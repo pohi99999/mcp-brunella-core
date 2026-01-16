@@ -1,0 +1,40 @@
+{
+  "name": "mcp-brunella-core",
+  "version": "1.0.0",
+  "description": "MCP server for Brunella Core",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "dev": "ts-node src/index.ts",
+    "watch": "tsc -w"
+  },
+  "keywords": [
+    "mcp",
+    "brunella"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@lancedb/lancedb": "^0.23.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
+    "@types/express": "^5.0.6",
+    "apache-arrow": "18.1.0",
+    "better-sqlite3": "^12.6.0",
+    "express": "^5.2.1",
+    "google-auth-library": "^10.5.0",
+    "googleapis": "^170.1.0",
+    "playwright": "^1.57.0",
+    "playwright-core": "^1.57.0",
+    "socket.io": "^4.8.3",
+    "ts-node": "^10.0.0",
+    "typescript": "^5.0.0",
+    "vectordb": "^0.21.2",
+    "vm2": "^3.10.1",
+    "zod": "^3.22.0"
+  },
+  "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
+    "@types/node": "^25.0.9"
+  }
+}
