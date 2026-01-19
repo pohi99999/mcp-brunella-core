@@ -208,7 +208,7 @@ export function createAnythingLLMAdapter(): AnythingLLMAdapter | null {
   const apiKey = process.env.ANYTHINGLLM_API_KEY;
 
   if (!apiKey) {
-    console.warn('AnythingLLM API key not configured');
+    console.error('AnythingLLM API key not configured. Set ANYTHINGLLM_API_KEY environment variable.');
     return null;
   }
 
@@ -229,6 +229,7 @@ export async function testAnythingLLMConnection(): Promise<void> {
   
   if (!adapter) {
     console.log('✗ AnythingLLM not configured (missing API key)');
+    console.log('  Set ANYTHINGLLM_API_KEY environment variable to enable.');
     return;
   }
 

@@ -29,7 +29,7 @@ thresholds:
 
 # Task definitions with triggers
 tasks:
-  - name: "LLM futtatás optimalizálás"
+  - name: "LLM execution optimization"
     id: "llm_optimization"
     description: "Optimize CPU when running LLM with high load"
     trigger:

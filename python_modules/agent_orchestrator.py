@@ -148,6 +148,13 @@ class AgentOrchestrator:
         # In production, this would actually call the agent CLI
         # For now, we return a simulated response
         
+        # SECURITY NOTE: When implementing actual subprocess execution,
+        # ensure proper input validation and sanitization:
+        # - Validate command paths
+        # - Sanitize arguments to prevent command injection
+        # - Use timeout to prevent hanging processes
+        # - Capture and validate output
+        
         try:
             # Simulate agent execution
             # In real implementation:

@@ -7,7 +7,7 @@
       "description": "CPU optimization tool for LLM execution",
       "category": "system_optimization",
       "platform": "windows",
-      "usage": "CPU optimalizálás LLM futtatáskor",
+      "usage": "CPU optimization during LLM execution",
       "trigger": {
         "type": "threshold",
         "condition": "cpu_load > 80 AND llm_active = true",
@@ -33,7 +33,7 @@
       "description": "SSD health monitoring and diagnostics",
       "category": "disk_monitoring",
       "platform": "windows",
-      "usage": "SSD állapot monitorozása",
+      "usage": "SSD health status monitoring",
       "trigger": {
         "type": "threshold",
         "condition": "io_latency > 100",
@@ -58,7 +58,7 @@
       "description": "Hardware monitoring and diagnostics",
       "category": "hardware_monitoring",
       "platform": "windows",
-      "usage": "Teljes rendszer monitorozása CPU, GPU, RAM, hőmérséklet",
+      "usage": "Full system monitoring: CPU, GPU, RAM, temperature",
       "trigger": {
         "type": "threshold",
         "condition": "cpu_temp > 80 OR gpu_temp > 85",
@@ -84,7 +84,7 @@
       "description": "Windows Task Manager for process monitoring",
       "category": "process_monitoring",
       "platform": "windows",
-      "usage": "Folyamatok és erőforrások monitorozása",
+      "usage": "Process and resource monitoring",
       "trigger": {
         "type": "manual",
         "condition": "user_request"
@@ -103,7 +103,7 @@
       "description": "Google Gemini CLI agent for code tasks",
       "category": "ai_agent",
       "platform": "cross_platform",
-      "usage": "Kód generálás, refaktorálás, review",
+      "usage": "Code generation, refactoring, and review",
       "trigger": {
         "type": "task_based",
         "tasks": ["code_generation", "code_review", "refactoring"]
@@ -122,7 +122,7 @@
       "description": "Claude AI for complex coding tasks",
       "category": "ai_agent",
       "platform": "cross_platform",
-      "usage": "Komplex kódolási feladatok, architektúra tervezés",
+      "usage": "Complex coding tasks and architecture design",
       "trigger": {
         "type": "task_based",
         "tasks": ["complex_coding", "architecture", "debugging"]
@@ -141,7 +141,7 @@
       "description": "Jules AI agent for automated workflows",
       "category": "ai_agent",
       "platform": "cross_platform",
-      "usage": "Automatizált workflow-k, batch feladatok",
+      "usage": "Automated workflows and batch tasks",
       "trigger": {
         "type": "task_based",
         "tasks": ["automation", "batch_processing", "workflow"]
