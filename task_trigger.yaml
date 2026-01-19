@@ -1,0 +1,194 @@
+# Task Trigger Configuration
+# Defines automated task triggers based on system state
+
+version: "1.0.0"
+
+# Global settings
+settings:
+  check_interval_seconds: 30
+  enable_auto_trigger: true
+  log_triggers: true
+  log_file: logs/task_triggers.log
+
+# Monitoring thresholds
+thresholds:
+  cpu:
+    warning: 70
+    critical: 80
+  memory:
+    warning: 60
+    critical: 70
+  io_latency:
+    warning: 80
+    critical: 100
+  temperature:
+    cpu_warning: 70
+    cpu_critical: 80
+    gpu_warning: 75
+    gpu_critical: 85
+
+# Task definitions with triggers
+tasks:
+  - name: "LLM futtatás optimalizálás"
+    id: "llm_optimization"
+    description: "Optimize CPU when running LLM with high load"
+    trigger:
+      conditions:
+        - type: threshold
+          metric: cpu_load
+          operator: ">"
+          value: 80
+        - type: state
+          metric: llm_active
+          operator: "=="
+          value: true
+      logic: "AND"  # All conditions must be true
+    tools:
+      - ProcessLasso
+    actions:
+      - tool: ProcessLasso
+        action: optimize
+        priority: high
+    cooldown_seconds: 300  # Don't retrigger for 5 minutes
+
+  - name: "Disk health check"
+    id: "disk_health_check"
+    description: "Check disk health when I/O latency is high"
+    trigger:
+      conditions:
+        - type: threshold
+          metric: io_latency
+          operator: ">"
+          value: 100
+      logic: "OR"
+    tools:
+      - CrystalDiskInfo
+    actions:
+      - tool: CrystalDiskInfo
+        action: check
+        priority: medium
+    cooldown_seconds: 600  # Don't retrigger for 10 minutes
+
+  - name: "Hardware monitoring"
+    id: "hardware_monitor"
+    description: "Monitor hardware when temperature exceeds threshold"
+    trigger:
+      conditions:
+        - type: threshold
+          metric: cpu_temp
+          operator: ">"
+          value: 80
+        - type: threshold
+          metric: gpu_temp
+          operator: ">"
+          value: 85
+      logic: "OR"  # Any condition triggers
+    tools:
+      - HWiNFO
+    actions:
+      - tool: HWiNFO
+        action: sensors
+        priority: high
+    cooldown_seconds: 180  # Don't retrigger for 3 minutes
+
+  - name: "Memory optimization"
+    id: "memory_optimization"
+    description: "Optimize memory when usage is high"
+    trigger:
+      conditions:
+        - type: threshold
+          metric: memory_usage
+          operator: ">"
+          value: 70
+      logic: "AND"
+    tools:
+      - TaskManager
+    actions:
+      - tool: TaskManager
+        action: open
+        priority: low
+    cooldown_seconds: 900  # Don't retrigger for 15 minutes
+
+  - name: "Combined system stress"
+    id: "system_stress"
+    description: "Trigger when multiple resources are under stress"
+    trigger:
+      conditions:
+        - type: threshold
+          metric: cpu_load
+          operator: ">"
+          value: 75
+        - type: threshold
+          metric: memory_usage
+          operator: ">"
+          value: 65
+        - type: threshold
+          metric: io_latency
+          operator: ">"
+          value: 80
+      logic: "AND"  # All conditions must be true
+    tools:
+      - ProcessLasso
+      - HWiNFO
+    actions:
+      - tool: ProcessLasso
+        action: balance
+        priority: high
+      - tool: HWiNFO
+        action: report
+        priority: medium
+    cooldown_seconds: 600
+
+# Schedule-based tasks (not triggered by metrics)
+scheduled_tasks:
+  - name: "Daily health check"
+    id: "daily_health"
+    description: "Run comprehensive health check daily"
+    schedule:
+      type: cron
+      expression: "0 9 * * *"  # Every day at 9 AM
+    tools:
+      - CrystalDiskInfo
+      - HWiNFO
+    actions:
+      - tool: CrystalDiskInfo
+        action: report
+      - tool: HWiNFO
+        action: report
+
+  - name: "Weekly cleanup"
+    id: "weekly_cleanup"
+    description: "Clean logs and cache weekly"
+    schedule:
+      type: cron
+      expression: "0 2 * * 0"  # Every Sunday at 2 AM
+    actions:
+      - type: script
+        command: "node"
+        args: ["scripts/cleanup.js"]
+
+# Notification settings
+notifications:
+  enabled: true
+  channels:
+    - type: log
+      level: info
+    - type: console
+      level: warning
+  templates:
+    trigger_fired: "🔔 Task '{task_name}' triggered: {reason}"
+    action_completed: "✓ Action '{action}' completed for task '{task_name}'"
+    action_failed: "✗ Action '{action}' failed for task '{task_name}': {error}"
+
+# Emergency overrides
+emergency:
+  cpu_critical_threshold: 95
+  memory_critical_threshold: 90
+  actions:
+    - type: alert
+      message: "CRITICAL: System resources at dangerous levels"
+    - type: tool
+      tool: ProcessLasso
+      action: optimize
+    - type: notification
+      priority: critical

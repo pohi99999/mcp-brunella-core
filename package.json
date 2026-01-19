@@ -7,7 +7,10 @@
     "build": "tsc",
     "start": "node build/index.js",
     "dev": "ts-node src/index.ts",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "test": "node scripts/test_runner.js",
+    "cleanup": "node scripts/cleanup.js",
+    "healthcheck": "bash status_report.sh"
   },
   "keywords": [
     "mcp",
@@ -20,6 +23,7 @@
     "@modelcontextprotocol/sdk": "^1.0.0",
     "@types/express": "^5.0.6",
     "apache-arrow": "18.1.0",
+    "axios": "^1.6.0",
     "better-sqlite3": "^12.6.0",
     "express": "^5.2.1",
     "google-auth-library": "^10.5.0",

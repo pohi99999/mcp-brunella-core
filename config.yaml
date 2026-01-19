@@ -1,0 +1,82 @@
+# MCP Brunella Core Configuration
+# Central configuration file for the MCP server
+
+server:
+  name: mcp-brunella-core
+  version: 1.0.0
+  environment: production
+  
+workspace:
+  root: F:\OneDrive\Desktop\Brunella_es_en
+  allowed_roots:
+    - 00_BAS_SYSTEM
+    - 00_INBOX
+    - 01_CONTEXT
+    - 02_PROJECTS
+    - 03_LIBRARY
+    - 04_ARCHIVE
+    - 05_CONFIG
+    - 06_CORE
+    - 07_KNOWLEDGE_BASE
+    - 08_SCRIPTS
+    - 99_SYSTEM_LOGS
+  deny_contains:
+    - 09_SECRETS
+    - .env
+    - .pem
+    - .p12
+    - client_secret
+    - credentials
+    - token
+    - id_rsa
+    - id_ed25519
+  max_read_bytes: 400000
+  max_file_bytes_for_search: 2000000
+
+system:
+  log_dir: ./logs
+  allowed_commands:
+    - dir
+    - ls
+    - type
+    - cat
+    - python
+    - node
+    - echo
+  command_timeout_ms: 30000
+
+security:
+  sandbox_enabled: true
+  code_execution_timeout_ms: 10000
+  max_code_size_bytes: 50000
+
+browser:
+  headless: true
+  timeout_ms: 30000
+  max_screenshots: 10
+
+tools:
+  enabled:
+    - workspace
+    - knowledge
+    - system
+    - browser
+    - interpreter
+    - copilot_cli
+    - jules_cli
+    - ollama
+    - claude
+    - pipeline
+    - google_workspace
+
+monitoring:
+  cpu_threshold_percent: 80
+  memory_threshold_percent: 70
+  io_latency_threshold_ms: 100
+  enable_auto_optimization: true
+
+anythingllm:
+  enabled: false
+  api_url: http://localhost:3001
+  api_key: ${ANYTHINGLLM_API_KEY}
+  timeout_ms: 30000

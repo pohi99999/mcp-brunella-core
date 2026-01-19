@@ -1,0 +1,13 @@
+# MCP Brunella Core - Python Dependencies
+# Requirements for Python modules and tools
+
+# Core dependencies (if any Python tools need them)
+# Note: This project is primarily TypeScript, but includes Python modules for extensibility
+
+# No external dependencies required for current Python modules
+# query_router.py and agent_orchestrator.py use only Python standard library
+
+# If you need to add Python dependencies in the future, uncomment and add them here:
+# requests>=2.31.0
+# pyyaml>=6.0
+# psutil>=5.9.0  # For system monitoring
