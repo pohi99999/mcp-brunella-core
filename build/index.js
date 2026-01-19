@@ -13,6 +13,7 @@ const ollamaTool_js_1 = require("./tools/ollamaTool.js");
 const claudeTool_js_1 = require("./tools/claudeTool.js");
 const llmPipeline_js_1 = require("./pipeline/llmPipeline.js");
 const googleWorkspace_js_1 = require("./tools/googleWorkspace.js");
+const anythingLLMTool_js_1 = require("./tools/anythingLLMTool.js");
 const web_js_1 = require("./server/web.js");
 // Create server instance
 const server = new mcp_js_1.McpServer({
@@ -31,6 +32,7 @@ const server = new mcp_js_1.McpServer({
 (0, claudeTool_js_1.registerClaudeTool)(server);
 (0, llmPipeline_js_1.registerPipelineTools)(server);
 (0, googleWorkspace_js_1.registerGoogleWorkspaceTools)(server);
+(0, anythingLLMTool_js_1.registerAnythingLLMTool)(server);
 server.tool("ping", "A simple ping tool to verify the server is running.", {}, async () => {
     return {
         content: [
