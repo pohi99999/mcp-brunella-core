@@ -13,6 +13,7 @@ A Cogella Core a Brunella Agent System (BAS) "digitális idegrendszere". Egy oly
 
 ## Kulcsfontosságú Funkciók (MVP)
 - **Brunella Orchestrator:** Hierarchikus ügynök-vezérlés, ahol Brunella delegálja a feladatokat a specializált ügynököknek.
+- **Brunella CLI (myai):** Önálló Python alapú eszközkészlet multi-ágens folyamatokhoz (Planner, Coder, Reviewer) és izolált kódvégrehajtáshoz.
 - **Hibrid DevOps Partner (Jules):** Külső ágens integráció White Box hozzáféréssel a forráskódhoz, automatizált teszteléshez és öngyógyító folyamatokhoz.
 - **Fejlett Tudásbázis (RAG):** Vektoros keresés a `07_KNOWLEDGE_BASE` és `03_LIBRARY` mappákban LanceDB segítségével.
 - **Innovációs Homokozó (Sandbox):** Biztonságos Python és Node.js kódvégrehajtás izolált Docker környezetben.
