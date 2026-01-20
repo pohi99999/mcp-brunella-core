@@ -18,7 +18,7 @@
     - [x] Add async health check endpoint
 - [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
-## Phase 3: Moduláris Routerek Vázának Létrehozása
+## Phase 3: Moduláris Routerek Vázának Létrehozása [checkpoint: 142c446]
 - [x] Task: `workspace.py` modul vázának elkészítése (FastMCP példány).
     - [x] Define `mcp_workspace` server
     - [x] Add dummy tool for testing
@@ -27,7 +27,7 @@
     - [x] Add dummy tool for testing
 - [x] Task: Modulok becsatolása (mount) a fő Gateway-be.
     - [x] Mount sub-servers in `main.py`
-- [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
 
 ## Phase 4: Ellenőrzés és Dokumentáció
 - [ ] Task: Szerver indítása és SSE végpontok tesztelése (curl vagy MCP Inspector).
