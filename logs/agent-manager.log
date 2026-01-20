@@ -25,3 +25,6 @@
 {"timestamp":"2026-01-20T22:56:15.807Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
 {"timestamp":"2026-01-20T22:56:15.808Z","level":"INFO","message":"Agent registered: developer"}
 {"timestamp":"2026-01-20T22:56:15.808Z","level":"INFO","message":"Agent registered: researcher"}
+{"timestamp":"2026-01-20T23:05:29.036Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
+{"timestamp":"2026-01-20T23:05:29.037Z","level":"INFO","message":"Agent registered: researcher"}
+{"timestamp":"2026-01-20T23:05:29.037Z","level":"INFO","message":"Agent registered: developer"}

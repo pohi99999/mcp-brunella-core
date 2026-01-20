@@ -14,4 +14,4 @@
 - [x] Task: Fő CLI interfész (`cli.py`) létrehozása Typer alapokon. [6c3b2e9]
 - [x] Task: Az új CLI regisztrálása MCP eszközként a Cogella Core-ban. [bae8cda]
 - [x] Task: Tesztelés: `dev_agent` futtatása a kalkulátor példával. [2503bb5]
-- [ ] Task: Conductor - User Manual Verification
+- [x] Task: Conductor - User Manual Verification [78d4353]
