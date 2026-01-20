@@ -25,18 +25,18 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md) [checkpoint: ea9d028]
 
 ## Phase 3: Agent Management System Implementation
-- [ ] Task: Agent Listing & Visualization UI
-    - [ ] TDD: Mock API endpoints (if needed) or MCP tool responses for listing agents.
-    - [ ] Implement/Refactor UI to list all registered agents from `src/agents/registry.json`.
-    - [ ] Visual representation of Agent capabilities (tools).
-- [ ] Task: Agent Configuration & Tool Assignment
-    - [ ] TDD: Create tests for Agent configuration updates.
-    - [ ] Implement UI for editing agent tool assignments.
-    - [ ] Implement backend logic (via MCP tool or API) to save configuration changes.
-- [ ] Task: Agent Orchestration UI
-    - [ ] Implement UI for composing agents (visualizing hierarchy).
-    - [ ] Implement controls to send direct instructions/messages to specific agents.
-- [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+- [x] Task: Agent Listing & Visualization UI
+    - [x] TDD: Mock API endpoints (if needed) or MCP tool responses for listing agents.
+    - [x] Implement/Refactor UI to list all registered agents from `src/agents/registry.json`.
+    - [x] Visual representation of Agent capabilities (tools).
+- [x] Task: Agent Configuration & Tool Assignment
+    - [x] TDD: Create tests for Agent configuration updates.
+    - [x] Implement UI for editing agent tool assignments.
+    - [x] Implement backend logic (via MCP tool or API) to save configuration changes.
+- [x] Task: Agent Orchestration UI
+    - [x] Implement UI for composing agents (visualizing hierarchy).
+    - [x] Implement controls to send direct instructions/messages to specific agents.
+- [x] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md) [checkpoint: 4a7b418]
 
 ## Phase 4: System Monitoring & Jules Reporting
 - [ ] Task: System Health Dashboard
