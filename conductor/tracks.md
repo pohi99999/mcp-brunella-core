@@ -6,8 +6,3 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: A Cogella Core alapstruktúra és aszinkron Gateway alapozása**
   *Link: [./tracks/cogella_core_init_20260120/](./tracks/cogella_core_init_20260120/)*
-
----
-
-- [x] **Track: Integration of external dashboard (mcp-brunella-core-ir) as the main UI, including agent management, system monitoring, and semantic testing with Jules.**
-  *Link: [./tracks/dashboard-integration_20260120/](./tracks/dashboard-integration_20260120/)*
