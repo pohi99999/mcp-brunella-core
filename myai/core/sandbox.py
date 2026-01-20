@@ -4,7 +4,7 @@ import tempfile
 from typing import Tuple
 
 
-def run_python_sandbox(code: str) -> Tuple[int, str, str]:
+def run_python_sandbox(code: str, timeout: int = 30) -> Tuple[int, str, str]:
     with tempfile.TemporaryDirectory() as tmpdir:
         script_path = os.path.join(tmpdir, "script.py")
         with open(script_path, "w", encoding="utf-8") as f:
@@ -17,8 +17,8 @@ def run_python_sandbox(code: str) -> Tuple[int, str, str]:
             text=True,
         )
         try:
-            out, err = proc.communicate(timeout=30)
+            out, err = proc.communicate(timeout=timeout)
             return proc.returncode, out, err
         except subprocess.TimeoutExpired:
             proc.kill()
-            return -1, "", "Execution timed out (30s)"
+            return -1, "", f"Execution timed out ({timeout}s)"
