@@ -1,13 +1,13 @@
 # Implementation Plan - A Cogella Core alapstruktúra és aszinkron Gateway alapozása
 
-## Phase 1: Környezet és Alapstruktúra
+## Phase 1: Környezet és Alapstruktúra [checkpoint: 1407716]
 - [x] Task: Python környezet inicializálása és függőségek telepítése (FastAPI, FastMCP, Uvicorn). [no-commit]
-    - [ ] Initialize Python environment (venv/uv)
-    - [ ] Create requirements.txt
-    - [ ] Install dependencies
+    - [x] Initialize Python environment (venv/uv)
+    - [x] Create requirements.txt
+    - [x] Install dependencies
 - [x] Task: Projekt könyvtárstruktúra kialakítása (`src/core`, `src/servers`).
-    - [ ] Create directory structure
-- [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
+    - [x] Create directory structure
+- [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
 ## Phase 2: Gateway Implementáció
 - [ ] Task: Központi `main.py` létrehozása FastAPI és FastMCP alapokon.
