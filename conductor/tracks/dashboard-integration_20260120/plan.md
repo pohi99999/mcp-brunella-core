@@ -39,16 +39,16 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md) [checkpoint: 4a7b418]
 
 ## Phase 4: System Monitoring & Jules Reporting
-- [ ] Task: System Health Dashboard
-    - [ ] TDD: Create health check data providers.
-    - [ ] Implement UI widgets for CPU, Memory, Docker Sandbox status, Ollama status.
-- [ ] Task: RAG & Knowledge Base Visualization
-    - [ ] Implement UI to visualize LanceDB status/stats.
-    - [ ] Implement a "Search Tester" widget to verify RAG retrieval results.
-- [ ] Task: Jules Report UI
-    - [ ] Design data structure for "Jules Reports" (JSON/Markdown logs).
-    - [ ] Implement UI to list and view generated test reports/logs.
-- [ ] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md)
+- [x] Task: System Health Dashboard
+    - [x] TDD: Create health check data providers.
+    - [x] Implement UI widgets for CPU, Memory, Docker Sandbox status, Ollama status.
+- [x] Task: RAG & Knowledge Base Visualization
+    - [x] Implement UI to visualize LanceDB status/stats.
+    - [x] Implement a "Search Tester" widget to verify RAG retrieval results.
+- [x] Task: Jules Report UI
+    - [x] Design data structure for "Jules Reports" (JSON/Markdown logs).
+    - [x] Implement UI to list and view generated test reports/logs.
+- [x] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md) [checkpoint: aa08201]
 
 ## Phase 5: Semantic Testing Infrastructure (Jules)
 - [ ] Task: Create Semantic Test Book
