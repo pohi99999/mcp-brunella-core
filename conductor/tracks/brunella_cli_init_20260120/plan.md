@@ -10,7 +10,7 @@
 - [x] Task: Projekt segédeszközök (`core/tools.py` és `core/project.py`) beépítése. [3d13ef5]
 - [x] Task: Multi-ágens logika (`core/agent.py`) implementálása. [66ac462]
 
-## Phase 3: CLI és MCP Integráció
+## Phase 3: CLI és MCP Integráció [checkpoint: d408deb]
 - [x] Task: Fő CLI interfész (`cli.py`) létrehozása Typer alapokon. [6c3b2e9]
 - [x] Task: Az új CLI regisztrálása MCP eszközként a Cogella Core-ban. [bae8cda]
 - [x] Task: Tesztelés: `dev_agent` futtatása a kalkulátor példával. [2503bb5]
