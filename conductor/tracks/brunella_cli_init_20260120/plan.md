@@ -1,6 +1,6 @@
 # Implementation Plan - Brunella CLI Integráció
 
-## Phase 1: Alapstruktúra és Függőségek
+## Phase 1: Alapstruktúra és Függőségek [checkpoint: d119ae4]
 - [x] Task: Python környezet és `myai/` könyvtárstruktúra kialakítása. [211893b]
 - [x] Task: `requirements.txt` létrehozása és csomagok telepítése. [3c21491]
 - [x] Task: `config.py` és alap LLM hívások (`core/llm.py`) implementálása. [6c3b2e9]
