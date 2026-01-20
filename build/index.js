@@ -1,67 +1,90 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const mcp_js_1 = require("@modelcontextprotocol/sdk/server/mcp.js");
-const stdio_js_1 = require("@modelcontextprotocol/sdk/server/stdio.js");
-const workspace_js_1 = require("./tools/workspace.js");
-const knowledge_js_1 = require("./tools/knowledge.js");
-const system_js_1 = require("./tools/system.js");
-const browser_js_1 = require("./tools/browser.js");
-const interpreter_js_1 = require("./tools/interpreter.js");
-const copilotCliTool_js_1 = require("./tools/copilotCliTool.js");
-const julesCliTool_js_1 = require("./tools/julesCliTool.js");
-const ollamaTool_js_1 = require("./tools/ollamaTool.js");
-const claudeTool_js_1 = require("./tools/claudeTool.js");
-const llmPipeline_js_1 = require("./pipeline/llmPipeline.js");
-const googleWorkspace_js_1 = require("./tools/googleWorkspace.js");
-const anythingllm_js_1 = require("./tools/anythingllm.js");
-const web_js_1 = require("./server/web.js");
-const AgentManager_js_1 = require("./agents/AgentManager.js");
-const zod_1 = require("zod");
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+import { registerWorkspaceTools } from "./tools/workspace.js";
+import { registerKnowledgeTools } from "./tools/knowledge.js";
+import { registerSystemTools } from "./tools/system.js";
+import { registerBrowserTools } from "./tools/browser.js";
+import { registerInterpreterTools } from "./tools/interpreter.js";
+import { registerCopilotCliTool } from "./tools/copilotCliTool.js";
+import { registerJulesCliTool } from "./tools/julesCliTool.js";
+import { registerOllamaTool } from "./tools/ollamaTool.js";
+import { registerClaudeTool } from "./tools/claudeTool.js";
+import { registerPipelineTools } from "./pipeline/llmPipeline.js";
+import { registerGoogleWorkspaceTools } from "./tools/googleWorkspace.js";
+import { registerAnythingLLMTools } from "./tools/anythingllm.js";
+import { registerMonitorTools } from "./tools/monitor.js";
+import { startWebServer } from "./server/web.js";
+import { agentManager } from "./agents/AgentManager.js";
+import { z } from "zod";
 // Create server instance
-const server = new mcp_js_1.McpServer({
+const server = new McpServer({
     name: "mcp-brunella-core",
     version: "1.0.0",
 });
 // Register Tools
-(0, workspace_js_1.registerWorkspaceTools)(server);
-(0, knowledge_js_1.registerKnowledgeTools)(server);
-(0, system_js_1.registerSystemTools)(server);
-(0, browser_js_1.registerBrowserTools)(server);
-(0, interpreter_js_1.registerInterpreterTools)(server);
-(0, copilotCliTool_js_1.registerCopilotCliTool)(server);
-(0, julesCliTool_js_1.registerJulesCliTool)(server);
-(0, ollamaTool_js_1.registerOllamaTool)(server);
-(0, claudeTool_js_1.registerClaudeTool)(server);
-(0, llmPipeline_js_1.registerPipelineTools)(server);
-(0, googleWorkspace_js_1.registerGoogleWorkspaceTools)(server);
-(0, anythingllm_js_1.registerAnythingLLMTools)(server);
+registerWorkspaceTools(server);
+registerKnowledgeTools(server);
+registerSystemTools(server);
+registerBrowserTools(server);
+registerInterpreterTools(server);
+registerCopilotCliTool(server);
+registerJulesCliTool(server);
+registerOllamaTool(server);
+registerClaudeTool(server);
+registerPipelineTools(server);
+registerGoogleWorkspaceTools(server);
+registerAnythingLLMTools(server);
+registerMonitorTools(server);
 // Register Agent Tools
 server.tool("agent_list", "Lists all available active agents.", {}, async () => {
-    const agents = AgentManager_js_1.agentManager.listAgentDefinitions();
+    const agents = agentManager.listAgentDefinitions();
     return {
         content: [{ type: "text", text: JSON.stringify(agents, null, 2) }]
     };
 });
 server.tool("agent_registry", "Lists all agent definitions from the registry (active + planned).", {}, async () => {
-    const agents = AgentManager_js_1.agentManager.listRegistryDefinitions();
+    const agents = agentManager.listRegistryDefinitions();
     return {
         content: [{ type: "text", text: JSON.stringify(agents, null, 2) }]
     };
 });
 server.tool("agent_delegate", "Delegates a task to a specific agent.", {
-    agent_name: zod_1.z.string().describe("Name of the agent (e.g., 'researcher', 'developer')"),
-    task: zod_1.z.string().describe("The task description")
+    agent_name: z.string().describe("Name of the agent (e.g., 'researcher', 'developer')"),
+    task: z.string().describe("The task description")
 }, async ({ agent_name, task }) => {
     try {
-        const result = await AgentManager_js_1.agentManager.delegate(agent_name, task);
+        const result = await agentManager.delegate(agent_name, task);
         return {
             content: [{ type: "text", text: result }]
         };
     }
     catch (e) {
+        const errorMessage = e instanceof Error ? e.message : String(e);
         return {
             isError: true,
-            content: [{ type: "text", text: `Agent Error: ${e.message}` }]
+            content: [{ type: "text", text: `Agent Error: ${errorMessage}` }]
+        };
+    }
+});
+server.tool("agent_update", "Updates an agent definition and saves it to the registry.", {
+    name: z.string().describe("Name of the agent to update"),
+    updates: z.object({
+        description: z.string().optional(),
+        capabilities: z.array(z.string()).optional(),
+        status: z.enum(["active", "planned", "deprecated"]).optional()
+    }).describe("Fields to update")
+}, async ({ name, updates }) => {
+    try {
+        const agent = agentManager.updateAgent(name, updates);
+        return {
+            content: [{ type: "text", text: JSON.stringify(agent, null, 2) }]
+        };
+    }
+    catch (e) {
+        const errorMessage = e instanceof Error ? e.message : String(e);
+        return {
+            isError: true,
+            content: [{ type: "text", text: `Update Error: ${errorMessage}` }]
         };
     }
 });
@@ -77,8 +100,8 @@ server.tool("ping", "A simple ping tool to verify the server is running.", {}, a
 });
 async function main() {
     // Start Web Interface
-    (0, web_js_1.startWebServer)();
-    const transport = new stdio_js_1.StdioServerTransport();
+    startWebServer(server);
+    const transport = new StdioServerTransport();
     await server.connect(transport);
     console.error("MCP Brunella Core Server running on stdio");
 }

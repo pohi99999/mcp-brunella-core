@@ -1,13 +1,10 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerBrowserTools = registerBrowserTools;
-const zod_1 = require("zod");
-const playwright_core_1 = require("playwright-core");
-const url_1 = require("url");
+import { z } from "zod";
+import { chromium } from 'playwright-core';
+import { URL } from 'url';
 // Security check for URLs (same as before)
 function isUrlAllowed(urlStr) {
     try {
-        const url = new url_1.URL(urlStr);
+        const url = new URL(urlStr);
         if (url.protocol === 'file:')
             return false;
         const hostname = url.hostname;
@@ -35,17 +32,17 @@ async function getBrowser() {
         // but we assume the user has a way to get one or we installed 'playwright' which does.
         // Actually, 'playwright' package installs browsers.
         // Let's try to launch.
-        browser = await playwright_core_1.chromium.launch({
+        browser = await chromium.launch({
             headless: true,
             args: ['--no-sandbox', '--disable-setuid-sandbox'] // Safer in some envs, standard for server-side
         });
     }
     return browser;
 }
-function registerBrowserTools(server) {
+export function registerBrowserTools(server) {
     server.tool("browser_navigate", "Navigates to a URL and returns the page content (text/html). Handles JS.", {
-        url: zod_1.z.string().url().describe("The URL to fetch"),
-        waitForSelector: zod_1.z.string().optional().describe("CSS selector to wait for before returning"),
+        url: z.string().url().describe("The URL to fetch"),
+        waitForSelector: z.string().optional().describe("CSS selector to wait for before returning"),
     }, async ({ url, waitForSelector }) => {
         if (!isUrlAllowed(url)) {
             return {
@@ -88,7 +85,7 @@ function registerBrowserTools(server) {
         }
     });
     server.tool("browser_screenshot", "Takes a screenshot of a URL.", {
-        url: zod_1.z.string().url().describe("The URL to screenshot"),
+        url: z.string().url().describe("The URL to screenshot"),
     }, async ({ url }) => {
         if (!isUrlAllowed(url)) {
             return { isError: true, content: [{ type: "text", text: "Access denied." }] };

@@ -34,6 +34,16 @@
 ### 👨‍💻 Developer (Internal)
 **Role:** Code generation via LLM Pipeline.
 
+### 🐍 Brunella CLI (Multi-Agent Tooling)
+**Role:** Local Python-based agent system for complex dev flows.
+**Path:** `myai/`
+**Capabilities:**
+- **Planner:** Breaks down tasks into logical steps.
+- **Coder:** Generates Python/TS code.
+- **Sandbox:** Executes Python code in an isolated environment.
+- **Reviewer:** Validates code quality and execution results.
+**Usage:** `python myai/cli.py dev-agent "<task>"` or via `brunella_cli_exec` MCP tool.
+
 ## 3. Interaction Protocol
 - **Jules to System:** Jules operates via GitHub PRs, Issues, and direct code access (if running locally via CLI).
 - **System to Jules:** Logs and Test Reports are the primary feedback mechanism.

@@ -1,24 +1,18 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerInterpreterTools = registerInterpreterTools;
-const zod_1 = require("zod");
-const promises_1 = __importDefault(require("fs/promises"));
-const path_1 = __importDefault(require("path"));
-const child_process_1 = require("child_process");
-const os_1 = __importDefault(require("os"));
-const vm2_1 = require("vm2");
+import { z } from "zod";
+import fs from 'fs/promises';
+import path from 'path';
+import { spawn } from "child_process";
+import os from 'os';
+import { VM } from 'vm2';
 const MAX_OUTPUT_SIZE = 1024 * 100; // 100KB limit
 const TIMEOUT_MS = 5000; // 5s timeout
 async function runPythonCode(code) {
-    const tmpDir = os_1.default.tmpdir();
-    const filePath = path_1.default.join(tmpDir, `mcp_py_${Date.now()}.py`);
-    await promises_1.default.writeFile(filePath, code);
+    const tmpDir = os.tmpdir();
+    const filePath = path.join(tmpDir, `mcp_py_${Date.now()}.py`);
+    await fs.writeFile(filePath, code);
     return new Promise((resolve) => {
         // Python sandbox: Clean env, limited time
-        const proc = (0, child_process_1.spawn)('python', [filePath], {
+        const proc = spawn('python', [filePath], {
             env: {
                 // Only pass minimal env vars needed for python to run, hide system secrets
                 PATH: process.env.PATH,
@@ -49,7 +43,7 @@ async function runPythonCode(code) {
         proc.stderr.on('data', dataHandler('stderr'));
         const timeout = setTimeout(() => {
             proc.kill();
-            promises_1.default.unlink(filePath).catch(() => { });
+            fs.unlink(filePath).catch(() => { });
             resolve({
                 isError: true,
                 content: [{ type: "text", text: `Execution timed out (${TIMEOUT_MS}ms).` }]
@@ -57,7 +51,7 @@ async function runPythonCode(code) {
         }, TIMEOUT_MS);
         proc.on('close', (code) => {
             clearTimeout(timeout);
-            promises_1.default.unlink(filePath).catch(() => { });
+            fs.unlink(filePath).catch(() => { });
             resolve({
                 content: [{
                         type: "text",
@@ -79,7 +73,7 @@ async function runNodeCode(code) {
                 }
                 output += text;
             };
-            const vm = new vm2_1.VM({
+            const vm = new VM({
                 timeout: TIMEOUT_MS,
                 sandbox: {
                     console: {
@@ -131,14 +125,14 @@ async function runNodeCode(code) {
         }
     });
 }
-function registerInterpreterTools(server) {
+export function registerInterpreterTools(server) {
     server.tool("interpreter_run_python", "Runs Python code in a restricted process (clean env, timeout).", {
-        code: zod_1.z.string().describe("Python code to execute"),
+        code: z.string().describe("Python code to execute"),
     }, async ({ code }) => {
         return await runPythonCode(code);
     });
     server.tool("interpreter_run_node", "Runs Node.js code in a VM2 sandbox (no fs/net access).", {
-        code: zod_1.z.string().describe("JavaScript code to execute"),
+        code: z.string().describe("JavaScript code to execute"),
     }, async ({ code }) => {
         return await runNodeCode(code);
     });

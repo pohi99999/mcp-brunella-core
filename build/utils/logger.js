@@ -1,30 +1,81 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.cliLogger = exports.systemLogger = exports.Logger = void 0;
-const promises_1 = __importDefault(require("fs/promises"));
-const path_1 = __importDefault(require("path"));
-const index_js_1 = require("../config/index.js");
-class Logger {
+import fs from 'fs/promises';
+import path from 'path';
+import { config } from '../config/index.js';
+export var LogLevel;
+(function (LogLevel) {
+    LogLevel["DEBUG"] = "DEBUG";
+    LogLevel["INFO"] = "INFO";
+    LogLevel["WARN"] = "WARN";
+    LogLevel["ERROR"] = "ERROR";
+})(LogLevel || (LogLevel = {}));
+export class Logger {
     logFile;
-    constructor(filename) {
-        this.logFile = path_1.default.join(index_js_1.config.systemLogDir, filename);
+    useStructuredLogging;
+    constructor(filename, useStructuredLogging = true) {
+        this.logFile = path.join(config.systemLogDir, filename);
+        this.useStructuredLogging = useStructuredLogging || process.env.STRUCTURED_LOGGING !== '0';
     }
-    async log(message, meta) {
-        const timestamp = new Date().toISOString();
-        const logEntry = `[${timestamp}] ${message} ${meta ? JSON.stringify(meta) : ''}\n`;
+    async writeLog(entry) {
         try {
-            // Ensure logs directory exists (redundant if ensured at startup but safe)
-            await promises_1.default.mkdir(path_1.default.dirname(this.logFile), { recursive: true });
-            await promises_1.default.appendFile(this.logFile, logEntry);
+            await fs.mkdir(path.dirname(this.logFile), { recursive: true });
+            if (this.useStructuredLogging) {
+                // JSON structured logging
+                const jsonEntry = JSON.stringify(entry) + '\n';
+                await fs.appendFile(this.logFile, jsonEntry);
+            }
+            else {
+                // Plain text logging (backward compatible)
+                const timestamp = entry.timestamp;
+                const metaStr = entry.meta ? ' ' + JSON.stringify(entry.meta) : '';
+                const errorStr = entry.error ? ` Error: ${entry.error.message}` : '';
+                const logEntry = `[${timestamp}] [${entry.level}] ${entry.message}${metaStr}${errorStr}\n`;
+                await fs.appendFile(this.logFile, logEntry);
+            }
         }
         catch (error) {
             console.error(`Failed to write to log file: ${this.logFile}`, error);
         }
     }
+    async log(message, meta) {
+        const entry = {
+            timestamp: new Date().toISOString(),
+            level: LogLevel.INFO,
+            message,
+            meta
+        };
+        await this.writeLog(entry);
+    }
+    async debug(message, meta) {
+        const entry = {
+            timestamp: new Date().toISOString(),
+            level: LogLevel.DEBUG,
+            message,
+            meta
+        };
+        await this.writeLog(entry);
+    }
+    async warn(message, meta) {
+        const entry = {
+            timestamp: new Date().toISOString(),
+            level: LogLevel.WARN,
+            message,
+            meta
+        };
+        await this.writeLog(entry);
+    }
+    async error(message, error, meta) {
+        const entry = {
+            timestamp: new Date().toISOString(),
+            level: LogLevel.ERROR,
+            message,
+            meta,
+            error: error ? {
+                message: error.message,
+                stack: error.stack
+            } : undefined
+        };
+        await this.writeLog(entry);
+    }
 }
-exports.Logger = Logger;
-exports.systemLogger = new Logger('system_commands.log');
-exports.cliLogger = new Logger('cli_tools.log');
+export const systemLogger = new Logger('system_commands.log');
+export const cliLogger = new Logger('cli_tools.log');

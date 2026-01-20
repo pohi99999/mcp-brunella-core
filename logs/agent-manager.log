@@ -10,3 +10,15 @@
 [2026-01-20T17:36:51.232Z] Agent registered: researcher 
 [2026-01-20T17:36:51.232Z] Agent registered: developer 
 [2026-01-20T17:36:51.231Z] Agent registry loaded: F:\OneDrive\Desktop\Brunella_es_en\02_PROJECTS\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+{"timestamp":"2026-01-20T21:33:52.945Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
+{"timestamp":"2026-01-20T21:33:52.945Z","level":"INFO","message":"Agent registered: researcher"}
+{"timestamp":"2026-01-20T21:33:52.945Z","level":"INFO","message":"Agent registered: developer"}
+{"timestamp":"2026-01-20T21:38:14.243Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
+{"timestamp":"2026-01-20T21:38:14.243Z","level":"INFO","message":"Agent registered: researcher"}
+{"timestamp":"2026-01-20T21:38:14.243Z","level":"INFO","message":"Agent registered: developer"}
+{"timestamp":"2026-01-20T21:38:51.097Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
+{"timestamp":"2026-01-20T21:38:51.097Z","level":"INFO","message":"Agent registered: researcher"}
+{"timestamp":"2026-01-20T21:38:51.097Z","level":"INFO","message":"Agent registered: developer"}
+{"timestamp":"2026-01-20T22:02:53.523Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
+{"timestamp":"2026-01-20T22:02:53.523Z","level":"INFO","message":"Agent registered: researcher"}
+{"timestamp":"2026-01-20T22:02:53.523Z","level":"INFO","message":"Agent registered: developer"}

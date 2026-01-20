@@ -13,6 +13,7 @@ import { registerPipelineTools } from "./pipeline/llmPipeline.js";
 import { registerGoogleWorkspaceTools } from "./tools/googleWorkspace.js";
 import { registerAnythingLLMTools } from "./tools/anythingllm.js";
 import { registerMonitorTools } from "./tools/monitor.js";
+import { registerBrunellaCliTools } from "./tools/brunella_cli.js";
 import { startWebServer } from "./server/web.js";
 import { agentManager } from "./agents/AgentManager.js";
 import { z } from "zod";
@@ -37,6 +38,7 @@ registerPipelineTools(server);
 registerGoogleWorkspaceTools(server);
 registerAnythingLLMTools(server);
 registerMonitorTools(server);
+registerBrunellaCliTools(server);
 
 // Register Agent Tools
 server.tool(
