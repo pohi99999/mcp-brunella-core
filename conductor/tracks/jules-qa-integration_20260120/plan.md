@@ -10,7 +10,7 @@
     - [x] Define reporting format for Jules' test runs.
 - [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md) [checkpoint: fc21bef]
 
-## Phase 2: Technical Enablement & Scripting
+## Phase 2: Technical Enablement & Scripting [checkpoint: 8fe0160]
 - [x] Task: Setup Maintenance Scripts [8bf924f]
     - [x] Create `scripts/jules_check.mjs` to trigger local sanity checks.
     - [x] Ensure logs are accessible and formatted for AI parsing.
