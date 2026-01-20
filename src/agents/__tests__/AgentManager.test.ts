@@ -1,5 +1,5 @@
-import { AgentManager } from '../AgentManager';
-import { IAgent } from '../types';
+import { AgentManager } from '../AgentManager.js';
+import { IAgent } from '../types.js';
 import fs from 'fs';
 
 // Mock dependencies

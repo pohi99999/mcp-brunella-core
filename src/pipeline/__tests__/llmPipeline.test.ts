@@ -1,4 +1,4 @@
-import { SelfHealingPipeline } from '../llmPipeline';
+import { SelfHealingPipeline } from '../llmPipeline.js';
 import { EventEmitter } from 'events';
 
 // Mock fetch

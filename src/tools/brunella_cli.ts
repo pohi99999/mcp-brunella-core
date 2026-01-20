@@ -9,22 +9,22 @@ export function registerBrunellaCliTools(server: McpServer) {
     "brunella_cli_exec",
     "Executes a Brunella CLI command (chat, codegen, dev_agent, sandbox).",
     {
-      command: z.enum(["chat", "codegen", "dev_agent", "sandbox", "project_analyze"])
+      command: z.enum(["chat", "codegen", "dev-agent", "sandbox", "project-analyze"])
         .describe("The CLI command to run"),
       argument: z.string().describe("The main argument or task description for the command"),
       model: z.string().optional().describe("Override the default LLM model")
     },
     async ({ command, argument, model }) => {
-      const cliPath = path.resolve(process.cwd(), 'myai', 'cli.py');
-      const args = [cliPath, command, argument];
+      const pythonPath = path.resolve(process.cwd(), '.venv', 'Scripts', 'python.exe');
+      const args = ["-m", "myai.cli", command, argument];
       
       if (model) {
           args.push("--model", model);
       }
 
       return new Promise((resolve) => {
-        const proc = spawn("python", args, {
-          cwd: path.resolve(process.cwd(), 'myai'),
+        const proc = spawn(pythonPath, args, {
+          cwd: process.cwd(),
           shell: true
         });
 

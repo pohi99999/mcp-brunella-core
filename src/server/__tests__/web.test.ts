@@ -1,7 +1,7 @@
 import request from 'supertest';
-import { createApp } from '../web';
+import { createApp } from '../web.js';
 
-describe('Web Server Static Serving', () => {
+describe('Web Server', () => {
     let app: any;
 
     beforeAll(() => {

@@ -1,7 +1,7 @@
-import { Logger, LogLevel } from '../logger';
-import fs from 'fs/promises';
+import { Logger, LogLevel } from '../logger.js';
+import fs from 'fs';
 import path from 'path';
-import { config } from '../../config';
+import { config } from '../../config/index.js';
 
 // Mock fs module
 jest.mock('fs/promises');

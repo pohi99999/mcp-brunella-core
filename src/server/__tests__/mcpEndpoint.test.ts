@@ -1,5 +1,5 @@
 import request from 'supertest';
-import { createApp, setupMcpEndpoints } from '../web';
+import { createApp, setupMcpEndpoints } from '../web.js';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 
