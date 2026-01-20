@@ -29,10 +29,10 @@
     - [x] Mount sub-servers in `main.py`
 - [x] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
 
-## Phase 4: Ellenőrzés és Dokumentáció
+## Phase 4: Ellenőrzés és Dokumentáció [checkpoint: 5bf97c9]
 - [x] Task: Szerver indítása és SSE végpontok tesztelése (curl vagy MCP Inspector).
     - [x] Verify server startup
     - [x] Test SSE connection
 - [x] Task: `README.md` frissítése az új Python alapú architektúrával.
     - [x] Update documentation
-- [ ] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md)
