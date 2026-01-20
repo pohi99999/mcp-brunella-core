@@ -3,7 +3,7 @@
 ## Phase 1: Alapstruktúra és Függőségek
 - [x] Task: Python környezet és `myai/` könyvtárstruktúra kialakítása. [211893b]
 - [x] Task: `requirements.txt` létrehozása és csomagok telepítése. [3c21491]
-- [ ] Task: `config.py` és alap LLM hívások (`core/llm.py`) implementálása.
+- [x] Task: `config.py` és alap LLM hívások (`core/llm.py`) implementálása. [6c3b2e9]
 
 ## Phase 2: Core Modulok és Eszközök
 - [ ] Task: Sandbox környezet (`core/sandbox.py`) megvalósítása.
