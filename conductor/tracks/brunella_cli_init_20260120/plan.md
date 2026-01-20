@@ -11,7 +11,7 @@
 - [x] Task: Multi-ágens logika (`core/agent.py`) implementálása. [66ac462]
 
 ## Phase 3: CLI és MCP Integráció
-- [ ] Task: Fő CLI interfész (`cli.py`) létrehozása Typer alapokon.
+- [x] Task: Fő CLI interfész (`cli.py`) létrehozása Typer alapokon. [6c3b2e9]
 - [ ] Task: Az új CLI regisztrálása MCP eszközként a Cogella Core-ban.
 - [ ] Task: Tesztelés: `dev_agent` futtatása a kalkulátor példával.
 - [ ] Task: Conductor - User Manual Verification
