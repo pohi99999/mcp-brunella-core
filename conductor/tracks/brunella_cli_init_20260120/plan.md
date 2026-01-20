@@ -5,7 +5,7 @@
 - [x] Task: `requirements.txt` létrehozása és csomagok telepítése. [3c21491]
 - [x] Task: `config.py` és alap LLM hívások (`core/llm.py`) implementálása. [6c3b2e9]
 
-## Phase 2: Core Modulok és Eszközök
+## Phase 2: Core Modulok és Eszközök [checkpoint: 56bcd2c]
 - [x] Task: Sandbox környezet (`core/sandbox.py`) megvalósítása. [7c0a5b2]
 - [x] Task: Projekt segédeszközök (`core/tools.py` és `core/project.py`) beépítése. [3d13ef5]
 - [x] Task: Multi-ágens logika (`core/agent.py`) implementálása. [66ac462]
