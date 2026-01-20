@@ -15,14 +15,14 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md) [checkpoint: d730a1f]
 
 ## Phase 2: Backend Integration (Serving & MCP)
-- [ ] Task: Serve Dashboard Static Files
-    - [ ] TDD: Create tests for static file serving in `src/server/web.ts`.
-    - [ ] Implement static file serving in Express (`src/server/web.ts`) to serve the build output.
-- [ ] Task: MCP Client-Server Bridge
-    - [ ] TDD: Verify MCP endpoint availability/connectivity for the frontend.
-    - [ ] Ensure frontend MCP client configuration points to the correct backend WebSocket/HTTP endpoints.
-    - [ ] Verify basic "Ping" or "ListTools" functionality from the integrated dashboard.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [x] Task: Serve Dashboard Static Files
+    - [x] TDD: Create tests for static file serving in `src/server/web.ts`.
+    - [x] Implement static file serving in Express (`src/server/web.ts`) to serve the build output.
+- [x] Task: MCP Client-Server Bridge
+    - [x] TDD: Verify MCP endpoint availability/connectivity for the frontend.
+    - [x] Ensure frontend MCP client configuration points to the correct backend WebSocket/HTTP endpoints.
+    - [x] Verify basic "Ping" or "ListTools" functionality from the integrated dashboard.
+- [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md) [checkpoint: ea9d028]
 
 ## Phase 3: Agent Management System Implementation
 - [ ] Task: Agent Listing & Visualization UI
