@@ -23,4 +23,4 @@
     - [x] Invoke Jules to run Scenario 1 from `TEST_BOOK.md`.
     - [x] Evaluate Jules' ability to identify and fix a simulated bug.
 - [x] Task: Refine AGENTS.md based on performance. [a61c8e8]
-- [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md) [4a36fad]
