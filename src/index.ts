@@ -12,6 +12,7 @@ import { registerClaudeTool } from "./tools/claudeTool.js";
 import { registerPipelineTools } from "./pipeline/llmPipeline.js";
 import { registerGoogleWorkspaceTools } from "./tools/googleWorkspace.js";
 import { registerAnythingLLMTools } from "./tools/anythingllm.js";
+import { registerMonitorTools } from "./tools/monitor.js";
 import { startWebServer } from "./server/web.js";
 import { agentManager } from "./agents/AgentManager.js";
 import { z } from "zod";
@@ -35,6 +36,7 @@ registerClaudeTool(server);
 registerPipelineTools(server);
 registerGoogleWorkspaceTools(server);
 registerAnythingLLMTools(server);
+registerMonitorTools(server);
 
 // Register Agent Tools
 server.tool(

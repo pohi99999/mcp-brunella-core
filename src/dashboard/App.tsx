@@ -9,6 +9,7 @@ import { LogViewer } from '@/components/dashboard/LogViewer'
 import { ConfigEditor } from '@/components/dashboard/ConfigEditor'
 import { ChatInterface } from '@/components/dashboard/ChatInterface'
 import { AgentManager } from '@/components/dashboard/AgentManager'
+import { KnowledgeBase } from '@/components/dashboard/KnowledgeBase'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { UserProfile } from '@/components/auth/UserProfile'
 import { ServerState, LogEntry, ConfigItem, ServerMetrics, User, AgentTool } from '@/lib/types'
@@ -21,7 +22,7 @@ import {
 } from '@/lib/mockData'
 import { canPerformAction } from '@/lib/auth'
 import { externalApiService } from '@/lib/externalApiService'
-import { ChartLine, Terminal, Gear, ChatCircle, Toolbox } from '@phosphor-icons/react'
+import { ChartLine, Terminal, Gear, ChatCircle, Toolbox, Books } from '@phosphor-icons/react'
 
 function App() {
   const [user, setUser] = useKV<User | null>('auth-user', null)
@@ -364,7 +365,7 @@ function App() {
         </header>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl grid-cols-5">
+          <TabsList className="grid w-full max-w-4xl grid-cols-6">
             <TabsTrigger value="overview" className="flex items-center gap-2">
               <ChartLine size={18} />
               Áttekintés
@@ -383,7 +384,11 @@ function App() {
             </TabsTrigger>
             <TabsTrigger value="agents" className="flex items-center gap-2">
               <Toolbox size={18} />
-              Agent Tools
+              Agents
+            </TabsTrigger>
+            <TabsTrigger value="knowledge" className="flex items-center gap-2">
+              <Books size={18} />
+              Knowledge
             </TabsTrigger>
           </TabsList>
 
@@ -425,6 +430,10 @@ function App() {
 
           <TabsContent value="agents">
             <AgentManager />
+          </TabsContent>
+
+          <TabsContent value="knowledge">
+            <KnowledgeBase />
           </TabsContent>
         </Tabs>
       </div>
