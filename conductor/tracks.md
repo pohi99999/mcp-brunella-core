@@ -6,8 +6,3 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: A Cogella Core alapstruktúra és aszinkron Gateway alapozása**
   *Link: [./tracks/cogella_core_init_20260120/](./tracks/cogella_core_init_20260120/)*
-
----
-
-- [x] **Track: Integration of Jules as Hybrid DevOps Partner and QA Agent.**
-  *Link: [./tracks/jules-qa-integration_20260120/](./tracks/jules-qa-integration_20260120/)*
