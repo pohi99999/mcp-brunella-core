@@ -22,5 +22,5 @@
 - [x] Task: Perform First Semantic Test with Jules [1e0e2d9]
     - [x] Invoke Jules to run Scenario 1 from `TEST_BOOK.md`.
     - [x] Evaluate Jules' ability to identify and fix a simulated bug.
-- [ ] Task: Refine AGENTS.md based on performance.
+- [x] Task: Refine AGENTS.md based on performance. [a61c8e8]
 - [ ] Task: Conductor - User Manual Verification 'Phase 3' (Protocol in workflow.md)
