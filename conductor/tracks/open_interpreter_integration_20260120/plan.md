@@ -5,7 +5,7 @@
 - [x] Task: `src/tools/openInterpreter.ts` létrehozása. [56bef0a]
 
 ## Phase 2: Implementáció
-- [ ] Task: Az `interpreter_open_query` eszköz megvalósítása child_process hívással.
+- [x] Task: Az `interpreter_open_query` eszköz megvalósítása child_process hívással. [56bef0a]
 - [ ] Task: Az új eszköz regisztrálása a `src/index.ts`-ben.
 
 ## Phase 3: Tesztelés
