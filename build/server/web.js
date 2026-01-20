@@ -32,6 +32,11 @@ async function chatWithOllama(prompt, system = "") {
 }
 const logger = new logger_js_1.Logger('web_ui.log');
 function startWebServer() {
+    const webUiEnabled = process.env.WEB_UI_ENABLED !== "0" && process.env.WEB_UI_ENABLED !== "false";
+    if (!webUiEnabled) {
+        console.error("WEB_UI_ENABLED=0 -> Web UI disabled");
+        return;
+    }
     (0, db_js_1.initDb)();
     const app = (0, express_1.default)();
     const httpServer = (0, http_1.createServer)(app);
@@ -98,7 +103,8 @@ ${result}
             }
         });
     });
-    const PORT = 3000;
+    const portValue = Number(process.env.WEB_UI_PORT || 3000);
+    const PORT = Number.isFinite(portValue) ? portValue : 3000;
     httpServer.listen(PORT, () => {
         console.error(`🌐 Web UI: http://localhost:${PORT}`);
     });

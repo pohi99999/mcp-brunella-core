@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import path from "path";
 import { execCommand } from "../utils/exec.js";
 import { config } from "../config/index.js";
 

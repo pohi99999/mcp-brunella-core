@@ -13,6 +13,7 @@ const ollamaTool_js_1 = require("./tools/ollamaTool.js");
 const claudeTool_js_1 = require("./tools/claudeTool.js");
 const llmPipeline_js_1 = require("./pipeline/llmPipeline.js");
 const googleWorkspace_js_1 = require("./tools/googleWorkspace.js");
+const anythingllm_js_1 = require("./tools/anythingllm.js");
 const web_js_1 = require("./server/web.js");
 const AgentManager_js_1 = require("./agents/AgentManager.js");
 const zod_1 = require("zod");
@@ -33,11 +34,18 @@ const server = new mcp_js_1.McpServer({
 (0, claudeTool_js_1.registerClaudeTool)(server);
 (0, llmPipeline_js_1.registerPipelineTools)(server);
 (0, googleWorkspace_js_1.registerGoogleWorkspaceTools)(server);
+(0, anythingllm_js_1.registerAnythingLLMTools)(server);
 // Register Agent Tools
 server.tool("agent_list", "Lists all available active agents.", {}, async () => {
-    const agents = AgentManager_js_1.agentManager.listAgents();
+    const agents = AgentManager_js_1.agentManager.listAgentDefinitions();
     return {
-        content: [{ type: "text", text: `Available Agents:\n${agents.join('\n')}` }]
+        content: [{ type: "text", text: JSON.stringify(agents, null, 2) }]
+    };
+});
+server.tool("agent_registry", "Lists all agent definitions from the registry (active + planned).", {}, async () => {
+    const agents = AgentManager_js_1.agentManager.listRegistryDefinitions();
+    return {
+        content: [{ type: "text", text: JSON.stringify(agents, null, 2) }]
     };
 });
 server.tool("agent_delegate", "Delegates a task to a specific agent.", {

@@ -50,6 +50,7 @@ async function runPythonCode(code: string): Promise<{ content: { type: "text", t
 
         const timeout = setTimeout(() => {
             proc.kill();
+            fs.unlink(filePath).catch(() => {});
             resolve({
                 isError: true,
                 content: [{ type: "text", text: `Execution timed out (${TIMEOUT_MS}ms).` }]
@@ -72,27 +73,58 @@ async function runPythonCode(code: string): Promise<{ content: { type: "text", t
 async function runNodeCode(code: string): Promise<{ content: { type: "text", text: string }[], isError?: boolean }> {
     return new Promise((resolve) => {
         try {
+            let output = '';
+            let outputSize = 0;
+
+            const appendOutput = (text: string) => {
+                outputSize += Buffer.byteLength(text, 'utf8');
+                if (outputSize > MAX_OUTPUT_SIZE) {
+                    throw new Error(`Execution terminated: Output exceeded limit (${MAX_OUTPUT_SIZE} bytes).`);
+                }
+                output += text;
+            };
+
             const vm = new VM({
                 timeout: TIMEOUT_MS,
                 sandbox: {
                     console: {
                         log: (...args: any[]) => {
-                            output += args.map(a => String(a)).join(' ') + '\n';
+                            appendOutput(args.map(a => String(a)).join(' ') + '\n');
                         },
                         error: (...args: any[]) => {
-                            output += '[ERROR] ' + args.map(a => String(a)).join(' ') + '\n';
+                            appendOutput('[ERROR] ' + args.map(a => String(a)).join(' ') + '\n');
                         }
                     }
                 }
             });
-
-            let output = '';
             
             // Capture output logic is manual in vm2, 
             // usually we redirect console.log in sandbox.
             
             const result = vm.run(code);
-            
+            if (result instanceof Promise) {
+                const timeoutPromise = new Promise((_, reject) => {
+                    setTimeout(() => reject(new Error(`Execution timed out (${TIMEOUT_MS}ms).`)), TIMEOUT_MS);
+                });
+
+                Promise.race([result, timeoutPromise])
+                    .then((resolved) => {
+                        resolve({
+                            content: [{
+                                type: "text",
+                                text: `Output:\n${output}\n\nReturn Value:\n${String(resolved)}`
+                            }]
+                        });
+                    })
+                    .catch((error: any) => {
+                        resolve({
+                            isError: true,
+                            content: [{ type: "text", text: `Sandbox Error: ${error?.message || String(error)}` }]
+                        });
+                    });
+                return;
+            }
+
             resolve({
                 content: [{
                     type: "text",

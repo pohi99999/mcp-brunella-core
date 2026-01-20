@@ -1,7 +1,11 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.registerJulesCliTool = registerJulesCliTool;
 const zod_1 = require("zod");
+const path_1 = __importDefault(require("path"));
 const exec_js_1 = require("../utils/exec.js");
 const index_js_1 = require("../config/index.js");
 const WHITELISTED_COMMANDS = ['run', 'ask', 'task', 'agent'];
@@ -22,7 +26,7 @@ function registerJulesCliTool(server) {
             // Safety: split args string carefully or pass as single arg if possible.
             // CLI tools often take a single string for prompt.
             // We'll pass it as is, relying on execCommand's shell handling but sanitized by usage intent.
-            const julesPath = path.join(index_js_1.config.workspaceRoot, '08_SCRIPTS', 'npm-global', 'jules.cmd');
+            const julesPath = path_1.default.join(index_js_1.config.workspaceRoot, '08_SCRIPTS', 'npm-global', 'jules.cmd');
             const cmdArgs = [subcommand, args];
             const result = await (0, exec_js_1.execCommand)(julesPath, cmdArgs, {
                 cwd: index_js_1.config.workspaceRoot,

@@ -29,6 +29,12 @@ async function chatWithOllama(prompt: string, system: string = ""): Promise<stri
 const logger = new Logger('web_ui.log');
 
 export function startWebServer() {
+    const webUiEnabled = process.env.WEB_UI_ENABLED !== "0" && process.env.WEB_UI_ENABLED !== "false";
+    if (!webUiEnabled) {
+        console.error("WEB_UI_ENABLED=0 -> Web UI disabled");
+        return;
+    }
+
     initDb();
 
     const app = express();
@@ -102,7 +108,8 @@ ${result}
         });
     });
 
-    const PORT = 3000;
+    const portValue = Number(process.env.WEB_UI_PORT || 3000);
+    const PORT = Number.isFinite(portValue) ? portValue : 3000;
     httpServer.listen(PORT, () => {
         console.error(`🌐 Web UI: http://localhost:${PORT}`);
     });

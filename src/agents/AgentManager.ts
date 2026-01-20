@@ -2,14 +2,32 @@ import { IAgent, AgentRegistry } from "./types.js";
 import { Logger } from "../utils/logger.js";
 import { searchRAG } from "../utils/rag.js";
 import { SelfHealingPipeline } from "../pipeline/llmPipeline.js";
+import fs from "fs";
+import path from "path";
 
 const logger = new Logger('agent-manager.log');
 
 export class AgentManager {
     private agents: AgentRegistry = {};
+    private definitions: Record<string, AgentDefinition> = {};
 
     constructor() {
+        this.loadRegistry();
         this.registerBuiltInAgents();
+    }
+
+    private loadRegistry() {
+        const registryPath = path.join(process.cwd(), "src", "agents", "registry.json");
+        try {
+            const raw = fs.readFileSync(registryPath, "utf-8");
+            const data = JSON.parse(raw) as AgentRegistryFile;
+            this.definitions = Object.fromEntries(
+                (data.agents || []).map((agent) => [agent.name, agent])
+            );
+            logger.log(`Agent registry loaded: ${registryPath}`);
+        } catch (error: any) {
+            logger.log(`Agent registry load failed: ${error.message}`);
+        }
     }
 
     private registerBuiltInAgents() {
@@ -64,6 +82,24 @@ export class AgentManager {
         return Object.keys(this.agents);
     }
 
+    public listAgentDefinitions(): AgentDefinition[] {
+        const registered = this.listAgents();
+        const definitions = registered.map((name) => this.definitions[name]).filter(Boolean);
+        return definitions.length > 0
+            ? definitions
+            : registered.map((name) => ({
+                name,
+                title: name,
+                description: "",
+                capabilities: [],
+                status: "active"
+            }));
+    }
+
+    public listRegistryDefinitions(): AgentDefinition[] {
+        return Object.values(this.definitions);
+    }
+
     public async delegate(agentName: string, task: string): Promise<string> {
         const agent = this.getAgent(agentName);
         if (!agent) {
@@ -74,3 +110,20 @@ export class AgentManager {
 }
 
 export const agentManager = new AgentManager();
+
+interface AgentDefinition {
+    name: string;
+    title: string;
+    description: string;
+    capabilities: string[];
+    tools?: string[];
+    notes?: string;
+    category?: string;
+    status?: "active" | "planned" | "deprecated";
+    tags?: string[];
+}
+
+interface AgentRegistryFile {
+    version: number;
+    agents: AgentDefinition[];
+}

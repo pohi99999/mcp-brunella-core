@@ -11,6 +11,7 @@ import { registerOllamaTool } from "./tools/ollamaTool.js";
 import { registerClaudeTool } from "./tools/claudeTool.js";
 import { registerPipelineTools } from "./pipeline/llmPipeline.js";
 import { registerGoogleWorkspaceTools } from "./tools/googleWorkspace.js";
+import { registerAnythingLLMTools } from "./tools/anythingllm.js";
 import { startWebServer } from "./server/web.js";
 import { agentManager } from "./agents/AgentManager.js";
 import { z } from "zod";
@@ -33,6 +34,7 @@ registerOllamaTool(server);
 registerClaudeTool(server);
 registerPipelineTools(server);
 registerGoogleWorkspaceTools(server);
+registerAnythingLLMTools(server);
 
 // Register Agent Tools
 server.tool(
@@ -40,9 +42,21 @@ server.tool(
     "Lists all available active agents.",
     {},
     async () => {
-        const agents = agentManager.listAgents();
+        const agents = agentManager.listAgentDefinitions();
         return {
-            content: [{ type: "text", text: `Available Agents:\n${agents.join('\n')}` }]
+            content: [{ type: "text", text: JSON.stringify(agents, null, 2) }]
+        };
+    }
+);
+
+server.tool(
+    "agent_registry",
+    "Lists all agent definitions from the registry (active + planned).",
+    {},
+    async () => {
+        const agents = agentManager.listRegistryDefinitions();
+        return {
+            content: [{ type: "text", text: JSON.stringify(agents, null, 2) }]
         };
     }
 );
