@@ -63,3 +63,10 @@ To trigger Jules for a QA task or bug fix locally:
     -   *Example Issue:* "QA: Run full regression test suite."
 3.  Assign Jules to the issue (if configured).
 4.  Jules will comment with results and open PRs for fixes.
+
+## 6. QA Scenarios & Tools
+Jules uses the following MCP tools for testing:
+- `monitor_get_metrics`: Core health check (uptime, memory).
+- `agent_list`: Verifies registry integrity.
+- `knowledge_semantic_search`: Verifies RAG functionality.
+- `system_run_command`: (Restricted) For environment checks.
