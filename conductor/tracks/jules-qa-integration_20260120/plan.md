@@ -1,14 +1,14 @@
 # Implementation Plan - Jules Agent Integration & QA Role
 
 ## Phase 1: Foundation & Instructions
-- [ ] Task: Create AGENTS.md
-    - [ ] Draft global agent architecture section.
-    - [ ] Define Jules' persona as a Hybrid DevOps Partner.
-    - [ ] Document technical access points (src, logs, DB).
-- [ ] Task: Integrate TEST_BOOK.md
-    - [ ] Map testing scenarios to Jules' tools.
-    - [ ] Define reporting format for Jules' test runs.
-- [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
+- [x] Task: Create AGENTS.md
+    - [x] Draft global agent architecture section.
+    - [x] Define Jules' persona as a Hybrid DevOps Partner.
+    - [x] Document technical access points (src, logs, DB).
+- [x] Task: Integrate TEST_BOOK.md
+    - [x] Map testing scenarios to Jules' tools.
+    - [x] Define reporting format for Jules' test runs.
+- [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md) [checkpoint: fc21bef]
 
 ## Phase 2: Technical Enablement & Scripting
 - [ ] Task: Setup Maintenance Scripts
