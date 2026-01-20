@@ -11,9 +11,9 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md) [checkpoint: fc21bef]
 
 ## Phase 2: Technical Enablement & Scripting
-- [ ] Task: Setup Maintenance Scripts
-    - [ ] Create `scripts/jules_check.mjs` to trigger local sanity checks.
-    - [ ] Ensure logs are accessible and formatted for AI parsing.
+- [x] Task: Setup Maintenance Scripts [8bf924f]
+    - [x] Create `scripts/jules_check.mjs` to trigger local sanity checks.
+    - [x] Ensure logs are accessible and formatted for AI parsing.
 - [ ] Task: Configure GitHub integration (Conceptual)
     - [ ] Document the process of calling Jules from CLI/Web for QA tasks.
 - [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
