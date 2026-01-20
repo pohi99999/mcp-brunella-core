@@ -23,6 +23,12 @@
 - **Integráció:** Google Workspace API-k (GoogleAuth)
 - **Logika:** Kód alapú automatizáció (Python scriptek prioritással az n8n helyett/mellett)
 
+## Frontend (Dashboard)
+- **Keretrendszer:** React 19 (Vite)
+- **Stílus:** Tailwind CSS v4
+- **UI komponensek:** Shadcn/UI, Radix UI
+- **Kommunikáció:** MCP Client (SSE)
+
 ## Fejlesztői Környezet
 - **CLI:** Gemini CLI
 - **Környezet:** Windows + WSL 2 + Docker

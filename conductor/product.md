@@ -18,6 +18,7 @@ A Cogella Core a Brunella Agent System (BAS) "digitális idegrendszere". Egy oly
 - **Google Workspace Nexus:** Szemantikus naptárkezelés és Gmail RAG alapú keresés.
 - **n8n Kétirányú Híd:** Automatizációs munkafolyamatok indítása és az ágens visszahívása az n8n folyamatokból.
 - **Böngésző Vezérlés:** Playwright alapú webes navigáció és adatgyűjtés.
+- **Központi Irányítópult (Dashboard):** Modern webes felület (React/Vite) a rendszer felügyeletére, az ügynökök menedzselésére és a tudásbázis vizualizációjára.
 
 ## Működési Környezet
 - A rendszer az `F:\OneDrive\Desktop\Brunella_es_en` munkaterületen belül működik, szigorúan betartva a könyvtárfa szabályait.
