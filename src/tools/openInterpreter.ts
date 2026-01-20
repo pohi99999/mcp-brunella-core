@@ -3,7 +3,7 @@ import { z } from "zod";
 import { spawn } from "child_process";
 import path from 'path';
 
-export function registerInterpreterTools(server: McpServer) {
+export function registerOpenInterpreterTools(server: McpServer) {
   
   server.tool(
     "interpreter_open_query",
