@@ -6,6 +6,8 @@ import { config } from '../config/index.js';
 import { Logger } from '../utils/logger.js';
 import { SelfHealingPipeline } from '../pipeline/llmPipeline.js';
 import { initDb, saveMessage, getMessages, createChat, DbMessage } from '../utils/db.js';
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 
 async function chatWithOllama(prompt: string, system: string = ""): Promise<string> {
     try {
@@ -27,22 +29,21 @@ async function chatWithOllama(prompt: string, system: string = ""): Promise<stri
 }
 
 const logger = new Logger('web_ui.log');
+const transports = new Map<string, SSEServerTransport>();
 
-export function startWebServer() {
-    const webUiEnabled = process.env.WEB_UI_ENABLED !== "0" && process.env.WEB_UI_ENABLED !== "false";
-    if (!webUiEnabled) {
-        console.error("WEB_UI_ENABLED=0 -> Web UI disabled");
-        return;
-    }
-
+export function createApp() {
     initDb();
-
     const app = express();
-    const httpServer = createServer(app);
-    const io = new Server(httpServer);
-
+    
+    // Priority: Serve from build/public (dashboard build)
+    app.use(express.static(path.join(process.cwd(), 'build', 'public')));
+    // Fallback: Serve from public (legacy or assets)
     app.use(express.static(path.join(process.cwd(), 'public')));
 
+    return app;
+}
+
+function setupSocket(io: Server) {
     io.on('connection', (socket) => {
         const DEFAULT_CHAT_ID = 'main-session';
         
@@ -85,7 +86,7 @@ export function startWebServer() {
 
                 try {
                     const result = await pipeline.run(userMsg);
-                    const finalMsg = `✅ Kész! Itt az eredmény:\n\n\`\`\`javascript\n${result}\n\`\`\``;
+                    const finalMsg = "✅ Kész! Itt az eredmény:\n\n```javascript\n" + result + "\n```";
                     socket.emit('bot_message', { text: finalMsg });
                     saveMessage(DEFAULT_CHAT_ID, 'bot', finalMsg);
                 } catch (e: unknown) {
@@ -102,6 +103,51 @@ export function startWebServer() {
             }
         });
     });
+}
+
+export function setupMcpEndpoints(app: express.Application, mcpServer: McpServer) {
+    console.log("Setting up MCP SSE endpoints...");
+    app.get('/sse', async (req, res) => {
+        const transport = new SSEServerTransport("/message", res);
+        transports.set(transport.sessionId, transport);
+        
+        transport.onclose = () => {
+            transports.delete(transport.sessionId);
+        };
+
+        await mcpServer.connect(transport);
+        await transport.start();
+    });
+
+    app.post('/message', async (req, res) => {
+        const sessionId = req.query.sessionId as string;
+        const transport = transports.get(sessionId);
+        
+        if (!transport) {
+            res.status(404).send("Session not found");
+            return;
+        }
+        
+        await transport.handlePostMessage(req, res);
+    });
+}
+
+export function startWebServer(mcpServer?: McpServer) {
+    const webUiEnabled = process.env.WEB_UI_ENABLED !== "0" && process.env.WEB_UI_ENABLED !== "false";
+    if (!webUiEnabled) {
+        console.error("WEB_UI_ENABLED=0 -> Web UI disabled");
+        return;
+    }
+
+    const app = createApp();
+    const httpServer = createServer(app);
+    const io = new Server(httpServer);
+
+    if (mcpServer) {
+        setupMcpEndpoints(app, mcpServer);
+    }
+
+    setupSocket(io);
 
     const portValue = Number(process.env.WEB_UI_PORT || 3000);
     const PORT = Number.isFinite(portValue) ? portValue : 3000;

@@ -102,7 +102,7 @@ server.tool(
 
 async function main() {
   // Start Web Interface
-  startWebServer();
+  startWebServer(server);
 
   const transport = new StdioServerTransport();
   await server.connect(transport);
