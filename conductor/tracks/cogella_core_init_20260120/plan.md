@@ -9,14 +9,14 @@
     - [x] Create directory structure
 - [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
-## Phase 2: Gateway Implementáció
+## Phase 2: Gateway Implementáció [checkpoint: e69cafb]
 - [x] Task: Központi `main.py` létrehozása FastAPI és FastMCP alapokon.
     - [x] Implement `lifespan` context manager
     - [x] Setup FastAPI app
     - [x] Configure SSE endpoints
 - [x] Task: Health check végpont implementálása (`/health`).
     - [x] Add async health check endpoint
-- [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
 ## Phase 3: Moduláris Routerek Vázának Létrehozása
 - [ ] Task: `workspace.py` modul vázának elkészítése (FastMCP példány).
