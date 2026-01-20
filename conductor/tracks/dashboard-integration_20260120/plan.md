@@ -1,18 +1,18 @@
 # Implementation Plan - Dashboard Integration & Enhancement
 
 ## Phase 1: Code Integration & Environment Setup
-- [ ] Task: Import Dashboard Source Code
-    - [ ] Clone/Download `mcp-brunella-core-ir` repository.
-    - [ ] Analyze structure and copy relevant source code to `src/dashboard` (or `frontend`).
-    - [ ] Copy static assets to `public/`.
-- [ ] Task: Merge Dependencies & Configuration
-    - [ ] Analyze `package.json` from IR repo and merge dependencies into project root `package.json`.
-    - [ ] Configure build tool (Vite/Webpack) for the frontend within the monorepo structure.
-    - [ ] Create/Update `tsconfig.json` for frontend specific needs.
-- [ ] Task: Setup Build Pipelines
-    - [ ] Create npm scripts for building the dashboard (`npm run build:ui`).
-    - [ ] Create npm scripts for developing the dashboard (`npm run dev:ui`).
-- [ ] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
+- [x] Task: Import Dashboard Source Code
+    - [x] Clone/Download `mcp-brunella-core-ir` repository.
+    - [x] Analyze structure and copy relevant source code to `src/dashboard` (or `frontend`).
+    - [x] Copy static assets to `public/`.
+- [x] Task: Merge Dependencies & Configuration
+    - [x] Analyze `package.json` from IR repo and merge dependencies into project root `package.json`.
+    - [x] Configure build tool (Vite/Webpack) for the frontend within the monorepo structure.
+    - [x] Create/Update `tsconfig.json` for frontend specific needs.
+- [x] Task: Setup Build Pipelines
+    - [x] Create npm scripts for building the dashboard (`npm run build:ui`).
+    - [x] Create npm scripts for developing the dashboard (`npm run dev:ui`).
+- [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md) [checkpoint: d730a1f]
 
 ## Phase 2: Backend Integration (Serving & MCP)
 - [ ] Task: Serve Dashboard Static Files
