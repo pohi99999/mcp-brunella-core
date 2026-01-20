@@ -29,9 +29,10 @@ export function registerJulesCliTool(server: McpServer) {
                 // CLI tools often take a single string for prompt.
                 // We'll pass it as is, relying on execCommand's shell handling but sanitized by usage intent.
                 
+                const julesPath = path.join(config.workspaceRoot, '08_SCRIPTS', 'npm-global', 'jules.cmd');
                 const cmdArgs = [subcommand, args];
 
-                const result = await execCommand('jules', cmdArgs, {
+                const result = await execCommand(julesPath, cmdArgs, {
                     cwd: config.workspaceRoot,
                     timeout: 120000 // Jules agents might take longer
                 });

@@ -14,6 +14,8 @@ const claudeTool_js_1 = require("./tools/claudeTool.js");
 const llmPipeline_js_1 = require("./pipeline/llmPipeline.js");
 const googleWorkspace_js_1 = require("./tools/googleWorkspace.js");
 const web_js_1 = require("./server/web.js");
+const AgentManager_js_1 = require("./agents/AgentManager.js");
+const zod_1 = require("zod");
 // Create server instance
 const server = new mcp_js_1.McpServer({
     name: "mcp-brunella-core",
@@ -31,6 +33,30 @@ const server = new mcp_js_1.McpServer({
 (0, claudeTool_js_1.registerClaudeTool)(server);
 (0, llmPipeline_js_1.registerPipelineTools)(server);
 (0, googleWorkspace_js_1.registerGoogleWorkspaceTools)(server);
+// Register Agent Tools
+server.tool("agent_list", "Lists all available active agents.", {}, async () => {
+    const agents = AgentManager_js_1.agentManager.listAgents();
+    return {
+        content: [{ type: "text", text: `Available Agents:\n${agents.join('\n')}` }]
+    };
+});
+server.tool("agent_delegate", "Delegates a task to a specific agent.", {
+    agent_name: zod_1.z.string().describe("Name of the agent (e.g., 'researcher', 'developer')"),
+    task: zod_1.z.string().describe("The task description")
+}, async ({ agent_name, task }) => {
+    try {
+        const result = await AgentManager_js_1.agentManager.delegate(agent_name, task);
+        return {
+            content: [{ type: "text", text: result }]
+        };
+    }
+    catch (e) {
+        return {
+            isError: true,
+            content: [{ type: "text", text: `Agent Error: ${e.message}` }]
+        };
+    }
+});
 server.tool("ping", "A simple ping tool to verify the server is running.", {}, async () => {
     return {
         content: [

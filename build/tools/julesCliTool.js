@@ -22,8 +22,9 @@ function registerJulesCliTool(server) {
             // Safety: split args string carefully or pass as single arg if possible.
             // CLI tools often take a single string for prompt.
             // We'll pass it as is, relying on execCommand's shell handling but sanitized by usage intent.
+            const julesPath = path.join(index_js_1.config.workspaceRoot, '08_SCRIPTS', 'npm-global', 'jules.cmd');
             const cmdArgs = [subcommand, args];
-            const result = await (0, exec_js_1.execCommand)('jules', cmdArgs, {
+            const result = await (0, exec_js_1.execCommand)(julesPath, cmdArgs, {
                 cwd: index_js_1.config.workspaceRoot,
                 timeout: 120000 // Jules agents might take longer
             });
