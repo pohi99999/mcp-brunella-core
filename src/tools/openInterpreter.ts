@@ -14,10 +14,15 @@ export function registerInterpreterTools(server: McpServer) {
     async ({ prompt }) => {
       // Fixed path based on environmental validation
       const interpreterPath = "F:\\OneDrive\\Desktop\\Brunella_es_en\\open-interpreter\\venv311\\Scripts\\interpreter.exe";
-      const configPath = "F:\\OneDrive\\Desktop\\Brunella_es_en\\open-interpreter\\config.yaml";
       
-      // Using -y for non-interactive mode and specifying the config
-      const args = ["-y", "--config", configPath, prompt];
+      // Using -y for non-interactive mode, --plain for cleaner output, and specifying Ollama to avoid interactive menu
+      const args = [
+        "-y", 
+        "--plain", 
+        "--stdin",
+        "--model", "ollama/tinyllama", 
+        "--api_base", "http://localhost:11434"
+      ];
 
       return new Promise((resolve) => {
         const proc = spawn(interpreterPath, args, {
@@ -30,6 +35,10 @@ export function registerInterpreterTools(server: McpServer) {
 
         proc.stdout.on('data', (data) => stdout += data);
         proc.stderr.on('data', (data) => stderr += data);
+
+        // Send the prompt via stdin
+        proc.stdin.write(prompt + "\n");
+        proc.stdin.end();
 
         proc.on('close', (code) => {
           resolve({
