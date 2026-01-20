@@ -7,7 +7,7 @@
 
 ## Phase 2: Core Modulok és Eszközök
 - [x] Task: Sandbox környezet (`core/sandbox.py`) megvalósítása. [7c0a5b2]
-- [ ] Task: Projekt segédeszközök (`core/tools.py` és `core/project.py`) beépítése.
+- [x] Task: Projekt segédeszközök (`core/tools.py` és `core/project.py`) beépítése. [3d13ef5]
 - [ ] Task: Multi-ágens logika (`core/agent.py`) implementálása.
 
 ## Phase 3: CLI és MCP Integráció
