@@ -19,12 +19,14 @@ export class AgentManager {
     private loadRegistry() {
         const registryPath = path.join(process.cwd(), "src", "agents", "registry.json");
         try {
-            const raw = fs.readFileSync(registryPath, "utf-8");
-            const data = JSON.parse(raw) as AgentRegistryFile;
-            this.definitions = Object.fromEntries(
-                (data.agents || []).map((agent) => [agent.name, agent])
-            );
-            logger.log(`Agent registry loaded: ${registryPath}`);
+            if (fs.existsSync(registryPath)) {
+                const raw = fs.readFileSync(registryPath, "utf-8");
+                const data = JSON.parse(raw) as AgentRegistryFile;
+                this.definitions = Object.fromEntries(
+                    (data.agents || []).map((agent) => [agent.name, agent])
+                );
+                logger.log(`Agent registry loaded: ${registryPath}`);
+            }
         } catch (error: unknown) {
             const errorMessage = error instanceof Error ? error.message : String(error);
             logger.log(`Agent registry load failed: ${errorMessage}`);
@@ -69,6 +71,20 @@ export class AgentManager {
                 }
             }
         });
+
+        // Sync built-ins to definitions
+        ['researcher', 'developer'].forEach(name => {
+            if (!this.definitions[name] && this.agents[name]) {
+                const agent = this.agents[name];
+                this.definitions[name] = {
+                    name: agent.name,
+                    title: agent.name.charAt(0).toUpperCase() + agent.name.slice(1),
+                    description: agent.description,
+                    capabilities: agent.capabilities,
+                    status: 'active'
+                };
+            }
+        });
     }
 
     public registerAgent(agent: IAgent) {
@@ -108,6 +124,40 @@ export class AgentManager {
             throw new Error(`Agent '${agentName}' not found.`);
         }
         return await agent.execute(task);
+    }
+
+    public updateAgent(name: string, updates: Partial<AgentDefinition>) {
+        if (!this.definitions[name]) {
+             // Try to find active agent
+             const agent = this.agents[name];
+             if (agent) {
+                 this.definitions[name] = {
+                     name: agent.name,
+                     title: agent.name,
+                     description: agent.description,
+                     capabilities: agent.capabilities,
+                     status: "active"
+                 };
+             } else {
+                 throw new Error(`Agent '${name}' not found.`);
+             }
+        }
+        
+        this.definitions[name] = { ...this.definitions[name], ...updates };
+        
+        // Save to file
+        const registryDir = path.join(process.cwd(), "src", "agents");
+        if (!fs.existsSync(registryDir)) fs.mkdirSync(registryDir, { recursive: true });
+        
+        const registryPath = path.join(registryDir, "registry.json");
+        const fileContent: AgentRegistryFile = {
+            version: 1,
+            agents: Object.values(this.definitions)
+        };
+        fs.writeFileSync(registryPath, JSON.stringify(fileContent, null, 2));
+        logger.log(`Agent updated and saved: ${name}`);
+        
+        return this.definitions[name];
     }
 }
 

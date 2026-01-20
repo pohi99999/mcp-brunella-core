@@ -8,7 +8,7 @@ import { MetricsCard } from '@/components/dashboard/MetricsCard'
 import { LogViewer } from '@/components/dashboard/LogViewer'
 import { ConfigEditor } from '@/components/dashboard/ConfigEditor'
 import { ChatInterface } from '@/components/dashboard/ChatInterface'
-import { AgentToolsManager } from '@/components/dashboard/AgentToolsManager'
+import { AgentManager } from '@/components/dashboard/AgentManager'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { UserProfile } from '@/components/auth/UserProfile'
 import { ServerState, LogEntry, ConfigItem, ServerMetrics, User, AgentTool } from '@/lib/types'
@@ -424,11 +424,7 @@ function App() {
           </TabsContent>
 
           <TabsContent value="agents">
-            <AgentToolsManager
-              tools={currentAgentTools}
-              user={currentUser}
-              onUpdateTools={setAgentTools}
-            />
+            <AgentManager />
           </TabsContent>
         </Tabs>
       </div>

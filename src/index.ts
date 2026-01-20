@@ -85,6 +85,33 @@ server.tool(
 );
 
 server.tool(
+    "agent_update",
+    "Updates an agent definition and saves it to the registry.",
+    {
+        name: z.string().describe("Name of the agent to update"),
+        updates: z.object({
+            description: z.string().optional(),
+            capabilities: z.array(z.string()).optional(),
+            status: z.enum(["active", "planned", "deprecated"]).optional()
+        }).describe("Fields to update")
+    },
+    async ({ name, updates }) => {
+        try {
+            const agent = agentManager.updateAgent(name, updates);
+            return {
+                content: [{ type: "text", text: JSON.stringify(agent, null, 2) }]
+            };
+        } catch (e: unknown) {
+            const errorMessage = e instanceof Error ? e.message : String(e);
+            return {
+                isError: true,
+                content: [{ type: "text", text: `Update Error: ${errorMessage}` }]
+            };
+        }
+    }
+);
+
+server.tool(
   "ping",
   "A simple ping tool to verify the server is running.",
   {},
