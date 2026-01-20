@@ -12,6 +12,6 @@
 
 ## Phase 3: CLI és MCP Integráció
 - [x] Task: Fő CLI interfész (`cli.py`) létrehozása Typer alapokon. [6c3b2e9]
-- [ ] Task: Az új CLI regisztrálása MCP eszközként a Cogella Core-ban.
+- [x] Task: Az új CLI regisztrálása MCP eszközként a Cogella Core-ban. [bae8cda]
 - [ ] Task: Tesztelés: `dev_agent` futtatása a kalkulátor példával.
 - [ ] Task: Conductor - User Manual Verification
