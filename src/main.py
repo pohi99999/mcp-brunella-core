@@ -5,9 +5,9 @@ import asyncio
 from contextlib import asynccontextmanager
 import uvicorn
 
-# 1. Al-szerverek helyőrzőinek előkészítése (Phase 3-ban töltjük meg)
-# mcp_workspace = FastMCP("Workspace Module")
-# mcp_automation = FastMCP("Automation Module")
+# 1. Al-szerverek importálása
+from src.servers.workspace import mcp_workspace
+from src.servers.automation import mcp_automation
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -25,7 +25,12 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# 3. Alapvető REST végpontok
+# 3. Al-szerverek becsatolása (Mounting)
+# Az SSE végpontok automatikusan létrejönnek: /mcp/workspace/sse, /mcp/automation/sse
+mcp_workspace.mount(app, path="/mcp/workspace")
+mcp_automation.mount(app, path="/mcp/automation")
+
+# 4. Alapvető REST végpontok
 @app.get("/health")
 async def health_check():
     """Health check végpont a rendszer állapotának ellenőrzéséhez."""
