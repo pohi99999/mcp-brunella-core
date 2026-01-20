@@ -85,17 +85,12 @@ export function startWebServer() {
 
                 try {
                     const result = await pipeline.run(userMsg);
-                    const finalMsg = `✅ Kész! Itt az eredmény:\n\
-\
-javascript
-${result}
-\
-\
-`;
+                    const finalMsg = `✅ Kész! Itt az eredmény:\n\n\`\`\`javascript\n${result}\n\`\`\``;
                     socket.emit('bot_message', { text: finalMsg });
                     saveMessage(DEFAULT_CHAT_ID, 'bot', finalMsg);
-                } catch (e: any) {
-                    const errMsg = `⚠️ Sajnos nem sikerült: ${e.message}`;
+                } catch (e: unknown) {
+                    const errorMessage = e instanceof Error ? e.message : String(e);
+                    const errMsg = `⚠️ Sajnos nem sikerült: ${errorMessage}`;
                     socket.emit('bot_message', { text: errMsg });
                     saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
                 }

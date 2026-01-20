@@ -25,8 +25,9 @@ export class AgentManager {
                 (data.agents || []).map((agent) => [agent.name, agent])
             );
             logger.log(`Agent registry loaded: ${registryPath}`);
-        } catch (error: any) {
-            logger.log(`Agent registry load failed: ${error.message}`);
+        } catch (error: unknown) {
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            logger.log(`Agent registry load failed: ${errorMessage}`);
         }
     }
 
@@ -62,8 +63,9 @@ export class AgentManager {
                 try {
                     const code = await pipeline.run(task);
                     return `Sikeres kódgenerálás:\n\n${code}`;
-                } catch (e: any) {
-                    return `Hiba a fejlesztés során: ${e.message}`;
+                } catch (e: unknown) {
+                    const errorMessage = e instanceof Error ? e.message : String(e);
+                    return `Hiba a fejlesztés során: ${errorMessage}`;
                 }
             }
         });

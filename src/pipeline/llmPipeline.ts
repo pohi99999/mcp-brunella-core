@@ -69,8 +69,8 @@ export class SelfHealingPipeline extends EventEmitter {
                 success = true;
                 this.emit('progress', `✅ Teszt SIKERES!`);
                 
-            } catch (e: any) {
-                lastError = e.message;
+            } catch (e: unknown) {
+                lastError = e instanceof Error ? e.message : String(e);
                 this.emit('progress', `❌ Hiba történt: ${lastError}`);
                 await logger.log(`Attempt ${attempt} failed: ${lastError}`);
             }
@@ -104,8 +104,9 @@ export function registerPipelineTools(server: McpServer) {
                 return {
                     content: [{ type: "text", text: `SUCCESS:\n${code}` }]
                 };
-            } catch (e: any) {
-                return { isError: true, content: [{ type: "text", text: `FAILED: ${e.message}` }] };
+            } catch (e: unknown) {
+                const errorMessage = e instanceof Error ? e.message : String(e);
+                return { isError: true, content: [{ type: "text", text: `FAILED: ${errorMessage}` }] };
             }
         }
     );

@@ -74,10 +74,11 @@ server.tool(
             return {
                 content: [{ type: "text", text: result }]
             };
-        } catch (e: any) {
+        } catch (e: unknown) {
+            const errorMessage = e instanceof Error ? e.message : String(e);
             return {
                 isError: true,
-                content: [{ type: "text", text: `Agent Error: ${e.message}` }]
+                content: [{ type: "text", text: `Agent Error: ${errorMessage}` }]
             };
         }
     }

@@ -1,3 +1,52 @@
+# Dependencies
 node_modules/
-node_modules/
-node_modules/
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Build outputs
+build/
+dist/
+*.tsbuildinfo
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Secrets
+*_secrets
+*.pem
+*.p12
+client_secret*.json
+credentials*.json
+token*.json

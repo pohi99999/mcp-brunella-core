@@ -4,13 +4,16 @@ Központi MCP szerver a Brunella rendszer számára, amely biztonságos és fel�
 
 ## Funkciók
 
--   **Workspace Tool:** Biztonságos fájlműveletek a `Brunella_es_en` könyvtárban.
--   **Knowledge Tool:** Keresés és kontextusépítés a projektekből és tudásbázisból.
+-   **Workspace Tool:** Biztonságos fájlműveletek a konfigurált workspace könyvtárban.
+-   **Knowledge Tool:** Keresés és kontextusépítés a projektekből és tudásbázisból (LanceDB RAG).
 -   **System Tool:** Whitelistelt parancsok futtatása (`ls`, `dir`, verzióellenőrzés) naplózással.
--   **Interpreter Tool:** Python és Node.js kód futtatása sandboxolt környezetben.
--   **Browser Tool:** Biztonságos HTTP GET kérések (lokális hálózat tiltva).
+-   **Interpreter Tool:** Python és Node.js kód futtatása sandboxolt környezetben (vm2).
+-   **Browser Tool:** Playwright alapú böngészési eszközök (navigate, screenshot, extract text).
 -   **AnythingLLM Tool:** Lokális AnythingLLM workspace elérés (listázás, chat).
- -   **Agent Registry:** JSON alapú agent definíciók és strukturált `agent_list` kimenet.
+-   **Agent Registry:** JSON alapú agent definíciók és strukturált `agent_list` kimenet.
+-   **Self-Healing Pipeline:** Automatikus kódgenerálás és javítás Ollama segítségével.
+-   **LLM Tools:** Ollama, Claude, és Copilot CLI integrációk.
+-   **Google Workspace:** Google Drive és Docs integráció.
 
 ### Egyéb Modulok
 -   **Health Check:** Rendszerállapot ellenőrző segédprogram (`src/utils/health_check.ts`).
@@ -47,23 +50,34 @@ Add hozzá az alábbi konfigurációt a `.gemini/settings.json` fájlod `mcpServ
 ### 3. Logolás
 A rendszer parancsok naplózása a `logs/system_commands.log` fájlba történik a projekt könyvtárában.
 
-### 4. Biztonság
+### 4. Környezeti változók
+
+- `WORKSPACE_ROOT` - A workspace gyökérkönyvtár (alapértelmezett: hardcoded útvonal)
+- `NODE_ENV` - Környezet mód (production/development)
+
+**AnythingLLM:**
+- `ANYTHINGLLM_BASE_URL` - AnythingLLM szerver URL (alapértelmezett: `http://localhost:3001`)
+- `ANYTHINGLLM_WORKSPACE` - Workspace ID
+- `ANYTHINGLLM_API_KEY` - API kulcs
+
+**Web UI:**
+- `WEB_UI_ENABLED` - Web UI engedélyezése (0/1, alapértelmezett: 1)
+- `WEB_UI_PORT` - Web UI port (alapértelmezett: 3000)
+
+### 5. Biztonság
 - A szerver csak a konfigurált `workspaceRoot` alatt engedélyez fájlműveleteket.
 - Érzékeny fájlok (pl. `.env`, `_br_secrets`) olvasása tiltott.
-- A kód futtatás idő- és méretkorlátokkal rendelkezik.
+- A kód futtatás idő- és méretkorlátokkal rendelkezik (vm2 sandbox).
+- Whitelistelt rendszerparancsok csak biztonságos műveletekhez.
 
-### 5. AnythingLLM konfiguráció
-Alapértelmezett: `http://localhost:3001`
+### 6. Web UI
+A web felület Socket.IO-val valós idejű kommunikációt biztosít:
+- Chat interfész Ollama integrációval
+- Self-Healing Pipeline futtatás
+- Üzenetek mentése SQLite adatbázisba
 
-Beállítható környezeti változókkal:
-
-- `ANYTHINGLLM_BASE_URL`
-- `ANYTHINGLLM_WORKSPACE`
-- `ANYTHINGLLM_API_KEY`
-
-### 6. Web UI kapcsolo
-- `WEB_UI_ENABLED=0` letiltja a web UI-t
-- `WEB_UI_PORT=3000` atallitja a portot
+Letiltás: `WEB_UI_ENABLED=0`
+Port változtatás: `WEB_UI_PORT=3000`
 
 ### 7. Smoke teszt
 MCP ping + AnythingLLM elerhetoseg ellenorzese:
