@@ -6,7 +6,7 @@
 - [x] Task: `config.py` és alap LLM hívások (`core/llm.py`) implementálása. [6c3b2e9]
 
 ## Phase 2: Core Modulok és Eszközök
-- [ ] Task: Sandbox környezet (`core/sandbox.py`) megvalósítása.
+- [x] Task: Sandbox környezet (`core/sandbox.py`) megvalósítása. [7c0a5b2]
 - [ ] Task: Projekt segédeszközök (`core/tools.py` és `core/project.py`) beépítése.
 - [ ] Task: Multi-ágens logika (`core/agent.py`) implementálása.
 
