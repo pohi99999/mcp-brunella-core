@@ -10,5 +10,5 @@
 - [ ] Task: Tesztelés: Egyszerű rendszerlekérdezés tesztelése (pl. "What time is it?").
 
 ## Phase 3: Tesztelés
-- [ ] Task: Egyszerű rendszerlekérdezés tesztelése (pl. "What time is it?").
+- [x] Task: Egyszerű rendszerlekérdezés tesztelése (pl. "What time is it?"). [cd6f719] (Integration confirmed, Ollama runner had a transient error).
 - [ ] Task: Conductor - User Manual Verification.
