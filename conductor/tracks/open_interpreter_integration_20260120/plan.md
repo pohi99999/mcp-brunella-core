@@ -6,7 +6,8 @@
 
 ## Phase 2: Implementáció
 - [x] Task: Az `interpreter_open_query` eszköz megvalósítása child_process hívással. [56bef0a]
-- [ ] Task: Az új eszköz regisztrálása a `src/index.ts`-ben.
+- [x] Task: Az új eszköz regisztrálása a `src/index.ts`-ben. [6ac13b7]
+- [ ] Task: Tesztelés: Egyszerű rendszerlekérdezés tesztelése (pl. "What time is it?").
 
 ## Phase 3: Tesztelés
 - [ ] Task: Egyszerű rendszerlekérdezés tesztelése (pl. "What time is it?").
