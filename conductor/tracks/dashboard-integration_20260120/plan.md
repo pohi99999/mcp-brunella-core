@@ -51,10 +51,10 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 4' (Protocol in workflow.md) [checkpoint: aa08201]
 
 ## Phase 5: Semantic Testing Infrastructure (Jules)
-- [ ] Task: Create Semantic Test Book
-    - [ ] Draft `testing/TEST_BOOK.md` with initial "smoke test" scenarios (Login, List Agents, Check Health).
-    - [ ] Define success criteria format for Jules.
-- [ ] Task: Jules Self-Testing Validation
-    - [ ] Perform a guided run where Jules executes a scenario from `TEST_BOOK.md`.
-    - [ ] Refine the Test Book based on Jules' feedback/performance.
-- [ ] Task: Conductor - User Manual Verification 'Phase 5' (Protocol in workflow.md)
+- [x] Task: Create Semantic Test Book
+    - [x] Draft `testing/TEST_BOOK.md` with initial "smoke test" scenarios (Login, List Agents, Check Health).
+    - [x] Define success criteria format for Jules.
+- [x] Task: Jules Self-Testing Validation
+    - [x] Perform a guided run where Jules executes a scenario from `TEST_BOOK.md`.
+    - [x] Refine the Test Book based on Jules' feedback/performance.
+- [x] Task: Conductor - User Manual Verification 'Phase 5' (Protocol in workflow.md) [checkpoint: 892ef1a]
