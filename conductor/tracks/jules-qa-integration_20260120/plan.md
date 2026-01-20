@@ -16,7 +16,7 @@
     - [x] Ensure logs are accessible and formatted for AI parsing.
 - [x] Task: Configure GitHub integration (Conceptual) [1a641b5]
     - [x] Document the process of calling Jules from CLI/Web for QA tasks.
-- [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md) [9c3ddec]
 
 ## Phase 3: Validation & Self-Testing
 - [ ] Task: Perform First Semantic Test with Jules
