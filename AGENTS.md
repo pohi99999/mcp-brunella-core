@@ -44,3 +44,22 @@
 - `conductor/`: Project management & plans.
 - `logs/`: Runtime logs & SQLite DB (`brunella.db`).
 - `testing/`: Semantic Test Book (`TEST_BOOK.md`).
+
+## 5. How to Invoke Jules for QA
+
+### 5.1 Via CLI (Local Development)
+To trigger Jules for a QA task or bug fix locally:
+1.  Ensure you have the Jules CLI installed.
+2.  Run the check script to verify environment: `node scripts/jules_check.mjs`.
+3.  Invoke Jules with a specific task:
+    ```bash
+    jules "Run Scenario 1 from TEST_BOOK.md and fix any issues found."
+    ```
+4.  Review Jules' output and proposed changes.
+
+### 5.2 Via Web / GitHub
+1.  Navigate to the repository on GitHub.
+2.  Open an Issue or Pull Request describing the QA task.
+    -   *Example Issue:* "QA: Run full regression test suite."
+3.  Assign Jules to the issue (if configured).
+4.  Jules will comment with results and open PRs for fixes.
