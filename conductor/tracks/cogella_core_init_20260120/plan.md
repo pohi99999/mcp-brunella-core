@@ -10,12 +10,12 @@
 - [x] Task: Conductor - User Manual Verification 'Phase 1' (Protocol in workflow.md)
 
 ## Phase 2: Gateway Implementáció
-- [ ] Task: Központi `main.py` létrehozása FastAPI és FastMCP alapokon.
-    - [ ] Implement `lifespan` context manager
-    - [ ] Setup FastAPI app
-    - [ ] Configure SSE endpoints
-- [ ] Task: Health check végpont implementálása (`/health`).
-    - [ ] Add async health check endpoint
+- [x] Task: Központi `main.py` létrehozása FastAPI és FastMCP alapokon.
+    - [x] Implement `lifespan` context manager
+    - [x] Setup FastAPI app
+    - [x] Configure SSE endpoints
+- [x] Task: Health check végpont implementálása (`/health`).
+    - [x] Add async health check endpoint
 - [ ] Task: Conductor - User Manual Verification 'Phase 2' (Protocol in workflow.md)
 
 ## Phase 3: Moduláris Routerek Vázának Létrehozása
