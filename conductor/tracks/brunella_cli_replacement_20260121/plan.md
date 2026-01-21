@@ -28,11 +28,11 @@ Implementáljuk az automatikus szerver-felfedezést és a WebSocket alapú kommu
 ## 3. Fázis: Mag Parancsok és Formázott Kimenet
 Kiépítjük a funkcionális parancsokat és az átlátható terminál megjelenítést.
 
-- [~] **Feladat: Eszközök kezelése (`tools`, `run`)**
+- [x] **Feladat: Eszközök kezelése (`tools`, `run`)**
     - [x] Task: Táblázatos és JSON kimenet implementálása (Red) [7d82cfc]
     - [x] Task: `tools` lista és `run` parancs megírása (Green) [36fc21c]
 - [~] **Feladat: Interaktív Chat (`chat`)**
-    - [ ] Task: Streaming output és Markdown renderelés a terminálban (Red)
+    - [x] Task: Streaming output és Markdown renderelés a terminálban (Red) [81453f0]
     - [ ] Task: `chat` parancs implementálása LLM integrációval (Green)
 - [~] **Feladat: Conductor - User Manual Verification '3. Fázis' (Protocol in workflow.md)**
 
