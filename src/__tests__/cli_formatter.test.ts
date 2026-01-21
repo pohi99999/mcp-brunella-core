@@ -1,4 +1,4 @@
-import { formatToolsTable, formatToolsJson } from '../utils/cli_formatter';
+import { formatToolsTable, formatToolsJson } from '../utils/cli_formatter.js';
 
 describe('CLI Formatter', () => {
     const mockTools = [
