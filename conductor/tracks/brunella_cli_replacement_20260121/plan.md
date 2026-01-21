@@ -30,7 +30,7 @@ Kiépítjük a funkcionális parancsokat és az átlátható terminál megjelen�
 
 - [~] **Feladat: Eszközök kezelése (`tools`, `run`)**
     - [x] Task: Táblázatos és JSON kimenet implementálása (Red) [7d82cfc]
-    - [ ] Task: `tools` lista és `run` parancs megírása (Green)
+    - [x] Task: `tools` lista és `run` parancs megírása (Green) [36fc21c]
 - [~] **Feladat: Interaktív Chat (`chat`)**
     - [ ] Task: Streaming output és Markdown renderelés a terminálban (Red)
     - [ ] Task: `chat` parancs implementálása LLM integrációval (Green)
