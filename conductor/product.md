@@ -16,7 +16,7 @@ A Cogella Core a Brunella Agent System (BAS) "digitális idegrendszere". Egy oly
 - **Brunella CLI (myai):** Önálló Python alapú eszközkészlet multi-ágens folyamatokhoz (Planner, Coder, Reviewer) és izolált kódvégrehajtáshoz.
 - **Hibrid DevOps Partner (Jules):** Külső ágens integráció White Box hozzáféréssel a forráskódhoz, automatizált teszteléshez és öngyógyító folyamatokhoz.
 - **Fejlett Tudásbázis (RAG):** Vektoros keresés a `07_KNOWLEDGE_BASE` és `03_LIBRARY` mappákban LanceDB segítségével.
-- **Innovációs Homokozó (Sandbox):** Biztonságos Python és Node.js kódvégrehajtás izolált Docker környezetben.
+- **Innovációs Homokozó (Sandbox):** Biztonságos Python és Node.js kódvégrehajtás izolált Docker környezetben, kiegészítve Open Interpreter-rel az OS-szintű feladatokhoz.
 - **Google Workspace Nexus:** Szemantikus naptárkezelés és Gmail RAG alapú keresés.
 - **n8n Kétirányú Híd:** Automatizációs munkafolyamatok indítása és az ágens visszahívása az n8n folyamatokból.
 - **Böngésző Vezérlés:** Playwright alapú webes navigáció és adatgyűjtés.

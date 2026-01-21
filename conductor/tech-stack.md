@@ -14,7 +14,7 @@
 - **Elsődleges Modellek:**
     - Helyi: Ollama (Gemma 3.4b, Qwen 2.5 Coder - kódolásra optimalizálva)
     - Felhő: Gemini API (kiegészítő hívásokhoz, tervezett Gemini 1.5 Pro integráció)
-- **Ügynök Kiegészítők:** Jules, Brunella CLI (Python Typer), Agent Coder
+- **Ügynök Kiegészítők:** Jules, Brunella CLI (Python Typer), Agent Coder, Open Interpreter (OS-level tasks)
 - **RAG:** Saját implementáció LanceDB alapon
 
 ## Automatizáció és Végrehajtás
