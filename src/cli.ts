@@ -1,160 +1,17 @@
 #!/usr/bin/env node
 import { Command } from 'commander';
 import chalk from 'chalk';
-import fs from 'fs';
-import path from 'path';
-import os from 'os';
-// @ts-ignore
-import io from "socket.io-client";
-import { spawn } from 'child_process';
+import { loadConfig, saveConfig } from './utils/cli_config.js';
+import { McpCliClient, connectToServer } from './utils/mcp_client.js';
 import { formatToolsTable, formatToolsJson } from './utils/cli_formatter.js';
+import { startChatRepl } from './utils/repl.js';
 
 const program = new Command();
-const CONFIG_DIR = path.join(os.homedir(), '.brunella');
-const CONFIG_FILE = path.join(CONFIG_DIR, 'settings.json');
-
-function loadConfig(): any {
-    try {
-        if (fs.existsSync(CONFIG_FILE)) {
-            return JSON.parse(fs.readFileSync(CONFIG_FILE, 'utf8'));
-        }
-    } catch (e) {
-        // ignore
-    }
-    return {
-        serverUrl: 'http://localhost:3000',
-        apiKey: 'default-key'
-    };
-}
-
-function saveConfig(config: any) {
-    if (!fs.existsSync(CONFIG_DIR)) {
-        fs.mkdirSync(CONFIG_DIR, { recursive: true });
-    }
-    fs.writeFileSync(CONFIG_FILE, JSON.stringify(config, null, 2));
-}
-
-class McpCliClient {
-    private messageId = 0;
-    private handlersCounter = new Map<number, (res: any) => void>();
-
-    constructor(private socket: any) {
-        this.socket.on('mcp_response', (response: any) => {
-            const handler = this.handlersCounter.get(response.id);
-            if (handler) {
-                handler(response);
-                this.handlersCounter.delete(response.id);
-            }
-        });
-    }
-
-    async request(method: string, params: any = {}): Promise<any> {
-        const id = ++this.messageId;
-        return new Promise((resolve, reject) => {
-            this.handlersCounter.set(id, (res) => {
-                if (res.error) {
-                    reject(new Error(res.error.message || 'MCP Error'));
-                } else {
-                    resolve(res.result);
-                }
-            });
-
-            this.socket.emit('mcp_message', {
-                jsonrpc: '2.0',
-                id,
-                method,
-                params
-            });
-
-            setTimeout(() => {
-                if (this.handlersCounter.has(id)) {
-                    this.handlersCounter.delete(id);
-                    reject(new Error(`MCP Request Timeout: ${method}`));
-                }
-            }, 10000);
-        });
-    }
-
-    async initialize() {
-        return this.request('initialize', {
-            protocolVersion: '2024-11-05',
-            capabilities: {},
-            clientInfo: { name: 'brunella-cli', version: '4.0.0' }
-        });
-    }
-
-    async listTools() {
-        return this.request('tools/list');
-    }
-
-    async callTool(name: string, args: any) {
-        return this.request('tools/call', {
-            name,
-            arguments: args
-        });
-    }
-}
-
-async function startServer(): Promise<void> {
-    console.log(chalk.yellow('Szerver indítása a háttérben...'));
-    const serverPath = path.join(process.cwd(), 'build', 'index.js');
-    
-    const out = fs.openSync(path.join(CONFIG_DIR, 'server.log'), 'a');
-    const err = fs.openSync(path.join(CONFIG_DIR, 'server.log'), 'a');
-
-    const child = spawn('node', [serverPath], {
-        detached: true,
-        stdio: ['ignore', out, err]
-    });
-
-    child.unref();
-    
-    // Várjunk egy kicsit az indulásra
-    return new Promise(resolve => setTimeout(resolve, 3000));
-}
-
-async function connectToServer(config: any): Promise<any> {
-    const tryConnect = (url: string, key: string): Promise<any> => {
-        return new Promise((resolve, reject) => {
-            const socket = io(url, {
-                auth: { token: key },
-                transports: ['websocket'],
-                autoConnect: false,
-                timeout: 3000
-            });
-
-            socket.connect();
-            
-            socket.once('connect', () => resolve(socket));
-            socket.once('connect_error', (err: any) => {
-                socket.disconnect();
-                reject(err);
-            });
-            setTimeout(() => {
-                socket.disconnect();
-                reject(new Error('Timeout'));
-            }, 3500);
-        });
-    };
-
-    try {
-        console.log(chalk.blue(`Csatlakozás a szerverhez: ${config.serverUrl}...`));
-        return await tryConnect(config.serverUrl, config.apiKey);
-    } catch (err) {
-        console.log(chalk.yellow('A szerver nem érhető el. Megpróbálom elindítani...'));
-        await startServer();
-        try {
-            return await tryConnect(config.serverUrl, config.apiKey);
-        } catch (retryErr: any) {
-            throw new Error(`Szerver indítás után sem sikerült kapcsolódni: ${retryErr.message}`);
-        }
-    }
-}
 
 program
   .name('brunella')
   .description('Brunella Core CLI - MCP Powered Assistant')
-  .version('4.0.0');
+  .version('1.0.0');
 
 program
   .command('ping')
@@ -275,6 +132,72 @@ program
         process.exit(0);
     } catch (err: any) {
         console.error(chalk.red(`Error running tool: ${err.message}`));
+        process.exit(1);
+    }
+  });
+
+program
+  .command('chat [message]')
+  .description('Start interactive chat or send a single message')
+  .option('-a, --agent <agent>', 'Specify agent to chat with')
+  .action(async (message, options) => {
+    const config = loadConfig();
+    try {
+        const socket = await connectToServer(config);
+        const client = new McpCliClient(socket);
+        await client.initialize();
+
+        if (message) {
+            // Single message mode
+            // Reuse the repl logic or simple call
+            // Using repl logic but simpler:
+            console.log(chalk.gray('Sending message...'));
+            // TODO: Extract send logic from repl to reuse?
+            // For now, I'll just replicate simple call or use callTool directly
+            // But I need to know WHICH tool.
+            // I'll start REPL if message is missing, or send one shot if present.
+            // But determining tool is in repl.ts
+            // So I should probably expose a "sendMessage" function in repl.ts or mcp_client.ts?
+            // Or just start REPL and pre-fill input?
+            // Let's keep it simple: pass to startChatRepl?
+            // startChatRepl is designed for loop.
+            
+            // I'll duplicate the tool discovery for now or move it to mcp_client.ts
+            // Actually, I'll just use callTool 'chat' or 'anythingllm_chat'
+            // Let's assume 'chat' for single message.
+            
+            const toolsResponse = await client.listTools();
+            const tools = toolsResponse.tools || [];
+            const toolNames = tools.map((t: any) => t.name);
+            let chatTool = 'chat';
+            if (toolNames.includes('anythingllm_chat')) chatTool = 'anythingllm_chat';
+            
+            const result = await client.callTool(chatTool, {
+                message,
+                agent: options.agent
+            });
+            
+            // Output
+             if (typeof result === 'object') {
+                 // Try to find text content
+                 if (result.content && Array.isArray(result.content)) {
+                     console.log(formatToolsJson(result.content)); // or markdown
+                 } else {
+                     console.log(JSON.stringify(result, null, 2));
+                 }
+            } else {
+                 console.log(String(result));
+            }
+            
+            socket.disconnect();
+            process.exit(0);
+        } else {
+            // Interactive mode
+            await startChatRepl(client, options.agent);
+            // repl handles exit
+        }
+    } catch (err: any) {
+        console.error(chalk.red(`Error in chat: ${err.message}`));
         process.exit(1);
     }
   });
