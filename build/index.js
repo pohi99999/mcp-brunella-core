@@ -14,6 +14,7 @@ const claudeTool_js_1 = require("./tools/claudeTool.js");
 const llmPipeline_js_1 = require("./pipeline/llmPipeline.js");
 const googleWorkspace_js_1 = require("./tools/googleWorkspace.js");
 const anythingllm_js_1 = require("./tools/anythingllm.js");
+const monitor_js_1 = require("./tools/monitor.js");
 const web_js_1 = require("./server/web.js");
 const AgentManager_js_1 = require("./agents/AgentManager.js");
 const zod_1 = require("zod");
@@ -35,6 +36,7 @@ const server = new mcp_js_1.McpServer({
 (0, llmPipeline_js_1.registerPipelineTools)(server);
 (0, googleWorkspace_js_1.registerGoogleWorkspaceTools)(server);
 (0, anythingllm_js_1.registerAnythingLLMTools)(server);
+(0, monitor_js_1.registerMonitorTools)(server);
 // Register Agent Tools
 server.tool("agent_list", "Lists all available active agents.", {}, async () => {
     const agents = AgentManager_js_1.agentManager.listAgentDefinitions();
