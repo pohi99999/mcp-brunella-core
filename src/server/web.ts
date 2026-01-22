@@ -2,12 +2,15 @@ import express from 'express';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
+import os from 'os';
 import { config } from '../config/index.js';
 import { Logger } from '../utils/logger.js';
 import { SelfHealingPipeline } from '../pipeline/llmPipeline.js';
 import { initDb, saveMessage, getMessages, createChat, DbMessage } from '../utils/db.js';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { registerAllTools } from './registry.js';
+import { v4 as uuidv4 } from 'uuid';
 
 async function chatWithOllama(prompt: string, system: string = ""): Promise<string> {
     try {
@@ -29,21 +32,99 @@ async function chatWithOllama(prompt: string, system: string = ""): Promise<stri
 }
 
 const logger = new Logger('web_ui.log');
-const transports = new Map<string, SSEServerTransport>();
 
-export function createApp() {
-    initDb();
-    const app = express();
-    
-    // Priority: Serve from build/public (dashboard build)
-    app.use(express.static(path.join(process.cwd(), 'build', 'public')));
-    // Fallback: Serve from public (legacy or assets)
-    app.use(express.static(path.join(process.cwd(), 'public')));
-
-    return app;
+interface ActiveTransport {
+    transport: SSEServerTransport;
+    server: McpServer;
 }
 
-function setupSocket(io: Server) {
+export function startWebServer() {
+    const webUiEnabled = process.env.WEB_UI_ENABLED !== "0" && process.env.WEB_UI_ENABLED !== "false";
+    if (!webUiEnabled) {
+        console.error("WEB_UI_ENABLED=0 -> Web UI disabled");
+        return;
+    }
+
+    initDb();
+
+    const app = express();
+    // Allow JSON body for MCP POST messages
+    app.use(express.json());
+
+    const httpServer = createServer(app);
+    const io = new Server(httpServer, {
+        cors: {
+            origin: "*",
+            methods: ["GET", "POST"]
+        }
+    });
+
+    // Helper to broadcast logs to dashboard
+    const broadcastLog = (level: string, message: string, source: string = 'core') => {
+        io.emit('system_log', {
+            id: `log-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+            timestamp: new Date().toISOString(),
+            level,
+            message,
+            source
+        });
+    };
+
+    // Broadcast metrics every 5 seconds
+    setInterval(() => {
+        const totalMem = os.totalmem();
+        const freeMem = os.freemem();
+        io.emit('metrics_update', {
+            requestsPerMinute: Math.floor(Math.random() * 50), // Mock for now
+            activeConnections: io.sockets.sockets.size,
+            errorRate: Math.random() * 2,
+            averageResponseTime: 10 + Math.random() * 50,
+            cpuUsage: os.loadavg()[0] * 10, // Approximate
+            memoryUsage: ((totalMem - freeMem) / totalMem) * 100
+        });
+    }, 5000);
+
+    // MCP SSE Support
+    const mcpSessions = new Map<string, ActiveTransport>();
+
+    app.get('/sse', async (req, res) => {
+        const sessionId = uuidv4();
+        console.log(`New MCP SSE connection: ${sessionId}`);
+        
+        // Create a transport that points to the POST endpoint with the session ID
+        const transport = new SSEServerTransport(`/messages?sessionId=${sessionId}`, res);
+        
+        const server = new McpServer({
+            name: "mcp-brunella-core-web",
+            version: "1.0.0",
+        });
+        
+        registerAllTools(server);
+
+        mcpSessions.set(sessionId, { transport, server });
+
+        // Cleanup on close
+        res.on('close', () => {
+            console.log(`MCP SSE connection closed: ${sessionId}`);
+            mcpSessions.delete(sessionId);
+        });
+
+        await server.connect(transport);
+    });
+
+    app.post('/messages', async (req, res) => {
+        const sessionId = req.query.sessionId as string;
+        if (!sessionId || !mcpSessions.has(sessionId)) {
+            res.status(404).send("Session not found");
+            return;
+        }
+
+        const { transport } = mcpSessions.get(sessionId)!;
+        await transport.handlePostMessage(req, res);
+    });
+
+    app.use(express.static(path.join(process.cwd(), 'build', 'public')));
+
     io.on('connection', (socket) => {
         const DEFAULT_CHAT_ID = 'main-session';
         
@@ -86,12 +167,17 @@ function setupSocket(io: Server) {
 
                 try {
                     const result = await pipeline.run(userMsg);
-                    const finalMsg = "✅ Kész! Itt az eredmény:\n\n```javascript\n" + result + "\n```";
+                    const finalMsg = `✅ Kész! Itt az eredmény:\n\
+\
+javascript
+${result}
+\
+\
+`;
                     socket.emit('bot_message', { text: finalMsg });
                     saveMessage(DEFAULT_CHAT_ID, 'bot', finalMsg);
-                } catch (e: unknown) {
-                    const errorMessage = e instanceof Error ? e.message : String(e);
-                    const errMsg = `⚠️ Sajnos nem sikerült: ${errorMessage}`;
+                } catch (e: any) {
+                    const errMsg = `⚠️ Sajnos nem sikerült: ${e.message}`;
                     socket.emit('bot_message', { text: errMsg });
                     saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
                 }
@@ -103,51 +189,6 @@ function setupSocket(io: Server) {
             }
         });
     });
-}
-
-export function setupMcpEndpoints(app: express.Application, mcpServer: McpServer) {
-    console.log("Setting up MCP SSE endpoints...");
-    app.get('/sse', async (req, res) => {
-        const transport = new SSEServerTransport("/message", res);
-        transports.set(transport.sessionId, transport);
-        
-        transport.onclose = () => {
-            transports.delete(transport.sessionId);
-        };
-
-        await mcpServer.connect(transport);
-        await transport.start();
-    });
-
-    app.post('/message', async (req, res) => {
-        const sessionId = req.query.sessionId as string;
-        const transport = transports.get(sessionId);
-        
-        if (!transport) {
-            res.status(404).send("Session not found");
-            return;
-        }
-        
-        await transport.handlePostMessage(req, res);
-    });
-}
-
-export function startWebServer(mcpServer?: McpServer) {
-    const webUiEnabled = process.env.WEB_UI_ENABLED !== "0" && process.env.WEB_UI_ENABLED !== "false";
-    if (!webUiEnabled) {
-        console.error("WEB_UI_ENABLED=0 -> Web UI disabled");
-        return;
-    }
-
-    const app = createApp();
-    const httpServer = createServer(app);
-    const io = new Server(httpServer);
-
-    if (mcpServer) {
-        setupMcpEndpoints(app, mcpServer);
-    }
-
-    setupSocket(io);
 
     const portValue = Number(process.env.WEB_UI_PORT || 3000);
     const PORT = Number.isFinite(portValue) ? portValue : 3000;

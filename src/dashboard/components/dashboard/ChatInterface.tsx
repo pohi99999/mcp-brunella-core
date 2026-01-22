@@ -1,5 +1,4 @@
 import { useState, useRef, useEffect, useMemo } from 'react'
-import { useKV } from '@github/spark/hooks'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -17,7 +16,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ChatMessage, User, AgentTool, OllamaStatus } from '@/lib/types'
-import { ollamaService } from '@/lib/ollamaService'
+import { useMcpStore } from '@/lib/mcpStore'
+import { useMCP } from '@/hooks/useMCP'
 import { 
   PaperPlaneRight, 
   Robot, 
@@ -43,10 +43,10 @@ interface ChatInterfaceProps {
 }
 
 export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfaceProps) {
-  const [messages, setMessages] = useKV<ChatMessage[]>('chat-messages', [])
+  const { chatMessages, addChatMessage } = useMcpStore()
+  const { sendMessage, isConnected } = useMCP()
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
-  const [ollamaStatus, setOllamaStatus] = useState<OllamaStatus | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
     from: undefined,
@@ -55,12 +55,12 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
   const scrollRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
-  const currentMessages = messages ?? []
+  const currentMessages = chatMessages ?? []
   const enabledTools = agentTools.filter(t => t.enabled)
 
   const filteredMessages = useMemo(() => {
     let filtered = currentMessages
-    
+    // ... filtering logic stays same ...
     if (dateRange.from || dateRange.to) {
       filtered = filtered.filter(msg => {
         const msgDate = new Date(msg.timestamp)
@@ -90,93 +90,23 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
   }, [currentMessages, searchQuery, dateRange])
 
   useEffect(() => {
-    checkOllamaConnection()
-    const interval = setInterval(checkOllamaConnection, 30000)
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
     }
   }, [currentMessages])
 
-  const checkOllamaConnection = async () => {
-    const status = await ollamaService.checkStatus()
-    setOllamaStatus(status)
-  }
-
   const handleSend = async () => {
-    if (!input.trim() || isLoading) return
+    if (!input.trim()) return
 
-    if (!ollamaStatus?.isConnected) {
-      toast.error('Ollama kapcsolat hiba', {
-        description: 'Az Ollama szerver nem elérhető. Ellenőrizd, hogy fut-e a helyi Ollama instance.',
+    if (!isConnected) {
+      toast.error('Kapcsolati hiba', {
+        description: 'Nincs kapcsolat a szerverrel.',
       })
       return
     }
 
-    const userMessage: ChatMessage = {
-      id: `msg-${Date.now()}`,
-      role: 'user',
-      content: input.trim(),
-      timestamp: new Date().toISOString(),
-    }
-
-    setMessages(current => [...(current ?? []), userMessage])
+    sendMessage(input.trim())
     setInput('')
-    setIsLoading(true)
-
-    const assistantMessageId = `msg-${Date.now()}-assistant`
-    const assistantMessage: ChatMessage = {
-      id: assistantMessageId,
-      role: 'assistant',
-      content: '',
-      timestamp: new Date().toISOString(),
-      isStreaming: true,
-    }
-
-    setMessages(current => [...(current ?? []), assistantMessage])
-
-    try {
-      const chatHistory = [...currentMessages, userMessage]
-      let fullContent = ''
-
-      for await (const chunk of ollamaService.streamChat(
-        chatHistory,
-        enabledTools,
-        onToolExecution ? async (toolCall) => {
-          return await onToolExecution(toolCall.toolName, toolCall.parameters)
-        } : undefined
-      )) {
-        fullContent += chunk
-        setMessages(current =>
-          (current ?? []).map(msg =>
-            msg.id === assistantMessageId
-              ? { ...msg, content: fullContent }
-              : msg
-          )
-        )
-      }
-
-      setMessages(current =>
-        (current ?? []).map(msg =>
-          msg.id === assistantMessageId
-            ? { ...msg, isStreaming: false }
-            : msg
-        )
-      )
-    } catch (error) {
-      toast.error('Chat hiba', {
-        description: error instanceof Error ? error.message : 'Ismeretlen hiba történt',
-      })
-      
-      setMessages(current =>
-        (current ?? []).filter(msg => msg.id !== assistantMessageId)
-      )
-    } finally {
-      setIsLoading(false)
-    }
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -187,7 +117,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
   }
 
   const handleClearChat = () => {
-    setMessages([])
+    useMcpStore.getState().setChatMessages([])
     setSearchQuery('')
     setDateRange({ from: undefined, to: undefined })
     toast.success('Chat törölve', { description: 'Összes üzenet törölve lett' })
@@ -213,11 +143,6 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-    toast.success('Exportálva', { 
-      description: hasActiveFilters 
-        ? `${messagesToExport.length} szűrt üzenet letöltve JSON formátumban`
-        : 'Chat előzmények JSON formátumban letöltve'
-    })
   }
 
   const exportAsText = () => {
@@ -239,11 +164,6 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
-    toast.success('Exportálva', { 
-      description: hasActiveFilters 
-        ? `${messagesToExport.length} szűrt üzenet letöltve szöveg formátumban`
-        : 'Chat előzmények szöveg formátumban letöltve'
-    })
   }
 
   return (
@@ -264,10 +184,10 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
               <Circle
                 size={12}
                 weight="fill"
-                className={ollamaStatus?.isConnected ? 'text-success animate-pulse-glow' : 'text-destructive'}
+                className={isConnected ? 'text-success animate-pulse-glow' : 'text-destructive'}
               />
               <span className="text-sm text-muted-foreground">
-                {ollamaStatus?.isConnected ? `Ollama: ${ollamaStatus.model}` : 'Ollama: Offline'}
+                {isConnected ? `Szerver: Online` : 'Szerver: Offline'}
               </span>
             </div>
             {currentMessages.length > 0 && (
@@ -428,11 +348,11 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
       </CardHeader>
 
       <CardContent className="flex-1 flex flex-col gap-4 overflow-hidden">
-        {!ollamaStatus?.isConnected && (
+        {!isConnected && (
           <Alert variant="destructive">
             <Warning size={18} />
             <AlertDescription>
-              Az Ollama szerver nem elérhető. Indítsd el a helyi Ollama instance-t a <code>http://localhost:11434</code> címen.
+              Nincs kapcsolat a szerverrel. Ellenőrizd a futó folyamatokat.
             </AlertDescription>
           </Alert>
         )}
@@ -454,18 +374,6 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 <p className="text-sm text-muted-foreground max-w-md">
                   Kérdezz a szerverről, kérj státusz információkat, vagy indíts műveleteket az AI segítségével
                 </p>
-                {enabledTools.length > 0 && (
-                  <div className="mt-4">
-                    <p className="text-xs text-muted-foreground mb-2">Elérhető eszközök:</p>
-                    <div className="flex flex-wrap gap-2 justify-center">
-                      {enabledTools.map(tool => (
-                        <Badge key={tool.id} variant="secondary" className="text-xs">
-                          {tool.name}
-                        </Badge>
-                      ))}
-                    </div>
-                  </div>
-                )}
               </div>
             ) : (
               <>
@@ -548,23 +456,17 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
             placeholder="Írj egy üzenetet... (Enter: küldés, Shift+Enter: új sor)"
             className="resize-none"
             rows={3}
-            disabled={isLoading || !ollamaStatus?.isConnected}
+            disabled={!isConnected}
           />
           <Button
             onClick={handleSend}
-            disabled={!input.trim() || isLoading || !ollamaStatus?.isConnected}
+            disabled={!input.trim() || !isConnected}
             size="icon"
             className="h-auto"
           >
             <PaperPlaneRight size={20} weight="fill" />
           </Button>
         </div>
-
-        {enabledTools.length === 0 && (
-          <p className="text-xs text-muted-foreground text-center">
-            Nincs engedélyezett agent tool. Menj a Beállítások fülre a tool-ok engedélyezéséhez.
-          </p>
-        )}
       </CardContent>
     </Card>
   )
