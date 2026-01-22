@@ -1,41 +1,42 @@
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
+import process from 'process';
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const projectRoot = path.resolve(__dirname, '..');
-const logsDir = path.join(projectRoot, 'logs');
+console.log("Checking Jules environment...");
 
-const filesToCheck = [
-    'web_ui.log',
-    'agent-manager.log',
-    'brunella.db'
-];
+// Check Node version
+console.log(`Node version: ${process.version}`);
 
-const status = {
-    timestamp: new Date().toISOString(),
-    status: 'ok',
-    environment: {
-        node_modules: fs.existsSync(path.join(projectRoot, 'node_modules')),
-        venv: fs.existsSync(path.join(projectRoot, '.venv')),
-    },
-    logs: {}
-};
-
-if (!fs.existsSync(logsDir)) {
-    status.status = 'warning';
-    status.message = 'logs directory missing';
+// Check for testing directory
+if (!fs.existsSync('testing/TEST_BOOK.md')) {
+    console.error("FAIL: testing/TEST_BOOK.md not found!");
+    process.exit(1);
 } else {
-    filesToCheck.forEach(file => {
-        const filePath = path.join(logsDir, file);
-        if (fs.existsSync(filePath)) {
-            status.logs[file] = 'exists';
-        } else {
-            status.logs[file] = 'missing';
-            // We don't fail the whole check for missing logs, as they might be created on runtime
-        }
-    });
+    console.log("PASS: testing/TEST_BOOK.md found.");
 }
 
-console.log(JSON.stringify(status, null, 2));
+// Check for build
+if (!fs.existsSync('build/index.js')) {
+    console.warn("WARN: build/index.js not found. Running build...");
+    try {
+        execSync('npm run build', { stdio: 'inherit' });
+    } catch (e) {
+        console.error("FAIL: Build failed.");
+        process.exit(1);
+    }
+} else {
+    console.log("PASS: Build artifact found.");
+}
+
+// Check if tests pass
+console.log("Running tests...");
+try {
+    execSync('npm test', { stdio: 'inherit' });
+    console.log("PASS: All tests passed.");
+} catch (e) {
+    console.error("FAIL: Tests failed.");
+    process.exit(1);
+}
+
+console.log("Jules environment is ready.");

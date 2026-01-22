@@ -1,13 +1,16 @@
-import { z } from "zod";
-import { Logger } from "../utils/logger.js";
-const logger = new Logger('ollama.log');
-export function registerOllamaTool(server) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerOllamaTool = registerOllamaTool;
+const zod_1 = require("zod");
+const logger_js_1 = require("../utils/logger.js");
+const logger = new logger_js_1.Logger('ollama.log');
+function registerOllamaTool(server) {
     server.tool("ollama_generate", "Generates text using a local Ollama model.", {
-        model: z.string().default("llama3.1").describe("The model to use"),
-        prompt: z.string().describe("The prompt to generate from"),
-        options: z.object({
-            temperature: z.number().optional(),
-            num_predict: z.number().optional(),
+        model: zod_1.z.string().default("qwen2.5-coder:1.5b").describe("The model to use"),
+        prompt: zod_1.z.string().describe("The prompt to generate from"),
+        options: zod_1.z.object({
+            temperature: zod_1.z.number().optional(),
+            num_predict: zod_1.z.number().optional(),
         }).optional()
     }, async ({ model, prompt, options }) => {
         const endpoint = "http://localhost:11434/api/generate";

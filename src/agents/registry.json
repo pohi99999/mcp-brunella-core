@@ -5,73 +5,140 @@
       "name": "orchestrator",
       "title": "Orchestrator",
       "description": "Koordinalja a feladatokat es delegalja az agentekhez.",
-      "capabilities": ["planning", "routing", "delegation"],
-      "tools": ["agent_list", "agent_delegate"],
+      "capabilities": [
+        "planning",
+        "routing",
+        "delegation"
+      ],
+      "tools": [
+        "agent_list",
+        "agent_delegate"
+      ],
       "category": "core",
       "status": "planned",
-      "tags": ["coordination", "workflow"]
+      "tags": [
+        "coordination",
+        "workflow"
+      ]
     },
     {
       "name": "researcher",
       "title": "Research Agent",
       "description": "Keres a tudasbazisban, majd osszefoglalja a relevans informaciokat.",
-      "capabilities": ["rag_search", "summarization"],
-      "tools": ["knowledge_semantic_search", "knowledge_search"],
+      "capabilities": [
+        "rag_search",
+        "summarization"
+      ],
+      "tools": [
+        "knowledge_semantic_search",
+        "knowledge_search"
+      ],
       "notes": "RAG-alapu tudaskereses es gyors kivonatolas.",
       "category": "knowledge",
       "status": "active",
-      "tags": ["rag", "summaries"]
+      "tags": [
+        "rag",
+        "summaries"
+      ]
     },
     {
       "name": "developer",
       "title": "Developer Agent",
       "description": "Kodol es javit a self-healing pipeline segitsegevel.",
-      "capabilities": ["code_generation", "self_healing"],
-      "tools": ["pipeline_self_healing_gen"],
+      "capabilities": [
+        "code_generation",
+        "self_healing"
+      ],
+      "tools": [
+        "pipeline_self_healing_gen"
+      ],
       "notes": "Ollama + sandbox ellenorzesen fut at.",
       "category": "engineering",
       "status": "active",
-      "tags": ["code", "pipeline"]
+      "tags": [
+        "code",
+        "pipeline"
+      ]
     },
     {
       "name": "qa",
       "title": "QA Agent",
       "description": "Funkcionalis tesztek, gyors validacio, smoke es regresszio ellenorzesek.",
-      "capabilities": ["test_execution", "validation"],
-      "tools": ["interpreter_run_node", "interpreter_run_python", "system_run_command"],
+      "capabilities": [
+        "test_execution",
+        "validation"
+      ],
+      "tools": [
+        "interpreter_run_node",
+        "interpreter_run_python",
+        "system_run_command"
+      ],
       "category": "quality",
       "status": "planned",
-      "tags": ["testing", "qa"]
+      "tags": [
+        "testing",
+        "qa"
+      ]
     },
     {
       "name": "documenter",
       "title": "Documentation Agent",
       "description": "Dokumentacio frissites, release jegyzetek, hasznalati mintak.",
-      "capabilities": ["docs", "summarization"],
-      "tools": ["workspace_read_file", "knowledge_read_context"],
+      "capabilities": [
+        "docs",
+        "summarization"
+      ],
+      "tools": [
+        "workspace_read_file",
+        "knowledge_read_context"
+      ],
       "category": "product",
       "status": "planned",
-      "tags": ["docs", "communication"]
+      "tags": [
+        "docs",
+        "communication"
+      ]
     },
     {
       "name": "ops",
       "title": "Ops Agent",
       "description": "Rendszer allapot es tool logok felugyelete, gyors diagnosztika.",
-      "capabilities": ["monitoring", "diagnostics"],
-      "tools": ["system_run_command", "workspace_list_directory"],
+      "capabilities": [
+        "monitoring",
+        "diagnostics"
+      ],
+      "tools": [
+        "system_run_command",
+        "workspace_list_directory",
+        "monitor_get_metrics",
+        "monitor_tail_logs"
+      ],
       "category": "operations",
-      "status": "planned",
-      "tags": ["ops", "health"]
+      "status": "active",
+      "tags": [
+        "ops",
+        "health"
+      ]
     },
     {
       "name": "integrator",
       "title": "Integration Agent",
       "description": "Kulso rendszerek, AnythingLLM es tudaskeszlet osszekotese.",
-      "capabilities": ["integration", "knowledge_sync"],
-      "tools": ["anythingllm_list_workspaces", "anythingllm_chat", "knowledge_index_file"],
+      "capabilities": [
+        "integration",
+        "knowledge_sync"
+      ],
+      "tools": [
+        "anythingllm_list_workspaces",
+        "anythingllm_chat",
+        "knowledge_index_file"
+      ],
       "category": "integration",
       "status": "planned",
-      "tags": ["anythingllm", "sync"]
+      "tags": [
+        "anythingllm",
+        "sync"
+      ]
     }
   ]
 }

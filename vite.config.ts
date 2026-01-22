@@ -2,9 +2,9 @@ import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react-swc";
 import { defineConfig, PluginOption } from "vite";
 import path from "path";
+import { fileURLToPath } from "url";
 
-// import sparkPlugin from "@github/spark/spark-vite-plugin";
-// import createIconImportProxy from "@github/spark/vitePhosphorIconProxyPlugin";
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
   root: 'src/dashboard',
@@ -21,7 +21,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      '@': path.resolve(process.cwd(), 'src/dashboard')
+      '@': path.resolve(__dirname, './src/dashboard')
     }
   },
 });

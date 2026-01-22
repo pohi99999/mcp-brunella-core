@@ -27,23 +27,23 @@ export class SelfHealingPipeline extends EventEmitter {
             this.emit('progress', `🔄 Próbálkozás ${attempt}/${this.maxAttempts}...`);
 
             // 1. GENERATE / FIX
-            const prompt = attempt === 1 
+            const prompt = attempt === 1
                 ? `Write a Node.js script for: ${task}. Output ONLY code, no markdown. No explanations.`
                 : `The previous code failed with: "${lastError}". Fix the code for: ${task}. Output ONLY code.`;
 
             this.emit('progress', `🧠 Kód generálása (Ollama)...`);
-            
+
             try {
                 const ollamaRes = await fetch("http://localhost:11434/api/generate", {
                     method: "POST",
-                    body: JSON.stringify({ model: "llama3.1", prompt: prompt, stream: false })
+                    body: JSON.stringify({ model: "qwen2.5-coder:1.5b", prompt: prompt, stream: false })
                 });
-                
+
                 if (!ollamaRes.ok) throw new Error("Ollama connection failed");
-                
+
                 const ollamaData = await ollamaRes.json();
                 currentCode = ollamaData.response;
-                
+
                 // Cleanup markdown
                 currentCode = currentCode.replace(/```javascript/g, "").replace(/```js/g, "").replace(/```/g, "").trim();
 
@@ -51,26 +51,26 @@ export class SelfHealingPipeline extends EventEmitter {
 
                 // 2. VALIDATE (Run in Sandbox)
                 this.emit('progress', `🧪 Tesztelés sandboxban...`);
-                
+
                 const { VM } = await import('vm2');
                 const vm = new VM({
-                    timeout: 2000, 
+                    timeout: 2000,
                     sandbox: {
-                        console: { log: () => {} }, // Mute console in check
+                        console: { log: () => { } }, // Mute console in check
                         require: (pkg: string) => {
                             if (['fs', 'path', 'http', 'net'].includes(pkg)) throw new Error(`Modul '${pkg}' tiltott a sandboxban.`);
                             return {}; // Mock other requires
                         }
                     }
                 });
-                
-                vm.run(currentCode); 
-                
+
+                vm.run(currentCode);
+
                 success = true;
                 this.emit('progress', `✅ Teszt SIKERES!`);
-                
-            } catch (e: unknown) {
-                lastError = e instanceof Error ? e.message : String(e);
+
+            } catch (e: any) {
+                lastError = e.message;
                 this.emit('progress', `❌ Hiba történt: ${lastError}`);
                 await logger.log(`Attempt ${attempt} failed: ${lastError}`);
             }
@@ -104,9 +104,8 @@ export function registerPipelineTools(server: McpServer) {
                 return {
                     content: [{ type: "text", text: `SUCCESS:\n${code}` }]
                 };
-            } catch (e: unknown) {
-                const errorMessage = e instanceof Error ? e.message : String(e);
-                return { isError: true, content: [{ type: "text", text: `FAILED: ${errorMessage}` }] };
+            } catch (e: any) {
+                return { isError: true, content: [{ type: "text", text: `FAILED: ${e.message}` }] };
             }
         }
     );

@@ -31,16 +31,16 @@ Kiépítjük a funkcionális parancsokat és az átlátható terminál megjelen�
 - [x] **Feladat: Eszközök kezelése (`tools`, `run`)**
     - [x] Task: Táblázatos és JSON kimenet implementálása (Red) [7d82cfc]
     - [x] Task: `tools` lista és `run` parancs megírása (Green) [36fc21c]
-- [~] **Feladat: Interaktív Chat (`chat`)**
+- [x] **Feladat: Interaktív Chat (`chat`)**
     - [x] Task: Streaming output és Markdown renderelés a terminálban (Red) [81453f0]
     - [x] Task: `chat` parancs implementálása LLM integrációval (Green) [8224349]
-- [~] **Feladat: Conductor - User Manual Verification '3. Fázis' (Protocol in workflow.md)**
+- [x] **Feladat: Conductor - User Manual Verification '3. Fázis' (Protocol in workflow.md)**
 
 ## 4. Fázis: Gemini CLI Paritás és Finomhangolás
 Biztosítjuk, hogy minden korábbi funkció elérhető legyen az új eszközben.
 
-- [ ] **Feladat: Ágens kezelés (`agents`)**
-    - [ ] Task: Ügynökök listázása és delegálási parancsok (Red)
-    - [ ] Task: `agents` és `delegate` parancsok implementálása (Green)
-- [ ] **Feladat: Hibakezelés és UX polírozás**
-- [ ] **Feladat: Conductor - User Manual Verification '4. Fázis' (Protocol in workflow.md)**
+- [x] **Feladat: Ágens kezelés (`agents`)**
+    - [x] Task: Ügynökök listázása és delegálási parancsok (Red)
+    - [x] Task: `agents` és `delegate` parancsok implementálása (Green)
+- [x] **Feladat: Hibakezelés és UX polírozás**
+- [x] **Feladat: Conductor - User Manual Verification '4. Fázis' (Protocol in workflow.md)**

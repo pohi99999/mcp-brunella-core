@@ -1,11 +1,14 @@
-import { spawn } from "child_process";
-import { cliLogger } from "./logger.js";
-export async function execCommand(command, args, options = {}) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.execCommand = execCommand;
+const child_process_1 = require("child_process");
+const logger_js_1 = require("./logger.js");
+async function execCommand(command, args, options = {}) {
     const cwd = options.cwd || process.cwd();
     // Log the execution attempt
-    await cliLogger.log(`Executing: ${command} ${args.join(' ')}`, { cwd });
+    await logger_js_1.cliLogger.log(`Executing: ${command} ${args.join(' ')}`, { cwd });
     return new Promise((resolve, reject) => {
-        const proc = spawn(command, args, {
+        const proc = (0, child_process_1.spawn)(command, args, {
             cwd,
             env: { ...process.env, ...options.env },
             shell: true // Be careful with this, but needed for some CLI tools in Windows
@@ -18,12 +21,12 @@ export async function execCommand(command, args, options = {}) {
         const timeout = setTimeout(() => {
             proc.kill();
             const errorMsg = `Command timed out after ${timeoutMs}ms`;
-            cliLogger.log(`Error: ${errorMsg}`);
+            logger_js_1.cliLogger.log(`Error: ${errorMsg}`);
             reject(new Error(errorMsg));
         }, timeoutMs);
         proc.on('close', (code) => {
             clearTimeout(timeout);
-            cliLogger.log(`Command finished`, { code });
+            logger_js_1.cliLogger.log(`Command finished`, { code });
             resolve({
                 stdout,
                 stderr,
@@ -32,7 +35,7 @@ export async function execCommand(command, args, options = {}) {
         });
         proc.on('error', (err) => {
             clearTimeout(timeout);
-            cliLogger.log(`Spawn error`, { error: err.message });
+            logger_js_1.cliLogger.log(`Spawn error`, { error: err.message });
             reject(err);
         });
     });

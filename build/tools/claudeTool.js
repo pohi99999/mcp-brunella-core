@@ -1,15 +1,18 @@
-import { z } from "zod";
-import { Logger } from "../utils/logger.js";
-const logger = new Logger('claude.log');
-export function registerClaudeTool(server) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerClaudeTool = registerClaudeTool;
+const zod_1 = require("zod");
+const logger_js_1 = require("../utils/logger.js");
+const logger = new logger_js_1.Logger('claude.log');
+function registerClaudeTool(server) {
     server.tool("claude_message", "Sends a message to the Anthropic Claude API.", {
-        model: z.string().default("claude-3-opus-20240229").describe("The model to use"),
-        messages: z.array(z.object({
-            role: z.enum(["user", "assistant"]),
-            content: z.string()
+        model: zod_1.z.string().default("claude-3-opus-20240229").describe("The model to use"),
+        messages: zod_1.z.array(zod_1.z.object({
+            role: zod_1.z.enum(["user", "assistant"]),
+            content: zod_1.z.string()
         })).describe("Conversation history"),
-        system: z.string().optional().describe("System prompt"),
-        max_tokens: z.number().default(1024)
+        system: zod_1.z.string().optional().describe("System prompt"),
+        max_tokens: zod_1.z.number().default(1024)
     }, async ({ model, messages, system, max_tokens }) => {
         const apiKey = process.env.CLAUDE_API_KEY;
         if (!apiKey) {

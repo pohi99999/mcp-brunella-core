@@ -1,58 +1,83 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { z } from "zod";
 import os from 'os';
-import fs from 'fs/promises';
 import path from 'path';
+import fs from 'fs/promises';
+import { config } from '../config/index.js';
+import { z } from "zod";
 
 export function registerMonitorTools(server: McpServer) {
-    server.tool(
-        "monitor_get_metrics",
-        "Returns system metrics (CPU, Memory, Uptime).",
-        {},
-        async () => {
-            const memUsage = process.memoryUsage();
-            const metrics = {
-                uptime: process.uptime(),
-                cpuUsage: process.cpuUsage(),
-                memory: {
-                    total: os.totalmem(),
-                    free: os.freemem(),
-                    processHeap: memUsage.heapUsed,
-                    processRss: memUsage.rss
-                },
-                platform: os.platform(),
-                loadavg: os.loadavg()
-            };
-            return {
-                content: [{ type: "text", text: JSON.stringify(metrics, null, 2) }]
-            };
-        }
-    );
+  server.tool(
+    "monitor_get_metrics",
+    "Returns system metrics including uptime, memory usage, and CPU load.",
+    {},
+    async () => {
+      const uptime = os.uptime();
+      const totalMem = os.totalmem();
+      const freeMem = os.freemem();
+      const loadAvg = os.loadavg();
 
-    server.tool(
-        "monitor_get_logs",
-        "Returns the tail of specified log file.",
-        {
-            logName: z.enum(['agent-manager.log', 'web_ui.log', 'system_commands.log', 'brunella.db']).describe("Name of the log file"),
-            lines: z.number().max(100).default(50).describe("Number of lines to return")
+      const metrics = {
+        uptime: uptime,
+        uptime_human: formatUptime(uptime),
+        memory: {
+          total: totalMem,
+          free: freeMem,
+          used: totalMem - freeMem,
+          usage_percent: ((totalMem - freeMem) / totalMem * 100).toFixed(2) + "%"
         },
-        async ({ logName, lines }) => {
-            const logPath = path.join(process.cwd(), 'logs', logName);
-            try {
-                await fs.access(logPath);
-                
-                const content = await fs.readFile(logPath, 'utf-8');
-                const allLines = content.split('\n');
-                const tail = allLines.slice(-lines).join('\n');
-                
-                return {
-                    content: [{ type: "text", text: tail }]
-                };
-            } catch (e) {
-                return {
-                    content: [{ type: "text", text: `Log file not found or empty: ${logName}` }]
-                };
-            }
-        }
-    );
+        cpu: {
+          load_avg_1m: loadAvg[0],
+          load_avg_5m: loadAvg[1],
+          load_avg_15m: loadAvg[2]
+        },
+        timestamp: new Date().toISOString()
+      };
+
+      return {
+        content: [
+          {
+            type: "text",
+            text: JSON.stringify(metrics, null, 2),
+          },
+        ],
+      };
+    }
+  );
+
+  server.tool(
+    "monitor_tail_logs",
+    "Reads the last N lines of a specified log file.",
+    {
+      log_file: z.string().describe("Name of the log file in logs/ dir (e.g. 'web_ui.log')"),
+      lines: z.number().default(50).describe("Number of lines to read")
+    },
+    async ({ log_file, lines }) => {
+      const logDir = path.join(process.cwd(), 'logs');
+      const targetPath = path.join(logDir, log_file);
+
+      // Security check
+      if (!targetPath.startsWith(logDir)) {
+        return { isError: true, content: [{ type: "text", text: "Access denied." }] };
+      }
+
+      try {
+        const content = await fs.readFile(targetPath, 'utf-8');
+        const allLines = content.split('\n');
+        const lastLines = allLines.slice(-lines).join('\n');
+
+        return {
+          content: [{ type: "text", text: lastLines }]
+        };
+      } catch (e: any) {
+        return { isError: true, content: [{ type: "text", text: `Error reading log: ${e.message}` }] };
+      }
+    }
+  );
+}
+
+function formatUptime(seconds: number): string {
+  const h = Math.floor(seconds / 3600);
+  const m = Math.floor((seconds % 3600) / 60);
+  const s = Math.floor(seconds % 60);
+  return `${h}h ${m}m ${s}s`;
 }

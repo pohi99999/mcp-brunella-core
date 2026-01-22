@@ -18,7 +18,7 @@ async function chatWithOllama(prompt: string, system: string = ""): Promise<stri
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                model: "llama3.1:latest",
+                model: "qwen2.5-coder:1.5b",
                 prompt: prompt,
                 system: system,
                 stream: false
@@ -90,15 +90,15 @@ export function startWebServer() {
     app.get('/sse', async (req, res) => {
         const sessionId = uuidv4();
         console.log(`New MCP SSE connection: ${sessionId}`);
-        
+
         // Create a transport that points to the POST endpoint with the session ID
         const transport = new SSEServerTransport(`/messages?sessionId=${sessionId}`, res);
-        
+
         const server = new McpServer({
             name: "mcp-brunella-core-web",
             version: "1.0.0",
         });
-        
+
         registerAllTools(server);
 
         mcpSessions.set(sessionId, { transport, server });
@@ -127,7 +127,7 @@ export function startWebServer() {
 
     io.on('connection', (socket) => {
         const DEFAULT_CHAT_ID = 'main-session';
-        
+
         try {
             const history: DbMessage[] = getMessages(DEFAULT_CHAT_ID);
             if (history.length === 0) {
@@ -135,10 +135,10 @@ export function startWebServer() {
             } else {
                 history.forEach((msg: DbMessage) => {
                     // Adapt DB format to UI format
-                    socket.emit('bot_message', { 
-                        text: msg.content, 
+                    socket.emit('bot_message', {
+                        text: msg.content,
                         isUser: msg.role === 'user',
-                        isLog: msg.is_log === 1 
+                        isLog: msg.is_log === 1
                     });
                 });
             }

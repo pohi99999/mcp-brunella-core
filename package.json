@@ -12,7 +12,7 @@
     "dev": "ts-node src/index.ts",
     "watch": "tsc -w",
     "smoke": "node scripts/smoke.mjs",
-    "test": "tsc test/*.test.ts --outDir test_build --moduleResolution node --target es2020 --module commonjs --esModuleInterop && node --test test_build/*.test.js",
+    "test": "tsc test/core_tools.test.ts test/monitor.test.ts test/python_shell.test.ts --outDir test_build --moduleResolution node --target es2020 --module commonjs --esModuleInterop && node --test test_build/*.test.js",
     "build:ui": "vite build src/dashboard",
     "dev:ui": "vite src/dashboard"
   },

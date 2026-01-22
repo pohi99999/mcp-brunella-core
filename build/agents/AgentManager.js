@@ -1,10 +1,16 @@
-import { Logger } from "../utils/logger.js";
-import { searchRAG } from "../utils/rag.js";
-import { SelfHealingPipeline } from "../pipeline/llmPipeline.js";
-import fs from "fs";
-import path from "path";
-const logger = new Logger('agent-manager.log');
-export class AgentManager {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.agentManager = exports.AgentManager = void 0;
+const logger_js_1 = require("../utils/logger.js");
+const rag_js_1 = require("../utils/rag.js");
+const llmPipeline_js_1 = require("../pipeline/llmPipeline.js");
+const fs_1 = __importDefault(require("fs"));
+const path_1 = __importDefault(require("path"));
+const logger = new logger_js_1.Logger('agent-manager.log');
+class AgentManager {
     agents = {};
     definitions = {};
     constructor() {
@@ -12,18 +18,15 @@ export class AgentManager {
         this.registerBuiltInAgents();
     }
     loadRegistry() {
-        const registryPath = path.join(process.cwd(), "src", "agents", "registry.json");
+        const registryPath = path_1.default.join(process.cwd(), "src", "agents", "registry.json");
         try {
-            if (fs.existsSync(registryPath)) {
-                const raw = fs.readFileSync(registryPath, "utf-8");
-                const data = JSON.parse(raw);
-                this.definitions = Object.fromEntries((data.agents || []).map((agent) => [agent.name, agent]));
-                logger.log(`Agent registry loaded: ${registryPath}`);
-            }
+            const raw = fs_1.default.readFileSync(registryPath, "utf-8");
+            const data = JSON.parse(raw);
+            this.definitions = Object.fromEntries((data.agents || []).map((agent) => [agent.name, agent]));
+            logger.log(`Agent registry loaded: ${registryPath}`);
         }
         catch (error) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            logger.log(`Agent registry load failed: ${errorMessage}`);
+            logger.log(`Agent registry load failed: ${error.message}`);
         }
     }
     registerBuiltInAgents() {
@@ -35,7 +38,7 @@ export class AgentManager {
             execute: async (task) => {
                 await logger.log(`[Researcher] Task received: ${task}`);
                 // 1. Keresés a RAG-ban
-                const results = await searchRAG(task, 5);
+                const results = await (0, rag_js_1.searchRAG)(task, 5);
                 if (results.length === 0) {
                     return "Nem találtam releváns információt a tudásbázisban.";
                 }
@@ -51,28 +54,31 @@ export class AgentManager {
             capabilities: ["code_generation", "self_healing"],
             execute: async (task) => {
                 await logger.log(`[Developer] Task received: ${task}`);
-                const pipeline = new SelfHealingPipeline();
+                const pipeline = new llmPipeline_js_1.SelfHealingPipeline();
                 try {
                     const code = await pipeline.run(task);
                     return `Sikeres kódgenerálás:\n\n${code}`;
                 }
                 catch (e) {
-                    const errorMessage = e instanceof Error ? e.message : String(e);
-                    return `Hiba a fejlesztés során: ${errorMessage}`;
+                    return `Hiba a fejlesztés során: ${e.message}`;
                 }
             }
         });
-        // Sync built-ins to definitions
-        ['researcher', 'developer'].forEach(name => {
-            if (!this.definitions[name] && this.agents[name]) {
-                const agent = this.agents[name];
-                this.definitions[name] = {
-                    name: agent.name,
-                    title: agent.name.charAt(0).toUpperCase() + agent.name.slice(1),
-                    description: agent.description,
-                    capabilities: agent.capabilities,
-                    status: 'active'
-                };
+        // 3. OPS ÜGYNÖK (Ops Agent)
+        this.registerAgent({
+            name: "ops",
+            description: "Rendszer állapot és logok felügyelete.",
+            capabilities: ["monitoring", "diagnostics"],
+            execute: async (task) => {
+                await logger.log(`[Ops] Task received: ${task}`);
+                if (task.includes("metrics") || task.includes("status") || task.includes("állapot")) {
+                    // Itt statikusan importáljuk vagy tool hívást szimulálunk, 
+                    // de mivel ez "belső" execute, közvetlenül hívhatjuk a logikát ha kiszerveznénk,
+                    // vagy visszaadhatunk egy útmutatót.
+                    // Egyszerűség kedvéért most szöveges választ adunk.
+                    return "A rendszer metrikák lekérdezéséhez használd a `monitor_get_metrics` toolt. A logokhoz a `monitor_tail_logs`-t.";
+                }
+                return `Ops Agent: A kért feladat (${task}) diagnosztikát igényel. Kérlek pontosítsd, mit vizsgáljak (pl. 'system status', 'web logs').`;
             }
         });
     }
@@ -109,36 +115,6 @@ export class AgentManager {
         }
         return await agent.execute(task);
     }
-    updateAgent(name, updates) {
-        if (!this.definitions[name]) {
-            // Try to find active agent
-            const agent = this.agents[name];
-            if (agent) {
-                this.definitions[name] = {
-                    name: agent.name,
-                    title: agent.name,
-                    description: agent.description,
-                    capabilities: agent.capabilities,
-                    status: "active"
-                };
-            }
-            else {
-                throw new Error(`Agent '${name}' not found.`);
-            }
-        }
-        this.definitions[name] = { ...this.definitions[name], ...updates };
-        // Save to file
-        const registryDir = path.join(process.cwd(), "src", "agents");
-        if (!fs.existsSync(registryDir))
-            fs.mkdirSync(registryDir, { recursive: true });
-        const registryPath = path.join(registryDir, "registry.json");
-        const fileContent = {
-            version: 1,
-            agents: Object.values(this.definitions)
-        };
-        fs.writeFileSync(registryPath, JSON.stringify(fileContent, null, 2));
-        logger.log(`Agent updated and saved: ${name}`);
-        return this.definitions[name];
-    }
 }
-export const agentManager = new AgentManager();
+exports.AgentManager = AgentManager;
+exports.agentManager = new AgentManager();

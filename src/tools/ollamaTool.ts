@@ -9,7 +9,7 @@ export function registerOllamaTool(server: McpServer) {
         "ollama_generate",
         "Generates text using a local Ollama model.",
         {
-            model: z.string().default("llama3.1").describe("The model to use"),
+            model: z.string().default("qwen2.5-coder:1.5b").describe("The model to use"),
             prompt: z.string().describe("The prompt to generate from"),
             options: z.object({
                 temperature: z.number().optional(),
@@ -18,7 +18,7 @@ export function registerOllamaTool(server: McpServer) {
         },
         async ({ model, prompt, options }) => {
             const endpoint = "http://localhost:11434/api/generate";
-            
+
             await logger.log(`Request: ${model}`, { promptLength: prompt.length });
 
             try {

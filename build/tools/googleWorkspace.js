@@ -1,14 +1,17 @@
-import { z } from "zod";
-import { google } from 'googleapis';
-import { getGoogleAuth } from '../utils/googleAuth.js';
-export function registerGoogleWorkspaceTools(server) {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerGoogleWorkspaceTools = registerGoogleWorkspaceTools;
+const zod_1 = require("zod");
+const googleapis_1 = require("googleapis");
+const googleAuth_js_1 = require("../utils/googleAuth.js");
+function registerGoogleWorkspaceTools(server) {
     // GMAIL: List Messages
     server.tool("gmail_list_messages", "Lists recent emails from Gmail.", {
-        maxResults: z.number().default(10),
+        maxResults: zod_1.z.number().default(10),
     }, async ({ maxResults }) => {
         try {
-            const auth = await getGoogleAuth();
-            const gmail = google.gmail({ version: 'v1', auth });
+            const auth = await (0, googleAuth_js_1.getGoogleAuth)();
+            const gmail = googleapis_1.google.gmail({ version: 'v1', auth });
             const res = await gmail.users.messages.list({ userId: 'me', maxResults });
             const messages = res.data.messages || [];
             const details = await Promise.all(messages.map(async (msg) => {
@@ -29,11 +32,11 @@ export function registerGoogleWorkspaceTools(server) {
     });
     // CALENDAR: List Events
     server.tool("calendar_list_events", "Lists upcoming events from Google Calendar.", {
-        maxResults: z.number().default(10),
+        maxResults: zod_1.z.number().default(10),
     }, async ({ maxResults }) => {
         try {
-            const auth = await getGoogleAuth();
-            const calendar = google.calendar({ version: 'v3', auth });
+            const auth = await (0, googleAuth_js_1.getGoogleAuth)();
+            const calendar = googleapis_1.google.calendar({ version: 'v3', auth });
             const res = await calendar.events.list({
                 calendarId: 'primary',
                 timeMin: (new Date()).toISOString(),

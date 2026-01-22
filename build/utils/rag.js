@@ -1,56 +1,49 @@
-import * as lancedb from "@lancedb/lancedb";
-import { config } from '../config/index.js';
-import path from 'path';
-class Cache {
-    embeddings = new Map();
-    searches = new Map();
-    TTL = 3600000; // 1 hour in milliseconds
-    getEmbedding(key) {
-        const entry = this.embeddings.get(key);
-        if (entry && Date.now() - entry.timestamp < this.TTL) {
-            return entry.data;
-        }
-        if (entry) {
-            this.embeddings.delete(key);
-        }
-        return null;
+"use strict";
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    var desc = Object.getOwnPropertyDescriptor(m, k);
+    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
+      desc = { enumerable: true, get: function() { return m[k]; } };
     }
-    setEmbedding(key, data) {
-        this.embeddings.set(key, { data, timestamp: Date.now() });
-    }
-    getSearch(key) {
-        const entry = this.searches.get(key);
-        if (entry && Date.now() - entry.timestamp < this.TTL) {
-            return entry.data;
-        }
-        if (entry) {
-            this.searches.delete(key);
-        }
-        return null;
-    }
-    setSearch(key, data) {
-        this.searches.set(key, { data, timestamp: Date.now() });
-    }
-    clear() {
-        this.embeddings.clear();
-        this.searches.clear();
-    }
-    getStats() {
-        return {
-            embeddings: this.embeddings.size,
-            searches: this.searches.size
+    Object.defineProperty(o, k2, desc);
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || (function () {
+    var ownKeys = function(o) {
+        ownKeys = Object.getOwnPropertyNames || function (o) {
+            var ar = [];
+            for (var k in o) if (Object.prototype.hasOwnProperty.call(o, k)) ar[ar.length] = k;
+            return ar;
         };
-    }
-}
-const cache = new Cache();
+        return ownKeys(o);
+    };
+    return function (mod) {
+        if (mod && mod.__esModule) return mod;
+        var result = {};
+        if (mod != null) for (var k = ownKeys(mod), i = 0; i < k.length; i++) if (k[i] !== "default") __createBinding(result, mod, k[i]);
+        __setModuleDefault(result, mod);
+        return result;
+    };
+})();
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.initRAG = initRAG;
+exports.addToIndex = addToIndex;
+exports.searchRAG = searchRAG;
+const lancedb = __importStar(require("@lancedb/lancedb"));
+const index_js_1 = require("../config/index.js");
+const path_1 = __importDefault(require("path"));
 // Use Ollama for embeddings
-async function getEmbedding(text, useCache = true) {
-    // Check cache first
-    if (useCache) {
-        const cached = cache.getEmbedding(text);
-        if (cached)
-            return cached;
-    }
+async function getEmbedding(text) {
     try {
         const response = await fetch("http://localhost:11434/api/embeddings", {
             method: "POST",
@@ -63,12 +56,7 @@ async function getEmbedding(text, useCache = true) {
         if (!response.ok)
             throw new Error("Ollama embedding failed");
         const data = await response.json();
-        const embedding = data.embedding;
-        // Cache the result
-        if (useCache) {
-            cache.setEmbedding(text, embedding);
-        }
-        return embedding;
+        return data.embedding;
     }
     catch (e) {
         console.error("Embedding error:", e);
@@ -78,11 +66,8 @@ async function getEmbedding(text, useCache = true) {
 // Database singleton
 let db = null;
 let tbl = null;
-let initialized = false;
-export async function initRAG() {
-    if (initialized)
-        return;
-    const dbPath = path.join(config.systemLogDir, 'lancedb');
+async function initRAG() {
+    const dbPath = path_1.default.join(index_js_1.config.systemLogDir, 'lancedb');
     db = await lancedb.connect(dbPath);
     // Create or open table
     const schema = {
@@ -101,12 +86,11 @@ export async function initRAG() {
         // We'll skip deep creation logic here to avoid complexity in this snippet
         // and rely on the tool to handle lazy creation on first index.
     }
-    initialized = true;
 }
-export async function addToIndex(filePath, content) {
+async function addToIndex(filePath, content) {
     if (!db)
         await initRAG();
-    const vector = await getEmbedding(content.slice(0, 1000), false); // Don't cache during indexing
+    const vector = await getEmbedding(content.slice(0, 1000)); // Embed first 1k chars for summary
     const data = [{
             id: filePath,
             path: filePath,
@@ -119,33 +103,11 @@ export async function addToIndex(filePath, content) {
     else {
         await tbl.add(data);
     }
-    // Clear search cache when new data is added
-    cache.clear();
 }
-export async function searchRAG(query, limit = 5, useCache = true) {
-    if (!db || !tbl) {
-        await initRAG();
-        if (!db || !tbl)
-            return [];
-    }
-    // Check cache for search results
-    const cacheKey = `${query}:${limit}`;
-    if (useCache) {
-        const cached = cache.getSearch(cacheKey);
-        if (cached)
-            return cached;
-    }
-    const queryVector = await getEmbedding(query, useCache);
+async function searchRAG(query, limit = 5) {
+    if (!db || !tbl)
+        return [];
+    const queryVector = await getEmbedding(query);
     const results = await tbl.vectorSearch(queryVector).limit(limit).toArray();
-    // Cache the results
-    if (useCache) {
-        cache.setSearch(cacheKey, results);
-    }
     return results;
-}
-export function clearRAGCache() {
-    cache.clear();
-}
-export function getRAGCacheStats() {
-    return cache.getStats();
 }

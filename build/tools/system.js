@@ -1,8 +1,14 @@
-import { z } from "zod";
-import { spawn } from "child_process";
-import fs from 'fs/promises';
-import path from 'path';
-import { config } from '../config/index.js';
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.registerSystemTools = registerSystemTools;
+const zod_1 = require("zod");
+const child_process_1 = require("child_process");
+const promises_1 = __importDefault(require("fs/promises"));
+const path_1 = __importDefault(require("path"));
+const index_js_1 = require("../config/index.js");
 const ALLOWED_COMMANDS = [
     'dir', 'ls',
     'type', 'cat',
@@ -16,16 +22,16 @@ const ALLOWED_ARGS_PATTERNS = [
 async function logCommand(command, cwd, user = 'unknown') {
     const logEntry = `[${new Date().toISOString()}] User: ${user} | CWD: ${cwd} | Command: ${command}\n`;
     try {
-        await fs.appendFile(path.join(config.systemLogDir, 'system_commands.log'), logEntry);
+        await promises_1.default.appendFile(path_1.default.join(index_js_1.config.systemLogDir, 'system_commands.log'), logEntry);
     }
     catch (e) {
         console.error("Failed to write log:", e);
     }
 }
-export function registerSystemTools(server) {
+function registerSystemTools(server) {
     server.tool("system_run_command", "Runs a restricted system command (dir, ls, type, cat, python --version, node --version).", {
-        command: z.string().describe("The command to run"),
-        cwd: z.string().optional().describe("Working directory"),
+        command: zod_1.z.string().describe("The command to run"),
+        cwd: zod_1.z.string().optional().describe("Working directory"),
     }, async ({ command, cwd }) => {
         const args = command.split(' ');
         const executable = args[0];
@@ -47,13 +53,13 @@ export function registerSystemTools(server) {
             }
         }
         // Check CWD security
-        const workingDir = cwd ? path.resolve(config.workspaceRoot, cwd) : config.workspaceRoot;
-        if (!workingDir.startsWith(config.workspaceRoot)) {
-            throw new Error(`Access denied: CWD must be within ${config.workspaceRoot}`);
+        const workingDir = cwd ? path_1.default.resolve(index_js_1.config.workspaceRoot, cwd) : index_js_1.config.workspaceRoot;
+        if (!workingDir.startsWith(index_js_1.config.workspaceRoot)) {
+            throw new Error(`Access denied: CWD must be within ${index_js_1.config.workspaceRoot}`);
         }
         await logCommand(command, workingDir);
         return new Promise((resolve) => {
-            const proc = spawn(executable, cmdArgs, {
+            const proc = (0, child_process_1.spawn)(executable, cmdArgs, {
                 cwd: workingDir,
                 shell: true
             });

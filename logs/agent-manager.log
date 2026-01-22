@@ -7,24 +7,92 @@
 [2026-01-20T10:20:24.409Z] Agent registry loaded: F:\OneDrive\Desktop\Brunella_es_en\02_PROJECTS\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
 [2026-01-20T10:20:24.410Z] Agent registered: researcher 
 [2026-01-20T10:20:24.410Z] Agent registered: developer 
-[2026-01-20T17:36:51.232Z] Agent registered: researcher 
-[2026-01-20T17:36:51.232Z] Agent registered: developer 
-[2026-01-20T17:36:51.231Z] Agent registry loaded: F:\OneDrive\Desktop\Brunella_es_en\02_PROJECTS\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
-{"timestamp":"2026-01-20T21:33:52.945Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
-{"timestamp":"2026-01-20T21:33:52.945Z","level":"INFO","message":"Agent registered: researcher"}
-{"timestamp":"2026-01-20T21:33:52.945Z","level":"INFO","message":"Agent registered: developer"}
-{"timestamp":"2026-01-20T21:38:14.243Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
-{"timestamp":"2026-01-20T21:38:14.243Z","level":"INFO","message":"Agent registered: researcher"}
-{"timestamp":"2026-01-20T21:38:14.243Z","level":"INFO","message":"Agent registered: developer"}
-{"timestamp":"2026-01-20T21:38:51.097Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
-{"timestamp":"2026-01-20T21:38:51.097Z","level":"INFO","message":"Agent registered: researcher"}
-{"timestamp":"2026-01-20T21:38:51.097Z","level":"INFO","message":"Agent registered: developer"}
-{"timestamp":"2026-01-20T22:02:53.523Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
-{"timestamp":"2026-01-20T22:02:53.523Z","level":"INFO","message":"Agent registered: researcher"}
-{"timestamp":"2026-01-20T22:02:53.523Z","level":"INFO","message":"Agent registered: developer"}
-{"timestamp":"2026-01-20T22:56:15.807Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
-{"timestamp":"2026-01-20T22:56:15.808Z","level":"INFO","message":"Agent registered: developer"}
-{"timestamp":"2026-01-20T22:56:15.808Z","level":"INFO","message":"Agent registered: researcher"}
-{"timestamp":"2026-01-20T23:05:29.036Z","level":"INFO","message":"Agent registry loaded: F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\\[ACTIVE]_mcp-brunella-core\\src\\agents\\registry.json"}
-{"timestamp":"2026-01-20T23:05:29.037Z","level":"INFO","message":"Agent registered: researcher"}
-{"timestamp":"2026-01-20T23:05:29.037Z","level":"INFO","message":"Agent registered: developer"}
+[2026-01-21T04:50:00.319Z] Agent registry loaded: /app/src/agents/registry.json
+[2026-01-21T04:50:00.320Z] Agent registered: researcher
+[2026-01-21T04:50:00.320Z] Agent registered: developer
+[2026-01-21T04:52:14.112Z] Agent registered: researcher
+[2026-01-21T04:52:14.112Z] Agent registered: developer
+[2026-01-21T04:52:14.110Z] Agent registry loaded: /app/src/agents/registry.json
+[2026-01-21T04:53:03.837Z] Agent registry loaded: /app/src/agents/registry.json
+[2026-01-21T04:53:03.838Z] Agent registered: researcher
+[2026-01-21T04:53:03.838Z] Agent registered: developer
+[2026-01-21T04:53:27.396Z] Agent registry loaded: /app/src/agents/registry.json
+[2026-01-21T04:53:27.397Z] Agent registered: researcher
+[2026-01-21T04:53:27.397Z] Agent registered: developer
+[2026-01-21T04:53:52.038Z] Agent registry loaded: /app/src/agents/registry.json
+[2026-01-21T04:53:52.039Z] Agent registered: researcher
+[2026-01-21T04:53:52.039Z] Agent registered: developer
+[2026-01-21T04:56:01.243Z] Agent registry loaded: /app/src/agents/registry.json
+[2026-01-21T04:56:01.244Z] Agent registered: researcher
+[2026-01-21T04:56:01.244Z] Agent registered: developer
+[2026-01-22T11:06:14.723Z] Agent registered: researcher 
+[2026-01-22T11:06:14.722Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T11:06:14.723Z] Agent registered: developer 
+[2026-01-22T11:19:17.192Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T11:19:17.193Z] Agent registered: researcher 
+[2026-01-22T11:19:17.193Z] Agent registered: developer 
+[2026-01-22T11:34:28.165Z] Agent registered: developer 
+[2026-01-22T11:34:28.165Z] Agent registered: researcher 
+[2026-01-22T11:34:28.164Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T12:06:25.812Z] Agent registered: developer 
+[2026-01-22T12:06:25.811Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T12:06:25.812Z] Agent registered: researcher 
+[2026-01-22T12:19:38.865Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T12:19:38.866Z] Agent registered: researcher 
+[2026-01-22T12:19:38.866Z] Agent registered: developer 
+[2026-01-22T12:28:18.133Z] Agent registered: researcher 
+[2026-01-22T12:28:18.133Z] Agent registered: developer 
+[2026-01-22T12:28:18.132Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T12:54:28.251Z] Agent registered: researcher 
+[2026-01-22T12:54:28.250Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T12:54:28.251Z] Agent registered: developer 
+[2026-01-22T13:06:45.585Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T13:06:45.586Z] Agent registered: researcher 
+[2026-01-22T13:06:45.586Z] Agent registered: developer 
+[2026-01-22T14:46:33.809Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T14:46:34.017Z] Agent registered: researcher 
+[2026-01-22T14:46:34.017Z] Agent registered: developer 
+[2026-01-22T14:47:13.712Z] Agent registered: researcher 
+[2026-01-22T14:47:13.704Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T14:47:13.712Z] Agent registered: developer 
+[2026-01-22T14:47:21.195Z] Agent registered: researcher 
+[2026-01-22T14:47:21.192Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T14:47:21.195Z] Agent registered: developer 
+[2026-01-22T14:49:24.828Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T14:49:24.834Z] Agent registered: researcher 
+[2026-01-22T14:49:24.834Z] Agent registered: developer 
+[2026-01-22T14:52:20.228Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T14:52:20.231Z] Agent registered: researcher 
+[2026-01-22T14:52:20.231Z] Agent registered: developer 
+[2026-01-22T15:10:09.392Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T15:10:09.394Z] Agent registered: researcher 
+[2026-01-22T15:10:09.394Z] Agent registered: ops 
+[2026-01-22T15:10:09.394Z] Agent registered: developer 
+[2026-01-22T15:10:38.117Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T15:10:38.122Z] Agent registered: developer 
+[2026-01-22T15:10:38.121Z] Agent registered: researcher 
+[2026-01-22T15:10:38.122Z] Agent registered: ops 
+[2026-01-22T15:12:49.642Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T15:12:49.647Z] Agent registered: researcher 
+[2026-01-22T15:12:49.647Z] Agent registered: developer 
+[2026-01-22T15:12:49.647Z] Agent registered: ops 
+[2026-01-22T15:17:53.441Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T15:17:53.443Z] Agent registered: developer 
+[2026-01-22T15:17:53.443Z] Agent registered: researcher 
+[2026-01-22T15:17:53.443Z] Agent registered: ops 
+[2026-01-22T15:17:58.369Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T15:17:58.372Z] Agent registered: researcher 
+[2026-01-22T15:17:58.372Z] Agent registered: developer 
+[2026-01-22T15:17:58.372Z] Agent registered: ops 
+[2026-01-22T15:24:54.010Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T15:24:54.016Z] Agent registered: researcher 
+[2026-01-22T15:24:54.016Z] Agent registered: developer 
+[2026-01-22T15:24:54.016Z] Agent registered: ops 
+[2026-01-22T15:25:00.090Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T15:25:00.095Z] Agent registered: researcher 
+[2026-01-22T15:25:00.095Z] Agent registered: ops 
+[2026-01-22T15:25:00.095Z] Agent registered: developer 
+[2026-01-22T15:27:10.789Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-22T15:27:10.793Z] Agent registered: researcher 
+[2026-01-22T15:27:10.793Z] Agent registered: ops 
+[2026-01-22T15:27:10.793Z] Agent registered: developer 

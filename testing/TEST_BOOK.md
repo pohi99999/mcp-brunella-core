@@ -1,40 +1,35 @@
-# Semantic Test Book: Cogella Core
+# Jules' Test Book
 
-This document defines the semantic test scenarios for Jules (or any Agent) to execute.
-Goal: Verify the system's integrity from a user perspective.
+This document defines the standard QA scenarios for Cogella Core (MCP Brunella Core).
+Jules uses these scenarios to verify system integrity.
 
-## Guidelines for Jules
-1. Read a Scenario.
-2. Execute the steps using available tools (`browser`, `system`, `agent`).
-3. Report success or failure for each step.
-4. If a step fails, try to diagnose why.
-
-## Scenario 1: System Health Check
-**Goal:** Verify that the backend is running and the dashboard is accessible.
-
+## Scenario 1: Basic Health Check
+**Goal:** Verify the server is running and responsive.
 **Steps:**
-1. Check system metrics.
-   - Tool: `monitor_get_metrics`
-   - Expectation: Returns valid JSON with uptime > 0.
-2. Verify MCP connection and Agent Registry.
-   - Tool: `agent_list`.
-   - Expectation: Returns list of agents (Researcher, Developer).
+1.  Connect to the MCP server.
+2.  Call `ping` tool.
+3.  **Expect:** Response containing "Pong" or confirmation of activity.
 
-## Scenario 2: Knowledge Base Verification
-**Goal:** Verify RAG functionality.
-
+## Scenario 2: System Metrics
+**Goal:** Check if system monitoring is active.
 **Steps:**
-1. Perform a semantic search.
-   - Tool: `knowledge_semantic_search` with query "What is Cogella Core?".
-   - Expectation: Returns results with content related to the product definition.
+1.  Call `monitor_get_metrics` tool.
+2.  **Expect:** JSON object with `uptime`, `memory`, and `cpu` fields.
 
-## Scenario 3: Agent Capabilities
-**Goal:** Verify that agents are registered and active.
-
+## Scenario 3: Agent Registry
+**Goal:** Verify agent definitions are loaded.
 **Steps:**
-1. List agents.
-   - Tool: `agent_list`.
-   - Expectation: Contains "researcher" and "developer".
-2. Delegate a simple task to "researcher".
-   - Tool: `agent_delegate` with agent "researcher" and task "Summarize the tech stack".
-   - Expectation: Returns a summary based on `tech-stack.md`.
+1.  Call `agent_list` tool.
+2.  **Expect:** A JSON list containing at least "Jules", "Brunella", "Researcher", "Developer".
+
+## Scenario 4: RAG Functionality (Knowledge)
+**Goal:** Verify semantic search is operational (requires LanceDB).
+**Steps:**
+1.  Call `knowledge_semantic_search` with query "What is Brunella?".
+2.  **Expect:** A list of results (even empty is technically success for the tool call, but non-error).
+
+## Scenario 5: Smoke Test (Script)
+**Goal:** Run the provided smoke script.
+**Steps:**
+1.  Execute `npm run smoke`.
+2.  **Expect:** Exit code 0 and "Protocol ping: OK".

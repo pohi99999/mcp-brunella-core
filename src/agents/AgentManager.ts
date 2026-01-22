@@ -19,17 +19,14 @@ export class AgentManager {
     private loadRegistry() {
         const registryPath = path.join(process.cwd(), "src", "agents", "registry.json");
         try {
-            if (fs.existsSync(registryPath)) {
-                const raw = fs.readFileSync(registryPath, "utf-8");
-                const data = JSON.parse(raw) as AgentRegistryFile;
-                this.definitions = Object.fromEntries(
-                    (data.agents || []).map((agent) => [agent.name, agent])
-                );
-                logger.log(`Agent registry loaded: ${registryPath}`);
-            }
-        } catch (error: unknown) {
-            const errorMessage = error instanceof Error ? error.message : String(error);
-            logger.log(`Agent registry load failed: ${errorMessage}`);
+            const raw = fs.readFileSync(registryPath, "utf-8");
+            const data = JSON.parse(raw) as AgentRegistryFile;
+            this.definitions = Object.fromEntries(
+                (data.agents || []).map((agent) => [agent.name, agent])
+            );
+            logger.log(`Agent registry loaded: ${registryPath}`);
+        } catch (error: any) {
+            logger.log(`Agent registry load failed: ${error.message}`);
         }
     }
 
@@ -41,7 +38,7 @@ export class AgentManager {
             capabilities: ["rag_search", "summarization"],
             execute: async (task: string) => {
                 await logger.log(`[Researcher] Task received: ${task}`);
-                
+
                 // 1. Keresés a RAG-ban
                 const results = await searchRAG(task, 5);
                 if (results.length === 0) {
@@ -65,24 +62,29 @@ export class AgentManager {
                 try {
                     const code = await pipeline.run(task);
                     return `Sikeres kódgenerálás:\n\n${code}`;
-                } catch (e: unknown) {
-                    const errorMessage = e instanceof Error ? e.message : String(e);
-                    return `Hiba a fejlesztés során: ${errorMessage}`;
+                } catch (e: any) {
+                    return `Hiba a fejlesztés során: ${e.message}`;
                 }
             }
         });
 
-        // Sync built-ins to definitions
-        ['researcher', 'developer'].forEach(name => {
-            if (!this.definitions[name] && this.agents[name]) {
-                const agent = this.agents[name];
-                this.definitions[name] = {
-                    name: agent.name,
-                    title: agent.name.charAt(0).toUpperCase() + agent.name.slice(1),
-                    description: agent.description,
-                    capabilities: agent.capabilities,
-                    status: 'active'
-                };
+        // 3. OPS ÜGYNÖK (Ops Agent)
+        this.registerAgent({
+            name: "ops",
+            description: "Rendszer állapot és logok felügyelete.",
+            capabilities: ["monitoring", "diagnostics"],
+            execute: async (task: string) => {
+                await logger.log(`[Ops] Task received: ${task}`);
+
+                if (task.includes("metrics") || task.includes("status") || task.includes("állapot")) {
+                    // Itt statikusan importáljuk vagy tool hívást szimulálunk, 
+                    // de mivel ez "belső" execute, közvetlenül hívhatjuk a logikát ha kiszerveznénk,
+                    // vagy visszaadhatunk egy útmutatót.
+                    // Egyszerűség kedvéért most szöveges választ adunk.
+                    return "A rendszer metrikák lekérdezéséhez használd a `monitor_get_metrics` toolt. A logokhoz a `monitor_tail_logs`-t.";
+                }
+
+                return `Ops Agent: A kért feladat (${task}) diagnosztikát igényel. Kérlek pontosítsd, mit vizsgáljak (pl. 'system status', 'web logs').`;
             }
         });
     }
@@ -124,40 +126,6 @@ export class AgentManager {
             throw new Error(`Agent '${agentName}' not found.`);
         }
         return await agent.execute(task);
-    }
-
-    public updateAgent(name: string, updates: Partial<AgentDefinition>) {
-        if (!this.definitions[name]) {
-             // Try to find active agent
-             const agent = this.agents[name];
-             if (agent) {
-                 this.definitions[name] = {
-                     name: agent.name,
-                     title: agent.name,
-                     description: agent.description,
-                     capabilities: agent.capabilities,
-                     status: "active"
-                 };
-             } else {
-                 throw new Error(`Agent '${name}' not found.`);
-             }
-        }
-        
-        this.definitions[name] = { ...this.definitions[name], ...updates };
-        
-        // Save to file
-        const registryDir = path.join(process.cwd(), "src", "agents");
-        if (!fs.existsSync(registryDir)) fs.mkdirSync(registryDir, { recursive: true });
-        
-        const registryPath = path.join(registryDir, "registry.json");
-        const fileContent: AgentRegistryFile = {
-            version: 1,
-            agents: Object.values(this.definitions)
-        };
-        fs.writeFileSync(registryPath, JSON.stringify(fileContent, null, 2));
-        logger.log(`Agent updated and saved: ${name}`);
-        
-        return this.definitions[name];
     }
 }
 
