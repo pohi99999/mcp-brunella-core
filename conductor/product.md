@@ -13,14 +13,12 @@ A Cogella Core a Brunella Agent System (BAS) "digitális idegrendszere". Egy oly
 
 ## Kulcsfontosságú Funkciók (MVP)
 - **Brunella Orchestrator:** Hierarchikus ügynök-vezérlés, ahol Brunella delegálja a feladatokat a specializált ügynököknek.
-- **Brunella CLI (myai):** Önálló Python alapú eszközkészlet multi-ágens folyamatokhoz (Planner, Coder, Reviewer) és izolált kódvégrehajtáshoz.
-- **Hibrid DevOps Partner (Jules):** Külső ágens integráció White Box hozzáféréssel a forráskódhoz, automatizált teszteléshez és öngyógyító folyamatokhoz.
+- **Real-time AI Irányítópult:** Modern webes felület (Dashboard) a rendszer állapotának, metrikáinak és naplóinak élő követésére, valamint interaktív chat interfész az ügynökökkel való kommunikációhoz.
 - **Fejlett Tudásbázis (RAG):** Vektoros keresés a `07_KNOWLEDGE_BASE` és `03_LIBRARY` mappákban LanceDB segítségével.
-- **Innovációs Homokozó (Sandbox):** Biztonságos Python és Node.js kódvégrehajtás izolált Docker környezetben, kiegészítve Open Interpreter-rel az OS-szintű feladatokhoz.
+- **Innovációs Homokozó (Sandbox):** Biztonságos Python és Node.js kódvégrehajtás izolált Docker környezetben.
 - **Google Workspace Nexus:** Szemantikus naptárkezelés és Gmail RAG alapú keresés.
 - **n8n Kétirányú Híd:** Automatizációs munkafolyamatok indítása és az ágens visszahívása az n8n folyamatokból.
 - **Böngésző Vezérlés:** Playwright alapú webes navigáció és adatgyűjtés.
-- **Központi Irányítópult (Dashboard):** Modern webes felület (React/Vite) a rendszer felügyeletére, az ügynökök menedzselésére és a tudásbázis vizualizációjára.
 
 ## Működési Környezet
 - A rendszer az `F:\OneDrive\Desktop\Brunella_es_en` munkaterületen belül működik, szigorúan betartva a könyvtárfa szabályait.

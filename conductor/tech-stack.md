@@ -6,6 +6,12 @@
 - **Protokoll:** Model Context Protocol (MCP SDK v1.0.0)
 - **Real-time kommunikáció:** Socket.io
 
+## Frontend (Dashboard)
+- **Keretrendszer:** React 19 (Vite alapokon)
+- **Stílus:** Tailwind CSS + Radix UI (Shadcn/UI elvek)
+- **Állapotkezelés:** Zustand (globális), React Context
+- **Kommunikáció:** Socket.io-client (valós idejű adatok), native fetch
+
 ## Adattárolás és Tudásbázis
 - **Vektoros Adatbázis:** LanceDB (RAG implementációhoz)
 - **Strukturált Adatbázis:** SQLite (better-sqlite3)
@@ -14,7 +20,7 @@
 - **Elsődleges Modellek:**
     - Helyi: Ollama (Gemma 3.4b, Qwen 2.5 Coder - kódolásra optimalizálva)
     - Felhő: Gemini API (kiegészítő hívásokhoz, tervezett Gemini 1.5 Pro integráció)
-- **Ügynök Kiegészítők:** Jules, Brunella CLI (Python Typer), Agent Coder, Open Interpreter (OS-level tasks)
+- **Ügynök Kiegészítők:** Jules, Agent Coder
 - **RAG:** Saját implementáció LanceDB alapon
 
 ## Automatizáció és Végrehajtás
@@ -22,12 +28,6 @@
 - **Böngésző:** Playwright (Headless navigáció)
 - **Integráció:** Google Workspace API-k (GoogleAuth)
 - **Logika:** Kód alapú automatizáció (Python scriptek prioritással az n8n helyett/mellett)
-
-## Frontend (Dashboard)
-- **Keretrendszer:** React 19 (Vite)
-- **Stílus:** Tailwind CSS v4
-- **UI komponensek:** Shadcn/UI, Radix UI
-- **Kommunikáció:** MCP Client (SSE)
 
 ## Fejlesztői Környezet
 - **CLI:** Gemini CLI
