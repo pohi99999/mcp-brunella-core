@@ -6,16 +6,16 @@
     - [x] Frissítsd a `requirements.txt`-t.
 
 ## Phase 2: Implementation
-- [ ] Task: Update Automation Server
-    - [ ] Módosítsd az `src/servers/automation.py` fájlt.
-    - [ ] Inicializáld a `BackgroundScheduler`-t `SQLAlchemyJobStore`-ral.
-    - [ ] Implementáld az életciklus kezelést (start/shutdown).
-- [ ] Task: Define Jobs
-    - [ ] Hozz létre egy "dummy" végrehajtó függvényt (pl. `execute_reminder`), amit az ütemező meghív.
-- [ ] Task: Create MCP Tools
-    - [ ] Implementáld a `schedule_reminder` eszközt (dátum/idő parsere-vel).
-    - [ ] Implementáld a `list_scheduled_jobs` eszközt.
-    - [ ] Implementáld a `remove_scheduled_job` eszközt.
+- [x] Task: Update Automation Server
+    - [x] Módosítsd az `src/servers/automation.py` fájlt.
+    - [x] Inicializáld a `BackgroundScheduler`-t `SQLAlchemyJobStore`-ral.
+    - [x] Implementáld az életciklus kezelést (start/shutdown).
+- [x] Task: Define Jobs
+    - [x] Hozz létre egy "dummy" végrehajtó függvényt (pl. `execute_reminder`), amit az ütemező meghív.
+- [x] Task: Create MCP Tools
+    - [x] Implementáld a `schedule_reminder` eszközt (dátum/idő parsere-vel).
+    - [x] Implementáld a `list_scheduled_jobs` eszközt.
+    - [x] Implementáld a `remove_scheduled_job` eszközt.
 
 ## Phase 3: Integration & Testing
 - [ ] Task: Manual Testing
