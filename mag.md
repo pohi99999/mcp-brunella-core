@@ -12,15 +12,21 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 
 ## System Status
 - **Node.js Tests:** Sikeres (manuális node hívással). Az `npm test` script optimalizálva lett.
-- **Python Tests:** Nincs tesztfájl, de a környezet (`.venv`) sikeresen felépült és a függőségek telepítve lettek. A `pytest` futtatható.
+- **Python Tests:** Nincs tesztfájl, de a környezet (`.venv`) sikeresen felépült.
+- **E2E Tesztek:** ✅ SIKERES. A `scripts/e2e_runner.ts` ellenőrizte a Node.js szervert, a Python Automation szervert és a Google Workspace szervert. Minden rendszer működőképes.
 - **Integrációk:**
     - **Google Workspace:** `src/servers/google_workspace.py` (Gmail, Drive) implementálva. Hitelesítés `src/utils/google_auth.py`-n keresztül.
     - **Feladatütemező (Scheduler):** `src/servers/automation.py` bővítve APScheduler-rel és SQLite perzisztenciával (`scheduler.db`).
 - **Ismert problémák:**
     - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat.
-    - A `pytest` hibát dobhat a könyvtárnévben lévő `[]` karakterek miatt paraméterezéskor.
+    - A Python szerverek STDERR kimenete néha zajos lehet, de az MCP kommunikációt nem zavarja.
 
 ## Development Log
+### 2026.01.26 - E2E Tesztelési Keretrendszer
+- `scripts/e2e_runner.ts` létrehozása a teljes rendszer tesztelésére.
+- Node.js és Python MCP szerverek párhuzamos tesztelése.
+- Port ütközések és modul import hibák javítása.
+
 ### 2026.01.26 - Feladatütemező (Scheduler) Implementálása
 - `apscheduler` és `sqlalchemy` telepítése.
 - `src/servers/automation.py` átírása valódi ütemezővé.

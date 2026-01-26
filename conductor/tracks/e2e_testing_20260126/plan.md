@@ -14,9 +14,9 @@
     - [x] Hívd meg a `list_scheduled_jobs` eszközt.
 
 ## Phase 3: Execution & Verification
-- [ ] Task: NPM Script
-    - [ ] Adj hozzá egy `test:e2e` scriptet a `package.json`-hoz.
-- [ ] Task: Run Tests
-    - [ ] Futtasd le a teszteket és javítsd az esetleges időzítési/kapcsolódási hibákat.
-- [ ] Task: Update Documentation
-    - [ ] Frissítsd a `mag.md` System Status szekcióját az E2E eredményekkel.
+- [x] Task: NPM Script
+    - [x] Adj hozzá egy `test:e2e` scriptet a `package.json`-hoz.
+- [x] Task: Run Tests
+    - [x] Futtasd le a teszteket és javítsd az esetleges időzítési/kapcsolódási hibákat.
+- [x] Task: Update Documentation
+    - [x] Frissítsd a `mag.md` System Status szekcióját az E2E eredményekkel.
