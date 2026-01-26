@@ -15,11 +15,18 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 - **Python Tests:** Nincs tesztfájl, de a környezet (`.venv`) sikeresen felépült és a függőségek telepítve lettek. A `pytest` futtatható.
 - **Integrációk:**
     - **Google Workspace:** `src/servers/google_workspace.py` (Gmail, Drive) implementálva. Hitelesítés `src/utils/google_auth.py`-n keresztül.
+    - **Feladatütemező (Scheduler):** `src/servers/automation.py` bővítve APScheduler-rel és SQLite perzisztenciával (`scheduler.db`).
 - **Ismert problémák:**
     - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat.
     - A `pytest` hibát dobhat a könyvtárnévben lévő `[]` karakterek miatt paraméterezéskor.
 
 ## Development Log
+### 2026.01.26 - Feladatütemező (Scheduler) Implementálása
+- `apscheduler` és `sqlalchemy` telepítése.
+- `src/servers/automation.py` átírása valódi ütemezővé.
+- SQLite perzisztencia beállítása a feladatok megőrzéséhez.
+- MCP eszközök: `schedule_reminder`, `list_scheduled_jobs`, `remove_scheduled_job`.
+
 ### 2026.01.26 - Google Workspace Integráció
 - `google-api-python-client` és hitelesítési könyvtárak telepítése.
 - `src/utils/google_auth.py` implementálása OAuth2 támogatással.

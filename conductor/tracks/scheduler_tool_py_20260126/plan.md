@@ -18,9 +18,9 @@
     - [x] Implementáld a `remove_scheduled_job` eszközt.
 
 ## Phase 3: Integration & Testing
-- [ ] Task: Manual Testing
-    - [ ] Hozz létre egy teszt scriptet, ami beütemez egy feladatot 1 perccel későbbre, és figyeli a kimenetet.
-- [ ] Task: Conductor - User Manual Verification 'Scheduler' (Protocol in workflow.md)
-- [ ] Task: Update Documentation
-    - [ ] Frissítsd a `mag.md`-t az új modullal.
-    - [ ] Frissítsd az `INTEGRATION_PLAN.md` státuszát (bár a SchedulerGem nem volt explicit része, de kapcsolódik).
+- [x] Task: Manual Testing
+    - [x] Hozz létre egy teszt scriptet, ami beütemez egy feladatot 1 perccel későbbre, és figyeli a kimenetet.
+- [x] Task: Conductor - User Manual Verification 'Scheduler' (Protocol in workflow.md)
+- [x] Task: Update Documentation
+    - [x] Frissítsd a `mag.md`-t az új modullal.
+    - [x] Frissítsd az `INTEGRATION_PLAN.md` státuszát. (Megjegyzés: A Scheduler funkció beépült az automation modulba).

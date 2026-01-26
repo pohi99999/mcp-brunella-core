@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Feladatütemező (Scheduler) Python Tool**
+- [x] **Track: Feladatütemező (Scheduler) Python Tool**
   *Link: [./tracks/scheduler_tool_py_20260126/](./tracks/scheduler_tool_py_20260126/)*
