@@ -15,6 +15,6 @@
 ## Phase 3: Verify & Search
 - [x] Task: Test Search
     - [x] Bővítsd az E2E tesztet vagy hozz létre egy `scripts/search_knowledge.ts` scriptet.
-    - [x] Futtass egy keresést: "Hogyan működik a scheduler?" és ellenőrizd az eredményt. (Megjegyzés: Üres eredmény az Ollama hiánya miatt).
+    - [x] Futtass egy keresést: "Hogyan működik a scheduler?" és ellenőrizd az eredményt. (Megjegyzés: SIKERES. Valódi találatokat kapunk az Ollama embeddingeknek köszönhetően).
 - [x] Task: Update Documentation
     - [x] Frissítsd a `mag.md` System Status szekcióját (RAG status).

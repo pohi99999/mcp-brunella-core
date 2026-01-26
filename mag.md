@@ -14,16 +14,16 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 - **Node.js Tests:** Sikeres.
 - **Python Tests:** Nincs tesztfájl, környezet OK.
 - **E2E Tesztek:** ✅ SIKERES.
-- **RAG (Tudásbázis):** Az indexelő script (`scripts/index_knowledge.ts`) elkészült. A projekt alapdokumentumai indexelve lettek a LanceDB-be. 
+- **RAG (Tudásbázis):** ✅ TELJESEN MŰKÖDŐKÉPES. Az indexelő script (`scripts/index_knowledge.ts`) lefutott az Ollama (nomic-embed-text) segítségével. A szemantikus keresés verifikálva.
 - **Ismert problémák:**
-    - **Ollama hiányzik:** Az embedding szolgáltatás nem érhető el, ezért a szemantikus keresés jelenleg üres találatokat ad (null vektorok). Az indexelés újraindítása szükséges, ha az Ollama fut.
     - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat.
 
 ## Development Log
-### 2026.01.26 - Tudásbázis Indexelése
-- `scripts/index_knowledge.ts` létrehozása.
-- Alapdokumentumok (`README`, `mag`, `conductor/*`) indexelése LanceDB-be.
-- Szemantikus keresés tesztelése (üres eredmény az Ollama hiánya miatt).
+### 2026.01.26 - Tudásbázis Indexelése és RAG Javítás
+- Ollama `nomic-embed-text` modell letöltése.
+- `src/utils/rag.ts` javítása (lazy inicializálás a keresésnél).
+- Teljes újra-indexelés valódi embeddingekkel.
+- Szemantikus keresés sikeres verifikációja (`scripts/search_knowledge.ts`).
 
 ### 2026.01.26 - E2E Tesztelési Keretrendszer
 - `scripts/e2e_runner.ts` létrehozása a teljes rendszer tesztelésére.
