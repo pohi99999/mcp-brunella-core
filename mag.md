@@ -11,7 +11,11 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 - **Biztonság:** Sandboxolt kód futtatás (vm2), korlátozott fájlműveletek.
 
 ## System Status
-*Feltöltés alatt a tesztek futtatása után...*
+- **Node.js Tests:** Sikeres (3 teszt lefutott, 0 hiba).
+- **Python Tests:** HIBA. A virtuális környezet (`.venv`) hibás útvonalra mutat, a `pytest` nem futtatható.
+- **Ismert problémák:**
+    - Python virtuális környezet (`.venv`) újrainicializálást igényel.
+    - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat (közvetlen `node` hívás szükséges).
 
 ## Development Log
 ### 2026.01.26 - Projekt Inicializálása és Conductor Setup
@@ -19,3 +23,5 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 - Termékdefiníció, Tech Stack és Workflow rögzítése.
 - Első track: Projekt Dokumentáció és Stabilitás megkezdése.
 - `mag.md` létrehozása és alapinformációk rögzítése.
+- **Rendszerellenőrzés:** Node.js tesztek rendben, Python környezet hibás.
+

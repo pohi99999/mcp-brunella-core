@@ -11,17 +11,17 @@
     - [x] Írd bele a "Development Log" szekciót (kezdeti bejegyzéssel).
 
 ## Phase 2: Verification
-- [ ] Task: Tesztkörnyezet Ellenőrzése
-    - [ ] Ellenőrizd a `package.json` teszt scriptjeit.
-    - [ ] Ellenőrizd a Python teszt környezetet (`pytest`).
-- [ ] Task: Tesztek Futtatása
-    - [ ] Futtasd le az `npm test` parancsot.
-    - [ ] Rögzítsd az eredményt egy ideiglenes fájlba vagy változóba.
-    - [ ] Futtasd le a Python teszteket (ha vannak).
-    - [ ] Rögzítsd az eredményt.
-- [ ] Task: Dokumentálás
-    - [ ] Frissítsd a `mag.md` "System Status" szekcióját a teszteredményekkel.
-    - [ ] Ha voltak hibák, hozz létre egy "Known Issues" szekciót a `mag.md`-ben és listázd őket.
+- [x] Task: Tesztkörnyezet Ellenőrzése
+    - [x] Ellenőrizd a `package.json` teszt scriptjeit.
+    - [x] Ellenőrizd a Python teszt környezetet (`pytest`).
+- [x] Task: Tesztek Futtatása
+    - [x] Futtasd le az `npm test` parancsot.
+    - [x] Rögzítsd az eredményt egy ideiglenes fájlba vagy változóba.
+    - [x] Futtasd le a Python teszteket (ha vannak).
+    - [x] Rögzítsd az eredményt.
+- [x] Task: Dokumentálás
+    - [x] Frissítsd a `mag.md` "System Status" szekcióját a teszteredményekkel.
+    - [x] Ha voltak hibák, hozz létre egy "Known Issues" szekciót a `mag.md`-ben és listázd őket.
 
 ## Phase 3: Finalization
 - [ ] Task: Conductor - User Manual Verification 'Initialization' (Protocol in workflow.md)
