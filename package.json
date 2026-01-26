@@ -12,7 +12,9 @@
     "dev": "ts-node src/index.ts",
     "watch": "tsc -w",
     "smoke": "node scripts/smoke.mjs",
-    "test": "tsc test/core_tools.test.ts test/monitor.test.ts test/python_shell.test.ts --outDir test_build --moduleResolution node --target es2020 --module commonjs --esModuleInterop && node --test test_build/*.test.js",
+    "test:build": "tsc test/core_tools.test.ts test/monitor.test.ts test/python_shell.test.ts --outDir test_build --moduleResolution node --target es2020 --module commonjs --esModuleInterop",
+    "test:run": "node --test test_build/*.test.js",
+    "test": "npm run test:build && npm run test:run",
     "build:ui": "vite build src/dashboard",
     "dev:ui": "vite src/dashboard"
   },
@@ -102,6 +104,7 @@
     "vite": "^7.3.1",
     "vm2": "^3.10.1",
     "zod": "^3.22.0",
+    "zod-to-json-schema": "^3.25.1",
     "zustand": "^5.0.10"
   },
   "devDependencies": {
