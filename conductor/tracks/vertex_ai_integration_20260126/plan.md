@@ -17,9 +17,9 @@
     - [x] Implementáld a `vertex_list_models` eszközt.
 
 ## Phase 3: Integration & Testing
-- [ ] Task: Manual Testing
-    - [ ] Hozz létre egy teszt scriptet (`test_vertex_ai.py`) a generálás ellenőrzésére.
-- [ ] Task: E2E Integration
-    - [ ] Add hozzá a Vertex AI szervert az `e2e_runner.ts` tesztjeihez.
-- [ ] Task: Update Documentation
-    - [ ] Frissítsd a `mag.md`-t és az `INTEGRATION_PLAN.md`-t.
+- [x] Task: Manual Testing
+    - [x] Hozz létre egy teszt scriptet (`test_vertex_ai.py`) a generálás ellenőrzésére.
+- [x] Task: E2E Integration
+    - [x] Add hozzá a Vertex AI szervert az `e2e_runner.ts` tesztjeihez.
+- [x] Task: Update Documentation
+    - [x] Frissítsd a `mag.md`-t és az `INTEGRATION_PLAN.md`-t.

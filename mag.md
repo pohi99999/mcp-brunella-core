@@ -15,10 +15,19 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 - **Python Tests:** Nincs tesztfájl, környezet OK.
 - **E2E Tesztek:** ✅ SIKERES.
 - **RAG (Tudásbázis):** ✅ TELJESEN MŰKÖDŐKÉPES. Az indexelő script (`scripts/index_knowledge.ts`) lefutott az Ollama (nomic-embed-text) segítségével. A szemantikus keresés verifikálva.
+- **Integrációk:**
+    - **Google Workspace:** `src/servers/google_workspace.py` (Gmail, Drive) implementálva. Hitelesítés `src/utils/google_auth.py`-n keresztül.
+    - **Vertex AI:** `src/servers/vertex_ai.py` (Gemini modellek) implementálva.
+    - **Feladatütemező (Scheduler):** `src/servers/automation.py` bővítve APScheduler-rel és SQLite perzisztenciával (`scheduler.db`).
 - **Ismert problémák:**
     - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat.
 
 ## Development Log
+### 2026.01.26 - Vertex AI Integráció
+- `google-cloud-aiplatform` csomag telepítése.
+- `src/servers/vertex_ai.py` MCP szerver implementálása Gemini modell támogatással.
+- Integrációs tesztelés E2E környezetben.
+
 ### 2026.01.26 - Tudásbázis Indexelése és RAG Javítás
 - Ollama `nomic-embed-text` modell letöltése.
 - `src/utils/rag.ts` javítása (lazy inicializálás a keresésnél).

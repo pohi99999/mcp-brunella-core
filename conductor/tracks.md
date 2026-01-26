@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Vertex AI Integráció (LLM Provider)**
+- [x] **Track: Vertex AI Integráció (LLM Provider)**
   *Link: [./tracks/vertex_ai_integration_20260126/](./tracks/vertex_ai_integration_20260126/)*
