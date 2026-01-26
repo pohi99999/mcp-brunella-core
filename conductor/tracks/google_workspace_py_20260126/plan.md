@@ -1,13 +1,13 @@
 # Implementation Plan - Google Workspace Integráció (Python)
 
 ## Phase 1: Setup & Authentication
-- [ ] Task: Dependency Installation
-    - [ ] Telepítsd a szükséges csomagokat: `pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib`.
-    - [ ] Frissítsd a `requirements.txt`-t.
-- [ ] Task: Auth Module
-    - [ ] Hozz létre egy `src/utils/google_auth.py` modult.
-    - [ ] Implementáld a hitelesítési logikát (Service Account vagy OAuth2 flow).
-    - [ ] Hozz létre placeholder credentials fájlt vagy dokumentáld a beállítást.
+- [x] Task: Dependency Installation
+    - [x] Telepítsd a szükséges csomagokat: `pip install google-api-python-client google-auth-httplib2 google-auth-oauthlib`.
+    - [x] Frissítsd a `requirements.txt`-t.
+- [x] Task: Auth Module
+    - [x] Hozz létre egy `src/utils/google_auth.py` modult.
+    - [x] Implementáld a hitelesítési logikát (Service Account vagy OAuth2 flow).
+    - [x] Hozz létre placeholder credentials fájlt vagy dokumentáld a beállítást.
 
 ## Phase 2: MCP Server Implementation
 - [ ] Task: Create Server File
