@@ -11,17 +11,20 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 - **Biztonság:** Sandboxolt kód futtatás (vm2), korlátozott fájlműveletek.
 
 ## System Status
-- **Node.js Tests:** Sikeres (manuális node hívással). Az `npm test` script optimalizálva lett.
-- **Python Tests:** Nincs tesztfájl, de a környezet (`.venv`) sikeresen felépült.
-- **E2E Tesztek:** ✅ SIKERES. A `scripts/e2e_runner.ts` ellenőrizte a Node.js szervert, a Python Automation szervert és a Google Workspace szervert. Minden rendszer működőképes.
-- **Integrációk:**
-    - **Google Workspace:** `src/servers/google_workspace.py` (Gmail, Drive) implementálva. Hitelesítés `src/utils/google_auth.py`-n keresztül.
-    - **Feladatütemező (Scheduler):** `src/servers/automation.py` bővítve APScheduler-rel és SQLite perzisztenciával (`scheduler.db`).
+- **Node.js Tests:** Sikeres.
+- **Python Tests:** Nincs tesztfájl, környezet OK.
+- **E2E Tesztek:** ✅ SIKERES.
+- **RAG (Tudásbázis):** Az indexelő script (`scripts/index_knowledge.ts`) elkészült. A projekt alapdokumentumai indexelve lettek a LanceDB-be. 
 - **Ismert problémák:**
+    - **Ollama hiányzik:** Az embedding szolgáltatás nem érhető el, ezért a szemantikus keresés jelenleg üres találatokat ad (null vektorok). Az indexelés újraindítása szükséges, ha az Ollama fut.
     - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat.
-    - A Python szerverek STDERR kimenete néha zajos lehet, de az MCP kommunikációt nem zavarja.
 
 ## Development Log
+### 2026.01.26 - Tudásbázis Indexelése
+- `scripts/index_knowledge.ts` létrehozása.
+- Alapdokumentumok (`README`, `mag`, `conductor/*`) indexelése LanceDB-be.
+- Szemantikus keresés tesztelése (üres eredmény az Ollama hiánya miatt).
+
 ### 2026.01.26 - E2E Tesztelési Keretrendszer
 - `scripts/e2e_runner.ts` létrehozása a teljes rendszer tesztelésére.
 - Node.js és Python MCP szerverek párhuzamos tesztelése.

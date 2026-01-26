@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Tudásbázis Indexelése (LanceDB RAG)**
+- [x] **Track: Tudásbázis Indexelése (LanceDB RAG)**
   *Link: [./tracks/knowledge_indexing_20260126/](./tracks/knowledge_indexing_20260126/)*

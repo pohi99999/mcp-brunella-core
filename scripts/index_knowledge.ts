@@ -41,7 +41,7 @@ async function runIndexing() {
       try {
         const result = await client.callTool({
           name: "knowledge_index_file",
-          arguments: { path: absolutePath }
+          arguments: { file_path: absolutePath }
         });
         // @ts-ignore
         console.log(`      ✅ ${result.content[0].text}`);
