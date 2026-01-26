@@ -1,35 +1,25 @@
-# Technológiai Stack: Cogella Core (BAS)
+# Technology Stack - MCP Brunella Core
 
-## 1. Core Backend
-- **Nyelv:** TypeScript (Node.js runtime)
-- **Framework:** Express 5.x
-- **Protokoll:** Model Context Protocol (MCP SDK v1.0.0)
-- **Kommunikáció:** Socket.io (Real-time)
+## Backend
+- **Core Runtime:** Node.js (TypeScript) & Python 3.14+
+- **Communication:** Model Context Protocol (MCP) SDK, FastMCP (Python)
+- **API Framework:** Express.js (Node.js), FastAPI (Python)
+- **Real-time:** Socket.io for live updates
+- **Validation:** Zod for schema-based type safety
 
-## 2. Frontend (Dashboard)
-- **Framework:** React 19 + Vite
-- **UI/UX:** Tailwind CSS + Radix UI (Shadcn/UI design system)
-- **State Management:** Zustand (Global), React Context (Local)
-- **API Híd:** Socket.io-client + Native Fetch
+## Frontend (Dashboard)
+- **Framework:** React 19 (Vite)
+- **Styling:** Tailwind CSS 4, Radix UI primitives
+- **Icons:** Lucide React, Phosphor Icons
+- **State Management:** Zustand
+- **Visualization:** D3.js, Recharts, Three.js
 
-## 3. Adattárolás & Tudásbázis
-- **Vektoradatbázis:** LanceDB (RAG engine)
-- **Relációs Adatbázis:** SQLite (`better-sqlite3`)
+## Data & Storage
+- **Vector Database:** LanceDB (for context and knowledge retrieval)
+- **Relational Database:** Better-SQLite3 (for logs and metadata)
 
-## 4. AI & Kódgenerálás
-- **Helyi Modellek (On-Premise):**
-    - `ollama` (Gemma 3.4b, Qwen 2.5 Coder)
-- **Felhő Modellek:**
-    - Gemini API v1.5 Pro
-- **Kiegészítők:** Jules, Agent Coder
-
-## 5. Automatizáció & Környezet
-- **Sandbox:** Egyedi megoldás / VM2 (Node.js & Python isolation)
-- **Browser Automation:** Playwright (Headless/Headed)
-- **Integrációk:** Google Workspace API
-- **Scripting:** Python (Elsődleges) + Node.js
-
-## 6. Fejlesztési Eszközök
-- **CLI:** Gemini CLI / Brunella CLI
-- **OS:** Windows + WSL 2 (Ubuntu)
-- **Container:** Docker (opcionális)
+## Tools & Utilities
+- **Automation/Scraping:** Playwright
+- **Security:** vm2 for sandboxed code execution
+- **CLI:** Commander.js, Inquirer
+- **Build/Package:** npm, uv (Python)

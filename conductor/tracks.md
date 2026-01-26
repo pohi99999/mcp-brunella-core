@@ -1,18 +1,8 @@
-# Projekt Nyomkövetés (Tracks)
+# Project Tracks
 
-Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál független egységként működik saját tervvel.
+This file tracks all major tracks for the project. Each track has its own detailed plan in its respective folder.
 
 ---
 
-### ✅ Lezárt Szálak (Completed Tracks)
-
-- [x] **Core Init:** A Cogella Core alapstruktúra és aszinkron Gateway alapozása
-  - 📂 *[./tracks/cogella_core_init_20260120/](./tracks/cogella_core_init_20260120/)*
-
-- [x] **CLI:** Brunella CLI Megvalósítás
-  - 📂 *[./tracks/brunella_cli_replacement_20260121/](./tracks/brunella_cli_replacement_20260121/)*
-
-- [x] **Ops Agent:** Beépített monitor toolok (logs, metrics) és aktív Ops ügynök logika
-  - 📂 *[./src/tools/monitor.ts](./src/tools/monitor.ts)*
-- [x] **Open Interpreter:** Perzisztens Python Shell (Stateful Execution)
-  - 📂 *[./src/utils/pythonShell.ts](./src/utils/pythonShell.ts)*
+- [ ] **Track: Projekt Dokumentáció és Stabilitás**
+  *Link: [./tracks/docs_stability_20260126/](./tracks/docs_stability_20260126/)*
