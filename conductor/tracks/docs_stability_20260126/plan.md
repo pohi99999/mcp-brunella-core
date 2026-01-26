@@ -24,8 +24,8 @@
     - [x] Ha voltak hibák, hozz létre egy "Known Issues" szekciót a `mag.md`-ben és listázd őket.
 
 ## Phase 3: Finalization
-- [ ] Task: Conductor - User Manual Verification 'Initialization' (Protocol in workflow.md)
-- [ ] Task: Conductor - User Manual Verification 'Verification' (Protocol in workflow.md)
-- [ ] Task: Végső Ellenőrzés
-    - [ ] Ellenőrizd, hogy a `mag.md` minden kért információt tartalmaz-e.
-    - [ ] Ellenőrizd, hogy a `mag.md` a projekt gyökerében van-e.
+- [x] Task: Conductor - User Manual Verification 'Initialization' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Verification' (Protocol in workflow.md)
+- [x] Task: Végső Ellenőrzés
+    - [x] Ellenőrizd, hogy a `mag.md` minden kért információt tartalmaz-e.
+    - [x] Ellenőrizd, hogy a `mag.md` a projekt gyökerében van-e.
