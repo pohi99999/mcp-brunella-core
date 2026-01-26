@@ -1,14 +1,14 @@
 # Implementation Plan - Projekt Dokumentáció és Stabilitás
 
 ## Phase 1: Initialization
-- [ ] Task: Elemzés és Adatgyűjtés
-    - [ ] Olvasd el a `README.md`, `package.json`, `conductor/*.md` fájlokat.
-    - [ ] Gyűjtsd össze a projekt alapinformációit (név, verzió, cél, stack).
-- [ ] Task: mag.md Létrehozása
-    - [ ] Hozz létre egy `mag.md` fájlt a projekt gyökerében.
-    - [ ] Írd bele a "Project Overview" szekciót.
-    - [ ] Írd bele a "Technical Architecture" szekciót.
-    - [ ] Írd bele a "Development Log" szekciót (kezdeti bejegyzéssel).
+- [x] Task: Elemzés és Adatgyűjtés
+    - [x] Olvasd el a `README.md`, `package.json`, `conductor/*.md` fájlokat.
+    - [x] Gyűjtsd össze a projekt alapinformációit (név, verzió, cél, stack).
+- [x] Task: mag.md Létrehozása
+    - [x] Hozz létre egy `mag.md` fájlt a projekt gyökerében.
+    - [x] Írd bele a "Project Overview" szekciót.
+    - [x] Írd bele a "Technical Architecture" szekciót.
+    - [x] Írd bele a "Development Log" szekciót (kezdeti bejegyzéssel).
 
 ## Phase 2: Verification
 - [ ] Task: Tesztkörnyezet Ellenőrzése
