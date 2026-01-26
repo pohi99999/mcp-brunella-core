@@ -1,17 +1,17 @@
 # Implementation Plan - End-to-End (E2E) Tesztelési Keretrendszer
 
 ## Phase 1: Test Harness Setup
-- [ ] Task: Create Test Script Skeleton
-    - [ ] Hozz létre egy `scripts/e2e_runner.ts` fájlt.
-    - [ ] Implementáld a szerver indítását (subprocess) és leállítását.
-    - [ ] Implementálj egy egyszerű MCP klienst, ami csatlakozik a szerverhez (stdio vagy SSE).
+- [x] Task: Create Test Script Skeleton
+    - [x] Hozz létre egy `scripts/e2e_runner.ts` fájlt.
+    - [x] Implementáld a szerver indítását (subprocess) és leállítását.
+    - [x] Implementálj egy egyszerű MCP klienst, ami csatlakozik a szerverhez (stdio vagy SSE).
 
 ## Phase 2: Implement Test Cases
-- [ ] Task: Basic Connectivity
-    - [ ] Teszteld a `tools/list` funkciót (meg kell jelennie a Python eszközöknek is).
-- [ ] Task: Python Integration Test
-    - [ ] Hívd meg az `automation_status` eszközt és ellenőrizd a választ.
-    - [ ] Hívd meg a `list_scheduled_jobs` eszközt.
+- [x] Task: Basic Connectivity
+    - [x] Teszteld a `tools/list` funkciót (meg kell jelennie a Python eszközöknek is).
+- [x] Task: Python Integration Test
+    - [x] Hívd meg az `automation_status` eszközt és ellenőrizd a választ.
+    - [x] Hívd meg a `list_scheduled_jobs` eszközt.
 
 ## Phase 3: Execution & Verification
 - [ ] Task: NPM Script
