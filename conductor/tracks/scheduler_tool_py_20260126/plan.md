@@ -1,9 +1,9 @@
 # Implementation Plan - Feladatütemező (Scheduler) Python Tool
 
 ## Phase 1: Setup
-- [ ] Task: Dependency Installation
-    - [ ] Telepítsd a szükséges csomagokat: `pip install apscheduler sqlalchemy`.
-    - [ ] Frissítsd a `requirements.txt`-t.
+- [x] Task: Dependency Installation
+    - [x] Telepítsd a szükséges csomagokat: `pip install apscheduler sqlalchemy`.
+    - [x] Frissítsd a `requirements.txt`-t.
 
 ## Phase 2: Implementation
 - [ ] Task: Update Automation Server
