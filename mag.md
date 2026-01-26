@@ -13,7 +13,8 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 ## System Status
 - **Node.js Tests:** Sikeres.
 - **Python Tests:** Nincs tesztfájl, környezet OK.
-- **E2E Tesztek:** ✅ SIKERES.
+- **E2E Tesztek:** ✅ SIKERES. A `scripts/e2e_runner.ts` ellenőrizte a Node.js szervert, a Python Automation szervert és a Google Workspace szervert. Minden rendszer működőképes.
+- **CLI Rendszer:** ✅ SIKERES. A `scripts/test_cli.ts` verifikálta a `brunella` parancs működését (help, version, subcommands).
 - **RAG (Tudásbázis):** ✅ TELJESEN MŰKÖDŐKÉPES. Az indexelő script (`scripts/index_knowledge.ts`) lefutott az Ollama (nomic-embed-text) segítségével. A szemantikus keresés verifikálva.
 - **Integrációk:**
     - **Google Workspace:** `src/servers/google_workspace.py` (Gmail, Drive) implementálva. Hitelesítés `src/utils/google_auth.py`-n keresztül.
@@ -23,6 +24,11 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
     - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat.
 
 ## Development Log
+### 2026.01.26 - CLI Rendszer Validálása
+- `scripts/test_cli.ts` létrehozása.
+- Alapvető parancsok (help, version, tools, agents) sikeres tesztelése.
+- `package.json` bővítése `test:cli` scripttel.
+
 ### 2026.01.26 - Vertex AI Integráció
 - `google-cloud-aiplatform` csomag telepítése.
 - `src/servers/vertex_ai.py` MCP szerver implementálása Gemini modell támogatással.

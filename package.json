@@ -14,6 +14,8 @@
     "smoke": "node scripts/smoke.mjs",
     "test:build": "tsc test/core_tools.test.ts test/monitor.test.ts test/python_shell.test.ts --outDir test_build --moduleResolution node --target es2020 --module commonjs --esModuleInterop",
     "test:run": "node --test test_build/*.test.js",
+    "test:e2e": "ts-node scripts/e2e_runner.ts",
+    "test:cli": "ts-node scripts/test_cli.ts",
     "test": "npm run test:build && npm run test:run",
     "build:ui": "vite build src/dashboard",
     "dev:ui": "vite src/dashboard"
