@@ -1,0 +1,8 @@
+{
+  "track_id": "vertex_ai_integration_20260126",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-26T13:00:00Z",
+  "updated_at": "2026-01-26T13:00:00Z",
+  "description": "Google Vertex AI (Gemini modellek) integrálása MCP eszközként Python segítségével."
+}
