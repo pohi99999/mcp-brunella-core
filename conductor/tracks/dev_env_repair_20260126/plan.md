@@ -20,7 +20,7 @@
     - [x] Teszteld az `npm test` futtatását. (Megjegyzés: Az `npm` parancs továbbra is blokkolva van a PowerShell policy miatt, de a `package.json` szerkezete most már tisztább és cmd-ben működőképes).
 
 ## Phase 3: Final Verification
-- [ ] Task: Conductor - User Manual Verification 'Python Environment' (Protocol in workflow.md)
-- [ ] Task: Conductor - User Manual Verification 'Node Environment' (Protocol in workflow.md)
-- [ ] Task: Update Documentation
-    - [ ] Frissítsd a `mag.md` "System Status" és "Known Issues" szekcióit.
+- [x] Task: Conductor - User Manual Verification 'Python Environment' (Protocol in workflow.md)
+- [x] Task: Conductor - User Manual Verification 'Node Environment' (Protocol in workflow.md)
+- [x] Task: Update Documentation
+    - [x] Frissítsd a `mag.md` "System Status" és "Known Issues" szekcióit.

@@ -11,13 +11,18 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 - **Biztonság:** Sandboxolt kód futtatás (vm2), korlátozott fájlműveletek.
 
 ## System Status
-- **Node.js Tests:** Sikeres (3 teszt lefutott, 0 hiba).
-- **Python Tests:** HIBA. A virtuális környezet (`.venv`) hibás útvonalra mutat, a `pytest` nem futtatható.
+- **Node.js Tests:** Sikeres (manuális node hívással). Az `npm test` script optimalizálva lett.
+- **Python Tests:** Nincs tesztfájl, de a környezet (`.venv`) sikeresen felépült és a függőségek telepítve lettek. A `pytest` futtatható (bár tesztek híján üresen tér vissza).
 - **Ismert problémák:**
-    - Python virtuális környezet (`.venv`) újrainicializálást igényel.
-    - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat (közvetlen `node` hívás szükséges).
+    - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat. Javasolt a `cmd` használata vagy a policy módosítása (`Set-ExecutionPolicy RemoteSigned`).
+    - A `pytest` hibát dobhat a könyvtárnévben lévő `[]` karakterek miatt paraméterezéskor, de ez nem befolyásolja a működést, ha nincsenek paraméterezett tesztek.
 
 ## Development Log
+### 2026.01.26 - Fejlesztői Környezet Helyreállítása
+- Python `.venv` törlése és újragenerálása.
+- Függőségek (`requirements.txt`) sikeres telepítése.
+- `package.json` teszt scriptek szétbontása (`test:build`, `test:run`) a jobb kompatibilitásért.
+
 ### 2026.01.26 - Projekt Inicializálása és Conductor Setup
 - Conductor keretrendszer beállítása.
 - Termékdefiníció, Tech Stack és Workflow rögzítése.
