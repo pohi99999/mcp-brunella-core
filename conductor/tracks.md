@@ -4,5 +4,5 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
-- [ ] **Track: Google Workspace Integráció (Python)**
+- [x] **Track: Google Workspace Integráció (Python)**
   *Link: [./tracks/google_workspace_py_20260126/](./tracks/google_workspace_py_20260126/)*

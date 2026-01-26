@@ -20,9 +20,9 @@
     - [x] Implementáld a `drive_list_files` eszközt.
 
 ## Phase 3: Integration & Testing
-- [ ] Task: Manual Testing
-    - [ ] Teszteld a funkciókat a FastMCP inspector vagy script segítségével.
-- [ ] Task: Conductor - User Manual Verification 'Google Auth' (Protocol in workflow.md)
-- [ ] Task: Update Documentation
-    - [ ] Frissítsd a `mag.md`-t az új modullal.
-    - [ ] Frissítsd az `INTEGRATION_PLAN.md` státuszát.
+- [x] Task: Manual Testing
+    - [x] Teszteld a funkciókat a FastMCP inspector vagy script segítségével.
+- [x] Task: Conductor - User Manual Verification 'Google Auth' (Protocol in workflow.md)
+- [x] Task: Update Documentation
+    - [x] Frissítsd a `mag.md`-t az új modullal.
+    - [x] Frissítsd az `INTEGRATION_PLAN.md` státuszát.

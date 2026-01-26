@@ -5,8 +5,8 @@ A `konyvtarfa.md` elemzése alapján az alábbi komponenseket azonosítottuk, mi
 ## 1. Python Scriptek Integrációja (`08_SCRIPTS`)
 A meglévő Python scriptek becsatornázása az `interpreter_tool` vagy dedikált `script_tool` alá.
 
-*   **`google_workspace.py`**: Valószínűleg Drive/Gmail/Calendar wrapper.
-    *   *Terv:* Tool készítése: `python_workspace_action(service="gmail", action="send", ...)`
+*   **`google_workspace.py`**: [KÉSZ] Implementálva önálló MCP szerverként (`src/servers/google_workspace.py`).
+    *   *Megvalósult:* Gmail (küldés/olvasás) és Drive (listázás) eszközök.
 *   **`vertex_ai.py`**: Google Vertex AI hívások.
     *   *Terv:* Ha jobb, mint a jelenlegi Claude/Ollama, integráljuk LLM providerként.
 *   **`agent_handler.py`**: Régi ügynök logika.

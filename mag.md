@@ -12,12 +12,19 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 
 ## System Status
 - **Node.js Tests:** Sikeres (manuális node hívással). Az `npm test` script optimalizálva lett.
-- **Python Tests:** Nincs tesztfájl, de a környezet (`.venv`) sikeresen felépült és a függőségek telepítve lettek. A `pytest` futtatható (bár tesztek híján üresen tér vissza).
+- **Python Tests:** Nincs tesztfájl, de a környezet (`.venv`) sikeresen felépült és a függőségek telepítve lettek. A `pytest` futtatható.
+- **Integrációk:**
+    - **Google Workspace:** `src/servers/google_workspace.py` (Gmail, Drive) implementálva. Hitelesítés `src/utils/google_auth.py`-n keresztül.
 - **Ismert problémák:**
-    - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat. Javasolt a `cmd` használata vagy a policy módosítása (`Set-ExecutionPolicy RemoteSigned`).
-    - A `pytest` hibát dobhat a könyvtárnévben lévő `[]` karakterek miatt paraméterezéskor, de ez nem befolyásolja a működést, ha nincsenek paraméterezett tesztek.
+    - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat.
+    - A `pytest` hibát dobhat a könyvtárnévben lévő `[]` karakterek miatt paraméterezéskor.
 
 ## Development Log
+### 2026.01.26 - Google Workspace Integráció
+- `google-api-python-client` és hitelesítési könyvtárak telepítése.
+- `src/utils/google_auth.py` implementálása OAuth2 támogatással.
+- `src/servers/google_workspace.py` MCP szerver létrehozása (Gmail küldés/olvasás, Drive listázás).
+
 ### 2026.01.26 - Fejlesztői Környezet Helyreállítása
 - Python `.venv` törlése és újragenerálása.
 - Függőségek (`requirements.txt`) sikeres telepítése.
