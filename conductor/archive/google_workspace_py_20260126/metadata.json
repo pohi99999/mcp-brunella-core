@@ -1,0 +1,8 @@
+{
+  "track_id": "google_workspace_py_20260126",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-26T11:00:00Z",
+  "updated_at": "2026-01-26T11:00:00Z",
+  "description": "Google Workspace (Gmail, Drive) funkciók integrálása MCP eszközként Python segítségével."
+}
