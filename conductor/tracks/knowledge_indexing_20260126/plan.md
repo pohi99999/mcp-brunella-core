@@ -1,11 +1,11 @@
 # Implementation Plan - Tudásbázis Indexelése (LanceDB RAG)
 
 ## Phase 1: Create Indexing Script
-- [ ] Task: Create Script
-    - [ ] Hozz létre egy `scripts/index_knowledge.ts` fájlt.
-    - [ ] A script csatlakozzon a futó MCP szerverhez (vagy indítsa el saját magának), és hívja meg a `knowledge_index_file` eszközt a célfájlokra.
-- [ ] Task: Identify Files
-    - [ ] Írj egy logikát, ami összegyűjti az indexelendő fájlokat (`glob` minták alapján).
+- [x] Task: Create Script
+    - [x] Hozz létre egy `scripts/index_knowledge.ts` fájlt.
+    - [x] A script csatlakozzon a futó MCP szerverhez (vagy indítsa el saját magának), és hívja meg a `knowledge_index_file` eszközt a célfájlokra.
+- [x] Task: Identify Files
+    - [x] Írj egy logikát, ami összegyűjti az indexelendő fájlokat (`glob` minták alapján). (Megjegyzés: A script fix listát használ a legfontosabb fájlokról).
 
 ## Phase 2: Index Data
 - [ ] Task: Run Indexing
