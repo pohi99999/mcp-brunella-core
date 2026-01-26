@@ -1,12 +1,12 @@
 # Implementation Plan - Vertex AI Integráció (LLM Provider)
 
 ## Phase 1: Setup
-- [ ] Task: Dependency Installation
-    - [ ] Telepítsd a szükséges csomagokat: `pip install google-cloud-aiplatform`.
-    - [ ] Frissítsd a `requirements.txt`-t.
-- [ ] Task: Configuration
-    - [ ] Ellenőrizd a `credentials.json` meglétét (ADC-hez).
-    - [ ] Hozz létre egy `.env` példát vagy dokumentációt a `PROJECT_ID` beállításához.
+- [x] Task: Dependency Installation
+    - [x] Telepítsd a szükséges csomagokat: `pip install google-cloud-aiplatform`.
+    - [x] Frissítsd a `requirements.txt`-t.
+- [x] Task: Configuration
+    - [x] Ellenőrizd a `credentials.json` meglétét (ADC-hez).
+    - [x] Hozz létre egy `.env` példát vagy dokumentációt a `PROJECT_ID` beállításához.
 
 ## Phase 2: Implementation
 - [ ] Task: Create Server File
