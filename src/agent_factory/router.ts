@@ -1,5 +1,5 @@
-import { AgentsDB } from '../database/agents_db';
-import { AgentSession, JsonRpcRequest, JsonRpcResponse } from '../types/buap';
+import { AgentsDB } from '../database/agents_db.js';
+import { AgentSession, JsonRpcRequest, JsonRpcResponse } from '../types/buap.js';
 import { v4 as uuidv4 } from 'uuid';
 
 export class AgentRouter {

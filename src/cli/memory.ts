@@ -10,6 +10,8 @@ export interface CliMemory {
     mode?: 'safe' | 'full';
     plugins?: string[];
     history?: string[];
+    model?: string;
+    llm_base_url?: string;
 }
 
 export class MemoryManager {

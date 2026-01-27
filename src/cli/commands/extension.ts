@@ -1,4 +1,4 @@
-import { ExtensionManager } from '../extensions';
+import { ExtensionManager } from '../extensions.js';
 
 const extensions = new ExtensionManager();
 

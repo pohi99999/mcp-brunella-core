@@ -6,7 +6,7 @@ export class McpClientManager {
 
     public async connectStdio(name: string, command: string, args: string[], env: Record<string, string> = {}): Promise<Client> {
         console.log(`Connecting to MCP server '${name}' (${command} ${args.join(' ')})...`);
-        
+
         const safeEnv: Record<string, string> = {};
         const combinedEnv = { ...process.env, ...env };
         for (const key in combinedEnv) {
@@ -22,11 +22,11 @@ export class McpClientManager {
             env: safeEnv
         });
 
-        const client = new Client({ 
-            name: "gemini-cli-client", 
-            version: "1.0.0" 
-        }, { 
-            capabilities: {} 
+        const client = new Client({
+            name: "gemini-cli-client",
+            version: "1.0.0"
+        }, {
+            capabilities: {}
         });
 
         try {
@@ -60,6 +60,28 @@ export class McpClientManager {
         return Array.from(this.activeClients.keys());
     }
 
+    public async getToolsForLLM(): Promise<any[]> {
+        const allTools: any[] = [];
+        for (const [serverName, client] of this.activeClients.entries()) {
+            try {
+                const result = await client.listTools();
+                for (const tool of result.tools) {
+                    allTools.push({
+                        type: 'function',
+                        function: {
+                            name: tool.name, // We might want to namespace this: serverName_toolName? For now, keep simple.
+                            description: tool.description || '',
+                            parameters: tool.inputSchema
+                        }
+                    });
+                }
+            } catch (e) {
+                console.error(`Error listing tools for ${serverName}:`, e);
+            }
+        }
+        return allTools;
+    }
+
     public async disconnectAll() {
         // SDK doesn't always expose a clean disconnect on the client directly in all versions, 
         // but typically transports should be closed. 
@@ -67,3 +89,6 @@ export class McpClientManager {
         this.activeClients.clear();
     }
 }
+
+export const mcpClientManager = new McpClientManager();
+

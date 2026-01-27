@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { toolRegistry } from './registry';
+import { toolRegistry } from './registry.js';
 
 // List Directory Tool
 toolRegistry.registerTool({

@@ -1,4 +1,4 @@
-import { toolRegistry } from './registry';
+import { toolRegistry } from './registry.js';
 import { chromium } from 'playwright';
 import path from 'path';
 

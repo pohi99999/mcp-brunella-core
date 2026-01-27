@@ -1,21 +1,21 @@
 import { Command } from 'commander';
 import inquirer from 'inquirer';
-import { MemoryManager } from './memory';
-import { DiscoveryService } from './discovery';
-import { McpClientManager } from './mcp_client';
-import { PythonBridge } from './python_bridge';
+import { MemoryManager } from './memory.js';
+import { DiscoveryService } from './discovery.js';
+import { McpClientManager, mcpClientManager } from './mcp_client.js';
+import { PythonBridge } from './python_bridge.js';
 import path from 'path';
-import { chatCommand } from './commands/chat';
-import { extensionCommand } from './commands/extension';
-import { runCommand } from './commands/run';
-import { conductorCommand } from './commands/conductor';
-import { connectCommand } from './commands/connect';
-import { agentCommand } from './commands/agent';
+import { chatCommand } from './commands/chat.js';
+import { extensionCommand } from './commands/extension.js';
+import { runCommand } from './commands/run.js';
+import { conductorCommand } from './commands/conductor.js';
+import { connectCommand } from './commands/connect.js';
+import { agentCommand } from './commands/agent.js';
 
 const program = new Command();
 const memory = new MemoryManager();
 const discovery = new DiscoveryService();
-const mcpClient = new McpClientManager();
+const mcpClient = mcpClientManager;
 const pythonBridge = new PythonBridge();
 
 async function mainMenu() {
@@ -26,7 +26,7 @@ async function mainMenu() {
         { name: '❌ Kilépés', value: 'exit' }
     ];
 
-    const { action } = await inquirer.prompt([{ 
+    const { action } = await inquirer.prompt([{
         type: 'list',
         name: 'action',
         message: 'Főmenü:',
@@ -68,7 +68,7 @@ async function handleDiscovery() {
 
     choices.push({ name: '🔙 Vissza', value: null } as any);
 
-    const { server } = await inquirer.prompt([{ 
+    const { server } = await inquirer.prompt([{
         type: 'list',
         name: 'server',
         message: 'Válassz szervert a csatlakozáshoz:',
@@ -96,16 +96,16 @@ async function handleDiscovery() {
             args = ['ts-node', server.path];
             // Windows workaround ha npx nem megy:
             if (process.platform === 'win32') {
-                 // Egyszerűsítés: node build/index.js ha van, de most forrást nézünk.
-                 // Használjuk a node-ot a ts-node regiszterrel, ahogy a tesztnél
-                 command = 'node';
-                 args = ['-r', './node_modules/ts-node/register', server.path];
+                // Egyszerűsítés: node build/index.js ha van, de most forrást nézünk.
+                // Használjuk a node-ot a ts-node regiszterrel, ahogy a tesztnél
+                command = 'node';
+                args = ['-r', './node_modules/ts-node/register', server.path];
             }
         }
 
         await mcpClient.connectStdio(server.name, command, args);
         console.log(`Sikeresen csatlakoztatva: ${server.name}`);
-        
+
         // Automatikusan mentsük el a kapcsolatot a memóriába (opcionális, most nem bonyolítom)
 
     } catch (error: any) {
@@ -133,13 +133,13 @@ async function handleTools() {
     try {
         console.log(`Eszközök lekérdezése innen: ${selectedClient}...`);
         const toolsResult = await mcpClient.listTools(selectedClient);
-        
+
         if (toolsResult.tools.length === 0) {
             console.log('Ez a szerver nem szolgáltat eszközöket.');
         } else {
-            console.table(toolsResult.tools.map(t => ({ 
-                Name: t.name, 
-                Description: t.description ? t.description.substring(0, 50) + '...' : 'N/A' 
+            console.table(toolsResult.tools.map(t => ({
+                Name: t.name,
+                Description: t.description ? t.description.substring(0, 50) + '...' : 'N/A'
             })));
         }
     } catch (error: any) {
@@ -151,7 +151,7 @@ async function handleSettings() {
     const currentMode = memory.get('mode');
     console.log(`Jelenlegi mód: ${currentMode}`);
 
-    const { newMode } = await inquirer.prompt([{ 
+    const { newMode } = await inquirer.prompt([{
         type: 'list',
         name: 'newMode',
         message: 'Válassz új módot:',
@@ -176,7 +176,7 @@ async function main() {
     let mode = memory.get('mode');
 
     if (!mode) {
-        const answer = await inquirer.prompt([ 
+        const answer = await inquirer.prompt([
             {
                 type: 'list',
                 name: 'mode',

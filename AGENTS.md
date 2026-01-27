@@ -80,7 +80,17 @@ Jules uses the following MCP tools for testing:
 - `agent_list`: Verifies registry integrity.
 - `knowledge_semantic_search`: Verifies RAG functionality.
 - `system_run_command`: (Restricted) For environment checks.
-ules Aszinkron Sprint Összefoglaló (2026. 01. 22.)
+
+## 7. Active & Upcoming Tasks (Q1 2026)
+
+### 🤖 Jules
+- [ ] **Task:** Unit Testing for Process Management.
+    - **Description:** Implement comprehensive unit tests for `src/server/McpProcessManager.ts` to ensure MCP servers can be reliably started and stopped.
+    - **Description:** Verify the logic of the `agent` CLI command handlers in `src/cli/commands/agent.ts` (listing, creation, spawning).
+    - **Goal:** Increase test coverage for core infrastructure components to >85%.
+
+---
+ Jules Aszinkron Sprint Összefoglaló (2026. 01. 22.)
 1. Stabilitási és QA Tanúsítvány
 Sikeresen futtatott szcenáriók: Scenario 1-5 (Health, Metrics, Registry, RAG, Smoke Test).
 

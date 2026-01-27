@@ -1,9 +1,9 @@
 import { Command } from 'commander';
 import path from 'path';
 import fs from 'fs';
-import { AgentsDB } from '../../database/agents_db';
-import { AgentRouter } from '../../agent_factory/router';
-import { AgentSupervisor } from '../../agent_factory/supervisor';
+import { AgentsDB } from '../../database/agents_db.js';
+import { AgentRouter } from '../../agent_factory/router.js';
+import { AgentSupervisor } from '../../agent_factory/supervisor.js';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 

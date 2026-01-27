@@ -10,7 +10,7 @@
 
 ## Frontend (Dashboard)
 - **Framework:** React 19 (Vite)
-- **Styling:** Tailwind CSS 4, Radix UI primitives
+- **Styling:** Tailwind CSS 4, Radix UI primitives, Framer Motion (Animations)
 - **Icons:** Lucide React, Phosphor Icons
 - **State Management:** Zustand
 - **Visualization:** D3.js, Recharts, Three.js, React Flow

@@ -2,6 +2,7 @@
   "name": "mcp-brunella-core",
   "version": "1.0.0",
   "description": "MCP server for Brunella Core",
+  "type": "module",
   "main": "build/index.js",
   "bin": {
     "brunella": "./build/cli.js"
@@ -9,16 +10,16 @@
   "scripts": {
     "build": "tsc",
     "start": "node build/index.js",
-    "dev": "ts-node src/index.ts",
+    "dev": "node --loader ts-node/esm src/index.ts",
     "watch": "tsc -w",
     "smoke": "node scripts/smoke.mjs",
     "test:build": "tsc test/core_tools.test.ts test/monitor.test.ts test/python_shell.test.ts --outDir test_build --moduleResolution node --target es2020 --module commonjs --esModuleInterop",
     "test:run": "node --test test_build/*.test.js",
-    "test:e2e": "ts-node scripts/e2e_runner.ts",
-    "test:cli": "ts-node scripts/test_cli.ts",
-    "test:unit:cli": "node -r ./node_modules/ts-node/register test/cli_unit.test.ts",
-    "test:factory": "node -r ./node_modules/ts-node/register test/agent_factory.test.ts",
-    "cli": "ts-node src/cli/index.ts",
+    "test:e2e": "node --loader ts-node/esm scripts/e2e_runner.ts",
+    "test:cli": "node --loader ts-node/esm scripts/test_cli.ts",
+    "test:unit:cli": "node --loader ts-node/esm test/cli_unit.test.ts",
+    "test:factory": "node --loader ts-node/esm test/agent_factory.test.ts",
+    "cli": "node build/cli/index.js",
     "test": "npm run test:build && npm run test:run",
     "build:ui": "vite build src/dashboard",
     "dev:ui": "vite src/dashboard"
@@ -85,6 +86,7 @@
     "lucide-react": "^0.562.0",
     "marked": "^15.0.12",
     "marked-terminal": "^7.3.0",
+    "node-fetch": "^3.3.2",
     "ora": "^5.4.1",
     "playwright": "^1.57.0",
     "playwright-core": "^1.57.0",

@@ -1,6 +1,6 @@
 import { spawn, ChildProcess } from 'child_process';
-import { AgentRouter } from './router';
-import { AgentSession } from '../types/buap';
+import { AgentRouter } from './router.js';
+import { AgentSession } from '../types/buap.js';
 import * as readline from 'readline';
 
 interface ManagedProcess {

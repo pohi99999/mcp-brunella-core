@@ -11,13 +11,15 @@ interface McpState {
   mcpServers: McpServerStatus[]
   isConnected: boolean
   currentPlan: ExecutionPlan | null
-  
+
   setServerState: (state: Partial<ServerState>) => void
   addLog: (log: LogEntry) => void
   setLogs: (logs: LogEntry[]) => void
   addChatMessage: (message: ChatMessage) => void
   setChatMessages: (messages: ChatMessage[]) => void
   updateLastChatMessage: (content: string) => void
+  appendChunkToLastMessage: (chunk: string) => void
+  setLastMessageStreaming: (isStreaming: boolean) => void
   setConfig: (config: ConfigItem[]) => void
   setAgentTools: (tools: AgentTool[]) => void
   setMetrics: (metrics: ServerMetrics) => void
@@ -50,18 +52,18 @@ export const useMcpStore = create<McpState>((set) => ({
   isConnected: false,
   currentPlan: null,
 
-  setServerState: (state) => set((s) => ({ 
-    serverState: { ...s.serverState, ...state } 
+  setServerState: (state) => set((s) => ({
+    serverState: { ...s.serverState, ...state }
   })),
-  
-  addLog: (log) => set((s) => ({ 
-    logs: [log, ...s.logs].slice(0, 200) 
+
+  addLog: (log) => set((s) => ({
+    logs: [log, ...s.logs].slice(0, 200)
   })),
-  
+
   setLogs: (logs) => set({ logs }),
 
-  addChatMessage: (msg) => set((s) => ({ 
-    chatMessages: [...s.chatMessages, msg] 
+  addChatMessage: (msg) => set((s) => ({
+    chatMessages: [...s.chatMessages, msg]
   })),
 
   setChatMessages: (chatMessages) => set({ chatMessages }),
@@ -76,24 +78,46 @@ export const useMcpStore = create<McpState>((set) => ({
     }
     return { chatMessages: newMessages };
   }),
-  
+
+  appendChunkToLastMessage: (chunk) => set((s) => {
+    const newMessages = [...s.chatMessages];
+    if (newMessages.length > 0) {
+      const last = newMessages[newMessages.length - 1];
+      if (last.role === 'assistant') {
+        newMessages[newMessages.length - 1] = { ...last, content: last.content + chunk };
+      }
+    }
+    return { chatMessages: newMessages };
+  }),
+
+  setLastMessageStreaming: (isStreaming) => set((s) => {
+    const newMessages = [...s.chatMessages];
+    if (newMessages.length > 0) {
+      const last = newMessages[newMessages.length - 1];
+      if (last.role === 'assistant') {
+        newMessages[newMessages.length - 1] = { ...last, isStreaming };
+      }
+    }
+    return { chatMessages: newMessages };
+  }),
+
   setConfig: (config) => set({ config }),
-  
+
   setAgentTools: (agentTools) => set({ agentTools }),
-  
+
   setMetrics: (metrics) => set({ metrics }),
 
   setMcpServers: (mcpServers) => set({ mcpServers }),
-  
+
   setConnected: (isConnected) => set({ isConnected }),
 
   setCurrentPlan: (currentPlan) => set({ currentPlan }),
 
   updatePlanStep: (updatedStep) => set((s) => {
-      if (!s.currentPlan) return {};
-      const newSteps = s.currentPlan.steps.map(step => 
-          step.id === updatedStep.id ? { ...step, ...updatedStep } : step
-      );
-      return { currentPlan: { ...s.currentPlan, steps: newSteps } };
+    if (!s.currentPlan) return {};
+    const newSteps = s.currentPlan.steps.map(step =>
+      step.id === updatedStep.id ? { ...step, ...updatedStep } : step
+    );
+    return { currentPlan: { ...s.currentPlan, steps: newSteps } };
   })
 }))

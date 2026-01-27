@@ -7,10 +7,10 @@ const BACKEND_URL = 'http://localhost:3000'
 
 export function useMCP() {
   const socketRef = useRef<Socket | null>(null)
-  const { 
-    setConnected, 
-    addLog, 
-    setServerState, 
+  const {
+    setConnected,
+    addLog,
+    setServerState,
     setMetrics,
     setAgentTools,
     setCurrentPlan,
@@ -49,7 +49,7 @@ export function useMCP() {
       setMcpServers(servers)
     })
 
-    // Listen for chat messages from backend
+    // Listen for chat messages from backend (legacy full message)
     socket.on('bot_message', (data: { text: string, isUser: boolean, isLog: boolean }) => {
       useMcpStore.getState().addChatMessage({
         id: `msg-${Date.now()}`,
@@ -60,6 +60,25 @@ export function useMCP() {
       })
     })
 
+    // Streaming support
+    socket.on('bot_message_start', (data: { isUser: boolean }) => {
+      useMcpStore.getState().addChatMessage({
+        id: `msg-${Date.now()}`,
+        role: data.isUser ? 'user' : 'assistant',
+        content: '',
+        timestamp: new Date().toISOString(),
+        isStreaming: true
+      });
+    });
+
+    socket.on('bot_message_chunk', (data: { text: string }) => {
+      useMcpStore.getState().appendChunkToLastMessage(data.text);
+    });
+
+    socket.on('bot_message_end', () => {
+      useMcpStore.getState().setLastMessageStreaming(false);
+    });
+
     // Listen for metrics
     socket.on('metrics_update', (metrics: ServerMetrics) => {
       setMetrics(metrics)
@@ -67,11 +86,11 @@ export function useMCP() {
 
     // Listen for Plan events
     socket.on('plan_created', (plan: ExecutionPlan) => {
-        setCurrentPlan(plan)
+      setCurrentPlan(plan)
     })
 
     socket.on('plan_step_update', (step: any) => {
-        updatePlanStep(step)
+      updatePlanStep(step)
     })
 
     // Listen for tool updates and adapt Schema
@@ -79,27 +98,27 @@ export function useMCP() {
       const frontendTools: AgentTool[] = tools.map((t) => {
         const schema = t.inputSchema || {};
         const params: AgentToolParameter[] = [];
-        
+
         if (schema.properties) {
-             Object.keys(schema.properties).forEach(key => {
-                 const prop = schema.properties[key];
-                 params.push({
-                     name: key,
-                     type: prop.type || 'string',
-                     description: prop.description || '',
-                     required: (schema.required || []).includes(key)
-                 });
-             });
+          Object.keys(schema.properties).forEach(key => {
+            const prop = schema.properties[key];
+            params.push({
+              name: key,
+              type: prop.type || 'string',
+              description: prop.description || '',
+              required: (schema.required || []).includes(key)
+            });
+          });
         }
 
         return {
-            id: t.name,
-            name: t.name,
-            description: t.description,
-            enabled: true,
-            parameters: params,
-            category: 'server',
-            createdAt: new Date().toISOString()
+          id: t.name,
+          name: t.name,
+          description: t.description,
+          enabled: true,
+          parameters: params,
+          category: 'server',
+          createdAt: new Date().toISOString()
         };
       });
       setAgentTools(frontendTools)
@@ -107,23 +126,23 @@ export function useMCP() {
 
     // Listen for tool results (optional, can be handled in UI via chat or specific store)
     socket.on('tool_result', (data) => {
-        addLog({
-            id: `res-${Date.now()}`,
-            timestamp: new Date().toISOString(),
-            level: 'info',
-            message: `Tool [${data.name}] result: ${JSON.stringify(data.result).substring(0, 100)}...`,
-            source: 'system'
-        });
+      addLog({
+        id: `res-${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        message: `Tool [${data.name}] result: ${JSON.stringify(data.result).substring(0, 100)}...`,
+        source: 'system'
+      });
     });
 
     socket.on('tool_error', (data) => {
-        addLog({
-            id: `err-${Date.now()}`,
-            timestamp: new Date().toISOString(),
-            level: 'error',
-            message: `Tool [${data.name}] failed: ${data.error}`,
-            source: 'system'
-        });
+      addLog({
+        id: `err-${Date.now()}`,
+        timestamp: new Date().toISOString(),
+        level: 'error',
+        message: `Tool [${data.name}] failed: ${data.error}`,
+        source: 'system'
+      });
     });
 
     return () => {
@@ -138,12 +157,12 @@ export function useMCP() {
   }
 
   const runTool = (name: string, args: any) => {
-      if (socketRef.current) {
-          const id = `req-${Date.now()}`;
-          socketRef.current.emit('run_tool', { name, args, id });
-          return id;
-      }
-      return null;
+    if (socketRef.current) {
+      const id = `req-${Date.now()}`;
+      socketRef.current.emit('run_tool', { name, args, id });
+      return id;
+    }
+    return null;
   }
 
   const startMcpServer = (name: string) => {

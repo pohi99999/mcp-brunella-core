@@ -252,3 +252,87 @@
 [2026-01-26T05:53:51.852Z] Agent registered: integrator 
 [2026-01-26T05:53:51.852Z] Agent registered: ops 
 [2026-01-26T05:53:51.852Z] Agent registered: orchestrator 
+[2026-01-27T08:53:59.477Z] Agent registered: researcher 
+[2026-01-27T08:53:59.476Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T08:53:59.477Z] Agent registered: developer 
+[2026-01-27T08:53:59.477Z] Agent registered: python_developer 
+[2026-01-27T08:53:59.477Z] Agent registered: integrator 
+[2026-01-27T08:53:59.477Z] Agent registered: orchestrator 
+[2026-01-27T08:53:59.477Z] Agent registered: ops 
+[2026-01-27T08:53:59.477Z] Agent registered: ops 
+[2026-01-27T08:54:11.637Z] Plan generation failed: SyntaxError: Unexpected end of JSON input "error"
+[2026-01-27T08:55:17.434Z] Plan generation failed: SyntaxError: Unexpected end of JSON input "error"
+[2026-01-27T08:57:16.035Z] Plan generation failed: SyntaxError: Unexpected end of JSON input "error"
+[2026-01-27T08:59:31.264Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T08:59:31.265Z] Agent registered: researcher 
+[2026-01-27T08:59:31.265Z] Agent registered: developer 
+[2026-01-27T08:59:31.265Z] Agent registered: python_developer 
+[2026-01-27T08:59:31.265Z] Agent registered: ops 
+[2026-01-27T08:59:31.265Z] Agent registered: ops 
+[2026-01-27T08:59:31.265Z] Agent registered: integrator 
+[2026-01-27T08:59:31.265Z] Agent registered: orchestrator 
+[2026-01-27T09:00:34.536Z] Plan generation failed: SyntaxError: Unexpected token 'L', "[LLM Error:"... is not valid JSON "error"
+[2026-01-27T09:04:05.983Z] Plan generation failed: SyntaxError: Unexpected token 'L', "[LLM Error:"... is not valid JSON "error"
+[2026-01-27T09:04:25.451Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:04:25.453Z] Agent registered: researcher 
+[2026-01-27T09:04:25.453Z] Agent registered: ops 
+[2026-01-27T09:04:25.453Z] Agent registered: python_developer 
+[2026-01-27T09:04:25.453Z] Agent registered: integrator 
+[2026-01-27T09:04:25.453Z] Agent registered: developer 
+[2026-01-27T09:04:25.453Z] Agent registered: orchestrator 
+[2026-01-27T09:04:25.453Z] Agent registered: ops 
+[2026-01-27T09:13:21.508Z] Plan generation failed: SyntaxError: Unexpected token 'L', "[LLM Error:"... is not valid JSON "error"
+[2026-01-27T09:13:50.828Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:13:50.829Z] Agent registered: researcher 
+[2026-01-27T09:13:50.829Z] Agent registered: ops 
+[2026-01-27T09:13:50.829Z] Agent registered: developer 
+[2026-01-27T09:13:50.829Z] Agent registered: python_developer 
+[2026-01-27T09:13:50.829Z] Agent registered: ops 
+[2026-01-27T09:13:50.829Z] Agent registered: orchestrator 
+[2026-01-27T09:13:50.829Z] Agent registered: integrator 
+[2026-01-27T09:15:01.524Z] Plan generation failed: SyntaxError: Unexpected token 'L', "[LLM Error:"... is not valid JSON "error"
+[2026-01-27T09:16:28.127Z] Plan generation failed: SyntaxError: Unexpected token 'L', "[LLM Error:"... is not valid JSON "error"
+[2026-01-27T09:17:23.915Z] Agent registered: researcher 
+[2026-01-27T09:17:23.914Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:17:23.915Z] Agent registered: python_developer 
+[2026-01-27T09:17:23.915Z] Agent registered: developer 
+[2026-01-27T09:17:23.915Z] Agent registered: ops 
+[2026-01-27T09:17:23.915Z] Agent registered: ops 
+[2026-01-27T09:17:23.915Z] Agent registered: orchestrator 
+[2026-01-27T09:17:23.915Z] Agent registered: integrator 
+[2026-01-27T09:17:31.819Z] [Developer] Task received: Type the word 'szia' into the console. 
+[2026-01-27T09:18:24.992Z] [Developer] Task received: Gépelj el a szöveg 'Szia!' 
+[2026-01-27T09:18:25.002Z] [Integrator] Task received: Válassz egy ügyfelet, amit szeretnél használni az alapján 
+[2026-01-27T09:19:46.448Z] Agent registered: researcher 
+[2026-01-27T09:19:46.448Z] Agent registered: python_developer 
+[2026-01-27T09:19:46.448Z] Agent registered: ops 
+[2026-01-27T09:19:46.447Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:19:46.448Z] Agent registered: ops 
+[2026-01-27T09:19:46.448Z] Agent registered: developer 
+[2026-01-27T09:19:46.448Z] Agent registered: integrator 
+[2026-01-27T09:19:46.448Z] Agent registered: orchestrator 
+[2026-01-27T09:20:20.160Z] [Developer] Task received: Készíthető egy Python script, amely segíti kiszámolni adott számokat! 
+[2026-01-27T09:30:48.731Z] Agent registered: researcher 
+[2026-01-27T09:30:48.730Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:30:48.731Z] Agent registered: node_developer 
+[2026-01-27T09:30:48.731Z] Agent registered: python_developer 
+[2026-01-27T09:30:48.731Z] Agent registered: ops 
+[2026-01-27T09:30:48.731Z] Agent registered: integrator 
+[2026-01-27T09:30:48.731Z] Agent registered: orchestrator 
+[2026-01-27T09:31:09.188Z] [Orchestrator] Task received: Az utasításokat egyetlen szöveggel megírjuk. 
+[2026-01-27T09:31:09.189Z] [Orchestrator] Task received: A felhasználó azt mondja, hogy magyarul tudsz? 
+[2026-01-27T09:31:09.190Z] [Orchestrator] Task received: Az utasításokat egyetlen szöveggel megírjuk. 
+[2026-01-27T09:56:12.326Z] Agent registered: node_developer 
+[2026-01-27T09:56:12.325Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:56:12.326Z] Agent registered: researcher 
+[2026-01-27T09:56:12.326Z] Agent registered: ops 
+[2026-01-27T09:56:12.326Z] Agent registered: python_developer 
+[2026-01-27T09:56:12.326Z] Agent registered: integrator 
+[2026-01-27T09:56:12.326Z] Agent registered: orchestrator 
+[2026-01-27T10:29:29.909Z] Agent registered: researcher 
+[2026-01-27T10:29:29.907Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T10:29:29.909Z] Agent registered: node_developer 
+[2026-01-27T10:29:29.909Z] Agent registered: python_developer 
+[2026-01-27T10:29:29.909Z] Agent registered: ops 
+[2026-01-27T10:29:29.909Z] Agent registered: integrator 
+[2026-01-27T10:29:29.909Z] Agent registered: orchestrator 

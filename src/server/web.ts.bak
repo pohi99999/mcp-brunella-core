@@ -16,22 +16,34 @@ import { toolManager } from './ToolManager.js';
 import { agentManager } from '../agents/AgentManager.js';
 import { mcpProcessManager } from './McpProcessManager.js';
 import { searchRAG, initRAG } from '../utils/rag.js';
-import { LLMClient, Message, Tool } from '../core/llm_client.js';
-import { mcpClientManager } from '../cli/mcp_client.js';
-import { MemoryManager } from '../cli/memory.js';
 
-import { McpConfigManager } from '../cli/mcp_config.js';
+async function chatWithOllama(prompt: string, system: string = ""): Promise<string> {
+    try {
+        const response = await fetch("http://localhost:11434/api/generate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                model: "qwen2.5-coder:1.5b",
+                prompt: prompt,
+                system: system,
+                stream: false
+            })
+        });
+        const data = await response.json();
+        return data.response || "Error: No response from Ollama";
+    } catch (e) {
+        return "Nem érem el az agyamat (Ollama).";
+    }
+}
 
 const logger = new Logger('web_ui.log');
-const memory = new MemoryManager();
-const configManager = new McpConfigManager();
 
 interface ActiveTransport {
     transport: SSEServerTransport;
     server: McpServer;
 }
 
-export async function startWebServer() {
+export function startWebServer() {
     const webUiEnabled = process.env.WEB_UI_ENABLED !== "0" && process.env.WEB_UI_ENABLED !== "false";
     if (!webUiEnabled) {
         console.error("WEB_UI_ENABLED=0 -> Web UI disabled");
@@ -39,30 +51,6 @@ export async function startWebServer() {
     }
 
     initDb();
-
-    // Auto-connect to configured MCP servers
-    console.log("🔄 Auto-connecting to configured MCP servers...");
-    const servers = configManager.getServers();
-    for (const server of servers) {
-        // Skip self or special entries if needed
-        if (server.name === 'brunella-core' || server.name === 'mcp-brunella-core') continue;
-
-        try {
-            // Check if already connected (optional optimization, but connectStdio usually spawns new)
-            // Ideally we check if client exists.
-            if (mcpClientManager.getClient(server.name)) {
-                console.log(`ℹ️  Already connected to ${server.name}`);
-                continue;
-            }
-
-            console.log(`🔌 Connecting to ${server.name}...`);
-            await mcpClientManager.connectStdio(server.name, server.command, server.args, server.env || {});
-            console.log(`✅ Connected to ${server.name}`);
-        } catch (e: any) {
-            console.error(`❌ Failed to auto-connect to ${server.name}: ${e.message}`);
-        }
-    }
-
 
     // Register tools globally for Socket.IO clients
     try {
@@ -158,7 +146,7 @@ export async function startWebServer() {
 
         // 1. Send Tool Definitions immediately
         socket.emit('tools_update', toolManager.getToolDefinitions());
-
+        
         // Send initial MCP status
         socket.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
 
@@ -166,40 +154,18 @@ export async function startWebServer() {
         socket.on('run_tool', async (data: { name: string, args: any, id?: string }) => {
             console.log(`Socket Tool Run Request: ${data.name}`);
             try {
-                // Try Local ToolManager first
-                let result;
-                try {
-                    result = await toolManager.executeTool(data.name, data.args);
-                } catch (localError: any) {
-                    // If not found locally, try MCP Clients
-                    console.log(`Tool not found locally, trying MCP clients for ${data.name}...`);
-                    const clients = mcpClientManager.getClientNames();
-                    let found = false;
-                    for (const clientName of clients) {
-                        try {
-                            const clientTools = await mcpClientManager.listTools(clientName);
-                            if (clientTools.tools.some(t => t.name === data.name)) {
-                                const mcpResult = await mcpClientManager.callTool(clientName, data.name, data.args);
-                                result = mcpResult; // Note: MCP result structure might differ
-                                found = true;
-                                break;
-                            }
-                        } catch (e) { /* continue */ }
-                    }
-                    if (!found) throw localError; // Throw original error if not found in MCP either
-                }
-
-                socket.emit('tool_result', {
-                    name: data.name,
+                const result = await toolManager.executeTool(data.name, data.args);
+                socket.emit('tool_result', { 
+                    name: data.name, 
                     result: result,
-                    id: data.id
+                    id: data.id 
                 });
             } catch (e: any) {
                 console.error(`Tool execution error: ${e.message}`);
-                socket.emit('tool_error', {
-                    name: data.name,
+                socket.emit('tool_error', { 
+                    name: data.name, 
                     error: e.message,
-                    id: data.id
+                    id: data.id 
                 });
             }
         });
@@ -234,7 +200,7 @@ export async function startWebServer() {
             try {
                 const flowsDir = path.join(process.cwd(), 'conductor', 'flows');
                 if (!fs.existsSync(flowsDir)) fs.mkdirSync(flowsDir, { recursive: true });
-
+                
                 const filePath = path.join(flowsDir, `${data.name}.json`);
                 fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
                 broadcastLog('info', `Flow elmentve: ${data.name}`, 'adk-manager');
@@ -309,85 +275,64 @@ export async function startWebServer() {
             const userMsg = data.text;
             saveMessage(DEFAULT_CHAT_ID, 'user', userMsg);
 
-            // Re-instantiate LLM Client to get fresh config (model updates etc.)
-            const currentModel: string = (memory.get('model') as string) || 'llava-llama3:latest';
-            const baseUrl = memory.get('llm_base_url') || 'http://127.0.0.1:11434';
+            const intentPrompt = `Analyze this user request: "${userMsg}". Classify as PLAN_TASK (if it involves multiple steps, agents, or looking up info then acting), CODING_TASK (if pure code generation), or CHAT. Return ONLY the word.`;
+            const intentResponse = await chatWithOllama(intentPrompt);
+            const category = (intentResponse || "CHAT").trim();
 
-            const llm = new LLMClient({
-                provider: 'ollama',
-                model: currentModel,
-                baseUrl: baseUrl
-            });
+            if (category.includes("PLAN_TASK")) {
+                const startMsg = "🔍 Összetett kérés észlelve. Tervet készítek...";
+                socket.emit('bot_message', { text: startMsg });
+                saveMessage(DEFAULT_CHAT_ID, 'bot', startMsg);
 
-            const messages: Message[] = [
-                { role: 'system', content: 'You are Brunella, an AI assistant. You can use tools. Be helpful and concise.' },
-                { role: 'user', content: userMsg }
-            ];
+                try {
+                    const plan = await agentManager.createPlan(userMsg);
+                    socket.emit('plan_created', plan); // Send initial plan to UI
 
-            // Get Tools
-            const mcpTools = await mcpClientManager.getToolsForLLM();
-            const tools: Tool[] = [...mcpTools];
-
-            // Temporary buffer for streaming response
-            let currentResponseText = "";
-
-            try {
-                // First token indicates start of response
-                socket.emit('bot_message_start', { isUser: false });
-
-                const response = await llm.chatStream(messages, tools, (chunk) => {
-                    currentResponseText += chunk;
-                    socket.emit('bot_message_chunk', { text: chunk });
-                });
-
-                // Save full message to DB
-                saveMessage(DEFAULT_CHAT_ID, 'bot', currentResponseText);
-
-                // Handle Tool Calls if any
-                if (response.tool_calls && response.tool_calls.length > 0) {
-                    socket.emit('bot_message_chunk', { text: '\n\n🛠️ Eszközök futtatása...\n' });
-
-                    for (const call of response.tool_calls) {
-                        const toolName = call.function.name;
-                        const toolArgs = JSON.parse(call.function.arguments);
-
-                        // Execute tool
-                        let executionResult = "Tool not found or failed";
-                        const clients = mcpClientManager.getClientNames();
-                        for (const clientName of clients) {
-                            try {
-                                const clientTools = await mcpClientManager.listTools(clientName);
-                                if (clientTools.tools.some(t => t.name === toolName)) {
-                                    const result = await mcpClientManager.callTool(clientName, toolName, toolArgs);
-                                    executionResult = JSON.stringify(result);
-                                    break;
-                                }
-                            } catch (e) { /* continue */ }
-                        }
-
-                        socket.emit('bot_message_chunk', { text: `> ${toolName}: ${executionResult.substring(0, 100)}...\n` });
-                        messages.push(response);
-                        messages.push({ role: 'tool', content: executionResult, name: toolName });
-                    }
-
-                    // Follow up
-                    const followUp = await llm.chatStream(messages, tools, (chunk) => {
-                        currentResponseText += chunk;
-                        socket.emit('bot_message_chunk', { text: chunk });
+                    const result = await agentManager.executePlan(plan, (event, data) => {
+                        socket.emit(event, data); // Forward plan events to UI
                     });
 
-                    // Update DB with full conversation including tool results? 
-                    // Ideally we save distinct messages, but for simplicity we append to last bot msg or create new.
-                    // Let's create new for follow up.
-                    saveMessage(DEFAULT_CHAT_ID, 'bot', followUp.content);
+                    const finalMsg = `✅ Terv végrehajtva:\n\n${result}`;
+                    socket.emit('bot_message', { text: finalMsg });
+                    saveMessage(DEFAULT_CHAT_ID, 'bot', finalMsg);
+                } catch (e: any) {
+                    const errMsg = `⚠️ Hiba a tervezés/végrehajtás során: ${e.message}`;
+                    socket.emit('bot_message', { text: errMsg });
+                    saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
                 }
 
-                socket.emit('bot_message_end', {});
+            } else if (category.includes("CODING_TASK")) {
+                const startMsg = "Indítom a Self-Healing Pipeline-t...";
+                socket.emit('bot_message', { text: startMsg });
+                saveMessage(DEFAULT_CHAT_ID, 'bot', startMsg);
 
-            } catch (e: any) {
-                const errMsg = `⚠️ Hiba: ${e.message}`;
-                socket.emit('bot_message', { text: errMsg });
-                saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
+                const pipeline = new SelfHealingPipeline();
+                pipeline.on('progress', (msg) => {
+                    socket.emit('bot_message', { text: msg, isLog: true });
+                    saveMessage(DEFAULT_CHAT_ID, 'bot', msg, true);
+                });
+
+                try {
+                    const result = await pipeline.run(userMsg);
+                    const finalMsg = `✅ Kész! Itt az eredmény:\n\
+\
+javascript
+${result}
+\
+\
+`;
+                    socket.emit('bot_message', { text: finalMsg });
+                    saveMessage(DEFAULT_CHAT_ID, 'bot', finalMsg);
+                } catch (e: any) {
+                    const errMsg = `⚠️ Sajnos nem sikerült: ${e.message}`;
+                    socket.emit('bot_message', { text: errMsg });
+                    saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
+                }
+
+            } else {
+                const response = await chatWithOllama(userMsg, "You are Brunella, a helpful AI assistant.");
+                socket.emit('bot_message', { text: response });
+                saveMessage(DEFAULT_CHAT_ID, 'bot', response);
             }
         });
     });
@@ -395,7 +340,6 @@ export async function startWebServer() {
     const portValue = Number(process.env.WEB_UI_PORT || 3000);
     const PORT = Number.isFinite(portValue) ? portValue : 3000;
     httpServer.listen(PORT, () => {
-        console.log(`🌐 Web UI: http://localhost:${PORT}`);
+        console.error(`🌐 Web UI: http://localhost:${PORT}`);
     });
 }
-

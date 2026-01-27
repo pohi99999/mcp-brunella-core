@@ -52,19 +52,46 @@ export class AgentManager {
             }
         });
 
-        // 2. FEJLESZTŐ ÜGYNÖK (Developer Agent)
+        // 2. NODE.JS FEJLESZTŐ ÜGYNÖK (Node Developer)
         this.registerAgent({
-            name: "developer",
-            description: "Kódot generál és javít a pipeline segítségével.",
-            capabilities: ["code_generation", "self_healing"],
+            name: "node_developer",
+            description: "Javascript/Node.js kódot generál és futtat.",
+            capabilities: ["nodejs", "javascript", "code_generation"],
             execute: async (task: string) => {
-                await logger.log(`[Developer] Task received: ${task}`);
+                await logger.log(`[NodeDeveloper] Task received: ${task}`);
                 const pipeline = new SelfHealingPipeline();
                 try {
                     const code = await pipeline.run(task);
-                    return `Sikeres kódgenerálás:\n\n${code}`;
+                    return `Sikeres kódgenerálás (Node.js):\n\n${code}`;
                 } catch (e: any) {
                     return `Hiba a fejlesztés során: ${e.message}`;
+                }
+            }
+        });
+
+        // 2b. PYTHON FEJLESZTŐ ÜGYNÖK (Python Developer)
+        this.registerAgent({
+            name: "python_developer",
+            description: "Python scripteket ír és futtat (adatelemzés, matek).",
+            capabilities: ["python", "data_analysis", "math"],
+            execute: async (task: string) => {
+                await logger.log(`[PythonDeveloper] Task received: ${task}`);
+                
+                // Prompt Ollama to generate python code for the task
+                const systemPrompt = "You are a Python Expert. Write a script for the following task. Output ONLY the code, no markdown.";
+                const code = await chatWithOllama(task, systemPrompt);
+                
+                // Clean code
+                const cleanCode = code.replace(/```python/g, "").replace(/```/g, "").trim();
+                
+                // Execute using globalPythonShell (bridge is in interpreter tool, but we can call it here)
+                const { globalPythonShell } = await import("../utils/pythonShell.js");
+                
+                try {
+                    const output = await globalPythonShell.execute(cleanCode);
+                    return `Python Code:\n${cleanCode}\n\nOutput:\n${output}`;
+                } catch (e: any) {
+                    return `Python Execution Error: ${e.message}`;
                 }
             }
         });
@@ -89,22 +116,6 @@ export class AgentManager {
             }
         });
 
-        // 3. OPS ÜGYNÖK (Ops Agent)
-        this.registerAgent({
-            name: "ops",
-            description: "Rendszer állapot és logok felügyelete.",
-            capabilities: ["monitoring", "diagnostics"],
-            execute: async (task: string) => {
-                await logger.log(`[Ops] Task received: ${task}`);
-
-                if (task.includes("metrics") || task.includes("status") || task.includes("állapot")) {
-                    return "A rendszer metrikák lekérdezéséhez használd a `monitor_get_metrics` toolt. A logokhoz a `monitor_tail_logs`-t.";
-                }
-
-                return `Ops Agent: A kért feladat (${task}) diagnosztikát igényel. Kérlek pontosítsd, mit vizsgáljak (pl. 'system status', 'web logs').`;
-            }
-        });
-
         // 4. INTEGRATOR ÜGYNÖK (AnythingLLM / Knowledge)
         this.registerAgent({
             name: "integrator",
@@ -120,19 +131,20 @@ export class AgentManager {
         // 5. ORCHESTRATOR (Brunella - The Boss)
         this.registerAgent({
             name: "orchestrator",
-            description: "A Brunella rendszer központi irányítója. Delegál.",
-            capabilities: ["planning", "routing", "delegation"],
+            description: "A Brunella rendszer központi irányítója. Delegál vagy válaszol.",
+            capabilities: ["planning", "routing", "delegation", "chat"],
             execute: async (task: string) => {
                 await logger.log(`[Orchestrator] Task received: ${task}`);
                 const lowerTask = task.toLowerCase();
 
                 // Simple routing logic based on keywords
-                if (lowerTask.includes("kód") || lowerTask.includes("javítsd") || lowerTask.includes("fejleszt")) {
-                    return await this.delegate("developer", task);
+                if (lowerTask.includes("python") || lowerTask.includes("számold") || lowerTask.includes("adat")) {
+                    return await this.delegate("python_developer", task);
+                }
+                if (lowerTask.includes("kód") || lowerTask.includes("javítsd") || lowerTask.includes("fejleszt") || lowerTask.includes("javascript") || lowerTask.includes("node")) {
+                    return await this.delegate("node_developer", task);
                 }
                 if (lowerTask.includes("keresd") || lowerTask.includes("kutass") || lowerTask.includes("tudás")) {
-                    // Could be Researcher OR Integrator (AnythingLLM)
-                    // Let's prefer Integrator if AnythingLLM is mentioned
                     if (lowerTask.includes("anything") || lowerTask.includes("local") || lowerTask.includes("bázis")) {
                         return await this.delegate("integrator", task);
                     }
@@ -142,8 +154,9 @@ export class AgentManager {
                     return await this.delegate("ops", task);
                 }
 
-                // Default fallback
-                return `Orchestrator (Brunella): Értettem a feladatot: "${task}". Mivel nem tudtam egyértelműen kategóriába sorolni, kérlek használd közvetlenül a megfelelő ügynököt (developer, ops, integrator) vagy pontosíts.`;
+                // If no specific agent found, answer directly as Brunella
+                const response = await chatWithOllama(task, "You are Brunella, the core AI of this system. Answer the user directly and helpfully in the same language they used.");
+                return response;
             }
         });
     }
@@ -181,21 +194,23 @@ export class AgentManager {
 
     public async createPlan(task: string): Promise<ExecutionPlan> {
         const systemPrompt = `You are the Brunella Orchestrator Planner.
-Your goal is to break down a complex user task into a sequence of atomic steps.
+Your goal is to decide if a task is a simple chat/question or a complex operation.
+
 Available Agents:
 - ops: Monitoring logs, metrics, system commands.
-- developer: Writing and executing Python/JS code, fixing bugs.
+- node_developer: Writing/executing Node.js code.
+- python_developer: Writing/executing Python code.
 - researcher: Searching knowledge base (RAG).
-- integrator: Interacting with AnythingLLM or external APIs.
+- integrator: Interacting with AnythingLLM.
 
-Return strictly valid JSON. No markdown blocks.`;
+CRITICAL RULES:
+1. If the input is a question (e.g. "magyarul tudsz?", "hogy vagy?", "ki vagy?"), return ONLY ONE step for the "orchestrator". DO NOT break it down.
+2. Only create multiple steps if the task involves multiple distinct actions (e.g. "find logs AND fix the code").
+3. Return strictly valid JSON. No markdown.`;
 
         const userPrompt = `Task: "${task}"
 
-Return a JSON object with a "steps" array. Each step must have:
-- "description": What to do.
-- "agent": Which agent should do it.
-- "tool": (Optional) Suggested tool name.`;
+Return a JSON object: {"steps": [{"description": "...", "agent": "...", "tool": "..."}]}`;
 
         const response = await chatWithOllama(userPrompt, systemPrompt);
         

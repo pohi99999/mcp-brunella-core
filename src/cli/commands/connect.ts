@@ -1,10 +1,10 @@
-import { McpConfigManager } from '../mcp_config';
-import { McpClientManager } from '../mcp_client';
+import { McpConfigManager } from '../mcp_config.js';
+import { McpClientManager, mcpClientManager } from '../mcp_client.js';
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 
 const configManager = new McpConfigManager();
-const mcpClient = new McpClientManager();
+const mcpClient = mcpClientManager;
 
 export async function connectCommand(serverName?: string) {
     const servers = configManager.getServers();

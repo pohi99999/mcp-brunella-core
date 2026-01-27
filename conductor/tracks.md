@@ -5,6 +5,26 @@ This file tracks all major tracks for the project. Each track has its own detail
 ---
 
 
+
+- [x] **Track: Brunella CLI Interactive Agent Mode**
+
+  *Link: [./tracks/brunella_cli_interactive_agent_20260127/](./tracks/brunella_cli_interactive_agent_20260127/)*
+
+
+
+
+
+
+
+---
+
+
+
+- [x] **Track: Smart Agency & Visuals**
+  *Link: [./tracks/smart_agency_visuals_20260123/](./tracks/smart_agency_visuals_20260123/)*
+
+---
+
 - [x] **Track: Vertex AI Integráció (LLM Provider)**
   *Link: [./tracks/vertex_ai_integration_20260126/](./tracks/vertex_ai_integration_20260126/)*
 

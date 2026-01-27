@@ -24,6 +24,13 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
     - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat.
 
 ## Development Log
+### 2026.01.27 - Gemini-fication & Web UI 2.0 (Phase 1 - COMPLETE)
+- **CLI Megújítása**: Teljesen újraírt `src/commands/chat.ts`, interaktív chat streaming támogatással és kontextuskezeléssel.
+- **LLM Kliens**: Egységesített `LLMClient` osztály (`src/core/llm_client.ts`), amely támogatja az Ollama streaminget és a tool calling-ot.
+- **Web UI Szinkronizáció**: A Dashboard (`src/server/web.ts`) mostantól ugyanazt a logikát használja, mint a CLI.
+- **Auto-Connect**: Indításkor a rendszer automatikusan csatlakozik a konfigurált MCP szerverekhez (`mcp_servers.json`).
+- **Magyar Modell**: Alapértelmezett modell váltása `llava-llama3:latest`-re a jobb magyar nyelvi támogatásért.
+
 ### 2026.01.26 - Agent Factory Core Implementation (Phase 3)
 - `supervisor.ts`: Node.js alapú folyamatmenedzser létrehozása, amely kezeli az ügynökök indítását és a JSON-RPC kommunikációt StdIO csatornákon.
 

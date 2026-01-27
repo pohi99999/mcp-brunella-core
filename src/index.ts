@@ -14,7 +14,7 @@ registerAllTools(server);
 
 async function main() {
   // Start Web Interface (which will now also handle SSE)
-  startWebServer();
+  await startWebServer();
 
   const transport = new StdioServerTransport();
   await server.connect(transport);

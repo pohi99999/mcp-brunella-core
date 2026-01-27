@@ -1,12 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.SelfHealingPipeline = void 0;
-exports.registerPipelineTools = registerPipelineTools;
-const zod_1 = require("zod");
-const logger_js_1 = require("../utils/logger.js");
-const events_1 = require("events");
-const logger = new logger_js_1.Logger('pipeline.log');
-class SelfHealingPipeline extends events_1.EventEmitter {
+import { z } from "zod";
+import { Logger } from "../utils/logger.js";
+import { EventEmitter } from 'events';
+const logger = new Logger('pipeline.log');
+export class SelfHealingPipeline extends EventEmitter {
     maxAttempts;
     constructor(maxAttempts = 3) {
         super();
@@ -28,14 +24,20 @@ class SelfHealingPipeline extends events_1.EventEmitter {
                 : `The previous code failed with: "${lastError}". Fix the code for: ${task}. Output ONLY code.`;
             this.emit('progress', `🧠 Kód generálása (Ollama)...`);
             try {
-                const ollamaRes = await fetch("http://localhost:11434/api/generate", {
+                // Trying to be flexible with the model name
+                const modelName = "qwen2.5-coder:1.5b";
+                const ollamaRes = await fetch("http://127.0.0.1:11434/api/generate", {
                     method: "POST",
-                    body: JSON.stringify({ model: "qwen2.5-coder:1.5b", prompt: prompt, stream: false })
+                    body: JSON.stringify({ model: modelName, prompt: prompt, stream: false })
                 });
-                if (!ollamaRes.ok)
-                    throw new Error("Ollama connection failed");
+                if (!ollamaRes.ok) {
+                    const errorText = await ollamaRes.text();
+                    throw new Error(`Ollama error (${ollamaRes.status}): ${errorText}`);
+                }
                 const ollamaData = await ollamaRes.json();
                 currentCode = ollamaData.response;
+                if (!currentCode)
+                    throw new Error("Ollama returned empty code.");
                 // Cleanup markdown
                 currentCode = currentCode.replace(/```javascript/g, "").replace(/```js/g, "").replace(/```/g, "").trim();
                 this.emit('progress', `💻 Kód generálva (${currentCode.length} karakter).`);
@@ -45,11 +47,11 @@ class SelfHealingPipeline extends events_1.EventEmitter {
                 const vm = new VM({
                     timeout: 2000,
                     sandbox: {
-                        console: { log: () => { } }, // Mute console in check
+                        console: { log: (...args) => logger.log(`[VM Log] ${args.join(' ')}`) },
                         require: (pkg) => {
                             if (['fs', 'path', 'http', 'net'].includes(pkg))
                                 throw new Error(`Modul '${pkg}' tiltott a sandboxban.`);
-                            return {}; // Mock other requires
+                            return {};
                         }
                     }
                 });
@@ -73,12 +75,11 @@ class SelfHealingPipeline extends events_1.EventEmitter {
         }
     }
 }
-exports.SelfHealingPipeline = SelfHealingPipeline;
 // Wrapper for MCP Tool registration
-function registerPipelineTools(server) {
+export function registerPipelineTools(server) {
     server.tool("pipeline_self_healing_gen", "Generates code with self-healing capabilities.", {
-        task: zod_1.z.string().describe("The coding task"),
-        max_attempts: zod_1.z.number().default(3)
+        task: z.string().describe("The coding task"),
+        max_attempts: z.number().default(3)
     }, async ({ task, max_attempts }) => {
         const pipeline = new SelfHealingPipeline(max_attempts);
         // We can't stream progress via standard MCP tool response easily yet (needs server-sent events support in client),
