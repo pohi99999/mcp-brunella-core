@@ -21,6 +21,7 @@
 
 ## Tools & Utilities
 - **Automation/Scraping:** Playwright
+- **Integrations:** Google Search API (googleapis)
 - **Security:** vm2 for sandboxed code execution
 - **CLI:** Commander.js, Inquirer, Chalk (Interaktív menürendszer)
 - **Build/Package:** npm, uv (Python)
