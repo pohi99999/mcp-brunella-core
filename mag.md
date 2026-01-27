@@ -24,6 +24,54 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
     - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat.
 
 ## Development Log
+### 2026.01.26 - Agent Factory Core Implementation (Phase 3)
+- `supervisor.ts`: Node.js alapú folyamatmenedzser létrehozása, amely kezeli az ügynökök indítását és a JSON-RPC kommunikációt StdIO csatornákon.
+
+### 2026.01.26 - Agent Factory Core Implementation (Phase 2)
+- `buap.ts`: TypeScript interfészek definiálása a BUAP protokoll üzeneteihez.
+- `router.ts`: Alapvető Message Router implementálása, amely kezeli a regisztrációt és az üzenettovábbítást az `AgentsDB` segítségével.
+
+### 2026.01.26 - Agent Factory Core Implementation (Phase 1)
+- `agents_schema.sql`: SQLite séma definiálása az ügynökök, üzenetek és feladatok tárolására.
+- `agents_db.ts`: `better-sqlite3` alapú adatbázis-kezelő osztály implementálása az állapotok perzisztálásához.
+
+### 2026.01.26 - Agent Protocol Architecture (Phase 3 - KÉSZ)
+- `prototype_example.md`: Konkrét példa ("Junior Python Developer") a teljes működési láncra (Manifest -> Router -> MCP -> UI).
+- `terv.md` frissítése: Új "Agent Factory Roadmap" szekció felvétele.
+- Lezárult a BUAP (Brunella Universal Agent Protocol) tervezési fázisa.
+
+### 2026.01.26 - Agent Protocol Architecture (Phase 2)
+- `runtime_design.md`: Folyamat-alapú (Process-based) futtatókörnyezet specifikálása (Supervisor szerepkör, életciklus).
+- `integration_strategy.md`: Adapter minták kidolgozása külső keretrendszerekhez (LangGraph, AutoGen) és CoPilotKit "Generative UI" integrációs stratégia.
+- `architecture_diagram.mermaid`: Rendszerkomponensek vizualizációja.
+
+### 2026.01.26 - Agent Protocol Architecture (Phase 1)
+- `agent_manifest_schema.json` létrehozása: Hibrid ügynök definíció (JSON + Script), CoPilot UI komponensek támogatása.
+- `a2a_protocol_spec.md` létrehozása: Hub & Spoke architektúra, JSON-RPC alapú üzenetküldés, Handshake és Delegálási folyamatok definiálása.
+
+### 2026.01.26 - Gemini CLI Bővítése (Phase 4 - KÉSZ)
+- Interaktív menürendszer implementálása (`src/cli/index.ts`) az `inquirer` könyvtárral.
+- Funkciók: Szerverek automatikus felderítése, Csatlakozás, Eszközök listázása, Módváltás (Safe/Full).
+- Teljes integráció a `start.bat` szkripttől a Python és Node.js MCP szerverekig.
+- A `gemini-cli` most már képes hibrid módon kezelni a projektben lévő eszközöket.
+
+### 2026.01.26 - Gemini CLI Bővítése (Phase 3)
+- `McpClientManager`: MCP szerverekhez való csatlakozás és eszközhívás megvalósítása az `@modelcontextprotocol/sdk` használatával.
+- `ExtensionManager`: Bővítmények dinamikus felderítése és betöltési logikája.
+- `DiscoveryService`: Automatikus szerver-felderítés (`src/servers` könyvtárból).
+
+### 2026.01.26 - Gemini CLI Bővítése (Phase 2)
+- `MemoryManager` implementálása a `.gemini/cli_memory.json` perzisztens tárolásához.
+- `PythonBridge` osztály létrehozása a `.venv` környezetben lévő Python szkriptek futtatásához.
+- Interaktív módválasztó (Safe/Full Access) integrálása az `inquirer` segítségével.
+- Unit tesztek (`test/cli_unit.test.ts`) előkészítése.
+
+### 2026.01.26 - Gemini CLI Bővítése és Finomítása (Phase 1)
+- Új fejlesztési track indítása a CLI képességeinek kiterjesztésére.
+- `src/cli/` struktúra kialakítása (Commander.js alapokon).
+- `start.bat` gyorsindító szkript létrehozása.
+- `package.json` bővítése a `cli` futtató paraccsal.
+
 ### 2026.01.26 - CLI Rendszer Validálása
 - `scripts/test_cli.ts` létrehozása.
 - Alapvető parancsok (help, version, tools, agents) sikeres tesztelése.

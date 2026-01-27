@@ -1,8 +1,0 @@
-{
-  "track_id": "docs_stability_20260126",
-  "type": "maintenance",
-  "status": "new",
-  "created_at": "2026-01-26T10:00:00Z",
-  "updated_at": "2026-01-26T10:00:00Z",
-  "description": "A mag.md inicializálása a jelenlegi állapot rögzítésével, a meglévő tesztek futtatása és egy átfogó rendszerállapot-jelentés készítése."
-}

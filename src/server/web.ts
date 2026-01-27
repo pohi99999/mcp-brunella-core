@@ -11,6 +11,8 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { registerAllTools } from './registry.js';
 import { v4 as uuidv4 } from 'uuid';
+import { toolManager } from './ToolManager.js';
+import { agentManager } from '../agents/AgentManager.js';
 
 async function chatWithOllama(prompt: string, system: string = ""): Promise<string> {
     try {
@@ -46,6 +48,14 @@ export function startWebServer() {
     }
 
     initDb();
+
+    // Register tools globally for Socket.IO clients
+    try {
+        registerAllTools(toolManager as any);
+        console.log("Tools registered to Global ToolManager");
+    } catch (e) {
+        console.error("Failed to register tools to ToolManager:", e);
+    }
 
     const app = express();
     // Allow JSON body for MCP POST messages
@@ -128,6 +138,29 @@ export function startWebServer() {
     io.on('connection', (socket) => {
         const DEFAULT_CHAT_ID = 'main-session';
 
+        // 1. Send Tool Definitions immediately
+        socket.emit('tools_update', toolManager.getToolDefinitions());
+
+        // 2. Handle Tool Execution
+        socket.on('run_tool', async (data: { name: string, args: any, id?: string }) => {
+            console.log(`Socket Tool Run Request: ${data.name}`);
+            try {
+                const result = await toolManager.executeTool(data.name, data.args);
+                socket.emit('tool_result', { 
+                    name: data.name, 
+                    result: result,
+                    id: data.id 
+                });
+            } catch (e: any) {
+                console.error(`Tool execution error: ${e.message}`);
+                socket.emit('tool_error', { 
+                    name: data.name, 
+                    error: e.message,
+                    id: data.id 
+                });
+            }
+        });
+
         try {
             const history: DbMessage[] = getMessages(DEFAULT_CHAT_ID);
             if (history.length === 0) {
@@ -150,11 +183,33 @@ export function startWebServer() {
             const userMsg = data.text;
             saveMessage(DEFAULT_CHAT_ID, 'user', userMsg);
 
-            const intentPrompt = `Analyze this user request: "${userMsg}". Classify as CODING_TASK or CHAT. Return ONLY the word.`;
+            const intentPrompt = `Analyze this user request: "${userMsg}". Classify as PLAN_TASK (if it involves multiple steps, agents, or looking up info then acting), CODING_TASK (if pure code generation), or CHAT. Return ONLY the word.`;
             const intentResponse = await chatWithOllama(intentPrompt);
             const category = (intentResponse || "CHAT").trim();
 
-            if (category.includes("CODING_TASK")) {
+            if (category.includes("PLAN_TASK")) {
+                const startMsg = "🔍 Összetett kérés észlelve. Tervet készítek...";
+                socket.emit('bot_message', { text: startMsg });
+                saveMessage(DEFAULT_CHAT_ID, 'bot', startMsg);
+
+                try {
+                    const plan = await agentManager.createPlan(userMsg);
+                    socket.emit('plan_created', plan); // Send initial plan to UI
+
+                    const result = await agentManager.executePlan(plan, (event, data) => {
+                        socket.emit(event, data); // Forward plan events to UI
+                    });
+
+                    const finalMsg = `✅ Terv végrehajtva:\n\n${result}`;
+                    socket.emit('bot_message', { text: finalMsg });
+                    saveMessage(DEFAULT_CHAT_ID, 'bot', finalMsg);
+                } catch (e: any) {
+                    const errMsg = `⚠️ Hiba a tervezés/végrehajtás során: ${e.message}`;
+                    socket.emit('bot_message', { text: errMsg });
+                    saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
+                }
+
+            } else if (category.includes("CODING_TASK")) {
                 const startMsg = "Indítom a Self-Healing Pipeline-t...";
                 socket.emit('bot_message', { text: startMsg });
                 saveMessage(DEFAULT_CHAT_ID, 'bot', startMsg);

@@ -1,0 +1,117 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Brunella Agent Manifest",
+  "description": "Configuration schema for Brunella Universal Agents",
+  "type": "object",
+  "properties": {
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the agent (e.g., 'junior-python-dev-v1')"
+        },
+        "name": {
+          "type": "string",
+          "description": "Human-readable name of the agent"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "description": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "tags": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      },
+      "required": ["id", "name", "version"]
+    },
+    "model_config": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["vertex_ai", "ollama", "openai", "anthropic"]
+        },
+        "model_name": {
+          "type": "string",
+          "description": "e.g., 'gemini-pro', 'gpt-4'"
+        },
+        "temperature": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 2
+        },
+        "max_tokens": {
+          "type": "integer"
+        }
+      },
+      "required": ["provider", "model_name"]
+    },
+    "system_prompt": {
+      "type": "string",
+      "description": "The core instructions for the agent."
+    },
+    "tools": {
+      "type": "array",
+      "description": "List of MCP tools the agent has access to.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "source": { "type": "string", "enum": ["builtin", "mcp_server", "script"] },
+          "config": { "type": "object" }
+        },
+        "required": ["name", "source"]
+      }
+    },
+    "runtime": {
+      "type": "object",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["declarative", "python_script", "hybrid"],
+          "default": "declarative"
+        },
+        "script_path": {
+          "type": "string",
+          "description": "Path to the Python/JS script for hybrid/script logic (relative to manifest)."
+        },
+        "environment": {
+          "type": "object",
+          "description": "Environment variables to inject."
+        }
+      }
+    },
+    "ui_components": {
+      "type": "array",
+      "description": "Definitions for CoPilotKit-style UI widgets.",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string", "enum": ["text_input", "confirmation", "chart", "custom"] },
+          "label": { "type": "string" },
+          "props_schema": { "type": "object" }
+        },
+        "required": ["id", "type"]
+      }
+    },
+    "capabilities": {
+      "type": "object",
+      "properties": {
+        "can_read_files": { "type": "boolean", "default": false },
+        "can_execute_commands": { "type": "boolean", "default": false },
+        "can_access_internet": { "type": "boolean", "default": false },
+        "memory_enabled": { "type": "boolean", "default": true }
+      }
+    }
+  },
+  "required": ["metadata", "model_config", "system_prompt"]
+}

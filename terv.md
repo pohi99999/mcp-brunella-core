@@ -1,4 +1,4 @@
-# ANTIGRAVITY AGENT PROTOKOLL: Helyreállítási Terv
+Helyreállítási Terv
 
 > **Dátum:** 2026. 01. 22.
 > **Státusz:** ✅ SUCCESS / STABLE
@@ -46,6 +46,22 @@ graph TD
 
 ---
 
-## 3. Üzenet
+## 3. Agent Factory Roadmap (2026 Q1)
+> **Track:** `agent_protocol_architecture_20260126`
+
+A Brunella Core következő evolúciós lépése az **Agent Factory** és a **Universal Agent Protocol (BUAP)** létrehozása.
+
+### 3.1. Architektúra (Tervezés alatt)
+- **Hub & Spoke Topology:** Központi Router kezeli az ügynökök közötti (A2A) kommunikációt.
+- **Process Isolation:** Az ügynökök különálló, sandboxolt folyamatokként futnak.
+- **Hybrid Manifest:** JSON alapú konfiguráció + Python/JS szkriptek támogatása.
+
+### 3.2. Integrációs Célok
+- **Keretrendszerek:** LangGraph, AutoGen, CrewAI adapterek.
+- **UI:** CoPilotKit alapú "Generative UI" komponensek.
+
+---
+
+## 4. Üzenet
 
 > "A rendszer a te kezedben van. A cél nem csak a működés, hanem a *reziliencia*. Építsd újjá erősebbre, mint amilyen volt!"

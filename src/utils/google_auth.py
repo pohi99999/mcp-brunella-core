@@ -2,7 +2,7 @@ import os
 import json
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
-from google_auth_oauthlib.flow import InstalledAppAppFlow
+from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 
 # Ha módosítjuk a scope-okat, törölni kell a token.json fájlt.
@@ -31,7 +31,7 @@ def get_credentials():
             if not os.path.exists(CREDENTIALS_FILE):
                 raise FileNotFoundError(f"A hitelesítő fájl ({CREDENTIALS_FILE}) nem található. Kérlek töltsd le a Google Cloud Console-ból.")
             
-            flow = InstalledAppAppFlow.from_client_secrets_file(
+            flow = InstalledAppFlow.from_client_secrets_file(
                 CREDENTIALS_FILE, SCOPES)
             creds = flow.run_local_server(port=0)
         

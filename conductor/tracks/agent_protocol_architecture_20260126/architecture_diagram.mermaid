@@ -1,0 +1,30 @@
+graph TD
+    subgraph "Brunella Core Host"
+        S[Supervisor / Process Manager] -->|Spawns & Monitors| A1[Agent Process 1]
+        S -->|Spawns & Monitors| A2[Agent Process 2]
+        S -->|Spawns & Monitors| A3[Agent Process 3]
+        
+        R[Message Router / Hub]
+        
+        A1 <-->|MCP / JSON-RPC| R
+        A2 <-->|MCP / JSON-RPC| R
+        A3 <-->|MCP / JSON-RPC| R
+        
+        DB[(LanceDB Memory)]
+        R -->|Logs & Context| DB
+        
+        CLI[Gemini CLI] <-->|Control| S
+        Dashboard[React Dashboard] <-->|WebSocket| S
+    end
+
+    subgraph "Agent Process 1 (Example)"
+        Logic[Business Logic / LangGraph]
+        MCP_Client[MCP Client]
+        MCP_Server[MCP Server]
+        Sandbox[Secure Sandbox]
+        
+        Logic --> MCP_Client
+        MCP_Server --> Logic
+    end
+
+    R -->|Validates| Permissions[Permission System]

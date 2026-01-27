@@ -16,6 +16,8 @@ const mcp_js_1 = require("@modelcontextprotocol/sdk/server/mcp.js");
 const sse_js_1 = require("@modelcontextprotocol/sdk/server/sse.js");
 const registry_js_1 = require("./registry.js");
 const uuid_1 = require("uuid");
+const ToolManager_js_1 = require("./ToolManager.js");
+const AgentManager_js_1 = require("../agents/AgentManager.js");
 async function chatWithOllama(prompt, system = "") {
     try {
         const response = await fetch("http://localhost:11434/api/generate", {
@@ -43,6 +45,14 @@ function startWebServer() {
         return;
     }
     (0, db_js_1.initDb)();
+    // Register tools globally for Socket.IO clients
+    try {
+        (0, registry_js_1.registerAllTools)(ToolManager_js_1.toolManager);
+        console.log("Tools registered to Global ToolManager");
+    }
+    catch (e) {
+        console.error("Failed to register tools to ToolManager:", e);
+    }
     const app = (0, express_1.default)();
     // Allow JSON body for MCP POST messages
     app.use(express_1.default.json());
@@ -108,6 +118,28 @@ function startWebServer() {
     app.use(express_1.default.static(path_1.default.join(process.cwd(), 'build', 'public')));
     io.on('connection', (socket) => {
         const DEFAULT_CHAT_ID = 'main-session';
+        // 1. Send Tool Definitions immediately
+        socket.emit('tools_update', ToolManager_js_1.toolManager.getToolDefinitions());
+        // 2. Handle Tool Execution
+        socket.on('run_tool', async (data) => {
+            console.log(`Socket Tool Run Request: ${data.name}`);
+            try {
+                const result = await ToolManager_js_1.toolManager.executeTool(data.name, data.args);
+                socket.emit('tool_result', {
+                    name: data.name,
+                    result: result,
+                    id: data.id
+                });
+            }
+            catch (e) {
+                console.error(`Tool execution error: ${e.message}`);
+                socket.emit('tool_error', {
+                    name: data.name,
+                    error: e.message,
+                    id: data.id
+                });
+            }
+        });
         try {
             const history = (0, db_js_1.getMessages)(DEFAULT_CHAT_ID);
             if (history.length === 0) {
@@ -130,10 +162,30 @@ function startWebServer() {
         socket.on('user_message', async (data) => {
             const userMsg = data.text;
             (0, db_js_1.saveMessage)(DEFAULT_CHAT_ID, 'user', userMsg);
-            const intentPrompt = `Analyze this user request: "${userMsg}". Classify as CODING_TASK or CHAT. Return ONLY the word.`;
+            const intentPrompt = `Analyze this user request: "${userMsg}". Classify as PLAN_TASK (if it involves multiple steps, agents, or looking up info then acting), CODING_TASK (if pure code generation), or CHAT. Return ONLY the word.`;
             const intentResponse = await chatWithOllama(intentPrompt);
             const category = (intentResponse || "CHAT").trim();
-            if (category.includes("CODING_TASK")) {
+            if (category.includes("PLAN_TASK")) {
+                const startMsg = "🔍 Összetett kérés észlelve. Tervet készítek...";
+                socket.emit('bot_message', { text: startMsg });
+                (0, db_js_1.saveMessage)(DEFAULT_CHAT_ID, 'bot', startMsg);
+                try {
+                    const plan = await AgentManager_js_1.agentManager.createPlan(userMsg);
+                    socket.emit('plan_created', plan); // Send initial plan to UI
+                    const result = await AgentManager_js_1.agentManager.executePlan(plan, (event, data) => {
+                        socket.emit(event, data); // Forward plan events to UI
+                    });
+                    const finalMsg = `✅ Terv végrehajtva:\n\n${result}`;
+                    socket.emit('bot_message', { text: finalMsg });
+                    (0, db_js_1.saveMessage)(DEFAULT_CHAT_ID, 'bot', finalMsg);
+                }
+                catch (e) {
+                    const errMsg = `⚠️ Hiba a tervezés/végrehajtás során: ${e.message}`;
+                    socket.emit('bot_message', { text: errMsg });
+                    (0, db_js_1.saveMessage)(DEFAULT_CHAT_ID, 'bot', errMsg);
+                }
+            }
+            else if (category.includes("CODING_TASK")) {
                 const startMsg = "Indítom a Self-Healing Pipeline-t...";
                 socket.emit('bot_message', { text: startMsg });
                 (0, db_js_1.saveMessage)(DEFAULT_CHAT_ID, 'bot', startMsg);

@@ -34,7 +34,7 @@ Add hozzá az alábbi konfigurációt a `.gemini/settings.json` fájlod `mcpServ
     "mcp-brunella-core": {
       "command": "node",
       "args": [
-        "F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\[ACTIVE]_mcp-brunella-core\\build\\index.js"
+        "F:\[ACTIVE]_mcp-brunella-core\\build\\index.js"
       ],
       "env": {
         "NODE_ENV": "production"

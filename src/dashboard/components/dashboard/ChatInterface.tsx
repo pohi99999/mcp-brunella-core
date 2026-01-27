@@ -16,8 +16,9 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { ChatMessage, User, AgentTool, OllamaStatus } from '@/lib/types'
-import { useMcpStore } from '@/lib/mcpStore'
-import { useMCP } from '@/hooks/useMCP'
+import { useMcpStore } from '@/lib/mcpStore';
+import { useMCP } from '@/hooks/useMCP';
+import { PlanViewer } from '@/components/PlanViewer';
 import { 
   PaperPlaneRight, 
   Robot, 
@@ -43,7 +44,7 @@ interface ChatInterfaceProps {
 }
 
 export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfaceProps) {
-  const { chatMessages, addChatMessage } = useMcpStore()
+  const { chatMessages, addChatMessage, currentPlan } = useMcpStore()
   const { sendMessage, isConnected } = useMCP()
   const [input, setInput] = useState('')
   const [isLoading, setIsLoading] = useState(false)
@@ -359,6 +360,8 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
 
         <ScrollArea className="flex-1 pr-4" ref={scrollRef}>
           <div className="space-y-4">
+            {currentPlan && <PlanViewer plan={currentPlan} />}
+
             {searchQuery && filteredMessages.length === 0 && currentMessages.length > 0 ? (
               <div className="flex flex-col items-center justify-center h-full py-12 text-center">
                 <MagnifyingGlass size={64} className="text-muted-foreground mb-4" />

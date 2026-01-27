@@ -15,7 +15,7 @@
         "agent_delegate"
       ],
       "category": "core",
-      "status": "planned",
+      "status": "active",
       "tags": [
         "coordination",
         "workflow"
@@ -134,7 +134,7 @@
         "knowledge_index_file"
       ],
       "category": "integration",
-      "status": "planned",
+      "status": "active",
       "tags": [
         "anythingllm",
         "sync"

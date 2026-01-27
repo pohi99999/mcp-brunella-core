@@ -16,6 +16,9 @@
     "test:run": "node --test test_build/*.test.js",
     "test:e2e": "ts-node scripts/e2e_runner.ts",
     "test:cli": "ts-node scripts/test_cli.ts",
+    "test:unit:cli": "node -r ./node_modules/ts-node/register test/cli_unit.test.ts",
+    "test:factory": "node -r ./node_modules/ts-node/register test/agent_factory.test.ts",
+    "cli": "ts-node src/cli/index.ts",
     "test": "npm run test:build && npm run test:run",
     "build:ui": "vite build src/dashboard",
     "dev:ui": "vite src/dashboard"

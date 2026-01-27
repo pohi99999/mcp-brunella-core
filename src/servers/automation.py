@@ -77,5 +77,5 @@ if not scheduler.running:
     scheduler.start()
     logger.info("APScheduler started.")
 
-# Megjegyzés: A shutdown kezelése MCP környezetben az életciklus eseményektől függ, 
-# de a BackgroundScheduler daemon szálként is futhat.
+if __name__ == "__main__":
+    mcp_automation.run(transport="stdio")

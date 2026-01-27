@@ -18,3 +18,5 @@ Az MCP Brunella Core a Brunella ökoszisztéma központi "idegrendszere", amely 
 - **Knowledge Engine:** Integráció LanceDB-vel és AnythingLLM-mel a releváns kontextus kinyeréséhez.
 - **Management Dashboard:** React alapú felület a szerver állapotának, az ágenseknek és a folyamatoknak a követésére.
 - **Agent Registry:** Strukturált metaadat-kezelés az elérhető ágensek és képességeik listázásához.
+- **Brunella CLI:** Fejlett, interaktív (Chat mód) parancssori eszköz beépített eszközökkel (FS, Conductor), bővítmény-támogatással és külső MCP szerverek (GitHub, Chrome, stb.) integrációjával.
+- **Agent Factory (Core):** Implementált Brunella Universal Agent Protocol (BUAP), Supervisor folyamatvezérlő és üzenetirányító Router a multi-ágens rendszerek alapjaihoz.

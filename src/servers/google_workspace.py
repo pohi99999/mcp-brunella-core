@@ -94,4 +94,4 @@ def drive_list_files(page_size: int = 10) -> str:
         return f"Hiba a fájlok listázásakor: {str(e)}"
 
 if __name__ == "__main__":
-    mcp.run()
+    mcp.run(transport="stdio")

@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { ServerState, LogEntry, ConfigItem, ServerMetrics, AgentTool } from './types'
+import { ServerState, LogEntry, ConfigItem, ServerMetrics, AgentTool, ChatMessage, ExecutionPlan } from './types'
 
 interface McpState {
   serverState: ServerState
@@ -9,6 +9,7 @@ interface McpState {
   agentTools: AgentTool[]
   metrics: ServerMetrics
   isConnected: boolean
+  currentPlan: ExecutionPlan | null
   
   setServerState: (state: Partial<ServerState>) => void
   addLog: (log: LogEntry) => void
@@ -20,6 +21,8 @@ interface McpState {
   setAgentTools: (tools: AgentTool[]) => void
   setMetrics: (metrics: ServerMetrics) => void
   setConnected: (connected: boolean) => void
+  setCurrentPlan: (plan: ExecutionPlan | null) => void
+  updatePlanStep: (step: any) => void
 }
 
 export const useMcpStore = create<McpState>((set) => ({
@@ -42,6 +45,7 @@ export const useMcpStore = create<McpState>((set) => ({
     averageResponseTime: 0
   },
   isConnected: false,
+  currentPlan: null,
 
   setServerState: (state) => set((s) => ({ 
     serverState: { ...s.serverState, ...state } 
@@ -76,5 +80,15 @@ export const useMcpStore = create<McpState>((set) => ({
   
   setMetrics: (metrics) => set({ metrics }),
   
-  setConnected: (isConnected) => set({ isConnected })
+  setConnected: (isConnected) => set({ isConnected }),
+
+  setCurrentPlan: (currentPlan) => set({ currentPlan }),
+
+  updatePlanStep: (updatedStep) => set((s) => {
+      if (!s.currentPlan) return {};
+      const newSteps = s.currentPlan.steps.map(step => 
+          step.id === updatedStep.id ? { ...step, ...updatedStep } : step
+      );
+      return { currentPlan: { ...s.currentPlan, steps: newSteps } };
+  })
 }))

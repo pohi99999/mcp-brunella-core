@@ -173,4 +173,5 @@ Problémák vagy javaslatok esetén:
 
 ---
 
-**Utolsó frissítés:** 2024-01-20
+**Utolsó frissítés:** 2026-01-20
+Pohánka József Péter

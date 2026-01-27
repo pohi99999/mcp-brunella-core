@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { io, Socket } from 'socket.io-client'
 import { useMcpStore } from '@/lib/mcpStore'
-import { LogEntry, ServerMetrics } from '@/lib/types'
+import { LogEntry, ServerMetrics, AgentTool, AgentToolParameter, ExecutionPlan } from '@/lib/types'
 
 const BACKEND_URL = 'http://localhost:3000'
 
@@ -12,7 +12,9 @@ export function useMCP() {
     addLog, 
     setServerState, 
     setMetrics,
-    setAgentTools
+    setAgentTools,
+    setCurrentPlan,
+    updatePlanStep
   } = useMcpStore()
 
   useEffect(() => {
@@ -57,10 +59,66 @@ export function useMCP() {
       setMetrics(metrics)
     })
 
-    // Listen for tool updates
-    socket.on('tools_update', (tools: any[]) => {
-      setAgentTools(tools)
+    // Listen for Plan events
+    socket.on('plan_created', (plan: ExecutionPlan) => {
+        setCurrentPlan(plan)
     })
+
+    socket.on('plan_step_update', (step: any) => {
+        updatePlanStep(step)
+    })
+
+    // Listen for tool updates and adapt Schema
+    socket.on('tools_update', (tools: any[]) => {
+      const frontendTools: AgentTool[] = tools.map((t) => {
+        const schema = t.inputSchema || {};
+        const params: AgentToolParameter[] = [];
+        
+        if (schema.properties) {
+             Object.keys(schema.properties).forEach(key => {
+                 const prop = schema.properties[key];
+                 params.push({
+                     name: key,
+                     type: prop.type || 'string',
+                     description: prop.description || '',
+                     required: (schema.required || []).includes(key)
+                 });
+             });
+        }
+
+        return {
+            id: t.name,
+            name: t.name,
+            description: t.description,
+            enabled: true,
+            parameters: params,
+            category: 'server',
+            createdAt: new Date().toISOString()
+        };
+      });
+      setAgentTools(frontendTools)
+    })
+
+    // Listen for tool results (optional, can be handled in UI via chat or specific store)
+    socket.on('tool_result', (data) => {
+        addLog({
+            id: `res-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            level: 'info',
+            message: `Tool [${data.name}] result: ${JSON.stringify(data.result).substring(0, 100)}...`,
+            source: 'system'
+        });
+    });
+
+    socket.on('tool_error', (data) => {
+        addLog({
+            id: `err-${Date.now()}`,
+            timestamp: new Date().toISOString(),
+            level: 'error',
+            message: `Tool [${data.name}] failed: ${data.error}`,
+            source: 'system'
+        });
+    });
 
     return () => {
       socket.disconnect()
@@ -73,8 +131,18 @@ export function useMCP() {
     }
   }
 
+  const runTool = (name: string, args: any) => {
+      if (socketRef.current) {
+          const id = `req-${Date.now()}`;
+          socketRef.current.emit('run_tool', { name, args, id });
+          return id;
+      }
+      return null;
+  }
+
   return {
     sendMessage,
+    runTool,
     isConnected: socketRef.current?.connected ?? false
   }
 }
