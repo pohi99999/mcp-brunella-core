@@ -118,3 +118,27 @@ export interface OllamaStatus {
   version?: string
   lastChecked: string
 }
+
+// Plan Types
+export interface PlanStep {
+    id: string
+    description: string
+    agent: string
+    status: 'pending' | 'running' | 'completed' | 'failed'
+    result?: string
+}
+
+export interface ExecutionPlan {
+    task: string
+    steps: PlanStep[]
+}
+
+export interface McpServerStatus {
+    name: string
+    command: string
+    args: string[]
+    env?: Record<string, string>
+    status: 'running' | 'stopped' | 'error'
+    pid?: number
+    error?: string
+}

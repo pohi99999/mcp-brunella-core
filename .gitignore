@@ -2,3 +2,9 @@ node_modules/
 build/
 logs/
 test_build/
+.env
+.venv
+test_build/
+
+.gemini/
+gha-creds-*.json

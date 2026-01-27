@@ -1,22 +1,16 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerKnowledgeTools = registerKnowledgeTools;
-const zod_1 = require("zod");
-const promises_1 = __importDefault(require("fs/promises"));
-const path_1 = __importDefault(require("path"));
-const index_js_1 = require("../config/index.js");
-const rag_js_1 = require("../utils/rag.js");
+import { z } from "zod";
+import fs from 'fs/promises';
+import path from 'path';
+import { config } from '../config/index.js';
+import { searchRAG, addToIndex } from '../utils/rag.js';
 const KNOWLEDGE_ROOTS = ['02_PROJECTS', '03_LIBRARY', '07_KNOWLEDGE_BASE'];
 async function searchFiles(dir, pattern, results) {
     // ... (previous implementation remains for fallback)
     try {
-        const files = await promises_1.default.readdir(dir, { withFileTypes: true });
+        const files = await fs.readdir(dir, { withFileTypes: true });
         for (const file of files) {
-            const fullPath = path_1.default.join(dir, file.name);
-            if (index_js_1.config.denyContains.some(denied => fullPath.includes(denied)))
+            const fullPath = path.join(dir, file.name);
+            if (config.denyContains.some(denied => fullPath.includes(denied)))
                 continue;
             if (file.name.startsWith('.'))
                 continue;
@@ -27,10 +21,10 @@ async function searchFiles(dir, pattern, results) {
             }
             else {
                 try {
-                    const stats = await promises_1.default.stat(fullPath);
-                    if (stats.size > index_js_1.config.maxFileBytesForSearch)
+                    const stats = await fs.stat(fullPath);
+                    if (stats.size > config.maxFileBytesForSearch)
                         continue;
-                    const content = await promises_1.default.readFile(fullPath, 'utf-8');
+                    const content = await fs.readFile(fullPath, 'utf-8');
                     if (content.toLowerCase().includes(pattern.toLowerCase())) {
                         results.push(fullPath);
                     }
@@ -41,14 +35,14 @@ async function searchFiles(dir, pattern, results) {
     }
     catch (e) { }
 }
-function registerKnowledgeTools(server) {
+export function registerKnowledgeTools(server) {
     // Legacy exact match search
     server.tool("knowledge_search", "Searches for a text pattern (exact match).", {
-        pattern: zod_1.z.string().describe("Text to search for"),
+        pattern: z.string().describe("Text to search for"),
     }, async ({ pattern }) => {
         const results = [];
         for (const rootName of KNOWLEDGE_ROOTS) {
-            const rootPath = path_1.default.join(index_js_1.config.workspaceRoot, rootName);
+            const rootPath = path.join(config.workspaceRoot, rootName);
             await searchFiles(rootPath, pattern, results);
         }
         const limitedResults = results.slice(0, 50);
@@ -63,10 +57,10 @@ function registerKnowledgeTools(server) {
     });
     // New Semantic Search
     server.tool("knowledge_semantic_search", "Searches for meaning/concepts using RAG (Vector DB). Requires indexed files.", {
-        query: zod_1.z.string().describe("The concept to search for"),
+        query: z.string().describe("The concept to search for"),
     }, async ({ query }) => {
         try {
-            const results = await (0, rag_js_1.searchRAG)(query);
+            const results = await searchRAG(query);
             return {
                 content: [{
                         type: "text",
@@ -83,12 +77,12 @@ function registerKnowledgeTools(server) {
     });
     // Indexing Tool
     server.tool("knowledge_index_file", "Adds a file to the semantic search index.", {
-        file_path: zod_1.z.string(),
+        file_path: z.string(),
     }, async ({ file_path }) => {
-        const fullPath = path_1.default.resolve(index_js_1.config.workspaceRoot, file_path);
+        const fullPath = path.resolve(config.workspaceRoot, file_path);
         try {
-            const content = await promises_1.default.readFile(fullPath, 'utf-8');
-            await (0, rag_js_1.addToIndex)(file_path, content);
+            const content = await fs.readFile(fullPath, 'utf-8');
+            await addToIndex(file_path, content);
             return {
                 content: [{ type: "text", text: `Indexed: ${file_path}` }]
             };
@@ -98,15 +92,15 @@ function registerKnowledgeTools(server) {
         }
     });
     server.tool("knowledge_read_context", "Reads multiple files to build context for LLMs.", {
-        file_paths: zod_1.z.array(zod_1.z.string()),
+        file_paths: z.array(z.string()),
     }, async ({ file_paths }) => {
         let context = "";
         for (const filePath of file_paths) {
-            const fullPath = path_1.default.resolve(index_js_1.config.workspaceRoot, filePath);
-            if (!fullPath.startsWith(index_js_1.config.workspaceRoot))
+            const fullPath = path.resolve(config.workspaceRoot, filePath);
+            if (!fullPath.startsWith(config.workspaceRoot))
                 continue;
             try {
-                const content = await promises_1.default.readFile(fullPath, 'utf-8');
+                const content = await fs.readFile(fullPath, 'utf-8');
                 context += `\n--- FILE: ${filePath} ---\n${content}\n`;
             }
             catch (e) { }

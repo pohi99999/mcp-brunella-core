@@ -1,0 +1,8 @@
+{
+  "name": "brunella-extension-conductor",
+  "version": "0.1.0",
+  "description": "Conductor parancsok bővítménye a Brunella CLI-hez (show/phase/task/run).",
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT"
+}

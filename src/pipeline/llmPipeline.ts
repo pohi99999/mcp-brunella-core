@@ -34,15 +34,22 @@ export class SelfHealingPipeline extends EventEmitter {
             this.emit('progress', `🧠 Kód generálása (Ollama)...`);
 
             try {
-                const ollamaRes = await fetch("http://localhost:11434/api/generate", {
+                // Trying to be flexible with the model name
+                const modelName = "qwen2.5-coder:1.5b"; 
+                const ollamaRes = await fetch("http://127.0.0.1:11434/api/generate", {
                     method: "POST",
-                    body: JSON.stringify({ model: "qwen2.5-coder:1.5b", prompt: prompt, stream: false })
+                    body: JSON.stringify({ model: modelName, prompt: prompt, stream: false })
                 });
 
-                if (!ollamaRes.ok) throw new Error("Ollama connection failed");
+                if (!ollamaRes.ok) {
+                    const errorText = await ollamaRes.text();
+                    throw new Error(`Ollama error (${ollamaRes.status}): ${errorText}`);
+                }
 
-                const ollamaData = await ollamaRes.json();
+                const ollamaData = await ollamaRes.json() as any;
                 currentCode = ollamaData.response;
+
+                if (!currentCode) throw new Error("Ollama returned empty code.");
 
                 // Cleanup markdown
                 currentCode = currentCode.replace(/```javascript/g, "").replace(/```js/g, "").replace(/```/g, "").trim();
@@ -56,10 +63,10 @@ export class SelfHealingPipeline extends EventEmitter {
                 const vm = new VM({
                     timeout: 2000,
                     sandbox: {
-                        console: { log: () => { } }, // Mute console in check
+                        console: { log: (...args: any[]) => logger.log(`[VM Log] ${args.join(' ')}`) },
                         require: (pkg: string) => {
                             if (['fs', 'path', 'http', 'net'].includes(pkg)) throw new Error(`Modul '${pkg}' tiltott a sandboxban.`);
-                            return {}; // Mock other requires
+                            return {};
                         }
                     }
                 });

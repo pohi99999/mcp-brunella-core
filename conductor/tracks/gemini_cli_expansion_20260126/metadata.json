@@ -1,0 +1,8 @@
+{
+  "track_id": "gemini_cli_expansion_20260126",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-26T00:00:00Z",
+  "updated_at": "2026-01-26T00:00:00Z",
+  "description": "Bővített Gemini CLI funkcionalitás: hibrid architektúra, MCP integráció, plugin rendszer és interaktív mód."
+}

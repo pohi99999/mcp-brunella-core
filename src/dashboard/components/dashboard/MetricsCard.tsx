@@ -10,7 +10,12 @@ export function MetricsCard({ metrics }: MetricsCardProps) {
   return (
     <Card className="border-border/50">
       <CardHeader>
-        <CardTitle className="text-lg">Teljesítmény Metrikák</CardTitle>
+        <CardTitle
+          className="text-lg"
+          title="Immunrendszer – Folyamat figyelő: teljesítmény metrikák"
+        >
+          Immunrendszer – Teljesítmény Metrikák
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">

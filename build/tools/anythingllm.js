@@ -1,10 +1,7 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerAnythingLLMTools = registerAnythingLLMTools;
-const zod_1 = require("zod");
-const index_js_1 = require("../config/index.js");
+import { z } from "zod";
+import { config } from "../config/index.js";
 function getBaseUrl() {
-    return index_js_1.config.anythingllmBaseUrl.replace(/\/$/, "");
+    return config.anythingllmBaseUrl.replace(/\s+/g, "").replace(/\/$/, "");
 }
 async function requestAnythingLLM(path, options = {}) {
     const baseUrl = getBaseUrl();
@@ -12,9 +9,9 @@ async function requestAnythingLLM(path, options = {}) {
     const headers = {
         "Content-Type": "application/json"
     };
-    if (index_js_1.config.anythingllmApiKey) {
-        headers.Authorization = `Bearer ${index_js_1.config.anythingllmApiKey}`;
-        headers["X-AnythingLLM-Api-Key"] = index_js_1.config.anythingllmApiKey;
+    if (config.anythingllmApiKey) {
+        headers.Authorization = `Bearer ${config.anythingllmApiKey}`;
+        headers["X-AnythingLLM-Api-Key"] = config.anythingllmApiKey;
     }
     const response = await fetch(url, {
         ...options,
@@ -37,10 +34,23 @@ async function requestAnythingLLM(path, options = {}) {
     }
     return data;
 }
-function registerAnythingLLMTools(server) {
+export async function listAnythingLLMWorkspaces() {
+    return await requestAnythingLLM("/api/v1/workspaces");
+}
+export async function chatAnythingLLM(message, workspace) {
+    const workspaceSlug = workspace || config.anythingllmWorkspace;
+    if (!workspaceSlug) {
+        throw new Error("Workspace not set. Provide 'workspace' or set ANYTHINGLLM_WORKSPACE.");
+    }
+    return await requestAnythingLLM(`/api/v1/workspace/${workspaceSlug}/chat`, {
+        method: "POST",
+        body: JSON.stringify({ message })
+    });
+}
+export function registerAnythingLLMTools(server) {
     server.tool("anythingllm_list_workspaces", "Lists available AnythingLLM workspaces.", {}, async () => {
         try {
-            const data = await requestAnythingLLM("/api/v1/workspaces");
+            const data = await listAnythingLLMWorkspaces();
             return {
                 content: [{ type: "text", text: JSON.stringify(data, null, 2) }]
             };
@@ -53,21 +63,11 @@ function registerAnythingLLMTools(server) {
         }
     });
     server.tool("anythingllm_chat", "Sends a chat message to an AnythingLLM workspace.", {
-        message: zod_1.z.string().describe("User message to send"),
-        workspace: zod_1.z.string().optional().describe("Workspace slug (optional)")
+        message: z.string().describe("User message to send"),
+        workspace: z.string().optional().describe("Workspace slug (optional)")
     }, async ({ message, workspace }) => {
-        const workspaceSlug = workspace || index_js_1.config.anythingllmWorkspace;
-        if (!workspaceSlug) {
-            return {
-                isError: true,
-                content: [{ type: "text", text: "Workspace not set. Provide 'workspace' or set ANYTHINGLLM_WORKSPACE." }]
-            };
-        }
         try {
-            const data = await requestAnythingLLM(`/api/v1/workspace/${workspaceSlug}/chat`, {
-                method: "POST",
-                body: JSON.stringify({ message })
-            });
+            const data = await chatAnythingLLM(message, workspace);
             return {
                 content: [{ type: "text", text: JSON.stringify(data, null, 2) }]
             };

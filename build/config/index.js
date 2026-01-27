@@ -1,11 +1,5 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.config = void 0;
-const path_1 = __importDefault(require("path"));
-exports.config = {
+import path from 'path';
+export const config = {
     workspaceRoot: 'F:\\OneDrive\\Desktop\\Brunella_es_en',
     allowedRoots: [
         '00_BAS_SYSTEM',
@@ -33,8 +27,8 @@ exports.config = {
     ],
     maxReadBytes: 400000, // 400KB
     maxFileBytesForSearch: 2000000, // 2MB
-    systemLogDir: path_1.default.join(process.cwd(), 'logs'),
-    anythingllmBaseUrl: process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001',
-    anythingllmWorkspace: process.env.ANYTHINGLLM_WORKSPACE || '',
-    anythingllmApiKey: process.env.ANYTHINGLLM_API_KEY || ''
+    systemLogDir: path.join(process.cwd(), 'logs'),
+    anythingllmBaseUrl: (process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001').trim(),
+    anythingllmWorkspace: (process.env.ANYTHINGLLM_WORKSPACE || '').trim(),
+    anythingllmApiKey: (process.env.ANYTHINGLLM_API_KEY || '').trim()
 };

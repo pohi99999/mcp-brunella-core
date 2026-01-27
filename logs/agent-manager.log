@@ -96,3 +96,369 @@
 [2026-01-22T15:27:10.793Z] Agent registered: researcher 
 [2026-01-22T15:27:10.793Z] Agent registered: ops 
 [2026-01-22T15:27:10.793Z] Agent registered: developer 
+[2026-01-23T13:56:17.778Z] Agent registered: researcher 
+[2026-01-23T13:56:17.777Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-23T13:56:17.778Z] Agent registered: ops 
+[2026-01-23T13:56:17.778Z] Agent registered: developer 
+[2026-01-23T13:56:17.778Z] Agent registered: integrator 
+[2026-01-23T13:56:17.778Z] Agent registered: orchestrator 
+[2026-01-23T13:56:17.778Z] Agent registered: ops 
+[2026-01-23T13:57:13.051Z] Agent registered: researcher 
+[2026-01-23T13:57:13.051Z] Agent registered: developer 
+[2026-01-23T13:57:13.050Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-23T13:57:13.051Z] Agent registered: ops 
+[2026-01-23T13:57:13.051Z] Agent registered: integrator 
+[2026-01-23T13:57:13.051Z] Agent registered: ops 
+[2026-01-23T13:57:13.051Z] Agent registered: orchestrator 
+[2026-01-23T13:58:24.800Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-23T13:58:24.801Z] Agent registered: developer 
+[2026-01-23T13:58:24.801Z] Agent registered: researcher 
+[2026-01-23T13:58:24.801Z] Agent registered: ops 
+[2026-01-23T13:58:24.801Z] Agent registered: integrator 
+[2026-01-23T13:58:24.801Z] Agent registered: orchestrator 
+[2026-01-23T13:58:24.801Z] Agent registered: ops 
+[2026-01-23T13:59:20.185Z] Agent registered: researcher 
+[2026-01-23T13:59:20.183Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-23T13:59:20.185Z] Agent registered: developer 
+[2026-01-23T13:59:20.185Z] Agent registered: ops 
+[2026-01-23T13:59:20.185Z] Agent registered: ops 
+[2026-01-23T13:59:20.185Z] Agent registered: integrator 
+[2026-01-23T13:59:20.185Z] Agent registered: orchestrator 
+[2026-01-23T14:00:39.514Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-23T14:00:39.515Z] Agent registered: ops 
+[2026-01-23T14:00:39.515Z] Agent registered: developer 
+[2026-01-23T14:00:39.515Z] Agent registered: researcher 
+[2026-01-23T14:00:39.515Z] Agent registered: integrator 
+[2026-01-23T14:00:39.515Z] Agent registered: ops 
+[2026-01-23T14:00:39.515Z] Agent registered: orchestrator 
+[2026-01-23T14:40:52.131Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-23T14:40:52.132Z] Agent registered: researcher 
+[2026-01-23T14:40:52.132Z] Agent registered: developer 
+[2026-01-23T14:40:52.132Z] Agent registered: ops 
+[2026-01-23T14:40:52.132Z] Agent registered: integrator 
+[2026-01-23T14:40:52.132Z] Agent registered: ops 
+[2026-01-23T14:40:52.132Z] Agent registered: orchestrator 
+[2026-01-23T14:47:53.617Z] Agent registered: researcher 
+[2026-01-23T14:47:53.616Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-23T14:47:53.617Z] Agent registered: developer 
+[2026-01-23T14:47:53.617Z] Agent registered: integrator 
+[2026-01-23T14:47:53.617Z] Agent registered: ops 
+[2026-01-23T14:47:53.617Z] Agent registered: ops 
+[2026-01-23T14:47:53.617Z] Agent registered: orchestrator 
+[2026-01-23T14:48:01.135Z] Plan generation failed: SyntaxError: Expected ',' or '}' after property value in JSON at position 389 (line 11 column 33) "error"
+[2026-01-23T14:48:01.136Z] [Orchestrator] Task received: Ellenőrizd a rendszer uptime-ot és listázd ki az aktív ügynököket. 
+[2026-01-26T04:39:28.891Z] Agent registered: researcher 
+[2026-01-26T04:39:28.890Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T04:39:28.891Z] Agent registered: ops 
+[2026-01-26T04:39:28.891Z] Agent registered: developer 
+[2026-01-26T04:39:28.891Z] Agent registered: integrator 
+[2026-01-26T04:39:28.891Z] Agent registered: orchestrator 
+[2026-01-26T04:39:28.891Z] Agent registered: ops 
+[2026-01-26T05:25:22.903Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:25:22.904Z] Agent registered: researcher 
+[2026-01-26T05:25:22.904Z] Agent registered: developer 
+[2026-01-26T05:25:22.904Z] Agent registered: ops 
+[2026-01-26T05:25:22.904Z] Agent registered: ops 
+[2026-01-26T05:25:22.904Z] Agent registered: integrator 
+[2026-01-26T05:25:22.904Z] Agent registered: orchestrator 
+[2026-01-26T05:26:54.250Z] Agent registered: researcher 
+[2026-01-26T05:26:54.250Z] Agent registered: developer 
+[2026-01-26T05:26:54.249Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:26:54.250Z] Agent registered: ops 
+[2026-01-26T05:26:54.250Z] Agent registered: integrator 
+[2026-01-26T05:26:54.250Z] Agent registered: ops 
+[2026-01-26T05:26:54.250Z] Agent registered: orchestrator 
+[2026-01-26T05:29:04.474Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:29:04.476Z] Agent registered: researcher 
+[2026-01-26T05:29:04.476Z] Agent registered: ops 
+[2026-01-26T05:29:04.476Z] Agent registered: developer 
+[2026-01-26T05:29:04.476Z] Agent registered: ops 
+[2026-01-26T05:29:04.476Z] Agent registered: orchestrator 
+[2026-01-26T05:29:04.476Z] Agent registered: integrator 
+[2026-01-26T05:29:31.885Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:29:31.886Z] Agent registered: researcher 
+[2026-01-26T05:29:31.886Z] Agent registered: ops 
+[2026-01-26T05:29:31.886Z] Agent registered: developer 
+[2026-01-26T05:29:31.886Z] Agent registered: integrator 
+[2026-01-26T05:29:31.886Z] Agent registered: orchestrator 
+[2026-01-26T05:29:31.886Z] Agent registered: ops 
+[2026-01-26T05:30:05.969Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:30:05.970Z] Agent registered: developer 
+[2026-01-26T05:30:05.970Z] Agent registered: researcher 
+[2026-01-26T05:30:05.970Z] Agent registered: ops 
+[2026-01-26T05:30:05.970Z] Agent registered: ops 
+[2026-01-26T05:30:05.970Z] Agent registered: integrator 
+[2026-01-26T05:30:05.970Z] Agent registered: orchestrator 
+[2026-01-26T05:35:01.285Z] Agent registered: researcher 
+[2026-01-26T05:35:01.284Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:35:01.285Z] Agent registered: developer 
+[2026-01-26T05:35:01.285Z] Agent registered: ops 
+[2026-01-26T05:35:01.285Z] Agent registered: ops 
+[2026-01-26T05:35:01.285Z] Agent registered: orchestrator 
+[2026-01-26T05:35:01.285Z] Agent registered: integrator 
+[2026-01-26T05:35:22.879Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:35:22.880Z] Agent registered: researcher 
+[2026-01-26T05:35:22.880Z] Agent registered: ops 
+[2026-01-26T05:35:22.880Z] Agent registered: developer 
+[2026-01-26T05:35:22.880Z] Agent registered: integrator 
+[2026-01-26T05:35:22.880Z] Agent registered: ops 
+[2026-01-26T05:35:22.880Z] Agent registered: orchestrator 
+[2026-01-26T05:36:18.237Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:36:18.238Z] Agent registered: researcher 
+[2026-01-26T05:36:18.238Z] Agent registered: ops 
+[2026-01-26T05:36:18.238Z] Agent registered: developer 
+[2026-01-26T05:36:18.238Z] Agent registered: ops 
+[2026-01-26T05:36:18.238Z] Agent registered: integrator 
+[2026-01-26T05:36:18.238Z] Agent registered: orchestrator 
+[2026-01-26T05:51:28.951Z] Agent registered: researcher 
+[2026-01-26T05:51:28.949Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:51:28.951Z] Agent registered: developer 
+[2026-01-26T05:51:28.951Z] Agent registered: ops 
+[2026-01-26T05:51:28.951Z] Agent registered: integrator 
+[2026-01-26T05:51:28.951Z] Agent registered: ops 
+[2026-01-26T05:51:28.951Z] Agent registered: orchestrator 
+[2026-01-26T05:51:44.683Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:51:44.684Z] Agent registered: developer 
+[2026-01-26T05:51:44.684Z] Agent registered: researcher 
+[2026-01-26T05:51:44.684Z] Agent registered: integrator 
+[2026-01-26T05:51:44.684Z] Agent registered: ops 
+[2026-01-26T05:51:44.684Z] Agent registered: orchestrator 
+[2026-01-26T05:51:44.684Z] Agent registered: ops 
+[2026-01-26T05:52:09.486Z] Agent registered: integrator 
+[2026-01-26T05:52:09.485Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:52:09.486Z] Agent registered: researcher 
+[2026-01-26T05:52:09.486Z] Agent registered: developer 
+[2026-01-26T05:52:09.486Z] Agent registered: ops 
+[2026-01-26T05:52:09.486Z] Agent registered: orchestrator 
+[2026-01-26T05:52:09.486Z] Agent registered: ops 
+[2026-01-26T05:52:33.938Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:52:33.939Z] Agent registered: researcher 
+[2026-01-26T05:52:33.939Z] Agent registered: ops 
+[2026-01-26T05:52:33.939Z] Agent registered: developer 
+[2026-01-26T05:52:33.939Z] Agent registered: ops 
+[2026-01-26T05:52:33.939Z] Agent registered: orchestrator 
+[2026-01-26T05:52:33.939Z] Agent registered: integrator 
+[2026-01-26T05:52:48.189Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:52:48.191Z] Agent registered: developer 
+[2026-01-26T05:52:48.190Z] Agent registered: researcher 
+[2026-01-26T05:52:48.191Z] Agent registered: ops 
+[2026-01-26T05:52:48.191Z] Agent registered: integrator 
+[2026-01-26T05:52:48.191Z] Agent registered: orchestrator 
+[2026-01-26T05:52:48.191Z] Agent registered: ops 
+[2026-01-26T05:53:51.852Z] Agent registered: developer 
+[2026-01-26T05:53:51.850Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-26T05:53:51.852Z] Agent registered: researcher 
+[2026-01-26T05:53:51.852Z] Agent registered: ops 
+[2026-01-26T05:53:51.852Z] Agent registered: integrator 
+[2026-01-26T05:53:51.852Z] Agent registered: ops 
+[2026-01-26T05:53:51.852Z] Agent registered: orchestrator 
+[2026-01-27T08:53:59.477Z] Agent registered: researcher 
+[2026-01-27T08:53:59.476Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T08:53:59.477Z] Agent registered: developer 
+[2026-01-27T08:53:59.477Z] Agent registered: python_developer 
+[2026-01-27T08:53:59.477Z] Agent registered: integrator 
+[2026-01-27T08:53:59.477Z] Agent registered: orchestrator 
+[2026-01-27T08:53:59.477Z] Agent registered: ops 
+[2026-01-27T08:53:59.477Z] Agent registered: ops 
+[2026-01-27T08:54:11.637Z] Plan generation failed: SyntaxError: Unexpected end of JSON input "error"
+[2026-01-27T08:55:17.434Z] Plan generation failed: SyntaxError: Unexpected end of JSON input "error"
+[2026-01-27T08:57:16.035Z] Plan generation failed: SyntaxError: Unexpected end of JSON input "error"
+[2026-01-27T08:59:31.264Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T08:59:31.265Z] Agent registered: researcher 
+[2026-01-27T08:59:31.265Z] Agent registered: developer 
+[2026-01-27T08:59:31.265Z] Agent registered: python_developer 
+[2026-01-27T08:59:31.265Z] Agent registered: ops 
+[2026-01-27T08:59:31.265Z] Agent registered: ops 
+[2026-01-27T08:59:31.265Z] Agent registered: integrator 
+[2026-01-27T08:59:31.265Z] Agent registered: orchestrator 
+[2026-01-27T09:00:34.536Z] Plan generation failed: SyntaxError: Unexpected token 'L', "[LLM Error:"... is not valid JSON "error"
+[2026-01-27T09:04:05.983Z] Plan generation failed: SyntaxError: Unexpected token 'L', "[LLM Error:"... is not valid JSON "error"
+[2026-01-27T09:04:25.451Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:04:25.453Z] Agent registered: researcher 
+[2026-01-27T09:04:25.453Z] Agent registered: ops 
+[2026-01-27T09:04:25.453Z] Agent registered: python_developer 
+[2026-01-27T09:04:25.453Z] Agent registered: integrator 
+[2026-01-27T09:04:25.453Z] Agent registered: developer 
+[2026-01-27T09:04:25.453Z] Agent registered: orchestrator 
+[2026-01-27T09:04:25.453Z] Agent registered: ops 
+[2026-01-27T09:13:21.508Z] Plan generation failed: SyntaxError: Unexpected token 'L', "[LLM Error:"... is not valid JSON "error"
+[2026-01-27T09:13:50.828Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:13:50.829Z] Agent registered: researcher 
+[2026-01-27T09:13:50.829Z] Agent registered: ops 
+[2026-01-27T09:13:50.829Z] Agent registered: developer 
+[2026-01-27T09:13:50.829Z] Agent registered: python_developer 
+[2026-01-27T09:13:50.829Z] Agent registered: ops 
+[2026-01-27T09:13:50.829Z] Agent registered: orchestrator 
+[2026-01-27T09:13:50.829Z] Agent registered: integrator 
+[2026-01-27T09:15:01.524Z] Plan generation failed: SyntaxError: Unexpected token 'L', "[LLM Error:"... is not valid JSON "error"
+[2026-01-27T09:16:28.127Z] Plan generation failed: SyntaxError: Unexpected token 'L', "[LLM Error:"... is not valid JSON "error"
+[2026-01-27T09:17:23.915Z] Agent registered: researcher 
+[2026-01-27T09:17:23.914Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:17:23.915Z] Agent registered: python_developer 
+[2026-01-27T09:17:23.915Z] Agent registered: developer 
+[2026-01-27T09:17:23.915Z] Agent registered: ops 
+[2026-01-27T09:17:23.915Z] Agent registered: ops 
+[2026-01-27T09:17:23.915Z] Agent registered: orchestrator 
+[2026-01-27T09:17:23.915Z] Agent registered: integrator 
+[2026-01-27T09:17:31.819Z] [Developer] Task received: Type the word 'szia' into the console. 
+[2026-01-27T09:18:24.992Z] [Developer] Task received: Gépelj el a szöveg 'Szia!' 
+[2026-01-27T09:18:25.002Z] [Integrator] Task received: Válassz egy ügyfelet, amit szeretnél használni az alapján 
+[2026-01-27T09:19:46.448Z] Agent registered: researcher 
+[2026-01-27T09:19:46.448Z] Agent registered: python_developer 
+[2026-01-27T09:19:46.448Z] Agent registered: ops 
+[2026-01-27T09:19:46.447Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:19:46.448Z] Agent registered: ops 
+[2026-01-27T09:19:46.448Z] Agent registered: developer 
+[2026-01-27T09:19:46.448Z] Agent registered: integrator 
+[2026-01-27T09:19:46.448Z] Agent registered: orchestrator 
+[2026-01-27T09:20:20.160Z] [Developer] Task received: Készíthető egy Python script, amely segíti kiszámolni adott számokat! 
+[2026-01-27T09:30:48.731Z] Agent registered: researcher 
+[2026-01-27T09:30:48.730Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:30:48.731Z] Agent registered: node_developer 
+[2026-01-27T09:30:48.731Z] Agent registered: python_developer 
+[2026-01-27T09:30:48.731Z] Agent registered: ops 
+[2026-01-27T09:30:48.731Z] Agent registered: integrator 
+[2026-01-27T09:30:48.731Z] Agent registered: orchestrator 
+[2026-01-27T09:31:09.188Z] [Orchestrator] Task received: Az utasításokat egyetlen szöveggel megírjuk. 
+[2026-01-27T09:31:09.189Z] [Orchestrator] Task received: A felhasználó azt mondja, hogy magyarul tudsz? 
+[2026-01-27T09:31:09.190Z] [Orchestrator] Task received: Az utasításokat egyetlen szöveggel megírjuk. 
+[2026-01-27T09:56:12.326Z] Agent registered: node_developer 
+[2026-01-27T09:56:12.325Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T09:56:12.326Z] Agent registered: researcher 
+[2026-01-27T09:56:12.326Z] Agent registered: ops 
+[2026-01-27T09:56:12.326Z] Agent registered: python_developer 
+[2026-01-27T09:56:12.326Z] Agent registered: integrator 
+[2026-01-27T09:56:12.326Z] Agent registered: orchestrator 
+[2026-01-27T10:29:29.909Z] Agent registered: researcher 
+[2026-01-27T10:29:29.907Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T10:29:29.909Z] Agent registered: node_developer 
+[2026-01-27T10:29:29.909Z] Agent registered: python_developer 
+[2026-01-27T10:29:29.909Z] Agent registered: ops 
+[2026-01-27T10:29:29.909Z] Agent registered: integrator 
+[2026-01-27T10:29:29.909Z] Agent registered: orchestrator 
+[2026-01-27T13:11:44.244Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T13:11:44.246Z] Agent registered: researcher 
+[2026-01-27T13:11:44.246Z] Agent registered: node_developer 
+[2026-01-27T13:11:44.246Z] Agent registered: integrator 
+[2026-01-27T13:11:44.246Z] Agent registered: orchestrator 
+[2026-01-27T13:11:44.246Z] Agent registered: python_developer 
+[2026-01-27T13:11:44.246Z] Agent registered: ops 
+[2026-01-27T13:14:12.518Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T13:14:12.519Z] Agent registered: researcher 
+[2026-01-27T13:14:12.519Z] Agent registered: node_developer 
+[2026-01-27T13:14:12.519Z] Agent registered: python_developer 
+[2026-01-27T13:14:12.519Z] Agent registered: integrator 
+[2026-01-27T13:14:12.519Z] Agent registered: ops 
+[2026-01-27T13:14:12.519Z] Agent registered: orchestrator 
+[2026-01-27T13:14:27.212Z] Agent registered: researcher 
+[2026-01-27T13:14:27.210Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T13:14:27.212Z] Agent registered: node_developer 
+[2026-01-27T13:14:27.212Z] Agent registered: python_developer 
+[2026-01-27T13:14:27.212Z] Agent registered: ops 
+[2026-01-27T13:14:27.212Z] Agent registered: orchestrator 
+[2026-01-27T13:14:27.212Z] Agent registered: integrator 
+[2026-01-27T13:15:36.818Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T13:15:36.819Z] Agent registered: researcher 
+[2026-01-27T13:15:36.819Z] Agent registered: node_developer 
+[2026-01-27T13:15:36.819Z] Agent registered: integrator 
+[2026-01-27T13:15:36.819Z] Agent registered: python_developer 
+[2026-01-27T13:15:36.819Z] Agent registered: ops 
+[2026-01-27T13:15:36.819Z] Agent registered: orchestrator 
+[2026-01-27T13:18:35.509Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T13:18:35.510Z] Agent registered: researcher 
+[2026-01-27T13:18:35.510Z] Agent registered: node_developer 
+[2026-01-27T13:18:35.510Z] Agent registered: python_developer 
+[2026-01-27T13:18:35.510Z] Agent registered: ops 
+[2026-01-27T13:18:35.510Z] Agent registered: integrator 
+[2026-01-27T13:18:35.510Z] Agent registered: orchestrator 
+[2026-01-27T13:21:33.484Z] Agent registry loaded: F:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T13:21:33.486Z] Agent registered: researcher 
+[2026-01-27T13:21:33.486Z] Agent registered: node_developer 
+[2026-01-27T13:21:33.486Z] Agent registered: python_developer 
+[2026-01-27T13:21:33.486Z] Agent registered: ops 
+[2026-01-27T13:21:33.486Z] Agent registered: integrator 
+[2026-01-27T13:21:33.486Z] Agent registered: orchestrator 
+[2026-01-27T16:26:47.400Z] Agent registered: python_developer 
+[2026-01-27T16:26:47.400Z] Agent registered: researcher 
+[2026-01-27T16:26:47.400Z] Agent registered: node_developer 
+[2026-01-27T16:26:47.398Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T16:26:47.400Z] Agent registered: orchestrator 
+[2026-01-27T16:26:47.400Z] Agent registered: ops 
+[2026-01-27T16:26:47.400Z] Agent registered: integrator 
+[2026-01-27T16:40:47.102Z] Agent registered: researcher 
+[2026-01-27T16:40:47.101Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T16:40:47.102Z] Agent registered: node_developer 
+[2026-01-27T16:40:47.102Z] Agent registered: python_developer 
+[2026-01-27T16:40:47.102Z] Agent registered: ops 
+[2026-01-27T16:40:47.102Z] Agent registered: integrator 
+[2026-01-27T16:40:47.102Z] Agent registered: orchestrator 
+[2026-01-27T16:57:45.970Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T16:57:45.972Z] Agent registered: researcher 
+[2026-01-27T16:57:45.972Z] Agent registered: python_developer 
+[2026-01-27T16:57:45.972Z] Agent registered: node_developer 
+[2026-01-27T16:57:45.972Z] Agent registered: ops 
+[2026-01-27T16:57:45.972Z] Agent registered: integrator 
+[2026-01-27T16:57:45.972Z] Agent registered: orchestrator 
+[2026-01-27T17:01:17.155Z] Agent registered: ops 
+[2026-01-27T17:01:17.155Z] Agent registered: node_developer 
+[2026-01-27T17:01:17.153Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T17:01:17.155Z] Agent registered: researcher 
+[2026-01-27T17:01:17.155Z] Agent registered: python_developer 
+[2026-01-27T17:01:17.155Z] Agent registered: integrator 
+[2026-01-27T17:01:17.155Z] Agent registered: orchestrator 
+[2026-01-27T17:05:28.962Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T17:05:28.963Z] Agent registered: python_developer 
+[2026-01-27T17:05:28.963Z] Agent registered: researcher 
+[2026-01-27T17:05:28.963Z] Agent registered: node_developer 
+[2026-01-27T17:05:28.963Z] Agent registered: integrator 
+[2026-01-27T17:05:28.963Z] Agent registered: ops 
+[2026-01-27T17:05:28.963Z] Agent registered: orchestrator 
+[2026-01-27T17:10:46.134Z] Agent registered: node_developer 
+[2026-01-27T17:10:46.134Z] Agent registered: researcher 
+[2026-01-27T17:10:46.134Z] Agent registered: integrator 
+[2026-01-27T17:10:46.134Z] Agent registered: python_developer 
+[2026-01-27T17:10:46.134Z] Agent registered: orchestrator 
+[2026-01-27T17:10:46.133Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T17:10:46.134Z] Agent registered: ops 
+[2026-01-27T17:11:51.947Z] Agent registered: researcher 
+[2026-01-27T17:11:51.946Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T17:11:51.947Z] Agent registered: python_developer 
+[2026-01-27T17:11:51.947Z] Agent registered: node_developer 
+[2026-01-27T17:11:51.947Z] Agent registered: integrator 
+[2026-01-27T17:11:51.947Z] Agent registered: orchestrator 
+[2026-01-27T17:11:51.947Z] Agent registered: ops 
+[2026-01-27T17:12:17.522Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T17:12:17.524Z] Agent registered: node_developer 
+[2026-01-27T17:12:17.524Z] Agent registered: researcher 
+[2026-01-27T17:12:17.524Z] Agent registered: ops 
+[2026-01-27T17:12:17.524Z] Agent registered: integrator 
+[2026-01-27T17:12:17.524Z] Agent registered: orchestrator 
+[2026-01-27T17:12:17.524Z] Agent registered: python_developer 
+[2026-01-27T17:12:31.401Z] Agent registered: researcher 
+[2026-01-27T17:12:31.401Z] Agent registered: node_developer 
+[2026-01-27T17:12:31.401Z] Agent registered: python_developer 
+[2026-01-27T17:12:31.400Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T17:12:31.401Z] Agent registered: ops 
+[2026-01-27T17:12:31.401Z] Agent registered: orchestrator 
+[2026-01-27T17:12:31.401Z] Agent registered: integrator 
+[2026-01-27T17:14:11.530Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T17:14:11.531Z] Agent registered: researcher 
+[2026-01-27T17:14:11.531Z] Agent registered: node_developer 
+[2026-01-27T17:14:11.531Z] Agent registered: ops 
+[2026-01-27T17:14:11.531Z] Agent registered: python_developer 
+[2026-01-27T17:14:11.531Z] Agent registered: orchestrator 
+[2026-01-27T17:14:11.531Z] Agent registered: integrator 
+[2026-01-27T17:14:33.007Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T17:14:33.008Z] Agent registered: researcher 
+[2026-01-27T17:14:33.008Z] Agent registered: python_developer 
+[2026-01-27T17:14:33.008Z] Agent registered: ops 
+[2026-01-27T17:14:33.008Z] Agent registered: node_developer 
+[2026-01-27T17:14:33.008Z] Agent registered: orchestrator 
+[2026-01-27T17:14:33.008Z] Agent registered: integrator 
+[2026-01-27T17:24:13.421Z] Agent registry loaded: f:\[ACTIVE]_mcp-brunella-core\src\agents\registry.json 
+[2026-01-27T17:24:13.423Z] Agent registered: ops 
+[2026-01-27T17:24:13.423Z] Agent registered: researcher 
+[2026-01-27T17:24:13.423Z] Agent registered: node_developer 
+[2026-01-27T17:24:13.423Z] Agent registered: python_developer 
+[2026-01-27T17:24:13.423Z] Agent registered: orchestrator 
+[2026-01-27T17:24:13.423Z] Agent registered: integrator 

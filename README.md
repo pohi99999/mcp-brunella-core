@@ -1,6 +1,6 @@
 # MCP Brunella Core
 
-Központi MCP szerver a Brunella rendszer számára, amely biztonságos és felügyelt hozzáférést biztosít a fájlrendszerhez, tudásbázishoz, rendszerparancsokhoz és webes tartalmakhoz.
+Központi MCP szerver a Brunella rendszer számára, amely biztonságos és felügyelt hozzáférést biztosít a fájlrendszerhez, tudásbázishoz, rendszerparancsokhoz és webes tartalmakhoz. Az architektúra a *Technikai Fehér Könyv* (BAS – skálázható, öngyógyító, transzparens AI) üvegdoboz elvére és négy rétegére (Tápláló, Tudásbázis, Agypiac, Immunrendszer) épül; a rétegek részletes leírását a **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** tartalmazza.
 
 ## Funkciók
 
@@ -11,6 +11,11 @@ Központi MCP szerver a Brunella rendszer számára, amely biztonságos és fel�
 -   **Browser Tool:** Biztonságos HTTP GET kérések (lokális hálózat tiltva).
 -   **AnythingLLM Tool:** Lokális AnythingLLM workspace elérés (listázás, chat).
  -   **Agent Registry:** JSON alapú agent definíciók és strukturált `agent_list` kimenet.
+
+## Konfiguráció és tárolás
+- **BRUNELLA_HOME**: alapértelmezett `~/.brunella`. Ide kerül a CLI memória (`cli_memory.json`) és a bővítmények (`extensions/`, npm prefix).
+- **MCP config**: `mcp_servers.json` (útvonal: `brunella config path`).
+- **Fehér Könyv megfeleltetés**: `docs/ARCHITECTURE.md` tartalmazza a réteg→komponens táblázatot.
 
 ### Egyéb Modulok
 -   **Health Check:** Rendszerállapot ellenőrző segédprogram (`src/utils/health_check.ts`).
@@ -34,7 +39,7 @@ Add hozzá az alábbi konfigurációt a `.gemini/settings.json` fájlod `mcpServ
     "mcp-brunella-core": {
       "command": "node",
       "args": [
-        "F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\[ACTIVE]_mcp-brunella-core\\build\\index.js"
+        "F:\[ACTIVE]_mcp-brunella-core\\build\\index.js"
       ],
       "env": {
         "NODE_ENV": "production"
@@ -65,7 +70,12 @@ Beállítható környezeti változókkal:
 - `WEB_UI_ENABLED=0` letiltja a web UI-t
 - `WEB_UI_PORT=3000` atallitja a portot
 
-### 7. Smoke teszt
+### 7. CLI memória és beállítások
+- Alapértelmezett hely: `~/.brunella/cli_memory.json`
+- Átállítható a `BRUNELLA_HOME` környezeti változóval (pl. `BRUNELLA_HOME=C:\path\to\.brunella`)
+- A korábbi `.gemini/cli_memory.json` automatikusan migrálódik, ha létezik
+
+### 8. Smoke teszt
 MCP ping + AnythingLLM elerhetoseg ellenorzese:
 
 ```bash

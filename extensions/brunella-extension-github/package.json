@@ -1,0 +1,8 @@
+{
+  "name": "brunella-extension-github",
+  "version": "0.1.0",
+  "description": "GitHub CLI bővítmény a Brunella CLI-hez (PR-ek, státusz, checks).",
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT"
+}

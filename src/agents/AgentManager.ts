@@ -1,7 +1,9 @@
-import { IAgent, AgentRegistry } from "./types.js";
+import { IAgent, AgentRegistry, ExecutionPlan, PlanStep } from "./types.js";
 import { Logger } from "../utils/logger.js";
 import { searchRAG } from "../utils/rag.js";
 import { SelfHealingPipeline } from "../pipeline/llmPipeline.js";
+import { chatWithOllama } from "../utils/llm.js";
+import { chatAnythingLLM, listAnythingLLMWorkspaces } from "../tools/anythingllm.js";
 import fs from "fs";
 import path from "path";
 
@@ -34,7 +36,7 @@ export class AgentManager {
         // 1. KUTATÓ ÜGYNÖK (Research Agent)
         this.registerAgent({
             name: "researcher",
-            description: "Keres a tudásbázisban és összefoglalja az információkat.",
+            description: "KUTATÓ szerepkör. Keres a tudásbázisban a TÁPLÁLÓ rétegből, és összefoglalja az információkat.",
             capabilities: ["rag_search", "summarization"],
             execute: async (task: string) => {
                 await logger.log(`[Researcher] Task received: ${task}`);
@@ -51,19 +53,46 @@ export class AgentManager {
             }
         });
 
-        // 2. FEJLESZTŐ ÜGYNÖK (Developer Agent)
+        // 2. NODE.JS FEJLESZTŐ ÜGYNÖK (Node Developer)
         this.registerAgent({
-            name: "developer",
-            description: "Kódot generál és javít a pipeline segítségével.",
-            capabilities: ["code_generation", "self_healing"],
+            name: "node_developer",
+            description: "ADATTUDÁS/TANÍTÓ szerepkör. Javascript/Node.js kódot generál és futtat.",
+            capabilities: ["nodejs", "javascript", "code_generation"],
             execute: async (task: string) => {
-                await logger.log(`[Developer] Task received: ${task}`);
+                await logger.log(`[NodeDeveloper] Task received: ${task}`);
                 const pipeline = new SelfHealingPipeline();
                 try {
                     const code = await pipeline.run(task);
-                    return `Sikeres kódgenerálás:\n\n${code}`;
+                    return `Sikeres kódgenerálás (Node.js):\n\n${code}`;
                 } catch (e: any) {
                     return `Hiba a fejlesztés során: ${e.message}`;
+                }
+            }
+        });
+
+        // 2b. PYTHON FEJLESZTŐ ÜGYNÖK (Python Developer)
+        this.registerAgent({
+            name: "python_developer",
+            description: "ADATTUDÁS/TANÍTÓ szerepkör. Python scripteket ír és futtat (adatelemzés, matek).",
+            capabilities: ["python", "data_analysis", "math"],
+            execute: async (task: string) => {
+                await logger.log(`[PythonDeveloper] Task received: ${task}`);
+
+                // Prompt Ollama to generate python code for the task
+                const systemPrompt = "You are a Python Expert. Write a script for the following task. Output ONLY the code, no markdown.";
+                const code = await chatWithOllama(task, systemPrompt);
+
+                // Clean code
+                const cleanCode = code.replace(/```python/g, "").replace(/```/g, "").trim();
+
+                // Execute using globalPythonShell (bridge is in interpreter tool, but we can call it here)
+                const { globalPythonShell } = await import("../utils/pythonShell.js");
+
+                try {
+                    const output = await globalPythonShell.execute(cleanCode);
+                    return `Python Code:\n${cleanCode}\n\nOutput:\n${output}`;
+                } catch (e: any) {
+                    return `Python Execution Error: ${e.message}`;
                 }
             }
         });
@@ -71,7 +100,7 @@ export class AgentManager {
         // 3. OPS ÜGYNÖK (Ops Agent)
         this.registerAgent({
             name: "ops",
-            description: "Rendszer állapot és logok felügyelete.",
+            description: "IMMUNRENDSZER felügyelő. Rendszer állapot és logok felügyelete.",
             capabilities: ["monitoring", "diagnostics"],
             execute: async (task: string) => {
                 await logger.log(`[Ops] Task received: ${task}`);
@@ -85,6 +114,63 @@ export class AgentManager {
                 }
 
                 return `Ops Agent: A kért feladat (${task}) diagnosztikát igényel. Kérlek pontosítsd, mit vizsgáljak (pl. 'system status', 'web logs').`;
+            }
+        });
+
+        // 4. INTEGRATOR ÜGYNÖK (AnythingLLM / Knowledge)
+        this.registerAgent({
+            name: "integrator",
+            description: "Adattudás és Integráció. Kapcsolattartás az AnythingLLM tudásbázissal.",
+            capabilities: ["integration", "knowledge_sync"],
+            execute: async (task: string) => {
+                await logger.log(`[Integrator] Task received: ${task}`);
+                const lowerTask = task.toLowerCase();
+                const workspaceMatch = task.match(/workspace\s*[:=]\s*([a-zA-Z0-9._-]+)/i);
+                const workspace = workspaceMatch?.[1];
+
+                try {
+                    if (lowerTask.includes("workspace") || lowerTask.includes("list") || lowerTask.includes("listáz")) {
+                        const data = await listAnythingLLMWorkspaces();
+                        return `AnythingLLM workspaces:\n${JSON.stringify(data, null, 2)}`;
+                    }
+
+                    const data = await chatAnythingLLM(task, workspace);
+                    return `AnythingLLM válasz:\n${JSON.stringify(data, null, 2)}`;
+                } catch (e: any) {
+                    return `AnythingLLM hiba: ${e.message}`;
+                }
+            }
+        });
+
+        // 5. ORCHESTRATOR (Brunella - The Boss)
+        this.registerAgent({
+            name: "orchestrator",
+            description: "AZ AGYPIAC vezetője (Karmester). A Brunella rendszer központi irányítója.",
+            capabilities: ["planning", "routing", "delegation", "chat"],
+            execute: async (task: string) => {
+                await logger.log(`[Orchestrator] Task received: ${task}`);
+                const lowerTask = task.toLowerCase();
+
+                // Simple routing logic based on keywords
+                if (lowerTask.includes("python") || lowerTask.includes("számold") || lowerTask.includes("adat")) {
+                    return await this.delegate("python_developer", task);
+                }
+                if (lowerTask.includes("kód") || lowerTask.includes("javítsd") || lowerTask.includes("fejleszt") || lowerTask.includes("javascript") || lowerTask.includes("node")) {
+                    return await this.delegate("node_developer", task);
+                }
+                if (lowerTask.includes("keresd") || lowerTask.includes("kutass") || lowerTask.includes("tudás")) {
+                    if (lowerTask.includes("anything") || lowerTask.includes("local") || lowerTask.includes("bázis")) {
+                        return await this.delegate("integrator", task);
+                    }
+                    return await this.delegate("researcher", task);
+                }
+                if (lowerTask.includes("monitor") || lowerTask.includes("log") || lowerTask.includes("status")) {
+                    return await this.delegate("ops", task);
+                }
+
+                // If no specific agent found, answer directly as Brunella
+                const response = await chatWithOllama(task, "You are Brunella, the core AI of this system. Answer the user directly and helpfully in the same language they used.");
+                return response;
             }
         });
     }
@@ -118,6 +204,89 @@ export class AgentManager {
 
     public listRegistryDefinitions(): AgentDefinition[] {
         return Object.values(this.definitions);
+    }
+
+    public async createPlan(task: string): Promise<ExecutionPlan> {
+        const systemPrompt = `You are the Brunella Orchestrator Planner.
+Your goal is to decide if a task is a simple chat/question or a complex operation.
+
+Available Agents:
+- ops: Monitoring logs, metrics, system commands.
+- node_developer: Writing/executing Node.js code.
+- python_developer: Writing/executing Python code.
+- researcher: Searching knowledge base (RAG).
+- integrator: Interacting with AnythingLLM.
+
+CRITICAL RULES:
+1. If the input is a question (e.g. "magyarul tudsz?", "hogy vagy?", "ki vagy?"), return ONLY ONE step for the "orchestrator". DO NOT break it down.
+2. Only create multiple steps if the task involves multiple distinct actions (e.g. "find logs AND fix the code").
+3. Return strictly valid JSON. No markdown.`;
+
+        const userPrompt = `Task: "${task}"
+
+Return a JSON object: {"steps": [{"description": "...", "agent": "...", "tool": "..."}]}`;
+
+        const response = await chatWithOllama(userPrompt, systemPrompt);
+
+        try {
+            const cleanJson = response.replace(/```json/g, '').replace(/```/g, '').trim();
+            const planData = JSON.parse(cleanJson);
+
+            return {
+                task,
+                steps: planData.steps.map((s: any, i: number) => ({
+                    ...s,
+                    id: `step-${i + 1}`,
+                    status: 'pending'
+                }))
+            };
+        } catch (e) {
+            logger.log(`Plan generation failed: ${e}`, 'error');
+            return {
+                task,
+                steps: [{
+                    id: 'step-1',
+                    description: task,
+                    agent: 'orchestrator',
+                    status: 'pending'
+                }]
+            };
+        }
+    }
+
+    public async executePlan(plan: ExecutionPlan, emitEvent?: (event: string, data: any) => void): Promise<string> {
+        let finalResult = "";
+
+        if (emitEvent) emitEvent('plan_created', plan);
+
+        for (const step of plan.steps) {
+            step.status = 'running';
+            if (emitEvent) emitEvent('plan_step_update', step);
+
+            try {
+                const agent = this.getAgent(step.agent) || this.getAgent('orchestrator');
+
+                let result = "";
+                if (agent) {
+                    result = await agent.execute(step.description);
+                } else {
+                    result = "Agent not found.";
+                }
+
+                step.status = 'completed';
+                step.result = result;
+                finalResult += `[Step ${step.id} - ${step.agent}]:\n${result}\n\n`;
+
+            } catch (e: any) {
+                step.status = 'failed';
+                step.result = e.message;
+                finalResult += `[Step ${step.id} Failed]: ${e.message}\n`;
+            }
+
+            if (emitEvent) emitEvent('plan_step_update', step);
+        }
+
+        return finalResult;
     }
 
     public async delegate(agentName: string, task: string): Promise<string> {

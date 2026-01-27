@@ -82,17 +82,19 @@ A szerver alapértelmezetten a `3000`-es porton (Web UI) és stdio-n (MCP) kommu
 
 Az alábbi rendszerek már működnek és használatra készek:
 
-### 1. Strukturált Logging
-Minden esemény JSON formátumban kerül naplózásra a `logs/` mappába. Használd a `Logger` osztályt (`src/utils/logger.ts`).
+### Legutóbbi fejlesztések (2026-01-27)
+- **Tool űrlap a Dashboardon:** Schema-alapú modális (boolean switch, enum select, típus szerinti ellenőrzés), gyors szűrők (GitHub/a2a/ADK/MCP/native) és prioritás-sorrend.
+- **Extension lifecycle:** `brunella extension reload` + install/uninstall/update után automatikus rediscover és betöltött bővítmények listája.
+- **MCP watchdog:** Timeoutos connect + healthCheck + reconnect; intervallum állítható `MCP_WATCHDOG_MS` env-vel.
+- **GitHub bővítmény:** `github status/prs/checks/open` (gh CLI + GITHUB_TOKEN).
+- **AnythingLLM integráció:** .env.local példa (BASE_URL, WORKSPACE, API_KEY), smoke sikeres a `workspace` sluggáral.
+- **Teszt pipeline fix:** `test_prepare.cjs` CJS-re állítja a test_build-et; `npm test`, `test:unit:cli`, `test:cli`, `test:e2e`, `smoke` zöld.
 
-### 2. RAG Cache
-A vektoros keresések eredményeit memóriában gyorsítótárazzuk. A statisztikák lekérhetők a `getRAGCacheStats()` függvénnyel.
-
-### 3. Bővített Health Check
-A rendszer induláskor és kérésre ellenőrzi a külső szolgáltatások (Ollama, Adatbázisok) elérhetőségét.
-
-### 4. Konfiguráció Kezelés
-A rendszer automatikusan felismeri a `brunella.config.json` vagy `.yaml` fájlokat.
+### Alap funkcionalitás
+- **Strukturált Logging:** minden esemény JSON formátumban a `logs/` mappába (`src/utils/logger.ts`).
+- **RAG Cache:** vektoros keresés gyorsítótár; statisztika lekérhető a `getRAGCacheStats()`-szal.
+- **Bővített Health Check:** induláskor/kérésre külső szolgáltatások (Ollama, DB) elérhetőség-ellenőrzés.
+- **Konfiguráció Kezelés:** auto-felismeri a `brunella.config.json/.yaml` fájlokat.
 
 ---
 
@@ -125,6 +127,14 @@ STRUCTURED_LOGGING=1 NO_COLOR=1 npm run dev
 ---
 
 ## Changelog
+
+### 2026-01-27 - Paritás / Stabilizáció
+- Dashboard Tools: schema-alapú űrlap, gyors szűrők (GitHub/a2a/ADK/MCP/native), prioritás szerinti rendezés.
+- MCP kliens: watchdog (timeout, healthCheck, reconnect), `MCP_WATCHDOG_MS` env.
+- Extension lifecycle: reload parancs, install/uninstall után automatikus rediscover + betöltött bővítmények listája.
+- GitHub CLI bővítmény (status/prs/checks/open).
+- AnythingLLM: .env.local példa, smoke futás BASE_URL + WORKSPACE + API_KEY kombóval.
+- Tesztek: `npm test`, `test:unit:cli`, `test:cli`, `test:e2e`, `smoke` mind PASS.
 
 ### 2024-01-20 - Fejlesztési Sprint
 
@@ -173,4 +183,5 @@ Problémák vagy javaslatok esetén:
 
 ---
 
-**Utolsó frissítés:** 2024-01-20
+**Utolsó frissítés:** 2026-01-27
+Pohánka József Péter

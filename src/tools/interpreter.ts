@@ -1,6 +1,8 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { VM } from 'vm2';
+import path from 'path';
+import fs from 'fs/promises';
 import { globalPythonShell } from "../utils/pythonShell.js";
 
 const MAX_OUTPUT_SIZE = 1024 * 100; // 100KB limit
@@ -77,7 +79,7 @@ async function runNodeCode(code: string): Promise<{ content: { type: "text", tex
 export function registerInterpreterTools(server: McpServer) {
     server.tool(
         "interpreter_run_python",
-        "Runs Python code in a PERSISTENT shell (stateful). Variables are preserved between calls.",
+        "Runs Python code in a PERSISTENT shell (stateful). Variables are preserved between calls. 'myai' folder is automatically in sys.path.",
         {
             code: z.string().describe("Python code to execute"),
             reset: z.boolean().optional().describe("If true, restarts the shell before execution (clears state).")
@@ -88,11 +90,12 @@ export function registerInterpreterTools(server: McpServer) {
                     await globalPythonShell.restart();
                 }
 
-                const output = await globalPythonShell.execute(code);
-
-                // Cleanup output: remove user prompt artifacts if any
-                // The shell might return '>>>' or similar depending on how clean we got the buffer
-                // Our separator logic handles most, but let's trim just in case.
+                // Ensure myai is in path
+                const setupCode = "import sys, os; myai_path = os.path.join(os.getcwd(), 'myai'); " +
+                                 "if myai_path not in sys.path: sys.path.append(myai_path)\n";
+                
+                const fullCode = setupCode + code;
+                const output = await globalPythonShell.execute(fullCode);
 
                 return {
                     content: [{
@@ -104,6 +107,33 @@ export function registerInterpreterTools(server: McpServer) {
                 return {
                     isError: true,
                     content: [{ type: "text", text: `Python Error: ${e.message}` }]
+                };
+            }
+        }
+    );
+
+    server.tool(
+        "python_list_scripts",
+        "Lists available Python scripts in the 'myai' directory.",
+        {},
+        async () => {
+            try {
+                const myaiPath = path.join(process.cwd(), "myai");
+                const files = await fs.readdir(myaiPath);
+                const scripts = files.filter(f => f.endsWith(".py") && f !== "__init__.py");
+                
+                return {
+                    content: [{
+                        type: "text",
+                        text: scripts.length > 0 
+                            ? `Available scripts in 'myai':\n${scripts.map(s => `- ${s}`).join("\n")}`
+                            : "No Python scripts found in 'myai' folder."
+                    }]
+                };
+            } catch (e: any) {
+                return {
+                    isError: true,
+                    content: [{ type: "text", text: `Error listing scripts: ${e.message}` }]
                 };
             }
         }

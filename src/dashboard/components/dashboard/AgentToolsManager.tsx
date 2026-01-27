@@ -54,7 +54,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
       tool.id === toolId ? { ...tool, enabled: !tool.enabled } : tool
     )
     onUpdateTools(updatedTools)
-    
+
     const tool = tools.find(t => t.id === toolId)
     toast.success(
       `Tool ${tool?.enabled ? 'letiltva' : 'engedélyezve'}`,
@@ -187,13 +187,21 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
   }
 
   return (
+<<<<<<< Current (Your changes)
+    <Card title="Agypiac – Ügynök lista és tool kezelő (Fehér Könyv).">
+      <CardHeader>
+        <div className="flex items-center justify-between">
+          <div className="space-y-1">
+            <CardTitle className="flex items-center gap-2" title="Agypiac – Ügynök lista és tool kezelő">
+=======
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <CardTitle className="flex items-center gap-2">
+>>>>>>> Incoming (Background Agent changes)
               <Toolbox size={24} weight="duotone" className="text-accent" />
-              Agent Tool Kezelő
+              Agypiac – Agent Tool Kezelő
             </CardTitle>
             <CardDescription>
               AI agent eszközök konfigurálása és kezelése
@@ -219,7 +227,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                     <TabsTrigger value="basic">Alapbeállítások</TabsTrigger>
                     <TabsTrigger value="api">API Integráció</TabsTrigger>
                   </TabsList>
-                  
+
                   <TabsContent value="basic" className="space-y-4 mt-4">
                     <div className="space-y-2">
                       <Label htmlFor="tool-name">Tool Név *</Label>
@@ -274,7 +282,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                         Külső API-t konfiguráls? Add meg az endpoint részleteit és hitelesítési információkat.
                       </AlertDescription>
                     </Alert>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="api-url">API Endpoint URL</Label>
                       <Input
@@ -391,8 +399,8 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                       </p>
                     </div>
 
-                    <Button 
-                      onClick={handleTestApi} 
+                    <Button
+                      onClick={handleTestApi}
                       disabled={!apiConfig.url || isTestingApi}
                       variant="outline"
                       className="w-full"
@@ -460,7 +468,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                           )}
                         </div>
                         <p className="text-sm text-muted-foreground">{tool.description}</p>
-                        
+
                         {tool.externalApi && (
                           <div className="space-y-1">
                             <p className="text-xs font-medium text-muted-foreground">API Konfiguráció:</p>
@@ -470,8 +478,8 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                                   {tool.externalApi.method}
                                 </Badge>
                                 <code className="text-xs bg-muted px-1.5 py-0.5 rounded">
-                                  {tool.externalApi.url.length > 50 
-                                    ? `${tool.externalApi.url.substring(0, 50)}...` 
+                                  {tool.externalApi.url.length > 50
+                                    ? `${tool.externalApi.url.substring(0, 50)}...`
                                     : tool.externalApi.url}
                                 </code>
                               </div>
@@ -488,7 +496,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                             </div>
                           </div>
                         )}
-                        
+
                         {tool.parameters.length > 0 && (
                           <div className="space-y-1">
                             <p className="text-xs font-medium text-muted-foreground">Paraméterek:</p>

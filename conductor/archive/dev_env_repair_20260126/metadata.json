@@ -1,0 +1,8 @@
+{
+  "track_id": "dev_env_repair_20260126",
+  "type": "maintenance",
+  "status": "new",
+  "created_at": "2026-01-26T10:30:00Z",
+  "updated_at": "2026-01-26T10:30:00Z",
+  "description": "A Python virtuális környezet (.venv) javítása és a tesztfuttatási folyamatok rendezése Windows környezetben."
+}

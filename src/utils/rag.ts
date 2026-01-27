@@ -71,7 +71,8 @@ export async function addToIndex(filePath: string, content: string) {
 }
 
 export async function searchRAG(query: string, limit = 5) {
-    if (!db || !tbl) return [];
+    if (!db || !tbl) await initRAG();
+    if (!tbl) return []; // Ha még az inicializálás után sincs tábla (üres DB)
     
     const queryVector = await getEmbedding(query);
     const results = await tbl.vectorSearch(queryVector).limit(limit).toArray();

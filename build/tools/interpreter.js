@@ -1,9 +1,8 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerInterpreterTools = registerInterpreterTools;
-const zod_1 = require("zod");
-const vm2_1 = require("vm2");
-const pythonShell_js_1 = require("../utils/pythonShell.js");
+import { z } from "zod";
+import { VM } from 'vm2';
+import path from 'path';
+import fs from 'fs/promises';
+import { globalPythonShell } from "../utils/pythonShell.js";
 const MAX_OUTPUT_SIZE = 1024 * 100; // 100KB limit
 const TIMEOUT_MS = 5000; // 5s timeout
 async function runNodeCode(code) {
@@ -18,7 +17,7 @@ async function runNodeCode(code) {
                 }
                 output += text;
             };
-            const vm = new vm2_1.VM({
+            const vm = new VM({
                 timeout: TIMEOUT_MS,
                 sandbox: {
                     console: {
@@ -68,19 +67,20 @@ async function runNodeCode(code) {
         }
     });
 }
-function registerInterpreterTools(server) {
-    server.tool("interpreter_run_python", "Runs Python code in a PERSISTENT shell (stateful). Variables are preserved between calls.", {
-        code: zod_1.z.string().describe("Python code to execute"),
-        reset: zod_1.z.boolean().optional().describe("If true, restarts the shell before execution (clears state).")
+export function registerInterpreterTools(server) {
+    server.tool("interpreter_run_python", "Runs Python code in a PERSISTENT shell (stateful). Variables are preserved between calls. 'myai' folder is automatically in sys.path.", {
+        code: z.string().describe("Python code to execute"),
+        reset: z.boolean().optional().describe("If true, restarts the shell before execution (clears state).")
     }, async ({ code, reset }) => {
         try {
             if (reset) {
-                await pythonShell_js_1.globalPythonShell.restart();
+                await globalPythonShell.restart();
             }
-            const output = await pythonShell_js_1.globalPythonShell.execute(code);
-            // Cleanup output: remove user prompt artifacts if any
-            // The shell might return '>>>' or similar depending on how clean we got the buffer
-            // Our separator logic handles most, but let's trim just in case.
+            // Ensure myai is in path
+            const setupCode = "import sys, os; myai_path = os.path.join(os.getcwd(), 'myai'); " +
+                "if myai_path not in sys.path: sys.path.append(myai_path)\n";
+            const fullCode = setupCode + code;
+            const output = await globalPythonShell.execute(fullCode);
             return {
                 content: [{
                         type: "text",
@@ -95,8 +95,29 @@ function registerInterpreterTools(server) {
             };
         }
     });
+    server.tool("python_list_scripts", "Lists available Python scripts in the 'myai' directory.", {}, async () => {
+        try {
+            const myaiPath = path.join(process.cwd(), "myai");
+            const files = await fs.readdir(myaiPath);
+            const scripts = files.filter(f => f.endsWith(".py") && f !== "__init__.py");
+            return {
+                content: [{
+                        type: "text",
+                        text: scripts.length > 0
+                            ? `Available scripts in 'myai':\n${scripts.map(s => `- ${s}`).join("\n")}`
+                            : "No Python scripts found in 'myai' folder."
+                    }]
+            };
+        }
+        catch (e) {
+            return {
+                isError: true,
+                content: [{ type: "text", text: `Error listing scripts: ${e.message}` }]
+            };
+        }
+    });
     server.tool("interpreter_run_node", "Runs Node.js code in a VM2 sandbox (no fs/net access).", {
-        code: zod_1.z.string().describe("JavaScript code to execute"),
+        code: z.string().describe("JavaScript code to execute"),
     }, async ({ code }) => {
         return await runNodeCode(code);
     });

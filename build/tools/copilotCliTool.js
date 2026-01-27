@@ -1,14 +1,11 @@
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.registerCopilotCliTool = registerCopilotCliTool;
-const zod_1 = require("zod");
-const exec_js_1 = require("../utils/exec.js");
-const index_js_1 = require("../config/index.js");
+import { z } from "zod";
+import { execCommand } from "../utils/exec.js";
+import { config } from "../config/index.js";
 const WHITELISTED_COMMANDS = ['suggest', 'explain', 'test', 'fix'];
-function registerCopilotCliTool(server) {
+export function registerCopilotCliTool(server) {
     server.tool("copilot_cli", "Executes GitHub Copilot CLI commands (suggest, explain, test, fix).", {
-        subcommand: zod_1.z.enum(['suggest', 'explain', 'test', 'fix']).describe("The copilot subcommand to run"),
-        query: zod_1.z.string().describe("The query or code snippet for Copilot"),
+        subcommand: z.enum(['suggest', 'explain', 'test', 'fix']).describe("The copilot subcommand to run"),
+        query: z.string().describe("The query or code snippet for Copilot"),
     }, async ({ subcommand, query }) => {
         if (!WHITELISTED_COMMANDS.includes(subcommand)) {
             return {
@@ -23,8 +20,8 @@ function registerCopilotCliTool(server) {
             // Let's try 'gh copilot' as it's the standard extension way, or fall back to 'copilot' if user set alias.
             // Safe bet: 'gh copilot <subcommand> -- <query>' to avoid arg parsing issues.
             const args = ['copilot', subcommand, '--', query];
-            const result = await (0, exec_js_1.execCommand)('gh', args, {
-                cwd: index_js_1.config.workspaceRoot,
+            const result = await execCommand('gh', args, {
+                cwd: config.workspaceRoot,
                 timeout: 60000 // Copilot might take a while
             });
             return {

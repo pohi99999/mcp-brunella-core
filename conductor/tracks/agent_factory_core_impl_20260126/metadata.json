@@ -1,0 +1,8 @@
+{
+  "track_id": "agent_factory_core_impl_20260126",
+  "type": "feature",
+  "status": "new",
+  "created_at": "2026-01-26T00:00:00Z",
+  "updated_at": "2026-01-26T00:00:00Z",
+  "description": "Az Agent Factory magjának megvalósítása: Supervisor, Router és az SQLite alapú perzisztencia réteg kiépítése."
+}
