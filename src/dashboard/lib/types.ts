@@ -132,3 +132,13 @@ export interface ExecutionPlan {
     task: string
     steps: PlanStep[]
 }
+
+export interface McpServerStatus {
+    name: string
+    command: string
+    args: string[]
+    env?: Record<string, string>
+    status: 'running' | 'stopped' | 'error'
+    pid?: number
+    error?: string
+}

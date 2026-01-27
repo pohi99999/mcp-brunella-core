@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { ServerState, LogEntry, ConfigItem, ServerMetrics, AgentTool, ChatMessage, ExecutionPlan } from './types'
+import { ServerState, LogEntry, ConfigItem, ServerMetrics, AgentTool, ChatMessage, ExecutionPlan, McpServerStatus } from './types'
 
 interface McpState {
   serverState: ServerState
@@ -8,6 +8,7 @@ interface McpState {
   config: ConfigItem[]
   agentTools: AgentTool[]
   metrics: ServerMetrics
+  mcpServers: McpServerStatus[]
   isConnected: boolean
   currentPlan: ExecutionPlan | null
   
@@ -20,6 +21,7 @@ interface McpState {
   setConfig: (config: ConfigItem[]) => void
   setAgentTools: (tools: AgentTool[]) => void
   setMetrics: (metrics: ServerMetrics) => void
+  setMcpServers: (servers: McpServerStatus[]) => void
   setConnected: (connected: boolean) => void
   setCurrentPlan: (plan: ExecutionPlan | null) => void
   updatePlanStep: (step: any) => void
@@ -44,6 +46,7 @@ export const useMcpStore = create<McpState>((set) => ({
     errorRate: 0,
     averageResponseTime: 0
   },
+  mcpServers: [],
   isConnected: false,
   currentPlan: null,
 
@@ -79,6 +82,8 @@ export const useMcpStore = create<McpState>((set) => ({
   setAgentTools: (agentTools) => set({ agentTools }),
   
   setMetrics: (metrics) => set({ metrics }),
+
+  setMcpServers: (mcpServers) => set({ mcpServers }),
   
   setConnected: (isConnected) => set({ isConnected }),
 

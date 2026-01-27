@@ -14,7 +14,8 @@ export function useMCP() {
     setMetrics,
     setAgentTools,
     setCurrentPlan,
-    updatePlanStep
+    updatePlanStep,
+    setMcpServers
   } = useMcpStore()
 
   useEffect(() => {
@@ -41,6 +42,11 @@ export function useMCP() {
     // Listen for real logs from backend
     socket.on('system_log', (log: LogEntry) => {
       addLog(log)
+    })
+
+    // Listen for MCP servers status
+    socket.on('mcp_servers_status', (servers: any[]) => {
+      setMcpServers(servers)
     })
 
     // Listen for chat messages from backend
@@ -140,9 +146,23 @@ export function useMCP() {
       return null;
   }
 
+  const startMcpServer = (name: string) => {
+    if (socketRef.current) {
+      socketRef.current.emit('mcp_server:start', name);
+    }
+  }
+
+  const stopMcpServer = (name: string) => {
+    if (socketRef.current) {
+      socketRef.current.emit('mcp_server:stop', name);
+    }
+  }
+
   return {
     sendMessage,
     runTool,
+    startMcpServer,
+    stopMcpServer,
     isConnected: socketRef.current?.connected ?? false
   }
 }

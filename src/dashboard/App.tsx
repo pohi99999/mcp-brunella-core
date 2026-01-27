@@ -8,6 +8,9 @@ import { LogViewer } from '@/components/dashboard/LogViewer'
 import { ConfigEditor } from '@/components/dashboard/ConfigEditor'
 import { ChatInterface } from '@/components/dashboard/ChatInterface'
 import { AgentToolsManager } from '@/components/dashboard/AgentToolsManager'
+import { FlowEditor } from '@/components/dashboard/FlowEditor'
+import { KnowledgeManager } from '@/components/dashboard/KnowledgeManager'
+import { McpRegistry } from '@/components/dashboard/McpRegistry'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { UserProfile } from '@/components/auth/UserProfile'
 import { ServerState, LogEntry, ConfigItem, ServerMetrics, User, AgentTool } from '@/lib/types'
@@ -15,7 +18,7 @@ import { useMcpStore } from '@/lib/mcpStore'
 import { useMCP } from '@/hooks/useMCP'
 import { canPerformAction } from '@/lib/auth'
 import { externalApiService } from '@/lib/externalApiService'
-import { ChartLine, Terminal, Gear, ChatCircle, Toolbox } from '@phosphor-icons/react'
+import { ChartLine, Terminal, Gear, ChatCircle, Toolbox, SquaresFour, Database, Plugs } from '@phosphor-icons/react'
 
 function App() {
   const [user, setUser] = useState<User | null>(null)
@@ -129,24 +132,36 @@ function App() {
         </header>
 
         <Tabs defaultValue="overview" className="space-y-6">
-          <TabsList className="grid w-full max-w-3xl grid-cols-5">
-            <TabsTrigger value="overview" className="flex items-center gap-2">
+          <TabsList className="flex w-full overflow-x-auto h-auto p-1 bg-muted/50">
+            <TabsTrigger value="overview" className="flex items-center gap-2 py-2">
               <ChartLine size={18} />
               Áttekintés
             </TabsTrigger>
-            <TabsTrigger value="chat" className="flex items-center gap-2">
+            <TabsTrigger value="flow" className="flex items-center gap-2 py-2">
+              <SquaresFour size={18} />
+              Flow Editor
+            </TabsTrigger>
+            <TabsTrigger value="chat" className="flex items-center gap-2 py-2">
               <ChatCircle size={18} />
               Chat
             </TabsTrigger>
-            <TabsTrigger value="logs" className="flex items-center gap-2">
+            <TabsTrigger value="knowledge" className="flex items-center gap-2 py-2">
+              <Database size={18} />
+              Tudás
+            </TabsTrigger>
+            <TabsTrigger value="registry" className="flex items-center gap-2 py-2">
+              <Plugs size={18} />
+              Regiszter
+            </TabsTrigger>
+            <TabsTrigger value="logs" className="flex items-center gap-2 py-2">
               <Terminal size={18} />
               Naplók
             </TabsTrigger>
-            <TabsTrigger value="config" className="flex items-center gap-2">
+            <TabsTrigger value="config" className="flex items-center gap-2 py-2">
               <Gear size={18} />
               Beállítások
             </TabsTrigger>
-            <TabsTrigger value="agents" className="flex items-center gap-2">
+            <TabsTrigger value="agents" className="flex items-center gap-2 py-2">
               <Toolbox size={18} />
               Agent Tools
             </TabsTrigger>
@@ -164,12 +179,24 @@ function App() {
             <MetricsCard metrics={metrics} />
           </TabsContent>
 
+          <TabsContent value="flow">
+            <FlowEditor />
+          </TabsContent>
+
           <TabsContent value="chat">
             <ChatInterface
               user={currentUser}
               agentTools={currentAgentTools}
               onToolExecution={handleToolExecution}
             />
+          </TabsContent>
+
+          <TabsContent value="knowledge">
+            <KnowledgeManager />
+          </TabsContent>
+
+          <TabsContent value="registry">
+            <McpRegistry />
           </TabsContent>
 
           <TabsContent value="logs">

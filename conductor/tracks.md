@@ -27,3 +27,8 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 - [x] **Track: Brunella CLI Enhancement & Parity**
   *Link: [./tracks/brunella_cli_enhancement_20260127/](./tracks/brunella_cli_enhancement_20260127/)*
+
+---
+
+- [x] **Track: Brunella UI & ADK Integration Dashboard**
+  *Link: [./tracks/brunella_ui_adk_integration_20260127/](./tracks/brunella_ui_adk_integration_20260127/)*

@@ -9,6 +9,7 @@ const http_1 = require("http");
 const socket_io_1 = require("socket.io");
 const path_1 = __importDefault(require("path"));
 const os_1 = __importDefault(require("os"));
+const fs_1 = __importDefault(require("fs"));
 const logger_js_1 = require("../utils/logger.js");
 const llmPipeline_js_1 = require("../pipeline/llmPipeline.js");
 const db_js_1 = require("../utils/db.js");
@@ -18,6 +19,8 @@ const registry_js_1 = require("./registry.js");
 const uuid_1 = require("uuid");
 const ToolManager_js_1 = require("./ToolManager.js");
 const AgentManager_js_1 = require("../agents/AgentManager.js");
+const McpProcessManager_js_1 = require("./McpProcessManager.js");
+const rag_js_1 = require("../utils/rag.js");
 async function chatWithOllama(prompt, system = "") {
     try {
         const response = await fetch("http://localhost:11434/api/generate", {
@@ -85,6 +88,8 @@ function startWebServer() {
             cpuUsage: os_1.default.loadavg()[0] * 10, // Approximate
             memoryUsage: ((totalMem - freeMem) / totalMem) * 100
         });
+        // Also broadcast MCP servers status
+        io.emit('mcp_servers_status', McpProcessManager_js_1.mcpProcessManager.getServersStatus());
     }, 5000);
     // MCP SSE Support
     const mcpSessions = new Map();
@@ -120,6 +125,8 @@ function startWebServer() {
         const DEFAULT_CHAT_ID = 'main-session';
         // 1. Send Tool Definitions immediately
         socket.emit('tools_update', ToolManager_js_1.toolManager.getToolDefinitions());
+        // Send initial MCP status
+        socket.emit('mcp_servers_status', McpProcessManager_js_1.mcpProcessManager.getServersStatus());
         // 2. Handle Tool Execution
         socket.on('run_tool', async (data) => {
             console.log(`Socket Tool Run Request: ${data.name}`);
@@ -138,6 +145,88 @@ function startWebServer() {
                     error: e.message,
                     id: data.id
                 });
+            }
+        });
+        // 3. Handle MCP Server management
+        socket.on('mcp_server:start', async (name) => {
+            try {
+                await McpProcessManager_js_1.mcpProcessManager.startServer(name);
+                io.emit('mcp_servers_status', McpProcessManager_js_1.mcpProcessManager.getServersStatus());
+                broadcastLog('info', `MCP Szerver elindítva: ${name}`, 'mcp-manager');
+            }
+            catch (e) {
+                broadcastLog('error', `Hiba az MCP szerver indításakor (${name}): ${e.message}`, 'mcp-manager');
+            }
+        });
+        socket.on('mcp_server:stop', (name) => {
+            try {
+                McpProcessManager_js_1.mcpProcessManager.stopServer(name);
+                io.emit('mcp_servers_status', McpProcessManager_js_1.mcpProcessManager.getServersStatus());
+                broadcastLog('info', `MCP Szerver leállítva: ${name}`, 'mcp-manager');
+            }
+            catch (e) {
+                broadcastLog('error', `Hiba az MCP szerver leállításakor (${name}): ${e.message}`, 'mcp-manager');
+            }
+        });
+        socket.on('request_mcp_status', () => {
+            socket.emit('mcp_servers_status', McpProcessManager_js_1.mcpProcessManager.getServersStatus());
+        });
+        // 4. Handle Flow Editor
+        socket.on('flow:save', async (data) => {
+            try {
+                const flowsDir = path_1.default.join(process.cwd(), 'conductor', 'flows');
+                if (!fs_1.default.existsSync(flowsDir))
+                    fs_1.default.mkdirSync(flowsDir, { recursive: true });
+                const filePath = path_1.default.join(flowsDir, `${data.name}.json`);
+                fs_1.default.writeFileSync(filePath, JSON.stringify(data, null, 2));
+                broadcastLog('info', `Flow elmentve: ${data.name}`, 'adk-manager');
+                socket.emit('flow:saved', { name: data.name });
+            }
+            catch (e) {
+                broadcastLog('error', `Hiba a flow mentésekor: ${e.message}`, 'adk-manager');
+            }
+        });
+        socket.on('flow:list', () => {
+            try {
+                const flowsDir = path_1.default.join(process.cwd(), 'conductor', 'flows');
+                if (!fs_1.default.existsSync(flowsDir)) {
+                    socket.emit('flow:list_result', []);
+                    return;
+                }
+                const files = fs_1.default.readdirSync(flowsDir).filter((f) => f.endsWith('.json'));
+                const flows = files.map((f) => {
+                    const content = fs_1.default.readFileSync(path_1.default.join(flowsDir, f), 'utf-8');
+                    return JSON.parse(content);
+                });
+                socket.emit('flow:list_result', flows);
+            }
+            catch (e) {
+                console.error("Error listing flows:", e);
+            }
+        });
+        // 5. Handle Knowledge Management
+        socket.on('knowledge:search', async (query) => {
+            try {
+                const results = await (0, rag_js_1.searchRAG)(query);
+                socket.emit('knowledge:search_results', results);
+            }
+            catch (e) {
+                socket.emit('knowledge:error', e.message);
+            }
+        });
+        socket.on('knowledge:status', async () => {
+            try {
+                // Simplified status check
+                const response = await fetch("http://localhost:11434/api/tags");
+                const isOllamaUp = response.ok;
+                socket.emit('knowledge:status_result', {
+                    ollama: isOllamaUp ? 'online' : 'offline',
+                    db: 'LanceDB',
+                    indexedCount: 'Helyi keresés szükséges' // TODO: implement actual count in rag.ts
+                });
+            }
+            catch (e) {
+                socket.emit('knowledge:status_result', { ollama: 'offline', db: 'LanceDB' });
             }
         });
         try {

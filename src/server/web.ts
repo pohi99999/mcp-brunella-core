@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import os from 'os';
+import fs from 'fs';
 import { config } from '../config/index.js';
 import { Logger } from '../utils/logger.js';
 import { SelfHealingPipeline } from '../pipeline/llmPipeline.js';
@@ -13,6 +14,8 @@ import { registerAllTools } from './registry.js';
 import { v4 as uuidv4 } from 'uuid';
 import { toolManager } from './ToolManager.js';
 import { agentManager } from '../agents/AgentManager.js';
+import { mcpProcessManager } from './McpProcessManager.js';
+import { searchRAG, initRAG } from '../utils/rag.js';
 
 async function chatWithOllama(prompt: string, system: string = ""): Promise<string> {
     try {
@@ -92,6 +95,9 @@ export function startWebServer() {
             cpuUsage: os.loadavg()[0] * 10, // Approximate
             memoryUsage: ((totalMem - freeMem) / totalMem) * 100
         });
+
+        // Also broadcast MCP servers status
+        io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
     }, 5000);
 
     // MCP SSE Support
@@ -140,6 +146,9 @@ export function startWebServer() {
 
         // 1. Send Tool Definitions immediately
         socket.emit('tools_update', toolManager.getToolDefinitions());
+        
+        // Send initial MCP status
+        socket.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
 
         // 2. Handle Tool Execution
         socket.on('run_tool', async (data: { name: string, args: any, id?: string }) => {
@@ -158,6 +167,89 @@ export function startWebServer() {
                     error: e.message,
                     id: data.id 
                 });
+            }
+        });
+
+        // 3. Handle MCP Server management
+        socket.on('mcp_server:start', async (name: string) => {
+            try {
+                await mcpProcessManager.startServer(name);
+                io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
+                broadcastLog('info', `MCP Szerver elindítva: ${name}`, 'mcp-manager');
+            } catch (e: any) {
+                broadcastLog('error', `Hiba az MCP szerver indításakor (${name}): ${e.message}`, 'mcp-manager');
+            }
+        });
+
+        socket.on('mcp_server:stop', (name: string) => {
+            try {
+                mcpProcessManager.stopServer(name);
+                io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
+                broadcastLog('info', `MCP Szerver leállítva: ${name}`, 'mcp-manager');
+            } catch (e: any) {
+                broadcastLog('error', `Hiba az MCP szerver leállításakor (${name}): ${e.message}`, 'mcp-manager');
+            }
+        });
+
+        socket.on('request_mcp_status', () => {
+            socket.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
+        });
+
+        // 4. Handle Flow Editor
+        socket.on('flow:save', async (data: { name: string, nodes: any[], edges: any[] }) => {
+            try {
+                const flowsDir = path.join(process.cwd(), 'conductor', 'flows');
+                if (!fs.existsSync(flowsDir)) fs.mkdirSync(flowsDir, { recursive: true });
+                
+                const filePath = path.join(flowsDir, `${data.name}.json`);
+                fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
+                broadcastLog('info', `Flow elmentve: ${data.name}`, 'adk-manager');
+                socket.emit('flow:saved', { name: data.name });
+            } catch (e: any) {
+                broadcastLog('error', `Hiba a flow mentésekor: ${e.message}`, 'adk-manager');
+            }
+        });
+
+        socket.on('flow:list', () => {
+            try {
+                const flowsDir = path.join(process.cwd(), 'conductor', 'flows');
+                if (!fs.existsSync(flowsDir)) {
+                    socket.emit('flow:list_result', []);
+                    return;
+                }
+                const files = fs.readdirSync(flowsDir).filter((f: string) => f.endsWith('.json'));
+                const flows = files.map((f: string) => {
+                    const content = fs.readFileSync(path.join(flowsDir, f), 'utf-8');
+                    return JSON.parse(content);
+                });
+                socket.emit('flow:list_result', flows);
+            } catch (e: any) {
+                console.error("Error listing flows:", e);
+            }
+        });
+
+        // 5. Handle Knowledge Management
+        socket.on('knowledge:search', async (query: string) => {
+            try {
+                const results = await searchRAG(query);
+                socket.emit('knowledge:search_results', results);
+            } catch (e: any) {
+                socket.emit('knowledge:error', e.message);
+            }
+        });
+
+        socket.on('knowledge:status', async () => {
+            try {
+                // Simplified status check
+                const response = await fetch("http://localhost:11434/api/tags");
+                const isOllamaUp = response.ok;
+                socket.emit('knowledge:status_result', {
+                    ollama: isOllamaUp ? 'online' : 'offline',
+                    db: 'LanceDB',
+                    indexedCount: 'Helyi keresés szükséges' // TODO: implement actual count in rag.ts
+                });
+            } catch (e) {
+                socket.emit('knowledge:status_result', { ollama: 'offline', db: 'LanceDB' });
             }
         });
 
