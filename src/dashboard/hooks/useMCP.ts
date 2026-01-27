@@ -87,10 +87,34 @@ export function useMCP() {
     // Listen for Plan events
     socket.on('plan_created', (plan: ExecutionPlan) => {
       setCurrentPlan(plan)
+      useMcpStore.getState().addChatMessage({
+        id: `plan-${Date.now()}`,
+        role: 'system',
+        content: `🧭 Terv készült: ${plan.task} (${plan.steps.length} lépés)`,
+        timestamp: new Date().toISOString(),
+        isStreaming: false
+      })
     })
 
     socket.on('plan_step_update', (step: any) => {
       updatePlanStep(step)
+      const statusLabel = step.status === 'running'
+        ? '▶'
+        : step.status === 'completed'
+          ? '✔'
+          : step.status === 'failed'
+            ? '✖'
+            : '•'
+      const resultSnippet = step.result
+        ? `\n${step.result.toString().substring(0, 160)}`
+        : ''
+      useMcpStore.getState().addChatMessage({
+        id: `step-${step.id}-${Date.now()}`,
+        role: 'system',
+        content: `${statusLabel} [${step.agent}] ${step.description}${resultSnippet}`,
+        timestamp: new Date().toISOString(),
+        isStreaming: false
+      })
     })
 
     // Listen for tool updates and adapt Schema
@@ -126,13 +150,22 @@ export function useMCP() {
 
     // Listen for tool results (optional, can be handled in UI via chat or specific store)
     socket.on('tool_result', (data) => {
+      const fullResult = JSON.stringify(data.result, null, 2)
+      const snippet = fullResult.substring(0, 500)
       addLog({
         id: `res-${Date.now()}`,
         timestamp: new Date().toISOString(),
         level: 'info',
-        message: `Tool [${data.name}] result: ${JSON.stringify(data.result).substring(0, 100)}...`,
+        message: `Tool [${data.name}] result: ${snippet}...`,
         source: 'system'
       });
+      useMcpStore.getState().addChatMessage({
+        id: `tool-${data.name}-${Date.now()}`,
+        role: 'system',
+        content: `🛠️ Tool eredmény: ${data.name}\n${fullResult}`,
+        timestamp: new Date().toISOString(),
+        isStreaming: false
+      })
     });
 
     socket.on('tool_error', (data) => {
@@ -143,6 +176,13 @@ export function useMCP() {
         message: `Tool [${data.name}] failed: ${data.error}`,
         source: 'system'
       });
+      useMcpStore.getState().addChatMessage({
+        id: `tool-${data.name}-err-${Date.now()}`,
+        role: 'system',
+        content: `⚠️ Tool hiba: ${data.name}\n${data.error}`,
+        timestamp: new Date().toISOString(),
+        isStreaming: false
+      })
     });
 
     return () => {
@@ -150,9 +190,9 @@ export function useMCP() {
     }
   }, [])
 
-  const sendMessage = (text: string) => {
+  const sendMessage = (text: string, tools?: string[]) => {
     if (socketRef.current) {
-      socketRef.current.emit('user_message', { text })
+      socketRef.current.emit('user_message', { text, tools })
     }
   }
 

@@ -1,0 +1,8 @@
+{
+  "name": "brunella-extension-jules",
+  "version": "0.1.0",
+  "description": "Jules QA bővítmény: smoke és teszt szcenáriók futtatása.",
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT"
+}

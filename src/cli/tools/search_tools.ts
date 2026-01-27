@@ -6,6 +6,13 @@ const customsearch = google.customsearch('v1');
 toolRegistry.registerTool({
     name: 'google_search',
     description: 'Performs a Google Search (Requires GOOGLE_API_KEY and GOOGLE_CX env vars)',
+    inputSchema: {
+        type: 'object',
+        properties: {
+            query: { type: 'string', description: 'Search query' }
+        },
+        required: ['query']
+    },
     execute: async ({ query }) => {
         if (!query) throw new Error('Query is required');
 

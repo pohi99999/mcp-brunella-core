@@ -1,17 +1,19 @@
 // scripts/test_cli.ts
+// Aligned with current CLI: gemini-cli / Brunella entry (build/cli/index.js), commands chat, extension, run, conductor, connect, agent.
 import { exec } from "child_process";
 import { promisify } from "util";
 
 const execAsync = promisify(exec);
 
 async function runCLITests() {
-  console.log("🚀 Testing Brunella CLI...");
+  console.log("🚀 Testing CLI (build/cli/index.js)...");
 
+  const cliPath = "node build/cli/index.js";
   const commands = [
-    { cmd: "node build/cli.js --help", expect: "Brunella CLI" },
-    { cmd: "node build/cli.js --version", expect: "1.0.0" },
-    { cmd: "node build/cli.js tools --help", expect: "List available MCP tools" },
-    { cmd: "node build/cli.js agents --help", expect: "List available agents" }
+    { cmd: `${cliPath} --help`, expect: "Usage:" },
+    { cmd: `${cliPath} --version`, expect: "1.0.0" },
+    { cmd: `${cliPath} agent --help`, expect: "Manage" },
+    { cmd: `${cliPath} connect --help`, expect: "Connect" }
   ];
 
   let successCount = 0;

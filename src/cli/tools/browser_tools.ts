@@ -6,6 +6,13 @@ import path from 'path';
 toolRegistry.registerTool({
     name: 'scrape_page',
     description: 'Scrapes the text content of a webpage using Playwright',
+    inputSchema: {
+        type: 'object',
+        properties: {
+            url: { type: 'string', description: 'URL to scrape' }
+        },
+        required: ['url']
+    },
     execute: async ({ url }) => {
         if (!url) throw new Error('URL is required');
         
@@ -28,6 +35,14 @@ toolRegistry.registerTool({
 toolRegistry.registerTool({
     name: 'screenshot',
     description: 'Takes a screenshot of a webpage',
+    inputSchema: {
+        type: 'object',
+        properties: {
+            url: { type: 'string', description: 'URL to capture' },
+            output: { type: 'string', description: 'Output file path' }
+        },
+        required: ['url']
+    },
     execute: async ({ url, output }) => {
         if (!url) throw new Error('URL is required');
         const outputPath = output || `screenshot_${Date.now()}.png`;

@@ -6,6 +6,9 @@
 **Tech Stack:** TypeScript (Node.js), Express, Socket.io, MCP SDK, LanceDB, SQLite.
 **Frontend:** React (Vite) Dashboard.
 
+### 1.1 Architecture alignment (Fehér Könyv)
+A BAS a *Technikai Fehér Könyv* (skálázható, öngyógyító, transzparens AI-architektúra) szerint **üvegdoboz** filozófiával és **négy réteggel** épül: **Tápláló**, **Tudásbázis**, **Agypiac**, **Immunrendszer**. A részletes réteg- és szerepkör-leírást a **[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)** tartalmazza.
+
 ## 2. Agent Roster
 
 ### 🤖 Jules (External - Google Cloud / CLI)

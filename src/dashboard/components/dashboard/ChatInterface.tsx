@@ -30,7 +30,13 @@ import {
   Download,
   FileText,
   FileJs,
-  CalendarBlank
+  CalendarBlank,
+  Info,
+  WarningCircle,
+  CheckCircle,
+  XCircle,
+  Wrench,
+  ListChecks
 } from '@phosphor-icons/react'
 import { formatTimestamp } from '@/lib/mockData'
 import { toast } from 'sonner'
@@ -53,6 +59,9 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     from: undefined,
     to: undefined,
   })
+  const [expandedToolMessages, setExpandedToolMessages] = useState<Record<string, boolean>>({})
+  const [showPlanEvents, setShowPlanEvents] = useState(true)
+  const [expandedPlanSteps, setExpandedPlanSteps] = useState<Record<string, boolean>>({})
   const scrollRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -90,6 +99,62 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     return filtered
   }, [currentMessages, searchQuery, dateRange])
 
+  const planMessages = useMemo(() => {
+    return filteredMessages.filter(msg =>
+      msg.role === 'system' &&
+      (msg.content.startsWith('🧭') || /^[▶✔✖•]/.test(msg.content))
+    )
+  }, [filteredMessages])
+
+  const displayMessages = useMemo(() => {
+    return filteredMessages.filter(msg =>
+      !(msg.role === 'system' && (msg.content.startsWith('🧭') || /^[▶✔✖•]/.test(msg.content)))
+    )
+  }, [filteredMessages])
+
+  const planSteps = useMemo(() => {
+    return currentPlan?.steps ?? []
+  }, [currentPlan])
+
+  const getSystemBadge = (content: string) => {
+    if (content.startsWith('⚠️')) {
+      return { variant: 'destructive' as const, icon: WarningCircle }
+    }
+    if (content.startsWith('🛠️')) {
+      return { variant: 'secondary' as const, icon: Wrench }
+    }
+    if (content.startsWith('🧭') || /^[▶✔✖•]/.test(content)) {
+      return { variant: 'outline' as const, icon: ListChecks }
+    }
+    return { variant: 'outline' as const, icon: Info }
+  }
+
+  const getStepStyles = (status?: string) => {
+    switch (status) {
+      case 'completed':
+        return 'text-success border-success/40'
+      case 'failed':
+        return 'text-destructive border-destructive/40'
+      case 'running':
+        return 'text-warning border-warning/40 animate-pulse'
+      default:
+        return 'text-muted-foreground border-border'
+    }
+  }
+
+  const getStepIcon = (status?: string) => {
+    switch (status) {
+      case 'completed':
+        return CheckCircle
+      case 'failed':
+        return XCircle
+      case 'running':
+        return WarningCircle
+      default:
+        return Info
+    }
+  }
+
   useEffect(() => {
     if (scrollRef.current) {
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight
@@ -106,7 +171,8 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
       return
     }
 
-    sendMessage(input.trim())
+    const enabledToolNames = enabledTools.map(tool => tool.name)
+    sendMessage(input.trim(), enabledToolNames)
     setInput('')
   }
 
@@ -165,6 +231,70 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
+  }
+
+  const downloadTextFile = (filename: string, content: string, mime: string) => {
+    const dataBlob = new Blob([content], { type: mime })
+    const url = URL.createObjectURL(dataBlob)
+    const link = document.createElement('a')
+    link.href = url
+    link.download = filename
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+    URL.revokeObjectURL(url)
+  }
+
+  const getToolPayload = (message: ChatMessage) => {
+    const parts = message.content.split('\n')
+    if (parts.length < 2) return null
+    const payload = parts.slice(1).join('\n').trim()
+    return payload.length > 0 ? payload : null
+  }
+
+  const downloadToolOutput = (message: ChatMessage, asJson: boolean) => {
+    const header = message.content.split('\n')[0] || ''
+    const match = header.match(/Tool (?:eredmény|hiba):\s*([^\n]+)/i)
+    const toolName = match?.[1]?.trim().replace(/\s+/g, '_') || 'tool-output'
+    const date = new Date().toISOString().split('T')[0]
+    if (asJson) {
+      const payload = getToolPayload(message)
+      if (!payload) return
+      try {
+        const parsed = JSON.parse(payload)
+        const filename = `tool-${toolName}-${date}.json`
+        downloadTextFile(filename, JSON.stringify(parsed, null, 2), 'application/json')
+        return
+      } catch {
+        // fall back to text
+      }
+    }
+    const filename = `tool-${toolName}-${date}.txt`
+    downloadTextFile(filename, message.content, 'text/plain;charset=utf-8')
+  }
+
+  const copyToClipboard = async (content: string) => {
+    try {
+      await navigator.clipboard.writeText(content)
+      toast.success('Másolva', { description: 'A tartalom a vágólapra került.' })
+    } catch {
+      toast.error('Másolási hiba', { description: 'Nem sikerült a vágólapra másolni.' })
+    }
+  }
+
+  const toggleAllPlanSteps = (expanded: boolean) => {
+    if (!currentPlan) return
+    const next: Record<string, boolean> = {}
+    currentPlan.steps.forEach(step => {
+      next[step.id] = expanded
+    })
+    setExpandedPlanSteps(next)
+  }
+
+  const exportPlan = () => {
+    if (!currentPlan) return
+    const filename = `plan-${new Date().toISOString().split('T')[0]}.json`
+    downloadTextFile(filename, JSON.stringify(currentPlan, null, 2), 'application/json')
   }
 
   return (
@@ -387,10 +517,134 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                     </Badge>
                   </div>
                 )}
-                {filteredMessages.map(message => (
+                {planMessages.length > 0 && (
+                  <div className="border border-border rounded-lg p-3 bg-muted/30">
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="text-sm font-medium">Plan lépések</div>
+                      <div className="flex items-center gap-2">
+                        {currentPlan && (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => toggleAllPlanSteps(true)}
+                            >
+                              Összes nyit
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => toggleAllPlanSteps(false)}
+                            >
+                              Összes zár
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={exportPlan}
+                            >
+                              <Download size={14} className="mr-1" />
+                              Export
+                            </Button>
+                          </>
+                        )}
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => setShowPlanEvents(prev => !prev)}
+                        >
+                          {showPlanEvents ? 'Elrejt' : 'Mutat'}
+                        </Button>
+                      </div>
+                    </div>
+                    {showPlanEvents && (
+                      <div className="mt-3 space-y-3">
+                        {currentPlan && planSteps.length > 0 ? (
+                          <div className="space-y-3">
+                            {planSteps.map((step, index) => {
+                              const Icon = getStepIcon(step.status)
+                              const isExpanded = Boolean(expandedPlanSteps[step.id])
+                              return (
+                                <div key={step.id} className="flex gap-3">
+                                  <div className="flex flex-col items-center">
+                                    <div className={`w-6 h-6 rounded-full border flex items-center justify-center ${getStepStyles(step.status)}`}>
+                                      <Icon size={14} />
+                                    </div>
+                                    {index < planSteps.length - 1 && (
+                                      <div className="w-px flex-1 bg-border/60 mt-1" />
+                                    )}
+                                  </div>
+                                  <div className="flex-1 text-xs">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <div className="font-medium text-foreground">
+                                        {step.agent} · {step.status}
+                                      </div>
+                                      {step.result && (
+                                        <Button
+                                          variant="ghost"
+                                          size="sm"
+                                          onClick={() =>
+                                            setExpandedPlanSteps(prev => ({
+                                              ...prev,
+                                              [step.id]: !prev[step.id]
+                                            }))
+                                          }
+                                        >
+                                          {isExpanded ? 'Elrejt' : 'Részletek'}
+                                        </Button>
+                                      )}
+                                    </div>
+                                    <div className="text-muted-foreground whitespace-pre-wrap">
+                                      {step.description}
+                                    </div>
+                                    {step.status === 'running' && (
+                                      <div className="mt-2 flex items-center gap-2 text-warning text-[11px]">
+                                        <span className="inline-flex h-2 w-2 rounded-full bg-warning animate-pulse" />
+                                        Folyamatban...
+                                      </div>
+                                    )}
+                                    {step.result && (
+                                      <div className="mt-1 text-muted-foreground whitespace-pre-wrap">
+                                        {isExpanded
+                                          ? step.result.toString()
+                                          : `${step.result.toString().substring(0, 220)}${step.result.toString().length > 220 ? '…' : ''}`}
+                                      </div>
+                                    )}
+                                    {step.result && (
+                                      <div className="mt-2">
+                                        <Button
+                                          variant="outline"
+                                          size="sm"
+                                          onClick={() => copyToClipboard(step.result?.toString() || '')}
+                                        >
+                                          Másolás
+                                        </Button>
+                                      </div>
+                                    )}
+                                  </div>
+                                </div>
+                              )
+                            })}
+                          </div>
+                        ) : (
+                          <div className="space-y-2">
+                            {planMessages.map(message => (
+                              <div key={message.id} className="text-xs text-muted-foreground whitespace-pre-wrap">
+                                {message.content}
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )}
+                {displayMessages.map(message => (
                   <div
                     key={message.id}
-                    className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                    className={`flex gap-3 ${
+                      message.role === 'user' ? 'justify-end' : message.role === 'system' ? 'justify-center' : 'justify-start'
+                    }`}
                   >
                     {message.role === 'assistant' && (
                       <div className="flex-shrink-0">
@@ -401,18 +655,88 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                     )}
                     
                     <div
-                      className={`flex flex-col gap-1 max-w-[80%] ${
-                        message.role === 'user' ? 'items-end' : 'items-start'
+                      className={`flex flex-col gap-1 ${
+                        message.role === 'system'
+                          ? 'items-center max-w-[90%]'
+                          : message.role === 'user'
+                            ? 'items-end max-w-[80%]'
+                            : 'items-start max-w-[80%]'
                       }`}
                     >
                       <div
                         className={`px-4 py-3 rounded-lg ${
                           message.role === 'user'
                             ? 'bg-primary text-primary-foreground'
-                            : 'bg-card border border-border'
+                            : message.role === 'system'
+                              ? 'bg-muted/50 border border-dashed border-border text-muted-foreground'
+                              : 'bg-card border border-border'
                         }`}
                       >
-                        <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                        {message.role === 'system' && (
+                          <div className="flex items-center gap-2 mb-2">
+                            {(() => {
+                              const badge = getSystemBadge(message.content)
+                              const Icon = badge.icon
+                              return (
+                                <Badge variant={badge.variant} className="gap-1">
+                                  <Icon size={12} />
+                                  System
+                                </Badge>
+                              )
+                            })()}
+                          </div>
+                        )}
+                        {message.role === 'system' && (message.content.startsWith('🛠️ Tool eredmény:') || message.content.startsWith('⚠️ Tool hiba:')) ? (
+                          <div className="space-y-2">
+                            <p className="text-xs whitespace-pre-wrap break-words">
+                              {expandedToolMessages[message.id]
+                                ? message.content
+                                : `${message.content.substring(0, 280)}${message.content.length > 280 ? '…' : ''}`}
+                            </p>
+                            <div className="flex items-center gap-2">
+                              {message.content.length > 280 && (
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() =>
+                                    setExpandedToolMessages(prev => ({
+                                      ...prev,
+                                      [message.id]: !prev[message.id]
+                                    }))
+                                  }
+                                >
+                                  {expandedToolMessages[message.id] ? 'Elrejt' : 'Mutat'}
+                                </Button>
+                              )}
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => downloadToolOutput(message, false)}
+                              >
+                                <Download size={14} className="mr-1" />
+                                TXT
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => downloadToolOutput(message, true)}
+                                disabled={!getToolPayload(message)}
+                              >
+                                <Download size={14} className="mr-1" />
+                                JSON
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => copyToClipboard(message.content)}
+                              >
+                                Másolás
+                              </Button>
+                            </div>
+                          </div>
+                        ) : (
+                          <p className="text-sm whitespace-pre-wrap break-words">{message.content}</p>
+                        )}
                         {message.isStreaming && (
                           <span className="inline-block w-2 h-4 bg-current animate-pulse ml-1" />
                         )}

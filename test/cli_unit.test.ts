@@ -1,5 +1,5 @@
-import { MemoryManager } from '../src/cli/memory';
-import { PythonBridge } from '../src/cli/python_bridge';
+import { MemoryManager } from '../src/cli/memory.js';
+import { PythonBridge } from '../src/cli/python_bridge.js';
 import fs from 'fs';
 import path from 'path';
 import os from 'os';

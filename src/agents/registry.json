@@ -3,8 +3,8 @@
   "agents": [
     {
       "name": "orchestrator",
-      "title": "Orchestrator",
-      "description": "Koordinalja a feladatokat es delegalja az agentekhez.",
+      "title": "Orchestrator (Karmester)",
+      "description": "AZ AGYPIAC vezetője. Koordinalja a feladatokat es delegalja az agentekhez.",
       "capabilities": [
         "planning",
         "routing",
@@ -18,13 +18,14 @@
       "status": "active",
       "tags": [
         "coordination",
-        "workflow"
+        "workflow",
+        "Karmester"
       ]
     },
     {
       "name": "researcher",
-      "title": "Research Agent",
-      "description": "Keres a tudasbazisban, majd osszefoglalja a relevans informaciokat.",
+      "title": "Research Agent (Kutató)",
+      "description": "KUTATÓ szerepkör. Keres a tudasbazisban a TÁPLÁLÓ rétegből, majd osszefoglalja a relevans informaciokat.",
       "capabilities": [
         "rag_search",
         "summarization"
@@ -38,13 +39,14 @@
       "status": "active",
       "tags": [
         "rag",
-        "summaries"
+        "summaries",
+        "Kutató"
       ]
     },
     {
       "name": "developer",
-      "title": "Developer Agent",
-      "description": "Kodol es javit a self-healing pipeline segitsegevel.",
+      "title": "Developer Agent (Adattudás)",
+      "description": "ADATTUDÁS/TANÍTÓ szerepkör. Kodol es javit a self-healing pipeline segitsegevel.",
       "capabilities": [
         "code_generation",
         "self_healing"
@@ -57,13 +59,14 @@
       "status": "active",
       "tags": [
         "code",
-        "pipeline"
+        "pipeline",
+        "Tanító"
       ]
     },
     {
       "name": "qa",
       "title": "QA Agent",
-      "description": "Funkcionalis tesztek, gyors validacio, smoke es regresszio ellenorzesek.",
+      "description": "IMMUNRENDSZER támogató. Funkcionalis tesztek, gyors validacio, smoke es regresszio ellenorzesek.",
       "capabilities": [
         "test_execution",
         "validation"
@@ -101,8 +104,8 @@
     },
     {
       "name": "ops",
-      "title": "Ops Agent",
-      "description": "Rendszer allapot es tool logok felugyelete, gyors diagnosztika.",
+      "title": "Ops Agent (Immunrendszer)",
+      "description": "IMMUNRENDSZER felügyelő. Rendszer allapot es tool logok felugyelete, gyors diagnosztika.",
       "capabilities": [
         "monitoring",
         "diagnostics"
@@ -117,7 +120,8 @@
       "status": "active",
       "tags": [
         "ops",
-        "health"
+        "health",
+        "Immunrendszer"
       ]
     },
     {

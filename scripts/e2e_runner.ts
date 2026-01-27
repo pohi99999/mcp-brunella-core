@@ -2,6 +2,9 @@
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // Utility to run a test session against a specific server script
 async function runTestSession(serverCommand: string, serverArgs: string[], testName: string, checks: (client: Client) => Promise<void>) {

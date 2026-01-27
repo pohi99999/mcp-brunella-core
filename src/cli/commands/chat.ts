@@ -2,7 +2,7 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import { LLMClient, Message, Tool } from '../../core/llm_client.js';
 import { mcpClientManager } from '../mcp_client.js';
-import { toolRegistry } from '../tools/registry.js'; // Keep existing tools as well?
+import { toolRegistry, getNativeToolsForLLM } from '../tools/index.js';
 import { MemoryManager } from '../memory.js';
 
 const memory = new MemoryManager();
@@ -100,11 +100,11 @@ export async function chatCommand() {
         messages.push({ role: 'user', content: trimmedInput });
 
         // Tool gathering
-        // 1. MCP Tools
+        // 1. Native tools (CLI registry)
+        const nativeTools = getNativeToolsForLLM();
+        // 2. MCP tools
         const mcpTools = await mcpClientManager.getToolsForLLM();
-        // 2. Native Tools (from registry) - Need to convert them too if we want to use them via LLM
-        // For now, let's focus on MCP tools as requested.
-        const tools: Tool[] = [...mcpTools];
+        const tools: Tool[] = [...nativeTools, ...mcpTools];
 
         process.stdout.write(chalk.gray('Thinking...'));
 
@@ -135,25 +135,41 @@ export async function chatCommand() {
 
                     console.log(chalk.cyan(`  > ${toolName}(${JSON.stringify(toolArgs)})`));
 
-                    // Execute tool via MCP
-                    // We need to find which client has this tool. 
-                    // The getToolsForLLM flattened them. 
-                    // We might need to look it up or prefix names.
-                    // For now, let's try to find it in active clients.
                     let executionResult = "Tool not found or failed";
 
-                    // Optimization: Mapping name -> client would be better.
-                    const clients = mcpClientManager.getClientNames();
-                    for (const clientName of clients) {
+                    // 1) Try native registry first
+                    const nativeTool = toolRegistry.getTool(toolName);
+                    if (nativeTool) {
                         try {
-                            const clientTools = await mcpClientManager.listTools(clientName);
-                            if (clientTools.tools.some(t => t.name === toolName)) {
-                                const result = await mcpClientManager.callTool(clientName, toolName, toolArgs);
-                                // MCP result is { content: [...] }
+                            const result = await nativeTool.execute(toolArgs);
+                            executionResult = typeof result === 'string' ? result : JSON.stringify(result);
+                        } catch (e: any) {
+                            executionResult = `Native tool error: ${e.message}`;
+                        }
+                    } else {
+                        // 2) MCP tools (prefer namespaced calls: mcp.<server>.<tool>)
+                        const parsed = parseMcpToolName(toolName);
+                        if (parsed) {
+                            try {
+                                const result = await mcpClientManager.callTool(parsed.serverName, parsed.toolName, toolArgs);
                                 executionResult = JSON.stringify(result);
-                                break;
+                            } catch (e: any) {
+                                executionResult = `MCP tool error (${parsed.serverName}): ${e.message}`;
                             }
-                        } catch (e) { /* ignore */ }
+                        } else {
+                            // Fallback to legacy un-namespaced MCP tool name
+                            const clients = mcpClientManager.getClientNames();
+                            for (const clientName of clients) {
+                                try {
+                                    const clientTools = await mcpClientManager.listTools(clientName);
+                                    if (clientTools.tools.some(t => t.name === toolName)) {
+                                        const result = await mcpClientManager.callTool(clientName, toolName, toolArgs);
+                                        executionResult = JSON.stringify(result);
+                                        break;
+                                    }
+                                } catch (e) { /* ignore */ }
+                            }
+                        }
                     }
 
                     console.log(chalk.gray(`  < Result: ${executionResult.substring(0, 50)}...`));
@@ -182,4 +198,14 @@ export async function chatCommand() {
             console.error(chalk.red('\nError:'), e.message);
         }
     }
+}
+
+function parseMcpToolName(name: string) {
+    if (!name.startsWith('mcp.')) return null;
+    const parts = name.split('.');
+    if (parts.length < 3) return null;
+    const serverName = parts[1];
+    const toolName = parts.slice(2).join('.');
+    if (!serverName || !toolName) return null;
+    return { serverName, toolName };
 }

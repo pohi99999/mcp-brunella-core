@@ -11,6 +11,7 @@ import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { registerAllTools } from './registry.js';
 import { v4 as uuidv4 } from 'uuid';
 import { toolManager } from './ToolManager.js';
+import { agentManager } from '../agents/AgentManager.js';
 import { mcpProcessManager } from './McpProcessManager.js';
 import { searchRAG } from '../utils/rag.js';
 import { LLMClient } from '../core/llm_client.js';
@@ -125,7 +126,7 @@ export async function startWebServer() {
     io.on('connection', (socket) => {
         const DEFAULT_CHAT_ID = 'main-session';
         // 1. Send Tool Definitions immediately
-        socket.emit('tools_update', toolManager.getToolDefinitions());
+        void emitToolsUpdate(socket);
         // Send initial MCP status
         socket.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
         // 2. Handle Tool Execution
@@ -275,67 +276,34 @@ export async function startWebServer() {
         }
         socket.on('user_message', async (data) => {
             const userMsg = data.text;
+            const allowedTools = Array.isArray(data.tools) ? data.tools : null;
             saveMessage(DEFAULT_CHAT_ID, 'user', userMsg);
-            // Re-instantiate LLM Client to get fresh config (model updates etc.)
-            const currentModel = memory.get('model') || 'llava-llama3:latest';
-            const baseUrl = memory.get('llm_base_url') || 'http://127.0.0.1:11434';
-            const llm = new LLMClient({
-                provider: 'ollama',
-                model: currentModel,
-                baseUrl: baseUrl
-            });
-            const messages = [
-                { role: 'system', content: 'You are Brunella, an AI assistant. You can use tools. Be helpful and concise.' },
-                { role: 'user', content: userMsg }
-            ];
-            // Get Tools
-            const mcpTools = await mcpClientManager.getToolsForLLM();
-            const tools = [...mcpTools];
-            // Temporary buffer for streaming response
             let currentResponseText = "";
+            socket.emit('bot_message_start', { isUser: false });
             try {
-                // First token indicates start of response
-                socket.emit('bot_message_start', { isUser: false });
-                const response = await llm.chatStream(messages, tools, (chunk) => {
-                    currentResponseText += chunk;
-                    socket.emit('bot_message_chunk', { text: chunk });
-                });
-                // Save full message to DB
-                saveMessage(DEFAULT_CHAT_ID, 'bot', currentResponseText);
-                // Handle Tool Calls if any
-                if (response.tool_calls && response.tool_calls.length > 0) {
-                    socket.emit('bot_message_chunk', { text: '\n\n🛠️ Eszközök futtatása...\n' });
-                    for (const call of response.tool_calls) {
-                        const toolName = call.function.name;
-                        const toolArgs = JSON.parse(call.function.arguments);
-                        // Execute tool
-                        let executionResult = "Tool not found or failed";
-                        const clients = mcpClientManager.getClientNames();
-                        for (const clientName of clients) {
-                            try {
-                                const clientTools = await mcpClientManager.listTools(clientName);
-                                if (clientTools.tools.some(t => t.name === toolName)) {
-                                    const result = await mcpClientManager.callTool(clientName, toolName, toolArgs);
-                                    executionResult = JSON.stringify(result);
-                                    break;
-                                }
-                            }
-                            catch (e) { /* continue */ }
-                        }
-                        socket.emit('bot_message_chunk', { text: `> ${toolName}: ${executionResult.substring(0, 100)}...\n` });
-                        messages.push(response);
-                        messages.push({ role: 'tool', content: executionResult, name: toolName });
+                const plan = await agentManager.createPlan(userMsg);
+                socket.emit('plan_created', plan);
+                for (const step of plan.steps) {
+                    step.status = 'running';
+                    socket.emit('plan_step_update', step);
+                    let result = "";
+                    if (step.agent === 'orchestrator') {
+                        result = await runOrchestratorWithTools(step.description, allowedTools, (chunk) => {
+                            currentResponseText += chunk;
+                            socket.emit('bot_message_chunk', { text: chunk });
+                        });
                     }
-                    // Follow up
-                    const followUp = await llm.chatStream(messages, tools, (chunk) => {
+                    else {
+                        result = await agentManager.delegate(step.agent, step.description);
+                        const chunk = `\n\n[${step.agent}]\n${result}`;
                         currentResponseText += chunk;
                         socket.emit('bot_message_chunk', { text: chunk });
-                    });
-                    // Update DB with full conversation including tool results? 
-                    // Ideally we save distinct messages, but for simplicity we append to last bot msg or create new.
-                    // Let's create new for follow up.
-                    saveMessage(DEFAULT_CHAT_ID, 'bot', followUp.content);
+                    }
+                    step.status = 'completed';
+                    step.result = result;
+                    socket.emit('plan_step_update', step);
                 }
+                saveMessage(DEFAULT_CHAT_ID, 'bot', currentResponseText);
                 socket.emit('bot_message_end', {});
             }
             catch (e) {
@@ -350,4 +318,110 @@ export async function startWebServer() {
     httpServer.listen(PORT, () => {
         console.log(`🌐 Web UI: http://localhost:${PORT}`);
     });
+}
+async function emitToolsUpdate(socket) {
+    try {
+        const local = toolManager.getToolDefinitions();
+        const mcpTools = await getMcpToolDefinitions();
+        socket.emit('tools_update', [...local, ...mcpTools]);
+    }
+    catch (e) {
+        socket.emit('tools_update', toolManager.getToolDefinitions());
+    }
+}
+async function getMcpToolDefinitions() {
+    const tools = [];
+    const clients = mcpClientManager.getClientNames();
+    for (const clientName of clients) {
+        try {
+            const result = await mcpClientManager.listTools(clientName);
+            result.tools.forEach((t) => {
+                tools.push({
+                    name: `mcp.${clientName}.${t.name}`,
+                    description: t.description || '',
+                    inputSchema: t.inputSchema
+                });
+            });
+        }
+        catch {
+            // ignore
+        }
+    }
+    return tools;
+}
+async function runOrchestratorWithTools(userMsg, allowedTools, onChunk) {
+    const currentModel = memory.get('model') || 'llava-llama3:latest';
+    const baseUrl = memory.get('llm_base_url') || 'http://127.0.0.1:11434';
+    const llm = new LLMClient({
+        provider: 'ollama',
+        model: currentModel,
+        baseUrl: baseUrl
+    });
+    const messages = [
+        { role: 'system', content: 'You are Brunella, an AI assistant. You can use tools. Be helpful and concise.' },
+        { role: 'user', content: userMsg }
+    ];
+    const localTools = toolManager.getToolDefinitions().map(def => ({
+        type: 'function',
+        function: {
+            name: def.name,
+            description: def.description || '',
+            parameters: def.inputSchema
+        }
+    }));
+    const mcpTools = await mcpClientManager.getToolsForLLM();
+    let tools = [...localTools, ...mcpTools];
+    if (allowedTools) {
+        tools = tools.filter(t => allowedTools.includes(t.function.name));
+    }
+    let currentResponseText = "";
+    const response = await llm.chatStream(messages, tools, (chunk) => {
+        currentResponseText += chunk;
+        onChunk(chunk);
+    });
+    if (response.tool_calls && response.tool_calls.length > 0) {
+        onChunk('\n\n🛠️ Eszközök futtatása...\n');
+        messages.push(response);
+        for (const call of response.tool_calls) {
+            const toolName = call.function.name;
+            const toolArgs = JSON.parse(call.function.arguments);
+            const executionResult = await executeToolByName(toolName, toolArgs);
+            const shortResult = executionResult.substring(0, 120);
+            onChunk(`> ${toolName}: ${shortResult}...\n`);
+            messages.push({ role: 'tool', content: executionResult, name: toolName });
+        }
+        const followUp = await llm.chatStream(messages, tools, (chunk) => {
+            currentResponseText += chunk;
+            onChunk(chunk);
+        });
+        currentResponseText = followUp.content ? currentResponseText : currentResponseText;
+    }
+    return currentResponseText;
+}
+async function executeToolByName(toolName, toolArgs) {
+    if (toolName.startsWith('mcp.')) {
+        const parsed = parseMcpToolName(toolName);
+        if (!parsed)
+            return 'Invalid MCP tool name';
+        try {
+            const result = await mcpClientManager.callTool(parsed.serverName, parsed.toolName, toolArgs);
+            return JSON.stringify(result);
+        }
+        catch (e) {
+            return `MCP tool error: ${e.message}`;
+        }
+    }
+    try {
+        const result = await toolManager.executeTool(toolName, toolArgs);
+        return typeof result === 'string' ? result : JSON.stringify(result);
+    }
+    catch (e) {
+        return `Tool error: ${e.message}`;
+    }
+}
+function parseMcpToolName(name) {
+    const parts = name.split('.');
+    if (parts.length < 3)
+        return null;
+    return { serverName: parts[1], toolName: parts.slice(2).join('.') };
 }

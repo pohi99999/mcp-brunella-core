@@ -1,0 +1,8 @@
+{
+  "name": "brunella-extension-agents",
+  "version": "0.1.0",
+  "description": "Agents registry bővítmény: listázás és megtekintés.",
+  "type": "module",
+  "main": "index.js",
+  "license": "MIT"
+}

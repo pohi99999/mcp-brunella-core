@@ -1,9 +1,11 @@
-import { AgentsDB } from '../src/database/agents_db';
-import { AgentRouter } from '../src/agent_factory/router';
-import { AgentSupervisor } from '../src/agent_factory/supervisor';
+import { AgentsDB } from '../src/database/agents_db.js';
+import { AgentRouter } from '../src/agent_factory/router.js';
+import { AgentSupervisor } from '../src/agent_factory/supervisor.js';
 import * as path from 'path';
 import * as fs from 'fs';
+import { fileURLToPath } from 'url';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const DB_PATH = path.resolve(__dirname, '..', 'test_agents.db');
 
 async function runTest() {
@@ -47,8 +49,8 @@ async function runTest() {
 
     console.log("Checking DB for messages...");
     
-    // Use better-sqlite3 directly to verify
-    const Database = require('better-sqlite3');
+    // Use better-sqlite3 directly to verify (ESM: dynamic import)
+    const { default: Database } = await import('better-sqlite3');
     const verifyDb = new Database(DB_PATH);
     
     const messages = verifyDb.prepare('SELECT * FROM messages').all();

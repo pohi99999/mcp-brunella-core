@@ -60,6 +60,46 @@ export class McpConfigManager {
     }
 
     public getServers(): McpServerConfig[] {
-        return JSON.parse(fs.readFileSync(this.configPath, 'utf-8'));
+        try {
+            return JSON.parse(fs.readFileSync(this.configPath, 'utf-8'));
+        } catch {
+            return [];
+        }
+    }
+
+    public getConfigPath(): string {
+        return this.configPath;
+    }
+
+    public saveServers(servers: McpServerConfig[]) {
+        fs.writeFileSync(this.configPath, JSON.stringify(servers, null, 2));
+    }
+
+    public addServer(server: McpServerConfig) {
+        const servers = this.getServers();
+        if (servers.some(s => s.name === server.name)) {
+            throw new Error(`Server already exists: ${server.name}`);
+        }
+        servers.push(server);
+        this.saveServers(servers);
+    }
+
+    public updateServer(name: string, patch: Partial<McpServerConfig>) {
+        const servers = this.getServers();
+        const index = servers.findIndex(s => s.name === name);
+        if (index === -1) {
+            throw new Error(`Server not found: ${name}`);
+        }
+        servers[index] = { ...servers[index], ...patch, name: servers[index].name };
+        this.saveServers(servers);
+    }
+
+    public removeServer(name: string) {
+        const servers = this.getServers();
+        const next = servers.filter(s => s.name !== name);
+        if (next.length === servers.length) {
+            throw new Error(`Server not found: ${name}`);
+        }
+        this.saveServers(next);
     }
 }
