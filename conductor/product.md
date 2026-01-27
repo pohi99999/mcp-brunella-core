@@ -17,6 +17,8 @@ Az MCP Brunella Core a Brunella ökoszisztéma központi "idegrendszere", amely 
 - **Secure Sandbox:** Fájlműveletek, Python/Node.js kód futtatása és rendszerparancsok kezelése védett környezetben.
 - **Knowledge Engine:** Integráció LanceDB-vel és AnythingLLM-mel a releváns kontextus kinyeréséhez.
 - **Management Dashboard:** React alapú felület a szerver állapotának, az ágenseknek és a folyamatoknak a követésére.
+- **Visual ADK & Flow Editor:** Node-alapú vizuális felület az ágens logikák tervezéséhez és a folyamatok irányításához.
+- **Runtime Process Control:** MCP szerverek és ágens folyamatok dinamikus indítása és leállítása a Dashboardon keresztül.
 - **Agent Registry:** Strukturált metaadat-kezelés az elérhető ágensek és képességeik listázásához.
 - **Brunella CLI:** Fejlett, interaktív (Chat mód) parancssori eszköz beépített eszközökkel (FS, Conductor), bővítmény-támogatással és külső MCP szerverek (GitHub, Chrome, stb.) integrációjával.
 - **Agent Factory (Core):** Implementált Brunella Universal Agent Protocol (BUAP), Supervisor folyamatvezérlő és üzenetirányító Router a multi-ágens rendszerek alapjaihoz.

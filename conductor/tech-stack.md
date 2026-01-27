@@ -13,7 +13,7 @@
 - **Styling:** Tailwind CSS 4, Radix UI primitives
 - **Icons:** Lucide React, Phosphor Icons
 - **State Management:** Zustand
-- **Visualization:** D3.js, Recharts, Three.js
+- **Visualization:** D3.js, Recharts, Three.js, React Flow
 
 ## Data & Storage
 - **Vector Database:** LanceDB (for context and knowledge retrieval)
