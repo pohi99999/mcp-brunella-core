@@ -54,9 +54,12 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
     <Card className="border-border/50">
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="flex items-center gap-2 text-lg">
+          <CardTitle
+            className="flex items-center gap-2 text-lg"
+            title="Immunrendszer – Folyamat figyelő: naplók és események"
+          >
             <Terminal size={24} />
-            Naplók
+            Immunrendszer – Naplók
           </CardTitle>
           <div className="flex items-center gap-2">
             <div className="flex gap-1">

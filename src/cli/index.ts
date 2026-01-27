@@ -8,15 +8,20 @@ import path from 'path';
 import { chatCommand } from './commands/chat.js';
 import { extensionCommand } from './commands/extension.js';
 import { runCommand } from './commands/run.js';
-import { conductorCommand } from './commands/conductor.js';
 import { connectCommand } from './commands/connect.js';
 import { agentCommand } from './commands/agent.js';
+import { toolsCommand } from './commands/tools.js';
+import { configCommand } from './commands/config.js';
+import { doctorCommand } from './commands/doctor.js';
+import { ExtensionManager } from './extensions.js';
+import './tools/index.js';
 
 const program = new Command();
 const memory = new MemoryManager();
 const discovery = new DiscoveryService();
 const mcpClient = mcpClientManager;
 const pythonBridge = new PythonBridge();
+const extensionManager = new ExtensionManager();
 
 async function mainMenu() {
     const choices = [
@@ -206,19 +211,44 @@ async function main() {
         .action(chatCommand);
 
     program
-        .command('extension <action>')
-        .description('Manage extensions (list, install)')
+        .command('extension <action> [extensionName]')
+        .description('Manage extensions (list, install, uninstall, update)')
         .action(extensionCommand);
+
+    program
+        .command('tools <action> [name] [args]')
+        .description('List or invoke tools (native + MCP)')
+        .action(toolsCommand);
+
+    program
+        .command('config <action> [name] [json]')
+        .description('Manage MCP config (path, list, show, add, update, remove)')
+        .action(configCommand);
+
+    program
+        .command('doctor')
+        .description('Run environment checks')
+        .option('--json', 'Machine-readable JSON output')
+        .action(doctorCommand);
+
+    program
+        .command('mcp:run')
+        .description('Run the MCP server (node build/index.js)')
+        .action(() => {
+            console.log('Indítás: node build/index.js');
+        });
+
+    program
+        .command('cli:run')
+        .description('Run the CLI from build (node build/cli/index.js)')
+        .action(() => {
+            console.log('Indítás: node build/cli/index.js');
+        });
 
     program
         .command('run <script>')
         .description('Run a script')
         .action(runCommand);
-
-    program
-        .command('conductor <action>')
-        .description('Manage project tracks and status')
-        .action(conductorCommand);
 
     program
         .command('connect [serverName]')
@@ -227,6 +257,16 @@ async function main() {
 
     program
         .addCommand(agentCommand);
+
+    // Bővítmények betöltése (dinamikus parancsok)
+    await extensionManager.discoverExtensions();
+    const loadedExtensions = extensionManager.getExtensions();
+    for (const ext of loadedExtensions) {
+        await extensionManager.activateExtension(ext.name, { program, cwd: process.cwd() });
+    }
+    if (loadedExtensions.length > 0) {
+        console.log(`Bővítmények betöltve: ${loadedExtensions.map(e => e.name).join(', ')}`);
+    }
 
     // Ha vannak argumentumok, a commander kezeli
     if (process.argv.length > 2) {

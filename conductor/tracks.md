@@ -4,7 +4,17 @@ This file tracks all major tracks for the project. Each track has its own detail
 
 ---
 
+- [x] **Track: Brunella CLI – Gemini CLI szint (teljes paritás, Google-független)**  
+  *Link: [./tracks/brunella_cli_gemini_parity_20260128/](./tracks/brunella_cli_gemini_parity_20260128/)*  
+  Állapot: KÉSZ. Conductor parancsok bővítménybe szervezve, extension lifecycle (install/update/uninstall/reload), MCP watchdog, GitHub/Jules/Agents bővítmények, tools/config/doctor parancsok, AnythingLLM smoke fix, teljes tesztcsomag zöld.
 
+---
+
+- [x] **Track: Fehér Könyv implementáció a Brunella Core MCP szerveren**  
+  *Link: [docs/ARCHITECTURE.md](../docs/ARCHITECTURE.md) + [docs/FEHER_KONYV_ALIGNMENT.md](../docs/FEHER_KONYV_ALIGNMENT.md)*  
+  Állapot: KÉSZ. Fehér Könyv rétegek és swarm szerepkörök mapelve komponensekre, out-of-scope szakasz rögzítve, README konfigurációs kiegészítések, testing/TEST_BOOK igazítás Fehér Könyv rétegekre.
+
+---
 
 - [x] **Track: Brunella CLI Interactive Agent Mode**
 

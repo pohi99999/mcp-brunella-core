@@ -3,6 +3,8 @@
 This document defines the standard QA scenarios for Cogella Core (MCP Brunella Core).
 Jules uses these scenarios to verify system integrity.
 
+A tesztforgatókönyvek a **Fehér Könyv** rétegeihez igazodnak (pl. monitor = Immunrendszer, knowledge = Tudásbázis, agent_list = Agypiac).
+
 ## Scenario 1: Basic Health Check
 **Goal:** Verify the server is running and responsive.
 **Steps:**

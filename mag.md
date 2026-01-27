@@ -11,11 +11,11 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
 - **Biztonság:** Sandboxolt kód futtatás (vm2), korlátozott fájlműveletek.
 
 ## System Status
-- **Node.js Tests:** Sikeres.
-- **Python Tests:** Nincs tesztfájl, környezet OK.
-- **E2E Tesztek:** ✅ SIKERES. A `scripts/e2e_runner.ts` ellenőrizte a Node.js szervert, a Python Automation szervert és a Google Workspace szervert. Minden rendszer működőképes.
-- **CLI Rendszer:** ✅ SIKERES. A `scripts/test_cli.ts` verifikálta a `brunella` parancs működését (help, version, subcommands).
-- **RAG (Tudásbázis):** ✅ TELJESEN MŰKÖDŐKÉPES. Az indexelő script (`scripts/index_knowledge.ts`) lefutott az Ollama (nomic-embed-text) segítségével. A szemantikus keresés verifikálva.
+- **Node.js Tests:** ✅ `npm test`, `test:unit:cli`, `test:cli` zöld.
+- **E2E Tesztek:** ✅ `scripts/e2e_runner.ts` (Node + Python szerverek: Google Workspace, Vertex AI).
+- **Smoke:** ✅ MCP ping, Tools ping; AnythingLLM elérés sikeres (BASE_URL=http://localhost:3001, WORKSPACE=workspace, API_KEY megadva), chat válasz érkezett.
+- **CLI Rendszer:** ✅ `scripts/test_cli.ts` (help, version, agent, connect).
+- **RAG (Tudásbázis):** ✅ Működőképes (LanceDB + search).
 - **Integrációk:**
     - **Google Workspace:** `src/servers/google_workspace.py` (Gmail, Drive) implementálva. Hitelesítés `src/utils/google_auth.py`-n keresztül.
     - **Vertex AI:** `src/servers/vertex_ai.py` (Gemini modellek) implementálva.
@@ -24,6 +24,15 @@ Az MCP Brunella Core a Brunella rendszer központi MCP szervere, amely biztonsá
     - PowerShell script futtatási szabályzata korlátozza az `npm` hívásokat.
 
 ## Development Log
+
+### 2026.01.27 - Paritás / Stabilizáció
+- Dashboard Tools: schema-űrlap (boolean switch, enum select), gyors szűrők és prioritás; GitHub/a2a/ADK/MCP/native badge.
+- MCP kliens: watchdog (timeout, healthCheck, reconnect), `MCP_WATCHDOG_MS` env-vel paraméterezhető.
+- Extension lifecycle: reload parancs, install/uninstall/update után automatikus rediscover + betöltött bővítmények listája.
+- GitHub CLI bővítmény (status/prs/checks/open).
+- AnythingLLM integráció: .env.local példa; smoke futás sikeres a `workspace` sluggáral és API kulccsal.
+- Tesztpipeline: `test_prepare.cjs` CJS-re állítja a test_build-et; `npm test`, `test:unit:cli`, `test:cli`, `test:e2e`, `smoke` mind PASS.
+
 ### 2026.01.27 - Gemini-fication & Web UI 2.0 (Phase 1 - COMPLETE)
 - **CLI Megújítása**: Teljesen újraírt `src/commands/chat.ts`, interaktív chat streaming támogatással és kontextuskezeléssel.
 - **LLM Kliens**: Egységesített `LLMClient` osztály (`src/core/llm_client.ts`), amely támogatja az Ollama streaminget és a tool calling-ot.

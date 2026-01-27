@@ -29,7 +29,7 @@ export const config = {
   maxReadBytes: 400000, // 400KB
   maxFileBytesForSearch: 2000000, // 2MB
   systemLogDir: path.join(process.cwd(), 'logs'),
-  anythingllmBaseUrl: process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001',
-  anythingllmWorkspace: process.env.ANYTHINGLLM_WORKSPACE || '',
-  anythingllmApiKey: process.env.ANYTHINGLLM_API_KEY || ''
+  anythingllmBaseUrl: (process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001').trim(),
+  anythingllmWorkspace: (process.env.ANYTHINGLLM_WORKSPACE || '').trim(),
+  anythingllmApiKey: (process.env.ANYTHINGLLM_API_KEY || '').trim()
 };

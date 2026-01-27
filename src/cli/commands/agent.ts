@@ -7,10 +7,128 @@ import { AgentSupervisor } from '../../agent_factory/supervisor.js';
 import chalk from 'chalk';
 import inquirer from 'inquirer';
 
+const REGISTRY_PATH = path.resolve(process.cwd(), 'src', 'agents', 'registry.json');
+
+type RegistryAgent = {
+    name: string;
+    title?: string;
+    description?: string;
+    capabilities?: string[];
+    category?: string;
+    status?: string;
+    tags?: string[];
+};
+
+function loadRegistry(): { agents: RegistryAgent[] } {
+    if (!fs.existsSync(REGISTRY_PATH)) {
+        return { agents: [] };
+    }
+    return JSON.parse(fs.readFileSync(REGISTRY_PATH, 'utf-8'));
+}
+
+function saveRegistry(reg: { agents: RegistryAgent[] }) {
+    fs.writeFileSync(REGISTRY_PATH, JSON.stringify(reg, null, 2));
+}
+
 export const agentCommand = new Command('agent');
 
 agentCommand
     .description('Manage AI Agents (Factory)');
+
+// Registry CRUD
+const registry = agentCommand.command('registry').description('Manage agent registry (registry.json)');
+
+registry
+    .command('list')
+    .description('List agents in registry.json')
+    .action(() => {
+        const reg = loadRegistry();
+        if (!reg.agents.length) {
+            console.log(chalk.yellow('Nincs ügynök a registry-ben.'));
+            return;
+        }
+        console.table(reg.agents.map(a => ({
+            Name: a.name,
+            Title: a.title ?? '',
+            Status: a.status ?? '',
+            Category: a.category ?? '',
+            Tags: a.tags?.join(', ') ?? ''
+        })));
+    });
+
+registry
+    .command('add <name>')
+    .description('Add agent to registry.json')
+    .option('--title <title>', 'Title')
+    .option('--description <description>', 'Description')
+    .option('--category <category>', 'Category (pl. core/knowledge/ops)')
+    .option('--status <status>', 'Status (active/planned)', 'active')
+    .option('--tags <tags>', 'Comma separated tags')
+    .option('--capabilities <caps>', 'Comma separated capabilities')
+    .action((name, options) => {
+        const reg = loadRegistry();
+        if (reg.agents.find(a => a.name === name)) {
+            console.log(chalk.red('Már létezik ilyen ügynök a registry-ben.'));
+            return;
+        }
+        const agent: RegistryAgent = {
+            name,
+            title: options.title,
+            description: options.description,
+            category: options.category,
+            status: options.status,
+            tags: options.tags ? options.tags.split(',').map((s: string) => s.trim()).filter(Boolean) : undefined,
+            capabilities: options.capabilities ? options.capabilities.split(',').map((s: string) => s.trim()).filter(Boolean) : undefined,
+        };
+        reg.agents.push(agent);
+        saveRegistry(reg);
+        console.log(chalk.green(`Agent '${name}' hozzáadva a registry-hez.`));
+    });
+
+registry
+    .command('update <name>')
+    .description('Update agent in registry.json')
+    .option('--title <title>', 'Title')
+    .option('--description <description>', 'Description')
+    .option('--category <category>', 'Category')
+    .option('--status <status>', 'Status (active/planned)')
+    .option('--tags <tags>', 'Comma separated tags (teljes felülírás)')
+    .option('--capabilities <caps>', 'Comma separated capabilities (teljes felülírás)')
+    .action((name, options) => {
+        const reg = loadRegistry();
+        const agent = reg.agents.find(a => a.name === name);
+        if (!agent) {
+            console.log(chalk.red('Nincs ilyen ügynök a registry-ben.'));
+            return;
+        }
+        if (options.title !== undefined) agent.title = options.title;
+        if (options.description !== undefined) agent.description = options.description;
+        if (options.category !== undefined) agent.category = options.category;
+        if (options.status !== undefined) agent.status = options.status;
+        if (options.tags !== undefined) {
+            agent.tags = options.tags.split(',').map((s: string) => s.trim()).filter(Boolean);
+        }
+        if (options.capabilities !== undefined) {
+            agent.capabilities = options.capabilities.split(',').map((s: string) => s.trim()).filter(Boolean);
+        }
+        saveRegistry(reg);
+        console.log(chalk.green(`Agent '${name}' frissítve a registry-ben.`));
+    });
+
+registry
+    .command('remove <name>')
+    .description('Remove agent from registry.json')
+    .action((name) => {
+        const reg = loadRegistry();
+        const before = reg.agents.length;
+        reg.agents = reg.agents.filter(a => a.name !== name);
+        if (reg.agents.length === before) {
+            console.log(chalk.red('Nincs ilyen ügynök a registry-ben.'));
+            return;
+        }
+        saveRegistry(reg);
+        console.log(chalk.green(`Agent '${name}' eltávolítva a registry-ből.`));
+    });
 
 agentCommand
     .command('list')

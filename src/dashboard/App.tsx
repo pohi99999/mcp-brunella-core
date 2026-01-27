@@ -8,6 +8,8 @@ import { LogViewer } from '@/components/dashboard/LogViewer'
 import { ConfigEditor } from '@/components/dashboard/ConfigEditor'
 import { ChatInterface } from '@/components/dashboard/ChatInterface'
 import { AgentToolsManager } from '@/components/dashboard/AgentToolsManager'
+import { AgentRegistryCard } from '@/components/dashboard/AgentRegistryCard'
+import { ToolsCard } from '@/components/dashboard/ToolsCard'
 import { FlowEditor } from '@/components/dashboard/FlowEditor'
 import { KnowledgeManager } from '@/components/dashboard/KnowledgeManager'
 import { McpRegistry } from '@/components/dashboard/McpRegistry'
@@ -196,7 +198,10 @@ function App() {
           </TabsContent>
 
           <TabsContent value="registry">
-            <McpRegistry />
+            <div className="space-y-4">
+              <McpRegistry />
+              <AgentRegistryCard />
+            </div>
           </TabsContent>
 
           <TabsContent value="logs">
@@ -216,11 +221,14 @@ function App() {
           </TabsContent>
 
           <TabsContent value="agents">
-            <AgentToolsManager
-              tools={currentAgentTools}
-              user={currentUser}
-              onUpdateTools={setAgentTools}
-            />
+            <div className="space-y-4">
+              <AgentToolsManager
+                tools={currentAgentTools}
+                user={currentUser}
+                onUpdateTools={setAgentTools}
+              />
+              <ToolsCard />
+            </div>
           </TabsContent>
         </Tabs>
       </div>
