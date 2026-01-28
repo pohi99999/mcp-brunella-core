@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Brunella CLI settings",
+  "description": "Layered config: system defaults < user ~/.brunella/settings.json < project .brunella/settings.json < system override < env",
+  "type": "object",
+  "properties": {
+    "serverUrl": { "type": "string", "default": "http://localhost:3000" },
+    "apiKey": { "type": ["string", "null"] },
+    "theme": { "type": "string", "enum": ["dark", "light"], "default": "dark" },
+    "general": {
+      "type": "object",
+      "properties": {
+        "preferredEditor": { "type": "string" },
+        "vimMode": { "type": "boolean", "default": false },
+        "previewFeatures": { "type": "boolean", "default": false }
+      }
+    },
+    "ui": {
+      "type": "object",
+      "properties": {
+        "theme": { "type": "string" },
+        "hideBanner": { "type": "boolean", "default": false },
+        "hideTips": { "type": "boolean", "default": false },
+        "hideFooter": { "type": "boolean", "default": false }
+      }
+    },
+    "output": {
+      "type": "object",
+      "properties": {
+        "format": { "type": "string", "enum": ["text", "json"], "default": "text" }
+      }
+    },
+    "model": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "maxSessionTurns": { "type": "number", "default": -1 }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "fileName": { "type": ["string", "array"], "items": { "type": "string" } },
+        "includeDirectories": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "tools": {
+      "type": "object",
+      "properties": {
+        "approvalMode": { "type": "string", "enum": ["default", "auto_edit", "plan", "yolo"], "default": "default" },
+        "autoAccept": { "type": "boolean", "default": false }
+      }
+    },
+    "mcp": {
+      "type": "object",
+      "properties": {
+        "serverCommand": { "type": "string" },
+        "allowed": { "type": "array", "items": { "type": "string" } },
+        "excluded": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "telemetry": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": false },
+        "target": { "type": "string", "enum": ["local", "gcp"], "default": "local" },
+        "otlpEndpoint": { "type": "string" },
+        "otlpProtocol": { "type": "string", "enum": ["grpc", "http"] },
+        "outfile": { "type": "string" },
+        "logPrompts": { "type": "boolean", "default": true },
+        "useCollector": { "type": "boolean", "default": false }
+      }
+    },
+    "privacy": {
+      "type": "object",
+      "properties": {
+        "usageStatisticsEnabled": { "type": "boolean", "default": true }
+      }
+    },
+    "skills": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "disabled": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "hooksConfig": {
+      "type": "object",
+      "properties": {
+        "enabled": { "type": "boolean", "default": true },
+        "disabled": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "admin": {
+      "type": "object",
+      "properties": {
+        "secureModeEnabled": { "type": "boolean", "default": false },
+        "mcp": { "type": "object", "properties": { "enabled": { "type": "boolean" } } },
+        "skills": { "type": "object", "properties": { "enabled": { "type": "boolean" } } }
+      }
+    }
+  }
+}

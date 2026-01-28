@@ -70,10 +70,36 @@ Beállítható környezeti változókkal:
 - `WEB_UI_ENABLED=0` letiltja a web UI-t
 - `WEB_UI_PORT=3000` atallitja a portot
 
-### 7. CLI memória és beállítások
-- Alapértelmezett hely: `~/.brunella/cli_memory.json`
-- Átállítható a `BRUNELLA_HOME` környezeti változóval (pl. `BRUNELLA_HOME=C:\path\to\.brunella`)
-- A korábbi `.gemini/cli_memory.json` automatikusan migrálódik, ha létezik
+### 7. Brunella CLI (Gemini-paritás)
+
+A beépített CLI a `brunella` parancs alatt érhető el, és a Gemini CLI parancskészletéhez igazodik.
+
+**Példák:**
+```bash
+npm run build && node build/cli.js --version
+node build/cli.js about
+node build/cli.js config list
+node build/cli.js config get serverUrl
+node build/cli.js tools [--json] [--desc] [--schema]
+node build/cli.js run <toolName> [args...] [--json]
+node build/cli.js chat [-m model]
+node build/cli.js agents [--json] | agents describe <name>
+node build/cli.js delegate <agentName> <task> [--json]
+node build/cli.js memory show | memory list | memory refresh
+node build/cli.js directory add <paths> | directory show
+```
+
+**Beállítások:** Rétegek: rendszer alapértelmezések → `~/.brunella/settings.json` (felhasználó) → `.brunella/settings.json` (projekt) → rendszer felülírás → env. Környezeti változók: `BRUNELLA_SERVER_URL`, `BRUNELLA_TELEMETRY_*`, `BRUNELLA_MODEL`, `BRUNELLA_SANDBOX`, `BRUNELLA_CLI_SYSTEM_*`. Sémá: `schemas/settings.schema.json`.
+
+**Telemetria:** `telemetry.enabled`, `telemetry.target` (local/gcp), `telemetry.outfile`. Lokális: NDJSON `~/.brunella/telemetry.log`. Gemini-szerű eseménynevek és env felülírások.
+
+**Kontextus/memory:** BRUNELLA.md / GEMINI.md felderítés (cwd → projekt gyökér, opcionális alkönyvtárak), `@path/to/file.md` importok. Parancsok: `memory show | list | refresh | add`.
+
+**Approval / sandbox:** `--approval-mode`, `tools.approvalMode`, `tools.allowed` / `tools.exclude`. `--sandbox` / `BRUNELLA_SANDBOX` / `tools.sandbox`.
+
+**Parancs-paritás mátrix:** `conductor/tracks/CLI_PARITY_MATRIX.md`. **Baseline (változatlan felületek):** `conductor/tracks/BASELINE_CLI.md`. **Referencia:** `conductor/tracks/Brunella-CLI.md.txt` (Gemini CLI parancslista), `conductor/tracks/config.md.txt`, `conductor/tracks/telemetria.md.txt`.
+
+**Tesztek:** `npm test` – config, telemetry, memory, hooks, skills, CLI config réteg. Smoke: `npm run smoke` (MCP ping + CLI `--help`, `config list`).
 
 ### 8. Smoke teszt
 MCP ping + AnythingLLM elerhetoseg ellenorzese:

@@ -1,13 +1,31 @@
 import fs from "node:fs";
 import path from "node:path";
 import process from "node:process";
+import { spawnSync } from "node:child_process";
 import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 
 const buildPath = path.join(process.cwd(), "build", "index.js");
+const cliPath = path.join(process.cwd(), "build", "cli.js");
 if (!fs.existsSync(buildPath)) {
   console.error("Build not found. Run: npm run build");
   process.exit(1);
+}
+
+function runCliSmoke() {
+  if (!fs.existsSync(cliPath)) return true;
+  const help = spawnSync(process.execPath, [cliPath, "--help"], { encoding: "utf8", cwd: process.cwd() });
+  if (help.status !== 0) {
+    console.error("CLI smoke: brunella --help failed");
+    return false;
+  }
+  const config = spawnSync(process.execPath, [cliPath, "config", "list"], { encoding: "utf8", cwd: process.cwd() });
+  if (config.status !== 0) {
+    console.error("CLI smoke: brunella config list failed");
+    return false;
+  }
+  console.log("CLI smoke: --help and config list OK");
+  return true;
 }
 
 const serverEnv = {
@@ -64,6 +82,7 @@ function findWorkspaceSlug(payload) {
 
 async function run() {
   let exitCode = 0;
+  if (!runCliSmoke()) exitCode = 1;
   try {
     await client.connect(transport);
     await client.ping();
