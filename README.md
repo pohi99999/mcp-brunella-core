@@ -1,29 +1,38 @@
 # 🧠 MCP Brunella Core
 
-Ez a Brunella Agent System (BAS) központi MCP szervere. Hibrid architektúrát valósít meg, amely ötvözi a Node.js alapú kiszolgálót, a Python alapú analitikát és a böngésző alapú adatgyűjtést.
+Ez a Brunella Agent System (BAS) központi MCP szervere és parancssori felülete. Hibrid architektúrát valósít meg, amely ötvözi a Node.js alapú kiszolgálót, a Python alapú analitikát és a böngésző alapú adatgyűjtést.
 
-## 📁 Struktúra és Dokumentáció
+## 🌟 Újdonságok (2026.01.29)
+- **Automatizált Indítás:** A `start.bat` egyetlen kattintással elindítja az Ollamát, AnythingLLM-et és a szervert.
+- **Brunella CLI v2:** Beépített Conductor támogatás és javított memória-kezelés.
+- **Swarm Ingestion:** Webes adatgyűjtés és tisztítás (Refiner) integrálva.
 
-A projekt naprakész dokumentációja az alábbi automatikusan generált fájlokban található:
+## 📁 Dokumentáció
+A projekt élő dokumentációja:
+- **[🌳 Könyvtárfa](./konyvtarfa.md):** Fájlszerkezet.
+- **[🛠️ Eszközkészlet](./Toolskeszlet.md):** Elérhető MCP eszközök és CLI parancsok.
+- **[📝 Változásnapló](./CHANGELOG.md):** Fejlesztési mérföldkövek.
+- **[🛤️ Tervek](./conductor/tracks.md):** Aktív és lezárt fejlesztési szálak.
 
-- **[🌳 Könyvtárfa (konyvtarfa.md)](./konyvtarfa.md):** A teljes fájlrendszer felépítése és leírása.
-- **[🛠️ Eszközkészlet (Toolskeszlet.md)](./Toolskeszlet.md):** Az elérhető MCP eszközök és ágensek listája.
-- **[🛤️ Fejlesztési Terv (conductor/tracks.md)](./conductor/tracks.md):** Aktív és lezárt fejlesztési szálak.
+## 🚀 Használat
 
-## 🚀 Indítás
+### Indítás
+Futtasd a `start.bat` fájlt a gyökérkönyvtárban.
 
-A rendszer indítása a `start.bat` segítségével történik, amely automatikusan kezeli:
-1.  Ollama szerver ellenőrzése/indítása.
-2.  AnythingLLM ellenőrzése.
-3.  MCP Szerver indítása (`npm start`).
+### CLI Parancsok
+A `brunella` parancs használatával vezérelheted a rendszert:
+```bash
+brunella conductor status   # Projekt állapot lekérdezése
+brunella memory list        # Memória fájlok listázása
+brunella run <tool>         # MCP eszköz futtatása
+brunella chat               # Chat az AI-val
+```
 
 ## 🔧 Technológia
-
-- **Nyelv:** TypeScript (Server), Python (Data Science).
-- **Kommunikáció:** MCP (Model Context Protocol) stdio-n keresztül.
-- **Adatbázis:** SQLite (better-sqlite3), LanceDB (Vector).
-- **Ingestion:** Playwright, Python Refiner.
+- **Core:** Node.js (TypeScript), Express, Socket.IO.
+- **AI:** Ollama (Llama 3.1), AnythingLLM.
+- **Automation:** Playwright, Python.
+- **Protocol:** MCP (Model Context Protocol).
 
 ## 🤝 Hozzájárulás
-
-Kérlek, kövesd a `conductor` mappában található protokollokat.
+Kérlek, kövesd a `conductor` mappában található protokollokat és a `workflow.md`-t.

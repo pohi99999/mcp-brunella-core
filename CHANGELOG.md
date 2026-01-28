@@ -1,0 +1,22 @@
+# Changelog - Brunella Agent System (BAS)
+
+## [2026-01-29] - Infrastructure & CLI Stabilization
+
+### 🚀 Hozzáadva (Added)
+- **Automatizált Start Script:** `start.bat` mostantól kezeli az Ollama, AnythingLLM és MCP Szerver indítását.
+- **Brunella CLI Conductor Integráció:** `/conductor:status` és `/conductor:setup` parancsok implementálva a CLI-be.
+- **Rendszer Dokumentáció:**
+  - `konyvtarfa.md`: Automatizált könyvtárszerkezet térkép.
+  - `Toolskeszlet.md`: MCP eszközök és CLI parancsok leltára.
+  - `mag.md`: Rendszer-szintű kontextus és útvonal-térkép.
+- **Swarm Ingestion:** `swarm_ingest` tool (Playwright + Python Refiner) webes adatgyűjtéshez.
+
+### 🔧 Javítva (Fixed)
+- **CLI Entry Point:** A `bin` beállítás a `package.json`-ben most helyesen a `build/cli.js`-re mutat.
+- **Build Rendszer:** `src/cli.ts` helyes fordítása és `src/cli` mappa konfliktus feloldása.
+- **GitHub Sync:** A `.tmp.driveupload` miatti push hiba javítva (repo history tisztítás).
+- **TypeScript Fordítás:** PowerShell karakterkódolási hibák (`backtick`) kiküszöbölése a fájlírásoknál.
+
+### ⚙️ Infrastruktúra
+- **Python Környezet:** Helyes `.venv` és `python.exe` útvonalak beállítása a configban.
+- **Logging:** Abszolút útvonalak használata a Python scriptekben a `System32` írási hibák elkerülésére.
