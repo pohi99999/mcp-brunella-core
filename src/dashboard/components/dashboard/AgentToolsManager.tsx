@@ -187,19 +187,11 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
   }
 
   return (
-<<<<<<< Current (Your changes)
     <Card title="Agypiac – Ügynök lista és tool kezelő (Fehér Könyv).">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div className="space-y-1">
             <CardTitle className="flex items-center gap-2" title="Agypiac – Ügynök lista és tool kezelő">
-=======
-    <Card>
-      <CardHeader>
-        <div className="flex items-center justify-between">
-          <div className="space-y-1">
-            <CardTitle className="flex items-center gap-2">
->>>>>>> Incoming (Background Agent changes)
               <Toolbox size={24} weight="duotone" className="text-accent" />
               Agypiac – Agent Tool Kezelő
             </CardTitle>

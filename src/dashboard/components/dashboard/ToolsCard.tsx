@@ -113,6 +113,7 @@ export function ToolsCard() {
   };
 
   return (
+    <>
     <Card className="w-full">
       <CardHeader>
         <div className="flex items-center gap-2">
@@ -258,5 +259,6 @@ export function ToolsCard() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+    </>
   );
 }

@@ -5,6 +5,7 @@ import { chatWithOllama } from "../utils/llm.js";
 import { chatAnythingLLM, listAnythingLLMWorkspaces } from "../tools/anythingllm.js";
 import fs from "fs";
 import path from "path";
+import { DataScientistAgent } from "./DataScientistAgent.js";
 const logger = new Logger('agent-manager.log');
 export class AgentManager {
     agents = {};
@@ -26,6 +27,29 @@ export class AgentManager {
         }
     }
     registerBuiltInAgents() {
+        // 0. ADATTUDÓS (Data Scientist) - Persistent Service
+        const dataScientist = new DataScientistAgent();
+        this.registerAgent({
+            name: "data_scientist",
+            description: "ADATTUDÓS szerepkör. Nyers adatokat tisztít, strukturál és validál a 'refiner' logika alapján.",
+            capabilities: ["data_cleaning", "structuring", "validation"],
+            execute: async (task) => {
+                await logger.log(`[DataScientist] Task received: ${task}`);
+                // Treat the task as the raw content to refine
+                // Remove command prefixes if present
+                let content = task;
+                if (content.toLowerCase().startsWith("clean") || content.toLowerCase().startsWith("refine")) {
+                    content = content.replace(/^(clean|refine)\s*[:]?\s*/i, "");
+                }
+                const result = await dataScientist.refineData(content, 'agent_request');
+                if (result) {
+                    return `Adattisztítás Eredménye:\n${JSON.stringify(result, null, 2)}`;
+                }
+                else {
+                    return "Az adat zajnak minősült vagy nem releváns a rendszer számára (Low Relevance / Dropped).";
+                }
+            }
+        });
         // 1. KUTATÓ ÜGYNÖK (Research Agent)
         this.registerAgent({
             name: "researcher",
@@ -132,6 +156,9 @@ export class AgentManager {
                 await logger.log(`[Orchestrator] Task received: ${task}`);
                 const lowerTask = task.toLowerCase();
                 // Simple routing logic based on keywords
+                if (lowerTask.includes("tisztítsd") || lowerTask.includes("szűrd") || lowerTask.includes("refine") || lowerTask.includes("clean")) {
+                    return await this.delegate("data_scientist", task);
+                }
                 if (lowerTask.includes("python") || lowerTask.includes("számold") || lowerTask.includes("adat")) {
                     return await this.delegate("python_developer", task);
                 }
@@ -187,6 +214,7 @@ Available Agents:
 - ops: Monitoring logs, metrics, system commands.
 - node_developer: Writing/executing Node.js code.
 - python_developer: Writing/executing Python code.
+- data_scientist: Cleaning and structuring raw text data (refining).
 - researcher: Searching knowledge base (RAG).
 - integrator: Interacting with AnythingLLM.
 

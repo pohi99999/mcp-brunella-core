@@ -358,6 +358,25 @@ export async function startWebServer() {
     httpServer.listen(PORT, () => {
         console.log(`🌐 Web UI: http://localhost:${PORT}`);
     });
+
+    // Graceful Shutdown
+    const shutdown = () => {
+        console.log('Shutting down Web Server...');
+        io.close();
+        httpServer.close();
+        mcpSessions.forEach(({ transport }) => {
+            // SDK doesn't always expose close, but we can try ending response
+            try {
+                // @ts-ignore
+                if (transport.res) transport.res.end();
+            } catch { }
+        });
+        mcpSessions.clear();
+        process.exit(0);
+    };
+
+    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', shutdown);
 }
 
 async function emitToolsUpdate(socket: any) {

@@ -91,6 +91,26 @@ export class PythonShell extends EventEmitter {
         this.buffer += data;
     }
 
+    public async loadScript(scriptPath: string): Promise<void> {
+        if (!this.process || !this.isReady) {
+            await this.start();
+        }
+
+        try {
+            // Use python's exec to load the file, avoiding interactive mode indentation issues
+            // Ensure forward slashes for cross-platform compatibility in python string
+            const normalizedPath = scriptPath.replace(/\\/g, '/');
+            const loadCommand = `exec(open('${normalizedPath}', encoding='utf-8').read())`;
+            const result = await this.execute(loadCommand);
+
+            if (result.includes("Traceback") || result.includes("Error:")) {
+                 throw new Error(`Python error during load: ${result}`);
+            }
+        } catch (error: any) {
+            throw new Error(`Failed to load script ${scriptPath}: ${error.message}`);
+        }
+    }
+
     public async execute(code: string): Promise<string> {
         if (!this.process || !this.isReady) {
             await this.start();

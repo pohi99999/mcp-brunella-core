@@ -4,7 +4,7 @@ import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import agentsRegistry from '@/agents/registry.json';
+import agentsRegistry from '../../../agents/registry.json';
 import { FunnelSimple, MagnifyingGlass, CheckCircle, XCircle } from '@phosphor-icons/react';
 
 type AgentItem = (typeof agentsRegistry)['agents'][number];

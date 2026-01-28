@@ -8,6 +8,7 @@ const BACKEND_URL = 'http://localhost:3000'
 export function useMCP() {
   const socketRef = useRef<Socket | null>(null)
   const {
+    isConnected,
     setConnected,
     addLog,
     setServerState,
@@ -222,6 +223,6 @@ export function useMCP() {
     runTool,
     startMcpServer,
     stopMcpServer,
-    isConnected: socketRef.current?.connected ?? false
+    isConnected
   }
 }
