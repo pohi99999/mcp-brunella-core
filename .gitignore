@@ -1,0 +1,9 @@
+node_modules/
+build/
+logs/
+test_build/
+.tmp.driveupload/
+.vs/
+__pycache__/
+*.tmp
+*.pyc

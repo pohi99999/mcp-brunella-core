@@ -1,0 +1,46 @@
+# Projekt Nyomkövetés (Tracks)
+
+Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál független egységként működik saját tervvel.
+
+### 🔧 Aktív Szálak (Active Tracks)
+
+- [~] **Documentation & Infrastructure Synchronization (2026-01-29):**
+  - **Cél:** Könyvtárfa (`konyvtarfa.md`), Eszközkészlet (`Toolskeszlet.md`) és GitHub szinkronizáció. Start script automatizálás.
+  - 📂 *[./tracks/docs_infra_sync_20260129/](./tracks/docs_infra_sync_20260129/)*
+
+---
+
+### ✅ Lezárt Szálak (Completed Tracks)
+
+- [x] **Swarm Ingestion Foundation (2026-01-28):**
+  - **Eredmény:** Harvester Swarm alapok kész. `swarm_ingest` tool implementálva (Playwright -> Python Refiner -> Knowledge Store). POC sikeresen lefutott.
+  - 📂 *[./tracks/swarm_ingestion_20260128/](./tracks/swarm_ingestion_20260128/)*
+
+- [x] **Comprehensive Testing & Fix (2026-01-28):**
+  - **Eredmény:** Szigorú tesztelés sikeres. Javított hibák: `__dirname` ES modul hiba, hiányzó agent regisztráció, Ollama connectivity és .env betöltés.
+  - 📂 *[./tracks/comprehensive_testing_20260128/](./tracks/comprehensive_testing_20260128/)*
+
+- [x] **Functional Restoration (2026-01-28):**
+
+- [x] **Functional Restoration (2026-01-28):**
+
+- [x] **System Recovery & Refactor (2026-01-28):**
+  - **Eredmény:** Build sikeres (0 hiba). Szerver elindul. Hiányzó modulok (LLM, ToolManager) stub-olva.
+  - **Következő lépés:** Funkcionalitás visszaépítése (LLM kliens, MCP integráció).
+  - 📂 *[./tracks/system_recovery_20260128/](./tracks/system_recovery_20260128/)*
+
+- [x] **System Audit & Discovery (2026-01-28):**
+  - **Eredmény:** 🔴 KRITIKUS HIBA feltárva. A build nem futott le, fájlstruktúra inkonzisztens volt.
+  - 📂 *[./tracks/system_audit_20260128/](./tracks/system_audit_20260128/)*
+
+- [x] **Core Init:** Cogella Core alapstruktúra
+- [x] **CLI:** Brunella CLI Megvalósítás
+- [x] **Ops Agent:** Monitor toolok
+- [x] **Open Interpreter:** Perzisztens Python Shell
+
+---
+
+### ⏳ Szüneteltetett / Integrált Szálak
+
+- [ ] **Dashboard & CLI SSE Fix (2026-01-27/28):**
+  - *Átvezetve az Audit és Recovery szálakba.*

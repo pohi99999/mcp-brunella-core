@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "brunella-core": {
+      "command": "",
+      "args": [
+        "node"
+      ]
+    }
+  }
+}

@@ -1,0 +1,46 @@
+[
+  {
+    "name": "github",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-github"
+    ],
+    "env": {
+      "GITHUB_PERSONAL_ACCESS_TOKEN": ""
+    }
+  },
+  {
+    "name": "chrome",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-chrome-devtools"
+    ]
+  },
+  {
+    "name": "computer-use",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-computer-use"
+    ]
+  },
+  {
+    "name": "docker",
+    "command": "docker",
+    "args": [
+      "run",
+      "-i",
+      "--rm",
+      "mcp/docker"
+    ]
+  },
+  {
+    "name": "brunella-core",
+    "command": "node",
+    "args": [
+      "./build/index.js"
+    ]
+  }
+]

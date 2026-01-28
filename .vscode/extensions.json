@@ -1,0 +1,6 @@
+{
+    "recommendations": [
+        "devsense.composer-php-vscode",
+        "ms-azuretools.vscode-docker"
+    ]
+}

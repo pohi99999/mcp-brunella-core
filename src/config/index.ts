@@ -1,0 +1,35 @@
+import path from 'path';
+
+export const config = {
+  workspaceRoot: 'F:\\\\[ACTIVE]_mcp-brunella-core',
+  allowedRoots: [
+    '00_BAS_SYSTEM',
+    '00_INBOX',
+    '01_CONTEXT',
+    '02_PROJECTS',
+    '03_LIBRARY',
+    '04_ARCHIVE',
+    '05_CONFIG',
+    '06_CORE',
+    '07_KNOWLEDGE_BASE',
+    '08_SCRIPTS',
+    '99_SYSTEM_LOGS'
+  ],
+  denyContains: [
+    '09_SECRETS',
+    '.env',
+    '.pem',
+    '.p12',
+    'client_secret',
+    'credentials',
+    'token',
+    'id_rsa',
+    'id_ed25519'
+  ],
+  maxReadBytes: 400000, // 400KB
+  maxFileBytesForSearch: 2000000, // 2MB
+  systemLogDir: 'F:\\\\[ACTIVE]_mcp-brunella-core\\\\logs',
+  anythingllmBaseUrl: process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001',
+  anythingllmWorkspace: process.env.ANYTHINGLLM_WORKSPACE || '',
+  anythingllmApiKey: process.env.ANYTHINGLLM_API_KEY || ''
+};

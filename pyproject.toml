@@ -1,0 +1,12 @@
+[project]
+name = "cogella-core"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi>=0.128.0",
+    "fastmcp>=2.14.3",
+    "httpx>=0.28.1",
+    "uvicorn>=0.40.0",
+]

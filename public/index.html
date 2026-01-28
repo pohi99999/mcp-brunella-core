@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="hu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brunella Command Center v2.0</title>
+    <style>
+        :root {
+            --bg-dark: #0f0f0f;
+            --panel-bg: #1a1a1a;
+            --accent: #00d4ff;
+            --text: #e0e0e0;
+            --border: #333;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text);
+            display: flex;
+            height: 100vh;
+        }
+
+        /* Dashboard Layout */
+        .app-container {
+            display: grid;
+            grid-template-columns: 300px 1fr 350px;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Sidebar Panels */
+        .panel {
+            background-color: var(--panel-bg);
+            border-right: 1px solid var(--border);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 15px;
+            background-color: #222;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Middle Chat Area */
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-dark);
+        }
+
+        #chat-window {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .msg {
+            padding: 10px 15px;
+            border-radius: 8px;
+            max-width: 80%;
+            word-wrap: break-word;
+        }
+
+        .msg.user { align-self: flex-end; background-color: #005f73; }
+        .msg.bot { align-self: flex-start; background-color: #333; }
+        .msg.log { font-family: monospace; font-size: 0.8rem; opacity: 0.7; border-left: 2px solid var(--accent); }
+
+        .input-box {
+            padding: 20px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            gap: 10px;
+        }
+
+        input {
+            flex-grow: 1;
+            background: #252525;
+            border: 1px solid var(--border);
+            padding: 12px;
+            border-radius: 5px;
+            color: white;
+        }
+
+        /* Right Panel (Widgets) */
+        .right-panel {
+            border-left: 1px solid var(--border);
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .widget {
+            background: #222;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .widget-title { color: var(--accent); font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; }
+
+        .data-item { font-size: 0.85rem; padding: 5px 0; border-bottom: 1px solid #333; }
+
+        /* Pipeline Visualizer */
+        #pipeline-status {
+            display: flex;
+            gap: 5px;
+            margin-top: 10px;
+        }
+        .step { width: 20px; height: 5px; background: #444; border-radius: 2px; }
+        .step.active { background: var(--accent); box-shadow: 0 0 10px var(--accent); }
+
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <!-- Left: Workspace & Context -->
+    <div class="panel">
+        <div class="panel-header">📂 MUNKATERÜLET</div>
+        <div style="padding: 15px; font-size: 0.9rem;">
+            <div><strong>Root:</strong> Brunella_es_en</div>
+            <div id="file-list" style="margin-top: 10px; opacity: 0.6;">Loading files...</div>
+        </div>
+    </div>
+
+    <!-- Middle: Chat -->
+    <div class="chat-area">
+        <div class="panel-header">
+            <span>🤖 BRUNELLA CORE 3.0</span>
+            <div id="pipeline-status">
+                <div class="step"></div>
+                <div class="step"></div>
+                <div class="step"></div>
+                <div class="step"></div>
+            </div>
+        </div>
+        <div id="chat-window"></div>
+        <div class="input-box">
+            <input type="text" id="user-input" placeholder="Parancs vagy kérdés...">
+            <button onclick="send()">KÜLDÉS</button>
+        </div>
+    </div>
+
+    <!-- Right: Widgets -->
+    <div class="panel right-panel">
+        <div class="widget">
+            <div class="widget-title">🗓️ NAPTÁR</div>
+            <div id="calendar-widget" style="font-size: 0.8rem;">Nincs aktív integráció.</div>
+        </div>
+        <div class="widget">
+            <div class="widget-title">✉️ GMAIL</div>
+            <div id="gmail-widget" style="font-size: 0.8rem;">Várakozás adatokra...</div>
+        </div>
+        <div class="widget">
+            <div class="widget-title">🚀 RENDSZER</div>
+            <div id="sys-info" style="font-size: 0.8rem;">
+                CPU: Ryzen 7 5800X<br>
+                GPU: RTX 3060<br>
+                RAM: <span id="ram-val">...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+    const socket = io();
+    const chatWindow = document.getElementById('chat-window');
+    const userInput = document.getElementById('user-input');
+    const steps = document.querySelectorAll('.step');
+
+    socket.on('bot_message', (data) => {
+        addMsg(data.text, data.isUser ? 'user' : (data.isLog ? 'log' : 'bot'));
+        
+        // Handle Pipeline visualization
+        if (data.isLog) {
+            steps.forEach((s, i) => { if(i < 4) s.classList.add('active') }); // Dummy animation
+        } else {
+            steps.forEach(s => s.classList.remove('active'));
+        }
+    });
+
+    socket.on('system_status', (data) => {
+        document.getElementById('ram-val').textContent = data.memory;
+    });
+
+    function addMsg(text, type) {
+        const d = document.createElement('div');
+        d.className = `msg ${type}`;
+        d.innerText = text;
+        chatWindow.appendChild(d);
+        chatWindow.scrollTop = chatWindow.scrollHeight;
+    }
+
+    function send() {
+        const text = userInput.value;
+        if(!text) return;
+        socket.emit('user_message', { text });
+        userInput.value = '';
+    }
+
+    userInput.addEventListener('keypress', (e) => { if(e.key === 'Enter') send(); });
+</script>
+
+</body>
+</html>
