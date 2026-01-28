@@ -158,6 +158,36 @@ program.command('editor [path]').description('Set external editor preference').a
   console.log('Preferred editor:', configManager.get('general.preferredEditor') || chalk.dim('(not set)'));
 });
 
+// --- conductor
+const conductorCmd = program.command('conductor').description('Manage Conductor workflows');
+
+conductorCmd.command('status').description('Show current project status').action(() => {
+  const tracksPath = join(process.cwd(), 'conductor', 'tracks.md');
+  if (!existsSync(tracksPath)) {
+    console.log(chalk.red('Conductor not initialized (tracks.md missing). Run `conductor setup`.'));
+    return;
+  }
+  const content = readFileSync(tracksPath, 'utf-8');
+  console.log(chalk.bold('Conductor Status:'));
+  console.log(content.split('---')[0]); // Show active tracks section
+});
+
+conductorCmd.command('setup').description('Initialize Conductor').action(() => {
+  const conductorDir = join(process.cwd(), 'conductor');
+  if (!existsSync(conductorDir)) {
+    // Basic scaffold would go here, but for now just check
+    console.log(chalk.yellow('Conductor directory missing. Please initialize manually or use the agent to setup.'));
+  } else {
+    console.log(chalk.green('Conductor directory exists.'));
+  }
+});
+
+conductorCmd.command('newTrack <name>').description('Create a new track').action((name: string) => {
+    // Stub for now - ideally delegates to an agent or creates file structure
+    console.log(chalk.dim(`Creating track '${name}'... (implemented by Agent)`));
+    // Here we could call client.callTool('agent_delegate', { agent: 'Conductor', task: 'new track...' })
+});
+
 // --- help
 program.command('help').description('Show help for Brunella CLI').action(() => {
   program.outputHelp();

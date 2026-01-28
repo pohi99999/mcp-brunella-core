@@ -2,15 +2,17 @@
 
 Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál független egységként működik saját tervvel.
 
-### 🔧 Aktív Szálak (Active Tracks)
-
-- [~] **Documentation & Infrastructure Synchronization (2026-01-29):**
-  - **Cél:** Könyvtárfa (`konyvtarfa.md`), Eszközkészlet (`Toolskeszlet.md`) és GitHub szinkronizáció. Start script automatizálás.
-  - 📂 *[./tracks/docs_infra_sync_20260129/](./tracks/docs_infra_sync_20260129/)*
-
----
-
 ### ✅ Lezárt Szálak (Completed Tracks)
+
+- [x] **Brunella CLI Verification & Parity (2026-01-29):**
+  - **Eredmény:** `src/cli.ts` javítva, `package.json` bin korrigálva. Conductor parancsok (`status`, `setup`) implementálva. Memória és Tools funkciók tesztelve. Dokumentáció frissítve.
+  - 📂 *[./tracks/cli_verification_20260129/](./tracks/cli_verification_20260129/)*
+
+- [x] **Documentation & Infrastructure Synchronization (2026-01-29):**
+
+- [x] **Documentation & Infrastructure Synchronization (2026-01-29):**
+  - **Eredmény:** Teljes rendszer-dokumentáció (`konyvtarfa.md`, `Toolskeszlet.md`, `mag.md`) automatizálva. GitHub szinkronizáció helyreállítva. `start.bat` integrálva Ollama/AnythingLLM-mel.
+  - 📂 *[./tracks/docs_infra_sync_20260129/](./tracks/docs_infra_sync_20260129/)*
 
 - [x] **Swarm Ingestion Foundation (2026-01-28):**
   - **Eredmény:** Harvester Swarm alapok kész. `swarm_ingest` tool implementálva (Playwright -> Python Refiner -> Knowledge Store). POC sikeresen lefutott.

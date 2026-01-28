@@ -5,7 +5,7 @@
   "type": "module",
   "main": "build/index.js",
   "bin": {
-    "brunella": "./build/cli/index.js"
+    "brunella": "./build/cli.js"
   },
   "scripts": {
     "build": "tsc",
