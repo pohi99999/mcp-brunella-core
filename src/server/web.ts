@@ -56,14 +56,18 @@ export async function startWebServer() {
         const totalMem = os.totalmem();
         const freeMem = os.freemem();
         io.emit('metrics_update', {
-            requestsPerMinute: 0,
+            requestsPerMinute: 0, // TODO: Track requests
             activeConnections: io.sockets.sockets.size,
-            errorRate: 0,
+            errorRate: 0, // TODO: Track errors
             averageResponseTime: 0,
-            cpuUsage: 0, 
+            cpuUsage: 0, // TODO: Use os-utils for CPU
             memoryUsage: ((totalMem - freeMem) / totalMem) * 100
         });
         io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
+        
+        // Push Agent & Tool status updates
+        io.emit('agent_update', agentManager.listAgentDefinitions());
+        io.emit('tools_update', toolManager.getToolDefinitions());
     }, 5000);
 
     const mcpSessions = new Map<string, ActiveTransport>();

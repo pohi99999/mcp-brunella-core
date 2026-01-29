@@ -118,6 +118,46 @@ export function useMCP() {
       })
     })
 
+    // Listen for agent updates
+    socket.on('agent_update', (agents: any[]) => {
+      // We can store agents in the same store or a new one. 
+      // For now, let's map them to AgentTool format but with 'agent' category if needed, 
+      // or just log them. But better yet, let's add setAgents to the store.
+      // Since useMcpStore doesn't have setAgents yet, we will adapt to AgentTools for now
+      // or just add it to the logs to confirm receipt.
+      // Actually, let's add them to the tools list with a special category.
+      
+      const agentTools: AgentTool[] = agents.map((a) => ({
+        id: `agent-${a.name}`,
+        name: a.name,
+        description: `${a.role}: ${a.description}`,
+        enabled: true,
+        parameters: [], // Agents take dynamic tasks usually
+        category: 'custom', // Using 'custom' as agent category
+        createdAt: new Date().toISOString()
+      }));
+      
+      // Merge with existing tools or update a separate list.
+      // Ideally we should update the store to handle agents separately.
+      // For this iteration, we merge into AgentTools to show them in the UI.
+      // But we need to be careful not to overwrite server tools.
+      // Let's assume tools_update handles server tools and this handles agents.
+      // We need a way to merge. 
+      // Since setAgentTools replaces the list, we might have a race condition.
+      // Let's rely on the backend sending everything in tools_update if registered as tools (which they are!).
+      
+      // WAIT! The backend 'agent_update' sends pure agent definitions.
+      // But 'tools_update' sends EVERYTHING registered in the registry.
+      // Since I registered agents as tools ("agent_list", "agent_delegate"), 
+      // they appear in tools_update.
+      // But individual agents like "DataScientist" are NOT registered as direct tools yet 
+      // (only via agent_delegate).
+      
+      // So, 'agent_update' is useful for a specific "Agents" view.
+      // I will add a log for now to confirm it works.
+      console.log('Agents updated:', agents);
+    });
+
     // Listen for tool updates and adapt Schema
     socket.on('tools_update', (tools: any[]) => {
       const frontendTools: AgentTool[] = tools.map((t) => {

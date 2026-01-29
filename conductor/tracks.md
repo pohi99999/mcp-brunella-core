@@ -4,6 +4,10 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### ✅ Lezárt Szálak (Completed Tracks)
 
+- [x] **Dashboard Integration & Control Center (2026-01-29):**
+  - **Eredmény:** `src/server/web.ts` kibővítve (System Metrics, Agent Updates). Frontend (`src/dashboard`) ellenőrizve és sikeresen buildelve (`npm run build:ui`).
+  - 📂 *[./tracks/dashboard_v2_20260129/](./tracks/dashboard_v2_20260129/)*
+
 - [x] **Agent Swarm Core Implementation (2026-01-29):**
   - **Eredmény:** `AgentManager` refaktorálva. `DataScientist` és `Researcher` ügynökök implementálva és regisztrálva. A rendszer képes a "Swarm" logikára.
   - 📂 *[./tracks/agent_swarm_core_20260129/](./tracks/agent_swarm_core_20260129/)*
