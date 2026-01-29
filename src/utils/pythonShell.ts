@@ -32,7 +32,7 @@ except Exception as e:
             await fs.writeFile(tempPy, wrapperCode, 'utf-8');
 
             return new Promise((resolve, reject) => {
-                exec(`"${this.pythonPath}" "${tempPy}"`, async (error, stdout, stderr) => {
+                exec(`"${this.pythonPath}" "${tempPy}"`, { timeout: 60000, maxBuffer: 4 * 1024 * 1024 }, async (error, stdout, stderr) => {
                     await fs.unlink(tempIn).catch(() => {});
                     await fs.unlink(tempPy).catch(() => {});
                     if (error) { reject(stderr || error.message); return; }

@@ -8,11 +8,14 @@ import { LogViewer } from '@/components/dashboard/LogViewer'
 import { ConfigEditor } from '@/components/dashboard/ConfigEditor'
 import { ChatInterface } from '@/components/dashboard/ChatInterface'
 import { AgentToolsManager } from '@/components/dashboard/AgentToolsManager'
+import { SystemHealthCard } from '@/components/dashboard/SystemHealthCard'
+import { AnythingLLMIntegration } from '@/components/dashboard/AnythingLLMIntegration'
 import { LoginForm } from '@/components/auth/LoginForm'
 import { UserProfile } from '@/components/auth/UserProfile'
 import { ServerState, LogEntry, ConfigItem, ServerMetrics, User, AgentTool } from '@/lib/types'
 import { useMcpStore } from '@/lib/mcpStore'
 import { useMCP } from '@/hooks/useMCP'
+import { useDashboardData } from '@/hooks/useDashboardData'
 import { canPerformAction } from '@/lib/auth'
 import { externalApiService } from '@/lib/externalApiService'
 import { ChartLine, Terminal, Gear, ChatCircle, Toolbox } from '@phosphor-icons/react'
@@ -32,6 +35,9 @@ function App() {
   } = useMcpStore()
   
   const { sendMessage } = useMCP()
+
+  // Initialize dashboard data from backend API
+  useDashboardData();
 
   const currentUser = user ?? null
   const currentServerState = serverState
@@ -153,6 +159,10 @@ function App() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <SystemHealthCard />
+              <AnythingLLMIntegration />
+            </div>
             <StatusCard serverState={currentServerState} />
             <ControlPanel
               status={currentServerState.status}

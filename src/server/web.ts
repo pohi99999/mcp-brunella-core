@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import os from 'os';
+import fetch from 'node-fetch';
 import { Logger } from '../utils/logger.js';
 import { initDb, saveMessage, getMessages, createChat, DbMessage } from '../utils/db.js';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -17,6 +18,36 @@ import { agentManager } from '../agents/AgentManager.js';
 
 const logger = new Logger('web_ui.log');
 const configManager = new ConfigManager();
+
+// Health check helper functions
+async function checkOllamaHealth(): Promise<boolean> {
+    try {
+        const baseUrl = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';
+        const response = await fetch(`${baseUrl}/api/tags`, { 
+            signal: AbortSignal.timeout(3000) 
+        });
+        return response.ok;
+    } catch (e) {
+        return false;
+    }
+}
+
+async function checkAnythingLLMHealth(): Promise<boolean> {
+    try {
+        const baseUrl = process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001';
+        const apiKey = process.env.ANYTHINGLLM_API_KEY;
+
+        if (!apiKey) return false;
+
+        const response = await fetch(`${baseUrl}/api/v1/workspaces`, {
+            headers: { 'Authorization': `Bearer ${apiKey}` },
+            signal: AbortSignal.timeout(10000)  // Increased from 3000 to 10000ms (10 sec)
+        });
+        return response.ok;
+    } catch (e) {
+        return false;
+    }
+}
 
 interface ActiveTransport {
     transport: SSEServerTransport;
@@ -68,6 +99,7 @@ export async function startWebServer() {
         // Push Agent & Tool status updates
         io.emit('agent_update', agentManager.listAgentDefinitions());
         io.emit('tools_update', toolManager.getToolDefinitions());
+        io.emit('tasks_update', agentManager.getAllTasks());
     }, 5000);
 
     const mcpSessions = new Map<string, ActiveTransport>();
@@ -81,6 +113,7 @@ export async function startWebServer() {
         });
 
         registerAllTools(server);
+        logger.info(`Registered Agents after init: ${JSON.stringify(agentManager.listAgentDefinitions())}`);
         mcpSessions.set(sessionId, { transport, server });
 
         res.on('close', () => {
@@ -98,6 +131,234 @@ export async function startWebServer() {
         }
         const { transport } = mcpSessions.get(sessionId)!;
         await transport.handlePostMessage(req, res);
+    });
+
+    // REST API Endpoints for Dashboard
+
+    // Health check endpoint
+    app.get('/api/health', async (req, res) => {
+        try {
+            const ollamaHealthy = await checkOllamaHealth();
+            const anythingLLMHealthy = await checkAnythingLLMHealth();
+
+            res.json({
+                status: 'ok',
+                timestamp: new Date().toISOString(),
+                services: {
+                    ollama: ollamaHealthy ? 'healthy' : 'unhealthy',
+                    anythingllm: anythingLLMHealthy ? 'healthy' : 'unhealthy',
+                    agents: agentManager.listAgents().length > 0 ? 'healthy' : 'no_agents',
+                    mcp: mcpProcessManager.getServersStatus().length > 0 ? 'healthy' : 'no_servers'
+                }
+            });
+        } catch (e: any) {
+            res.status(500).json({ status: 'error', message: e.message });
+        }
+    });
+
+    // Agents API
+    app.get('/api/agents', (req, res) => {
+        try {
+            const agents = agentManager.listAgentDefinitions();
+            res.json({ agents });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.post('/api/agents/:agentName/execute', async (req, res) => {
+        try {
+            const { agentName } = req.params;
+            const { task, context } = req.body;
+
+            if (!task) {
+                res.status(400).json({ error: 'Task is required' });
+                return;
+            }
+
+            const result = await agentManager.delegate(agentName, task, context);
+            res.json({ result });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    // Tasks API
+    app.get('/api/tasks', (req, res) => {
+        try {
+            const tasks = agentManager.getAllTasks();
+            res.json({ tasks });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.post('/api/tasks', async (req, res) => {
+        try {
+            const { description, agentName, context, parentId } = req.body;
+
+            if (!description || !agentName) {
+                res.status(400).json({ error: 'Description and agentName are required' });
+                return;
+            }
+
+            const taskId = agentManager.queueTask(description, agentName, context, parentId);
+            res.json({ taskId, status: 'queued' });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    // Ollama API
+    app.get('/api/ollama/models', async (req, res) => {
+        try {
+            const baseUrl = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';
+            const response = await fetch(`${baseUrl}/api/tags`, {
+                signal: AbortSignal.timeout(10000)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Ollama API error: ${response.statusText}`);
+            }
+
+            const data: any = await response.json();
+            res.json({ models: data.models || [] });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message, models: [] });
+        }
+    });
+
+    app.post('/api/ollama/generate', async (req, res) => {
+        try {
+            const { prompt, model, system } = req.body;
+
+            if (!prompt) {
+                res.status(400).json({ error: 'Prompt is required' });
+                return;
+            }
+
+            const baseUrl = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';
+            const selectedModel = model || process.env.OLLAMA_MODEL || 'gemma2:9b';
+
+            const response = await fetch(`${baseUrl}/api/generate`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    model: selectedModel,
+                    prompt,
+                    system,
+                    stream: false
+                }),
+                signal: AbortSignal.timeout(60000)
+            });
+
+            if (!response.ok) {
+                throw new Error(`Ollama API error: ${response.statusText}`);
+            }
+
+            const data = await response.json() as any;
+            res.json({ response: data.response });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    // AnythingLLM API
+    app.get('/api/anythingllm/workspaces', async (req, res) => {
+        try {
+            const baseUrl = process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001';
+            const apiKey = process.env.ANYTHINGLLM_API_KEY;
+
+            if (!apiKey) {
+                res.status(500).json({ error: 'AnythingLLM API key not configured', workspaces: [] });
+                return;
+            }
+
+            const response = await fetch(`${baseUrl}/api/v1/workspaces`, {
+                headers: { 'Authorization': `Bearer ${apiKey}` },
+                signal: AbortSignal.timeout(10000)
+            });
+
+            if (!response.ok) {
+                throw new Error(`AnythingLLM API error: ${response.statusText}`);
+            }
+
+            const data: any = await response.json();
+            res.json({ workspaces: data.workspaces || [] });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message, workspaces: [] });
+        }
+    });
+
+    app.post('/api/anythingllm/chat', async (req, res) => {
+        try {
+            const { workspace, message, mode } = req.body;
+
+            if (!workspace || !message) {
+                res.status(400).json({ error: 'Workspace and message are required' });
+                return;
+            }
+
+            const baseUrl = process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001';
+            const apiKey = process.env.ANYTHINGLLM_API_KEY;
+
+            if (!apiKey) {
+                res.status(500).json({ error: 'AnythingLLM API key not configured' });
+                return;
+            }
+
+            const response = await fetch(`${baseUrl}/api/v1/workspace/${workspace}/chat`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${apiKey}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ message, mode: mode || 'chat' }),
+                signal: AbortSignal.timeout(60000)
+            });
+
+            if (!response.ok) {
+                throw new Error(`AnythingLLM API error: ${response.statusText}`);
+            }
+
+            const data: any = await response.json();
+            res.json({ response: data.textResponse || data.response });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    // Chat messages API
+    app.get('/api/chat/messages', (req, res) => {
+        try {
+            const chatId = req.query.chatId as string || 'main-session';
+            const messages = getMessages(chatId);
+            res.json({ messages });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message, messages: [] });
+        }
+    });
+
+    // Tools API
+    app.get('/api/tools', (req, res) => {
+        try {
+            const tools = toolManager.getToolDefinitions();
+            res.json({ tools });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message, tools: [] });
+        }
+    });
+
+    app.post('/api/tools/:toolName/execute', async (req, res) => {
+        try {
+            const { toolName } = req.params;
+            const args = req.body;
+
+            const result = await toolManager.executeTool(toolName, args);
+            res.json({ result });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
     });
 
     app.use(express.static(path.join(process.cwd(), 'build', 'public')));

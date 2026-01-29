@@ -1,9 +1,18 @@
 import Database from 'better-sqlite3';
 import path from 'path';
+import fs from 'fs';
 import { config } from '../config/index.js';
 
+if (!fs.existsSync(config.systemLogDir)) {
+    fs.mkdirSync(config.systemLogDir, { recursive: true });
+}
+
 const dbPath = path.join(config.systemLogDir, 'brunella.db');
+console.error('DEBUG: DB Path:', dbPath);
 const db = new Database(dbPath);
+
+// Initialize Tables Immediately
+initDb();
 
 export interface DbMessage {
     role: string;
@@ -37,10 +46,15 @@ export function initDb() {
     db.exec(`
         CREATE TABLE IF NOT EXISTS tasks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            task_description TEXT,
-            result_code TEXT,
-            status TEXT,
-            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+            parent_id INTEGER,
+            agent_name TEXT,
+            description TEXT,
+            context TEXT,
+            status TEXT DEFAULT 'pending',
+            result TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(parent_id) REFERENCES tasks(id)
         )
     `);
 }

@@ -2,8 +2,45 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { Logger } from "../utils/logger.js";
 import { EventEmitter } from 'events';
+import { spawn } from 'child_process';
+import fs from 'fs/promises';
+import path from 'path';
+import { config } from '../config/index.js';
 
 const logger = new Logger('pipeline.log');
+const SANDBOX_TIMEOUT_MS = 5000;
+
+/**
+ * Run untrusted code in an isolated subprocess with timeout.
+ * Replaces vm2 (deprecated, critical CVEs). Uses temp file + node child_process.
+ */
+async function runCodeInSubprocess(code: string): Promise<{ success: boolean; error?: string }> {
+    const tmpDir = config.systemLogDir;
+    const tmpFile = path.join(tmpDir, `pipeline_sandbox_${Date.now()}_${process.pid}.js`);
+    try {
+        await fs.mkdir(tmpDir, { recursive: true });
+        await fs.writeFile(tmpFile, code, 'utf-8');
+        const result = await new Promise<{ success: boolean; error?: string }>((resolve) => {
+            const child = spawn(process.execPath, [tmpFile], {
+                stdio: ['ignore', 'pipe', 'pipe'],
+                timeout: SANDBOX_TIMEOUT_MS,
+                env: { ...process.env, NODE_OPTIONS: '--no-warnings' }
+            });
+            let stderr = '';
+            child.stderr?.on('data', (d) => { stderr += String(d); });
+            child.on('error', () => resolve({ success: false, error: 'Process spawn error' }));
+            child.on('close', (exitCode, signal) => {
+                if (exitCode === 0 && signal === null) return resolve({ success: true });
+                resolve({ success: false, error: (stderr || `exit ${exitCode} signal ${String(signal)}`).trim() });
+            });
+        });
+        await fs.unlink(tmpFile).catch(() => {});
+        return result;
+    } catch (e: any) {
+        await fs.unlink(tmpFile).catch(() => {});
+        return { success: false, error: e.message };
+    }
+}
 
 export class SelfHealingPipeline extends EventEmitter {
     private maxAttempts: number;
@@ -26,7 +63,6 @@ export class SelfHealingPipeline extends EventEmitter {
             attempt++;
             this.emit('progress', `🔄 Próbálkozás ${attempt}/${this.maxAttempts}...`);
 
-            // 1. GENERATE / FIX
             const prompt = attempt === 1
                 ? `Write a Node.js script for: ${task}. Output ONLY code, no markdown. No explanations.`
                 : `The previous code failed with: "${lastError}". Fix the code for: ${task}. Output ONLY code.`;
@@ -34,43 +70,37 @@ export class SelfHealingPipeline extends EventEmitter {
             this.emit('progress', `🧠 Kód generálása (Ollama)...`);
 
             try {
+                const controller = new AbortController();
+                const t = setTimeout(() => controller.abort(), 15000);
                 const ollamaRes = await fetch("http://localhost:11434/api/generate", {
                     method: "POST",
-                    body: JSON.stringify({ model: "qwen2.5-coder:1.5b", prompt: prompt, stream: false })
+                    body: JSON.stringify({ model: "qwen2.5-coder:1.5b", prompt, stream: false }),
+                    signal: controller.signal,
+                    headers: { 'Content-Type': 'application/json' }
                 });
+                clearTimeout(t);
 
                 if (!ollamaRes.ok) throw new Error("Ollama connection failed");
 
-                const ollamaData = await ollamaRes.json();
-                currentCode = ollamaData.response;
+                const ollamaData = await ollamaRes.json() as { response?: string };
+                currentCode = ollamaData.response ?? "";
 
-                // Cleanup markdown
                 currentCode = currentCode.replace(/```javascript/g, "").replace(/```js/g, "").replace(/```/g, "").trim();
 
                 this.emit('progress', `💻 Kód generálva (${currentCode.length} karakter).`);
+                this.emit('progress', `🧪 Tesztelés sandboxban (subprocess, ${SANDBOX_TIMEOUT_MS}ms timeout)...`);
 
-                // 2. VALIDATE (Run in Sandbox)
-                this.emit('progress', `🧪 Tesztelés sandboxban...`);
-
-                const { VM } = await import('vm2');
-                const vm = new VM({
-                    timeout: 2000,
-                    sandbox: {
-                        console: { log: () => { } }, // Mute console in check
-                        require: (pkg: string) => {
-                            if (['fs', 'path', 'http', 'net'].includes(pkg)) throw new Error(`Modul '${pkg}' tiltott a sandboxban.`);
-                            return {}; // Mock other requires
-                        }
-                    }
-                });
-
-                vm.run(currentCode);
-
-                success = true;
-                this.emit('progress', `✅ Teszt SIKERES!`);
-
+                const { success: ok, error } = await runCodeInSubprocess(currentCode);
+                if (ok) {
+                    success = true;
+                    this.emit('progress', `✅ Teszt SIKERES!`);
+                } else {
+                    lastError = error ?? 'Unknown error';
+                    this.emit('progress', `❌ Hiba történt: ${lastError}`);
+                    await logger.log(`Attempt ${attempt} failed: ${lastError}`);
+                }
             } catch (e: any) {
-                lastError = e.message;
+                lastError = e.message ?? String(e);
                 this.emit('progress', `❌ Hiba történt: ${lastError}`);
                 await logger.log(`Attempt ${attempt} failed: ${lastError}`);
             }
@@ -79,10 +109,9 @@ export class SelfHealingPipeline extends EventEmitter {
         if (success) {
             this.emit('complete', { success: true, code: currentCode });
             return currentCode;
-        } else {
-            this.emit('complete', { success: false, error: lastError });
-            throw new Error(`Pipeline failed after ${this.maxAttempts} attempts.`);
         }
+        this.emit('complete', { success: false, error: lastError });
+        throw new Error(`Pipeline failed after ${this.maxAttempts} attempts.`);
     }
 }
 

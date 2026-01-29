@@ -16,6 +16,7 @@ import { registerSwarmTools } from "../tools/swarmTools.js";
 import { agentManager } from "../agents/AgentManager.js";
 import { DataScientistAgent } from "../agents/DataScientistAgent.js";
 import { ResearcherAgent } from "../agents/ResearcherAgent.js";
+import { OrchestratorAgent } from "../agents/OrchestratorAgent.js";
 import { z } from "zod";
 
 // Tool list for dashboard display
@@ -42,6 +43,7 @@ export function registerAllTools(server: McpServer) {
     // Initialize Agents
     agentManager.registerAgent(new DataScientistAgent());
     agentManager.registerAgent(new ResearcherAgent());
+    agentManager.registerAgent(new OrchestratorAgent());
 
     // Register External Tools
     registerWorkspaceTools(server);

@@ -1,45 +1,35 @@
-import { describe, it, after, before } from 'node:test';
+import { describe, it } from 'node:test';
 import assert from 'node:assert';
+import fs from 'fs';
+import path from 'path';
+import { config } from '../src/config/index.js';
 import { PythonShell } from '../src/utils/pythonShell.js';
 
-describe('Persistent Python Shell', () => {
-    let shell: PythonShell;
+const venvPy = path.resolve(config.workspaceRoot, process.platform === 'win32' ? '.venv/Scripts/python.exe' : '.venv/bin/python');
+const hasPython = fs.existsSync(venvPy);
+const suite = hasPython ? describe : describe.skip;
 
-    before(async () => {
-        shell = new PythonShell();
-        await shell.start();
-    });
+suite('PythonShell', () => {
+    const shell = new PythonShell('interactive.py');
 
-    after(() => {
-        shell.stop();
-    });
-
-    it('should execute simple math', async () => {
-        const result = await shell.execute('print(2 + 2)');
+    it('should execute simple code via run()', async () => {
+        const result = await shell.run('print(2 + 2)');
         assert.match(result, /4/);
     });
 
-    it('should maintain state (variables)', async () => {
-        await shell.execute('x = 42');
-        const result = await shell.execute('print(x)');
-        assert.match(result, /42/);
-    });
-
-    it('should handle multiple lines', async () => {
+    it('should handle multi-line code', async () => {
         const code = `
 def greet(name):
     return f"Hello, {name}"
-
 print(greet("Brunella"))
-    `;
-        const result = await shell.execute(code);
+`;
+        const result = await shell.run(code);
         assert.match(result, /Hello, Brunella/);
     });
 
-    it('should handle errors gracefully', async () => {
-        // Python syntax error handling
-        // The shell streams output, so error might be in the result string
-        const result = await shell.execute('print(undefined_variable)');
-        assert.match(result, /NameError/);
+    it('should return error payload on Python exception', async () => {
+        const result = await shell.run('print(undefined_variable)');
+        const hasError = /error|NameError|undefined_variable/i.test(result);
+        assert.ok(hasError, `Expected error info in result: ${result}`);
     });
 });

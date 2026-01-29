@@ -1,7 +1,10 @@
 import path from 'path';
 
+const defaultWorkspace = process.cwd();
+const defaultLogDir = path.join(process.cwd(), 'logs');
+
 export const config = {
-  workspaceRoot: 'F:\\\\[ACTIVE]_mcp-brunella-core',
+  workspaceRoot: process.env.BRUNELLA_WORKSPACE_ROOT || defaultWorkspace,
   allowedRoots: [
     '00_BAS_SYSTEM',
     '00_INBOX',
@@ -28,7 +31,7 @@ export const config = {
   ],
   maxReadBytes: 400000, // 400KB
   maxFileBytesForSearch: 2000000, // 2MB
-  systemLogDir: 'F:\\\\[ACTIVE]_mcp-brunella-core\\\\logs',
+  systemLogDir: process.env.BRUNELLA_SYSTEM_LOG_DIR || defaultLogDir,
   anythingllmBaseUrl: process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001',
   anythingllmWorkspace: process.env.ANYTHINGLLM_WORKSPACE || '',
   anythingllmApiKey: process.env.ANYTHINGLLM_API_KEY || ''

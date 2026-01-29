@@ -1,7 +1,7 @@
 # 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
 
 Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
-**Generálva:** 2026. 01. 29. 0:50:30
+**Generálva:** 2026. 01. 29. 21:08:19
 
 ---
 
@@ -24,8 +24,7 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 - **calendar_list_events**: Lists upcoming events from Google Calendar.
 
 ## 📦 interpreter
-- **interpreter_run_python**: Runs Python code in a PERSISTENT shell (stateful). Variables are preserved between calls.
-- **interpreter_run_node**: Runs Node.js code in a VM2 sandbox (no fs/net access).
+- **interpreter_run_python**: Executes Python code in a persistent shell.
 
 ## 📦 julesCliTool
 - **jules_cli**: Executes Google Jules CLI commands (run, ask, task, agent).

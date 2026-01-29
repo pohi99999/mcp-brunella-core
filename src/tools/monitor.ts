@@ -46,17 +46,19 @@ export function registerMonitorTools(server: McpServer) {
 
   server.tool(
     "monitor_tail_logs",
-    "Reads the last N lines of a specified log file.",
+    "Reads the last N lines of a specified log file. log_file: name in logs/ (e.g. web_ui.log). lines: default 50.",
     {
-      log_file: z.string().describe("Name of the log file in logs/ dir (e.g. 'web_ui.log')"),
-      lines: z.number().default(50).describe("Number of lines to read")
+      log_file: z.string(),
+      lines: z.number().default(50)
     },
     async ({ log_file, lines }) => {
       const logDir = path.join(process.cwd(), 'logs');
-      const targetPath = path.join(logDir, log_file);
+      const targetPath = path.resolve(logDir, log_file);
+      const logDirResolved = path.resolve(logDir);
 
-      // Security check
-      if (!targetPath.startsWith(logDir)) {
+      // Security: prevent path traversal; ensure resolved path is under logDir
+      const relative = path.relative(logDirResolved, targetPath);
+      if (relative.startsWith('..') || path.isAbsolute(relative)) {
         return { isError: true, content: [{ type: "text", text: "Access denied." }] };
       }
 

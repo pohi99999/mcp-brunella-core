@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 01. 29. 0:30:57
+**Generálva:** 2026. 01. 29. 21:08:18
 **Script:** 
 
 ---
@@ -468,9 +468,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 plan.md
         - 📄 spec.md
     - 📂 **tracks**
+      - 📂 **agent_swarm_core_20260129**
+        - 📄 plan.md
+        - 📄 spec.md
+      - 📂 **autonomous_reasoning_20260129**
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **brunella_cli_replacement_20260121**
         - 📄 index.md
         - 📄 metadata.json
+        - 📄 plan.md
+        - 📄 spec.md
+      - 📂 **cli_verification_20260129**
         - 📄 plan.md
         - 📄 spec.md
       - 📂 **cogella_core_init_20260120**
@@ -484,6 +493,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **dashboard_mcp_native_binding_20260121**
         - 📄 index.md
         - 📄 metadata.json
+        - 📄 plan.md
+        - 📄 spec.md
+      - 📂 **dashboard_restoration_20260130**
+        - 📄 COMPLETION_REPORT.md
+        - 📄 plan.md
+        - 📄 spec.md
+      - 📂 **dashboard_v2_20260129**
         - 📄 plan.md
         - 📄 spec.md
       - 📂 **docs_infra_sync_20260129**
@@ -514,11 +530,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 CLI_PARITY_MATRIX.md
       - 📄 config.md.txt
       - 📄 telemetria.md.txt
+    - 📄 BAS_ARCHITECTURE_v2.md
     - 📄 Cocductornak_szeretettel.pdf
     - 📄 index.md
     - 📄 product-guidelines.md
     - 📄 product.md
     - 📄 setup_state.json
+    - 📄 SYSTEM_STATE_ANALYSIS_20260130.md
     - 📄 tech-stack.md
     - 📄 tracks.md
     - 📄 workflow.md
@@ -668,6 +686,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📂 **schemas**
     - 📄 settings.schema.json
   - 📂 **scripts**
+    - 📄 check_tasks.js
+    - 📄 conductor_diagnostics.mjs
+    - 📄 generate_tools_inventory.mjs
     - 📄 generate_tree.mjs
     - 📄 jules_check.mjs
     - 📄 smoke.mjs
@@ -677,7 +698,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **agents**
       - 📄 AgentManager.ts
       - 📄 DataScientistAgent.ts
+      - 📄 OrchestratorAgent.ts
       - 📄 registry.json
+      - 📄 ResearcherAgent.ts
       - 📄 types.ts
     - 📂 **config**
       - 📄 index.ts
@@ -695,6 +718,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📂 **dashboard**
           - 📄 AgentRegistryCard.tsx
           - 📄 AgentToolsManager.tsx
+          - 📄 AnythingLLMIntegration.tsx
           - 📄 ChatInterface.tsx
           - 📄 ConfigEditor.tsx
           - 📄 ControlPanel.tsx
@@ -702,6 +726,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 LogViewer.tsx
           - 📄 MetricsCard.tsx
           - 📄 StatusCard.tsx
+          - 📄 SystemHealthCard.tsx
           - 📄 ToolsCard.tsx
         - 📂 **ui**
           - 📄 accordion.tsx
@@ -752,8 +777,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 tooltip.tsx
       - 📂 **hooks**
         - 📄 use-mobile.ts
+        - 📄 useDashboardData.ts
         - 📄 useMCP.ts
       - 📂 **lib**
+        - 📄 apiService.ts
         - 📄 auth.ts
         - 📄 externalApiService.ts
         - 📄 mcpStore.ts
@@ -834,26 +861,38 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 telemetry.test.ts
   - 📂 **testing**
     - 📄 TEST_BOOK.md
+  - 📄 Adatközpont.lnk
   - 📄 AGENTS.md
+  - 📄 AnythingLLM
+  - 📄 Brunella
+  - 📄 CHANGELOG.md
   - 📄 commit_recovery.bat
   - 📄 commit_restoration.bat
   - 📄 commit_testing.bat
   - 📄 commit.bat
   - 📄 CONDUCTOR_PLAN.md
+  - 📄 DASHBOARD_INTEGRATION_REPORT.md
   - 📄 git_sync.ps1
-  - 📄 INTEGRATION_PLAN.md
   - 📄 JELENTES.md
+  - 📄 konyvtarfa.md
+  - 📄 mag.md
+  - 📄 Master_document.docx
   - 📄 mcp_servers.json
+  - 📄 Ollama
   - 📄 package.json
   - 📄 pull_model.js
   - 📄 pyproject.toml
   - 📄 README.md
+  - 📄 rendszer ellenorzes.md.txt
   - 📄 requirements.txt
   - 📄 start_brunella.ps1
+  - 📄 start.bat
   - 📄 szerver_log.md
   - 📄 tailwind.config.js
   - 📄 terv.md
+  - 📄 test_full_system.ps1
   - 📄 test_ollama.js
+  - 📄 Toolskeszlet.md
   - 📄 tsconfig.json
   - 📄 tsconfig.ui.json
   - 📄 vite.config.ts

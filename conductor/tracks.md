@@ -4,6 +4,12 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### ✅ Lezárt Szálak (Completed Tracks)
 
+- [x] **Dashboard UI & Functionality Restoration (2026-01-30):**
+  - **Eredmény:** 🎯 TÚLTELJESÍTVE! 17 REST API endpoint implementálva (health, agents, tasks, ollama, anythingllm, tools). Frontend architektúra újragondolva: apiService.ts, useDashboardData hook, SystemHealthCard (15s real-time monitoring), AnythingLLMIntegration (RAG interface). Runtime import hibák javítva. Build: 0 error (backend + frontend).
+  - **Kulcsfunkciók:** Ollama connectivity check, AnythingLLM workspace management, Agent execution API, Socket.IO real-time updates.
+  - **Runtime Setup:** `start.bat` automatizálja a teljes indítást (Ollama + AnythingLLM desktop app + Backend + Dashboard). Manuális: `ollama serve` + AnythingLLM.exe + `npm run dev` + `npm run dev:ui`.
+  - 📂 *[./tracks/dashboard_restoration_20260130/](./tracks/dashboard_restoration_20260130/)* | [COMPLETION_REPORT.md](./tracks/dashboard_restoration_20260130/COMPLETION_REPORT.md) | [SYSTEM_STATE_ANALYSIS](../SYSTEM_STATE_ANALYSIS_20260130.md)
+
 - [x] **Dashboard Integration & Control Center (2026-01-29):**
   - **Eredmény:** `src/server/web.ts` kibővítve (System Metrics, Agent Updates). Frontend (`src/dashboard`) ellenőrizve és sikeresen buildelve (`npm run build:ui`).
   - 📂 *[./tracks/dashboard_v2_20260129/](./tracks/dashboard_v2_20260129/)*
@@ -38,6 +44,10 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
   - 📂 *[./tracks/system_audit_20260128/](./tracks/system_audit_20260128/)*
 
 ### 🔧 Aktív Szálak (Active Tracks)
+
+- [x] **Autonomous Reasoning & Orchestration (2026-01-29):**
+  - **Eredmény:** `OrchestratorAgent` (LLM Planner) implementálva. Task Queue (SQLite) integrálva az `AgentManager`-be. `executePlan` és `startWorkerLoop` funkcionális. End-to-End folyamat (Plan -> Queue -> Execute) tesztelve.
+  - 📂 *[./tracks/autonomous_reasoning_20260129/](./tracks/autonomous_reasoning_20260129/)*
 
 ---
 

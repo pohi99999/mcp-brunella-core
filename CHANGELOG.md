@@ -1,5 +1,72 @@
 # Changelog - Brunella Agent System (BAS)
 
+## [2026-01-30] - Revízió, biztonság és tesztstabilitás
+
+### 🔒 Biztonság
+- **vm2 eltávolítva:** A kritikus CVE-ket tartalmazó, elavult vm2 sandboxot subprocess-alapú futtatás váltotta a `pipeline_self_healing_gen` toolban (temp fájl + `child_process.spawn` timeouttal).
+- **Path traversal javítva:** A `monitor_tail_logs` tool `path.resolve` + `path.relative` ellenőrzéssel biztosítja, hogy a log fájl a `logs/` alatt maradjon.
+- **SQL injection kiküszöbölve:** Az `AgentManager.executePlan` task lekérdezés paraméterezett (`?` placeholderek) lett.
+
+### 🔧 Javítva (Fixed)
+- **Config:** `workspaceRoot` és `systemLogDir` mostantól `BRUNELLA_WORKSPACE_ROOT` / `BRUNELLA_SYSTEM_LOG_DIR` env változókból vagy `process.cwd()` alapján.
+- **Fetch timeoutok:** Az Ollama és AnythingLLM API hívásokhoz (`/api/ollama/*`, `/api/anythingllm/*`) `AbortSignal.timeout` került.
+- **PythonShell:** `exec` timeout (60s) és `maxBuffer` beállítva.
+- **Monitor tool:** Zod schema egyszerűsítve (`.describe()` eltávolítva) az MCP SDK kompatibilitás érdekében.
+
+### 🧪 Tesztek
+- **`scripts/test_prepare.cjs`:** Új script; biztosítja a `test_build` és `logs` mappákat.
+- **Tesztfuttatás:** `npm test` a Core Tools (node --test) és a Monitor teszteket (ts-node) futtatja; a PythonShell tesztek `npm run test:python`-nel futtathatók (.venv szükséges).
+- **Pytest:** `test_dependencies` már nem követeli a `pytest_cov` dev függőséget.
+
+### 📦 Függőségek
+- **vm2** eltávolítva a `package.json`-ból.
+
+---
+
+## [2026-01-30] - Dashboard & System Integration Complete
+
+### 🚀 Hozzáadva (Added)
+- **Backend REST API Endpoints:**
+  - `/api/health` - System health check (Ollama, AnythingLLM, Agents, MCP)
+  - `/api/agents` - Agent list and execution endpoints
+  - `/api/tasks` - Task queue management (GET/POST)
+  - `/api/ollama/*` - Ollama models and generation
+  - `/api/anythingllm/*` - Workspace list and RAG chat
+  - `/api/chat/messages` - Chat history
+  - `/api/tools/*` - Tool list and execution
+
+- **Dashboard UI Components:**
+  - `SystemHealthCard.tsx` - Real-time health monitoring (15s refresh)
+  - `AnythingLLMIntegration.tsx` - Workspace selector + RAG interface
+  - `apiService.ts` - Centralized API communication module
+  - `useDashboardData.ts` - Automatic data initialization hook
+
+- **Integration Features:**
+  - Ollama connectivity check és model listing
+  - AnythingLLM workspace management from Dashboard
+  - Agent system fully connected to UI
+  - Socket.IO real-time updates (metrics, agents, tasks)
+
+### 🔧 Javítva (Fixed)
+- **TypeScript Type Safety:** node-fetch type annotations fixed
+- **Duplicate Code:** Removed duplicate functions in `useMCP.ts`
+- **Health Check:** Added async health check functions for external services
+- **Dashboard Layout:** Grid layout for Overview tab (SystemHealth + AnythingLLM)
+
+### 📋 Dokumentáció
+- **`DASHBOARD_INTEGRATION_REPORT.md`** - Teljes integrációs riport elkészítve
+  - API végpontok dokumentálva
+  - Frontend komponensek leírva
+  - Indítási útmutató
+  - Hibaelhárítási útmutató
+
+### ✅ Build Status
+- Backend build: 0 hiba
+- Dashboard build: 9.10s, sikeres
+- TypeScript type check: Passed
+
+---
+
 ## [2026-01-29] - Infrastructure & CLI Stabilization
 
 ### 🚀 Hozzáadva (Added)

@@ -118,3 +118,17 @@ export interface OllamaStatus {
   version?: string
   lastChecked: string
 }
+
+export interface PlanStep {
+  id: string
+  agent: string
+  description: string
+  status: 'pending' | 'running' | 'completed' | 'failed'
+  result?: any
+}
+
+export interface ExecutionPlan {
+  id: string
+  task: string
+  steps: PlanStep[]
+}
