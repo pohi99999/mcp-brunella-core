@@ -182,6 +182,22 @@ conductorCmd.command('setup').description('Initialize Conductor').action(() => {
   }
 });
 
+conductorCmd.command('check').description('Run System Diagnostics').action(() => {
+    try {
+        const scriptPath = join(process.cwd(), 'scripts', 'conductor_diagnostics.mjs');
+        if (existsSync(scriptPath)) {
+            // Use execSync to run it and pipe output
+            const { execSync } = require('child_process');
+            const output = execSync(`node "${scriptPath}"`, { encoding: 'utf-8' });
+            console.log(output);
+        } else {
+            console.log(chalk.red('Diagnostics script missing (scripts/conductor_diagnostics.mjs).'));
+        }
+    } catch (e: any) {
+        console.error(chalk.red('Diagnostics failed:'), e.message);
+    }
+});
+
 conductorCmd.command('newTrack <name>').description('Create a new track').action((name: string) => {
     // Stub for now - ideally delegates to an agent or creates file structure
     console.log(chalk.dim(`Creating track '${name}'... (implemented by Agent)`));

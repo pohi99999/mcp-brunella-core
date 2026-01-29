@@ -1,29 +1,14 @@
-import { z } from "zod";
-
 export interface IAgent {
     name: string;
+    role: string;
     description: string;
     capabilities: string[];
-    execute: (task: string, context?: any) => Promise<string>;
+    execute(task: string, context?: any): Promise<any>;
 }
 
-export interface AgentRegistry {
-    [key: string]: IAgent;
-}
-
-export interface PlanStep {
-    id: string;
-    description: string;
-    agent: string;
-    status: 'pending' | 'running' | 'completed' | 'failed';
-    result?: string;
-    dependencies?: string[];
-}
-
-export interface ExecutionPlan {
-    id: string; // Ha ez hiányzott
-    task?: string; // Ha a kódban "task"-ot használnak
-    goal?: string; // Ha "goal"-t
-    steps: PlanStep[];
-    status?: 'pending' | 'in_progress' | 'completed' | 'failed';
+export interface AgentResponse {
+    status: 'success' | 'error' | 'delegated';
+    data?: any;
+    error?: string;
+    nextStep?: string;
 }

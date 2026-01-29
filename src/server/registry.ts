@@ -14,6 +14,8 @@ import { registerAnythingLLMTools } from "../tools/anythingllm.js";
 import { registerMonitorTools } from "../tools/monitor.js";
 import { registerSwarmTools } from "../tools/swarmTools.js";
 import { agentManager } from "../agents/AgentManager.js";
+import { DataScientistAgent } from "../agents/DataScientistAgent.js";
+import { ResearcherAgent } from "../agents/ResearcherAgent.js";
 import { z } from "zod";
 
 // Tool list for dashboard display
@@ -37,6 +39,10 @@ const registeredToolsList: RegisteredToolInfo[] = [
 const toolHandlers = new Map<string, (args: any) => Promise<any>>();
 
 export function registerAllTools(server: McpServer) {
+    // Initialize Agents
+    agentManager.registerAgent(new DataScientistAgent());
+    agentManager.registerAgent(new ResearcherAgent());
+
     // Register External Tools
     registerWorkspaceTools(server);
     registerKnowledgeTools(server);

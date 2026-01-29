@@ -1,5 +1,12 @@
 # Workflow: The Data Flywheel & Phoenix Protocol
 
+## 0.0 SYSTEM INITIALIZATION (Karmesteri Indító Protokoll)
+**KÖTELEZŐ LÉPÉS:** Mielőtt bármilyen fejlesztési vagy elemzési feladatba kezdenél (Plan vagy Track olvasása előtt), futtasd le a diagnosztikát:
+```bash
+node scripts/conductor_diagnostics.mjs
+```
+Ennek eredménye alapján dönts a további lépésekről (pl. ha az Ollama áll, ne próbálj meg embeddelni).
+
 ## 1. Az Adat-Volán (Data Flywheel)
 1. **Gyűjtés (Harvesters):** A raj beküldi a nyers adatokat a `Raw Lake`-be.
 2. **Tisztítás (Refiners):** Az Adattudós ügynökök lefuttatják a `refiner_logic.py`-t.

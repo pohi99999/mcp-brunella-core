@@ -4,11 +4,13 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### ✅ Lezárt Szálak (Completed Tracks)
 
+- [x] **Agent Swarm Core Implementation (2026-01-29):**
+  - **Eredmény:** `AgentManager` refaktorálva. `DataScientist` és `Researcher` ügynökök implementálva és regisztrálva. A rendszer képes a "Swarm" logikára.
+  - 📂 *[./tracks/agent_swarm_core_20260129/](./tracks/agent_swarm_core_20260129/)*
+
 - [x] **Brunella CLI Verification & Parity (2026-01-29):**
   - **Eredmény:** `src/cli.ts` javítva, `package.json` bin korrigálva. Conductor parancsok (`status`, `setup`) implementálva. Memória és Tools funkciók tesztelve. Dokumentáció frissítve.
   - 📂 *[./tracks/cli_verification_20260129/](./tracks/cli_verification_20260129/)*
-
-- [x] **Documentation & Infrastructure Synchronization (2026-01-29):**
 
 - [x] **Documentation & Infrastructure Synchronization (2026-01-29):**
   - **Eredmény:** Teljes rendszer-dokumentáció (`konyvtarfa.md`, `Toolskeszlet.md`, `mag.md`) automatizálva. GitHub szinkronizáció helyreállítva. `start.bat` integrálva Ollama/AnythingLLM-mel.
@@ -22,10 +24,6 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
   - **Eredmény:** Szigorú tesztelés sikeres. Javított hibák: `__dirname` ES modul hiba, hiányzó agent regisztráció, Ollama connectivity és .env betöltés.
   - 📂 *[./tracks/comprehensive_testing_20260128/](./tracks/comprehensive_testing_20260128/)*
 
-- [x] **Functional Restoration (2026-01-28):**
-
-- [x] **Functional Restoration (2026-01-28):**
-
 - [x] **System Recovery & Refactor (2026-01-28):**
   - **Eredmény:** Build sikeres (0 hiba). Szerver elindul. Hiányzó modulok (LLM, ToolManager) stub-olva.
   - **Következő lépés:** Funkcionalitás visszaépítése (LLM kliens, MCP integráció).
@@ -35,10 +33,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
   - **Eredmény:** 🔴 KRITIKUS HIBA feltárva. A build nem futott le, fájlstruktúra inkonzisztens volt.
   - 📂 *[./tracks/system_audit_20260128/](./tracks/system_audit_20260128/)*
 
-- [x] **Core Init:** Cogella Core alapstruktúra
-- [x] **CLI:** Brunella CLI Megvalósítás
-- [x] **Ops Agent:** Monitor toolok
-- [x] **Open Interpreter:** Perzisztens Python Shell
+### 🔧 Aktív Szálak (Active Tracks)
 
 ---
 

@@ -142,7 +142,7 @@ export async function startWebServer() {
                 const plan = await agentManager.createPlan(userMsg);
                 socket.emit('plan_created', plan);
 
-                const result = await agentManager.executePlan(plan, (event, eventData) => {
+                const result = await agentManager.executePlan(plan, (event: any, eventData: any) => {
                     socket.emit(event, eventData);
                 });
 

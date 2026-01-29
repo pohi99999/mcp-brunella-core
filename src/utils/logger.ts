@@ -12,17 +12,26 @@ export class Logger {
     async log(message: string, meta?: any) {
         const timestamp = new Date().toISOString();
         const logEntry = `[${timestamp}] ${message} ${meta ? JSON.stringify(meta) : ''}\n`;
-        
         try {
-            // Ensure logs directory exists (redundant if ensured at startup but safe)
             await fs.mkdir(path.dirname(this.logFile), { recursive: true });
             await fs.appendFile(this.logFile, logEntry);
         } catch (error) {
             console.error(`Failed to write to log file: ${this.logFile}`, error);
         }
     }
+
+    info(message: string, meta?: any) {
+        return this.log(`[INFO] ${message}`, meta);
+    }
+
+    error(message: string, meta?: any) {
+        return this.log(`[ERROR] ${message}`, meta);
+    }
+
+    warn(message: string, meta?: any) {
+        return this.log(`[WARN] ${message}`, meta);
+    }
 }
 
 export const systemLogger = new Logger('system_commands.log');
 export const cliLogger = new Logger('cli_tools.log');
-

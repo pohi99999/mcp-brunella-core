@@ -1,74 +1,51 @@
+import { IAgent } from './types.js';
 import { PythonShell } from '../utils/pythonShell.js';
 import { Logger } from '../utils/logger.js';
 
-const logger = new Logger('data-scientist.log');
-
-export class DataScientistAgent {
+export class DataScientistAgent implements IAgent {
+    name = "DataScientist";
+    role = "Refiner";
+    description = "Cleans, structures, and validates raw data using Python logic.";
+    capabilities = ["clean_text", "extract_entities", "validate_data"];
+    
     private pythonShell: PythonShell;
-    private initialized: boolean = false;
+    private logger: Logger;
 
     constructor() {
-        this.pythonShell = new PythonShell();
+        this.pythonShell = new PythonShell('myai/refiner_logic.py');
+        this.logger = new Logger('data-scientist.log');
     }
 
-    private async init() {
-        if (this.initialized) return;
-        try {
-            await this.pythonShell.start();
-            await this.pythonShell.loadScript('myai/refiner_logic.py');
-            this.initialized = true;
-            logger.log("DataScientistAgent initialized with refiner logic.", 'info');
-        } catch (error) {
-            logger.log(`Failed to initialize DataScientistAgent: ${error}`, 'error');
-            throw error;
-        }
-    }
+    async execute(task: string, context?: any): Promise<any> {
+        this.logger.info(`Processing task: ${task}`);
 
-    /**
-     * Refines raw data using the Python Refiner logic.
-     * @param rawContent The text to process.
-     * @param source Source identifier (e.g. 'user', 'web').
-     * @returns Refined JSON object or null if dropped/error.
-     */
-    async refineData(rawContent: string, source: string = 'unknown') {
-        await this.init();
-        logger.log(`Adattisztítás megkezdése forrásból: ${source}`);
-
-        const payload = {
-            content: rawContent,
-            source: source
-        };
-
-        try {
-            // Using the global 'refiner' instance created in the python script
-            const pythonCommand = `print(json.dumps(refiner.process_data(${JSON.stringify(payload)})))`;
-            const result = await this.pythonShell.execute(pythonCommand);
-
-            // Attempt to parse result
-            try {
-                // The result string might contain newlines or whitespace
-                const cleanedResult = result.trim();
-                const parsedData = JSON.parse(cleanedResult);
-
-                if (parsedData) {
-                    logger.log("Sikeres zajszűrés.", 'info');
-                    return parsedData;
-                } else {
-                    logger.log("Az adat zajnak minősült vagy hiba történt (null return).", 'warn');
-                    return null;
-                }
-            } catch (parseError) {
-                logger.log(`Hiba a válasz parse-olásakor: ${result}`, 'error');
-                return null;
+        if (task.startsWith("refine:")) {
+            const rawContent = context?.content;
+            const source = context?.source || "unknown";
+            
+            if (!rawContent) {
+                return { status: "error", error: "No content provided for refinement." };
             }
 
-        } catch (error) {
-            logger.log(`Hiba az adattisztítás során: ${error}`, 'error');
-            return null;
+            // A PythonShell wrapperbe olyan kódot küldünk, ami importálja a refinert
+            const pythonCode = `
+from myai.refiner_logic import refiner
+payload = {"content": context.get("content"), "source": context.get("source")}
+result = refiner.process_data(payload)
+if result:
+    print(json.dumps(result))
+else:
+    print(json.dumps({"status": "REJECTED"}))
+`;
+            
+            try {
+                const resultStr = await this.pythonShell.run(pythonCode, { content: rawContent, source });
+                return JSON.parse(resultStr);
+            } catch (e: any) {
+                return { status: "error", error: e.message };
+            }
         }
-    }
-    
-    async stop() {
-        this.pythonShell.stop();
+
+        return { status: "error", error: "Unknown task." };
     }
 }
