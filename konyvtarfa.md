@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 01. 30. 2:24:43
+**Generálva:** 2026. 01. 30. 2:49:06
 **Script:** 
 
 ---
@@ -481,6 +481,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 metadata.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **cli_gemini_fication_20260130**
+        - 📄 plan.md
       - 📂 **cli_verification_20260129**
         - 📄 plan.md
         - 📄 spec.md
@@ -693,6 +695,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **agents**
       - 📄 AgentManager.ts
       - 📄 DataScientistAgent.ts
+      - 📄 DeveloperAgent.ts
       - 📄 EvaluatorAgent.ts
       - 📄 OrchestratorAgent.ts
       - 📄 registry.json
