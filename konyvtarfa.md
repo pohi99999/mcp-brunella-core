@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 01. 29. 21:08:18
+**Generálva:** 2026. 01. 30. 2:24:43
 **Script:** 
 
 ---
@@ -471,6 +471,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **agent_swarm_core_20260129**
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **ai_evaluator_self_healing_20260130**
+        - 📄 plan.md
       - 📂 **autonomous_reasoning_20260129**
         - 📄 plan.md
         - 📄 spec.md
@@ -502,9 +504,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **dashboard_v2_20260129**
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **docker_containerization_20260130**
+        - 📄 plan.md
       - 📂 **docs_infra_sync_20260129**
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **docs_swagger_openapi_20260130**
+        - 📄 plan.md
       - 📂 **functional_restoration_20260128**
         - 📄 plan.md
         - 📄 spec.md
@@ -513,6 +519,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 metadata.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **python_fastapi_refactor_20260130**
+        - 📄 plan.md
       - 📂 **swarm_ingestion_20260128**
         - 📄 plan.md
         - 📄 spec.md
@@ -524,6 +532,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **system_recovery_20260128**
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **test_consolidation_vitest_20260130**
+        - 📄 plan.md
       - 📄 BASELINE_CLI.md
       - 📄 brunella_archet.md.txt
       - 📄 Brunella-CLI.md.txt
@@ -640,17 +650,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📂 **myai**
     - 📂 **__pycache__**
       - 📄 __init__.cpython-314.pyc
-      - 📄 cli.cpython-314.pyc
-      - 📄 config.cpython-314.pyc
       - 📄 refiner_logic.cpython-314.pyc
     - 📂 **core**
       - 📂 **__pycache__**
-        - 📄 __init__.cpython-314.pyc
-        - 📄 agent.cpython-314.pyc
-        - 📄 llm.cpython-314.pyc
-        - 📄 project.cpython-314.pyc
-        - 📄 sandbox.cpython-314.pyc
-        - 📄 tools.cpython-314.pyc
       - 📄 __init__.py
       - 📄 agent.py
       - 📄 llm.py
@@ -660,14 +662,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **sandbox_env**
     - 📂 **tests**
       - 📂 **__pycache__**
-        - 📄 test_agent.cpython-314-pytest-9.0.1.pyc
-        - 📄 test_cli.cpython-314-pytest-9.0.1.pyc
-        - 📄 test_dependencies.cpython-314-pytest-9.0.1.pyc
-        - 📄 test_llm.cpython-314-pytest-9.0.1.pyc
-        - 📄 test_project.cpython-314-pytest-9.0.1.pyc
-        - 📄 test_sandbox.cpython-314-pytest-9.0.1.pyc
-        - 📄 test_structure.cpython-314-pytest-9.0.1.pyc
-        - 📄 test_tools.cpython-314-pytest-9.0.1.pyc
       - 📄 test_agent.py
       - 📄 test_cli.py
       - 📄 test_dependencies.py
@@ -681,6 +675,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 config.py
     - 📄 refiner_logic.py
     - 📄 requirements.txt
+    - 📄 server.py
   - 📂 **public**
     - 📄 index.html
   - 📂 **schemas**
@@ -692,16 +687,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 generate_tree.mjs
     - 📄 jules_check.mjs
     - 📄 smoke.mjs
+    - 📄 test_prepare.cjs
   - 📂 **src**
     - 📂 **__pycache__**
-      - 📄 main.cpython-314.pyc
     - 📂 **agents**
       - 📄 AgentManager.ts
       - 📄 DataScientistAgent.ts
+      - 📄 EvaluatorAgent.ts
       - 📄 OrchestratorAgent.ts
       - 📄 registry.json
       - 📄 ResearcherAgent.ts
       - 📄 types.ts
+    - 📂 **cli**
     - 📂 **config**
       - 📄 index.ts
     - 📂 **core**
@@ -802,17 +799,19 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 tsconfig.json
       - 📄 vite-end.d.ts
       - 📄 vite.config.ts
+    - 📂 **database**
+      - 📄 agents_schema.sql
     - 📂 **pipeline**
       - 📄 llmPipeline.ts
     - 📂 **server**
       - 📄 McpProcessManager.ts
+      - 📄 middleware.ts
       - 📄 registry.ts
+      - 📄 swagger.ts
       - 📄 ToolManager.ts
       - 📄 web.ts
     - 📂 **servers**
       - 📂 **__pycache__**
-        - 📄 automation.cpython-314.pyc
-        - 📄 workspace.cpython-314.pyc
       - 📄 automation.py
       - 📄 workspace.py
     - 📂 **tools**
@@ -836,6 +835,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 exec.ts
       - 📄 googleAuth.ts
       - 📄 health_check.ts
+      - 📄 health.ts
       - 📄 hooks.ts
       - 📄 logger.ts
       - 📄 mcpClient.ts
@@ -846,8 +846,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 serverManager.ts
       - 📄 skillsLoader.ts
       - 📄 telemetry.ts
+      - 📄 validateSecrets.ts
     - 📄 cli.ts
     - 📄 index.ts
+    - 📄 interactive.ts
     - 📄 main.py
   - 📂 **test**
     - 📄 cli_config.test.ts
@@ -856,12 +858,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 hooks.test.ts
     - 📄 memory_context.test.ts
     - 📄 monitor.test.ts
+    - 📄 monitor.vitest.ts
     - 📄 python_shell.test.ts
     - 📄 skills_loader.test.ts
+    - 📄 smoke.vitest.ts
     - 📄 telemetry.test.ts
   - 📂 **testing**
     - 📄 TEST_BOOK.md
   - 📄 Adatközpont.lnk
+  - 📄 agents.db
   - 📄 AGENTS.md
   - 📄 AnythingLLM
   - 📄 Brunella
@@ -872,6 +877,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 commit.bat
   - 📄 CONDUCTOR_PLAN.md
   - 📄 DASHBOARD_INTEGRATION_REPORT.md
+  - 📄 docker-compose.yml
+  - 📄 Dockerfile.node
+  - 📄 Dockerfile.python
+  - 📄 GEMINI.md
   - 📄 git_sync.ps1
   - 📄 JELENTES.md
   - 📄 konyvtarfa.md
@@ -884,6 +893,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 pyproject.toml
   - 📄 README.md
   - 📄 rendszer ellenorzes.md.txt
+  - 📄 REPORT_REVISION_20260130.md
   - 📄 requirements.txt
   - 📄 start_brunella.ps1
   - 📄 start.bat
@@ -896,4 +906,5 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 tsconfig.json
   - 📄 tsconfig.ui.json
   - 📄 vite.config.ts
+  - 📄 vitest.config.ts
   - 📄 workflow.md

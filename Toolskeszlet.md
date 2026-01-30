@@ -1,7 +1,7 @@
 # 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
 
 Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
-**Generálva:** 2026. 01. 29. 21:08:19
+**Generálva:** 2026. 01. 30. 2:24:43
 
 ---
 
@@ -37,7 +37,7 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 
 ## 📦 monitor
 - **monitor_get_metrics**: Returns system metrics including uptime, memory usage, and CPU load.
-- **monitor_tail_logs**: Reads the last N lines of a specified log file.
+- **monitor_tail_logs**: Reads the last N lines of a specified log file. log_file: name in logs/ (e.g. web_ui.log). lines: default 50.
 
 ## 📦 ollamaTool
 - **ollama_generate**: Generates text using a local Ollama model.

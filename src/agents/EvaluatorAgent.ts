@@ -36,7 +36,7 @@ export class EvaluatorAgent implements IAgent {
         const ollama = await checkOllamaHealth();
         const anything = await checkAnythingLLMHealth();
         
-        const status = (ollama.status === 'ok' && anything.status === 'ok') ? "HEALTHY" : "DEGRADED";
+        const status = (ollama.status === 'healthy' && anything.status === 'healthy') ? "HEALTHY" : "DEGRADED";
         
         return {
             status,
