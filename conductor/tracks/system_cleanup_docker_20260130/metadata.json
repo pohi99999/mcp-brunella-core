@@ -1,0 +1,8 @@
+{
+  "track_id": "system_cleanup_docker_20260130",
+  "type": "chore",
+  "status": "new",
+  "created_at": "2026-01-30T05:33:00Z",
+  "updated_at": "2026-01-30T05:33:00Z",
+  "description": "Rendszerszintű leltár, takarítás, Dockerizálás és Brunella CLI ügynök integráció."
+}

@@ -69,6 +69,10 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### 🔧 Aktív Szálak (Active Tracks)
 
+- [ ] **Rendszerszintű leltár, takarítás, Dockerizálás és Brunella CLI ügynök integráció (2026-01-30):**
+  - **Cél:** Teljes cleanup, dokumentáció centralizáció és Docker migráció, valamint az új ügynökök natív integrációja.
+  - 📂 *[./tracks/system_cleanup_docker_20260130/](./tracks/system_cleanup_docker_20260130/)*
+
 - [x] **Autonomous Reasoning & Orchestration (2026-01-29):**
   - **Eredmény:** `OrchestratorAgent` (LLM Planner) implementálva. Task Queue (SQLite) integrálva az `AgentManager`-be. `executePlan` és `startWorkerLoop` funkcionális. End-to-End folyamat (Plan -> Queue -> Execute) tesztelve.
   - 📂 *[./tracks/autonomous_reasoning_20260129/](./tracks/autonomous_reasoning_20260129/)*
