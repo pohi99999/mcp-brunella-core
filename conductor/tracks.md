@@ -4,6 +4,10 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### ✅ Lezárt Szálak (Completed Tracks)
 
+- [x] **CLI Gemini-fication & Developer Agent (2026-01-30):**
+  - **Eredmény:** CLI teljesen újraírva (`src/cli.ts` + `src/interactive.ts`). Stabilitási javítások (Stdio mode). `DeveloperAgent` implementálva és regisztrálva. Orchestrator felokosítva.
+  - 📂 *[./tracks/cli_gemini_fication_20260130/](./tracks/cli_gemini_fication_20260130/)*
+
 - [x] **AI Evaluator & Self-Healing (2026-01-30):**
   - **Eredmény:** `EvaluatorAgent` implementálva (`src/agents/EvaluatorAgent.ts`). Képes auditálni (`/api/health`) és teszteket futtatni (`npm run test:vitest`). Regisztrálva a `registry.json`-ben.
   - 📂 *[./tracks/ai_evaluator_self_healing_20260130/](./tracks/ai_evaluator_self_healing_20260130/)*
