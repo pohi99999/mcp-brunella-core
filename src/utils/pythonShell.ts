@@ -6,32 +6,74 @@ import { config } from '../config/index.js';
 export class PythonShell {
     private scriptPath: string;
     private pythonPath: string;
+    private apiUrl: string;
+    private useApi: boolean = true;
 
     constructor(scriptRelativePath: string) {
         this.scriptPath = path.resolve(config.workspaceRoot, scriptRelativePath);
         const venvRel = process.platform === 'win32' ? '.venv/Scripts/python.exe' : '.venv/bin/python';
         const candidatePath = path.resolve(config.workspaceRoot, venvRel);
+        this.apiUrl = process.env.BRUNELLA_PYTHON_API_URL || "http://127.0.0.1:8000";
         
-        // Validate python path
+        // Validate python path for legacy fallback
         try {
-            // Check if file exists AND is executable/valid
             execSync(`"${candidatePath}" --version`, { stdio: 'ignore' });
             this.pythonPath = candidatePath;
         } catch (e) {
-            console.warn(`[PythonShell] Venv python at ${candidatePath} is invalid or missing. Falling back to system python.`);
             this.pythonPath = 'python'; // Fallback
         }
     }
 
     async run(code: string, context?: any): Promise<string> {
+        if (this.useApi) {
+            try {
+                return await this.runViaApi(code, context);
+            } catch (e) {
+                // Silent fallback to legacy if API is down
+                // console.warn("[PythonShell] API connection failed, falling back to subprocess.");
+            }
+        }
+        return this.runLegacy(code, context);
+    }
+
+    private async runViaApi(code: string, context?: any): Promise<string> {
+        const controller = new AbortController();
+        const timeout = setTimeout(() => controller.abort(), 60000);
+
+        try {
+            const response = await fetch(`${this.apiUrl}/execute`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code, context }),
+                signal: controller.signal
+            });
+
+            if (!response.ok) {
+                throw new Error(`API returned ${response.status}: ${await response.text()}`);
+            }
+
+            const data = await response.json() as { stdout: string, error?: string };
+            if (data.error) {
+                // If the python code itself threw an exception, we want to return that as the result string
+                // just like the legacy shell does (it prints the error json)
+                // However, our server returns { stdout: "", error: "..." }
+                // Legacy wrapper printed: print(json.dumps({"error": str(e)}))
+                return JSON.stringify({ error: data.error });
+            }
+            return data.stdout;
+        } finally {
+            clearTimeout(timeout);
+        }
+    }
+
+    private async runLegacy(code: string, context?: any): Promise<string> {
         const root = config.workspaceRoot.replace(/\\/g, '/');
         const tempIn = path.join(config.systemLogDir, `py_in_${Date.now()}.json`);
         const tempPy = path.join(config.systemLogDir, `py_run_${Date.now()}.py`);
 
-        // Ensure log dir exists
         try {
             await fs.mkdir(config.systemLogDir, { recursive: true });
-        } catch (e) { }
+        } catch (e) { } // Ignore if dir exists
 
         try {
             await fs.writeFile(tempIn, JSON.stringify(context || {}), 'utf-8');
