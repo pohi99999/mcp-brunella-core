@@ -20,6 +20,18 @@ export class Logger {
         }
     }
 
+    /** Structured JSON log: { level, timestamp, message, requestId?, ...meta } */
+    async structured(level: 'info' | 'warn' | 'error', message: string, meta?: Record<string, unknown>) {
+        const entry = { level, timestamp: new Date().toISOString(), message, ...meta };
+        const line = JSON.stringify(entry) + '\n';
+        try {
+            await fs.mkdir(path.dirname(this.logFile), { recursive: true });
+            await fs.appendFile(this.logFile, line);
+        } catch (error) {
+            console.error(`Failed to write to log file: ${this.logFile}`, error);
+        }
+    }
+
     info(message: string, meta?: any) {
         return this.log(`[INFO] ${message}`, meta);
     }

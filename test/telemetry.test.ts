@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
+import { describe, it, expect } from 'vitest';
 import {
   configureTelemetry,
   isTelemetryEnabled,
@@ -13,41 +12,41 @@ import {
 describe('Telemetry', () => {
   it('disabled by default', () => {
     configureTelemetry({ enabled: false });
-    assert.strictEqual(isTelemetryEnabled(), false);
+    expect(isTelemetryEnabled()).toBe(false);
   });
 
   it('enabled when configured', () => {
     configureTelemetry({ enabled: true, target: 'local' });
-    assert.strictEqual(isTelemetryEnabled(), true);
+    expect(isTelemetryEnabled()).toBe(true);
     configureTelemetry({ enabled: false });
-    assert.strictEqual(isTelemetryEnabled(), false);
+    expect(isTelemetryEnabled()).toBe(false);
   });
 
   it('recordEvent does not throw when disabled', () => {
     configureTelemetry({ enabled: false });
-    assert.doesNotThrow(() => recordEvent('test.event', { k: 'v' }));
+    expect(() => recordEvent('test.event', { k: 'v' })).not.toThrow();
   });
 
   it('recordMetric does not throw when disabled', () => {
     configureTelemetry({ enabled: false });
-    assert.doesNotThrow(() => recordMetric('test.metric', 1, {}));
+    expect(() => recordMetric('test.metric', 1, {})).not.toThrow();
   });
 
   it('getTelemetryConfig returns current config', () => {
     configureTelemetry({ enabled: true, target: 'local', logPrompts: false });
     const c = getTelemetryConfig();
-    assert.strictEqual(c.enabled, true);
-    assert.strictEqual(c.target, 'local');
-    assert.strictEqual(c.logPrompts, false);
+    expect(c.enabled).toBe(true);
+    expect(c.target).toBe('local');
+    expect(c.logPrompts).toBe(false);
   });
 
   it('initTelemetryFromConfig accepts nested telemetry object', () => {
     initTelemetryFromConfig({ telemetry: { enabled: true, target: 'local' } });
-    assert.strictEqual(isTelemetryEnabled(), true);
+    expect(isTelemetryEnabled()).toBe(true);
     configureTelemetry({ enabled: false });
   });
 
   it('flushTelemetry does not throw', () => {
-    assert.doesNotThrow(() => flushTelemetry());
+    expect(() => flushTelemetry()).not.toThrow();
   });
 });

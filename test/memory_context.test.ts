@@ -1,5 +1,4 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
+import { describe, it, expect } from 'vitest';
 import fs from 'node:fs';
 import path from 'node:path';
 import os from 'node:os';
@@ -14,8 +13,8 @@ describe('Memory context', () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'brunella-mem-'));
     try {
       const paths = discoverMemoryPaths(tmp, {});
-      assert.ok(Array.isArray(paths));
-      assert.strictEqual(paths.length, 0);
+      expect(Array.isArray(paths)).toBe(true);
+      expect(paths.length).toBe(0);
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }
@@ -27,8 +26,8 @@ describe('Memory context', () => {
       const file = path.join(tmp, 'BRUNELLA.md');
       fs.writeFileSync(file, '# Context\n', 'utf-8');
       const paths = discoverMemoryPaths(tmp, { fileName: 'BRUNELLA.md' });
-      assert.ok(paths.length >= 1);
-      assert.ok(paths.some((p) => p.endsWith('BRUNELLA.md')));
+      expect(paths.length).toBeGreaterThanOrEqual(1);
+      expect(paths.some((p) => p.endsWith('BRUNELLA.md'))).toBe(true);
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }
@@ -42,9 +41,9 @@ describe('Memory context', () => {
       fs.writeFileSync(f1, 'content a', 'utf-8');
       fs.writeFileSync(f2, 'content b', 'utf-8');
       const { combined, byPath } = loadMemoryContent([f1, f2]);
-      assert.strictEqual(byPath.length, 2);
-      assert.ok(combined.includes('--- ') && combined.includes(' ---'));
-      assert.ok(combined.includes('content a') && combined.includes('content b'));
+      expect(byPath.length).toBe(2);
+      expect(combined.includes('--- ') && combined.includes(' ---')).toBe(true);
+      expect(combined.includes('content a') && combined.includes('content b')).toBe(true);
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }
@@ -56,10 +55,10 @@ describe('Memory context', () => {
       const file = path.join(tmp, 'BRUNELLA.md');
       fs.writeFileSync(file, 'hello memory', 'utf-8');
       const out = getMemory(tmp, { fileName: 'BRUNELLA.md' });
-      assert.ok(Array.isArray(out.paths));
-      assert.ok(typeof out.combined === 'string');
-      assert.ok(out.byPath.length >= 1);
-      assert.ok(out.combined.includes('hello memory'));
+      expect(Array.isArray(out.paths)).toBe(true);
+      expect(typeof out.combined).toBe('string');
+      expect(out.byPath.length).toBeGreaterThanOrEqual(1);
+      expect(out.combined.includes('hello memory')).toBe(true);
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }
@@ -73,7 +72,7 @@ describe('Memory context', () => {
       fs.writeFileSync(path.join(sub, 'extra.md'), 'imported content', 'utf-8');
       fs.writeFileSync(path.join(tmp, 'main.md'), 'main and @sub/extra.md', 'utf-8');
       const { combined } = loadMemoryContent([path.join(tmp, 'main.md')]);
-      assert.ok(combined.includes('imported content'));
+      expect(combined.includes('imported content')).toBe(true);
     } finally {
       fs.rmSync(tmp, { recursive: true, force: true });
     }

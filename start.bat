@@ -3,7 +3,7 @@ setlocal
 echo [Brunella Core] Rendszerinditas...
 
 :: 1. Ollama ellenorzes es inditas
-echo [1/4] Ollama ellenorzese...
+echo [1/5] Ollama ellenorzese...
 tasklist /FI "IMAGENAME eq ollama app.exe" 2>NUL | find /I /N "ollama app.exe">NUL
 if "%ERRORLEVEL%"=="0" (
     echo    -> Ollama mar fut.
@@ -14,7 +14,7 @@ if "%ERRORLEVEL%"=="0" (
 )
 
 :: 2. Dokumentacio es Build (gyors)
-echo [2/4] Karbantartas es Build...
+echo [2/5] Karbantartas es Build...
 if exist "scripts\generate_tree.mjs" call node scripts/generate_tree.mjs >nul 2>&1
 if exist "scripts\generate_tools_inventory.mjs" call node scripts/generate_tools_inventory.mjs >nul 2>&1
 
@@ -23,13 +23,18 @@ if not exist "build\public\index.html" (
     echo    [!] UI build hianyzik. Kerlek futtasd: npm run build:ui
 )
 
-:: 3. MCP Szerver inditasa (KULON ABLAKBAN/Hatterben)
-echo [3/4] MCP Brunella Core inditasa...
+:: 3. Python API Szerver inditasa
+echo [3/5] Python API inditasa...
+start "Python API" /MIN cmd /c "call .venv\Scripts\activate && uvicorn myai.server:app --port 8000"
+timeout /t 3 >nul
+
+:: 4. MCP Szerver inditasa (KULON ABLAKBAN/Hatterben)
+echo [4/5] MCP Brunella Core inditasa...
 start "MCP Brunella Server" /MIN cmd /c "npm start"
 timeout /t 5 >nul
 
-:: 4. Kliensek inditasa
-echo [4/4] Kliensek inditasa...
+:: 5. Kliensek inditasa
+echo [5/5] Kliensek inditasa...
 
 :: AnythingLLM
 if exist "C:\Program Files\AnythingLLM\AnythingLLM.exe" (

@@ -3,6 +3,7 @@ import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { startWebServer } from "./server/web.js";
 import { registerAllTools } from "./server/registry.js";
 import { agentManager } from "./agents/AgentManager.js";
+import { validateSecrets } from "./utils/validateSecrets.js";
 
 // Create server instance
 const server = new McpServer({
@@ -14,7 +15,7 @@ const server = new McpServer({
 registerAllTools(server);
 
 async function main() {
-  // Start Web Interface (which will now also handle SSE)
+  validateSecrets();
   await startWebServer();
 
   // Start Autonomous Worker Loop

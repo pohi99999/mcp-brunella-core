@@ -1,0 +1,94 @@
+name: CI
+
+on:
+  push:
+    branches: [main, gemini-fication-v2]
+  pull_request:
+    branches: [main, gemini-fication-v2]
+
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+        env:
+          WEB_UI_ENABLED: '0'
+
+  vitest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Vitest
+        run: npx vitest run --reporter=verbose
+        timeout-minutes: 3
+
+  python:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install myai deps
+        run: pip install -r myai/requirements.txt
+
+      - name: Pytest
+        run: python -m pytest myai/tests -v --tb=short
+        env:
+          PYTHONPATH: .
+
+  python-shell-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Setup Python venv
+        run: |
+          python3 -m venv .venv
+          . .venv/bin/activate
+          pip install -r myai/requirements.txt
+
+      - name: Install Node deps & build
+        run: npm ci && npm run build
+
+      - name: PythonShell tests
+        run: node --loader ts-node/esm --test test/python_shell.test.ts
+        env:
+          WEB_UI_ENABLED: '0'
