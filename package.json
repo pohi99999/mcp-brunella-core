@@ -15,16 +15,12 @@
     "smoke": "node scripts/smoke.mjs",
     "mcp:run": "node build/index.js",
     "cli:run": "node build/cli/index.js",
-    "test:build": "tsc test/core_tools.test.ts --outDir test_build --moduleResolution node --target es2020 --module commonjs --esModuleInterop --skipLibCheck",
-    "test:prepare": "node scripts/test_prepare.cjs",
-    "test:run": "node --test test_build/core_tools.test.js && node --loader ts-node/esm --test test/monitor.test.ts",
-    "test:e2e": "node --loader ts-node/esm scripts/e2e_runner.ts",
-    "test:cli": "node --loader ts-node/esm scripts/test_cli.ts",
-    "test:unit:cli": "node --loader ts-node/esm test/cli_unit.test.ts",
-    "test:factory": "node --loader ts-node/esm test/agent_factory.test.ts",
-    "cli": "node build/cli/index.js",
-    "test": "npm run test:build && npm run test:prepare && npm run test:run",
+    "test": "npm run build && vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "test:legacy": "node scripts/test_prepare.cjs && node --test test_build/core_tools.test.js",
     "test:python": "node --loader ts-node/esm --test test/python_shell.test.ts",
+    "test:vitest": "vitest run",
     "test:all": "npm run test:unit:cli && npm run test:factory && npm run test:cli && npm test",
     "build:ui": "vite build src/dashboard",
     "dev:ui": "vite src/dashboard"
@@ -84,6 +80,7 @@
     "embla-carousel-react": "^8.6.0",
     "eventsource": "^4.1.0",
     "express": "^5.2.1",
+    "express-rate-limit": "^8.2.1",
     "framer-motion": "^12.28.1",
     "google-auth-library": "^10.5.0",
     "googleapis": "^170.1.0",
@@ -125,6 +122,7 @@
     "@types/inquirer": "^8.2.12",
     "@types/marked-terminal": "^6.1.1",
     "@types/node": "^25.0.9",
-    "@types/uuid": "^10.0.0"
+    "@types/uuid": "^10.0.0",
+    "vitest": "^4.0.18"
   }
 }

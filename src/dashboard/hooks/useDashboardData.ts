@@ -26,15 +26,15 @@ export function useDashboardData() {
                     });
 
                     // Show warnings for unhealthy services
-                    if (health.services.ollama === 'unhealthy') {
+                    const so = (s: { status?: string } | string) => (typeof s === 'object' ? s?.status : s) ?? '';
+                    if (so(health.services.ollama) === 'unhealthy') {
                         toast.warning('Ollama nem elérhető', {
-                            description: 'Az Ollama service nem fut. Indítsd el: ollama serve'
+                            description: 'Az Ollama service nem fut. Indítsd el: ollama serve',
                         });
                     }
-
-                    if (health.services.anythingllm === 'unhealthy') {
+                    if (so(health.services.anythingllm) === 'unhealthy') {
                         toast.warning('AnythingLLM nem elérhető', {
-                            description: 'Az AnythingLLM service nem érhető el.'
+                            description: 'Az AnythingLLM service nem érhető el.',
                         });
                     }
                 }

@@ -1,11 +1,9 @@
-import { describe, it } from 'node:test';
-import assert from 'node:assert';
+import { describe, it, expect } from 'vitest';
 import fs from 'fs';
 import path from 'path';
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import process from 'process';
 import { registerMonitorTools } from '../src/tools/monitor.js';
 
-// Mock MCP Server to capture tool registration
 // Mock MCP Server to capture tool registration
 class MockServer {
     tools: Map<string, any> = new Map();
@@ -25,7 +23,7 @@ describe('Monitor Tools', () => {
 
     it('should read tail logs', async () => {
         const logDir = path.join(process.cwd(), 'logs');
-        if (!fs.existsSync(logDir)) fs.mkdirSync(logDir);
+        if (!fs.existsSync(logDir)) fs.mkdirSync(logDir, { recursive: true });
 
         const testLog = 'test_monitor.log';
         const logPath = path.join(logDir, testLog);
@@ -35,17 +33,22 @@ describe('Monitor Tools', () => {
         fs.writeFileSync(logPath, lines);
 
         const tool = server.tools.get('monitor_tail_logs');
-        assert.ok(tool, 'Tool monitor_tail_logs not registered');
+        expect(tool).toBeDefined();
 
         const result = await tool({ log_file: testLog, lines: 3 });
+        // @ts-ignore
         const content = result.content[0].text;
 
-        assert.match(content, /Line 8/);
-        assert.match(content, /Line 9/);
-        assert.match(content, /Line 10/);
-        assert.doesNotMatch(content, /Line 7/);
+        expect(content).toMatch(/Line 8/);
+        expect(content).toMatch(/Line 9/);
+        expect(content).toMatch(/Line 10/);
+        expect(content).not.toMatch(/Line 7/);
 
         // Cleanup
-        fs.unlinkSync(logPath);
+        try {
+            fs.unlinkSync(logPath);
+        } catch (e) {
+            // ignore cleanup errors
+        }
     });
 });
