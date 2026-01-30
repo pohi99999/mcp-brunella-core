@@ -17,6 +17,7 @@ import { agentManager } from "../agents/AgentManager.js";
 import { DataScientistAgent } from "../agents/DataScientistAgent.js";
 import { ResearcherAgent } from "../agents/ResearcherAgent.js";
 import { OrchestratorAgent } from "../agents/OrchestratorAgent.js";
+import { EvaluatorAgent } from "../agents/EvaluatorAgent.js";
 import { z } from "zod";
 
 // Tool list for dashboard display
@@ -44,6 +45,7 @@ export function registerAllTools(server: McpServer) {
     agentManager.registerAgent(new DataScientistAgent());
     agentManager.registerAgent(new ResearcherAgent());
     agentManager.registerAgent(new OrchestratorAgent());
+    agentManager.registerAgent(new EvaluatorAgent());
 
     // Register External Tools
     registerWorkspaceTools(server);

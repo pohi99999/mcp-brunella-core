@@ -81,6 +81,26 @@
       ]
     },
     {
+      "name": "evaluator",
+      "title": "Evaluator Agent",
+      "description": "Rendszer auditor, health check es belso tesztfuttato.",
+      "capabilities": [
+        "audit_system",
+        "run_tests",
+        "check_health"
+      ],
+      "tools": [
+        "system_run_command",
+        "monitor_get_metrics"
+      ],
+      "category": "quality",
+      "status": "active",
+      "tags": [
+        "audit",
+        "health"
+      ]
+    },
+    {
       "name": "documenter",
       "title": "Documentation Agent",
       "description": "Dokumentacio frissites, release jegyzetek, hasznalati mintak.",
