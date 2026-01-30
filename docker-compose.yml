@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - BRUNELLA_PYTHON_API_URL=http://ai-worker:8000
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      # Adjust these if running inside container
+      - BRUNELLA_WORKSPACE_ROOT=/app
+      - BRUNELLA_SYSTEM_LOG_DIR=/app/logs
+    volumes:
+      - ./logs:/app/logs
+      - ./agents.db:/app/agents.db
+      - ./conductor:/app/conductor
+    depends_on:
+      - ai-worker
+
+  ai-worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    ports:
+      - "8000:8000"
+    environment:
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./logs:/app/logs

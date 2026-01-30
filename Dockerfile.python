@@ -1,0 +1,19 @@
+FROM python:3.11-slim
+
+WORKDIR /app
+
+RUN pip install uv
+
+COPY pyproject.toml .
+# Install dependencies from pyproject.toml
+# We use --system to install into the system python (safe in container)
+RUN uv pip install --system fastapi uvicorn fastmcp httpx pydantic requests
+
+COPY myai/ ./myai/
+RUN mkdir -p logs
+
+ENV PYTHONPATH=/app
+
+EXPOSE 8000
+
+CMD ["uvicorn", "myai.server:app", "--host", "0.0.0.0", "--port", "8000"]
