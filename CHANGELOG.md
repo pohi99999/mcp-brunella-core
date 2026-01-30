@@ -1,5 +1,22 @@
 # Changelog - Brunella Agent System (BAS)
 
+## [2026-01-30] - Gemini-fication & Developer Agent
+
+### 🚀 Hozzáadva (Added)
+- **CLI Gemini-fication:** Teljes CLI újraírás (`src/cli.ts`), interaktív menü (`src/interactive.ts`), stabil `stdio` mód a Windows hibák kiküszöbölésére.
+- **Developer Agent:** Új kódoló ügynök (`src/agents/DeveloperAgent.ts`), amely a `PythonShell` segítségével képes kódot generálni és futtatni. Integrálva az Orchestratorral.
+- **Evaluator Agent:** Rendszer auditor és tesztfuttató ügynök.
+- **FastAPI Python Szerver:** A lassú subprocess-alapú Python futtatás kiváltása állandó `uvicorn` szerverrel (`myai/server.py`).
+- **Dokumentáció:** Swagger UI (`/api-docs`) automatikus API dokumentációhoz.
+- **Konténerizáció:** Docker támogatás (`Dockerfile.node`, `Dockerfile.python`, `docker-compose.yml`).
+
+### 🔧 Javítva (Fixed)
+- **Tesztelés:** Konszolidált tesztkörnyezet (Vitest) a `npm test` alatt. Minden régi teszt (`node:test`) migrált.
+- **PythonShell:** Fallback mechanizmus: ha a FastAPI szerver nem elérhető, visszavált `exec`-re. Sérült `venv` detektálása és javítása.
+- **MCP Kliens:** `src/utils/mcpClient.ts` felkészítve több szerver kezelésére (`mcp_servers.json` alapján).
+
+---
+
 ## [2026-01-30] - Revízió, biztonság és tesztstabilitás
 
 ### 🔒 Biztonság
