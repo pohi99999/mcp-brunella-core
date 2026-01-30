@@ -139,6 +139,31 @@ program.command('tools')
     }
   });
 
+// --- agents
+program.command('agents')
+  .description('List all registered AI agents')
+  .action(async () => {
+    const client = new BrunellaClient();
+    try {
+      await client.connect();
+      // Use the agent_list tool
+      const result = await client.callTool('agent_list', {});
+      // @ts-ignore
+      const text = result.content?.[0]?.text;
+      if (text) {
+          console.log(chalk.bold('Registered Agents:'));
+          console.log(text);
+      } else {
+          console.log(chalk.yellow('No agents found or tool returned empty result.'));
+      }
+    } catch (error: any) {
+      console.error(chalk.red('Error fetching agents:'), error.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
 // --- run
 program.command('run <toolName> [args...]')
   .description('Run an MCP tool')

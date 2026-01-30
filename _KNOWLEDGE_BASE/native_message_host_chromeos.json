@@ -1,0 +1,7 @@
+)]}'
+{
+  "id": "723bad59b0c21cc4a7856275bdb93c6a82c73955",
+  "repo": "chromium/src.git",
+  "revision": "72.0.3626.80",
+  "path": "chrome/browser/extensions/api/messaging/native_message_host_chromeos.cc"
+}

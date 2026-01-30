@@ -1,0 +1,14 @@
+# Zero-Shot & Few-Shot Prompting Training
+name: zero_few_prompting
+description: "Baseline reasoning with Zero-Shot and Few-Shot examples"
+steps:
+  - prompt: "Explain quantum computing simply to a 12-year-old."
+    mode: zero-shot
+    output: logs/day1_zero.json
+
+  - prompt: |
+      Example 1: Input: "Translate 'Bonjour' → Output: Hello"
+      Example 2: Input: "Translate 'Guten Tag' → Output: Good day"
+      Task: Translate 'Buenos días'
+    mode: few-shot
+    output: logs/day1_few.json
