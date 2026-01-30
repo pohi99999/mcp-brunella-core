@@ -23,6 +23,25 @@
 
 ---
 
+## [2026-01-30] - Skálázási javaslatok megvalósítva
+
+### ✅ Elvégzett javaslatok (REPORT_REVISION)
+1. **Vitest** – `vitest.config.ts`, `test/smoke.vitest.ts`, `test/monitor.vitest.ts`, `npm run test:vitest`.
+2. **CI (GitHub Actions)** – `.github/workflows/ci.yml`: Node build + `npm test`, Vitest, Pytest (`myai/tests`), PythonShell tesztek (.venv).
+3. **Health check** – `src/utils/health.ts`: strukturált válasz (`HealthResponse`), retry + timeout (env: `HEALTH_*`), naplózás. `/api/health` ezt használja.
+4. **CORS whitelist** – `CORS_ORIGINS` (vesszővel elválasztva). Üres = `*`. Middleware + Socket.IO.
+5. **Kulcsok ellenőrzése** – `validateSecrets()` induláskor; figyelmeztet, ha pl. `ANYTHINGLLM_API_KEY` hiányzik. Kihagyható: `BRUNELLA_SKIP_SECRETS_CHECK=1`.
+6. **Rate limiting** – `express-rate-limit` a `/api` alatt. Env: `RATE_LIMIT_WINDOW_MS`, `RATE_LIMIT_MAX_PER_WINDOW`.
+7. **Structured logging** – `Logger.structured(level, message, meta)` JSON sorokkal; HTTP middleware `requestId` + structured request log (`http.log`).
+8. **Pipeline** – `PIPELINE_SANDBOX_TIMEOUT_MS` env; opcionális erősebb izoláció dokumentálva.
+
+### 🔧 Egyéb
+- **PythonShell** – `.venv/bin/python` Linuxon, `.venv/Scripts/python.exe` Windows-on.
+- **README** – „Környezeti változók” táblázat bővítve.
+- **Dashboard** – Health API kompatibilitás az új `services.*.status` formátummal.
+
+---
+
 ## [2026-01-30] - Dashboard & System Integration Complete
 
 ### 🚀 Hozzáadva (Added)

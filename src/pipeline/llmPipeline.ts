@@ -8,7 +8,8 @@ import path from 'path';
 import { config } from '../config/index.js';
 
 const logger = new Logger('pipeline.log');
-const SANDBOX_TIMEOUT_MS = 5000;
+/** Configurable via PIPELINE_SANDBOX_TIMEOUT_MS. Stronger isolation (e.g. isolated-vm) optional for future. */
+const SANDBOX_TIMEOUT_MS = Number(process.env.PIPELINE_SANDBOX_TIMEOUT_MS) || 5000;
 
 /**
  * Run untrusted code in an isolated subprocess with timeout.
@@ -24,7 +25,7 @@ async function runCodeInSubprocess(code: string): Promise<{ success: boolean; er
             const child = spawn(process.execPath, [tmpFile], {
                 stdio: ['ignore', 'pipe', 'pipe'],
                 timeout: SANDBOX_TIMEOUT_MS,
-                env: { ...process.env, NODE_OPTIONS: '--no-warnings' }
+                env: { ...process.env, NODE_OPTIONS: '--no-warnings' },
             });
             let stderr = '';
             child.stderr?.on('data', (d) => { stderr += String(d); });

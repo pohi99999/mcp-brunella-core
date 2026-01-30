@@ -15,39 +15,20 @@ import { mcpProcessManager } from './McpProcessManager.js';
 import { ConfigManager } from '../utils/cliConfig.js';
 import { mcpClientManager } from '../utils/mcpClientManager.js';
 import { agentManager } from '../agents/AgentManager.js';
+import {
+    checkOllamaHealth,
+    checkAnythingLLMHealth,
+    buildHealthResponse,
+} from '../utils/health.js';
+import { corsWhitelist, requestId, requestLogging, apiRateLimit } from './middleware.js';
 
 const logger = new Logger('web_ui.log');
 const configManager = new ConfigManager();
 
-// Health check helper functions
-async function checkOllamaHealth(): Promise<boolean> {
-    try {
-        const baseUrl = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';
-        const response = await fetch(`${baseUrl}/api/tags`, { 
-            signal: AbortSignal.timeout(3000) 
-        });
-        return response.ok;
-    } catch (e) {
-        return false;
-    }
-}
-
-async function checkAnythingLLMHealth(): Promise<boolean> {
-    try {
-        const baseUrl = process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001';
-        const apiKey = process.env.ANYTHINGLLM_API_KEY;
-
-        if (!apiKey) return false;
-
-        const response = await fetch(`${baseUrl}/api/v1/workspaces`, {
-            headers: { 'Authorization': `Bearer ${apiKey}` },
-            signal: AbortSignal.timeout(10000)  // Increased from 3000 to 10000ms (10 sec)
-        });
-        return response.ok;
-    } catch (e) {
-        return false;
-    }
-}
+const corsOriginList = (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
 
 interface ActiveTransport {
     transport: SSEServerTransport;
@@ -73,13 +54,17 @@ export async function startWebServer() {
 
     const app = express();
     app.use(express.json());
+    app.use(corsWhitelist);
+    app.use(requestId);
+    app.use(requestLogging);
+    app.use('/api', apiRateLimit);
 
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
         cors: {
-            origin: "*",
-            methods: ["GET", "POST"]
-        }
+            origin: corsOriginList.length > 0 ? corsOriginList : '*',
+            methods: ['GET', 'POST'],
+        },
     });
 
     // Metrics Loop
@@ -135,22 +120,23 @@ export async function startWebServer() {
 
     // REST API Endpoints for Dashboard
 
-    // Health check endpoint
+    // Health check endpoint (structured response, retry, timeout via health module)
     app.get('/api/health', async (req, res) => {
         try {
-            const ollamaHealthy = await checkOllamaHealth();
-            const anythingLLMHealthy = await checkAnythingLLMHealth();
-
-            res.json({
-                status: 'ok',
-                timestamp: new Date().toISOString(),
-                services: {
-                    ollama: ollamaHealthy ? 'healthy' : 'unhealthy',
-                    anythingllm: anythingLLMHealthy ? 'healthy' : 'unhealthy',
-                    agents: agentManager.listAgents().length > 0 ? 'healthy' : 'no_agents',
-                    mcp: mcpProcessManager.getServersStatus().length > 0 ? 'healthy' : 'no_servers'
-                }
-            });
+            const [ollama, anythingllm] = await Promise.all([
+                checkOllamaHealth(),
+                checkAnythingLLMHealth(),
+            ]);
+            const agentsCount = agentManager.listAgents().length;
+            const mcpCount = mcpProcessManager.getServersStatus().length;
+            const payload = buildHealthResponse(
+                ollama,
+                anythingllm,
+                agentsCount,
+                mcpCount,
+                (req as any).id
+            );
+            res.json(payload);
         } catch (e: any) {
             res.status(500).json({ status: 'error', message: e.message });
         }

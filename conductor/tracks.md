@@ -45,6 +45,29 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### 🔧 Aktív Szálak (Active Tracks)
 
+- [ ] **Test Infrastructure Consolidation (Vitest) (2026-01-30):**
+  - **Cél:** `node --test` és `ts-node` alapú tesztek teljes kiváltása egységes Vitest konfigurációval. CI/CD egyszerűsítés.
+  - **Státusz:** 🔄 Folyamatban
+  - 📂 *[./tracks/test_consolidation_vitest_20260130/](./tracks/test_consolidation_vitest_20260130/)*
+
+### ⏳ Várakozó Szálak (Pending Tracks)
+
+- [ ] **Python Subsystem Refactor (FastAPI/FastMCP) (2026-01-30):**
+  - **Cél:** `pythonShell.ts` (subprocess) kiváltása állandó FastAPI szerverrel a gyorsabb válaszidőkért és állapotmegőrzésért.
+  - 📂 *[./tracks/python_fastapi_refactor_20260130/](./tracks/python_fastapi_refactor_20260130/)*
+
+- [ ] **Containerization & Docker Compose (2026-01-30):**
+  - **Cél:** Teljes környezet (Node, Python, Redis/VectorDB) dockerizálása a hordozhatóságért.
+  - 📂 *[./tracks/docker_containerization_20260130/](./tracks/docker_containerization_20260130/)*
+
+- [ ] **API Documentation & Swagger (2026-01-30):**
+  - **Cél:** OpenAPI specifikáció generálása a backend végpontokhoz.
+  - 📂 *[./tracks/docs_swagger_openapi_20260130/](./tracks/docs_swagger_openapi_20260130/)*
+
+- [ ] **AI Evaluator & Self-Healing (2026-01-30):**
+  - **Cél:** Belső "Evaluator" ágens létrehozása, ami a `TEST_BOOK.md` alapján ellenőrzi a rendszert.
+  - 📂 *[./tracks/ai_evaluator_self_healing_20260130/](./tracks/ai_evaluator_self_healing_20260130/)*
+
 - [x] **Autonomous Reasoning & Orchestration (2026-01-29):**
   - **Eredmény:** `OrchestratorAgent` (LLM Planner) implementálva. Task Queue (SQLite) integrálva az `AgentManager`-be. `executePlan` és `startWorkerLoop` funkcionális. End-to-End folyamat (Plan -> Queue -> Execute) tesztelve.
   - 📂 *[./tracks/autonomous_reasoning_20260129/](./tracks/autonomous_reasoning_20260129/)*

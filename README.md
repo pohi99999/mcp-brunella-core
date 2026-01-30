@@ -34,5 +34,17 @@ brunella chat               # Chat az AI-val
 - **Automation:** Playwright, Python.
 - **Protocol:** MCP (Model Context Protocol).
 
+## ⚙️ Környezeti változók (válogatott)
+| Változó | Leírás |
+|--------|--------|
+| `CORS_ORIGINS` | CORS whitelist (vesszővel elválasztva). Üres = `*` |
+| `RATE_LIMIT_WINDOW_MS` | Rate limit ablak (ms), alapértelmezett 60000 |
+| `RATE_LIMIT_MAX_PER_WINDOW` | Kérések limit ablakonként, alapértelmezett 120 |
+| `PIPELINE_SANDBOX_TIMEOUT_MS` | Pipeline subprocess timeout (ms), alapértelmezett 5000 |
+| `HEALTH_OLLAMA_TIMEOUT_MS`, `HEALTH_OLLAMA_RETRIES` | Health check: Ollama timeout és retry |
+| `HEALTH_ANYTHINGLLM_TIMEOUT_MS`, `HEALTH_ANYTHINGLLM_RETRIES` | Health check: AnythingLLM |
+| `BRUNELLA_SKIP_SECRETS_CHECK` | `1` = kihagyja a titkok ellenőrzését induláskor |
+| `ANYTHINGLLM_API_KEY`, `OLLAMA_BASE_URL` | Külső szolgáltatások (titkok ne kódba!) |
+
 ## 🤝 Hozzájárulás
 Kérlek, kövesd a `conductor` mappában található protokollokat és a `workflow.md`-t.

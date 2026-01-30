@@ -27,36 +27,30 @@ export function SystemHealthCard() {
         setIsChecking(true);
         try {
             const health = await api.checkHealth();
-            
+            const so = (s: { status?: string } | string) => (typeof s === 'object' ? s.status : s) ?? 'unhealthy';
+            const ok = (s: { status?: string } | string) => so(s) === 'healthy';
+
             const newServices: ServiceStatus[] = [
                 {
                     name: 'Ollama',
-                    status: health.services.ollama === 'healthy' ? 'healthy' : 'unhealthy',
-                    message: health.services.ollama === 'healthy' 
-                        ? 'Működik' 
-                        : 'Indítsd el: ollama serve'
+                    status: ok(health.services.ollama) ? 'healthy' : 'unhealthy',
+                    message: ok(health.services.ollama) ? 'Működik' : 'Indítsd el: ollama serve',
                 },
                 {
                     name: 'AnythingLLM',
-                    status: health.services.anythingllm === 'healthy' ? 'healthy' : 'unhealthy',
-                    message: health.services.anythingllm === 'healthy'
-                        ? 'Működik'
-                        : 'Service nem elérhető'
+                    status: ok(health.services.anythingllm) ? 'healthy' : 'unhealthy',
+                    message: ok(health.services.anythingllm) ? 'Működik' : 'Service nem elérhető',
                 },
                 {
                     name: 'Agents',
-                    status: health.services.agents === 'healthy' ? 'healthy' : 'unhealthy',
-                    message: health.services.agents === 'healthy'
-                        ? 'Aktív ágensek rendelkezésre állnak'
-                        : 'Nincs regisztrált ágens'
+                    status: ok(health.services.agents) ? 'healthy' : 'unhealthy',
+                    message: ok(health.services.agents) ? 'Aktív ágensek rendelkezésre állnak' : 'Nincs regisztrált ágens',
                 },
                 {
                     name: 'MCP Servers',
-                    status: health.services.mcp === 'healthy' ? 'healthy' : 'unhealthy',
-                    message: health.services.mcp === 'healthy'
-                        ? 'MCP kapcsolat működik'
-                        : 'Nincs elérhető MCP szerver'
-                }
+                    status: ok(health.services.mcp) ? 'healthy' : 'unhealthy',
+                    message: ok(health.services.mcp) ? 'MCP kapcsolat működik' : 'Nincs elérhető MCP szerver',
+                },
             ];
 
             setServices(newServices);
