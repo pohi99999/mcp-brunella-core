@@ -1,0 +1,14 @@
+node_modules
+build
+dist
+logs
+.git
+_archive
+external_research
+_KNOWLEDGE_BASE
+*.log
+.env
+.vs
+.vscode
+.pytest_cache
+__pycache__

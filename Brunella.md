@@ -15,6 +15,13 @@ A Brunella egy hibrid architektúrájú MI ökoszisztéma, amely a Model Context
 - **Adat & Memória:** LanceDB (Vektor DB), SQLite (Feladatok és ágensek), Local Filesystem.
 - **AI Integráció:** Ollama (Helyi LLM), AnythingLLM (RAG), Gemini (Cloud).
 
+### 🌊 Adatfolyam (Data Pipeline)
+A "Tudásbetakarító és Finomító" (Harvester & Refiner) alrendszer működése:
+1. **Ingestion (Harvester Swarm):** Webes adatgyűjtés -> Kafka/Queue.
+2. **Processing (Refiner Factory):** Tisztítás, darabolás (Chunking).
+3. **Storage (RAG):** Beágyazás (Embedding) -> LanceDB.
+4. **Retrieval:** Szemantikus keresés az ügynökök számára.
+
 ## 🤖 Ügynökök (Agent Roster)
 1. **Brunella (Orchestrator):** A központi vezérlő ügynök. Feladata a feladatok delegálása és az MCP eszközök összehangolása.
 2. **Jules (DevOps/QA):** Hibrid DevOps partner. Felelős a tesztelésért (`npm test`), log elemzésért és hibajavításért.

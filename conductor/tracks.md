@@ -69,6 +69,10 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### 🔧 Aktív Szálak (Active Tracks)
 
+- [ ] **LangSmith Integráció & Observability (2026-01-30):**
+  - **Cél:** Teljes körű tracing bevezetése minden ügynök-művelethez.
+  - 📂 *[./tracks/langsmith_integration_20260130/](./tracks/langsmith_integration_20260130/)*
+
 - [x] **Rendszerszintű leltár, takarítás, Dockerizálás és Brunella CLI ügynök integráció (2026-01-30):**
   - **Eredmény:** Teljes cleanup elvégezve, a gyökérkönyvtár tiszta. A dokumentáció centralizálva a `Brunella.md`-be. Docker Compose frissítve hibrid módhoz. `project_organizer` és `agent_architect` regisztrálva a rendszerbe és a Brunella CLI kiegészítve az `agents` paranccsal.
   - 📂 *[./tracks/system_cleanup_docker_20260130/](./tracks/system_cleanup_docker_20260130/)*

@@ -1,0 +1,66 @@
+# 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
+
+Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
+**Generálva:** 2026. 01. 30. 8:24:16
+
+---
+
+## 📦 anythingllm
+- **anythingllm_list_workspaces**: Lists available AnythingLLM workspaces.
+- **anythingllm_chat**: Sends a chat message to an AnythingLLM workspace.
+
+## 📦 browser
+- **browser_navigate**: Navigates to a URL and returns the page content (text/html). Handles JS.
+- **browser_screenshot**: Takes a screenshot of a URL.
+
+## 📦 claudeTool
+- **claude_message**: Sends a message to the Anthropic Claude API.
+
+## 📦 copilotCliTool
+- **copilot_cli**: Executes GitHub Copilot CLI commands (suggest, explain, test, fix).
+
+## 📦 googleWorkspace
+- **gmail_list_messages**: Lists recent emails from Gmail.
+- **calendar_list_events**: Lists upcoming events from Google Calendar.
+
+## 📦 interpreter
+- **interpreter_run_python**: Executes Python code in a persistent shell.
+
+## 📦 julesCliTool
+- **jules_cli**: Executes Google Jules CLI commands (run, ask, task, agent).
+
+## 📦 knowledge
+- **knowledge_search**: Searches for a text pattern (exact match).
+- **knowledge_semantic_search**: Searches for meaning/concepts using RAG (Vector DB). Requires indexed files.
+- **knowledge_index_file**: Adds a file to the semantic search index.
+- **knowledge_read_context**: Reads multiple files to build context for LLMs.
+
+## 📦 monitor
+- **monitor_get_metrics**: Returns system metrics including uptime, memory usage, and CPU load.
+- **monitor_tail_logs**: Reads the last N lines of a specified log file. log_file: name in logs/ (e.g. web_ui.log). lines: default 50.
+
+## 📦 ollamaTool
+- **ollama_generate**: Generates text using a local Ollama model.
+
+## 📦 swarmTools
+- **swarm_ingest**: Browse -> Refine -> Knowledge Store.
+
+## 📦 system
+- **system_run_command**: Runs a restricted system command (dir, ls, type, cat, python --version, node --version).
+
+## 📦 workspace
+- **workspace_list_directory**: Lists files and directories in the workspace.
+- **workspace_read_file**: Reads the content of a file in the workspace.
+
+## 🤖 Ágensek (Agents)
+- **agent_list**: Aktív ágensek listázása.
+- **agent_registry**: Minden elérhető ágens definíció.
+- **agent_delegate**: Feladat delegálása egy ágensnek.
+
+## 💻 Brunella CLI Parancsok
+- **brunella conductor status**: Projekt státuszának megjelenítése.
+- **brunella conductor setup**: Conductor infrastruktúra ellenőrzése.
+- **brunella memory list/show/refresh**: Kontextus kezelés (mag.md).
+- **brunella run <tool>**: MCP eszköz futtatása.
+- **brunella chat**: Interaktív chat (Ollama).
+- **brunella agents**: Ágensek listázása CLI-ből.
