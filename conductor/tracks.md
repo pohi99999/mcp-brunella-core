@@ -69,8 +69,12 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### 🔧 Aktív Szálak (Active Tracks)
 
-- [ ] **LangSmith Integráció & Observability (2026-01-30):**
-  - **Cél:** Teljes körű tracing bevezetése minden ügynök-művelethez.
+- [ ] **Browser-Use Harvester with Structured JSON Output (2026-01-31):**
+  - **Cél:** A `myai/browser_worker.py` továbbfejlesztése strukturált JSON adatgyűjtésre (Harvester) és JSON kimenetre Pydantic modellekkel.
+  - 📂 *[./tracks/browser_use_harvester_20260131/](./tracks/browser_use_harvester_20260131/)*
+
+- [x] **LangSmith Integráció & Observability (2026-01-31):**
+  - **Eredmény:** LangSmith alapok és Browser-Use ágens híd implementálva. `myai/browser_worker.py` kész, Node.js híd (`browserBridge.ts`) stabilizálva. `swarm_ingest` és `swarm_browser_task` eszközök frissítve az új ágensre.
   - 📂 *[./tracks/langsmith_integration_20260130/](./tracks/langsmith_integration_20260130/)*
 
 - [x] **Rendszerszintű leltár, takarítás, Dockerizálás és Brunella CLI ügynök integráció (2026-01-30):**
