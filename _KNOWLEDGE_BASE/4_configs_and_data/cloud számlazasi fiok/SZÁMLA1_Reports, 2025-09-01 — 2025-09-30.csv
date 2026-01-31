@@ -1,0 +1,194 @@
+Service description,Service ID,SKU description,SKU ID,Usage amount,Usage unit,Cost ($),Savings programs ($),Other savings ($),Unrounded subtotal ($),Subtotal ($),Percent change in subtotal compared to previous period
+Cloud Workstations,4528-FDD0-A2A0,Cloud Workstations control plane fee (us-central1),61C4-0757-3151,"463,697",hour,"92,74","0,00","0,00","92,739175","92,74",New
+Compute Engine,6F81-5844-456A,E2 Instance Core running in Americas,CF4E-A0C7-E3BF,"1 854,482",hour,"40,45","0,00","0,00","40,448849","40,45",New
+Compute Engine,6F81-5844-456A,Regional Balanced PD Capacity,0FE3-CAB9-E7E3,"128,651",gibibyte month,"25,73","0,00","0,00","25,729784","25,73",New
+Compute Engine,6F81-5844-456A,E2 Instance Ram running in Americas,F449-33EC-A5EF,"7 417,953",gibibyte hour,"21,69","0,00","0,00","21,686209","21,69",New
+Duet AI,719A-983F-202D,Gemini Code Assist subscription,7743-4D2E-8A79,1,month,"19,00","0,00","0,00","18,998640","19,00",50%
+Compute Engine,6F81-5844-456A,SSD backed PD Capacity,B188-61DD-52E4,"32,212",gibibyte month,"5,48","0,00","0,00","5,475605","5,48",New
+Cloud Run,152E-C115-5142,Cloud Run Network Inter Region Data Transfer Out Intercontinental (Excl Oceania),9B46-8DDB-2AC8,"59,432",gibibyte,"4,67","0,00","0,00","4,669828","4,67",577%
+Networking,E505-1604-58F8,Networking Private Service Connect Consumer End Point,9E4E-F9A7-5EAE,"463,431",hour,"4,63","0,00","0,00","4,634092","4,63",New
+Cloud SQL,9662-B51E-5089,Cloud SQL for PostgreSQL: Zonal - Micro instance in Americas,C2D4-F7DF-B8D0,392,hour,"4,12","0,00","0,00","4,116000","4,12",587%
+Cloud SQL,9662-B51E-5089,Cloud SQL for PostgreSQL: Zonal - Micro instance in Netherlands,F10A-1272-6C49,"342,866",hour,"3,98","0,00","0,00","3,977243","3,98",New
+Cloud SQL,9662-B51E-5089,Cloud SQL for PostgreSQL: Zonal - Standard storage in Americas,C18F-7FE0-0717,"5,444",gibibyte month,"0,93","0,00","0,00","0,925512","0,93",615%
+Cloud SQL,9662-B51E-5089,Cloud SQL for PostgreSQL: Zonal - Standard storage in Netherlands,813B-C170-DD76,"4,762",gibibyte month,"0,89","0,00","0,00","0,890422","0,89",New
+Security Command Center,FBF2-FC68-171A,Organization Level Security Command Center Premium for Cloud SQL - Core Running,2D4E-8022-822A,"143,24",hour,"0,82","0,00","0,00","0,815462","0,82",1267%
+Gemini API,AEFD-7695-64FA,Generate content output token count gemini 2.5 flash short input text,911A-8880-A243,187 607,count,"0,47","0,00","0,00","0,469005","0,47",135%
+Cloud Run,152E-C115-5142,Cloud Run Network Inter Region Data Transfer Out North America to North America,E262-332F-1474,"39,615",gibibyte,"0,38","0,00","0,00","0,384244","0,38",533%
+Secret Manager,EE82-7A5E-871C,Secret version replica storage,7756-ADEF-84F4,"8,405",month,"0,14","0,00","0,00","0,143744","0,14",New
+Gemini API,AEFD-7695-64FA,Generate content input token count gemini 2.5 flash long input text,56F0-A86F-DC9F,325 947,count,"0,10","0,00","0,00","0,097784","0,10",New
+Gemini API,AEFD-7695-64FA,Generate content input token count gemini 2.5 flash input audio,5308-F418-CF26,84 817,count,"0,08","0,00","0,00","0,084817","0,08",New
+Gemini API,AEFD-7695-64FA,Generate content cached input token count gemini 2.5 flash input audio,C2BC-2466-DBDE,203 964,count,"0,05","0,00","0,00","0,050990","0,05",New
+Gemini API,AEFD-7695-64FA,Generate content input token count Gemini 2.5 Pro short input text,2D1C-F790-3C09,38 014,count,"0,05","0,00","0,00","0,047517","0,05",-67%
+Cloud Storage,95FF-2EF5-5EA1,Multi-Region Standard Class A Operations,9ADA-9AED-1B24,2 864,count,"0,03","0,00","0,00","0,028640","0,03",200%
+Gemini API,AEFD-7695-64FA,Generate content cached input token count gemini 2.5 flash long input text,5FCD-DE01-0A4B,319 467,count,"0,01","0,00","0,00","0,011980","0,01",New
+Gemini API,AEFD-7695-64FA,Generate content cached input token count gemini 2.5 flash input video,8824-6618-3717,313 940,count,"0,01","0,00","0,00","0,011772","0,01",New
+Artifact Registry,149C-F9EC-3994,Artifact Registry Storage,8502-299A-ABAF,"0,616",gibibyte month,"0,01","0,00","0,00","0,011364","0,01",0%
+Gemini API,AEFD-7695-64FA,Generate content input token count gemini 2.5 flash short input text,981A-C057-0BF9,33 834,count,"0,01","0,00","0,00","0,010125","0,01",-50%
+Cloud Storage,95FF-2EF5-5EA1,Multi-Region Standard Class B Operations,8AE7-5BBD-8F38,20 759,count,"0,01","0,00","0,00","0,008278","0,01",
+Cloud Storage,95FF-2EF5-5EA1,Standard Storage US Multi-region,0D5D-6E23-4250,"0,299",gibibyte month,"0,01","0,00","0,00","0,007722","0,01",
+Cloud Run,152E-C115-5142,"Cloud Run Network Internet Data Transfer Out Intercontinental (Excl Oceania, Africa and China)",DBAA-7594-B9FA,"0,056",gibibyte,"0,01","0,00","0,00","0,006666","0,01",
+Vertex AI,C7E2-9256-1C43,Metadata storage,AEEB-1CC1-1A3A,"0,001",gibibyte month,"0,01","0,00","0,00","0,005033","0,01",New
+Gemini API,AEFD-7695-64FA,Generate content output token count Gemini 2.5 Pro short output text,0F51-429B-C2DC,461,count,"0,00","0,00","0,00","0,004610","0,00",-100%
+Security Command Center,FBF2-FC68-171A,Organization Level Security Command Center Premium for Cloud Storage - Class A Operations,E4C4-C51E-3368,2 698,count,"0,00","0,00","0,00","0,003787","0,00",0%
+Security Command Center,FBF2-FC68-171A,Organization Level Security Command Center Premium for Cloud Storage - Class B Operations,8756-CA40-90F3,20 064,count,"0,00","0,00","0,00","0,002890","0,00",0%
+Networking,E505-1604-58F8,Networking Private Service Connect Consumer Data Processing,C40A-084F-09B4,"0,283",gibibyte,"0,00","0,00","0,00","0,002746","0,00",0%
+Compute Engine,6F81-5844-456A,Multi-regional Snapshot download within North America,97AC-7B07-1DF5,"0,032",gibibyte,"0,00","0,00","0,00","0,000624","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Internet Data Transfer Out from Americas to Americas,238B-D94B-7243,"0,003",gibibyte,"0,00","0,00","0,00","0,000475","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Internet Data Transfer Out from Netherlands to EMEA,DFB1-E662-FA10,"0,001",gibibyte,"0,00","0,00","0,00","0,000144","0,00",0%
+Gemini API,AEFD-7695-64FA,Generate content input token count gemini 2.5 flash input image,68D6-42D9-37E1,447,count,"0,00","0,00","0,00","0,000133","0,00",0%
+Gemini API,AEFD-7695-64FA,Generate content cached input token count gemini 2.5 flash input short text,5CDC-4C82-2AEC,2 456,count,"0,00","0,00","0,00","0,000088","0,00",0%
+Cloud Storage,95FF-2EF5-5EA1,Network Data Transfer GCP Replication within Northern America,AED0-3315-7B11,"0,002",gibibyte,"0,00","0,00","0,00","0,000040","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Internet Data Transfer Out from Netherlands to Americas,1BD3-6F3F-3755,0,gibibyte,"0,00","0,00","0,00","0,000036","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Internet Data Transfer Out from Netherlands to APAC,7A17-5C48-A83F,0,gibibyte,"0,00","0,00","0,00","0,000029","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Internet Data Transfer Out from Americas to EMEA,7EB3-F1EB-EC4A,0,gibibyte,"0,00","0,00","0,00","0,000025","0,00",0%
+Gemini API,AEFD-7695-64FA,Generate content cached input token count gemini 2.5 flash input image,1C33-4690-9D67,585,count,"0,00","0,00","0,00","0,000021","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Inter Connect Data Transfer Out Americas,AFEC-8830-099C,0,gibibyte,"0,00","0,00","0,00","0,000009","0,00",0%
+Gemini API,AEFD-7695-64FA,Generate content cached content gemini 2.5 flash storage by hour,EA4C-4CC4-D85C,"8,431",hour,"0,00","0,00","0,00","0,000008","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Internet Data Transfer Out from Americas to APAC,094A-C58C-9FD6,0,gibibyte,"0,00","0,00","0,00","0,000006","0,00",0%
+Gemini API,AEFD-7695-64FA,GenerateContent text output token count for Gemini 2.0 Flash Lite,29B5-90A7-DFF4,11,count,"0,00","0,00","0,00","0,000003","0,00",0%
+Gemini API,AEFD-7695-64FA,Generate content output token count gemini 2.5 flash short output text non-thinking,7133-23F2-04B7,9,count,"0,00","0,00","0,00","0,000003","0,00",0%
+Gemini API,AEFD-7695-64FA,GenerateContent output token count for Gemini 1.5 Flash 8B when input is up to 128k tokens,E739-1241-46D4,11,count,"0,00","0,00","0,00","0,000001","0,00",0%
+Geocoding API,0AC2-4B25-C429,Geocoding,BAC8-4E68-E261,2,count,"0,00","0,00","0,00","0,000000","0,00",0%
+Artifact Registry,149C-F9EC-3994,Artifact Registry Network Inter Region Egress Intercontinental (Excl Oceania),F867-73D9-ACCD,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Run,152E-C115-5142,Services Memory (Request-based billing),02A2-9231-36A6,"8 212,55",gibibyte second,"0,02","0,00","-0,02","0,000000","0,00",0%
+Cloud Run,152E-C115-5142,Cloud Run GOOGLE-API Data Transfer Out,0CCB-7057-48DE,"0,002",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Run,152E-C115-5142,Requests,2DA5-55D3-E679,141 775,count,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Run,152E-C115-5142,Services CPU (Request-based billing),4856-B847-F1EB,"16 425,099",second,"0,39","0,00","-0,39","0,000000","0,00",0%
+Cloud Run,152E-C115-5142,Cloud Run Network Internet Data Transfer Out North America to North America,DDFD-AE42-E219,"0,004",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Run,152E-C115-5142,Cloud Run Network Intra Region Data Transfer,EF10-B23A-2545,"19,806",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Firebase Hosting,2662-232A-AC11,Outgoing Bandwidth,5DF2-5F92-77F0,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Firebase Hosting,2662-232A-AC11,Storage,6B36-F770-533F,0,gibibyte month,"0,00","0,00","0,00","0,000000","0,00",0%
+Firebase Data Connect,3C58-66D1-EF70,Firebase Data Connect: Network Data Transfer Out Internet Premium between North America and Europe,E89A-4D62-CB6C,"0,001",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Logging,5490-F7B7-8DF6,Log Storage cost,143F-A1B0-E0BE,"0,451",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Monitoring,58CD-E7C3-72CA,Monitoring Uptime Checks,CA14-D3DE-E67F,141 169,Count of Uptime Check executions,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer Out from Americas to South America,03A5-1B2A-3485,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Los Angeles,0C3C-6B13-B1E8,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Jakarta to Americas,0D56-2F80-52A5,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Warsaw to Americas,1053-AC83-A223,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer Out from Americas to Africa,11D6-3D11-8E77,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Data Transfer In from Google Services from Americas to Americas,123C-0EFC-B7C8,"98,883",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Salt Lake City to Americas,1779-5CD6-D18B,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Montreal to Americas,1B9B-60EB-AF3D,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer In from South America to Americas,1CFF-8100-5F11,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Sydney,1D3E-3C54-0FA7,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Americas to Americas,1E55-5CEB-2AB1,"0,002",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Stockholm to Americas,22A3-1909-2C0A,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Zurich to Americas,23F1-7159-60E3,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer In from EMEA to Americas,2F99-3A90-373B,"0,003",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Dallas to Americas,3091-E573-A86C,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Las Vegas to Americas,3606-CAF7-7ACF,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer Out from Americas to Apac(Excluding Korea and Indonesia),378D-6896-1041,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Madrid to Americas,3C59-C617-B717,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Licensing Fee for Container-Optimized OS - PCID Whitelisted (RAM cost),3D41-4308-45C0,"7 418,787",gibibyte hour,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Dammam to Americas,3DE6-C55A-EB9C,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Salt Lake City,40D6-DDD1-E008,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Data Transfer In via Carrier Peering Network - Americas Based,427E-B4F2-B5CF,"0,001",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Hong Kong to Americas,4B24-F362-2296,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Dallas,4CCF-185C-4E98,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Virginia to Americas,587F-0E36-6A26,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Sao Paulo to Americas,5D89-42F2-7725,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Montreal,5E0D-5F20-E67E,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Warsaw,6F59-4E8C-6224,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Columbus,735D-08F9-4DB3,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to London,7618-3912-3F75,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer In from Australia to Americas,773D-F52D-63CD,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Licensing Fee for Container-Optimized OS - PCID Whitelisted (CPU cost),7927-E3EC-DBBC,"463,674",hour,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Jakarta,7C79-34BD-F61B,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Japan to Americas,8497-0F70-3439,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from London to Americas,8687-6D6B-5B8B,"0,001",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Licensing Fee for Shielded COS (CPU cost),8835-C41E-B3EA,"1 854,697",hour,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Toronto to Americas,892C-ECAD-0554,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from EMEA to Americas,8E2F-8EE0-E9FD,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Mumbai to Americas,90C1-86D9-BD3F,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Data Transfer to Google Services from Americas to Americas,92CB-C25F-B1D1,"2,853",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer In from Apac(Excluding Korea and Indonesia) to Americas,93F4-2190-D5EF,"0,001",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Data Transfer Out via Carrier Peering Network - Americas Based,984A-1F27-2D1F,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer Out from Americas to Middle East,A6C3-31B5-6D26,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Columbus to Americas,A9E6-10FA-84BE,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Licensing Fee for Shielded COS (CPU cost),ABD6-FF7B-A404,"463,674",hour,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Las Vegas,ACC0-9F23-6029,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Licensing Fee for Shielded COS (RAM cost),B0B5-6E19-13AE,"7 418,787",gibibyte hour,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from APAC to Americas,BBF8-C07D-1DF4,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Frankfurt to Americas,BE6F-687A-D530,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Delhi,BFCE-631E-CFD3,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,External IP Charge on a Standard VM,C054-7F72-A02E,"463,664",hour,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Netherlands to Americas,C1BB-5F08-C60D,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer In from Middle East to Americas,C4A4-76CD-56D0,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Doha,C85C-4E19-F585,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Virginia,C863-37DA-506E,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Americas,C8EA-1A86-3D28,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Sydney to Americas,CD2E-8A37-FA48,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to EMEA,D011-1819-740D,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Zone Data Transfer In,D0CC-50DF-59D2,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Doha to Americas,D2DA-41CC-0B33,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Finland to Americas,D72A-E5E4-973E,"0,001",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Licensing Fee for Container-Optimized OS - PCID Whitelisted (CPU cost),DA21-2385-9025,"1 854,697",hour,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Zone Data Transfer Out,DE9E-AFBC-A15A,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer Out from Americas to EMEA,DFA5-B5C6-36D6,"0,001",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Delhi to Americas,E618-1B91-F89A,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer In from Americas to Americas,E926-D07C-E1A4,"0,007",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Toronto,EA63-657C-F08B,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Los Angeles to Americas,EB67-3CB7-1BF5,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Licensing Fee for Container-Optimized OS from Google (CPU cost),ECCC-9EE4-AEE4,"463,674",hour,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer In from Africa to Americas,EF89-EF79-A587,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer Out from Americas to Madrid,EFDD-0A28-5372,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Inter Region Data Transfer In from Singapore to Americas,F208-E30F-07D3,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Licensing Fee for Container-Optimized OS from Google (RAM cost),F239-15CB-5B98,"7 418,787",gibibyte hour,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer Out from Americas to Americas,F274-1692-F213,"0,002",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Licensing Fee for Container-Optimized OS from Google (CPU cost),FA27-F4A0-3EE3,"1 854,697",hour,"0,00","0,00","0,00","0,000000","0,00",0%
+Compute Engine,6F81-5844-456A,Network Internet Data Transfer Out from Americas to Australia,FDBC-6E3B-D4D8,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from TLV),031C-62A1-56B8,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from PHX),0D0B-D0AA-BF81,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from LGA),149D-AF65-5A5A,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from DHR),2B7E-9B0B-1046,"0,001",gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from BRU),2DA4-83D6-7E6D,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from QRO),3C56-CF2C-DFA3,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from TPE),4072-8CE2-F75C,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from FRA),413F-FEED-A1E4,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from FJR),5EC2-81BB-43EC,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from YYZ),5F69-73B4-6053,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from GRQ),7D39-1AFB-4B99,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from LBG),95F5-CEED-5B1D,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from PRG),B0AA-6A50-111F,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from LAS),B9E8-CB9D-8036,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from SEA),BE53-CCFD-C68B,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from HKG),C44C-0369-8906,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from CBF),C509-11B9-542B,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from SFO),D034-76C4-1B7F,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from LHR),E0A3-74CB-1240,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from CHS),E44B-D730-F71A,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from IAD),F1A8-673A-18A7,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from GRU),F474-1C86-A5EF,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Firebase App Hosting,825D-BF56-C188,Firebase App Hosting -- Uncached Response Bytes (from DFW),F62F-07B5-1DB9,0,gibibyte,"0,00","0,00","-0,00","0,000000","0,00",0%
+Cloud Build,8B5D-EF7D-EB12,Build time e2-standard-2,A464-9020-6404,"3,033",minute,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Storage,95FF-2EF5-5EA1,Download Worldwide Destinations (excluding Asia & Australia),22EB-AAE8-FBCD,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Storage,95FF-2EF5-5EA1,GCP Storage Data Transfer between Northern America and Europe,C7FF-4F9E-C0DB,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Storage,95FF-2EF5-5EA1,Standard Storage US Regional,E5F0-6A5D-7BAD,0,gibibyte month,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Storage,95FF-2EF5-5EA1,Standard Storage Frankfurt,F272-7933-F065,0,gibibyte month,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Inter Region Data Transfer Out from Americas to Finland,13EA-07C9-BE0C,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Data Transfer to Google Services from Netherlands to Netherlands,2DD7-4903-A88E,"1,537",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Inter Region Data Transfer Out from Netherlands to Finland,4C7E-BB81-2B13,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Inter Connect Data Transfer Out EMEA,7175-B1A3-8454,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,FDC Trial in Cloud SQL for PostgreSQL: Zonal - Micro instance in Netherlands,81BB-217C-FE01,"49,134",hour,"0,57","0,00","-0,57","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Inter Region Data Transfer Out from Americas to Americas,8524-4DD5-9D67,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Data Transfer to Google Services from Americas to Americas,85F4-8AFC-FF68,"3,524",gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,FDC Trial in Cloud SQL for PostgreSQL: Zonal - Standard storage in Netherlands,9DEE-B118-0AE3,"0,682",gibibyte month,"0,13","0,00","-0,13","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Inter Region Data Transfer Out from Americas to London,A064-C398-CA09,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Inter Region Data Transfer Out from Netherlands to London,A1E1-DE13-BFA8,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,FDC Trial in Cloud SQL for PostgreSQL: Zonal - Standard storage in Americas,B314-CE7E-685A,"5,339",gibibyte month,"0,91","0,00","-0,91","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,Network Inter Region Data Transfer Out from Netherlands to Americas,EAA1-40D1-12A5,0,gibibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud SQL,9662-B51E-5089,FDC Trial in Cloud SQL for PostgreSQL: Zonal - Micro instance in Americas,FA21-925E-BC01,"384,383",hour,"4,04","0,00","-4,04","0,000000","0,00",0%
+Storage Insights,9C87-5BCE-65DD,Active Logical Storage,B192-705E-875C,0,gibibyte month,"0,00","0,00","0,00","0,000000","0,00",0%
+Cloud Pub/Sub,A1E8-BE35-7EBC,Message Delivery Basic,027D-B6C7-CCA2,0,tebibyte,"0,00","0,00","0,00","0,000000","0,00",0%
+Gemini API,AEFD-7695-64FA,GenerateContent input token count for Gemini 1.5 Flash 8B when input is up to 128k tokens,0A2D-DE36-8A9C,2,count,"0,00","0,00","0,00","0,000000","0,00",0%
+Gemini API,AEFD-7695-64FA,Generate content input token count gemini 2.5 flash lite short input text,399C-32AD-1412,2,count,"0,00","0,00","0,00","0,000000","0,00",0%
+Gemini API,AEFD-7695-64FA,GenerateContent text input token count for Gemini 2.0 Flash Lite,4F47-4429-D871,1,count,"0,00","0,00","0,00","0,000000","0,00",0%
+Networking,E505-1604-58F8,Networking Service Directory Integrated Resource,50F4-D7E5-3682,"1,93",month,"0,00","0,00","0,00","0,000000","0,00",0%
+Networking,E505-1604-58F8,Network Intelligence Center Network Analyzer Resource Hours,9BF8-CD36-F9B8,504,count,"0,55","0,00","-0,55","0,000000","0,00",0%
+Networking,E505-1604-58F8,Network Intelligence Center Internet to Google Cloud Performance Resource Hours,BDBA-22FA-3925,504,count,"0,40","0,00","-0,40","0,000000","0,00",0%
+Networking,E505-1604-58F8,Network Intelligence Center Topology and Google Cloud Performance Resource Hours,D9AD-28F8-05D8,504,count,"0,55","0,00","-0,55","0,000000","0,00",0%
+Secret Manager,EE82-7A5E-871C,Secret access operations,EBA7-264F-2D2C,68,count,"0,00","0,00","0,00","0,000000","0,00",0%
+Security Command Center,FBF2-FC68-171A,Organization Level Security Command Center Premium for Cloud Run - CPU Time,8787-968C-2B4D,"4,334",hour,"0,02","0,00","-0,02","0,000000","0,00",0%
+,,,,,,,,Subtotal,226.502180,226.50
+,,,,,,,,Tax,0.000000,0.00
+,,,,,,,,Invoice total,226.500000,226.50

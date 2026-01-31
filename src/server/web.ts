@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import path from 'path';
 import os from 'os';
 import fetch from 'node-fetch';
+import swaggerUi from 'swagger-ui-express';
 import { Logger } from '../utils/logger.js';
 import { initDb, saveMessage, getMessages, createChat, DbMessage } from '../utils/db.js';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -21,6 +22,7 @@ import {
     buildHealthResponse,
 } from '../utils/health.js';
 import { corsWhitelist, requestId, requestLogging, apiRateLimit } from './middleware.js';
+import { swaggerSpec } from './swagger.js';
 
 const logger = new Logger('web_ui.log');
 const configManager = new ConfigManager();
@@ -58,6 +60,9 @@ export async function startWebServer() {
     app.use(requestId);
     app.use(requestLogging);
     app.use('/api', apiRateLimit);
+
+    // Swagger UI
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
@@ -120,7 +125,16 @@ export async function startWebServer() {
 
     // REST API Endpoints for Dashboard
 
-    // Health check endpoint (structured response, retry, timeout via health module)
+    /**
+     * @swagger
+     * /api/health:
+     *   get:
+     *     summary: System Health Check
+     *     description: Checks the status of internal components, Ollama, and AnythingLLM.
+     *     responses:
+     *       200:
+     *         description: Health status object
+     */
     app.get('/api/health', async (req, res) => {
         try {
             const [ollama, anythingllm] = await Promise.all([
@@ -142,7 +156,16 @@ export async function startWebServer() {
         }
     });
 
-    // Agents API
+    /**
+     * @swagger
+     * /api/agents:
+     *   get:
+     *     summary: List Agents
+     *     description: Returns a list of all registered agents and their capabilities.
+     *     responses:
+     *       200:
+     *         description: List of agents
+     */
     app.get('/api/agents', (req, res) => {
         try {
             const agents = agentManager.listAgentDefinitions();
@@ -195,7 +218,16 @@ export async function startWebServer() {
         }
     });
 
-    // Ollama API
+    /**
+     * @swagger
+     * /api/ollama/models:
+     *   get:
+     *     summary: List Ollama Models
+     *     description: Fetches available models from the configured Ollama instance.
+     *     responses:
+     *       200:
+     *         description: List of models
+     */
     app.get('/api/ollama/models', async (req, res) => {
         try {
             const baseUrl = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';

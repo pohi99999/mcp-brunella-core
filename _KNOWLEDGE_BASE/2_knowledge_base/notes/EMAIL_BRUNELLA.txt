@@ -1,0 +1,198 @@
+1. Fázis: A Terv és a Működési Elv
+
+A munkafolyamat a következőképpen fog kinézni:
+1.	Előkészítés: Létrehozunk egy egyszerű mappastruktúrát az e-mailek kezelésére: egyet a küldendő (pending) és egyet az elküldött (sent) e-maileknek.
+2.	Adatformátum: Meghatározzuk a .txt fájlok egységes formátumát, hogy a scriptem könnyen értelmezni tudja a címzettet, a tárgyat és az üzenet törzsét.
+3.	Hitelesítés: A meglévő authenticate_google.py scriptet fogjuk használni, hogy biztonságosan kapcsolódjunk a Gmail fiókodhoz anélkül, hogy a jelszavadat a kódban kellene tárolni. Ez a Google által javasolt, biztonságos OAuth 2.0 módszer.
+4.	Automatizálás: Megírom a központi Python scriptet (email_sender.py), ami:
+○	Beolvassa a pending mappában lévő összes .txt fájlt.
+○	Feldolgozza őket a megbeszélt formátum alapján.
+○	A Gmail API-n keresztül elküldi az e-maileket.
+○	Az elküldött e-mailekhez tartozó .txt fájlokat áthelyezi a sent mappába, hogy ne küldjük el őket újra.
+________________________________________
+2. Fázis: Előkészületek és Fájlstruktúra
+
+Mielőtt a kódolásba kezdünk, hozd létre a következő mappa- és fájlstruktúrát a gépeden. Javaslom, hogy mindent egy központi Brunella_Email_Automata mappába tegyél.
+
+
+
+G:/Brunella\_Email_Automata/
+│
+├── pending/              # Ide kerülnek a küldendő .txt e-mailek
+│   ├── email_ceg_1.txt
+│   └── email_partner_2.txt
+│
+├── sent/                 # Az elküldött e-mailek .txt-jei ide kerülnek át
+│
+├── authenticate_google.py  # A már meglévő hitelesítő szkripted
+├── email_sender.py         # Ezt a fájlt fogom most elkészíteni
+├── client_secret_....json  # A te Google API hozzáférésed
+└── token.json              # Ezt a hitelesítés után hozza létre a script
+
+
+A .txt Fájlok Formátuma
+
+Minden a pending mappába helyezett .txt fájlnak a következőképpen kell kinéznie. Ez biztosítja, hogy a scriptem egyértelműen tudja, melyik rész micsoda.
+Példa (email_ceg_1.txt):
+
+
+
+To: pelda.ceg@email.com
+Subject: Együttműködési Ajánlat
+---
+Tisztelt Cégvezető!
+
+Ez egy automatizált rendszeren keresztül küldött teszt üzenet, amely a Mester CRM rendszer adatai alapján generálódott.
+
+Üdvözlettel,
+[A Te Neved]
+
+Fontos szabályok:
+●	To: és Subject: sorok kötelezőek.
+●	A --- (három kötőjel) sor választja el a fejlécet az e-mail törzsétől. Minden, ami ez alatt van, az üzenet tartalma lesz.
+________________________________________
+3. Fázis: A Végrehajtó Script (email_sender.py)
+
+Itt van a Python script, ami elvégzi a munka dandárját. Mentsd el email_sender.py néven a fentebb létrehozott mappába.
+
+Python
+
+
+import os
+import base64
+from email.mime.text import MIMEText
+from googleapiclient.discovery import build
+from googleapiclient.errors import HttpError
+from authenticate_google import authenticate # Feltételezzük, hogy az authenticate_google.py ugyanabban a mappában van
+
+# A mappák elérési útjai
+PENDING_DIR = 'pending'
+SENT_DIR = 'sent'
+
+def create_message(sender, to, subject, message_text):
+    """Készít egy MIMEText objektumot a küldéshez."""
+    message = MIMEText(message_text)
+    message['to'] = to
+    message['from'] = sender
+    message['subject'] = subject
+    # A nyers üzenet base64 kódolása, ahogy a Gmail API kéri
+    raw_message = base64.urlsafe_b64encode(message.as_bytes()).decode()
+    return {'raw': raw_message}
+
+def send_message(service, user_id, message):
+    """Elküldi az e-mailt a Gmail API-n keresztül."""
+    try:
+        message = service.users().messages().send(userId=user_id, body=message).execute()
+        print(f"Üzenet elküldve. Message ID: {message['id']}")
+        return message
+    except HttpError as error:
+        print(f"Hiba történt az e-mail küldése közben: {error}")
+        return None
+
+def parse_email_file(file_path):
+    """Beolvas és feldolgoz egy .txt fájlt, visszaadja a részeit."""
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+        
+        headers = {}
+        body_start_index = -1
+
+        for i, line in enumerate(lines):
+            if line.strip() == '---':
+                body_start_index = i + 1
+                break
+            if ':' in line:
+                key, value = line.split(':', 1)
+                headers[key.strip().lower()] = value.strip()
+        
+        if 'to' not in headers or 'subject' not in headers or body_start_index == -1:
+            print(f"Hiba: A(z) '{os.path.basename(file_path)}' fájl formátuma hibás (hiányzik a 'To', 'Subject' vagy a '---' elválasztó).")
+            return None
+
+        body = "".join(lines[body_start_index:])
+        
+        return {
+            'to': headers['to'],
+            'subject': headers['subject'],
+            'body': body
+        }
+    except Exception as e:
+        print(f"Hiba a(z) '{os.path.basename(file_path)}' fájl olvasása közben: {e}")
+        return None
+
+def main():
+    """A fő folyamat, amely beolvassa, elküldi és archiválja az e-maileket."""
+    print("Google hitelesítés indítása...")
+    creds = authenticate()
+    if not creds:
+        print("A hitelesítés sikertelen, a program leáll.")
+        return
+        
+    service = build('gmail', 'v1', credentials=creds)
+    print("Sikeres kapcsolat a Gmail API-val.")
+
+    # Ellenőrizzük, hogy a mappák léteznek-e
+    if not os.path.exists(PENDING_DIR):
+        print(f"Hiba: A '{PENDING_DIR}' mappa nem létezik.")
+        return
+    if not os.path.exists(SENT_DIR):
+        os.makedirs(SENT_DIR) # Ha a sent mappa nem létezik, létrehozzuk
+        print(f"A '{SENT_DIR}' mappa létrehozva.")
+
+    # Küldendő fájlok listázása
+    email_files = [f for f in os.listdir(PENDING_DIR) if f.endswith('.txt')]
+    
+    if not email_files:
+        print("Nincsenek küldendő e-mailek a 'pending' mappában.")
+        return
+
+    print(f"\n{len(email_files)} db e-mail feldolgozása következik...\n")
+
+    for filename in email_files:
+        file_path = os.path.join(PENDING_DIR, filename)
+        email_data = parse_email_file(file_path)
+        
+        if email_data:
+            print(f"--- Fájl feldolgozása: {filename} ---")
+            print(f"Címzett: {email_data['to']}")
+            
+            message_body = create_message(
+                sender='me', # 'me' a hitelesített felhasználót jelöli
+                to=email_data['to'],
+                subject=email_data['subject'],
+                message_text=email_data['body']
+            )
+            
+            if send_message(service, 'me', message_body):
+                # Sikeres küldés után áthelyezés
+                try:
+                    destination_path = os.path.join(SENT_DIR, filename)
+                    os.rename(file_path, destination_path)
+                    print(f"A(z) '{filename}' sikeresen átmozgatva a '{SENT_DIR}' mappába.\n")
+                except OSError as e:
+                    print(f"Hiba a(z) '{filename}' fájl mozgatása közben: {e}\n")
+            else:
+                print(f"A(z) '{filename}' küldése sikertelen, a fájl a helyén marad.\n")
+
+if __name__ == '__main__':
+    main()
+
+
+________________________________________
+4. Fázis: Telepítés és Futtatás
+
+Már csak pár lépés van hátra:
+1.	Függőségek Telepítése:
+Ha még nincsenek telepítve a szükséges Python csomagok, nyiss egy terminált (parancssort) és futtasd a következő parancsot:
+Bash
+pip install --upgrade google-api-python-client google-auth-httplib2 google-auth-oauthlib
+
+2.	Első Futtatás és Hitelesítés:
+○	Navigálj a terminálban a Brunella_Email_Automata mappába.
+○	Futtasd a scriptet: python email_sender.py
+○	Az első futtatáskor a script megnyit egy böngészőablakot, ahol be kell jelentkezned a Google fiókodba és engedélyezned kell a hozzáférést a script számára.
+○	A sikeres engedélyezés után létrejön a token.json fájl. Ezt a script a jövőbeni futtatásokhoz fogja használni, így többet nem kell bejelentkezned.
+3.	Automatizált Működés:
+Innentől kezdve, ha egy vagy több megfelelően formázott .txt fájlt helyezel a pending mappába és lefuttatod a python email_sender.py parancsot, a rendszer automatikusan elvégzi a feladatot.
+Ez a megoldás skálázható, biztonságos és könnyen karbantartható. Ha bármelyik lépésnél elakadnál, vagy finomítani szeretnéd a működést, szólj!

@@ -1,0 +1,38 @@
+name: PR Reviewer
+
+on:
+  pull_request:
+    types: [opened, synchronize]
+
+permissions:
+  contents: 'read'
+  pull-requests: 'write'
+
+jobs:
+  pr-review:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          # Fetch the entire history to enable accurate diff comparisons
+          fetch-depth: 0
+
+      - name: Gemini PR Review
+        uses: google-github-actions/run-gemini-cli@v0.1.10
+        with:
+          # This command instructs the Gemini model to act as a code reviewer.
+          # It will analyze the diff of the pull request and provide feedback.
+          # You can customize the prompt below to fit your specific review criteria.
+          command: >
+            You are an expert code reviewer.
+            Please analyze the following code changes from a pull request.
+            Provide a concise, high-level summary of the changes.
+            Then, offer specific, actionable feedback on code quality, potential bugs, style inconsistencies, or areas for improvement.
+            Use markdown for formatting your review.
+            Here is the diff:
+            ```diff
+            ${{ github.event.pull_request.diff_url }}
+            ```
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          api_key: ${{ secrets.GEMINI_API_KEY }}

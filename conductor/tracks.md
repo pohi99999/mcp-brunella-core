@@ -4,6 +4,30 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### ✅ Lezárt Szálak (Completed Tracks)
 
+- [x] **CLI Gemini-fication & Developer Agent (2026-01-30):**
+  - **Eredmény:** CLI teljesen újraírva (`src/cli.ts` + `src/interactive.ts`). Stabilitási javítások (Stdio mode). `DeveloperAgent` implementálva és regisztrálva. Orchestrator felokosítva.
+  - 📂 *[./tracks/cli_gemini_fication_20260130/](./tracks/cli_gemini_fication_20260130/)*
+
+- [x] **AI Evaluator & Self-Healing (2026-01-30):**
+  - **Eredmény:** `EvaluatorAgent` implementálva (`src/agents/EvaluatorAgent.ts`). Képes auditálni (`/api/health`) és teszteket futtatni (`npm run test:vitest`). Regisztrálva a `registry.json`-ben.
+  - 📂 *[./tracks/ai_evaluator_self_healing_20260130/](./tracks/ai_evaluator_self_healing_20260130/)*
+
+- [x] **API Documentation & Swagger (2026-01-30):**
+  - **Eredmény:** Swagger UI (`/api-docs`) integrálva. `swagger-jsdoc` alapú definíciók.
+  - 📂 *[./tracks/docs_swagger_openapi_20260130/](./tracks/docs_swagger_openapi_20260130/)*
+
+- [x] **Containerization & Docker Compose (2026-01-30):**
+  - **Eredmény:** `Dockerfile.node`, `Dockerfile.python`, `docker-compose.yml` létrehozva.
+  - 📂 *[./tracks/docker_containerization_20260130/](./tracks/docker_containerization_20260130/)*
+
+- [x] **Python Subsystem Refactor (FastAPI/FastMCP) (2026-01-30):**
+  - **Eredmény:** `myai/server.py` FastAPI szerver. `PythonShell` refaktorálva HTTP-kérés alapúra (+ fallback). `start.bat` frissítve.
+  - 📂 *[./tracks/python_fastapi_refactor_20260130/](./tracks/python_fastapi_refactor_20260130/)*
+
+- [x] **Test Infrastructure Consolidation (Vitest) (2026-01-30):**
+  - **Eredmény:** Minden teszt (`node:test`) migrált Vitest-re. `test_build` mappa törölve. `npm test` = `vitest run`.
+  - 📂 *[./tracks/test_consolidation_vitest_20260130/](./tracks/test_consolidation_vitest_20260130/)*
+
 - [x] **Dashboard UI & Functionality Restoration (2026-01-30):**
   - **Eredmény:** 🎯 TÚLTELJESÍTVE! 17 REST API endpoint implementálva (health, agents, tasks, ollama, anythingllm, tools). Frontend architektúra újragondolva: apiService.ts, useDashboardData hook, SystemHealthCard (15s real-time monitoring), AnythingLLMIntegration (RAG interface). Runtime import hibák javítva. Build: 0 error (backend + frontend).
   - **Kulcsfunkciók:** Ollama connectivity check, AnythingLLM workspace management, Agent execution API, Socket.IO real-time updates.
@@ -45,28 +69,17 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### 🔧 Aktív Szálak (Active Tracks)
 
-- [ ] **Test Infrastructure Consolidation (Vitest) (2026-01-30):**
-  - **Cél:** `node --test` és `ts-node` alapú tesztek teljes kiváltása egységes Vitest konfigurációval. CI/CD egyszerűsítés.
-  - **Státusz:** 🔄 Folyamatban
-  - 📂 *[./tracks/test_consolidation_vitest_20260130/](./tracks/test_consolidation_vitest_20260130/)*
+- [ ] **Browser-Use Harvester with Structured JSON Output (2026-01-31):**
+  - **Cél:** A `myai/browser_worker.py` továbbfejlesztése strukturált JSON adatgyűjtésre (Harvester) és JSON kimenetre Pydantic modellekkel.
+  - 📂 *[./tracks/browser_use_harvester_20260131/](./tracks/browser_use_harvester_20260131/)*
 
-### ⏳ Várakozó Szálak (Pending Tracks)
+- [x] **LangSmith Integráció & Observability (2026-01-31):**
+  - **Eredmény:** LangSmith alapok és Browser-Use ágens híd implementálva. `myai/browser_worker.py` kész, Node.js híd (`browserBridge.ts`) stabilizálva. `swarm_ingest` és `swarm_browser_task` eszközök frissítve az új ágensre.
+  - 📂 *[./tracks/langsmith_integration_20260130/](./tracks/langsmith_integration_20260130/)*
 
-- [ ] **Python Subsystem Refactor (FastAPI/FastMCP) (2026-01-30):**
-  - **Cél:** `pythonShell.ts` (subprocess) kiváltása állandó FastAPI szerverrel a gyorsabb válaszidőkért és állapotmegőrzésért.
-  - 📂 *[./tracks/python_fastapi_refactor_20260130/](./tracks/python_fastapi_refactor_20260130/)*
-
-- [ ] **Containerization & Docker Compose (2026-01-30):**
-  - **Cél:** Teljes környezet (Node, Python, Redis/VectorDB) dockerizálása a hordozhatóságért.
-  - 📂 *[./tracks/docker_containerization_20260130/](./tracks/docker_containerization_20260130/)*
-
-- [ ] **API Documentation & Swagger (2026-01-30):**
-  - **Cél:** OpenAPI specifikáció generálása a backend végpontokhoz.
-  - 📂 *[./tracks/docs_swagger_openapi_20260130/](./tracks/docs_swagger_openapi_20260130/)*
-
-- [ ] **AI Evaluator & Self-Healing (2026-01-30):**
-  - **Cél:** Belső "Evaluator" ágens létrehozása, ami a `TEST_BOOK.md` alapján ellenőrzi a rendszert.
-  - 📂 *[./tracks/ai_evaluator_self_healing_20260130/](./tracks/ai_evaluator_self_healing_20260130/)*
+- [x] **Rendszerszintű leltár, takarítás, Dockerizálás és Brunella CLI ügynök integráció (2026-01-30):**
+  - **Eredmény:** Teljes cleanup elvégezve, a gyökérkönyvtár tiszta. A dokumentáció centralizálva a `Brunella.md`-be. Docker Compose frissítve hibrid módhoz. `project_organizer` és `agent_architect` regisztrálva a rendszerbe és a Brunella CLI kiegészítve az `agents` paranccsal.
+  - 📂 *[./tracks/system_cleanup_docker_20260130/](./tracks/system_cleanup_docker_20260130/)*
 
 - [x] **Autonomous Reasoning & Orchestration (2026-01-29):**
   - **Eredmény:** `OrchestratorAgent` (LLM Planner) implementálva. Task Queue (SQLite) integrálva az `AgentManager`-be. `executePlan` és `startWorkerLoop` funkcionális. End-to-End folyamat (Plan -> Queue -> Execute) tesztelve.

@@ -1,0 +1,788 @@
+1) Célkép: hogyan működik az ügynök
+
+Parancsbeviteli felület: Google Chat app (vagy a P-Day-M mobilappod) – természetes nyelvű utasítások. 
+Google for Developers
++1
+
+Orchestrator: Vertex AI (Gemini) + „tools” (function/extension) hívások. 
+Google Cloud
++2
+Google Cloud
++2
+
+Művelet-réteg Google-APIkon: Gmail, Drive, Calendar, Docs/Sheets, People.
+
+Vállalati hozzáférés: Service Account + Domain-wide Delegation (ha Workspace admin vagy), így az ügynök a jóváhagyott scope-okon impersonálja a felhasználót. 
+Google for Developers
+Google Támogatás
+
+Eseményvezérelt frissítés (nem polling):
+
+Gmail push → Pub/Sub → Orchestrator. (watch 7 naponta megújítandó) 
+Google for Developers
+
+Drive változások: Drive push / Workspace Events API. 
+Google for Developers
++1
+
+Router: Eventarc → Cloud Run/Workflows (ha kell összetett folyamat). 
+Google Cloud
++1
+
+2) Három bevált architektúra (válassz)
+
+A) Gyors MVP – Apps Script + Chat app (legkisebb súrlódás)
+
+Apps Script web app / add-on a Gmail/Drive/Naptárhoz; Chat-parancsokból hívható HTTP végpont. 
+Google for Developers
++2
+Google for Developers
++2
+
+Pro: 1 nap alatt működik, nincs infra. Con: kvóták, nagyobb terhelésnél szűk.
+
+B) „Pro” – Cloud Run mikroszerviz + Service Account DWD + Pub/Sub/Eventarc
+
+Python/Node API, amely Gmail/Drive/Calendar/Docs/Sheets műveleteket futtat; Gmail/Drive eseményeket Pub/Sub-on kap. 
+Google for Developers
+Google Cloud
+
+Pro: skáláz, auditálható, infra-érett. Con: egyszeri felhő beállítás.
+
+C) Agents-first – Vertex AI Agent Builder + Extensions
+
+Agent Builderrel felépített ügynök, amely Extensions-ön keresztül hív külső/APIs szolgáltatásokat és üzleti guardrail-eket. 
+Google Cloud
++2
+Google Cloud
++2
+
+Pro: gyors ügynöképítés, beépített eszköz-hívás logika. Con: funkcionalitás/előnézeti státuszok változhatnak.
+
+Javaslat: induljunk B)-vel (stabil, bővíthető), és párhuzamosan csináljunk egy A)-t gyors demonstrátornak.
+
+3) Biztonság és jogosultság (GDPR-barát)
+
+Legkisebb jogosultság: csak szükséges OAuth-scope-ok (Gmail send/readonly, Drive file, Calendar events stb.).
+
+Domain-wide Delegation (ha Workspace admin): Admin Console → Security → API controls → Domain-wide delegation; add Client ID + scopes. 
+Google for Developers
+
+Események: Gmail push-nál add „gmail-api-push@system.gserviceaccount.com
+” Publisher szerepet a Pub/Sub topicon. 
+Google for Developers
+
+Audit/megfigyelés: Cloud Logging + Error Reporting + kötelező naplózás a végrehajtott műveletekről.
+
+4) Tipikus parancsok (magyar „parancsnyelv” minták)
+
+„Küldd ki a Teaser e-mailt a ‘Döntéshozók’ Sheet listára, tárgy: ‘Premium Üllő Dev’, csatolmány: Drive/Teaser.pdf, nyelv: HU/EN/DE.”
+
+„Hozz létre 30 perces Google Meetet holnap 10:00-ra Üllő bemutató néven, résztvevők a Sales/lead-x kontaktcsoportból.”
+
+„Készíts Ajánlat-v1.docx sablonból új Google Docot az ügyfél nevével kitöltve, mentsd ‘Üllő/ajánlatok/2025-08’ mappába, és oszd meg view only.”
+
+„Ha új fájl kerül a ‘/Bejövő lead anyagok’ mappába, kérek összegző kivonatot (Docs) + feladatkártyát (Sheets), és küldd el jóváhagyásra.”
+
+5) 0→1 MVP megvalósítás (konkrét, rövid)
+
+0. Előkészítés (Cloud projekt)
+
+Engedélyezd: Gmail API, Drive API, Calendar API, Docs/Sheets API, Cloud Run, Pub/Sub, Eventarc, Vertex AI.
+
+1. Service Account + DWD
+
+Hozz létre Service Accountot; Admin Console-ban add Domain-wide Delegationt a szükséges scope-okkal (pl. gmail.modify, drive, calendar, documents, spreadsheets). 
+Google for Developers
+
+2. Gmail push beállítás
+
+Pub/Sub topic + subscription (push → Cloud Run endpoint). Adj Publisher jogot a gmail-api-push@system.gserviceaccount.com-nak. Állítsd be a users.watch-ot és napi megújítást. 
+Google for Developers
+
+3. Drive/Workspace események
+
+Drive push / Workspace Events API a fontos mappákra (pl. „Bejövő leadek”). 
+Google for Developers
++1
+
+4. Orchestrator (Cloud Run, Python példával)
+
+# requirements: google-api-python-client, google-auth, flask
+from flask import Flask, request
+from google.oauth2 import service_account
+from googleapiclient.discovery import build
+
+SCOPES = [
+  'https://www.googleapis.com/auth/gmail.modify',
+  'https://www.googleapis.com/auth/drive',
+  'https://www.googleapis.com/auth/calendar',
+  'https://www.googleapis.com/auth/documents',
+  'https://www.googleapis.com/auth/spreadsheets'
+]
+SA_PATH = '/secrets/sa.json'  # Secret Managerből mountolva
+IMPERSONATE = 'te@ceged.hu'   # vagy dinamikusan parancs alapján
+
+def as_user(api, version):
+    creds = service_account.Credentials.from_service_account_file(SA_PATH, scopes=SCOPES)
+    delegated = creds.with_subject(IMPERSONATE)
+    return build(api, version, credentials=delegated, cache_discovery=False)
+
+app = Flask(__name__)
+
+@app.post('/pubsub/gmail')
+def gmail_push():
+    # Pub/Sub üzenet dekód, majd history.list → üzleti logika
+    # végül szükség szerint válasz: e-mail vázlat, címkézés, stb.
+    return ('', 204)
+
+@app.post('/command')
+def command():
+    data = request.get_json()
+    intent = data.get('intent')  # pl. "send_teaser"
+    # ── példa: csatolmány felvétele, címzettek Sheetsből, e-mail küldése
+    gmail = as_user('gmail', 'v1')
+    # ... implementáció ...
+    return {'ok': True}
+
+
+5. Chat App (parancsok)
+
+Google Chat app készítése (Apps Script vagy Cloud Run), slash parancsok → /teaser_kikuld stb. 
+Google for Developers
+
+6. (Opcionális) Vertex AI Agent Builder/Extensions bekötés
+
+A természetes nyelvű parancs → Tool/Function hívás a fentiekre. 
+Google Cloud
++1
+
+6) Események és workflow-k – miért fontos
+
+Gmail push: nem kell pollolni, Pub/Sub üzenet érkezik minden bejövő változásról; a watch-ot 7 napon belül meg kell újítani. 
+Google for Developers
+
+Drive/Workspace Events: fájl-hozzáadás/szerkesztés esetén indít automatát (kivonat, címkézés, jogosultság). 
+Google for Developers
+
+Eventarc: stabil routing Cloud Run/Workflows felé, ha több forrást akarsz egységesen kezelni. 
+Google Cloud
++1
+
+7) Governance – mitől lesz „ügyfél-kész”
+
+Scope-mátrix dokumentum (ki/mi mire jogosult).
+
+Titokkezelés: Service Account kulcs Secret Managerben, KMS, rotation.
+
+Naplózás: Ki küldött e-mailt, melyik sablonnal, mikor; minden ügynök-akció visszakereshető.
+
+Visszaélés elleni védelmek: kvóta-limitek, külső címáttöltés kontroll (pl. max X/óra), jóváhagyási lépcső kritikus műveleteknél (pl. tömeges kiküldés).
+
+8) Következő lépés (válassz és indulunk)
+
+Választható start-csomagok:
+
+„A – Gyors demo”: Apps Script + Chat parancs: Teaser kiküldése Sheets-listára, Drive-csatolmánnyal. (1 projekt, 1 Chat parancs, 1 sablon) 
+Google for Developers
++1
+
+„B – Pro alap”: Cloud Run + DWD + Gmail push + 2 parancs („Teaser kiküld”, „Meet szervez”), + Drive-esemény kivonat. 
+Google for Developers
++1
+
+„C – Agents-first”: Agent Builder + 2 Tool (Gmail/Drive), Chat-ból természetes nyelvű parancs. 
+Google Cloud
+
+Írd meg, melyik opcióval menjünk, és bedrótozom a pontos scope-listát + a konkrét parancsok specifikációját (payload-sémák, Sheets-táblák, Drive-útvonalak). Ha szeretnéd, hozok kész kódrészleteket a „Teaser” tömeges kiküldéshez (Sheets → Gmail + Drive csatolmány) és a naptár-meeting automatához is.
+
+Ha közben a P-Day-M-ben akarod vezérelni a parancsokat, a Chat app helyett REST végpontot publikálunk, és ugyanazt az orchestrát hívja.
+
+Ezt mondtad:
+3 C 
+A ChatGPT ezt mondta:
+Ennyi ideig gondolkozott: 56s
+
+Remek – C) Agents-first (Vertex AI Agent Builder + Extensions). Az alábbi terv ügyfél-kész, lépésről lépésre megépíthető. Ahol fontos, hivatkozok a hivatalos Google-doksikra.
+
+0) Eredmény röviden (mit kapsz)
+
+Természetes nyelvű parancs → Agent megérti → Extension hívja a saját API-idat → a háttérben Gmail/Drive/Calendar/Docs/Sheets műveletek futnak.
+
+Hitelesítés: a Vertex AI az általad megadott Service Accounttal hívja a végpontokat (OIDC/OAuth), nincs “shared secret” káosz. 
+Google Cloud
+
+Régió: az Extension API us-central1 régióban érhető el. Ezt itt tervezzük. 
+Google Cloud
+
+1) Architektúra (rövid)
+
+Vertex AI Agent Builder – fő „agy”, ami tool/extension hívásokat végez. 
+Google Cloud
+
+OpenAPI-alapú Extension – a Te végpontjaid (Cloud Run/Functions) leírása, amit az Agent tud hívni. Spec feltöltés GCS-be + manifest. 
+Google Cloud
+
+Auth – Extension manifestben OIDC vagy OAuth, szolgáltatásfiókkal; Vertex AI a megadott SA nevében ad ki tokent és beállítja az audience-t a te API-d URL-jére. 
+Google Cloud
+
+Műveleti réteg – Cloud Run/Functions végpontok (Node/Python), amelyek Google Workspace API-kat hívnak.
+
+Push/Events (opcionális): Gmail watch (7 naponta megújítandó) + Workspace Events API/Drive events további automatizmusokhoz. 
+Google for Developers
++2
+Google for Developers
++2
+
+2) Megvalósítás 9 lépésben
+2.1 Előkészítés (GCP projekt)
+
+Engedélyezd: Vertex AI, Vertex AI Agent Builder/Extensions, Cloud Run/Functions, IAM, Secret Manager, Pub/Sub (későbbi eseményekhez), Gmail/Drive/Calendar/Docs/Sheets API.
+
+Régió: us-central1 az Extension miatt. 
+Google Cloud
+
+2.2 Service Account & jogosultság
+
+Hozz létre Service Accountot (pl. agent-ext@PROJECT.iam.gserviceaccount.com).
+
+Az Extensionhez auth: OIDC service account vagy OAuth service account – a manifestben megadod a SA-t; a Vertex Extension Service Agent jogosultságot kér getAccessToken/getOpenIdToken hívásra ezen a SA-n. 
+Google Cloud
++2
+Google Cloud
++2
+
+Workspace API-khoz a végpontod (nem az Extension!) használja a saját SA-ját. Ha van Workspace admin jogod: Domain-wide Delegation (impersonálás). (Best practice, skálázható.)
+
+2.3 Végpontok (Cloud Run/Functions)
+
+Alap 3 művelet (bővíthető):
+
+POST /send-teaser-email – tömeges e-mail, Drive-csatolmánnyal (HU/EN/DE szöveggel).
+
+POST /create-meet – Google Calendar esemény + Meet link.
+
+POST /doc-from-template – Google Doc sablon másolása, placeholder-csere, megosztás.
+
+Megjegyzés: Gmail push/watch és Drive/Workspace Events opcionális bővítés az eseményvezérelt automatizmusokhoz; Gmail watch-ot min. 7 naponta meg kell újítani. 
+Google for Developers
+
+2.4 OpenAPI specifikáció (Extension eszköz)
+
+Tedd fel GCS-be (pl. gs://pohi-ext/spec.yaml). A lényeg (részlet):
+
+openapi: 3.0.3
+info:
+  title: Pohi AgentOps
+  version: "1.0.0"
+servers:
+  - url: https://YOUR-RUN-URL.a.run.app
+paths:
+  /send-teaser-email:
+    post:
+      operationId: sendTeaserEmail
+      summary: Tömeges e-mail küldése Drive csatolmánnyal
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [sheetId, range, subject, bodyLangs, driveFileId]
+              properties:
+                sheetId: { type: string }
+                range: { type: string, example: "Cimzettek!A2:C" }
+                subject: { type: string }
+                bodyLangs:
+                  type: object
+                  properties:
+                    hu: { type: string }
+                    en: { type: string }
+                    de: { type: string }
+                driveFileId: { type: string }
+      responses:
+        "200": { description: OK }
+  /create-meet:
+    post:
+      operationId: createMeet
+      summary: Calendar meeting + Google Meet
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [title, startIso, durationMin, attendees]
+              properties:
+                title: { type: string }
+                startIso: { type: string, format: date-time }
+                durationMin: { type: integer }
+                attendees: { type: array, items: { type: string } }
+      responses: { "200": { description: OK } }
+  /doc-from-template:
+    post:
+      operationId: docFromTemplate
+      summary: Doc sablon klónozás + placeholder csere + megosztás
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [templateId, name, folderId, placeholders, shareEmails]
+              properties:
+                templateId: { type: string }
+                name: { type: string }
+                folderId: { type: string }
+                placeholders: { type: object, additionalProperties: { type: string } }
+                shareEmails: { type: array, items: { type: string } }
+      responses: { "200": { description: OK } }
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+security:
+  - bearerAuth: []
+
+
+Miért így? Az Extension „OpenAPI tool” alapján tudja a paramétereket és a típusokat, így az Agent a megfelelő hívást fogja kiválasztani. 
+Google Cloud
++1
+
+2.5 Extension manifest (auth + spec)
+
+Regisztráláskor a manifestben megadod a spec helyét és az auth-ot. Példa (részlet):
+
+{
+  "displayName": "Pohi AgentOps",
+  "description": "Gmail/Drive/Calendar/Docs műveletek",
+  "apiSpec": {
+    "source": "CLOUD_STORAGE",
+    "uri": "gs://pohi-ext/spec.yaml"
+  },
+  "authConfig": {
+    "authType": "OIDC_AUTH",
+    "oidcConfig": { "service_account": "agent-ext@PROJECT.iam.gserviceaccount.com" }
+  }
+}
+
+
+Az OIDC service account esetén a Vertex AI az adott SA-val ad ki ID tokent és automatikusan az API URL-re állítja az audience-et. 
+Google Cloud
+
+2.6 Cloud Run/Functions – példa implementáció (Node.js)
+
+Közös segédek (SA impersonálás a Workspace API-khoz):
+
+// package.json: "googleapis", "google-auth-library", "express", "nodemailer"
+import express from "express";
+import {GoogleAuth} from "google-auth-library";
+import {google} from "googleapis";
+
+const app = express();
+app.use(express.json());
+
+const WORKSPACE_SCOPES = [
+  "https://www.googleapis.com/auth/gmail.send",
+  "https://www.googleapis.com/auth/drive",
+  "https://www.googleapis.com/auth/calendar",
+  "https://www.googleapis.com/auth/documents",
+  "https://www.googleapis.com/auth/spreadsheets.readonly"
+];
+
+async function asUser(serviceAccountEmail, userEmail){
+  const auth = new GoogleAuth({
+    scopes: WORKSPACE_SCOPES,
+    clientOptions: { subject: userEmail }, // DWD impersonation
+  });
+  // Az ADC a futtató környezet SA-ját használja; DWD-hez az Admin Console-on kell beállítanod az SA-t és a scope-okat.
+  const client = await auth.getClient();
+  return { client };
+}
+
+
+1) POST /send-teaser-email – Gmail + Drive csatolmány
+
+import MailComposer from "nodemailer/lib/mail-composer/index.js";
+
+app.post("/send-teaser-email", async (req, res) => {
+  const { sheetId, range, subject, bodyLangs, driveFileId, userEmail } = req.body;
+  const { client } = await asUser(process.env.WORKSPACE_SA, userEmail);
+  const sheets = google.sheets({version:"v4", auth: client});
+  const drive  = google.drive({version:"v3", auth: client});
+  const gmail  = google.gmail({version:"v1", auth: client});
+
+  const rows = (await sheets.spreadsheets.values.get({ spreadsheetId: sheetId, range })).data.values || [];
+  const fileMeta = await drive.files.get({ fileId: driveFileId, fields: "name,mimeType" });
+  const fileData = await drive.files.get({ fileId: driveFileId, alt: "media" }, { responseType: "arraybuffer" });
+
+  const tasks = rows.map(async ([email, lang="hu"]) => {
+    const body = bodyLangs[lang] || bodyLangs.hu;
+    const mail = new MailComposer({
+      to: email,
+      subject,
+      text: body,
+      attachments: [{
+        filename: fileMeta.data.name,
+        content: Buffer.from(fileData.data),
+        contentType: fileMeta.data.mimeType
+      }]
+    });
+    const raw = (await mail.compile().build()).toString("base64").replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+    await gmail.users.messages.send({ userId: "me", requestBody: { raw }});
+  });
+
+  await Promise.all(tasks);
+  res.json({ ok: true, sent: rows.length });
+});
+
+
+2) POST /create-meet – Calendar esemény + Meet
+
+app.post("/create-meet", async (req, res) => {
+  const { title, startIso, durationMin, attendees=[], userEmail } = req.body;
+  const { client } = await asUser(process.env.WORKSPACE_SA, userEmail);
+  const calendar = google.calendar({version:"v3", auth: client});
+  const start = new Date(startIso);
+  const end = new Date(start.getTime() + durationMin*60000);
+
+  const event = {
+    summary: title,
+    start: { dateTime: start.toISOString() },
+    end:   { dateTime: end.toISOString() },
+    attendees: attendees.map(e => ({ email: e })),
+    conferenceData: { createRequest: { requestId: "req-"+Date.now() } }
+  };
+
+  const resp = await calendar.events.insert({
+    calendarId: "primary",
+    requestBody: event,
+    conferenceDataVersion: 1
+  });
+  res.json({ ok: true, htmlLink: resp.data.htmlLink, meet: resp.data.hangoutLink });
+});
+
+
+3) POST /doc-from-template – Docs sablon klónozás + csere
+
+app.post("/doc-from-template", async (req, res) => {
+  const { templateId, name, folderId, placeholders={}, shareEmails=[], userEmail } = req.body;
+  const { client } = await asUser(process.env.WORKSPACE_SA, userEmail);
+  const drive = google.drive({version:"v3", auth: client});
+  const docs  = google.docs({version:"v1", auth: client});
+
+  // másolat
+  const copy = await drive.files.copy({ fileId: templateId, requestBody: { name, parents: [folderId] }});
+  const documentId = copy.data.id;
+
+  // placeholder csere
+  const requests = Object.entries(placeholders).map(([k,v]) => ({
+    replaceAllText: { containsText: { text: `{{${k}}}`, matchCase: true }, replaceText: v }
+  }));
+  if (requests.length) await docs.documents.batchUpdate({ documentId, requestBody: { requests }});
+
+  // megosztás
+  await Promise.all(shareEmails.map(email => drive.permissions.create({
+    fileId: documentId,
+    requestBody: { type: "user", role: "reader", emailAddress: email },
+    sendNotificationEmail: false
+  })));
+
+  res.json({ ok: true, documentId, link: `https://docs.google.com/document/d/${documentId}/edit` });
+});
+
+
+Megjegyzés a Calendar/Gmail API-khoz: a Calendar műveletekhez events.insert és a Gmail push-hoz a „watch 7 naponta” szabály hivatalos; Drive push/Workspace Events modern alternatíva Drive változásokra. 
+Google for Developers
++3
+Google for Developers
++3
+Google for Developers
++3
+
+2.7 Agent Builder – Tool bekötés
+
+Hozz létre Agentet, add hozzá az Extensiont (OpenAPI tool).
+
+A model beállításnál adj példa-promptokat (few-shot), amelyek tool hívásokat indukálnak, pl.:
+
+„Küldd ki a Teaser levelet a ‘Döntéshozók’ Sheetről (… paraméterek …).”
+
+„Foglalj 30 perc Meetslotot holnap 10:00-tól ‘Üllő bemutató’ címmel …”
+
+Az Extension futtatásához szükséges jogosultság/SA beállításait az Extension manifestben állítod be (service account auth). 
+Google Cloud
++1
+
+2.8 Eseményvezérelt bővítés (később)
+
+Gmail Push: watch → Pub/Sub → futtasd az agentops végpontot a levél alapján (pl. “reply-with-template”). 7 nap újrahívás javasolt. 
+Google for Developers
+
+Workspace Events API: több appra kiterjedő, egységes előfizetés (meet/fálj/…); Drive events is elérhető. 
+Google for Developers
++2
+Google for Developers
++2
+
+2.9 Őrfalak (guardrails) és audit
+
+Scope-mátrix: csak szükséges scope (send, file, events, documents).
+
+Rate-limit: küldés X/óra; idegen domainek esetén manuális jóváhagyás.
+
+Naplózás: minden hívás requestId-je, paraméterek (PII nélkül).
+
+SA jogosultságok: Extension Service Agent kapjon getAccessToken/OpenIdToken jogot a megadott SA-ra. 
+Google Cloud
++1
+
+3) Parancs-minták (magyar parancsnyelv → tool paraméter)
+
+„Teaser kiküldése: subject=Premium Üllő Dev, file=driveFileId, sheet=1Abc.., range=Címzettek!A2:C, lang=HU/EN/DE.”
+
+„Meet szervezés: Üllő bemutató, 2025-09-02T10:00:00+02:00, 30 perc, résztvevők: [e1@.., e2@..].”
+
+„Ajánlat dokumentum: sablon=templateId, név=Ajánlat-X, mappa=folderId, placeholders={…}, share=[…].”
+
+4) Bevezetési checklist (gyors indulás)
+
+Infra
+
+ GCP projekt + us-central1
+
+ agent-ext@ SA + Extension Service Agent jogosultságai beállítva 
+Google Cloud
++1
+
+ Cloud Run/Functions deploy (3 végpont)
+
+ Secret Manager: API-kulcsok/SA JSON (ha kell)
+
+ GCS bucket: gs://pohi-ext/spec.yaml (OpenAPI)
+
+Workspace
+
+ (Ha van admin jog) Domain-wide Delegation a WORKSPACE_SA-ra (Gmail/Drive/Calendar/Docs/Sheets scopok)
+
+ Teszt Sheet + Drive fájl + Doc sablon + mappa
+
+Agent
+
+ Extension regisztráció (manifest + auth) 
+Google Cloud
+
+ Few-shot példák + tool mapping
+
+ Try-it teszt futtatás
+
+5) Kockázatok & döntések
+
+Régiók: Extension csak us-central1 – itt futtasd az Agentet. 
+Google Cloud
+
+Jogosultság: ha nincs DWD, 3-lépcsős OAuth kell felhasználónként; DWD-vel a backend impersonál.
+
+Események: Gmail watch 7 nap limit; Drive/Workspace Events egységesebb jövőbiztosítás. 
+Google for Developers
++2
+Google for Developers
++2
+
+6) Következő lépés – végrehajtási terv (1 napos MVP)
+
+Spec.yaml feltöltés + 3 végpont deploy (a fenti kóddal).
+
+Extension regisztrálása OIDC SA-val. 
+Google Cloud
+
+Agent létrehozása + few-shotok betöltése.
+
+Smoke-teszt:
+
+/send-teaser-email 3 tesztcímre (HU/EN/DE).
+
+/create-meet ma 16:00 (Europe/Budapest) időzónával.
+
+/doc-from-template 2 placeholderrel.
+
+Ha szeretnéd, a fenti kódot Cloud Run-ra optimalizált repo-struktúrával és OpenAPI fájllal összecsomagolom (README-vel), és megy a GitHubodra – csak add meg, hogy Workspace DWD-t használunk-e vagy OAuth-ot.
+
+Források
+
+Extension létrehozása, OpenAPI spec + manifest, OIDC/OAuth SA hitelesítés minták. 
+Google Cloud
++1
+
+Extension API régiós korlát. 
+Google Cloud
+
+Agent fejlesztési sablonok (LangChain/LangGraph), ha keretrendszerrel építed. 
+Google Cloud
++1
+
+Workspace Events & Drive events. 
+Google for Developers
++2
+Google for Developers
++2
+
+Gmail push „watch” 7 napos megújítás. 
+Google for Developers
+
+Calendar Events API referenciák. 
+Google for Developers
+
+Ha készen állsz, indítom a repo-t a fentiekkel (OpenAPI + Functions + deploy-szkriptek) és igazítom a P-Day-M apphoz/parancsnyelvhez.
+
+Ezt mondtad:
+Rendbem
+A ChatGPT ezt mondta:
+Ennyi ideig gondolkozott: 36s
+Pohi Agent Ops (vertex Ai Extension) – Mvp Csomag
+· other
+# Pohi AgentOps (Vertex AI Extension) – MVP
+# Impersonált felhasználó alapértelmezett e-mailje
+DEFAULT_IMPERSONATE_USER=you@your-domain.com
+
+
+# Secret Managerből jön; lokál teszthez ide teheted plaintextként is
+WORKSPACE_SA_KEY={"type":"service_account","project_id":"...","private_key_id":"...","private_key":"-----BEGIN PRIVATE KEY-----\n...\n-----END PRIVATE KEY-----\n","client_email":"workspace-sa@PROJECT_ID.iam.gserviceaccount.com","client_id":"...","auth_uri":"https://accounts.google.com/o/oauth2/auth","token_uri":"https://oauth2.googleapis.com/token","auth_provider_x509_cert_url":"https://www.googleapis.com/oauth2/v1/certs","client_x509_cert_url":"..."}
+```
+
+
+---
+
+
+## cloudrun.yaml (opcionális infra-as-code)
+
+
+```yaml
+apiVersion: serving.knative.dev/v1
+kind: Service
+metadata:
+  name: agentops
+  namespace: default
+spec:
+  template:
+    spec:
+      serviceAccountName: workspace-sa@PROJECT_ID.iam.gserviceaccount.com
+      containers:
+        - image: gcr.io/PROJECT_ID/agentops:latest
+          env:
+            - name: DEFAULT_IMPERSONATE_USER
+              value: you@your-domain.com
+            - name: WORKSPACE_SA_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: WORKSPACE_SA_KEY
+                  key: latest
+      containerConcurrency: 80
+```
+
+
+---
+
+
+## scripts/deploy.sh
+
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+PROJECT_ID=${PROJECT_ID:-"your-project"}
+REGION=us-central1
+SERVICE=agentops
+
+
+# Secret (egyszeri)
+#gcloud secrets create WORKSPACE_SA_KEY --replication-policy=automatic || true
+#gcloud secrets versions add WORKSPACE_SA_KEY --data-file=sa-workspace.json
+
+
+# Build & Deploy
+gcloud run deploy "$SERVICE" \
+  --source . \
+  --region "$REGION" \
+  --service-account=workspace-sa@${PROJECT_ID}.iam.gserviceaccount.com \
+  --set-env-vars=DEFAULT_IMPERSONATE_USER="you@your-domain.com" \
+  --update-secrets=WORKSPACE_SA_KEY=WORKSPACE_SA_KEY:latest \
+  --no-allow-unauthenticated
+
+
+RUN_URL=$(gcloud run services describe "$SERVICE" --region "$REGION" --format='value(status.url)')
+echo "RUN_URL=$RUN_URL"
+
+
+echo "Granting run.invoker to Extension SA..."
+gcloud run services add-iam-policy-binding "$SERVICE" \
+  --region "$REGION" \
+  --member=serviceAccount:agent-ext@${PROJECT_ID}.iam.gserviceaccount.com \
+  --role=roles/run.invoker
+
+
+echo "All set."
+
+
+
+Rendben, Péter — a teljes MVP-csomagot feltettem a canvasra. Ez már egy „plug-in” jellegű, bővíthető alap, amit a Vertex AI Agent Builder Extension közvetlenül tud hívni.
+
+Következő 5 lépés (gyors végrehajtás)
+
+GCP projekt + régió
+
+Projekt kiválasztása, régió: us-central1.
+
+Két Service Account
+
+agent-ext@… (Extension OIDC) – kulcs nélkül.
+
+workspace-sa@… (DWD) – Domain-wide Delegation a Gmail/Drive/Calendar/Docs/Sheets scopokra.
+
+A workspace-sa JSON kulcsát töltsd fel Secret Managerbe WORKSPACE_SA_KEY néven.
+
+Cloud Run deploy
+
+Futtasd a canvasban található scripts/deploy.sh lépéseit, vagy a README parancsait.
+
+Adj roles/run.invoker jogot az agent-ext@… SA-nak a szolgáltatásra.
+
+OpenAPI + Extension
+
+Másold fel az openapi/spec.yaml-t GCS-be.
+
+Hozd létre az Extensiont (OIDC→agent-ext@…) és add meg a spec URI-t.
+
+Agent Builder
+
+Készíts Agentet, add hozzá toolként a fenti Extensiont.
+
+Használd a README végén a few-shot példákat.
+
+Teszthez szükséges azonosítók
+
+Amikor futtatnád a 3 műveletet, ezek kellenek (bedobhatod ide, és beírjuk a payloadokba):
+
+<DRIVE_FILE_ID> – a Teaser PDF.
+
+<SHEET_ID> + range (pl. Címzettek!A2:C).
+
+<DOC_TEMPLATE_ID> – ajánlat sablon.
+
+<DRIVE_FOLDER_ID> – ahová az új Doc menjen.
+
+DEFAULT_IMPERSONATE_USER – az a Workspace-felhasználó, akinek a nevében fusson (pl. te@ceged.hu
+).
+
+Parancs-minták (Agent felé)
+
+„Küldd ki a Teaser levelet a Döntéshozók tábláról, csatolmány: Teaser.pdf, HU/EN/DE.”
+
+„Foglalj 30 perces Meetet holnap 10:00-ra ‘Üllő bemutató’ címmel: a@dom.hu
+, b@dom.hu
+.”
+
+„Készíts ajánlat-dokumentumot a sablonból ‘Ajánlat-Üllő-001’ néven, oszd meg olvasásra.”
+
+Ha elküldöd a fenti ID-ket és a projektnév/SA-nevek pontos írásmódját, azonnal beparaméterezem a spec-et és a példapayloadokat, hogy egyből fusson az első próba.

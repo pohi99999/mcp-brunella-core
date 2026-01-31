@@ -1,0 +1,74 @@
+deps.dev API
+OpenSSF Scorecard
+
+A deps.dev egy Google által fejlesztett és üzemeltetett szolgáltatás, amelynek célja, hogy segítsen a fejlesztőknek jobban megérteni a nyílt forráskódú szoftvercsomagok szerkezetét, felépítését és biztonságát.
+
+A deps.dev API kétféleképpen érhető el: JSON-ként HTTP-n keresztül, valamint gRPC-n keresztül . Ez a tárház tartalmazza a gRPC API szolgáltatásdefinícióját, valamint mindkét API-hoz tartozó példaalkalmazásokat.
+
+A deps.dev API-nak két verziója létezik:
+
+v3 , proto : Alapvető funkciók stabilitási garanciával és elavulási szabályzattal. A legtöbb felhasználó számára ajánlott.
+v3alpha , proto : A v3 összes funkciója, további kísérleti funkciókkal. Időről időre inkompatibilis módon változhat.
+A HTTP API használata
+A HTTP API bármely HTTP klienssel elérhető. A gyors kezdéshez használhatja a curlparancssori eszközt. Példa:
+
+curl 'https://api.deps.dev/v3/systems/npm/packages/%40colors%2Fcolors'
+Vegye figyelembe, hogy a csomag nevében a „ @és” karakterek /százalékos kódolásúak.
+
+A HTTP API teljes dokumentációjáért kérjük, látogassa meg a docs.deps.dev weboldalt .
+
+A gRPC API használata
+A gRPC API bármely gRPC klienssel elérhető. A szolgáltatásdefiníció, amely leírja az API metódusait a kérés- és válaszüzenetekkel együtt, az api/v3/api.proto fájlban található.
+
+Az API gyors megismeréséhez használhatja a grpcurlparancssori eszközt. Példa:
+
+grpcurl \
+  -d '{"package_key":{"system":"NPM","name":"@colors/colors"}}' \
+  api.deps.dev:443 \
+  deps_dev.v3.Insights/GetPackage
+Példaalkalmazások
+A Go nyelven írt példaalkalmazások a következő könyvtárban találhatók examples:
+
+artifact_querybemutatja, hogyan lehet lekérdezni a deps.dev HTTP API-t fájltartalom hash alapján.
+container_base_imagebemutatja, hogyan számítható ki a Chain ID egy OCI konténerképből, és hogyan használható a deps.dev HTTP API az alapkép(ek) azonosítására.
+dependencies_dotLekér egy feloldott függőségi gráfot a deps.dev HTTP API-ból, és megjeleníti azt a Graphviz által használt DOT nyelven.
+maven_parse_resolveelemzi és feldolgozza a Maven pom.xml fájlt, majd meghívja a feloldót a függőségi gráf generálásához.
+package_lock_licensesés package_lock_licenses_batch a függőségeket egy npm package-lock.json fájlból olvassák be, és a licenceiket a deps.dev-ből kérik le, a gRPC API-hoz intézett egyidejű kérések, illetve a HTTP API-hoz intézett kötegelt kérések használatával.
+resolvefüggőségi feloldást végez egy közzétett npm csomag egyetlen verzióján, majd összehasonlítja a kapott gráfot a GetDependencies végpontból származó eredménnyel.
+Harmadik féltől származó eszközök és integrációk
+Megjegyzendő, hogy ezek közösség által készített eszközök, és a deps.dev központi karbantartói nem támogatják őket.
+
+edoardottt/depsdevCLI kliens (és Golang modul) a deps.dev API-hoz.
+safedep/vetCLI eszköz nyílt forráskódú függőségek szabályzatvezérelt ellenőrzéséhez a deps.dev API adatforrásként való használatával.
+Adat
+A deps.dev számos forrásból összesíti az adatokat:
+
+Csomagadatok (beleértve a csomag- és verzióneveket, leírásokat, függőségi követelményeket stb.)
+Crates.io
+Go modul tükör-, index- és ellenőrzőösszeg-adatbázisa
+Maven központi adattár
+A Google Maven adattára
+Jenkins Maven adattára
+npm nyilvántartás
+NuGet
+PyPI
+Projektadatok (beleértve a projektek nevét, leírását, elágazásokat és csillagokat stb.)
+GitHub
+GitLab
+Bitbucket
+Biztonsági figyelmeztetések
+OSV.dev
+Kapcsolódó adatok
+OpenSSF Scorecard
+OSS-Fuzz
+Az ezen forrásokból származó adatok felhasználásával kapcsolatos részletekért kérjük, tekintse meg a dokumentációjukat.
+
+Az adatok összesítése mellett a deps.dev további adatokat is generál, beleértve a feloldott függőségeket, tanácsadó statisztikákat, entitások közötti kapcsolatokat stb. Ezek a generált adatok CC-BY 4.0 licenc alatt érhetők el.
+
+Feltételek
+A deps.dev API használatára a Google API Szolgáltatási Feltételei vonatkoznak .
+
+Az ügyfelek kifejezetten jogosultak az API által szolgáltatott adatok gyorsítótárazására.
+
+Kapcsolat
+Ha kérdése van az API-val kapcsolatban, vagy problémát szeretne bejelenteni, kérjük, hozzon létre egy problémát, vagy vegye fel velünk a kapcsolatot a depsdev@google.com címen .

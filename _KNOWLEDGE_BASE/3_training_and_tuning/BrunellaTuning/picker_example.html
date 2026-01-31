@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Google Picker API Example</title>
+    <meta charset="utf-8" />
+</head>
+<body>
+
+    <h2>Google Picker API Példa</h2>
+    <p>Ez a példa bemutatja, hogyan lehet a Google Picker API segítségével fájlokat kiválasztani a Google Drive-ról.</p>
+
+    <button id="pick-button">Válassz fájlt a Drive-ról</button>
+
+    <div id="result" style="margin-top: 20px; font-family: monospace;"></div>
+
+    <script type="text/javascript">
+        // A te adataid
+        const API_KEY = 'AIzaSyAcvV4maSR0cAFdqmcD1rTp15zDywBpLxA';
+        // FONTOS: Ezt a saját Client ID-dra kell cserélned a Google Cloud Console-ból!
+        const CLIENT_ID = '608181723722-v2qrf64eq8lksbih9dk5fc1f7t9ksnop.apps.googleusercontent.com'; 
+
+        const SCOPES = ['https://www.googleapis.com/auth/drive.readonly'];
+        let tokenClient;
+        let accessToken = null;
+
+        function gapiLoaded() {
+            gapi.load('client:picker', initializePicker);
+        }
+
+        function gisLoaded() {
+            tokenClient = google.accounts.oauth2.initTokenClient({
+                client_id: CLIENT_ID,
+                scope: SCOPES.join(' '),
+                callback: (tokenResponse) => {
+                    accessToken = tokenResponse.access_token;
+                    // A sikeres hitelesítés után hozzuk létre a pickert
+                    createPicker();
+                },
+            });
+        }
+
+        function initializePicker() {
+            // A gapi kliens inicializálása
+            gapi.client.load('https://www.googleapis.com/discovery/v1/apis/drive/v3/rest');
+        }
+
+        function handleAuthClick() {
+            if (accessToken) {
+                gapi.auth.setToken({ access_token: accessToken });
+                createPicker();
+            } else {
+                // Kérjük a felhasználót, hogy jelentkezzen be
+                tokenClient.requestAccessToken({ prompt: 'consent' });
+            }
+        }
+
+        function createPicker() {
+            if (!accessToken) return;
+
+            const view = new google.picker.View(google.picker.ViewId.DOCS);
+            view.setMimeTypes("image/png,image/jpeg,image/jpg,application/pdf");
+
+            const picker = new google.picker.PickerBuilder()
+                .setAppId(CLIENT_ID) // Az App ID ugyanaz, mint a Client ID
+                .setOAuthToken(accessToken)
+                .addView(view)
+                .setDeveloperKey(API_KEY)
+                .setCallback(pickerCallback)
+                .build();
+            picker.setVisible(true);
+        }
+
+        function pickerCallback(data) {
+            let resultText = '';
+            if (data.action == google.picker.Action.PICKED) {
+                const doc = data.docs[0];
+                resultText = `<h3>Kiválasztott fájl:</h3>
+                              <p><b>Név:</b> ${doc.name}</p>
+                              <p><b>ID:</b> ${doc.id}</p>
+                              <p><b>URL:</b> <a href="${doc.url}" target="_blank">${doc.url}</a></p>
+                              <p><b>MIME Típus:</b> ${doc.mimeType}</p>`;
+            }
+            document.getElementById('result').innerHTML = resultText;
+        }
+
+        document.getElementById('pick-button').addEventListener('click', handleAuthClick);
+
+    </script>
+
+    <!-- Google API betöltése -->
+    <script async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+    <script async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
+</body>
+</html>
