@@ -1,0 +1,10 @@
+# ReAct Workflow Training
+name: react_workflow
+description: "Reasoning + Acting with external observation"
+steps:
+  - thought: "Need to identify 2024 Nobel Peace Prize winner"
+  - action: "search('2024 Nobel Peace Prize winner')"
+  - observe: "Parse search result"
+  - prompt: "Summarize the winner and their organization."
+    mode: react
+    output: logs/day2_react.json

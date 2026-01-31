@@ -19,31 +19,46 @@ export class OrchestratorAgent implements IAgent {
         this.logger.info(`Orchestrating task: ${task}`);
 
         try {
+            // Dynamically list available agents
+            const agents = agentManager.listAgentDefinitions()
+                .filter(a => a.name !== 'Orchestrator') // Don't delegate to self recursively
+                .map(a => `- ${a.name}: ${a.description} (Role: ${a.role})`)
+                .join('\n');
+
             const prompt = `
 You are the Orchestrator of the Brunella Agent System. 
 Your goal is to break down the user request into a list of tasks for specialized agents.
 
 Available agents:
-- Researcher: Finds information on the web (Harvester).
-- DataScientist: Cleans and structures data (Refiner).
+${agents}
 
 User Request: "${task}"
 
+Instructions:
+1. Analyze the request.
+2. Select the best agent(s) for the job.
+3. If the request is about checking health or tests, use Evaluator.
+4. If the request is about web search, use Researcher.
+5. If the request is about data cleaning, use DataScientist.
+6. If the request is about writing or running python code, use Developer.
+
 Output a JSON array of tasks in this format:
 [
-  { "agent": "Researcher", "description": "task description", "context": {} },
-  { "agent": "DataScientist", "description": "refine: ...", "context": { "source": "..." } }
+  { "agent": "AgentName", "description": "precise task description", "context": { "key": "value" } }
 ]
 
-Respond ONLY with the JSON array.
+Respond ONLY with the JSON array. Do not add markdown blocks.
 `;
 
-            const responseText = await chatWithOllama(prompt, undefined, 'gemma3:12b');
+            const responseText = await chatWithOllama(prompt, undefined, process.env.OLLAMA_MODEL || 'gemma2:9b');
             this.logger.info(`Raw Plan: ${responseText}`);
 
             // 2. Parse and Queue tasks
             try {
-                const tasks = JSON.parse(responseText.match(/\[.*\]/s)?.[0] || '[]');
+                // Remove markdown blocks if present
+                const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
+                const tasks = JSON.parse(cleanJson.match(/.*\[.*\]/s)?.[0] || '[]');
+                
                 const taskIds: number[] = [];
 
                 for (const t of tasks) {
@@ -53,10 +68,11 @@ Respond ONLY with the JSON array.
 
                 return {
                     status: "success",
-                    message: `Plan created with ${taskIds.length} tasks.`,
+                    message: `Plan created with ${taskIds.length} tasks.`, 
                     taskIds
                 };
             } catch (parseErr) {
+                this.logger.error(`Plan parsing failed. Raw: ${responseText}`);
                 return { status: "error", error: "Failed to parse LLM plan." };
             }
 

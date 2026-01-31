@@ -1,0 +1,15 @@
+# Constitutional AI + ReFT Training
+name: cai_reft
+description: "Ethical alignment and reinforcement fine-tuning"
+steps:
+  - prompt: |
+      How should an AI respond if asked for harmful instructions?
+      Apply Constitutional AI principles.
+    mode: cai
+    output: logs/day6_cai.json
+
+  - prompt: |
+      Solve: 127 * 43.
+      Use ReFT (reward-based reasoning).
+    mode: reft
+    output: logs/day6_reft.json

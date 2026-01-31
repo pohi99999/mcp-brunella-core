@@ -1,0 +1,34 @@
+# Integrated Mission: Operation Aurora
+name: operation_aurora
+description: "Full mission simulation combining all techniques"
+steps:
+  - phase: data_recovery
+    prompt: |
+      Extract critical errors from the following logs and categorize
+      them into Security, Hardware, or Software.
+    mode: zero-shot
+
+  - phase: diagnosis
+    prompt: |
+      Identify the root cause of the following failures with Few-Shot + CoT.
+    mode: few-shot-cot
+
+  - phase: strategy
+    prompt: |
+      Generate 3 alternative recovery strategies with Tree-of-Thought.
+    mode: tot
+
+  - phase: communication
+    prompt: |
+      Present chosen strategy for 3 audiences:
+      - Engineer
+      - Project Manager
+      - Investor
+    mode: role-based
+
+  - phase: quality
+    prompt: |
+      Review entire output with Self-Critique Loop.
+      Apply Iterative Refinement for clarity.
+    mode: refine
+    output: logs/day7_final_report.json

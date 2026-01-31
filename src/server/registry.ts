@@ -17,7 +17,11 @@ import { agentManager } from "../agents/AgentManager.js";
 import { DataScientistAgent } from "../agents/DataScientistAgent.js";
 import { ResearcherAgent } from "../agents/ResearcherAgent.js";
 import { OrchestratorAgent } from "../agents/OrchestratorAgent.js";
+import { EvaluatorAgent } from "../agents/EvaluatorAgent.js";
+import { DeveloperAgent } from "../agents/DeveloperAgent.js";
+import { DynamicAgent } from "../agents/DynamicAgent.js";
 import { z } from "zod";
+import path from "path";
 
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
@@ -40,10 +44,21 @@ const registeredToolsList: RegisteredToolInfo[] = [
 const toolHandlers = new Map<string, (args: any) => Promise<any>>();
 
 export function registerAllTools(server: McpServer) {
-    // Initialize Agents
+    // Initialize Static Agents
     agentManager.registerAgent(new DataScientistAgent());
     agentManager.registerAgent(new ResearcherAgent());
     agentManager.registerAgent(new OrchestratorAgent());
+    agentManager.registerAgent(new EvaluatorAgent());
+    agentManager.registerAgent(new DeveloperAgent());
+
+    // Initialize Dynamic Agents
+    try {
+        const agentsDir = path.join(process.cwd(), 'myai/agents');
+        agentManager.registerAgent(new DynamicAgent(path.join(agentsDir, 'project_organizer.toml')));
+        agentManager.registerAgent(new DynamicAgent(path.join(agentsDir, 'agent_architect.toml')));
+    } catch (e) {
+        console.warn("Could not load dynamic agents:", e);
+    }
 
     // Register External Tools
     registerWorkspaceTools(server);

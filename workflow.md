@@ -1,7 +1,7 @@
 # MCP Brunella Core - Fejlesztői Kézikönyv
 
-> **Státusz:** Aktív Fejlesztés alatt
-> **Verzió:** 2.0 (Alpha)
+> **Státusz:** Aktív Fejlesztés alatt (Production Ready Alpha)
+> **Verzió:** 2.1 (Gemini-fication Update)
 
 ## Tartalomjegyzék
 
@@ -22,7 +22,8 @@ A **MCP Brunella Core** a "Cogella" ökoszisztéma központi eleme. Ez egy Model
 - **📁 Workspace Kezelés:** Biztonságos fájlrendszer hozzáférés.
 - **🧠 Tudásbázis (RAG):** LanceDB alapú vektoros keresés dokumentumokban.
 - **🌐 Böngészés:** Playwright alapú headless böngésző.
-- **🤖 AI Ügynökök:** Különálló, specializált ügynökök (pl. Kutató, Fejlesztő) koordinálása.
+- **🤖 AI Ügynökök:** Különálló, specializált ügynökök (pl. Kutató, Fejlesztő, Auditor) koordinálása.
+- **💻 Gemini CLI:** Fejlett parancssori felület (Chat, Interaktív menü, Doctor).
 
 ---
 
@@ -47,7 +48,7 @@ mcp-brunella-core/
 │   ├── server/              # 🔌 Express + Socket.IO Endpointok
 │   ├── tools/               # 🛠 MCP Eszköz implementációk
 │   └── utils/               # 🧰 Segédkönyvtárak (Logger, RAG, DB)
-├── myai/                    # 🐍 Python kiterjesztések rétege
+├── myai/                    # 🐍 Python API Szerver (FastAPI)
 └── logs/                    # 📋 Strukturált naplófájlok
 ```
 
@@ -64,17 +65,27 @@ mcp-brunella-core/
 ### Telepítés és Indítás
 
 ```bash
-# 1. Függőségek telepítése
+# 1. Automatikus indítás (Ajánlott)
+start.bat
+
+# 2. VAGY Manuális fejlesztői mód
 npm install
-
-# 2. Fejlesztői mód (Auto-reload)
-npm run dev
-
-# 3. Tesztek futtatása
-npm test
+npm run build
+npm start
 ```
 
-A szerver alapértelmezetten a `3000`-es porton (Web UI) és stdio-n (MCP) kommunikál.
+### CLI Használat
+
+```bash
+# Interaktív menü
+npm run cli
+
+# Chat mód
+npm run cli chat
+
+# Diagnosztika
+npm run cli doctor
+```
 
 ---
 
@@ -91,8 +102,11 @@ A vektoros keresések eredményeit memóriában gyorsítótárazzuk. A statiszti
 ### 3. Bővített Health Check
 A rendszer induláskor és kérésre ellenőrzi a külső szolgáltatások (Ollama, Adatbázisok) elérhetőségét.
 
-### 4. Konfiguráció Kezelés
-A rendszer automatikusan felismeri a `brunella.config.json` vagy `.yaml` fájlokat.
+### 4. Swagger UI (Új!)
+Az API dokumentáció elérhető a `/api-docs` végponton (amikor a szerver fut).
+
+### 5. Python API (Új!)
+A `myai` mappa egy önálló FastAPI szervert tartalmaz a gyors Python kód futtatásához.
 
 ---
 
@@ -104,7 +118,7 @@ A rendszer automatikusan felismeri a `brunella.config.json` vagy `.yaml` fájlok
 | :--- | :--- | :--- |
 | **"Ollama connection failed"** | Az Ollama nem fut vagy rossz porton figyel. | Indítsd el az Ollama-t (`ollama serve`) és ellenőrizd a `checkSystemHealth()` kimenetet. |
 | **"Failed to write log"** | Jogosultsági hiba a `logs/` mappában. | Töröld a `logs/` mappát vagy add meg a megfelelő írási jogot. |
-| **"Build error (TypeScript)"** | Inkompatibilis típusok a `src/tools/` mappában. | Futtass egy tiszta buildet: `npm run clean && npm run build`. |
+| **"Session not found" (CLI)** | Hálózati hiba SSE kapcsolatnál. | A CLI automatikusan átvált `stdio` módba, használd az `npm run cli`-t. |
 
 ### Debug Mód
 Ha részletesebb kimenetre van szükséged, állítsd a környezeti változót:
@@ -112,65 +126,6 @@ Ha részletesebb kimenetre van szükséged, állítsd a környezeti változót:
 STRUCTURED_LOGGING=1 NO_COLOR=1 npm run dev
 ```
 
-4. **Performance**
-   - Connection pooling
-   - Batch operations
-   - Lazy loading
-
-5. **Security**
-   - Rate limiting
-   - Authentication tokens
-   - Audit logging
-
 ---
 
-## Changelog
-
-### 2024-01-20 - Fejlesztési Sprint
-
-#### Hozzáadva
-- ✅ Strukturált logging rendszer (JSON + plain text)
-- ✅ YAML/JSON config fájl támogatás
-- ✅ RAG cache optimalizálás (in-memory, 1h TTL)
-- ✅ Bővített health check (szolgáltatások, workspace, cache)
-- ✅ Jest teszt infrastruktúra
-- ✅ Unit tesztek (Logger, AgentManager, Pipeline)
-- ✅ Type safety javítások (`any` -> `unknown`)
-- ✅ Konzisztens error handling
-- ✅ Cache statisztikák és management API
-- ✅ Config reload funkció
-
-#### Javítva
-- ✅ Web UI markdown formázási hiba
-- ✅ .gitignore bővítése
-- ✅ Config merge logika (precedencia rendszer)
-- ✅ Error handling konzisztencia
-
-#### Dokumentálva
-- ✅ Workflow dokumentáció
-- ✅ API dokumentáció alapok
-- ✅ Konfigurációs példák
-
----
-
-## Kapcsolat és Támogatás
-
-### Fejlesztési Kérdések
-
-Problémák vagy javaslatok esetén:
-1. Ellenőrizd a dokumentációt
-2. Nézd meg a health check eredményeket
-3. Vizsgáld meg a log fájlokat
-4. Futtass unit teszteket
-
-### Log Fájlok Helye
-
-- `logs/system_commands.log` - Rendszerparancsok
-- `logs/agent-manager.log` - Agent műveletek
-- `logs/pipeline.log` - Pipeline folyamatok
-- `logs/web_ui.log` - Web UI események
-- `logs/health_status.json` - Health check eredmények
-
----
-
-**Utolsó frissítés:** 2024-01-20
+**Utolsó frissítés:** 2026-01-30

@@ -1,0 +1,3 @@
+@echo off
+echo Brunella korabbi memoriajanak betoltese...
+gemini

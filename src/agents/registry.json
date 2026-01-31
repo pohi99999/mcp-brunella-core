@@ -81,6 +81,26 @@
       ]
     },
     {
+      "name": "evaluator",
+      "title": "Evaluator Agent",
+      "description": "Rendszer auditor, health check es belso tesztfuttato.",
+      "capabilities": [
+        "audit_system",
+        "run_tests",
+        "check_health"
+      ],
+      "tools": [
+        "system_run_command",
+        "monitor_get_metrics"
+      ],
+      "category": "quality",
+      "status": "active",
+      "tags": [
+        "audit",
+        "health"
+      ]
+    },
+    {
       "name": "documenter",
       "title": "Documentation Agent",
       "description": "Dokumentacio frissites, release jegyzetek, hasznalati mintak.",
@@ -118,6 +138,48 @@
       "tags": [
         "ops",
         "health"
+      ]
+    },
+    {
+      "name": "project_organizer",
+      "title": "Project Organizer",
+      "description": "Rendszerezi a projektet, mappánkénti tartalomjegyzéket készít és frissíti a könyvtártérképet.",
+      "capabilities": [
+        "organization",
+        "documentation",
+        "cleanup"
+      ],
+      "tools": [
+        "workspace_list_directory",
+        "workspace_read_file",
+        "knowledge_read_context"
+      ],
+      "category": "operations",
+      "status": "active",
+      "tags": [
+        "cleanup",
+        "structure"
+      ]
+    },
+    {
+      "name": "agent_architect",
+      "title": "Agent Architect",
+      "description": "Új ügynököket tervez, generálja a promptjaikat, függőségeiket és konfigurációjukat a leírás alapján.",
+      "capabilities": [
+        "prompt_engineering",
+        "agent_design",
+        "configuration"
+      ],
+      "tools": [
+        "workspace_read_file",
+        "knowledge_read_context",
+        "system_run_command"
+      ],
+      "category": "engineering",
+      "status": "active",
+      "tags": [
+        "design",
+        "meta"
       ]
     },
     {
