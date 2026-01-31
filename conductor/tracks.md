@@ -69,7 +69,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### 🔧 Aktív Szálak (Active Tracks)
 
-- [ ] **Browser-Use Harvester with Structured JSON Output (2026-01-31):**
+- [x] **Browser-Use Harvester with Structured JSON Output (2026-01-31):**
   - **Cél:** A `myai/browser_worker.py` továbbfejlesztése strukturált JSON adatgyűjtésre (Harvester) és JSON kimenetre Pydantic modellekkel.
   - 📂 *[./tracks/browser_use_harvester_20260131/](./tracks/browser_use_harvester_20260131/)*
 
@@ -89,5 +89,5 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### ⏳ Szüneteltetett / Integrált Szálak
 
-- [ ] **Dashboard & CLI SSE Fix (2026-01-27/28):**
+- [x] **Dashboard & CLI SSE Fix (2026-01-27/28):**
   - *Átvezetve az Audit és Recovery szálakba.*
