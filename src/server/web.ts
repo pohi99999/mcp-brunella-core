@@ -21,8 +21,10 @@ import {
     checkAnythingLLMHealth,
     buildHealthResponse,
 } from '../utils/health.js';
+import { chatWithOllama } from '../core/llm_client.js';
 import { corsWhitelist, requestId, requestLogging, apiRateLimit } from './middleware.js';
 import { swaggerSpec } from './swagger.js';
+import { socketService } from './SocketService.js';
 
 const logger = new Logger('web_ui.log');
 const configManager = new ConfigManager();
@@ -67,10 +69,11 @@ export async function startWebServer() {
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
         cors: {
-            origin: corsOriginList.length > 0 ? corsOriginList : '*',
+            origin: corsOriginList.length > 0 ? corsOriginList : ['http://localhost:5173', 'http://localhost:3000', '*'],
             methods: ['GET', 'POST'],
         },
     });
+    socketService.init(io);
 
     // Metrics Loop
     setInterval(() => {
@@ -255,27 +258,9 @@ export async function startWebServer() {
                 return;
             }
 
-            const baseUrl = process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434';
             const selectedModel = model || process.env.OLLAMA_MODEL || 'gemma2:9b';
-
-            const response = await fetch(`${baseUrl}/api/generate`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    model: selectedModel,
-                    prompt,
-                    system,
-                    stream: false
-                }),
-                signal: AbortSignal.timeout(60000)
-            });
-
-            if (!response.ok) {
-                throw new Error(`Ollama API error: ${response.statusText}`);
-            }
-
-            const data = await response.json() as any;
-            res.json({ response: data.response });
+            const response = await chatWithOllama(prompt, system, selectedModel);
+            res.json({ response });
         } catch (e: any) {
             res.status(500).json({ error: e.message });
         }
@@ -358,6 +343,34 @@ export async function startWebServer() {
     });
 
     // Tools API
+    app.post('/api/debug/broadcast-log', (req, res) => {
+        try {
+            const { message, type = 'info' } = req.body;
+            if (!message) {
+                res.status(400).json({ error: 'message is required' });
+                return;
+            }
+            socketService.broadcastLog(message, type);
+            res.json({ ok: true, message: 'Log broadcast sent' });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.post('/api/debug/agent-status', (req, res) => {
+        try {
+            const { agentName, status, taskDescription } = req.body;
+            if (!agentName || !status) {
+                res.status(400).json({ error: 'agentName and status are required' });
+                return;
+            }
+            socketService.updateAgentStatus(agentName, status, taskDescription);
+            res.json({ ok: true, message: 'Agent status update sent' });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
     app.get('/api/tools', (req, res) => {
         try {
             const tools = toolManager.getToolDefinitions();
@@ -384,7 +397,8 @@ export async function startWebServer() {
     io.on('connection', (socket) => {
         const DEFAULT_CHAT_ID = 'main-session';
         console.log('Client connected to Dashboard');
-        
+        socket.emit('system:log', { message: 'Rendszer indítása... Mission Control csatlakozva.', type: 'success', timestamp: Date.now() });
+
         socket.emit('tools_update', toolManager.getToolDefinitions());
         socket.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
 

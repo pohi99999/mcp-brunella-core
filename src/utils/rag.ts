@@ -1,79 +1,63 @@
+// FILE: src/utils/rag.ts
+// PURPOSE: Zone II: Hibrid memória rendszer (LanceDB) valós idejű íráshoz Node.js-ben.
+
 import * as lancedb from "@lancedb/lancedb";
-import { config } from '../config/index.js';
-import path from 'path';
-import fs from 'fs/promises';
+import fs from "fs/promises";
+import path from "path";
 
-// Use Ollama for embeddings
-async function getEmbedding(text: string): Promise<number[]> {
-    try {
-        const response = await fetch("http://localhost:11434/api/embeddings", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                model: "nomic-embed-text", // Standard fast embedding model
-                prompt: text
-            })
-        });
-        
-        if (!response.ok) throw new Error("Ollama embedding failed");
-        const data = await response.json();
-        return data.embedding;
-    } catch (e) {
-        console.error("Embedding error:", e);
-        return new Array(768).fill(0); // Fallback dummy vector (bad but prevents crash)
-    }
-}
+const DB_PATH = "./data/brunella_lancedb";
 
-// Database singleton
-let db: lancedb.Connection | null = null;
-let tbl: lancedb.Table | null = null;
+export class HybridMemory {
+  private dbPath = DB_PATH;
 
-export async function initRAG() {
-    const dbPath = path.join(config.systemLogDir, 'lancedb');
-    db = await lancedb.connect(dbPath);
-    
-    // Create or open table
-    const schema = {
-        id: "string",
-        path: "string",
-        content: "string",
-        vector: "vector[768]" // Assuming nomic-embed-text dimension
-    };
+  async addDocument(content: string, metadata: object) {
+    const db = await lancedb.connect(this.dbPath);
+    const tableNames = await db.tableNames();
 
-    // Simple check if table exists (API varies by version, trying open then create)
-    try {
-        tbl = await db.openTable("knowledge_base");
-    } catch {
-        // Create if not exists (need initial data or schema)
-        // LanceDB often requires data to infer schema or specific create call
-        // We'll skip deep creation logic here to avoid complexity in this snippet
-        // and rely on the tool to handle lazy creation on first index.
-    }
-}
-
-export async function addToIndex(filePath: string, content: string) {
-    if (!db) await initRAG();
-    
-    const vector = await getEmbedding(content.slice(0, 1000)); // Embed first 1k chars for summary
-    
-    const data = [{
-        id: filePath,
-        path: filePath,
-        content: content,
-        vector: vector
-    }];
-
-    if (!tbl) {
-        tbl = await db!.createTable("knowledge_base", data);
+    let table;
+    if (tableNames.includes("memory")) {
+      table = await db.openTable("memory");
     } else {
-        await tbl.add(data);
+      table = await db.createTable("memory", [{ vector: new Array(1536).fill(0), text: content, ...metadata }]);
     }
+
+    await table.add([{ text: content, ...metadata }]);
+  }
 }
 
-export async function searchRAG(query: string, limit = 5) {
-    if (!db || !tbl) return [];
-    
-    const queryVector = await getEmbedding(query);
-    const results = await tbl.vectorSearch(queryVector).limit(limit).toArray();
+const memory = new HybridMemory();
+
+/** Add content to the RAG index (path/id stored in metadata). */
+export async function addToIndex(pathOrId: string, content: string): Promise<void> {
+  await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => {});
+  await memory.addDocument(content, { path: pathOrId });
+}
+
+/** Search RAG by text (simple substring match until vector/embedding is wired). */
+export async function searchRAG(query: string, limit = 20): Promise<Array<{ text: string; path?: string }>> {
+  try {
+    const db = await lancedb.connect(DB_PATH);
+    const tableNames = await db.tableNames();
+    if (!tableNames.includes("memory")) return [];
+
+    const table = await db.openTable("memory");
+    const results: Array<{ text: string; path?: string }> = [];
+    const q = query.toLowerCase();
+
+    for await (const batch of table.query().limit(limit * 3)) {
+      const textCol = batch.getChild("text");
+      const pathCol = batch.schema.fields.find((f) => f.name === "path") ? batch.getChild("path") : null;
+      const n = batch.numRows;
+      for (let i = 0; i < n; i++) {
+        const text = String(textCol?.get(i) ?? "");
+        if (text.toLowerCase().includes(q)) {
+          results.push({ text, path: pathCol ? String(pathCol.get(i) ?? "") : undefined });
+          if (results.length >= limit) return results;
+        }
+      }
+    }
     return results;
+  } catch {
+    return [];
+  }
 }

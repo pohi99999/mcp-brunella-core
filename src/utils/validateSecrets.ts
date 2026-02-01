@@ -9,6 +9,21 @@ const validators: { name: string; check: () => boolean; hint: string }[] = [
     check: () => !!process.env.ANYTHINGLLM_API_KEY,
     hint: 'Set ANYTHINGLLM_API_KEY for AnythingLLM workspace/chat API.',
   },
+  {
+    name: 'N8N_TEST_USER',
+    check: () => !!process.env.N8N_TEST_USER,
+    hint: 'Set N8N_TEST_USER for n8n sandbox access.',
+  },
+  {
+    name: 'N8N_TEST_PASSWORD',
+    check: () => !!process.env.N8N_TEST_PASSWORD,
+    hint: 'Set N8N_TEST_PASSWORD for n8n sandbox access.',
+  },
+  {
+    name: 'N8N_TEST_URL',
+    check: () => !!process.env.N8N_TEST_URL,
+    hint: 'Set N8N_TEST_URL for n8n sandbox access.',
+  },
 ];
 
 export function validateSecrets(): void {

@@ -6,6 +6,7 @@ import { spawn } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
 import { config } from '../config/index.js';
+import { chatWithOllama } from '../core/llm_client.js';
 
 const logger = new Logger('pipeline.log');
 /** Configurable via PIPELINE_SANDBOX_TIMEOUT_MS. Stronger isolation (e.g. isolated-vm) optional for future. */
@@ -71,20 +72,7 @@ export class SelfHealingPipeline extends EventEmitter {
             this.emit('progress', `🧠 Kód generálása (Ollama)...`);
 
             try {
-                const controller = new AbortController();
-                const t = setTimeout(() => controller.abort(), 15000);
-                const ollamaRes = await fetch("http://localhost:11434/api/generate", {
-                    method: "POST",
-                    body: JSON.stringify({ model: "qwen2.5-coder:1.5b", prompt, stream: false }),
-                    signal: controller.signal,
-                    headers: { 'Content-Type': 'application/json' }
-                });
-                clearTimeout(t);
-
-                if (!ollamaRes.ok) throw new Error("Ollama connection failed");
-
-                const ollamaData = await ollamaRes.json() as { response?: string };
-                currentCode = ollamaData.response ?? "";
+                currentCode = await chatWithOllama(prompt, undefined, "qwen2.5-coder:1.5b");
 
                 currentCode = currentCode.replace(/```javascript/g, "").replace(/```js/g, "").replace(/```/g, "").trim();
 
