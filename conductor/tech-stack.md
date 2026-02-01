@@ -9,9 +9,10 @@
   - *Specifikus Ügynökök:* LoRA finomhangolt modellek a Vertex AI-ban.
 
 ## Adat & Memória
-- **Vektor Store:** LanceDB (helyi) / Qdrant vagy Milvus (skálázott).
+- **Vektor Store:** LanceDB (hibrid, lokális/Python & Node.js írás) / Qdrant vagy Milvus (skálázott).
 - **Adatbázis:** SQLite (better-sqlite3) a tranzakcióknak.
 - **Ingestion:** Playwright (böngészés), Python Refiner (zajszűrés), Unstructured.io (PDF).
+- **Strukturált Adatkimenet:** Pydantic (Python) a böngésző ügynök (Robotkéz) strukturált JSON kimenetéhez.
 
 ## Felhő Integráció (BAS-Bridge)
 - **GCP:** Cloud Run (Backend), Firestore (NoSQL), BigQuery (Analitika).
@@ -19,4 +20,4 @@
 
 ## Monitoring & Healing
 - **Logging:** Strukturált JSON logging minden szinten.
-- **Audit:** LangSmith / Custom Ops Agent dashboard.
+- **Audit & Telemetria:** LangSmith (telemetria, tracing, költségfigyelés) / Custom Ops Agent dashboard.
