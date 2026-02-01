@@ -7,6 +7,7 @@ export default defineConfig({
     include: ['test/**/*.test.ts', 'test/**/*.vitest.ts'],
     exclude: ['**/node_modules/**', '**/build/**', '**/src/dashboard/**'],
     globals: true,
+    setupFiles: ['./test/setup.ts'],
   },
   resolve: {
     alias: {

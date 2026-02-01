@@ -88,9 +88,10 @@ export class LLMClient {
     }
 }
 
-export async function chatWithOllama(prompt: string, system?: string, modelOverride?: string): Promise<string> {
+/** Internal implementation: all LLM calls go through this for optional LangSmith tracing. */
+async function chatWithOllamaInternal(prompt: string, system?: string, modelOverride?: string): Promise<string> {
     const baseUrl = process.env.OLLAMA_BASE_URL || "http://localhost:11434";
-    const model = modelOverride || process.env.OLLAMA_MODEL || "gemma2:9b"; // Default to a known model
+    const model = modelOverride || process.env.OLLAMA_MODEL || "gemma2:9b";
 
     const messages: Message[] = [];
     if (system) {
@@ -104,4 +105,26 @@ export async function chatWithOllama(prompt: string, system?: string, modelOverr
         fullText += chunk;
     });
     return fullText;
+}
+
+let tracedChatWithOllama: ((p: string, s?: string, m?: string) => Promise<string>) | null = null;
+
+/**
+ * Single entry point for Ollama LLM calls. When LANGCHAIN_API_KEY is set,
+ * calls are wrapped with LangSmith traceable so every LLM call is traced (Zone I).
+ */
+export async function chatWithOllama(prompt: string, system?: string, modelOverride?: string): Promise<string> {
+    if (process.env.LANGCHAIN_API_KEY) {
+        if (!tracedChatWithOllama) {
+            const { traceable } = await import("langsmith/traceable");
+            tracedChatWithOllama = traceable(chatWithOllamaInternal, {
+                name: "chatWithOllama",
+                run_type: "llm",
+                project_name: process.env.LANGCHAIN_PROJECT || "brunella-core",
+                metadata: { provider: "ollama" },
+            }) as (p: string, s?: string, m?: string) => Promise<string>;
+        }
+        return tracedChatWithOllama(prompt, system, modelOverride);
+    }
+    return chatWithOllamaInternal(prompt, system, modelOverride);
 }

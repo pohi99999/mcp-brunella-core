@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "Saját AI Böngésző Ügynök",
+  "version": "1.0",
+  "description": "Szöveges utasítások végrehajtása weboldalakon.",
+  "permissions": [
+    "activeTab",
+    "scripting"
+  ],
+  "action": {
+    "default_popup": "popup.html"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ]
+}

@@ -7,3 +7,8 @@ test_build/
 __pycache__/
 *.tmp
 *.pyc
+_KNOWLEDGE_BASE/
+01_AI_ML_Projects/
+external_research/
+myai/
+open-interpreter/

@@ -1,4 +1,4 @@
-# mcp-brunella-core: Befektetői Összefoglaló
+# mcp-brunella-core: 
 
 **Dátum:** 2026. január 31., szombat
 
@@ -21,7 +21,11 @@ Az `mcp-brunella-core` egy moduláris, többügynökös rendszer, melynek gerinc
 *   **Backend:**
     *   **Node.js (TypeScript):** Vezérlőlogika, CLI, Dashboard backend, MCP szerverek.
     *   **Python (FastAPI/FastMCP):** AI/ML feladatok, adatfeldolgozás, mikroszolgáltatások.
+    *   **Automatizálási Platform: n8n (API-val vezérelve):** Munkafolyamatok automatizálása és orchestrációja.
     *   **SQLite:** Könnyűsúlyú adatbázis feladatkezeléshez (Task Queue).
+*   **Modellek:**
+    *   **Ollama:** Lokális LLM futtatás (deepseek-coder:6.7b, llama3.1:8b, qwen2.5-coder:7b, gemma3:4b stb.), prioritizálva a költséghatékonyság miatt.
+    *   **Egyéb LLM-ek:** (pl. Gemini API) szükség esetén, alacsonyabb prioritással.
 *   **Frontend (Dashboard UI):**
     *   **React:** Modern, komponens-alapú UI.
     *   **Vitest:** Tesztelési keretrendszer.
@@ -40,11 +44,14 @@ A projekt a Conductor keretrendszerrel, egy "Track" alapú, specifikáció-vezé
 *   **Infrastruktúra & Konténerizáció:** Docker és Docker Compose bevezetése, platformfüggetlen működés.
 *   **Python Alrendszer:** FastAPI alapú refaktorálás, optimalizált AI/ML képességek.
 *   **Tesztelés:** Tesztelési infrastruktúra konszolidálása Vitesttel, magas minőség biztosítása.
+*   **BAS Scale-Up & Stabilization (Cursor ügynök által):** LangSmith telemetria (LangChain tracer `src/core/llm_client.ts`, `src/pipeline/llmPipeline.ts`, `src/server/web.ts`), hibrid LanceDB memóriarendszer (`src/utils/rag.ts`, `myai/refiner_logic.py`), strukturált böngésző kimenet (`myai/browser_worker.py`) implementálva. A build hibák javításra kerültek.
+    *   **LangSmith Integráció:** Minden LLM hívás LangSmithba kerül, ha a `LANGCHAIN_API_KEY` be van állítva. Ez kiterjed az `OrchestratorAgent`, `DynamicAgent`, `ollamaTool`, `llmPipeline`, `/api/ollama/generate` funkciókra.
+    *   **LanceDB Hibrid Memória:** LanceDB (Node.js) és Python oldali (LanceDB batch írás `myai/refiner_logic.py`) integráció.
+    *   **Strukturált Böngésző Kimenet:** Pydantic alapú kimenet a `myai/browser_worker.py` fájlban.
+    *   **Build Státusz:** A `npm run build` és `npm test -- test/telemetry.test.ts` sikeresen lefutottak.
+*   **Robotkéz n8n Sandbox és Edzésterv:** Implementálva a "Robotkéz n8n Sandbox és Edzésterv" track. A kezdeti UI automatizálási kísérletek (browser-use) problémái miatt API-alapú n8n integrációra váltottunk, amely sikeresen létrehozza, átnevezi és törli a munkafolyamatokat. Ezzel biztosítva van a Robotkéz számára egy stabil és automatizálható edzési környezet.
 *   **Dashboard UI:** Valós idejű, interaktív Dashboard UI fejlesztése, számos REST API endpointtal.
 *   **Ügynök Swarm:** `AgentManager` refaktorálás, `DataScientist` és `Researcher` ügynökök bevezetése.
-*   **Rendszer & Dokumentáció Szinkronizáció:** Automatikus dokumentáció generálás és frissítés.
-*   **LangSmith Integráció:** Observability és debuggolási képességek bővítése.
-*   **Cleanup & Docker Integráció:** Rendszerszintű tisztítás, dokumentáció centralizálás, Docker Compose optimalizálás.
 
 ## 4. Rendszer Képességei és Funkcionalitása
 
@@ -54,10 +61,10 @@ Az `mcp-brunella-core` széles körű AI-vezérelt képességeket kínál:
 *   **Önálló Döntéshozatal és Automatizálás:** Feladatok elemzése, tervezése, delegálása és automatikus végrehajtása.
 *   **Rugalmas Bővíthetőség (MCP):** Új eszközök és ügynökök zökkenőmentes integrációja.
 *   **Külső Eszközök és Platformok Integrációja:**
-    *   **Ollama:** Lokális LLM futtatás.
+    *   **Ollama:** Lokális LLM futtatás a költséghatékonyság és a testreszabhatóság érdekében.
     *   **AnythingLLM:** RAG (Retrieval Augmented Generation) képességek, tudáskezelés.
+    *   **n8n:** Munkafolyamat automatizálás API-vezérelve.
     *   **GitHub MCP:** Integráció a GitHub API-val.
-    *   **Browser-Use Harvester:** Strukturált webes adatkinyerés.
     *   **LangSmith:** Observability és ügynöki végrehajtás nyomon követése.
 *   **Parancssori Interfész (CLI):** Hatékony szöveges interakció a fejlesztők számára.
 *   **Webes Vezérlőpult (Dashboard UI):** Intuitív grafikus felület a rendszer monitorozásához és kezeléséhez.
@@ -80,7 +87,7 @@ A platform a rugalmas működést és a széles körű interakciókat helyezi el
 
 Az `mcp-brunella-core` projekt nem csupán egy technológiai megoldás, hanem egy stratégiai befektetés a szoftverfejlesztés jövőjébe, számos kiemelkedő erősséggel és jelentős jövőbeli potenciállal:
 
-*   **Innovatív AI-alapú Megközelítés:** Az AI központi szerepe a fejlesztési folyamatban, páratlan hatékonyságot és minőséget eredményezve.
+*   **Innovatív AI-alapú Megközelítés:** Az AI központi szerepe a fejlesztési folyamatban, páratlan hatékonyságot és minőséget eredményezve, különös tekintettel a költséghatékony lokális LLM modellek kihasználására.
 *   **Maximális Automatizálás:** A Conductor keretrendszer és az ügynökök révén a fejlesztési feladatok nagymértékben automatizálódnak, csökkentve a költségeket és a hibalehetőségeket.
 *   **Skálázhatóság és Rugalmasság:** Az MCP alapú, moduláris architektúra könnyű skálázhatóságot és bővíthetőséget biztosít.
 *   **Megbízhatóság és Minőség:** Az `EvaluatorAgent` és a tesztelési infrastruktúra garantálja a magas kódminőséget és a rendszer stabilitását.
@@ -117,5 +124,5 @@ A Markdown fájlba közvetlenül nem illeszthető be ábra, de egy befektetői p
 
 4.  **Értékajánlat Grafikon/Infografika:**
     *   **Típus:** Bár vagy vonaldiagram vagy infografika.
-    *   **Elemei:** Idő/Költség megtakarítás az automatizálás révén, Minőségi növekedés (hibák csökkenése), Fejlesztési sebesség növekedése, Piaci versenyképesség növelése.
+    *   **Elemei:** Idő/Költség megtakarítás az automatizálás révén, Minőségi növekedés (hibák csökkenése), Fejlesztési sebesség növelése, Piaci versenyképesség növelése.
     *   **Célja:** Kvantitatív és kvalitatív adatokkal alátámasztani a befektetési megtérülést.
