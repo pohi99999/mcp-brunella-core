@@ -69,6 +69,10 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 
 ### 🔧 Aktív Szálak (Active Tracks)
 
+- [x] **BAS Scale-Up & Stabilization (2026-01-31):**
+  - **Cél:** A Brunella Agent System (BAS) stabilizálása és skálázása a Zone I-III fejlesztési fázisok szerint. Ez magában foglalja a LangSmith telemetria bevezetését, a hibrid LanceDB alapú memóriarendszer kiépítését, valamint a böngésző ügynök (Robotkéz) Pydantic alapú, strukturált kimenetre való átállítását.
+  - 📂 *[./tracks/bas_scale_up_stabilization_20260131/](./tracks/bas_scale_up_stabilization_20260131/)*
+
 - [x] **Browser-Use Harvester with Structured JSON Output (2026-01-31):**
   - **Cél:** A `myai/browser_worker.py` továbbfejlesztése strukturált JSON adatgyűjtésre (Harvester) és JSON kimenetre Pydantic modellekkel.
   - 📂 *[./tracks/browser_use_harvester_20260131/](./tracks/browser_use_harvester_20260131/)*
