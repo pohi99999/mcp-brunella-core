@@ -94,4 +94,4 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
 ### ⏳ Szüneteltetett / Integrált Szálak
 
 - [x] **Dashboard & CLI SSE Fix (2026-01-27/28):**
-  - *Átvezetve az Audit és Recovery szálakba.*
+  - **Eredmény:** Átvezetve az Audit, Recovery és Dashboard Restoration szálakba; az SSE/streaming javítások ott kerültek megvalósításra.
