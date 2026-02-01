@@ -2,11 +2,15 @@
 
 ## Core Infrastruktúra
 - **Szerver:** MCP Brunella Core (Node.js 24+, TypeScript).
+- **Automatizálási Platform:** n8n (API-val vezérelve)
 - **Runtime:** Hibrid Node.js & Perzisztens Python Shell.
 - **Modellek:**
-  - *Vezérlés:* GPT-4o / Claude 3.5 / Gemini 1.5 Pro.
-  - *Helyi Munka:* Ollama (Llama 3.1, Gemma 3:1b).
-  - *Specifikus Ügynökök:* LoRA finomhangolt modellek a Vertex AI-ban.
+  - *Vezérlés (Local):* llama3.1:8b (Ollama)
+  - *Kódgenerálás (Local):* deepseek-coder:6.7b (Ollama), qwen2.5-coder:7b (Ollama), codegemma:7b (Ollama)
+  - *Beágyazás (Local):* embeddinggemma:300m (Ollama), nomic-embed-text:latest (Ollama)
+  - *Kutatás (Local):* kimi-k2.5:cloud (Ollama), ministral-3:latest (Ollama), mistral:latest (Ollama)
+  - *Konverzió (Local):* translategemma:4b (Ollama)
+  - *Specifikus Ügynökök (Future):* Finomhangolt modellek (pl. Gemma 3, llama3.2, gemma2) a Vertex AI-ban, ha a keret engedi.
 
 ## Adat & Memória
 - **Vektor Store:** LanceDB (hibrid, lokális/Python & Node.js írás) / Qdrant vagy Milvus (skálázott).

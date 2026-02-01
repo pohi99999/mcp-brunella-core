@@ -10,7 +10,7 @@ A BAS nem csupán egy szoftver, hanem egy proaktív digitális idegrendszer és 
 - **Hibrid Szuverenitás:** A lokális adatbiztonság (Ollama/MCP) és a globális felhő-erő (GCP/Vertex AI) ötvözete.
 
 ## Alapvető Funkciók
-1. **Harvester Swarm:** Folyamatos, trend-alapú adatgyűjtés (FB, X, YT, Web).
+1. **Harvester Swarm:** Folyamatos, trend-alapú adatgyűjtés (FB, X, YT, Web), beleértve az automatizált edzési forgatókönyveket az n8n API-val.
 2. **Refiner Factory:** Adattudós ügynökök, amik JSON/Vektor formátumba hozzák a nyers adatot.
 3. **Incubator:** Speciális iparági ügynökök (pl. Pohi AI Pro) folyamatos képzése és finomhangolása.
 4. **BAS-Bridge:** Biztonságos híd a helyi MCP mag és a felhőalapú ökoszisztéma között.
