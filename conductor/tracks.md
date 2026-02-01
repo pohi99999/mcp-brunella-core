@@ -89,6 +89,10 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál f�
   - **Eredmény:** `OrchestratorAgent` (LLM Planner) implementálva. Task Queue (SQLite) integrálva az `AgentManager`-be. `executePlan` és `startWorkerLoop` funkcionális. End-to-End folyamat (Plan -> Queue -> Execute) tesztelve.
   - 📂 *[./tracks/autonomous_reasoning_20260129/](./tracks/autonomous_reasoning_20260129/)*
 
+- [x] **Robotkéz n8n Sandbox és Edzésterv:**
+  - Cél: A Robotkéz (browser-use) számára egy izolált n8n sandbox környezet és az első automatizált edzésterv (training scenario) kialakítása.
+  - 📂 *[./tracks/robotkez_n8n_sandbox_edzesterv/](./tracks/robotkez_n8n_sandbox_edzesterv/)*
+
 ---
 
 ### ⏳ Szüneteltetett / Integrált Szálak
