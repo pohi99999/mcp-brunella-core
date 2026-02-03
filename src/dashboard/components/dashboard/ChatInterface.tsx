@@ -229,6 +229,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Keresés az üzenetekben..."
+                  aria-label="Keresés az üzenetekben"
                   className="pl-10 pr-10"
                 />
                 {searchQuery && (
@@ -237,6 +238,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                     size="icon"
                     className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
                     onClick={() => setSearchQuery('')}
+                    aria-label="Keresés törlése"
                   >
                     <X size={16} />
                   </Button>
@@ -454,6 +456,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Írj egy üzenetet... (Enter: küldés, Shift+Enter: új sor)"
+            aria-label="Üzenet írása"
             className="resize-none"
             rows={3}
             disabled={!isConnected}
@@ -463,6 +466,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
             disabled={!input.trim() || !isConnected}
             size="icon"
             className="h-auto"
+            aria-label="Üzenet küldése"
           >
             <PaperPlaneRight size={20} weight="fill" />
           </Button>
