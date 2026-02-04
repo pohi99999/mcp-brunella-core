@@ -2,34 +2,74 @@ import { IAgent, AgentResponse } from './types.js';
 import fs from 'fs';
 import path from 'path';
 import toml from 'toml';
-import { chatWithOllama } from '../core/llm_client.js';
-import { Logger } from '../utils/logger.js';
+import { generateResponse } from '../core/llm_client.js';
+import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { addToIndex } from '../utils/rag.js';
 
+interface DynamicAgentConfig {
+    name?: string;
+    displayName?: string;
+    description?: string;
+    systemPrompt?: string;
+    query?: string;
+    tags?: string[];
+    tomlPath?: string;
+}
+
 export class DynamicAgent implements IAgent {
-    public name: string;
-    public role: string;
-    public description: string;
-    public capabilities: string[] = [];
-    private systemPrompt: string;
-    private queryTemplate: string;
-    private logger: Logger;
+    public name: string = 'DynamicAgent';
+    public role: string = 'Dynamic Agent';
+    public description: string = 'Dynamically configured agent';
+    public capabilities: string[] = ['dynamic'];
+    private systemPrompt: string = '';
+    private queryTemplate: string = '${task}';
 
-    constructor(tomlPath: string) {
-        this.logger = new Logger('agent-dynamic.log');
-        const content = fs.readFileSync(tomlPath, 'utf-8');
-        const config = toml.parse(content);
+    constructor(configOrPath?: string | DynamicAgentConfig) {
+        if (!configOrPath) {
+            // No config provided, use defaults (will be set by AgentManager)
+            return;
+        }
 
-        this.name = config.name;
-        this.role = config.displayName || config.name;
-        this.description = config.description;
-        this.systemPrompt = config.systemPrompt;
-        this.queryTemplate = config.query;
-        this.capabilities = config.tags || ['dynamic'];
+        if (typeof configOrPath === 'string') {
+            // Legacy: TOML file path
+            try {
+                const content = fs.readFileSync(configOrPath, 'utf-8');
+                const config = toml.parse(content);
+                this.initFromConfig(config);
+            } catch (error) {
+                logError('DynamicAgent', `Failed to load TOML from ${configOrPath}: ${error}`);
+            }
+        } else {
+            // New: Config object from registry
+            this.initFromConfig(configOrPath);
+
+            // If tomlPath is provided in config, also load from TOML
+            if (configOrPath.tomlPath) {
+                try {
+                    const content = fs.readFileSync(configOrPath.tomlPath, 'utf-8');
+                    const tomlConfig = toml.parse(content);
+                    this.initFromConfig({ ...configOrPath, ...tomlConfig });
+                } catch (error) {
+                    logError('DynamicAgent', `Failed to load TOML: ${error}`);
+                }
+            }
+        }
+    }
+
+    private initFromConfig(config: DynamicAgentConfig): void {
+        if (config.name) this.name = config.name;
+        if (config.displayName) this.role = config.displayName;
+        else if (config.name) this.role = config.name;
+        if (config.description) this.description = config.description;
+        if (config.systemPrompt) this.systemPrompt = config.systemPrompt;
+        if (config.query) this.queryTemplate = config.query;
+        if (config.tags) this.capabilities = config.tags;
     }
 
     async execute(task: string, context?: any): Promise<AgentResponse> {
-        this.logger.info(`Executing task for ${this.name}: ${task}`);
+        const taskDesc = task.length > 80 ? task.slice(0, 77) + '...' : task;
+        setAgentStatus(this.name, 'working', taskDesc);
+        logInfo(this.name, `Executing task for ${this.name}: ${task}`);
 
         try {
             // Context enrichment for Project Organizer
@@ -39,7 +79,7 @@ export class DynamicAgent implements IAgent {
                 const files = fs.readdirSync(targetDir);
                 
                 // --- Proactive Indexing ---
-                this.logger.info(`Project Organizer is indexing files in ${targetDir}`);
+                logInfo(this.name, `Project Organizer is indexing files in ${targetDir}`);
                 for (const file of files) {
                     const fullPath = path.join(targetDir, file);
                     const stats = fs.statSync(fullPath);
@@ -49,7 +89,7 @@ export class DynamicAgent implements IAgent {
                             const content = fs.readFileSync(fullPath, 'utf-8');
                             await addToIndex(file, content);
                         } catch (err) {
-                            this.logger.warn(`Failed to index ${file}: ${err}`);
+                            logError(this.name, `Failed to index ${file}: ${err}`);
                         }
                     }
                 }
@@ -60,18 +100,21 @@ export class DynamicAgent implements IAgent {
             const prompt = `${this.queryTemplate.replace('${target_path}', context?.target_path || '.')} \n\nUser Message: ${task} \n${contextData}`;
             
             // Call the LLM
-            const response = await chatWithOllama(prompt, this.systemPrompt);
+            const fullPrompt = `${this.systemPrompt}\n\n${prompt}`;
+            const response = await generateResponse(fullPrompt, context?.provider);
 
             return {
                 status: 'success',
                 data: response
             };
         } catch (e: any) {
-            this.logger.error(`Execution failed: ${e.message}`);
+            logError(this.name, `Execution failed: ${e.message}`);
             return {
                 status: 'error',
                 error: e.message
             };
+        } finally {
+            setAgentStatus(this.name, 'idle');
         }
     }
 }

@@ -8,6 +8,7 @@ export interface LogEntry {
   message: string
   type: LogType
   timestamp: number
+  source?: string
 }
 
 export type AgentStatusPayload = 'idle' | 'working' | 'error'
@@ -79,18 +80,58 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(socketReducer, initialState)
 
   useEffect(() => {
-    const socket = io(SOCKET_URL, { path: '/socket.io', transports: ['websocket', 'polling'] })
+    const socket = io(SOCKET_URL, {
+      path: '/socket.io',
+      transports: ['websocket', 'polling'],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+    })
 
-    socket.on('connect', () => dispatch({ type: 'connect' }))
-    socket.on('disconnect', () => dispatch({ type: 'disconnect' }))
+    socket.on('connect', () => {
+      console.log('[Socket] Connected to server')
+      dispatch({ type: 'connect' })
+    })
 
-    socket.on('system:log', (data: { message: string; type: LogType; timestamp?: number }) => {
+    socket.on('disconnect', (reason) => {
+      console.log('[Socket] Disconnected:', reason)
+      dispatch({ type: 'disconnect' })
+    })
+
+    socket.on('connect_error', (error) => {
+      console.error('[Socket] Connection error:', error.message)
+      dispatch({
+        type: 'log',
+        payload: {
+          message: `Socket kapcsolódási hiba: ${error.message}`,
+          type: 'error',
+          timestamp: Date.now(),
+          source: 'SocketContext',
+        },
+      })
+    })
+
+    socket.on('error', (error) => {
+      console.error('[Socket] Error:', error)
+      dispatch({
+        type: 'log',
+        payload: {
+          message: `Socket hiba: ${error}`,
+          type: 'error',
+          timestamp: Date.now(),
+          source: 'SocketContext',
+        },
+      })
+    })
+
+    socket.on('system:log', (data: { message: string; type: LogType; timestamp?: number; source?: string }) => {
       dispatch({
         type: 'log',
         payload: {
           message: data.message,
           type: data.type ?? 'info',
           timestamp: data.timestamp ?? Date.now(),
+          source: data.source,
         },
       })
     })
@@ -111,6 +152,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     return () => {
       socket.off('connect')
       socket.off('disconnect')
+      socket.off('connect_error')
+      socket.off('error')
       socket.off('system:log')
       socket.off('agent:update')
       socket.disconnect()
