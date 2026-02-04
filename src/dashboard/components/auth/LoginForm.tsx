@@ -92,10 +92,10 @@ export function LoginForm({ onLogin }: LoginFormProps) {
             <Button
               type="submit"
               className="w-full"
-              disabled={isLoading}
+              isLoading={isLoading}
             >
-              <SignIn className="mr-2" size={18} />
-              {isLoading ? 'Bejelentkezés...' : 'Bejelentkezés'}
+              {!isLoading && <SignIn className="mr-2" size={18} />}
+              Bejelentkezés
             </Button>
           </form>
 
