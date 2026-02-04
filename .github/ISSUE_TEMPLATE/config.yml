@@ -1,0 +1,9 @@
+# Issue template chooser configuration
+blank_issues_enabled: true
+contact_links:
+  - name: Brunella Documentation
+    url: https://github.com/pohi99999/mcp-brunella-core/blob/main/Brunella.md
+    about: Nézd meg a dokumentációt mielőtt kérdést teszel fel
+  - name: Conductor Tracks
+    url: https://github.com/pohi99999/mcp-brunella-core/blob/main/conductor/tracks.md
+    about: Aktív fejlesztési szálak és állapotuk
