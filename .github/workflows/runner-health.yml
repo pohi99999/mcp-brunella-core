@@ -1,0 +1,96 @@
+# Self-Hosted Runner Health Check
+# Ellenőrzi a lokális runner állapotát és szolgáltatásokat
+
+name: "Self-Hosted Runner Health"
+
+on:
+  schedule:
+    # 30 percenként fut
+    - cron: '*/30 * * * *'
+  workflow_dispatch:
+    inputs:
+      verbose:
+        description: 'Részletes kimenet'
+        required: false
+        default: 'false'
+        type: boolean
+
+jobs:
+  health-check:
+    name: Runner Health Check
+    runs-on: self-hosted
+    timeout-minutes: 5
+
+    steps:
+      - name: System Info
+        run: |
+          echo "🖥️ Runner: $RUNNER_NAME"
+          echo "📅 Timestamp: $(date -Iseconds)"
+          echo "🏠 Working Dir: $(pwd)"
+          echo "👤 User: $(whoami)"
+
+      - name: Check GitHub Connectivity
+        run: |
+          echo "🌐 Testing GitHub API..."
+          curl -sf https://api.github.com/zen && echo "✅ GitHub API OK" || echo "❌ GitHub API Failed"
+
+      - name: Check Disk Space
+        run: |
+          echo "💾 Disk Space:"
+          if command -v df &> /dev/null; then
+            df -h / 2>/dev/null || df -h . 2>/dev/null || echo "df command failed"
+          else
+            # Windows PowerShell fallback
+            powershell -Command "Get-PSDrive -PSProvider FileSystem | Select-Object Name, @{N='Used(GB)';E={[math]::Round($_.Used/1GB,2)}}, @{N='Free(GB)';E={[math]::Round($_.Free/1GB,2)}}"
+          fi
+
+      - name: Check Ollama Service
+        continue-on-error: true
+        run: |
+          echo "🦙 Checking Ollama..."
+          OLLAMA_URL="${OLLAMA_BASE_URL:-http://localhost:11434}"
+          if curl -sf "$OLLAMA_URL/api/tags" > /dev/null 2>&1; then
+            echo "✅ Ollama OK at $OLLAMA_URL"
+            curl -s "$OLLAMA_URL/api/tags" | head -c 500
+          else
+            echo "⚠️ Ollama not responding at $OLLAMA_URL"
+          fi
+
+      - name: Check Node.js
+        run: |
+          echo "📦 Node.js:"
+          node --version || echo "Node.js not found"
+          npm --version || echo "npm not found"
+
+      - name: Check Python
+        run: |
+          echo "🐍 Python:"
+          python --version 2>/dev/null || python3 --version 2>/dev/null || echo "Python not found"
+
+      - name: Check Docker (if available)
+        continue-on-error: true
+        run: |
+          echo "🐳 Docker:"
+          docker --version 2>/dev/null && docker ps --format "table {{.Names}}\t{{.Status}}" 2>/dev/null || echo "Docker not available"
+
+      - name: Check Running Processes
+        if: ${{ github.event.inputs.verbose == 'true' }}
+        continue-on-error: true
+        run: |
+          echo "🔄 Key Processes:"
+          if command -v pgrep &> /dev/null; then
+            pgrep -la "node|python|ollama" 2>/dev/null | head -20 || echo "No matching processes"
+          else
+            # Windows fallback
+            powershell -Command "Get-Process | Where-Object {$_.ProcessName -match 'node|python|ollama'} | Select-Object ProcessName, Id, CPU | Format-Table"
+          fi
+
+      - name: Health Summary
+        run: |
+          echo ""
+          echo "================================"
+          echo "🏥 HEALTH CHECK COMPLETE"
+          echo "================================"
+          echo "Runner: $RUNNER_NAME"
+          echo "Time: $(date)"
+          echo "Status: ✅ Runner is operational"
