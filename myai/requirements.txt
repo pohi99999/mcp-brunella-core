@@ -1,0 +1,4 @@
+browser-use
+pydantic
+langsmith
+lancedb

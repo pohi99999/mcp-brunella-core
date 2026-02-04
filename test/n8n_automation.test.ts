@@ -3,6 +3,7 @@
 
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import path from 'path';
 import axios from 'axios'; // For API cleanup
 
 const execPromise = promisify(exec);
@@ -14,14 +15,17 @@ describe("Robotkéz n8n Integration Test", () => {
     });
 
     it("should create and rename a workflow via n8n API", async () => {
-        const pythonScriptPath = "F:/mcp-brunella-core/myai/browser_worker.py";
-        const venvPythonPath = "F:/mcp-brunella-core/.venv/Scripts/python";
+        const pythonScriptPath = path.join(process.cwd(), "myai/browser_worker.py");
+        // Use python3 on non-Windows platforms (like CI), or just 'python' if venv is active/alias exists
+        // In this environment, we assume python or python3 is available.
+        // We avoid hardcoded venv paths which fail in CI.
+        const pythonCommand = process.platform === 'win32' ? 'python' : 'python3';
 
         let workflowId: string | undefined;
 
         try {
             // Run the Python script that executes the API scenario
-            const { stdout, stderr } = await execPromise(`${venvPythonPath} ${pythonScriptPath}`);
+            const { stdout, stderr } = await execPromise(`${pythonCommand} "${pythonScriptPath}"`);
 
             // Log stdout and stderr for debugging
             console.log("Python Script Stdout:", stdout);
@@ -42,7 +46,7 @@ describe("Robotkéz n8n Integration Test", () => {
 
         } finally {
             // Cleanup: Delete the created workflow via n8n API
-            if (workflowId && process.env.N8N_API_KEY && process.env.N8N_TEST_URL) {
+            if (workflowId && workflowId !== 'mock-id' && process.env.N8N_API_KEY && process.env.N8N_TEST_URL) {
                 const n8nBaseUrl = process.env.N8N_TEST_URL;
                 const n8nApiKey = process.env.N8N_API_KEY;
 
@@ -58,7 +62,7 @@ describe("Robotkéz n8n Integration Test", () => {
                     console.error(`Error during cleanup of workflow ${workflowId}:`, error);
                 }
             } else {
-                console.warn("Cleanup skipped: Workflow ID or n8n API credentials missing.");
+                console.warn("Cleanup skipped: Workflow ID mock-id or n8n API credentials missing.");
             }
         }
     }, 30000); // Increased timeout for the API call and cleanup
