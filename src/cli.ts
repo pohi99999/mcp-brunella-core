@@ -212,14 +212,15 @@ program.command('chat')
   .description('Interactive chat with Brunella')
   .action(async () => {
     marked.setOptions({ renderer: new TerminalRenderer() as any });
-    const model = (configManager.get('model.name') as string) || 'llama3.1';
     
-    console.log(chalk.cyan("Starting chat... (Type 'exit' to quit)"));
+    console.log(chalk.cyan("Starting chat... (Type 'exit' to quit, /switch <provider> to change LLM provider)"));
 
     const client = new BrunellaClient();
     try {
       await client.connect();
-      let context = "";
+      
+      let history: Array<{ role: 'user' | 'assistant'; content: string }> = [];
+      let activeProvider: 'ollama' | 'gemini' | 'claude' | 'openai' = 'ollama';
 
       while (true) {
         const { prompt } = await inquirer.prompt([{
@@ -230,16 +231,37 @@ program.command('chat')
 
         if (prompt.toLowerCase() === 'exit') break;
 
+        if (prompt.startsWith('/switch ')) {
+            const newProvider = prompt.split(' ')[1];
+            if (['ollama', 'gemini', 'claude', 'openai'].includes(newProvider)) {
+                activeProvider = newProvider as any;
+                console.log(chalk.yellow(`Switched to ${activeProvider} provider.`));
+                history = []; // Reset history on provider switch
+                continue;
+            } else {
+                console.log(chalk.red(`Invalid provider. Available: ollama, gemini, claude, openai`));
+                continue;
+            }
+        }
+
+        history.push({ role: 'user', content: prompt });
+
         const spinner = ora('Thinking...').start();
         try {
             const result = await client.callTool('agent_delegate', {
                 agent_name: 'Orchestrator',
-                task: prompt
+                task: prompt,
+                context: {
+                    history: history,
+                    provider: activeProvider
+                }
             });
             
             spinner.stop();
             // @ts-ignore
             const response = result.content?.[0]?.text || "No response";
+            
+            history.push({ role: 'assistant', content: response });
             
             console.log(chalk.green('Brunella:'));
             console.log(marked(response));
@@ -265,16 +287,16 @@ program.command('interpreter')
       const client = new BrunellaClient();
       try {
           await client.connect();
-          
+
           while(true) {
               const { code } = await inquirer.prompt([{
                   type: 'input',
                   name: 'code',
                   message: '>>>'
               }]);
-              
+
               if (code === 'exit') break;
-              
+
               const result = await client.callTool('interpreter_run_python', { code });
               // @ts-ignore
               console.log(result.content[0].text);
@@ -285,6 +307,114 @@ program.command('interpreter')
           await client.close();
           process.exit(0);
       }
+  });
+
+// --- conductor (Project Management)
+const conductorCmd = program.command('conductor').description('Project management and documentation sync');
+
+conductorCmd.command('status')
+  .description('Show project status and active tracks')
+  .action(async () => {
+    const client = new BrunellaClient();
+    const spinner = ora('Fetching project status...').start();
+    try {
+      await client.connect();
+      const result = await client.callTool('agent_delegate', {
+        agent_name: 'ProjectConductor',
+        task: 'status'
+      });
+      spinner.stop();
+      // @ts-ignore
+      const response = result.content?.[0]?.text || 'No response';
+      console.log(marked(response));
+    } catch (e: any) {
+      spinner.stop();
+      console.error(chalk.red('Error:'), e.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
+conductorCmd.command('sync')
+  .description('Synchronize documentation files')
+  .action(async () => {
+    const client = new BrunellaClient();
+    const spinner = ora('Synchronizing documentation...').start();
+    try {
+      await client.connect();
+      const result = await client.callTool('agent_delegate', {
+        agent_name: 'ProjectConductor',
+        task: 'sync'
+      });
+      spinner.stop();
+      // @ts-ignore
+      const response = result.content?.[0]?.text || 'Sync completed';
+      console.log(chalk.green('✓'), response);
+    } catch (e: any) {
+      spinner.stop();
+      console.error(chalk.red('Error:'), e.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
+conductorCmd.command('health')
+  .description('Run project health check (build, tests, docs)')
+  .action(async () => {
+    const client = new BrunellaClient();
+    const spinner = ora('Running health check...').start();
+    try {
+      await client.connect();
+      const result = await client.callTool('agent_delegate', {
+        agent_name: 'ProjectConductor',
+        task: 'health'
+      });
+      spinner.stop();
+      // @ts-ignore
+      const response = result.content?.[0]?.text || 'Health check completed';
+      console.log(marked(response));
+    } catch (e: any) {
+      spinner.stop();
+      console.error(chalk.red('Error:'), e.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
+conductorCmd.command('track <action> [name]')
+  .description('Manage development tracks (create, update, list)')
+  .action(async (action: string, name?: string) => {
+    const client = new BrunellaClient();
+    let task = action;
+    if (action === 'create' && name) {
+      task = `track create ${name}`;
+    } else if (action === 'update') {
+      task = 'track update';
+    } else if (action === 'list') {
+      task = 'status'; // Status shows track list
+    }
+
+    const spinner = ora(`Executing track ${action}...`).start();
+    try {
+      await client.connect();
+      const result = await client.callTool('agent_delegate', {
+        agent_name: 'ProjectConductor',
+        task
+      });
+      spinner.stop();
+      // @ts-ignore
+      const response = result.content?.[0]?.text || 'Done';
+      console.log(marked(response));
+    } catch (e: any) {
+      spinner.stop();
+      console.error(chalk.red('Error:'), e.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
   });
 
 // Interactive Menu (Default)
