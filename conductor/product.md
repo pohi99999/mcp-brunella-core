@@ -7,7 +7,7 @@ A BAS nem csupán egy szoftver, hanem egy proaktív digitális idegrendszer és 
 - **Antifragilitás (Phoenix Protocol):** A rendszer a stresszhatásoktól és hibáktól nem gyengül, hanem az öngyógyító folyamatok révén erősebbé válik.
 - **0-Hiba Stratégia:** Szigorú zajszűrés és validálás az Adattudós ügynökökön keresztül.
 - **Skálázhatóság:** Raj-alapú (Swarm) működés, ahol több ezer mikro-ügynök dolgozik párhuzamosan.
-- **Hibrid Szuverenitás:** A lokális adatbiztonság (Ollama/MCP) és a globális felhő-erő (GCP/Vertex AI) ötvözete.
+- **Hibrid Szuverenitás:** A lokális adatbiztonság (Ollama/MCP) és a globális peremhálózat (Cloudflare Edge) és felhő-erő (GCP/Vertex AI) szimbiózisa.
 
 ## Alapvető Funkciók
 1. **Harvester Swarm:** Folyamatos, trend-alapú adatgyűjtés (FB, X, YT, Web), beleértve az automatizált edzési forgatókönyveket az n8n API-val.
