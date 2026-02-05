@@ -87,3 +87,19 @@ export const generateResponse: (prompt: string, provider?: string) => Promise<st
         throw error;
     }
 }, { name: "MultiProvider_Generate", run_type: "llm" });
+
+/**
+ * Backwards-compatible chat function for Ollama.
+ * @param prompt User prompt
+ * @param system System prompt (prepended to user prompt if provided)
+ * @param model Model name (used for logging, actual model comes from env)
+ */
+export async function chatWithOllama(
+    prompt: string,
+    system?: string,
+    model?: string
+): Promise<string> {
+    const fullPrompt = system ? `${system}\n\n${prompt}` : prompt;
+    logInfo("LLM_CLIENT", `chatWithOllama called with model hint: ${model || OLLAMA_MODEL}`);
+    return generateResponse(fullPrompt, 'ollama');
+}

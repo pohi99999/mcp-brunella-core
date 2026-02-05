@@ -1,5 +1,5 @@
 import { IAgent } from './types.js';
-import { Logger } from '../utils/logger.js';
+import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { chromium } from 'playwright';
 import { agentManager } from './AgentManager.js';
 
@@ -8,15 +8,11 @@ export class ResearcherAgent implements IAgent {
     role = "Harvester";
     description = "Browses the web to gather raw information. Can search for topics or scrape URLs.";
     capabilities = ["browse", "search", "extract"];
-    
-    private logger: Logger;
-
-    constructor() {
-        this.logger = new Logger('researcher.log');
-    }
 
     async execute(task: string, context?: any): Promise<any> {
-        this.logger.info(`Researching: ${task}`);
+        const taskDesc = task.length > 80 ? task.slice(0, 77) + '...' : task;
+        setAgentStatus(this.name, 'working', taskDesc);
+        logInfo(this.name, `Researching: ${task}`);
 
         let url = "";
         
@@ -27,15 +23,18 @@ export class ResearcherAgent implements IAgent {
             url = context.url;
         } else {
             // It's a topic -> Search
-            this.logger.info(`Input is a topic. Searching for: ${task}`);
+            logInfo(this.name, `Input is a topic. Searching for: ${task}`);
             try {
                 const searchResult = await this.search(task);
                 if (!searchResult) {
+                    setAgentStatus(this.name, 'idle');
                     return { status: "error", error: "No search results found." };
                 }
                 url = searchResult;
-                this.logger.info(`Found relevant URL: ${url}`);
+                logInfo(this.name, `Found relevant URL: ${url}`);
             } catch (e: any) {
+                logError(this.name, `Search failed: ${e.message}`);
+                setAgentStatus(this.name, 'error');
                 return { status: "error", error: `Search failed: ${e.message}` };
             }
         }
@@ -47,20 +46,26 @@ export class ResearcherAgent implements IAgent {
             // Forward to DataScientist (The "Refiner")
             const refiner = agentManager.getAgent("DataScientist");
             if (refiner) {
-                this.logger.info("Handing over to DataScientist...");
+                logInfo(this.name, "Handing over to DataScientist...");
                 // Pass the original task context + extracted data
                 const refined = await refiner.execute("refine:", { 
                     content: rawData.content, 
                     source: url,
                     original_task: task
                 });
+                setAgentStatus(this.name, 'idle');
                 return { status: "success", data: refined, source: url };
             } else {
+                setAgentStatus(this.name, 'idle');
                 return { status: "success", data: rawData, note: "Refiner not found, returning raw data." };
             }
 
         } catch (e: any) {
+            logError(this.name, e.message);
+            setAgentStatus(this.name, 'error');
             return { status: "error", error: e.message };
+        } finally {
+            setAgentStatus(this.name, 'idle');
         }
     }
 
