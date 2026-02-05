@@ -1,7 +1,7 @@
 // FILE: src/core/llm_client.ts
 // PURPOSE: Multi-provider kliens implementálása LangSmith tracing-gel.
 
-// import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenerativeAI } from "@google/generative-ai";
 import { traceable } from "langsmith/traceable";
 import { logInfo, logError } from "../utils/logger.js";
 
@@ -11,7 +11,7 @@ const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.1:8b';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
 const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS || '120000'); // 2 minutes default
 
-// const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
 /**
  * Poliglott generálási metódus, amely támogatja a helyi (Ollama) és felhő (Gemini) modelleket.
@@ -25,10 +25,9 @@ export const generateResponse: (prompt: string, provider?: string) => Promise<st
             if (!process.env.GEMINI_API_KEY) {
                 throw new Error('GEMINI_API_KEY not configured');
             }
-            // const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
-            // const result = await model.generateContent(prompt);
-            // return result.response.text();
-            throw new Error("Gemini not supported without @google/generative-ai");
+            const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+            const result = await model.generateContent(prompt);
+            return result.response.text();
         }
 
         // Default: Ollama (Helyi)
