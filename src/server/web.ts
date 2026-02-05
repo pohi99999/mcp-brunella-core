@@ -3,7 +3,6 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import os from 'os';
-import osUtils from 'os-utils';
 import fetch from 'node-fetch';
 import swaggerUi from 'swagger-ui-express';
 import { Logger } from '../utils/logger.js';
@@ -77,25 +76,43 @@ export async function startWebServer() {
     socketService.init(io);
 
     // Metrics Loop
+    let lastCpus = os.cpus();
     setInterval(() => {
-        osUtils.cpuUsage((cpuPercent) => {
-            const totalMem = os.totalmem();
-            const freeMem = os.freemem();
-            io.emit('metrics_update', {
-                requestsPerMinute: 0, // TODO: Track requests
-                activeConnections: io.sockets.sockets.size,
-                errorRate: 0, // TODO: Track errors
-                averageResponseTime: 0,
-                cpuUsage: cpuPercent * 100,
-                memoryUsage: ((totalMem - freeMem) / totalMem) * 100
-            });
-            io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
+        const currentCpus = os.cpus();
+        let idleDiff = 0;
+        let totalDiff = 0;
 
-            // Push Agent & Tool status updates
-            io.emit('agent_update', agentManager.listAgentDefinitions());
-            io.emit('tools_update', toolManager.getToolDefinitions());
-            io.emit('tasks_update', agentManager.getAllTasks());
+        for (let i = 0; i < currentCpus.length; i++) {
+            const cpu = currentCpus[i];
+            const lastCpu = lastCpus[i];
+
+            for (const type in cpu.times) {
+                // @ts-ignore
+                totalDiff += cpu.times[type] - lastCpu.times[type];
+            }
+            idleDiff += cpu.times.idle - lastCpu.times.idle;
+        }
+
+        const cpuUsage = totalDiff > 0 ? (1 - idleDiff / totalDiff) * 100 : 0;
+        lastCpus = currentCpus;
+
+        const totalMem = os.totalmem();
+        const freeMem = os.freemem();
+
+        io.emit('metrics_update', {
+            requestsPerMinute: 0, // TODO: Track requests
+            activeConnections: io.sockets.sockets.size,
+            errorRate: 0, // TODO: Track errors
+            averageResponseTime: 0,
+            cpuUsage: cpuUsage,
+            memoryUsage: ((totalMem - freeMem) / totalMem) * 100
         });
+        io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
+
+        // Push Agent & Tool status updates
+        io.emit('agent_update', agentManager.listAgentDefinitions());
+        io.emit('tools_update', toolManager.getToolDefinitions());
+        io.emit('tasks_update', agentManager.getAllTasks());
     }, 5000);
 
     const mcpSessions = new Map<string, ActiveTransport>();

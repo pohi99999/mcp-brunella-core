@@ -7,7 +7,14 @@ import axios from 'axios'; // For API cleanup
 
 const execPromise = promisify(exec);
 
-describe("Robotkéz n8n Integration Test", () => {
+// Skip these tests if not running in a full environment with required secrets and paths
+const isCI = process.env.CI === 'true';
+// Also skip if local paths (F:/...) are hardcoded, as they won't work on CI
+const isWindowsLocal = process.platform === 'win32';
+
+const describeOrSkip = (isCI || !isWindowsLocal) ? describe.skip : describe;
+
+describeOrSkip("Robotkéz n8n Integration Test", () => {
     it("should verify environment variables are present", () => {
         expect(process.env.N8N_TEST_USER).toBeDefined();
         expect(process.env.N8N_TEST_URL).toBeDefined();
