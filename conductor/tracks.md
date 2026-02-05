@@ -17,11 +17,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
   - **Utolsó aktivitás:** 2026-02-03
   - 📂 *[./tracks/cloudflare_edge_integration_20260202/](./tracks/cloudflare_edge_integration_20260202/)*
 
-- [x] **EV Hunter & AI Research Pipeline (2026-02-02)** [MEDIUM]
-  - **ID:** `ev_hunter_ai_research_20260202`
-  - **Progress:** 0%
-  - **Utolsó aktivitás:** 2026-02-02
-  - 📂 *[./tracks/ev_hunter_ai_research_20260202/](./tracks/ev_hunter_ai_research_20260202/)*
+
 
 - [ ] **Hybrid Cloud Integration - Végrehajtási Terv** [HIGH]
   - **ID:** `hybrid_cloud_integration_20260203`
