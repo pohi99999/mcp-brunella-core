@@ -76,28 +76,37 @@ export async function startWebServer() {
     socketService.init(io);
 
     // Metrics Loop
-    let lastCpus = os.cpus();
+    let lastCpus = os.cpus ? os.cpus() : [];
     setInterval(() => {
-        const currentCpus = os.cpus();
-        let idleDiff = 0;
-        let totalDiff = 0;
+        let cpuUsage = 0;
+        if (os.cpus) {
+            try {
+                const currentCpus = os.cpus();
+                let idleDiff = 0;
+                let totalDiff = 0;
 
-        for (let i = 0; i < currentCpus.length; i++) {
-            const cpu = currentCpus[i];
-            const lastCpu = lastCpus[i];
+                if (lastCpus.length === currentCpus.length) {
+                    for (let i = 0; i < currentCpus.length; i++) {
+                        const cpu = currentCpus[i];
+                        const lastCpu = lastCpus[i];
 
-            for (const type in cpu.times) {
-                // @ts-ignore
-                totalDiff += cpu.times[type] - lastCpu.times[type];
+                        for (const type in cpu.times) {
+                            // @ts-ignore
+                            totalDiff += cpu.times[type] - lastCpu.times[type];
+                        }
+                        idleDiff += cpu.times.idle - lastCpu.times.idle;
+                    }
+                    cpuUsage = totalDiff > 0 ? (1 - idleDiff / totalDiff) * 100 : 0;
+                }
+                lastCpus = currentCpus;
+            } catch (e) {
+                console.error("Error calculating CPU usage:", e);
             }
-            idleDiff += cpu.times.idle - lastCpu.times.idle;
         }
 
-        const cpuUsage = totalDiff > 0 ? (1 - idleDiff / totalDiff) * 100 : 0;
-        lastCpus = currentCpus;
-
-        const totalMem = os.totalmem();
-        const freeMem = os.freemem();
+        const totalMem = os.totalmem ? os.totalmem() : 0;
+        const freeMem = os.freemem ? os.freemem() : 0;
+        const memoryUsage = totalMem > 0 ? ((totalMem - freeMem) / totalMem) * 100 : 0;
 
         io.emit('metrics_update', {
             requestsPerMinute: 0, // TODO: Track requests
@@ -105,7 +114,7 @@ export async function startWebServer() {
             errorRate: 0, // TODO: Track errors
             averageResponseTime: 0,
             cpuUsage: cpuUsage,
-            memoryUsage: ((totalMem - freeMem) / totalMem) * 100
+            memoryUsage: memoryUsage
         });
         io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
 
