@@ -467,6 +467,12 @@ export async function startWebServer() {
 
 // Helper to calculate CPU usage without external dependencies
 function getCPUUsage(callback: (percentage: number) => void) {
+    // Guard against environments where os.cpus() is not available (e.g. Cloudflare Workers)
+    if (!os.cpus) {
+        callback(0);
+        return;
+    }
+
     const stats1 = getCPUInfo();
     const startIdle = stats1.idle;
     const startTotal = stats1.total;
@@ -485,7 +491,8 @@ function getCPUUsage(callback: (percentage: number) => void) {
 }
 
 function getCPUInfo() {
-    const cpus = os.cpus();
+    // Guard against missing os.cpus()
+    const cpus = os.cpus ? os.cpus() : [];
     let user = 0;
     let nice = 0;
     let sys = 0;
