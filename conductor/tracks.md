@@ -9,11 +9,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 ## Aktív Szálak (9)
 
-- [x] **Implementation Plan: Browser-Use Harvester with Structured JSON Output** [MEDIUM]
-  - **ID:** `browser_use_harvester_20260131`
-  - **Progress:** 0%
-  - **Utolsó aktivitás:** 2026-02-04
-  - 📂 *[./tracks/browser_use_harvester_20260131/](./tracks/browser_use_harvester_20260131/)*
+
 
 - [ ] **Cloudflare Edge Integration** [HIGH]
   - **ID:** `cloudflare_edge_integration_20260202`
