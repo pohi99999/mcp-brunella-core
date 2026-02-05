@@ -11,7 +11,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 
 
-- [ ] **Cloudflare Edge Integration** [HIGH]
+- [x] **Cloudflare Edge Integration** [HIGH]
   - **ID:** `cloudflare_edge_integration_20260202`
   - **Progress:** 0%
   - **Utolsó aktivitás:** 2026-02-03
