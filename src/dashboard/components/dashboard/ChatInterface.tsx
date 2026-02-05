@@ -237,6 +237,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                     size="icon"
                     className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7"
                     onClick={() => setSearchQuery('')}
+                    aria-label="Keresés törlése"
                   >
                     <X size={16} />
                   </Button>
@@ -314,11 +315,14 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 {searchQuery && (
                   <Badge variant="secondary" className="gap-1">
                     Keresés: {searchQuery}
-                    <X
-                      size={14}
-                      className="cursor-pointer hover:text-foreground"
+                    <button
+                      type="button"
                       onClick={() => setSearchQuery('')}
-                    />
+                      className="ml-0.5 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                      aria-label="Keresés szűrő törlése"
+                    >
+                      <X size={14} />
+                    </button>
                   </Badge>
                 )}
                 {dateRange.from && (
@@ -326,11 +330,14 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                     {dateRange.to
                       ? `${format(dateRange.from, "MMM d", { locale: hu })} - ${format(dateRange.to, "MMM d", { locale: hu })}`
                       : `Ettől: ${format(dateRange.from, "MMM d", { locale: hu })}`}
-                    <X
-                      size={14}
-                      className="cursor-pointer hover:text-foreground"
+                    <button
+                      type="button"
                       onClick={() => setDateRange({ from: undefined, to: undefined })}
-                    />
+                      className="ml-0.5 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+                      aria-label="Dátum szűrő törlése"
+                    >
+                      <X size={14} />
+                    </button>
                   </Badge>
                 )}
                 <Button
@@ -463,6 +470,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
             disabled={!input.trim() || !isConnected}
             size="icon"
             className="h-auto"
+            aria-label="Üzenet küldése"
           >
             <PaperPlaneRight size={20} weight="fill" />
           </Button>
