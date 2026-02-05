@@ -47,3 +47,16 @@ export class Logger {
 
 export const systemLogger = new Logger('system_commands.log');
 export const cliLogger = new Logger('cli_tools.log');
+
+// Standalone helpers to satisfy agent dependencies
+export function logInfo(category: string, message: string, meta?: any) {
+    return systemLogger.info(`[${category}] ${message}`, meta);
+}
+
+export function logError(category: string, message: string, meta?: any) {
+    return systemLogger.error(`[${category}] ${message}`, meta);
+}
+
+export function setAgentStatus(agentName: string, status: string, task?: string) {
+    return systemLogger.info(`[AGENT_STATUS] ${agentName}: ${status}`, { task });
+}

@@ -50,24 +50,6 @@ jobs:
         run: npx vitest run --reporter=verbose
         timeout-minutes: 3
 
-  python:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - name: Setup Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.12'
-
-      - name: Install myai deps
-        run: pip install -r myai/requirements.txt
-
-      - name: Pytest
-        run: python -m pytest myai/tests -v --tb=short
-        env:
-          PYTHONPATH: .
-
   python-shell-tests:
     runs-on: ubuntu-latest
     steps:
@@ -83,7 +65,7 @@ jobs:
         run: |
           python3 -m venv .venv
           . .venv/bin/activate
-          pip install -r myai/requirements.txt
+          pip install -r requirements.txt
 
       - name: Install Node deps & build
         run: npm ci && npm run build

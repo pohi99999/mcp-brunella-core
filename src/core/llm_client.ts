@@ -87,3 +87,14 @@ export const generateResponse: (prompt: string, provider?: string) => Promise<st
         throw error;
     }
 }, { name: "MultiProvider_Generate", run_type: "llm" });
+
+/**
+ * Wrapper for chat with Ollama to satisfy legacy imports.
+ * NOTE: The 'system' and 'model' parameters are currently ignored by generateResponse in favor of env vars,
+ * but kept here for interface compatibility.
+ */
+export const chatWithOllama = async (prompt: string, system?: string, model?: string): Promise<string> => {
+    // Ideally, we should pass 'model' to generateResponse if the underlying implementation supported it.
+    // For now, we delegate to the default behavior.
+    return generateResponse(prompt, 'ollama');
+};
