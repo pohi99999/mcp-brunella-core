@@ -1,5 +1,5 @@
 import { IAgent } from './types.js';
-import { Logger } from '../utils/logger.js';
+import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { globalPythonShell } from '../utils/pythonShell.js';
 
 export class DeveloperAgent implements IAgent {
@@ -7,15 +7,11 @@ export class DeveloperAgent implements IAgent {
     role = "Coder";
     description = "Generates and executes code using Python Interpreter.";
     capabilities = ["run_python", "generate_code"];
-    
-    private logger: Logger;
-
-    constructor() {
-        this.logger = new Logger('developer.log');
-    }
 
     async execute(task: string, context?: any): Promise<any> {
-        this.logger.info(`Processing task: ${task}`);
+        const taskDesc = task.length > 80 ? task.slice(0, 77) + '...' : task;
+        setAgentStatus(this.name, 'working', taskDesc);
+        logInfo(this.name, `Processing task: ${task}`);
 
         // Try to find code in context or task
         let code = context?.code;
@@ -34,10 +30,14 @@ export class DeveloperAgent implements IAgent {
                     message: "Code executed successfully via Python API."
                 };
             } catch (e: any) {
+                logError(this.name, e.message);
                 return { status: "error", error: e.message };
+            } finally {
+                setAgentStatus(this.name, 'idle');
             }
         }
 
+        setAgentStatus(this.name, 'idle');
         return { 
             status: "ignored", 
             message: "Developer needs explicit 'code' in context or clear python syntax in task." 

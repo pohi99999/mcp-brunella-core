@@ -2,113 +2,119 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
-## Project Overview
+## Első Lépés
 
-AI multi-agent system (Brunella Agent System) automating software development via local LLMs (Ollama), MCP protocol, and hybrid Node.js/Python architecture.
+**Mielőtt bármit csinálsz, olvasd be:**
+1. `.ai/FOSZAL.md` - Összes ügynök egyesített naplója
+2. `conductor/tracks.md` - Aktív fejlesztési szálak
+3. `.ai/claude.md` - Saját naplód (félbehagyott feladatok)
 
-## Quick Start
+## Projekt
 
-```bash
-# Full system (Windows) - starts Ollama + AnythingLLM + server
-start.bat
+**Brunella Agent System (BAS)** - AI multi-agent rendszer szoftverfejlesztés automatizálására.
+- Lokális LLM: Ollama
+- Protokoll: MCP (Model Context Protocol)
+- Stack: TypeScript (Node.js) + Python (FastAPI)
 
-# OR manually:
-npm install && npm run build
-npm run dev          # Backend (port 3000)
-npm run dev:ui       # Frontend (port 5173)
-
-# Python subsystem (uv preferred)
-cd myai && uv sync && uvicorn server:app --reload --port 8000
-```
-
-## Commands
+## Parancsok
 
 ```bash
-# Build & Run
-npm run build        # TypeScript compile
-npm run dev          # Dev server (tsx watch, port 3000)
-npm run dev:alt      # Alt port (3001) if 3000 busy
-npm run dev:ui       # Vite Dashboard (port 5173)
+# Indítás
+start-full.bat               # Teljes rendszer (Windows)
+npm run build                # TypeScript fordítás
+npm run dev                  # Backend (:3000)
+npm run dev:ui               # Dashboard (:5173)
 
-# Testing
-npm test                           # Build + Vitest run
-npm run test:watch                 # Vitest watch mode
-npx vitest run test/foo.test.ts   # Single test file
+# Tesztelés
+npm test                     # Build + Vitest
+npm run test:watch           # Watch mód
+npx vitest run test/foo.test.ts   # Egy teszt
 
 # CLI
-brunella conductor status      # Project status
-brunella chat                  # Ollama chat
-brunella agents                # List agents
-brunella run <tool>            # Run MCP tool
+brunella doctor              # Rendszer diagnosztika
+brunella chat                # Interaktív chat
+brunella agents              # Ügynökök listája
+brunella tools               # MCP eszközök
+brunella conductor           # Projekt menedzsment
 
-# Docker
-docker-compose up -d           # All services
+# Python alrendszer
+cd myai && uv sync           # Függőségek
+uvicorn server:app --reload --port 8000
+
+# Cloudflare (bas-cloudflare-orchestrator mappából)
+npx wrangler deploy          # Worker deploy
+npx wrangler d1 list         # D1 adatbázisok
+npx wrangler r2 bucket list  # R2 bucket-ek
+
+# Szinkronizálás
+python scripts/sync_foszal.py   # FŐSZÁL frissítés
 ```
 
-## Architecture
-
-### Directory Structure
+## Architektúra
 
 ```
 src/
-├── agents/          # AI agents implementing IAgent interface
-│   ├── types.ts     # IAgent, AgentResponse interfaces
-│   └── *.ts         # Agent implementations
-├── tools/           # MCP tool definitions & handlers
-├── server/          # Express + Socket.IO API
-├── dashboard/       # React UI (Vite, Tailwind, Radix)
+├── agents/         # AI ügynökök (IAgent implementációk)
+│   └── types.js    # IAgent, AgentResponse interfészek (FONTOS!)
+├── tools/          # MCP eszközök
+├── server/         # Express + Socket.IO API
+├── dashboard/      # React UI (Vite, Tailwind)
 ├── utils/
-│   ├── logger.ts    # Structured logging (use instead of console.log)
-│   └── rag.ts       # LanceDB vector search
-└── cli.ts           # CLI entry point
+│   ├── logger.ts   # Strukturált naplózás (MINDIG HASZNÁLD!)
+│   └── rag.ts      # LanceDB vektor keresés
+└── cli.ts          # CLI belépési pont
 
-myai/                # Python subsystem
-├── server.py        # FastAPI server (:8000)
-├── browser_worker.py # Playwright automation + JSON extraction
-├── refiner_logic.py  # Data cleaning + LanceDB batch write
-└── pydantic_models.py # Validation schemas
+myai/               # Python alrendszer
+├── server.py       # FastAPI (:8000)
+├── browser_worker.py # Playwright automatizálás
+└── refiner_logic.py  # Adat tisztítás + LanceDB
 
-conductor/           # Project management
-├── tracks.md        # Development track statuses
-├── tracks/          # Per-track detailed plans
-└── workflow.md      # Development protocols (Data Flywheel, Phoenix)
+conductor/          # Projekt menedzsment
+├── tracks.md       # Fejlesztési szálak (AUTO-GENERÁLT, ne szerkeszd!)
+├── workflow.md     # Data Flywheel, Phoenix Protocol
+└── tracks/         # Track részletek
+
+.ai/                # AI ügynök naplók
+├── FOSZAL.md       # Egyesített napló (auto-generált)
+└── claude.md       # Claude Code napló
 ```
 
-### Agent Hierarchy
+## Aktív Ügynökök
 
-```
-OrchestratorAgent (Planner & Dispatcher)
-  ├── DeveloperAgent     - Code writing, Python execution
-  ├── EvaluatorAgent     - Audit, testing, code review
-  ├── ResearcherAgent    - Web search, info gathering
-  ├── DataScientistAgent - Data cleaning, LanceDB
-  ├── EdgeProxyAgent     - Cloudflare Workers proxy
-  └── ProjectConductor   - Docs sync, track management
-```
+| Ügynök | Szerep | Fájl |
+|--------|--------|------|
+| **Orchestrator** | Központi tervező, feladat delegálás | `OrchestratorAgent.ts` |
+| **Evaluator** | Audit, tesztelés, öngyógyítás | `EvaluatorAgent.ts` |
+| **ProjectConductor** | Dokumentáció szinkron, track kezelés | `ProjectConductorAgent.ts` |
+| Developer | Kódírás, Python futtatás | `DeveloperAgent.ts` |
+| Researcher | Web keresés (Playwright) | `ResearcherAgent.ts` |
+| DataScientist | Adat tisztítás, LanceDB | `DataScientistAgent.ts` |
+| EdgeProxy | Cloudflare Workers proxy | `EdgeProxyAgent.ts` |
+| DependencyGraph | Függőség elemzés | `DependencyGraphAgent.ts` |
+| DocsIntelligence | Dokumentáció elemzés | `DocsIntelligenceAgent.ts` |
+| Python | Python alrendszer kezelés | `PythonAgent.ts` |
 
-`AgentManager` handles registry (`src/agents/registry.json`) and Task Queue (SQLite).
+## Kód Minta - Új Agent
 
-## Code Patterns
-
-### TypeScript Agent Pattern
 ```typescript
-import { IAgent } from './types.js';
+import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 
-export class MyNewAgent implements IAgent {
-  name = "MyNew";
-  role = "Agent purpose";
-  description = "What this agent does";
+export class MyAgent implements IAgent {
+  name = "MyAgent";
+  role = "Cél";
+  description = "Mit csinál";
   capabilities = ["skill1", "skill2"];
 
-  async execute(task: string, context?: any): Promise<any> {
+  async execute(task: string, context?: unknown): Promise<AgentResponse> {
     setAgentStatus(this.name, 'working', task.slice(0, 50));
     try {
-      // Implementation
-      return { status: "success", result: data };
-    } catch (e: any) {
-      logError(this.name, e.message);
-      return { status: "error", error: e.message };
+      // Implementáció
+      return { status: "success", data: result };
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError(this.name, error);
+      return { status: "error", error };
     } finally {
       setAgentStatus(this.name, 'idle');
     }
@@ -116,81 +122,76 @@ export class MyNewAgent implements IAgent {
 }
 ```
 
-### MCP Tool Pattern
-```typescript
-export const myToolDefinition = {
-  name: "my_tool",
-  description: "Tool purpose",
-  inputSchema: {
-    type: "object",
-    properties: { param: { type: "string" } },
-    required: ["param"]
-  }
-};
+## Konvenciók
 
-export async function myToolHandler(params: { param: string }) {
-  return { success: true, data: result };
-}
+| Szabály | Helyes | Helytelen |
+|---------|--------|-----------|
+| ESM importok | `import { foo } from './bar.js'` | `require('./bar')` |
+| Naplózás | `logInfo()`, `logError()` | `console.log()` |
+| Típusok | `unknown` vagy konkrét típus | `any` |
+| Agent válasz | `{ status: 'success' \| 'error' }` | Egyedi formátum |
+
+## Protokollok
+
+### Data Flywheel
+```
+Harvest (browser_worker.py) → Refine (refiner_logic.py) →
+Index (LanceDB) → Learn (RAG) → Execute (Orchestrator)
 ```
 
-## Key Conventions
+### Phoenix Protocol (Öngyógyítás)
+- Hiba → Automatikus javítási kísérlet
+- Checkpointing minden művelet előtt
+- Git recovery (`git_sync.ps1`)
 
-- **Imports:** ESM with `.js` extension → `import { foo } from './bar.js'`
-- **Logging:** Use `logger.ts` functions (`logInfo()`, `logError()`), never `console.log()`
-- **Types:** Avoid `any`; use `unknown` if type is truly dynamic
-- **Agent responses:** Follow `AgentResponse` interface (`status: 'success' | 'error' | 'delegated'`)
+### 0-Hiba Stratégia
+- `npm run build` MUSZÁJ átmennie
+- `npm test` MUSZÁJ átmennie commit előtt
 
-## Environment Variables (.env)
+## Munkamenet Végén
+
+**KÖTELEZŐ frissíteni a `.ai/claude.md` fájlt:**
+
+```markdown
+### YYYY-MM-DD HH:MM - Cím
+
+**Feladat:** Mit csináltál
+**Fájlok:** fájl1.ts, fájl2.py
+**Státusz:** ✅ Befejezve / ⏳ Folyamatban / ❌ Sikertelen
+**Megjegyzés:** Info a következő munkamenethez
+```
+
+Majd: `python scripts/sync_foszal.py`
+
+## Hibaelhárítás
+
+| Probléma | Megoldás |
+|----------|----------|
+| Ollama connection failed | `ollama serve` |
+| Port 3000 foglalt | `npm run dev:alt` (:3001) |
+| Python import hiba | `cd myai && uv sync` |
+| Build hiba | `rmdir /s /q build && npm run build` |
+
+## Cloudflare Infrastruktúra
+
+| Erőforrás | Név | Típus |
+|-----------|-----|-------|
+| D1 Database | `bas-metadata` | Metadata tároló |
+| R2 Bucket | `vodor1` | Fájl tároló |
+| KV Namespace | `BAS_TASKS` | Task queue |
+| Worker | `bas-cloudflare-orchestrator` | Edge orchestrátor |
+
+## Környezeti Változók (.env)
 
 ```env
 OLLAMA_BASE_URL=http://localhost:11434
-LANGCHAIN_API_KEY=...              # LangSmith tracing
+LANGCHAIN_API_KEY=...              # LangSmith tracing (opcionális)
 ANYTHINGLLM_API_KEY=...
 BRUNELLA_WORKSPACE_ROOT=.
+CLOUDFLARE_API_TOKEN=...           # Cloudflare (opcionális)
+CLOUDFLARE_ACCOUNT_ID=...
 ```
 
-## API Endpoints
+## Megjegyzés
 
-- `GET /api/health` - System health
-- `GET /api/agents` - List agents
-- `POST /api/agents/:name/execute` - Execute agent
-- `GET /api/tools` - MCP tools
-- `POST /api/ollama/generate` - LLM generation
-- `GET /api-docs` - Swagger UI
-
-## Development Rules
-
-1. **Conductor protocol:** Check `conductor/tracks.md` before major changes
-2. **Track system:** New feature = new track in `conductor/tracks/`
-3. **Testing:** `npm test` must pass before commit
-4. **Types:** TypeScript strict mode, avoid `any`
-5. **Do not manually edit** `conductor/tracks.md` (ProjectConductor manages it)
-
-## Troubleshooting
-
-| Issue | Solution |
-|-------|----------|
-| "Ollama connection failed" | Run `ollama serve` |
-| Port 3000 busy | `npm run dev:alt` (port 3001) |
-| Python import errors | `cd myai && uv sync` |
-| Build fails | `rmdir /s build` + `npm run build` |
-
-## Data Flywheel
-
-```
-Harvest (browser_worker.py) → Refine (refiner_logic.py) →
-Index (LanceDB) → Learn (Agents RAG) → Execute (Orchestrator)
-```
-
-## Anti-Patterns (Avoid)
-
-- Using `any` type without justification
-- CommonJS `require()` (this is ESM)
-- Leaving `console.log()` in production code
-- Skipping `npm test` before commits
-- Creating agents without implementing `IAgent` interface
-- Manually editing `conductor/tracks.md`
-
-## Project Note
-
-Project owner is a creative, non-programmer. Development happens via AI agents. Documentation may be scattered - ask if you find contradictions.
+A projekt tulajdonosa kreatív, nem programozó. A fejlesztés AI ügynökökkel történik. Ha ellentmondást találsz, kérdezz rá.
