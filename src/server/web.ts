@@ -3,7 +3,6 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import os from 'os';
-import osUtils from 'os-utils';
 import fetch from 'node-fetch';
 import swaggerUi from 'swagger-ui-express';
 import { Logger } from '../utils/logger.js';
@@ -78,9 +77,11 @@ export async function startWebServer() {
 
     // Metrics Loop
     setInterval(() => {
-        osUtils.cpuUsage((cpuPercent) => {
-            const totalMem = os.totalmem();
-            const freeMem = os.freemem();
+        const totalMem = os.totalmem();
+        const freeMem = os.freemem();
+
+        // Manual CPU usage calculation to avoid os-utils dependency (unsafe for Workers)
+        getCPUUsage((cpuPercent) => {
             io.emit('metrics_update', {
                 requestsPerMinute: 0, // TODO: Track requests
                 activeConnections: io.sockets.sockets.size,
@@ -462,4 +463,47 @@ export async function startWebServer() {
     httpServer.listen(PORT, () => {
         console.log(`🌐 Web UI: http://localhost:${PORT}`);
     });
+}
+
+// Helper to calculate CPU usage without external dependencies
+function getCPUUsage(callback: (percentage: number) => void) {
+    const stats1 = getCPUInfo();
+    const startIdle = stats1.idle;
+    const startTotal = stats1.total;
+
+    setTimeout(() => {
+        const stats2 = getCPUInfo();
+        const endIdle = stats2.idle;
+        const endTotal = stats2.total;
+
+        const idle = endIdle - startIdle;
+        const total = endTotal - startTotal;
+        const percentage = idle / total;
+
+        callback(1 - percentage);
+    }, 1000);
+}
+
+function getCPUInfo() {
+    const cpus = os.cpus();
+    let user = 0;
+    let nice = 0;
+    let sys = 0;
+    let idle = 0;
+    let irq = 0;
+
+    for (const cpu of cpus) {
+        user += cpu.times.user;
+        nice += cpu.times.nice;
+        sys += cpu.times.sys;
+        irq += cpu.times.irq;
+        idle += cpu.times.idle;
+    }
+
+    const total = user + nice + sys + idle + irq;
+
+    return {
+        idle,
+        total
+    };
 }
