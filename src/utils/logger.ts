@@ -47,3 +47,15 @@ export class Logger {
 
 export const systemLogger = new Logger('system_commands.log');
 export const cliLogger = new Logger('cli_tools.log');
+
+export function logInfo(component: string, message: string, meta?: any) {
+    return systemLogger.info(`[${component}] ${message}`, meta);
+}
+
+export function logError(component: string, message: string, meta?: any) {
+    return systemLogger.error(`[${component}] ${message}`, meta);
+}
+
+export function setAgentStatus(agentName: string, status: string, details?: string) {
+    return systemLogger.info(`[STATUS_CHANGE] ${agentName} -> ${status}`, { details });
+}
