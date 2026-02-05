@@ -47,3 +47,16 @@ export class Logger {
 
 export const systemLogger = new Logger('system_commands.log');
 export const cliLogger = new Logger('cli_tools.log');
+
+export function logInfo(scope: string, message: string) {
+    return systemLogger.info(`[${scope}] ${message}`);
+}
+
+export function logError(scope: string, message: string) {
+    return systemLogger.error(`[${scope}] ${message}`);
+}
+
+export function setAgentStatus(agentName: string, status: string, task?: string) {
+    // TODO: Implement actual status tracking
+    systemLogger.info(`[STATUS:${agentName}] ${status} ${task ? '- ' + task : ''}`);
+}

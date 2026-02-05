@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import os from 'os';
+import osUtils from 'os-utils';
 import fetch from 'node-fetch';
 import swaggerUi from 'swagger-ui-express';
 import { Logger } from '../utils/logger.js';
@@ -77,22 +78,24 @@ export async function startWebServer() {
 
     // Metrics Loop
     setInterval(() => {
-        const totalMem = os.totalmem();
-        const freeMem = os.freemem();
-        io.emit('metrics_update', {
-            requestsPerMinute: 0, // TODO: Track requests
-            activeConnections: io.sockets.sockets.size,
-            errorRate: 0, // TODO: Track errors
-            averageResponseTime: 0,
-            cpuUsage: 0, // TODO: Use os-utils for CPU
-            memoryUsage: ((totalMem - freeMem) / totalMem) * 100
+        osUtils.cpuUsage((cpuPercent) => {
+            const totalMem = os.totalmem();
+            const freeMem = os.freemem();
+            io.emit('metrics_update', {
+                requestsPerMinute: 0, // TODO: Track requests
+                activeConnections: io.sockets.sockets.size,
+                errorRate: 0, // TODO: Track errors
+                averageResponseTime: 0,
+                cpuUsage: cpuPercent * 100,
+                memoryUsage: ((totalMem - freeMem) / totalMem) * 100
+            });
+            io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
+
+            // Push Agent & Tool status updates
+            io.emit('agent_update', agentManager.listAgentDefinitions());
+            io.emit('tools_update', toolManager.getToolDefinitions());
+            io.emit('tasks_update', agentManager.getAllTasks());
         });
-        io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
-        
-        // Push Agent & Tool status updates
-        io.emit('agent_update', agentManager.listAgentDefinitions());
-        io.emit('tools_update', toolManager.getToolDefinitions());
-        io.emit('tasks_update', agentManager.getAllTasks());
     }, 5000);
 
     const mcpSessions = new Map<string, ActiveTransport>();
