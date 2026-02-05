@@ -37,7 +37,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
   - **Utolsó aktivitás:** 2026-02-01
   - 📂 *[./tracks/robotkez_n8n_sandbox_edzesterv/](./tracks/robotkez_n8n_sandbox_edzesterv/)*
 
-- [ ] **Data Flywheel Incubator** [HIGH]
+- [x] **Data Flywheel Incubator** [HIGH]
   - **ID:** `data_flywheel_incubator_20260205`
   - **Progress:** 0%
   - **Utolsó aktivitás:** 2026-02-05
