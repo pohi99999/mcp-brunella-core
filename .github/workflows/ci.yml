@@ -73,12 +73,12 @@ jobs:
       - name: Install deps
         run: pip install -r requirements.txt
 
-      - name: Pytest (if tests exist)
+      - name: Pytest
         run: |
-          if [ -d "tests" ]; then
-            python -m pytest tests -v --tb=short
+          if [ -d "test" ] && find test -name "*.py" -type f | grep -q .; then
+            python -m pytest test -v --tb=short
           else
-            echo "No tests directory found, skipping pytest"
+            echo "No Python tests found in test/ directory"
           fi
         env:
           PYTHONPATH: .
