@@ -2,7 +2,7 @@
  * Agent skills discovery – Gemini-style: list from ~/.brunella/skills and project .brunella/skills.
  * Each skill is a directory with SKILL.md or skill.json (name, description).
  */
-import { promises as fs } from 'fs';
+import fs from 'fs';
 import path from 'path';
 import os from 'os';
 
@@ -20,7 +20,7 @@ async function readSkillMeta(dir: string, baseName: string): Promise<SkillMeta> 
   const jsonPath = path.join(dir, SKILL_JSON);
 
   try {
-    const content = await fs.readFile(jsonPath, 'utf-8');
+    const content = await fs.promises.readFile(jsonPath, 'utf-8');
     try {
       const j = JSON.parse(content);
       if (j.name) meta.name = j.name;
@@ -37,7 +37,7 @@ async function readSkillMeta(dir: string, baseName: string): Promise<SkillMeta> 
 
   const mdPath = path.join(dir, SKILL_MD);
   try {
-    const content = await fs.readFile(mdPath, 'utf-8');
+    const content = await fs.promises.readFile(mdPath, 'utf-8');
     const line = content.split('\n')[0];
     if (line.startsWith('# ')) meta.description = line.slice(2).trim();
   } catch {
@@ -60,10 +60,10 @@ export async function discoverSkills(skillsDir?: string, cwd?: string): Promise<
 
   const dirResults = await Promise.all(dirs.map(async (dir) => {
     try {
-      const stats = await fs.stat(dir);
+      const stats = await fs.promises.stat(dir);
       if (!stats.isDirectory()) return [];
 
-      const entries = await fs.readdir(dir, { withFileTypes: true });
+      const entries = await fs.promises.readdir(dir, { withFileTypes: true });
       const dirsToProcess = entries.filter(e => e.isDirectory());
       const skillsInDir: { dir: string, name: string }[] = [];
 
@@ -76,7 +76,7 @@ export async function discoverSkills(skillsDir?: string, cwd?: string): Promise<
           const skillPath = path.join(sub, SKILL_MD);
           const skillJson = path.join(sub, SKILL_JSON);
           try {
-            await fs.access(skillPath).catch(() => fs.access(skillJson));
+            await fs.promises.access(skillPath).catch(() => fs.promises.access(skillJson));
             return { dir: sub, name: e.name };
           } catch {
             return null;
