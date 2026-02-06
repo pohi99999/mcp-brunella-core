@@ -4,10 +4,15 @@
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import axios from 'axios'; // For API cleanup
+import os from 'os';
 
 const execPromise = promisify(exec);
 
-describe("Robotkéz n8n Integration Test", () => {
+// This test suite depends on specific local Windows paths and environment variables.
+// It should be skipped in CI environments or non-Windows platforms.
+const shouldRunTests = os.platform() === 'win32' && process.env.N8N_TEST_USER && process.env.N8N_TEST_URL;
+
+(shouldRunTests ? describe : describe.skip)("Robotkéz n8n Integration Test", () => {
     it("should verify environment variables are present", () => {
         expect(process.env.N8N_TEST_USER).toBeDefined();
         expect(process.env.N8N_TEST_URL).toBeDefined();
