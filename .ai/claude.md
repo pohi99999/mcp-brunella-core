@@ -856,3 +856,14 @@ node scripts/spec-freeze-check.cjs --freeze <id>  # Spec "frozen"-ra
 ---
 
 <!-- ÚJ BEJEGYZÉSEK IDE KERÜLNEK (legfrissebb felül) -->
+### 2026-02-06 18:50 - Ág audit és PR státusz áttekintés
+
+**Feladat:** GitHub ágak áttekintése, nyitott PR-ok azonosítása, archiválási javaslatok.
+
+**Érintett fájlok:**
+- `.ai/claude.md`
+- `.ai/FOSZAL.md` (sync_foszal.py)
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** `npm run build` és `npm test` jelenleg hibázik (logWarn export hiány, llm_client exportok, hiányzó AWS SDK típusok, implicit any). Két ág már merge-elt PR-rel rendelkezik (`feat/data-refiner-and-fixes-12902137542899717588`, `jules-setup-14782448924770257556`) → törölhető/archiválható; a többi ág nyitott PR-hoz tartozik.
