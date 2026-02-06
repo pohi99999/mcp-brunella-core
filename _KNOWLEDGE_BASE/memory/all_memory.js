@@ -54,7 +54,6 @@ const all_memory = {
         "G:\\Brunella\\GEMINI.md (gyors útmutató)",
         "G:\\Brunella\\_br_core\\WORKSPACE_OVERVIEW.md (részletes áttekintés)"
       ]
-      ]
     },
     "gemini_cli_tools_api_analysis_2025_10_12": {
       "summary": "A Gemini CLI belső eszközrendszerének (Tools API) mélyreható elemzése a 'tools-api.md' dokumentum alapján.",
