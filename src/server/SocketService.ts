@@ -16,9 +16,9 @@ class SocketServiceClass {
     this.io = io;
   }
 
-  broadcastLog(message: string, type: LogType = 'info'): void {
+  broadcastLog(message: string, type: LogType = 'info', source?: string): void {
     if (!this.io) return;
-    this.io.emit('system:log', { message, type, timestamp: Date.now() });
+    this.io.emit('system:log', { message, type, timestamp: Date.now(), source });
   }
 
   updateAgentStatus(agentName: string, status: AgentStatusPayload, taskDescription?: string): void {

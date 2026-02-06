@@ -9,40 +9,40 @@ const LONG_TIMEOUT_MS = 120000;    // 2 minutes for LLM calls
 
 /** Fetch with timeout support */
 async function fetchWithTimeout(
-  url: string,
-  options: RequestInit = {},
-  timeoutMs: number = DEFAULT_TIMEOUT_MS
+    url: string,
+    options: RequestInit = {},
+    timeoutMs: number = DEFAULT_TIMEOUT_MS
 ): Promise<Response> {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
 
-  try {
-    const response = await fetch(url, {
-      ...options,
-      signal: controller.signal,
-    });
-    return response;
-  } catch (error: any) {
-    if (error.name === 'AbortError') {
-      throw new Error(`Időtúllépés (${timeoutMs / 1000}s)`);
+    try {
+        const response = await fetch(url, {
+            ...options,
+            signal: controller.signal,
+        });
+        return response;
+    } catch (error: any) {
+        if (error.name === 'AbortError') {
+            throw new Error(`Időtúllépés (${timeoutMs / 1000}s)`);
+        }
+        throw error;
+    } finally {
+        clearTimeout(timeoutId);
     }
-    throw error;
-  } finally {
-    clearTimeout(timeoutId);
-  }
 }
 
 /** Biztonságos JSON parse – üres vagy hibás válasz kezelése */
 async function safeJson<T>(response: Response): Promise<T> {
-  const text = await response.text();
-  if (!text || text.trim().length === 0) {
-    throw new Error(response.ok ? 'Üres válasz' : `HTTP ${response.status}: ${response.statusText}`);
-  }
-  try {
-    return JSON.parse(text) as T;
-  } catch {
-    throw new Error(`Érvénytelen válasz: ${text.slice(0, 100)}...`);
-  }
+    const text = await response.text();
+    if (!text || text.trim().length === 0) {
+        throw new Error(response.ok ? 'Üres válasz' : `HTTP ${response.status}: ${response.statusText}`);
+    }
+    try {
+        return JSON.parse(text) as T;
+    } catch {
+        throw new Error(`Érvénytelen válasz: ${text.slice(0, 100)}...`);
+    }
 }
 
 export interface HealthStatus {
@@ -130,7 +130,7 @@ export async function getRegistry(): Promise<Registry> {
     return safeJson<Registry>(response);
 }
 
-export async function executeAgent(agentName: string, task: string, context?: any): Promise<string> {
+export async function executeAgent(agentName: string, task: string, context?: any): Promise<any> {
     const response = await fetchWithTimeout(
         `${API_BASE}/api/agents/${encodeURIComponent(agentName)}/execute`,
         {
@@ -140,13 +140,23 @@ export async function executeAgent(agentName: string, task: string, context?: an
         },
         LONG_TIMEOUT_MS  // 2 minutes for agent execution
     );
-
-    const data = await safeJson<{ result?: string | object; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    const data = await safeJson<{ result?: any; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
     if (!response.ok) throw new Error(data.error || 'Agent execution failed');
-    const r = data.result;
-    if (typeof r === 'string') return r;
-    if (r && typeof r === 'object') return (r as { message?: string }).message ?? JSON.stringify(r);
-    return String(r ?? '');
+    return data.result;
+}
+
+export async function createAgent(config: { name: string, role: string, description: string, capabilities: string[], triggers?: string[] }): Promise<any> {
+    const response = await fetchWithTimeout(
+        `${API_BASE}/api/agents/create`,
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(config)
+        }
+    );
+    const data = await safeJson<{ status?: string; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    if (!response.ok) throw new Error(data.error || 'Agent creation failed');
+    return data;
 }
 
 /**
@@ -200,6 +210,75 @@ export async function generateWithOllama(prompt: string, model?: string, system?
 }
 
 /**
+ * GitHub Models API
+ */
+export interface GithubModel {
+    name: string;
+    provider: string;
+}
+
+export async function getGithubModels(): Promise<GithubModel[]> {
+    try {
+        const response = await fetch(`${API_BASE}/api/github-models/models`);
+        if (!response.ok) return [];
+        const data = await safeJson<{ models?: GithubModel[] }>(response);
+        return data.models || [];
+    } catch {
+        return [];
+    }
+}
+
+export async function generateWithGithubModels(prompt: string, model?: string, system?: string): Promise<string> {
+    const response = await fetchWithTimeout(
+        `${API_BASE}/api/github-models/generate`,
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, model, system })
+        },
+        LONG_TIMEOUT_MS
+    );
+    const data = await safeJson<{ response?: string; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    if (!response.ok) throw new Error(data.error || 'GitHub Models generation failed');
+    return typeof data.response === 'string' ? data.response : String(data.response ?? '');
+}
+
+/**
+ * Gemini API
+ */
+export interface GeminiModel {
+    name: string;
+    provider: string;
+    tier: string;
+}
+
+export async function getGeminiModels(): Promise<GeminiModel[]> {
+    try {
+        const response = await fetch(`${API_BASE}/api/gemini/models`);
+        if (!response.ok) return [];
+        const data = await safeJson<{ models?: GeminiModel[] }>(response);
+        return data.models || [];
+    } catch {
+        return [];
+    }
+}
+
+export async function generateWithGemini(prompt: string, model?: string, system?: string): Promise<string> {
+    const response = await fetchWithTimeout(
+        `${API_BASE}/api/gemini/generate`,
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt, model, system })
+        },
+        LONG_TIMEOUT_MS
+    );
+    const data = await safeJson<{ response?: string; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    if (!response.ok) throw new Error(data.error || 'Gemini generation failed');
+    return typeof data.response === 'string' ? data.response : String(data.response ?? '');
+}
+
+/**
  * AnythingLLM API
  */
 export async function getAnythingLLMWorkspaces(): Promise<Workspace[]> {
@@ -228,8 +307,8 @@ export async function chatWithAnythingLLM(workspace: string, message: string, mo
  * Chat Messages API
  */
 export async function getChatMessages(chatId?: string): Promise<any[]> {
-    const url = chatId 
-        ? `${API_BASE}/api/chat/messages?chatId=${chatId}` 
+    const url = chatId
+        ? `${API_BASE}/api/chat/messages?chatId=${chatId}`
         : `${API_BASE}/api/chat/messages`;
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Chat: HTTP ${response.status}`);
@@ -295,3 +374,29 @@ export async function executeTool(toolName: string, args: any): Promise<any> {
     if (!response.ok) throw new Error(data.error || 'Tool execution failed');
     return data.result;
 }
+
+/**
+ * Files API
+ */
+export interface FileInfo {
+    name: string;
+    isDirectory: boolean;
+    path: string;
+    size: number;
+    modified: string;
+}
+
+export async function listFiles(path: string = '.'): Promise<FileInfo[]> {
+    const response = await fetch(`${API_BASE}/api/files/list?path=${encodeURIComponent(path)}`);
+    if (!response.ok) throw new Error(`Files: HTTP ${response.status}`);
+    const data = await safeJson<{ files?: FileInfo[] }>(response);
+    return data.files || [];
+}
+
+export async function getFileContent(path: string): Promise<string> {
+    const response = await fetch(`${API_BASE}/api/files/content?path=${encodeURIComponent(path)}`);
+    if (!response.ok) throw new Error(`File Content: HTTP ${response.status}`);
+    const data = await safeJson<{ content?: string }>(response);
+    return data.content || '';
+}
+

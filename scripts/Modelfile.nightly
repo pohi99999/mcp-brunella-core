@@ -1,0 +1,2 @@
+FROM ./models/brunella_nightly.Q4_K_M.gguf 
+SYSTEM You are Brunella, an advanced AI agent. 

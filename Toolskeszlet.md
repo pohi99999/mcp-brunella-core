@@ -1,7 +1,7 @@
 # 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
 
 Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
-**Generálva:** 2026. 02. 01. 22:51:20
+**Generálva:** 2026. 02. 06. 9:52:10
 
 ---
 
@@ -10,6 +10,8 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 - **anythingllm_chat**: Sends a chat message to an AnythingLLM workspace.
 
 ## 📦 browser
+- **harvest_scenario**: Runs a Robotkéz browser automation scenario (n8n workflow creation, data extraction, etc). Calls the Python browser_worker.
+- **harvest_extract**: Structured data extraction from a URL using a JSON schema (Pydantic validated).
 - **browser_navigate**: Navigates to a URL and returns the page content (text/html). Handles JS.
 - **browser_screenshot**: Takes a screenshot of a URL.
 
@@ -18,6 +20,14 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 
 ## 📦 copilotCliTool
 - **copilot_cli**: Executes GitHub Copilot CLI commands (suggest, explain, test, fix).
+
+## 📦 geminiTool
+- **gemini_generate**: Generate text using Google Gemini API (2.5 Pro, 2.0 Flash, etc.).
+- **gemini_list_models**: List available Gemini models.
+
+## 📦 githubModelsTool
+- **github_models_generate**: Generate text using GitHub Models API (GPT-4o, DeepSeek-R1, Grok 3, etc.). Requires GitHub Pro+ subscription.
+- **github_models_list**: List available GitHub Models (Pro+ subscription catalog).
 
 ## 📦 googleWorkspace
 - **gmail_list_messages**: Lists recent emails from Gmail.
@@ -38,6 +48,9 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 ## 📦 monitor
 - **monitor_get_metrics**: Returns system metrics including uptime, memory usage, and CPU load.
 - **monitor_tail_logs**: Reads the last N lines of a specified log file. log_file: name in logs/ (e.g. web_ui.log). lines: default 50.
+
+## 📦 n8n
+- **n8n_trigger_workflow**: Indít egy n8n munkafolyamatot a megadott adatokkal.
 
 ## 📦 ollamaTool
 - **ollama_generate**: Generates text using a local Ollama model.

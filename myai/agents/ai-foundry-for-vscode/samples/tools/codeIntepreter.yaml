@@ -1,0 +1,4 @@
+type: code_interpreter
+options:
+  file_ids:
+    - {your file id}

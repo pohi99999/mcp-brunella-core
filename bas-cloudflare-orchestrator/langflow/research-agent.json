@@ -1,0 +1,146 @@
+{
+  "name": "BAS Research Agent",
+  "description": "Kutató ügynök - információgyűjtés, összefoglalás, elemzés",
+  "endpoint_name": "research-agent",
+  "data": {
+    "nodes": [
+      {
+        "id": "ChatInput-1",
+        "type": "ChatInput",
+        "position": { "x": 100, "y": 200 },
+        "data": {
+          "id": "ChatInput-1",
+          "node": {
+            "template": {
+              "input_value": { "value": "" },
+              "sender": { "value": "User" },
+              "sender_name": { "value": "BAS Orchestrator" },
+              "session_id": { "value": "" },
+              "should_store_message": { "value": true }
+            }
+          }
+        }
+      },
+      {
+        "id": "Prompt-Research",
+        "type": "Prompt",
+        "position": { "x": 350, "y": 100 },
+        "data": {
+          "id": "Prompt-Research",
+          "node": {
+            "template": {
+              "template": {
+                "value": "Te egy kutató ügynök vagy a BAS (Brunella Agent System) rendszerben.\n\nA feladatod: {task}\n\nKövetesd az alábbi lépéseket:\n1. Azonosítsd a kulcs keresési kifejezéseket\n2. Gyűjtsd össze a releváns információkat\n3. Ellenőrizd a források megbízhatóságát\n4. Készíts strukturált összefoglalót\n\nFontos:\n- Magyar nyelven válaszolj\n- Hivatkozz a forrásokra ahol lehetséges\n- Ha nem találsz megbízható információt, jelezd\n\nKontextus: {context}\n\nVálaszod:"
+              },
+              "task": { "value": "" },
+              "context": { "value": "{}" }
+            }
+          }
+        }
+      },
+      {
+        "id": "OllamaModel-1",
+        "type": "OllamaModel",
+        "position": { "x": 350, "y": 350 },
+        "data": {
+          "id": "OllamaModel-1",
+          "node": {
+            "template": {
+              "model_name": { "value": "llama3.1:8b" },
+              "base_url": { "value": "http://localhost:11434" },
+              "temperature": { "value": 0.7 },
+              "num_ctx": { "value": 4096 },
+              "format": { "value": "" },
+              "mirostat": { "value": 0 },
+              "mirostat_eta": { "value": 0.1 },
+              "mirostat_tau": { "value": 5.0 },
+              "num_gpu": { "value": -1 },
+              "num_thread": { "value": 0 },
+              "repeat_last_n": { "value": 64 },
+              "repeat_penalty": { "value": 1.1 },
+              "seed": { "value": -1 },
+              "stop": { "value": [] },
+              "tfs_z": { "value": 1.0 },
+              "top_k": { "value": 40 },
+              "top_p": { "value": 0.9 },
+              "verbose": { "value": false }
+            }
+          }
+        }
+      },
+      {
+        "id": "WebSearch-1",
+        "type": "SearchAPI",
+        "position": { "x": 600, "y": 100 },
+        "data": {
+          "id": "WebSearch-1",
+          "node": {
+            "template": {
+              "api_key": { "value": "" },
+              "engine": { "value": "google" },
+              "query": { "value": "" },
+              "num_results": { "value": 5 }
+            }
+          }
+        }
+      },
+      {
+        "id": "TextOutput-1",
+        "type": "TextOutput",
+        "position": { "x": 850, "y": 200 },
+        "data": {
+          "id": "TextOutput-1",
+          "node": {
+            "template": {
+              "input_value": { "value": "" }
+            }
+          }
+        }
+      },
+      {
+        "id": "ChatOutput-1",
+        "type": "ChatOutput",
+        "position": { "x": 1100, "y": 200 },
+        "data": {
+          "id": "ChatOutput-1",
+          "node": {
+            "template": {
+              "input_value": { "value": "" },
+              "sender": { "value": "Machine" },
+              "sender_name": { "value": "Research Agent" },
+              "session_id": { "value": "" },
+              "should_store_message": { "value": true }
+            }
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "ChatInput-1",
+        "sourceHandle": "message",
+        "target": "Prompt-Research",
+        "targetHandle": "task"
+      },
+      {
+        "source": "Prompt-Research",
+        "sourceHandle": "prompt",
+        "target": "OllamaModel-1",
+        "targetHandle": "input"
+      },
+      {
+        "source": "OllamaModel-1",
+        "sourceHandle": "text",
+        "target": "TextOutput-1",
+        "targetHandle": "input_value"
+      },
+      {
+        "source": "TextOutput-1",
+        "sourceHandle": "text",
+        "target": "ChatOutput-1",
+        "targetHandle": "input_value"
+      }
+    ],
+    "viewport": { "x": 0, "y": 0, "zoom": 1 }
+  }
+}

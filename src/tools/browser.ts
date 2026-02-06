@@ -39,7 +39,71 @@ async function getBrowser() {
     return browser;
 }
 
+const PYTHON_API = process.env.PYTHON_API_URL || 'http://127.0.0.1:8000';
+
 export function registerBrowserTools(server: McpServer) {
+
+  // --- Robotkéz Harvest Tools (Python browser_worker proxy) ---
+
+  server.tool(
+    "harvest_scenario",
+    "Runs a Robotkéz browser automation scenario (n8n workflow creation, data extraction, etc). Calls the Python browser_worker.",
+    {
+      scenario_path: z.string().describe("Path to scenario JSON file, e.g. myai/scenarios/n8n_training.json"),
+      force_mode: z.enum(["api", "ui"]).optional().describe("Force API or UI mode (default: auto-detect)"),
+    },
+    async ({ scenario_path, force_mode }) => {
+      try {
+        const response = await fetch(`${PYTHON_API}/harvest`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ scenario_path, force_mode }),
+          signal: AbortSignal.timeout(120000),
+        });
+        const data = await response.json() as any;
+        return {
+          content: [{ type: "text", text: JSON.stringify(data, null, 2) }]
+        };
+      } catch (error: any) {
+        return {
+          isError: true,
+          content: [{ type: "text", text: `Harvest error: ${error.message}` }]
+        };
+      }
+    }
+  );
+
+  server.tool(
+    "harvest_extract",
+    "Structured data extraction from a URL using a JSON schema (Pydantic validated).",
+    {
+      target_url: z.string().url().describe("URL to extract data from"),
+      schema_source: z.string().describe("JSON schema file path or raw JSON string"),
+      extraction_prompt: z.string().optional().describe("Custom extraction prompt"),
+    },
+    async ({ target_url, schema_source, extraction_prompt }) => {
+      try {
+        const response = await fetch(`${PYTHON_API}/harvest/extract`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ target_url, schema_source, extraction_prompt }),
+          signal: AbortSignal.timeout(120000),
+        });
+        const data = await response.json() as any;
+        return {
+          content: [{ type: "text", text: JSON.stringify(data, null, 2) }]
+        };
+      } catch (error: any) {
+        return {
+          isError: true,
+          content: [{ type: "text", text: `Extract error: ${error.message}` }]
+        };
+      }
+    }
+  );
+
+  // --- Playwright Direct Tools (existing) ---
+
   
   server.tool(
     "browser_navigate",

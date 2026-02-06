@@ -1,0 +1,41 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Run func cli (console)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/out/bin/Azure.Functions.Cli/debug/func.dll",
+            "env": {
+                "CLI_DEBUG": "1"
+            },
+            "args": "${input:funcArgs} --script-root ${input:scriptRootArg}",
+            "cwd": "${workspaceFolder}/src/Cli/func",
+            "console": "integratedTerminal",
+            "stopAtEntry": false
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
+        }
+    ],
+    "inputs": [
+        {
+            "id": "funcArgs",
+            "type": "promptString",
+            "description": "Args to pass to the 'func' command",
+            "default": "--version"
+        },
+        // Optional argument for script root, useful for debugging a specific function app.
+        // This is the root directory of the function app, where the host.json file is located.
+        {
+            "id": "scriptRootArg",
+            "type": "promptString",
+            "description": "Optional --script-root argument (leave blank if none)",
+            "default": ""
+        }
+    ]
+}

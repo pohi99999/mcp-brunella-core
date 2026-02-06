@@ -1,0 +1,17 @@
+{
+  "private": true,
+  "name": "ai-sdk",
+  "dependencies": {
+    "@ai-sdk/openai": "^2.0.53",
+    "@openai/agents": "workspace:*",
+    "@openai/agents-extensions": "workspace:*",
+    "@openrouter/ai-sdk-provider": "^1.2.0"
+  },
+  "scripts": {
+    "build-check": "tsc --noEmit",
+    "start": "tsx index.ts",
+    "start:gpt-5": "tsx gpt-5.ts",
+    "start:stream": "tsx stream.ts",
+    "start:image-tool-output": "tsx image-tool-output.ts"
+  }
+}

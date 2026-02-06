@@ -1,10 +1,16 @@
 /**
  * BaseAgent - Alaposztály az AgentContext/AgentResult használó ügynököknek
  * EdgeProxyAgent, ProjectConductorAgent öröklik
+ *
+ * IAgent-kompatibilis: az execute(task, context?) bridge automatikusan
+ * átalakítja az IAgent hívást AgentContext formátumra.
  */
+
+import { IAgent, ISwarmContext, AgentHandoff, AgentResponse } from './types.js';
 
 export interface AgentContext {
   task?: string;
+  swarm?: ISwarmContext;
   [key: string]: unknown;
 }
 
@@ -12,12 +18,60 @@ export interface AgentResult {
   success: boolean;
   message: string;
   data?: unknown;
+  handoff?: AgentHandoff;
+  thoughts?: string;
+  contextUsed?: string[];
+  metadata?: any;        // Egyéb metaadatok (pl. source, confidence)
 }
 
-export abstract class BaseAgent {
+export abstract class BaseAgent implements IAgent {
   abstract name: string;
   abstract description: string;
   abstract role: string;
+  capabilities: string[] = [];
 
-  abstract execute(context: AgentContext): Promise<AgentResult>;
+  // Opcionális Swarm Context (ha az AgentManager/SwarmManager átadja)
+  protected swarmContext?: ISwarmContext;
+
+  /**
+   * Belső végrehajtás – a leszármazottak ezt implementálják.
+   */
+  abstract executeTask(context: AgentContext): Promise<AgentResult>;
+
+  /**
+   * IAgent-kompatibilis execute bridge.
+   * Az AgentManager és az MCP eszközök egységesen hívhatják:
+   *   agent.execute(task, context?)
+   */
+  async execute(task: string, context?: any): Promise<AgentResponse> {
+    const agentContext: AgentContext = {
+      task,
+      ...(context || {})
+    };
+
+    const result = await this.executeTask(agentContext);
+
+    return {
+      status: result.success ? 'success' : 'error',
+      data: result.data,
+      error: result.success ? undefined : result.message,
+      handoff: result.handoff,
+    };
+  }
+
+  /**
+   * Helper a végrehajtás átadásához
+   */
+  protected createHandoff(targetAgent: string, instruction: string, reason: string): AgentResult {
+    return {
+      success: true, // A handoff maga sikeres művelet
+      message: `Handoff to ${targetAgent}: ${reason}`,
+      handoff: {
+        type: 'handoff',
+        targetAgent,
+        instruction,
+        reason
+      }
+    };
+  }
 }

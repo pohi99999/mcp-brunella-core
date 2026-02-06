@@ -1,0 +1,108 @@
+# 📁 Projekt Struktúra
+
+**Generálva:** 2026. 02. 04. 23:03:08
+
+```
+📁 agentenv/
+  📁 Include/
+  📁 Lib/
+    📁 site-packages/
+      📁 adodbapi/
+      📁 agentlightning/
+      📁 agentlightning-0.2.2.dist-info/
+      📁 agentops/
+      📁 agentops-0.4.21.dist-info/
+      📁 agent_framework/
+      📁 agent_framework-1.0.0b251120.dist-info/
+      📁 agent_framework_core-1.0.0b251001.dist-info/
+      📁 agent_framework_devui/
+      📁 agent_framework_devui-1.0.0b260130.dist-info/
+      📁 agent_framework_lab-1.0.0b251024.dist-info/
+      📁 agent_framework_lab_gaia/
+      📁 agent_framework_lab_lightning/
+      📁 agent_framework_lab_tau2/
+      📁 agent_framework_meta/
+  📄 pyvenv.cfg
+  📁 Scripts/
+📄 agents.db
+📄 AnythingLLM
+📄 audit_report.json
+📁 bas-cloudflare-analysis/
+  📄 BAS_CLOUDFLARE_INTEGRATION_ANALYSIS.md
+  📄 track_cloudflare_edge_integration_spec.md
+📁 bas-cloudflare-orchestrator/
+  📁 client/
+  📄 docker-compose.yml
+  📄 GEMINI.md
+  📄 GEMINI_CLI_INSTRUCTIONS.md
+  📄 INSTALL_AND_TEST_GUIDE.md
+  📁 langflow/
+  📁 local/
+    📁 venv/
+      📁 Include/
+      📁 Lib/
+      📁 Scripts/
+  📁 migrations/
+  📁 n8n/
+  📄 package-lock.json
+  📄 package.json
+  📄 README.md
+  📄 run-tests.ps1
+  📄 setup-complete.ps1
+  📄 setup.ps1
+📁 bin/
+  📄 cloudflared.exe
+📄 Brunella
+📄 Brunella.md
+📄 CLAUDE.md
+📁 cloudflare/
+  📄 package.json
+  📁 src/
+  📄 tsconfig.json
+  📄 wrangler.jsonc
+📁 conductor/
+  📁 archive/
+    📁 brunella_cli_init_20260120/
+    📁 dashboard-integration_20260120/
+    📁 jules-qa-integration_20260120/
+  📄 BAS_ARCHITECTURE_v2.md
+  📄 Cocductornak_szeretettel.pdf
+  📄 CONDUCTOR_MANIFEST.md
+  📄 index.md
+  📄 product-guidelines.md
+  📄 product.md
+  📄 setup_state.json
+  📄 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAA.txt
+  📄 SUMMARY.md
+  📄 SYSTEM_STATE_ANALYSIS_20260130.md
+  📄 tech-stack.md
+  📁 tracks/
+    📁 agent_swarm_core_20260129/
+    📁 ai_evaluator_self_healing_20260130/
+    📁 autonomous_reasoning_20260129/
+    📁 bas_cloudflare_orchestrator_deploy_20260203/
+    📁 bas_scale_up_stabilization_20260131/
+    📁 browser_use_harvester_20260131/
+    📁 brunella_2_0_geminification_20260204/
+    📁 brunella_cli_replacement_20260121/
+    📁 cli_gemini_fication_20260130/
+    📁 cli_verification_20260129/
+    📁 cloudflare_edge_integration_20260202/
+  📄 tracks.md
+  📄 workflow.md
+📁 data/
+  📁 brunella_lancedb/
+    📁 memory.lance/
+      📁 data/
+      📁 _transactions/
+      📁 _versions/
+  📁 brunella_lancedb_python/
+    📁 memory.lance/
+      📁 data/
+      📁 _transactions/
+      📁 _versions/
+📄 docker-compose.yml
+📄 Dockerfile.node
+```
+
+> Ez egy automatikusan generált áttekintés. Részletekért lásd a CLAUDE.md fájlt.

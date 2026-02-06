@@ -1,0 +1,29 @@
+name: Compile workflows with latest gh-aw release
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  install-gh-aw:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install gh-aw
+        run: gh extension install githubnext/gh-aw
+        env: 
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Verify gh-aw installation
+        run: gh aw --version
+        env: 
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compile workflows in .github/workflows
+        run: gh aw compile --verbose
+        env: 
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Compile workflows in workflows directory
+        run: gh aw compile --workflows-dir workflows --verbose
+        env: 
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -1,0 +1,145 @@
+{
+  "scenario_name": "n8n_level3_conditional_branching",
+  "mode": "ui",
+  "difficulty": "advanced",
+  "description": "Feltételes elágazás: Input → IF condition → Branch A / Branch B → Merge",
+  "target_url": "https://n8n-latest-fulv.onrender.com",
+  "expected_duration_seconds": 180,
+  "steps": [
+    {
+      "id": 1,
+      "action": "navigate",
+      "target": "https://n8n-latest-fulv.onrender.com",
+      "description": "n8n megnyitása"
+    },
+    {
+      "id": 2,
+      "action": "click",
+      "target": "button:has-text('Create Workflow')",
+      "description": "Új workflow"
+    },
+    {
+      "id": 3,
+      "action": "add_node",
+      "node_type": "Manual Trigger",
+      "position": {"x": 250, "y": 300},
+      "description": "Manual Trigger"
+    },
+    {
+      "id": 4,
+      "action": "add_node",
+      "node_type": "Set",
+      "connect_from": "Manual Trigger",
+      "position": {"x": 400, "y": 300},
+      "config": {
+        "values": {
+          "number": [{"name": "score", "value": 75}]
+        }
+      },
+      "description": "Set node - score=75"
+    },
+    {
+      "id": 5,
+      "action": "add_node",
+      "node_type": "IF",
+      "connect_from": "Set",
+      "position": {"x": 550, "y": 300},
+      "description": "IF node hozzáadása"
+    },
+    {
+      "id": 6,
+      "action": "configure_node",
+      "node_name": "IF",
+      "config": {
+        "conditions": {
+          "number": [{
+            "value1": "={{ $json.score }}",
+            "operation": "largerEqual",
+            "value2": 70
+          }]
+        }
+      },
+      "description": "Feltétel: score >= 70"
+    },
+    {
+      "id": 7,
+      "action": "add_node",
+      "node_type": "Set",
+      "connect_from": {"node": "IF", "output": "true"},
+      "position": {"x": 700, "y": 200},
+      "config": {
+        "values": {
+          "string": [{"name": "result", "value": "PASSED"}]
+        }
+      },
+      "description": "True branch - PASSED"
+    },
+    {
+      "id": 8,
+      "action": "add_node",
+      "node_type": "Set",
+      "connect_from": {"node": "IF", "output": "false"},
+      "position": {"x": 700, "y": 400},
+      "config": {
+        "values": {
+          "string": [{"name": "result", "value": "FAILED"}]
+        }
+      },
+      "description": "False branch - FAILED"
+    },
+    {
+      "id": 9,
+      "action": "add_node",
+      "node_type": "Merge",
+      "position": {"x": 900, "y": 300},
+      "description": "Merge node a végén"
+    },
+    {
+      "id": 10,
+      "action": "connect_nodes",
+      "from": "Set (PASSED)",
+      "to": "Merge",
+      "description": "PASSED → Merge kapcsolat"
+    },
+    {
+      "id": 11,
+      "action": "connect_nodes",
+      "from": "Set (FAILED)",
+      "to": "Merge",
+      "description": "FAILED → Merge kapcsolat"
+    },
+    {
+      "id": 12,
+      "action": "rename_workflow",
+      "new_name": "Robotkez_Conditional_Test",
+      "description": "Workflow átnevezése"
+    },
+    {
+      "id": 13,
+      "action": "keyboard",
+      "keys": "Control+s",
+      "description": "Mentés"
+    },
+    {
+      "id": 14,
+      "action": "click",
+      "target": "button:has-text('Test Workflow')",
+      "description": "Teszt futtatás"
+    },
+    {
+      "id": 15,
+      "action": "verify_execution_path",
+      "expected_path": ["Manual Trigger", "Set", "IF", "Set (PASSED)", "Merge"],
+      "description": "Ellenőrzés: a helyes ág futott"
+    }
+  ],
+  "validation": {
+    "success_criteria": [
+      "6 node létrehozva",
+      "IF node két kimenettel",
+      "Merge node összefűzi az ágakat",
+      "score=75 esetén a PASSED ág fut"
+    ],
+    "screenshot_on_complete": true
+  }
+}

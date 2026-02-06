@@ -1,0 +1,11 @@
+{
+  "ActiveTargetSystem": "WSL: Ubuntu",
+  "DevContainersInfoBarHidden": true,
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\server",
+    "\\_rebase"
+  ],
+  "PreviewInSolutionExplorer": false
+}

@@ -1,0 +1,15 @@
+{
+  "id": "phoenix_protocol_v2_20260205",
+  "title": "Phoenix Protocol v2 - Öngyógyító Rendszer",
+  "status": "active",
+  "priority": "medium",
+  "created": "2026-02-05",
+  "updated": "2026-02-05",
+  "owner": "Developer",
+  "spec_status": "draft",
+  "progress": 30,
+  "tags": ["self-healing", "resilience", "checkpoint", "monitoring"],
+  "dependencies": [],
+  "estimated_effort": "medium",
+  "business_value": "high"
+}

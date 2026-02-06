@@ -1,12 +1,35 @@
 [project]
-name = "cogella-core"
-version = "0.1.0"
-description = "Add your description here"
+name = "brunella-core"
+version = "2.1.0"
+description = "Brunella Agent System - AI multi-agent framework"
 readme = "README.md"
-requires-python = ">=3.14"
+requires-python = ">=3.12"
 dependencies = [
+    # Web framework
     "fastapi>=0.128.0",
-    "fastmcp>=2.14.3",
-    "httpx>=0.28.1",
     "uvicorn>=0.40.0",
+    "httpx>=0.28.1",
+    # MCP
+    "fastmcp>=2.14.3",
+    # LLM
+    "langchain>=0.3.0",
+    "langchain-google-genai>=2.0.0",
+    # Vector DB
+    "lancedb>=0.27.0",
+    "pyarrow>=23.0.0",
+    "chromadb>=0.6.0",
+    # Browser automation
+    "browser-use>=0.1.0",
+    "playwright>=1.49.0",
+    # Data processing
+    "pydantic>=2.10.0",
+    "python-dotenv>=1.0.0",
+    "requests>=2.32.0",
+    "aiofiles>=24.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.24.0",
 ]

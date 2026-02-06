@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import os from 'os';
+import fs from 'fs';
 import fetch from 'node-fetch';
 import swaggerUi from 'swagger-ui-express';
 import { Logger } from '../utils/logger.js';
@@ -21,7 +22,7 @@ import {
     checkAnythingLLMHealth,
     buildHealthResponse,
 } from '../utils/health.js';
-import { chatWithOllama } from '../core/llm_client.js';
+import { chatWithOllama, chat, generateWithGithubModels, listGithubModels, generateWithGemini, listGeminiModels } from '../core/llm_client.js';
 import { corsWhitelist, requestId, requestLogging, apiRateLimit } from './middleware.js';
 import { swaggerSpec } from './swagger.js';
 import { socketService } from './SocketService.js';
@@ -88,7 +89,7 @@ export async function startWebServer() {
             memoryUsage: ((totalMem - freeMem) / totalMem) * 100
         });
         io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
-        
+
         // Push Agent & Tool status updates
         io.emit('agent_update', agentManager.listAgentDefinitions());
         io.emit('tools_update', toolManager.getToolDefinitions());
@@ -195,6 +196,128 @@ export async function startWebServer() {
         }
     });
 
+    app.post('/api/agents/:agentName/capabilities', async (req, res) => {
+        try {
+            const { agentName } = req.params;
+            const { capabilities } = req.body;
+
+            if (!Array.isArray(capabilities)) {
+                res.status(400).json({ error: 'Capabilities must be an array of strings' });
+                return;
+            }
+
+            const success = await agentManager.updateAgentCapabilities(agentName, capabilities);
+            if (success) {
+                res.json({ status: 'success', capabilities });
+            } else {
+                res.status(404).json({ error: 'Agent not found' });
+            }
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.post('/api/agents/create', async (req, res) => {
+        try {
+            const config = req.body;
+            if (!config.name || !config.role) {
+                res.status(400).json({ error: 'Name and role are required' });
+                return;
+            }
+
+            const success = await agentManager.createAgent(config);
+            if (success) {
+                res.json({ status: 'success', message: `Agent ${config.name} created successfully` });
+                // Notify via socket
+                socketService.broadcastLog(`Új ügynök született: ${config.name}`, 'success');
+            } else {
+                res.status(500).json({ error: 'Failed to create agent' });
+            }
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.get('/api/cloudflare/agents', async (req, res) => {
+        try {
+            const edgeStatus = agentManager.getEdgeStatus();
+            if (!edgeStatus.enabled) {
+                res.json({ agents: [], status: 'disabled' });
+                return;
+            }
+
+            // In a real scenario, we would proxy the request to the Cloudflare Worker URL
+            // const workerUrl = process.env.CLOUDFLARE_WORKER_URL;
+            // const response = await fetch(`${workerUrl}/agents`);
+            // const data = await response.json();
+
+            // Stubbed response for now
+            res.json({
+                status: edgeStatus.healthy ? 'connected' : 'error',
+                agents: [
+                    { name: 'EdgeOrchestrator', status: 'active', tasks: 2 },
+                    { name: 'EdgeKVReader', status: 'idle', tasks: 0 }
+                ]
+            });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    // Files API
+    app.get('/api/files/list', async (req, res) => {
+        try {
+            const relPath = req.query.path as string || '.';
+            if (relPath.includes('..')) {
+                res.status(400).json({ error: 'Invalid path' });
+                return;
+            }
+
+            const fullPath = path.resolve(process.cwd(), relPath);
+            if (!fullPath.startsWith(process.cwd())) {
+                res.status(403).json({ error: 'Access denied' });
+                return;
+            }
+
+            const entries = await fs.promises.readdir(fullPath, { withFileTypes: true });
+            const files = entries.map(entry => {
+                const stats = fs.statSync(path.join(fullPath, entry.name));
+                return {
+                    name: entry.name,
+                    isDirectory: entry.isDirectory(),
+                    path: path.join(relPath, entry.name).replace(/\\/g, '/'),
+                    size: entry.isFile() ? stats.size : 0,
+                    modified: stats.mtime
+                };
+            });
+
+            res.json({ files });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.get('/api/files/content', async (req, res) => {
+        try {
+            const filePath = req.query.path as string;
+            if (!filePath || filePath.includes('..')) {
+                res.status(400).json({ error: 'Invalid path' });
+                return;
+            }
+
+            const fullPath = path.resolve(process.cwd(), filePath);
+            if (!fullPath.startsWith(process.cwd())) {
+                res.status(403).json({ error: 'Access denied' });
+                return;
+            }
+
+            const content = await fs.promises.readFile(fullPath, 'utf-8');
+            res.json({ content });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
     // Tasks API
     app.get('/api/tasks', (req, res) => {
         try {
@@ -260,6 +383,54 @@ export async function startWebServer() {
 
             const selectedModel = model || process.env.OLLAMA_MODEL || 'gemma2:9b';
             const response = await chatWithOllama(prompt, system, selectedModel);
+            res.json({ response });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    // GitHub Models API
+    app.get('/api/github-models/models', async (req, res) => {
+        try {
+            const models = listGithubModels();
+            res.json({ models });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message, models: [] });
+        }
+    });
+
+    app.post('/api/github-models/generate', async (req, res) => {
+        try {
+            const { prompt, model, system } = req.body;
+            if (!prompt) {
+                res.status(400).json({ error: 'Prompt is required' });
+                return;
+            }
+            const response = await generateWithGithubModels(prompt, model, system);
+            res.json({ response });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    // Gemini API
+    app.get('/api/gemini/models', async (req, res) => {
+        try {
+            const models = listGeminiModels();
+            res.json({ models });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message, models: [] });
+        }
+    });
+
+    app.post('/api/gemini/generate', async (req, res) => {
+        try {
+            const { prompt, model, system } = req.body;
+            if (!prompt) {
+                res.status(400).json({ error: 'Prompt is required' });
+                return;
+            }
+            const response = await generateWithGemini(prompt, model, system);
             res.json({ response });
         } catch (e: any) {
             res.status(500).json({ error: e.message });
@@ -431,12 +602,16 @@ export async function startWebServer() {
 
         // Chat Logic
         socket.on('user_message', async (data) => {
-             const userMsg = data.text;
-             saveMessage(DEFAULT_CHAT_ID, 'user', userMsg);
-             socket.emit('bot_message_start', { isUser: false });
+            const userMsg = data.text;
+            const options = {
+                model: data.model,
+                provider: data.provider
+            };
+            saveMessage(DEFAULT_CHAT_ID, 'user', userMsg);
+            socket.emit('bot_message_start', { isUser: false });
 
-             try {
-                const plan = await agentManager.createPlan(userMsg);
+            try {
+                const plan = await agentManager.createPlan(userMsg, options);
                 socket.emit('plan_created', plan);
 
                 const result = await agentManager.executePlan(plan, (event: any, eventData: any) => {
@@ -446,11 +621,11 @@ export async function startWebServer() {
                 socket.emit('bot_message_chunk', { text: result });
                 saveMessage(DEFAULT_CHAT_ID, 'bot', result);
                 socket.emit('bot_message_end', {});
-             } catch (e: any) {
+            } catch (e: any) {
                 const errMsg = `⚠️ Hiba: ${e.message}`;
                 socket.emit('bot_message', { text: errMsg });
                 saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
-             }
+            }
         });
     });
 

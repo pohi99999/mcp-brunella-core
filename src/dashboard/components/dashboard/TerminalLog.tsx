@@ -31,7 +31,7 @@ export function TerminalLog({ logs = [], className }: TerminalLogProps) {
     logs.length > 0
       ? logs.map((log) => ({
           id: log.id,
-          text: log.message,
+          text: log.source ? `[${log.source}] ${log.message}` : log.message,
           type: logTypeToTerminalType(log.type),
         }))
       : placeholderLines

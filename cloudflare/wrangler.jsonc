@@ -1,0 +1,35 @@
+{
+  "$schema": "https://json.schemastore.org/wrangler.json",
+  "name": "bas-orchestrator",
+  "main": "src/index.ts",
+  "compatibility_date": "2024-01-01",
+  "compatibility_flags": ["nodejs_compat"],
+  
+  // KV Namespaces
+  "kv_namespaces": [
+    { "binding": "BAS_TASKS", "id": "YOUR_KV_ID_HERE" }
+  ],
+  
+  // Durable Objects (Phase 3)
+  // "durable_objects": {
+  //   "bindings": [
+  //     { "name": "SESSION_STATE", "class_name": "SessionState" },
+  //     { "name": "TASK_COORDINATOR", "class_name": "TaskCoordinator" }
+  //   ]
+  // },
+  
+  // Workers AI binding
+  "ai": {
+    "binding": "AI"
+  },
+  
+  // Environment variables (set via wrangler secret)
+  // BAS_LOCAL_URL - Your local tunnel URL
+  // BAS_API_KEY - API key for authentication
+  
+  // Development settings
+  "dev": {
+    "port": 8787,
+    "local_protocol": "http"
+  }
+}

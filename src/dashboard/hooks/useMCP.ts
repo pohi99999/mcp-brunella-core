@@ -170,9 +170,9 @@ export function useMCP() {
     }
   }, [])
 
-  const sendMessage = (text: string, tools?: string[]) => {
+  const sendMessage = (text: string, tools?: string[], model?: string, provider?: string) => {
     if (socket) {
-      socket.emit('user_message', { text, tools })
+      socket.emit('user_message', { text, tools, model, provider })
     }
   }
 

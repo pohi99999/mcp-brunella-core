@@ -1,0 +1,23 @@
+3. Böngésző Automatizálás (A "Modern" Web Scraping)
+Ami régen a Selenium volt, az ma a Playwright. Az összes modern AI agent (mint amit a COMET-ben láttál) ezen alapul.
+
+Hogyan kísérletezhetsz vele kódolás nélkül (vagy kevés kóddal):
+Microsoft Power Automate Desktop: Ez be van építve a Windowsba (vagy ingyen letölthető). Van benne "Recorder" funkció. Megnyomod a felvételt, megcsinálod a folyamatot a weben, ő rögzíti, majd a Gemini-vel írathatsz hozzá JavaScriptet, ha bonyolítani akarod.
+LaVague (GitHub): Ez egy új, kifejezetten AI-ra épülő keretrendszer. Te megadod a célt ("Jelentkezz be ide és töltsd le a legutóbbi számlát"), ő pedig generál hozzá egy futtatható kódot, ami megcsinálja a böngészőben.
+4. Hogyan kapcsold össze a PWA-val? (A te Use-Cased)
+Itt ér össze a kör az előző beszélgetésünkkel.
+
+Ha használni akarod az OpenInterpreter-t vagy a Computer Use-t, a Sub Apps (PWA) technológia aranybánya.
+
+Miért? Ha azt mondod az AI-nak: "Nyisd meg a Chatet", és a Chat egy millió tab egyike a Chrome-ban, az AI összezavarodhat (látnia kell a tabokat, váltani, stb.).
+PWA előny: Ha a Chat egy külön ablak (telepített PWA), az operációs rendszer szintjén külön "app"-ként látszik. Az AI sokkal könnyebben tud fókuszálni rá (Alt+Tab, ablakazonosítás), és a képernyőképen is tisztább a felület (nincs böngészősor, könyvjelzősáv).
+A következő lépés neked (Gyakorlati tanács)
+Mivel már használtál CLI-t és n8n-t, javaslom, hogy tegyél egy próbát az OpenInterpreter-rel, mert ez áll legközelebb ahhoz, amit keresel, és könnyű telepíteni.
+
+Legyen fent a Python a gépeden.
+Nyiss egy terminált.
+Add ki: pip install open-interpreter
+Ha van OpenAI API kulcsod vagy Anthropic kulcsod, exportáld be. Ha nincs, használd a local módot (ha van pl. LM Studio vagy Ollama a gépeden).
+Indítsd el: interpreter --os (Fontos a --os kapcsoló, ez aktiválja a látást és az egérvezérlést).
+Utasítsd: "Nézd meg a megnyitott PWA ablakot a képernyőn, olvasd el az utolsó üzenetet és írj rá választ."
+Ez a leggyorsabb út, hogy megtapasztald azt a "mágiát", amikor a gép magától mozog a parancsaidra. Sok sikert a kísérletezéshez, nagyon jó irányba haladsz!

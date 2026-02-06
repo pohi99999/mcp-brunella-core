@@ -16,6 +16,7 @@ import { getMemory } from './utils/memoryContext.js';
 import { discoverSkills } from './utils/skillsLoader.js';
 import { listHooks } from './utils/hooks.js';
 import { startInteractiveMenu } from './interactive.js';
+import { cloudflareClient } from './utils/cloudflareClient.js';
 
 const program = new Command();
 
@@ -25,10 +26,10 @@ try {
   // Try relative to build location first, then src
   let pkgPath = join(__dirname, '../package.json');
   if (!existsSync(pkgPath)) pkgPath = join(__dirname, '../../package.json');
-  
+
   if (existsSync(pkgPath)) {
-      const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
-      version = pkg.version;
+    const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
+    version = pkg.version;
   }
 } catch (e) {
   // ignore
@@ -50,7 +51,7 @@ try {
   if (all?.telemetry?.enabled) {
     recordSessionStart({ cli_version: version, server_url: String(all.serverUrl ?? configManager.get('serverUrl') ?? '') });
   }
-} catch (_) {}
+} catch (_) { }
 process.on('beforeExit', () => { flushTelemetry(); });
 
 program
@@ -83,39 +84,39 @@ authCmd.command('login').description('Log in or change auth method').option('--a
 
 // --- doctor
 program.command('doctor').description('Run system diagnostics').action(async () => {
-    console.log(chalk.bold('🩺 Brunella Doctor'));
-    
-    // Check Node
-    console.log(`✔ Node: ${process.version}`);
-    
-    // Check Server Connection
-    const client = new BrunellaClient();
-    try {
-        await client.connect();
-        console.log(chalk.green('✔ Server: Connected'));
-        
-        // Check Agents
-        const agents = await client.callTool('agent_list', {});
-        // @ts-ignore
-        if (agents.content[0].text) {
-             console.log(chalk.green('✔ Agents: Active'));
-        }
-        
-    } catch (e: any) {
-        console.log(chalk.red(`✖ Server: Connection failed (${e.message})`));
-    } finally {
-        await client.close();
+  console.log(chalk.bold('🩺 Brunella Doctor'));
+
+  // Check Node
+  console.log(`✔ Node: ${process.version}`);
+
+  // Check Server Connection
+  const client = new BrunellaClient();
+  try {
+    await client.connect();
+    console.log(chalk.green('✔ Server: Connected'));
+
+    // Check Agents
+    const agents = await client.callTool('agent_list', {});
+    // @ts-ignore
+    if (agents.content[0].text) {
+      console.log(chalk.green('✔ Agents: Active'));
     }
+
+  } catch (e: any) {
+    console.log(chalk.red(`✖ Server: Connection failed (${e.message})`));
+  } finally {
+    await client.close();
+  }
 });
 
 // --- connect (MCP)
 program.command('connect <serverName>')
-    .description('Connect to an external MCP server (github, chrome, docker)')
-    .action(async (serverName: string) => {
-        console.log(chalk.cyan(`Connecting to ${serverName}...`));
-        console.log(chalk.dim("Feature coming soon: Dynamic MCP config update."));
-        console.log(chalk.dim(`Please add '${serverName}' manually to mcp_servers.json for now.`));
-    });
+  .description('Connect to an external MCP server (github, chrome, docker)')
+  .action(async (serverName: string) => {
+    console.log(chalk.cyan(`Connecting to ${serverName}...`));
+    console.log(chalk.dim("Feature coming soon: Dynamic MCP config update."));
+    console.log(chalk.dim(`Please add '${serverName}' manually to mcp_servers.json for now.`));
+  });
 
 // --- tools
 program.command('tools')
@@ -139,7 +140,7 @@ program.command('tools')
     }
   });
 
-// --- agents
+// --- agents (list)
 program.command('agents')
   .description('List all registered AI agents')
   .action(async () => {
@@ -151,13 +152,68 @@ program.command('agents')
       // @ts-ignore
       const text = result.content?.[0]?.text;
       if (text) {
-          console.log(chalk.bold('Registered Agents:'));
-          console.log(text);
+        console.log(chalk.bold('Registered Agents:'));
+        console.log(text);
       } else {
-          console.log(chalk.yellow('No agents found or tool returned empty result.'));
+        console.log(chalk.yellow('No agents found or tool returned empty result.'));
       }
     } catch (error: any) {
       console.error(chalk.red('Error fetching agents:'), error.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
+// --- agent (execute specific agent)
+program.command('agent <agentName> <task>')
+  .description('Execute a specific agent with a task')
+  .option('--context <json>', 'Context as JSON string')
+  .option('--json', 'Output raw JSON response')
+  .action(async (agentName: string, task: string, cmd?: { opts: () => { context?: string; json?: boolean } }) => {
+    const opts = cmd?.opts?.() ?? {};
+    let context: any = {};
+
+    if (opts.context) {
+      try {
+        context = JSON.parse(opts.context);
+      } catch (e) {
+        console.error(chalk.red('Invalid JSON in --context'));
+        process.exit(1);
+      }
+    }
+
+    const spinner = ora(`Executing ${chalk.cyan(agentName)}...`).start();
+    const client = new BrunellaClient();
+
+    try {
+      await client.connect();
+
+      // Call agent_execute tool
+      const result = await client.callTool('agent_execute', {
+        agentName,
+        task,
+        context: JSON.stringify(context)
+      });
+
+      spinner.stop();
+
+      if (opts.json) {
+        console.log(JSON.stringify(result, null, 2));
+      } else {
+        // @ts-ignore
+        const text = result.content?.[0]?.text;
+        if (text) {
+          console.log(chalk.bold(`\n✅ ${agentName} Response:`));
+          console.log(text);
+        } else {
+          console.log(chalk.yellow('Agent returned empty response'));
+        }
+      }
+    } catch (error: any) {
+      spinner.fail(chalk.red(`${agentName} failed`));
+      console.error(chalk.red('Error:'), error.message);
+      process.exit(1);
     } finally {
       await client.close();
       process.exit(0);
@@ -171,25 +227,25 @@ program.command('run <toolName> [args...]')
   .action(async (toolName: string, args: string[] = [], cmd?: { opts: () => { json?: boolean } }) => {
     const opts = cmd?.opts?.() ?? {};
     const parsedArgs: Record<string, string> = {};
-    
+
     for (const arg of args || []) {
-        const parts = arg.split('=');
-        if (parts.length >= 2) {
-          const key = parts[0];
-          const value = parts.slice(1).join('=');
-          parsedArgs[key] = value;
-        } else if (arg.startsWith('{')) {
-             try {
-                Object.assign(parsedArgs, JSON.parse(arg));
-             } catch {}
-        }
+      const parts = arg.split('=');
+      if (parts.length >= 2) {
+        const key = parts[0];
+        const value = parts.slice(1).join('=');
+        parsedArgs[key] = value;
+      } else if (arg.startsWith('{')) {
+        try {
+          Object.assign(parsedArgs, JSON.parse(arg));
+        } catch { }
+      }
     }
 
     const client = new BrunellaClient();
     try {
       await client.connect();
       const result = await client.callTool(toolName, parsedArgs);
-      
+
       if (opts.json) {
         console.log(JSON.stringify(result, null, 2));
       } else {
@@ -212,67 +268,151 @@ program.command('chat')
   .description('Interactive chat with Brunella')
   .action(async () => {
     marked.setOptions({ renderer: new TerminalRenderer() as any });
-    
-    console.log(chalk.cyan("Starting chat... (Type 'exit' to quit, /switch <provider> to change LLM provider)"));
+
+    console.log(chalk.cyan("Starting chat..."));
+    console.log(chalk.dim("Type 'exit' to quit"));
+    console.log(chalk.dim("Commands:"));
+    console.log(chalk.dim("  /switch  - Change AI Model (GPT-4.1, Gemini, Ollama)"));
+    console.log(chalk.dim("  /edge    - Toggle Edge Mode (Cloudflare)"));
+    console.log(chalk.dim("  /conductor <action> - Run Conductor tasks (status, sync, track)"));
+    console.log(chalk.dim("  /tools   - List available tools"));
+    console.log(chalk.dim("  /ls [path] - List files (Coding Agent)"));
+    console.log(chalk.dim("  /read <path> - Read file (Coding Agent)"));
+    console.log(chalk.dim("  /eval <code> - Run Python code directly"));
+    console.log(chalk.dim("  /clear   - Clear conversation history"));
 
     const client = new BrunellaClient();
     try {
       await client.connect();
-      
+
+      // Session State
       let history: Array<{ role: 'user' | 'assistant'; content: string }> = [];
-      let activeProvider: 'ollama' | 'gemini' | 'claude' | 'openai' = 'ollama';
+      let activeProvider: 'ollama' | 'gemini' | 'github' = 'github';
+      let activeModel: string = 'gpt-4o'; // Updated to valid model
+
+      let edgeMode = false;
+
+      console.log(chalk.green(`\n✔ Active Model: ${chalk.bold(activeModel)} (${activeProvider})\n`));
 
       while (true) {
         const { prompt } = await inquirer.prompt([{
           type: 'input',
           name: 'prompt',
-          message: 'Brunella ❯',
+          message: edgeMode ? chalk.blue('Brunella (Edge) ❯') : chalk.magenta('Brunella ❯'),
         }]);
 
-        if (prompt.toLowerCase() === 'exit') break;
+        const trimmed = prompt.trim();
+        if (!trimmed) continue;
+        if (trimmed.toLowerCase() === 'exit') break;
 
-        if (prompt.startsWith('/switch ')) {
-            const newProvider = prompt.split(' ')[1];
-            if (['ollama', 'gemini', 'claude', 'openai'].includes(newProvider)) {
-                activeProvider = newProvider as any;
-                console.log(chalk.yellow(`Switched to ${activeProvider} provider.`));
-                history = []; // Reset history on provider switch
-                continue;
-            } else {
-                console.log(chalk.red(`Invalid provider. Available: ollama, gemini, claude, openai`));
-                continue;
-            }
+        // --- Commands ---
+
+        if (trimmed === '/clear') {
+          history = [];
+          console.log(chalk.yellow('Conversation history cleared.'));
+          continue;
         }
 
-        history.push({ role: 'user', content: prompt });
+        if (trimmed.startsWith('/edge')) {
+          edgeMode = !edgeMode;
+          console.log(edgeMode ? chalk.cyan('Edge mode enabled (Cloudflare).') : chalk.yellow('Edge mode disabled (Local/API).'));
+          continue;
+        }
 
+        if (trimmed.startsWith('/switch')) {
+          const parts = trimmed.split(' ');
+          // Interactive selection if just '/switch'
+          if (parts.length === 1) {
+            const { provider } = await inquirer.prompt([{
+              type: 'list',
+              name: 'provider',
+              message: 'Select AI Provider:',
+              choices: ['github', 'gemini', 'ollama']
+            }]);
+
+            let modelChoices: string[] = [];
+            if (provider === 'github') modelChoices = ['gpt-4o', 'gpt-4o-mini', 'o1-preview', 'o1-mini'];
+
+            if (provider === 'gemini') modelChoices = ['gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-2.0-flash-lite'];
+            if (provider === 'ollama') modelChoices = ['llama3.1:8b', 'deepseek-r1:8b', 'qwen2.5-coder'];
+
+            const { model } = await inquirer.prompt([{
+              type: 'list',
+              name: 'model',
+              message: 'Select Model:',
+              choices: modelChoices
+            }]);
+
+            activeProvider = provider;
+            activeModel = model;
+          } else {
+            // Quick switch: /switch gemini
+            const target = parts[1].toLowerCase();
+            if (target === 'github') { activeProvider = 'github'; activeModel = 'gpt-4o'; }
+            else if (target === 'gemini') { activeProvider = 'gemini'; activeModel = 'gemini-2.0-flash'; }
+            else if (target === 'ollama') { activeProvider = 'ollama'; activeModel = 'llama3.1:8b'; }
+            else { console.log(chalk.red('Unknown provider. Use interactive mode (just /switch) or github/gemini/ollama.')); continue; }
+          }
+
+          console.log(chalk.green(`✔ Switched to: ${chalk.bold(activeModel)}`));
+          history = []; // Optional: reset history on switch? Let's keep it for context continuity if compatible, but usually safer to clear or warn.
+          // For now, let's NOT clear history implicitly to allow context carry-over, but warn user manually if needed.
+          continue;
+        }
+
+        // --- Chat Loop ---
+
+        history.push({ role: 'user', content: prompt });
         const spinner = ora('Thinking...').start();
+
         try {
-            const result = await client.callTool('agent_delegate', {
+          let responseText = "";
+
+          if (edgeMode) {
+            const edgeResult = await cloudflareClient.submitTask(prompt, { history });
+            responseText = typeof edgeResult.result === 'string' ? edgeResult.result : (edgeResult.result?.response || edgeResult.message || JSON.stringify(edgeResult));
+          } else {
+            // Local / API Providers via Tools
+            let result: any;
+
+            if (activeProvider === 'github') {
+              result = await client.callTool('github_models_generate', { prompt, model: activeModel, system: "You are Brunella, a helpful AI assistant." });
+            } else if (activeProvider === 'gemini') {
+              result = await client.callTool('gemini_generate', { prompt, model: activeModel });
+            } else if (activeProvider === 'ollama') {
+              result = await client.callTool('ollama_generate', { prompt, model: activeModel });
+            } else {
+              // Fallback Agent
+              result = await client.callTool('agent_delegate', {
                 agent_name: 'Orchestrator',
                 task: prompt,
-                context: {
-                    history: history,
-                    provider: activeProvider
-                }
-            });
-            
-            spinner.stop();
-            // @ts-ignore
-            const response = result.content?.[0]?.text || "No response";
-            
-            history.push({ role: 'assistant', content: response });
-            
-            console.log(chalk.green('Brunella:'));
-            console.log(marked(response));
+                context: { history, provider: activeProvider }
+              });
+            }
+
+            // Parse Tool Result safely
+            if (result && result.content && Array.isArray(result.content) && result.content.length > 0) {
+              responseText = result.content[0].text;
+            } else if (result && result.message) {
+              responseText = result.message;
+            } else {
+              responseText = JSON.stringify(result, null, 2);
+            }
+          }
+
+          spinner.stop();
+
+          // Render Markdown
+          console.log(marked(responseText));
+          history.push({ role: 'assistant', content: responseText });
 
         } catch (err: any) {
           spinner.stop();
-          console.error(chalk.red("Error:"), err.message);
+          console.error(chalk.red("\nError:"), err.message);
         }
       }
     } catch (e: any) {
-      console.error(chalk.red("Chat error:"), e.message);
+      console.error(chalk.red("\nConnection failed:"), e.message);
     } finally {
       await client.close();
       process.exit(0);
@@ -283,30 +423,30 @@ program.command('chat')
 program.command('interpreter')
   .description('Interactive Python Interpreter')
   .action(async () => {
-      console.log(chalk.blue(boxen('Brunella Python Interpreter', { padding: 1, borderStyle: 'round' })));
-      const client = new BrunellaClient();
-      try {
-          await client.connect();
+    console.log(chalk.blue(boxen('Brunella Python Interpreter', { padding: 1, borderStyle: 'round' })));
+    const client = new BrunellaClient();
+    try {
+      await client.connect();
 
-          while(true) {
-              const { code } = await inquirer.prompt([{
-                  type: 'input',
-                  name: 'code',
-                  message: '>>>'
-              }]);
+      while (true) {
+        const { code } = await inquirer.prompt([{
+          type: 'input',
+          name: 'code',
+          message: '>>>'
+        }]);
 
-              if (code === 'exit') break;
+        if (code === 'exit') break;
 
-              const result = await client.callTool('interpreter_run_python', { code });
-              // @ts-ignore
-              console.log(result.content[0].text);
-          }
-      } catch (e: any) {
-          console.log(chalk.red(e.message));
-      } finally {
-          await client.close();
-          process.exit(0);
+        const result = await client.callTool('interpreter_run_python', { code });
+        // @ts-ignore
+        console.log(result.content[0].text);
       }
+    } catch (e: any) {
+      console.log(chalk.red(e.message));
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
   });
 
 // --- conductor (Project Management)
@@ -419,7 +559,7 @@ conductorCmd.command('track <action> [name]')
 
 // Interactive Menu (Default)
 if (!process.argv.slice(2).length) {
-    startInteractiveMenu();
+  startInteractiveMenu();
 } else {
-    program.parse(process.argv);
+  program.parse(process.argv);
 }

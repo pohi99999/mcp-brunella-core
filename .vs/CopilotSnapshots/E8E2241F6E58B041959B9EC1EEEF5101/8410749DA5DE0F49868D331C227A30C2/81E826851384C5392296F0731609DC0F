@@ -1,0 +1,204 @@
+﻿import { useState, useEffect } from 'react'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Toaster, toast } from 'sonner'
+import { StatusCard } from '@/components/dashboard/StatusCard'
+import { ControlPanel } from '@/components/dashboard/ControlPanel'
+import { MetricsCard } from '@/components/dashboard/MetricsCard'
+import { LogViewer } from '@/components/dashboard/LogViewer'
+import { ConfigEditor } from '@/components/dashboard/ConfigEditor'
+import { ChatInterface } from '@/components/dashboard/ChatInterface'
+import { AgentToolsManager } from '@/components/dashboard/AgentToolsManager'
+import { LoginForm } from '@/components/auth/LoginForm'
+import { UserProfile } from '@/components/auth/UserProfile'
+import { ServerState, LogEntry, ConfigItem, ServerMetrics, User, AgentTool } from '@/lib/types'
+import { useMcpStore } from '@/lib/mcpStore'
+import { useMCP } from '@/hooks/useMCP'
+import { canPerformAction } from '@/lib/auth'
+import { externalApiService } from '@/lib/externalApiService'
+import { ChartLine, Terminal, Gear, ChatCircle, Toolbox } from '@phosphor-icons/react'
+
+function App() {
+  const [user, setUser] = useState<User | null>(null)
+  const { 
+    serverState, 
+    logs, 
+    config, 
+    agentTools, 
+    metrics,
+    setLogs,
+    setConfig,
+    setAgentTools,
+    setServerState
+  } = useMcpStore()
+  
+  const { sendMessage } = useMCP()
+
+  const currentUser = user ?? null
+  const currentServerState = serverState
+  const currentLogs = logs
+  const currentConfig = config
+  const currentAgentTools = agentTools
+
+  const handleLogin = (authenticatedUser: User) => {
+    setUser(authenticatedUser)
+    toast.success('Sikeres bejelentkezés', { 
+      description: `Üdvözöljük, ${authenticatedUser.displayName}!` 
+    })
+  }
+
+  const handleLogout = () => {
+    setUser(null)
+    toast.info('Kijelentkeztél', { description: 'Viszlát!' })
+  }
+
+  // Remove the old local effects and use the hook's connection
+  useEffect(() => {
+    // Initial data fetch if needed
+  }, [currentUser])
+
+  const handleStart = () => {
+    setServerState({ status: 'starting' })
+    sendMessage('server:start')
+    toast.info('Szerver indítása...', { description: 'A folyamat hamarosan elindul' })
+  }
+
+  const handleStop = () => {
+    setServerState({ status: 'stopping' })
+    sendMessage('server:stop')
+    toast.info('Szerver leállítása...', { description: 'Várakozás az aktív kapcsolatok lezárására' })
+  }
+
+  const handleRestart = () => {
+    setServerState({ status: 'stopping' })
+    sendMessage('server:restart')
+    toast.info('Szerver újraindítása...', { description: 'Leállítás folyamatban' })
+  }
+
+  const handleClearLogs = () => {
+    setLogs([])
+    toast.success('Naplók törölve', { description: 'Minden naplóbejegyzés törölve lett' })
+  }
+
+  const handleSaveConfig = (updatedConfig: ConfigItem[]) => {
+    setConfig(updatedConfig)
+    sendMessage(`config:update:${JSON.stringify(updatedConfig)}`)
+    toast.success('Konfiguráció mentve', { description: 'A beállítások sikeresen frissítve' })
+  }
+
+  const handleToolExecution = async (toolName: string, params: any): Promise<string> => {
+    const tool = currentAgentTools.find(t => t.name === toolName)
+    
+    if (!tool) {
+      return `Hiba: A tool "${toolName}" nem található`
+    }
+
+    if (!tool.enabled) {
+      return `Hiba: A tool "${toolName}" le van tiltva`
+    }
+
+    if (tool.requiresPermission && !canPerformAction(currentUser, tool.requiresPermission)) {
+      return `Hiba: Nincs jogosultságod a "${toolName}" tool használatokhoz`
+    }
+
+    sendMessage(`tool:run:${toolName}:${JSON.stringify(params)}`)
+    return `Kérés elküldve a szervernek: ${toolName}`
+  }
+
+  if (!currentUser) {
+    return (
+      <>
+        <Toaster position="top-right" theme="dark" />
+        <LoginForm onLogin={handleLogin} />
+      </>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      <Toaster position="top-right" theme="dark" />
+      
+      <div className="container mx-auto p-6 space-y-6">
+        <header className="flex items-center justify-between">
+          <div className="space-y-2">
+            <h1 className="text-3xl font-bold tracking-tight">MCP Brunella Core</h1>
+            <p className="text-muted-foreground">
+              Professzionális szerver irányítópult
+            </p>
+          </div>
+          <UserProfile user={currentUser} onLogout={handleLogout} />
+        </header>
+
+        <Tabs defaultValue="overview" className="space-y-6">
+          <TabsList className="grid w-full max-w-3xl grid-cols-5">
+            <TabsTrigger value="overview" className="flex items-center gap-2">
+              <ChartLine size={18} />
+              Áttekintés
+            </TabsTrigger>
+            <TabsTrigger value="chat" className="flex items-center gap-2">
+              <ChatCircle size={18} />
+              Chat
+            </TabsTrigger>
+            <TabsTrigger value="logs" className="flex items-center gap-2">
+              <Terminal size={18} />
+              Naplók
+            </TabsTrigger>
+            <TabsTrigger value="config" className="flex items-center gap-2">
+              <Gear size={18} />
+              Beállítások
+            </TabsTrigger>
+            <TabsTrigger value="agents" className="flex items-center gap-2">
+              <Toolbox size={18} />
+              Agent Tools
+            </TabsTrigger>
+          </TabsList>
+
+          <TabsContent value="overview" className="space-y-6">
+            <StatusCard serverState={currentServerState} />
+            <ControlPanel
+              status={currentServerState.status}
+              user={currentUser}
+              onStart={handleStart}
+              onStop={handleStop}
+              onRestart={handleRestart}
+            />
+            <MetricsCard metrics={metrics} />
+          </TabsContent>
+
+          <TabsContent value="chat">
+            <ChatInterface
+              user={currentUser}
+              agentTools={currentAgentTools}
+              onToolExecution={handleToolExecution}
+            />
+          </TabsContent>
+
+          <TabsContent value="logs">
+            <LogViewer 
+              logs={currentLogs} 
+              user={currentUser}
+              onClearLogs={handleClearLogs} 
+            />
+          </TabsContent>
+
+          <TabsContent value="config">
+            <ConfigEditor 
+              config={currentConfig} 
+              user={currentUser}
+              onSave={handleSaveConfig} 
+            />
+          </TabsContent>
+
+          <TabsContent value="agents">
+            <AgentToolsManager
+              tools={currentAgentTools}
+              user={currentUser}
+              onUpdateTools={setAgentTools}
+            />
+          </TabsContent>
+        </Tabs>
+      </div>
+    </div>
+  )
+}
+
+export default App

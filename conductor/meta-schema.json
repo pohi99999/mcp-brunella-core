@@ -1,0 +1,90 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Conductor Track Meta Schema",
+  "description": "Schema for conductor/tracks/*/meta.json files - Spec Freeze Protocol",
+  "type": "object",
+  "required": ["track_id", "status", "created_at"],
+  "properties": {
+    "track_id": {
+      "type": "string",
+      "description": "Unique identifier for the track (folder name)"
+    },
+    "title": {
+      "type": "string",
+      "description": "Human-readable title"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of the track"
+    },
+    "type": {
+      "type": "string",
+      "enum": ["feature", "bugfix", "refactor", "docs", "infrastructure"],
+      "default": "feature"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["LOW", "MEDIUM", "HIGH", "CRITICAL"],
+      "default": "MEDIUM"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["new", "pending", "in_progress", "testing", "completed", "archived"],
+      "description": "Overall track status"
+    },
+    "spec_status": {
+      "type": "string",
+      "enum": ["draft", "review", "approved", "frozen"],
+      "default": "draft",
+      "description": "Spec Freeze Protocol: Implementation only allowed when 'frozen'"
+    },
+    "spec_approved_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When spec was approved/frozen"
+    },
+    "spec_approved_by": {
+      "type": "string",
+      "description": "Agent or person who approved the spec"
+    },
+    "implementation_allowed": {
+      "type": "boolean",
+      "default": false,
+      "description": "True only when spec_status is 'frozen'"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "archived_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "archive_reason": {
+      "type": "string"
+    },
+    "assigned_agent": {
+      "type": "string",
+      "description": "Primary agent responsible"
+    },
+    "progress": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 100,
+      "default": 0
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Other track IDs this depends on"
+    },
+    "tags": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}

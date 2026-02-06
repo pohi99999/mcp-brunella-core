@@ -69,6 +69,8 @@ export interface ChatMessage {
   timestamp: string
   toolCalls?: ToolCall[]
   isStreaming?: boolean
+  image?: string // Base64 or URL
+  thoughts?: string
 }
 
 export interface ToolCall {
