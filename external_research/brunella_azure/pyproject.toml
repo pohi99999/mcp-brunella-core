@@ -1,0 +1,36 @@
+[tool.ruff]
+target-version = "py310"
+lint.select = ["E", "F", "I", "UP"]
+lint.ignore = ["E501", "E701", "UP045"] # line too long, multiple statements on one line, keep Optional[X]
+src = ["app/backend", "scripts", "app/functions"]
+
+[tool.ruff.lint.isort]
+known-local-folder = ["scripts"]
+
+[tool.black]
+line-length = 120
+
+[tool.pytest.ini_options]
+addopts = "-ra"
+pythonpath = ["app/backend", "scripts", "app/functions"]
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.coverage.paths]
+source = ["scripts", "app"]
+
+[tool.coverage.report]
+show_missing = true
+
+[tool.ty.environment]
+python-version = "3.10"
+# Root directories for module resolution (so imports like "from prepdocslib import ..." work)
+root = ["app/backend", "scripts", "app/functions"]
+
+[tool.ty.src]
+# Directories to actually type-check (excludes tests folder which has many mock-related type errors)
+include = ["app/backend", "scripts", "app/functions"]
+
+[tool.ty.rules]
+# Downgrade warnings that are too strict for this codebase
+redundant-cast = "ignore"
+possibly-missing-attribute = "ignore"

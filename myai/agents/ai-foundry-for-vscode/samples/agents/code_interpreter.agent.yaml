@@ -1,0 +1,23 @@
+# yaml-language-server: $schema=https://aka.ms/ai-foundry-vsc/agent/1.0.0
+version: 1.0.0
+name: code in
+description: Description of the agent
+id: 
+metadata:
+  authors:
+    - author1
+    - author2
+  tags:
+    - tag1
+    - tag2
+model:
+  id: gpt-4.1
+  options:
+    temperature: 1
+    top_p: 1
+instructions: Instructions for the agent
+tools:
+  - type: code_interpreter
+    options:
+      file_ids:
+        - {your file id}

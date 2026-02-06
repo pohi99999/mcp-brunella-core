@@ -5,7 +5,8 @@
   "type": "module",
   "main": "build/index.js",
   "bin": {
-    "brunella": "./build/cli.js"
+    "brunella": "./build/cli.js",
+    "brunella-jules": "./build/cli-jules-interactive.js"
   },
   "scripts": {
     "build": "tsc",
@@ -22,6 +23,7 @@
     "test:legacy": "node scripts/test_prepare.cjs && node --test test_build/core_tools.test.js",
     "test:python": "node --loader ts-node/esm --test test/python_shell.test.ts",
     "test:vitest": "vitest run",
+    "test:comprehensive": "vitest run test/llm_client.test.ts test/DeveloperAgent.test.ts",
     "test:all": "npm run test:unit:cli && npm run test:factory && npm run test:cli && npm test",
     "build:ui": "vite build src/dashboard",
     "dev:ui": "vite src/dashboard"
@@ -121,7 +123,8 @@
     "vite": "^7.3.1",
     "zod": "^3.25.76",
     "zod-to-json-schema": "^3.25.1",
-    "zustand": "^5.0.10"
+    "zustand": "^5.0.10",
+    "next-themes": "^0.3.0"
   },
   "devDependencies": {
     "@types/better-sqlite3": "^7.6.13",

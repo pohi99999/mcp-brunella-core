@@ -1,0 +1,86 @@
+# LintFixerAgent - Mikro-ügynök konfiguráció
+# A Karbantartó Raj (Maintenance Swarm) tagja
+
+[agent]
+name = "LintFixer"
+title = "Lint Fixer Agent"
+runtime = "nodejs"
+version = "1.0.0"
+category = "maintenance"
+status = "active"
+
+[agent.metadata]
+author = "Brunella System"
+created = "2026-02-05"
+model_recommendation = "qwen2.5-coder-7b"
+model_fallback = "llama3.2:3b"
+
+[agent.prompt]
+system = """
+Role: Kód Karbantartó Ügynök
+Objective: ESLint és TypeScript hibák automatikus detektálása és javítása
+Constraints:
+  - Csak a megadott hibákat javítsd
+  - Minimális változtatás elve
+  - Ne változtass a kód logikáján
+  - logger.ts használata console.log helyett
+Output Format: JSON válasz status és data mezőkkel
+"""
+
+[agent.capabilities]
+skills = [
+    "lint_check",      # ESLint futtatás és hibák listázása
+    "auto_fix",        # Automatikus javítás (--fix)
+    "suggest_fix",     # Javítási javaslat generálása
+    "type_check",      # TypeScript típusellenőrzés
+    "batch_fix"        # Több fájl javítása egyszerre
+]
+
+tools = [
+    "system_run_command",  # npx eslint, npx tsc futtatás
+    "workspace_read_file", # Fájl olvasás javításhoz
+    "workspace_write_file" # Javított fájl mentése
+]
+
+[agent.triggers]
+# Ezek a kulcsszavak aktiválják az ügynököt
+keywords = [
+    "lint",
+    "eslint",
+    "fix",
+    "type error",
+    "typescript error",
+    "típushiba",
+    "javít",
+    "ellenőriz"
+]
+
+# Ütemezett futtatás (opcionális)
+schedule = "0 3 * * *"  # Minden éjjel 3:00-kor
+
+[agent.rules]
+# Szabályok amiket figyel
+eslint_rules = [
+    "no-unused-vars",
+    "@typescript-eslint/no-unused-vars",
+    "no-console",
+    "@typescript-eslint/no-explicit-any",
+    "prefer-const"
+]
+
+# Auto-fix engedélyezve ezekre
+auto_fixable = [
+    "prefer-const",
+    "no-var",
+    "semi",
+    "quotes",
+    "indent"
+]
+
+[agent.integration]
+# n8n webhook trigger
+n8n_webhook = "/webhook/lint-fixer"
+
+# Dashboard widget
+dashboard_widget = true
+widget_position = "maintenance-panel"

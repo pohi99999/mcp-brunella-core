@@ -1,0 +1,55 @@
+name: Jules Activity Notification
+
+# Trigger when Jules pushes to any branch
+on:
+  push:
+    branches:
+      - 'jules-**'
+      - 'robotkez-**'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get commit info
+        id: commit_info
+        run: |
+          BRANCH=${GITHUB_REF#refs/heads/}
+          COMMITS=$(git log origin/main..HEAD --oneline | wc -l)
+          LAST_COMMIT=$(git log -1 --pretty=format:"%s")
+          echo "branch=$BRANCH" >> $GITHUB_OUTPUT
+          echo "commits=$COMMITS" >> $GITHUB_OUTPUT
+          echo "last_commit=$LAST_COMMIT" >> $GITHUB_OUTPUT
+
+      - name: Log Jules Activity
+        run: |
+          echo "🤖 Jules pusholt: ${{ steps.commit_info.outputs.branch }}"
+          echo "📦 Új commitok: ${{ steps.commit_info.outputs.commits }}"
+          echo "📝 Legutóbbi: ${{ steps.commit_info.outputs.last_commit }}"
+          echo ""
+          echo "🔄 Szinkronizálás parancs helyi gépen:"
+          echo "   python scripts/jules_sync_watchdog.py --once"
+          echo ""
+          echo "🔍 Branch megtekintés:"
+          echo "   git fetch origin && git log origin/${{ steps.commit_info.outputs.branch }} -5"
+
+      - name: Create sync reminder file
+        run: |
+          mkdir -p .jules-activity
+          echo "Branch: ${{ steps.commit_info.outputs.branch }}" > .jules-activity/last_push.txt
+          echo "Time: $(date)" >> .jules-activity/last_push.txt
+          echo "Commits: ${{ steps.commit_info.outputs.commits }}" >> .jules-activity/last_push.txt
+
+      # Opcionális: Discord/Slack webhook értesítés (ha van)
+      # - name: Send Discord Notification
+      #   env:
+      #     DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+      #   run: |
+      #     curl -X POST "$DISCORD_WEBHOOK" \
+      #       -H "Content-Type: application/json" \
+      #       -d '{"content": "🤖 Jules pusholt: ${{ steps.commit_info.outputs.commits }} új commit a ${{ steps.commit_info.outputs.branch }} branch-en!"}'

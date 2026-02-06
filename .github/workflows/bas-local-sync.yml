@@ -1,0 +1,42 @@
+name: BAS Local Sync
+
+on:
+  workflow_dispatch:
+    inputs:
+      sync_type:
+        description: 'Type of sync (e.g., full, tracks)'
+        required: true
+        default: 'full'
+  push:
+    branches:
+      - main
+    paths:
+      - 'conductor/tracks.md'
+
+jobs:
+  run-local-sync:
+    runs-on: [self-hosted, Windows, X64, bas]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install uv
+        run: pip install uv
+
+      - name: Install Python dependencies
+        run: |
+          cd myai
+          uv sync
+        shell: bash
+
+      - name: Run Sync Script
+        run: |
+          cd myai
+          python sync_to_r2.py ${{ github.event.inputs.sync_type || 'full' }}
+        shell: bash

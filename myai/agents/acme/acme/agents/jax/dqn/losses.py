@@ -1,0 +1,348 @@
+# Copyright 2018 DeepMind Technologies Limited. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+"""DQN losses."""
+import dataclasses
+from typing import Tuple
+
+from acme import types
+from acme.agents.jax.dqn import learning_lib
+from acme.jax import networks as networks_lib
+import chex
+import jax
+import jax.numpy as jnp
+import reverb
+import rlax
+
+
+@dataclasses.dataclass
+class PrioritizedDoubleQLearning(learning_lib.LossFn):
+  """Clipped double q learning with prioritization on TD error."""
+  discount: float = 0.99
+  importance_sampling_exponent: float = 0.2
+  max_abs_reward: float = 1.
+  huber_loss_parameter: float = 1.
+
+  def __call__(
+      self,
+      network: networks_lib.TypedFeedForwardNetwork,
+      params: networks_lib.Params,
+      target_params: networks_lib.Params,
+      batch: reverb.ReplaySample,
+      key: networks_lib.PRNGKey,
+  ) -> Tuple[jax.Array, learning_lib.LossExtra]:
+    """Calculate a loss on a single batch of data."""
+    transitions: types.Transition = batch.data
+    probs = batch.info.probability
+
+    # Forward pass.
+    key1, key2, key3 = jax.random.split(key, 3)
+    q_tm1 = network.apply(
+        params, transitions.observation, is_training=True, key=key1)
+    q_t_value = network.apply(
+        target_params, transitions.next_observation, is_training=True, key=key2)
+    q_t_selector = network.apply(
+        params, transitions.next_observation, is_training=True, key=key3)
+
+    # Cast and clip rewards.
+    d_t = (transitions.discount * self.discount).astype(jnp.float32)
+    r_t = jnp.clip(transitions.reward, -self.max_abs_reward,
+                   self.max_abs_reward).astype(jnp.float32)
+
+    # Compute double Q-learning n-step TD-error.
+    batch_error = jax.vmap(rlax.double_q_learning)
+    td_error = batch_error(q_tm1, transitions.action, r_t, d_t, q_t_value,
+                           q_t_selector)
+    batch_loss = rlax.huber_loss(td_error, self.huber_loss_parameter)
+
+    # Importance weighting.
+    importance_weights = (1. / probs).astype(jnp.float32)
+    importance_weights **= self.importance_sampling_exponent
+    importance_weights /= jnp.max(importance_weights)
+
+    # Reweight.
+    loss = jnp.mean(importance_weights * batch_loss)  # []
+    extra = learning_lib.LossExtra(
+        metrics={}, reverb_priorities=jnp.abs(td_error).astype(jnp.float64))
+    return loss, extra
+
+
+@dataclasses.dataclass
+class QrDqn(learning_lib.LossFn):
+  """Quantile Regression DQN.
+
+  https://arxiv.org/abs/1710.10044
+  """
+  num_atoms: int = 51
+  huber_param: float = 1.0
+
+  def __call__(
+      self,
+      network: networks_lib.TypedFeedForwardNetwork,
+      params: networks_lib.Params,
+      target_params: networks_lib.Params,
+      batch: reverb.ReplaySample,
+      key: networks_lib.PRNGKey,
+  ) -> Tuple[jax.Array, learning_lib.LossExtra]:
+    """Calculate a loss on a single batch of data."""
+    transitions: types.Transition = batch.data
+    key1, key2 = jax.random.split(key)
+    _, dist_q_tm1 = network.apply(
+        params, transitions.observation, is_training=True, key=key1)
+    _, dist_q_target_t = network.apply(
+        target_params, transitions.next_observation, is_training=True, key=key2)
+    batch_size = len(transitions.observation)
+    chex.assert_shape(
+        dist_q_tm1, (
+            batch_size,
+            None,
+            self.num_atoms,
+        ),
+        custom_message=f'Expected (batch_size, num_actions, num_atoms), got: {dist_q_tm1.shape}',
+        include_default_message=True)
+    chex.assert_shape(
+        dist_q_target_t, (
+            batch_size,
+            None,
+            self.num_atoms,
+        ),
+        custom_message=f'Expected (batch_size, num_actions, num_atoms), got: {dist_q_target_t.shape}',
+        include_default_message=True)
+    # Swap distribution and action dimension, since
+    # rlax.quantile_q_learning expects it that way.
+    dist_q_tm1 = jnp.swapaxes(dist_q_tm1, 1, 2)
+    dist_q_target_t = jnp.swapaxes(dist_q_target_t, 1, 2)
+    quantiles = (
+        (jnp.arange(self.num_atoms, dtype=jnp.float32) + 0.5) / self.num_atoms)
+    batch_quantile_q_learning = jax.vmap(
+        rlax.quantile_q_learning, in_axes=(0, None, 0, 0, 0, 0, 0, None))
+    losses = batch_quantile_q_learning(
+        dist_q_tm1,
+        quantiles,
+        transitions.action,
+        transitions.reward,
+        transitions.discount,
+        dist_q_target_t,  # No double Q-learning here.
+        dist_q_target_t,
+        self.huber_param,
+    )
+    loss = jnp.mean(losses)
+    chex.assert_shape(losses, (batch_size,))
+    extra = learning_lib.LossExtra(metrics={'mean_loss': loss})
+    return loss, extra
+
+
+@dataclasses.dataclass
+class PrioritizedCategoricalDoubleQLearning(learning_lib.LossFn):
+  """Categorical double q learning with prioritization on TD error."""
+  discount: float = 0.99
+  importance_sampling_exponent: float = 0.2
+  max_abs_reward: float = 1.
+
+  def __call__(
+      self,
+      network: networks_lib.TypedFeedForwardNetwork,
+      params: networks_lib.Params,
+      target_params: networks_lib.Params,
+      batch: reverb.ReplaySample,
+      key: networks_lib.PRNGKey,
+  ) -> Tuple[jax.Array, learning_lib.LossExtra]:
+    """Calculate a loss on a single batch of data."""
+    transitions: types.Transition = batch.data
+    probs = batch.info.probability
+
+    # Forward pass.
+    key1, key2, key3 = jax.random.split(key, 3)
+    _, logits_tm1, atoms_tm1 = network.apply(
+        params, transitions.observation, is_training=True, key=key1)
+    _, logits_t, atoms_t = network.apply(
+        target_params, transitions.next_observation, is_training=True, key=key2)
+    q_t_selector, _, _ = network.apply(
+        params, transitions.next_observation, is_training=True, key=key3)
+
+    # Cast and clip rewards.
+    d_t = (transitions.discount * self.discount).astype(jnp.float32)
+    r_t = jnp.clip(transitions.reward, -self.max_abs_reward,
+                   self.max_abs_reward).astype(jnp.float32)
+
+    # Compute categorical double Q-learning loss.
+    batch_loss_fn = jax.vmap(
+        rlax.categorical_double_q_learning,
+        in_axes=(None, 0, 0, 0, 0, None, 0, 0))
+    batch_loss = batch_loss_fn(atoms_tm1, logits_tm1, transitions.action, r_t,
+                               d_t, atoms_t, logits_t, q_t_selector)
+
+    # Importance weighting.
+    importance_weights = (1. / probs).astype(jnp.float32)
+    importance_weights **= self.importance_sampling_exponent
+    importance_weights /= jnp.max(importance_weights)
+
+    # Reweight.
+    loss = jnp.mean(importance_weights * batch_loss)  # []
+    extra = learning_lib.LossExtra(
+        metrics={}, reverb_priorities=jnp.abs(batch_loss).astype(jnp.float64))
+    return loss, extra
+
+
+@dataclasses.dataclass
+class QLearning(learning_lib.LossFn):
+  """Deep q learning.
+
+  This matches the original DQN loss: https://arxiv.org/abs/1312.5602.
+  It differs by two aspects that improve it on the optimization side
+    - it uses Adam instead of RMSProp as an optimizer
+    - it uses a square loss instead of the Huber one.
+  """
+  discount: float = 0.99
+  max_abs_reward: float = 1.
+
+  def __call__(
+      self,
+      network: networks_lib.TypedFeedForwardNetwork,
+      params: networks_lib.Params,
+      target_params: networks_lib.Params,
+      batch: reverb.ReplaySample,
+      key: networks_lib.PRNGKey,
+  ) -> Tuple[jax.Array, learning_lib.LossExtra]:
+    """Calculate a loss on a single batch of data."""
+    transitions: types.Transition = batch.data
+
+    # Forward pass.
+    key1, key2 = jax.random.split(key)
+    q_tm1 = network.apply(
+        params, transitions.observation, is_training=True, key=key1)
+    q_t = network.apply(
+        target_params, transitions.next_observation, is_training=True, key=key2)
+
+    # Cast and clip rewards.
+    d_t = (transitions.discount * self.discount).astype(jnp.float32)
+    r_t = jnp.clip(transitions.reward, -self.max_abs_reward,
+                   self.max_abs_reward).astype(jnp.float32)
+
+    # Compute Q-learning TD-error.
+    batch_error = jax.vmap(rlax.q_learning)
+    td_error = batch_error(q_tm1, transitions.action, r_t, d_t, q_t)
+    batch_loss = jnp.square(td_error)
+
+    loss = jnp.mean(batch_loss)
+    extra = learning_lib.LossExtra(metrics={})
+    return loss, extra
+
+
+@dataclasses.dataclass
+class RegularizedQLearning(learning_lib.LossFn):
+  """Regularized Q-learning.
+
+  Implements DQNReg loss function: https://arxiv.org/abs/2101.03958.
+  This is almost identical to QLearning except: 1) Adds a regularization term;
+  2) Uses vanilla TD error without huber loss. 3) No reward clipping.
+  """
+  discount: float = 0.99
+  regularizer_coeff = 0.1
+
+  def __call__(
+      self,
+      network: networks_lib.TypedFeedForwardNetwork,
+      params: networks_lib.Params,
+      target_params: networks_lib.Params,
+      batch: reverb.ReplaySample,
+      key: networks_lib.PRNGKey,
+  ) -> Tuple[jax.Array, learning_lib.LossExtra]:
+    """Calculate a loss on a single batch of data."""
+    transitions: types.Transition = batch.data
+
+    # Forward pass.
+    key1, key2 = jax.random.split(key)
+    q_tm1 = network.apply(
+        params, transitions.observation, is_training=True, key=key1)
+    q_t = network.apply(
+        target_params, transitions.next_observation, is_training=True, key=key2)
+
+    d_t = (transitions.discount * self.discount).astype(jnp.float32)
+
+    # Compute Q-learning TD-error.
+    batch_error = jax.vmap(rlax.q_learning)
+    td_error = batch_error(
+        q_tm1, transitions.action, transitions.reward, d_t, q_t)
+    td_error = 0.5 * jnp.square(td_error)
+
+    def select(qtm1, action):
+      return qtm1[action]
+    q_regularizer = jax.vmap(select)(q_tm1, transitions.action)
+
+    loss = self.regularizer_coeff * jnp.mean(q_regularizer) + jnp.mean(td_error)
+    extra = learning_lib.LossExtra(metrics={})
+    return loss, extra
+
+
+@dataclasses.dataclass
+class MunchausenQLearning(learning_lib.LossFn):
+  """Munchausen q learning.
+
+  Implements M-DQN: https://arxiv.org/abs/2007.14430.
+  """
+  entropy_temperature: float = 0.03  # tau parameter
+  munchausen_coefficient: float = 0.9  # alpha parameter
+  clip_value_min: float = -1e3
+  discount: float = 0.99
+  max_abs_reward: float = 1.
+  huber_loss_parameter: float = 1.
+
+  def __call__(
+      self,
+      network: networks_lib.TypedFeedForwardNetwork,
+      params: networks_lib.Params,
+      target_params: networks_lib.Params,
+      batch: reverb.ReplaySample,
+      key: networks_lib.PRNGKey,
+  ) -> Tuple[jax.Array, learning_lib.LossExtra]:
+    """Calculate a loss on a single batch of data."""
+    transitions: types.Transition = batch.data
+
+    # Forward pass.
+    key1, key2, key3 = jax.random.split(key, 3)
+    q_online_s = network.apply(
+        params, transitions.observation, is_training=True, key=key1)
+    action_one_hot = jax.nn.one_hot(transitions.action, q_online_s.shape[-1])
+    q_online_sa = jnp.sum(action_one_hot * q_online_s, axis=-1)
+    q_target_s = network.apply(
+        target_params, transitions.observation, is_training=True, key=key2)
+    q_target_next = network.apply(
+        target_params, transitions.next_observation, is_training=True, key=key3)
+
+    # Cast and clip rewards.
+    d_t = (transitions.discount * self.discount).astype(jnp.float32)
+    r_t = jnp.clip(transitions.reward, -self.max_abs_reward,
+                   self.max_abs_reward).astype(jnp.float32)
+
+    # Munchausen term : tau * log_pi(a|s)
+    munchausen_term = self.entropy_temperature * jax.nn.log_softmax(
+        q_target_s / self.entropy_temperature, axis=-1)
+    munchausen_term_a = jnp.sum(action_one_hot * munchausen_term, axis=-1)
+    munchausen_term_a = jnp.clip(
+        munchausen_term_a, min=self.clip_value_min, max=0.0
+    )
+
+    # Soft Bellman operator applied to q
+    next_v = self.entropy_temperature * jax.nn.logsumexp(
+        q_target_next / self.entropy_temperature, axis=-1)
+    target_q = jax.lax.stop_gradient(r_t + self.munchausen_coefficient *
+                                     munchausen_term_a + d_t * next_v)
+
+    batch_loss = rlax.huber_loss(target_q - q_online_sa,
+                                 self.huber_loss_parameter)
+    loss = jnp.mean(batch_loss)
+
+    extra = learning_lib.LossExtra(metrics={})
+    return loss, extra

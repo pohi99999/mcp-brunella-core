@@ -1,0 +1,185 @@
+# Projekt Nyomkövetés (Tracks)
+
+**Utolsó frissítés:** 2026-02-03
+**Generátor:** ProjectConductorAgent
+
+Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks). Minden szál független egységként működik saját tervvel.
+
+---
+
+## 🚀 Aktív Szálak (Active Tracks)
+
+### 🔴 HIGH Priority
+
+- [x] **Hybrid Cloud Integration** [HIGH] ✅
+  - **ID:** `hybrid_cloud_integration_20260203`
+  - **Cél:** Hibrid antifragilis ökoszisztéma - R2/D1 szinkron, GitHub Runner, Copilot integráció
+  - **Progress:** 95%
+  - **Elkészült:**
+    - [x] R2 bucket (vodor1) + binding
+    - [x] D1 database (bas-metadata) + séma
+    - [x] Worker deploy (minden binding aktív)
+    - [x] sync_to_r2.py script (tracks feltöltés OK)
+    - [x] .github/copilot-instructions.md
+    - [x] .github/workflows/bas-cloud-sync.yml
+    - [x] docs/github-runner-setup.md
+  - **Hátra:** Self-hosted Runner telepítése (opcionális)
+  - 📂 *[./tracks/hybrid_cloud_integration_20260203/](./tracks/hybrid_cloud_integration_20260203/)*
+
+- [ ] **Cloudflare Edge Integration** [HIGH]
+  - **ID:** `cloudflare_edge_integration_20260202`
+  - **Cél:** BAS edge orchestrátor kiépítése Cloudflare Workers-szel
+  - **Progress:** 40%
+  - **Elkészült (2026-02-03):**
+    - [x] bas-cloudflare-orchestrator deploy (Worker fut: https://bas-orchestrator.iam-dd1.workers.dev)
+    - [x] KV namespace (BAS_TASKS)
+    - [x] Task routing, health check, webhook callback-ek
+  - **Fázisok:**
+    1. ~~API Gateway és Tunnel~~ → Deploy kész, Tunnel hátra
+    2. Task Router és KV szinkron (3-4 nap)
+    3. Durable Objects és Workers AI fallback (5-7 nap)
+  - 📂 *[./tracks/cloudflare_edge_integration_20260202/](./tracks/cloudflare_edge_integration_20260202/)*
+
+- [ ] **ProjectConductor Agent Implementation** [HIGH]
+  - **ID:** `project_conductor_agent_20260202`
+  - **Cél:** Központi projekt menedzsment ügynök a dokumentáció szinkronizáláshoz
+  - **Progress:** 80%
+  - **Elkészült:**
+    - [x] ProjectConductorAgent.ts
+    - [x] registry.json frissítés
+    - [x] Dokumentáció szinkron funkciók
+  - **Hátra van:**
+    - [ ] Tesztelés és integráció
+    - [ ] CLI parancsok
+  - 📂 *[./tracks/project_conductor_agent_20260202/](./tracks/project_conductor_agent_20260202/)*
+
+### 🟡 MEDIUM Priority
+
+- [ ] **BAS Scale-Up & Stabilization** [MEDIUM]
+  - **ID:** `bas_scale_up_stabilization_20260131`
+  - **Cél:** LangSmith telemetria, hibrid LanceDB memória, strukturált böngésző kimenet
+  - **Progress:** 90%
+  - **Státusz:** Utolsó finomhangolások
+  - 📂 *[./tracks/bas_scale_up_stabilization_20260131/](./tracks/bas_scale_up_stabilization_20260131/)*
+
+- [ ] **Robotkéz n8n Sandbox és Edzésterv** [MEDIUM]
+  - **ID:** `robotkez_n8n_sandbox_edzesterv`
+  - **Cél:** Izolált n8n környezet a browser-use ügynöknek
+  - **Progress:** 70%
+  - 📂 *[./tracks/robotkez_n8n_sandbox_edzesterv/](./tracks/robotkez_n8n_sandbox_edzesterv/)*
+
+---
+
+## ✅ Lezárt Szálak (Completed Tracks)
+
+### 2026-02-03
+
+- [x] **Mission Control 2.0**
+  - **Eredmény:** Service Control Widget (Ollama, AnythingLLM, Python kapcsolók), Agent & Tool Catalog (Inventory), Neural Link Chat. SystemController.ts, API /api/system/*. AnythingLLM: `ANYTHINGLLM_EXE_PATH=C:\Program Files\AnythingLLM\AnythingLLM.exe`
+  - 📂 *Mission Control Dashboard (src/dashboard/components/dashboard/)*
+
+- [x] **BAS Cloudflare Orchestrator Deploy**
+  - **Eredmény:** Worker deployolva (https://bas-orchestrator.iam-dd1.workers.dev), KV namespace, task routing, dinamikus callback URL
+  - 📂 *[./tracks/bas_cloudflare_orchestrator_deploy_20260203/](./tracks/bas_cloudflare_orchestrator_deploy_20260203/)*
+
+### 2026-01-31
+
+- [x] **LangSmith Integráció & Observability**
+  - LangSmith alapok és Browser-Use ügynök híd implementálva
+  - 📂 *[./tracks/langsmith_integration_20260130/](./tracks/langsmith_integration_20260130/)*
+
+- [x] **Browser-Use Harvester with Structured JSON Output**
+  - Pydantic alapú strukturált JSON kimenet
+  - 📂 *[./tracks/browser_use_harvester_20260131/](./tracks/browser_use_harvester_20260131/)*
+
+### 2026-01-30
+
+- [x] **Dashboard UI & Functionality Restoration**
+  - 17 REST API endpoint, Mission Control UI
+  - 📂 *[./tracks/dashboard_restoration_20260130/](./tracks/dashboard_restoration_20260130/)*
+
+- [x] **CLI Gemini-fication & Developer Agent**
+  - CLI újraírás, DeveloperAgent implementálás
+  - 📂 *[./tracks/cli_gemini_fication_20260130/](./tracks/cli_gemini_fication_20260130/)*
+
+- [x] **AI Evaluator & Self-Healing**
+  - EvaluatorAgent implementálás
+  - 📂 *[./tracks/ai_evaluator_self_healing_20260130/](./tracks/ai_evaluator_self_healing_20260130/)*
+
+- [x] **API Documentation & Swagger**
+  - Swagger UI integráció
+  - 📂 *[./tracks/docs_swagger_openapi_20260130/](./tracks/docs_swagger_openapi_20260130/)*
+
+- [x] **Containerization & Docker Compose**
+  - Dockerfile-ok és docker-compose.yml
+  - 📂 *[./tracks/docker_containerization_20260130/](./tracks/docker_containerization_20260130/)*
+
+- [x] **Python Subsystem Refactor (FastAPI/FastMCP)**
+  - FastAPI szerver, HTTP-alapú Python bridge
+  - 📂 *[./tracks/python_fastapi_refactor_20260130/](./tracks/python_fastapi_refactor_20260130/)*
+
+- [x] **Test Infrastructure Consolidation (Vitest)**
+  - Összes teszt Vitest-re migrálva
+  - 📂 *[./tracks/test_consolidation_vitest_20260130/](./tracks/test_consolidation_vitest_20260130/)*
+
+- [x] **Rendszerszintű leltár, takarítás, Dockerizálás**
+  - Teljes cleanup, dokumentáció centralizálás
+  - 📂 *[./tracks/system_cleanup_docker_20260130/](./tracks/system_cleanup_docker_20260130/)*
+
+### 2026-01-29
+
+- [x] **Dashboard Integration & Control Center**
+  - System Metrics, Agent Updates
+  - 📂 *[./tracks/dashboard_v2_20260129/](./tracks/dashboard_v2_20260129/)*
+
+- [x] **Agent Swarm Core Implementation**
+  - AgentManager, DataScientist, Researcher
+  - 📂 *[./tracks/agent_swarm_core_20260129/](./tracks/agent_swarm_core_20260129/)*
+
+- [x] **Autonomous Reasoning & Orchestration**
+  - OrchestratorAgent (LLM Planner), Task Queue
+  - 📂 *[./tracks/autonomous_reasoning_20260129/](./tracks/autonomous_reasoning_20260129/)*
+
+### 2026-01-28
+
+- [x] **Swarm Ingestion Foundation**
+  - Harvester Swarm, swarm_ingest tool
+  - 📂 *[./tracks/swarm_ingestion_20260128/](./tracks/swarm_ingestion_20260128/)*
+
+- [x] **Comprehensive Testing & Fix**
+  - __dirname hiba, agent regisztráció, Ollama connectivity
+  - 📂 *[./tracks/comprehensive_testing_20260128/](./tracks/comprehensive_testing_20260128/)*
+
+- [x] **System Recovery & Refactor**
+  - Build sikeres, szerver elindul
+  - 📂 *[./tracks/system_recovery_20260128/](./tracks/system_recovery_20260128/)*
+
+---
+
+## 📊 Statisztikák
+
+| Metrika | Érték |
+|---------|-------|
+| Aktív szálak | 4 |
+| Lezárt szálak | 16+ |
+| Legutóbbi lezárás | 2026-02-03 |
+| Következő mérföldkő | Cloudflare Tunnel, Langflow/n8n integráció |
+
+---
+
+## 🔄 Automatikus Frissítés
+
+Ez a fájl automatikusan frissül a **ProjectConductorAgent** által:
+
+```bash
+# Manuális frissítés
+brunella conductor sync
+
+# Vagy az agent hívása
+brunella agent ProjectConductor "track update"
+```
+
+---
+
+*Generálta: ProjectConductorAgent*
+*Verzió: 2.1.0*

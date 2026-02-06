@@ -24,6 +24,16 @@ const validators: { name: string; check: () => boolean; hint: string }[] = [
     check: () => !!process.env.N8N_TEST_URL,
     hint: 'Set N8N_TEST_URL for n8n sandbox access.',
   },
+  {
+    name: 'N8N_API_KEY',
+    check: () => !!process.env.N8N_API_KEY,
+    hint: 'Set N8N_API_KEY for n8n API mode (create_workflow, rename_workflow).',
+  },
+  {
+    name: 'GOOGLE_API_KEY',
+    check: () => !!process.env.GOOGLE_API_KEY,
+    hint: 'Set GOOGLE_API_KEY for Robotkéz Browser-Use mód (Gemini).',
+  },
 ];
 
 export function validateSecrets(): void {

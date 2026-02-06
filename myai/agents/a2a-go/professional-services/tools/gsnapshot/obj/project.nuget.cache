@@ -1,0 +1,228 @@
+{
+  "version": 2,
+  "dgSpecHash": "/Yc2pn+I3s8=",
+  "success": false,
+  "projectFilePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\8.0.0\\microsoft.bcl.asyncinterfaces.8.0.0.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.extensions.configuration\\8.0.0\\microsoft.extensions.configuration.8.0.0.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.extensions.configuration.abstractions\\8.0.0\\microsoft.extensions.configuration.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.extensions.configuration.fileextensions\\8.0.1\\microsoft.extensions.configuration.fileextensions.8.0.1.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.extensions.configuration.json\\8.0.1\\microsoft.extensions.configuration.json.8.0.1.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.extensions.dependencyinjection\\8.0.1\\microsoft.extensions.dependencyinjection.8.0.1.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.extensions.dependencyinjection.abstractions\\8.0.2\\microsoft.extensions.dependencyinjection.abstractions.8.0.2.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.extensions.fileproviders.abstractions\\8.0.0\\microsoft.extensions.fileproviders.abstractions.8.0.0.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.extensions.fileproviders.physical\\8.0.0\\microsoft.extensions.fileproviders.physical.8.0.0.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.extensions.filesystemglobbing\\8.0.0\\microsoft.extensions.filesystemglobbing.8.0.0.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\microsoft.extensions.primitives\\8.0.0\\microsoft.extensions.primitives.8.0.0.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\system.memory\\4.5.5\\system.memory.4.5.5.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\system.text.encodings.web\\8.0.0\\system.text.encodings.web.8.0.0.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\system.text.json\\8.0.5\\system.text.json.8.0.5.nupkg.sha512",
+    "C:\\Users\\pohi9\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "message": "gsnapshot depends on Microsoft.Extensions.Configuration.Json (>= 5.0.0) but Microsoft.Extensions.Configuration.Json 5.0.0 was not found. Microsoft.Extensions.Configuration.Json 8.0.1 was resolved instead.",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "warningLevel": 1,
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Microsoft.Extensions.Configuration.Json",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "message": "gsnapshot depends on Microsoft.Extensions.DependencyInjection (>= 5.0.1) but Microsoft.Extensions.DependencyInjection 5.0.1 was not found. Microsoft.Extensions.DependencyInjection 8.0.1 was resolved instead.",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "warningLevel": 1,
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Microsoft.Extensions.DependencyInjection",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1603",
+      "level": "Warning",
+      "message": "gsnapshot depends on Newtonsoft.Json (>= 12.0.3) but Newtonsoft.Json 12.0.3 was not found. Newtonsoft.Json 13.0.1 was resolved instead.",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "warningLevel": 1,
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Newtonsoft.Json",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package ByteSize. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "ByteSize",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package CommandLineParser. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "CommandLineParser",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package ConsoleUI.ConsoleMenu. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "ConsoleUI.ConsoleMenu",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Google.Apis.Auth. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Google.Apis.Auth",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Google.Apis.CloudResourceManager.v1. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Google.Apis.CloudResourceManager.v1",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Google.Apis.Compute.beta. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Google.Apis.Compute.beta",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Google.Apis.Compute.v1. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Google.Apis.Compute.v1",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package NLog. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "NLog",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package NLog.Extensions.Logging. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "NLog.Extensions.Logging",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package ReadLine. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "ReadLine",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package System.Buffers. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "System.Buffers",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Microsoft.NETCore.App.Ref. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Microsoft.NETCore.App.Ref",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Microsoft.WindowsDesktop.App.Ref. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Microsoft.WindowsDesktop.App.Ref",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Microsoft.AspNetCore.App.Ref. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Microsoft.AspNetCore.App.Ref",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    },
+    {
+      "code": "NU1101",
+      "level": "Error",
+      "message": "Unable to find package Microsoft.NETCore.App.Host.win-x64. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
+      "projectPath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
+      "libraryId": "Microsoft.NETCore.App.Host.win-x64",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    }
+  ]
+}

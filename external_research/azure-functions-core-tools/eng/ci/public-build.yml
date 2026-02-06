@@ -1,0 +1,120 @@
+schedules:
+- cron: "0 7 * * *"   # 11pm PST
+  displayName: Nightly Build
+  branches:
+    include:
+      - main
+  always: true
+
+trigger: none
+
+pr:
+  branches:
+    include:
+    - release_4.0
+    - main
+    - in-proc
+    - feature/*
+
+
+resources:
+  repositories:
+  - repository: 1es
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
+
+variables:
+  - name: supportedRuntimes
+    value: 'linux-x64,linux-arm64,osx-x64,osx-arm64,win-arm64,win-x64,win-x86,min.win-arm64,min.win-x86,min.win-x64'
+
+extends:
+  template: v1/1ES.Unofficial.PipelineTemplate.yml@1es
+  parameters:
+    pool:
+      name: 1es-pool-azfunc-public
+      image: 1es-windows-2022
+      os: windows
+      ${{ if eq( variables['Build.Reason'], 'Schedule' ) }}:
+        demands:
+        - Priority -equals Low
+    sdl:
+      codeql:
+         compiled:
+           enabled: true
+         runSourceLanguagesInSourceAnalysis: true
+    settings:
+      # PR's from forks do not have sufficient permissions to set tags.
+      skipBuildTagsForGitHubPullRequests: ${{ variables['System.PullRequest.IsFork'] }}
+
+    stages:
+      - stage: PreCheck
+        displayName: 'Pre-check: classify changes'
+
+        jobs:
+        - template: /eng/ci/templates/public/jobs/precheck-docs-only.yml@self
+
+      - stage: Build
+        dependsOn: PreCheck
+
+        # This condition ensures that if the build is not a PR (i.e a scheduled or manual build), the stages will always run.
+        # If it is a PR, the stages will only run if the changes are not "docs-only" changes.
+        condition: >
+          or(
+            ne(variables['Build.Reason'], 'PullRequest'),
+            ne(dependencies.PreCheck.outputs['classify_changes.detect.DocsOnly'], 'true')
+          )
+
+        jobs:
+        - ${{ each runtime in split(variables.supportedRuntimes,',') }}:
+          - template: /eng/ci/templates/public/jobs/build-cli.yml@self
+            parameters:
+              runtime: ${{ runtime }}
+              jobNameSuffix: ${{ replace(replace(runtime, '-', ''), '.', '') }}
+
+      - stage: UnitTest
+        dependsOn: PreCheck
+        condition: >
+          or(
+            ne(variables['Build.Reason'], 'PullRequest'),
+            ne(dependencies.PreCheck.outputs['classify_changes.detect.DocsOnly'], 'true')
+          )
+
+        jobs:
+        - template: /eng/ci/templates/public/jobs/test-unit-windows.yml@self
+        - template: /eng/ci/templates/public/jobs/test-unit-linux.yml@self
+
+      # Do we want the E2E tests for the public build?
+      # Might need this at first whilst we work on building out solid unit tests
+      - stage: E2ETestWindows
+        dependsOn: PreCheck
+        condition: >
+          or(
+            ne(variables['Build.Reason'], 'PullRequest'),
+            ne(dependencies.PreCheck.outputs['classify_changes.detect.DocsOnly'], 'true')
+          )
+
+        jobs:
+        - template: /eng/ci/templates/jobs/test-e2e-windows.yml@self
+
+      - stage: E2ETestLinux
+        dependsOn: PreCheck
+        condition: >
+          or(
+            ne(variables['Build.Reason'], 'PullRequest'),
+            ne(dependencies.PreCheck.outputs['classify_changes.detect.DocsOnly'], 'true')
+          )
+
+        jobs:
+        - template: /eng/ci/templates/jobs/test-e2e-linux.yml@self
+
+      - stage: E2ETestOSX
+        dependsOn: PreCheck
+        condition: >
+          or(
+            ne(variables['Build.Reason'], 'PullRequest'),
+            ne(dependencies.PreCheck.outputs['classify_changes.detect.DocsOnly'], 'true')
+          )
+
+        jobs:
+        - template: /eng/ci/templates/jobs/test-e2e-osx.yml@self

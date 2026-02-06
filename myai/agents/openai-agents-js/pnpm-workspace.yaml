@@ -1,0 +1,15 @@
+packages:
+  - packages/*
+  - examples/*
+  - docs
+
+onlyBuiltDependencies:
+  - '@tailwindcss/oxide'
+  - esbuild
+  - sharp
+  # used only in examples/memory
+  - '@prisma/client'
+  - '@prisma/engines'
+  - 'prisma'
+
+publishBranch: main

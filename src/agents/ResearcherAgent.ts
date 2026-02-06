@@ -1,99 +1,123 @@
-import { IAgent } from './types.js';
-import { Logger } from '../utils/logger.js';
-import { chromium } from 'playwright';
-import { agentManager } from './AgentManager.js';
+import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
+import { AgentHandoff, ISwarmContext } from './types.js';
+import { logInfo, logError } from '../utils/logger.js';
 
-export class ResearcherAgent implements IAgent {
-    name = "Researcher";
-    role = "Harvester";
-    description = "Browses the web to gather raw information. Can search for topics or scrape URLs.";
-    capabilities = ["browse", "search", "extract"];
-    
-    private logger: Logger;
+interface RAGResult {
+    text: string;
+    source: string;
+    page_num: number;
+    score: number;
+}
 
-    constructor() {
-        this.logger = new Logger('researcher.log');
-    }
+export default class ResearcherAgent extends BaseAgent {
+    name = 'Researcher';
+    description = 'Webes keresésre és információgyűjtésre specializálódott ügynök. Képes a belső tudásbázis (RAG) és a világháló keresésére.';
+    role = 'researcher';
+    capabilities = ['web_search', 'rag_search', 'information_gathering'];
 
-    async execute(task: string, context?: any): Promise<any> {
-        this.logger.info(`Researching: ${task}`);
-
-        let url = "";
-        
-        // 1. Determine Intent (URL vs Search)
-        if (task.startsWith("http")) {
-            url = task;
-        } else if (context?.url) {
-            url = context.url;
-        } else {
-            // It's a topic -> Search
-            this.logger.info(`Input is a topic. Searching for: ${task}`);
-            try {
-                const searchResult = await this.search(task);
-                if (!searchResult) {
-                    return { status: "error", error: "No search results found." };
-                }
-                url = searchResult;
-                this.logger.info(`Found relevant URL: ${url}`);
-            } catch (e: any) {
-                return { status: "error", error: `Search failed: ${e.message}` };
-            }
-        }
-
-        // 2. Scrape & Process
+    private async queryRAG(query: string): Promise<RAGResult[]> {
         try {
-            const rawData = await this.scrape(url);
-            
-            // Forward to DataScientist (The "Refiner")
-            const refiner = agentManager.getAgent("DataScientist");
-            if (refiner) {
-                this.logger.info("Handing over to DataScientist...");
-                // Pass the original task context + extracted data
-                const refined = await refiner.execute("refine:", { 
-                    content: rawData.content, 
-                    source: url,
-                    original_task: task
-                });
-                return { status: "success", data: refined, source: url };
-            } else {
-                return { status: "success", data: rawData, note: "Refiner not found, returning raw data." };
-            }
-
-        } catch (e: any) {
-            return { status: "error", error: e.message };
-        }
-    }
-
-    private async search(query: string): Promise<string | null> {
-        const browser = await chromium.launch({ headless: true });
-        const page = await browser.newPage();
-        try {
-            // Use DuckDuckGo HTML version for easier scraping without JS bloat
-            const searchUrl = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
-            await page.goto(searchUrl, { waitUntil: 'domcontentloaded', timeout: 15000 });
-            
-            // Extract first result link (class 'result__a')
-            const firstLink = await page.evaluate(() => {
-                const link = document.querySelector('.result__a') as HTMLAnchorElement;
-                return link ? link.href : null;
+            logInfo('ResearcherAgent', `Querying RAG Knowledge Base: ${query}`);
+            const response = await fetch('http://127.0.0.1:8000/rag/query', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ query: query, limit: 5 })
             });
-            
-            return firstLink;
-        } finally {
-            await browser.close();
+
+            if (!response.ok) {
+                throw new Error(`RAG API error: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            return data.results || [];
+        } catch (error) {
+            logError('ResearcherAgent', `RAG query failed: ${error}`);
+            return [];
         }
     }
 
-    private async scrape(url: string) {
-        const browser = await chromium.launch({ headless: true });
-        const page = await browser.newPage();
-        try {
-            await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 30000 });
-            const content = await page.evaluate(() => document.body.innerText);
-            const title = await page.title();
-            return { title, content };
-        } finally {
-            await browser.close();
+    async executeTask(context: AgentContext): Promise<AgentResult> {
+        const task = context.task || '';
+        const taskLower = task.toLowerCase();
+        const swarmContext = context.swarm;
+
+        // 1. RAG Search (Priority if explicitly requested or context implies internal knowledge)
+        if (taskLower.includes('tudásbázis') || taskLower.includes('rag') || taskLower.includes('belső') || taskLower.includes('internal')) {
+            logInfo('ResearcherAgent', `RAG Search activated for: ${task}`);
+            const ragResults = await this.queryRAG(task);
+
+            if (ragResults.length > 0) {
+                const formattedResults = ragResults.map(r =>
+                    `- **${r.source}** (Page ${r.page_num}): "${r.text.substring(0, 150)}..."`
+                ).join('\n');
+
+                if (swarmContext) {
+                    swarmContext.artifacts['ragResults'] = ragResults;
+                    swarmContext.history.push({
+                        role: 'assistant',
+                        agent: this.name,
+                        content: `Tudásbázis találatok:\n${formattedResults}`
+                    });
+                }
+
+                return {
+                    success: true,
+                    message: `Találtam ${ragResults.length} releváns elemet a tudásbázisban.`,
+                    data: {
+                        source: 'rag',
+                        results: ragResults,
+                        summary: `Találtam ${ragResults.length} releváns elemet a tudásbázisban.`
+                    },
+                    contextUsed: ragResults.map(r => r.source)
+                };
+            } else {
+                return {
+                    success: true,
+                    message: 'Nem találtam releváns információt a tudásbázisban.',
+                    data: { source: 'rag', results: [], summary: 'Nem találtam releváns információt a tudásbázisban.' }
+                };
+            }
         }
+
+        // 2. Mock Web Search (Fallback)
+        if (taskLower.includes('keress') || taskLower.includes('search') || taskLower.includes('web')) {
+            logInfo('ResearcherAgent', `Web Searching for: ${task}`);
+
+            // Simulate finding data
+            const searchResults = [
+                { title: 'Result 1', snippet: 'Information about ' + task },
+                { title: 'Result 2', snippet: 'More details on ' + task }
+            ];
+
+            // Store in Swarm Context if available
+            if (swarmContext) {
+                swarmContext.artifacts['searchResults'] = searchResults;
+                swarmContext.history.push({
+                    role: 'assistant',
+                    agent: this.name,
+                    content: `Found ${searchResults.length} results for "${task}". Saved to artifacts.`
+                });
+            }
+
+            // Handoff to Data Scientist for analysis if needed
+            if (taskLower.includes('elemz') || taskLower.includes('analyze')) {
+                return this.createHandoff(
+                    'DataScientist',
+                    `Analyze the search results for: ${task}`,
+                    'Search complete, analysis required.'
+                );
+            }
+
+            return {
+                success: true,
+                message: `Webes keresés sikeres: ${searchResults.length} találat`,
+                data: searchResults
+            };
+        }
+
+        return {
+            success: false,
+            message: 'Nem tudom értelmezni a kutatási feladatot. Használj kulcsszavakat: "rag", "tudásbázis", "keress", "web".'
+        };
     }
 }

@@ -1,0 +1,4 @@
+type: bing_grounding
+options:
+  tool_connections:
+    - {your bing connection id}

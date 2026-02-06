@@ -1,0 +1,37 @@
+# Browser-Use API Dockerfile
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install system dependencies for browser automation
+RUN apt-get update && apt-get install -y \
+    chromium \
+    chromium-driver \
+    fonts-liberation \
+    libnss3 \
+    libxss1 \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libgtk-3-0 \
+    --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Chrome path
+ENV CHROME_BIN=/usr/bin/chromium
+ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
+
+# Copy requirements and install
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy application code
+COPY browser_use_api.py .
+
+# Create data directory
+RUN mkdir -p /app/data
+
+# Expose port
+EXPOSE 8000
+
+# Run the API
+CMD ["python", "browser_use_api.py"]

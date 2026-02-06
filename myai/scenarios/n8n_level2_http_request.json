@@ -1,0 +1,120 @@
+{
+  "scenario_name": "n8n_level2_http_request",
+  "mode": "ui",
+  "difficulty": "intermediate",
+  "description": "HTTP Request workflow: Trigger → HTTP Request → Parse JSON → Output",
+  "target_url": "https://n8n-latest-fulv.onrender.com",
+  "expected_duration_seconds": 120,
+  "steps": [
+    {
+      "id": 1,
+      "action": "navigate",
+      "target": "https://n8n-latest-fulv.onrender.com",
+      "description": "n8n főoldal"
+    },
+    {
+      "id": 2,
+      "action": "click",
+      "target": "button:has-text('Create Workflow')",
+      "description": "Új workflow"
+    },
+    {
+      "id": 3,
+      "action": "add_node",
+      "node_type": "Schedule Trigger",
+      "position": {"x": 250, "y": 300},
+      "description": "Schedule Trigger hozzáadása"
+    },
+    {
+      "id": 4,
+      "action": "configure_node",
+      "node_name": "Schedule Trigger",
+      "config": {
+        "rule": {
+          "interval": [{"field": "minutes", "minutesInterval": 5}]
+        }
+      },
+      "description": "5 percenként futtatás"
+    },
+    {
+      "id": 5,
+      "action": "add_node",
+      "node_type": "HTTP Request",
+      "connect_from": "Schedule Trigger",
+      "position": {"x": 450, "y": 300},
+      "description": "HTTP Request node hozzáadása"
+    },
+    {
+      "id": 6,
+      "action": "configure_node",
+      "node_name": "HTTP Request",
+      "config": {
+        "method": "GET",
+        "url": "https://api.github.com/repos/anthropics/claude-code/releases/latest",
+        "options": {
+          "response": {
+            "response": {
+              "fullResponse": false
+            }
+          }
+        }
+      },
+      "description": "GitHub API hívás konfigurálása"
+    },
+    {
+      "id": 7,
+      "action": "add_node",
+      "node_type": "Set",
+      "connect_from": "HTTP Request",
+      "position": {"x": 650, "y": 300},
+      "description": "Set node az adatok feldolgozásához"
+    },
+    {
+      "id": 8,
+      "action": "configure_node",
+      "node_name": "Set",
+      "config": {
+        "values": {
+          "string": [
+            {"name": "version", "value": "={{ $json.tag_name }}"},
+            {"name": "published", "value": "={{ $json.published_at }}"}
+          ]
+        }
+      },
+      "description": "Verzió és dátum kinyerése"
+    },
+    {
+      "id": 9,
+      "action": "rename_workflow",
+      "new_name": "Robotkez_GitHub_Checker",
+      "description": "Workflow átnevezése"
+    },
+    {
+      "id": 10,
+      "action": "keyboard",
+      "keys": "Control+s",
+      "description": "Mentés"
+    },
+    {
+      "id": 11,
+      "action": "click",
+      "target": "button:has-text('Test Workflow')",
+      "description": "Teszt futtatás"
+    },
+    {
+      "id": 12,
+      "action": "verify_output",
+      "expected_fields": ["version", "published"],
+      "description": "Ellenőrzés: van-e version és published mező"
+    }
+  ],
+  "validation": {
+    "success_criteria": [
+      "3 node létrehozva és összekötve",
+      "HTTP kérés sikeres (200 OK)",
+      "JSON feldolgozás működik",
+      "Teszt futtatás sikeres"
+    ],
+    "screenshot_on_complete": true
+  }
+}

@@ -3,6 +3,7 @@ import { createServer } from 'http';
 import { Server } from 'socket.io';
 import path from 'path';
 import os from 'os';
+import fs from 'fs';
 import fetch from 'node-fetch';
 import swaggerUi from 'swagger-ui-express';
 import { Logger } from '../utils/logger.js';
@@ -21,7 +22,7 @@ import {
     checkAnythingLLMHealth,
     buildHealthResponse,
 } from '../utils/health.js';
-import { chatWithOllama } from '../core/llm_client.js';
+import { chatWithOllama, generateResponse } from '../core/llm_client.js';
 import { corsWhitelist, requestId, requestLogging, apiRateLimit } from './middleware.js';
 import { swaggerSpec } from './swagger.js';
 import { socketService } from './SocketService.js';
@@ -47,7 +48,7 @@ export async function startWebServer() {
     }
 
     try {
-        await initDb();
+        initDb();
     } catch (e) {
         console.error("DB Init failed:", e);
     }
@@ -88,7 +89,7 @@ export async function startWebServer() {
             memoryUsage: ((totalMem - freeMem) / totalMem) * 100
         });
         io.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
-        
+
         // Push Agent & Tool status updates
         io.emit('agent_update', agentManager.listAgentDefinitions());
         io.emit('tools_update', toolManager.getToolDefinitions());
@@ -195,6 +196,90 @@ export async function startWebServer() {
         }
     });
 
+
+
+
+
+    app.get('/api/cloudflare/agents', async (req, res) => {
+        try {
+            const edgeStatus = agentManager.getEdgeStatus();
+            if (!edgeStatus.enabled) {
+                res.json({ agents: [], status: 'disabled' });
+                return;
+            }
+
+            // In a real scenario, we would proxy the request to the Cloudflare Worker URL
+            // const workerUrl = process.env.CLOUDFLARE_WORKER_URL;
+            // const response = await fetch(`${workerUrl}/agents`);
+            // const data = await response.json();
+
+            // Stubbed response for now
+            res.json({
+                status: edgeStatus.healthy ? 'connected' : 'error',
+                agents: [
+                    { name: 'EdgeOrchestrator', status: 'active', tasks: 2 },
+                    { name: 'EdgeKVReader', status: 'idle', tasks: 0 }
+                ]
+            });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    // Files API
+    app.get('/api/files/list', async (req, res) => {
+        try {
+            const relPath = req.query.path as string || '.';
+            if (relPath.includes('..')) {
+                res.status(400).json({ error: 'Invalid path' });
+                return;
+            }
+
+            const fullPath = path.resolve(process.cwd(), relPath);
+            if (!fullPath.startsWith(process.cwd())) {
+                res.status(403).json({ error: 'Access denied' });
+                return;
+            }
+
+            const entries = await fs.promises.readdir(fullPath, { withFileTypes: true });
+            const files = entries.map(entry => {
+                const stats = fs.statSync(path.join(fullPath, entry.name));
+                return {
+                    name: entry.name,
+                    isDirectory: entry.isDirectory(),
+                    path: path.join(relPath, entry.name).replace(/\\/g, '/'),
+                    size: entry.isFile() ? stats.size : 0,
+                    modified: stats.mtime
+                };
+            });
+
+            res.json({ files });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.get('/api/files/content', async (req, res) => {
+        try {
+            const filePath = req.query.path as string;
+            if (!filePath || filePath.includes('..')) {
+                res.status(400).json({ error: 'Invalid path' });
+                return;
+            }
+
+            const fullPath = path.resolve(process.cwd(), filePath);
+            if (!fullPath.startsWith(process.cwd())) {
+                res.status(403).json({ error: 'Access denied' });
+                return;
+            }
+
+            const content = await fs.promises.readFile(fullPath, 'utf-8');
+            res.json({ content });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
     // Tasks API
     app.get('/api/tasks', (req, res) => {
         try {
@@ -268,6 +353,96 @@ export async function startWebServer() {
         }
     });
 
+    /**
+     * @swagger
+     * /api/gemini/generate:
+     *   post:
+     *     summary: Generate with Gemini
+     *     description: Generates text using Google Gemini models.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               prompt:
+     *                 type: string
+     *               model:
+     *                 type: string
+     *               system:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: Generated response
+     */
+    app.post('/api/gemini/generate', async (req, res) => {
+        try {
+            const { prompt, model, system } = req.body;
+
+            if (!prompt) {
+                res.status(400).json({ error: 'Prompt is required' });
+                return;
+            }
+
+            const selectedModel = model || process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+            const fullPrompt = system ? `${system}\n\n${prompt}` : prompt;
+            const response = await generateResponse(fullPrompt, 'gemini', selectedModel);
+            res.json({ response });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    /**
+     * @swagger
+     * /api/github-models/generate:
+     *   post:
+     *     summary: Generate with GitHub Models
+     *     description: Generates text using GitHub Models (GPT-4o via Azure).
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               prompt:
+     *                 type: string
+     *               model:
+     *                 type: string
+     *               system:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: Generated response
+     */
+    app.post('/api/github-models/generate', async (req, res) => {
+        try {
+            const { prompt, model, system } = req.body;
+
+            if (!prompt) {
+                res.status(400).json({ error: 'Prompt is required' });
+                return;
+            }
+
+            const selectedModel = model || 'gpt-4o';
+            const fullPrompt = system ? `${system}\n\n${prompt}` : prompt;
+            const response = await generateResponse(fullPrompt, 'github', selectedModel);
+            res.json({ response });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+
+
+
+
+
+
+
+
     // AnythingLLM API
     app.get('/api/anythingllm/workspaces', async (req, res) => {
         try {
@@ -334,10 +509,10 @@ export async function startWebServer() {
     });
 
     // Chat messages API
-    app.get('/api/chat/messages', async (req, res) => {
+    app.get('/api/chat/messages', (req, res) => {
         try {
             const chatId = req.query.chatId as string || 'main-session';
-            const messages = await getMessages(chatId);
+            const messages = getMessages(chatId);
             res.json({ messages });
         } catch (e: any) {
             res.status(500).json({ error: e.message, messages: [] });
@@ -433,11 +608,15 @@ export async function startWebServer() {
 
         // Chat Logic
         socket.on('user_message', async (data) => {
-             const userMsg = data.text;
-             await saveMessage(DEFAULT_CHAT_ID, 'user', userMsg);
-             socket.emit('bot_message_start', { isUser: false });
+            const userMsg = data.text;
+            const options = {
+                model: data.model,
+                provider: data.provider
+            };
+            saveMessage(DEFAULT_CHAT_ID, 'user', userMsg);
+            socket.emit('bot_message_start', { isUser: false });
 
-             try {
+            try {
                 const plan = await agentManager.createPlan(userMsg);
                 socket.emit('plan_created', plan);
 
@@ -446,13 +625,13 @@ export async function startWebServer() {
                 });
 
                 socket.emit('bot_message_chunk', { text: result });
-                await saveMessage(DEFAULT_CHAT_ID, 'bot', result);
+                saveMessage(DEFAULT_CHAT_ID, 'bot', result);
                 socket.emit('bot_message_end', {});
-             } catch (e: any) {
+            } catch (e: any) {
                 const errMsg = `⚠️ Hiba: ${e.message}`;
                 socket.emit('bot_message', { text: errMsg });
-                await saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
-             }
+                saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
+            }
         });
     });
 
