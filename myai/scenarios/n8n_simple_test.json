@@ -1,0 +1,59 @@
+{
+  "scenario_name": "n8n_simple_test",
+  "mode": "ui",
+  "difficulty": "beginner",
+  "description": "Legegyszerűbb teszt: Belép, létrehoz egy workflow-t névvel, elmenti",
+  "target_url": "https://n8n-latest-fulv.onrender.com",
+  "expected_duration_seconds": 60,
+  "notes": "Ez a LEGEGYSZERŰBB scenario - csak belépés és workflow létrehozás",
+  "steps": [
+    {
+      "id": 1,
+      "action": "navigate",
+      "target": "https://n8n-latest-fulv.onrender.com/signin",
+      "wait_after_ms": 3000,
+      "description": "Login oldal megnyitása"
+    },
+    {
+      "id": 2,
+      "action": "fill_form",
+      "fields": [
+        {
+          "selector": "input[type='email']",
+          "value": "${N8N_OWNER_EMAIL}"
+        },
+        {
+          "selector": "input[type='password']",
+          "value": "${N8N_OWNER_PASSWORD}"
+        }
+      ],
+      "description": "Login form kitöltése"
+    },
+    {
+      "id": 3,
+      "action": "click",
+      "target": "button[type='submit']",
+      "wait_after_ms": 5000,
+      "description": "Bejelentkezés"
+    },
+    {
+      "id": 4,
+      "action": "click",
+      "target": "button:has-text('Create'), button:has-text('New'), a:has-text('Create')",
+      "wait_after_ms": 2000,
+      "description": "Új workflow gomb"
+    },
+    {
+      "id": 5,
+      "action": "screenshot",
+      "filename": "robotkez_n8n_test_result.png",
+      "description": "Screenshot készítése az eredményről"
+    }
+  ],
+  "validation": {
+    "success_criteria": [
+      "Sikeres bejelentkezés",
+      "Workflow editor megnyílt"
+    ]
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "private": true,
+  "name": "model-providers",
+  "dependencies": {
+    "@openai/agents": "workspace:*"
+  },
+  "scripts": {
+    "build-check": "tsc --noEmit",
+    "start:custom-example-agent": "tsx custom-example-agent.ts",
+    "start:custom-example-global": "tsx custom-example-global.ts",
+    "start:custom-example-provider": "tsx custom-example-provider.ts"
+  }
+}

@@ -9,6 +9,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   root: 'src/dashboard',
   publicDir: '../../public',
+  server: {
+    host: true,
+    allowedHosts: true,
+    port: 5173,
+    proxy: {
+      '/api': 'http://localhost:3000',
+      '/socket.io': { target: 'http://localhost:3000', ws: true },
+    },
+  },
   build: {
     outDir: '../../build/public',
     emptyOutDir: true,

@@ -9,10 +9,14 @@ import "./main.css"
 import "./styles/theme.css"
 import "./index.css"
 
+import { ThemeProvider } from "./components/theme-provider.tsx"
+
 createRoot(document.getElementById('root')!).render(
   <ErrorBoundary FallbackComponent={ErrorFallback}>
-    <SocketProvider>
-      <App />
-    </SocketProvider>
-   </ErrorBoundary>
+    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <SocketProvider>
+        <App />
+      </SocketProvider>
+    </ThemeProvider>
+  </ErrorBoundary>
 )

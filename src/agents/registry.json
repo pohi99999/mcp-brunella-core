@@ -201,6 +201,88 @@
         "anythingllm",
         "sync"
       ]
+    },
+    {
+      "name": "lint_fixer",
+      "title": "Lint Fixer Agent",
+      "description": "Mikro-ugynok ESLint es TypeScript hibak automatikus javitasara. A Karbantarto Raj (Maintenance Swarm) tagja.",
+      "capabilities": [
+        "lint_check",
+        "auto_fix",
+        "suggest_fix",
+        "type_check",
+        "batch_fix"
+      ],
+      "tools": [
+        "system_run_command",
+        "workspace_read_file",
+        "workspace_write_file"
+      ],
+      "category": "maintenance",
+      "status": "active",
+      "tags": [
+        "lint",
+        "eslint",
+        "typescript",
+        "micro-agent",
+        "maintenance-swarm"
+      ],
+      "model": "qwen2.5-coder-7b"
+    },
+    {
+      "name": "robotkez",
+      "title": "Robotkéz Agent",
+      "description": "Böngésző alapú automatizáció és interakció. Képes weboldalak megnyitására, gombok kattintására és adatok kinyerésére.",
+      "class": "RobotkezAgent",
+      "module": "./agents/RobotkezAgent",
+      "capabilities": [
+        "browser_automation",
+        "ui_interaction",
+        "screenshots",
+        "web_scraping"
+      ],
+      "triggers": [
+        "robotkéz",
+        "böngésző",
+        "kattints",
+        "tölts ki",
+        "keress rá",
+        "nyisd meg"
+      ],
+      "category": "automation",
+      "status": "active",
+      "tags": [
+        "browser",
+        "playwright",
+        "automation"
+      ],
+      "priority": 2
+    },
+    {
+      "name": "voice",
+      "title": "Voice Agent",
+      "description": "Hangutasítások és multimodális interakciók specialistája (Auralia integráció).",
+      "class": "VoiceAgent",
+      "module": "./agents/VoiceAgent",
+      "capabilities": [
+        "voice_command_refinement",
+        "multimodal_context_analysis"
+      ],
+      "triggers": [
+        "hang",
+        "voice",
+        "audio",
+        "screenshot"
+      ],
+      "category": "interface",
+      "status": "active",
+      "tags": [
+        "voice",
+        "multimodal",
+        "auralia"
+      ],
+      "autoStart": true,
+      "priority": 1
     }
   ]
 }

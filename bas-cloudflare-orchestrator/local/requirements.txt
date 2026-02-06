@@ -1,0 +1,9 @@
+# BAS Browser-Use API Dependencies
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+httpx>=0.26.0
+pydantic>=2.5.0
+
+# Browser-Use (uncomment when ready)
+# browser-use>=0.1.0
+# langchain-ollama>=0.1.0

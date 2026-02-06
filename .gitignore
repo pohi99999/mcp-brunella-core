@@ -1,14 +1,88 @@
-node_modules/
+# Environment and secrets (NEVER commit)
+.env
+.env.local
+.env.*.local
+credentials.json
+
+# Sync .project/sourceTexts/ folder (source text files)
+
+# Don't sync user-specific SQLite databases
+.project/*.sqlite
+
+# Don't sync SQLite auxiliary files
+.project/*.sqlite-wal
+.project/*.sqlite-shm
+
+# Don't sync user-specific files
+.project/complete_drafts.txt
+.project/localProjectSettings.json
+copilot-messages.log
+
+# Archive formats
+*.zip
+*.rar
+*.7z
+*.tar
+*.tar.gz
+*.tar.bz2
+*.tar.xz
+*.gz
+*.bz2
+*.xz
+
+# Windows executables and installers
+*.exe
+*.msi
+*.bat
+*.cmd
+*.com
+*.scr
+*.dll
+
+# macOS executables and disk images
+*.dmg
+*.pkg
+
+# Disk images and virtual machine files
+*.iso
+*.img
+*.vhd
+*.vmdk
+
+# System files
+.DS_Store
+.project/attachments/files/**
+.gemini/
+gha-creds-*.json
+node_modules
+nul
+
+# Large generated/temporary directories and files (added by Gemini CLI)
 build/
+.lancedb/
+.venv/
+Ollama/
+AnythingLLM/
+_archive/
+_br_temp/
 logs/
-test_build/
+*.db
+*.log
 .tmp.driveupload/
-.vs/
-__pycache__/
-*.tmp
-*.pyc
-_KNOWLEDGE_BASE/
-01_AI_ML_Projects/
-external_research/
-myai/
-open-interpreter/
+
+# Problematic embedded Git repositories / submodules (cleaned up)
+_KNOWLEDGE_BASE/actions-runner/
+myai/agents/adk-a2a/
+myai/agents/ready-agents/agents-chat/chat_v1_Atlasz/
+myai/agents/ready-agents/iam-bobs-brain/
+myai/agents/ready-agents/pohi-ai-agents/
+myai/agents/tools/gemini-cli/
+
+# Problematic embedded Git repositories / submodules (cleaned up)
+_KNOWLEDGE_BASE/actions-runner/
+myai/agents/adk-a2a/
+myai/agents/ready-agents/agents-chat/chat_v1_Atlasz/
+myai/agents/ready-agents/iam-bobs-brain/
+myai/agents/ready-agents/pohi-ai-agents/
+myai/agents/tools/gemini-cli/
+

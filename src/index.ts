@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
 import { startWebServer } from "./server/web.js";
@@ -14,8 +15,9 @@ const server = new McpServer({
 async function main() {
   // Register Tools (now async)
   await registerAllTools(server);
-  
+
   validateSecrets();
+
   await startWebServer();
 
   // Start Autonomous Worker Loop
@@ -26,7 +28,12 @@ async function main() {
   console.error("MCP Brunella Core Server running on stdio");
 }
 
-main().catch((error) => {
-  console.error("Server error:", error);
+main().catch((error: unknown) => {
+  const err = error instanceof Error ? error : new Error(String(error));
+  console.error("Server error:", err.message);
+  if (err.stack) console.error(err.stack);
+  if (error && typeof error === 'object' && !(error instanceof Error)) {
+    try { console.error("Raw error:", JSON.stringify(error, null, 2)); } catch { /* non-serializable */ }
+  }
   process.exit(1);
 });

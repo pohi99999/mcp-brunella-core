@@ -3,6 +3,7 @@ version: '3.8'
 services:
   # Brunella Core (Node.js/TypeScript)
   backend:
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile.node
@@ -25,6 +26,7 @@ services:
 
   # AI Subsystem (Python/FastAPI)
   ai-worker:
+    restart: always
     build:
       context: .
       dockerfile: Dockerfile.python

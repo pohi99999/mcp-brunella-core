@@ -19,8 +19,10 @@
 - **Strukturált Adatkimenet:** Pydantic (Python) a böngésző ügynök (Robotkéz) strukturált JSON kimenetéhez.
 
 ## Felhő Integráció (BAS-Bridge)
-- **GCP:** Cloud Run (Backend), Firestore (NoSQL), BigQuery (Analitika).
-- **Security:** Secret Manager, OAuth 2.1, JWT.
+- **Peremhálózat (Edge):** Cloudflare Workers (Orchestration), R2 (Vektor DB Snapshotok), D1 (Metaadatok).
+- **CI/CD & Automatizáció:** GitHub Actions (Self-hosted runner a lokális szkriptek futtatásához).
+- **GCP (Jövőbeli):** Cloud Run (Backend), Firestore (NoSQL), BigQuery (Analitika).
+- **Security:** Secret Manager, Cloudflare Access, GitHub Secrets.
 
 ## Monitoring & Healing
 - **Logging:** Strukturált JSON logging minden szinten.

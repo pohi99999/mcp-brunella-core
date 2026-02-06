@@ -1,0 +1,21 @@
+# BAS Cloudflare Tunnel - peterpohanka.com
+# Használat: cloudflared tunnel run bas-tunnel --config docs/tunnel-config.yml
+
+tunnel: f6c9eed4-cb46-4bc4-98bf-d51b6455417c
+credentials-file: C:\Users\pohi9\.cloudflared\f6c9eed4-cb46-4bc4-98bf-d51b6455417c.json
+
+ingress:
+  # n8n - munkafolyamat automatizáció (port 5678)
+  - hostname: n8n.bas.peterpohanka.com
+    service: http://localhost:5678
+
+  # Browser-Use / Python API (port 8000)
+  - hostname: browser-use.bas.peterpohanka.com
+    service: http://localhost:8000
+
+  # BAS Node.js API (port 3000)
+  - hostname: api.bas.peterpohanka.com
+    service: http://localhost:3000
+
+  # Kötelező: catch-all 404
+  - service: http_status:404

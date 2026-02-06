@@ -24,13 +24,19 @@ export class PythonShell {
         }
     }
 
+    /** Zone IV: Phoenix Protocol – retry on failure, then fallback. */
     async run(code: string, context?: any): Promise<string> {
         if (this.useApi) {
             try {
                 return await this.runViaApi(code, context);
             } catch (e) {
-                // Silent fallback to legacy if API is down
-                // console.warn("[PythonShell] API connection failed, falling back to subprocess.");
+                // Phoenix: retry once after short delay
+                await new Promise((r) => setTimeout(r, 1500));
+                try {
+                    return await this.runViaApi(code, context);
+                } catch (e2) {
+                    // Fallback to legacy subprocess
+                }
             }
         }
         return this.runLegacy(code, context);

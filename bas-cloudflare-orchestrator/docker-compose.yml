@@ -1,0 +1,84 @@
+# BAS Full Stack - Docker Compose
+# Langflow + n8n + Ollama (ha nincs lokálisan)
+
+version: '3.8'
+
+services:
+  # Langflow - Multi-Agent Flow Builder
+  langflow:
+    image: langflowai/langflow:latest
+    container_name: bas-langflow
+    ports:
+      - "7860:7860"
+    environment:
+      - LANGFLOW_DATABASE_URL=sqlite:///./langflow.db
+      - LANGFLOW_CONFIG_DIR=/app/config
+      - LANGFLOW_AUTO_LOGIN=true
+      - LANGFLOW_SUPERUSER=admin
+      - LANGFLOW_SUPERUSER_PASSWORD=bas2025
+      # Ollama connection (host network)
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+    volumes:
+      - langflow_data:/app/langflow
+      - ./langflow:/app/flows:ro  # Flow JSON fájlok
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    networks:
+      - bas-network
+
+  # n8n - Workflow Automation
+  n8n:
+    image: n8nio/n8n:latest
+    container_name: bas-n8n
+    ports:
+      - "5678:5678"
+    environment:
+      - N8N_BASIC_AUTH_ACTIVE=true
+      - N8N_BASIC_AUTH_USER=admin
+      - N8N_BASIC_AUTH_PASSWORD=bas2025
+      - N8N_HOST=localhost
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=http
+      - WEBHOOK_URL=http://localhost:5678/
+      - GENERIC_TIMEZONE=Europe/Budapest
+      # Langflow connection
+      - LANGFLOW_URL=http://langflow:7860
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./n8n:/home/node/workflows:ro  # Workflow JSON fájlok
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - langflow
+    restart: unless-stopped
+    networks:
+      - bas-network
+
+  # Browser-Use API (robotkéz)
+  browser-use-api:
+    build:
+      context: ./local
+      dockerfile: Dockerfile.browseruse
+    container_name: bas-browser-use
+    ports:
+      - "8000:8000"
+    environment:
+      - OLLAMA_BASE_URL=http://host.docker.internal:11434
+      - CLOUDFLARE_CALLBACK_URL=https://bas-orchestrator.workers.dev/webhook/browser-use
+    volumes:
+      - browser_use_data:/app/data
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    networks:
+      - bas-network
+
+volumes:
+  langflow_data:
+  n8n_data:
+  browser_use_data:
+
+networks:
+  bas-network:
+    driver: bridge
