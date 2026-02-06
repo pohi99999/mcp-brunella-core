@@ -47,7 +47,7 @@ export async function startWebServer() {
     }
 
     try {
-        initDb();
+        await initDb();
     } catch (e) {
         console.error("DB Init failed:", e);
     }
@@ -334,10 +334,10 @@ export async function startWebServer() {
     });
 
     // Chat messages API
-    app.get('/api/chat/messages', (req, res) => {
+    app.get('/api/chat/messages', async (req, res) => {
         try {
             const chatId = req.query.chatId as string || 'main-session';
-            const messages = getMessages(chatId);
+            const messages = await getMessages(chatId);
             res.json({ messages });
         } catch (e: any) {
             res.status(500).json({ error: e.message, messages: [] });
@@ -434,7 +434,7 @@ export async function startWebServer() {
         // Chat Logic
         socket.on('user_message', async (data) => {
              const userMsg = data.text;
-             saveMessage(DEFAULT_CHAT_ID, 'user', userMsg);
+             await saveMessage(DEFAULT_CHAT_ID, 'user', userMsg);
              socket.emit('bot_message_start', { isUser: false });
 
              try {
@@ -446,12 +446,12 @@ export async function startWebServer() {
                 });
 
                 socket.emit('bot_message_chunk', { text: result });
-                saveMessage(DEFAULT_CHAT_ID, 'bot', result);
+                await saveMessage(DEFAULT_CHAT_ID, 'bot', result);
                 socket.emit('bot_message_end', {});
              } catch (e: any) {
                 const errMsg = `⚠️ Hiba: ${e.message}`;
                 socket.emit('bot_message', { text: errMsg });
-                saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
+                await saveMessage(DEFAULT_CHAT_ID, 'bot', errMsg);
              }
         });
     });
