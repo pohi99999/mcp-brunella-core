@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { chromium, Browser, Page } from 'playwright';
+import type { Browser, Page } from 'playwright';
 import { URL } from 'url';
 
 // Security check for URLs (same as before)
@@ -31,10 +31,15 @@ async function getBrowser() {
         // but we assume the user has a way to get one or we installed 'playwright' which does.
         // Actually, 'playwright' package installs browsers.
         // Let's try to launch.
-        browser = await chromium.launch({
-            headless: true,
-            args: ['--no-sandbox', '--disable-setuid-sandbox'] // Safer in some envs, standard for server-side
-        });
+        try {
+            const { chromium } = await import('playwright');
+            browser = await chromium.launch({
+                headless: true,
+                args: ['--no-sandbox', '--disable-setuid-sandbox'] // Safer in some envs, standard for server-side
+            });
+        } catch (e: any) {
+            throw new Error(`Failed to load playwright: ${e.message}. Browser tools are not available in this environment.`);
+        }
     }
     return browser;
 }
@@ -123,6 +128,8 @@ export function registerBrowserTools(server: McpServer) {
       let page: Page | null = null;
       try {
         const browser = await getBrowser();
+        if (!browser) throw new Error("Browser not initialized");
+
         page = await browser.newPage();
         
         await page.goto(url, { waitUntil: 'networkidle' }); // Wait for network to settle
@@ -170,6 +177,8 @@ export function registerBrowserTools(server: McpServer) {
       let page: Page | null = null;
       try {
         const browser = await getBrowser();
+        if (!browser) throw new Error("Browser not initialized");
+
         page = await browser.newPage();
         await page.goto(url, { waitUntil: 'networkidle' });
         

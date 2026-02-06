@@ -31,7 +31,7 @@ def simple_search_tool(query: str) -> str:
 
 # A Supervisor / Menedzser Ügynök (Brunella)
 # Nincs közvetlen اربعهze, a célja a feladatok lebontása és delegálása.
-sup<ctrl61>ervisor_agent = Agent(
+supervisor_agent = Agent(
     role='Projektmenedzser Supervisor',
     goal='Felügyelni egy kutatási projektet az elejétől a végéig. Feladatokat lebontani és delegálni a megfelelő szakértő ügynöknek.',
     backstory="""Te Brunella vagy, egy magas szintű MI projektmenedzser. Képességed a komplex célok egyszerű, végrehajtható lépésekre bontása
