@@ -4,7 +4,8 @@ import { registerKnowledgeTools } from "../tools/knowledge.js";
 import { registerSystemTools } from "../tools/system.js";
 import { registerBrowserTools } from "../tools/browser.js";
 import { registerInterpreterTools } from "../tools/interpreter.js";
-import { registerCopilotCliTool } from "../tools/copilotCliTool.js";
+import { registerGithubModelsTool } from "../tools/githubModelsTool.js";
+import { registerGeminiTool } from "../tools/geminiTool.js";
 import { registerJulesCliTool } from "../tools/julesCliTool.js";
 import { registerOllamaTool } from "../tools/ollamaTool.js";
 import { registerClaudeTool } from "../tools/claudeTool.js";
@@ -13,9 +14,10 @@ import { registerGoogleWorkspaceTools } from "../tools/googleWorkspace.js";
 import { registerAnythingLLMTools } from "../tools/anythingllm.js";
 import { registerMonitorTools } from "../tools/monitor.js";
 import { registerSwarmTools } from "../tools/swarmTools.js";
+import { registerN8nTools } from "../tools/n8n.js";
 import { agentManager } from "../agents/AgentManager.js";
-import { DataScientistAgent } from "../agents/DataScientistAgent.js";
-import { ResearcherAgent } from "../agents/ResearcherAgent.js";
+import DataScientistAgent from "../agents/DataScientistAgent.js";
+import ResearcherAgent from "../agents/ResearcherAgent.js";
 import { OrchestratorAgent } from "../agents/OrchestratorAgent.js";
 import { EvaluatorAgent } from "../agents/EvaluatorAgent.js";
 import { DeveloperAgent } from "../agents/DeveloperAgent.js";
@@ -38,6 +40,7 @@ const registeredToolsList: RegisteredToolInfo[] = [
     { id: 'agent_list', name: 'agent_list', description: 'Aktív ágensek listázása', enabled: true, category: 'server', parameters: [] },
     { id: 'agent_registry', name: 'agent_registry', description: 'Összes ágens definíció listázása', enabled: true, category: 'server', parameters: [] },
     { id: 'agent_delegate', name: 'agent_delegate', description: 'Feladat delegálása ágensnek', enabled: true, category: 'server', parameters: [{ name: 'agent_name', type: 'string', required: true }, { name: 'task', type: 'string', required: true }] },
+    { id: 'agent_execute', name: 'agent_execute', description: 'Ágens közvetlen végrehajtása (szinkron)', enabled: true, category: 'server', parameters: [{ name: 'agentName', type: 'string', required: true }, { name: 'task', type: 'string', required: true }, { name: 'context', type: 'string', required: false }] },
 ];
 
 // Internal tool handler map
@@ -66,7 +69,8 @@ export function registerAllTools(server: McpServer) {
     registerSystemTools(server);
     registerBrowserTools(server);
     registerInterpreterTools(server);
-    registerCopilotCliTool(server);
+    registerGithubModelsTool(server);
+    registerGeminiTool(server);
     registerJulesCliTool(server);
     registerOllamaTool(server);
     registerClaudeTool(server);
@@ -75,6 +79,7 @@ export function registerAllTools(server: McpServer) {
     registerAnythingLLMTools(server);
     registerMonitorTools(server);
     registerSwarmTools(server);
+    registerN8nTools(server);
 
     // Register Agent Tools with double-registration (server + internal map)
     const agentListHandler = async () => {
@@ -104,6 +109,40 @@ export function registerAllTools(server: McpServer) {
         task: z.string()
     }, agentDelegateHandler);
     toolHandlers.set("agent_delegate", agentDelegateHandler);
+
+    const agentExecuteHandler = async ({ agentName, task, context }: any) => {
+        try {
+            const agent = agentManager.getAgent(agentName);
+            if (!agent) {
+                return { isError: true, content: [{ type: "text" as const, text: `Agent '${agentName}' not found. Use agent_list to see available agents.` }] };
+            }
+
+            // Parse context if provided as JSON string
+            let parsedContext;
+            if (context) {
+                try {
+                    parsedContext = typeof context === 'string' ? JSON.parse(context) : context;
+                } catch (e: any) {
+                    return { isError: true, content: [{ type: "text" as const, text: `Invalid context JSON: ${e.message}` }] };
+                }
+            }
+
+            // Execute agent directly
+            const result = await agent.execute(task, parsedContext);
+
+            // Format response
+            const responseText = JSON.stringify(result, null, 2);
+            return { content: [{ type: "text" as const, text: responseText }] };
+        } catch (e: any) {
+            return { isError: true, content: [{ type: "text" as const, text: `Agent Execution Error: ${e.message}` }] };
+        }
+    };
+    server.tool("agent_execute", "Executes an agent directly with a task (synchronous).", {
+        agentName: z.string(),
+        task: z.string(),
+        context: z.string().optional()
+    }, agentExecuteHandler);
+    toolHandlers.set("agent_execute", agentExecuteHandler);
 
     const pingHandler = async () => ({
         content: [{ type: "text" as const, text: "Pong! MCP Brunella Core is active." }]
