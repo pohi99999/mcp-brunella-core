@@ -9,8 +9,4 @@ dependencies = [
     "fastmcp>=2.14.3",
     "httpx>=0.28.1",
     "uvicorn>=0.40.0",
-    "browser-use",
-    "playwright",
-    "langchain-google-genai",
-    "python-dotenv",
 ]
