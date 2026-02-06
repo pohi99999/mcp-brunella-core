@@ -1,5 +1,6 @@
 {
   "name": "mcp-brunella-core",
+  "packageManager": "pnpm@10.28.0",
   "version": "1.0.0",
   "description": "MCP server for Brunella Core",
   "type": "module",

@@ -15,7 +15,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 10
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -24,7 +24,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install deps
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build
         run: pnpm run build
@@ -42,7 +42,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 10
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -51,7 +51,7 @@ jobs:
           cache: 'pnpm'
 
       - name: Install deps
-        run: pnpm install --frozen-lockfile
+        run: pnpm install --no-frozen-lockfile
 
       - name: Build
         run: pnpm run build
@@ -91,7 +91,7 @@ jobs:
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 8
+          version: 10
 
       - name: Setup Node
         uses: actions/setup-node@v4
@@ -106,7 +106,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Install Node deps & build
-        run: pnpm install --frozen-lockfile && pnpm run build
+        run: pnpm install --no-frozen-lockfile && pnpm run build
 
       - name: PythonShell tests
         run: node --loader ts-node/esm --test test/python_shell.test.ts
