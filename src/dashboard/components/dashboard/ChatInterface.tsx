@@ -314,21 +314,27 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 {searchQuery && (
                   <Badge variant="secondary" className="gap-1">
                     Keresés: {searchQuery}
-                    <X
-                      size={14}
-                      className="cursor-pointer hover:text-foreground"
-                      onClick={() => setSearchQuery('')}
-                    />
-                  </Badge>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-4 w-4 p-0 hover:bg-transparent hover:text-foreground"
+                      onClick={() => setSearchQuery("")}
+                      aria-label="Keresési szűrő törlése"
+                    >
+                      <X size={14} />
+                    </Button>
                 )}
                 {dateRange.from && (
                   <Badge variant="secondary" className="gap-1">
-                    {dateRange.to
-                      ? `${format(dateRange.from, "MMM d", { locale: hu })} - ${format(dateRange.to, "MMM d", { locale: hu })}`
-                      : `Ettől: ${format(dateRange.from, "MMM d", { locale: hu })}`}
-                    <X
-                      size={14}
-                      className="cursor-pointer hover:text-foreground"
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="h-4 w-4 p-0 hover:bg-transparent hover:text-foreground"
+                      onClick={() => setDateRange({ from: undefined, to: undefined })}
+                      aria-label="Dátum szűrő törlése"
+                    >
+                      <X size={14} />
+                    </Button>
                       onClick={() => setDateRange({ from: undefined, to: undefined })}
                     />
                   </Badge>
