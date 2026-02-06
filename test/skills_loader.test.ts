@@ -6,18 +6,18 @@ import process from 'node:process';
 import { discoverSkills } from '../src/utils/skillsLoader.js';
 
 describe('Skills loader', () => {
-  it('discoverSkills returns array', () => {
-    const skills = discoverSkills(undefined, process.cwd());
+  it('discoverSkills returns array', async () => {
+    const skills = await discoverSkills(undefined, process.cwd());
     expect(Array.isArray(skills)).toBe(true);
   });
 
-  it('discoverSkills finds skill dir with SKILL.md in given dir', () => {
+  it('discoverSkills finds skill dir with SKILL.md in given dir', async () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'brunella-skills-'));
     try {
       const skillDir = path.join(tmp, 'my-skill');
       fs.mkdirSync(skillDir, { recursive: true });
       fs.writeFileSync(path.join(skillDir, 'SKILL.md'), '# my-skill\nDo stuff.\n', 'utf-8');
-      const skills = discoverSkills(tmp, tmp);
+      const skills = await discoverSkills(tmp, tmp);
       expect(skills.length).toBeGreaterThanOrEqual(1);
       const s = skills.find((x) => x.name === 'my-skill');
       expect(s).toBeDefined();
@@ -27,7 +27,7 @@ describe('Skills loader', () => {
     }
   });
 
-  it('discoverSkills finds skill dir with skill.json', () => {
+  it('discoverSkills finds skill dir with skill.json', async () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'brunella-skills-'));
     try {
       const skillDir = path.join(tmp, 'json-skill');
@@ -37,7 +37,7 @@ describe('Skills loader', () => {
         JSON.stringify({ name: 'JsonSkill', description: 'From JSON' }),
         'utf-8'
       );
-      const skills = discoverSkills(tmp, tmp);
+      const skills = await discoverSkills(tmp, tmp);
       const s = skills.find((x) => x.name === 'json-skill' || x.name === 'JsonSkill');
       expect(s).toBeDefined();
     } finally {
