@@ -16,7 +16,6 @@ import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync } from 'child_process';
 // ============================================================================
 // INTERFACES
 // ============================================================================
