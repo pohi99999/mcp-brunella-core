@@ -41,6 +41,64 @@
 
 ## Napló
 
+### 2026-02-06 23:30 - GitHub Models Token Javítás (TELJES SIKER!)
+
+**Feladat:** GitHub Models API 401 error javítása új token generálással
+
+**Probléma:**
+- Régi GitHub PAT nem rendelkezett `models:read` scope-pal
+- 401 Unauthorized error minden GitHub Models híváskor
+
+**Megoldás:**
+1. Új GitHub Personal Access Token generálás helyes scope-okkal
+2. .env fájl frissítés
+3. Biztonsági figyelmeztetés (token nem public!)
+
+**Scope-ok (KÖTELEZŐ):**
+- ✅ `repo` - Repository hozzáférés
+- ✅ `read:user` - User info olvasás
+- ✅ `models:read` - GitHub Models API (ÚJ!)
+
+**Teszt eredmény:**
+- ✅ Ollama: MŰKÖDIK ("Is there something I can help you with?")
+- ✅ Gemini: MŰKÖDIK ("Hello! How can I help you today?")
+- ✅ GitHub Models: MŰKÖDIK ("Hello! How can I assist you today? 😊")
+
+**Érintett fájlok:**
+- `.env` - GITHUB_PAT frissítve (NEM commitolva!)
+
+**Copilot Pro+ előfizetés:**
+- 2000 prémium hívás/hó
+- GPT-4o korlátlan (models API-n keresztül)
+- o1-preview, o1-mini, Grok-3 is elérhető
+
+**CLI használat (MIND MŰKÖDIK!):**
+```bash
+# Interaktív chat
+node build/cli.js chat
+
+# Ollama
+> /switch ollama
+> Hello, how are you?
+
+# Gemini
+> /switch gemini
+> Explain quantum physics
+
+# GitHub Models (GPT-4o)
+> /switch github
+> Write a haiku about AI
+```
+
+**Státusz:** ✅ 100% BEFEJEZVE - MINDEN LLM MŰKÖDIK!
+
+**Következő lépések:**
+1. ✅ API kulcsok rendben
+2. LangSmith tracing kiterjesztés
+3. Robotkéz + Browser Harvester aktiválás
+
+---
+
 ### 2026-02-06 23:00 - CLI LLM Interakció Javítás (MCP Client Tool Cache)
 
 **Feladat:** CLI chat parancs nem működött - "Connection closed" hiba az LLM tool híváskor
