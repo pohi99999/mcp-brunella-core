@@ -42,19 +42,19 @@ interface ActiveTransport {
 export async function startWebServer() {
     const webUiEnabled = process.env.WEB_UI_ENABLED !== "0" && process.env.WEB_UI_ENABLED !== "false";
     if (!webUiEnabled) {
-        console.error("WEB_UI_ENABLED=0 -> Web UI disabled");
+        logger.error("WEB_UI_ENABLED=0 -> Web UI disabled");
         return;
     }
 
     try {
         initDb();
     } catch (e) {
-        console.error("DB Init failed:", e);
+        logger.error("DB Init failed: " + e);
     }
 
     // Auto-connect to configured MCP servers (Stub for now based on configManager)
     // In a real scenario, we would read from mcp_servers.json
-    console.log("🔄 Starting MCP Bridge...");
+    logger.info("🔄 Starting MCP Bridge...");
 
     const app = express();
     app.use(express.json());
@@ -396,14 +396,14 @@ export async function startWebServer() {
 
     io.on('connection', (socket) => {
         const DEFAULT_CHAT_ID = 'main-session';
-        console.log('Client connected to Dashboard');
+        logger.info('Client connected to Dashboard');
         socket.emit('system:log', { message: 'Rendszer indítása... Mission Control csatlakozva.', type: 'success', timestamp: Date.now() });
 
         socket.emit('tools_update', toolManager.getToolDefinitions());
         socket.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
 
         socket.on('run_tool', async (data: { name: string, args: any, id?: string }) => {
-            console.log(`Socket Tool Run Request: ${data.name}`);
+            logger.info(`Socket Tool Run Request: ${data.name}`);
             try {
                 // Try local toolManager first
                 let result;
@@ -456,6 +456,6 @@ export async function startWebServer() {
 
     const PORT = Number(process.env.PORT || 3000);
     httpServer.listen(PORT, () => {
-        console.log(`🌐 Web UI: http://localhost:${PORT}`);
+        logger.info(`🌐 Web UI: http://localhost:${PORT}`);
     });
 }

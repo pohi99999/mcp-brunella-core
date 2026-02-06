@@ -47,3 +47,7 @@ export class Logger {
 
 export const systemLogger = new Logger('system_commands.log');
 export const cliLogger = new Logger('cli_tools.log');
+export const logInfo = (source: string, message: string) => systemLogger.info(`[${source}] ${message}`);
+export const logError = (source: string, message: string) => systemLogger.error(`[${source}] ${message}`);
+export const setAgentStatus = (agentName: string, status: string, task?: string) =>
+    systemLogger.structured('info', 'Agent Status Update', { agentName, status, task });
