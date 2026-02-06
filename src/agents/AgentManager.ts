@@ -11,8 +11,6 @@
  */
 
 import { EventEmitter } from 'events';
-import * as fs from 'fs';
-import * as path from 'path';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 
 // ============================================================================
@@ -129,9 +127,18 @@ export class AgentManager extends EventEmitter {
   }
 
   private async loadAgent(config: AgentConfig): Promise<void> {
-    const modulePath = path.resolve(process.cwd(), 'build', config.module.replace('./', ''));
+    // Dynamic imports for Node.js-specific modules (Worker compatibility)
+    if (typeof process === 'undefined' || !process.versions?.node) {
+      logError('AgentManager', 'loadAgent() requires Node.js environment');
+      return;
+    }
     
-    if (!fs.existsSync(modulePath)) {
+    const path = await import('path');
+    const fs = await import('fs');
+    
+    const modulePath = path.default.resolve(process.cwd(), 'build', config.module.replace('./', ''));
+    
+    if (!fs.default.existsSync(modulePath)) {
       logError('AgentManager', `Modul nem található: ${modulePath}`);
       return;
     }
@@ -509,10 +516,29 @@ export class AgentManager extends EventEmitter {
   // --------------------------------------------------------------------------
 
   private loadRegistry(): RegistryConfig {
-    const registryPath = path.resolve(process.cwd(), 'build', 'agents', 'registry.json');
+    // Dynamic imports for Node.js-specific modules (Worker compatibility)
+    if (typeof process === 'undefined' || !process.versions?.node) {
+      // Fallback for Worker environments
+      return {
+        version: '1.0.0',
+        agents: [],
+        defaultAgent: 'Orchestrator',
+        routingRules: []
+      };
+    }
     
-    if (fs.existsSync(registryPath)) {
-      return JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
+    try {
+      // Use synchronous dynamic import pattern
+      const path = require('path');
+      const fs = require('fs');
+      
+      const registryPath = path.resolve(process.cwd(), 'build', 'agents', 'registry.json');
+      
+      if (fs.existsSync(registryPath)) {
+        return JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
+      }
+    } catch (e) {
+      logError('AgentManager', `Registry load failed: ${e}`);
     }
     
     // Fallback
