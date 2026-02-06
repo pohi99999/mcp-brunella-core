@@ -68,4 +68,5 @@ _br_temp/
 logs/
 *.db
 *.log
+.tmp.driveupload/
 
