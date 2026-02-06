@@ -3,10 +3,12 @@
 // Zone IV: Dual Storage (LanceDB + JSONL backup).
 // Zone V: Vector Embeddings via Ollama nomic-embed-text model.
 
-import * as lancedb from "@lancedb/lancedb";
-import fs from "fs/promises";
-import path from "path";
 import { logInfo, logError } from "./logger.js";
+
+// Type definitions for dynamically imported modules
+type LanceDB = typeof import("@lancedb/lancedb");
+type NodeFS = typeof import("fs/promises");
+type NodePath = typeof import("path");
 
 const DB_PATH = "./data/brunella_lancedb";
 const HARVEST_BACKUP_PATH = "./logs/harvest_backup.jsonl";
@@ -56,8 +58,9 @@ const embeddingCache = new SimpleLRUCache<string, number[]>(EMBEDDING_CACHE_SIZE
 /**
  * Get embedding vector from Ollama API
  * Uses nomic-embed-text model by default (768 dimensions)
+ * Safe to call in any environment (Node/Worker) as it uses fetch.
  */
-async function getEmbedding(text: string): Promise<number[]> {
+export async function getEmbedding(text: string): Promise<number[]> {
   const cached = embeddingCache.get(text);
   if (cached) {
     return cached;
@@ -101,10 +104,28 @@ async function getEmbedding(text: string): Promise<number[]> {
   }
 }
 
+// Module imports helper
+let lancedb: LanceDB | null = null;
+let fs: NodeFS | null = null;
+let path: NodePath | null = null;
+
+async function ensureModules() {
+  if (typeof process !== 'undefined' && process.versions?.node) {
+    if (!lancedb) lancedb = await import("@lancedb/lancedb");
+    if (!fs) fs = await import("fs/promises");
+    if (!path) path = await import("path");
+  } else {
+    throw new Error("RAG storage operations are only supported in Node.js environment");
+  }
+}
+
 export class HybridMemory {
   private dbPath = DB_PATH;
 
   async addDocument(content: string, metadata: object) {
+    await ensureModules();
+    if (!lancedb) throw new Error("LanceDB not loaded");
+
     const db = await lancedb.connect(this.dbPath);
     const tableNames = await db.tableNames();
 
@@ -129,6 +150,9 @@ const memory = new HybridMemory();
 
 /** Add content to the RAG index (path/id stored in metadata). */
 export async function addToIndex(pathOrId: string, content: string): Promise<void> {
+  await ensureModules();
+  if (!fs || !path) throw new Error("FS/Path not loaded");
+
   await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => {});
   await memory.addDocument(content, { path: pathOrId });
 }
@@ -136,6 +160,9 @@ export async function addToIndex(pathOrId: string, content: string): Promise<voi
 /** Search RAG using vector similarity (cosine distance via LanceDB). */
 export async function searchRAG(query: string, limit = 20): Promise<Array<{ text: string; path?: string; score?: number }>> {
   try {
+    await ensureModules();
+    if (!lancedb) throw new Error("LanceDB not loaded");
+
     const db = await lancedb.connect(DB_PATH);
     const tableNames = await db.tableNames();
     if (!tableNames.includes("memory")) return [];
@@ -192,6 +219,9 @@ export class DualStorageManager {
   private dbPath = DB_PATH;
 
   async saveWithBackup(table: string, data: Record<string, unknown>): Promise<void> {
+    await ensureModules();
+    if (!fs || !path) throw new Error("FS/Path not loaded");
+
     const entry = { ...data, savedAt: new Date().toISOString(), table };
     const line = JSON.stringify(entry) + "\n";
 
