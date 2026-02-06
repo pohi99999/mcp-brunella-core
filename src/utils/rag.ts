@@ -3,10 +3,27 @@
 // Zone IV: Dual Storage (LanceDB + JSONL backup).
 // Zone V: Vector Embeddings via Ollama nomic-embed-text model.
 
-import * as lancedb from "@lancedb/lancedb";
-import fs from "fs/promises";
-import path from "path";
+import type * as lancedb from "@lancedb/lancedb";
 import { logInfo, logError } from "./logger.js";
+
+// Dynamic imports for Worker compatibility
+let lancedbModule: typeof import("@lancedb/lancedb") | null = null;
+let fs: typeof import("fs/promises") | null = null;
+let path: typeof import("path") | null = null;
+
+async function ensureModules() {
+    if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+        if (!lancedbModule) {
+             try {
+                 lancedbModule = await import("@lancedb/lancedb");
+             } catch (e) {
+                 // May fail if bindings not available or in Worker environment mimicking Node
+             }
+        }
+        if (!fs) fs = await import("fs/promises");
+        if (!path) path = await import("path");
+    }
+}
 
 const DB_PATH = "./data/brunella_lancedb";
 const HARVEST_BACKUP_PATH = "./logs/harvest_backup.jsonl";
@@ -68,34 +85,48 @@ export class HybridMemory {
   }
 
   private async getDb(): Promise<lancedb.Connection> {
+    await ensureModules();
+    if (!lancedbModule) {
+        throw new Error("LanceDB module not loaded. Are you running in a Node.js environment?");
+    }
     if (!this.db) {
-      this.db = await lancedb.connect(this.dbPath);
+      this.db = await lancedbModule.connect(this.dbPath);
     }
     return this.db;
   }
 
   async addDocument(content: string, metadata: object) {
-    const db = await this.getDb();
-    const tableNames = await db.tableNames();
+    try {
+        await ensureModules();
+        if (!lancedbModule) return; // Silent skip in non-Node envs
 
-    // Generate embedding for the content
-    const vector = await getEmbedding(content);
-    const record = { vector, text: content, ...metadata, createdAt: new Date().toISOString() };
+        const db = await this.getDb();
+        const tableNames = await db.tableNames();
 
-    let table;
-    if (tableNames.includes("memory")) {
-      table = await db.openTable("memory");
-      await table.add([record]);
-    } else {
-      // Create table with first record (defines schema)
-      table = await db.createTable("memory", [record]);
+        // Generate embedding for the content
+        const vector = await getEmbedding(content);
+        const record = { vector, text: content, ...metadata, createdAt: new Date().toISOString() };
+
+        let table;
+        if (tableNames.includes("memory")) {
+          table = await db.openTable("memory");
+          await table.add([record]);
+        } else {
+          // Create table with first record (defines schema)
+          table = await db.createTable("memory", [record]);
+        }
+
+        logInfo("RAG", `Document indexed: ${(metadata as any).path || "unknown"}`);
+    } catch (e: any) {
+        logError("RAG", `Add document error: ${e.message}`);
     }
-
-    logInfo("RAG", `Document indexed: ${(metadata as any).path || "unknown"}`);
   }
 
   async search(query: string, limit = 20): Promise<Array<{ text: string; path?: string; score?: number }>> {
     try {
+      await ensureModules();
+      if (!lancedbModule) return [];
+
       const db = await this.getDb();
       const tableNames = await db.tableNames();
       if (!tableNames.includes("memory")) return [];
@@ -151,8 +182,14 @@ const memory = new HybridMemory();
 
 /** Add content to the RAG index (path/id stored in metadata). */
 export async function addToIndex(pathOrId: string, content: string): Promise<void> {
-  await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => {});
-  await memory.addDocument(content, { path: pathOrId });
+  try {
+      await ensureModules();
+      if (!fs || !path) return;
+      await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => {});
+      await memory.addDocument(content, { path: pathOrId });
+  } catch (e) {
+      // Ignore in non-Node
+  }
 }
 
 /** Search RAG using vector similarity (cosine distance via LanceDB). */
@@ -170,10 +207,17 @@ export class DualStorageManager {
     const line = JSON.stringify(entry) + "\n";
 
     // 1. JSONL backup (biztonsági mentés)
-    await fs.mkdir(path.dirname(this.backupPath), { recursive: true }).catch(() => {});
-    await fs.appendFile(this.backupPath, line, "utf-8").catch((e) => {
-      console.warn(`[DualStorage] Backup write failed: ${e.message}`);
-    });
+    try {
+        await ensureModules();
+        if (fs && path) {
+             await fs.mkdir(path.dirname(this.backupPath), { recursive: true }).catch(() => {});
+             await fs.appendFile(this.backupPath, line, "utf-8").catch((e) => {
+                 console.warn(`[DualStorage] Backup write failed: ${e.message}`);
+             });
+        }
+    } catch (e) {
+        // Ignore
+    }
 
     // 2. LanceDB (ha van text mező)
     const text = (data.text as string) ?? JSON.stringify(data);
