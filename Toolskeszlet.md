@@ -1,7 +1,7 @@
 # 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
 
 Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
-**Generálva:** 2026. 02. 06. 9:52:10
+**Generálva:** 2026. 02. 06. 22:37:03
 
 ---
 
@@ -23,11 +23,9 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 
 ## 📦 geminiTool
 - **gemini_generate**: Generate text using Google Gemini API (2.5 Pro, 2.0 Flash, etc.).
-- **gemini_list_models**: List available Gemini models.
 
 ## 📦 githubModelsTool
 - **github_models_generate**: Generate text using GitHub Models API (GPT-4o, DeepSeek-R1, Grok 3, etc.). Requires GitHub Pro+ subscription.
-- **github_models_list**: List available GitHub Models (Pro+ subscription catalog).
 
 ## 📦 googleWorkspace
 - **gmail_list_messages**: Lists recent emails from Gmail.

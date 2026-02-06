@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { generateWithGemini, listGeminiModels } from "../core/llm_client.js";
+import { generateResponse } from "../core/llm_client.js";
 
 export function registerGeminiTool(server: McpServer) {
     server.tool(
@@ -13,7 +13,9 @@ export function registerGeminiTool(server: McpServer) {
         },
         async ({ prompt, model, system }) => {
             try {
-                const response = await generateWithGemini(prompt, model, system);
+                // Combine system and prompt if system is provided
+                const fullPrompt = system ? `System: ${system}\n\nUser: ${prompt}` : prompt;
+                const response = await generateResponse(fullPrompt, 'gemini', model);
                 return {
                     content: [{ type: "text", text: response }]
                 };
@@ -24,18 +26,6 @@ export function registerGeminiTool(server: McpServer) {
                     content: [{ type: "text", text: `Gemini hiba: ${msg}` }]
                 };
             }
-        }
-    );
-
-    server.tool(
-        "gemini_list_models",
-        "List available Gemini models.",
-        {},
-        async () => {
-            const models = listGeminiModels();
-            return {
-                content: [{ type: "text", text: JSON.stringify(models, null, 2) }]
-            };
         }
     );
 }

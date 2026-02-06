@@ -24,12 +24,12 @@ const toolHandlers = new Map<string, (args: any) => Promise<any>>();
 export async function registerAllTools(server: McpServer) {
     // Dynamically import Node.js-specific modules only in Node environment
     const isNode = typeof process !== 'undefined' && process.versions?.node;
-    
+
     if (isNode) {
         const path = await import('path');
         const { agentManager } = await import('../agents/AgentManager.js');
-        const { DataScientistAgent } = await import('../agents/DataScientistAgent.js');
-        const { ResearcherAgent } = await import('../agents/ResearcherAgent.js');
+        const DataScientistAgent = (await import('../agents/DataScientistAgent.js')).default;
+        const ResearcherAgent = (await import('../agents/ResearcherAgent.js')).default;
         const { OrchestratorAgent } = await import('../agents/OrchestratorAgent.js');
         const { EvaluatorAgent } = await import('../agents/EvaluatorAgent.js');
         const { DeveloperAgent } = await import('../agents/DeveloperAgent.js');
@@ -66,6 +66,8 @@ export async function registerAllTools(server: McpServer) {
         const { registerAnythingLLMTools } = await import('../tools/anythingllm.js');
         const { registerMonitorTools } = await import('../tools/monitor.js');
         const { registerSwarmTools } = await import('../tools/swarmTools.js');
+        const { registerGithubModelsTool } = await import('../tools/githubModelsTool.js');
+        const { registerGeminiTool } = await import('../tools/geminiTool.js');
 
         registerWorkspaceTools(server);
         registerKnowledgeTools(server);
@@ -81,6 +83,8 @@ export async function registerAllTools(server: McpServer) {
         registerAnythingLLMTools(server);
         registerMonitorTools(server);
         registerSwarmTools(server);
+        registerGithubModelsTool(server);
+        registerGeminiTool(server);
 
         // Register Agent Tools with double-registration (server + internal map)
         const agentListHandler = async () => {

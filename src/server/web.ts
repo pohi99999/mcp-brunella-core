@@ -22,7 +22,7 @@ import {
     checkAnythingLLMHealth,
     buildHealthResponse,
 } from '../utils/health.js';
-import { chatWithOllama, chat, generateWithGithubModels, listGithubModels, generateWithGemini, listGeminiModels } from '../core/llm_client.js';
+import { chatWithOllama, generateResponse } from '../core/llm_client.js';
 import { corsWhitelist, requestId, requestLogging, apiRateLimit } from './middleware.js';
 import { swaggerSpec } from './swagger.js';
 import { socketService } from './SocketService.js';
@@ -196,47 +196,9 @@ export async function startWebServer() {
         }
     });
 
-    app.post('/api/agents/:agentName/capabilities', async (req, res) => {
-        try {
-            const { agentName } = req.params;
-            const { capabilities } = req.body;
 
-            if (!Array.isArray(capabilities)) {
-                res.status(400).json({ error: 'Capabilities must be an array of strings' });
-                return;
-            }
 
-            const success = await agentManager.updateAgentCapabilities(agentName, capabilities);
-            if (success) {
-                res.json({ status: 'success', capabilities });
-            } else {
-                res.status(404).json({ error: 'Agent not found' });
-            }
-        } catch (e: any) {
-            res.status(500).json({ error: e.message });
-        }
-    });
 
-    app.post('/api/agents/create', async (req, res) => {
-        try {
-            const config = req.body;
-            if (!config.name || !config.role) {
-                res.status(400).json({ error: 'Name and role are required' });
-                return;
-            }
-
-            const success = await agentManager.createAgent(config);
-            if (success) {
-                res.json({ status: 'success', message: `Agent ${config.name} created successfully` });
-                // Notify via socket
-                socketService.broadcastLog(`Új ügynök született: ${config.name}`, 'success');
-            } else {
-                res.status(500).json({ error: 'Failed to create agent' });
-            }
-        } catch (e: any) {
-            res.status(500).json({ error: e.message });
-        }
-    });
 
     app.get('/api/cloudflare/agents', async (req, res) => {
         try {
@@ -391,53 +353,13 @@ export async function startWebServer() {
         }
     });
 
-    // GitHub Models API
-    app.get('/api/github-models/models', async (req, res) => {
-        try {
-            const models = listGithubModels();
-            res.json({ models });
-        } catch (e: any) {
-            res.status(500).json({ error: e.message, models: [] });
-        }
-    });
 
-    app.post('/api/github-models/generate', async (req, res) => {
-        try {
-            const { prompt, model, system } = req.body;
-            if (!prompt) {
-                res.status(400).json({ error: 'Prompt is required' });
-                return;
-            }
-            const response = await generateWithGithubModels(prompt, model, system);
-            res.json({ response });
-        } catch (e: any) {
-            res.status(500).json({ error: e.message });
-        }
-    });
 
-    // Gemini API
-    app.get('/api/gemini/models', async (req, res) => {
-        try {
-            const models = listGeminiModels();
-            res.json({ models });
-        } catch (e: any) {
-            res.status(500).json({ error: e.message, models: [] });
-        }
-    });
 
-    app.post('/api/gemini/generate', async (req, res) => {
-        try {
-            const { prompt, model, system } = req.body;
-            if (!prompt) {
-                res.status(400).json({ error: 'Prompt is required' });
-                return;
-            }
-            const response = await generateWithGemini(prompt, model, system);
-            res.json({ response });
-        } catch (e: any) {
-            res.status(500).json({ error: e.message });
-        }
-    });
+
+
+
+
 
     // AnythingLLM API
     app.get('/api/anythingllm/workspaces', async (req, res) => {
@@ -613,7 +535,7 @@ export async function startWebServer() {
             socket.emit('bot_message_start', { isUser: false });
 
             try {
-                const plan = await agentManager.createPlan(userMsg, options);
+                const plan = await agentManager.createPlan(userMsg);
                 socket.emit('plan_created', plan);
 
                 const result = await agentManager.executePlan(plan, (event: any, eventData: any) => {

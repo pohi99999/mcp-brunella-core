@@ -54,7 +54,7 @@ export async function startInteractiveMenu() {
                 name: 'action',
                 message: 'Válassz chat módot:',
                 choices: [
-                    { name: '🤖 Helyi Brunella Chat (Ollama)', value: 'chat' },
+                    { name: '💬 Chat (GitHub / Gemini / Ollama)', value: 'chat' },
                     { name: '☁️ Cloudflare Edge Chat (/edge on)', value: 'chat_edge' },
                     { name: '🔙 Vissza', value: 'back' }
                 ]

@@ -17,6 +17,7 @@ interface McpServerConfig {
 export class BrunellaClient {
     private clients: Map<string, Client> = new Map();
     private transports: Map<string, any> = new Map();
+    private toolCache: Map<string, string> = new Map(); // tool name -> server name
 
     async connect() {
         // Load config from mcp_servers.json
@@ -62,17 +63,37 @@ export class BrunellaClient {
         const allTools: any[] = [];
         for (const [name, client] of this.clients) {
             const result = await client.listTools();
-            // Add server name to tool if needed or just merge
+            // Cache tool -> server mapping
+            for (const tool of result.tools) {
+                this.toolCache.set(tool.name, name);
+            }
             allTools.push(...result.tools);
         }
         return { tools: allTools };
     }
 
     async callTool(name: string, args: any) {
-        // Search for which client has this tool
+        // Try cache first
+        if (this.toolCache.has(name)) {
+            const serverName = this.toolCache.get(name)!;
+            const client = this.clients.get(serverName);
+            if (client) {
+                try {
+                    return await client.callTool({ name, arguments: args });
+                } catch (error: any) {
+                    // If cached lookup fails, fall through to full search
+                    console.error(`Tool '${name}' failed on cached server '${serverName}', retrying...`);
+                    this.toolCache.delete(name);
+                }
+            }
+        }
+
+        // Fallback: Search for which client has this tool
         for (const [serverName, client] of this.clients) {
             const result = await client.listTools();
-            if (result.tools.some(t => t.name === name)) {
+            const tool = result.tools.find(t => t.name === name);
+            if (tool) {
+                this.toolCache.set(name, serverName); // Update cache
                 return client.callTool({ name, arguments: args });
             }
         }

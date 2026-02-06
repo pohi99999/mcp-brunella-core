@@ -8,7 +8,7 @@ import { logInfo, logError } from "../utils/logger.js";
 // Configuration
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.1:8b';
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp';
 const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS || '120000'); // 2 minutes default
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
@@ -32,6 +32,39 @@ export const generateResponse: (prompt: string, provider?: string, modelName?: s
             const model = genAI.getGenerativeModel({ model: modelName || GEMINI_MODEL });
             const result = await model.generateContent(prompt);
             return result.response.text();
+        }
+
+        if (provider === 'github') {
+            const apiKey = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
+            if (!apiKey) {
+                throw new Error('GITHUB_TOKEN or GITHUB_PAT not configured');
+            }
+
+            const model = modelName || 'gpt-4o';
+            const response = await fetch("https://models.inference.ai.azure.com/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${apiKey}`
+                },
+                body: JSON.stringify({
+                    messages: [
+                        { role: "system", content: "You are a helpful AI assistant." },
+                        { role: "user", content: prompt }
+                    ],
+                    model: model,
+                    temperature: 0.7,
+                    max_tokens: 4096,
+                    top_p: 1.0
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`GitHub Models API error: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+            return data.choices[0].message.content;
         }
 
         // Default: Ollama (Helyi)

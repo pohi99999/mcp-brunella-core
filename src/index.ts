@@ -15,9 +15,9 @@ const server = new McpServer({
 async function main() {
   // Register Tools (now async)
   await registerAllTools(server);
-  
+
   validateSecrets();
-  registerAllTools(server);
+
   await startWebServer();
 
   // Start Autonomous Worker Loop

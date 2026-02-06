@@ -1,3 +1,4 @@
+/*
 import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import dotenv from "dotenv";
@@ -43,3 +44,4 @@ export class CloudStorage {
     return response.Contents?.map(c => c.Key || "") || [];
   }
 }
+*/

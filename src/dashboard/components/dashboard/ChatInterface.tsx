@@ -298,51 +298,56 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
             </div>
             {currentMessages.length > 0 && (
               <>
-                <DropdownMenu>
-                      Exportálás
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={exportAsJSON} className="flex items-center gap-2">
-                      <FileJs size={16} />
-                      JSON formátum
-                    </DropdownMenuItem>
-                    <DropdownMenuItem onClick={exportAsText} className="flex items-center gap-2">
-                      <FileText size={16} />
-                      Szöveg formátum
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-                
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="flex items-center gap-2 min-w-[140px] justify-between">
-                      <div className="flex items-center gap-2">
-                        <Badge variant="outline" className="h-5 px-1 bg-muted">
-                          {selectedProvider === 'github' ? 'GH' : selectedProvider === 'gemini' ? 'G' : 'O'}
-                        </Badge>
-                        <span className="truncate max-w-[100px]">{selectedModel}</span>
-                      </div>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end" className="w-[200px]">
-                    <div className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">GitHub Models</div>
-                    <DropdownMenuItem onClick={() => { setSelectedProvider('github'); setSelectedModel('gpt-4o'); }}>GPT-4o</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => { setSelectedProvider('github'); setSelectedModel('o3-mini'); }}>o3-mini</DropdownMenuItem>
-                    
-                    <div className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-t mt-1 pt-2">Gemini</div>
-                    <DropdownMenuItem onClick={() => { setSelectedProvider('gemini'); setSelectedModel('gemini-2.0-flash'); }}>Gemini 2.0 Flash</DropdownMenuItem>
-                    
-                    <div className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-t mt-1 pt-2">Ollama</div>
-                    <DropdownMenuItem onClick={() => { setSelectedProvider('ollama'); setSelectedModel('llama3.1:8b'); }}>Llama 3.1 8B</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => { setSelectedProvider('ollama'); setSelectedModel('qwen2.5-coder:7b'); }}>Qwen 2.5 Coder</DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+            {currentMessages.length > 0 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="icon" className="h-8 w-8">
+                    <Download size={16} />
+                    <span className="sr-only">Exportálás</span>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuItem onClick={exportAsJSON} className="flex items-center gap-2">
+                    <FileJs size={16} />
+                    JSON formátum
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={exportAsText} className="flex items-center gap-2">
+                    <FileText size={16} />
+                    Szöveg formátum
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
 
-                <Button variant="outline" size="sm" onClick={handleClearChat}>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="outline" size="sm" className="flex items-center gap-2 min-w-[140px] justify-between h-8">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="h-5 px-1 bg-muted">
+                      {selectedProvider === 'github' ? 'GH' : selectedProvider === 'gemini' ? 'G' : 'O'}
+                    </Badge>
+                    <span className="truncate max-w-[100px]">{selectedModel}</span>
+                  </div>
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="w-[200px]">
+                <div className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">GitHub Models</div>
+                <DropdownMenuItem onClick={() => { setSelectedProvider('github'); setSelectedModel('gpt-4o'); }}>GPT-4o</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setSelectedProvider('github'); setSelectedModel('o3-mini'); }}>o3-mini</DropdownMenuItem>
+                
+                <div className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-t mt-1 pt-2">Gemini</div>
+                <DropdownMenuItem onClick={() => { setSelectedProvider('gemini'); setSelectedModel('gemini-2.0-flash'); }}>Gemini 2.0 Flash</DropdownMenuItem>
+                
+                <div className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-t mt-1 pt-2">Ollama</div>
+                <DropdownMenuItem onClick={() => { setSelectedProvider('ollama'); setSelectedModel('llama3.1:8b'); }}>Llama 3.1 8B</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setSelectedProvider('ollama'); setSelectedModel('qwen2.5-coder:7b'); }}>Qwen 2.5 Coder</DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {currentMessages.length > 0 && (
+                <Button variant="outline" size="sm" onClick={handleClearChat} className="h-8">
                   Törlés
                 </Button>
-              </>
             )}
           </div>
         </div>

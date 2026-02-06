@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { generateWithGithubModels, listGithubModels } from "../core/llm_client.js";
+import { generateResponse } from "../core/llm_client.js";
 
 export function registerGithubModelsTool(server: McpServer) {
     server.tool(
@@ -13,7 +13,9 @@ export function registerGithubModelsTool(server: McpServer) {
         },
         async ({ prompt, model, system }) => {
             try {
-                const response = await generateWithGithubModels(prompt, model, system);
+                // Combine system and prompt if system is provided
+                const fullPrompt = system ? `System: ${system}\n\nUser: ${prompt}` : prompt;
+                const response = await generateResponse(fullPrompt, 'github', model);
                 return {
                     content: [{ type: "text", text: response }]
                 };
@@ -24,18 +26,6 @@ export function registerGithubModelsTool(server: McpServer) {
                     content: [{ type: "text", text: `GitHub Models hiba: ${msg}` }]
                 };
             }
-        }
-    );
-
-    server.tool(
-        "github_models_list",
-        "List available GitHub Models (Pro+ subscription catalog).",
-        {},
-        async () => {
-            const models = listGithubModels();
-            return {
-                content: [{ type: "text", text: JSON.stringify(models, null, 2) }]
-            };
         }
     );
 }
