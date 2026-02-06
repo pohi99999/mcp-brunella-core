@@ -1,4 +1,3 @@
-import fs from 'fs/promises';
 import path from 'path';
 import { config } from '../config/index.js';
 
@@ -9,27 +8,39 @@ export class Logger {
         this.logFile = path.join(config.systemLogDir, filename);
     }
 
+    private async writeToFile(content: string) {
+        try {
+            // Dynamic import to avoid bundling fs in non-Node environments (e.g. Cloudflare Workers)
+            const fs = await import('fs/promises');
+            await fs.mkdir(path.dirname(this.logFile), { recursive: true });
+            await fs.appendFile(this.logFile, content);
+        } catch (error) {
+            // Fallback to console in environments where fs is unavailable or fails
+            // console.warn(`Logger: Failed to write to file (using console fallback):`, error);
+        }
+    }
+
     async log(message: string, meta?: any) {
         const timestamp = new Date().toISOString();
         const logEntry = `[${timestamp}] ${message} ${meta ? JSON.stringify(meta) : ''}\n`;
-        try {
-            await fs.mkdir(path.dirname(this.logFile), { recursive: true });
-            await fs.appendFile(this.logFile, logEntry);
-        } catch (error) {
-            console.error(`Failed to write to log file: ${this.logFile}`, error);
-        }
+
+        // Always log to console for visibility
+        console.log(logEntry.trim());
+
+        await this.writeToFile(logEntry);
     }
 
     /** Structured JSON log: { level, timestamp, message, requestId?, ...meta } */
     async structured(level: 'info' | 'warn' | 'error', message: string, meta?: Record<string, unknown>) {
         const entry = { level, timestamp: new Date().toISOString(), message, ...meta };
         const line = JSON.stringify(entry) + '\n';
-        try {
-            await fs.mkdir(path.dirname(this.logFile), { recursive: true });
-            await fs.appendFile(this.logFile, line);
-        } catch (error) {
-            console.error(`Failed to write to log file: ${this.logFile}`, error);
-        }
+
+        // Always log to console
+        if (level === 'error') console.error(JSON.stringify(entry));
+        else if (level === 'warn') console.warn(JSON.stringify(entry));
+        else console.log(JSON.stringify(entry));
+
+        await this.writeToFile(line);
     }
 
     info(message: string, meta?: any) {
