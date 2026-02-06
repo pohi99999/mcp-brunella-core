@@ -13,8 +13,8 @@
 A projekt gyökeréből:
 
 ```bash
-# Függőségek frissítése (pyproject.toml alapján)
-uv pip install -r pyproject.toml
+# Függőségek telepítése a különálló requirements fájlból
+uv pip install -r myai/requirements.txt
 # Vagy manuálisan:
 uv pip install browser-use playwright httpx asyncio langchain-google-genai python-dotenv
 
