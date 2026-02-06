@@ -333,7 +333,7 @@ program.command('chat')
             let modelChoices: string[] = [];
             if (provider === 'github') modelChoices = ['gpt-4o', 'gpt-4o-mini', 'o1-preview', 'o1-mini'];
 
-            if (provider === 'gemini') modelChoices = ['gemini-2.0-flash', 'gemini-1.5-pro', 'gemini-2.0-flash-lite'];
+            if (provider === 'gemini') modelChoices = ['gemini-2.5-flash', 'gemini-2.0-flash', 'gemini-flash-latest', 'gemini-2.5-pro'];
             if (provider === 'ollama') modelChoices = ['llama3.1:8b', 'deepseek-r1:8b', 'qwen2.5-coder'];
 
             const { model } = await inquirer.prompt([{
@@ -349,7 +349,7 @@ program.command('chat')
             // Quick switch: /switch gemini
             const target = parts[1].toLowerCase();
             if (target === 'github') { activeProvider = 'github'; activeModel = 'gpt-4o'; }
-            else if (target === 'gemini') { activeProvider = 'gemini'; activeModel = 'gemini-2.0-flash'; }
+            else if (target === 'gemini') { activeProvider = 'gemini'; activeModel = 'gemini-2.5-flash'; }
             else if (target === 'ollama') { activeProvider = 'ollama'; activeModel = 'llama3.1:8b'; }
             else { console.log(chalk.red('Unknown provider. Use interactive mode (just /switch) or github/gemini/ollama.')); continue; }
           }

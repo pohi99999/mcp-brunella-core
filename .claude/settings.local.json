@@ -47,7 +47,9 @@
       "Bash(node -e:*)",
       "Bash(gh extension list:*)",
       "Bash(gh copilot:*)",
-      "Bash(gh auth:*)"
+      "Bash(gh auth:*)",
+      "Bash(/tmp/test_github.js << 'EOFJS'\nconst token = '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';\n\nfetch\\(\"https://models.inference.ai.azure.com/chat/completions\", {\n  method: \"POST\",\n  headers: {\n    \"Content-Type\": \"application/json\",\n    \"Authorization\": `Bearer ${token}`\n  },\n  body: JSON.stringify\\({\n    messages: [\n      { role: \"user\", content: \"Say hello in 3 words\" }\n    ],\n    model: \"gpt-4o\",\n    temperature: 0.7,\n    max_tokens: 100\n  }\\)\n}\\)\n  .then\\(async r => {\n    console.log\\('Status:', r.status, r.statusText\\);\n    const text = await r.text\\(\\);\n    if \\(r.ok\\) {\n      const data = JSON.parse\\(text\\);\n      console.log\\('✅ GitHub Models WORKING!'\\);\n      console.log\\('Response:', data.choices[0].message.content\\);\n    } else {\n      console.log\\('❌ Error:', text\\);\n    }\n  }\\)\n  .catch\\(e => console.error\\('Fetch error:', e.message\\)\\);\nEOFJS)",
+      "Bash(node:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -8,7 +8,7 @@ import { logInfo, logError } from "../utils/logger.js";
 // Configuration
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.1:8b';
-const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.0-flash-exp';
+const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS || '120000'); // 2 minutes default
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
