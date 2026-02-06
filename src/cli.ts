@@ -274,6 +274,7 @@ program.command('chat')
     console.log(chalk.dim("Commands:"));
     console.log(chalk.dim("  /switch  - Change AI Model (GPT-4.1, Gemini, Ollama)"));
     console.log(chalk.dim("  /edge    - Toggle Edge Mode (Cloudflare)"));
+    console.log(chalk.dim("  /jules   - Jules AI delegálás (new/sync/status)"));
     console.log(chalk.dim("  /conductor <action> - Run Conductor tasks (status, sync, track)"));
     console.log(chalk.dim("  /tools   - List available tools"));
     console.log(chalk.dim("  /ls [path] - List files (Coding Agent)"));
@@ -313,13 +314,85 @@ program.command('chat')
           continue;
         }
 
-        if (trimmed.startsWith('/edge')) {
+        if (trimmed.toLowerCase().startsWith('/jules')) {
+          const parts = trimmed.toLowerCase().split(' ');
+          const action = parts[1];
+
+          if (!action || action === 'help') {
+            console.log(chalk.cyan('\n🤖 Jules Commands:'));
+            console.log(chalk.dim('  /jules new     - Új Jules task létrehozás'));
+            console.log(chalk.dim('  /jules sync    - GitHub Jules branch-ek pullolása'));
+            console.log(chalk.dim('  /jules status  - Sessions + branch-ek státusza'));
+            console.log(chalk.dim('  /jules menu    - Interaktív menü indítás\n'));
+            continue;
+          }
+
+          if (action === 'menu') {
+            console.log(chalk.cyan('Launching Jules interactive menu...'));
+            // Import and run interactive menu
+            try {
+              const { execSync } = await import('child_process');
+              execSync('node build/cli-jules-interactive.js', { stdio: 'inherit', cwd: process.cwd() });
+            } catch (e: any) {
+              console.log(chalk.red(`Error launching menu: ${e.message}`));
+            }
+            continue;
+          }
+
+          if (action === 'new') {
+            const { taskPrompt } = await inquirer.prompt([{
+              type: 'input',
+              name: 'taskPrompt',
+              message: 'Jules task prompt:',
+            }]);
+
+            if (taskPrompt) {
+              console.log(chalk.cyan(`\n🚀 Jules task indítás: "${taskPrompt.slice(0, 60)}..."\n`));
+              try {
+                const { execSync } = await import('child_process');
+                execSync(`python scripts/jules_api_client.py create "${taskPrompt}"`, { stdio: 'inherit', cwd: process.cwd() });
+              } catch (e: any) {
+                console.log(chalk.red(`Error: ${e.message}`));
+              }
+            }
+            continue;
+          }
+
+          if (action === 'sync') {
+            console.log(chalk.cyan('\n🔄 Jules sync indítás...\n'));
+            try {
+              const { execSync } = await import('child_process');
+              execSync('python scripts/jules_sync_watchdog.py --once', { stdio: 'inherit', cwd: process.cwd() });
+            } catch (e: any) {
+              console.log(chalk.red(`Error: ${e.message}`));
+            }
+            continue;
+          }
+
+          if (action === 'status') {
+            console.log(chalk.cyan('\n📊 Jules status...\n'));
+            try {
+              const { execSync } = await import('child_process');
+              execSync('python scripts/jules_api_client.py list 5', { stdio: 'inherit', cwd: process.cwd() });
+              console.log('');
+              execSync('python scripts/jules_sync_watchdog.py --check', { stdio: 'inherit', cwd: process.cwd() });
+            } catch (e: any) {
+              console.log(chalk.red(`Error: ${e.message}`));
+            }
+            continue;
+          }
+
+          console.log(chalk.red('Unknown Jules command. Use /jules help'));
+          continue;
+        }
+
+        if (trimmed.toLowerCase().startsWith('/edge')) {
           edgeMode = !edgeMode;
           console.log(edgeMode ? chalk.cyan('Edge mode enabled (Cloudflare).') : chalk.yellow('Edge mode disabled (Local/API).'));
           continue;
         }
 
-        if (trimmed.startsWith('/switch')) {
+        if (trimmed.toLowerCase().startsWith('/switch')) {
           const parts = trimmed.split(' ');
           // Interactive selection if just '/switch'
           if (parts.length === 1) {
@@ -554,6 +627,73 @@ conductorCmd.command('track <action> [name]')
     } finally {
       await client.close();
       process.exit(0);
+    }
+  });
+
+// --- jules (Jules AI Integration)
+const julesCmd = program.command('jules').description('Jules AI integration (task delegation, sync, status)');
+
+julesCmd.command('menu')
+  .description('Launch interactive Jules menu')
+  .action(async () => {
+    try {
+      const { execSync } = await import('child_process');
+      execSync('node build/cli-jules-interactive.js', { stdio: 'inherit', cwd: process.cwd() });
+    } catch (e: any) {
+      console.error(chalk.red('Error launching menu:'), e.message);
+      process.exit(1);
+    }
+  });
+
+julesCmd.command('new [prompt]')
+  .description('Create new Jules task')
+  .action(async (prompt?: string) => {
+    if (!prompt) {
+      const answer = await inquirer.prompt([{
+        type: 'input',
+        name: 'taskPrompt',
+        message: 'Jules task prompt:',
+      }]);
+      prompt = answer.taskPrompt;
+    }
+
+    if (prompt) {
+      console.log(chalk.cyan(`\n🚀 Jules task: "${prompt.slice(0, 60)}..."\n`));
+      try {
+        const { execSync } = await import('child_process');
+        execSync(`python scripts/jules_api_client.py create "${prompt}"`, { stdio: 'inherit', cwd: process.cwd() });
+      } catch (e: any) {
+        console.error(chalk.red('Error:'), e.message);
+        process.exit(1);
+      }
+    }
+  });
+
+julesCmd.command('sync')
+  .description('Sync Jules GitHub branches (pull latest)')
+  .action(async () => {
+    console.log(chalk.cyan('\n🔄 Jules sync...\n'));
+    try {
+      const { execSync } = await import('child_process');
+      execSync('python scripts/jules_sync_watchdog.py --once', { stdio: 'inherit', cwd: process.cwd() });
+    } catch (e: any) {
+      console.error(chalk.red('Error:'), e.message);
+      process.exit(1);
+    }
+  });
+
+julesCmd.command('status')
+  .description('Show Jules sessions and branch status')
+  .action(async () => {
+    console.log(chalk.cyan('\n📊 Jules status...\n'));
+    try {
+      const { execSync } = await import('child_process');
+      execSync('python scripts/jules_api_client.py list 5', { stdio: 'inherit', cwd: process.cwd() });
+      console.log('');
+      execSync('python scripts/jules_sync_watchdog.py --check', { stdio: 'inherit', cwd: process.cwd() });
+    } catch (e: any) {
+      console.error(chalk.red('Error:'), e.message);
+      process.exit(1);
     }
   });
 

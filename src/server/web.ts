@@ -353,6 +353,88 @@ export async function startWebServer() {
         }
     });
 
+    /**
+     * @swagger
+     * /api/gemini/generate:
+     *   post:
+     *     summary: Generate with Gemini
+     *     description: Generates text using Google Gemini models.
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               prompt:
+     *                 type: string
+     *               model:
+     *                 type: string
+     *               system:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: Generated response
+     */
+    app.post('/api/gemini/generate', async (req, res) => {
+        try {
+            const { prompt, model, system } = req.body;
+
+            if (!prompt) {
+                res.status(400).json({ error: 'Prompt is required' });
+                return;
+            }
+
+            const selectedModel = model || process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+            const fullPrompt = system ? `${system}\n\n${prompt}` : prompt;
+            const response = await generateResponse(fullPrompt, 'gemini', selectedModel);
+            res.json({ response });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    /**
+     * @swagger
+     * /api/github-models/generate:
+     *   post:
+     *     summary: Generate with GitHub Models
+     *     description: Generates text using GitHub Models (GPT-4o via Azure).
+     *     requestBody:
+     *       required: true
+     *       content:
+     *         application/json:
+     *           schema:
+     *             type: object
+     *             properties:
+     *               prompt:
+     *                 type: string
+     *               model:
+     *                 type: string
+     *               system:
+     *                 type: string
+     *     responses:
+     *       200:
+     *         description: Generated response
+     */
+    app.post('/api/github-models/generate', async (req, res) => {
+        try {
+            const { prompt, model, system } = req.body;
+
+            if (!prompt) {
+                res.status(400).json({ error: 'Prompt is required' });
+                return;
+            }
+
+            const selectedModel = model || 'gpt-4o';
+            const fullPrompt = system ? `${system}\n\n${prompt}` : prompt;
+            const response = await generateResponse(fullPrompt, 'github', selectedModel);
+            res.json({ response });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
 
 
 
