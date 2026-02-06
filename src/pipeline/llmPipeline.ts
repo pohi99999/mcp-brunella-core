@@ -6,7 +6,7 @@ import { spawn } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
 import { config } from '../config/index.js';
-import { generateResponse } from '../core/llm_client.js';
+import { chatWithOllama } from '../core/llm_client.js';
 
 const logger = new Logger('pipeline.log');
 /** Configurable via PIPELINE_SANDBOX_TIMEOUT_MS. Stronger isolation (e.g. isolated-vm) optional for future. */
@@ -72,7 +72,7 @@ export class SelfHealingPipeline extends EventEmitter {
             this.emit('progress', `🧠 Kód generálása (Ollama)...`);
 
             try {
-                currentCode = await generateResponse(prompt, 'ollama');
+                currentCode = await chatWithOllama(prompt, "qwen2.5-coder:1.5b");
 
                 currentCode = currentCode.replace(/```javascript/g, "").replace(/```js/g, "").replace(/```/g, "").trim();
 

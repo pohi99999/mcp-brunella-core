@@ -5,8 +5,7 @@
   "type": "module",
   "main": "build/index.js",
   "bin": {
-    "brunella": "./build/cli.js",
-    "brunella-edge": "./build/cli-edge.js"
+    "brunella": "./build/cli.js"
   },
   "scripts": {
     "build": "tsc",
@@ -14,7 +13,6 @@
     "dev": "node --loader ts-node/esm src/index.ts",
     "watch": "tsc -w",
     "smoke": "node scripts/smoke.mjs",
-    "security:check": "node scripts/security_check.mjs",
     "mcp:run": "node build/index.js",
     "cli:run": "node build/cli.js",
     "cli": "node build/cli.js",
@@ -35,13 +33,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.712.0",
-    "@aws-sdk/s3-request-presigner": "^3.712.0",
     "@google/generative-ai": "^0.21.0",
     "@hookform/resolvers": "^5.2.2",
-    "@iarna/toml": "^2.2.5",
     "@lancedb/lancedb": "^0.23.0",
-    "@modelcontextprotocol/sdk": "^1.26.0",
+    "@modelcontextprotocol/sdk": "^1.0.0",
     "@phosphor-icons/react": "^2.1.10",
     "@radix-ui/colors": "^3.0.0",
     "@radix-ui/react-accordion": "^1.2.12",
@@ -80,7 +75,6 @@
     "chalk": "^4.1.2",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "cmdk": "^1.1.1",
     "commander": "^14.0.2",
     "d3": "^7.9.0",
     "date-fns": "^4.1.0",
@@ -100,10 +94,9 @@
     "lucide-react": "^0.562.0",
     "marked": "^15.0.12",
     "marked-terminal": "^7.3.0",
-    "next-themes": "^0.4.6",
     "node-fetch": "^3.3.2",
     "ora": "^5.4.1",
-    "playwright": "^1.58.1",
+    "playwright": "^1.58.0",
     "playwright-core": "^1.57.0",
     "react": "^19.2.3",
     "react-day-picker": "^9.13.0",
