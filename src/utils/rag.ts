@@ -16,12 +16,53 @@ const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || "http://localhost:11434";
 const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || "nomic-embed-text";
 const EMBEDDING_DIMENSION = 768; // nomic-embed-text uses 768 dimensions
 const EMBEDDING_TIMEOUT_MS = 30000;
+const EMBEDDING_CACHE_SIZE = 100;
+
+class SimpleLRUCache<K, V> {
+  private capacity: number;
+  private cache: Map<K, V>;
+
+  constructor(capacity: number) {
+    this.capacity = capacity;
+    this.cache = new Map();
+  }
+
+  get(key: K): V | undefined {
+    const value = this.cache.get(key);
+    if (value !== undefined) {
+      // Refresh: delete and add again to make it most recently used
+      this.cache.delete(key);
+      this.cache.set(key, value);
+    }
+    return value;
+  }
+
+  set(key: K, value: V): void {
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    } else if (this.cache.size >= this.capacity) {
+      // Remove the first item (least recently used)
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey);
+      }
+    }
+    this.cache.set(key, value);
+  }
+}
+
+const embeddingCache = new SimpleLRUCache<string, number[]>(EMBEDDING_CACHE_SIZE);
 
 /**
  * Get embedding vector from Ollama API
  * Uses nomic-embed-text model by default (768 dimensions)
  */
 async function getEmbedding(text: string): Promise<number[]> {
+  const cached = embeddingCache.get(text);
+  if (cached) {
+    return cached;
+  }
+
   try {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), EMBEDDING_TIMEOUT_MS);
@@ -47,6 +88,7 @@ async function getEmbedding(text: string): Promise<number[]> {
       throw new Error("Invalid embedding response from Ollama");
     }
 
+    embeddingCache.set(text, data.embedding);
     return data.embedding;
   } catch (error: any) {
     if (error.name === "AbortError") {
