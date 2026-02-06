@@ -11,4 +11,5 @@ _KNOWLEDGE_BASE/
 01_AI_ML_Projects/
 external_research/
 myai/
-open-interpreter/
+open-interpreter/dist_bench/
+data/

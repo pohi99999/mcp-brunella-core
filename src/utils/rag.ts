@@ -61,9 +61,21 @@ async function getEmbedding(text: string): Promise<number[]> {
 
 export class HybridMemory {
   private dbPath = DB_PATH;
+  private db: lancedb.Connection | null = null;
+
+  constructor(dbPath: string = DB_PATH) {
+      this.dbPath = dbPath;
+  }
+
+  private async getDb(): Promise<lancedb.Connection> {
+    if (!this.db) {
+      this.db = await lancedb.connect(this.dbPath);
+    }
+    return this.db;
+  }
 
   async addDocument(content: string, metadata: object) {
-    const db = await lancedb.connect(this.dbPath);
+    const db = await this.getDb();
     const tableNames = await db.tableNames();
 
     // Generate embedding for the content
@@ -81,6 +93,58 @@ export class HybridMemory {
 
     logInfo("RAG", `Document indexed: ${(metadata as any).path || "unknown"}`);
   }
+
+  async search(query: string, limit = 20): Promise<Array<{ text: string; path?: string; score?: number }>> {
+    try {
+      const db = await this.getDb();
+      const tableNames = await db.tableNames();
+      if (!tableNames.includes("memory")) return [];
+
+      const table = await db.openTable("memory");
+
+      // Generate embedding for the query
+      const queryVector = await getEmbedding(query);
+
+      // Check if we got a valid embedding (not all zeros)
+      const hasValidEmbedding = queryVector.some((v) => v !== 0);
+
+      if (hasValidEmbedding) {
+        // Vector similarity search
+        const results = await table
+          .vectorSearch(queryVector)
+          .limit(limit)
+          .toArray();
+
+        return results.map((r: any) => ({
+          text: r.text || "",
+          path: r.path,
+          score: r._distance, // LanceDB returns distance (lower = more similar)
+        }));
+      } else {
+        // Fallback to text search if embedding failed
+        logInfo("RAG", "Embedding failed, falling back to text search");
+        const results: Array<{ text: string; path?: string }> = [];
+        const q = query.toLowerCase();
+
+        for await (const batch of table.query().limit(limit * 3)) {
+          const textCol = batch.getChild("text");
+          const pathCol = batch.schema.fields.find((f) => f.name === "path") ? batch.getChild("path") : null;
+          const n = batch.numRows;
+          for (let i = 0; i < n; i++) {
+            const text = String(textCol?.get(i) ?? "");
+            if (text.toLowerCase().includes(q)) {
+              results.push({ text, path: pathCol ? String(pathCol.get(i) ?? "") : undefined });
+              if (results.length >= limit) return results;
+            }
+          }
+        }
+        return results;
+      }
+    } catch (error: any) {
+      logError("RAG", `Search error: ${error.message}`);
+      return [];
+    }
+  }
 }
 
 const memory = new HybridMemory();
@@ -93,55 +157,7 @@ export async function addToIndex(pathOrId: string, content: string): Promise<voi
 
 /** Search RAG using vector similarity (cosine distance via LanceDB). */
 export async function searchRAG(query: string, limit = 20): Promise<Array<{ text: string; path?: string; score?: number }>> {
-  try {
-    const db = await lancedb.connect(DB_PATH);
-    const tableNames = await db.tableNames();
-    if (!tableNames.includes("memory")) return [];
-
-    const table = await db.openTable("memory");
-
-    // Generate embedding for the query
-    const queryVector = await getEmbedding(query);
-
-    // Check if we got a valid embedding (not all zeros)
-    const hasValidEmbedding = queryVector.some((v) => v !== 0);
-
-    if (hasValidEmbedding) {
-      // Vector similarity search
-      const results = await table
-        .vectorSearch(queryVector)
-        .limit(limit)
-        .toArray();
-
-      return results.map((r: any) => ({
-        text: r.text || "",
-        path: r.path,
-        score: r._distance, // LanceDB returns distance (lower = more similar)
-      }));
-    } else {
-      // Fallback to text search if embedding failed
-      logInfo("RAG", "Embedding failed, falling back to text search");
-      const results: Array<{ text: string; path?: string }> = [];
-      const q = query.toLowerCase();
-
-      for await (const batch of table.query().limit(limit * 3)) {
-        const textCol = batch.getChild("text");
-        const pathCol = batch.schema.fields.find((f) => f.name === "path") ? batch.getChild("path") : null;
-        const n = batch.numRows;
-        for (let i = 0; i < n; i++) {
-          const text = String(textCol?.get(i) ?? "");
-          if (text.toLowerCase().includes(q)) {
-            results.push({ text, path: pathCol ? String(pathCol.get(i) ?? "") : undefined });
-            if (results.length >= limit) return results;
-          }
-        }
-      }
-      return results;
-    }
-  } catch (error: any) {
-    logError("RAG", `Search error: ${error.message}`);
-    return [];
-  }
+  return memory.search(query, limit);
 }
 
 /** Zone IV: Dual Storage – LanceDB + JSONL backup (antifragilitás). */
