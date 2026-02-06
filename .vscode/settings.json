@@ -1,6 +1,15 @@
 {
-  "python.testing.unittestArgs": ["-v", "-s", "./build", "-p", "*test.py"],
+  "python.testing.unittestArgs": [
+    "-v",
+    "-s",
+    "./build",
+    "-p",
+    "*test.py"
+  ],
   "python.testing.pytestEnabled": false,
   "python.testing.unittestEnabled": true,
-  "vitest.disableWorkspaceWarning": true
+  "vitest.disableWorkspaceWarning": true,
+  "python-envs.defaultEnvManager": "ms-python.python:system",
+  "python-envs.pythonProjects": [],
+  "DockerRun.DisableDockerrc": true
 }

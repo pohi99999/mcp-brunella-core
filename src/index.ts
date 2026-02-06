@@ -11,10 +11,10 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-// Register Tools
-registerAllTools(server);
-
 async function main() {
+  // Register Tools (now async)
+  await registerAllTools(server);
+  
   validateSecrets();
   await startWebServer();
 

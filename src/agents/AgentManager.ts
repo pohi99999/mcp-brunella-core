@@ -11,8 +11,8 @@
  */
 
 import { EventEmitter } from 'events';
-import * as fs from 'fs';
-import * as path from 'path';
+import type * as fs from 'fs';
+import type * as path from 'path';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 
 // ============================================================================
@@ -129,9 +129,18 @@ export class AgentManager extends EventEmitter {
   }
 
   private async loadAgent(config: AgentConfig): Promise<void> {
-    const modulePath = path.resolve(process.cwd(), 'build', config.module.replace('./', ''));
+    // Dynamic imports for Node.js-specific modules (Worker compatibility)
+    if (typeof process === 'undefined' || !process.versions?.node) {
+      logError('AgentManager', 'loadAgent() requires Node.js environment');
+      return;
+    }
     
-    if (!fs.existsSync(modulePath)) {
+    const path = await import('path');
+    const fs = await import('fs');
+    
+    const modulePath = path.default.resolve(process.cwd(), 'build', config.module.replace('./', ''));
+    
+    if (!fs.default.existsSync(modulePath)) {
       logError('AgentManager', `Modul nem található: ${modulePath}`);
       return;
     }
@@ -508,14 +517,45 @@ export class AgentManager extends EventEmitter {
   // CONFIGURATION LOADERS
   // --------------------------------------------------------------------------
 
-  private loadRegistry(): RegistryConfig {
-    const registryPath = path.resolve(process.cwd(), 'build', 'agents', 'registry.json');
+  private async loadRegistryAsync(): Promise<RegistryConfig> {
+    // Dynamic imports for Node.js-specific modules (Worker compatibility)
+    if (typeof process === 'undefined' || !process.versions?.node) {
+      // Fallback for Worker environments
+      return {
+        version: '1.0.0',
+        agents: [],
+        defaultAgent: 'Orchestrator',
+        routingRules: []
+      };
+    }
     
-    if (fs.existsSync(registryPath)) {
-      return JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
+    try {
+      // Use async dynamic imports
+      const path = await import('path');
+      const fs = await import('fs');
+      
+      const registryPath = path.default.resolve(process.cwd(), 'build', 'agents', 'registry.json');
+      
+      if (fs.default.existsSync(registryPath)) {
+        const content = fs.default.readFileSync(registryPath, 'utf-8');
+        return JSON.parse(content);
+      }
+    } catch (e) {
+      logError('AgentManager', `Registry load failed: ${e}`);
     }
     
     // Fallback
+    return {
+      version: '1.0.0',
+      agents: [],
+      defaultAgent: 'Orchestrator',
+      routingRules: []
+    };
+  }
+
+  private loadRegistry(): RegistryConfig {
+    // Note: This is called from constructor, which cannot be async
+    // So we use a simplified version here and rely on the registry being optional
     return {
       version: '1.0.0',
       agents: [],
