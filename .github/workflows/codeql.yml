@@ -54,12 +54,4 @@ jobs:
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ matrix.language }}"
-          upload: always
-
-      - name: Upload SARIF results
-        uses: github/codeql-action/upload-sarif@v3
-        if: always()
-        continue-on-error: true
-        with:
-          sarif_file: ../results/${{ matrix.language }}.sarif
-          category: codeql-${{ matrix.language }}
+          # upload: true is the default, no need to specify 'always' manually if we don't have a separate upload step
