@@ -517,7 +517,7 @@ export class AgentManager extends EventEmitter {
   // CONFIGURATION LOADERS
   // --------------------------------------------------------------------------
 
-  private loadRegistry(): RegistryConfig {
+  private async loadRegistryAsync(): Promise<RegistryConfig> {
     // Dynamic imports for Node.js-specific modules (Worker compatibility)
     if (typeof process === 'undefined' || !process.versions?.node) {
       // Fallback for Worker environments
@@ -530,20 +530,32 @@ export class AgentManager extends EventEmitter {
     }
     
     try {
-      // Use synchronous dynamic import pattern
-      const path = require('path');
-      const fs = require('fs');
+      // Use async dynamic imports
+      const path = await import('path');
+      const fs = await import('fs');
       
-      const registryPath = path.resolve(process.cwd(), 'build', 'agents', 'registry.json');
+      const registryPath = path.default.resolve(process.cwd(), 'build', 'agents', 'registry.json');
       
-      if (fs.existsSync(registryPath)) {
-        return JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
+      if (fs.default.existsSync(registryPath)) {
+        const content = fs.default.readFileSync(registryPath, 'utf-8');
+        return JSON.parse(content);
       }
     } catch (e) {
       logError('AgentManager', `Registry load failed: ${e}`);
     }
     
     // Fallback
+    return {
+      version: '1.0.0',
+      agents: [],
+      defaultAgent: 'Orchestrator',
+      routingRules: []
+    };
+  }
+
+  private loadRegistry(): RegistryConfig {
+    // Note: This is called from constructor, which cannot be async
+    // So we use a simplified version here and rely on the registry being optional
     return {
       version: '1.0.0',
       agents: [],

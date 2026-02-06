@@ -7,26 +7,20 @@ import axios from 'axios'; // For API cleanup
 
 const execPromise = promisify(exec);
 
+import { describe, it, expect } from 'vitest';
+
 describe("Robotkéz n8n Integration Test", () => {
     // Skip tests in CI/Linux environments where Windows paths and specific setup are unavailable
     const isCI = process.env.CI === 'true';
     const isLinux = process.platform === 'linux';
     const shouldSkip = isCI || isLinux;
 
-    it("should verify environment variables are present", function() {
-        if (shouldSkip) {
-            this.skip();
-            return;
-        }
+    it.skipIf(shouldSkip)("should verify environment variables are present", () => {
         expect(process.env.N8N_TEST_USER).toBeDefined();
         expect(process.env.N8N_TEST_URL).toBeDefined();
     });
 
-    it("should create and rename a workflow via n8n API", async function() {
-        if (shouldSkip) {
-            this.skip();
-            return;
-        }
+    it.skipIf(shouldSkip)("should create and rename a workflow via n8n API", async () => {
         const pythonScriptPath = "F:/mcp-brunella-core/myai/browser_worker.py";
         const venvPythonPath = "F:/mcp-brunella-core/.venv/Scripts/python";
 
