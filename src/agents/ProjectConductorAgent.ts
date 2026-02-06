@@ -16,11 +16,7 @@ import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import * as fs from 'fs';
 import * as path from 'path';
-import { execSync, exec } from 'child_process';
-import { promisify } from 'util';
-
-const execAsync = promisify(exec);
-
+import { execSync } from 'child_process';
 // ============================================================================
 // INTERFACES
 // ============================================================================
@@ -416,6 +412,10 @@ ${this.projectState.components.map(c => `- **${c.name}:** ${c.status === 'health
     
     // Build ellenőrzés
     try {
+      const { exec } = await import('child_process');
+      const { promisify } = await import('util');
+      const execAsync = promisify(exec);
+
       await execAsync('npm run build', { cwd: PROJECT_ROOT });
       health.buildStatus = true;
       logInfo(this.name, '✅ Build sikeres');
@@ -427,6 +427,10 @@ ${this.projectState.components.map(c => `- **${c.name}:** ${c.status === 'health
     
     // Test ellenőrzés (gyors)
     try {
+      const { exec } = await import('child_process');
+      const { promisify } = await import('util');
+      const execAsync = promisify(exec);
+
       await execAsync('npm run test -- --passWithNoTests --maxWorkers=1', {
         cwd: PROJECT_ROOT, 
         timeout: 60000 
