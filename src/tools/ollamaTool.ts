@@ -12,7 +12,7 @@ export function registerOllamaTool(server: McpServer) {
         },
         async ({ model, prompt }) => {
             try {
-                const response = await chatWithOllama(prompt, undefined, model);
+                const response = await chatWithOllama(prompt, model);
                 
                 return {
                     content: [{

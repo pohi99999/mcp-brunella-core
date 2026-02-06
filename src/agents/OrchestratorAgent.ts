@@ -50,7 +50,7 @@ Output a JSON array of tasks in this format:
 Respond ONLY with the JSON array. Do not add markdown blocks.
 `;
 
-            const responseText = await chatWithOllama(prompt, undefined, process.env.OLLAMA_MODEL || 'gemma2:9b');
+            const responseText = await chatWithOllama(prompt, process.env.OLLAMA_MODEL || 'gemma2:9b');
             this.logger.info(`Raw Plan: ${responseText}`);
 
             // 2. Parse and Queue tasks

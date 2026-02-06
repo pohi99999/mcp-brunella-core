@@ -259,7 +259,9 @@ export async function startWebServer() {
             }
 
             const selectedModel = model || process.env.OLLAMA_MODEL || 'gemma2:9b';
-            const response = await chatWithOllama(prompt, system, selectedModel);
+            // Combine system and prompt if system is provided
+            const fullPrompt = system ? `${system}\n\n${prompt}` : prompt;
+            const response = await chatWithOllama(fullPrompt, selectedModel);
             res.json({ response });
         } catch (e: any) {
             res.status(500).json({ error: e.message });
