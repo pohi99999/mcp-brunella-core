@@ -16,8 +16,12 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 /**
  * Poliglott generálási metódus, amely támogatja a helyi (Ollama) és felhő (Gemini) modelleket.
  * Automatikus fallback mechanizmussal rendelkezik.
+ * 
+ * @param prompt - A generálási prompt
+ * @param provider - A szolgáltató neve ('ollama' vagy 'gemini')
+ * @param modelName - Opcionális: egyedi modell név felülíráshoz
  */
-export const generateResponse: (prompt: string, provider?: string) => Promise<string> = traceable(async (prompt: string, provider: string = 'ollama'): Promise<string> => {
+export const generateResponse: (prompt: string, provider?: string, modelName?: string) => Promise<string> = traceable(async (prompt: string, provider: string = 'ollama', modelName?: string): Promise<string> => {
     let lastError: Error | null = null;
 
     try {
@@ -25,7 +29,7 @@ export const generateResponse: (prompt: string, provider?: string) => Promise<st
             if (!process.env.GEMINI_API_KEY) {
                 throw new Error('GEMINI_API_KEY not configured');
             }
-            const model = genAI.getGenerativeModel({ model: GEMINI_MODEL });
+            const model = genAI.getGenerativeModel({ model: modelName || GEMINI_MODEL });
             const result = await model.generateContent(prompt);
             return result.response.text();
         }
@@ -44,7 +48,7 @@ export const generateResponse: (prompt: string, provider?: string) => Promise<st
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({ model: OLLAMA_MODEL, prompt, stream: false }),
+                body: JSON.stringify({ model: modelName || OLLAMA_MODEL, prompt, stream: false }),
                 signal: controller.signal,
             });
 
@@ -75,7 +79,7 @@ export const generateResponse: (prompt: string, provider?: string) => Promise<st
         if (provider !== 'ollama') {
             logInfo("LLM_CLIENT", "Fallback indítása Ollama-ra...");
             try {
-                const fallbackResponse = await generateResponse(prompt, 'ollama');
+                const fallbackResponse = await generateResponse(prompt, 'ollama', modelName);
                 return fallbackResponse;
             } catch (fallbackError: any) {
                 logError("LLM_CLIENT", `Ollama fallback is sikertelen: ${fallbackError.message}`);
@@ -87,3 +91,6 @@ export const generateResponse: (prompt: string, provider?: string) => Promise<st
         throw error;
     }
 }, { name: "MultiProvider_Generate", run_type: "llm" });
+
+// Alias for backward compatibility and clarity
+export const chatWithOllama = (prompt: string, modelName?: string) => generateResponse(prompt, 'ollama', modelName);
