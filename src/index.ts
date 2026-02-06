@@ -10,10 +10,10 @@ const server = new McpServer({
   version: "1.0.0",
 });
 
-// Register Tools
-registerAllTools(server);
-
 async function main() {
+  // Register Tools
+  await registerAllTools(server);
+
   validateSecrets();
 
   // Conditionally load web server only if not in Worker environment

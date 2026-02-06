@@ -1,18 +1,4 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
-import { registerWorkspaceTools } from "../tools/workspace.js";
-import { registerKnowledgeTools } from "../tools/knowledge.js";
-import { registerSystemTools } from "../tools/system.js";
-import { registerBrowserTools } from "../tools/browser.js";
-import { registerInterpreterTools } from "../tools/interpreter.js";
-import { registerCopilotCliTool } from "../tools/copilotCliTool.js";
-import { registerJulesCliTool } from "../tools/julesCliTool.js";
-import { registerOllamaTool } from "../tools/ollamaTool.js";
-import { registerClaudeTool } from "../tools/claudeTool.js";
-import { registerPipelineTools } from "../pipeline/llmPipeline.js";
-import { registerGoogleWorkspaceTools } from "../tools/googleWorkspace.js";
-import { registerAnythingLLMTools } from "../tools/anythingllm.js";
-import { registerMonitorTools } from "../tools/monitor.js";
-import { registerSwarmTools } from "../tools/swarmTools.js";
 import { agentManager } from "../agents/AgentManager.js";
 import { DataScientistAgent } from "../agents/DataScientistAgent.js";
 import { ResearcherAgent } from "../agents/ResearcherAgent.js";
@@ -21,7 +7,6 @@ import { EvaluatorAgent } from "../agents/EvaluatorAgent.js";
 import { DeveloperAgent } from "../agents/DeveloperAgent.js";
 import { DynamicAgent } from "../agents/DynamicAgent.js";
 import { z } from "zod";
-import path from "path";
 
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
@@ -43,7 +28,7 @@ const registeredToolsList: RegisteredToolInfo[] = [
 // Internal tool handler map
 const toolHandlers = new Map<string, (args: any) => Promise<any>>();
 
-export function registerAllTools(server: McpServer) {
+export async function registerAllTools(server: McpServer) {
     // Initialize Static Agents
     agentManager.registerAgent(new DataScientistAgent());
     agentManager.registerAgent(new ResearcherAgent());
@@ -51,30 +36,52 @@ export function registerAllTools(server: McpServer) {
     agentManager.registerAgent(new EvaluatorAgent());
     agentManager.registerAgent(new DeveloperAgent());
 
-    // Initialize Dynamic Agents
-    try {
-        const agentsDir = path.join(process.cwd(), 'myai/agents');
-        agentManager.registerAgent(new DynamicAgent(path.join(agentsDir, 'project_organizer.toml')));
-        agentManager.registerAgent(new DynamicAgent(path.join(agentsDir, 'agent_architect.toml')));
-    } catch (e) {
-        console.warn("Could not load dynamic agents:", e);
+    const isNode = typeof process !== 'undefined' && process.release?.name === 'node';
+
+    // Initialize Dynamic Agents (Node-only)
+    if (isNode) {
+        try {
+            const path = await import("path");
+            const agentsDir = path.join(process.cwd(), 'myai/agents');
+            agentManager.registerAgent(new DynamicAgent(path.join(agentsDir, 'project_organizer.toml')));
+            agentManager.registerAgent(new DynamicAgent(path.join(agentsDir, 'agent_architect.toml')));
+        } catch (e) {
+            console.warn("Could not load dynamic agents (Worker env or missing files):", e);
+        }
     }
 
+    // Helper for dynamic registration
+    const register = async (modulePath: string, methodName: string) => {
+        try {
+            const module = await import(modulePath);
+            if (module[methodName]) {
+                await module[methodName](server);
+            }
+        } catch (e) {
+            console.warn(`Failed to register tools from ${modulePath}:`, e);
+        }
+    };
+
     // Register External Tools
-    registerWorkspaceTools(server);
-    registerKnowledgeTools(server);
-    registerSystemTools(server);
-    registerBrowserTools(server);
-    registerInterpreterTools(server);
-    registerCopilotCliTool(server);
-    registerJulesCliTool(server);
-    registerOllamaTool(server);
-    registerClaudeTool(server);
-    registerPipelineTools(server);
-    registerGoogleWorkspaceTools(server);
-    registerAnythingLLMTools(server);
-    registerMonitorTools(server);
-    registerSwarmTools(server);
+    // Node-heavy tools are registered only in Node environment
+    if (isNode) {
+        await register("../tools/workspace.js", "registerWorkspaceTools");
+        await register("../tools/knowledge.js", "registerKnowledgeTools");
+        await register("../tools/system.js", "registerSystemTools");
+        await register("../tools/browser.js", "registerBrowserTools");
+        await register("../tools/interpreter.js", "registerInterpreterTools");
+        await register("../tools/copilotCliTool.js", "registerCopilotCliTool");
+        await register("../tools/julesCliTool.js", "registerJulesCliTool");
+        await register("../tools/monitor.js", "registerMonitorTools");
+        await register("../tools/swarmTools.js", "registerSwarmTools");
+    }
+
+    // Universal Tools (Fetch-based or safe)
+    await register("../tools/ollamaTool.js", "registerOllamaTool");
+    await register("../tools/claudeTool.js", "registerClaudeTool");
+    await register("../tools/anythingllm.js", "registerAnythingLLMTools");
+    await register("../tools/googleWorkspace.js", "registerGoogleWorkspaceTools");
+    await register("../pipeline/llmPipeline.js", "registerPipelineTools");
 
     // Register Agent Tools with double-registration (server + internal map)
     const agentListHandler = async () => {

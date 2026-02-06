@@ -105,7 +105,7 @@ export async function startWebServer() {
             version: "1.0.0",
         });
 
-        registerAllTools(server);
+        await registerAllTools(server);
         logger.info(`Registered Agents after init: ${JSON.stringify(agentManager.listAgentDefinitions())}`);
         mcpSessions.set(sessionId, { transport, server });
 
