@@ -5,7 +5,8 @@
   "type": "module",
   "main": "build/index.js",
   "bin": {
-    "brunella": "./build/cli.js"
+    "brunella": "./build/cli.js",
+    "brunella-jules": "./build/cli-jules-interactive.js"
   },
   "scripts": {
     "build": "tsc",

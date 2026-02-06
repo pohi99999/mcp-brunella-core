@@ -1,0 +1,44 @@
+═══════════════════════════════════════════════════════════
+  GITHUB PERSONAL ACCESS TOKEN GENERÁLÁS
+═══════════════════════════════════════════════════════════
+
+1. NYISD MEG A BÖNGÉSZŐT:
+   https://github.com/settings/tokens/new
+
+2. TÖLTSD KI A FORM-OT:
+   ┌─────────────────────────────────────────────────────┐
+   │ Note (név):                                          │
+   │ ┌─────────────────────────────────────────────────┐ │
+   │ │ Brunella GitHub Models API v2                   │ │
+   │ └─────────────────────────────────────────────────┘ │
+   │                                                      │
+   │ Expiration (lejárat):                               │
+   │ ┌─────────────────────────────────────────────────┐ │
+   │ │ 90 days                                         │ │
+   │ └─────────────────────────────────────────────────┘ │
+   │                                                      │
+   │ Scopes (jogosultságok):                             │
+   │ ✅ repo (Full control of private repositories)     │
+   │ ✅ read:user (Read ALL user profile data)          │
+   │                                                      │
+   └─────────────────────────────────────────────────────┘
+
+3. KATTINTS: "Generate token" (zöld gomb alul)
+
+4. MÁSOLD LE A TOKENT (megjelenik egy zöld dobozban):
+   ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   
+   FONTOS: Csak egyszer látod! Másold le AZONNAL!
+
+5. NYISD MEG A .env FÁJLT:
+   F:\mcp-brunella-core\.env
+   
+6. KERESD MEG EZT A SORT:
+   GITHUB_PAT=github_pat_11BROA46Q...
+   
+7. CSERÉLD LE AZ ÚJ TOKENRE:
+   GITHUB_PAT=ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+   
+8. MENTSD EL (Ctrl+S)
+
+═══════════════════════════════════════════════════════════
