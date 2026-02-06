@@ -1,6 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { generateResponse } from "../core/llm_client.js";
+import { chatWithOllama } from "../core/llm_client.js";
 
 export function registerOllamaTool(server: McpServer) {
     server.tool(
@@ -12,7 +12,7 @@ export function registerOllamaTool(server: McpServer) {
         },
         async ({ model, prompt }) => {
             try {
-                const response = await generateResponse(prompt, 'ollama');
+                const response = await chatWithOllama(prompt, model);
                 
                 return {
                     content: [{
