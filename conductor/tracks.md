@@ -19,11 +19,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 
 
-- [ ] **Hybrid Cloud Integration - Végrehajtási Terv** [HIGH]
-  - **ID:** `hybrid_cloud_integration_20260203`
-  - **Progress:** 0%
-  - **Utolsó aktivitás:** 2026-02-03
-  - 📂 *[./tracks/hybrid_cloud_integration_20260203/](./tracks/hybrid_cloud_integration_20260203/)*
+
 
 - [ ] **Implementation Plan: LangSmith Integration** [MEDIUM]
   - **ID:** `langsmith_integration_20260130`
@@ -39,7 +35,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 
 
-- [ ] **Agent Architect Upgrade** [MEDIUM]
+- [~] **Agent Architect Upgrade** [MEDIUM]
   - **ID:** `agent_architect_upgrade_20260205`
   - **Progress:** 0%
   - **Utolsó aktivitás:** 2026-02-05
