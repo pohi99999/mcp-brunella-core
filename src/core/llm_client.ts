@@ -94,3 +94,30 @@ export const generateResponse: (prompt: string, provider?: string, modelName?: s
 
 // Alias for backward compatibility and clarity
 export const chatWithOllama = (prompt: string, modelName?: string) => generateResponse(prompt, 'ollama', modelName);
+export const chat = chatWithOllama; // Additional alias
+
+// Gemini-specific functions
+export const generateWithGemini = async (prompt: string, modelName?: string, systemPrompt?: string): Promise<string> => {
+    // System prompt can be prepended to the prompt if provided
+    const fullPrompt = systemPrompt ? `${systemPrompt}\n\n${prompt}` : prompt;
+    return generateResponse(fullPrompt, 'gemini', modelName);
+};
+
+export const listGeminiModels = async (): Promise<string[]> => {
+    // Return available Gemini models
+    return ['gemini-1.5-pro', 'gemini-1.5-flash', 'gemini-pro'];
+};
+
+// GitHub Models functions (stub implementations for compatibility)
+export const generateWithGithubModels = async (prompt: string, modelName: string = 'gpt-4o', systemPrompt?: string): Promise<string> => {
+    // For now, fallback to ollama or gemini
+    // System prompt can be prepended to the prompt if provided
+    const fullPrompt = systemPrompt ? `${systemPrompt}\n\n${prompt}` : prompt;
+    logInfo("LLM_CLIENT", "GitHub Models not yet implemented, using fallback");
+    return generateResponse(fullPrompt, 'ollama', modelName);
+};
+
+export const listGithubModels = async (): Promise<string[]> => {
+    // Return available GitHub models (stub)
+    return ['gpt-4o', 'gpt-4', 'gpt-3.5-turbo'];
+};

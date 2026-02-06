@@ -1,4 +1,6 @@
+// @ts-ignore - Optional dependency: AWS SDK for Cloudflare R2
 import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
+// @ts-ignore - Optional dependency: AWS SDK for Cloudflare R2
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import dotenv from "dotenv";
 import path from "path";
@@ -40,6 +42,6 @@ export class CloudStorage {
     if (!s3Client) return [];
     const command = new ListObjectsV2Command({ Bucket: BUCKET, Prefix: prefix });
     const response = await s3Client.send(command);
-    return response.Contents?.map(c => c.Key || "") || [];
+    return response.Contents?.map((c: any) => c.Key || "") || [];
   }
 }

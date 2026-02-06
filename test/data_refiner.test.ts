@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import DataScientistAgent from '../src/agents/DataScientistAgent.js';
+import { DataScientistAgent } from '../src/agents/DataScientistAgent.js';
 
 describe('DataScientist Agent', () => {
 

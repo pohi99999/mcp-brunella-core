@@ -1,7 +1,7 @@
 import { IAgent, AgentResponse, ISwarmContext } from './types.js';
 import { logInfo } from '../utils/logger.js';
 
-export default class DataScientistAgent implements IAgent {
+export class DataScientistAgent implements IAgent {
     name = 'DataScientist';
     description = 'Adatok elemzésére és Python kód futtatására specializálódott ügynök.';
     role = 'scientist';

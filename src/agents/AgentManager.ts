@@ -483,12 +483,39 @@ export class AgentManager extends EventEmitter {
   }
 
   /** Terv készítése (Orchestrator hívás) */
-  async createPlan(userMessage: string): Promise<{ taskIds: number[] }> {
+  async createPlan(userMessage: string, options?: any): Promise<{ taskIds: number[] }> {
     const orchestrator = this.agents.get('Orchestrator');
     if (!orchestrator) return { taskIds: [] };
-    const out = await orchestrator.execute(userMessage);
+    const out = await orchestrator.execute(userMessage, options);
     const taskIds = Array.isArray(out?.taskIds) ? out.taskIds : [];
     return { taskIds };
+  }
+
+  /** Update agent capabilities (stub for compatibility) */
+  async updateAgentCapabilities(agentName: string, capabilities: string[]): Promise<boolean> {
+    const agent = this.agents.get(agentName);
+    if (!agent) return false;
+    
+    if ('capabilities' in agent) {
+      (agent as any).capabilities = capabilities;
+      logInfo('AgentManager', `Updated capabilities for ${agentName}`);
+      return true;
+    }
+    return false;
+  }
+
+  /** Create a new agent dynamically (stub for compatibility) */
+  async createAgent(config: { name: string; role: string; [key: string]: any }): Promise<boolean> {
+    try {
+      // This is a simplified implementation
+      // In a full implementation, this would dynamically create and register an agent
+      logInfo('AgentManager', `Create agent called for: ${config.name}`);
+      // For now, just return false as this needs proper implementation
+      return false;
+    } catch (e: any) {
+      logError('AgentManager', `Failed to create agent: ${e.message}`);
+      return false;
+    }
   }
 
   /** Terv végrehajtása */

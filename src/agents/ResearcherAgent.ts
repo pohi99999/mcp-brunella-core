@@ -9,7 +9,7 @@ interface RAGResult {
     score: number;
 }
 
-export default class ResearcherAgent extends BaseAgent {
+export class ResearcherAgent extends BaseAgent {
     name = 'Researcher';
     description = 'Webes keresésre és információgyűjtésre specializálódott ügynök. Képes a belső tudásbázis (RAG) és a világháló keresésére.';
     role = 'researcher';
