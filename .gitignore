@@ -70,3 +70,19 @@ logs/
 *.log
 .tmp.driveupload/
 
+# Problematic embedded Git repositories / submodules (cleaned up)
+_KNOWLEDGE_BASE/actions-runner/
+myai/agents/adk-a2a/
+myai/agents/ready-agents/agents-chat/chat_v1_Atlasz/
+myai/agents/ready-agents/iam-bobs-brain/
+myai/agents/ready-agents/pohi-ai-agents/
+myai/agents/tools/gemini-cli/
+
+# Problematic embedded Git repositories / submodules (cleaned up)
+_KNOWLEDGE_BASE/actions-runner/
+myai/agents/adk-a2a/
+myai/agents/ready-agents/agents-chat/chat_v1_Atlasz/
+myai/agents/ready-agents/iam-bobs-brain/
+myai/agents/ready-agents/pohi-ai-agents/
+myai/agents/tools/gemini-cli/
+
