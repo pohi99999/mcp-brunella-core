@@ -11,8 +11,6 @@
  */
 
 import { EventEmitter } from 'events';
-import type * as fs from 'fs';
-import type * as path from 'path';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 
 // ============================================================================
@@ -102,6 +100,11 @@ export class AgentManager extends EventEmitter {
 
   async initialize(): Promise<void> {
     logInfo('AgentManager', 'Inicializálás...');
+    
+    // Load registry asynchronously if in Node environment
+    if (typeof process !== 'undefined' && process.versions?.node) {
+      this.registry = await this.loadRegistryAsync();
+    }
     
     // Ügynökök betöltése
     for (const agentConfig of this.registry.agents) {
