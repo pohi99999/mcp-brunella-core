@@ -72,7 +72,7 @@ export class SelfHealingPipeline extends EventEmitter {
             this.emit('progress', `🧠 Kód generálása (Ollama)...`);
 
             try {
-                currentCode = await chatWithOllama(prompt, undefined, "qwen2.5-coder:1.5b");
+                currentCode = await chatWithOllama(prompt, "qwen2.5-coder:1.5b");
 
                 currentCode = currentCode.replace(/```javascript/g, "").replace(/```js/g, "").replace(/```/g, "").trim();
 

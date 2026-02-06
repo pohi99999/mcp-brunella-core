@@ -11,6 +11,8 @@
  */
 
 import { EventEmitter } from 'events';
+import type * as fs from 'fs';
+import type * as path from 'path';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 
 // ============================================================================
