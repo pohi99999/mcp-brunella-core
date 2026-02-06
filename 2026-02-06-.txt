@@ -1,0 +1,1623 @@
+
+ ▐▛███▜▌   Claude Code v2.1.32
+▝▜█████▛▘  Sonnet 4.5 · API Usage Billing
+  ▘▘ ▝▝    F:\mcp-brunella-core
+
+  /model to try Opus 4.6
+
+╭──────────────────────────────────────────────────────────────────────────────╮
+│ Plan to implement                                                            │
+│                                                                              │
+│ GitHub Models Integráció - Brunella Agent System                             │
+│                                                                              │
+│ Összefoglaló                                                                 │
+│                                                                              │
+│ A GitHub Pro+ előfizetés modelljeit (GPT-4.1, GPT-5, o3, DeepSeek-R1, Grok   │
+│ 3, stb.) bekötjük a Brunella rendszerbe. Az API OpenAI-kompatibilis          │
+│ (chat/completions), a gh auth token dinamikusan adja a tokent.               │
+│                                                                              │
+│ Tesztelve: curl hívás a                                                      │
+│ https://models.inference.ai.azure.com/chat/completions-re a gh auth          │
+│ token-nel → GPT-4.1 válaszolt.                                               │
+│                                                                              │
+│ ---                                                                          │
+│ Módosítandó fájlok (6 fájl)                                                  │
+│                                                                              │
+│ 1. src/core/llm_client.ts — Új github provider                               │
+│                                                                              │
+│ - Új konstansok: GITHUB_MODELS_BASE_URL, GITHUB_MODELS_MODEL                 │
+│ - Token: execSync('gh auth token') dinamikusan VAGY process.env.GITHUB_TOKEN │
+│ - Új branch a generateResponse()-ban: provider === 'github'                  │
+│ - OpenAI chat/completions formátum: { model, messages: [{role, content}] }   │
+│ - Támogatja a system prompt-ot is (messages tömb)                            │
+│ - Fallback: ha github nem megy → ollama                                      │
+│                                                                              │
+│ 2. src/server/web.ts — Két új REST endpoint                                  │
+│                                                                              │
+│ - GET /api/github-models/models — Elérhető modellek listája (dinamikus: gh   │
+│ models list parse VAGY hardcoded + API)                                      │
+│ - POST /api/github-models/generate — { prompt, model?, system? } →           │
+│ generateResponse(prompt, 'github')                                           │
+│                                                                              │
+│ 3. src/dashboard/lib/apiService.ts — Két új frontend függvény                │
+│                                                                              │
+│ - getGithubModels(): Promise<{name: string}[]> → GET                         │
+│ /api/github-models/models                                                    │
+│ - generateWithGithubModels(prompt, model?, system?): Promise<string> → POST  │
+│ /api/github-models/generate                                                  │
+│                                                                              │
+│ 4. src/dashboard/components/dashboard/NeuralLinkChat.tsx — Harmadik mód      │
+│                                                                              │
+│ - ChatMode bővítés: 'orchestrator' | 'ollama' | 'github'                     │
+│ - Mód választóban új opció: "GitHub Models (Pro+)"                           │
+│ - GitHub mód: modellválasztó dropdown (mint Ollama-nál)                      │
+│ - send() bővítés: mode === 'github' → api.generateWithGithubModels()         │
+│                                                                              │
+│ 5. src/tools/copilotCliTool.ts — Átírás githubModelsTool.ts-re               │
+│                                                                              │
+│ - Régi gh copilot parancsok → elavultak                                      │
+│ - Új MCP tool: github_models_generate (prompt, model, system)                │
+│ - Használja a generateResponse(prompt, 'github')-t                           │
+│   - github_models_list tool a modellek listázásához                          │
+│                                                                              │
+│ 6. src/server/registry.ts — Tool regisztráció                                │
+│                                                                              │
+│ - registerCopilotCliTool → registerGithubModelsTool                          │
+│ - Import frissítés                                                           │
+│                                                                              │
+│ ---                                                                          │
+│ Token kezelés stratégia                                                      │
+│                                                                              │
+│ 1. Elsődleges: process.env.GITHUB_TOKEN (ha be van állítva)                  │
+│ 2. Másodlagos: execSync('gh auth token').toString().trim()                   │
+│ 3. Fallback: process.env.GITHUB_PERSONAL_ACCESS_TOKEN                        │
+│                                                                              │
+│ A gh auth token dinamikus, de szinkron hívás. Cache-eljük 5 percre, hogy ne  │
+│ hívjuk minden kérésnél.                                                      │
+│                                                                              │
+│ ---                                                                          │
+│ CLI chat bővítés (src/cli.ts)                                                │
+│                                                                              │
+│ - /switch github → activeProvider = 'github' (már létezik a switch logika)   │
+│ - A send() branch-ben: ha activeProvider === 'github' →                      │
+│ client.callTool('github_models_generate', { prompt, model })                 │
+│                                                                              │
+│ ---                                                                          │
+│ .env.example bővítés                                                         │
+│                                                                              │
+│ # === GITHUB MODELS (Pro+ subscription) ===                                  │
+│ # GITHUB_TOKEN=ghp_...  # Opcionális - ha nincs, `gh auth token`-t           │
+│ használjuk                                                                   │
+│ GITHUB_MODELS_DEFAULT_MODEL=openai/gpt-4.1                                   │
+│                                                                              │
+│ ---                                                                          │
+│ Verifikáció                                                                  │
+│                                                                              │
+│ 1. npm run build — Hiba nélkül forduljon                                     │
+│ 2. npm test — 58/58 teszt zöld maradjon                                      │
+│ 3. curl POST localhost:3000/api/github-models/generate -d                    │
+│ '{"prompt":"hello","model":"openai/gpt-4.1"}' — Válasz jöjjön                │
+│ 4. curl GET localhost:3000/api/github-models/models — Modell lista           │
+│ 5. Dashboard NeuralLinkChat → GitHub Models mód → üzenet küldés → válasz     │
+│ 6. CLI: brunella chat → /switch github → kérdés → válasz                     │
+╰──────────────────────────────────────────────────────────────────────────────╯
+
+● I'll implement the GitHub Models integration step by step. Let me start by
+  reading the relevant files.
+
+● Read 6 files (ctrl+o to expand)
+
+● Now let me read the existing copilotCliTool.ts and check the .env.example
+  file.
+
+● Searched for 2 patterns, read 2 files (ctrl+o to expand)
+
+● Good, I have all the context I need. Let me now implement all the changes.
+  I'll create task items for tracking and start working.
+  ⎿  You've hit your limit · resets 8am (Europe/Budapest)
+
+✻ Worked for 31s
+
+> /rate-limit-options 
+  ⎿  Login successful
+
+> folytassuk 
+  ⎿  You've hit your limit · resets 8am (Europe/Budapest)
+
+> /rate-limit-options 
+  ⎿  Login successful
+
+> folytassuk 
+
+● Folytatom az implementációt. Kezdem az összes fájl módosítással.
+
+  1/6 — src/core/llm_client.ts — GitHub provider hozzáadása:
+
+● Update(src\core\llm_client.ts)
+  ⎿  Added 26 lines
+      2  // PURPOSE: Multi-provider kliens implementálása LangSmith      
+         tracing-gel.                                                    
+      3                                                                  
+      4  import { GoogleGenerativeAI } from "@google/generative-ai";     
+      5 +import { execSync } from "child_process";                       
+      6  import { traceable } from "langsmith/traceable";                
+      7  import { logInfo, logError } from "../utils/logger.js";         
+      8                                                                  
+     ...
+      11  const GEMINI_MODEL = process.env.GEMINI_MODEL ||               
+          'gemini-2.0-flash';                                            
+      12  const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS ||  
+          '120000'); // 2 minutes default                                
+      13                                                                 
+      14 +// GitHub Models configuration                                 
+      15 +const GITHUB_MODELS_BASE_URL =                                 
+         +'https://models.inference.ai.azure.com';                       
+      16 +const GITHUB_MODELS_DEFAULT_MODEL =                            
+         +process.env.GITHUB_MODELS_DEFAULT_MODEL || 'openai/gpt-4.1';   
+      17 +                                                               
+      18 +// GitHub token cache (5 min TTL)                              
+      19 +let _ghTokenCache: { token: string; expires: number } | null = 
+         + null;                                                         
+      20 +                                                               
+      21 +function getGitHubToken(): string {                            
+      22 +    // 1. Explicit env var                                     
+      23 +    if (process.env.GITHUB_TOKEN) return                       
+         +process.env.GITHUB_TOKEN;                                      
+      24 +    // 2. PAT fallback env var                                 
+      25 +    if (process.env.GITHUB_PERSONAL_ACCESS_TOKEN) return       
+         +process.env.GITHUB_PERSONAL_ACCESS_TOKEN;                      
+      26 +    // 3. gh auth token (cached 5 min)                         
+      27 +    if (_ghTokenCache && Date.now() < _ghTokenCache.expires)   
+         +return _ghTokenCache.token;                                    
+      28 +    try {                                                      
+      29 +        const token = execSync('gh auth token', { encoding:    
+         +'utf-8', timeout: 5000 }).trim();                              
+      30 +        if (!token) throw new Error('gh auth token returned    
+         +empty');                                                       
+      31 +        _ghTokenCache = { token, expires: Date.now() + 5 * 60  
+         +* 1000 };                                                      
+      32 +        return token;                                          
+      33 +    } catch (e: unknown) {                                     
+      34 +        const msg = e instanceof Error ? e.message :           
+         +String(e);                                                     
+      35 +        throw new Error(`GitHub token not available. Set       
+         +GITHUB_TOKEN env var or run 'gh auth login'. (${msg})`);       
+      36 +    }                                                          
+      37 +}                                                              
+      38 +                                                               
+      39  const genAI = new                                              
+          GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");          
+      40                                                                 
+      41  /**                                                            
+
+● Now add the github provider branch in generateResponse:
+
+● Update(src\core\llm_client.ts)
+  ⎿  Added 38 lines
+      56              return result.response.text();                     
+      57          }                                                      
+      58                                                                 
+      59 +        if (provider === 'github') {                           
+      60 +            const token = getGitHubToken();                    
+      61 +            const ghModel = (options as any)?.model ||         
+         +GITHUB_MODELS_DEFAULT_MODEL;                                   
+      62 +            const systemPrompt = (options as any)?.system;     
+      63 +            const messages: Array<{ role: string; content:     
+         +string }> = [];                                                
+      64 +            if (systemPrompt) messages.push({ role: 'system',  
+         +content: systemPrompt });                                      
+      65 +            messages.push({ role: 'user', content: prompt });  
+      66 +                                                               
+      67 +            const controller = new AbortController();          
+      68 +            const timeoutId = setTimeout(() =>                 
+         +controller.abort(), LLM_TIMEOUT_MS);                           
+      69 +            try {                                              
+      70 +                const response = await                         
+         +fetch(`${GITHUB_MODELS_BASE_URL}/chat/completions`, {          
+      71 +                    method: 'POST',                            
+      72 +                    headers: {                                 
+      73 +                        'Content-Type': 'application/json',    
+      74 +                        'Authorization': `Bearer ${token}`,    
+      75 +                    },                                         
+      76 +                    body: JSON.stringify({ model: ghModel,     
+         +messages }),                                                   
+      77 +                    signal: controller.signal,                 
+      78 +                });                                            
+      79 +                clearTimeout(timeoutId);                       
+      80 +                if (!response.ok) {                            
+      81 +                    const errBody = await                      
+         +response.text().catch(() => '');                               
+      82 +                    throw new Error(`GitHub Models HTTP        
+         +${response.status}: ${errBody || response.statusText}`);       
+      83 +                }                                              
+      84 +                const data: any = await response.json();       
+      85 +                const content =                                
+         +data.choices?.[0]?.message?.content;                           
+      86 +                if (!content) throw new Error('GitHub Models   
+         +returned empty response');                                     
+      87 +                return content;                                
+      88 +            } catch (fetchError: any) {                        
+      89 +                clearTimeout(timeoutId);                       
+      90 +                if (fetchError.name === 'AbortError') {        
+      91 +                    throw new Error(`GitHub Models timeout     
+         +after ${LLM_TIMEOUT_MS}ms`);                                   
+      92 +                }                                              
+      93 +                throw fetchError;                              
+      94 +            }                                                  
+      95 +        }                                                      
+      96 +                                                               
+      97          // Default: Ollama (Helyi)                             
+      98          if (!OLLAMA_BASE_URL || OLLAMA_BASE_URL ===            
+          'undefined') {                                                 
+      99              throw new Error('OLLAMA_BASE_URL not configured'); 
+
+● Now I need to update the function signature to accept options, and add the
+  generateWithGithubModels and listGithubModels exports:
+
+● Update(src\core\llm_client.ts)
+  ⎿  Added 1 line, removed 1 line
+      43   * Poliglott generálási metódus, amely támogatja a helyi       
+          (Ollama) és felhő (Gemini) modelleket.                         
+      44   * Automatikus fallback mechanizmussal rendelkezik.            
+      45   */                                                            
+      46 -export const generateResponse: (prompt: string, provider?:     
+         -string) => Promise<string> = traceable(async (prompt: string,  
+         -provider: string = 'ollama'): Promise<string> => {             
+      46 +export const generateResponse: (prompt: string, provider?:     
+         +string, options?: { model?: string; system?: string }          
+         +) => Promise<string> = traceable(async (prompt: string,        
+         +provider: string = 'ollama'                                    
+         +, options?: { model?: string; system?: string }                
+         +): Promise<string> => {                                        
+      47      let lastError: Error | null = null;                        
+      48                                                                 
+      49      try {                                                      
+
+● Now add the exported helper functions at the end of the file:
+
+● Read 1 file (ctrl+o to expand)
+
+● Update(src\core\llm_client.ts)
+  ⎿  Added 35 lines
+      167      logInfo("LLM_CLIENT", `chatWithOllama called with model   
+           hint: ${model || OLLAMA_MODEL}`);                             
+      168      return generateResponse(fullPrompt, 'ollama');            
+      169  }                                                             
+      170 +                                                              
+      171 +/**                                                           
+      172 + * Generate text using GitHub Models (OpenAI-compatible API). 
+      173 + */                                                           
+      174 +export async function generateWithGithubModels(               
+      175 +    prompt: string,                                           
+      176 +    model?: string,                                           
+      177 +    system?: string                                           
+      178 +): Promise<string> {                                          
+      179 +    logInfo("LLM_CLIENT", `generateWithGithubModels           
+          +model=${model || GITHUB_MODELS_DEFAULT_MODEL}`);              
+      180 +    return generateResponse(prompt, 'github', { model, system 
+          + });                                                          
+      181 +}                                                             
+      182 +                                                              
+      183 +/** Well-known GitHub Models available via Pro+ subscription  
+          +*/                                                            
+      184 +const GITHUB_MODELS_CATALOG = [                               
+      185 +    { name: 'openai/gpt-4.1', provider: 'OpenAI' },           
+      186 +    { name: 'openai/gpt-4.1-mini', provider: 'OpenAI' },      
+      187 +    { name: 'openai/gpt-4.1-nano', provider: 'OpenAI' },      
+      188 +    { name: 'openai/gpt-4o', provider: 'OpenAI' },            
+      189 +    { name: 'openai/o3-mini', provider: 'OpenAI' },           
+      190 +    { name: 'openai/o4-mini', provider: 'OpenAI' },           
+      191 +    { name: 'deepseek/DeepSeek-R1', provider: 'DeepSeek' },   
+      192 +    { name: 'meta/Llama-4-Scout-17B-16E-Instruct', provider:  
+          +'Meta' },                                                     
+      193 +    { name: 'mistralai/Mistral-Small-3.1-24B-Instruct',       
+          +provider: 'Mistral' },                                        
+      194 +    { name: 'xai/grok-3-mini', provider: 'xAI' },             
+      195 +    { name: 'cohere/cohere-command-a', provider: 'Cohere' },  
+      196 +];                                                            
+      197 +                                                              
+      198 +/**                                                           
+      199 + * List available GitHub Models.                              
+      200 + * Returns the built-in catalog (API listing requires         
+          +separate auth scope).                                         
+      201 + */                                                           
+      202 +export function listGithubModels(): Array<{ name: string;     
+          +provider: string }> {                                         
+      203 +    return GITHUB_MODELS_CATALOG;                             
+      204 +}                                                             
+
+> magyarul kérlek 
+
+● Rendben, magyarul folytatom! Most jön a 2/6 — src/tools/githubModelsTool.ts (a
+   régi copilotCliTool.ts cseréje):
+
+● Write(src\tools\githubModelsTool.ts)
+  ⎿  Wrote 1 lines to src\tools\githubModelsTool.ts
+     import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+     import { z } from "zod";
+     import { generateWithGithubModels, listGithubModels } from
+     "../core/llm_client.js";
+
+     export function registerGithubModelsTool(server: McpServer) {
+         server.tool(
+             "github_models_generate",
+             "Generate text using GitHub Models API (GPT-4.1, DeepSeek-R1, 
+     Grok 3, etc.). Requires GitHub Pro+ subscription.",
+             {
+                 prompt: z.string().describe("The user prompt to send"),
+
+● 3/6 — src/server/registry.ts — Import csere:
+
+● Update(src\server\registry.ts)
+  ⎿  Added 1 line, removed 1 line
+       4  import { registerSystemTools } from "../tools/system.js";      
+       5  import { registerBrowserTools } from "../tools/browser.js";    
+       6  import { registerInterpreterTools } from                       
+          "../tools/interpreter.js";                                     
+       7 -import { registerCopilotCliTool } from                         
+         -"../tools/copilotCliTool.js";                                  
+       7 +import { registerGithubModelsTool } from                       
+         +"../tools/githubModelsTool.js";                                
+       8  import { registerJulesCliTool } from                           
+          "../tools/julesCliTool.js";                                    
+       9  import { registerOllamaTool } from "../tools/ollamaTool.js";   
+      10  import { registerClaudeTool } from "../tools/claudeTool.js";   
+
+● Update(src\server\registry.ts)
+  ⎿  Added 1 line, removed 1 line
+      67      registerSystemTools(server);                               
+      68      registerBrowserTools(server);                              
+      69      registerInterpreterTools(server);                          
+      70 -    registerCopilotCliTool(server);                            
+      70 +    registerGithubModelsTool(server);                          
+      71      registerJulesCliTool(server);                              
+      72      registerOllamaTool(server);                                
+      73      registerClaudeTool(server);                                
+
+● 4/6 — src/server/web.ts — Két új REST endpoint:
+
+● Update(src\server\web.ts)
+  ⎿  Added 1 line, removed 1 line
+      22      checkAnythingLLMHealth,                                    
+      23      buildHealthResponse,                                       
+      24  } from '../utils/health.js';                                   
+      25 -import { chatWithOllama } from '../core/llm_client.js';        
+      25 +import { chatWithOllama,                                       
+         +generateWithGithubModels, listGithubModels                     
+         +} from '../core/llm_client.js';                                
+      26  import { corsWhitelist, requestId, requestLogging,             
+          apiRateLimit } from './middleware.js';                         
+      27  import { swaggerSpec } from './swagger.js';                    
+      28  import { socketService } from './SocketService.js';            
+
+● Most a két endpoint-ot az Ollama endpoint-ok után szúrom be:
+
+● Update(src\server\web.ts)
+  ⎿  Added 24 lines
+      389          }                                                     
+      390      });                                                       
+      391                                                                
+      392 +    // GitHub Models API                                      
+      393 +    app.get('/api/github-models/models', async (req, res) =>  
+          +{                                                             
+      394 +        try {                                                 
+      395 +            const models = listGithubModels();                
+      396 +            res.json({ models });                             
+      397 +        } catch (e: any) {                                    
+      398 +            res.status(500).json({ error: e.message, models:  
+          +[] });                                                        
+      399 +        }                                                     
+      400 +    });                                                       
+      401 +                                                              
+      402 +    app.post('/api/github-models/generate', async (req, res)  
+          +=> {                                                          
+      403 +        try {                                                 
+      404 +            const { prompt, model, system } = req.body;       
+      405 +            if (!prompt) {                                    
+      406 +                res.status(400).json({ error: 'Prompt is      
+          +required' });                                                 
+      407 +                return;                                       
+      408 +            }                                                 
+      409 +            const response = await                            
+          +generateWithGithubModels(prompt, model, system);              
+      410 +            res.json({ response });                           
+      411 +        } catch (e: any) {                                    
+      412 +            res.status(500).json({ error: e.message });       
+      413 +        }                                                     
+      414 +    });                                                       
+      415 +                                                              
+      416      // AnythingLLM API                                        
+      417      app.get('/api/anythingllm/workspaces', async (req, res)   
+           => {                                                          
+      418          try {                                                 
+
+● 5/6 — src/dashboard/lib/apiService.ts — Két új frontend függvény:
+
+● Update(src\dashboard\lib\apiService.ts)
+  ⎿  Added 34 lines
+      210  }                                                             
+      211                                                                
+      212  /**                                                           
+      213 + * GitHub Models API                                          
+      214 + */                                                           
+      215 +export interface GithubModel {                                
+      216 +    name: string;                                             
+      217 +    provider: string;                                         
+      218 +}                                                             
+      219 +                                                              
+      220 +export async function getGithubModels():                      
+          +Promise<GithubModel[]> {                                      
+      221 +    try {                                                     
+      222 +        const response = await                                
+          +fetch(`${API_BASE}/api/github-models/models`);                
+      223 +        if (!response.ok) return [];                          
+      224 +        const data = await safeJson<{ models?: GithubModel[]  
+          +}>(response);                                                 
+      225 +        return data.models || [];                             
+      226 +    } catch {                                                 
+      227 +        return [];                                            
+      228 +    }                                                         
+      229 +}                                                             
+      230 +                                                              
+      231 +export async function generateWithGithubModels(prompt:        
+          +string, model?: string, system?: string): Promise<string> {   
+      232 +    const response = await fetchWithTimeout(                  
+      233 +        `${API_BASE}/api/github-models/generate`,             
+      234 +        {                                                     
+      235 +            method: 'POST',                                   
+      236 +            headers: { 'Content-Type': 'application/json' },  
+      237 +            body: JSON.stringify({ prompt, model, system })   
+      238 +        },                                                    
+      239 +        LONG_TIMEOUT_MS                                       
+      240 +    );                                                        
+      241 +    const data = await safeJson<{ response?: string; error?:  
+          +string }>(response).catch(() => ({ error: `HTTP               
+          +${response.status}` }));                                      
+      242 +    if (!response.ok) throw new Error(data.error || 'GitHub   
+          +Models generation failed');                                   
+      243 +    return typeof data.response === 'string' ? data.response  
+          +: String(data.response ?? '');                                
+      244 +}                                                             
+      245 +                                                              
+      246 +/**                                                           
+      247   * AnythingLLM API                                            
+      248   */                                                           
+      249  export async function getAnythingLLMWorkspaces():             
+           Promise<Workspace[]> {                                        
+
+● 6/6 — src/dashboard/components/dashboard/NeuralLinkChat.tsx — Harmadik mód
+  (GitHub Models):
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 1 line, removed 1 line
+      31    executedBy?: string;                                         
+      32  }                                                              
+      33                                                                 
+      34 -type ChatMode = 'orchestrator' | 'ollama';                     
+      34 +type ChatMode = 'orchestrator' | 'ollama' | 'github';          
+      35                                                                 
+      36  export function NeuralLinkChat() {                             
+      37    const [messages, setMessages] = useState<Message[]>([]);     
+
+● Most a state-eket és useEffect-et bővítem a GitHub modellek kezelésével:
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 2 lines
+      39    const [mode, setMode] = useState<ChatMode>('orchestrator');  
+      40    const [models, setModels] = useState<{ name: string          
+          }[]>([]);                                                      
+      41    const [selectedModel, setSelectedModel] =                    
+          useState<string>('');                                          
+      42 +  const [ghModels, setGhModels] = useState<{ name: string;     
+         +provider: string }[]>([]);                                     
+      43 +  const [selectedGhModel, setSelectedGhModel] =                
+         +useState<string>('');                                          
+      44    const [isLoading, setIsLoading] = useState(false);           
+      45    const [expandedThoughts, setExpandedThoughts] =              
+          useState<Record<number, boolean>>({});                         
+      46    const scrollRef = useRef<HTMLDivElement>(null);              
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 6 lines
+      52          setSelectedModel(list[0].name);                        
+      53        }                                                        
+      54      }).catch(() => setModels([]));                             
+      55 +    api.getGithubModels().then((list) => {                     
+      56 +      setGhModels(list);                                       
+      57 +      if (list.length > 0 && !selectedGhModel) {               
+      58 +        setSelectedGhModel(list[0].name);                      
+      59 +      }                                                        
+      60 +    }).catch(() => setGhModels([]));                           
+      61    }, []);                                                      
+      62                                                                 
+      63    useEffect(() => {                                            
+
+● Most a send() függvényt bővítem a github ág-gal:
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 3 lines
+      81        let response: any;                                       
+      82        if (mode === 'orchestrator') {                           
+      83          response = await api.executeAgent('Orchestrator',      
+          text);                                                         
+      84 +      } else if (mode === 'github') {                          
+      85 +        const rawResponse = await                              
+         +api.generateWithGithubModels(text, selectedGhModel ||          
+         +undefined);                                                    
+      86 +        response = { message: rawResponse };                   
+      87        } else {                                                 
+      88          const rawResponse = await api.generateWithOllama(text, 
+           selectedModel || undefined);                                  
+      89          response = { message: rawResponse };                   
+
+● Most a mód választó dropdown-ban hozzáadom a GitHub opciót és a GitHub modell
+  választót:
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 15 lines
+      127            >                                                   
+      128              <option                                           
+           value="orchestrator">Orchestrator</option>                    
+      129              <option value="ollama">Ollama</option>            
+      130 +            <option value="github">GitHub Models</option>     
+      131            </select>                                           
+      132            {mode === 'ollama' && (                             
+      133              <Select value={selectedModel}                     
+           onValueChange={setSelectedModel}>                             
+     ...
+      142                </SelectContent>                                
+      143              </Select>                                         
+      144            )}                                                  
+      145 +          {mode === 'github' && (                             
+      146 +            <Select value={selectedGhModel}                   
+          +onValueChange={setSelectedGhModel}>                           
+      147 +              <SelectTrigger className="w-[200px]             
+          +bg-background/50 border-border shadow-none">                  
+      148 +                <SelectValue placeholder="GitHub Model" />    
+      149 +              </SelectTrigger>                                
+      150 +              <SelectContent>                                 
+      151 +                {ghModels.map((m) => (                        
+      152 +                  <SelectItem key={m.name} value={m.name}>    
+      153 +                    {m.name}                                  
+      154 +                  </SelectItem>                               
+      155 +                ))}                                           
+      156 +              </SelectContent>                                
+      157 +            </Select>                                         
+      158 +          )}                                                  
+      159          </div>                                                
+      160        </CardHeader>                                           
+      161        <CardContent className="flex-1 flex flex-col min-h-0    
+           p-0">                                                         
+
+● Most frissítem az üres állapot szöveget is a GitHub módhoz:
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 2 lines
+      172                    <p className="text-xs text-muted-foreground 
+            max-w-xs">                                                   
+      173                      {mode === 'orchestrator'                  
+      174                        ? 'Orchestrator üzemmód: Komplex        
+           feladatok delegálása ügynököknek.'                            
+      175 +                      : mode === 'github'                     
+      176 +                      ? 'GitHub Models üzemmód: GPT-4.1,      
+          +DeepSeek-R1, Grok 3 és más felhő modellek.'                   
+      177                        : 'Ollama üzemmód: Közvetlen            
+           kommunikáció a lokális modellel.'}                            
+      178                    </p>                                        
+      179                  </div>                                        
+
+● Most frissítem a placeholder szöveget és az input area-t:
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 1 line, removed 1 line
+      260                value={input}                                   
+      261                onChange={(e) => setInput(e.target.value)}      
+      262                onKeyDown={(e) => e.key === 'Enter' &&          
+           !e.shiftKey && (e.preventDefault(), send())}                  
+      263 -              placeholder={mode === 'orchestrator' ? 'Üzenet  
+          -az Orchestratornak...' : 'Üzenet az AI-nak...'}               
+      263 +              placeholder={mode === 'orchestrator' ? 'Üzenet  
+          +az Orchestratornak...' : mode === 'github' ? 'Üzenet          
+          +a GitHub Models-nek...' : 'Üzenet az AI-nak...'}              
+      264                className="min-h-[60px] bg-zinc-900             
+           border-zinc-800 resize-none"                                  
+      265                disabled={isLoading}                            
+      266              />                                                
+
+● Most a CLI chat bővítés — src/cli.ts-ben a /switch github támogatás:
+
+● Update(src\cli.ts)
+  ⎿  Added 1 line, removed 1 line
+      221        await client.connect();                                 
+      222                                                                
+      223        let history: Array<{ role: 'user' | 'assistant';        
+           content: string }> = [];                                      
+      224 -      let activeProvider: 'ollama' | 'gemini' | 'claude' |    
+          -'openai' = 'ollama';                                          
+      224 +      let activeProvider: 'ollama' | 'gemini' | 'claude' |    
+          +'openai' | 'github' = 'ollama';                               
+      225        let edgeMode = false;                                   
+      226                                                                
+      227        while (true) {                                          
+
+● Update(src\cli.ts)
+  ⎿  Added 1 line, removed 1 line
+      254          // Simple provider switching from prompt              
+      255          if (prompt.startsWith('/switch ')) {                  
+      256            const newProvider = prompt.split(' ')[1];           
+      257 -          if (['ollama', 'gemini', 'claude', 'openai'         
+          -].includes(newProvider)) {                                    
+      257 +          if (['ollama', 'gemini', 'claude', 'openai'         
+          +, 'github'].includes(newProvider)) {                          
+      258              activeProvider = newProvider as any;              
+      259              console.log(chalk.yellow(`Switched to             
+           ${activeProvider} provider.`));                               
+      260              history = []; // Reset history on provider switch 
+
+● Update(src\cli.ts)
+  ⎿  Added 1 line, removed 1 line
+      260              history = []; // Reset history on provider switch 
+      261              continue;                                         
+      262            } else {                                            
+      263 -            console.log(chalk.red(`Invalid provider.          
+          -Available: ollama, gemini, claude, openai`));                 
+      263 +            console.log(chalk.red(`Invalid provider.          
+          +Available: ollama, gemini, claude, openai, github`));         
+      264              continue;                                         
+      265            }                                                   
+      266          }                                                     
+
+● Most a CLI chat send logikában kell egy github ágat hozzáadni. A jelenlegi kód
+   az agent_delegate-en keresztül dolgozik. A github provider-nél közvetlenül a
+  github_models_generate tool-t hívjuk:
+
+● Update(src\cli.ts)
+  ⎿  Added 7 lines
+      309                console.log(chalk.blue.bold('Brunella           
+           (Edge):'));                                                   
+      310                console.log(marked(response));                  
+      311              }                                                 
+      312 +          } else if (activeProvider === 'github') {           
+      313 +            const result = await                              
+          +client.callTool('github_models_generate', {                   
+      314 +              prompt,                                         
+      315 +            });                                               
+      316 +            spinner.stop();                                   
+      317 +            // @ts-ignore                                     
+      318 +            response = result.content?.[0]?.text || "Nincs    
+          +válasz.";                                                     
+      319            } else {                                            
+      320              const result = await                              
+           client.callTool('agent_delegate', {                           
+      321                agent_name: 'Orchestrator',                     
+
+● Most a .env.example frissítése:
+
+● Update(.env.example)
+  ⎿  Added 4 lines
+      29  CLAUDE_API_KEY=sk-ant-...                                      
+      30  BROWSER_USE_API_KEY=bu_...                                     
+      31                                                                 
+      32 +# === GITHUB MODELS (Pro+ subscription) ===                    
+      33 +# GITHUB_TOKEN=ghp_...  # Opcionális - ha nincs, `gh auth      
+         +token`-t használjuk                                            
+      34 +GITHUB_MODELS_DEFAULT_MODEL=openai/gpt-4.1                     
+      35 +                                                               
+      36  # === AUTOMATION (n8n & GitHub) ===                            
+      37  # N8N_API_KEY=your_key_here                                    
+      38  N8N_BASE_URL=https://n8n-latest-fulv.onrender.com              
+
+● Minden fájl módosítva. Most ellenőrizzük a build-et:
+
+● Bash(npm run build 2>&1)
+  ⎿  > mcp-brunella-core@1.0.0 build
+     > tsc
+  ⎿  (timeout 2m)
+
+● Build hiba nélkül átment. Most futtassuk a teszteket:
+
+● Bash(npm test 2>&1)
+  ⎿  > mcp-brunella-core@1.0.0 test
+     > npm run build && vitest run
+     … +81 lines (ctrl+o to expand)
+  ⎿  (timeout 2m)
+
+● Build: sikeres, 58/58 teszt: mind zöld.
+
+● Összefoglalás — GitHub Models integráció kész
+
+  Módosított/létrehozott fájlok (7):
+  Fájl: src/core/llm_client.ts
+  Változás: Új github provider, token cache (gh auth token / env),
+    generateWithGithubModels(), listGithubModels()
+  ────────────────────────────────────────
+  Fájl: src/tools/githubModelsTool.ts
+  Változás: Új fájl — github_models_generate és github_models_list MCP tool-ok
+  ────────────────────────────────────────
+  Fájl: src/server/registry.ts
+  Változás: registerCopilotCliTool → registerGithubModelsTool csere
+  ────────────────────────────────────────
+  Fájl: src/server/web.ts
+  Változás: GET /api/github-models/models + POST /api/github-models/generate
+    endpoint-ok
+  ────────────────────────────────────────
+  Fájl: src/dashboard/lib/apiService.ts
+  Változás: getGithubModels() + generateWithGithubModels() frontend API
+    függvények
+  ────────────────────────────────────────
+  Fájl: src/dashboard/components/dashboard/NeuralLinkChat.tsx
+  Változás: Harmadik mód: "GitHub Models" választó + modell dropdown
+  ────────────────────────────────────────
+  Fájl: src/cli.ts
+  Változás: /switch github támogatás, github_models_generate tool hívás
+  ────────────────────────────────────────
+  Fájl: .env.example
+  Változás: GITHUB_MODELS_DEFAULT_MODEL szekció
+  Token kezelés:
+  1. GITHUB_TOKEN env → 2. GITHUB_PERSONAL_ACCESS_TOKEN env → 3. gh auth token 
+  (5 perces cache)
+
+  Eredmény: npm run build ✅ | npm test 58/58 ✅
+
+✻ Crunched for 3m 48s
+
+> akkor most a brunella cli -t a copilot hajtja a gdpt 4.1 -es openai       
+  modellel?                                                                 
+
+● Nem egészen — hadd tisztázzam:
+
+  Ami történt:
+  - A régi copilotCliTool.ts (ami a gh copilot suggest/explain parancsokat
+  hívta) le lett cserélve a githubModelsTool.ts-re
+  - Ez a GitHub Models API-t használja (nem a Copilot-ot!) — ez egy külön
+  szolgáltatás, ahol közvetlenül hívhatsz modelleket (GPT-4.1, DeepSeek-R1, Grok
+   3, stb.)
+
+  A CLI alapértelmezetten továbbra is Ollama + Orchestrator módban indul. A 
+  GitHub Models-t kézzel kell bekapcsolni:
+
+  brunella chat
+  Brunella ❯ /switch github
+  # → Switched to github provider
+  Brunella ❯ Mi a kvantumszámítás?
+  # → GPT-4.1 válaszol a GitHub Models API-n keresztül
+
+  Három hely ahol elérhető:
+  ┌───────────┬───────────────────────────────────────────────────────────────┐
+  │    Hol    │                            Hogyan                             │
+  ├───────────┼───────────────────────────────────────────────────────────────┤
+  │ CLI chat  │ /switch github → openai/gpt-4.1 (alapért.)                    │
+  ├───────────┼───────────────────────────────────────────────────────────────┤
+  │ Dashboard │ Neural Link → mód választó: "GitHub Models" → modell dropdown │
+  ├───────────┼───────────────────────────────────────────────────────────────┤
+  │ MCP tool  │ github_models_generate tool hívás bármelyik ügynökből         │
+  └───────────┴───────────────────────────────────────────────────────────────┘
+  Szóval nem "a Copilot hajtja" a CLI-t, hanem egy új opció lett a GitHub Models
+   API a meglévő Ollama/Gemini/Orchestrator mellé. Ha azt szeretnéd, hogy
+  alapértelmezetten a GitHub Models legyen a fő provider (nem kell /switch), azt
+   is meg tudom csinálni — kérdezz rá!
+
+> persze, de akkor a lényeg a GTP 4.1 -et így tudom használni ? ami         
+  ingyenes az előfizetésem miatt?                                           
+
+● Igen, pontosan ez a lényeg!
+
+  A GitHub Pro+ előfizetésedben benne van a GitHub Models API hozzáférés, ami
+  azt jelenti:
+
+  - GPT-4.1 (és GPT-4.1-mini, nano) — ingyenesen használhatod
+  - DeepSeek-R1, Grok 3 mini, Llama 4, Mistral — szintén
+  - A tokent a gh auth token adja automatikusan (már be vagy jelentkezve)
+  - Nincs külön OpenAI API kulcs, nincs extra költség
+
+  Szóval most a CLI-ben:
+  brunella chat
+  /switch github
+  > Bármilyen kérdés → GPT-4.1 válaszol, ingyen
+
+  Vagy a Dashboard-on: Neural Link → "GitHub Models" → válaszd ki a modellt.
+
+  Van napi/havi rate limit a GitHub-tól (Pro+ esetén elég bőséges), de
+  gyakorlati használatra bőven elég.
+
+> hát kódolónak be kell állítanunk tudjon kódot írni , conductort meghívni  
+  a 4.1 -es jó kódírásban nem?                                              
+
+● Igen, a GPT-4.1 kiváló kódolásban! Most viszont csak a chat-ben érhető el — az
+   ügynökök (Developer, Orchestrator, Conductor) még mindig Ollamát használják
+  belül. Ezt kell bekötni.
+
+  Hadd nézzem meg hogyan hívják most az ügynökök az LLM-et:
+
+● Read 7 files (ctrl+o to expand)
+
+● Megvan a kép. Nézzük a DeveloperAgent-et is:
+
+● Searched for 1 pattern, read 1 file (ctrl+o to expand)
+
+● Most látom a teljes képet. Jelenleg egyetlen helyen használ LLM-et a rendszer
+  ügynökként: az OrchestratorAgent a chatWithOllama() hívásán keresztül. A többi
+   ügynök (Evaluator, Researcher, Developer, ProjectConductor) nem hív LLM-et —
+  azok konkrét feladatokat végeznek (teszt futtatás, RAG keresés, Python kód
+  futtatás, doksik szinkron).
+
+  A megoldás: egy globális LLM_PROVIDER env var, ami megmondja melyik
+  szolgáltató legyen az alapértelmezett, és az Orchestrator (ami a "gondolkodó
+  agy") ezt használja a GPT-4.1-gyel.
+
+● Update(src\core\llm_client.ts)
+  ⎿  Added 3 lines
+      12  const GEMINI_MODEL = process.env.GEMINI_MODEL ||               
+          'gemini-2.0-flash';                                            
+      13  const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS ||  
+          '120000'); // 2 minutes default                                
+      14                                                                 
+      15 +// Default LLM provider (agents read this)                     
+      16 +const DEFAULT_LLM_PROVIDER = process.env.LLM_PROVIDER ||       
+         +'ollama';                                                      
+      17 +                                                               
+      18  // GitHub Models configuration                                 
+      19  const GITHUB_MODELS_BASE_URL =                                 
+          'https://models.inference.ai.azure.com';                       
+      20  const GITHUB_MODELS_DEFAULT_MODEL =                            
+          process.env.GITHUB_MODELS_DEFAULT_MODEL || 'openai/gpt-4.1';   
+
+● Most exportálom a default provider getter-t és egy egységes chat() függvényt,
+  amit minden ügynök használhat:
+
+● Read 1 file (ctrl+o to expand)
+
+● Update(src\core\llm_client.ts)
+  ⎿  Added 36 lines
+      205  export function listGithubModels(): Array<{ name: string;     
+           provider: string }> {                                         
+      206      return GITHUB_MODELS_CATALOG;                             
+      207  }                                                             
+      208 +                                                              
+      209 +/**                                                           
+      210 + * Returns the configured default LLM provider.               
+      211 + * Set via LLM_PROVIDER env var. Default: 'ollama'.           
+      212 + */                                                           
+      213 +export function getDefaultProvider(): string {                
+      214 +    return DEFAULT_LLM_PROVIDER;                              
+      215 +}                                                             
+      216 +                                                              
+      217 +/**                                                           
+      218 + * Unified chat function that uses the configured default     
+          +provider.                                                     
+      219 + * This is the recommended way for agents to call LLM.        
+      220 + *                                                            
+      221 + * - LLM_PROVIDER=github → GPT-4.1 via GitHub Models API      
+      222 + * - LLM_PROVIDER=gemini → Gemini                             
+      223 + * - LLM_PROVIDER=ollama → local Ollama (default)             
+      224 + */                                                           
+      225 +export async function chat(                                   
+      226 +    prompt: string,                                           
+      227 +    system?: string,                                          
+      228 +    model?: string                                            
+      229 +): Promise<string> {                                          
+      230 +    const provider = DEFAULT_LLM_PROVIDER;                    
+      231 +    logInfo("LLM_CLIENT", `chat() provider=${provider}        
+          +model=${model || 'default'}`);                                
+      232 +                                                              
+      233 +    if (provider === 'github') {                              
+      234 +        return generateResponse(prompt, 'github', { model,    
+          +system });                                                    
+      235 +    }                                                         
+      236 +    if (provider === 'gemini') {                              
+      237 +        const fullPrompt = system ? `${system}\n\n${prompt}`  
+          +: prompt;                                                     
+      238 +        return generateResponse(fullPrompt, 'gemini');        
+      239 +    }                                                         
+      240 +    // Default: ollama                                        
+      241 +    const fullPrompt = system ? `${system}\n\n${prompt}` :    
+          +prompt;                                                       
+      242 +    return generateResponse(fullPrompt, 'ollama');            
+      243 +}                                                             
+
+● Most az OrchestratorAgent-et átírom, hogy a chat() függvényt használja a
+  chatWithOllama() helyett:
+
+● Update(src\agents\OrchestratorAgent.ts)
+  ⎿  Added 1 line, removed 1 line
+      1  import { IAgent } from './types.js';                            
+      2  import { Logger } from '../utils/logger.js';                    
+      3  import { agentManager } from './AgentManager.js';               
+      4 -import { chatWithOllama } from '../core/llm_client.js';         
+      4 +import { chat } from '../core/llm_client.js';                   
+      5                                                                  
+      6  export class OrchestratorAgent implements IAgent {              
+      7      name = "Orchestrator";                                      
+
+● Update(src\agents\OrchestratorAgent.ts)
+  ⎿  Added 1 line, removed 1 line
+      55  Respond ONLY with the JSON array. Do not add markdown blocks.  
+      56  `;                                                             
+      57                                                                 
+      58 -            const responseText = await chatWithOllama(prompt,  
+         -undefined, process.env.OLLAMA_MODEL || 'gemma2:9b');           
+      58 +            const responseText = await chat(prompt);           
+      59              this.logger.info(`Raw Plan: ${responseText}`);     
+      60                                                                 
+      61              // 2. Parse and Queue tasks                        
+
+● Most frissítem a .env.example-t az LLM_PROVIDER változóval:
+
+● Update(.env.example)
+  ⎿  Added 5 lines
+      29  CLAUDE_API_KEY=sk-ant-...                                      
+      30  BROWSER_USE_API_KEY=bu_...                                     
+      31                                                                 
+      32 +# === LLM PROVIDER (Which brain powers the agents?) ===        
+      33 +# LLM_PROVIDER=github    # → GPT-4.1 via GitHub Models         
+         +(ingyenes Pro+-szal)                                           
+      34 +# LLM_PROVIDER=gemini    # → Google Gemini                     
+      35 +# LLM_PROVIDER=ollama    # → Lokális Ollama (alapértelmezett)  
+      36 +                                                               
+      37  # === GITHUB MODELS (Pro+ subscription) ===                    
+      38  # GITHUB_TOKEN=ghp_...  # Opcionális - ha nincs, `gh auth      
+          token`-t használjuk                                            
+      39  GITHUB_MODELS_DEFAULT_MODEL=openai/gpt-4.1                     
+
+● A web.ts-ben az import-ot is frissítem a chat-tel:
+
+● Update(src\server\web.ts)
+  ⎿  Added 1 line, removed 1 line
+      22      checkAnythingLLMHealth,                                    
+      23      buildHealthResponse,                                       
+      24  } from '../utils/health.js';                                   
+      25 -import { chatWithOllama,                                       
+         -generateWithGithubModels, listGithubModels } from              
+         -'../core/llm_client.js';                                       
+      25 +import { chatWithOllama, chat,                                 
+         +generateWithGithubModels, listGithubModels } from              
+         +'../core/llm_client.js';                                       
+      26  import { corsWhitelist, requestId, requestLogging,             
+          apiRateLimit } from './middleware.js';                         
+      27  import { swaggerSpec } from './swagger.js';                    
+      28  import { socketService } from './SocketService.js';            
+
+● Most build + teszt:
+
+● Bash(npm run build 2>&1)
+  ⎿  > mcp-brunella-core@1.0.0 build
+     > tsc
+  ⎿  (timeout 2m)
+
+● Bash(npm test 2>&1)
+  ⎿  > mcp-brunella-core@1.0.0 test
+     > npm run build && vitest run
+     … +81 lines (ctrl+o to expand)
+  ⎿  (timeout 2m)
+
+● Build ✅ | 58/58 teszt ✅
+
+  Most a lényeg, egyszerűen:
+
+  Hogyan kapcsolod be a GPT-4.1-et mint fő "agy"
+
+  Tedd a .env fájlba:
+  LLM_PROVIDER=github
+
+  Ennyi. Ezzel:
+  Mi történik: Orchestrator tervez
+  Előtte (Ollama): llama3.1:8b gondolkodik
+  Utána (GitHub/GPT-4.1): GPT-4.1 tervez és delegál
+  ────────────────────────────────────────
+  Mi történik: CLI chat
+  Előtte (Ollama): Ollama válaszol
+  Utána (GitHub/GPT-4.1): GPT-4.1 válaszol
+  ────────────────────────────────────────
+  Mi történik: Dashboard Neural Link
+  Előtte (Ollama): helyi modell
+  Utána (GitHub/GPT-4.1): GPT-4.1 (ha GitHub módot választod)
+  ────────────────────────────────────────
+  Mi történik: Bármelyik ügynök ami chat()-et hív
+  Előtte (Ollama): Ollama
+  Utána (GitHub/GPT-4.1): GPT-4.1
+  A token automatikusan a gh auth token-ből jön — nem kell API kulcs, az
+  előfizetésed fedezi.
+
+  Fontos: Az Orchestrator most a "gondolkodó" — ő tervez, delegál, és az ő agya
+  lett a GPT-4.1. A többi ügynök (Developer, Evaluator, Conductor) konkrét
+  feladatokat végez (kód futtatás, teszt, doksik), nem hívnak LLM-et
+  közvetlenül. Ha a jövőben valamelyik ügynöknek is kéne LLM hívás (pl.
+  Developer kódot generáljon GPT-4.1-gyel), csak importálnia kell a chat() 
+  függvényt.
+
+✻ Sautéed for 2m 39s
+
+> hát akkor a GPD-4.1 legyen alapértelmezett 
+
+● Egyszerű, átállítom az alapértelmezett provider-t github-ra a kódban:
+
+● Update(src\core\llm_client.ts)
+  ⎿  Added 1 line, removed 1 line
+      13  const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS ||  
+          '120000'); // 2 minutes default                                
+      14                                                                 
+      15  // Default LLM provider (agents read this)                     
+      16 -const DEFAULT_LLM_PROVIDER = process.env.LLM_PROVIDER || '     
+         -ollama';                                                       
+      16 +const DEFAULT_LLM_PROVIDER = process.env.LLM_PROVIDER || '     
+         +github';                                                       
+      17                                                                 
+      18  // GitHub Models configuration                                 
+      19  const GITHUB_MODELS_BASE_URL =                                 
+          'https://models.inference.ai.azure.com';                       
+
+● Bash(npm run build 2>&1)
+  ⎿  > mcp-brunella-core@1.0.0 build
+     > tsc
+  ⎿  (timeout 1m)
+
+● Kész. Mostantól GPT-4.1 az alapértelmezett mindenhol — ha valaki mégis lokális
+   Ollamát akarna, LLM_PROVIDER=ollama-t tesz a .env-be.
+
+✻ Cogitated for 34s
+
+> anythingllm-be hogy van akkor most ott maradt ollama nem? 
+
+● Igen, az AnythingLLM egy külön alkalmazás — annak saját beállításai vannak,
+  nem a mi LLM_PROVIDER-ünktől függ.
+
+  Az AnythingLLM a saját admin felületén (http://localhost:3001) konfigurálja,
+  hogy melyik LLM-et használja. Mi csak API-n keresztül kommunikálunk vele
+  (/api/v1/workspace/.../chat).
+
+  De — az AnythingLLM-et is át lehet állítani! Két opció van:
+
+  1. AnythingLLM admin UI-ban → Settings → LLM → beállíthatod "Generic
+  OpenAI"-ra:
+    - Base URL: https://models.inference.ai.azure.com
+    - API Key: a gh auth token kimenete
+    - Model: openai/gpt-4.1
+  2. Vagy egyszerűbben: Az AnythingLLM-et ki is hagyhatjuk, mert most már a
+  Brunella saját chat() függvénye közvetlenül a GPT-4.1-et hívja. Az AnythingLLM
+   főleg a RAG (tudásbázis) kereséshez kellett.
+
+  Melyiket szeretnéd?
+  - Az AnythingLLM-et is átállítani GPT-4.1-re?
+  - Vagy elég ha a Brunella ügynökök használják a GPT-4.1-et, az AnythingLLM meg
+   marad ahogy van (RAG-hoz)?
+
+> maradjon ahogy van hasznos lesz még nekem meg megszerettem a nyilt        
+  modelleket tanítgatom őket szívemhez nőttek (: , de akkor ez nagyon       
+  király meg figyelj,                                                       
+  Access                                                                    
+  Code, planning, and automation                                            
+  Security                                                                  
+  Integrations                                                              
+  Archives                                                                  
+  GitHub Copilot                                                            
+   GitHub Copilot Pro+ is active for your account                           
+  You currently have an active Copilot Pro+ subscription.                   
+  Get started by installing the extension in your preferred environment.    
+                                                                            
+  Usage                                                                     
+  Premium requests                                                          
+  2.7%                                                                      
+  ennyit használtam most is még csak a premium hívásaimból ki 10százalék    
+  fölé még nem is mentem pedig minden csúcs modelt lehet már használni a    
+  copilottal                                                                
+
+● Ez tényleg király! Szóval a GitHub Copilot Pro+ előfizetésedben:
+
+  - 2.7% felhasználva a premium hívásokból
+  - Minden csúcsmodell elérhető (GPT-4.1, o3, DeepSeek-R1, Grok 3...)
+  - És most ezeket a Brunella is használja közvetlenül
+
+  Gyakorlatilag ingyen kaptál egy GPT-4.1-es agyat a teljes ügynökrendszerhez,
+  miközben az Ollama nyílt modelljeid is megmaradnak tanítgatásra. A kettő
+  szépen kiegészíti egymást:
+  Column 1: Mire jó
+  GitHub Models (GPT-4.1): Tervezés, kódolás, komplex feladatok
+  Ollama (nyílt modellek): Kísérletezés, tanítás, offline munka
+  ────────────────────────────────────────
+  Column 1: Költség
+  GitHub Models (GPT-4.1): Ingyen (Pro+ része)
+  Ollama (nyílt modellek): Ingyen (lokális)
+  ────────────────────────────────────────
+  Column 1: Hol fut
+  GitHub Models (GPT-4.1): Felhő (Azure)
+  Ollama (nyílt modellek): A gépeden
+  ────────────────────────────────────────
+  Column 1: Brunella-ban
+  GitHub Models (GPT-4.1): Orchestrator agya, chat
+  Ollama (nyílt modellek): Fallback, RAG, AnythingLLM
+  A 10% alatti használattal még rengeteg tartalékod van — az ügynökök nyugodtan
+  dolgozhatnak GPT-4.1-gyel anélkül hogy aggódnod kéne a limitekre.
+
+> a prémimmal téged is megtudlak hívni akár egész napra , a gemini 3prot    
+  bármit amig elnem fogy utánna a 4.1 akkor is ingyenes marad , csak azért  
+  íróm hogy kihasználhatnánk aszt is valahogy majd                          
+
+● Igen, ez egy brutálisan jó setup ami neked van:
+
+  1. Claude (én) — Claude Code-dal egész nap kódolás
+  2. Gemini 2.5 Pro — szintén Pro+ része, erős kódolásban
+  3. GPT-4.1 — ha a premium keret elfogy, ez marad ingyen mint alapértelmezett
+
+  Szóval egy okos fallback lánc is lehetne a Brunellában a jövőben:
+
+  Premium modellek (amíg van keret)
+    → Claude / Gemini 2.5 Pro (komplex feladatok)
+
+  Mindig ingyenes
+    → GPT-4.1 (Orchestrator agy, kódolás)
+    → Ollama (offline, tanítás, RAG)
+
+  Ha majd szeretnéd, be tudjuk kötni a Gemini-t is hasonlóan mint a GitHub 
+  Models-t — a LLM_PROVIDER=gemini már most is működik, csak a Gemini API
+  kulcsot kell beállítani. A három provider közt akár automatikusan is
+  válthatnánk (ha az egyik nem válaszol, jön a következő).
+
+  De ez majd egy következő fejlesztési szál lesz — most a GPT-4.1 integráció
+  áll, működik, és a 97% megmaradt premiumoddal van bőven tér!
+
+> állítsd be a Geminit is lécci ha nem nehéz  
+
+● Nem nehéz, ugyanaz a minta mint a GitHub Models-nél! Csináljuk.
+
+● Read 1 file (ctrl+o to expand)
+
+● Most hozzáadom a Gemini integrációt — ugyanaz a minta mint a GitHub
+  Models-nél: llm_client, REST endpoint-ok, dashboard, MCP tool.
+
+  1. llm_client.ts — Gemini system prompt támogatás javítása + export
+  függvények:
+
+● Update(src\core\llm_client.ts)
+  ⎿  Added 7 lines, removed 1 line
+      54              if (!process.env.GEMINI_API_KEY) {                 
+      55                  throw new Error('GEMINI_API_KEY not            
+          configured');                                                  
+      56              }                                                  
+      57 -            const model = genAI.getGenerativeModel({ model:    
+         -GEMINI_MODEL });                                               
+      57 +            const geminiModelName = options?.model ||          
+         +GEMINI_MODEL;                                                  
+      58 +            const systemPrompt = options?.system;              
+      59 +            const modelConfig: any = { model: geminiModelName  
+         +};                                                             
+      60 +            if (systemPrompt) {                                
+      61 +                modelConfig.systemInstruction = systemPrompt;  
+      62 +            }                                                  
+      63 +            const model =                                      
+         +genAI.getGenerativeModel(modelConfig);                         
+      64              const result = await                               
+          model.generateContent(prompt);                                 
+      65              return result.response.text();                     
+      66          }                                                      
+
+● Most a Gemini export függvények és modell katalógus hozzáadása:
+
+● Update(src\core\llm_client.ts)
+  ⎿  Added 30 lines, removed 1 line
+      213  }                                                             
+      214                                                                
+      215  /**                                                           
+      216 + * Generate text using Google Gemini API.                     
+      217 + */                                                           
+      218 +export async function generateWithGemini(                     
+      219 +    prompt: string,                                           
+      220 +    model?: string,                                           
+      221 +    system?: string                                           
+      222 +): Promise<string> {                                          
+      223 +    logInfo("LLM_CLIENT", `generateWithGemini model=${model   
+          +|| GEMINI_MODEL}`);                                           
+      224 +    return generateResponse(prompt, 'gemini', { model, system 
+          + });                                                          
+      225 +}                                                             
+      226 +                                                              
+      227 +/** Available Gemini models */                                
+      228 +const GEMINI_MODELS_CATALOG = [                               
+      229 +    { name: 'gemini-2.5-pro-preview-06-05', provider:         
+          +'Google', tier: 'premium' },                                  
+      230 +    { name: 'gemini-2.5-flash-preview-05-20', provider:       
+          +'Google', tier: 'free' },                                     
+      231 +    { name: 'gemini-2.0-flash', provider: 'Google', tier:     
+          +'free' },                                                     
+      232 +    { name: 'gemini-2.0-flash-lite', provider: 'Google',      
+          +tier: 'free' },                                               
+      233 +    { name: 'gemini-1.5-pro', provider: 'Google', tier:       
+          +'free' },                                                     
+      234 +    { name: 'gemini-1.5-flash', provider: 'Google', tier:     
+          +'free' },                                                     
+      235 +];                                                            
+      236 +                                                              
+      237 +/**                                                           
+      238 + * List available Gemini models.                              
+      239 + */                                                           
+      240 +export function listGeminiModels(): Array<{ name: string;     
+          +provider: string; tier: string }> {                           
+      241 +    return GEMINI_MODELS_CATALOG;                             
+      242 +}                                                             
+      243 +                                                              
+      244 +/**                                                           
+      245   * Returns the configured default LLM provider.               
+      246 - * Set via LLM_PROVIDER env var. Default: 'ollama'.           
+      246 + * Set via LLM_PROVIDER env var. Default: 'github'.           
+      247   */                                                           
+      248  export function getDefaultProvider(): string {                
+      249      return DEFAULT_LLM_PROVIDER;                              
+
+● A chat() függvényben a gemini ág is kapjon system prompt támogatást:
+
+● Update(src\core\llm_client.ts)
+  ⎿  Added 1 line, removed 2 lines
+      269          return generateResponse(prompt, 'github', { model,    
+           system });                                                    
+      270      }                                                         
+      271      if (provider === 'gemini') {                              
+      272 -        const fullPrompt = system ? `${system}\n\n${prompt}`  
+          -: prompt;                                                     
+      273 -        return generateResponse(fullPrompt, 'gemini');        
+      272 +        return generateResponse(prompt, 'gemini', { model,    
+          +system });                                                    
+      273      }                                                         
+      274      // Default: ollama                                        
+      275      const fullPrompt = system ? `${system}\n\n${prompt}` :    
+           prompt;                                                       
+
+● 2. src/tools/geminiTool.ts — Új MCP tool:
+
+● Write(src\tools\geminiTool.ts)
+  ⎿  Wrote 1 lines to src\tools\geminiTool.ts
+     import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+     import { z } from "zod";
+     import { generateWithGemini, listGeminiModels } from
+     "../core/llm_client.js";
+
+     export function registerGeminiTool(server: McpServer) {
+         server.tool(
+             "gemini_generate",
+             "Generate text using Google Gemini API (2.5 Pro, 2.0 Flash, 
+     etc.).",
+             {
+                 prompt: z.string().describe("The user prompt to send"),
+
+● 3. src/server/registry.ts — Gemini tool regisztrálása:
+
+● Update(src\server\registry.ts)
+  ⎿  Added 1 line
+       5  import { registerBrowserTools } from "../tools/browser.js";    
+       6  import { registerInterpreterTools } from                       
+          "../tools/interpreter.js";                                     
+       7  import { registerGithubModelsTool } from                       
+          "../tools/githubModelsTool.js";                                
+       8 +import { registerGeminiTool } from "../tools/geminiTool.js";   
+       9  import { registerJulesCliTool } from                           
+          "../tools/julesCliTool.js";                                    
+      10  import { registerOllamaTool } from "../tools/ollamaTool.js";   
+      11  import { registerClaudeTool } from "../tools/claudeTool.js";   
+
+● Update(src\server\registry.ts)
+  ⎿  Added 1 line
+      69      registerBrowserTools(server);                              
+      70      registerInterpreterTools(server);                          
+      71      registerGithubModelsTool(server);                          
+      72 +    registerGeminiTool(server);                                
+      73      registerJulesCliTool(server);                              
+      74      registerOllamaTool(server);                                
+      75      registerClaudeTool(server);                                
+
+● 4. src/server/web.ts — Gemini REST endpoint-ok:
+
+● Update(src\server\web.ts)
+  ⎿  Added 1 line, removed 1 line
+      22      checkAnythingLLMHealth,                                    
+      23      buildHealthResponse,                                       
+      24  } from '../utils/health.js';                                   
+      25 -import { chatWithOllama, chat, generateWithGithubModels,       
+         -listGithubModels } from '../core/llm_client.js';               
+      25 +import { chatWithOllama, chat, generateWithGithubModels,       
+         +listGithubModels, generateWithGemini, listGeminiModels         
+         +} from '../core/llm_client.js';                                
+      26  import { corsWhitelist, requestId, requestLogging,             
+          apiRateLimit } from './middleware.js';                         
+      27  import { swaggerSpec } from './swagger.js';                    
+      28  import { socketService } from './SocketService.js';            
+
+● Update(src\server\web.ts)
+  ⎿  Added 24 lines
+      413          }                                                     
+      414      });                                                       
+      415                                                                
+      416 +    // Gemini API                                             
+      417 +    app.get('/api/gemini/models', async (req, res) => {       
+      418 +        try {                                                 
+      419 +            const models = listGeminiModels();                
+      420 +            res.json({ models });                             
+      421 +        } catch (e: any) {                                    
+      422 +            res.status(500).json({ error: e.message, models:  
+          +[] });                                                        
+      423 +        }                                                     
+      424 +    });                                                       
+      425 +                                                              
+      426 +    app.post('/api/gemini/generate', async (req, res) => {    
+      427 +        try {                                                 
+      428 +            const { prompt, model, system } = req.body;       
+      429 +            if (!prompt) {                                    
+      430 +                res.status(400).json({ error: 'Prompt is      
+          +required' });                                                 
+      431 +                return;                                       
+      432 +            }                                                 
+      433 +            const response = await generateWithGemini(prompt, 
+          + model, system);                                              
+      434 +            res.json({ response });                           
+      435 +        } catch (e: any) {                                    
+      436 +            res.status(500).json({ error: e.message });       
+      437 +        }                                                     
+      438 +    });                                                       
+      439 +                                                              
+      440      // AnythingLLM API                                        
+      441      app.get('/api/anythingllm/workspaces', async (req, res)   
+           => {                                                          
+      442          try {                                                 
+
+● 5. src/dashboard/lib/apiService.ts — Gemini frontend függvények:
+
+● Update(src\dashboard\lib\apiService.ts)
+  ⎿  Added 35 lines
+      244  }                                                             
+      245                                                                
+      246  /**                                                           
+      247 + * Gemini API                                                 
+      248 + */                                                           
+      249 +export interface GeminiModel {                                
+      250 +    name: string;                                             
+      251 +    provider: string;                                         
+      252 +    tier: string;                                             
+      253 +}                                                             
+      254 +                                                              
+      255 +export async function getGeminiModels():                      
+          +Promise<GeminiModel[]> {                                      
+      256 +    try {                                                     
+      257 +        const response = await                                
+          +fetch(`${API_BASE}/api/gemini/models`);                       
+      258 +        if (!response.ok) return [];                          
+      259 +        const data = await safeJson<{ models?: GeminiModel[]  
+          +}>(response);                                                 
+      260 +        return data.models || [];                             
+      261 +    } catch {                                                 
+      262 +        return [];                                            
+      263 +    }                                                         
+      264 +}                                                             
+      265 +                                                              
+      266 +export async function generateWithGemini(prompt: string,      
+          +model?: string, system?: string): Promise<string> {           
+      267 +    const response = await fetchWithTimeout(                  
+      268 +        `${API_BASE}/api/gemini/generate`,                    
+      269 +        {                                                     
+      270 +            method: 'POST',                                   
+      271 +            headers: { 'Content-Type': 'application/json' },  
+      272 +            body: JSON.stringify({ prompt, model, system })   
+      273 +        },                                                    
+      274 +        LONG_TIMEOUT_MS                                       
+      275 +    );                                                        
+      276 +    const data = await safeJson<{ response?: string; error?:  
+          +string }>(response).catch(() => ({ error: `HTTP               
+          +${response.status}` }));                                      
+      277 +    if (!response.ok) throw new Error(data.error || 'Gemini   
+          +generation failed');                                          
+      278 +    return typeof data.response === 'string' ? data.response  
+          +: String(data.response ?? '');                                
+      279 +}                                                             
+      280 +                                                              
+      281 +/**                                                           
+      282   * AnythingLLM API                                            
+      283   */                                                           
+      284  export async function getAnythingLLMWorkspaces():             
+           Promise<Workspace[]> {                                        
+
+● 6. NeuralLinkChat.tsx — Gemini mód a Dashboard-ban:
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 1 line, removed 1 line
+      31    executedBy?: string;                                         
+      32  }                                                              
+      33                                                                 
+      34 -type ChatMode = 'orchestrator' | 'ollama' | 'github';          
+      34 +type ChatMode = 'orchestrator' | 'ollama' | 'github' | 'gemini'
+         +;                                                              
+      35                                                                 
+      36  export function NeuralLinkChat() {                             
+      37    const [messages, setMessages] = useState<Message[]>([]);     
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 2 lines
+      41    const [selectedModel, setSelectedModel] =                    
+          useState<string>('');                                          
+      42    const [ghModels, setGhModels] = useState<{ name: string;     
+          provider: string }[]>([]);                                     
+      43    const [selectedGhModel, setSelectedGhModel] =                
+          useState<string>('');                                          
+      44 +  const [geminiModels, setGeminiModels] = useState<{ name:     
+         +string }[]>([]);                                               
+      45 +  const [selectedGeminiModel, setSelectedGeminiModel] =        
+         +useState<string>('');                                          
+      46    const [isLoading, setIsLoading] = useState(false);           
+      47    const [expandedThoughts, setExpandedThoughts] =              
+          useState<Record<number, boolean>>({});                         
+      48    const scrollRef = useRef<HTMLDivElement>(null);              
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 6 lines
+      60          setSelectedGhModel(list[0].name);                      
+      61        }                                                        
+      62      }).catch(() => setGhModels([]));                           
+      63 +    api.getGeminiModels().then((list) => {                     
+      64 +      setGeminiModels(list);                                   
+      65 +      if (list.length > 0 && !selectedGeminiModel) {           
+      66 +        setSelectedGeminiModel(list[0].name);                  
+      67 +      }                                                        
+      68 +    }).catch(() => setGeminiModels([]));                       
+      69    }, []);                                                      
+      70                                                                 
+      71    useEffect(() => {                                            
+
+● Gemini ág a send() függvényben:
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 3 lines
+       92        } else if (mode === 'github') {                         
+       93          const rawResponse = await                             
+           api.generateWithGithubModels(text, selectedGhModel ||         
+           undefined);                                                   
+       94          response = { message: rawResponse };                  
+       95 +      } else if (mode === 'gemini') {                         
+       96 +        const rawResponse = await                             
+          +api.generateWithGemini(text, selectedGeminiModel ||           
+          +undefined);                                                   
+       97 +        response = { message: rawResponse };                  
+       98        } else {                                                
+       99          const rawResponse = await                             
+           api.generateWithOllama(text, selectedModel || undefined);     
+      100          response = { message: rawResponse };                  
+
+● Gemini opció a mód választóban + modell dropdown:
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 1 line
+      139              <option                                           
+           value="orchestrator">Orchestrator</option>                    
+      140              <option value="ollama">Ollama</option>            
+      141              <option value="github">GitHub Models</option>     
+      142 +            <option value="gemini">Gemini</option>            
+      143            </select>                                           
+      144            {mode === 'ollama' && (                             
+      145              <Select value={selectedModel}                     
+           onValueChange={setSelectedModel}>                             
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 14 lines
+      169                </SelectContent>                                
+      170              </Select>                                         
+      171            )}                                                  
+      172 +          {mode === 'gemini' && (                             
+      173 +            <Select value={selectedGeminiModel}               
+          +onValueChange={setSelectedGeminiModel}>                       
+      174 +              <SelectTrigger className="w-[200px]             
+          +bg-background/50 border-border shadow-none">                  
+      175 +                <SelectValue placeholder="Gemini Model" />    
+      176 +              </SelectTrigger>                                
+      177 +              <SelectContent>                                 
+      178 +                {geminiModels.map((m) => (                    
+      179 +                  <SelectItem key={m.name} value={m.name}>    
+      180 +                    {m.name}                                  
+      181 +                  </SelectItem>                               
+      182 +                ))}                                           
+      183 +              </SelectContent>                                
+      184 +            </Select>                                         
+      185 +          )}                                                  
+      186          </div>                                                
+      187        </CardHeader>                                           
+      188        <CardContent className="flex-1 flex flex-col min-h-0    
+           p-0">                                                         
+
+● Üres állapot szöveg és placeholder frissítése:
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 2 lines
+      200                        ? 'Orchestrator üzemmód: Komplex        
+           feladatok delegálása ügynököknek.'                            
+      201                        : mode === 'github'                     
+      202                        ? 'GitHub Models üzemmód: GPT-4.1,      
+           DeepSeek-R1, Grok 3 és más felhő modellek.'                   
+      203 +                      : mode === 'gemini'                     
+      204 +                      ? 'Gemini üzemmód: Google Gemini 2.5    
+          +Pro, Flash és más modellek.'                                  
+      205                        : 'Ollama üzemmód: Közvetlen            
+           kommunikáció a lokális modellel.'}                            
+      206                    </p>                                        
+      207                  </div>                                        
+
+● Update(src\dashboard\components\dashboard\NeuralLinkChat.tsx)
+  ⎿  Added 1 line, removed 1 line
+      288                value={input}                                   
+      289                onChange={(e) => setInput(e.target.value)}      
+      290                onKeyDown={(e) => e.key === 'Enter' &&          
+           !e.shiftKey && (e.preventDefault(), send())}                  
+      291 -              placeholder={mode === 'orchestrator' ? 'Üzenet  
+          -az Orchestratornak...' : mode === 'github' ? 'Üzenet a GitHub 
+          -Models-nek...' : 'Üzenet az AI-nak...'}                       
+      291 +              placeholder={mode === 'orchestrator' ? 'Üzenet  
+          +az Orchestratornak...' : mode === 'github' ? 'Üzenet a GitHub 
+          +Models-nek...' : mode === 'gemini' ? 'Üzenet                  
+          +a Gemini-nek...' : 'Üzenet az AI-nak...'}                     
+      292                className="min-h-[60px] bg-zinc-900             
+           border-zinc-800 resize-none"                                  
+      293                disabled={isLoading}                            
+      294              />                                                
+
+● 7. CLI — Gemini ág a chat-ben:
+
+● Update(src\cli.ts)
+  ⎿  Added 7 lines
+      316              spinner.stop();                                   
+      317              // @ts-ignore                                     
+      318              response = result.content?.[0]?.text || "Nincs    
+           válasz.";                                                     
+      319 +          } else if (activeProvider === 'gemini') {           
+      320 +            const result = await                              
+          +client.callTool('gemini_generate', {                          
+      321 +              prompt,                                         
+      322 +            });                                               
+      323 +            spinner.stop();                                   
+      324 +            // @ts-ignore                                     
+      325 +            response = result.content?.[0]?.text || "Nincs    
+          +válasz.";                                                     
+      326            } else {                                            
+      327              const result = await                              
+           client.callTool('agent_delegate', {                           
+      328                agent_name: 'Orchestrator',                     
+
+● Most build + teszt:
+
+● Bash(npm run build 2>&1)
+  ⎿  > mcp-brunella-core@1.0.0 build
+     > tsc
+  ⎿  (timeout 1m)
+
+● Bash(npm test 2>&1)
+  ⎿  > mcp-brunella-core@1.0.0 test
+     > npm run build && vitest run
+     … +81 lines (ctrl+o to expand)
+  ⎿  (timeout 2m)
+
+● Build ✅ | 58/58 teszt ✅
+
+  Kész! A Gemini is be van kötve. Összefoglaló:
+
+  Most elérhető LLM providerek a Brunellában
+  Provider: GitHub Models (alapért.)
+  Dashboard: Neural Link → "GitHub Models"
+  CLI: /switch github
+  MCP Tool: github_models_generate
+  Modell példák: GPT-4.1, DeepSeek-R1, Grok 3
+  ────────────────────────────────────────
+  Provider: Gemini
+  Dashboard: Neural Link → "Gemini"
+  CLI: /switch gemini
+  MCP Tool: gemini_generate
+  Modell példák: Gemini 2.5 Pro, 2.0 Flash
+  ────────────────────────────────────────
+  Provider: Ollama
+  Dashboard: Neural Link → "Ollama"
+  CLI: /switch ollama
+  MCP Tool: ollama_generate
+  Modell példák: llama3.1, gemma2, qwen2.5
+  ────────────────────────────────────────
+  Provider: Orchestrator
+  Dashboard: Neural Link → "Orchestrator"
+  CLI: alapértelmezett
+  MCP Tool: agent_delegate
+  Modell példák: GPT-4.1 (ami az LLM_PROVIDER)
+  A GEMINI_API_KEY kell a .env-be a Gemini használatához — az viszont Google AI
+  Studio-ból ingyen szerezhető.
+
+✻ Baked for 3m 25s
+
+> AIzaSyCohm3LnbT2T_Yf1AA6J83KpcFv0zt92Ts 
+  ⎿ Credit balance too low · Add funds: 

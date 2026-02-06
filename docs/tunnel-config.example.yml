@@ -1,0 +1,27 @@
+# BAS Cloudflare Tunnel - Konfigurációs sablon
+# Másold át: tunnel-config.yml néven és cseréld ki a placeholder-eket!
+#
+# Használat:
+#   cloudflared tunnel run bas-tunnel --config docs/tunnel-config.yml
+#
+# VAGY ha a projekt gyökeréből futtatod, és a config a docs mappában van:
+#   cloudflared tunnel run bas-tunnel --config F:/mcp-brunella-core/docs/tunnel-config.yml
+
+tunnel: REPLACE_WITH_TUNNEL_ID
+credentials-file: C:\Users\REPLACE_WITH_USERNAME\.cloudflared\REPLACE_WITH_TUNNEL_ID.json
+
+ingress:
+  # n8n - munkafolyamat automatizáció (port 5678)
+  - hostname: n8n.bas.REPLACE_WITH_YOUR_DOMAIN
+    service: http://localhost:5678
+
+  # Browser-Use / Python API (port 8000)
+  - hostname: browser-use.bas.REPLACE_WITH_YOUR_DOMAIN
+    service: http://localhost:8000
+
+  # BAS Node.js API (port 3000)
+  - hostname: api.bas.REPLACE_WITH_YOUR_DOMAIN
+    service: http://localhost:3000
+
+  # Kötelező: catch-all 404
+  - service: http_status:404

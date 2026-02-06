@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Voice Assistant</string>
+    <string name="accessibility_service_description">Voice Assistant for visually impaired users. Provides voice commands for navigation, calling, messaging, and app control.</string>
+    <string name="wake_word_detected">Wake word detected</string>
+    <string name="listening_for_command">Listening for your command</string>
+    <string name="command_processed">Command processed</string>
+    <string name="permission_required">Permissions are required for the voice assistant to function properly</string>
+</resources>

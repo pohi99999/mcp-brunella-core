@@ -1,0 +1,17 @@
+{
+  "scenario_name": "n8n_basic_workflow_creation",
+  "target_url": "https://n8n-latest-fulv.onrender.com/signin",
+  "steps": [
+    {
+      "action": "create_workflow",
+      "new_name": "Robotkez_Teszt_1",
+      "description": "Új munkafolyamat létrehozása Robotkez_Teszt_1 névvel."
+    },
+    {
+      "action": "rename_workflow",
+      "target_id_from_previous_step": true,
+      "new_name": "Robotkez_Teszt_1_API",
+      "description": "A munkafolyamat átnevezése Robotkez_Teszt_1_API-ra."
+    }
+  ]
+}

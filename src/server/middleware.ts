@@ -3,7 +3,7 @@
  */
 
 import type { Request, Response, NextFunction } from 'express';
-import rateLimit from 'express-rate-limit';
+import { rateLimit } from 'express-rate-limit';
 import { v4 as uuidv4 } from 'uuid';
 import { Logger } from '../utils/logger.js';
 

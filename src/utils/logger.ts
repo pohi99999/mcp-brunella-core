@@ -47,3 +47,60 @@ export class Logger {
 
 export const systemLogger = new Logger('system_commands.log');
 export const cliLogger = new Logger('cli_tools.log');
+
+// --- Mission Control Dashboard Logger (console + Socket.IO) ---
+// Lazy-load SocketService to avoid circular deps / init order with server
+
+let _socketService: typeof import('../server/SocketService.js').socketService | null = null;
+
+async function getSocketService() {
+    if (_socketService === null) {
+        try {
+            const mod = await import('../server/SocketService.js');
+            _socketService = mod.socketService;
+        } catch {
+            _socketService = undefined as any;
+        }
+    }
+    return _socketService ?? null;
+}
+
+export type AgentStatusType = 'idle' | 'working' | 'error';
+
+/** Log info to console and broadcast to Mission Control dashboard. */
+export function logInfo(source: string, message: string): void {
+    const full = source ? `[${source}] ${message}` : message;
+    console.log(full);
+    getSocketService().then((svc) => {
+        if (svc?.isReady()) svc.broadcastLog(message, 'info', source);
+    }).catch(() => {});
+}
+
+/** Log error to console and broadcast to Mission Control dashboard. */
+export function logError(source: string, message: string): void {
+    const full = source ? `[${source}] ${message}` : message;
+    console.error(full);
+    getSocketService().then((svc) => {
+        if (svc?.isReady()) svc.broadcastLog(message, 'error', source);
+    }).catch(() => {});
+}
+
+/** Log warning to console and broadcast to Mission Control dashboard. */
+export function logWarn(source: string, message: string): void {
+    const full = source ? `[${source}] ${message}` : message;
+    console.warn(full);
+    getSocketService().then((svc) => {
+        if (svc?.isReady()) svc.broadcastLog(message, 'info', source); // 'warn' not in LogType, use 'info'
+    }).catch(() => {});
+}
+
+/** Update agent status on Mission Control dashboard. */
+export function setAgentStatus(
+    agentName: string,
+    status: AgentStatusType,
+    taskDescription?: string
+): void {
+    getSocketService().then((svc) => {
+        if (svc?.isReady()) svc.updateAgentStatus(agentName, status, taskDescription);
+    }).catch(() => {});
+}

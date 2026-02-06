@@ -1,0 +1,13 @@
+{
+  "scenario_name": "harvester_job_posting_example",
+  "mode": "ui",
+  "target_url": "https://example.com/jobs",
+  "extraction_schema": "myai/scenarios/job_posting_schema.json",
+  "extraction_prompt": "Találd meg az első álláshirdetés adatait a listából.",
+  "steps": [
+    {
+      "action": "click",
+      "description": "Nyisd meg az első álláshirdetést (ha szükséges)."
+    }
+  ]
+}

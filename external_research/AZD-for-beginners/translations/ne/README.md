@@ -1,0 +1,961 @@
+<!--
+CO_OP_TRANSLATOR_METADATA:
+{
+  "original_hash": "068c87cc2641a81ca353ad7064ff326a",
+  "translation_date": "2026-01-01T13:48:43+00:00",
+  "source_file": "README.md",
+  "language_code": "ne"
+}
+-->
+# AZD नयाँ सिक्नेहरूका लागि: एक संरचित सिकाइ यात्रा
+
+![AZD-नयाँ-सिक्नेहरूका लागि](../../translated_images/azdbeginners.5527441dd9f74068.ne.png) 
+
+[![GitHub अनुगामीहरू](https://img.shields.io/github/watchers/microsoft/azd-for-beginners.svg?style=social&label=Watch)](https://GitHub.com/microsoft/azd-for-beginners/watchers/)
+[![GitHub फोर्कहरू](https://img.shields.io/github/forks/microsoft/azd-for-beginners.svg?style=social&label=Fork)](https://GitHub.com/microsoft/azd-for-beginners/network/)
+[![GitHub स्टारहरू](https://img.shields.io/github/stars/microsoft/azd-for-beginners.svg?style=social&label=Star)](https://GitHub.com/microsoft/azd-for-beginners/stargazers/)
+
+[![Azure डिस्कोर्ड](https://dcbadge.limes.pink/api/server/https://discord.gg/microsoft-azure)](https://discord.gg/microsoft-azure)
+[![Microsoft Foundry डिस्कोर्ड](https://dcbadge.limes.pink/api/server/nTYy5BXMWG)](https://discord.gg/nTYy5BXMWG)
+
+## यो कोर्ससँग सुरु गर्नुहोस्
+
+तपाईंको AZD सिकाइ यात्रा सुरु गर्न यी कदमहरू अनुसरण गर्नुहोस्:
+
+1. **रिपोजिटरी Fork गर्नुहोस्**: क्लिक गर्नुहोस् [![GitHub फोर्कहरू](https://img.shields.io/github/forks/microsoft/azd-for-beginners.svg?style=social&label=Fork)](https://GitHub.com/microsoft/azd-for-beginners/fork)
+2. **रिपोजिटरी क्लोन गर्नुहोस्**: `git clone https://github.com/microsoft/azd-for-beginners.git`
+3. **समुदायमा सामेल हुनुहोस्**: [Azure डिस्कोर्ड समुदायहरू](https://discord.com/invite/ByRwuEEgH4) विशेषज्ञ समर्थनको लागि
+4. **आफ्नो सिकाइ मार्ग छान्नुहोस्**: तलको कुनै अध्याय चयन गर्नुहोस् जुन तपाइँको अनुभव स्तरसँग मेल खान्छ
+
+### बहुभाषी समर्थन
+
+#### स्वचालित अनुवाद (सधैं अद्यावधिक)
+
+<!-- CO-OP TRANSLATOR LANGUAGES TABLE START -->
+[अरबी](../ar/README.md) | [बंगाली](../bn/README.md) | [बुल्गेरियाली](../bg/README.md) | [बर्मी (म्यानमार)](../my/README.md) | [चिनी (सरलीकृत)](../zh/README.md) | [चिनी (परम्परागत, हङकङ)](../hk/README.md) | [चिनी (परम्परागत, मकाउ)](../mo/README.md) | [चिनी (परम्परागत, ताइवान)](../tw/README.md) | [क्रोएशियाली](../hr/README.md) | [चेक](../cs/README.md) | [डेनिश](../da/README.md) | [डच](../nl/README.md) | [एस्टोनियाली](../et/README.md) | [फिनिश](../fi/README.md) | [फ्रेन्च](../fr/README.md) | [जर्मन](../de/README.md) | [ग्रीक](../el/README.md) | [हिब्रू](../he/README.md) | [हिन्दी](../hi/README.md) | [हंगेरीयन](../hu/README.md) | [इन्डोनेशियाली](../id/README.md) | [इटालियन](../it/README.md) | [जापानी](../ja/README.md) | [कन्नड](../kn/README.md) | [कोरियाली](../ko/README.md) | [लिथुआनियाली](../lt/README.md) | [मलय](../ms/README.md) | [मलयालम](../ml/README.md) | [मराठी](../mr/README.md) | [नेपाली](./README.md) | [नाइजेरीयन पिजिन](../pcm/README.md) | [नर्वेजियन](../no/README.md) | [फारसी](../fa/README.md) | [पोलिश](../pl/README.md) | [पोर्चुगीज (ब्राजिल)](../br/README.md) | [पोर्चुगीज (पोर्चुगल)](../pt/README.md) | [पन्जाबी (गुरुमुखी)](../pa/README.md) | [रोमानियाली](../ro/README.md) | [रुसी](../ru/README.md) | [सर्बियन (सिरिलिक)](../sr/README.md) | [स्लोभाक](../sk/README.md) | [स्लोभेनियाली](../sl/README.md) | [स्पेनिश](../es/README.md) | [स्वाहिली](../sw/README.md) | [स्विडिश](../sv/README.md) | [ट्यागालग (फिलिपिनो)](../tl/README.md) | [तमिल](../ta/README.md) | [तेलुगु](../te/README.md) | [थाइ](../th/README.md) | [तुर्की](../tr/README.md) | [युक्रेनी](../uk/README.md) | [उर्दू](../ur/README.md) | [भियतनामी](../vi/README.md)
+<!-- CO-OP TRANSLATOR LANGUAGES TABLE END -->
+
+## पाठ्यक्रम अवलोकन
+
+क्रमिक सिकाइका लागि डिजाइन गरिएको संरचित अध्यायहरू मार्फत Azure Developer CLI (azd) मा निपुण बन्नुहोस्। **Microsoft Foundry एकीकरणसँग AI अनुप्रयोग तैनाथीमा विशेष ध्यान।**
+
+### आधुनिक विकासकर्ताहरूका लागि यो कोर्स किन आवश्यक छ
+
+Microsoft Foundry Discord समुदायका अन्तर्दृष्टिहरूको आधारमा, **45% विकासकर्ताहरू AI वर्कलोडका लागि AZD प्रयोग गर्न चाहन्छन्** तर निम्न चुनौतिहरू सामना गर्दछन्:
+- जटिल बहु-सेवा AI वास्तुकलाहरू
+- उत्पादन AI तैनाथीका उत्कृष्ट अभ्यासहरू  
+- Azure AI सेवा एकीकरण र कन्फिगरेसन
+- AI वर्कलोडका लागि लागत अनुकूलन
+- AI-विशिष्ट तैनाथी समस्याहरूको समस्या निवारण
+
+### सिकाइ उद्देश्यहरू
+
+यो संरचित कोर्स पूरा गरेपछि, तपाईंले:
+- **AZD आधारभूतमा महारत हासिल गर्नुहोस्**: प्रमुख अवधारणाहरू, स्थापना, र कन्फिगरेसन
+- **AI अनुप्रयोग तैनाथि गर्नुहोस्**: AZD लाई Microsoft Foundry सेवाहरूसँग प्रयोग गर्नुहोस्
+- **पूर्वाधारलाई कोडको रूपमा लागू गर्नुहोस्**: Bicep टेम्प्लेटहरूसँग Azure स्रोत व्यवस्थापन गर्नुहोस्
+- **तैनाथीहरूमा समस्या निवारण गर्नुहोस्**: सामान्य समस्याहरू समाधान गर्नुहोस् र डिबग गर्नुहोस्
+- **उत्पादनका लागि अनुकूलन गर्नुहोस्**: सुरक्षा, स्केलिङ, निगरानी, र लागत व्यवस्थापन
+- **बहु-एजेन्ट समाधान निर्माण गर्नुहोस्**: जटिल AI वास्तुकलाहरू तैनाथ गर्नुहोस्
+
+## 📚 सिकाइका अध्यायहरू
+
+*तपाईंको अनुभव स्तर र लक्ष्यअनुसार आफ्नो सिकाइ मार्ग छान्नुहोस्*
+
+### 🚀 अध्याय 1: आधार र छिटो शुरुवात
+**पूर्वशर्तहरू**: Azure सदस्यता, आधारभूत कमाण्ड लाइन ज्ञान  
+**अवधि**: 30-45 मिनेट  
+**जटिलता**: ⭐
+
+#### तपाईंले के सिक्नुहुनेछ
+- Azure Developer CLI का आधारभूत अवधारणाहरू बुझ्ने
+- तपाईंको प्लेटफर्ममा AZD स्थापना गर्ने
+- तपाईंको पहिलो सफल तैनाथी
+
+#### सिकाइ स्रोतहरू
+- **🎯 यहाँबाट सुरु गर्नुहोस्**: [Azure Developer CLI भनेको के हो?](../..)
+- **📖 सिद्धान्त**: [AZD आधारभूत](docs/getting-started/azd-basics.md) - मुख्य अवधारणाहरू र शब्दावली
+- **⚙️ सेटअप**: [स्थापना & सेटअप](docs/getting-started/installation.md) - प्लेटफर्म-विशेष गाइडहरू
+- **🛠️ व्यावहारिक**: [तपाईंको पहिलो प्रोजेक्ट](docs/getting-started/first-project.md) - चरण-दर-चरण ट्युटोरियल
+- **📋 छिटो संदर्भ**: [कमाण्ड चीट शीट](resources/cheat-sheet.md)
+
+#### व्यावहारिक अभ्यासहरू
+```bash
+# छिटो स्थापना जाँच
+azd version
+
+# आफ्नो पहिलो अनुप्रयोग तैनाथ गर्नुहोस्
+azd init --template todo-nodejs-mongo
+azd up
+```
+
+**💡 अध्याय परिणाम**: AZD प्रयोग गरेर Azure मा एक सरल वेब एप्लिकेशन सफलतापूर्वक तैनाथ गर्नुहोस्
+
+**✅ सफलता मान्यता:**
+```bash
+# अध्याय १ पूरा गरेपछि, तपाईंले निम्न गर्न सक्षम हुनुपर्नेछ:
+azd version              # स्थापित संस्करण देखाउँछ
+azd init --template todo-nodejs-mongo  # परियोजना आरम्भ गर्छ
+azd up                  # Azure मा परिनियोजित गर्छ
+azd show                # चलिरहेको अनुप्रयोगको URL देखाउँछ
+# अनुप्रयोग ब्राउजरमा खुल्छ र सही रूपमा काम गर्दछ
+azd down --force --purge  # संसाधनहरू सफा गर्छ
+```
+
+**📊 समय लगानी:** 30-45 मिनेट  
+**📈 पछि सीप स्तर:** आधारभूत अनुप्रयोगहरू स्वतन्त्र रूपमा तैनाथ गर्न सक्षम
+
+**✅ सफलता मान्यता:**
+```bash
+# अध्याय 1 पूरा गरेपछि, तपाईंले निम्न गर्न सक्षम हुनुहुनेछ:
+azd version              # स्थापित संस्करण देखाउँछ
+azd init --template todo-nodejs-mongo  # परियोजना आरम्भ गर्दछ
+azd up                  # Azure मा परिनियोजन गर्दछ
+azd show                # चलिरहेको एपको URL देखाउँछ
+# एप्लिकेसन ब्राउजरमा खुल्छ र काम गर्दछ
+azd down --force --purge  # संसाधनहरू सफा गर्दछ
+```
+
+**📊 समय लगानी:** 30-45 मिनेट  
+**📈 पछि सीप स्तर:** आधारभूत अनुप्रयोगहरू स्वतन्त्र रूपमा तैनाथ गर्न सक्षम
+
+---
+
+### 🤖 अध्याय 2: AI-प्रथम विकास (AI विकासकर्ताहरूका लागि सिफारिस गरिएको)
+**पूर्वशर्तहरू**: अध्याय 1 पूरा भएको  
+**अवधि**: 1-2 घण्टा  
+**जटिलता**: ⭐⭐
+
+#### तपाईंले के सिक्नुहुनेछ
+- AZD सँग Microsoft Foundry एकीकरण
+- AI-सक्षम अनुप्रयोगहरू तैनाथ गर्न
+- AI सेवाको कन्फिगरेसनहरू बुझ्न
+
+#### सिकाइ स्रोतहरू
+- **🎯 यहाँबाट सुरु गर्नुहोस्**: [Microsoft Foundry एकीकरण](docs/microsoft-foundry/microsoft-foundry-integration.md)
+- **📖 ढाँचा**: [AI मोडल तैनाथी](docs/microsoft-foundry/ai-model-deployment.md) - AI मोडेलहरू तैनाथ गर्ने र व्यवस्थापन गर्ने
+- **🛠️ वर्कशप**: [AI वर्कशप ल्याब](docs/microsoft-foundry/ai-workshop-lab.md) - आफ्नो AI समाधानहरू AZD-तैयार बनाउनुहोस्
+- **🎥 इन्टरएक्टिभ गाइड**: [वर्कशप सामग्रीहरू](workshop/README.md) - MkDocs सहित ब्राउजर-आधारित सिकाइ * DevContainer वातावरण
+- **📋 ढाँचाहरू**: [Microsoft Foundry ढाँचाहरू](../..)
+- **📝 उदाहरणहरू**: [AZD तैनाथी उदाहरणहरू](examples/README.md)
+
+#### व्यावहारिक अभ्यासहरू
+```bash
+# तपाईंको पहिलो एआई अनुप्रयोग तैनाथ गर्नुहोस्
+azd init --template azure-search-openai-demo
+azd up
+
+# थप एआई टेम्पलेटहरू प्रयास गर्नुहोस्
+azd init --template openai-chat-app-quickstart
+azd init --template agent-openai-python-prompty
+```
+
+**💡 अध्याय परिणाम**: RAG क्षमतासहित AI-सक्षम च्याट अनुप्रयोग तैनाथ र कन्फिगर गर्नुहोस्
+
+**✅ सफलता मान्यता:**
+```bash
+# अध्याय २ पछि, तपाईं सक्षम हुनुहुनेछ:
+azd init --template azure-search-openai-demo
+azd up
+# एआई च्याट इन्टरफेसको परीक्षण गर्नुहोस्
+# प्रश्न सोध्नुहोस् र स्रोतसहित एआई-समर्थित उत्तरहरू प्राप्त गर्नुहोस्
+# खोज एकीकरणले काम गर्छ भन्ने जाँच गर्नुहोस्
+azd monitor  # Application Insights मा टेलिमेट्री देखिएको छ कि छैन जाँच गर्नुहोस्
+azd down --force --purge
+```
+
+**📊 समय लगानी:** 1-2 घण्टा  
+**📈 पछि सीप स्तर:** उत्पादन-तयार AI अनुप्रयोगहरू तैनाथ र कन्फिगर गर्न सक्षम  
+**💰 लागत सचेतता:** विकास लागत $80-150/महिना, उत्पादन लागत $300-3500/महिना बुझ्नुहोस्
+
+#### 💰 AI तैनाथीहरूको लागि लागत विचारहरू
+
+**विकास वातावरण (अनुमानित $80-150/महिना):**
+- Azure OpenAI (Pay-as-you-go): $0-50/महिना (टोकन प्रयोगको आधारमा)
+- AI Search (Basic tier): $75/महिना
+- Container Apps (Consumption): $0-20/महिना
+- Storage (Standard): $1-5/महिना
+
+**उत्पादन वातावरण (अनुमानित $300-3,500+/महिना):**
+- Azure OpenAI (PTU for consistent performance): $3,000+/महिना OR Pay-as-go with high volume
+- AI Search (Standard tier): $250/महिना
+- Container Apps (Dedicated): $50-100/महिना
+- Application Insights: $5-50/महिना
+- Storage (Premium): $10-50/महिना
+
+**💡 लागत अनुकूलन सुझावहरू:**
+- सिक्नको लागि **Free Tier** Azure OpenAI प्रयोग गर्नुहोस् (50,000 टोकन/महिना समावेश)
+- सक्रिय रूपमा विकास नगर्दा स्रोतहरू डिलेअलोकेट गर्न `azd down` चलाउनुहोस्
+- खपत-आधारित बिलिङबाट सुरु गर्नुहोस्, केवल उत्पादनका लागि PTU मा अपग्रेड गर्नुहोस्
+- तैनाथी अघि लागत अनुमान गर्न `azd provision --preview` प्रयोग गर्नुहोस्
+- अटो-स्केलिङ सक्षम गर्नुहोस्: वास्तविक प्रयोगको लागि मात्र तिर्नुहोस्
+
+**लागत अनुगमन:**
+```bash
+# अनुमानित मासिक लागतहरू जाँच गर्नुहोस्
+azd provision --preview
+
+# Azure पोर्टलमा वास्तविक लागतहरू अनुगमन गर्नुहोस्
+az consumption budget list --resource-group <your-rg>
+```
+
+---
+
+### ⚙️ अध्याय 3: कन्फिगरेसन र प्रमाणीकरण
+**पूर्वशर्तहरू**: अध्याय 1 पूरा गरिएको  
+**अवधि**: 45-60 मिनेट  
+**जटिलता**: ⭐⭐
+
+#### तपाईंले के सिक्नुहुनेछ
+- पर्यावरण कन्फिगरेसन र व्यवस्थापन
+- प्रमाणीकरण र सुरक्षा उत्कृष्ट अभ्यासहरू
+- स्रोत नामकरण र संगठन
+
+#### सिकाइ स्रोतहरू
+- **📖 कन्फिगरेसन**: [कन्फिगरेसन गाइड](docs/getting-started/configuration.md) - पर्यावरण सेटअप
+- **🔐 सुरक्षा**: [प्रमाणीकरण ढाँचाहरू र प्रबन्धित पहिचान](docs/getting-started/authsecurity.md) - प्रमाणीकरण ढाँचाहरू
+- **📝 उदाहरणहरू**: [डेटाबेस एप्लिकेशन उदाहरण](examples/database-app/README.md) - AZD डेटाबेस उदाहरणहरू
+
+#### व्यावहारिक अभ्यासहरू
+- एकाधिक वातावरणहरू कन्फिगर गर्नुहोस् (dev, staging, prod)
+- प्रबन्धित पहिचान प्रमाणीकरण सेट अप गर्नुहोस्
+- पर्यावरण-विशिष्ट कन्फिगरेसनहरू लागू गर्नुहोस्
+
+**💡 अध्याय परिणाम**: उपयुक्त प्रमाणीकरण र सुरक्षासँग एकाधिक वातावरणहरू व्यवस्थापन गर्नुहोस्
+
+---
+
+### 🏗️ अध्याय 4: पूर्वाधारलाई कोडको रूपमा र तैनाथी
+**पूर्वशर्तहरू**: अध्यायहरू 1-3 पूरा गरिएको  
+**अवधि**: 1-1.5 घण्टा  
+**जटिलता**: ⭐⭐⭐
+
+#### तपाईंले के सिक्नुहुनेछ
+- उन्नत तैनाथी ढाँचाहरू
+- Bicep प्रयोग गरी पूर्वाधारलाई कोडको रूपमा
+- स्रोत प्राविजन रणनीतिहरू
+
+#### सिकाइ स्रोतहरू
+- **📖 तैनाथी**: [तैनाथी गाइड](docs/deployment/deployment-guide.md) - पूर्ण कार्यप्रवाहहरू
+- **🏗️ प्राविजनिङ**: [स्रोत प्राविजन](docs/deployment/provisioning.md) - Azure स्रोत व्यवस्थापन
+- **📝 उदाहरणहरू**: [Container App Example](../../examples/container-app) - कन्टेनरयुक्त तैनाथीहरू
+
+#### व्यावहारिक अभ्यासहरू
+- कस्टम Bicep टेम्प्लेटहरू सिर्जना गर्नुहोस्
+- बहु-सेवा अनुप्रयोगहरू तैनाथ गर्नुहोस्
+- ब्लू-ग्रीन तैनाथी रणनीतिहरू लागू गर्नुहोस्
+
+**💡 अध्याय परिणाम**: कस्टम पूर्वाधार टेम्पलेटहरू प्रयोग गरी जटिल बहु-सेवा अनुप्रयोगहरू तैनाथ गर्नुहोस्
+
+---
+
+### 🎯 अध्याय 5: बहु-एजेन्ट AI समाधानहरू (उन्नत)
+**पूर्वशर्तहरू**: अध्यायहरू 1-2 पूरा गरिएको  
+**अवधि**: 2-3 घण्टा  
+**जटिलता**: ⭐⭐⭐⭐
+
+#### तपाईंले के सिक्नुहुनेछ
+- बहु-एजेन्ट वास्तुकला ढाँचाहरू
+- एजेन्ट ओरकेस्ट्रेशन र समन्वय
+- उत्पादन-तयार AI तैनाथीहरू
+
+#### सिकाइ स्रोतहरू
+- **🤖 विशेष परियोजना**: [रिटेल बहु-एजेन्ट समाधान](examples/retail-scenario.md) - पूर्ण कार्यान्वयन
+- **🛠️ ARM टेम्पलेटहरू**: [ARM Template Package](../../examples/retail-multiagent-arm-template) - एक-क्लिक तैनाती
+- **📖 वास्तुकला**: [Multi-agent coordination patterns](/docs/pre-deployment/coordination-patterns.md) - ढाँचाहरू
+
+#### व्यावहारिक अभ्यासहरू
+```bash
+# पूर्ण खुद्रा बहु-एजेन्ट समाधान परिनियोजन गर्नुहोस्
+cd examples/retail-multiagent-arm-template
+./deploy.sh
+
+# एजेन्ट विन्यासहरू अन्वेषण गर्नुहोस्
+az deployment group show --resource-group <rg-name> --name <deployment-name>
+```
+
+**💡 अध्याय परिणाम**: Customer र Inventory एजेन्टहरूसँग उत्पादन-तयार बहु-एजेन्ट AI समाधान तैनात र व्यवस्थापन गर्नुहोस्
+
+---
+
+### 🔍 अध्याय 6: पूर्व-तैनाती मान्यकरण र योजना
+**पूर्वआवश्यकताहरू**: अध्याय 4 पूरा  
+**अवधि**: 1 hour  
+**जटिलता**: ⭐⭐
+
+#### तपाईंले के सिक्नुहुनेछ
+- क्षमता योजना र स्रोत मान्यकरण
+- SKU छनोट रणनीतिहरू
+- प्रि-फ्लाइट जाँचहरू र स्वचालन
+
+#### सिकाइ स्रोतहरू
+- **📊 योजना**: [Capacity Planning](docs/pre-deployment/capacity-planning.md) - संसाधन मान्यकरण
+- **💰 चयन**: [SKU Selection](docs/pre-deployment/sku-selection.md) - लागत-कुशल विकल्पहरू
+- **✅ मान्यकरण**: [Pre-flight Checks](docs/pre-deployment/preflight-checks.md) - स्वचालित स्क्रिप्टहरू
+
+#### व्यावहारिक अभ्यासहरू
+- क्षमता मान्यकरण स्क्रिप्टहरू चलाउनुहोस्
+- लागतका लागि SKU छनोटहरू अनुकूल गर्नुहोस्
+- स्वचालित पूर्व-तैनाती जाँचहरू लागू गर्नुहोस्
+
+**💡 अध्याय परिणाम**: कार्यान्वयन भन्दा पहिले तैनातीहरू मान्य र अनुकूल गर्नुहोस्
+
+---
+
+### 🚨 अध्याय 7: समस्या निवारण र डिबगिङ
+**पूर्वआवश्यकताहरू**: कुनै पनि तैनाती अध्याय पूरा भएको  
+**अवधि**: 1-1.5 hours  
+**जटिलता**: ⭐⭐
+
+#### तपाईंले के सिक्नुहुनेछ
+- व्यवस्थित डिबगिङ दृष्टिकोणहरू
+- सामान्य समस्याहरू र समाधानहरू
+- AI-विशिष्ट समस्या निवारण
+
+#### सिकाइ स्रोतहरू
+- **🔧 सामान्य समस्या**: [Common Issues](docs/troubleshooting/common-issues.md) - FAQ र समाधानहरू
+- **🕵️ डिबगिङ**: [Debugging Guide](docs/troubleshooting/debugging.md) - चरण-द्वारा-चरण रणनीतिहरू
+- **🤖 AI समस्याहरू**: [AI-Specific Troubleshooting](docs/troubleshooting/ai-troubleshooting.md) - AI सेवा समस्याहरू
+
+#### व्यावहारिक अभ्यासहरू
+- तैनाती विफलताहरू निदान गर्नुहोस्
+- प्रमाणीकरण समस्याहरू समाधान गर्नुहोस्
+- AI सेवा कनेक्टिविटी डिबग गर्नुहोस्
+
+**💡 अध्याय परिणाम**: स्वतन्त्र रूपमा सामान्य तैनाती समस्याहरू निदान र समाधान गर्नुहोस्
+
+---
+
+### 🏢 अध्याय 8: उत्पादन र एंटरप्राइज ढाँचाहरू
+**पूर्वआवश्यकताहरू**: अध्यायहरू 1-4 पूरा  
+**अवधि**: 2-3 hours  
+**जटिलता**: ⭐⭐⭐⭐
+
+#### तपाईंले के सिक्नुहुनेछ
+- उत्पादन तैनाती रणनीतिहरू
+- एंटरप्राइज सुरक्षा ढाँचाहरू
+- निगरानी र लागत अनुकूलन
+
+#### सिकाइ स्रोतहरू
+- **🏭 उत्पादन**: [Production AI Best Practices](docs/microsoft-foundry/production-ai-practices.md) - एंटरप्राइज ढाँचाहरू
+- **📝 उदाहरणहरू**: [Microservices Example](../../examples/microservices) - जटिल वास्तुकला
+- **📊 निगरानी**: [Application Insights integration](docs/pre-deployment/application-insights.md) - निगरानी
+
+#### व्यावहारिक अभ्यासहरू
+- एंटरप्राइज सुरक्षा ढाँचाहरू लागू गर्नुहोस्
+- व्यापक निगरानी सेटअप गर्नुहोस्
+- सही शासनसहित उत्पादनमा तैनाती गर्नुहोस्
+
+**💡 अध्याय परिणाम**: पूर्ण उत्पादन क्षमताहरूसहित एंटरप्राइज-तयार अनुप्रयोगहरू तैनात गर्नुहोस्
+
+---
+
+## 🎓 कार्यशाला सिंहावलोकन: व्यवहारिक सिक्ने अनुभव
+
+> **⚠️ WORKSHOP STATUS: Active Development**  
+> कार्यशाला सामग्रीहरू हाल विकास र परिष्करणको अवस्थामा छन्। मूल मोड्युलहरू कार्यरत छन्, तर केही उन्नत खण्डहरू अपूर्ण छन्। हामी सक्रिय रूपमा सबै सामग्री पूरा गर्न काम गरिरहेका छौं। [Track progress →](workshop/README.md)
+
+### अन्तरक्रियात्मक कार्यशाला सामग्रीहरू
+**ब्राउजर-आधारित उपकरणहरू र मार्गनिर्देशित अभ्यासहरूसहित व्यापक, अन्तरक्रियात्मक सिकाइ अनुभव**
+
+हाम्रो कार्यशाला सामग्रीहरूले अध्याय-आधारित पाठ्यक्रमलाई पूरक गर्ने संरचित, अन्तरक्रियात्मक सिकाइ अनुभव प्रदान गर्छन्। कार्यशाला आत्म-अध्ययन र प्रशिक्षक-नेतृत्व सत्र दुबैका लागि डिजाइन गरिएको छ।
+
+#### 🛠️ कार्यशालाका सुविधाहरू
+- **ब्राउजर-आधारित इन्टरफेस**: खोज, प्रतिलिपि, र थिम सुविधाहरू सहित पूर्ण MkDocs-समर्थित कार्यशाला
+- **GitHub Codespaces इन्टिग्रेसन**: एक-क्लिक विकास वातावरण सेटअप
+- **संरचित सिकाइ मार्ग**: 7-चरण निर्देशित अभ्यासहरू (कुल 3.5 घण्टा)
+- **खोज → तैनाती → कस्टमाइजेसन**: प्रगतिशील कार्यप्रणाली
+- **इन्टरएक्टिभ DevContainer वातावरण**: पूर्व-कन्फिगर गरिएको उपकरणहरू र निर्भरता
+
+#### 📚 कार्यशाला संरचना
+कार्यशालाले **खोज → तैनाती → कस्टमाइजेसन** कार्यप्रणाली पालन गर्छ:
+
+1. **खोज चरण** (45 मिनेट)
+   - Microsoft Foundry टेम्पलेटहरू र सेवाहरू अन्वेषण गर्नुहोस्
+   - बहु-एजेन्ट वास्तुकला ढाँचाहरू बुझ्नुहोस्
+   - तैनाती आवश्यकताहरू र पूर्वआवश्यकताहरू समीक्षा गर्नुहोस्
+
+2. **तैनाती चरण** (2 hours)
+   - AZD प्रयोग गरेर AI अनुप्रयोगहरूको व्यावहारिक तैनाती
+   - Azure AI सेवाहरू र एन्डपोइन्टहरू कन्फिगर गर्नुहोस्
+   - सुरक्षा र प्रमाणीकरण ढाँचाहरू लागू गर्नुहोस्
+
+3. **कस्टमाइजेसन चरण** (45 mins)
+   - विशिष्ट प्रयोग केसहरूको लागि अनुप्रयोगहरू परिमार्जन गर्नुहोस्
+   - उत्पादन तैनातीको लागि अनुकूलन गर्नुहोस्
+   - निगरानी र लागत व्यवस्थापन लागू गर्नुहोस्
+
+#### 🚀 कार्यशालासँग सुरु गर्ने तरिका
+```bash
+# विकल्प 1: GitHub Codespaces (सिफारिश गरिन्छ)
+# रिपोजिटरीमा "Code" → "Create codespace on main" मा क्लिक गर्नुहोस्
+
+# विकल्प 2: स्थानीय विकास
+git clone https://github.com/microsoft/azd-for-beginners.git
+cd azd-for-beginners/workshop
+# workshop/README.md मा सेटअप निर्देशनहरू अनुसरण गर्नुहोस्
+```
+
+#### 🎯 कार्यशाला शिक्षण नतिजाहरू
+कार्यशाला पूरा गरेर सहभागीहरूले:
+- **उत्पादन AI अनुप्रयोगहरू तैनात गर्नुहोस्**: Microsoft Foundry सेवाहरू सहित AZD प्रयोग गर्नुहोस्
+- **बहु-एजेन्ट वास्तुकलाहरूमा दक्षता हासिल गर्नुहोस्**: समन्वित AI एजेन्ट समाधानहरू लागू गर्नुहोस्
+- **सुरक्षा उत्तम अभ्यासहरू लागू गर्नुहोस्**: प्रमाणीकरण र पहुँच नियन्त्रण कन्फिगर गर्नुहोस्
+- **स्केलका लागि अनुकूलन गर्नुहोस्**: लागत-प्रभावी, प्रदर्शनक्षम तैनाती डिजाइन गर्नुहोस्
+- **तैनातीहरूमा समस्या निवारण गर्नुहोस्**: सामान्य समस्याहरू स्वतन्त्र रूपमा समाधान गर्नुहोस्
+
+#### 📖 कार्यशाला स्रोतहरू
+- **🎥 अन्तरक्रियात्मक मार्गदर्शक**: [Workshop Materials](workshop/README.md) - ब्राउजर-आधारित सिकाइ वातावरण
+- **📋 चरण-दर-चरण निर्देशन**: [Guided Exercises](../../workshop/docs/instructions) - विस्तृत वाकथ्रु
+- **🛠️ AI कार्यशाला ल्याब**: [AI Workshop Lab](docs/microsoft-foundry/ai-workshop-lab.md) - AI-केन्द्रित अभ्यासहरू
+- **💡 छिटो सुरु गर्नुहोस्**: [Workshop Setup Guide](workshop/README.md#quick-start) - वातावरण कन्फिगरेसन
+
+**उपयुक्त**: कर्पोरेट प्रशिक्षण, विश्वविद्यालय पाठ्यक्रमहरू, आत्म-अध्ययन, र डेभेपर बूटक्याम्पहरूको लागि।
+
+---
+
+## 📖 Azure Developer CLI के हो?
+
+Azure Developer CLI (azd) एक डेभेलपर-केंद्रित कमाण्ड-लाइन इन्टरफेस हो जसले Azure मा अनुप्रयोगहरू निर्माण र तैनाती गर्ने प्रक्रियालाई तीव्र बनाउँछ। यसले प्रदान गर्छ:
+
+- **टेम्पलेट-आधारित तैनातीहरू** - सामान्य अनुप्रयोग ढाँचाहरूका लागि पूर्व-निर्मित टेम्पलेटहरू प्रयोग गर्नुहोस्
+- **इन्फ्रास्ट्रक्चर एज कोड** - Bicep वा Terraform प्रयोग गरेर Azure स्रोतहरू व्यवस्थापन गर्नुहोस्  
+- **एकीकृत कार्यप्रवाहहरू** - सहज रूपमा प्राविजन, तैनाती, र अनुप्रयोगहरू निगरानी गर्नुहोस्
+- **डेभलपर-अनुकूल** - डेभलपर उत्पादकता र अनुभवका लागि अनुकूलित
+
+### **AZD + Microsoft Foundry: AI तैनातीहरूको लागि उत्तम**
+
+**किन AZD AI समाधानहरूका लागि?** AZD ले AI डेभलपरहरूले सामना गर्ने प्रमुख चुनौतीहरू समाधान गर्छ:
+
+- **AI-तयार टेम्पलेटहरू** - Azure OpenAI, Cognitive Services, र ML कार्यभारहरूको लागि पूर्व-कन्फिगर गरिएको टेम्पलेटहरू
+- **सुरक्षित AI तैनातीहरू** - AI सेवाहरू, API कुञ्जीहरू, र मोडेल एन्डपोइन्टहरूको लागि बिल्ट-इन सुरक्षा ढाँचाहरू  
+- **उत्पादन AI ढाँचाहरू** - स्केलेबल, लागत-कुशल AI अनुप्रयोग तैनातीका लागि उत्तम अभ्यासहरू
+- **एन्ड-टु-एन्ड AI कार्यप्रवाहहरू** - मोडेल विकासदेखि उत्पादन तैनातीसम्म उपयुक्त निगरानी सहित
+- **लागत अनुकूलन** - AI कार्यभारहरूको लागि स्मार्ट स्रोत विनियोजन र स्केलिङ रणनीतिहरू
+- **Microsoft Foundry एकीकरण** - Microsoft Foundry मोडेल क्याटलग र एन्डपोइन्टहरूसँग सहज जडान
+
+---
+
+## 🎯 टेम्पलेटहरू र उदाहरणहरूको पुस्तकालय
+
+### विशेष: Microsoft Foundry टेम्पलेटहरू
+**यदि तपाईं AI अनुप्रयोगहरू तैनात गर्दै हुनुहुन्छ भने यहाँबाट सुरु गर्नुहोस्!**
+
+> **नोट:** यी टेम्पलेटहरूले विभिन्न AI ढाँचाहरू प्रदर्शन गर्दछन्। केही बाह्य Azure Samples हुन्, अन्यहरू स्थानीय कार्यान्वयनहरू हुन्।
+
+| Template | Chapter | Complexity | Services | Type |
+|----------|---------|------------|----------|------|
+| [**AI च्याटसँग सुरू गर्नुहोस्**](https://github.com/Azure-Samples/get-started-with-ai-chat) | Chapter 2 | ⭐⭐ | AzureOpenAI + Azure AI Model Inference API + Azure AI Search + Azure Container Apps + Application Insights | External |
+| [**AI एजेन्टहरूबाट सुरू गर्नुहोस्**](https://github.com/Azure-Samples/get-started-with-ai-agents) | Chapter 2 | ⭐⭐ | Azure AI Agent Service + AzureOpenAI + Azure AI Search + Azure Container Apps + Application Insights| External |
+| [**Azure Search + OpenAI डेमो**](https://github.com/Azure-Samples/azure-search-openai-demo) | Chapter 2 | ⭐⭐ | AzureOpenAI + Azure AI Search + App Service + Storage | External |
+| [**OpenAI च्याट एप क्विकस्टार्ट**](https://github.com/Azure-Samples/openai-chat-app-quickstart) | Chapter 2 | ⭐ | AzureOpenAI + Container Apps + Application Insights | External |
+| [**Agent OpenAI Python Prompty**](https://github.com/Azure-Samples/agent-openai-python-prompty) | Chapter 5 | ⭐⭐⭐ | AzureOpenAI + Azure Functions + Prompty | External |
+| [**Contoso Chat RAG**](https://github.com/Azure-Samples/contoso-chat) | Chapter 8 | ⭐⭐⭐⭐ | AzureOpenAI + AI Search + Cosmos DB + Container Apps | External |
+| [**Retail Multi-Agent Solution**](examples/retail-scenario.md) | Chapter 5 | ⭐⭐⭐⭐ | AzureOpenAI + AI Search + Storage + Container Apps + Cosmos DB | **Local** |
+
+### विशेष: पूर्ण सिकाइ परिदृश्यहरू
+**उत्पादन-तयार अनुप्रयोग टेम्पलेटहरू सिकाइ अध्यायहरूसँग मिलाइएका**
+
+| Template | Learning Chapter | Complexity | Key Learning |
+|----------|------------------|------------|--------------|
+| [**openai-chat-app-quickstart**](https://github.com/Azure-Samples/openai-chat-app-quickstart) | Chapter 2 | ⭐ | आधारभूत AI तैनाती ढाँचाहरू |
+| [**azure-search-openai-demo**](https://github.com/Azure-Samples/azure-search-openai-demo) | Chapter 2 | ⭐⭐ | Azure AI Search सँग RAG कार्यान्वयन |
+| [**ai-document-processing**](https://github.com/Azure-Samples/ai-document-processing) | Chapter 4 | ⭐⭐ | Document Intelligence एकीकरण |
+| [**agent-openai-python-prompty**](https://github.com/Azure-Samples/agent-openai-python-prompty) | Chapter 5 | ⭐⭐⭐ | एजेन्ट फ्रेमवर्क र फङ्सन कलिङ |
+| [**contoso-chat**](https://github.com/Azure-Samples/contoso-chat) | Chapter 8 | ⭐⭐⭐ | एंटरप्राइज AI ऑर्केस्ट्रेसन |
+| [**retail-multi-agent-solution**](examples/retail-scenario.md) | Chapter 5 | ⭐⭐⭐⭐ | Customer र Inventory एजेन्टहरूसहित बहु-एजेन्ट वास्तुकला |
+
+### उदाहरण प्रकार द्वारा सिकाइ
+
+> **📌 स्थानीय vs. बाह्य उदाहरणहरू:**  
+> **स्थानीय उदाहरणहरू** (यो रेपोमा) = तुरुन्त प्रयोग गर्न तयार  
+> **बाह्य उदाहरणहरू** (Azure Samples) = लिंक गरिएका रिपोजिटरीहरूबाट क्लोन गर्नुहोस्
+
+#### स्थानीय उदाहरणहरू (तुरुन्त प्रयोग गर्न तयार)
+- [**Retail Multi-Agent Solution**](examples/retail-scenario.md) - ARM टेम्पलेटहरूसहित पूर्ण उत्पादन-तयार कार्यान्वयन
+  - बहु-एजेन्ट वास्तुकला (Customer + Inventory एजेन्टहरू)
+  - व्यापक निगरानी र मूल्याङ्कन
+  - ARM टेम्पलेटमार्फत एक-क्लिक तैनाती
+
+#### स्थानीय उदाहरणहरू - कन्टेनर अनुप्रयोगहरू (अध्याय 2-5)
+**यस रिपोजिटरीमा व्यापक कन्टेनर तैनाती उदाहरणहरू:**
+- [**Container App Examples**](examples/container-app/README.md) - कन्टेनराइज्ड तैनातीहरूको पूर्ण मार्गदर्शिका
+  - [Simple Flask API](../../examples/container-app/simple-flask-api) - scale-to-zero सहित आधारभूत REST API
+  - [Microservices Architecture](../../examples/container-app/microservices) - उत्पादन-तयार बहु-सर्भिस तैनाती
+  - क्विक स्टार्ट, उत्पादन, र उन्नत तैनाती ढाँचाहरू
+  - निगरानी, सुरक्षा, र लागत अनुकूलन मार्गदर्शन
+
+#### बाह्य उदाहरणहरू - सरल अनुप्रयोगहरू (अध्याय 1-2)
+**सुरु गर्न यी Azure Samples रिपोजिटरीहरू क्लोन गर्नुहोस्:**
+- [Simple Web App - Node.js + MongoDB](https://github.com/Azure-Samples/todo-nodejs-mongo) - आधारभूत तैनाती ढाँचाहरू
+- [Static Website - React SPA](https://github.com/Azure-Samples/todo-csharp-sql-swa-func) - स्थिर सामग्री तैनाती
+- [Container App - Python Flask](https://github.com/Azure-Samples/container-apps-store-api-microservice) - REST API तैनाती
+
+#### बाह्य उदाहरणहरू - डेटाबेस एकीकरण (अध्याय 3-4)  
+- [Database App - C# + SQL](https://github.com/Azure-Samples/todo-csharp-sql) - डेटाबेस कनेक्टिविटी ढाँचाहरू
+- [Functions + Cosmos DB](https://github.com/Azure-Samples/todo-python-mongo-swa-func) - सर्भरलेस डाटा वर्कफ्लो
+
+#### बाह्य उदाहरणहरू - उन्नत ढाँचाहरू (अध्याय 4-8)
+- [Java Microservices](https://github.com/Azure-Samples/java-microservices-aca-lab) - बहु-सर्भिस वास्तुकलाहरू
+- [Container Apps Jobs](https://github.com/Azure-Samples/container-apps-jobs) - पृष्ठभूमि प्रशोधन  
+- [Enterprise ML Pipeline](https://github.com/Azure-Samples/mlops-v2) - उत्पादन-तयार ML ढाँचाहरू
+
+### बाह्य टेम्पलेट संग्रहहरू
+- [**Official AZD Template Gallery**](https://azure.github.io/awesome-azd/) - आधिकारिक र समुदाय टेम्पलेटहरूको curated संग्रह
+- [**Azure Developer CLI Templates**](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/azd-templates) - Microsoft Learn टेम्पलेट डकुमेन्टेसन
+- [**Examples Directory**](examples/README.md) - विस्तृत व्याख्याहरू सहित स्थानीय सिकाइ उदाहरणहरू
+
+---
+
+## 📚 सिकाइ स्रोतहरू र सन्दर्भहरू
+
+### छिटो सन्दर्भहरू
+- [**Command Cheat Sheet**](resources/cheat-sheet.md) - प्रत्येक अध्यायअनुसार क्रमबद्ध महत्वपूर्ण azd कमाण्डहरू
+- [**Glossary**](resources/glossary.md) - Azure र azd सम्बन्धी शब्दावली  
+- [**FAQ**](resources/faq.md) - सिकाइ अध्यायअनुसार व्यवस्थित सामान्य प्रश्नहरू
+- [**Study Guide**](resources/study-guide.md) - व्यापक अभ्यासहरू
+
+### व्यावहारिक कार्यशालाहरू
+- [**AI Workshop Lab**](docs/microsoft-foundry/ai-workshop-lab.md) - तपाईँका AI समाधानहरू AZD-deployable बनाउनुहोस् (2-3 hours)
+- [**Interactive Workshop Guide**](workshop/README.md) - ब्राउजर-आधारित कार्यशाला MkDocs र DevContainer Environmentसहित
+- [**Structured Learning Path**](../../workshop/docs/instructions) - 7-step निर्देशित अभ्यासहरू (Discovery → Deployment → Customization)
+- [**AZD For Beginners Workshop**](workshop/README.md) - GitHub Codespaces इन्प्टिग्रेसन सहित पूर्ण व्यावहारिक कार्यशाला सामग्री
+
+### बाह्य सिकाइ स्रोतहरू
+- [Azure Developer CLI Documentation](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/)
+- [Azure Architecture Center](https://learn.microsoft.com/en-us/azure/architecture/)
+- [Azure Pricing Calculator](https://azure.microsoft.com/pricing/calculator/)
+- [Azure Status](https://status.azure.com/)
+
+---
+
+## 🔧 छिटो समस्या समाधान मार्गदर्शिका
+
+**नयाँ प्रयोगकर्ताहरूले सामना गर्ने सामान्य समस्या र तात्कालिक समाधानहरू:**
+
+### ❌ "azd: command not found"
+
+```bash
+# पहिले AZD स्थापना गर्नुहोस्
+# विन्डोज (पावरशेल):
+winget install microsoft.azd
+
+# म्याकओएस:
+brew tap azure/azd && brew install azd
+
+# लिनक्स:
+curl -fsSL https://aka.ms/install-azd.sh | bash
+
+# स्थापना जाँच्नुहोस्
+azd version
+```
+
+### ❌ "No subscription found" or "Subscription not set"
+
+```bash
+# उपलब्ध सदस्यताहरू सूचीबद्ध गर्नुहोस्
+az account list --output table
+
+# पूर्वनिर्धारित सदस्यता सेट गर्नुहोस्
+az account set --subscription "<subscription-id-or-name>"
+
+# AZD वातावरणको लागि सेट गर्नुहोस्
+azd env set AZURE_SUBSCRIPTION_ID "<subscription-id>"
+
+# जाँच गर्नुहोस्
+az account show
+```
+
+### ❌ "InsufficientQuota" or "Quota exceeded"
+
+```bash
+# विभिन्न Azure क्षेत्रहरू प्रयास गर्नुहोस्
+azd env set AZURE_LOCATION "westus2"
+azd up
+
+# वा विकासमा साना SKUहरू प्रयोग गर्नुहोस्
+# infra/main.parameters.json सम्पादन गर्नुहोस्:
+{
+  "sku": "B1"  // Instead of "P1V2"
+}
+```
+
+### ❌ "azd up" fails halfway through
+
+```bash
+# विकल्प 1: सफा गरी फेरि प्रयास गर्नुहोस्
+azd down --force --purge
+azd up
+
+# विकल्प 2: केवल पूर्वाधार ठीक गर्नुहोस्
+azd provision
+
+# विकल्प 3: विस्तृत लगहरू जाँच गर्नुहोस्
+azd show
+azd logs
+```
+
+### ❌ "Authentication failed" or "Token expired"
+
+```bash
+# पुनः प्रमाणीकरण गर्नुहोस्
+az logout
+az login
+
+azd auth logout
+azd auth login
+
+# प्रमाणीकरण जाँच गर्नुहोस्
+az account show
+```
+
+### ❌ "Resource already exists" or naming conflicts
+
+```bash
+# AZD अद्वितीय नामहरू सिर्जना गर्छ, तर द्वन्द्व भएमा:
+azd down --force --purge
+
+# त्यसपछि नयाँ वातावरणमा पुनः प्रयास गर्नुहोस्
+azd env new dev-v2
+azd up
+```
+
+### ❌ Template deployment taking too long
+
+**सामान्य प्रतीक्षा समयहरू:**
+- Simple web app: 5-10 minutes
+- App with database: 10-15 minutes
+- AI applications: 15-25 minutes (OpenAI provisioning is slow)
+
+```bash
+# प्रगति जाँच्नुहोस्
+azd show
+
+# यदि 30 मिनेटभन्दा बढी अड्किएको छ भने, Azure पोर्टल जाँच गर्नुहोस्:
+azd monitor
+# असफल डिप्लोयमेन्टहरू खोज्नुहोस्
+```
+
+### ❌ "Permission denied" or "Forbidden"
+
+```bash
+# आफ्नो Azure भूमिका जाँच गर्नुहोस्
+az role assignment list --assignee $(az account show --query user.name -o tsv)
+
+# तपाईंलाई कम्तीमा "Contributor" भूमिका आवश्यक छ
+# आफ्नो Azure प्रशासकलाई निम्न अधिकारहरू प्रदान गर्न भन्नुहोस्:
+# - Contributor (संसाधनहरूको लागि)
+# - User Access Administrator (भूमिका नियुक्तिहरूका लागि)
+```
+
+### ❌ Can't find deployed application URL
+
+```bash
+# सबै सेवा अन्तबिन्दुहरू देखाउनुहोस्
+azd show
+
+# वा Azure पोर्टल खोल्नुहोस्
+azd monitor
+
+# निर्दिष्ट सेवा जाँच गर्नुहोस्
+azd env get-values
+# *_URL वेरिएबलहरू खोज्नुहोस्
+```
+
+### 📚 पूर्ण समस्या समाधान स्रोतहरू
+
+- **Common Issues Guide:** [Detailed Solutions](docs/troubleshooting/common-issues.md)
+- **AI-Specific Issues:** [AI Troubleshooting](docs/troubleshooting/ai-troubleshooting.md)
+- **Debugging Guide:** [Step-by-step Debugging](docs/troubleshooting/debugging.md)
+- **Get Help:** [Azure Discord](https://discord.gg/microsoft-azure) #azure-developer-cli
+
+---
+
+## 🔧 छिटो समस्या समाधान मार्गदर्शिका
+
+**नयाँ प्रयोगकर्ताहरूले सामना गर्ने सामान्य समस्या र तात्कालिक समाधानहरू:**
+
+<details>
+<summary><strong>❌ "azd: command not found"</strong></summary>
+
+```bash
+# पहिले AZD स्थापना गर्नुहोस्
+# विन्डोज (पावरशेल):
+winget install microsoft.azd
+
+# म्याकओएस:
+brew tap azure/azd && brew install azd
+
+# लिनक्स:
+curl -fsSL https://aka.ms/install-azd.sh | bash
+
+# स्थापना जाँच गर्नुहोस्
+azd version
+```
+</details>
+
+<details>
+<summary><strong>❌ "No subscription found" or "Subscription not set"</strong></summary>
+
+```bash
+# उपलब्ध सदस्यताहरू सूचीबद्ध गर्नुहोस्
+az account list --output table
+
+# पूर्वनिर्धारित सदस्यता सेट गर्नुहोस्
+az account set --subscription "<subscription-id-or-name>"
+
+# AZD वातावरणका लागि सेट गर्नुहोस्
+azd env set AZURE_SUBSCRIPTION_ID "<subscription-id>"
+
+# पुष्टि गर्नुहोस्
+az account show
+```
+</details>
+
+<details>
+<summary><strong>❌ "InsufficientQuota" or "Quota exceeded"</strong></summary>
+
+```bash
+# विभिन्न Azure क्षेत्रहरू प्रयास गर्नुहोस्
+azd env set AZURE_LOCATION "westus2"
+azd up
+
+# वा विकासमा साना SKUहरू प्रयोग गर्नुहोस्
+# infra/main.parameters.json सम्पादन गर्नुहोस्:
+{
+  "sku": "B1"  // Instead of "P1V2"
+}
+```
+</details>
+
+<details>
+<summary><strong>❌ "azd up" fails halfway through</strong></summary>
+
+```bash
+# विकल्प 1: सफा गर्नुहोस् र पुनः प्रयास गर्नुहोस्
+azd down --force --purge
+azd up
+
+# विकल्प 2: सिर्फ पूर्वाधार ठीक गर्नुहोस्
+azd provision
+
+# विकल्प 3: विस्तृत लगहरू जाँच गर्नुहोस्
+azd show
+azd logs
+```
+</details>
+
+<details>
+<summary><strong>❌ "Authentication failed" or "Token expired"</strong></summary>
+
+```bash
+# पुनः प्रमाणिकरण गर्नुहोस्
+az logout
+az login
+
+azd auth logout
+azd auth login
+
+# प्रमाणिकरण जाँच गर्नुहोस्
+az account show
+```
+</details>
+
+<details>
+<summary><strong>❌ "Resource already exists" or naming conflicts</strong></summary>
+
+```bash
+# AZD अद्वितीय नामहरू सिर्जना गर्छ, तर नाम टकराएमा:
+azd down --force --purge
+
+# त्यसपछि नयाँ वातावरणमा फेरि प्रयास गर्नुहोस्
+azd env new dev-v2
+azd up
+```
+</details>
+
+<details>
+<summary><strong>❌ Template deployment taking too long</strong></summary>
+
+**सामान्य प्रतीक्षा समयहरू:**
+- Simple web app: 5-10 minutes
+- App with database: 10-15 minutes
+- AI applications: 15-25 minutes (OpenAI provisioning is slow)
+
+```bash
+# प्रगति जाँच गर्नुहोस्
+azd show
+
+# यदि >30 मिनेटसम्म अड्किएको भए, Azure पोर्टल जाँच गर्नुहोस्:
+azd monitor
+# असफल डिप्लोयमेन्टहरू खोज्नुहोस्
+```
+</details>
+
+<details>
+<summary><strong>❌ "Permission denied" or "Forbidden"</strong></summary>
+
+```bash
+# आफ्नो Azure भूमिका जाँच गर्नुहोस्
+az role assignment list --assignee $(az account show --query user.name -o tsv)
+
+# तपाईंलाई कम्तीमा "Contributor" भूमिका आवश्यक छ
+# आफ्नो Azure प्रशासकलाई निम्न अनुमति दिन भनेर भन्नुहोस्:
+# - Contributor (संसाधनहरूको लागि)
+# - User Access Administrator (भूमिका तोकाइहरूका लागि)
+```
+</details>
+
+<details>
+<summary><strong>❌ Can't find deployed application URL</strong></summary>
+
+```bash
+# सबै सेवा अन्तबिन्दुहरू देखाउनुहोस्
+azd show
+
+# वा Azure पोर्टल खोल्नुहोस्
+azd monitor
+
+# विशिष्ट सेवा जाँच गर्नुहोस्
+azd env get-values
+# *_URL भेरिएबलहरू खोज्नुहोस्
+```
+</details>
+
+### 📚 पूर्ण समस्या समाधान स्रोतहरू
+
+- **Common Issues Guide:** [Detailed Solutions](docs/troubleshooting/common-issues.md)
+- **AI-Specific Issues:** [AI Troubleshooting](docs/troubleshooting/ai-troubleshooting.md)
+- **Debugging Guide:** [Step-by-step Debugging](docs/troubleshooting/debugging.md)
+- **Get Help:** [Azure Discord](https://discord.gg/microsoft-azure) #azure-developer-cli
+
+---
+
+## 🎓 कोर्स सम्पन्नता र प्रमाणन
+
+### प्रगति ट्र्याकिङ
+प्रत्येक अध्यायमार्फत आफ्नो सिकाइ प्रगति ट्र्याक गर्नुहोस्:
+
+- [ ] **अध्याय 1**: आधार र छिटो सुरुवात ✅
+- [ ] **अध्याय 2**: AI-प्रथम विकास ✅  
+- [ ] **अध्याय 3**: Configuration & Authentication ✅
+- [ ] **अध्याय 4**: Infrastructure as Code & Deployment ✅
+- [ ] **अध्याय 5**: बहु-एजेन्ट AI समाधानहरू ✅
+- [ ] **अध्याय 6**: पूर्व-परिनियोजन सत्यापन र योजना ✅
+- [ ] **अध्याय 7**: Troubleshooting & Debugging ✅
+- [ ] **अध्याय 8**: उत्पादन र एंटरप्राइज ढाँचाहरू ✅
+
+### ज्ञान प्रमाणिकरण
+प्रत्येक अध्याय पूरा गरेपछि आफ्नो ज्ञान प्रमाणित गर्नुहोस्:
+1. **व्यावहारिक अभ्यास**: अध्यायको व्यावहारिक परिनियोजन पूरा गर्नुहोस्
+2. **ज्ञान जाँच**: आफ्नो अध्यायको FAQ सेक्सन समीक्षा गर्नुहोस्
+3. **समुदाय छलफल**: Azure Discord मा आफ्नो अनुभव साझा गर्नुहोस्
+4. **अर्को अध्याय**: अर्को जटिलता स्तरमा बढ्नुहोस्
+
+### कोर्स सम्पन्नता लाभहरू
+सबै अध्याय पूरा गरेपछि तपाईंले पाउनुहुनेछ:
+- **उत्पादन अनुभव**: वास्तविक AI अनुप्रयोगहरू Azure मा तैनाथ गर्ने अनुभव
+- **व्यावसायिक दक्षता**: एंटरप्राइज-तयार परिनियोजन क्षमताहरू  
+- **समुदाय मान्यता**: Azure विकासकर्ता समुदायका सक्रिय सदस्य
+- **पेशागत उन्नति**: मागमा रहेका AZD र AI परिनियोजन विशेषज्ञता
+
+---
+
+## 🤝 समुदाय र समर्थन
+
+### मदत र समर्थन प्राप्त गर्नुहोस्
+- **प्राविधिक समस्या**: [Report bugs and request features](https://github.com/microsoft/azd-for-beginners/issues)
+- **सिकाइ सम्बन्धी प्रश्नहरू**: [Microsoft Azure Discord Community](https://discord.gg/microsoft-azure) र [![Microsoft Foundry Discord](https://dcbadge.limes.pink/api/server/nTYy5BXMWG)](https://discord.gg/nTYy5BXMWG)
+- **AI-विशिष्ट मदत**: सामेल हुनुहोस् [![Microsoft Foundry Discord](https://dcbadge.limes.pink/api/server/nTYy5BXMWG)](https://discord.gg/nTYy5BXMWG)
+- **प्रलेखन**: [Official Azure Developer CLI documentation](https://learn.microsoft.com/en-us/azure/developer/azure-developer-cli/)
+
+### Microsoft Foundry Discord बाट समुदाय अन्तर्दृष्टि
+
+**हालको #Azure च्यानल पोल नतिजा:**
+- **45%** विकासकर्ताहरू AZD लाई AI कार्यभारहरूमा प्रयोग गर्न चाहन्छन्
+- **शीर्ष चुनौतीहरू**: बहु-सेवा परिनियोजन, क्रेडेन्शियल व्यवस्थापन, उत्पादन तयारी  
+- **सबैभन्दा अनुरोध गरिएका**: AI-विशिष्ट टेम्पलेटहरू, समस्या समाधान मार्गदर्शकहरू, उत्तम अभ्यासहरू
+
+**हाम्रो समुदायमा सहभागी भएर तपाईंले:**
+- आफ्नो AZD + AI अनुभवहरू साझा गर्नुहोस् र सहयोग पाउनुहोस्
+- नयाँ AI टेम्पलेटहरूको प्रारम्भिक पूर्वावलोकनहरू पहुँच गर्नुहोस्
+- AI परिनियोजन उत्तम अभ्यासहरूमा योगदान गर्नुहोस्
+- भविष्यका AI + AZD सुविधाहरूको विकासमा प्रभाव पार्नुहोस्
+
+### कोर्समा योगदान
+हामी योगदानहरू स्वागत गर्छौं! विवरणहरूका लागि कृपया हाम्रो [Contributing Guide](CONTRIBUTING.md) पढ्नुहोस्:
+- **सामग्री सुधारहरू**: विद्यमान अध्यायहरू र उदाहरणहरू सुधार गर्नुहोस्
+- **नयाँ उदाहरणहरू**: वास्तविक-विश्व परिदृश्यहरू र टेम्पलेटहरू थप्नुहोस्  
+- **अनुवाद**: बहु-भाषा समर्थन कायम राख्न मद्दत गर्नुहोस्
+- **बग रिपोर्टहरू**: शुद्धता र स्पष्टता सुधार गर्नुहोस्
+- **समुदाय मानकहरू**: हाम्रो समावेशी समुदाय मार्गदर्शकहरू पालना गर्नुहोस्
+
+---
+
+## 📄 कोर्स जानकारी
+
+### लाइसेन्स
+यो परियोजनालाई MIT License अन्तर्गत लाइसेन्स गरिएको छ - विवरणहरूको लागि [LICENSE](../../LICENSE) फाइल हेर्नुहोस्।
+
+### सम्बन्धित Microsoft सिकाइ स्रोतहरू
+
+हाम्रो टोलीले अन्य व्यापक सिकाइ कोर्सहरू उत्पादन गर्दछ:
+
+<!-- CO-OP TRANSLATOR OTHER COURSES START -->
+### LangChain
+[![LangChain4j for Beginners](https://img.shields.io/badge/LangChain4j%20for%20Beginners-22C55E?style=for-the-badge&&labelColor=E5E7EB&color=0553D6)](https://aka.ms/langchain4j-for-beginners)
+[![LangChain.js for Beginners](https://img.shields.io/badge/LangChain.js%20for%20Beginners-22C55E?style=for-the-badge&labelColor=E5E7EB&color=0553D6)](https://aka.ms/langchainjs-for-beginners?WT.mc_id=m365-94501-dwahlin)
+
+---
+
+### Azure / Edge / MCP / Agents
+[![AZD for Beginners](https://img.shields.io/badge/AZD%20for%20Beginners-0078D4?style=for-the-badge&labelColor=E5E7EB&color=0078D4)](https://github.com/microsoft/AZD-for-beginners?WT.mc_id=academic-105485-koreyst)
+[![Edge AI for Beginners](https://img.shields.io/badge/Edge%20AI%20for%20Beginners-00B8E4?style=for-the-badge&labelColor=E5E7EB&color=00B8E4)](https://github.com/microsoft/edgeai-for-beginners?WT.mc_id=academic-105485-koreyst)
+[![MCP for Beginners](https://img.shields.io/badge/MCP%20for%20Beginners-009688?style=for-the-badge&labelColor=E5E7EB&color=009688)](https://github.com/microsoft/mcp-for-beginners?WT.mc_id=academic-105485-koreyst)
+[![AI Agents for Beginners](https://img.shields.io/badge/AI%20Agents%20for%20Beginners-00C49A?style=for-the-badge&labelColor=E5E7EB&color=00C49A)](https://github.com/microsoft/ai-agents-for-beginners?WT.mc_id=academic-105485-koreyst)
+
+---
+ 
+### Generative AI Series
+[![Generative AI for Beginners](https://img.shields.io/badge/Generative%20AI%20for%20Beginners-8B5CF6?style=for-the-badge&labelColor=E5E7EB&color=8B5CF6)](https://github.com/microsoft/generative-ai-for-beginners?WT.mc_id=academic-105485-koreyst)
+[![Generative AI (.NET)](https://img.shields.io/badge/Generative%20AI%20(.NET)-9333EA?style=for-the-badge&labelColor=E5E7EB&color=9333EA)](https://github.com/microsoft/Generative-AI-for-beginners-dotnet?WT.mc_id=academic-105485-koreyst)
+[![Generative AI (Java)](https://img.shields.io/badge/Generative%20AI%20(Java)-C084FC?style=for-the-badge&labelColor=E5E7EB&color=C084FC)](https://github.com/microsoft/generative-ai-for-beginners-java?WT.mc_id=academic-105485-koreyst)
+[![Generative AI (JavaScript)](https://img.shields.io/badge/Generative%20AI%20(JavaScript)-E879F9?style=for-the-badge&labelColor=E5E7EB&color=E879F9)](https://github.com/microsoft/generative-ai-with-javascript?WT.mc_id=academic-105485-koreyst)
+
+---
+ 
+### Core Learning
+[![ML for Beginners](https://img.shields.io/badge/ML%20for%20Beginners-22C55E?style=for-the-badge&labelColor=E5E7EB&color=22C55E)](https://aka.ms/ml-beginners?WT.mc_id=academic-105485-koreyst)
+[![Data Science for Beginners](https://img.shields.io/badge/Data%20Science%20for%20Beginners-84CC16?style=for-the-badge&labelColor=E5E7EB&color=84CC16)](https://aka.ms/datascience-beginners?WT.mc_id=academic-105485-koreyst)
+[![शुरुआतीहरूका लागि AI](https://img.shields.io/badge/AI%20for%20Beginners-A3E635?style=for-the-badge&labelColor=E5E7EB&color=A3E635)](https://aka.ms/ai-beginners?WT.mc_id=academic-105485-koreyst)
+[![शुरुआतीहरूका लागि साइबर सुरक्षा](https://img.shields.io/badge/Cybersecurity%20for%20Beginners-F97316?style=for-the-badge&labelColor=E5E7EB&color=F97316)](https://github.com/microsoft/Security-101?WT.mc_id=academic-96948-sayoung)
+[![शुरुआतीहरूका लागि वेब विकास](https://img.shields.io/badge/Web%20Dev%20for%20Beginners-EC4899?style=for-the-badge&labelColor=E5E7EB&color=EC4899)](https://aka.ms/webdev-beginners?WT.mc_id=academic-105485-koreyst)
+[![शुरुआतीहरूका लागि IoT](https://img.shields.io/badge/IoT%20for%20Beginners-14B8A6?style=for-the-badge&labelColor=E5E7EB&color=14B8A6)](https://aka.ms/iot-beginners?WT.mc_id=academic-105485-koreyst)
+[![शुरुआतीहरूका लागि XR विकास](https://img.shields.io/badge/XR%20Development%20for%20Beginners-38BDF8?style=for-the-badge&labelColor=E5E7EB&color=38BDF8)](https://github.com/microsoft/xr-development-for-beginners?WT.mc_id=academic-105485-koreyst)
+
+---
+ 
+### Copilot श्रृंखला
+[![AI जोडी प्रोग्रामिङका लागि Copilot](https://img.shields.io/badge/Copilot%20for%20AI%20Paired%20Programming-FACC15?style=for-the-badge&labelColor=E5E7EB&color=FACC15)](https://aka.ms/GitHubCopilotAI?WT.mc_id=academic-105485-koreyst)
+[![C#/.NET का लागि Copilot](https://img.shields.io/badge/Copilot%20for%20C%23/.NET-FBBF24?style=for-the-badge&labelColor=E5E7EB&color=FBBF24)](https://github.com/microsoft/mastering-github-copilot-for-dotnet-csharp-developers?WT.mc_id=academic-105485-koreyst)
+[![Copilot साहसिक](https://img.shields.io/badge/Copilot%20Adventure-FDE68A?style=for-the-badge&labelColor=E5E7EB&color=FDE68A)](https://github.com/microsoft/CopilotAdventures?WT.mc_id=academic-105485-koreyst)
+<!-- CO-OP TRANSLATOR OTHER COURSES END -->
+
+---
+
+## 🗺️ पाठ्यक्रम नेभिगेसन
+
+**🚀 सिक्न सुरु गर्न तयार?**
+
+**शुरुआतीहरू**: सुरु गर्नुहोस् [अध्याय 1: आधार र छिटो सुरुवात](../..)  
+**AI विकासकर्ताहरू**: सिधै जानुहोस् [अध्याय 2: AI-प्रथम विकास](../..)  
+**अनुभवी विकासकर्ताहरू**: [अध्याय 3: कन्फिगरेसन र प्रमाणीकरण](../..) बाट सुरु गर्नुहोस्
+
+**अर्को कदमहरू**: [अध्याय 1 - AZD आधारभूत सुरु गर्नुहोस्](docs/getting-started/azd-basics.md) →
+
+---
+
+<!-- CO-OP TRANSLATOR DISCLAIMER START -->
+अस्वीकरण:
+यो दस्तावेज AI अनुवाद सेवा [Co-op Translator](https://github.com/Azure/co-op-translator) प्रयोग गरेर अनुवाद गरिएको हो। हामी शुद्धताको लागि प्रयासरत छौं, तर कृपया जानकार हुनुहोस् कि स्वचालित अनुवादमा त्रुटि वा अशुद्धता हुन सक्छ। मूल भाषामा रहेको मूल दस्तावेजलाई अधिकारिक स्रोत मान्नुपर्छ। महत्वपूर्ण जानकारीका लागि पेशेवर मानव अनुवाद सिफारिस गरिन्छ। यस अनुवादको प्रयोगबाट हुने कुनै पनि गलतफहमी वा गलत व्याख्याका लागि हामी उत्तरदायी छैनौं।
+<!-- CO-OP TRANSLATOR DISCLAIMER END -->

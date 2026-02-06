@@ -1,0 +1,29 @@
+{
+  "scenario_name": "n8n_ui_workflow_creation",
+  "mode": "ui",
+  "target_url": "https://n8n-latest-fulv.onrender.com",
+  "steps": [
+    {
+      "action": "login",
+      "description": "Belépés az n8n felületére a .env-ben tárolt N8N_TEST_USER és N8N_TEST_PASSWORD adatokkal."
+    },
+    {
+      "action": "dismiss_onboarding",
+      "description": "Ha felugrik egy onboarding ablak (pl. 'Milyen területen dolgozol?' / 'What area do you work in?'), válassz bármely opciót (pl. Other, Development) vagy kattints Skip/Close-ra, majd folytasd. Ha nincs ilyen ablak, ugorj tovább."
+    },
+    {
+      "action": "click",
+      "target": "Create Workflow",
+      "description": "Új munkafolyamat indítása a Create Workflow gombra kattintva."
+    },
+    {
+      "action": "rename_workflow",
+      "new_name": "Robotkez_Teszt_1",
+      "description": "A workflow elnevezése Robotkez_Teszt_1-re."
+    },
+    {
+      "action": "save",
+      "description": "Változások mentése."
+    }
+  ]
+}

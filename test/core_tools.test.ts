@@ -15,11 +15,12 @@ describe('Core Tools', () => {
     transport = new StdioClientTransport({
         command: process.execPath,
         args: [buildPath],
-        env: { ...process.env, WEB_UI_ENABLED: "0" }
+        env: { ...process.env, WEB_UI_ENABLED: "0", BRUNELLA_SKIP_SECRETS_CHECK: "1" }
     });
     client = new Client({ name: "test-client", version: "1.0.0" });
     await client.connect(transport);
-  });
+    await waitForPing(client, 10000);
+  }, 45000);
 
   afterAll(async () => {
     await transport.close();
@@ -50,3 +51,18 @@ describe('Core Tools', () => {
     expect(metrics.memory).toBeDefined();
   });
 });
+
+async function waitForPing(client: Client, timeoutMs: number): Promise<void> {
+  const start = Date.now();
+  let lastError: unknown;
+  while (Date.now() - start < timeoutMs) {
+    try {
+      await client.callTool({ name: "ping", arguments: {} });
+      return;
+    } catch (error) {
+      lastError = error;
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  }
+  throw lastError || new Error("Ping did not respond in time");
+}

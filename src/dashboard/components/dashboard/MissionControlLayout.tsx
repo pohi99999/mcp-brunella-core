@@ -1,174 +1,261 @@
-import { Activity, Terminal, Database, Brain, LayoutDashboard, FileText, Settings } from 'lucide-react'
+
+import { useState, useEffect } from 'react'
+import {
+  LayoutDashboard,
+  Box,
+  MessageSquare,
+  Workflow,
+  Sparkles,
+  FolderOpen,
+  Settings,
+  Activity,
+  Terminal,
+  Brain,
+  FileText
+} from 'lucide-react'
 import { cn } from '@/lib/utils'
-import { AgentStatusCard, AgentStatus } from './AgentStatusCard'
-import { TerminalLog } from './TerminalLog'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { AgentStatusCard } from '@/components/dashboard/AgentStatusCard'
+import { TerminalLog } from '@/components/dashboard/TerminalLog'
+import { ServiceControlWidget } from '@/components/dashboard/ServiceControlWidget'
+import { InventoryCatalog } from '@/components/dashboard/InventoryCatalog'
+import { NeuralLinkChat } from '@/components/dashboard/NeuralLinkChat'
+import { EmbeddedWorkflow } from '@/components/dashboard/EmbeddedWorkflow'
+import { SettingsPanel } from '@/components/dashboard/SettingsPanel'
+import { FileExplorer } from '@/components/dashboard/FileExplorer'
 import { useSocket } from '@/context/SocketContext'
+import { getRegistry, executeAgent, type RegistryAgent } from '@/lib/apiService'
+import { toast } from 'sonner'
+import { ThemeToggle } from "@/components/ThemeToggle"
+import { CommandMenu } from "@/components/CommandMenu"
+import { AgentGraph } from "@/components/AgentGraph"
+import { Skeleton } from "@/components/ui/skeleton"
+import { RocketLaunch } from '@phosphor-icons/react'
+import { AgentFactory } from '@/components/dashboard/AgentFactory'
 
 const SIDEBAR_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'files', label: 'Files', icon: FileText },
+  { id: 'inventory', label: 'Inventory', icon: Box },
+  { id: 'chat', label: 'Neural Link', icon: MessageSquare },
+  { id: 'n8n', label: 'Workflows', icon: Workflow },
+  { id: 'langflow', label: 'Agents', icon: Sparkles },
+  { id: 'factory', label: 'Factory', icon: RocketLaunch },
+  { id: 'files', label: 'Files', icon: FolderOpen },
   { id: 'settings', label: 'Settings', icon: Settings },
-] as const
-
-const DEFAULT_AGENTS = [
-  {
-    id: '1',
-    name: 'Researcher Agent',
-    status: 'idle' as AgentStatus,
-    taskDescription: 'AI innovációk gyűjtése (ArXiv, GitHub, HuggingFace)',
-  },
-  {
-    id: '2',
-    name: 'Data Scientist Agent',
-    status: 'idle' as AgentStatus,
-    taskDescription: 'JSON normalizálás vár',
-  },
-  {
-    id: '3',
-    name: 'Orchestrator Agent',
-    status: 'idle' as AgentStatus,
-    taskDescription: 'Folyamat koordináció',
-  },
 ]
 
-const DEFAULT_MEMORY_CONTEXT = [
-  { id: '1', name: 'ai_innovations.json', size: '12 KB' },
-  { id: '2', name: 'config.toml', size: '2 KB' },
-  { id: '3', name: 'workflow.md', size: '4 KB' },
+const DEFAULT_MEMORY_CONTEXT: MemoryFile[] = [
+  { id: '1', name: 'project_context.md', size: '12kb', type: 'text/markdown' },
+  { id: '2', name: 'api_specs.yaml', size: '45kb', type: 'application/yaml' },
+  { id: '3', name: 'user_preferences.json', size: '2kb', type: 'application/json' },
 ]
 
 interface MemoryFile {
   id: string
   name: string
   size: string
+  type: string
 }
 
+type AgentStatus = 'working' | 'idle' | 'error' | 'offline'
+
+const N8N_URL = 'http://localhost:5678'
+const LANGFLOW_URL = 'http://localhost:3000'
+
 export function MissionControlLayout() {
+  const [activeTab, setActiveTab] = useState<string>('dashboard')
+  const [viewMode, setViewMode] = useState<'list' | 'graph'>('graph')
+  const [registryAgents, setRegistryAgents] = useState<RegistryAgent[]>([])
+  const [isLoadingAgents, setIsLoadingAgents] = useState(true)
   const { logs, agents, isConnected } = useSocket()
 
-  const agentsFromSocket = Array.from(agents.values())
-  const agentsToShow =
-    agentsFromSocket.length > 0
-      ? agentsFromSocket.map((a, idx) => ({
-          id: `socket-${a.name}-${idx}`,
-          name: a.name,
-          status: a.status as AgentStatus,
-          taskDescription: a.taskDescription,
-        }))
-      : DEFAULT_AGENTS
+  useEffect(() => {
+    setIsLoadingAgents(true)
+    getRegistry()
+      .then((r) => setRegistryAgents(r.agents || []))
+      .catch(() => setRegistryAgents([]))
+      .finally(() => setIsLoadingAgents(false))
+  }, [])
+
+  const socketStatusMap = new Map(Array.from(agents.values()).map((a) => [a.name, a]))
+  const agentsToShow = registryAgents
+
+  const handleExecuteAgent = async (agentName: string, task: string) => {
+    try {
+      toast.info(`${agentName} futtatása...`)
+      const result = await executeAgent(agentName, task)
+      toast.success(typeof result === 'string' ? result.slice(0, 100) + (result.length > 100 ? '...' : '') : 'Kész')
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Hiba')
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-zinc-100 antialiased">
-      {/* Header */}
-      <header className="sticky top-0 z-50 border-b border-zinc-800/80 bg-zinc-950/80 backdrop-blur-xl">
-        <div className="flex h-14 items-center justify-between px-4 lg:px-6">
-          <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-              <Brain size={24} className="text-emerald-500" />
-              <span className="font-mono text-lg font-semibold tracking-tight">Brunella</span>
-              <span className="hidden rounded bg-zinc-800/80 px-2 py-0.5 font-mono text-xs text-zinc-500 sm:inline">
-                Mission Control
-              </span>
-              {isConnected && (
-                <span className="rounded bg-emerald-500/20 px-2 py-0.5 font-mono text-xs text-emerald-400">
-                  Live
-                </span>
-              )}
-            </div>
-          </div>
+    <div className="min-h-screen bg-transparent text-foreground antialiased overflow-hidden flex flex-col">
+      <CommandMenu />
 
-          {/* System status dummy */}
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-2 rounded-lg border border-zinc-800/60 bg-zinc-900/50 px-3 py-1.5">
-              <Activity size={14} className="text-emerald-500" />
-              <span className="font-mono text-xs text-zinc-400">CPU</span>
-              <span className="font-mono text-sm font-medium text-zinc-200">23%</span>
-            </div>
-            <div className="flex items-center gap-2 rounded-lg border border-zinc-800/60 bg-zinc-900/50 px-3 py-1.5">
-              <Database size={14} className="text-cyan-500" />
-              <span className="font-mono text-xs text-zinc-400">RAM</span>
-              <span className="font-mono text-sm font-medium text-zinc-200">4.2 GB</span>
-            </div>
-          </div>
+      {/* Header */}
+      <header className="flex h-14 items-center gap-4 border-b bg-background/50 px-6 backdrop-blur-lg lg:h-[60px]">
+        <div className="flex flex-1 items-center gap-2 font-semibold">
+          <span className="text-primary">Brunella</span>
+          <span className="text-muted-foreground">/</span>
+          <span>Mission Control</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
         </div>
       </header>
 
-      {/* Main grid */}
-      <div className="flex h-[calc(100vh-3.5rem)]">
+      {/* Main Layout */}
+      <div className="flex flex-1 overflow-hidden">
         {/* Sidebar */}
-        <aside className="hidden w-52 shrink-0 border-r border-zinc-800/80 bg-zinc-950/60 lg:block">
-          <nav className="flex flex-col gap-1 p-3">
-            {SIDEBAR_ITEMS.map((item) => {
-              const Icon = item.icon
-              return (
+        <aside className="w-[60px] lg:w-[240px] border-r bg-background/50 backdrop-blur-lg flex flex-col">
+          <div className="flex-1 py-4">
+            <nav className="grid gap-1 px-2">
+              {SIDEBAR_ITEMS.map((item) => (
                 <button
                   key={item.id}
+                  onClick={() => setActiveTab(item.id)}
                   className={cn(
-                    'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
-                    item.id === 'dashboard'
-                      ? 'bg-zinc-800/80 text-zinc-100'
-                      : 'text-zinc-400 hover:bg-zinc-800/50 hover:text-zinc-200',
+                    "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-muted",
+                    activeTab === item.id && "bg-muted text-primary font-medium"
                   )}
                 >
-                  <Icon size={18} />
-                  {item.label}
+                  <item.icon className="h-4 w-4" />
+                  <span className="hidden lg:inline">{item.label}</span>
                 </button>
-              )
-            })}
-          </nav>
+              ))}
+            </nav>
+          </div>
         </aside>
 
-        {/* Center: Bento grid - agents + terminal */}
-        <main className="flex-1 overflow-auto p-4 lg:p-6">
-          <div className="mx-auto grid max-w-6xl gap-6 lg:grid-cols-[1fr_280px]">
-            {/* Agents column */}
-            <div className="space-y-4">
-              <h2 className="flex items-center gap-2 text-sm font-medium text-zinc-400">
-                <Activity size={16} />
-                Aktív ügynökök
-              </h2>
-              <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-                {agentsToShow.map((agent) => (
-                  <AgentStatusCard
-                    key={agent.id}
-                    name={agent.name}
-                    status={agent.status}
-                    taskDescription={agent.taskDescription}
-                  />
-                ))}
-              </div>
+        {/* Center Content */}
+        <main className="flex-1 overflow-auto p-6 scroll-smooth">
+          <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1fr_320px]">
+            {/* Primary Column */}
+            <div className="space-y-6">
+              {activeTab === 'dashboard' && (
+                <div className="space-y-6">
+                  <div className="flex items-center justify-between">
+                    <h2 className="flex items-center gap-2 text-lg font-space font-bold text-foreground">
+                      <Activity size={20} className="text-primary" />
+                      Active Neural Agents ({agentsToShow.length})
+                    </h2>
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => setViewMode('list')}
+                        className={cn("px-3 py-1 text-xs rounded-md border transition-colors", viewMode === 'list' ? "bg-primary text-primary-foreground border-primary" : "text-muted-foreground hover:bg-muted")}
+                      >
+                        List
+                      </button>
+                      <button
+                        onClick={() => setViewMode('graph')}
+                        className={cn("px-3 py-1 text-xs rounded-md border transition-colors", viewMode === 'graph' ? "bg-primary text-primary-foreground border-primary" : "text-muted-foreground hover:bg-muted")}
+                      >
+                        Graph
+                      </button>
+                    </div>
+                  </div>
 
-              {/* Terminal */}
-              <div className="mt-6">
-                <h2 className="mb-2 flex items-center gap-2 text-sm font-medium text-zinc-400">
-                  <Terminal size={16} />
-                  Live output
-                </h2>
-                <TerminalLog logs={logs} />
-              </div>
+                  {viewMode === 'graph' ? (
+                    <AgentGraph />
+                  ) : (
+                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+                      {isLoadingAgents ? (
+                        Array.from({ length: 3 }).map((_, i) => (
+                          <div key={i} className="space-y-3">
+                            <Skeleton className="h-[125px] w-full rounded-xl" />
+                            <div className="space-y-2">
+                              <Skeleton className="h-4 w-[250px]" />
+                              <Skeleton className="h-4 w-[200px]" />
+                            </div>
+                          </div>
+                        ))
+                      ) : agentsToShow.length > 0 ? (
+                        agentsToShow.map((agent) => {
+                          const socketData = socketStatusMap.get(agent.name)
+                          return (
+                            <div key={agent.name} className="hover:scale-[1.02] transition-transform duration-200">
+                              <AgentStatusCard
+                                agent={agent}
+                                status={(socketData?.status as AgentStatus) || 'idle'}
+                                taskDescription={socketData?.taskDescription}
+                                onExecute={handleExecuteAgent}
+                                allAgents={registryAgents}
+                              />
+                            </div>
+                          )
+                        })
+                      ) : (
+                        <div className="col-span-full p-8 text-center glass-panel rounded-xl border-dashed border-2 border-white/10">
+                          <Brain size={48} className="mx-auto text-muted-foreground/20 mb-4" />
+                          <h3 className="text-lg font-medium text-muted-foreground">No Agents Online</h3>
+                          <p className="text-sm text-muted-foreground/60 max-w-sm mx-auto mt-2">
+                            Start an agent from the CLI or check your configuration.
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  )}
+
+                  <div className="glass-card rounded-xl p-1">
+                    <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50">
+                      <Terminal size={18} className="text-muted-foreground" />
+                      <h2 className="text-sm font-medium text-muted-foreground">System Terminals</h2>
+                    </div>
+                    <div className="p-2">
+                      <TerminalLog logs={logs} />
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {activeTab === 'inventory' && <InventoryCatalog />}
+              {activeTab === 'chat' && <NeuralLinkChat />}
+              {activeTab === 'n8n' && (
+                <EmbeddedWorkflow
+                  title="n8n Automation"
+                  url={N8N_URL}
+                  icon={<Workflow size={20} className="text-[#FF6D5A]" />}
+                />
+              )}
+              {activeTab === 'langflow' && (
+                <EmbeddedWorkflow
+                  title="Langflow Orchestration"
+                  url={LANGFLOW_URL}
+                  icon={<Sparkles size={20} className="text-violet-500" />}
+                />
+              )}
+              {activeTab === 'factory' && <AgentFactory />}
+              {activeTab === 'files' && <FileExplorer />}
+              {activeTab === 'settings' && <SettingsPanel />}
             </div>
 
-            {/* Right: Memory Context */}
-            <div className="order-first lg:order-last">
-              <Card className="border-zinc-800/80 bg-zinc-950/60 backdrop-blur-sm">
-                <CardHeader className="pb-2">
-                  <CardTitle className="flex items-center gap-2 text-base font-medium">
-                    <Brain size={18} className="text-cyan-500" />
-                    Memory Context
+            {/* Right Column: Widgets */}
+            <div className="space-y-6 lg:sticky lg:top-6 h-fit">
+              <ServiceControlWidget />
+
+              <Card className="glass-card border-white/10 overflow-hidden">
+                <CardHeader className="pb-3 border-b border-border/50 bg-muted/20">
+                  <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-muted-foreground">
+                    <Brain size={16} className="text-cyan-400" />
+                    Short-term Memory
                   </CardTitle>
                 </CardHeader>
-                <CardContent>
-                  <ScrollArea className="h-[320px]">
-                    <ul className="space-y-2">
+                <CardContent className="p-0">
+                  <ScrollArea className="h-[300px]">
+                    <ul className="divide-y divide-border/50">
                       {DEFAULT_MEMORY_CONTEXT.map((file: MemoryFile) => (
                         <li
                           key={file.id}
-                          className="flex items-center justify-between rounded-md px-2 py-2 font-mono text-sm hover:bg-zinc-800/50"
+                          className="flex items-center justify-between px-4 py-3 hover:bg-muted/50 transition-colors cursor-pointer group"
                         >
-                          <span className="truncate text-zinc-300">{file.name}</span>
-                          <span className="shrink-0 text-xs text-zinc-500">{file.size}</span>
+                          <div className="flex items-center gap-3 overflow-hidden">
+                            <FileText size={16} className="text-muted-foreground group-hover:text-primary transition-colors" />
+                            <span className="truncate text-sm font-mono text-foreground/80 group-hover:text-foreground transition-colors">{file.name}</span>
+                          </div>
+                          <span className="shrink-0 text-xs font-mono text-muted-foreground">{file.size}</span>
                         </li>
                       ))}
                     </ul>

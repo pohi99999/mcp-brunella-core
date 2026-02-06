@@ -56,3 +56,16 @@ copilot-messages.log
 gha-creds-*.json
 node_modules
 nul
+
+# Large generated/temporary directories and files (added by Gemini CLI)
+build/
+.lancedb/
+.venv/
+Ollama/
+AnythingLLM/
+_archive/
+_br_temp/
+logs/
+*.db
+*.log
+

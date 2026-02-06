@@ -22,7 +22,7 @@ A rendszernek támogatnia kell a következő kulcsokat:
 - Minden `execute` hívás naplózása a LangSmith-be a bemeneti paraméterekkel és a model válaszával.
 
 ## 3. Elfogadási Kritériumok
-- [ ] A `.env` fájl kiegészítve a LangSmith kulcsokkal.
-- [ ] A Python worker `pip install langsmith` után sikeresen elindul.
-- [ ] Egy ügynök hívás (pl. `project_organizer`) után megjelenik a trace a LangSmith Dashboardon.
-- [ ] A Node.js oldalon a logokban látható a LangSmith URL.
+- [ ] A `.env` fájl kiegészítve a LangSmith kulcsokkal (LANGCHAIN_API_KEY, LANGCHAIN_TRACING_V2=true).
+- [x] Python traceable dekorátor a `myai/core/agent.py`-ban (2026-02-02).
+- [x] Node.js LangSmith traceable wrapper a `src/core/llm_client.ts`-ben.
+- [ ] Egy ügynök hívás (pl. `project_organizer`) után megjelenik a trace a LangSmith Dashboardon (LANGCHAIN_API_KEY beállítva esetén).

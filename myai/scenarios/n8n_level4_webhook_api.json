@@ -1,0 +1,140 @@
+{
+  "scenario_name": "n8n_level4_webhook_api",
+  "mode": "ui",
+  "difficulty": "advanced",
+  "description": "Webhook API: External trigger → Process → Respond with JSON",
+  "target_url": "https://n8n-latest-fulv.onrender.com",
+  "expected_duration_seconds": 240,
+  "prerequisite": "n8n must be accessible from localhost",
+  "steps": [
+    {
+      "id": 1,
+      "action": "navigate",
+      "target": "https://n8n-latest-fulv.onrender.com",
+      "description": "n8n megnyitása"
+    },
+    {
+      "id": 2,
+      "action": "click",
+      "target": "button:has-text('Create Workflow')",
+      "description": "Új workflow"
+    },
+    {
+      "id": 3,
+      "action": "add_node",
+      "node_type": "Webhook",
+      "position": {"x": 250, "y": 300},
+      "description": "Webhook trigger hozzáadása"
+    },
+    {
+      "id": 4,
+      "action": "configure_node",
+      "node_name": "Webhook",
+      "config": {
+        "httpMethod": "POST",
+        "path": "robotkez-test",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "description": "POST /webhook/robotkez-test"
+    },
+    {
+      "id": 5,
+      "action": "copy_webhook_url",
+      "store_as": "webhook_url",
+      "description": "Webhook URL másolása"
+    },
+    {
+      "id": 6,
+      "action": "add_node",
+      "node_type": "Code",
+      "connect_from": "Webhook",
+      "position": {"x": 450, "y": 300},
+      "description": "Code node feldolgozáshoz"
+    },
+    {
+      "id": 7,
+      "action": "configure_node",
+      "node_name": "Code",
+      "config": {
+        "mode": "runOnceForAllItems",
+        "jsCode": "const input = items[0].json;\nconst processed = {\n  received: input,\n  timestamp: new Date().toISOString(),\n  status: 'processed',\n  robot: 'Robotkez'\n};\nreturn [{json: processed}];"
+      },
+      "description": "JavaScript feldolgozás"
+    },
+    {
+      "id": 8,
+      "action": "add_node",
+      "node_type": "Respond to Webhook",
+      "connect_from": "Code",
+      "position": {"x": 650, "y": 300},
+      "description": "Respond to Webhook node"
+    },
+    {
+      "id": 9,
+      "action": "configure_node",
+      "node_name": "Respond to Webhook",
+      "config": {
+        "respondWith": "allIncomingItems",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {"name": "Content-Type", "value": "application/json"},
+              {"name": "X-Processed-By", "value": "Robotkez"}
+            ]
+          }
+        }
+      },
+      "description": "JSON válasz konfigurálása"
+    },
+    {
+      "id": 10,
+      "action": "rename_workflow",
+      "new_name": "Robotkez_Webhook_API",
+      "description": "Workflow átnevezése"
+    },
+    {
+      "id": 11,
+      "action": "keyboard",
+      "keys": "Control+s",
+      "description": "Mentés"
+    },
+    {
+      "id": 12,
+      "action": "activate_workflow",
+      "description": "Workflow aktiválása (production mode)"
+    },
+    {
+      "id": 13,
+      "action": "external_http_request",
+      "method": "POST",
+      "url": "{{webhook_url}}",
+      "body": {"test": "data", "from": "robotkez"},
+      "headers": {"Content-Type": "application/json"},
+      "description": "Teszt kérés küldése a webhook-ra"
+    },
+    {
+      "id": 14,
+      "action": "verify_response",
+      "expected": {
+        "status_code": 200,
+        "body_contains": ["processed", "Robotkez", "timestamp"]
+      },
+      "description": "Válasz ellenőrzése"
+    }
+  ],
+  "validation": {
+    "success_criteria": [
+      "Webhook node POST módban",
+      "Code node feldolgozza az inputot",
+      "Respond node JSON-t küld vissza",
+      "Külső HTTP kérés 200 OK választ kap",
+      "Válasz tartalmazza: processed, timestamp, robot"
+    ],
+    "screenshot_on_complete": true
+  },
+  "cleanup": {
+    "deactivate_workflow": true,
+    "description": "Workflow deaktiválása teszt után"
+  }
+}

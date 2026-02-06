@@ -3,13 +3,13 @@
 ## Phase 1: Environment Setup
 - [ ] Task: **Update `.env` template.**
     - Add LangSmith placeholders to `.env`.
-- [ ] Task: **Install Dependencies.**
+- [x] Task: **Install Dependencies.**
     - Run `npm install langsmith` in root.
     - Run `uv pip install langsmith` (or add to `requirements.txt`) in `myai/`.
 - [ ] Task: Conductor - User Manual Verification 'Phase 1: Env' (Protocol in workflow.md)
 
 ## Phase 2: Python Subsystem Tracing
-- [ ] Task: **Instrument `myai/core/agent.py`.**
+- [x] Task: **Instrument `myai/core/agent.py`.**
     - Import `traceable` from `langsmith`.
     - Decorate the `Agent.execute` method.
     - Pass through context metadata.
@@ -18,7 +18,7 @@
 - [ ] Task: Conductor - User Manual Verification 'Phase 2: Python Trace' (Protocol in workflow.md)
 
 ## Phase 3: Node.js Core Tracing
-- [ ] Task: **Instrument `src/core/llm_client.ts`.**
+- [x] Task: **Instrument `src/core/llm_client.ts`.**
     - Wrap the `chatStream` call with LangSmith client.
     - Ensure tags (agent_name, task_id) are passed correctly.
 - [ ] Task: **End-to-End Test.**

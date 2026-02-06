@@ -1,0 +1,44 @@
+# Because all of our nightly build artifacts will have a pre-release version (i.e. 4.1.0-ci.<buildnumber>),
+# we cannot use '*' wildcard matching to get the latest version. Instead, we will fetch the latest version
+# from the feed using the Azure DevOps REST API.
+parameters:
+  - name: defaultCliOnly
+    type: boolean
+    default: false
+
+steps:
+- task: PowerShell@2
+  displayName: 'Get latest artifact version'
+  inputs:
+    targetType: 'filePath'
+    filePath: '$(Build.SourcesDirectory)/eng/scripts/get-latest-package-versions.ps1'
+  env:
+    SYSTEM_ACCESSTOKEN: $(System.AccessToken)
+
+- task: DownloadPackage@1
+  displayName: 'Download func-cli from feed'
+  inputs:
+    packageType: 'upack'
+    feed: 'internal/core-tools-nightly-build'
+    definition: 'func-cli'
+    version: '$(FUNC_CLI_VERSION)'
+    downloadPath: '$(Pipeline.Workspace)/func-cli-default/func-cli'
+
+- ${{ if not(parameters.defaultCliOnly) }}:
+  - task: DownloadPackage@1
+    displayName: 'Download func-cli-inproc from feed'
+    inputs:
+      packageType: 'upack'
+      feed: 'internal/core-tools-nightly-build'
+      definition: 'func-cli-inproc'
+      version: '$(FUNC_CLI_INPROC_VERSION)'
+      downloadPath: '$(Pipeline.Workspace)/func-cli-inproc'
+
+  - task: DownloadPackage@1
+    displayName: 'Download func-cli-host from feed'
+    inputs:
+      packageType: 'upack'
+      feed: 'internal/core-tools-nightly-build'
+      definition: 'func-cli-host'
+      version: '$(FUNC_CLI_VERSION)'
+      downloadPath: '$(Pipeline.Workspace)/func-cli-host'

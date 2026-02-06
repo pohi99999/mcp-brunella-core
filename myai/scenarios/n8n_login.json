@@ -1,0 +1,55 @@
+{
+  "scenario_name": "n8n_login",
+  "mode": "ui",
+  "difficulty": "beginner",
+  "description": "Bejelentkezés az n8n-be",
+  "target_url": "https://n8n-latest-fulv.onrender.com",
+  "steps": [
+    {
+      "id": 1,
+      "action": "navigate",
+      "target": "https://n8n-latest-fulv.onrender.com/signin",
+      "description": "n8n login oldal megnyitása"
+    },
+    {
+      "id": 2,
+      "action": "wait_for_element",
+      "selector": "input[type='email'], input[name='email']",
+      "timeout_ms": 10000,
+      "description": "Várakozás a login form-ra"
+    },
+    {
+      "id": 3,
+      "action": "type",
+      "target": "input[type='email'], input[name='email']",
+      "value": "${N8N_OWNER_EMAIL}",
+      "description": "Email cím beírása"
+    },
+    {
+      "id": 4,
+      "action": "type",
+      "target": "input[type='password'], input[name='password']",
+      "value": "${N8N_OWNER_PASSWORD}",
+      "description": "Jelszó beírása"
+    },
+    {
+      "id": 5,
+      "action": "click",
+      "target": "button[type='submit'], button:has-text('Sign in'), button:has-text('Login')",
+      "description": "Bejelentkezés gomb"
+    },
+    {
+      "id": 6,
+      "action": "wait_for_navigation",
+      "expected_url_contains": "/home",
+      "timeout_ms": 15000,
+      "description": "Várakozás a dashboard-ra"
+    }
+  ],
+  "validation": {
+    "success_criteria": [
+      "URL tartalmazza: /home vagy /workflows",
+      "Nincs 'Sign in' gomb látható"
+    ]
+  }
+}

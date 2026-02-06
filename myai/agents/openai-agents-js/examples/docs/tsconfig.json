@@ -1,0 +1,7 @@
+{
+  "extends": "../../tsconfig.examples.json",
+  "compilerOptions": {
+    "noUnusedLocals": false,
+    "skipLibCheck": true
+  }
+}

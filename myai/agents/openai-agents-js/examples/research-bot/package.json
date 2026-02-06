@@ -1,0 +1,11 @@
+{
+  "private": true,
+  "name": "research-bot",
+  "dependencies": {
+    "@openai/agents": "workspace:*"
+  },
+  "scripts": {
+    "build-check": "tsc --noEmit",
+    "start": "tsx main.ts"
+  }
+}

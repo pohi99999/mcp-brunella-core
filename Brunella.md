@@ -1,128 +1,192 @@
-# mcp-brunella-core: 
+  ---
+  🔍 Projekt Állapot Összefoglaló
 
-**Dátum:** 2026. január 31., szombat
+  🚨 KRITIKUS PROBLÉMÁK (Azonnali beavatkozás szükséges)
 
-## 1. Projekt Áttekintés és Stratégiai Célok
+  1. API Kulcsok Kitéve a .env Fájlban
 
-Az `mcp-brunella-core` egy élvonalbeli, mesterséges intelligencia alapú fejlesztési keretrendszer, amely a Model Context Protocol (MCP) köré épül. Fő célja a szoftverfejlesztési életciklus teljes automatizálása, a tervezéstől a tesztelésig és a telepítésig. Egy innovatív, többügynökös architektúrát alkalmaz, ahol specializált AI ügynökök koordináltan dolgoznak együtt komplex feladatok megoldásában.
+  A .env fájl valódi API kulcsokat tartalmaz ami be van commitolva:
+  - GEMINI_API_KEY, GITHUB_PERSONAL_ACCESS_TOKEN, OPENAI_API_KEY, CLOUDFLARE_R2_SECRET_ACCESS_KEY
 
-A projekt a manuális, ismétlődő és hibalehetőségeket rejtő fejlesztési folyamatokra nyújt áttörő megoldást. Hosszú távú víziója egy olyan jövő megteremtése, ahol az AI radikálisan növeli a szoftverfejlesztés hatékonyságát és minőségét. Befektetői szempontból ez egy kiemelkedő megtérülési potenciállal rendelkező, piacformáló innováció, amely az AI-vezérelt fejlesztés új paradigmáját honosítja meg.
+  Teendő: Azonnal rotáld ezeket a kulcsokat, mert publikusak lettek!
 
-## 2. Architektúra és Kulcstechnológiák
+  2. Agent Interfész Inkonzisztencia
 
-Az `mcp-brunella-core` egy moduláris, többügynökös rendszer, melynek gerincét a Model Context Protocol (MCP) és a Conductor keretrendszer adja. A hierarchikus architektúra élén egy `OrchestratorAgent` (LLM Planner) áll, amely delegálja a feladatokat az alsóbb szintű, domain-specifikus ügynököknek.
+  Két különböző interfész van használatban:
+  - IAgent (6 agent): execute(task: string, context?)
+  - BaseAgent (2 agent): execute(context: AgentContext)
 
-### Architektúra Alapelvek
-*   **Többügynökös Design:** Specializált AI ügynökök (Developer, Evaluator, Orchestrator, DataScientist, Researcher stb.) közötti koordinált együttműködés.
-*   **MCP-központú kommunikáció:** Standardizált protokoll az ügynökök és külső eszközök közötti interakcióra.
-*   **Moduláris és Bővíthető:** Könnyű integráció új eszközökkel és ügynökökkel.
+  Az AgentManager.delegateLocally() objektummal hívja az execute-ot, de az IAgent-ek stringet várnak → hibás delegálás.
 
-### Kulcstechnológiák (Tech Stack)
-*   **Backend:**
-    *   **Node.js (TypeScript):** Vezérlőlogika, CLI, Dashboard backend, MCP szerverek.
-    *   **Python (FastAPI/FastMCP):** AI/ML feladatok, adatfeldolgozás, mikroszolgáltatások.
-    *   **Automatizálási Platform: n8n (API-val vezérelve):** Munkafolyamatok automatizálása és orchestrációja.
-    *   **SQLite:** Könnyűsúlyú adatbázis feladatkezeléshez (Task Queue).
-*   **Modellek:**
-    *   **Ollama:** Lokális LLM futtatás (deepseek-coder:6.7b, llama3.1:8b, qwen2.5-coder:7b, gemma3:4b stb.), prioritizálva a költséghatékonyság miatt.
-    *   **Egyéb LLM-ek:** (pl. Gemini API) szükség esetén, alacsonyabb prioritással.
-*   **Frontend (Dashboard UI):**
-    *   **React:** Modern, komponens-alapú UI.
-    *   **Vitest:** Tesztelési keretrendszer.
-    *   **Tailwind CSS:** Gyors UI fejlesztés.
-*   **Konténerizáció és Deploy:**
-    *   **Docker, Docker Compose:** Izolált, reprodukálható környezetek a fejlesztéshez, teszteléshez és éles üzemhez.
-    *   **Hibrid környezet:** Node.js és Python erősségeinek kombinálása.
+  3. DynamicAgent Törött Konstruktor
 
-## 3. Fejlesztési Státusz és "Track" Történet
+  // Registry-ben: config objektum érkezik
+  // DynamicAgent vár: tomlPath string
+  constructor(tomlPath: string) { ... }
+  A ProjectOrganizer és AgentArchitect ügynökök nem tudnak elindulni.
 
-A projekt a Conductor keretrendszerrel, egy "Track" alapú, specifikáció-vezérelt módszertannal halad, biztosítva a strukturált és iteratív fejlesztést. Minden jelentős fejlesztési "track" `[x] Completed` státuszban van, ami a projekt érettségét és stabilitását mutatja.
+  4. Hiányzó Fájl a Workflow-ban
 
-### Főbb Elért Mérföldkövek:
-*   **CLI & Ügynök Fejlesztés:** Teljes CLI újraírás, `DeveloperAgent`, `EvaluatorAgent` és `OrchestratorAgent` implementálása.
-*   **API & Dokumentáció:** Swagger UI integráció, automatikus API dokumentáció.
-*   **Infrastruktúra & Konténerizáció:** Docker és Docker Compose bevezetése, platformfüggetlen működés.
-*   **Python Alrendszer:** FastAPI alapú refaktorálás, optimalizált AI/ML képességek.
-*   **Tesztelés:** Tesztelési infrastruktúra konszolidálása Vitesttel, magas minőség biztosítása.
-*   **BAS Scale-Up & Stabilization (Cursor ügynök által):** LangSmith telemetria (LangChain tracer `src/core/llm_client.ts`, `src/pipeline/llmPipeline.ts`, `src/server/web.ts`), hibrid LanceDB memóriarendszer (`src/utils/rag.ts`, `myai/refiner_logic.py`), strukturált böngésző kimenet (`myai/browser_worker.py`) implementálva. A build hibák javításra kerültek.
-    *   **LangSmith Integráció:** Minden LLM hívás LangSmithba kerül, ha a `LANGCHAIN_API_KEY` be van állítva. Ez kiterjed az `OrchestratorAgent`, `DynamicAgent`, `ollamaTool`, `llmPipeline`, `/api/ollama/generate` funkciókra.
-    *   **LanceDB Hibrid Memória:** LanceDB (Node.js) és Python oldali (LanceDB batch írás `myai/refiner_logic.py`) integráció.
-    *   **Strukturált Böngésző Kimenet:** Pydantic alapú kimenet a `myai/browser_worker.py` fájlban.
-    *   **Build Státusz:** A `npm run build` és `npm test -- test/telemetry.test.ts` sikeresen lefutottak.
-*   **Robotkéz n8n Sandbox és Edzésterv:** Implementálva a "Robotkéz n8n Sandbox és Edzésterv" track. A kezdeti UI automatizálási kísérletek (browser-use) problémái miatt API-alapú n8n integrációra váltottunk, amely sikeresen létrehozza, átnevezi és törli a munkafolyamatokat. Ezzel biztosítva van a Robotkéz számára egy stabil és automatizálható edzési környezet.
-*   **Dashboard UI:** Valós idejű, interaktív Dashboard UI fejlesztése, számos REST API endpointtal.
-*   **Ügynök Swarm:** `AgentManager` refaktorálás, `DataScientist` és `Researcher` ügynökök bevezetése.
+  bas-cloud-sync.yml hivatkozik myai/sync_to_r2.py-ra ami nem létezik a repóban.
 
-## 4. Rendszer Képességei és Funkcionalitása
+  ---
+  ⚠️ MAGAS PRIORITÁSÚ PROBLÉMÁK
+  ┌───────────────┬──────────────────────────────────────────────────────────────────────────┬─────────────────────────┐
+  │    Terület    │                                 Probléma                                 │          Fájl           │
+  ├───────────────┼──────────────────────────────────────────────────────────────────────────┼─────────────────────────┤
+  │ LLM Client    │ Nincs Content-Type header, nincs timeout, nincs HTTP status ellenőrzés   │ src/core/llm_client.ts  │
+  ├───────────────┼──────────────────────────────────────────────────────────────────────────┼─────────────────────────┤
+  │ LLM Client    │ Fallback logika hibás - rekurzív hívás nem kezeli mindkét provider       │ src/core/llm_client.ts  │
+  │               │ hibáját                                                                  │                         │
+  ├───────────────┼──────────────────────────────────────────────────────────────────────────┼─────────────────────────┤
+  │ CLI           │ /switch claude és /switch openai elfogadva de nincs implementálva        │ src/cli.ts              │
+  ├───────────────┼──────────────────────────────────────────────────────────────────────────┼─────────────────────────┤
+  │ RAG           │ Vector embeddings nincs implementálva - csak substring keresés           │ src/utils/rag.ts        │
+  ├───────────────┼──────────────────────────────────────────────────────────────────────────┼─────────────────────────┤
+  │ Dashboard     │ iframe sandbox túl permisszív (XSS kockázat)                             │ EmbeddedWorkflow.tsx:39 │
+  ├───────────────┼──────────────────────────────────────────────────────────────────────────┼─────────────────────────┤
+  │ Agents        │ EdgeProxyAgent és ProjectConductorAgent hiányzik a role property         │ BaseAgent               │
+  │               │                                                                          │ leszármazottak          │
+  ├───────────────┼──────────────────────────────────────────────────────────────────────────┼─────────────────────────┤
+  │ GitHub        │ Gemini workflow-ok timeout nélkül (6 óra default!)                       │ gemini-invoke.yml       │
+  │ Actions       │                                                                          │                         │
+  ├───────────────┼──────────────────────────────────────────────────────────────────────────┼─────────────────────────┤
+  │ GitHub        │ SQL injection kockázat D1 parancsban                                     │ bas-cloud-sync.yml      │
+  │ Actions       │                                                                          │                         │
+  └───────────────┴──────────────────────────────────────────────────────────────────────────┴─────────────────────────┘
+  ---
+  📊 Területenkénti Státusz
 
-Az `mcp-brunella-core` széles körű AI-vezérelt képességeket kínál:
+  GitHub Actions & Copilot Integration
+  ┌──────────────────────┬───────────────┬───────────────────────────────────────────┐
+  │       Workflow       │    Státusz    │                Megjegyzés                 │
+  ├──────────────────────┼───────────────┼───────────────────────────────────────────┤
+  │ ci.yml               │ ✅ Jó         │ Node + Python tesztek párhuzamosan        │
+  ├──────────────────────┼───────────────┼───────────────────────────────────────────┤
+  │ bas-cloud-sync.yml   │ ❌ Törött     │ Hiányzó fájl, hardcoded Windows útvonalak │
+  ├──────────────────────┼───────────────┼───────────────────────────────────────────┤
+  │ gemini-*.yml         │ ⚠️ Kockázatos │ Nincs timeout, secrets validáció hiányzik │
+  ├──────────────────────┼───────────────┼───────────────────────────────────────────┤
+  │ jules-self-heal.yml  │ ⚠️ Kockázatos │ Auto-PR creation review nélkül            │
+  ├──────────────────────┼───────────────┼───────────────────────────────────────────┤
+  │ Copilot instructions │ ✅ Kiváló     │ Részletes, jól strukturált                │
+  └──────────────────────┴───────────────┴───────────────────────────────────────────┘
+  Agent Rendszer
+  ┌───────────────────────┬───────────┬──────────────────────────────┐
+  │         Agent         │ Interfész │           Státusz            │
+  ├───────────────────────┼───────────┼──────────────────────────────┤
+  │ OrchestratorAgent     │ IAgent    │ ✅ Működik                   │
+  ├───────────────────────┼───────────┼──────────────────────────────┤
+  │ DeveloperAgent        │ IAgent    │ ✅ Működik                   │
+  ├───────────────────────┼───────────┼──────────────────────────────┤
+  │ EvaluatorAgent        │ IAgent    │ ✅ Működik                   │
+  ├───────────────────────┼───────────┼──────────────────────────────┤
+  │ ResearcherAgent       │ IAgent    │ ✅ Működik                   │
+  ├───────────────────────┼───────────┼──────────────────────────────┤
+  │ DataScientistAgent    │ IAgent    │ ⚠️ Python injection kockázat │
+  ├───────────────────────┼───────────┼──────────────────────────────┤
+  │ DynamicAgent          │ IAgent    │ ❌ Törött konstruktor        │
+  ├───────────────────────┼───────────┼──────────────────────────────┤
+  │ EdgeProxyAgent        │ BaseAgent │ ⚠️ Hiányzó role              │
+  ├───────────────────────┼───────────┼──────────────────────────────┤
+  │ ProjectConductorAgent │ BaseAgent │ ⚠️ Hiányzó role              │
+  └───────────────────────┴───────────┴──────────────────────────────┘
+  Dashboard UI
+  ┌──────────────────────┬────────────────────────┬──────────────────────────────────────────────────────┐
+  │      Komponens       │        Státusz         │                      Megjegyzés                      │
+  ├──────────────────────┼────────────────────────┼──────────────────────────────────────────────────────┤
+  │ MissionControlLayout │ ✅ Jó                  │ CPU/RAM placeholder, de működik                      │
+  ├──────────────────────┼────────────────────────┼──────────────────────────────────────────────────────┤
+  │ AgentStatusCard      │ ✅ Jó                  │ Hiányzik error boundary                              │
+  ├──────────────────────┼────────────────────────┼──────────────────────────────────────────────────────┤
+  │ NeuralLinkChat       │ ✅ Jó                  │ Nincs message persistence                            │
+  ├──────────────────────┼────────────────────────┼──────────────────────────────────────────────────────┤
+  │ SocketContext        │ ⚠️ Részleges           │ Socket instance nem elérhető, error handler hiányzik │
+  ├──────────────────────┼────────────────────────┼──────────────────────────────────────────────────────┤
+  │ EmbeddedWorkflow     │ ❌ Biztonsági probléma │ iframe sandbox túl nyitott                           │
+  └──────────────────────┴────────────────────────┴──────────────────────────────────────────────────────┘
+  Conductor Rendszer
+  ┌────────────────────────┬───────────────────────────────────────────────┐
+  │          Elem          │                    Státusz                    │
+  ├────────────────────────┼───────────────────────────────────────────────┤
+  │ tracks.md              │ ✅ Naprakész, 4 aktív track                   │
+  ├────────────────────────┼───────────────────────────────────────────────┤
+  │ workflow.md            │ ✅ Részletes protokollok                      │
+  ├────────────────────────┼───────────────────────────────────────────────┤
+  │ SUMMARY.md             │ ✅ Auto-frissítve                             │
+  ├────────────────────────┼───────────────────────────────────────────────┤
+  │ CONDUCTOR_MANIFEST.md  │ ❌ Kaotikus - AI chat history keveredik benne │
+  ├────────────────────────┼───────────────────────────────────────────────┤
+  │ ProjectConductor Agent │ ⚠️ 80% kész - CLI integration hiányzik        │
+  └────────────────────────┴───────────────────────────────────────────────┘
+  ---
+  📈 Aktív Track-ek Összefoglalója
+  ┌──────────────────────────────┬──────────┬─────────────────────────────┐
+  │            Track             │ Progress │           Blocker           │
+  ├──────────────────────────────┼──────────┼─────────────────────────────┤
+  │ Cloudflare Edge Integration  │ 65%      │ DNS nameserver propagation  │
+  ├──────────────────────────────┼──────────┼─────────────────────────────┤
+  │ ProjectConductor Agent       │ 80%      │ CLI wiring, pre-commit hook │
+  ├──────────────────────────────┼──────────┼─────────────────────────────┤
+  │ BAS Scale-Up & Stabilization │ 90%      │ Final tuning                │
+  ├──────────────────────────────┼──────────┼─────────────────────────────┤
+  │ Robotkéz n8n Sandbox         │ 70%      │ Training scenarios          │
+  └──────────────────────────────┴──────────┴─────────────────────────────┘
+  Befejezett (utóbbi 4 nap): Brunella 2.0 Gemini-fication, Mission Control 2.1, Hybrid Cloud Integration, BAS Cloudflare
+   Orchestrator Deploy, Mission Control Remote Access
 
-*   **Többügynökös (Multi-Agent) Rendszer:** Specializált ügynökök (Developer, Evaluator, Orchestrator, DataScientist, Researcher, Project Organizer, Agent Architect) autonóm és koordinált munkája.
-*   **Önálló Döntéshozatal és Automatizálás:** Feladatok elemzése, tervezése, delegálása és automatikus végrehajtása.
-*   **Rugalmas Bővíthetőség (MCP):** Új eszközök és ügynökök zökkenőmentes integrációja.
-*   **Külső Eszközök és Platformok Integrációja:**
-    *   **Ollama:** Lokális LLM futtatás a költséghatékonyság és a testreszabhatóság érdekében.
-    *   **AnythingLLM:** RAG (Retrieval Augmented Generation) képességek, tudáskezelés.
-    *   **n8n:** Munkafolyamat automatizálás API-vezérelve.
-    *   **GitHub MCP:** Integráció a GitHub API-val.
-    *   **LangSmith:** Observability és ügynöki végrehajtás nyomon követése.
-*   **Parancssori Interfész (CLI):** Hatékony szöveges interakció a fejlesztők számára.
-*   **Webes Vezérlőpult (Dashboard UI):** Intuitív grafikus felület a rendszer monitorozásához és kezeléséhez.
+  ---
+  🎯 Javasolt Teendők Prioritás Szerint
 
-## 5. Működési Környezet és Interakciók
+  KRITIKUS (Ma/Holnap)
 
-A platform a rugalmas működést és a széles körű interakciókat helyezi előtérbe:
+  1. ⛔ API kulcsok rotálása - Minden exposed kulcs cseréje
+  2. 🔧 Agent interfész egységesítése - IAgent vs BaseAgent konfliktus feloldása
+  3. 🔧 DynamicAgent javítása - Constructor fix hogy config objectet fogadjon
 
-*   **Fejlesztési Környezetek:** Hibrid (Node.js/Python), konténerizált (Docker/Docker Compose), platformfüggetlen.
-*   **Felhasználói Interakciók:**
-    *   **CLI:** Parancssori interakció ügynökökkel és feladatokkal.
-    *   **Dashboard UI:** Grafikus felület valós idejű monitorozással és kezeléssel.
-*   **Rendszerközi Interakciók:**
-    *   **MCP:** Standard kommunikációs protokoll ügynökök és eszközök között.
-    *   **Külső API-k:** Integráció GitHub, Google szolgáltatások, Snyk stb. API-jával.
-    *   **Ollama, AnythingLLM:** Lokális LLM és RAG interakciók.
-*   **Adatkezelés:** SQLite (Task Queue), Brunella memóriakezelés a kontextus megőrzéséért.
+  MAGAS (Ezen a héten)
 
-## 6. Erősségek és Jövőbeli Potenciál
+  4. 📝 llm_client.ts hardening - Content-Type, timeout, HTTP status check
+  5. 🔒 EmbeddedWorkflow iframe security - Sandbox permissions szűkítése
+  6. 📁 sync_to_r2.py létrehozása vagy workflow fix
+  7. 🤖 ProjectConductor CLI integration - brunella conductor status működjön
 
-Az `mcp-brunella-core` projekt nem csupán egy technológiai megoldás, hanem egy stratégiai befektetés a szoftverfejlesztés jövőjébe, számos kiemelkedő erősséggel és jelentős jövőbeli potenciállal:
+  KÖZEPES (Jövő hét)
 
-*   **Innovatív AI-alapú Megközelítés:** Az AI központi szerepe a fejlesztési folyamatban, páratlan hatékonyságot és minőséget eredményezve, különös tekintettel a költséghatékony lokális LLM modellek kihasználására.
-*   **Maximális Automatizálás:** A Conductor keretrendszer és az ügynökök révén a fejlesztési feladatok nagymértékben automatizálódnak, csökkentve a költségeket és a hibalehetőségeket.
-*   **Skálázhatóság és Rugalmasság:** Az MCP alapú, moduláris architektúra könnyű skálázhatóságot és bővíthetőséget biztosít.
-*   **Megbízhatóság és Minőség:** Az `EvaluatorAgent` és a tesztelési infrastruktúra garantálja a magas kódminőséget és a rendszer stabilitását.
-*   **Transzparencia és Ellenőrizhetőség:** A Dashboard UI és a LangSmith integráció valós idejű betekintést nyújt a rendszer működésébe, az ügynöki döntéshozatalba és a feladatok végrehajtásába. Ez biztosítja az átláthatóságot és az ellenőrizhetőséget, ami kritikus az AI alapú rendszerekben.
-*   **Jövőbeli Bővítési Lehetőségek:**
-    *   Specifikus Domain Ügynökök fejlesztése.
-    *   Fejlettebb AI/ML modellek integrálása.
-    *   Mélyebb Observability és Prediktív Karbantartás.
-    *   Felhasználói élmény (UX) további finomítása.
-    *   Teljes CI/CD pipeline automatizálása.
+  8. 📚 CONDUCTOR_MANIFEST.md refaktorálás - AI chat history eltávolítása
+  9. 🔍 RAG vector embeddings implementálása (jelenleg nem működik)
+  10. ⏱️ GitHub Actions timeouts hozzáadása
 
-### Befektetői Perspektíva
-Az `mcp-brunella-core` egy forradalmi platform, amely átalakíthatja a szoftverfejlesztés iparágát, jelentős versenyelőnyt biztosítva. Az AI-alapú automatizálás, a skálázhatóság és a folyamatos innovációs potenciál rendkívül vonzó befektetési lehetőséget kínál egy gyorsan növekvő piacon. A projekt már bizonyította alapvető stabilitását és funkcionalitását a számos sikeresen lezárt fejlesztési "track" révén.
+  ---
+  💡 Pozitív Megfigyelések
+
+  - ✅ LangSmith tracing jól integrálva az LLM hívásokhoz
+  - ✅ Socket.IO megfelelően konfigurálva CORS-szal
+  - ✅ Copilot instructions kiválóan dokumentált
+  - ✅ Track rendszer jól működik, 16+ befejezett track
+  - ✅ Health check rendszer robosztus retry logikával
+  - ✅ CLI UX profi (chalk, ora, inquirer)
 
 ---
 
-### Diagramok és Ábrák Megjegyzések
-A Markdown fájlba közvetlenül nem illeszthető be ábra, de egy befektetői prezentációhoz az alábbiakban leírt diagramok és vizuális elemek lennének ideálisak:
+## Brunella 2.0 - Gemini-fication & Multi-Provider LLM (2026. február 4.)
 
-1.  **Rendszerarchitektúra Diagram:**
-    *   **Típus:** Blokkdiagram vagy komponensdiagram.
-    *   **Elemei:** Felhasználói interfészek (CLI, Dashboard UI), Központi vezérlő (OrchestratorAgent/Conductor), AI Ügynökök réteg, MCP Kommunikációs Réteg, Külső Eszközök és Integrációk (Ollama, AnythingLLM, GitHub, Google API-k, Snyk), Adatkezelési réteg (SQLite, Memória), Konténerizációs réteg (Docker).
-    *   **Célja:** Vizualizálni a rendszer moduláris felépítését és az egyes komponensek közötti adatfolyamot.
+Ez a fejlesztési ciklus a Brunella Agent System (BAS) intelligens magjának jelentős továbbfejlesztését célozta, bevezetve a több LLM szolgáltatót támogató architektúrát és egy interaktívabb parancssori élményt.
 
-2.  **Fejlesztési Munkafolyamat Diagram (Conductor/PDCA):**
-    *   **Típus:** Folyamatábra vagy állapotgép.
-    *   **Elemei:** Tervezés (Plan) -> Tervezés (Design) -> Megvalósítás (Do) -> Ellenőrzés (Check) -> Beavatkozás (Act) ciklus. "Track" kiválasztása, állapotfrissítés, feladatok végrehajtása, Dokumentáció szinkronizálás.
-    *   **Célja:** Bemutatni a projekt menedzsment módszertanát és az automatizált fejlesztési ciklust.
+### 1. Multi-Provider LLM Támogatás
+- **Új `llm_client`:** Létrehozásra került egy új, központi `llm_client` (`src/core/llm_client.ts`), amely képes kezelni a helyi (Ollama) és a felhőalapú (Google Gemini) nyelvi modelleket.
+- **Automatikus Fallback:** A rendszer hibatűrőbb lett; ha a kiválasztott felhőszolgáltató (pl. Gemini) nem érhető el, a rendszer automatikusan visszavált a helyi Ollama modellre, biztosítva a folyamatos működést.
+- **Architekturális Refaktor:** A korábbi, kizárólag Ollamára épülő `chatWithOllama` függvényt az egész kódbázisban lecseréltük az új, rugalmas `generateResponse` függvényre. Ez érintette az összes ügynököt (`OrchestratorAgent`, `DynamicAgent` stb.) és a belső eszközöket.
 
-3.  **Ügynök Interakciós Diagram:**
-    *   **Típus:** Szereplő-használati eset (UML Use Case) vagy szekvenciadiagram.
-    *   **Elemei:** Felhasználó -> OrchestratorAgent -> Specializált Ügynökök -> Külső Eszközök (MCP). Például: "Kód refaktorálása" feladat menete.
-    *   **Célja:** Illusztrálni az ügynökök közötti kollaborációt és a feladatok delegálását.
+### 2. Interaktív CLI Fejlesztések
+- **Állapot-nyilvántartó Chat:** A `brunella chat` parancs mostantól egy teljes értékű, interaktív munkamenetet biztosít, amely megjegyzi a beszélgetés előzményeit.
+- **Dinamikus Szolgáltatóváltás:** A chat munkameneten belül bevezetésre került a `/switch <provider>` parancs, amellyel a felhasználó futás közben válthat az `ollama`, `gemini`, `claude` és `openai` szolgáltatók között.
 
-4.  **Értékajánlat Grafikon/Infografika:**
-    *   **Típus:** Bár vagy vonaldiagram vagy infografika.
-    *   **Elemei:** Idő/Költség megtakarítás az automatizálás révén, Minőségi növekedés (hibák csökkenése), Fejlesztési sebesség növelése, Piaci versenyképesség növelése.
-    *   **Célja:** Kvantitatív és kvalitatív adatokkal alátámasztani a befektetési megtérülést.
+### 3. LangSmith Integráció
+- **Mélyebb Observability:** A "Glass Box" protokoll szellemében minden LLM hívás mostantól a LangSmith segítségével követhető nyomon. Ez lehetővé teszi a hívások részletes elemzését, a hibakeresést és a teljesítmény optimalizálását.
+
+### 4. Új Függőségek
+- **Node.js:** `@google/generative-ai` a Gemini API integrációhoz, `readline-sync` és `chalk` a továbbfejlesztett CLI élményért.
+- **Python:** `google-generativeai` és `langsmith` a Python alrendszer képességeinek bővítéséhez.
+
+Ez a frissítés kulcsfontosságú lépés a Brunella rendszer poliglott és hibatűrő képességeinek megalapozásában, lehetővé téve a legmegfelelőbb AI modell dinamikus kiválasztását az adott feladathoz.

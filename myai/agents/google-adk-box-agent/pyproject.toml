@@ -1,0 +1,14 @@
+[project]
+name = "google-adk-box-agent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "box-ai-agents-toolkit>=0.0.42",
+    "google-adk>=1.2.1",
+    "python-dotenv>=1.1.0",
+]
+
+[dependency-groups]
+dev = ["pytest>=8.3.5", "ruff>=0.11.9"]

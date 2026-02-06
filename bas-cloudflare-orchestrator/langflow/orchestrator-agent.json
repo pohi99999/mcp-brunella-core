@@ -1,0 +1,180 @@
+{
+  "name": "BAS Orchestrator Agent",
+  "description": "Fő orchestrátor - összetett feladatok bontása, agent koordináció, ReAct reasoning",
+  "endpoint_name": "orchestrator-agent",
+  "data": {
+    "nodes": [
+      {
+        "id": "ChatInput-Orch",
+        "type": "ChatInput",
+        "position": { "x": 100, "y": 300 },
+        "data": {
+          "id": "ChatInput-Orch",
+          "node": {
+            "template": {
+              "input_value": { "value": "" },
+              "sender": { "value": "User" },
+              "sender_name": { "value": "BAS System" },
+              "session_id": { "value": "" },
+              "should_store_message": { "value": true }
+            }
+          }
+        }
+      },
+      {
+        "id": "Memory-ConversationBuffer",
+        "type": "ConversationBufferMemory",
+        "position": { "x": 100, "y": 500 },
+        "data": {
+          "id": "Memory-ConversationBuffer",
+          "node": {
+            "template": {
+              "memory_key": { "value": "chat_history" },
+              "input_key": { "value": "input" },
+              "output_key": { "value": "output" },
+              "return_messages": { "value": true },
+              "human_prefix": { "value": "Human" },
+              "ai_prefix": { "value": "AI" }
+            }
+          }
+        }
+      },
+      {
+        "id": "Prompt-ReAct",
+        "type": "Prompt",
+        "position": { "x": 400, "y": 150 },
+        "data": {
+          "id": "Prompt-ReAct",
+          "node": {
+            "template": {
+              "template": {
+                "value": "Te a Brunella Agent System (BAS) fő orchestrátora vagy. A felhasználód Péter, magyar fejlesztő.\n\n## SZEREPED\nCélvezérelt, proaktív vezető vagy. Nem passzív asszisztens - te koordinálod az agent csapatot.\n\n## ReAct KERETRENDSZER\nMinden feladatnál kövesd ezt a mintát:\n\n**Thought (Gondolat):** Mi a feladat lényege? Milyen részfeladatokra bontható?\n**Action (Akció):** Melyik agent-et/tool-t használjam?\n**Observation (Megfigyelés):** Mi az eredmény?\n**... (ismétlés szükség szerint)**\n**Final Answer (Végső válasz):** Összefoglalás és következő lépések\n\n## ELÉRHETŐ ÜGYNÖKÖK\n1. **ResearcherGem** - Kutatás, információgyűjtés, összefoglalás\n2. **CoderGem** - Kód generálás, review, debug\n3. **robotkéz (Browser-Use)** - Böngésző automatizálás\n4. **n8n** - Workflow automatizálás, integrációk\n\n## KONTEXTUS\nKorábbi beszélgetés:\n{chat_history}\n\nFeladat részletei:\n{context}\n\n## JELENLEGI FELADAT\n{task}\n\n## VÁLASZ FORMÁTUM\nStrukturált választ adj:\n\n### 🎯 Feladat Elemzés\n[A feladat megértése és bontása]\n\n### 🧠 Gondolkodási Folyamat\n**Thought:** [gondolat]\n**Action:** [akció - melyik agent/tool]\n**Expected Outcome:** [várt eredmény]\n\n### 📋 Végrehajtási Terv\n1. [lépés]\n2. [lépés]\n...\n\n### ✅ Azonnali Akció\n[Mit csinálok most azonnal]\n\n### 💡 Javaslatok\n[Proaktív javaslatok, optimalizálási lehetőségek]\n\nVálaszod:"
+              },
+              "task": { "value": "" },
+              "context": { "value": "{}" },
+              "chat_history": { "value": "" }
+            }
+          }
+        }
+      },
+      {
+        "id": "OllamaModel-Orch",
+        "type": "OllamaModel",
+        "position": { "x": 700, "y": 200 },
+        "data": {
+          "id": "OllamaModel-Orch",
+          "node": {
+            "template": {
+              "model_name": { "value": "llama3.1:8b" },
+              "base_url": { "value": "http://localhost:11434" },
+              "temperature": { "value": 0.7 },
+              "num_ctx": { "value": 8192 },
+              "format": { "value": "" },
+              "mirostat": { "value": 0 },
+              "mirostat_eta": { "value": 0.1 },
+              "mirostat_tau": { "value": 5.0 },
+              "num_gpu": { "value": -1 },
+              "repeat_penalty": { "value": 1.1 },
+              "seed": { "value": -1 },
+              "stop": { "value": [] },
+              "top_k": { "value": 40 },
+              "top_p": { "value": 0.9 },
+              "verbose": { "value": false }
+            }
+          }
+        }
+      },
+      {
+        "id": "TaskParser-1",
+        "type": "PythonFunction",
+        "position": { "x": 700, "y": 400 },
+        "data": {
+          "id": "TaskParser-1",
+          "node": {
+            "template": {
+              "code": {
+                "value": "import re\nimport json\n\ndef parse_orchestrator_response(response: str) -> dict:\n    \"\"\"\n    Parsolja az orchestrátor válaszát és kinyeri a struktúrált adatokat\n    \"\"\"\n    result = {\n        'raw_response': response,\n        'analysis': '',\n        'thinking': [],\n        'plan': [],\n        'immediate_action': '',\n        'suggestions': [],\n        'delegations': []\n    }\n    \n    # Feladat Elemzés kinyerése\n    analysis_match = re.search(r'### 🎯 Feladat Elemzés\\n([\\s\\S]*?)(?=### |$)', response)\n    if analysis_match:\n        result['analysis'] = analysis_match.group(1).strip()\n    \n    # Gondolkodási folyamat\n    thought_matches = re.findall(r'\\*\\*Thought:\\*\\* ([^\\n]+)', response)\n    action_matches = re.findall(r'\\*\\*Action:\\*\\* ([^\\n]+)', response)\n    result['thinking'] = list(zip(thought_matches, action_matches))\n    \n    # Végrehajtási terv\n    plan_match = re.search(r'### 📋 Végrehajtási Terv\\n([\\s\\S]*?)(?=### |$)', response)\n    if plan_match:\n        plan_text = plan_match.group(1)\n        result['plan'] = re.findall(r'\\d+\\.\\s*([^\\n]+)', plan_text)\n    \n    # Azonnali akció\n    action_match = re.search(r'### ✅ Azonnali Akció\\n([\\s\\S]*?)(?=### |$)', response)\n    if action_match:\n        result['immediate_action'] = action_match.group(1).strip()\n    \n    # Delegálások azonosítása\n    if 'ResearcherGem' in response or 'research' in response.lower():\n        result['delegations'].append({'agent': 'research', 'detected': True})\n    if 'CoderGem' in response or 'code' in response.lower():\n        result['delegations'].append({'agent': 'code', 'detected': True})\n    if 'robotkéz' in response or 'browser' in response.lower():\n        result['delegations'].append({'agent': 'browser', 'detected': True})\n    if 'n8n' in response:\n        result['delegations'].append({'agent': 'n8n', 'detected': True})\n    \n    return result\n\nreturn parse_orchestrator_response(input_value)"
+              },
+              "input_value": { "value": "" }
+            }
+          }
+        }
+      },
+      {
+        "id": "TextOutput-Orch",
+        "type": "TextOutput",
+        "position": { "x": 1000, "y": 300 },
+        "data": {
+          "id": "TextOutput-Orch",
+          "node": {
+            "template": {
+              "input_value": { "value": "" }
+            }
+          }
+        }
+      },
+      {
+        "id": "ChatOutput-Orch",
+        "type": "ChatOutput",
+        "position": { "x": 1250, "y": 300 },
+        "data": {
+          "id": "ChatOutput-Orch",
+          "node": {
+            "template": {
+              "input_value": { "value": "" },
+              "sender": { "value": "Machine" },
+              "sender_name": { "value": "Brunella Orchestrator" },
+              "session_id": { "value": "" },
+              "should_store_message": { "value": true }
+            }
+          }
+        }
+      }
+    ],
+    "edges": [
+      {
+        "source": "ChatInput-Orch",
+        "sourceHandle": "message",
+        "target": "Prompt-ReAct",
+        "targetHandle": "task"
+      },
+      {
+        "source": "Memory-ConversationBuffer",
+        "sourceHandle": "memory",
+        "target": "Prompt-ReAct",
+        "targetHandle": "chat_history"
+      },
+      {
+        "source": "Prompt-ReAct",
+        "sourceHandle": "prompt",
+        "target": "OllamaModel-Orch",
+        "targetHandle": "input"
+      },
+      {
+        "source": "OllamaModel-Orch",
+        "sourceHandle": "text",
+        "target": "TaskParser-1",
+        "targetHandle": "input_value"
+      },
+      {
+        "source": "TaskParser-1",
+        "sourceHandle": "output",
+        "target": "TextOutput-Orch",
+        "targetHandle": "input_value"
+      },
+      {
+        "source": "OllamaModel-Orch",
+        "sourceHandle": "text",
+        "target": "Memory-ConversationBuffer",
+        "targetHandle": "input"
+      },
+      {
+        "source": "TextOutput-Orch",
+        "sourceHandle": "text",
+        "target": "ChatOutput-Orch",
+        "targetHandle": "input_value"
+      }
+    ],
+    "viewport": { "x": 0, "y": 0, "zoom": 0.8 }
+  }
+}

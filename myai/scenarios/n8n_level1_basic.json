@@ -1,0 +1,144 @@
+{
+  "scenario_name": "n8n_level1_basic_workflow",
+  "mode": "ui",
+  "difficulty": "beginner",
+  "description": "Alap workflow: Login → Manual trigger → Set node → Run",
+  "target_url": "https://n8n-latest-fulv.onrender.com",
+  "expected_duration_seconds": 90,
+  "requires_auth": true,
+  "steps": [
+    {
+      "id": 1,
+      "action": "navigate",
+      "target": "https://n8n-latest-fulv.onrender.com/signin",
+      "description": "n8n login oldal"
+    },
+    {
+      "id": 2,
+      "action": "wait_for_element",
+      "selector": "input[type='email'], input[name='email'], input[placeholder*='mail']",
+      "timeout_ms": 10000,
+      "description": "Várakozás login form-ra"
+    },
+    {
+      "id": 3,
+      "action": "type",
+      "target": "input[type='email'], input[name='email'], input[placeholder*='mail']",
+      "value": "${N8N_OWNER_EMAIL}",
+      "clear_first": true,
+      "description": "Email beírása"
+    },
+    {
+      "id": 4,
+      "action": "type",
+      "target": "input[type='password']",
+      "value": "${N8N_OWNER_PASSWORD}",
+      "clear_first": true,
+      "description": "Jelszó beírása"
+    },
+    {
+      "id": 5,
+      "action": "click",
+      "target": "button[type='submit']",
+      "description": "Sign in gomb"
+    },
+    {
+      "id": 6,
+      "action": "wait_for_navigation",
+      "timeout_ms": 15000,
+      "description": "Várakozás bejelentkezésre"
+    },
+    {
+      "id": 7,
+      "action": "click",
+      "target": "button:has-text('Create Workflow'), [data-test-id='new-workflow-button'], a:has-text('New')",
+      "timeout_ms": 10000,
+      "description": "Új workflow létrehozása"
+    },
+    {
+      "id": 8,
+      "action": "wait_for_element",
+      "selector": "[data-test-id='canvas'], .workflow-canvas, canvas",
+      "timeout_ms": 10000,
+      "description": "Várakozás a canvas-ra"
+    },
+    {
+      "id": 9,
+      "action": "click",
+      "target": "[data-test-id='canvas-add-button'], button:has-text('+'), .add-node-button",
+      "description": "Node hozzáadás gomb"
+    },
+    {
+      "id": 10,
+      "action": "type",
+      "target": "[data-test-id='node-creator-search-input'], input[placeholder*='Search'], input[type='search']",
+      "value": "Manual Trigger",
+      "description": "Manual Trigger keresése"
+    },
+    {
+      "id": 11,
+      "action": "click",
+      "target": "[data-test-id='node-creator-item']:has-text('Manual'), div:has-text('Manual Trigger')",
+      "description": "Manual Trigger kiválasztása"
+    },
+    {
+      "id": 12,
+      "action": "wait",
+      "duration_ms": 1000,
+      "description": "Várakozás node renderelésre"
+    },
+    {
+      "id": 13,
+      "action": "click",
+      "target": "[data-test-id='canvas-add-button'], .node-connector-output, .connection-output",
+      "description": "Új node hozzáadása a trigger után"
+    },
+    {
+      "id": 14,
+      "action": "type",
+      "target": "[data-test-id='node-creator-search-input'], input[placeholder*='Search']",
+      "value": "Edit Fields",
+      "description": "Edit Fields (Set) keresése"
+    },
+    {
+      "id": 15,
+      "action": "click",
+      "target": "[data-test-id='node-creator-item']:has-text('Edit Fields'), div:has-text('Edit Fields')",
+      "description": "Edit Fields kiválasztása"
+    },
+    {
+      "id": 16,
+      "action": "keyboard",
+      "keys": "Control+s",
+      "description": "Mentés (Ctrl+S)"
+    },
+    {
+      "id": 17,
+      "action": "wait",
+      "duration_ms": 500,
+      "description": "Mentés feldolgozása"
+    },
+    {
+      "id": 18,
+      "action": "click",
+      "target": "button:has-text('Test workflow'), button:has-text('Execute'), [data-test-id='execute-workflow-button']",
+      "description": "Teszt futtatás"
+    },
+    {
+      "id": 19,
+      "action": "wait_for_element",
+      "selector": "[data-test-id='execution-success'], .execution-succeeded, .success-indicator",
+      "timeout_ms": 15000,
+      "description": "Várakozás sikeres futtatásra"
+    }
+  ],
+  "validation": {
+    "success_criteria": [
+      "Bejelentkezés sikeres",
+      "Workflow létrejött",
+      "2 node hozzáadva",
+      "Teszt futtatás sikeres"
+    ],
+    "screenshot_on_complete": true
+  }
+}

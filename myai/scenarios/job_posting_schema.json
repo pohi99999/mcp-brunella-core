@@ -1,0 +1,12 @@
+{
+  "title": "JobPosting",
+  "type": "object",
+  "properties": {
+    "title": { "type": "string" },
+    "company": { "type": "string" },
+    "location": { "type": "string" },
+    "salary": { "type": "string" },
+    "url": { "type": "string" }
+  },
+  "required": ["title", "company", "url"]
+}
