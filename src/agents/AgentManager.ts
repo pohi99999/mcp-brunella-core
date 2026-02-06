@@ -11,8 +11,6 @@
  */
 
 import { EventEmitter } from 'events';
-import * as fs from 'fs';
-import * as path from 'path';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 
 // ============================================================================
@@ -129,22 +127,29 @@ export class AgentManager extends EventEmitter {
   }
 
   private async loadAgent(config: AgentConfig): Promise<void> {
-    const modulePath = path.resolve(process.cwd(), 'build', config.module.replace('./', ''));
-    
-    if (!fs.existsSync(modulePath)) {
-      logError('AgentManager', `Modul nem található: ${modulePath}`);
-      return;
+    try {
+        const path = await import('path');
+        const fs = await import('fs');
+
+        const modulePath = path.resolve(process.cwd(), 'build', config.module.replace('./', ''));
+
+        if (!fs.existsSync(modulePath)) {
+          logError('AgentManager', `Modul nem található: ${modulePath}`);
+          return;
+        }
+
+        const AgentClass = (await import(modulePath)).default;
+        const agent = new AgentClass(config.config);
+
+        agent.name = config.name;
+        agent.description = config.description;
+        agent.systemPrompt = config.systemPrompt;
+
+        this.agents.set(config.name, agent);
+        logInfo('AgentManager', `Ügynök betöltve: ${config.name}`);
+    } catch (e) {
+        logError('AgentManager', `Cannot load agent ${config.name} (likely in Worker env): ${e}`);
     }
-    
-    const AgentClass = (await import(modulePath)).default;
-    const agent = new AgentClass(config.config);
-    
-    agent.name = config.name;
-    agent.description = config.description;
-    agent.systemPrompt = config.systemPrompt;
-    
-    this.agents.set(config.name, agent);
-    logInfo('AgentManager', `Ügynök betöltve: ${config.name}`);
   }
 
   private async initializeEdgeProxy(): Promise<void> {
@@ -509,10 +514,22 @@ export class AgentManager extends EventEmitter {
   // --------------------------------------------------------------------------
 
   private loadRegistry(): RegistryConfig {
-    const registryPath = path.resolve(process.cwd(), 'build', 'agents', 'registry.json');
-    
-    if (fs.existsSync(registryPath)) {
-      return JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
+    try {
+        // Warning: This synchronous loading might fail in strict environments or Workers.
+        // Ideally registry should be imported or injected.
+        // We use require or direct import if possible, but here we keep the logic dynamic
+        // assuming Node.js. In Workers, this will likely throw or return fallback.
+        // Since we can't do async in constructor easily, we assume this is Node-only path.
+        // For Workers, AgentManager should probably be initialized with a config object.
+        const fs = require('fs');
+        const path = require('path');
+        const registryPath = path.resolve(process.cwd(), 'build', 'agents', 'registry.json');
+
+        if (fs.existsSync(registryPath)) {
+          return JSON.parse(fs.readFileSync(registryPath, 'utf-8'));
+        }
+    } catch (e) {
+        // Ignore error in Worker env
     }
     
     // Fallback

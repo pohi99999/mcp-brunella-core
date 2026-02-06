@@ -1,22 +1,28 @@
-import fs from 'fs/promises';
-import path from 'path';
 import { config } from '../config/index.js';
 
 export class Logger {
     private logFile: string;
 
     constructor(filename: string) {
-        this.logFile = path.join(config.systemLogDir, filename);
+        // Delay path.join until needed, or use string concatenation if path module is unavailable
+        this.logFile = filename;
     }
 
     async log(message: string, meta?: any) {
         const timestamp = new Date().toISOString();
         const logEntry = `[${timestamp}] ${message} ${meta ? JSON.stringify(meta) : ''}\n`;
+
         try {
-            await fs.mkdir(path.dirname(this.logFile), { recursive: true });
-            await fs.appendFile(this.logFile, logEntry);
+            // Dynamic import to avoid build errors in non-Node environments (e.g. Cloudflare Workers)
+            const fs = await import('fs/promises');
+            const path = await import('path');
+            const fullPath = path.join(config.systemLogDir, this.logFile);
+
+            await fs.mkdir(path.dirname(fullPath), { recursive: true });
+            await fs.appendFile(fullPath, logEntry);
         } catch (error) {
-            console.error(`Failed to write to log file: ${this.logFile}`, error);
+            // Fallback to console in environments without filesystem access
+            console.log(message, meta || '');
         }
     }
 
@@ -24,11 +30,17 @@ export class Logger {
     async structured(level: 'info' | 'warn' | 'error', message: string, meta?: Record<string, unknown>) {
         const entry = { level, timestamp: new Date().toISOString(), message, ...meta };
         const line = JSON.stringify(entry) + '\n';
+
         try {
-            await fs.mkdir(path.dirname(this.logFile), { recursive: true });
-            await fs.appendFile(this.logFile, line);
+            const fs = await import('fs/promises');
+            const path = await import('path');
+            const fullPath = path.join(config.systemLogDir, this.logFile);
+
+            await fs.mkdir(path.dirname(fullPath), { recursive: true });
+            await fs.appendFile(fullPath, line);
         } catch (error) {
-            console.error(`Failed to write to log file: ${this.logFile}`, error);
+             // Fallback to console in environments without filesystem access
+             console.log(`[${level.toUpperCase()}] ${message}`, meta || '');
         }
     }
 
