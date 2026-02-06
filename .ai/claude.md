@@ -41,6 +41,97 @@
 
 ## Napló
 
+### 2026-02-06 12:00 - Cloudflare Worker Flotta Aktiválás + Jules AI 1 Hetes Terv
+
+**Feladat:** Cloudflare Worker integration + Jules (Google AI agent) setup napi 100 session kihasználásra
+
+**Elvégzett munkák:**
+
+1. **Cloudflare Worker Edge Integration**
+   - `.env` - Worker URL, EDGE_ENABLED változók hozzáadva
+   - `bas_client.py` - Worker URL javítás (iam-dd1.workers.dev)
+   - `scripts/test_cloudflare_agents.py` - Health check + task submit test
+   - `src/cli-edge.ts` - Új CLI (health, submit, status parancsok)
+   - `package.json` - brunella-edge binary
+
+2. **Worker Tesztelés - SIKERES**
+   - Worker status: ONLINE ✅
+   - Task submitted: `bas-1770372196734-7nq0qp6` (code generation)
+   - Workers AI generálta a Python kódot exponenciális backoff-fal
+   - Tokens: 402 (prompt: 146, completion: 256)
+
+3. **Jules AI Agent Setup**
+   - `.github/JULES.md` - 1 hetes munkaterv (100 sessions/nap = 700 session/hét)
+   - 6 fő feature prompt template:
+     - Hétfő: Memory Bank (LanceDB) - error-fix tárolás
+     - Kedd: EdgeProxy CLI integration
+     - Szerda: Browser-Use Robotkéz aktiválás
+     - Csütörtök: LangSmith tracing kiterjesztés
+     - Péntek: Automated testing pipeline (Husky + CI/CD)
+     - Szombat-Vasárnap: Documentation + refactor
+
+**CLI Használat:**
+```bash
+# Edge Worker hívások
+node build/cli-edge.js health
+node build/cli-edge.js submit "Generate FastAPI user auth endpoint"
+node build/cli-edge.js status <taskId>
+
+# Vagy globális install után
+npm install -g .
+brunella-edge health
+brunella-edge submit "your task"
+```
+
+**Python Client Használat:**
+```python
+from bas_client import BASClient
+
+async with BASClient() as client:
+    result = await client.submit_task("Generate code")
+    code = await client.generate_code("async retry logic")
+```
+
+**Cloudflare Worker Endpoints:**
+- POST /task - Task submit (AI auto-routing)
+- GET /status/:taskId - Státusz lekérdezés
+- POST /webhook/browser-use - Browser callback
+- POST /webhook/n8n - n8n callback
+
+**Érintett fájlok:**
+- `bas-cloudflare-orchestrator/client/bas_client.py`
+- `scripts/test_cloudflare_agents.py`
+- `src/cli-edge.ts`
+- `package.json`
+- `.github/JULES.md`
+
+**Teszt eredmény:**
+- Cloudflare Worker: ✅ ONLINE
+- Task submit: ✅ MŰKÖDIK
+- Code generation: ✅ MŰKÖDIK (Workers AI)
+- CLI: ✅ brunella-edge parancsok működnek
+
+**Jules AI Resource:**
+- URL: https://jules.google.com
+- Napi limit: 100 session
+- Autonóm agent: órákon át dolgozik egyedül
+- Full kódbázis kontextus
+- Teszt írás/futtatás/javítás automatikusan
+
+**Következő lépések (Jules-nak):**
+1. Hétfő: Memory Bank implementáció (DeveloperAgent + LanceDB)
+2. Kedd: EdgeProxy CLI integration teljes
+3. Szerda: Browser-Use Robotkéz működésbe hozás
+4. Csütörtök: LangSmith tracing minden agent-re
+5. Péntek: CI/CD pipeline + pre-commit hooks
+6. Hétvége: Dokumentáció + code cleanup
+
+**Státusz:** ✅ Befejezve
+
+**Commit:** `b903d818` - feat(edge): Cloudflare Worker integration + Jules AI 1-week plan
+
+---
+
 ### 2026-02-06 11:15 - agent_execute MCP Eszköz Implementáció (CLI Fix)
 
 **Feladat:** Hiányzó `agent_execute` MCP eszköz hozzáadása a CLI `agent` parancshoz
