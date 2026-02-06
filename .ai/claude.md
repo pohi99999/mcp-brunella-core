@@ -41,6 +41,81 @@
 
 ## Napló
 
+### 2026-02-06 23:00 - CLI LLM Interakció Javítás (MCP Client Tool Cache)
+
+**Feladat:** CLI chat parancs nem működött - "Connection closed" hiba az LLM tool híváskor
+
+**Probléma:**
+- A CLI `brunella chat` parancs nem tudott kommunikálni az LLM-ekkel
+- `ollama_generate`, `gemini_generate`, `github_models_generate` tools regisztrálva DE crash-elt
+- Hiba: "MCP error -32000: Connection closed"
+
+**Gyökérok:**
+`src/utils/mcpClient.ts` `callTool()` metódusa **minden egyes híváskor újra listázta az összes tool-t**, ami:
+1. Felesleges round-trip (lassú)
+2. Race condition
+3. Connection timeout
+
+**Megoldás:**
+1. **Tool cache bevezetése** - `Map<string, string>` (tool name → server name)
+2. **Lazy loading** - Első `listTools()` híváskor cache-eli a mapping-et
+3. **Fallback mechanizmus** - Ha cache-elt hívás fail, fallback full search-re
+
+**Érintett fájlok:**
+- `src/utils/mcpClient.ts` - Tool cache implementáció
+- `src/core/llm_client.ts` - Gemini modell frissítés (`gemini-2.0-flash-exp`)
+- `test/llm_client.test.ts` - Teszt frissítés új modell névvel
+
+**Diagnosztika eredmények:**
+- ✅ Build: OK
+- ✅ Ollama: 18 modell elérhető (llama3.1:8b, qwen2.5-coder, deepseek-coder)
+- ✅ Tesztek: 68/68 PASS
+- ✅ `ollama_generate` tool: MŰKÖDIK
+- ✅ `gemini_generate` tool: Fallback működik (Ollama válasz)
+- ❌ `github_models_generate`: 401 Unauthorized (érvénytelen GITHUB_PAT)
+- ❌ `gemini_generate` (natív): 400 Invalid API Key (érvénytelen GEMINI_API_KEY)
+
+**Használat (működik!):**
+```bash
+# Ollama (LOCAL)
+node build/cli.js run ollama_generate prompt="Hello"
+
+# Gemini (Fallback Ollama-ra ha API key rossz)
+node build/cli.js run gemini_generate prompt="Hello"
+
+# GitHub Models (401 ha API key rossz, de tool működik)
+node build/cli.js run github_models_generate prompt="Hello" model="gpt-4o"
+
+# Interactive Chat
+node build/cli.js chat
+# majd használd: /switch ollama
+```
+
+**Teszt eredmény:** 68/68 PASS ✅
+**Build:** OK ✅
+**CLI:** ✅ Működik
+
+**TODO (felhasználónak):**
+1. **Frissíteni az API kulcsokat:**
+   - GEMINI_API_KEY - Google Cloud Console: https://console.cloud.google.com/apis/credentials
+   - GITHUB_PAT - GitHub Settings: https://github.com/settings/tokens
+2. **Új kulcsok beszerzése után:**
+   ```bash
+   # Frissítsd .env fájlt
+   # Majd teszteld:
+   node build/cli.js run gemini_generate prompt="Hello"
+   node build/cli.js run github_models_generate prompt="Hello"
+   ```
+
+**Státusz:** ✅ Befejezve
+
+**Következő lépések:**
+1. API kulcsok frissítése (felhasználó feladata)
+2. LangSmith tracing kiterjesztés (track: langsmith_integration_20260130)
+3. Robotkéz + Browser Harvester (track: browser_use_harvester_20260131)
+
+---
+
 ### 2026-02-06 12:00 - Cloudflare Worker Flotta Aktiválás + Jules AI 1 Hetes Terv
 
 **Feladat:** Cloudflare Worker integration + Jules (Google AI agent) setup napi 100 session kihasználásra

@@ -3,7 +3,7 @@
 // VERSION: 2.0
 
 import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { globalPythonShell } from '../utils/pythonShell.js';
 import { generateResponse } from '../core/llm_client.js';
 import { execSync } from 'child_process';
@@ -75,7 +75,7 @@ export class DeveloperAgent implements IAgent {
         const keywords = ['generate', 'create', 'write', 'implement', 'add', 'build', 'make'];
         const codeKeywords = ['function', 'class', 'component', 'module', 'api', 'endpoint'];
         return keywords.some(k => task.toLowerCase().includes(k)) &&
-               codeKeywords.some(k => task.toLowerCase().includes(k));
+            codeKeywords.some(k => task.toLowerCase().includes(k));
     }
 
     private isTestGenerationTask(task: string): boolean {
@@ -92,6 +92,10 @@ export class DeveloperAgent implements IAgent {
 
     private isGitTask(task: string): boolean {
         return /git|commit|push|branch|merge/i.test(task);
+    }
+
+    private formatPromptWithSystem(prompt: string, systemPrompt: string): string {
+        return `System Prompt: ${systemPrompt}\n\nUser Prompt: ${prompt}`;
     }
 
     // ==================== Code Generation ====================
@@ -119,10 +123,7 @@ Requirements:
 Generate the code:`;
 
         try {
-            const code = await generateResponse(prompt, this.llmProvider, {
-                system: systemPrompt,
-                model: 'gpt-4o'
-            });
+            const code = await generateResponse(this.formatPromptWithSystem(prompt, systemPrompt), this.llmProvider, 'gpt-4o');
 
             logInfo(this.name, `✅ Code generated (${code.length} chars)`);
 
@@ -135,7 +136,7 @@ Generate the code:`;
                 // Auto-test build
                 const buildResult = await this.tryBuild();
                 if (!buildResult.success) {
-                    logWarn(this.name, "⚠️ Build failed, attempting auto-fix...");
+                    logInfo(this.name, "⚠️ Build failed, attempting auto-fix...");
                     return await this.selfHealBuild(code, buildResult.error || "Unknown error", filePath);
                 }
             }
@@ -171,10 +172,7 @@ ${context?.sourceCode ? `Source code to test:\n\`\`\`typescript\n${context.sourc
 Generate Vitest test suite:`;
 
         try {
-            const testCode = await generateResponse(prompt, this.llmProvider, {
-                system: systemPrompt,
-                model: 'gpt-4o'
-            });
+            const testCode = await generateResponse(this.formatPromptWithSystem(prompt, systemPrompt), this.llmProvider, 'gpt-4o');
 
             if (context?.testFilePath) {
                 await this.saveCode(context.testFilePath, testCode);
@@ -236,10 +234,7 @@ ${task}
 
 Provide the fixed code:`;
 
-            const fixedCode = await generateResponse(prompt, this.llmProvider, {
-                system: systemPrompt,
-                model: 'gpt-4o'
-            });
+            const fixedCode = await generateResponse(this.formatPromptWithSystem(prompt, systemPrompt), this.llmProvider, 'gpt-4o');
 
             if (filePath) {
                 await this.saveCode(filePath, fixedCode);
@@ -325,10 +320,7 @@ Analyze the task and provide a helpful response.
 If code is needed, generate it. If explanation is needed, explain.`;
 
         try {
-            const response = await generateResponse(task, this.llmProvider, {
-                system: systemPrompt,
-                model: 'gpt-4o'
-            });
+            const response = await generateResponse(this.formatPromptWithSystem(task, systemPrompt), this.llmProvider, 'gpt-4o');
 
             return {
                 status: "success",
@@ -413,10 +405,7 @@ ${buildError}
 Fix the code:`;
 
             try {
-                const fixedCode = await generateResponse(prompt, this.llmProvider, {
-                    system: systemPrompt,
-                    model: 'gpt-4o'
-                });
+                const fixedCode = await generateResponse(this.formatPromptWithSystem(prompt, systemPrompt), this.llmProvider, 'gpt-4o');
 
                 await this.saveCode(filePath, fixedCode);
                 const buildResult = await this.tryBuild();

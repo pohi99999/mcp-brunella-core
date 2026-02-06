@@ -28,7 +28,10 @@ describe("Robotkéz n8n Integration Test", () => {
 
         try {
             // Run the Python script that executes the API scenario
-            const { stdout, stderr } = await execPromise(`${venvPythonPath} ${pythonScriptPath}`);
+            const projectRoot = 'F:/mcp-brunella-core'; // Explicitly define project root
+            const { stdout, stderr } = await execPromise(`${venvPythonPath} ${pythonScriptPath}`, {
+                env: { PYTHONPATH: projectRoot }
+            });
 
             // Log stdout and stderr for debugging
             console.log("Python Script Stdout:", stdout);
