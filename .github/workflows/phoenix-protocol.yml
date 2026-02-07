@@ -1,0 +1,48 @@
+name: Phoenix Protocol (CI)
+
+on: [push, pull_request]
+
+jobs:
+  validate-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1. Node.js Környezet (Orchestrator)
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install Node Dependencies
+        run: npm ci
+
+      - name: Build TypeScript
+        run: npm run build --if-present
+
+      # 2. Python Környezet (Robotkéz/MyAI)
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: |
+          cd myai
+          pip install -r requirements.txt
+
+      # 3. A Nagy Teszt (Phoenix Protocol)
+      - name: Run Tests
+        run: npm test
+
+      # 4. Specifikáció Ellenőrzés (ha van conductor check script)
+      # - name: Check Spec Compliance
+      #   run: node scripts/conductor_diagnostics.mjs
+
+      # 5. Build Validation
+      - name: Verify Build Artifacts
+        run: |
+          test -d build || (echo "Build directory missing!" && exit 1)
+          echo "✅ Build artifacts present"
