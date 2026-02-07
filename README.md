@@ -12,7 +12,30 @@ AI multi-agent rendszer szoftverfejlesztés automatizálására lokális LLM-ekk
 
 ## 🚀 INDULÁS PROTOKOLL (Kötelező sorrend - 3 lépés)
 
-### 1. Dokumentáció Beolvasás
+### 1. GitHub Szinkronizálás (MINDIG ELŐSZÖR!)
+```bash
+# 🔴 KÖTELEZŐ minden munkamenet elején!
+scripts\sync.bat              # Windows CMD
+# VAGY
+.\scripts\sync.ps1            # PowerShell
+# VAGY
+bash scripts/sync.sh          # Git Bash / WSL
+
+# Opciók:
+scripts\sync.bat --build      # Sync + build check
+scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
+```
+
+**Mit csinál a sync script:**
+- ✅ Fetch + Pull GitHub változásokat (Jules work!)
+- ✅ Auto-stash uncommitted changes
+- ✅ Jules PR-ek listázása
+- ✅ Conflict detection
+- ✅ Build/Test check (opcionális)
+
+**Részletek:** [scripts/SYNC_README.md](scripts/SYNC_README.md)
+
+### 2. Dokumentáció Beolvasás
 ```
 ✅ KÖTELEZŐ:
 1. README.md (ez a fájl) - TELJES TARTALOM!
@@ -24,10 +47,9 @@ AI multi-agent rendszer szoftverfejlesztés automatizálására lokális LLM-ekk
 - conductor/workflow.md - Részletes workflow
 ```
 
-### 2. Rendszer Validáció (Munka ELŐTT)
+### 3. Rendszer Validáció (Munka ELŐTT)
 ```bash
-# Ellenőrizd a rendszer állapotát
-git status                    # Mi változott?
+# Ha nem futtattad a sync --build -ot:
 npm run build                 # TypeScript fordítás (MUSZÁJ OK!)
 npm test                      # Vitest tesztek (MUSZÁJ PASS!)
 ```
