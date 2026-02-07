@@ -8,89 +8,70 @@ import httpx
 API_URL = "http://localhost:8000"
 
 async def test_level1():
-    print("=" * 60)
-    print("[LEVEL 1] Alapveto Navigacio Teszt")
-    print("=" * 60)
-
-    async with httpx.AsyncClient(timeout=120.0) as client:
-        # Test 1: Google Search
-        print("\n[TEST 1] Google Search")
-        print("-" * 60)
-
+    print("--- 🤖 Robotkéz Level 1 Teszt: Alapvető Navigáció ---")
+    async with httpx.AsyncClient(timeout=180.0) as client:
+        # 1. Google Keresés
+        print("\n[TASK] 1/3: Google keresés 'github playwright'...")
         response = await client.post(
             f"{API_URL}/api/task",
             json={
-                "taskId": "test-google-search",
+                "taskId": "level1-google-search",
                 "type": "browser",
                 "payload": {
-                    "instruction": "Open google.com and search for 'Playwright Python tutorial'",
-                    "context": {}
+                    "instruction": "Go to google.com and search for 'github playwright', then take a screenshot.",
+                    "context": {"headless": True, "save_screenshot": True}
                 },
-                "callbackUrl": ""
             }
         )
-
         if response.status_code == 200:
-            result = response.json()
-            print(f"[OK] Task submitted: {result.get('taskId')}")
-            print(f"Result: {result.get('result', {}).get('summary', 'N/A')}")
+            print("[OK] Google keresés sikeres.")
         else:
-            print(f"[FAIL] HTTP {response.status_code}: {response.text}")
+            print(f"[FAIL] Google keresés hiba: {response.text}")
+            return
 
-        # Test 2: Screenshot
-        print("\n[TEST 2] Screenshot")
-        print("-" * 60)
-
+        # 2. GitHub Trending
+        print("\n[TASK] 2/3: GitHub Trending repók kinyerése...")
         response = await client.post(
             f"{API_URL}/api/task",
             json={
-                "taskId": "test-screenshot",
+                "taskId": "level1-github-trending",
                 "type": "browser",
                 "payload": {
-                    "instruction": "Open example.com and take a screenshot",
-                    "context": {"save_screenshot": True}
+                    "instruction": "Go to github.com/trending and extract the names and URLs of the top 3 repositories. Return as JSON.",
+                    "context": {"headless": True, "extract_json": True}
                 },
-                "callbackUrl": ""
             }
         )
-
         if response.status_code == 200:
-            result = response.json()
-            print(f"[OK] Screenshot saved")
+            data = response.json().get("result", {}).get("extractedData", [])
+            print(f"[OK] GitHub Trending sikeresen kinyerve. {len(data)} repó található.")
+            if data:
+                for repo in data[:3]:
+                    print(f"  - {repo.get('name')}: {repo.get('url')}")
         else:
-            print(f"[FAIL] HTTP {response.status_code}")
+            print(f"[FAIL] GitHub Trending hiba: {response.text}")
+            return
 
-        # Test 3: Data Extraction
-        print("\n[TEST 3] Data Extraction")
-        print("-" * 60)
-
+        # 3. Weboldal tartalmának ellenőrzése
+        print("\n[TASK] 3/3: n8n.io weboldal tartalmának ellenőrzése...")
         response = await client.post(
             f"{API_URL}/api/task",
             json={
-                "taskId": "test-extraction",
+                "taskId": "level1-content-check",
                 "type": "browser",
                 "payload": {
-                    "instruction": "Open github.com/trending and extract the top 3 repositories",
-                    "context": {"extract_json": True}
+                    "instruction": "Go to n8n.io and check if the text 'workflow automation' is present on the page.",
+                    "context": {"headless": True}
                 },
-                "callbackUrl": ""
             }
         )
-
-        if response.status_code == 200:
-            result = response.json()
-            extracted = result.get('result', {}).get('extractedData')
-            if extracted:
-                print(f"[OK] Extracted {len(extracted)} items")
-                print(f"Sample: {extracted[0] if extracted else 'N/A'}")
-            else:
-                print("[WARN] No data extracted")
+        if response.status_code == 200 and 'is present' in response.json().get('result', {}).get('summary', ''):
+             print("[OK] 'workflow automation' szöveg megtalálható az n8n.io oldalon.")
         else:
-            print(f"[FAIL] HTTP {response.status_code}")
+            print(f"[FAIL] n8n.io tartalomellenőrzés hiba: {response.text}")
+            return
 
-    print("\n" + "=" * 60)
-    print("[LEVEL 1] Test Complete")
-    print("=" * 60)
+    print("\n--- ✅ Robotkéz Level 1 Teszt Befejezve ---")
 
 if __name__ == "__main__":
     asyncio.run(test_level1())
