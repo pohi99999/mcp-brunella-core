@@ -13,6 +13,7 @@
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { saveTask, updateTask, getPendingTasks, DbTask } from '../utils/db.js';
 
 // ============================================================================
 // INTERFACES
@@ -51,11 +52,12 @@ const DEFAULT_CONFIG: EdgeConfig = {
   workerUrl: process.env.CLOUDFLARE_WORKER_URL || 'https://bas-orchestrator.workers.dev',
   tunnelEnabled: process.env.CLOUDFLARE_TUNNEL_ENABLED === 'true',
   fallbackToLocal: true,
-  healthCheckInterval: 30000
+  healthCheckInterval: 60000,
+  apiKey: process.env.CLOUDFLARE_API_KEY
 };
 
 // ============================================================================
-// AGENT IMPLEMENTATION
+// CLASS IMPLEMENTATION
 // ============================================================================
 
 export class EdgeProxyAgent extends BaseAgent {
@@ -228,6 +230,13 @@ export class EdgeProxyAgent extends BaseAgent {
   async submitTask(context: AgentContext): Promise<AgentResult> {
     logInfo(this.name, 'Task beküldése az edge-re...');
     
+    // Mentés lokális adatbázisba
+    const localTaskId = await saveTask(this.name, context.task || 'Unknown Task', {
+        ...context.context as any,
+        originalInstruction: context.task,
+        source: 'EdgeProxy'
+    });
+
     // Edge elérhetőség ellenőrzése
     if (this.health.edge === 'offline') {
       await this.checkHealth();
@@ -235,6 +244,12 @@ export class EdgeProxyAgent extends BaseAgent {
     
     if (this.health.edge === 'offline' && this.config.fallbackToLocal) {
       logInfo(this.name, 'Edge offline, lokális fallback...');
+
+      // Update local task if needed
+      if (localTaskId) {
+           await updateTask(localTaskId, { status: 'pending', context: { ...context.context as any, fallback: true } });
+      }
+
       return {
         success: false,
         message: 'Edge nem elérhető, lokális feldolgozás szükséges',
@@ -262,6 +277,14 @@ export class EdgeProxyAgent extends BaseAgent {
       const result = await response.json() as EdgeTask;
       
       logInfo(this.name, `Task beküldve: ${result.taskId}`);
+
+      // Update local task with edge ID
+      if (localTaskId) {
+          await updateTask(localTaskId, {
+              status: 'dispatched',
+              context: { ...context.context as any, edgeTaskId: result.taskId }
+          });
+      }
       
       return {
         success: true,
@@ -272,6 +295,13 @@ export class EdgeProxyAgent extends BaseAgent {
     } catch (error) {
       logError(this.name, `Task beküldés sikertelen: ${error}`);
       
+      if (localTaskId) {
+          await updateTask(localTaskId, {
+              status: 'failed',
+              result: { error: String(error) }
+          });
+      }
+
       if (this.config.fallbackToLocal) {
         return {
           success: false,
@@ -322,12 +352,39 @@ export class EdgeProxyAgent extends BaseAgent {
       };
     }
     
-    // TODO: Implementálni a KV ↔ SQLite szinkronizációt
+    // Implementáció: KV <-> SQLite szinkronizáció
+    const pendingTasks = await getPendingTasks(this.name);
+    let syncedCount = 0;
+    const updates: any[] = [];
+
+    for (const task of pendingTasks) {
+        try {
+            const context = JSON.parse(task.context || '{}');
+            const edgeTaskId = context.edgeTaskId;
+
+            if (edgeTaskId) {
+                const edgeStatus = await this.getTaskStatus(edgeTaskId);
+
+                if (edgeStatus && (edgeStatus.status === 'completed' || edgeStatus.status === 'failed')) {
+                     // Status changed on edge (to final state)
+                     await updateTask(task.id, {
+                         status: edgeStatus.status,
+                         result: edgeStatus.result
+                     });
+                     syncedCount++;
+                     updates.push({ id: task.id, oldStatus: task.status, newStatus: edgeStatus.status });
+                     logInfo(this.name, `Task szinkronizálva: ${task.id} -> ${edgeStatus.status}`);
+                }
+            }
+        } catch (e) {
+            logError(this.name, `Hiba a task szinkronizálásakor (ID: ${task.id}): ${e}`);
+        }
+    }
     
     return {
       success: true,
-      message: 'Szinkronizálás befejezve',
-      data: { health: this.health }
+      message: `Szinkronizálás befejezve: ${syncedCount} task frissítve`,
+      data: { health: this.health, updates, syncedCount }
     };
   }
 
@@ -397,18 +454,17 @@ export class EdgeProxyAgent extends BaseAgent {
 
 | Parancs | Leírás |
 |---------|--------|
-| \`health\` / \`status\` | Edge státusz lekérdezése |
-| \`submit [task]\` | Task beküldése az edge-re |
-| \`sync\` | Szinkronizálás az edge-gel |
-| \`test\` | Edge kapcsolat tesztelése |
+| 'health' / 'status' | Edge státusz lekérdezése |
+| 'submit [task]' | Task beküldése az edge-re |
+| 'sync' | Szinkronizálás az edge-gel |
+| 'test' | Edge kapcsolat tesztelése |
 
 ## Konfiguráció (.env):
 
-\`\`\`
-CLOUDFLARE_WORKER_URL=https://bas-orchestrator.workers.dev
-CLOUDFLARE_TUNNEL_ENABLED=true
-CLOUDFLARE_API_KEY=your-api-key
-\`\`\`
+    CLOUDFLARE_WORKER_URL=https://bas-orchestrator.workers.dev
+    CLOUDFLARE_TUNNEL_ENABLED=true
+    CLOUDFLARE_API_KEY=your-api-key
+
 `;
     
     return {

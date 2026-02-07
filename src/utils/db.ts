@@ -113,3 +113,76 @@ export async function createChat(id: string, title: string) {
     const stmt = database.prepare('INSERT OR IGNORE INTO chats (id, title) VALUES (?, ?)');
     stmt.run(id, title);
 }
+
+// ============================================================================
+// TASK MANAGEMENT
+// ============================================================================
+
+export interface DbTask {
+    id: number;
+    parent_id?: number;
+    agent_name: string;
+    description: string;
+    context: string; // JSON string
+    status: string;
+    result?: string; // JSON string
+    created_at: string;
+    updated_at: string;
+}
+
+export async function saveTask(agentName: string, description: string, context: any, parentId?: number): Promise<number | null> {
+    const database = await getDb();
+    if (!database) return null;
+
+    const stmt = database.prepare('INSERT INTO tasks (agent_name, description, context, parent_id) VALUES (?, ?, ?, ?)');
+    const result = stmt.run(agentName, description, JSON.stringify(context), parentId || null);
+    // @ts-ignore
+    return result.lastInsertRowid as number;
+}
+
+export async function updateTask(id: number, updates: { status?: string, result?: any, context?: any }): Promise<boolean> {
+    const database = await getDb();
+    if (!database) return false;
+
+    const sets: string[] = [];
+    const values: any[] = [];
+
+    if (updates.status !== undefined) {
+        sets.push('status = ?');
+        values.push(updates.status);
+    }
+    if (updates.result !== undefined) {
+        sets.push('result = ?');
+        values.push(JSON.stringify(updates.result));
+    }
+    if (updates.context !== undefined) {
+        sets.push('context = ?');
+        values.push(JSON.stringify(updates.context));
+    }
+
+    // Always update timestamp
+    sets.push('updated_at = CURRENT_TIMESTAMP');
+
+    values.push(id);
+    const sql = `UPDATE tasks SET ${sets.join(', ')} WHERE id = ?`;
+
+    const stmt = database.prepare(sql);
+    const info = stmt.run(...values);
+    return info.changes > 0;
+}
+
+export async function getPendingTasks(agentName: string): Promise<DbTask[]> {
+    const database = await getDb();
+    if (!database) return [];
+
+    const stmt = database.prepare("SELECT * FROM tasks WHERE agent_name = ? AND status NOT IN ('completed', 'failed') ORDER BY created_at ASC");
+    return stmt.all(agentName) as DbTask[];
+}
+
+export async function getTask(id: number): Promise<DbTask | null> {
+    const database = await getDb();
+    if (!database) return null;
+
+    const stmt = database.prepare('SELECT * FROM tasks WHERE id = ?');
+    return stmt.get(id) as DbTask || null;
+}
