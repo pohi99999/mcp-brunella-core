@@ -601,8 +601,7 @@ npx wrangler deploy
 
 ---
 
-*Projekt tulajdonos: Péter (kreatív, nem programozó)*
-*Fejlesztés: AI ügynökökkel (Claude, Gemini, Cursor, Copilot)*
+*Projekt tulajdonos: Pohánka Péter*
 *Ha kérdésed van, kérdezz - ne találgass!*
 
 **🚀 Happy Coding!**
