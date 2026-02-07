@@ -355,35 +355,61 @@ ${this.projectState.components.map(c => `- **${c.name}:** ${c.status === 'health
     logInfo(this.name, 'Track-ek frissítése...');
     
     const tracksDir = path.join(CONDUCTOR_PATH, 'tracks');
-    const trackDirs = fs.readdirSync(tracksDir).filter(f => 
-      fs.statSync(path.join(tracksDir, f)).isDirectory()
-    );
+
+    let trackDirs: string[] = [];
+    try {
+      const entries = await fs.promises.readdir(tracksDir, { withFileTypes: true });
+      trackDirs = entries.filter(e => e.isDirectory()).map(e => e.name);
+    } catch (error: any) {
+      if (error.code === 'ENOENT') {
+        trackDirs = [];
+      } else {
+        logError(this.name, `Nem sikerült olvasni a tracks könyvtárat: ${error}`);
+        return { success: false, message: 'Hiba a tracks könyvtár olvasásakor', data: error };
+      }
+    }
     
     const updatedTracks: TrackState[] = [];
+    const CONCURRENCY_LIMIT = 50;
     
-    for (const dir of trackDirs) {
-      const planPath = path.join(tracksDir, dir, 'plan.md');
-      if (fs.existsSync(planPath)) {
-        const content = fs.readFileSync(planPath, 'utf-8');
-        
-        // Státusz és progress kinyerése a plan.md-ből
-        const statusMatch = content.match(/Státusz:\s*([🟢🟡🔴⏸️✅])\s*(\w+)/);
-        const progressMatch = content.match(/Progress:\s*(\d+)%/);
-        const priorityMatch = content.match(/Prioritás:\s*(\w+)/i);
-        
-        const existingTrack = this.projectState.tracks.find(t => t.id === dir);
-        
-        updatedTracks.push({
-          id: dir,
-          name: this.extractTrackNameFromContent(content) || dir,
-          status: this.parseStatus(statusMatch?.[2] || existingTrack?.status || 'active'),
-          priority: this.parsePriority(priorityMatch?.[1] || existingTrack?.priority || 'medium'),
-          progress: parseInt(progressMatch?.[1] || '0'),
-          lastActivity: fs.statSync(planPath).mtime.toISOString(),
-          blockers: existingTrack?.blockers || [],
-          assignee: existingTrack?.assignee
-        });
-      }
+    // Chunk-okban dolgozzuk fel a track-eket a concurrency limit betartásához
+    for (let i = 0; i < trackDirs.length; i += CONCURRENCY_LIMIT) {
+      const chunk = trackDirs.slice(i, i + CONCURRENCY_LIMIT);
+
+      const chunkResults = await Promise.all(chunk.map(async (dir) => {
+        const planPath = path.join(tracksDir, dir, 'plan.md');
+        try {
+          // Aszinkron fájl stat és olvasás
+          const stats = await fs.promises.stat(planPath);
+          const content = await fs.promises.readFile(planPath, 'utf-8');
+
+          // Státusz és progress kinyerése a plan.md-ből
+          const statusMatch = content.match(/Státusz:\s*([🟢🟡🔴⏸️✅])\s*(\w+)/);
+          const progressMatch = content.match(/Progress:\s*(\d+)%/);
+          const priorityMatch = content.match(/Prioritás:\s*(\w+)/i);
+
+          const existingTrack = this.projectState.tracks.find(t => t.id === dir);
+
+          return {
+            id: dir,
+            name: this.extractTrackNameFromContent(content) || dir,
+            status: this.parseStatus(statusMatch?.[2] || existingTrack?.status || 'active'),
+            priority: this.parsePriority(priorityMatch?.[1] || existingTrack?.priority || 'medium'),
+            progress: parseInt(progressMatch?.[1] || '0'),
+            lastActivity: stats.mtime.toISOString(),
+            blockers: existingTrack?.blockers || [],
+            assignee: existingTrack?.assignee
+          } as TrackState;
+        } catch (error: any) {
+          // Ha nincs plan.md, vagy nem olvasható, kihagyjuk
+          if (error.code !== 'ENOENT') {
+            logError(this.name, `Hiba a track feldolgozásakor (${dir}): ${error.message}`);
+          }
+          return null;
+        }
+      }));
+
+      updatedTracks.push(...chunkResults.filter((t): t is TrackState => t !== null));
     }
     
     this.projectState.tracks = updatedTracks;
