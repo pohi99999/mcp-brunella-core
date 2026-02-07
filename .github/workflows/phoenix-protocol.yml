@@ -1,6 +1,10 @@
 name: Phoenix Protocol (CI)
 
-on: [push, pull_request]
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   validate-and-test:
@@ -9,23 +13,25 @@ jobs:
       - uses: actions/checkout@v4
 
       # 1. Node.js Környezet (Orchestrator)
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install Node Dependencies
-        run: npm ci
-
-      - name: Build TypeScript
-        run: npm run build --if-present
+        run: pnpm install --frozen-lockfile
 
       # 2. Python Környezet (Robotkéz/MyAI)
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: '3.12'
           cache: 'pip'
 
       - name: Install Python Dependencies
@@ -33,16 +39,14 @@ jobs:
           cd myai
           pip install -r requirements.txt
 
-      # 3. A Nagy Teszt (Phoenix Protocol)
+      # 3. Run Tests (includes build via package.json)
       - name: Run Tests
-        run: npm test
+        run: pnpm test
+        env:
+          WEB_UI_ENABLED: '0'
 
-      # 4. Specifikáció Ellenőrzés (ha van conductor check script)
-      # - name: Check Spec Compliance
-      #   run: node scripts/conductor_diagnostics.mjs
-
-      # 5. Build Validation
+      # 4. Verify Build Artifacts
       - name: Verify Build Artifacts
         run: |
-          test -d build || (echo "Build directory missing!" && exit 1)
+          test -d build || (echo "❌ Build directory missing!" && exit 1)
           echo "✅ Build artifacts present"
