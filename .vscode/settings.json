@@ -1,4 +1,5 @@
 {
+  // Python Testing
   "python.testing.unittestArgs": [
     "-v",
     "-s",
@@ -9,6 +10,22 @@
   "python.testing.pytestEnabled": false,
   "python.testing.unittestEnabled": true,
   "vitest.disableWorkspaceWarning": true,
+
+  // GitHub Copilot Configuration (BAS-specific)
+  "github.copilot.editor.enableAutoCompletions": true,
+  "github.copilot.chat.runCommand.enabled": true,
+
+  // File Associations (segít a Copilotnak érteni a BAS fájlokat)
+  "files.associations": {
+    "*.md": "markdown",
+    "*.jsonc": "jsonc",
+    "conductor/**/*.md": "markdown"
+  },
+
+  // Copilot Advanced Settings (Codebase Awareness)
+  "github.copilot.advanced": {
+    "listFilesLimit": 10000
+  },
   "codex-project-manager.timestampsDataMigrationCompleted": true,
   "codex-project-manager.cellTypePromotionMigrationCompleted": true,
   "codex-project-manager.editHistoryFormatMigrationCompleted": true,

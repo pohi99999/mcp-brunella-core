@@ -1,0 +1,52 @@
+name: Phoenix Protocol (CI)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # 1. Node.js Környezet (Orchestrator)
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install Node Dependencies
+        run: pnpm install --frozen-lockfile
+
+      # 2. Python Környezet (Robotkéz/MyAI)
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      - name: Install Python Dependencies
+        run: |
+          cd myai
+          pip install -r requirements.txt
+
+      # 3. Run Tests (includes build via package.json)
+      - name: Run Tests
+        run: pnpm test
+        env:
+          WEB_UI_ENABLED: '0'
+
+      # 4. Verify Build Artifacts
+      - name: Verify Build Artifacts
+        run: |
+          test -d build || (echo "❌ Build directory missing!" && exit 1)
+          echo "✅ Build artifacts present"
