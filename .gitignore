@@ -34,6 +34,7 @@ copilot-messages.log
 *.exe
 *.msi
 *.bat
+!scripts/*.bat
 *.cmd
 *.com
 *.scr
