@@ -1,21 +1,25 @@
-import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 
-// Create server instance
-const server = new McpServer({
-  name: "mcp-brunella-core",
-  version: "1.0.0",
-});
+// Main entry point for MCP Brunella Core
+// This file must remain compatible with both Node.js and Cloudflare Workers environments.
+// All Node.js-specific dependencies must be imported dynamically.
 
 async function main() {
   // Conditional execution for Node.js environment
   if (typeof process !== 'undefined' && process.versions && process.versions.node) {
     // Dynamic imports to prevent bundling Node-native modules in Worker builds
     await import('dotenv/config');
+    const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
     const { StdioServerTransport } = await import("@modelcontextprotocol/sdk/server/stdio.js");
     const { startWebServer } = await import("./server/web.js");
     const { registerAllTools } = await import("./server/registry.js");
     const { agentManager } = await import("./agents/AgentManager.js");
     const { validateSecrets } = await import("./utils/validateSecrets.js");
+
+    // Create server instance
+    const server = new McpServer({
+      name: "mcp-brunella-core",
+      version: "1.0.0",
+    });
 
     // Register Tools
     await registerAllTools(server);
