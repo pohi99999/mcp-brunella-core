@@ -87,6 +87,10 @@ export function logError(agent: string, message: string) {
     console.error(`[ERROR] [${agent}] ${message}`);
 }
 
+export function logWarn(agent: string, message: string) {
+    console.warn(`[WARN] [${agent}] ${message}`);
+}
+
 export function setAgentStatus(agent: string, status: string, task?: string) {
     const statusMsg = task ? `${status} - ${task}` : status;
     console.log(`[STATUS] [${agent}] ${statusMsg}`);
