@@ -14,7 +14,7 @@ import {
     getRobotkezScreenshot,
     getN8nWorkflows,
     BrowserStatus
-} from '../lib/apiService';
+} from '../../lib/apiService';
 
 export function RobotkezPanel() {
     const [status, setStatus] = useState<BrowserStatus>({ active: false });

@@ -14,14 +14,16 @@ import {
   FileText,
   Rocket,
   History,
-  Network
+  Network,
+  Cpu,
+  Flask
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { AgentStatusCard } from '@/components/dashboard/AgentStatusCard'
 import { TerminalLog } from '@/components/dashboard/TerminalLog'
-import { ServiceControlWidget } from '@/components/dashboard/ServiceControlWidget'
+import { SystemHealthCard } from '@/components/dashboard/SystemHealthCard' // Swapped
 import { InventoryCatalog } from '@/components/dashboard/InventoryCatalog'
 import { NeuralLinkChat } from '@/components/dashboard/NeuralLinkChat'
 import { EmbeddedWorkflow } from '@/components/dashboard/EmbeddedWorkflow'
@@ -40,18 +42,16 @@ import { AgentManagementPanel } from '@/components/dashboard/AgentManagementPane
 import { TaskQueueMonitor } from '@/components/dashboard/TaskQueueMonitor'
 import { LLMProvidersPanel } from '@/components/dashboard/LLMProvidersPanel'
 import { KnowledgeBasePanel } from '@/components/dashboard/KnowledgeBasePanel'
+import { IncubatorPanel } from '@/components/dashboard/IncubatorPanel'
 
 const SIDEBAR_ITEMS = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { id: 'inventory', label: 'Inventory', icon: Box },
-  { id: 'chat', label: 'Neural Link', icon: MessageSquare },
-  { id: 'management', label: 'Management', icon: Sparkles },
-  { id: 'tasks', label: 'Task Queue', icon: History },
-  { id: 'providers', label: 'Providers', icon: Network },
+  { id: 'dashboard', label: 'Mission Control', icon: LayoutDashboard },
+  { id: 'management', label: 'Agents', icon: Sparkles },
+  { id: 'incubator', label: 'Incubator', icon: Flask },
   { id: 'knowledge', label: 'Knowledge', icon: Brain },
-  { id: 'n8n', label: 'Workflows', icon: Workflow },
   { id: 'robotkez', label: 'Robotkéz', icon: Activity },
-  { id: 'factory', label: 'Factory', icon: Rocket },
+  { id: 'tasks', label: 'Tasks', icon: History },
+  { id: 'inventory', label: 'Assets', icon: Box },
   { id: 'files', label: 'Files', icon: FolderOpen },
   { id: 'settings', label: 'Settings', icon: Settings },
 ]
@@ -226,6 +226,7 @@ export function MissionControlLayout() {
 
               {activeTab === 'inventory' && <InventoryCatalog />}
               {activeTab === 'chat' && <NeuralLinkChat />}
+              {activeTab === 'incubator' && <IncubatorPanel />}
               {activeTab === 'n8n' && (
                 <EmbeddedWorkflow
                   title="n8n Automation"
@@ -252,7 +253,7 @@ export function MissionControlLayout() {
 
             {/* Right Column: Widgets */}
             <div className="space-y-6 lg:sticky lg:top-6 h-fit">
-              <ServiceControlWidget />
+              <SystemHealthCard />
 
               <Card className="glass-card border-white/10 overflow-hidden">
                 <CardHeader className="pb-3 border-b border-border/50 bg-muted/20">

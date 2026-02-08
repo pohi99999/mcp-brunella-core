@@ -3,25 +3,28 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Switch } from '@/components/ui/switch';
 import { Circle, CheckCircle, Warning, XCircle, ArrowsClockwise } from '@phosphor-icons/react';
 import * as api from '@/lib/apiService';
 import { toast } from 'sonner';
 
 interface ServiceStatus {
+    id: string;
     name: string;
-    status: 'healthy' | 'unhealthy' | 'checking';
+    status: 'healthy' | 'unhealthy' | 'checking' | 'starting' | 'stopping';
     message?: string;
 }
 
 export function SystemHealthCard() {
     const [services, setServices] = useState<ServiceStatus[]>([
-        { name: 'Ollama', status: 'checking' },
-        { name: 'AnythingLLM', status: 'checking' },
-        { name: 'Agents', status: 'checking' },
-        { name: 'MCP Servers', status: 'checking' }
+        { id: 'ollama', name: 'Ollama', status: 'checking' },
+        { id: 'anythingllm', name: 'AnythingLLM', status: 'checking' },
+        { id: 'agents', name: 'Agents', status: 'checking' },
+        { id: 'mcp', name: 'MCP Servers', status: 'checking' }
     ]);
     const [lastCheck, setLastCheck] = useState<string>('');
     const [isChecking, setIsChecking] = useState(false);
+    const [loading, setLoading] = useState<Record<string, boolean>>({});
 
     const checkHealth = async () => {
         setIsChecking(true);
@@ -32,21 +35,25 @@ export function SystemHealthCard() {
 
             const newServices: ServiceStatus[] = [
                 {
+                    id: 'ollama',
                     name: 'Ollama',
                     status: ok(health.services.ollama) ? 'healthy' : 'unhealthy',
                     message: ok(health.services.ollama) ? 'Működik' : 'Indítsd el: ollama serve',
                 },
                 {
+                    id: 'anythingllm',
                     name: 'AnythingLLM',
                     status: ok(health.services.anythingllm) ? 'healthy' : 'unhealthy',
                     message: ok(health.services.anythingllm) ? 'Működik' : 'Service nem elérhető',
                 },
                 {
+                    id: 'agents',
                     name: 'Agents',
                     status: ok(health.services.agents) ? 'healthy' : 'unhealthy',
                     message: ok(health.services.agents) ? 'Aktív ágensek rendelkezésre állnak' : 'Nincs regisztrált ágens',
                 },
                 {
+                    id: 'mcp',
                     name: 'MCP Servers',
                     status: ok(health.services.mcp) ? 'healthy' : 'unhealthy',
                     message: ok(health.services.mcp) ? 'MCP kapcsolat működik' : 'Nincs elérhető MCP szerver',
@@ -55,17 +62,8 @@ export function SystemHealthCard() {
 
             setServices(newServices);
             setLastCheck(new Date().toLocaleString('hu-HU'));
-            
-            const unhealthy = newServices.filter(s => s.status === 'unhealthy');
-            if (unhealthy.length > 0) {
-                toast.warning(`${unhealthy.length} service nem elérhető`, {
-                    description: unhealthy.map(s => s.name).join(', ')
-                });
-            }
         } catch (error: any) {
-            toast.error('Health check sikertelen', {
-                description: error.message
-            });
+            console.error('Health check error:', error);
             setServices(prev => prev.map(s => ({
                 ...s,
                 status: 'unhealthy',
@@ -76,9 +74,38 @@ export function SystemHealthCard() {
         }
     };
 
+    const handleToggle = async (serviceId: string, currentlyHealthy: boolean) => {
+        if (serviceId === 'agents' || serviceId === 'mcp') {
+            toast.info(`${serviceId} állapotát a rendszer automatikusan kezeli`);
+            return;
+        }
+
+        setLoading(prev => ({ ...prev, [serviceId]: true }));
+        try {
+            if (currentlyHealthy) {
+                if (serviceId === 'anythingllm') {
+                    toast.info('AnythingLLM Desktop app – manuálisan zárd be');
+                    return;
+                }
+                const result = await api.stopService(serviceId as any);
+                if (result.success) toast.success(result.message);
+                else toast.error(result.message);
+            } else {
+                const result = await api.startService(serviceId as any);
+                if (result.success) toast.success(result.message);
+                else toast.error(result.message);
+            }
+            await checkHealth();
+        } catch (e: any) {
+            toast.error(e.message || 'Művelet sikertelen');
+        } finally {
+            setLoading(prev => ({ ...prev, [serviceId]: false }));
+        }
+    };
+
     useEffect(() => {
         checkHealth();
-        const interval = setInterval(checkHealth, 15000); // Check every 15 seconds
+        const interval = setInterval(checkHealth, 30000); // 30s as per masterplan V3
         return () => clearInterval(interval);
     }, []);
 
@@ -87,100 +114,75 @@ export function SystemHealthCard() {
             case 'healthy':
                 return <CheckCircle size={20} className="text-green-500" weight="fill" />;
             case 'unhealthy':
-                return <XCircle size={20} className="text-red-500" weight="fill" />;
+                return <XCircle size={14} className="text-red-500" weight="fill" />;
             case 'checking':
-                return <Circle size={20} className="text-yellow-500 animate-pulse" weight="fill" />;
+                return <Circle size={14} className="text-yellow-500 animate-pulse" weight="fill" />;
             default:
-                return <Warning size={20} className="text-gray-500" />;
+                return <Warning size={14} className="text-gray-500" />;
         }
-    };
-
-    const getStatusBadge = (status: string) => {
-        const variant = status === 'healthy' ? 'default' : status === 'unhealthy' ? 'destructive' : 'secondary';
-        return (
-            <Badge variant={variant}>
-                {status === 'healthy' ? 'Működik' : status === 'unhealthy' ? 'Hiba' : 'Ellenőrzés...'}
-            </Badge>
-        );
     };
 
     const healthyCount = services.filter(s => s.status === 'healthy').length;
     const totalCount = services.length;
-    const healthPercentage = (healthyCount / totalCount) * 100;
 
     return (
-        <Card>
-            <CardHeader className="flex flex-row items-center justify-between">
-                <CardTitle className="text-lg font-semibold">Rendszer Állapot</CardTitle>
-                <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={checkHealth}
-                    disabled={isChecking}
-                >
-                    <ArrowsClockwise 
-                        size={16} 
-                        className={isChecking ? 'animate-spin' : ''} 
-                    />
-                    <span className="ml-2">Frissítés</span>
-                </Button>
+        <Card className="glass-card border-white/10">
+            <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-white/5">
+                <CardTitle className="text-sm font-space font-bold tracking-tight uppercase text-muted-foreground flex items-center gap-2">
+                    <ArrowsClockwise size={16} className={isChecking ? 'animate-spin' : ''} />
+                    System Engine Health
+                </CardTitle>
+                <div className="flex items-center gap-2">
+                    <Badge variant={healthyCount === totalCount ? 'default' : 'destructive'} className="text-[10px]">
+                        {healthyCount}/{totalCount} OK
+                    </Badge>
+                </div>
             </CardHeader>
-            <CardContent className="space-y-4">
-                {/* Overall Status */}
-                <Alert variant={healthPercentage === 100 ? 'default' : 'destructive'}>
-                    <AlertDescription>
-                        <div className="flex items-center justify-between">
-                            <span className="font-medium">
-                                {healthyCount} / {totalCount} service működik
-                            </span>
-                            {lastCheck && (
-                                <span className="text-xs text-muted-foreground">
-                                    Utolsó ellenőrzés: {lastCheck}
-                                </span>
-                            )}
-                        </div>
-                    </AlertDescription>
-                </Alert>
-
-                {/* Service List */}
-                <div className="space-y-3">
-                    {services.map((service) => (
-                        <div
-                            key={service.name}
-                            className="flex items-center justify-between p-3 rounded-lg border bg-card"
-                        >
-                            <div className="flex items-center gap-3">
-                                {getStatusIcon(service.status)}
-                                <div>
-                                    <p className="font-medium">{service.name}</p>
-                                    {service.message && (
-                                        <p className="text-sm text-muted-foreground">
-                                            {service.message}
+            <CardContent className="p-0">
+                <div className="divide-y divide-white/5">
+                    {services.map((service) => {
+                        const isHealthy = service.status === 'healthy';
+                        const canToggle = service.id === 'ollama' || service.id === 'anythingllm';
+                        
+                        return (
+                            <div
+                                key={service.id}
+                                className="flex items-center justify-between p-3 hover:bg-white/5 transition-colors"
+                            >
+                                <div className="flex items-center gap-3">
+                                    {getStatusIcon(service.status)}
+                                    <div>
+                                        <p className="font-medium text-xs font-mono">{service.name}</p>
+                                        <p className="text-[10px] text-muted-foreground truncate max-w-[120px]">
+                                            {service.message || 'System online'}
                                         </p>
+                                    </div>
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    {canToggle && (
+                                        <Switch
+                                            checked={isHealthy}
+                                            disabled={loading[service.id] || isChecking}
+                                            onCheckedChange={() => handleToggle(service.id, isHealthy)}
+                                            className="scale-75"
+                                        />
+                                    )}
+                                    {!canToggle && (
+                                        <Badge variant="outline" className="text-[9px] h-5 opacity-50">
+                                            AUTO
+                                        </Badge>
                                     )}
                                 </div>
                             </div>
-                            {getStatusBadge(service.status)}
-                        </div>
-                    ))}
+                        );
+                    })}
                 </div>
-
-                {/* Quick Actions for Unhealthy Services */}
-                {services.some(s => s.status === 'unhealthy') && (
-                    <Alert>
-                        <AlertDescription>
-                            <p className="font-medium mb-2">Gyorsjavítás:</p>
-                            <ul className="text-sm space-y-1 list-disc list-inside">
-                                {services.find(s => s.name === 'Ollama' && s.status === 'unhealthy') && (
-                                    <li>Ollama: Futtasd a <code className="bg-muted px-1 rounded">ollama serve</code> parancsot</li>
-                                )}
-                                {services.find(s => s.name === 'AnythingLLM' && s.status === 'unhealthy') && (
-                                    <li>AnythingLLM: Ellenőrizd az .env fájlban az API kulcsot</li>
-                                )}
-                            </ul>
-                        </AlertDescription>
-                    </Alert>
-                )}
+                
+                <div className="p-3 bg-muted/20 border-t border-white/5">
+                    <p className="text-[9px] text-muted-foreground font-mono uppercase text-center">
+                        Last Check: {lastCheck || 'Initializing...'}
+                    </p>
+                </div>
             </CardContent>
         </Card>
     );

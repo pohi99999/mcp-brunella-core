@@ -1,0 +1,18 @@
+{
+    "sender_email": "csuka.miklosj@icloud.com",
+    "recipient_emails": ["csuka.miklosj@icloud.com", "peterpohankapersonal@gmail.com"],
+    "min_price": 10000,
+    "max_price": 19000,
+    "countries": ["at", "si"],
+    "models": [
+        {"make": "BMW", "model": "i3", "version": "94 Ah"},
+        {"make": "BMW", "model": "i3", "version": "120 Ah"},
+        {"make": "Nissan", "model": "Leaf", "version": "40 kWh"},
+        {"make": "Nissan", "model": "Leaf", "version": "62 kWh"},
+        {"make": "Kia", "model": "Niro", "version": "64 kWh"},
+        {"make": "Hyundai", "model": "Kona", "version": "64 kWh"},
+        {"make": "Volkswagen", "model": "ID.3", "version": "58 kWh"}
+    ],
+    "schedule_times": ["08:00", "13:00", "18:00"],
+    "min_score": 60
+}

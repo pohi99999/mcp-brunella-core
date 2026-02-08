@@ -124,7 +124,11 @@ export default class LintFixerAgent implements IAgent {
                 '--ext', '.ts,.tsx,.js,.jsx'
             ];
 
-            const eslint = spawn('npx', ['eslint', ...args], {
+            // Construct command string to avoid DEP0190 warning with shell: true
+            const cmdArgs = ['eslint', ...args].map(arg => `"${arg}"`).join(' ');
+            const command = `npx ${cmdArgs}`;
+
+            const eslint = spawn(command, {
                 cwd: this.workspaceRoot,
                 shell: true
             });
@@ -179,10 +183,10 @@ export default class LintFixerAgent implements IAgent {
         logInfo(this.name, 'ESLint --fix futtatása...');
 
         return new Promise((resolve) => {
-            const eslint = spawn('npx', [
-                'eslint', 'src/', '--fix',
-                '--ext', '.ts,.tsx,.js,.jsx'
-            ], {
+            const cmdArgs = ['eslint', 'src/', '--fix', '--ext', '.ts,.tsx,.js,.jsx'].map(arg => `"${arg}"`).join(' ');
+            const command = `npx ${cmdArgs}`;
+            
+            const eslint = spawn(command, {
                 cwd: this.workspaceRoot,
                 shell: true
             });
@@ -242,7 +246,10 @@ export default class LintFixerAgent implements IAgent {
         }
 
         return new Promise((resolve) => {
-            const eslint = spawn('npx', ['eslint', fullPath, '--fix'], {
+            const cmdArgs = ['eslint', fullPath, '--fix'].map(arg => `"${arg}"`).join(' ');
+            const command = `npx ${cmdArgs}`;
+
+            const eslint = spawn(command, {
                 cwd: this.workspaceRoot,
                 shell: true
             });
@@ -328,7 +335,10 @@ export default class LintFixerAgent implements IAgent {
         logInfo(this.name, 'TypeScript check indítása...');
 
         return new Promise((resolve) => {
-            const tsc = spawn('npx', ['tsc', '--noEmit', '--pretty'], {
+            const cmdArgs = ['tsc', '--noEmit', '--pretty'].map(arg => `"${arg}"`).join(' ');
+            const command = `npx ${cmdArgs}`;
+
+            const tsc = spawn(command, {
                 cwd: this.workspaceRoot,
                 shell: true
             });
