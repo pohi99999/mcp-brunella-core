@@ -1,13 +1,25 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import fs from 'fs/promises';
-import path from 'path';
 import { config } from '../config/index.js';
 
-export function registerWorkspaceTools(server: McpServer) {
-  
+// Dynamic imports for Node.js modules
+let fs: typeof import('fs/promises') | null = null;
+let path: typeof import('path') | null = null;
+
+async function ensureModules() {
+    if (typeof process !== 'undefined' && process.versions?.node) {
+        if (!fs) fs = (await import('fs/promises')).default || await import('fs/promises');
+        if (!path) path = (await import('path')).default || await import('path');
+    }
+}
+
+export async function registerWorkspaceTools(server: McpServer) {
+  await ensureModules();
+
   // Helper function to validate path
   function validatePath(targetPath: string) {
+    if (!path || !fs) throw new Error("File system access not available in this environment.");
+
     // 1. Must be within workspace root
     if (!targetPath.startsWith(config.workspaceRoot)) {
       throw new Error(`Access denied: Path must be within workspace root.`);
@@ -15,11 +27,8 @@ export function registerWorkspaceTools(server: McpServer) {
 
     // 2. Must be within allowed roots (subdirectories)
     const relativePath = path.relative(config.workspaceRoot, targetPath);
-    const rootDir = relativePath.split(path.sep)[0];
+    // const rootDir = relativePath.split(path.sep)[0]; // Unused
     
-    // If it's in the root folder directly, it might be allowed if allowedRoots contains '.' or specific files logic
-    // But based on config, allowedRoots are folder names.
-    // We check if the path starts with any of the allowed roots relative to workspace
     const isAllowed = config.allowedRoots.some(root => 
         relativePath.startsWith(root) || relativePath === root
     );
@@ -46,6 +55,8 @@ export function registerWorkspaceTools(server: McpServer) {
       dir_path: z.string().describe("Relative or absolute path within the workspace"),
     },
     async ({ dir_path }) => {
+      if (!path || !fs) return { isError: true, content: [{ type: "text", text: "Tool not supported in this environment" }] };
+
       const targetPath = path.resolve(config.workspaceRoot, dir_path);
       
       try {
@@ -55,7 +66,7 @@ export function registerWorkspaceTools(server: McpServer) {
         const listing = files.map(file => ({
           name: file.name,
           isDirectory: file.isDirectory(),
-          path: path.relative(config.workspaceRoot, path.join(targetPath, file.name))
+          path: path!.relative(config.workspaceRoot, path!.join(targetPath, file.name))
         }));
 
         return {
@@ -84,6 +95,8 @@ export function registerWorkspaceTools(server: McpServer) {
       file_path: z.string().describe("Relative or absolute path to the file"),
     },
     async ({ file_path }) => {
+      if (!path || !fs) return { isError: true, content: [{ type: "text", text: "Tool not supported in this environment" }] };
+
       const targetPath = path.resolve(config.workspaceRoot, file_path);
 
       try {

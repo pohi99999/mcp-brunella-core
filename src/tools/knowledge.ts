@@ -1,130 +1,86 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import fs from 'fs/promises';
-import path from 'path';
 import { config } from '../config/index.js';
 import { searchRAG, addToIndex } from '../utils/rag.js';
 
-const KNOWLEDGE_ROOTS = ['02_PROJECTS', '03_LIBRARY', '07_KNOWLEDGE_BASE'];
+// Dynamic imports for Node.js modules
+let fs: typeof import('fs/promises') | null = null;
+let path: typeof import('path') | null = null;
 
-async function searchFiles(dir: string, pattern: string, results: string[]) {
-  // ... (previous implementation remains for fallback)
-  try {
-    const files = await fs.readdir(dir, { withFileTypes: true });
-    for (const file of files) {
-      const fullPath = path.join(dir, file.name);
-      if (config.denyContains.some(denied => fullPath.includes(denied))) continue;
-      if (file.name.startsWith('.')) continue;
-      if (file.name === 'node_modules') continue;
-
-      if (file.isDirectory()) {
-        await searchFiles(fullPath, pattern, results);
-      } else {
-        try {
-          const stats = await fs.stat(fullPath);
-          if (stats.size > config.maxFileBytesForSearch) continue;
-          const content = await fs.readFile(fullPath, 'utf-8');
-          if (content.toLowerCase().includes(pattern.toLowerCase())) {
-            results.push(fullPath);
-          }
-        } catch (e) {}
-      }
+async function ensureModules() {
+    if (typeof process !== 'undefined' && process.versions?.node) {
+        if (!fs) fs = (await import('fs/promises')).default || await import('fs/promises');
+        if (!path) path = (await import('path')).default || await import('path');
     }
-  } catch (e) {}
 }
 
-export function registerKnowledgeTools(server: McpServer) {
-  
-  // Legacy exact match search
+export async function registerKnowledgeTools(server: McpServer) {
+  await ensureModules();
+
   server.tool(
     "knowledge_search",
-    "Searches for a text pattern (exact match).",
+    "Searches the knowledge base using semantic search (RAG).",
     {
-      pattern: z.string().describe("Text to search for"),
+      query: z.string().describe("The search query"),
+      limit: z.number().optional().default(5).describe("Number of results to return"),
     },
-    async ({ pattern }) => {
-      const results: string[] = [];
-      for (const rootName of KNOWLEDGE_ROOTS) {
-          const rootPath = path.join(config.workspaceRoot, rootName);
-          await searchFiles(rootPath, pattern, results);
-      }
-      const limitedResults = results.slice(0, 50);
-      return {
-        content: [{
-          type: "text",
-          text: limitedResults.length > 0 
-            ? `Found "${pattern}" in:\n` + limitedResults.join('\n')
-            : `No matches found for "${pattern}".`
-        }]
-      };
-    }
-  );
-
-  // New Semantic Search
-  server.tool(
-    "knowledge_semantic_search",
-    "Searches for meaning/concepts using RAG (Vector DB). Requires indexed files.",
-    {
-      query: z.string().describe("The concept to search for"),
-    },
-    async ({ query }) => {
-        try {
-            const results = await searchRAG(query);
-            return {
-                content: [{
-                    type: "text",
-                    text: JSON.stringify(results, null, 2)
-                }]
-            };
-        } catch (e: any) {
-            return {
-                isError: true,
-                content: [{ type: "text", text: `RAG Error: ${e.message}` }]
-            };
-        }
-    }
-  );
-
-  // Indexing Tool
-  server.tool(
-    "knowledge_index_file",
-    "Adds a file to the semantic search index.",
-    {
-        file_path: z.string(),
-    },
-    async ({ file_path }) => {
-        const fullPath = path.resolve(config.workspaceRoot, file_path);
-        try {
-            const content = await fs.readFile(fullPath, 'utf-8');
-            await addToIndex(file_path, content);
-            return {
-                content: [{ type: "text", text: `Indexed: ${file_path}` }]
-            };
-        } catch (e: any) {
-            return { isError: true, content: [{ type: "text", text: `Error: ${e.message}` }] };
-        }
-    }
-  );
-
-  server.tool(
-    "knowledge_read_context",
-    "Reads multiple files to build context for LLMs.",
-    {
-        file_paths: z.array(z.string()),
-    },
-    async ({ file_paths }) => {
-        let context = "";
-        for (const filePath of file_paths) {
-            const fullPath = path.resolve(config.workspaceRoot, filePath);
-            if (!fullPath.startsWith(config.workspaceRoot)) continue;
-            try {
-                const content = await fs.readFile(fullPath, 'utf-8');
-                context += `\n--- FILE: ${filePath} ---\n${content}\n`;
-            } catch (e) {}
-        }
+    async ({ query, limit }) => {
+      try {
+        const results = await searchRAG(query, limit);
         return {
-            content: [{ type: "text", text: context }]
+          content: [{
+            type: "text",
+            text: JSON.stringify(results, null, 2)
+          }]
         };
+      } catch (error: any) {
+        return {
+          isError: true,
+          content: [{
+            type: "text",
+            text: `Error searching knowledge base: ${error.message}`
+          }]
+        };
+      }
+    }
+  );
+
+  server.tool(
+    "knowledge_add",
+    "Adds a document or note to the knowledge base.",
+    {
+      content: z.string().describe("The content to add"),
+      metadata: z.object({
+        source: z.string().optional(),
+        tags: z.array(z.string()).optional()
+      }).optional(),
+    },
+    async ({ content, metadata }) => {
+      try {
+        await addToIndex(content, metadata || {});
+
+        // Save to file as backup if fs is available
+        if (fs && path) {
+            const filename = `note-${Date.now()}.md`;
+            const filepath = path.join(config.workspaceRoot, '_KNOWLEDGE_BASE', 'notes', filename);
+            await fs.writeFile(filepath, content);
+        }
+
+        return {
+          content: [{
+            type: "text",
+            text: "Successfully added to knowledge base."
+          }]
+        };
+      } catch (error: any) {
+        return {
+          isError: true,
+          content: [{
+            type: "text",
+            text: `Error adding to knowledge base: ${error.message}`
+          }]
+        };
+      }
     }
   );
 }

@@ -1,9 +1,19 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { spawn } from "child_process";
-import fs from 'fs/promises';
-import path from 'path';
 import { config } from '../config/index.js';
+
+// Dynamic imports for Node.js modules
+let fs: typeof import('fs/promises') | null = null;
+let path: typeof import('path') | null = null;
+let child_process: typeof import('child_process') | null = null;
+
+async function ensureModules() {
+    if (typeof process !== 'undefined' && process.versions?.node) {
+        if (!fs) fs = (await import('fs/promises')).default || await import('fs/promises');
+        if (!path) path = (await import('path')).default || await import('path');
+        if (!child_process) child_process = (await import('child_process')).default || await import('child_process');
+    }
+}
 
 const ALLOWED_COMMANDS = [
     'dir', 'ls', 
@@ -18,6 +28,7 @@ const ALLOWED_ARGS_PATTERNS = [
 ];
 
 async function logCommand(command: string, cwd: string, user: string = 'unknown') {
+    if (!fs || !path) return;
     const logEntry = `[${new Date().toISOString()}] User: ${user} | CWD: ${cwd} | Command: ${command}\n`;
     try {
         await fs.appendFile(path.join(config.systemLogDir, 'system_commands.log'), logEntry);
@@ -26,8 +37,9 @@ async function logCommand(command: string, cwd: string, user: string = 'unknown'
     }
 }
 
-export function registerSystemTools(server: McpServer) {
-  
+export async function registerSystemTools(server: McpServer) {
+  await ensureModules();
+
   server.tool(
     "system_run_command",
     "Runs a restricted system command (dir, ls, type, cat, python --version, node --version).",
@@ -36,6 +48,8 @@ export function registerSystemTools(server: McpServer) {
       cwd: z.string().optional().describe("Working directory"),
     },
     async ({ command, cwd }) => {
+      if (!child_process || !path) return { isError: true, content: [{ type: "text", text: "Tool not supported in this environment" }] };
+
       const args = command.split(' ');
       const executable = args[0];
       const cmdArgs = args.slice(1);
@@ -49,11 +63,6 @@ export function registerSystemTools(server: McpServer) {
       if (executable === 'python' || executable === 'node') {
           const isVersionCheck = cmdArgs.some(arg => ALLOWED_ARGS_PATTERNS.some(p => p.test(arg)));
           if (!isVersionCheck && cmdArgs.length > 0) {
-               // Allow empty args (repl) or version check only for these interpreters in system tool
-               // But wait, the prompt says "python --version" OR "node --version".
-               // It implies general execution might be restricted here, 
-               // but the interpreter tool is for code execution.
-               // Let's be strict: only allow version checks for python/node here.
                throw new Error(`Interpreter commands in system_tool are restricted to version checks (e.g. --version). Use interpreter_tool for code execution.`);
           }
       }
@@ -67,7 +76,7 @@ export function registerSystemTools(server: McpServer) {
       await logCommand(command, workingDir);
 
       return new Promise((resolve) => {
-        const proc = spawn(executable, cmdArgs, {
+        const proc = child_process!.spawn(executable, cmdArgs, {
           cwd: workingDir,
           shell: true
         });
@@ -75,10 +84,10 @@ export function registerSystemTools(server: McpServer) {
         let stdout = '';
         let stderr = '';
 
-        proc.stdout.on('data', (data) => stdout += data);
-        proc.stderr.on('data', (data) => stderr += data);
+        proc.stdout?.on('data', (data: any) => stdout += data);
+        proc.stderr?.on('data', (data: any) => stderr += data);
 
-        proc.on('close', (code) => {
+        proc.on('close', (code: any) => {
           resolve({
             content: [{
               type: "text",
@@ -87,7 +96,7 @@ export function registerSystemTools(server: McpServer) {
           });
         });
 
-        proc.on('error', (err) => {
+        proc.on('error', (err: any) => {
            resolve({
             isError: true,
             content: [{ type: "text", text: `Execution error: ${err.message}` }]

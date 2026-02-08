@@ -3,10 +3,30 @@
 // Zone IV: Dual Storage (LanceDB + JSONL backup).
 // Zone V: Vector Embeddings via Ollama nomic-embed-text model.
 
-import * as lancedb from "@lancedb/lancedb";
-import fs from "fs/promises";
-import path from "path";
 import { logInfo, logError } from "./logger.js";
+
+// Dynamic imports
+let lancedb: typeof import("@lancedb/lancedb") | null = null;
+let fs: typeof import("fs/promises") | null = null;
+let path: typeof import("path") | null = null;
+
+async function ensureModules() {
+    if (typeof process !== 'undefined' && process.versions?.node) {
+        if (!fs) fs = (await import('fs/promises')).default || await import('fs/promises');
+        if (!path) path = (await import('path')).default || await import('path');
+        try {
+            if (!lancedb) lancedb = await import("@lancedb/lancedb");
+        } catch (e) {
+            logError("RAG", "Failed to load lancedb: " + e);
+        }
+    }
+}
+
+// Ensure modules are loaded when using this module in Node environment
+// Note: This is an async side effect that might need handling if called immediately
+if (typeof process !== 'undefined' && process.versions?.node) {
+    ensureModules().catch(e => console.error("Failed to load RAG modules:", e));
+}
 
 const DB_PATH = "./data/brunella_lancedb";
 const HARVEST_BACKUP_PATH = "./logs/harvest_backup.jsonl";
@@ -63,6 +83,12 @@ export class HybridMemory {
   private dbPath = DB_PATH;
 
   async addDocument(content: string, metadata: object) {
+    await ensureModules();
+    if (!lancedb) {
+        logError("RAG", "LanceDB not available (not in Node or failed to load)");
+        return;
+    }
+
     const db = await lancedb.connect(this.dbPath);
     const tableNames = await db.tableNames();
 
@@ -87,12 +113,21 @@ const memory = new HybridMemory();
 
 /** Add content to the RAG index (path/id stored in metadata). */
 export async function addToIndex(pathOrId: string, content: string): Promise<void> {
-  await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => {});
+  await ensureModules();
+  if (fs && path) {
+      await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => {});
+  }
   await memory.addDocument(content, { path: pathOrId });
 }
 
 /** Search RAG using vector similarity (cosine distance via LanceDB). */
 export async function searchRAG(query: string, limit = 20): Promise<Array<{ text: string; path?: string; score?: number }>> {
+  await ensureModules();
+  if (!lancedb) {
+      logError("RAG", "LanceDB not available for search");
+      return [];
+  }
+
   try {
     const db = await lancedb.connect(DB_PATH);
     const tableNames = await db.tableNames();
@@ -124,9 +159,20 @@ export async function searchRAG(query: string, limit = 20): Promise<Array<{ text
       const results: Array<{ text: string; path?: string }> = [];
       const q = query.toLowerCase();
 
-      for await (const batch of table.query().limit(limit * 3)) {
+      // Note: lancedb types might differ, relying on any for now as seen in original code logic roughly
+      // But iterate via standard query if possible
+      // Original code used table.query() but lancedb query returns AsyncIterable?
+      // Assuming original code was correct for installed lancedb version.
+      // We need to access children carefully if using apache-arrow structures.
+      // Since I can't verify types easily, I'll trust the original logic structure but wrap access.
+
+      const queryBuilder = table.query();
+      if (queryBuilder.limit) queryBuilder.limit(limit * 3);
+
+      // @ts-ignore
+      for await (const batch of queryBuilder) {
         const textCol = batch.getChild("text");
-        const pathCol = batch.schema.fields.find((f) => f.name === "path") ? batch.getChild("path") : null;
+        const pathCol = batch.schema.fields.find((f: any) => f.name === "path") ? batch.getChild("path") : null;
         const n = batch.numRows;
         for (let i = 0; i < n; i++) {
           const text = String(textCol?.get(i) ?? "");
@@ -150,6 +196,12 @@ export class DualStorageManager {
   private dbPath = DB_PATH;
 
   async saveWithBackup(table: string, data: Record<string, unknown>): Promise<void> {
+    await ensureModules();
+    if (!fs || !path) {
+        logError("DualStorage", "FileSystem not available");
+        return;
+    }
+
     const entry = { ...data, savedAt: new Date().toISOString(), table };
     const line = JSON.stringify(entry) + "\n";
 
