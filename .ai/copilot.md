@@ -25,12 +25,54 @@
 
 ## Aktív Feladatok
 
-<!-- Ide írj ha valami félbe maradt -->
+- **Gold Protocol implementáció** — 54 feladat, 4 sprint, ~24 óra
+  - Sprint 1 (G1-G2): Spec Freeze + Phoenix Protocol v2
+  - Sprint 2 (G3-G4): Model Router + Kognitív Memória
+  - Sprint 3 (G5-G6): Glass Box Telemetria + Audit
+  - Sprint 4 (G7): Dashboard & CLI teljes integráció
+  - **Spec:** `conductor/tracks/gold_protocol/spec.md` (v2.0)
+  - **Plan:** `conductor/tracks/gold_protocol/plan.md` (v2.0)
 
 
 ## Napló
 
-### 2026-02-09 02:20 - Green Lightning P9: System Stabilization
+### 2026-02-09 14:00 - Gold Protocol: Terv & Spec v2.0 (Dashboard + CLI Integráció)
+
+**Összefoglaló:**
+A Gold Protocol terv és specifikáció kibővítve a teljes Dashboard & CLI integrációval (FÁZIS G7). Minden Gold Protocol pillér (G1-G6) mostantól elérhető a React Dashboard-ról és a CLI-ből is, valós idejű Socket.IO push-sal.
+
+**Terv frissítés (plan.md v2.0):**
+- ✅ **G7 Sprint 4** hozzáadva: 23 új feladat (#32-#54), ~7 óra
+- ✅ **G7.1** SpecManagerPanel + specRoutes.ts
+- ✅ **G7.2** PhoenixPanel + phoenixRoutes.ts
+- ✅ **G7.3** ModelRouterPanel + routerRoutes.ts
+- ✅ **G7.4** CognitiveMemoryPanel + memoryRoutes.ts
+- ✅ **G7.5** TraceViewer + TokenUsageChart + CostSummary
+- ✅ **G7.6** AuditPanel
+- ✅ **G7.7** SettingsPanel Gold section + goldConfig.ts
+- ✅ **G7.8** Socket.IO 11 új Gold event + useGoldProtocol hook
+- ✅ **G7.9** Sidebar navigáció bővítés (6 új tab)
+- ✅ **G7.10** GoldStatusWidget főoldali widgetek
+- ✅ **G7.11** Tesztek (route + component + E2E)
+
+**Spec frissítés (spec.md v2.0):**
+- ✅ **§5 Dashboard & CLI Integráció** szekció (8 alszekció)
+- ✅ **RULE-UI1–UI4:** Architekturális elvek (REST API egyezőség, Socket.IO push)
+- ✅ **RULE-DB1–DB7:** Dashboard viselkedés (toast értesítések, throttle, lazy load)
+- ✅ **RULE-CL1–CL5:** CLI viselkedés (csoportosított parancsok, --json flag)
+- ✅ **27 REST API endpoint** specifikáció (specs, phoenix, router, memory, telemetry, audit, settings)
+- ✅ **11 Socket.IO Gold event** TypeScript interface
+- ✅ **GoldConfig** centrális konfiguráció interface
+- ✅ **Tesztelési terv** bővítve G7-tel (~1200 sor, 12+ fájl)
+
+**Érintett fájlok:**
+- `conductor/tracks/gold_protocol/plan.md` — G7 Sprint 4 hozzáadva (v2.0)
+- `conductor/tracks/gold_protocol/spec.md` — §5 Dashboard & CLI + §6 Tesztelési terv bővítés (v2.0)
+- `conductor/tracks.md` — Gold Protocol track státusz hozzáadva
+
+**Összesen:** 54 feladat | 4 sprint | ~24 óra | 16 új fájl | 10 módosított fájl
+
+**Státusz:** ✅ TERVEZÉS KÉSZ — Implementáció indulhat
 
 **Összefoglaló:**
 A rendszer stabilizációs fázisa (P9) sikeresen lezárult. Minden figyelmeztetést (Node.js Deprecation, Pydantic Warning) megszüntettünk, és a rendszer tiszta teszteredményeket produkál.
