@@ -112,7 +112,7 @@ export class HybridMemory {
 const memory = new HybridMemory();
 
 /** Add content to the RAG index (path/id stored in metadata). */
-export async function addToIndex(pathOrId: string, content: string, extraMetadata: object = {}): Promise<void> {
+export async function addDocumentToIndex(pathOrId: string, content: string, extraMetadata: object = {}): Promise<void> {
   await ensureModules();
   if (fs && path) {
       await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => {});
@@ -207,6 +207,6 @@ export class DualStorageManager {
 
     // 2. LanceDB (ha van text mező)
     const text = (data.text as string) ?? JSON.stringify(data);
-    await addToIndex((data.path as string) ?? `harvest_${Date.now()}`, text);
+    await addDocumentToIndex((data.path as string) ?? `harvest_${Date.now()}`, text);
   }
 }

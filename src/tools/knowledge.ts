@@ -1,7 +1,7 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { config } from '../config/index.js';
-import { searchRAG, addToIndex } from '../utils/rag.js';
+import { searchRAG, addDocumentToIndex } from '../utils/rag.js';
 
 // Dynamic imports for Node.js modules
 let fs: typeof import('fs/promises') | null = null;
@@ -58,7 +58,7 @@ export async function registerKnowledgeTools(server: McpServer) {
     async ({ content, metadata }) => {
       try {
         const pathOrId = metadata?.source || `note-${Date.now()}`;
-        await addToIndex(pathOrId, content, metadata || {});
+        await addDocumentToIndex(pathOrId, content, metadata || {});
 
         // Save to file as backup if fs is available
         if (fs && path) {
