@@ -1,5 +1,4 @@
-```
-import { useState, useRef, useEffect, useMemo } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
@@ -39,7 +38,6 @@ import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { hu } from 'date-fns/locale'
 import { marked } from 'marked';
-import { apiService } from '../../lib/apiService'; // Added apiService import
 
 interface ChatInterfaceProps {
   user: User
@@ -296,8 +294,6 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 {isConnected ? `Szerver: Online` : 'Szerver: Offline'}
               </span>
             </div>
-            {currentMessages.length > 0 && (
-              <>
             {currentMessages.length > 0 && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -692,4 +688,3 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     </Card>
   )
 }
-```

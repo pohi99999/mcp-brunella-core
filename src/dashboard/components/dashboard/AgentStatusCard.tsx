@@ -23,7 +23,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
 
-export type AgentStatus = 'idle' | 'working' | 'error'
+export type AgentStatus = 'idle' | 'working' | 'error' | 'offline'
 
 interface AgentStatusCardProps {
   agent: RegistryAgent
@@ -63,6 +63,12 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
       color: 'bg-red-500',
       pulse: false,
       badge: 'destructive',
+    },
+    offline: {
+      label: 'Offline',
+      color: 'bg-zinc-600',
+      pulse: false,
+      badge: 'outline',
     },
   }
 
