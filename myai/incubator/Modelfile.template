@@ -1,0 +1,14 @@
+# FILE: myai/incubator/Modelfile.template
+# PURPOSE: Ollama konfiguráció a finomhangolt modellhez.
+
+FROM ./model_output.gguf
+
+TEMPLATE """<|im_start|>system
+{{ .System }}<|im_end|>
+<|im_start|>user
+{{ .Prompt }}<|im_end|>
+<|im_start|>assistant
+"""
+
+PARAMETER stop "<|im_start|>"
+PARAMETER stop "<|im_end|>"

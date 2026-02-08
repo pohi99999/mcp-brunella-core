@@ -9,7 +9,9 @@ pytest-cov==6.0.0
 pydantic>=2.0
 arxiv>=2.0
 python-dotenv>=1.0
-browser-use>=0.1
+browser-use>=0.11.9
+playwright>=1.40
+langchain-google-genai>=2.0
 langsmith
 lancedb
 chromadb
