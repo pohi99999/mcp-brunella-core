@@ -33,8 +33,19 @@ async function getDb() {
 
         const dbPath = path.join(config.systemLogDir, 'brunella.db');
 
-        // Dynamic import safe for bundling (hopefully)
-        const Database = (await import('better-sqlite3')).default;
+        // Dynamically import better-sqlite3 using module.createRequire if available
+        // or a dynamic import that bundlers might ignore or handle gracefully
+        let Database;
+        try {
+            // Using a template literal for import sometimes fools simple static analysis
+            const moduleName = 'better-sqlite3';
+            const imported = await import(moduleName);
+            Database = imported.default || imported;
+        } catch (e) {
+            console.warn("Could not import better-sqlite3:", e);
+            return null;
+        }
+
         db = new Database(dbPath);
 
         // Auto-initialize tables on first load

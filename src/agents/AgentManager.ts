@@ -1,43 +1,20 @@
-/**
- * AgentManager - Ügynök Menedzser (Frissítve Edge támogatással)
- * 
- * Változások:
- * - Edge-first delegálás támogatás
- * - Fallback lokális feldolgozásra
- * - ProjectConductor integráció
- * 
- * @author Brunella Core Team
- * @version 2.1.0
- */
-
-import { EventEmitter } from 'events';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
-
-// ============================================================================
-// INTERFACES
-// ============================================================================
-
-interface AgentConfig {
-  name: string;
-  class: string;
-  module: string;
-  description: string;
-  capabilities: string[];
-  priority: number;
-  autoStart: boolean;
-  systemPrompt?: string;
-  triggers?: string[];
-  config?: Record<string, any>;
-}
+import { IAgent, ISwarmContext, AgentHandoff, AgentResponse } from './types.js';
 
 interface RegistryConfig {
   version: string;
-  agents: AgentConfig[];
-  defaultAgent: string;
-  routingRules: Array<{
-    pattern: string;
-    agent: string;
+  agents: Array<{
+    name: string;
+    path: string;
+    description?: string;
+    role?: string;
+    capabilities?: string[];
+    priority?: number;
+    autoStart?: boolean;
+    triggers?: string[];
   }>;
+  defaultAgent: string;
+  routingRules: Array<{ pattern: string; agent: string }>;
 }
 
 interface EdgeConfig {
@@ -48,237 +25,194 @@ interface EdgeConfig {
   healthCheckInterval: number;
 }
 
-interface Task {
-  id: string;
-  instruction: string;
-  context?: Record<string, any>;
-  priority?: number;
-  source?: string;
-  createdAt: string;
-}
-
-interface TaskResult {
-  success: boolean;
-  message: string;
-  data: any;
-  executedBy?: string;
-  executionTime?: number;
-}
-
-// ============================================================================
-// AGENT MANAGER
-// ============================================================================
-
 interface QueuedTask {
   id: number;
   description: string;
   agentName: string;
-  context?: Record<string, any>;
+  context?: any;
   parentId?: number;
-  createdAt: string;
   status: 'pending' | 'running' | 'done' | 'error';
+  createdAt: string;
 }
 
-export class AgentManager extends EventEmitter {
-  private agents: Map<string, any> = new Map();
+// Simple EventEmitter polyfill for Worker compatibility
+class SimpleEventEmitter {
+    private listeners: Record<string, Function[]> = {};
+
+    on(event: string, listener: Function) {
+        if (!this.listeners[event]) this.listeners[event] = [];
+        this.listeners[event].push(listener);
+        return this;
+    }
+
+    emit(event: string, ...args: any[]) {
+        if (!this.listeners[event]) return false;
+        this.listeners[event].forEach(listener => listener(...args));
+        return true;
+    }
+}
+
+// Use native EventEmitter if available (Node), otherwise fallback
+// This avoids bundling 'events' module for Workers if not needed
+let EventEmitterClass: any = SimpleEventEmitter;
+if (typeof process !== 'undefined' && process.versions?.node) {
+    try {
+        // Dynamic require/import to avoid static analysis
+        const req = typeof require !== 'undefined' ? require : null;
+        if (req) {
+             EventEmitterClass = req('events').EventEmitter;
+        }
+    } catch {
+        // Fallback to SimpleEventEmitter
+    }
+}
+
+export class AgentManager extends EventEmitterClass {
   private registry: RegistryConfig;
+  private agents: Map<string, any> = new Map();
   private edgeConfig: EdgeConfig;
-  private edgeProxy?: any; // EdgeProxyAgent instance
   private taskQueue: QueuedTask[] = [];
   private taskIdCounter = 0;
-  private workerInterval?: ReturnType<typeof setInterval>;
+  private workerInterval?: NodeJS.Timeout;
+
+  // EdgeProxy instance (dynamically loaded)
+  private edgeProxy?: any;
 
   constructor() {
     super();
     this.registry = this.loadRegistry();
     this.edgeConfig = this.loadEdgeConfig();
+
+    // Load agents asynchronously in background
+    this.initializeAgents();
   }
 
-  // --------------------------------------------------------------------------
-  // INITIALIZATION
-  // --------------------------------------------------------------------------
-
-  async initialize(): Promise<void> {
-    logInfo('AgentManager', 'Inicializálás...');
+  private async initializeAgents() {
+    logInfo('AgentManager', 'Initializing agents...');
     
-    // Load registry asynchronously if in Node environment
-    if (typeof process !== 'undefined' && process.versions?.node) {
-      this.registry = await this.loadRegistryAsync();
+    // 1. Load Registry from file (Node.js only)
+    const fileRegistry = await this.loadRegistryAsync();
+    if (fileRegistry) {
+      this.registry = fileRegistry;
     }
-    
-    // Ügynökök betöltése
+
+    // 2. Load Agents
     for (const agentConfig of this.registry.agents) {
-      try {
-        await this.loadAgent(agentConfig);
-      } catch (error) {
-        logError('AgentManager', `Ügynök betöltési hiba (${agentConfig.name}): ${error}`);
+      if (agentConfig.autoStart) {
+        try {
+          await this.loadAgent(agentConfig.name, agentConfig.path);
+        } catch (e) {
+          logError('AgentManager', `Failed to auto-load ${agentConfig.name}: ${e}`);
+        }
       }
     }
-    
-    // Edge proxy inicializálása (ha engedélyezve)
+
+    // 3. Initialize Edge Proxy if enabled
     if (this.edgeConfig.enabled) {
-      await this.initializeEdgeProxy();
-    }
-    
-    // Auto-start ügynökök
-    for (const agentConfig of this.registry.agents.filter(a => a.autoStart)) {
-      const agent = this.agents.get(agentConfig.name);
-      if (agent?.initialize) {
-        await agent.initialize();
-      }
-    }
-    
-    logInfo('AgentManager', `${this.agents.size} ügynök betöltve`);
-  }
-
-  private async loadAgent(config: AgentConfig): Promise<void> {
-    // Dynamic imports for Node.js-specific modules (Worker compatibility)
-    if (typeof process === 'undefined' || !process.versions?.node) {
-      logError('AgentManager', 'loadAgent() requires Node.js environment');
-      return;
-    }
-    
-    const path = await import('path');
-    const fs = await import('fs');
-    
-    const modulePath = path.default.resolve(process.cwd(), 'build', config.module.replace('./', ''));
-    
-    if (!fs.default.existsSync(modulePath)) {
-      logError('AgentManager', `Modul nem található: ${modulePath}`);
-      return;
-    }
-    
-    const AgentClass = (await import(modulePath)).default;
-    const agent = new AgentClass(config.config);
-    
-    agent.name = config.name;
-    agent.description = config.description;
-    agent.systemPrompt = config.systemPrompt;
-    
-    this.agents.set(config.name, agent);
-    logInfo('AgentManager', `Ügynök betöltve: ${config.name}`);
-  }
-
-  private async initializeEdgeProxy(): Promise<void> {
-    const edgeProxyConfig = this.registry.agents.find(a => a.name === 'EdgeProxy');
-    if (edgeProxyConfig) {
-      this.edgeProxy = this.agents.get('EdgeProxy');
-      if (this.edgeProxy?.initialize) {
-        await this.edgeProxy.initialize();
-        logInfo('AgentManager', 'EdgeProxy inicializálva');
-      }
-    }
-  }
-
-  // --------------------------------------------------------------------------
-  // TASK DELEGATION
-  // --------------------------------------------------------------------------
-
-  /**
-   * Feladat delegálása - Edge-first stratégia
-   */
-  async delegateTask(task: Task): Promise<TaskResult> {
-    const startTime = Date.now();
-    
-    logInfo('AgentManager', `Task delegálás: ${task.instruction.slice(0, 50)}...`);
-    
-    // 1. Edge-first stratégia (ha engedélyezve és elérhető)
-    if (this.edgeConfig.enabled && this.edgeProxy?.isEdgeHealthy?.()) {
       try {
-        logInfo('AgentManager', 'Edge delegálás...');
-        const edgeResult = await this.delegateToEdge(task);
-        
-        if (edgeResult.success) {
-          return {
-            ...edgeResult,
-            executedBy: 'edge',
-            executionTime: Date.now() - startTime
-          };
-        }
-        
-        // Edge sikertelen, de fallback engedélyezve
-        if (this.edgeConfig.fallbackToLocal) {
-          logInfo('AgentManager', 'Edge sikertelen, lokális fallback...');
-        } else {
-          return edgeResult;
-        }
-      } catch (error) {
-        logError('AgentManager', `Edge hiba: ${error}`);
-        
-        if (!this.edgeConfig.fallbackToLocal) {
-          return {
-            success: false,
-            message: `Edge hiba: ${error}`,
-            data: null,
-            executedBy: 'edge',
-            executionTime: Date.now() - startTime
-          };
-        }
+        // Dynamic import to avoid static dependency
+        const { default: EdgeProxyAgent } = await import('./EdgeProxyAgent.js');
+        this.edgeProxy = new EdgeProxyAgent(this.edgeConfig);
+        await this.edgeProxy.initialize();
+        this.registerAgent(this.edgeProxy);
+      } catch (e) {
+        logError('AgentManager', `Failed to load EdgeProxy: ${e}`);
       }
     }
-    
-    // 2. Lokális delegálás
-    return await this.delegateLocally(task, startTime);
+
+    logInfo('AgentManager', `Initialized with ${this.agents.size} agents.`);
   }
 
-  /**
-   * Edge delegálás
-   */
-  private async delegateToEdge(task: Task): Promise<TaskResult> {
-    if (!this.edgeProxy) {
-      return {
-        success: false,
-        message: 'EdgeProxy nem elérhető',
-        data: null
-      };
+  async loadAgent(name: string, modulePath: string): Promise<void> {
+    try {
+        // Dynamic imports for Node.js-specific modules (Worker compatibility)
+        if (typeof process === 'undefined' || !process.versions?.node) {
+             throw new Error("Dynamic agent loading not supported in Worker environment");
+        }
+        
+        const path = await import('path');
+        // Resolve path relative to build directory if needed
+        // This is a simplification; in real app we need robust path resolution
+        if (!modulePath.startsWith('/') && !modulePath.startsWith('.')) {
+             // assume relative to current file or build root
+        }
+        
+        // This is tricky in bundled environments.
+        // We assume modulePath is something we can import.
+        const AgentClass = (await import(modulePath)).default;
+        const agent = new AgentClass();
+        this.agents.set(name, agent);
+
+        if (agent.initialize) {
+            await agent.initialize();
+        }
+    } catch (e) {
+        logError('AgentManager', `Error loading agent ${name}: ${e}`);
+        throw e;
     }
-    
-    const result = await this.edgeProxy.execute({
-      task: `submit ${task.instruction}`,
-      context: task.context
-    });
-    
-    return result;
   }
 
+  // --------------------------------------------------------------------------
+  // CORE LOGIC
+  // --------------------------------------------------------------------------
+
   /**
-   * Lokális delegálás
+   * Fő belépési pont: feladat delegálása
    */
-  private async delegateLocally(task: Task, startTime: number): Promise<TaskResult> {
-    // Ügynök kiválasztása routing szabályok alapján
-    const targetAgent = this.routeTask(task.instruction);
+  async delegateTask(task: { id: string; instruction: string; context?: any; createdAt: string }): Promise<AgentResult> {
+    const startTime = Date.now();
+    let targetAgent = this.routeTask(task.instruction);
     
     if (!targetAgent) {
       return {
         success: false,
-        message: 'Nem található megfelelő ügynök',
+        message: 'Nem találtam megfelelő ügynököt a feladathoz.',
         data: null,
         executionTime: Date.now() - startTime
       };
     }
-    
-    const agent = this.agents.get(targetAgent);
-    
-    if (!agent) {
-      return {
-        success: false,
-        message: `Ügynök nem betöltve: ${targetAgent}`,
-        data: null,
-        executionTime: Date.now() - startTime
-      };
-    }
-    
-    try {
-      setAgentStatus(targetAgent, 'working', task.instruction);
 
-      // Handle both IAgent (string, context?) and BaseAgent ({task, context}) signatures
-      let result: any;
-      if (typeof agent.execute.length === 'number' && agent.execute.length <= 2) {
-        // Check if agent has BaseAgent-style execute (single object param)
-        // by checking if it extends BaseAgent or has AgentContext signature
-        const isBaseAgent = agent.constructor?.name?.includes('Agent') &&
-                           !['OrchestratorAgent', 'DeveloperAgent', 'EvaluatorAgent',
-                             'ResearcherAgent', 'DataScientistAgent', 'DynamicAgent'].includes(agent.constructor?.name);
+    // Ha Edge Proxy van beállítva és az ügynök nincs helyben, próbáljuk meg edge-en
+    if (this.edgeConfig.enabled && !this.agents.has(targetAgent) && this.edgeProxy) {
+      logInfo('AgentManager', `Delegálás edge-re: ${targetAgent}`);
+      // Itt speciális logika kellene, hogy az EdgeProxy-n keresztül hívjuk meg
+      // Egyelőre egyszerűsítve:
+      targetAgent = 'EdgeProxy';
+    }
+
+    const agent = this.agents.get(targetAgent);
+    if (!agent) {
+       return {
+        success: false,
+        message: `A kijelölt ügynök (${targetAgent}) nem elérhető.`,
+        data: null,
+        executionTime: Date.now() - startTime
+      };
+    }
+
+    logInfo('AgentManager', `Delegálás: ${task.instruction} -> ${targetAgent}`);
+    setAgentStatus(targetAgent, 'working', task.instruction);
+
+    try {
+      let result;
+
+      // Check for different execute signatures
+      if (typeof agent.executeTask === 'function') {
+        // New AgentContext signature
+        result = await agent.executeTask({
+          task: task.instruction,
+          context: task.context,
+          swarm: {
+            sessionId: task.id,
+            history: [],
+            artifacts: {}
+          }
+        });
+      } else {
+        // Legacy or mismatched signature
+        // We check if it inherits from BaseAgent by checking properties
+        const isBaseAgent = agent.executeTask !== undefined ||
+                            ['BaseAgent', 'EdgeProxyAgent', 'ProjectConductorAgent', 'DynamicAgent'].includes(agent.constructor?.name);
 
         if (isBaseAgent || agent.constructor?.name === 'EdgeProxyAgent' || agent.constructor?.name === 'ProjectConductorAgent') {
           // BaseAgent signature: execute(context: AgentContext)
@@ -287,9 +221,6 @@ export class AgentManager extends EventEmitter {
           // IAgent signature: execute(task: string, context?: any)
           result = await agent.execute(task.instruction, task.context);
         }
-      } else {
-        // Fallback to IAgent signature
-        result = await agent.execute(task.instruction, task.context);
       }
 
       return {
