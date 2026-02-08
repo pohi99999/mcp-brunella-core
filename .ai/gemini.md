@@ -86,6 +86,76 @@
 
 <!-- ÚJ BEJEGYZÉSEK IDE KERÜLNEK (legfrissebb felül) -->
 
+### 2026-02-08 04:00 - Robotkéz (Browser-Use) Setup Kísérlet
+
+**Feladat:**
+A Robotkéz (Browser-Use) funkció telepítése és tesztelése a README.md és docs/ROBOTKEZ_SETUP.md alapján.
+
+**Érintett fájlok:**
+
+- `myai/` (Python függőségek: browser-use, playwright, asyncio)
+- `scripts/robotkez_test_level1.py` (Teszt script)
+- `scripts/debug_robotkez.py` (Debug script)
+- `scripts/start_server_debug.ps1` (Server indító script)
+- `myai/server.py` (FastAPI backend)
+- `src/agents/RobotkezAgent.ts` (Node.js ügynök)
+
+**Elvégzett lépések:**
+✅ Python függőségek telepítése (`uv pip install browser-use playwright asyncio`)
+✅ Playwright Chromium telepítése (`python -m playwright install chromium`)
+✅ Teszt scriptek és dokumentáció áttekintése
+⚠️ Uvicorn szerver indítási kísérletek (többszöri próbálkozás)
+⚠️ Level 1 teszt futtatása (kapcsolódási hiba)
+
+**Problémák:**
+
+1. **Uvicorn szerver nem indul:** Többszöri kísérlet különböző módszerekkel (`uv run`, `.venv/Scripts/uvicorn.exe`, PowerShell wrapper), de a szerver nem válaszol a 8000-es porton.
+2. **Import hiba:** `myai/server.log` szerint `ModuleNotFoundError: No module named 'myai'` - a szerver a `myai/` könyvtárból indult, ami import problémákat okozott.
+3. **Log fájlok nem jönnek létre:** A háttérben indított folyamatok nem írnak ki log fájlokat, nehezítve a hibakeresést.
+4. **Teszt kapcsolódási hiba:** A `robotkez_test_level1.py` script `All connection attempts failed` hibával leáll, mivel sem a Node.js backend (3000), sem a Python backend (8000) nem fut.
+
+**Státusz:** ⏳ Folyamatban / Blokkolt
+
+- A Python backend (uvicorn) indítási problémája megoldásra vár
+- A Node.js backend (`npm run dev`) elindult, de a teljes rendszer tesztelése függőben
+
+**Következő lépések:**
+
+1. Uvicorn indítási hiba részletes debugolása (PYTHONPATH, working directory)
+2. Smoke test futtatása (`npm run smoke`) a rendszer állapotának ellenőrzésére
+3. Level 1-3 tesztek újrafuttatása működő backend mellett
+
+---
+
+### 2026-02-08 04:00 - Dashboard V2 Phase 5 & Stability Enhancements
+
+**Feladat:**
+Befejezni a Dashboard V2 Phase 5-öt (Knowledge Base UI), implementálni a RAG API-t és a fájl feltöltést, valamint stabilizálni a rendszert (Circuit Breaker, Retry Logic) és elhárítani a port ütközéseket.
+
+**Érintett fájlok:**
+
+- `src/dashboard/components/dashboard/KnowledgeBasePanel.tsx` (Új komponens: RAG vizualizáció és fájl feltöltés)
+- `src/server/web.ts` (Új API végpontok: `/api/rag/stats`, `/api/rag/query`, `/api/rag/ingest`; Fix: Port 3000 EADDRINUSE)
+- `src/agents/AgentManager.ts` (Új funkciók: Circuit Breaker, Retry Logic)
+- `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Új "Knowledge" tab)
+- `task.md`, `implementation_plan.md`, `walkthrough.md` (Dokumentáció frissítése)
+
+**Eredmények:**
+✅ **Knowledge Base UI:** Teljes körű RAG vizualizáció a Dashboardon.
+
+- **Statisztikák:** Valós idejű LanceDB adatok (sorok száma, státusz).
+- **Keresés:** Szemantikus keresőfelület a memóriában.
+- **Ingestion:** Kliensoldali fájlbeolvasás (TXT, MD, LOG, JSON, TS, JS, PY támogatás) és indexelés.
+✅ **Backend API:** Stabil `/api/rag/*` végpontok.
+✅ **Port Konfliktus Fix:** A `web.ts`-ben lévő redundáns ügynök regisztráció eltávolítva, ami megszüntette a kettős inicializálást és a port ütközést.
+✅ **Stabilitás:**
+- **Circuit Breaker:** 3 hiba után az ügynök pihenőre kerül.
+- **Retry Logic:** Automatikus újrapróbálkozás hiba esetén.
+
+**Státusz:** ✅ Befejezve (Phase 5 Complete)
+
+---
+
 ### 2026-02-06 07:45 - CLI & Dashboard Modernizálás (Model Selector Update)
 
 **Feladat:**

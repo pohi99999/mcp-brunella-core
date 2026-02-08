@@ -1,36 +1,36 @@
   ---
   🔍 Projekt Állapot Összefoglaló
+  **Utolsó frissítés:** 2026-02-08 (Phase 4 Completion)
 
   🚨 KRITIKUS PROBLÉMÁK (Azonnali beavatkozás szükséges)
 
   1. API Kulcsok Kitéve a .env Fájlban
 
   A .env fájl valódi API kulcsokat tartalmaz ami be van commitolva:
-  - GEMINI_API_KEY, GITHUB_PERSONAL_ACCESS_TOKEN, OPENAI_API_KEY, CLOUDFLARE_R2_SECRET_ACCESS_KEY
 
-  Teendő: Azonnal rotáld ezeket a kulcsokat, mert publikusak lettek!
+- GEMINI_API_KEY, GITHUB_PERSONAL_ACCESS_TOKEN, OPENAI_API_KEY, CLOUDFLARE_R2_SECRET_ACCESS_KEY
 
-  2. Agent Interfész Inkonzisztencia
+  **Státusz:** ⚠️ PENDING - Rotációs mechanizmus elkészítve (Phase 5), manuális kulcscsere szükséges
 
-  Két különböző interfész van használatban:
-  - IAgent (6 agent): execute(task: string, context?)
-  - BaseAgent (2 agent): execute(context: AgentContext)
+  1. ~~Agent Interfész Inkonzisztencia~~ ✅ MEGOLDVA (Phase 4)
 
-  Az AgentManager.delegateLocally() objektummal hívja az execute-ot, de az IAgent-ek stringet várnak → hibás delegálás.
+  **Megoldás:** Az `AgentManager.ts` standardizálva lett, minden agent hívás az `execute(task, context)` formátumot használja.
+  A `BaseAgent` belsőleg kezeli az `AgentContext` transzformációt.
 
-  3. DynamicAgent Törött Konstruktor
+  1. ~~DynamicAgent Törött Konstruktor~~ ✅ MEGOLDVA (Phase 4)
 
-  // Registry-ben: config objektum érkezik
-  // DynamicAgent vár: tomlPath string
-  constructor(tomlPath: string) { ... }
-  A ProjectOrganizer és AgentArchitect ügynökök nem tudnak elindulni.
+  **Megoldás:** A `DynamicAgent.ts` konstruktor javítva lett, mostantól támogatja mind a TOML fájl útvonalakat, mind a registry konfigurációs objektumokat.
+  A `registry.json` frissítve lett a `project_organizer` és `agent_architect` ügynökök helyes betöltéséhez.
 
-  4. Hiányzó Fájl a Workflow-ban
+  1. Hiányzó Fájl a Workflow-ban
 
   bas-cloud-sync.yml hivatkozik myai/sync_to_r2.py-ra ami nem létezik a repóban.
 
+  **Státusz:** ⚠️ PENDING - Phase 5-ben kerül javításra
+
   ---
-  ⚠️ MAGAS PRIORITÁSÚ PROBLÉMÁK
+
+⚠️ MAGAS PRIORITÁSÚ PROBLÉMÁK
   ┌───────────────┬──────────────────────────────────────────────────────────────────────────┬─────────────────────────┐
   │    Terület    │                                 Probléma                                 │          Fájl           │
   ├───────────────┼──────────────────────────────────────────────────────────────────────────┼─────────────────────────┤
@@ -55,9 +55,10 @@
   │ Actions       │                                                                          │                         │
   └───────────────┴──────────────────────────────────────────────────────────────────────────┴─────────────────────────┘
   ---
+
   📊 Területenkénti Státusz
 
-  GitHub Actions & Copilot Integration
+GitHub Actions & Copilot Integration
   ┌──────────────────────┬───────────────┬───────────────────────────────────────────┐
   │       Workflow       │    Státusz    │                Megjegyzés                 │
   ├──────────────────────┼───────────────┼───────────────────────────────────────────┤
@@ -120,6 +121,7 @@
   │ ProjectConductor Agent │ ⚠️ 80% kész - CLI integration hiányzik        │
   └────────────────────────┴───────────────────────────────────────────────┘
   ---
+
   📈 Aktív Track-ek Összefoglalója
   ┌──────────────────────────────┬──────────┬─────────────────────────────┐
   │            Track             │ Progress │           Blocker           │
@@ -146,26 +148,26 @@
 
   MAGAS (Ezen a héten)
 
-  4. 📝 llm_client.ts hardening - Content-Type, timeout, HTTP status check
-  5. 🔒 EmbeddedWorkflow iframe security - Sandbox permissions szűkítése
-  6. 📁 sync_to_r2.py létrehozása vagy workflow fix
-  7. 🤖 ProjectConductor CLI integration - brunella conductor status működjön
+  1. 📝 llm_client.ts hardening - Content-Type, timeout, HTTP status check
+  2. 🔒 EmbeddedWorkflow iframe security - Sandbox permissions szűkítése
+  3. 📁 sync_to_r2.py létrehozása vagy workflow fix
+  4. 🤖 ProjectConductor CLI integration - brunella conductor status működjön
 
   KÖZEPES (Jövő hét)
 
-  8. 📚 CONDUCTOR_MANIFEST.md refaktorálás - AI chat history eltávolítása
-  9. 🔍 RAG vector embeddings implementálása (jelenleg nem működik)
-  10. ⏱️ GitHub Actions timeouts hozzáadása
+  1. 📚 CONDUCTOR_MANIFEST.md refaktorálás - AI chat history eltávolítása
+  2. 🔍 RAG vector embeddings implementálása (jelenleg nem működik)
+  3. ⏱️ GitHub Actions timeouts hozzáadása
 
   ---
   💡 Pozitív Megfigyelések
 
-  - ✅ LangSmith tracing jól integrálva az LLM hívásokhoz
-  - ✅ Socket.IO megfelelően konfigurálva CORS-szal
-  - ✅ Copilot instructions kiválóan dokumentált
-  - ✅ Track rendszer jól működik, 16+ befejezett track
-  - ✅ Health check rendszer robosztus retry logikával
-  - ✅ CLI UX profi (chalk, ora, inquirer)
+- ✅ LangSmith tracing jól integrálva az LLM hívásokhoz
+- ✅ Socket.IO megfelelően konfigurálva CORS-szal
+- ✅ Copilot instructions kiválóan dokumentált
+- ✅ Track rendszer jól működik, 16+ befejezett track
+- ✅ Health check rendszer robosztus retry logikával
+- ✅ CLI UX profi (chalk, ora, inquirer)
 
 ---
 
@@ -174,18 +176,22 @@
 Ez a fejlesztési ciklus a Brunella Agent System (BAS) intelligens magjának jelentős továbbfejlesztését célozta, bevezetve a több LLM szolgáltatót támogató architektúrát és egy interaktívabb parancssori élményt.
 
 ### 1. Multi-Provider LLM Támogatás
+
 - **Új `llm_client`:** Létrehozásra került egy új, központi `llm_client` (`src/core/llm_client.ts`), amely képes kezelni a helyi (Ollama) és a felhőalapú (Google Gemini) nyelvi modelleket.
 - **Automatikus Fallback:** A rendszer hibatűrőbb lett; ha a kiválasztott felhőszolgáltató (pl. Gemini) nem érhető el, a rendszer automatikusan visszavált a helyi Ollama modellre, biztosítva a folyamatos működést.
 - **Architekturális Refaktor:** A korábbi, kizárólag Ollamára épülő `chatWithOllama` függvényt az egész kódbázisban lecseréltük az új, rugalmas `generateResponse` függvényre. Ez érintette az összes ügynököt (`OrchestratorAgent`, `DynamicAgent` stb.) és a belső eszközöket.
 
 ### 2. Interaktív CLI Fejlesztések
+
 - **Állapot-nyilvántartó Chat:** A `brunella chat` parancs mostantól egy teljes értékű, interaktív munkamenetet biztosít, amely megjegyzi a beszélgetés előzményeit.
 - **Dinamikus Szolgáltatóváltás:** A chat munkameneten belül bevezetésre került a `/switch <provider>` parancs, amellyel a felhasználó futás közben válthat az `ollama`, `gemini`, `claude` és `openai` szolgáltatók között.
 
 ### 3. LangSmith Integráció
+
 - **Mélyebb Observability:** A "Glass Box" protokoll szellemében minden LLM hívás mostantól a LangSmith segítségével követhető nyomon. Ez lehetővé teszi a hívások részletes elemzését, a hibakeresést és a teljesítmény optimalizálását.
 
 ### 4. Új Függőségek
+
 - **Node.js:** `@google/generative-ai` a Gemini API integrációhoz, `readline-sync` és `chalk` a továbbfejlesztett CLI élményért.
 - **Python:** `google-generativeai` és `langsmith` a Python alrendszer képességeinek bővítéséhez.
 

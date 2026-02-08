@@ -7,10 +7,11 @@
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError } from '../utils/logger.js';
-import { config } from '../config/index.js';
+import { v4 as uuidv4 } from 'uuid';
+import fetch from 'node-fetch';
 
 export class RobotkezAgent extends BaseAgent {
-    name = 'robotkez';
+    name = 'Robotkez'; // Corrected name to match routing
     role = 'Böngésző Operátor';
     description = 'Böngésző alapú feladatokat hajt végre (kattintás, keresés, form kitöltés)';
     capabilities = ['browser_automation', 'web_scraping', 'ui_interaction', 'screenshots'];
@@ -24,33 +25,39 @@ export class RobotkezAgent extends BaseAgent {
 
     async executeTask(context: AgentContext): Promise<AgentResult> {
         const instruction = context.task || '';
-        logInfo('RobotkezAgent', `Végrehajtás: ${instruction}`);
+        logInfo('RobotkezAgent', `Végrehajtás: ${instruction.slice(0, 100)}...`);
 
         try {
-            // 1. Megvizsgáljuk, hogy ez egy egyszerű navigálás vagy komplex feladat
-            const isSimpleNavigation = instruction.toLowerCase().startsWith('nyisd meg') || instruction.toLowerCase().startsWith('open');
+            const taskId = `robotkez-task-${uuidv4()}`;
+            
+            // Construct the payload for the Python server's /api/task endpoint
+            const requestBody = {
+                taskId: taskId,
+                type: "browser",
+                payload: {
+                    instruction: instruction,
+                    context: context.context || {} // Pass the nested context object
+                }
+            };
 
-            // A Python alrendszer /harvest végpontját hívjuk
-            // Ha nincs megadott scenario, generálunk egy dinamikusat az instruction alapján
-            const response = await fetch(`${this.pythonApiUrl}/harvest`, {
+            const response = await fetch(`${this.pythonApiUrl}/api/task`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    scenario_path: 'myai/scenarios/dynamic_chat_task.json', // Ideiglenes, a Python oldalon ezt lekezeljük vagy ad-hoc parancsot küldünk
-                    force_mode: 'ui'
-                })
+                body: JSON.stringify(requestBody),
             });
 
             if (!response.ok) {
-                throw new Error(`Python API hiba: ${response.statusText}`);
+                const errorText = await response.text();
+                logError('RobotkezAgent', `Python API hiba (${response.status}): ${errorText}`);
+                throw new Error(`Python API hiba: ${response.status} ${response.statusText} - ${errorText}`);
             }
 
-            const result = await response.json();
+            const result: any = await response.json();
 
             return {
                 success: result.status === 'ok',
-                message: result.result?.message || 'A böngésző művelet befejeződött.',
-                data: result.result,
+                message: result.result?.summary || 'A böngésző művelet befejeződött.',
+                data: result.result, // Pass the whole result object back
                 thoughts: `A feladatot a Python browser_worker hajtotta végre. Állapot: ${result.status}`
             };
 

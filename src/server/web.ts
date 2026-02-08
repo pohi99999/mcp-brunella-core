@@ -57,6 +57,9 @@ export async function startWebServer() {
     // In a real scenario, we would read from mcp_servers.json
     console.log("🔄 Starting MCP Bridge...");
 
+    // Előzetes ügynök regisztráció (hogy az API végpontok működjenek SSE előtt is)
+    // Megjegyzés: Ez már megtörténik az index.ts-ben a registerAllTools-on keresztül.
+
     const app = express();
     app.use(express.json());
     app.use(corsWhitelist);
@@ -171,6 +174,7 @@ export async function startWebServer() {
      *         description: List of agents
      */
     app.get('/api/agents', (req, res) => {
+        console.error("GET /api/agents hit");
         try {
             const agents = agentManager.listAgentDefinitions();
             res.json({ agents });
@@ -200,6 +204,38 @@ export async function startWebServer() {
 
 
 
+    app.get('/api/agents/status', (req, res) => {
+        try {
+            const status = agentManager.listAgents(); // This currently returns name, description, status: 'loaded'
+            // We can augment this with real-time data from socketService if needed
+            res.json({ agents: status });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.get('/api/agents/:agentName/logs', (req, res) => {
+        const { agentName } = req.params;
+
+        res.setHeader('Content-Type', 'text/event-stream');
+        res.setHeader('Cache-Control', 'no-cache');
+        res.setHeader('Connection', 'keep-alive');
+        res.flushHeaders();
+
+        const logListener = (data: any) => {
+            if (data.agent === agentName || !data.agent) {
+                res.write(`data: ${JSON.stringify(data)}\n\n`);
+            }
+        };
+
+        // Assuming agentManager or socketService can emit logs
+        agentManager.on('log', logListener);
+
+        req.on('close', () => {
+            agentManager.off('log', logListener);
+        });
+    });
+
     app.get('/api/cloudflare/agents', async (req, res) => {
         try {
             const edgeStatus = agentManager.getEdgeStatus();
@@ -213,7 +249,6 @@ export async function startWebServer() {
             // const response = await fetch(`${workerUrl}/agents`);
             // const data = await response.json();
 
-            // Stubbed response for now
             res.json({
                 status: edgeStatus.healthy ? 'connected' : 'error',
                 agents: [
@@ -221,6 +256,33 @@ export async function startWebServer() {
                     { name: 'EdgeKVReader', status: 'idle', tasks: 0 }
                 ]
             });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.get('/api/providers/status', async (req, res) => {
+        console.error("GET /api/providers/status hit");
+        try {
+            const { generateResponse } = await import('../core/llm_client.js');
+
+            const checks = [
+                { id: 'ollama', name: 'Ollama (Helyi)', test: () => generateResponse('hi', 'ollama') },
+                { id: 'gemini', name: 'Google Gemini', test: () => generateResponse('hi', 'gemini') },
+                { id: 'github', name: 'GitHub Models', test: () => generateResponse('hi', 'github') }
+            ];
+
+            const results = await Promise.all(checks.map(async (c) => {
+                try {
+                    const start = Date.now();
+                    await c.test();
+                    return { id: c.id, name: c.name, status: 'online', latency: Date.now() - start };
+                } catch (e: any) {
+                    return { id: c.id, name: c.name, status: 'offline', error: e.message };
+                }
+            }));
+
+            res.json({ providers: results });
         } catch (e: any) {
             res.status(500).json({ error: e.message });
         }
@@ -280,11 +342,61 @@ export async function startWebServer() {
         }
     });
 
-    // Tasks API
-    app.get('/api/tasks', (req, res) => {
+    // RAG API
+    app.get('/api/rag/stats', async (req, res) => {
         try {
-            const tasks = agentManager.getAllTasks();
-            res.json({ tasks });
+            const { getRAGCount } = await import('../utils/rag.js');
+            const count = await getRAGCount();
+            res.json({
+                table: 'memory',
+                provider: 'LanceDB',
+                status: 'online',
+                rowCount: count
+            });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.get('/api/rag/query', async (req, res) => {
+        try {
+            const { query, limit } = req.query;
+            if (!query) {
+                res.status(400).json({ error: 'Query is required' });
+                return;
+            }
+            const { searchRAG } = await import('../utils/rag.js');
+            const results = await searchRAG(query as string, limit ? parseInt(limit as string) : 5);
+            res.json({ results });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.post('/api/rag/ingest', async (req, res) => {
+        try {
+            const { text, metadata } = req.body;
+            if (!text) {
+                res.status(400).json({ error: 'Text is required' });
+                return;
+            }
+            const { addToIndex } = await import('../utils/rag.js');
+            await addToIndex(metadata?.path || `manual_${Date.now()}`, text);
+            res.json({ status: 'success', indexed: true });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    // Tasks API
+    app.get('/api/tasks', async (req, res) => {
+        try {
+            const limit = parseInt(req.query.limit as string) || 50;
+            const offset = parseInt(req.query.offset as string) || 0;
+            const { getTasks, getTaskCount } = await import('../utils/db.js');
+            const tasks = await getTasks(limit, offset);
+            const total = await getTaskCount();
+            res.json({ tasks, total, limit, offset });
         } catch (e: any) {
             res.status(500).json({ error: e.message });
         }

@@ -144,6 +144,11 @@
       "name": "project_organizer",
       "title": "Project Organizer",
       "description": "Rendszerezi a projektet, mappánkénti tartalomjegyzéket készít és frissíti a könyvtártérképet.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent",
+      "config": {
+        "tomlPath": "myai/agents/project_organizer.toml"
+      },
       "capabilities": [
         "organization",
         "documentation",
@@ -165,6 +170,11 @@
       "name": "agent_architect",
       "title": "Agent Architect",
       "description": "Új ügynököket tervez, generálja a promptjaikat, függőségeiket és konfigurációjukat a leírás alapján.",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent",
+      "config": {
+        "tomlPath": "myai/agents/agent_architect.toml"
+      },
       "capabilities": [
         "prompt_engineering",
         "agent_design",

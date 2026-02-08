@@ -1,0 +1,16 @@
+[
+  {
+    "session_id": "15093023916479920552",
+    "prompt": "Branch Cleanup \\& Repository Hygiene",
+    "branch": null,
+    "created_at": "2026-02-07T23:30:55.282120",
+    "status": "running"
+  },
+  {
+    "session_id": "3213617300495294502",
+    "prompt": "Branch Cleanup \\& Repository Hygiene",
+    "branch": null,
+    "created_at": "2026-02-07T23:35:05.667992",
+    "status": "running"
+  }
+]
