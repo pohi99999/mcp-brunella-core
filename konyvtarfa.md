@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 07. 22:21:05
+**Generálva:** 2026. 02. 08. 11:37:44
 **Script:** 
 
 ---
@@ -52328,6 +52328,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 pydantic_models.cpython-312.pyc
       - 📄 pydantic_models.cpython-314.pyc
       - 📄 rag.cpython-312.pyc
+      - 📄 rag.cpython-314.pyc
       - 📄 refiner_logic.cpython-311.pyc
       - 📄 refiner_logic.cpython-312.pyc
       - 📄 refiner_logic.cpython-314.pyc
@@ -59857,6 +59858,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                     - 📂 **refint**
                     - 📄 gsnapshot.AssemblyInfo.cs
                     - 📄 gsnapshot.AssemblyInfoInputs.cache
+                    - 📄 gsnapshot.assets.cache
+                    - 📄 gsnapshot.csproj.AssemblyReference.cache
                     - 📄 gsnapshot.GeneratedMSBuildEditorConfig.editorconfig
                 - 📄 gsnapshot.csproj.nuget.dgspec.json
                 - 📄 gsnapshot.csproj.nuget.g.props
@@ -104956,9 +104959,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **utils**
       - 📂 **__pycache__**
         - 📄 page.cpython-312.pyc
+        - 📄 page.cpython-314.pyc
         - 📄 parser.cpython-312.pyc
+        - 📄 parser.cpython-314.pyc
         - 📄 pdfparser.cpython-312.pyc
+        - 📄 pdfparser.cpython-314.pyc
         - 📄 textsplitter.cpython-312.pyc
+        - 📄 textsplitter.cpython-314.pyc
       - 📄 dataset_manager.py
       - 📄 dependency_detector.py
       - 📄 page.py
@@ -104977,6 +104984,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 refiner_logic.py
     - 📄 requirements.txt
     - 📄 schemas.py
+    - 📄 server.log
     - 📄 server.py
     - 📄 SUMMARY.md
     - 📄 sync_to_r2.py
@@ -105313,6 +105321,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📂 **schemas**
     - 📄 settings.schema.json
   - 📂 **scripts**
+    - 📂 **__pycache__**
+      - 📄 robotkez_test_level1.cpython-314.pyc
+      - 📄 robotkez_test_level2_n8n.cpython-314.pyc
+      - 📄 robotkez_test_level3_monitoring.cpython-314.pyc
     - 📂 **deprecated**
       - 📄 commit_recovery.bat
       - 📄 commit_restoration.bat
@@ -105326,6 +105338,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 cloudflare_check_workers.py
     - 📄 conductor_diagnostics.mjs
     - 📄 daily_trigger.ts
+    - 📄 debug_robotkez.py
     - 📄 generate_tools_inventory.mjs
     - 📄 generate_tree.mjs
     - 📄 generate-ai-context.js
@@ -105343,12 +105356,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 robotkez_test_level1.py
     - 📄 robotkez_test_level2_n8n.py
     - 📄 robotkez_test_level3_monitoring.py
+    - 📄 rotate_api_keys.ps1
     - 📄 run_jules_self_heal.mjs
     - 📄 security_check.mjs
     - 📄 setup_jules_sync_task.ps1
     - 📄 smoke.mjs
     - 📄 spec-freeze-check.cjs
     - 📄 start_remote.ps1
+    - 📄 start_server_debug.ps1
     - 📄 sync_foszal.py
     - 📄 SYNC_README.md
     - 📄 sync-agent.js
@@ -105401,6 +105416,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 UserProfile.tsx
         - 📂 **dashboard**
           - 📄 AgentFactory.tsx
+          - 📄 AgentManagementPanel.tsx
           - 📄 AgentRegistryCard.tsx
           - 📄 AgentStatusCard.tsx
           - 📄 AgentToolsManager.tsx
@@ -105413,15 +105429,19 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 EmbeddedWorkflow.tsx
           - 📄 FileExplorer.tsx
           - 📄 InventoryCatalog.tsx
+          - 📄 KnowledgeBasePanel.tsx
           - 📄 LiveIndicator.tsx
+          - 📄 LLMProvidersPanel.tsx
           - 📄 LogViewer.tsx
           - 📄 MetricsCard.tsx
           - 📄 MissionControlLayout.tsx
           - 📄 NeuralLinkChat.tsx
+          - 📄 RobotkezPanel.tsx
           - 📄 ServiceControlWidget.tsx
           - 📄 SettingsPanel.tsx
           - 📄 StatusCard.tsx
           - 📄 SystemHealthCard.tsx
+          - 📄 TaskQueueMonitor.tsx
           - 📄 TerminalLog.tsx
           - 📄 ToolsCard.tsx
         - 📂 **ui**
@@ -105655,6 +105675,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 rendszer ellenorzes.md.txt
   - 📄 requirements.txt
   - 📄 schema.sql
+  - 📄 server_debug.log
+  - 📄 server_direct.log
+  - 📄 server_final.log
+  - 📄 server.log
   - 📄 setup_bas_update.ps1
   - 📄 start_architect.ps1
   - 📄 start_brunella.ps1
@@ -105669,6 +105693,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 tsconfig.json
   - 📄 tsconfig.ui.json
   - 📄 USER_START.md
+  - 📄 verify_port.ts
   - 📄 vite.config.ts
   - 📄 vitest.config.ts
   - 📄 workflow.md

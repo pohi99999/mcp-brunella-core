@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Play, Square, ExternalLink, Camera, RefreshCw, Terminal, Activity, Globe, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from './ui/card';
-import { Button } from './ui/button';
-import { Badge } from './ui/badge';
-import { ScrollArea } from './ui/scroll-area';
-import { Progress } from './ui/progress';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '../ui/card';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
+import { ScrollArea } from '../ui/scroll-area';
+import { Progress } from '../ui/progress';
 import { toast } from 'sonner';
 import {
     startBrowser,

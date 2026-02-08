@@ -3,7 +3,7 @@
  * Centralized API calls to the MCP Brunella Core backend
  */
 
-const API_BASE = '';  // Same origin
+export const API_BASE = '';  // Same origin
 const DEFAULT_TIMEOUT_MS = 30000;  // 30 seconds default timeout
 const LONG_TIMEOUT_MS = 120000;    // 2 minutes for LLM calls
 
