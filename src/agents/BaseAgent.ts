@@ -22,6 +22,9 @@ export interface AgentResult {
   thoughts?: string;
   contextUsed?: string[];
   metadata?: any;        // Egyéb metaadatok (pl. source, confidence)
+  // Optional execution metrics added by AgentManager
+  executedBy?: string;
+  executionTime?: number;
 }
 
 export abstract class BaseAgent implements IAgent {

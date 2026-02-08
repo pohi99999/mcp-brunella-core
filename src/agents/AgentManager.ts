@@ -1,4 +1,5 @@
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { AgentResult } from './BaseAgent.js';
 import { IAgent, ISwarmContext, AgentHandoff, AgentResponse } from './types.js';
 
 interface RegistryConfig {
