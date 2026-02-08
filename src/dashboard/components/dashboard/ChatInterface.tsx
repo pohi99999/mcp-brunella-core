@@ -296,9 +296,9 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 {isConnected ? `Szerver: Online` : 'Szerver: Offline'}
               </span>
             </div>
-            {currentMessages.length > 0 ? (
+            {currentMessages.length > 0 && (
               <>
-            {currentMessages.length > 0 ? (
+            {currentMessages.length > 0 && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon" className="h-8 w-8">
@@ -317,7 +317,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : null}
+            )}
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -344,14 +344,14 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {currentMessages.length > 0 ? (
+            {currentMessages.length > 0 && (
                 <Button variant="outline" size="sm" onClick={handleClearChat} className="h-8">
                   Törlés
                 </Button>
-            ) : null}
+            )}
           </div>
         </div>
-        {currentMessages.length > 0 ? (
+        {currentMessages.length > 0 && (
           <div className="space-y-3 mt-4">
             <div className="flex gap-2">
               <div className="relative flex-1">
@@ -374,7 +374,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                   >
                     <X size={16} />
                   </Button>
-                ) : null}
+                )}
               </div>
 
               <Popover>
@@ -396,7 +396,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                       )
                     ) : (
                       "Dátum"
-                    ) : null}
+                    )}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="end">
@@ -426,7 +426,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                           }
                         />
                       </div>
-                    ) : null}
+                    )}
                     <div className="flex gap-2 pt-2 border-t">
                       <Button
                         variant="outline"
@@ -454,7 +454,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                       onClick={() => setSearchQuery('')}
                     />
                   </Badge>
-                ) : null}
+                )}
                 {dateRange.from && (
                   <Badge variant="secondary" className="gap-1">
                     {dateRange.to
@@ -466,7 +466,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                       onClick={() => setDateRange({ from: undefined, to: undefined })}
                     />
                   </Badge>
-                ) : null}
+                )}
                 <Button
                   variant="ghost"
                   size="sm"
@@ -476,7 +476,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                   Összes törlése
                 </Button>
               </div>
-            ) : null}
+            )}
           </div>
         )}
       </CardHeader>
@@ -517,7 +517,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                       {filteredMessages.length} / {currentMessages.length} üzenet
                     </Badge>
                   </div>
-                ) : null}
+                )}
                 {filteredMessages.map(message => (
                   <div
                     key={message.id}
@@ -529,7 +529,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                           <Robot size={18} className="text-accent" />
                         </div>
                       </div>
-                    ) : null}
+                    )}
 
                     <div
                       className={`flex flex - col gap - 1 max - w - [80 %] ${
@@ -547,7 +547,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                           <div className="mb-2 text-xs italic text-muted-foreground border-l-2 border-accent/30 pl-2">
                             {message.thoughts}
                           </div>
-                        ) : null}
+                        )}
                         <div 
                           className="text-sm prose dark:prose-invert max-w-none break-words [&>p]:mb-2 [&>ul]:list-disc [&>ul]:pl-4 [&>ol]:list-decimal [&>ol]:pl-4 [&>pre]:bg-muted/50 [&>pre]:p-2 [&>pre]:rounded-md [&>code]:bg-muted/30 [&>code]:rounded [&>code]:px-1"
                           dangerouslySetInnerHTML={{ 
@@ -586,11 +586,11 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                               }}
                             />
                           </div>
-                        ) : null}
+                        )}
 
                         {message.isStreaming && (
                           <span className="inline-block w-2 h-4 bg-current animate-pulse ml-1" />
-                        ) : null}
+                        )}
                       </div>
                       <span className="text-xs text-muted-foreground">
                         {formatTimestamp(message.timestamp)}
@@ -603,11 +603,11 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                           <UserIcon size={18} className="text-primary" />
                         </div>
                       </div>
-                    ) : null}
+                    )}
                   </div>
                 ))}
               </>
-            ) : null}
+            )}
 
             {isProcessing && currentMessages[currentMessages.length - 1]?.role !== 'assistant' && !hasActiveFilters && (
               <div className="flex gap-3">
@@ -621,7 +621,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                   <Skeleton className="h-4 w-1/2" />
                 </div>
               </div>
-            ) : null}
+            )}
           </div>
         </ScrollArea>
 
