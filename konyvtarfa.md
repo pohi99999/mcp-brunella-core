@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 06. 22:36:56
+**Generálva:** 2026. 02. 07. 22:21:05
 **Script:** 
 
 ---
@@ -155,7 +155,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 worklow.md
       - 📂 **BrunellaTuning**
         - 📄 AI Brunella tuning.csv
-        - 📄 AI Brunella tuning.js
         - 📄 allat.csv
         - 📄 allat.docx
         - 📄 allat.JSON
@@ -186,7 +185,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 picker_example.html
         - 📄 prepare-package.js
         - 📄 sandbox_command.js
-        - 📄 setup.js
         - 📄 start.js
         - 📄 start1.JSON
         - 📄 start2.JSON
@@ -33078,11 +33076,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📂 **data**
           - 📄 1000100100010001011000007dbdcd457db9ec321cc5b15c3d.lance
   - 📂 **docs**
+    - 📄 AGENT_PERMISSIONS_GUIDE.md
     - 📄 cloudflare-tunnel-setup.md
     - 📄 github-runner-setup.md
     - 📄 harvester-structured-json.md
     - 📄 jules-repo-config.md
     - 📄 jules-setup.md
+    - 📄 MCP_TOOL_PERMISSIONS_GUIDE.md
     - 📄 n8n-setup.md
     - 📄 ROBOTKEZ_SETUP.md
     - 📄 tunnel-config.example.yml
@@ -52209,6 +52209,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 ice_edits.json
     - 📄 silver_path_memories.json
     - 📄 smart_edits.json
+  - 📂 **jules_session_10830104862054860677**
+    - 📂 **docs**
+      - 📄 ROBOTKEZ_SETUP.md
+    - 📂 **scripts**
+      - 📄 cloudflare_check_workers.py
+      - 📄 monitor_loop.py
+      - 📄 robotkez_cli.py
+      - 📄 robotkez_test_level1.py
+      - 📄 robotkez_test_level2_n8n.py
+      - 📄 robotkez_test_level3_monitoring.py
   - 📂 **mcp-brunella-core-UIX** _(✨ Welcome to Your Spark Template!)_
     - 📂 **src**
       - 📂 **assets**
@@ -105313,14 +105323,21 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 ai-chat-log.js
     - 📄 audit_workspace.ts
     - 📄 check_tasks.js
+    - 📄 cloudflare_check_workers.py
     - 📄 conductor_diagnostics.mjs
     - 📄 daily_trigger.ts
     - 📄 generate_tools_inventory.mjs
     - 📄 generate_tree.mjs
     - 📄 generate-ai-context.js
+    - 📄 github_token_help.txt
     - 📄 init_lancedb.py
+    - 📄 jules_api_client.py
     - 📄 jules_check.mjs
+    - 📄 jules_cli_wrapper.py
+    - 📄 JULES_SYNC_README.md
+    - 📄 jules_sync_watchdog.py
     - 📄 Modelfile.nightly
+    - 📄 monitor_loop.py
     - 📄 pre-commit-docs.cjs
     - 📄 robotkez_cli.py
     - 📄 robotkez_test_level1.py
@@ -105328,11 +105345,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 robotkez_test_level3_monitoring.py
     - 📄 run_jules_self_heal.mjs
     - 📄 security_check.mjs
+    - 📄 setup_jules_sync_task.ps1
     - 📄 smoke.mjs
     - 📄 spec-freeze-check.cjs
     - 📄 start_remote.ps1
     - 📄 sync_foszal.py
+    - 📄 SYNC_README.md
     - 📄 sync-agent.js
+    - 📄 sync.bat
+    - 📄 sync.ps1
+    - 📄 sync.sh
     - 📄 test_bridge.ts
     - 📄 test_cloudflare_agents.py
     - 📄 test_prepare.cjs
@@ -105354,11 +105376,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 EvaluatorAgent.ts
       - 📄 LintFixerAgent.ts
       - 📄 OrchestratorAgent.ts
+      - 📄 permissions.ts
       - 📄 ProjectConductorAgent.ts
       - 📄 PythonAgent.ts
       - 📄 registry.json
       - 📄 ResearcherAgent.ts
       - 📄 RobotkezAgent.ts
+      - 📄 SpecWriterAgent.ts
       - 📄 types.ts
       - 📄 VoiceAgent.ts
     - 📂 **cli**
@@ -105522,6 +105546,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 swarmTools.tmp
       - 📄 swarmTools.ts
       - 📄 system.ts
+      - 📄 toolPermissions.ts
       - 📄 workspace.ts
     - 📂 **types**
       - 📄 llm.ts
@@ -105549,6 +105574,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 telemetry.ts
       - 📄 validateSecrets.ts
     - 📄 cli-edge.ts
+    - 📄 cli-jules-interactive.ts
     - 📄 cli.ts
     - 📄 index.ts
     - 📄 interactive.ts
@@ -105573,6 +105599,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 setup.ts
     - 📄 skills_loader.test.ts
     - 📄 smoke.vitest.ts
+    - 📄 SpecWriterAgent.test.ts
     - 📄 telemetry.test.ts
   - 📂 **testing**
     - 📂 **hirszerzes_test_1**
@@ -105599,8 +105626,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 _JULES_MAINTENANCE_TASKS.md
   - 📄 _PROJECT_STRUCTURE.md
   - 📄 _QUICK_START.md
+  - 📄 1.jpg
   - 📄 2026-02-06-.txt
   - 📄 2026-02-06-this-session-is-being-continued-from-a-previous-co.txt
+  - 📄 2026-02-07-this-session-is-being-continued-from-a-previous-co.txt
   - 📄 agents.db
   - 📄 AnythingLLM
   - 📄 audit_report.json
@@ -105614,6 +105643,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 GEMINI.md
   - 📄 git_sync.ps1
   - 📄 interactive.py
+  - 📄 JULES_CLI_QUICK_START.md
+  - 📄 JULES_INTEGRATION.md
   - 📄 konyvtarfa.md
   - 📄 mcp_servers.json
   - 📄 Ollama

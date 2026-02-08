@@ -26,7 +26,6 @@ export class DynamicAgent implements IAgent {
 
     constructor(configOrPath?: string | DynamicAgentConfig) {
         if (!configOrPath) {
-            // No config provided, use defaults (will be set by AgentManager)
             return;
         }
 
@@ -41,25 +40,33 @@ export class DynamicAgent implements IAgent {
             }
         } else {
             // New: Config object from registry
+            // 1. First init from provided registry config
             this.initFromConfig(configOrPath);
 
-            // If tomlPath is provided in config, also load from TOML
+            // 2. If tomlPath is provided, load TOML and merge (registry config overrides TOML)
             if (configOrPath.tomlPath) {
                 try {
                     const content = fs.readFileSync(configOrPath.tomlPath, 'utf-8');
                     const tomlConfig = toml.parse(content);
-                    this.initFromConfig({ ...configOrPath, ...tomlConfig });
+                    // Registry config (configOrPath) takes precedence over TOML
+                    this.initFromConfig({ ...tomlConfig, ...configOrPath });
                 } catch (error) {
-                    logError('DynamicAgent', `Failed to load TOML: ${error}`);
+                    logError(this.name, `Failed to load TOML from ${configOrPath.tomlPath}: ${error}`);
                 }
             }
         }
     }
 
     private initFromConfig(config: DynamicAgentConfig): void {
-        if (config.name) this.name = config.name;
+        if (config.name) {
+            this.name = config.name;
+            // Default role to name if not provided
+            if (!this.role || this.role === 'Dynamic Agent') {
+                this.role = config.name;
+            }
+        }
+
         if (config.displayName) this.role = config.displayName;
-        else if (config.name) this.role = config.name;
         if (config.description) this.description = config.description;
         if (config.systemPrompt) this.systemPrompt = config.systemPrompt;
         if (config.query) this.queryTemplate = config.query;
@@ -77,7 +84,7 @@ export class DynamicAgent implements IAgent {
             if (this.name === 'project_organizer') {
                 const targetDir = context?.target_path || process.cwd();
                 const files = fs.readdirSync(targetDir);
-                
+
                 // --- Proactive Indexing ---
                 logInfo(this.name, `Project Organizer is indexing files in ${targetDir}`);
                 for (const file of files) {
@@ -93,12 +100,12 @@ export class DynamicAgent implements IAgent {
                         }
                     }
                 }
-                
+
                 contextData = `\nCurrent directory contents of '${targetDir}' (THESE ARE NOW INDEXED TO MEMORY):\n${files.join('\n')}`;
             }
 
             const prompt = `${this.queryTemplate.replace('${target_path}', context?.target_path || '.')} \n\nUser Message: ${task} \n${contextData}`;
-            
+
             // Call the LLM
             const fullPrompt = `${this.systemPrompt}\n\n${prompt}`;
             const response = await generateResponse(fullPrompt, context?.provider);

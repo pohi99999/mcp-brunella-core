@@ -11,7 +11,10 @@ import {
   Activity,
   Terminal,
   Brain,
-  FileText
+  FileText,
+  Rocket,
+  History,
+  Network
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -31,16 +34,24 @@ import { ThemeToggle } from "@/components/ThemeToggle"
 import { CommandMenu } from "@/components/CommandMenu"
 import { AgentGraph } from "@/components/AgentGraph"
 import { Skeleton } from "@/components/ui/skeleton"
-import { RocketLaunch } from '@phosphor-icons/react'
 import { AgentFactory } from '@/components/dashboard/AgentFactory'
+import { RobotkezPanel } from '@/components/dashboard/RobotkezPanel'
+import { AgentManagementPanel } from '@/components/dashboard/AgentManagementPanel'
+import { TaskQueueMonitor } from '@/components/dashboard/TaskQueueMonitor'
+import { LLMProvidersPanel } from '@/components/dashboard/LLMProvidersPanel'
+import { KnowledgeBasePanel } from '@/components/dashboard/KnowledgeBasePanel'
 
 const SIDEBAR_ITEMS = [
   { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { id: 'inventory', label: 'Inventory', icon: Box },
   { id: 'chat', label: 'Neural Link', icon: MessageSquare },
+  { id: 'management', label: 'Management', icon: Sparkles },
+  { id: 'tasks', label: 'Task Queue', icon: History },
+  { id: 'providers', label: 'Providers', icon: Network },
+  { id: 'knowledge', label: 'Knowledge', icon: Brain },
   { id: 'n8n', label: 'Workflows', icon: Workflow },
-  { id: 'langflow', label: 'Agents', icon: Sparkles },
-  { id: 'factory', label: 'Factory', icon: RocketLaunch },
+  { id: 'robotkez', label: 'Robotkéz', icon: Activity },
+  { id: 'factory', label: 'Factory', icon: Rocket },
   { id: 'files', label: 'Files', icon: FolderOpen },
   { id: 'settings', label: 'Settings', icon: Settings },
 ]
@@ -78,7 +89,9 @@ export function MissionControlLayout() {
       .finally(() => setIsLoadingAgents(false))
   }, [])
 
-  const socketStatusMap = new Map(Array.from(agents.values()).map((a) => [a.name, a]))
+  const socketStatusMap = new Map<string, { status: string; taskDescription?: string }>(
+    Array.from(agents.entries()).map(([name, data]: [string, any]) => [name, data])
+  )
   const agentsToShow = registryAgents
 
   const handleExecuteAgent = async (agentName: string, task: string) => {
@@ -179,7 +192,7 @@ export function MissionControlLayout() {
                             <div key={agent.name} className="hover:scale-[1.02] transition-transform duration-200">
                               <AgentStatusCard
                                 agent={agent}
-                                status={(socketData?.status as AgentStatus) || 'idle'}
+                                status={(socketData?.status as any) || 'idle'}
                                 taskDescription={socketData?.taskDescription}
                                 onExecute={handleExecuteAgent}
                                 allAgents={registryAgents}
@@ -228,6 +241,11 @@ export function MissionControlLayout() {
                 />
               )}
               {activeTab === 'factory' && <AgentFactory />}
+              {activeTab === 'management' && <AgentManagementPanel />}
+              {activeTab === 'robotkez' && <RobotkezPanel />}
+              {activeTab === 'tasks' && <TaskQueueMonitor />}
+              {activeTab === 'providers' && <LLMProvidersPanel />}
+              {activeTab === 'knowledge' && <KnowledgeBasePanel />}
               {activeTab === 'files' && <FileExplorer />}
               {activeTab === 'settings' && <SettingsPanel />}
             </div>

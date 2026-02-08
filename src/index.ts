@@ -40,9 +40,22 @@ async function main() {
 }
 
 main().catch((error: unknown) => {
-  const err = error instanceof Error ? error : new Error(String(error));
-  console.error("Server error:", err.message);
-  if (err.stack) console.error(err.stack);
+  let errorMessage = "Unknown error";
+  if (error instanceof Error) {
+    errorMessage = error.message;
+  } else if (typeof error === 'string') {
+    errorMessage = error;
+  } else {
+    try {
+      errorMessage = JSON.stringify(error);
+    } catch {
+      errorMessage = Object.prototype.toString.call(error);
+    }
+  }
+
+  console.error("Server error:", errorMessage);
+  if (error instanceof Error && error.stack) console.error(error.stack);
+
   if (error && typeof error === 'object' && !(error instanceof Error)) {
     try { console.error("Raw error:", JSON.stringify(error, null, 2)); } catch { /* non-serializable */ }
   }

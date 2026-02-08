@@ -113,3 +113,36 @@ export async function createChat(id: string, title: string) {
     const stmt = database.prepare('INSERT OR IGNORE INTO chats (id, title) VALUES (?, ?)');
     stmt.run(id, title);
 }
+
+export async function saveTask(task: { agent_name: string, description: string, context?: string, parent_id?: number }) {
+    const database = await getDb();
+    if (!database) return null;
+
+    const stmt = database.prepare('INSERT INTO tasks (agent_name, description, context, parent_id) VALUES (?, ?, ?, ?)');
+    const result = stmt.run(task.agent_name, task.description, task.context || null, task.parent_id || null);
+    return result.lastInsertRowid;
+}
+
+export async function updateTaskStatus(id: number | bigint, status: string, result?: string) {
+    const database = await getDb();
+    if (!database) return;
+
+    const stmt = database.prepare('UPDATE tasks SET status = ?, result = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?');
+    stmt.run(status, result || null, id);
+}
+
+export async function getTasks(limit: number = 50, offset: number = 0) {
+    const database = await getDb();
+    if (!database) return [];
+
+    const stmt = database.prepare('SELECT * FROM tasks ORDER BY created_at DESC LIMIT ? OFFSET ?');
+    return stmt.all(limit, offset);
+}
+
+export async function getTaskCount() {
+    const database = await getDb();
+    if (!database) return 0;
+
+    const stmt = database.prepare('SELECT COUNT(*) as count FROM tasks');
+    return (stmt.get() as any).count;
+}

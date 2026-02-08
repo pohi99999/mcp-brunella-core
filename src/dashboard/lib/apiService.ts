@@ -130,6 +130,52 @@ export async function getRegistry(): Promise<Registry> {
     return safeJson<Registry>(response);
 }
 
+export async function getAgentStatuses(): Promise<Agent[]> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/agents/status`);
+    if (!response.ok) throw new Error(`Agent Status: HTTP ${response.status}`);
+    const data = await safeJson<{ agents?: Agent[] }>(response);
+    return data.agents || [];
+}
+
+export interface QueuedTask {
+    id: number;
+    agent_name: string;
+    description: string;
+    status: string;
+    created_at: string;
+    updated_at: string;
+    context?: string;
+    result?: string;
+}
+
+export interface TasksResponse {
+    tasks: QueuedTask[];
+    total: number;
+    limit: number;
+    offset: number;
+}
+
+export async function getTasks(limit: number = 50, offset: number = 0): Promise<TasksResponse> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/tasks?limit=${limit}&offset=${offset}`);
+    if (!response.ok) throw new Error(`Tasks: HTTP ${response.status}`);
+    return safeJson<TasksResponse>(response);
+}
+
+export interface ProviderStatus {
+    id: string;
+    name: string;
+    status: 'online' | 'offline';
+    latency?: number;
+    error?: string;
+}
+
+export async function getProvidersStatus(): Promise<ProviderStatus[]> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/providers/status`);
+    if (!response.ok) throw new Error(`Providers Status: HTTP ${response.status}`);
+    const data = await safeJson<{ providers?: ProviderStatus[] }>(response);
+    return data.providers || [];
+}
+
 export async function executeAgent(agentName: string, task: string, context?: any): Promise<any> {
     const response = await fetchWithTimeout(
         `${API_BASE}/api/agents/${encodeURIComponent(agentName)}/execute`,
@@ -140,7 +186,7 @@ export async function executeAgent(agentName: string, task: string, context?: an
         },
         LONG_TIMEOUT_MS  // 2 minutes for agent execution
     );
-    const data = await safeJson<{ result?: any; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    const data: any = await safeJson<{ result?: any; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
     if (!response.ok) throw new Error(data.error || 'Agent execution failed');
     return data.result;
 }
@@ -154,31 +200,11 @@ export async function createAgent(config: { name: string, role: string, descript
             body: JSON.stringify(config)
         }
     );
-    const data = await safeJson<{ status?: string; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    const data: any = await safeJson<{ status?: string; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
     if (!response.ok) throw new Error(data.error || 'Agent creation failed');
     return data;
 }
 
-/**
- * Tasks API
- */
-export async function getTasks(): Promise<Task[]> {
-    const response = await fetch(`${API_BASE}/api/tasks`);
-    if (!response.ok) throw new Error(`Tasks: HTTP ${response.status}`);
-    const data = await safeJson<{ tasks?: Task[] }>(response);
-    return data.tasks || [];
-}
-
-export async function createTask(description: string, agentName: string, context?: any, parentId?: number): Promise<number> {
-    const response = await fetch(`${API_BASE}/api/tasks`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ description, agentName, context, parentId })
-    });
-    const data = await safeJson<{ taskId?: number; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
-    if (!response.ok) throw new Error(data.error || 'Task creation failed');
-    return data.taskId ?? 0;
-}
 
 /**
  * Ollama API
@@ -400,3 +426,47 @@ export async function getFileContent(path: string): Promise<string> {
     return data.content || '';
 }
 
+/**
+ * Robotkéz (Browser-Use) API
+ * Calls the Python Subsystem at http://localhost:8000
+ */
+const PYTHON_API_BASE = 'http://localhost:8000';
+
+export interface BrowserStatus {
+    status: 'running' | 'stopped';
+    has_agent: boolean;
+}
+
+export async function startBrowser(instruction?: string): Promise<any> {
+    const response = await fetchWithTimeout(`${PYTHON_API_BASE}/browser/start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ instruction })
+    });
+    return safeJson(response);
+}
+
+export async function stopBrowser(): Promise<any> {
+    const response = await fetchWithTimeout(`${PYTHON_API_BASE}/browser/stop`, {
+        method: 'POST'
+    });
+    return safeJson(response);
+}
+
+export async function getBrowserStatus(): Promise<BrowserStatus> {
+    const response = await fetchWithTimeout(`${PYTHON_API_BASE}/browser/status`);
+    return safeJson<BrowserStatus>(response);
+}
+
+export async function runRobotkezTest(level: 1 | 2 | 3): Promise<any> {
+    const response = await fetchWithTimeout(`${PYTHON_API_BASE}/test/run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ level })
+    }, 180000); // 3 minute timeout for tests
+    return safeJson(response);
+}
+
+export async function getRobotkezScreenshot(): Promise<string> {
+    return `${PYTHON_API_BASE}/browser/screenshot/latest?t=${Date.now()}`;
+}

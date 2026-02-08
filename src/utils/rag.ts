@@ -81,14 +81,31 @@ export class HybridMemory {
 
     logInfo("RAG", `Document indexed: ${(metadata as any).path || "unknown"}`);
   }
+
+  async getTableCount(): Promise<number> {
+    try {
+      const db = await lancedb.connect(this.dbPath);
+      const tableNames = await db.tableNames();
+      if (!tableNames.includes("memory")) return 0;
+      const table = await db.openTable("memory");
+      return await table.countRows();
+    } catch (e) {
+      return 0;
+    }
+  }
 }
 
 const memory = new HybridMemory();
 
 /** Add content to the RAG index (path/id stored in metadata). */
 export async function addToIndex(pathOrId: string, content: string): Promise<void> {
-  await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => {});
+  await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => { });
   await memory.addDocument(content, { path: pathOrId });
+}
+
+/** Get total number of records in the RAG index. */
+export async function getRAGCount(): Promise<number> {
+  return await memory.getTableCount();
 }
 
 /** Search RAG using vector similarity (cosine distance via LanceDB). */
@@ -154,7 +171,7 @@ export class DualStorageManager {
     const line = JSON.stringify(entry) + "\n";
 
     // 1. JSONL backup (biztonsági mentés)
-    await fs.mkdir(path.dirname(this.backupPath), { recursive: true }).catch(() => {});
+    await fs.mkdir(path.dirname(this.backupPath), { recursive: true }).catch(() => { });
     await fs.appendFile(this.backupPath, line, "utf-8").catch((e) => {
       console.warn(`[DualStorage] Backup write failed: ${e.message}`);
     });

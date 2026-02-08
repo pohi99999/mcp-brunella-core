@@ -21,35 +21,47 @@ const registeredToolsList: RegisteredToolInfo[] = [
 // Internal tool handler map
 const toolHandlers = new Map<string, (args: any) => Promise<any>>();
 
+let agentManager: any = null;
+
+export async function registerAgents() {
+    if (!agentManager) {
+        agentManager = (await import('../agents/AgentManager.js')).agentManager;
+    }
+
+    const DataScientistAgent = (await import('../agents/DataScientistAgent.js')).default;
+    const ResearcherAgent = (await import('../agents/ResearcherAgent.js')).default;
+    const { OrchestratorAgent } = await import('../agents/OrchestratorAgent.js');
+    const { EvaluatorAgent } = await import('../agents/EvaluatorAgent.js');
+    const { DeveloperAgent } = await import('../agents/DeveloperAgent.js');
+    const { RobotkezAgent } = await import('../agents/RobotkezAgent.js');
+    const { DynamicAgent } = await import('../agents/DynamicAgent.js');
+
+    // Initialize Static Agents
+    await agentManager.initialize(); // Ensure manager itself is initialized
+    agentManager.registerAgent(new DataScientistAgent());
+    agentManager.registerAgent(new ResearcherAgent());
+    agentManager.registerAgent(new OrchestratorAgent());
+    agentManager.registerAgent(new EvaluatorAgent());
+    agentManager.registerAgent(new DeveloperAgent());
+    agentManager.registerAgent(new RobotkezAgent());
+
+    // Initialize Dynamic Agents
+    try {
+        const path = await import('path');
+        const agentsDir = path.default.join(process.cwd(), 'myai/agents');
+        agentManager.registerAgent(new DynamicAgent(path.default.join(agentsDir, 'project_organizer.toml')));
+        agentManager.registerAgent(new DynamicAgent(path.default.join(agentsDir, 'agent_architect.toml')));
+    } catch (e) {
+        console.warn("Could not load dynamic agents:", e);
+    }
+}
+
 export async function registerAllTools(server: McpServer) {
     // Dynamically import Node.js-specific modules only in Node environment
     const isNode = typeof process !== 'undefined' && process.versions?.node;
 
     if (isNode) {
-        const path = await import('path');
-        const { agentManager } = await import('../agents/AgentManager.js');
-        const DataScientistAgent = (await import('../agents/DataScientistAgent.js')).default;
-        const ResearcherAgent = (await import('../agents/ResearcherAgent.js')).default;
-        const { OrchestratorAgent } = await import('../agents/OrchestratorAgent.js');
-        const { EvaluatorAgent } = await import('../agents/EvaluatorAgent.js');
-        const { DeveloperAgent } = await import('../agents/DeveloperAgent.js');
-        const { DynamicAgent } = await import('../agents/DynamicAgent.js');
-
-        // Initialize Static Agents
-        agentManager.registerAgent(new DataScientistAgent());
-        agentManager.registerAgent(new ResearcherAgent());
-        agentManager.registerAgent(new OrchestratorAgent());
-        agentManager.registerAgent(new EvaluatorAgent());
-        agentManager.registerAgent(new DeveloperAgent());
-
-        // Initialize Dynamic Agents
-        try {
-            const agentsDir = path.default.join(process.cwd(), 'myai/agents');
-            agentManager.registerAgent(new DynamicAgent(path.default.join(agentsDir, 'project_organizer.toml')));
-            agentManager.registerAgent(new DynamicAgent(path.default.join(agentsDir, 'agent_architect.toml')));
-        } catch (e) {
-            console.warn("Could not load dynamic agents:", e);
-        }
+        await registerAgents();
 
         // Register Node-specific tools
         const { registerWorkspaceTools } = await import('../tools/workspace.js');

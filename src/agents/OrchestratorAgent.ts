@@ -8,7 +8,7 @@ export class OrchestratorAgent implements IAgent {
     role = "Planner & Dispatcher";
     description = "The central intelligence that plans and delegates tasks to other agents.";
     capabilities = ["plan", "delegate", "analyze_intent"];
-    
+
     private logger: Logger;
 
     constructor() {
@@ -58,17 +58,18 @@ Respond ONLY with the JSON array. Do not add markdown blocks.
                 // Remove markdown blocks if present
                 const cleanJson = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
                 const tasks = JSON.parse(cleanJson.match(/.*\[.*\]/s)?.[0] || '[]');
-                
+
                 const taskIds: number[] = [];
 
                 for (const t of tasks) {
-                    const id = agentManager.queueTask(t.description, t.agent, t.context);
+                    const id = await agentManager.queueTask(t.description, t.agent, t.context);
                     taskIds.push(id);
                 }
 
                 return {
+                    success: true,
                     status: "success",
-                    message: `Plan created with ${taskIds.length} tasks.`, 
+                    message: `Plan created with ${taskIds.length} tasks.`,
                     taskIds
                 };
             } catch (parseErr) {
