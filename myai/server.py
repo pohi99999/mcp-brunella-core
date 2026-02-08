@@ -3,9 +3,16 @@ import os
 import json
 import traceback
 import io
+import asyncio
+from dataclasses import dataclass
+from datetime import datetime
+from uuid import uuid4
+from pathlib import Path
 from contextlib import redirect_stdout
 from typing import Any, Dict, Optional, Union
 from fastapi import FastAPI, HTTPException, UploadFile, File
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 import uvicorn
 import shutil
@@ -28,6 +35,13 @@ except ImportError:
     ChatGoogle = None
     HAS_BROWSER_USE = False
 
+try:
+    from playwright.async_api import async_playwright
+    HAS_PLAYWRIGHT = True
+except ImportError:
+    async_playwright = None
+    HAS_PLAYWRIGHT = False
+
 # Add project root to sys.path so imports work
 import sys
 import os
@@ -40,6 +54,14 @@ from myai.refiner_logic import refiner
 from myai.browser_worker import run_scenario, run_structured_extraction, check_setup
 
 app = FastAPI(title="Brunella Python Subsystem")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # --- Pydantic Models ---
 
@@ -70,6 +92,18 @@ class TaskRequest(BaseModel):
     type: str
     payload: BrowserTaskPayload
     callbackUrl: Optional[str] = None
+
+class BrowserStartRequest(BaseModel):
+    headless: Optional[bool] = True
+    startUrl: Optional[str] = "about:blank"
+    sessionName: Optional[str] = None
+
+class BrowserStopRequest(BaseModel):
+    sessionId: Optional[str] = None
+
+class TestRunRequest(BaseModel):
+    level: int
+    sessionName: Optional[str] = None
 
 
 # --- Health & Endpoints ---
@@ -212,83 +246,272 @@ async def harvest_extract(req: ExtractionRequest):
 
 # --- Robotkéz (Browser-Use) Extended Endpoints ---
 
-active_agent = None
+@dataclass
+class BrowserSessionState:
+    session_id: str
+    started_at: datetime
+    playwright: Any
+    browser: Any
+    context: Any
+    page: Any
+    last_screenshot_at: Optional[datetime] = None
+
+@dataclass
+class TestSessionState:
+    session_id: str
+    level: int
+    log_path: Path
+    started_at: datetime
+    finished_at: Optional[datetime] = None
+    exit_code: Optional[int] = None
+    status: str = "running"
+
+active_session: Optional[BrowserSessionState] = None
+test_sessions: Dict[str, TestSessionState] = {}
+test_session_lock = asyncio.Lock()
+
+SCREENSHOT_DIR = Path(PROJECT_ROOT) / "myai" / "screenshots"
+TEST_LOG_DIR = Path(PROJECT_ROOT) / "myai" / "logs" / "robotkez_tests"
+WEB_API_BASE = os.getenv("BRUNELLA_WEB_API_URL", "http://localhost:3000")
+
+
+async def broadcast_log(message: str, level: str, source: str) -> None:
+    try:
+        import httpx
+        async with httpx.AsyncClient(timeout=5.0) as client:
+            await client.post(
+                f"{WEB_API_BASE}/api/debug/broadcast-log",
+                json={"message": message, "type": level, "source": source}
+            )
+    except Exception:
+        # Best-effort log broadcast
+        pass
+
 
 @app.post("/browser/start")
-async def start_browser(req: Optional[BrowserTaskPayload] = None):
-    global active_agent
-    if not HAS_BROWSER_USE:
-        raise HTTPException(status_code=501, detail="browser-use not installed")
-    
+async def start_browser(req: BrowserStartRequest):
+    global active_session
+    if not HAS_PLAYWRIGHT:
+        raise HTTPException(status_code=501, detail="playwright not installed")
+
+    if active_session and active_session.page:
+        return {
+            "status": "started",
+            "sessionId": active_session.session_id,
+            "pid": active_session.browser.process.pid if active_session.browser else None
+        }
+
     try:
-        instruction = req.instruction if req else "Initialize browser"
-        llm = ChatGoogle(model="gemini-2.0-flash")
-        active_agent = Agent(task=instruction, llm=llm)
-        # In a real scenario, we might want to keep the browser open
-        # For now, we'll just mark it as initialized
-        return {"status": "ok", "message": "Browser session initialized"}
+        session_id = f"robotkez-session-{uuid4()}"
+        playwright = await async_playwright().start()
+        browser = await playwright.chromium.launch(headless=req.headless if req.headless is not None else True)
+        context = await browser.new_context()
+        page = await context.new_page()
+        if req.startUrl:
+            await page.goto(req.startUrl)
+
+        active_session = BrowserSessionState(
+            session_id=session_id,
+            started_at=datetime.utcnow(),
+            playwright=playwright,
+            browser=browser,
+            context=context,
+            page=page
+        )
+
+        return {
+            "status": "started",
+            "sessionId": session_id,
+            "pid": browser.process.pid if browser else None
+        }
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+
 @app.post("/browser/stop")
-async def stop_browser():
-    global active_agent
-    active_agent = None
-    return {"status": "ok", "message": "Browser session stopped"}
+async def stop_browser(req: BrowserStopRequest = BrowserStopRequest()):
+    global active_session
+    if not active_session:
+        return {"status": "stopped", "sessionId": None}
+
+    if req.sessionId and req.sessionId != active_session.session_id:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    try:
+        await active_session.context.close()
+        await active_session.browser.close()
+        await active_session.playwright.stop()
+    finally:
+        session_id = active_session.session_id
+        active_session = None
+
+    return {"status": "stopped", "sessionId": session_id}
+
 
 @app.get("/browser/status")
 async def get_browser_status():
+    if not active_session or not active_session.page:
+        return {
+            "active": False,
+            "sessionId": None,
+            "currentUrl": None,
+            "startedAt": None,
+            "lastScreenshotAt": None
+        }
+
+    current_url = None
+    try:
+        current_url = active_session.page.url
+    except Exception:
+        current_url = None
+
     return {
-        "status": "running" if active_agent else "stopped",
-        "has_agent": active_agent is not None
+        "active": True,
+        "sessionId": active_session.session_id,
+        "currentUrl": current_url,
+        "startedAt": active_session.started_at.isoformat() + "Z",
+        "lastScreenshotAt": active_session.last_screenshot_at.isoformat() + "Z" if active_session.last_screenshot_at else None
     }
+
 
 @app.get("/browser/screenshot/latest")
 async def get_latest_screenshot():
-    # Placeholder for screenshot logic - browser-use usually saves these in a specific dir
-    screenshot_dir = os.path.join(PROJECT_ROOT, "myai", "screenshots")
-    if not os.path.exists(screenshot_dir):
-        raise HTTPException(status_code=404, detail="No screenshots found")
-    
-    files = [os.path.join(screenshot_dir, f) for f in os.listdir(screenshot_dir) if f.endswith(".png")]
-    if not files:
-         raise HTTPException(status_code=404, detail="No screenshots found")
-    
-    latest_file = max(files, key=os.path.getmtime)
-    from fastapi.responses import FileResponse
-    return FileResponse(latest_file)
+    if not active_session or not active_session.page:
+        raise HTTPException(status_code=404, detail="No active session")
+
+    SCREENSHOT_DIR.mkdir(parents=True, exist_ok=True)
+    screenshot_path = SCREENSHOT_DIR / f"{active_session.session_id}_{int(datetime.utcnow().timestamp())}.png"
+
+    try:
+        await active_session.page.screenshot(path=str(screenshot_path), full_page=True)
+        active_session.last_screenshot_at = datetime.utcnow()
+        return FileResponse(str(screenshot_path))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Screenshot failed: {str(e)}")
+
+
+async def _read_stream(stream: asyncio.StreamReader, session_id: str, level: str, log_path: Path) -> None:
+    while True:
+        line = await stream.readline()
+        if not line:
+            break
+        text = line.decode(errors="ignore").rstrip()
+        if not text:
+            continue
+
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        with log_path.open("a", encoding="utf-8") as f:
+            f.write(f"[{datetime.utcnow().isoformat()}Z] {level.upper()} {text}\n")
+
+        await broadcast_log(text, level, f"robotkez-test:{session_id}")
+
 
 @app.post("/test/run")
-async def run_robotkez_test(req: Dict[str, Any]):
-    level = req.get("level")
+async def run_robotkez_test(req: TestRunRequest):
+    level = req.level
     if level not in [1, 2, 3]:
         raise HTTPException(status_code=400, detail="Invalid level. Must be 1, 2, or 3.")
-    
+
     script_map = {
         1: "scripts/robotkez_test_level1.py",
         2: "scripts/robotkez_test_level2_n8n.py",
         3: "scripts/robotkez_test_level3_monitoring.py"
     }
-    
+
     script_path = os.path.join(PROJECT_ROOT, script_map[level])
     if not os.path.exists(script_path):
-         raise HTTPException(status_code=404, detail=f"Script not found at {script_path}")
+        raise HTTPException(status_code=404, detail=f"Script not found at {script_path}")
 
-    import subprocess
-    try:
-        # Run asynchronously in background would be better for SSE, 
-        # but for Phase 1 we'll do a simple execution first
-        process = subprocess.Popen([sys.executable, script_path], stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-        stdout, stderr = process.communicate()
-        
-        return {
-            "status": "ok",
-            "exit_code": process.returncode,
-            "stdout": stdout,
-            "stderr": stderr
-        }
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    session_id = f"robotkez-test-{uuid4()}"
+    log_path = TEST_LOG_DIR / f"{session_id}.log"
+    started_at = datetime.utcnow()
+
+    async with test_session_lock:
+        test_sessions[session_id] = TestSessionState(
+            session_id=session_id,
+            level=level,
+            log_path=log_path,
+            started_at=started_at
+        )
+
+    process = await asyncio.create_subprocess_exec(
+        sys.executable,
+        script_path,
+        stdout=asyncio.subprocess.PIPE,
+        stderr=asyncio.subprocess.PIPE
+    )
+
+    stdout_task = asyncio.create_task(_read_stream(process.stdout, session_id, "info", log_path))
+    stderr_task = asyncio.create_task(_read_stream(process.stderr, session_id, "error", log_path))
+
+    async def finalize():
+        await stdout_task
+        await stderr_task
+        exit_code = await process.wait()
+        async with test_session_lock:
+            session = test_sessions.get(session_id)
+            if session:
+                session.exit_code = exit_code
+                session.finished_at = datetime.utcnow()
+                session.status = "success" if exit_code == 0 else "error"
+
+        await broadcast_log(
+            f"Test completed with exit code {exit_code}",
+            "success" if exit_code == 0 else "error",
+            f"robotkez-test:{session_id}"
+        )
+
+    asyncio.create_task(finalize())
+
+    return {
+        "status": "started",
+        "sessionId": session_id,
+        "level": level
+    }
+
+
+@app.get("/test/logs/{session_id}")
+async def stream_test_logs(session_id: str):
+    async with test_session_lock:
+        session = test_sessions.get(session_id)
+        if not session:
+            raise HTTPException(status_code=404, detail="Session not found")
+
+    async def event_stream():
+        log_path = session.log_path
+        last_pos = 0
+
+        while True:
+            if log_path.exists():
+                with log_path.open("r", encoding="utf-8") as f:
+                    f.seek(last_pos)
+                    for line in f:
+                        payload = {
+                            "ts": datetime.utcnow().isoformat() + "Z",
+                            "level": "info" if " INFO " in line else "error" if " ERROR " in line else "info",
+                            "message": line.strip()
+                        }
+                        yield f"event: log\ndata: {json.dumps(payload)}\n\n"
+                    last_pos = f.tell()
+
+            async with test_session_lock:
+                current = test_sessions.get(session_id)
+                done = current and current.status in ["success", "error"]
+                if done:
+                    duration = None
+                    if current and current.finished_at:
+                        duration = int((current.finished_at - current.started_at).total_seconds() * 1000)
+                    payload = {
+                        "status": current.status if current else "error",
+                        "durationMs": duration,
+                        "exitCode": current.exit_code if current else None
+                    }
+                    yield f"event: done\ndata: {json.dumps(payload)}\n\n"
+                    break
+
+            await asyncio.sleep(0.5)
+
+    return StreamingResponse(event_stream(), media_type="text/event-stream")
 
 # Initialize Whisper model (lazy loading or startup)
 # Using 'tiny' or 'base' for speed, 'small' for better accuracy.

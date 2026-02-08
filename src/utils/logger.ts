@@ -1,6 +1,27 @@
+import { EventEmitter } from 'events';
+
 // Dynamic imports for Node.js-specific modules (Worker compatibility)
 let fs: typeof import('fs/promises') | null = null;
 let path: typeof import('path') | null = null;
+
+export type LogLevel = 'info' | 'warn' | 'error' | 'success';
+
+export interface LogEvent {
+    level: LogLevel;
+    message: string;
+    timestamp: string;
+    agent?: string;
+    source?: string;
+}
+
+export interface AgentStatusEvent {
+    agent: string;
+    status: string;
+    task?: string;
+    timestamp: string;
+}
+
+export const logEmitter = new EventEmitter();
 
 async function ensureNodeModules() {
     if (typeof process !== 'undefined' && process.versions?.node) {
@@ -81,17 +102,41 @@ export const cliLogger = new Logger('cli_tools.log');
 // Simple helper functions for quick logging (exported for agent use)
 export function logInfo(agent: string, message: string) {
     console.log(`[INFO] [${agent}] ${message}`);
+    logEmitter.emit('log', {
+        level: 'info',
+        message,
+        timestamp: new Date().toISOString(),
+        agent
+    } satisfies LogEvent);
 }
 
 export function logError(agent: string, message: string) {
     console.error(`[ERROR] [${agent}] ${message}`);
+    logEmitter.emit('log', {
+        level: 'error',
+        message,
+        timestamp: new Date().toISOString(),
+        agent
+    } satisfies LogEvent);
 }
 
 export function logWarn(agent: string, message: string) {
     console.warn(`[WARN] [${agent}] ${message}`);
+    logEmitter.emit('log', {
+        level: 'warn',
+        message,
+        timestamp: new Date().toISOString(),
+        agent
+    } satisfies LogEvent);
 }
 
 export function setAgentStatus(agent: string, status: string, task?: string) {
     const statusMsg = task ? `${status} - ${task}` : status;
     console.log(`[STATUS] [${agent}] ${statusMsg}`);
+    logEmitter.emit('agent_status', {
+        agent,
+        status,
+        task,
+        timestamp: new Date().toISOString()
+    } satisfies AgentStatusEvent);
 }
