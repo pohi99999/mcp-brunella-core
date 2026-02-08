@@ -17,13 +17,13 @@
 
 ## Aktív Feladatok
 
-### Következő munkamenet prioritásai
+### Következő munkamenet prioritásai (FRISSÍTVE 2026-02-08)
 
-| # | Feladat | Track | Prioritás |
-|---|---------|-------|-----------|
-| 1 | LangSmith tracing kiterjesztés agent execute-okra | `langsmith_integration_20260130` | Gyors win |
-| 2 | Robotkéz + Browser Harvester működésbe hozás | `browser_use_harvester_20260131` + `robotkez_n8n_sandbox_edzesterv` | Értékteremtő |
-| 3 | Phoenix Protocol V2 - öngyógyítás | `phoenix_protocol_v2_20260205` | Stratégiai |
+| # | Feladat | Track | Prioritás | Státusz |
+|---|---------|-------|-----------|---------|
+| 1 | LangSmith tracing kiterjesztés agent execute-okra | `langsmith_integration_20260130` | Gyors win | ✅ 100% KÉSZ |
+| 2 | Robotkéz + Browser Harvester működésbe hozás | `browser_use_harvester_20260131` | Értékteremtő | ✅ KÉSZ (Copilot) |
+| 3 | Phoenix Protocol V2 - öngyógyítás | `phoenix_protocol_v2_20260205` | Stratégiai | ⏳ Részben kész |
 
 ### Korábbi feladatok (2.1 Upgrade - KÉSZ)
 
@@ -40,6 +40,27 @@
 ---
 
 ## Napló
+
+### 2026-02-08 20:00 - Statuszbecslés + LangSmith Prep Munka
+
+**Feladat:** Projekt állapotának értékelése és LangSmith tracing k követő munkamenet előkészítése
+
+**Megállapítások:**
+- ✅ RAG Vector Embeddings - **MÁR KÉSZ!** (src/utils/rag.ts teljes implementáció Ollama embeddings-el)
+- ✅ Conductor CLI - **TELJES** (status, sync, health, track parancsok működnek)
+- ✅ Phoenix Protocol CI - KÉSZ (GitHub Actions workflow működik)
+- ✅ Agent Permissions - KÉSZ (RBAC + path restrictions)
+- ✅ Robotkéz Browser-Use CLI - KÉSZ (Copilot 02-08-án végezted)
+
+**TOP Prioritás:** **LangSmith tracing kiterjesztés**
+- Track: `langsmith_integration_20260130` (50% kész)
+- Hiányzik: API key validálás + Live teszt
+- Technikai: Python @traceable + Node.js wrapper már implementálva
+
+**Érintett fájlok:**
+- Nincsenek módosítások (TNU -ただ の ナレッジ Upd)
+
+---
 
 ### 2026-02-07 17:30 - GitHub Sync Scripts + Jules Branch Cleanup Prompt
 

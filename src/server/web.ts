@@ -6,8 +6,9 @@ import os from 'os';
 import fs from 'fs';
 import fetch from 'node-fetch';
 import swaggerUi from 'swagger-ui-express';
-import { Logger } from '../utils/logger.js';
+import { Logger, logEmitter, type LogEvent, type AgentStatusEvent } from '../utils/logger.js';
 import { initDb, saveMessage, getMessages, createChat, DbMessage } from '../utils/db.js';
+import { initTasksDb, getTasks, getTaskCount, getTaskById, getTaskStats } from '../utils/tasksDb.js';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { registerAllTools } from './registry.js';
@@ -53,6 +54,12 @@ export async function startWebServer() {
         console.error("DB Init failed:", e);
     }
 
+    try {
+        initTasksDb();
+    } catch (e) {
+        console.error("Tasks DB Init failed:", e);
+    }
+
     // Auto-connect to configured MCP servers (Stub for now based on configManager)
     // In a real scenario, we would read from mcp_servers.json
     console.log("🔄 Starting MCP Bridge...");
@@ -78,6 +85,26 @@ export async function startWebServer() {
         },
     });
     socketService.init(io);
+
+    const agentLogBuffer = new Map<string, LogEvent[]>();
+    const MAX_AGENT_LOGS = 500;
+
+    logEmitter.on('log', (entry: LogEvent) => {
+        const source = entry.agent || entry.source;
+        const type = entry.level === 'error' ? 'error' : entry.level === 'success' ? 'success' : 'info';
+        socketService.broadcastLog(entry.message, type, source);
+
+        if (entry.agent) {
+            const list = agentLogBuffer.get(entry.agent) || [];
+            list.push(entry);
+            if (list.length > MAX_AGENT_LOGS) list.splice(0, list.length - MAX_AGENT_LOGS);
+            agentLogBuffer.set(entry.agent, list);
+        }
+    });
+
+    logEmitter.on('agent_status', (entry: AgentStatusEvent) => {
+        socketService.updateAgentStatus(entry.agent, entry.status as any, entry.task);
+    });
 
     // Metrics Loop
     setInterval(() => {
@@ -183,6 +210,15 @@ export async function startWebServer() {
         }
     });
 
+    app.get('/api/registry', (req, res) => {
+        try {
+            const registry = agentManager.getRegistry();
+            res.json(registry);
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
     app.post('/api/agents/:agentName/execute', async (req, res) => {
         try {
             const { agentName } = req.params;
@@ -206,8 +242,7 @@ export async function startWebServer() {
 
     app.get('/api/agents/status', (req, res) => {
         try {
-            const status = agentManager.listAgents(); // This currently returns name, description, status: 'loaded'
-            // We can augment this with real-time data from socketService if needed
+            const status = agentManager.listAgentStatuses();
             res.json({ agents: status });
         } catch (e: any) {
             res.status(500).json({ error: e.message });
@@ -216,23 +251,23 @@ export async function startWebServer() {
 
     app.get('/api/agents/:agentName/logs', (req, res) => {
         const { agentName } = req.params;
+        const levelFilter = typeof req.query.level === 'string' ? req.query.level : undefined;
 
         res.setHeader('Content-Type', 'text/event-stream');
         res.setHeader('Cache-Control', 'no-cache');
         res.setHeader('Connection', 'keep-alive');
         res.flushHeaders();
 
-        const logListener = (data: any) => {
-            if (data.agent === agentName || !data.agent) {
-                res.write(`data: ${JSON.stringify(data)}\n\n`);
-            }
+        const logListener = (entry: LogEvent) => {
+            if (entry.agent !== agentName) return;
+            if (levelFilter && entry.level !== levelFilter) return;
+            res.write(`event: log\ndata: ${JSON.stringify(entry)}\n\n`);
         };
 
-        // Assuming agentManager or socketService can emit logs
-        agentManager.on('log', logListener);
+        logEmitter.on('log', logListener);
 
         req.on('close', () => {
-            agentManager.off('log', logListener);
+            logEmitter.off('log', logListener);
         });
     });
 
@@ -391,12 +426,88 @@ export async function startWebServer() {
     // Tasks API
     app.get('/api/tasks', async (req, res) => {
         try {
-            const limit = parseInt(req.query.limit as string) || 50;
+            const limit = parseInt(req.query.limit as string) || 20;
             const offset = parseInt(req.query.offset as string) || 0;
-            const { getTasks, getTaskCount } = await import('../utils/db.js');
-            const tasks = await getTasks(limit, offset);
-            const total = await getTaskCount();
-            res.json({ tasks, total, limit, offset });
+            const status = typeof req.query.status === 'string' ? req.query.status : undefined;
+            const tasks = await getTasks(limit, offset, status);
+            const total = await getTaskCount(status);
+            res.json({ tasks, total, limit, offset, status });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.get('/api/tasks/stats', async (req, res) => {
+        try {
+            const stats = await getTaskStats();
+            res.json({ stats });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.get('/api/tasks/:id', async (req, res) => {
+        try {
+            const id = Number(req.params.id);
+            if (Number.isNaN(id)) {
+                res.status(400).json({ error: 'Invalid task id' });
+                return;
+            }
+            const task = await getTaskById(id);
+            if (!task) {
+                res.status(404).json({ error: 'Task not found' });
+                return;
+            }
+            res.json({ task });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.post('/api/tasks/execute', async (req, res) => {
+        try {
+            const result = await agentManager.processPendingTasks();
+            if (!result) {
+                res.status(404).json({ error: 'No pending tasks' });
+                return;
+            }
+            res.json({ result });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.post('/api/tasks/cancel', async (req, res) => {
+        try {
+            const taskId = Number(req.body.taskId);
+            if (Number.isNaN(taskId)) {
+                res.status(400).json({ error: 'taskId is required' });
+                return;
+            }
+            const ok = await agentManager.cancelTask(taskId);
+            if (!ok) {
+                res.status(404).json({ error: 'Task not found' });
+                return;
+            }
+            res.json({ status: 'cancelled', taskId });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.post('/api/tasks/retry', async (req, res) => {
+        try {
+            const taskId = Number(req.body.taskId);
+            if (Number.isNaN(taskId)) {
+                res.status(400).json({ error: 'taskId is required' });
+                return;
+            }
+            const ok = await agentManager.retryTask(taskId);
+            if (!ok) {
+                res.status(404).json({ error: 'Task not found' });
+                return;
+            }
+            res.json({ status: 'pending', taskId });
         } catch (e: any) {
             res.status(500).json({ error: e.message });
         }
@@ -441,6 +552,34 @@ export async function startWebServer() {
 
             const data: any = await response.json();
             res.json({ models: data.models || [] });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message, models: [] });
+        }
+    });
+
+    app.get('/api/gemini/models', (req, res) => {
+        try {
+            const envList = process.env.GEMINI_MODELS;
+            const defaultModel = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
+            const models = (envList ? envList.split(',') : [defaultModel])
+                .map((name) => name.trim())
+                .filter(Boolean)
+                .map((name) => ({ name, provider: 'gemini', tier: 'configured' }));
+            res.json({ models });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message, models: [] });
+        }
+    });
+
+    app.get('/api/github-models/models', (req, res) => {
+        try {
+            const envList = process.env.GITHUB_MODELS;
+            const defaultModel = process.env.GITHUB_MODEL || 'gpt-4o';
+            const models = (envList ? envList.split(',') : [defaultModel])
+                .map((name) => name.trim())
+                .filter(Boolean)
+                .map((name) => ({ name, provider: 'github' }));
+            res.json({ models });
         } catch (e: any) {
             res.status(500).json({ error: e.message, models: [] });
         }
@@ -501,6 +640,26 @@ export async function startWebServer() {
             const fullPrompt = system ? `${system}\n\n${prompt}` : prompt;
             const response = await generateResponse(fullPrompt, 'gemini', selectedModel);
             res.json({ response });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.get('/api/n8n/workflows', async (req, res) => {
+        try {
+            const baseUrl = process.env.N8N_BASE_URL || 'https://n8n-latest-fulv.onrender.com';
+            const apiKey = process.env.N8N_API_KEY;
+            const response = await fetch(`${baseUrl}/api/v1/workflows`, {
+                headers: apiKey ? { 'X-N8N-API-KEY': apiKey } : undefined,
+                signal: AbortSignal.timeout(15000)
+            });
+
+            if (!response.ok) {
+                throw new Error(`n8n API error: ${response.statusText}`);
+            }
+
+            const data: any = await response.json();
+            res.json(data);
         } catch (e: any) {
             res.status(500).json({ error: e.message });
         }
@@ -634,12 +793,12 @@ export async function startWebServer() {
     // Tools API
     app.post('/api/debug/broadcast-log', (req, res) => {
         try {
-            const { message, type = 'info' } = req.body;
+            const { message, type = 'info', source } = req.body;
             if (!message) {
                 res.status(400).json({ error: 'message is required' });
                 return;
             }
-            socketService.broadcastLog(message, type);
+            socketService.broadcastLog(message, type, source);
             res.json({ ok: true, message: 'Log broadcast sent' });
         } catch (e: any) {
             res.status(500).json({ error: e.message });

@@ -62,6 +62,16 @@ export interface Agent {
     description: string;
 }
 
+export interface AgentStatus {
+    name: string;
+    description: string;
+    status: 'idle' | 'working' | 'error' | 'loaded';
+    lastTaskAt?: string;
+    successCount?: number;
+    errorCount?: number;
+    lastTask?: string;
+}
+
 export interface Task {
     id: number;
     description: string;
@@ -130,20 +140,20 @@ export async function getRegistry(): Promise<Registry> {
     return safeJson<Registry>(response);
 }
 
-export async function getAgentStatuses(): Promise<Agent[]> {
+export async function getAgentStatuses(): Promise<AgentStatus[]> {
     const response = await fetchWithTimeout(`${API_BASE}/api/agents/status`);
     if (!response.ok) throw new Error(`Agent Status: HTTP ${response.status}`);
-    const data = await safeJson<{ agents?: Agent[] }>(response);
+    const data = await safeJson<{ agents?: AgentStatus[] }>(response);
     return data.agents || [];
 }
 
 export interface QueuedTask {
     id: number;
-    agent_name: string;
-    description: string;
+    agent: string;
+    task: string;
     status: string;
     created_at: string;
-    updated_at: string;
+    completed_at?: string | null;
     context?: string;
     result?: string;
 }
@@ -153,12 +163,70 @@ export interface TasksResponse {
     total: number;
     limit: number;
     offset: number;
+    status?: string;
 }
 
-export async function getTasks(limit: number = 50, offset: number = 0): Promise<TasksResponse> {
-    const response = await fetchWithTimeout(`${API_BASE}/api/tasks?limit=${limit}&offset=${offset}`);
+export async function getTasks(limit: number = 20, offset: number = 0, status?: string): Promise<TasksResponse> {
+    const qs = new URLSearchParams({ limit: String(limit), offset: String(offset) });
+    if (status) qs.set('status', status);
+    const response = await fetchWithTimeout(`${API_BASE}/api/tasks?${qs.toString()}`);
     if (!response.ok) throw new Error(`Tasks: HTTP ${response.status}`);
     return safeJson<TasksResponse>(response);
+}
+
+export async function getTaskById(taskId: number): Promise<QueuedTask> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/tasks/${taskId}`);
+    if (!response.ok) throw new Error(`Task: HTTP ${response.status}`);
+    const data = await safeJson<{ task: QueuedTask }>(response);
+    return data.task;
+}
+
+export interface TaskStats {
+    total: number;
+    successCount: number;
+    errorCount: number;
+    pendingCount: number;
+    runningCount: number;
+    cancelledCount: number;
+    successRate: number;
+    avgDurationMs: number;
+    failedByAgent: Array<{ agent: string; count: number }>;
+}
+
+export async function getTaskStats(): Promise<TaskStats> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/tasks/stats`);
+    if (!response.ok) throw new Error(`Task Stats: HTTP ${response.status}`);
+    const data = await safeJson<{ stats: TaskStats }>(response);
+    return data.stats;
+}
+
+export async function executePendingTask(): Promise<any> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/tasks/execute`, {
+        method: 'POST'
+    });
+    const data: any = await safeJson<{ result?: any; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    if (!response.ok) throw new Error(data.error || 'Task execute failed');
+    return data.result;
+}
+
+export async function cancelTask(taskId: number): Promise<void> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/tasks/cancel`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId })
+    });
+    const data: any = await safeJson<{ error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    if (!response.ok) throw new Error(data.error || 'Task cancel failed');
+}
+
+export async function retryTask(taskId: number): Promise<void> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/tasks/retry`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ taskId })
+    });
+    const data: any = await safeJson<{ error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    if (!response.ok) throw new Error(data.error || 'Task retry failed');
 }
 
 export interface ProviderStatus {
@@ -433,22 +501,33 @@ export async function getFileContent(path: string): Promise<string> {
 const PYTHON_API_BASE = 'http://localhost:8000';
 
 export interface BrowserStatus {
-    status: 'running' | 'stopped';
-    has_agent: boolean;
+    active: boolean;
+    sessionId?: string | null;
+    currentUrl?: string | null;
+    startedAt?: string | null;
+    lastScreenshotAt?: string | null;
 }
 
-export async function startBrowser(instruction?: string): Promise<any> {
+export interface BrowserStartOptions {
+    headless?: boolean;
+    startUrl?: string;
+    sessionName?: string;
+}
+
+export async function startBrowser(options?: BrowserStartOptions): Promise<any> {
     const response = await fetchWithTimeout(`${PYTHON_API_BASE}/browser/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ instruction })
+        body: JSON.stringify(options || {})
     });
     return safeJson(response);
 }
 
-export async function stopBrowser(): Promise<any> {
+export async function stopBrowser(sessionId?: string): Promise<any> {
     const response = await fetchWithTimeout(`${PYTHON_API_BASE}/browser/stop`, {
-        method: 'POST'
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(sessionId ? { sessionId } : {})
     });
     return safeJson(response);
 }
@@ -458,7 +537,7 @@ export async function getBrowserStatus(): Promise<BrowserStatus> {
     return safeJson<BrowserStatus>(response);
 }
 
-export async function runRobotkezTest(level: 1 | 2 | 3): Promise<any> {
+export async function runRobotkezTest(level: 1 | 2 | 3): Promise<{ status: string; sessionId: string; level: number }> {
     const response = await fetchWithTimeout(`${PYTHON_API_BASE}/test/run`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -469,4 +548,10 @@ export async function runRobotkezTest(level: 1 | 2 | 3): Promise<any> {
 
 export async function getRobotkezScreenshot(): Promise<string> {
     return `${PYTHON_API_BASE}/browser/screenshot/latest?t=${Date.now()}`;
+}
+
+export async function getN8nWorkflows(): Promise<any> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/n8n/workflows`, {}, 15000);
+    if (!response.ok) throw new Error(`n8n: HTTP ${response.status}`);
+    return safeJson<any>(response);
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Play, Square, ExternalLink, Camera, RefreshCw, Terminal, Activity, Globe, CheckCircle, AlertCircle, Loader2 } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from '../ui/card';
+import { Play, Square, Camera, RefreshCw, Terminal, Activity, Globe, Loader2 } from 'lucide-react';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Button } from '../ui/button';
 import { Badge } from '../ui/badge';
 import { ScrollArea } from '../ui/scroll-area';
@@ -12,11 +12,12 @@ import {
     getBrowserStatus,
     runRobotkezTest,
     getRobotkezScreenshot,
+    getN8nWorkflows,
     BrowserStatus
 } from '../lib/apiService';
 
 export function RobotkezPanel() {
-    const [status, setStatus] = useState<BrowserStatus>({ status: 'stopped', has_agent: false });
+    const [status, setStatus] = useState<BrowserStatus>({ active: false });
     const [loading, setLoading] = useState(false);
     const [runningTest, setRunningTest] = useState<number | null>(null);
     const [logs, setLogs] = useState<string[]>([]);
@@ -27,29 +28,55 @@ export function RobotkezPanel() {
     // Refresh status and screenshot
     const refreshData = async () => {
         try {
-            const s = await getBrowserStatus();
-            setStatus(s);
-            if (s.status === 'running') {
-                const img = await getRobotkezScreenshot();
-                setScreenshotUrl(img);
+            // Get Browser Status
+            const browserData = await getBrowserStatus();
+            setStatus(browserData);
+
+            // Get Screenshot (if active)
+            if (browserData.active) {
+                setScreenshotUrl(await getRobotkezScreenshot());
+            } else {
+                setScreenshotUrl('');
             }
-        } catch (err) {
-            console.error('Failed to fetch browser status:', err);
+        } catch (err: any) {
+            console.error(err);
         }
     };
 
+    const fetchN8nWorkflows = async () => {
+        setN8nLoading(true);
+        try {
+            const data = await getN8nWorkflows();
+            setN8nWorkflows(data.data || []);
+        } catch (err: any) {
+            console.error('n8n error:', err);
+            // Don't toast on auto-refresh to avoid spam
+            if (!n8nLoading) toast.error(`n8n hiba: ${err.message}`);
+            setN8nWorkflows([]);
+        } finally {
+            setN8nLoading(false);
+        }
+    };
+
+    // Auto-refresh hook
     useEffect(() => {
         refreshData();
-        const interval = setInterval(refreshData, 5000);
+        fetchN8nWorkflows();
+        const interval = setInterval(() => {
+            refreshData();
+        }, 5000);
         return () => clearInterval(interval);
     }, []);
 
     const handleStart = async () => {
         setLoading(true);
         try {
-            await startBrowser("Dashboard control active");
+            await startBrowser({
+                startUrl: "https://google.com", 
+                sessionName: "Dashboard Session"
+            });
             toast.success("Böngésző elindítva");
-            refreshData();
+            setTimeout(refreshData, 1000);
         } catch (err: any) {
             toast.error(`Hiba: ${err.message}`);
         } finally {
@@ -60,9 +87,9 @@ export function RobotkezPanel() {
     const handleStop = async () => {
         setLoading(true);
         try {
-            await stopBrowser();
+            await stopBrowser(status.sessionId || undefined);
             toast.info("Böngésző leállítva");
-            refreshData();
+            setTimeout(refreshData, 1000);
         } catch (err: any) {
             toast.error(`Hiba: ${err.message}`);
         } finally {
@@ -73,32 +100,53 @@ export function RobotkezPanel() {
     const handleRunTest = async (level: 1 | 2 | 3) => {
         setRunningTest(level);
         setLogs(prev => [...prev, `\n--- Futtatás: Level ${level} teszt ---`]);
+        
         try {
+            // Start the test and get session ID
             const result = await runRobotkezTest(level);
-            if (result.stdout) setLogs(prev => [...prev, result.stdout]);
-            if (result.stderr) setLogs(prev => [...prev, `ERROR: ${result.stderr}`]);
-            toast.success(`Level ${level} teszt befejeződött`);
-        } catch (err: any) {
-            toast.error(`Teszt hiba: ${err.message}`);
-        } finally {
-            setRunningTest(null);
-        }
-    };
-
-    const fetchN8nWorkflows = async () => {
-        setN8nLoading(true);
-        try {
-            const response = await fetch('https://n8n-latest-fulv.onrender.com/api/v1/workflows', {
-                // Note: This usually requires an API key in headers if not public
+            const sessionId = result.sessionId;
+            
+            // Connect to SSE stream
+            // Note: This connects directly to Python FastAPI (port 8000)
+            const evtSource = new EventSource(`http://localhost:8000/test/logs/${sessionId}`);
+            
+            evtSource.addEventListener('log', (e: MessageEvent) => {
+                try {
+                    const data = JSON.parse(e.data);
+                    // Add timestamp? data.ts is available
+                    setLogs(prev => [...prev, `[${data.level?.toUpperCase() || 'INFO'}] ${data.message}`]);
+                } catch (err) {
+                    console.error('Log parse error:', err);
+                }
             });
-            if (response.ok) {
-                const data = await response.json();
-                setN8nWorkflows(data.data || []);
-            }
-        } catch (err) {
-            console.error('n8n fetch failed');
-        } finally {
-            setN8nLoading(false);
+
+            evtSource.addEventListener('done', (e: MessageEvent) => {
+                try {
+                    const data = JSON.parse(e.data);
+                    setLogs(prev => [...prev, `\n--- KÉSZ (Exit: ${data.exitCode}, Idő: ${data.durationMs}ms) ---`]);
+                    
+                    if (data.status === 'success') {
+                        toast.success(`Level ${level} teszt sikeres`);
+                    } else {
+                        toast.error('Teszt hibával zárult');
+                    }
+                } catch (err) {
+                    console.error('Done parse error:', err);
+                } finally {
+                    evtSource.close();
+                    setRunningTest(null);
+                }
+            });
+
+            evtSource.onerror = (err) => {
+                console.error('SSE Error:', err);
+                evtSource.close();
+                setRunningTest(null);
+            };
+
+        } catch (err: any) {
+            toast.error(`Indítási hiba: ${err.message}`);
+            setRunningTest(null);
         }
     };
 
@@ -112,8 +160,8 @@ export function RobotkezPanel() {
                             <Globe className="w-5 h-5 text-primary" />
                             Robotkéz Session
                         </CardTitle>
-                        <Badge variant={status.status === 'running' ? 'default' : 'secondary'} className={status.status === 'running' ? 'bg-green-500/20 text-green-500 border-green-500/50' : ''}>
-                            {status.status === 'running' ? 'AKTÍV' : 'LEÁLLÍTVA'}
+                        <Badge variant={status.active ? 'default' : 'secondary'} className={status.active ? 'bg-green-500/20 text-green-500 border-green-500/50' : ''}>
+                            {status.active ? 'AKTÍV' : 'LEÁLLÍTVA'}
                         </Badge>
                     </div>
                 </CardHeader>
@@ -122,7 +170,7 @@ export function RobotkezPanel() {
                         <Button
                             className="flex-1 gap-2"
                             onClick={handleStart}
-                            disabled={loading || status.status === 'running'}
+                            disabled={loading || status.active}
                         >
                             {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Play className="w-4 h-4" />}
                             Start
@@ -131,7 +179,7 @@ export function RobotkezPanel() {
                             variant="destructive"
                             className="flex-1 gap-2"
                             onClick={handleStop}
-                            disabled={loading || status.status === 'stopped'}
+                            disabled={loading || !status.active}
                         >
                             <Square className="w-4 h-4" />
                             Stop
@@ -214,7 +262,9 @@ export function RobotkezPanel() {
                         <div className="w-2 h-2 rounded-full bg-orange-500 animate-pulse" />
                         n8n Integráció
                     </CardTitle>
-                    <Button variant="ghost" size="sm" onClick={fetchN8nWorkflows}>FRISSÍTÉS</Button>
+                    <Button variant="ghost" size="sm" onClick={fetchN8nWorkflows} disabled={n8nLoading}>
+                        {n8nLoading ? <Loader2 className="w-3 h-3 animate-spin" /> : 'FRISSÍTÉS'}
+                    </Button>
                 </CardHeader>
                 <CardContent className="space-y-4">
                     <div className="flex justify-between items-end">
@@ -234,6 +284,9 @@ export function RobotkezPanel() {
                                 </Badge>
                             </div>
                         ))}
+                        {n8nWorkflows.length === 0 && (
+                            <div className="text-xs text-muted-foreground p-2">Nincsenek elérhető workflow-k</div>
+                        )}
                     </div>
                 </CardContent>
             </Card>

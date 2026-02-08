@@ -68,6 +68,7 @@
     "@radix-ui/react-toggle-group": "^1.1.11",
     "@radix-ui/react-tooltip": "^1.2.8",
     "@tailwindcss/vite": "^4.1.18",
+    "@tanstack/react-query": "^5.59.0",
     "@types/express": "^5.0.6",
     "@vitejs/plugin-react-swc": "^4.2.2",
     "apache-arrow": "18.1.0",

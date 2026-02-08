@@ -12,7 +12,7 @@
 
 import { EventEmitter } from 'events';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
-import { saveTask, updateTaskStatus } from '../utils/db.js';
+import { saveTask, updateTaskStatus } from '../utils/tasksDb.js';
 
 // ============================================================================
 // INTERFACES
@@ -66,6 +66,16 @@ interface TaskResult {
   executionTime?: number;
 }
 
+type AgentRuntimeStatus = 'idle' | 'working' | 'error';
+
+interface AgentRuntimeInfo {
+  status: AgentRuntimeStatus;
+  lastTaskAt?: string;
+  lastTask?: string;
+  successCount: number;
+  errorCount: number;
+}
+
 // ============================================================================
 // AGENT MANAGER
 // ============================================================================
@@ -77,7 +87,8 @@ interface QueuedTask {
   context?: Record<string, any>;
   parentId?: number;
   createdAt: string;
-  status: 'pending' | 'running' | 'done' | 'error';
+  startedAt?: string;
+  status: 'pending' | 'running' | 'done' | 'error' | 'cancelled';
 }
 
 export class AgentManager extends EventEmitter {
@@ -88,6 +99,7 @@ export class AgentManager extends EventEmitter {
   private taskQueue: QueuedTask[] = [];
   private taskIdCounter = 0;
   private workerInterval?: ReturnType<typeof setInterval>;
+  private agentRuntime: Map<string, AgentRuntimeInfo> = new Map();
   private circuitBreakers: Map<string, { failures: number; lastFailure: number; isOpen: boolean }> = new Map();
   private readonly FAILURE_THRESHOLD = 3;
   private readonly RESET_TIMEOUT = 5 * 60 * 1000; // 5 perc
@@ -160,7 +172,24 @@ export class AgentManager extends EventEmitter {
     agent.systemPrompt = config.systemPrompt;
 
     this.agents.set(config.name, agent);
+    this.ensureAgentRuntime(config.name);
     logInfo('AgentManager', `Ügynök betöltve: ${config.name}. Jelenlegi kulcsok: ${[...this.agents.keys()].join(', ')}`);
+  }
+
+  private ensureAgentRuntime(agentName: string): AgentRuntimeInfo {
+    if (!this.agentRuntime.has(agentName)) {
+      this.agentRuntime.set(agentName, {
+        status: 'idle',
+        successCount: 0,
+        errorCount: 0
+      });
+    }
+    return this.agentRuntime.get(agentName)!;
+  }
+
+  private updateAgentRuntime(agentName: string, updates: Partial<AgentRuntimeInfo>) {
+    const current = this.ensureAgentRuntime(agentName);
+    this.agentRuntime.set(agentName, { ...current, ...updates });
   }
 
   private async initializeEdgeProxy(): Promise<void> {
@@ -303,6 +332,11 @@ export class AgentManager extends EventEmitter {
         const agent = this.agents.get(agentName);
         if (!agent) throw new Error(`Ügynök nem található: ${agentName}`);
 
+        this.updateAgentRuntime(agentName, {
+          status: 'working',
+          lastTask: instruction,
+          lastTaskAt: new Date().toISOString()
+        });
         setAgentStatus(agentName, 'working', instruction);
         let result = await agent.execute(instruction, context);
 
@@ -320,6 +354,14 @@ export class AgentManager extends EventEmitter {
         cb.failures = 0;
         cb.isOpen = false;
 
+        const runtime = this.ensureAgentRuntime(agentName);
+        this.updateAgentRuntime(agentName, {
+          status: 'idle',
+          lastTaskAt: new Date().toISOString(),
+          successCount: runtime.successCount + 1
+        });
+        setAgentStatus(agentName, 'idle', instruction);
+
         return result;
       } catch (error: any) {
         lastError = error;
@@ -333,10 +375,16 @@ export class AgentManager extends EventEmitter {
           logError('AgentManager', `Circuit Breaker TRIPPED (${agentName})!`);
           break; // Ne retry-oljunk tovább, ha a CB kioldott
         }
-      } finally {
-        setAgentStatus(agentName, 'idle');
       }
     }
+
+    const runtime = this.ensureAgentRuntime(agentName);
+    this.updateAgentRuntime(agentName, {
+      status: 'error',
+      lastTaskAt: new Date().toISOString(),
+      errorCount: runtime.errorCount + 1
+    });
+    setAgentStatus(agentName, 'error', instruction);
 
     return {
       success: false,
@@ -397,11 +445,29 @@ export class AgentManager extends EventEmitter {
    * Összes ügynök listázása
    */
   listAgents(): Array<{ name: string; description: string; status: string }> {
-    return Array.from(this.agents.entries()).map(([name, agent]) => ({
-      name,
-      description: agent.description || '',
-      status: 'loaded'
-    }));
+    return Array.from(this.agents.entries()).map(([name, agent]) => {
+      const runtime = this.ensureAgentRuntime(name);
+      return {
+        name,
+        description: agent.description || '',
+        status: runtime.status
+      };
+    });
+  }
+
+  listAgentStatuses(): Array<{ name: string; description: string; status: AgentRuntimeStatus; lastTaskAt?: string; successCount: number; errorCount: number; lastTask?: string }> {
+    return Array.from(this.agents.entries()).map(([name, agent]) => {
+      const runtime = this.ensureAgentRuntime(name);
+      return {
+        name,
+        description: agent.description || '',
+        status: runtime.status,
+        lastTaskAt: runtime.lastTaskAt,
+        successCount: runtime.successCount,
+        errorCount: runtime.errorCount,
+        lastTask: runtime.lastTask
+      };
+    });
   }
 
   /**
@@ -441,6 +507,7 @@ export class AgentManager extends EventEmitter {
   /** Manuális ügynök regisztráció (registry.ts) */
   registerAgent(agent: { name: string; description?: string; role?: string; execute: (task: string, context?: any) => Promise<any> }): void {
     this.agents.set(agent.name, agent);
+    this.ensureAgentRuntime(agent.name);
     logInfo('AgentManager', `Ügynök regisztrálva: ${agent.name}`);
   }
 
@@ -500,8 +567,8 @@ export class AgentManager extends EventEmitter {
 
     // Save to DB for tracking
     const dbId = await saveTask({
-      agent_name: agentName,
-      description: task,
+      agent: agentName,
+      task,
       context: context ? JSON.stringify(context) : undefined
     });
 
@@ -524,10 +591,9 @@ export class AgentManager extends EventEmitter {
   async queueTask(description: string, agentName: string, context?: Record<string, any>, parentId?: number): Promise<number> {
     const contextStr = context ? JSON.stringify(context) : undefined;
     const dbId = await saveTask({
-      agent_name: agentName,
-      description,
-      context: contextStr,
-      parent_id: parentId
+      agent: agentName,
+      task: description,
+      context: contextStr
     });
 
     const id = Number(dbId) || ++this.taskIdCounter;
@@ -546,6 +612,45 @@ export class AgentManager extends EventEmitter {
   /** Összes feladat a sorból */
   getAllTasks(): QueuedTask[] {
     return [...this.taskQueue];
+  }
+
+  /** Egy pending feladat azonnali feldolgozása */
+  async processPendingTasks(): Promise<{ taskId?: number; status: string; message?: string } | null> {
+    const pending = this.taskQueue.find(t => t.status === 'pending');
+    if (!pending) return null;
+
+    pending.status = 'running';
+    pending.startedAt = new Date().toISOString();
+    await updateTaskStatus(pending.id, 'running');
+
+    try {
+      const result = await this.executeAgentWithRetry(pending.agentName, pending.description, pending.context);
+      pending.status = result.success ? 'done' : 'error';
+      const resultStr = typeof result === 'object' ? JSON.stringify(result) : String(result);
+      await updateTaskStatus(pending.id, pending.status, resultStr);
+      return { taskId: pending.id, status: pending.status, message: result.message };
+    } catch (e: any) {
+      pending.status = 'error';
+      await updateTaskStatus(pending.id, 'error', e.message);
+      return { taskId: pending.id, status: 'error', message: e.message };
+    }
+  }
+
+  async cancelTask(taskId: number): Promise<boolean> {
+    const task = this.taskQueue.find(t => t.id === taskId);
+    if (!task) return false;
+    task.status = 'cancelled';
+    await updateTaskStatus(taskId, 'cancelled', 'Cancelled by user');
+    return true;
+  }
+
+  async retryTask(taskId: number): Promise<boolean> {
+    const task = this.taskQueue.find(t => t.id === taskId);
+    if (!task) return false;
+    task.status = 'pending';
+    task.startedAt = undefined;
+    await updateTaskStatus(taskId, 'pending');
+    return true;
   }
 
   /** Registry definíciók (alias listAgentDefinitions) */

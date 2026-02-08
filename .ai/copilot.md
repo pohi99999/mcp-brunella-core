@@ -31,6 +31,30 @@
 
 ## Napló
 
+### 2026-02-08 20:45 - Dashboard V2 Phase 1 & Phase 2 Integration
+
+**Feladat:** Robotkéz Control + Agent Management panelek bekötése valós logikával
+
+**Érintett fájlok:**
+- ✅ `src/dashboard/components/dashboard/RobotkezPanel.tsx` (SSE log stream, API hívások, Auto-refresh)
+- ✅ `src/dashboard/components/dashboard/AgentManagementPanel.tsx` (ÚJ - Eseményvezérelt ügynök menedzsment)
+- ✅ `myai/server.py` (CORSMiddleware hozzáadva SSE-hez, új /test/logs endpointok)
+- ✅ `src/server/web.ts` (ÚJ API endpointok: task management, n8n proxy, log broadcast)
+- ✅ `src/utils/tasksDb.ts` (ÚJ - SQLite adatbázis réteg a feladatokhoz)
+- ✅ `src/agents/AgentManager.ts` (Task Queue feldolgozás, status tracking kiegészítés)
+- ✅ `_DASHBOARD_IMPLEMENTATION_PLAN.md` (Státusz frissítve: Phase 1 KÉSZ)
+
+**Státusz:** ✅ Phase 1 (Robotkéz) Kész | ✅ Phase 2 (Agents) Implementálva | ⏳ Phase 3 (Tasks) Félkész
+
+**Technikai részletek:**
+- **Dual Log Streaming:**
+  - Python (Robotkéz) → React: Direct SSE (`http://localhost:8000/test/logs/:id`)
+  - Node.js (Agents) → React: SSE Bridge (`/api/agents/:name/logs`)
+- **Adatbázis:** SQLite (`data/tasks.db`) bevezetve a perzisztens feladatkövetéshez
+- **CORS:** Python backend fellazítva (`allow_origins=["*"]`) a fejlesztés idejére a közvetlen frontend eléréshez
+
+---
+
 ### 2026-02-08 18:07 - Robotkéz (Browser-Use) CLI Integration (TELJES!)
 
 **Feladat:** Browser-Use + Gemini CLI integráció python-shell bridge-dzsel
