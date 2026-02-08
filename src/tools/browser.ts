@@ -2,6 +2,9 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { Browser, Page } from 'playwright';
 import { URL } from 'url';
+import { PythonShell, Options } from 'python-shell';
+import path from 'path';
+import fs from 'fs';
 
 // Security check for URLs (same as before)
 function isUrlAllowed(urlStr: string): boolean {
@@ -199,6 +202,65 @@ export function registerBrowserTools(server: McpServer) {
         };
       } finally {
         if (page) await page.close();
+      }
+    }
+  );
+
+  // --- Robotkéz CLI-Based Tool (python-shell bridge) ---
+
+  server.tool(
+    "browser_action",
+    "Autonóm böngésző vezérlés (Robotkéz CLI). Képes weboldalakat megnyitni, kattintani, gépelni és adatokat kinyerni.",
+    {
+      task: z.string().describe('A feladat részletes leírása (pl. "Menj a google.com-ra és keress rá erre...")'),
+      headless: z.boolean().optional().default(true).describe('Fusson-e háttérben a böngésző (default: true)'),
+      use_vision: z.boolean().optional().default(true).describe('Használja-e az AI a látást (screenshot elemzés) (default: true)'),
+    },
+    async ({ task, headless = true, use_vision = true }) => {
+      const scriptPath = path.resolve(process.cwd(), 'myai/browser_task_runner.py');
+      
+      if (!fs.existsSync(scriptPath)) {
+        return {
+          isError: true,
+          content: [{ type: "text", text: `Python script not found at: ${scriptPath}` }]
+        };
+      }
+
+      const options: Options = {
+        mode: 'text',
+        pythonPath: 'python',
+        pythonOptions: ['-u'],
+        scriptPath: path.dirname(scriptPath),
+        args: [
+          '--task', task,
+          '--headless', String(headless),
+          '--vision', String(use_vision)
+        ]
+      };
+
+      try {
+        const messages = await PythonShell.run(path.basename(scriptPath), options);
+        const lastMessage = messages[messages.length - 1];
+        const result = JSON.parse(lastMessage);
+        
+        if (!result.success) {
+          return {
+            isError: true,
+            content: [{ type: "text", text: `Browser task failed: ${result.error || result.final_answer}` }]
+          };
+        }
+
+        return {
+          content: [{
+            type: "text",
+            text: `✅ Robotkéz Eredmény:\n\n${result.final_answer}\n\nMetadata: ${JSON.stringify(result.extracted_data, null, 2)}`
+          }]
+        };
+      } catch (error: any) {
+        return {
+          isError: true,
+          content: [{ type: "text", text: `Python execution error: ${error.message}` }]
+        };
       }
     }
   );

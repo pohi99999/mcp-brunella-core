@@ -21,6 +21,14 @@ try:
 except Exception:  # pragma: no cover - optional dependency
     ChromaDbAdapter = None
 
+# Addded: Incubator (Fine-tuning) support
+try:
+    from myai.utils.dataset_manager import save_gold_sample
+    HAS_INCUBATOR = True
+except ImportError:
+    save_gold_sample = None
+    HAS_INCUBATOR = False
+
 # BAS Strukturált Logging inicializálása
 # Abszolút út meghatározása a projekt gyökeréhez képest
 PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -165,6 +173,19 @@ class DataRefiner:
             
             # 4. Mentés LanceDB-be (Hozzáadva)
             await self.save_to_lancedb(structured_data) # Hozzáadva
+
+            # 4b. Mentés az "Arany Adatkészletbe" tréning céljára (Incubator Pipeline)
+            if HAS_INCUBATOR and save_gold_sample:
+                try:
+                    save_gold_sample(
+                        system_prompt="You are a Brunella Data Refiner. Extract structured JSON from HTML.",
+                        user_input=raw_data,
+                        assistant_output=structured_data["clean_content"],
+                        metadata={"source": "harvester_swarm", **structured_data["metadata"]}
+                    )
+                    logging.info(json.dumps({"status": "GOLDEN_DATASET_SAVED", "source": "harvester_swarm"}))
+                except Exception as e:
+                    logging.error(json.dumps({"status": "GOLDEN_DATASET_ERROR", "error": str(e)}))
 
             # 5. Mentés ChromaDB-be (ha elérhető)
             if self.vector_db:

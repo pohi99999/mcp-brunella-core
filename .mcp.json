@@ -1,1 +1,10 @@
-{"mcpServers":{"MCP_DOCKER":{"command":"docker","args":["mcp","gateway","run"],"env":{"LOCALAPPDATA":"C:\\Users\\pohi9\\AppData\\Local","ProgramData":"C:\\ProgramData","ProgramFiles":"C:\\Program Files"},"type":"stdio"}}}
+{"mcpServers":{"MCP_DOCKER":{"command":"docker","args":["mcp","gateway","run"],"env":{"LOCALAPPDATA":"C:\\Users\\pohi9\\AppData\\Local","ProgramData":"C:\\ProgramData","ProgramFiles":"C:\\Program Files"},"type":"stdio"}}}{
+  "mcpServers": {
+    "github-chat": {
+      "command": "uvx",
+      "args": [
+        "github-chat-mcp"
+      ]
+    }
+  }
+}
