@@ -1,0 +1,11 @@
+paths-ignore:
+  - '**/*.test.ts'
+  - '**/test/**'
+  - '**/tests/**'
+  - '**/external_research/**'
+  - '**/myai/agents/**'
+  - '**/node_modules/**'
+  - '**/_KNOWLEDGE_BASE/**'
+  - '**/open-interpreter/**'
+  - '**/dist/**'
+  - '**/build/**'
