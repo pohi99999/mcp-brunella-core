@@ -7,13 +7,20 @@ async function main() {
   // Conditional execution for Node.js environment
   if (typeof process !== 'undefined' && process.versions && process.versions.node) {
     // Dynamic imports to prevent bundling Node-native modules in Worker builds
+    // We use template strings or variables to prevent esbuild from analyzing and bundling these paths
     await import('dotenv/config');
+    const serverPath = './server';
+    const agentsPath = './agents';
+    const utilsPath = './utils';
+
     const { McpServer } = await import("@modelcontextprotocol/sdk/server/mcp.js");
     const { StdioServerTransport } = await import("@modelcontextprotocol/sdk/server/stdio.js");
-    const { startWebServer } = await import("./server/web.js");
-    const { registerAllTools } = await import("./server/registry.js");
-    const { agentManager } = await import("./agents/AgentManager.js");
-    const { validateSecrets } = await import("./utils/validateSecrets.js");
+
+    // Obfuscated imports
+    const { startWebServer } = await import(`${serverPath}/web.js`);
+    const { registerAllTools } = await import(`${serverPath}/registry.js`);
+    const { agentManager } = await import(`${agentsPath}/AgentManager.js`);
+    const { validateSecrets } = await import(`${utilsPath}/validateSecrets.js`);
 
     // Create server instance
     const server = new McpServer({

@@ -27,13 +27,18 @@ export async function registerAllTools(server: McpServer) {
 
     if (isNode) {
         const path = await import('path');
-        const { agentManager } = await import('../agents/AgentManager.js');
-        const DataScientistAgent = (await import('../agents/DataScientistAgent.js')).default;
-        const ResearcherAgent = (await import('../agents/ResearcherAgent.js')).default;
-        const { OrchestratorAgent } = await import('../agents/OrchestratorAgent.js');
-        const { EvaluatorAgent } = await import('../agents/EvaluatorAgent.js');
-        const { DeveloperAgent } = await import('../agents/DeveloperAgent.js');
-        const { DynamicAgent } = await import('../agents/DynamicAgent.js');
+        const toolsPath = '../tools';
+        const agentsPath = '../agents';
+        const pipelinePath = '../pipeline';
+
+        // Obfuscated imports to prevent esbuild from bundling Node-specific files in Worker builds
+        const { agentManager } = await import(`${agentsPath}/AgentManager.js`);
+        const DataScientistAgent = (await import(`${agentsPath}/DataScientistAgent.js`)).default;
+        const ResearcherAgent = (await import(`${agentsPath}/ResearcherAgent.js`)).default;
+        const { OrchestratorAgent } = await import(`${agentsPath}/OrchestratorAgent.js`);
+        const { EvaluatorAgent } = await import(`${agentsPath}/EvaluatorAgent.js`);
+        const { DeveloperAgent } = await import(`${agentsPath}/DeveloperAgent.js`);
+        const { DynamicAgent } = await import(`${agentsPath}/DynamicAgent.js`);
 
         // Initialize Static Agents
         agentManager.registerAgent(new DataScientistAgent());
@@ -52,22 +57,22 @@ export async function registerAllTools(server: McpServer) {
         }
 
         // Register Node-specific tools
-        const { registerWorkspaceTools } = await import('../tools/workspace.js');
-        const { registerKnowledgeTools } = await import('../tools/knowledge.js');
-        const { registerSystemTools } = await import('../tools/system.js');
-        const { registerBrowserTools } = await import('../tools/browser.js');
-        const { registerInterpreterTools } = await import('../tools/interpreter.js');
-        const { registerCopilotCliTool } = await import('../tools/copilotCliTool.js');
-        const { registerJulesCliTool } = await import('../tools/julesCliTool.js');
-        const { registerOllamaTool } = await import('../tools/ollamaTool.js');
-        const { registerClaudeTool } = await import('../tools/claudeTool.js');
-        const { registerPipelineTools } = await import('../pipeline/llmPipeline.js');
-        const { registerGoogleWorkspaceTools } = await import('../tools/googleWorkspace.js');
-        const { registerAnythingLLMTools } = await import('../tools/anythingllm.js');
-        const { registerMonitorTools } = await import('../tools/monitor.js');
-        const { registerSwarmTools } = await import('../tools/swarmTools.js');
-        const { registerGithubModelsTool } = await import('../tools/githubModelsTool.js');
-        const { registerGeminiTool } = await import('../tools/geminiTool.js');
+        const { registerWorkspaceTools } = await import(`${toolsPath}/workspace.js`);
+        const { registerKnowledgeTools } = await import(`${toolsPath}/knowledge.js`);
+        const { registerSystemTools } = await import(`${toolsPath}/system.js`);
+        const { registerBrowserTools } = await import(`${toolsPath}/browser.js`);
+        const { registerInterpreterTools } = await import(`${toolsPath}/interpreter.js`);
+        const { registerCopilotCliTool } = await import(`${toolsPath}/copilotCliTool.js`);
+        const { registerJulesCliTool } = await import(`${toolsPath}/julesCliTool.js`);
+        const { registerOllamaTool } = await import(`${toolsPath}/ollamaTool.js`);
+        const { registerClaudeTool } = await import(`${toolsPath}/claudeTool.js`);
+        const { registerPipelineTools } = await import(`${pipelinePath}/llmPipeline.js`);
+        const { registerGoogleWorkspaceTools } = await import(`${toolsPath}/googleWorkspace.js`);
+        const { registerAnythingLLMTools } = await import(`${toolsPath}/anythingllm.js`);
+        const { registerMonitorTools } = await import(`${toolsPath}/monitor.js`);
+        const { registerSwarmTools } = await import(`${toolsPath}/swarmTools.js`);
+        const { registerGithubModelsTool } = await import(`${toolsPath}/githubModelsTool.js`);
+        const { registerGeminiTool } = await import(`${toolsPath}/geminiTool.js`);
 
         registerWorkspaceTools(server);
         registerKnowledgeTools(server);
