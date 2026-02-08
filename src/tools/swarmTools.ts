@@ -1,13 +1,26 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { chromium } from 'playwright';
-import { exec } from 'child_process';
-import fs from 'fs/promises';
-import path from 'path';
 import { config } from '../config/index.js';
-import { addToIndex } from '../utils/rag.js';
+import { addDocumentToIndex } from '../utils/rag.js';
+
+// Dynamic imports for Node.js modules
+let fs: typeof import('fs/promises') | null = null;
+let path: typeof import('path') | null = null;
+let child_process: typeof import('child_process') | null = null;
+
+async function ensureModules() {
+    if (typeof process !== 'undefined' && process.versions?.node) {
+        if (!fs) fs = (await import('fs/promises')).default || await import('fs/promises');
+        if (!path) path = (await import('path')).default || await import('path');
+        if (!child_process) child_process = (await import('child_process')).default || await import('child_process');
+    }
+}
 
 async function runRefinerSafe(content: string, source: string): Promise<any> {
+    await ensureModules();
+    if (!fs || !path || !child_process) return { status: "ENV_ERROR", error: "Node environment required" };
+
     const pythonPath = path.resolve(config.workspaceRoot, '.venv/Scripts/python.exe');
     const root = config.workspaceRoot.replace(/\\/g, '/');
     const tempIn = path.join(config.systemLogDir, `ref_in_${Date.now()}.json`);
@@ -30,9 +43,9 @@ except Exception as e:
         await fs.writeFile(tempPy, pyCode, 'utf-8');
 
         return new Promise((resolve) => {
-            exec(`"${pythonPath}" "${tempPy}"`, async (error, stdout, stderr) => {
-                await fs.unlink(tempIn).catch(() => {});
-                await fs.unlink(tempPy).catch(() => {});
+            child_process!.exec(`"${pythonPath}" "${tempPy}"`, async (error, stdout, stderr) => {
+                await fs!.unlink(tempIn).catch(() => {});
+                await fs!.unlink(tempPy).catch(() => {});
                 try {
                     const parsed = stdout.trim() ? JSON.parse(stdout) : { status: "EMPTY", stderr };
                     resolve(parsed);
@@ -46,10 +59,14 @@ except Exception as e:
     }
 }
 
-export function registerSwarmTools(server: McpServer) {
+export async function registerSwarmTools(server: McpServer) {
+  await ensureModules();
+
   server.tool("swarm_ingest", "Browse -> Refine -> Knowledge Store.", {
       url: z.string().url(),
   }, async ({ url }) => {
+      if (!fs || !path) return { isError: true, content: [{ type: "text", text: "Tool not supported in this environment" }] };
+
       let browserInstance;
       try {
         browserInstance = await chromium.launch({ headless: true });
@@ -70,7 +87,7 @@ export function registerSwarmTools(server: McpServer) {
         const filePath = path.join(kbDir, fileName);
         const md = `# ${title}\n\n**Source:** ${url}\n\n${refined.clean_content}`;
         await fs.writeFile(filePath, md, 'utf-8');
-        try { await addToIndex(path.join('07_KNOWLEDGE_BASE', 'swarm_ingested', fileName), md); } catch {}
+        try { await addDocumentToIndex(path.join('07_KNOWLEDGE_BASE', 'swarm_ingested', fileName), md); } catch {}
 
         return { content: [{ type: "text", text: `Success: ${title}\nSaved: ${fileName}` }] };
       } catch (error: any) {
