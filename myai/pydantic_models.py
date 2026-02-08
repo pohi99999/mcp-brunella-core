@@ -8,7 +8,7 @@ class ExtractionSchema(BaseModel):
     """Wrapper for JSON-schema based extraction."""
 
     name: str = Field(default="DynamicExtraction")
-    schema: Dict[str, Any]
+    json_schema: Dict[str, Any]
 
 
 class ExtractionResult(BaseModel):

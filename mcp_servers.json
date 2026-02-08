@@ -16,5 +16,46 @@
     "args": [
       "./build/index.js"
     ]
+  },
+  {
+    "name": "brunella-windows-manager",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@simonb97/server-win-cli"
+    ],
+    "env": {
+      "ALLOWED_PATHS": [
+        "C:\\Windows\\System32",
+        "F:\\mcp-brunella-core",
+        "G:\\Brunella",
+        "C:\\Users\\pohi9"
+      ]
+    },
+    "disabled": false
+  },
+  {
+    "name": "playwright",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-playwright"
+    ]
+  },
+  {
+    "name": "docker",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-docker"
+    ]
+  },
+  {
+    "name": "chrome-devtools",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-puppeteer"
+    ]
   }
 ]

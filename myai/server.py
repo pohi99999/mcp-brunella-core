@@ -52,6 +52,7 @@ if PROJECT_ROOT not in sys.path:
 from myai.rag import rag_service
 from myai.refiner_logic import refiner
 from myai.browser_worker import run_scenario, run_structured_extraction, check_setup
+from myai.utils.dataset_manager import save_gold_sample, get_dataset_stats
 
 app = FastAPI(title="Brunella Python Subsystem")
 
@@ -104,6 +105,12 @@ class BrowserStopRequest(BaseModel):
 class TestRunRequest(BaseModel):
     level: int
     sessionName: Optional[str] = None
+
+class GoldSampleRequest(BaseModel):
+    prompt: str
+    completion: str
+    source: Optional[str] = "manual"
+    quality: Optional[float] = 1.0
 
 
 # --- Health & Endpoints ---
@@ -571,8 +578,41 @@ async def transcribe_audio(file: UploadFile = File(...)):
             os.remove(temp_filename)
         raise HTTPException(status_code=500, detail=f"Transcription failed: {str(e)}")
 
+@app.post("/incubator/gold-sample")
+async def add_gold_sample(req: GoldSampleRequest):
+    """
+    Saves a high-quality (golden) sample to the dataset for future fine-tuning.
+    """
+    try:
+        success = save_gold_sample(
+            prompt=req.prompt,
+            completion=req.completion,
+            source=req.source,
+            quality=req.quality
+        )
+        if success:
+            stats = get_dataset_stats()
+            return {"status": "success", "message": "Sample saved to golden dataset.", "stats": stats}
+        else:
+            raise HTTPException(status_code=500, detail="Failed to save sample.")
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.get("/incubator/stats")
+async def incubator_stats():
+    """
+    Returns statistics about the training dataset.
+    """
+    try:
+        stats = get_dataset_stats()
+        return {"status": "success", "stats": stats}
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/harvest/check")
-def harvest_check(scenario_path: str = "myai/scenarios/n8n_training.json"):
+async def harvest_check(scenario_path: str = "myai/scenarios/n8n_training.json"):
     """
     Pre-flight check for a scenario (env vars, dependencies).
     """

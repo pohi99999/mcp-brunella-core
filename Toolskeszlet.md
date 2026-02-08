@@ -1,7 +1,7 @@
 # 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
 
 Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
-**Generálva:** 2026. 02. 08. 11:37:50
+**Generálva:** 2026. 02. 08. 22:35:23
 
 ---
 
@@ -14,6 +14,7 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 - **harvest_extract**: Structured data extraction from a URL using a JSON schema (Pydantic validated).
 - **browser_navigate**: Navigates to a URL and returns the page content (text/html). Handles JS.
 - **browser_screenshot**: Takes a screenshot of a URL.
+- **browser_action**: Autonóm böngésző vezérlés (Robotkéz CLI). Képes weboldalakat megnyitni, kattintani, gépelni és adatokat kinyerni.
 
 ## 📦 claudeTool
 - **claude_message**: Sends a message to the Anthropic Claude API.

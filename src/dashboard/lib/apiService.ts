@@ -555,3 +555,29 @@ export async function getN8nWorkflows(): Promise<any> {
     if (!response.ok) throw new Error(`n8n: HTTP ${response.status}`);
     return safeJson<any>(response);
 }
+
+/**
+ * Incubator (Training) API
+ */
+export interface DatasetStats {
+    total_samples: number;
+    sources: Record<string, number>;
+    avg_quality: number;
+    last_updated: string;
+}
+
+export async function addGoldSample(prompt: string, completion: string, source: string = 'manual', quality: number = 1.0): Promise<any> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/incubator/gold-sample`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, completion, source, quality })
+    });
+    return safeJson(response);
+}
+
+export async function getIncubatorStats(): Promise<DatasetStats> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/incubator/stats`);
+    if (!response.ok) throw new Error(`Incubator Stats: HTTP ${response.status}`);
+    const data = await safeJson<{ stats: DatasetStats }>(response);
+    return data.stats;
+}

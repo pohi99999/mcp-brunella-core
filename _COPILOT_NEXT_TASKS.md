@@ -21,71 +21,26 @@ A Brunella Agent System egy AI multi-agent rendszer, amely automatizálja a szof
 
 ---
 
-## Prioritás 1: RAG Vector Embeddings Implementálása
+## Prioritás 1: RAG Vector Embeddings Implementálása [KÉSZ]
 
 **Fájl:** `src/utils/rag.ts`
 
-**Probléma:** A LanceDB jelenleg NEM használ valódi vector embedding-et. Csak substring keresés van implementálva, ami nem igazi RAG.
-
-**Feladat:**
-1. Integrálj Ollama embedding API-t (`/api/embeddings` endpoint)
-2. Az `addToIndex()` függvényben generálj embedding-et a szöveghez
-3. A `searchRAG()` függvényben vector similarity search-öt használj
-
-**Példa implementáció:**
-```typescript
-// Ollama embedding hívás
-async function getEmbedding(text: string): Promise<number[]> {
-  const response = await fetch(`${process.env.OLLAMA_BASE_URL}/api/embeddings`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ model: 'nomic-embed-text', prompt: text })
-  });
-  const data = await response.json();
-  return data.embedding;
-}
-
-// addToIndex módosítás
-export async function addToIndex(title: string, content: string, metadata?: Record<string, any>): Promise<void> {
-  const db = await lancedb.connect(LANCEDB_PATH);
-  const embedding = await getEmbedding(content);
-  // ... LanceDB insert with embedding vector
-}
-```
-
-**Teszt:** `npm test -- test/rag.test.ts`
+**Státusz:** ✅ Implementálva és Tesztelve (2026-02-09)
+- `getEmbedding` funkció Ollama supporttal
+- `search` metódus `HybridMemory` osztályban
+- `test/rag.test.ts` validálja a működést
 
 ---
 
-## Prioritás 2: CONDUCTOR_MANIFEST.md Refaktorálás
+## Prioritás 2: CONDUCTOR_MANIFEST.md Refaktorálás [KÉSZ]
 
 **Fájl:** `conductor/CONDUCTOR_MANIFEST.md`
 
-**Probléma:** A fájl 1200+ soros, kaotikus AI chat history keveredik benne formális dokumentációval.
-
-**Feladat:**
-1. Hozz létre `conductor/archive/` mappát
-2. Mozgasd az AI chat history-t `conductor/archive/ai_session_notes_2026.md`-be
-3. Tisztítsd meg a CONDUCTOR_MANIFEST.md-t:
-   - Csak aktuális állapot
-   - Strukturált szekciók (Célok, Komponensek, Változások)
-   - Maximum 200 sor
-
-**Struktúra minta:**
-```markdown
-# Conductor Manifest
-
-## Aktív Komponensek
-- ProjectConductorAgent (80% kész)
-- Track rendszer (működik)
-
-## Következő Lépések
-1. CLI integráció befejezése
-2. Pre-commit hook beállítása
-
-## Változásnapló
-- 2026-02-04: Manifest refaktorálás
-```
+**Státusz:** ✅ KÉSZ (2026-02-09)
+- `conductor/archive` létrehozva
+- 25+ régi track archiválva
+- Manifest v3.0.0 formátumra átírva (Green Lightning fókusz)
+- AI chat logok eltávolítva a fő manifestből
 
 ---
 

@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 08. 11:37:44
+**Generálva:** 2026. 02. 08. 22:35:15
 **Script:** 
 
 ---
@@ -1152,6 +1152,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 file-system-test-helpers.ts
           - 📄 index.ts
         - 📄 index.ts
+        - 📄 junit.xml
         - 📄 package.json
         - 📄 tsconfig.json
         - 📄 vitest.config.ts
@@ -32976,6 +32977,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **dashboard_v2_20260129**
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **dashboard_v2_robotkez_control_20260208**
+        - 📄 spec.md
       - 📂 **developer_agent_2_0_20260206**
         - 📄 plan.md
         - 📄 spec.md
@@ -33038,12 +33041,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 spec.md
       - 📂 **test_consolidation_vitest_20260130**
         - 📄 plan.md
-      - 📄 BASELINE_CLI.md
-      - 📄 brunella_archet.md.txt
-      - 📄 Brunella-CLI.md.txt
-      - 📄 CLI_PARITY_MATRIX.md
-      - 📄 config.md.txt
-      - 📄 telemetria.md.txt
     - 📄 BAS_ARCHITECTURE_v2.md
     - 📄 Cocductornak_szeretettel.pdf
     - 📄 CONDUCTOR_MANIFEST.md
@@ -33075,6 +33072,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1.manifest
         - 📂 **data**
           - 📄 1000100100010001011000007dbdcd457db9ec321cc5b15c3d.lance
+    - 📂 **training**
+      - 📄 golden_dataset.jsonl
+    - 📄 tasks.db
   - 📂 **docs**
     - 📄 AGENT_PERMISSIONS_GUIDE.md
     - 📄 cloudflare-tunnel-setup.md
@@ -104927,6 +104927,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 sandbox.py
       - 📄 tools.py
     - 📂 **incubator**
+      - 📄 Modelfile.template
       - 📄 train.py
     - 📂 **sandbox_env**
     - 📂 **scenarios**
@@ -104958,6 +104959,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 integrated_research.py
     - 📂 **utils**
       - 📂 **__pycache__**
+        - 📄 dataset_manager.cpython-312.pyc
+        - 📄 dataset_manager.cpython-314.pyc
         - 📄 page.cpython-312.pyc
         - 📄 page.cpython-314.pyc
         - 📄 parser.cpython-312.pyc
@@ -104975,6 +104978,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **workflows**
       - 📄 n8n_lint_fixer_automation.json
     - 📄 __init__.py
+    - 📄 browser_task_runner.py
     - 📄 browser_worker.py
     - 📄 chromadb_adapter.py
     - 📄 cli.py
@@ -105591,6 +105595,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 serverManager.ts
       - 📄 skillsLoader.ts
       - 📄 systemHealth.ts
+      - 📄 tasksDb.ts
       - 📄 telemetry.ts
       - 📄 validateSecrets.ts
     - 📄 cli-edge.ts
@@ -105608,6 +105613,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 DeveloperAgent.test.ts
     - 📄 ev_hunter_research.test.ts
     - 📄 hooks.test.ts
+    - 📄 incubator_test.py
     - 📄 lint_fixer.test.ts
     - 📄 llm_client.test.ts
     - 📄 llm_provider.test.ts
@@ -105616,6 +105622,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 monitor.vitest.ts
     - 📄 n8n_automation.test.ts
     - 📄 python_shell.test.ts
+    - 📄 robotkez_integration.test.ts
     - 📄 setup.ts
     - 📄 skills_loader.test.ts
     - 📄 smoke.vitest.ts
@@ -105642,6 +105649,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 _CHANGE_REPORT.md
   - 📄 _CONDUCTOR_UPDATE_TEMPLATE.md
   - 📄 _COPILOT_NEXT_TASKS.md
+  - 📄 _DASHBOARD_IMPLEMENTATION_PLAN.md
   - 📄 _FIX_INSTRUCTIONS.md
   - 📄 _JULES_MAINTENANCE_TASKS.md
   - 📄 _PROJECT_STRUCTURE.md

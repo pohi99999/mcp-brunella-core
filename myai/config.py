@@ -1,6 +1,11 @@
-DEFAULT_MODEL = "llama3.1:latest"
+import os
+from dotenv import load_dotenv
 
-OLLAMA_URL = "http://localhost:11434"
+load_dotenv()
+
+DEFAULT_MODEL = os.getenv("OLLAMA_MODEL", "llama3.1:8b")
+
+OLLAMA_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 
 PROJECT_IGNORE = [
     ".git",

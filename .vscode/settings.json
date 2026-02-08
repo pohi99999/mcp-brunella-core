@@ -71,5 +71,7 @@
     "d2a927dd5045",
     "01b84103a322",
     "75f3d9b01cfa"
-  ]
+  ],
+  "azureFunctions.projectSubpath": "external_research\\azure-functions-core-tools\\test\\TestFunctionApps\\TestPythonProject",
+  "chat.agent.maxRequests": 300
 }

@@ -18,6 +18,7 @@ import { mcpProcessManager } from './McpProcessManager.js';
 import { ConfigManager } from '../utils/cliConfig.js';
 import { mcpClientManager } from '../utils/mcpClientManager.js';
 import { agentManager } from '../agents/AgentManager.js';
+import { AgentArchitect } from '../agents/AgentArchitect.js';
 import {
     checkOllamaHealth,
     checkAnythingLLMHealth,
@@ -236,9 +237,25 @@ export async function startWebServer() {
         }
     });
 
-
-
-
+    /**
+     * @swagger
+     * /api/agents/create:
+     *   post:
+     *     summary: Create New Agent
+     *     description: Generates a new dynamic agent, saves its config and registers it.
+     */
+    app.post('/api/agents/create', async (req, res) => {
+        try {
+            const result = await AgentArchitect.createAgent(req.body);
+            if (result.success) {
+                res.json(result);
+            } else {
+                res.status(500).json(result);
+            }
+        } catch (e: any) {
+            res.status(500).json({ success: false, message: e.message });
+        }
+    });
 
     app.get('/api/agents/status', (req, res) => {
         try {
@@ -418,6 +435,33 @@ export async function startWebServer() {
             const { addToIndex } = await import('../utils/rag.js');
             await addToIndex(metadata?.path || `manual_${Date.now()}`, text);
             res.json({ status: 'success', indexed: true });
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    // Incubator API
+    app.post('/api/incubator/gold-sample', async (req, res) => {
+        try {
+            const pythonBaseUrl = process.env.PYTHON_SUBSET_URL || 'http://127.0.0.1:8000';
+            const response = await fetch(`${pythonBaseUrl}/incubator/gold-sample`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(req.body)
+            });
+            const data: any = await response.json();
+            res.status(response.status).json(data);
+        } catch (e: any) {
+            res.status(500).json({ error: e.message });
+        }
+    });
+
+    app.get('/api/incubator/stats', async (req, res) => {
+        try {
+            const pythonBaseUrl = process.env.PYTHON_SUBSET_URL || 'http://127.0.0.1:8000';
+            const response = await fetch(`${pythonBaseUrl}/incubator/stats`);
+            const data: any = await response.json();
+            res.status(response.status).json(data);
         } catch (e: any) {
             res.status(500).json({ error: e.message });
         }
