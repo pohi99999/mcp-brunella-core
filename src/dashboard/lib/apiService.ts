@@ -106,6 +106,7 @@ export async function getAgents(): Promise<Agent[]> {
 
 export interface RegistryAgent {
     name: string;
+    role?: string;
     class: string;
     module: string;
     description: string;
@@ -140,7 +141,7 @@ export async function executeAgent(agentName: string, task: string, context?: an
         },
         LONG_TIMEOUT_MS  // 2 minutes for agent execution
     );
-    const data = await safeJson<{ result?: any; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    const data = await safeJson<{ result?: any; error?: string }>(response).catch(() => ({ result: undefined, error: `HTTP ${response.status}` }));
     if (!response.ok) throw new Error(data.error || 'Agent execution failed');
     return data.result;
 }
@@ -175,7 +176,7 @@ export async function createTask(description: string, agentName: string, context
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ description, agentName, context, parentId })
     });
-    const data = await safeJson<{ taskId?: number; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    const data = await safeJson<{ taskId?: number; error?: string }>(response).catch(() => ({ taskId: undefined, error: `HTTP ${response.status}` }));
     if (!response.ok) throw new Error(data.error || 'Task creation failed');
     return data.taskId ?? 0;
 }
@@ -204,7 +205,7 @@ export async function generateWithOllama(prompt: string, model?: string, system?
         },
         LONG_TIMEOUT_MS  // 2 minutes for LLM generation
     );
-    const data = await safeJson<{ response?: string; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    const data = await safeJson<{ response?: string; error?: string }>(response).catch(() => ({ response: undefined, error: `HTTP ${response.status}` }));
     if (!response.ok) throw new Error(data.error || 'Ollama generation failed');
     return typeof data.response === 'string' ? data.response : String(data.response ?? '');
 }
@@ -238,7 +239,7 @@ export async function generateWithGithubModels(prompt: string, model?: string, s
         },
         LONG_TIMEOUT_MS
     );
-    const data = await safeJson<{ response?: string; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    const data = await safeJson<{ response?: string; error?: string }>(response).catch(() => ({ response: undefined, error: `HTTP ${response.status}` }));
     if (!response.ok) throw new Error(data.error || 'GitHub Models generation failed');
     return typeof data.response === 'string' ? data.response : String(data.response ?? '');
 }
@@ -273,7 +274,7 @@ export async function generateWithGemini(prompt: string, model?: string, system?
         },
         LONG_TIMEOUT_MS
     );
-    const data = await safeJson<{ response?: string; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    const data = await safeJson<{ response?: string; error?: string }>(response).catch(() => ({ response: undefined, error: `HTTP ${response.status}` }));
     if (!response.ok) throw new Error(data.error || 'Gemini generation failed');
     return typeof data.response === 'string' ? data.response : String(data.response ?? '');
 }
@@ -298,7 +299,7 @@ export async function chatWithAnythingLLM(workspace: string, message: string, mo
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ workspace, message, mode })
     });
-    const data = await safeJson<{ response?: string; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    const data = await safeJson<{ response?: string; error?: string }>(response).catch(() => ({ response: undefined, error: `HTTP ${response.status}` }));
     if (!response.ok) throw new Error(data.error || 'AnythingLLM chat failed');
     return typeof data.response === 'string' ? data.response : String(data.response ?? '');
 }
@@ -350,7 +351,7 @@ export async function startService(service: 'ollama' | 'python' | 'anythingllm')
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ service }),
     });
-    const data = await safeJson<{ success?: boolean; message?: string }>(response).catch(() => ({}));
+    const data = await safeJson<{ success?: boolean; message?: string }>(response).catch(() => ({ success: false, message: undefined }));
     return { success: data.success ?? false, message: data.message ?? `HTTP ${response.status}` };
 }
 
@@ -360,7 +361,7 @@ export async function stopService(service: 'ollama' | 'python'): Promise<{ succe
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ service }),
     });
-    const data = await safeJson<{ success?: boolean; message?: string }>(response).catch(() => ({}));
+    const data = await safeJson<{ success?: boolean; message?: string }>(response).catch(() => ({ success: false, message: undefined }));
     return { success: data.success ?? false, message: data.message ?? `HTTP ${response.status}` };
 }
 
@@ -370,7 +371,7 @@ export async function executeTool(toolName: string, args: any): Promise<any> {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(args)
     });
-    const data = await safeJson<{ result?: any; error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    const data = await safeJson<{ result?: any; error?: string }>(response).catch(() => ({ result: undefined, error: `HTTP ${response.status}` }));
     if (!response.ok) throw new Error(data.error || 'Tool execution failed');
     return data.result;
 }
