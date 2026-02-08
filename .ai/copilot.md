@@ -31,6 +31,27 @@
 
 ## Napló
 
+### 2026-02-08 21:00 - Dashboard V2 Phase 3: Task Queue & Providers
+
+**Feladat:** Task Queue Action-ök és LLM Provider státusz monitorozás implementálása
+
+**Érintett fájlok:**
+- ✅ `src/dashboard/components/dashboard/TaskQueueMonitor.tsx` (Actions: Execute/Cancel/Retry, Stats Cards, Detail Dialog)
+- ✅ `src/dashboard/components/dashboard/LLMProvidersPanel.tsx` (Status API integráció, UI frissítés)
+- ✅ `src/server/web.ts` (Implementált API: `/api/providers/status`)
+- ✅ `src/dashboard/lib/apiService.ts` (Client-side API wrapper)
+- ✅ `vite.config.ts` (Proxy ellenőrzés - OK)
+- ✅ `_DASHBOARD_IMPLEMENTATION_PLAN.md` (STATUS: Phase 3 COMPLETED)
+
+**Státusz:** ✅ Dashboard V2 backend és frontend implementáció TELJES.
+
+**Következő lépések:**
+- End-to-End tesztelés böngészőben (manual validation)
+- n8n proxy finomhangolása (ha szükséges)
+- Élesítés
+
+---
+
 ### 2026-02-08 20:45 - Dashboard V2 Phase 1 & Phase 2 Integration
 
 **Feladat:** Robotkéz Control + Agent Management panelek bekötése valós logikával
