@@ -32,8 +32,8 @@ async function getDb() {
         }
 
         const dbPath = path.join(config.systemLogDir, 'brunella.db');
-        // console.log('DEBUG: DB Path:', dbPath); // Optional logging
 
+        // Dynamic import safe for bundling (hopefully)
         const Database = (await import('better-sqlite3')).default;
         db = new Database(dbPath);
 

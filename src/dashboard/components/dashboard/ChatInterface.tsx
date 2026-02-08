@@ -1,4 +1,4 @@
-```
+
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -692,4 +692,3 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     </Card>
   )
 }
-```

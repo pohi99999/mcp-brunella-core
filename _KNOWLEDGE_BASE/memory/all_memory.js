@@ -51,8 +51,8 @@ const all_memory = {
         "Ismeretlen fájlok (`automation.db`, `products.json`, `rest.json`) és a régi `Tudas` mappa archiválva lettek."
       ],
       "key_artifacts": [
-        "G:\\Brunella\\GEMINI.md (gyors útmutató)",
-        "G:\\Brunella\\_br_core\\WORKSPACE_OVERVIEW.md (részletes áttekintés)"
+        "G:\Brunella\GEMINI.md (gyors útmutató)",
+        "G:\Brunella\_br_core\WORKSPACE_OVERVIEW.md (részletes áttekintés)"
       ]
     },
     "gemini_cli_tools_api_analysis_2025_10_12": {
@@ -68,4 +68,6 @@ const all_memory = {
         "Két fő bővítési módszer létezik: 'Command-based Discovery' (egyszerű, szkript-alapú) és 'MCP (Model Context Protocol) Szerverek' (haladó, elosztott rendszerekhez).",
         "Az MCP protokoll stratégiai utat jelöl ki a komplex, több-ügynökös rendszerek felé, ahol a Gemini CLI egy központi orchestrator szerepét töltheti be, amely külső, specializált ügynököket (MCP szervereket) koordinál."
       ]
-    },
+    }
+  }
+};
