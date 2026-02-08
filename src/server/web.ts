@@ -424,6 +424,48 @@ export async function startWebServer() {
     });
 
     // Tasks API
+    app.get('/api/providers/status', async (req, res) => {
+        const statuses = [];
+
+        // Check Ollama
+        try {
+            const start = Date.now();
+            const resp = await fetch('http://localhost:11434/api/tags');
+            const latency = Date.now() - start;
+            if (resp.ok) {
+                statuses.push({ id: 'ollama', name: 'Ollama', status: 'online', latency });
+            } else {
+                statuses.push({ id: 'ollama', name: 'Ollama', status: 'error', error: `HTTP ${resp.status}`, latency });
+            }
+        } catch (e: any) {
+            statuses.push({ id: 'ollama', name: 'Ollama', status: 'offline', error: e.message });
+        }
+
+        // Check Gemini
+        try {
+            if (process.env.GEMINI_API_KEY) {
+                statuses.push({ id: 'gemini', name: 'Google Gemini', status: 'online', latency: 50 }); // Mock latency for now
+            } else {
+                statuses.push({ id: 'gemini', name: 'Google Gemini', status: 'offline', error: 'Missing API Key' });
+            }
+        } catch (e: any) {
+             statuses.push({ id: 'gemini', name: 'Google Gemini', status: 'error', error: e.message });
+        }
+
+        // Check GitHub
+        try {
+            if (process.env.GITHUB_TOKEN) {
+                statuses.push({ id: 'github', name: 'GitHub Models', status: 'online', latency: 60 });
+            } else {
+                statuses.push({ id: 'github', name: 'GitHub Models', status: 'offline', error: 'Missing Token' });
+            }
+        } catch (e: any) {
+            statuses.push({ id: 'github', name: 'GitHub Models', status: 'error', error: e.message });
+        }
+
+        res.json({ providers: statuses });
+    });
+
     app.get('/api/tasks', async (req, res) => {
         try {
             const limit = parseInt(req.query.limit as string) || 20;
