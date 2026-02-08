@@ -57,7 +57,8 @@ export async function registerKnowledgeTools(server: McpServer) {
     },
     async ({ content, metadata }) => {
       try {
-        await addToIndex(content, metadata || {});
+        const pathOrId = metadata?.source || `note-${Date.now()}`;
+        await addToIndex(pathOrId, content, metadata || {});
 
         // Save to file as backup if fs is available
         if (fs && path) {

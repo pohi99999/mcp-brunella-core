@@ -112,12 +112,12 @@ export class HybridMemory {
 const memory = new HybridMemory();
 
 /** Add content to the RAG index (path/id stored in metadata). */
-export async function addToIndex(pathOrId: string, content: string): Promise<void> {
+export async function addToIndex(pathOrId: string, content: string, extraMetadata: object = {}): Promise<void> {
   await ensureModules();
   if (fs && path) {
       await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => {});
   }
-  await memory.addDocument(content, { path: pathOrId });
+  await memory.addDocument(content, { path: pathOrId, ...extraMetadata });
 }
 
 /** Search RAG using vector similarity (cosine distance via LanceDB). */
@@ -160,12 +160,6 @@ export async function searchRAG(query: string, limit = 20): Promise<Array<{ text
       const q = query.toLowerCase();
 
       // Note: lancedb types might differ, relying on any for now as seen in original code logic roughly
-      // But iterate via standard query if possible
-      // Original code used table.query() but lancedb query returns AsyncIterable?
-      // Assuming original code was correct for installed lancedb version.
-      // We need to access children carefully if using apache-arrow structures.
-      // Since I can't verify types easily, I'll trust the original logic structure but wrap access.
-
       const queryBuilder = table.query();
       if (queryBuilder.limit) queryBuilder.limit(limit * 3);
 
