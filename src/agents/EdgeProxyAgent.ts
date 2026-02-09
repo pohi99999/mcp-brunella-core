@@ -260,10 +260,10 @@ export class EdgeProxyAgent extends BaseAgent {
                    });
                } catch (err) {
                    logError(this.name, `Failed to parse existing task context for task ${localTaskId}: ${err}`);
-                   // Fallback to using just the new context if parsing fails
+                   // Fallback to using the original context parameter if parsing fails
                    await updateTask(localTaskId, { 
                        status: 'pending', 
-                       context: { fallback: true } 
+                       context: { ...(context.context as any), fallback: true } 
                    });
                }
            } else {
