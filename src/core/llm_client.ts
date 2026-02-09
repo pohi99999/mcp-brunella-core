@@ -1,9 +1,11 @@
 // FILE: src/core/llm_client.ts
 // PURPOSE: Multi-provider kliens implementálása LangSmith tracing-gel.
+// UPDATED: G3.1 — Model Router integráció
 
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { traceable } from "langsmith/traceable";
 import { logInfo, logError } from "../utils/logger.js";
+import { routeTask, type RoutingDecision, type ProviderName } from './modelRouter.js';
 
 // Configuration
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
@@ -127,3 +129,46 @@ export const generateResponse: (prompt: string, provider?: string, modelName?: s
 
 // Alias for backward compatibility and clarity
 export const chatWithOllama = (prompt: string, modelName?: string) => generateResponse(prompt, 'ollama', modelName);
+
+/**
+ * Routed generation — automatically selects the best model based on task description.
+ * Uses the Model Router (G3) to pick brain/muscle model.
+ * Falls back to Ollama if the selected cloud model fails (RULE-MR4).
+ * 
+ * @param prompt - The generation prompt
+ * @param taskDescription - Natural language description for routing (if different from prompt)
+ * @param routerConfig - Optional router configuration overrides
+ * @returns The generated response string
+ */
+export async function generateRouted(
+  prompt: string,
+  taskDescription?: string,
+  routerConfig?: Record<string, unknown>
+): Promise<{ response: string; decision: RoutingDecision }> {
+  const decision = routeTask(taskDescription || prompt, routerConfig);
+
+  logInfo('LLM_CLIENT', `Routed → ${decision.model.name} (${decision.model.provider}) — ${decision.reason}`);
+
+  try {
+    const response = await generateResponse(prompt, decision.model.provider, decision.model.name);
+    return { response, decision };
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : String(error);
+    logError('LLM_CLIENT', `Routed model (${decision.model.name}) failed: ${errorMsg}`);
+
+    // RULE-MR4: Fallback to Ollama if we have a fallback defined
+    if (decision.fallback && decision.model.provider !== 'ollama') {
+      logInfo('LLM_CLIENT', `[MR4] Falling back to ${decision.fallback.name}`);
+      const fallbackResponse = await generateResponse(prompt, decision.fallback.provider, decision.fallback.name);
+      return {
+        response: fallbackResponse,
+        decision: {
+          ...decision,
+          reason: `${decision.reason} [FALLBACK: ${decision.fallback.name}]`
+        }
+      };
+    }
+
+    throw error;
+  }
+}
