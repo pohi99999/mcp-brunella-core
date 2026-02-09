@@ -15,6 +15,50 @@
 
 ---
 
+### 2026-02-09 19:30 - Interaktív CLI Menü Rendszer & P9 Code Scaffolding (TELJES! 🎉)
+
+**Commit:** `[pending]`
+**Feladat:** 
+1. Interaktív CLI menü teljes átírása (Gemini CLI stílus, nyíl-billentyűk)
+2. P9 Code Scaffolding implementáció (Agent + API + CLI + Tests)
+
+**Implementáció:**
+
+✨ **Interaktív CLI Menü (`src/interactive.ts`, teljes újraírás, ~350 sor):**
+- **Gemini CLI stílus:** Nyíl-billentyűkkel navigálható `inquirer` list menük
+- **Hierarchikus menürendszer** — Főmenü → Almenü → Művelet/Input
+- **6 főmenü kategória:**
+  1. 💬 Kommunikáció (Chat, Edge Chat, Jules AI)
+  2. 🤖 Ügynökök (Listázás, Futtatás)
+  3. 🛠️ Fejlesztői Eszközök (Scaffold, Test, Review, Fix, Heal, Coverage, Queue)
+  4. 🐙 Git Műveletek (Status, Diff, Commit, Push, Branches, Checkout, Log)
+  5. 📁 Rendszer & Projekt (Doctor, Conductor, Tools, Interpreter, About)
+  6. ⚙️ Beállítások (Auth, Gold Protocol)
+- **Minden almenüben:** ⬅️ Vissza gomb + Separator vizuális elválasztás
+- **Scaffold almenü:** Template választó listából (react-component, rest-api, agent, test-file), majd változó-gyűjtés template típus szerint
+- **Queue almenü:** List, Add (típus választóval), Cancel, Retry
+- **Jules almenü:** New, Sync, Status
+- **Helper függvények:** `subMenu()`, `askInput()`, `pause()`, `runCli()`
+- **Ctrl+C kezelés:** Graceful continue a főmenübe
+
+✨ **P9: Code Scaffolding (Agent + API + CLI + Tests):**
+- `src/agents/codeScaffold.ts` (ÚJ, ~400 sor): TemplateEngine osztály
+  - 4 beépített sablon: react-component, rest-api, agent, test-file
+  - `{{variable}}` szintaxis, default értékek, required validáció
+  - Preview mód (nem ír fájlt), overwrite védelem
+- `src/server/routes/developer.ts` (v3.0.5): 2 új endpoint
+  - `GET /scaffold/templates`, `POST /scaffold`
+- `src/cli/devCommands.ts`: 2 új parancs
+  - `brunella dev scaffold list`, `brunella dev scaffold generate <template> -v Key=Value`
+- `test/code_scaffold.test.ts` (ÚJ, 9 teszt): Template management, variable replacement, preview mode
+
+**Build & Test eredmény:**
+- ✅ Build: 0 TypeScript error
+- ✅ Tests: 350/350 PASS (42 fájl)
+- ✅ CLI: `brunella` (argumentum nélkül) → interaktív menü indul
+
+---
+
 ### 2026-02-09 19:00 - Developer Agent 3.0 Fázis 3 Part 2: Git Integration (P8 TELJES! 🎉)
 
 **Commit:** `ca32d415`
