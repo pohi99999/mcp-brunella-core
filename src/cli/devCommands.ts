@@ -587,4 +587,171 @@ export function registerDevCommands(program: Command): void {
                 process.exit(1);
             }
         });
+
+    // brunella dev queue — P7: Task Queue Management
+    const queue = dev.command('queue').description('Manage developer task queue');
+
+    queue
+        .command('list')
+        .description('List all queued tasks')
+        .option('--status <status>', 'Filter by status (queued/running/completed/failed/cancelled)')
+        .option('--type <type>', 'Filter by task type')
+        .option('--json', 'Output raw JSON')
+        .action(async (opts: { status?: string; type?: string; json?: boolean }) => {
+            const spinner = ora('Fetching task queue...').start();
+
+            try {
+                const params = new URLSearchParams();
+                if (opts.status) params.set('status', opts.status);
+                if (opts.type) params.set('type', opts.type);
+
+                const result = await apiFetch<{
+                    tasks: Array<{
+                        id: string;
+                        type: string;
+                        description: string;
+                        priority: string;
+                        status: string;
+                        createdAt: number;
+                        startedAt?: number;
+                        completedAt?: number;
+                        error?: string;
+                    }>;
+                    stats: {
+                        total: number;
+                        queued: number;
+                        running: number;
+                        completed: number;
+                        failed: number;
+                        cancelled: number;
+                    };
+                }>(`/queue?${params}`);
+
+                const { tasks, stats } = result;
+                spinner.succeed(chalk.green(`Found ${tasks.length} tasks`));
+
+                if (opts.json) {
+                    console.log(JSON.stringify({ tasks, stats }, null, 2));
+                    return;
+                }
+
+                console.log(`\n${chalk.bold('📊 Queue Stats:')}`);
+                console.log(`  Total: ${stats.total} | Queued: ${stats.queued} | Running: ${chalk.yellow(stats.running)} | ✅ ${stats.completed} | ❌ ${stats.failed}`);
+
+                if (tasks.length === 0) {
+                    console.log(chalk.dim('\nNo tasks in queue.'));
+                    return;
+                }
+
+                console.log(`\n${chalk.bold('📋 Tasks:')}\n`);
+                for (const task of tasks) {
+                    const statusColor = task.status === 'completed' ? chalk.green :
+                        task.status === 'failed' ? chalk.red :
+                        task.status === 'running' ? chalk.yellow :
+                        task.status === 'cancelled' ? chalk.gray : chalk.blue;
+
+                    const priority = task.priority === 'high' ? chalk.red('HIGH') :
+                        task.priority === 'medium' ? chalk.yellow('MED') : chalk.gray('LOW');
+
+                    console.log(`  ${chalk.cyan(task.id)} ${priority} [${statusColor(task.status)}]`);
+                    console.log(`    ${chalk.dim(task.type)}: ${task.description.slice(0, 60)}`);
+                    if (task.error) {
+                        console.log(`    ${chalk.red('Error:')} ${task.error.slice(0, 80)}`);
+                    }
+                    console.log('');
+                }
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to list queue: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    queue
+        .command('add <type> <description>')
+        .description('Add a task to the queue')
+        .option('-p, --priority <priority>', 'Priority: high/medium/low', 'medium')
+        .option('--json', 'Output raw JSON')
+        .action(async (type: string, description: string, opts: { priority: string; json?: boolean }) => {
+            const spinner = ora(`Adding ${type} task to queue...`).start();
+
+            try {
+                const result = await apiFetch<{
+                    task: {
+                        id: string;
+                        type: string;
+                        description: string;
+                        priority: string;
+                        status: string;
+                    };
+                }>('/queue', {
+                    method: 'POST',
+                    body: JSON.stringify({ type, description, priority: opts.priority, params: {} }),
+                });
+
+                const { task } = result;
+                spinner.succeed(chalk.green(`Task added: ${task.id}`));
+
+                if (opts.json) {
+                    console.log(JSON.stringify(task, null, 2));
+                    return;
+                }
+
+                console.log(`\n  ID: ${chalk.cyan(task.id)}`);
+                console.log(`  Type: ${task.type}`);
+                console.log(`  Priority: ${task.priority}`);
+                console.log(`  Status: ${task.status}\n`);
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to add task: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    queue
+        .command('cancel <taskId>')
+        .description('Cancel a queued or running task')
+        .action(async (taskId: string) => {
+            const spinner = ora(`Cancelling task ${taskId}...`).start();
+
+            try {
+                const result = await apiFetch<{
+                    task: { id: string; status: string };
+                    message: string;
+                }>(`/queue/${taskId}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ action: 'cancel' }),
+                });
+
+                spinner.succeed(chalk.green(result.message));
+                console.log(`  Status: ${result.task.status}`);
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to cancel task: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    queue
+        .command('retry <taskId>')
+        .description('Retry a failed task')
+        .action(async (taskId: string) => {
+            const spinner = ora(`Retrying task ${taskId}...`).start();
+
+            try {
+                const result = await apiFetch<{
+                    task: { id: string };
+                    message: string;
+                }>(`/queue/${taskId}/retry`, {
+                    method: 'POST',
+                });
+
+                spinner.succeed(chalk.green(result.message));
+                console.log(`  New Task ID: ${chalk.cyan(result.task.id)}`);
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to retry task: ${msg}`));
+                process.exit(1);
+            }
+        });
 }
