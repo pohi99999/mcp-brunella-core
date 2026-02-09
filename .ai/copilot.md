@@ -2,7 +2,7 @@
 
 **Agent:** GitHub Copilot (Pro+)
 **Fájl:** `.ai/copilot.md`
-**Utolsó frissítés:** 2026-02-08
+**Utolsó frissítés:** 2026-02-09
 
 ---
 
@@ -12,6 +12,124 @@
 2. **Formátum:** `### YYYY-MM-DD HH:MM - [Rövid cím]`
 3. **Tartalmazzon:** Mit csináltál, mely fájlokat érintette, mi a státusz
 4. **Olvass be induláskor:** `README.md`, `conductor/tracks.md`, `.ai/FOSZAL.md`
+
+---
+
+### 2026-02-09 18:15 - Developer Agent 3.0 Fázis 2: Code Review + Context + Coverage (TELJES! 🎯)
+
+**Commit:** `0779fa8e`
+**Feladat:** Developer Agent 3.0 — Fázis 2 (P4+P5+P6) teljes implementáció: Code Review, Multi-File Context Builder, Test Coverage Analysis
+
+**Aranyszabály betartva:** Minden új képesség EGYSZERRE jelent meg Agent + CLI + Dashboard + API + Test szintjén (5 szelet per pillér).
+
+**Implementáció:**
+
+✨ **P4: Code Review & Refactoring:**
+- `src/agents/codeReview.ts` (ÚJ, ~320 sor): `CodeReviewEngine` osztály LLM-powered review/refactor képességgel
+  - `reviewFile(filePath)`, `reviewCode(code, language)`, `refactorFile(filePath, instruction)`
+  - Severity levels: critical, warning, info, suggestion
+  - History tracking (max 50), aggregate statistics
+  - JSON extraction + fallback parser (malformed LLM responses kezelése)
+  - Markdown code block extraction refactor preview-hoz
+- `src/server/routes/developer.ts`: 3 új endpoint
+  - `POST /review` — file vagy code review (score, findings, stats)
+  - `POST /refactor` — instructed refactoring (apply flag opcionális)
+  - `GET /review/history` — review history + aggregate stats
+- `src/cli/devCommands.ts`: 2 új parancs
+  - `brunella dev review <file>` — severity-color coded output, --json flag
+  - `brunella dev refactor <file> <instruction>` — dry-run preview, --apply flag
+- `src/dashboard/components/dashboard/DeveloperPanel.tsx`: Review tab
+  - Tab switcher: Build | Review | Coverage
+  - File path input + score display (color-coded: green≥80, yellow≥60, red<60)
+  - Findings list: severity badges, line numbers, rule IDs, suggestions
+  - Empty state card
+  - SEVERITY_CONFIG map (icons: ShieldAlert, AlertTriangle, Info, Lightbulb)
+- `test/code_review.test.ts` (ÚJ, 13 teszt): Full coverage
+  - reviewFile, reviewCode, refactorFile, history, aggregateStats
+  - Malformed LLM response fallback, invalid severity defaults
+
+✨ **P5: Multi-File Context Builder:**
+- `src/agents/contextBuilder.ts` (ÚJ, ~280 sor): `ContextBuilder` osztály 4 gathering stratégiával
+  - Strategy 0 (priority 0): Explicit includes
+  - Strategy 1 (priority 1): Import parsing (ESM + require(), @/ alias resolution)
+  - Strategy 2 (priority 2): Test pair (test ↔ source file mapping)
+  - Strategy 3 (priority 3): Directory siblings (same folder, code extensions only)
+  - `gatherContext(targetFile, options)` — Returns `ContextResult` with files metadata
+  - `formatForPrompt(context)` — Markdown-formatted context block for LLM
+  - `parseImports()` — Regex-based import/require extraction, extension resolution (.ts/.tsx/.js/.jsx)
+  - `getSiblingFiles()` — ReadDir filter
+  - `findTestPair()` — Bidirectional test/source lookup (test/ ↔ src/)
+- `src/server/routes/developer.ts`: 1 új endpoint
+  - `POST /context` — Gather context files for target (metadata only by default, `?content=true` flag)
+- `src/cli/devCommands.ts`: 1 új parancs + 1 flag
+  - `brunella dev context <file>` — Display context file list with reasons + sizes
+  - `brunella dev generate --context auto` flag — Auto-gather context before execution
+- `src/dashboard/components/dashboard/DeveloperPanel.tsx`: Context Files section (Build tab)
+  - Collapsible card (ChevronDown/ChevronRight icons)
+  - File path input + Search button
+  - Scrollable file list (140px): relativePath, reason, size (KB)
+  - Total size display + truncation warning
+  - Toast notifications (success/error)
+- `test/context_builder.test.ts` (ÚJ, 17 teszt): Strategy coverage
+  - parseImports (import-from, require, @/ alias, external skip)
+  - getSiblingFiles (exclude target, code extensions only)
+  - findTestPair (bidirectional, .spec. support)
+  - gatherContext (maxFiles, maxTotalSize limits, explicit includes, unreadable files skip)
+  - formatForPrompt (markdown output with truncation notice)
+
+✨ **P6: Test Coverage Analysis:**
+- `src/agents/coverageAnalysis.ts` (ÚJ, ~350 sor): `CoverageAnalyzer` osztály vitest coverage runner + JSON parser
+  - `runCoverage(options)` — Executes `npx vitest run --coverage` then parses output
+  - `parseCoverageJson(path, options)` — Parse existing coverage-final.json
+  - `getLastSummary()` — Cached summary without re-run
+  - Metrics: statements, branches, functions, lines (total, covered, pct)
+  - `worstFiles` sorted by line coverage (lowest first)
+  - `untestedFiles` — Source files without test pair
+  - `findUntestedFiles()` — Walk src/, cross-reference with test/, check coverage map
+  - Exclusion filters: .d.ts, index.ts, types.ts, skip patterns (node_modules, build, dist)
+- `src/server/routes/developer.ts`: 2 új endpoint
+  - `POST /coverage` — mode: 'run' | 'parse', returns full summary
+  - `GET /coverage/summary` — Get last cached summary (404 if none)
+- `src/cli/devCommands.ts`: 1 új parancs
+  - `brunella dev coverage` — Display aggregate bars, worst files, untested files
+  - Flags: `--run` (fresh coverage), `--worst <count>` (default: 10), `--json`
+  - Color-coded percentages (green≥80, yellow≥60, red<60)
+- `src/dashboard/components/dashboard/DeveloperPanel.tsx`: Coverage tab
+  - Coverage controls card: "Load Existing" + "Run Coverage" buttons
+  - Aggregate metrics card: 4 progress bars (statements, branches, functions, lines)
+  - Worst files list (ScrollArea 200px): file name, progress bar, uncovered lines (if ≤10)
+  - Untested files list (ScrollArea 120px): red text
+  - Empty state card
+  - `CoverageBar` component (progress bar with color theming)
+- `test/coverage_analysis.test.ts` (ÚJ, 11 teszt): Parser + helper coverage
+  - parseCoverageJson (valid JSON, 100% for zero totals, worst files sorting)
+  - Empty summary (file not found, invalid JSON)
+  - Uncovered lines computation
+  - worstFileLimit option
+  - Exclude patterns (path.includes matching on Windows)
+  - getLastSummary caching
+  - collectedAt timestamp
+
+**Technikai részletek:**
+- Version bump: `developer.ts` → `3.0.2` (P4+P5+P6)
+- Icons hozzáadva DeveloperPanel-hez: `FolderOpen`, `ChevronDown`, `ChevronRight`, `BarChart3`
+- Tab state type: `'build' | 'review' | 'coverage'`
+- Code Review LLM: GitHub Models GPT-4o használata (`generateResponse('...', 'github', 'gpt-4o')`)
+- Context Builder: Windows path compatibility (path.relative returns backslash)
+- Coverage: child_process execFileAsync with 120s timeout, WAL mode skipped (JSON-only parser)
+
+**Eredmények:**
+- 🏗️ 6 új fájl (~950 LOC): 3 agent module, 3 test file
+- 🔧 3 módosított fájl (~700 LOC): developer.ts, devCommands.ts, DeveloperPanel.tsx
+- ✅ TypeScript compile: 0 errors
+- ✅ Tests: **295/295 PASS** (39 fájl) — +41 teszt (254→295)
+  - code_review.test.ts: 13 tests
+  - context_builder.test.ts: 17 tests
+  - coverage_analysis.test.ts: 11 tests
+- 📊 Developer Agent 3.0: Fázis 2 — **50% kész** (Fázis 1+2 teljes)
+- 🟢 Git: `0779fa8e` → GitHub main branch
+
+**Következő:** Fázis 3 (P7: Task Queue, P8: Git Integration, P9: Code Scaffolding) vagy user irányítás
 
 ---
 
