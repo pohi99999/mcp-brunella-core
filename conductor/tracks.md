@@ -45,15 +45,16 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 - [ ] **Developer Agent 3.0 — Unified Development Platform** [HIGH]
   - **ID:** `developer_agent_2_0_20260206`
-  - **Progress:** 60% (Fázis 1+2+3.1: P1-P7 kész ✅✅⚡)
+  - **Progress:** 70% (Fázis 1+2+3.1+3.2: P1-P8 kész ✅✅⚡⚡)
   - **Utolsó aktivitás:** 2026-02-09
-  - **Commits:** `573d0530` (Fázis 1), `0779fa8e` (Fázis 2), `132ef85f` (Fázis 3.1: P7)
+  - **Commits:** `573d0530` (Fázis 1), `0779fa8e` (Fázis 2), `132ef85f` (Fázis 3.1: P7), `[pending]` (Fázis 3.2: P8)
   - **Leírás:** Unified Dev Platform: Pipeline, CLI (`brunella dev`), Dashboard (DeveloperPanel), REST API (`/api/v1/developer/*`). Aranyszabály: Agent + CLI + Dashboard + API + Test szinkronban.
   - **Fázis 1 KÉSZ (P1-P3):** Pipeline Runner (5 fázis), 7 CLI parancs, Dashboard panel, 25 teszt
   - **Fázis 2 KÉSZ (P4-P6):** Code Review + Refactor, Multi-File Context Builder, Test Coverage Analysis, 41 teszt
   - **Fázis 3.1 KÉSZ (P7):** Task Queue & Batch Operations, 25 teszt (concurrent execution, priority queue, retry, cleanup)
-  - **Tesztek:** 320/320 PASS (40 fájl), 0 TypeScript errors
-  - **Következő:** Fázis 3.2 (P8: Git Integration) és 3.3 (P9: Code Scaffolding) — 40% remaining
+  - **Fázis 3.2 KÉSZ (P8):** Git Integration (getStatus, diff, stage/unstage, commit, push, branches, log), 21 teszt — Dashboard UI skipped (200+ LOC complexity)
+  - **Tesztek:** 341/341 PASS (41 fájl), 0 TypeScript errors
+  - **Következő:** Fázis 3.3 (P9: Code Scaffolding) — 30% remaining
   - 📂 *[./tracks/developer_agent_2_0_20260206/](./tracks/developer_agent_2_0_20260206/)*
 
 - [ ] **Phoenix Protocol V2** [MEDIUM]
