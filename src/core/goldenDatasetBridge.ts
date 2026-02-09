@@ -197,7 +197,7 @@ export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
 export async function autoSaveGoldenSample(
   agentName: string,
   task: string,
-  result: string | Record<string, unknown>
+  result: string | Record<string, unknown> | object
 ): Promise<void> {
   const completion = typeof result === 'string' ? result : JSON.stringify(result);
   const quality = calculateQuality(task, completion);

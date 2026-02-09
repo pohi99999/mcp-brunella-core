@@ -198,8 +198,9 @@ export default class LintFixerAgent implements IAgent {
                 // Újra ellenőrizzük mi maradt
                 const checkResult = await this.runLintCheck('check src/');
 
-                if (checkResult.status === 'success' && checkResult.data) {
-                    const remaining = checkResult.data.report as LintReport;
+                if (checkResult.status === 'success' && checkResult.data && typeof checkResult.data === 'object') {
+                    const dataObj = checkResult.data as Record<string, unknown>;
+                    const remaining = dataObj['report'] as LintReport;
 
                     resolve({
                         status: 'success',
@@ -279,11 +280,16 @@ export default class LintFixerAgent implements IAgent {
         // Először nézzük meg mi a hiba
         const checkResult = await this.runLintCheck(`check ${filePath}`);
 
-        if (checkResult.status !== 'success' || !checkResult.data?.report) {
+        if (checkResult.status !== 'success' || !checkResult.data || typeof checkResult.data !== 'object') {
             return checkResult;
         }
 
-        const report = checkResult.data.report as LintReport;
+        const dataObj = checkResult.data as Record<string, unknown>;
+        if (!dataObj['report']) {
+            return checkResult;
+        }
+
+        const report = dataObj['report'] as LintReport;
 
         if (report.totalErrors === 0) {
             return {

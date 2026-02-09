@@ -20,6 +20,7 @@ import { autoSaveGoldenSample } from '../core/goldenDatasetBridge.js';
 import { traceAgentExecution, type TraceContext } from '../utils/agentTracer.js';
 import { checkToolPermission } from '../tools/toolPermissions.js';
 import { record as auditRecord } from '../core/auditLog.js';
+import type { IAgent } from './types.js';
 
 // ============================================================================
 // INTERFACES
@@ -35,7 +36,7 @@ interface AgentConfig {
   autoStart: boolean;
   systemPrompt?: string;
   triggers?: string[];
-  config?: Record<string, any>;
+  config?: Record<string, unknown>;
 }
 
 interface RegistryConfig {
@@ -59,7 +60,7 @@ interface EdgeConfig {
 interface Task {
   id: string;
   instruction: string;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
   priority?: number;
   source?: string;
   createdAt: string;
@@ -68,7 +69,7 @@ interface Task {
 interface TaskResult {
   success: boolean;
   message: string;
-  data: any;
+  data: unknown;
   executedBy?: string;
   executionTime?: number;
 }
@@ -91,7 +92,7 @@ interface QueuedTask {
   id: number;
   description: string;
   agentName: string;
-  context?: Record<string, any>;
+  context?: Record<string, unknown>;
   parentId?: number;
   createdAt: string;
   startedAt?: string;
@@ -99,10 +100,10 @@ interface QueuedTask {
 }
 
 export class AgentManager extends EventEmitter {
-  private agents: Map<string, any> = new Map();
+  private agents: Map<string, IAgent> = new Map();
   private registry: RegistryConfig;
   private edgeConfig: EdgeConfig;
-  private edgeProxy?: any; // EdgeProxyAgent instance
+  private edgeProxy?: IAgent; // EdgeProxy agent instance
   private taskQueue: QueuedTask[] = [];
   private taskIdCounter = 0;
   private workerInterval?: ReturnType<typeof setInterval>;
@@ -273,12 +274,10 @@ export class AgentManager extends EventEmitter {
       };
     }
 
-    const result = await this.edgeProxy.execute({
-      task: `submit ${task.instruction}`,
-      context: task.context
-    });
+    const result = await this.edgeProxy.execute(`submit ${task.instruction}`, task.context);
 
-    return result;
+    // Cast result to TaskResult (since execute returns unknown)
+    return (typeof result === 'object' && result !== null ? result : { success: true, data: result, message: 'Edge execution completed' }) as TaskResult;
   }
 
   /**
@@ -307,7 +306,7 @@ export class AgentManager extends EventEmitter {
   /**
    * Ügynök végrehajtása retry logikával és Circuit Breaker-rel
    */
-  private async executeAgentWithRetry(agentName: string, instruction: string, context?: any, retries = 2, parentTraceContext?: TraceContext): Promise<TaskResult> {
+  private async executeAgentWithRetry(agentName: string, instruction: string, context?: Record<string, unknown>, retries = 2, parentTraceContext?: TraceContext): Promise<TaskResult> {
     const cb = this.getCircuitBreaker(agentName);
 
     // RULE-OB1: Start trace span for this agent execution
@@ -391,14 +390,14 @@ export class AgentManager extends EventEmitter {
 
           // Result normalizálás (status -> success mapping)
           if (typeof res === 'object' && res !== null) {
-            if (res.success === undefined) {
-              res.success = res.status === 'success' || res.status === 'ok';
+            const resObj = res as Record<string, unknown>;
+            if (resObj['success'] === undefined) {
+              resObj['success'] = resObj['status'] === 'success' || resObj['status'] === 'ok';
             }
+            return resObj as unknown as TaskResult;
           } else {
-            res = { success: true, data: res, message: 'Végrehajtva' };
+            return { success: true, data: res, message: 'Végrehajtva' } as TaskResult;
           }
-
-          return res;
         },
         `${agentName}:execute`,
         retryConfig
@@ -503,7 +502,7 @@ export class AgentManager extends EventEmitter {
   /**
    * Ügynök lekérdezése név alapján
    */
-  getAgent(name: string): any | null {
+  getAgent(name: string): IAgent | null {
     return this.agents.get(name) || null;
   }
 
@@ -571,14 +570,21 @@ export class AgentManager extends EventEmitter {
   // --------------------------------------------------------------------------
 
   /** Manuális ügynök regisztráció (registry.ts) */
-  registerAgent(agent: { name: string; description?: string; role?: string; execute: (task: string, context?: any) => Promise<any> }): void {
-    this.agents.set(agent.name, agent);
+  registerAgent(agent: { name: string; description?: string; role?: string; capabilities?: string[]; execute: (task: string, context?: Record<string, unknown>) => Promise<unknown> }): void {
+    const fullAgent: IAgent = {
+      name: agent.name,
+      role: agent.role || 'custom',
+      description: agent.description || '',
+      capabilities: agent.capabilities || [],
+      execute: agent.execute
+    };
+    this.agents.set(agent.name, fullAgent);
     this.ensureAgentRuntime(agent.name);
     logInfo('AgentManager', `Ügynök regisztrálva: ${agent.name}`);
   }
 
   /** Delegálás név + feladat alapján (registry, web) */
-  async delegate(agentName: string, task: string, context?: Record<string, any>): Promise<any> {
+  async delegate(agentName: string, task: string, context?: Record<string, unknown>): Promise<unknown> {
     logInfo('AgentManager', `[DELEGATE] Kérés érkezett a '${agentName}' ügynökhöz.`);
 
     // HOTFIX: If the agent is Orchestrator, we must create AND execute the plan.
@@ -604,7 +610,7 @@ export class AgentManager extends EventEmitter {
     logInfo('AgentManager', `[DELEGATE] Keresés: '${agentName}' (${lowerAgentName}). Regisztrált: ${[...this.agents.keys()].join(', ')}`);
 
     // Case-insensitive lookup in Map
-    let agent: any = undefined;
+    let agent: IAgent | undefined = undefined;
     for (const [name, a] of this.agents.entries()) {
       if (name.toLowerCase() === lowerAgentName) {
         agent = a;
@@ -768,16 +774,23 @@ export class AgentManager extends EventEmitter {
   }
 
   /** Terv készítése (Orchestrator hívás) */
-  async createPlan(userMessage: string): Promise<{ taskIds: number[] }> {
+  async createPlan(userMessage: string): Promise<{ taskIds: number[]; taskDescriptions?: string[] }> {
     const orchestrator = this.agents.get('Orchestrator');
-    if (!orchestrator) return { taskIds: [] };
+    if (!orchestrator) return { taskIds: [], taskDescriptions: [] };
     const out = await orchestrator.execute(userMessage);
-    const taskIds = Array.isArray(out?.taskIds) ? out.taskIds : [];
-    return { taskIds };
+    
+    // Type guard for orchestrator output
+    if (typeof out === 'object' && out !== null) {
+      const outObj = out as Record<string, unknown>;
+      const taskIds = Array.isArray(outObj['taskIds']) ? outObj['taskIds'] as number[] : [];
+      return { taskIds, taskDescriptions: [] };
+    }
+    
+    return { taskIds: [], taskDescriptions: [] };
   }
 
   /** Terv végrehajtása */
-  async executePlan(plan: { taskIds: number[] }, emit: (event: string, data: any) => void): Promise<string> {
+  async executePlan(plan: { taskIds: number[] }, emit: (event: string, data: unknown) => void): Promise<string> {
     const parts: string[] = [];
     for (const id of plan.taskIds) {
       const t = this.taskQueue.find(q => q.id === id);

@@ -4,14 +4,17 @@ export interface IAgent {
     role: string;
     description: string;
     capabilities: string[];
-    execute(task: string, context?: any): Promise<any>;
+    execute(task: string, context?: Record<string, unknown>): Promise<unknown>;
+    initialize?(): Promise<void>; // Optional init method
+    isEdgeHealthy?(): boolean; // Optional edge health check (EdgeProxy)
+    isTunnelConnected?(): boolean; // Optional tunnel status (EdgeProxy)
 }
 
 // Swarm Context - Shared Memory
 export interface ISwarmContext {
     sessionId: string;
     history: Array<{ role: 'user' | 'assistant' | 'system'; content: string; agent?: string }>;
-    artifacts: Record<string, any>; // Shared data (e.g. dataframes, search results)
+    artifacts: Record<string, unknown>; // Shared data (e.g. dataframes, search results)
     activeAgent?: string;
 }
 
@@ -21,13 +24,13 @@ export interface AgentHandoff {
     targetAgent: string;
     reason: string;
     instruction: string; // The new prompt for the target agent
-    contextUpdates?: Record<string, any>;
+    contextUpdates?: Record<string, unknown>;
 }
 
 // Standard Agent Response
 export interface AgentResponse {
     status: 'success' | 'error' | 'delegated' | 'handoff';
-    data?: any;
+    data?: unknown;
     error?: string;
     message?: string; // Optional message describing the result
     nextStep?: string;
