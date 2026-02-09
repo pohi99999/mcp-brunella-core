@@ -50,7 +50,7 @@ export interface RoutingDecision {
 // MODEL REGISTRY
 // ============================================================================
 
-const MODEL_REGISTRY: ModelProfile[] = [
+export const MODEL_REGISTRY: ModelProfile[] = [
   // Brain models (Cloud) — planning, architecture, complex analysis
   {
     name: 'gpt-4o',
@@ -374,6 +374,27 @@ export function getModelProfiles(): ModelProfile[] {
  */
 export function getRoutingHistory(): RoutingDecision[] {
   return [...routingHistory];
+}
+
+/**
+ * Get recent routing decisions (for CLI/API).
+ * Returns last N decisions with flattened data for display.
+ */
+export function getRecentDecisions(limit= 50): Array<{
+  timestamp: string;
+  task: string;
+  category: string;
+  selectedModel: string;
+  reason: string;
+}> {
+  const recent = routingHistory.slice(-limit);
+  return recent.map(d => ({
+    timestamp: new Date(d.timestamp).toISOString(),
+    task: d.reason,
+    category: d.model.role, // brain or muscle
+    selectedModel: d.model.name,
+    reason: d.reason,
+  }));
 }
 
 /**
