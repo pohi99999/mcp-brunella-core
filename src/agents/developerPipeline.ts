@@ -4,6 +4,7 @@
 
 import { logInfo, logError } from '../utils/logger.js';
 import { developerMetrics } from '../utils/developerMetrics.js';
+import { activityFeed } from '../utils/activityFeed.js';
 import { EventEmitter } from 'events';
 
 // ==================== Types ====================
@@ -92,6 +93,14 @@ export class PipelineRunner extends EventEmitter {
 
         this.pipelines.set(taskId, pipeline);
         logInfo('PipelineRunner', `Pipeline created: ${taskId} → "${task.slice(0, 60)}"`);
+        
+        activityFeed.addActivity(
+            'info',
+            'pipeline',
+            `Pipeline started: ${taskId}`,
+            { taskId, task }
+        );
+
         return pipeline;
     }
 
@@ -171,6 +180,13 @@ export class PipelineRunner extends EventEmitter {
 
         this.emitProgress(pipeline, phaseId, 'error', `Error: ${error.slice(0, 100)}`);
         logError('PipelineRunner', `Pipeline ${taskId} failed at ${phaseId}: ${error}`);
+
+        activityFeed.addActivity(
+            'error',
+            'pipeline',
+            `Pipeline failed at ${phaseId}: ${error.slice(0, 100)}`,
+            { taskId, phaseId, error }
+        );
     }
 
     /**
@@ -206,6 +222,13 @@ export class PipelineRunner extends EventEmitter {
         );
 
         logInfo('PipelineRunner', `Pipeline ${taskId} done in ${totalMs}ms`);
+
+        activityFeed.addActivity(
+            'success',
+            'pipeline',
+            `Pipeline completed successfully: ${taskId}`,
+            { taskId, duration: totalMs }
+        );
 
         this.emitProgress(pipeline, 'test', 'done', `Task completed (${totalMs}ms)`);
     }

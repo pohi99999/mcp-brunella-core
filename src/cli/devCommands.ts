@@ -1134,7 +1134,7 @@ export function registerDevCommands(program: Command): void {
         .action(async (options: { json?: boolean }) => {
             const spinner = ora('Fetching templates...').start();
             try {
-                const result = await apiFetch<any>('/api/v1/developer/scaffold/templates');
+                const result = await apiFetch<{ templates: any[] }>('/scaffold/templates');
                 const templates = result.templates;
                 
                 spinner.stop();
@@ -1195,7 +1195,7 @@ export function registerDevCommands(program: Command): void {
                     }
                 }
 
-                const result = await apiFetch<any>('/api/v1/developer/scaffold', {
+                const result = await apiFetch<{ message: string; files: any[] }>('/scaffold', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -1233,4 +1233,175 @@ export function registerDevCommands(program: Command): void {
                 process.exit(1);
             }
         });
+
+    // ==================== P11: Approval Commands ====================
+
+    const approval = dev.command('approval').description('Manage approval requests');
+
+    approval
+        .command('list')
+        .description('List pending approval requests')
+        .action(async () => {
+            const spinner = ora('Fetching approval requests...').start();
+            try {
+                const result = await apiFetch<{ requests: any[] }>('/approval?status=pending');
+                const { requests } = result;
+                spinner.stop();
+
+                if (requests.length === 0) {
+                    console.log(chalk.dim('\nNo pending requests.'));
+                    return;
+                }
+
+                console.log(chalk.bold('\nPending Approvals:\n'));
+                for (const req of requests) {
+                    console.log(`${chalk.cyan(req.id)} [${req.type}]`);
+                    console.log(`  ${req.description}`);
+                    const age = Math.round((Date.now() - req.createdAt) / 1000);
+                    console.log(`  ${chalk.dim(`Created ${age}s ago`)}`);
+                    console.log('');
+                }
+            } catch (e: unknown) {
+                 const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    approval
+        .command('approve <id>')
+        .description('Approve a request')
+        .action(async (id: string) => {
+            const spinner = ora(`Approving ${id}...`).start();
+            try {
+                const result = await apiFetch<{ success: boolean; status: string }>(`/approval/${id}/respond`, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: 'approve' })
+                });
+                spinner.succeed(chalk.green(`Request approved`));
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                 spinner.fail(chalk.red(`Failed: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    approval
+        .command('reject <id>')
+        .description('Reject a request')
+        .action(async (id: string) => {
+             const spinner = ora(`Rejecting ${id}...`).start();
+            try {
+                const result = await apiFetch<{ success: boolean; status: string }>(`/approval/${id}/respond`, {
+                     method: 'POST',
+                    body: JSON.stringify({ action: 'reject' })
+                });
+                spinner.succeed(chalk.red(`Request rejected`));
+            } catch (e: unknown) {
+                 const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed: ${msg}`));
+                 process.exit(1);
+            }
+        });
+
+    // ==================== P12: Activity Feed Commands ====================
+
+    dev
+        .command('feed')
+        .description('Show activity feed')
+        .option('-l, --limit <count>', 'Limit entries', '20')
+        .option('--json', 'Output raw JSON')
+        .option('-w, --watch', 'Watch mode (poll for new events)')
+        .action(async (opts: { limit: string; json?: boolean; watch?: boolean }) => {
+            try {
+                const limit = parseInt(opts.limit) || 20;
+
+                const fetchAndShow = async (lastId?: string) => {
+                    const result = await apiFetch<{ activities: any[] }>(`/feed?limit=${limit}`);
+                    // If watching, filter out old ones
+                    const newItems = lastId 
+                        ? result.activities.filter(a => a.id > lastId) // Simple lexicographical check or timestamp check needed? ID is random. 
+                        // Actually ID is act-{timestamp}-{random}, so lexicographical might work for timestamp part, but safe to filter by timestamp or known IDs.
+                        // For simplicity in CLI, just showing snapshot unless we implement smart dedupe.
+                        // Let's rely on timestamp if watching.
+                        : result.activities;
+
+                    if (opts.json) {
+                        console.log(JSON.stringify(newItems, null, 2));
+                        return result.activities[0]?.id; // Return latest ID
+                    }
+                    
+                    if (!lastId && !opts.watch) {
+                        console.log(chalk.bold('\n📡 Activity Feed:\n'));
+                    }
+
+                    // Reverse to show oldest first in log stream, but for snapshot usually newest first
+                    const itemsToShow = opts.watch ? newItems.reverse() : newItems;
+
+                    for (const item of itemsToShow) {
+                        const time = new Date(item.timestamp).toLocaleTimeString();
+                        let badge = chalk.blue('INFO');
+                        if (item.type === 'success') badge = chalk.green('DONE');
+                        if (item.type === 'warning') badge = chalk.yellow('WARN');
+                        if (item.type === 'error') badge = chalk.red('ERR ');
+                        if (item.type === 'approval') badge = chalk.magenta('ASK ');
+
+                        const source = chalk.dim(`[${item.source}]`);
+                        console.log(`${chalk.dim(time)} ${badge} ${source} ${item.message}`);
+                    }
+                    
+                    return result.activities[0]?.id || lastId; // Latest ID
+                };
+
+                let latestId = await fetchAndShow();
+
+                if (opts.watch) {
+                    console.log(chalk.dim('\nWatching for new activities... (Ctrl+C to stop)'));
+                    // Use a simple Set to track seen IDs for deduplication in watch mode
+                    const seenIds = new Set<string>();
+                    // Prime with initial fetch
+                    // (Actually the logic above is a bit simplistic for proper watch, 
+                    // let's just re-fetch and filter by seenIds)
+                    
+                    // Reset seenIds with initial batch
+                    // (We can't easily access the initial batch variable here due to scope, let's just start fresh loop)
+                }
+                
+                if (opts.watch) {
+                    const seen = new Set<string>();
+                    // Add initial batch to seen
+                    // We need to re-fetch to simplify logic or change structure.
+                    // Let's keep it simple: just poll.
+                    
+                    setInterval(async () => {
+                        const result = await apiFetch<{ activities: any[] }>(`/feed?limit=20`);
+                        const newActivities = result.activities.filter(a => !seen.has(a.id)).reverse(); // Oldest first for streaming
+                        
+                        for (const item of newActivities) {
+                             seen.add(item.id);
+                             // ... print ...
+                             const time = new Date(item.timestamp).toLocaleTimeString();
+                             let badge = chalk.blue('INFO');
+                             if (item.type === 'success') badge = chalk.green('DONE');
+                             if (item.type === 'warning') badge = chalk.yellow('WARN');
+                             if (item.type === 'error') badge = chalk.red('ERR ');
+                             if (item.type === 'approval') badge = chalk.magenta('ASK ');
+     
+                             const source = chalk.dim(`[${item.source}]`);
+                             console.log(`${chalk.dim(time)} ${badge} ${source} ${item.message}`);
+                        }
+                    }, 2000);
+                    
+                    // Prime the set with recent ones so we don't dump 20 old ones
+                    const initial = await apiFetch<{ activities: any[] }>(`/feed?limit=${limit}`);
+                    initial.activities.forEach(a => seen.add(a.id));
+                }
+
+            } catch (e: unknown) {
+                 const msg = e instanceof Error ? e.message : String(e);
+                console.error(chalk.red(`Failed: ${msg}`));
+                 process.exit(1);
+            }
+        });
+
 }

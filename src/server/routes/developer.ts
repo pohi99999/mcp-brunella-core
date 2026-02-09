@@ -11,6 +11,8 @@ import { taskQueueManager } from '../../agents/taskQueue.js';
 import { getGitManager } from '../../agents/gitIntegration.js';
 import { getTemplateEngine } from '../../agents/codeScaffold.js';
 import { developerMetrics } from '../../utils/developerMetrics.js';
+import { approvalManager } from '../../utils/approvalManager.js';
+import { activityFeed } from '../../utils/activityFeed.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
@@ -733,6 +735,74 @@ export function createDeveloperRoutes(): Router {
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             logError('DeveloperRoute', `Scaffold generation failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // ==================== P11: Approval Flow ====================
+
+    // POST /approval/request — Request approval (mainly for testing/tools)
+    router.post('/approval/request', async (req, res) => {
+        try {
+            const { type, description, metadata, timeoutMs } = req.body;
+            if (!type || !description) {
+                res.status(400).json({ error: 'type and description required' });
+                return;
+            }
+            const id = await approvalManager.requestApproval(type, description, metadata, timeoutMs);
+            res.json({ id, status: 'pending' });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // GET /approval — List pending requests
+    router.get('/approval', (req, res) => {
+        try {
+            const { status } = req.query;
+            const requests = approvalManager.listRequests(status as any);
+            res.json({ requests });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // POST /approval/:id/respond — Respond to request
+    router.post('/approval/:id/respond', (req, res) => {
+        try {
+            const { id } = req.params;
+            const { action, response } = req.body;
+
+            if (action !== 'approve' && action !== 'reject') {
+                res.status(400).json({ error: 'action must be approve or reject' });
+                return;
+            }
+
+            const success = approvalManager.respond(id, action, response);
+            if (!success) {
+                res.status(400).json({ error: 'Failed to respond (invalid ID or status)' });
+                return;
+            }
+
+            res.json({ success: true, id, status: action === 'approve' ? 'approved' : 'rejected' });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // ==================== P12: Activity Feed ====================
+
+    // GET /feed — Get recent activity feed
+    router.get('/feed', (req, res) => {
+        try {
+            const limit = parseInt(req.query.limit as string) || 50;
+            const activities = activityFeed.getRecent(limit);
+            res.json({ activities });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });
         }
     });
