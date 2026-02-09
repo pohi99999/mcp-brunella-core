@@ -30,6 +30,10 @@ import { swaggerSpec } from './swagger.js';
 import { socketService } from './SocketService.js';
 import { createTelemetryRouter } from './telemetryRoutes.js';
 import { createAuditRouter } from './auditRoutes.js';
+import { createSpecRouter } from './specRoutes.js';
+import { createPhoenixRouter } from './phoenixRoutes.js';
+import { createRouterRouter } from './routerRoutes.js';
+import { createMemoryRouter } from './memoryRoutes.js';
 
 const logger = new Logger('web_ui.log');
 const configManager = new ConfigManager();
@@ -85,6 +89,18 @@ export async function startWebServer() {
 
     // Gold Protocol: Audit routes (G6.2)
     app.use('/api/audit', createAuditRouter());
+
+    // Gold Protocol: Spec routes (G7.1)
+    app.use('/api/specs', createSpecRouter());
+
+    // Gold Protocol: Phoenix routes (G7.2)
+    app.use('/api/phoenix', createPhoenixRouter());
+
+    // Gold Protocol: Router routes (G7.3)
+    app.use('/api/router', createRouterRouter());
+
+    // Gold Protocol: Memory routes (G7.4)
+    app.use('/api/memory', createMemoryRouter());
 
     const httpServer = createServer(app);
     const io = new Server(httpServer, {

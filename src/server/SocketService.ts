@@ -29,6 +29,14 @@ class SocketServiceClass {
   isReady(): boolean {
     return this.io !== null;
   }
+
+  /**
+   * Generic emit for custom Gold Protocol events (G7.8)
+   */
+  emit(event: string, data: any): void {
+    if (!this.io) return;
+    this.io.emit(event, data);
+  }
 }
 
 export const socketService = new SocketServiceClass();

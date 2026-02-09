@@ -17,6 +17,7 @@ import { discoverSkills } from './utils/skillsLoader.js';
 import { listHooks } from './utils/hooks.js';
 import { startInteractiveMenu } from './interactive.js';
 import { cloudflareClient } from './utils/cloudflareClient.js';
+import { registerGoldCommands } from './cli/goldCommands.js';
 
 const program = new Command();
 
@@ -696,6 +697,9 @@ julesCmd.command('status')
       process.exit(1);
     }
   });
+
+// Register Gold Protocol commands (G7.7)
+registerGoldCommands(program);
 
 // Interactive Menu (Default)
 if (!process.argv.slice(2).length) {
