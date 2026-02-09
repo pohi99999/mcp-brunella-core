@@ -19,11 +19,11 @@ export function createAuditRouter(): Router {
    * GET /api/audit/log
    * Paginated audit log (newest first)
    */
-  router.get('/log', (req, res) => {
+  router.get('/log', async (req, res) => {
     try {
       const limit = Math.min(parseInt(req.query.limit as string) || 50, 500);
       const offset = parseInt(req.query.offset as string) || 0;
-      const entries = getAuditLog(limit, offset);
+      const entries = await getAuditLog(limit, offset);
       res.json({ entries, limit, offset });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
@@ -34,10 +34,10 @@ export function createAuditRouter(): Router {
    * GET /api/audit/denied
    * Only denied entries (newest first)
    */
-  router.get('/denied', (req, res) => {
+  router.get('/denied', async (req, res) => {
     try {
       const limit = Math.min(parseInt(req.query.limit as string) || 50, 500);
-      const entries = getDeniedEntries(limit);
+      const entries = await getDeniedEntries(limit);
       res.json({ entries });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
@@ -48,9 +48,9 @@ export function createAuditRouter(): Router {
    * GET /api/audit/stats
    * Audit statistics (totals, by agent)
    */
-  router.get('/stats', (_req, res) => {
+  router.get('/stats', async (_req, res) => {
     try {
-      const stats = getAuditStats();
+      const stats = await getAuditStats();
       res.json(stats);
     } catch (e: any) {
       res.status(500).json({ error: e.message });
@@ -61,10 +61,10 @@ export function createAuditRouter(): Router {
    * POST /api/audit/cleanup
    * Manual trigger for retention cleanup
    */
-  router.post('/cleanup', (req, res) => {
+  router.post('/cleanup', async (req, res) => {
     try {
       const days = parseInt(req.body?.retentionDays as string) || 30;
-      const removed = cleanupOldEntries(days);
+      const removed = await cleanupOldEntries(days);
       res.json({ removed, retentionDays: days });
     } catch (e: any) {
       res.status(500).json({ error: e.message });

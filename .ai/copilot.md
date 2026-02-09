@@ -37,6 +37,47 @@
 
 ## Napló
 
+### 2026-02-10 - Code Quality P4: Audit Log SQLite Persistence (TELJES! ✅)
+
+**Commit:** (pending)
+**Feladat:** Audit log perzisztens tárolása SQLite-ban (checkpoint.ts mintájára)
+
+**Implementáció:**
+- ✅ **SQLite Database** (`src/core/auditLog.ts`):
+  - Lazy singleton `getDb()` (better-sqlite3, WAL mode)
+  - Schema: `audit_log` tábla (id, timestamp, agent_name, action, resource, result, reason)
+  - Indexes: id, timestamp, agent_name, result
+
+- ✅ **Async Functions** (minden függvény Promise-alapú):
+  - `record()` → SQLite INSERT + in-memory buffer (fast cache)
+  - `getAuditLog()` → SQLite SELECT ORDER BY id DESC (fallback to buffer)
+  - `getDeniedEntries()` → SQLite WHERE result='DENIED'
+  - `getAuditStats()` → SQLite aggregation (totals, by agent)
+  - `cleanupOldEntries()` → SQLite DELETE WHERE timestamp < cutoff
+  - `clearAuditLog()` → DELETE FROM audit_log (for tests)
+
+- ✅ **Integration Updates**:
+  - AgentManager.ts: `auditRecord()` calls now `await`
+  - auditRoutes.ts: All handlers async
+  - Tests: 13/13 audit tests updated (async/await)
+
+- ✅ **Performance**:
+  - WAL mode: concurrent reads + low-latency writes
+  - In-memory buffer (1000 entries) for fast recent access
+  - SQLite persistence for long-term storage
+
+**Eredmények:**
+- 💾 Audit log perzisztens (data/audit.db)
+- ✅ TypeScript compile: 0 errors
+- ✅ Tests: 195/195 PASS
+- 📊 Gold Protocol G6: Audit Trail completion
+- 🔒 30-day retention policy (automated cleanup)
+
+**Git:** (pending commit)
+**Következő:** P5 (Config Validation Zod) vagy P6 (Test Coverage)
+
+---
+
 ### 2026-02-10 - Code Quality P3: Centralizált Error Handling (TELJES! ✅)
 
 **Commit:** `0c9c4ee1`
