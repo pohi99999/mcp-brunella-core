@@ -5,7 +5,7 @@ import path from 'path';
 import os from 'os';
 import swaggerUi from 'swagger-ui-express';
 import { config } from '../config/schema.js';
-import { Logger, logEmitter, type LogEvent, type AgentStatusEvent } from '../utils/logger.js';
+import { Logger, logEmitter, type LogEvent, type AgentStatusEvent, logInfo, logError, logWarn } from '../utils/logger.js';
 import { initDb, saveMessage } from '../utils/db.js';
 import { initTasksDb } from '../utils/tasksDb.js';
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
@@ -61,25 +61,25 @@ interface ActiveTransport {
 export async function startWebServer() {
     const webUiEnabled = process.env.WEB_UI_ENABLED !== "0" && process.env.WEB_UI_ENABLED !== "false";
     if (!webUiEnabled) {
-        console.error("WEB_UI_ENABLED=0 -> Web UI disabled");
+        logError('Server', "WEB_UI_ENABLED=0 -> Web UI disabled");
         return;
     }
 
     try {
         initDb();
-    } catch (e) {
-        console.error("DB Init failed:", e);
+    } catch (e: any) {
+        logError('Server', `DB Init failed: ${e.message}`);
     }
 
     try {
         initTasksDb();
-    } catch (e) {
-        console.error("Tasks DB Init failed:", e);
+    } catch (e: any) {
+        logError('Server', `Tasks DB Init failed: ${e.message}`);
     }
 
     // Auto-connect to configured MCP servers (Stub for now based on configManager)
     // In a real scenario, we would read from mcp_servers.json
-    console.log("🔄 Starting MCP Bridge...");
+    logInfo('Server', "🔄 Starting MCP Bridge...");
 
     // Előzetes ügynök regisztráció (hogy az API végpontok működjenek SSE előtt is)
     // Megjegyzés: Ez már megtörténik az index.ts-ben a registerAllTools-on keresztül.
@@ -218,14 +218,14 @@ export async function startWebServer() {
 
     io.on('connection', (socket) => {
         const DEFAULT_CHAT_ID = 'main-session';
-        console.log('Client connected to Dashboard');
+        logInfo('Server', 'Client connected to Dashboard');
         socket.emit('system:log', { message: 'Rendszer indítása... Mission Control csatlakozva.', type: 'success', timestamp: Date.now() });
 
         socket.emit('tools_update', toolManager.getToolDefinitions());
         socket.emit('mcp_servers_status', mcpProcessManager.getServersStatus());
 
         socket.on('run_tool', async (data: { name: string, args: any, id?: string }) => {
-            console.log(`Socket Tool Run Request: ${data.name}`);
+            logInfo('Server', `Socket Tool Run Request: ${data.name}`);
             try {
                 // Try local toolManager first
                 let result;
@@ -281,6 +281,6 @@ export async function startWebServer() {
     });
 
     httpServer.listen(config.port, () => {
-        console.log(`🌐 Web UI: http://localhost:${config.port}`);
+        logInfo('Server', `🌐 Web UI: http://localhost:${config.port}`);
     });
 }

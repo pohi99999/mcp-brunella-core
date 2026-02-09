@@ -1,4 +1,5 @@
 import { getRegisteredToolsList, executeLocalTool } from './registry.js';
+import { logError } from '../utils/logger.js';
 
 export class ToolManager {
     getToolDefinitions() {
@@ -9,7 +10,7 @@ export class ToolManager {
         try {
             return await executeLocalTool(name, args);
         } catch (e: any) {
-            console.error(`ToolManager execution error for ${name}:`, e.message);
+            logError('ToolManager', `Execution error for ${name}: ${e.message}`);
             throw e;
         }
     }

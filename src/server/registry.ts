@@ -1,5 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { logWarn } from "../utils/logger.js";
 
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
@@ -51,8 +52,8 @@ export async function registerAgents() {
         const agentsDir = path.default.join(process.cwd(), 'myai/agents');
         agentManager.registerAgent(new DynamicAgent(path.default.join(agentsDir, 'project_organizer.toml')));
         agentManager.registerAgent(new DynamicAgent(path.default.join(agentsDir, 'agent_architect.toml')));
-    } catch (e) {
-        console.warn("Could not load dynamic agents:", e);
+    } catch (e: any) {
+        logWarn('System', `Could not load dynamic agents: ${e.message}`);
     }
 }
 

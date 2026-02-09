@@ -1,4 +1,5 @@
 import { config } from '../config/index.js';
+import { logWarn } from './logger.js';
 
 let db: any = null;
 let path: any = null;
@@ -41,8 +42,8 @@ async function getDb() {
         _initTables(db);
 
         return db;
-    } catch (e) {
-        console.warn("Failed to initialize SQLite database:", e);
+    } catch (e: any) {
+        logWarn('System', `Failed to initialize SQLite database: ${e.message}`);
         return null;
     }
 }
