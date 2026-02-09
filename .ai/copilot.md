@@ -2,7 +2,7 @@
 
 **Agent:** GitHub Copilot (Pro+)
 **Fájl:** `.ai/copilot.md`
-**Utolsó frissítés:** 2026-02-10
+**Utolsó frissítés:** 2026-02-09
 
 ---
 
@@ -12,6 +12,45 @@
 2. **Formátum:** `### YYYY-MM-DD HH:MM - [Rövid cím]`
 3. **Tartalmazzon:** Mit csináltál, mely fájlokat érintette, mi a státusz
 4. **Olvass be induláskor:** `README.md`, `conductor/tracks.md`, `.ai/FOSZAL.md`
+
+---
+
+### 2026-02-09 21:15 - Smoke Fix + Teljes Rendszer Validáció + Dashboard Fázis 4 UI ✅
+
+**Commit:** `[pending]`
+**Feladat:** Smoke script javítása, .env konfiguráció rendezése, teljes indítóprotokoll végrehajtása
+
+**Javítások:**
+
+✨ **Smoke Script (`scripts/smoke.mjs`):**
+
+- `WEB_UI_ENABLED` env-ből érkezik (default: `1`) — korábban hardcoded `0` volt
+- `PORT` env továbbítása child process-nek (portütközés megelőzése)
+- AnythingLLM env változók `trim()` kezelése (URL-break elleni védelem)
+- `brunella config list` nem blokkolja a smoke-ot (warn + skip)
+
+✨ **AnythingLLM Integráció:**
+
+- `src/tools/anythingllm.ts`: `getBaseUrl()` trim hozzáadva
+- `.env`: `ANYTHINGLLM_API_KEY` beállítva, `ANYTHINGLLM_WORKSPACE` javítva `workspace`-re (slug, nem name)
+
+✨ **Dashboard DeveloperPanel bővítés (`src/dashboard/components/dashboard/DeveloperPanel.tsx`):**
+
+- Metrics tab: fejlesztői metrikák megjelenítése (build/test/task statisztikák)
+- Approvals tab: jóváhagyási kérelmek kezelése (approve/reject gombok)
+- Activity Feed tab: valós idejű polling, eseménylista, típus badge-ek
+- `src/dashboard/lib/apiService.ts`: új API helper függvények (metrics, approval, feed)
+
+**Validáció (README Indító Protokoll):**
+
+- ✅ `npm run build` — 0 TypeScript hiba
+- ✅ `npm test` — 361/361 PASS (44 fájl)
+- ✅ `npm run smoke` — Protocol ping OK, AnythingLLM list + chat OK
+
+**Érintett fájlok:**
+`scripts/smoke.mjs`, `src/tools/anythingllm.ts`, `.env`, `src/dashboard/components/dashboard/DeveloperPanel.tsx`, `src/dashboard/lib/apiService.ts`, `conductor/tracks/developer_agent_2_0_20260206/plan.md`
+
+**Státusz:** ✅ Befejezve — rendszer stabil, minden teszt PASS
 
 ---
 

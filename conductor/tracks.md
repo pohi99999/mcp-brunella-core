@@ -46,15 +46,17 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 - [x] **Developer Agent 3.0 — Unified Development Platform** [HIGH]
   - **ID:** `developer_agent_2_0_20260206`
   - **Progress:** 100% (Fázis 1-4: P1-P12 kész ✅)
-  - **Utolsó aktivitás:** 2026-02-10
-  - **Commits:** ... `a01c1a9c` (P10), `[pending]` (P11/P12)
+  - **Utolsó aktivitás:** 2026-02-09
+  - **Commits:** ... `a01c1a9c` (P10), `[pending]` (P11/P12/smoke fix)
   - **Leírás:** Unified Dev Platform: Pipeline, CLI (`brunella dev`), Dashboard (DeveloperPanel), REST API (`/api/v1/developer/*`). Aranyszabály: Agent + CLI + Dashboard + API + Test szinkronban.
   - **Fázis 1 KÉSZ (P1-P3):** Pipeline Runner, CLI commands, Dashboard panel ✅
   - **Fázis 2 KÉSZ (P4-P6):** Code Review, Context Builder, Coverage Analysis ✅
   - **Fázis 3 KÉSZ (P7-P9):** Task Queue, Git Integration, Code Scaffolding ✅
   - **Fázis 4 KÉSZ (P10-P12):** Metrics (Persistence), Approval Flow (Manager/API/CLI), Unified Activity Feed ✅
-  - **Tesztek:** 350+/350+ PASS, 0 TypeScript errors
-  - **Következő:** Deployment / Dashboard v2 integrálás
+  - **Smoke Fix (2026-02-09):** smoke.mjs env propagation, AnythingLLM trim, WEB_UI_ENABLED default=1
+  - **Dashboard UI bővítés:** DeveloperPanel Metrics/Approvals/Activity Feed tab-ok
+  - **Tesztek:** 361/361 PASS, 0 TypeScript errors
+  - **Validáció:** build ✅ + test ✅ + smoke ✅ (teljes indítóprotokoll 2026-02-09)
   - 📂 *[./tracks/developer_agent_2_0_20260206/](./tracks/developer_agent_2_0_20260206/)*
 
 - [ ] **Phoenix Protocol V2** [MEDIUM]
