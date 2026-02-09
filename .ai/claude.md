@@ -2,7 +2,7 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-02-06
+**Utolsó frissítés:** 2026-02-10
 
 ---
 
@@ -40,6 +40,59 @@
 ---
 
 ## Napló
+
+### 2026-02-10 19:35 - P5 Config Validation (Zod) - Code Quality Track
+
+**Feladat:** Centralizált környezeti változó validáció Zod sémával (Code Quality Improvements Track P5)
+
+**Elvégzett munkák:**
+
+1. **ConfigSchema létrehozás** (`src/config/schema.ts`)
+   - ✅ 11 validated field: port, nodeEnv, ollamaBaseUrl, pythonBaseUrl, geminiApiKey, githubToken, langchainApiKey, anythingllmApiKey, brunellaWorkspaceRoot, googleApplicationCredentials, nodeOptionsMaxOldSpaceSize
+   - ✅ Type coercion: `z.coerce.number()` (string → number for port)
+   - ✅ URL validation: ollamaBaseUrl, pythonBaseUrl
+   - ✅ Enum validation: nodeEnv ∈ ['development', 'production', 'test']
+   - ✅ Optional fields: API keys (geminiApiKey, githubToken, langchainApiKey, anythingllmApiKey)
+   - ✅ Sensible defaults: port=3000, nodeEnv='development', URLs=localhost
+
+2. **parseConfig() implementation**
+   - ✅ Startup validation throws formatted ZodError on invalid config
+   - ✅ Exported `config` object: type-safe (ConfigSchema inferred type)
+   - ✅ Clear error messages for validation failures
+
+3. **web.ts integration**
+   - ✅ `import { config } from '../config/schema.js'`
+   - ✅ `httpServer.listen(config.port, ...)` instead of raw `process.env.PORT`
+
+4. **Test suite** (`test/configSchema.test.ts`)
+   - ✅ 16 tests: defaults, URL validation, enum enforcement, type coercion, error formatting, optional fields
+   - ✅ All 16 tests PASS
+
+**Érintett fájlok:**
+- `src/config/schema.ts` (NEW - 115 lines)
+- `test/configSchema.test.ts` (NEW - 145 lines)
+- `src/server/web.ts` (MODIFIED - config.port usage)
+- `conductor/tracks/code_quality_improvements_20260210/spec.md` (P5 DONE jelölés)
+- `conductor/tracks.md` (progress update)
+
+**Teszt eredmények:** 211/211 PASS ✅ (195 original + 16 new config tests)
+**Build:** 0 TypeScript errors ✅
+**Commit:** `81a36957` - feat(code-quality): P5 Config Validation (Zod)
+**GitHub Push:** ✅ SUCCESS
+
+**Track Progress:** Code Quality Improvements - 63% (5/8 tasks done)
+- ✅ P1: web.ts refactoring (980→200 LOC) - commit `7dd6b628`
+- ✅ P2: any types elimination (20+→0) - commits `cc625d8d`, `5c4a0f8e`
+- ✅ P3: Centralized error handling - commit `0c9c4ee1`
+- ✅ P4: Audit SQLite persistence - commit `ee9ba86a`
+- ✅ P5: Config validation (Zod) - commit `81a36957`
+- ⏳ P6-P8: Postponed to afternoon session per user request
+
+**Státusz:** ✅ P5 KÉSZ - Session pause per user: "P5-öt még csináljuk meg a többit meghagyjuk délutánra"
+
+**Következő munkamenet:** P6 (Test Coverage), P7 (Logger Cleanup), P8 (API Versioning) - ~3.5 hours estimated
+
+---
 
 ### 2026-02-08 23:05 - Bootstrap Protokoll Aktiválás + Körülmények Értékeelés
 
