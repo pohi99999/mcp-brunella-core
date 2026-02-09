@@ -13,7 +13,7 @@
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
-import { saveTask, updateTask, getPendingTasks, DbTask } from '../utils/db.js';
+import { saveTask, updateTask, getPendingTasks } from '../utils/db.js';
 
 // ============================================================================
 // INTERFACES
@@ -230,12 +230,18 @@ export class EdgeProxyAgent extends BaseAgent {
   async submitTask(context: AgentContext): Promise<AgentResult> {
     logInfo(this.name, 'Task beküldése az edge-re...');
     
-    // Mentés lokális adatbázisba
-    const localTaskId = await saveTask(this.name, context.task || 'Unknown Task', {
-        ...context.context as any,
-        originalInstruction: context.task,
-        source: 'EdgeProxy'
-    });
+    // Mentés lokális adatbázisba (best-effort)
+    let localTaskId: number | null = null;
+    try {
+      localTaskId = await saveTask(this.name, context.task || 'Unknown Task', {
+          ...(context.context as Record<string, unknown> || {}),
+          originalInstruction: context.task,
+          source: 'EdgeProxy'
+      });
+    } catch (error) {
+      // Ha a lokális mentés hibázik, folytatjuk az edge beküldéssel / fallbackkel
+      logError(this.name, `Lokális task mentés sikertelen: ${String(error)}`);
+    }
 
     // Edge elérhetőség ellenőrzése
     if (this.health.edge === 'offline') {
@@ -245,9 +251,17 @@ export class EdgeProxyAgent extends BaseAgent {
     if (this.health.edge === 'offline' && this.config.fallbackToLocal) {
       logInfo(this.name, 'Edge offline, lokális fallback...');
 
-      // Update local task if needed
+      // Update local task if needed, preserving all context fields
       if (localTaskId) {
-           await updateTask(localTaskId, { status: 'pending', context: { ...context.context as any, fallback: true } });
+           await updateTask(localTaskId, { 
+               status: 'pending', 
+               context: { 
+                   ...(context.context as Record<string, unknown> || {}),
+                   originalInstruction: context.task,
+                   source: 'EdgeProxy',
+                   fallback: true 
+               } 
+           });
       }
 
       return {
@@ -278,11 +292,16 @@ export class EdgeProxyAgent extends BaseAgent {
       
       logInfo(this.name, `Task beküldve: ${result.taskId}`);
 
-      // Update local task with edge ID
+      // Update local task with edge ID, preserving original instruction/source metadata
       if (localTaskId) {
           await updateTask(localTaskId, {
               status: 'dispatched',
-              context: { ...context.context as any, edgeTaskId: result.taskId }
+              context: {
+                  ...(context.context as Record<string, unknown> || {}),
+                  edgeTaskId: result.taskId,
+                  originalInstruction: context.task,
+                  source: 'EdgeProxy'
+              }
           });
       }
       
@@ -295,11 +314,16 @@ export class EdgeProxyAgent extends BaseAgent {
     } catch (error) {
       logError(this.name, `Task beküldés sikertelen: ${error}`);
       
+      // Best-effort DB update in catch path
       if (localTaskId) {
-          await updateTask(localTaskId, {
-              status: 'failed',
-              result: { error: String(error) }
-          });
+          try {
+              await updateTask(localTaskId, {
+                  status: 'failed',
+                  result: { error: String(error) }
+              });
+          } catch (dbError) {
+              logError(this.name, `Failed to update task status in DB: ${dbError}`);
+          }
       }
 
       if (this.config.fallbackToLocal) {
@@ -353,14 +377,15 @@ export class EdgeProxyAgent extends BaseAgent {
     }
     
     // Implementáció: KV <-> SQLite szinkronizáció
-    const pendingTasks = await getPendingTasks(this.name);
+    // Csak a 'dispatched' státuszú taskokat szinkronizáljuk az edge-del
+    const pendingTasks = await getPendingTasks(this.name, ['dispatched']);
     let syncedCount = 0;
-    const updates: any[] = [];
+    const updates: Array<{ id: number; oldStatus: string; newStatus: string }> = [];
 
     for (const task of pendingTasks) {
         try {
-            const context = JSON.parse(task.context || '{}');
-            const edgeTaskId = context.edgeTaskId;
+            const context = JSON.parse(task.context || '{}') as Record<string, unknown>;
+            const edgeTaskId = context.edgeTaskId as string | undefined;
 
             if (edgeTaskId) {
                 const edgeStatus = await this.getTaskStatus(edgeTaskId);

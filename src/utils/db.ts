@@ -141,45 +141,55 @@ export interface DbTask {
     updated_at: string;
 }
 
-export async function saveTask(agentName: string, description: string, context: any, parentId?: number): Promise<number | null> {
+export async function saveTask(agentName: string, description: string, context: unknown, parentId?: number): Promise<number | null> {
     const database = await getDb();
     if (!database) return null;
 
-    const stmt = database.prepare('INSERT INTO tasks (agent_name, description, context, parent_id) VALUES (?, ?, ?, ?)');
-    const result = stmt.run(agentName, description, JSON.stringify(context), parentId || null);
-    // @ts-ignore
-    return result.lastInsertRowid as number;
+    try {
+        const contextJson = JSON.stringify(context);
+        const stmt = database.prepare('INSERT INTO tasks (agent_name, description, context, parent_id) VALUES (?, ?, ?, ?)');
+        const result = stmt.run(agentName, description, contextJson, parentId ?? null);
+        return Number(result.lastInsertRowid);
+    } catch (error) {
+        logError('db.saveTask', `Failed to save task: ${error}`);
+        return null;
+    }
 }
 
-export async function updateTask(id: number, updates: { status?: string, result?: any, context?: any }): Promise<boolean> {
+export async function updateTask(id: number, updates: { status?: string, result?: unknown, context?: unknown }): Promise<boolean> {
     const database = await getDb();
     if (!database) return false;
 
-    const sets: string[] = [];
-    const values: any[] = [];
+    try {
+        const sets: string[] = [];
+        const values: (string | number)[] = [];
 
-    if (updates.status !== undefined) {
-        sets.push('status = ?');
-        values.push(updates.status);
+        if (updates.status !== undefined) {
+            sets.push('status = ?');
+            values.push(updates.status);
+        }
+        if (updates.result !== undefined) {
+            sets.push('result = ?');
+            values.push(JSON.stringify(updates.result));
+        }
+        if (updates.context !== undefined) {
+            sets.push('context = ?');
+            values.push(JSON.stringify(updates.context));
+        }
+
+        // Always update timestamp
+        sets.push('updated_at = CURRENT_TIMESTAMP');
+
+        values.push(id);
+        const sql = `UPDATE tasks SET ${sets.join(', ')} WHERE id = ?`;
+
+        const stmt = database.prepare(sql);
+        const info = stmt.run(...values);
+        return info.changes > 0;
+    } catch (error) {
+        logError('db.updateTask', `Failed to update task ${id}: ${error}`);
+        return false;
     }
-    if (updates.result !== undefined) {
-        sets.push('result = ?');
-        values.push(JSON.stringify(updates.result));
-    }
-    if (updates.context !== undefined) {
-        sets.push('context = ?');
-        values.push(JSON.stringify(updates.context));
-    }
-
-    // Always update timestamp
-    sets.push('updated_at = CURRENT_TIMESTAMP');
-
-    values.push(id);
-    const sql = `UPDATE tasks SET ${sets.join(', ')} WHERE id = ?`;
-
-    const stmt = database.prepare(sql);
-    const info = stmt.run(...values);
-    return info.changes > 0;
 }
 
 export async function getPendingTasks(agentName: string, statuses?: string[]): Promise<DbTask[]> {
