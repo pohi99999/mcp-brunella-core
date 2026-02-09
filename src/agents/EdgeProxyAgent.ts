@@ -249,11 +249,22 @@ export class EdgeProxyAgent extends BaseAgent {
       if (localTaskId) {
            const existingTask = await getTask(localTaskId);
            if (existingTask) {
-               const existingContext = JSON.parse(existingTask.context);
-               await updateTask(localTaskId, { 
-                   status: 'pending', 
-                   context: { ...existingContext, fallback: true } 
-               });
+               try {
+                   const existingContext = JSON.parse(existingTask.context);
+                   await updateTask(localTaskId, { 
+                       status: 'pending', 
+                       context: { ...existingContext, fallback: true } 
+                   });
+               } catch (err) {
+                   logError(this.name, `Failed to parse existing task context: ${err}`);
+                   // Fallback to using just the new context if parsing fails
+                   await updateTask(localTaskId, { 
+                       status: 'pending', 
+                       context: { fallback: true } 
+                   });
+               }
+           } else {
+               logError(this.name, `Task ${localTaskId} not found in database, cannot update context`);
            }
       }
 
