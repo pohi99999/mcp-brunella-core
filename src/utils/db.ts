@@ -182,21 +182,11 @@ export async function updateTask(id: number, updates: { status?: string, result?
     return info.changes > 0;
 }
 
-export async function getPendingTasks(agentName: string, statuses?: string[]): Promise<DbTask[]> {
+export async function getPendingTasks(agentName: string): Promise<DbTask[]> {
     const database = await getDb();
     if (!database) return [];
 
-    if (statuses && statuses.length > 0) {
-        const placeholders = statuses.map(() => '?').join(', ');
-        const stmt = database.prepare(
-            `SELECT * FROM tasks WHERE agent_name = ? AND status IN (${placeholders}) ORDER BY created_at ASC`,
-        );
-        return stmt.all(agentName, ...statuses) as DbTask[];
-    }
-
-    const stmt = database.prepare(
-        "SELECT * FROM tasks WHERE agent_name = ? AND status NOT IN ('completed', 'failed') ORDER BY created_at ASC",
-    );
+    const stmt = database.prepare("SELECT * FROM tasks WHERE agent_name = ? AND status NOT IN ('completed', 'failed') ORDER BY created_at ASC");
     return stmt.all(agentName) as DbTask[];
 }
 
