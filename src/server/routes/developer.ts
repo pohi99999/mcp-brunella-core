@@ -10,6 +10,7 @@ import { coverageAnalyzer } from '../../agents/coverageAnalysis.js';
 import { taskQueueManager } from '../../agents/taskQueue.js';
 import { getGitManager } from '../../agents/gitIntegration.js';
 import { getTemplateEngine } from '../../agents/codeScaffold.js';
+import { developerMetrics } from '../../utils/developerMetrics.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
@@ -118,6 +119,20 @@ export function createDeveloperRoutes(): Router {
                     createdAt: p.createdAt,
                 })),
             });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    /**
+     * GET /api/v1/developer/metrics
+     * Get developer metrics (P10)
+     */
+    router.get('/metrics', async (_req, res) => {
+        try {
+            const metrics = await developerMetrics.getMetrics();
+            res.json({ metrics });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });

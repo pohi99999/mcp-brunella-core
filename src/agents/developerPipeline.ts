@@ -3,6 +3,7 @@
 // VERSION: 3.0
 
 import { logInfo, logError } from '../utils/logger.js';
+import { developerMetrics } from '../utils/developerMetrics.js';
 import { EventEmitter } from 'events';
 
 // ==================== Types ====================
@@ -163,6 +164,11 @@ export class PipelineRunner extends EventEmitter {
         pipeline.error = error;
         pipeline.completedAt = Date.now();
 
+        // P10: Record metrics
+        developerMetrics.recordTask(taskId, false, pipeline.completedAt - pipeline.createdAt).catch(err => 
+            console.error('Failed to record metrics:', err)
+        );
+
         this.emitProgress(pipeline, phaseId, 'error', `Error: ${error.slice(0, 100)}`);
         logError('PipelineRunner', `Pipeline ${taskId} failed at ${phaseId}: ${error}`);
     }
@@ -193,6 +199,12 @@ export class PipelineRunner extends EventEmitter {
         pipeline.result = result;
 
         const totalMs = pipeline.completedAt - pipeline.createdAt;
+        
+        // P10: Record metrics
+        developerMetrics.recordTask(taskId, true, totalMs).catch(err => 
+            console.error('Failed to record metrics:', err)
+        );
+
         logInfo('PipelineRunner', `Pipeline ${taskId} done in ${totalMs}ms`);
 
         this.emitProgress(pipeline, 'test', 'done', `Task completed (${totalMs}ms)`);
