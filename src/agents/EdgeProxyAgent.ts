@@ -250,13 +250,16 @@ export class EdgeProxyAgent extends BaseAgent {
            const existingTask = await getTask(localTaskId);
            if (existingTask) {
                try {
-                   const existingContext = JSON.parse(existingTask.context);
+                   // Handle both string and object context formats
+                   const existingContext = typeof existingTask.context === 'string' 
+                       ? JSON.parse(existingTask.context) 
+                       : existingTask.context;
                    await updateTask(localTaskId, { 
                        status: 'pending', 
                        context: { ...existingContext, fallback: true } 
                    });
                } catch (err) {
-                   logError(this.name, `Failed to parse existing task context: ${err}`);
+                   logError(this.name, `Failed to parse existing task context for task ${localTaskId}: ${err}`);
                    // Fallback to using just the new context if parsing fails
                    await updateTask(localTaskId, { 
                        status: 'pending', 
