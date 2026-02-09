@@ -16,9 +16,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { PaperPlaneRight, Robot, User, Circle } from '@phosphor-icons/react';
-import { Brain, FileText } from 'lucide-react';
+import { Brain, FileText, Loader2 } from 'lucide-react';
 import * as api from '@/lib/apiService';
 import { toast } from 'sonner';
 
@@ -232,6 +237,9 @@ export function NeuralLinkChat() {
                       <button
                         onClick={() => toggleThoughts(i)}
                         className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors w-fit"
+                        aria-expanded={expandedThoughts[i]}
+                        aria-controls={`thoughts-${i}`}
+                        aria-label={expandedThoughts[i] ? "Részletek elrejtése" : "Részletek megjelenítése"}
                       >
                         <span className={`w-1.5 h-1.5 rounded-full ${msg.thoughts ? 'bg-amber-500 animate-pulse' : 'bg-zinc-500'}`} />
                         {expandedThoughts[i] ? 'Hide Intel' : 'Show Intel'}
@@ -239,7 +247,7 @@ export function NeuralLinkChat() {
                       </button>
 
                       {expandedThoughts[i] && (
-                        <div className="mt-2 space-y-3 animate-in fade-in duration-200">
+                        <div id={`thoughts-${i}`} className="mt-2 space-y-3 animate-in fade-in duration-200">
                           {msg.thoughts && (
                             <div className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
                               <p className="text-[11px] italic text-amber-500/80 leading-normal">
@@ -291,14 +299,23 @@ export function NeuralLinkChat() {
               placeholder={mode === 'orchestrator' ? 'Üzenet az Orchestratornak...' : mode === 'github' ? 'Üzenet a GitHub Models-nek...' : mode === 'gemini' ? 'Üzenet a Gemini-nek...' : 'Üzenet az AI-nak...'}
               className="min-h-[60px] bg-zinc-900 border-zinc-800 resize-none"
               disabled={isLoading}
+              aria-label="Üzenet beviteli mező"
             />
-            <Button
-              onClick={send}
-              disabled={!input.trim() || isLoading}
-              className="bg-emerald-600 hover:bg-emerald-500 shrink-0"
-            >
-              <PaperPlaneRight size={18} />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  onClick={send}
+                  disabled={!input.trim() || isLoading}
+                  className="bg-emerald-600 hover:bg-emerald-500 shrink-0"
+                  aria-label="Üzenet küldése"
+                >
+                  {isLoading ? <Loader2 className="animate-spin" size={18} /> : <PaperPlaneRight size={18} />}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Üzenet küldése (Enter)</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </div>
       </CardContent>

@@ -16,7 +16,7 @@ import {
   History,
   Network,
   Cpu,
-  Flask,
+  FlaskConical as Flask,
   Code2
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -48,6 +48,7 @@ import { DeveloperPanel } from '@/components/dashboard/DeveloperPanel'
 
 const SIDEBAR_ITEMS = [
   { id: 'dashboard', label: 'Mission Control', icon: LayoutDashboard },
+  { id: 'chat', label: 'Neural Link', icon: MessageSquare },
   { id: 'management', label: 'Agents', icon: Sparkles },
   { id: 'incubator', label: 'Incubator', icon: Flask },
   { id: 'knowledge', label: 'Knowledge', icon: Brain },

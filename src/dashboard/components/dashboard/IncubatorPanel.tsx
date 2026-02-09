@@ -9,8 +9,8 @@ import {
     Play, 
     FileCode, 
     Plus,
-    History,
-    Activity
+    ClockCounterClockwise as History,
+    Pulse as Activity
 } from '@phosphor-icons/react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
