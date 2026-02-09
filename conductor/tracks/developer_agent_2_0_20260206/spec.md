@@ -26,9 +26,9 @@ A Developer Agent, a CLI és a Dashboard **szinkronban fejlődik** — minden ú
 | Fázis | Feladatok | Prioritás | Státusz |
 |-------|-----------|-----------|---------|
 | **Fázis 1** | P1 Pipeline, P2 CLI, P3 Dashboard | 🔴 CRITICAL | `DONE ✅` |
-| **Fázis 2** | P4 Review, P5 Context, P6 Coverage | 🟠 HIGH | `PLANNED` |
+| **Fázis 2** | P4 Review, P5 Context, P6 Coverage | 🟠 HIGH | `DONE ✅` |
 | **Fázis 3** | P7 Queue, P8 Git, P9 Scaffold | 🟡 MEDIUM | `DONE ✅` |
-| **Fázis 4** | P10 Metrics, P11 Approval, P12 Feed | 🟡 MEDIUM | `PARTIAL` |
+| **Fázis 4** | P10 Metrics, P11 Approval, P12 Feed | 🟡 MEDIUM | `DONE ✅` |
 
 ---
 
@@ -89,21 +89,21 @@ brunella dev history               # Feladat történet
 
 ## 🧠 FÁZIS 2: Intelligens Képességek (P4–P6)
 
-### P4: Code Review & Refactoring [PLANNED]
+### P4: Code Review & Refactoring [DONE ✅]
 
 - `handleCodeReview(filePath)` — LLM review, severity szintek
 - `handleRefactoring(filePath, instruction)` — irányított refaktorálás
 - CLI: `brunella dev review <file>`
 - Dashboard: Review Panel, kódsoronkénti annotáció
 
-### P5: Multi-File Kontextus & Project-Aware Generation [PLANNED]
+### P5: Multi-File Kontextus & Project-Aware Generation [DONE ✅]
 
 - RAG-alapú kontextus: releváns fájlok auto-becsatolás
 - `codebaseIndexer.ts` + `DependencyGraphAgent` integráció
 - CLI: `brunella dev generate --context auto`
 - Dashboard: Kontextus fájlválasztó panel
 
-### P6: Teszt Lefedettség Elemzés & Auto-Test [PLANNED]
+### P6: Teszt Lefedettség Elemzés & Auto-Test [DONE ✅]
 
 - `analyzeCoverage()` — Vitest coverage report
 - `suggestTests(file)` — lefedetlen kódrészekhez javaslatok
@@ -114,7 +114,7 @@ brunella dev history               # Feladat történet
 
 ## ⚡ FÁZIS 3: Workflow & Automatizáció (P7–P9)
 
-### P7: Task Queue & Batch Operations [IDEA]
+### P7: Task Queue & Batch Operations [DONE ✅]
 
 ### P8: Git Workflow Automatizáció [IDEA]
 
@@ -151,9 +151,45 @@ brunella dev scaffold generate <template> -v Name=MyComponent
 - API: `GET /api/v1/developer/metrics`
 - Interaktív menü integráció.
 
-### P11: Approval & Confirmation Flow [IDEA]
+### P11: Approval & Confirmation Flow [DONE ✅]
 
-### P12: Unified Activity Feed & Notifications [IDEA]
+**Fájlok:**
+
+- `src/utils/approvalManager.ts` (ÚJ) — Singleton approval state machine
+- `src/server/routes/developer.ts` — API végpontok (`/approval/*`)
+- `src/cli/devCommands.ts` — CLI parancsok (`brunella dev approval`)
+
+**Működés:**
+
+- Kérések (`ApprovalRequest`) kezelése: pending → approved/rejected/expired
+- Időzített lejárat (timeout)
+- CLI polling (`waitForResult`) támogatás
+
+**API:**
+
+- `GET /approval` — List pending
+- `POST /approval/request` — Create request
+- `POST /approval/:id/respond` — Válasz küldése
+
+**CLI:**
+
+- `brunella dev approval list`
+- `brunella dev approval approve <id>`
+- `brunella dev approval reject <id>`
+
+### P12: Unified Activity Feed [DONE ✅]
+
+**Fájlok:**
+
+- `src/utils/activityFeed.ts` (ÚJ) — Singleton feed manager
+- `src/server/routes/developer.ts` — `GET /feed` végpont
+- `src/cli/devCommands.ts` — `brunella dev feed [--watch]`
+
+**Működés:**
+
+- Centralizált esemény-folyam (Info, Success, Error, Approval)
+- Források: Pipeline, ApprovalManager, System
+- CLI-ben `tail -f` stílusú figyelés támogatása (--watch)
 
 ---
 
