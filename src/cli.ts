@@ -18,6 +18,7 @@ import { listHooks } from './utils/hooks.js';
 import { startInteractiveMenu } from './interactive.js';
 import { cloudflareClient } from './utils/cloudflareClient.js';
 import { registerGoldCommands } from './cli/goldCommands.js';
+import { registerDevCommands } from './cli/devCommands.js';
 
 const program = new Command();
 
@@ -700,6 +701,9 @@ julesCmd.command('status')
 
 // Register Gold Protocol commands (G7.7)
 registerGoldCommands(program);
+
+// Register Developer Agent commands (P2)
+registerDevCommands(program);
 
 // Interactive Menu (Default)
 if (!process.argv.slice(2).length) {

@@ -16,7 +16,8 @@ import {
   History,
   Network,
   Cpu,
-  Flask
+  Flask,
+  Code2
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -43,12 +44,14 @@ import { TaskQueueMonitor } from '@/components/dashboard/TaskQueueMonitor'
 import { LLMProvidersPanel } from '@/components/dashboard/LLMProvidersPanel'
 import { KnowledgeBasePanel } from '@/components/dashboard/KnowledgeBasePanel'
 import { IncubatorPanel } from '@/components/dashboard/IncubatorPanel'
+import { DeveloperPanel } from '@/components/dashboard/DeveloperPanel'
 
 const SIDEBAR_ITEMS = [
   { id: 'dashboard', label: 'Mission Control', icon: LayoutDashboard },
   { id: 'management', label: 'Agents', icon: Sparkles },
   { id: 'incubator', label: 'Incubator', icon: Flask },
   { id: 'knowledge', label: 'Knowledge', icon: Brain },
+  { id: 'developer', label: 'Developer', icon: Code2 },
   { id: 'robotkez', label: 'Robotkéz', icon: Activity },
   { id: 'tasks', label: 'Tasks', icon: History },
   { id: 'inventory', label: 'Assets', icon: Box },
@@ -224,6 +227,7 @@ export function MissionControlLayout() {
                 </div>
               )}
 
+              {activeTab === 'developer' && <DeveloperPanel />}
               {activeTab === 'inventory' && <InventoryCatalog />}
               {activeTab === 'chat' && <NeuralLinkChat />}
               {activeTab === 'incubator' && <IncubatorPanel />}

@@ -581,3 +581,77 @@ export async function getIncubatorStats(): Promise<DatasetStats> {
     const data = await safeJson<{ stats: DatasetStats }>(response);
     return data.stats;
 }
+
+/**
+ * Developer Agent API (Pipeline-based)
+ */
+export interface DeveloperPipelinePhase {
+    id: string;
+    label: string;
+    status: 'pending' | 'running' | 'done' | 'error' | 'skipped';
+    startedAt?: number;
+    completedAt?: number;
+    error?: string;
+}
+
+export interface DeveloperPipeline {
+    taskId: string;
+    task: string;
+    status: string;
+    phases: DeveloperPipelinePhase[];
+    createdAt: number;
+    completedAt?: number;
+    error?: string;
+}
+
+export interface DeveloperStatus {
+    activeTasks: number;
+    completedTasks: number;
+    failedTasks: number;
+    totalTasks: number;
+}
+
+export interface DeveloperHistoryEntry {
+    taskId: string;
+    task: string;
+    status: string;
+    createdAt: number;
+    completedAt?: number;
+}
+
+export async function getDeveloperStatus(): Promise<DeveloperStatus> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/v1/developer/status`);
+    if (!response.ok) throw new Error(`Developer Status: HTTP ${response.status}`);
+    return safeJson<DeveloperStatus>(response);
+}
+
+export async function getDeveloperHistory(limit: number = 20): Promise<DeveloperHistoryEntry[]> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/v1/developer/history?limit=${limit}`);
+    if (!response.ok) throw new Error(`Developer History: HTTP ${response.status}`);
+    const data = await safeJson<{ history: DeveloperHistoryEntry[] }>(response);
+    return data.history;
+}
+
+export async function executeDeveloperTask(task: string, context?: Record<string, unknown>): Promise<{ taskId: string }> {
+    const response = await fetchWithTimeout(
+        `${API_BASE}/api/v1/developer/execute`,
+        {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ task, context })
+        },
+        LONG_TIMEOUT_MS
+    );
+    if (!response.ok) {
+        const data = await safeJson<{ error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+        throw new Error(data.error || 'Developer task failed');
+    }
+    return safeJson<{ taskId: string }>(response);
+}
+
+export async function getDeveloperPipeline(taskId: string): Promise<DeveloperPipeline> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/v1/developer/pipeline/${taskId}`);
+    if (!response.ok) throw new Error(`Developer Pipeline: HTTP ${response.status}`);
+    const data = await safeJson<{ pipeline: DeveloperPipeline }>(response);
+    return data.pipeline;
+}

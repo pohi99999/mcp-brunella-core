@@ -7,6 +7,7 @@ import { createTaskRoutes } from './tasks.js';
 import { createToolRoutes, createDebugRoutes } from './tools.js';
 import { createChatRoutes, createAnythingLLMRoutes } from './chat.js';
 import { createIncubatorRoutes, createN8nRoutes } from './external.js';
+import { createDeveloperRoutes } from './developer.js';
 
 export {
     createHealthRoutes,
@@ -26,6 +27,7 @@ export {
     createAnythingLLMRoutes,
     createIncubatorRoutes,
     createN8nRoutes,
+    createDeveloperRoutes,
 };
 
 /**
@@ -51,6 +53,7 @@ export function createV1Router(): Router {
     router.use('/anythingllm', createAnythingLLMRoutes());
     router.use('/incubator', createIncubatorRoutes());
     router.use('/n8n', createN8nRoutes());
+    router.use('/developer', createDeveloperRoutes());
 
     return router;
 }
