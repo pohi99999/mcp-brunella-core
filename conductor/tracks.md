@@ -11,9 +11,11 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 - [ ] **🏆 Gold Protocol** [CRITICAL]
   - **ID:** `gold_protocol`
-  - **Progress:** 0%
-  - **Utolsó aktivitás:** 2026-02-09
+  - **Progress:** 75% (3/4 sprint kész)
+  - **Utolsó aktivitás:** 2026-02-09 15:30
   - **Leírás:** BAS "felokosítása" - 6 pillér: Spec Freeze, Phoenix v2, Model Router, Memória, Glass Box, Audit
+  - **Státusz:** ✅ Sprint 1-3 KÉSZ | ⏳ Sprint 4 következik
+  - **Commits:** d1c3d938, 11294752, b96abc9d
   - 📂 *[./tracks/gold_protocol/](./tracks/gold_protocol/)*
 
 - [ ] **Agent Architect Upgrade** [MEDIUM]
