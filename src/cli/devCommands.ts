@@ -1055,4 +1055,117 @@ export function registerDevCommands(program: Command): void {
                 process.exit(1);
             }
         });
+
+    // ==================== P9: Code Scaffolding Commands ====================
+
+    const scaffoldCmd = dev
+        .command('scaffold')
+        .description('Code scaffolding operations');
+
+    scaffoldCmd
+        .command('list')
+        .description('List available code templates')
+        .option('--json', 'Output as JSON')
+        .action(async (options: { json?: boolean }) => {
+            const spinner = ora('Fetching templates...').start();
+            try {
+                const result = await apiFetch<any>('/api/v1/developer/scaffold/templates');
+                const templates = result.templates;
+                
+                spinner.stop();
+
+                if (options.json) {
+                    console.log(JSON.stringify(templates, null, 2));
+                    return;
+                }
+
+                console.log(chalk.bold('📋 Available Templates:\n'));
+                
+                // Group by category
+                const groups: Record<string, any[]> = {};
+                for (const t of templates) {
+                    const cat = t.category || 'other';
+                    if (!groups[cat]) groups[cat] = [];
+                    groups[cat].push(t);
+                }
+
+                for (const [category, items] of Object.entries(groups)) {
+                    console.log(chalk.cyan.bold(`  ${category.toUpperCase()}`));
+                    for (const t of items) {
+                        console.log(`    ${chalk.green(t.name.padEnd(20))} ${chalk.dim(t.description)}`);
+                        // Show variables
+                        if (t.variables && t.variables.length > 0) {
+                            const vars = t.variables.map((v: any) => 
+                                v.required ? chalk.yellow(v.name) : chalk.dim(`${v.name}?`)
+                            ).join(', ');
+                            console.log(`      ${chalk.dim('Variables:')} ${vars}`);
+                        }
+                        console.log('');
+                    }
+                }
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to list templates: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    scaffoldCmd
+        .command('generate <template>')
+        .description('Generate code from template')
+        .option('--dry-run', 'Preview changes without writing files')
+        .option('--force', 'Overwrite existing files')
+        .option('-v, --var <variable...>', 'Variables (format: key=value)')
+        .action(async (template: string, options: { dryRun?: boolean; force?: boolean; var?: string[] }) => {
+            const spinner = ora('Generating code...').start();
+            try {
+                // Parse variables
+                const variables: Record<string, string> = {};
+                if (options.var) {
+                    for (const v of options.var) {
+                        const [key, value] = v.split('=');
+                        if (key && value) {
+                            variables[key] = value;
+                        }
+                    }
+                }
+
+                const result = await apiFetch<any>('/api/v1/developer/scaffold', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        template,
+                        variables,
+                        preview: options.dryRun,
+                        overwrite: options.force
+                    })
+                });
+
+                spinner.succeed(chalk.green(result.message));
+
+                if (result.files && result.files.length > 0) {
+                    console.log(`\n${chalk.bold('Generated Files:')}`);
+                    for (const file of result.files) {
+                        console.log(`  ${chalk.cyan(file.path)}`);
+                        if (options.dryRun) {
+                            console.log(chalk.dim('\nPreview:'));
+                            console.log(chalk.gray(file.content.substring(0, 200) + '...'));
+                            console.log(chalk.dim('---'));
+                        }
+                    }
+                }
+
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to generate code: ${msg}`));
+                
+                // Hint for missing variables
+                if (msg.includes('Required variable missing')) {
+                    console.log(chalk.yellow('\nTip: Provide variables using -v flag:'));
+                    console.log(chalk.gray('  brunella dev scaffold generate react-component -v ComponentName=MyButton'));
+                }
+                
+                process.exit(1);
+            }
+        });
 }
