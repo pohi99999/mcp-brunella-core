@@ -18,6 +18,7 @@ import { agentManager } from '../agents/AgentManager.js';
 import { corsWhitelist, requestId, requestLogging, apiRateLimit } from './middleware.js';
 import { swaggerSpec } from './swagger.js';
 import { socketService } from './SocketService.js';
+import { globalErrorHandler } from './middleware/errorHandler.js';
 import { createTelemetryRouter } from './telemetryRoutes.js';
 import { createAuditRouter } from './auditRoutes.js';
 import { createSpecRouter } from './specRoutes.js';
@@ -210,6 +211,9 @@ export async function startWebServer() {
     app.use('/api/n8n', createN8nRoutes());
 
     app.use(express.static(path.join(process.cwd(), 'build', 'public')));
+
+    // Global error handler (MUST be after all routes)
+    app.use(globalErrorHandler);
 
     io.on('connection', (socket) => {
         const DEFAULT_CHAT_ID = 'main-session';

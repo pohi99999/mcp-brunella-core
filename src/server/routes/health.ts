@@ -6,6 +6,8 @@ import {
     checkAnythingLLMHealth,
     buildHealthResponse,
 } from '../../utils/health.js';
+import { AppError } from '../../utils/AppError.js';
+import { asyncHandler } from '../middleware/errorHandler.js';
 
 export function createHealthRoutes(): Router {
     const router = Router();
@@ -20,27 +22,22 @@ export function createHealthRoutes(): Router {
      *       200:
      *         description: Health status object
      */
-    router.get('/', async (req, res) => {
-        try {
-            const [ollama, anythingllm] = await Promise.all([
-                checkOllamaHealth(),
-                checkAnythingLLMHealth(),
-            ]);
-            const agentsCount = agentManager.listAgents().length;
-            const mcpCount = mcpProcessManager.getServersStatus().length;
-            const payload = buildHealthResponse(
-                ollama,
-                anythingllm,
-                agentsCount,
-                mcpCount,
-                (req as unknown as Record<string, unknown>).id as string
-            );
-            res.json(payload);
-        } catch (e: unknown) {
-            const msg = e instanceof Error ? e.message : String(e);
-            res.status(500).json({ status: 'error', message: msg });
-        }
-    });
+    router.get('/', asyncHandler(async (req, res) => {
+        const [ollama, anythingllm] = await Promise.all([
+            checkOllamaHealth(),
+            checkAnythingLLMHealth(),
+        ]);
+        const agentsCount = agentManager.listAgents().length;
+        const mcpCount = mcpProcessManager.getServersStatus().length;
+        const payload = buildHealthResponse(
+            ollama,
+            anythingllm,
+            agentsCount,
+            mcpCount,
+            (req as unknown as Record<string, unknown>).id as string
+        );
+        res.json(payload);
+    }));
 
     return router;
 }
