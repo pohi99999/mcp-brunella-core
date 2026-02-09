@@ -234,7 +234,7 @@ export class EdgeProxyAgent extends BaseAgent {
     let localTaskId: number | null = null;
     try {
       localTaskId = await saveTask(this.name, context.task || 'Unknown Task', {
-          ...(context.context as Record<string, unknown> ?? {}),
+          ...((context.context ?? {}) as Record<string, unknown>),
           originalInstruction: context.task,
           source: 'EdgeProxy'
       });
@@ -256,7 +256,7 @@ export class EdgeProxyAgent extends BaseAgent {
            await updateTask(localTaskId, { 
                status: 'pending', 
                context: { 
-                   ...(context.context as Record<string, unknown> ?? {}),
+                   ...((context.context ?? {}) as Record<string, unknown>),
                    originalInstruction: context.task,
                    source: 'EdgeProxy',
                    fallback: true 
@@ -297,7 +297,7 @@ export class EdgeProxyAgent extends BaseAgent {
           await updateTask(localTaskId, {
               status: 'dispatched',
               context: {
-                  ...(context.context as Record<string, unknown> ?? {}),
+                  ...((context.context ?? {}) as Record<string, unknown>),
                   edgeTaskId: result.taskId,
                   originalInstruction: context.task,
                   source: 'EdgeProxy'
