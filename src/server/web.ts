@@ -4,6 +4,7 @@ import { Server } from 'socket.io';
 import path from 'path';
 import os from 'os';
 import swaggerUi from 'swagger-ui-express';
+import { config } from '../config/schema.js';
 import { Logger, logEmitter, type LogEvent, type AgentStatusEvent } from '../utils/logger.js';
 import { initDb, saveMessage } from '../utils/db.js';
 import { initTasksDb } from '../utils/tasksDb.js';
@@ -279,8 +280,7 @@ export async function startWebServer() {
         });
     });
 
-    const PORT = Number(process.env.PORT || 3000);
-    httpServer.listen(PORT, () => {
-        console.log(`🌐 Web UI: http://localhost:${PORT}`);
+    httpServer.listen(config.port, () => {
+        console.log(`🌐 Web UI: http://localhost:${config.port}`);
     });
 }
