@@ -16,6 +16,7 @@ import { saveTask, updateTaskStatus } from '../utils/tasksDb.js';
 import { withRetry, calculateDelay, DEFAULT_RETRY_CONFIG, type RetryConfig } from '../core/retryStrategy.js';
 import { saveCheckpoint, loadCheckpoint, clearCheckpoints } from '../core/checkpoint.js';
 import { gitAutoCheckpoint, logRecoveryEvent } from '../core/gitRecovery.js';
+import { autoSaveGoldenSample } from '../core/goldenDatasetBridge.js';
 
 // ============================================================================
 // INTERFACES
@@ -399,6 +400,9 @@ export class AgentManager extends EventEmitter {
         `${agentName}:success`,
         { agent: agentName, resultPreview: JSON.stringify(result).slice(0, 500) }
       ).catch(() => { /* non-critical */ });
+
+      // RULE-GD1: Auto-save golden sample on success
+      await autoSaveGoldenSample(agentName, instruction, result).catch(() => { /* non-critical */ });
 
       return result;
     } catch (lastError: any) {
