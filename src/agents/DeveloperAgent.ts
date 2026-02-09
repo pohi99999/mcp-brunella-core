@@ -6,6 +6,7 @@ import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { globalPythonShell } from '../utils/pythonShell.js';
 import { generateResponse } from '../core/llm_client.js';
+import { getSpecStatus, requiresSpec } from './specStatus.js';
 import { execSync } from 'child_process';
 import fs from 'fs/promises';
 import path from 'path';
@@ -45,6 +46,24 @@ export class DeveloperAgent implements IAgent {
         logInfo(this.name, `Processing: ${task}`);
 
         try {
+            // ── SPEC GATE (RULE-SF1) ────────────────────────────────────
+            // Block execution if a trackId is present and spec is not approved.
+            // Skip check for SKIP_SPEC_CHECK env var (test environments).
+            const trackId = context?.trackId as string | undefined;
+            if (trackId && requiresSpec(this.name) && process.env.SKIP_SPEC_CHECK !== 'true') {
+                const specStatus = await getSpecStatus(trackId);
+                if (specStatus !== 'approved') {
+                    logInfo(this.name, `BLOCKED: Spec not approved for track '${trackId}' (status: ${specStatus})`);
+                    return {
+                        status: 'error',
+                        error: `SPEC_NOT_APPROVED: Track '${trackId}' spec is '${specStatus}'. Run SpecWriterAgent first.`,
+                        message: `Blocked by Spec Gate: spec status is '${specStatus}' for track '${trackId}'`
+                    };
+                }
+                logInfo(this.name, `Spec gate PASSED for track '${trackId}'`);
+            }
+            // ── END SPEC GATE ───────────────────────────────────────────
+
             // Route to appropriate handler
             if (this.isCodeGenerationTask(task)) {
                 return await this.handleCodeGeneration(task, context);
