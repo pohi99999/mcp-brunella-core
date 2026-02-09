@@ -4,6 +4,7 @@
 import { BaseAgent, type AgentContext, type AgentResult } from './BaseAgent.js';
 import { generateResponse } from '../core/llm_client.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { approveSpec as approveSpecStatus, rejectSpec as rejectSpecStatus, getSpecStatus, type SpecStatus } from './specStatus.js';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -33,6 +34,10 @@ export class SpecWriterAgent extends BaseAgent {
                 return await this.approveSpec(context);
             }
 
+            if (this.isSpecRejectionTask(task)) {
+                return await this.rejectSpec(context);
+            }
+
             // Default: generate spec from conversation
             return await this.generateSpec(context);
 
@@ -60,6 +65,11 @@ export class SpecWriterAgent extends BaseAgent {
 
     private isSpecApprovalTask(task: string): boolean {
         const keywords = ['approve', 'jóváhagy', 'activate', 'elfogad'];
+        return keywords.some(kw => task.includes(kw));
+    }
+
+    private isSpecRejectionTask(task: string): boolean {
+        const keywords = ['reject', 'elutasít', 'deny', 'visszautasít'];
         return keywords.some(kw => task.includes(kw));
     }
 
@@ -246,7 +256,8 @@ Generate a comprehensive specification document following the format above.`;
     }
 
     /**
-     * Approve a spec and activate the track
+     * Approve a spec and activate the track.
+     * Delegates to the central specStatus module (RULE-SF3).
      */
     private async approveSpec(context: AgentContext): Promise<AgentResult> {
         const metadata = (context.metadata || {}) as Record<string, any>;
@@ -259,33 +270,69 @@ Generate a comprehensive specification document following the format above.`;
             };
         }
 
-        const trackPath = path.join(this.TRACKS_DIR, trackId);
-        const metaPath = path.join(trackPath, 'meta.json');
-
         try {
-            // Read meta.json
-            const metaContent = await fs.readFile(metaPath, 'utf-8');
-            const meta = JSON.parse(metaContent);
+            const success = await approveSpecStatus(trackId);
+            if (!success) {
+                return {
+                    success: false,
+                    message: `Failed to approve spec for track: ${trackId}`
+                };
+            }
 
-            // Update status
-            meta.status = 'active';
-            meta.spec_status = 'approved';
-            meta.updated = new Date().toISOString().split('T')[0];
-
-            // Write back
-            await fs.writeFile(metaPath, JSON.stringify(meta, null, 2), 'utf-8');
-            logInfo(this.name, `Track ${trackId} approved and activated`);
+            logInfo(this.name, `Track ${trackId} approved and activated via specStatus`);
 
             return {
                 success: true,
                 message: `✅ Spec approved! Track ${trackId} is now ACTIVE`,
                 data: { trackId, status: 'active' }
             };
-        } catch (error: any) {
-            logError(this.name, `Failed to approve spec: ${error.message}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError(this.name, `Failed to approve spec: ${msg}`);
             return {
                 success: false,
-                message: `Failed to approve spec: ${error.message}`
+                message: `Failed to approve spec: ${msg}`
+            };
+        }
+    }
+
+    /**
+     * Reject a spec with an optional reason.
+     */
+    private async rejectSpec(context: AgentContext): Promise<AgentResult> {
+        const metadata = (context.metadata || {}) as Record<string, any>;
+        const trackId = metadata.trackId;
+        const reason = metadata.reason;
+
+        if (!trackId) {
+            return {
+                success: false,
+                message: 'Missing trackId in context.metadata'
+            };
+        }
+
+        try {
+            const success = await rejectSpecStatus(trackId, reason);
+            if (!success) {
+                return {
+                    success: false,
+                    message: `Failed to reject spec for track: ${trackId}`
+                };
+            }
+
+            logInfo(this.name, `Track ${trackId} spec rejected`);
+
+            return {
+                success: true,
+                message: `❌ Spec rejected for track ${trackId}${reason ? `: ${reason}` : ''}`,
+                data: { trackId, status: 'rejected', reason }
+            };
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError(this.name, `Failed to reject spec: ${msg}`);
+            return {
+                success: false,
+                message: `Failed to reject spec: ${msg}`
             };
         }
     }

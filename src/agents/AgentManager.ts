@@ -13,6 +13,9 @@
 import { EventEmitter } from 'events';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { saveTask, updateTaskStatus } from '../utils/tasksDb.js';
+import { withRetry, calculateDelay, DEFAULT_RETRY_CONFIG, type RetryConfig } from '../core/retryStrategy.js';
+import { saveCheckpoint, loadCheckpoint, clearCheckpoints } from '../core/checkpoint.js';
+import { gitAutoCheckpoint, logRecoveryEvent } from '../core/gitRecovery.js';
 
 // ============================================================================
 // INTERFACES
@@ -321,77 +324,107 @@ export class AgentManager extends EventEmitter {
       }
     }
 
-    let lastError: any;
-    for (let attempt = 0; attempt <= retries; attempt++) {
-      try {
-        if (attempt > 0) {
-          logInfo('AgentManager', `Újrapróbálkozás (${agentName})... ${attempt}/${retries}`);
-          await new Promise(resolve => setTimeout(resolve, 1000 * attempt)); // Exponenciális backoff jellegű várakozás
-        }
+    const agent = this.agents.get(agentName);
+    if (!agent) {
+      return {
+        success: false,
+        message: `Ügynök nem található: ${agentName}`,
+        data: null,
+        executedBy: agentName
+      };
+    }
 
-        const agent = this.agents.get(agentName);
-        if (!agent) throw new Error(`Ügynök nem található: ${agentName}`);
-
-        this.updateAgentRuntime(agentName, {
-          status: 'working',
-          lastTask: instruction,
-          lastTaskAt: new Date().toISOString()
-        });
-        setAgentStatus(agentName, 'working', instruction);
-        let result = await agent.execute(instruction, context);
-
-        // Result normalizálás (status -> success mapping)
-        if (typeof result === 'object' && result !== null) {
-          if (result.success === undefined) {
-            result.success = result.status === 'success' || result.status === 'ok';
-          }
-        } else {
-          // Ha nem objektum, de nem dobott hibát, akkor sikeresnek tekintjük
-          result = { success: true, data: result, message: 'Végrehajtva' };
-        }
-
-        // Siker esetén nullázzuk a hibákat
-        cb.failures = 0;
-        cb.isOpen = false;
-
-        const runtime = this.ensureAgentRuntime(agentName);
-        this.updateAgentRuntime(agentName, {
-          status: 'idle',
-          lastTaskAt: new Date().toISOString(),
-          successCount: runtime.successCount + 1
-        });
-        setAgentStatus(agentName, 'idle', instruction);
-
-        return result;
-      } catch (error: any) {
-        lastError = error;
-        logError('AgentManager', `Végrehajtási hiba (${agentName}, próbálkozás ${attempt + 1}): ${error.message}`);
-
+    const retryConfig: Partial<RetryConfig> = {
+      maxRetries: retries,
+      onRetry: (attempt, delay, error) => {
+        logInfo('AgentManager', `Újrapróbálkozás (${agentName})... ${attempt}/${retries} — ${delay}ms várakozás`);
+        this.emit('gold:retry_attempt', { taskId: instruction.slice(0, 50), attempt, delay, agent: agentName });
         cb.failures++;
         cb.lastFailure = Date.now();
-
         if (cb.failures >= this.FAILURE_THRESHOLD) {
           cb.isOpen = true;
           logError('AgentManager', `Circuit Breaker TRIPPED (${agentName})!`);
-          break; // Ne retry-oljunk tovább, ha a CB kioldott
         }
       }
-    }
-
-    const runtime = this.ensureAgentRuntime(agentName);
-    this.updateAgentRuntime(agentName, {
-      status: 'error',
-      lastTaskAt: new Date().toISOString(),
-      errorCount: runtime.errorCount + 1
-    });
-    setAgentStatus(agentName, 'error', instruction);
-
-    return {
-      success: false,
-      message: `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError?.message || 'Ismeretlen hiba'}`,
-      data: null,
-      executedBy: agentName
     };
+
+    try {
+      const result = await withRetry(
+        async () => {
+          // Circuit breaker check inside retry loop
+          if (cb.isOpen) {
+            throw new Error(`Circuit Breaker OPEN for ${agentName}`);
+          }
+
+          this.updateAgentRuntime(agentName, {
+            status: 'working',
+            lastTask: instruction,
+            lastTaskAt: new Date().toISOString()
+          });
+          setAgentStatus(agentName, 'working', instruction);
+
+          let res = await agent.execute(instruction, context);
+
+          // Result normalizálás (status -> success mapping)
+          if (typeof res === 'object' && res !== null) {
+            if (res.success === undefined) {
+              res.success = res.status === 'success' || res.status === 'ok';
+            }
+          } else {
+            res = { success: true, data: res, message: 'Végrehajtva' };
+          }
+
+          return res;
+        },
+        `${agentName}:execute`,
+        retryConfig
+      );
+
+      // Success — reset circuit breaker & update runtime
+      cb.failures = 0;
+      cb.isOpen = false;
+
+      const runtime = this.ensureAgentRuntime(agentName);
+      this.updateAgentRuntime(agentName, {
+        status: 'idle',
+        lastTaskAt: new Date().toISOString(),
+        successCount: runtime.successCount + 1
+      });
+      setAgentStatus(agentName, 'idle', instruction);
+
+      // RULE-PH1: checkpoint on success
+      await saveCheckpoint(
+        instruction.slice(0, 100),
+        0,
+        `${agentName}:success`,
+        { agent: agentName, resultPreview: JSON.stringify(result).slice(0, 500) }
+      ).catch(() => { /* non-critical */ });
+
+      return result;
+    } catch (lastError: any) {
+      logError('AgentManager', `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError?.message || 'Ismeretlen hiba'}`);
+
+      // RULE-PH4: Git auto-checkpoint after all retries exhausted
+      await gitAutoCheckpoint(agentName, lastError?.message || 'Unknown error').catch((e: any) =>
+        logError('AgentManager', `Git recovery failed: ${e.message}`)
+      );
+      logRecoveryEvent('crash', agentName, lastError?.message || 'All retries exhausted');
+
+      const runtime = this.ensureAgentRuntime(agentName);
+      this.updateAgentRuntime(agentName, {
+        status: 'error',
+        lastTaskAt: new Date().toISOString(),
+        errorCount: runtime.errorCount + 1
+      });
+      setAgentStatus(agentName, 'error', instruction);
+
+      return {
+        success: false,
+        message: `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError?.message || 'Ismeretlen hiba'}`,
+        data: null,
+        executedBy: agentName
+      };
+    }
   }
 
   private getCircuitBreaker(agentName: string) {
