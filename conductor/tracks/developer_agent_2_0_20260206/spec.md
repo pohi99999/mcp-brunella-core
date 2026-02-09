@@ -1,8 +1,8 @@
 # Spec: Developer Agent 3.0 — Unified Development Platform
 
 **Track ID:** `developer_agent_2_0_20260206`
-**Version:** 3.0.0
-**Last Updated:** 2026-02-10
+**Version:** 3.1.0
+**Last Updated:** 2026-02-09
 **Status:** `approved` ✅
 
 ---
@@ -26,7 +26,7 @@ A Developer Agent, a CLI és a Dashboard **szinkronban fejlődik** — minden ú
 |-------|-----------|-----------|---------|
 | **Fázis 1** | P1 Pipeline, P2 CLI, P3 Dashboard | 🔴 CRITICAL | `DONE ✅` |
 | **Fázis 2** | P4 Review, P5 Context, P6 Coverage | 🟠 HIGH | `PLANNED` |
-| **Fázis 3** | P7 Queue, P8 Git, P9 Scaffold | 🟡 MEDIUM | `IDEA` |
+| **Fázis 3** | P7 Queue, P8 Git, P9 Scaffold | 🟡 MEDIUM | `DONE ✅` |
 | **Fázis 4** | P10 Metrics, P11 Approval, P12 Feed | 🟡 MEDIUM | `IDEA` |
 
 ---
@@ -106,7 +106,23 @@ brunella dev history               # Feladat történet
 
 ### P7: Task Queue & Batch Operations [IDEA]
 ### P8: Git Workflow Automatizáció [IDEA]
-### P9: Scaffold & Template Rendszer [IDEA]
+### P9: Scaffold & Template Rendszer [DONE ✅]
+
+**Fájlok:**
+- `src/agents/codeScaffold.ts` — TemplateEngine osztály (4 beépített template)
+- `src/server/routes/developer.ts` — API végpontok (`/scaffold`)
+- `src/cli/devCommands.ts` — CLI parancsok (`scaffold list`, `scaffold generate`)
+
+**Működés:**
+- Beépített sablonok: `react-component`, `rest-api`, `agent`, `test-file`
+- Változó helyettesítés: `{{VariableName}}` szintaxis
+- Preview mód: `--dry-run` flag support
+
+**CLI:**
+```bash
+brunella dev scaffold list
+brunella dev scaffold generate <template> -v Name=MyComponent
+```
 
 ---
 
