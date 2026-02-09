@@ -37,6 +37,41 @@
 
 ## Napló
 
+### 2026-02-10 - Code Quality P1: web.ts "God File" Refactoring (TELJES! ✅)
+
+**Commit:** (pending)
+**Feladat:** web.ts ~980 sor → ~200 sor, route modulok kiemelése
+
+**Implementáció:**
+- ✅ **9 új route modul** létrehozva `src/server/routes/`:
+  - `agents.ts` — createAgentRoutes, createRegistryRoutes, createCloudflareAgentRoutes
+  - `llm.ts` — createProvidersRoutes, createOllamaRoutes, createGeminiRoutes, createGithubModelsRoutes
+  - `files.ts` — createFileRoutes, createRagRoutes
+  - `tasks.ts` — createTaskRoutes
+  - `tools.ts` — createToolRoutes, createDebugRoutes
+  - `chat.ts` — createChatRoutes, createAnythingLLMRoutes
+  - `external.ts` — createIncubatorRoutes, createN8nRoutes
+  - `health.ts` — createHealthRoutes
+  - `index.ts` — barrel export (17 route factory)
+
+**Technikai részletek:**
+- ✅ web.ts refaktorálva: csak app setup, middleware, Gold Protocol routers, SSE/MCP, Socket.IO, metrics, httpServer.listen()
+- ✅ Error handling javítva: `(e: unknown)` + `instanceof Error` type guard minden route-ban
+- ✅ Type safety: `(req as unknown as Record<string, unknown>).id` fix
+- ✅ Imports tisztítva: eltávolítva fs, node-fetch, ConfigManager, AgentArchitect, health utils, llm_client, db/tasksDb specifikus exportok
+
+**Eredmények:**
+- 🏗️ 9 új fájl, 1 módosított (~800 LOC kiemelve)
+- ✅ TypeScript compile: 0 errors
+- ✅ Tests: 195/195 PASS (29 fájl)
+- 📊 web.ts sorok: 980 → ~200 (79% csökkentés)
+- 📋 Conductor: spec.md + tracks.md frissítve (45% progress)
+
+**Git:** (pending commit)
+**Következő:** P2 (any típusok eliminálása) + P3 (error handling)
+
+---
+
 ### 2026-02-09 18:45 - Gold Protocol Sprint 4: Dashboard & CLI Integration (TELJES! 🎉)
 
 **Commit:** `7a1a7fe9`

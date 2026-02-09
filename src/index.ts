@@ -34,6 +34,22 @@ async function main() {
     const transport = new StdioServerTransport();
     await server.connect(transport);
     console.error("MCP Brunella Core Server running on stdio");
+
+    // Graceful shutdown handling
+    const shutdown = async (signal: string) => {
+      console.error(`\n[Shutdown] Received ${signal}, graceful shutdown initiated...`);
+      try {
+        agentManager.stopWorkerLoop();
+        await server.close?.();
+        console.error("[Shutdown] Cleanup complete.");
+      } catch (e) {
+        console.error("[Shutdown] Error during cleanup:", e);
+      }
+      process.exit(0);
+    };
+
+    process.on('SIGTERM', () => shutdown('SIGTERM'));
+    process.on('SIGINT', () => shutdown('SIGINT'));
   } else {
     console.warn("MCP Brunella Core: Non-Node.js environment detected. Skipping Node-specific initialization.");
   }
