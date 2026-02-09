@@ -588,6 +588,71 @@ export function registerDevCommands(program: Command): void {
             }
         });
 
+    // brunella dev metrics — P10: Metrics & Analytics
+    dev
+        .command('metrics')
+        .description('Show developer agent metrics and analytics')
+        .option('--json', 'Output raw JSON')
+        .action(async (opts: { json?: boolean }) => {
+            try {
+                const result = await apiFetch<{
+                    metrics: {
+                        builds: { total: number; success: number; fail: number; lastStatus: string; lastDurationMs: number };
+                        tests: { totalRuns: number; lastPassRate: number; lastDurationMs: number };
+                        tasks: { total: number; success: number; error: number; avgDurationMs: number };
+                        history: Array<any>;
+                    };
+                }>('/metrics');
+
+                const { metrics } = result;
+
+                if (opts.json) {
+                    console.log(JSON.stringify(metrics, null, 2));
+                    return;
+                }
+
+                console.log(chalk.bold('\n📊 Developer Agent Metrics & Analytics\n'));
+
+                // Tasks
+                console.log(chalk.cyan.bold('  TASKS'));
+                console.log(`    Total:      ${metrics.tasks.total}`);
+                console.log(`    Success:    ${chalk.green(String(metrics.tasks.success))}`);
+                console.log(`    Error:      ${chalk.red(String(metrics.tasks.error))}`);
+                console.log(`    Avg Duration: ${chalk.yellow(`${(metrics.tasks.avgDurationMs / 1000).toFixed(1)}s`)}`);
+
+                // Builds
+                console.log(chalk.cyan.bold('\n  BUILDS'));
+                console.log(`    Total:      ${metrics.builds.total}`);
+                console.log(`    Success:    ${chalk.green(String(metrics.builds.success))}`);
+                console.log(`    Fail:       ${chalk.red(String(metrics.builds.fail))}`);
+                const statusColor = metrics.builds.lastStatus === 'success' ? chalk.green : chalk.red;
+                console.log(`    Last Status: ${statusColor(metrics.builds.lastStatus)} (${(metrics.builds.lastDurationMs / 1000).toFixed(1)}s)`);
+
+                // Tests
+                console.log(chalk.cyan.bold('\n  TESTS'));
+                console.log(`    Total Runs: ${metrics.tests.totalRuns}`);
+                const rateColor = metrics.tests.lastPassRate === 100 ? chalk.green : chalk.yellow;
+                console.log(`    Last Pass Rate: ${rateColor(`${metrics.tests.lastPassRate}%`)} (${(metrics.tests.lastDurationMs / 1000).toFixed(1)}s)`);
+
+                // History
+                if (metrics.history.length > 0) {
+                    console.log(chalk.cyan.bold('\n  RECENT ACTIVITY (last 5)'));
+                    for (const item of metrics.history.slice(0, 5)) {
+                        const type = item.type.toUpperCase().padEnd(6);
+                        const status = item.status === 'success' ? chalk.green('OK ') : chalk.red('ERR');
+                        const time = new Date(item.timestamp).toLocaleTimeString();
+                        console.log(`    ${chalk.dim(time)} ${type} ${status} ${item.details}`);
+                    }
+                }
+
+                console.log('');
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                console.error(chalk.red(`Failed to get metrics: ${msg}`));
+                process.exit(1);
+            }
+        });
+
     // brunella dev queue — P7: Task Queue Management
     const queue = dev.command('queue').description('Manage developer task queue');
 

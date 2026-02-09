@@ -86,6 +86,7 @@ async function devToolsMenu(): Promise<void> {
         { name: '🔍  Kód Review', value: 'review' },
         { name: '🔧  Hiba Javítás (Fix)', value: 'fix' },
         { name: '💊  Self-Heal', value: 'heal' },
+        { name: '📊  Metrics & Analytics', value: 'metrics' },
         { name: '📊  Coverage Elemzés', value: 'coverage' },
         { name: '📝  Task Queue Kezelés', value: 'queue' },
     ]);
@@ -108,6 +109,9 @@ async function devToolsMenu(): Promise<void> {
         await pause();
     } else if (action === 'heal') {
         runCli('dev heal');
+        await pause();
+    } else if (action === 'metrics') {
+        runCli('dev metrics');
         await pause();
     } else if (action === 'coverage') {
         runCli('dev coverage --run');
