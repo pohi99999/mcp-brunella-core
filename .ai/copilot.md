@@ -51,17 +51,70 @@
 
 ## Aktív Feladatok
 
-- **Gold Protocol implementáció** — 54 feladat, 4 sprint, ~24 óra (100% KÉSZ! 🎉)
-  - ✅ Sprint 1 (G1-G2): Spec Freeze + Phoenix Protocol v2 — KÉSZ (commit `d1c3d938`)
-  - ✅ Sprint 2 (G3-G4): Model Router + Kognitív Memória — KÉSZ (commit `11294752`)
-  - ✅ Sprint 3 (G5-G6): Glass Box Observability + Audit — KÉSZ (commit `b96abc9d`)
-  - ✅ Sprint 4 (G7): Dashboard & CLI teljes integráció — KÉSZ (commit `7a1a7fe9`)
-  - **Spec:** `conductor/tracks/gold_protocol/spec.md` (v2.0)
-  - **Plan:** `conductor/tracks/gold_protocol/plan.md` (v2.0)
-  - **Státusz:** 100% TELJES! 195/195 tests PASS, 0 TypeScript errors
+- **Developer Agent 3.0 — Unified Development Platform** — 12 feladat (P1-P12), 4 fázis
+  - ✅ Fázis 1 (P1+P2+P3): Pipeline + CLI + Dashboard — KÉSZ (commit `573d0530`)
+  - ⬜ Fázis 2 (P4+P5+P6): Code Review + Context + Coverage — TERVEZETT
+  - ⬜ Fázis 3 (P7+P8+P9): Queue + Git + Scaffold — ÖTLET
+  - ⬜ Fázis 4 (P10+P11+P12): Metrics + Approval + Feed — ÖTLET
+  - **Spec:** `conductor/tracks/developer_agent_2_0_20260206/spec.md` (v3.0)
+  - **Státusz:** 25% — Fázis 1 TELJES! 254/254 tests PASS, 0 TypeScript errors
+
+- **Gold Protocol implementáció** — 100% KÉSZ! 🎉
+  - **Commits:** `d1c3d938` (S1), `11294752` (S2), `b96abc9d` (S3), `7a1a7fe9` (S4)
 
 
 ## Napló
+
+### 2026-02-10 21:00 - Developer Agent 3.0 Fázis 1: Pipeline + CLI + Dashboard (TELJES! ✅)
+
+**Commit:** `573d0530`
+**Feladat:** Developer Agent 3.0 — Fázis 1 (P1+P2+P3) teljes implementáció: Pipeline architektúra, CLI parancsok, Dashboard panel
+
+**Aranyszabály betartva:** Minden új képesség EGYSZERRE jelent meg Agent + CLI + Dashboard + API + Test szintjén.
+
+**Implementáció:**
+
+✨ **P1: Task Pipeline & Progress Streaming:**
+- `src/agents/developerPipeline.ts` (ÚJ, ~220 sor): `PipelineRunner` osztály EventEmitter-rel
+  - 5 fázis: `plan → generate → validate → save → test`
+  - `TaskStatus`: queued → planning → generating → validating → saving → testing → done/error
+  - Singleton export: `pipelineRunner`
+  - Pipeline CRUD: createPipeline(), getPipeline(), getHistory(), cleanup(keepLast=50)
+- `src/server/routes/developer.ts` (ÚJ, ~120 sor): 4 REST API végpont
+  - `GET /pipeline/:taskId`, `GET /history`, `POST /execute`, `GET /status`
+  - `agentManager.delegate('Developer', ...)` használata
+- `src/server/routes/index.ts`: `router.use('/developer', createDeveloperRoutes())` hozzáadva (18. route group)
+
+✨ **P2: CLI Developer Commands:**
+- `src/cli/devCommands.ts` (ÚJ, ~180 sor): 7 alparancs (`generate`, `test`, `fix`, `heal`, `review`, `status`, `history`)
+  - `apiFetch<T>()` helper + `pollPipeline()` (1s interval, max 120)
+- `src/cli.ts`: `registerDevCommands(program)` regisztrálva
+
+✨ **P3: Dashboard Developer Panel:**
+- `src/dashboard/components/dashboard/DeveloperPipeline.tsx` (ÚJ, ~100 sor): Pipeline vizualizáció
+- `src/dashboard/components/dashboard/DeveloperPanel.tsx` (ÚJ, ~280 sor): Prompt input, quick actions, history
+- `src/dashboard/components/dashboard/MissionControlLayout.tsx`: Developer tab + Code2 ikon
+- `src/dashboard/lib/apiService.ts`: 4 új API típus + 4 függvény
+
+✨ **Tesztek (25 új):**
+- `test/developer_pipeline.test.ts` (15 teszt): Pipeline CRUD, fázis lifecycle, cleanup, history
+- `test/dev_commands.test.ts` (4 teszt): CLI regisztráció, alparancsok, variadic args, --auto
+- `test/routes_developer.test.ts` (6 teszt): REST végpontok, 404, 400
+
+**Javított hibák:**
+- `agentManager.executeAgent()` → `agentManager.delegate()` (helyes metódus)
+- Teszt assertions: `keepLast` (nem `maxAge`), státusz `'planning'` (nem `'running'`)
+
+**Eredmények:**
+- 🏗️ 6 új fájl, 4 módosított (~900 LOC)
+- ✅ TypeScript compile: 0 errors
+- ✅ Tests: 254/254 PASS (36 fájl) — +25 teszt (229→254)
+- 📊 Developer Agent 3.0: Fázis 1 — 25% kész
+- 🟢 Git: `573d0530` → GitHub main branch
+
+**Következő:** Fázis 2 (P4: Code Review, P5: Multi-file Context, P6: Coverage Analysis)
+
+---
 
 ### 2026-02-10 - Code Quality P4: Audit Log SQLite Persistence (TELJES! ✅)
 

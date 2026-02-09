@@ -24,6 +24,16 @@ import {
   CheckCircle2,
   XCircle,
   Activity,
+  Search,
+  FileSearch,
+  AlertTriangle,
+  Info,
+  Lightbulb,
+  ShieldAlert,
+  FolderOpen,
+  ChevronDown,
+  ChevronRight,
+  BarChart3,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DeveloperPipeline, type PipelinePhaseView } from './DeveloperPipeline'
@@ -80,6 +90,116 @@ async function executeDeveloperTask(
   })
 }
 
+// ==================== P4: Review Types & API ====================
+
+interface ReviewFinding {
+  severity: 'critical' | 'warning' | 'info' | 'suggestion'
+  line?: number
+  message: string
+  rule?: string
+  suggestion?: string
+}
+
+interface ReviewResult {
+  filePath: string
+  fileName: string
+  language: string
+  score: number
+  summary: string
+  findings: ReviewFinding[]
+  stats: {
+    critical: number
+    warning: number
+    info: number
+    suggestion: number
+    total: number
+  }
+  reviewedAt: number
+}
+
+async function reviewFile(filePath: string): Promise<ReviewResult> {
+  const data = await devApiFetch<{ review: ReviewResult }>('/review', {
+    method: 'POST',
+    body: JSON.stringify({ filePath }),
+  })
+  return data.review
+}
+
+// ==================== P5: Context Types & API ====================
+
+interface ContextFile {
+  relativePath: string
+  reason: string
+  size: number
+}
+
+interface ContextResult {
+  targetFile: string
+  totalSize: number
+  truncated: boolean
+  files: ContextFile[]
+}
+
+async function gatherContext(filePath: string): Promise<ContextResult> {
+  const data = await devApiFetch<{ context: ContextResult }>('/context', {
+    method: 'POST',
+    body: JSON.stringify({ filePath }),
+  })
+  return data.context
+}
+
+const SEVERITY_CONFIG: Record<string, { icon: typeof ShieldAlert; color: string; bg: string }> = {
+  critical: { icon: ShieldAlert, color: 'text-red-500', bg: 'bg-red-500/10' },
+  warning: { icon: AlertTriangle, color: 'text-yellow-500', bg: 'bg-yellow-500/10' },
+  info: { icon: Info, color: 'text-blue-500', bg: 'bg-blue-500/10' },
+  suggestion: { icon: Lightbulb, color: 'text-purple-400', bg: 'bg-purple-500/10' },
+}
+
+// ==================== P6: Coverage Types & API ====================
+
+interface CoverageMetricData {
+  total: number
+  covered: number
+  pct: number
+}
+
+interface CoverageSummaryData {
+  totalFiles: number
+  filesWithTests: number
+  filesWithoutTests: number
+  aggregate: {
+    statements: CoverageMetricData
+    branches: CoverageMetricData
+    functions: CoverageMetricData
+    lines: CoverageMetricData
+  }
+  worstFiles: Array<{
+    relativePath: string
+    lines: CoverageMetricData
+    functions: CoverageMetricData
+    uncoveredLines: number[]
+  }>
+  untestedFiles: string[]
+  collectedAt: number
+}
+
+async function fetchCoverage(mode: 'run' | 'parse' = 'parse'): Promise<CoverageSummaryData> {
+  const data = await devApiFetch<{ coverage: CoverageSummaryData }>('/coverage', {
+    method: 'POST',
+    body: JSON.stringify({ mode }),
+  })
+  return data.coverage
+}
+
+function CoverageBar({ pct }: { pct: number }) {
+  const color = pct >= 80 ? 'bg-green-500' : pct >= 60 ? 'bg-yellow-500' : 'bg-red-500'
+  return (
+    <div className="w-20 h-2 bg-muted rounded-full overflow-hidden">
+      <div className={cn('h-full rounded-full transition-all', color)} style={{ width: `${pct}%` }} />
+    </div>
+  )
+}
+
 // ==================== Component ====================
 
 export function DeveloperPanel() {
@@ -88,6 +208,19 @@ export function DeveloperPanel() {
   const [activePipeline, setActivePipeline] = useState<PipelineData | null>(null)
   const [history, setHistory] = useState<HistoryEntry[]>([])
   const [status, setStatus] = useState<DevStatus | null>(null)
+  // P4: Code Review state
+  const [reviewPath, setReviewPath] = useState('')
+  const [isReviewing, setIsReviewing] = useState(false)
+  const [reviewResult, setReviewResult] = useState<ReviewResult | null>(null)
+  const [activeTab, setActiveTab] = useState<'build' | 'review' | 'coverage'>('build')
+  // P5: Context state
+  const [contextPath, setContextPath] = useState('')
+  const [isGatheringContext, setIsGatheringContext] = useState(false)
+  const [contextResult, setContextResult] = useState<ContextResult | null>(null)
+  const [contextExpanded, setContextExpanded] = useState(false)
+  // P6: Coverage state
+  const [coverageData, setCoverageData] = useState<CoverageSummaryData | null>(null)
+  const [isLoadingCoverage, setIsLoadingCoverage] = useState(false)
 
   // Fetch status and history on mount
   const refreshData = useCallback(async () => {
@@ -166,6 +299,31 @@ export function DeveloperPanel() {
     return Math.round(((done + running * 0.5) / total) * 100)
   }
 
+  // P4: Submit code review
+  const handleReview = async () => {
+    const path = reviewPath.trim()
+    if (!path) return
+
+    setIsReviewing(true)
+    setReviewResult(null)
+    try {
+      const result = await reviewFile(path)
+      setReviewResult(result)
+      toast.success(`Review complete: ${result.score}/100`)
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : 'Review failed')
+    } finally {
+      setIsReviewing(false)
+    }
+  }
+
+  // Score color helper
+  const getScoreColor = (score: number): string => {
+    if (score >= 80) return 'text-green-500'
+    if (score >= 60) return 'text-yellow-500'
+    return 'text-red-500'
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -196,6 +354,140 @@ export function DeveloperPanel() {
           </Button>
         </div>
       </div>
+
+      {/* Tab Switcher */}
+      <div className="flex gap-1 p-1 bg-muted/50 rounded-lg w-fit">
+        <button
+          onClick={() => setActiveTab('build')}
+          className={cn(
+            'px-4 py-1.5 rounded-md text-sm font-medium transition-colors',
+            activeTab === 'build'
+              ? 'bg-background shadow text-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <span className="flex items-center gap-1.5">
+            <Code2 size={14} /> Build
+          </span>
+        </button>
+        <button
+          onClick={() => setActiveTab('review')}
+          className={cn(
+            'px-4 py-1.5 rounded-md text-sm font-medium transition-colors',
+            activeTab === 'review'
+              ? 'bg-background shadow text-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <span className="flex items-center gap-1.5">
+            <FileSearch size={14} /> Review
+          </span>
+        </button>
+        <button
+          onClick={() => setActiveTab('coverage')}
+          className={cn(
+            'px-4 py-1.5 rounded-md text-sm font-medium transition-colors',
+            activeTab === 'coverage'
+              ? 'bg-background shadow text-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <span className="flex items-center gap-1.5">
+            <BarChart3 size={14} /> Coverage
+          </span>
+        </button>
+      </div>
+
+      {/* ==================== BUILD TAB ==================== */}
+      {activeTab === 'build' && (<>
+
+      {/* P5: Context Gatherer */}
+      <Card className="glass-card">
+        <CardContent className="p-3">
+          <button
+            onClick={() => setContextExpanded(!contextExpanded)}
+            className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors w-full"
+          >
+            {contextExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+            <FolderOpen size={14} className="text-primary" />
+            Context Files
+            {contextResult && (
+              <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full ml-auto">
+                {contextResult.files.length} files
+              </span>
+            )}
+          </button>
+          {contextExpanded && (
+            <div className="mt-3 space-y-2">
+              <div className="flex gap-2">
+                <input
+                  type="text"
+                  value={contextPath}
+                  onChange={(e) => setContextPath(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setIsGatheringContext(true)
+                      gatherContext(contextPath)
+                        .then((r) => { setContextResult(r); toast.success(`Found ${r.files.length} context files`) })
+                        .catch((err: unknown) => { toast.error(err instanceof Error ? err.message : 'Context failed') })
+                        .finally(() => setIsGatheringContext(false))
+                    }
+                  }}
+                  placeholder="Enter file path to discover related files..."
+                  className="flex-1 bg-transparent border border-border rounded-md px-3 py-1.5 text-xs
+                             focus:outline-none focus:ring-1 focus:ring-primary/50 placeholder:text-muted-foreground/50"
+                  disabled={isGatheringContext}
+                />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={!contextPath.trim() || isGatheringContext}
+                  onClick={() => {
+                    setIsGatheringContext(true)
+                    gatherContext(contextPath)
+                      .then((r) => { setContextResult(r); toast.success(`Found ${r.files.length} context files`) })
+                      .catch((err: unknown) => { toast.error(err instanceof Error ? err.message : 'Context failed') })
+                      .finally(() => setIsGatheringContext(false))
+                  }}
+                >
+                  {isGatheringContext ? <Activity size={12} className="animate-spin" /> : <Search size={12} />}
+                </Button>
+              </div>
+              {contextResult && contextResult.files.length > 0 && (
+                <ScrollArea className="h-[140px]">
+                  <div className="space-y-1">
+                    {contextResult.files.map((f, i) => (
+                      <div
+                        key={i}
+                        className="flex items-center justify-between text-xs px-2 py-1.5 rounded hover:bg-muted/50 transition-colors"
+                      >
+                        <div className="flex items-center gap-2 min-w-0">
+                          <Code2 size={10} className="text-primary shrink-0" />
+                          <span className="truncate font-mono">{f.relativePath}</span>
+                        </div>
+                        <div className="flex items-center gap-2 shrink-0 ml-2">
+                          <span className="text-[10px] text-muted-foreground">{f.reason}</span>
+                          <span className="text-[10px] text-muted-foreground/60">
+                            {(f.size / 1024).toFixed(1)}K
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              )}
+              {contextResult && (
+                <div className="flex items-center justify-between text-[10px] text-muted-foreground px-1">
+                  <span>Total: {(contextResult.totalSize / 1024).toFixed(1)} KB</span>
+                  {contextResult.truncated && (
+                    <span className="text-yellow-500">⚠ Truncated</span>
+                  )}
+                </div>
+              )}
+            </div>
+          )}
+        </CardContent>
+      </Card>
 
       {/* Prompt Input */}
       <Card className="glass-card">
@@ -388,6 +680,346 @@ export function DeveloperPanel() {
           </ScrollArea>
         </CardContent>
       </Card>
+
+      </>)}
+
+      {/* ==================== REVIEW TAB ==================== */}
+      {activeTab === 'review' && (<>
+
+      {/* Review Input */}
+      <Card className="glass-card">
+        <CardContent className="p-4">
+          <div className="flex gap-2">
+            <input
+              type="text"
+              value={reviewPath}
+              onChange={(e) => setReviewPath(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleReview()}
+              placeholder="Enter file path to review (e.g., src/agents/DeveloperAgent.ts)"
+              className="flex-1 bg-transparent border border-border rounded-lg px-4 py-2.5 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground/50"
+              disabled={isReviewing}
+            />
+            <Button
+              onClick={handleReview}
+              disabled={!reviewPath.trim() || isReviewing}
+              className="gap-2"
+            >
+              <Search size={14} />
+              Review
+            </Button>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Review Loading */}
+      {isReviewing && (
+        <Card className="glass-card border-blue-500/30">
+          <CardContent className="p-6 text-center">
+            <Activity size={24} className="text-blue-500 animate-spin mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">Analyzing code quality...</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Review Results */}
+      {reviewResult && !isReviewing && (
+        <>
+          {/* Score & Summary */}
+          <Card className="glass-card">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center justify-between">
+                <span className="flex items-center gap-2">
+                  <FileSearch size={14} className="text-primary" />
+                  {reviewResult.fileName}
+                  <span className="text-xs font-normal text-muted-foreground">
+                    ({reviewResult.language})
+                  </span>
+                </span>
+                <span className={cn('text-2xl font-bold', getScoreColor(reviewResult.score))}>
+                  {reviewResult.score}/100
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <p className="text-sm text-muted-foreground mb-3">{reviewResult.summary}</p>
+              {/* Stats row */}
+              <div className="flex gap-3 text-xs">
+                <span className="flex items-center gap-1">
+                  <ShieldAlert size={12} className="text-red-500" />
+                  {reviewResult.stats.critical} critical
+                </span>
+                <span className="flex items-center gap-1">
+                  <AlertTriangle size={12} className="text-yellow-500" />
+                  {reviewResult.stats.warning} warnings
+                </span>
+                <span className="flex items-center gap-1">
+                  <Info size={12} className="text-blue-500" />
+                  {reviewResult.stats.info} info
+                </span>
+                <span className="flex items-center gap-1">
+                  <Lightbulb size={12} className="text-purple-400" />
+                  {reviewResult.stats.suggestion} suggestions
+                </span>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Findings List */}
+          {reviewResult.findings.length > 0 && (
+            <Card className="glass-card">
+              <CardHeader className="pb-3 border-b border-border/50">
+                <CardTitle className="flex items-center gap-2 text-sm">
+                  <Search size={14} className="text-muted-foreground" />
+                  Findings ({reviewResult.findings.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <ScrollArea className="h-[340px]">
+                  <div className="divide-y divide-border/50">
+                    {reviewResult.findings.map((finding, i) => {
+                      const config = SEVERITY_CONFIG[finding.severity] || SEVERITY_CONFIG.info
+                      const Icon = config.icon
+                      return (
+                        <div key={i} className="px-4 py-3 hover:bg-muted/50 transition-colors">
+                          <div className="flex items-start gap-2">
+                            <span className={cn('shrink-0 mt-0.5', config.color)}>
+                              <Icon size={14} />
+                            </span>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center gap-2">
+                                <span className={cn(
+                                  'text-[10px] font-medium px-1.5 py-0.5 rounded-full uppercase',
+                                  config.bg, config.color
+                                )}>
+                                  {finding.severity}
+                                </span>
+                                {finding.line && (
+                                  <span className="text-xs text-muted-foreground">
+                                    Line {finding.line}
+                                  </span>
+                                )}
+                                {finding.rule && (
+                                  <span className="text-[10px] text-muted-foreground font-mono">
+                                    [{finding.rule}]
+                                  </span>
+                                )}
+                              </div>
+                              <p className="text-sm mt-1">{finding.message}</p>
+                              {finding.suggestion && (
+                                <p className="text-xs text-muted-foreground mt-1 italic">
+                                  → {finding.suggestion}
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          )}
+        </>
+      )}
+
+      {/* Empty state for review */}
+      {!reviewResult && !isReviewing && (
+        <Card className="glass-card">
+          <CardContent className="p-8 text-center">
+            <FileSearch size={32} className="text-muted-foreground/50 mx-auto mb-3" />
+            <p className="text-sm text-muted-foreground">
+              Enter a file path above to start an AI-powered code review.
+            </p>
+            <p className="text-xs text-muted-foreground/70 mt-1">
+              The review analyzes code quality, security, patterns, and suggests improvements.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      </>)}
+
+      {/* ==================== COVERAGE TAB ==================== */}
+      {activeTab === 'coverage' && (<>
+
+      {/* Coverage Controls */}
+      <Card className="glass-card">
+        <CardContent className="p-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BarChart3 size={16} className="text-primary" />
+              <span className="text-sm font-medium">Test Coverage Analysis</span>
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                disabled={isLoadingCoverage}
+                onClick={async () => {
+                  setIsLoadingCoverage(true)
+                  try {
+                    const result = await fetchCoverage('parse')
+                    setCoverageData(result)
+                    toast.success('Coverage data loaded')
+                  } catch (err: unknown) {
+                    toast.error(err instanceof Error ? err.message : 'Failed to load coverage')
+                  } finally {
+                    setIsLoadingCoverage(false)
+                  }
+                }}
+              >
+                {isLoadingCoverage ? <Activity size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+                <span className="ml-1.5">Load Existing</span>
+              </Button>
+              <Button
+                size="sm"
+                disabled={isLoadingCoverage}
+                onClick={async () => {
+                  setIsLoadingCoverage(true)
+                  try {
+                    const result = await fetchCoverage('run')
+                    setCoverageData(result)
+                    toast.success('Coverage run complete')
+                  } catch (err: unknown) {
+                    toast.error(err instanceof Error ? err.message : 'Coverage run failed')
+                  } finally {
+                    setIsLoadingCoverage(false)
+                  }
+                }}
+              >
+                <Play size={12} />
+                <span className="ml-1.5">Run Coverage</span>
+              </Button>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Coverage Loading */}
+      {isLoadingCoverage && (
+        <Card className="glass-card border-blue-500/30">
+          <CardContent className="p-6 text-center">
+            <Activity size={24} className="text-blue-500 animate-spin mx-auto mb-2" />
+            <p className="text-sm text-muted-foreground">Analyzing coverage...</p>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Coverage Results */}
+      {coverageData && !isLoadingCoverage && (
+        <>
+          {/* Aggregate Metrics */}
+          <Card className="glass-card">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <BarChart3 size={14} className="text-primary" />
+                Aggregate Coverage
+                <span className="ml-auto text-xs text-muted-foreground">
+                  {coverageData.filesWithTests} / {coverageData.totalFiles} files
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0 space-y-2">
+              {(['statements', 'branches', 'functions', 'lines'] as const).map(metric => {
+                const d = coverageData.aggregate[metric]
+                return (
+                  <div key={metric} className="flex items-center gap-3 text-xs">
+                    <span className="w-20 text-muted-foreground capitalize">{metric}</span>
+                    <CoverageBar pct={d.pct} />
+                    <span className={cn(
+                      'w-10 text-right font-medium',
+                      d.pct >= 80 ? 'text-green-500' : d.pct >= 60 ? 'text-yellow-500' : 'text-red-500'
+                    )}>
+                      {d.pct}%
+                    </span>
+                    <span className="text-muted-foreground/60">{d.covered}/{d.total}</span>
+                  </div>
+                )
+              })}
+            </CardContent>
+          </Card>
+
+          {/* Worst Files */}
+          {coverageData.worstFiles.length > 0 && (
+            <Card className="glass-card">
+              <CardHeader className="pb-3 border-b border-border/50">
+                <CardTitle className="flex items-center gap-2 text-sm">
+                  <AlertTriangle size={14} className="text-yellow-500" />
+                  Lowest Coverage ({coverageData.worstFiles.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="p-0">
+                <ScrollArea className="h-[200px]">
+                  <div className="divide-y divide-border/50">
+                    {coverageData.worstFiles.map((f, i) => (
+                      <div key={i} className="px-4 py-2 hover:bg-muted/50 transition-colors">
+                        <div className="flex items-center justify-between">
+                          <span className="text-xs font-mono truncate flex-1">{f.relativePath}</span>
+                          <div className="flex items-center gap-2 ml-2">
+                            <CoverageBar pct={f.lines.pct} />
+                            <span className={cn(
+                              'text-xs font-medium w-10 text-right',
+                              f.lines.pct >= 80 ? 'text-green-500' : f.lines.pct >= 60 ? 'text-yellow-500' : 'text-red-500'
+                            )}>
+                              {f.lines.pct}%
+                            </span>
+                          </div>
+                        </div>
+                        {f.uncoveredLines.length > 0 && f.uncoveredLines.length <= 10 && (
+                          <p className="text-[10px] text-muted-foreground mt-0.5">
+                            Uncovered: L{f.uncoveredLines.join(', L')}
+                          </p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          )}
+
+          {/* Untested Files */}
+          {coverageData.untestedFiles.length > 0 && (
+            <Card className="glass-card border-red-500/20">
+              <CardHeader className="pb-3">
+                <CardTitle className="flex items-center gap-2 text-sm">
+                  <XCircle size={14} className="text-red-500" />
+                  Untested Files ({coverageData.untestedFiles.length})
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="pt-0">
+                <ScrollArea className="h-[120px]">
+                  <div className="space-y-1">
+                    {coverageData.untestedFiles.map((f, i) => (
+                      <div key={i} className="text-xs text-red-400 font-mono">{f}</div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          )}
+        </>
+      )}
+
+      {/* Empty state for coverage */}
+      {!coverageData && !isLoadingCoverage && (
+        <Card className="glass-card">
+          <CardContent className="p-8 text-center">
+            <BarChart3 size={32} className="text-muted-foreground/50 mx-auto mb-3" />
+            <p className="text-sm text-muted-foreground">
+              Click &quot;Load Existing&quot; to parse coverage data, or &quot;Run Coverage&quot; to generate fresh results.
+            </p>
+            <p className="text-xs text-muted-foreground/70 mt-1">
+              Coverage analysis shows statement, branch, function, and line coverage metrics.
+            </p>
+          </CardContent>
+        </Card>
+      )}
+
+      </>)}
+
     </div>
   )
 }

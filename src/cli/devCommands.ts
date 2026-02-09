@@ -112,7 +112,8 @@ export function registerDevCommands(program: Command): void {
         .description('Generate code from a natural language prompt')
         .option('-f, --file <path>', 'Save generated code to file')
         .option('--no-test', 'Skip test phase')
-        .action(async (promptParts: string[], opts: { file?: string; test?: boolean }) => {
+        .option('--context <mode>', 'Context gathering: auto | none (default: none)')
+        .action(async (promptParts: string[], opts: { file?: string; test?: boolean; context?: string }) => {
             const prompt = promptParts.join(' ');
             const spinner = ora(`Generating code...`).start();
 
@@ -120,6 +121,20 @@ export function registerDevCommands(program: Command): void {
                 const context: Record<string, unknown> = {};
                 if (opts.file) context.filePath = opts.file;
                 if (opts.test === false) context.skipTests = true;
+                if (opts.context === 'auto' && opts.file) {
+                    spinner.text = 'Gathering context...';
+                    try {
+                        const ctxResult = await apiFetch<{ context: { files: Array<{ relativePath: string; size: number }> } }>('/context', {
+                            method: 'POST',
+                            body: JSON.stringify({ filePath: opts.file }),
+                        });
+                        context.contextFiles = ctxResult.context.files.map(f => f.relativePath);
+                        spinner.text = `Context: ${ctxResult.context.files.length} files. Generating code...`;
+                    } catch {
+                        // Context gathering failed, continue without context
+                        spinner.text = 'Generating code (no context)...';
+                    }
+                }
 
                 const { taskId } = await executeDevTask(
                     `generate code: ${prompt}`,
@@ -218,10 +233,280 @@ export function registerDevCommands(program: Command): void {
     // brunella dev review <file>
     dev
         .command('review <file>')
-        .description('Review code quality (Fázis 2 — coming soon)')
-        .action(async (file: string) => {
-            console.log(chalk.yellow(`⚠️  Code review for ${chalk.cyan(file)} — coming in Fázis 2 (P4)`));
-            console.log(chalk.dim('Use: brunella agent Developer "review code in ' + file + '"'));
+        .description('Review code quality with AI-powered analysis')
+        .option('--json', 'Output raw JSON')
+        .action(async (file: string, opts: { json?: boolean }) => {
+            const spinner = ora(`Reviewing ${chalk.cyan(file)}...`).start();
+
+            try {
+                const result = await apiFetch<{
+                    review: {
+                        filePath: string;
+                        fileName: string;
+                        language: string;
+                        score: number;
+                        summary: string;
+                        findings: Array<{
+                            severity: string;
+                            line?: number;
+                            message: string;
+                            rule?: string;
+                            suggestion?: string;
+                        }>;
+                        stats: { critical: number; warning: number; info: number; suggestion: number; total: number };
+                    };
+                }>('/review', {
+                    method: 'POST',
+                    body: JSON.stringify({ filePath: file }),
+                });
+
+                const { review } = result;
+                spinner.succeed(chalk.green(`Review complete: ${review.fileName}`));
+
+                if (opts.json) {
+                    console.log(JSON.stringify(review, null, 2));
+                    return;
+                }
+
+                // Score badge
+                const scoreColor = review.score >= 80 ? chalk.green : review.score >= 60 ? chalk.yellow : chalk.red;
+                console.log(`\n${chalk.bold('Score:')} ${scoreColor(`${review.score}/100`)}`);
+                console.log(`${chalk.bold('Summary:')} ${review.summary}`);
+
+                // Stats line
+                console.log(`\n${chalk.bold('Findings:')} ${review.stats.total} total — ` +
+                    `${chalk.red(`${review.stats.critical} critical`)} · ` +
+                    `${chalk.yellow(`${review.stats.warning} warnings`)} · ` +
+                    `${chalk.blue(`${review.stats.info} info`)} · ` +
+                    `${chalk.dim(`${review.stats.suggestion} suggestions`)}`);
+
+                // Individual findings
+                if (review.findings.length > 0) {
+                    console.log('');
+                    for (const f of review.findings) {
+                        const icon = f.severity === 'critical' ? chalk.red('✖') :
+                            f.severity === 'warning' ? chalk.yellow('⚠') :
+                                f.severity === 'info' ? chalk.blue('ℹ') : chalk.dim('💡');
+                        const lineRef = f.line ? chalk.dim(`:${f.line}`) : '';
+                        const rule = f.rule ? chalk.dim(` [${f.rule}]`) : '';
+                        console.log(`  ${icon} ${f.message}${lineRef}${rule}`);
+                        if (f.suggestion) {
+                            console.log(`    ${chalk.dim('→')} ${chalk.cyan(f.suggestion)}`);
+                        }
+                    }
+                }
+                console.log('');
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Review failed: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    // brunella dev refactor <file> <instruction>
+    dev
+        .command('refactor <file> <instruction...>')
+        .description('Refactor a file with a specific instruction')
+        .option('--apply', 'Apply refactored code to file')
+        .action(async (file: string, instructionParts: string[], opts: { apply?: boolean }) => {
+            const instruction = instructionParts.join(' ');
+            const spinner = ora(`Refactoring ${chalk.cyan(file)}...`).start();
+
+            try {
+                const result = await apiFetch<{
+                    refactor: {
+                        filePath: string;
+                        changes: string[];
+                        instruction: string;
+                        applied: boolean;
+                        refactoredCode?: string;
+                    };
+                }>('/refactor', {
+                    method: 'POST',
+                    body: JSON.stringify({ filePath: file, instruction, apply: opts.apply }),
+                });
+
+                const { refactor } = result;
+
+                if (refactor.applied) {
+                    spinner.succeed(chalk.green(`Refactoring applied to ${file}`));
+                } else {
+                    spinner.succeed(chalk.green('Refactoring complete (dry run)'));
+                }
+
+                console.log(`\n${chalk.bold('Instruction:')} ${refactor.instruction}`);
+                console.log(`${chalk.bold('Changes:')}`);
+                for (const change of refactor.changes) {
+                    console.log(`  • ${change}`);
+                }
+
+                if (!refactor.applied && refactor.refactoredCode) {
+                    console.log(`\n${chalk.dim('Preview (use --apply to write):')}`);
+                    console.log(chalk.dim('─'.repeat(60)));
+                    console.log(refactor.refactoredCode.slice(0, 2000));
+                    if (refactor.refactoredCode.length > 2000) {
+                        console.log(chalk.dim(`\n... (${refactor.refactoredCode.length} chars total)`));
+                    }
+                }
+                console.log('');
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Refactor failed: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    // brunella dev context <file> — P5: Show context files
+    dev
+        .command('context <file>')
+        .description('Show related context files for a target file')
+        .option('-n, --max <count>', 'Maximum context files', '10')
+        .option('--json', 'Output raw JSON')
+        .action(async (file: string, opts: { max: string; json?: boolean }) => {
+            const spinner = ora(`Gathering context for ${chalk.cyan(file)}...`).start();
+
+            try {
+                const result = await apiFetch<{
+                    context: {
+                        targetFile: string;
+                        totalSize: number;
+                        truncated: boolean;
+                        files: Array<{ relativePath: string; reason: string; size: number }>;
+                    };
+                }>('/context', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        filePath: file,
+                        options: { maxFiles: parseInt(opts.max) || 10 },
+                    }),
+                });
+
+                const { context } = result;
+                spinner.succeed(chalk.green(`Found ${context.files.length} context files`));
+
+                if (opts.json) {
+                    console.log(JSON.stringify(context, null, 2));
+                    return;
+                }
+
+                console.log(`\n${chalk.bold('Target:')} ${file}`);
+                console.log(`${chalk.bold('Total size:')} ${(context.totalSize / 1024).toFixed(1)} KB`);
+                if (context.truncated) {
+                    console.log(chalk.yellow('⚠ Context was truncated due to size limits'));
+                }
+
+                if (context.files.length > 0) {
+                    console.log(`\n${chalk.bold('Context files:')}`);
+                    for (const f of context.files) {
+                        const sizeStr = chalk.dim(`(${(f.size / 1024).toFixed(1)} KB)`);
+                        console.log(`  ${chalk.cyan(f.relativePath)} ${sizeStr}`);
+                        console.log(`    ${chalk.dim(f.reason)}`);
+                    }
+                } else {
+                    console.log(chalk.dim('\nNo context files found.'));
+                }
+                console.log('');
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Context gathering failed: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    // brunella dev coverage — P6: Test coverage analysis
+    dev
+        .command('coverage')
+        .description('Analyze test coverage')
+        .option('--run', 'Re-run tests to generate fresh coverage')
+        .option('--worst <count>', 'Show N worst-covered files', '10')
+        .option('--json', 'Output raw JSON')
+        .action(async (opts: { run?: boolean; worst: string; json?: boolean }) => {
+            const mode = opts.run ? 'run' : 'parse';
+            const spinner = ora(
+                mode === 'run'
+                    ? 'Running tests with coverage...'
+                    : 'Parsing existing coverage data...'
+            ).start();
+
+            try {
+                const data = await apiFetch<{
+                    coverage: {
+                        totalFiles: number;
+                        filesWithTests: number;
+                        filesWithoutTests: number;
+                        aggregate: {
+                            statements: { pct: number; covered: number; total: number };
+                            branches: { pct: number; covered: number; total: number };
+                            functions: { pct: number; covered: number; total: number };
+                            lines: { pct: number; covered: number; total: number };
+                        };
+                        worstFiles: Array<{
+                            relativePath: string;
+                            lines: { pct: number };
+                            functions: { pct: number };
+                            uncoveredLines: number[];
+                        }>;
+                        untestedFiles: string[];
+                    };
+                }>('/coverage', {
+                    method: 'POST',
+                    body: JSON.stringify({ mode }),
+                });
+
+                const { coverage } = data;
+                spinner.succeed(chalk.green('Coverage analysis complete'));
+
+                if (opts.json) {
+                    console.log(JSON.stringify(coverage, null, 2));
+                    return;
+                }
+
+                // Aggregate metrics
+                const agg = coverage.aggregate;
+                const colorize = (pct: number) =>
+                    pct >= 80 ? chalk.green(`${pct}%`) :
+                    pct >= 60 ? chalk.yellow(`${pct}%`) :
+                    chalk.red(`${pct}%`);
+
+                console.log(`\n${chalk.bold('📊 Coverage Summary')}`);
+                console.log(`  Statements: ${colorize(agg.statements.pct)}  (${agg.statements.covered}/${agg.statements.total})`);
+                console.log(`  Branches:   ${colorize(agg.branches.pct)}  (${agg.branches.covered}/${agg.branches.total})`);
+                console.log(`  Functions:  ${colorize(agg.functions.pct)}  (${agg.functions.covered}/${agg.functions.total})`);
+                console.log(`  Lines:      ${colorize(agg.lines.pct)}  (${agg.lines.covered}/${agg.lines.total})`);
+                console.log(`\n  Files: ${coverage.filesWithTests} tested / ${coverage.filesWithoutTests} untested / ${coverage.totalFiles} total`);
+
+                // Worst files
+                const worstLimit = parseInt(opts.worst) || 10;
+                const worst = coverage.worstFiles.slice(0, worstLimit);
+                if (worst.length > 0) {
+                    console.log(`\n${chalk.bold('⚠ Lowest Coverage Files:')}`);
+                    for (const f of worst) {
+                        const linePct = colorize(f.lines.pct);
+                        const fnPct = colorize(f.functions.pct);
+                        console.log(`  ${chalk.cyan(f.relativePath)}  lines: ${linePct}  fn: ${fnPct}`);
+                        if (f.uncoveredLines.length > 0 && f.uncoveredLines.length <= 20) {
+                            console.log(`    ${chalk.dim(`uncovered: L${f.uncoveredLines.join(', L')}`)}`);
+                        }
+                    }
+                }
+
+                // Untested files
+                if (coverage.untestedFiles.length > 0) {
+                    console.log(`\n${chalk.bold('❌ Files Without Tests:')}`);
+                    for (const f of coverage.untestedFiles.slice(0, 15)) {
+                        console.log(`  ${chalk.red(f)}`);
+                    }
+                    if (coverage.untestedFiles.length > 15) {
+                        console.log(chalk.dim(`  ... and ${coverage.untestedFiles.length - 15} more`));
+                    }
+                }
+
+                console.log('');
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Coverage analysis failed: ${msg}`));
+                process.exit(1);
+            }
         });
 
     // brunella dev status
