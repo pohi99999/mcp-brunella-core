@@ -1,9 +1,12 @@
 // FILE: src/server/routes/developer.ts
 // PURPOSE: REST API endpoints for Developer Agent 3.0
-// VERSION: 3.0
+// VERSION: 3.0.2 — P4+P5+P6: Code Review, Context Builder, Coverage Analysis
 
 import { Router } from 'express';
 import { pipelineRunner, type TaskPipeline } from '../../agents/developerPipeline.js';
+import { codeReviewEngine } from '../../agents/codeReview.js';
+import { contextBuilder } from '../../agents/contextBuilder.js';
+import { coverageAnalyzer } from '../../agents/coverageAnalysis.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
@@ -116,6 +119,191 @@ export function createDeveloperRoutes(): Router {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });
         }
+    });
+
+    // ==================== P4: Code Review & Refactoring ====================
+
+    /**
+     * POST /api/v1/developer/review
+     * Review a file for code quality issues
+     *
+     * Body: { filePath: string } OR { code: string, language?: string }
+     */
+    router.post('/review', async (req, res) => {
+        try {
+            const { filePath, code, language } = req.body;
+
+            if (!filePath && !code) {
+                res.status(400).json({ error: 'filePath or code is required' });
+                return;
+            }
+
+            logInfo('DeveloperRoute', `Review request: ${filePath || '<inline>'}`);
+
+            let result;
+            if (filePath) {
+                result = await codeReviewEngine.reviewFile(filePath);
+            } else {
+                result = await codeReviewEngine.reviewCode(
+                    code as string,
+                    (language as string) || 'typescript'
+                );
+            }
+
+            res.json({ review: result });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Review failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    /**
+     * POST /api/v1/developer/refactor
+     * Refactor a file with a specific instruction
+     *
+     * Body: { filePath: string, instruction: string, apply?: boolean }
+     */
+    router.post('/refactor', async (req, res) => {
+        try {
+            const { filePath, instruction, apply } = req.body;
+
+            if (!filePath || typeof filePath !== 'string') {
+                res.status(400).json({ error: 'filePath (string) is required' });
+                return;
+            }
+            if (!instruction || typeof instruction !== 'string') {
+                res.status(400).json({ error: 'instruction (string) is required' });
+                return;
+            }
+
+            logInfo('DeveloperRoute', `Refactor request: ${filePath}`);
+
+            const result = await codeReviewEngine.refactorFile(filePath, instruction);
+
+            // Optionally apply the refactored code
+            if (apply) {
+                const fs = await import('fs/promises');
+                await fs.writeFile(result.filePath, result.refactoredCode, 'utf-8');
+                logInfo('DeveloperRoute', `Refactored code applied to ${result.filePath}`);
+            }
+
+            res.json({
+                refactor: {
+                    ...result,
+                    applied: !!apply,
+                    // Don't send full code in response by default
+                    originalCode: undefined,
+                    refactoredCode: apply ? undefined : result.refactoredCode,
+                },
+            });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Refactor failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    /**
+     * GET /api/v1/developer/review/history
+     * Get review history
+     */
+    router.get('/review/history', (_req, res) => {
+        try {
+            const limit = parseInt(_req.query.limit as string) || 20;
+            const history = codeReviewEngine.getHistory(limit);
+            const stats = codeReviewEngine.getAggregateStats();
+
+            res.json({ history, stats });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // ==================== P5: Multi-File Context ====================
+
+    /**
+     * POST /api/v1/developer/context
+     * Gather context files for a target file
+     *
+     * Body: { filePath: string, options?: ContextOptions }
+     */
+    router.post('/context', async (req, res) => {
+        try {
+            const { filePath, options } = req.body;
+
+            if (!filePath || typeof filePath !== 'string') {
+                res.status(400).json({ error: 'filePath (string) is required' });
+                return;
+            }
+
+            logInfo('DeveloperRoute', `Context request: ${filePath}`);
+
+            const result = await contextBuilder.gatherContext(filePath, options || {});
+
+            // Return metadata + file list (without full content by default)
+            const includeContent = req.query.content === 'true';
+
+            res.json({
+                context: {
+                    targetFile: result.targetFile,
+                    totalSize: result.totalSize,
+                    truncated: result.truncated,
+                    gatheredAt: result.gatheredAt,
+                    files: result.files.map(f => ({
+                        relativePath: f.relativePath,
+                        reason: f.reason,
+                        size: f.size,
+                        ...(includeContent ? { content: f.content } : {}),
+                    })),
+                },
+            });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Context failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // ==================== P6: Coverage Analysis ====================
+
+    // POST /coverage — Run coverage analysis (or parse existing)
+    router.post('/coverage', async (req, res) => {
+        try {
+            const { mode, include, exclude } = req.body as {
+                mode?: 'run' | 'parse';
+                include?: string[];
+                exclude?: string[];
+            };
+
+            logInfo('DeveloperRoute', `Coverage request: mode=${mode || 'parse'}`);
+
+            let summary;
+            if (mode === 'run') {
+                summary = await coverageAnalyzer.runCoverage({ include, exclude });
+            } else {
+                // Try to parse existing coverage JSON
+                const coveragePath = require('path').join(process.cwd(), 'coverage/coverage-final.json');
+                summary = await coverageAnalyzer.parseCoverageJson(coveragePath, { exclude });
+            }
+
+            res.json({ coverage: summary });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Coverage failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // GET /coverage/summary — Get last computed coverage (no re-run)
+    router.get('/coverage/summary', (_req, res) => {
+        const summary = coverageAnalyzer.getLastSummary();
+        if (!summary) {
+            res.status(404).json({ error: 'No coverage data. Run POST /coverage first.' });
+            return;
+        }
+        res.json({ coverage: summary });
     });
 
     return router;
