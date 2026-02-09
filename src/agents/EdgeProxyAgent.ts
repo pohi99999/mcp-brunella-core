@@ -13,7 +13,7 @@
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
-import { saveTask, updateTask, getPendingTasks, DbTask } from '../utils/db.js';
+import { saveTask, updateTask, getPendingTasks, getTask, DbTask } from '../utils/db.js';
 
 // ============================================================================
 // INTERFACES
@@ -245,9 +245,16 @@ export class EdgeProxyAgent extends BaseAgent {
     if (this.health.edge === 'offline' && this.config.fallbackToLocal) {
       logInfo(this.name, 'Edge offline, lokális fallback...');
 
-      // Update local task if needed
+      // Update local task if needed - merge with existing context to preserve fields
       if (localTaskId) {
-           await updateTask(localTaskId, { status: 'pending', context: { ...context.context as any, fallback: true } });
+           const existingTask = await getTask(localTaskId);
+           if (existingTask) {
+               const existingContext = JSON.parse(existingTask.context);
+               await updateTask(localTaskId, { 
+                   status: 'pending', 
+                   context: { ...existingContext, fallback: true } 
+               });
+           }
       }
 
       return {
