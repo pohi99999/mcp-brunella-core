@@ -198,20 +198,23 @@ A `console.log/error/warn` hívások nagy része `logInfo/logError/logWarn` hív
 
 ---
 
-### P8: API Versioning [IDEA]
-**Becsült idő:** 30 perc (az API Route refactorral együtt)
+### P8: API Versioning [DONE ✅]
+**Elvégezve:** 2026-02-10
 
-```typescript
-// Jelenlegi: /api/agents
-// Új: /api/v1/agents
+Centralizált, verziózott router (`createV1Router`) implementálva. Az API elérhető `/api/v1/*` prefixszel, míg a visszafelé kompatibilitás biztosított az `/api/*` alias révén.
 
-app.use('/api/v1', v1Router);
-app.use('/api', v1Router); // backwards compatibility
-```
+**Implementáció:**
+- ✅ `src/server/routes/index.ts`: `createV1Router()` gyűjtő router létrehozva.
+- ✅ `src/server/web.ts`: `v1Router` mountolva `/api/v1` és `/api` alá.
+- ✅ `src/server/web.ts`: redundáns, manuális route regisztrációk törölve (17 generic + telemetry, audit, etc.).
+- ✅ Centralizált route kezelés: egyetlen helyen módosítható az összes API végpont.
 
 **Acceptance Criteria:**
-- [ ] /api/v1/* prefix működik
-- [ ] /api/* is működik (alias)
+- [x] /api/v1/* prefix működik
+- [x] /api/* is működik (alias)
+- [x] Manuális redundancia megszüntetve a `web.ts`-ben.
+- [x] Build PASS
+- [x] Tests PASS (229/229)
 
 ---
 

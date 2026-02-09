@@ -41,6 +41,36 @@
 
 ## Napló
 
+### 2026-02-10 18:45 - API Versioning (P8) & Code Quality Track 100% DONE! (🏆)
+
+**Feladat:** API verziózás bevezetése (`/api/v1`) és a Code Quality Improvements track teljes lezárása.
+
+**Elvégzett munkák:**
+
+1. **API Versioning (P8)**
+   - ✅ **Centralized Router:** `src/server/routes/index.ts`-ben implementálva a `createV1Router()` factory.
+   - ✅ **Router Mounting:** `src/server/web.ts`-ben a `v1Router` mountolva `/api/v1` (explicit verzió) és `/api` (alias) alá.
+   - ✅ **Code Cleanup:** Eltávolítva 17+ redundáns, manuálisan regisztrált route a `web.ts`-ből.
+   - ✅ **Backwards Compatibility:** Minden meglévő `/api/health`, `/api/agents`, stb. hívás továbbra is működik az aliasing miatt.
+
+2. **Track Menedzsment**
+   - ✅ **Spec Update:** `conductor/tracks/code_quality_improvements_20260210/spec.md` P8 feladata `DONE`-ra váltva.
+   - ✅ **Track Index:** `conductor/tracks.md` állapota frissítve (100% KÉSZ).
+   - ✅ **Git Sync:** Befejezve a végső git commit és push a teljes track lezárásához.
+
+3. **Verifikáció**
+   - ✅ **Tests:** 229/229 PASS. Minden integrációs teszt (amik a `/api` útvonalat használják) sikeresen lefutott az új router struktúrával is.
+   - ✅ **Build:** 0 hiba.
+
+**Eredmények:**
+- 🏆 Code Quality Improvements: **100% TELJESÍTVE**.
+- 🛠️ Karbantarthatóság: A szerver route regisztrációja mostantól egyetlen központi helyen (index.ts) történik.
+- 🚀 Jövőbiztosság: Készen állunk a v2 API bevezetésére anélkül, hogy a v1 klienseket (pl. dashboard) elrontanánk.
+
+**Következő lépések:** Új track indítása a felhasználó kérése alapján (pl. Developer Agent 2.0 bővítése vagy Cloudflare Edge).
+
+---
+
 ### 2026-02-10 19:35 - P5 Config Validation (Zod) - Code Quality Track
 
 **Feladat:** Centralizált környezeti változó validáció Zod sémával (Code Quality Improvements Track P5)
