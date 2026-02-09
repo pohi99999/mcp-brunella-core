@@ -39,7 +39,7 @@
 
 ### 2026-02-10 - Code Quality P4: Audit Log SQLite Persistence (TELJES! ✅)
 
-**Commit:** (pending)
+**Commit:** `ee9ba86a`
 **Feladat:** Audit log perzisztens tárolása SQLite-ban (checkpoint.ts mintájára)
 
 **Implementáció:**
