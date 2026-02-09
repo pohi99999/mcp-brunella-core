@@ -34,6 +34,9 @@ import {
   ChevronDown,
   ChevronRight,
   BarChart3,
+  ListTodo,
+  X,
+  RotateCw,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { DeveloperPipeline, type PipelinePhaseView } from './DeveloperPipeline'
@@ -200,6 +203,54 @@ function CoverageBar({ pct }: { pct: number }) {
   )
 }
 
+// ==================== P7: Queue Types & API ====================
+
+type QueueTaskStatus = 'queued' | 'running' | 'completed' | 'failed' | 'cancelled'
+type QueueTaskPriority = 'high' | 'medium' | 'low'
+
+interface QueuedTaskData {
+  id: string
+  type: string
+  description: string
+  priority: QueueTaskPriority
+  status: QueueTaskStatus
+  createdAt: number
+  startedAt?: number
+  completedAt?: number
+  error?: string
+}
+
+interface QueueStatsData {
+  total: number
+  queued: number
+  running: number
+  completed: number
+  failed: number
+  cancelled: number
+  avgWaitTime: number
+  avgExecutionTime: number
+}
+
+async function fetchQueueTasks(filters?: { status?: string }): Promise<{ tasks: QueuedTaskData[]; stats: QueueStatsData }> {
+  const params = filters?.status ? `?status=${filters.status}` : ''
+  const data = await devApiFetch<{ tasks: QueuedTaskData[]; stats: QueueStatsData }>(`/queue${params}`)
+  return data
+}
+
+async function cancelQueueTask(taskId: string): Promise<void> {
+  await devApiFetch<{ task: QueuedTaskData; message: string }>(`/queue/${taskId}`, {
+    method: 'PUT',
+    body: JSON.stringify({ action: 'cancel' }),
+  })
+}
+
+async function retryQueueTask(taskId: string): Promise<QueuedTaskData> {
+  const data = await devApiFetch<{ task: QueuedTaskData; message: string }>(`/queue/${taskId}/retry`, {
+    method: 'POST',
+  })
+  return data.task
+}
+
 // ==================== Component ====================
 
 export function DeveloperPanel() {
@@ -212,7 +263,7 @@ export function DeveloperPanel() {
   const [reviewPath, setReviewPath] = useState('')
   const [isReviewing, setIsReviewing] = useState(false)
   const [reviewResult, setReviewResult] = useState<ReviewResult | null>(null)
-  const [activeTab, setActiveTab] = useState<'build' | 'review' | 'coverage'>('build')
+  const [activeTab, setActiveTab] = useState<'build' | 'review' | 'coverage' | 'queue'>('build')
   // P5: Context state
   const [contextPath, setContextPath] = useState('')
   const [isGatheringContext, setIsGatheringContext] = useState(false)
@@ -221,6 +272,10 @@ export function DeveloperPanel() {
   // P6: Coverage state
   const [coverageData, setCoverageData] = useState<CoverageSummaryData | null>(null)
   const [isLoadingCoverage, setIsLoadingCoverage] = useState(false)
+  // P7: Queue state
+  const [queueTasks, setQueueTasks] = useState<QueuedTaskData[]>([])
+  const [queueStats, setQueueStats] = useState<QueueStatsData | null>(null)
+  const [isLoadingQueue, setIsLoadingQueue] = useState(false)
 
   // Fetch status and history on mount
   const refreshData = useCallback(async () => {
@@ -394,6 +449,19 @@ export function DeveloperPanel() {
         >
           <span className="flex items-center gap-1.5">
             <BarChart3 size={14} /> Coverage
+          </span>
+        </button>
+        <button
+          onClick={() => setActiveTab('queue')}
+          className={cn(
+            'px-4 py-1.5 rounded-md text-sm font-medium transition-colors',
+            activeTab === 'queue'
+              ? 'bg-background shadow text-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+          )}
+        >
+          <span className="flex items-center gap-1.5">
+            <ListTodo size={14} /> Queue
           </span>
         </button>
       </div>
@@ -1018,6 +1086,187 @@ export function DeveloperPanel() {
         </Card>
       )}
 
+      </>)}
+
+      {/* ==================== P7: Queue Tab ==================== */}
+      {activeTab === 'queue' && (<>
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h2 className="text-xl font-semibold mb-1">Task Queue</h2>
+            <p className="text-sm text-muted-foreground">
+              Manage concurrent developer tasks (max 3 workers)
+            </p>
+          </div>
+          <Button
+            onClick={async () => {
+              setIsLoadingQueue(true)
+              try {
+                const data = await fetchQueueTasks()
+                setQueueTasks(data.tasks)
+                setQueueStats(data.stats)
+                toast.success('Queue refreshed')
+              } catch (err: unknown) {
+                const errMsg = err instanceof Error ? err.message : String(err)
+                toast.error('Failed to load queue', { description: errMsg })
+              } finally {
+                setIsLoadingQueue(false)
+              }
+            }}
+            disabled={isLoadingQueue}
+            size="sm"
+            variant="outline"
+          >
+            {isLoadingQueue ? 'Loading...' : 'Refresh Queue'}
+          </Button>
+        </div>
+
+        {/* Queue Stats Cards */}
+        {queueStats && (
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+            <Card className="glass-card">
+              <CardContent className="p-4">
+                <div className="text-sm text-muted-foreground mb-1">Queued</div>
+                <div className="text-2xl font-bold text-yellow-500">{queueStats.queued}</div>
+              </CardContent>
+            </Card>
+            <Card className="glass-card">
+              <CardContent className="p-4">
+                <div className="text-sm text-muted-foreground mb-1">Running</div>
+                <div className="text-2xl font-bold text-blue-500">{queueStats.running}</div>
+              </CardContent>
+            </Card>
+            <Card className="glass-card">
+              <CardContent className="p-4">
+                <div className="text-sm text-muted-foreground mb-1">Completed</div>
+                <div className="text-2xl font-bold text-green-500">{queueStats.completed}</div>
+              </CardContent>
+            </Card>
+            <Card className="glass-card">
+              <CardContent className="p-4">
+                <div className="text-sm text-muted-foreground mb-1">Failed</div>
+                <div className="text-2xl font-bold text-red-500">{queueStats.failed}</div>
+              </CardContent>
+            </Card>
+          </div>
+        )}
+
+        {/* Task List */}
+        {queueTasks.length > 0 && (
+          <Card className="glass-card">
+            <CardContent className="p-0">
+              <ScrollArea className="h-[500px]">
+                <div className="divide-y divide-border">
+                  {queueTasks.map((task) => (
+                    <div key={task.id} className="p-4 hover:bg-accent/50 transition-colors">
+                      <div className="flex items-start justify-between gap-4">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 mb-2">
+                            <Badge
+                              variant={
+                                task.status === 'completed' ? 'default' :
+                                task.status === 'failed' ? 'destructive' :
+                                task.status === 'running' ? 'default' :
+                                task.status === 'cancelled' ? 'secondary' :
+                                'outline'
+                              }
+                              className={cn(
+                                'text-xs',
+                                task.status === 'queued' && 'bg-yellow-500/10 text-yellow-500 border-yellow-500/20',
+                                task.status === 'running' && 'bg-blue-500/10 text-blue-500 border-blue-500/20',
+                                task.status === 'completed' && 'bg-green-500/10 text-green-500 border-green-500/20'
+                              )}
+                            >
+                              {task.status.toUpperCase()}
+                            </Badge>
+                            <Badge variant="outline" className={cn(
+                              'text-xs',
+                              task.priority === 'high' && 'bg-red-500/10 text-red-500 border-red-500/30',
+                              task.priority === 'medium' && 'bg-yellow-500/10 text-yellow-500 border-yellow-500/30',
+                              task.priority === 'low' && 'bg-gray-500/10 text-gray-500 border-gray-500/30'
+                            )}>
+                              {task.priority === 'high' ? 'HIGH' : task.priority === 'medium' ? 'MED' : 'LOW'}
+                            </Badge>
+                            <span className="text-xs text-muted-foreground">{task.type}</span>
+                          </div>
+                          <p className="text-sm font-medium mb-1 truncate">{task.description}</p>
+                          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                            <span>ID: {task.id.slice(0, 8)}</span>
+                            <span>Created: {new Date(task.createdAt).toLocaleTimeString()}</span>
+                            {task.completedAt && (
+                              <span>Duration: {Math.round((task.completedAt - (task.startedAt || task.createdAt)) / 1000)}s</span>
+                            )}
+                          </div>
+                          {task.error && (
+                            <div className="mt-2 p-2 bg-destructive/10 border border-destructive/20 rounded text-xs text-destructive">
+                              {task.error}
+                            </div>
+                          )}
+                        </div>
+                        <div className="flex items-center gap-2">
+                          {(task.status === 'queued' || task.status === 'running') && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={async () => {
+                                try {
+                                  await cancelQueueTask(task.id)
+                                  toast.success('Task cancelled')
+                                  const data = await fetchQueueTasks()
+                                  setQueueTasks(data.tasks)
+                                  setQueueStats(data.stats)
+                                } catch (err: unknown) {
+                                  const errMsg = err instanceof Error ? err.message : String(err)
+                                  toast.error('Failed to cancel task', { description: errMsg })
+                                }
+                              }}
+                            >
+                              <X size={16} />
+                            </Button>
+                          )}
+                          {task.status === 'failed' && (
+                            <Button
+                              size="sm"
+                              variant="ghost"
+                              onClick={async () => {
+                                try {
+                                  await retryQueueTask(task.id)
+                                  toast.success('Task retried')
+                                  const data = await fetchQueueTasks()
+                                  setQueueTasks(data.tasks)
+                                  setQueueStats(data.stats)
+                                } catch (err: unknown) {
+                                  const errMsg = err instanceof Error ? err.message : String(err)
+                                  toast.error('Failed to retry task', { description: errMsg })
+                                }
+                              }}
+                            >
+                              <RotateCw size={16} />
+                            </Button>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </ScrollArea>
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Empty State */}
+        {queueTasks.length === 0 && !isLoadingQueue && (
+          <Card className="glass-card">
+            <CardContent className="p-8 text-center">
+              <ListTodo size={32} className="text-muted-foreground/50 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">
+                No tasks in queue. Use CLI to add tasks: <code className="text-xs bg-muted px-1 py-0.5 rounded">brunella dev queue add</code>
+              </p>
+              <p className="text-xs text-muted-foreground/70 mt-1">
+                Queue supports concurrent task execution with priority scheduling.
+              </p>
+            </CardContent>
+          </Card>
+        )}
       </>)}
 
     </div>

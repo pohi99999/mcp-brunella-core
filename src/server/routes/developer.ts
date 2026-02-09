@@ -1,12 +1,13 @@
 // FILE: src/server/routes/developer.ts
 // PURPOSE: REST API endpoints for Developer Agent 3.0
-// VERSION: 3.0.2 — P4+P5+P6: Code Review, Context Builder, Coverage Analysis
+// VERSION: 3.0.3 — P4+P5+P6+P7: Code Review, Context, Coverage, Task Queue
 
 import { Router } from 'express';
 import { pipelineRunner, type TaskPipeline } from '../../agents/developerPipeline.js';
 import { codeReviewEngine } from '../../agents/codeReview.js';
 import { contextBuilder } from '../../agents/contextBuilder.js';
 import { coverageAnalyzer } from '../../agents/coverageAnalysis.js';
+import { taskQueueManager } from '../../agents/taskQueue.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
@@ -304,6 +305,151 @@ export function createDeveloperRoutes(): Router {
             return;
         }
         res.json({ coverage: summary });
+    });
+
+    // ==================== P7: Task Queue Management ====================
+
+    // POST /queue — Add task to queue
+    router.post('/queue', async (req, res) => {
+        try {
+            const { type, description, params, priority, maxRetries } = req.body as {
+                type?: string;
+                description?: string;
+                params?: Record<string, unknown>;
+                priority?: string;
+                maxRetries?: number;
+            };
+
+            if (!type || !description) {
+                res.status(400).json({ error: 'type and description are required' });
+                return;
+            }
+
+            const taskId = await taskQueueManager.addTask(
+                type as any,
+                description,
+                params ?? {},
+                { priority: priority as any, maxRetries }
+            );
+
+            const task = taskQueueManager.getTask(taskId);
+            res.json({ task });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Queue add failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // GET /queue — List all tasks (with optional filters)
+    router.get('/queue', (req, res) => {
+        try {
+            const { status, type, priority } = req.query as {
+                status?: string;
+                type?: string;
+                priority?: string;
+            };
+
+            const tasks = taskQueueManager.getTasks({
+                status: status as any,
+                type: type as any,
+                priority: priority as any,
+            });
+
+            const stats = taskQueueManager.getStats();
+
+            res.json({ tasks, stats });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Queue list failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // GET /queue/:id — Get specific task
+    router.get('/queue/:id', (req, res) => {
+        try {
+            const { id } = req.params;
+            const task = taskQueueManager.getTask(id);
+
+            if (!task) {
+                res.status(404).json({ error: 'Task not found', taskId: id });
+                return;
+            }
+
+            res.json({ task });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Queue get failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // PUT /queue/:id — Update task (priority or cancel)
+    router.put('/queue/:id', async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { action, priority } = req.body as {
+                action?: 'cancel' | 'prioritize';
+                priority?: string;
+            };
+
+            if (action === 'cancel') {
+                const success = await taskQueueManager.cancelTask(id);
+                if (!success) {
+                    res.status(400).json({ error: 'Cannot cancel task (already finished or not found)' });
+                    return;
+                }
+                const task = taskQueueManager.getTask(id);
+                res.json({ task, message: 'Task cancelled' });
+            } else if (action === 'prioritize' && priority) {
+                const success = taskQueueManager.prioritizeTask(id, priority as any);
+                if (!success) {
+                    res.status(400).json({ error: 'Cannot change priority (not queued or not found)' });
+                    return;
+                }
+                const task = taskQueueManager.getTask(id);
+                res.json({ task, message: 'Priority updated' });
+            } else {
+                res.status(400).json({ error: 'Invalid action or missing priority' });
+            }
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Queue update failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // POST /queue/:id/retry — Retry a failed task
+    router.post('/queue/:id/retry', async (req, res) => {
+        try {
+            const { id } = req.params;
+            const newTaskId = await taskQueueManager.retryTask(id);
+
+            if (!newTaskId) {
+                res.status(400).json({ error: 'Cannot retry (not failed or max retries exceeded)' });
+                return;
+            }
+
+            const newTask = taskQueueManager.getTask(newTaskId);
+            res.json({ task: newTask, message: `Task retried as ${newTaskId}` });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Queue retry failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // GET /queue/stats — Get queue statistics
+    router.get('/queue/stats', (_req, res) => {
+        try {
+            const stats = taskQueueManager.getStats();
+            res.json({ stats });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Queue stats failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
     });
 
     return router;
