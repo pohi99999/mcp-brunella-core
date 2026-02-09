@@ -655,3 +655,98 @@ export async function getDeveloperPipeline(taskId: string): Promise<DeveloperPip
     const data = await safeJson<{ pipeline: DeveloperPipeline }>(response);
     return data.pipeline;
 }
+
+// Developer Metrics (P10)
+export interface DeveloperMetricsData {
+    builds: {
+        total: number;
+        success: number;
+        fail: number;
+        lastStatus: 'success' | 'fail' | 'unknown';
+        lastDurationMs: number;
+        lastTimestamp?: number;
+    };
+    tests: {
+        totalRuns: number;
+        lastPassRate: number;
+        lastDurationMs: number;
+        lastTimestamp?: number;
+    };
+    tasks: {
+        total: number;
+        success: number;
+        error: number;
+        avgDurationMs: number;
+    };
+    ai: {
+        totalTokenUsage: number;
+        estimatedCost: number;
+    };
+    history: Array<{
+        type: 'task' | 'build' | 'test';
+        status: 'success' | 'fail' | 'error';
+        details: string;
+        durationMs: number;
+        timestamp: number;
+    }>;
+}
+
+export async function getDeveloperMetrics(): Promise<DeveloperMetricsData> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/v1/developer/metrics`);
+    if (!response.ok) throw new Error(`Developer Metrics: HTTP ${response.status}`);
+    const data = await safeJson<{ metrics: DeveloperMetricsData }>(response);
+    return data.metrics;
+}
+
+// Approval Flow (P11)
+export type ApprovalStatus = 'pending' | 'approved' | 'rejected' | 'expired';
+
+export interface ApprovalRequest {
+    id: string;
+    type: 'file_edit' | 'command_exec' | 'critical_action';
+    description: string;
+    metadata?: any;
+    status: ApprovalStatus;
+    createdAt: number;
+    expiresAt: number;
+    response?: any;
+    respondedAt?: number;
+}
+
+export async function listApprovals(status?: ApprovalStatus): Promise<ApprovalRequest[]> {
+    const qs = status ? `?status=${status}` : '';
+    const response = await fetchWithTimeout(`${API_BASE}/api/v1/developer/approval${qs}`);
+    if (!response.ok) throw new Error(`Approval list: HTTP ${response.status}`);
+    const data = await safeJson<{ requests: ApprovalRequest[] }>(response);
+    return data.requests || [];
+}
+
+export async function respondApprovalRequest(id: string, action: 'approve' | 'reject', responsePayload?: any): Promise<void> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/v1/developer/approval/${id}/respond`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action, response: responsePayload })
+    });
+    const data: any = await safeJson<{ error?: string }>(response).catch(() => ({ error: `HTTP ${response.status}` }));
+    if (!response.ok) throw new Error(data.error || 'Approval response failed');
+}
+
+// Activity Feed (P12)
+export type ActivityType = 'info' | 'success' | 'warning' | 'error' | 'approval';
+export type ActivitySource = 'system' | 'agent' | 'user' | 'pipeline' | 'git' | 'queue';
+
+export interface ActivityFeedItem {
+    id: string;
+    type: ActivityType;
+    source: ActivitySource;
+    message: string;
+    metadata?: Record<string, unknown>;
+    timestamp: string;
+}
+
+export async function getActivityFeed(limit: number = 50): Promise<ActivityFeedItem[]> {
+    const response = await fetchWithTimeout(`${API_BASE}/api/v1/developer/feed?limit=${limit}`);
+    if (!response.ok) throw new Error(`Activity feed: HTTP ${response.status}`);
+    const data = await safeJson<{ activities: ActivityFeedItem[] }>(response);
+    return data.activities || [];
+}

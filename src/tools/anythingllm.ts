@@ -3,7 +3,7 @@ import { z } from "zod";
 import { config } from "../config/index.js";
 
 function getBaseUrl() {
-  return config.anythingllmBaseUrl.replace(/\/$/, "");
+  return config.anythingllmBaseUrl.trim().replace(/\/$/, "");
 }
 
 async function requestAnythingLLM(path: string, options: RequestInit = {}) {
