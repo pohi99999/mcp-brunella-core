@@ -758,6 +758,15 @@ export class AgentManager extends EventEmitter {
     logInfo('AgentManager', 'Worker loop started');
   }
 
+  /** Worker loop leállítása graceful shutdown-hoz */
+  stopWorkerLoop(): void {
+    if (this.workerInterval) {
+      clearInterval(this.workerInterval);
+      this.workerInterval = undefined;
+      logInfo('AgentManager', 'Worker loop stopped');
+    }
+  }
+
   /** Terv készítése (Orchestrator hívás) */
   async createPlan(userMessage: string): Promise<{ taskIds: number[] }> {
     const orchestrator = this.agents.get('Orchestrator');

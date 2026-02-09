@@ -9,6 +9,13 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 ## 🟢 Aktív Szálak
 
+- [ ] **Code Quality Improvements** [MEDIUM]
+  - **ID:** `code_quality_improvements_20260210`
+  - **Progress:** 45% (Quick Fixes KÉSZ, P1 web.ts refactor KÉSZ, 7 feladat pending)
+  - **Utolsó aktivitás:** 2026-02-10
+  - **Leírás:** Kódbázis minőségjavítás: ~~web.ts refactor~~, any típusok, error handling, audit persistence, config validation
+  - 📂 *[./tracks/code_quality_improvements_20260210/](./tracks/code_quality_improvements_20260210/)*
+
 - [ ] **🏆 Gold Protocol** [CRITICAL]
   - **ID:** `gold_protocol`
   - **Progress:** 100% (4/4 sprint KÉSZ! 🎉)
