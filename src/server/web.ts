@@ -27,23 +27,7 @@ import { createPhoenixRouter } from './phoenixRoutes.js';
 import { createRouterRouter } from './routerRoutes.js';
 import { createMemoryRouter } from './memoryRoutes.js';
 import {
-    createHealthRoutes,
-    createAgentRoutes,
-    createRegistryRoutes,
-    createCloudflareAgentRoutes,
-    createProvidersRoutes,
-    createOllamaRoutes,
-    createGeminiRoutes,
-    createGithubModelsRoutes,
-    createFileRoutes,
-    createRagRoutes,
-    createTaskRoutes,
-    createToolRoutes,
-    createDebugRoutes,
-    createChatRoutes,
-    createAnythingLLMRoutes,
-    createIncubatorRoutes,
-    createN8nRoutes,
+    createV1Router,
 } from './routes/index.js';
 
 const logger = new Logger('web_ui.log');
@@ -94,23 +78,20 @@ export async function startWebServer() {
     // Swagger UI
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-    // Gold Protocol: Telemetry routes (G5.2)
-    app.use('/api/telemetry', createTelemetryRouter());
+    // --- API Versioning (Phase 8) ---
+    const v1Router = createV1Router();
 
-    // Gold Protocol: Audit routes (G6.2)
-    app.use('/api/audit', createAuditRouter());
+    // Add Gold Protocol routes to v1
+    v1Router.use('/telemetry', createTelemetryRouter());
+    v1Router.use('/audit', createAuditRouter());
+    v1Router.use('/specs', createSpecRouter());
+    v1Router.use('/phoenix', createPhoenixRouter());
+    v1Router.use('/router', createRouterRouter());
+    v1Router.use('/memory', createMemoryRouter());
 
-    // Gold Protocol: Spec routes (G7.1)
-    app.use('/api/specs', createSpecRouter());
-
-    // Gold Protocol: Phoenix routes (G7.2)
-    app.use('/api/phoenix', createPhoenixRouter());
-
-    // Gold Protocol: Router routes (G7.3)
-    app.use('/api/router', createRouterRouter());
-
-    // Gold Protocol: Memory routes (G7.4)
-    app.use('/api/memory', createMemoryRouter());
+    // Mount v1 router at /api/v1 and /api (backwards compatibility)
+    app.use('/api/v1', v1Router);
+    app.use('/api', v1Router);
 
     const httpServer = createServer(app);
     const io = new Server(httpServer, {
@@ -191,25 +172,6 @@ export async function startWebServer() {
         const { transport } = mcpSessions.get(sessionId)!;
         await transport.handlePostMessage(req, res);
     });
-
-    // --- REST API Routes ---
-    app.use('/api/health', createHealthRoutes());
-    app.use('/api/agents', createAgentRoutes());
-    app.use('/api/registry', createRegistryRoutes());
-    app.use('/api/cloudflare/agents', createCloudflareAgentRoutes());
-    app.use('/api/providers', createProvidersRoutes());
-    app.use('/api/ollama', createOllamaRoutes());
-    app.use('/api/gemini', createGeminiRoutes());
-    app.use('/api/github-models', createGithubModelsRoutes());
-    app.use('/api/files', createFileRoutes());
-    app.use('/api/rag', createRagRoutes());
-    app.use('/api/tasks', createTaskRoutes());
-    app.use('/api/tools', createToolRoutes());
-    app.use('/api/debug', createDebugRoutes());
-    app.use('/api/chat', createChatRoutes());
-    app.use('/api/anythingllm', createAnythingLLMRoutes());
-    app.use('/api/incubator', createIncubatorRoutes());
-    app.use('/api/n8n', createN8nRoutes());
 
     app.use(express.static(path.join(process.cwd(), 'build', 'public')));
 
