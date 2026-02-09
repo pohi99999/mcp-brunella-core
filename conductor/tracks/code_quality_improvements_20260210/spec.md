@@ -128,33 +128,29 @@ CREATE TABLE IF NOT EXISTS audit_log (
 
 ---
 
-### P5: Config Validation (Zod) [MEDIUM]
-**Becsült idő:** 30 perc
+### P5: Config Validation (Zod) [DONE ✅]
+**Elvégezve:** 2026-02-10
 
-```typescript
-// src/config/schema.ts
-import { z } from 'zod';
+Centralizált környezeti változó validáció Zod sémával, type-safe config objektum, startup validáció.
 
-export const ConfigSchema = z.object({
-  port: z.number().default(3000),
-  ollamaBaseUrl: z.string().url().default('http://localhost:11434'),
-  pythonSubsetUrl: z.string().url().default('http://127.0.0.1:8000'),
-  geminiApiKey: z.string().optional(),
-  githubToken: z.string().optional(),
-  nodeEnv: z.enum(['development', 'production', 'test']).default('development'),
-});
-
-export const config = ConfigSchema.parse({
-  port: Number(process.env.PORT),
-  ollamaBaseUrl: process.env.OLLAMA_BASE_URL,
-  // ...
-});
-```
+**Implementáció:**
+- ✅ `src/config/schema.ts`: ConfigSchema 11 mezővel (port, nodeEnv, URLs, API keys)
+- ✅ Type coercion: `z.coerce.number()` (string → number)
+- ✅ URL validation: ollamaBaseUrl, pythonBaseUrl, etc.
+- ✅ Enum validation: nodeEnv ∈ ['development', 'production', 'test']
+- ✅ Optional fields: geminiApiKey, githubToken, langchainApiKey
+- ✅ Sensible defaults: port=3000, nodeEnv='development', URLs=localhost
+- ✅ `parseConfig()`: startup validation + formatted ZodError messages
+- ✅ Exported `config` object: type-safe (ConfigSchema's inferred type)
+- ✅ web.ts: `import { config }` és `httpServer.listen(config.port, ...)`
+- ✅ test/configSchema.test.ts: 16 tests (defaults, validation, coercion, errors)
 
 **Acceptance Criteria:**
-- [ ] Zod schema definiálja az összes config opciót
-- [ ] Startup-kor validálás fut
-- [ ] Hiányzó/hibás config esetén érthető hibaüzenet
+- [x] Zod schema definiálja az összes config opciót (11 mező)
+- [x] Startup-kor validálás fut (parseConfig() throws on error)
+- [x] Hiányzó/hibás config esetén érthető hibaüzenet (formatted ZodError)
+- [x] Build PASS (0 TypeScript errors)
+- [x] Tests PASS (211/211: 195 original + 16 config tests)
 
 ---
 
