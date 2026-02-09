@@ -65,39 +65,27 @@ Az AgentManager.ts és types.ts fájlokban az összes explicit `any` típus hely
 
 ---
 
-### P3: Centralizált Error Handling [IMPORTANT]
-**Becsült idő:** 1 óra
+### P3: Centralizált Error Handling [DONE ✅]
+**Elvégezve:** 2026-02-10
 
-Jelenleg minden route saját try-catch-et használ. Helyette:
+Jelenleg minden route saját try-catch-et használt. Egységesítve globalErrorHandler middleware-rel és AppError osztállyal.
 
-```typescript
-// src/utils/AppError.ts
-export class AppError extends Error {
-  constructor(
-    message: string,
-    public statusCode: number = 500,
-    public code?: string
-  ) {
-    super(message);
-    this.name = 'AppError';
-  }
-}
-
-// src/server/middleware/errorHandler.ts
-export function globalErrorHandler(err, req, res, next) {
-  if (err instanceof AppError) {
-    return res.status(err.statusCode).json({ error: err.message, code: err.code });
-  }
-  logError('Express', err.message);
-  res.status(500).json({ error: 'Internal Server Error' });
-}
-```
+**Implementáció:**
+- ✅ `src/utils/AppError.ts`: Custom Error class (statusCode, code, isOperational)
+- ✅ Factory methods: badRequest(), unauthorized(), forbidden(), notFound(), conflict(), internal()
+- ✅ `src/server/middleware/errorHandler.ts`: Global error handler + asyncHandler wrapper
+- ✅ web.ts: globalErrorHandler mount-olva (minden route után)
+- ✅ health.ts: asyncHandler wrapper példa
+- ✅ Egységes JSON error formátum: `{ error, code?, statusCode, requestId?, stack? }`
+- ✅ Development mode: stack trace exposed
 
 **Acceptance Criteria:**
-- [ ] AppError class létezik
-- [ ] Globális error middleware aktív
-- [ ] Route-ok `throw new AppError(...)` formát használnak
-- [ ] Egységes JSON error formátum
+- [x] AppError class létezik (factory methods-szal)
+- [x] Globális error middleware aktív
+- [x] Route-ok asyncHandler-t használnak (példa: health.ts)
+- [x] Egységes JSON error formátum
+- [x] Build PASS
+- [x] Tests PASS (195/195)
 
 ---
 

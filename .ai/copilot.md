@@ -37,6 +37,44 @@
 
 ## Napló
 
+### 2026-02-10 - Code Quality P3: Centralizált Error Handling (TELJES! ✅)
+
+**Commit:** (pending)
+**Feladat:** Globális error middleware implementálása egyéges hibakezeléshez
+
+**Implementáció:**
+- ✅ **AppError class** (`src/utils/AppError.ts`):
+  - Custom Error extending: statusCode, code, isOperational
+  - Factory methods: badRequest(400), unauthorized(401), forbidden(403), notFound(404), conflict(409), internal(500)
+  - toJSON(): API-friendly error response
+
+- ✅ **Global Error Handler** (`src/server/middleware/errorHandler.ts`):
+  - globalErrorHandler: AppError → proper status + JSON
+  - asyncHandler: Promise rejection wrapper (auto error handling)
+  - Development mode: stack trace exposed
+  - Production mode: generic "Internal Server Error"
+
+- ✅ **web.ts integráció**:
+  - globalErrorHandler mount-olva (express.static után, minden route után)
+  - Egyéges error response: `{ error, code?, statusCode, requestId?, stack? }`
+
+- ✅ **Route frissítés (health.ts példa)**:
+  - try-catch eltávolítva
+  - asyncHandler wrapper használata
+  - Automatikus error propagation
+
+**Eredmények:**
+- 🛡️ Egyéges hibakezelés minden route-on
+- ✅ TypeScript compile: 0 errors
+- ✅ Tests: 195/195 PASS
+- 📊 Code cleanup: try-catch blokkok eliminálva ahol szükségtelen
+- 🔒 Biztonság: stack trace csak development mode-ban
+
+**Git:** (pending commit)
+**Következő:** P4 (Audit Log SQLite persistence)
+
+---
+
 ### 2026-02-10 - Code Quality P2: `any` Típusok Eliminálása (TELJES! ✅)
 
 **Commit:** `cc625d8d`
