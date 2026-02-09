@@ -1,0 +1,101 @@
+name: Branch Cleanup
+
+on:
+  schedule:
+    # Minden vasárnap 2:00 UTC
+    - cron: '0 2 * * 0'
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  cleanup-merged-branches:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      issues: write
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      
+      - name: List and delete merged branches
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const { data: branches } = await github.rest.repos.listBranches({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              per_page: 100
+            });
+            
+            const protectedBranches = ['main', 'develop', 'production'];
+            const maxAge = 30; // days
+            const now = new Date();
+            
+            let deletedCount = 0;
+            let skippedCount = 0;
+            
+            for (const branch of branches) {
+              if (protectedBranches.includes(branch.name)) {
+                console.log(`⏭️  Skipping protected branch: ${branch.name}`);
+                skippedCount++;
+                continue;
+              }
+              
+              // Check if merged to main
+              try {
+                const { data: comparison } = await github.rest.repos.compareCommits({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  base: branch.commit.sha,
+                  head: 'main'
+                });
+                
+                if (comparison.status === 'identical' || comparison.status === 'behind') {
+                  // Branch is merged
+                  const { data: commit } = await github.rest.repos.getCommit({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    ref: branch.commit.sha
+                  });
+                  
+                  const lastCommitDate = new Date(commit.commit.committer.date);
+                  const daysSinceLastCommit = (now - lastCommitDate) / (1000 * 60 * 60 * 24);
+                  
+                  if (daysSinceLastCommit > maxAge) {
+                    console.log(`🗑️  Deleting merged branch: ${branch.name} (${Math.floor(daysSinceLastCommit)} days old)`);
+                    
+                    await github.rest.git.deleteRef({
+                      owner: context.repo.owner,
+                      repo: context.repo.repo,
+                      ref: `heads/${branch.name}`
+                    });
+                    
+                    deletedCount++;
+                  } else {
+                    console.log(`⏳ Branch ${branch.name} is merged but recent (${Math.floor(daysSinceLastCommit)} days)`);
+                    skippedCount++;
+                  }
+                }
+              } catch (error) {
+                console.log(`⚠️  Error processing branch ${branch.name}:`, error.message);
+                skippedCount++;
+              }
+            }
+            
+            console.log(`\n📊 Summary:`);
+            console.log(`   ✅ Deleted: ${deletedCount} branches`);
+            console.log(`   ⏭️  Skipped: ${skippedCount} branches`);
+            
+            // Create issue if many branches deleted
+            if (deletedCount > 10) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: `🧹 Branch Cleanup Report: ${deletedCount} branches deleted`,
+                body: `Automated branch cleanup deleted **${deletedCount}** merged branches that were older than ${maxAge} days.\n\nCheck the [workflow run](https://github.com/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId}) for details.`,
+                labels: ['maintenance', 'automated']
+              });
+            }
