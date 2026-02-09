@@ -28,6 +28,8 @@ import { chatWithOllama, generateResponse } from '../core/llm_client.js';
 import { corsWhitelist, requestId, requestLogging, apiRateLimit } from './middleware.js';
 import { swaggerSpec } from './swagger.js';
 import { socketService } from './SocketService.js';
+import { createTelemetryRouter } from './telemetryRoutes.js';
+import { createAuditRouter } from './auditRoutes.js';
 
 const logger = new Logger('web_ui.log');
 const configManager = new ConfigManager();
@@ -77,6 +79,12 @@ export async function startWebServer() {
 
     // Swagger UI
     app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+    // Gold Protocol: Telemetry routes (G5.2)
+    app.use('/api/telemetry', createTelemetryRouter());
+
+    // Gold Protocol: Audit routes (G6.2)
+    app.use('/api/audit', createAuditRouter());
 
     const httpServer = createServer(app);
     const io = new Server(httpServer, {

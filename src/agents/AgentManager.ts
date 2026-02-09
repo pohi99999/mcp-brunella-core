@@ -17,6 +17,9 @@ import { withRetry, calculateDelay, DEFAULT_RETRY_CONFIG, type RetryConfig } fro
 import { saveCheckpoint, loadCheckpoint, clearCheckpoints } from '../core/checkpoint.js';
 import { gitAutoCheckpoint, logRecoveryEvent } from '../core/gitRecovery.js';
 import { autoSaveGoldenSample } from '../core/goldenDatasetBridge.js';
+import { traceAgentExecution, type TraceContext } from '../utils/agentTracer.js';
+import { checkToolPermission } from '../tools/toolPermissions.js';
+import { record as auditRecord } from '../core/auditLog.js';
 
 // ============================================================================
 // INTERFACES
@@ -304,14 +307,33 @@ export class AgentManager extends EventEmitter {
   /**
    * Ügynök végrehajtása retry logikával és Circuit Breaker-rel
    */
-  private async executeAgentWithRetry(agentName: string, instruction: string, context?: any, retries = 2): Promise<TaskResult> {
+  private async executeAgentWithRetry(agentName: string, instruction: string, context?: any, retries = 2, parentTraceContext?: TraceContext): Promise<TaskResult> {
     const cb = this.getCircuitBreaker(agentName);
+
+    // RULE-OB1: Start trace span for this agent execution
+    const trace = traceAgentExecution(agentName, instruction, parentTraceContext);
+
+    // RULE-AU1: Permission check before execution
+    const permCheck = checkToolPermission('agent_delegate', { agentName });
+    if (!permCheck.allowed) {
+      // RULE-AU2: DENIED → audit log + error return
+      auditRecord('DENIED', agentName, 'execute', instruction.slice(0, 100), permCheck.reason);
+      trace.end('error', `PERMISSION_DENIED: ${permCheck.reason}`);
+      return {
+        success: false,
+        message: `PERMISSION_DENIED: ${permCheck.reason}`,
+        data: null,
+        executedBy: agentName
+      };
+    }
+    auditRecord('ALLOWED', agentName, 'execute', instruction.slice(0, 100));
 
     // Circuit Breaker ellenőrzése
     if (cb.isOpen) {
       const remaining = this.RESET_TIMEOUT - (Date.now() - cb.lastFailure);
       if (remaining > 0) {
         logError('AgentManager', `Circuit Breaker NYITVA (${agentName}). Hátralévő idő: ${Math.round(remaining / 1000)}s`);
+        trace.end('error', `Circuit Breaker OPEN (${agentName})`);
         return {
           success: false,
           message: `Ügynök ideiglenesen letiltva (Circuit Breaker): ${agentName}`,
@@ -327,6 +349,7 @@ export class AgentManager extends EventEmitter {
 
     const agent = this.agents.get(agentName);
     if (!agent) {
+      trace.end('error', `Agent not found: ${agentName}`);
       return {
         success: false,
         message: `Ügynök nem található: ${agentName}`,
@@ -404,6 +427,9 @@ export class AgentManager extends EventEmitter {
       // RULE-GD1: Auto-save golden sample on success
       await autoSaveGoldenSample(agentName, instruction, result).catch(() => { /* non-critical */ });
 
+      // RULE-OB1: End trace span on success
+      trace.end('success');
+
       return result;
     } catch (lastError: any) {
       logError('AgentManager', `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError?.message || 'Ismeretlen hiba'}`);
@@ -413,6 +439,9 @@ export class AgentManager extends EventEmitter {
         logError('AgentManager', `Git recovery failed: ${e.message}`)
       );
       logRecoveryEvent('crash', agentName, lastError?.message || 'All retries exhausted');
+
+      // RULE-OB1: End trace span on error
+      trace.end('error', lastError?.message || 'All retries exhausted');
 
       const runtime = this.ensureAgentRuntime(agentName);
       this.updateAgentRuntime(agentName, {

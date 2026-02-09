@@ -2,6 +2,7 @@
 // PURPOSE: Zone I: LangSmith integráció + CLI telemetry (OTLP/stub).
 
 import { Client } from "langsmith";
+import { logInfo } from "./logger.js";
 
 /** LangSmith tracer for LangChain runnables (optional: use when @langchain/core available). */
 export function getTracer(projectName: string = "brunella-core"): { projectName: string; client?: Client } {
@@ -17,7 +18,7 @@ export function getTracer(projectName: string = "brunella-core"): { projectName:
 }
 
 export const logTokenUsage = (agentName: string, usage: { input: number; output: number }) => {
-  console.log(`[Telemetry] Agent: ${agentName} | Tokens: In=${usage.input}, Out=${usage.output}`);
+  logInfo('Telemetry', `Agent: ${agentName} | Tokens: In=${usage.input}, Out=${usage.output}`);
 };
 
 // --- CLI telemetry (Brunella OTLP / config-driven): stubs so CLI builds ---
