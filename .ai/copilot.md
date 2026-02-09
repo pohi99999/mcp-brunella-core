@@ -39,7 +39,7 @@
 
 ### 2026-02-10 - Code Quality P3: Centralizált Error Handling (TELJES! ✅)
 
-**Commit:** (pending)
+**Commit:** `0c9c4ee1`
 **Feladat:** Globális error middleware implementálása egyéges hibakezeléshez
 
 **Implementáció:**
