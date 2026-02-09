@@ -15,6 +15,142 @@
 
 ---
 
+### 2026-02-09 18:30 - Developer Agent 3.0 Fázis 3 Part 1: Task Queue & Batch Operations (P7 TELJES! 🚀)
+
+**Commit:** `132ef85f`
+**Feladat:** Developer Agent 3.0 — Fázis 3 Part 1 (P7) teljes implementáció: Task Queue & Batch Operations
+**Test Result:** 320/320 PASS (40 files, +25 új teszt), 0 TypeScript error
+
+**Aranyszabály betartva:** Minden új képesség EGYSZERRE jelent meg Agent + CLI + Dashboard + API + Test szintjén (5 szelet per pillér).
+
+**Implementáció:**
+
+✨ **P7: Task Queue & Batch Operations:**
+
+**1. Agent Module (`src/agents/taskQueue.ts`, ÚJ, ~400 sor):**
+- `TaskQueueManager` osztály extends EventEmitter
+- **Max 3 concurrent workers** — Több task párhuzamos futtatása
+- **Priority queue:** high (weight: 3), medium (weight: 2), low (weight: 1)
+- **Task lifecycle:** queued → running → completed/failed/cancelled
+- **8 task típus:** generate, test, fix, review, refactor, coverage, scaffold, generic
+- **Public methods:**
+  - `addTask(type, description, params, options)` → taskId
+  - `getTask(taskId)` → QueuedTask | null
+  - `getTasks(filters?)` → QueuedTask[] (sortolva priority + age szerint)
+  - `cancelTask(taskId)` → boolean (queued/running task-okat canceleli)
+  - `retryTask(taskId)` → string | null (új taskId-t ad, incrementelt retryCount-tal)
+  - `prioritizeTask(taskId, newPriority)` → boolean (csak queued task-ok esetén)
+  - `getStats()` → QueueStats (total, queued, running, completed, failed, cancelled, avgWaitTime, avgExecutionTime)
+  - `cleanup(keepLast = 100)` → number (eltávolított task-ok száma)
+  - `stop()` → void (processing loop leállítás)
+- **Private methods:**
+  - `startProcessing()` — 1s interval loop indítás
+  - `processQueue()` — Worker pool ellenőrzés, task indítás
+  - `executeTask(task)` — Task execution típus szerint (pipeline integration generate/test/fix/generic esetén)
+  - `waitForPipeline(pipeline)` — Poll pipeline status 500ms-enként, 5min timeout
+- **EventEmitter events:** 'task:added', 'task:cancelled', 'task:completed', 'task:failed', 'task:prioritized'
+- **Config:** `autoStart` flag (testing esetén false), `maxWorkers` (default: 3), `DEFAULT_MAX_RETRIES = 2`
+- **Task ID format:** `task-{timestamp}-{counter}`
+- **Retry logic:** Task description tartalmazza "retry X/Y", retryCount ++, eredeti params megmarad
+- **Cleanup:** Csak completed/failed/cancelled task-okat törli, queued/running megmarad
+
+**2. API Endpoints (`src/server/routes/developer.ts`, v3.0.3):**
+- Version bump: `3.0.2` → `3.0.3 — P4+P5+P6+P7: Code Review, Context, Coverage, Task Queue`
+- **6 új route:**
+  1. `POST /queue` — Add task
+     - Body: `{ type, description, params?, priority?, maxRetries? }`
+     - Returns: `{ task }`
+     - Validation: type & description required
+  2. `GET /queue` — List tasks with filters
+     - Query params: status, type, priority (all optional)
+     - Returns: `{ tasks, stats }`
+  3. `GET /queue/:id` — Get specific task
+     - Returns: `{ task }` or 404
+  4. `PUT /queue/:id` — Update task (cancel/prioritize)
+     - Body: `{ action: 'cancel' | 'prioritize', priority? }`
+     - Returns: `{ task, message }`
+  5. `POST /queue/:id/retry` — Retry failed task
+     - Returns: `{ task, message }` (új task ID), or 400 if cannot retry
+  6. `GET /queue/stats` — Queue statistics
+     - Returns: `{ stats }`
+
+**3. CLI Commands (`src/cli/devCommands.ts`):**
+- **Új command group:** `brunella dev queue`
+- **4 subcommand:**
+  1. `queue list` — Display task list + stats
+     - Options: `--status <status>`, `--type <type>`, `--json`
+     - Color-coded status: green (completed), red (failed), yellow (running), gray (cancelled), blue (queued)
+     - Priority badges: HIGH (red), MED (yellow), LOW (gray)
+     - Stats line: Total, Queued, Running, ✅, ❌
+     - Task format: ID (8 chars), priority badge, status, type (dim), description (60 chars), error (if present)
+  2. `queue add <type> <description>` — Add task to queue
+     - Options: `-p, --priority <priority>` (default: 'medium'), `--json`
+     - Displays: task ID, type, priority, status
+  3. `queue cancel <taskId>` — Cancel task
+     - PUT /queue/:id with action: 'cancel'
+     - Success message + current status
+  4. `queue retry <taskId>` — Retry failed task
+     - POST /queue/:id/retry
+     - Displays new task ID
+- **Pattern:** `ora` spinner, `chalk` colors, `apiFetch` helper, process.exit(1) on error
+
+**4. Dashboard UI (`src/dashboard/components/dashboard/DeveloperPanel.tsx`):**
+- **4. tab hozzáadva:** Build | Review | Coverage | **Queue**
+- **Queue tab funkciók:**
+  - **Stats Cards Grid (4 cards):**
+    - Queued (yellow), Running (blue), Completed (green), Failed (red)
+    -값-ben kijelzett task count
+  - **Task List (ScrollArea 500px):**
+    - Task item: Status badge (color-coded), Priority badge (HIGH/MED/LOW), Type (dim)
+    - Description (truncated), Task ID (8 chars), Created time, Duration (if completed)
+    - Error display (red background) if present
+    - **Action buttons:**
+      - Cancel button (X icon) — queued/running task-ok esetén
+      - Retry button (RotateCw icon) — failed task-ok esetén
+  - **Refresh Queue button:** Manual refresh (fetchQueueTasks API call)
+  - **Empty state:** "No tasks in queue" card with CLI hint
+- **Types added:**
+  - `QueueTaskStatus`, `QueueTaskPriority`, `QueuedTaskData`, `QueueStatsData`
+- **API functions:**
+  - `fetchQueueTasks(filters?)`, `cancelQueueTask(taskId)`, `retryQueueTask(taskId)`
+- **Toast notifications:** success/error on actions
+- **Icons:** ListTodo, X, RotateCw (lucide-react)
+
+**5. Tests (`test/task_queue.test.ts`, ÚJ, 25 teszt):**
+- **Test coverage areas:**
+  - **Task Addition (3 tests):** addTask return format, custom priority, task:added event
+  - **Task Retrieval (6 tests):** getTask (exists/null), getTasks (all, filter by status/type/priority), sort by priority+age
+  - **Task Cancellation (4 tests):** cancel queued, cancel running, cannot cancel completed, task:cancelled event
+  - **Task Retry (3 tests):** retry failed (success, retryCount++), cannot retry non-failed, cannot retry if maxRetries exceeded
+  - **Task Prioritization (2 tests):** prioritize queued (success), cannot prioritize non-queued
+  - **Queue Stats (2 tests):** correct calculation (total, queued, running, completed, failed, cancelled, avgWaitTime, avgExecutionTime), empty queue stats
+  - **Cleanup (2 tests):** cleanup old tasks (keepLast), do not cleanup queued/running
+  - **Event Emitter (2 tests):** task:completed event, task:failed event
+  - **Lifecycle (1 test):** stop() processing loop
+- **Mock setup:**
+  - `vi.mock` for logger (logInfo, logError, setAgentStatus)
+  - `vi.mock` for pipelineRunner (startPipeline, getPipeline)
+  - TaskQueueManager instantiated with `autoStart=false` for deterministic testing
+  - Manual runningTasks Set manipulation for testing stats
+
+**Technikai részletek:**
+- **Task ID generation:** `task-${Date.now()}-${this.nextTaskId++}` — Unique within instance, timestamp-based
+- **Priority weights:** HIGH=3, MEDIUM=2, LOW=1 — Sort by weight DESC, then createdAt ASC
+- **Processing loop:** 1000ms interval, `processQueue()` hívás
+- **Worker pool:** Max 3 concurrent (runningTasks Set mérete alapján)
+- **Pipeline integration:** generate/test/fix/generic típusok `pipelineRunner.createPipeline()` hívás, majd `waitForPipeline()` poll 5min timeout
+- **Retry description:** Új task description: `${description} (retry ${retryCount}/${maxRetries})`
+- **Cleanup logic:** completed/failed/cancelled task-ok sort by completedAt DESC, slice(keepLast) removed
+
+**Build & Test eredmény:**
+- ✅ Build: 0 TypeScript error
+- ✅ Tests: 320 passed (40 files, +25 új P7 teszt)
+- ✅ Git push: `132ef85f` pushed to main
+
+**Következő lépés:** P8 (Git Integration) és P9 (Code Scaffolding) implementálása
+
+---
+
 ### 2026-02-09 18:15 - Developer Agent 3.0 Fázis 2: Code Review + Context + Coverage (TELJES! 🎯)
 
 **Commit:** `0779fa8e`
