@@ -1,6 +1,6 @@
 // FILE: src/server/routes/developer.ts
 // PURPOSE: REST API endpoints for Developer Agent 3.0
-// VERSION: 3.0.4 — P4+P5+P6+P7+P8: Code Review, Context, Coverage, Task Queue, Git Integration
+// VERSION: 3.0.5 — P4+P5+P6+P7+P8+P9: Code Review, Context, Coverage, Task Queue, Git Integration, Code Scaffolding
 
 import { Router } from 'express';
 import { pipelineRunner, type TaskPipeline } from '../../agents/developerPipeline.js';
@@ -9,6 +9,7 @@ import { contextBuilder } from '../../agents/contextBuilder.js';
 import { coverageAnalyzer } from '../../agents/coverageAnalysis.js';
 import { taskQueueManager } from '../../agents/taskQueue.js';
 import { getGitManager } from '../../agents/gitIntegration.js';
+import { getTemplateEngine } from '../../agents/codeScaffold.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
@@ -664,6 +665,59 @@ export function createDeveloperRoutes(): Router {
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             logError('DeveloperRoute', `Git pull failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // ==================== P9: Code Scaffolding ====================
+
+    // GET /scaffold/templates — List available templates
+    router.get('/scaffold/templates', (req, res) => {
+        try {
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const templateEngine = getTemplateEngine(workspaceRoot);
+            const templates = templateEngine.listTemplates();
+            res.json({ templates });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `List templates failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // POST /scaffold — Generate files from template
+    router.post('/scaffold', async (req, res) => {
+        try {
+            const { template, variables, preview, overwrite } = req.body;
+
+            if (!template) {
+                res.status(400).json({ error: 'template name required' });
+                return;
+            }
+
+            if (!variables || typeof variables !== 'object') {
+                res.status(400).json({ error: 'variables object required' });
+                return;
+            }
+
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const templateEngine = getTemplateEngine(workspaceRoot);
+
+            const files = await templateEngine.generateFromTemplate(
+                template,
+                variables,
+                { preview: preview === true, overwrite: overwrite === true }
+            );
+
+            res.json({
+                success: true,
+                files,
+                preview: preview === true,
+                message: preview ? 'Preview generated' : `${files.length} files generated`,
+            });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Scaffold generation failed: ${msg}`);
             res.status(500).json({ error: msg });
         }
     });
