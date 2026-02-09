@@ -26,15 +26,53 @@
 ## Aktív Feladatok
 
 - **Gold Protocol implementáció** — 54 feladat, 4 sprint, ~24 óra
-  - Sprint 1 (G1-G2): Spec Freeze + Phoenix Protocol v2
-  - Sprint 2 (G3-G4): Model Router + Kognitív Memória
-  - Sprint 3 (G5-G6): Glass Box Telemetria + Audit
-  - Sprint 4 (G7): Dashboard & CLI teljes integráció
+  - ✅ Sprint 1 (G1-G2): Spec Freeze + Phoenix Protocol v2 — KÉSZ (commit `d1c3d938`)
+  - ✅ Sprint 2 (G3-G4): Model Router + Kognitív Memória — KÉSZ (commit `11294752`)
+  - ✅ Sprint 3 (G5-G6): Glass Box Observability + Audit — KÉSZ (commit `b96abc9d`)
+  - ⏳ Sprint 4 (G7): Dashboard & CLI teljes integráció — KÖVETKEZIK
   - **Spec:** `conductor/tracks/gold_protocol/spec.md` (v2.0)
   - **Plan:** `conductor/tracks/gold_protocol/plan.md` (v2.0)
+  - **Státusz:** 75% kész (3/4 sprint teljesítve)
 
 
 ## Napló
+
+### 2026-02-09 15:30 - Gold Protocol Sprint 3: Glass Box Observability + Audit (TELJES!)
+
+**Összefoglaló:**
+A Sprint 3 sikeresen lezárult. Implementáltuk a teljes observability rendszert (G5) és a runtime permission audit trail-t (G6). A rendszer mostantól képes trace-elni minden agent végrehajtást, token használatot monitorizálni, költségeket számolni, és minden engedélyezési döntést audit napló-ba rögzíteni.
+
+**G5 - Glass Box Observability:**
+- ✅ `src/utils/agentTracer.ts` (~280 sor): Központi trace rendszer parent-child hierarchiával, LangSmith batch upload
+- ✅ AgentManager trace integráció: RULE-OB1 (minden execute = span)
+- ✅ `src/server/telemetryRoutes.ts` (~160 sor): REST API (usage, traces, cost, stats)
+- ✅ `schemas/telemetry.sql`: telemetry_spans tábla + indexek
+- ✅ `TraceViewer.tsx` (~170 sor): Hierarchikus span vizualizáció dashboard-ra
+- ✅ `TokenUsageChart.tsx` (~140 sor): Token használat + költség összesítők
+- ✅ `telemetry.ts` fix: console.log → logInfo
+- ✅ 18 teszt (agentTracer.test.ts): Teljesítmény < 2ms validálva
+
+**G6 - Runtime Permission & Audit:**
+- ✅ `src/core/auditLog.ts` (~150 sor): In-memory audit buffer, async non-blocking
+- ✅ `schemas/audit.sql`: audit_log tábla (ALLOWED/DENIED)
+- ✅ AgentManager permission middleware: checkToolPermission + auditRecord minden végrehajtás előtt
+- ✅ `src/server/auditRoutes.ts` (~70 sor): REST API (log, denied, stats, cleanup)
+- ✅ RULE-AU1/AU2/AU3 implementálva (record, denied logging, 30-day retention)
+- ✅ 13 teszt (auditLog.test.ts): Minden funkció validálva
+
+**Érintett fájlok:**
+- 10 új fájl (6x G5, 4x G6)
+- 4 módosított fájl (AgentManager.ts, web.ts, telemetry.ts)
+
+**Státusz:**
+- ✅ Build: 0 hiba
+- ✅ Tesztek: 195/195 passing (29 fájl)
+- ✅ Commit: `b96abc9d`
+- ✅ Push: main
+
+**Következő:** Sprint 4 (G7) - Dashboard panelek + Socket.IO események + CLI integráció
+
+---
 
 ### 2026-02-09 14:00 - Gold Protocol: Terv & Spec v2.0 (Dashboard + CLI Integráció)
 
