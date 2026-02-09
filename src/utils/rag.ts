@@ -6,7 +6,7 @@
 import * as lancedb from "@lancedb/lancedb";
 import fs from "fs/promises";
 import path from "path";
-import { logInfo, logError } from "./logger.js";
+import { logInfo, logError, logWarn } from "./logger.js";
 
 const DB_PATH = "./data/brunella_lancedb";
 const HARVEST_BACKUP_PATH = "./logs/harvest_backup.jsonl";
@@ -181,7 +181,7 @@ export class DualStorageManager {
     // 1. JSONL backup (biztonsági mentés)
     await fs.mkdir(path.dirname(this.backupPath), { recursive: true }).catch(() => { });
     await fs.appendFile(this.backupPath, line, "utf-8").catch((e) => {
-      console.warn(`[DualStorage] Backup write failed: ${e.message}`);
+      logWarn("RAG", `Backup write failed: ${e.message}`);
     });
 
     // 2. LanceDB (ha van text mező)

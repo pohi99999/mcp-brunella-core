@@ -15,6 +15,30 @@
 
 ---
 
+### 2026-02-10 18:15 - Code Quality P7 & Dashboard Fix (TELJES! ✅)
+
+**Commit:** (pending)
+**Feladat:** `console.log` hívások cseréje (P7) és Dashboard UI bug fix (`IncubatorPanel.tsx`).
+
+**Implementáció:**
+- ✅ **Structured Logging (P7)**:
+  - Referált fájlok: `web.ts`, `validateSecrets.ts`, `rag.ts`, `mcpClient.ts`, `db.ts`, `ToolManager.ts`, `registry.ts`.
+  - Összes legacy `console.log` lecserélve a `logInfo`, `logError`, `logWarn` hívásokra.
+- ✅ **Dashboard Fix**:
+  - `src/dashboard/components/dashboard/IncubatorPanel.tsx`: `Activity` ikon importálása a `@phosphor-icons/react` csomagból (hiányzott, ami UI hibát okozott).
+  - Verifikálva: A fájl nem volt levágva a fájlrendszerben, csak az ikon hiányzott az import listából.
+
+**Eredmények:**
+- ✅ Browser Dashboard: `IncubatorPanel` betöltési hiba elhárítva.
+- ✅ System Logs: Minden kritikus esemény a Dashboardon követhető.
+- ✅ Tests: 229/229 PASS.
+- 📊 Code Quality Track: 87% progress.
+
+**Git:** (pending commit/sync)
+**Következő:** P8 (API versioning)
+
+---
+
 ## Copilot Specifikus Beállítások
 
 - **Instructions:** `.github/copilot-instructions.md`
@@ -75,6 +99,33 @@
 
 **Git:** (pending commit)
 **Következő:** P5 (Config Validation Zod) vagy P6 (Test Coverage)
+
+---
+
+### 2026-02-10 16:40 - Code Quality P6: Test Coverage Bővítés (TELJES! ✅)
+
+**Commit:** (pending)
+**Feladat:** Server layer teszt lefedettség bővítése (Supertest, Socket.IO, Middleware)
+
+**Implementáció:**
+- ✅ **New Tests** (3 files, 18 tests):
+  - `test/middleware.test.ts`: Error handler logic (AppError vs Error), asyncHandler wrapper, requestId generation, and dynamic CORS whitelist validation.
+  - `test/socketService.test.ts`: Unified Socket.IO emission tests (logs, agent status, generic gold events).
+  - `test/api_v1.test.ts`: Integration tests using `supertest` for `/api/health` and error bubbling.
+- ✅ **Code Refactor**:
+  - `src/server/middleware.ts`: Moved `corsOrigins` logic to a getter to allow dynamic testing and environment variable manipulation during tests.
+- ✅ **Dependencies**:
+  - `supertest` & `@types/supertest` installed as devDependencies.
+
+**Eredmények:**
+- 🛡️ Server/Route réteg tesztelve (mocked dependencies)
+- ✅ TypeScript compile: 0 errors
+- ✅ Tests: 229/229 PASS (211 original + 18 new)
+- 📊 Code Quality Track: 75% progress (P6 DONE)
+- 🛠️ Infrastructure: Supertest ready for all router factories.
+
+**Git:** (pending commit)
+**Következő:** P7 (Logger cleanup) vagy P8 (API versioning)
 
 ---
 

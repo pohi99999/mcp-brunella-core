@@ -9,13 +9,16 @@ import { Logger } from '../utils/logger.js';
 
 const reqLogger = new Logger('http.log');
 
-const corsOrigins = (process.env.CORS_ORIGINS || '')
-  .split(',')
-  .map((s) => s.trim())
-  .filter(Boolean);
+function getCorsOrigins() {
+  return (process.env.CORS_ORIGINS || '')
+    .split(',')
+    .map((s) => s.trim())
+    .filter(Boolean);
+}
 
 function corsWhitelist(req: Request, res: Response, next: NextFunction) {
   const origin = req.headers.origin;
+  const corsOrigins = getCorsOrigins();
   if (corsOrigins.length === 0) {
     res.setHeader('Access-Control-Allow-Origin', '*');
   } else if (origin && corsOrigins.includes(origin)) {

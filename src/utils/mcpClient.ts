@@ -3,6 +3,7 @@ import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js"
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
+import { logError, logInfo } from './logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -52,9 +53,9 @@ export class BrunellaClient {
                 await client.connect(transport);
                 this.clients.set(server.name, client);
                 this.transports.set(server.name, transport);
-                // console.log(`Connected to MCP server: ${server.name}`);
+                // logInfo('MCP', `Connected to MCP server: ${server.name}`);
             } catch (e: any) {
-                console.error(`Failed to connect to ${server.name}: ${e.message}`);
+                logError('MCP', `Failed to connect to ${server.name}: ${e.message}`);
             }
         }
     }
@@ -82,7 +83,7 @@ export class BrunellaClient {
                     return await client.callTool({ name, arguments: args });
                 } catch (error: any) {
                     // If cached lookup fails, fall through to full search
-                    console.error(`Tool '${name}' failed on cached server '${serverName}', retrying...`);
+                    logError('MCP', `Tool '${name}' failed on cached server '${serverName}', retrying...`);
                     this.toolCache.delete(name);
                 }
             }
