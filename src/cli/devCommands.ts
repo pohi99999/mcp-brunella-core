@@ -754,4 +754,305 @@ export function registerDevCommands(program: Command): void {
                 process.exit(1);
             }
         });
+
+    // brunella dev git — P8: Git Workflow Automatizáció
+    const git = dev.command('git').description('Git workflow operations');
+
+    git
+        .command('status')
+        .description('Show git status')
+        .option('--json', 'Output raw JSON')
+        .action(async (opts: { json?: boolean }) => {
+            const spinner = ora('Getting git status...').start();
+
+            try {
+                const result = await apiFetch<{
+                    status: {
+                        branch: string;
+                        remote?: string;
+                        ahead: number;
+                        behind: number;
+                        files: Array<{ path: string; status: string; staged: boolean }>;
+                        staged: Array<{ path: string; status: string; staged: boolean }>;
+                        unstaged: Array<{ path: string; status: string; staged: boolean }>;
+                        untracked: string[];
+                        hasChanges: boolean;
+                    };
+                }>('/git/status');
+
+                const { status } = result;
+                spinner.succeed(chalk.green(`Branch: ${status.branch}`));
+
+                if (opts.json) {
+                    console.log(JSON.stringify({ status }, null, 2));
+                    return;
+                }
+
+                // Display branch info
+                console.log(`\n${chalk.bold('🌿 Branch:')} ${chalk.cyan(status.branch)}`);
+                if (status.remote) {
+                    console.log(`  Tracking: ${status.remote}`);
+                }
+                if (status.ahead > 0) {
+                    console.log(`  ${chalk.green(`↑ ${status.ahead} ahead`)}`);
+                }
+                if (status.behind > 0) {
+                    console.log(`  ${chalk.yellow(`↓ ${status.behind} behind`)}`);
+                }
+
+                // Display staged files
+                if (status.staged.length > 0) {
+                    console.log(`\n${chalk.bold('📦 Staged files:')}`);
+                    for (const file of status.staged) {
+                        console.log(`  ${chalk.green(`+ ${file.path}`)} (${file.status})`);
+                    }
+                }
+
+                // Display unstaged files
+                if (status.unstaged.length > 0) {
+                    console.log(`\n${chalk.bold('📝 Unstaged changes:')}`);
+                    for (const file of status.unstaged) {
+                        console.log(`  ${chalk.yellow(`M ${file.path}`)} (${file.status})`);
+                    }
+                }
+
+                // Display untracked files
+                if (status.untracked.length > 0) {
+                    console.log(`\n${chalk.bold('❓ Untracked files:')}`);
+                    for (const file of status.untracked) {
+                        console.log(`  ${chalk.dim(`? ${file}`)}`);
+                    }
+                }
+
+                if (!status.hasChanges) {
+                    console.log(chalk.dim('\n✨ Working directory clean'));
+                }
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to get status: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    git
+        .command('diff [file]')
+        .description('Show diff for file or all changes')
+        .option('--staged', 'Show staged changes only')
+        .action(async (file: string | undefined, opts: { staged?: boolean }) => {
+            const spinner = ora('Getting diff...').start();
+
+            try {
+                const params = new URLSearchParams();
+                if (file) params.set('file', file);
+                if (opts.staged) params.set('staged', 'true');
+
+                const result = await apiFetch<{
+                    diffs: Array<{
+                        file: string;
+                        diff: string;
+                        additions: number;
+                        deletions: number;
+                    }>;
+                }>(`/git/diff?${params}`);
+
+                const { diffs } = result;
+                spinner.succeed(chalk.green(`Found ${diffs.length} file(s) with changes`));
+
+                if (diffs.length === 0) {
+                    console.log(chalk.dim('No changes'));
+                    return;
+                }
+
+                for (const diff of diffs) {
+                    console.log(`\n${chalk.bold(diff.file)}`);
+                    console.log(chalk.green(`+${diff.additions}`) + ' ' + chalk.red(`-${diff.deletions}`));
+                    console.log(chalk.dim('─'.repeat(60)));
+                    console.log(diff.diff);
+                }
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to get diff: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    git
+        .command('commit <message>')
+        .description('Commit staged changes')
+        .action(async (message: string) => {
+            const spinner = ora('Committing changes...').start();
+
+            try {
+                const result = await apiFetch<{
+                    commit: {
+                        hash: string;
+                        message: string;
+                        filesChanged: number;
+                        insertions: number;
+                        deletions: number;
+                    };
+                }>('/git/commit', {
+                    method: 'POST',
+                    body: JSON.stringify({ message }),
+                });
+
+                const { commit } = result;
+                spinner.succeed(chalk.green(`Commit created: ${commit.hash}`));
+
+                console.log(`\n${chalk.bold('📝 Commit Details:')}`);
+                console.log(`  Hash:    ${chalk.cyan(commit.hash)}`);
+                console.log(`  Message: ${commit.message.substring(0, 60)}...`);
+                console.log(`  Files:   ${commit.filesChanged} changed`);
+                console.log(`  Lines:   ${chalk.green(`+${commit.insertions}`)} ${chalk.red(`-${commit.deletions}`)}`);
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to commit: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    git
+        .command('push')
+        .description('Push to remote')
+        .option('--remote <remote>', 'Remote name', 'origin')
+        .option('--branch <branch>', 'Branch name (defaults to current)')
+        .action(async (opts: { remote?: string; branch?: string }) => {
+            const spinner = ora('Pushing to remote...').start();
+
+            try {
+                const result = await apiFetch<{
+                    push: {
+                        success: boolean;
+                        branch: string;
+                        remote: string;
+                        message: string;
+                    };
+                }>('/git/push', {
+                    method: 'POST',
+                    body: JSON.stringify({
+                        remote: opts.remote || 'origin',
+                        branch: opts.branch,
+                    }),
+                });
+
+                const { push } = result;
+
+                if (push.success) {
+                    spinner.succeed(chalk.green(`Pushed ${push.branch} to ${push.remote}`));
+                } else {
+                    spinner.fail(chalk.red(`Push failed: ${push.message}`));
+                    process.exit(1);
+                }
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to push: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    git
+        .command('branches')
+        .description('List branches')
+        .option('--remote', 'Include remote branches')
+        .option('--json', 'Output raw JSON')
+        .action(async (opts: { remote?: boolean; json?: boolean }) => {
+            const spinner = ora('Listing branches...').start();
+
+            try {
+                const params = new URLSearchParams();
+                if (opts.remote) params.set('remote', 'true');
+
+                const result = await apiFetch<{
+                    branches: Array<{
+                        name: string;
+                        current: boolean;
+                        remote?: string;
+                        lastCommit?: string;
+                    }>;
+                }>(`/git/branches?${params}`);
+
+                const { branches } = result;
+                spinner.succeed(chalk.green(`Found ${branches.length} branches`));
+
+                if (opts.json) {
+                    console.log(JSON.stringify({ branches }, null, 2));
+                    return;
+                }
+
+                console.log(`\n${chalk.bold('🌿 Branches:')}\n`);
+                for (const branch of branches) {
+                    const prefix = branch.current ? chalk.green('* ') : '  ';
+                    const name = branch.current ? chalk.green(branch.name) : branch.name;
+                    const remote = branch.remote ? chalk.dim(` [${branch.remote}]`) : '';
+                    const commit = branch.lastCommit ? chalk.dim(` ${branch.lastCommit}`) : '';
+                    console.log(`${prefix}${name}${remote}${commit}`);
+                }
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to list branches: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    git
+        .command('checkout <branch>')
+        .description('Checkout a branch')
+        .action(async (branch: string) => {
+            const spinner = ora(`Checking out ${branch}...`).start();
+
+            try {
+                await apiFetch<{ success: boolean; message: string }>(`/git/branch/${branch}`, {
+                    method: 'PUT',
+                    body: JSON.stringify({ action: 'checkout' }),
+                });
+
+                spinner.succeed(chalk.green(`Checked out: ${branch}`));
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to checkout: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    git
+        .command('log')
+        .description('Show recent commits')
+        .option('--limit <limit>', 'Number of commits', '10')
+        .option('--json', 'Output raw JSON')
+        .action(async (opts: { limit?: string; json?: boolean }) => {
+            const spinner = ora('Getting commit log...').start();
+
+            try {
+                const params = new URLSearchParams();
+                if (opts.limit) params.set('limit', opts.limit);
+
+                const result = await apiFetch<{
+                    log: Array<{
+                        hash: string;
+                        author: string;
+                        date: string;
+                        message: string;
+                    }>;
+                }>(`/git/log?${params}`);
+
+                const { log } = result;
+                spinner.succeed(chalk.green(`Found ${log.length} commits`));
+
+                if (opts.json) {
+                    console.log(JSON.stringify({ log }, null, 2));
+                    return;
+                }
+
+                console.log(`\n${chalk.bold('📜 Recent Commits:')}\n`);
+                for (const commit of log) {
+                    console.log(`${chalk.cyan(commit.hash)} ${chalk.dim(commit.date)} ${chalk.yellow(commit.author)}`);
+                    console.log(`  ${commit.message}`);
+                    console.log('');
+                }
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Failed to get log: ${msg}`));
+                process.exit(1);
+            }
+        });
 }

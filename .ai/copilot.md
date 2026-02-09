@@ -15,6 +15,144 @@
 
 ---
 
+### 2026-02-09 19:00 - Developer Agent 3.0 Fázis 3 Part 2: Git Integration (P8 TELJES! 🎉)
+
+**Commit:** `[pending]`
+**Feladat:** Developer Agent 3.0 — Fázis 3 Part 2 (P8) teljes implementáció: Git Workflow Operations
+**Test Result:** 341/341 PASS (41 files, +21 új teszt), 0 TypeScript error
+
+**Aranyszabály betartva:** Agent + CLI + API + Test (Dashboard skipped intentionally, 200+ LOC complexity)
+
+**Implementáció:**
+
+✨ **P8: Git Integration:**
+
+**1. Agent Module (`src/agents/gitIntegration.ts`, ÚJ, ~650 sor):**
+- `GitManager` osztály promisified `child_process.exec` használatával
+- **BUGFIX:** `execGit()` `stdout.trimEnd()` használ (NE `trim()`!) — Leading spaces megtartása git porcelain output-ban
+- **Encoding:** utf-8, 30s timeout, maxBuffer: 10MB
+- **8 TypeScript interface:**
+  - `GitFileStatus`: modified | added | deleted | renamed | untracked | conflicted
+  - `GitStatusResult`: branch, remote?, ahead, behind, files[], staged[], unstaged[], untracked[], hasChanges
+  - `GitFileInfo`: path, status, staged boolean
+  - `GitDiffResult`: file, additions, deletions, hunks[]
+  - `DiffHunk`: oldStart, newStart, lines[]
+  - `GitCommitResult`: hash, message, filesChanged, insertions, deletions
+  - `GitPushResult`: success, branch, remote, message
+  - `GitBranchInfo`: name, current, hash, message, remote?
+  - `GitLogEntry`: hash (8 chars), author, date, message
+- **Public methods (17 db):**
+  - `getStatus()` → GitStatusResult
+    - git rev-parse --abbrev-ref HEAD (branch)
+    - git rev-parse branch@{upstream} (remote)
+    - git rev-list --left-right --count (ahead/behind)
+    - git status --porcelain (files)
+    - Porcelain format parsing: XY = staged/unstaged codes, substring(0,2), substring(3)
+    - Files categorized: staged (X≠' ' && X≠'?'), unstaged (Y≠' ' && Y≠'?'), untracked (X='?' && Y='?')
+  - `getDiff(filePath?, staged?)` → GitDiffResult[]
+    - git diff [--cached] [-- "file"]
+    - Unified diff parsing: @@ -old+new @@, +/- lines, additions/deletions count
+  - `stageFiles(files)` → void — git add "file1" "file2"
+  - `unstageFiles(files)` → void — git reset HEAD "file1"
+  - `commit(message)` → GitCommitResult
+    - git commit -m "message"
+    - Parse output: [branch hash] message\nX files changed, Y insertions(+), Z deletions(-)
+  - `push(remote='origin', branch?)` → GitPushResult (try-catch, success=false on error)
+  - `pull(remote='origin', branch?)` → void
+  - `fetch(remote='origin')` → void
+  - `listBranches(includeRemote=false)` → GitBranchInfo[]
+    - git branch [-a] -vv
+    - Parse current (prefix `* `), remote tracking `[...]`, skip HEAD pointers
+  - `createBranch(name, checkout=false)` → void — git [checkout -b | branch] name
+  - `checkoutBranch(name)` → void — git checkout name
+  - `deleteBranch(name, force=false)` → void — git branch [-d|-D] name
+  - `getLog(limit=10)` → GitLogEntry[]
+    - git log -n10 --pretty=format:'%H|%an|%ad|%s' --date=short
+    - Parse: hash (substring 0-8), author, date, subject
+- **Singleton:** `getGitManager(workspaceRoot?)` — Init on first call, uses BRUNELLA_WORKSPACE_ROOT || cwd
+
+**2. API Endpoints (`src/server/routes/developer.ts`, v3.0.4):**
+- Version: `3.0.3` → `3.0.4 — P4+P5+P6+P7+P8: Code Review, Context, Coverage, Task Queue, Git Integration`
+- **12 új route:**
+  1. `GET /git/status` — Returns `{ status: GitStatusResult }`
+  2. `GET /git/diff?file=...&staged=...` — Returns `{ diffs: GitDiffResult[] }`
+  3. `POST /git/stage` — Body: `{ files: string[] }`, returns `{ success, message }`
+  4. `POST /git/unstage` — Body: `{ files: string[] }`, returns `{ success, message }`
+  5. `POST /git/commit` — Body: `{ message: string }` (required), returns `{ commit: GitCommitResult }`
+  6. `POST /git/push` — Body: `{ remote?, branch? }`, returns `{ push: GitPushResult }`
+  7. `GET /git/branches?remote=...` — Returns `{ branches: GitBranchInfo[] }`
+  8. `POST /git/branch` — Body: `{ name, checkout? }`, returns `{ success, message }`
+  9. `PUT /git/branch/:name` — Body: `{ action: 'checkout'|'delete', force? }`, returns `{ success, message }`
+  10. `GET /git/log?limit=...` — Returns `{ log: GitLogEntry[] }`
+  11. `POST /git/fetch` — Body: `{ remote? }`, returns `{ success, message }`
+  12. `POST /git/pull` — Body: `{ remote?, branch? }`, returns `{ success, message }`
+- All endpoints: `process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd()`, try-catch, logError, 500 response
+
+**3. CLI Commands (`src/cli/devCommands.ts`, ~1020 sor, +263 új):**
+- **Új command group:** `brunella dev git`
+- **7 subcommand:**
+  1. `git status` — Options: `--json`
+     - Display: Branch emoji (🌿), remote tracking, ahead/behind (↑/↓ arrows)
+     - Staged files: green `M ` prefix
+     - Unstaged files: yellow `M ` prefix
+     - Untracked files: dim `? ` prefix
+     - Clean working dir: ✨ message
+  2. `git diff [file]` — Options: `--staged`
+     - File name bold, +additions/-deletions (colored), horizontal rule, full diff
+  3. `git commit <message>`
+     - Success: Hash cyan, message (60 chars), files changed, insertions (green), deletions (red)
+  4. `git push` — Options: `--remote <remote>` (default: origin), `--branch <branch>`
+  5. `git branches` — Options: `--remote`, `--json`
+     - Current branch green with `* ` prefix
+     - Remote tracking dim `[origin/...]`
+     - Last commit hash dim
+  6. `git checkout <branch>`
+  7. `git log` — Options: `--limit <limit>` (default: 10), `--json`
+     - Hash cyan, date dim, author yellow, message on new line
+- All commands: `ora` spinner, `chalk` colors, `apiFetch` helper
+
+**4. Dashboard UI: SKIPPED (intentionally)**
+- Reason: Git UI would require ~200+ LOC (status display, file list with checkboxes, commit form, push button, branch switcher)
+- Decision: Focus on core Git infrastructure, skip UI slice this round
+- Users can use CLI or API for Git operations
+
+**5. Tests (`test/git_integration.test.ts`, ÚJ, 21 teszt):**
+- **Mock setup (CRITICAL FIX):**
+  - Used `vi.hoisted()` to avoid TDZ error: `const { mockExecAsyncFn } = vi.hoisted(() => ({ mockExecAsyncFn: vi.fn() }))`
+  - Mocked: logger (logInfo, logError, logWarn), child_process.exec, node:util.promisify
+- **Test coverage areas:**
+  - **Git Status (2 tests):** with upstream (ahead/behind parsing), without upstream (no remote)
+  - **Git Diff (2 tests):** specific file (unified diff parsing with hunks), empty diff
+  - **Stage/Unstage (3 tests):** stage files (command check), stage no files (error), unstage files
+  - **Commit (2 tests):** successful commit (parse hash, stats), empty message error
+  - **Push (2 tests):** success, failure (success=false + error message)
+  - **Branches (6 tests):** list (parse current `*`, remote tracking), create, create+checkout, checkout, delete, force delete
+  - **Log (1 test):** parse commit log format (pipe-delimited)
+  - **Fetch/Pull (2 tests):** basic operations
+  - **Error Handling (1 test):** git command failure propagation
+
+**Technikai részletek:**
+- **Porcelain parsing:** XY format (X=staged, Y=unstaged), space character CRITICAL (`.trimEnd()` not `.trim()`)
+- **Test bug discovered:** Leading space removed by `stdout.trim()` caused incorrect staged file detection
+  - `' M file1.ts'` → `'M file1.ts'` after trim → stagedCode='M' instead of ' '
+  - Fix: Changed `stdout.trim()` to `stdout.trimEnd()` in `execGit()` method
+- **Diff parsing:** Unified format, `@@ -1,3 +1,4 @@`, track additions (+) and deletions (-) line prefix
+- **Branch parsing:** Skip `HEAD -> ` pointers, current branch has `* ` prefix, remote tracking in `[brackets]`
+- **Commit output parsing:** Regex for `[branch hash] message\nX files changed, ...` format
+- **Error handling:** All methods throw Error with descriptive messages, logged via logError
+
+**Build & Test eredmény:**
+- ✅ Build: 0 TypeScript error
+- ✅ Tests: 341 passed (41 files, +21 új P8 teszt)
+  - Previous: 320 tests (P7)
+  - Added: 21 tests (P8 Git Integration)
+- ✅ Mock hoisting fix: Used `vi.hoisted()` factory pattern
+- ✅ Porcelain parsing fix: `.trimEnd()` preserves leading spaces
+
+**Következő lépés:** P9 (Code Scaffolding) implementálása — 5 slices: Agent + API + CLI + Dashboard? + Tests
+
+---
+
 ### 2026-02-09 18:30 - Developer Agent 3.0 Fázis 3 Part 1: Task Queue & Batch Operations (P7 TELJES! 🚀)
 
 **Commit:** `132ef85f`

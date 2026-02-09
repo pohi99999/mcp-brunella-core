@@ -1,6 +1,6 @@
 // FILE: src/server/routes/developer.ts
 // PURPOSE: REST API endpoints for Developer Agent 3.0
-// VERSION: 3.0.3 — P4+P5+P6+P7: Code Review, Context, Coverage, Task Queue
+// VERSION: 3.0.4 — P4+P5+P6+P7+P8: Code Review, Context, Coverage, Task Queue, Git Integration
 
 import { Router } from 'express';
 import { pipelineRunner, type TaskPipeline } from '../../agents/developerPipeline.js';
@@ -8,6 +8,7 @@ import { codeReviewEngine } from '../../agents/codeReview.js';
 import { contextBuilder } from '../../agents/contextBuilder.js';
 import { coverageAnalyzer } from '../../agents/coverageAnalysis.js';
 import { taskQueueManager } from '../../agents/taskQueue.js';
+import { getGitManager } from '../../agents/gitIntegration.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
@@ -448,6 +449,221 @@ export function createDeveloperRoutes(): Router {
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             logError('DeveloperRoute', `Queue stats failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // ==================== P8: Git Integration ====================
+
+    // GET /git/status — Get git status (branch, staged/unstaged files)
+    router.get('/git/status', async (_req, res) => {
+        try {
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            const status = await gitManager.getStatus();
+            res.json({ status });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git status failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // GET /git/diff — Get diff for file or all changes
+    router.get('/git/diff', async (req, res) => {
+        try {
+            const { file, staged } = req.query;
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            const diffs = await gitManager.getDiff(
+                file as string | undefined,
+                staged === 'true'
+            );
+            res.json({ diffs });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git diff failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // POST /git/stage — Stage files
+    router.post('/git/stage', async (req, res) => {
+        try {
+            const { files } = req.body;
+            if (!Array.isArray(files) || files.length === 0) {
+                res.status(400).json({ error: 'files array required' });
+                return;
+            }
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            await gitManager.stageFiles(files);
+            res.json({ success: true, message: `${files.length} files staged` });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git stage failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // POST /git/unstage — Unstage files
+    router.post('/git/unstage', async (req, res) => {
+        try {
+            const { files } = req.body;
+            if (!Array.isArray(files) || files.length === 0) {
+                res.status(400).json({ error: 'files array required' });
+                return;
+            }
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            await gitManager.unstageFiles(files);
+            res.json({ success: true, message: `${files.length} files unstaged` });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git unstage failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // POST /git/commit — Commit staged changes
+    router.post('/git/commit', async (req, res) => {
+        try {
+            const { message } = req.body;
+            if (!message) {
+                res.status(400).json({ error: 'message required' });
+                return;
+            }
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            const result = await gitManager.commit(message);
+            res.json({ commit: result });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git commit failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // POST /git/push — Push to remote
+    router.post('/git/push', async (req, res) => {
+        try {
+            const { remote, branch } = req.body;
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            const result = await gitManager.push(remote, branch);
+            res.json({ push: result });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git push failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // GET /git/branches — List branches
+    router.get('/git/branches', async (req, res) => {
+        try {
+            const { remote } = req.query;
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            const branches = await gitManager.listBranches(remote === 'true');
+            res.json({ branches });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git branches failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // POST /git/branch — Create branch
+    router.post('/git/branch', async (req, res) => {
+        try {
+            const { name, checkout } = req.body;
+            if (!name) {
+                res.status(400).json({ error: 'name required' });
+                return;
+            }
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            await gitManager.createBranch(name, checkout === true);
+            res.json({ success: true, message: `Branch created: ${name}` });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git branch create failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // PUT /git/branch/:name — Checkout or delete branch
+    router.put('/git/branch/:name', async (req, res) => {
+        try {
+            const { name } = req.params;
+            const { action, force } = req.body;
+
+            if (!action || (action !== 'checkout' && action !== 'delete')) {
+                res.status(400).json({ error: 'action required: checkout | delete' });
+                return;
+            }
+
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+
+            if (action === 'checkout') {
+                await gitManager.checkoutBranch(name);
+                res.json({ success: true, message: `Checked out: ${name}` });
+            } else {
+                await gitManager.deleteBranch(name, force === true);
+                res.json({ success: true, message: `Branch deleted: ${name}` });
+            }
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git branch ${req.body.action} failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // GET /git/log — Get recent commits
+    router.get('/git/log', async (req, res) => {
+        try {
+            const { limit } = req.query;
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            const log = await gitManager.getLog(
+                limit ? parseInt(limit as string, 10) : 10
+            );
+            res.json({ log });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git log failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // POST /git/fetch — Fetch from remote
+    router.post('/git/fetch', async (req, res) => {
+        try {
+            const { remote } = req.body;
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            await gitManager.fetch(remote || 'origin');
+            res.json({ success: true, message: `Fetched from ${remote || 'origin'}` });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git fetch failed: ${msg}`);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    // POST /git/pull — Pull from remote
+    router.post('/git/pull', async (req, res) => {
+        try {
+            const { remote, branch } = req.body;
+            const workspaceRoot = process.env.BRUNELLA_WORKSPACE_ROOT || process.cwd();
+            const gitManager = getGitManager(workspaceRoot);
+            await gitManager.pull(remote || 'origin', branch);
+            res.json({ success: true, message: `Pulled from ${remote || 'origin'}` });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('DeveloperRoute', `Git pull failed: ${msg}`);
             res.status(500).json({ error: msg });
         }
     });
