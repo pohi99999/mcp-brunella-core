@@ -1,0 +1,75 @@
+/**
+ * Gold Protocol G6: Audit API Routes
+ *
+ * RULE-UI4: Routes in separate *Routes.ts files (clean separation)
+ *
+ * Endpoints:
+ *   GET /api/audit/log    → AuditEntry[] (paginated)
+ *   GET /api/audit/denied → AuditEntry[] (denied only)
+ *   GET /api/audit/stats  → Audit statistics
+ */
+
+import { Router } from 'express';
+import { getAuditLog, getDeniedEntries, getAuditStats, cleanupOldEntries } from '../core/auditLog.js';
+
+export function createAuditRouter(): Router {
+  const router = Router();
+
+  /**
+   * GET /api/audit/log
+   * Paginated audit log (newest first)
+   */
+  router.get('/log', (req, res) => {
+    try {
+      const limit = Math.min(parseInt(req.query.limit as string) || 50, 500);
+      const offset = parseInt(req.query.offset as string) || 0;
+      const entries = getAuditLog(limit, offset);
+      res.json({ entries, limit, offset });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  /**
+   * GET /api/audit/denied
+   * Only denied entries (newest first)
+   */
+  router.get('/denied', (req, res) => {
+    try {
+      const limit = Math.min(parseInt(req.query.limit as string) || 50, 500);
+      const entries = getDeniedEntries(limit);
+      res.json({ entries });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  /**
+   * GET /api/audit/stats
+   * Audit statistics (totals, by agent)
+   */
+  router.get('/stats', (_req, res) => {
+    try {
+      const stats = getAuditStats();
+      res.json(stats);
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  /**
+   * POST /api/audit/cleanup
+   * Manual trigger for retention cleanup
+   */
+  router.post('/cleanup', (req, res) => {
+    try {
+      const days = parseInt(req.body?.retentionDays as string) || 30;
+      const removed = cleanupOldEntries(days);
+      res.json({ removed, retentionDays: days });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  return router;
+}
