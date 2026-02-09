@@ -1,457 +1,171 @@
-# Spec: DeveloperAgent 2.0 - Technical Specification
+# Spec: Developer Agent 3.0 — Unified Development Platform
 
 **Track ID:** `developer_agent_2_0_20260206`
-**Version:** 2.0.0
-**Last Updated:** 2026-02-06
+**Version:** 3.0.0
+**Last Updated:** 2026-02-10
+**Status:** `approved` ✅
 
 ---
 
-## 🎯 Overview
+## 🎯 Vízió
 
-DeveloperAgent 2.0 is a self-healing AI developer that generates code, writes tests, fixes errors, and commits changes. Uses GPT-4o (GitHub Models) for intelligent code generation.
+A Developer Agent, a CLI és a Dashboard **szinkronban fejlődik** — minden új képesség egyszerre elérhető mindhárom felületen: programozottan (agent), parancssorból (CLI), és vizuálisan (Dashboard).
 
----
-
-## 📦 Module Structure
-
-```
-src/agents/DeveloperAgent.ts
-├── Core Agent (IAgent interface)
-├── Task Routing (7 handlers)
-├── Self-Healing Pipeline
-└── Utility Methods
-```
+**Aranyszabály:** Minden új fejlesztői képesség EGYSZERRE kerül be:
+1. 🤖 Agent handler a `DeveloperAgent.ts`-ben
+2. 💻 CLI parancs a `devCommands.ts`-ben
+3. 🖥️ Dashboard UI elem a `DeveloperPanel.tsx`-ben
+4. 🌐 REST végpont a `developer.ts` route-ban
+5. 🧪 Vitest teszteset a `test/` mappában
 
 ---
 
-## 🔧 API Specification
+## 📊 Fázisok Összefoglalása
 
-### IAgent Interface Implementation
-
-```typescript
-interface IAgent {
-  name: string;
-  role: string;
-  description: string;
-  capabilities: string[];
-  execute(task: string, context?: any): Promise<AgentResponse>;
-}
-```
-
-### AgentResponse
-
-```typescript
-interface AgentResponse {
-  status: "success" | "error" | "delegated" | "handoff";
-  data?: any;
-  error?: string;
-  message?: string;
-}
-```
+| Fázis | Feladatok | Prioritás | Státusz |
+|-------|-----------|-----------|---------|
+| **Fázis 1** | P1 Pipeline, P2 CLI, P3 Dashboard | 🔴 CRITICAL | `DONE ✅` |
+| **Fázis 2** | P4 Review, P5 Context, P6 Coverage | 🟠 HIGH | `PLANNED` |
+| **Fázis 3** | P7 Queue, P8 Git, P9 Scaffold | 🟡 MEDIUM | `IDEA` |
+| **Fázis 4** | P10 Metrics, P11 Approval, P12 Feed | 🟡 MEDIUM | `IDEA` |
 
 ---
 
-## 🎯 Task Handlers
+## 🏗️ FÁZIS 1: Alapok & Architektúra (P1–P3) [DONE ✅]
 
-### 1. handleCodeGeneration()
+### P1: Task Pipeline & Progress Streaming [DONE ✅]
 
-**Trigger:** Task includes keywords like "generate", "create", "write" + "function", "class", "module"
+**Fájlok:**
+- `src/agents/developerPipeline.ts` — Pipeline interfészek + `PipelineRunner` osztály
+- `src/agents/DeveloperAgent.ts` — Pipeline integráció az execute()-ba
+- `src/server/routes/developer.ts` — REST API végpontok
 
-**Input:**
-```typescript
-{
-  task: string;           // e.g., "generate function add(a, b)"
-  context?: {
-    filePath?: string;    // Where to save
-    language?: string;    // TypeScript (default), Python, JS
-  }
-}
-```
+**Működés:**
+- Minden feladat fázisokra bomlik: `plan → generate → validate → save → test`
+- `ProgressEvent` emit Socket.IO-n keresztül
+- Feladat-állapot: `queued → planning → generating → validating → saving → testing → done/error`
 
-**Process:**
-1. Build LLM prompt with system instructions
-2. Call GPT-4o via `generateResponse()`
-3. Parse and clean generated code
-4. Save to file (if filePath provided)
-5. Run `npm run build` to validate
-6. If build fails → trigger `selfHealBuild()`
+**API végpontok:**
+- `GET /api/v1/developer/pipeline/:taskId` — Pipeline állapot lekérdezés
+- `GET /api/v1/developer/history` — Utolsó N feladat
+- `POST /api/v1/developer/execute` — Feladat indítás progress streaming-gel
 
-**Output:**
-```typescript
-{
-  status: "success" | "error";
-  data: {
-    code: string;
-    provider: string;     // "github"
-    buildSuccess?: boolean;
-  };
-  message: string;
-}
-```
+### P2: CLI Developer Commands [DONE ✅]
 
----
+**Fájl:** `src/cli/devCommands.ts`
 
-### 2. handleTestGeneration()
-
-**Trigger:** Task includes "test", "spec", "vitest", "jest"
-
-**Input:**
-```typescript
-{
-  task: string;              // e.g., "generate tests for add function"
-  context?: {
-    sourceCode?: string;     // Code to test
-    testFilePath?: string;   // Where to save test
-  }
-}
-```
-
-**Process:**
-1. Build test generation prompt (Vitest syntax)
-2. Call GPT-4o
-3. Parse test code
-4. Save to test file
-5. Run tests: `npx vitest run <testFile>`
-
-**Output:**
-```typescript
-{
-  status: "success" | "error";
-  data: {
-    testCode: string;
-    testResult?: {
-      success: boolean;
-      output: string;
-    };
-  };
-  message: string;
-}
-```
-
----
-
-### 3. handleErrorFix()
-
-**Trigger:** Task includes "fix", "repair", "debug", "error", "bug"
-
-**Input:**
-```typescript
-{
-  task: string;           // e.g., "fix build error in file X"
-  context: {
-    error: string;        // Error message
-    filePath?: string;    // File to fix
-  }
-}
-```
-
-**Process:**
-1. Read source file (if filePath)
-2. Build fix prompt with error + code
-3. Call GPT-4o
-4. Apply fix
-5. Verify build
-
-**Output:**
-```typescript
-{
-  status: "success" | "error";
-  data: {
-    fixedCode: string;
-    buildSuccess: boolean;
-  };
-  message: string;
-}
-```
-
----
-
-### 4. handlePythonExecution()
-
-**Trigger:** Task includes Python syntax OR context.code exists
-
-**Input:**
-```typescript
-{
-  task: string;      // Python code as string
-  context?: {
-    code: string;    // Explicit Python code
-  }
-}
-```
-
-**Process:**
-1. Extract Python code
-2. Execute via `globalPythonShell.run()`
-3. Return output/error
-
-**Output:**
-```typescript
-{
-  status: "success" | "error";
-  data: {
-    output: any;     // Python execution result
-  };
-  error?: string;
-}
-```
-
----
-
-### 5. handleGitOperation()
-
-**Trigger:** Task includes "git", "commit", "push", "branch"
-
-**Input:**
-```typescript
-{
-  task: string;              // e.g., "commit changes"
-  context?: {
-    commitMessage?: string;  // Commit message
-    branchName?: string;     // Branch name for new branch
-  }
-}
-```
-
-**Supported Operations:**
-- `commit` - Stage all and commit
-- `branch` - Create new branch
-
-**Output:**
-```typescript
-{
-  status: "success" | "error";
-  message: string;    // e.g., "Committed: message"
-}
-```
-
----
-
-### 6. handleGenericTask()
-
-**Trigger:** Fallback for unrecognized tasks
-
-**Process:**
-1. Send entire task to GPT-4o
-2. Let LLM decide what to do
-3. Return response
-
----
-
-## 🔄 Self-Healing Pipeline
-
-### selfHealBuild()
-
-**Purpose:** Automatically fix build errors
-
-**Algorithm:**
-```
-1. Build fails with error
-2. FOR attempt = 1 TO maxRetries (3):
-   a. Send error + code to GPT-4o
-   b. Get fixed code
-   c. Save and re-build
-   d. IF build succeeds → RETURN success
-   e. ELSE update error message
-3. IF all retries fail → RETURN error
-```
-
-**Parameters:**
-```typescript
-selfHealBuild(
-  originalCode: string,
-  buildError: string,
-  filePath: string
-): Promise<AgentResponse>
-```
-
-**Success Rate Target:** >70% of build errors auto-fixed
-
----
-
-## 🧰 Utility Methods
-
-### saveCode()
-```typescript
-async saveCode(filePath: string, code: string): Promise<void>
-```
-Creates directories if needed, writes file.
-
-### tryBuild()
-```typescript
-async tryBuild(): Promise<{ success: boolean; error?: string }>
-```
-Runs `npm run build`, returns success/error.
-
-### runTests()
-```typescript
-async runTests(testFile?: string): Promise<{ success: boolean; output?: string }>
-```
-Runs `npm test` or specific test file.
-
----
-
-## 🔗 Dependencies
-
-### Internal
-- `src/core/llm_client.ts` - GPT-4o integration
-- `src/utils/logger.ts` - Logging
-- `src/utils/pythonShell.ts` - Python execution
-
-### External
-- `@google/generative-ai` - Gemini fallback
-- `child_process` - Shell commands
-- `fs/promises` - File operations
-
----
-
-## ⚙️ Configuration
-
-### Environment Variables
-
-```env
-# LLM Provider (default: github)
-LLM_PROVIDER=github
-
-# GitHub Models (GPT-4o)
-GITHUB_TOKEN=ghp_xxxxx                    # Auto-detected via gh CLI
-GITHUB_MODELS_DEFAULT_MODEL=gpt-4o       # Default model
-
-# Timeouts
-LLM_TIMEOUT_MS=120000                     # 2 minutes
-
-# LangSmith (optional tracing)
-LANGCHAIN_API_KEY=lsv2_xxxxx
-```
-
-### Agent Configuration
-
-```typescript
-private llmProvider = 'github';     // GPT-4o default
-private maxRetries = 3;             // Self-healing attempts
-private buildTimeout = 120000;      // 2 minutes
-```
-
----
-
-## 🧪 Testing Strategy
-
-### Unit Tests (`test/developer_agent_2_0.test.ts`)
-
-```typescript
-describe('DeveloperAgent 2.0', () => {
-  it('should generate code for simple function');
-  it('should generate Vitest tests');
-  it('should fix build errors automatically');
-  it('should execute Python code');
-  it('should commit changes to git');
-  it('should self-heal after 3 retries');
-});
-```
-
-### Integration Tests (CLI)
-
+**Parancsok:**
 ```bash
-# Code generation
-brunella agent Developer "generate function fibonacci(n)"
+brunella dev generate <prompt>     # Kód generálás
+brunella dev test <file>           # Teszt generálás
+brunella dev fix [--auto]          # Hiba javítás
+brunella dev heal                  # Self-heal futtatás
+brunella dev review <file>         # Kód review
+brunella dev status                # Pipeline állapot
+brunella dev history               # Feladat történet
+```
 
-# Test generation
-brunella agent Developer "generate tests for src/utils/math.ts"
+### P3: Dashboard Developer Panel [DONE ✅]
 
-# Error fixing
-brunella agent Developer "fix error in src/agents/X.ts" --context error="TypeError"
+**Fájlok:**
+- `src/dashboard/components/dashboard/DeveloperPanel.tsx` — Fő panel
+- `src/dashboard/components/dashboard/DeveloperPipeline.tsx` — Pipeline vizualizáció
 
-# Python execution
-brunella agent Developer "print('hello')" --context code="print('hello')"
+**Tartalom:**
+1. Prompt input + „Generálj" gomb
+2. Pipeline progress bar (fázisonkénti vizualizáció)
+3. One-Click műveletek (Generate, Test, Fix, Heal)
+4. Feladat történet táblázat
+5. Self-Heal log timeline
 
-# Git commit
-brunella agent Developer "commit changes" --context commitMessage="Add feature X"
+---
+
+## 🧠 FÁZIS 2: Intelligens Képességek (P4–P6)
+
+### P4: Code Review & Refactoring [PLANNED]
+- `handleCodeReview(filePath)` — LLM review, severity szintek
+- `handleRefactoring(filePath, instruction)` — irányított refaktorálás
+- CLI: `brunella dev review <file>`
+- Dashboard: Review Panel, kódsoronkénti annotáció
+
+### P5: Multi-File Kontextus & Project-Aware Generation [PLANNED]
+- RAG-alapú kontextus: releváns fájlok auto-becsatolás
+- `codebaseIndexer.ts` + `DependencyGraphAgent` integráció
+- CLI: `brunella dev generate --context auto`
+- Dashboard: Kontextus fájlválasztó panel
+
+### P6: Teszt Lefedettség Elemzés & Auto-Test [PLANNED]
+- `analyzeCoverage()` — Vitest coverage report
+- `suggestTests(file)` — lefedetlen kódrészekhez javaslatok
+- CLI: `brunella dev coverage` + `brunella dev test --auto-generate`
+- Dashboard: Coverage heatmap
+
+---
+
+## ⚡ FÁZIS 3: Workflow & Automatizáció (P7–P9)
+
+### P7: Task Queue & Batch Operations [IDEA]
+### P8: Git Workflow Automatizáció [IDEA]
+### P9: Scaffold & Template Rendszer [IDEA]
+
+---
+
+## 📊 FÁZIS 4: Monitoring & Kontroll (P10–P12)
+
+### P10: Developer Metrics & Analytics [IDEA]
+### P11: Approval & Confirmation Flow [IDEA]
+### P12: Unified Activity Feed & Notifications [IDEA]
+
+---
+
+## 📁 Fájlstruktúra
+
+```
+src/
+├── agents/
+│   ├── DeveloperAgent.ts          # Bővített (Pipeline integráció)
+│   └── developerPipeline.ts       # Pipeline & Progress (P1)
+├── cli/
+│   ├── goldCommands.ts            # Meglévő
+│   └── devCommands.ts             # Developer CLI modul (P2)
+├── dashboard/components/dashboard/
+│   ├── DeveloperPanel.tsx         # Fő developer panel (P3)
+│   └── DeveloperPipeline.tsx      # Pipeline vizualizáció (P3)
+├── server/routes/
+│   └── developer.ts               # /api/v1/developer/* végpontok
+└── utils/
+    └── developerMetrics.ts        # Metrika gyűjtés (P10, későbbi)
+
+test/
+├── developer_pipeline.test.ts     # Pipeline tesztek
+├── dev_commands.test.ts           # CLI tesztek
+└── routes_developer.test.ts       # API végpont tesztek
 ```
 
 ---
 
-## 📊 Performance Metrics
+## 🔗 Korábbi v2.0 referencia
 
-| Metric | Target | Measurement |
-|--------|--------|-------------|
-| Code generation success | >90% | % of valid code generated |
-| Build auto-fix success | >70% | % of build errors fixed |
-| Average response time | <30s | Time to GPT-4o response |
-| Test generation accuracy | >80% | % of passing tests |
-| Self-healing iterations | ≤2 | Avg. retries before success |
-
----
-
-## 🚨 Error Handling
-
-### Error Types
-
-1. **LLM Error** - GPT-4o API failure
-   - Fallback: Try Ollama
-   - Log: LangSmith trace
-
-2. **Build Error** - TypeScript compilation fails
-   - Action: Trigger `selfHealBuild()`
-   - Max retries: 3
-
-3. **Test Error** - Generated tests fail
-   - Action: Log warning, return error response
-   - No auto-retry (tests might be correct, code might be wrong)
-
-4. **File Error** - Cannot read/write file
-   - Action: Return error immediately
-   - No retry
-
-### Error Response Format
-
-```typescript
-{
-  status: "error";
-  error: string;            // Human-readable error
-  data?: {
-    lastCode?: string;      // Last attempted code
-    attempts?: number;      // Retry count
-  };
-}
-```
-
----
-
-## 🔐 Security Considerations
-
-1. **Code Execution**
-   - Python code runs in FastAPI subprocess (port 8000)
-   - No shell injection (parameterized commands)
-
-2. **File Operations**
-   - Only writes to project directory
-   - No directory traversal (path.resolve validation)
-
-3. **Git Operations**
-   - Sanitized commit messages (escape quotes)
-   - No forced operations without confirmation
+A v2.0 handler-ek (handleCodeGeneration, handleTestGeneration, handleErrorFix,
+handlePythonExecution, handleGitOperation, handleGenericTask, selfHealBuild)
+továbbra is megmaradnak — a v3.0 ezeket burkolja pipeline-ba.
 
 ---
 
 ## 📝 Change Log
 
-### v2.0.0 (2026-02-06)
+### v3.0.0 (2026-02-10) — Fázis 1
+- Pipeline architektúra (TaskPipeline, PipelineRunner)
+- CLI `brunella dev` alparancs-csoport (7 parancs)
+- Dashboard DeveloperPanel + DeveloperPipeline vizualizáció
+- REST API: `/api/v1/developer/*` végpontok
+- Socket.IO progress streaming integráció
+
+### v2.0.0 (2026-02-06) — Alapok
 - Complete rewrite from v1.0
-- Added GPT-4o integration
-- Added test generation
-- Added self-healing pipeline
-- Added git operations
-- Expanded from 47 to 400+ lines
+- GPT-4o integráció, teszt generálás, self-healing pipeline, git műveletek
 
 ---
 
-## 🔗 Related Documents
-
-- [Track Plan](./plan.md)
-- [README.md](../../../README.md) - Bootstrap protocol
-- [src/core/llm_client.ts](../../../src/core/llm_client.ts) - LLM integration
-
----
-
-**Status:** ✅ Implemented
-**Next:** CLI integration + Memory Bank
+**Status:** ✅ Fázis 1 Implementálva
+**Next:** Fázis 2 (P4–P6) — Code Review, Project Context, Coverage
