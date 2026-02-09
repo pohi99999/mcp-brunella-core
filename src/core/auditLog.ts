@@ -27,11 +27,60 @@ export interface AuditEntry {
 }
 
 // ============================================================================
-// IN-MEMORY AUDIT BUFFER (async non-blocking)
+// DATABASE (lazy singleton)
+// ============================================================================
+
+let db: any = null;
+
+async function getDb(): Promise<any> {
+  if (db) return db;
+
+  if (typeof process === 'undefined' || !process.versions?.node) {
+    return null;
+  }
+
+  const path = await import('path');
+  const fs = await import('fs');
+
+  const dbDir = path.default.join(process.cwd(), 'data');
+  if (!fs.default.existsSync(dbDir)) {
+    fs.default.mkdirSync(dbDir, { recursive: true });
+  }
+
+  const dbPath = path.default.join(dbDir, 'audit.db');
+  const Database = (await import('better-sqlite3')).default;
+  db = new Database(dbPath);
+
+  // WAL mode for concurrent reads + low-latency writes
+  db.pragma('journal_mode = WAL');
+
+  // Create table from schemas/audit.sql
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS audit_log (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      timestamp TEXT NOT NULL DEFAULT (datetime('now')),
+      agent_name TEXT NOT NULL,
+      action TEXT NOT NULL,
+      resource TEXT,
+      result TEXT NOT NULL CHECK (result IN ('ALLOWED', 'DENIED')),
+      reason TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+    CREATE INDEX IF NOT EXISTS idx_audit_agent ON audit_log(agent_name);
+    CREATE INDEX IF NOT EXISTS idx_audit_result ON audit_log(result);
+    CREATE INDEX IF NOT EXISTS idx_audit_timestamp ON audit_log(timestamp);
+  `);
+
+  logInfo('AuditLog', 'Database initialized (WAL mode)');
+  return db;
+}
+
+// ============================================================================
+// IN-MEMORY CACHE (optional fast access)
 // ============================================================================
 
 const auditBuffer: AuditEntry[] = [];
-const MAX_BUFFER = 5000;
+const MAX_BUFFER = 1000; // Reduced size (SQLite is source of truth)
 const DEFAULT_RETENTION_DAYS = 30;
 
 let cleanupInterval: ReturnType<typeof setInterval> | null = null;
@@ -45,13 +94,13 @@ let cleanupInterval: ReturnType<typeof setInterval> | null = null;
  * RULE-AU1: Every permission check result is recorded.
  * RULE-AU2: DENIED results also trigger logError.
  */
-export function record(
+export async function record(
   result: AuditResult,
   agentName: string,
   action: string,
   resource: string,
   reason?: string
-): void {
+): Promise<void> {
   const entry: AuditEntry = {
     timestamp: new Date().toISOString(),
     agentName,
@@ -66,84 +115,230 @@ export function record(
     logError('AuditLog', `DENIED: ${agentName} → ${action} on ${resource}: ${reason || 'no reason'}`);
   }
 
+  // In-memory cache (fast recent access)
   auditBuffer.push(entry);
-
-  // Ring buffer: evict oldest when full
   if (auditBuffer.length > MAX_BUFFER) {
     auditBuffer.splice(0, auditBuffer.length - MAX_BUFFER);
+  }
+
+  // SQLite persistence (async, non-blocking)
+  try {
+    const database = await getDb();
+    if (!database) return;
+
+    const stmt = database.prepare(
+      'INSERT INTO audit_log (timestamp, agent_name, action, resource, result, reason) VALUES (?, ?, ?, ?, ?, ?)'
+    );
+    stmt.run(entry.timestamp, entry.agentName, entry.action, entry.resource, entry.result, entry.reason || null);
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    logError('AuditLog', `SQLite insert failed: ${msg}`);
   }
 }
 
 /**
  * Get paginated audit log entries (newest first).
+ * Reads from SQLite (fallback to in-memory buffer if DB unavailable).
  */
-export function getAuditLog(limit = 50, offset = 0): AuditEntry[] {
-  const sorted = [...auditBuffer].reverse();
-  return sorted.slice(offset, offset + limit);
+export async function getAuditLog(limit = 50, offset = 0): Promise<AuditEntry[]> {
+  try {
+    const database = await getDb();
+    if (!database) {
+      // Fallback to in-memory buffer
+      const sorted = [...auditBuffer].reverse();
+      return sorted.slice(offset, offset + limit);
+    }
+
+    const stmt = database.prepare(
+      'SELECT id, timestamp, agent_name, action, resource, result, reason FROM audit_log ORDER BY id DESC LIMIT ? OFFSET ?'
+    );
+    const rows = stmt.all(limit, offset) as any[];
+
+    return rows.map((row: any) => ({
+      id: row.id,
+      timestamp: row.timestamp,
+      agentName: row.agent_name,
+      action: row.action,
+      resource: row.resource,
+      result: row.result as AuditResult,
+      reason: row.reason || undefined,
+    }));
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    logError('AuditLog', `SQLite select failed: ${msg}`);
+    // Fallback to buffer
+    const sorted = [...auditBuffer].reverse();
+    return sorted.slice(offset, offset + limit);
+  }
 }
 
 /**
  * Get only DENIED entries (newest first).
  */
-export function getDeniedEntries(limit = 50): AuditEntry[] {
-  return [...auditBuffer]
-    .filter((e) => e.result === 'DENIED')
-    .reverse()
-    .slice(0, limit);
+export async function getDeniedEntries(limit = 50): Promise<AuditEntry[]> {
+  try {
+    const database = await getDb();
+    if (!database) {
+      return [...auditBuffer]
+        .filter((e) => e.result === 'DENIED')
+        .reverse()
+        .slice(0, limit);
+    }
+
+    const stmt = database.prepare(
+      'SELECT id, timestamp, agent_name, action, resource, result, reason FROM audit_log WHERE result = ? ORDER BY id DESC LIMIT ?'
+    );
+    const rows = stmt.all('DENIED', limit) as any[];
+
+    return rows.map((row: any) => ({
+      id: row.id,
+      timestamp: row.timestamp,
+      agentName: row.agent_name,
+      action: row.action,
+      resource: row.resource,
+      result: row.result as AuditResult,
+      reason: row.reason || undefined,
+    }));
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    logError('AuditLog', `SQLite denied query failed: ${msg}`);
+    return [...auditBuffer]
+      .filter((e) => e.result === 'DENIED')
+      .reverse()
+      .slice(0, limit);
+  }
 }
 
 /**
  * Get audit log statistics.
  */
-export function getAuditStats(): {
+export async function getAuditStats(): Promise<{
   totalEntries: number;
   allowedCount: number;
   deniedCount: number;
   byAgent: Record<string, { allowed: number; denied: number }>;
-} {
-  const byAgent: Record<string, { allowed: number; denied: number }> = {};
-  let allowedCount = 0;
-  let deniedCount = 0;
+}> {
+  try {
+    const database = await getDb();
+    if (!database) {
+      // Fallback to in-memory buffer
+      const byAgent: Record<string, { allowed: number; denied: number }> = {};
+      let allowedCount = 0;
+      let deniedCount = 0;
 
-  for (const entry of auditBuffer) {
-    if (entry.result === 'ALLOWED') allowedCount++;
-    else deniedCount++;
+      for (const entry of auditBuffer) {
+        if (entry.result === 'ALLOWED') allowedCount++;
+        else deniedCount++;
 
-    if (!byAgent[entry.agentName]) {
-      byAgent[entry.agentName] = { allowed: 0, denied: 0 };
+        if (!byAgent[entry.agentName]) {
+          byAgent[entry.agentName] = { allowed: 0, denied: 0 };
+        }
+        if (entry.result === 'ALLOWED') byAgent[entry.agentName].allowed++;
+        else byAgent[entry.agentName].denied++;
+      }
+
+      return {
+        totalEntries: auditBuffer.length,
+        allowedCount,
+        deniedCount,
+        byAgent,
+      };
     }
-    if (entry.result === 'ALLOWED') byAgent[entry.agentName].allowed++;
-    else byAgent[entry.agentName].denied++;
-  }
 
-  return {
-    totalEntries: auditBuffer.length,
-    allowedCount,
-    deniedCount,
-    byAgent,
-  };
+    // SQLite aggregation
+    const totalRow = database.prepare('SELECT COUNT(*) as count FROM audit_log').get() as any;
+    const allowedRow = database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ?').get('ALLOWED') as any;
+    const deniedRow = database.prepare('SELECT COUNT(*) as count FROM audit_log WHERE result = ?').get('DENIED') as any;
+
+    const agentRows = database.prepare(`
+      SELECT agent_name, result, COUNT(*) as count
+      FROM audit_log
+      GROUP BY agent_name, result
+    `).all() as any[];
+
+    const byAgent: Record<string, { allowed: number; denied: number }> = {};
+    for (const row of agentRows) {
+      if (!byAgent[row.agent_name]) {
+        byAgent[row.agent_name] = { allowed: 0, denied: 0 };
+      }
+      if (row.result === 'ALLOWED') byAgent[row.agent_name].allowed = row.count;
+      else byAgent[row.agent_name].denied = row.count;
+    }
+
+    return {
+      totalEntries: totalRow?.count || 0,
+      allowedCount: allowedRow?.count || 0,
+      deniedCount: deniedRow?.count || 0,
+      byAgent,
+    };
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    logError('AuditLog', `SQLite stats failed: ${msg}`);
+
+    // Fallback to buffer
+    const byAgent: Record<string, { allowed: number; denied: number }> = {};
+    let allowedCount = 0;
+    let deniedCount = 0;
+
+    for (const entry of auditBuffer) {
+      if (entry.result === 'ALLOWED') allowedCount++;
+      else deniedCount++;
+
+      if (!byAgent[entry.agentName]) {
+        byAgent[entry.agentName] = { allowed: 0, denied: 0 };
+      }
+      if (entry.result === 'ALLOWED') byAgent[entry.agentName].allowed++;
+      else byAgent[entry.agentName].denied++;
+    }
+
+    return {
+      totalEntries: auditBuffer.length,
+      allowedCount,
+      deniedCount,
+      byAgent,
+    };
+  }
 }
 
 /**
  * RULE-AU3: Cleanup entries older than retentionDays.
  * Returns the number of removed entries.
  */
-export function cleanupOldEntries(retentionDays = DEFAULT_RETENTION_DAYS): number {
+export async function cleanupOldEntries(retentionDays = DEFAULT_RETENTION_DAYS): Promise<number> {
   const cutoff = new Date();
   cutoff.setDate(cutoff.getDate() - retentionDays);
   const cutoffStr = cutoff.toISOString();
 
-  const before = auditBuffer.length;
-  const kept = auditBuffer.filter((e) => e.timestamp >= cutoffStr);
+  try {
+    const database = await getDb();
+    if (!database) {
+      // Fallback to in-memory buffer
+      const before = auditBuffer.length;
+      const kept = auditBuffer.filter((e) => e.timestamp >= cutoffStr);
 
-  auditBuffer.length = 0;
-  auditBuffer.push(...kept);
+      auditBuffer.length = 0;
+      auditBuffer.push(...kept);
 
-  const removed = before - auditBuffer.length;
-  if (removed > 0) {
-    logInfo('AuditLog', `Cleanup: removed ${removed} entries older than ${retentionDays} days`);
+      const removed = before - auditBuffer.length;
+      if (removed > 0) {
+        logInfo('AuditLog', `Cleanup (buffer): removed ${removed} entries older than ${retentionDays} days`);
+      }
+      return removed;
+    }
+
+    const stmt = database.prepare('DELETE FROM audit_log WHERE timestamp < ?');
+    const result = stmt.run(cutoffStr);
+
+    const removed = result.changes;
+    if (removed > 0) {
+      logInfo('AuditLog', `Cleanup (SQLite): removed ${removed} entries older than ${retentionDays} days`);
+    }
+    return removed;
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    logError('AuditLog', `SQLite cleanup failed: ${msg}`);
+    return 0;
   }
-  return removed;
 }
 
 /**
@@ -167,7 +362,29 @@ export function stopCleanupSchedule(): void {
 
 /**
  * Clear all audit entries (for testing).
+ * Also clears SQLite database.
  */
-export function clearAuditLog(): void {
+export async function clearAuditLog(): Promise<void> {
   auditBuffer.length = 0;
+
+  try {
+    const database = await getDb();
+    if (database) {
+      database.prepare('DELETE FROM audit_log').run();
+    }
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    logError('AuditLog', `Clear SQLite failed: ${msg}`);
+  }
+}
+
+/**
+ * Close audit database (for tests / graceful shutdown).
+ */
+export async function closeAuditDb(): Promise<void> {
+  if (db) {
+    db.close();
+    db = null;
+    logInfo('AuditLog', 'Database closed');
+  }
 }

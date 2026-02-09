@@ -316,7 +316,7 @@ export class AgentManager extends EventEmitter {
     const permCheck = checkToolPermission('agent_delegate', { agentName });
     if (!permCheck.allowed) {
       // RULE-AU2: DENIED → audit log + error return
-      auditRecord('DENIED', agentName, 'execute', instruction.slice(0, 100), permCheck.reason);
+      await auditRecord('DENIED', agentName, 'execute', instruction.slice(0, 100), permCheck.reason);
       trace.end('error', `PERMISSION_DENIED: ${permCheck.reason}`);
       return {
         success: false,
@@ -325,7 +325,7 @@ export class AgentManager extends EventEmitter {
         executedBy: agentName
       };
     }
-    auditRecord('ALLOWED', agentName, 'execute', instruction.slice(0, 100));
+    await auditRecord('ALLOWED', agentName, 'execute', instruction.slice(0, 100));
 
     // Circuit Breaker ellenőrzése
     if (cb.isOpen) {

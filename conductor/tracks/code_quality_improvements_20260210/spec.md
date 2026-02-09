@@ -89,8 +89,8 @@ Jelenleg minden route saját try-catch-et használt. Egységesítve globalErrorH
 
 ---
 
-### P4: Audit Log SQLite Persistence [IMPORTANT]
-**Becsült idő:** 1 óra
+### P4: Audit Log SQLite Persistence [DONE ✅]
+**Elvégezve:** 2026-02-10
 
 Jelenleg az audit log csak memóriában tárolódik (`auditBuffer: AuditEntry[]`).
 
@@ -100,18 +100,31 @@ A `checkpoint.ts` mintájára SQLite tárolás:
 CREATE TABLE IF NOT EXISTS audit_log (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   timestamp TEXT NOT NULL,
+  agent_name TEXT NOT NULL,
   action TEXT NOT NULL,
-  agent_name TEXT,
-  details TEXT,
-  user_id TEXT
+  resource TEXT,
+  result TEXT NOT NULL CHECK (result IN ('ALLOWED', 'DENIED')),
+  reason TEXT
 );
 ```
 
+**Implementáció:**
+- ✅ audit.db lazy singleton (better-sqlite3, WAL mode)
+- ✅ record() → SQLite INSERT + in-memory buffer cache
+- ✅ getAuditLog() → SQLite SELECT (ORDER BY id DESC)
+- ✅ getDeniedEntries() → SQLite WHERE result='DENIED'
+- ✅ getAuditStats() → SQLite aggregation
+- ✅ cleanupOldEntries() → SQLite DELETE WHERE timestamp < cutoff
+- ✅ clearAuditLog() → DELETE FROM audit_log (for tests)
+- ✅ All async functions with proper await
+- ✅ AgentManager + auditRoutes updated
+- ✅ Tests: 13/13 PASS (async, SQLite cleanup)
+
 **Acceptance Criteria:**
-- [ ] `audit_log` tábla létezik (schema.sql)
-- [ ] `recordAuditEntry()` SQLite-ba ír
-- [ ] `getAuditHistory()` SQLite-ból olvas
-- [ ] In-memory buffer megmarad gyorsítótárnak
+- [x] `audit_log` tábla létezik (schemas/audit.sql)
+- [x] `record()` SQLite-ba ír (async)
+- [x] `getAuditLog()` SQLite-ból olvas (fallback to buffer)
+- [x] In-memory buffer megmarad gyorsítótárnak (fast recent access)
 
 ---
 

@@ -11,9 +11,9 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 - [ ] **Code Quality Improvements** [MEDIUM]
   - **ID:** `code_quality_improvements_20260210`
-  - **Progress:** 75% (Quick Fixes KÉSZ, P1 web.ts KÉSZ, P2 any types KÉSZ, P3 error handling KÉSZ, 5 feladat pending)
+  - **Progress:** 50% (4/8 feladat: Quick Fixes KÉSZ, P1 web.ts KÉSZ, P2 any types KÉSZ, P3 error handling KÉSZ, P4 audit SQLite KÉSZ, 4 feladat pending)
   - **Utolsó aktivitás:** 2026-02-10
-  - **Leírás:** Kódbázis minőségjavítás: ~~web.ts refactor~~, ~~any típusok~~, ~~error handling~~, audit persistence, config validation
+  - **Leírás:** Kódbázis minőségjavítás: ~~web.ts refactor~~, ~~any típusok~~, ~~error handling~~, ~~audit persistence~~, config validation, test coverage...
   - 📂 *[./tracks/code_quality_improvements_20260210/](./tracks/code_quality_improvements_20260210/)*
 
 - [ ] **🏆 Gold Protocol** [CRITICAL]
