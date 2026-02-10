@@ -15,9 +15,9 @@
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-playwright"
+        "@playwright/mcp@latest"
       ],
-      "notes": "ROBOTKÉZ: Böngésző vezérlés és kattintás"
+      "notes": "ROBOTKÉZ: Böngésző vezérlés és E2E tesztelés"
     },
     "filesystem": {
       "command": "npx",
@@ -28,20 +28,48 @@
       ],
       "notes": "Biztonságos fájl hozzáférés a projekthez"
     },
-    "git": {
+    "github": {
       "command": "npx",
       "args": [
         "-y",
-        "@modelcontextprotocol/server-git"
+        "@modelcontextprotocol/server-github"
       ],
-      "notes": "Verziókezelés"
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:githubPat}"
+      },
+      "notes": "GitHub repo/issue/PR/commit kezelés"
     },
-    "github-chat": {
-      "command": "uvx",
+    "chrome-devtools": {
+      "command": "npx",
       "args": [
-        "github-chat-mcp"
+        "-y",
+        "@anthropic-ai/mcp-server-puppeteer@latest"
       ],
-      "notes": "A te GitHub Chat integrációd"
+      "notes": "Chrome DevTools vezérlés, screenshot, DOM elemzés"
+    },
+    "windows-mcp": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@anthropic-ai/mcp-server-windows@latest"
+      ],
+      "notes": "Windows ablak/alkalmazás vezérlés, screenshot, automáció"
+    },
+    "context7": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp@latest"
+      ],
+      "notes": "Könyvtár dokumentáció keresés (up-to-date docs)"
     }
-  }
+  },
+  "inputs": [
+    {
+      "id": "githubPat",
+      "type": "promptString",
+      "description": "GitHub Personal Access Token (repo/issues scope)",
+      "password": true
+    }
+  ]
 }
