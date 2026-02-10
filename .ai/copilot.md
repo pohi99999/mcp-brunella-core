@@ -23,6 +23,7 @@
 **Sprint 3: CF Browser Rendering API Implementation (TELJES! ✅)**
 
 🎯 **CF Browser Rendering API Client (`src/utils/browserRendering.ts`):**
+
 - CloudflareBrowserAPI osztály: screenshot(), generatePDF(), quickScreenshot(), testConnection()
 - Domain-free architektúra: localhost, IPs, bármilyen URL támogatása (nem kell custom domain!)  
 - Authentication: CF Workers API token (FmoHMroBrF3dmv7ALyb9haz4OAjMfwoSVCkV4_Kw)
@@ -30,12 +31,14 @@
 - Performance monitoring: execution time tracking, file size metrics
 
 🧪 **PowerShell Test Infrastructure (`scripts/test_cf_browser_api.ps1`):**
+
 - 4-phase comprehensive testing: Token validation, Screenshot API, PDF API, Domain-free localhost testing
 - .env file parsing: automatic CF_API_TOKEN és CLOUDFLARE_ACCOUNT_ID betöltése
 - Emoji-free PowerShell compatibility: all emojis removed for Windows compatibility
 - Validated CF API integration: 400 status (expected - service requires upgraded CF plan)
 
 🔧 **MCP Tool Integration (`src/tools/browser.ts`):**
+
 - `cf_browser_screenshot`: Full screenshot with viewport, format, quality options
 - `cf_browser_pdf`: PDF generation with format, orientation, margin settings  
 - `cf_quick_screenshot`: Fast default screenshot for quick captures
@@ -43,6 +46,7 @@
 - Tool schemas: comprehensive input validation with zod
 
 **Technikai validáció:**
+
 - ✅ TypeScript build sikeres (0 errors)
 - ✅ CF API token authentication working (1412ms response time)
 - ✅ Domain-free architecture confirmed (waiting for CF plan upgrade)
