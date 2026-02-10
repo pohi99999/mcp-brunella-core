@@ -13,6 +13,7 @@ AI multi-agent rendszer szoftverfejlesztés automatizálására lokális LLM-ekk
 ## 🚀 INDULÁS PROTOKOLL (Kötelező sorrend - 3 lépés)
 
 ### 1. GitHub Szinkronizálás (MINDIG ELŐSZÖR!)
+
 ```bash
 # 🔴 KÖTELEZŐ minden munkamenet elején!
 scripts\sync.bat              # Windows CMD
@@ -27,6 +28,7 @@ scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
 ```
 
 **Mit csinál a sync script:**
+
 - ✅ Fetch + Pull GitHub változásokat (Jules work!)
 - ✅ Auto-stash uncommitted changes
 - ✅ Jules PR-ek listázása
@@ -36,6 +38,7 @@ scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
 **Részletek:** [scripts/SYNC_README.md](scripts/SYNC_README.md)
 
 ### 2. Dokumentáció Beolvasás
+
 ```
 ✅ KÖTELEZŐ:
 1. README.md (ez a fájl) - TELJES TARTALOM!
@@ -48,6 +51,7 @@ scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
 ```
 
 ### 3. Rendszer Validáció (Munka ELŐTT)
+
 ```bash
 # Ha nem futtattad a sync --build -ot:
 npm run build                 # TypeScript fordítás (MUSZÁJ OK!)
@@ -57,6 +61,7 @@ npm test                      # Vitest tesztek (MUSZÁJ PASS!)
 **Ha bármelyik FAIL** → **NE kezdj fejlesztésbe!** Javítsd először!
 
 ### 3. Dokumentálás (Munka UTÁN)
+
 ```bash
 # 1. Frissítsd a saját naplódat
 # Szerkeszd: .ai/<te_neved>.md (formátum alább)
@@ -74,6 +79,7 @@ git commit -m "Leírás"
 ## 📝 .ai/ Mappa Használat (KRITIKUS!)
 
 ### Struktúra
+
 ```
 .ai/
 ├── FOSZAL.md           # 🔴 EGYESÍTETT NAPLÓ (auto-generált, olvasd KÖTELEZŐEN!)
@@ -84,6 +90,7 @@ git commit -m "Leírás"
 ```
 
 ### FOSZAL.md - Egyesített Napló
+
 - **Mit tartalmaz:** Összes ügynök munkája időrendben
 - **Generálás:** `python scripts/sync_foszal.py` (automatikus)
 - **MIÉRT FONTOS:** Tudod mi történt mióta utoljára dolgoztál
@@ -102,6 +109,7 @@ git commit -m "Leírás"
 ```
 
 **Példa:**
+
 ```markdown
 ### 2026-02-06 14:30 - Dashboard Theme Fix
 
@@ -116,12 +124,14 @@ git commit -m "Leírás"
 ## 🏗️ Projekt Architektúra (Gyors Áttekintés)
 
 ### Dual-Mode MCP Szerver
+
 `src/index.ts` két párhuzamos kommunikációs csatornát indít:
 
 1. **MCP stdio** (StdioServerTransport) - Claude Desktop / MCP kliens
 2. **Express webszerver** (:3000) - REST API + Socket.IO + Dashboard
 
 ### Ügynök Hierarchia
+
 ```
 OrchestratorAgent (Planner & Dispatcher)
   ├── DeveloperAgent        - Kód írás, Python végrehajtás
@@ -134,6 +144,7 @@ OrchestratorAgent (Planner & Dispatcher)
 ```
 
 ### Data Flywheel (5 lépéses ciklus)
+
 ```
 1. Harvest (browser_worker.py)    → Webes adatgyűjtés
 2. Refine (refiner_logic.py)      → Adat tisztítás
@@ -144,6 +155,7 @@ OrchestratorAgent (Planner & Dispatcher)
 ```
 
 ### Phoenix Protocol (Öngyógyító Mechanika)
+
 ```
 Hiba detektálva → Checkpointing (SQLite task queue)
                 → Auto-Reset (max 3 kísérlet)
@@ -151,9 +163,11 @@ Hiba detektálva → Checkpointing (SQLite task queue)
 ```
 
 ### Track Rendszer (Fejlesztési Szálak)
+
 ```
 PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 ```
+
 Minden nagyobb fejlesztés = Track a `conductor/tracks/` mappában.
 **Jelenleg:** 9 aktív track, 4 lezárt, 25 archivált.
 
@@ -200,7 +214,7 @@ mcp-brunella-core/
 └── README.md                # 📖 Ez a fájl (MASTER DOCUMENT)
 ```
 
-### VÉDETT FÁJLOK - SOHA NE TÖRÖLD!
+### VÉDETT FÁJLOK - SOHA NE TÖRÖLD
 
 | Fájl | Miért kritikus |
 |------|----------------|
@@ -222,6 +236,7 @@ mcp-brunella-core/
 ## 🔧 Build & Fejlesztés
 
 ### Indítás
+
 ```bash
 # Teljes rendszer indítás (ajánlott - Windows)
 start-full.bat
@@ -238,6 +253,7 @@ uvicorn server:app --reload --port 8000
 ```
 
 ### Build & Teszt (KÖTELEZŐ munka előtt/után!)
+
 ```bash
 # Build
 npm run build        # TypeScript → build/ (MUSZÁJ sikerülnie!)
@@ -252,6 +268,7 @@ npm run smoke        # Ollama, Express, FastAPI ellenőrzés
 ```
 
 ### CLI Parancsok
+
 ```bash
 brunella chat                 # Interaktív chat (VIP menü)
 brunella agents               # Ügynökök listázása
@@ -265,6 +282,7 @@ brunella conductor health     # Track-ek health check
 ```
 
 ### Chat Parancsok (interaktív módban)
+
 ```
 /edge on|off         # Cloudflare Edge mód be/ki
 /switch ollama       # Váltás Ollama-ra
@@ -281,6 +299,7 @@ brunella conductor health     # Track-ek health check
 ## 🧪 Tesztelés (KÖTELEZŐ Munkafolyamat Része!)
 
 ### 0-Hiba Stratégia
+
 ```bash
 # 1. Build MUSZÁJ sikeresnek lennie
 npm run build
@@ -295,6 +314,7 @@ git add -A && git commit -m "Fix: description"
 ```
 
 ### Teszt Parancsok
+
 ```bash
 npm test                      # Build + összes teszt
 npm run test:watch            # Watch mód (fejlesztés közben)
@@ -307,11 +327,13 @@ pytest tests/
 ```
 
 ### Mit Ellenőrizz Munka Előtt
+
 - [ ] `npm run build` - TypeScript fordítás OK
 - [ ] `npm test` - Tesztek PASS
 - [ ] `git status` - Nincs váratlan változás
 
 ### Mit Ellenőrizz Munka Után
+
 - [ ] `npm run build` - Még mindig OK
 - [ ] `npm test` - Még mindig PASS
 - [ ] `.ai/<te_neved>.md` - Napló frissítve
@@ -322,14 +344,18 @@ pytest tests/
 ## 📖 Kód Konvenciók (FONTOS!)
 
 ### ESM + .js Kiterjesztés
+
 A projekt `"type": "module"`. **Minden import `.js` kiterjesztéssel:**
+
 ```typescript
 import { foo } from './bar.js';  // ✅ HELYES
 import { foo } from './bar';     // ❌ HELYTELEN (build fail!)
 ```
 
 ### Naplózás (Console.log TILOS!)
+
 **Használd a `logger.ts` függvényeket:**
+
 ```typescript
 // Agent kódban:
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
@@ -347,6 +373,7 @@ await logger.info('message');
 ### Agent Implementációs Minták
 
 #### 1. Egyszerű Agent (IAgent interfész)
+
 ```typescript
 import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
@@ -376,6 +403,7 @@ export class MyAgent implements IAgent {
 **try/finally KÖTELEZŐ:** Garantálja hogy az ügynök státusza mindig `idle`-ba tér vissza!
 
 #### 2. Komplex Agent (BaseAgent leszármazott)
+
 ```typescript
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 
@@ -393,6 +421,7 @@ export class MyComplexAgent extends BaseAgent {
 ```
 
 **BaseAgent Bridge Pattern:**
+
 - `execute(task, context)` → IAgent interfész (külső API)
 - `executeTask(context)` → Belső implementáció
 - Automatikus status management, logging, error recovery
@@ -400,6 +429,7 @@ export class MyComplexAgent extends BaseAgent {
 ### MCP Tool Minta
 
 **Tool definiálás (`src/tools/myTool.ts`):**
+
 ```typescript
 export const myToolDefinition = {
   name: "my_tool",
@@ -429,6 +459,7 @@ export async function myToolHandler(params: { param: string }) {
 ```
 
 **Tool regisztráció (`src/server/registry.ts`):**
+
 ```typescript
 import { myToolDefinition, myToolHandler } from '../tools/myTool.js';
 
@@ -441,6 +472,7 @@ export function registerAllTools(server: MCPServer) {
 ```
 
 ### Típusok
+
 - **Kerüld az `any` típust** → használj `unknown` vagy konkrét típust
 - TypeScript strict mode aktív (`tsconfig.json`)
 - Agent válaszok az `AgentResponse` interfészt követik
@@ -450,6 +482,7 @@ export function registerAllTools(server: MCPServer) {
 ## 🔄 Fejlesztési Workflow (Kivonat)
 
 ### Data Flywheel (5 lépés)
+
 1. **Harvest** (`myai/browser_worker.py`) - Webes adatgyűjtés Playwright-tel
 2. **Refine** (`myai/refiner_logic.py`) - Adat tisztítás, validáció
 3. **Index** (LanceDB) - Vektoros indexelés (opcionális: lancedb, pyarrow)
@@ -457,9 +490,11 @@ export function registerAllTools(server: MCPServer) {
 5. **Execute** (OrchestratorAgent) - Feladat végrehajtás → Feedback loop
 
 ### Track Rendszer (Életciklus)
+
 ```
 PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 ```
+
 - **PROPOSED:** Ötlet fázis
 - **ACTIVE:** Fejlesztés folyamatban
 - **TESTING:** QA/Review
@@ -469,7 +504,9 @@ PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 **Track-en dolgozol?** Olvasd be: `conductor/tracks.md` + `conductor/tracks/<track_név>/plan.md`
 
 ### Phoenix Protocol (Öngyógyítás)
+
 **Hiba esetén:**
+
 1. **Checkpointing** - SQLite task queue: `executing` → `failed`
 2. **Auto-Reset** - AgentManager retry: 1s → 3s → 10s (max 3 kísérlet)
 3. **Git Recovery** - `sync_foszal.py` + commit
@@ -479,12 +516,14 @@ PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 ## 🌐 Környezeti Változók (.env)
 
 **KÖTELEZŐ:**
+
 ```env
 OLLAMA_BASE_URL=http://localhost:11434
 BRUNELLA_WORKSPACE_ROOT=.
 ```
 
 **OPCIONÁLIS (de ajánlott):**
+
 ```env
 LANGCHAIN_API_KEY=...              # LangSmith tracing
 ANYTHINGLLM_API_KEY=...
@@ -516,6 +555,7 @@ N8N_API_KEY=...
 | **LanceDB ImportError** | Opcionális függőség: `cd myai && uv pip install lancedb pyarrow` |
 
 ### Gyakori Hibák
+
 1. **Import `.js` kiterjesztés nélkül** → Build fail
 2. **`console.log()` használata** → Használj `logger.ts`-t!
 3. **Agent `finally` hiányzik** → Status nem tér vissza `idle`-ba
@@ -553,10 +593,22 @@ KV Namespace: BAS_TASKS         # Task queue
 ```
 
 **Deploy:**
+
 ```bash
 cd bas-cloudflare-orchestrator
 npx wrangler deploy
 ```
+
+**Részletes dokumentáció:** [docs/CLOUDFLARE_INTEGRATION.md](docs/CLOUDFLARE_INTEGRATION.md)
+
+### Cloudflare Szolgáltatások
+
+- **🌐 Cloudflare Tunnel** - Biztonságos távoli hozzáférés (port nyitás nélkül)
+- **🧠 AI Gateway** - LLM cache, rate limiting, cost tracking
+- **📊 Vectorize** - Globális vektor DB (POC fázis)
+- **🔧 Workers KV** - Distributed task queue
+- **💾 R2 Storage** - Zero-egress object storage
+- **🗄️ D1 Database** - Serverless SQL
 
 ---
 
@@ -604,6 +656,7 @@ npx wrangler deploy
 ## 📋 Changelog
 
 ### v2.3.0 (2026-02-06)
+
 - **BREAKING:** README.md most a központi master dokumentum
 - **DEPRECATED:** CLAUDE.md, GEMINI.md lecserélve redirect-re
 - **NEW:** .ai/ mappa használat részletesen dokumentálva
@@ -611,12 +664,14 @@ npx wrangler deploy
 - **NEW:** 0-Hiba stratégia tesztelési protokoll
 
 ### v2.2.0 (2026-02-05)
+
 - Dashboard V2 funkciók
 - Cloudflare Edge Integration
 - ProjectConductor 2.0 Chief-of-Staff
 - VoiceAgent (Whisper)
 
 ### v2.1.0 (2026-02-04)
+
 - Multi-agent koordinációs rendszer
 - FOSZAL.md egyesített napló
 - Track nagytakarítás (28→9 aktív)
@@ -639,11 +694,11 @@ AI multi-agent rendszer szoftverfejlesztés automatizálására, optimalizálva 
 
 ## 🚀 MUNKA INDÍTÁSA (Szigorú sorrend)
 
-1.  **GitHub Szinkron:** Futtasd: `scripts\sync.bat`
-2.  **Kontextus Beolvasás:** - `README.md` (ez a fájl)
+1. **GitHub Szinkron:** Futtasd: `scripts\sync.bat`
+2. **Kontextus Beolvasás:** - `README.md` (ez a fájl)
     - `.ai/FOSZAL.md` (időrendi események)
     - `.ai/gemini.md` (saját korábbi munkád)
-3.  **Rendszerellenőrzés:** `npm run build` ÉS `npm test`. Ha hiba van, a javítás az első feladat!
+3. **Rendszerellenőrzés:** `npm run build` ÉS `npm test`. Ha hiba van, a javítás az első feladat!
 
 ---
 
@@ -652,18 +707,21 @@ AI multi-agent rendszer szoftverfejlesztés automatizálására, optimalizálva 
 A hatékony és autonóm fejlesztéshez használd az alábbi `/` parancsokat és skilleket:
 
 ### 📋 Tervezés és Végrehajtás
+
 - `/plan` (vagy `writing-plans`): Használd MINDEN összetettebb feladat előtt. Készíts részletes tervet.
 - `/implement` (vagy `subagent-driven-development`): Autonóm végrehajtás részfeladatokra bontva.
 - `/executing-plans`: A már jóváhagyott terv pontról pontra történő megvalósítása.
 - `/brainstorm`: Használd új funkciók tervezésénél vagy kreatív elakadásoknál.
 
 ### 🧪 Minőség és Tesztelés
+
 - `/tdd` (vagy `test-driven-development`): Előbb a teszt, aztán a kód! Kötelező minden funkcióhoz.
 - `/debug` (vagy `systematic-debugging`): Teszthiba vagy váratlan viselkedés esetén kötelező használni.
 - `/verification-before-completion`: Használd, mielőtt azt állítanád, hogy kész vagy! Lefuttatja az ellenőrzéseket.
 - `gemini:zero-script-qa`: Log-alapú verifikáció, ha nincs írott teszt szkript.
 
 ### 🏛️ Architektúra és Council
+
 - `/council:ask`: Konzultálj a multi-model tanáccsal kritikus döntéseknél.
 - `/architecture:system-design`: Rendszerszintű tervezési minták alkalmazása.
 - `/data:schema`: Adatstruktúrák és adatbázis sémák tervezése.
@@ -684,8 +742,9 @@ A projekt a **bkit** módszertant követi. Tartsd be a fázisokat:
 
 Minden munkamenet végén kötelező az alábbi sorrend:
 
-1.  **Build & Test:** Ellenőrizd, hogy nem tört el semmi.
-2.  **Saját Napló:** Frissítsd a `.ai/gemini.md` fájlt:
+1. **Build & Test:** Ellenőrizd, hogy nem tört el semmi.
+2. **Saját Napló:** Frissítsd a `.ai/gemini.md` fájlt:
+
     ```markdown
     ### YYYY-MM-DD HH:MM - [Rövid cím]
     **Feladat:** [Mit csináltál]
@@ -693,8 +752,9 @@ Minden munkamenet végén kötelező az alábbi sorrend:
     **Státusz:** ✅ Befejezve / ⏳ Folyamatban
     **Megjegyzés:** [Blockerek, vagy mi maradt hátra]
     ```
-3.  **Főnapló Szinkron:** `python scripts/sync_foszal.py`
-4.  **Git Commit:** `git add -A && git commit -m "feat/fix: rövid leírás"`
+
+3. **Főnapló Szinkron:** `python scripts/sync_foszal.py`
+4. **Git Commit:** `git add -A && git commit -m "feat/fix: rövid leírás"`
 
 ---
 

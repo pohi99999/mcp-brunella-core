@@ -1,17 +1,17 @@
 import { useState, useEffect } from 'react';
-import { 
-    Flask, 
-    Database, 
-    Cpu, 
-    ArrowRight, 
-    CheckCircle, 
-    Warning, 
-    Play, 
-    FileCode, 
+import {
+    Flask,
+    Database,
+    Cpu,
+    ArrowRight,
+    CheckCircle,
+    Warning,
+    Play,
+    FileCode,
     Plus,
-    History,
-    Activity
+    History
 } from '@phosphor-icons/react';
+import { Activity } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -25,7 +25,7 @@ export function IncubatorPanel() {
     const [stats, setStats] = useState<DatasetStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('overview');
-    
+
     // Form state
     const [prompt, setPrompt] = useState('');
     const [completion, setCompletion] = useState('');
@@ -179,7 +179,7 @@ export function IncubatorPanel() {
                         <CardContent className="space-y-4">
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Prompt (Felhasználói kérés)</label>
-                                <textarea 
+                                <textarea
                                     className="w-full min-h-[100px] bg-black/40 border border-white/10 rounded-lg p-3 text-sm font-mono focus:ring-1 focus:ring-primary outline-none"
                                     placeholder="Írd be a mintát..."
                                     value={prompt}
@@ -188,15 +188,15 @@ export function IncubatorPanel() {
                             </div>
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Kívánt Válasz (AI válasz)</label>
-                                <textarea 
+                                <textarea
                                     className="w-full min-h-[150px] bg-black/40 border border-white/10 rounded-lg p-3 text-sm font-mono focus:ring-1 focus:ring-primary outline-none"
                                     placeholder="Írd be a helyes AI választ..."
                                     value={completion}
                                     onChange={(e) => setCompletion(e.target.value)}
                                 />
                             </div>
-                            <Button 
-                                onClick={handleSaveSample} 
+                            <Button
+                                onClick={handleSaveSample}
                                 disabled={isSaving || !prompt || !completion}
                                 className="w-full gap-2"
                             >
@@ -215,7 +215,7 @@ export function IncubatorPanel() {
                         </CardHeader>
                         <CardContent>
                             <pre className="p-4 bg-black/60 rounded-lg overflow-x-auto text-xs font-mono text-cyan-400 border border-white/5">
-{`FROM lora_output.gguf
+                                {`FROM lora_output.gguf
 TEMPLATE """{{ if .System }}<|im_start|>system
 {{ .System }}<|im_end|>
 {{ end }}{{ if .Prompt }}<|im_start|>user

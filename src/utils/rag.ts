@@ -7,53 +7,34 @@ import * as lancedb from "@lancedb/lancedb";
 import fs from "fs/promises";
 import path from "path";
 import { logInfo, logError, logWarn } from "./logger.js";
+import { aiGateway } from './aiGateway.js';
 
 const DB_PATH = "./data/brunella_lancedb";
 const HARVEST_BACKUP_PATH = "./logs/harvest_backup.jsonl";
 
 // Ollama embedding configuration
-const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || "http://localhost:11434";
 const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || "nomic-embed-text";
 const EMBEDDING_DIMENSION = 768; // nomic-embed-text uses 768 dimensions
 const EMBEDDING_TIMEOUT_MS = 30000;
 
 /**
- * Get embedding vector from Ollama API
+ * Get embedding vector from Ollama API (via AI Gateway if enabled)
  * Uses nomic-embed-text model by default (768 dimensions)
  */
 async function getEmbedding(text: string): Promise<number[]> {
   try {
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), EMBEDDING_TIMEOUT_MS);
-
-    const response = await fetch(`${OLLAMA_BASE_URL}/api/embeddings`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: EMBEDDING_MODEL,
-        prompt: text.slice(0, 8000), // Limit text length for embedding
-      }),
-      signal: controller.signal,
+    // Use AI Gateway wrapper for embeddings (v3.0 pure fetch)
+    const embedding = await aiGateway.embeddings(text.slice(0, 8000), {
+      model: EMBEDDING_MODEL
     });
 
-    clearTimeout(timeoutId);
-
-    if (!response.ok) {
-      throw new Error(`Ollama embedding failed: ${response.status}`);
-    }
-
-    const data = await response.json() as { embedding?: number[] };
-    if (!data.embedding || !Array.isArray(data.embedding)) {
+    if (!embedding || !Array.isArray(embedding)) {
       throw new Error("Invalid embedding response from Ollama");
     }
 
-    return data.embedding;
+    return embedding;
   } catch (error: any) {
-    if (error.name === "AbortError") {
-      logError("RAG", `Embedding timeout after ${EMBEDDING_TIMEOUT_MS}ms`);
-    } else {
-      logError("RAG", `Embedding error: ${error.message}`);
-    }
+    logError("RAG", `Embedding error: ${error.message}`);
     // Return zero vector as fallback (will still store the text)
     return new Array(EMBEDDING_DIMENSION).fill(0);
   }
