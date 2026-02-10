@@ -38,6 +38,24 @@ jobs:
         run: npm test
         env:
           WEB_UI_ENABLED: '0'
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          CLAUDE_API_KEY: ${{ secrets.CLAUDE_API_KEY }}
+          ANYTHINGLLM_API_KEY: ${{ secrets.ANYTHINGLLM_API_KEY }}
+          LANGCHAIN_API_KEY: ${{ secrets.LANGCHAIN_API_KEY }}
+          LANGCHAIN_PROJECT: ${{ secrets.LANGCHAIN_PROJECT }}
+          LANGCHAIN_TRACING_V2: 'true'
+          LLM_PROVIDER: ${{ secrets.LLM_PROVIDER }}
+          OLLAMA_MODEL: ${{ secrets.OLLAMA_MODEL }}
+          OLLAMA_MODEL_SECONDARY: ${{ secrets.OLLAMA_MODEL_SECONDARY }}
+          OLLAMA_API_KEY: ${{ secrets.OLLAMA_API_KEY }}
+          N8N_API_KEY: ${{ secrets.N8N_API_KEY }}
+          N8N_TEST_URL: ${{ secrets.N8N_TEST_URL }}
+          N8N_TEST_USER: ${{ secrets.N8N_TEST_USER }}
+          N8N_TEST_PASSWORD: ${{ secrets.N8N_TEST_PASSWORD }}
+          BROWSER_USE_API_KEY: ${{ secrets.BROWSER_USE_API_KEY }}
+          BRUNELLA_SKIP_SECRETS_CHECK: '1'
 
       # 4. Verify Build Artifacts
       - name: Verify Build Artifacts
