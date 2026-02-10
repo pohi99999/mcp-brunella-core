@@ -20,13 +20,15 @@ A Sprint 3 sikeresen lezárult a teljes 8-endpoint Browser Rendering API impleme
 **Cél:** Cloudflare Workers telepítése és konfigurálása a Browser Rendering API-hoz
 
 **Részfeladatok:**
+
 - **4.1.1** Workers script létrehozása (`worker.js`)
-- **4.1.2** Wrangler konfiguráció (`wrangler.toml`) 
+- **4.1.2** Wrangler konfiguráció (`wrangler.toml`)
 - **4.1.3** Environment variables beállítása Workers-ben
 - **4.1.4** Custom domain mapping (subdomain.workers.dev)
 - **4.1.5** CLI deployment script (`deploy_workers.ps1`)
 
 **Elfogadási kritériumok:**
+
 - ✅ Workers script deployed és elérhető
 - ✅ Environment variables átmásolva és működnek
 - ✅ Browser Rendering endpoints elérhetők Workers URL-en
@@ -39,19 +41,22 @@ A Sprint 3 sikeresen lezárult a teljes 8-endpoint Browser Rendering API impleme
 **Cél:** Cache stratégia és teljesítmény javítások implementálása
 
 **Részfeladatok:**
+
 - **4.2.1** Cloudflare Cache Rules beállítása
-- **4.2.2** Browser caching headers optimalizálása 
-- **4.2.3** Response compression (gzip/brotli) 
+- **4.2.2** Browser caching headers optimalizálása
+- **4.2.3** Response compression (gzip/brotli)
 - **4.2.4** CDN edge locations tesztelése
 - **4.2.5** Auto-scaling konfiguráció Workers-ben
 
 **Elfogadási kritériumok:**
+
 - ✅ Cache hit ratio > 80% static tartalomnál
 - ✅ Response time < 500ms globálisan
 - ✅ Compression ratio > 70% text alapú válaszokhoz
 - ✅ Auto-scaling 1-100 workers között
 
 **Performance célok:**
+
 | Metrika | Target | Measurement |
 |---------|---------|-------------|
 | Global Response Time | < 500ms | Multiple regions |
@@ -66,6 +71,7 @@ A Sprint 3 sikeresen lezárult a teljes 8-endpoint Browser Rendering API impleme
 **Cél:** Élő API validáció és monitoring beállítása
 
 **Részfeladatok:**
+
 - **4.3.1** Élő endpoint tesztelés (8 endpoint validáció)
 - **4.3.2** Load testing (100 concurrent requests)
 - **4.3.3** Global latency measurement (5+ regions)
@@ -73,13 +79,15 @@ A Sprint 3 sikeresen lezárult a teljes 8-endpoint Browser Rendering API impleme
 - **4.3.5** API documentation frissítése (Swagger)
 
 **Elfogadási kritériumok:**
+
 - ✅ Mind a 8 endpoint válaszol élőben
 - ✅ Load test: 100 RPS támogatottság
 - ✅ Global average latency < 500ms
-- ✅ Error rate < 0.1% production usage alatt 
+- ✅ Error rate < 0.1% production usage alatt
 - ✅ Swagger API docs frissítve és elérhető
 
 **Test Endpoints:**
+
 ```bash
 # Screenshot test
 curl -X POST https://bas-browser.workers.dev/screenshot \
@@ -119,6 +127,7 @@ export default {
 ```
 
 ### **Environment Variables (Workers)**
+
 ```toml
 # wrangler.toml
 [env.production.vars]
@@ -129,12 +138,14 @@ CLOUDFLARE_ACCOUNT_ID = "1bf6118df97f0e12f3592a89d90deb1e"
 ```
 
 ### **Cache Strategy**
+
 - **Static Assets:** 1 year TTL
 - **API Responses:** 5 minutes TTL (configurable per endpoint)
 - **Images (PNG/PDF):** 1 hour TTL
 - **HTML/Text:** 5 minutes TTL
 
 ### **Error Handling**
+
 - Rate limiting: 100 req/min per IP
 - Authentication errors: Proper HTTP status codes
 - Browser timeout: 30 seconds default
@@ -157,24 +168,28 @@ CLOUDFLARE_ACCOUNT_ID = "1bf6118df97f0e12f3592a89d90deb1e"
 ## 🚀 Deployment Plan
 
 ### **Phase 1: Workers Setup** (2-3 óra)
+
 1. Wrangler CLI setup
 2. Workers project inicializálás
 3. Environment variables konfiguráció  
 4. Basic routing implementáció
 
 ### **Phase 2: Integration** (2-3 óra)  
+
 1. Browser Rendering API proxy
 2. Authentication flow integration
 3. Error handling implementáció
 4. Basic caching setup
 
 ### **Phase 3: Optimization** (2-3 óra)
+
 1. Performance tuning
-2. Advanced caching rules 
+2. Advanced caching rules
 3. Compression beállítása
 4. Monitoring setup
 
 ### **Phase 4: Validation** (1-2 óra)
+
 1. Élő tesztelés mind a 8 endpoint
 2. Load testing végrehajtása  
 3. Global latency measurement
@@ -194,18 +209,21 @@ CLOUDFLARE_ACCOUNT_ID = "1bf6118df97f0e12f3592a89d90deb1e"
 ## 📝 Jegyzetek
 
 **Sprint 3 Eredmények (baseline):**
+
 - ✅ 20/20 unit teszt sikeres
 - ✅ Dual authentication (Global key + Bearer token)  
 - ✅ TypeScript: 0 hiba
 - ✅ Production ready codebase
 
 **Sprint 4 Kockázatok:**
+
 - Workers cold start latency
 - Browser Rendering API rate limits
 - Global DNS propagation delays
 - Cross-region cache consistency
 
 **Mitigations:**
+
 - Warm-up scripts Workers-hez
 - Rate limiting implementation  
 - DNS pre-warming strategy
