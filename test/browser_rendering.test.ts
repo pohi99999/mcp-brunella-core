@@ -54,7 +54,7 @@ describe('CloudflareBrowserAPI', () => {
                 CF_EMAIL: process.env.CF_EMAIL,
                 CLOUDFLARE_EMAIL: process.env.CLOUDFLARE_EMAIL
             };
-            
+
             // Delete all possible auth env vars
             delete process.env.CF_API_TOKEN;
             delete process.env.CLOUDFLARE_API_TOKEN;
@@ -62,7 +62,7 @@ describe('CloudflareBrowserAPI', () => {
             delete process.env.CLOUDFLARE_GLOBAL_API_KEY;
             delete process.env.CF_EMAIL;
             delete process.env.CLOUDFLARE_EMAIL;
-            
+
             try {
                 expect(() => new CloudflareBrowserAPI('', 'acc')).toThrow(
                     'Either CF_API_TOKEN or (CF_GLOBAL_API_KEY + CF_EMAIL) environment variables are required'
@@ -79,7 +79,7 @@ describe('CloudflareBrowserAPI', () => {
             // Save and clear account ID env var
             const origAccId = process.env.CLOUDFLARE_ACCOUNT_ID;
             delete process.env.CLOUDFLARE_ACCOUNT_ID;
-            
+
             try {
                 expect(() => new CloudflareBrowserAPI('tok', '')).toThrow(
                     'CLOUDFLARE_ACCOUNT_ID environment variable is required'
@@ -343,16 +343,16 @@ describe('CloudflareBrowserAPI', () => {
                 CF_EMAIL: process.env.CF_EMAIL,
                 CLOUDFLARE_EMAIL: process.env.CLOUDFLARE_EMAIL
             };
-            
+
             delete process.env.CF_GLOBAL_API_KEY;
             delete process.env.CLOUDFLARE_GLOBAL_API_KEY;
             delete process.env.CF_EMAIL;
             delete process.env.CLOUDFLARE_EMAIL;
-            
+
             try {
                 // Create fresh instance with explicit token (not global key)
                 const tokenApi = new CloudflareBrowserAPI('test-token-xyz', 'test-account');
-                
+
                 mockFetch.mockResolvedValueOnce({
                     ok: true,
                     headers: new Headers(),
@@ -365,7 +365,7 @@ describe('CloudflareBrowserAPI', () => {
                 const fetchCall = mockFetch.mock.calls[0];
                 const requestInit = fetchCall[1];
                 const headers = requestInit.headers;
-                
+
                 // Check the headers object directly
                 expect(headers['Authorization']).toBe('Bearer test-token-xyz');
                 expect(headers['Content-Type']).toBe('application/json');
