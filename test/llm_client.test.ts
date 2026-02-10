@@ -18,6 +18,17 @@ vi.mock('@google/generative-ai', () => {
     };
 });
 
+// Mock aiGateway to always use local Ollama (bypass CF routing in tests)
+vi.mock('../src/utils/aiGateway.js', async () => {
+    const { AIGatewayClient, ...rest } = await vi.importActual('../src/utils/aiGateway.js') as any;
+    const localClient = new AIGatewayClient({ enabled: false });
+    return {
+        ...rest,
+        AIGatewayClient,
+        aiGateway: localClient
+    };
+});
+
 // Mock LangSmith traceable to be a pass-through
 vi.mock('langsmith/traceable', () => ({
     traceable: (fn: any) => fn
@@ -33,6 +44,7 @@ describe('llm_client', () => {
         process.env.GEMINI_API_KEY = 'test-gemini-key';
         process.env.GITHUB_TOKEN = 'test-github-token';
         process.env.OLLAMA_BASE_URL = 'http://localhost:11434';
+        process.env.AI_GATEWAY_ENABLED = 'false'; // Force local Ollama for tests
     });
 
     describe('generateResponse', () => {
@@ -75,14 +87,14 @@ describe('llm_client', () => {
             (global.fetch as any).mockResolvedValue({
                 ok: true,
                 json: async () => ({
-                    response: 'Ollama response'
+                    message: { content: 'Ollama response' }
                 })
             });
 
             const result = await generateResponse('test prompt');
 
             expect(global.fetch).toHaveBeenCalledWith(
-                expect.stringContaining('/api/generate'),
+                expect.stringContaining('/api/chat'),
                 expect.objectContaining({
                     method: 'POST',
                     body: expect.stringContaining('llama3.1:8b')
@@ -98,7 +110,7 @@ describe('llm_client', () => {
                 .mockResolvedValueOnce({ // Fallback call succeeds
                     ok: true,
                     json: async () => ({
-                        response: 'Fallback Ollama response'
+                        message: { content: 'Fallback Ollama response' }
                     })
                 });
 
@@ -115,7 +127,7 @@ describe('llm_client', () => {
             (global.fetch as any).mockResolvedValue({
                 ok: true,
                 json: async () => ({
-                    response: 'Fallback Ollama response'
+                    message: { content: 'Fallback Ollama response' }
                 })
             });
 
@@ -131,7 +143,7 @@ describe('llm_client', () => {
             (global.fetch as any).mockResolvedValue({
                 ok: true,
                 json: async () => ({
-                    response: 'Fallback Ollama response'
+                    message: { content: 'Fallback Ollama response' }
                 })
             });
 

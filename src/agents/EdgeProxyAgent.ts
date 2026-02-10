@@ -24,6 +24,10 @@ interface EdgeConfig {
   fallbackToLocal: boolean;
   healthCheckInterval: number;
   apiKey?: string;
+  tunnelUrl?: string;
+  tunnelN8nUrl?: string;
+  tunnelBrowserUrl?: string;
+  tunnelDashboardUrl?: string;
 }
 
 interface EdgeHealth {
@@ -51,7 +55,11 @@ const DEFAULT_CONFIG: EdgeConfig = {
   workerUrl: process.env.CLOUDFLARE_WORKER_URL || 'https://bas-orchestrator.workers.dev',
   tunnelEnabled: process.env.CLOUDFLARE_TUNNEL_ENABLED === 'true',
   fallbackToLocal: true,
-  healthCheckInterval: 30000
+  healthCheckInterval: 30000,
+  tunnelUrl: process.env.CLOUDFLARE_TUNNEL_URL,
+  tunnelN8nUrl: process.env.CLOUDFLARE_TUNNEL_N8N_URL,
+  tunnelBrowserUrl: process.env.CLOUDFLARE_TUNNEL_BROWSER_URL,
+  tunnelDashboardUrl: process.env.CLOUDFLARE_TUNNEL_DASHBOARD_URL
 };
 
 // ============================================================================
@@ -62,7 +70,7 @@ export class EdgeProxyAgent extends BaseAgent {
   name = 'EdgeProxy';
   description = 'Cloudflare Edge kommunikáció és task routing';
   role = 'Edge Proxy & Remote Access';
-  
+
   private config: EdgeConfig;
   private health: EdgeHealth;
   private healthCheckTimer?: NodeJS.Timeout;
@@ -84,10 +92,10 @@ export class EdgeProxyAgent extends BaseAgent {
 
   async initialize(): Promise<void> {
     logInfo(this.name, `Inicializálás: ${this.config.workerUrl}`);
-    
+
     // Kezdeti health check
     await this.checkHealth();
-    
+
     // Periodikus health check
     if (this.config.healthCheckInterval > 0) {
       this.healthCheckTimer = setInterval(
@@ -117,22 +125,22 @@ export class EdgeProxyAgent extends BaseAgent {
       if (task.includes('health') || task.includes('status')) {
         return await this.getEdgeStatus();
       }
-      
+
       if (task.includes('submit') || task.includes('task')) {
         return await this.submitTask(context);
       }
-      
+
       if (task.includes('sync') || task.includes('szinkron')) {
         return await this.syncWithEdge();
       }
-      
+
       if (task.includes('test') || task.includes('teszt')) {
         return await this.runEdgeTest();
       }
 
       // Default: show help
       return this.showHelp();
-      
+
     } catch (error) {
       logError(this.name, `Hiba: ${error}`);
       setAgentStatus(this.name, 'error');
@@ -155,16 +163,16 @@ export class EdgeProxyAgent extends BaseAgent {
    */
   async checkHealth(): Promise<EdgeHealth> {
     const startTime = Date.now();
-    
+
     try {
       const response = await fetch(`${this.config.workerUrl}/health`, {
         method: 'GET',
         headers: this.getHeaders(),
         signal: AbortSignal.timeout(10000)
       });
-      
+
       const latency = Date.now() - startTime;
-      
+
       if (response.ok) {
         const data = await response.json() as any;
         this.health = {
@@ -185,7 +193,7 @@ export class EdgeProxyAgent extends BaseAgent {
         lastCheck: new Date().toISOString()
       };
     }
-    
+
     return this.health;
   }
 
@@ -194,12 +202,12 @@ export class EdgeProxyAgent extends BaseAgent {
    */
   private async getEdgeStatus(): Promise<AgentResult> {
     logInfo(this.name, 'Edge státusz lekérdezése...');
-    
+
     await this.checkHealth();
-    
-    const statusIcon = this.health.edge === 'healthy' ? '✅' : 
-                       this.health.edge === 'degraded' ? '⚠️' : '❌';
-    
+
+    const statusIcon = this.health.edge === 'healthy' ? '✅' :
+      this.health.edge === 'degraded' ? '⚠️' : '❌';
+
     const report = `
 # 🌐 Cloudflare Edge Státusz
 
@@ -227,12 +235,12 @@ export class EdgeProxyAgent extends BaseAgent {
    */
   async submitTask(context: AgentContext): Promise<AgentResult> {
     logInfo(this.name, 'Task beküldése az edge-re...');
-    
+
     // Edge elérhetőség ellenőrzése
     if (this.health.edge === 'offline') {
       await this.checkHealth();
     }
-    
+
     if (this.health.edge === 'offline' && this.config.fallbackToLocal) {
       logInfo(this.name, 'Edge offline, lokális fallback...');
       return {
@@ -241,37 +249,50 @@ export class EdgeProxyAgent extends BaseAgent {
         data: { fallback: true }
       };
     }
-    
+
     try {
+      const payload: any = {
+        instruction: context.task,
+        context: context.context || {},
+        source: 'brunella-core',
+        timestamp: new Date().toISOString()
+      };
+
+      // Add tunnel callback URLs if available
+      if (this.config.tunnelEnabled && this.config.tunnelUrl) {
+        payload.callbackUrls = {
+          api: this.config.tunnelUrl,
+          n8n: this.config.tunnelN8nUrl,
+          browser: this.config.tunnelBrowserUrl,
+          dashboard: this.config.tunnelDashboardUrl
+        };
+        logInfo(this.name, `Tunnel callback URL-ek hozzáadva: ${this.config.tunnelUrl}`);
+      }
+
       const response = await fetch(`${this.config.workerUrl}/task`, {
         method: 'POST',
         headers: this.getHeaders(),
-        body: JSON.stringify({
-          instruction: context.task,
-          context: context.context || {},
-          source: 'brunella-core',
-          timestamp: new Date().toISOString()
-        }),
+        body: JSON.stringify(payload),
         signal: AbortSignal.timeout(30000)
       });
-      
+
       if (!response.ok) {
         throw new Error(`Edge error: ${response.status}`);
       }
-      
+
       const result = await response.json() as EdgeTask;
-      
+
       logInfo(this.name, `Task beküldve: ${result.taskId}`);
-      
+
       return {
         success: true,
         message: `Task sikeresen beküldve: ${result.taskId}`,
         data: { task: result }
       };
-      
+
     } catch (error) {
       logError(this.name, `Task beküldés sikertelen: ${error}`);
-      
+
       if (this.config.fallbackToLocal) {
         return {
           success: false,
@@ -279,7 +300,7 @@ export class EdgeProxyAgent extends BaseAgent {
           data: { fallback: true, error: String(error) }
         };
       }
-      
+
       throw error;
     }
   }
@@ -294,11 +315,11 @@ export class EdgeProxyAgent extends BaseAgent {
         headers: this.getHeaders(),
         signal: AbortSignal.timeout(10000)
       });
-      
+
       if (response.ok) {
         return await response.json() as EdgeTask;
       }
-      
+
       return null;
     } catch {
       return null;
@@ -310,10 +331,10 @@ export class EdgeProxyAgent extends BaseAgent {
    */
   private async syncWithEdge(): Promise<AgentResult> {
     logInfo(this.name, 'Szinkronizálás az edge-gel...');
-    
+
     // Health check
     await this.checkHealth();
-    
+
     if (this.health.edge === 'offline') {
       return {
         success: false,
@@ -321,9 +342,9 @@ export class EdgeProxyAgent extends BaseAgent {
         data: { health: this.health }
       };
     }
-    
+
     // TODO: Implementálni a KV ↔ SQLite szinkronizációt
-    
+
     return {
       success: true,
       message: 'Szinkronizálás befejezve',
@@ -336,14 +357,14 @@ export class EdgeProxyAgent extends BaseAgent {
    */
   private async runEdgeTest(): Promise<AgentResult> {
     logInfo(this.name, 'Edge kapcsolat tesztelése...');
-    
+
     const tests = [
       { name: 'Health Check', fn: () => this.checkHealth() },
       { name: 'Task Submit', fn: () => this.submitTask({ task: 'test', context: {} } as AgentContext) },
     ];
-    
+
     const results: Array<{ test: string; success: boolean; duration: number; error?: string }> = [];
-    
+
     for (const test of tests) {
       const start = Date.now();
       try {
@@ -362,9 +383,9 @@ export class EdgeProxyAgent extends BaseAgent {
         });
       }
     }
-    
+
     const allPassed = results.every(r => r.success);
-    
+
     return {
       success: allPassed,
       message: `Edge teszt: ${allPassed ? 'PASSED' : 'FAILED'}`,
@@ -381,11 +402,11 @@ export class EdgeProxyAgent extends BaseAgent {
       'Content-Type': 'application/json',
       'User-Agent': 'Brunella-Core/1.0'
     };
-    
+
     if (this.config.apiKey) {
       headers['X-BAS-API-Key'] = this.config.apiKey;
     }
-    
+
     return headers;
   }
 
@@ -410,7 +431,7 @@ CLOUDFLARE_TUNNEL_ENABLED=true
 CLOUDFLARE_API_KEY=your-api-key
 \`\`\`
 `;
-    
+
     return {
       success: true,
       message: 'EdgeProxy súgó',

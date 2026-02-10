@@ -6,9 +6,9 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { traceable } from "langsmith/traceable";
 import { logInfo, logError } from "../utils/logger.js";
 import { routeTask, type RoutingDecision, type ProviderName } from './modelRouter.js';
+import { aiGateway } from '../utils/aiGateway.js';
 
 // Configuration
-const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'llama3.1:8b';
 const GEMINI_MODEL = process.env.GEMINI_MODEL || 'gemini-2.5-flash';
 const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS || '120000'); // 2 minutes default
@@ -69,42 +69,15 @@ export const generateResponse: (prompt: string, provider?: string, modelName?: s
             return data.choices[0].message.content;
         }
 
-        // Default: Ollama (Helyi)
-        if (!OLLAMA_BASE_URL || OLLAMA_BASE_URL === 'undefined') {
-            throw new Error('OLLAMA_BASE_URL not configured');
-        }
+        // Default: Ollama/CF Workers AI via AI Gateway v3.0 (pure fetch)
 
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), LLM_TIMEOUT_MS);
+        const response = await aiGateway.generate(prompt, {
+            model: modelName || OLLAMA_MODEL,
+            temperature: 0.7,
+            maxTokens: 4096
+        });
 
-        try {
-            const response = await fetch(`${OLLAMA_BASE_URL}/api/generate`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ model: modelName || OLLAMA_MODEL, prompt, stream: false }),
-                signal: controller.signal,
-            });
-
-            clearTimeout(timeoutId);
-
-            if (!response.ok) {
-                throw new Error(`Ollama HTTP error: ${response.status} ${response.statusText}`);
-            }
-
-            const data = await response.json();
-            if (!data.response) {
-                throw new Error('No response from Ollama - empty response body');
-            }
-            return data.response;
-        } catch (fetchError: any) {
-            clearTimeout(timeoutId);
-            if (fetchError.name === 'AbortError') {
-                throw new Error(`Ollama timeout after ${LLM_TIMEOUT_MS}ms`);
-            }
-            throw fetchError;
-        }
+        return response;
 
     } catch (error: any) {
         lastError = error;
@@ -141,34 +114,34 @@ export const chatWithOllama = (prompt: string, modelName?: string) => generateRe
  * @returns The generated response string
  */
 export async function generateRouted(
-  prompt: string,
-  taskDescription?: string,
-  routerConfig?: Record<string, unknown>
+    prompt: string,
+    taskDescription?: string,
+    routerConfig?: Record<string, unknown>
 ): Promise<{ response: string; decision: RoutingDecision }> {
-  const decision = routeTask(taskDescription || prompt, routerConfig);
+    const decision = routeTask(taskDescription || prompt, routerConfig);
 
-  logInfo('LLM_CLIENT', `Routed → ${decision.model.name} (${decision.model.provider}) — ${decision.reason}`);
+    logInfo('LLM_CLIENT', `Routed → ${decision.model.name} (${decision.model.provider}) — ${decision.reason}`);
 
-  try {
-    const response = await generateResponse(prompt, decision.model.provider, decision.model.name);
-    return { response, decision };
-  } catch (error: unknown) {
-    const errorMsg = error instanceof Error ? error.message : String(error);
-    logError('LLM_CLIENT', `Routed model (${decision.model.name}) failed: ${errorMsg}`);
+    try {
+        const response = await generateResponse(prompt, decision.model.provider, decision.model.name);
+        return { response, decision };
+    } catch (error: unknown) {
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        logError('LLM_CLIENT', `Routed model (${decision.model.name}) failed: ${errorMsg}`);
 
-    // RULE-MR4: Fallback to Ollama if we have a fallback defined
-    if (decision.fallback && decision.model.provider !== 'ollama') {
-      logInfo('LLM_CLIENT', `[MR4] Falling back to ${decision.fallback.name}`);
-      const fallbackResponse = await generateResponse(prompt, decision.fallback.provider, decision.fallback.name);
-      return {
-        response: fallbackResponse,
-        decision: {
-          ...decision,
-          reason: `${decision.reason} [FALLBACK: ${decision.fallback.name}]`
+        // RULE-MR4: Fallback to Ollama if we have a fallback defined
+        if (decision.fallback && decision.model.provider !== 'ollama') {
+            logInfo('LLM_CLIENT', `[MR4] Falling back to ${decision.fallback.name}`);
+            const fallbackResponse = await generateResponse(prompt, decision.fallback.provider, decision.fallback.name);
+            return {
+                response: fallbackResponse,
+                decision: {
+                    ...decision,
+                    reason: `${decision.reason} [FALLBACK: ${decision.fallback.name}]`
+                }
+            };
         }
-      };
-    }
 
-    throw error;
-  }
+        throw error;
+    }
 }

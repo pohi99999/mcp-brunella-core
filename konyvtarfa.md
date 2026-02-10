@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 09. 16:07:45
+**Generálva:** 2026. 02. 09. 23:44:46
 **Script:** 
 
 ---
@@ -37198,6 +37198,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **dashboard_v2_robotkez_control_20260208**
         - 📄 spec.md
       - 📂 **developer_agent_2_0_20260206**
+        - 📂 **P10_Metrics_Analytics**
+          - 📄 spec.md
         - 📄 plan.md
         - 📄 spec.md
       - 📂 **gold_protocol**
@@ -37248,6 +37250,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 audit.db
     - 📄 audit.db-shm
     - 📄 audit.db-wal
+    - 📄 developer_metrics.json
     - 📄 tasks.db
   - 📂 **docs**
     - 📄 AGENT_PERMISSIONS_GUIDE.md
@@ -109141,6 +109144,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **utils**
       - 📂 **__pycache__**
         - 📄 __init__.cpython-312.pyc
+        - 📄 __init__.cpython-314.pyc
         - 📄 dataset_manager.cpython-312.pyc
         - 📄 dataset_manager.cpython-314.pyc
         - 📄 page.cpython-312.pyc
@@ -109575,14 +109579,20 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 AgentArchitect.ts
       - 📄 AgentManager.ts
       - 📄 BaseAgent.ts
+      - 📄 codeReview.ts
+      - 📄 codeScaffold.ts
+      - 📄 contextBuilder.ts
+      - 📄 coverageAnalysis.ts
       - 📄 DataScientistAgent.ts
       - 📄 DependencyGraphAgent.ts
       - 📄 DeveloperAgent.ts
+      - 📄 developerPipeline.ts
       - 📄 DocsIntelligenceAgent.ts
       - 📄 DynamicAgent.ts
       - 📄 DynamicAgentLoader.ts
       - 📄 EdgeProxyAgent.ts
       - 📄 EvaluatorAgent.ts
+      - 📄 gitIntegration.ts
       - 📄 LintFixerAgent.ts
       - 📄 OrchestratorAgent.ts
       - 📄 permissions.ts
@@ -109593,9 +109603,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 RobotkezAgent.ts
       - 📄 specStatus.ts
       - 📄 SpecWriterAgent.ts
+      - 📄 taskQueue.ts
       - 📄 types.ts
       - 📄 VoiceAgent.ts
     - 📂 **cli**
+      - 📄 devCommands.ts
       - 📄 goldCommands.ts
     - 📂 **config**
       - 📄 index.ts
@@ -109634,6 +109646,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 ConfigEditor.tsx
           - 📄 ControlPanel.tsx
           - 📄 CostSummary.tsx
+          - 📄 DeveloperPanel.tsx
+          - 📄 DeveloperPipeline.tsx
           - 📄 EmbeddedWorkflow.tsx
           - 📄 FileExplorer.tsx
           - 📄 GoldStatusWidget.tsx
@@ -109756,6 +109770,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **routes**
         - 📄 agents.ts
         - 📄 chat.ts
+        - 📄 developer.ts
         - 📄 external.ts
         - 📄 files.ts
         - 📄 health.ts
@@ -109804,13 +109819,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **types**
       - 📄 llm.ts
     - 📂 **utils**
+      - 📄 activityFeed.ts
       - 📄 agentTracer.ts
       - 📄 AppError.ts
+      - 📄 approvalManager.ts
       - 📄 checkpoint.ts
       - 📄 cliConfig.ts
       - 📄 cloud_storage.ts
       - 📄 cloudflareClient.ts
       - 📄 db.ts
+      - 📄 developerMetrics.ts
       - 📄 exec.ts
       - 📄 fsInspector.ts
       - 📄 googleAuth.ts
@@ -109837,17 +109855,27 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 main.py
     - 📄 SUMMARY.md
   - 📂 **test**
+    - 📄 activity_feed.test.ts
     - 📄 agent_template.test.ts
     - 📄 agentTracer.test.ts
+    - 📄 api_v1.test.ts
+    - 📄 approval_manager.test.ts
     - 📄 auditLog.test.ts
     - 📄 checkpoint.test.ts
     - 📄 cli_config.test.ts
+    - 📄 code_review.test.ts
+    - 📄 code_scaffold.test.ts
     - 📄 codebaseIndexer.test.ts
     - 📄 configSchema.test.ts
+    - 📄 context_builder.test.ts
     - 📄 core_tools.test.ts
+    - 📄 coverage_analysis.test.ts
     - 📄 data_refiner.test.ts
+    - 📄 dev_commands.test.ts
+    - 📄 developer_pipeline.test.ts
     - 📄 DeveloperAgent.test.ts
     - 📄 ev_hunter_research.test.ts
+    - 📄 git_integration.test.ts
     - 📄 goldenDatasetBridge.test.ts
     - 📄 hooks.test.ts
     - 📄 incubator_test.py
@@ -109855,6 +109883,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 llm_client.test.ts
     - 📄 llm_provider.test.ts
     - 📄 memory_context.test.ts
+    - 📄 middleware.test.ts
     - 📄 modelRouter.test.ts
     - 📄 monitor.test.ts
     - 📄 monitor.vitest.ts
@@ -109863,11 +109892,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 rag.test.ts
     - 📄 retryStrategy.test.ts
     - 📄 robotkez_integration.test.ts
+    - 📄 routes_developer.test.ts
     - 📄 setup.ts
     - 📄 skills_loader.test.ts
     - 📄 smoke.vitest.ts
+    - 📄 socketService.test.ts
     - 📄 specStatus.test.ts
     - 📄 SpecWriterAgent.test.ts
+    - 📄 task_queue.test.ts
     - 📄 telemetry.test.ts
   - 📂 **testing**
     - 📂 **hirszerzes_test_1**

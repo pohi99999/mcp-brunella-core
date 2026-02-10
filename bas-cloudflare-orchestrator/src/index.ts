@@ -17,6 +17,7 @@ interface Env {
   N8N_WEBHOOK_URL: string;
   BROWSER_USE_ENDPOINT: string;
   DEFAULT_CODE_MODEL: string;
+  VECTORIZE?: VectorizeIndex;
 }
 
 interface BASTask {
@@ -27,6 +28,12 @@ interface BASTask {
   result?: unknown;
   createdAt: string;
   updatedAt: string;
+  callbackUrls?: {
+    api?: string;
+    n8n?: string;
+    browser?: string;
+    dashboard?: string;
+  };
 }
 
 // Task ID generator
@@ -103,10 +110,13 @@ async function handleCodingTask(ai: Ai, instruction: string, model: string = "@c
 }
 
 // Dispatch task to appropriate handler
-async function dispatchTask(task: BASTask, env: Env, workerOrigin: string): Promise<void> {
+async function dispatchTask(task: BASTask, env: Env, defaultWorkerOrigin: string): Promise<void> {
+  // Use tunnel URLs if provided, otherwise fall back to env or worker origin
+  const workerOrigin = task.callbackUrls?.api || defaultWorkerOrigin;
   const target = task.type === "browser"
-    ? env.BROWSER_USE_ENDPOINT
-    : env.N8N_WEBHOOK_URL;
+    ? (task.callbackUrls?.browser || env.BROWSER_USE_ENDPOINT)
+    : (task.callbackUrls?.n8n || env.N8N_WEBHOOK_URL);
+
   const callbackPath = task.type === "browser" ? "browser-use" : "n8n";
 
   try {
@@ -143,8 +153,17 @@ export default {
 
     // POST /task - Submit new task
     if (path === "/task" && request.method === "POST") {
-      const body = await request.json() as { instruction: string; context?: Record<string, unknown> };
-      const { instruction, context } = body;
+      const body = await request.json() as {
+        instruction: string;
+        context?: Record<string, unknown>;
+        callbackUrls?: {
+          api?: string;
+          n8n?: string;
+          browser?: string;
+          dashboard?: string;
+        };
+      };
+      const { instruction, context, callbackUrls } = body;
 
       if (!instruction) {
         return Response.json({ error: "instruction required" }, { status: 400, headers: corsHeaders });
@@ -159,7 +178,8 @@ export default {
         status: "pending",
         payload: { instruction, context },
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
+        callbackUrls
       };
 
       // Store task
@@ -254,6 +274,45 @@ export default {
       return Response.json({ received: true }, { headers: corsHeaders });
     }
 
+    // POST /vectorize/search - Vector similarity search (POC)
+    if (path === "/vectorize/search" && request.method === "POST") {
+      if (!env.VECTORIZE) {
+        return Response.json({ error: "Vectorize not configured" }, { status: 501, headers: corsHeaders });
+      }
+
+      const body = await request.json() as { query: string; topK?: number };
+      const { query, topK = 5 } = body;
+
+      if (!query) {
+        return Response.json({ error: "query required" }, { status: 400, headers: corsHeaders });
+      }
+
+      try {
+        // Generate embedding for query using Workers AI
+        const ai = new Ai(env.AI);
+        const embedResponse = await ai.run("@cf/baai/bge-base-en-v1.5", {
+          text: query
+        }) as { data: number[][] };
+
+        const embedding = embedResponse.data[0];
+
+        // Query Vectorize index
+        const results = await env.VECTORIZE.query(embedding, { topK });
+
+        return Response.json({
+          success: true,
+          query,
+          results: results.matches.map(m => ({
+            id: m.id,
+            score: m.score,
+            metadata: m.metadata
+          }))
+        }, { headers: corsHeaders });
+      } catch (error: any) {
+        return Response.json({ error: error.message }, { status: 500, headers: corsHeaders });
+      }
+    }
+
     // GET / - Health check & info
     if (path === "/" || path === "") {
       return Response.json({
@@ -264,7 +323,8 @@ export default {
           submitTask: "POST /task",
           checkStatus: "GET /status/:taskId",
           browserUseWebhook: "POST /webhook/browser-use",
-          n8nWebhook: "POST /webhook/n8n"
+          n8nWebhook: "POST /webhook/n8n",
+          vectorizeSearch: "POST /vectorize/search (POC)"
         },
         status: "operational"
       }, { headers: corsHeaders });

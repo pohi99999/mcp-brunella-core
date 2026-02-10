@@ -3,6 +3,7 @@
 // Periodically scans .ts, .py, .md files, chunks them, and indexes via Python backend.
 
 import { logInfo, logError } from '../utils/logger.js';
+import { aiGateway } from '../utils/aiGateway.js';
 
 // ============================================================================
 // TYPES
@@ -37,7 +38,6 @@ export interface IndexerConfig {
 // ============================================================================
 
 const PYTHON_BASE_URL = process.env.PYTHON_BASE_URL || 'http://localhost:8000';
-const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
 const EMBED_MODEL = process.env.EMBED_MODEL || 'nomic-embed-text';
 
 const DEFAULT_CONFIG: IndexerConfig = {
@@ -201,19 +201,16 @@ async function getChangedFiles(sinceTimestamp: number): Promise<string[]> {
 // ============================================================================
 
 /**
- * Generate embedding for a text chunk using Ollama's embedding API.
+ * Generate embedding for a text chunk using Ollama's embedding API (via AI Gateway if enabled).
  */
 async function generateEmbedding(text: string): Promise<number[] | null> {
   try {
-    const response = await fetch(`${OLLAMA_BASE_URL}/api/embeddings`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: EMBED_MODEL, prompt: text })
+    // Use AI Gateway wrapper for embeddings (v3.0 pure fetch)
+    const embedding = await aiGateway.embeddings(text, {
+      model: EMBED_MODEL
     });
 
-    if (!response.ok) return null;
-    const data = await response.json();
-    return data.embedding || null;
+    return embedding || null;
   } catch {
     return null;
   }

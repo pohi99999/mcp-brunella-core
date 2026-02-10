@@ -2,6 +2,10 @@
     "recommendations": [
         "devsense.composer-php-vscode",
         "ms-azuretools.vscode-docker",
-        "sbroenne.windows-mcp"
+        "sbroenne.windows-mcp",
+        "github.copilot-chat",
+        "cloudflare.cloudflare-workers-bindings-extension",
+        "ivanarjona.cloudflaretunnel",
+        "github.codespaces"
     ]
 }
