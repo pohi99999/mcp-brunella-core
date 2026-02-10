@@ -16,7 +16,7 @@ import {
   History,
   Network,
   Cpu,
-  Flask,
+  FlaskConical,
   Code2
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -49,7 +49,7 @@ import { DeveloperPanel } from '@/components/dashboard/DeveloperPanel'
 const SIDEBAR_ITEMS = [
   { id: 'dashboard', label: 'Mission Control', icon: LayoutDashboard },
   { id: 'management', label: 'Agents', icon: Sparkles },
-  { id: 'incubator', label: 'Incubator', icon: Flask },
+  { id: 'incubator', label: 'Incubator', icon: FlaskConical },
   { id: 'knowledge', label: 'Knowledge', icon: Brain },
   { id: 'developer', label: 'Developer', icon: Code2 },
   { id: 'robotkez', label: 'Robotkéz', icon: Activity },
@@ -109,7 +109,7 @@ export function MissionControlLayout() {
 
   return (
     <div className="min-h-screen bg-transparent text-foreground antialiased overflow-hidden flex flex-col">
-      <CommandMenu />
+      <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
 
       {/* Header */}
       <header className="flex h-14 items-center gap-4 border-b bg-background/50 px-6 backdrop-blur-lg lg:h-[60px]">

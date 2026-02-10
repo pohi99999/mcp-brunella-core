@@ -12,16 +12,44 @@
     "lastDurationMs": 0
   },
   "tasks": {
-    "total": 12,
-    "success": 10,
-    "error": 2,
-    "avgDurationMs": 0
+    "total": 16,
+    "success": 13,
+    "error": 3,
+    "avgDurationMs": 4
   },
   "ai": {
     "totalTokenUsage": 0,
     "estimatedCost": 0
   },
   "history": [
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1770739249794-1",
+      "durationMs": 0,
+      "timestamp": 1770739249799
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1770739249792-1",
+      "durationMs": 0,
+      "timestamp": 1770739249798
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1770731544628-1",
+      "durationMs": 0,
+      "timestamp": 1770731544634
+    },
+    {
+      "type": "task",
+      "status": "error",
+      "details": "dev-1770731054475-1",
+      "durationMs": 56,
+      "timestamp": 1770731054539
+    },
     {
       "type": "task",
       "status": "success",

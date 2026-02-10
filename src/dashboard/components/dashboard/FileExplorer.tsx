@@ -181,7 +181,17 @@ export function FileExplorer() {
                                     </div>
                                 </div>
 
-                                <Button className="w-full" size="sm" variant="outline">
+                                <Button className="w-full" size="sm" variant="outline" onClick={() => {
+                                    if (previewFile) {
+                                        const blob = new Blob([previewContent || ''], { type: 'text/plain' });
+                                        const url = URL.createObjectURL(blob);
+                                        const a = document.createElement('a');
+                                        a.href = url;
+                                        a.download = previewFile.name || 'download.txt';
+                                        a.click();
+                                        URL.revokeObjectURL(url);
+                                    }
+                                }}>
                                     <Download size={14} className="mr-2" />
                                     Letöltés
                                 </Button>

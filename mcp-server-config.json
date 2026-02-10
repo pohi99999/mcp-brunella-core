@@ -1,0 +1,15 @@
+{
+  "mcpServers": {
+    "brunella-core": {
+      "command": "node",
+      "args": [
+        "F:/mcp-brunella-core/build/index.js"
+      ],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "disabled": false,
+      "autoApprove": []
+    }
+  }
+}

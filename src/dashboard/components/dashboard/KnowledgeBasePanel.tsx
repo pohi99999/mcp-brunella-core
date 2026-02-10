@@ -21,8 +21,13 @@ interface SearchResult {
 }
 
 export function KnowledgeBasePanel() {
+    const [stats, setStats] = useState<RagStats | null>(null)
+    const [isLoading, setIsLoading] = useState(false)
     const [isIngesting, setIsIngesting] = useState(false)
     const [rowCount, setRowCount] = useState(0)
+    const [query, setQuery] = useState('')
+    const [isSearching, setIsSearching] = useState(false)
+    const [results, setResults] = useState<SearchResult[]>([])
 
     useEffect(() => {
         fetchStats()

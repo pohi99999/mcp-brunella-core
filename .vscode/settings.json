@@ -1,75 +1,64 @@
 {
-  // Python Testing
-  "python.testing.unittestArgs": [
-    "-v",
-    "-s",
-    "./build",
-    "-p",
-    "*test.py"
-  ],
-  "python.testing.pytestEnabled": false,
-  "python.testing.unittestEnabled": true,
-  "vitest.disableWorkspaceWarning": true,
-  // GitHub Copilot Configuration (BAS-specific)
-  "github.copilot.editor.enableAutoCompletions": true,
-  "github.copilot.chat.runCommand.enabled": true,
-  // File Associations (segít a Copilotnak érteni a BAS fájlokat)
-  "files.associations": {
-    "*.md": "markdown",
-    "*.jsonc": "jsonc",
-    "conductor/**/*.md": "markdown"
-  },
-  // Copilot Advanced Settings (Codebase Awareness)
-  "github.copilot.advanced": {
-    "listFilesLimit": 10000
-  },
-  "codex-project-manager.timestampsDataMigrationCompleted": true,
-  "codex-project-manager.cellTypePromotionMigrationCompleted": true,
-  "codex-project-manager.editHistoryFormatMigrationCompleted": true,
-  "codex-project-manager.documentContextHoistMigrationCompleted": true,
-  "codex-project-manager.milestoneCellsMigrationCompleted": true,
-  "codex-project-manager.paratextReorderMigrationCompleted": true,
-  "codex-project-manager.globalReferencesMigrationCompleted": true,
-  "codex-project-manager.cellIdsToUuidMigrationCompleted": true,
-  "git.ignoreLimitWarning": true,
-  "chatgpt.openOnStartup": true,
-  "DockerRun.DisableDockerrc": true,
-  "DockerRun.Containers": [
-    "092a7946246e",
-    "d45c1f8dce24",
-    "b03d451d65b8",
-    "5ec5594c9663",
-    "f7bad09773a8",
-    "66263ea89b0e",
-    "608fe91d16a5",
-    "d750ecd4589a",
-    "581f4fe0a625",
-    "00a2be753c7f",
-    "8b7483f6899a",
-    "7903e4aeb7af",
-    "278f646babd8",
-    "aa3629ad21f0",
-    "66b8f43d423b",
-    "c4a040fb0671",
-    "a07e705a9b2e",
-    "f0d2bd5caf75",
-    "71381cc1aa2e",
-    "34d27ba3c8a0",
-    "910bd5a6feee",
-    "416a62d63f68",
-    "a3f2fec4d91d",
-    "cf115e625f2f",
-    "41299a4a4cc2",
-    "282af16391f9",
-    "95cdc52d8731",
-    "61ced18d6217",
-    "850605cecfe3",
-    "b518f848509e",
-    "d2a927dd5045",
-    "01b84103a322",
-    "75f3d9b01cfa"
-  ],
-  "azureFunctions.projectSubpath": "external_research\\azure-functions-core-tools\\test\\TestFunctionApps\\TestPythonProject",
-  "chat.agent.maxRequests": 300,
-  "editor.formatOnSave": true
+    // --- 1. CORE COPILOT PRO+ INTELLIGENCE ---
+    // Engedélyezzük a Copilotnak, hogy parancsokat futtasson és javítson
+    "github.copilot.editor.enableAutoCompletions": true,
+    "github.copilot.editor.enableCodeActions": true,
+    "github.copilot.chat.runCommand.enabled": true,
+    "github.copilot.chat.experimental.commandConfirmation": false, // Gyorsabb végrehajtás kérdezés nélkül
+    
+    // Codebase Awareness: Ez a legfontosabb a "Context" szempontjából
+    "github.copilot.advanced": {
+        "listFilesLimit": 10000 // Növelt limit, hogy lássa a teljes BAS struktúrát
+    },
+    "github.copilot.chat.search.semanticTextResults": true, // Értse a jelentést, ne csak kulcsszavakat keressen
+
+    // --- 2. ZAJSZŰRÉS (NOISE CANCELLATION) ---
+    // Ezeket a mappákat elrejtjük a Copilot elől, hogy ne pazarolja a tokeneket
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/__pycache__": true,
+        "**/.git": true,
+        "**/.venv": true,
+        "**/coverage": true,
+        "**/dist": true,
+        "**/build": true, // A build kimenet ne zavarja a forráskód értelmezését
+        "**/*.lock": true
+    },
+    "files.watcherExclude": {
+        "**/.git/objects/**": true,
+        "**/node_modules/**": true,
+        "**/__pycache__/**": true
+    },
+
+    // --- 3. BAS PROJEKT SPECIFIKUSOK ---
+    // Segítünk a rendszernek érteni a fájltípusokat
+    "files.associations": {
+        "*.md": "markdown",
+        "CONDUCTOR_MANIFEST.md": "markdown", // A Conductor fájlok kiemelése
+        "*.jsonc": "jsonc",
+        "Modelfile": "dockerfile" // Az Ollama fájlokhoz syntax highlight
+    },
+
+    // --- 4. PYTHON & TESTING (Robotkéz támogatás) ---
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "python.testing.unittestArgs": [
+        "-v",
+        "-s",
+        "./tests", // Javaslom a 'tests' mappát a 'build' helyett, ha ott vannak a forrástesztek
+        "-p",
+        "*test.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "python.analysis.typeCheckingMode": "basic",
+
+    // --- 5. EDITOR UX ---
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    
+    // --- LEGACY / EGYÉB (Megtartva, de rendezve) ---
+    "vitest.disableWorkspaceWarning": true,
+    "git.ignoreLimitWarning": true,
+    "chatgpt.openOnStartup": true
 }

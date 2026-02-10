@@ -2,29 +2,60 @@
 	"version": "2.0.0",
 	"tasks": [
 		{
-			"label": "build",
-			"command": "dotnet",
+			"label": "👀 BUILD & WATCH (Folyamatos Fordítás)",
 			"type": "shell",
-			"args": [
-				"build",
-				"/property:GenerateFullPaths=true",
-				"/consoleloggerparameters:NoSummary"
-			],
-			"group": "build",
-			"presentation": {
-				"reveal": "silent"
+			"command": "npx tsc -w",
+			"group": {
+				"kind": "build",
+				"isDefault": true
 			},
-			"problemMatcher": "$msCompile"
+			"isBackground": true,
+			"problemMatcher": "$tsc-watch",
+			"presentation": {
+				"reveal": "never",
+				"panel": "dedicated"
+			},
+			"detail": "Ez a háttérben fut és azonnal lefordítja a TypeScript kódot, ha mentesz."
 		},
 		{
+			"label": "🚀 START BRUNELLA CORE (Szerver Indítás)",
 			"type": "npm",
-			"script": "build",
-			"group": "build",
-			"problemMatcher": [],
-			"label": "npm: build",
+			"script": "dev",
+			"group": "test",
 			"presentation": {
-				"reveal": "silent"
-			}
+				"reveal": "always",
+				"panel": "dedicated",
+				"group": "servers"
+			},
+			"detail": "Elindítja a BAS központi agyát (Orchestrator)."
+		},
+		{
+			"label": "🕵️ MCP INSPECTOR (Debug Eszköz)",
+			"type": "shell",
+			"command": "npx",
+			"args": [
+				"@modelcontextprotocol/inspector",
+				"node",
+				"build/index.js"
+			],
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			},
+			"detail": "Megnyit egy webes felületet, ahol kézzel tesztelheted az eszközöket (pl. fájlkeresés, robotkéz)."
+		},
+		{
+			"label": "🔄 GITHUB SYNC (Mentés & Frissítés)",
+			"type": "shell",
+			"command": ".\\scripts\\sync.bat",
+			"windows": {
+				"command": ".\\scripts\\sync.bat"
+			},
+			"presentation": {
+				"reveal": "always",
+				"panel": "shared"
+			},
+			"detail": "Lefuttatja a Brunella szinkronizációs protokollt (Git add/commit/push + Pull)."
 		}
 	]
 }

@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 09. 23:44:46
+**Generálva:** 2026. 02. 10. 12:44:12
 **Script:** 
 
 ---
@@ -27,6 +27,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 lancedb_snapshot_20260206_000046.tar.gz
       - 📄 lancedb_snapshot_20260206_023401.tar.gz
       - 📄 lancedb_snapshot_20260208_224350.tar.gz
+      - 📄 lancedb_snapshot_20260209_235808.tar.gz
       - 📄 sync_to_r2.log
     - 📂 **reports**
       - 📄 DASHBOARD_INTEGRATION_REPORT.md
@@ -36011,6 +36012,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **__pycache__**
         - 📄 bas_client.cpython-314.pyc
       - 📄 bas_client.py
+    - 📂 **cloudflared** _(Cloudflare Tunnel Setup for BAS)_
+      - 📄 config.yml
+      - 📄 README.md
     - 📂 **langflow** _(BAS Langflow Integration Guide)_
       - 📄 bas-orchestrator-agent.json
       - 📄 bas-research-agent.json
@@ -37042,6 +37046,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 setup.ps1
     - 📄 TEST_RESULTS.md
     - 📄 tsconfig.json
+    - 📄 VECTORIZE_POC.md
     - 📄 wrangler.jsonc
   - 📂 **bin**
     - 📄 cloudflared.exe
@@ -37193,6 +37198,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 spec.md
       - 📂 **cloudflare_edge_integration_20260202**
         - 📄 plan.md
+        - 📄 sprint4_spec.md
       - 📂 **code_quality_improvements_20260210**
         - 📄 spec.md
       - 📂 **dashboard_v2_robotkez_control_20260208**
@@ -37250,10 +37256,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 audit.db
     - 📄 audit.db-shm
     - 📄 audit.db-wal
+    - 📄 checkpoints.db
     - 📄 developer_metrics.json
     - 📄 tasks.db
   - 📂 **docs**
     - 📄 AGENT_PERMISSIONS_GUIDE.md
+    - 📄 CLOUDFLARE_INTEGRATION.md
     - 📄 cloudflare-tunnel-setup.md
     - 📄 github-runner-setup.md
     - 📄 harvester-structured-json.md
@@ -57092,6 +57100,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                       - 📂 **resources**
                         - 📄 application.yml
                         - 📄 logback.xml
+                  - 📂 **target**
+                    - 📂 **classes**
+                      - 📄 application.yml
+                      - 📄 logback.xml
+                    - 📂 **generated-sources**
+                      - 📂 **annotations**
+                    - 📂 **maven-status**
+                      - 📂 **maven-compiler-plugin**
+                        - 📂 **compile**
+                          - 📂 **default-compile**
+                            - 📄 createdFiles.lst
+                            - 📄 inputFiles.lst
                   - 📄 aot-jar.properties
                   - 📄 micronaut-cli.yml
                   - 📄 mvnw
@@ -57258,6 +57278,43 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                           - 📂 **pso**
                             - 📂 **dofns**
                               - 📄 UpdateKeyTest.java
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **dofns**
+                            - 📄 UpdateKey.class
+                          - 📂 **options**
+                            - 📄 BigtablePipelineOptions.class
+                          - 📂 **pipeline**
+                            - 📄 BigtableChangeKey.class
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **generated-test-sources**
+                  - 📂 **test-annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                    - 📂 **testCompile**
+                      - 📂 **default-testCompile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **test-classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **dofns**
+                            - 📄 UpdateKeyTest.class
+                - 📄 bigtable-change-key-0.1-SNAPSHOT.jar
+                - 📄 bigtable-change-key-bundled-0.1-SNAPSHOT.jar
               - 📄 pom.xml
               - 📄 README.md
             - 📂 **billboard** _(billboard)_
@@ -57384,6 +57441,17 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
               - 📄 README.md
             - 📂 **bq-remote-function** _(BigQuery Remote Function Sample Code)_
               - 📂 **string_formatter**
+                - 📂 **lib**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **bqremotefunc**
+                            - 📂 **util**
+                              - 📄 FunctionResponseObj.class
+                              - 📄 remoteFunctionObject.class
+                              - 📄 UserDefinedContext.class
+                            - 📄 StringFormat.class
                 - 📂 **src**
                   - 📂 **main**
                     - 📂 **java**
@@ -57397,6 +57465,20 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                                   - 📄 remoteFunctionObject.java
                                   - 📄 UserDefinedContext.java
                                 - 📄 StringFormat.java
+                - 📂 **target**
+                  - 📂 **archive-tmp**
+                  - 📂 **generated-sources**
+                    - 📂 **annotations**
+                  - 📂 **maven-archiver**
+                    - 📄 pom.properties
+                  - 📂 **maven-status**
+                    - 📂 **maven-compiler-plugin**
+                      - 📂 **compile**
+                        - 📂 **default-compile**
+                          - 📄 createdFiles.lst
+                          - 📄 inputFiles.lst
+                  - 📄 StringFormat-jar-with-dependencies.jar
+                  - 📄 StringFormat.jar
                 - 📄 pom.xml
               - 📄 README.md
             - 📂 **carbon-footprint-dashboard** _(Carbon Footprint Dashboard)_
@@ -57452,6 +57534,250 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                     - 📄 dialogflow.proto
                   - 📂 **resources**
                     - 📄 application.properties
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **middleware**
+                      - 📂 **controller**
+                        - 📂 **cache**
+                          - 📄 MapperCache.class
+                          - 📄 RedisUtil.class
+                        - 📂 **dialogflow**
+                          - 📄 DialogflowConversationHandler.class
+                          - 📄 DialogflowDetailsProto.class
+                          - 📄 DialogflowDetailsProto$1.class
+                          - 📄 DialogflowDetailsProto$DialogflowDetails.class
+                          - 📄 DialogflowDetailsProto$DialogflowDetails$1.class
+                          - 📄 DialogflowDetailsProto$DialogflowDetails$Builder.class
+                          - 📄 DialogflowDetailsProto$DialogflowDetailsOrBuilder.class
+                          - 📄 WebhookHandler.class
+                        - 📂 **rest**
+                          - 📄 Controller.class
+                          - 📄 ProcessorService.class
+                        - 📂 **twilio**
+                          - 📄 MarketplaceAddOn.class
+                          - 📄 TwilioConversation.class
+                        - 📂 **util**
+                          - 📄 ConversationInitializer.class
+                        - 📂 **wehbook**
+                          - 📄 NewMessage.class
+                          - 📄 NewParticipant.class
+                  - 📄 application.properties
+                  - 📄 dialogflow.proto
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **java**
+                  - 📂 **com**
+                    - 📂 **middleware**
+                      - 📂 **controller**
+                        - 📂 **dialogflow**
+                          - 📄 DialogflowDetailsProto.java
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **protoc-dependencies**
+                  - 📂 **2ff1df0c35b6630c7adf31be9775270c**
+                    - 📂 **google**
+                      - 📂 **protobuf**
+                        - 📄 any.proto
+                        - 📄 api.proto
+                        - 📄 descriptor.proto
+                        - 📄 duration.proto
+                        - 📄 empty.proto
+                        - 📄 field_mask.proto
+                        - 📄 source_context.proto
+                        - 📄 struct.proto
+                        - 📄 timestamp.proto
+                        - 📄 type.proto
+                        - 📄 wrappers.proto
+                  - 📂 **41b42b061b26ce8aaa67906c50719037**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **dialogflow**
+                          - 📂 **v2beta1**
+                            - 📄 agent.proto
+                            - 📄 answer_record.proto
+                            - 📄 audio_config.proto
+                            - 📄 context.proto
+                            - 📄 conversation_event.proto
+                            - 📄 conversation_profile.proto
+                            - 📄 conversation.proto
+                            - 📄 document.proto
+                            - 📄 entity_type.proto
+                            - 📄 environment.proto
+                            - 📄 fulfillment.proto
+                            - 📄 gcs.proto
+                            - 📄 human_agent_assistant_event.proto
+                            - 📄 intent.proto
+                            - 📄 knowledge_base.proto
+                            - 📄 participant.proto
+                            - 📄 session_entity_type.proto
+                            - 📄 session.proto
+                            - 📄 validation_result.proto
+                            - 📄 version.proto
+                            - 📄 webhook.proto
+                  - 📂 **5ee2d9f2eb22114130344e17890a8f3b**
+                    - 📂 **google**
+                      - 📂 **api**
+                        - 📄 annotations.proto
+                        - 📄 auth.proto
+                        - 📄 backend.proto
+                        - 📄 billing.proto
+                        - 📄 client.proto
+                        - 📄 config_change.proto
+                        - 📄 consumer.proto
+                        - 📄 context.proto
+                        - 📄 control.proto
+                        - 📄 distribution.proto
+                        - 📄 documentation.proto
+                        - 📄 endpoint.proto
+                        - 📄 error_reason.proto
+                        - 📄 field_behavior.proto
+                        - 📄 http.proto
+                        - 📄 httpbody.proto
+                        - 📄 label.proto
+                        - 📄 launch_stage.proto
+                        - 📄 log.proto
+                        - 📄 logging.proto
+                        - 📄 metric.proto
+                        - 📄 monitored_resource.proto
+                        - 📄 monitoring.proto
+                        - 📄 quota.proto
+                        - 📄 resource.proto
+                        - 📄 routing.proto
+                        - 📄 service.proto
+                        - 📄 source_info.proto
+                        - 📄 system_parameter.proto
+                        - 📄 usage.proto
+                        - 📄 visibility.proto
+                      - 📂 **cloud**
+                        - 📂 **audit**
+                          - 📄 audit_log.proto
+                        - 📄 extended_operations.proto
+                      - 📂 **geo**
+                        - 📂 **type**
+                          - 📄 viewport.proto
+                      - 📂 **logging**
+                        - 📂 **type**
+                          - 📄 http_request.proto
+                          - 📄 log_severity.proto
+                      - 📂 **longrunning**
+                        - 📄 operations.proto
+                      - 📂 **rpc**
+                        - 📂 **context**
+                          - 📄 attribute_context.proto
+                        - 📄 code.proto
+                        - 📄 error_details.proto
+                        - 📄 status.proto
+                      - 📂 **type**
+                        - 📄 calendar_period.proto
+                        - 📄 color.proto
+                        - 📄 date.proto
+                        - 📄 datetime.proto
+                        - 📄 dayofweek.proto
+                        - 📄 decimal.proto
+                        - 📄 expr.proto
+                        - 📄 fraction.proto
+                        - 📄 interval.proto
+                        - 📄 latlng.proto
+                        - 📄 localized_text.proto
+                        - 📄 money.proto
+                        - 📄 month.proto
+                        - 📄 phone_number.proto
+                        - 📄 postal_address.proto
+                        - 📄 quaternion.proto
+                        - 📄 timeofday.proto
+                  - 📂 **64867f8bce9f4ef4ec6197c01b1101d7**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **dialogflow**
+                          - 📂 **cx**
+                            - 📂 **v3beta1**
+                              - 📄 advanced_settings.proto
+                              - 📄 agent.proto
+                              - 📄 audio_config.proto
+                              - 📄 changelog.proto
+                              - 📄 deployment.proto
+                              - 📄 entity_type.proto
+                              - 📄 environment.proto
+                              - 📄 experiment.proto
+                              - 📄 flow.proto
+                              - 📄 fulfillment.proto
+                              - 📄 intent.proto
+                              - 📄 page.proto
+                              - 📄 response_message.proto
+                              - 📄 security_settings.proto
+                              - 📄 session_entity_type.proto
+                              - 📄 session.proto
+                              - 📄 test_case.proto
+                              - 📄 transition_route_group.proto
+                              - 📄 validation_message.proto
+                              - 📄 version.proto
+                              - 📄 webhook.proto
+                  - 📂 **73bb84189e808c23f068eed817e62c24**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **dialogflow**
+                          - 📂 **v2**
+                            - 📄 agent.proto
+                            - 📄 answer_record.proto
+                            - 📄 audio_config.proto
+                            - 📄 context.proto
+                            - 📄 conversation_dataset.proto
+                            - 📄 conversation_event.proto
+                            - 📄 conversation_model.proto
+                            - 📄 conversation_profile.proto
+                            - 📄 conversation.proto
+                            - 📄 document.proto
+                            - 📄 entity_type.proto
+                            - 📄 environment.proto
+                            - 📄 fulfillment.proto
+                            - 📄 gcs.proto
+                            - 📄 human_agent_assistant_event.proto
+                            - 📄 intent.proto
+                            - 📄 knowledge_base.proto
+                            - 📄 participant.proto
+                            - 📄 session_entity_type.proto
+                            - 📄 session.proto
+                            - 📄 validation_result.proto
+                            - 📄 version.proto
+                            - 📄 webhook.proto
+                  - 📂 **b074a0d74832cd4020c5bcc5baed049a**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **dialogflow**
+                          - 📂 **cx**
+                            - 📂 **v3**
+                              - 📄 advanced_settings.proto
+                              - 📄 agent.proto
+                              - 📄 audio_config.proto
+                              - 📄 changelog.proto
+                              - 📄 deployment.proto
+                              - 📄 entity_type.proto
+                              - 📄 environment.proto
+                              - 📄 experiment.proto
+                              - 📄 flow.proto
+                              - 📄 fulfillment.proto
+                              - 📄 intent.proto
+                              - 📄 page.proto
+                              - 📄 response_message.proto
+                              - 📄 security_settings.proto
+                              - 📄 session_entity_type.proto
+                              - 📄 session.proto
+                              - 📄 test_case.proto
+                              - 📄 transition_route_group.proto
+                              - 📄 validation_message.proto
+                              - 📄 version.proto
+                              - 📄 webhook.proto
+                - 📂 **protoc-plugins**
+                  - 📄 protoc-3.4.0-windows-x86_64.exe
+                - 📄 diagcontroller-0.0.1-SNAPSHOT.jar
+                - 📄 diagcontroller-0.0.1-SNAPSHOT.jar.original
               - 📄 pom.xml
               - 📄 README.md
             - 📂 **ccai-insight-export-composer**
@@ -57509,6 +57835,28 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                         - 📂 **cloud**
                           - 📂 **pso**
                             - 📄 OauthApplicationTest.java
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📄 OauthApplication.class
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **generated-test-sources**
+                  - 📂 **test-annotations**
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                    - 📂 **testCompile**
+                      - 📂 **default-testCompile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **test-classes**
               - 📄 pom.xml
               - 📄 README.md
             - 📂 **cloud-composer-cicd** _(Cloud Composer Examples)_
@@ -57749,6 +58097,42 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                             - 📄 ListCasesTest.java
                             - 📄 StarterTest.java
                             - 📄 UpdateCaseTest.java
+                - 📂 **target**
+                  - 📂 **classes**
+                    - 📂 **com**
+                      - 📂 **example**
+                        - 📂 **gcpsupport**
+                          - 📄 CreateCase.class
+                          - 📄 GetCase.class
+                          - 📄 ListCases.class
+                          - 📄 Starter.class
+                          - 📄 UpdateCase.class
+                  - 📂 **generated-sources**
+                    - 📂 **annotations**
+                  - 📂 **generated-test-sources**
+                    - 📂 **test-annotations**
+                  - 📂 **maven-archiver**
+                    - 📄 pom.properties
+                  - 📂 **maven-status**
+                    - 📂 **maven-compiler-plugin**
+                      - 📂 **compile**
+                        - 📂 **default-compile**
+                          - 📄 createdFiles.lst
+                          - 📄 inputFiles.lst
+                      - 📂 **testCompile**
+                        - 📂 **default-testCompile**
+                          - 📄 createdFiles.lst
+                          - 📄 inputFiles.lst
+                  - 📂 **test-classes**
+                    - 📂 **com**
+                      - 📂 **example**
+                        - 📂 **gcpsupport**
+                          - 📄 CreateCaseTest.class
+                          - 📄 GetCaseTest.class
+                          - 📄 ListCasesTest.class
+                          - 📄 StarterTest.class
+                          - 📄 UpdateCaseTest.class
+                  - 📄 cloud-client-1.0-SNAPSHOT.jar
                 - 📄 pom.xml
                 - 📄 README.md
               - 📂 **java_update_cases_blog_code**
@@ -57774,6 +58158,23 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                           - 📂 **eenclona**
                             - 📂 **app**
                               - 📄 App.java
+                  - 📂 **target**
+                    - 📂 **classes**
+                      - 📂 **com**
+                        - 📂 **eenclona**
+                          - 📂 **app**
+                            - 📄 App.class
+                    - 📂 **generated-sources**
+                      - 📂 **annotations**
+                    - 📂 **maven-archiver**
+                      - 📄 pom.properties
+                    - 📂 **maven-status**
+                      - 📂 **maven-compiler-plugin**
+                        - 📂 **compile**
+                          - 📂 **default-compile**
+                            - 📄 createdFiles.lst
+                            - 📄 inputFiles.lst
+                    - 📄 my-app-1.0-SNAPSHOT.jar
                   - 📄 pom.xml
                 - 📄 README.md
             - 📂 **cloudbuild-application-cicd** _(Create Pupsub Topic that captures Artifact Registry Events.)_
@@ -58641,6 +59042,31 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                     - 📂 **utils**
                       - 📄 CloudBigtableCustomOptions.java
                       - 📄 ExchangeConfiguration.java
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **data**
+                    - 📄 TradeLoad.class
+                  - 📂 **run**
+                    - 📄 RunThePipeline.class
+                    - 📄 RunThePipeline$1.class
+                  - 📂 **source**
+                    - 📄 CryptoMarketTradeUnboundedReader.class
+                    - 📄 CryptoMarketTradeUnboundedReader$1.class
+                    - 📄 CryptoMarketTradeUnboundedSource.class
+                  - 📂 **utils**
+                    - 📄 CloudBigtableCustomOptions.class
+                    - 📄 ExchangeConfiguration.class
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📄 cryptorealtime-1.0-SNAPSHOT.jar
               - 📂 **terraform-setup**
                 - 📄 main.tf
                 - 📄 service_account.tf
@@ -58947,6 +59373,56 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                         - 📂 **dataflow**
                           - 📂 **feature**
                             - 📄 FeatureCalculationTest.java
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **dataflow**
+                        - 📂 **feature**
+                          - 📂 **model**
+                            - 📄 AutoValue_ClickstreamEvent.class
+                            - 📄 AutoValue_ClickstreamEvent$1.class
+                            - 📄 AutoValue_ClickstreamEvent$Builder.class
+                            - 📄 ClickstreamEvent.class
+                            - 📄 ClickstreamEvent$Builder.class
+                            - 📄 ClickstreamEvent$Builder$CustomDateSerializer.class
+                          - 📂 **pipeline**
+                            - 📄 TaxiNRTPipeline.class
+                            - 📄 TaxiNRTPipeline$BuildTableRow.class
+                            - 📄 TaxiNRTPipeline$CustomPipelineOptions.class
+                          - 📄 ExpireValue.class
+                          - 📄 MergeFeaturesToCSV.class
+                          - 📄 NRTFeature.class
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                    - 📂 **com**
+                      - 📂 **google**
+                        - 📂 **dataflow**
+                          - 📂 **feature**
+                            - 📂 **model**
+                              - 📄 AutoValue_ClickstreamEvent.java
+                - 📂 **generated-test-sources**
+                  - 📂 **test-annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                    - 📂 **testCompile**
+                      - 📂 **default-testCompile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **test-classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **dataflow**
+                        - 📂 **feature**
+                          - 📄 FeatureCalculationTest.class
+                - 📄 nrt-producer-0.1.jar
+                - 📄 nrt-producer-bundled-0.1.jar
               - 📄 pom.xml
               - 📄 README.md
               - 📄 viz.png
@@ -59038,6 +59514,39 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                           - 📂 **pso**
                             - 📂 **pipeline**
                               - 📄 StreamingBenchmarkTest.java
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **pipeline**
+                            - 📄 StreamingBenchmark.class
+                            - 📄 StreamingBenchmark$MalformedSchemaException.class
+                            - 📄 StreamingBenchmark$MessageGeneratorFn.class
+                            - 📄 StreamingBenchmark$Options.class
+                  - 📄 spotbugs-exclude.xml
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **generated-test-sources**
+                  - 📂 **test-annotations**
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                    - 📂 **testCompile**
+                      - 📂 **default-testCompile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **test-classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **pipeline**
+                            - 📄 StreamingBenchmarkTest.class
               - 📄 pom.xml
               - 📄 README.md
             - 📂 **dataflow-streaming-schema-handler** _(Dataflow Streaming Schema Handler)_
@@ -59075,6 +59584,58 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                             - 📂 **transforms**
                               - 📄 JsonEventMatcherTest.java
                               - 📄 JsonSchemaExistTest.java
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **pipeline**
+                            - 📄 PubsubToBigQueryJSON.class
+                            - 📄 PubsubToBigQueryJSON$1.class
+                            - 📄 PubsubToBigQueryJSON$2.class
+                            - 📄 PubsubToBigQueryJSON$3.class
+                            - 📄 PubsubToBigQueryJSON$PubsubToBigQueryJSONOptions.class
+                          - 📂 **transforms**
+                            - 📄 JsonEventMatcher.class
+                            - 📄 JsonSchemaExist.class
+                            - 📄 ReadPubSub.class
+                          - 📂 **util**
+                            - 📄 BigQueryConverters.class
+                            - 📄 BQDatasetSchemas.class
+                            - 📄 BQDatasetSchemas$BQTableSchemaInfo.class
+                            - 📄 Constants.class
+                            - 📄 Constants$1.class
+                            - 📄 Constants$2.class
+                            - 📄 Constants$3.class
+                            - 📄 Constants$4.class
+                            - 📄 ConvertEventToGenericFailureRow.class
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **generated-test-sources**
+                  - 📂 **test-annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                    - 📂 **testCompile**
+                      - 📂 **default-testCompile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **test-classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **transforms**
+                            - 📄 JsonEventMatcherTest.class
+                            - 📄 JsonSchemaExistTest.class
+                - 📄 dataflow-streaming-schema-handler-1.0-SNAPSHOT-sources.jar
+                - 📄 dataflow-streaming-schema-handler-1.0-SNAPSHOT.jar
               - 📄 pom.xml
               - 📄 README.md
             - 📂 **dataflow-xml-pubsub-to-gcs** _(Overview)_
@@ -59098,6 +59659,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                       - 📄 Order.java
                       - 📄 ShipInfo.java
                       - 📄 XmlIoDemo.java
+              - 📂 **target**
+                - 📂 **classes**
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
               - 📄 pom.xml
               - 📄 README.md
               - 📄 run.sh
@@ -59304,6 +59875,33 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                           - 📄 PubSubServer.java
                   - 📂 **resources**
                     - 📄 application.properties
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **example**
+                      - 📂 **dfdl**
+                        - 📄 DfdlDef.class
+                        - 📄 DfdlDefRepository.class
+                        - 📄 DfdlService.class
+                        - 📄 FirestoreService.class
+                        - 📄 MessageController.class
+                        - 📄 ProcessorService.class
+                        - 📄 PubSubServer.class
+                        - 📄 PubSubServer$1.class
+                        - 📄 PubSubServer$PubsubOutboundGateway.class
+                  - 📄 application.properties
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📄 mfol-0.0.1-SNAPSHOT.jar
+                - 📄 mfol-0.0.1-SNAPSHOT.jar.original
               - 📄 pom.xml
               - 📄 README.md
             - 📂 **dialogflow-entities-example** _(Entities creation and update for Dialogflow)_
@@ -59458,6 +60056,37 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                   - 📂 **resources**
                     - 📂 **e2etest**
                       - 📄 dataflow-e2e-test.feature
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **util**
+                    - 📄 BashOutput.class
+                    - 📄 BQUtils.class
+                    - 📄 CompareContent.class
+                    - 📄 DFJobConstants.class
+                    - 📄 MyBashExecutor.class
+                    - 📄 Utils.class
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **generated-test-sources**
+                  - 📂 **test-annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                    - 📂 **testCompile**
+                      - 📂 **default-testCompile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **test-classes**
+                  - 📂 **e2etest**
+                    - 📄 dataflow-e2e-test.feature
+                    - 📄 E2ETest.class
+                    - 📄 RunCucumberTest.class
+                - 📄 e2etest-dataflow-1.0.0-SNAPSHOT.jar
               - 📄 pom.xml
               - 📄 Readme.md
             - 📂 **ephemeral-projects**
@@ -59628,6 +60257,25 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                       - 📂 **com**
                         - 📂 **example**
                           - 📄 GCS2BQ.java
+                - 📂 **target**
+                  - 📂 **classes**
+                    - 📂 **com**
+                      - 📂 **example**
+                        - 📄 GCS2BQ.class
+                        - 📄 GCS2BQ$1.class
+                  - 📂 **generated-sources**
+                    - 📂 **annotations**
+                  - 📂 **maven-archiver**
+                    - 📄 pom.properties
+                  - 📂 **maven-status**
+                    - 📂 **maven-compiler-plugin**
+                      - 📂 **compile**
+                        - 📂 **default-compile**
+                          - 📄 createdFiles.lst
+                          - 📄 inputFiles.lst
+                  - 📄 GCS2BQWithSpark-1.0-SNAPSHOT.jar
+                  - 📄 original-GCS2BQWithSpark-1.0-SNAPSHOT.jar
+                - 📄 dependency-reduced-pom.xml
                 - 📄 pom.xml
               - 📂 **schema**
                 - 📄 schema.json
@@ -59767,6 +60415,143 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                             - 📄 RedisUtil.java
                   - 📂 **proto**
                     - 📄 connect_service.proto
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **example**
+                      - 📂 **grpc**
+                        - 📂 **client**
+                          - 📄 ConnectClient.class
+                        - 📂 **server**
+                          - 📄 ConnectServer.class
+                        - 📂 **service**
+                          - 📄 ConnectServiceImpl.class
+                          - 📄 RedisUtil.class
+                        - 📄 ConnectServiceGrpc.class
+                        - 📄 ConnectServiceGrpc$1.class
+                        - 📄 ConnectServiceGrpc$2.class
+                        - 📄 ConnectServiceGrpc$3.class
+                        - 📄 ConnectServiceGrpc$ConnectServiceBaseDescriptorSupplier.class
+                        - 📄 ConnectServiceGrpc$ConnectServiceBlockingStub.class
+                        - 📄 ConnectServiceGrpc$ConnectServiceFileDescriptorSupplier.class
+                        - 📄 ConnectServiceGrpc$ConnectServiceFutureStub.class
+                        - 📄 ConnectServiceGrpc$ConnectServiceImplBase.class
+                        - 📄 ConnectServiceGrpc$ConnectServiceMethodDescriptorSupplier.class
+                        - 📄 ConnectServiceGrpc$ConnectServiceStub.class
+                        - 📄 ConnectServiceGrpc$MethodHandlers.class
+                        - 📄 ConnectServiceOuterClass.class
+                        - 📄 ConnectServiceOuterClass$1.class
+                        - 📄 ConnectServiceOuterClass$GetUserRequest.class
+                        - 📄 ConnectServiceOuterClass$GetUserRequest$1.class
+                        - 📄 ConnectServiceOuterClass$GetUserRequest$Builder.class
+                        - 📄 ConnectServiceOuterClass$GetUserRequestOrBuilder.class
+                        - 📄 ConnectServiceOuterClass$GetUserResponse.class
+                        - 📄 ConnectServiceOuterClass$GetUserResponse$1.class
+                        - 📄 ConnectServiceOuterClass$GetUserResponse$Builder.class
+                        - 📄 ConnectServiceOuterClass$GetUserResponseOrBuilder.class
+                  - 📄 connect_service.proto
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                  - 📂 **protobuf**
+                    - 📂 **grpc-java**
+                      - 📂 **com**
+                        - 📂 **example**
+                          - 📂 **grpc**
+                            - 📄 ConnectServiceGrpc.java
+                    - 📂 **java**
+                      - 📂 **com**
+                        - 📂 **example**
+                          - 📂 **grpc**
+                            - 📄 ConnectServiceOuterClass.java
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **protoc-dependencies**
+                  - 📂 **2ff1df0c35b6630c7adf31be9775270c**
+                    - 📂 **google**
+                      - 📂 **protobuf**
+                        - 📄 any.proto
+                        - 📄 api.proto
+                        - 📄 descriptor.proto
+                        - 📄 duration.proto
+                        - 📄 empty.proto
+                        - 📄 field_mask.proto
+                        - 📄 source_context.proto
+                        - 📄 struct.proto
+                        - 📄 timestamp.proto
+                        - 📄 type.proto
+                        - 📄 wrappers.proto
+                  - 📂 **9f18b0e6dfb4f393bb270df15b03b3bf**
+                    - 📂 **google**
+                      - 📂 **api**
+                        - 📄 annotations.proto
+                        - 📄 auth.proto
+                        - 📄 backend.proto
+                        - 📄 billing.proto
+                        - 📄 client.proto
+                        - 📄 config_change.proto
+                        - 📄 consumer.proto
+                        - 📄 context.proto
+                        - 📄 control.proto
+                        - 📄 distribution.proto
+                        - 📄 documentation.proto
+                        - 📄 endpoint.proto
+                        - 📄 field_behavior.proto
+                        - 📄 http.proto
+                        - 📄 httpbody.proto
+                        - 📄 label.proto
+                        - 📄 launch_stage.proto
+                        - 📄 log.proto
+                        - 📄 logging.proto
+                        - 📄 metric.proto
+                        - 📄 monitored_resource.proto
+                        - 📄 monitoring.proto
+                        - 📄 quota.proto
+                        - 📄 resource.proto
+                        - 📄 service.proto
+                        - 📄 source_info.proto
+                        - 📄 system_parameter.proto
+                        - 📄 usage.proto
+                      - 📂 **cloud**
+                        - 📂 **audit**
+                          - 📄 audit_log.proto
+                      - 📂 **geo**
+                        - 📂 **type**
+                          - 📄 viewport.proto
+                      - 📂 **logging**
+                        - 📂 **type**
+                          - 📄 http_request.proto
+                          - 📄 log_severity.proto
+                      - 📂 **longrunning**
+                        - 📄 operations.proto
+                      - 📂 **rpc**
+                        - 📂 **context**
+                          - 📄 attribute_context.proto
+                        - 📄 code.proto
+                        - 📄 error_details.proto
+                        - 📄 status.proto
+                      - 📂 **type**
+                        - 📄 calendar_period.proto
+                        - 📄 color.proto
+                        - 📄 date.proto
+                        - 📄 datetime.proto
+                        - 📄 dayofweek.proto
+                        - 📄 expr.proto
+                        - 📄 fraction.proto
+                        - 📄 latlng.proto
+                        - 📄 money.proto
+                        - 📄 postal_address.proto
+                        - 📄 quaternion.proto
+                        - 📄 timeofday.proto
+                - 📂 **protoc-plugins**
+                  - 📄 protoc-3.18.1-windows-x86_64.exe
+                  - 📄 protoc-gen-grpc-java-1.45.0-windows-x86_64.exe
+                - 📄 grpc_example-1.0-SNAPSHOT.jar
               - 📄 pom.xml
               - 📄 README.md
             - 📂 **grpc_spanner_example** _(gRPC Example)_
@@ -59785,6 +60570,171 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                             - 📄 SpannerUtil.java
                   - 📂 **proto**
                     - 📄 connect_service.proto
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📄 connect_service.proto
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                  - 📂 **protobuf**
+                    - 📂 **grpc-java**
+                      - 📂 **com**
+                        - 📂 **example**
+                          - 📂 **grpc**
+                            - 📄 ConnectServiceGrpc.java
+                    - 📂 **java**
+                      - 📂 **com**
+                        - 📂 **example**
+                          - 📂 **grpc**
+                            - 📄 ConnectServiceOuterClass.java
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **protoc-dependencies**
+                  - 📂 **00f739d2e91c1be88f8f7ca79cf58122**
+                    - 📂 **google**
+                      - 📂 **spanner**
+                        - 📂 **admin**
+                          - 📂 **instance**
+                            - 📂 **v1**
+                              - 📄 spanner_instance_admin.proto
+                  - 📂 **265b3e799013b2141826f5b6c3aa8da2**
+                    - 📂 **google**
+                      - 📂 **api**
+                        - 📄 annotations.proto
+                        - 📄 auth.proto
+                        - 📄 backend.proto
+                        - 📄 billing.proto
+                        - 📄 client.proto
+                        - 📄 config_change.proto
+                        - 📄 consumer.proto
+                        - 📄 context.proto
+                        - 📄 control.proto
+                        - 📄 distribution.proto
+                        - 📄 documentation.proto
+                        - 📄 endpoint.proto
+                        - 📄 error_reason.proto
+                        - 📄 field_behavior.proto
+                        - 📄 http.proto
+                        - 📄 httpbody.proto
+                        - 📄 label.proto
+                        - 📄 launch_stage.proto
+                        - 📄 log.proto
+                        - 📄 logging.proto
+                        - 📄 metric.proto
+                        - 📄 monitored_resource.proto
+                        - 📄 monitoring.proto
+                        - 📄 quota.proto
+                        - 📄 resource.proto
+                        - 📄 routing.proto
+                        - 📄 service.proto
+                        - 📄 source_info.proto
+                        - 📄 system_parameter.proto
+                        - 📄 usage.proto
+                        - 📄 visibility.proto
+                      - 📂 **cloud**
+                        - 📂 **audit**
+                          - 📄 audit_log.proto
+                        - 📄 extended_operations.proto
+                      - 📂 **geo**
+                        - 📂 **type**
+                          - 📄 viewport.proto
+                      - 📂 **logging**
+                        - 📂 **type**
+                          - 📄 http_request.proto
+                          - 📄 log_severity.proto
+                      - 📂 **longrunning**
+                        - 📄 operations.proto
+                      - 📂 **rpc**
+                        - 📂 **context**
+                          - 📄 attribute_context.proto
+                        - 📄 code.proto
+                        - 📄 error_details.proto
+                        - 📄 status.proto
+                      - 📂 **type**
+                        - 📄 calendar_period.proto
+                        - 📄 color.proto
+                        - 📄 date.proto
+                        - 📄 datetime.proto
+                        - 📄 dayofweek.proto
+                        - 📄 decimal.proto
+                        - 📄 expr.proto
+                        - 📄 fraction.proto
+                        - 📄 interval.proto
+                        - 📄 latlng.proto
+                        - 📄 localized_text.proto
+                        - 📄 money.proto
+                        - 📄 month.proto
+                        - 📄 phone_number.proto
+                        - 📄 postal_address.proto
+                        - 📄 quaternion.proto
+                        - 📄 timeofday.proto
+                  - 📂 **2ff1df0c35b6630c7adf31be9775270c**
+                    - 📂 **google**
+                      - 📂 **protobuf**
+                        - 📄 any.proto
+                        - 📄 api.proto
+                        - 📄 descriptor.proto
+                        - 📄 duration.proto
+                        - 📄 empty.proto
+                        - 📄 field_mask.proto
+                        - 📄 source_context.proto
+                        - 📄 struct.proto
+                        - 📄 timestamp.proto
+                        - 📄 type.proto
+                        - 📄 wrappers.proto
+                  - 📂 **987b2d580db61aa9a9c84c04d5dd2fe2**
+                    - 📂 **grpc**
+                      - 📂 **gcp**
+                        - 📄 altscontext.proto
+                        - 📄 handshaker.proto
+                        - 📄 transport_security_common.proto
+                  - 📂 **9b4cf19515ea0ade7d5e97ed9835d1cc**
+                    - 📂 **google**
+                      - 📂 **spanner**
+                        - 📂 **v1**
+                          - 📄 commit_response.proto
+                          - 📄 keys.proto
+                          - 📄 mutation.proto
+                          - 📄 query_plan.proto
+                          - 📄 result_set.proto
+                          - 📄 spanner.proto
+                          - 📄 transaction.proto
+                          - 📄 type.proto
+                  - 📂 **b2fa6aafba09ba8e96e367a6766de2d0**
+                    - 📂 **google**
+                      - 📂 **iam**
+                        - 📂 **v1**
+                          - 📂 **logging**
+                            - 📄 audit_data.proto
+                          - 📄 iam_policy.proto
+                          - 📄 options.proto
+                          - 📄 policy.proto
+                  - 📂 **c1f0f7ab6d98f17f98252ec7e0fe2c55**
+                    - 📂 **google**
+                      - 📂 **spanner**
+                        - 📂 **admin**
+                          - 📂 **database**
+                            - 📂 **v1**
+                              - 📄 backup.proto
+                              - 📄 common.proto
+                              - 📄 spanner_database_admin.proto
+                  - 📂 **e1e4806a0deb4416fca19045ead798c6**
+                    - 📂 **google**
+                      - 📂 **grpc**
+                        - 📂 **gcp**
+                          - 📂 **proto**
+                            - 📄 grpc_gcp.proto
+                  - 📂 **e8c03a278a566bf051f94e5e86be653f**
+                    - 📂 **grpc**
+                      - 📂 **lb**
+                        - 📂 **v1**
+                          - 📄 load_balancer.proto
+                - 📂 **protoc-plugins**
+                  - 📄 protoc-3.18.1-windows-x86_64.exe
+                  - 📄 protoc-gen-grpc-java-1.44.1-windows-x86_64.exe
               - 📄 pom.xml
               - 📄 README.md
             - 📂 **iam-deny** _(Terraform Google Cloud IAM Deny and Organization Policies)_
@@ -59965,6 +60915,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                                   - 📂 **common**
                                     - 📄 CityTest.java
                                     - 📄 MessageTest.java
+                - 📂 **target**
+                  - 📂 **classes**
+                    - 📄 cities.json
+                  - 📂 **generated-sources**
+                    - 📂 **annotations**
                 - 📄 pom.xml
               - 📂 **img**
                 - 📄 architecture.png
@@ -60072,6 +61027,50 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                             - 📂 **pso**
                               - 📂 **pipelines**
                                 - 📄 SentimentAnalysisTest.java
+                - 📂 **target**
+                  - 📂 **classes**
+                    - 📂 **com**
+                      - 📂 **google**
+                        - 📂 **cloud**
+                          - 📂 **pso**
+                            - 📂 **common**
+                              - 📄 Doc.class
+                            - 📂 **pipelines**
+                              - 📄 SentimentAnalysis.class
+                              - 📄 SentimentAnalysis$1.class
+                              - 📄 SentimentAnalysis$AggregatesToStringFn.class
+                              - 📄 SentimentAnalysis$AnalyzeSentimentFn.class
+                              - 📄 SentimentAnalysis$ExtractDocFn.class
+                              - 📄 SentimentAnalysis$ExtractSentimentValuesFn.class
+                              - 📄 SentimentAnalysis$SentimentAnalysisOptions.class
+                  - 📂 **generated-sources**
+                    - 📂 **annotations**
+                  - 📂 **generated-test-sources**
+                    - 📂 **test-annotations**
+                  - 📂 **maven-archiver**
+                    - 📄 pom.properties
+                  - 📂 **maven-status**
+                    - 📂 **maven-compiler-plugin**
+                      - 📂 **compile**
+                        - 📂 **default-compile**
+                          - 📄 createdFiles.lst
+                          - 📄 inputFiles.lst
+                      - 📂 **testCompile**
+                        - 📂 **default-testCompile**
+                          - 📄 createdFiles.lst
+                          - 📄 inputFiles.lst
+                  - 📂 **test-classes**
+                    - 📂 **com**
+                      - 📂 **google**
+                        - 📂 **cloud**
+                          - 📂 **pso**
+                            - 📂 **pipelines**
+                              - 📄 SentimentAnalysisTest.class
+                  - 📄 cloud-natural-language-1.0-SNAPSHOT-sources.jar
+                  - 📄 cloud-natural-language-1.0-SNAPSHOT-tests.jar
+                  - 📄 cloud-natural-language-1.0-SNAPSHOT.jar
+                  - 📄 dependency-reduced-pom.xml
+                  - 📄 original-cloud-natural-language-1.0-SNAPSHOT.jar
                 - 📄 build_image.sh
                 - 📄 Dockerfile
                 - 📄 pom.xml
@@ -60195,6 +61194,45 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                   - 📂 **resources**
                     - 📄 application.yaml
                     - 📄 logback-spring.xml
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **org**
+                    - 📂 **example**
+                      - 📂 **gcp**
+                        - 📂 **slack**
+                          - 📂 **claude**
+                            - 📂 **common**
+                              - 📄 Utils.class
+                            - 📂 **config**
+                              - 📄 Routes.class
+                              - 📄 SlackApp.class
+                              - 📄 SpringAiConfig.class
+                            - 📂 **handlers**
+                              - 📄 ClaudeChat.class
+                              - 📄 SlackEvent.class
+                              - 📄 SlackOperations.class
+                              - 📄 SlackResource.class
+                              - 📄 SlackResource$SlackResponse.class
+                            - 📂 **vertexai**
+                              - 📄 ClaudeVertexAiConfig.class
+                              - 📄 ClaudeVertexAIRequestAdapter.class
+                              - 📄 GoogleAdcProvider.class
+                            - 📄 SlackListenerApp.class
+                  - 📄 application.yaml
+                  - 📄 logback-spring.xml
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📄 agent-gcptoolbox-claude-slack-1.0-SNAPSHOT.jar
+                - 📄 agent-gcptoolbox-claude-slack-1.0-SNAPSHOT.jar.original
+                - 📄 spotless-index
               - 📄 cleanup.sh
               - 📄 cloudbuild.yaml
               - 📄 deploy.sh
@@ -60447,6 +61485,23 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                           - 📂 **pso**
                             - 📂 **pubsub**
                               - 📄 GenerateRandomEmployeeReaderTest.java
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📄 spotbugs-exclude.xml
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                  - 📂 **avro**
+                    - 📂 **com**
+                      - 📂 **google**
+                        - 📂 **cloud**
+                          - 📂 **pso**
+                            - 📄 Employee.java
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
               - 📄 LICENSE
               - 📄 pom.xml
               - 📄 README.md
@@ -60570,6 +61625,30 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                                   - 📂 **util**
                                     - 📄 MathUtilsTest.java
                                     - 📄 package-info.java
+                - 📂 **target**
+                  - 📂 **classes**
+                    - 📂 **com**
+                      - 📂 **google**
+                        - 📂 **cloud**
+                          - 📂 **pso**
+                            - 📂 **benchmarks**
+                              - 📂 **redis**
+                                - 📂 **compression**
+                                  - 📄 Compression.class
+                                - 📂 **model**
+                                  - 📄 Payload.class
+                                - 📂 **serde**
+                                  - 📄 EncDecoder.class
+                                - 📄 PayloadGenerator.class
+                    - 📄 logback.xml
+                  - 📂 **generated-sources**
+                    - 📂 **annotations**
+                  - 📂 **maven-status**
+                    - 📂 **maven-compiler-plugin**
+                      - 📂 **compile**
+                        - 📂 **default-compile**
+                          - 📄 createdFiles.lst
+                          - 📄 inputFiles.lst
                 - 📄 cloudbuild.yml
                 - 📄 Dockerfile
                 - 📄 LICENSE_HEADER
@@ -60701,6 +61780,37 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                   - 📂 **resources**
                     - 📄 config.properties
                     - 📄 log4j2.xml
+              - 📂 **target**
+                - 📂 **archive-tmp**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **sts**
+                            - 📄 EventHandler.class
+                            - 📄 Metrics.class
+                            - 📄 PubSubSubscriber.class
+                            - 📄 RetryHttpInitializerWrapper.class
+                            - 📄 RetryHttpInitializerWrapper$SdrsBackOffRequired.class
+                            - 📄 StsJobGenerationWorker.class
+                            - 📄 StsJobHelper.class
+                            - 📄 StsJobNotificationHandler.class
+                            - 📄 StsMetricsMain.class
+                  - 📄 config.properties
+                  - 📄 log4j2.xml
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📄 sts-metrics-jar-with-dependencies.jar
+                - 📄 sts-metrics.jar
               - 📄 pom.xml
               - 📄 README.md
             - 📂 **tensorflow-profiling-examples** _(TensorFlow Profiling Examples)_
@@ -63426,6 +64536,38 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                                 - 📄 CustomRoleAnalyzerHelper.java
                                 - 📄 CustomRoleAnalyzerResult.java
                               - 📄 CustomRoleAnalyzer.java
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **security**
+                            - 📂 **constants**
+                              - 📄 GenericConstants.class
+                            - 📂 **iam**
+                              - 📂 **permission**
+                                - 📄 PermissionUtil.class
+                              - 📂 **role**
+                                - 📄 RoleUtil.class
+                              - 📄 IamClient.class
+                            - 📂 **resourcemanager**
+                              - 📄 ResourceManagerClient.class
+                            - 📂 **util**
+                              - 📄 CustomRoleAnalyzerHelper.class
+                              - 📄 CustomRoleAnalyzerResult.class
+                            - 📄 CustomRoleAnalyzer.class
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📄 custom-roles-analyzer-1.0-SNAPSHOT.jar
               - 📄 analyze.sh
               - 📄 pom.xml
               - 📄 README.md
@@ -63657,6 +64799,67 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                               - 📄 DataLoadPipelineTest.java
                   - 📂 **resources**
                     - 📄 sample-dynamodb-export.json.gz
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **migration**
+                            - 📂 **dofns**
+                              - 📄 BeamRowToBigtableRowFn.class
+                              - 📄 package-info.class
+                            - 📂 **model**
+                              - 📄 InputFormat.class
+                              - 📄 package-info.class
+                            - 📂 **transforms**
+                              - 📄 package-info.class
+                              - 📄 ReadFromGCS.class
+                              - 📄 ReadFromGCS$1.class
+                              - 📄 WriteToBigtable.class
+                            - 📂 **utils**
+                              - 📄 BeamRowUtils.class
+                              - 📄 BeamRowUtils$1.class
+                              - 📄 DataLoadConstants.class
+                              - 📄 DataLoadConstants$DynamoDBFields.class
+                              - 📄 DataLoadConstants$SchemaFields.class
+                              - 📄 DynamoRowUtils.class
+                            - 📄 BaseOptions.class
+                            - 📄 DataLoadOptionsValidator.class
+                            - 📄 DataLoadPipeline.class
+                            - 📄 DataLoadPipeline$DataLoadOptions.class
+                  - 📄 logback.xml
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **generated-test-sources**
+                  - 📂 **test-annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                    - 📂 **testCompile**
+                      - 📂 **default-testCompile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **test-classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **migration**
+                            - 📂 **dofns**
+                              - 📄 BeamRowToBigtableRowFnTest.class
+                            - 📂 **utils**
+                              - 📄 BeamRowUtilsTest.class
+                            - 📄 DataLoadPipelineTest.class
+                            - 📄 DataLoadPipelineTest$DataLoadTestOptions.class
+                  - 📄 sample-dynamodb-export.json.gz
+                - 📄 dynamodb-migration-1.0.jar
+                - 📄 original-dynamodb-migration-1.0.jar
               - 📄 dependency-reduced-pom.xml
               - 📄 pom.xml
               - 📄 README.md
@@ -63721,6 +64924,53 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                   - 📂 **resources**
                     - 📂 **schema**
                       - 📄 initial_inventory_schema.json
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **gceusage**
+                            - 📂 **initialvminventory**
+                              - 📄 InitialInstanceInventoryRow.class
+                              - 📄 InitialInstanceInventoryRow$KV.class
+                              - 📄 InitialVMInventory.class
+                            - 📂 **services**
+                              - 📄 BQHelper.class
+                              - 📄 CloudResourceManagerService.class
+                              - 📄 ComputeService.class
+                              - 📄 ComputeService$1.class
+                              - 📄 EmptyRowCollection.class
+                              - 📄 GCEHelper.class
+                            - 📄 Main.class
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **generated-test-sources**
+                  - 📂 **test-annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                    - 📂 **testCompile**
+                      - 📂 **default-testCompile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **test-classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **pso**
+                          - 📂 **gceusage**
+                            - 📂 **initialvminventory**
+                              - 📄 InitialVMInventoryTest.class
+                  - 📂 **schema**
+                    - 📄 initial_inventory_schema.json
+                - 📄 gce-usage.jar
+                - 📄 original-gce-usage.jar
               - 📄 dependency-reduced-pom.xml
               - 📄 gce_interval_view.sql
               - 📄 gce_usage_view.sql
@@ -64740,6 +65990,32 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                       - 📂 **java**
                         - 📂 **functions**
                           - 📄 SendNotificationTest.java
+                  - 📂 **target**
+                    - 📂 **classes**
+                      - 📂 **functions**
+                        - 📂 **eventpojos**
+                          - 📄 PubSubMessage.class
+                        - 📄 SendNotification.class
+                    - 📂 **generated-sources**
+                      - 📂 **annotations**
+                    - 📂 **generated-test-sources**
+                      - 📂 **test-annotations**
+                    - 📂 **maven-archiver**
+                      - 📄 pom.properties
+                    - 📂 **maven-status**
+                      - 📂 **maven-compiler-plugin**
+                        - 📂 **compile**
+                          - 📂 **default-compile**
+                            - 📄 createdFiles.lst
+                            - 📄 inputFiles.lst
+                        - 📂 **testCompile**
+                          - 📂 **default-testCompile**
+                            - 📄 createdFiles.lst
+                            - 📄 inputFiles.lst
+                    - 📂 **test-classes**
+                      - 📂 **functions**
+                        - 📄 SendNotificationTest.class
+                    - 📄 quota-monitoring-solution-notification-v2-1.0-SNAPSHOT.jar
                   - 📄 pom.xml
                 - 📂 **quota-scan**
                   - 📂 **src**
@@ -64757,6 +66033,30 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                           - 📄 ScanProjectQuotasHelper.java
                       - 📂 **resources**
                         - 📄 config.properties
+                  - 📂 **target**
+                    - 📂 **classes**
+                      - 📂 **functions**
+                        - 📂 **eventpojos**
+                          - 📄 GCPProject.class
+                          - 📄 GCPResourceClient.class
+                          - 📄 ProjectQuota.class
+                          - 📄 PubSubMessage.class
+                          - 📄 TimeSeriesQuery.class
+                        - 📄 ListProjects.class
+                        - 📄 ScanProjectQuotas.class
+                        - 📄 ScanProjectQuotasHelper.class
+                      - 📄 config.properties
+                    - 📂 **generated-sources**
+                      - 📂 **annotations**
+                    - 📂 **maven-archiver**
+                      - 📄 pom.properties
+                    - 📂 **maven-status**
+                      - 📂 **maven-compiler-plugin**
+                        - 📂 **compile**
+                          - 📂 **default-compile**
+                            - 📄 createdFiles.lst
+                            - 📄 inputFiles.lst
+                    - 📄 functions-hello-pub-sub-1.0.21.jar
                   - 📄 input.json
                   - 📄 pom.xml
                 - 📂 **terraform**
@@ -64938,7 +66238,48 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                             - 📄 SecretLookupToFileTest.java
                             - 📄 SecretManagerStringSubstitutorTest.java
                             - 📄 SecretManagerSubstitutorPropertiesTest.java
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **secrethelper**
+                          - 📄 SecretLookup.class
+                          - 📄 SecretLookupToFile.class
+                          - 📄 SecretManagerPropertiesExample.class
+                          - 📄 SecretManagerStringSubstitutor.class
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **generated-test-sources**
+                  - 📂 **test-annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                    - 📂 **testCompile**
+                      - 📂 **default-testCompile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📂 **test-classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **cloud**
+                        - 📂 **secrethelper**
+                          - 📄 SecretLookupTest.class
+                          - 📄 SecretLookupToFileTest.class
+                          - 📄 SecretManagerStringSubstitutorTest.class
+                          - 📄 SecretManagerSubstitutorPropertiesTest.class
+                - 📄 checkstyle-cachefile
+                - 📄 checkstyle-checker.xml
+                - 📄 checkstyle-result.xml
+                - 📄 secret-manager-test-1.0-SNAPSHOT-shaded.jar
+                - 📄 secret-manager-test-1.0-SNAPSHOT.jar
               - 📄 cloudbuild.yaml
+              - 📄 dependency-reduced-pom.xml
               - 📄 pom.xml
               - 📄 README.md
             - 📂 **service-account-provider** _(Service Account Provider (SAPRO))_
@@ -65027,6 +66368,37 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                                 - 📄 JsonUtilityTest.java
                                 - 📄 ReplacementMapBuilderUtilityTest.java
                               - 📄 SlotoolsApplicationTests.java
+                - 📂 **target**
+                  - 📂 **classes**
+                    - 📂 **com**
+                      - 📂 **tools**
+                        - 📂 **slo**
+                          - 📂 **slotools**
+                            - 📂 **config**
+                              - 📄 WebConfig.class
+                              - 📄 WebConfig$1.class
+                            - 📂 **constant**
+                              - 📄 FileConstants.class
+                              - 📄 ReplaceConstants.class
+                              - 📄 SliConstants.class
+                            - 📄 SlotoolsApplication.class
+                    - 📂 **templates**
+                      - 📄 req_dc.txt
+                      - 📄 req_gtr.txt
+                      - 📄 win_gtr.txt
+                      - 📄 win_mmir.txt
+                      - 📄 win_msir.txt
+                    - 📄 application-cloudrun.yml
+                    - 📄 application-local.yml
+                    - 📄 application.yml
+                  - 📂 **generated-sources**
+                    - 📂 **annotations**
+                  - 📂 **maven-status**
+                    - 📂 **maven-compiler-plugin**
+                      - 📂 **compile**
+                        - 📂 **default-compile**
+                          - 📄 createdFiles.lst
+                          - 📄 inputFiles.lst
                 - 📄 Dockerfile
                 - 📄 mvnw
                 - 📄 mvnw.cmd
@@ -105297,6 +106669,26 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                   - 📂 **main**
                     - 📂 **java**
                       - 📄 SoftwareBugAssistant.java
+                - 📂 **target**
+                  - 📂 **classes**
+                    - 📂 **com**
+                      - 📂 **google**
+                        - 📂 **adk**
+                          - 📂 **samples**
+                            - 📂 **agents**
+                              - 📂 **softwarebugassistant**
+                                - 📄 SoftwareBugAssistant.class
+                  - 📂 **generated-sources**
+                    - 📂 **annotations**
+                  - 📂 **maven-archiver**
+                    - 📄 pom.properties
+                  - 📂 **maven-status**
+                    - 📂 **maven-compiler-plugin**
+                      - 📂 **compile**
+                        - 📂 **default-compile**
+                          - 📄 createdFiles.lst
+                          - 📄 inputFiles.lst
+                  - 📄 -dev-ui-0.1.0.jar
                 - 📄 Dockerfile
                 - 📄 pom.xml
               - 📄 architecture-diagram.svg
@@ -105312,6 +106704,26 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                             - 📂 **agents**
                               - 📂 **timeseriesforecasting**
                                 - 📄 ForecastingAgent.java
+              - 📂 **target**
+                - 📂 **classes**
+                  - 📂 **com**
+                    - 📂 **google**
+                      - 📂 **adk**
+                        - 📂 **samples**
+                          - 📂 **agents**
+                            - 📂 **timeseriesforecasting**
+                              - 📄 ForecastingAgent.class
+                - 📂 **generated-sources**
+                  - 📂 **annotations**
+                - 📂 **maven-archiver**
+                  - 📄 pom.properties
+                - 📂 **maven-status**
+                  - 📂 **maven-compiler-plugin**
+                    - 📂 **compile**
+                      - 📂 **default-compile**
+                        - 📄 createdFiles.lst
+                        - 📄 inputFiles.lst
+                - 📄 time-series-forecasting-1.0.jar
               - 📄 diagram.png
               - 📄 Dockerfile
               - 📄 generate_diagram.py
@@ -109110,6 +110522,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 project.py
       - 📄 sandbox.py
       - 📄 tools.py
+    - 📂 **data**
+      - 📂 **training**
     - 📂 **incubator**
       - 📄 Modelfile.template
       - 📄 train.py
@@ -109568,6 +110982,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 sync.ps1
     - 📄 sync.sh
     - 📄 test_bridge.ts
+    - 📄 test_cf_browser_api.ps1
+    - 📄 test_cf_browser_rendering.ps1
+    - 📄 test_cf_workers_ai.ps1
     - 📄 test_cloudflare_agents.py
     - 📄 test_prepare.cjs
     - 📄 test_swarm.ts
@@ -109821,8 +111238,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **utils**
       - 📄 activityFeed.ts
       - 📄 agentTracer.ts
+      - 📄 aiGateway.ts
       - 📄 AppError.ts
       - 📄 approvalManager.ts
+      - 📄 browserRendering.ts
       - 📄 checkpoint.ts
       - 📄 cliConfig.ts
       - 📄 cloud_storage.ts
@@ -109855,12 +111274,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 main.py
     - 📄 SUMMARY.md
   - 📂 **test**
+    - 📄 ## Chat Customization Diagnostics.md
     - 📄 activity_feed.test.ts
     - 📄 agent_template.test.ts
     - 📄 agentTracer.test.ts
+    - 📄 aiGateway.test.ts
     - 📄 api_v1.test.ts
     - 📄 approval_manager.test.ts
     - 📄 auditLog.test.ts
+    - 📄 browser_rendering.test.ts
     - 📄 checkpoint.test.ts
     - 📄 cli_config.test.ts
     - 📄 code_review.test.ts
@@ -109952,6 +111374,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 mcp_servers.json
   - 📄 Ollama
   - 📄 package.json
+  - 📄 peterpohankapersonal@gmail.com.ical.zip
   - 📄 pnpm-lock.yaml
   - 📄 pyproject.toml
   - 📄 README.md

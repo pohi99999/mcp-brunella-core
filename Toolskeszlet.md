@@ -1,7 +1,7 @@
 # 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
 
 Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
-**Generálva:** 2026. 02. 09. 23:44:54
+**Generálva:** 2026. 02. 10. 12:44:18
 
 ---
 
@@ -15,6 +15,14 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 - **browser_navigate**: Navigates to a URL and returns the page content (text/html). Handles JS.
 - **browser_screenshot**: Takes a screenshot of a URL.
 - **browser_action**: Autonóm böngésző vezérlés (Robotkéz CLI). Képes weboldalakat megnyitni, kattintani, gépelni és adatokat kinyerni.
+- **cf_screenshot**: Capture a screenshot of a URL or raw HTML using Cloudflare Browser Rendering REST API. Supports fullPage, viewport, selector, cookies, custom JS/CSS injection.
+- **cf_pdf**: Generate a PDF from a URL or raw HTML using Cloudflare Browser Rendering. Supports paper format, margins, headers/footers, landscape mode.
+- **cf_content**: Fetch fully rendered HTML of a URL (after JS execution) via Cloudflare Browser Rendering. Ideal for SPAs and JS-heavy pages.
+- **cf_markdown**: Extract Markdown from a webpage using Cloudflare Browser Rendering. Great for converting web content to readable Markdown.
+- **cf_snapshot**: Take a full page DOM snapshot via Cloudflare Browser Rendering. Returns the accessibility tree / DOM structure.
+- **cf_scrape**: Scrape HTML elements by CSS selectors via Cloudflare Browser Rendering. Returns text, HTML, attributes, and dimensions for each match.
+- **cf_json**: Extract structured data from a webpage using AI (natural language prompt) via Cloudflare Browser Rendering. Ideal for data extraction without writing selectors.
+- **cf_links**: Retrieve all links from a webpage via Cloudflare Browser Rendering. Returns href and text for each link.
 
 ## 📦 claudeTool
 - **claude_message**: Sends a message to the Anthropic Claude API.

@@ -13,6 +13,10 @@ export default defineConfig({
     host: true,
     allowedHosts: true,
     port: 5173,
+    proxy: {
+      '/api': 'http://localhost:3000',
+      '/socket.io': { target: 'http://localhost:3000', ws: true },
+    },
   },
   build: {
     outDir: '../../build/public',

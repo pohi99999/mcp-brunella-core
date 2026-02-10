@@ -2,21 +2,22 @@
   "mcpServers": {
     "brunella-core": {
       "command": "node",
-      "args": ["F:\\OneDrive\\Desktop\\Brunella_es_en\\02_PROJECTS\[ACTIVE]_mcp-brunella-core\\build\\index.js"],
+      "args": [
+        "${workspaceFolder}/build/index.js"
+      ],
       "env": {
-        "NODE_ENV": "production"
+        "NODE_ENV": "development",
+        "MCP_DEBUG": "true"
       },
-      "notes": "A saját fejlesztésű központi agy (ez a te repód)"
+      "notes": "A BAS Központi Agya (Orchestrator)"
     },
     "playwright": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-playwright"],
-      "notes": "ROBOTKÉZ: Böngésző vezérlés, kattintás"
-    },
-    "chrome-devtools": {
-      "command": "npx",
-      "args": ["-y", "@iota9star/chrome-devtools-mcp"],
-      "notes": "RÖNTGEN: Hálózati elemzés, debug"
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-playwright"
+      ],
+      "notes": "ROBOTKÉZ: Böngésző vezérlés és kattintás"
     },
     "filesystem": {
       "command": "npx",
@@ -25,35 +26,22 @@
         "@modelcontextprotocol/server-filesystem",
         "${workspaceFolder}"
       ],
-      "notes": "Fájl hozzáférés a jelenlegi projekthez"
+      "notes": "Biztonságos fájl hozzáférés a projekthez"
     },
     "git": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-git"],
-      "notes": "Git verziókezelés"
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-git"
+      ],
+      "notes": "Verziókezelés"
     },
-    "brave-search": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-brave-search"],
-      "env": {
-        "BRAVE_API_KEY": "YOUR_BRAVE_API_KEY"
-      }
-    },
-    "puppeteer": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
-    },
-    "fetch": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-fetch"]
-    },
-    "sequential-thinking": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"]
-    },
-    "memory": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-memory"]
+    "github-chat": {
+      "command": "uvx",
+      "args": [
+        "github-chat-mcp"
+      ],
+      "notes": "A te GitHub Chat integrációd"
     }
   }
 }

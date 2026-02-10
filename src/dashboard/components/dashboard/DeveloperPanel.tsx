@@ -433,30 +433,6 @@ export function DeveloperPanel() {
     return () => clearInterval(interval)
   }, [activePipeline, refreshData])
 
-  useEffect(() => {
-    if (activeTab === 'metrics') {
-      if (!metricsData && !isLoadingMetrics) {
-        loadMetrics()
-      }
-    } else if (activeTab === 'approvals') {
-      if (!isLoadingApprovals) {
-        loadApprovals(approvalFilter)
-      }
-    } else if (activeTab === 'activity') {
-      if (!isLoadingActivity) {
-        loadActivity(activityLimit)
-      }
-    }
-  }, [activeTab, activityLimit, approvalFilter, isLoadingActivity, isLoadingApprovals, isLoadingMetrics, loadActivity, loadApprovals, loadMetrics, metricsData])
-
-  useEffect(() => {
-    if (activeTab !== 'activity') return
-    const interval = setInterval(() => {
-      loadActivity(activityLimit)
-    }, 5000)
-    return () => clearInterval(interval)
-  }, [activeTab, activityLimit, loadActivity])
-
   const handleSubmit = async (taskOverride?: string) => {
     const task = taskOverride || prompt.trim()
     if (!task) return
@@ -544,6 +520,31 @@ export function DeveloperPanel() {
       setIsLoadingActivity(false)
     }
   }, [activityLimit])
+
+  // Tab-change data loading effects (must be after useCallback definitions)
+  useEffect(() => {
+    if (activeTab === 'metrics') {
+      if (!metricsData && !isLoadingMetrics) {
+        loadMetrics()
+      }
+    } else if (activeTab === 'approvals') {
+      if (!isLoadingApprovals) {
+        loadApprovals(approvalFilter)
+      }
+    } else if (activeTab === 'activity') {
+      if (!isLoadingActivity) {
+        loadActivity(activityLimit)
+      }
+    }
+  }, [activeTab, activityLimit, approvalFilter, isLoadingActivity, isLoadingApprovals, isLoadingMetrics, loadActivity, loadApprovals, loadMetrics, metricsData])
+
+  useEffect(() => {
+    if (activeTab !== 'activity') return
+    const interval = setInterval(() => {
+      loadActivity(activityLimit)
+    }, 5000)
+    return () => clearInterval(interval)
+  }, [activeTab, activityLimit, loadActivity])
 
   // P4: Submit code review
   const handleReview = async () => {
@@ -699,622 +700,622 @@ export function DeveloperPanel() {
       {/* ==================== BUILD TAB ==================== */}
       {activeTab === 'build' && (<>
 
-      {/* P5: Context Gatherer */}
-      <Card className="glass-card">
-        <CardContent className="p-3">
-          <button
-            onClick={() => setContextExpanded(!contextExpanded)}
-            className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors w-full"
-          >
-            {contextExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
-            <FolderOpen size={14} className="text-primary" />
-            Context Files
-            {contextResult && (
-              <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full ml-auto">
-                {contextResult.files.length} files
-              </span>
-            )}
-          </button>
-          {contextExpanded && (
-            <div className="mt-3 space-y-2">
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={contextPath}
-                  onChange={(e) => setContextPath(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+        {/* P5: Context Gatherer */}
+        <Card className="glass-card">
+          <CardContent className="p-3">
+            <button
+              onClick={() => setContextExpanded(!contextExpanded)}
+              className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors w-full"
+            >
+              {contextExpanded ? <ChevronDown size={14} /> : <ChevronRight size={14} />}
+              <FolderOpen size={14} className="text-primary" />
+              Context Files
+              {contextResult && (
+                <span className="text-xs bg-primary/10 text-primary px-1.5 py-0.5 rounded-full ml-auto">
+                  {contextResult.files.length} files
+                </span>
+              )}
+            </button>
+            {contextExpanded && (
+              <div className="mt-3 space-y-2">
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={contextPath}
+                    onChange={(e) => setContextPath(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        setIsGatheringContext(true)
+                        gatherContext(contextPath)
+                          .then((r) => { setContextResult(r); toast.success(`Found ${r.files.length} context files`) })
+                          .catch((err: unknown) => { toast.error(err instanceof Error ? err.message : 'Context failed') })
+                          .finally(() => setIsGatheringContext(false))
+                      }
+                    }}
+                    placeholder="Enter file path to discover related files..."
+                    className="flex-1 bg-transparent border border-border rounded-md px-3 py-1.5 text-xs
+                             focus:outline-none focus:ring-1 focus:ring-primary/50 placeholder:text-muted-foreground/50"
+                    disabled={isGatheringContext}
+                  />
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    disabled={!contextPath.trim() || isGatheringContext}
+                    onClick={() => {
                       setIsGatheringContext(true)
                       gatherContext(contextPath)
                         .then((r) => { setContextResult(r); toast.success(`Found ${r.files.length} context files`) })
                         .catch((err: unknown) => { toast.error(err instanceof Error ? err.message : 'Context failed') })
                         .finally(() => setIsGatheringContext(false))
-                    }
-                  }}
-                  placeholder="Enter file path to discover related files..."
-                  className="flex-1 bg-transparent border border-border rounded-md px-3 py-1.5 text-xs
-                             focus:outline-none focus:ring-1 focus:ring-primary/50 placeholder:text-muted-foreground/50"
-                  disabled={isGatheringContext}
-                />
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={!contextPath.trim() || isGatheringContext}
-                  onClick={() => {
-                    setIsGatheringContext(true)
-                    gatherContext(contextPath)
-                      .then((r) => { setContextResult(r); toast.success(`Found ${r.files.length} context files`) })
-                      .catch((err: unknown) => { toast.error(err instanceof Error ? err.message : 'Context failed') })
-                      .finally(() => setIsGatheringContext(false))
-                  }}
-                >
-                  {isGatheringContext ? <Activity size={12} className="animate-spin" /> : <Search size={12} />}
-                </Button>
-              </div>
-              {contextResult && contextResult.files.length > 0 && (
-                <ScrollArea className="h-[140px]">
-                  <div className="space-y-1">
-                    {contextResult.files.map((f, i) => (
-                      <div
-                        key={i}
-                        className="flex items-center justify-between text-xs px-2 py-1.5 rounded hover:bg-muted/50 transition-colors"
-                      >
-                        <div className="flex items-center gap-2 min-w-0">
-                          <Code2 size={10} className="text-primary shrink-0" />
-                          <span className="truncate font-mono">{f.relativePath}</span>
+                    }}
+                  >
+                    {isGatheringContext ? <Activity size={12} className="animate-spin" /> : <Search size={12} />}
+                  </Button>
+                </div>
+                {contextResult && contextResult.files.length > 0 && (
+                  <ScrollArea className="h-[140px]">
+                    <div className="space-y-1">
+                      {contextResult.files.map((f, i) => (
+                        <div
+                          key={i}
+                          className="flex items-center justify-between text-xs px-2 py-1.5 rounded hover:bg-muted/50 transition-colors"
+                        >
+                          <div className="flex items-center gap-2 min-w-0">
+                            <Code2 size={10} className="text-primary shrink-0" />
+                            <span className="truncate font-mono">{f.relativePath}</span>
+                          </div>
+                          <div className="flex items-center gap-2 shrink-0 ml-2">
+                            <span className="text-[10px] text-muted-foreground">{f.reason}</span>
+                            <span className="text-[10px] text-muted-foreground/60">
+                              {(f.size / 1024).toFixed(1)}K
+                            </span>
+                          </div>
                         </div>
-                        <div className="flex items-center gap-2 shrink-0 ml-2">
-                          <span className="text-[10px] text-muted-foreground">{f.reason}</span>
-                          <span className="text-[10px] text-muted-foreground/60">
-                            {(f.size / 1024).toFixed(1)}K
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                      ))}
+                    </div>
+                  </ScrollArea>
+                )}
+                {contextResult && (
+                  <div className="flex items-center justify-between text-[10px] text-muted-foreground px-1">
+                    <span>Total: {(contextResult.totalSize / 1024).toFixed(1)} KB</span>
+                    {contextResult.truncated && (
+                      <span className="text-yellow-500">⚠ Truncated</span>
+                    )}
                   </div>
-                </ScrollArea>
+                )}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Prompt Input */}
+        <Card className="glass-card">
+          <CardContent className="p-4">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSubmit()}
+                placeholder="Describe what you want to build... (e.g., 'generate a REST API for user management')"
+                className="flex-1 bg-transparent border border-border rounded-lg px-4 py-2.5 text-sm
+                         focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground/50"
+                disabled={isLoading}
+              />
+              <Button
+                onClick={() => handleSubmit()}
+                disabled={!prompt.trim() || isLoading}
+                className="gap-2"
+              >
+                <Send size={14} />
+                Generate
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Quick Actions */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <Button
+            variant="outline"
+            className="gap-2 h-auto py-3"
+            onClick={() => handleQuickAction('generate code: create a utility module')}
+            disabled={isLoading}
+          >
+            <Play size={16} className="text-green-500" />
+            <div className="text-left">
+              <div className="text-xs font-medium">Generate</div>
+              <div className="text-[10px] text-muted-foreground">Create code</div>
+            </div>
+          </Button>
+          <Button
+            variant="outline"
+            className="gap-2 h-auto py-3"
+            onClick={() => handleQuickAction('generate vitest tests for the latest changes')}
+            disabled={isLoading}
+          >
+            <TestTube2 size={16} className="text-blue-500" />
+            <div className="text-left">
+              <div className="text-xs font-medium">Test</div>
+              <div className="text-[10px] text-muted-foreground">Write tests</div>
+            </div>
+          </Button>
+          <Button
+            variant="outline"
+            className="gap-2 h-auto py-3"
+            onClick={() => handleQuickAction('fix all build errors automatically')}
+            disabled={isLoading}
+          >
+            <Wrench size={16} className="text-orange-500" />
+            <div className="text-left">
+              <div className="text-xs font-medium">Fix</div>
+              <div className="text-[10px] text-muted-foreground">Auto-repair</div>
+            </div>
+          </Button>
+          <Button
+            variant="outline"
+            className="gap-2 h-auto py-3"
+            onClick={() => handleQuickAction('self-heal: fix all build errors and ensure npm run build succeeds')}
+            disabled={isLoading}
+          >
+            <HeartPulse size={16} className="text-red-500" />
+            <div className="text-left">
+              <div className="text-xs font-medium">Heal</div>
+              <div className="text-[10px] text-muted-foreground">Self-repair</div>
+            </div>
+          </Button>
+        </div>
+
+        {/* Active Pipeline */}
+        {activePipeline && activePipeline.status !== 'done' && activePipeline.status !== 'error' && (
+          <Card className="glass-card border-blue-500/30">
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                <Activity size={14} className="text-blue-500 animate-pulse" />
+                Active Pipeline
+                <span className="text-xs text-muted-foreground font-normal ml-auto">
+                  {activePipeline.taskId.slice(0, 20)}
+                </span>
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <p className="text-xs text-muted-foreground mb-3 truncate">
+                {activePipeline.task}
+              </p>
+              <DeveloperPipeline
+                phases={activePipeline.phases}
+                progress={calculateProgress(activePipeline)}
+              />
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Last completed pipeline */}
+        {activePipeline && (activePipeline.status === 'done' || activePipeline.status === 'error') && (
+          <Card className={cn(
+            'glass-card',
+            activePipeline.status === 'done' ? 'border-green-500/30' : 'border-red-500/30'
+          )}>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-sm flex items-center gap-2">
+                {activePipeline.status === 'done' ? (
+                  <CheckCircle2 size={14} className="text-green-500" />
+                ) : (
+                  <XCircle size={14} className="text-red-500" />
+                )}
+                Last Result: {activePipeline.status === 'done' ? 'Success' : 'Failed'}
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="pt-0">
+              <p className="text-xs text-muted-foreground mb-3 truncate">
+                {activePipeline.task}
+              </p>
+              <DeveloperPipeline
+                phases={activePipeline.phases}
+                progress={calculateProgress(activePipeline)}
+              />
+              {activePipeline.error && (
+                <p className="text-xs text-red-400 mt-2">{activePipeline.error}</p>
               )}
-              {contextResult && (
-                <div className="flex items-center justify-between text-[10px] text-muted-foreground px-1">
-                  <span>Total: {(contextResult.totalSize / 1024).toFixed(1)} KB</span>
-                  {contextResult.truncated && (
-                    <span className="text-yellow-500">⚠ Truncated</span>
-                  )}
+            </CardContent>
+          </Card>
+        )}
+
+        {/* Task History */}
+        <Card className="glass-card">
+          <CardHeader className="pb-3 border-b border-border/50">
+            <CardTitle className="flex items-center gap-2 text-sm">
+              <Clock size={14} className="text-muted-foreground" />
+              Task History
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-0">
+            <ScrollArea className="h-[280px]">
+              {history.length === 0 ? (
+                <div className="p-6 text-center text-sm text-muted-foreground">
+                  No developer tasks yet. Use the prompt above to start.
+                </div>
+              ) : (
+                <div className="divide-y divide-border/50">
+                  {history.map((entry) => (
+                    <div
+                      key={entry.taskId}
+                      className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
+                    >
+                      <div className="shrink-0">
+                        {entry.status === 'done' ? (
+                          <CheckCircle2 size={14} className="text-green-500" />
+                        ) : entry.status === 'error' ? (
+                          <XCircle size={14} className="text-red-500" />
+                        ) : (
+                          <Clock size={14} className="text-yellow-500" />
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="text-sm truncate">{entry.task}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(entry.createdAt).toLocaleTimeString()}
+                          {entry.completedAt && (
+                            <span className="ml-2">
+                              ({((entry.completedAt - entry.createdAt) / 1000).toFixed(1)}s)
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                      <span
+                        className={cn(
+                          'text-xs font-medium px-2 py-0.5 rounded-full',
+                          entry.status === 'done' && 'bg-green-500/10 text-green-500',
+                          entry.status === 'error' && 'bg-red-500/10 text-red-500',
+                          !['done', 'error'].includes(entry.status) && 'bg-yellow-500/10 text-yellow-500'
+                        )}
+                      >
+                        {entry.status}
+                      </span>
+                    </div>
+                  ))}
                 </div>
               )}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Prompt Input */}
-      <Card className="glass-card">
-        <CardContent className="p-4">
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={prompt}
-              onChange={(e) => setPrompt(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && handleSubmit()}
-              placeholder="Describe what you want to build... (e.g., 'generate a REST API for user management')"
-              className="flex-1 bg-transparent border border-border rounded-lg px-4 py-2.5 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground/50"
-              disabled={isLoading}
-            />
-            <Button
-              onClick={() => handleSubmit()}
-              disabled={!prompt.trim() || isLoading}
-              className="gap-2"
-            >
-              <Send size={14} />
-              Generate
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Quick Actions */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <Button
-          variant="outline"
-          className="gap-2 h-auto py-3"
-          onClick={() => handleQuickAction('generate code: create a utility module')}
-          disabled={isLoading}
-        >
-          <Play size={16} className="text-green-500" />
-          <div className="text-left">
-            <div className="text-xs font-medium">Generate</div>
-            <div className="text-[10px] text-muted-foreground">Create code</div>
-          </div>
-        </Button>
-        <Button
-          variant="outline"
-          className="gap-2 h-auto py-3"
-          onClick={() => handleQuickAction('generate vitest tests for the latest changes')}
-          disabled={isLoading}
-        >
-          <TestTube2 size={16} className="text-blue-500" />
-          <div className="text-left">
-            <div className="text-xs font-medium">Test</div>
-            <div className="text-[10px] text-muted-foreground">Write tests</div>
-          </div>
-        </Button>
-        <Button
-          variant="outline"
-          className="gap-2 h-auto py-3"
-          onClick={() => handleQuickAction('fix all build errors automatically')}
-          disabled={isLoading}
-        >
-          <Wrench size={16} className="text-orange-500" />
-          <div className="text-left">
-            <div className="text-xs font-medium">Fix</div>
-            <div className="text-[10px] text-muted-foreground">Auto-repair</div>
-          </div>
-        </Button>
-        <Button
-          variant="outline"
-          className="gap-2 h-auto py-3"
-          onClick={() => handleQuickAction('self-heal: fix all build errors and ensure npm run build succeeds')}
-          disabled={isLoading}
-        >
-          <HeartPulse size={16} className="text-red-500" />
-          <div className="text-left">
-            <div className="text-xs font-medium">Heal</div>
-            <div className="text-[10px] text-muted-foreground">Self-repair</div>
-          </div>
-        </Button>
-      </div>
-
-      {/* Active Pipeline */}
-      {activePipeline && activePipeline.status !== 'done' && activePipeline.status !== 'error' && (
-        <Card className="glass-card border-blue-500/30">
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center gap-2">
-              <Activity size={14} className="text-blue-500 animate-pulse" />
-              Active Pipeline
-              <span className="text-xs text-muted-foreground font-normal ml-auto">
-                {activePipeline.taskId.slice(0, 20)}
-              </span>
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <p className="text-xs text-muted-foreground mb-3 truncate">
-              {activePipeline.task}
-            </p>
-            <DeveloperPipeline
-              phases={activePipeline.phases}
-              progress={calculateProgress(activePipeline)}
-            />
+            </ScrollArea>
           </CardContent>
         </Card>
-      )}
-
-      {/* Last completed pipeline */}
-      {activePipeline && (activePipeline.status === 'done' || activePipeline.status === 'error') && (
-        <Card className={cn(
-          'glass-card',
-          activePipeline.status === 'done' ? 'border-green-500/30' : 'border-red-500/30'
-        )}>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm flex items-center gap-2">
-              {activePipeline.status === 'done' ? (
-                <CheckCircle2 size={14} className="text-green-500" />
-              ) : (
-                <XCircle size={14} className="text-red-500" />
-              )}
-              Last Result: {activePipeline.status === 'done' ? 'Success' : 'Failed'}
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="pt-0">
-            <p className="text-xs text-muted-foreground mb-3 truncate">
-              {activePipeline.task}
-            </p>
-            <DeveloperPipeline
-              phases={activePipeline.phases}
-              progress={calculateProgress(activePipeline)}
-            />
-            {activePipeline.error && (
-              <p className="text-xs text-red-400 mt-2">{activePipeline.error}</p>
-            )}
-          </CardContent>
-        </Card>
-      )}
-
-      {/* Task History */}
-      <Card className="glass-card">
-        <CardHeader className="pb-3 border-b border-border/50">
-          <CardTitle className="flex items-center gap-2 text-sm">
-            <Clock size={14} className="text-muted-foreground" />
-            Task History
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <ScrollArea className="h-[280px]">
-            {history.length === 0 ? (
-              <div className="p-6 text-center text-sm text-muted-foreground">
-                No developer tasks yet. Use the prompt above to start.
-              </div>
-            ) : (
-              <div className="divide-y divide-border/50">
-                {history.map((entry) => (
-                  <div
-                    key={entry.taskId}
-                    className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
-                  >
-                    <div className="shrink-0">
-                      {entry.status === 'done' ? (
-                        <CheckCircle2 size={14} className="text-green-500" />
-                      ) : entry.status === 'error' ? (
-                        <XCircle size={14} className="text-red-500" />
-                      ) : (
-                        <Clock size={14} className="text-yellow-500" />
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="text-sm truncate">{entry.task}</p>
-                      <p className="text-xs text-muted-foreground">
-                        {new Date(entry.createdAt).toLocaleTimeString()}
-                        {entry.completedAt && (
-                          <span className="ml-2">
-                            ({((entry.completedAt - entry.createdAt) / 1000).toFixed(1)}s)
-                          </span>
-                        )}
-                      </p>
-                    </div>
-                    <span
-                      className={cn(
-                        'text-xs font-medium px-2 py-0.5 rounded-full',
-                        entry.status === 'done' && 'bg-green-500/10 text-green-500',
-                        entry.status === 'error' && 'bg-red-500/10 text-red-500',
-                        !['done', 'error'].includes(entry.status) && 'bg-yellow-500/10 text-yellow-500'
-                      )}
-                    >
-                      {entry.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </ScrollArea>
-        </CardContent>
-      </Card>
 
       </>)}
 
       {/* ==================== REVIEW TAB ==================== */}
       {activeTab === 'review' && (<>
 
-      {/* Review Input */}
-      <Card className="glass-card">
-        <CardContent className="p-4">
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={reviewPath}
-              onChange={(e) => setReviewPath(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && handleReview()}
-              placeholder="Enter file path to review (e.g., src/agents/DeveloperAgent.ts)"
-              className="flex-1 bg-transparent border border-border rounded-lg px-4 py-2.5 text-sm
+        {/* Review Input */}
+        <Card className="glass-card">
+          <CardContent className="p-4">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={reviewPath}
+                onChange={(e) => setReviewPath(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleReview()}
+                placeholder="Enter file path to review (e.g., src/agents/DeveloperAgent.ts)"
+                className="flex-1 bg-transparent border border-border rounded-lg px-4 py-2.5 text-sm
                          focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground/50"
-              disabled={isReviewing}
-            />
-            <Button
-              onClick={handleReview}
-              disabled={!reviewPath.trim() || isReviewing}
-              className="gap-2"
-            >
-              <Search size={14} />
-              Review
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Review Loading */}
-      {isReviewing && (
-        <Card className="glass-card border-blue-500/30">
-          <CardContent className="p-6 text-center">
-            <Activity size={24} className="text-blue-500 animate-spin mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">Analyzing code quality...</p>
+                disabled={isReviewing}
+              />
+              <Button
+                onClick={handleReview}
+                disabled={!reviewPath.trim() || isReviewing}
+                className="gap-2"
+              >
+                <Search size={14} />
+                Review
+              </Button>
+            </div>
           </CardContent>
         </Card>
-      )}
 
-      {/* Review Results */}
-      {reviewResult && !isReviewing && (
-        <>
-          {/* Score & Summary */}
-          <Card className="glass-card">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-sm flex items-center justify-between">
-                <span className="flex items-center gap-2">
-                  <FileSearch size={14} className="text-primary" />
-                  {reviewResult.fileName}
-                  <span className="text-xs font-normal text-muted-foreground">
-                    ({reviewResult.language})
-                  </span>
-                </span>
-                <span className={cn('text-2xl font-bold', getScoreColor(reviewResult.score))}>
-                  {reviewResult.score}/100
-                </span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0">
-              <p className="text-sm text-muted-foreground mb-3">{reviewResult.summary}</p>
-              {/* Stats row */}
-              <div className="flex gap-3 text-xs">
-                <span className="flex items-center gap-1">
-                  <ShieldAlert size={12} className="text-red-500" />
-                  {reviewResult.stats.critical} critical
-                </span>
-                <span className="flex items-center gap-1">
-                  <AlertTriangle size={12} className="text-yellow-500" />
-                  {reviewResult.stats.warning} warnings
-                </span>
-                <span className="flex items-center gap-1">
-                  <Info size={12} className="text-blue-500" />
-                  {reviewResult.stats.info} info
-                </span>
-                <span className="flex items-center gap-1">
-                  <Lightbulb size={12} className="text-purple-400" />
-                  {reviewResult.stats.suggestion} suggestions
-                </span>
-              </div>
+        {/* Review Loading */}
+        {isReviewing && (
+          <Card className="glass-card border-blue-500/30">
+            <CardContent className="p-6 text-center">
+              <Activity size={24} className="text-blue-500 animate-spin mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">Analyzing code quality...</p>
             </CardContent>
           </Card>
+        )}
 
-          {/* Findings List */}
-          {reviewResult.findings.length > 0 && (
+        {/* Review Results */}
+        {reviewResult && !isReviewing && (
+          <>
+            {/* Score & Summary */}
             <Card className="glass-card">
-              <CardHeader className="pb-3 border-b border-border/50">
-                <CardTitle className="flex items-center gap-2 text-sm">
-                  <Search size={14} className="text-muted-foreground" />
-                  Findings ({reviewResult.findings.length})
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm flex items-center justify-between">
+                  <span className="flex items-center gap-2">
+                    <FileSearch size={14} className="text-primary" />
+                    {reviewResult.fileName}
+                    <span className="text-xs font-normal text-muted-foreground">
+                      ({reviewResult.language})
+                    </span>
+                  </span>
+                  <span className={cn('text-2xl font-bold', getScoreColor(reviewResult.score))}>
+                    {reviewResult.score}/100
+                  </span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-0">
-                <ScrollArea className="h-[340px]">
-                  <div className="divide-y divide-border/50">
-                    {reviewResult.findings.map((finding, i) => {
-                      const config = SEVERITY_CONFIG[finding.severity] || SEVERITY_CONFIG.info
-                      const Icon = config.icon
-                      return (
-                        <div key={i} className="px-4 py-3 hover:bg-muted/50 transition-colors">
-                          <div className="flex items-start gap-2">
-                            <span className={cn('shrink-0 mt-0.5', config.color)}>
-                              <Icon size={14} />
-                            </span>
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2">
-                                <span className={cn(
-                                  'text-[10px] font-medium px-1.5 py-0.5 rounded-full uppercase',
-                                  config.bg, config.color
-                                )}>
-                                  {finding.severity}
-                                </span>
-                                {finding.line && (
-                                  <span className="text-xs text-muted-foreground">
-                                    Line {finding.line}
-                                  </span>
-                                )}
-                                {finding.rule && (
-                                  <span className="text-[10px] text-muted-foreground font-mono">
-                                    [{finding.rule}]
-                                  </span>
-                                )}
-                              </div>
-                              <p className="text-sm mt-1">{finding.message}</p>
-                              {finding.suggestion && (
-                                <p className="text-xs text-muted-foreground mt-1 italic">
-                                  → {finding.suggestion}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      )
-                    })}
-                  </div>
-                </ScrollArea>
+              <CardContent className="pt-0">
+                <p className="text-sm text-muted-foreground mb-3">{reviewResult.summary}</p>
+                {/* Stats row */}
+                <div className="flex gap-3 text-xs">
+                  <span className="flex items-center gap-1">
+                    <ShieldAlert size={12} className="text-red-500" />
+                    {reviewResult.stats.critical} critical
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <AlertTriangle size={12} className="text-yellow-500" />
+                    {reviewResult.stats.warning} warnings
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Info size={12} className="text-blue-500" />
+                    {reviewResult.stats.info} info
+                  </span>
+                  <span className="flex items-center gap-1">
+                    <Lightbulb size={12} className="text-purple-400" />
+                    {reviewResult.stats.suggestion} suggestions
+                  </span>
+                </div>
               </CardContent>
             </Card>
-          )}
-        </>
-      )}
 
-      {/* Empty state for review */}
-      {!reviewResult && !isReviewing && (
-        <Card className="glass-card">
-          <CardContent className="p-8 text-center">
-            <FileSearch size={32} className="text-muted-foreground/50 mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground">
-              Enter a file path above to start an AI-powered code review.
-            </p>
-            <p className="text-xs text-muted-foreground/70 mt-1">
-              The review analyzes code quality, security, patterns, and suggests improvements.
-            </p>
-          </CardContent>
-        </Card>
-      )}
+            {/* Findings List */}
+            {reviewResult.findings.length > 0 && (
+              <Card className="glass-card">
+                <CardHeader className="pb-3 border-b border-border/50">
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <Search size={14} className="text-muted-foreground" />
+                    Findings ({reviewResult.findings.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <ScrollArea className="h-[340px]">
+                    <div className="divide-y divide-border/50">
+                      {reviewResult.findings.map((finding, i) => {
+                        const config = SEVERITY_CONFIG[finding.severity] || SEVERITY_CONFIG.info
+                        const Icon = config.icon
+                        return (
+                          <div key={i} className="px-4 py-3 hover:bg-muted/50 transition-colors">
+                            <div className="flex items-start gap-2">
+                              <span className={cn('shrink-0 mt-0.5', config.color)}>
+                                <Icon size={14} />
+                              </span>
+                              <div className="flex-1 min-w-0">
+                                <div className="flex items-center gap-2">
+                                  <span className={cn(
+                                    'text-[10px] font-medium px-1.5 py-0.5 rounded-full uppercase',
+                                    config.bg, config.color
+                                  )}>
+                                    {finding.severity}
+                                  </span>
+                                  {finding.line && (
+                                    <span className="text-xs text-muted-foreground">
+                                      Line {finding.line}
+                                    </span>
+                                  )}
+                                  {finding.rule && (
+                                    <span className="text-[10px] text-muted-foreground font-mono">
+                                      [{finding.rule}]
+                                    </span>
+                                  )}
+                                </div>
+                                <p className="text-sm mt-1">{finding.message}</p>
+                                {finding.suggestion && (
+                                  <p className="text-xs text-muted-foreground mt-1 italic">
+                                    → {finding.suggestion}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </ScrollArea>
+                </CardContent>
+              </Card>
+            )}
+          </>
+        )}
+
+        {/* Empty state for review */}
+        {!reviewResult && !isReviewing && (
+          <Card className="glass-card">
+            <CardContent className="p-8 text-center">
+              <FileSearch size={32} className="text-muted-foreground/50 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">
+                Enter a file path above to start an AI-powered code review.
+              </p>
+              <p className="text-xs text-muted-foreground/70 mt-1">
+                The review analyzes code quality, security, patterns, and suggests improvements.
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
       </>)}
 
       {/* ==================== COVERAGE TAB ==================== */}
       {activeTab === 'coverage' && (<>
 
-      {/* Coverage Controls */}
-      <Card className="glass-card">
-        <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
-              <BarChart3 size={16} className="text-primary" />
-              <span className="text-sm font-medium">Test Coverage Analysis</span>
+        {/* Coverage Controls */}
+        <Card className="glass-card">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <BarChart3 size={16} className="text-primary" />
+                <span className="text-sm font-medium">Test Coverage Analysis</span>
+              </div>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  disabled={isLoadingCoverage}
+                  onClick={async () => {
+                    setIsLoadingCoverage(true)
+                    try {
+                      const result = await fetchCoverage('parse')
+                      setCoverageData(result)
+                      toast.success('Coverage data loaded')
+                    } catch (err: unknown) {
+                      toast.error(err instanceof Error ? err.message : 'Failed to load coverage')
+                    } finally {
+                      setIsLoadingCoverage(false)
+                    }
+                  }}
+                >
+                  {isLoadingCoverage ? <Activity size={12} className="animate-spin" /> : <RefreshCw size={12} />}
+                  <span className="ml-1.5">Load Existing</span>
+                </Button>
+                <Button
+                  size="sm"
+                  disabled={isLoadingCoverage}
+                  onClick={async () => {
+                    setIsLoadingCoverage(true)
+                    try {
+                      const result = await fetchCoverage('run')
+                      setCoverageData(result)
+                      toast.success('Coverage run complete')
+                    } catch (err: unknown) {
+                      toast.error(err instanceof Error ? err.message : 'Coverage run failed')
+                    } finally {
+                      setIsLoadingCoverage(false)
+                    }
+                  }}
+                >
+                  <Play size={12} />
+                  <span className="ml-1.5">Run Coverage</span>
+                </Button>
+              </div>
             </div>
-            <div className="flex gap-2">
-              <Button
-                variant="outline"
-                size="sm"
-                disabled={isLoadingCoverage}
-                onClick={async () => {
-                  setIsLoadingCoverage(true)
-                  try {
-                    const result = await fetchCoverage('parse')
-                    setCoverageData(result)
-                    toast.success('Coverage data loaded')
-                  } catch (err: unknown) {
-                    toast.error(err instanceof Error ? err.message : 'Failed to load coverage')
-                  } finally {
-                    setIsLoadingCoverage(false)
-                  }
-                }}
-              >
-                {isLoadingCoverage ? <Activity size={12} className="animate-spin" /> : <RefreshCw size={12} />}
-                <span className="ml-1.5">Load Existing</span>
-              </Button>
-              <Button
-                size="sm"
-                disabled={isLoadingCoverage}
-                onClick={async () => {
-                  setIsLoadingCoverage(true)
-                  try {
-                    const result = await fetchCoverage('run')
-                    setCoverageData(result)
-                    toast.success('Coverage run complete')
-                  } catch (err: unknown) {
-                    toast.error(err instanceof Error ? err.message : 'Coverage run failed')
-                  } finally {
-                    setIsLoadingCoverage(false)
-                  }
-                }}
-              >
-                <Play size={12} />
-                <span className="ml-1.5">Run Coverage</span>
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Coverage Loading */}
-      {isLoadingCoverage && (
-        <Card className="glass-card border-blue-500/30">
-          <CardContent className="p-6 text-center">
-            <Activity size={24} className="text-blue-500 animate-spin mx-auto mb-2" />
-            <p className="text-sm text-muted-foreground">Analyzing coverage...</p>
           </CardContent>
         </Card>
-      )}
 
-      {/* Coverage Results */}
-      {coverageData && !isLoadingCoverage && (
-        <>
-          {/* Aggregate Metrics */}
-          <Card className="glass-card">
-            <CardHeader className="pb-3">
-              <CardTitle className="text-sm flex items-center gap-2">
-                <BarChart3 size={14} className="text-primary" />
-                Aggregate Coverage
-                <span className="ml-auto text-xs text-muted-foreground">
-                  {coverageData.filesWithTests} / {coverageData.totalFiles} files
-                </span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="pt-0 space-y-2">
-              {(['statements', 'branches', 'functions', 'lines'] as const).map(metric => {
-                const d = coverageData.aggregate[metric]
-                return (
-                  <div key={metric} className="flex items-center gap-3 text-xs">
-                    <span className="w-20 text-muted-foreground capitalize">{metric}</span>
-                    <CoverageBar pct={d.pct} />
-                    <span className={cn(
-                      'w-10 text-right font-medium',
-                      d.pct >= 80 ? 'text-green-500' : d.pct >= 60 ? 'text-yellow-500' : 'text-red-500'
-                    )}>
-                      {d.pct}%
-                    </span>
-                    <span className="text-muted-foreground/60">{d.covered}/{d.total}</span>
-                  </div>
-                )
-              })}
+        {/* Coverage Loading */}
+        {isLoadingCoverage && (
+          <Card className="glass-card border-blue-500/30">
+            <CardContent className="p-6 text-center">
+              <Activity size={24} className="text-blue-500 animate-spin mx-auto mb-2" />
+              <p className="text-sm text-muted-foreground">Analyzing coverage...</p>
             </CardContent>
           </Card>
+        )}
 
-          {/* Worst Files */}
-          {coverageData.worstFiles.length > 0 && (
+        {/* Coverage Results */}
+        {coverageData && !isLoadingCoverage && (
+          <>
+            {/* Aggregate Metrics */}
             <Card className="glass-card">
-              <CardHeader className="pb-3 border-b border-border/50">
-                <CardTitle className="flex items-center gap-2 text-sm">
-                  <AlertTriangle size={14} className="text-yellow-500" />
-                  Lowest Coverage ({coverageData.worstFiles.length})
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="p-0">
-                <ScrollArea className="h-[200px]">
-                  <div className="divide-y divide-border/50">
-                    {coverageData.worstFiles.map((f, i) => (
-                      <div key={i} className="px-4 py-2 hover:bg-muted/50 transition-colors">
-                        <div className="flex items-center justify-between">
-                          <span className="text-xs font-mono truncate flex-1">{f.relativePath}</span>
-                          <div className="flex items-center gap-2 ml-2">
-                            <CoverageBar pct={f.lines.pct} />
-                            <span className={cn(
-                              'text-xs font-medium w-10 text-right',
-                              f.lines.pct >= 80 ? 'text-green-500' : f.lines.pct >= 60 ? 'text-yellow-500' : 'text-red-500'
-                            )}>
-                              {f.lines.pct}%
-                            </span>
-                          </div>
-                        </div>
-                        {f.uncoveredLines.length > 0 && f.uncoveredLines.length <= 10 && (
-                          <p className="text-[10px] text-muted-foreground mt-0.5">
-                            Uncovered: L{f.uncoveredLines.join(', L')}
-                          </p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                </ScrollArea>
-              </CardContent>
-            </Card>
-          )}
-
-          {/* Untested Files */}
-          {coverageData.untestedFiles.length > 0 && (
-            <Card className="glass-card border-red-500/20">
               <CardHeader className="pb-3">
-                <CardTitle className="flex items-center gap-2 text-sm">
-                  <XCircle size={14} className="text-red-500" />
-                  Untested Files ({coverageData.untestedFiles.length})
+                <CardTitle className="text-sm flex items-center gap-2">
+                  <BarChart3 size={14} className="text-primary" />
+                  Aggregate Coverage
+                  <span className="ml-auto text-xs text-muted-foreground">
+                    {coverageData.filesWithTests} / {coverageData.totalFiles} files
+                  </span>
                 </CardTitle>
               </CardHeader>
-              <CardContent className="pt-0">
-                <ScrollArea className="h-[120px]">
-                  <div className="space-y-1">
-                    {coverageData.untestedFiles.map((f, i) => (
-                      <div key={i} className="text-xs text-red-400 font-mono">{f}</div>
-                    ))}
-                  </div>
-                </ScrollArea>
+              <CardContent className="pt-0 space-y-2">
+                {(['statements', 'branches', 'functions', 'lines'] as const).map(metric => {
+                  const d = coverageData.aggregate[metric]
+                  return (
+                    <div key={metric} className="flex items-center gap-3 text-xs">
+                      <span className="w-20 text-muted-foreground capitalize">{metric}</span>
+                      <CoverageBar pct={d.pct} />
+                      <span className={cn(
+                        'w-10 text-right font-medium',
+                        d.pct >= 80 ? 'text-green-500' : d.pct >= 60 ? 'text-yellow-500' : 'text-red-500'
+                      )}>
+                        {d.pct}%
+                      </span>
+                      <span className="text-muted-foreground/60">{d.covered}/{d.total}</span>
+                    </div>
+                  )
+                })}
               </CardContent>
             </Card>
-          )}
-        </>
-      )}
 
-      {/* Empty state for coverage */}
-      {!coverageData && !isLoadingCoverage && (
-        <Card className="glass-card">
-          <CardContent className="p-8 text-center">
-            <BarChart3 size={32} className="text-muted-foreground/50 mx-auto mb-3" />
-            <p className="text-sm text-muted-foreground">
-              Click &quot;Load Existing&quot; to parse coverage data, or &quot;Run Coverage&quot; to generate fresh results.
-            </p>
-            <p className="text-xs text-muted-foreground/70 mt-1">
-              Coverage analysis shows statement, branch, function, and line coverage metrics.
-            </p>
-          </CardContent>
-        </Card>
-      )}
+            {/* Worst Files */}
+            {coverageData.worstFiles.length > 0 && (
+              <Card className="glass-card">
+                <CardHeader className="pb-3 border-b border-border/50">
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <AlertTriangle size={14} className="text-yellow-500" />
+                    Lowest Coverage ({coverageData.worstFiles.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <ScrollArea className="h-[200px]">
+                    <div className="divide-y divide-border/50">
+                      {coverageData.worstFiles.map((f, i) => (
+                        <div key={i} className="px-4 py-2 hover:bg-muted/50 transition-colors">
+                          <div className="flex items-center justify-between">
+                            <span className="text-xs font-mono truncate flex-1">{f.relativePath}</span>
+                            <div className="flex items-center gap-2 ml-2">
+                              <CoverageBar pct={f.lines.pct} />
+                              <span className={cn(
+                                'text-xs font-medium w-10 text-right',
+                                f.lines.pct >= 80 ? 'text-green-500' : f.lines.pct >= 60 ? 'text-yellow-500' : 'text-red-500'
+                              )}>
+                                {f.lines.pct}%
+                              </span>
+                            </div>
+                          </div>
+                          {f.uncoveredLines.length > 0 && f.uncoveredLines.length <= 10 && (
+                            <p className="text-[10px] text-muted-foreground mt-0.5">
+                              Uncovered: L{f.uncoveredLines.join(', L')}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Untested Files */}
+            {coverageData.untestedFiles.length > 0 && (
+              <Card className="glass-card border-red-500/20">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <XCircle size={14} className="text-red-500" />
+                    Untested Files ({coverageData.untestedFiles.length})
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="pt-0">
+                  <ScrollArea className="h-[120px]">
+                    <div className="space-y-1">
+                      {coverageData.untestedFiles.map((f, i) => (
+                        <div key={i} className="text-xs text-red-400 font-mono">{f}</div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </CardContent>
+              </Card>
+            )}
+          </>
+        )}
+
+        {/* Empty state for coverage */}
+        {!coverageData && !isLoadingCoverage && (
+          <Card className="glass-card">
+            <CardContent className="p-8 text-center">
+              <BarChart3 size={32} className="text-muted-foreground/50 mx-auto mb-3" />
+              <p className="text-sm text-muted-foreground">
+                Click &quot;Load Existing&quot; to parse coverage data, or &quot;Run Coverage&quot; to generate fresh results.
+              </p>
+              <p className="text-xs text-muted-foreground/70 mt-1">
+                Coverage analysis shows statement, branch, function, and line coverage metrics.
+              </p>
+            </CardContent>
+          </Card>
+        )}
 
       </>)}
 
@@ -1394,10 +1395,10 @@ export function DeveloperPanel() {
                             <Badge
                               variant={
                                 task.status === 'completed' ? 'default' :
-                                task.status === 'failed' ? 'destructive' :
-                                task.status === 'running' ? 'default' :
-                                task.status === 'cancelled' ? 'secondary' :
-                                'outline'
+                                  task.status === 'failed' ? 'destructive' :
+                                    task.status === 'running' ? 'default' :
+                                      task.status === 'cancelled' ? 'secondary' :
+                                        'outline'
                               }
                               className={cn(
                                 'text-xs',
@@ -1499,343 +1500,343 @@ export function DeveloperPanel() {
         )}
       </>)}
 
-        {/* ==================== P10: Metrics Tab ==================== */}
-        {activeTab === 'metrics' && (
-          <>
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold">Developer Metrics</h2>
-                <p className="text-sm text-muted-foreground">Build, test, and task performance snapshots</p>
+      {/* ==================== P10: Metrics Tab ==================== */}
+      {activeTab === 'metrics' && (
+        <>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Developer Metrics</h2>
+              <p className="text-sm text-muted-foreground">Build, test, and task performance snapshots</p>
+            </div>
+            <Button
+              size="sm"
+              variant="outline"
+              disabled={isLoadingMetrics}
+              onClick={loadMetrics}
+            >
+              {isLoadingMetrics ? <Activity size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+              <span className="ml-1.5">Refresh</span>
+            </Button>
+          </div>
+
+          {isLoadingMetrics && (
+            <Card className="glass-card border-blue-500/20">
+              <CardContent className="p-6 text-center">
+                <Activity size={20} className="animate-spin text-blue-500 mx-auto mb-2" />
+                <p className="text-sm text-muted-foreground">Loading metrics...</p>
+              </CardContent>
+            </Card>
+          )}
+
+          {metricsData && !isLoadingMetrics && (
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="glass-card">
+                  <CardContent className="p-4 space-y-2">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <span className="flex items-center gap-2"><Gauge size={14} className="text-primary" /> Builds</span>
+                      <Badge variant="outline" className="text-[10px]">
+                        {metricsData.builds.lastStatus === 'unknown' ? 'n/a' : metricsData.builds.lastStatus}
+                      </Badge>
+                    </div>
+                    <div className="text-3xl font-bold">{metricsData.builds.total}</div>
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <span className="text-green-500">{metricsData.builds.success} success</span>
+                      <span className="text-red-500">{metricsData.builds.fail} fail</span>
+                    </div>
+                    {metricsData.builds.lastDurationMs > 0 && (
+                      <p className="text-[11px] text-muted-foreground">
+                        Last duration: {(metricsData.builds.lastDurationMs / 1000).toFixed(1)}s
+                      </p>
+                    )}
+                  </CardContent>
+                </Card>
+                <Card className="glass-card">
+                  <CardContent className="p-4 space-y-2">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <span className="flex items-center gap-2"><TestTube2 size={14} className="text-primary" /> Tests</span>
+                      <Badge variant="outline" className="text-[10px]">{metricsData.tests.totalRuns} runs</Badge>
+                    </div>
+                    <div className="text-3xl font-bold">{metricsData.tests.lastPassRate}%</div>
+                    <p className="text-[11px] text-muted-foreground">
+                      Last duration: {(metricsData.tests.lastDurationMs / 1000).toFixed(1)}s
+                    </p>
+                  </CardContent>
+                </Card>
+                <Card className="glass-card">
+                  <CardContent className="p-4 space-y-2">
+                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                      <span className="flex items-center gap-2"><Activity size={14} className="text-primary" /> Tasks</span>
+                      <Badge variant="outline" className="text-[10px]">Avg {Math.round(metricsData.tasks.avgDurationMs / 1000)}s</Badge>
+                    </div>
+                    <div className="text-3xl font-bold">{metricsData.tasks.total}</div>
+                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                      <span className="text-green-500">{metricsData.tasks.success} success</span>
+                      <span className="text-red-500">{metricsData.tasks.error} error</span>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
-              <Button
-                size="sm"
-                variant="outline"
-                disabled={isLoadingMetrics}
-                onClick={loadMetrics}
-              >
-                {isLoadingMetrics ? <Activity size={14} className="animate-spin" /> : <RefreshCw size={14} />}
-                <span className="ml-1.5">Refresh</span>
+
+              {metricsData.history.length > 0 ? (
+                <Card className="glass-card">
+                  <CardHeader className="pb-3 border-b border-border/50">
+                    <CardTitle className="flex items-center gap-2 text-sm">
+                      <History size={14} className="text-muted-foreground" /> Recent Runs
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <ScrollArea className="h-[260px]">
+                      <div className="divide-y divide-border/60">
+                        {metricsData.history.map((entry, idx) => (
+                          <div key={idx} className="px-4 py-3 flex items-center gap-3">
+                            <Badge
+                              variant="outline"
+                              className={cn(
+                                'text-[10px]',
+                                entry.status === 'success' && 'bg-green-500/10 text-green-500 border-green-500/30',
+                                entry.status !== 'success' && 'bg-red-500/10 text-red-500 border-red-500/30'
+                              )}
+                            >
+                              {entry.type.toUpperCase()}
+                            </Badge>
+                            <div className="flex-1 min-w-0">
+                              <p className="text-sm truncate">{entry.details}</p>
+                              <p className="text-[11px] text-muted-foreground">
+                                {(entry.durationMs / 1000).toFixed(1)}s • {new Date(entry.timestamp).toLocaleTimeString()}
+                              </p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </ScrollArea>
+                  </CardContent>
+                </Card>
+              ) : (
+                <Card className="glass-card">
+                  <CardContent className="p-6 text-center text-sm text-muted-foreground">
+                    No metrics recorded yet. Run builds or tasks to populate history.
+                  </CardContent>
+                </Card>
+              )}
+            </>
+          )}
+
+          {!metricsData && !isLoadingMetrics && (
+            <Card className="glass-card">
+              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+                No metrics data available. Trigger a build/test/task to start tracking.
+              </CardContent>
+            </Card>
+          )}
+        </>
+      )}
+
+      {/* ==================== P11: Approvals Tab ==================== */}
+      {activeTab === 'approvals' && (
+        <>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Approval Requests</h2>
+              <p className="text-sm text-muted-foreground">Human-in-the-loop confirmations for critical actions</p>
+            </div>
+            <div className="flex items-center gap-2">
+              {(['pending', 'approved', 'rejected', 'expired'] as ApprovalStatus[]).map((status) => (
+                <Button
+                  key={status}
+                  variant={approvalFilter === status ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => loadApprovals(status)}
+                >
+                  {status}
+                </Button>
+              ))}
+              <Button size="sm" variant="ghost" onClick={() => loadApprovals(approvalFilter)} disabled={isLoadingApprovals}>
+                {isLoadingApprovals ? <Activity size={14} className="animate-spin" /> : <RefreshCw size={14} />}
               </Button>
             </div>
+          </div>
 
-            {isLoadingMetrics && (
-              <Card className="glass-card border-blue-500/20">
-                <CardContent className="p-6 text-center">
-                  <Activity size={20} className="animate-spin text-blue-500 mx-auto mb-2" />
-                  <p className="text-sm text-muted-foreground">Loading metrics...</p>
-                </CardContent>
-              </Card>
-            )}
+          {isLoadingApprovals && (
+            <Card className="glass-card border-blue-500/20">
+              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+                <Activity size={18} className="animate-spin text-blue-500 mx-auto mb-2" />
+                Loading approvals...
+              </CardContent>
+            </Card>
+          )}
 
-            {metricsData && !isLoadingMetrics && (
-              <>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Card className="glass-card">
-                    <CardContent className="p-4 space-y-2">
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span className="flex items-center gap-2"><Gauge size={14} className="text-primary" /> Builds</span>
-                        <Badge variant="outline" className="text-[10px]">
-                          {metricsData.builds.lastStatus === 'unknown' ? 'n/a' : metricsData.builds.lastStatus}
+          {approvals.length > 0 && !isLoadingApprovals && (
+            <Card className="glass-card">
+              <CardContent className="p-0">
+                <ScrollArea className="h-[420px]">
+                  <div className="divide-y divide-border/60">
+                    {approvals.map((req) => (
+                      <div key={req.id} className="p-4 flex items-start gap-3">
+                        <Badge
+                          variant="outline"
+                          className={cn(
+                            'text-[10px] mt-0.5',
+                            req.status === 'pending' && 'bg-yellow-500/10 text-yellow-500 border-yellow-500/40',
+                            req.status === 'approved' && 'bg-green-500/10 text-green-500 border-green-500/40',
+                            req.status === 'rejected' && 'bg-red-500/10 text-red-500 border-red-500/40',
+                            req.status === 'expired' && 'bg-muted/60 text-muted-foreground border-border'
+                          )}
+                        >
+                          {req.status.toUpperCase()}
                         </Badge>
-                      </div>
-                      <div className="text-3xl font-bold">{metricsData.builds.total}</div>
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span className="text-green-500">{metricsData.builds.success} success</span>
-                        <span className="text-red-500">{metricsData.builds.fail} fail</span>
-                      </div>
-                      {metricsData.builds.lastDurationMs > 0 && (
-                        <p className="text-[11px] text-muted-foreground">
-                          Last duration: {(metricsData.builds.lastDurationMs / 1000).toFixed(1)}s
-                        </p>
-                      )}
-                    </CardContent>
-                  </Card>
-                  <Card className="glass-card">
-                    <CardContent className="p-4 space-y-2">
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span className="flex items-center gap-2"><TestTube2 size={14} className="text-primary" /> Tests</span>
-                        <Badge variant="outline" className="text-[10px]">{metricsData.tests.totalRuns} runs</Badge>
-                      </div>
-                      <div className="text-3xl font-bold">{metricsData.tests.lastPassRate}%</div>
-                      <p className="text-[11px] text-muted-foreground">
-                        Last duration: {(metricsData.tests.lastDurationMs / 1000).toFixed(1)}s
-                      </p>
-                    </CardContent>
-                  </Card>
-                  <Card className="glass-card">
-                    <CardContent className="p-4 space-y-2">
-                      <div className="flex items-center justify-between text-sm text-muted-foreground">
-                        <span className="flex items-center gap-2"><Activity size={14} className="text-primary" /> Tasks</span>
-                        <Badge variant="outline" className="text-[10px]">Avg {Math.round(metricsData.tasks.avgDurationMs / 1000)}s</Badge>
-                      </div>
-                      <div className="text-3xl font-bold">{metricsData.tasks.total}</div>
-                      <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                        <span className="text-green-500">{metricsData.tasks.success} success</span>
-                        <span className="text-red-500">{metricsData.tasks.error} error</span>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </div>
-
-                {metricsData.history.length > 0 ? (
-                  <Card className="glass-card">
-                    <CardHeader className="pb-3 border-b border-border/50">
-                      <CardTitle className="flex items-center gap-2 text-sm">
-                        <History size={14} className="text-muted-foreground" /> Recent Runs
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-0">
-                      <ScrollArea className="h-[260px]">
-                        <div className="divide-y divide-border/60">
-                          {metricsData.history.map((entry, idx) => (
-                            <div key={idx} className="px-4 py-3 flex items-center gap-3">
-                              <Badge
-                                variant="outline"
-                                className={cn(
-                                  'text-[10px]',
-                                  entry.status === 'success' && 'bg-green-500/10 text-green-500 border-green-500/30',
-                                  entry.status !== 'success' && 'bg-red-500/10 text-red-500 border-red-500/30'
-                                )}
-                              >
-                                {entry.type.toUpperCase()}
-                              </Badge>
-                              <div className="flex-1 min-w-0">
-                                <p className="text-sm truncate">{entry.details}</p>
-                                <p className="text-[11px] text-muted-foreground">
-                                  {(entry.durationMs / 1000).toFixed(1)}s • {new Date(entry.timestamp).toLocaleTimeString()}
-                                </p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </ScrollArea>
-                    </CardContent>
-                  </Card>
-                ) : (
-                  <Card className="glass-card">
-                    <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                      No metrics recorded yet. Run builds or tasks to populate history.
-                    </CardContent>
-                  </Card>
-                )}
-              </>
-            )}
-
-            {!metricsData && !isLoadingMetrics && (
-              <Card className="glass-card">
-                <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                  No metrics data available. Trigger a build/test/task to start tracking.
-                </CardContent>
-              </Card>
-            )}
-          </>
-        )}
-
-        {/* ==================== P11: Approvals Tab ==================== */}
-        {activeTab === 'approvals' && (
-          <>
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold">Approval Requests</h2>
-                <p className="text-sm text-muted-foreground">Human-in-the-loop confirmations for critical actions</p>
-              </div>
-              <div className="flex items-center gap-2">
-                {(['pending', 'approved', 'rejected', 'expired'] as ApprovalStatus[]).map((status) => (
-                  <Button
-                    key={status}
-                    variant={approvalFilter === status ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => loadApprovals(status)}
-                  >
-                    {status}
-                  </Button>
-                ))}
-                <Button size="sm" variant="ghost" onClick={() => loadApprovals(approvalFilter)} disabled={isLoadingApprovals}>
-                  {isLoadingApprovals ? <Activity size={14} className="animate-spin" /> : <RefreshCw size={14} />}
-                </Button>
-              </div>
-            </div>
-
-            {isLoadingApprovals && (
-              <Card className="glass-card border-blue-500/20">
-                <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                  <Activity size={18} className="animate-spin text-blue-500 mx-auto mb-2" />
-                  Loading approvals...
-                </CardContent>
-              </Card>
-            )}
-
-            {approvals.length > 0 && !isLoadingApprovals && (
-              <Card className="glass-card">
-                <CardContent className="p-0">
-                  <ScrollArea className="h-[420px]">
-                    <div className="divide-y divide-border/60">
-                      {approvals.map((req) => (
-                        <div key={req.id} className="p-4 flex items-start gap-3">
-                          <Badge
-                            variant="outline"
-                            className={cn(
-                              'text-[10px] mt-0.5',
-                              req.status === 'pending' && 'bg-yellow-500/10 text-yellow-500 border-yellow-500/40',
-                              req.status === 'approved' && 'bg-green-500/10 text-green-500 border-green-500/40',
-                              req.status === 'rejected' && 'bg-red-500/10 text-red-500 border-red-500/40',
-                              req.status === 'expired' && 'bg-muted/60 text-muted-foreground border-border'
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <span className="font-mono">{req.id.slice(0, 8)}</span>
+                            <span>Type: {req.type}</span>
+                            <span>Created: {new Date(req.createdAt).toLocaleTimeString()}</span>
+                          </div>
+                          <p className="text-sm mt-1">{req.description}</p>
+                          {req.metadata && (
+                            <p className="text-[11px] text-muted-foreground mt-1 truncate">
+                              Meta: {JSON.stringify(req.metadata)}
+                            </p>
+                          )}
+                          {req.response && (
+                            <p className="text-[11px] text-muted-foreground mt-1">
+                              Response: {JSON.stringify(req.response)}
+                            </p>
+                          )}
+                          <div className="flex items-center gap-2 mt-2">
+                            {req.status === 'pending' && (
+                              <>
+                                <Button
+                                  size="sm"
+                                  variant="default"
+                                  disabled={respondingId === req.id}
+                                  onClick={() => handleApprovalAction(req.id, 'approve')}
+                                  className="h-7"
+                                >
+                                  {respondingId === req.id ? '...' : 'Approve'}
+                                </Button>
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  disabled={respondingId === req.id}
+                                  onClick={() => handleApprovalAction(req.id, 'reject')}
+                                  className="h-7"
+                                >
+                                  Reject
+                                </Button>
+                              </>
                             )}
-                          >
-                            {req.status.toUpperCase()}
-                          </Badge>
+                            {req.status !== 'pending' && req.respondedAt && (
+                              <span className="text-[11px] text-muted-foreground">
+                                Resolved {new Date(req.respondedAt).toLocaleTimeString()}
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          )}
+
+          {approvals.length === 0 && !isLoadingApprovals && (
+            <Card className="glass-card">
+              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+                No approval requests in this state.
+              </CardContent>
+            </Card>
+          )}
+        </>
+      )}
+
+      {/* ==================== P12: Activity Feed Tab ==================== */}
+      {activeTab === 'activity' && (
+        <>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Activity Feed</h2>
+              <p className="text-sm text-muted-foreground">Recent system, agent, queue, and approval events</p>
+            </div>
+            <div className="flex items-center gap-2">
+              <select
+                className="border border-border rounded-md bg-transparent text-sm px-2 py-1"
+                value={activityLimit}
+                onChange={(e) => loadActivity(parseInt(e.target.value, 10))}
+              >
+                {[20, 30, 50, 100].map((n) => (
+                  <option key={n} value={n}>{n} items</option>
+                ))}
+              </select>
+              <Button size="sm" variant="outline" onClick={() => loadActivity(activityLimit)} disabled={isLoadingActivity}>
+                {isLoadingActivity ? <Activity size={14} className="animate-spin" /> : <RefreshCw size={14} />}
+              </Button>
+            </div>
+          </div>
+
+          {isLoadingActivity && (
+            <Card className="glass-card border-blue-500/20">
+              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+                <Activity size={18} className="animate-spin text-blue-500 mx-auto mb-2" />
+                Loading activity...
+              </CardContent>
+            </Card>
+          )}
+
+          {activities.length > 0 && !isLoadingActivity && (
+            <Card className="glass-card">
+              <CardContent className="p-0">
+                <ScrollArea className="h-[480px]">
+                  <div className="divide-y divide-border/60">
+                    {activities.map((item) => {
+                      const color = item.type === 'success'
+                        ? 'text-green-500'
+                        : item.type === 'warning'
+                          ? 'text-yellow-500'
+                          : item.type === 'error'
+                            ? 'text-red-500'
+                            : item.type === 'approval'
+                              ? 'text-blue-500'
+                              : 'text-muted-foreground'
+                      return (
+                        <div key={item.id} className="p-4 flex items-start gap-3">
+                          <div className={cn('mt-0.5 h-2 w-2 rounded-full',
+                            item.type === 'success' ? 'bg-green-500' :
+                              item.type === 'warning' ? 'bg-yellow-500' :
+                                item.type === 'error' ? 'bg-red-500' :
+                                  item.type === 'approval' ? 'bg-blue-500' : 'bg-muted-foreground'
+                          )} />
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                              <span className="font-mono">{req.id.slice(0, 8)}</span>
-                              <span>Type: {req.type}</span>
-                              <span>Created: {new Date(req.createdAt).toLocaleTimeString()}</span>
+                              <span className={color}>{item.type}</span>
+                              <span className="uppercase text-[10px]">{item.source}</span>
+                              <span>{new Date(item.timestamp).toLocaleTimeString()}</span>
                             </div>
-                            <p className="text-sm mt-1">{req.description}</p>
-                            {req.metadata && (
+                            <p className="text-sm mt-1">{item.message}</p>
+                            {item.metadata && (
                               <p className="text-[11px] text-muted-foreground mt-1 truncate">
-                                Meta: {JSON.stringify(req.metadata)}
+                                Meta: {JSON.stringify(item.metadata)}
                               </p>
                             )}
-                            {req.response && (
-                              <p className="text-[11px] text-muted-foreground mt-1">
-                                Response: {JSON.stringify(req.response)}
-                              </p>
-                            )}
-                            <div className="flex items-center gap-2 mt-2">
-                              {req.status === 'pending' && (
-                                <>
-                                  <Button
-                                    size="sm"
-                                    variant="default"
-                                    disabled={respondingId === req.id}
-                                    onClick={() => handleApprovalAction(req.id, 'approve')}
-                                    className="h-7"
-                                  >
-                                    {respondingId === req.id ? '...' : 'Approve'}
-                                  </Button>
-                                  <Button
-                                    size="sm"
-                                    variant="outline"
-                                    disabled={respondingId === req.id}
-                                    onClick={() => handleApprovalAction(req.id, 'reject')}
-                                    className="h-7"
-                                  >
-                                    Reject
-                                  </Button>
-                                </>
-                              )}
-                              {req.status !== 'pending' && req.respondedAt && (
-                                <span className="text-[11px] text-muted-foreground">
-                                  Resolved {new Date(req.respondedAt).toLocaleTimeString()}
-                                </span>
-                              )}
-                            </div>
                           </div>
                         </div>
-                      ))}
-                    </div>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
-            )}
+                      )
+                    })}
+                  </div>
+                </ScrollArea>
+              </CardContent>
+            </Card>
+          )}
 
-            {approvals.length === 0 && !isLoadingApprovals && (
-              <Card className="glass-card">
-                <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                  No approval requests in this state.
-                </CardContent>
-              </Card>
-            )}
-          </>
-        )}
-
-        {/* ==================== P12: Activity Feed Tab ==================== */}
-        {activeTab === 'activity' && (
-          <>
-            <div className="flex items-center justify-between">
-              <div>
-                <h2 className="text-xl font-semibold">Activity Feed</h2>
-                <p className="text-sm text-muted-foreground">Recent system, agent, queue, and approval events</p>
-              </div>
-              <div className="flex items-center gap-2">
-                <select
-                  className="border border-border rounded-md bg-transparent text-sm px-2 py-1"
-                  value={activityLimit}
-                  onChange={(e) => loadActivity(parseInt(e.target.value, 10))}
-                >
-                  {[20, 30, 50, 100].map((n) => (
-                    <option key={n} value={n}>{n} items</option>
-                  ))}
-                </select>
-                <Button size="sm" variant="outline" onClick={() => loadActivity(activityLimit)} disabled={isLoadingActivity}>
-                  {isLoadingActivity ? <Activity size={14} className="animate-spin" /> : <RefreshCw size={14} />}
-                </Button>
-              </div>
-            </div>
-
-            {isLoadingActivity && (
-              <Card className="glass-card border-blue-500/20">
-                <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                  <Activity size={18} className="animate-spin text-blue-500 mx-auto mb-2" />
-                  Loading activity...
-                </CardContent>
-              </Card>
-            )}
-
-            {activities.length > 0 && !isLoadingActivity && (
-              <Card className="glass-card">
-                <CardContent className="p-0">
-                  <ScrollArea className="h-[480px]">
-                    <div className="divide-y divide-border/60">
-                      {activities.map((item) => {
-                        const color = item.type === 'success'
-                          ? 'text-green-500'
-                          : item.type === 'warning'
-                            ? 'text-yellow-500'
-                            : item.type === 'error'
-                              ? 'text-red-500'
-                              : item.type === 'approval'
-                                ? 'text-blue-500'
-                                : 'text-muted-foreground'
-                        return (
-                          <div key={item.id} className="p-4 flex items-start gap-3">
-                            <div className={cn('mt-0.5 h-2 w-2 rounded-full',
-                              item.type === 'success' ? 'bg-green-500' :
-                              item.type === 'warning' ? 'bg-yellow-500' :
-                              item.type === 'error' ? 'bg-red-500' :
-                              item.type === 'approval' ? 'bg-blue-500' : 'bg-muted-foreground'
-                            )} />
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                <span className={color}>{item.type}</span>
-                                <span className="uppercase text-[10px]">{item.source}</span>
-                                <span>{new Date(item.timestamp).toLocaleTimeString()}</span>
-                              </div>
-                              <p className="text-sm mt-1">{item.message}</p>
-                              {item.metadata && (
-                                <p className="text-[11px] text-muted-foreground mt-1 truncate">
-                                  Meta: {JSON.stringify(item.metadata)}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        )
-                      })}
-                    </div>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
-            )}
-
-            {activities.length === 0 && !isLoadingActivity && (
-              <Card className="glass-card">
-                <CardContent className="p-6 text-center text-sm text-muted-foreground">
-                  No activity recorded yet.
-                </CardContent>
-              </Card>
-            )}
-          </>
-        )}
+          {activities.length === 0 && !isLoadingActivity && (
+            <Card className="glass-card">
+              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+                No activity recorded yet.
+              </CardContent>
+            </Card>
+          )}
+        </>
+      )}
 
     </div>
   )
