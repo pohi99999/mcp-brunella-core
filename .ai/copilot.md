@@ -81,6 +81,41 @@
 
 ---
 
+### 2026-02-12 10:30 - 🤖 Robotkéz Stabilizáció & Gemini 2.0 Integráció (FIX KÉSZ! ✅)
+
+**Track:** `robotkez_stabilization_20260212`
+**Feladat:** Robotkéz (browser-use) stabilizálása, Gemini 404 hiba javítása, JSON kommunikációs hiba elhárítása.
+
+**Eredmények:**
+
+✅ **Gemini 2.0 Flash Integráció:**
+- A `gemini-1.5-flash` 404-es hibát adott, az új alapértelmezett modell a `models/gemini-2.0-flash` lett.
+- `myai/browser_task_runner.py` frissítve a legújabb `ChatGoogleGenerativeAI` wrapperre.
+
+✅ **JSON Bridge Stabilizáció:**
+- Megszüntetve a Node.js `JSON.parse` hibája: a Python kimenet korábban logokat is tartalmazott a `stdout`-on.
+- Minden Python log átirányítva a `sys.stderr`-re.
+- A `stdout` mostantól **kizárólag** tiszta JSON választ ad vissza (Success/Error/Result).
+
+✅ **Robotkéz API (v1):**
+- `/api/v1/robotkez/task` endpoint stabilizálva.
+- Hibakezelés (Timeout, Process error) implementálva.
+
+✅ **Technikai Validáció:**
+- "Visit google.com" teszt sikeresen lefutott.
+- A modell sikeresen navigál és adatot nyer ki.
+
+**Érintett fájlok:**
+- `myai/browser_task_runner.py` (Modell váltás, log redirection, pydantic output)
+- `src/server/web.ts` (API regisztráció, v1 router)
+- `src/server/routes/robotkez.ts` (Új route modul)
+- `src/server/routes/index.ts` (Registry update)
+
+**Git:** `[pending]`
+**Következő:** Github commit + push, majd a következő fejlesztési fázis.
+
+---
+
 ### 2026-02-10 05:30 - 🎉 SPRINT 3 TELJES BEFEJEZÉS! CF Browser Rendering API ✅
 
 **Commit:** `608744c2`

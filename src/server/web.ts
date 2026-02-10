@@ -40,6 +40,7 @@ import { createPhoenixRouter } from "./phoenixRoutes.js";
 import { createRouterRouter } from "./routerRoutes.js";
 import { createMemoryRouter } from "./memoryRoutes.js";
 import { createV1Router } from "./routes/index.js";
+import { createRobotkezRoutes } from "./routes/robotkez.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -52,6 +53,12 @@ interface ActiveTransport {
   transport: SSEServerTransport;
   server: McpServer;
 }
+
+// Javított robotkezTasks típus
+const robotkezTasks = new Map<
+  string,
+  { status: "in-progress" | "completed" | "failed"; result?: unknown }
+>();
 
 export async function startWebServer() {
   const webUiEnabled =
@@ -101,6 +108,9 @@ export async function startWebServer() {
   v1Router.use("/phoenix", createPhoenixRouter());
   v1Router.use("/router", createRouterRouter());
   v1Router.use("/memory", createMemoryRouter());
+
+  // Add Robotkéz routes to v1
+  v1Router.use("/robotkez", createRobotkezRoutes());
 
   // Mount v1 router at /api/v1 and /api (backwards compatibility)
   app.use("/api/v1", v1Router);
@@ -325,6 +335,53 @@ export async function startWebServer() {
         socket.emit("bot_message", { text: errMsg });
         saveMessage(DEFAULT_CHAT_ID, "bot", errMsg);
       }
+    });
+
+    // Robotkéz API végpontok
+    app.post("/api/v1/robotkez/task", async (req, res) => {
+      const taskId = uuidv4();
+      const { task, headless = true, vision = true } = req.body;
+
+      if (!task) {
+        res.status(400).send({ error: "A 'task' mező kötelező." });
+        return;
+      }
+
+      robotkezTasks.set(taskId, { status: "in-progress" });
+
+      try {
+        const { exec } = await import("child_process");
+        const { promisify } = await import("util");
+        const execAsync = promisify(exec);
+
+        const command = `python myai/browser_task_runner.py --task "${task}" --headless ${headless} --vision ${vision}`;
+        const { stdout } = await execAsync(command);
+
+        // Csak az stdout feldolgozása JSON-ként
+        const result = JSON.parse(stdout);
+
+        robotkezTasks.set(taskId, { status: "completed", result });
+        res.status(200).send({ taskId });
+      } catch (error) {
+        const errorMessage =
+          error instanceof Error ? error.message : "Ismeretlen hiba";
+        robotkezTasks.set(taskId, { status: "failed", result: errorMessage });
+        res
+          .status(500)
+          .send({ error: "Feladat végrehajtási hiba.", details: errorMessage });
+      }
+    });
+
+    app.get("/api/v1/robotkez/task/:id", (req, res) => {
+      const { id } = req.params;
+      const task = robotkezTasks.get(id);
+
+      if (!task) {
+        res.status(404).send({ error: "Feladat nem található." });
+        return;
+      }
+
+      res.status(200).send(task);
     });
   });
 
