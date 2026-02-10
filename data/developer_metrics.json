@@ -12,10 +12,10 @@
     "lastDurationMs": 0
   },
   "tasks": {
-    "total": 17,
-    "success": 13,
-    "error": 4,
-    "avgDurationMs": 4
+    "total": 3,
+    "success": 2,
+    "error": 1,
+    "avgDurationMs": 1
   },
   "ai": {
     "totalTokenUsage": 0,
@@ -24,123 +24,24 @@
   "history": [
     {
       "type": "task",
-      "status": "error",
-      "details": "dev-1770742944718-1",
+      "status": "success",
+      "details": "dev-1770743051371-1",
       "durationMs": 0,
-      "timestamp": 1770742944728
+      "timestamp": 1770743051374
     },
     {
       "type": "task",
       "status": "success",
-      "details": "dev-1770739249794-1",
-      "durationMs": 0,
-      "timestamp": 1770739249799
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770739249792-1",
-      "durationMs": 0,
-      "timestamp": 1770739249798
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770731544628-1",
-      "durationMs": 0,
-      "timestamp": 1770731544634
-    },
-    {
-      "type": "task",
-      "status": "error",
-      "details": "dev-1770731054475-1",
-      "durationMs": 56,
-      "timestamp": 1770731054539
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770687507187-1",
-      "durationMs": 0,
-      "timestamp": 1770687507194
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770686867842-1",
-      "durationMs": 0,
-      "timestamp": 1770686867857
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770686771399-1",
-      "durationMs": 0,
-      "timestamp": 1770686771405
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770684584132-1",
-      "durationMs": 0,
-      "timestamp": 1770684584141
-    },
-    {
-      "type": "task",
-      "status": "error",
-      "details": "dev-1770684584113-1",
-      "durationMs": 0,
-      "timestamp": 1770684584138
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770684478081-1",
-      "durationMs": 0,
-      "timestamp": 1770684478095
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770682313788-1",
-      "durationMs": 0,
-      "timestamp": 1770682313793
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770671462745-1",
-      "durationMs": 0,
-      "timestamp": 1770671462749
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770671337654-1",
-      "durationMs": 0,
-      "timestamp": 1770671337660
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770667047941-1",
+      "details": "dev-1770743051368-1",
       "durationMs": 1,
-      "timestamp": 1770667047946
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1770667047944-1",
-      "durationMs": 0,
-      "timestamp": 1770667047946
+      "timestamp": 1770743051374
     },
     {
       "type": "task",
       "status": "error",
-      "details": "dev-1770667047918-1",
-      "durationMs": 0,
-      "timestamp": 1770667047945
+      "details": "dev-1770743051348-1",
+      "durationMs": 2,
+      "timestamp": 1770743051374
     }
   ]
-}
 }
