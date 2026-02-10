@@ -7,8 +7,12 @@ import path from 'path';
 import fs from 'fs';
 import { CloudflareBrowserAPI } from '../utils/browserRendering.js';
 
-// Create singleton instance for CF Browser API
-const cloudflareBrowserAPI = new CloudflareBrowserAPI();
+// Lazy singleton – won't throw at import time if env vars are missing
+let _cfBrowser: CloudflareBrowserAPI | null = null;
+function getCfBrowser(): CloudflareBrowserAPI {
+  if (!_cfBrowser) _cfBrowser = new CloudflareBrowserAPI();
+  return _cfBrowser;
+}
 
 // Security check for URLs (same as before)
 function isUrlAllowed(urlStr: string): boolean {
@@ -269,143 +273,205 @@ export function registerBrowserTools(server: McpServer) {
     }
   );
 
-  // --- Cloudflare Browser Rendering API Tools ---
+  // --- Cloudflare Browser Rendering REST API Tools ---
+  // 8 endpoints: /screenshot, /pdf, /content, /markdown, /snapshot, /scrape, /json, /links
+  // Docs: https://developers.cloudflare.com/browser-rendering/rest-api/
 
+  // 1. /screenshot – capture screenshot
   server.tool(
-    "cf_browser_screenshot",
-    "Domain-free screenshot using Cloudflare Browser Rendering API. Supports localhost, IPs, and any URL without custom domain requirements.",
+    "cf_screenshot",
+    "Capture a screenshot of a URL or raw HTML using Cloudflare Browser Rendering REST API. Supports fullPage, viewport, selector, cookies, custom JS/CSS injection.",
     {
-      url: z.string().url().describe("URL to capture screenshot from (supports localhost, IPs, any domain)"),
-      format: z.enum(["jpeg", "png"]).optional().default("png").describe("Image format"),
-      fullPageScreenshot: z.boolean().optional().describe("Take full page screenshot"),
-      waitUntil: z.enum(["load", "domcontentloaded", "networkidle"]).optional().default("load").describe("Wait condition"),
-      timeout: z.number().optional().default(30000).describe("Timeout in milliseconds"),
+      url: z.string().optional().describe("URL to screenshot"),
+      html: z.string().optional().describe("Raw HTML to render instead of URL"),
+      fullPage: z.boolean().optional().describe("Capture the full scrollable page"),
+      type: z.enum(["png", "jpeg"]).optional().default("png").describe("Image format"),
+      quality: z.number().min(1).max(100).optional().describe("JPEG quality (1-100). Only valid when type=jpeg"),
+      selector: z.string().optional().describe("CSS selector to screenshot a specific element"),
+      omitBackground: z.boolean().optional().describe("Hide default white background (transparency)"),
       viewportWidth: z.number().optional().default(1920).describe("Viewport width"),
       viewportHeight: z.number().optional().default(1080).describe("Viewport height"),
+      deviceScaleFactor: z.number().optional().describe("Device scale factor (2 for retina)"),
+      waitUntil: z.enum(["load", "domcontentloaded", "networkidle0", "networkidle2"]).optional().describe("Page load wait strategy"),
+      timeout: z.number().optional().default(45000).describe("Navigation timeout in ms"),
     },
-    async ({ url, format = "png", fullPageScreenshot, waitUntil = "load", timeout = 30000, viewportWidth = 1920, viewportHeight = 1080 }) => {
+    async ({ url, html, fullPage, type = "png", quality, selector, omitBackground, viewportWidth = 1920, viewportHeight = 1080, deviceScaleFactor, waitUntil, timeout = 45000 }) => {
       try {
-        const result = await cloudflareBrowserAPI.screenshot({
-          url,
-          format,
-          fullPage: fullPageScreenshot,
-          viewport: { width: viewportWidth, height: viewportHeight },
-          waitFor: waitUntil === "networkidle" ? 5000 : undefined // Convert to timeout for networkidle
+        const cf = getCfBrowser();
+        const result = await cf.screenshot({
+          ...(url && { url }),
+          ...(html && { html }),
+          ...(selector && { selector }),
+          viewport: { width: viewportWidth, height: viewportHeight, ...(deviceScaleFactor && { deviceScaleFactor }) },
+          screenshotOptions: {
+            ...(fullPage && { fullPage }),
+            ...(type && { type }),
+            ...(quality && { quality }),
+            ...(omitBackground && { omitBackground }),
+          },
+          gotoOptions: { ...(waitUntil && { waitUntil }), timeout },
         });
-
-        if (!result.success) {
-          return {
-            isError: true,
-            content: [{ type: "text", text: `CF Browser API Error: ${result.error}` }]
-          };
-        }
-
-        // Convert Buffer to base64
-        const base64Image = result.data ? Buffer.from(result.data).toString('base64') : '';
-
-        return {
-          content: [{
-            type: "image",
-            data: base64Image,
-            mimeType: format === "png" ? "image/png" : "image/jpeg"
-          }]
-        };
-      } catch (error: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: `Cloudflare Browser API error: ${error.message}` }]
-        };
+        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        const b64 = result.data ? result.data.toString('base64') : '';
+        return { content: [{ type: "image", data: b64, mimeType: result.mimeType || "image/png" }] };
+      } catch (e: any) {
+        return { isError: true, content: [{ type: "text", text: `CF screenshot error: ${e.message}` }] };
       }
     }
   );
 
+  // 2. /pdf – generate PDF
   server.tool(
-    "cf_browser_pdf",
-    "Generate PDF using Cloudflare Browser Rendering API with advanced options.",
+    "cf_pdf",
+    "Generate a PDF from a URL or raw HTML using Cloudflare Browser Rendering. Supports paper format, margins, headers/footers, landscape mode.",
     {
-      url: z.string().url().describe("URL to generate PDF from"),
-      format: z.enum(["A0", "A1", "A2", "A3", "A4", "A5", "A6", "Letter", "Legal", "Tabloid", "Ledger"]).optional().default("A4").describe("PDF paper format"),
-      orientation: z.enum(["portrait", "landscape"]).optional().default("portrait").describe("PDF orientation"),
-      printBackground: z.boolean().optional().default(true).describe("Include background graphics"),
-      marginTop: z.number().optional().describe("Top margin in inches"),
-      marginBottom: z.number().optional().describe("Bottom margin in inches"),
-      marginLeft: z.number().optional().describe("Left margin in inches"),
-      marginRight: z.number().optional().describe("Right margin in inches"),
-      waitUntil: z.enum(["load", "domcontentloaded", "networkidle"]).optional().default("load").describe("Wait condition"),
-      timeout: z.number().optional().default(30000).describe("Timeout in milliseconds"),
+      url: z.string().optional().describe("URL to render as PDF"),
+      html: z.string().optional().describe("Raw HTML to render"),
+      format: z.enum(["a0", "a1", "a2", "a3", "a4", "a5", "a6", "letter", "legal", "tabloid", "ledger"]).optional().default("a4").describe("Paper format"),
+      landscape: z.boolean().optional().describe("Landscape orientation"),
+      printBackground: z.boolean().optional().default(true).describe("Include background"),
+      scale: z.number().optional().describe("Render scale (0.1 - 2.0)"),
+      waitUntil: z.enum(["load", "domcontentloaded", "networkidle0", "networkidle2"]).optional().describe("Wait strategy"),
+      timeout: z.number().optional().default(45000).describe("Timeout ms"),
     },
-    async ({ url, format = "A4", orientation = "portrait", printBackground = true, marginTop, marginBottom, marginLeft, marginRight, waitUntil = "load", timeout = 30000 }) => {
+    async ({ url, html, format = "a4", landscape, printBackground = true, scale, waitUntil, timeout = 45000 }) => {
       try {
-        const result = await cloudflareBrowserAPI.generatePDF({
-          url,
-          // Note: CF Browser API might not support all PDF-specific options, 
-          // keeping basic options that align with screenshot interface
-          viewport: { width: 1920, height: 1080 },
-          fullPage: true, // PDFs typically capture full page
-          waitFor: waitUntil === "networkidle" ? 5000 : undefined
+        const cf = getCfBrowser();
+        const result = await cf.pdf({
+          ...(url && { url }),
+          ...(html && { html }),
+          pdfOptions: { format, ...(landscape && { landscape }), printBackground, ...(scale && { scale }) },
+          gotoOptions: { ...(waitUntil && { waitUntil }), timeout },
         });
-
-        if (!result.success) {
-          return {
-            isError: true,
-            content: [{ type: "text", text: `CF Browser API Error: ${result.error}` }]
-          };
-        }
-
-        // Convert Buffer to base64
-        const base64PDF = result.data ? Buffer.from(result.data).toString('base64') : '';
-
-        return {
-          content: [{
-            type: "resource",
-            resource: {
-              uri: `data:application/pdf;base64,${base64PDF}`,
-              mimeType: "application/pdf",
-              text: `PDF generated from ${url}`,
-            }
-          }]
-        };
-      } catch (error: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: `Cloudflare Browser PDF error: ${error.message}` }]
-        };
+        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        const b64 = result.data ? result.data.toString('base64') : '';
+        return { content: [{ type: "resource", resource: { uri: `data:application/pdf;base64,${b64}`, mimeType: "application/pdf", text: `PDF from ${url || 'HTML'}` } }] };
+      } catch (e: any) {
+        return { isError: true, content: [{ type: "text", text: `CF pdf error: ${e.message}` }] };
       }
     }
   );
 
+  // 3. /content – fetch fully rendered HTML
   server.tool(
-    "cf_quick_screenshot",
-    "Quick screenshot with default settings using Cloudflare Browser Rendering API.",
+    "cf_content",
+    "Fetch fully rendered HTML of a URL (after JS execution) via Cloudflare Browser Rendering. Ideal for SPAs and JS-heavy pages.",
     {
-      url: z.string().url().describe("URL to capture screenshot from"),
+      url: z.string().url().describe("URL to fetch rendered HTML from"),
+      waitUntil: z.enum(["load", "domcontentloaded", "networkidle0", "networkidle2"]).optional().describe("Wait strategy"),
+      timeout: z.number().optional().default(45000).describe("Timeout ms"),
     },
-    async ({ url }) => {
+    async ({ url, waitUntil, timeout = 45000 }) => {
       try {
-        const result = await cloudflareBrowserAPI.quickScreenshot(url);
+        const cf = getCfBrowser();
+        const result = await cf.content({ url, gotoOptions: { ...(waitUntil && { waitUntil }), timeout } });
+        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        return { content: [{ type: "text", text: typeof result.result === 'string' ? result.result : JSON.stringify(result.result, null, 2) }] };
+      } catch (e: any) {
+        return { isError: true, content: [{ type: "text", text: `CF content error: ${e.message}` }] };
+      }
+    }
+  );
 
-        if (!result.success) {
-          return {
-            isError: true,
-            content: [{ type: "text", text: `CF Browser API Error: ${result.error}` }]
-          };
-        }
+  // 4. /markdown – extract Markdown from webpage
+  server.tool(
+    "cf_markdown",
+    "Extract Markdown from a webpage using Cloudflare Browser Rendering. Great for converting web content to readable Markdown.",
+    {
+      url: z.string().url().describe("URL to extract Markdown from"),
+      waitUntil: z.enum(["load", "domcontentloaded", "networkidle0", "networkidle2"]).optional().describe("Wait strategy"),
+    },
+    async ({ url, waitUntil }) => {
+      try {
+        const cf = getCfBrowser();
+        const result = await cf.markdown({ url, gotoOptions: { ...(waitUntil && { waitUntil }) } });
+        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        return { content: [{ type: "text", text: typeof result.result === 'string' ? result.result : JSON.stringify(result.result, null, 2) }] };
+      } catch (e: any) {
+        return { isError: true, content: [{ type: "text", text: `CF markdown error: ${e.message}` }] };
+      }
+    }
+  );
 
-        // Convert Buffer to base64
-        const base64Image = result.data ? Buffer.from(result.data).toString('base64') : '';
+  // 5. /snapshot – take full DOM/accessibility snapshot
+  server.tool(
+    "cf_snapshot",
+    "Take a full page DOM snapshot via Cloudflare Browser Rendering. Returns the accessibility tree / DOM structure.",
+    {
+      url: z.string().url().describe("URL to snapshot"),
+      waitUntil: z.enum(["load", "domcontentloaded", "networkidle0", "networkidle2"]).optional().describe("Wait strategy"),
+    },
+    async ({ url, waitUntil }) => {
+      try {
+        const cf = getCfBrowser();
+        const result = await cf.snapshot({ url, gotoOptions: { ...(waitUntil && { waitUntil }) } });
+        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        return { content: [{ type: "text", text: JSON.stringify(result.result, null, 2) }] };
+      } catch (e: any) {
+        return { isError: true, content: [{ type: "text", text: `CF snapshot error: ${e.message}` }] };
+      }
+    }
+  );
 
-        return {
-          content: [{
-            type: "image",
-            data: base64Image,
-            mimeType: "image/png"
-          }]
-        };
-      } catch (error: any) {
-        return {
-          isError: true,
-          content: [{ type: "text", text: `Cloudflare Quick Screenshot error: ${error.message}` }]
-        };
+  // 6. /scrape – extract HTML elements by CSS selector
+  server.tool(
+    "cf_scrape",
+    "Scrape HTML elements by CSS selectors via Cloudflare Browser Rendering. Returns text, HTML, attributes, and dimensions for each match.",
+    {
+      url: z.string().url().describe("URL to scrape"),
+      selectors: z.array(z.string()).describe("CSS selectors to extract (e.g. ['h1', 'a', '.price'])"),
+      waitUntil: z.enum(["load", "domcontentloaded", "networkidle0", "networkidle2"]).optional().describe("Wait strategy"),
+    },
+    async ({ url, selectors, waitUntil }) => {
+      try {
+        const cf = getCfBrowser();
+        const elements = selectors.map(s => ({ selector: s }));
+        const result = await cf.scrape({ url, elements, gotoOptions: { ...(waitUntil && { waitUntil }) } });
+        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        return { content: [{ type: "text", text: JSON.stringify(result.result, null, 2) }] };
+      } catch (e: any) {
+        return { isError: true, content: [{ type: "text", text: `CF scrape error: ${e.message}` }] };
+      }
+    }
+  );
+
+  // 7. /json – AI-powered structured data extraction
+  server.tool(
+    "cf_json",
+    "Extract structured data from a webpage using AI (natural language prompt) via Cloudflare Browser Rendering. Ideal for data extraction without writing selectors.",
+    {
+      url: z.string().url().describe("URL to extract data from"),
+      prompt: z.string().describe("Natural language prompt describing what data to extract (e.g. 'Extract all product names and prices')"),
+      waitUntil: z.enum(["load", "domcontentloaded", "networkidle0", "networkidle2"]).optional().describe("Wait strategy"),
+    },
+    async ({ url, prompt, waitUntil }) => {
+      try {
+        const cf = getCfBrowser();
+        const result = await cf.json({ url, prompt, gotoOptions: { ...(waitUntil && { waitUntil }) } });
+        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        return { content: [{ type: "text", text: JSON.stringify(result.result, null, 2) }] };
+      } catch (e: any) {
+        return { isError: true, content: [{ type: "text", text: `CF json error: ${e.message}` }] };
+      }
+    }
+  );
+
+  // 8. /links – retrieve all links from a webpage
+  server.tool(
+    "cf_links",
+    "Retrieve all links from a webpage via Cloudflare Browser Rendering. Returns href and text for each link.",
+    {
+      url: z.string().url().describe("URL to extract links from"),
+      waitUntil: z.enum(["load", "domcontentloaded", "networkidle0", "networkidle2"]).optional().describe("Wait strategy"),
+    },
+    async ({ url, waitUntil }) => {
+      try {
+        const cf = getCfBrowser();
+        const result = await cf.links({ url, gotoOptions: { ...(waitUntil && { waitUntil }) } });
+        if (!result.success) return { isError: true, content: [{ type: "text", text: `CF Error: ${result.error}` }] };
+        return { content: [{ type: "text", text: JSON.stringify(result.result, null, 2) }] };
+      } catch (e: any) {
+        return { isError: true, content: [{ type: "text", text: `CF links error: ${e.message}` }] };
       }
     }
   );
