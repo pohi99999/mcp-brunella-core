@@ -17,11 +17,48 @@ const EMBEDDING_MODEL = process.env.EMBEDDING_MODEL || "nomic-embed-text";
 const EMBEDDING_DIMENSION = 768; // nomic-embed-text uses 768 dimensions
 const EMBEDDING_TIMEOUT_MS = 30000;
 
+class SimpleLRUCache {
+  private capacity: number;
+  private cache: Map<string, number[]>;
+
+  constructor(capacity: number) {
+    this.capacity = capacity;
+    this.cache = new Map();
+  }
+
+  get(key: string): number[] | undefined {
+    if (!this.cache.has(key)) return undefined;
+    const value = this.cache.get(key)!;
+    this.cache.delete(key);
+    this.cache.set(key, value);
+    return value;
+  }
+
+  set(key: string, value: number[]): void {
+    if (this.cache.has(key)) {
+      this.cache.delete(key);
+    } else if (this.cache.size >= this.capacity) {
+      const firstKey = this.cache.keys().next().value;
+      if (firstKey !== undefined) {
+        this.cache.delete(firstKey);
+      }
+    }
+    this.cache.set(key, value);
+  }
+}
+
+const embeddingCache = new SimpleLRUCache(500);
+
 /**
  * Get embedding vector from Ollama API (via AI Gateway if enabled)
  * Uses nomic-embed-text model by default (768 dimensions)
+ * Caches results to improve performance.
  */
-async function getEmbedding(text: string): Promise<number[]> {
+export async function getEmbedding(text: string): Promise<number[]> {
+  // Check cache
+  const cached = embeddingCache.get(text);
+  if (cached) return cached;
+
   try {
     // Use AI Gateway wrapper for embeddings (v3.0 pure fetch)
     const embedding = await aiGateway.embeddings(text.slice(0, 8000), {
@@ -31,6 +68,9 @@ async function getEmbedding(text: string): Promise<number[]> {
     if (!embedding || !Array.isArray(embedding)) {
       throw new Error("Invalid embedding response from Ollama");
     }
+
+    // Cache result
+    embeddingCache.set(text, embedding);
 
     return embedding;
   } catch (error: any) {
