@@ -11,9 +11,10 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 - [ ] **🔬 BAS Átfogó Tesztprotokol** [CRITICAL]
   - **ID:** `bas_comprehensive_test_protocol_20260210`
-  - **Progress:** 0%
+  - **Progress:** 65%
   - **Utolsó aktivitás:** 2026-02-10
-  - **Leírás:** Teljes rendszer tesztprotokol — 6 fázis: Health Check (startup diagnózis), Phoenix Crash Recovery (öngyógyulás bizonyítéka), Ügynök Delegálási Lánc, Dashboard Error Boundary audit, Robotkéz Level 1-3 szinttesztek, CI/CD automatizáció (Husky pre-commit + Nightly E2E). ~30 új teszt fájl, ~16 óra becsült munka.
+  - **Leírás:** Teljes rendszer tesztprotokol — 6 fázis implementálva: Health Check (7 service check, CLI output), Phoenix State Restoration (6 checkpoint teszt), Ügynök Delegálási Lánc (4 teszt), Input Sanitization (15 teszt — shell/SQL injection, UTF-8, Agent Response séma), Dashboard Action Triggering (6 E2E teszt), CI/CD (Husky pre-commit + Nightly GitHub Action). 31 új teszt, 425/425 PASS.
+  - **Hátralevő:** Robotkéz Level 1-3 szinttesztek, Socket.IO reconnect E2E, Phoenix crash recovery (process kill)
   - **Előfeltétel:** code_quality_improvements_20260210 ✅, dashboard_test_suite_20260210 🔄
   - 📂 *[./tracks/bas_comprehensive_test_protocol_20260210/](./tracks/bas_comprehensive_test_protocol_20260210/)*
 
