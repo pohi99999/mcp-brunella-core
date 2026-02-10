@@ -16,14 +16,14 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
   - **Leírás:** Teljes rendszer tesztprotokol — 6 fázis implementálva: Health Check (7 service check, CLI output), Phoenix State Restoration (6 checkpoint teszt), Ügynök Delegálási Lánc (4 teszt), Input Sanitization (15 teszt — shell/SQL injection, UTF-8, Agent Response séma), Dashboard Action Triggering (6 E2E teszt), CI/CD (Husky pre-commit + Nightly GitHub Action). 31 új teszt, 425/425 PASS.
   - **Hátralevő:** Robotkéz Level 1-3 szinttesztek, Socket.IO reconnect E2E, Phoenix crash recovery (process kill)
   - **Előfeltétel:** code_quality_improvements_20260210 ✅, dashboard_test_suite_20260210 🔄
-  - 📂 *[./tracks/bas_comprehensive_test_protocol_20260210/](./tracks/bas_comprehensive_test_protocol_20260210/)*
+  - 📂 _[./tracks/bas_comprehensive_test_protocol_20260210/](./tracks/bas_comprehensive_test_protocol_20260210/)_
 
 - [x] **Code Quality Improvements** [MEDIUM]
   - **ID:** `code_quality_improvements_20260210`
   - **Progress:** 100% (8/8 feladat KÉSZ! 🎉)
   - **Utolsó aktivitás:** 2026-02-10
   - **Leírás:** Kódbázis minőségjavítás: ~~web.ts refactor~~, ~~any típusok~~, ~~error handling~~, ~~audit persistence~~, ~~config validation~~, ~~test coverage~~, ~~structured logging~~, ~~API versioning~~.
-  - 📂 *[./tracks/code_quality_improvements_20260210/](./tracks/code_quality_improvements_20260210/)*
+  - 📂 _[./tracks/code_quality_improvements_20260210/](./tracks/code_quality_improvements_20260210/)_
 
 - [ ] **🏆 Gold Protocol** [CRITICAL]
   - **ID:** `gold_protocol`
@@ -32,13 +32,13 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
   - **Leírás:** BAS "felokosítása" - 6 pillér: Spec Freeze, Phoenix v2, Model Router, Memória, Glass Box, Audit
   - **Státusz:** ✅ TELJES! Sprint 1-4 befejezve
   - **Commits:** d1c3d938 (S1), 11294752 (S2), b96abc9d (S3), 7a1a7fe9 (S4)
-  - 📂 *[./tracks/gold_protocol/](./tracks/gold_protocol/)*
+  - 📂 _[./tracks/gold_protocol/](./tracks/gold_protocol/)_
 
 - [ ] **Agent Architect Upgrade** [MEDIUM]
   - **ID:** `agent_architect_upgrade_20260205`
   - **Progress:** 100% (P5 KÉSZ)
   - **Utolsó aktivitás:** 2026-02-09
-  - 📂 *[./tracks/agent_architect_upgrade_20260205/](./tracks/agent_architect_upgrade_20260205/)*
+  - 📂 _[./tracks/agent_architect_upgrade_20260205/](./tracks/agent_architect_upgrade_20260205/)_
 
 - [x] **Cloudflare Edge Integration** [HIGH] → ✅ SPRINT 3 TELJES! 🎉
   - **ID:** `cloudflare_edge_integration_20260202`
@@ -46,7 +46,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
   - **Utolsó aktivitás:** 2026-02-10 05:30 (NEW API token + 20/20 unit teszt)
   - **Leírás:** CF Edge computing: ~~Sprint 1 aiGateway v3.0~~, ~~Sprint 2 Domain-free~~, ✅ **Sprint 3 Browser API TELJES** (8 REST endpoints + új token + 100% teszt)
   - **Sprint 3 Eredmények:**
-    - ✅ **ÚJ API Token:** `_kRlfpaBKWJohhumqMQtkDp45PgIdT6MAj0B5TRN` (aktív)
+    - ✅ **ÚJ API Token:** `xxxxx` (aktív)
     - ✅ **20/20 unit teszt** átment (100% lefedettség)
     - ✅ **8 teljes endpoint:** /screenshot, /pdf, /content, /markdown, /snapshot, /scrape, /json, /links
     - ✅ **Dual auth:** Global API key + Bearer token támogatás
@@ -57,13 +57,13 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
     - 🔍 **Tesztelés** - Élő API validáció
   - **Commits:** d3db9566 (Sprint 1), 0b30bf7a (Sprint 2), 12700a96 (Sprint 3 working), 608744c2 (Sprint 3 új token)
   - **Status:** ✅ PRODUCTION READY - Teljes CR Browser Rendering API működik
-  - 📂 *[./tracks/cloudflare_edge_integration_20260202/](./tracks/cloudflare_edge_integration_20260202/)*
+  - 📂 _[./tracks/cloudflare_edge_integration_20260202/](./tracks/cloudflare_edge_integration_20260202/)_
 
 - [ ] **Dashboard V2 Robotkéz Control** [HIGH]
   - **ID:** `dashboard_v2_robotkez_control_20260208`
   - **Progress:** 100% (P3 KÉSZ)
   - **Utolsó aktivitás:** 2026-02-08
-  - 📂 *[./tracks/dashboard_v2_robotkez_control_20260208/](./tracks/dashboard_v2_robotkez_control_20260208/)*
+  - 📂 _[./tracks/dashboard_v2_robotkez_control_20260208/](./tracks/dashboard_v2_robotkez_control_20260208/)_
 
 - [x] **Developer Agent 3.0 — Unified Development Platform** [HIGH]
   - **ID:** `developer_agent_2_0_20260206`
@@ -79,7 +79,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
   - **Dashboard UI bővítés:** DeveloperPanel Metrics/Approvals/Activity Feed tab-ok
   - **Tesztek:** 361/361 PASS, 0 TypeScript errors
   - **Validáció:** build ✅ + test ✅ + smoke ✅ (teljes indítóprotokoll 2026-02-09)
-  - 📂 *[./tracks/developer_agent_2_0_20260206/](./tracks/developer_agent_2_0_20260206/)*
+  - 📂 _[./tracks/developer_agent_2_0_20260206/](./tracks/developer_agent_2_0_20260206/)_
 
 - [ ] **🧪 Dashboard Komplett Tesztsorozat** [HIGH]
   - **ID:** `dashboard_test_suite_20260210`
@@ -94,19 +94,19 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
     - ✅ `npm run build` 0 hiba, meglévő tesztek 393/394 PASS
   - **Hátralevő:** Komponens unit tesztek (Vitest+jsdom), további E2E bővítés
   - **Előfeltétel:** code_quality_improvements_20260210 ✅
-  - 📂 *[./tracks/dashboard_test_suite_20260210/](./tracks/dashboard_test_suite_20260210/)*
+  - 📂 _[./tracks/dashboard_test_suite_20260210/](./tracks/dashboard_test_suite_20260210/)_
 
 - [ ] **Phoenix Protocol V2** [MEDIUM]
   - **ID:** `phoenix_protocol_v2_20260205`
   - **Progress:** 0%
   - **Utolsó aktivitás:** 2026-02-05
-  - 📂 *[./tracks/phoenix_protocol_v2_20260205/](./tracks/phoenix_protocol_v2_20260205/)*
+  - 📂 _[./tracks/phoenix_protocol_v2_20260205/](./tracks/phoenix_protocol_v2_20260205/)_
 
 - [ ] **Robotkéz n8n Sandbox** [MEDIUM]
   - **ID:** `robotkez_n8n_sandbox_edzesterv`
   - **Progress:** 50%
   - **Utolsó aktivitás:** 2026-02-01
-  - 📂 *[./tracks/robotkez_n8n_sandbox_edzesterv/](./tracks/robotkez_n8n_sandbox_edzesterv/)*
+  - 📂 _[./tracks/robotkez_n8n_sandbox_edzesterv/](./tracks/robotkez_n8n_sandbox_edzesterv/)_
 
 ---
 
@@ -119,8 +119,8 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 - **Cloudflare Orchestrator Deploy** (✅ KÉSZ, 2026-02-03)
 - **Mission Control Remote Access** (✅ KÉSZ, 2026-02-02)
 
-*(És 25+ régebbi track...)*
+_(És 25+ régebbi track...)_
 
 ---
 
-*Frissítéséhez használd a `.ai/FOSZAL.md`-ből kinyert információkat.*
+_Frissítéséhez használd a `.ai/FOSZAL.md`-ből kinyert információkat._

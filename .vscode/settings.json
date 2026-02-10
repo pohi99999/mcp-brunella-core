@@ -5,13 +5,11 @@
     "github.copilot.editor.enableCodeActions": true,
     "github.copilot.chat.runCommand.enabled": true,
     "github.copilot.chat.experimental.commandConfirmation": false, // Gyorsabb végrehajtás kérdezés nélkül
-    
     // Codebase Awareness: Ez a legfontosabb a "Context" szempontjából
     "github.copilot.advanced": {
         "listFilesLimit": 10000 // Növelt limit, hogy lássa a teljes BAS struktúrát
     },
     "github.copilot.chat.search.semanticTextResults": true, // Értse a jelentést, ne csak kulcsszavakat keressen
-
     // --- 2. ZAJSZŰRÉS (NOISE CANCELLATION) ---
     // Ezeket a mappákat elrejtjük a Copilot elől, hogy ne pazarolja a tokeneket
     "search.exclude": {
@@ -29,7 +27,6 @@
         "**/node_modules/**": true,
         "**/__pycache__/**": true
     },
-
     // --- 3. BAS PROJEKT SPECIFIKUSOK ---
     // Segítünk a rendszernek érteni a fájltípusokat
     "files.associations": {
@@ -38,7 +35,6 @@
         "*.jsonc": "jsonc",
         "Modelfile": "dockerfile" // Az Ollama fájlokhoz syntax highlight
     },
-
     // --- 4. PYTHON & TESTING (Robotkéz támogatás) ---
     "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
     "python.testing.unittestArgs": [
@@ -51,14 +47,13 @@
     "python.testing.pytestEnabled": false,
     "python.testing.unittestEnabled": true,
     "python.analysis.typeCheckingMode": "basic",
-
     // --- 5. EDITOR UX ---
     "editor.formatOnSave": true,
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "terminal.integrated.defaultProfile.windows": "PowerShell",
-    
     // --- LEGACY / EGYÉB (Megtartva, de rendezve) ---
     "vitest.disableWorkspaceWarning": true,
     "git.ignoreLimitWarning": true,
-    "chatgpt.openOnStartup": true
+    "chatgpt.openOnStartup": true,
+    "editor.aiStats.enabled": false
 }
