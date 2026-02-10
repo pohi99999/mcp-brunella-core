@@ -15,44 +15,72 @@
 
 ---
 
-### 2026-02-09 14:45 - Cloudflare Edge Integration Sprint 3: Browser Rendering API Domain-Free Implementation ✅
+### 2026-02-11 - CF Browser Rendering: Full 8-Endpoint REST API Rewrite ✅
 
-**Commit:** `[pending Sprint 2-3 unified commit]`
-**Feladat:** Sprint 3 Browser Rendering API teljes implementáció + MCP tool integráció
+**Commit:** `872ce238`
+**Feladat:** CF Browser Rendering API teljes újraírása a valós REST API alapján (8 endpoint)
 
-**Sprint 3: CF Browser Rendering API Implementation (TELJES! ✅)**
+**Előzmény:** A korábbi Sprint 3 implementáció csak 3 metódust tartalmazott (screenshot, generatePDF, quickScreenshot) helytelen base URL-lel (`/browser/`). A user biztosította a hivatalos CF Browser Rendering REST API dokumentációt, ami 8 endpoint-ot tartalmaz.
+
+**Teljes újraírás:**
 
 🎯 **CF Browser Rendering API Client (`src/utils/browserRendering.ts`):**
 
-- CloudflareBrowserAPI osztály: screenshot(), generatePDF(), quickScreenshot(), testConnection()
-- Domain-free architektúra: localhost, IPs, bármilyen URL támogatása (nem kell custom domain!)  
-- Authentication: CF Workers API token (FmoHMroBrF3dmv7ALyb9haz4OAjMfwoSVCkV4_Kw)
-- Error handling: Proper CF API error parsing + structured logging
-- Performance monitoring: execution time tracking, file size metrics
+- **8 endpoint metódus:** content(), screenshot(), pdf(), markdown(), snapshot(), scrape(), json(), links()
+- **Helyes base URL:** `/browser-rendering/` (korábban `/browser/` volt)
+- **Typed interfaces:** GotoOptions, Viewport, BrowserCookie, CommonRequestFields, ScreenshotRequest, PdfRequest, ScrapeRequest, JsonRequest
+- **Binary vs JSON:** postBinary() (screenshot/pdf) és postJson() (content/markdown/snapshot/scrape/json/links)
+- **X-Browser-Ms-Used:** Response header tracking minden hívásban
+- **Env var fallback:** CF_API_TOKEN || CLOUDFLARE_API_TOKEN
 
-🧪 **PowerShell Test Infrastructure (`scripts/test_cf_browser_api.ps1`):**
+🔧 **8 MCP Tool (`src/tools/browser.ts`):**
 
-- 4-phase comprehensive testing: Token validation, Screenshot API, PDF API, Domain-free localhost testing
-- .env file parsing: automatic CF_API_TOKEN és CLOUDFLARE_ACCOUNT_ID betöltése
-- Emoji-free PowerShell compatibility: all emojis removed for Windows compatibility
-- Validated CF API integration: 400 status (expected - service requires upgraded CF plan)
+- `cf_screenshot`: PNG/JPEG, fullPage, omitBackground, clip, selector, viewport
+- `cf_pdf`: format (a0-ledger), landscape, printBackground, scale, margin, headerTemplate
+- `cf_content`: Rendered HTML extraction
+- `cf_markdown`: Webpage → Markdown conversion
+- `cf_snapshot`: DOM snapshot (Puppeteer-compatible)
+- `cf_scrape`: CSS selector-based element scraping
+- `cf_json`: AI-powered structured data extraction (prompt + response_format)
+- `cf_links`: Link extraction from page
+- **Lazy singleton:** `getCfBrowser()` pattern - nem crashel import-kor ha env vars hiányoznak
 
-🔧 **MCP Tool Integration (`src/tools/browser.ts`):**
+🧪 **Unit Tests (`test/browser_rendering.test.ts`):**
 
-- `cf_browser_screenshot`: Full screenshot with viewport, format, quality options
-- `cf_browser_pdf`: PDF generation with format, orientation, margin settings  
-- `cf_quick_screenshot`: Fast default screenshot for quick captures
-- Base64 response handling: proper Buffer → base64 conversion for MCP compatibility
-- Tool schemas: comprehensive input validation with zod
+- **20/20 PASS** — constructor, auth headers, all 8 endpoints, error handling, gotoOptions
+- Mocked fetch, env vars, logger
+
+🧪 **Live Test Script (`scripts/test_cf_browser_rendering.ps1`):**
+
+- 10 teszt szcenárió: mind a 8 endpoint + fullPage + HTML screenshot
+- Eredmény: **401 Unauthorized** — a token nem rendelkezik "Browser Rendering - Edit" permission-nel
+
+**Token probléma azonosítva:**
+
+- A meglévő CF API token (FmoHMroBrF...4_Kw) valid és aktív
+- DE nincs "Browser Rendering - Edit" permission (account-szintű hívások 401)
+- **Megoldás:** Új token kell a CF Dashboard-ról: My Profile → API Tokens → Create Token → Account → Workers Browser Rendering → Edit
 
 **Technikai validáció:**
 
-- ✅ TypeScript build sikeres (0 errors)
-- ✅ CF API token authentication working (1412ms response time)
-- ✅ Domain-free architecture confirmed (waiting for CF plan upgrade)
-- ✅ MCP tool registration complete in registerBrowserTools()
+- ✅ TypeScript build: 0 errors
+- ✅ Unit tests: 20/20 PASS
+- ✅ Live test script: működik (10/10 futott le, mind 401 = token permission issue)
+- ⏳ Éles API teszt: vár az új tokenre
 
-**Következő sprint:** Ready for Sprint 4 (Edge Workers deployment) when CF Browser Service access obtained.
+**Következő:** Új CF API token létrehozása Browser Rendering Edit permission-nel → live test → Sprint 4
+
+---
+
+### 2026-02-09 14:45 - Cloudflare Edge Integration Sprint 3: Browser Rendering API Domain-Free Implementation (SUPERSEDED)
+
+**Commit:** `0b30bf7a`
+**Státusz:** ⚠️ FELÜLÍRVA a 2026-02-11-es 8-endpoint rewrite által
+
+**Eredeti implementáció (3 metódus, helytelen base URL):**
+- CloudflareBrowserAPI: screenshot(), generatePDF(), quickScreenshot()
+- Base URL: `/browser/` (HELYTELEN → `/browser-rendering/` a helyes)
+- MCP tools: cf_browser_screenshot, cf_browser_pdf, cf_quick_screenshot
 
 ---
 

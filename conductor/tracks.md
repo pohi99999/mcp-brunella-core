@@ -33,10 +33,10 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 - [x] **Cloudflare Edge Integration** [HIGH]
   - **ID:** `cloudflare_edge_integration_20260202`
-  - **Progress:** 60% (Sprint 1-3 KÉSZ! 🎉)
-  - **Utolsó aktivitás:** 2026-02-09 (Sprint 3 Browser Rendering API)
-  - **Leírás:** CF Edge computing: ~~Sprint 1 aiGateway v3.0~~, ~~Sprint 2 Domain-free~~, ~~Sprint 3 Browser API~~. Pending: Sprint 4-5 deployment.
-  - **Commits:** d3db9566 (Sprint 1), 0b30bf7a (Sprint 2-3)
+  - **Progress:** 65% (Sprint 1-3 KÉSZ + 8-endpoint rewrite)
+  - **Utolsó aktivitás:** 2026-02-11 (8-endpoint Browser Rendering API rewrite)
+  - **Leírás:** CF Edge computing: ~~Sprint 1 aiGateway v3.0~~, ~~Sprint 2 Domain-free~~, ~~Sprint 3 Browser API~~ (8 REST endpoint). Blocker: CF API token needs "Browser Rendering - Edit" permission. Pending: Sprint 4-5 deployment.
+  - **Commits:** d3db9566 (Sprint 1), 0b30bf7a (Sprint 2-3), 872ce238 (8-endpoint rewrite)
   - 📂 *[./tracks/cloudflare_edge_integration_20260202/](./tracks/cloudflare_edge_integration_20260202/)*
 
 - [ ] **Dashboard V2 Robotkéz Control** [HIGH]
