@@ -29,7 +29,11 @@
     "dev:ui": "vite src/dashboard",
     "test:dashboard": "vitest run --config vitest.dashboard.config.ts",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui"
+    "test:e2e:ui": "playwright test --ui",
+    "test:health": "npx tsx scripts/health_check.ts",
+    "test:phoenix": "vitest run test/state_restoration.test.ts",
+    "test:full": "npm run build && vitest run && npm run test:health",
+    "prepare": "husky"
   },
   "keywords": [
     "mcp",
@@ -140,6 +144,7 @@
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react-swc": "^4.2.2",
+    "husky": "^9.1.7",
     "jsdom": "^28.0.0",
     "msw": "^2.12.10",
     "playwright": "^1.58.0",
