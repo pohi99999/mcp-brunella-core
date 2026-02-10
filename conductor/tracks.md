@@ -9,6 +9,13 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 ## 🟢 Aktív Szálak
 
+- [x] **Robotkéz Stabilizáció & Gemini 2.0** [HIGH]
+  - **ID:** `robotkez_stabilization_20260212`
+  - **Progress:** 100% ✅
+  - **Utolsó aktivitás:** 2026-02-12
+  - **Leírás:** Robotkéz (browser-use) hibajavítás: Gemini 2.0 Flash modellre váltás (404 fix), tiszta JSON kimenet (stdout vs stderr separation), Node.js API integráció stabilizálva.
+  - **Eredmény:** Működő autonóm böngésző vezérlés REST API-n keresztül.
+
 - [ ] **🔬 BAS Átfogó Tesztprotokol** [CRITICAL]
   - **ID:** `bas_comprehensive_test_protocol_20260210`
   - **Progress:** 65%
