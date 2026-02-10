@@ -66,6 +66,7 @@ __pycache__/
 
 # Large generated/temporary directories and files (added by Gemini CLI)
 build/
+test-results/
 .lancedb/
 .venv/
 Ollama/
