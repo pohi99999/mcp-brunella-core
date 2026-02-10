@@ -15,7 +15,7 @@
 
 ---
 
-### 2026-02-11 - CF Browser Rendering: Full 8-Endpoint REST API Implementation ✅ WORKING!
+### 2026-02-11 - CF Browser Rendering: Full 8-Endpoint REST API Implementation ✅ WORKING
 
 **Commit:** `12700a96`
 **Feladat:** CF Browser Rendering API teljes implementáció + Global API key authentikáció
@@ -48,7 +48,7 @@
 
 - **Unit tests:** 20/20 PASS
 - **Live Node.js test:** ✅ SUCCESS (`success: true, 210947 bytes PNG, 575ms browser, 1365ms total`)
-- **Authentication:** Global API key successful (`CF_GLOBAL_API_KEY`=3d477...f7655, `CF_EMAIL`=peterpohankapersonal@gmail.com)
+- **Authentication:** Global API key successful (`CF_GLOBAL_API_KEY`=3d477...f7655, `CF_EMAIL`=<peterpohankapersonal@gmail.com>)
 - **Rate limiting:** Temporarily hit during testing, but API works
 
 **Technikai validáció:**
