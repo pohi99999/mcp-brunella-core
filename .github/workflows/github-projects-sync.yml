@@ -1,0 +1,45 @@
+name: Sync Issues to GitHub Projects
+
+on:
+  issues:
+    types: [opened, edited, closed, reopened, labeled, unlabeled]
+  pull_request:
+    types: [opened, closed, reopened]
+  workflow_dispatch:
+
+jobs:
+  sync-to-project:
+    runs-on: ubuntu-latest
+    name: Sync to GitHub Projects
+    
+    steps:
+      - name: Add to project
+        uses: actions/add-to-project@v0.5.0
+        if: github.event_name == 'issues' && github.event.action == 'opened'
+        with:
+          project-url: https://github.com/users/pohi99999/projects/1
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          labeled: track,sprint,bug,feature,enhancement
+          label-operator: OR
+
+      - name: Set project fields for new issues
+        if: github.event_name == 'issues' && github.event.action == 'opened'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Issue created: ${{ github.event.issue.number }}"
+          # Additional field setting can be done via GraphQL API
+          # This is a placeholder for custom field automation
+
+      - name: Update status on PR
+        uses: actions/add-to-project@v0.5.0
+        if: github.event_name == 'pull_request' && github.event.action == 'opened'
+        with:
+          project-url: https://github.com/users/pohi99999/projects/1
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify on completion
+        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        run: |
+          echo "PR merged: ${{ github.event.pull_request.number }}"
+          echo "Consider updating conductor/tracks.md"

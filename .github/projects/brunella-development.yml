@@ -1,0 +1,190 @@
+# GitHub Project: Brunella Development Board
+# This configuration file documents the structure of our GitHub Projects board
+# for tracking Brunella Agent System (BAS) development
+
+name: "Brunella Development Board"
+description: "AI multi-agent system development tracking - synchronized with conductor/tracks"
+
+# Project Fields
+fields:
+  - name: "Status"
+    type: "single_select"
+    options:
+      - name: "📋 Backlog"
+        description: "Ideas and future work"
+        color: "gray"
+      - name: "🎯 Ready"
+        description: "Planned and ready to start"
+        color: "yellow"
+      - name: "🔄 In Progress"
+        description: "Currently being worked on"
+        color: "blue"
+      - name: "👀 In Review"
+        description: "PR submitted, awaiting review"
+        color: "purple"
+      - name: "✅ Done"
+        description: "Completed and merged"
+        color: "green"
+      - name: "🚫 Blocked"
+        description: "Cannot proceed due to dependencies"
+        color: "red"
+
+  - name: "Priority"
+    type: "single_select"
+    options:
+      - name: "🔴 CRITICAL"
+        description: "System-breaking or security issues"
+      - name: "🟠 HIGH"
+        description: "Important features or major bugs"
+      - name: "🟡 MEDIUM"
+        description: "Standard features and improvements"
+      - name: "🟢 LOW"
+        description: "Nice-to-have or minor issues"
+
+  - name: "Track"
+    type: "single_select"
+    options:
+      - name: "Code Quality"
+      - name: "Gold Protocol"
+      - name: "Agent Architect"
+      - name: "Cloudflare Edge"
+      - name: "Dashboard V2"
+      - name: "Developer Agent"
+      - name: "Phoenix Protocol"
+      - name: "Robotkéz"
+      - name: "Other"
+
+  - name: "Progress"
+    type: "number"
+    description: "Percentage completed (0-100)"
+
+  - name: "Track ID"
+    type: "text"
+    description: "Conductor track ID (e.g., code_quality_improvements_20260210)"
+
+  - name: "Sprint"
+    type: "text"
+    description: "Sprint or phase identifier (e.g., S1, P1, Phase 2)"
+
+  - name: "Assignee Type"
+    type: "single_select"
+    options:
+      - name: "👤 Human"
+      - name: "🤖 AI Agent"
+      - name: "🤝 Hybrid"
+
+# Project Views
+views:
+  - name: "📊 Board View"
+    type: "board"
+    layout:
+      group_by: "Status"
+      sort_by: "Priority"
+    description: "Kanban board grouped by status"
+
+  - name: "🎯 By Track"
+    type: "board"
+    layout:
+      group_by: "Track"
+      sort_by: "Priority"
+    description: "View all work organized by track"
+
+  - name: "🔥 By Priority"
+    type: "table"
+    layout:
+      group_by: "Priority"
+      sort_by: "Status"
+    description: "All items sorted by priority"
+
+  - name: "✅ Completed"
+    type: "table"
+    layout:
+      filter: "Status:Done"
+      sort_by: "Updated"
+      order: "desc"
+    description: "Recently completed work"
+
+  - name: "🤖 AI Agent Work"
+    type: "table"
+    layout:
+      filter: "Assignee Type:AI Agent"
+      sort_by: "Status"
+    description: "Work being done by AI agents"
+
+# Automation Rules
+automation:
+  - name: "Auto-add new issues"
+    trigger: "issue_created"
+    action: "add_to_project"
+    set_fields:
+      Status: "📋 Backlog"
+
+  - name: "Move to In Progress on PR"
+    trigger: "pull_request_opened"
+    action: "update_field"
+    set_fields:
+      Status: "👀 In Review"
+
+  - name: "Move to Done on merge"
+    trigger: "pull_request_merged"
+    action: "update_field"
+    set_fields:
+      Status: "✅ Done"
+
+  - name: "Mark blocked on 'blocked' label"
+    trigger: "issue_labeled"
+    label: "blocked"
+    action: "update_field"
+    set_fields:
+      Status: "🚫 Blocked"
+
+# Integration with conductor/tracks
+integration:
+  sync_source: "conductor/tracks.md"
+  sync_direction: "bidirectional"
+  sync_fields:
+    - "Status"
+    - "Progress"
+    - "Priority"
+    - "Track ID"
+  sync_frequency: "on_commit"
+  sync_script: "scripts/sync_github_projects.js"
+
+# Labels to use
+labels:
+  - name: "track:code-quality"
+    color: "0E8A16"
+  - name: "track:gold-protocol"
+    color: "FFD700"
+  - name: "track:agent-architect"
+    color: "1D76DB"
+  - name: "track:cloudflare"
+    color: "F38020"
+  - name: "track:dashboard"
+    color: "5319E7"
+  - name: "track:developer-agent"
+    color: "0052CC"
+  - name: "track:phoenix-protocol"
+    color: "D93F0B"
+  - name: "track:robotkez"
+    color: "C5DEF5"
+  - name: "priority:critical"
+    color: "B60205"
+  - name: "priority:high"
+    color: "D93F0B"
+  - name: "priority:medium"
+    color: "FBCA04"
+  - name: "priority:low"
+    color: "0E8A16"
+  - name: "agent:claude"
+    color: "7057FF"
+  - name: "agent:gemini"
+    color: "4285F4"
+  - name: "agent:copilot"
+    color: "000000"
+  - name: "agent:jules"
+    color: "00D4AA"
+  - name: "blocked"
+    color: "D73A4A"
+  - name: "automated"
+    color: "EDEDED"

@@ -121,6 +121,61 @@ git commit -m "Leírás"
 
 ---
 
+## 📊 GitHub Projects - Fejlesztés Követése
+
+A Brunella rendszer fejlesztését **GitHub Projects** segítségével követheted nyomon!
+
+### 🎯 Projekt Tábla Elérése
+
+👉 **[Brunella Development Board](https://github.com/pohi99999/mcp-brunella-core/projects)**
+
+### Gyors Áttekintés
+
+```bash
+# Szinkronizáld a conductor/tracks.md-t GitHub Projects-el
+npm run sync:projects
+
+# Dry-run módban (csak előnézet, nem ír semmit)
+npm run sync:projects:dry
+```
+
+### Mit Találsz a Project Board-on?
+
+- 📋 **Backlog** - Tervezett feladatok
+- 🔄 **In Progress** - Folyamatban lévő munkák
+- 👀 **In Review** - PR-ek review alatt
+- ✅ **Done** - Befejezett feladatok
+- 🚫 **Blocked** - Blokkolt munkák
+
+### Track-ek Követése
+
+Minden `conductor/tracks.md`-ben szereplő track automatikusan issue-ként jelenik meg:
+
+- **Gold Protocol** → Issue címkézve `track:gold-protocol`
+- **Dashboard V2** → Issue címkézve `track:dashboard`
+- **Developer Agent** → Issue címkézve `track:developer-agent`
+
+### Issue-k Létrehozása
+
+Használd a template-eket:
+- 🎯 **New Development Track** - Új track indítása
+- 🏃 **Sprint/Phase Task** - Sprint feladat
+- 🐛 **Track Bug/Issue** - Bug jelentése
+
+### Automatizálás
+
+- ✅ Új issue automatikusan Backlog-ba kerül
+- ✅ PR nyitása → Issue "In Review" állapotra vált
+- ✅ PR merge → Issue "Done" állapotra vált
+- ✅ "blocked" címke → Issue "Blocked" állapotra vált
+
+### További Információ
+
+📖 **[GitHub Projects Útmutató](.github/PROJECTS.md)** - Teljes dokumentáció magyarul
+📖 **[Projects Technical Docs](.github/projects/README.md)** - Technikai részletek
+
+---
+
 ## 🏗️ Projekt Architektúra (Gyors Áttekintés)
 
 ### Dual-Mode MCP Szerver
