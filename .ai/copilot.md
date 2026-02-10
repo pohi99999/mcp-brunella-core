@@ -23,10 +23,12 @@
 **Eredmények:**
 
 ✅ **Conductor Track:**
+
 - `conductor/tracks/dashboard_test_suite_20260210/` — spec.md + meta.json létrehozva
 - `conductor/tracks.md` — bejegyzés felvéve (HIGH priority)
 
 ✅ **Teszt Infrastruktúra Felépítve:**
+
 - 6 dependency: `@playwright/test`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jsdom`, `msw`
 - `playwright.config.ts` — E2E config (webServer auto-start, chromium)
 - `vitest.dashboard.config.ts` — jsdom environment React komponens tesztekhez
@@ -35,25 +37,28 @@
 - 3 npm script: `test:dashboard`, `test:e2e`, `test:e2e:ui`
 
 ✅ **3 Bug Javítva:**
+
 1. **CommandMenu** — `setActiveTab`/`activeTab` prop nem volt átadva → javítva MissionControlLayout.tsx L112
 2. **"Training indítása" gomb** — onClick handler hiányzott → toast.info hozzáadva IncubatorPanel.tsx
 3. **"Letöltés" gomb** — handler nélkül → Blob download implementálva FileExplorer.tsx
 
 ✅ **37/37 E2E Teszt PASS:**
 
-| Fájl | Tesztek | Lefedettség |
-|------|---------|-------------|
-| navigation.spec.ts | 6 | Betöltés, sidebar, tab-váltás, Ctrl+K, CommandMenu, stresszteszt |
-| mission-control.spec.ts | 4 | Agent kártyák, List/Graph toggle, SystemHealthCard, TerminalLog |
-| tabs-basic.spec.ts | 8 | Agents, Incubator (sub-tab-ok + validáció), Knowledge (keresés + feltöltés) |
-| tabs-advanced.spec.ts | 12 | Developer (sub-tab-ok + quick actions), Tasks, Files, Settings, Assets |
-| error-handling.spec.ts | 7 | Fehér képernyő, API 500, XSS, rapid switching, responsive, Socket.IO |
+| Fájl                    | Tesztek | Lefedettség                                                                 |
+| ----------------------- | ------- | --------------------------------------------------------------------------- |
+| navigation.spec.ts      | 6       | Betöltés, sidebar, tab-váltás, Ctrl+K, CommandMenu, stresszteszt            |
+| mission-control.spec.ts | 4       | Agent kártyák, List/Graph toggle, SystemHealthCard, TerminalLog             |
+| tabs-basic.spec.ts      | 8       | Agents, Incubator (sub-tab-ok + validáció), Knowledge (keresés + feltöltés) |
+| tabs-advanced.spec.ts   | 12      | Developer (sub-tab-ok + quick actions), Tasks, Files, Settings, Assets      |
+| error-handling.spec.ts  | 7       | Fehér képernyő, API 500, XSS, rapid switching, responsive, Socket.IO        |
 
 ✅ **Build + Meglévő Tesztek:**
+
 - `npm run build` — 0 hiba
 - `vitest run` — 393/394 PASS (1 meglévő RAG timeout — nem a mi változásunk)
 
 **Érintett fájlok (új):**
+
 - `playwright.config.ts`, `vitest.dashboard.config.ts`
 - `test/dashboard/setup.ts`, `test/dashboard/mocks/handlers.ts`
 - `test/e2e/navigation.spec.ts`, `test/e2e/mission-control.spec.ts`
@@ -63,6 +68,7 @@
 - `conductor/tracks/dashboard_test_suite_20260210/meta.json`
 
 **Érintett fájlok (módosított):**
+
 - `package.json` (dependencies + scripts)
 - `conductor/tracks.md` (új bejegyzés)
 - `src/dashboard/components/dashboard/MissionControlLayout.tsx` (CommandMenu props fix)
@@ -84,14 +90,14 @@
 
 ✅ **ÚJ API TOKEN AKTIVÁLVA:**
 
-- **Token:** `_kRlfpaBKWJohhumqMQtkDp45PgIdT6MAj0B5TRN`
+- **Token:** `xxxxx`
 - **Verifikáció:** `curl` teszt sikeres - token aktív és érvényes
 - **Global Key Backup:** Dual authentication rendszer megtartva
 
 ✅ **TELJES 8-ENDPOINT BROWSER RENDERING API:**
 
 - `/screenshot` - PNG/JPEG képek generálása
-- `/pdf` - PDF dokumentum létrehozása  
+- `/pdf` - PDF dokumentum létrehozása
 - `/content` - Rendered HTML kinyerése
 - `/markdown` - Weboldal → Markdown konverzió
 - `/snapshot` - DOM struktúra snapshot
@@ -104,7 +110,7 @@
 - **20/20 teszt** sikeresen átment 🎯
 - **Dual authentication tesztelés** - Global key + Bearer token
 - **Environment isolation** - Tökéletes test setup
-- **Edge case handling** - Hibakezelés verifikálva  
+- **Edge case handling** - Hibakezelés verifikálva
 
 ✅ **PRODUKCIÓS KONFIGURÁCIÓ:**
 
@@ -121,23 +127,23 @@
 
 **🚀 SPRINT 3 SZOLGÁLTATÁSOK:**
 
-| Endpoint | Funkció | Teszt Státusz | Produkciós |
-|----------|---------|---------------|------------|
-| `/screenshot` | PNG/JPEG képek | ✅ PASS | ✅ KÉSZ |
-| `/pdf` | PDF dokumentumok | ✅ PASS | ✅ KÉSZ |  
-| `/content` | HTML renderelés | ✅ PASS | ✅ KÉSZ |
-| `/markdown` | Markdown konverzió | ✅ PASS | ✅ KÉSZ |
-| `/snapshot` | DOM struktúra | ✅ PASS | ✅ KÉSZ |
-| `/scrape` | Adatkinyerés | ✅ PASS | ✅ KÉSZ |
-| `/json` | AI feldolgozás | ✅ PASS | ✅ KÉSZ |
-| `/links` | Link gyűjtés | ✅ PASS | ✅ KÉSZ |
+| Endpoint      | Funkció            | Teszt Státusz | Produkciós |
+| ------------- | ------------------ | ------------- | ---------- |
+| `/screenshot` | PNG/JPEG képek     | ✅ PASS       | ✅ KÉSZ    |
+| `/pdf`        | PDF dokumentumok   | ✅ PASS       | ✅ KÉSZ    |
+| `/content`    | HTML renderelés    | ✅ PASS       | ✅ KÉSZ    |
+| `/markdown`   | Markdown konverzió | ✅ PASS       | ✅ KÉSZ    |
+| `/snapshot`   | DOM struktúra      | ✅ PASS       | ✅ KÉSZ    |
+| `/scrape`     | Adatkinyerés       | ✅ PASS       | ✅ KÉSZ    |
+| `/json`       | AI feldolgozás     | ✅ PASS       | ✅ KÉSZ    |
+| `/links`      | Link gyűjtés       | ✅ PASS       | ✅ KÉSZ    |
 
 **🔧 SPRINT 4 TERVEZETT FELADATOK:**
 
 📋 **Sprint 4 Roadmap** (conductor/tracks.md frissítve):
 
 1. 🌍 **Edge Workers Deployment** - Cloudflare Workers telepítés és beállítás
-2. ⚡ **Performance Optimization** - Cache stratégia, CDN optimalizálás, auto-scaling  
+2. ⚡ **Performance Optimization** - Cache stratégia, CDN optimalizálás, auto-scaling
 3. 🔍 **Tesztelés & Validáció** - Élő API validáció, performance tesztek, monitoring
 
 **Következő prioritás:** Edge Workers deployment a teljes Browser Rendering API globális elérhetőségéhez
@@ -261,7 +267,7 @@
   - Token Usage: 79 tokens total (64 completion + 15 prompt)
   - Model: @cf/meta/llama-3.1-8b-instruct
   - Response Quality: "I'm an artificial intelligence model known as Llama" ✅
-- **Ollama Local Performance:**  
+- **Ollama Local Performance:**
   - Response Time: 3147ms
   - Model: llama3.1:8b
   - Response Quality: High quality local generation ✅
@@ -282,17 +288,20 @@
 
 ```typescript
 // aiGateway v3.0 - Direct CF Workers AI API
-const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/meta/llama-3.1-8b-instruct`, {
-  method: 'POST',
-  headers: {
-    'Authorization': `Bearer ${apiToken}`,
-    'Content-Type': 'application/json'
+const response = await fetch(
+  `https://api.cloudflare.com/client/v4/accounts/${accountId}/ai/run/@cf/meta/llama-3.1-8b-instruct`,
+  {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${apiToken}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      messages: messages,
+      max_tokens: options?.max_tokens || 150,
+    }),
   },
-  body: JSON.stringify({
-    messages: messages,
-    max_tokens: options?.max_tokens || 150
-  })
-});
+);
 ```
 
 ✨ **PowerShell Test Script Excellence:**
@@ -307,7 +316,7 @@ const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ac
 **Eredmények:**
 
 - ✅ **Domain Independence Confirmed:** Cloudflare edge services teljes működőképessége custom domain nélkül
-- ✅ **Authentication Resolved:** Full Workers token comprehensive CF service access biztosítása  
+- ✅ **Authentication Resolved:** Full Workers token comprehensive CF service access biztosítása
 - ✅ **Performance Validated:** CF vs Ollama baseline measurement, hybrid routing strategy confirmation
 - ✅ **Test Infrastructure:** Automated validation script future CF development támogatására
 - ✅ **Production Ready:** aiGateway v3.0 éles használatra kész, 374/374 tests PASS
@@ -741,8 +750,7 @@ const response = await fetch(`https://api.cloudflare.com/client/v4/accounts/${ac
 - **4. tab hozzáadva:** Build | Review | Coverage | **Queue**
 - **Queue tab funkciók:**
   - **Stats Cards Grid (4 cards):**
-    - Queued (yellow), Running (blue), Completed (green), Failed (red)
-    -값-ben kijelzett task count
+    - Queued (yellow), Running (blue), Completed (green), Failed (red) -값-ben kijelzett task count
   - **Task List (ScrollArea 500px):**
     - Task item: Status badge (color-coded), Priority badge (HIGH/MED/LOW), Type (dim)
     - Description (truncated), Task ID (8 chars), Created time, Duration (if completed)
@@ -1593,7 +1601,7 @@ A Dashboard Phase 3 (V3) sikeresen implementálva és a main ágra push-olva. A 
 - ✅ `src/dashboard/components/dashboard/TaskQueueMonitor.tsx` (Actions: Execute/Cancel/Retry, Stats Cards, Detail Dialog)
 - ✅ `src/server/web.ts` (Implementált API: `/api/providers/status`)
 - ✅ `src/dashboard/lib/apiService.ts` (Client-side API wrapper)
- **Frissítés:** A Green Lightning masterplan aktiválása és az első feladat (P3-1: Dataset Manager) megjelölése.
+  **Frissítés:** A Green Lightning masterplan aktiválása és az első feladat (P3-1: Dataset Manager) megjelölése.
 - ✅ `vite.config.ts` (Proxy ellenőrzés - OK)
 - ✅ `_DASHBOARD_IMPLEMENTATION_PLAN.md` (STATUS: Phase 3 COMPLETED)
 
@@ -1643,7 +1651,7 @@ A Dashboard Phase 3 (V3) sikeresen implementálva és a main ágra push-olva. A 
 - ✅ `myai/browser_task_runner.py` (ÚJ - CLI interface Browser-Use Agent-hez)
 - ✅ `src/tools/browser.ts` (MÓDOSÍTOTT - browser_action tool hozzáadva)
 - ✅ `test/robotkez_integration.test.ts` (ÚJ - CLI bridge teszt)
-- ⚠️  Package: python-shell telepítve (npm)
+- ⚠️ Package: python-shell telepítve (npm)
 
 **Státusz:** ✅ Befejezve (76/77 teszt PASS - 98.7%!)
 

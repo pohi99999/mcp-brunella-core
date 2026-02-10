@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 10. 12:44:12
+**Generálva:** 2026. 02. 10. 20:57:17
 **Script:** 
 
 ---
@@ -37196,10 +37196,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **agent_architect_upgrade_20260205**
         - 📄 meta.json
         - 📄 spec.md
+      - 📂 **bas_comprehensive_test_protocol_20260210**
+        - 📄 meta.json
+        - 📄 spec.md
       - 📂 **cloudflare_edge_integration_20260202**
         - 📄 plan.md
         - 📄 sprint4_spec.md
       - 📂 **code_quality_improvements_20260210**
+        - 📄 spec.md
+      - 📂 **dashboard_test_suite_20260210**
+        - 📄 meta.json
         - 📄 spec.md
       - 📂 **dashboard_v2_robotkez_control_20260208**
         - 📄 spec.md
@@ -37254,9 +37260,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **training**
       - 📄 golden_dataset.jsonl
     - 📄 audit.db
-    - 📄 audit.db-shm
-    - 📄 audit.db-wal
     - 📄 checkpoints.db
+    - 📄 checkpoints.db-shm
+    - 📄 checkpoints.db-wal
     - 📄 developer_metrics.json
     - 📄 tasks.db
   - 📂 **docs**
@@ -110951,6 +110957,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 generate_tree.mjs
     - 📄 generate-ai-context.js
     - 📄 github_token_help.txt
+    - 📄 health_check.ts
     - 📄 init_lancedb.py
     - 📄 jules_api_client.py
     - 📄 jules_check.mjs
@@ -111274,6 +111281,17 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 main.py
     - 📄 SUMMARY.md
   - 📂 **test**
+    - 📂 **dashboard**
+      - 📂 **mocks**
+        - 📄 handlers.ts
+      - 📄 setup.ts
+    - 📂 **e2e**
+      - 📄 action-triggering.spec.ts
+      - 📄 error-handling.spec.ts
+      - 📄 mission-control.spec.ts
+      - 📄 navigation.spec.ts
+      - 📄 tabs-advanced.spec.ts
+      - 📄 tabs-basic.spec.ts
     - 📄 ## Chat Customization Diagnostics.md
     - 📄 activity_feed.test.ts
     - 📄 agent_template.test.ts
@@ -111293,14 +111311,17 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 core_tools.test.ts
     - 📄 coverage_analysis.test.ts
     - 📄 data_refiner.test.ts
+    - 📄 delegation_chain.test.ts
     - 📄 dev_commands.test.ts
     - 📄 developer_pipeline.test.ts
     - 📄 DeveloperAgent.test.ts
     - 📄 ev_hunter_research.test.ts
     - 📄 git_integration.test.ts
     - 📄 goldenDatasetBridge.test.ts
+    - 📄 health_check.test.ts
     - 📄 hooks.test.ts
     - 📄 incubator_test.py
+    - 📄 input_sanitization.test.ts
     - 📄 lint_fixer.test.ts
     - 📄 llm_client.test.ts
     - 📄 llm_provider.test.ts
@@ -111321,8 +111342,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 socketService.test.ts
     - 📄 specStatus.test.ts
     - 📄 SpecWriterAgent.test.ts
+    - 📄 state_restoration.test.ts
     - 📄 task_queue.test.ts
     - 📄 telemetry.test.ts
+  - 📂 **test-results**
   - 📂 **testing**
     - 📂 **hirszerzes_test_1**
       - 📄 ai_research_pipeline.json
@@ -111372,9 +111395,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 konyvtarfa.md
   - 📄 latest_email.html
   - 📄 mcp_servers.json
+  - 📄 mcp-server-config.json
   - 📄 Ollama
   - 📄 package.json
   - 📄 peterpohankapersonal@gmail.com.ical.zip
+  - 📄 playwright.config.ts
   - 📄 pnpm-lock.yaml
   - 📄 pyproject.toml
   - 📄 README.md
@@ -111402,4 +111427,5 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 verify_port.ts
   - 📄 vite.config.ts
   - 📄 vitest.config.ts
+  - 📄 vitest.dashboard.config.ts
   - 📄 workflow.md

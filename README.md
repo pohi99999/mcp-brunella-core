@@ -216,18 +216,18 @@ mcp-brunella-core/
 
 ### VÉDETT FÁJLOK - SOHA NE TÖRÖLD
 
-| Fájl | Miért kritikus |
-|------|----------------|
-| `.env` | API kulcsok, titkos konfigurációk |
-| `package.json` | Projekt definíció, függőségek |
-| `src/agents/*.ts` | Core ügynökök implementációi |
-| `src/agents/types.ts` | IAgent interfész definíció |
-| `src/agents/registry.json` | Ügynök regisztráció |
-| `src/server/web.ts` | Web szerver |
-| `src/server/registry.ts` | MCP tool regisztráció |
-| `src/cli.ts` | CLI belépési pont |
-| `src/core/llm_client.ts` | LLM kommunikáció |
-| `src/index.ts` | Fő belépési pont |
+| Fájl                       | Miért kritikus                    |
+| -------------------------- | --------------------------------- |
+| `.env`                     | API kulcsok, titkos konfigurációk |
+| `package.json`             | Projekt definíció, függőségek     |
+| `src/agents/*.ts`          | Core ügynökök implementációi      |
+| `src/agents/types.ts`      | IAgent interfész definíció        |
+| `src/agents/registry.json` | Ügynök regisztráció               |
+| `src/server/web.ts`        | Web szerver                       |
+| `src/server/registry.ts`   | MCP tool regisztráció             |
+| `src/cli.ts`               | CLI belépési pont                 |
+| `src/core/llm_client.ts`   | LLM kommunikáció                  |
+| `src/index.ts`             | Fő belépési pont                  |
 
 **Ha "takarítani" akarsz vagy "tisztítani" a projektet - KÉRDEZZ ELŐSZÖR!**
 
@@ -348,8 +348,8 @@ pytest tests/
 A projekt `"type": "module"`. **Minden import `.js` kiterjesztéssel:**
 
 ```typescript
-import { foo } from './bar.js';  // ✅ HELYES
-import { foo } from './bar';     // ❌ HELYTELEN (build fail!)
+import { foo } from "./bar.js"; // ✅ HELYES
+import { foo } from "./bar"; // ❌ HELYTELEN (build fail!)
 ```
 
 ### Naplózás (Console.log TILOS!)
@@ -358,14 +358,14 @@ import { foo } from './bar';     // ❌ HELYTELEN (build fail!)
 
 ```typescript
 // Agent kódban:
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
-logInfo('AgentName', 'message');
-setAgentStatus('AgentName', 'working', 'task desc');
+import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
+logInfo("AgentName", "message");
+setAgentStatus("AgentName", "working", "task desc");
 
 // Szerver kódban:
-import { Logger } from '../utils/logger.js';
-const logger = new Logger('feature.log');
-await logger.info('message');
+import { Logger } from "../utils/logger.js";
+const logger = new Logger("feature.log");
+await logger.info("message");
 ```
 
 **NE használj `console.log()` production kódban!**
@@ -375,8 +375,8 @@ await logger.info('message');
 #### 1. Egyszerű Agent (IAgent interfész)
 
 ```typescript
-import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { IAgent, AgentResponse } from "./types.js";
+import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
 
 export class MyAgent implements IAgent {
   name = "MyAgent";
@@ -385,7 +385,7 @@ export class MyAgent implements IAgent {
   capabilities = ["skill1", "skill2"];
 
   async execute(task: string, context?: unknown): Promise<AgentResponse> {
-    setAgentStatus(this.name, 'working', task.slice(0, 50));
+    setAgentStatus(this.name, "working", task.slice(0, 50));
     try {
       // Implementáció
       return { status: "success", data: result };
@@ -394,7 +394,7 @@ export class MyAgent implements IAgent {
       logError(this.name, error);
       return { status: "error", error };
     } finally {
-      setAgentStatus(this.name, 'idle'); // KÖTELEZŐ!
+      setAgentStatus(this.name, "idle"); // KÖTELEZŐ!
     }
   }
 }
@@ -405,7 +405,7 @@ export class MyAgent implements IAgent {
 #### 2. Komplex Agent (BaseAgent leszármazott)
 
 ```typescript
-import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
+import { BaseAgent, AgentContext, AgentResult } from "./BaseAgent.js";
 
 export class MyComplexAgent extends BaseAgent {
   name = "MyComplex";
@@ -437,10 +437,10 @@ export const myToolDefinition = {
   inputSchema: {
     type: "object",
     properties: {
-      param: { type: "string", description: "Parameter leírás" }
+      param: { type: "string", description: "Parameter leírás" },
     },
-    required: ["param"]
-  }
+    required: ["param"],
+  },
 };
 
 export async function myToolHandler(params: { param: string }) {
@@ -461,12 +461,11 @@ export async function myToolHandler(params: { param: string }) {
 **Tool regisztráció (`src/server/registry.ts`):**
 
 ```typescript
-import { myToolDefinition, myToolHandler } from '../tools/myTool.js';
+import { myToolDefinition, myToolHandler } from "../tools/myTool.js";
 
 export function registerAllTools(server: MCPServer) {
-  server.registerTool(
-    myToolDefinition,
-    async (params: unknown) => myToolHandler(params as { param: string })
+  server.registerTool(myToolDefinition, async (params: unknown) =>
+    myToolHandler(params as { param: string }),
   );
 }
 ```
@@ -541,18 +540,18 @@ N8N_API_KEY=...
 
 ## 🚨 Hibaelhárítás
 
-| Probléma | Megoldás |
-|----------|----------|
-| **Ollama connection failed** | Indítsd el: `ollama serve` vagy ellenőrizd port 11434 |
-| **Port 3000 foglalt** | `npm run dev:alt` (port 3001) vagy zárd be a másik process-t |
-| **Python import hiba** | `cd myai && uv sync` vagy `.venv` újraépítés |
-| **Build hiba** | `rmdir /s /q build && npm run build` |
-| **Teszt fail** | **JAVÍTSD a tesztet**, ne töröld! Ellenőrizd: `npm run smoke` |
-| **Hiányzó fájl (git)** | `git checkout HEAD -- <fájl>` |
-| **uv sync lock hiba** | `.venv` törlése: `Remove-Item -Recurse -Force .venv && uv venv && uv sync` |
-| **Dashboard fehér képernyő** | Ellenőrizd a konzolt, gyakran import hiba vagy props error |
-| **FastAPI nem indul** | Ellenőrizd: `cd myai && uvicorn server:app --reload --port 8000` |
-| **LanceDB ImportError** | Opcionális függőség: `cd myai && uv pip install lancedb pyarrow` |
+| Probléma                     | Megoldás                                                                   |
+| ---------------------------- | -------------------------------------------------------------------------- |
+| **Ollama connection failed** | Indítsd el: `ollama serve` vagy ellenőrizd port 11434                      |
+| **Port 3000 foglalt**        | `npm run dev:alt` (port 3001) vagy zárd be a másik process-t               |
+| **Python import hiba**       | `cd myai && uv sync` vagy `.venv` újraépítés                               |
+| **Build hiba**               | `rmdir /s /q build && npm run build`                                       |
+| **Teszt fail**               | **JAVÍTSD a tesztet**, ne töröld! Ellenőrizd: `npm run smoke`              |
+| **Hiányzó fájl (git)**       | `git checkout HEAD -- <fájl>`                                              |
+| **uv sync lock hiba**        | `.venv` törlése: `Remove-Item -Recurse -Force .venv && uv venv && uv sync` |
+| **Dashboard fehér képernyő** | Ellenőrizd a konzolt, gyakran import hiba vagy props error                 |
+| **FastAPI nem indul**        | Ellenőrizd: `cd myai && uvicorn server:app --reload --port 8000`           |
+| **LanceDB ImportError**      | Opcionális függőség: `cd myai && uv pip install lancedb pyarrow`           |
 
 ### Gyakori Hibák
 
@@ -565,16 +564,16 @@ N8N_API_KEY=...
 
 ## 📚 API Végpontok
 
-| Végpont | Leírás |
-|---------|--------|
-| `GET /api/health` | Rendszer állapot (Ollama, FastAPI, stb.) |
-| `GET /api/agents` | Ügynökök listája |
-| `POST /api/agents/:name/execute` | Ügynök futtatás |
-| `GET /api/tools` | MCP eszközök listája |
-| `POST /api/ollama/generate` | LLM generálás (LangSmith traced) |
-| `GET /api-docs` | Swagger UI (API dokumentáció) |
-| `GET /files/list` | Fájl lista (Dashboard File Explorer) |
-| `GET /files/content` | Fájl tartalom olvasás |
+| Végpont                          | Leírás                                   |
+| -------------------------------- | ---------------------------------------- |
+| `GET /api/health`                | Rendszer állapot (Ollama, FastAPI, stb.) |
+| `GET /api/agents`                | Ügynökök listája                         |
+| `POST /api/agents/:name/execute` | Ügynök futtatás                          |
+| `GET /api/tools`                 | MCP eszközök listája                     |
+| `POST /api/ollama/generate`      | LLM generálás (LangSmith traced)         |
+| `GET /api-docs`                  | Swagger UI (API dokumentáció)            |
+| `GET /files/list`                | Fájl lista (Dashboard File Explorer)     |
+| `GET /files/content`             | Fájl tartalom olvasás                    |
 
 ---
 
@@ -614,42 +613,42 @@ npx wrangler deploy
 
 ## 📊 Dashboard V2 Funkciók
 
-| Funkció | Leírás | Gyorsbillentyű |
-|---------|--------|----------------|
-| **AgentGraph** | Ügynök kapcsolatok vizualizáció (React Flow) | - |
-| **CommandMenu** | Globális parancs paletta | `Ctrl+K` |
-| **ThemeToggle** | Sötét/Világos téma váltás | - |
-| **FileExplorer** | Projekt fájl böngésző | - |
-| **NeuralLinkChat** | Beágyazott chat interfész | - |
-| **ServiceControl** | Szolgáltatások indítás/leállítás | - |
+| Funkció            | Leírás                                       | Gyorsbillentyű |
+| ------------------ | -------------------------------------------- | -------------- |
+| **AgentGraph**     | Ügynök kapcsolatok vizualizáció (React Flow) | -              |
+| **CommandMenu**    | Globális parancs paletta                     | `Ctrl+K`       |
+| **ThemeToggle**    | Sötét/Világos téma váltás                    | -              |
+| **FileExplorer**   | Projekt fájl böngésző                        | -              |
+| **NeuralLinkChat** | Beágyazott chat interfész                    | -              |
+| **ServiceControl** | Szolgáltatások indítás/leállítás             | -              |
 
 ---
 
 ## 🎯 Aktív Ügynökök
 
-| Ügynök | Szerep | Státusz |
-|--------|--------|---------|
-| **Orchestrator** | Központi koordinátor, feladat delegálás | Active |
-| **Developer** | Kód generálás, self-healing pipeline | Active |
-| **Evaluator** | Rendszer audit, tesztelés, health check | Active |
-| **Researcher** | RAG keresés, tudásbázis, összefoglalás | Active |
-| **DataScientist** | Adat elemzés, Python végrehajtás, LanceDB | Active |
-| **ProjectConductor** | Projekt struktúra, docs sync (Chief-of-Staff) | Active |
-| **EdgeProxy** | Cloudflare Workers proxy | Active |
-| **VoiceAgent** | Hangfelismerés (Whisper) | Active |
-| **LintFixer** | Automatikus lint javítás (mikro-ügynök) | Active |
+| Ügynök               | Szerep                                        | Státusz |
+| -------------------- | --------------------------------------------- | ------- |
+| **Orchestrator**     | Központi koordinátor, feladat delegálás       | Active  |
+| **Developer**        | Kód generálás, self-healing pipeline          | Active  |
+| **Evaluator**        | Rendszer audit, tesztelés, health check       | Active  |
+| **Researcher**       | RAG keresés, tudásbázis, összefoglalás        | Active  |
+| **DataScientist**    | Adat elemzés, Python végrehajtás, LanceDB     | Active  |
+| **ProjectConductor** | Projekt struktúra, docs sync (Chief-of-Staff) | Active  |
+| **EdgeProxy**        | Cloudflare Workers proxy                      | Active  |
+| **VoiceAgent**       | Hangfelismerés (Whisper)                      | Active  |
+| **LintFixer**        | Automatikus lint javítás (mikro-ügynök)       | Active  |
 
 ---
 
 ## 🔗 További Dokumentáció (Opcionális Olvasás)
 
-| Fájl | Mikor olvasd |
-|------|-------------|
-| `conductor/tracks.md` | Ha konkrét track-en dolgozol |
-| `conductor/workflow.md` | Ha mélyebben érdekel a Data Flywheel/Phoenix Protocol |
-| `conductor/tracks/<id>/plan.md` | Ha track-specifikus detailsre van szükséged |
-| `CLAUDE.md` | **ELAVULT** - Ez a README.md az aktuális! |
-| `GEMINI.md` | **ELAVULT** - Ez a README.md az aktuális! |
+| Fájl                            | Mikor olvasd                                          |
+| ------------------------------- | ----------------------------------------------------- |
+| `conductor/tracks.md`           | Ha konkrét track-en dolgozol                          |
+| `conductor/workflow.md`         | Ha mélyebben érdekel a Data Flywheel/Phoenix Protocol |
+| `conductor/tracks/<id>/plan.md` | Ha track-specifikus detailsre van szükséged           |
+| `CLAUDE.md`                     | **ELAVULT** - Ez a README.md az aktuális!             |
+| `GEMINI.md`                     | **ELAVULT** - Ez a README.md az aktuális!             |
 
 ---
 
@@ -678,91 +677,5 @@ npx wrangler deploy
 
 ---
 
-*Projekt tulajdonos: Pohánka Péter*
-*Ha kérdésed van, kérdezz - ne találgass!*
-
-# Brunella Agent System (BAS)
-
-**Verzió:** 2.4.0 | **Utolsó frissítés:** 2026-02-08
-AI multi-agent rendszer szoftverfejlesztés automatizálására, optimalizálva a Gemini CLI készségeire.
-
----
-
-# ⚠️ AI ÜGYNÖKÖK - KÖTELEZŐ BOOTSTRAP PROTOKOLL
-
-**Ha Gemini CLI-vel vagy más AI ügynökként dolgozol, ez a protokoll a "törvény"!**
-
-## 🚀 MUNKA INDÍTÁSA (Szigorú sorrend)
-
-1. **GitHub Szinkron:** Futtasd: `scripts\sync.bat`
-2. **Kontextus Beolvasás:** - `README.md` (ez a fájl)
-    - `.ai/FOSZAL.md` (időrendi események)
-    - `.ai/gemini.md` (saját korábbi munkád)
-3. **Rendszerellenőrzés:** `npm run build` ÉS `npm test`. Ha hiba van, a javítás az első feladat!
-
----
-
-## 🛠️ GEMINI CLI KÉPESSÉGEK (Skill Usage)
-
-A hatékony és autonóm fejlesztéshez használd az alábbi `/` parancsokat és skilleket:
-
-### 📋 Tervezés és Végrehajtás
-
-- `/plan` (vagy `writing-plans`): Használd MINDEN összetettebb feladat előtt. Készíts részletes tervet.
-- `/implement` (vagy `subagent-driven-development`): Autonóm végrehajtás részfeladatokra bontva.
-- `/executing-plans`: A már jóváhagyott terv pontról pontra történő megvalósítása.
-- `/brainstorm`: Használd új funkciók tervezésénél vagy kreatív elakadásoknál.
-
-### 🧪 Minőség és Tesztelés
-
-- `/tdd` (vagy `test-driven-development`): Előbb a teszt, aztán a kód! Kötelező minden funkcióhoz.
-- `/debug` (vagy `systematic-debugging`): Teszthiba vagy váratlan viselkedés esetén kötelező használni.
-- `/verification-before-completion`: Használd, mielőtt azt állítanád, hogy kész vagy! Lefuttatja az ellenőrzéseket.
-- `gemini:zero-script-qa`: Log-alapú verifikáció, ha nincs írott teszt szkript.
-
-### 🏛️ Architektúra és Council
-
-- `/council:ask`: Konzultálj a multi-model tanáccsal kritikus döntéseknél.
-- `/architecture:system-design`: Rendszerszintű tervezési minták alkalmazása.
-- `/data:schema`: Adatstruktúrák és adatbázis sémák tervezése.
-
----
-
-## 🔄 BKIT PIPELINE & PDCA
-
-A projekt a **bkit** módszertant követi. Tartsd be a fázisokat:
-
-- `gemini:pipeline-status`: Ellenőrizd, melyik fázisban van a projekt (Phase 1-9).
-- `gemini:pipeline-next`: Lépj a következő fejlesztési szakaszba.
-- `gemini:pdca-status`: Ellenőrizd a Plan-Design-Check-Act ciklus állását.
-
----
-
-## 📝 DOKUMENTÁCIÓS KÖTELEZETTSÉG (Munka UTÁN)
-
-Minden munkamenet végén kötelező az alábbi sorrend:
-
-1. **Build & Test:** Ellenőrizd, hogy nem tört el semmi.
-2. **Saját Napló:** Frissítsd a `.ai/gemini.md` fájlt:
-
-    ```markdown
-    ### YYYY-MM-DD HH:MM - [Rövid cím]
-    **Feladat:** [Mit csináltál]
-    **Képességek:** [/plan, /tdd, /debug, stb.]
-    **Státusz:** ✅ Befejezve / ⏳ Folyamatban
-    **Megjegyzés:** [Blockerek, vagy mi maradt hátra]
-    ```
-
-3. **Főnapló Szinkron:** `python scripts/sync_foszal.py`
-4. **Git Commit:** `git add -A && git commit -m "feat/fix: rövid leírás"`
-
----
-
-## 📖 KÓD KONVENCIÓK (KRITIKUS!)
-
-- **ESM + .js:** Kötelező a `.js` kiterjesztés az importoknál! (`import { x } from './y.js'`)
-- **Logger:** `console.log` TILOS! Használd: `import { logInfo } from '../utils/logger.js'`
-- **Clean Code:** TypeScript strict mode bekapcsolva. Kerüld az `any` használatát.
-
----
-*Generated by Gemini CLI - Intelligent Autonomy enabled.*
+_Projekt tulajdonos: Pohánka Péter_
+_Ha kérdésed van, kérdezz - ne találgass!_
