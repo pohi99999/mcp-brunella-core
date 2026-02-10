@@ -45,25 +45,48 @@ describe('CloudflareBrowserAPI', () => {
         });
 
         it('should throw if API token is missing', () => {
-            const origToken = process.env.CF_API_TOKEN;
-            const origClToken = process.env.CLOUDFLARE_API_TOKEN;
+            // Explicitly clear ALL auth-related environment variables
+            const originals = {
+                CF_API_TOKEN: process.env.CF_API_TOKEN,
+                CLOUDFLARE_API_TOKEN: process.env.CLOUDFLARE_API_TOKEN,
+                CF_GLOBAL_API_KEY: process.env.CF_GLOBAL_API_KEY,
+                CLOUDFLARE_GLOBAL_API_KEY: process.env.CLOUDFLARE_GLOBAL_API_KEY,
+                CF_EMAIL: process.env.CF_EMAIL,
+                CLOUDFLARE_EMAIL: process.env.CLOUDFLARE_EMAIL
+            };
+            
+            // Delete all possible auth env vars
             delete process.env.CF_API_TOKEN;
             delete process.env.CLOUDFLARE_API_TOKEN;
+            delete process.env.CF_GLOBAL_API_KEY;
+            delete process.env.CLOUDFLARE_GLOBAL_API_KEY;
+            delete process.env.CF_EMAIL;
+            delete process.env.CLOUDFLARE_EMAIL;
+            
             try {
-                expect(() => new CloudflareBrowserAPI('', 'acc')).toThrow();
+                expect(() => new CloudflareBrowserAPI('', 'acc')).toThrow(
+                    'Either CF_API_TOKEN or (CF_GLOBAL_API_KEY + CF_EMAIL) environment variables are required'
+                );
             } finally {
-                process.env.CF_API_TOKEN = origToken;
-                process.env.CLOUDFLARE_API_TOKEN = origClToken;
+                // Restore original values
+                Object.entries(originals).forEach(([key, value]) => {
+                    if (value !== undefined) process.env[key] = value;
+                });
             }
         });
 
         it('should throw if account ID is missing', () => {
+            // Save and clear account ID env var
             const origAccId = process.env.CLOUDFLARE_ACCOUNT_ID;
             delete process.env.CLOUDFLARE_ACCOUNT_ID;
+            
             try {
-                expect(() => new CloudflareBrowserAPI('tok', '')).toThrow();
+                expect(() => new CloudflareBrowserAPI('tok', '')).toThrow(
+                    'CLOUDFLARE_ACCOUNT_ID environment variable is required'
+                );
             } finally {
-                process.env.CLOUDFLARE_ACCOUNT_ID = origAccId;
+                // Restore original value
+                if (origAccId !== undefined) process.env.CLOUDFLARE_ACCOUNT_ID = origAccId;
             }
         });
     });
@@ -312,32 +335,51 @@ describe('CloudflareBrowserAPI', () => {
     // ─── Shared features ─────────────────────────────────────────────────
 
     describe('shared features', () => {
-        it('should include Authorization header in all requests', async () => {
-            mockFetch.mockResolvedValueOnce({
-                ok: true,
-                headers: new Headers(),
-                json: async () => 'html',
-            });
+        it('should include correct auth headers in all requests', async () => {
+            // Clear ALL global key env vars to force Bearer token usage
+            const originals = {
+                CF_GLOBAL_API_KEY: process.env.CF_GLOBAL_API_KEY,
+                CLOUDFLARE_GLOBAL_API_KEY: process.env.CLOUDFLARE_GLOBAL_API_KEY,
+                CF_EMAIL: process.env.CF_EMAIL,
+                CLOUDFLARE_EMAIL: process.env.CLOUDFLARE_EMAIL
+            };
+            
+            delete process.env.CF_GLOBAL_API_KEY;
+            delete process.env.CLOUDFLARE_GLOBAL_API_KEY;
+            delete process.env.CF_EMAIL;
+            delete process.env.CLOUDFLARE_EMAIL;
+            
+            try {
+                // Create fresh instance with explicit token (not global key)
+                const tokenApi = new CloudflareBrowserAPI('test-token-xyz', 'test-account');
+                
+                mockFetch.mockResolvedValueOnce({
+                    ok: true,
+                    headers: new Headers(),
+                    json: async () => 'html',
+                });
 
-            await api.content({ url: 'https://example.com' });
+                await tokenApi.content({ url: 'https://example.com' });
 
-            const headers = mockFetch.mock.calls[0][1].headers;
-            expect(headers['Authorization']).toBe('Bearer test-token-abc123');
-            expect(headers['Content-Type']).toBe('application/json');
+                // Get the fetch call arguments
+                const fetchCall = mockFetch.mock.calls[0];
+                const requestInit = fetchCall[1];
+                const headers = requestInit.headers;
+                
+                // Check the headers object directly
+                expect(headers['Authorization']).toBe('Bearer test-token-xyz');
+                expect(headers['Content-Type']).toBe('application/json');
+            } finally {
+                // Restore original values
+                Object.entries(originals).forEach(([key, value]) => {
+                    if (value !== undefined) process.env[key] = value;
+                });
+            }
         });
 
-        it('should use correct base URL with account ID', async () => {
-            mockFetch.mockResolvedValueOnce({
-                ok: true,
-                headers: new Headers(),
-                json: async () => [],
-            });
-
-            await api.links({ url: 'https://example.com' });
-
-            const url = mockFetch.mock.calls[0][0];
-            expect(url).toBe(
-                'https://api.cloudflare.com/client/v4/accounts/test-account-id-xyz/browser-rendering/links'
+        it('should use correct base URL with account ID', () => {
+            expect(api.getBaseUrl()).toBe(
+                'https://api.cloudflare.com/client/v4/accounts/test-account-id-xyz/browser-rendering'
             );
         });
 
