@@ -55,5 +55,13 @@
     "vitest.disableWorkspaceWarning": true,
     "git.ignoreLimitWarning": true,
     "chatgpt.openOnStartup": true,
-    "editor.aiStats.enabled": false
+    "editor.aiStats.enabled": false,
+    "github.copilot.chat.agentCustomizationSkill.enabled": true,
+    "github.copilot.chat.languageContext.fix.typescript.enabled": true,
+    "github.copilot.chat.languageContext.inline.typescript.enabled": true,
+    "github.copilot.chat.languageContext.typescript.enabled": true,
+    "github.copilot.chat.notebook.enhancedNextEditSuggestions.enabled": true,
+    "chat.customAgentInSubagent.enabled": true,
+    "chat.agentSessionProjection.enabled": true,
+    "chat.unifiedAgentsBar.enabled": true
 }
