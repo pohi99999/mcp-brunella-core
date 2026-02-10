@@ -14,25 +14,19 @@ jobs:
         with:
           lfs: true
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Build project
-        run: pnpm run build
+        run: npm run build
 
       - name: Run tests
-        run: pnpm test
+        run: npm test
         env:
           WEB_UI_ENABLED: '0'
 
@@ -41,25 +35,19 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Install deps
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Build
-        run: pnpm run build
+        run: npm run build
 
       - name: Vitest
-        run: pnpm exec vitest run --reporter=verbose
+        run: npx vitest run --reporter=verbose
         timeout-minutes: 3
 
   build-python:
@@ -91,16 +79,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
-
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Setup Python venv
         run: |
@@ -109,7 +91,7 @@ jobs:
           pip install -r requirements.txt
 
       - name: Install Node deps & build
-        run: pnpm install --frozen-lockfile && pnpm run build
+        run: npm ci && npm run build
 
       - name: PythonShell tests
         run: node --loader ts-node/esm --test test/python_shell.test.ts
@@ -121,20 +103,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v3
-        with:
-          version: 8
-
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          cache: 'pnpm'
 
       - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+        run: npm ci
 
       - name: Run linter
-        run: pnpm run lint || echo "⚠️ Lint step skipped - not configured in package.json"
+        run: npm run lint || echo "⚠️ Lint step skipped - not configured in package.json"
         continue-on-error: true
