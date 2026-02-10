@@ -24,6 +24,7 @@ A BAS (Brunella Agent System) bővítése Cloudflare Workers edge computing kép
 ## 🏆 Sprint Progress
 
 ### ✅ Sprint 1: aiGateway v3.0 Pure Fetch Architecture (KÉSZ 2026-02-07)
+
 **Commit:** `d3db9566`
 
 - ✅ OpenAI SDK → Pure fetch API migration
@@ -33,6 +34,7 @@ A BAS (Brunella Agent System) bővítése Cloudflare Workers edge computing kép
 - ✅ Auto-fallback: CF Workers AI → Ollama on error
 
 ### ✅ Sprint 2: Domain-Free Architecture Validation (KÉSZ 2026-02-09)
+
 **Commit:** `0b30bf7a`
 
 - ✅ Domain-free architecture confirmed working
@@ -41,6 +43,7 @@ A BAS (Brunella Agent System) bővítése Cloudflare Workers edge computing kép
 - ✅ Integration tests: screenshot API, PDF generation preparation
 
 ### ✅ Sprint 3: CF Browser Rendering API Implementation (KÉSZ 2026-02-09)
+
 **Commit:** `0b30bf7a`
 
 - ✅ **CloudflareBrowserAPI client** (`src/utils/browserRendering.ts`)
@@ -57,6 +60,7 @@ A BAS (Brunella Agent System) bővítése Cloudflare Workers edge computing kép
   - Registered in `registerBrowserTools()`
 
 ### ⏳ Sprint 4: Edge Workers Deployment (In Progress)
+
 **Target:** Deploy to CF Workers when Browser Service access obtained
 
 - [ ] CF Browser API service plan upgrade
@@ -82,7 +86,7 @@ A BAS (Brunella Agent System) bővítése Cloudflare Workers edge computing kép
 - [x] cloudflared telepítése (2025.8.1) – 2026-02-03
 - [x] Cloudflare Tunnel létrehozása (bas-tunnel, f6c9eed4-cb46-4bc4-98bf-d51b6455417c) – 2026-02-03
 - [x] KV namespace létrehozása (`BAS_TASKS`) – 2026-02-03
-- [x] Első deploy és health check teszt – 2026-02-03 (https://bas-orchestrator.iam-dd1.workers.dev)
+- [x] Első deploy és health check teszt – 2026-02-03 (<https://bas-orchestrator.iam-dd1.workers.dev>)
 
 ### Fázis 2: Lokális Integráció (2-3 nap)
 
@@ -106,17 +110,20 @@ A BAS (Brunella Agent System) bővítése Cloudflare Workers edge computing kép
 ## ✅ Elfogadási Kritériumok
 
 ### Must Have
+
 - [x] Worker deployolva: `https://bas-orchestrator.iam-dd1.workers.dev` (2026-02-03)
 - [x] Health check működik edge-ről
 - [x] Task beküldés működik az edge-en keresztül
 - [ ] Tunnel kapcsolat stabil (lokális szolgáltatásokhoz)
 
 ### Should Have
+
 - [ ] KV szinkronizáció működik
 - [ ] Workers AI fallback implementálva
 - [ ] Dashboard elérhető távolról
 
 ### Nice to Have
+
 - [ ] Durable Objects session management
 - [ ] Cloudflare Access policy
 - [ ] Multi-region támogatás
@@ -213,7 +220,7 @@ describe('Edge Integration', () => {
 
 - bas-cloudflare-orchestrator deploy sikeres
 - KV namespace: b6718ab359ac401bb24da7c34c24f11b
-- Worker URL: https://bas-orchestrator.iam-dd1.workers.dev
+- Worker URL: <https://bas-orchestrator.iam-dd1.workers.dev>
 - Dinamikus callback URL javítás
 - Track: bas_cloudflare_orchestrator_deploy_20260203
 - **Cloudflare Tunnel:** cloudflared login, tunnel create bas-tunnel (f6c9eed4-cb46-4bc4-98bf-d51b6455417c)

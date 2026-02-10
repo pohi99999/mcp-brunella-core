@@ -78,6 +78,7 @@
 **Státusz:** ⚠️ FELÜLÍRVA a 2026-02-11-es 8-endpoint rewrite által
 
 **Eredeti implementáció (3 metódus, helytelen base URL):**
+
 - CloudflareBrowserAPI: screenshot(), generatePDF(), quickScreenshot()
 - Base URL: `/browser/` (HELYTELEN → `/browser-rendering/` a helyes)
 - MCP tools: cf_browser_screenshot, cf_browser_pdf, cf_quick_screenshot

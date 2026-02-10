@@ -148,31 +148,44 @@ export interface JsonApiResponse<T = unknown> {
 
 export class CloudflareBrowserAPI {
     private apiToken: string;
+    private globalApiKey?: string;
+    private email?: string;
     private accountId: string;
     private baseUrl: string;
 
     constructor(apiToken?: string, accountId?: string) {
         this.apiToken = apiToken || process.env.CF_API_TOKEN || process.env.CLOUDFLARE_API_TOKEN || '';
+        this.globalApiKey = process.env.CF_GLOBAL_API_KEY || process.env.CLOUDFLARE_GLOBAL_API_KEY;
+        this.email = process.env.CF_EMAIL || process.env.CLOUDFLARE_EMAIL;
         this.accountId = accountId || process.env.CLOUDFLARE_ACCOUNT_ID || '';
         this.baseUrl = `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/browser-rendering`;
 
-        if (!this.apiToken) {
-            throw new Error('CF_API_TOKEN or CLOUDFLARE_API_TOKEN environment variable is required');
+        if (!this.apiToken && (!this.globalApiKey || !this.email)) {
+            throw new Error('Either CF_API_TOKEN or (CF_GLOBAL_API_KEY + CF_EMAIL) environment variables are required');
         }
         if (!this.accountId) {
             throw new Error('CLOUDFLARE_ACCOUNT_ID environment variable is required');
         }
 
-        logInfo('CF Browser API', `Initialized (account: ${this.accountId.slice(0, 8)}...)`);
+        const authMethod = this.globalApiKey ? 'Global key' : 'Bearer token';
+        logInfo('CF Browser API', `Initialized (account: ${this.accountId.slice(0, 8)}..., auth: ${authMethod})`);
     }
 
     // ─── Core HTTP helpers ───────────────────────────────────────────────────
 
     private get headers(): Record<string, string> {
-        return {
-            'Authorization': `Bearer ${this.apiToken}`,
-            'Content-Type': 'application/json'
-        };
+        if (this.globalApiKey && this.email) {
+            return {
+                'X-Auth-Email': this.email,
+                'X-Auth-Key': this.globalApiKey,
+                'Content-Type': 'application/json'
+            };
+        } else {
+            return {
+                'Authorization': `Bearer ${this.apiToken}`,
+                'Content-Type': 'application/json'
+            };
+        }
     }
 
     /** POST that returns binary data (screenshot / pdf) */
