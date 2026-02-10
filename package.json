@@ -26,7 +26,10 @@
     "test:comprehensive": "vitest run test/llm_client.test.ts test/DeveloperAgent.test.ts",
     "test:all": "npm run test:unit:cli && npm run test:factory && npm run test:cli && npm test",
     "build:ui": "vite build src/dashboard",
-    "dev:ui": "vite src/dashboard"
+    "dev:ui": "vite src/dashboard",
+    "test:dashboard": "vitest run --config vitest.dashboard.config.ts",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "keywords": [
     "mcp",
@@ -122,7 +125,11 @@
     "zustand": "^5.0.10"
   },
   "devDependencies": {
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/vite": "^4.1.18",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.2",
+    "@testing-library/user-event": "^14.6.1",
     "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^5.0.6",
     "@types/inquirer": "^8.2.12",
@@ -133,6 +140,8 @@
     "@types/swagger-ui-express": "^4.1.8",
     "@types/uuid": "^10.0.0",
     "@vitejs/plugin-react-swc": "^4.2.2",
+    "jsdom": "^28.0.0",
+    "msw": "^2.12.10",
     "playwright": "^1.58.0",
     "playwright-core": "^1.57.0",
     "supertest": "^7.2.2",

@@ -1,11 +1,21 @@
 {
-    "recommendations": [
-        "devsense.composer-php-vscode",
-        "ms-azuretools.vscode-docker",
-        "sbroenne.windows-mcp",
-        "github.copilot-chat",
-        "cloudflare.cloudflare-workers-bindings-extension",
-        "ivanarjona.cloudflaretunnel",
-        "github.codespaces"
-    ]
+  "recommendations": [
+    // --- CORE BAS EXTENSIONS ---
+    "github.copilot",
+    "github.copilot-chat",
+    "sbroenne.windows-mcp", // MCP kliens Windowsra
+    
+    // --- PYTHON (Robotkéz & AI) ---
+    "ms-python.python",
+    "ms-python.vscode-pylance",
+    "charliermarsh.ruff", // Gyors Python linter (ajánlott)
+
+    // --- NODE.JS / TYPESCRIPT ---
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+
+    // --- CLOUD & DEVOPS ---
+    "ms-azuretools.vscode-docker",
+    "cloudflare.cloudflare-workers-bindings-extension"
+  ]
 }

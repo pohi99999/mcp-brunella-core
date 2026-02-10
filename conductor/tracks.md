@@ -72,6 +72,21 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
   - **Validáció:** build ✅ + test ✅ + smoke ✅ (teljes indítóprotokoll 2026-02-09)
   - 📂 *[./tracks/developer_agent_2_0_20260206/](./tracks/developer_agent_2_0_20260206/)*
 
+- [ ] **🧪 Dashboard Komplett Tesztsorozat** [HIGH]
+  - **ID:** `dashboard_test_suite_20260210`
+  - **Progress:** 80%
+  - **Utolsó aktivitás:** 2026-02-10 17:30
+  - **Leírás:** Teljes E2E + komponens tesztsorozat a Dashboard-hoz. Playwright E2E (37/37 PASS), Vitest+jsdom komponens tesztek, MSW API mock-ok. 3 bugfix elvégezve (CommandMenu, Training gomb, Download gomb).
+  - **Eredmények:**
+    - ✅ Playwright infrastruktúra + config
+    - ✅ MSW API mock handlers (20+ endpoint)
+    - ✅ 5 E2E teszt fájl (37 teszteset — 37/37 PASS)
+    - ✅ 3 ismert bug javítva (CommandMenu props, Training handler, Download handler)
+    - ✅ `npm run build` 0 hiba, meglévő tesztek 393/394 PASS
+  - **Hátralevő:** Komponens unit tesztek (Vitest+jsdom), további E2E bővítés
+  - **Előfeltétel:** code_quality_improvements_20260210 ✅
+  - 📂 *[./tracks/dashboard_test_suite_20260210/](./tracks/dashboard_test_suite_20260210/)*
+
 - [ ] **Phoenix Protocol V2** [MEDIUM]
   - **ID:** `phoenix_protocol_v2_20260205`
   - **Progress:** 0%

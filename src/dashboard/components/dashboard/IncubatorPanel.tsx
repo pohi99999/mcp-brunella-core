@@ -9,7 +9,7 @@ import {
     Play,
     FileCode,
     Plus,
-    History
+    ClockCounterClockwise
 } from '@phosphor-icons/react';
 import { Activity } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
@@ -82,9 +82,9 @@ export function IncubatorPanel() {
                 </div>
                 <div className="flex gap-2">
                     <Button variant="outline" onClick={fetchStats} className="gap-2">
-                        <History /> Frissítés
+                        <ClockCounterClockwise /> Frissítés
                     </Button>
-                    <Button className="gap-2 bg-primary hover:bg-primary/80">
+                    <Button className="gap-2 bg-primary hover:bg-primary/80" onClick={() => toast.info('Training funkció hamarosan elérhető!')}>
                         <Play weight="fill" /> Training indítása
                     </Button>
                 </div>
@@ -161,7 +161,7 @@ export function IncubatorPanel() {
                         </CardHeader>
                         <CardContent>
                             <div className="flex flex-col items-center justify-center p-12 bg-black/20 rounded-xl border border-dashed border-white/10">
-                                <History size={48} className="text-muted-foreground opacity-20 mb-4" />
+                                <ClockCounterClockwise size={48} className="text-muted-foreground opacity-20 mb-4" />
                                 <p className="text-muted-foreground italic">Még nem történt finomhangolás ezzel az „Arany Adatkészlettel”.</p>
                             </div>
                         </CardContent>

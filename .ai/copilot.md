@@ -15,6 +15,66 @@
 
 ---
 
+### 2026-02-10 17:30 - 🧪 Dashboard Komplett Tesztsorozat — E2E Implementáció (37/37 PASS! 🎉)
+
+**Track:** `dashboard_test_suite_20260210`
+**Feladat:** Teljes dashboard tesztsorozat tervezés + implementáció + bugjavítás
+
+**Eredmények:**
+
+✅ **Conductor Track:**
+- `conductor/tracks/dashboard_test_suite_20260210/` — spec.md + meta.json létrehozva
+- `conductor/tracks.md` — bejegyzés felvéve (HIGH priority)
+
+✅ **Teszt Infrastruktúra Felépítve:**
+- 6 dependency: `@playwright/test`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jsdom`, `msw`
+- `playwright.config.ts` — E2E config (webServer auto-start, chromium)
+- `vitest.dashboard.config.ts` — jsdom environment React komponens tesztekhez
+- `test/dashboard/setup.ts` — matchMedia, ResizeObserver, IntersectionObserver mock-ok
+- `test/dashboard/mocks/handlers.ts` — 20+ MSW API handler (health, agents, registry, tools, tasks, rag, developer, providers, system stb.)
+- 3 npm script: `test:dashboard`, `test:e2e`, `test:e2e:ui`
+
+✅ **3 Bug Javítva:**
+1. **CommandMenu** — `setActiveTab`/`activeTab` prop nem volt átadva → javítva MissionControlLayout.tsx L112
+2. **"Training indítása" gomb** — onClick handler hiányzott → toast.info hozzáadva IncubatorPanel.tsx
+3. **"Letöltés" gomb** — handler nélkül → Blob download implementálva FileExplorer.tsx
+
+✅ **37/37 E2E Teszt PASS:**
+
+| Fájl | Tesztek | Lefedettség |
+|------|---------|-------------|
+| navigation.spec.ts | 6 | Betöltés, sidebar, tab-váltás, Ctrl+K, CommandMenu, stresszteszt |
+| mission-control.spec.ts | 4 | Agent kártyák, List/Graph toggle, SystemHealthCard, TerminalLog |
+| tabs-basic.spec.ts | 8 | Agents, Incubator (sub-tab-ok + validáció), Knowledge (keresés + feltöltés) |
+| tabs-advanced.spec.ts | 12 | Developer (sub-tab-ok + quick actions), Tasks, Files, Settings, Assets |
+| error-handling.spec.ts | 7 | Fehér képernyő, API 500, XSS, rapid switching, responsive, Socket.IO |
+
+✅ **Build + Meglévő Tesztek:**
+- `npm run build` — 0 hiba
+- `vitest run` — 393/394 PASS (1 meglévő RAG timeout — nem a mi változásunk)
+
+**Érintett fájlok (új):**
+- `playwright.config.ts`, `vitest.dashboard.config.ts`
+- `test/dashboard/setup.ts`, `test/dashboard/mocks/handlers.ts`
+- `test/e2e/navigation.spec.ts`, `test/e2e/mission-control.spec.ts`
+- `test/e2e/tabs-basic.spec.ts`, `test/e2e/tabs-advanced.spec.ts`
+- `test/e2e/error-handling.spec.ts`
+- `conductor/tracks/dashboard_test_suite_20260210/spec.md`
+- `conductor/tracks/dashboard_test_suite_20260210/meta.json`
+
+**Érintett fájlok (módosított):**
+- `package.json` (dependencies + scripts)
+- `conductor/tracks.md` (új bejegyzés)
+- `src/dashboard/components/dashboard/MissionControlLayout.tsx` (CommandMenu props fix)
+- `src/dashboard/components/dashboard/IncubatorPanel.tsx` (Training gomb handler)
+- `src/dashboard/components/dashboard/FileExplorer.tsx` (Download handler)
+- `src/dashboard/components/dashboard/KnowledgeBasePanel.tsx` (hiányzó state-ek fix)
+
+**Git:** `[pending]`
+**Következő:** Teljes tesztprotokol terv (Smoke + Phoenix + Agent Logic + Robotkéz)
+
+---
+
 ### 2026-02-10 05:30 - 🎉 SPRINT 3 TELJES BEFEJEZÉS! CF Browser Rendering API ✅
 
 **Commit:** `608744c2`
