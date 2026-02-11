@@ -14,7 +14,10 @@ describe("Brunella 2.0 LLM Provider Test", () => {
             // Mock Ollama response for fallback
             return {
                 ok: true,
-                json: async () => ({ response: "ok from ollama" }),
+                json: async () => ({
+                    response: "ok from ollama",
+                    message: { content: "ok from ollama" }
+                }),
                 text: async () => "ok from ollama"
             };
         }) as unknown as typeof fetch);
