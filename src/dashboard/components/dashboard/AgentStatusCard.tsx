@@ -153,7 +153,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
           <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
             <Dialog open={delegateOpen} onOpenChange={setDelegateOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-accent hover:bg-accent/10 rounded-full" title="Delegálás">
+                <Button type="button" variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-accent hover:bg-accent/10 rounded-full" title="Delegálás" aria-label="Delegálás">
                   <ShareNetwork size={16} />
                 </Button>
               </DialogTrigger>
@@ -196,8 +196,10 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
             </Dialog>
 
             <button
+              type="button"
               className="rounded-full p-1 text-zinc-500 hover:bg-white/5 hover:text-zinc-300 transition-colors"
               aria-label={expanded ? 'Összecsuk' : 'Részletek'}
+              onClick={() => setExpanded(!expanded)}
             >
               {expanded ? <CaretUp size={18} /> : <CaretDown size={18} />}
             </button>
@@ -219,7 +221,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                 </span>
                 <Popover open={isEditingCaps} onOpenChange={setIsEditingCaps}>
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300">
+                    <Button type="button" variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300" aria-label="Képességek szerkesztése">
                       <PencilSimple size={12} />
                     </Button>
                   </PopoverTrigger>
@@ -233,17 +235,20 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                           placeholder="Új képesség..."
                           className="h-8 text-xs bg-white/5 border-white/10"
                         />
-                        <Button size="sm" onClick={handleAddCapability} className="h-8 w-8 p-0"><Plus size={14} /></Button>
+                        <Button type="button" size="sm" onClick={handleAddCapability} className="h-8 w-8 p-0" aria-label="Képesség hozzáadása"><Plus size={14} /></Button>
                       </div>
                       <div className="flex flex-wrap gap-1 max-h-[200px] overflow-y-auto">
                         {capabilities.map(cap => (
                           <Badge key={cap} variant="secondary" className="text-[10px] gap-1 pr-1">
                             {cap}
-                            <X
-                              size={10}
-                              className="cursor-pointer hover:text-red-400"
+                            <button
+                              type="button"
+                              className="cursor-pointer hover:text-red-400 bg-transparent border-0 p-0 flex items-center justify-center"
                               onClick={() => handleRemoveCapability(cap)}
-                            />
+                              aria-label={`Képesség törlése: ${cap}`}
+                            >
+                              <X size={10} />
+                            </button>
                           </Badge>
                         ))}
                       </div>
@@ -292,11 +297,13 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                   </div>
                 </div>
                 <Button
+                  type="button"
                   size="sm"
                   variant="default"
                   className="shrink-0 h-auto py-1 bg-primary hover:bg-primary/90 text-primary-foreground"
                   onClick={handleQuickRun}
                   disabled={!quickTask.trim() || status === 'working'}
+                  aria-label="Gyorsfuttatás"
                 >
                   <Play size={12} weight="fill" />
                 </Button>
