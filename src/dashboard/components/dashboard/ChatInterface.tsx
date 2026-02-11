@@ -1,4 +1,3 @@
-```
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -39,7 +38,7 @@ import { toast } from 'sonner'
 import { format } from 'date-fns'
 import { hu } from 'date-fns/locale'
 import { marked } from 'marked';
-import { apiService } from '../../lib/apiService'; // Added apiService import
+import { apiService } from '../../lib/apiService';
 
 interface ChatInterfaceProps {
   user: User
@@ -50,15 +49,15 @@ interface ChatInterfaceProps {
 export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfaceProps) {
   const { chatMessages, addChatMessage } = useMcpStore()
   const { sendMessage, isConnected } = useMCP()
-  const [newMessage, setNewMessage] = useState('') // Renamed 'input' to 'newMessage'
-  const [isProcessing, setIsProcessing] = useState(false); // Replaced 'isLoading' with 'isProcessing'
+  const [newMessage, setNewMessage] = useState('')
+  const [isProcessing, setIsProcessing] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedImage, setSelectedImage] = useState<string | null>(null); // Added for image attachment
-  const [isRecording, setIsRecording] = useState(false); // Added for voice recording
-  const mediaRecorderRef = useRef<MediaRecorder | null>(null); // Added for voice recording
-  const audioChunksRef = useRef<Blob[]>([]); // Added for voice recording
-  const [selectedProvider, setSelectedProvider] = useState<'github' | 'gemini' | 'ollama'>('github');
-  const [selectedModel, setSelectedModel] = useState<string>('gpt-4o');
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [isRecording, setIsRecording] = useState(false)
+  const mediaRecorderRef = useRef<MediaRecorder | null>(null)
+  const audioChunksRef = useRef<Blob[]>([])
+  const [selectedProvider, setSelectedProvider] = useState<'github' | 'gemini' | 'ollama'>('github')
+  const [selectedModel, setSelectedModel] = useState<string>('gpt-4o')
   
   const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
     from: undefined,
@@ -72,7 +71,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
 
   const filteredMessages = useMemo(() => {
     let filtered = currentMessages
-    // ... filtering logic stays same ...
+
     if (dateRange.from || dateRange.to) {
       filtered = filtered.filter(msg => {
         const msgDate = new Date(msg.timestamp)
@@ -108,7 +107,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
   }, [currentMessages])
 
   const handleSend = async () => {
-    if (!newMessage.trim() && !selectedImage) return // Updated to newMessage and selectedImage
+    if (!newMessage.trim() && !selectedImage) return
 
     if (!isConnected) {
       toast.error('Kapcsolati hiba', {
@@ -117,11 +116,9 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
       return
     }
 
-    // Assuming sendMessage can handle both text and image, or we need to adapt it.
-    // For now, just sending text. Image handling would require more backend integration.
     sendMessage(newMessage.trim(), undefined, selectedModel, selectedProvider)
     setNewMessage('')
-    setSelectedImage(null); // Clear selected image after sending
+    setSelectedImage(null)
   }
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -153,7 +150,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     const url = URL.createObjectURL(dataBlob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `chat - history - ${ new Date().toISOString().split('T')[0] }.json`
+    link.download = `chat-history-${new Date().toISOString().split('T')[0]}.json`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
@@ -166,7 +163,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
       .map(msg => {
         const time = new Date(msg.timestamp).toLocaleString('hu-HU')
         const role = msg.role === 'user' ? 'Felhasználó' : 'AI Asszisztens'
-        return `[${ time }] ${ role }: \n${ msg.content } \n`
+        return `[${time}] ${role}:\n${msg.content}\n`
       })
       .join('\n---\n\n')
 
@@ -174,103 +171,90 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     const url = URL.createObjectURL(dataBlob)
     const link = document.createElement('a')
     link.href = url
-    link.download = `chat - history - ${ new Date().toISOString().split('T')[0] }.txt`
+    link.download = `chat-history-${new Date().toISOString().split('T')[0]}.txt`
     document.body.appendChild(link)
     link.click()
     document.body.removeChild(link)
     URL.revokeObjectURL(url)
   }
 
-  // Added for image attachment (placeholder, actual logic for sending image with message is not fully implemented here)
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+    const file = event.target.files?.[0]
     if (file) {
-      const reader = new FileReader();
+      const reader = new FileReader()
       reader.onloadend = () => {
-        setSelectedImage(reader.result as string);
-      };
-      reader.readAsDataURL(file);
+        setSelectedImage(reader.result as string)
+      }
+      reader.readAsDataURL(file)
     }
-  };
+  }
 
   const startRecording = async () => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      const mediaRecorder = new MediaRecorder(stream);
-      mediaRecorderRef.current = mediaRecorder;
-      audioChunksRef.current = [];
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
+      const mediaRecorder = new MediaRecorder(stream)
+      mediaRecorderRef.current = mediaRecorder
+      audioChunksRef.current = []
 
       mediaRecorder.ondataavailable = (event) => {
         if (event.data.size > 0) {
-          audioChunksRef.current.push(event.data);
+          audioChunksRef.current.push(event.data)
         }
-      };
+      }
 
       mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' }); // Chrome uses webm
-        await handleAudioUpload(audioBlob);
-        
-        // Stop all tracks to release microphone
-        stream.getTracks().forEach(track => track.stop());
-      };
+        const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/webm' })
+        await handleAudioUpload(audioBlob)
+        stream.getTracks().forEach(track => track.stop())
+      }
 
-      mediaRecorder.start();
-      setIsRecording(true);
-      toast.info("Hangfelvétel elindult...");
+      mediaRecorder.start()
+      setIsRecording(true)
+      toast.info("Hangfelvétel elindult...")
     } catch (err) {
-      console.error("Microphone access initialization failed", err);
-      toast.error("Nem sikerült hozzáférni a mikrofonhoz.");
+      console.error("Microphone access initialization failed", err)
+      toast.error("Nem sikerült hozzáférni a mikrofonhoz.")
     }
-  };
+  }
 
   const stopRecording = () => {
     if (mediaRecorderRef.current && isRecording) {
-      mediaRecorderRef.current.stop();
-      setIsRecording(false);
-      toast.info("Feldolgozás...");
+      mediaRecorderRef.current.stop()
+      setIsRecording(false)
+      toast.info("Feldolgozás...")
     }
-  };
+  }
 
   const handleAudioUpload = async (audioBlob: Blob) => {
-    setIsProcessing(true);
+    setIsProcessing(true)
     try {
-      const formData = new FormData();
-      formData.append('file', audioBlob, 'recording.webm');
+      const formData = new FormData()
+      formData.append('file', audioBlob, 'recording.webm')
 
-      // We need to bypass the standard API service wrapper for file upload or extend it.
-      // Assuming apiService can't handle raw fetch with FormData easily or we want direct control.
-      // Since `apiService` is not fully visible, I'll use fetch directly to the Python endpoint
-      // BUT we need to route via Node proxy to avoid CORS if ports differ?
-      // Actually Python is on 8000, Dashboard on 5173 (client). CORS might be an issue if not set on FastAPI.
-      // Let's assume FastAPI allows CORS (it usually does in dev).
-      // Or better: use the Node server as proxy if possible.
-      // For now, I'll try direct call to Python backend localhost:8000/voice/transcribe.
-      // Note: In real prod, this should go through Nginx or similar.
-      
       const response = await fetch('http://localhost:8000/voice/transcribe', {
         method: 'POST',
         body: formData,
-      });
+      })
 
       if (!response.ok) {
-        throw new Error(`Server error: ${ response.status } `);
+        throw new Error(`Server error: ${response.status}`)
       }
 
-      const data = await response.json();
+      const data = await response.json()
       if (data.status === 'success' && data.text) {
-        setNewMessage((prev) => (prev ? prev + ' ' + data.text : data.text));
-        toast.success("Hang átírva!");
+        setNewMessage((prev) => (prev ? prev + ' ' + data.text : data.text))
+        toast.success("Hang átírva!")
       } else {
-        toast.error("Nem sikerült az átírás.");
+        toast.error("Nem sikerült az átírás.")
       }
 
     } catch (error) {
-      console.error('Audio upload failed:', error);
-      toast.error("Hiba a hang feldolgozása közben.");
+      console.error('Audio upload failed:', error)
+      toast.error("Hiba a hang feldolgozása közben.")
     } finally {
-      setIsProcessing(false);
+      setIsProcessing(false)
     }
-  };
+  }
 
   return (
     <Card className="h-[calc(100vh-280px)] flex flex-col">
@@ -296,8 +280,6 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 {isConnected ? `Szerver: Online` : 'Szerver: Offline'}
               </span>
             </div>
-            {currentMessages.length > 0 && (
-              <>
             {currentMessages.length > 0 && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -458,8 +440,8 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 {dateRange.from && (
                   <Badge variant="secondary" className="gap-1">
                     {dateRange.to
-                      ? `${ format(dateRange.from, "MMM d", { locale: hu }) } - ${ format(dateRange.to, "MMM d", { locale: hu }) } `
-                      : `Ettől: ${ format(dateRange.from, "MMM d", { locale: hu }) } `}
+                      ? `${format(dateRange.from, "MMM d", { locale: hu })} - ${format(dateRange.to, "MMM d", { locale: hu })}`
+                      : `Ettől: ${format(dateRange.from, "MMM d", { locale: hu })}`}
                     <X
                       size={14}
                       className="cursor-pointer hover:text-foreground"
@@ -521,7 +503,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 {filteredMessages.map(message => (
                   <div
                     key={message.id}
-                    className={`flex gap - 3 ${ message.role === 'user' ? 'justify-end' : 'justify-start' } `}
+                    className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {message.role === 'assistant' && (
                       <div className="flex-shrink-0">
@@ -532,16 +514,16 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                     )}
 
                     <div
-                      className={`flex flex - col gap - 1 max - w - [80 %] ${
-  message.role === 'user' ? 'items-end' : 'items-start'
-} `}
+                      className={`flex flex-col gap-1 max-w-[80%] ${
+                        message.role === 'user' ? 'items-end' : 'items-start'
+                      }`}
                     >
                       <div
-                        className={`px - 4 py - 3 rounded - lg ${
-  message.role === 'user'
-    ? 'bg-primary text-primary-foreground'
-    : 'bg-card border border-border'
-} `}
+                        className={`px-4 py-3 rounded-lg ${
+                          message.role === 'user'
+                            ? 'bg-primary text-primary-foreground'
+                            : 'bg-card border border-border'
+                        }`}
                       >
                         {message.thoughts && (
                           <div className="mb-2 text-xs italic text-muted-foreground border-l-2 border-accent/30 pl-2">
@@ -575,13 +557,13 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                         {message.image && (
                           <div className="mt-3 rounded-md overflow-hidden border border-border bg-black/5">
                             <img
-                              src={message.image.startsWith('data:') ? message.image : `data: image / png; base64, ${ message.image } `}
+                              src={message.image.startsWith('data:') ? message.image : `data:image/png;base64,${message.image}`}
                               alt="Böngésző nézet"
                               className="w-full h-auto max-h-[300px] object-contain cursor-zoom-in transition-transform hover:scale-[1.02]"
                               onClick={() => {
-                                const win = window.open();
+                                const win = window.open()
                                 if (win) {
-                                  win.document.write(`< img src = "${message.image.startsWith('data:') ? message.image : `data:image/png;base64,${message.image}`}" style = "max-width:100%" > `);
+                                  win.document.write(`<img src="${message.image.startsWith('data:') ? message.image : `data:image/png;base64,${message.image}`}" style="max-width:100%">`)
                                 }
                               }}
                             />
@@ -625,7 +607,6 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
           </div>
         </ScrollArea>
 
-        {/* Recording Indicator */}
         {isRecording && (
             <div className="absolute bottom-[100px] left-0 right-0 flex justify-center items-center gap-2 animate-pulse text-red-500 font-bold bg-background/80 p-2 rounded-t-lg">
                 <Circle weight="fill" size={16} />
@@ -634,7 +615,6 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
         )}
 
         <div className="flex items-end gap-2 bg-background p-2 rounded-lg border border-input focus-within:ring-1 focus-within:ring-ring">
-          {/* Image attachment button */}
           <div className="relative">
             <input
               type="file"
@@ -654,12 +634,11 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
             </Button>
           </div>
 
-          {/* Microphone Button */}
           <Button
             type="button"
             size="icon"
             variant={isRecording ? "destructive" : "ghost"}
-            className={`h - 10 w - 10 shrink - 0 transition - all ${ isRecording ? "animate-pulse" : "" } `}
+            className={`h-10 w-10 shrink-0 transition-all ${isRecording ? "animate-pulse" : ""}`}
             onClick={isRecording ? stopRecording : startRecording}
             disabled={isProcessing}
             title={isRecording ? "Leállítás" : "Hangfelvétel indítása"}
@@ -692,4 +671,3 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     </Card>
   )
 }
-```
