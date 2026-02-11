@@ -15,6 +15,7 @@ export interface BrunellaSettingsSchema {
     preferredEditor?: string;
     vimMode?: boolean;
     previewFeatures?: boolean;
+    language?: 'hu' | 'en';
   };
   ui?: {
     theme?: string;
@@ -94,7 +95,7 @@ const DEFAULT_LEGACY: CliSettingsLegacy = {
 };
 
 const DEFAULT_NESTED: BrunellaSettingsSchema = {
-  general: { vimMode: false, previewFeatures: false },
+  general: { vimMode: false, previewFeatures: false, language: 'hu' },
   ui: { theme: 'dark', hideBanner: false, hideTips: false, hideFooter: false },
   output: { format: 'text' },
   model: { maxSessionTurns: -1 },
