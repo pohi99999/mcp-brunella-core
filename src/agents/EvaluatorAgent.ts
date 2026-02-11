@@ -1,17 +1,10 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { Logger } from '../utils/logger.js';
 import { checkOllamaHealth, checkAnythingLLMHealth } from '../utils/health.js';
+import { exec } from 'child_process';
+import util from 'util';
 
-// Dynamic import holder
-let exec: any = null;
-let util: any = null;
-
-async function ensureNodeDeps() {
-    if (typeof process !== 'undefined' && process.versions?.node) {
-        if (!exec) exec = (await import('child_process')).exec;
-        if (!util) util = (await import('util')).default;
-    }
-}
+const execAsync = util.promisify(exec);
 
 export class EvaluatorAgent extends BaseAgent {
     name = "Evaluator";
@@ -67,16 +60,6 @@ export class EvaluatorAgent extends BaseAgent {
     }
 
     private async runTests(): Promise<AgentResult> {
-        await ensureNodeDeps();
-        if (!exec || !util) {
-             return {
-                 success: false,
-                 message: "Test execution is not supported in this environment (Node.js required)."
-             };
-        }
-
-        const execAsync = util.promisify(exec);
-
         try {
             // Running tests via npm. Warning: this might be slow and capture a lot of output.
             // We use 'npm test' which now runs 'vitest run'

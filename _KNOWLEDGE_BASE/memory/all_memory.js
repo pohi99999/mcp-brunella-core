@@ -68,4 +68,6 @@ const all_memory = {
         "Két fő bővítési módszer létezik: 'Command-based Discovery' (egyszerű, szkript-alapú) és 'MCP (Model Context Protocol) Szerverek' (haladó, elosztott rendszerekhez).",
         "Az MCP protokoll stratégiai utat jelöl ki a komplex, több-ügynökös rendszerek felé, ahol a Gemini CLI egy központi orchestrator szerepét töltheti be, amely külső, specializált ügynököket (MCP szervereket) koordinál."
       ]
-    },
+    }
+  }
+}

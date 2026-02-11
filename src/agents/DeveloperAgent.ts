@@ -7,19 +7,9 @@ import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { globalPythonShell } from '../utils/pythonShell.js';
 import { generateResponse } from '../core/llm_client.js';
 import { getSpecStatus, requiresSpec } from './specStatus.js';
-
-// Dynamic imports holder
-let execSync: any = null;
-let fs: any = null;
-let path: any = null;
-
-async function ensureNodeDeps() {
-    if (typeof process !== 'undefined' && process.versions?.node) {
-        if (!execSync) execSync = (await import('child_process')).execSync;
-        if (!fs) fs = (await import('fs/promises')).default;
-        if (!path) path = (await import('path')).default;
-    }
-}
+import { execSync } from 'child_process';
+import fs from 'fs/promises';
+import path from 'path';
 
 /**
  * DeveloperAgent 2.0 - Self-Healing AI Developer
@@ -56,8 +46,6 @@ export class DeveloperAgent implements IAgent {
         logInfo(this.name, `Processing: ${task}`);
 
         try {
-            await ensureNodeDeps();
-
             // ── SPEC GATE (RULE-SF1) ────────────────────────────────────
             // Block execution if a trackId is present and spec is not approved.
             // Skip check for SKIP_SPEC_CHECK env var (test environments).
@@ -247,7 +235,6 @@ Generate Vitest test suite:`;
         try {
             let sourceCode = "";
             if (filePath) {
-                if (!fs) throw new Error("File system not available");
                 sourceCode = await fs.readFile(filePath, 'utf-8');
             }
 
@@ -315,10 +302,6 @@ Provide the fixed code:`;
     private async handleGitOperation(task: string, context?: any): Promise<AgentResponse> {
         logInfo(this.name, "📦 Git operation mode");
 
-        if (!execSync) {
-            return { status: "error", error: "Git operations require Node.js environment" };
-        }
-
         try {
             if (/commit/i.test(task)) {
                 const message = context?.commitMessage || task;
@@ -372,14 +355,12 @@ If code is needed, generate it. If explanation is needed, explain.`;
     // ==================== Utilities ====================
 
     private async saveCode(filePath: string, code: string): Promise<void> {
-        if (!fs || !path) throw new Error("File system not available");
         const dir = path.dirname(filePath);
         await fs.mkdir(dir, { recursive: true });
         await fs.writeFile(filePath, code, 'utf-8');
     }
 
     private async tryBuild(): Promise<{ success: boolean; error?: string }> {
-        if (!execSync) return { success: false, error: "Build requires Node.js" };
         try {
             execSync('npm run build', {
                 encoding: 'utf-8',
@@ -396,7 +377,6 @@ If code is needed, generate it. If explanation is needed, explain.`;
     }
 
     private async runTests(testFile: string | undefined): Promise<{ success: boolean; output?: string }> {
-        if (!execSync) return { success: false, output: "Tests require Node.js" };
         try {
             const cmd = testFile
                 ? `npx vitest run ${testFile}`

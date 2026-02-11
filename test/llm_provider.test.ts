@@ -9,18 +9,10 @@ describe("Brunella 2.0 LLM Provider Test", () => {
 
     beforeEach(() => {
         process.env.GEMINI_API_KEY = originalGeminiKey;
-        vi.stubGlobal("fetch", vi.fn(async (url) => {
-            // Mock Gemini response if key is present (not actually needed here as we test failure)
-            // Mock Ollama response for fallback
-            return {
-                ok: true,
-                json: async () => ({
-                    response: "ok from ollama",
-                    message: { content: "ok from ollama" }
-                }),
-                text: async () => "ok from ollama"
-            };
-        }) as unknown as typeof fetch);
+        vi.stubGlobal("fetch", vi.fn(async () => ({
+            ok: true,
+            json: async () => ({ response: "ok" })
+        })) as unknown as typeof fetch);
     });
 
     afterEach(() => {

@@ -1,0 +1,11 @@
+name: "CodeQL config"
+
+disable-default-queries: false
+
+paths-ignore:
+  - 'external_research'
+  - 'myai/agents/a2a-go'
+  - 'myai/agents/tensorflow'
+  - 'open-interpreter'
+  - 'node_modules'
+  - '_KNOWLEDGE_BASE'
