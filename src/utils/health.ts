@@ -2,7 +2,6 @@
  * Health check helpers: structured responses, retry, timeout config.
  */
 
-import fetch from 'node-fetch';
 import { Logger } from './logger.js';
 
 const healthLogger = new Logger('health.log');
