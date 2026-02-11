@@ -1,0 +1,54 @@
+{
+  "name": "BAS_AI_Research_Pipeline_v1",
+  "description": "Autonóm AI hírszerző flow - Gemini kutató + Ollama validátor",
+  "nodes": [
+    {
+      "id": "cron_trigger_01",
+      "type": "CustomComponent",
+      "data": {
+        "node": "CronJob",
+        "schedule": "0 9 * * *" 
+      }
+    },
+    {
+      "id": "gemini_researcher_02",
+      "type": "Agent",
+      "data": {
+        "model": "gemini-2.0-flash",
+        "system_prompt": "Te egy AI kutató vagy. Keress nyílt forráskódú innovációkat. Output: Markdown lista címekkel és URL-ekkel.",
+        "tools": ["perplexity_search", "arxiv_api"]
+      }
+    },
+    {
+      "id": "python_parser_03",
+      "type": "PythonFunction",
+      "data": {
+        "code": "import re\nimport uuid\nfrom datetime import datetime\n\ndef parse_markdown_to_structured(markdown_text: str):\n    # Regex alapú feldolgozás a struktúra kinyeréséhez\n    entries = []\n    # ... (Regex logika a hirszerzes_test1.md.txt alapján)\n    return entries"
+      }
+    },
+    {
+      "id": "ollama_validator_04",
+      "type": "LLMChain",
+      "data": {
+        "provider": "ollama",
+        "model": "llama3.1:8b",
+        "prompt": "Validáld és alakítsd át az alábbi adatokat szigorú JSON sémára: {title, url, category, summary, tags}."
+      }
+    },
+    {
+      "id": "lancedb_storage_05",
+      "type": "VectorStore",
+      "data": {
+        "database": "LanceDB",
+        "table": "ai_innovations",
+        "action": "upsert"
+      }
+    }
+  ],
+  "edges": [
+    { "source": "cron_trigger_01", "target": "gemini_researcher_02" },
+    { "source": "gemini_researcher_02", "target": "python_parser_03" },
+    { "source": "python_parser_03", "target": "ollama_validator_04" },
+    { "source": "ollama_validator_04", "target": "lancedb_storage_05" }
+  ]
+}

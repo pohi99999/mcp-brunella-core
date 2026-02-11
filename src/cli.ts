@@ -25,6 +25,7 @@ import { startInteractiveMenu } from "./interactive.js";
 import { cloudflareClient } from "./utils/cloudflareClient.js";
 import { registerGoldCommands } from "./cli/goldCommands.js";
 import { registerDevCommands } from "./cli/devCommands.js";
+import { registerTracksCommands } from "./cli/tracksCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -997,6 +998,9 @@ registerGoldCommands(program);
 
 // Register Developer Agent commands (P2)
 registerDevCommands(program);
+
+// Register Tracks commands (EPP v2)
+registerTracksCommands(program);
 
 // Interactive Menu (Default)
 if (!process.argv.slice(2).length) {

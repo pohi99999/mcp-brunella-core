@@ -39,6 +39,7 @@ import { createSpecRouter } from "./specRoutes.js";
 import { createPhoenixRouter } from "./phoenixRoutes.js";
 import { createRouterRouter } from "./routerRoutes.js";
 import { createMemoryRouter } from "./memoryRoutes.js";
+import { createTracksRouter } from "./tracksRoutes.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
 
@@ -108,6 +109,9 @@ export async function startWebServer() {
   v1Router.use("/phoenix", createPhoenixRouter());
   v1Router.use("/router", createRouterRouter());
   v1Router.use("/memory", createMemoryRouter());
+
+  // Add Tracks routes (EPP v2)
+  v1Router.use("/tracks", createTracksRouter());
 
   // Add Robotkéz routes to v1
   v1Router.use("/robotkez", createRobotkezRoutes());

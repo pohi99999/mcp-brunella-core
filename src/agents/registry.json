@@ -237,6 +237,25 @@
       "status": "active",
       "tags": ["management", "conductor"],
       "priority": 10
+    },
+    {
+      "name": "SpecWriter",
+      "title": "SpecWriter Agent",
+      "description": "Automatikus track generálás EPP v2 protokoll szerint. 3-stage LLM pipeline: requirement extraction → track generation → validation.",
+      "class": "SpecWriterAgent",
+      "module": "./agents/SpecWriterAgent.js",
+      "capabilities": [
+        "track_generation",
+        "epp_v2_compliance",
+        "requirement_extraction",
+        "todo_breakdown"
+      ],
+      "triggers": ["track", "generate", "spec", "ötlet", "idea"],
+      "category": "engineering",
+      "status": "active",
+      "tags": ["tracks", "epp-v2", "automation"],
+      "priority": 5,
+      "model": "qwen2.5-coder:latest"
     }
   ]
 }
