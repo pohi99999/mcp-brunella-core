@@ -160,11 +160,12 @@ export class SpecWriterAgent extends BaseAgent {
                 }
             };
         } catch (error: any) {
-            logError(this.name, `3-stage pipeline error: ${error.message}`);
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            logError(this.name, `3-stage pipeline error: ${errorMessage}`);
             return {
                 success: false,
-                message: `Failed to generate track: ${error.message}`,
-                metadata: { error: error.message, stack: error.stack }
+                message: `Failed to generate track: ${errorMessage}`,
+                metadata: { error: errorMessage, stack: error.stack }
             };
         }
     }
@@ -221,17 +222,26 @@ export class SpecWriterAgent extends BaseAgent {
                 'qwen2.5-coder:latest'
             );
 
-            if (!rawResponse || typeof rawResponse !== 'string') {
-                throw new Error('LLM returned empty or invalid response');
+            if (typeof rawResponse !== 'string') {
+                throw new Error('LLM returned non-string or empty response');
             }
 
-            // Parse JSON from response (handle markdown code blocks if present)
-            const jsonMatch = rawResponse.match(/```json\s*([\s\S]*?)\s*```/) || rawResponse.match(/\{[\s\S]*\}/);
-            if (!jsonMatch) {
-                throw new Error('LLM did not return valid JSON');
-            }
+            let jsonString = rawResponse;
 
-            const jsonString = jsonMatch[1] || jsonMatch[0];
+            // Try to extract from markdown code block first
+            const markdownMatch = rawResponse.match(/```json\s*([\s\S]*?)\s*```/);
+            if (markdownMatch && markdownMatch[1]) {
+                jsonString = markdownMatch[1];
+            } else {
+                // If not in markdown, try to find the first { and last }
+                const firstCurly = rawResponse.indexOf('{');
+                const lastCurly = rawResponse.lastIndexOf('}');
+                if (firstCurly !== -1 && lastCurly !== -1 && lastCurly > firstCurly) {
+                    jsonString = rawResponse.substring(firstCurly, lastCurly + 1);
+                } else {
+                    throw new Error('LLM did not return valid JSON format (missing curly braces or markdown block)');
+                }
+            }
             const parsed = JSON.parse(jsonString) as RequirementsJson;
 
             // Validation
@@ -241,8 +251,9 @@ export class SpecWriterAgent extends BaseAgent {
 
             return parsed;
         } catch (error: any) {
-            logError(this.name, `Stage 1 error: ${error.message}`);
-            throw new Error(`Requirement extraction failed: ${error.message}`);
+            const errorMessage = error instanceof Error ? error.message : String(error);
+            logError(this.name, `Stage 1 error: ${errorMessage}`);
+            throw new Error(`Requirement extraction failed: ${errorMessage}`);
         }
     }
 

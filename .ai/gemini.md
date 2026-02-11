@@ -21,6 +21,26 @@
 
 ---
 
+### 2026-02-12 - SpecWriterAgent Tesztjavítás
+
+**Feladat:** Hibás tesztek javítása a `SpecWriterAgent.test.ts` fájlban.
+
+**Érintett fájlok:**
+- `test/specWriterAgent.test.ts`
+- `src/agents/SpecWriterAgent.ts`
+
+**Elvégzett lépések:**
+1.  Kijavítottam a `should return error if idea is missing` teszt hibaüzenetének elvárását.
+2.  Robusztusabbá tettem a JSON-parsolási logikát a `stage1_extractRequirements` metódusban, beleértve a `rawResponse` string típusának explicit ellenőrzését és a JSON blokkok pontosabb kinyerését.
+3.  Kijavítottam a `rawResponse` duplikált deklarációját a `SpecWriterAgent.ts` fájlban.
+4.  Módosítottam a `catch` blokkokat a `SpecWriterAgent.ts` fájlban, hogy az `errorMessage` mindig string legyen.
+5.  Biztosítottam, hogy minden `generateResponse` hívás a tesztpipeline során fedezve legyen `mockResolvedValueOnce` hívásokkal.
+6.  Frissítettem a `mockTrackMarkdown` értékét a `should generate EPP v2 compliant track.md` tesztben, hogy teljesen EPP v2 kompatibilis legyen.
+
+**Státusz:** ✅ Befejezve
+
+---
+
 ## Napló
 
 ### 2026-02-04 - Korábbi Munkamenetek Importálása

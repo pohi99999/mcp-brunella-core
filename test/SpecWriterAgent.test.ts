@@ -68,9 +68,42 @@ describe('SpecWriterAgent v2.0', () => {
                 }
             };
 
-            vi.mocked(llmClient.generateResponse).mockResolvedValueOnce(
-                JSON.stringify(mockRequirements)
-            );
+            vi.mocked(llmClient.generateResponse)
+                .mockResolvedValueOnce(JSON.stringify(mockRequirements)) // For stage1
+                .mockResolvedValueOnce(`
+# E2E Test Track Title
+
+**Track ID:** \`test-track-20260211\`
+**Priority:** P1
+**Progress:** 0%
+
+## 🎯 Cél
+Test description
+
+## 📋 Feladatok (TODO)
+- [ ] Task 1
+
+## ✅ Acceptance Criteria
+- [ ] Dashboard integráció kész (Test dashboard component)
+- [ ] CLI integráció kész (Test CLI command)
+- [ ] \`npm test\` - All tests passing (0 errors)
+- [ ] \`npm run build\` - Clean build (0 TypeScript errors)
+- [ ] EPP v2 compliance: 7 Arany Szabály követve
+- [ ] Documentation updated (.ai/claude.md + FOSZAL.md)
+
+## 🔗 Integrációk
+
+### Dashboard
+Test dashboard component
+
+**Component:** \`src/dashboard/components/[ComponentName].tsx\`
+
+### CLI
+Test CLI command
+
+**Command:** \`brunella [command-name]\`
+**File:** \`src/cli/[commandName]Commands.ts\`
+`); // For stage2 - EPP v2 compliant markdown
 
             const result = await agent.execute('Generate track from idea: Add user authentication', {
                 metadata: {
@@ -79,6 +112,7 @@ describe('SpecWriterAgent v2.0', () => {
             });
 
             expect(result.status).toBe('success');
+            expect(result.error).toBeUndefined(); // Expected to be undefined on success
             expect(llmClient.generateResponse).toHaveBeenCalledWith(
                 expect.stringContaining('Extract structured information'),
                 'ollama',
@@ -89,7 +123,42 @@ describe('SpecWriterAgent v2.0', () => {
         it('should handle JSON wrapped in markdown code blocks', async () => {
             const mockResponse = '```json\n{"title":"Test","description":"desc","priority":"P0","estimated_hours":2,"phases":[],"integrations":{"dashboard":"x","cli":"y"}}\n```';
 
-            vi.mocked(llmClient.generateResponse).mockResolvedValueOnce(mockResponse);
+            vi.mocked(llmClient.generateResponse)
+                .mockResolvedValueOnce(mockResponse) // For stage1
+                .mockResolvedValueOnce(`
+# E2E Test Track Title
+
+**Track ID:** \`test-track-20260211\`
+**Priority:** P1
+**Progress:** 0%
+
+## 🎯 Cél
+Test description
+
+## 📋 Feladatok (TODO)
+- [ ] Task 1
+
+## ✅ Acceptance Criteria
+- [ ] Dashboard integráció kész (Test dashboard component)
+- [ ] CLI integráció kész (Test CLI command)
+- [ ] \`npm test\` - All tests passing (0 errors)
+- [ ] \`npm run build\` - Clean build (0 TypeScript errors)
+- [ ] EPP v2 compliance: 7 Arany Szabály követve
+- [ ] Documentation updated (.ai/claude.md + FOSZAL.md)
+
+## 🔗 Integrációk
+
+### Dashboard
+Test dashboard component
+
+**Component:** \`src/dashboard/components/[ComponentName].tsx\`
+
+### CLI
+Test CLI command
+
+**Command:** \`brunella [command-name]\`
+**File:** \`src/cli/[commandName]Commands.ts\`
+`); // For stage2 - EPP v2 compliant markdown
 
             const result = await agent.execute('test', {
                 metadata: { idea: 'Test idea' }
@@ -97,15 +166,17 @@ describe('SpecWriterAgent v2.0', () => {
 
             // Should parse successfully
             expect(result.status).toBe('success');
+            expect(result.error).toBeUndefined();
+            expect(llmClient.generateResponse).toHaveBeenCalledTimes(2); // Two calls, one for each stage
         });
 
         it('should return error if idea is missing', async () => {
-            const result = await agent.execute('Generate track', {
-                metadata: {}
+            const result = await agent.execute('', { // Empty task
+                metadata: { idea: '' } // Explicitly empty idea
             });
 
             expect(result.status).toBe('error');
-            expect(result.error).toContain('Missing idea');
+            expect(result.error).toBe('Missing idea in context.metadata.idea or context.task');
         });
     });
 
@@ -141,12 +212,25 @@ Test description
 - [ ] Task 1
 
 ## ✅ Acceptance Criteria
-- [ ] Dashboard integráció kész
-- [ ] CLI integráció kész
+- [ ] Dashboard integráció kész (Dashboard comp)
+- [ ] CLI integráció kész (CLI cmd)
+- [ ] \`npm test\` - All tests passing (0 errors)
+- [ ] \`npm run build\` - Clean build (0 TypeScript errors)
+- [ ] EPP v2 compliance: 7 Arany Szabály követve
+- [ ] Documentation updated (.ai/claude.md + FOSZAL.md)
 
 ## 🔗 Integrációk
+
+### Dashboard
 Dashboard comp
+
+**Component:** \`src/dashboard/components/[ComponentName].tsx\`
+
+### CLI
 CLI cmd
+
+**Command:** \`brunella [command-name]\`
+**File:** \`src/cli/[commandName]Commands.ts\`
 `;
 
             vi.mocked(llmClient.generateResponse)
@@ -158,6 +242,7 @@ CLI cmd
             });
 
             expect(result.status).toBe('success');
+            expect(result.error).toBeUndefined();
             expect(llmClient.generateResponse).toHaveBeenCalledTimes(2);
         });
     });
