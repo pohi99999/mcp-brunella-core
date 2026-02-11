@@ -1,0 +1,140 @@
+{
+  "name": "EV Hunter Automation",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hours": 1
+            }
+          ]
+        }
+      },
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [
+        250,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "command": "cd F:/mcp-brunella-core && python myai/tasks/ev_hunter.py"
+      },
+      "name": "Execute EV Hunter",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [
+        450,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "const pythonOutput = JSON.parse(items[0].json.stdout);\nreturn pythonOutput.map(item => ({ json: item }));"
+      },
+      "name": "Parse JSON",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 1,
+      "position": [
+        650,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "number": [
+            {
+              "value1": "={{ $json.price }}",
+              "operation": "larger",
+              "value2": 10000
+            },
+            {
+              "value1": "={{ $json.price }}",
+              "operation": "smaller",
+              "value2": 19000
+            }
+          ],
+          "string": [
+            {
+              "value1": "={{ $json.seller_type }}",
+              "operation": "contains",
+              "value2": "Private"
+            }
+          ]
+        }
+      },
+      "name": "Filter Deals",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 1,
+      "position": [
+        850,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "subject": "=\u26a1 BAS TAL\u00c1LAT: {{ $json.model }} - {{ $json.price }}\u20ac",
+        "message": "=Szia P\u00e9ter! Tal\u00e1ltam egy aut\u00f3t:\nLink: {{ $json.link }}\n\u00c1r: {{ $json.price }} \u20ac\nLe\u00edr\u00e1s: {{ $json.description }}",
+        "toEmail": "peterpohankapersonal@gmail.com"
+      },
+      "name": "Send Email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2,
+      "position": [
+        1050,
+        300
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Execute EV Hunter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute EV Hunter": {
+      "main": [
+        [
+          {
+            "node": "Parse JSON",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse JSON": {
+      "main": [
+        [
+          {
+            "node": "Filter Deals",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter Deals": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }

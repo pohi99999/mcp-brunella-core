@@ -1,13 +1,76 @@
 # Projekt Nyomkövetés (Tracks)
 
-**Utolsó frissítés:** 2026-02-10
-**Generátor:** Manuális / ProjectConductor
+**Utolsó frissítés:** 2026-02-11
+**Generátor:** Claude (SpecWriter Protocol)
 
 Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 ---
 
-## 🟢 Aktív Szálak
+## 🟢 Aktív Szálak (ÚJ! 2026-02-11)
+
+- [ ] **🎨 SpecWriter Agent** [P0 - CRITICAL]
+  - **ID:** `spec-writer-agent-20260211`
+  - **Progress:** 50% (Phase 1-3 KÉSZ! ✅)
+  - **Utolsó aktivitás:** 2026-02-11 23:30
+  - **Leírás:** Automatizált track generálás kreatív ötletekből → professzionális spec + implementációs terv. Dashboard UI (TrackGenerator.tsx) + Magyar CLI menü.
+  - **Integráció:** ✅ CLI (magyar, menüvezérelt) | ⏳ Dashboard (következő)
+  - **Fázisok:** ✅ Agent Core | ✅ Backend API | ✅ CLI Magyar | ⏳ Dashboard | ⏳ Tests | ⏳ Docs
+  - 📂 _[./tracks/spec-writer-agent-20260211/](./tracks/spec-writer-agent-20260211/)_
+
+- [ ] **💬 Cloudflare Chat Integration** [P1 - HIGH]
+  - **ID:** `cloudflare-chat-integration-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-11
+  - **Leírás:** Cloudflare Workers WebSocket chat beágyazása Dashboard-ba + CLI chat interface. D1 Database történet mentés, AgentManager integráció.
+  - **Integráció:** ✅ Dashboard (CloudflareChat.tsx) + ✅ CLI (chat-hu.ts)
+  - **D1 DB:** 1c4e7d00-7b09-4ddf-88b4-8df42e1123ab
+  - 📂 _[./tracks/cloudflare-chat-integration-20260211/](./tracks/cloudflare-chat-integration-20260211/)_
+
+- [ ] **🧪 Jules Async Test Automation** [P1 - HIGH]
+  - **ID:** `jules-async-test-automation-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-11
+  - **Leírás:** GitHub Actions workflow 15 párhuzamos teszteléshez (napi 90 ciklus), automatikus PR/Issue creation, napi test coordinator report.
+  - **Integráció:** ✅ Dashboard (JulesTestStatus.tsx) + ✅ CLI (tests-hu.ts)
+  - 📂 _[./tracks/jules-async-test-automation-20260211/](./tracks/jules-async-test-automation-20260211/)_
+
+- [ ] **🧩 Task Decomposer Agent** [P2 - MEDIUM]
+  - **ID:** `task-decomposer-agent-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-11
+  - **Leírás:** Mikro-ügynök orchestrator: komplex task dekompozíció → DAG végrehajtás, párhuzamos/szekvenciális, fault tolerance.
+  - **Integráció:** ✅ Dashboard (TaskDecomposition.tsx + react-flow) + ✅ CLI (decompose-hu.ts)
+  - 📂 _[./tracks/task-decomposer-agent-20260211/](./tracks/task-decomposer-agent-20260211/)_
+
+- [ ] **🖥️ Magyar CLI Menürendszer** [P0 - CRITICAL]
+  - **ID:** `magyar-cli-menu-system-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-11
+  - **Leírás:** Teljes CLI átírás magyar menüvezérelt interface-re (inquirer.js). NINCS begépelés, csak nyíl navigáció + enter. 6 főkategória.
+  - **Integráció:** ✅ CLI (teljes átírás magyar nyelvre)
+  - 📂 _[./tracks/magyar-cli-menu-system-20260211/](./tracks/magyar-cli-menu-system-20260211/)_
+
+- [ ] **📋 EPP v2 Protocol** [P0 - CRITICAL] ✨
+  - **ID:** `epp-v2-protocol-20260211`
+  - **Progress:** 75% (Phase 1-3 KÉSZ!)
+  - **Utolsó aktivitás:** 2026-02-11 23:00
+  - **Leírás:** Engineering Precision Protocol v2 dokumentálás. ✅ conductor/epp-v2.md (500+ sor) + README.md Quick Reference. ÚJ 6. SZABÁLY: Dashboard + CLI integráció KÖTELEZŐ!
+  - **Integráció:** ✅ Dokumentáció (conductor/epp-v2.md + README.md frissítés)
+  - **Hátralevő:** Final touches (track status update)
+  - 📂 _[./tracks/epp-v2-protocol-20260211/](./tracks/epp-v2-protocol-20260211/)_
+
+- [ ] **📊 Dashboard TODO Widget** [P2 - MEDIUM]
+  - **ID:** `dashboard-todo-widget-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-11
+  - **Leírás:** Real-time track progress widget Dashboard-ra: track.md TODO checklist megjelenítés, checkbox toggle, WebSocket sync.
+  - **Integráció:** ✅ Dashboard (TrackProgress.tsx) + ✅ CLI (progress-hu.ts)
+  - 📂 _[./tracks/dashboard-todo-widget-20260211/](./tracks/dashboard-todo-widget-20260211/)_
+
+---
+
+## 🟢 Aktív Szálak (Folytatás)
 
 - [x] **Self-Healing & Auto-Fix Protocol** [HIGH]
   - **ID:** `self_healing_core_20260213`

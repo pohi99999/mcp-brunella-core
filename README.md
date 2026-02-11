@@ -333,6 +333,66 @@ Minden feladatnak nyoma kell legyen. Ami nincs írásban, az nem létezik.
 
 ---
 
+### 🚀 EPP v2 Protocol (2026-02-11 ÚJ!)
+
+**Engineering Precision Protocol v2** - Teljes fejlesztési protokoll frissítése.
+
+**📖 Teljes dokumentáció:** [`conductor/epp-v2.md`](./conductor/epp-v2.md)
+
+#### 🎯 A 7 Arany Szabály (Quick Reference)
+
+| # | Szabály | Mit jelent? |
+|---|---------|-------------|
+| 1️⃣ | **Track Required** | Nincs kódírás track nélkül (`conductor/tracks/<name>/`) |
+| 2️⃣ | **Fix Bugs** | Fejlesztés közben talált hibák azonnal javítandók |
+| 3️⃣ | **Commit Often** | Minden Phase befejezése után git commit |
+| 4️⃣ | **TODO List** | Track.md checkbox lista folyamatos frissítése |
+| 5️⃣ | **All Tests Green** | COMPLETED csak ha: build ✅ + test ✅ + manual ✅ |
+| 6️⃣ | **Dashboard + CLI** | Mindkettő kötelező minden új funkcióhoz! |
+| 7️⃣ | **Final Docs** | Track befejezés után: .ai/<agent>.md + sync_foszal.py |
+
+#### ⚠️ KRITIKUS ÚJ SZABÁLY: Dashboard + CLI Integráció KÖTELEZŐ!
+
+**Mi változott v1 → v2:**
+- ✅ **6. szabály hozzáadva:** Minden új funkció = Dashboard komponens + CLI parancs (magyar, menüvezérelt)
+- ✅ Track template frissítve (Dashboard + CLI checklist kötelező)
+- ✅ COMPLETED státusz csak ha MINDKETTŐ működik
+
+**Minden új funkció implementálása során:**
+
+1. **Dashboard Komponens** (`src/dashboard/components/`)
+   - React komponens Radix UI + Tailwind
+   - Működő backend integráció (API endpoint)
+   - Real-time frissítés ahol releváns (WebSocket)
+   - Responsive design + error handling
+
+2. **CLI Parancs** (`src/cli/commands/`)
+   - **MAGYAR nyelven, menüvezérelt!** (NINCS begépelés!)
+   - inquirer.js menü (nyíl + enter navigáció)
+   - Színes output (chalk, boxen, ora)
+   - Interaktív kiválasztás
+
+3. **Track Checklist** kötelező pontok minden track-ben:
+   ```markdown
+   ## 🎨 Dashboard Integráció
+   - [ ] React komponens létrehozva: src/dashboard/components/<Feature>.tsx
+   - [ ] Radix UI + Tailwind használat
+   - [ ] Backend API integráció
+   - [ ] Real-time updates (ha releváns)
+
+   ## 🖥️ CLI Integráció
+   - [ ] Magyar menü: src/cli/commands/<feature>-hu.ts
+   - [ ] Inquirer.js menü (nyíl + enter)
+   - [ ] Színes output (chalk, boxen)
+   - [ ] CLI regisztráció (src/cli.ts)
+   ```
+
+**Ha valamelyik elmarad → Track NEM lehet COMPLETED!**
+
+**További részletek, példák, anti-patterns:** [`conductor/epp-v2.md`](./conductor/epp-v2.md)
+
+---
+
 ### Teszt Parancsok
 
 ```bash
