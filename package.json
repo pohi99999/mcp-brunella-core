@@ -33,6 +33,7 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "test:health": "npx tsx scripts/health_check.ts",
+    "health": "npm run test:health",
     "test:phoenix": "vitest run test/state_restoration.test.ts",
     "test:full": "npm run build && vitest run && npm run test:health",
     "prepare": "husky"

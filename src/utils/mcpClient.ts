@@ -57,7 +57,12 @@ export class BrunellaClient {
         const transport = new StdioClientTransport({
           command: command,
           args: args,
-          env: { ...process.env, ...resolvedEnv, WEB_UI_ENABLED: "false" },
+          env: {
+            ...process.env,
+            ...resolvedEnv,
+            // Allow overriding via env var, default to false for CLI
+            WEB_UI_ENABLED: process.env.WEB_UI_ENABLED || "false",
+          },
         });
 
         const client = new Client(

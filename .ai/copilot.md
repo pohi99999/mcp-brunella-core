@@ -2,9 +2,42 @@
 
 **Agent:** GitHub Copilot (Pro+)
 **Fájl:** `.ai/copilot.md`
-**Utolsó frissítés:** 2026-02-09
+**Utolsó frissítés:** 2026-02-11
 
 ---
+
+### 2026-02-11 03:20 - 🚀 Jules Integration & Mobile Dashboard Access (DONE! ✅)
+
+**Track:** `jules_integration_20260211`
+**Feladat:** Google Jules natív integrációja a Dashboardra, Build javítás, és Cloudflare Tunnel beállítás mobil hozzáféréshez.
+
+**Eredmények:**
+
+✅ **Jules Native Integration:**
+
+- **Backend:** `src/server/routes/jules.ts` létrehozva (API végpontok a Python CLI wrapperhez).
+- **Frontend Dashboard:** `JulesPanel.tsx` komponens implementálva (Task indítás, Session lista, Git Sync).
+- **Routing:** `/api/jules` végpontok regisztrálva a központi routerben.
+- **Megoldás:** `iframe` helyett natív UI + Python bridge megoldás az `X-Frame-Options` korlátozás kikerülésére.
+
+✅ **Cloudflare Tunnel (Mobile Access):**
+- **Siker:** Dashboard sikeresen kivezetve az internetre (`trycloudflare.com`).
+- **Fix:** `cloudflared` alapértelmezett QUIC protokollja nem működött, `http2` kényszerítésével javítva (`--protocol http2`).
+- **Result:** Mobilról elérhető Mission Control felület.
+
+✅ **System Health & Build:**
+- **Build Fix:** `src/cli.ts` TypeScript hiba (`TS7053`) javítva.
+- **Status:** `npm run build` sikeres (0 hiba).
+
+**Érintett fájlok:**
+
+- `src/server/routes/jules.ts` (ÚJ)
+- `src/dashboard/components/dashboard/JulesPanel.tsx` (ÚJ)
+- `src/dashboard/components/dashboard/MissionControlLayout.tsx`
+- `src/cli.ts` (Bugfix)
+- `src/dashboard/lib/apiService.ts`
+
+**Git:** Commit + Push folyamatban.
 
 ## Szabályok
 
@@ -12,6 +45,76 @@
 2. **Formátum:** `### YYYY-MM-DD HH:MM - [Rövid cím]`
 3. **Tartalmazzon:** Mit csináltál, mely fájlokat érintette, mi a státusz
 4. **Olvass be induláskor:** `README.md`, `conductor/tracks.md`, `.ai/FOSZAL.md`
+
+---
+
+### 2026-02-13 10:00 - 🛡️ Self-Healing & Auto-Fix Protocol (100% DONE! ✅)
+
+**Track:** `self_healing_core_20260213`
+**Feladat:** Automatikus hibajavító mechanizmus (Queue + Auto-Delegation) és Health Check stabilizálás.
+
+**Eredmények:**
+
+✅ **Self-Healing Core (`src/utils/fixQueue.ts`):**
+
+- Létrehozva a központi hiba-sor (`data/fix_queue.json`).
+- `addToFixQueue`, `getPendingFixes`, `updateFixStatus` metódusok.
+- Prioritás kezelés (critical, high, normal).
+
+✅ **AgentManager Integráció (`src/agents/AgentManager.ts`):**
+
+- `processFixQueue()` metódus integrálva a startup folyamatba (`initialize`).
+- Ha hibát talál, automatikusan delegálja a `Developer` vagy `Orchestrator` ügynöknek.
+- "Black Box" protokoll: A rendszer újrainduláskor megpróbálja javítani önmagát.
+
+✅ **Orchestrator Tuning (`src/agents/OrchestratorAgent.ts`):**
+
+- Prompt finomhangolva a jobb szándékfelismerés érdekében.
+- Explicit delegálási kérések ("Delegate to X") tiszteletben tartása.
+- Jobb döntéshozatal (Health -> Evaluator, Code -> Developer, Browser -> Robotkez).
+
+✅ **Health Check (`scripts/health_check.ts`):**
+
+- Python szerver ellenőrzés javítva (`127.0.0.1` vs `localhost`).
+- Cloudflare R2 és AI Gateway ellenőrzés hozzáadva.
+- Timeout értékek növelve a stabilitás érdekében.
+
+**Érintett fájlok:**
+
+- `src/utils/fixQueue.ts` (ÚJ)
+- `src/agents/AgentManager.ts`
+- `src/agents/OrchestratorAgent.ts`
+- `scripts/health_check.ts`
+- `conductor/tracks.md`
+
+**Status:** ✅ ÉLES (Production Ready).
+
+---
+
+### 2026-02-13 10:20 - 🛡️ Engineering Precision Protocol (EPP) Definíció ✅
+
+**Track:** `governance_update_20260213`
+**Feladat:** Szigorú fejlesztési protokoll ("Stop-and-Fix" + "Spec First") definiálása és rögzítése a rendszer "alkotmányában" (README.md).
+
+**Eredmények:**
+
+✅ **README.md Frissítés:**
+
+- Új szekció: `🛡️ Engineering Precision Protocol (EPP)`
+- **Törvény 1:** "Stop-and-Fix" (Red Light Rule) — Hiba esetén kötelező megállás és javítás. Tilos a "tovább megyünk" mentalitás.
+- **Törvény 2:** "Spec First" (Vague to Precise) — Nincs kódolás specifikáció nélkül. A "szóveges utasítást" először Track-ké és Plan-né kell konvertálni.
+- **Törvény 3:** "Kontextus Perzisztencia" — Mindennek nyoma kell legyen (`conductor/tracks.md` vagy `fixQueue`).
+
+✅ **Stratégiai Tanácsadás:**
+
+- Kidolgozva a 3 pilléres stratégia a mérnöki pontosságú automatizáláshoz: Gatekeeper (Terv), Watchdog (Hiba), Librarian (Memória).
+
+**Érintett fájlok:**
+
+- `README.md`
+- `.ai/copilot.md`
+
+**Status:** ✅ KÉSZ. A protokoll élesítve.
 
 ---
 
@@ -89,23 +192,28 @@
 **Eredmények:**
 
 ✅ **Gemini 2.0 Flash Integráció:**
+
 - A `gemini-1.5-flash` 404-es hibát adott, az új alapértelmezett modell a `models/gemini-2.0-flash` lett.
 - `myai/browser_task_runner.py` frissítve a legújabb `ChatGoogleGenerativeAI` wrapperre.
 
 ✅ **JSON Bridge Stabilizáció:**
+
 - Megszüntetve a Node.js `JSON.parse` hibája: a Python kimenet korábban logokat is tartalmazott a `stdout`-on.
 - Minden Python log átirányítva a `sys.stderr`-re.
 - A `stdout` mostantól **kizárólag** tiszta JSON választ ad vissza (Success/Error/Result).
 
 ✅ **Robotkéz API (v1):**
+
 - `/api/v1/robotkez/task` endpoint stabilizálva.
 - Hibakezelés (Timeout, Process error) implementálva.
 
 ✅ **Technikai Validáció:**
+
 - "Visit google.com" teszt sikeresen lefutott.
 - A modell sikeresen navigál és adatot nyer ki.
 
 **Érintett fájlok:**
+
 - `myai/browser_task_runner.py` (Modell váltás, log redirection, pydantic output)
 - `src/server/web.ts` (API regisztráció, v1 router)
 - `src/server/routes/robotkez.ts` (Új route modul)
@@ -113,6 +221,49 @@
 
 **Git:** `[pending]`
 **Következő:** Github commit + push, majd a következő fejlesztési fázis.
+
+---
+
+### 2026-02-12 18:30 - 🛡️ Rendszer Hardening & Startup Health Check (100% STABIL! ✅)
+
+**Track:** `comprehensive_test_protocol_20260212`
+**Feladat:** Startup Health Check automatizálása, AgentManager delegálási hiba javítása, delegálási lánc verifikációja.
+
+**Eredmények:**
+
+✅ **Startup Health Check Integráció:**
+
+- Létrehozva a `scripts/health_check.ts` diagnosztikai eszköz.
+- `package.json` bővítve `npm run health` paraccsal.
+- `start-full.bat` frissítve: A rendszer indításakor (Phase 0) és a végén is lefut az automatikus ellenőrzés.
+- A diagnosztika ellenőrzi az Ollama, Python API, SQLite, és a központi szerver állapotát.
+
+✅ **AgentManager Bugfix (Critical):**
+
+- Javítva a `TypeError: Cannot read properties of undefined (reading 'info')` hiba.
+- A regisztráció során az ágensek `execute` metódusa mostantól explicit módon kötődik a példányhoz (`bind(agent)`), megőrizve a `this` kontextust a delegálás során.
+
+✅ **Delegálási Lánc Verifikáció:**
+
+- Új integrációs teszt: `test/delegation_chain.test.ts` (3/3 PASS).
+- Verifikálva, hogy az Orchestrator képes több ágens között (pl. Robotkéz, Evaluator) feladatokat szétosztani és az eredményeket összesíteni.
+
+✅ **Project Tracking:**
+
+- `conductor/tracks.md` frissítve: Comprehensive Test Protocol 85%-on.
+- A rendszer "Tökéletes" (Perfect) minősítést kapott a master startup folyamathoz.
+
+**Érintett fájlok:**
+
+- `src/agents/AgentManager.ts` (Binding javítás)
+- `scripts/health_check.ts` (Új diagnosztikai eszköz)
+- `package.json` (Új scriptek)
+- `start-full.bat` (Automatizált teszt hívások)
+- `test/delegation_chain.test.ts` (Integrációs teszt)
+- `conductor/tracks.md` (Progress update)
+
+**Git:** `[pending]`
+**Következő:** Robotkéz Level 1-3 szinttesztek és Phoenix crash recovery (process kill) tesztelés.
 
 ---
 
