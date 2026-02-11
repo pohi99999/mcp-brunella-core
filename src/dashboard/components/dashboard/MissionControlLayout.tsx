@@ -49,10 +49,12 @@ import { KnowledgeBasePanel } from "@/components/dashboard/KnowledgeBasePanel";
 import { IncubatorPanel } from "@/components/dashboard/IncubatorPanel";
 import { DeveloperPanel } from "@/components/dashboard/DeveloperPanel";
 import { JulesPanel } from "./JulesPanel";
+import { TrackGenerator } from "./TrackGenerator";
 
 const SIDEBAR_ITEMS = [
   { id: "dashboard", label: "Mission Control", icon: LayoutDashboard },
   { id: "management", label: "Agents", icon: Sparkles },
+  { id: "tracks", label: "Tracks", icon: Rocket },
   { id: "incubator", label: "Incubator", icon: FlaskConical },
   { id: "knowledge", label: "Knowledge", icon: Brain },
   { id: "developer", label: "Developer", icon: Code2 },
@@ -272,6 +274,7 @@ export function MissionControlLayout() {
               )}
 
               {activeTab === "developer" && <DeveloperPanel />}
+              {activeTab === "tracks" && <TrackGenerator />}
               {activeTab === "inventory" && <InventoryCatalog />}
               {activeTab === "chat" && <NeuralLinkChat />}
               {activeTab === "incubator" && <IncubatorPanel />}
