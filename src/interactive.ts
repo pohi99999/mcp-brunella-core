@@ -356,7 +356,7 @@ async function subMenu(title: string, choices: Array<{ name: string; value: stri
 // ==================== Sub-Menus V2 (Reorganized) ====================
 
 async function agentsMenuV2(): Promise<void> {
-    const action = await subMenu(t('menu.agents.title'), [
+    const action = await subMenu(chalk.green(t('menu.agents.title')), [
         { name: t('menu.agents.list'), value: 'list' },
         { name: t('menu.agents.execute'), value: 'execute' },
         { name: t('menu.agents.dev_generate'), value: 'dev_generate' },
@@ -416,7 +416,7 @@ async function agentsMenuV2(): Promise<void> {
 }
 
 async function tracksMenuV2(): Promise<void> {
-    const action = await subMenu(t('menu.tracks.title'), [
+    const action = await subMenu(chalk.blue(t('menu.tracks.title')), [
         { name: t('menu.tracks.generate'), value: 'generate' },
         { name: t('menu.tracks.list'), value: 'list' },
         { name: t('menu.tracks.view'), value: 'view' },
@@ -448,7 +448,7 @@ async function tracksMenuV2(): Promise<void> {
 }
 
 async function chatMenuV2(): Promise<void> {
-    const action = await subMenu(t('menu.chat.title'), [
+    const action = await subMenu(chalk.magenta(t('menu.chat.title')), [
         { name: t('menu.chat.start'), value: 'chat' },
         { name: t('menu.chat.edge'), value: 'edge' },
         { name: t('menu.chat.jules'), value: 'jules' },
@@ -466,7 +466,7 @@ async function chatMenuV2(): Promise<void> {
 }
 
 async function julesMenuV2(): Promise<void> {
-    const action = await subMenu(t('menu.chat.title') + ' / Jules', [
+    const action = await subMenu(chalk.magenta(t('menu.chat.title') + ' / Jules'), [
         { name: t('menu.chat.jules_new'), value: 'new' },
         { name: t('menu.chat.jules_sync'), value: 'sync' },
         { name: t('menu.chat.jules_status'), value: 'status' },
@@ -488,7 +488,7 @@ async function julesMenuV2(): Promise<void> {
 }
 
 async function testsMenuV2(): Promise<void> {
-    const action = await subMenu(t('menu.tests.title'), [
+    const action = await subMenu(chalk.yellow(t('menu.tests.title')), [
         { name: t('menu.tests.build'), value: 'build' },
         { name: t('menu.tests.run'), value: 'run' },
         { name: t('menu.tests.coverage'), value: 'coverage' },
@@ -577,7 +577,7 @@ async function testsMenuV2(): Promise<void> {
 }
 
 async function systemMenuV2(): Promise<void> {
-    const action = await subMenu(t('menu.system.title'), [
+    const action = await subMenu(chalk.cyan(t('menu.system.title')), [
         { name: t('menu.system.doctor'), value: 'doctor' },
         { name: t('menu.system.health'), value: 'health' },
         { name: t('menu.system.tools'), value: 'tools' },
@@ -653,7 +653,7 @@ async function scaffoldMenuV2(): Promise<void> {
     const { template } = await inquirer.prompt([{
         type: 'list',
         name: 'template',
-        message: t('scaffold.template.select'),
+        message: chalk.cyan(t('scaffold.template.select')),
         choices: [
             { name: t('scaffold.template.react'), value: 'react-component' },
             { name: t('scaffold.template.api'), value: 'rest-api' },
@@ -702,7 +702,7 @@ async function settingsMenuV2(): Promise<void> {
     const currentTheme = configManager.get('ui.theme') || 'dark';
     const vimMode = configManager.get('general.vimMode') ? 'ON' : 'OFF';
 
-    const action = await subMenu(t('menu.settings.title'), [
+    const action = await subMenu(chalk.gray(t('menu.settings.title')), [
         { name: `${t('menu.settings.api_key')} [${key}]`, value: 'auth' },
         { name: `${t('menu.settings.language')} [${currentLang.toUpperCase()}]`, value: 'language' },
         { name: `${t('menu.settings.theme')} [${currentTheme}]`, value: 'theme' },
