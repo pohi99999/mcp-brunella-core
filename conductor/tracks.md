@@ -11,11 +11,11 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 - [ ] **🎨 SpecWriter Agent** [P0 - CRITICAL]
   - **ID:** `spec-writer-agent-20260211`
-  - **Progress:** 50% (Phase 1-3 KÉSZ! ✅)
-  - **Utolsó aktivitás:** 2026-02-11 23:30
+  - **Progress:** 75% (Phase 1-4 KÉSZ! ✅ Dashboard component ready!)
+  - **Utolsó aktivitás:** 2026-02-12 00:45
   - **Leírás:** Automatizált track generálás kreatív ötletekből → professzionális spec + implementációs terv. Dashboard UI (TrackGenerator.tsx) + Magyar CLI menü.
-  - **Integráció:** ✅ CLI (magyar, menüvezérelt) | ⏳ Dashboard (következő)
-  - **Fázisok:** ✅ Agent Core | ✅ Backend API | ✅ CLI Magyar | ⏳ Dashboard | ⏳ Tests | ⏳ Docs
+  - **Integráció:** ✅ CLI (magyar, menüvezérelt) | ✅ Dashboard (TrackGenerator.tsx + Rocket icon sidebar)
+  - **Fázisok:** ✅ Agent Core | ✅ Backend API | ✅ CLI Magyar | ✅ Dashboard | ⏳ Tests | ⏳ Docs
   - 📂 _[./tracks/spec-writer-agent-20260211/](./tracks/spec-writer-agent-20260211/)_
 
 - [ ] **💬 Cloudflare Chat Integration** [P1 - HIGH]
