@@ -2,25 +2,39 @@
  * Health check helpers: structured responses, retry, timeout config.
  */
 
-import fetch from 'node-fetch';
-import { Logger } from './logger.js';
+import fetch from "node-fetch";
+import { Logger } from "./logger.js";
 
-const healthLogger = new Logger('health.log');
+const healthLogger = new Logger("health.log");
 
 export const HEALTH_CONFIG = {
   ollama: {
     timeoutMs: Number(process.env.HEALTH_OLLAMA_TIMEOUT_MS) || 5_000,
     retries: Number(process.env.HEALTH_OLLAMA_RETRIES) || 2,
-    baseUrl: process.env.OLLAMA_BASE_URL || 'http://127.0.0.1:11434',
+    baseUrl: process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434",
   },
   anythingllm: {
     timeoutMs: Number(process.env.HEALTH_ANYTHINGLLM_TIMEOUT_MS) || 10_000,
     retries: Number(process.env.HEALTH_ANYTHINGLLM_RETRIES) || 1,
-    baseUrl: process.env.ANYTHINGLLM_BASE_URL || 'http://localhost:3001',
+    baseUrl: process.env.ANYTHINGLLM_BASE_URL || "http://localhost:3001",
+  },
+  python: {
+    timeoutMs: 8_000,
+    retries: 1,
+    baseUrl: process.env.PYTHON_API_URL || "http://127.0.0.1:8000",
+  },
+  cloudflare: {
+    timeoutMs: 8_000,
+    retries: 1,
   },
 } as const;
 
-export type ServiceStatus = 'healthy' | 'unhealthy' | 'no_agents' | 'no_servers' | 'error';
+export type ServiceStatus =
+  | "healthy"
+  | "unhealthy"
+  | "no_agents"
+  | "no_servers"
+  | "error";
 
 export interface HealthServiceResult {
   status: ServiceStatus;
@@ -29,7 +43,7 @@ export interface HealthServiceResult {
 }
 
 export interface HealthResponse {
-  status: 'ok' | 'degraded' | 'error';
+  status: "ok" | "degraded" | "error";
   timestamp: string;
   requestId?: string;
   services: {
@@ -37,39 +51,57 @@ export interface HealthResponse {
     anythingllm: HealthServiceResult;
     agents: HealthServiceResult;
     mcp: HealthServiceResult;
+    python: HealthServiceResult;
+    cloudflare: HealthServiceResult;
   };
 }
 
 async function fetchWithRetry(
   url: string,
-  options: { timeout: number; headers?: Record<string, string> },
-  retries: number
-): Promise<{ ok: boolean; latencyMs: number; error?: string }> {
+  options: {
+    timeout: number;
+    method?: string;
+    headers?: Record<string, string>;
+  },
+  retries: number,
+): Promise<{ ok: boolean; latencyMs: number; status: number; error?: string }> {
   const start = Date.now();
   let lastErr: string | undefined;
+  let lastStatus = 0;
   for (let i = 0; i <= retries; i++) {
     try {
       const res = await fetch(url, {
+        method: options.method || "GET",
         signal: AbortSignal.timeout(options.timeout),
         headers: options.headers,
       } as any);
       const latencyMs = Date.now() - start;
-      if (res.ok) return { ok: true, latencyMs };
+      lastStatus = res.status;
+      if (res.ok) return { ok: true, latencyMs, status: res.status };
       lastErr = `HTTP ${res.status}`;
     } catch (e: any) {
       lastErr = e?.message ?? String(e);
     }
   }
-  return { ok: false, latencyMs: Date.now() - start, error: lastErr };
+  return {
+    ok: false,
+    latencyMs: Date.now() - start,
+    status: lastStatus,
+    error: lastErr,
+  };
 }
 
 export async function checkOllamaHealth(): Promise<HealthServiceResult> {
   const { baseUrl, timeoutMs, retries } = HEALTH_CONFIG.ollama;
   const url = `${baseUrl}/api/tags`;
-  const { ok, latencyMs, error } = await fetchWithRetry(url, { timeout: timeoutMs }, retries);
-  await healthLogger.log('Ollama health', { ok, latencyMs, error });
+  const { ok, latencyMs, error } = await fetchWithRetry(
+    url,
+    { timeout: timeoutMs },
+    retries,
+  );
+  await healthLogger.log("Ollama health", { ok, latencyMs, error });
   return {
-    status: ok ? 'healthy' : 'unhealthy',
+    status: ok ? "healthy" : "unhealthy",
     latencyMs,
     error: ok ? undefined : error,
   };
@@ -78,45 +110,111 @@ export async function checkOllamaHealth(): Promise<HealthServiceResult> {
 export async function checkAnythingLLMHealth(): Promise<HealthServiceResult> {
   const apiKey = process.env.ANYTHINGLLM_API_KEY;
   if (!apiKey) {
-    await healthLogger.log('AnythingLLM health skipped', { reason: 'no API key' });
-    return { status: 'unhealthy', error: 'API key not configured' };
+    await healthLogger.log("AnythingLLM health skipped", {
+      reason: "no API key",
+    });
+    return { status: "unhealthy", error: "API key not configured" };
   }
   const { baseUrl, timeoutMs, retries } = HEALTH_CONFIG.anythingllm;
   const url = `${baseUrl}/api/v1/workspaces`;
   const { ok, latencyMs, error } = await fetchWithRetry(
     url,
     { timeout: timeoutMs, headers: { Authorization: `Bearer ${apiKey}` } },
-    retries
+    retries,
   );
-  await healthLogger.log('AnythingLLM health', { ok, latencyMs, error: error ? 'present' : undefined });
+  await healthLogger.log("AnythingLLM health", {
+    ok,
+    latencyMs,
+    error: error ? "present" : undefined,
+  });
   return {
-    status: ok ? 'healthy' : 'unhealthy',
+    status: ok ? "healthy" : "unhealthy",
     latencyMs,
     error: ok ? undefined : error,
+  };
+}
+
+export async function checkPythonHealth(): Promise<HealthServiceResult> {
+  const { baseUrl, timeoutMs, retries } = HEALTH_CONFIG.python;
+  const url = `${baseUrl}/health`;
+  const { ok, latencyMs, error } = await fetchWithRetry(
+    url,
+    { timeout: timeoutMs },
+    retries,
+  );
+  await healthLogger.log("Python health", { ok, latencyMs, error });
+  return {
+    status: ok ? "healthy" : "unhealthy",
+    latencyMs,
+    error: ok ? undefined : error,
+  };
+}
+
+export async function checkCloudflareHealth(): Promise<HealthServiceResult> {
+  const token = process.env.CF_API_TOKEN || process.env.CF_TOKEN;
+  const accountId = process.env.CF_ACCOUNT_ID;
+  const gatewayId = process.env.CF_GATEWAY_ID || "brunella-gateway";
+
+  if (!token || !accountId) {
+    return { status: "unhealthy", error: "Missing CF configuration" };
+  }
+
+  const { timeoutMs, retries } = HEALTH_CONFIG.cloudflare;
+  const url = `https://gateway.ai.cloudflare.com/v1/${accountId}/${gatewayId}`;
+
+  const { ok, latencyMs, status, error } = await fetchWithRetry(
+    url,
+    { timeout: timeoutMs, headers: { Authorization: `Bearer ${token}` } },
+    retries,
+  );
+
+  // 404 is actually "online" but empty, 401 is bad token
+  const isHealthy = ok || status === 404;
+  await healthLogger.log("Cloudflare health", {
+    ok: isHealthy,
+    latencyMs,
+    status,
+    error,
+  });
+
+  return {
+    status: isHealthy ? "healthy" : "unhealthy",
+    latencyMs,
+    error: isHealthy ? undefined : error || `HTTP ${status}`,
   };
 }
 
 export function buildHealthResponse(
   ollama: HealthServiceResult,
   anythingllm: HealthServiceResult,
+  python: HealthServiceResult,
+  cloudflare: HealthServiceResult,
   agentsCount: number,
   mcpServersCount: number,
-  requestId?: string
+  requestId?: string,
 ): HealthResponse {
   const agents: HealthServiceResult = {
-    status: agentsCount > 0 ? 'healthy' : 'no_agents',
+    status: agentsCount > 0 ? "healthy" : "no_agents",
   };
   const mcp: HealthServiceResult = {
-    status: mcpServersCount > 0 ? 'healthy' : 'no_servers',
+    status: mcpServersCount > 0 ? "healthy" : "no_servers",
   };
-  const allOk = ollama.status === 'healthy' && anythingllm.status === 'healthy';
-  const anyOk = ollama.status === 'healthy' || anythingllm.status === 'healthy' || agentsCount > 0 || mcpServersCount > 0;
-  const status = allOk ? 'ok' : anyOk ? 'degraded' : 'error';
+  const allOk =
+    ollama.status === "healthy" &&
+    anythingllm.status === "healthy" &&
+    python.status === "healthy";
+  const anyOk =
+    ollama.status === "healthy" ||
+    anythingllm.status === "healthy" ||
+    agentsCount > 0 ||
+    mcpServersCount > 0 ||
+    python.status === "healthy";
+  const status = allOk ? "ok" : anyOk ? "degraded" : "error";
 
   return {
     status,
     timestamp: new Date().toISOString(),
     requestId,
-    services: { ollama, anythingllm, agents, mcp },
+    services: { ollama, anythingllm, agents, mcp, python, cloudflare },
   };
 }

@@ -18,6 +18,7 @@ import { createChatRoutes, createAnythingLLMRoutes } from "./chat.js";
 import { createIncubatorRoutes, createN8nRoutes } from "./external.js";
 import { createDeveloperRoutes } from "./developer.js";
 import { createRobotkezRoutes } from "./robotkez.js";
+import { createJulesRoutes } from "./jules.js";
 
 export {
   createHealthRoutes,
@@ -66,6 +67,7 @@ export function createV1Router(): Router {
   router.use("/n8n", createN8nRoutes());
   router.use("/developer", createDeveloperRoutes());
   router.use("/robotkez", createRobotkezRoutes());
+  router.use("/jules", createJulesRoutes());
 
   return router;
 }

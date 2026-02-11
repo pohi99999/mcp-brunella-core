@@ -9,6 +9,18 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 ## 🟢 Aktív Szálak
 
+- [x] **Self-Healing & Auto-Fix Protocol** [HIGH]
+  - **ID:** `self_healing_core_20260213`
+  - **Progress:** 100% ✅
+  - **Utolsó aktivitás:** 2026-02-13
+  - **Leírás:** Automatikus hibajavító rendszer ("Phoenix Protocol Light"). A rendszer képes a hibákat egy sorba gyűjteni (`data/fix_queue.json`), és induláskor vagy időzítve automatikusan ügynököt (Developer/Orchestrator) rendelni a javításhoz.
+  - **Eredmények:**
+    - ✅ `src/utils/fixQueue.ts` — Perzisztens hiba-sor kezelő.
+    - ✅ `AgentManager` integráció — Startup-kor automatikus `processFixQueue()`.
+    - ✅ Orchestrator Tuning — Jobb szándékfelismerés (Intent Recognition).
+    - ✅ Health Check — Python/Locahost pontosítás, Cloudflare R2/AI Gateway ellenőrzés.
+  - **Status:** ✅ ÉLES (Production Ready).
+
 - [x] **Robotkéz Stabilizáció & Gemini 2.0** [HIGH]
   - **ID:** `robotkez_stabilization_20260212`
   - **Progress:** 100% ✅
@@ -18,10 +30,14 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 - [ ] **🔬 BAS Átfogó Tesztprotokol** [CRITICAL]
   - **ID:** `bas_comprehensive_test_protocol_20260210`
-  - **Progress:** 65%
-  - **Utolsó aktivitás:** 2026-02-10
-  - **Leírás:** Teljes rendszer tesztprotokol — 6 fázis implementálva: Health Check (7 service check, CLI output), Phoenix State Restoration (6 checkpoint teszt), Ügynök Delegálási Lánc (4 teszt), Input Sanitization (15 teszt — shell/SQL injection, UTF-8, Agent Response séma), Dashboard Action Triggering (6 E2E teszt), CI/CD (Husky pre-commit + Nightly GitHub Action). 31 új teszt, 425/425 PASS.
-  - **Hátralevő:** Robotkéz Level 1-3 szinttesztek, Socket.IO reconnect E2E, Phoenix crash recovery (process kill)
+  - **Progress:** 85% ✅
+  - **Utolsó aktivitás:** 2026-02-12
+  - **Leírás:** Teljes rendszer tesztprotokol — Fázis 1 (Health Check) és Fázis 3 (Delegálási Lánc) implementálva. Új `npm run health` diagnosztikai eszköz, `start-full.bat` integráció. Delegálási lánc teszt (`test/delegation_chain.test.ts`) 100% PASS. AgentManager context binding javítva.
+  - **Eredmények:**
+    - ✅ Startup Health Check: 7+ kritikus ellenőrzés (Ollama, Python, Node, DB, Secrets).
+    - ✅ Delegálási Lánc: Orchestrator -> AgentManager -> Specialized Agent lánc validálva.
+    - ✅ Robotkéz integráció: Browser automation felvéve az Orchestrator képességei közé.
+  - **Hátralevő:** Socket.IO reconnect E2E, Phoenix crash recovery (process kill), Robotkéz Level 1-3 szinttesztek.
   - **Előfeltétel:** code_quality_improvements_20260210 ✅, dashboard_test_suite_20260210 🔄
   - 📂 _[./tracks/bas_comprehensive_test_protocol_20260210/](./tracks/bas_comprehensive_test_protocol_20260210/)_
 

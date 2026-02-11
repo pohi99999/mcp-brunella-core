@@ -298,20 +298,40 @@ brunella conductor health     # Track-ek health check
 
 ## 🧪 Tesztelés (KÖTELEZŐ Munkafolyamat Része!)
 
-### 0-Hiba Stratégia
+### 🛡️ Engineering Precision Protocol (EPP) - "Zero Broken Windows"
 
-```bash
-# 1. Build MUSZÁJ sikeresnek lennie
-npm run build
-# Ha FAIL → Javítsd a TypeScript hibákat!
+Ez a protokoll garantálja, hogy a rendszer mérnöki precizitással működjön, és soha ne "felejtsen el" feladatokat.
 
-# 2. Tesztek MUSZÁJANAK átmennie
-npm test
-# Ha FAIL → Javítsd a failing teszteket! (NE töröld a tesztet!)
+#### 1. 🛑 "Stop-and-Fix" Törvény (Red Light Rule)
 
-# 3. Csak akkor commitolj ha mindkettő OK
-git add -A && git commit -m "Fix: description"
-```
+**"Nem lépünk tovább hibás rendszerrel."**
+
+Ha bármilyen munkafolyamat során (fejlesztés, tesztelés, robotkéz) hibát észlelsz:
+
+1. **AZONNAL ÁLLJ MEG!** Ne folytasd a feature fejlesztést.
+2. **JAVÍTSD KI!** A hibát addig kell diagnosztizálni és javítani, amíg el nem tűnik.
+3. **CSAK AKKOR FOLYTASD**, ha a rendszer újra "Zöld" (Build OK, Test OK).
+
+_Tilos a "majd később visszatérünk rá" vagy "ez most nem az én dolgom" mentalitás._
+
+#### 2. 📝 "Spec First" Elv (Vague to Precise)
+
+Soha ne írj kódot "vázlatos" utasítás alapján. Konvertáld a szöveget mérnöki tervvé:
+
+1. **User Input:** "Csinálj egy olyat, hogy..."
+2. **Specifikáció:** Hozz létre egy Track-et (`conductor/tracks/uj_feature/spec.md`).
+3. **Jóváhagyás:** A userrel (vagy Conductorral) validáltasd a tervet.
+4. **Implementáció:** Csak a jóváhagyott spec alapján kódolj.
+
+#### 3. 🧠 Kontextus Perzisztencia (No Amsnesia)
+
+Minden feladatnak nyoma kell legyen. Ami nincs írásban, az nem létezik.
+
+- **Aktív Feladat:** `conductor/tracks.md` (Track)
+- **Hiba/Javítás:** `data/fix_queue.json` (Self-Healing Queue)
+- **Ötlet:** `conductor/backlog.md` (ha van) vagy `tracks.md` (Proposed)
+
+---
 
 ### Teszt Parancsok
 
