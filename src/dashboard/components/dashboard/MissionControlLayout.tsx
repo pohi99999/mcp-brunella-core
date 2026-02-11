@@ -37,6 +37,7 @@ import { ThemeToggle } from "@/components/ThemeToggle"
 import { CommandMenu } from "@/components/CommandMenu"
 import { AgentGraph } from "@/components/AgentGraph"
 import { Skeleton } from "@/components/ui/skeleton"
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip"
 import { AgentFactory } from '@/components/dashboard/AgentFactory'
 import { RobotkezPanel } from '@/components/dashboard/RobotkezPanel'
 import { AgentManagementPanel } from '@/components/dashboard/AgentManagementPanel'
@@ -130,17 +131,24 @@ export function MissionControlLayout() {
           <div className="flex-1 py-4">
             <nav className="grid gap-1 px-2">
               {SIDEBAR_ITEMS.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-muted",
-                    activeTab === item.id && "bg-muted text-primary font-medium"
-                  )}
-                >
-                  <item.icon className="h-4 w-4" />
-                  <span className="hidden lg:inline">{item.label}</span>
-                </button>
+                <Tooltip key={item.id}>
+                  <TooltipTrigger asChild>
+                    <button
+                      onClick={() => setActiveTab(item.id)}
+                      aria-label={item.label}
+                      className={cn(
+                        "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-muted w-full",
+                        activeTab === item.id && "bg-muted text-primary font-medium"
+                      )}
+                    >
+                      <item.icon className="h-4 w-4 shrink-0" />
+                      <span className="hidden lg:inline">{item.label}</span>
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent side="right" className="lg:hidden">
+                    {item.label}
+                  </TooltipContent>
+                </Tooltip>
               ))}
             </nav>
           </div>
