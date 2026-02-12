@@ -109,6 +109,13 @@ export interface CloudflareTaskResponse {
   message: string;
 }
 
+export interface CloudflareChatResponse {
+  success: boolean;
+  message: string;
+  raw?: unknown;
+  endpoint?: string;
+}
+
 export async function submitCloudflareTask(
   instruction: string,
   context: Record<string, unknown> = {},
@@ -143,6 +150,27 @@ export async function getCloudflareTaskStatus(
   }));
   if (!response.ok) throw new Error(data.error || "Cloudflare status failed");
   return data;
+}
+
+export async function chatWithCloudflare(
+  instruction: string,
+  history: Array<{ role: "user" | "assistant"; content: string }> = [],
+): Promise<CloudflareChatResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/cloudflare/chat`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ instruction, history }),
+    },
+    LONG_TIMEOUT_MS,
+  );
+
+  const data: any = await safeJson<any>(response).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Cloudflare chat failed");
+  return data as CloudflareChatResponse;
 }
 
 /**
