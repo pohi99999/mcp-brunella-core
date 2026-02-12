@@ -1,0 +1,21 @@
+{
+  "id": "cloudflare-iteration-2-20260212",
+  "name": "Cloudflare Chat Integration - Iteration 2 (WebSocket + D1 + CLI)",
+  "status": "active",
+  "priority": "high",
+  "progress": 0,
+  "dependencies": ["cloudflare-chat-integration-20260211"],
+  "created": "2026-02-12T18:20:00Z",
+  "updated": "2026-02-12T18:20:00Z",
+  "assignee": "DeveloperAgent + RobotkezAgent",
+  "tags": [
+    "cloudflare",
+    "websocket",
+    "d1",
+    "cli",
+    "integration",
+    "iteration-2"
+  ],
+  "estimatedHours": 6,
+  "description": "Cloudflare Chat Integration második iterációja: WebSocket real-time kommunikáció, D1 perzisztens task storage, CLI parancsok (edge status/chat/task/query/history)."
+}
