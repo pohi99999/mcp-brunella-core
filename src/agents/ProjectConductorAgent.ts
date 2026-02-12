@@ -809,6 +809,9 @@ ${tree}
    * tracks.md frissítése
    */
   private async updateTracksFile(): Promise<AgentResult> {
+    const proposedTracks = this.projectState.tracks.filter(
+      (t) => t.status === "proposed",
+    );
     const activeTracks = this.projectState.tracks.filter(
       (t) => t.status === "active",
     );
@@ -825,6 +828,25 @@ ${tree}
 **Generátor:** ProjectConductorAgent
 
 Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
+
+---
+
+## 🧊 Tervezett Szálak (Backlog) (${proposedTracks.length})
+
+${
+  proposedTracks.length > 0
+    ? proposedTracks
+        .map(
+          (t) => `- [ ] **${t.name}** [${t.priority.toUpperCase()}]
+  - **ID:** \`${t.id}\`
+  - **Progress:** ${t.progress}%
+  - **Utolsó aktivitás:** ${t.lastActivity.slice(0, 10)}
+  - 📂 *[./tracks/${t.id}/](./tracks/${t.id}/)*
+`,
+        )
+        .join("\n")
+    : "*Nincs tervezett (proposed) szál*"
+}
 
 ---
 

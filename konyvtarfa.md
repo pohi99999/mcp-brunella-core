@@ -1,6 +1,6 @@
 # Projekt Könyvtárfa
 
-**Generálva:** 2026-02-12T00:04:01.920Z
+**Generálva:** 2026-02-12T00:09:29.453Z
 **Generátor:** ProjectConductorAgent
 
 ---
@@ -1304,6 +1304,7 @@
 │   ├── cloudflare llm prompt/
 │   │   ├── ai_tooling.md
 │   │   ├── certs.json
+│   │   ├── cloudflare_bovites.md
 │   │   ├── Cloudflare_MCP_Server_One_Pager.pdf
 │   │   ├── developer_cloudflare.md
 │   │   └── llm/

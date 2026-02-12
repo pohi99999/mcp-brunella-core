@@ -1,9 +1,50 @@
 # Projekt Nyomkövetés (Tracks)
 
-**Utolsó frissítés:** 2026-02-12T00:04:01.921Z
+**Utolsó frissítés:** 2026-02-12T00:09:29.454Z
 **Generátor:** ProjectConductorAgent
 
 Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
+
+---
+
+## 🧊 Tervezett Szálak (Backlog) (6)
+
+- [ ] **Cloudflare Chat Integration** [HIGH]
+  - **ID:** `cloudflare-chat-integration-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-12
+  - 📂 *[./tracks/cloudflare-chat-integration-20260211/](./tracks/cloudflare-chat-integration-20260211/)*
+
+- [ ] **Dashboard TODO Widget** [MEDIUM]
+  - **ID:** `dashboard-todo-widget-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-12
+  - 📂 *[./tracks/dashboard-todo-widget-20260211/](./tracks/dashboard-todo-widget-20260211/)*
+
+- [ ] **Engineering Precision Protocol v2 (EPP v2)** [CRITICAL]
+  - **ID:** `epp-v2-protocol-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-12
+  - 📂 *[./tracks/epp-v2-protocol-20260211/](./tracks/epp-v2-protocol-20260211/)*
+
+- [ ] **Jules Async Test Automation (GitHub Actions)** [HIGH]
+  - **ID:** `jules-async-test-automation-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-12
+  - 📂 *[./tracks/jules-async-test-automation-20260211/](./tracks/jules-async-test-automation-20260211/)*
+
+- [ ] **Magyar CLI Menürendszer (Teljes Átírás)** [CRITICAL]
+  - **ID:** `magyar-cli-menu-system-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-12
+  - 📂 *[./tracks/magyar-cli-menu-system-20260211/](./tracks/magyar-cli-menu-system-20260211/)*
+
+- [ ] **Task Decomposer Agent (Mikro-Ügynök Orchestrator)** [MEDIUM]
+  - **ID:** `task-decomposer-agent-20260211`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-12
+  - 📂 *[./tracks/task-decomposer-agent-20260211/](./tracks/task-decomposer-agent-20260211/)*
+
 
 ---
 
