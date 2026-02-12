@@ -8,7 +8,6 @@ import { spawn, ChildProcess } from 'child_process';
 import path from 'path';
 import { logInfo, logError } from '../utils/logger.js';
 import { checkOllamaHealth } from '../utils/health.js';
-import fetch from 'node-fetch';
 
 export type ServiceId = 'ollama' | 'anythingllm' | 'python';
 
