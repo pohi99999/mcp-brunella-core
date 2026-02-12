@@ -459,6 +459,79 @@ export async function dispatchJulesWorkflow(params?: {
 }
 
 /**
+ * Tracks TODO / Progress API (Dashboard TODO Widget)
+ */
+export interface TrackTodoItem {
+  id: string;
+  text: string;
+  completed: boolean;
+}
+
+export interface TrackTodoSummary {
+  trackId: string;
+  title: string;
+  status?: string;
+  progress: number;
+  completedCount: number;
+  totalCount: number;
+}
+
+export interface TrackTodosResponse {
+  success: boolean;
+  trackId: string;
+  title: string;
+  todos: TrackTodoItem[];
+  progress: number;
+  completedCount: number;
+  totalCount: number;
+  updatedAt: string;
+}
+
+export async function getActiveTrackTodoSummaries(): Promise<TrackTodoSummary[]> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/tracks/todos/active`);
+  const data: any = await safeJson<any>(response).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+  if (!response.ok) throw new Error(data.error || 'Tracks todos failed');
+  return (data.tracks || []) as TrackTodoSummary[];
+}
+
+export async function getTrackTodos(trackId: string): Promise<TrackTodosResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/tracks/${encodeURIComponent(trackId)}/todos`,
+  );
+  const data: any = await safeJson<any>(response).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+  if (!response.ok) throw new Error(data.error || 'Track todos failed');
+  return data as TrackTodosResponse;
+}
+
+export async function toggleTrackTodo(params: {
+  trackId: string;
+  todoId: string;
+  completed?: boolean;
+}): Promise<TrackTodosResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/tracks/${encodeURIComponent(params.trackId)}/todos/${encodeURIComponent(params.todoId)}`,
+    {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(
+        typeof params.completed === 'boolean'
+          ? { completed: params.completed }
+          : {},
+      ),
+    },
+  );
+  const data: any = await safeJson<any>(response).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+  if (!response.ok) throw new Error(data.error || 'Toggle todo failed');
+  return data as TrackTodosResponse;
+}
+
+/**
  * Ollama API
  */
 export async function getOllamaModels(): Promise<OllamaModel[]> {

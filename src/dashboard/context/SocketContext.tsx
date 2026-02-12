@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useReducer, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useReducer, useState, type ReactNode } from 'react'
 import { io, type Socket } from 'socket.io-client'
 
 export type LogType = 'info' | 'error' | 'success'
@@ -78,6 +78,7 @@ const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || (import.meta.env.DEV ? 'ht
 
 export function SocketProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(socketReducer, initialState)
+  const [socketInstance, setSocketInstance] = useState<Socket | null>(null)
 
   useEffect(() => {
     const socket = io(SOCKET_URL, {
@@ -87,6 +88,8 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
     })
+
+    setSocketInstance(socket)
 
     socket.on('connect', () => {
       console.log('[Socket] Connected to server')
@@ -157,12 +160,13 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       socket.off('system:log')
       socket.off('agent:update')
       socket.disconnect()
+      setSocketInstance(null)
     }
   }, [])
 
   const value: SocketContextValue = {
     ...state,
-    socket: null,
+    socket: socketInstance,
   }
 
   return <SocketContext.Provider value={value}>{children}</SocketContext.Provider>

@@ -1,6 +1,6 @@
 # Track: Dashboard TODO Widget (Real-time Track Progress)
 
-**Status:** PROPOSED
+**Status:** IN_PROGRESS (Iteration 1: Dashboard + CLI + API ✅)
 **Priority:** P2
 **Complexity:** MEDIUM
 **Created:** 2026-02-11
@@ -21,7 +21,11 @@ Dashboard widget a track TODO listák real-time megjelenítésére. WebSocket sy
 
 ## 🔧 Technikai Követelmények
 
-### Dashboard: src/dashboard/components/TrackProgress.tsx
+### Dashboard
+
+- Widget: `src/dashboard/components/dashboard/TrackProgress.tsx`
+- Bekötés: `src/dashboard/components/dashboard/MissionControlLayout.tsx` (jobb oldali widget oszlop)
+
 ```typescript
 interface TrackTodo {
   trackName: string;
@@ -36,19 +40,33 @@ interface TrackTodo {
 ```
 
 **UI elemek:**
+
 - Track dropdown (active track-ek)
 - TODO checklist (interactive)
 - Progress bar (shadcn/ui)
 - "Frissítés" button (manual reload)
 - WebSocket connection status
 
-### Backend: src/server/routes/track-progress.ts
-- GET /api/tracks/:name/todos → Parse track.md checkboxes
-- PATCH /api/tracks/:name/todos/:id → Toggle checkbox
-- WebSocket /ws/track-progress → Real-time updates
+### Backend
 
-### CLI: src/cli-commands/progress-hu.ts
-```
+Megvalósítás: `src/server/tracksRoutes.ts` (EPP v2: közös API Dashboard + CLI)
+
+- `GET /api/v1/tracks/todos/active` → aktív track summary (progress + counts)
+- `GET /api/v1/tracks/:trackId/todos` → checkbox TODO parse
+- `PATCH /api/v1/tracks/:trackId/todos/:todoId` → checkbox toggle (id: `line:<n>`)
+
+Real-time frissítés:
+
+- Socket.IO események (best-effort poll watcher, nincs új dependency):
+  - `track:changed`
+  - `track:todo_updated`
+
+### CLI
+
+- Parancs: `brunella progress` (magyar menü)
+- Implementáció: `src/cli/progressCommands.ts`
+
+```text
 1. 📊 Track progress (választott track)
 2. 📈 Összes track progress
 3. ✅ TODO kipipálása
@@ -58,44 +76,50 @@ interface TrackTodo {
 ## 📋 Implementation Plan
 
 ### Phase 1: Backend Parser
-- [ ] Track.md checkbox parser
-- [ ] GET /api/tracks/:name/todos handler
-- [ ] PATCH checkbox toggle handler
-- [ ] File write back (track.md update)
+
+- [x] Track.md checkbox parser
+- [x] GET /api/v1/tracks/:trackId/todos
+- [x] PATCH /api/v1/tracks/:trackId/todos/:todoId
+- [x] File write back (track.md update)
+- [x] Aktív track summary: GET /api/v1/tracks/todos/active
 
 ### Phase 2: Dashboard Widget
-- [ ] TrackProgress.tsx komponens
-- [ ] Track dropdown + TODO list UI
-- [ ] Progress bar komponens
-- [ ] Checkbox toggle handler
-- [ ] Dashboard integráció
+
+- [x] TrackProgress widget komponens
+- [x] Track dropdown + TODO list UI
+- [x] Progress bar (shadcn/ui)
+- [x] Checkbox toggle handler
+- [x] Dashboard integráció
 
 ### Phase 3: WebSocket Sync
-- [ ] WebSocket server setup (/ws/track-progress)
-- [ ] File watcher (chokidar)
-- [ ] track.md change → broadcast
-- [ ] Client reconnect logic
+
+- [x] Socket.IO események: `track:changed`, `track:todo_updated`
+- [x] Poll watcher (setInterval + mtime) a track.md változásokhoz
+- [ ] Reconnect logic (SocketContext alapból reconnectel)
 
 ### Phase 4: CLI Commands
-- [ ] progress-hu.ts létrehozás
-- [ ] Track selection menu
-- [ ] TODO display + toggle
-- [ ] Progress bar (CLI ascii)
-- [ ] CLI regisztráció
+
+- [x] Magyar progress parancs: `brunella progress`
+- [x] Track selection menü
+- [x] TODO display + toggle
+- [x] ASCII progress bar
+- [x] CLI regisztráció (`src/cli.ts`)
 
 ### Phase 5: Testing
-- [ ] Checkbox toggle test
-- [ ] WebSocket sync test
-- [ ] CLI test
-- [ ] npm test
+
+- [x] Checkbox toggle + parser test: `test/tracks_todos_routes.test.ts`
+- [ ] WebSocket sync test (opcionális)
+- [ ] CLI test (opcionális)
+- [x] npm test
 
 ### Phase 6: Deployment
+
 - [ ] README.md frissítés
 - [ ] GitHub commit
 
 ## 📝 Implementation Prompt
 
-```
+```text
 Dashboard TODO Widget implementálás:
 
 Backend:
