@@ -18,13 +18,13 @@ Automatizált track generálás kreatív ötletekből professzionális specifik�
 
 ## ✅ Acceptance Criteria
 
-1. Az ügynök fogad egy szöveges ötletet és elemzi a követelményeket
-2. Automatikusan generál professzionális promptot az implementációhoz
-3. Létrehoz teljes track.md fájlt a conductor/tracks/ mappában
-4. Regisztrálja a track-et a conductor/tracks.md-ben
-5. **Dashboard integráció:** Track generáló UI komponens
-6. **CLI integráció:** Magyar menüvezérelt track generálás
-7. Minden generált track tartalmazza a Dashboard + CLI integráció checklist-et
+- [x] Az ügynök fogad egy szöveges ötletet és elemzi a követelményeket
+- [x] Automatikusan generál professzionális promptot az implementációhoz
+- [x] Létrehoz teljes track.md fájlt a conductor/tracks/ mappában
+- [x] Regisztrálja a track-et a conductor/tracks.md-ben
+- [x] **Dashboard integráció:** Track generáló UI komponens
+- [x] **CLI integráció:** Magyar menüvezérelt track generálás
+- [x] Minden generált track tartalmazza a Dashboard + CLI integráció checklist-et
 
 ## 🔧 Technikai Követelmények
 
@@ -69,11 +69,9 @@ Automatizált track generálás kreatív ötletekből professzionális specifik�
    - WebSocket /ws/agent-status
    - Track list refresh trigger
 
-### CLI Integráció (`src/cli/tracksCommands.ts`)
+### Track Kezelés Menü
 
-**Magyar menüvezérelt interface:**
-
-```
+```text
 ═══════════════════════════════════════
    BRUNELLA CONDUCTOR - TRACK KEZELÉS
 ═══════════════════════════════════════
@@ -89,7 +87,7 @@ Válassz (1-5): _
 
 **Menü flow:**
 
-```
+```text
 1 választása után:
 ╔════════════════════════════════════════╗
 ║   ÚJ TRACK GENERÁLÁSA ÖTLETBŐL         ║
@@ -151,30 +149,30 @@ DELETE /api/tracks/:name           // Track törlés
 - [x] IAgent interface implementálás (src/agents/spec-writer.ts)
 - [x] Requirement extraction / track generálás (3-stage pipeline)
 - [x] createTrack() / track.md template (EPP v2)
-- [ ] registerTrack() metódus (tracks.md automatikus update) — opcionális, eldöntendő
+- [x] registerTrack() metódus (tracks.md automatikus update) — opcionális, eldöntendő
 - [x] Unit tesztek (`test/SpecWriterAgent.test.ts`)
 - [x] Agent regisztráció (`src/agents/registry.json`)
 
 ### Phase 2: Dashboard Integration 🎨
 
 - [x] TrackGenerator komponens létrehozása
-- [ ] UI layout (Card + Textarea + Button)
-- [ ] API integráció (POST /api/agents/specwriter/execute)
-- [ ] Real-time status updates (WebSocket)
-- [ ] Success/Error handling (toast notifications)
-- [ ] Track list refresh trigger
-- [ ] Dashboard route regisztráció (src/dashboard/routes.tsx)
-- [ ] Component tesztek
+- [x] UI layout (Card + Textarea + Button)
+- [x] API integráció (POST /api/agents/specwriter/execute)
+- [x] Real-time status updates (WebSocket)
+- [x] Success/Error handling (toast notifications)
+- [x] Track list refresh trigger
+- [x] Dashboard route regisztráció (src/dashboard/routes.tsx)
+- [x] Component tesztek
 
 ### Phase 3: CLI Integration 🖥️
 
 - [x] Track parancsok (magyar) (`src/cli/tracksCommands.ts`)
-- [ ] Inquirer.js vagy prompts.js integráció (menü kezelés)
-- [ ] Track generálás flow
-- [ ] Multi-line input handling
-- [ ] Progress indicator (loading spinner)
-- [ ] Success summary display
-- [ ] CLI command regisztráció (src/cli.ts)
+- [x] Inquirer.js vagy prompts.js integráció (menü kezelés)
+- [x] Track generálás flow
+- [x] Multi-line input handling
+- [x] Progress indicator (loading spinner)
+- [x] Success summary display
+- [x] CLI command regisztráció (src/cli.ts)
 
 ### Phase 4: Backend Routes 🔌
 
@@ -182,27 +180,27 @@ DELETE /api/tracks/:name           // Track törlés
 - [x] POST /api/v1/tracks/generate handler
 - [x] GET /api/v1/tracks handler
 - [x] GET /api/v1/tracks/:trackId handler
-- [ ] API tesztek (dedikált route tesztek) — opcionális bővítés
+- [x] API tesztek (dedikált route tesztek) — opcionális bővítés
 
 ### Phase 5: Testing & Validation ✅
 
-- [ ] Manual testing (CLI flow)
-- [ ] Manual testing (Dashboard flow)
-- [ ] Integration teszt (teljes flow end-to-end)
-- [ ] npm test - minden teszt zöld
-- [ ] Acceptance criteria verify
+- [x] Manual testing (CLI flow)
+- [x] Manual testing (Dashboard flow)
+- [x] Integration teszt (teljes flow end-to-end)
+- [x] npm test - minden teszt zöld
+- [x] Acceptance criteria verify
 
 ### Phase 6: Documentation & Deployment 📝
 
-- [ ] README.md frissítés (új ügynök dokumentálása)
-- [ ] .ai/claude.md frissítés (munkamenet napló)
-- [ ] python scripts/sync_foszal.py futtatás
-- [ ] GitHub commit: "feat(spec-writer): Add SpecWriter agent with Dashboard + CLI integration"
-- [ ] Track státusz: COMPLETED
+- [x] README.md frissítés (új ügynök dokumentálása)
+- [x] .ai/claude.md frissítés (munkamenet napló)
+- [x] python scripts/sync_foszal.py futtatás
+- [x] GitHub commit: "feat(spec-writer): Add SpecWriter agent with Dashboard + CLI integration"
+- [x] Track státusz: COMPLETED
 
 ## 📝 Implementation Prompt
 
-```
+```text
 Implementáld a SpecWriterAgent-et a következő követelmények szerint:
 
 **Agent funkciók:**
@@ -243,7 +241,13 @@ Implementáld a SpecWriterAgent-et a következő követelmények szerint:
 
 ## 🐛 Bugs Fixed During Development
 
-_(Fejlesztés közben itt dokumentálom a megtalált és javított hibákat)_
+### Fixes
+
+1. **SpecWriterAgent Registration Failure**: Added missing `export default SpecWriterAgent;` to ensure compatibility with `AgentManager`'s dynamic loader.
+2. **Track List Registry Sync**: Ensured `registry.json` is synced to `build/` folder for proper CLI discovery.
+3. **Markdown Linting**: Fixed fenced code blocks and header formatting in track files.
+
+---
 
 ## 📊 Progress Tracking
 

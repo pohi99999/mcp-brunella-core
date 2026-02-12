@@ -11,6 +11,7 @@
 A Brunella Agent System egy AI multi-agent rendszer, amely automatizálja a szoftverfejlesztést lokális LLM-ekkel (Ollama), MCP protokollal és hibrid Node.js/Python architektúrával.
 
 **Elvégzett javítások:**
+
 - Agent interfész konzisztencia (IAgent vs BaseAgent)
 - DynamicAgent konstruktor fix
 - LLM client hardening (timeout, Content-Type, HTTP status check)
@@ -26,6 +27,7 @@ A Brunella Agent System egy AI multi-agent rendszer, amely automatizálja a szof
 **Fájl:** `src/utils/rag.ts`
 
 **Státusz:** ✅ Implementálva és Tesztelve (2026-02-09)
+
 - `getEmbedding` funkció Ollama supporttal
 - `search` metódus `HybridMemory` osztályban
 - `test/rag.test.ts` validálja a működést
@@ -37,6 +39,7 @@ A Brunella Agent System egy AI multi-agent rendszer, amely automatizálja a szof
 **Fájl:** `conductor/CONDUCTOR_MANIFEST.md`
 
 **Státusz:** ✅ KÉSZ (2026-02-09)
+
 - `conductor/archive` létrehozva
 - 25+ régi track archiválva
 - Manifest v3.0.0 formátumra átírva (Green Lightning fókusz)
@@ -47,17 +50,20 @@ A Brunella Agent System egy AI multi-agent rendszer, amely automatizálja a szof
 ## Prioritás 3: ProjectConductor CLI Integráció [KÉSZ]
 
 **Fájlok:**
+
 - `src/cli.ts`
 - `src/agents/ProjectConductorAgent.ts`
 
 **Probléma:** A `brunella conductor status` parancs nincs bekötve.
 
 **Feladat:**
+
 1. A CLI-ben add hozzá a `conductor` subcommand-ot
 2. Delegálj a ProjectConductorAgent-nek
 3. Támogatott parancsok: `status`, `sync`, `health`, `track create <name>`
 
 **Státusz:** ✅ KÉSZ (2026-02-14)
+
 - CLI sub-process port collision (3000) kijavítva a `mcpClient.ts`-ben.
 - `conductor` subcommand implementálva.
 
@@ -66,11 +72,13 @@ A Brunella Agent System egy AI multi-agent rendszer, amely automatizálja a szof
 ## Prioritás 4: Gemini Workflow Timeout Bővítés [KÉSZ]
 
 **Fájlok:**
+
 - `.github/workflows/gemini-review.yml`
 - `.github/workflows/gemini-triage.yml`
 - `.github/workflows/gemini-scheduled-triage.yml`
 
 **Státusz:** ✅ KÉSZ (2026-02-14)
+
 - `timeout-minutes: 15` hozzáadva minden Gemini workflow-hoz.
 
 ---
@@ -80,6 +88,7 @@ A Brunella Agent System egy AI multi-agent rendszer, amely automatizálja a szof
 **Fájl:** `.github/workflows/*.yml`
 
 **Státusz:** ✅ KÉSZ (2026-02-14)
+
 - Secrets validáció (existence check) hozzáadva a Gemini és BAS sync workflow-khoz.
 
 ---
@@ -87,6 +96,7 @@ A Brunella Agent System egy AI multi-agent rendszer, amely automatizálja a szof
 ## Ellenőrzés
 
 Minden változtatás után:
+
 ```bash
 npm run build          # TypeScript compile
 npm test               # Vitest tesztek
@@ -103,4 +113,4 @@ npm run dev            # Funkcionális teszt
 
 ---
 
-*Generálta: Claude Code (Opus 4.5) - 2026-02-04*
+_Generálta: Claude Code (Opus 4.5) - 2026-02-04_
