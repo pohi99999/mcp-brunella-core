@@ -42,6 +42,7 @@ import { createMemoryRouter } from "./memoryRoutes.js";
 import { createTracksRouter } from "./tracksRoutes.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
+import { registerEdgeWebSocketHandlers } from "./websocket.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -131,6 +132,9 @@ export async function startWebServer() {
     },
   });
   socketService.init(io);
+
+  // Register Cloudflare Edge WebSocket handlers (Iteration 2)
+  registerEdgeWebSocketHandlers(io);
 
   const agentLogBuffer = new Map<string, LogEvent[]>();
   const MAX_AGENT_LOGS = 500;
