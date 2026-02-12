@@ -2,24 +2,88 @@ import { Router } from "express";
 import { exec } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
+import { logError, logInfo, logWarn } from "../../utils/logger.js";
 
 // Helper to run shell commands
 const runCommand = (command: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     exec(command, { cwd: process.cwd() }, (error, stdout, stderr) => {
       if (error) {
-        console.error(`Exec error: ${error.message}`);
+        logError("JulesRoutes", `Exec error: ${error.message}`);
         reject(error.message);
         return;
       }
       if (stderr && !stderr.includes("Created session")) {
         // Jules CLI might print info to stderr
-        console.warn(`Stderr: ${stderr}`);
+        logWarn("JulesRoutes", `Stderr: ${stderr}`);
       }
       resolve(stdout);
     });
   });
 };
+
+function getGithubApiBase(): string {
+  return process.env.GITHUB_API_BASE || "https://api.github.com";
+}
+
+function getGithubRepo(): string {
+  // Prefer GitHub Actions env, then local .env, then repo default.
+  return (
+    process.env.GITHUB_REPOSITORY ||
+    process.env.GITHUB_REPO ||
+    "pohi99999/mcp-brunella-core"
+  );
+}
+
+function getGithubToken(): string | undefined {
+  return (
+    process.env.GITHUB_TOKEN || process.env.GH_TOKEN || process.env.GITHUB_PAT
+  );
+}
+
+async function githubFetchJson(url: string, init?: RequestInit): Promise<any> {
+  const token = getGithubToken();
+  if (!token) {
+    const err = new Error("GitHub token missing (set GITHUB_TOKEN)");
+    (err as any).statusCode = 503;
+    throw err;
+  }
+
+  const response = await fetch(url, {
+    ...init,
+    headers: {
+      Accept: "application/vnd.github+json",
+      Authorization: `Bearer ${token}`,
+      "X-GitHub-Api-Version": "2022-11-28",
+      ...(init?.headers || {}),
+    },
+    signal: AbortSignal.timeout(15000),
+  });
+
+  const text = await response.text();
+  const data = text
+    ? (() => {
+        try {
+          return JSON.parse(text);
+        } catch {
+          return { raw: text };
+        }
+      })()
+    : {};
+
+  if (!response.ok) {
+    const err = new Error(
+      data && (data.message as string)
+        ? `GitHub API error: ${data.message}`
+        : `GitHub API error: HTTP ${response.status}`,
+    );
+    (err as any).statusCode = response.status;
+    (err as any).data = data;
+    throw err;
+  }
+
+  return data;
+}
 
 export function createJulesRoutes(): Router {
   const router = Router();
@@ -28,6 +92,73 @@ export function createJulesRoutes(): Router {
     "scripts",
     "jules_cli_wrapper.py",
   );
+
+  // ------------------------------------------------------------------------
+  // GitHub Actions (Async tests)
+  // ------------------------------------------------------------------------
+
+  // GET /workflow-runs?workflow=jules-async-tests.yml&limit=10
+  router.get("/workflow-runs", async (req, res) => {
+    try {
+      const workflow =
+        typeof req.query.workflow === "string" && req.query.workflow.trim()
+          ? req.query.workflow.trim()
+          : "jules-async-tests.yml";
+
+      const limitRaw =
+        typeof req.query.limit === "string" ? req.query.limit : "10";
+      const limit = Math.max(
+        1,
+        Math.min(50, parseInt(limitRaw || "10", 10) || 10),
+      );
+
+      const repo = getGithubRepo();
+      const base = getGithubApiBase();
+      const url = `${base}/repos/${repo}/actions/workflows/${encodeURIComponent(workflow)}/runs?per_page=${limit}`;
+
+      const data = await githubFetchJson(url);
+      res.json({ workflow, runs: data.workflow_runs || [] });
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      const status = (e as any)?.statusCode || 500;
+      res.status(status).json({ error: msg });
+    }
+  });
+
+  // POST /dispatch { workflow?: string, ref?: string, inputs?: object }
+  router.post("/dispatch", async (req, res) => {
+    try {
+      const workflow =
+        typeof req.body?.workflow === "string" && req.body.workflow.trim()
+          ? String(req.body.workflow).trim()
+          : "jules-async-tests.yml";
+
+      const ref =
+        typeof req.body?.ref === "string" && req.body.ref.trim()
+          ? String(req.body.ref).trim()
+          : "main";
+
+      const inputs = (req.body?.inputs ?? {}) as Record<string, unknown>;
+
+      const repo = getGithubRepo();
+      const base = getGithubApiBase();
+      const url = `${base}/repos/${repo}/actions/workflows/${encodeURIComponent(workflow)}/dispatches`;
+
+      logInfo("JulesRoutes", `Dispatch workflow: ${workflow} ref=${ref}`);
+
+      await githubFetchJson(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ref, inputs }),
+      });
+
+      res.json({ success: true, workflow, ref });
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      const status = (e as any)?.statusCode || 500;
+      res.status(status).json({ error: msg });
+    }
+  });
 
   // GET /sessions - List all sessions
   router.get("/sessions", async (req, res) => {

@@ -22,6 +22,9 @@ import {
   createJulesTask,
   syncJulesSession,
   type JulesSession,
+  getJulesWorkflowRuns,
+  dispatchJulesWorkflow,
+  type JulesWorkflowRun,
 } from "@/lib/apiService";
 import { toast } from "sonner";
 
@@ -30,6 +33,10 @@ export function JulesPanel() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [sessions, setSessions] = useState<JulesSession[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [runs, setRuns] = useState<JulesWorkflowRun[]>([]);
+  const [isLoadingRuns, setIsLoadingRuns] = useState(false);
+
+  const WORKFLOW = "jules-async-tests.yml";
 
   const refreshSessions = async () => {
     setIsLoading(true);
@@ -41,6 +48,22 @@ export function JulesPanel() {
       toast.error("Jules sessions load failed");
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const refreshRuns = async () => {
+    setIsLoadingRuns(true);
+    try {
+      const list = await getJulesWorkflowRuns({
+        workflow: WORKFLOW,
+        limit: 10,
+      });
+      setRuns(list);
+    } catch (error: any) {
+      // Token missing is expected in some dev envs → keep it non-fatal
+      setRuns([]);
+    } finally {
+      setIsLoadingRuns(false);
     }
   };
 
@@ -71,10 +94,28 @@ export function JulesPanel() {
 
   useEffect(() => {
     refreshSessions();
+    refreshRuns();
     // Auto-refresh every 30s
-    const interval = setInterval(refreshSessions, 30000);
+    const interval = setInterval(() => {
+      refreshSessions();
+      refreshRuns();
+    }, 30000);
     return () => clearInterval(interval);
   }, []);
+
+  const triggerAsyncTests = async () => {
+    try {
+      await dispatchJulesWorkflow({
+        workflow: WORKFLOW,
+        ref: "main",
+        inputs: {},
+      });
+      toast.success("Async tesztek elindítva (workflow_dispatch)");
+      refreshRuns();
+    } catch (e: any) {
+      toast.error(e?.message || "Nem sikerült indítani a workflow-t");
+    }
+  };
 
   return (
     <Card className="glass-panel border-purple-500/20 shadow-purple-900/10">
@@ -175,6 +216,91 @@ export function JulesPanel() {
                       >
                         <GitPullRequest size={16} />
                       </Button>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Async Tests (GitHub Actions) */}
+        <div className="rounded-md border border-white/10 overflow-hidden">
+          <div className="flex items-center justify-between px-3 py-2 bg-white/5">
+            <div className="text-sm font-medium text-muted-foreground">
+              Async Tests (GitHub Actions)
+            </div>
+            <div className="flex gap-2">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={refreshRuns}
+                disabled={isLoadingRuns}
+                title="Frissítés"
+              >
+                <ArrowsClockwise
+                  size={16}
+                  className={isLoadingRuns ? "animate-spin" : ""}
+                />
+              </Button>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={triggerAsyncTests}
+                title="workflow_dispatch indítás"
+              >
+                <Play className="mr-2 h-4 w-4" />
+                Trigger
+              </Button>
+            </div>
+          </div>
+          <Table>
+            <TableHeader className="bg-white/5">
+              <TableRow>
+                <TableHead className="w-[80px]">#</TableHead>
+                <TableHead>Status</TableHead>
+                <TableHead>Conclusion</TableHead>
+                <TableHead>Updated</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {runs.length === 0 ? (
+                <TableRow>
+                  <TableCell
+                    colSpan={4}
+                    className="text-center text-muted-foreground h-16"
+                  >
+                    {isLoadingRuns
+                      ? "Betöltés..."
+                      : "Nincs adat (lehet hiányzik a GITHUB_TOKEN a szerveren)."}
+                  </TableCell>
+                </TableRow>
+              ) : (
+                runs.map((r) => (
+                  <TableRow key={r.id}>
+                    <TableCell className="font-mono text-xs">
+                      {r.run_number ?? r.id}
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="outline">{r.status || "unknown"}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge
+                        variant={
+                          (r.conclusion || "") === "success"
+                            ? "default"
+                            : (r.conclusion || "") === "failure"
+                              ? "destructive"
+                              : "secondary"
+                        }
+                      >
+                        {r.conclusion ?? "-"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell className="text-xs text-muted-foreground">
+                      {(r.updated_at || r.created_at || "")
+                        .slice(0, 19)
+                        .replace("T", " ")}
                     </TableCell>
                   </TableRow>
                 ))

@@ -125,6 +125,41 @@ Következő: workflow baseline (Iteration 1) + Dashboard/CLI integráció implem
 
 ---
 
+### 2026-02-12 - 🧪 Jules Async Tests (Workflow + Dashboard + CLI) ✅
+
+**Track:** `jules-async-test-automation-20260211`
+
+✅ **GitHub Actions workflow:**
+
+- Új workflow: `.github/workflows/jules-async-tests.yml`
+  - schedule: 4 óránként
+  - workflow_dispatch: manuális indítás
+  - baseline matrix (Iteration 1): `unit_fast`, `dashboard` (bővíthető)
+
+✅ **Backend API (GitHub Actions runs/dispatch):**
+
+- `src/server/routes/jules.ts`
+  - `GET /api/v1/jules/workflow-runs` (GITHUB_TOKEN szükséges)
+  - `POST /api/v1/jules/dispatch` (workflow_dispatch)
+
+✅ **Dashboard integráció:**
+
+- `src/dashboard/components/dashboard/JulesPanel.tsx`
+  - Async Tests szekció: legutóbbi futások táblája + Trigger gomb
+- `src/dashboard/lib/apiService.ts`
+  - `getJulesWorkflowRuns()` + `dispatchJulesWorkflow()`
+
+✅ **CLI integráció (magyar):**
+
+- `src/cli.ts` → `brunella jules tests` (futások listázása / indítás)
+
+✅ **Tesztelés:**
+
+- `test/jules_workflow_routes.test.ts`
+- `npm test` ✅ (432/432 PASS)
+
+---
+
 ### 2026-02-11 - 📡 OpenTelemetry Agent Tracing Integration (DONE! ✅)
 
 **Track:** `otel_agent_tracing_20260211`

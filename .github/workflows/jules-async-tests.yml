@@ -1,0 +1,72 @@
+name: Jules Async Tests
+
+on:
+  schedule:
+    - cron: "0 */4 * * *" # every 4 hours
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: "Which test suite to run (unit_fast | dashboard | e2e). Leave empty to run all."
+        required: false
+        default: ""
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jules-async-tests-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  async-tests:
+    name: ${{ matrix.suite }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      max-parallel: 15
+      matrix:
+        suite: [unit_fast, dashboard]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install
+        run: npm ci
+
+      - name: Run selected suite
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # If workflow_dispatch input provided, override matrix to just that suite.
+          if [[ "${{ github.event.inputs.suite }}" != "" ]]; then
+            SUITE="${{ github.event.inputs.suite }}"
+          else
+            SUITE="${{ matrix.suite }}"
+          fi
+
+          echo "Running suite: $SUITE"
+
+          case "$SUITE" in
+            unit_fast)
+              npm test
+              ;;
+            dashboard)
+              npm run test:dashboard
+              ;;
+            e2e)
+              npm run test:e2e
+              ;;
+            *)
+              echo "Unknown suite: $SUITE" >&2
+              exit 1
+              ;;
+          esac
