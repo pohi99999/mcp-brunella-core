@@ -83,6 +83,37 @@
 
 ---
 
+### 2026-02-12 - ☁️ Cloudflare Chat Integration (Spec-First + Iteration 1) ✅
+
+**Track:** `cloudflare-chat-integration-20260211`
+
+**Spec-first (EPP v2):**
+
+- Létrehozva: `conductor/tracks/cloudflare-chat-integration-20260211/spec.md`
+- `meta.json`: `spec_status` → `pending_approval`
+
+**Iteration 1 implementáció (Dashboard + CLI alapok, secrets nélkül is tesztelhető):**
+
+- Backend route: `src/server/routes/cloudflare.ts`
+  - `GET /api/v1/cloudflare/status`
+  - `POST /api/v1/cloudflare/task` (csak ha `EDGE_ENABLED=true`, különben 503)
+  - `GET /api/v1/cloudflare/status/:taskId` (csak ha `EDGE_ENABLED=true`, különben 503)
+- Dashboard: `src/dashboard/components/dashboard/NeuralLinkChat.tsx`
+  - új mód: **Cloudflare (Edge)** → `submitCloudflareTask()` hívása
+- Dashboard API: `src/dashboard/lib/apiService.ts`
+  - `submitCloudflareTask()` + `getCloudflareTaskStatus()`
+
+**Tesztelés:**
+
+- Új teszt: `test/cloudflare_routes.test.ts`
+- `npm test` ✅ (429/429 PASS)
+
+**Megjegyzés:**
+
+- A teljes WebSocket chat + D1 history implementáció következő iteráció (feature flag + secrets/infra kell hozzá).
+
+---
+
 ### 2026-02-11 - 📡 OpenTelemetry Agent Tracing Integration (DONE! ✅)
 
 **Track:** `otel_agent_tracing_20260211`

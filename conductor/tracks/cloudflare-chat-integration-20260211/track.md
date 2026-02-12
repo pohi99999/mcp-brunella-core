@@ -1,6 +1,6 @@
 # Track: Cloudflare Chat Integration (Dashboard + CLI)
 
-**Status:** PROPOSED
+**Status:** IN_PROGRESS
 **Priority:** P1
 **Complexity:** HIGH
 **Created:** 2026-02-11
@@ -55,7 +55,7 @@ Cloudflare Workers WebSocket chat beágyazása a Dashboardba + CLI chat interfac
 
 ### Phase 1: Dashboard Component
 
-- [ ] CloudflareChat.tsx létrehozás
+- [x] Dashboard Cloudflare/Edge chat felület (NeuralLinkChat: Cloudflare mód)
 - [ ] WebSocket setup (useState + useRef)
 - [ ] Message list rendering
 - [ ] Input field + send handler
@@ -73,7 +73,8 @@ Cloudflare Workers WebSocket chat beágyazása a Dashboardba + CLI chat interfac
 
 ### Phase 3: Backend Routes
 
-- [ ] cloudflare.ts routes
+- [x] cloudflare.ts routes (v1: /api/cloudflare/*)
+- [x] POST /api/cloudflare/task handler (feature-flag: EDGE_ENABLED)
 - [ ] POST /api/chat/send handler
 - [ ] D1 API integráció
 - [ ] AgentManager call
@@ -117,3 +118,15 @@ Backend:
 D1 Database ID: 1c4e7d00-7b09-4ddf-88b4-8df42e1123ab
 WebSocket URL: wss://chat-bas.peterpohanka.com/ws
 ```
+
+---
+
+## 📝 Napló
+
+### 2026-02-12
+
+- Spec-first: `spec.md` létrehozva (feature-flag + API contract, secrets nélküli tesztelhetőség).
+- Implementáció (Iteration 1):
+	- Backend: `src/server/routes/cloudflare.ts` + mount: `/api/v1/cloudflare/*`.
+	- Dashboard: `NeuralLinkChat` kapott **Cloudflare (Edge)** módot.
+	- Teszt: `test/cloudflare_routes.test.ts` (EDGE disabled → 503), így a CI nem hív külső endpointot.

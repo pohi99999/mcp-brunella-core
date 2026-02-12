@@ -31,7 +31,7 @@ interface Message {
   executedBy?: string;
 }
 
-type ChatMode = 'orchestrator' | 'ollama' | 'github' | 'gemini';
+type ChatMode = 'orchestrator' | 'ollama' | 'github' | 'gemini' | 'cloudflare';
 
 export function NeuralLinkChat() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -89,6 +89,16 @@ export function NeuralLinkChat() {
       let response: any;
       if (mode === 'orchestrator') {
         response = await api.executeAgent('Orchestrator', text);
+      } else if (mode === 'cloudflare') {
+        const edge = await api.submitCloudflareTask(text, {
+          history: messages.map((m) => ({ role: m.role, content: m.content })),
+        });
+        response = {
+          message:
+            typeof (edge as any)?.result === 'string'
+              ? (edge as any).result
+              : (edge as any)?.result?.response || (edge as any)?.message || JSON.stringify(edge),
+        };
       } else if (mode === 'github') {
         const rawResponse = await api.generateWithGithubModels(text, selectedGhModel || undefined);
         response = { message: rawResponse };
@@ -134,9 +144,11 @@ export function NeuralLinkChat() {
           <select
             value={mode}
             onChange={(e) => setMode(e.target.value as ChatMode)}
+            aria-label="Chat mód"
             className="rounded-md border border-border bg-background/50 px-2 py-1.5 text-sm"
           >
             <option value="orchestrator">Orchestrator</option>
+            <option value="cloudflare">Cloudflare (Edge)</option>
             <option value="ollama">Ollama</option>
             <option value="github">GitHub Models</option>
             <option value="gemini">Gemini</option>
@@ -198,6 +210,8 @@ export function NeuralLinkChat() {
                   <p className="text-xs text-muted-foreground max-w-xs">
                     {mode === 'orchestrator'
                       ? 'Orchestrator üzemmód: Komplex feladatok delegálása ügynököknek.'
+                      : mode === 'cloudflare'
+                      ? 'Cloudflare Edge üzemmód: delegálás a Cloudflare Worker felé (EDGE_ENABLED szükséges).'
                       : mode === 'github'
                       ? 'GitHub Models üzemmód: GPT-4.1, DeepSeek-R1, Grok 3 és más felhő modellek.'
                       : mode === 'gemini'
@@ -288,7 +302,7 @@ export function NeuralLinkChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), send())}
-              placeholder={mode === 'orchestrator' ? 'Üzenet az Orchestratornak...' : mode === 'github' ? 'Üzenet a GitHub Models-nek...' : mode === 'gemini' ? 'Üzenet a Gemini-nek...' : 'Üzenet az AI-nak...'}
+              placeholder={mode === 'orchestrator' ? 'Üzenet az Orchestratornak...' : mode === 'cloudflare' ? 'Üzenet a Cloudflare Edge-nek...' : mode === 'github' ? 'Üzenet a GitHub Models-nek...' : mode === 'gemini' ? 'Üzenet a Gemini-nek...' : 'Üzenet az AI-nak...'}
               className="min-h-[60px] bg-zinc-900 border-zinc-800 resize-none"
               disabled={isLoading}
             />
