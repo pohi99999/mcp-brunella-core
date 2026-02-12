@@ -31,7 +31,7 @@ interface Message {
   executedBy?: string;
 }
 
-type ChatMode = 'orchestrator' | 'ollama' | 'github' | 'gemini' | 'cloudflare';
+type ChatMode = 'orchestrator' | 'ollama' | 'github' | 'gemini' | 'cloudflare' | 'cloudflare_chat';
 
 const MAX_CONTEXT_MESSAGES = 10;
 
@@ -112,6 +112,16 @@ export function NeuralLinkChat() {
           chatMode: mode,
           history: messages.map((m) => ({ role: m.role, content: m.content, timestamp: m.timestamp })),
         });
+      } else if (mode === 'cloudflare_chat') {
+        const cfChat = await api.chatWithCloudflare(
+          text,
+          messages.map((m) => ({ role: m.role, content: m.content })),
+        );
+        response = {
+          message: cfChat.message,
+          executedBy: 'cloudflare_chat',
+          contextUsed: [cfChat.endpoint || '/api/chat'],
+        };
       } else if (mode === 'cloudflare') {
         const edge = await api.submitCloudflareTask(text, {
           history: messages.map((m) => ({ role: m.role, content: m.content })),
@@ -181,6 +191,7 @@ export function NeuralLinkChat() {
             className="rounded-md border border-border bg-background/50 px-2 py-1.5 text-sm"
           >
             <option value="orchestrator">Orchestrator</option>
+            <option value="cloudflare_chat">Cloudflare Chat</option>
             <option value="cloudflare">Cloudflare (Edge)</option>
             <option value="ollama">Ollama</option>
             <option value="github">GitHub Models</option>
@@ -243,6 +254,8 @@ export function NeuralLinkChat() {
                   <p className="text-xs text-muted-foreground max-w-xs">
                     {mode === 'orchestrator'
                       ? 'Orchestrator üzemmód: Komplex feladatok delegálása ügynököknek.'
+                      : mode === 'cloudflare_chat'
+                      ? 'Cloudflare Chat üzemmód: közvetlen folyamatos beszélgetés a Cloudflare chat workerrel.'
                       : mode === 'cloudflare'
                       ? 'Cloudflare Edge üzemmód: delegálás a Cloudflare Worker felé (EDGE_ENABLED szükséges).'
                       : mode === 'github'
@@ -335,7 +348,7 @@ export function NeuralLinkChat() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), send())}
-              placeholder={mode === 'orchestrator' ? 'Üzenet az Orchestratornak...' : mode === 'cloudflare' ? 'Üzenet a Cloudflare Edge-nek...' : mode === 'github' ? 'Üzenet a GitHub Models-nek...' : mode === 'gemini' ? 'Üzenet a Gemini-nek...' : 'Üzenet az AI-nak...'}
+              placeholder={mode === 'orchestrator' ? 'Üzenet az Orchestratornak...' : mode === 'cloudflare_chat' ? 'Üzenet a Cloudflare Chat-nek...' : mode === 'cloudflare' ? 'Üzenet a Cloudflare Edge-nek...' : mode === 'github' ? 'Üzenet a GitHub Models-nek...' : mode === 'gemini' ? 'Üzenet a Gemini-nek...' : 'Üzenet az AI-nak...'}
               className="min-h-[60px] bg-zinc-900 border-zinc-800 resize-none"
               disabled={isLoading}
             />
