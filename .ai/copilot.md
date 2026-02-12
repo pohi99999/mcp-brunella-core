@@ -114,6 +114,17 @@
 
 ---
 
+### 2026-02-12 - 🤖 Jules Async Tests (Spec-First) ✅
+
+**Track:** `jules-async-test-automation-20260211`
+
+- Létrehozva: `conductor/tracks/jules-async-test-automation-20260211/spec.md`
+- `meta.json`: `spec_status` → `pending_approval`
+
+Következő: workflow baseline (Iteration 1) + Dashboard/CLI integráció implementáció.
+
+---
+
 ### 2026-02-11 - 📡 OpenTelemetry Agent Tracing Integration (DONE! ✅)
 
 **Track:** `otel_agent_tracing_20260211`
