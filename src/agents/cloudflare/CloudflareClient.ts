@@ -1,10 +1,10 @@
 /**
  * CloudflareClient - WebSocket-aware wrapper for EdgeProxyAgent
- * 
+ *
  * This class provides a simplified API for interacting with Cloudflare Workers
  * from the WebSocket event handlers. It wraps EdgeProxyAgent and provides
  * methods optimized for real-time communication.
- * 
+ *
  * @author Brunella Core Team
  * @version 1.0.0
  */
@@ -66,7 +66,7 @@ class CloudflareClientClass {
 
   /**
    * Submit a task to the Cloudflare Worker
-   * 
+   *
    * @param instruction - Task instruction text
    * @returns Task ID and initial status
    */
@@ -88,7 +88,8 @@ class CloudflareClientClass {
       }
 
       // Extract task ID from result data
-      const taskId = (result.data as any)?.task?.taskId || this.generateTaskId();
+      const taskId =
+        (result.data as any)?.task?.taskId || this.generateTaskId();
 
       return {
         taskId,
@@ -102,7 +103,7 @@ class CloudflareClientClass {
 
   /**
    * Check the status of a task
-   * 
+   *
    * @param taskId - Task ID to query
    * @returns Task status with progress and result
    */
@@ -147,15 +148,12 @@ class CloudflareClientClass {
 
   /**
    * Send a chat message to the Cloudflare Worker AI
-   * 
+   *
    * @param instruction - Chat message text
    * @param history - Optional conversation history
    * @returns Chat response from Worker AI
    */
-  async chat(
-    instruction: string,
-    history?: any[],
-  ): Promise<ChatResponse> {
+  async chat(instruction: string, history?: any[]): Promise<ChatResponse> {
     if (!this.initialized) {
       await this.initialize();
     }
@@ -192,7 +190,7 @@ class CloudflareClientClass {
 
   /**
    * Check if the Cloudflare Worker is healthy
-   * 
+   *
    * @returns Health status
    */
   async isHealthy(): Promise<boolean> {

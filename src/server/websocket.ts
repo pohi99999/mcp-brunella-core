@@ -4,15 +4,15 @@ import { cloudflareClient } from "../agents/cloudflare/CloudflareClient.js";
 
 /**
  * Register Cloudflare Edge WebSocket event handlers
- * 
+ *
  * This function sets up real-time WebSocket communication between
  * the Dashboard and Cloudflare Workers AI.
- * 
+ *
  * Events:
  * - edge:task:submit - Submit a task to the Worker
  * - edge:chat:message - Send a chat message to Worker LLM
  * - edge:status:query - Query task status by taskId
- * 
+ *
  * @param io - Socket.IO Server instance
  */
 export function registerEdgeWebSocketHandlers(io: Server) {
@@ -22,7 +22,7 @@ export function registerEdgeWebSocketHandlers(io: Server) {
     /**
      * Event: edge:task:submit
      * Client submits a task instruction to the Cloudflare Worker
-     * 
+     *
      * Payload: { instruction: string }
      * Response: edge:task:submitted { taskId, status }
      * Progress: edge:task:progress { taskId, progress, status }
@@ -96,7 +96,7 @@ export function registerEdgeWebSocketHandlers(io: Server) {
     /**
      * Event: edge:chat:message
      * Client sends a chat message to the Cloudflare Worker LLM
-     * 
+     *
      * Payload: { instruction: string, history?: any[] }
      * Response: edge:chat:response { response }
      * Error: edge:chat:error { error }
@@ -130,7 +130,7 @@ export function registerEdgeWebSocketHandlers(io: Server) {
     /**
      * Event: edge:status:query
      * Client queries the status of a specific task
-     * 
+     *
      * Payload: { taskId: string }
      * Response: edge:status:response { taskId, status, result, progress }
      * Error: edge:status:error { error }
