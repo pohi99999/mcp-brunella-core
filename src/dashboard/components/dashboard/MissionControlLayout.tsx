@@ -17,6 +17,7 @@ import {
   Cpu,
   FlaskConical,
   Code2,
+  Cloud,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -48,6 +49,7 @@ import { LLMProvidersPanel } from "@/components/dashboard/LLMProvidersPanel";
 import { KnowledgeBasePanel } from "@/components/dashboard/KnowledgeBasePanel";
 import { IncubatorPanel } from "@/components/dashboard/IncubatorPanel";
 import { DeveloperPanel } from "@/components/dashboard/DeveloperPanel";
+import { EdgePanel } from "@/components/dashboard/EdgePanel";
 import { JulesPanel } from "./JulesPanel";
 import { TrackGenerator } from "./TrackGenerator";
 import { TaskDecomposerPanel } from "./TaskDecomposerPanel";
@@ -62,6 +64,7 @@ const SIDEBAR_ITEMS = [
   { id: "incubator", label: "Incubator", icon: FlaskConical },
   { id: "knowledge", label: "Knowledge", icon: Brain },
   { id: "developer", label: "Developer", icon: Code2 },
+  { id: "edge", label: "Edge", icon: Cloud },
   { id: "robotkez", label: "Robotkéz", icon: Activity },
   { id: "tasks", label: "Tasks", icon: History },
   { id: "inventory", label: "Assets", icon: Box },
@@ -278,6 +281,7 @@ export function MissionControlLayout() {
               )}
 
               {activeTab === "developer" && <DeveloperPanel />}
+              {activeTab === "edge" && <EdgePanel />}
               {activeTab === "decomposer" && <TaskDecomposerPanel />}
               {activeTab === "tracks" && <TrackGenerator />}
               {activeTab === "inventory" && <InventoryCatalog />}
