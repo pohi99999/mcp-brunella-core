@@ -1,19 +1,13 @@
 # Projekt Nyomkövetés (Tracks)
 
-**Utolsó frissítés:** 2026-02-12T00:09:29.454Z
+**Utolsó frissítés:** 2026-02-12T00:35:40.639Z
 **Generátor:** ProjectConductorAgent
 
 Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 ---
 
-## 🧊 Tervezett Szálak (Backlog) (6)
-
-- [ ] **Cloudflare Chat Integration** [HIGH]
-  - **ID:** `cloudflare-chat-integration-20260211`
-  - **Progress:** 0%
-  - **Utolsó aktivitás:** 2026-02-12
-  - 📂 *[./tracks/cloudflare-chat-integration-20260211/](./tracks/cloudflare-chat-integration-20260211/)*
+## 🧊 Tervezett Szálak (Backlog) (5)
 
 - [ ] **Dashboard TODO Widget** [MEDIUM]
   - **ID:** `dashboard-todo-widget-20260211`
@@ -48,7 +42,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 ---
 
-## 🚀 Aktív Szálak (6)
+## 🚀 Aktív Szálak (7)
 
 - [ ] **Agent Architect 2.0 Meta-Ügynök** [MEDIUM]
   - **ID:** `agent_architect_upgrade_20260205`
@@ -63,6 +57,13 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
   - **Utolsó aktivitás:** 2026-02-12
   
   - 📂 *[./tracks/bas_comprehensive_test_protocol_20260210/](./tracks/bas_comprehensive_test_protocol_20260210/)*
+
+- [ ] **Cloudflare Chat Integration** [HIGH]
+  - **ID:** `cloudflare-chat-integration-20260211`
+  - **Progress:** 20%
+  - **Utolsó aktivitás:** 2026-02-12
+  
+  - 📂 *[./tracks/cloudflare-chat-integration-20260211/](./tracks/cloudflare-chat-integration-20260211/)*
 
 - [ ] **Dashboard Komplett Tesztsorozat** [HIGH]
   - **ID:** `dashboard_test_suite_20260210`

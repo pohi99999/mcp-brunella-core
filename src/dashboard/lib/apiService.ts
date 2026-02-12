@@ -101,6 +101,48 @@ export interface Workspace {
   slug: string;
 }
 
+export interface CloudflareTaskResponse {
+  success: boolean;
+  taskId: string;
+  type: string;
+  result?: unknown;
+  message: string;
+}
+
+export async function submitCloudflareTask(
+  instruction: string,
+  context: Record<string, unknown> = {},
+): Promise<CloudflareTaskResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/cloudflare/task`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ instruction, context }),
+    },
+    LONG_TIMEOUT_MS,
+  );
+
+  const data: any = await safeJson<any>(response).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Cloudflare task failed");
+  return data as CloudflareTaskResponse;
+}
+
+export async function getCloudflareTaskStatus(taskId: string): Promise<unknown> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/cloudflare/status/${encodeURIComponent(taskId)}`,
+    {},
+    DEFAULT_TIMEOUT_MS,
+  );
+  const data: any = await safeJson<any>(response).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Cloudflare status failed");
+  return data;
+}
+
 /**
  * Health Check
  */
