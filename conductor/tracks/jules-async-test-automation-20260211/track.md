@@ -1,6 +1,6 @@
 # Track: Jules Async Test Automation (GitHub Actions)
 
-**Status:** PROPOSED
+**Status:** IN_PROGRESS
 **Priority:** P1
 **Complexity:** MEDIUM
 **Created:** 2026-02-11
@@ -23,6 +23,7 @@ Jules AI automatikus tesztelés időigényes teszt suite-okhoz. 15 párhuzamos s
 ## 🔧 Technikai Követelmények
 
 ### GitHub Actions: .github/workflows/jules-async-tests.yml
+
 ```yaml
 strategy:
   matrix:
@@ -30,10 +31,11 @@ strategy:
   max-parallel: 15
 
 schedule:
-  - cron: '0 */4 * * *'  # 4 óránként
+  - cron: "0 */4 * * *" # 4 óránként
 ```
 
 ### Dashboard: src/dashboard/components/JulesTestStatus.tsx
+
 - Latest test runs table
 - Pass/Fail badge
 - Duration chart (trend)
@@ -41,6 +43,7 @@ schedule:
 - WebSocket live updates
 
 ### CLI: src/cli-commands/tests-hu.ts
+
 ```
 1. 🧪 Legutóbbi teszt eredmények
 2. 🚀 Tesztek futtatása (trigger GitHub Action)
@@ -51,27 +54,31 @@ schedule:
 ## 📋 Implementation Plan
 
 ### Phase 1: GitHub Actions Workflows
-- [ ] jules-async-tests.yml létrehozás
+
+- [x] jules-async-tests.yml létrehozás
 - [ ] Test matrix konfigurálás (15 suite)
 - [ ] Jules API key secret setup
 - [ ] Test prompt írás (analyze, fix, report)
 - [ ] jules-test-coordinator.yml (napi összesítő)
 
 ### Phase 2: Dashboard Widget
-- [ ] JulesTestStatus.tsx komponens
+
+- [x] Workflow runs widget a JulesPanel-ben
 - [ ] GitHub API integráció (workflow runs fetch)
 - [ ] Table + Chart komponensek
-- [ ] "Trigger Tests" button (workflow_dispatch)
+- [x] "Trigger" gomb (workflow_dispatch)
 - [ ] Dashboard integráció
 
 ### Phase 3: CLI Commands
-- [ ] tests-hu.ts létrehozás
+
+- [x] CLI: `brunella jules tests` (runs/trigger)
 - [ ] GitHub API calls (latest runs)
 - [ ] Trend analysis display
-- [ ] Trigger command (workflow_dispatch)
+- [x] Trigger command (workflow_dispatch)
 - [ ] CLI regisztráció
 
 ### Phase 4: Testing & Docs
+
 - [ ] Workflow trigger test
 - [ ] Dashboard widget test
 - [ ] CLI test
@@ -108,3 +115,9 @@ CLI:
 ### 2026-02-12
 
 - Spec-first: `spec.md` létrehozva, `meta.json` → `spec_status: pending_approval`.
+- Implementáció (Iteration 1):
+  - Workflow: `.github/workflows/jules-async-tests.yml` (schedule + workflow_dispatch + baseline matrix)
+  - Backend: `GET /api/v1/jules/workflow-runs`, `POST /api/v1/jules/dispatch`
+  - Dashboard: `JulesPanel` kibővítve workflow runs táblával + Trigger gombbal
+  - CLI: `brunella jules tests` (magyar menü: futások / indítás)
+  - Teszt: `test/jules_workflow_routes.test.ts` (token missing → 503; fetch mock)

@@ -130,7 +130,9 @@ export async function submitCloudflareTask(
   return data as CloudflareTaskResponse;
 }
 
-export async function getCloudflareTaskStatus(taskId: string): Promise<unknown> {
+export async function getCloudflareTaskStatus(
+  taskId: string,
+): Promise<unknown> {
   const response = await fetchWithTimeout(
     `${API_BASE}/api/cloudflare/status/${encodeURIComponent(taskId)}`,
     {},
@@ -397,6 +399,63 @@ export async function syncJulesSession(
   }>(response);
   if (!response.ok) throw new Error(data.error || "Jules sync failed");
   return data;
+}
+
+export interface JulesWorkflowRun {
+  id: number;
+  name?: string;
+  html_url?: string;
+  status?: string;
+  conclusion?: string | null;
+  created_at?: string;
+  updated_at?: string;
+  run_number?: number;
+  event?: string;
+}
+
+export async function getJulesWorkflowRuns(params?: {
+  workflow?: string;
+  limit?: number;
+}): Promise<JulesWorkflowRun[]> {
+  const qs = new URLSearchParams();
+  if (params?.workflow) qs.set("workflow", params.workflow);
+  if (typeof params?.limit === "number") qs.set("limit", String(params.limit));
+
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/jules/workflow-runs${qs.toString() ? `?${qs.toString()}` : ""}`,
+    {},
+    DEFAULT_TIMEOUT_MS,
+  );
+  const data: any = await safeJson<any>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Jules workflow runs failed");
+  return (data.runs || []) as JulesWorkflowRun[];
+}
+
+export async function dispatchJulesWorkflow(params?: {
+  workflow?: string;
+  ref?: string;
+  inputs?: Record<string, unknown>;
+}): Promise<{ success: boolean; workflow: string; ref: string }> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/jules/dispatch`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        workflow: params?.workflow,
+        ref: params?.ref,
+        inputs: params?.inputs,
+      }),
+    },
+    DEFAULT_TIMEOUT_MS,
+  );
+  const data: any = await safeJson<any>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Jules dispatch failed");
+  return data as { success: boolean; workflow: string; ref: string };
 }
 
 /**

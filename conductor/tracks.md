@@ -1,13 +1,13 @@
 # Projekt Nyomkövetés (Tracks)
 
-**Utolsó frissítés:** 2026-02-12T00:35:40.639Z
+**Utolsó frissítés:** 2026-02-12T01:05:50.867Z
 **Generátor:** ProjectConductorAgent
 
 Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 ---
 
-## 🧊 Tervezett Szálak (Backlog) (5)
+## 🧊 Tervezett Szálak (Backlog) (4)
 
 - [ ] **Dashboard TODO Widget** [MEDIUM]
   - **ID:** `dashboard-todo-widget-20260211`
@@ -20,12 +20,6 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
   - **Progress:** 0%
   - **Utolsó aktivitás:** 2026-02-12
   - 📂 *[./tracks/epp-v2-protocol-20260211/](./tracks/epp-v2-protocol-20260211/)*
-
-- [ ] **Jules Async Test Automation (GitHub Actions)** [HIGH]
-  - **ID:** `jules-async-test-automation-20260211`
-  - **Progress:** 0%
-  - **Utolsó aktivitás:** 2026-02-12
-  - 📂 *[./tracks/jules-async-test-automation-20260211/](./tracks/jules-async-test-automation-20260211/)*
 
 - [ ] **Magyar CLI Menürendszer (Teljes Átírás)** [CRITICAL]
   - **ID:** `magyar-cli-menu-system-20260211`
@@ -42,7 +36,7 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 ---
 
-## 🚀 Aktív Szálak (7)
+## 🚀 Aktív Szálak (8)
 
 - [ ] **Agent Architect 2.0 Meta-Ügynök** [MEDIUM]
   - **ID:** `agent_architect_upgrade_20260205`
@@ -78,6 +72,13 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
   - **Utolsó aktivitás:** 2026-02-12
   
   - 📂 *[./tracks/developer_agent_2_0_20260206/](./tracks/developer_agent_2_0_20260206/)*
+
+- [ ] **Jules Async Test Automation (GitHub Actions)** [HIGH]
+  - **ID:** `jules-async-test-automation-20260211`
+  - **Progress:** 30%
+  - **Utolsó aktivitás:** 2026-02-12
+  
+  - 📂 *[./tracks/jules-async-test-automation-20260211/](./tracks/jules-async-test-automation-20260211/)*
 
 - [ ] **Phoenix Protocol v2 - Öngyógyító Rendszer** [MEDIUM]
   - **ID:** `phoenix_protocol_v2_20260205`

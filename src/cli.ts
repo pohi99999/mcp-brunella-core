@@ -908,6 +908,93 @@ const julesCmd = program
   .command("jules")
   .description("Jules AI integration (task delegation, sync, status)");
 
+// --- jules tests (GitHub Actions async tests)
+julesCmd
+  .command("tests")
+  .description("Jules async tests (GitHub Actions) - runs / trigger")
+  .option("--workflow <file>", "Workflow file name", "jules-async-tests.yml")
+  .option("--limit <n>", "How many runs to list", "10")
+  .action(
+    async (cmd?: { opts: () => { workflow?: string; limit?: string } }) => {
+      const opts = cmd?.opts?.() ?? {};
+      const workflow = String(opts.workflow || "jules-async-tests.yml");
+      const limit = Math.max(
+        1,
+        Math.min(50, parseInt(String(opts.limit || "10"), 10) || 10),
+      );
+
+      const baseUrl = String(
+        configManager.get("serverUrl") || "http://localhost:3000",
+      ).replace(/\/$/, "");
+
+      const { action } = await inquirer.prompt([
+        {
+          type: "list",
+          name: "action",
+          message: "Jules async tesztek:",
+          choices: [
+            { name: "🧪 Legutóbbi futások", value: "runs" },
+            { name: "🚀 Workflow indítása (dispatch)", value: "trigger" },
+            { name: "❌ Mégsem", value: "cancel" },
+          ],
+        },
+      ]);
+
+      if (action === "cancel") return;
+
+      try {
+        if (action === "runs") {
+          const url = `${baseUrl}/api/v1/jules/workflow-runs?workflow=${encodeURIComponent(workflow)}&limit=${limit}`;
+          const res = await fetch(url, { signal: AbortSignal.timeout(15000) });
+          const data = (await res.json()) as any;
+          if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+
+          const runs = (data?.runs || []) as Array<any>;
+          if (runs.length === 0) {
+            console.log(
+              chalk.yellow(
+                "Nincs futás (vagy hiányzik a GITHUB_TOKEN a szerveren).",
+              ),
+            );
+            return;
+          }
+
+          console.log(
+            chalk.bold(`\nWorkflow: ${workflow} (top ${runs.length})\n`),
+          );
+          for (const r of runs) {
+            const status = String(r.status || "unknown");
+            const concl = r.conclusion == null ? "-" : String(r.conclusion);
+            const when = String(r.updated_at || r.created_at || "")
+              .slice(0, 19)
+              .replace("T", " ");
+            console.log(
+              `• #${r.run_number ?? r.id}  ${status} / ${concl}  (${when})`,
+            );
+          }
+        } else if (action === "trigger") {
+          const url = `${baseUrl}/api/v1/jules/dispatch`;
+          const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ workflow, ref: "main", inputs: {} }),
+            signal: AbortSignal.timeout(15000),
+          });
+          const data = (await res.json()) as any;
+          if (!res.ok) throw new Error(data?.error || `HTTP ${res.status}`);
+          console.log(
+            chalk.green(
+              `✅ Workflow indítva: ${data.workflow} (ref=${data.ref})`,
+            ),
+          );
+        }
+      } catch (e: any) {
+        console.error(chalk.red("Hiba:"), e?.message || String(e));
+        process.exit(1);
+      }
+    },
+  );
+
 julesCmd
   .command("menu")
   .description("Launch interactive Jules menu")
