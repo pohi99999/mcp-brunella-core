@@ -341,19 +341,20 @@ Minden feladatnak nyoma kell legyen. Ami nincs írásban, az nem létezik.
 
 #### 🎯 A 7 Arany Szabály (Quick Reference)
 
-| # | Szabály | Mit jelent? |
-|---|---------|-------------|
-| 1️⃣ | **Track Required** | Nincs kódírás track nélkül (`conductor/tracks/<name>/`) |
-| 2️⃣ | **Fix Bugs** | Fejlesztés közben talált hibák azonnal javítandók |
-| 3️⃣ | **Commit Often** | Minden Phase befejezése után git commit |
-| 4️⃣ | **TODO List** | Track.md checkbox lista folyamatos frissítése |
-| 5️⃣ | **All Tests Green** | COMPLETED csak ha: build ✅ + test ✅ + manual ✅ |
-| 6️⃣ | **Dashboard + CLI** | Mindkettő kötelező minden új funkcióhoz! |
-| 7️⃣ | **Final Docs** | Track befejezés után: .ai/<agent>.md + sync_foszal.py |
+| #   | Szabály             | Mit jelent?                                             |
+| --- | ------------------- | ------------------------------------------------------- |
+| 1️⃣  | **Track Required**  | Nincs kódírás track nélkül (`conductor/tracks/<name>/`) |
+| 2️⃣  | **Fix Bugs**        | Fejlesztés közben talált hibák azonnal javítandók       |
+| 3️⃣  | **Commit Often**    | Minden Phase befejezése után git commit                 |
+| 4️⃣  | **TODO List**       | Track.md checkbox lista folyamatos frissítése           |
+| 5️⃣  | **All Tests Green** | COMPLETED csak ha: build ✅ + test ✅ + manual ✅       |
+| 6️⃣  | **Dashboard + CLI** | Mindkettő kötelező minden új funkcióhoz!                |
+| 7️⃣  | **Final Docs**      | Track befejezés után: .ai/<agent>.md + sync_foszal.py   |
 
 #### ⚠️ KRITIKUS ÚJ SZABÁLY: Dashboard + CLI Integráció KÖTELEZŐ!
 
 **Mi változott v1 → v2:**
+
 - ✅ **6. szabály hozzáadva:** Minden új funkció = Dashboard komponens + CLI parancs (magyar, menüvezérelt)
 - ✅ Track template frissítve (Dashboard + CLI checklist kötelező)
 - ✅ COMPLETED státusz csak ha MINDKETTŐ működik
@@ -373,14 +374,17 @@ Minden feladatnak nyoma kell legyen. Ami nincs írásban, az nem létezik.
    - Interaktív kiválasztás
 
 3. **Track Checklist** kötelező pontok minden track-ben:
+
    ```markdown
    ## 🎨 Dashboard Integráció
+
    - [ ] React komponens létrehozva: src/dashboard/components/<Feature>.tsx
    - [ ] Radix UI + Tailwind használat
    - [ ] Backend API integráció
    - [ ] Real-time updates (ha releváns)
 
    ## 🖥️ CLI Integráció
+
    - [ ] Magyar menü: src/cli/commands/<feature>-hu.ts
    - [ ] Inquirer.js menü (nyíl + enter)
    - [ ] Színes output (chalk, boxen)
@@ -612,9 +616,119 @@ CLOUDFLARE_API_TOKEN=...           # Edge deploy
 CLOUDFLARE_ACCOUNT_ID=...
 N8N_HOST=...                       # n8n automatizálás
 N8N_API_KEY=...
+
+# Cloudflare Chat Integration (Edge)
+EDGE_ENABLED=true                  # Cloudflare Edge proxy engedélyezése
+CLOUDFLARE_WORKER_URL=https://bas-orchestrator.iam-dd1.workers.dev
+CLOUDFLARE_CHAT_URL=https://llm-chat-app-template.iam-dd1.workers.dev
 ```
 
 **SOHA NE COMMITOLD** a `.env` fájlt git-be!
+
+---
+
+## ☁️ Cloudflare Chat Integration (Edge Mode)
+
+A BAS támogatja a **Cloudflare Workers** integrációt távoli chat és orchestration kontrollhoz.
+
+### 🔧 Környezeti Változók
+
+```env
+# Cloudflare Edge mód engedélyezése
+EDGE_ENABLED=true
+
+# Cloudflare Worker URL-ek
+CLOUDFLARE_WORKER_URL=https://bas-orchestrator.iam-dd1.workers.dev
+CLOUDFLARE_CHAT_URL=https://llm-chat-app-template.iam-dd1.workers.dev
+```
+
+### 📡 Backend API Végpontok
+
+| Végpont                          | Metódus | Leírás                                                  |
+| -------------------------------- | ------- | ------------------------------------------------------- |
+| `/api/cloudflare/status`         | GET     | Edge enabled/healthy/tunnel státusz                     |
+| `/api/cloudflare/task`           | POST    | Task submission Cloudflare Worker-nek                   |
+| `/api/cloudflare/status/:taskId` | GET     | Task status lekérdezés                                  |
+| `/api/cloudflare/chat`           | POST    | Chat proxy Cloudflare Worker-hez (history támogatással) |
+
+**Feature Flag:** Ha `EDGE_ENABLED != true`, akkor minden /task és /status/:taskId végpont 503-at dob.
+
+### 🖥️ Dashboard Használat
+
+**Neural Link Chat komponensben:**
+
+1. **Cloudflare Chat mód** - Közvetlen folyamatos beszélgetés Worker-rel
+   - Dropdown: válaszd a "Cloudflare Chat" opciót
+   - History támogatás: teljes beszélgetés kontextus küldhető
+   - Endpoint fallback: próbál /api/chat, /chat, /api/v1/chat, / sorrendben
+
+2. **Cloudflare (Edge) mód** - Task submission Edge Worker-nek
+   - Dropdown: válaszd a "Cloudflare (Edge)" opciót
+   - Task-based execution: instruction + context küldhető
+   - Status tracking taskId alapján
+
+**Connection Status:** Zöld/piros badge jelzi az Edge enabled/disabled állapotot a mód váltó mellett.
+
+### 🧪 TypeScript Client Példa
+
+```typescript
+import * as api from "@/lib/apiService";
+
+// 1. Edge Status Check
+const status = await api.getCloudflareStatus();
+console.log(status); // { enabled: true, healthy: true, tunnelConnected: true }
+
+// 2. Task Submission
+const task = await api.submitCloudflareTask(
+  "Generate a Python function for CSV parsing",
+  { format: "pandas" },
+);
+console.log(task.taskId); // "task_abc123"
+
+// 3. Chat with History
+const chat = await api.chatWithCloudflare("Explain TypeScript generics", [
+  { role: "user", content: "Hi!" },
+  { role: "assistant", content: "Hello! How can I help?" },
+]);
+console.log(chat.message);
+```
+
+### 🛠️ CLI Parancsok
+
+```bash
+brunella chat                 # Edge mód interaktív váltás
+/edge on                      # Edge mód bekapcsolás
+/edge off                     # Edge mód kikapcsolás
+```
+
+### ⚠️ Hibaelhárítás
+
+| Probléma                 | Megoldás                                                            |
+| ------------------------ | ------------------------------------------------------------------- |
+| **503 "Edge disabled"**  | Állítsd be: `EDGE_ENABLED=true` a `.env`-ben                        |
+| **Edge unhealthy**       | Ellenőrizd hogy a Worker URL elérhető-e                             |
+| **Tunnel not connected** | Cloudflare tunnel nincs konfigurálva (normális helyi fejlesztésben) |
+| **Chat proxy 502**       | Worker endpoint nem elérhető, ellenőrizd `CLOUDFLARE_CHAT_URL`      |
+
+### 🧪 Tesztelés
+
+```bash
+# Unit tesztek (Edge disabled állapotban)
+npm test -- cloudflare
+# 5 teszt (feature-flag behavior, validation, proxy success)
+
+# Edge enabled manuális teszt
+EDGE_ENABLED=true npm run dev
+# Dashboard-on: Cloudflare Chat vagy Cloudflare (Edge) mód
+```
+
+### 📚 További Dokumentáció
+
+- **Spec:** `conductor/tracks/cloudflare-chat-integration-20260211/spec.md`
+- **Implementation Plan:** `conductor/tracks/cloudflare-chat-integration-20260211/plan.md`
+- **Backend Routes:** `src/server/routes/cloudflare.ts`
+- **Cloudflare Client:** `src/utils/cloudflareClient.ts`
+- **Tests:** `test/cloudflare_routes.test.ts`
 
 ---
 
