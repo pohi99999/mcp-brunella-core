@@ -37,7 +37,10 @@ async function mkTrack(
     status: opts.status ?? "active",
     ...(opts.meta || {}),
   };
-  await fs.writeFile(path.join(dir, "meta.json"), JSON.stringify(meta, null, 2));
+  await fs.writeFile(
+    path.join(dir, "meta.json"),
+    JSON.stringify(meta, null, 2),
+  );
 }
 
 describe("Tracks todos routes", () => {
@@ -73,7 +76,9 @@ describe("Tracks todos routes", () => {
   });
 
   afterEach(async () => {
-    await fs.rm(tempTracksDir, { recursive: true, force: true }).catch(() => {});
+    await fs
+      .rm(tempTracksDir, { recursive: true, force: true })
+      .catch(() => {});
   });
 
   it("GET /api/v1/tracks/:trackId/todos parses checkbox todos", async () => {
@@ -99,7 +104,9 @@ describe("Tracks todos routes", () => {
 
     const read = await request(app).get("/api/v1/tracks/active-track-1/todos");
     expect(read.body.completedCount).toBe(2);
-    const todos = Array.isArray(read.body.todos) ? (read.body.todos as unknown[]) : [];
+    const todos = Array.isArray(read.body.todos)
+      ? (read.body.todos as unknown[])
+      : [];
     const found = todos.find((t) => getString(t, "id") === "line:2");
     expect(getBool(found, "completed")).toBe(true);
   });
@@ -108,7 +115,9 @@ describe("Tracks todos routes", () => {
     const res = await request(app).get("/api/v1/tracks/todos/active");
     expect(res.status).toBe(200);
     expect(res.body.success).toBe(true);
-    const tracks = Array.isArray(res.body.tracks) ? (res.body.tracks as unknown[]) : [];
+    const tracks = Array.isArray(res.body.tracks)
+      ? (res.body.tracks as unknown[])
+      : [];
     const ids = tracks.map((t) => getString(t, "trackId")).filter(Boolean);
     expect(ids).toContain("active-track-1");
     expect(ids).not.toContain("proposed-track-1");

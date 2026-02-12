@@ -7,8 +7,8 @@
   "updated": "2026-02-12",
   "owner": "Claude",
   "spec_status": "pending_approval",
-  "progress": 75,
-  "tags": ["dashboard", "tracks", "todo", "realtime"],
+  "progress": 90,
+  "tags": ["dashboard", "tracks", "todo", "realtime", "chokidar", "socket"],
   "dependencies": [],
   "estimated_effort": "medium",
   "business_value": "Visible progress tracking"
