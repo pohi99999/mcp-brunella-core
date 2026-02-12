@@ -10,13 +10,21 @@
     { "binding": "BAS_TASKS", "id": "YOUR_KV_ID_HERE" }
   ],
   
-  // Durable Objects (Phase 3)
-  // "durable_objects": {
-  //   "bindings": [
-  //     { "name": "SESSION_STATE", "class_name": "SessionState" },
-  //     { "name": "TASK_COORDINATOR", "class_name": "TaskCoordinator" }
-  //   ]
-  // },
+  // D1 Database (Phase 3)
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "brunella-edge-tasks",
+      "database_id": "YOUR_D1_DATABASE_ID"
+    }
+  ],
+  
+  // Durable Objects (Phase 2)
+  "durable_objects": {
+    "bindings": [
+      { "name": "EDGE_COORDINATOR", "class_name": "EdgeCoordinator" }
+    ]
+  },
   
   // Workers AI binding
   "ai": {

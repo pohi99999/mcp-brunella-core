@@ -179,6 +179,26 @@ export function createCloudflareRoutes(): Router {
     }
   });
 
+  router.get("/history", async (req, res) => {
+    try {
+      const edgeStatus = agentManager.getEdgeStatus();
+      if (!edgeStatus.enabled) {
+        /* If edge disabled, return empty or cached? 
+           For now we assume if they ask for history, they want remote history. 
+           But if disabled, we can't fetch it. */
+        res.status(503).json({ error: "Edge disabled (set EDGE_ENABLED=true)" });
+        return;
+      }
+
+      const limit = parseInt(String(req.query.limit || "20"), 10);
+      const data = await cloudflareClient.fetchHistory(limit);
+      res.json(data);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ error: msg });
+    }
+  });
+
   /**
    * POST /api/cloudflare/chat
    * Proxy chat request to Cloudflare chat worker/template.
