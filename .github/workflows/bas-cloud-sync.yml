@@ -8,9 +8,9 @@ on:
   workflow_dispatch:
     inputs:
       sync_type:
-        description: 'Szinkron típusa'
+        description: "Szinkron típusa"
         required: true
-        default: 'full'
+        default: "full"
         type: choice
         options:
           - full
@@ -19,34 +19,41 @@ on:
 
   # Ütemezett futtatás (naponta 2:00 UTC)
   schedule:
-    - cron: '0 2 * * *'
+    - cron: "0 2 * * *"
 
   # Push a main-re (csak tracks.md változásnál)
   push:
     branches: [main]
     paths:
-      - 'conductor/tracks.md'
-      - 'conductor/tracks/**'
+      - "conductor/tracks.md"
+      - "conductor/tracks/**"
 
 # Self-hosted runner szükséges a lokális fájlok eléréséhez
 jobs:
   sync:
     name: Cloud Sync
-    runs-on: self-hosted  # Lokális runner: G:\Brunella\actions-runner
+    runs-on: self-hosted # Lokális runner: G:\Brunella\actions-runner
 
     steps:
+      - name: Validate Secrets
+        run: |
+          if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
+            echo "::error::CLOUDFLARE_API_TOKEN secret is not set"
+            exit 1
+          fi
+
       - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install dependencies
         run: |
@@ -66,9 +73,9 @@ jobs:
           python sync_to_r2.py ${{ github.event.inputs.sync_type || 'full' }}
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          LANCEDB_PATH: 'F:/mcp-brunella-core/.lancedb'
-          R2_BUCKET: 'vodor1'
-          R2_PREFIX: 'Brunella_core'
+          LANCEDB_PATH: "F:/mcp-brunella-core/.lancedb"
+          R2_BUCKET: "vodor1"
+          R2_PREFIX: "Brunella_core"
 
       - name: Update D1 Metadata
         if: success()
@@ -113,7 +120,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install and Deploy
         run: |

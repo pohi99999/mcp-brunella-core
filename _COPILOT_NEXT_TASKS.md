@@ -44,7 +44,7 @@ A Brunella Agent System egy AI multi-agent rendszer, amely automatizálja a szof
 
 ---
 
-## Prioritás 3: ProjectConductor CLI Integráció
+## Prioritás 3: ProjectConductor CLI Integráció [KÉSZ]
 
 **Fájlok:**
 - `src/cli.ts`
@@ -57,35 +57,30 @@ A Brunella Agent System egy AI multi-agent rendszer, amely automatizálja a szof
 2. Delegálj a ProjectConductorAgent-nek
 3. Támogatott parancsok: `status`, `sync`, `health`, `track create <name>`
 
-**Kód helye:** `src/cli.ts` ~150. sor körül, a parancs routing résznél
+**Státusz:** ✅ KÉSZ (2026-02-14)
+- CLI sub-process port collision (3000) kijavítva a `mcpClient.ts`-ben.
+- `conductor` subcommand implementálva.
 
 ---
 
-## Prioritás 4: Gemini Workflow Timeout Bővítés
+## Prioritás 4: Gemini Workflow Timeout Bővítés [KÉSZ]
 
 **Fájlok:**
 - `.github/workflows/gemini-review.yml`
 - `.github/workflows/gemini-triage.yml`
 - `.github/workflows/gemini-scheduled-triage.yml`
 
-**Feladat:** Add hozzá `timeout-minutes: 15` mindegyik job-hoz (mint a gemini-invoke.yml-ben már megvan).
+**Státusz:** ✅ KÉSZ (2026-02-14)
+- `timeout-minutes: 15` hozzáadva minden Gemini workflow-hoz.
 
 ---
 
-## Prioritás 5: Secrets Validáció Workflow-kban
+## Prioritás 5: Secrets Validáció Workflow-kban [KÉSZ]
 
 **Fájl:** `.github/workflows/*.yml`
 
-**Feladat:** Add hozzá secrets létezés ellenőrzést a workflow-k elejére:
-
-```yaml
-- name: Validate secrets
-  run: |
-    if [ -z "${{ secrets.CLOUDFLARE_API_TOKEN }}" ]; then
-      echo "::error::CLOUDFLARE_API_TOKEN secret is not set"
-      exit 1
-    fi
-```
+**Státusz:** ✅ KÉSZ (2026-02-14)
+- Secrets validáció (existence check) hozzáadva a Gemini és BAS sync workflow-khoz.
 
 ---
 
