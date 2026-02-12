@@ -19,7 +19,7 @@ import {
 
 export function EdgePanel() {
   const wsUrl =
-    import.meta.env.VITE_EDGE_WS_URL || "ws://localhost:3000/ws";
+    import.meta.env.VITE_EDGE_WS_URL || "wss://bas-orchestrator.iam-dd1.workers.dev/ws";
 
   const {
     status,
