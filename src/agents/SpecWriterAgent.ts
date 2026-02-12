@@ -579,3 +579,5 @@ ${requirements.integrations.cli}
     }
   }
 }
+
+export default SpecWriterAgent;

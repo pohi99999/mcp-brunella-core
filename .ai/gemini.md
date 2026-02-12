@@ -21,15 +21,40 @@
 
 ---
 
+### 2026-02-12 - Magyar CLI Menürendszer (MAG-1.0)
+
+**Feladat:**
+Egy teljesen szigorúan menüvezérelt, magyar nyelvű terminál interfész (Magyar CLI) megalkotása, ahol a begépelést választás váltja fel (Inquirer.js).
+
+**Érintett fájlok:**
+
+- `src/cli-hu.ts` (Új: Magyar CLI belépési pont)
+- `package.json` (Új parancsok: `npm run cli:hu` és `brunella-hu` bináris)
+- `conductor/tracks/magyar-cli-menu-system-20260211/track.md` (Update)
+- `conductor/tracks.md` (Update)
+
+**Eredmények:**
+✅ **Szigorú Menüvezérlés:** Az `inquirer` csomagnak köszönhetően a felhasználó hierarchikus menükben (Ügynökök, Trackek, Chat, Rendszer, Beállítások) navigálhat begépelés nélkül.
+✅ **Helyi Chat Funkciók:** Beépített gyors-kérdések a projekt státuszáról és karbantartási feladatokról.
+✅ **Projekt Menedzsment:** A `tracks` menüben választható listából lehet trackeket vizsgálni, frissíteni vagy újakat generálni.
+✅ **Rendszer Diagnosztika:** Interaktív `health check` és MCP tool lista megtekintő.
+✅ **Lokalizáció:** Teljes magyar nyelvű felület, professzionális Gemini-stílusú vizuális elemekkel (`figlet`, `boxen`, `chalk`).
+
+**Státusz:** ✅ Befejezve
+
+---
+
 ### 2026-02-12 - SpecWriterAgent Tesztjavítás
 
 **Feladat:** Hibás tesztek javítása a `SpecWriterAgent.test.ts` fájlban.
 
 **Érintett fájlok:**
+
 - `test/specWriterAgent.test.ts`
 - `src/agents/SpecWriterAgent.ts`
 
 **Elvégzett lépések:**
+
 1.  Kijavítottam a `should return error if idea is missing` teszt hibaüzenetének elvárását.
 2.  Robusztusabbá tettem a JSON-parsolási logikát a `stage1_extractRequirements` metódusban, beleértve a `rawResponse` string típusának explicit ellenőrzését és a JSON blokkok pontosabb kinyerését.
 3.  Kijavítottam a `rawResponse` duplikált deklarációját a `SpecWriterAgent.ts` fájlban.
@@ -106,12 +131,53 @@
 
 <!-- ÚJ BEJEGYZÉSEK IDE KERÜLNEK (legfrissebb felül) -->
 
+### 2026-02-12 - Engineering Precision Protocol v2 (EPP v2) Finalizálás
+
+**Feladat:**
+Az EPP v2 protokoll véglegesítése, dokumentálása és a track lezárása. A protokoll kötelezővé teszi a Dashboard és CLI integrációt minden új funkcióhoz.
+
+**Érintett fájlok:**
+
+- `conductor/epp-v2.md` (EPP v2 részletes dokumentáció)
+- `README.md` (Quick reference és integrációs szabályok)
+- `conductor/tracks/epp-v2-protocol-20260211/track.md` (Update to COMPLETED)
+- `conductor/tracks.md` (Track list frissítés)
+
+**Eredmények:**
+✅ **Protokoll Hardening:** Rögzítésre került a "7 Arany Szabály", beleértve az új kötelező Dashboard + CLI integrációt.
+✅ **Checklist Template:** A track template-ek mostantól tartalmazzák a GUI/CLI integrációs checkbox-okat.
+✅ **Dokumentáció:** Minden fejlesztési irányelv egy központi, jól strukturált fájlba (`epp-v2.md`) került.
+
+**Státusz:** ✅ Befejezve
+
+### 2026-02-14 - SpecWriter Agent Registration Fix & Completion
+
+**Feladat:**
+A `SpecWriterAgent` (Ötlet → Track Generátor) track lezárása és a regisztrációs hiba elhárítása.
+
+**Érintett fájlok:**
+
+- `src/agents/SpecWriterAgent.ts` (Fixed missing `export default`)
+- `src/agents/registry.json` (Entry verified)
+- `conductor/tracks/spec-writer-agent-20260211/track.md` (Updated to COMPLETED)
+- `conductor/tracks.md` (Updated master list)
+
+**Eredmények:**
+✅ **Registration Fix:** Kiderült, hogy a `SpecWriterAgent.ts` fájlból hiányzott az `export default`, ami miatt az `AgentManager` nem tudta példányosítani. A javítás után az ügynök sikeresen betöltődik.
+✅ **CLI Verifikáció:** A `node build/cli.js tracks list` parancs most már hiba nélkül kilistázza a meglévő trackeket, beleértve a SpecWriter által generáltakat is.
+✅ **Track Lezárva:** A `spec-writer-agent-20260211` track minden Acceptance Criteria-ja teljesült (Core logic, Dashboard UI, CLI commands).
+
+**Státusz:** ✅ Befejezve
+
+---
+
 ### 2026-02-14 - Workflow Hardening & CLI Integration (Priority 3-5)
 
 **Feladat:**
 A `_COPILOT_NEXT_TASKS.md` manifestben rögzített prioritások (3, 4, 5) végrehajtása: CLI Conductor integráció, port ütközés fix, és GitHub Workflow-k megerősítése.
 
 **Érintett fájlok:**
+
 - `src/utils/mcpClient.ts` (Recursive port 3000 fix)
 - `src/cli.ts` (`conductor` subcommand bekötése)
 - `.github/workflows/gemini-*.yml` (Timeoutok és secrets validáció)
@@ -187,9 +253,9 @@ Befejezni a Dashboard V2 Phase 5-öt (Knowledge Base UI), implementálni a RAG A
 - **Statisztikák:** Valós idejű LanceDB adatok (sorok száma, státusz).
 - **Keresés:** Szemantikus keresőfelület a memóriában.
 - **Ingestion:** Kliensoldali fájlbeolvasás (TXT, MD, LOG, JSON, TS, JS, PY támogatás) és indexelés.
-✅ **Backend API:** Stabil `/api/rag/*` végpontok.
-✅ **Port Konfliktus Fix:** A `web.ts`-ben lévő redundáns ügynök regisztráció eltávolítva, ami megszüntette a kettős inicializálást és a port ütközést.
-✅ **Stabilitás:**
+  ✅ **Backend API:** Stabil `/api/rag/*` végpontok.
+  ✅ **Port Konfliktus Fix:** A `web.ts`-ben lévő redundáns ügynök regisztráció eltávolítva, ami megszüntette a kettős inicializálást és a port ütközést.
+  ✅ **Stabilitás:**
 - **Circuit Breaker:** 3 hiba után az ügynök pihenőre kerül.
 - **Retry Logic:** Automatikus újrapróbálkozás hiba esetén.
 

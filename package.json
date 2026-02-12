@@ -6,7 +6,8 @@
   "main": "build/index.js",
   "bin": {
     "brunella": "./build/cli.js",
-    "brunella-jules": "./build/cli-jules-interactive.js"
+    "brunella-jules": "./build/cli-jules-interactive.js",
+    "brunella-hu": "./build/cli-hu.js"
   },
   "scripts": {
     "build": "tsc",
@@ -17,6 +18,7 @@
     "mcp:run": "node build/index.js",
     "cli:run": "node build/cli.js",
     "cli": "node build/cli.js",
+    "cli:hu": "node build/cli-hu.js",
     "test": "npm run build && vitest run",
     "lint": "eslint src/ test/ --max-warnings=0",
     "lint:fix": "eslint src/ test/ --fix",
