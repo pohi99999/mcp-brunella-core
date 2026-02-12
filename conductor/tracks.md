@@ -1,7 +1,7 @@
 # Projekt Nyomkövetés (Tracks)
 
-**Utolsó frissítés:** 2026-02-12T18:05:00.000Z
-**Generátor:** Claude AI (Auto-Update via Cloudflare Track Completion)
+**Utolsó frissítés:** 2026-02-12T18:30:00.000Z
+**Generátor:** Claude AI (Iteration 2 Track Created)
 
 Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
@@ -23,13 +23,19 @@ Ez a fájl követi nyomon a fő fejlesztési szálakat (tracks).
 
 ---
 
-## 🚀 Aktív Szálak (5)
+## 🚀 Aktív Szálak (6)
 
 - [ ] **Agent Architect 2.0 Meta-Ügynök** [MEDIUM]
   - **ID:** `agent_architect_upgrade_20260205`
   - **Progress:** 25%
   - **Utolsó aktivitás:** 2026-02-05
   - 📂 _[./tracks/agent_architect_upgrade_20260205/](./tracks/agent_architect_upgrade_20260205/)_
+
+- [ ] **Cloudflare Chat Integration - Iteration 2 (WebSocket + D1 + CLI)** [HIGH]
+  - **ID:** `cloudflare-iteration-2-20260212`
+  - **Progress:** 0%
+  - **Utolsó aktivitás:** 2026-02-12
+  - 📂 _[./tracks/cloudflare-iteration-2-20260212/](./tracks/cloudflare-iteration-2-20260212/)_
 
 - [ ] **Jules Async Test Automation (GitHub Actions)** [HIGH]
   - **ID:** `jules-async-test-automation-20260211`
