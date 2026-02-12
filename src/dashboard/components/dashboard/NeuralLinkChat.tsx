@@ -33,6 +33,25 @@ interface Message {
 
 type ChatMode = 'orchestrator' | 'ollama' | 'github' | 'gemini' | 'cloudflare';
 
+const MAX_CONTEXT_MESSAGES = 10;
+
+function buildConversationPrompt(history: Message[], userInput: string): string {
+  const recent = history.slice(-MAX_CONTEXT_MESSAGES);
+  if (recent.length === 0) return userInput;
+
+  const rendered = recent
+    .map((m) => `${m.role === 'user' ? 'Felhasználó' : 'Asszisztens'}: ${m.content}`)
+    .join('\n');
+
+  return [
+    'Korábbi beszélgetés (rövid kontextus):',
+    rendered,
+    '',
+    `Új felhasználói üzenet: ${userInput}`,
+    'Válaszolj természetesen, magyarul, a kontextust figyelembe véve.',
+  ].join('\n');
+}
+
 export function NeuralLinkChat() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState('');
@@ -86,39 +105,53 @@ export function NeuralLinkChat() {
     setIsLoading(true);
 
     try {
-      let response: any;
+      const conversationPrompt = buildConversationPrompt(messages, text);
+      let response: unknown;
       if (mode === 'orchestrator') {
-        response = await api.executeAgent('Orchestrator', text);
+        response = await api.executeAgent('Orchestrator', text, {
+          chatMode: mode,
+          history: messages.map((m) => ({ role: m.role, content: m.content, timestamp: m.timestamp })),
+        });
       } else if (mode === 'cloudflare') {
         const edge = await api.submitCloudflareTask(text, {
           history: messages.map((m) => ({ role: m.role, content: m.content })),
         });
         response = {
           message:
-            typeof (edge as any)?.result === 'string'
-              ? (edge as any).result
-              : (edge as any)?.result?.response || (edge as any)?.message || JSON.stringify(edge),
+            typeof edge.result === 'string'
+              ? edge.result
+              : (typeof edge.result === 'object' && edge.result !== null && 'response' in edge.result
+                ? String((edge.result as { response?: unknown }).response ?? '')
+                : edge.message || JSON.stringify(edge)),
         };
       } else if (mode === 'github') {
-        const rawResponse = await api.generateWithGithubModels(text, selectedGhModel || undefined);
+        const rawResponse = await api.generateWithGithubModels(conversationPrompt, selectedGhModel || undefined);
         response = { message: rawResponse };
       } else if (mode === 'gemini') {
-        const rawResponse = await api.generateWithGemini(text, selectedGeminiModel || undefined);
+        const rawResponse = await api.generateWithGemini(conversationPrompt, selectedGeminiModel || undefined);
         response = { message: rawResponse };
       } else {
-        const rawResponse = await api.generateWithOllama(text, selectedModel || undefined);
+        const rawResponse = await api.generateWithOllama(conversationPrompt, selectedModel || undefined);
         response = { message: rawResponse };
       }
+
+      const r = typeof response === 'object' && response !== null ? response as {
+        message?: unknown;
+        data?: unknown;
+        thoughts?: string;
+        contextUsed?: string[];
+        executedBy?: string;
+      } : null;
 
       setMessages((prev) => [
         ...prev,
         {
           role: 'assistant',
-          content: typeof response === 'object' ? (response.message || response.data || JSON.stringify(response)) : String(response),
+          content: r ? String(r.message ?? r.data ?? JSON.stringify(response)) : String(response),
           timestamp: Date.now(),
-          thoughts: response.thoughts,
-          contextUsed: response.contextUsed,
-          executedBy: response.executedBy
+          thoughts: r?.thoughts,
+          contextUsed: r?.contextUsed,
+          executedBy: r?.executedBy
         },
       ]);
     } catch (e: unknown) {

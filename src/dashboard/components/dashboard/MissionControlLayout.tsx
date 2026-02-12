@@ -55,6 +55,7 @@ import { TrackProgressWidget } from "./TrackProgress";
 
 const SIDEBAR_ITEMS = [
   { id: "dashboard", label: "Mission Control", icon: LayoutDashboard },
+  { id: "chat", label: "Chat", icon: MessageSquare },
   { id: "management", label: "Agents", icon: Sparkles },
   { id: "decomposer", label: "Decompose", icon: Network },
   { id: "tracks", label: "Tracks", icon: Rocket },
