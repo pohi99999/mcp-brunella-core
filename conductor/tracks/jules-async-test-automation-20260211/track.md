@@ -100,3 +100,11 @@ CLI:
 - GitHub API integration
 - Trend display
 ```
+
+---
+
+## 📝 Napló
+
+### 2026-02-12
+
+- Spec-first: `spec.md` létrehozva, `meta.json` → `spec_status: pending_approval`.
