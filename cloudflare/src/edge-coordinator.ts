@@ -1,8 +1,8 @@
-import { Env } from './types.js';
+import { Env } from "./types.js";
 
 /**
  * EdgeCoordinator - Durable Object for real-time WebSocket communication
- * 
+ *
  * Responsibilities:
  * 1. Maintain persistent WebSocket connections
  * 2. Route messages to specific clients
@@ -16,7 +16,7 @@ export class EdgeCoordinator implements DurableObject {
   constructor(state: DurableObjectState, env: Env) {
     this.state = state;
     this.sessions = new Map();
-    
+
     // Restore sessions from storage if needed (optional for pure signaling)
     // this.state.blockConcurrencyWhile(async () => {
     //   // restoration logic
@@ -41,7 +41,7 @@ export class EdgeCoordinator implements DurableObject {
     // Default HTTP behavior if not WebSocket
     // Useful for direct communication with the DO via HTTP
     const url = new URL(request.url);
-    
+
     if (url.pathname === "/broadcast" && request.method === "POST") {
       const payload = await request.json();
       this.broadcast(payload);
@@ -54,11 +54,11 @@ export class EdgeCoordinator implements DurableObject {
   private async handleSession(webSocket: WebSocket) {
     // Generate unique session ID
     const sessionId = crypto.randomUUID();
-    
+
     // Accept the WebSocket
     webSocket.accept();
     this.sessions.set(sessionId, webSocket);
-    
+
     // Set up event listeners
     webSocket.addEventListener("message", async (msg) => {
       try {
@@ -73,7 +73,7 @@ export class EdgeCoordinator implements DurableObject {
     webSocket.addEventListener("close", () => {
       this.sessions.delete(sessionId);
     });
-    
+
     webSocket.addEventListener("error", () => {
       this.sessions.delete(sessionId);
     });
@@ -86,12 +86,12 @@ export class EdgeCoordinator implements DurableObject {
         const ws = this.sessions.get(sessionId);
         ws?.send(JSON.stringify({ type: "pong", timestamp: Date.now() }));
         break;
-        
+
       case "task:submit":
         // Handle task submission directly via WebSocket if supported
         // In current architecture, we use HTTP POST -> Worker -> DO broadcast
         break;
-        
+
       default:
         // Echo or handle other types
         break;

@@ -99,7 +99,9 @@ async function postCloudflareChat(
       }
 
       const extracted = extractMessageFromPayload(parsed);
-      const message = extracted || (typeof parsed === "string" ? parsed : JSON.stringify(parsed));
+      const message =
+        extracted ||
+        (typeof parsed === "string" ? parsed : JSON.stringify(parsed));
 
       if (!message || !message.trim()) {
         lastError = `Empty response at ${endpoint}`;
@@ -137,11 +139,16 @@ export function createCloudflareRoutes(): Router {
     try {
       const edgeStatus = agentManager.getEdgeStatus();
       if (!edgeStatus.enabled) {
-        res.status(503).json({ error: "Edge disabled (set EDGE_ENABLED=true)" });
+        res
+          .status(503)
+          .json({ error: "Edge disabled (set EDGE_ENABLED=true)" });
         return;
       }
 
-      const instruction = typeof req.body?.instruction === "string" ? req.body.instruction.trim() : "";
+      const instruction =
+        typeof req.body?.instruction === "string"
+          ? req.body.instruction.trim()
+          : "";
       const context = (req.body?.context ?? {}) as Record<string, unknown>;
 
       if (!instruction) {
@@ -161,7 +168,9 @@ export function createCloudflareRoutes(): Router {
     try {
       const edgeStatus = agentManager.getEdgeStatus();
       if (!edgeStatus.enabled) {
-        res.status(503).json({ error: "Edge disabled (set EDGE_ENABLED=true)" });
+        res
+          .status(503)
+          .json({ error: "Edge disabled (set EDGE_ENABLED=true)" });
         return;
       }
 
@@ -186,7 +195,9 @@ export function createCloudflareRoutes(): Router {
         /* If edge disabled, return empty or cached? 
            For now we assume if they ask for history, they want remote history. 
            But if disabled, we can't fetch it. */
-        res.status(503).json({ error: "Edge disabled (set EDGE_ENABLED=true)" });
+        res
+          .status(503)
+          .json({ error: "Edge disabled (set EDGE_ENABLED=true)" });
         return;
       }
 
@@ -216,9 +227,7 @@ export function createCloudflareRoutes(): Router {
               if (!item || typeof item !== "object") return null;
               const r = item as Record<string, unknown>;
               const role =
-                r.role === "user" || r.role === "assistant"
-                  ? r.role
-                  : null;
+                r.role === "user" || r.role === "assistant" ? r.role : null;
               const content =
                 typeof r.content === "string" ? r.content.trim() : "";
               if (!role || !content) return null;

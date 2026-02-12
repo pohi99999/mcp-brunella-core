@@ -3,13 +3,16 @@
   "name": "bas-orchestrator",
   "main": "src/index.ts",
   "compatibility_date": "2024-01-01",
-  "compatibility_flags": ["nodejs_compat"],
-  
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   // KV Namespaces
   "kv_namespaces": [
-    { "binding": "BAS_TASKS", "id": "YOUR_KV_ID_HERE" }
+    {
+      "binding": "BAS_TASKS",
+      "id": "YOUR_KV_ID_HERE"
+    }
   ],
-  
   // D1 Database (Phase 3)
   "d1_databases": [
     {
@@ -18,23 +21,22 @@
       "database_id": "YOUR_D1_DATABASE_ID"
     }
   ],
-  
   // Durable Objects (Phase 2)
   "durable_objects": {
     "bindings": [
-      { "name": "EDGE_COORDINATOR", "class_name": "EdgeCoordinator" }
+      {
+        "name": "EDGE_COORDINATOR",
+        "class_name": "EdgeCoordinator"
+      }
     ]
   },
-  
   // Workers AI binding
   "ai": {
     "binding": "AI"
   },
-  
   // Environment variables (set via wrangler secret)
   // BAS_LOCAL_URL - Your local tunnel URL
   // BAS_API_KEY - API key for authentication
-  
   // Development settings
   "dev": {
     "port": 8787,

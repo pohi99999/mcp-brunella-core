@@ -9,14 +9,14 @@
 
 ## Fázisok Áttekintése
 
-| Fázis | Komponens                     | Idő     | Progress | Státusz    |
-| ----- | ----------------------------- | ------- | -------- | ---------- |
-| 1     | WebSocket Backend Setup       | 2h      | 0%       | ⏳ PENDING |
-| 2     | Worker Durable Objects        | 1.5h    | 0%       | ⏳ PENDING |
-| 3     | D1 Schema + Queries           | 1.5h    | 0%       | ⏳ PENDING |
-| 4     | CLI Commands (5 commands)     | 1h      | 0%       | ⏳ PENDING |
-| 5     | Dashboard WebSocket Hook      | 0.5h    | 0%       | ⏳ PENDING |
-| 6     | Tests + Documentation         | 1h      | 0%       | ⏳ PENDING |
+| Fázis      | Komponens                 | Idő      | Progress | Státusz    |
+| ---------- | ------------------------- | -------- | -------- | ---------- |
+| 1          | WebSocket Backend Setup   | 2h       | 0%       | ⏳ PENDING |
+| 2          | Worker Durable Objects    | 1.5h     | 0%       | ⏳ PENDING |
+| 3          | D1 Schema + Queries       | 1.5h     | 0%       | ⏳ PENDING |
+| 4          | CLI Commands (5 commands) | 1h       | 0%       | ⏳ PENDING |
+| 5          | Dashboard WebSocket Hook  | 0.5h     | 0%       | ⏳ PENDING |
+| 6          | Tests + Documentation     | 1h       | 0%       | ⏳ PENDING |
 | **Totals** | **6 phases**              | **7.5h** | **0%**   | ⏳ PENDING |
 
 ---
@@ -24,6 +24,7 @@
 ## Phase 1: WebSocket Backend Setup (2 hours)
 
 ### Célok
+
 - Socket.io szerver inicializálása
 - WebSocket event handlers implementálása
 - Backend HTTP szerver integrációja
@@ -32,6 +33,7 @@
 ### Tasks
 
 #### Task 1.1: Dependencies Install (10 min)
+
 ```bash
 npm install socket.io @types/socket.io
 npm install socket.io-client  # Frontend
@@ -75,7 +77,7 @@ export function initializeWebSocketServer(httpServer: any): Server {
             clearInterval(interval);
             socket.emit("edge:task:complete", status);
           }
-        }, 2000);  // Poll every 2s (future: replace with Worker push)
+        }, 2000); // Poll every 2s (future: replace with Worker push)
       } catch (error: any) {
         logError("WebSocket", `Task submit error: ${error.message}`);
         socket.emit("edge:task:error", { error: error.message });
@@ -104,7 +106,8 @@ export function initializeWebSocketServer(httpServer: any): Server {
 }
 ```
 
-**Success Criteria**: 
+**Success Criteria**:
+
 - Module compiles without errors
 - Exports `initializeWebSocketServer` function
 - Handles 2 events (task:submit, chat:message)
@@ -129,7 +132,8 @@ const io = initializeWebSocketServer(server);
 logInfo("WebSocket", "Socket.io server initialized");
 ```
 
-**Success Criteria**: 
+**Success Criteria**:
+
 - Backend starts without errors
 - WebSocket server listens on same port as HTTP
 
@@ -160,7 +164,7 @@ let serverPort = 3001;
 beforeAll(async () => {
   // Start test server
   const server = app.listen(serverPort);
-  
+
   // Connect client
   clientSocket = ioClient(`http://localhost:${serverPort}`, {
     transports: ["websocket"],
@@ -189,7 +193,8 @@ describe("WebSocket Server", () => {
 });
 ```
 
-**Success Criteria**: 
+**Success Criteria**:
+
 - Tests pass (2/2)
 - WebSocket connection established
 - Task submit event handled
@@ -199,6 +204,7 @@ describe("WebSocket Server", () => {
 ## Phase 2: Worker Durable Objects (1.5 hours)
 
 ### Célok
+
 - Durable Objects WebSocket support
 - Client session management
 - Broadcasting messages to connected clients
@@ -238,11 +244,13 @@ export class EdgeCoordinator {
         if (data.type === "task:submit") {
           // Process task
           const taskId = crypto.randomUUID();
-          
+
           // Save to D1
           await this.env.DB.prepare(
-            "INSERT INTO tasks (id, instruction, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?)"
-          ).bind(taskId, data.instruction, "pending", Date.now(), Date.now()).run();
+            "INSERT INTO tasks (id, instruction, status, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
+          )
+            .bind(taskId, data.instruction, "pending", Date.now(), Date.now())
+            .run();
 
           // Broadcast to all clients
           this.broadcast({ type: "task:submitted", taskId });
@@ -288,6 +296,7 @@ export class EdgeCoordinator {
 ```
 
 **Success Criteria**:
+
 - Class compiles
 - WebSocket upgrade returns 101
 - Sessions map tracks clients
@@ -317,6 +326,7 @@ database_id = "your-d1-database-id"  # From wrangler d1 create
 ```
 
 **Success Criteria**:
+
 - Durable Objects binding configured
 - Migration defined
 
@@ -331,6 +341,7 @@ wscat -c wss://brunella-edge.YOUR_SUBDOMAIN.workers.dev/ws
 ```
 
 **Success Criteria**:
+
 - Worker deploys successfully
 - WebSocket connection established
 - Can send/receive messages
@@ -340,6 +351,7 @@ wscat -c wss://brunella-edge.YOUR_SUBDOMAIN.workers.dev/ws
 ## Phase 3: D1 Schema + Queries (1.5 hours)
 
 ### Célok
+
 - D1 database létrehozása
 - Schema migration
 - INSERT/SELECT queries implementálása
@@ -379,11 +391,13 @@ CREATE INDEX idx_tasks_completed_at ON tasks(completed_at);
 ```
 
 **Apply Migration**:
+
 ```bash
 wrangler d1 execute brunella-edge-tasks --file=./migrations/0001_create_tasks.sql
 ```
 
-**Success Criteria**: 
+**Success Criteria**:
+
 - Table created
 - Indexes created
 - Schema queryable
@@ -425,7 +439,10 @@ export async function updateTaskStatus(
 }
 
 export async function getTask(db: D1Database, taskId: string): Promise<any> {
-  return await db.prepare("SELECT * FROM tasks WHERE id = ?").bind(taskId).first();
+  return await db
+    .prepare("SELECT * FROM tasks WHERE id = ?")
+    .bind(taskId)
+    .first();
 }
 
 export async function getRecentTasks(
@@ -444,6 +461,7 @@ export async function getRecentTasks(
 ```
 
 **Success Criteria**:
+
 - 4 functions implemented
 - Type-safe D1 queries
 - No compilation errors
@@ -479,6 +497,7 @@ app.get("/api/cloudflare/history", async (req, res) => {
 ```
 
 **Success Criteria**:
+
 - Endpoint returns task array
 - Proxies request to Worker
 - Error handling implemented
@@ -488,6 +507,7 @@ app.get("/api/cloudflare/history", async (req, res) => {
 ## Phase 4: CLI Commands (1 hour)
 
 ### Célok
+
 - 5 új CLI parancs regisztrálása
 - Színes terminal output (chalk)
 - Error handling + help text
@@ -501,6 +521,7 @@ app.get("/api/cloudflare/history", async (req, res) => {
 (Implementation in spec.md - full code provided)
 
 Key commands:
+
 1. `brunella edge status` - Health check
 2. `brunella edge chat "<msg>"` - Chat message
 3. `brunella edge task "<instruction>"` - Submit task
@@ -508,6 +529,7 @@ Key commands:
 5. `brunella edge history [--limit N]` - List recent tasks
 
 **Success Criteria**:
+
 - All 5 commands implemented
 - chalk for colored output
 - Error handling (try/catch + process.exit(1))
@@ -527,6 +549,7 @@ program.parse();
 ```
 
 **Success Criteria**:
+
 - Commands appear in `brunella --help`
 - `brunella edge --help` lists 5 subcommands
 
@@ -541,6 +564,7 @@ node build/cli/index.js edge history --limit 5
 ```
 
 **Success Criteria**:
+
 - All commands execute without crash
 - Colored output displays correctly
 - Errors handled gracefully
@@ -550,6 +574,7 @@ node build/cli/index.js edge history --limit 5
 ## Phase 5: Dashboard WebSocket Hook (30 min)
 
 ### Célok
+
 - Custom React hook WebSocket connection kezelésére
 - Auto-reconnect logika
 - NeuralLinkChat integráció
@@ -622,6 +647,7 @@ export function useWebSocket(url: string): UseWebSocketReturn {
 ```
 
 **Success Criteria**:
+
 - Hook compiles
 - Auto-reconnect works
 - Exposes emit/on methods
@@ -655,6 +681,7 @@ useEffect(() => {
 ```
 
 **Success Criteria**:
+
 - Component compiles
 - WebSocket connection badge updates (green when connected)
 - Real-time task updates display
@@ -664,6 +691,7 @@ useEffect(() => {
 ## Phase 6: Tests + Documentation (1 hour)
 
 ### Célok
+
 - WebSocket tests (connection, events)
 - D1 query tests (mocks)
 - CLI tests (fetch mocks)
@@ -676,6 +704,7 @@ useEffect(() => {
 **File**: `test/websocket.test.ts` (from Phase 1)
 
 Add more tests:
+
 - Task submit → task:submitted event
 - Chat message → chat:token event
 - Disconnect handling
@@ -711,9 +740,7 @@ describe("D1 Queries", () => {
     const mockDB = {
       prepare: vi.fn().mockReturnValue({
         bind: vi.fn().mockReturnValue({
-          first: vi
-            .fn()
-            .mockResolvedValue({ id: "task-1", status: "success" }),
+          first: vi.fn().mockResolvedValue({ id: "task-1", status: "success" }),
         }),
       }),
     };
@@ -766,12 +793,14 @@ describe("Edge CLI Commands", () => {
 Add new sections:
 
 **WebSocket Integration**:
+
 ```markdown
 ### WebSocket Real-time Communication
 
 Backend exposes Socket.io server at `http://localhost:3000/socket.io/`.
 
 **Events**:
+
 - `edge:task:submit` - Submit task
 - `edge:task:submitted` - Task submitted (returns taskId)
 - `edge:task:complete` - Task completed (returns result)
@@ -780,6 +809,7 @@ Backend exposes Socket.io server at `http://localhost:3000/socket.io/`.
 ```
 
 **D1 Storage**:
+
 ```markdown
 ### D1 Persistent Task Storage
 
@@ -791,7 +821,8 @@ All tasks are stored in Cloudflare D1 (SQLite) database.
 ```
 
 **CLI Commands**:
-```markdown
+
+````markdown
 ### CLI Edge Commands
 
 ```bash
@@ -801,9 +832,11 @@ brunella edge task "instruction"  # Submit task
 brunella edge query <taskId>      # Query task status
 brunella edge history --limit 10  # List recent tasks
 ```
+````
+
 ```
 
-**Success Criteria**: 
+**Success Criteria**:
 - 3 new sections added
 - Examples provided
 - No markdown lint errors (critical)
@@ -874,5 +907,6 @@ If critical issues arise:
 
 ---
 
-**Status**: ⏳ **PENDING_APPROVAL**  
+**Status**: ⏳ **PENDING_APPROVAL**
 **Ready to Start**: Awaiting user confirmation
+```
