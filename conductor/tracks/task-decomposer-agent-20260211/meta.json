@@ -6,7 +6,7 @@
   "created": "2026-02-11",
   "updated": "2026-02-12",
   "owner": "Claude",
-  "spec_status": "draft",
+  "spec_status": "pending_approval",
   "progress": 0,
   "tags": ["agents", "orchestration", "dag", "parallelism", "dashboard", "cli"],
   "dependencies": [],
