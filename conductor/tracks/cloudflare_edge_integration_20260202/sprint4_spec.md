@@ -131,10 +131,12 @@ export default {
 ```toml
 # wrangler.toml
 [env.production.vars]
-CF_API_TOKEN = "xxxxx"
-CF_GLOBAL_API_KEY = "3d477d3095d6174dd1f904c710c22763f7655"
-CF_EMAIL = "peterpohankapersonal@gmail.com"
+CF_API_TOKEN = "***REDACTED***"
+CF_GLOBAL_API_KEY = "***REDACTED***"
+CF_EMAIL = "***REDACTED***"
 CLOUDFLARE_ACCOUNT_ID = "1bf6118df97f0e12f3592a89d90deb1e"
+
+> ⚠️ SECURITY NOTE: A fenti titkok korábban véletlenül bekerültek a repóba. Kezeld kompromittáltnak, és **rotáld** őket a Cloudflare dashboardon.
 ```
 
 ### **Cache Strategy**

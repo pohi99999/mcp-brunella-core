@@ -459,7 +459,108 @@ ${this.projectState.components.map((c) => `- **${c.name}:** ${c.status === "heal
     const updatedTracks: TrackState[] = [];
 
     for (const dir of trackDirs) {
+      const metaPath = path.join(tracksDir, dir, "meta.json");
+      const trackMdPath = path.join(tracksDir, dir, "track.md");
       const planPath = path.join(tracksDir, dir, "plan.md");
+
+      const existingTrack = this.projectState.tracks.find((t) => t.id === dir);
+
+      // Helper: map P0/P1/P2/P3 → TrackState priority
+      const priorityFromP = (p?: string): TrackState["priority"] => {
+        const v = (p || "").toLowerCase();
+        if (v.includes("p0")) return "critical";
+        if (v.includes("p1")) return "high";
+        if (v.includes("p2")) return "medium";
+        if (v.includes("p3")) return "low";
+        return this.parsePriority(p || "medium");
+      };
+
+      // 1) Prefer meta.json (structured source of truth)
+      if (fs.existsSync(metaPath)) {
+        try {
+          const raw = fs.readFileSync(metaPath, "utf-8");
+          const meta = JSON.parse(raw) as any;
+
+          const id = String(meta.track_id ?? meta.id ?? dir);
+          const name = String(meta.title ?? meta.name ?? dir);
+          const status = this.parseStatus(String(meta.status ?? "active"));
+          const priority = priorityFromP(String(meta.priority ?? "medium"));
+          const progress = Number(meta.progress ?? 0);
+          const lastActivity = String(
+            meta.updated_at ?? meta.updated ?? meta.lastActivity ?? "",
+          );
+
+          updatedTracks.push({
+            id,
+            name,
+            status,
+            priority,
+            progress: Number.isFinite(progress)
+              ? Math.max(0, Math.min(100, progress))
+              : 0,
+            lastActivity:
+              lastActivity || fs.statSync(metaPath).mtime.toISOString(),
+            blockers:
+              (meta.blockers as string[]) ?? existingTrack?.blockers ?? [],
+            assignee:
+              String(
+                meta.assigned_agent ??
+                  meta.assignee ??
+                  existingTrack?.assignee ??
+                  "",
+              ) || undefined,
+          });
+
+          continue;
+        } catch (e) {
+          logError(this.name, `meta.json parse hiba (${dir}): ${e}`);
+          // fall through to track.md/plan.md
+        }
+      }
+
+      // 2) Fallback: track.md (common in this repo)
+      if (fs.existsSync(trackMdPath)) {
+        try {
+          const content = fs.readFileSync(trackMdPath, "utf-8");
+          const firstHeading = content.match(/^#\s+(.+)$/m)?.[1]?.trim();
+          const name =
+            this.extractTrackNameFromContent(content) || firstHeading || dir;
+
+          const statusLine = content
+            .match(/\*\*Status:\*\*\s*([^\n]+)/i)?.[1]
+            ?.trim();
+          const priorityLine = content
+            .match(/\*\*(Priority|Prioritás):\*\*\s*([^\n]+)/i)?.[2]
+            ?.trim();
+          const progressLine = content.match(
+            /\*\*Progress:\*\*\s*(\d+)%/i,
+          )?.[1];
+
+          updatedTracks.push({
+            id: dir,
+            name,
+            status: this.parseStatus(
+              statusLine || existingTrack?.status || "active",
+            ),
+            priority: priorityFromP(
+              priorityLine || existingTrack?.priority || "medium",
+            ),
+            progress: parseInt(
+              progressLine || String(existingTrack?.progress ?? 0),
+            ),
+            lastActivity: fs.statSync(trackMdPath).mtime.toISOString(),
+            blockers: existingTrack?.blockers || [],
+            assignee: existingTrack?.assignee,
+          });
+
+          continue;
+        } catch (e) {
+          logError(this.name, `track.md parse hiba (${dir}): ${e}`);
+          // fall through to plan.md
+        }
+      }
+
+      // 3) Legacy: plan.md
       if (fs.existsSync(planPath)) {
         const content = fs.readFileSync(planPath, "utf-8");
 
@@ -467,10 +568,6 @@ ${this.projectState.components.map((c) => `- **${c.name}:** ${c.status === "heal
         const statusMatch = content.match(/Státusz:\s*([🟢🟡🔴⏸️✅])\s*(\w+)/);
         const progressMatch = content.match(/Progress:\s*(\d+)%/);
         const priorityMatch = content.match(/Prioritás:\s*(\w+)/i);
-
-        const existingTrack = this.projectState.tracks.find(
-          (t) => t.id === dir,
-        );
 
         updatedTracks.push({
           id: dir,
@@ -481,7 +578,9 @@ ${this.projectState.components.map((c) => `- **${c.name}:** ${c.status === "heal
           priority: this.parsePriority(
             priorityMatch?.[1] || existingTrack?.priority || "medium",
           ),
-          progress: parseInt(progressMatch?.[1] || "0"),
+          progress: parseInt(
+            progressMatch?.[1] || String(existingTrack?.progress ?? 0),
+          ),
           lastActivity: fs.statSync(planPath).mtime.toISOString(),
           blockers: existingTrack?.blockers || [],
           assignee: existingTrack?.assignee,
@@ -993,8 +1092,11 @@ Ez a mappa tartalmazza a Brunella projekt specifikáció-vezérelt fejlesztési 
   }
 
   private extractTrackNameFromContent(content: string): string | null {
-    const match = content.match(/^#\s*Track:\s*(.+)$/m);
-    return match?.[1]?.trim() || null;
+    const explicit = content.match(/^#\s*Track:\s*(.+)$/m);
+    if (explicit?.[1]?.trim()) return explicit[1].trim();
+
+    const heading = content.match(/^#\s+(.+)$/m);
+    return heading?.[1]?.trim() || null;
   }
 
   private parseStatus(status: string): TrackState["status"] {

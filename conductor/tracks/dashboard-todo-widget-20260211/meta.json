@@ -1,0 +1,15 @@
+{
+  "id": "dashboard-todo-widget-20260211",
+  "title": "Dashboard TODO Widget",
+  "status": "proposed",
+  "priority": "medium",
+  "created": "2026-02-11",
+  "updated": "2026-02-12",
+  "owner": "Claude",
+  "spec_status": "draft",
+  "progress": 0,
+  "tags": ["dashboard", "tracks", "todo", "realtime"],
+  "dependencies": [],
+  "estimated_effort": "medium",
+  "business_value": "Visible progress tracking"
+}

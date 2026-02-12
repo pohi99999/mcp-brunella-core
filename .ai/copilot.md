@@ -2,7 +2,152 @@
 
 **Agent:** GitHub Copilot (Pro+)
 **Fájl:** `.ai/copilot.md`
-**Utolsó frissítés:** 2026-02-11
+**Utolsó frissítés:** 2026-02-12
+
+---
+
+### 2026-02-12 - 🎼 Conductor Protokoll Futtatás (Stop-and-Fix + Track Hygiene) ✅
+
+**Feladat:** `conductor/tracks.md` alapján Conductor protokoll végrehajtása: init check, Stop-and-Fix (piros tesztek), secret hygiene, track packaging egységesítés.
+
+**Eredmények:**
+
+✅ **Conductor diagnostics:** `node scripts/conductor_diagnostics.mjs`
+
+- Jelzés: `mag.md` hiányzik (CRITICAL a diagnosztikában)
+
+✅ **Stop-and-Fix:** `SpecWriterAgent` tesztek zöldítése
+
+- `npx vitest run test/SpecWriterAgent.test.ts` — 10/10 PASS
+- `npm test` — 426/426 PASS ✅
+
+✅ **Security hygiene (titkok eltávolítása):**
+
+- `conductor/tracks/cloudflare-chat-integration-20260211/track.md` — Cloudflare token **REDACTED** + rotációs teendő
+- `conductor/tracks/cloudflare_edge_integration_20260202/sprint4_spec.md` — global key/email/token **REDACTED** + security note
+
+✅ **Track packaging egységesítés:** (hiányzó track mappák pótlása)
+
+- Létrehozva: `conductor/tracks/otel_agent_tracing_20260211/` (track.md + meta.json)
+- Létrehozva: `conductor/tracks/robotkez_stabilization_20260212/` (track.md + meta.json)
+- Létrehozva: `conductor/tracks/self_healing_core_20260213/` (track.md + meta.json)
+
+✅ **Központi registry frissítés:**
+
+- `conductor/tracks.md` kiegészítve a fenti track linkekkel
+
+**Megjegyzés:**
+
+- A `ProjectConductor` CLI-hívás korábban elhasalt (`agent_execute` tool hiány). Ez javítva lett (`agent_execute` MCP tool hozzáadva), és a `ProjectConductor "status"` + `"sync"` ismét futtatható.
+
+---
+
+### 2026-02-12 - 🧾 Meta/Progress Drift Rendezés + Conductor Registry Regenerálás ✅
+
+**Feladat:** A `meta.json` ↔ `conductor/tracks.md` drift rendezése (hiányzó `meta.json` pótlása, progress/status összehangolás), majd a Conductor registry újragenerálása.
+
+**Eredmények:**
+
+✅ **Hiányzó `meta.json` fájlok pótlása (nem-test trackek):**
+
+- Létrehozva többek közt:
+  - `conductor/tracks/cloudflare-chat-integration-20260211/meta.json`
+  - `conductor/tracks/cloudflare_edge_integration_20260202/meta.json`
+  - `conductor/tracks/code_quality_improvements_20260210/meta.json`
+  - `conductor/tracks/dashboard_v2_robotkez_control_20260208/meta.json`
+  - `conductor/tracks/dashboard-todo-widget-20260211/meta.json`
+  - `conductor/tracks/developer_agent_2_0_20260206/meta.json`
+  - `conductor/tracks/epp-v2-protocol-20260211/meta.json`
+  - `conductor/tracks/jules-async-test-automation-20260211/meta.json`
+  - `conductor/tracks/magyar-cli-menu-system-20260211/meta.json`
+  - `conductor/tracks/robotkez_n8n_sandbox_edzesterv/meta.json`
+  - `conductor/tracks/task-decomposer-agent-20260211/meta.json`
+
+✅ **Progress drift fix:**
+
+- `conductor/tracks/bas_comprehensive_test_protocol_20260210/meta.json`: progress **65 → 85** (tracks.md-hez igazítva)
+
+✅ **Conductor registry regenerálás:**
+
+- `ProjectConductor "track update"` lefuttatva → `conductor/tracks.md` újragenerálva és ismét konzisztens.
+
+✅ **Repo hygiene:**
+
+- Eltávolítva egy véletlenül bentmaradt teszt track artefakt, ami bekerült a registry-be:
+  - törölve: `conductor/tracks/test-track-12345678/track.md`
+
+✅ **Validáció:**
+
+- `npm run build` ✅
+- `npm test` ✅ (426/426 PASS)
+
+---
+
+### 2026-02-11 - 📡 OpenTelemetry Agent Tracing Integration (DONE! ✅)
+
+**Track:** `otel_agent_tracing_20260211`
+**Feladat:** OpenTelemetry (OTLP) tracing bevezetése az agent végrehajtási láncba, vizualizáció támogatása (Jaeger/Zipkin/Grafana Tempo).
+
+**Eredmények:**
+
+✅ **OpenTelemetry SDK Integráció (`src/utils/otelTracing.ts`, ÚJ):**
+
+- `initOtelTracing()`: NodeSDK inicializálás BatchSpanProcessor + OTLPTraceExporter-rel
+- `shutdownOtelTracing()`: Graceful flush & shutdown
+- `getOtelTracer()`: Globális tracer instance (`brunella-agent-tracer`)
+- OTLP HTTP endpoint: `http://localhost:4319/v1/traces` (konfigurálható `OTEL_EXPORTER_OTLP_ENDPOINT` env-vel)
+- Resource attribútumok: `service.name=brunella-agent-system`, `service.version=1.0.0`
+- `resourceFromAttributes()` használata (újabb @opentelemetry/resources API — `Resource` class type-only!)
+
+✅ **Agent Span Bridging (`src/utils/agentTracer.ts`, MÓDOSÍTOTT):**
+
+- Meglévő in-memory span rendszer + LangSmith upload **mellé** OTel span párhuzamos létrehozása
+- `startSpan()`: Új OTel span attribútumokkal (`agent.name`, `agent.operation`), `otelSpans` Map-ben tárolva
+- `endSpan()`: OTel span lezárása `StatusCode.OK` vagy `StatusCode.ERROR` státusszal, `duration` és `tokenUsage` attribútumokkal
+- Lazy tracer inicializálás (Worker kompatibilitás megőrzése)
+
+✅ **Startup & Shutdown Lifecycle (`src/index.ts`, MÓDOSÍTOTT):**
+
+- `initOtelTracing()` hívás a szerver indulásának legelején (dotenv után, mielőtt bármi más betöltődik)
+- `shutdownOtelTracing()` hívás graceful shutdown-kor (process.exit előtt)
+
+✅ **Validáció:**
+
+- `npm run build` — 0 TypeScript hiba ✅
+- `npx vitest run test/agentTracer.test.ts` — 16/16 teszt PASS ✅
+- TS2693 hiba javítva: `Resource` → `resourceFromAttributes()` (API változás az @opentelemetry/resources-ben)
+
+**Telepített csomagok (6 db):**
+
+- `@opentelemetry/sdk-node`
+- `@opentelemetry/api`
+- `@opentelemetry/exporter-trace-otlp-http`
+- `@opentelemetry/resources`
+- `@opentelemetry/semantic-conventions`
+- `@opentelemetry/sdk-trace-base`
+
+**Érintett fájlok:**
+
+- `src/utils/otelTracing.ts` (ÚJ)
+- `src/utils/agentTracer.ts` (MÓDOSÍTOTT — OTel span bridge)
+- `src/index.ts` (MÓDOSÍTOTT — lifecycle hooks)
+- `package.json` (6 @opentelemetry dependency)
+
+**Használat:**
+
+```bash
+# Jaeger indítása (Docker)
+docker run -d --name jaeger -p 4319:4318 -p 16686:16686 jaegertracing/all-in-one:latest
+
+# Brunella indítása — automatikus OTLP export
+npm run dev
+
+# Trace-ek megtekintése
+# http://localhost:16686 (Jaeger UI)
+```
+
+**Git:** `[pending]`
+**Következő:** Jaeger/Grafana Tempo Docker compose integráció, Dashboard TraceViewer bekötése az OTel adatokra.
 
 ---
 
@@ -21,11 +166,13 @@
 - **Megoldás:** `iframe` helyett natív UI + Python bridge megoldás az `X-Frame-Options` korlátozás kikerülésére.
 
 ✅ **Cloudflare Tunnel (Mobile Access):**
+
 - **Siker:** Dashboard sikeresen kivezetve az internetre (`trycloudflare.com`).
 - **Fix:** `cloudflared` alapértelmezett QUIC protokollja nem működött, `http2` kényszerítésével javítva (`--protocol http2`).
 - **Result:** Mobilról elérhető Mission Control felület.
 
 ✅ **System Health & Build:**
+
 - **Build Fix:** `src/cli.ts` TypeScript hiba (`TS7053`) javítva.
 - **Status:** `npm run build` sikeres (0 hiba).
 

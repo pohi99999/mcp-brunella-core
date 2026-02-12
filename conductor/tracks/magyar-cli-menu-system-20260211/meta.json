@@ -1,0 +1,15 @@
+{
+  "id": "magyar-cli-menu-system-20260211",
+  "title": "Magyar CLI Menürendszer (Teljes Átírás)",
+  "status": "proposed",
+  "priority": "critical",
+  "created": "2026-02-11",
+  "updated": "2026-02-12",
+  "owner": "Claude",
+  "spec_status": "draft",
+  "progress": 0,
+  "tags": ["cli", "i18n", "ux", "menus", "inquirer", "chalk"],
+  "dependencies": [],
+  "estimated_effort": "high",
+  "business_value": "No-typing, fully Hungarian interactive CLI"
+}

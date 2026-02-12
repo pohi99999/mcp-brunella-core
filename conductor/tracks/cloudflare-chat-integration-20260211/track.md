@@ -21,6 +21,7 @@ Cloudflare Workers WebSocket chat beágyazása a Dashboardba + CLI chat interfac
 ## 🔧 Technikai Követelmények
 
 ### Dashboard: src/dashboard/components/CloudflareChat.tsx
+
 - WebSocket connection (wss://chat-bas.peterpohanka.com/ws)
 - Real-time message display (Card + ScrollArea)
 - Input field + Send button
@@ -28,6 +29,7 @@ Cloudflare Workers WebSocket chat beágyazása a Dashboardba + CLI chat interfac
 - Reconnect mechanizmus
 
 ### CLI: src/cli-commands/chat-hu.ts
+
 ```
 1. 💬 Chat indítása
 2. 📜 Chat előzmények
@@ -37,18 +39,22 @@ Cloudflare Workers WebSocket chat beágyazása a Dashboardba + CLI chat interfac
 ```
 
 ### Backend: src/server/routes/cloudflare.ts
+
 - POST /api/chat/send → AgentManager + D1 storage
 - GET /api/chat/history/:userId → D1 query
 - WebSocket proxy (Socket.IO)
 
 ### Cloudflare D1 Integration
-- API Token: 25vuwcB9SnwLc6fVSMQSVNNm0rsyCcTPRKCmnr3A
+
+- API Token: **_REDACTED_**
+- ⚠️ Teendő: Cloudflare API token **azonnali rotálása** (a repo-ban korábban szerepelt).
 - Database ID: 1c4e7d00-7b09-4ddf-88b4-8df42e1123ab
 - Schema: messages (id, user_id, content, type, created_at)
 
 ## 📋 Implementation Plan
 
 ### Phase 1: Dashboard Component
+
 - [ ] CloudflareChat.tsx létrehozás
 - [ ] WebSocket setup (useState + useRef)
 - [ ] Message list rendering
@@ -57,6 +63,7 @@ Cloudflare Workers WebSocket chat beágyazása a Dashboardba + CLI chat interfac
 - [ ] Dashboard route integráció
 
 ### Phase 2: CLI Interface
+
 - [ ] chat-hu.ts létrehozás
 - [ ] Magyar menü (inquirer.js)
 - [ ] WebSocket CLI client
@@ -65,6 +72,7 @@ Cloudflare Workers WebSocket chat beágyazása a Dashboardba + CLI chat interfac
 - [ ] CLI command regisztráció
 
 ### Phase 3: Backend Routes
+
 - [ ] cloudflare.ts routes
 - [ ] POST /api/chat/send handler
 - [ ] D1 API integráció
@@ -73,6 +81,7 @@ Cloudflare Workers WebSocket chat beágyazása a Dashboardba + CLI chat interfac
 - [ ] WebSocket proxy (Socket.IO)
 
 ### Phase 4: Testing
+
 - [ ] Manual testing (Dashboard)
 - [ ] Manual testing (CLI)
 - [ ] D1 storage verify
@@ -80,6 +89,7 @@ Cloudflare Workers WebSocket chat beágyazása a Dashboardba + CLI chat interfac
 - [ ] npm test
 
 ### Phase 5: Deployment
+
 - [ ] README.md frissítés
 - [ ] .ai/claude.md frissítés
 - [ ] GitHub commit

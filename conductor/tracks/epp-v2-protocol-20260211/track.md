@@ -103,3 +103,15 @@ README.md:
 - EPP v2 bevezetés dokumentálása
 - Dátum: 2026-02-11
 ```
+
+---
+
+## 📝 Napló
+
+### 2026-02-12
+
+- Meta/progress drift rendezés végrehajtva a `conductor/tracks/*` alatt:
+  - hiányzó `meta.json` fájlok pótlása (nem-test trackek)
+  - progress összehangolás (pl. `bas_comprehensive_test_protocol_20260210`: 65 → 85)
+- `ProjectConductor "track update"` futtatva → `conductor/tracks.md` újragenerálva és konzisztens.
+- Teszt artefakt takarítás: `test-track-12345678` kikerült a registry-ből.
