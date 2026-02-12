@@ -160,6 +160,37 @@ Következő: workflow baseline (Iteration 1) + Dashboard/CLI integráció implem
 
 ---
 
+### 2026-02-12 - ✅ Dashboard TODO Widget (Track Progress) (Iteration 1) ✅
+
+**Track:** `dashboard-todo-widget-20260211`
+
+✅ **Backend (közös API Dashboard + CLI):**
+
+- `src/server/tracksRoutes.ts`
+  - `GET /api/v1/tracks/todos/active`
+  - `GET /api/v1/tracks/:trackId/todos`
+  - `PATCH /api/v1/tracks/:trackId/todos/:todoId` (id: `line:<n>`)
+  - Socket.IO események: `track:changed`, `track:todo_updated` (poll watcher)
+
+✅ **Dashboard widget:**
+
+- `src/dashboard/components/dashboard/TrackProgress.tsx` (ÚJ)
+- `src/dashboard/components/dashboard/MissionControlLayout.tsx` (MÓDOSÍTOTT) – widget megjelenítés
+- `src/dashboard/context/SocketContext.tsx` (MÓDOSÍTOTT) – socket instance átadása a widgeteknek
+- `src/dashboard/lib/apiService.ts` (MÓDOSÍTOTT) – API helper függvények
+
+✅ **CLI (magyar):**
+
+- `src/cli/progressCommands.ts` (ÚJ)
+- `src/cli.ts` (MÓDOSÍTOTT) – `brunella progress`
+
+✅ **Tesztelés:**
+
+- `test/tracks_todos_routes.test.ts` (ÚJ)
+- `npm test` ✅ (439/439 PASS)
+
+---
+
 ### 2026-02-12 - 🧩 Task Decomposer (Spec-First + Iteration 1 / Preview-only) ✅
 
 **Track:** `task-decomposer-agent-20260211`

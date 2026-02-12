@@ -51,6 +51,7 @@ import { DeveloperPanel } from "@/components/dashboard/DeveloperPanel";
 import { JulesPanel } from "./JulesPanel";
 import { TrackGenerator } from "./TrackGenerator";
 import { TaskDecomposerPanel } from "./TaskDecomposerPanel";
+import { TrackProgressWidget } from "./TrackProgress";
 
 const SIDEBAR_ITEMS = [
   { id: "dashboard", label: "Mission Control", icon: LayoutDashboard },
@@ -308,6 +309,8 @@ export function MissionControlLayout() {
             {/* Right Column: Widgets */}
             <div className="space-y-6 lg:sticky lg:top-6 h-fit">
               <SystemHealthCard />
+
+              <TrackProgressWidget />
 
               <Card className="glass-card border-white/10 overflow-hidden">
                 <CardHeader className="pb-3 border-b border-border/50 bg-muted/20">
