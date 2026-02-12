@@ -48,6 +48,19 @@ const registeredToolsList: RegisteredToolInfo[] = [
       { name: "task", type: "string", required: true },
     ],
   },
+  {
+    id: "agent_execute",
+    name: "agent_execute",
+    description:
+      "Execute an agent with optional JSON context (CLI compatibility)",
+    enabled: true,
+    category: "server",
+    parameters: [
+      { name: "agentName", type: "string", required: true },
+      { name: "task", type: "string", required: true },
+      { name: "context", type: "string", required: false },
+    ],
+  },
 ];
 
 // Internal tool handler map
@@ -200,6 +213,58 @@ export async function registerAllTools(server: McpServer) {
       agentDelegateHandler,
     );
     toolHandlers.set("agent_delegate", agentDelegateHandler);
+
+    // CLI compatibility: src/cli.ts expects an MCP tool called `agent_execute`
+    // with params { agentName, task, context?: string }
+    const agentExecuteHandler = async ({ agentName, task, context }: any) => {
+      try {
+        let parsedContext: Record<string, unknown> | undefined = undefined;
+
+        if (typeof context === "string" && context.trim().length > 0) {
+          try {
+            parsedContext = JSON.parse(context) as Record<string, unknown>;
+          } catch (e: any) {
+            return {
+              isError: true,
+              content: [
+                {
+                  type: "text" as const,
+                  text: `Invalid JSON in context: ${e?.message ?? String(e)}`,
+                },
+              ],
+            };
+          }
+        }
+
+        const result = await agentManager.delegate(
+          agentName,
+          task,
+          parsedContext,
+        );
+        const text =
+          typeof result === "string" ? result : JSON.stringify(result, null, 2);
+        return { content: [{ type: "text" as const, text }] };
+      } catch (e: any) {
+        return {
+          isError: true,
+          content: [
+            { type: "text" as const, text: `Agent Error: ${e.message}` },
+          ],
+        };
+      }
+    };
+
+    server.tool(
+      "agent_execute",
+      "Executes an agent with optional JSON context (CLI compatibility).",
+      {
+        agentName: z.string(),
+        task: z.string(),
+        context: z.string().optional(),
+      },
+      agentExecuteHandler,
+    );
+    toolHandlers.set("agent_execute", agentExecuteHandler);
   }
 
   // Always register ping tool (works in any environment)

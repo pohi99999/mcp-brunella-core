@@ -1,0 +1,15 @@
+{
+  "id": "epp-v2-protocol-20260211",
+  "title": "Engineering Precision Protocol v2 (EPP v2)",
+  "status": "proposed",
+  "priority": "critical",
+  "created": "2026-02-11",
+  "updated": "2026-02-12",
+  "owner": "Claude",
+  "spec_status": "draft",
+  "progress": 0,
+  "tags": ["process", "protocol", "conductor", "dashboard", "cli"],
+  "dependencies": [],
+  "estimated_effort": "low",
+  "business_value": "Clear spec freeze + Dashboard+CLI rule for every feature"
+}

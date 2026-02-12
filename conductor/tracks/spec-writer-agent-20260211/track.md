@@ -1,6 +1,6 @@
 # Track: SpecWriter Agent (Ötlet → Track Generátor)
 
-**Status:** PROPOSED
+**Status:** TESTING
 **Priority:** P0
 **Complexity:** MEDIUM
 **Created:** 2026-02-11
@@ -28,7 +28,7 @@ Automatizált track generálás kreatív ötletekből professzionális specifik�
 
 ## 🔧 Technikai Követelmények
 
-### Agent Implementáció (src/agents/spec-writer.ts)
+### Agent Implementáció (`src/agents/SpecWriterAgent.ts`)
 
 1. **IAgent interface implementálás**
    - `name = "SpecWriter"`
@@ -36,6 +36,7 @@ Automatizált track generálás kreatív ötletekből professzionális specifik�
    - `capabilities = ["requirement_analysis", "prompt_engineering", "track_generation"]`
 
 2. **Core funkciók:**
+
    ```typescript
    async analyzeIdea(idea: string): Promise<Requirements>
    async generatePrompt(requirements: Requirements): Promise<string>
@@ -48,7 +49,7 @@ Automatizált track generálás kreatív ötletekből professzionális specifik�
    - Strukturált JSON response parsing
    - Error handling + retry mechanizmus
 
-### Dashboard Integráció (src/dashboard/components/TrackGenerator.tsx)
+### Dashboard Integráció (`src/dashboard/components/dashboard/TrackGenerator.tsx`)
 
 1. **UI Komponens:**
    - Card layout (Radix UI)
@@ -68,7 +69,7 @@ Automatizált track generálás kreatív ötletekből professzionális specifik�
    - WebSocket /ws/agent-status
    - Track list refresh trigger
 
-### CLI Integráció (src/cli-commands/tracks-hu.ts)
+### CLI Integráció (`src/cli/tracksCommands.ts`)
 
 **Magyar menüvezérelt interface:**
 
@@ -87,6 +88,7 @@ Válassz (1-5): _
 ```
 
 **Menü flow:**
+
 ```
 1 választása után:
 ╔════════════════════════════════════════╗
@@ -119,7 +121,7 @@ Mit szeretnél csinálni?
 Válassz (1-3): _
 ```
 
-### Backend Routes (src/server/routes/tracks.ts)
+### Backend Routes (`src/server/tracksRoutes.ts`)
 
 ```typescript
 POST   /api/tracks/generate        // Track generálás ötletből
@@ -145,16 +147,17 @@ DELETE /api/tracks/:name           // Track törlés
 ## 📋 Implementation Plan
 
 ### Phase 1: Agent Core ✅
+
 - [x] IAgent interface implementálás (src/agents/spec-writer.ts)
-- [ ] analyzeIdea() metódus (Ollama API integration)
-- [ ] generatePrompt() metódus
-- [ ] createTrack() metódus (track.md template)
-- [ ] registerTrack() metódus (tracks.md update)
-- [ ] Unit tesztek (test/agents/spec-writer.test.ts)
-- [ ] Agent regisztráció (src/agents/registry.json)
+- [x] Requirement extraction / track generálás (3-stage pipeline)
+- [x] createTrack() / track.md template (EPP v2)
+- [ ] registerTrack() metódus (tracks.md automatikus update) — opcionális, eldöntendő
+- [x] Unit tesztek (`test/SpecWriterAgent.test.ts`)
+- [x] Agent regisztráció (`src/agents/registry.json`)
 
 ### Phase 2: Dashboard Integration 🎨
-- [ ] TrackGenerator.tsx komponens létrehozása
+
+- [x] TrackGenerator komponens létrehozása
 - [ ] UI layout (Card + Textarea + Button)
 - [ ] API integráció (POST /api/agents/specwriter/execute)
 - [ ] Real-time status updates (WebSocket)
@@ -164,7 +167,8 @@ DELETE /api/tracks/:name           // Track törlés
 - [ ] Component tesztek
 
 ### Phase 3: CLI Integration 🖥️
-- [ ] Magyar menürendszer (src/cli-commands/tracks-hu.ts)
+
+- [x] Track parancsok (magyar) (`src/cli/tracksCommands.ts`)
 - [ ] Inquirer.js vagy prompts.js integráció (menü kezelés)
 - [ ] Track generálás flow
 - [ ] Multi-line input handling
@@ -173,15 +177,15 @@ DELETE /api/tracks/:name           // Track törlés
 - [ ] CLI command regisztráció (src/cli.ts)
 
 ### Phase 4: Backend Routes 🔌
-- [ ] Express routes létrehozása (src/server/routes/tracks.ts)
-- [ ] POST /api/tracks/generate handler
-- [ ] GET /api/tracks handler
-- [ ] GET /api/tracks/:name handler
-- [ ] PATCH /api/tracks/:name/status handler
-- [ ] Route regisztráció (src/server/index.ts)
-- [ ] API tesztek
+
+- [x] Express routes létrehozása (`src/server/tracksRoutes.ts`)
+- [x] POST /api/v1/tracks/generate handler
+- [x] GET /api/v1/tracks handler
+- [x] GET /api/v1/tracks/:trackId handler
+- [ ] API tesztek (dedikált route tesztek) — opcionális bővítés
 
 ### Phase 5: Testing & Validation ✅
+
 - [ ] Manual testing (CLI flow)
 - [ ] Manual testing (Dashboard flow)
 - [ ] Integration teszt (teljes flow end-to-end)
@@ -189,6 +193,7 @@ DELETE /api/tracks/:name           // Track törlés
 - [ ] Acceptance criteria verify
 
 ### Phase 6: Documentation & Deployment 📝
+
 - [ ] README.md frissítés (új ügynök dokumentálása)
 - [ ] .ai/claude.md frissítés (munkamenet napló)
 - [ ] python scripts/sync_foszal.py futtatás

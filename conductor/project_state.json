@@ -1,0 +1,198 @@
+{
+  "lastUpdated": "2026-02-12T00:04:01.922Z",
+  "tracks": [
+    {
+      "id": "agent_architect_upgrade_20260205",
+      "name": "Agent Architect 2.0 Meta-Ügynök",
+      "status": "active",
+      "priority": "medium",
+      "progress": 25,
+      "lastActivity": "2026-02-05",
+      "blockers": []
+    },
+    {
+      "id": "bas_comprehensive_test_protocol_20260210",
+      "name": "BAS Átfogó Tesztprotokol",
+      "status": "active",
+      "priority": "critical",
+      "progress": 85,
+      "lastActivity": "2026-02-12T00:00:00Z",
+      "blockers": [],
+      "assignee": "DeveloperAgent"
+    },
+    {
+      "id": "cloudflare-chat-integration-20260211",
+      "name": "Cloudflare Chat Integration",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "cloudflare_edge_integration_20260202",
+      "name": "Cloudflare Edge Integration",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "code_quality_improvements_20260210",
+      "name": "Code Quality Improvements",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 100,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "dashboard-todo-widget-20260211",
+      "name": "Dashboard TODO Widget",
+      "status": "proposed",
+      "priority": "medium",
+      "progress": 0,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "dashboard_test_suite_20260210",
+      "name": "Dashboard Komplett Tesztsorozat",
+      "status": "active",
+      "priority": "high",
+      "progress": 80,
+      "lastActivity": "2026-02-10T17:30:00Z",
+      "blockers": [],
+      "assignee": "DeveloperAgent"
+    },
+    {
+      "id": "dashboard_v2_robotkez_control_20260208",
+      "name": "Dashboard V2 Robotkéz Control",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "developer_agent_2_0_20260206",
+      "name": "DeveloperAgent 2.0/3.0 – Unified Development Platform",
+      "status": "active",
+      "priority": "high",
+      "progress": 75,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "epp-v2-protocol-20260211",
+      "name": "Engineering Precision Protocol v2 (EPP v2)",
+      "status": "proposed",
+      "priority": "critical",
+      "progress": 0,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "gold_protocol",
+      "name": "Gold Protocol - BAS Observability & Governance",
+      "status": "completed",
+      "priority": "critical",
+      "progress": 100,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "jules-async-test-automation-20260211",
+      "name": "Jules Async Test Automation (GitHub Actions)",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "magyar-cli-menu-system-20260211",
+      "name": "Magyar CLI Menürendszer (Teljes Átírás)",
+      "status": "proposed",
+      "priority": "critical",
+      "progress": 0,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "otel_agent_tracing_20260211",
+      "name": "OpenTelemetry Agent Tracing",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "lastActivity": "2026-02-11T00:00:00Z",
+      "blockers": [],
+      "assignee": "GitHub Copilot"
+    },
+    {
+      "id": "phoenix_protocol_v2_20260205",
+      "name": "Phoenix Protocol v2 - Öngyógyító Rendszer",
+      "status": "active",
+      "priority": "medium",
+      "progress": 30,
+      "lastActivity": "2026-02-05",
+      "blockers": []
+    },
+    {
+      "id": "robotkez_n8n_sandbox_edzesterv",
+      "name": "Robotkéz n8n Sandbox és Edzésterv",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 100,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    },
+    {
+      "id": "robotkez_stabilization_20260212",
+      "name": "Robotkéz Stabilizáció & Gemini 2.0",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "lastActivity": "2026-02-12T00:00:00Z",
+      "blockers": []
+    },
+    {
+      "id": "self_healing_core_20260213",
+      "name": "Self-Healing & Auto-Fix Protocol",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "lastActivity": "2026-02-13T00:00:00Z",
+      "blockers": []
+    },
+    {
+      "id": "spec-writer-agent-20260211",
+      "name": "SpecWriter Agent (Ötlet → Track Generátor)",
+      "status": "active",
+      "priority": "critical",
+      "progress": 75,
+      "lastActivity": "2026-02-12T00:00:00Z",
+      "blockers": [],
+      "assignee": "SpecWriterAgent"
+    },
+    {
+      "id": "task-decomposer-agent-20260211",
+      "name": "Task Decomposer Agent (Mikro-Ügynök Orchestrator)",
+      "status": "proposed",
+      "priority": "medium",
+      "progress": 0,
+      "lastActivity": "2026-02-12",
+      "blockers": []
+    }
+  ],
+  "components": [],
+  "recentChanges": [],
+  "healthStatus": {
+    "overall": "unknown",
+    "buildStatus": false,
+    "testStatus": false,
+    "documentationSync": false,
+    "lastHealthCheck": ""
+  }
+}

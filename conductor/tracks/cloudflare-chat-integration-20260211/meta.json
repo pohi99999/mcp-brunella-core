@@ -1,0 +1,15 @@
+{
+  "id": "cloudflare-chat-integration-20260211",
+  "title": "Cloudflare Chat Integration",
+  "status": "proposed",
+  "priority": "high",
+  "created": "2026-02-11",
+  "updated": "2026-02-12",
+  "owner": "Claude",
+  "spec_status": "draft",
+  "progress": 0,
+  "tags": ["cloudflare", "chat", "dashboard", "cli", "websocket", "d1"],
+  "dependencies": [],
+  "estimated_effort": "high",
+  "business_value": "Remote chat + orchestration control"
+}
