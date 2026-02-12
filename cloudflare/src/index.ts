@@ -9,34 +9,13 @@
  * 5. Workers AI - Fallback LLM
  */
 
-export interface Env {
-  BAS_TASKS: KVNamespace;
-  AI: Ai;
-  BAS_LOCAL_URL?: string;
-  BAS_API_KEY?: string;
-}
-
-interface TaskPayload {
-  instruction: string;
-  context?: Record<string, any>;
-  source?: string;
-  timestamp?: string;
-}
-
-interface TaskRecord {
-  taskId: string;
-  type: string;
-  status: 'pending' | 'dispatched' | 'completed' | 'failed';
-  payload: TaskPayload;
-  result?: any;
-  createdAt: string;
-  completedAt?: string;
-}
+import { Env, TaskPayload, TaskRecord } from './types.js';
+export { EdgeCoordinator } from './edge-coordinator.js';
 
 // Task típus osztályozás Workers AI-val
 async function classifyTask(env: Env, instruction: string): Promise<string> {
   try {
-    const response = await env.AI.run('@cf/meta/llama-3.1-8b-instruct', {
+    const response = await env.AI.run('@cf/meta/llama-3.1-8b-instruct' as any, {
       messages: [
         {
           role: 'system',
@@ -113,6 +92,13 @@ export default {
     
     // Routing
     try {
+      // WebSocket / Durable Object routing
+      if (path === '/ws' || request.headers.get('Upgrade') === 'websocket') {
+        const id = env.EDGE_COORDINATOR.idFromName("global");
+        const stub = env.EDGE_COORDINATOR.get(id);
+        return stub.fetch(request);
+      }
+
       // Health check
       if (path === '/health' || path === '/') {
         const localHealth = await forwardToLocal(env, '/api/health').catch(() => null);
@@ -146,7 +132,26 @@ export default {
         // Task osztályozás
         const taskType = await classifyTask(env, payload.instruction);
         
-        // Task record létrehozása
+        // D1 INSERT
+        try {
+          await env.DB.prepare(
+            `INSERT INTO tasks (id, instruction, status, created_at, updated_at, metadata) VALUES (?, ?, ?, ?, ?, ?)`
+          ).bind(
+            taskId, 
+            payload.instruction, 
+            'pending', 
+            Date.now(), 
+            Date.now(), 
+            JSON.stringify({ type: taskType, ...payload })
+          ).run();
+        } catch (e) {
+          return new Response(JSON.stringify({ error: 'Database error', details: String(e) }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+        
+        // Notify local system via tunnel (optional, keeping original logic pattern)
         const task: TaskRecord = {
           taskId,
           type: taskType,
@@ -154,11 +159,6 @@ export default {
           payload,
           createdAt: new Date().toISOString()
         };
-        
-        // KV-ba mentés
-        await env.BAS_TASKS.put(taskId, JSON.stringify(task), {
-          expirationTtl: 86400 // 24 óra
-        });
         
         // Próbáljuk továbbítani a lokális rendszernek
         const localResponse = await forwardToLocal(env, '/api/tasks', {
@@ -168,8 +168,11 @@ export default {
         });
         
         if (localResponse.ok) {
+          // Update status to dispatched
+          await env.DB.prepare(
+            `UPDATE tasks SET status = ? WHERE id = ?`
+          ).bind('dispatched', taskId).run();
           task.status = 'dispatched';
-          await env.BAS_TASKS.put(taskId, JSON.stringify(task));
         }
         
         return new Response(JSON.stringify(task), {
@@ -181,18 +184,48 @@ export default {
       // Task status
       if (path.startsWith('/status/')) {
         const taskId = path.split('/')[2];
-        const taskData = await env.BAS_TASKS.get(taskId);
         
-        if (!taskData) {
-          return new Response(JSON.stringify({ error: 'Task not found' }), {
-            status: 404,
+        try {
+          const result = await env.DB.prepare(
+            `SELECT * FROM tasks WHERE id = ?`
+          ).bind(taskId).first();
+          
+          if (!result) {
+            return new Response(JSON.stringify({ error: 'Task not found' }), {
+              status: 404,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
+          }
+          
+          return new Response(JSON.stringify(result), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        } catch (e) {
+          return new Response(JSON.stringify({ error: 'Database error' }), {
+            status: 500,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           });
         }
+      }
+
+      // History endpoint (Phase 3)
+      if (path === '/history' && request.method === 'GET') {
+        const limit = parseInt(url.searchParams.get('limit') || '20');
         
-        return new Response(taskData, {
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-        });
+        try {
+          const { results } = await env.DB.prepare(
+            `SELECT id, instruction, status, created_at, completed_at FROM tasks ORDER BY created_at DESC LIMIT ?`
+          ).bind(limit).all();
+          
+          return new Response(JSON.stringify({ tasks: results }), {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        } catch (e) {
+          return new Response(JSON.stringify({ error: 'Database error', details: String(e) }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
       }
       
       // API proxy (minden más /api/* útvonal)

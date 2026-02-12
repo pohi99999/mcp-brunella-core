@@ -42,6 +42,15 @@ export class CloudflareClient {
             throw new Error(`Status check failed: ${error.message}`);
         }
     }
+
+    async fetchHistory(limit: number = 20): Promise<any> {
+        try {
+            const response = await axios.get(`${this.baseUrl}/history?limit=${limit}`);
+            return response.data;
+        } catch (error: any) {
+            throw new Error(`History fetch failed: ${error.message}`);
+        }
+    }
 }
 
 export const cloudflareClient = new CloudflareClient();
