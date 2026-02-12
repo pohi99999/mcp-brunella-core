@@ -160,6 +160,43 @@ Következő: workflow baseline (Iteration 1) + Dashboard/CLI integráció implem
 
 ---
 
+### 2026-02-12 - 🧩 Task Decomposer (Spec-First + Iteration 1 / Preview-only) ✅
+
+**Track:** `task-decomposer-agent-20260211`
+
+✅ **Core + Agent (preview-only):**
+
+- `src/agents/taskDecomposerCore.ts` (ÚJ)
+  - mikro-task build + DAG + cycle-detect
+- `src/agents/TaskDecomposerAgent.ts` (ÚJ)
+  - agent név: `task_decomposer`
+  - default: preview-only (nem futtat toolokat)
+- `src/agents/registry.json`
+  - `task_decomposer` regisztrálva
+
+✅ **Dashboard vizualizáció (ReactFlow):**
+
+- `src/dashboard/components/dashboard/TaskDecomposerPanel.tsx` (ÚJ)
+- `src/dashboard/components/dashboard/MissionControlLayout.tsx` (MÓDOSÍTOTT)
+  - új tab: **Decompose** (`activeTab === "decomposer"`)
+
+✅ **CLI (magyar):**
+
+- `src/cli/taskDecomposerCommands.ts` (ÚJ)
+  - parancs: `brunella decompose [task]`
+- `src/cli.ts` (MÓDOSÍTOTT) – regisztráció
+
+✅ **Tesztelés:**
+
+- `test/taskDecomposerCore.test.ts` (ÚJ)
+- `npm test` ✅ (436/436 PASS)
+
+**Megjegyzés:**
+
+- Iteration 1-ben ez _kifejezetten_ preview-only; végrehajtás (parallel/retry/timeout + approval flow) következő iteráció.
+
+---
+
 ### 2026-02-11 - 📡 OpenTelemetry Agent Tracing Integration (DONE! ✅)
 
 **Track:** `otel_agent_tracing_20260211`
