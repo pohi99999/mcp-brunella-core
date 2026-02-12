@@ -28,6 +28,7 @@ import { registerDevCommands } from "./cli/devCommands.js";
 import { registerTracksCommands } from "./cli/tracksCommands.js";
 import { registerTaskDecomposerCommands } from "./cli/taskDecomposerCommands.js";
 import { registerProgressCommands } from "./cli/progressCommands.js";
+import { registerEdgeCommands } from "./cli/edgeCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -1096,6 +1097,9 @@ registerTaskDecomposerCommands(program);
 
 // Register Track progress / TODO commands (Dashboard TODO Widget)
 registerProgressCommands(program);
+
+// Register Edge commands (Cloudflare)
+registerEdgeCommands(program);
 
 // Interactive Menu (Default)
 if (!process.argv.slice(2).length) {
