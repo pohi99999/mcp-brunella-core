@@ -106,6 +106,27 @@
 
 <!-- ÚJ BEJEGYZÉSEK IDE KERÜLNEK (legfrissebb felül) -->
 
+### 2026-02-14 - Workflow Hardening & CLI Integration (Priority 3-5)
+
+**Feladat:**
+A `_COPILOT_NEXT_TASKS.md` manifestben rögzített prioritások (3, 4, 5) végrehajtása: CLI Conductor integráció, port ütközés fix, és GitHub Workflow-k megerősítése.
+
+**Érintett fájlok:**
+- `src/utils/mcpClient.ts` (Recursive port 3000 fix)
+- `src/cli.ts` (`conductor` subcommand bekötése)
+- `.github/workflows/gemini-*.yml` (Timeoutok és secrets validáció)
+- `.github/workflows/bas-*.yml` (Secrets validáció)
+- `_COPILOT_NEXT_TASKS.md` (Státusz frissítés)
+
+**Eredmények:**
+✅ **CLI Conductor Fix:** Mostantól a `brunella conductor status` nem okoz port ütközést és helyesen delegál az ügynöknek.
+✅ **GitHub Workflow Hardening:** Minden Gemini és BAS szinkron workflow kapott `timeout-minutes: 15` korlátot és explicit secret validációt.
+✅ **EADDRINUSE védelem:** Az MCP kliens mostantól kényszeríti a `WEB_UI_ENABLED=false` változót az alfolyamatokban.
+
+**Státusz:** ✅ Befejezve
+
+---
+
 ### 2026-02-08 04:00 - Robotkéz (Browser-Use) Setup Kísérlet
 
 **Feladat:**

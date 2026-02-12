@@ -60,8 +60,9 @@ export class BrunellaClient {
           env: {
             ...process.env,
             ...resolvedEnv,
-            // Allow overriding via env var, default to false for CLI
-            WEB_UI_ENABLED: process.env.WEB_UI_ENABLED || "false",
+            // Force Web UI disabled for MCP CLI sub-processes to avoid port conflicts
+            WEB_UI_ENABLED: "false",
+            BRUNELLA_QUIET_LOGS: "true",
           },
         });
 

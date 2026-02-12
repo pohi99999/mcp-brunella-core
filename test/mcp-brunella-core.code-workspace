@@ -1,0 +1,64 @@
+{
+  "folders": [
+    {
+      "name": "mcp-brunella-core",
+      "path": ".."
+    }
+  ],
+  "settings": {
+    "github.copilot.editor.enableCodeActions": true,
+    "search.exclude": {
+      "**/node_modules": true,
+      "**/__pycache__": true,
+      "**/.git": true,
+      "**/.venv": true,
+      "**/coverage": true,
+      "**/dist": true,
+      "**/build": true,
+      "**/*.lock": true
+    },
+    "files.watcherExclude": {
+      "**/.git/objects/**": true,
+      "**/node_modules/**": true,
+      "**/__pycache__/**": true
+    },
+    "files.associations": {
+      "*.md": "markdown",
+      "CONDUCTOR_MANIFEST.md": "markdown",
+      "*.jsonc": "jsonc",
+      "Modelfile": "dockerfile"
+    },
+    "python.defaultInterpreterPath": "${workspaceFolder}/.venv/Scripts/python.exe",
+    "python.testing.unittestArgs": [
+      "-v",
+      "-s",
+      "./tests",
+      "-p",
+      "*test.py"
+    ],
+    "python.testing.pytestEnabled": false,
+    "python.testing.unittestEnabled": true,
+    "python.analysis.typeCheckingMode": "basic",
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "terminal.integrated.defaultProfile.windows": "PowerShell",
+    "vitest.disableWorkspaceWarning": true,
+    "git.ignoreLimitWarning": true,
+    "chatgpt.openOnStartup": true,
+    "editor.aiStats.enabled": false,
+    "github.copilot.chat.agentCustomizationSkill.enabled": true,
+    "github.copilot.chat.languageContext.fix.typescript.enabled": true,
+    "github.copilot.chat.languageContext.inline.typescript.enabled": true,
+    "github.copilot.chat.languageContext.typescript.enabled": true,
+    "github.copilot.chat.notebook.enhancedNextEditSuggestions.enabled": true,
+    "chat.customAgentInSubagent.enabled": true,
+    "chat.agentSessionProjection.enabled": true,
+    "chat.unifiedAgentsBar.enabled": true,
+    "azureFunctions.projectSubpath": "external_research\\azure-functions-core-tools\\test\\TestFunctionApps\\TestCustomHandlerProject",
+    "azureFunctions.deploySubpath": "external_research\\azure-functions-core-tools\\test\\TestFunctionApps\\TestCustomHandlerProject",
+    "azureFunctions.projectLanguage": "Custom",
+    "azureFunctions.projectRuntime": "~4",
+    "debug.internalConsoleOptions": "neverOpen",
+    "DockerRun.DisableDockerrc": true
+  }
+}

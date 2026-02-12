@@ -63,5 +63,6 @@
     "github.copilot.chat.notebook.enhancedNextEditSuggestions.enabled": true,
     "chat.customAgentInSubagent.enabled": true,
     "chat.agentSessionProjection.enabled": true,
-    "chat.unifiedAgentsBar.enabled": true
+    "chat.unifiedAgentsBar.enabled": true,
+    "DockerRun.DisableDockerrc": true
 }
