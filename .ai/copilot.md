@@ -6,6 +6,24 @@
 
 ---
 
+### 2026-02-12 - ✅ Dashboard TODO Widget (Iteration 2: chokidar watcher + reconnect UX)
+
+**Cél:** a track TODO widget valóban “real-time” legyen (polling helyett), és a Socket reconnect állapot legyen átláthatóbb a UI/logok felől.
+
+**Változások:**
+
+- Backend: `src/server/tracksRoutes.ts`
+  - Poll watcher → `chokidar` watcher (`track.md` + `meta.json`)
+  - `track:changed` események debouncolva (save burst-ek ellen)
+- Dashboard: `src/dashboard/context/SocketContext.tsx`
+  - Reconnect attempt/success/fail események logolása (console helyett belső log stream)
+- Dashboard: `src/dashboard/components/dashboard/TrackProgress.tsx`
+  - Connection badge: `LIVE` / `RECONNECT` / `OFFLINE`
+
+**Validáció:**
+
+- `npm test` ✅ (54 test file passed, 439 tests passed)
+
 ### 2026-02-12 - 🎼 Conductor Protokoll Futtatás (Stop-and-Fix + Track Hygiene) ✅
 
 **Feladat:** `conductor/tracks.md` alapján Conductor protokoll végrehajtása: init check, Stop-and-Fix (piros tesztek), secret hygiene, track packaging egységesítés.

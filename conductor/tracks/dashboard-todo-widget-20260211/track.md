@@ -1,6 +1,6 @@
 # Track: Dashboard TODO Widget (Real-time Track Progress)
 
-**Status:** IN_PROGRESS (Iteration 1: Dashboard + CLI + API ✅)
+**Status:** IN_PROGRESS (Iteration 2: chokidar watcher + reconnect UX ✅)
 **Priority:** P2
 **Complexity:** MEDIUM
 **Created:** 2026-02-11
@@ -94,8 +94,8 @@ Real-time frissítés:
 ### Phase 3: WebSocket Sync
 
 - [x] Socket.IO események: `track:changed`, `track:todo_updated`
-- [x] Poll watcher (setInterval + mtime) a track.md változásokhoz
-- [ ] Reconnect logic (SocketContext alapból reconnectel)
+- [x] Valódi file watcher: `chokidar` (track.md + meta.json változás → `track:changed`)
+- [x] Reconnect UX finomítás (SocketContext: reconnect attempt/success/fail logok)
 
 ### Phase 4: CLI Commands
 

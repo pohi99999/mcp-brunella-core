@@ -56,7 +56,9 @@ export function TrackProgressWidget() {
         setSelectedTrackId(list[0].trackId);
       }
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : "Nem sikerült betölteni a trackeket");
+      toast.error(
+        e instanceof Error ? e.message : "Nem sikerült betölteni a trackeket",
+      );
       setTracks([]);
     } finally {
       setIsLoadingTracks(false);
@@ -78,7 +80,9 @@ export function TrackProgressWidget() {
         updatedAt: r.updatedAt,
       });
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : "Nem sikerült betölteni a TODO-kat");
+      toast.error(
+        e instanceof Error ? e.message : "Nem sikerült betölteni a TODO-kat",
+      );
       setTodosState(null);
     } finally {
       setIsLoadingTodos(false);
@@ -114,7 +118,7 @@ export function TrackProgressWidget() {
       socket.off("track:changed", onChanged);
       socket.off("track:todo_updated", onChanged);
     };
-  }, [socket, selectedTrackId]);
+  }, [socket, selectedTrackId, refreshTracks, refreshTodos]);
 
   const toggle = async (todoId: string, completed: boolean) => {
     if (!todosState) return;
@@ -153,6 +157,17 @@ export function TrackProgressWidget() {
 
   const pct = todosState?.progress ?? selectedTrack?.progress ?? 0;
 
+  const connectionBadge = useMemo(() => {
+    if (isConnected) {
+      return { label: "LIVE", variant: "default" as const };
+    }
+    // socket.io-client: socket.active === will try to reconnect
+    if (socket?.active) {
+      return { label: "RECONNECT", variant: "secondary" as const };
+    }
+    return { label: "OFFLINE", variant: "secondary" as const };
+  }, [isConnected, socket]);
+
   return (
     <Card className="glass-card border-white/10 overflow-hidden">
       <CardHeader className="pb-3 border-b border-border/50 bg-muted/20">
@@ -162,8 +177,8 @@ export function TrackProgressWidget() {
             Track TODO
           </span>
           <span className="flex items-center gap-2">
-            <Badge variant={isConnected ? "default" : "secondary"}>
-              {isConnected ? "LIVE" : "OFFLINE"}
+            <Badge variant={connectionBadge.variant}>
+              {connectionBadge.label}
             </Badge>
             <Button
               variant="ghost"
@@ -177,7 +192,9 @@ export function TrackProgressWidget() {
             >
               <ArrowsClockwise
                 size={16}
-                className={isLoadingTracks || isLoadingTodos ? "animate-spin" : ""}
+                className={
+                  isLoadingTracks || isLoadingTodos ? "animate-spin" : ""
+                }
               />
             </Button>
           </span>

@@ -66,13 +66,19 @@ function renderBar(pct: number, width = 24): string {
 }
 
 async function chooseTrack(): Promise<TrackTodoSummary | null> {
-  const list = await apiFetch<{ success: boolean; count: number; tracks: TrackTodoSummary[] }>(
-    "/todos/active",
-  );
+  const list = await apiFetch<{
+    success: boolean;
+    count: number;
+    tracks: TrackTodoSummary[];
+  }>("/todos/active");
 
   const tracks = (list.tracks || []).sort((a, b) => b.progress - a.progress);
   if (tracks.length === 0) {
-    console.log(chalk.yellow("Nincs aktív track (vagy nincs meta.json status=active/in_progress)."));
+    console.log(
+      chalk.yellow(
+        "Nincs aktív track (vagy nincs meta.json status=active/in_progress).",
+      ),
+    );
     return null;
   }
 
@@ -98,10 +104,16 @@ async function showTrackProgress() {
     spinner.stop();
     if (!chosen) return;
 
-    const data = await apiFetch<TrackTodosResponse>(`/${encodeURIComponent(chosen.trackId)}/todos`);
+    const data = await apiFetch<TrackTodosResponse>(
+      `/${encodeURIComponent(chosen.trackId)}/todos`,
+    );
 
     console.log(chalk.bold(`\n📌 ${data.title}`));
-    console.log(chalk.dim(`ID: ${data.trackId} | ${data.completedCount}/${data.totalCount} | updated: ${data.updatedAt}`));
+    console.log(
+      chalk.dim(
+        `ID: ${data.trackId} | ${data.completedCount}/${data.totalCount} | updated: ${data.updatedAt}`,
+      ),
+    );
     console.log(chalk.green(renderBar(data.progress)));
 
     if (!data.todos.length) {
@@ -111,7 +123,9 @@ async function showTrackProgress() {
 
     console.log("");
     for (const t of data.todos) {
-      console.log(`${t.completed ? chalk.green("[x]") : chalk.gray("[ ]")} ${t.text} ${chalk.dim(`(${t.id})`)}`);
+      console.log(
+        `${t.completed ? chalk.green("[x]") : chalk.gray("[ ]")} ${t.text} ${chalk.dim(`(${t.id})`)}`,
+      );
     }
 
     const { action } = await inquirer.prompt([
@@ -151,10 +165,13 @@ async function showTrackProgress() {
       const next = item ? !item.completed : true;
 
       const saving = ora("Mentés...").start();
-      await apiFetch<TrackTodosResponse>(`/${encodeURIComponent(data.trackId)}/todos/${encodeURIComponent(todoId)}`, {
-        method: "PATCH",
-        body: JSON.stringify({ completed: next }),
-      });
+      await apiFetch<TrackTodosResponse>(
+        `/${encodeURIComponent(data.trackId)}/todos/${encodeURIComponent(todoId)}`,
+        {
+          method: "PATCH",
+          body: JSON.stringify({ completed: next }),
+        },
+      );
       saving.succeed("Mentve");
 
       await showTrackProgress();
@@ -168,7 +185,11 @@ async function showTrackProgress() {
 async function listAllProgress() {
   const spinner = ora("Track progress betöltése...").start();
   try {
-    const data = await apiFetch<{ success: boolean; count: number; tracks: TrackTodoSummary[] }>("/todos/active");
+    const data = await apiFetch<{
+      success: boolean;
+      count: number;
+      tracks: TrackTodoSummary[];
+    }>("/todos/active");
     spinner.stop();
 
     const tracks = (data.tracks || []).sort((a, b) => b.progress - a.progress);
