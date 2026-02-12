@@ -27,6 +27,20 @@
       "tags": ["rag", "summaries"]
     },
     {
+      "name": "task_decomposer",
+      "title": "Task Decomposer",
+      "description": "Komplex feladatok dekompozíciója mikro-taskokra (preview-only, DAG).",
+      "class": "TaskDecomposerAgent",
+      "module": "./agents/TaskDecomposerAgent.js",
+      "capabilities": ["task_decomposition", "dag", "preview"],
+      "tools": [],
+      "notes": "Iteration 1: csak preview (nem futtat toolokat).",
+      "category": "engineering",
+      "status": "active",
+      "tags": ["orchestration", "dag", "planning"],
+      "autoStart": false
+    },
+    {
       "name": "developer",
       "title": "Developer Agent",
       "description": "Kodol es javit a self-healing pipeline segitsegevel.",

@@ -48,7 +48,10 @@ export interface MicroTask {
 export interface DecompositionResult {
   originalTask: string;
   tasks: MicroTask[];
-  dag: { nodes: Array<{ id: string; label: string }>; edges: Array<{ from: string; to: string }> };
+  dag: {
+    nodes: Array<{ id: string; label: string }>;
+    edges: Array<{ from: string; to: string }>;
+  };
 }
 ```
 
