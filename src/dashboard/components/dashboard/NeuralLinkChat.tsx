@@ -5,25 +5,25 @@
  * - Ollama: közvetlen LLM generálás
  */
 
-import { useState, useRef, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { useState, useRef, useEffect } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { ScrollArea } from '@/components/ui/scroll-area';
-import { PaperPlaneRight, Robot, User, Circle } from '@phosphor-icons/react';
-import { Brain, FileText } from 'lucide-react';
-import * as api from '@/lib/apiService';
-import { toast } from 'sonner';
+} from "@/components/ui/select";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { PaperPlaneRight, Robot, User, Circle } from "@phosphor-icons/react";
+import { Brain, FileText } from "lucide-react";
+import * as api from "@/lib/apiService";
+import { toast } from "sonner";
 
 interface Message {
-  role: 'user' | 'assistant';
+  role: "user" | "assistant";
   content: string;
   timestamp: number;
   thoughts?: string;
@@ -31,145 +31,209 @@ interface Message {
   executedBy?: string;
 }
 
-type ChatMode = 'orchestrator' | 'ollama' | 'github' | 'gemini' | 'cloudflare' | 'cloudflare_chat';
+type ChatMode =
+  | "orchestrator"
+  | "ollama"
+  | "github"
+  | "gemini"
+  | "cloudflare"
+  | "cloudflare_chat";
 
 const MAX_CONTEXT_MESSAGES = 10;
 
-function buildConversationPrompt(history: Message[], userInput: string): string {
+function buildConversationPrompt(
+  history: Message[],
+  userInput: string,
+): string {
   const recent = history.slice(-MAX_CONTEXT_MESSAGES);
   if (recent.length === 0) return userInput;
 
   const rendered = recent
-    .map((m) => `${m.role === 'user' ? 'Felhasználó' : 'Asszisztens'}: ${m.content}`)
-    .join('\n');
+    .map(
+      (m) =>
+        `${m.role === "user" ? "Felhasználó" : "Asszisztens"}: ${m.content}`,
+    )
+    .join("\n");
 
   return [
-    'Korábbi beszélgetés (rövid kontextus):',
+    "Korábbi beszélgetés (rövid kontextus):",
     rendered,
-    '',
+    "",
     `Új felhasználói üzenet: ${userInput}`,
-    'Válaszolj természetesen, magyarul, a kontextust figyelembe véve.',
-  ].join('\n');
+    "Válaszolj természetesen, magyarul, a kontextust figyelembe véve.",
+  ].join("\n");
 }
 
 export function NeuralLinkChat() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [input, setInput] = useState('');
-  const [mode, setMode] = useState<ChatMode>('orchestrator');
+  const [input, setInput] = useState("");
+  const [mode, setMode] = useState<ChatMode>("orchestrator");
   const [models, setModels] = useState<{ name: string }[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string>('');
-  const [ghModels, setGhModels] = useState<{ name: string; provider: string }[]>([]);
-  const [selectedGhModel, setSelectedGhModel] = useState<string>('');
+  const [selectedModel, setSelectedModel] = useState<string>("");
+  const [ghModels, setGhModels] = useState<
+    { name: string; provider: string }[]
+  >([]);
+  const [selectedGhModel, setSelectedGhModel] = useState<string>("");
   const [geminiModels, setGeminiModels] = useState<{ name: string }[]>([]);
-  const [selectedGeminiModel, setSelectedGeminiModel] = useState<string>('');
+  const [selectedGeminiModel, setSelectedGeminiModel] = useState<string>("");
   const [isLoading, setIsLoading] = useState(false);
-  const [expandedThoughts, setExpandedThoughts] = useState<Record<number, boolean>>({});
+  const [expandedThoughts, setExpandedThoughts] = useState<
+    Record<number, boolean>
+  >({});
+  const [edgeStatus, setEdgeStatus] = useState<{
+    enabled: boolean;
+    healthy: boolean;
+  } | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    api.getOllamaModels().then((list) => {
-      setModels(list);
-      if (list.length > 0 && !selectedModel) {
-        setSelectedModel(list[0].name);
-      }
-    }).catch(() => setModels([]));
-    api.getGithubModels().then((list) => {
-      setGhModels(list);
-      if (list.length > 0 && !selectedGhModel) {
-        setSelectedGhModel(list[0].name);
-      }
-    }).catch(() => setGhModels([]));
-    api.getGeminiModels().then((list) => {
-      setGeminiModels(list);
-      if (list.length > 0 && !selectedGeminiModel) {
-        setSelectedGeminiModel(list[0].name);
-      }
-    }).catch(() => setGeminiModels([]));
+    api
+      .getOllamaModels()
+      .then((list) => {
+        setModels(list);
+        if (list.length > 0 && !selectedModel) {
+          setSelectedModel(list[0].name);
+        }
+      })
+      .catch(() => setModels([]));
+    api
+      .getGithubModels()
+      .then((list) => {
+        setGhModels(list);
+        if (list.length > 0 && !selectedGhModel) {
+          setSelectedGhModel(list[0].name);
+        }
+      })
+      .catch(() => setGhModels([]));
+    api
+      .getGeminiModels()
+      .then((list) => {
+        setGeminiModels(list);
+        if (list.length > 0 && !selectedGeminiModel) {
+          setSelectedGeminiModel(list[0].name);
+        }
+      })
+      .catch(() => setGeminiModels([]));
+
+    // Fetch Edge status for connection indicator
+    api
+      .getCloudflareStatus()
+      .then((status) => {
+        setEdgeStatus(status.status);
+      })
+      .catch(() => setEdgeStatus({ enabled: false, healthy: false }));
   }, []);
 
   useEffect(() => {
-    scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   const toggleThoughts = (index: number) => {
-    setExpandedThoughts(prev => ({ ...prev, [index]: !prev[index] }));
+    setExpandedThoughts((prev) => ({ ...prev, [index]: !prev[index] }));
   };
 
   const send = async () => {
     const text = input.trim();
     if (!text || isLoading) return;
 
-    setInput('');
+    setInput("");
     const userMsgTimestamp = Date.now();
-    setMessages((prev) => [...prev, { role: 'user', content: text, timestamp: userMsgTimestamp }]);
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: text, timestamp: userMsgTimestamp },
+    ]);
     setIsLoading(true);
 
     try {
       const conversationPrompt = buildConversationPrompt(messages, text);
       let response: unknown;
-      if (mode === 'orchestrator') {
-        response = await api.executeAgent('Orchestrator', text, {
+      if (mode === "orchestrator") {
+        response = await api.executeAgent("Orchestrator", text, {
           chatMode: mode,
-          history: messages.map((m) => ({ role: m.role, content: m.content, timestamp: m.timestamp })),
+          history: messages.map((m) => ({
+            role: m.role,
+            content: m.content,
+            timestamp: m.timestamp,
+          })),
         });
-      } else if (mode === 'cloudflare_chat') {
+      } else if (mode === "cloudflare_chat") {
         const cfChat = await api.chatWithCloudflare(
           text,
           messages.map((m) => ({ role: m.role, content: m.content })),
         );
         response = {
           message: cfChat.message,
-          executedBy: 'cloudflare_chat',
-          contextUsed: [cfChat.endpoint || '/api/chat'],
+          executedBy: "cloudflare_chat",
+          contextUsed: [cfChat.endpoint || "/api/chat"],
         };
-      } else if (mode === 'cloudflare') {
+      } else if (mode === "cloudflare") {
         const edge = await api.submitCloudflareTask(text, {
           history: messages.map((m) => ({ role: m.role, content: m.content })),
         });
         response = {
           message:
-            typeof edge.result === 'string'
+            typeof edge.result === "string"
               ? edge.result
-              : (typeof edge.result === 'object' && edge.result !== null && 'response' in edge.result
-                ? String((edge.result as { response?: unknown }).response ?? '')
-                : edge.message || JSON.stringify(edge)),
+              : typeof edge.result === "object" &&
+                  edge.result !== null &&
+                  "response" in edge.result
+                ? String((edge.result as { response?: unknown }).response ?? "")
+                : edge.message || JSON.stringify(edge),
         };
-      } else if (mode === 'github') {
-        const rawResponse = await api.generateWithGithubModels(conversationPrompt, selectedGhModel || undefined);
+      } else if (mode === "github") {
+        const rawResponse = await api.generateWithGithubModels(
+          conversationPrompt,
+          selectedGhModel || undefined,
+        );
         response = { message: rawResponse };
-      } else if (mode === 'gemini') {
-        const rawResponse = await api.generateWithGemini(conversationPrompt, selectedGeminiModel || undefined);
+      } else if (mode === "gemini") {
+        const rawResponse = await api.generateWithGemini(
+          conversationPrompt,
+          selectedGeminiModel || undefined,
+        );
         response = { message: rawResponse };
       } else {
-        const rawResponse = await api.generateWithOllama(conversationPrompt, selectedModel || undefined);
+        const rawResponse = await api.generateWithOllama(
+          conversationPrompt,
+          selectedModel || undefined,
+        );
         response = { message: rawResponse };
       }
 
-      const r = typeof response === 'object' && response !== null ? response as {
-        message?: unknown;
-        data?: unknown;
-        thoughts?: string;
-        contextUsed?: string[];
-        executedBy?: string;
-      } : null;
+      const r =
+        typeof response === "object" && response !== null
+          ? (response as {
+              message?: unknown;
+              data?: unknown;
+              thoughts?: string;
+              contextUsed?: string[];
+              executedBy?: string;
+            })
+          : null;
 
       setMessages((prev) => [
         ...prev,
         {
-          role: 'assistant',
-          content: r ? String(r.message ?? r.data ?? JSON.stringify(response)) : String(response),
+          role: "assistant",
+          content: r
+            ? String(r.message ?? r.data ?? JSON.stringify(response))
+            : String(response),
           timestamp: Date.now(),
           thoughts: r?.thoughts,
           contextUsed: r?.contextUsed,
-          executedBy: r?.executedBy
+          executedBy: r?.executedBy,
         },
       ]);
     } catch (e: unknown) {
-      const msg = e instanceof Error ? e.message : 'Generálás sikertelen';
+      const msg = e instanceof Error ? e.message : "Generálás sikertelen";
       toast.error(msg);
       setMessages((prev) => [
         ...prev,
-        { role: 'assistant', content: `⚠️ Hiba: ${msg}`, timestamp: Date.now() },
+        {
+          role: "assistant",
+          content: `⚠️ Hiba: ${msg}`,
+          timestamp: Date.now(),
+        },
       ]);
     } finally {
       setIsLoading(false);
@@ -197,7 +261,49 @@ export function NeuralLinkChat() {
             <option value="github">GitHub Models</option>
             <option value="gemini">Gemini</option>
           </select>
-          {mode === 'ollama' && (
+          {(mode === "cloudflare" || mode === "cloudflare_chat") &&
+            edgeStatus && (
+              <div
+                className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium"
+                style={{
+                  backgroundColor:
+                    edgeStatus.enabled && edgeStatus.healthy
+                      ? "rgba(34, 197, 94, 0.15)"
+                      : "rgba(239, 68, 68, 0.15)",
+                  color:
+                    edgeStatus.enabled && edgeStatus.healthy
+                      ? "rgb(34, 197, 94)"
+                      : "rgb(239, 68, 68)",
+                  border: `1px solid ${edgeStatus.enabled && edgeStatus.healthy ? "rgba(34, 197, 94, 0.3)" : "rgba(239, 68, 68, 0.3)"}`,
+                }}
+                title={
+                  edgeStatus.enabled
+                    ? edgeStatus.healthy
+                      ? "Edge Connected"
+                      : "Edge Unhealthy"
+                    : "Edge Disabled (set EDGE_ENABLED=true)"
+                }
+              >
+                <Circle
+                  size={8}
+                  weight="fill"
+                  style={{
+                    color:
+                      edgeStatus.enabled && edgeStatus.healthy
+                        ? "rgb(34, 197, 94)"
+                        : "rgb(239, 68, 68)",
+                  }}
+                />
+                <span>
+                  {edgeStatus.enabled
+                    ? edgeStatus.healthy
+                      ? "Connected"
+                      : "Unhealthy"
+                    : "Disabled"}
+                </span>
+              </div>
+            )}
+          {mode === "ollama" && (
             <Select value={selectedModel} onValueChange={setSelectedModel}>
               <SelectTrigger className="w-[160px] bg-background/50 border-border shadow-none">
                 <SelectValue placeholder="Modell" />
@@ -211,7 +317,7 @@ export function NeuralLinkChat() {
               </SelectContent>
             </Select>
           )}
-          {mode === 'github' && (
+          {mode === "github" && (
             <Select value={selectedGhModel} onValueChange={setSelectedGhModel}>
               <SelectTrigger className="w-[200px] bg-background/50 border-border shadow-none">
                 <SelectValue placeholder="GitHub Model" />
@@ -225,8 +331,11 @@ export function NeuralLinkChat() {
               </SelectContent>
             </Select>
           )}
-          {mode === 'gemini' && (
-            <Select value={selectedGeminiModel} onValueChange={setSelectedGeminiModel}>
+          {mode === "gemini" && (
+            <Select
+              value={selectedGeminiModel}
+              onValueChange={setSelectedGeminiModel}
+            >
               <SelectTrigger className="w-[200px] bg-background/50 border-border shadow-none">
                 <SelectValue placeholder="Gemini Model" />
               </SelectTrigger>
@@ -250,19 +359,21 @@ export function NeuralLinkChat() {
                   <Brain size={32} className="text-primary animate-pulse" />
                 </div>
                 <div className="space-y-1">
-                  <p className="text-sm font-medium text-foreground/80">Neural Connection established</p>
+                  <p className="text-sm font-medium text-foreground/80">
+                    Neural Connection established
+                  </p>
                   <p className="text-xs text-muted-foreground max-w-xs">
-                    {mode === 'orchestrator'
-                      ? 'Orchestrator üzemmód: Komplex feladatok delegálása ügynököknek.'
-                      : mode === 'cloudflare_chat'
-                      ? 'Cloudflare Chat üzemmód: közvetlen folyamatos beszélgetés a Cloudflare chat workerrel.'
-                      : mode === 'cloudflare'
-                      ? 'Cloudflare Edge üzemmód: delegálás a Cloudflare Worker felé (EDGE_ENABLED szükséges).'
-                      : mode === 'github'
-                      ? 'GitHub Models üzemmód: GPT-4.1, DeepSeek-R1, Grok 3 és más felhő modellek.'
-                      : mode === 'gemini'
-                      ? 'Gemini üzemmód: Google Gemini 2.5 Pro, Flash és más modellek.'
-                      : 'Ollama üzemmód: Közvetlen kommunikáció a lokális modellel.'}
+                    {mode === "orchestrator"
+                      ? "Orchestrator üzemmód: Komplex feladatok delegálása ügynököknek."
+                      : mode === "cloudflare_chat"
+                        ? "Cloudflare Chat üzemmód: közvetlen folyamatos beszélgetés a Cloudflare chat workerrel."
+                        : mode === "cloudflare"
+                          ? "Cloudflare Edge üzemmód: delegálás a Cloudflare Worker felé (EDGE_ENABLED szükséges)."
+                          : mode === "github"
+                            ? "GitHub Models üzemmód: GPT-4.1, DeepSeek-R1, Grok 3 és más felhő modellek."
+                            : mode === "gemini"
+                              ? "Gemini üzemmód: Google Gemini 2.5 Pro, Flash és más modellek."
+                              : "Ollama üzemmód: Közvetlen kommunikáció a lokális modellel."}
                   </p>
                 </div>
               </div>
@@ -270,59 +381,72 @@ export function NeuralLinkChat() {
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`flex gap-3 ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}
+                className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-300`}
               >
-                {msg.role === 'assistant' && (
+                {msg.role === "assistant" && (
                   <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                     <Robot size={14} className="text-primary" />
                   </div>
                 )}
                 <div className="flex flex-col gap-1.5 max-w-[85%]">
                   <div
-                    className={`rounded-2xl px-4 py-2.5 text-sm shadow-sm ${msg.role === 'user'
-                        ? 'bg-primary text-primary-foreground font-medium'
-                        : 'bg-muted/50 border border-border/50 text-foreground'
-                      }`}
+                    className={`rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
+                      msg.role === "user"
+                        ? "bg-primary text-primary-foreground font-medium"
+                        : "bg-muted/50 border border-border/50 text-foreground"
+                    }`}
                   >
-                    <p className="whitespace-pre-wrap leading-relaxed">{msg.content}</p>
+                    <p className="whitespace-pre-wrap leading-relaxed">
+                      {msg.content}
+                    </p>
                   </div>
 
-                  {msg.role === 'assistant' && (msg.thoughts || msg.contextUsed) && (
-                    <div className="flex flex-col gap-1 px-1">
-                      <button
-                        onClick={() => toggleThoughts(i)}
-                        className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors w-fit"
-                      >
-                        <span className={`w-1.5 h-1.5 rounded-full ${msg.thoughts ? 'bg-amber-500 animate-pulse' : 'bg-zinc-500'}`} />
-                        {expandedThoughts[i] ? 'Hide Intel' : 'Show Intel'}
-                        {msg.executedBy && <span className="opacity-50 ml-2">via {msg.executedBy}</span>}
-                      </button>
+                  {msg.role === "assistant" &&
+                    (msg.thoughts || msg.contextUsed) && (
+                      <div className="flex flex-col gap-1 px-1">
+                        <button
+                          onClick={() => toggleThoughts(i)}
+                          className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors w-fit"
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${msg.thoughts ? "bg-amber-500 animate-pulse" : "bg-zinc-500"}`}
+                          />
+                          {expandedThoughts[i] ? "Hide Intel" : "Show Intel"}
+                          {msg.executedBy && (
+                            <span className="opacity-50 ml-2">
+                              via {msg.executedBy}
+                            </span>
+                          )}
+                        </button>
 
-                      {expandedThoughts[i] && (
-                        <div className="mt-2 space-y-3 animate-in fade-in duration-200">
-                          {msg.thoughts && (
-                            <div className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
-                              <p className="text-[11px] italic text-amber-500/80 leading-normal">
-                                {msg.thoughts}
-                              </p>
-                            </div>
-                          )}
-                          {msg.contextUsed && msg.contextUsed.length > 0 && (
-                            <div className="flex flex-wrap gap-1.5">
-                              {msg.contextUsed.map((ctx, ci) => (
-                                <div key={ci} className="flex items-center gap-1 px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-mono text-blue-400">
-                                  <FileText size={10} />
-                                  {ctx}
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  )}
+                        {expandedThoughts[i] && (
+                          <div className="mt-2 space-y-3 animate-in fade-in duration-200">
+                            {msg.thoughts && (
+                              <div className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
+                                <p className="text-[11px] italic text-amber-500/80 leading-normal">
+                                  {msg.thoughts}
+                                </p>
+                              </div>
+                            )}
+                            {msg.contextUsed && msg.contextUsed.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5">
+                                {msg.contextUsed.map((ctx, ci) => (
+                                  <div
+                                    key={ci}
+                                    className="flex items-center gap-1 px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-mono text-blue-400"
+                                  >
+                                    <FileText size={10} />
+                                    {ctx}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
                 </div>
-                {msg.role === 'user' && (
+                {msg.role === "user" && (
                   <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                     <User size={14} className="text-primary" />
                   </div>
@@ -332,7 +456,10 @@ export function NeuralLinkChat() {
             {isLoading && (
               <div className="flex gap-3">
                 <div className="h-8 w-8 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
-                  <Circle size={14} className="text-emerald-400 animate-pulse" />
+                  <Circle
+                    size={14}
+                    className="text-emerald-400 animate-pulse"
+                  />
                 </div>
                 <div className="bg-zinc-800/60 rounded-lg px-3 py-2">
                   <p className="text-sm text-zinc-500">Válasz generálása...</p>
@@ -347,8 +474,22 @@ export function NeuralLinkChat() {
             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), send())}
-              placeholder={mode === 'orchestrator' ? 'Üzenet az Orchestratornak...' : mode === 'cloudflare_chat' ? 'Üzenet a Cloudflare Chat-nek...' : mode === 'cloudflare' ? 'Üzenet a Cloudflare Edge-nek...' : mode === 'github' ? 'Üzenet a GitHub Models-nek...' : mode === 'gemini' ? 'Üzenet a Gemini-nek...' : 'Üzenet az AI-nak...'}
+              onKeyDown={(e) =>
+                e.key === "Enter" && !e.shiftKey && (e.preventDefault(), send())
+              }
+              placeholder={
+                mode === "orchestrator"
+                  ? "Üzenet az Orchestratornak..."
+                  : mode === "cloudflare_chat"
+                    ? "Üzenet a Cloudflare Chat-nek..."
+                    : mode === "cloudflare"
+                      ? "Üzenet a Cloudflare Edge-nek..."
+                      : mode === "github"
+                        ? "Üzenet a GitHub Models-nek..."
+                        : mode === "gemini"
+                          ? "Üzenet a Gemini-nek..."
+                          : "Üzenet az AI-nak..."
+              }
               className="min-h-[60px] bg-zinc-900 border-zinc-800 resize-none"
               disabled={isLoading}
             />
