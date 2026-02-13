@@ -6,6 +6,27 @@
 
 ---
 
+## 2026-02-13 08:40 - ⚙️ Iron Clad Python AI Backend (Phase 2 vLLM Routing) ✅
+
+**Track:** `iron_clad_backend_20260212`
+**Feladat:** Nagy modellek vLLM-en futtatása, route + fallback stratégia kialakítása a LiteLLM/Ollama rétegek fölé építve.
+
+**Eredmények:**
+
+- ✅ Konfiguráció bővítés (`myai/backend/config.py`): `VLLM_BASE_URL`, `IRON_CLAD_HIGH_CAPACITY_MODELS`, új `vllm_base_url` + `high_capacity_models` mezők
+- ✅ Gateway routing (`myai/backend/providers.py`): `_should_use_vllm`, `_try_vllm`, OpenAI-kompatibilis POST hívás, Phoenix fallback (vLLM → LiteLLM → Ollama)
+- ✅ Új unit tesztek (`myai/tests/test_iron_clad_provider.py`): high-capacity → vLLM, vLLM hiba → LiteLLM fallback, kis modell → LiteLLM útvonal
+- ✅ Dokumentáció update (`myai/backend/README.md`): Phase 2 env változók + routing leírás
+- ✅ Track meta update (`conductor/tracks/iron_clad_backend_20260212/meta.json`): progress `25 → 45`
+
+**Verifikáció:**
+
+- ✅ `npm test` PASS (`63` test file, `486` test)
+
+**Hatás:**
+
+- A nagy modell inference mostantól GPU-gyorsított vLLM-en történik, miközben a rendszer önjavító fallback útvonala változatlanul garantálja a szolgáltatás folytonosságát.
+
 ## 2026-02-13 07:05 - 🛡️ Iron Clad Python AI Backend (Phase 1 Skeleton) ✅
 
 **Track:** `iron_clad_backend_20260212`
