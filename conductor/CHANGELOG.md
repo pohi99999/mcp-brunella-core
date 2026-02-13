@@ -2,6 +2,25 @@
 
 A cél: minden jelentős rendszer- és fejlesztési módosítás rövid, visszakereshető naplózása.
 
+## 2026-02-14 - Copilot session: Living Documentation regression tests (ProjectConductor)
+
+### Összefoglaló (Teszt hardening)
+
+Új, izolált unit tesztek készültek a ProjectConductor Living Documentation logikájára, hogy a bootstrap + coverage generálás regresszióit korán detektáljuk.
+
+### Implementált technikai változások (Teszt)
+
+- **Új tesztfájl**: `test/project_conductor_living_docs.test.ts`
+  - ESM-kompatibilis, hoisted `fs` mock állapottal
+  - validálja a hiányzó agent docs bootstrap létrehozását
+  - validálja a coverage riport 100%-os állapotát bootstrap után
+  - validálja, hogy a már létező docs fájlok nem íródnak felül
+
+### Verifikáció (Teszt)
+
+- Célteszt zöld: `npx vitest run test/project_conductor_living_docs.test.ts`
+- Teljes futtatás zöld: `npm test` (62 fájl, 481 teszt PASS)
+
 ## 2026-02-14 - Copilot session: Living Documentation bootstrap for missing agent docs
 
 ### Összefoglaló (Living Docs bootstrap)
