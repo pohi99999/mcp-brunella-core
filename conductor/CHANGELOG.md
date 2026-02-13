@@ -2,6 +2,25 @@
 
 A cél: minden jelentős rendszer- és fejlesztési módosítás rövid, visszakereshető naplózása.
 
+## 2026-02-14 - Copilot session: Living Documentation coverage automation (agents)
+
+### Összefoglaló (Living Docs)
+
+A ProjectConductor dokumentáció-szinkron folyamat bővítve lett automatikus agent dokumentáció-lefedettségi riporttal.
+
+### Implementált technikai változások (Living Docs)
+
+- **ProjectConductor sync bővítés** (`src/agents/ProjectConductorAgent.ts`):
+  - új auto-update célfájl: `docs/agents/README_COVERAGE.md`
+  - új generátor metódus: `updateAgentDocumentationCoverage()`
+  - forrás: `src/agents/*.ts` fájlok (Base/types kizárva)
+  - cél: `docs/agents/<AgentName>.md` létezésének ellenőrzése
+  - kimenet: összesített coverage % + táblázatos státusz
+
+### Verifikáció (Living Docs)
+
+- Teljes futtatás zöld: `npm test` (61 fájl, 479 teszt PASS)
+
 ## 2026-02-14 - Copilot session: LanceDB Dual-Index Embedding Migration (mxbai + legacy fallback)
 
 ### Összefoglaló (Dual-index)

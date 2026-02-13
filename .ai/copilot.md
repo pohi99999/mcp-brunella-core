@@ -6,6 +6,28 @@
 
 ---
 
+## 2026-02-14 05:40 - 📚 Living Documentation: Agent Doc Coverage Automation ✅
+
+**Track:** `living_docs_coverage_20260214`
+**Feladat:** A docs sync folyamat kiegészítése automatikus agent dokumentáció-lefedettségi riporttal.
+
+**Eredmények:**
+
+- ✅ `src/agents/ProjectConductorAgent.ts` bővítve:
+  - új auto-update dokumentum: `docs/agents/README_COVERAGE.md`
+  - új metódus: `updateAgentDocumentationCoverage()`
+  - `src/agents/*.ts` beolvasása, Base/types kizárással
+  - várt dokumentumok ellenőrzése: `docs/agents/<AgentName>.md`
+  - coverage százalék + táblázat generálás
+
+**Verifikáció:**
+
+- ✅ `npm test` PASS (`61` test file, `479` test)
+
+**Hatás:**
+
+- A `brunella conductor sync` mostantól "living documentation" módon láthatóvá teszi, mely agent-ekhez hiányzik a dedikált docs oldali leírás.
+
 ## 2026-02-14 05:30 - 🧠 LanceDB Dual-Index Embedding Migration (mxbai + legacy fallback) ✅
 
 **Track:** `lancedb_dual_index_transition_20260214`
