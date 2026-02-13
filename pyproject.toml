@@ -27,6 +27,8 @@ dependencies = [
     "python-dotenv>=1.0.0",
     "requests>=2.32.0",
     "aiofiles>=24.0.0",
+    # Tokenization
+    "tiktoken>=0.7.0",
 ]
 
 [project.optional-dependencies]
