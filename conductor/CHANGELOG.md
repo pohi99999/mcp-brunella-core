@@ -2,6 +2,32 @@
 
 A cél: minden jelentős rendszer- és fejlesztési módosítás rövid, visszakereshető naplózása.
 
+## 2026-02-14 - Copilot session: Living Documentation bootstrap for missing agent docs
+
+### Összefoglaló (Living Docs bootstrap)
+
+A ProjectConductor immár nemcsak riportálja a dokumentációs lefedettséget, hanem automatikusan létre is hozza a hiányzó agent dokumentációs stubokat.
+
+### Implementált technikai változások (Bootstrap)
+
+- **Automatikus docs bootstrap** (`src/agents/ProjectConductorAgent.ts`):
+  - új metódus: `bootstrapMissingAgentDocs(...)`
+  - hiányzó `docs/agents/<AgentName>.md` fájlok létrehozása sync futáskor
+  - alapadatok kinyerése a forrásból (`name`, `role`, `description`, `capabilities`)
+  - kiegészítő helper metódusok:
+    - `extractAssignedString(...)`
+    - `extractCapabilities(...)`
+
+- **Új agent dokumentációs oldalak** (`docs/agents/*.md`):
+  - 16 db új stub oldal generálva a teljes `src/agents/*Agent.ts` készlethez.
+
+- **Coverage riport frissítés** (`docs/agents/README_COVERAGE.md`):
+  - lefedettség: `0%` → `100%`
+
+### Verifikáció (Bootstrap)
+
+- Teljes futtatás zöld: `npm test` (61 fájl, 479 teszt PASS)
+
 ## 2026-02-14 - Copilot session: Living Documentation coverage automation (agents)
 
 ### Összefoglaló (Living Docs)

@@ -1036,6 +1036,12 @@ Ez a mappa tartalmazza a Brunella projekt specifikáció-vezérelt fejlesztési 
       .filter((fileName) => fileName !== "BaseAgent.ts")
       .sort((a, b) => a.localeCompare(b));
 
+    const bootstrapResult = this.bootstrapMissingAgentDocs(
+      agentFiles,
+      agentsDir,
+      docsAgentsDir,
+    );
+
     const rows: string[] = [];
     let documentedCount = 0;
 
@@ -1088,8 +1094,106 @@ This file is auto-generated during \
         documentedCount,
         coverage,
         outputPath,
+        bootstrappedDocs: bootstrapResult.created,
       },
     };
+  }
+
+  /**
+   * Hiányzó agent dokumentációk automatikus bootstrap generálása.
+   */
+  private bootstrapMissingAgentDocs(
+    agentFiles: string[],
+    agentsDir: string,
+    docsAgentsDir: string,
+  ): { created: number } {
+    let created = 0;
+
+    for (const fileName of agentFiles) {
+      const baseName = fileName.replace(/\.ts$/, "");
+      const sourcePath = path.join(agentsDir, fileName);
+      const docPath = path.join(docsAgentsDir, `${baseName}.md`);
+
+      if (fs.existsSync(docPath)) {
+        continue;
+      }
+
+      const source = fs.readFileSync(sourcePath, "utf-8");
+      const agentName = this.extractAssignedString(source, "name") || baseName;
+      const role = this.extractAssignedString(source, "role") || "TBD";
+      const description =
+        this.extractAssignedString(source, "description") ||
+        "Agent-specific documentation not yet finalized.";
+      const capabilities = this.extractCapabilities(source);
+
+      const content = `# ${baseName}
+
+**Agent Name:** \`${agentName}\`
+**Source:** \`src/agents/${fileName}\`
+**Role:** ${role}
+
+## Description
+
+${description}
+
+## Capabilities
+
+${capabilities.length > 0 ? capabilities.map((c) => `- \`${c}\``).join("\n") : "- _No explicit capabilities listed yet._"}
+
+## Inputs / Outputs
+
+- **Primary input:** Task string + optional context object.
+- **Primary output:** Agent result/response object.
+
+## Operational Notes
+
+- Generated automatically by \`ProjectConductorAgent\` during \`conductor sync\`.
+- Replace placeholders and expand with concrete examples over time.
+
+## TODO
+
+- [ ] Add real-world usage examples
+- [ ] Add failure modes and recovery notes
+- [ ] Add integration touchpoints
+`;
+
+      fs.writeFileSync(docPath, content, "utf-8");
+      created += 1;
+    }
+
+    return { created };
+  }
+
+  private extractAssignedString(source: string, property: string): string | null {
+    const directMatch = source.match(
+      new RegExp(`${property}\\s*=\\s*['\"]([^'\"]+)['\"]`),
+    );
+    if (directMatch?.[1]) {
+      return directMatch[1].trim();
+    }
+
+    const blockMatch = source.match(
+      new RegExp(`${property}\\s*=\\s*([\"'\`])([\\s\\S]*?)\\1`),
+    );
+    if (blockMatch?.[2]) {
+      return blockMatch[2].replace(/\s+/g, " ").trim();
+    }
+
+    return null;
+  }
+
+  private extractCapabilities(source: string): string[] {
+    const capabilitiesMatch = source.match(
+      /capabilities\s*=\s*\[([\s\S]*?)\]/,
+    );
+    if (!capabilitiesMatch?.[1]) {
+      return [];
+    }
+
+    const entries = capabilitiesMatch[1].match(/['\"]([^'\"]+)['\"]/g) || [];
+    return entries
+      .map((entry) => entry.replace(/['\"]/g, "").trim())
+      .filter(Boolean);
   }
 
   // --------------------------------------------------------------------------
