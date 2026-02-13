@@ -1,4 +1,4 @@
-# Iron Clad Python AI Backend (Phase 1-3)
+# Iron Clad Python AI Backend (Phase 1-4)
 
 OpenAI-kompatibilis FastAPI gateway skeleton + vLLM routing:
 
@@ -17,6 +17,17 @@ OpenAI-kompatibilis FastAPI gateway skeleton + vLLM routing:
 - `IRON_CLAD_GATEWAY_URL`: a FastAPI gateway elérhetősége (alapértelmezés: `http://127.0.0.1:8010`).
 - A LangGraph workflow a gateway `/chat/completions` endpointot használja, így a vLLM/LiteLLM/Ollama routing automatikusan érvényesül.
 - Fő node-ok: Supervisor → Diagnosztika → Terv → Javító, checkpointinggel.
+
+## OpenInterpreter integráció (Phase 4)
+
+- `IRON_CLAD_INTERPRETER_ENABLED`: `true/false` (alap: `false`)
+- `IRON_CLAD_INTERPRETER_AUTO_RUN`: `true/false` (alap: `false`)
+- `IRON_CLAD_INTERPRETER_ALLOWED_MODES`: engedélyezett módok (alap: `python`)
+- `IRON_CLAD_INTERPRETER_MAX_CHARS`: maximális utasítás hossz (alap: `4000`)
+- `IRON_CLAD_INTERPRETER_SYSTEM_MESSAGE`: opcionális system prompt bővítés
+
+Az execute node az első javító akciót futtatja OpenInterpreterrel (ha engedélyezett),
+és az eredményt a workflow állapotába menti.
 
 ## Futtatás
 
