@@ -6,6 +6,83 @@
 
 ---
 
+## 2026-02-14 22:00 - 🔒 Biztonsági Audit, MCP Hardening & Workspace Visibility Fix ✅
+
+**Feladat:** Teljes biztonsági audit, MCP konfiguráció optimalizálás, Cloudflare MCP server integráció, Python cwd fix és workspace láthatósági javítások.
+
+**7 commit a mai session során:**
+
+### 1. 🔧 Codex NeuralLink Chat Refactor Track Completion (3b79b375)
+
+- `safeJson<any>` eltávolítás és típusos verzióra cserélés (`apiService.ts`)
+- Dashboard NeuralLinkChat tesztek (3 teszt)
+- ErrorFallback.tsx javítás teszt környezethez
+- Track lezárás: `codex_chat_refactor_20260212`
+
+### 2. 🛡️ Biztonsági Audit & npm Frissítés (4cc3db5f)
+
+- `npm audit fix` + `npm update` végrehajtása
+- Dependency-k naprakészre hozva
+- Ismert sebezhetőségek megszüntetve
+
+### 3. 🐛 5 Kritikus Bugfix (df5b3fbb)
+
+- **Command injection** védelem: `system_run_command` tool-ban shell parancs szanitizálás
+- **Route duplikáció** megszüntetése: `web.ts`-ből a kétszeres route regisztráció kijavítva
+- **McpProcessManager** stub javítás: hiányzó metódusok pótlása
+- **Hardcoded verzió** feloldása: `package.json`-ból dinamikus olvasás
+- **CORS warning** megszüntetése: origin konfigurációs figyelmeztetés javítva
+
+### 4. ⚙️ 8 MCP Konfigurációs Optimalizáció (e07785bb)
+
+- `mcp_servers.json` és `.vscode/mcp.json` átvizsgálása és hardening
+- Felesleges/elavult konfiguráció eltávolítva
+- Tool szűrés, timeout beállítások, path-ok normalizálása
+- Env változó hivatkozások egységesítve
+
+### 5. ☁️ Cloudflare MCP Server Integráció (0a745450)
+
+- `@cloudflare/mcp-server-cloudflare` hozzáadva a konfigurációhoz
+- `mcp_servers.json` + `.vscode/mcp.json` bővítve
+- Account ID és API token input változók konfigurálva
+- Működőképesség verifikálva (7 MCP config betöltve, 6 aktív)
+
+### 6. 🔧 Tiktoken & LangSmith Startup Warning Fix (27170a76)
+
+- **Tiktoken**: `tiktoken>=0.7.0` felvéve `pyproject.toml`-ba, tiktoken 0.12.0 telepítve
+- **LangSmith**: `LANGCHAIN_CALLBACKS_BACKGROUND=true` hozzáadva `.env`-hez
+- Startup logból eltűntek a korábbi figyelmeztetések
+
+### 7. 🗂️ Workspace Visibility & Python cwd Fix (26d6c81a)
+
+- **`src/config/index.ts`**: `allowedRoots` bővítve 11 új könyvtárral (`src`, `myai`, `conductor`, `test`, `docs`, `scripts`, `data`, `public`, `schemas`, `ADR`, `_KNOWLEDGE_BASE`)
+- **`myai/config.py`**: `WORKSPACE_ROOT = Path(__file__).resolve().parent.parent` — mindig a projekt gyökérre mutat, cwd-től függetlenül
+- **`myai/core/tools.py`**: `list_files()` default `root=""` → `WORKSPACE_ROOT` alapú path feloldás; üres, relatív és abszolút útvonalak kezelése
+
+**Verifikáció:**
+
+- ✅ `npm run build` — 0 hiba
+- ✅ `npm test` — 63 fájl, 486 teszt, MIND PASS
+- ✅ Rendszer indítás OK (7 MCP config, 6 aktív)
+
+**Érintett fő fájlok:**
+
+- `src/config/index.ts`
+- `src/server/web.ts`
+- `src/tools/system.ts`
+- `src/utils/mcpProcessManager.ts`
+- `myai/config.py`
+- `myai/core/tools.py`
+- `mcp_servers.json`
+- `.vscode/mcp.json`
+- `pyproject.toml`
+- `package.json`
+
+**Branch:** `copilot/vscode-mlh60ptr-9pqa`
+**Státusz:** ✅ KÉSZ. Minden commit pusholva, build és tesztek zöldek.
+
+---
+
 ## 2026-02-14 18:00 - 🔧 Codex NeuralLink Chat Refactor - Track Completion ✅
 
 **Track:** `codex_chat_refactor_20260212`
