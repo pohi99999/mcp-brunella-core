@@ -6,6 +6,28 @@
 
 ---
 
+## 2026-02-14 06:05 - 🧪 Living Documentation: ProjectConductor Regression Tests ✅
+
+**Track:** `living_docs_coverage_20260214`
+**Feladat:** A bootstrap + coverage generálás köré stabil unit tesztburkot építeni.
+
+**Eredmények:**
+
+- ✅ Új tesztfájl: `test/project_conductor_living_docs.test.ts`
+  - ESM-kompatibilis, hoisted `fs` mock-alapú izolált tesztkörnyezet
+  - ellenőrzi a hiányzó docs automatikus létrehozását
+  - ellenőrzi a `README_COVERAGE.md` 100%-os lefedettségi számítását
+  - ellenőrzi, hogy meglévő docs fájlokat nem ír felül a bootstrap
+
+**Verifikáció:**
+
+- ✅ `npx vitest run test/project_conductor_living_docs.test.ts` PASS
+- ✅ `npm test` PASS (`62` test file, `481` test)
+
+**Hatás:**
+
+- A Living Documentation pipeline most már tesztekkel védett, így a bootstrap és coverage logika regressziói hamarabb észlelhetők.
+
 ## 2026-02-14 05:45 - 🧩 Living Documentation: Auto-Bootstrap Missing Agent Docs ✅
 
 **Track:** `living_docs_coverage_20260214`
