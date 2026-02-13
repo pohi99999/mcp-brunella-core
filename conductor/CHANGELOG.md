@@ -26,7 +26,7 @@ Elindult a LangGraph alapú orchestration réteg: elkészült a Supervisor → D
 
 ### Verifikáció (Iron Clad Phase 3)
 
-- Node regresszió: `npm test` (futtatás a záró lépésben)
+- Node regresszió: `npm test` (63 fájl, 486 teszt PASS)
 
 ## 2026-02-13 - Copilot session: Iron Clad Python AI Backend (Phase 2 vLLM routing)
 
