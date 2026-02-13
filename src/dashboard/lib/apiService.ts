@@ -49,6 +49,47 @@ async function safeJson<T>(response: Response): Promise<T> {
   }
 }
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function getErrorMessage(value: unknown): string | undefined {
+  if (!isRecord(value)) return undefined;
+  return typeof value.error === "string" ? value.error : undefined;
+}
+
+function isCloudflareTaskResponse(
+  value: unknown,
+): value is CloudflareTaskResponse {
+  if (!isRecord(value)) return false;
+  return (
+    typeof value.success === "boolean" &&
+    typeof value.taskId === "string" &&
+    typeof value.type === "string" &&
+    typeof value.message === "string"
+  );
+}
+
+function isCloudflareChatResponse(
+  value: unknown,
+): value is CloudflareChatResponse {
+  if (!isRecord(value)) return false;
+  return (
+    typeof value.success === "boolean" &&
+    typeof value.message === "string" &&
+    (value.endpoint === undefined || typeof value.endpoint === "string")
+  );
+}
+
+function isCloudflareStatus(value: unknown): value is CloudflareStatus {
+  if (!isRecord(value)) return false;
+  if (!isRecord(value.status)) return false;
+  return (
+    typeof value.status.enabled === "boolean" &&
+    typeof value.status.healthy === "boolean"
+  );
+}
+
 export interface HealthStatus {
   status: string;
   timestamp: string;
@@ -130,11 +171,16 @@ export async function submitCloudflareTask(
     LONG_TIMEOUT_MS,
   );
 
-  const data: any = await safeJson<any>(response).catch(() => ({
+  const data = await safeJson<CloudflareTaskResponse | { error?: string }>(
+    response,
+  ).catch(() => ({
     error: `HTTP ${response.status}: ${response.statusText}`,
   }));
-  if (!response.ok) throw new Error(data.error || "Cloudflare task failed");
-  return data as CloudflareTaskResponse;
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Cloudflare task failed");
+  if (!isCloudflareTaskResponse(data))
+    throw new Error("Érvénytelen Cloudflare task válasz");
+  return data;
 }
 
 export async function getCloudflareTaskStatus(
@@ -145,10 +191,11 @@ export async function getCloudflareTaskStatus(
     {},
     DEFAULT_TIMEOUT_MS,
   );
-  const data: any = await safeJson<any>(response).catch(() => ({
+  const data = await safeJson<unknown>(response).catch(() => ({
     error: `HTTP ${response.status}: ${response.statusText}`,
   }));
-  if (!response.ok) throw new Error(data.error || "Cloudflare status failed");
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Cloudflare status failed");
   return data;
 }
 
@@ -166,11 +213,16 @@ export async function chatWithCloudflare(
     LONG_TIMEOUT_MS,
   );
 
-  const data: any = await safeJson<any>(response).catch(() => ({
+  const data = await safeJson<CloudflareChatResponse | { error?: string }>(
+    response,
+  ).catch(() => ({
     error: `HTTP ${response.status}: ${response.statusText}`,
   }));
-  if (!response.ok) throw new Error(data.error || "Cloudflare chat failed");
-  return data as CloudflareChatResponse;
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Cloudflare chat failed");
+  if (!isCloudflareChatResponse(data))
+    throw new Error("Érvénytelen Cloudflare chat válasz");
+  return data;
 }
 
 export interface CloudflareStatus {
@@ -188,7 +240,10 @@ export async function getCloudflareStatus(): Promise<CloudflareStatus> {
   );
   if (!response.ok)
     throw new Error(`Cloudflare status: HTTP ${response.status}`);
-  return safeJson<CloudflareStatus>(response);
+  const data = await safeJson<unknown>(response);
+  if (!isCloudflareStatus(data))
+    throw new Error("Érvénytelen Cloudflare státusz válasz");
+  return data;
 }
 
 /**
@@ -472,11 +527,14 @@ export async function getJulesWorkflowRuns(params?: {
     {},
     DEFAULT_TIMEOUT_MS,
   );
-  const data: any = await safeJson<any>(response).catch(() => ({
+  const data = await safeJson<{ runs?: JulesWorkflowRun[]; error?: string }>(
+    response,
+  ).catch(() => ({
     error: `HTTP ${response.status}`,
   }));
-  if (!response.ok) throw new Error(data.error || "Jules workflow runs failed");
-  return (data.runs || []) as JulesWorkflowRun[];
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Jules workflow runs failed");
+  return data.runs || [];
 }
 
 export async function dispatchJulesWorkflow(params?: {
@@ -497,10 +555,15 @@ export async function dispatchJulesWorkflow(params?: {
     },
     DEFAULT_TIMEOUT_MS,
   );
-  const data: any = await safeJson<any>(response).catch(() => ({
+  const data = await safeJson<
+    { success: boolean; workflow: string; ref: string } | { error?: string }
+  >(response).catch(() => ({
     error: `HTTP ${response.status}`,
   }));
-  if (!response.ok) throw new Error(data.error || "Jules dispatch failed");
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Jules dispatch failed");
+  if (!isRecord(data))
+    throw new Error("Érvénytelen Jules dispatch válasz");
   return data as { success: boolean; workflow: string; ref: string };
 }
 
@@ -539,11 +602,14 @@ export async function getActiveTrackTodoSummaries(): Promise<
   const response = await fetchWithTimeout(
     `${API_BASE}/api/v1/tracks/todos/active`,
   );
-  const data: any = await safeJson<any>(response).catch(() => ({
+  const data = await safeJson<
+    { tracks?: TrackTodoSummary[]; error?: string }
+  >(response).catch(() => ({
     error: `HTTP ${response.status}: ${response.statusText}`,
   }));
-  if (!response.ok) throw new Error(data.error || "Tracks todos failed");
-  return (data.tracks || []) as TrackTodoSummary[];
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Tracks todos failed");
+  return data.tracks || [];
 }
 
 export async function getTrackTodos(
@@ -552,10 +618,13 @@ export async function getTrackTodos(
   const response = await fetchWithTimeout(
     `${API_BASE}/api/v1/tracks/${encodeURIComponent(trackId)}/todos`,
   );
-  const data: any = await safeJson<any>(response).catch(() => ({
+  const data = await safeJson<TrackTodosResponse | { error?: string }>(
+    response,
+  ).catch(() => ({
     error: `HTTP ${response.status}: ${response.statusText}`,
   }));
-  if (!response.ok) throw new Error(data.error || "Track todos failed");
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Track todos failed");
   return data as TrackTodosResponse;
 }
 
@@ -576,10 +645,13 @@ export async function toggleTrackTodo(params: {
       ),
     },
   );
-  const data: any = await safeJson<any>(response).catch(() => ({
+  const data = await safeJson<TrackTodosResponse | { error?: string }>(
+    response,
+  ).catch(() => ({
     error: `HTTP ${response.status}: ${response.statusText}`,
   }));
-  if (!response.ok) throw new Error(data.error || "Toggle todo failed");
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Toggle todo failed");
   return data as TrackTodosResponse;
 }
 
@@ -916,21 +988,24 @@ export async function runRobotkezTest(
     },
     180000,
   ); // 3 minute timeout for tests
-  return safeJson(response);
+  if (!response.ok) throw new Error(`Robotkéz: HTTP ${response.status}`);
+  return safeJson<{ status: string; sessionId: string; level: number }>(
+    response,
+  );
 }
 
 export async function getRobotkezScreenshot(): Promise<string> {
   return `${PYTHON_API_BASE}/browser/screenshot/latest?t=${Date.now()}`;
 }
 
-export async function getN8nWorkflows(): Promise<any> {
+export async function getN8nWorkflows(): Promise<unknown> {
   const response = await fetchWithTimeout(
     `${API_BASE}/api/n8n/workflows`,
     {},
     15000,
   );
   if (!response.ok) throw new Error(`n8n: HTTP ${response.status}`);
-  return safeJson<any>(response);
+  return safeJson<unknown>(response);
 }
 
 /**
@@ -948,7 +1023,7 @@ export async function addGoldSample(
   completion: string,
   source: string = "manual",
   quality: number = 1.0,
-): Promise<any> {
+): Promise<unknown> {
   const response = await fetchWithTimeout(
     `${API_BASE}/api/incubator/gold-sample`,
     {
@@ -957,7 +1032,7 @@ export async function addGoldSample(
       body: JSON.stringify({ prompt, completion, source, quality }),
     },
   );
-  return safeJson(response);
+  return safeJson<unknown>(response);
 }
 
 export async function getIncubatorStats(): Promise<DatasetStats> {

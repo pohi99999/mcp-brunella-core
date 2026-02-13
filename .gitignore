@@ -79,6 +79,8 @@ logs/
 *.db-shm
 *.log
 .tmp.driveupload/
+developer_metrics.json
+data/developer_metrics.json
 
 # Problematic embedded Git repositories / submodules (cleaned up)
 _KNOWLEDGE_BASE/actions-runner/
