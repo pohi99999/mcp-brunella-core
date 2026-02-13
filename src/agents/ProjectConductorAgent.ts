@@ -1095,6 +1095,7 @@ This file is auto-generated during \
         coverage,
         outputPath,
         bootstrappedDocs: bootstrapResult.created,
+        refreshedDocs: bootstrapResult.updated,
       },
     };
   }
@@ -1106,27 +1107,47 @@ This file is auto-generated during \
     agentFiles: string[],
     agentsDir: string,
     docsAgentsDir: string,
-  ): { created: number } {
+  ): { created: number; updated: number } {
     let created = 0;
+    let updated = 0;
 
     for (const fileName of agentFiles) {
       const baseName = fileName.replace(/\.ts$/, "");
       const sourcePath = path.join(agentsDir, fileName);
       const docPath = path.join(docsAgentsDir, `${baseName}.md`);
 
-      if (fs.existsSync(docPath)) {
+      const source = fs.readFileSync(sourcePath, "utf-8");
+      const content = this.generateAgentDocContent(baseName, fileName, source);
+
+      if (!fs.existsSync(docPath)) {
+        fs.writeFileSync(docPath, content, "utf-8");
+        created += 1;
         continue;
       }
 
-      const source = fs.readFileSync(sourcePath, "utf-8");
-      const agentName = this.extractAssignedString(source, "name") || baseName;
-      const role = this.extractAssignedString(source, "role") || "TBD";
-      const description =
-        this.extractAssignedString(source, "description") ||
-        "Agent-specific documentation not yet finalized.";
-      const capabilities = this.extractCapabilities(source);
+      const existingDoc = fs.readFileSync(docPath, "utf-8");
+      if (this.shouldRefreshLegacyAgentDoc(existingDoc)) {
+        fs.writeFileSync(docPath, content, "utf-8");
+        updated += 1;
+      }
+    }
 
-      const content = `# ${baseName}
+    return { created, updated };
+  }
+
+  private generateAgentDocContent(
+    baseName: string,
+    fileName: string,
+    source: string,
+  ): string {
+    const agentName = this.extractAssignedString(source, "name") || baseName;
+    const role = this.extractAssignedString(source, "role") || "TBD";
+    const description =
+      this.extractAssignedString(source, "description") ||
+      "Agent-specific documentation not yet finalized.";
+    const capabilities = this.extractCapabilities(source);
+
+    return `# ${baseName}
 
 **Agent Name:** \`${agentName}\`
 **Source:** \`src/agents/${fileName}\`
@@ -1156,12 +1177,13 @@ ${capabilities.length > 0 ? capabilities.map((c) => `- \`${c}\``).join("\n") : "
 - [ ] Add failure modes and recovery notes
 - [ ] Add integration touchpoints
 `;
+  }
 
-      fs.writeFileSync(docPath, content, "utf-8");
-      created += 1;
-    }
-
-    return { created };
+  private shouldRefreshLegacyAgentDoc(existingDoc: string): boolean {
+    return (
+      existingDoc.includes("## Purpose") ||
+      existingDoc.includes("- Add capabilities and examples")
+    );
   }
 
   private extractAssignedString(source: string, property: string): string | null {
