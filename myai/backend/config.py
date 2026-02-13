@@ -12,6 +12,7 @@ class BackendConfig:
     backend_name: str
     vllm_base_url: str | None
     high_capacity_models: Tuple[str, ...]
+    gateway_base_url: str | None
 
 
 def _normalize_url(value: str | None) -> str | None:
@@ -36,5 +37,8 @@ def get_backend_config() -> BackendConfig:
         vllm_base_url=_normalize_url(os.getenv("VLLM_BASE_URL", "http://localhost:8001")),
         high_capacity_models=_parse_high_capacity_models(
             os.getenv("IRON_CLAD_HIGH_CAPACITY_MODELS", "qwen2.5-72b-instruct")
+        ),
+        gateway_base_url=_normalize_url(
+            os.getenv("IRON_CLAD_GATEWAY_URL", "http://127.0.0.1:8010")
         ),
     )

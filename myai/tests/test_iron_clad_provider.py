@@ -14,6 +14,7 @@ def make_config(**overrides: object) -> BackendConfig:
         "backend_name": "iron",
         "vllm_base_url": "http://localhost:8001",
         "high_capacity_models": ("mega-coder",),
+        "gateway_base_url": "http://127.0.0.1:8010",
     }
     base_kwargs.update(overrides)
     return BackendConfig(**base_kwargs)  # type: ignore[arg-type]
