@@ -2,6 +2,31 @@
 
 A cél: minden jelentős rendszer- és fejlesztési módosítás rövid, visszakereshető naplózása.
 
+## 2026-02-13 - Copilot session: Iron Clad Python AI Backend (Phase 2 vLLM routing)
+
+### Összefoglaló (Iron Clad Phase 2)
+
+Megérkezett a nagy modellekre optimalizált Phase 2 frissítés: az Iron Clad backend most már vLLM szolgáltatáson keresztül hajtja végre a nagy teljesítményű modelleket, miközben megőrzi a LiteLLM → Ollama önjavító fallback útvonalat.
+
+### Implementált technikai változások (Iron Clad Phase 2)
+
+- **Konfiguráció bővítés** (`myai/backend/config.py`):
+  - új mezők: `vllm_base_url`, `high_capacity_models`
+  - env változók: `VLLM_BASE_URL`, `IRON_CLAD_HIGH_CAPACITY_MODELS`
+- **vLLM routing + fallback** (`myai/backend/providers.py`):
+  - `_should_use_vllm` + `_try_vllm` útvonal
+  - nagy modellek → vLLM → (hiba) → LiteLLM → Ollama
+- **Új unit tesztek** (`myai/tests/test_iron_clad_provider.py`):
+  - high capacity modell vLLM-re megy
+  - vLLM hiba esetén LiteLLM fallback
+  - kis modellek kihagyják a vLLM-et
+- **README frissítés** (`myai/backend/README.md`): vLLM környezeti változók, routing leírás
+- **Track meta** (`conductor/tracks/iron_clad_backend_20260212/meta.json`): progress `25 → 45`
+
+### Verifikáció (Iron Clad Phase 2)
+
+- Teljes regresszió: `npm test` (63 fájl, 486 teszt PASS)
+
 ## 2026-02-13 - Copilot session: Iron Clad Python AI Backend (Phase 1 skeleton)
 
 ### Összefoglaló (Iron Clad Phase 1)
