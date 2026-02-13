@@ -20,6 +20,9 @@ function corsWhitelist(req: Request, res: Response, next: NextFunction) {
   const origin = req.headers.origin;
   const corsOrigins = getCorsOrigins();
   if (corsOrigins.length === 0) {
+    if (process.env.NODE_ENV === 'production') {
+      reqLogger.structured('warn', 'CORS_ORIGINS not set in production — allowing all origins is unsafe', {});
+    }
     res.setHeader('Access-Control-Allow-Origin', '*');
   } else if (origin && corsOrigins.includes(origin)) {
     res.setHeader('Access-Control-Allow-Origin', origin);

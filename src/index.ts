@@ -23,11 +23,22 @@ async function main() {
     const { registerAllTools } = await import("./server/registry.js");
     const { agentManager } = await import("./agents/AgentManager.js");
     const { validateSecrets } = await import("./utils/validateSecrets.js");
+    const { readFileSync } = await import("fs");
+
+    // Read version from package.json
+    const pkgVersion = (() => {
+      try {
+        const pkg = JSON.parse(readFileSync("package.json", "utf-8"));
+        return typeof pkg.version === "string" ? pkg.version : "1.0.0";
+      } catch {
+        return "1.0.0";
+      }
+    })();
 
     // Create server instance
     const server = new McpServer({
       name: "mcp-brunella-core",
-      version: "1.0.0",
+      version: pkgVersion,
     });
 
     // Register Tools

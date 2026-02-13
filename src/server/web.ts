@@ -2,6 +2,7 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import path from "path";
+import { readFileSync } from "fs";
 import os from "os";
 import swaggerUi from "swagger-ui-express";
 import { config } from "../config/schema.js";
@@ -62,11 +63,14 @@ interface ActiveTransport {
   server: McpServer;
 }
 
-// Javított robotkezTasks típus
-const robotkezTasks = new Map<
-  string,
-  { status: "in-progress" | "completed" | "failed"; result?: unknown }
->();
+const PACKAGE_VERSION = (() => {
+  try {
+    const pkg = JSON.parse(readFileSync(path.resolve(process.cwd(), "package.json"), "utf-8"));
+    return typeof pkg.version === "string" ? pkg.version : "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+})();
 
 export async function startWebServer() {
   const webUiEnabled =
@@ -91,9 +95,15 @@ export async function startWebServer() {
 
   initMetrics();
 
-  // Auto-connect to configured MCP servers (Stub for now based on configManager)
-  // In a real scenario, we would read from mcp_servers.json
   logInfo("Server", "🔄 Starting MCP Bridge...");
+  try {
+    await mcpProcessManager.loadConfig();
+    const configured = mcpProcessManager.getServersStatus();
+    logInfo("Server", `📋 ${configured.length} MCP server(s) configured`);
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    logError("Server", `MCP config load failed: ${msg}`);
+  }
 
   // Előzetes ügynök regisztráció (hogy az API végpontok működjenek SSE előtt is)
   // Megjegyzés: Ez már megtörténik az index.ts-ben a registerAllTools-on keresztül.
@@ -267,7 +277,7 @@ export async function startWebServer() {
     );
     const server = new McpServer({
       name: "mcp-brunella-core-web",
-      version: "1.0.0",
+      version: PACKAGE_VERSION,
     });
 
     await registerAllTools(server);
@@ -383,52 +393,6 @@ export async function startWebServer() {
       }
     });
 
-    // Robotkéz API végpontok
-    app.post("/api/v1/robotkez/task", async (req, res) => {
-      const taskId = uuidv4();
-      const { task, headless = true, vision = true } = req.body;
-
-      if (!task) {
-        res.status(400).send({ error: "A 'task' mező kötelező." });
-        return;
-      }
-
-      robotkezTasks.set(taskId, { status: "in-progress" });
-
-      try {
-        const { exec } = await import("child_process");
-        const { promisify } = await import("util");
-        const execAsync = promisify(exec);
-
-        const command = `python myai/browser_task_runner.py --task "${task}" --headless ${headless} --vision ${vision}`;
-        const { stdout } = await execAsync(command);
-
-        // Csak az stdout feldolgozása JSON-ként
-        const result = JSON.parse(stdout);
-
-        robotkezTasks.set(taskId, { status: "completed", result });
-        res.status(200).send({ taskId });
-      } catch (error) {
-        const errorMessage =
-          error instanceof Error ? error.message : "Ismeretlen hiba";
-        robotkezTasks.set(taskId, { status: "failed", result: errorMessage });
-        res
-          .status(500)
-          .send({ error: "Feladat végrehajtási hiba.", details: errorMessage });
-      }
-    });
-
-    app.get("/api/v1/robotkez/task/:id", (req, res) => {
-      const { id } = req.params;
-      const task = robotkezTasks.get(id);
-
-      if (!task) {
-        res.status(404).send({ error: "Feladat nem található." });
-        return;
-      }
-
-      res.status(200).send(task);
-    });
   });
 
   httpServer.listen(config.port, () => {
