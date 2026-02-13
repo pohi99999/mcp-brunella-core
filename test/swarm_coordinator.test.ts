@@ -83,7 +83,7 @@ describe("SwarmCoordinator Durable Object", () => {
       expect(content).toContain("SWARM_COORDINATOR: DurableObjectNamespace");
     });
 
-    it('should route /swarm/* to Durable Object', () => {
+    it("should route /swarm/* to Durable Object", () => {
       const content = fs.readFileSync(indexPath, "utf-8");
       expect(content).toContain('path.startsWith("/swarm")');
       expect(content).toContain("SWARM_COORDINATOR.idFromName");

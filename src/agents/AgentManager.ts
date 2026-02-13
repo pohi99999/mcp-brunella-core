@@ -26,6 +26,8 @@ import {
 } from "../core/checkpoint.js";
 import { gitAutoCheckpoint, logRecoveryEvent } from "../core/gitRecovery.js";
 import { autoSaveGoldenSample } from "../core/goldenDatasetBridge.js";
+import { phoenixEventBus } from "../core/phoenixEventBus.js";
+import { failoverRegistry } from "../core/failoverRegistry.js";
 import {
   traceAgentExecution,
   type TraceContext,
@@ -440,6 +442,7 @@ export class AgentManager extends EventEmitter {
     context?: Record<string, unknown>,
     retries = 2,
     parentTraceContext?: TraceContext,
+    isFailover = false,
   ): Promise<TaskResult> {
     const executionStart = Date.now();
     const cb = this.getCircuitBreaker(agentName);
@@ -528,6 +531,13 @@ export class AgentManager extends EventEmitter {
         if (cb.failures >= this.FAILURE_THRESHOLD) {
           cb.isOpen = true;
           logError("AgentManager", `Circuit Breaker TRIPPED (${agentName})!`);
+          phoenixEventBus.publish('phoenix:circuit_breaker', {
+            agentName,
+            state: 'open',
+            previousState: 'closed',
+            failures: cb.failures,
+            timestamp: new Date().toISOString(),
+          });
         }
       },
     };
@@ -634,6 +644,97 @@ export class AgentManager extends EventEmitter {
         errorCount: runtime.errorCount + 1,
       });
       setAgentStatus(agentName, "error", instruction);
+
+      // ================================================================
+      // PHOENIX PROTOCOL SZINT 4: Cross-Agent Failover
+      // ================================================================
+      phoenixEventBus.publish('phoenix:agent_failed', {
+        agentName,
+        taskInstruction: instruction,
+        taskContext: context,
+        error: lastError?.message || 'Unknown error',
+        retriesExhausted: retries,
+        timestamp: new Date().toISOString(),
+      });
+
+      // Attempt cross-agent failover (only if not already a failover attempt)
+      if (!isFailover) {
+        const fallbacks = failoverRegistry.getFallbacks(agentName);
+        for (let i = 0; i < fallbacks.length; i++) {
+          const fallbackAgent = fallbacks[i];
+          if (!this.agents.has(fallbackAgent)) continue;
+
+          const fallbackCb = this.getCircuitBreaker(fallbackAgent);
+          if (fallbackCb.isOpen) continue;
+
+          phoenixEventBus.publish('phoenix:failover_triggered', {
+            originalAgent: agentName,
+            fallbackAgent,
+            taskInstruction: instruction,
+            attempt: i + 1,
+            timestamp: new Date().toISOString(),
+          });
+
+          logInfo('AgentManager', `Phoenix Failover: ${agentName} → ${fallbackAgent} (attempt ${i + 1}/${fallbacks.length})`);
+          const failoverStart = Date.now();
+
+          try {
+            const failoverResult = await this.executeAgentWithRetry(
+              fallbackAgent, instruction, context, 1, parentTraceContext, true,
+            );
+
+            const foSuccess = failoverResult.success;
+            phoenixEventBus.publish('phoenix:failover_result', {
+              originalAgent: agentName,
+              fallbackAgent,
+              taskInstruction: instruction,
+              success: foSuccess,
+              error: foSuccess ? undefined : failoverResult.message,
+              executionTimeMs: Date.now() - failoverStart,
+              timestamp: new Date().toISOString(),
+            });
+            failoverRegistry.recordAttempt({
+              primaryAgent: agentName,
+              fallbackAgent,
+              taskInstruction: instruction,
+              success: foSuccess,
+              error: foSuccess ? undefined : failoverResult.message,
+              attemptIndex: i,
+              timestamp: new Date().toISOString(),
+            });
+
+            if (foSuccess) {
+              logInfo('AgentManager', `Phoenix Failover SUCCEEDED: ${agentName} → ${fallbackAgent}`);
+              logRecoveryEvent('failover', agentName, `Failover to ${fallbackAgent} succeeded`);
+              return { ...failoverResult, executedBy: `${fallbackAgent} (failover from ${agentName})` };
+            }
+          } catch (foErr: any) {
+            phoenixEventBus.publish('phoenix:failover_result', {
+              originalAgent: agentName,
+              fallbackAgent,
+              taskInstruction: instruction,
+              success: false,
+              error: foErr?.message || 'Unknown failover error',
+              executionTimeMs: Date.now() - failoverStart,
+              timestamp: new Date().toISOString(),
+            });
+            failoverRegistry.recordAttempt({
+              primaryAgent: agentName,
+              fallbackAgent,
+              taskInstruction: instruction,
+              success: false,
+              error: foErr?.message,
+              attemptIndex: i,
+              timestamp: new Date().toISOString(),
+            });
+            logError('AgentManager', `Phoenix Failover FAILED: ${agentName} → ${fallbackAgent}: ${foErr?.message}`);
+          }
+        }
+
+        if (fallbacks.length > 0) {
+          logError('AgentManager', `Phoenix Failover: ALL fallbacks exhausted for ${agentName}`);
+        }
+      }
 
       return {
         success: false,

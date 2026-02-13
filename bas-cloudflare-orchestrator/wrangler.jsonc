@@ -64,7 +64,9 @@
   "migrations": [
     {
       "tag": "v1",
-      "new_classes": ["SwarmCoordinator"]
+      "new_classes": [
+        "SwarmCoordinator"
+      ]
     }
   ],
   // �📊 Telemetria
