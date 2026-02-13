@@ -21,61 +21,38 @@ import { PaperPlaneRight, Robot, User, Circle } from "@phosphor-icons/react";
 import { Brain, FileText } from "lucide-react";
 import * as api from "@/lib/apiService";
 import { toast } from "sonner";
-
-interface Message {
-  role: "user" | "assistant";
-  content: string;
-  timestamp: number;
-  thoughts?: string;
-  contextUsed?: string[];
-  executedBy?: string;
-}
-
-type ChatMode =
-  | "orchestrator"
-  | "ollama"
-  | "github"
-  | "gemini"
-  | "cloudflare"
-  | "cloudflare_chat";
-
-const MAX_CONTEXT_MESSAGES = 10;
-
-function buildConversationPrompt(
-  history: Message[],
-  userInput: string,
-): string {
-  const recent = history.slice(-MAX_CONTEXT_MESSAGES);
-  if (recent.length === 0) return userInput;
-
-  const rendered = recent
-    .map(
-      (m) =>
-        `${m.role === "user" ? "Felhasználó" : "Asszisztens"}: ${m.content}`,
-    )
-    .join("\n");
-
-  return [
-    "Korábbi beszélgetés (rövid kontextus):",
-    rendered,
-    "",
-    `Új felhasználói üzenet: ${userInput}`,
-    "Válaszolj természetesen, magyarul, a kontextust figyelembe véve.",
-  ].join("\n");
-}
+import { buildConversationPrompt } from "@/lib/chat/contextBuilder";
+import { getProvider } from "@/lib/chat/providerRegistry";
+import { loadChatSession, saveChatSession } from "@/lib/chat/sessionStore";
+import type { ChatMessage as Message, ChatMode } from "@/lib/chat/types";
 
 export function NeuralLinkChat() {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>(() => {
+    const restored = loadChatSession();
+    return restored?.messages ?? [];
+  });
   const [input, setInput] = useState("");
-  const [mode, setMode] = useState<ChatMode>("orchestrator");
+  const [mode, setMode] = useState<ChatMode>(() => {
+    const restored = loadChatSession();
+    return restored?.mode ?? "orchestrator";
+  });
   const [models, setModels] = useState<{ name: string }[]>([]);
-  const [selectedModel, setSelectedModel] = useState<string>("");
+  const [selectedModel, setSelectedModel] = useState<string>(() => {
+    const restored = loadChatSession();
+    return restored?.selectedModel ?? "";
+  });
   const [ghModels, setGhModels] = useState<
     { name: string; provider: string }[]
   >([]);
-  const [selectedGhModel, setSelectedGhModel] = useState<string>("");
+  const [selectedGhModel, setSelectedGhModel] = useState<string>(() => {
+    const restored = loadChatSession();
+    return restored?.selectedGhModel ?? "";
+  });
   const [geminiModels, setGeminiModels] = useState<{ name: string }[]>([]);
-  const [selectedGeminiModel, setSelectedGeminiModel] = useState<string>("");
+  const [selectedGeminiModel, setSelectedGeminiModel] = useState<string>(() => {
+    const restored = loadChatSession();
+    return restored?.selectedGeminiModel ?? "";
+  });
   const [isLoading, setIsLoading] = useState(false);
   const [expandedThoughts, setExpandedThoughts] = useState<
     Record<number, boolean>
@@ -91,8 +68,8 @@ export function NeuralLinkChat() {
       .getOllamaModels()
       .then((list) => {
         setModels(list);
-        if (list.length > 0 && !selectedModel) {
-          setSelectedModel(list[0].name);
+        if (list.length > 0) {
+          setSelectedModel((prev) => prev || list[0].name);
         }
       })
       .catch(() => setModels([]));
@@ -100,8 +77,8 @@ export function NeuralLinkChat() {
       .getGithubModels()
       .then((list) => {
         setGhModels(list);
-        if (list.length > 0 && !selectedGhModel) {
-          setSelectedGhModel(list[0].name);
+        if (list.length > 0) {
+          setSelectedGhModel((prev) => prev || list[0].name);
         }
       })
       .catch(() => setGhModels([]));
@@ -109,8 +86,8 @@ export function NeuralLinkChat() {
       .getGeminiModels()
       .then((list) => {
         setGeminiModels(list);
-        if (list.length > 0 && !selectedGeminiModel) {
-          setSelectedGeminiModel(list[0].name);
+        if (list.length > 0) {
+          setSelectedGeminiModel((prev) => prev || list[0].name);
         }
       })
       .catch(() => setGeminiModels([]));
@@ -123,6 +100,20 @@ export function NeuralLinkChat() {
       })
       .catch(() => setEdgeStatus({ enabled: false, healthy: false }));
   }, []);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      saveChatSession({
+        messages,
+        mode,
+        selectedModel,
+        selectedGhModel,
+        selectedGeminiModel,
+      });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [messages, mode, selectedModel, selectedGhModel, selectedGeminiModel]);
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -146,82 +137,25 @@ export function NeuralLinkChat() {
 
     try {
       const conversationPrompt = buildConversationPrompt(messages, text);
-      let response: unknown;
-      if (mode === "orchestrator") {
-        response = await api.executeAgent("Orchestrator", text, {
-          chatMode: mode,
-          history: messages.map((m) => ({
-            role: m.role,
-            content: m.content,
-            timestamp: m.timestamp,
-          })),
-        });
-      } else if (mode === "cloudflare_chat") {
-        const cfChat = await api.chatWithCloudflare(
-          text,
-          messages.map((m) => ({ role: m.role, content: m.content })),
-        );
-        response = {
-          message: cfChat.message,
-          executedBy: "cloudflare_chat",
-          contextUsed: [cfChat.endpoint || "/api/chat"],
-        };
-      } else if (mode === "cloudflare") {
-        const edge = await api.submitCloudflareTask(text, {
-          history: messages.map((m) => ({ role: m.role, content: m.content })),
-        });
-        response = {
-          message:
-            typeof edge.result === "string"
-              ? edge.result
-              : typeof edge.result === "object" &&
-                  edge.result !== null &&
-                  "response" in edge.result
-                ? String((edge.result as { response?: unknown }).response ?? "")
-                : edge.message || JSON.stringify(edge),
-        };
-      } else if (mode === "github") {
-        const rawResponse = await api.generateWithGithubModels(
-          conversationPrompt,
-          selectedGhModel || undefined,
-        );
-        response = { message: rawResponse };
-      } else if (mode === "gemini") {
-        const rawResponse = await api.generateWithGemini(
-          conversationPrompt,
-          selectedGeminiModel || undefined,
-        );
-        response = { message: rawResponse };
-      } else {
-        const rawResponse = await api.generateWithOllama(
-          conversationPrompt,
-          selectedModel || undefined,
-        );
-        response = { message: rawResponse };
-      }
-
-      const r =
-        typeof response === "object" && response !== null
-          ? (response as {
-              message?: unknown;
-              data?: unknown;
-              thoughts?: string;
-              contextUsed?: string[];
-              executedBy?: string;
-            })
-          : null;
+      const provider = getProvider(mode);
+      const response = await provider.send({
+        text,
+        history: messages,
+        conversationPrompt,
+        selectedModel,
+        selectedGhModel,
+        selectedGeminiModel,
+      });
 
       setMessages((prev) => [
         ...prev,
         {
           role: "assistant",
-          content: r
-            ? String(r.message ?? r.data ?? JSON.stringify(response))
-            : String(response),
+          content: response.message,
           timestamp: Date.now(),
-          thoughts: r?.thoughts,
-          contextUsed: r?.contextUsed,
-          executedBy: r?.executedBy,
+          thoughts: response.thoughts,
+          contextUsed: response.contextUsed,
+          executedBy: response.executedBy,
         },
       ]);
     } catch (e: unknown) {

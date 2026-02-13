@@ -6,6 +6,43 @@
 
 ---
 
+## 2026-02-13 06:55 - 🧠 Codex NeuralLink Chat Refactor (Phase 1-3) ✅
+
+**Track:** `codex_chat_refactor_20260212`
+**Feladat:** A `NeuralLinkChat.tsx` monolit send-logika szétbontása provider adapter rétegre, plusz session perzisztencia.
+
+**Eredmények:**
+
+- ✅ Új chat modulok:
+  - `src/dashboard/lib/chat/types.ts`
+  - `src/dashboard/lib/chat/contextBuilder.ts`
+  - `src/dashboard/lib/chat/sessionStore.ts`
+  - `src/dashboard/lib/chat/providerRegistry.ts`
+  - `src/dashboard/lib/chat/providers/*`
+
+- ✅ `NeuralLinkChat.tsx` refaktor:
+  - provider lookup (`getProvider(mode)`) a központi `send()` útvonalban
+  - mode-specifikus if/else logika kiszervezve providerekbe
+  - session restore + debounce save (300ms)
+
+- ✅ Új teszt:
+  - `test/dashboard_chat_lib.test.ts`
+  - context builder + session store lefedettség (4 teszt)
+
+- ✅ Track meta frissítés:
+  - `conductor/tracks/codex_chat_refactor_20260212/meta.json`
+  - `status: in_progress`, `spec_status: approved`, `progress: 45`
+
+**Verifikáció:**
+
+- ✅ `npx vitest run test/dashboard_chat_lib.test.ts` PASS (4)
+- ✅ `npm test` PASS (`63` test file, `486` test)
+
+**Hatás:**
+
+- A chat komponens tisztább, bővíthetőbb: új provider hozzáadása már elsősorban új provider fájl + registry bejegyzés.
+- A session állapot frissítés után is megmarad (UX javulás).
+
 ## 2026-02-13 13:10 - 📚 Living Documentation System Starter Package ✅
 
 **Track:** `living_documentation_system_20260213`
