@@ -6,6 +6,46 @@
 
 ---
 
+## 2026-02-14 05:45 - 🧩 Living Documentation: Auto-Bootstrap Missing Agent Docs ✅
+
+**Track:** `living_docs_coverage_20260214`
+**Feladat:** A lefedettségi riportot kibővíteni önjavító bootstrap mechanizmussal, ami automatikusan létrehozza a hiányzó agent docs fájlokat.
+
+**Eredmények:**
+
+- ✅ `src/agents/ProjectConductorAgent.ts` bővítve:
+  - új metódus: `bootstrapMissingAgentDocs(...)`
+  - új helper-ek: `extractAssignedString(...)`, `extractCapabilities(...)`
+  - sync közben automatikus docs fájl-generálás, ha egy `docs/agents/<Agent>.md` hiányzik
+
+- ✅ Új dokumentációs fájlok létrehozva a teljes agent készletre (16 db):
+  - `docs/agents/DataScientistAgent.md`
+  - `docs/agents/DependencyGraphAgent.md`
+  - `docs/agents/DeveloperAgent.md`
+  - `docs/agents/DocsIntelligenceAgent.md`
+  - `docs/agents/DynamicAgent.md`
+  - `docs/agents/EdgeProxyAgent.md`
+  - `docs/agents/EvaluatorAgent.md`
+  - `docs/agents/LintFixerAgent.md`
+  - `docs/agents/OrchestratorAgent.md`
+  - `docs/agents/ProjectConductorAgent.md`
+  - `docs/agents/PythonAgent.md`
+  - `docs/agents/ResearcherAgent.md`
+  - `docs/agents/RobotkezAgent.md`
+  - `docs/agents/SpecWriterAgent.md`
+  - `docs/agents/TaskDecomposerAgent.md`
+  - `docs/agents/VoiceAgent.md`
+
+- ✅ `docs/agents/README_COVERAGE.md` frissítve 100% lefedettségi állapotra.
+
+**Verifikáció:**
+
+- ✅ `npm test` PASS (`61` test file, `479` test)
+
+**Hatás:**
+
+- A Living Documentation folyamat most már aktív önjavítással működik: a coverage report nem csak jelzi a hiányokat, hanem automatikusan bootstrapeli is a minimális docs alapot.
+
 ## 2026-02-14 05:40 - 📚 Living Documentation: Agent Doc Coverage Automation ✅
 
 **Track:** `living_docs_coverage_20260214`
