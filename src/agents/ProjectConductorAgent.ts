@@ -109,6 +109,12 @@ const DOCUMENTATION_FILES: DocumentationFile[] = [
     autoUpdate: false,
     lastSync: "",
   },
+  {
+    path: "docs/agents/README_COVERAGE.md",
+    type: "technical",
+    autoUpdate: true,
+    lastSync: "",
+  },
 ];
 
 const MONITORED_DIRECTORIES = [
@@ -346,6 +352,9 @@ ${this.projectState.components.map((c) => `- **${c.name}:** ${c.status === "heal
           results.push(`✅ ${doc.path} frissítve`);
         } else if (doc.path === "conductor/SUMMARY.md") {
           await this.updateSummaryFile();
+          results.push(`✅ ${doc.path} frissítve`);
+        } else if (doc.path === "docs/agents/README_COVERAGE.md") {
+          await this.updateAgentDocumentationCoverage();
           results.push(`✅ ${doc.path} frissítve`);
         }
 
@@ -998,6 +1007,88 @@ Ez a mappa tartalmazza a Brunella projekt specifikáció-vezérelt fejlesztési 
       success: true,
       message: "SUMMARY.md frissítve",
       data: null,
+    };
+  }
+
+  /**
+   * Agent dokumentáció lefedettségi riport generálása (Living Documentation).
+   */
+  private async updateAgentDocumentationCoverage(): Promise<AgentResult> {
+    const agentsDir = path.join(PROJECT_ROOT, "src", "agents");
+    const docsAgentsDir = path.join(PROJECT_ROOT, "docs", "agents");
+    const outputPath = path.join(docsAgentsDir, "README_COVERAGE.md");
+
+    if (!fs.existsSync(agentsDir)) {
+      return {
+        success: false,
+        message: "src/agents könyvtár nem található",
+        data: null,
+      };
+    }
+
+    if (!fs.existsSync(docsAgentsDir)) {
+      fs.mkdirSync(docsAgentsDir, { recursive: true });
+    }
+
+    const agentFiles = fs
+      .readdirSync(agentsDir)
+      .filter((fileName) => fileName.endsWith("Agent.ts"))
+      .filter((fileName) => fileName !== "BaseAgent.ts")
+      .sort((a, b) => a.localeCompare(b));
+
+    const rows: string[] = [];
+    let documentedCount = 0;
+
+    for (const fileName of agentFiles) {
+      const baseName = fileName.replace(/\.ts$/, "");
+      const expectedDoc = `${baseName}.md`;
+      const expectedDocPath = path.join(docsAgentsDir, expectedDoc);
+      const exists = fs.existsSync(expectedDocPath);
+
+      if (exists) documentedCount += 1;
+
+      rows.push(
+        `| ${baseName} | ${exists ? "✅" : "❌"} | ${exists ? `./${expectedDoc}` : "—"} |`,
+      );
+    }
+
+    const totalAgents = agentFiles.length;
+    const coverage = totalAgents === 0 ? 100 : Math.round((documentedCount / totalAgents) * 100);
+
+    const content = `# Agent Documentation Coverage
+
+**Generated:** ${new Date().toISOString()}
+**Generator:** ProjectConductorAgent
+
+## Summary
+
+- Agents detected: **${totalAgents}**
+- Documented: **${documentedCount}**
+- Coverage: **${coverage}%**
+
+## Coverage Table
+
+| Agent | Documentation | Doc Path |
+|-------|---------------|----------|
+${rows.join("\n") || "| — | — | — |"}
+
+---
+
+This file is auto-generated during \
+\`brunella conductor sync\` and serves as living documentation coverage status.
+`;
+
+    fs.writeFileSync(outputPath, content, "utf-8");
+
+    return {
+      success: true,
+      message: "Agent documentation coverage frissítve",
+      data: {
+        totalAgents,
+        documentedCount,
+        coverage,
+        outputPath,
+      },
     };
   }
 
