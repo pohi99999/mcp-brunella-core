@@ -1,0 +1,4 @@
+name: "CodeQL Exclusions"
+paths-ignore:
+  - "external_research/**"
+  - "_KNOWLEDGE_BASE/**"
