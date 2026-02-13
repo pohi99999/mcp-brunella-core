@@ -1,9 +1,9 @@
 import { Router } from "express";
 import { v4 as uuidv4 } from "uuid";
-import { exec } from "child_process";
+import { execFile } from "child_process";
 import { promisify } from "util";
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
 const robotkezTasks = new Map<
   string,
   { status: "in-progress" | "completed" | "failed"; result?: unknown }
@@ -16,16 +16,20 @@ export function createRobotkezRoutes(): Router {
     const taskId = uuidv4();
     const { task, headless = true, vision = true } = req.body;
 
-    if (!task) {
-      res.status(400).send({ error: "A 'task' mező kötelező." });
+    if (!task || typeof task !== "string") {
+      res.status(400).send({ error: "A 'task' mező kötelező és string típusú kell legyen." });
       return;
     }
 
     robotkezTasks.set(taskId, { status: "in-progress" });
 
     try {
-      const command = `python myai/browser_task_runner.py --task "${task}" --headless ${headless} --vision ${vision}`;
-      const { stdout } = await execAsync(command);
+      const { stdout } = await execFileAsync("python", [
+        "myai/browser_task_runner.py",
+        "--task", task,
+        "--headless", String(headless),
+        "--vision", String(vision),
+      ]);
       const result = JSON.parse(stdout);
 
       robotkezTasks.set(taskId, { status: "completed", result });
