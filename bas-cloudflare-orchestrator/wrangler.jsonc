@@ -52,7 +52,22 @@
       }
     }
   },
-  // 📊 Telemetria
+  // � Durable Objects (Swarm Coordinator — persistent session state)
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SWARM_COORDINATOR",
+        "class_name": "SwarmCoordinator"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": ["SwarmCoordinator"]
+    }
+  ],
+  // �📊 Telemetria
   "observability": {
     "enabled": true
   },

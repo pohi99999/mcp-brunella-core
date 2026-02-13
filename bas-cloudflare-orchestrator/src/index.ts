@@ -11,12 +11,16 @@
 
 import { Ai } from "@cloudflare/ai";
 
+// Re-export Durable Object for wrangler
+export { SwarmCoordinator } from "./swarmCoordinator.js";
+
 interface Env {
   AI: Ai;
   BAS_TASKS: KVNamespace;
   D1_METADATA: D1Database;
   R2_KNOWLEDGE: R2Bucket;
   TASK_QUEUE: Queue;
+  SWARM_COORDINATOR: DurableObjectNamespace;
   N8N_WEBHOOK_URL: string;
   BROWSER_USE_ENDPOINT: string;
   DEFAULT_CODE_MODEL: string;
@@ -549,17 +553,31 @@ export default {
       }
     }
 
+    // /swarm/* — Route to SwarmCoordinator Durable Object
+    if (path.startsWith("/swarm")) {
+      // Use a single DO instance per worker (global coordinator)
+      const doId = env.SWARM_COORDINATOR.idFromName("global");
+      const stub = env.SWARM_COORDINATOR.get(doId);
+      // Forward the full request to the DO
+      return stub.fetch(request);
+    }
+
     // GET / - Health check & info
     if (path === "/" || path === "") {
       return Response.json(
         {
           service: "BAS Cloudflare Orchestrator",
-          version: "1.1.0",
+          version: "1.2.0",
           architecture: "hybrid",
           endpoints: {
             submitTask: "POST /task",
             checkStatus: "GET /status/:taskId",
             analytics: "GET /analytics",
+            swarmCreate: "POST /swarm/create",
+            swarmStatus: "GET /swarm/:id",
+            swarmHandoff: "POST /swarm/:id/handoff",
+            swarmArtifact: "POST /swarm/:id/artifact",
+            swarmWs: "GET /swarm/:id/ws",
             browserUseWebhook: "POST /webhook/browser-use",
             n8nWebhook: "POST /webhook/n8n",
             vectorizeSearch: "POST /vectorize/search (POC)",

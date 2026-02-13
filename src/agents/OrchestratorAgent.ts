@@ -6,15 +6,98 @@ import { chatWithOllama } from "../core/llm_client.js";
 // ---------------------------------------------------------------------------
 // Keyword pre-routing table (order: more specific → less specific)
 // ---------------------------------------------------------------------------
-const KEYWORD_ROUTES: ReadonlyArray<{ keywords: readonly string[]; agent: string }> = [
-  { keywords: ["lint", "eslint", "format", "type error", "típushiba"], agent: "lint_fixer" },
-  { keywords: ["böngésző", "browser", "kattints", "click", "navigate", "scrape", "screenshot", "nyisd meg", "tölts ki", "open url", "open page", "keress rá"], agent: "robotkez" },
-  { keywords: ["health", "test", "teszt", "audit", "check system", "diagnos", "ellenőriz", "smoke"], agent: "evaluator" },
-  { keywords: ["search", "rag", "keres", "kutat", "összefoglal", "summarize", "knowledge", "tudás", "web search"], agent: "researcher" },
-  { keywords: ["code", "kód", "bug", "fix", "javít", "implement", "refactor", "self-healing", "pipeline"], agent: "developer" },
-  { keywords: ["project structure", "directory", "mappa", "szervez", "organize", "könyvtár", "map update", "tartalomjegyzék"], agent: "project_organizer" },
-  { keywords: ["spec", "ötlet", "idea", "generate track", "requirement"], agent: "SpecWriter" },
-  { keywords: ["conductor", "projekt státusz", "project status", "track status"], agent: "ProjectConductor" },
+const KEYWORD_ROUTES: ReadonlyArray<{
+  keywords: readonly string[];
+  agent: string;
+}> = [
+  {
+    keywords: ["lint", "eslint", "format", "type error", "típushiba"],
+    agent: "lint_fixer",
+  },
+  {
+    keywords: [
+      "böngésző",
+      "browser",
+      "kattints",
+      "click",
+      "navigate",
+      "scrape",
+      "screenshot",
+      "nyisd meg",
+      "tölts ki",
+      "open url",
+      "open page",
+      "keress rá",
+    ],
+    agent: "robotkez",
+  },
+  {
+    keywords: [
+      "health",
+      "test",
+      "teszt",
+      "audit",
+      "check system",
+      "diagnos",
+      "ellenőriz",
+      "smoke",
+    ],
+    agent: "evaluator",
+  },
+  {
+    keywords: [
+      "search",
+      "rag",
+      "keres",
+      "kutat",
+      "összefoglal",
+      "summarize",
+      "knowledge",
+      "tudás",
+      "web search",
+    ],
+    agent: "researcher",
+  },
+  {
+    keywords: [
+      "code",
+      "kód",
+      "bug",
+      "fix",
+      "javít",
+      "implement",
+      "refactor",
+      "self-healing",
+      "pipeline",
+    ],
+    agent: "developer",
+  },
+  {
+    keywords: [
+      "project structure",
+      "directory",
+      "mappa",
+      "szervez",
+      "organize",
+      "könyvtár",
+      "map update",
+      "tartalomjegyzék",
+    ],
+    agent: "project_organizer",
+  },
+  {
+    keywords: ["spec", "ötlet", "idea", "generate track", "requirement"],
+    agent: "SpecWriter",
+  },
+  {
+    keywords: [
+      "conductor",
+      "projekt státusz",
+      "project status",
+      "track status",
+    ],
+    agent: "ProjectConductor",
+  },
   { keywords: ["voice", "hang", "audio", "hangutasítás"], agent: "voice" },
 ];
 
@@ -61,14 +144,20 @@ export class OrchestratorAgent implements IAgent {
     return best;
   }
 
-  async execute(task: string, context?: Record<string, unknown>): Promise<unknown> {
+  async execute(
+    task: string,
+    context?: Record<string, unknown>,
+  ): Promise<unknown> {
     this.logger.info(`Orchestrating task: ${task}`);
 
     try {
       // === FAST PATH: keyword pre-routing (no LLM needed) ===
       // Skip for compound tasks that likely need multi-agent planning
       const kwMatch = this.keywordRoute(task);
-      const isCompound = /\b(?:and|then|after that|also|plus|meg |aztán|majd|valamint|utána)\b/i.test(task);
+      const isCompound =
+        /\b(?:and|then|after that|also|plus|meg |aztán|majd|valamint|utána)\b/i.test(
+          task,
+        );
       if (kwMatch && (kwMatch.hits >= 99 || !isCompound)) {
         this.logger.info(
           `Keyword pre-route → ${kwMatch.agent} (hits: ${kwMatch.hits})`,

@@ -65,7 +65,9 @@ interface ActiveTransport {
 
 const PACKAGE_VERSION = (() => {
   try {
-    const pkg = JSON.parse(readFileSync(path.resolve(process.cwd(), "package.json"), "utf-8"));
+    const pkg = JSON.parse(
+      readFileSync(path.resolve(process.cwd(), "package.json"), "utf-8"),
+    );
     return typeof pkg.version === "string" ? pkg.version : "0.0.0";
   } catch {
     return "0.0.0";
@@ -392,7 +394,6 @@ export async function startWebServer() {
         saveMessage(DEFAULT_CHAT_ID, "bot", errMsg);
       }
     });
-
   });
 
   httpServer.listen(config.port, () => {

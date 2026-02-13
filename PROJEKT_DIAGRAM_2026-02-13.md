@@ -363,27 +363,6 @@ brunella conductor view phoenix_protocol_v2_20260205
 
 ---
 
-#### 2. **Dokumentáció Javítás** [HIGH Priority]
-
-**Probléma:**
-- Sok funkció működik, de dokumentáció hiányos (60%)
-- Új fejlesztők/ügynökök nehezen találnak információt
-- API dokumentáció szétszórt
-
-**Javasolt megoldás:**
-```bash
-# Új track: "Living Documentation System"
-- API documentation (Swagger UI már van, de bővítendő)
-- Agent README-k (minden agenthez külön README.md)
-- Architecture Decision Records (ADR/)
-- Video tutorials (Loom screencast)
-- Interactive examples (Jupyter notebooks myai/examples/)
-```
-
-**ROI:** Drasztikusan csökkenti az onboarding időt és a "hogyan működik ez?" kérdéseket.
-
----
-
 #### 3. **Green Lightning Track Indítása** [HIGH Business Value]
 
 **Miért ezt választanám:**
@@ -413,58 +392,6 @@ brunella conductor view phoenix_protocol_v2_20260205
 **Üzleti kimenet:** Működő EV Hunter rendszer, amivel **ténylegesen találsz autót** (nem csak demo).
 
 ---
-
-### 🔧 Technikai Javaslatok
-
-#### A. **LanceDB Embedding Upgrade**
-
-**Probléma:** Jelenleg basic OpenAI embedding használat (ha van).
-
-**Javaslat:** Lokális embedding model (Ollama mxbai-embed-large)
-```python
-# myai/tools/knowledge_integrator.py
-from langchain_ollama import OllamaEmbeddings
-
-embeddings = OllamaEmbeddings(
-    model="mxbai-embed-large",  # 334M params, SOTA quality
-    base_url="http://localhost:11434"
-)
-```
-
-**Előny:**
-- Ingyenes (no OpenAI API cost)
-- Gyorsabb (local inference)
-- Privacy (data stays local)
-
----
-
-#### B. **Agent Performance Monitoring**
-
-**Hiányzik:** Agent execution metrics (response time, success rate, LLM token usage)
-
-**Javaslat:** Prometheus + Grafana dashboard
-```typescript
-// src/utils/metrics.ts
-import { Counter, Histogram } from 'prom-client';
-
-export const agentExecutionTime = new Histogram({
-  name: 'agent_execution_seconds',
-  help: 'Agent execution time',
-  labelNames: ['agent_name', 'status']
-});
-
-export const llmTokenUsage = new Counter({
-  name: 'llm_tokens_total',
-  help: 'LLM token usage',
-  labelNames: ['provider', 'model']
-});
-```
-
-**Dashboard példa:**
-- Agent execution time (p50, p95, p99)
-- Success rate (per agent)
-- LLM cost tracking ($ per day)
-- Error rate trending
 
 ---
 

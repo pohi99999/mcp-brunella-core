@@ -562,8 +562,7 @@ export async function dispatchJulesWorkflow(params?: {
   }));
   if (!response.ok)
     throw new Error(getErrorMessage(data) || "Jules dispatch failed");
-  if (!isRecord(data))
-    throw new Error("Érvénytelen Jules dispatch válasz");
+  if (!isRecord(data)) throw new Error("Érvénytelen Jules dispatch válasz");
   return data as { success: boolean; workflow: string; ref: string };
 }
 
@@ -602,9 +601,9 @@ export async function getActiveTrackTodoSummaries(): Promise<
   const response = await fetchWithTimeout(
     `${API_BASE}/api/v1/tracks/todos/active`,
   );
-  const data = await safeJson<
-    { tracks?: TrackTodoSummary[]; error?: string }
-  >(response).catch(() => ({
+  const data = await safeJson<{ tracks?: TrackTodoSummary[]; error?: string }>(
+    response,
+  ).catch(() => ({
     error: `HTTP ${response.status}: ${response.statusText}`,
   }));
   if (!response.ok)

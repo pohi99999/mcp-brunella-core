@@ -31,6 +31,7 @@ export interface AuditEntry {
 // ============================================================================
 
 let db: any = null;
+let resolvedDbPath: string | null = null;
 
 async function getDb(): Promise<any> {
   if (db) return db;
@@ -42,17 +43,45 @@ async function getDb(): Promise<any> {
   const path = await import('path');
   const fs = await import('fs');
 
-  const dbDir = path.default.join(process.cwd(), 'data');
-  if (!fs.default.existsSync(dbDir)) {
-    fs.default.mkdirSync(dbDir, { recursive: true });
+  if (!resolvedDbPath) {
+    const envPath = process.env.AUDIT_LOG_DB?.trim();
+    const isTestEnv = Boolean(process.env.VITEST || process.env.NODE_ENV === 'test');
+
+    if (envPath && envPath.length > 0) {
+      if (envPath === ':memory:') {
+        resolvedDbPath = ':memory:';
+      } else if (path.default.isAbsolute(envPath)) {
+        resolvedDbPath = envPath;
+      } else {
+        resolvedDbPath = path.default.join(process.cwd(), envPath);
+      }
+    } else if (isTestEnv) {
+      // Use in-memory database during tests to avoid cross-worker interference
+      resolvedDbPath = ':memory:';
+    } else {
+      const defaultDir = path.default.join(process.cwd(), 'data');
+      if (!fs.default.existsSync(defaultDir)) {
+        fs.default.mkdirSync(defaultDir, { recursive: true });
+      }
+      resolvedDbPath = path.default.join(defaultDir, 'audit.db');
+    }
+
+    if (resolvedDbPath !== ':memory:') {
+      const dir = path.default.dirname(resolvedDbPath);
+      if (!fs.default.existsSync(dir)) {
+        fs.default.mkdirSync(dir, { recursive: true });
+      }
+    }
   }
 
-  const dbPath = path.default.join(dbDir, 'audit.db');
   const Database = (await import('better-sqlite3')).default;
-  db = new Database(dbPath);
+  const dbPathToUse = resolvedDbPath ?? ':memory:';
+  db = new Database(dbPathToUse);
 
-  // WAL mode for concurrent reads + low-latency writes
-  db.pragma('journal_mode = WAL');
+  // WAL mode for concurrent reads + low-latency writes (skip for in-memory DBs)
+  if (dbPathToUse !== ':memory:') {
+    db.pragma('journal_mode = WAL');
+  }
 
   // Create table from schemas/audit.sql
   db.exec(`
@@ -71,7 +100,8 @@ async function getDb(): Promise<any> {
     CREATE INDEX IF NOT EXISTS idx_audit_timestamp ON audit_log(timestamp);
   `);
 
-  logInfo('AuditLog', 'Database initialized (WAL mode)');
+  const initMode = dbPathToUse === ':memory:' ? 'in-memory test mode' : `WAL mode @ ${dbPathToUse}`;
+  logInfo('AuditLog', `Database initialized (${initMode})`);
   return db;
 }
 
@@ -385,6 +415,7 @@ export async function closeAuditDb(): Promise<void> {
   if (db) {
     db.close();
     db = null;
+    resolvedDbPath = null;
     logInfo('AuditLog', 'Database closed');
   }
 }
