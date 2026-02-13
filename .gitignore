@@ -75,6 +75,8 @@ _archive/
 _br_temp/
 logs/
 *.db
+*.db-wal
+*.db-shm
 *.log
 .tmp.driveupload/
 
