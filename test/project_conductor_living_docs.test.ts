@@ -14,19 +14,16 @@ type CoverageUpdateResult = {
   data: {
     coverage: number;
     bootstrappedDocs: number;
+    refreshedDocs: number;
     documentedCount: number;
     outputPath: string;
   };
 };
 
-type ProjectConductorCtor = new () => {
-  updateAgentDocumentationCoverage: () => Promise<CoverageUpdateResult>;
-};
-
 describe("ProjectConductor Living Documentation", () => {
   let originalCwd: string;
   let testRoot: string;
-  let ProjectConductorAgent: ProjectConductorCtor;
+  let ProjectConductorAgent: new () => unknown;
 
   beforeEach(async () => {
     originalCwd = process.cwd();
@@ -70,7 +67,7 @@ describe("ProjectConductor Living Documentation", () => {
 
     const imported = await import("../src/agents/ProjectConductorAgent.js");
     ProjectConductorAgent =
-      imported.ProjectConductorAgent as ProjectConductorCtor;
+      imported.ProjectConductorAgent as unknown as new () => unknown;
   });
 
   afterEach(async () => {
@@ -90,6 +87,7 @@ describe("ProjectConductor Living Documentation", () => {
 
     expect(result.success).toBe(true);
     expect(result.data.bootstrappedDocs).toBe(2);
+    expect(result.data.refreshedDocs).toBe(0);
     expect(result.data.documentedCount).toBe(2);
     expect(result.data.coverage).toBe(100);
 
@@ -130,6 +128,7 @@ describe("ProjectConductor Living Documentation", () => {
 
     expect(result.success).toBe(true);
     expect(result.data.bootstrappedDocs).toBe(1);
+    expect(result.data.refreshedDocs).toBe(0);
 
     const preservedAlpha = await fs.readFile(alphaDocPath, "utf-8");
     expect(preservedAlpha).toBe(originalAlphaDoc);
@@ -137,5 +136,31 @@ describe("ProjectConductor Living Documentation", () => {
     const betaDocPath = path.join(docsDir, "BetaAgent.md");
     const betaDoc = await fs.readFile(betaDocPath, "utf-8");
     expect(betaDoc).toContain("# BetaAgent");
+  });
+
+  it("refreshes legacy template docs in place", async () => {
+    const docsDir = path.join(testRoot, "docs", "agents");
+    await fs.mkdir(docsDir, { recursive: true });
+
+    const alphaDocPath = path.join(docsDir, "AlphaAgent.md");
+    const legacyContent = `# AlphaAgent\n\n**Source:** \`src/agents/AlphaAgent.ts\`\n\n## Purpose\n\nLegacy placeholder\n\n## TODO\n\n- Add capabilities and examples\n`;
+    await fs.writeFile(alphaDocPath, legacyContent, "utf-8");
+
+    const agent = new ProjectConductorAgent();
+
+    const result = await (
+      agent as unknown as {
+        updateAgentDocumentationCoverage: () => Promise<CoverageUpdateResult>;
+      }
+    ).updateAgentDocumentationCoverage();
+
+    expect(result.success).toBe(true);
+    expect(result.data.bootstrappedDocs).toBe(1);
+    expect(result.data.refreshedDocs).toBe(1);
+
+    const refreshedAlpha = await fs.readFile(alphaDocPath, "utf-8");
+    expect(refreshedAlpha).toContain("**Agent Name:** `Alpha`");
+    expect(refreshedAlpha).toContain("## Description");
+    expect(refreshedAlpha).not.toContain("## Purpose");
   });
 });

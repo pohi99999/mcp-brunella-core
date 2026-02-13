@@ -6,6 +6,32 @@
 
 ---
 
+## 2026-02-14 06:15 - ♻️ Living Documentation: Legacy Agent Doc Refresh ✅
+
+**Track:** `living_docs_coverage_20260214`
+**Feladat:** A bootstrap logika ne csak hiányzó agent docs fájlokat hozzon létre, hanem a régi (legacy) sablonformátumúakat is automatikusan frissítse.
+
+**Eredmények:**
+
+- ✅ `src/agents/ProjectConductorAgent.ts` bővítve:
+  - `bootstrapMissingAgentDocs(...)` most `created` + `updated` metrikát ad vissza
+  - új helper: `generateAgentDocContent(...)`
+  - új helper: `shouldRefreshLegacyAgentDoc(...)`
+  - `updateAgentDocumentationCoverage()` kimenete bővítve: `refreshedDocs`
+
+- ✅ `test/project_conductor_living_docs.test.ts` bővítve:
+  - új teszt: `refreshes legacy template docs in place`
+  - `refreshedDocs` mező validációja
+
+**Verifikáció:**
+
+- ✅ `npx vitest run test/project_conductor_living_docs.test.ts` PASS (3 test)
+- ✅ `npm test` PASS (`62` test file, `482` test)
+
+**Hatás:**
+
+- A Living Documentation szinkron már nem hagyja bent a régi „## Purpose / Add capabilities” típusú legacy stubbokat, hanem automatikusan modern formátumra emeli őket.
+
 ## 2026-02-14 06:05 - 🧪 Living Documentation: ProjectConductor Regression Tests ✅
 
 **Track:** `living_docs_coverage_20260214`

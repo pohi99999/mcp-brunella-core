@@ -2,6 +2,32 @@
 
 A cél: minden jelentős rendszer- és fejlesztési módosítás rövid, visszakereshető naplózása.
 
+## 2026-02-14 - Copilot session: Living Documentation legacy template refresh
+
+### Összefoglaló (Living Docs refresh)
+
+A ProjectConductor agent dokumentációs bootstrap folyamata kibővült: most már a régi, legacy sablonformátumú agent docs fájlokat is képes automatikusan modernizálni sync közben.
+
+### Implementált technikai változások (Refresh)
+
+- **ProjectConductor fejlesztés** (`src/agents/ProjectConductorAgent.ts`):
+  - `bootstrapMissingAgentDocs(...)` már kétféle eredményt ad:
+    - `created`: hiányzó fájlok létrehozása
+    - `updated`: legacy sablonfájlok frissítése
+  - új segédmetódusok:
+    - `generateAgentDocContent(...)` (kanonikus docs tartalom)
+    - `shouldRefreshLegacyAgentDoc(...)` (legacy marker detektálás: `## Purpose`, `- Add capabilities and examples`)
+  - coverage output adat bővítve: `refreshedDocs`
+
+- **Tesztbővítés** (`test/project_conductor_living_docs.test.ts`):
+  - új eset: meglévő legacy docs fájl in-place frissítése
+  - explicit validáció `refreshedDocs` metrikára
+
+### Verifikáció (Refresh)
+
+- Célteszt zöld: `npx vitest run test/project_conductor_living_docs.test.ts` (3 PASS)
+- Teljes futtatás zöld: `npm test` (62 fájl, 482 teszt PASS)
+
 ## 2026-02-14 - Copilot session: Living Documentation regression tests (ProjectConductor)
 
 ### Összefoglaló (Teszt hardening)
