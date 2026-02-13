@@ -6,6 +6,7 @@ const defaultLogDir = path.join(process.cwd(), 'logs');
 export const config = {
   workspaceRoot: process.env.BRUNELLA_WORKSPACE_ROOT || defaultWorkspace,
   allowedRoots: [
+    // Legacy numbered folders
     '00_BAS_SYSTEM',
     '00_INBOX',
     '01_CONTEXT',
@@ -16,7 +17,19 @@ export const config = {
     '06_CORE',
     '07_KNOWLEDGE_BASE',
     '08_SCRIPTS',
-    '99_SYSTEM_LOGS'
+    '99_SYSTEM_LOGS',
+    // Active project directories
+    'src',
+    'myai',
+    'conductor',
+    'test',
+    'docs',
+    'scripts',
+    'data',
+    'public',
+    'schemas',
+    'ADR',
+    '_KNOWLEDGE_BASE',
   ],
   denyContains: [
     '09_SECRETS',
