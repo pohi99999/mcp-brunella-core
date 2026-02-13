@@ -30,12 +30,12 @@ A **ProjectConductorAgent** a projekt központi menedzsment ügynöke:
 
 ### Felelősségek
 
-| Terület | Funkció |
-|---------|---------|
-| **Dokumentáció** | Brunella.md, konyvtarfa.md automatikus frissítése |
-| **Track-ek** | tracks.md, SUMMARY.md karbantartása |
-| **Health Check** | Build, tesztek, dokumentáció szinkron ellenőrzése |
-| **Változáskövetés** | Minden módosítás naplózása |
+| Terület             | Funkció                                           |
+| ------------------- | ------------------------------------------------- |
+| **Dokumentáció**    | Brunella.md, konyvtarfa.md automatikus frissítése |
+| **Track-ek**        | tracks.md, SUMMARY.md karbantartása               |
+| **Health Check**    | Build, tesztek, dokumentáció szinkron ellenőrzése |
+| **Változáskövetés** | Minden módosítás naplózása                        |
 
 ### Parancsok
 
@@ -62,6 +62,7 @@ brunella agent ProjectConductor "full"
 ### Automatikus Futtatás
 
 A ProjectConductor automatikusan fut:
+
 - Minden `git commit` előtt (pre-commit hook)
 - Naponta egyszer (scheduler)
 - Track lezárásakor
@@ -134,6 +135,36 @@ npm run test           # Vitest tesztek
 - [ ] Tesztek futnak
 - [ ] Dokumentáció frissítve
 - [ ] Track napló frissítve
+- [ ] **EPP v2 Compliance:** Dashboard + CLI komponensek párhuzamosan készültek (lásd [EPP v2 Protocol](./epp-v2.md))
+
+### Engineering Precision Protocol v2 (EPP v2)
+
+**Hatálybalépés:** 2026-02-11
+
+**Alapelv:** Minden új feature két felületen is használható legyen:
+
+1. **Dashboard UI** (`src/dashboard/components/`)
+2. **Magyar CLI** (`src/cli/commands/` vagy `src/cli-hu.ts`)
+
+**Kötelező checklist minden új feature-höz:**
+
+- [ ] React komponens létrehozva a Dashboardhoz
+- [ ] Inquirer menü létrehozva a CLI-hez
+- [ ] Mindkét felület azonos backend API-t hív
+- [ ] Mindkét felületen tesztelve
+- [ ] Track markdown frissítve mindkét komponenssel
+
+**Részletes szabályok:** [conductor/epp-v2.md](./epp-v2.md)
+
+**Track követés:**
+
+```bash
+# Aktuális trackek listázása
+brunella conductor status
+
+# Track részleteinek megtekintése
+brunella conductor track <track-name>
+```
 
 ---
 
@@ -189,11 +220,11 @@ Ha a Cloudflare Edge integráció aktív:
 
 ### Track Tulajdonosi Rendszer
 
-| Track | Owner | Fő fájlok |
-|-------|-------|-----------|
-| Cloudflare Edge | Péter/Claude | `cloudflare/`, `EdgeProxyAgent.ts` |
-| BAS Stabilization | Péter | `src/core/`, tesztek |
-| Robotkéz n8n | Péter | `myai/browser_worker.py`, n8n |
+| Track             | Owner        | Fő fájlok                          |
+| ----------------- | ------------ | ---------------------------------- |
+| Cloudflare Edge   | Péter/Claude | `cloudflare/`, `EdgeProxyAgent.ts` |
+| BAS Stabilization | Péter        | `src/core/`, tesztek               |
+| Robotkéz n8n      | Péter        | `myai/browser_worker.py`, n8n      |
 
 ### Napi Szinkronizációs Rutin
 
@@ -226,14 +257,14 @@ git push                                       # Push
 
 ### Státusz Jelentések
 
-| Ikon | Státusz | Jelentés |
-|------|---------|----------|
-| 🔵 | PROPOSED | Track tervezett, de még nem kezdődött |
-| 🟡 | ACTIVE | Aktív fejlesztés alatt |
-| 🟠 | TESTING | Kód kész, tesztelés folyamatban |
-| 🟢 | COMPLETED | Minden kész, merge megtörtént |
-| ⏸️ | PAUSED | Ideiglenesen szüneteltetve |
-| 🗄️ | ARCHIVED | Régi track, archívumban |
+| Ikon | Státusz   | Jelentés                              |
+| ---- | --------- | ------------------------------------- |
+| 🔵   | PROPOSED  | Track tervezett, de még nem kezdődött |
+| 🟡   | ACTIVE    | Aktív fejlesztés alatt                |
+| 🟠   | TESTING   | Kód kész, tesztelés folyamatban       |
+| 🟢   | COMPLETED | Minden kész, merge megtörtént         |
+| ⏸️   | PAUSED    | Ideiglenesen szüneteltetve            |
+| 🗄️   | ARCHIVED  | Régi track, archívumban               |
 
 ---
 
@@ -265,12 +296,12 @@ git push                                       # Push
 
 A **ProjectConductorAgent** automatikusan frissíti:
 
-| Fájl | Frissítési gyakoriság | Tartalom |
-|------|----------------------|----------|
-| `konyvtarfa.md` | Minden sync | Teljes könyvtárfa |
-| `conductor/tracks.md` | Minden track változás | Track lista |
-| `conductor/SUMMARY.md` | Naponta | Összefoglaló |
-| `Brunella.md` (részben) | Hetente | Aktív track-ek szekció |
+| Fájl                    | Frissítési gyakoriság | Tartalom               |
+| ----------------------- | --------------------- | ---------------------- |
+| `konyvtarfa.md`         | Minden sync           | Teljes könyvtárfa      |
+| `conductor/tracks.md`   | Minden track változás | Track lista            |
+| `conductor/SUMMARY.md`  | Naponta               | Összefoglaló           |
+| `Brunella.md` (részben) | Hetente               | Aktív track-ek szekció |
 
 ---
 
@@ -337,16 +368,16 @@ brunella agent EdgeProxy "health"
 
 ### Fájl Szerkesztési Szabályok
 
-| Fájl | Ki szerkesztheti | Hogyan |
-|------|-----------------|--------|
-| Track plan.md | Track owner | Kézzel |
-| Brunella.md | ProjectConductor + Human | Auto + kézi |
-| konyvtarfa.md | ProjectConductor | Auto |
-| tracks.md | ProjectConductor | Auto |
-| Kód fájlok | Developer | IDE |
+| Fájl          | Ki szerkesztheti         | Hogyan      |
+| ------------- | ------------------------ | ----------- |
+| Track plan.md | Track owner              | Kézzel      |
+| Brunella.md   | ProjectConductor + Human | Auto + kézi |
+| konyvtarfa.md | ProjectConductor         | Auto        |
+| tracks.md     | ProjectConductor         | Auto        |
+| Kód fájlok    | Developer                | IDE         |
 
 ---
 
-*Dokumentum verzió: 2.1.0*
-*Utolsó frissítés: 2026-02-02*
-*Karbantartó: ProjectConductorAgent*
+_Dokumentum verzió: 2.1.0_
+_Utolsó frissítés: 2026-02-02_
+_Karbantartó: ProjectConductorAgent_

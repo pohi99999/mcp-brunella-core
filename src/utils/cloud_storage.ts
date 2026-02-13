@@ -1,6 +1,7 @@
 /*
 import { S3Client, PutObjectCommand, GetObjectCommand, ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
+import { logInfo } from './logger.js';
 import dotenv from "dotenv";
 import path from "path";
 import fs from "fs";
@@ -33,7 +34,7 @@ export class CloudStorage {
       ContentType: mimeType,
     }));
     
-    console.log(`☁️ [R2] Feltöltve: ${key}`);
+    logInfo('R2', `Feltöltve: ${key}`);
     return key;
   }
 

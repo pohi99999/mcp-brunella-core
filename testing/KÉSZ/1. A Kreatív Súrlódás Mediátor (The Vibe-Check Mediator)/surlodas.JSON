@@ -1,0 +1,39 @@
+{
+  "name": "Creative_Friction_Mediator",
+  "description": "Organizational sentiment analysis and conflict prediction agent.",
+  "nodes": [
+    {
+      "id": "input_stream",
+      "type": "Webhook",
+      "config": { "source": ["Slack", "Email"], "encryption": "AES-256" }
+    },
+    {
+      "id": "sentiment_analyzer",
+      "type": "LLM_Chain",
+      "model": "llama3.2:latest", 
+      "prompt": "Analyze the following interaction for latent conflict markers: passive-aggressiveness, brevity, tonal shifts. Output a 'Friction Score' (0-10) and 'Root Cause' hypothesis.",
+      "temperature": 0.1
+    },
+    {
+      "id": "vector_memory",
+      "type": "LanceDB",
+      "purpose": "Store communication patterns to detect deviations from the baseline 'Vibe'."
+    },
+    {
+      "id": "mediator_logic",
+      "type": "PythonFunction",
+      "code": "if friction_score > 7.5 and previous_interaction_score > 6: trigger_alert(root_cause)"
+    },
+    {
+      "id": "advice_generator",
+      "type": "LLM_Chain",
+      "model": "gpt-4-turbo",
+      "prompt": "Based on this conflict pattern ({{root_cause}}), suggest 3 specific management interventions to de-escalate without accusing anyone."
+    },
+    {
+      "id": "output_dm",
+      "type": "Notification",
+      "target": "Project_Manager_Private_Channel"
+    }
+  ]
+}

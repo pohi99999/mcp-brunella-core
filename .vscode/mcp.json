@@ -1,75 +1,144 @@
 {
-  "mcpServers": {
-    "brunella-core": {
-      "command": "node",
-      "args": [
-        "${workspaceFolder}/build/index.js"
-      ],
-      "env": {
-        "NODE_ENV": "development",
-        "MCP_DEBUG": "true"
-      },
-      "notes": "A BAS Központi Agya (Orchestrator)"
-    },
-    "playwright": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@playwright/mcp@latest"
-      ],
-      "notes": "ROBOTKÉZ: Böngésző vezérlés és E2E tesztelés"
-    },
-    "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "${workspaceFolder}"
-      ],
-      "notes": "Biztonságos fájl hozzáférés a projekthez"
-    },
-    "github": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-github"
-      ],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "${input:githubPat}"
-      },
-      "notes": "GitHub repo/issue/PR/commit kezelés"
-    },
-    "chrome-devtools": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@anthropic-ai/mcp-server-puppeteer@latest"
-      ],
-      "notes": "Chrome DevTools vezérlés, screenshot, DOM elemzés"
-    },
-    "windows-mcp": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@anthropic-ai/mcp-server-windows@latest"
-      ],
-      "notes": "Windows ablak/alkalmazás vezérlés, screenshot, automáció"
-    },
-    "context7": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp@latest"
-      ],
-      "notes": "Könyvtár dokumentáció keresés (up-to-date docs)"
-    }
-  },
-  "inputs": [
-    {
-      "id": "githubPat",
-      "type": "promptString",
-      "description": "GitHub Personal Access Token (repo/issues scope)",
-      "password": true
-    }
-  ]
+	"servers": {
+		"io.github.ChromeDevTools/chrome-devtools-mcp": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"--registry",
+				"https://registry.npmjs.org",
+				"chrome-devtools-mcp@0.17.0"
+			],
+			"gallery": "https://api.mcp.github.com",
+			"version": "0.17.0"
+		},
+		"io.github.wonderwhy-er/desktop-commander": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"--registry",
+				"https://registry.npmjs.org",
+				"@wonderwhy-er/desktop-commander@0.2.35"
+			],
+			"gallery": "https://api.mcp.github.com",
+			"version": "0.2.35"
+		},
+		"io.github.upstash/context7": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"@upstash/context7-mcp@1.0.31"
+			],
+			"env": {
+				"CONTEXT7_API_KEY": "${input:CONTEXT7_API_KEY}"
+			},
+			"gallery": "https://api.mcp.github.com",
+			"version": "1.0.31"
+		},
+		"io.github.github/github-mcp-server": {
+			"type": "stdio",
+			"command": "docker",
+			"args": [
+				"run",
+				"-i",
+				"--rm",
+				"-e",
+				"GITHUB_PERSONAL_ACCESS_TOKEN=${input:token}",
+				"ghcr.io/github/github-mcp-server:0.30.3"
+			],
+			"gallery": "https://api.mcp.github.com",
+			"version": "0.30.3"
+		},
+		"io.github.vercel/next-devtools-mcp": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"next-devtools-mcp@0.3.6"
+			],
+			"gallery": "https://api.mcp.github.com",
+			"version": "0.3.6"
+		},
+		"cloudflare": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@cloudflare/mcp-server-cloudflare"
+			],
+			"env": {
+				"CLOUDFLARE_ACCOUNT_ID": "${input:cloudflareAccountId}",
+				"CLOUDFLARE_API_TOKEN": "${input:cloudflareApiToken}"
+			}
+		},
+		"sqlite": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-sqlite",
+				"data/brunella.db"
+			]
+		},
+		"fetch": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-fetch"
+			]
+		},
+		"memory": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-memory"
+			],
+			"env": {
+				"MEMORY_FILE_PATH": "data/mcp_memory.json"
+			}
+		},
+		"brunella-python": {
+			"type": "stdio",
+			"command": "python",
+			"args": [
+				"-m",
+				"myai.mcp_server"
+			],
+			"env": {
+				"PYTHONPATH": "."
+			}
+		}
+	},
+	"inputs": [
+		{
+			"id": "githubPat",
+			"type": "promptString",
+			"description": "GitHub Personal Access Token (repo/issues scope)",
+			"password": true
+		},
+		{
+			"id": "CONTEXT7_API_KEY",
+			"type": "promptString",
+			"description": "API key for authentication",
+			"password": true
+		},
+		{
+			"id": "token",
+			"type": "promptString",
+			"description": "",
+			"password": true
+		},
+		{
+			"id": "cloudflareAccountId",
+			"type": "promptString",
+			"description": "Cloudflare Account ID",
+			"password": false
+		},
+		{
+			"id": "cloudflareApiToken",
+			"type": "promptString",
+			"description": "Cloudflare API Token (Workers/KV/D1/R2 permissions)",
+			"password": true
+		}
+	]
 }

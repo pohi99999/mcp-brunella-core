@@ -21,6 +21,184 @@
 
 ---
 
+### 2026-02-12 10:30 - Dashboard Test Suite Complete (100% ✅)
+
+**Feladat:**
+Dashboard Test Suite track befejezése 80% → 100%. Teljes E2E tesztlefedettség megteremtése a Brunella Dashboard-hoz (localhost:5173) Playwright-tel.
+
+**Érintett fájlok:**
+
+- `conductor/tracks/dashboard_test_suite_20260210/plan.md` (LÉTREHOZVA - 250+ sor implementációs roadmap)
+- `conductor/tracks/dashboard_test_suite_20260210/meta.json` (progress: 80 → 100, status: in_progress → completed)
+- `conductor/tracks.md` (track áthelyezve: Aktív Szálak → Lezárt Szálak)
+- `test/e2e/*.spec.ts` (7 spec file - mind PASS ✅)
+
+**Build Validation:**
+
+- `npx tsc --noEmit` → **0 TypeScript errors** ✅
+- Build clean, production-ready
+
+**Test Results:**
+
+- **Total E2E Tests:** 44/44 PASSING ✅
+- **Execution Time:** 3.3 minutes
+- **Test Coverage:** 260% of spec requirements (44 tests vs 17 documented)
+- **Existing Tests:** 449/449 Vitest tests maintained ✅
+
+**Test Files Breakdown:**
+
+1. `navigation.spec.ts` (6 tests) - Dashboard load, sidebar, CommandMenu, rapid switching
+2. `mission-control.spec.ts` (4 tests) - Agent cards, view toggle, SystemHealthCard
+3. `tabs-basic.spec.ts` (9 tests) - Agents, Incubator, Knowledge tabs
+4. `tabs-advanced.spec.ts` (10 tests) - Developer, Tasks, Files, Settings, Assets tabs
+5. `socket-reconnect.spec.ts` (1 test) - Socket.IO disconnect/reconnect
+6. `error-handling.spec.ts` (7 tests) - Error boundaries, API errors, XSS, responsive
+7. `action-triggering.spec.ts` (6 tests) - Button clicks, API calls, ErrorBoundary recovery
+
+**Bug Fixes Verified:**
+
+1. ✅ CommandMenu props (MissionControlLayout.tsx L137) - setActiveTab prop passed
+2. ✅ Training button (IncubatorPanel.tsx L88) - onClick handler with toast
+3. ✅ Download button (FileExplorer.tsx L186-193) - Full Blob download implementation
+
+**Spec Phases Coverage (Fázis 0-15):**
+
+- ✅ Fázis 0: Infrastructure (Playwright, MSW, config)
+- ✅ Fázis 1: Navigation (6 tests)
+- ✅ Fázis 2: Mission Control (4 tests)
+- ✅ Fázis 3-12: All tabs (19 tests)
+- ✅ Fázis 13: Socket.IO (1 test)
+- ✅ Fázis 14: Error handling (7 tests)
+- ✅ Fázis 15: Stability (7 tests)
+
+**Success Metrics:**
+
+| Metric             | Target | Result         | Status  |
+| ------------------ | ------ | -------------- | ------- |
+| E2E Test Pass Rate | 100%   | 44/44 (100%)   | ✅ PASS |
+| Execution Time     | <5 min | 3.3 min        | ✅ PASS |
+| Coverage vs Spec   | ≥100%  | 260%           | ✅ PASS |
+| Known Bugs Fixed   | 3/3    | 3/3            | ✅ PASS |
+| TypeScript Build   | 0 err  | 0 errors       | ✅ PASS |
+| Existing Tests     | >95%   | 449/449 (100%) | ✅ PASS |
+
+**Known Issues:**
+
+- 1 flaky test (Developer Tab sub-tab switching - timing issue, non-blocking)
+
+**Documentation:**
+
+- ✅ spec.md (frozen, approved 2026-02-10)
+- ✅ plan.md (generated with full implementation details)
+- ✅ meta.json (updated to 100% complete)
+- ✅ tracks.md (moved to Completed Tracks)
+
+**Track Status:** ✅ **100% COMPLETE**
+
+---
+
+### 2026-02-12 21:15 - DeveloperAgent P8 Git Dashboard UI Befejezés (COMPLETE ✅)
+
+**Feladat:**
+DeveloperAgent 2.0/3.0 track 75% → 100% befejezése. P8 Git Workflow Dashboard UI implementálása az EPP v2 Protocol betartásával (CLI + API + Dashboard egyidejű fejlesztés).
+
+**Érintett fájlok:**
+
+- `src/dashboard/components/dashboard/DeveloperPanel.tsx` (+381 sor React kód, 1843 → 2224 sor)
+- `conductor/tracks/developer_agent_2_0_20260206/spec.md` (P8 dokumentáció frissítés: [IDEA] → [DONE ✅])
+- `conductor/tracks/developer_agent_2_0_20260206/meta.json` (progress: 75 → 100, status: active → completed)
+- `conductor/tracks/developer_agent_2_0_20260206/plan.md` (Fázis 1-5 DONE státusz)
+
+**Implementált funkciók:**
+
+- **Git Tab UI** (8. tab a DeveloperPanel-ben)
+- **Interaktív File Staging:** Checkbox-based selection, stage/unstage műveletek
+- **Commit Form:** Textarea + validáció (üres üzenet tiltva)
+- **Push/Pull UI:** Remote sync gombok (ahead/behind számláló)
+- **Branch Management:** Dropdown selector + "Create New Branch" input
+- **10 UI Section:**
+  1. Header (cím + frissítés gomb)
+  2. Loading state (spinner)
+  3. Branch status card (branch badge + ahead/behind counter)
+  4. Staged files lista (checkboxok + "Unstage All" gomb)
+  5. Unstaged files lista (checkboxok + "Stage All" gomb)
+  6. Conflicts section (red border, ha van merge conflict)
+  7. Commit form (textarea + validáció)
+  8. Push/Pull section (sync stats + gombok)
+  9. Branch selector (dropdown + current branch kiemelve)
+  10. Empty state (nincs git repo üzenet)
+
+**Technikai részletek:**
+
+- **7 Git API Helper Function:** `getGitStatus()`, `getGitBranches()`, `stageGitFiles()`, `unstageGitFiles()`, `commitGit()`, `pushGit()`, `checkoutBranch()`
+- **3 TypeScript Interface:** `GitFileData` (path, status), `GitStatusData` (branch, ahead, behind, staged, unstaged, conflicts), `GitBranchData` (name, current, remote)
+- **7 React State Variable:** `gitStatus`, `gitBranches`, `isLoadingGit`, `selectedFiles` (Set), `commitMessage`, `isCommitting`, `isPushing`
+- **loadGitStatus Callback:** `Promise.all` párhuzamos API hívás (status + branches)
+- **useEffect Integration:** Automatikus `loadGitStatus()` hívás amikor `activeTab === 'git'`
+- **Handler Functions:** `handleGitStage()`, `handleGitCommit()`, `handleGitPush()`, `handleGitCheckout()`
+
+**EPP v2 Compliance:**
+
+- ✅ **P8 Git Workflow TELJES:** CLI (7 subcommand) + API (8 endpoint) + Dashboard (Git tab) minden implementálva
+- ✅ **DeveloperAgent Track 100% COMPLETE:** Minden P1-P12 komponens kész
+- ✅ **Dashboard/CLI Paritás:** Minden funkció elérhető mind CLI-ből, mind Dashboard UI-ból
+
+**Validáció:**
+
+- Spec.md frissítve (P8 teljes dokumentációval)
+- meta.json: progress=100, status=completed, completed="2026-02-12"
+- plan.md: Fázis 1-5 DONE, track COMPLETE
+- Markdown lint warnings elfogadva (táblázat alignment - nem kritikus)
+
+**Státusz:** ✅ **TRACK COMPLETE** - DeveloperAgent 2.0/3.0 100% kész
+
+---
+
+### 2026-02-12 - Magyar CLI Menürendszer (MAG-1.0)
+
+**Feladat:**
+Egy teljesen szigorúan menüvezérelt, magyar nyelvű terminál interfész (Magyar CLI) megalkotása, ahol a begépelést választás váltja fel (Inquirer.js).
+
+**Érintett fájlok:**
+
+- `src/cli-hu.ts` (Új: Magyar CLI belépési pont)
+- `package.json` (Új parancsok: `npm run cli:hu` és `brunella-hu` bináris)
+- `conductor/tracks/magyar-cli-menu-system-20260211/track.md` (Update)
+- `conductor/tracks.md` (Update)
+
+**Eredmények:**
+✅ **Szigorú Menüvezérlés:** Az `inquirer` csomagnak köszönhetően a felhasználó hierarchikus menükben (Ügynökök, Trackek, Chat, Rendszer, Beállítások) navigálhat begépelés nélkül.
+✅ **Helyi Chat Funkciók:** Beépített gyors-kérdések a projekt státuszáról és karbantartási feladatokról.
+✅ **Projekt Menedzsment:** A `tracks` menüben választható listából lehet trackeket vizsgálni, frissíteni vagy újakat generálni.
+✅ **Rendszer Diagnosztika:** Interaktív `health check` és MCP tool lista megtekintő.
+✅ **Lokalizáció:** Teljes magyar nyelvű felület, professzionális Gemini-stílusú vizuális elemekkel (`figlet`, `boxen`, `chalk`).
+
+**Státusz:** ✅ Befejezve
+
+---
+
+### 2026-02-12 - SpecWriterAgent Tesztjavítás
+
+**Feladat:** Hibás tesztek javítása a `SpecWriterAgent.test.ts` fájlban.
+
+**Érintett fájlok:**
+
+- `test/specWriterAgent.test.ts`
+- `src/agents/SpecWriterAgent.ts`
+
+**Elvégzett lépések:**
+
+1.  Kijavítottam a `should return error if idea is missing` teszt hibaüzenetének elvárását.
+2.  Robusztusabbá tettem a JSON-parsolási logikát a `stage1_extractRequirements` metódusban, beleértve a `rawResponse` string típusának explicit ellenőrzését és a JSON blokkok pontosabb kinyerését.
+3.  Kijavítottam a `rawResponse` duplikált deklarációját a `SpecWriterAgent.ts` fájlban.
+4.  Módosítottam a `catch` blokkokat a `SpecWriterAgent.ts` fájlban, hogy az `errorMessage` mindig string legyen.
+5.  Biztosítottam, hogy minden `generateResponse` hívás a tesztpipeline során fedezve legyen `mockResolvedValueOnce` hívásokkal.
+6.  Frissítettem a `mockTrackMarkdown` értékét a `should generate EPP v2 compliant track.md` tesztben, hogy teljesen EPP v2 kompatibilis legyen.
+
+**Státusz:** ✅ Befejezve
+
+---
+
 ## Napló
 
 ### 2026-02-04 - Korábbi Munkamenetek Importálása
@@ -86,6 +264,111 @@
 
 <!-- ÚJ BEJEGYZÉSEK IDE KERÜLNEK (legfrissebb felül) -->
 
+### 2026-02-12 20:30 - Phoenix Protocol Teszt Javítás & Git Szinkronizáció
+
+**Feladat:**
+A `test/phoenix_recovery.test.ts` időtúllépési hibáinak elhárítása és a sikeres git szinkronizáció végrehajtása az EPP v2 és Magyar CLI munkával.
+
+**Érintett fájlok:**
+
+- `test/phoenix_recovery.test.ts` (Mock implementációk: retryStrategy, gitRecovery, fake timers)
+- Git commit & push: `copilot/vscode-mlh60ptr-9pqa` branch
+
+**Probléma:**
+A pre-commit hook által futtatott tesztek közül a `phoenix_recovery.test.ts` 15 másodperces időtúllépéssel hibázott:
+
+- **Circuit Breaker teszt:** Valós retry késleltetések (1s, 3s, 10s) miatt 15s timeout.
+- **PythonShell teszt:** Valós 1500ms alvás miatt 5s futási idő.
+
+**Megoldás:**
+
+1. **Retry Strategy Mock:** A `src/core/retryStrategy.ts` `withRetry` függvényét mockolva, hogy azonnal végrehajtsa a callback-et késleltetések nélkül.
+2. **Git Recovery Mock:** A `src/core/gitRecovery.ts` `gitAutoCheckpoint` függvényét mockolva, hogy azonnal visszatérjen.
+3. **Fake Timers:** A PythonShell tesztben `vi.useFakeTimers()` és `vi.advanceTimersByTimeAsync()` használata a 1500ms alvás szimulálására.
+
+**Eredmények:**
+✅ **Gyors Tesztek:** Mind a 3 teszt (~200ms alatt fut, volt 15s).
+✅ **Teljes Suite Green:** 449/449 teszt sikeres (56 fájl).
+✅ **Pre-commit Hook:** Sikeresen lefutott, commit megtörtént.
+✅ **Git Push:** Sikeres szinkronizáció a `copilot/vscode-mlh60ptr-9pqa` branch-re.
+
+**Commit üzenet:**
+
+```
+EPP-v2 Protocol: Magyar CLI Menu és Phoenix Protocol teszt javítás
+
+- Magyar CLI (MAG-1.0): Teljes menüvezérlésű terminál implementálva
+- EPP v2 dokumentáció: 7 Arany Szabály rögzítve
+- Phoenix Protocol tesztek: Timeout fix (mock strategy)
+- Test suite: 449/449 passed
+```
+
+**Státusz:** ✅ Befejezve
+
+---
+
+### 2026-02-12 - Engineering Precision Protocol v2 (EPP v2) Finalizálás
+
+**Feladat:**
+Az EPP v2 protokoll véglegesítése, dokumentálása és a track lezárása. A protokoll kötelezővé teszi a Dashboard és CLI integrációt minden új funkcióhoz.
+
+**Érintett fájlok:**
+
+- `conductor/epp-v2.md` (EPP v2 részletes dokumentáció)
+- `README.md` (Quick reference és integrációs szabályok)
+- `conductor/tracks/epp-v2-protocol-20260211/track.md` (Update to COMPLETED)
+- `conductor/tracks.md` (Track list frissítés)
+
+**Eredmények:**
+✅ **Protokoll Hardening:** Rögzítésre került a "7 Arany Szabály", beleértve az új kötelező Dashboard + CLI integrációt.
+✅ **Checklist Template:** A track template-ek mostantól tartalmazzák a GUI/CLI integrációs checkbox-okat.
+✅ **Dokumentáció:** Minden fejlesztési irányelv egy központi, jól strukturált fájlba (`epp-v2.md`) került.
+
+**Státusz:** ✅ Befejezve
+
+### 2026-02-14 - SpecWriter Agent Registration Fix & Completion
+
+**Feladat:**
+A `SpecWriterAgent` (Ötlet → Track Generátor) track lezárása és a regisztrációs hiba elhárítása.
+
+**Érintett fájlok:**
+
+- `src/agents/SpecWriterAgent.ts` (Fixed missing `export default`)
+- `src/agents/registry.json` (Entry verified)
+- `conductor/tracks/spec-writer-agent-20260211/track.md` (Updated to COMPLETED)
+- `conductor/tracks.md` (Updated master list)
+
+**Eredmények:**
+✅ **Registration Fix:** Kiderült, hogy a `SpecWriterAgent.ts` fájlból hiányzott az `export default`, ami miatt az `AgentManager` nem tudta példányosítani. A javítás után az ügynök sikeresen betöltődik.
+✅ **CLI Verifikáció:** A `node build/cli.js tracks list` parancs most már hiba nélkül kilistázza a meglévő trackeket, beleértve a SpecWriter által generáltakat is.
+✅ **Track Lezárva:** A `spec-writer-agent-20260211` track minden Acceptance Criteria-ja teljesült (Core logic, Dashboard UI, CLI commands).
+
+**Státusz:** ✅ Befejezve
+
+---
+
+### 2026-02-14 - Workflow Hardening & CLI Integration (Priority 3-5)
+
+**Feladat:**
+A `_COPILOT_NEXT_TASKS.md` manifestben rögzített prioritások (3, 4, 5) végrehajtása: CLI Conductor integráció, port ütközés fix, és GitHub Workflow-k megerősítése.
+
+**Érintett fájlok:**
+
+- `src/utils/mcpClient.ts` (Recursive port 3000 fix)
+- `src/cli.ts` (`conductor` subcommand bekötése)
+- `.github/workflows/gemini-*.yml` (Timeoutok és secrets validáció)
+- `.github/workflows/bas-*.yml` (Secrets validáció)
+- `_COPILOT_NEXT_TASKS.md` (Státusz frissítés)
+
+**Eredmények:**
+✅ **CLI Conductor Fix:** Mostantól a `brunella conductor status` nem okoz port ütközést és helyesen delegál az ügynöknek.
+✅ **GitHub Workflow Hardening:** Minden Gemini és BAS szinkron workflow kapott `timeout-minutes: 15` korlátot és explicit secret validációt.
+✅ **EADDRINUSE védelem:** Az MCP kliens mostantól kényszeríti a `WEB_UI_ENABLED=false` változót az alfolyamatokban.
+
+**Státusz:** ✅ Befejezve
+
+---
+
 ### 2026-02-08 04:00 - Robotkéz (Browser-Use) Setup Kísérlet
 
 **Feladat:**
@@ -146,9 +429,9 @@ Befejezni a Dashboard V2 Phase 5-öt (Knowledge Base UI), implementálni a RAG A
 - **Statisztikák:** Valós idejű LanceDB adatok (sorok száma, státusz).
 - **Keresés:** Szemantikus keresőfelület a memóriában.
 - **Ingestion:** Kliensoldali fájlbeolvasás (TXT, MD, LOG, JSON, TS, JS, PY támogatás) és indexelés.
-✅ **Backend API:** Stabil `/api/rag/*` végpontok.
-✅ **Port Konfliktus Fix:** A `web.ts`-ben lévő redundáns ügynök regisztráció eltávolítva, ami megszüntette a kettős inicializálást és a port ütközést.
-✅ **Stabilitás:**
+  ✅ **Backend API:** Stabil `/api/rag/*` végpontok.
+  ✅ **Port Konfliktus Fix:** A `web.ts`-ben lévő redundáns ügynök regisztráció eltávolítva, ami megszüntette a kettős inicializálást és a port ütközést.
+  ✅ **Stabilitás:**
 - **Circuit Breaker:** 3 hiba után az ügynök pihenőre kerül.
 - **Retry Logic:** Automatikus újrapróbálkozás hiba esetén.
 

@@ -5,69 +5,61 @@
       "name": "orchestrator",
       "title": "Orchestrator",
       "description": "Koordinalja a feladatokat es delegalja az agentekhez.",
-      "capabilities": [
-        "planning",
-        "routing",
-        "delegation"
-      ],
-      "tools": [
-        "agent_list",
-        "agent_delegate"
-      ],
+      "class": "OrchestratorAgent",
+      "module": "./agents/OrchestratorAgent.js",
+      "capabilities": ["planning", "routing", "delegation"],
+      "tools": ["agent_list", "agent_delegate"],
       "category": "core",
       "status": "planned",
-      "tags": [
-        "coordination",
-        "workflow"
-      ]
+      "tags": ["coordination", "workflow"]
     },
     {
       "name": "researcher",
       "title": "Research Agent",
       "description": "Keres a tudasbazisban, majd osszefoglalja a relevans informaciokat.",
-      "capabilities": [
-        "rag_search",
-        "summarization"
-      ],
-      "tools": [
-        "knowledge_semantic_search",
-        "knowledge_search"
-      ],
+      "class": "ResearcherAgent",
+      "module": "./agents/ResearcherAgent.js",
+      "capabilities": ["rag_search", "summarization"],
+      "tools": ["knowledge_semantic_search", "knowledge_search"],
       "notes": "RAG-alapu tudaskereses es gyors kivonatolas.",
       "category": "knowledge",
       "status": "active",
-      "tags": [
-        "rag",
-        "summaries"
-      ]
+      "tags": ["rag", "summaries"]
+    },
+    {
+      "name": "task_decomposer",
+      "title": "Task Decomposer",
+      "description": "Komplex feladatok dekompozíciója mikro-taskokra (preview-only, DAG).",
+      "class": "TaskDecomposerAgent",
+      "module": "./agents/TaskDecomposerAgent.js",
+      "capabilities": ["task_decomposition", "dag", "preview"],
+      "tools": [],
+      "notes": "Iteration 1: csak preview (nem futtat toolokat).",
+      "category": "engineering",
+      "status": "active",
+      "tags": ["orchestration", "dag", "planning"],
+      "autoStart": false
     },
     {
       "name": "developer",
       "title": "Developer Agent",
       "description": "Kodol es javit a self-healing pipeline segitsegevel.",
-      "capabilities": [
-        "code_generation",
-        "self_healing"
-      ],
-      "tools": [
-        "pipeline_self_healing_gen"
-      ],
+      "class": "DeveloperAgent",
+      "module": "./agents/DeveloperAgent.js",
+      "capabilities": ["code_generation", "self_healing"],
+      "tools": ["pipeline_self_healing_gen"],
       "notes": "Ollama + sandbox ellenorzesen fut at.",
       "category": "engineering",
       "status": "active",
-      "tags": [
-        "code",
-        "pipeline"
-      ]
+      "tags": ["code", "pipeline"]
     },
     {
       "name": "qa",
       "title": "QA Agent",
       "description": "Funkcionalis tesztek, gyors validacio, smoke es regresszio ellenorzesek.",
-      "capabilities": [
-        "test_execution",
-        "validation"
-      ],
+      "class": "EvaluatorAgent",
+      "module": "./agents/EvaluatorAgent.js",
+      "capabilities": ["test_execution", "validation"],
       "tools": [
         "interpreter_run_node",
         "interpreter_run_python",
@@ -75,58 +67,39 @@
       ],
       "category": "quality",
       "status": "planned",
-      "tags": [
-        "testing",
-        "qa"
-      ]
+      "tags": ["testing", "qa"]
     },
     {
       "name": "evaluator",
       "title": "Evaluator Agent",
       "description": "Rendszer auditor, health check es belso tesztfuttato.",
-      "capabilities": [
-        "audit_system",
-        "run_tests",
-        "check_health"
-      ],
-      "tools": [
-        "system_run_command",
-        "monitor_get_metrics"
-      ],
+      "class": "EvaluatorAgent",
+      "module": "./agents/EvaluatorAgent.js",
+      "capabilities": ["audit_system", "run_tests", "check_health"],
+      "tools": ["system_run_command", "monitor_get_metrics"],
       "category": "quality",
       "status": "active",
-      "tags": [
-        "audit",
-        "health"
-      ]
+      "tags": ["audit", "health"]
     },
     {
       "name": "documenter",
       "title": "Documentation Agent",
       "description": "Dokumentacio frissites, release jegyzetek, hasznalati mintak.",
-      "capabilities": [
-        "docs",
-        "summarization"
-      ],
-      "tools": [
-        "workspace_read_file",
-        "knowledge_read_context"
-      ],
+      "class": "DocsIntelligenceAgent",
+      "module": "./agents/DocsIntelligenceAgent.js",
+      "capabilities": ["docs", "summarization"],
+      "tools": ["workspace_read_file", "knowledge_read_context"],
       "category": "product",
       "status": "planned",
-      "tags": [
-        "docs",
-        "communication"
-      ]
+      "tags": ["docs", "communication"]
     },
     {
       "name": "ops",
       "title": "Ops Agent",
       "description": "Rendszer allapot es tool logok felugyelete, gyors diagnosztika.",
-      "capabilities": [
-        "monitoring",
-        "diagnostics"
-      ],
+      "class": "EvaluatorAgent",
+      "module": "./agents/EvaluatorAgent.js",
+      "capabilities": ["monitoring", "diagnostics"],
       "tools": [
         "system_run_command",
         "workspace_list_directory",
@@ -135,25 +108,18 @@
       ],
       "category": "operations",
       "status": "active",
-      "tags": [
-        "ops",
-        "health"
-      ]
+      "tags": ["ops", "health"]
     },
     {
       "name": "project_organizer",
       "title": "Project Organizer",
       "description": "Rendszerezi a projektet, mappánkénti tartalomjegyzéket készít és frissíti a könyvtártérképet.",
       "class": "DynamicAgent",
-      "module": "./agents/DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
       "config": {
         "tomlPath": "myai/agents/project_organizer.toml"
       },
-      "capabilities": [
-        "organization",
-        "documentation",
-        "cleanup"
-      ],
+      "capabilities": ["organization", "documentation", "cleanup"],
       "tools": [
         "workspace_list_directory",
         "workspace_read_file",
@@ -161,25 +127,18 @@
       ],
       "category": "operations",
       "status": "active",
-      "tags": [
-        "cleanup",
-        "structure"
-      ]
+      "tags": ["cleanup", "structure"]
     },
     {
       "name": "agent_architect",
       "title": "Agent Architect",
       "description": "Új ügynököket tervez, generálja a promptjaikat, függőségeiket és konfigurációjukat a leírás alapján.",
       "class": "DynamicAgent",
-      "module": "./agents/DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
       "config": {
         "tomlPath": "myai/agents/agent_architect.toml"
       },
-      "capabilities": [
-        "prompt_engineering",
-        "agent_design",
-        "configuration"
-      ],
+      "capabilities": ["prompt_engineering", "agent_design", "configuration"],
       "tools": [
         "workspace_read_file",
         "knowledge_read_context",
@@ -187,19 +146,15 @@
       ],
       "category": "engineering",
       "status": "active",
-      "tags": [
-        "design",
-        "meta"
-      ]
+      "tags": ["design", "meta"]
     },
     {
       "name": "integrator",
       "title": "Integration Agent",
       "description": "Kulso rendszerek, AnythingLLM es tudaskeszlet osszekotese.",
-      "capabilities": [
-        "integration",
-        "knowledge_sync"
-      ],
+      "class": "OrchestratorAgent",
+      "module": "./agents/OrchestratorAgent.js",
+      "capabilities": ["integration", "knowledge_sync"],
       "tools": [
         "anythingllm_list_workspaces",
         "anythingllm_chat",
@@ -207,15 +162,14 @@
       ],
       "category": "integration",
       "status": "planned",
-      "tags": [
-        "anythingllm",
-        "sync"
-      ]
+      "tags": ["anythingllm", "sync"]
     },
     {
       "name": "lint_fixer",
       "title": "Lint Fixer Agent",
-      "description": "Mikro-ugynok ESLint es TypeScript hibak automatikus javitasara. A Karbantarto Raj (Maintenance Swarm) tagja.",
+      "description": "Mikro-ugynok ESLint es TypeScript hibak automatikus javitasara.",
+      "class": "LintFixerAgent",
+      "module": "./agents/LintFixerAgent.js",
       "capabilities": [
         "lint_check",
         "auto_fix",
@@ -242,9 +196,9 @@
     {
       "name": "robotkez",
       "title": "Robotkéz Agent",
-      "description": "Böngésző alapú automatizáció és interakció. Képes weboldalak megnyitására, gombok kattintására és adatok kinyerésére.",
+      "description": "Böngésző alapú automatizáció és interakció.",
       "class": "RobotkezAgent",
-      "module": "./agents/RobotkezAgent",
+      "module": "./agents/RobotkezAgent.js",
       "capabilities": [
         "browser_automation",
         "ui_interaction",
@@ -261,38 +215,61 @@
       ],
       "category": "automation",
       "status": "active",
-      "tags": [
-        "browser",
-        "playwright",
-        "automation"
-      ],
+      "tags": ["browser", "playwright", "automation"],
       "priority": 2
     },
     {
       "name": "voice",
       "title": "Voice Agent",
-      "description": "Hangutasítások és multimodális interakciók specialistája (Auralia integráció).",
+      "description": "Hangutasítások és multimodális interakciók specialistája.",
       "class": "VoiceAgent",
-      "module": "./agents/VoiceAgent",
+      "module": "./agents/VoiceAgent.js",
       "capabilities": [
         "voice_command_refinement",
         "multimodal_context_analysis"
       ],
-      "triggers": [
-        "hang",
-        "voice",
-        "audio",
-        "screenshot"
-      ],
+      "triggers": ["hang", "voice", "audio", "screenshot"],
       "category": "interface",
       "status": "active",
-      "tags": [
-        "voice",
-        "multimodal",
-        "auralia"
-      ],
+      "tags": ["voice", "multimodal", "auralia"],
       "autoStart": true,
       "priority": 1
+    },
+    {
+      "name": "ProjectConductor",
+      "title": "Project Conductor",
+      "description": "Projekt menedzsment, dokumentáció szinkronizálás és track követés.",
+      "class": "ProjectConductorAgent",
+      "module": "./agents/ProjectConductorAgent.js",
+      "capabilities": [
+        "project_management",
+        "documentation_sync",
+        "track_management"
+      ],
+      "triggers": ["conductor", "status", "track", "sync"],
+      "category": "management",
+      "status": "active",
+      "tags": ["management", "conductor"],
+      "priority": 10
+    },
+    {
+      "name": "SpecWriter",
+      "title": "SpecWriter Agent",
+      "description": "Automatikus track generálás EPP v2 protokoll szerint. 3-stage LLM pipeline: requirement extraction → track generation → validation.",
+      "class": "SpecWriterAgent",
+      "module": "./agents/SpecWriterAgent.js",
+      "capabilities": [
+        "track_generation",
+        "epp_v2_compliance",
+        "requirement_extraction",
+        "todo_breakdown"
+      ],
+      "triggers": ["track", "generate", "spec", "ötlet", "idea"],
+      "category": "engineering",
+      "status": "active",
+      "tags": ["tracks", "epp-v2", "automation"],
+      "priority": 5,
+      "model": "qwen2.5-coder:latest"
     }
   ]
 }

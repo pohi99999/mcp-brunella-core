@@ -23,12 +23,12 @@ A Developer Agent, a CLI és a Dashboard **szinkronban fejlődik** — minden ú
 
 ## 📊 Fázisok Összefoglalása
 
-| Fázis | Feladatok | Prioritás | Státusz |
-|-------|-----------|-----------|---------|
-| **Fázis 1** | P1 Pipeline, P2 CLI, P3 Dashboard | 🔴 CRITICAL | `DONE ✅` |
-| **Fázis 2** | P4 Review, P5 Context, P6 Coverage | 🟠 HIGH | `DONE ✅` |
-| **Fázis 3** | P7 Queue, P8 Git, P9 Scaffold | 🟡 MEDIUM | `DONE ✅` |
-| **Fázis 4** | P10 Metrics, P11 Approval, P12 Feed | 🟡 MEDIUM | `DONE ✅` |
+| Fázis       | Feladatok                           | Prioritás   | Státusz   |
+| ----------- | ----------------------------------- | ----------- | --------- |
+| **Fázis 1** | P1 Pipeline, P2 CLI, P3 Dashboard   | 🔴 CRITICAL | `DONE ✅` |
+| **Fázis 2** | P4 Review, P5 Context, P6 Coverage  | 🟠 HIGH     | `DONE ✅` |
+| **Fázis 3** | P7 Queue, P8 Git, P9 Scaffold       | 🟡 MEDIUM   | `DONE ✅` |
+| **Fázis 4** | P10 Metrics, P11 Approval, P12 Feed | 🟡 MEDIUM   | `DONE ✅` |
 
 ---
 
@@ -116,7 +116,57 @@ brunella dev history               # Feladat történet
 
 ### P7: Task Queue & Batch Operations [DONE ✅]
 
-### P8: Git Workflow Automatizáció [IDEA]
+### P8: Git Workflow Automatizáció [DONE ✅]
+
+**Fájlok:**
+
+- `src/agents/gitIntegration.ts` — GitManager osztály (Simple Git wrapper)
+- `src/server/routes/developer.ts` — API végpontok (`/git/*`)
+- `src/cli/devCommands.ts` — CLI parancsok (`git` subcommands: status, diff, commit, push, branches, checkout, log)
+- `src/dashboard/components/dashboard/DeveloperPanel.tsx` — Git Tab UI (branch switcher, staging area, commit form)
+
+**Működés:**
+
+- **Git Status:** Branch info, staged/unstaged/untracked fájlok listázása
+- **Staging:** Interactive file selection, stage/unstage műveletek
+- **Commit:** Commit message editor + commit végrehajtás
+- **Push/Pull:** Remote sync gombok
+- **Branch Management:** Branch listázás, váltás (checkout), új branch létrehozás
+- **Git Log:** Commit history megjelenítés
+
+**CLI:**
+
+```sh
+brunella dev git status                  # Git status megjelenítés
+brunella dev git diff [--file=X]         # Diff megtekintés
+brunella dev git commit -m "message"     # Commit végrehajtás
+brunella dev git push                    # Push to remote
+brunella dev git branches [--remote]     # Branch lista
+brunella dev git checkout <branch>       # Branch váltás
+brunella dev git log [--limit=10]        # Commit history
+```
+
+**API:**
+
+- `GET /api/v1/developer/git/status` — Git status lekérés
+- `GET /api/v1/developer/git/diff?file=...&staged=true` — Diff lekérés
+- `POST /api/v1/developer/git/stage` — Fájlok stage-elése
+- `POST /api/v1/developer/git/unstage` — Fájlok unstage-elése
+- `POST /api/v1/developer/git/commit` — Commit végrehajtás
+- `POST /api/v1/developer/git/push` — Push to remote
+- `GET /api/v1/developer/git/branches?remote=true` — Branch lista
+- `POST /api/v1/developer/git/branch` — Új branch létrehozás
+- `PUT /api/v1/developer/git/branch/:name` — Branch checkout/delete
+
+**Dashboard UI:**
+
+- **Git Tab:** Interactive git workflow панель
+- **Branch Switcher:** Dropdown lista branch váltáshoz
+- **Staging Area:** Checkbox lista unstaged fájlokhoz
+- **Staged Files:** Lista a stage-elt fájlokról (unstage gombbal)
+- **Commit Form:** Textarea + Commit gomb
+- **Push Button:** Remote push végrehajtása
+- **Status Badge:** Aktuális branch + ahead/behind számlálók
 
 ### P9: Scaffold & Template Rendszer [DONE ✅]
 

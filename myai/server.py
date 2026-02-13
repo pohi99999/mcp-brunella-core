@@ -585,10 +585,12 @@ async def add_gold_sample(req: GoldSampleRequest):
     """
     try:
         success = save_gold_sample(
-            prompt=req.prompt,
-            completion=req.completion,
+            system_prompt="You are a helpful AI assistant.",
+            user_input=req.prompt,
+            assistant_output=req.completion,
             source=req.source,
-            quality=req.quality
+            quality_score=req.quality,
+            metadata={"source": req.source, "quality": req.quality},
         )
         if success:
             stats = get_dataset_stats()

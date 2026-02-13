@@ -56,6 +56,40 @@
 				"panel": "shared"
 			},
 			"detail": "Lefuttatja a Brunella szinkronizációs protokollt (Git add/commit/push + Pull)."
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "npm run build"
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "npm run build"
+		},
+		{
+			"label": "build",
+			"type": "shell",
+			"command": "npm run build"
+		},
+		{
+			"label": "🖥️ START WEB DASHBOARD (UI Indítás)",
+			"type": "shell",
+			"command": "npm run dev:ui",
+			"args": [],
+			"isBackground": true,
+			"problemMatcher": [],
+			"group": "test"
+		},
+		{
+			"type": "func",
+			"label": "func: host start",
+			"command": "host start",
+			"problemMatcher": "$func-powershell-watch",
+			"isBackground": true,
+			"options": {
+				"cwd": "${workspaceFolder}/external_research\\brunella_azure\\app\\functions\\text_processor"
+			}
 		}
 	]
 }

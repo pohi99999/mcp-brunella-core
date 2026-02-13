@@ -4,28 +4,28 @@
  * Státusz: 🟢 Online / 🔴 Offline / 🟡 Starting
  */
 
-import { useEffect, useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ArrowsClockwise } from '@phosphor-icons/react';
-import * as api from '@/lib/apiService';
-import type { ServiceState } from '@/lib/apiService';
-import { toast } from 'sonner';
+import { useEffect, useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { ArrowsClockwise } from "@phosphor-icons/react";
+import * as api from "@/lib/apiService";
+import type { ServiceState } from "@/lib/apiService";
+import { toast } from "sonner";
 
 const SERVICE_LABELS: Record<string, string> = {
-  ollama: 'Ollama',
-  anythingllm: 'AnythingLLM',
-  python: 'Python Subsystem',
+  ollama: "Ollama",
+  anythingllm: "AnythingLLM",
+  python: "Python Subsystem",
 };
 
 const STATUS_EMOJI: Record<string, string> = {
-  online: '🟢',
-  offline: '🔴',
-  starting: '🟡',
-  stopping: '🟡',
-  unknown: '⚪',
+  online: "🟢",
+  offline: "🔴",
+  starting: "🟡",
+  stopping: "🟡",
+  unknown: "⚪",
 };
 
 export function ServiceControlWidget() {
@@ -39,7 +39,7 @@ export function ServiceControlWidget() {
       const states = await api.getServiceStatus();
       setServices(states);
     } catch (e) {
-      toast.error('Státusz lekérés sikertelen');
+      toast.error("Státusz lekérés sikertelen");
     } finally {
       setIsRefreshing(false);
     }
@@ -57,18 +57,20 @@ export function ServiceControlWidget() {
 
     try {
       if (currentlyOnline) {
-        if (serviceId === 'anythingllm') {
-          toast.info('AnythingLLM Desktop app – manuálisan zárd be');
+        if (serviceId === "anythingllm") {
+          toast.info("AnythingLLM Desktop app – manuálisan zárd be");
           return;
         }
-        const result = await api.stopService(serviceId as 'ollama' | 'python');
+        const result = await api.stopService(serviceId as "ollama" | "python");
         if (result.success) {
           toast.success(result.message);
         } else {
           toast.error(result.message);
         }
       } else {
-        const result = await api.startService(serviceId as 'ollama' | 'python' | 'anythingllm');
+        const result = await api.startService(
+          serviceId as "ollama" | "python" | "anythingllm",
+        );
         if (result.success) {
           toast.success(result.message);
         } else {
@@ -77,7 +79,7 @@ export function ServiceControlWidget() {
       }
       await fetchStatus();
     } catch (e: any) {
-      toast.error(e.message || 'Művelet sikertelen');
+      toast.error(e.message || "Művelet sikertelen");
     } finally {
       setLoading((prev) => ({ ...prev, [serviceId]: false }));
     }
@@ -96,28 +98,34 @@ export function ServiceControlWidget() {
           disabled={isRefreshing}
           className="text-zinc-400 hover:text-zinc-200"
         >
-          <ArrowsClockwise size={14} className={isRefreshing ? 'animate-spin' : ''} />
+          <ArrowsClockwise
+            size={14}
+            className={isRefreshing ? "animate-spin" : ""}
+          />
         </Button>
       </CardHeader>
       <CardContent className="space-y-3">
-        {services.map((svc) => {
-          const isOnline = svc.status === 'online';
-          const isStarting = svc.status === 'starting' || svc.status === 'stopping';
-          const canStop = svc.id !== 'anythingllm' && isOnline;
+        {services.map((svc, i) => {
+          const isOnline = svc.status === "online";
+          const isStarting =
+            svc.status === "starting" || svc.status === "stopping";
+          const canStop = svc.id !== "anythingllm" && isOnline;
 
           return (
             <div
-              key={svc.id}
+              key={`${svc.id}-${i}`}
               className="flex items-center justify-between rounded-lg border border-zinc-800/60 bg-zinc-900/40 px-3 py-2"
             >
               <div className="flex items-center gap-2">
-                <span className="text-sm">{STATUS_EMOJI[svc.status] || '⚪'}</span>
+                <span className="text-sm">
+                  {STATUS_EMOJI[svc.status] || "⚪"}
+                </span>
                 <span className="font-mono text-sm text-zinc-300">
                   {SERVICE_LABELS[svc.id] || svc.id}
                 </span>
                 {isStarting && (
                   <Badge variant="secondary" className="text-xs">
-                    {svc.status === 'starting' ? 'Indul...' : 'Leáll...'}
+                    {svc.status === "starting" ? "Indul..." : "Leáll..."}
                   </Badge>
                 )}
               </div>

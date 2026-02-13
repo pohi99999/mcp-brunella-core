@@ -1,15 +1,21 @@
 {
   "id": "gold_protocol",
   "title": "Gold Protocol - BAS Observability & Governance",
-  "status": "active",
+  "status": "archived",
   "spec_status": "approved",
   "priority": "critical",
   "created": "2026-02-09",
-  "updated": "2026-02-09",
+  "updated": "2026-02-12",
   "owner": "System",
-  "progress": 75,
-  "tags": ["observability", "governance", "automation", "spec-driven"],
+  "progress": 100,
+  "tags": [
+    "observability",
+    "governance",
+    "automation",
+    "spec-driven"
+  ],
   "dependencies": [],
   "estimated_effort": "24 hours",
-  "business_value": "100% agent autonomy + full transparency"
+  "business_value": "100% agent autonomy + full transparency",
+  "archived_at": "2026-02-13T00:00:00Z"
 }

@@ -5,9 +5,13 @@
             "type": "node",
             "request": "launch",
             "name": "Debug MCP Server",
-            "skipFiles": ["<node_internals>/**"],
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
             "program": "${workspaceFolder}/build/index.js",
-            "outFiles": ["${workspaceFolder}/build/**/*.js"]
+            "outFiles": [
+                "${workspaceFolder}/build/**/*.js"
+            ]
         },
         {
             "name": "Run MCP Inspector",
@@ -20,6 +24,14 @@
                 "${workspaceFolder}/build/index.js"
             ],
             "console": "integratedTerminal"
+        },
+        {
+            "name": "Attach to PowerShell Functions",
+            "type": "PowerShell",
+            "request": "attach",
+            "customPipeName": "AzureFunctionsPSWorker",
+            "runspaceId": 1,
+            "preLaunchTask": "func: host start"
         }
     ]
 }

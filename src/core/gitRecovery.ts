@@ -21,7 +21,7 @@ export interface GitRecoveryResult {
 }
 
 export interface RecoveryEvent {
-  type: 'crash' | 'restart' | 'git_checkpoint';
+  type: 'crash' | 'restart' | 'git_checkpoint' | 'failover';
   agent: string;
   details: string;
   timestamp: number;

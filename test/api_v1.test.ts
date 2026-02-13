@@ -9,9 +9,11 @@ import { AppError } from '../src/utils/AppError.js';
 vi.mock('../src/utils/health.js', () => ({
   checkOllamaHealth: vi.fn().mockResolvedValue({ status: 'ok', model: 'llama3' }),
   checkAnythingLLMHealth: vi.fn().mockResolvedValue({ status: 'ok' }),
-  buildHealthResponse: vi.fn().mockImplementation((ol, al, ac, mc, rid) => ({
+  checkPythonHealth: vi.fn().mockResolvedValue({ status: 'ok' }),
+  checkCloudflareHealth: vi.fn().mockResolvedValue({ status: 'healthy' }),
+  buildHealthResponse: vi.fn().mockImplementation((ol, al, py, cf, ac, mc, rid) => ({
     status: 'ok',
-    components: { ollama: ol, anythingllm: al },
+    components: { ollama: ol, anythingllm: al, python: py, cloudflare: cf },
     stats: { agents: ac, mcp: mc },
     requestId: rid
   }))
