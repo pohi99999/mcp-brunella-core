@@ -2,6 +2,31 @@
 
 A cél: minden jelentős rendszer- és fejlesztési módosítás rövid, visszakereshető naplózása.
 
+## 2026-02-13 - Copilot session: Iron Clad Python AI Backend (Phase 5 OpenDevin integration)
+
+### Összefoglaló (Iron Clad Phase 5)
+
+Elkészült az OpenDevin adapter és a LangGraph `devin` node. A workflow most már képes külső OpenDevin futtatásra (HTTP vagy CLI), biztonsági guardrail-ekkel és konfigurálható gateway végponttal.
+
+### Implementált technikai változások (Iron Clad Phase 5)
+
+- **OpenDevin adapter** (`myai/backend/opendevin_adapter.py`):
+  - HTTP/CLI mód, timeout, max task hossz, projekt root, gateway endpoint
+- **LangGraph devin node** (`myai/backend/langgraph_orchestrator.py`):
+  - `devin_result` / `devin_error` state mezők
+  - Supervisor után futtatott OpenDevin lépés
+- **Konfiguráció** (`myai/backend/config.py`, `.env.example`):
+  - `IRON_CLAD_OPENDEVIN_*` env változók
+- **Teszt bővítés**:
+  - `myai/tests/test_iron_clad_opendevin_adapter.py`
+  - `myai/tests/test_iron_clad_provider.py` config frissítés
+- **Dokumentáció** (`myai/backend/README.md`): Phase 5 ismertető
+- **Track meta** (`conductor/tracks/iron_clad_backend_20260212/meta.json`): progress `80 → 90`
+
+### Verifikáció (Iron Clad Phase 5)
+
+- Node regresszió: `npm test` (63 fájl, 486 teszt PASS)
+
 ## 2026-02-13 - Copilot session: Iron Clad Python AI Backend (Phase 4 OpenInterpreter integration)
 
 ### Összefoglaló (Iron Clad Phase 4)

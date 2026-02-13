@@ -20,6 +20,14 @@ def make_config(**overrides: object) -> BackendConfig:
         "interpreter_system_message": None,
         "interpreter_allowed_modes": ("python",),
         "interpreter_max_chars": 4000,
+        "opendevin_enabled": False,
+        "opendevin_mode": "http",
+        "opendevin_base_url": None,
+        "opendevin_cli_command": None,
+        "opendevin_project_root": None,
+        "opendevin_model_endpoint": "http://127.0.0.1:8010",
+        "opendevin_timeout": 300,
+        "opendevin_max_chars": 8000,
     }
     base_kwargs.update(overrides)
     return BackendConfig(**base_kwargs)  # type: ignore[arg-type]

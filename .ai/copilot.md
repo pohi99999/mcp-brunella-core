@@ -6,6 +6,30 @@
 
 ---
 
+## 2026-02-13 10:30 - 🧑‍💻 Iron Clad Python AI Backend (Phase 5 OpenDevin Integration) ✅
+
+**Track:** `iron_clad_backend_20260212`
+**Feladat:** OpenDevin adapter + LangGraph `devin` node beépítése HTTP/CLI móddal és guardrail-ekkel.
+
+**Eredmények:**
+
+- ✅ OpenDevin adapter (`myai/backend/opendevin_adapter.py`)
+  - HTTP/CLI mód, timeout, max chars, project root, model endpoint
+- ✅ LangGraph devin node (`myai/backend/langgraph_orchestrator.py`)
+  - `devin_result` / `devin_error` state mezők
+- ✅ Konfiguráció (`myai/backend/config.py`, `.env.example`): `IRON_CLAD_OPENDEVIN_*`
+- ✅ Tesztek (`myai/tests/test_iron_clad_opendevin_adapter.py`, `myai/tests/test_iron_clad_provider.py`)
+- ✅ Dokumentáció (`myai/backend/README.md`)
+- ✅ Track meta (`conductor/tracks/iron_clad_backend_20260212/meta.json`): progress `80 → 90`
+
+**Verifikáció:**
+
+- ✅ `npm test` PASS (`63` test file, `486` test)
+
+**Hatás:**
+
+- A workflow most már külső OpenDevin futtatást is képes indítani, miközben a gateway és biztonsági guardrail-ek kontroll alatt tartják a végrehajtást.
+
 ## 2026-02-13 10:00 - 🧰 Iron Clad Python AI Backend (Phase 4 OpenInterpreter Integration) ✅
 
 **Track:** `iron_clad_backend_20260212`

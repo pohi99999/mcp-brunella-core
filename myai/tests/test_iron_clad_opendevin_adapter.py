@@ -3,7 +3,7 @@ from __future__ import annotations
 import pytest
 
 from myai.backend.config import BackendConfig
-from myai.backend.interpreter_adapter import OpenInterpreterAdapter
+from myai.backend.opendevin_adapter import OpenDevinAdapter
 
 
 def make_config(**overrides: object) -> BackendConfig:
@@ -32,15 +32,19 @@ def make_config(**overrides: object) -> BackendConfig:
     return BackendConfig(**base_kwargs)  # type: ignore[arg-type]
 
 
-def test_interpreter_disabled_raises():
-    adapter = OpenInterpreterAdapter(make_config(interpreter_enabled=False))
+def test_opendevin_disabled_raises():
+    adapter = OpenDevinAdapter(make_config(opendevin_enabled=False))
     with pytest.raises(RuntimeError, match="disabled"):
-        adapter.run("print('hi')")
+        adapter.run("fix failing tests")
 
 
-def test_interpreter_disallowed_mode_blocks_before_import():
-    adapter = OpenInterpreterAdapter(
-        make_config(interpreter_enabled=True, interpreter_allowed_modes=("python",))
-    )
-    with pytest.raises(RuntimeError, match="not allowed"):
-        adapter.run("echo hello", mode="shell")
+def test_opendevin_http_requires_base_url():
+    adapter = OpenDevinAdapter(make_config(opendevin_enabled=True, opendevin_mode="http"))
+    with pytest.raises(RuntimeError, match="BASE_URL"):
+        adapter.run("fix failing tests")
+
+
+def test_opendevin_cli_requires_command():
+    adapter = OpenDevinAdapter(make_config(opendevin_enabled=True, opendevin_mode="cli"))
+    with pytest.raises(RuntimeError, match="CLI"):
+        adapter.run("fix failing tests")
