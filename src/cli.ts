@@ -965,14 +965,34 @@ julesCmd
           console.log(
             chalk.bold(`\nWorkflow: ${workflow} (top ${runs.length})\n`),
           );
+
+          // Trend Analysis
+          const successCount = runs.filter((r: any) => r.conclusion === "success").length;
+          const failureCount = runs.filter((r: any) => r.conclusion === "failure").length;
+          const passRate = runs.length > 0 ? Math.round((successCount / runs.length) * 100) : 0;
+
+          console.log(chalk.cyan("📊 Trend Analysis (last " + runs.length + " runs):"));
+          console.log(
+            `  ✅ Success: ${chalk.green(successCount)} | ❌ Failure: ${chalk.red(failureCount)} | ⚡ Pass Rate: ${passRate >= 90 ? chalk.green(passRate + "%") : passRate >= 70 ? chalk.yellow(passRate + "%") : chalk.red(passRate + "%")}\n`,
+          );
+
+          // ASCII Chart (simple bar)
+          const barLength = 40;
+          const successBar = "█".repeat(Math.round((successCount / runs.length) * barLength));
+          const failureBar = "█".repeat(Math.round((failureCount / runs.length) * barLength));
+          console.log(chalk.green("  Success: " + successBar));
+          console.log(chalk.red("  Failure: " + failureBar) + "\n");
+
+          // List runs
           for (const r of runs) {
             const status = String(r.status || "unknown");
             const concl = r.conclusion == null ? "-" : String(r.conclusion);
             const when = String(r.updated_at || r.created_at || "")
               .slice(0, 19)
               .replace("T", " ");
+            const icon = concl === "success" ? chalk.green("✅") : concl === "failure" ? chalk.red("❌") : "⏸️";
             console.log(
-              `• #${r.run_number ?? r.id}  ${status} / ${concl}  (${when})`,
+              `${icon} #${r.run_number ?? r.id}  ${status} / ${concl}  (${when})`,
             );
           }
         } else if (action === "trigger") {
@@ -1083,6 +1103,100 @@ julesCmd
     }
   });
 
+// --- architect (Agent Architect 2.0)
+const architectCmd = program
+  .command("architect")
+  .description("Agent Architect 2.0 - Create new agents dynamically");
+
+architectCmd
+  .command("create [description]")
+  .description("Create a new agent from natural language description")
+  .action(async (description?: string) => {
+    const { AgentArchitect } = await import("./agents/AgentArchitect.js");
+
+    let desc = description;
+    if (!desc) {
+      const answer = await inquirer.prompt([
+        {
+          type: "input",
+          name: "description",
+          message: "Describe the agent (e.g. 'Monitor HackerNews top posts'):",
+        },
+      ]);
+      desc = answer.description;
+    }
+
+    if (!desc || desc.trim().length < 10) {
+      console.log(chalk.red("\n❌ Description too short. Please provide at least 10 characters.\n"));
+      return;
+    }
+
+    console.log(chalk.cyan(`\n🏗️  Agent Architect - Creating agent...\n`));
+    console.log(chalk.dim(`Description: ${desc}\n`));
+
+    const spinner = ora("Analyzing description...").start();
+
+    try {
+      // Extract name, role, capabilities from description using LLM
+      const { generateResponse } = await import("./core/llm_client.js");
+
+      spinner.text = "Generating agent configuration...";
+      const analysisPrompt = `
+You are an AI agent designer. Given a description, extract structured information.
+
+Description: "${desc}"
+
+Return ONLY a JSON object with this structure:
+{
+  "name": "short_snake_case_name",
+  "role": "Short Role Title (2-4 words)",
+  "capabilities": ["cap1", "cap2", "cap3"],
+  "triggers": ["keyword1", "keyword2"]
+}
+
+Example for "Monitor HackerNews top posts":
+{
+  "name": "hackernews_monitor",
+  "role": "HackerNews Monitor",
+  "capabilities": ["web_scraping", "summarization", "monitoring"],
+  "triggers": ["hackernews", "hn", "tech_news"]
+}
+
+Return ONLY valid JSON, no markdown, no explanation.
+`;
+
+      const analysisResult = await generateResponse(analysisPrompt);
+      const agentConfig = JSON.parse(analysisResult.replace(/```json|```/g, "").trim());
+
+      spinner.text = "Creating agent files...";
+
+      const result = await AgentArchitect.createAgent({
+        name: agentConfig.name,
+        role: agentConfig.role,
+        description: desc,
+        capabilities: agentConfig.capabilities || ["general"],
+        triggers: agentConfig.triggers || [agentConfig.name],
+      });
+
+      if (result.success) {
+        spinner.succeed(chalk.green(`✅ ${result.message}`));
+        console.log(chalk.dim(`\nAgent name: ${chalk.white(agentConfig.name)}`));
+        console.log(chalk.dim(`Role: ${chalk.white(agentConfig.role)}`));
+        console.log(chalk.dim(`Capabilities: ${chalk.white(agentConfig.capabilities.join(", "))}`));
+        console.log(chalk.dim(`\n📁 Files created:`));
+        console.log(chalk.dim(`  - myai/agents/${agentConfig.name}.toml`));
+        console.log(chalk.dim(`  - registry.json (updated)`));
+        console.log(chalk.cyan(`\n🚀 Run: ${chalk.white(`brunella agents`)}\n`));
+      } else {
+        spinner.fail(chalk.red(`❌ ${result.message}`));
+      }
+    } catch (e: any) {
+      spinner.fail(chalk.red(`❌ Error: ${e.message}`));
+      console.error(chalk.dim(e.stack));
+      process.exit(1);
+    }
+  });
+
 // Register Gold Protocol commands (G7.7)
 registerGoldCommands(program);
 
@@ -1100,6 +1214,112 @@ registerProgressCommands(program);
 
 // Register Edge commands (Cloudflare)
 registerEdgeCommands(program);
+
+// ════════════════════════════════════════════════════════════════════════════
+// HARVEST COMMAND (Tech-Harvester Pipeline)
+// ════════════════════════════════════════════════════════════════════════════
+
+const harvestCmd = program
+  .command("harvest")
+  .description("Run Tech-Harvester pipeline (scrape AI/Tech sources → LanceDB RAG)");
+
+harvestCmd
+  .command("run")
+  .description("Run full harvest pipeline (harvest → refine → integrate)")
+  .option("--mode <mode>", "Harvesting mode (playwright|browser-use)", "playwright")
+  .option("--config <path>", "Sources config file", "myai/config/sources.json")
+  .action(async (options) => {
+    const ora = (await import("ora")).default;
+    const chalk = (await import("chalk")).default;
+
+    console.log(chalk.blue("\n╔════════════════════════════════════════════════════════════════╗"));
+    console.log(chalk.blue("║") + chalk.bold("           TECH-HARVESTER PIPELINE                          ") + chalk.blue("║"));
+    console.log(chalk.blue("╚════════════════════════════════════════════════════════════════╝\n"));
+
+    const spinner = ora("Starting harvest pipeline...").start();
+
+    try {
+      const { spawn } = await import("child_process");
+
+      const pythonProcess = spawn("python", [
+        "myai/tools/harvest_pipeline.py",
+        "--mode", options.mode,
+        "--config", options.config,
+      ], {
+        stdio: "inherit",
+      });
+
+      await new Promise((resolve, reject) => {
+        pythonProcess.on("close", (code) => {
+          if (code === 0) {
+            spinner.succeed(chalk.green("Harvest pipeline completed successfully!"));
+            resolve(undefined);
+          } else {
+            spinner.fail(chalk.red(`Harvest pipeline failed with exit code ${code}`));
+            reject(new Error(`Exit code ${code}`));
+          }
+        });
+
+        pythonProcess.on("error", (err) => {
+          spinner.fail(chalk.red("Failed to start harvest pipeline"));
+          reject(err);
+        });
+      });
+
+    } catch (error: any) {
+      spinner.fail(chalk.red("Harvest pipeline error"));
+      console.error(chalk.red(`Error: ${error.message}`));
+      process.exit(1);
+    }
+  });
+
+harvestCmd
+  .command("status")
+  .description("Show last harvest summary")
+  .action(async () => {
+    const chalk = (await import("chalk")).default;
+    const { readFileSync } = await import("fs");
+    const { resolve } = await import("path");
+
+    try {
+      const logPath = resolve("logs/harvest_pipeline.log");
+      const logContent = readFileSync(logPath, "utf-8");
+
+      // Extract last summary
+      const lines = logContent.split("\n").reverse();
+      let summaryLines: string[] = [];
+      let foundSummary = false;
+
+      for (const line of lines) {
+        if (line.includes("HARVEST PIPELINE COMPLETED")) {
+          foundSummary = true;
+          summaryLines.push(line);
+          continue;
+        }
+
+        if (foundSummary) {
+          summaryLines.push(line);
+
+          if (line.includes("HARVEST PIPELINE STARTING")) {
+            break;
+          }
+        }
+      }
+
+      if (summaryLines.length > 0) {
+        console.log(chalk.blue("\n" + "═".repeat(80)));
+        console.log(chalk.bold("LAST HARVEST SUMMARY"));
+        console.log(chalk.blue("═".repeat(80)));
+        summaryLines.reverse().forEach((line) => console.log(line));
+        console.log(chalk.blue("═".repeat(80) + "\n"));
+      } else {
+        console.log(chalk.yellow("No harvest summary found. Run 'brunella harvest run' first."));
+      }
+
+    } catch (error: any) {
+      console.error(chalk.red(`Error reading harvest log: ${error.message}`));
+    }
+  });
 
 // Interactive Menu (Default)
 if (!process.argv.slice(2).length) {

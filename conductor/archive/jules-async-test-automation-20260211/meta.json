@@ -1,0 +1,15 @@
+{
+  "id": "jules-async-test-automation-20260211",
+  "title": "Jules Async Test Automation (GitHub Actions)",
+  "status": "completed",
+  "priority": "high",
+  "created": "2026-02-11",
+  "updated": "2026-02-13",
+  "owner": "Claude",
+  "spec_status": "approved",
+  "progress": 100,
+  "tags": ["ci", "github-actions", "testing", "automation", "dashboard", "cli"],
+  "dependencies": [],
+  "estimated_effort": "high",
+  "business_value": "Automated long-running test coverage + reporting"
+}

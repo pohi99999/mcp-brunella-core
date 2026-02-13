@@ -1,0 +1,97 @@
+{
+  "version": "1.0.0",
+  "lastUpdate": "2026-02-13T02:45:00Z",
+  "targets": [
+    {
+      "name": "GitHub Trending AI",
+      "url": "https://github.com/trending/python?since=daily",
+      "type": "list",
+      "enabled": true,
+      "selector": "article.Box-row",
+      "extractFields": ["title", "description", "stars", "url"],
+      "keywords": ["MCP", "Agent", "Orchestrator", "RAG", "Local LLM", "AI"]
+    },
+    {
+      "name": "GitHub MCP Servers",
+      "url": "https://github.com/modelcontextprotocol/servers",
+      "type": "docs",
+      "enabled": true,
+      "selector": "article.markdown-body",
+      "extractFields": ["server_name", "description", "url"],
+      "keywords": ["MCP", "Server", "Integration"]
+    },
+    {
+      "name": "Vercel AI SDK Docs",
+      "url": "https://sdk.vercel.ai/docs",
+      "type": "docs",
+      "enabled": true,
+      "selector": "main article",
+      "extractFields": ["title", "description", "code_examples"],
+      "keywords": ["AI SDK", "Agent", "Streaming", "Tool Calling"]
+    },
+    {
+      "name": "LangChain Blog",
+      "url": "https://blog.langchain.dev",
+      "type": "article",
+      "enabled": true,
+      "selector": "article.post",
+      "extractFields": ["title", "summary", "url", "date"],
+      "keywords": ["Agent", "LangGraph", "Multi-Agent", "Orchestration"]
+    },
+    {
+      "name": "Anthropic Developer Docs",
+      "url": "https://docs.anthropic.com/en/docs",
+      "type": "docs",
+      "enabled": false,
+      "selector": "article.docs-content",
+      "extractFields": ["title", "description", "api_examples"],
+      "keywords": ["Claude", "Tool Use", "Prompt Caching"]
+    },
+    {
+      "name": "HuggingFace Daily Papers",
+      "url": "https://huggingface.co/papers",
+      "type": "list",
+      "enabled": true,
+      "selector": "article.paper-card",
+      "extractFields": ["title", "abstract", "authors", "arxiv_url"],
+      "keywords": ["LLM", "Fine-tuning", "Embeddings", "RAG"]
+    }
+  ],
+  "globalKeywords": [
+    "MCP",
+    "Agent",
+    "Orchestrator",
+    "RAG",
+    "Local LLM",
+    "LangChain",
+    "LangGraph",
+    "Multi-Agent",
+    "Tool Calling",
+    "Embeddings",
+    "Fine-tuning",
+    "Prompt Engineering"
+  ],
+  "harvesterSettings": {
+    "maxItemsPerSource": 5,
+    "timeoutSeconds": 60,
+    "retryAttempts": 3,
+    "outputDir": "temp/harvest_results",
+    "logLevel": "INFO",
+    "headless": true,
+    "screenshotOnError": true
+  },
+  "refinementSettings": {
+    "minRelevanceScore": 0.6,
+    "summaryMaxTokens": 500,
+    "deduplicationThreshold": 0.85,
+    "llmProvider": "ollama",
+    "llmModel": "qwen2.5-coder:latest"
+  },
+  "integrationSettings": {
+    "lancedbEnabled": true,
+    "lancedbTable": "tech_trends",
+    "goldenDatasetEnabled": true,
+    "goldenDatasetPath": "myai/incubator/training_data.jsonl",
+    "notifyOnCompletion": true
+  }
+}
