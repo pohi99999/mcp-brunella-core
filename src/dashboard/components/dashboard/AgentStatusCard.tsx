@@ -198,6 +198,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
             <button
               className="rounded-full p-1 text-zinc-500 hover:bg-white/5 hover:text-zinc-300 transition-colors"
               aria-label={expanded ? 'Összecsuk' : 'Részletek'}
+              onClick={() => setExpanded(!expanded)}
             >
               {expanded ? <CaretUp size={18} /> : <CaretDown size={18} />}
             </button>
@@ -219,7 +220,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                 </span>
                 <Popover open={isEditingCaps} onOpenChange={setIsEditingCaps}>
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300">
+                    <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300" aria-label="Képességek szerkesztése">
                       <PencilSimple size={12} />
                     </Button>
                   </PopoverTrigger>
@@ -233,17 +234,20 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                           placeholder="Új képesség..."
                           className="h-8 text-xs bg-white/5 border-white/10"
                         />
-                        <Button size="sm" onClick={handleAddCapability} className="h-8 w-8 p-0"><Plus size={14} /></Button>
+                        <Button size="sm" onClick={handleAddCapability} className="h-8 w-8 p-0" aria-label="Képesség hozzáadása"><Plus size={14} /></Button>
                       </div>
                       <div className="flex flex-wrap gap-1 max-h-[200px] overflow-y-auto">
                         {capabilities.map(cap => (
                           <Badge key={cap} variant="secondary" className="text-[10px] gap-1 pr-1">
                             {cap}
-                            <X
-                              size={10}
-                              className="cursor-pointer hover:text-red-400"
+                            <button
+                              type="button"
                               onClick={() => handleRemoveCapability(cap)}
-                            />
+                              className="cursor-pointer hover:text-red-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400 rounded-sm"
+                              aria-label={`Képesség törlése: ${cap}`}
+                            >
+                              <X size={10} />
+                            </button>
                           </Badge>
                         ))}
                       </div>
@@ -281,6 +285,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                 <div className="relative flex-1">
                   <input
                     type="text"
+                    aria-label="Gyors feladat"
                     placeholder="Execute quick task..."
                     className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-1.5 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors font-mono"
                     value={quickTask}
@@ -297,6 +302,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                   className="shrink-0 h-auto py-1 bg-primary hover:bg-primary/90 text-primary-foreground"
                   onClick={handleQuickRun}
                   disabled={!quickTask.trim() || status === 'working'}
+                  aria-label="Feladat végrehajtása"
                 >
                   <Play size={12} weight="fill" />
                 </Button>
