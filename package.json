@@ -139,7 +139,6 @@
     "@types/inquirer": "^8.2.12",
     "@types/marked-terminal": "^6.1.1",
     "@types/node": "^25.0.9",
-    "@types/node-fetch": "^2.6.13",
     "@types/supertest": "^6.0.3",
     "@types/swagger-jsdoc": "^6.0.4",
     "@types/swagger-ui-express": "^4.1.8",
