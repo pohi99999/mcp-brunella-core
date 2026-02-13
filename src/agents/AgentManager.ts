@@ -1,26 +1,42 @@
 /**
  * AgentManager - Ügynök Menedzser (Frissítve Edge támogatással)
- * 
+ *
  * Változások:
  * - Edge-first delegálás támogatás
  * - Fallback lokális feldolgozásra
  * - ProjectConductor integráció
- * 
+ *
  * @author Brunella Core Team
  * @version 2.1.0
  */
 
-import { EventEmitter } from 'events';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
-import { saveTask, updateTaskStatus } from '../utils/tasksDb.js';
-import { withRetry, calculateDelay, DEFAULT_RETRY_CONFIG, type RetryConfig } from '../core/retryStrategy.js';
-import { saveCheckpoint, loadCheckpoint, clearCheckpoints } from '../core/checkpoint.js';
-import { gitAutoCheckpoint, logRecoveryEvent } from '../core/gitRecovery.js';
-import { autoSaveGoldenSample } from '../core/goldenDatasetBridge.js';
-import { traceAgentExecution, type TraceContext } from '../utils/agentTracer.js';
-import { checkToolPermission } from '../tools/toolPermissions.js';
-import { record as auditRecord } from '../core/auditLog.js';
-import type { IAgent } from './types.js';
+import { EventEmitter } from "events";
+import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
+import { saveTask, updateTaskStatus } from "../utils/tasksDb.js";
+import {
+  withRetry,
+  calculateDelay,
+  DEFAULT_RETRY_CONFIG,
+  type RetryConfig,
+} from "../core/retryStrategy.js";
+import {
+  saveCheckpoint,
+  loadCheckpoint,
+  clearCheckpoints,
+} from "../core/checkpoint.js";
+import { gitAutoCheckpoint, logRecoveryEvent } from "../core/gitRecovery.js";
+import { autoSaveGoldenSample } from "../core/goldenDatasetBridge.js";
+import { phoenixEventBus } from "../core/phoenixEventBus.js";
+import { failoverRegistry } from "../core/failoverRegistry.js";
+import {
+  traceAgentExecution,
+  type TraceContext,
+} from "../utils/agentTracer.js";
+import { recordAgentExecution } from "../utils/metrics.js";
+import { checkToolPermission } from "../tools/toolPermissions.js";
+import { record as auditRecord } from "../core/auditLog.js";
+import { getPendingFixes, updateFixStatus } from "../utils/fixQueue.js";
+import type { IAgent } from "./types.js";
 
 // ============================================================================
 // INTERFACES
@@ -74,7 +90,7 @@ interface TaskResult {
   executionTime?: number;
 }
 
-type AgentRuntimeStatus = 'idle' | 'working' | 'error';
+type AgentRuntimeStatus = "idle" | "working" | "error";
 
 interface AgentRuntimeInfo {
   status: AgentRuntimeStatus;
@@ -96,7 +112,7 @@ interface QueuedTask {
   parentId?: number;
   createdAt: string;
   startedAt?: string;
-  status: 'pending' | 'running' | 'done' | 'error' | 'cancelled';
+  status: "pending" | "running" | "done" | "error" | "cancelled";
 }
 
 export class AgentManager extends EventEmitter {
@@ -108,7 +124,10 @@ export class AgentManager extends EventEmitter {
   private taskIdCounter = 0;
   private workerInterval?: ReturnType<typeof setInterval>;
   private agentRuntime: Map<string, AgentRuntimeInfo> = new Map();
-  private circuitBreakers: Map<string, { failures: number; lastFailure: number; isOpen: boolean }> = new Map();
+  private circuitBreakers: Map<
+    string,
+    { failures: number; lastFailure: number; isOpen: boolean }
+  > = new Map();
   private readonly FAILURE_THRESHOLD = 3;
   private readonly RESET_TIMEOUT = 5 * 60 * 1000; // 5 perc
 
@@ -123,10 +142,10 @@ export class AgentManager extends EventEmitter {
   // --------------------------------------------------------------------------
 
   async initialize(): Promise<void> {
-    logInfo('AgentManager', 'Inicializálás...');
+    logInfo("AgentManager", "Inicializálás...");
 
     // Load registry asynchronously if in Node environment
-    if (typeof process !== 'undefined' && process.versions?.node) {
+    if (typeof process !== "undefined" && process.versions?.node) {
       this.registry = await this.loadRegistryAsync();
     }
 
@@ -135,7 +154,10 @@ export class AgentManager extends EventEmitter {
       try {
         await this.loadAgent(agentConfig);
       } catch (error) {
-        logError('AgentManager', `Ügynök betöltési hiba (${agentConfig.name}): ${error}`);
+        logError(
+          "AgentManager",
+          `Ügynök betöltési hiba (${agentConfig.name}): ${error}`,
+        );
       }
     }
 
@@ -145,34 +167,117 @@ export class AgentManager extends EventEmitter {
     }
 
     // Auto-start ügynökök
-    for (const agentConfig of this.registry.agents.filter(a => a.autoStart)) {
+    for (const agentConfig of this.registry.agents.filter((a) => a.autoStart)) {
       const agent = this.agents.get(agentConfig.name);
       if (agent?.initialize) {
         await agent.initialize();
       }
     }
 
-    logInfo('AgentManager', `${this.agents.size} ügynök betöltve`);
+    logInfo("AgentManager", `${this.agents.size} ügynök betöltve`);
+
+    // STARTUP SELF-HEALING (The "Black Box" Protocol)
+    await this.processFixQueue();
+
+    // Auto-start ügynökök
+    for (const agentConfig of this.registry.agents.filter((a) => a.autoStart)) {
+      const agent = this.agents.get(agentConfig.name);
+      if (agent?.initialize) {
+        await agent.initialize();
+      }
+    }
+  }
+
+  /**
+   * Processes the Fix Queue on startup or demand.
+   * This implements the "Self-Healing" protocol requested.
+   */
+  async processFixQueue(): Promise<void> {
+    const pendingFixes = getPendingFixes();
+    if (pendingFixes.length === 0) return;
+
+    logInfo(
+      "AgentManager",
+      `🔧 Self-Healing: ${pendingFixes.length} pending fixes found.`,
+    );
+
+    // If we have critical fixes, delegate them to DeveloperAgent immediately
+    for (const fix of pendingFixes) {
+      logInfo(
+        "AgentManager",
+        `🔧 Applying Fix: ${fix.description} [${fix.id}]`,
+      );
+      updateFixStatus(fix.id, "in-progress");
+
+      // Prefer DeveloperAgent for fixes
+      const targetAgent = this.agents.get("Developer")
+        ? "Developer"
+        : "Orchestrator";
+
+      try {
+        const result = await this.delegate(
+          targetAgent,
+          `CRITICAL FIX: ${fix.description}. Source: ${fix.source}. Fix this immediately.`,
+        );
+
+        // Check result
+        const success = (result as any)?.success ?? false;
+        if (success) {
+          updateFixStatus(fix.id, "resolved");
+          logInfo("AgentManager", `✅ Fix Resolved: ${fix.id}`);
+        } else {
+          updateFixStatus(
+            fix.id,
+            "failed",
+            (result as any)?.message || "Unknown error",
+          );
+        }
+      } catch (e) {
+        updateFixStatus(fix.id, "failed", (e as Error).message);
+        logError(
+          "AgentManager",
+          `❌ Fix Failed: ${fix.id} - ${(e as Error).message}`,
+        );
+      }
+    }
   }
 
   private async loadAgent(config: AgentConfig): Promise<void> {
     // Dynamic imports for Node.js-specific modules (Worker compatibility)
-    if (typeof process === 'undefined' || !process.versions?.node) {
-      logError('AgentManager', 'loadAgent() requires Node.js environment');
+    if (typeof process === "undefined" || !process.versions?.node) {
+      logError("AgentManager", "loadAgent() requires Node.js environment");
       return;
     }
 
-    const path = await import('path');
-    const fs = await import('fs');
+    // Skip if module is not defined (e.g. planned agents)
+    if (!config.module) {
+      logInfo(
+        "AgentManager",
+        `Skipping agent '${config.name}' (no module path defined)`,
+      );
+      return;
+    }
 
-    const modulePath = path.default.resolve(process.cwd(), 'build', config.module.replace('./', ''));
+    const path = await import("path");
+    const fs = await import("fs");
+    const url = await import("url");
+
+    const modulePath = path.default.resolve(
+      process.cwd(),
+      "build",
+      config.module.replace("./", ""),
+    );
 
     if (!fs.default.existsSync(modulePath)) {
-      logError('AgentManager', `Modul nem található: ${modulePath}`);
+      logError("AgentManager", `Modul nem található: ${modulePath}`);
       return;
     }
 
-    const AgentClass = (await import(modulePath)).default;
+    // Convert Windows path to file:// URL for ESM import
+    const moduleUrl = url.pathToFileURL(modulePath).href;
+
+    // Use moduleUrl instead of modulePath for import
+    const AgentClass = (await import(moduleUrl)).default;
     const agent = new AgentClass(config.config);
 
     agent.name = config.name;
@@ -181,32 +286,40 @@ export class AgentManager extends EventEmitter {
 
     this.agents.set(config.name, agent);
     this.ensureAgentRuntime(config.name);
-    logInfo('AgentManager', `Ügynök betöltve: ${config.name}. Jelenlegi kulcsok: ${[...this.agents.keys()].join(', ')}`);
+    logInfo(
+      "AgentManager",
+      `Ügynök betöltve: ${config.name}. Jelenlegi kulcsok: ${[...this.agents.keys()].join(", ")}`,
+    );
   }
 
   private ensureAgentRuntime(agentName: string): AgentRuntimeInfo {
     if (!this.agentRuntime.has(agentName)) {
       this.agentRuntime.set(agentName, {
-        status: 'idle',
+        status: "idle",
         successCount: 0,
-        errorCount: 0
+        errorCount: 0,
       });
     }
     return this.agentRuntime.get(agentName)!;
   }
 
-  private updateAgentRuntime(agentName: string, updates: Partial<AgentRuntimeInfo>) {
+  private updateAgentRuntime(
+    agentName: string,
+    updates: Partial<AgentRuntimeInfo>,
+  ) {
     const current = this.ensureAgentRuntime(agentName);
     this.agentRuntime.set(agentName, { ...current, ...updates });
   }
 
   private async initializeEdgeProxy(): Promise<void> {
-    const edgeProxyConfig = this.registry.agents.find(a => a.name === 'EdgeProxy');
+    const edgeProxyConfig = this.registry.agents.find(
+      (a) => a.name === "EdgeProxy",
+    );
     if (edgeProxyConfig) {
-      this.edgeProxy = this.agents.get('EdgeProxy');
+      this.edgeProxy = this.agents.get("EdgeProxy");
       if (this.edgeProxy?.initialize) {
         await this.edgeProxy.initialize();
-        logInfo('AgentManager', 'EdgeProxy inicializálva');
+        logInfo("AgentManager", "EdgeProxy inicializálva");
       }
     }
   }
@@ -221,38 +334,41 @@ export class AgentManager extends EventEmitter {
   async delegateTask(task: Task): Promise<TaskResult> {
     const startTime = Date.now();
 
-    logInfo('AgentManager', `Task delegálás: ${task.instruction.slice(0, 50)}...`);
+    logInfo(
+      "AgentManager",
+      `Task delegálás: ${task.instruction.slice(0, 50)}...`,
+    );
 
     // 1. Edge-first stratégia (ha engedélyezve és elérhető)
     if (this.edgeConfig.enabled && this.edgeProxy?.isEdgeHealthy?.()) {
       try {
-        logInfo('AgentManager', 'Edge delegálás...');
+        logInfo("AgentManager", "Edge delegálás...");
         const edgeResult = await this.delegateToEdge(task);
 
         if (edgeResult.success) {
           return {
             ...edgeResult,
-            executedBy: 'edge',
-            executionTime: Date.now() - startTime
+            executedBy: "edge",
+            executionTime: Date.now() - startTime,
           };
         }
 
         // Edge sikertelen, de fallback engedélyezve
         if (this.edgeConfig.fallbackToLocal) {
-          logInfo('AgentManager', 'Edge sikertelen, lokális fallback...');
+          logInfo("AgentManager", "Edge sikertelen, lokális fallback...");
         } else {
           return edgeResult;
         }
       } catch (error) {
-        logError('AgentManager', `Edge hiba: ${error}`);
+        logError("AgentManager", `Edge hiba: ${error}`);
 
         if (!this.edgeConfig.fallbackToLocal) {
           return {
             success: false,
             message: `Edge hiba: ${error}`,
             data: null,
-            executedBy: 'edge',
-            executionTime: Date.now() - startTime
+            executedBy: "edge",
+            executionTime: Date.now() - startTime,
           };
         }
       }
@@ -269,106 +385,161 @@ export class AgentManager extends EventEmitter {
     if (!this.edgeProxy) {
       return {
         success: false,
-        message: 'EdgeProxy nem elérhető',
-        data: null
+        message: "EdgeProxy nem elérhető",
+        data: null,
       };
     }
 
-    const result = await this.edgeProxy.execute(`submit ${task.instruction}`, task.context);
+    const result = await this.edgeProxy.execute(
+      `submit ${task.instruction}`,
+      task.context,
+    );
 
     // Cast result to TaskResult (since execute returns unknown)
-    return (typeof result === 'object' && result !== null ? result : { success: true, data: result, message: 'Edge execution completed' }) as TaskResult;
+    return (
+      typeof result === "object" && result !== null
+        ? result
+        : { success: true, data: result, message: "Edge execution completed" }
+    ) as TaskResult;
   }
 
   /**
    * Lokális delegálás
    */
-  private async delegateLocally(task: Task, startTime: number): Promise<TaskResult> {
+  private async delegateLocally(
+    task: Task,
+    startTime: number,
+  ): Promise<TaskResult> {
     const targetAgent = this.routeTask(task.instruction);
 
     if (!targetAgent) {
       return {
         success: false,
-        message: 'Nem található megfelelő ügynök',
+        message: "Nem található megfelelő ügynök",
         data: null,
-        executionTime: Date.now() - startTime
+        executionTime: Date.now() - startTime,
       };
     }
 
-    const result = await this.executeAgentWithRetry(targetAgent, task.instruction, task.context);
+    const result = await this.executeAgentWithRetry(
+      targetAgent,
+      task.instruction,
+      task.context,
+    );
 
     return {
       ...result,
-      executionTime: Date.now() - startTime
+      executionTime: Date.now() - startTime,
     };
   }
 
   /**
    * Ügynök végrehajtása retry logikával és Circuit Breaker-rel
    */
-  private async executeAgentWithRetry(agentName: string, instruction: string, context?: Record<string, unknown>, retries = 2, parentTraceContext?: TraceContext): Promise<TaskResult> {
+  private async executeAgentWithRetry(
+    agentName: string,
+    instruction: string,
+    context?: Record<string, unknown>,
+    retries = 2,
+    parentTraceContext?: TraceContext,
+    isFailover = false,
+  ): Promise<TaskResult> {
+    const executionStart = Date.now();
     const cb = this.getCircuitBreaker(agentName);
 
     // RULE-OB1: Start trace span for this agent execution
-    const trace = traceAgentExecution(agentName, instruction, parentTraceContext);
+    const trace = traceAgentExecution(
+      agentName,
+      instruction,
+      parentTraceContext,
+    );
 
     // RULE-AU1: Permission check before execution
-    const permCheck = checkToolPermission('agent_delegate', { agentName });
+    const permCheck = checkToolPermission("agent_delegate", { agentName });
     if (!permCheck.allowed) {
       // RULE-AU2: DENIED → audit log + error return
-      await auditRecord('DENIED', agentName, 'execute', instruction.slice(0, 100), permCheck.reason);
-      trace.end('error', `PERMISSION_DENIED: ${permCheck.reason}`);
+      await auditRecord(
+        "DENIED",
+        agentName,
+        "execute",
+        instruction.slice(0, 100),
+        permCheck.reason,
+      );
+      trace.end("error", `PERMISSION_DENIED: ${permCheck.reason}`);
       return {
         success: false,
         message: `PERMISSION_DENIED: ${permCheck.reason}`,
         data: null,
-        executedBy: agentName
+        executedBy: agentName,
       };
     }
-    await auditRecord('ALLOWED', agentName, 'execute', instruction.slice(0, 100));
+    await auditRecord(
+      "ALLOWED",
+      agentName,
+      "execute",
+      instruction.slice(0, 100),
+    );
 
     // Circuit Breaker ellenőrzése
     if (cb.isOpen) {
       const remaining = this.RESET_TIMEOUT - (Date.now() - cb.lastFailure);
       if (remaining > 0) {
-        logError('AgentManager', `Circuit Breaker NYITVA (${agentName}). Hátralévő idő: ${Math.round(remaining / 1000)}s`);
-        trace.end('error', `Circuit Breaker OPEN (${agentName})`);
+        logError(
+          "AgentManager",
+          `Circuit Breaker NYITVA (${agentName}). Hátralévő idő: ${Math.round(remaining / 1000)}s`,
+        );
+        trace.end("error", `Circuit Breaker OPEN (${agentName})`);
         return {
           success: false,
           message: `Ügynök ideiglenesen letiltva (Circuit Breaker): ${agentName}`,
-          data: null
+          data: null,
         };
       } else {
         // Timeout lejárt, próbálkozunk (Half-open állapot szimulálva)
         cb.isOpen = false;
         cb.failures = 0;
-        logInfo('AgentManager', `Circuit Breaker VISSZAÁLLÍTVA (${agentName})`);
+        logInfo("AgentManager", `Circuit Breaker VISSZAÁLLÍTVA (${agentName})`);
       }
     }
 
     const agent = this.agents.get(agentName);
     if (!agent) {
-      trace.end('error', `Agent not found: ${agentName}`);
+      trace.end("error", `Agent not found: ${agentName}`);
       return {
         success: false,
         message: `Ügynök nem található: ${agentName}`,
         data: null,
-        executedBy: agentName
+        executedBy: agentName,
       };
     }
 
     const retryConfig: Partial<RetryConfig> = {
       maxRetries: retries,
       onRetry: (attempt, delay, error) => {
-        logInfo('AgentManager', `Újrapróbálkozás (${agentName})... ${attempt}/${retries} — ${delay}ms várakozás`);
-        this.emit('gold:retry_attempt', { taskId: instruction.slice(0, 50), attempt, delay, agent: agentName });
+        logInfo(
+          "AgentManager",
+          `Újrapróbálkozás (${agentName})... ${attempt}/${retries} — ${delay}ms várakozás`,
+        );
+        this.emit("gold:retry_attempt", {
+          taskId: instruction.slice(0, 50),
+          attempt,
+          delay,
+          agent: agentName,
+        });
         cb.failures++;
         cb.lastFailure = Date.now();
         if (cb.failures >= this.FAILURE_THRESHOLD) {
           cb.isOpen = true;
-          logError('AgentManager', `Circuit Breaker TRIPPED (${agentName})!`);
+          logError("AgentManager", `Circuit Breaker TRIPPED (${agentName})!`);
+          phoenixEventBus.publish('phoenix:circuit_breaker', {
+            agentName,
+            state: 'open',
+            previousState: 'closed',
+            failures: cb.failures,
+            timestamp: new Date().toISOString(),
+          });
         }
-      }
+      },
     };
 
     try {
@@ -380,27 +551,32 @@ export class AgentManager extends EventEmitter {
           }
 
           this.updateAgentRuntime(agentName, {
-            status: 'working',
+            status: "working",
             lastTask: instruction,
-            lastTaskAt: new Date().toISOString()
+            lastTaskAt: new Date().toISOString(),
           });
-          setAgentStatus(agentName, 'working', instruction);
+          setAgentStatus(agentName, "working", instruction);
 
           let res = await agent.execute(instruction, context);
 
           // Result normalizálás (status -> success mapping)
-          if (typeof res === 'object' && res !== null) {
+          if (typeof res === "object" && res !== null) {
             const resObj = res as Record<string, unknown>;
-            if (resObj['success'] === undefined) {
-              resObj['success'] = resObj['status'] === 'success' || resObj['status'] === 'ok';
+            if (resObj["success"] === undefined) {
+              resObj["success"] =
+                resObj["status"] === "success" || resObj["status"] === "ok";
             }
             return resObj as unknown as TaskResult;
           } else {
-            return { success: true, data: res, message: 'Végrehajtva' } as TaskResult;
+            return {
+              success: true,
+              data: res,
+              message: "Végrehajtva",
+            } as TaskResult;
           }
         },
         `${agentName}:execute`,
-        retryConfig
+        retryConfig,
       );
 
       // Success — reset circuit breaker & update runtime
@@ -409,59 +585,173 @@ export class AgentManager extends EventEmitter {
 
       const runtime = this.ensureAgentRuntime(agentName);
       this.updateAgentRuntime(agentName, {
-        status: 'idle',
+        status: "idle",
         lastTaskAt: new Date().toISOString(),
-        successCount: runtime.successCount + 1
+        successCount: runtime.successCount + 1,
       });
-      setAgentStatus(agentName, 'idle', instruction);
+      setAgentStatus(agentName, "idle", instruction);
 
       // RULE-PH1: checkpoint on success
       await saveCheckpoint(
         instruction.slice(0, 100),
         0,
         `${agentName}:success`,
-        { agent: agentName, resultPreview: JSON.stringify(result).slice(0, 500) }
-      ).catch(() => { /* non-critical */ });
+        {
+          agent: agentName,
+          resultPreview: JSON.stringify(result).slice(0, 500),
+        },
+      ).catch(() => {
+        /* non-critical */
+      });
 
       // RULE-GD1: Auto-save golden sample on success
-      await autoSaveGoldenSample(agentName, instruction, result).catch(() => { /* non-critical */ });
+      await autoSaveGoldenSample(agentName, instruction, result).catch(() => {
+        /* non-critical */
+      });
 
       // RULE-OB1: End trace span on success
-      trace.end('success');
+      trace.end("success");
+      recordAgentExecution(agentName, "success", Date.now() - executionStart);
 
       return result;
     } catch (lastError: any) {
-      logError('AgentManager', `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError?.message || 'Ismeretlen hiba'}`);
+      logError(
+        "AgentManager",
+        `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError?.message || "Ismeretlen hiba"}`,
+      );
 
       // RULE-PH4: Git auto-checkpoint after all retries exhausted
-      await gitAutoCheckpoint(agentName, lastError?.message || 'Unknown error').catch((e: any) =>
-        logError('AgentManager', `Git recovery failed: ${e.message}`)
+      await gitAutoCheckpoint(
+        agentName,
+        lastError?.message || "Unknown error",
+      ).catch((e: any) =>
+        logError("AgentManager", `Git recovery failed: ${e.message}`),
       );
-      logRecoveryEvent('crash', agentName, lastError?.message || 'All retries exhausted');
+      logRecoveryEvent(
+        "crash",
+        agentName,
+        lastError?.message || "All retries exhausted",
+      );
 
       // RULE-OB1: End trace span on error
-      trace.end('error', lastError?.message || 'All retries exhausted');
+      trace.end("error", lastError?.message || "All retries exhausted");
+      recordAgentExecution(agentName, "error", Date.now() - executionStart);
 
       const runtime = this.ensureAgentRuntime(agentName);
       this.updateAgentRuntime(agentName, {
-        status: 'error',
+        status: "error",
         lastTaskAt: new Date().toISOString(),
-        errorCount: runtime.errorCount + 1
+        errorCount: runtime.errorCount + 1,
       });
-      setAgentStatus(agentName, 'error', instruction);
+      setAgentStatus(agentName, "error", instruction);
+
+      // ================================================================
+      // PHOENIX PROTOCOL SZINT 4: Cross-Agent Failover
+      // ================================================================
+      phoenixEventBus.publish('phoenix:agent_failed', {
+        agentName,
+        taskInstruction: instruction,
+        taskContext: context,
+        error: lastError?.message || 'Unknown error',
+        retriesExhausted: retries,
+        timestamp: new Date().toISOString(),
+      });
+
+      // Attempt cross-agent failover (only if not already a failover attempt)
+      if (!isFailover) {
+        const fallbacks = failoverRegistry.getFallbacks(agentName);
+        for (let i = 0; i < fallbacks.length; i++) {
+          const fallbackAgent = fallbacks[i];
+          if (!this.agents.has(fallbackAgent)) continue;
+
+          const fallbackCb = this.getCircuitBreaker(fallbackAgent);
+          if (fallbackCb.isOpen) continue;
+
+          phoenixEventBus.publish('phoenix:failover_triggered', {
+            originalAgent: agentName,
+            fallbackAgent,
+            taskInstruction: instruction,
+            attempt: i + 1,
+            timestamp: new Date().toISOString(),
+          });
+
+          logInfo('AgentManager', `Phoenix Failover: ${agentName} → ${fallbackAgent} (attempt ${i + 1}/${fallbacks.length})`);
+          const failoverStart = Date.now();
+
+          try {
+            const failoverResult = await this.executeAgentWithRetry(
+              fallbackAgent, instruction, context, 1, parentTraceContext, true,
+            );
+
+            const foSuccess = failoverResult.success;
+            phoenixEventBus.publish('phoenix:failover_result', {
+              originalAgent: agentName,
+              fallbackAgent,
+              taskInstruction: instruction,
+              success: foSuccess,
+              error: foSuccess ? undefined : failoverResult.message,
+              executionTimeMs: Date.now() - failoverStart,
+              timestamp: new Date().toISOString(),
+            });
+            failoverRegistry.recordAttempt({
+              primaryAgent: agentName,
+              fallbackAgent,
+              taskInstruction: instruction,
+              success: foSuccess,
+              error: foSuccess ? undefined : failoverResult.message,
+              attemptIndex: i,
+              timestamp: new Date().toISOString(),
+            });
+
+            if (foSuccess) {
+              logInfo('AgentManager', `Phoenix Failover SUCCEEDED: ${agentName} → ${fallbackAgent}`);
+              logRecoveryEvent('failover', agentName, `Failover to ${fallbackAgent} succeeded`);
+              return { ...failoverResult, executedBy: `${fallbackAgent} (failover from ${agentName})` };
+            }
+          } catch (foErr: any) {
+            phoenixEventBus.publish('phoenix:failover_result', {
+              originalAgent: agentName,
+              fallbackAgent,
+              taskInstruction: instruction,
+              success: false,
+              error: foErr?.message || 'Unknown failover error',
+              executionTimeMs: Date.now() - failoverStart,
+              timestamp: new Date().toISOString(),
+            });
+            failoverRegistry.recordAttempt({
+              primaryAgent: agentName,
+              fallbackAgent,
+              taskInstruction: instruction,
+              success: false,
+              error: foErr?.message,
+              attemptIndex: i,
+              timestamp: new Date().toISOString(),
+            });
+            logError('AgentManager', `Phoenix Failover FAILED: ${agentName} → ${fallbackAgent}: ${foErr?.message}`);
+          }
+        }
+
+        if (fallbacks.length > 0) {
+          logError('AgentManager', `Phoenix Failover: ALL fallbacks exhausted for ${agentName}`);
+        }
+      }
 
       return {
         success: false,
-        message: `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError?.message || 'Ismeretlen hiba'}`,
+        message: `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError?.message || "Ismeretlen hiba"}`,
         data: null,
-        executedBy: agentName
+        executedBy: agentName,
       };
     }
   }
 
   private getCircuitBreaker(agentName: string) {
     if (!this.circuitBreakers.has(agentName)) {
-      this.circuitBreakers.set(agentName, { failures: 0, lastFailure: 0, isOpen: false });
+      this.circuitBreakers.set(agentName, {
+        failures: 0,
+        lastFailure: 0,
+        isOpen: false,
+      });
     }
     return this.circuitBreakers.get(agentName)!;
   }
@@ -474,7 +764,7 @@ export class AgentManager extends EventEmitter {
 
     // Routing szabályok ellenőrzése
     for (const rule of this.registry.routingRules) {
-      const regex = new RegExp(rule.pattern, 'i');
+      const regex = new RegExp(rule.pattern, "i");
       if (regex.test(lowerInstruction)) {
         return rule.agent;
       }
@@ -514,23 +804,31 @@ export class AgentManager extends EventEmitter {
       const runtime = this.ensureAgentRuntime(name);
       return {
         name,
-        description: agent.description || '',
-        status: runtime.status
+        description: agent.description || "",
+        status: runtime.status,
       };
     });
   }
 
-  listAgentStatuses(): Array<{ name: string; description: string; status: AgentRuntimeStatus; lastTaskAt?: string; successCount: number; errorCount: number; lastTask?: string }> {
+  listAgentStatuses(): Array<{
+    name: string;
+    description: string;
+    status: AgentRuntimeStatus;
+    lastTaskAt?: string;
+    successCount: number;
+    errorCount: number;
+    lastTask?: string;
+  }> {
     return Array.from(this.agents.entries()).map(([name, agent]) => {
       const runtime = this.ensureAgentRuntime(name);
       return {
         name,
-        description: agent.description || '',
+        description: agent.description || "",
         status: runtime.status,
         lastTaskAt: runtime.lastTaskAt,
         successCount: runtime.successCount,
         errorCount: runtime.errorCount,
-        lastTask: runtime.lastTask
+        lastTask: runtime.lastTask,
       };
     });
   }
@@ -538,11 +836,15 @@ export class AgentManager extends EventEmitter {
   /**
    * Ügynök definíciók listázása (név, leírás, szerepkör) – Orchestrator delegáláshoz
    */
-  listAgentDefinitions(): Array<{ name: string; description: string; role?: string }> {
+  listAgentDefinitions(): Array<{
+    name: string;
+    description: string;
+    role?: string;
+  }> {
     return Array.from(this.agents.entries()).map(([name, agent]) => ({
       name,
-      description: agent.description || '',
-      role: agent.role || ''
+      description: agent.description || "",
+      role: agent.role || "",
     }));
   }
 
@@ -551,17 +853,21 @@ export class AgentManager extends EventEmitter {
    */
   updateEdgeConfig(config: Partial<EdgeConfig>): void {
     this.edgeConfig = { ...this.edgeConfig, ...config };
-    logInfo('AgentManager', 'Edge konfiguráció frissítve');
+    logInfo("AgentManager", "Edge konfiguráció frissítve");
   }
 
   /**
    * Edge állapot lekérdezése
    */
-  getEdgeStatus(): { enabled: boolean; healthy: boolean; tunnelConnected: boolean } {
+  getEdgeStatus(): {
+    enabled: boolean;
+    healthy: boolean;
+    tunnelConnected: boolean;
+  } {
     return {
       enabled: this.edgeConfig.enabled,
       healthy: this.edgeProxy?.isEdgeHealthy?.() || false,
-      tunnelConnected: this.edgeProxy?.isTunnelConnected?.() || false
+      tunnelConnected: this.edgeProxy?.isTunnelConnected?.() || false,
     };
   }
 
@@ -570,44 +876,76 @@ export class AgentManager extends EventEmitter {
   // --------------------------------------------------------------------------
 
   /** Manuális ügynök regisztráció (registry.ts) */
-  registerAgent(agent: { name: string; description?: string; role?: string; capabilities?: string[]; execute: (task: string, context?: Record<string, unknown>) => Promise<unknown> }): void {
+  registerAgent(agent: {
+    name: string;
+    description?: string;
+    role?: string;
+    capabilities?: string[];
+    execute: (
+      task: string,
+      context?: Record<string, unknown>,
+    ) => Promise<unknown>;
+  }): void {
     const fullAgent: IAgent = {
       name: agent.name,
-      role: agent.role || 'custom',
-      description: agent.description || '',
+      role: agent.role || "custom",
+      description: agent.description || "",
       capabilities: agent.capabilities || [],
-      execute: agent.execute
+      execute: agent.execute.bind(agent),
     };
     this.agents.set(agent.name, fullAgent);
     this.ensureAgentRuntime(agent.name);
-    logInfo('AgentManager', `Ügynök regisztrálva: ${agent.name}`);
+    logInfo("AgentManager", `Ügynök regisztrálva: ${agent.name}`);
   }
 
   /** Delegálás név + feladat alapján (registry, web) */
-  async delegate(agentName: string, task: string, context?: Record<string, unknown>): Promise<unknown> {
-    logInfo('AgentManager', `[DELEGATE] Kérés érkezett a '${agentName}' ügynökhöz.`);
+  async delegate(
+    agentName: string,
+    task: string,
+    context?: Record<string, unknown>,
+  ): Promise<unknown> {
+    logInfo(
+      "AgentManager",
+      `[DELEGATE] Kérés érkezett a '${agentName}' ügynökhöz.`,
+    );
 
     // HOTFIX: If the agent is Orchestrator, we must create AND execute the plan.
-    if (agentName.toLowerCase() === 'orchestrator') {
-      logInfo('AgentManager', 'Orchestrator delegation detected. Running full plan-and-execute cycle.');
+    if (agentName.toLowerCase() === "orchestrator") {
+      logInfo(
+        "AgentManager",
+        "Orchestrator delegation detected. Running full plan-and-execute cycle.",
+      );
       try {
         const plan = await this.createPlan(task);
         if (!plan || plan.taskIds.length === 0) {
-          return { success: true, message: "A terv nem tartalmazott végrehajtható lépéseket." };
+          return {
+            success: true,
+            message: "A terv nem tartalmazott végrehajtható lépéseket.",
+          };
         }
 
-        const noOpEmit = (event: string, data: any) => { };
+        const noOpEmit = (event: string, data: any) => {};
         const finalResult = await this.executePlan(plan, noOpEmit);
 
-        return { success: true, message: "A terv végrehajtása befejeződött.", data: finalResult };
+        return {
+          success: true,
+          message: "A terv végrehajtása befejeződött.",
+          data: finalResult,
+        };
       } catch (e: any) {
-        logError('AgentManager', `Orchestrator plan/execute hiba: ${e.message}`);
+        logError(
+          "AgentManager",
+          `Orchestrator plan/execute hiba: ${e.message}`,
+        );
         throw e;
       }
     }
 
     const lowerAgentName = agentName.toLowerCase();
-    logInfo('AgentManager', `[DELEGATE] Keresés: '${agentName}' (${lowerAgentName}). Regisztrált: ${[...this.agents.keys()].join(', ')}`);
+    logInfo(
+      "AgentManager",
+      `[DELEGATE] Keresés: '${agentName}' (${lowerAgentName}). Regisztrált: ${[...this.agents.keys()].join(", ")}`,
+    );
 
     // Case-insensitive lookup in Map
     let agent: IAgent | undefined = undefined;
@@ -619,53 +957,68 @@ export class AgentManager extends EventEmitter {
     }
 
     if (!agent) {
-      logError('AgentManager', `[DELEGATE] Az ügynök ('${agentName}') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: ${[...this.agents.keys()].join(', ')}. Fallback to dynamic routing.`);
+      logError(
+        "AgentManager",
+        `[DELEGATE] Az ügynök ('${agentName}') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: ${[...this.agents.keys()].join(", ")}. Fallback to dynamic routing.`,
+      );
       const result = await this.delegateTask({
         id: `delegate-${Date.now()}`,
         instruction: task,
         context,
-        createdAt: new Date().toISOString()
+        createdAt: new Date().toISOString(),
       });
 
-      logInfo('AgentManager', `[DELEGATE] Dynamic routing eredménye: success=${result.success}, detail: ${JSON.stringify(result).slice(0, 100)}`);
+      logInfo(
+        "AgentManager",
+        `[DELEGATE] Dynamic routing eredménye: success=${result.success}, detail: ${JSON.stringify(result).slice(0, 100)}`,
+      );
 
       if (result.success) {
         return result;
       }
-      throw new Error(result.message || 'Delegation failed');
+      throw new Error(result.message || "Delegation failed");
     }
 
-    logInfo('AgentManager', `[DELEGATE] Az ügynök ('${lowerAgentName}') MEGTALÁLVA. Közvetlen végrehajtás...`);
+    logInfo(
+      "AgentManager",
+      `[DELEGATE] Az ügynök ('${lowerAgentName}') MEGTALÁLVA. Közvetlen végrehajtás...`,
+    );
 
     // Save to DB for tracking
     const dbId = await saveTask({
       agent: agentName,
       task,
-      context: context ? JSON.stringify(context) : undefined
+      context: context ? JSON.stringify(context) : undefined,
     });
 
     try {
       const out = await this.executeAgentWithRetry(agentName, task, context);
 
       if (dbId) {
-        const resultStr = typeof out === 'object' ? JSON.stringify(out) : String(out);
-        await updateTaskStatus(dbId, 'done', resultStr);
+        const resultStr =
+          typeof out === "object" ? JSON.stringify(out) : String(out);
+        await updateTaskStatus(dbId, "done", resultStr);
       }
 
       return out;
     } catch (e: any) {
-      if (dbId) await updateTaskStatus(dbId, 'error', e.message);
+      if (dbId) await updateTaskStatus(dbId, "error", e.message);
       throw e;
     }
   }
 
   /** Feladat betétele a sorba (Orchestrator, web) */
-  async queueTask(description: string, agentName: string, context?: Record<string, any>, parentId?: number): Promise<number> {
+  async queueTask(
+    description: string,
+    agentName: string,
+    context?: Record<string, any>,
+    parentId?: number,
+  ): Promise<number> {
     const contextStr = context ? JSON.stringify(context) : undefined;
     const dbId = await saveTask({
       agent: agentName,
       task: description,
-      context: contextStr
+      context: contextStr,
     });
 
     const id = Number(dbId) || ++this.taskIdCounter;
@@ -676,7 +1029,7 @@ export class AgentManager extends EventEmitter {
       context,
       parentId,
       createdAt: new Date().toISOString(),
-      status: 'pending'
+      status: "pending",
     });
     return id;
   }
@@ -687,46 +1040,63 @@ export class AgentManager extends EventEmitter {
   }
 
   /** Egy pending feladat azonnali feldolgozása */
-  async processPendingTasks(): Promise<{ taskId?: number; status: string; message?: string } | null> {
-    const pending = this.taskQueue.find(t => t.status === 'pending');
+  async processPendingTasks(): Promise<{
+    taskId?: number;
+    status: string;
+    message?: string;
+  } | null> {
+    const pending = this.taskQueue.find((t) => t.status === "pending");
     if (!pending) return null;
 
-    pending.status = 'running';
+    pending.status = "running";
     pending.startedAt = new Date().toISOString();
-    await updateTaskStatus(pending.id, 'running');
+    await updateTaskStatus(pending.id, "running");
 
     try {
-      const result = await this.executeAgentWithRetry(pending.agentName, pending.description, pending.context);
-      pending.status = result.success ? 'done' : 'error';
-      const resultStr = typeof result === 'object' ? JSON.stringify(result) : String(result);
+      const result = await this.executeAgentWithRetry(
+        pending.agentName,
+        pending.description,
+        pending.context,
+      );
+      pending.status = result.success ? "done" : "error";
+      const resultStr =
+        typeof result === "object" ? JSON.stringify(result) : String(result);
       await updateTaskStatus(pending.id, pending.status, resultStr);
-      return { taskId: pending.id, status: pending.status, message: result.message };
+      return {
+        taskId: pending.id,
+        status: pending.status,
+        message: result.message,
+      };
     } catch (e: any) {
-      pending.status = 'error';
-      await updateTaskStatus(pending.id, 'error', e.message);
-      return { taskId: pending.id, status: 'error', message: e.message };
+      pending.status = "error";
+      await updateTaskStatus(pending.id, "error", e.message);
+      return { taskId: pending.id, status: "error", message: e.message };
     }
   }
 
   async cancelTask(taskId: number): Promise<boolean> {
-    const task = this.taskQueue.find(t => t.id === taskId);
+    const task = this.taskQueue.find((t) => t.id === taskId);
     if (!task) return false;
-    task.status = 'cancelled';
-    await updateTaskStatus(taskId, 'cancelled', 'Cancelled by user');
+    task.status = "cancelled";
+    await updateTaskStatus(taskId, "cancelled", "Cancelled by user");
     return true;
   }
 
   async retryTask(taskId: number): Promise<boolean> {
-    const task = this.taskQueue.find(t => t.id === taskId);
+    const task = this.taskQueue.find((t) => t.id === taskId);
     if (!task) return false;
-    task.status = 'pending';
+    task.status = "pending";
     task.startedAt = undefined;
-    await updateTaskStatus(taskId, 'pending');
+    await updateTaskStatus(taskId, "pending");
     return true;
   }
 
   /** Registry definíciók (alias listAgentDefinitions) */
-  listRegistryDefinitions(): Array<{ name: string; description: string; role?: string }> {
+  listRegistryDefinitions(): Array<{
+    name: string;
+    description: string;
+    role?: string;
+  }> {
     return this.listAgentDefinitions();
   }
 
@@ -739,29 +1109,37 @@ export class AgentManager extends EventEmitter {
   startWorkerLoop(): void {
     if (this.workerInterval) return;
     this.workerInterval = setInterval(async () => {
-      const pending = this.taskQueue.find(t => t.status === 'pending');
+      const pending = this.taskQueue.find((t) => t.status === "pending");
       if (!pending) return;
-      pending.status = 'running';
-      await updateTaskStatus(pending.id, 'running');
+      pending.status = "running";
+      await updateTaskStatus(pending.id, "running");
       try {
-        const result = await this.executeAgentWithRetry(pending.agentName, pending.description, pending.context);
+        const result = await this.executeAgentWithRetry(
+          pending.agentName,
+          pending.description,
+          pending.context,
+        );
 
-        pending.status = result.success ? 'done' : 'error';
-        const resultStr = typeof result === 'object' ? JSON.stringify(result) : String(result);
+        pending.status = result.success ? "done" : "error";
+        const resultStr =
+          typeof result === "object" ? JSON.stringify(result) : String(result);
         await updateTaskStatus(pending.id, pending.status, resultStr);
 
         if (result.success) {
-          this.emit('task_done', { task: pending, result });
+          this.emit("task_done", { task: pending, result });
         } else {
-          logError('AgentManager', `Task ${pending.id} failed: ${result.message}`);
+          logError(
+            "AgentManager",
+            `Task ${pending.id} failed: ${result.message}`,
+          );
         }
       } catch (e: any) {
-        pending.status = 'error';
-        await updateTaskStatus(pending.id, 'error', e.message);
-        logError('AgentManager', `Task ${pending.id} error: ${e.message}`);
+        pending.status = "error";
+        await updateTaskStatus(pending.id, "error", e.message);
+        logError("AgentManager", `Task ${pending.id} error: ${e.message}`);
       }
     }, 2000);
-    logInfo('AgentManager', 'Worker loop started');
+    logInfo("AgentManager", "Worker loop started");
   }
 
   /** Worker loop leállítása graceful shutdown-hoz */
@@ -769,53 +1147,71 @@ export class AgentManager extends EventEmitter {
     if (this.workerInterval) {
       clearInterval(this.workerInterval);
       this.workerInterval = undefined;
-      logInfo('AgentManager', 'Worker loop stopped');
+      logInfo("AgentManager", "Worker loop stopped");
     }
   }
 
   /** Terv készítése (Orchestrator hívás) */
-  async createPlan(userMessage: string): Promise<{ taskIds: number[]; taskDescriptions?: string[] }> {
-    const orchestrator = this.agents.get('Orchestrator');
+  async createPlan(
+    userMessage: string,
+  ): Promise<{ taskIds: number[]; taskDescriptions?: string[] }> {
+    const orchestrator = this.agents.get("Orchestrator");
     if (!orchestrator) return { taskIds: [], taskDescriptions: [] };
     const out = await orchestrator.execute(userMessage);
-    
+
     // Type guard for orchestrator output
-    if (typeof out === 'object' && out !== null) {
+    if (typeof out === "object" && out !== null) {
       const outObj = out as Record<string, unknown>;
-      const taskIds = Array.isArray(outObj['taskIds']) ? outObj['taskIds'] as number[] : [];
+      const taskIds = Array.isArray(outObj["taskIds"])
+        ? (outObj["taskIds"] as number[])
+        : [];
       return { taskIds, taskDescriptions: [] };
     }
-    
+
     return { taskIds: [], taskDescriptions: [] };
   }
 
   /** Terv végrehajtása */
-  async executePlan(plan: { taskIds: number[] }, emit: (event: string, data: unknown) => void): Promise<string> {
+  async executePlan(
+    plan: { taskIds: number[] },
+    emit: (event: string, data: unknown) => void,
+  ): Promise<string> {
     const parts: string[] = [];
     for (const id of plan.taskIds) {
-      const t = this.taskQueue.find(q => q.id === id);
-      if (!t || t.status !== 'pending') continue;
-      emit('task_start', { id, description: t.description, agentName: t.agentName });
+      const t = this.taskQueue.find((q) => q.id === id);
+      if (!t || t.status !== "pending") continue;
+      emit("task_start", {
+        id,
+        description: t.description,
+        agentName: t.agentName,
+      });
       try {
-        const result = await this.executeAgentWithRetry(t.agentName, t.description, t.context);
+        const result = await this.executeAgentWithRetry(
+          t.agentName,
+          t.description,
+          t.context,
+        );
 
         if (result.success) {
-          t.status = 'done';
-          const text = typeof result === 'object' ? JSON.stringify(result) : String(result);
+          t.status = "done";
+          const text =
+            typeof result === "object"
+              ? JSON.stringify(result)
+              : String(result);
           parts.push(`[${t.agentName}]: ${text}`);
-          emit('task_done', { id, result });
+          emit("task_done", { id, result });
         } else {
-          t.status = 'error';
+          t.status = "error";
           parts.push(`[${t.agentName}]: Error: ${result.message}`);
-          emit('task_error', { id, error: result.message });
+          emit("task_error", { id, error: result.message });
         }
       } catch (e: any) {
-        t.status = 'error';
+        t.status = "error";
         parts.push(`[${t.agentName}]: Exception: ${e.message}`);
-        emit('task_error', { id, error: e.message });
+        emit("task_error", { id, error: e.message });
       }
     }
-    return parts.join('\n\n');
+    return parts.join("\n\n");
   }
 
   // --------------------------------------------------------------------------
@@ -824,37 +1220,42 @@ export class AgentManager extends EventEmitter {
 
   private async loadRegistryAsync(): Promise<RegistryConfig> {
     // Dynamic imports for Node.js-specific modules (Worker compatibility)
-    if (typeof process === 'undefined' || !process.versions?.node) {
+    if (typeof process === "undefined" || !process.versions?.node) {
       // Fallback for Worker environments
       return {
-        version: '1.0.0',
+        version: "1.0.0",
         agents: [],
-        defaultAgent: 'Orchestrator',
-        routingRules: []
+        defaultAgent: "Orchestrator",
+        routingRules: [],
       };
     }
 
     try {
       // Use async dynamic imports
-      const path = await import('path');
-      const fs = await import('fs');
+      const path = await import("path");
+      const fs = await import("fs");
 
-      const registryPath = path.default.resolve(process.cwd(), 'build', 'agents', 'registry.json');
+      const registryPath = path.default.resolve(
+        process.cwd(),
+        "build",
+        "agents",
+        "registry.json",
+      );
 
       if (fs.default.existsSync(registryPath)) {
-        const content = fs.default.readFileSync(registryPath, 'utf-8');
+        const content = fs.default.readFileSync(registryPath, "utf-8");
         return JSON.parse(content);
       }
     } catch (e) {
-      logError('AgentManager', `Registry load failed: ${e}`);
+      logError("AgentManager", `Registry load failed: ${e}`);
     }
 
     // Fallback
     return {
-      version: '1.0.0',
+      version: "1.0.0",
       agents: [],
-      defaultAgent: 'Orchestrator',
-      routingRules: []
+      defaultAgent: "Orchestrator",
+      routingRules: [],
     };
   }
 
@@ -862,20 +1263,24 @@ export class AgentManager extends EventEmitter {
     // Note: This is called from constructor, which cannot be async
     // So we use a simplified version here and rely on the registry being optional
     return {
-      version: '1.0.0',
+      version: "1.0.0",
       agents: [],
-      defaultAgent: 'Orchestrator',
-      routingRules: []
+      defaultAgent: "Orchestrator",
+      routingRules: [],
     };
   }
 
   private loadEdgeConfig(): EdgeConfig {
     return {
-      enabled: process.env.EDGE_ENABLED === 'true',
-      workerUrl: process.env.CLOUDFLARE_WORKER_URL || 'https://bas-orchestrator.workers.dev',
-      tunnelEnabled: process.env.CLOUDFLARE_TUNNEL_ENABLED === 'true',
-      fallbackToLocal: process.env.EDGE_FALLBACK_TO_LOCAL !== 'false',
-      healthCheckInterval: parseInt(process.env.EDGE_HEALTH_CHECK_INTERVAL || '30000')
+      enabled: process.env.EDGE_ENABLED === "true",
+      workerUrl:
+        process.env.CLOUDFLARE_WORKER_URL ||
+        "https://bas-orchestrator.workers.dev",
+      tunnelEnabled: process.env.CLOUDFLARE_TUNNEL_ENABLED === "true",
+      fallbackToLocal: process.env.EDGE_FALLBACK_TO_LOCAL !== "false",
+      healthCheckInterval: parseInt(
+        process.env.EDGE_HEALTH_CHECK_INTERVAL || "30000",
+      ),
     };
   }
 }

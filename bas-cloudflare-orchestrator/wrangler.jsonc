@@ -52,8 +52,42 @@
       }
     }
   },
-  // 📊 Telemetria
+  // � Durable Objects (Swarm Coordinator — persistent session state)
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "SWARM_COORDINATOR",
+        "class_name": "SwarmCoordinator"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": [
+        "SwarmCoordinator"
+      ]
+    }
+  ],
+  // �📊 Telemetria
   "observability": {
     "enabled": true
+  },
+  // 📬 Queues (Async Task Pipeline)
+  "queues": {
+    "producers": [
+      {
+        "binding": "TASK_QUEUE",
+        "queue": "bas-task-pipeline"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "bas-task-pipeline",
+        "max_batch_size": 10,
+        "max_retries": 3,
+        "dead_letter_queue": "bas-task-dlq"
+      }
+    ]
   }
 }

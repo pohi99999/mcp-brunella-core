@@ -1,0 +1,24 @@
+{
+  "id": "developer_agent_2_0_20260206",
+  "title": "DeveloperAgent 2.0/3.0 – Unified Development Platform",
+  "status": "archived",
+  "priority": "high",
+  "created": "2026-02-06",
+  "updated": "2026-02-12",
+  "completed": "2026-02-12",
+  "owner": "Claude",
+  "spec_status": "approved",
+  "progress": 100,
+  "tags": [
+    "developer-agent",
+    "self-healing",
+    "cli",
+    "dashboard",
+    "pipeline",
+    "vitest"
+  ],
+  "dependencies": [],
+  "estimated_effort": "high",
+  "business_value": "End-to-end agent-driven development workflow",
+  "archived_at": "2026-02-13T00:00:00Z"
+}

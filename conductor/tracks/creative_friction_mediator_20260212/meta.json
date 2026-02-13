@@ -1,0 +1,20 @@
+{
+  "id": "creative_friction_mediator_20260212",
+  "name": "Creative Friction Mediator (The Vibe-Check)",
+  "status": "proposed",
+  "priority": "low",
+  "progress": 0,
+  "created": "2026-02-12T00:00:00Z",
+  "updated": "2026-02-12T17:19:00Z",
+  "assignee": "ResearcherAgent + LangFlow",
+  "tags": [
+    "experimental",
+    "soft-skills",
+    "mediation",
+    "langflow",
+    "sentiment-analysis"
+  ],
+  "estimatedHours": 8,
+  "description": "LangFlow alapú Soft-Skill AI - szervezeti kommunikáció elemzése rejtett konfliktusok után, mediációs célzattal.",
+  "spec_status": "pending_approval"
+}

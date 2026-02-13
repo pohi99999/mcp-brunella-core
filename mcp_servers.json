@@ -2,60 +2,79 @@
   {
     "name": "github",
     "command": "npx",
-    "args": [
-      "-y",
-      "@modelcontextprotocol/server-github"
-    ],
+    "args": ["-y", "@modelcontextprotocol/server-github"],
     "env": {
-      "GITHUB_PERSONAL_ACCESS_TOKEN": "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"
+      "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
     }
   },
   {
     "name": "brunella-core",
     "command": "node",
-    "args": [
-      "./build/index.js"
-    ]
+    "args": ["./build/index.js"]
   },
   {
     "name": "brunella-windows-manager",
     "command": "npx",
-    "args": [
-      "-y",
-      "@simonb97/server-win-cli"
-    ],
+    "args": ["-y", "@simonb97/server-win-cli"],
     "env": {
-      "ALLOWED_PATHS": [
-        "C:\\Windows\\System32",
-        "F:\\mcp-brunella-core",
-        "G:\\Brunella",
-        "C:\\Users\\pohi9"
-      ]
+      "ALLOWED_PATHS": "C:\\Windows\\System32,F:\\mcp-brunella-core,G:\\Brunella,C:\\Users\\pohi9"
     },
     "disabled": false
   },
   {
     "name": "playwright",
     "command": "npx",
+    "args": ["-y", "@playwright/mcp@latest"]
+  },
+  {
+    "name": "filesystem",
+    "command": "npx",
     "args": [
       "-y",
-      "@modelcontextprotocol/server-playwright"
+      "@modelcontextprotocol/server-filesystem",
+      "F:\\mcp-brunella-core",
+      "G:\\Brunella"
     ]
   },
   {
     "name": "docker",
     "command": "npx",
-    "args": [
-      "-y",
-      "@modelcontextprotocol/server-docker"
-    ]
+    "args": ["-y", "@modelcontextprotocol/server-docker"],
+    "disabled": false
   },
   {
-    "name": "chrome-devtools",
+    "name": "cloudflare",
     "command": "npx",
-    "args": [
-      "-y",
-      "@modelcontextprotocol/server-puppeteer"
-    ]
+    "args": ["-y", "@cloudflare/mcp-server-cloudflare"],
+    "env": {
+      "CLOUDFLARE_ACCOUNT_ID": "${CLOUDFLARE_ACCOUNT_ID}",
+      "CLOUDFLARE_API_TOKEN": "${CLOUDFLARE_API_TOKEN}"
+    }
+  },
+  {
+    "name": "sqlite",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-sqlite", "data/brunella.db"]
+  },
+  {
+    "name": "fetch",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-fetch"]
+  },
+  {
+    "name": "memory",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-memory"],
+    "env": {
+      "MEMORY_FILE_PATH": "data/mcp_memory.json"
+    }
+  },
+  {
+    "name": "brunella-python",
+    "command": "python",
+    "args": ["-m", "myai.mcp_server"],
+    "env": {
+      "PYTHONPATH": "."
+    }
   }
 ]

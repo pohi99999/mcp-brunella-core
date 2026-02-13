@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 10. 12:44:12
+**Generálva:** 2026. 02. 13. 21:16:09
 **Script:** 
 
 ---
@@ -15,6 +15,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 popup.html.txt
       - 📄 popup.js.txt
     - 📂 **deleted_files**
+      - 📄 main.py
     - 📂 **docs**
       - 📄 bongeszo_hasznalat.md.txt
       - 📄 CHANGELOG.md
@@ -1380,6 +1381,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 web-fetch.md
     - 📄 web-search.md
     - 📄 webhook_server.py
+  - 📂 **ADR** _(Architecture Decision Records (ADR))_
+    - 📄 0001-living-documentation-system.md
+    - 📄 0002-embedding-standard-mxbai-with-legacy-fallback.md
+    - 📄 README.md
   - 📂 **agentenv**
     - 📂 **Include**
     - 📂 **Lib**
@@ -1387,6 +1392,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📂 **__pycache__**
           - 📄 _soundfile.cpython-314.pyc
           - 📄 google_auth_httplib2.cpython-314.pyc
+          - 📄 jsonpatch.cpython-314.pyc
+          - 📄 jsonpointer.cpython-314.pyc
           - 📄 pythoncom.cpython-314.pyc
           - 📄 six.cpython-314.pyc
           - 📄 soundfile.cpython-314.pyc
@@ -2573,6 +2580,946 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 METADATA
           - 📄 RECORD
           - 📄 WHEEL
+        - 📂 **anthropic**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 _base_client.cpython-314.pyc
+            - 📄 _client.cpython-314.pyc
+            - 📄 _compat.cpython-314.pyc
+            - 📄 _constants.cpython-314.pyc
+            - 📄 _exceptions.cpython-314.pyc
+            - 📄 _files.cpython-314.pyc
+            - 📄 _legacy_response.cpython-314.pyc
+            - 📄 _models.cpython-314.pyc
+            - 📄 _qs.cpython-314.pyc
+            - 📄 _resource.cpython-314.pyc
+            - 📄 _response.cpython-314.pyc
+            - 📄 _streaming.cpython-314.pyc
+            - 📄 _types.cpython-314.pyc
+            - 📄 _version.cpython-314.pyc
+            - 📄 pagination.cpython-314.pyc
+          - 📂 **_decoders**
+            - 📂 **__pycache__**
+              - 📄 jsonl.cpython-314.pyc
+            - 📄 jsonl.py
+          - 📂 **_utils**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 _compat.cpython-314.pyc
+              - 📄 _datetime_parse.cpython-314.pyc
+              - 📄 _httpx.cpython-314.pyc
+              - 📄 _json.cpython-314.pyc
+              - 📄 _logs.cpython-314.pyc
+              - 📄 _proxy.cpython-314.pyc
+              - 📄 _reflection.cpython-314.pyc
+              - 📄 _resources_proxy.cpython-314.pyc
+              - 📄 _streams.cpython-314.pyc
+              - 📄 _sync.cpython-314.pyc
+              - 📄 _transform.cpython-314.pyc
+              - 📄 _typing.cpython-314.pyc
+              - 📄 _utils.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 _compat.py
+            - 📄 _datetime_parse.py
+            - 📄 _httpx.py
+            - 📄 _json.py
+            - 📄 _logs.py
+            - 📄 _proxy.py
+            - 📄 _reflection.py
+            - 📄 _resources_proxy.py
+            - 📄 _streams.py
+            - 📄 _sync.py
+            - 📄 _transform.py
+            - 📄 _typing.py
+            - 📄 _utils.py
+          - 📂 **lib**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 _files.cpython-314.pyc
+              - 📄 foundry.cpython-314.pyc
+            - 📂 **_extras**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 _common.cpython-314.pyc
+                - 📄 _google_auth.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 _common.py
+              - 📄 _google_auth.py
+            - 📂 **_parse**
+              - 📂 **__pycache__**
+                - 📄 _response.cpython-314.pyc
+                - 📄 _transform.cpython-314.pyc
+              - 📄 _response.py
+              - 📄 _transform.py
+            - 📂 **bedrock**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 _beta_messages.cpython-314.pyc
+                - 📄 _beta.cpython-314.pyc
+                - 📄 _client.cpython-314.pyc
+                - 📄 _stream_decoder.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 _auth.py
+              - 📄 _beta_messages.py
+              - 📄 _beta.py
+              - 📄 _client.py
+              - 📄 _stream_decoder.py
+              - 📄 _stream.py
+            - 📂 **streaming**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 _beta_messages.cpython-314.pyc
+                - 📄 _beta_types.cpython-314.pyc
+                - 📄 _messages.cpython-314.pyc
+                - 📄 _types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 _beta_messages.py
+              - 📄 _beta_types.py
+              - 📄 _messages.py
+              - 📄 _types.py
+            - 📂 **tools**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 _beta_builtin_memory_tool.cpython-314.pyc
+                - 📄 _beta_compaction_control.cpython-314.pyc
+                - 📄 _beta_functions.cpython-314.pyc
+                - 📄 _beta_runner.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 _beta_builtin_memory_tool.py
+              - 📄 _beta_compaction_control.py
+              - 📄 _beta_functions.py
+              - 📄 _beta_runner.py
+            - 📂 **vertex**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 _auth.cpython-314.pyc
+                - 📄 _beta_messages.cpython-314.pyc
+                - 📄 _beta.cpython-314.pyc
+                - 📄 _client.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 _auth.py
+              - 📄 _beta_messages.py
+              - 📄 _beta.py
+              - 📄 _client.py
+            - 📄 __init__.py
+            - 📄 _files.py
+            - 📄 foundry.md
+            - 📄 foundry.py
+          - 📂 **resources**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 completions.cpython-314.pyc
+              - 📄 models.cpython-314.pyc
+            - 📂 **beta**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 beta.cpython-314.pyc
+                - 📄 files.cpython-314.pyc
+                - 📄 models.cpython-314.pyc
+              - 📂 **messages**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                  - 📄 batches.cpython-314.pyc
+                  - 📄 messages.cpython-314.pyc
+                - 📄 __init__.py
+                - 📄 batches.py
+                - 📄 messages.py
+              - 📂 **skills**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                  - 📄 skills.cpython-314.pyc
+                  - 📄 versions.cpython-314.pyc
+                - 📄 __init__.py
+                - 📄 skills.py
+                - 📄 versions.py
+              - 📄 __init__.py
+              - 📄 beta.py
+              - 📄 files.py
+              - 📄 models.py
+            - 📂 **messages**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 batches.cpython-314.pyc
+                - 📄 messages.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 batches.py
+              - 📄 messages.py
+            - 📄 __init__.py
+            - 📄 completions.py
+            - 📄 models.py
+          - 📂 **types**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 anthropic_beta_param.cpython-314.pyc
+              - 📄 base64_image_source_param.cpython-314.pyc
+              - 📄 base64_pdf_source_param.cpython-314.pyc
+              - 📄 beta_api_error.cpython-314.pyc
+              - 📄 beta_authentication_error.cpython-314.pyc
+              - 📄 beta_billing_error.cpython-314.pyc
+              - 📄 beta_error_response.cpython-314.pyc
+              - 📄 beta_error.cpython-314.pyc
+              - 📄 beta_gateway_timeout_error.cpython-314.pyc
+              - 📄 beta_invalid_request_error.cpython-314.pyc
+              - 📄 beta_not_found_error.cpython-314.pyc
+              - 📄 beta_overloaded_error.cpython-314.pyc
+              - 📄 beta_permission_error.cpython-314.pyc
+              - 📄 beta_rate_limit_error.cpython-314.pyc
+              - 📄 cache_control_ephemeral_param.cpython-314.pyc
+              - 📄 cache_creation.cpython-314.pyc
+              - 📄 citation_char_location_param.cpython-314.pyc
+              - 📄 citation_char_location.cpython-314.pyc
+              - 📄 citation_content_block_location_param.cpython-314.pyc
+              - 📄 citation_content_block_location.cpython-314.pyc
+              - 📄 citation_page_location_param.cpython-314.pyc
+              - 📄 citation_page_location.cpython-314.pyc
+              - 📄 citation_search_result_location_param.cpython-314.pyc
+              - 📄 citation_web_search_result_location_param.cpython-314.pyc
+              - 📄 citations_config_param.cpython-314.pyc
+              - 📄 citations_delta.cpython-314.pyc
+              - 📄 citations_search_result_location.cpython-314.pyc
+              - 📄 citations_web_search_result_location.cpython-314.pyc
+              - 📄 completion_create_params.cpython-314.pyc
+              - 📄 completion.cpython-314.pyc
+              - 📄 content_block_delta_event.cpython-314.pyc
+              - 📄 content_block_param.cpython-314.pyc
+              - 📄 content_block_source_content_param.cpython-314.pyc
+              - 📄 content_block_source_param.cpython-314.pyc
+              - 📄 content_block_start_event.cpython-314.pyc
+              - 📄 content_block_stop_event.cpython-314.pyc
+              - 📄 content_block.cpython-314.pyc
+              - 📄 document_block_param.cpython-314.pyc
+              - 📄 image_block_param.cpython-314.pyc
+              - 📄 input_json_delta.cpython-314.pyc
+              - 📄 json_output_format_param.cpython-314.pyc
+              - 📄 message_count_tokens_params.cpython-314.pyc
+              - 📄 message_count_tokens_tool_param.cpython-314.pyc
+              - 📄 message_create_params.cpython-314.pyc
+              - 📄 message_delta_event.cpython-314.pyc
+              - 📄 message_delta_usage.cpython-314.pyc
+              - 📄 message_param.cpython-314.pyc
+              - 📄 message_start_event.cpython-314.pyc
+              - 📄 message_stop_event.cpython-314.pyc
+              - 📄 message_stream_event.cpython-314.pyc
+              - 📄 message_tokens_count.cpython-314.pyc
+              - 📄 message.cpython-314.pyc
+              - 📄 metadata_param.cpython-314.pyc
+              - 📄 model_info.cpython-314.pyc
+              - 📄 model_list_params.cpython-314.pyc
+              - 📄 model_param.cpython-314.pyc
+              - 📄 model.cpython-314.pyc
+              - 📄 output_config_param.cpython-314.pyc
+              - 📄 parsed_message.cpython-314.pyc
+              - 📄 plain_text_source_param.cpython-314.pyc
+              - 📄 raw_content_block_delta_event.cpython-314.pyc
+              - 📄 raw_content_block_delta.cpython-314.pyc
+              - 📄 raw_content_block_start_event.cpython-314.pyc
+              - 📄 raw_content_block_stop_event.cpython-314.pyc
+              - 📄 raw_message_delta_event.cpython-314.pyc
+              - 📄 raw_message_start_event.cpython-314.pyc
+              - 📄 raw_message_stop_event.cpython-314.pyc
+              - 📄 raw_message_stream_event.cpython-314.pyc
+              - 📄 redacted_thinking_block_param.cpython-314.pyc
+              - 📄 redacted_thinking_block.cpython-314.pyc
+              - 📄 search_result_block_param.cpython-314.pyc
+              - 📄 server_tool_usage.cpython-314.pyc
+              - 📄 server_tool_use_block_param.cpython-314.pyc
+              - 📄 server_tool_use_block.cpython-314.pyc
+              - 📄 signature_delta.cpython-314.pyc
+              - 📄 stop_reason.cpython-314.pyc
+              - 📄 text_block_param.cpython-314.pyc
+              - 📄 text_block.cpython-314.pyc
+              - 📄 text_citation_param.cpython-314.pyc
+              - 📄 text_citation.cpython-314.pyc
+              - 📄 text_delta.cpython-314.pyc
+              - 📄 thinking_block_param.cpython-314.pyc
+              - 📄 thinking_block.cpython-314.pyc
+              - 📄 thinking_config_adaptive_param.cpython-314.pyc
+              - 📄 thinking_config_disabled_param.cpython-314.pyc
+              - 📄 thinking_config_enabled_param.cpython-314.pyc
+              - 📄 thinking_config_param.cpython-314.pyc
+              - 📄 thinking_delta.cpython-314.pyc
+              - 📄 tool_bash_20250124_param.cpython-314.pyc
+              - 📄 tool_choice_any_param.cpython-314.pyc
+              - 📄 tool_choice_auto_param.cpython-314.pyc
+              - 📄 tool_choice_none_param.cpython-314.pyc
+              - 📄 tool_choice_param.cpython-314.pyc
+              - 📄 tool_choice_tool_param.cpython-314.pyc
+              - 📄 tool_param.cpython-314.pyc
+              - 📄 tool_result_block_param.cpython-314.pyc
+              - 📄 tool_text_editor_20250124_param.cpython-314.pyc
+              - 📄 tool_text_editor_20250429_param.cpython-314.pyc
+              - 📄 tool_text_editor_20250728_param.cpython-314.pyc
+              - 📄 tool_union_param.cpython-314.pyc
+              - 📄 tool_use_block_param.cpython-314.pyc
+              - 📄 tool_use_block.cpython-314.pyc
+              - 📄 url_image_source_param.cpython-314.pyc
+              - 📄 url_pdf_source_param.cpython-314.pyc
+              - 📄 usage.cpython-314.pyc
+              - 📄 web_search_result_block_param.cpython-314.pyc
+              - 📄 web_search_result_block.cpython-314.pyc
+              - 📄 web_search_tool_20250305_param.cpython-314.pyc
+              - 📄 web_search_tool_request_error_param.cpython-314.pyc
+              - 📄 web_search_tool_result_block_content.cpython-314.pyc
+              - 📄 web_search_tool_result_block_param_content_param.cpython-314.pyc
+              - 📄 web_search_tool_result_block_param.cpython-314.pyc
+              - 📄 web_search_tool_result_block.cpython-314.pyc
+              - 📄 web_search_tool_result_error.cpython-314.pyc
+            - 📂 **beta**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 beta_all_thinking_turns_param.cpython-314.pyc
+                - 📄 beta_base64_image_source_param.cpython-314.pyc
+                - 📄 beta_base64_pdf_block_param.cpython-314.pyc
+                - 📄 beta_base64_pdf_source_param.cpython-314.pyc
+                - 📄 beta_base64_pdf_source.cpython-314.pyc
+                - 📄 beta_bash_code_execution_output_block_param.cpython-314.pyc
+                - 📄 beta_bash_code_execution_output_block.cpython-314.pyc
+                - 📄 beta_bash_code_execution_result_block_param.cpython-314.pyc
+                - 📄 beta_bash_code_execution_result_block.cpython-314.pyc
+                - 📄 beta_bash_code_execution_tool_result_block_param.cpython-314.pyc
+                - 📄 beta_bash_code_execution_tool_result_block.cpython-314.pyc
+                - 📄 beta_bash_code_execution_tool_result_error_param.cpython-314.pyc
+                - 📄 beta_bash_code_execution_tool_result_error.cpython-314.pyc
+                - 📄 beta_cache_control_ephemeral_param.cpython-314.pyc
+                - 📄 beta_cache_creation.cpython-314.pyc
+                - 📄 beta_citation_char_location_param.cpython-314.pyc
+                - 📄 beta_citation_char_location.cpython-314.pyc
+                - 📄 beta_citation_config.cpython-314.pyc
+                - 📄 beta_citation_content_block_location_param.cpython-314.pyc
+                - 📄 beta_citation_content_block_location.cpython-314.pyc
+                - 📄 beta_citation_page_location_param.cpython-314.pyc
+                - 📄 beta_citation_page_location.cpython-314.pyc
+                - 📄 beta_citation_search_result_location_param.cpython-314.pyc
+                - 📄 beta_citation_search_result_location.cpython-314.pyc
+                - 📄 beta_citation_web_search_result_location_param.cpython-314.pyc
+                - 📄 beta_citations_config_param.cpython-314.pyc
+                - 📄 beta_citations_delta.cpython-314.pyc
+                - 📄 beta_citations_web_search_result_location.cpython-314.pyc
+                - 📄 beta_clear_thinking_20251015_edit_param.cpython-314.pyc
+                - 📄 beta_clear_thinking_20251015_edit_response.cpython-314.pyc
+                - 📄 beta_clear_tool_uses_20250919_edit_param.cpython-314.pyc
+                - 📄 beta_clear_tool_uses_20250919_edit_response.cpython-314.pyc
+                - 📄 beta_code_execution_output_block_param.cpython-314.pyc
+                - 📄 beta_code_execution_output_block.cpython-314.pyc
+                - 📄 beta_code_execution_result_block_param.cpython-314.pyc
+                - 📄 beta_code_execution_result_block.cpython-314.pyc
+                - 📄 beta_code_execution_tool_20250522_param.cpython-314.pyc
+                - 📄 beta_code_execution_tool_20250825_param.cpython-314.pyc
+                - 📄 beta_code_execution_tool_result_block_content.cpython-314.pyc
+                - 📄 beta_code_execution_tool_result_block_param_content_param.cpython-314.pyc
+                - 📄 beta_code_execution_tool_result_block_param.cpython-314.pyc
+                - 📄 beta_code_execution_tool_result_block.cpython-314.pyc
+                - 📄 beta_code_execution_tool_result_error_code.cpython-314.pyc
+                - 📄 beta_code_execution_tool_result_error_param.cpython-314.pyc
+                - 📄 beta_code_execution_tool_result_error.cpython-314.pyc
+                - 📄 beta_compact_20260112_edit_param.cpython-314.pyc
+                - 📄 beta_compaction_block_param.cpython-314.pyc
+                - 📄 beta_compaction_block.cpython-314.pyc
+                - 📄 beta_compaction_content_block_delta.cpython-314.pyc
+                - 📄 beta_compaction_iteration_usage.cpython-314.pyc
+                - 📄 beta_container_params.cpython-314.pyc
+                - 📄 beta_container_upload_block_param.cpython-314.pyc
+                - 📄 beta_container_upload_block.cpython-314.pyc
+                - 📄 beta_container.cpython-314.pyc
+                - 📄 beta_content_block_param.cpython-314.pyc
+                - 📄 beta_content_block_source_content_param.cpython-314.pyc
+                - 📄 beta_content_block_source_param.cpython-314.pyc
+                - 📄 beta_content_block.cpython-314.pyc
+                - 📄 beta_context_management_config_param.cpython-314.pyc
+                - 📄 beta_context_management_response.cpython-314.pyc
+                - 📄 beta_count_tokens_context_management_response.cpython-314.pyc
+                - 📄 beta_direct_caller_param.cpython-314.pyc
+                - 📄 beta_direct_caller.cpython-314.pyc
+                - 📄 beta_document_block.cpython-314.pyc
+                - 📄 beta_file_document_source_param.cpython-314.pyc
+                - 📄 beta_file_image_source_param.cpython-314.pyc
+                - 📄 beta_image_block_param.cpython-314.pyc
+                - 📄 beta_input_json_delta.cpython-314.pyc
+                - 📄 beta_input_tokens_clear_at_least_param.cpython-314.pyc
+                - 📄 beta_input_tokens_trigger_param.cpython-314.pyc
+                - 📄 beta_iterations_usage.cpython-314.pyc
+                - 📄 beta_json_output_format_param.cpython-314.pyc
+                - 📄 beta_mcp_tool_config_param.cpython-314.pyc
+                - 📄 beta_mcp_tool_default_config_param.cpython-314.pyc
+                - 📄 beta_mcp_tool_result_block.cpython-314.pyc
+                - 📄 beta_mcp_tool_use_block_param.cpython-314.pyc
+                - 📄 beta_mcp_tool_use_block.cpython-314.pyc
+                - 📄 beta_mcp_toolset_param.cpython-314.pyc
+                - 📄 beta_memory_tool_20250818_command.cpython-314.pyc
+                - 📄 beta_memory_tool_20250818_create_command.cpython-314.pyc
+                - 📄 beta_memory_tool_20250818_delete_command.cpython-314.pyc
+                - 📄 beta_memory_tool_20250818_insert_command.cpython-314.pyc
+                - 📄 beta_memory_tool_20250818_param.cpython-314.pyc
+                - 📄 beta_memory_tool_20250818_rename_command.cpython-314.pyc
+                - 📄 beta_memory_tool_20250818_str_replace_command.cpython-314.pyc
+                - 📄 beta_memory_tool_20250818_view_command.cpython-314.pyc
+                - 📄 beta_message_delta_usage.cpython-314.pyc
+                - 📄 beta_message_iteration_usage.cpython-314.pyc
+                - 📄 beta_message_param.cpython-314.pyc
+                - 📄 beta_message_tokens_count.cpython-314.pyc
+                - 📄 beta_message.cpython-314.pyc
+                - 📄 beta_metadata_param.cpython-314.pyc
+                - 📄 beta_model_info.cpython-314.pyc
+                - 📄 beta_output_config_param.cpython-314.pyc
+                - 📄 beta_plain_text_source_param.cpython-314.pyc
+                - 📄 beta_plain_text_source.cpython-314.pyc
+                - 📄 beta_raw_content_block_delta_event.cpython-314.pyc
+                - 📄 beta_raw_content_block_delta.cpython-314.pyc
+                - 📄 beta_raw_content_block_start_event.cpython-314.pyc
+                - 📄 beta_raw_content_block_stop_event.cpython-314.pyc
+                - 📄 beta_raw_message_delta_event.cpython-314.pyc
+                - 📄 beta_raw_message_start_event.cpython-314.pyc
+                - 📄 beta_raw_message_stop_event.cpython-314.pyc
+                - 📄 beta_raw_message_stream_event.cpython-314.pyc
+                - 📄 beta_redacted_thinking_block_param.cpython-314.pyc
+                - 📄 beta_redacted_thinking_block.cpython-314.pyc
+                - 📄 beta_request_document_block_param.cpython-314.pyc
+                - 📄 beta_request_mcp_server_tool_configuration_param.cpython-314.pyc
+                - 📄 beta_request_mcp_server_url_definition_param.cpython-314.pyc
+                - 📄 beta_request_mcp_tool_result_block_param.cpython-314.pyc
+                - 📄 beta_search_result_block_param.cpython-314.pyc
+                - 📄 beta_server_tool_caller_param.cpython-314.pyc
+                - 📄 beta_server_tool_caller.cpython-314.pyc
+                - 📄 beta_server_tool_usage.cpython-314.pyc
+                - 📄 beta_server_tool_use_block_param.cpython-314.pyc
+                - 📄 beta_server_tool_use_block.cpython-314.pyc
+                - 📄 beta_signature_delta.cpython-314.pyc
+                - 📄 beta_skill_params.cpython-314.pyc
+                - 📄 beta_skill.cpython-314.pyc
+                - 📄 beta_stop_reason.cpython-314.pyc
+                - 📄 beta_text_block_param.cpython-314.pyc
+                - 📄 beta_text_block.cpython-314.pyc
+                - 📄 beta_text_citation_param.cpython-314.pyc
+                - 📄 beta_text_citation.cpython-314.pyc
+                - 📄 beta_text_delta.cpython-314.pyc
+                - 📄 beta_text_editor_code_execution_create_result_block_param.cpython-314.pyc
+                - 📄 beta_text_editor_code_execution_create_result_block.cpython-314.pyc
+                - 📄 beta_text_editor_code_execution_str_replace_result_block_param.cpython-314.pyc
+                - 📄 beta_text_editor_code_execution_str_replace_result_block.cpython-314.pyc
+                - 📄 beta_text_editor_code_execution_tool_result_block_param.cpython-314.pyc
+                - 📄 beta_text_editor_code_execution_tool_result_block.cpython-314.pyc
+                - 📄 beta_text_editor_code_execution_tool_result_error_param.cpython-314.pyc
+                - 📄 beta_text_editor_code_execution_tool_result_error.cpython-314.pyc
+                - 📄 beta_text_editor_code_execution_view_result_block_param.cpython-314.pyc
+                - 📄 beta_text_editor_code_execution_view_result_block.cpython-314.pyc
+                - 📄 beta_thinking_block_param.cpython-314.pyc
+                - 📄 beta_thinking_block.cpython-314.pyc
+                - 📄 beta_thinking_config_adaptive_param.cpython-314.pyc
+                - 📄 beta_thinking_config_disabled_param.cpython-314.pyc
+                - 📄 beta_thinking_config_enabled_param.cpython-314.pyc
+                - 📄 beta_thinking_config_param.cpython-314.pyc
+                - 📄 beta_thinking_delta.cpython-314.pyc
+                - 📄 beta_thinking_turns_param.cpython-314.pyc
+                - 📄 beta_tool_bash_20241022_param.cpython-314.pyc
+                - 📄 beta_tool_bash_20250124_param.cpython-314.pyc
+                - 📄 beta_tool_choice_any_param.cpython-314.pyc
+                - 📄 beta_tool_choice_auto_param.cpython-314.pyc
+                - 📄 beta_tool_choice_none_param.cpython-314.pyc
+                - 📄 beta_tool_choice_param.cpython-314.pyc
+                - 📄 beta_tool_choice_tool_param.cpython-314.pyc
+                - 📄 beta_tool_computer_use_20241022_param.cpython-314.pyc
+                - 📄 beta_tool_computer_use_20250124_param.cpython-314.pyc
+                - 📄 beta_tool_computer_use_20251124_param.cpython-314.pyc
+                - 📄 beta_tool_param.cpython-314.pyc
+                - 📄 beta_tool_reference_block_param.cpython-314.pyc
+                - 📄 beta_tool_reference_block.cpython-314.pyc
+                - 📄 beta_tool_result_block_param.cpython-314.pyc
+                - 📄 beta_tool_search_tool_bm25_20251119_param.cpython-314.pyc
+                - 📄 beta_tool_search_tool_regex_20251119_param.cpython-314.pyc
+                - 📄 beta_tool_search_tool_result_block_param.cpython-314.pyc
+                - 📄 beta_tool_search_tool_result_block.cpython-314.pyc
+                - 📄 beta_tool_search_tool_result_error_param.cpython-314.pyc
+                - 📄 beta_tool_search_tool_result_error.cpython-314.pyc
+                - 📄 beta_tool_search_tool_search_result_block_param.cpython-314.pyc
+                - 📄 beta_tool_search_tool_search_result_block.cpython-314.pyc
+                - 📄 beta_tool_text_editor_20241022_param.cpython-314.pyc
+                - 📄 beta_tool_text_editor_20250124_param.cpython-314.pyc
+                - 📄 beta_tool_text_editor_20250429_param.cpython-314.pyc
+                - 📄 beta_tool_text_editor_20250728_param.cpython-314.pyc
+                - 📄 beta_tool_union_param.cpython-314.pyc
+                - 📄 beta_tool_use_block_param.cpython-314.pyc
+                - 📄 beta_tool_use_block.cpython-314.pyc
+                - 📄 beta_tool_uses_keep_param.cpython-314.pyc
+                - 📄 beta_tool_uses_trigger_param.cpython-314.pyc
+                - 📄 beta_url_image_source_param.cpython-314.pyc
+                - 📄 beta_url_pdf_source_param.cpython-314.pyc
+                - 📄 beta_usage.cpython-314.pyc
+                - 📄 beta_web_fetch_block_param.cpython-314.pyc
+                - 📄 beta_web_fetch_block.cpython-314.pyc
+                - 📄 beta_web_fetch_tool_20250910_param.cpython-314.pyc
+                - 📄 beta_web_fetch_tool_result_block_param.cpython-314.pyc
+                - 📄 beta_web_fetch_tool_result_block.cpython-314.pyc
+                - 📄 beta_web_fetch_tool_result_error_block_param.cpython-314.pyc
+                - 📄 beta_web_fetch_tool_result_error_block.cpython-314.pyc
+                - 📄 beta_web_fetch_tool_result_error_code.cpython-314.pyc
+                - 📄 beta_web_search_result_block_param.cpython-314.pyc
+                - 📄 beta_web_search_result_block.cpython-314.pyc
+                - 📄 beta_web_search_tool_20250305_param.cpython-314.pyc
+                - 📄 beta_web_search_tool_request_error_param.cpython-314.pyc
+                - 📄 beta_web_search_tool_result_block_content.cpython-314.pyc
+                - 📄 beta_web_search_tool_result_block_param_content_param.cpython-314.pyc
+                - 📄 beta_web_search_tool_result_block_param.cpython-314.pyc
+                - 📄 beta_web_search_tool_result_block.cpython-314.pyc
+                - 📄 beta_web_search_tool_result_error_code.cpython-314.pyc
+                - 📄 beta_web_search_tool_result_error.cpython-314.pyc
+                - 📄 deleted_file.cpython-314.pyc
+                - 📄 file_list_params.cpython-314.pyc
+                - 📄 file_metadata.cpython-314.pyc
+                - 📄 file_upload_params.cpython-314.pyc
+                - 📄 message_count_tokens_params.cpython-314.pyc
+                - 📄 message_create_params.cpython-314.pyc
+                - 📄 model_list_params.cpython-314.pyc
+                - 📄 parsed_beta_message.cpython-314.pyc
+                - 📄 skill_create_params.cpython-314.pyc
+                - 📄 skill_create_response.cpython-314.pyc
+                - 📄 skill_delete_response.cpython-314.pyc
+                - 📄 skill_list_params.cpython-314.pyc
+                - 📄 skill_list_response.cpython-314.pyc
+                - 📄 skill_retrieve_response.cpython-314.pyc
+              - 📂 **messages**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                  - 📄 batch_create_params.cpython-314.pyc
+                  - 📄 batch_list_params.cpython-314.pyc
+                  - 📄 beta_deleted_message_batch.cpython-314.pyc
+                  - 📄 beta_message_batch_canceled_result.cpython-314.pyc
+                  - 📄 beta_message_batch_errored_result.cpython-314.pyc
+                  - 📄 beta_message_batch_expired_result.cpython-314.pyc
+                  - 📄 beta_message_batch_individual_response.cpython-314.pyc
+                  - 📄 beta_message_batch_request_counts.cpython-314.pyc
+                  - 📄 beta_message_batch_result.cpython-314.pyc
+                  - 📄 beta_message_batch_succeeded_result.cpython-314.pyc
+                  - 📄 beta_message_batch.cpython-314.pyc
+                - 📄 __init__.py
+                - 📄 batch_create_params.py
+                - 📄 batch_list_params.py
+                - 📄 beta_deleted_message_batch.py
+                - 📄 beta_message_batch_canceled_result.py
+                - 📄 beta_message_batch_errored_result.py
+                - 📄 beta_message_batch_expired_result.py
+                - 📄 beta_message_batch_individual_response.py
+                - 📄 beta_message_batch_request_counts.py
+                - 📄 beta_message_batch_result.py
+                - 📄 beta_message_batch_succeeded_result.py
+                - 📄 beta_message_batch.py
+              - 📂 **skills**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                  - 📄 version_create_params.cpython-314.pyc
+                  - 📄 version_create_response.cpython-314.pyc
+                  - 📄 version_delete_response.cpython-314.pyc
+                  - 📄 version_list_params.cpython-314.pyc
+                  - 📄 version_list_response.cpython-314.pyc
+                  - 📄 version_retrieve_response.cpython-314.pyc
+                - 📄 __init__.py
+                - 📄 version_create_params.py
+                - 📄 version_create_response.py
+                - 📄 version_delete_response.py
+                - 📄 version_list_params.py
+                - 📄 version_list_response.py
+                - 📄 version_retrieve_response.py
+              - 📄 __init__.py
+              - 📄 beta_all_thinking_turns_param.py
+              - 📄 beta_base64_image_source_param.py
+              - 📄 beta_base64_pdf_block_param.py
+              - 📄 beta_base64_pdf_source_param.py
+              - 📄 beta_base64_pdf_source.py
+              - 📄 beta_bash_code_execution_output_block_param.py
+              - 📄 beta_bash_code_execution_output_block.py
+              - 📄 beta_bash_code_execution_result_block_param.py
+              - 📄 beta_bash_code_execution_result_block.py
+              - 📄 beta_bash_code_execution_tool_result_block_param.py
+              - 📄 beta_bash_code_execution_tool_result_block.py
+              - 📄 beta_bash_code_execution_tool_result_error_param.py
+              - 📄 beta_bash_code_execution_tool_result_error.py
+              - 📄 beta_cache_control_ephemeral_param.py
+              - 📄 beta_cache_creation.py
+              - 📄 beta_citation_char_location_param.py
+              - 📄 beta_citation_char_location.py
+              - 📄 beta_citation_config.py
+              - 📄 beta_citation_content_block_location_param.py
+              - 📄 beta_citation_content_block_location.py
+              - 📄 beta_citation_page_location_param.py
+              - 📄 beta_citation_page_location.py
+              - 📄 beta_citation_search_result_location_param.py
+              - 📄 beta_citation_search_result_location.py
+              - 📄 beta_citation_web_search_result_location_param.py
+              - 📄 beta_citations_config_param.py
+              - 📄 beta_citations_delta.py
+              - 📄 beta_citations_web_search_result_location.py
+              - 📄 beta_clear_thinking_20251015_edit_param.py
+              - 📄 beta_clear_thinking_20251015_edit_response.py
+              - 📄 beta_clear_tool_uses_20250919_edit_param.py
+              - 📄 beta_clear_tool_uses_20250919_edit_response.py
+              - 📄 beta_code_execution_output_block_param.py
+              - 📄 beta_code_execution_output_block.py
+              - 📄 beta_code_execution_result_block_param.py
+              - 📄 beta_code_execution_result_block.py
+              - 📄 beta_code_execution_tool_20250522_param.py
+              - 📄 beta_code_execution_tool_20250825_param.py
+              - 📄 beta_code_execution_tool_result_block_content.py
+              - 📄 beta_code_execution_tool_result_block_param_content_param.py
+              - 📄 beta_code_execution_tool_result_block_param.py
+              - 📄 beta_code_execution_tool_result_block.py
+              - 📄 beta_code_execution_tool_result_error_code.py
+              - 📄 beta_code_execution_tool_result_error_param.py
+              - 📄 beta_code_execution_tool_result_error.py
+              - 📄 beta_compact_20260112_edit_param.py
+              - 📄 beta_compaction_block_param.py
+              - 📄 beta_compaction_block.py
+              - 📄 beta_compaction_content_block_delta.py
+              - 📄 beta_compaction_iteration_usage.py
+              - 📄 beta_container_params.py
+              - 📄 beta_container_upload_block_param.py
+              - 📄 beta_container_upload_block.py
+              - 📄 beta_container.py
+              - 📄 beta_content_block_param.py
+              - 📄 beta_content_block_source_content_param.py
+              - 📄 beta_content_block_source_param.py
+              - 📄 beta_content_block.py
+              - 📄 beta_context_management_config_param.py
+              - 📄 beta_context_management_response.py
+              - 📄 beta_count_tokens_context_management_response.py
+              - 📄 beta_direct_caller_param.py
+              - 📄 beta_direct_caller.py
+              - 📄 beta_document_block.py
+              - 📄 beta_file_document_source_param.py
+              - 📄 beta_file_image_source_param.py
+              - 📄 beta_image_block_param.py
+              - 📄 beta_input_json_delta.py
+              - 📄 beta_input_tokens_clear_at_least_param.py
+              - 📄 beta_input_tokens_trigger_param.py
+              - 📄 beta_iterations_usage.py
+              - 📄 beta_json_output_format_param.py
+              - 📄 beta_mcp_tool_config_param.py
+              - 📄 beta_mcp_tool_default_config_param.py
+              - 📄 beta_mcp_tool_result_block.py
+              - 📄 beta_mcp_tool_use_block_param.py
+              - 📄 beta_mcp_tool_use_block.py
+              - 📄 beta_mcp_toolset_param.py
+              - 📄 beta_memory_tool_20250818_command.py
+              - 📄 beta_memory_tool_20250818_create_command.py
+              - 📄 beta_memory_tool_20250818_delete_command.py
+              - 📄 beta_memory_tool_20250818_insert_command.py
+              - 📄 beta_memory_tool_20250818_param.py
+              - 📄 beta_memory_tool_20250818_rename_command.py
+              - 📄 beta_memory_tool_20250818_str_replace_command.py
+              - 📄 beta_memory_tool_20250818_view_command.py
+              - 📄 beta_message_delta_usage.py
+              - 📄 beta_message_iteration_usage.py
+              - 📄 beta_message_param.py
+              - 📄 beta_message_tokens_count.py
+              - 📄 beta_message.py
+              - 📄 beta_metadata_param.py
+              - 📄 beta_model_info.py
+              - 📄 beta_output_config_param.py
+              - 📄 beta_plain_text_source_param.py
+              - 📄 beta_plain_text_source.py
+              - 📄 beta_raw_content_block_delta_event.py
+              - 📄 beta_raw_content_block_delta.py
+              - 📄 beta_raw_content_block_start_event.py
+              - 📄 beta_raw_content_block_stop_event.py
+              - 📄 beta_raw_message_delta_event.py
+              - 📄 beta_raw_message_start_event.py
+              - 📄 beta_raw_message_stop_event.py
+              - 📄 beta_raw_message_stream_event.py
+              - 📄 beta_redacted_thinking_block_param.py
+              - 📄 beta_redacted_thinking_block.py
+              - 📄 beta_request_document_block_param.py
+              - 📄 beta_request_mcp_server_tool_configuration_param.py
+              - 📄 beta_request_mcp_server_url_definition_param.py
+              - 📄 beta_request_mcp_tool_result_block_param.py
+              - 📄 beta_search_result_block_param.py
+              - 📄 beta_server_tool_caller_param.py
+              - 📄 beta_server_tool_caller.py
+              - 📄 beta_server_tool_usage.py
+              - 📄 beta_server_tool_use_block_param.py
+              - 📄 beta_server_tool_use_block.py
+              - 📄 beta_signature_delta.py
+              - 📄 beta_skill_params.py
+              - 📄 beta_skill.py
+              - 📄 beta_stop_reason.py
+              - 📄 beta_text_block_param.py
+              - 📄 beta_text_block.py
+              - 📄 beta_text_citation_param.py
+              - 📄 beta_text_citation.py
+              - 📄 beta_text_delta.py
+              - 📄 beta_text_editor_code_execution_create_result_block_param.py
+              - 📄 beta_text_editor_code_execution_create_result_block.py
+              - 📄 beta_text_editor_code_execution_str_replace_result_block_param.py
+              - 📄 beta_text_editor_code_execution_str_replace_result_block.py
+              - 📄 beta_text_editor_code_execution_tool_result_block_param.py
+              - 📄 beta_text_editor_code_execution_tool_result_block.py
+              - 📄 beta_text_editor_code_execution_tool_result_error_param.py
+              - 📄 beta_text_editor_code_execution_tool_result_error.py
+              - 📄 beta_text_editor_code_execution_view_result_block_param.py
+              - 📄 beta_text_editor_code_execution_view_result_block.py
+              - 📄 beta_thinking_block_param.py
+              - 📄 beta_thinking_block.py
+              - 📄 beta_thinking_config_adaptive_param.py
+              - 📄 beta_thinking_config_disabled_param.py
+              - 📄 beta_thinking_config_enabled_param.py
+              - 📄 beta_thinking_config_param.py
+              - 📄 beta_thinking_delta.py
+              - 📄 beta_thinking_turns_param.py
+              - 📄 beta_tool_bash_20241022_param.py
+              - 📄 beta_tool_bash_20250124_param.py
+              - 📄 beta_tool_choice_any_param.py
+              - 📄 beta_tool_choice_auto_param.py
+              - 📄 beta_tool_choice_none_param.py
+              - 📄 beta_tool_choice_param.py
+              - 📄 beta_tool_choice_tool_param.py
+              - 📄 beta_tool_computer_use_20241022_param.py
+              - 📄 beta_tool_computer_use_20250124_param.py
+              - 📄 beta_tool_computer_use_20251124_param.py
+              - 📄 beta_tool_param.py
+              - 📄 beta_tool_reference_block_param.py
+              - 📄 beta_tool_reference_block.py
+              - 📄 beta_tool_result_block_param.py
+              - 📄 beta_tool_search_tool_bm25_20251119_param.py
+              - 📄 beta_tool_search_tool_regex_20251119_param.py
+              - 📄 beta_tool_search_tool_result_block_param.py
+              - 📄 beta_tool_search_tool_result_block.py
+              - 📄 beta_tool_search_tool_result_error_param.py
+              - 📄 beta_tool_search_tool_result_error.py
+              - 📄 beta_tool_search_tool_search_result_block_param.py
+              - 📄 beta_tool_search_tool_search_result_block.py
+              - 📄 beta_tool_text_editor_20241022_param.py
+              - 📄 beta_tool_text_editor_20250124_param.py
+              - 📄 beta_tool_text_editor_20250429_param.py
+              - 📄 beta_tool_text_editor_20250728_param.py
+              - 📄 beta_tool_union_param.py
+              - 📄 beta_tool_use_block_param.py
+              - 📄 beta_tool_use_block.py
+              - 📄 beta_tool_uses_keep_param.py
+              - 📄 beta_tool_uses_trigger_param.py
+              - 📄 beta_url_image_source_param.py
+              - 📄 beta_url_pdf_source_param.py
+              - 📄 beta_usage.py
+              - 📄 beta_web_fetch_block_param.py
+              - 📄 beta_web_fetch_block.py
+              - 📄 beta_web_fetch_tool_20250910_param.py
+              - 📄 beta_web_fetch_tool_result_block_param.py
+              - 📄 beta_web_fetch_tool_result_block.py
+              - 📄 beta_web_fetch_tool_result_error_block_param.py
+              - 📄 beta_web_fetch_tool_result_error_block.py
+              - 📄 beta_web_fetch_tool_result_error_code.py
+              - 📄 beta_web_search_result_block_param.py
+              - 📄 beta_web_search_result_block.py
+              - 📄 beta_web_search_tool_20250305_param.py
+              - 📄 beta_web_search_tool_request_error_param.py
+              - 📄 beta_web_search_tool_result_block_content.py
+              - 📄 beta_web_search_tool_result_block_param_content_param.py
+              - 📄 beta_web_search_tool_result_block_param.py
+              - 📄 beta_web_search_tool_result_block.py
+              - 📄 beta_web_search_tool_result_error_code.py
+              - 📄 beta_web_search_tool_result_error.py
+              - 📄 deleted_file.py
+              - 📄 file_list_params.py
+              - 📄 file_metadata.py
+              - 📄 file_upload_params.py
+              - 📄 message_count_tokens_params.py
+              - 📄 message_create_params.py
+              - 📄 model_list_params.py
+              - 📄 parsed_beta_message.py
+              - 📄 skill_create_params.py
+              - 📄 skill_create_response.py
+              - 📄 skill_delete_response.py
+              - 📄 skill_list_params.py
+              - 📄 skill_list_response.py
+              - 📄 skill_retrieve_response.py
+            - 📂 **messages**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 batch_create_params.cpython-314.pyc
+                - 📄 batch_list_params.cpython-314.pyc
+                - 📄 deleted_message_batch.cpython-314.pyc
+                - 📄 message_batch_canceled_result.cpython-314.pyc
+                - 📄 message_batch_errored_result.cpython-314.pyc
+                - 📄 message_batch_expired_result.cpython-314.pyc
+                - 📄 message_batch_individual_response.cpython-314.pyc
+                - 📄 message_batch_request_counts.cpython-314.pyc
+                - 📄 message_batch_result.cpython-314.pyc
+                - 📄 message_batch_succeeded_result.cpython-314.pyc
+                - 📄 message_batch.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 batch_create_params.py
+              - 📄 batch_list_params.py
+              - 📄 deleted_message_batch.py
+              - 📄 message_batch_canceled_result.py
+              - 📄 message_batch_errored_result.py
+              - 📄 message_batch_expired_result.py
+              - 📄 message_batch_individual_response.py
+              - 📄 message_batch_request_counts.py
+              - 📄 message_batch_result.py
+              - 📄 message_batch_succeeded_result.py
+              - 📄 message_batch.py
+            - 📂 **shared**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 api_error_object.cpython-314.pyc
+                - 📄 authentication_error.cpython-314.pyc
+                - 📄 billing_error.cpython-314.pyc
+                - 📄 error_object.cpython-314.pyc
+                - 📄 error_response.cpython-314.pyc
+                - 📄 gateway_timeout_error.cpython-314.pyc
+                - 📄 invalid_request_error.cpython-314.pyc
+                - 📄 not_found_error.cpython-314.pyc
+                - 📄 overloaded_error.cpython-314.pyc
+                - 📄 permission_error.cpython-314.pyc
+                - 📄 rate_limit_error.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 api_error_object.py
+              - 📄 authentication_error.py
+              - 📄 billing_error.py
+              - 📄 error_object.py
+              - 📄 error_response.py
+              - 📄 gateway_timeout_error.py
+              - 📄 invalid_request_error.py
+              - 📄 not_found_error.py
+              - 📄 overloaded_error.py
+              - 📄 permission_error.py
+              - 📄 rate_limit_error.py
+            - 📄 __init__.py
+            - 📄 anthropic_beta_param.py
+            - 📄 base64_image_source_param.py
+            - 📄 base64_pdf_source_param.py
+            - 📄 beta_api_error.py
+            - 📄 beta_authentication_error.py
+            - 📄 beta_billing_error.py
+            - 📄 beta_error_response.py
+            - 📄 beta_error.py
+            - 📄 beta_gateway_timeout_error.py
+            - 📄 beta_invalid_request_error.py
+            - 📄 beta_not_found_error.py
+            - 📄 beta_overloaded_error.py
+            - 📄 beta_permission_error.py
+            - 📄 beta_rate_limit_error.py
+            - 📄 cache_control_ephemeral_param.py
+            - 📄 cache_creation.py
+            - 📄 citation_char_location_param.py
+            - 📄 citation_char_location.py
+            - 📄 citation_content_block_location_param.py
+            - 📄 citation_content_block_location.py
+            - 📄 citation_page_location_param.py
+            - 📄 citation_page_location.py
+            - 📄 citation_search_result_location_param.py
+            - 📄 citation_web_search_result_location_param.py
+            - 📄 citations_config_param.py
+            - 📄 citations_delta.py
+            - 📄 citations_search_result_location.py
+            - 📄 citations_web_search_result_location.py
+            - 📄 completion_create_params.py
+            - 📄 completion.py
+            - 📄 content_block_delta_event.py
+            - 📄 content_block_param.py
+            - 📄 content_block_source_content_param.py
+            - 📄 content_block_source_param.py
+            - 📄 content_block_start_event.py
+            - 📄 content_block_stop_event.py
+            - 📄 content_block.py
+            - 📄 document_block_param.py
+            - 📄 image_block_param.py
+            - 📄 input_json_delta.py
+            - 📄 json_output_format_param.py
+            - 📄 message_count_tokens_params.py
+            - 📄 message_count_tokens_tool_param.py
+            - 📄 message_create_params.py
+            - 📄 message_delta_event.py
+            - 📄 message_delta_usage.py
+            - 📄 message_param.py
+            - 📄 message_start_event.py
+            - 📄 message_stop_event.py
+            - 📄 message_stream_event.py
+            - 📄 message_tokens_count.py
+            - 📄 message.py
+            - 📄 metadata_param.py
+            - 📄 model_info.py
+            - 📄 model_list_params.py
+            - 📄 model_param.py
+            - 📄 model.py
+            - 📄 output_config_param.py
+            - 📄 parsed_message.py
+            - 📄 plain_text_source_param.py
+            - 📄 raw_content_block_delta_event.py
+            - 📄 raw_content_block_delta.py
+            - 📄 raw_content_block_start_event.py
+            - 📄 raw_content_block_stop_event.py
+            - 📄 raw_message_delta_event.py
+            - 📄 raw_message_start_event.py
+            - 📄 raw_message_stop_event.py
+            - 📄 raw_message_stream_event.py
+            - 📄 redacted_thinking_block_param.py
+            - 📄 redacted_thinking_block.py
+            - 📄 search_result_block_param.py
+            - 📄 server_tool_usage.py
+            - 📄 server_tool_use_block_param.py
+            - 📄 server_tool_use_block.py
+            - 📄 signature_delta.py
+            - 📄 stop_reason.py
+            - 📄 text_block_param.py
+            - 📄 text_block.py
+            - 📄 text_citation_param.py
+            - 📄 text_citation.py
+            - 📄 text_delta.py
+            - 📄 thinking_block_param.py
+            - 📄 thinking_block.py
+            - 📄 thinking_config_adaptive_param.py
+            - 📄 thinking_config_disabled_param.py
+            - 📄 thinking_config_enabled_param.py
+            - 📄 thinking_config_param.py
+            - 📄 thinking_delta.py
+            - 📄 tool_bash_20250124_param.py
+            - 📄 tool_choice_any_param.py
+            - 📄 tool_choice_auto_param.py
+            - 📄 tool_choice_none_param.py
+            - 📄 tool_choice_param.py
+            - 📄 tool_choice_tool_param.py
+            - 📄 tool_param.py
+            - 📄 tool_result_block_param.py
+            - 📄 tool_text_editor_20250124_param.py
+            - 📄 tool_text_editor_20250429_param.py
+            - 📄 tool_text_editor_20250728_param.py
+            - 📄 tool_union_param.py
+            - 📄 tool_use_block_param.py
+            - 📄 tool_use_block.py
+            - 📄 url_image_source_param.py
+            - 📄 url_pdf_source_param.py
+            - 📄 usage.py
+            - 📄 web_search_result_block_param.py
+            - 📄 web_search_result_block.py
+            - 📄 web_search_tool_20250305_param.py
+            - 📄 web_search_tool_request_error_param.py
+            - 📄 web_search_tool_result_block_content.py
+            - 📄 web_search_tool_result_block_param_content_param.py
+            - 📄 web_search_tool_result_block_param.py
+            - 📄 web_search_tool_result_block.py
+            - 📄 web_search_tool_result_error.py
+          - 📄 __init__.py
+          - 📄 _base_client.py
+          - 📄 _client.py
+          - 📄 _compat.py
+          - 📄 _constants.py
+          - 📄 _exceptions.py
+          - 📄 _files.py
+          - 📄 _legacy_response.py
+          - 📄 _models.py
+          - 📄 _qs.py
+          - 📄 _resource.py
+          - 📄 _response.py
+          - 📄 _streaming.py
+          - 📄 _types.py
+          - 📄 _version.py
+          - 📄 pagination.py
+          - 📄 py.typed
+        - 📂 **anthropic-0.79.0.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
         - 📂 **anyio**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -2871,6 +3818,262 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 INSTALLER
           - 📄 METADATA
           - 📄 RECORD
+          - 📄 WHEEL
+        - 📂 **authlib**
+          - 📂 **common**
+            - 📄 __init__.py
+            - 📄 encoding.py
+            - 📄 errors.py
+            - 📄 security.py
+            - 📄 urls.py
+          - 📂 **integrations**
+            - 📂 **base_client**
+              - 📄 __init__.py
+              - 📄 async_app.py
+              - 📄 async_openid.py
+              - 📄 errors.py
+              - 📄 framework_integration.py
+              - 📄 registry.py
+              - 📄 sync_app.py
+              - 📄 sync_openid.py
+            - 📂 **django_client**
+              - 📄 __init__.py
+              - 📄 apps.py
+              - 📄 integration.py
+            - 📂 **django_oauth1**
+              - 📄 __init__.py
+              - 📄 authorization_server.py
+              - 📄 nonce.py
+              - 📄 resource_protector.py
+            - 📂 **django_oauth2**
+              - 📄 __init__.py
+              - 📄 authorization_server.py
+              - 📄 endpoints.py
+              - 📄 requests.py
+              - 📄 resource_protector.py
+              - 📄 signals.py
+            - 📂 **flask_client**
+              - 📄 __init__.py
+              - 📄 apps.py
+              - 📄 integration.py
+            - 📂 **flask_oauth1**
+              - 📄 __init__.py
+              - 📄 authorization_server.py
+              - 📄 cache.py
+              - 📄 resource_protector.py
+            - 📂 **flask_oauth2**
+              - 📄 __init__.py
+              - 📄 authorization_server.py
+              - 📄 errors.py
+              - 📄 requests.py
+              - 📄 resource_protector.py
+              - 📄 signals.py
+            - 📂 **httpx_client**
+              - 📄 __init__.py
+              - 📄 assertion_client.py
+              - 📄 oauth1_client.py
+              - 📄 oauth2_client.py
+              - 📄 utils.py
+            - 📂 **requests_client**
+              - 📄 __init__.py
+              - 📄 assertion_session.py
+              - 📄 oauth1_session.py
+              - 📄 oauth2_session.py
+              - 📄 utils.py
+            - 📂 **sqla_oauth2**
+              - 📄 __init__.py
+              - 📄 client_mixin.py
+              - 📄 functions.py
+              - 📄 tokens_mixins.py
+            - 📂 **starlette_client**
+              - 📄 __init__.py
+              - 📄 apps.py
+              - 📄 integration.py
+            - 📄 __init__.py
+          - 📂 **jose**
+            - 📂 **drafts**
+              - 📄 __init__.py
+              - 📄 _jwe_algorithms.py
+              - 📄 _jwe_enc_cryptodome.py
+              - 📄 _jwe_enc_cryptography.py
+            - 📂 **rfc7515**
+              - 📄 __init__.py
+              - 📄 jws.py
+              - 📄 models.py
+            - 📂 **rfc7516**
+              - 📄 __init__.py
+              - 📄 jwe.py
+              - 📄 models.py
+            - 📂 **rfc7517**
+              - 📄 __init__.py
+              - 📄 _cryptography_key.py
+              - 📄 asymmetric_key.py
+              - 📄 base_key.py
+              - 📄 jwk.py
+              - 📄 key_set.py
+            - 📂 **rfc7518**
+              - 📄 __init__.py
+              - 📄 ec_key.py
+              - 📄 jwe_algs.py
+              - 📄 jwe_encs.py
+              - 📄 jwe_zips.py
+              - 📄 jws_algs.py
+              - 📄 oct_key.py
+              - 📄 rsa_key.py
+              - 📄 util.py
+            - 📂 **rfc7519**
+              - 📄 __init__.py
+              - 📄 claims.py
+              - 📄 jwt.py
+            - 📂 **rfc8037**
+              - 📄 __init__.py
+              - 📄 jws_eddsa.py
+              - 📄 okp_key.py
+            - 📄 __init__.py
+            - 📄 errors.py
+            - 📄 jwk.py
+            - 📄 util.py
+          - 📂 **oauth1**
+            - 📂 **rfc5849**
+              - 📄 __init__.py
+              - 📄 authorization_server.py
+              - 📄 base_server.py
+              - 📄 client_auth.py
+              - 📄 errors.py
+              - 📄 models.py
+              - 📄 parameters.py
+              - 📄 resource_protector.py
+              - 📄 rsa.py
+              - 📄 signature.py
+              - 📄 util.py
+              - 📄 wrapper.py
+            - 📄 __init__.py
+            - 📄 client.py
+            - 📄 errors.py
+          - 📂 **oauth2**
+            - 📂 **rfc6749**
+              - 📂 **grants**
+                - 📄 __init__.py
+                - 📄 authorization_code.py
+                - 📄 base.py
+                - 📄 client_credentials.py
+                - 📄 implicit.py
+                - 📄 refresh_token.py
+                - 📄 resource_owner_password_credentials.py
+              - 📄 __init__.py
+              - 📄 authenticate_client.py
+              - 📄 authorization_server.py
+              - 📄 errors.py
+              - 📄 hooks.py
+              - 📄 models.py
+              - 📄 parameters.py
+              - 📄 requests.py
+              - 📄 resource_protector.py
+              - 📄 token_endpoint.py
+              - 📄 util.py
+              - 📄 wrappers.py
+            - 📂 **rfc6750**
+              - 📄 __init__.py
+              - 📄 errors.py
+              - 📄 parameters.py
+              - 📄 token.py
+              - 📄 validator.py
+            - 📂 **rfc7009**
+              - 📄 __init__.py
+              - 📄 parameters.py
+              - 📄 revocation.py
+            - 📂 **rfc7521**
+              - 📄 __init__.py
+              - 📄 client.py
+            - 📂 **rfc7523**
+              - 📄 __init__.py
+              - 📄 assertion.py
+              - 📄 auth.py
+              - 📄 client.py
+              - 📄 jwt_bearer.py
+              - 📄 token.py
+              - 📄 validator.py
+            - 📂 **rfc7591**
+              - 📄 __init__.py
+              - 📄 claims.py
+              - 📄 endpoint.py
+              - 📄 errors.py
+            - 📂 **rfc7592**
+              - 📄 __init__.py
+              - 📄 endpoint.py
+            - 📂 **rfc7636**
+              - 📄 __init__.py
+              - 📄 challenge.py
+            - 📂 **rfc7662**
+              - 📄 __init__.py
+              - 📄 introspection.py
+              - 📄 models.py
+              - 📄 token_validator.py
+            - 📂 **rfc8414**
+              - 📄 __init__.py
+              - 📄 models.py
+              - 📄 well_known.py
+            - 📂 **rfc8628**
+              - 📄 __init__.py
+              - 📄 device_code.py
+              - 📄 endpoint.py
+              - 📄 errors.py
+              - 📄 models.py
+            - 📂 **rfc8693**
+              - 📄 __init__.py
+            - 📂 **rfc9068**
+              - 📄 __init__.py
+              - 📄 claims.py
+              - 📄 introspection.py
+              - 📄 revocation.py
+              - 📄 token_validator.py
+              - 📄 token.py
+            - 📂 **rfc9101**
+              - 📄 __init__.py
+              - 📄 authorization_server.py
+              - 📄 discovery.py
+              - 📄 errors.py
+              - 📄 registration.py
+            - 📂 **rfc9207**
+              - 📄 __init__.py
+              - 📄 parameter.py
+            - 📄 __init__.py
+            - 📄 auth.py
+            - 📄 base.py
+            - 📄 client.py
+          - 📂 **oidc**
+            - 📂 **core**
+              - 📂 **grants**
+                - 📄 __init__.py
+                - 📄 code.py
+                - 📄 hybrid.py
+                - 📄 implicit.py
+                - 📄 util.py
+              - 📄 __init__.py
+              - 📄 claims.py
+              - 📄 errors.py
+              - 📄 models.py
+              - 📄 userinfo.py
+              - 📄 util.py
+            - 📂 **discovery**
+              - 📄 __init__.py
+              - 📄 models.py
+              - 📄 well_known.py
+            - 📂 **registration**
+              - 📄 __init__.py
+              - 📄 claims.py
+            - 📄 __init__.py
+          - 📄 __init__.py
+          - 📄 consts.py
+          - 📄 deprecate.py
+        - 📂 **authlib-1.6.7.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
           - 📄 WHEEL
         - 📂 **azure**
           - 📂 **core**
@@ -6754,6 +7957,496 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 RECORD
           - 📄 top_level.txt
           - 📄 WHEEL
+        - 📂 **browser_use**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 config.cpython-314.pyc
+            - 📄 logging_config.cpython-314.pyc
+            - 📄 observability.cpython-314.pyc
+            - 📄 utils.cpython-314.pyc
+          - 📂 **actor**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 element.cpython-314.pyc
+              - 📄 mouse.cpython-314.pyc
+              - 📄 page.cpython-314.pyc
+              - 📄 utils.cpython-314.pyc
+            - 📂 **playground**
+              - 📄 flights.py
+              - 📄 mixed_automation.py
+              - 📄 playground.py
+            - 📄 __init__.py
+            - 📄 element.py
+            - 📄 mouse.py
+            - 📄 page.py
+            - 📄 utils.py
+          - 📂 **agent**
+            - 📂 **__pycache__**
+              - 📄 cloud_events.cpython-314.pyc
+              - 📄 judge.cpython-314.pyc
+              - 📄 prompts.cpython-314.pyc
+              - 📄 service.cpython-314.pyc
+              - 📄 views.cpython-314.pyc
+            - 📂 **message_manager**
+              - 📂 **__pycache__**
+                - 📄 service.cpython-314.pyc
+                - 📄 utils.cpython-314.pyc
+                - 📄 views.cpython-314.pyc
+              - 📄 service.py
+              - 📄 utils.py
+              - 📄 views.py
+            - 📂 **system_prompts**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 system_prompt_anthropic_flash.md
+              - 📄 system_prompt_browser_use_flash.md
+              - 📄 system_prompt_browser_use_no_thinking.md
+              - 📄 system_prompt_browser_use.md
+              - 📄 system_prompt_flash_anthropic.md
+              - 📄 system_prompt_flash.md
+              - 📄 system_prompt_no_thinking.md
+              - 📄 system_prompt.md
+            - 📄 cloud_events.py
+            - 📄 gif.py
+            - 📄 judge.py
+            - 📄 prompts.py
+            - 📄 service.py
+            - 📄 variable_detector.py
+            - 📄 views.py
+          - 📂 **browser**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 events.cpython-314.pyc
+              - 📄 profile.cpython-314.pyc
+              - 📄 session_manager.cpython-314.pyc
+              - 📄 session.cpython-314.pyc
+              - 📄 video_recorder.cpython-314.pyc
+              - 📄 views.cpython-314.pyc
+              - 📄 watchdog_base.cpython-314.pyc
+            - 📂 **cloud**
+              - 📂 **__pycache__**
+                - 📄 cloud.cpython-314.pyc
+                - 📄 views.cpython-314.pyc
+              - 📄 cloud.py
+              - 📄 views.py
+            - 📂 **watchdogs**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 aboutblank_watchdog.cpython-314.pyc
+                - 📄 default_action_watchdog.cpython-314.pyc
+                - 📄 dom_watchdog.cpython-314.pyc
+                - 📄 downloads_watchdog.cpython-314.pyc
+                - 📄 har_recording_watchdog.cpython-314.pyc
+                - 📄 local_browser_watchdog.cpython-314.pyc
+                - 📄 permissions_watchdog.cpython-314.pyc
+                - 📄 popups_watchdog.cpython-314.pyc
+                - 📄 recording_watchdog.cpython-314.pyc
+                - 📄 screenshot_watchdog.cpython-314.pyc
+                - 📄 security_watchdog.cpython-314.pyc
+                - 📄 storage_state_watchdog.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 aboutblank_watchdog.py
+              - 📄 crash_watchdog.py
+              - 📄 default_action_watchdog.py
+              - 📄 dom_watchdog.py
+              - 📄 downloads_watchdog.py
+              - 📄 har_recording_watchdog.py
+              - 📄 local_browser_watchdog.py
+              - 📄 permissions_watchdog.py
+              - 📄 popups_watchdog.py
+              - 📄 recording_watchdog.py
+              - 📄 screenshot_watchdog.py
+              - 📄 security_watchdog.py
+              - 📄 storage_state_watchdog.py
+            - 📄 __init__.py
+            - 📄 demo_mode.py
+            - 📄 events.py
+            - 📄 profile.py
+            - 📄 python_highlights.py
+            - 📄 session_manager.py
+            - 📄 session.py
+            - 📄 video_recorder.py
+            - 📄 views.py
+            - 📄 watchdog_base.py
+          - 📂 **code_use**
+            - 📄 __init__.py
+            - 📄 formatting.py
+            - 📄 namespace.py
+            - 📄 notebook_export.py
+            - 📄 service.py
+            - 📄 system_prompt.md
+            - 📄 utils.py
+            - 📄 views.py
+          - 📂 **controller**
+            - 📄 __init__.py
+          - 📂 **dom**
+            - 📂 **__pycache__**
+              - 📄 enhanced_snapshot.cpython-314.pyc
+              - 📄 service.cpython-314.pyc
+              - 📄 utils.cpython-314.pyc
+              - 📄 views.cpython-314.pyc
+            - 📂 **playground**
+              - 📄 extraction.py
+              - 📄 multi_act.py
+            - 📂 **serializer**
+              - 📂 **__pycache__**
+                - 📄 clickable_elements.cpython-314.pyc
+                - 📄 paint_order.cpython-314.pyc
+                - 📄 serializer.cpython-314.pyc
+              - 📄 clickable_elements.py
+              - 📄 code_use_serializer.py
+              - 📄 eval_serializer.py
+              - 📄 html_serializer.py
+              - 📄 paint_order.py
+              - 📄 serializer.py
+            - 📄 enhanced_snapshot.py
+            - 📄 markdown_extractor.py
+            - 📄 service.py
+            - 📄 utils.py
+            - 📄 views.py
+          - 📂 **filesystem**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 file_system.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 file_system.py
+          - 📂 **integrations**
+            - 📂 **gmail**
+              - 📄 __init__.py
+              - 📄 actions.py
+              - 📄 service.py
+          - 📂 **llm**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 base.cpython-314.pyc
+              - 📄 exceptions.cpython-314.pyc
+              - 📄 messages.cpython-314.pyc
+              - 📄 schema.cpython-314.pyc
+              - 📄 views.cpython-314.pyc
+            - 📂 **anthropic**
+              - 📂 **__pycache__**
+                - 📄 chat.cpython-314.pyc
+                - 📄 serializer.cpython-314.pyc
+              - 📄 chat.py
+              - 📄 serializer.py
+            - 📂 **aws**
+              - 📄 __init__.py
+              - 📄 chat_anthropic.py
+              - 📄 chat_bedrock.py
+              - 📄 serializer.py
+            - 📂 **azure**
+              - 📄 chat.py
+            - 📂 **browser_use**
+              - 📄 __init__.py
+              - 📄 chat.py
+            - 📂 **cerebras**
+              - 📄 chat.py
+              - 📄 serializer.py
+            - 📂 **deepseek**
+              - 📄 chat.py
+              - 📄 serializer.py
+            - 📂 **google**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 chat.cpython-314.pyc
+                - 📄 serializer.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 chat.py
+              - 📄 serializer.py
+            - 📂 **groq**
+              - 📄 chat.py
+              - 📄 parser.py
+              - 📄 serializer.py
+            - 📂 **mistral**
+              - 📄 __init__.py
+              - 📄 chat.py
+              - 📄 schema.py
+            - 📂 **oci_raw**
+              - 📄 __init__.py
+              - 📄 chat.py
+              - 📄 serializer.py
+            - 📂 **ollama**
+              - 📄 chat.py
+              - 📄 serializer.py
+            - 📂 **openai**
+              - 📄 chat.py
+              - 📄 like.py
+              - 📄 responses_serializer.py
+              - 📄 serializer.py
+            - 📂 **openrouter**
+              - 📄 chat.py
+              - 📄 serializer.py
+            - 📂 **vercel**
+              - 📄 __init__.py
+              - 📄 chat.py
+              - 📄 serializer.py
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 exceptions.py
+            - 📄 messages.py
+            - 📄 models.py
+            - 📄 schema.py
+            - 📄 views.py
+          - 📂 **mcp**
+            - 📄 __init__.py
+            - 📄 __main__.py
+            - 📄 client.py
+            - 📄 controller.py
+            - 📄 server.py
+          - 📂 **sandbox**
+            - 📄 __init__.py
+            - 📄 sandbox.py
+            - 📄 views.py
+          - 📂 **screenshots**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 service.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 service.py
+          - 📂 **skill_cli**
+            - 📂 **commands**
+              - 📄 __init__.py
+              - 📄 agent.py
+              - 📄 browser.py
+              - 📄 python_exec.py
+              - 📄 session.py
+            - 📄 __init__.py
+            - 📄 __main__.py
+            - 📄 api_key.py
+            - 📄 main.py
+            - 📄 protocol.py
+            - 📄 python_session.py
+            - 📄 server.py
+            - 📄 sessions.py
+            - 📄 utils.py
+          - 📂 **skills**
+            - 📄 __init__.py
+            - 📄 service.py
+            - 📄 utils.py
+            - 📄 views.py
+          - 📂 **sync**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 auth.cpython-314.pyc
+              - 📄 service.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 auth.py
+            - 📄 service.py
+          - 📂 **telemetry**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 service.cpython-314.pyc
+              - 📄 views.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 service.py
+            - 📄 views.py
+          - 📂 **tokens**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 custom_pricing.cpython-314.pyc
+              - 📄 mappings.cpython-314.pyc
+              - 📄 service.cpython-314.pyc
+              - 📄 views.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 custom_pricing.py
+            - 📄 mappings.py
+            - 📄 service.py
+            - 📄 views.py
+          - 📂 **tools**
+            - 📂 **__pycache__**
+              - 📄 service.cpython-314.pyc
+              - 📄 utils.cpython-314.pyc
+              - 📄 views.cpython-314.pyc
+            - 📂 **extraction**
+              - 📄 __init__.py
+              - 📄 schema_utils.py
+              - 📄 views.py
+            - 📂 **registry**
+              - 📂 **__pycache__**
+                - 📄 service.cpython-314.pyc
+                - 📄 views.cpython-314.pyc
+              - 📄 service.py
+              - 📄 views.py
+            - 📄 service.py
+            - 📄 utils.py
+            - 📄 views.py
+          - 📄 __init__.py
+          - 📄 cli.py
+          - 📄 config.py
+          - 📄 exceptions.py
+          - 📄 init_cmd.py
+          - 📄 logging_config.py
+          - 📄 observability.py
+          - 📄 py.typed
+          - 📄 utils.py
+        - 📂 **browser_use_sdk**
+          - 📂 **billing**
+            - 📄 __init__.py
+            - 📄 client.py
+            - 📄 raw_client.py
+          - 📂 **browsers**
+            - 📄 __init__.py
+            - 📄 client.py
+            - 📄 raw_client.py
+          - 📂 **core**
+            - 📄 __init__.py
+            - 📄 api_error.py
+            - 📄 client_wrapper.py
+            - 📄 datetime_utils.py
+            - 📄 file.py
+            - 📄 force_multipart.py
+            - 📄 http_client.py
+            - 📄 http_response.py
+            - 📄 jsonable_encoder.py
+            - 📄 pydantic_utilities.py
+            - 📄 query_encoder.py
+            - 📄 remove_none_from_dict.py
+            - 📄 request_options.py
+            - 📄 serialization.py
+            - 📄 unchecked_base_model.py
+          - 📂 **errors**
+            - 📄 __init__.py
+            - 📄 bad_request_error.py
+            - 📄 forbidden_error.py
+            - 📄 internal_server_error.py
+            - 📄 not_found_error.py
+            - 📄 payment_required_error.py
+            - 📄 too_many_requests_error.py
+            - 📄 unprocessable_entity_error.py
+          - 📂 **files**
+            - 📄 __init__.py
+            - 📄 client.py
+            - 📄 raw_client.py
+          - 📂 **lib**
+            - 📄 webhooks.py
+          - 📂 **profiles**
+            - 📄 __init__.py
+            - 📄 client.py
+            - 📄 raw_client.py
+          - 📂 **sessions**
+            - 📄 __init__.py
+            - 📄 client.py
+            - 📄 raw_client.py
+          - 📂 **skills**
+            - 📄 __init__.py
+            - 📄 client.py
+            - 📄 raw_client.py
+          - 📂 **skills_marketplace**
+            - 📄 __init__.py
+            - 📄 client.py
+            - 📄 raw_client.py
+          - 📂 **tasks**
+            - 📂 **types**
+              - 📄 __init__.py
+              - 📄 create_task_request_vision_one.py
+              - 📄 create_task_request_vision.py
+            - 📄 __init__.py
+            - 📄 client.py
+            - 📄 raw_client.py
+          - 📂 **types**
+            - 📄 __init__.py
+            - 📄 account_not_found_error.py
+            - 📄 account_view.py
+            - 📄 app_endpoints_api_v2skills_views_insufficient_credits_error.py
+            - 📄 bad_request_error_body.py
+            - 📄 browser_session_item_view.py
+            - 📄 browser_session_list_response.py
+            - 📄 browser_session_status.py
+            - 📄 browser_session_update_action.py
+            - 📄 browser_session_view.py
+            - 📄 cannot_delete_skill_while_generating_error.py
+            - 📄 cannot_rollback_public_skill_error.py
+            - 📄 common_utils_errors_insufficient_credits_error.py
+            - 📄 concurrent_skill_creations_error.py
+            - 📄 create_skill_response.py
+            - 📄 custom_proxy.py
+            - 📄 download_url_generation_error.py
+            - 📄 enabled_skills_limit_exceeded_error.py
+            - 📄 execute_skill_request.py
+            - 📄 execute_skill_response.py
+            - 📄 file_view.py
+            - 📄 generation_not_cancellable_error.py
+            - 📄 http_validation_error.py
+            - 📄 insufficient_credits_error.py
+            - 📄 internal_server_error_body.py
+            - 📄 marketplace_skill_list_response.py
+            - 📄 marketplace_skill_response.py
+            - 📄 not_found_error_body.py
+            - 📄 output_file_not_found_error.py
+            - 📄 parameter_schema.py
+            - 📄 parameter_type.py
+            - 📄 plan_info.py
+            - 📄 profile_list_response.py
+            - 📄 profile_not_found_error.py
+            - 📄 profile_view.py
+            - 📄 proxy_country_code.py
+            - 📄 refine_skill_response.py
+            - 📄 session_has_running_task_error.py
+            - 📄 session_item_view.py
+            - 📄 session_list_response.py
+            - 📄 session_not_found_error.py
+            - 📄 session_status.py
+            - 📄 session_stopped_error.py
+            - 📄 session_timeout_limit_exceeded_error.py
+            - 📄 session_update_action.py
+            - 📄 session_view.py
+            - 📄 share_not_found_error.py
+            - 📄 share_view.py
+            - 📄 skill_category.py
+            - 📄 skill_execution_list_response.py
+            - 📄 skill_execution_output_response.py
+            - 📄 skill_execution_view.py
+            - 📄 skill_list_response.py
+            - 📄 skill_not_finished_error.py
+            - 📄 skill_not_found_error.py
+            - 📄 skill_response.py
+            - 📄 skills_generation_status.py
+            - 📄 supported_ll_ms.py
+            - 📄 task_created_response.py
+            - 📄 task_item_view.py
+            - 📄 task_list_response.py
+            - 📄 task_log_file_response.py
+            - 📄 task_not_found_error.py
+            - 📄 task_output_file_response.py
+            - 📄 task_status_view.py
+            - 📄 task_status.py
+            - 📄 task_step_view.py
+            - 📄 task_update_action.py
+            - 📄 task_view.py
+            - 📄 too_many_concurrent_active_sessions_error.py
+            - 📄 unsupported_content_type_error.py
+            - 📄 upload_file_presigned_url_response_method.py
+            - 📄 upload_file_presigned_url_response.py
+            - 📄 upload_file_request_content_type.py
+            - 📄 upload_file_request.py
+            - 📄 validation_error_loc_item.py
+            - 📄 validation_error.py
+          - 📂 **wrapper**
+            - 📂 **tasks**
+              - 📄 client.py
+            - 📄 parse.py
+          - 📄 __init__.py
+          - 📄 base_client.py
+          - 📄 client.py
+          - 📄 environment.py
+          - 📄 py.typed
+          - 📄 version.py
+        - 📂 **browser_use_sdk-2.0.15.dist-info**
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
+        - 📂 **browser_use-0.11.9.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 entry_points.txt
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
         - 📂 **bs4**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -6789,6 +8482,777 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 filter.py
           - 📄 formatter.py
           - 📄 py.typed
+        - 📂 **bubus**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 logging.cpython-314.pyc
+            - 📄 models.cpython-314.pyc
+            - 📄 service.cpython-314.pyc
+          - 📄 __init__.py
+          - 📄 helpers.py
+          - 📄 logging.py
+          - 📄 models.py
+          - 📄 service.py
+        - 📂 **bubus-1.5.6.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
+        - 📂 **cdp_use**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 client.cpython-314.pyc
+          - 📂 **cdp**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 library.cpython-314.pyc
+              - 📄 registration_library.cpython-314.pyc
+              - 📄 registry.cpython-314.pyc
+            - 📂 **accessibility**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **animation**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **audits**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **autofill**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **backgroundservice**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **bluetoothemulation**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **browser**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **cachestorage**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **cast**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **console**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **css**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **debugger**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **deviceaccess**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **deviceorientation**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **dom**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **domdebugger**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **domsnapshot**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **domstorage**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **emulation**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **eventbreakpoints**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **extensions**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **fedcm**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **fetch**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **filesystem**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **headlessexperimental**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **heapprofiler**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **indexeddb**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **input**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **inspector**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **io**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **layertree**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **log**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **media**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **memory**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **network**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **overlay**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **page**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **performance**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **performancetimeline**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **preload**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **profiler**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **pwa**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **runtime**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **schema**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **security**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **serviceworker**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **storage**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **systeminfo**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **target**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **tethering**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **tracing**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **webaudio**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📂 **webauthn**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 commands.cpython-314.pyc
+                - 📄 events.cpython-314.pyc
+                - 📄 library.cpython-314.pyc
+                - 📄 registration.cpython-314.pyc
+                - 📄 types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 commands.py
+              - 📄 events.py
+              - 📄 library.py
+              - 📄 registration.py
+              - 📄 types.py
+            - 📄 __init__.py
+            - 📄 library.py
+            - 📄 registration_library.py
+            - 📄 registry.py
+          - 📄 __init__.py
+          - 📄 client.py
+        - 📂 **cdp_use-1.4.4.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
         - 📂 **certifi**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -6942,6 +9406,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 INSTALLER
           - 📄 METADATA
           - 📄 RECORD
+          - 📄 WHEEL
+        - 📂 **cloudpickle**
+          - 📄 __init__.py
+          - 📄 cloudpickle_fast.py
+          - 📄 cloudpickle.py
+        - 📂 **cloudpickle-3.1.2.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
           - 📄 WHEEL
         - 📂 **colorama**
           - 📂 **__pycache__**
@@ -7837,6 +10313,45 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 shared.py
           - 📄 table.py
           - 📄 types.py
+        - 📂 **docstring_parser**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 attrdoc.cpython-314.pyc
+            - 📄 common.cpython-314.pyc
+            - 📄 epydoc.cpython-314.pyc
+            - 📄 google.cpython-314.pyc
+            - 📄 numpydoc.cpython-314.pyc
+            - 📄 parser.cpython-314.pyc
+            - 📄 rest.cpython-314.pyc
+            - 📄 util.cpython-314.pyc
+          - 📂 **tests**
+            - 📄 __init__.py
+            - 📄 _pydoctor.py
+            - 📄 test_epydoc.py
+            - 📄 test_google.py
+            - 📄 test_numpydoc.py
+            - 📄 test_parse_from_object.py
+            - 📄 test_parser.py
+            - 📄 test_rest.py
+            - 📄 test_util.py
+          - 📄 __init__.py
+          - 📄 attrdoc.py
+          - 📄 common.py
+          - 📄 epydoc.py
+          - 📄 google.py
+          - 📄 numpydoc.py
+          - 📄 parser.py
+          - 📄 py.typed
+          - 📄 rest.py
+          - 📄 util.py
+        - 📂 **docstring_parser-0.17.0.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE.md
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
         - 📂 **dotenv**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -8113,6 +10628,51 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 METADATA
           - 📄 RECORD
           - 📄 WHEEL
+        - 📂 **filetype**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 filetype.cpython-314.pyc
+            - 📄 helpers.cpython-314.pyc
+            - 📄 match.cpython-314.pyc
+            - 📄 utils.cpython-314.pyc
+          - 📂 **types**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 application.cpython-314.pyc
+              - 📄 archive.cpython-314.pyc
+              - 📄 audio.cpython-314.pyc
+              - 📄 base.cpython-314.pyc
+              - 📄 document.cpython-314.pyc
+              - 📄 font.cpython-314.pyc
+              - 📄 image.cpython-314.pyc
+              - 📄 isobmff.cpython-314.pyc
+              - 📄 video.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 application.py
+            - 📄 archive.py
+            - 📄 audio.py
+            - 📄 base.py
+            - 📄 document.py
+            - 📄 font.py
+            - 📄 image.py
+            - 📄 isobmff.py
+            - 📄 video.py
+          - 📄 __init__.py
+          - 📄 __main__.py
+          - 📄 filetype.py
+          - 📄 helpers.py
+          - 📄 match.py
+          - 📄 utils.py
+        - 📂 **filetype-1.2.0.dist-info**
+          - 📄 entry_points.txt
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
+          - 📄 WHEEL
+          - 📄 zip-safe
         - 📂 **flask**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -8324,6 +10884,830 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📂 **google**
           - 📂 **_upb**
             - 📄 _message.pyd
+          - 📂 **ai**
+            - 📂 **generativelanguage**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 gapic_version.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 gapic_version.py
+              - 📄 py.typed
+            - 📂 **generativelanguage_v1**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 gapic_version.cpython-314.pyc
+              - 📂 **services**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                - 📂 **generative_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📂 **model_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📄 __init__.py
+              - 📂 **types**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                  - 📄 citation.cpython-314.pyc
+                  - 📄 content.cpython-314.pyc
+                  - 📄 generative_service.cpython-314.pyc
+                  - 📄 model_service.cpython-314.pyc
+                  - 📄 model.cpython-314.pyc
+                  - 📄 safety.cpython-314.pyc
+                - 📄 __init__.py
+                - 📄 citation.py
+                - 📄 content.py
+                - 📄 generative_service.py
+                - 📄 model_service.py
+                - 📄 model.py
+                - 📄 safety.py
+              - 📄 __init__.py
+              - 📄 gapic_metadata.json
+              - 📄 gapic_version.py
+              - 📄 py.typed
+            - 📂 **generativelanguage_v1alpha**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 gapic_version.cpython-314.pyc
+              - 📂 **services**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                - 📂 **cache_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **discuss_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📂 **file_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **generative_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📂 **model_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **permission_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **prediction_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📂 **retriever_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **text_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📄 __init__.py
+              - 📂 **types**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                  - 📄 cache_service.cpython-314.pyc
+                  - 📄 cached_content.cpython-314.pyc
+                  - 📄 citation.cpython-314.pyc
+                  - 📄 content.cpython-314.pyc
+                  - 📄 discuss_service.cpython-314.pyc
+                  - 📄 file_service.cpython-314.pyc
+                  - 📄 file.cpython-314.pyc
+                  - 📄 generative_service.cpython-314.pyc
+                  - 📄 model_service.cpython-314.pyc
+                  - 📄 model.cpython-314.pyc
+                  - 📄 permission_service.cpython-314.pyc
+                  - 📄 permission.cpython-314.pyc
+                  - 📄 prediction_service.cpython-314.pyc
+                  - 📄 retriever_service.cpython-314.pyc
+                  - 📄 retriever.cpython-314.pyc
+                  - 📄 safety.cpython-314.pyc
+                  - 📄 text_service.cpython-314.pyc
+                  - 📄 tuned_model.cpython-314.pyc
+                - 📄 __init__.py
+                - 📄 cache_service.py
+                - 📄 cached_content.py
+                - 📄 citation.py
+                - 📄 content.py
+                - 📄 discuss_service.py
+                - 📄 file_service.py
+                - 📄 file.py
+                - 📄 generative_service.py
+                - 📄 model_service.py
+                - 📄 model.py
+                - 📄 permission_service.py
+                - 📄 permission.py
+                - 📄 prediction_service.py
+                - 📄 retriever_service.py
+                - 📄 retriever.py
+                - 📄 safety.py
+                - 📄 text_service.py
+                - 📄 tuned_model.py
+              - 📄 __init__.py
+              - 📄 gapic_metadata.json
+              - 📄 gapic_version.py
+              - 📄 py.typed
+            - 📂 **generativelanguage_v1beta**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 gapic_version.cpython-314.pyc
+              - 📂 **services**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                - 📂 **cache_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **discuss_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📂 **file_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **generative_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📂 **model_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **permission_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **prediction_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📂 **retriever_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **text_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📄 __init__.py
+              - 📂 **types**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                  - 📄 cache_service.cpython-314.pyc
+                  - 📄 cached_content.cpython-314.pyc
+                  - 📄 citation.cpython-314.pyc
+                  - 📄 content.cpython-314.pyc
+                  - 📄 discuss_service.cpython-314.pyc
+                  - 📄 file_service.cpython-314.pyc
+                  - 📄 file.cpython-314.pyc
+                  - 📄 generative_service.cpython-314.pyc
+                  - 📄 model_service.cpython-314.pyc
+                  - 📄 model.cpython-314.pyc
+                  - 📄 permission_service.cpython-314.pyc
+                  - 📄 permission.cpython-314.pyc
+                  - 📄 prediction_service.cpython-314.pyc
+                  - 📄 retriever_service.cpython-314.pyc
+                  - 📄 retriever.cpython-314.pyc
+                  - 📄 safety.cpython-314.pyc
+                  - 📄 text_service.cpython-314.pyc
+                  - 📄 tuned_model.cpython-314.pyc
+                - 📄 __init__.py
+                - 📄 cache_service.py
+                - 📄 cached_content.py
+                - 📄 citation.py
+                - 📄 content.py
+                - 📄 discuss_service.py
+                - 📄 file_service.py
+                - 📄 file.py
+                - 📄 generative_service.py
+                - 📄 model_service.py
+                - 📄 model.py
+                - 📄 permission_service.py
+                - 📄 permission.py
+                - 📄 prediction_service.py
+                - 📄 retriever_service.py
+                - 📄 retriever.py
+                - 📄 safety.py
+                - 📄 text_service.py
+                - 📄 tuned_model.py
+              - 📄 __init__.py
+              - 📄 gapic_metadata.json
+              - 📄 gapic_version.py
+              - 📄 py.typed
+            - 📂 **generativelanguage_v1beta2**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 gapic_version.cpython-314.pyc
+              - 📂 **services**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                - 📂 **discuss_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📂 **model_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **text_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📄 __init__.py
+              - 📂 **types**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                  - 📄 citation.cpython-314.pyc
+                  - 📄 discuss_service.cpython-314.pyc
+                  - 📄 model_service.cpython-314.pyc
+                  - 📄 model.cpython-314.pyc
+                  - 📄 safety.cpython-314.pyc
+                  - 📄 text_service.cpython-314.pyc
+                - 📄 __init__.py
+                - 📄 citation.py
+                - 📄 discuss_service.py
+                - 📄 model_service.py
+                - 📄 model.py
+                - 📄 safety.py
+                - 📄 text_service.py
+              - 📄 __init__.py
+              - 📄 gapic_metadata.json
+              - 📄 gapic_version.py
+              - 📄 py.typed
+            - 📂 **generativelanguage_v1beta3**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 gapic_version.cpython-314.pyc
+              - 📂 **services**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                - 📂 **discuss_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📂 **model_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **permission_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                    - 📄 pagers.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                  - 📄 pagers.py
+                - 📂 **text_service**
+                  - 📂 **__pycache__**
+                    - 📄 __init__.cpython-314.pyc
+                    - 📄 async_client.cpython-314.pyc
+                    - 📄 client.cpython-314.pyc
+                  - 📂 **transports**
+                    - 📂 **__pycache__**
+                      - 📄 __init__.cpython-314.pyc
+                      - 📄 base.cpython-314.pyc
+                      - 📄 grpc_asyncio.cpython-314.pyc
+                      - 📄 grpc.cpython-314.pyc
+                      - 📄 rest_base.cpython-314.pyc
+                      - 📄 rest.cpython-314.pyc
+                    - 📄 __init__.py
+                    - 📄 base.py
+                    - 📄 grpc_asyncio.py
+                    - 📄 grpc.py
+                    - 📄 rest_base.py
+                    - 📄 rest.py
+                  - 📄 __init__.py
+                  - 📄 async_client.py
+                  - 📄 client.py
+                - 📄 __init__.py
+              - 📂 **types**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                  - 📄 citation.cpython-314.pyc
+                  - 📄 discuss_service.cpython-314.pyc
+                  - 📄 model_service.cpython-314.pyc
+                  - 📄 model.cpython-314.pyc
+                  - 📄 permission_service.cpython-314.pyc
+                  - 📄 permission.cpython-314.pyc
+                  - 📄 safety.cpython-314.pyc
+                  - 📄 text_service.cpython-314.pyc
+                  - 📄 tuned_model.cpython-314.pyc
+                - 📄 __init__.py
+                - 📄 citation.py
+                - 📄 discuss_service.py
+                - 📄 model_service.py
+                - 📄 model.py
+                - 📄 permission_service.py
+                - 📄 permission.py
+                - 📄 safety.py
+                - 📄 text_service.py
+                - 📄 tuned_model.py
+              - 📄 __init__.py
+              - 📄 gapic_metadata.json
+              - 📄 gapic_version.py
+              - 📄 py.typed
           - 📂 **api**
             - 📂 **__pycache__**
               - 📄 annotations_pb2.cpython-314.pyc
@@ -8461,11 +11845,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📂 **api_core**
             - 📂 **__pycache__**
               - 📄 __init__.cpython-314.pyc
-              - 📄 _python_package_support.cpython-314.pyc
-              - 📄 _python_version_support.cpython-314.pyc
               - 📄 _rest_streaming_base.cpython-314.pyc
-              - 📄 bidi_async.cpython-314.pyc
-              - 📄 bidi_base.cpython-314.pyc
               - 📄 bidi.cpython-314.pyc
               - 📄 client_info.cpython-314.pyc
               - 📄 client_logging.cpython-314.pyc
@@ -8566,11 +11946,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
               - 📄 retry_unary_async.py
               - 📄 retry_unary.py
             - 📄 __init__.py
-            - 📄 _python_package_support.py
-            - 📄 _python_version_support.py
             - 📄 _rest_streaming_base.py
-            - 📄 bidi_async.py
-            - 📄 bidi_base.py
             - 📄 bidi.py
             - 📄 client_info.py
             - 📄 client_logging.py
@@ -9528,6 +12904,151 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
             - 📄 tunings.py
             - 📄 types.py
             - 📄 version.py
+          - 📂 **generativeai**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 answer.cpython-314.pyc
+              - 📄 caching.cpython-314.pyc
+              - 📄 client.cpython-314.pyc
+              - 📄 embedding.cpython-314.pyc
+              - 📄 files.cpython-314.pyc
+              - 📄 generative_models.cpython-314.pyc
+              - 📄 models.cpython-314.pyc
+              - 📄 operations.cpython-314.pyc
+              - 📄 permission.cpython-314.pyc
+              - 📄 protos.cpython-314.pyc
+              - 📄 responder.cpython-314.pyc
+              - 📄 retriever.cpython-314.pyc
+              - 📄 string_utils.cpython-314.pyc
+              - 📄 utils.cpython-314.pyc
+              - 📄 version.cpython-314.pyc
+            - 📂 **notebook**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 argument_parser.cpython-314.pyc
+                - 📄 cmd_line_parser.cpython-314.pyc
+                - 📄 command_utils.cpython-314.pyc
+                - 📄 command.cpython-314.pyc
+                - 📄 compare_cmd.cpython-314.pyc
+                - 📄 compile_cmd.cpython-314.pyc
+                - 📄 eval_cmd.cpython-314.pyc
+                - 📄 flag_def.cpython-314.pyc
+                - 📄 gspread_client.cpython-314.pyc
+                - 📄 html_utils.cpython-314.pyc
+                - 📄 input_utils.cpython-314.pyc
+                - 📄 ipython_env_impl.cpython-314.pyc
+                - 📄 ipython_env.cpython-314.pyc
+                - 📄 magics_engine.cpython-314.pyc
+                - 📄 magics.cpython-314.pyc
+                - 📄 model_registry.cpython-314.pyc
+                - 📄 output_utils.cpython-314.pyc
+                - 📄 parsed_args_lib.cpython-314.pyc
+                - 📄 post_process_utils_test_helper.cpython-314.pyc
+                - 📄 post_process_utils.cpython-314.pyc
+                - 📄 py_utils.cpython-314.pyc
+                - 📄 run_cmd.cpython-314.pyc
+                - 📄 sheets_id.cpython-314.pyc
+                - 📄 sheets_sanitize_url.cpython-314.pyc
+                - 📄 sheets_utils.cpython-314.pyc
+                - 📄 text_model.cpython-314.pyc
+              - 📂 **lib**
+                - 📂 **__pycache__**
+                  - 📄 __init__.cpython-314.pyc
+                  - 📄 llm_function.cpython-314.pyc
+                  - 📄 llmfn_input_utils.cpython-314.pyc
+                  - 📄 llmfn_inputs_source.cpython-314.pyc
+                  - 📄 llmfn_output_row.cpython-314.pyc
+                  - 📄 llmfn_outputs.cpython-314.pyc
+                  - 📄 llmfn_post_process_cmds.cpython-314.pyc
+                  - 📄 llmfn_post_process.cpython-314.pyc
+                  - 📄 model.cpython-314.pyc
+                  - 📄 prompt_utils.cpython-314.pyc
+                  - 📄 unique_fn.cpython-314.pyc
+                - 📄 __init__.py
+                - 📄 llm_function.py
+                - 📄 llmfn_input_utils.py
+                - 📄 llmfn_inputs_source.py
+                - 📄 llmfn_output_row.py
+                - 📄 llmfn_outputs.py
+                - 📄 llmfn_post_process_cmds.py
+                - 📄 llmfn_post_process.py
+                - 📄 model.py
+                - 📄 prompt_utils.py
+                - 📄 unique_fn.py
+              - 📄 __init__.py
+              - 📄 argument_parser.py
+              - 📄 cmd_line_parser.py
+              - 📄 command_utils.py
+              - 📄 command.py
+              - 📄 compare_cmd.py
+              - 📄 compile_cmd.py
+              - 📄 eval_cmd.py
+              - 📄 flag_def.py
+              - 📄 gspread_client.py
+              - 📄 html_utils.py
+              - 📄 input_utils.py
+              - 📄 ipython_env_impl.py
+              - 📄 ipython_env.py
+              - 📄 magics_engine.py
+              - 📄 magics.py
+              - 📄 model_registry.py
+              - 📄 output_utils.py
+              - 📄 parsed_args_lib.py
+              - 📄 post_process_utils_test_helper.py
+              - 📄 post_process_utils.py
+              - 📄 py_utils.py
+              - 📄 run_cmd.py
+              - 📄 sheets_id.py
+              - 📄 sheets_sanitize_url.py
+              - 📄 sheets_utils.py
+              - 📄 text_model.py
+            - 📂 **types**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 answer_types.cpython-314.pyc
+                - 📄 caching_types.cpython-314.pyc
+                - 📄 citation_types.cpython-314.pyc
+                - 📄 content_types.cpython-314.pyc
+                - 📄 file_types.cpython-314.pyc
+                - 📄 generation_types.cpython-314.pyc
+                - 📄 helper_types.cpython-314.pyc
+                - 📄 model_types.cpython-314.pyc
+                - 📄 palm_safety_types.cpython-314.pyc
+                - 📄 permission_types.cpython-314.pyc
+                - 📄 retriever_types.cpython-314.pyc
+                - 📄 safety_types.cpython-314.pyc
+                - 📄 text_types.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 answer_types.py
+              - 📄 caching_types.py
+              - 📄 citation_types.py
+              - 📄 content_types.py
+              - 📄 file_types.py
+              - 📄 generation_types.py
+              - 📄 helper_types.py
+              - 📄 model_types.py
+              - 📄 palm_safety_types.py
+              - 📄 permission_types.py
+              - 📄 retriever_types.py
+              - 📄 safety_types.py
+              - 📄 text_types.py
+            - 📄 __init__.py
+            - 📄 answer.py
+            - 📄 caching.py
+            - 📄 client.py
+            - 📄 embedding.py
+            - 📄 files.py
+            - 📄 generative_models.py
+            - 📄 models.py
+            - 📄 operations.py
+            - 📄 permission.py
+            - 📄 protos.py
+            - 📄 py.typed
+            - 📄 responder.py
+            - 📄 retriever.py
+            - 📄 string_utils.py
+            - 📄 utils.py
+            - 📄 version.py
           - 📂 **logging**
             - 📂 **type**
               - 📂 **__pycache__**
@@ -9613,11 +13134,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
               - 📄 message.cpython-314.pyc
               - 📄 proto_builder.cpython-314.pyc
               - 📄 proto_json.cpython-314.pyc
-              - 📄 proto_text.cpython-314.pyc
               - 📄 proto.cpython-314.pyc
               - 📄 reflection.cpython-314.pyc
               - 📄 runtime_version.cpython-314.pyc
               - 📄 service_reflection.cpython-314.pyc
+              - 📄 service.cpython-314.pyc
               - 📄 source_context_pb2.cpython-314.pyc
               - 📄 struct_pb2.cpython-314.pyc
               - 📄 symbol_database.cpython-314.pyc
@@ -9637,6 +13158,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
             - 📂 **internal**
               - 📂 **__pycache__**
                 - 📄 __init__.cpython-314.pyc
+                - 📄 _parameterized.cpython-314.pyc
                 - 📄 api_implementation.cpython-314.pyc
                 - 📄 builder.cpython-314.pyc
                 - 📄 containers.cpython-314.pyc
@@ -9653,6 +13175,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
                 - 📄 well_known_types.cpython-314.pyc
                 - 📄 wire_format.cpython-314.pyc
               - 📄 __init__.py
+              - 📄 _parameterized.py
               - 📄 api_implementation.py
               - 📄 builder.py
               - 📄 containers.py
@@ -9699,11 +13222,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
             - 📄 message.py
             - 📄 proto_builder.py
             - 📄 proto_json.py
-            - 📄 proto_text.py
             - 📄 proto.py
             - 📄 reflection.py
             - 📄 runtime_version.py
             - 📄 service_reflection.py
+            - 📄 service.py
             - 📄 source_context_pb2.py
             - 📄 struct_pb2.py
             - 📄 symbol_database.py
@@ -9812,7 +13335,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
             - 📄 timeofday_pb2.py
             - 📄 timeofday_pb2.pyi
             - 📄 timeofday.proto
-        - 📂 **google_api_core-2.29.0.dist-info**
+        - 📂 **google_ai_generativelanguage-0.6.15.dist-info**
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 top_level.txt
+          - 📄 WHEEL
+        - 📂 **google_api_core-2.25.2.dist-info**
           - 📂 **licenses**
             - 📄 LICENSE
           - 📄 INSTALLER
@@ -9837,6 +13367,24 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 RECORD
           - 📄 top_level.txt
           - 📄 WHEEL
+        - 📂 **google_auth_oauthlib**
+          - 📂 **tool**
+            - 📄 __init__.py
+            - 📄 __main__.py
+          - 📄 __init__.py
+          - 📄 flow.py
+          - 📄 helpers.py
+          - 📄 interactive.py
+        - 📂 **google_auth_oauthlib-1.2.4.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 entry_points.txt
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
+          - 📄 WHEEL
         - 📂 **google_auth-2.48.0.dist-info**
           - 📂 **licenses**
             - 📄 LICENSE
@@ -9851,6 +13399,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
             - 📄 LICENSE
           - 📄 INSTALLER
           - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
+          - 📄 WHEEL
+        - 📂 **google_generativeai-0.8.6.dist-info**
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 namespace_packages.txt
           - 📄 RECORD
           - 📄 REQUESTED
           - 📄 top_level.txt
@@ -10553,6 +14110,118 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 RECORD
           - 📄 top_level.txt
           - 📄 WHEEL
+        - 📂 **groq**
+          - 📂 **_utils**
+            - 📄 __init__.py
+            - 📄 _compat.py
+            - 📄 _datetime_parse.py
+            - 📄 _logs.py
+            - 📄 _proxy.py
+            - 📄 _reflection.py
+            - 📄 _resources_proxy.py
+            - 📄 _streams.py
+            - 📄 _sync.py
+            - 📄 _transform.py
+            - 📄 _typing.py
+            - 📄 _utils.py
+          - 📂 **lib**
+          - 📂 **resources**
+            - 📂 **audio**
+              - 📄 __init__.py
+              - 📄 audio.py
+              - 📄 speech.py
+              - 📄 transcriptions.py
+              - 📄 translations.py
+            - 📂 **chat**
+              - 📄 __init__.py
+              - 📄 chat.py
+              - 📄 completions.py
+            - 📄 __init__.py
+            - 📄 batches.py
+            - 📄 embeddings.py
+            - 📄 files.py
+            - 📄 models.py
+          - 📂 **types**
+            - 📂 **audio**
+              - 📄 __init__.py
+              - 📄 speech_create_params.py
+              - 📄 transcription_create_params.py
+              - 📄 transcription.py
+              - 📄 translation_create_params.py
+              - 📄 translation.py
+            - 📂 **chat**
+              - 📄 __init__.py
+              - 📄 chat_completion_assistant_message_param.py
+              - 📄 chat_completion_chunk.py
+              - 📄 chat_completion_content_part_image_param.py
+              - 📄 chat_completion_content_part_param.py
+              - 📄 chat_completion_content_part_text_param.py
+              - 📄 chat_completion_function_call_option_param.py
+              - 📄 chat_completion_function_message_param.py
+              - 📄 chat_completion_message_param.py
+              - 📄 chat_completion_message_tool_call_param.py
+              - 📄 chat_completion_message_tool_call.py
+              - 📄 chat_completion_message.py
+              - 📄 chat_completion_named_tool_choice_param.py
+              - 📄 chat_completion_role.py
+              - 📄 chat_completion_system_message_param.py
+              - 📄 chat_completion_token_logprob.py
+              - 📄 chat_completion_tool_choice_option_param.py
+              - 📄 chat_completion_tool_message_param.py
+              - 📄 chat_completion_tool_param.py
+              - 📄 chat_completion_user_message_param.py
+              - 📄 chat_completion.py
+              - 📄 completion_create_params.py
+            - 📂 **shared**
+              - 📄 __init__.py
+              - 📄 error_object.py
+              - 📄 function_definition.py
+              - 📄 function_parameters.py
+            - 📂 **shared_params**
+              - 📄 __init__.py
+              - 📄 function_definition.py
+              - 📄 function_parameters.py
+            - 📄 __init__.py
+            - 📄 batch_cancel_response.py
+            - 📄 batch_create_params.py
+            - 📄 batch_create_response.py
+            - 📄 batch_list_response.py
+            - 📄 batch_retrieve_response.py
+            - 📄 completion_usage.py
+            - 📄 create_embedding_response.py
+            - 📄 embedding_create_params.py
+            - 📄 embedding.py
+            - 📄 file_create_params.py
+            - 📄 file_create_response.py
+            - 📄 file_delete_response.py
+            - 📄 file_info_response.py
+            - 📄 file_list_response.py
+            - 📄 model_deleted.py
+            - 📄 model_list_response.py
+            - 📄 model.py
+          - 📄 __init__.py
+          - 📄 _base_client.py
+          - 📄 _client.py
+          - 📄 _compat.py
+          - 📄 _constants.py
+          - 📄 _exceptions.py
+          - 📄 _files.py
+          - 📄 _models.py
+          - 📄 _qs.py
+          - 📄 _resource.py
+          - 📄 _response.py
+          - 📄 _streaming.py
+          - 📄 _types.py
+          - 📄 _version.py
+          - 📄 py.typed
+        - 📂 **groq-1.0.0.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
         - 📂 **grpc**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -10694,6 +14363,23 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 _simple_stubs.py
           - 📄 _typing.py
           - 📄 _utilities.py
+        - 📂 **grpc_status**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 _async.cpython-314.pyc
+            - 📄 _common.cpython-314.pyc
+            - 📄 rpc_status.cpython-314.pyc
+          - 📄 __init__.py
+          - 📄 _async.py
+          - 📄 _common.py
+          - 📄 rpc_status.py
+        - 📂 **grpcio_status-1.71.2.dist-info**
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 top_level.txt
+          - 📄 WHEEL
         - 📂 **grpcio-1.78.0rc2.dist-info**
           - 📂 **licenses**
             - 📄 LICENSE
@@ -11579,6 +15265,47 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 RECORD
           - 📄 top_level.txt
           - 📄 WHEEL
+        - 📂 **InquirerPy**
+          - 📂 **base**
+            - 📄 __init__.py
+            - 📄 complex.py
+            - 📄 control.py
+            - 📄 list.py
+            - 📄 simple.py
+          - 📂 **containers**
+            - 📄 __init__.py
+            - 📄 instruction.py
+            - 📄 message.py
+            - 📄 spinner.py
+            - 📄 validation.py
+          - 📂 **prompts**
+            - 📄 __init__.py
+            - 📄 checkbox.py
+            - 📄 confirm.py
+            - 📄 expand.py
+            - 📄 filepath.py
+            - 📄 fuzzy.py
+            - 📄 input.py
+            - 📄 list.py
+            - 📄 number.py
+            - 📄 rawlist.py
+            - 📄 secret.py
+          - 📄 __init__.py
+          - 📄 enum.py
+          - 📄 exceptions.py
+          - 📄 inquirer.py
+          - 📄 py.typed
+          - 📄 resolver.py
+          - 📄 separator.py
+          - 📄 utils.py
+          - 📄 validator.py
+        - 📂 **inquirerpy-0.3.4.dist-info**
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
         - 📂 **isapi**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -11769,6 +15496,24 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 RECORD
           - 📄 top_level.txt
           - 📄 WHEEL
+        - 📂 **jsonpatch-1.33.dist-info**
+          - 📄 AUTHORS
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
+          - 📄 WHEEL
+        - 📂 **jsonpointer-3.0.0.dist-info**
+          - 📄 AUTHORS
+          - 📄 INSTALLER
+          - 📄 LICENSE.txt
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
+          - 📄 WHEEL
         - 📂 **jsonschema**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -11936,6 +15681,385 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 types.py
           - 📄 utils.py
           - 📄 warnings.py
+        - 📂 **langchain_core**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 _import_utils.cpython-314.pyc
+            - 📄 caches.cpython-314.pyc
+            - 📄 env.cpython-314.pyc
+            - 📄 exceptions.cpython-314.pyc
+            - 📄 globals.cpython-314.pyc
+            - 📄 prompt_values.cpython-314.pyc
+            - 📄 rate_limiters.cpython-314.pyc
+            - 📄 version.cpython-314.pyc
+          - 📂 **_api**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 beta_decorator.cpython-314.pyc
+              - 📄 deprecation.cpython-314.pyc
+              - 📄 internal.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 beta_decorator.py
+            - 📄 deprecation.py
+            - 📄 internal.py
+            - 📄 path.py
+          - 📂 **_security**
+            - 📄 __init__.py
+            - 📄 _ssrf_protection.py
+          - 📂 **callbacks**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 base.cpython-314.pyc
+              - 📄 manager.cpython-314.pyc
+              - 📄 stdout.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 file.py
+            - 📄 manager.py
+            - 📄 stdout.py
+            - 📄 streaming_stdout.py
+            - 📄 usage.py
+          - 📂 **document_loaders**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 blob_loaders.py
+            - 📄 langsmith.py
+          - 📂 **documents**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 compressor.py
+            - 📄 transformers.py
+          - 📂 **embeddings**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 embeddings.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 embeddings.py
+            - 📄 fake.py
+          - 📂 **example_selectors**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 length_based.py
+            - 📄 semantic_similarity.py
+          - 📂 **indexing**
+            - 📄 __init__.py
+            - 📄 api.py
+            - 📄 base.py
+            - 📄 in_memory.py
+          - 📂 **language_models**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 _utils.cpython-314.pyc
+              - 📄 base.cpython-314.pyc
+              - 📄 chat_models.cpython-314.pyc
+              - 📄 llms.cpython-314.pyc
+              - 📄 model_profile.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 _utils.py
+            - 📄 base.py
+            - 📄 chat_models.py
+            - 📄 fake_chat_models.py
+            - 📄 fake.py
+            - 📄 llms.py
+            - 📄 model_profile.py
+          - 📂 **load**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 _validation.cpython-314.pyc
+              - 📄 dump.cpython-314.pyc
+              - 📄 load.cpython-314.pyc
+              - 📄 mapping.cpython-314.pyc
+              - 📄 serializable.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 _validation.py
+            - 📄 dump.py
+            - 📄 load.py
+            - 📄 mapping.py
+            - 📄 serializable.py
+          - 📂 **messages**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 ai.cpython-314.pyc
+              - 📄 base.cpython-314.pyc
+              - 📄 chat.cpython-314.pyc
+              - 📄 content.cpython-314.pyc
+              - 📄 function.cpython-314.pyc
+              - 📄 human.cpython-314.pyc
+              - 📄 modifier.cpython-314.pyc
+              - 📄 system.cpython-314.pyc
+              - 📄 tool.cpython-314.pyc
+              - 📄 utils.cpython-314.pyc
+            - 📂 **block_translators**
+              - 📂 **__pycache__**
+                - 📄 __init__.cpython-314.pyc
+                - 📄 anthropic.cpython-314.pyc
+                - 📄 bedrock_converse.cpython-314.pyc
+                - 📄 bedrock.cpython-314.pyc
+                - 📄 google_genai.cpython-314.pyc
+                - 📄 google_vertexai.cpython-314.pyc
+                - 📄 groq.cpython-314.pyc
+                - 📄 openai.cpython-314.pyc
+              - 📄 __init__.py
+              - 📄 anthropic.py
+              - 📄 bedrock_converse.py
+              - 📄 bedrock.py
+              - 📄 google_genai.py
+              - 📄 google_vertexai.py
+              - 📄 groq.py
+              - 📄 langchain_v0.py
+              - 📄 openai.py
+            - 📄 __init__.py
+            - 📄 ai.py
+            - 📄 base.py
+            - 📄 chat.py
+            - 📄 content.py
+            - 📄 function.py
+            - 📄 human.py
+            - 📄 modifier.py
+            - 📄 system.py
+            - 📄 tool.py
+            - 📄 utils.py
+          - 📂 **output_parsers**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 base.cpython-314.pyc
+              - 📄 format_instructions.cpython-314.pyc
+              - 📄 json.cpython-314.pyc
+              - 📄 openai_tools.cpython-314.pyc
+              - 📄 pydantic.cpython-314.pyc
+              - 📄 transform.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 format_instructions.py
+            - 📄 json.py
+            - 📄 list.py
+            - 📄 openai_functions.py
+            - 📄 openai_tools.py
+            - 📄 pydantic.py
+            - 📄 string.py
+            - 📄 transform.py
+            - 📄 xml.py
+          - 📂 **outputs**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 chat_generation.cpython-314.pyc
+              - 📄 chat_result.cpython-314.pyc
+              - 📄 generation.cpython-314.pyc
+              - 📄 llm_result.cpython-314.pyc
+              - 📄 run_info.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 chat_generation.py
+            - 📄 chat_result.py
+            - 📄 generation.py
+            - 📄 llm_result.py
+            - 📄 run_info.py
+          - 📂 **prompts**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 chat.py
+            - 📄 dict.py
+            - 📄 few_shot_with_templates.py
+            - 📄 few_shot.py
+            - 📄 image.py
+            - 📄 loading.py
+            - 📄 message.py
+            - 📄 prompt.py
+            - 📄 string.py
+            - 📄 structured.py
+          - 📂 **runnables**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 base.cpython-314.pyc
+              - 📄 config.cpython-314.pyc
+              - 📄 passthrough.cpython-314.pyc
+              - 📄 schema.cpython-314.pyc
+              - 📄 utils.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 branch.py
+            - 📄 config.py
+            - 📄 configurable.py
+            - 📄 fallbacks.py
+            - 📄 graph_ascii.py
+            - 📄 graph_mermaid.py
+            - 📄 graph_png.py
+            - 📄 graph.py
+            - 📄 history.py
+            - 📄 passthrough.py
+            - 📄 retry.py
+            - 📄 router.py
+            - 📄 schema.py
+            - 📄 utils.py
+          - 📂 **tools**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 base.cpython-314.pyc
+              - 📄 convert.cpython-314.pyc
+              - 📄 simple.cpython-314.pyc
+              - 📄 structured.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 convert.py
+            - 📄 render.py
+            - 📄 retriever.py
+            - 📄 simple.py
+            - 📄 structured.py
+          - 📂 **tracers**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 _compat.cpython-314.pyc
+              - 📄 _streaming.cpython-314.pyc
+              - 📄 base.cpython-314.pyc
+              - 📄 context.cpython-314.pyc
+              - 📄 core.cpython-314.pyc
+              - 📄 event_stream.cpython-314.pyc
+              - 📄 langchain.cpython-314.pyc
+              - 📄 log_stream.cpython-314.pyc
+              - 📄 memory_stream.cpython-314.pyc
+              - 📄 root_listeners.cpython-314.pyc
+              - 📄 run_collector.cpython-314.pyc
+              - 📄 schemas.cpython-314.pyc
+              - 📄 stdout.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 _compat.py
+            - 📄 _streaming.py
+            - 📄 base.py
+            - 📄 context.py
+            - 📄 core.py
+            - 📄 evaluation.py
+            - 📄 event_stream.py
+            - 📄 langchain.py
+            - 📄 log_stream.py
+            - 📄 memory_stream.py
+            - 📄 root_listeners.py
+            - 📄 run_collector.py
+            - 📄 schemas.py
+            - 📄 stdout.py
+          - 📂 **utils**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 _merge.cpython-314.pyc
+              - 📄 aiter.cpython-314.pyc
+              - 📄 env.cpython-314.pyc
+              - 📄 function_calling.cpython-314.pyc
+              - 📄 input.cpython-314.pyc
+              - 📄 interactive_env.cpython-314.pyc
+              - 📄 iter.cpython-314.pyc
+              - 📄 json_schema.cpython-314.pyc
+              - 📄 json.cpython-314.pyc
+              - 📄 pydantic.cpython-314.pyc
+              - 📄 usage.cpython-314.pyc
+              - 📄 utils.cpython-314.pyc
+              - 📄 uuid.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 _merge.py
+            - 📄 aiter.py
+            - 📄 env.py
+            - 📄 formatting.py
+            - 📄 function_calling.py
+            - 📄 html.py
+            - 📄 image.py
+            - 📄 input.py
+            - 📄 interactive_env.py
+            - 📄 iter.py
+            - 📄 json_schema.py
+            - 📄 json.py
+            - 📄 mustache.py
+            - 📄 pydantic.py
+            - 📄 strings.py
+            - 📄 usage.py
+            - 📄 utils.py
+            - 📄 uuid.py
+          - 📂 **vectorstores**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 in_memory.py
+            - 📄 utils.py
+          - 📄 __init__.py
+          - 📄 _import_utils.py
+          - 📄 agents.py
+          - 📄 caches.py
+          - 📄 chat_history.py
+          - 📄 chat_loaders.py
+          - 📄 chat_sessions.py
+          - 📄 env.py
+          - 📄 exceptions.py
+          - 📄 globals.py
+          - 📄 prompt_values.py
+          - 📄 py.typed
+          - 📄 rate_limiters.py
+          - 📄 retrievers.py
+          - 📄 stores.py
+          - 📄 structured_query.py
+          - 📄 sys_info.py
+          - 📄 version.py
+        - 📂 **langchain_core-1.2.11.dist-info**
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
+        - 📂 **langchain_google_genai**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 _common.cpython-314.pyc
+            - 📄 _compat.cpython-314.pyc
+            - 📄 _enums.cpython-314.pyc
+            - 📄 _function_utils.cpython-314.pyc
+            - 📄 _image_utils.cpython-314.pyc
+            - 📄 chat_models.cpython-314.pyc
+            - 📄 embeddings.cpython-314.pyc
+            - 📄 llms.cpython-314.pyc
+            - 📄 utils.cpython-314.pyc
+          - 📂 **data**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 _profiles.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 _profiles.py
+            - 📄 profile_augmentations.toml
+          - 📄 __init__.py
+          - 📄 _common.py
+          - 📄 _compat.py
+          - 📄 _enums.py
+          - 📄 _function_utils.py
+          - 📄 _image_utils.py
+          - 📄 chat_models.py
+          - 📄 embeddings.py
+          - 📄 llms.py
+          - 📄 py.typed
+          - 📄 utils.py
+        - 📂 **langchain_google_genai-4.2.0.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
+        - 📂 **langchain_ollama**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 _compat.cpython-314.pyc
+            - 📄 _utils.cpython-314.pyc
+            - 📄 chat_models.cpython-314.pyc
+            - 📄 embeddings.cpython-314.pyc
+            - 📄 llms.cpython-314.pyc
+          - 📄 __init__.py
+          - 📄 _compat.py
+          - 📄 _utils.py
+          - 📄 chat_models.py
+          - 📄 embeddings.py
+          - 📄 llms.py
+          - 📄 py.typed
+        - 📂 **langchain_ollama-1.0.1.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
         - 📂 **langsmith**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -17701,6 +21825,20 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 INSTALLER
           - 📄 METADATA
           - 📄 RECORD
+          - 📄 WHEEL
+        - 📂 **markdownify**
+          - 📄 __init__.py
+          - 📄 __init__.pyi
+          - 📄 main.py
+          - 📄 py.typed
+        - 📂 **markdownify-1.2.2.dist-info**
+          - 📄 entry_points.txt
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
           - 📄 WHEEL
         - 📂 **markupsafe**
           - 📂 **__pycache__**
@@ -26946,6 +31084,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 WHEEL
         - 📂 **pandas.libs**
           - 📄 msvcp140-a4c2229bdc2a2a630acdc095b4d86008.dll
+        - 📂 **pfzy**
+          - 📄 __init__.py
+          - 📄 match.py
+          - 📄 score.py
+          - 📄 types.py
+        - 📂 **pfzy-0.3.4.dist-info**
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 WHEEL
         - 📂 **PIL**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -28691,6 +32841,298 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 RECORD
           - 📄 top_level.txt
           - 📄 WHEEL
+        - 📂 **portalocker**
+          - 📄 __about__.py
+          - 📄 __init__.py
+          - 📄 __main__.py
+          - 📄 constants.py
+          - 📄 exceptions.py
+          - 📄 portalocker.py
+          - 📄 py.typed
+          - 📄 redis.py
+          - 📄 utils.py
+        - 📂 **portalocker-2.10.1.dist-info**
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
+          - 📄 WHEEL
+        - 📂 **posthog**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 args.cpython-314.pyc
+            - 📄 client.cpython-314.pyc
+            - 📄 consumer.cpython-314.pyc
+            - 📄 contexts.cpython-314.pyc
+            - 📄 exception_capture.cpython-314.pyc
+            - 📄 exception_utils.cpython-314.pyc
+            - 📄 feature_flags.cpython-314.pyc
+            - 📄 flag_definition_cache.cpython-314.pyc
+            - 📄 poller.cpython-314.pyc
+            - 📄 request.cpython-314.pyc
+            - 📄 types.cpython-314.pyc
+            - 📄 utils.cpython-314.pyc
+            - 📄 version.cpython-314.pyc
+          - 📂 **ai**
+            - 📂 **anthropic**
+              - 📄 __init__.py
+              - 📄 anthropic_async.py
+              - 📄 anthropic_converter.py
+              - 📄 anthropic_providers.py
+              - 📄 anthropic.py
+            - 📂 **gemini**
+              - 📄 __init__.py
+              - 📄 gemini_async.py
+              - 📄 gemini_converter.py
+              - 📄 gemini.py
+            - 📂 **langchain**
+              - 📄 __init__.py
+              - 📄 callbacks.py
+            - 📂 **openai**
+              - 📄 __init__.py
+              - 📄 openai_async.py
+              - 📄 openai_converter.py
+              - 📄 openai_providers.py
+              - 📄 openai.py
+            - 📂 **openai_agents**
+              - 📄 __init__.py
+              - 📄 processor.py
+            - 📄 __init__.py
+            - 📄 prompts.py
+            - 📄 sanitization.py
+            - 📄 types.py
+            - 📄 utils.py
+          - 📂 **integrations**
+            - 📄 __init__.py
+            - 📄 django.py
+          - 📂 **test**
+            - 📂 **ai**
+              - 📂 **openai_agents**
+                - 📄 __init__.py
+                - 📄 test_processor.py
+              - 📄 __init__.py
+              - 📄 test_prompts.py
+              - 📄 test_sanitization.py
+              - 📄 test_system_prompts.py
+            - 📄 __init__.py
+            - 📄 test_before_send.py
+            - 📄 test_client.py
+            - 📄 test_consumer.py
+            - 📄 test_contexts.py
+            - 📄 test_exception_capture.py
+            - 📄 test_feature_flag_result.py
+            - 📄 test_feature_flag.py
+            - 📄 test_feature_flags.py
+            - 📄 test_flag_definition_cache.py
+            - 📄 test_module.py
+            - 📄 test_request.py
+            - 📄 test_size_limited_dict.py
+            - 📄 test_types.py
+            - 📄 test_utils.py
+          - 📄 __init__.py
+          - 📄 args.py
+          - 📄 client.py
+          - 📄 consumer.py
+          - 📄 contexts.py
+          - 📄 exception_capture.py
+          - 📄 exception_utils.py
+          - 📄 feature_flags.py
+          - 📄 flag_definition_cache.py
+          - 📄 poller.py
+          - 📄 py.typed
+          - 📄 request.py
+          - 📄 types.py
+          - 📄 utils.py
+          - 📄 version.py
+        - 📂 **posthog-7.8.5.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
+          - 📄 WHEEL
+        - 📂 **prompt_toolkit**
+          - 📂 **application**
+            - 📄 __init__.py
+            - 📄 application.py
+            - 📄 current.py
+            - 📄 dummy.py
+            - 📄 run_in_terminal.py
+          - 📂 **clipboard**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 in_memory.py
+            - 📄 pyperclip.py
+          - 📂 **completion**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 deduplicate.py
+            - 📄 filesystem.py
+            - 📄 fuzzy_completer.py
+            - 📄 nested.py
+            - 📄 word_completer.py
+          - 📂 **contrib**
+            - 📂 **completers**
+              - 📄 __init__.py
+              - 📄 system.py
+            - 📂 **regular_languages**
+              - 📄 __init__.py
+              - 📄 compiler.py
+              - 📄 completion.py
+              - 📄 lexer.py
+              - 📄 regex_parser.py
+              - 📄 validation.py
+            - 📂 **ssh**
+              - 📄 __init__.py
+              - 📄 server.py
+            - 📂 **telnet**
+              - 📄 __init__.py
+              - 📄 log.py
+              - 📄 protocol.py
+              - 📄 server.py
+            - 📄 __init__.py
+          - 📂 **eventloop**
+            - 📄 __init__.py
+            - 📄 async_generator.py
+            - 📄 inputhook.py
+            - 📄 utils.py
+            - 📄 win32.py
+          - 📂 **filters**
+            - 📄 __init__.py
+            - 📄 app.py
+            - 📄 base.py
+            - 📄 cli.py
+            - 📄 utils.py
+          - 📂 **formatted_text**
+            - 📄 __init__.py
+            - 📄 ansi.py
+            - 📄 base.py
+            - 📄 html.py
+            - 📄 pygments.py
+            - 📄 utils.py
+          - 📂 **input**
+            - 📄 __init__.py
+            - 📄 ansi_escape_sequences.py
+            - 📄 base.py
+            - 📄 defaults.py
+            - 📄 posix_pipe.py
+            - 📄 posix_utils.py
+            - 📄 typeahead.py
+            - 📄 vt100_parser.py
+            - 📄 vt100.py
+            - 📄 win32_pipe.py
+            - 📄 win32.py
+          - 📂 **key_binding**
+            - 📂 **bindings**
+              - 📄 __init__.py
+              - 📄 auto_suggest.py
+              - 📄 basic.py
+              - 📄 completion.py
+              - 📄 cpr.py
+              - 📄 emacs.py
+              - 📄 focus.py
+              - 📄 mouse.py
+              - 📄 named_commands.py
+              - 📄 open_in_editor.py
+              - 📄 page_navigation.py
+              - 📄 scroll.py
+              - 📄 search.py
+              - 📄 vi.py
+            - 📄 __init__.py
+            - 📄 defaults.py
+            - 📄 digraphs.py
+            - 📄 emacs_state.py
+            - 📄 key_bindings.py
+            - 📄 key_processor.py
+            - 📄 vi_state.py
+          - 📂 **layout**
+            - 📄 __init__.py
+            - 📄 containers.py
+            - 📄 controls.py
+            - 📄 dimension.py
+            - 📄 dummy.py
+            - 📄 layout.py
+            - 📄 margins.py
+            - 📄 menus.py
+            - 📄 mouse_handlers.py
+            - 📄 processors.py
+            - 📄 screen.py
+            - 📄 scrollable_pane.py
+            - 📄 utils.py
+          - 📂 **lexers**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 pygments.py
+          - 📂 **output**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 color_depth.py
+            - 📄 conemu.py
+            - 📄 defaults.py
+            - 📄 flush_stdout.py
+            - 📄 plain_text.py
+            - 📄 vt100.py
+            - 📄 win32.py
+            - 📄 windows10.py
+          - 📂 **shortcuts**
+            - 📂 **progress_bar**
+              - 📄 __init__.py
+              - 📄 base.py
+              - 📄 formatters.py
+            - 📄 __init__.py
+            - 📄 choice_input.py
+            - 📄 dialogs.py
+            - 📄 prompt.py
+            - 📄 utils.py
+          - 📂 **styles**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 defaults.py
+            - 📄 named_colors.py
+            - 📄 pygments.py
+            - 📄 style_transformation.py
+            - 📄 style.py
+          - 📂 **widgets**
+            - 📄 __init__.py
+            - 📄 base.py
+            - 📄 dialogs.py
+            - 📄 menus.py
+            - 📄 toolbars.py
+          - 📄 __init__.py
+          - 📄 auto_suggest.py
+          - 📄 buffer.py
+          - 📄 cache.py
+          - 📄 cursor_shapes.py
+          - 📄 data_structures.py
+          - 📄 document.py
+          - 📄 enums.py
+          - 📄 history.py
+          - 📄 keys.py
+          - 📄 log.py
+          - 📄 mouse_events.py
+          - 📄 patch_stdout.py
+          - 📄 py.typed
+          - 📄 renderer.py
+          - 📄 search.py
+          - 📄 selection.py
+          - 📄 token.py
+          - 📄 utils.py
+          - 📄 validation.py
+          - 📄 win32_types.py
+        - 📂 **prompt_toolkit-3.0.52.dist-info**
+          - 📂 **licenses**
+            - 📄 AUTHORS.rst
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
+          - 📄 WHEEL
         - 📂 **propcache**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -28781,7 +33223,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 RECORD
           - 📄 top_level.txt
           - 📄 WHEEL
-        - 📂 **protobuf-6.33.5.dist-info**
+        - 📂 **protobuf-5.29.6.dist-info**
           - 📄 INSTALLER
           - 📄 LICENSE
           - 📄 METADATA
@@ -30263,6 +34705,35 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 RECORD
           - 📄 top_level.txt
           - 📄 WHEEL
+        - 📂 **pyotp**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 compat.cpython-314.pyc
+            - 📄 hotp.cpython-314.pyc
+            - 📄 otp.cpython-314.pyc
+            - 📄 totp.cpython-314.pyc
+            - 📄 utils.cpython-314.pyc
+          - 📂 **contrib**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 steam.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 steam.py
+          - 📄 __init__.py
+          - 📄 compat.py
+          - 📄 hotp.py
+          - 📄 otp.py
+          - 📄 py.typed
+          - 📄 totp.py
+          - 📄 utils.py
+        - 📂 **pyotp-2.9.0.dist-info**
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
+          - 📄 WHEEL
         - 📂 **pyparsing**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -31707,6 +36178,217 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 RECORD
           - 📄 top_level.txt
           - 📄 WHEEL
+        - 📂 **reportlab**
+          - 📂 **fonts**
+            - 📄 _a______.pfb
+            - 📄 _ab_____.pfb
+            - 📄 _abi____.pfb
+            - 📄 _ai_____.pfb
+            - 📄 _eb_____.pfb
+            - 📄 _ebi____.pfb
+            - 📄 _ei_____.pfb
+            - 📄 _er_____.pfb
+            - 📄 00readme.txt
+            - 📄 bitstream-vera-license.txt
+            - 📄 callig15.afm
+            - 📄 callig15.pfb
+            - 📄 cob_____.pfb
+            - 📄 cobo____.pfb
+            - 📄 com_____.pfb
+            - 📄 coo_____.pfb
+            - 📄 DarkGarden-changelog.txt
+            - 📄 DarkGarden-copying-gpl.txt
+            - 📄 DarkGarden-copying.txt
+            - 📄 DarkGarden-readme.txt
+            - 📄 DarkGarden.sfd
+            - 📄 DarkGardenMK.afm
+            - 📄 DarkGardenMK.pfb
+            - 📄 hb-test.ttf
+            - 📄 sy______.pfb
+            - 📄 Vera.ttf
+            - 📄 VeraBd.ttf
+            - 📄 VeraBI.ttf
+            - 📄 VeraIt.ttf
+            - 📄 zd______.pfb
+            - 📄 zx______.pfb
+            - 📄 zy______.pfb
+          - 📂 **graphics**
+            - 📂 **barcode**
+              - 📄 __init__.py
+              - 📄 code128.py
+              - 📄 code39.py
+              - 📄 code93.py
+              - 📄 common.py
+              - 📄 dmtx.py
+              - 📄 eanbc.py
+              - 📄 ecc200datamatrix.py
+              - 📄 fourstate.py
+              - 📄 lto.py
+              - 📄 qr.py
+              - 📄 qrencoder.py
+              - 📄 test.py
+              - 📄 usps.py
+              - 📄 usps4s.py
+              - 📄 widgets.py
+            - 📂 **charts**
+              - 📄 __init__.py
+              - 📄 areas.py
+              - 📄 axes.py
+              - 📄 barcharts.py
+              - 📄 dotbox.py
+              - 📄 doughnut.py
+              - 📄 legends.py
+              - 📄 linecharts.py
+              - 📄 lineplots.py
+              - 📄 markers.py
+              - 📄 piecharts.py
+              - 📄 slidebox.py
+              - 📄 spider.py
+              - 📄 textlabels.py
+              - 📄 utils.py
+              - 📄 utils3d.py
+            - 📂 **samples**
+              - 📄 __init__.py
+              - 📄 bubble.py
+              - 📄 clustered_bar.py
+              - 📄 clustered_column.py
+              - 📄 excelcolors.py
+              - 📄 exploded_pie.py
+              - 📄 filled_radar.py
+              - 📄 line_chart.py
+              - 📄 linechart_with_markers.py
+              - 📄 radar.py
+              - 📄 runall.py
+              - 📄 scatter_lines_markers.py
+              - 📄 scatter_lines.py
+              - 📄 scatter.py
+              - 📄 simple_pie.py
+              - 📄 stacked_bar.py
+              - 📄 stacked_column.py
+            - 📂 **widgets**
+              - 📄 __init__.py
+              - 📄 adjustableArrow.py
+              - 📄 eventcal.py
+              - 📄 flags.py
+              - 📄 grids.py
+              - 📄 markers.py
+              - 📄 signsandsymbols.py
+              - 📄 table.py
+            - 📄 __init__.py
+            - 📄 renderbase.py
+            - 📄 renderPDF.py
+            - 📄 renderPM.py
+            - 📄 renderPS.py
+            - 📄 renderSVG.py
+            - 📄 shapes.py
+            - 📄 svgpath.py
+            - 📄 testdrawings.py
+            - 📄 testshapes.py
+            - 📄 transform.py
+            - 📄 utils.py
+            - 📄 widgetbase.py
+          - 📂 **lib**
+            - 📄 __init__.py
+            - 📄 abag.py
+            - 📄 arciv.py
+            - 📄 attrmap.py
+            - 📄 boxstuff.py
+            - 📄 codecharts.py
+            - 📄 colors.py
+            - 📄 corp.py
+            - 📄 enums.py
+            - 📄 extformat.py
+            - 📄 fontfinder.py
+            - 📄 fonts.py
+            - 📄 formatters.py
+            - 📄 geomutils.py
+            - 📄 logger.py
+            - 📄 normalDate.py
+            - 📄 pagesizes.py
+            - 📄 pdfencrypt.py
+            - 📄 PyFontify.py
+            - 📄 pygments2xpre.py
+            - 📄 randomtext.py
+            - 📄 rl_accel.py
+            - 📄 rl_safe_eval.py
+            - 📄 rltempfile.py
+            - 📄 rparsexml.py
+            - 📄 sequencer.py
+            - 📄 styles.py
+            - 📄 testutils.py
+            - 📄 textsplit.py
+            - 📄 units.py
+            - 📄 utils.py
+            - 📄 validators.py
+            - 📄 yaml.py
+          - 📂 **pdfbase**
+            - 📄 __init__.py
+            - 📄 _can_cmap_data.py
+            - 📄 _cidfontdata.py
+            - 📄 _fontdata_enc_macexpert.py
+            - 📄 _fontdata_enc_macroman.py
+            - 📄 _fontdata_enc_pdfdoc.py
+            - 📄 _fontdata_enc_standard.py
+            - 📄 _fontdata_enc_symbol.py
+            - 📄 _fontdata_enc_winansi.py
+            - 📄 _fontdata_enc_zapfdingbats.py
+            - 📄 _fontdata_widths_courier.py
+            - 📄 _fontdata_widths_courierbold.py
+            - 📄 _fontdata_widths_courierboldoblique.py
+            - 📄 _fontdata_widths_courieroblique.py
+            - 📄 _fontdata_widths_helvetica.py
+            - 📄 _fontdata_widths_helveticabold.py
+            - 📄 _fontdata_widths_helveticaboldoblique.py
+            - 📄 _fontdata_widths_helveticaoblique.py
+            - 📄 _fontdata_widths_symbol.py
+            - 📄 _fontdata_widths_timesbold.py
+            - 📄 _fontdata_widths_timesbolditalic.py
+            - 📄 _fontdata_widths_timesitalic.py
+            - 📄 _fontdata_widths_timesroman.py
+            - 📄 _fontdata_widths_zapfdingbats.py
+            - 📄 _fontdata.py
+            - 📄 _glyphlist.py
+            - 📄 acroform.py
+            - 📄 cidfonts.py
+            - 📄 pdfdoc.py
+            - 📄 pdfform.py
+            - 📄 pdfmetrics.py
+            - 📄 pdfpattern.py
+            - 📄 pdfutils.py
+            - 📄 rl_codecs.py
+            - 📄 ttfonts.py
+          - 📂 **pdfgen**
+            - 📄 __init__.py
+            - 📄 canvas.py
+            - 📄 pathobject.py
+            - 📄 pdfgeom.py
+            - 📄 pdfimages.py
+            - 📄 textobject.py
+          - 📂 **platypus**
+            - 📄 __init__.py
+            - 📄 doctemplate.py
+            - 📄 figures.py
+            - 📄 flowables.py
+            - 📄 frames.py
+            - 📄 multicol.py
+            - 📄 para.py
+            - 📄 paragraph.py
+            - 📄 paraparser.py
+            - 📄 tableofcontents.py
+            - 📄 tables.py
+            - 📄 xpreformatted.py
+          - 📄 __init__.py
+          - 📄 rl_config.py
+          - 📄 rl_settings.py
+        - 📂 **reportlab-4.4.9.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
+          - 📄 WHEEL
         - 📂 **requests**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -31889,14 +36571,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📂 **rich**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
-            - 📄 __main__.cpython-314.pyc
-            - 📄 _cell_widths.cpython-314.pyc
             - 📄 _emoji_codes.cpython-314.pyc
             - 📄 _emoji_replace.cpython-314.pyc
             - 📄 _export_format.cpython-314.pyc
             - 📄 _extension.cpython-314.pyc
             - 📄 _fileno.cpython-314.pyc
-            - 📄 _inspect.cpython-314.pyc
             - 📄 _log_render.cpython-314.pyc
             - 📄 _loop.cpython-314.pyc
             - 📄 _null_file.cpython-314.pyc
@@ -31904,39 +36583,27 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
             - 📄 _pick.cpython-314.pyc
             - 📄 _ratio.cpython-314.pyc
             - 📄 _spinners.cpython-314.pyc
-            - 📄 _stack.cpython-314.pyc
-            - 📄 _timer.cpython-314.pyc
-            - 📄 _win32_console.cpython-314.pyc
-            - 📄 _windows_renderer.cpython-314.pyc
-            - 📄 _windows.cpython-314.pyc
             - 📄 _wrap.cpython-314.pyc
             - 📄 abc.cpython-314.pyc
             - 📄 align.cpython-314.pyc
             - 📄 ansi.cpython-314.pyc
-            - 📄 bar.cpython-314.pyc
             - 📄 box.cpython-314.pyc
             - 📄 cells.cpython-314.pyc
             - 📄 color_triplet.cpython-314.pyc
             - 📄 color.cpython-314.pyc
-            - 📄 columns.cpython-314.pyc
             - 📄 console.cpython-314.pyc
             - 📄 constrain.cpython-314.pyc
             - 📄 containers.cpython-314.pyc
             - 📄 control.cpython-314.pyc
             - 📄 default_styles.cpython-314.pyc
-            - 📄 diagnose.cpython-314.pyc
             - 📄 emoji.cpython-314.pyc
             - 📄 errors.cpython-314.pyc
             - 📄 file_proxy.cpython-314.pyc
             - 📄 filesize.cpython-314.pyc
             - 📄 highlighter.cpython-314.pyc
-            - 📄 json.cpython-314.pyc
             - 📄 jupyter.cpython-314.pyc
-            - 📄 layout.cpython-314.pyc
             - 📄 live_render.cpython-314.pyc
             - 📄 live.cpython-314.pyc
-            - 📄 logging.cpython-314.pyc
-            - 📄 markdown.cpython-314.pyc
             - 📄 markup.cpython-314.pyc
             - 📄 measure.cpython-314.pyc
             - 📄 padding.cpython-314.pyc
@@ -31946,16 +36613,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
             - 📄 pretty.cpython-314.pyc
             - 📄 progress_bar.cpython-314.pyc
             - 📄 progress.cpython-314.pyc
-            - 📄 prompt.cpython-314.pyc
             - 📄 protocol.cpython-314.pyc
             - 📄 region.cpython-314.pyc
             - 📄 repr.cpython-314.pyc
-            - 📄 rule.cpython-314.pyc
             - 📄 scope.cpython-314.pyc
             - 📄 screen.cpython-314.pyc
             - 📄 segment.cpython-314.pyc
             - 📄 spinner.cpython-314.pyc
-            - 📄 status.cpython-314.pyc
             - 📄 style.cpython-314.pyc
             - 📄 styled.cpython-314.pyc
             - 📄 syntax.cpython-314.pyc
@@ -31964,11 +36628,35 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
             - 📄 text.cpython-314.pyc
             - 📄 theme.cpython-314.pyc
             - 📄 themes.cpython-314.pyc
-            - 📄 traceback.cpython-314.pyc
-            - 📄 tree.cpython-314.pyc
+          - 📂 **_unicode_data**
+            - 📂 **__pycache__**
+              - 📄 __init__.cpython-314.pyc
+              - 📄 _versions.cpython-314.pyc
+            - 📄 __init__.py
+            - 📄 _versions.py
+            - 📄 unicode10-0-0.py
+            - 📄 unicode11-0-0.py
+            - 📄 unicode12-0-0.py
+            - 📄 unicode12-1-0.py
+            - 📄 unicode13-0-0.py
+            - 📄 unicode14-0-0.py
+            - 📄 unicode15-0-0.py
+            - 📄 unicode15-1-0.py
+            - 📄 unicode16-0-0.py
+            - 📄 unicode17-0-0.py
+            - 📄 unicode4-1-0.py
+            - 📄 unicode5-0-0.py
+            - 📄 unicode5-1-0.py
+            - 📄 unicode5-2-0.py
+            - 📄 unicode6-0-0.py
+            - 📄 unicode6-1-0.py
+            - 📄 unicode6-2-0.py
+            - 📄 unicode6-3-0.py
+            - 📄 unicode7-0-0.py
+            - 📄 unicode8-0-0.py
+            - 📄 unicode9-0-0.py
           - 📄 __init__.py
           - 📄 __main__.py
-          - 📄 _cell_widths.py
           - 📄 _emoji_codes.py
           - 📄 _emoji_replace.py
           - 📄 _export_format.py
@@ -32045,11 +36733,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 themes.py
           - 📄 traceback.py
           - 📄 tree.py
-        - 📂 **rich-13.7.1.dist-info**
+        - 📂 **rich-14.3.2.dist-info**
           - 📄 INSTALLER
           - 📄 LICENSE
           - 📄 METADATA
           - 📄 RECORD
+          - 📄 REQUESTED
           - 📄 WHEEL
         - 📂 **rpds**
           - 📂 **__pycache__**
@@ -34466,6 +39155,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 METADATA
           - 📄 RECORD
           - 📄 WHEEL
+        - 📂 **uuid_extensions**
+          - 📂 **__pycache__**
+            - 📄 __init__.cpython-314.pyc
+            - 📄 uuid7.cpython-314.pyc
+          - 📄 __init__.py
+          - 📄 uuid7.py
         - 📂 **uuid_utils**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
@@ -34484,6 +39179,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 INSTALLER
           - 📄 METADATA
           - 📄 RECORD
+          - 📄 WHEEL
+        - 📂 **uuid7-0.1.0.dist-info**
+          - 📄 INSTALLER
+          - 📄 LICENSE
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
+          - 📄 top_level.txt
           - 📄 WHEEL
         - 📂 **uvicorn**
           - 📂 **__pycache__**
@@ -34614,6 +39317,31 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 INSTALLER
           - 📄 METADATA
           - 📄 RECORD
+          - 📄 WHEEL
+        - 📂 **wcwidth**
+          - 📄 __init__.py
+          - 📄 bisearch.py
+          - 📄 control_codes.py
+          - 📄 escape_sequences.py
+          - 📄 grapheme.py
+          - 📄 py.typed
+          - 📄 sgr_state.py
+          - 📄 table_ambiguous.py
+          - 📄 table_grapheme.py
+          - 📄 table_mc.py
+          - 📄 table_vs16.py
+          - 📄 table_wide.py
+          - 📄 table_zero.py
+          - 📄 textwrap.py
+          - 📄 unicode_versions.py
+          - 📄 wcwidth.py
+        - 📂 **wcwidth-0.6.0.dist-info**
+          - 📂 **licenses**
+            - 📄 LICENSE
+          - 📄 INSTALLER
+          - 📄 METADATA
+          - 📄 RECORD
+          - 📄 REQUESTED
           - 📄 WHEEL
         - 📂 **websockets**
           - 📂 **__pycache__**
@@ -35936,6 +40664,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 _soundfile.py
         - 📄 distutils-precedence.pth
         - 📄 google_auth_httplib2.py
+        - 📄 google_generativeai-0.8.6-py3.13-nspkg.pth
+        - 📄 jsonpatch.py
+        - 📄 jsonpointer.py
         - 📄 pythoncom.py
         - 📄 PyWin32.chm
         - 📄 pywin32.pth
@@ -35953,6 +40684,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 activate.fish
       - 📄 Activate.ps1
       - 📄 agl.exe
+      - 📄 browser-use-tui.exe
+      - 📄 browser-use.exe
+      - 📄 browser.exe
+      - 📄 browseruse.exe
+      - 📄 bu.exe
       - 📄 deactivate.bat
       - 📄 devui.exe
       - 📄 distro.exe
@@ -35960,17 +40696,23 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 email_validator.exe
       - 📄 f2py.exe
       - 📄 fastapi.exe
+      - 📄 filetype.exe
       - 📄 flask.exe
       - 📄 gaia_viewer.exe
+      - 📄 google-oauthlib-tool.exe
       - 📄 gunicorn.exe
       - 📄 hf.exe
       - 📄 httpx.exe
       - 📄 jp.py
+      - 📄 jsondiff
+      - 📄 jsonpatch
+      - 📄 jsonpointer
       - 📄 jsonschema.exe
       - 📄 lightning.exe
       - 📄 litellm-proxy.exe
       - 📄 litellm.exe
       - 📄 markdown-it.exe
+      - 📄 markdownify.exe
       - 📄 mcp.exe
       - 📄 normalizer.exe
       - 📄 numpy-config.exe
@@ -37030,6 +41772,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 requirements.txt
     - 📂 **migrations**
       - 📄 0001_initial_schema.sql
+      - 📄 0002_task_analytics.sql
     - 📂 **n8n**
       - 📄 bas-task-handler-workflow.json
       - 📄 bas-task-handler.json
@@ -37051,13 +41794,21 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📂 **bin**
     - 📄 cloudflared.exe
   - 📂 **cloudflare**
+    - 📂 **migrations**
+      - 📄 0000_schema.sql
     - 📂 **src**
+      - 📄 edge-coordinator.ts
       - 📄 index.ts
+      - 📄 types.ts
     - 📄 package.json
     - 📄 tsconfig.json
     - 📄 wrangler.jsonc
   - 📂 **conductor**
     - 📂 **archive**
+      - 📂 **agent_architect_upgrade_20260205**
+        - 📄 meta.json
+        - 📄 spec.md
+        - 📄 track.md
       - 📂 **browser_use_harvester_20260131**
         - 📄 meta.json
         - 📄 plan.md
@@ -37072,6 +41823,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 metadata.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **dashboard-todo-widget-20260211**
+        - 📄 meta.json
+        - 📄 spec.md
+        - 📄 track.md
       - 📂 **data_flywheel_incubator_20260205**
         - 📄 meta.json
         - 📄 spec.md
@@ -37083,11 +41838,28 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 plan.md
         - 📄 spec másolata.md
         - 📄 spec.md
+      - 📂 **iron_clad_backend_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **jules-async-test-automation-20260211**
+        - 📄 meta.json
+        - 📄 spec.md
+        - 📄 track.md
       - 📂 **jules-qa-integration_20260120**
         - 📄 index.md
         - 📄 metadata.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **spec-writer-agent-20260211**
+        - 📄 meta.json
+        - 📄 track.md
+      - 📂 **task-decomposer-agent-20260211**
+        - 📄 meta.json
+        - 📄 spec.md
+        - 📄 track.md
+      - 📂 **TR-20260212-TECH-HAR**
+        - 📄 meta.json
+        - 📄 TR-20260212-TECH-HARVESTER.md
       - 📂 **tracks_backup_20260209**
         - 📂 **agent_swarm_core_20260129**
           - 📄 plan.md
@@ -37193,40 +41965,108 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 CONDUCTOR_MANIFEST_backup_20260204.md
       - 📄 CONDUCTOR_MANIFEST_old.md
     - 📂 **tracks**
-      - 📂 **agent_architect_upgrade_20260205**
+      - 📂 **bas_comprehensive_test_protocol_20260210**
         - 📄 meta.json
         - 📄 spec.md
+        - 📄 track.md
       - 📂 **cloudflare_edge_integration_20260202**
+        - 📄 meta.json
         - 📄 plan.md
         - 📄 sprint4_spec.md
+      - 📂 **cloudflare-chat-integration-20260211**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
+        - 📄 track.md
+      - 📂 **cloudflare-iteration-2-20260212**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **code_quality_improvements_20260210**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **codex_chat_refactor_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **creative_friction_mediator_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **dashboard_test_suite_20260210**
+        - 📄 meta.json
+        - 📄 plan.md
         - 📄 spec.md
       - 📂 **dashboard_v2_robotkez_control_20260208**
+        - 📄 meta.json
         - 📄 spec.md
       - 📂 **developer_agent_2_0_20260206**
         - 📂 **P10_Metrics_Analytics**
           - 📄 spec.md
+        - 📄 meta.json
         - 📄 plan.md
+        - 📄 spec.md
+      - 📂 **epp-v2-protocol-20260211**
+        - 📄 meta.json
+        - 📄 track.md
+      - 📂 **gemini_git_agent_20260212**
+        - 📄 meta.json
         - 📄 spec.md
       - 📂 **gold_protocol**
         - 📄 meta.json
         - 📄 plan.md
         - 📄 spec.md
         - 📄 status.md
+      - 📂 **green_lightning_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **innovation_bridge_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **iron_clad_backend_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **jules_enterprise_cicd_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **living_documentation_system_20260213**
+        - 📄 spec.md
+      - 📂 **magyar-cli-menu-system-20260211**
+        - 📄 meta.json
+        - 📄 spec.md
+        - 📄 track.md
+      - 📂 **micro_csr_automator_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **otel_agent_tracing_20260211**
+        - 📄 meta.json
+        - 📄 track.md
       - 📂 **phoenix_protocol_v2_20260205**
         - 📄 meta.json
         - 📄 spec.md
       - 📂 **robotkez_n8n_sandbox_edzesterv**
         - 📄 BROWSER_USE_TEST_REPORT.md
+        - 📄 meta.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **robotkez_stabilization_20260212**
+        - 📄 meta.json
+        - 📄 track.md
+      - 📂 **self_healing_core_20260213**
+        - 📄 meta.json
+        - 📄 track.md
+      - 📂 **test-20260211**
+      - 📂 **test-feature-20260211**
+      - 📂 **test-track-12345678**
+      - 📂 **test-track-20260211**
     - 📄 BAS_ARCHITECTURE_v2.md
+    - 📄 CHANGELOG.md
     - 📄 Cocductornak_szeretettel.pdf
     - 📄 CONDUCTOR_MANIFEST.md
+    - 📄 epp-v2.md
     - 📄 index.md
     - 📄 meta-schema.json
     - 📄 product-guidelines.md
     - 📄 product.md
+    - 📄 project_state.json
     - 📄 setup_state.json
     - 📄 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAA.txt
     - 📄 SUMMARY.md
@@ -37257,9 +42097,34 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 audit.db-shm
     - 📄 audit.db-wal
     - 📄 checkpoints.db
+    - 📄 checkpoints.db-shm
+    - 📄 checkpoints.db-wal
     - 📄 developer_metrics.json
+    - 📄 fix_queue.json
     - 📄 tasks.db
   - 📂 **docs**
+    - 📂 **agents**
+      - 📄 DataScientistAgent.md
+      - 📄 DependencyGraphAgent.md
+      - 📄 DeveloperAgent.md
+      - 📄 DocsIntelligenceAgent.md
+      - 📄 DynamicAgent.md
+      - 📄 EdgeProxyAgent.md
+      - 📄 EvaluatorAgent.md
+      - 📄 LintFixerAgent.md
+      - 📄 OrchestratorAgent.md
+      - 📄 ProjectConductorAgent.md
+      - 📄 PythonAgent.md
+      - 📄 README_COVERAGE.md
+      - 📄 ResearcherAgent.md
+      - 📄 RobotkezAgent.md
+      - 📄 SpecWriterAgent.md
+      - 📄 TaskDecomposerAgent.md
+      - 📄 VoiceAgent.md
+    - 📂 **monitoring**
+      - 📂 **grafana** _(Grafana Dashboard Baseline)_
+        - 📄 brunella-agents-overview.dashboard.json
+        - 📄 README.md
     - 📄 AGENT_PERMISSIONS_GUIDE.md
     - 📄 CLOUDFLARE_INTEGRATION.md
     - 📄 cloudflare-tunnel-setup.md
@@ -37268,10 +42133,53 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 jules-repo-config.md
     - 📄 jules-setup.md
     - 📄 MCP_TOOL_PERMISSIONS_GUIDE.md
+    - 📄 MONITORING_PROMETHEUS.md
     - 📄 n8n-setup.md
     - 📄 ROBOTKEZ_SETUP.md
     - 📄 tunnel-config.example.yml
     - 📄 tunnel-config.yml
+  - 📂 **Egyéb**
+    - 📂 **cloudflare llm prompt**
+      - 📂 **llm**
+        - 📄 fejlesztoi_platform.md
+        - 📄 keresesllm.md
+        - 📄 llm.md
+        - 📄 prompt.md
+      - 📄 ai_tooling.md
+      - 📄 certs.json
+      - 📄 cloudflare_bovites.md
+      - 📄 Cloudflare_MCP_Server_One_Pager.pdf
+      - 📄 developer_cloudflare.md
+    - 📂 **Jules** _(Example Workflows)_
+      - 📄 enterprise.yml
+      - 📄 README.md
+    - 📂 **n8n+robotkez+agentfactory**
+      - 📄 myaitasksev_hunter.py
+      - 📄 n8n_workflowsev_hunter.json
+      - 📄 track_new.md
+      - 📄 workersscraper-worker.js
+    - 📂 **Workflow (n8n, Langflow)**
+      - 📂 **1. A Kreatív Súrlódás Mediátor (The Vibe-Check Mediator)**
+        - 📄 surlodas.json
+        - 📄 surlodas.md
+      - 📂 **2. Kereszt-Iparági Tudás-Híd Kereső (Cross-Industry Innovation Bridge)**
+        - 📄 tudashid.json
+        - 📄 tudashid.md
+      - 📂 **3. A Mikro-Helyi CSR Automata (The Neighborhood Watchman)**
+        - 📄 csr_automata.json
+        - 📄 csr_automata.md
+      - 📂 **KÉSZ**
+        - 📂 **1. A Kreatív Súrlódás Mediátor (The Vibe-Check Mediator)**
+          - 📄 BAS_AI_Research_Pipeline_v1.json
+          - 📄 surlodas.JSON
+          - 📄 surlodas.md
+        - 📂 **2. Kereszt-Iparági Tudás-Híd Kereső (Cross-Industry Innovation Bridge)**
+          - 📄 tudashid.json
+          - 📄 tudashid.md
+        - 📂 **3. A Mikro-Helyi CSR Automata (The Neighborhood Watchman)**
+          - 📄 csr_automata.json
+          - 📄 csr_automata.md
+    - 📄 cloudflare_chat.md
   - 📂 **external_research**
     - 📂 **Auralia** _(🎤 Auralia - Intelligent Voice Assistant)_
       - 📂 **app**
@@ -110509,6 +115417,20 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 project_organizer.toml
       - 📄 README.md
       - 📄 STARTED_APPS.md
+      - 📄 TECH_HARVESTER_README.md
+      - 📄 tech_harvester.py
+    - 📂 **backend** _(Iron Clad Python AI Backend (Phase 1-5))_
+      - 📄 __init__.py
+      - 📄 app.py
+      - 📄 config.py
+      - 📄 interpreter_adapter.py
+      - 📄 langgraph_orchestrator.py
+      - 📄 opendevin_adapter.py
+      - 📄 providers.py
+      - 📄 README.md
+      - 📄 schemas.py
+    - 📂 **config**
+      - 📄 sources.json
     - 📂 **core**
       - 📂 **__pycache__**
         - 📄 __init__.cpython-314.pyc
@@ -110524,6 +115446,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 tools.py
     - 📂 **data**
       - 📂 **training**
+        - 📄 golden_dataset.jsonl
+    - 📂 **examples** _(myai/examples)_
+      - 📄 rag_golden_dataset_walkthrough.ipynb
+      - 📄 README.md
     - 📂 **incubator**
       - 📄 Modelfile.template
       - 📄 train.py
@@ -110547,6 +115473,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 test_browser_worker.py
       - 📄 test_cli.py
       - 📄 test_dependencies.py
+      - 📄 test_iron_clad_backend_phase1.py
+      - 📄 test_iron_clad_interpreter_adapter.py
+      - 📄 test_iron_clad_langgraph_phase3.py
+      - 📄 test_iron_clad_opendevin_adapter.py
+      - 📄 test_iron_clad_provider.py
       - 📄 test_llm.py
       - 📄 test_project.py
       - 📄 test_sandbox.py
@@ -110554,7 +115485,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 test_tools.py
     - 📂 **tools**
       - 📄 __init__.py
+      - 📄 HARVEST_PIPELINE_README.md
+      - 📄 harvest_pipeline.py
       - 📄 integrated_research.py
+      - 📄 knowledge_integrator.py
     - 📂 **utils**
       - 📂 **__pycache__**
         - 📄 __init__.cpython-312.pyc
@@ -110921,6 +115855,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 poetry.lock
     - 📄 pyproject.toml
     - 📄 README.md
+  - 📂 **playwright-report**
+    - 📂 **data**
+      - 📄 10d9e53e1aa9a72651db3405f24c3f97fddd29a6.webm
+      - 📄 7a33d5db6370b6de345e990751aa1f1da65ad675.png
+      - 📄 7af5b73be4b26d34e5276c189510a6c6e3e43ad5.webm
+      - 📄 98792efc19c0e70ddeb6c70e3b9471f7555fed27.webm
+    - 📄 index.html
   - 📂 **public**
     - 📄 index.html
   - 📂 **schemas**
@@ -110951,6 +115892,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 generate_tree.mjs
     - 📄 generate-ai-context.js
     - 📄 github_token_help.txt
+    - 📄 health_check.ts
     - 📄 init_lancedb.py
     - 📄 jules_api_client.py
     - 📄 jules_check.mjs
@@ -110975,6 +115917,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 spec-freeze-check.cjs
     - 📄 start_remote.ps1
     - 📄 start_server_debug.ps1
+    - 📄 sync_conductor.py
     - 📄 sync_foszal.py
     - 📄 SYNC_README.md
     - 📄 sync-agent.js
@@ -110986,13 +115929,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 test_cf_browser_rendering.ps1
     - 📄 test_cf_workers_ai.ps1
     - 📄 test_cloudflare_agents.py
+    - 📄 test_cloudflare_history.ts
     - 📄 test_prepare.cjs
     - 📄 test_swarm.ts
     - 📄 update_ollama_model.bat
     - 📄 watch-changes.js
   - 📂 **src**
-    - 📂 **__pycache__**
     - 📂 **agents**
+      - 📂 **cloudflare**
+        - 📄 CloudflareClient.ts
       - 📄 AgentArchitect.ts
       - 📄 AgentManager.ts
       - 📄 BaseAgent.ts
@@ -111020,12 +115965,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 RobotkezAgent.ts
       - 📄 specStatus.ts
       - 📄 SpecWriterAgent.ts
+      - 📄 TaskDecomposerAgent.ts
+      - 📄 taskDecomposerCore.ts
       - 📄 taskQueue.ts
       - 📄 types.ts
       - 📄 VoiceAgent.ts
     - 📂 **cli**
       - 📄 devCommands.ts
+      - 📄 edgeCommands.ts
       - 📄 goldCommands.ts
+      - 📄 progressCommands.ts
+      - 📄 taskDecomposerCommands.ts
+      - 📄 tracksCommands.ts
     - 📂 **config**
       - 📄 index.ts
       - 📄 schema.ts
@@ -111065,11 +116016,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 CostSummary.tsx
           - 📄 DeveloperPanel.tsx
           - 📄 DeveloperPipeline.tsx
+          - 📄 EdgePanel.tsx
           - 📄 EmbeddedWorkflow.tsx
           - 📄 FileExplorer.tsx
           - 📄 GoldStatusWidget.tsx
           - 📄 IncubatorPanel.tsx
           - 📄 InventoryCatalog.tsx
+          - 📄 JulesPanel.tsx
           - 📄 KnowledgeBasePanel.tsx
           - 📄 LiveIndicator.tsx
           - 📄 LLMProvidersPanel.tsx
@@ -111085,11 +116038,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 SpecManagerPanel.tsx
           - 📄 StatusCard.tsx
           - 📄 SystemHealthCard.tsx
+          - 📄 TaskDecomposerPanel.tsx
           - 📄 TaskQueueMonitor.tsx
           - 📄 TerminalLog.tsx
           - 📄 TokenUsageChart.tsx
           - 📄 ToolsCard.tsx
           - 📄 TraceViewer.tsx
+          - 📄 TrackGenerator.tsx
+          - 📄 TrackProgress.tsx
+          - 📄 TrackTodoWidget.tsx
         - 📂 **ui**
           - 📄 accordion.tsx
           - 📄 alert-dialog.tsx
@@ -111148,8 +116105,22 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **hooks**
         - 📄 use-mobile.ts
         - 📄 useDashboardData.ts
+        - 📄 useEdgeWebSocket.ts
         - 📄 useMCP.ts
       - 📂 **lib**
+        - 📂 **chat**
+          - 📂 **providers**
+            - 📄 cloudflareChatProvider.ts
+            - 📄 cloudflareEdgeProvider.ts
+            - 📄 geminiProvider.ts
+            - 📄 githubProvider.ts
+            - 📄 ollamaProvider.ts
+            - 📄 orchestratorProvider.ts
+            - 📄 utils.ts
+          - 📄 contextBuilder.ts
+          - 📄 providerRegistry.ts
+          - 📄 sessionStore.ts
+          - 📄 types.ts
         - 📄 apiService.ts
         - 📄 auth.ts
         - 📄 externalApiService.ts
@@ -111187,14 +116158,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **routes**
         - 📄 agents.ts
         - 📄 chat.ts
+        - 📄 cloudflare.ts
         - 📄 developer.ts
         - 📄 external.ts
         - 📄 files.ts
         - 📄 health.ts
         - 📄 index.ts
+        - 📄 jules.ts
         - 📄 llm.ts
+        - 📄 robotkez.ts
         - 📄 tasks.ts
         - 📄 tools.ts
+        - 📄 tracks.ts
       - 📄 auditRoutes.ts
       - 📄 McpProcessManager.ts
       - 📄 memoryRoutes.ts
@@ -111208,9 +116183,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 SystemController.ts
       - 📄 telemetryRoutes.ts
       - 📄 ToolManager.ts
+      - 📄 tracksRoutes.ts
       - 📄 web.ts
+      - 📄 websocket.ts
     - 📂 **servers**
-      - 📂 **__pycache__**
       - 📄 automation.py
       - 📄 workspace.py
     - 📂 **tools**
@@ -111228,7 +116204,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 monitor.ts
       - 📄 n8n.ts
       - 📄 ollamaTool.ts
-      - 📄 swarmTools.tmp
       - 📄 swarmTools.ts
       - 📄 system.ts
       - 📄 toolPermissions.ts
@@ -111249,6 +116224,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 db.ts
       - 📄 developerMetrics.ts
       - 📄 exec.ts
+      - 📄 fixQueue.ts
       - 📄 fsInspector.ts
       - 📄 googleAuth.ts
       - 📄 health_check.ts
@@ -111258,6 +116234,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 mcpClient.ts
       - 📄 mcpClientManager.ts
       - 📄 memoryContext.ts
+      - 📄 metrics.ts
+      - 📄 otelTracing.ts
       - 📄 pythonShell.ts
       - 📄 rag.ts
       - 📄 serverManager.ts
@@ -111265,15 +116243,31 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 systemHealth.ts
       - 📄 tasksDb.ts
       - 📄 telemetry.ts
+      - 📄 trackTodoParser.ts
       - 📄 validateSecrets.ts
     - 📄 cli-edge.ts
+    - 📄 cli-hu.ts
     - 📄 cli-jules-interactive.ts
     - 📄 cli.ts
     - 📄 index.ts
     - 📄 interactive.ts
-    - 📄 main.py
     - 📄 SUMMARY.md
   - 📂 **test**
+    - 📂 **dashboard**
+      - 📂 **components**
+        - 📄 ErrorBoundary.test.tsx
+        - 📄 NeuralLinkChat.test.tsx
+      - 📂 **mocks**
+        - 📄 handlers.ts
+      - 📄 setup.ts
+    - 📂 **e2e**
+      - 📄 action-triggering.spec.ts
+      - 📄 error-handling.spec.ts
+      - 📄 mission-control.spec.ts
+      - 📄 navigation.spec.ts
+      - 📄 socket-reconnect.spec.ts
+      - 📄 tabs-advanced.spec.ts
+      - 📄 tabs-basic.spec.ts
     - 📄 ## Chat Customization Diagnostics.md
     - 📄 activity_feed.test.ts
     - 📄 agent_template.test.ts
@@ -111285,6 +116279,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 browser_rendering.test.ts
     - 📄 checkpoint.test.ts
     - 📄 cli_config.test.ts
+    - 📄 cloudflare_integration.test.ts
+    - 📄 cloudflare_routes.test.ts
     - 📄 code_review.test.ts
     - 📄 code_scaffold.test.ts
     - 📄 codebaseIndexer.test.ts
@@ -111292,24 +116288,34 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 context_builder.test.ts
     - 📄 core_tools.test.ts
     - 📄 coverage_analysis.test.ts
+    - 📄 dashboard_chat_lib.test.ts
     - 📄 data_refiner.test.ts
+    - 📄 delegation_chain.test.ts
     - 📄 dev_commands.test.ts
     - 📄 developer_pipeline.test.ts
     - 📄 DeveloperAgent.test.ts
     - 📄 ev_hunter_research.test.ts
     - 📄 git_integration.test.ts
     - 📄 goldenDatasetBridge.test.ts
+    - 📄 health_check.test.ts
     - 📄 hooks.test.ts
     - 📄 incubator_test.py
+    - 📄 input_sanitization.test.ts
+    - 📄 jules_workflow_routes.test.ts
     - 📄 lint_fixer.test.ts
     - 📄 llm_client.test.ts
     - 📄 llm_provider.test.ts
+    - 📄 mcp-brunella-core.code-workspace
     - 📄 memory_context.test.ts
+    - 📄 memoryRoutes.golden.test.ts
     - 📄 middleware.test.ts
     - 📄 modelRouter.test.ts
     - 📄 monitor.test.ts
     - 📄 monitor.vitest.ts
     - 📄 n8n_automation.test.ts
+    - 📄 phoenix_recovery.test.ts
+    - 📄 project_conductor_living_docs.test.ts
+    - 📄 prometheus_metrics.test.ts
     - 📄 python_shell.test.ts
     - 📄 rag.test.ts
     - 📄 retryStrategy.test.ts
@@ -111321,9 +116327,26 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 socketService.test.ts
     - 📄 specStatus.test.ts
     - 📄 SpecWriterAgent.test.ts
+    - 📄 state_restoration.test.ts
+    - 📄 structured_output.test.ts
+    - 📄 swagger_spec.test.ts
     - 📄 task_queue.test.ts
+    - 📄 taskDecomposerCore.test.ts
     - 📄 telemetry.test.ts
+    - 📄 tracks_todos_routes.test.ts
+    - 📄 trackTodoParser.test.ts
+  - 📂 **test-results**
+    - 📂 **action-triggering-ErrorBou-599cf-ad-of-crash-on-widget-error-chromium**
+      - 📄 test-failed-1.png
+      - 📄 video.webm
+    - 📂 **action-triggering-ErrorBou-faa62--after-error-boundary-reset-chromium**
+      - 📄 test-failed-1.png
+      - 📄 video.webm
+    - 📂 **error-handling-Error-Handl-f57cb-hite-screen-on-initial-load-chromium**
+      - 📄 test-failed-1.png
+      - 📄 video.webm
   - 📂 **testing**
+    - 📂 **egyeb**
     - 📂 **hirszerzes_test_1**
       - 📄 ai_research_pipeline.json
       - 📄 arxiv_search_tool.py
@@ -111336,6 +116359,17 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 README_TELJES.md
       - 📄 requirements.txt
       - 📄 SETUP.md
+    - 📂 **KÉSZ**
+      - 📂 **1. A Kreatív Súrlódás Mediátor (The Vibe-Check Mediator)**
+        - 📄 BAS_AI_Research_Pipeline_v1.json
+        - 📄 surlodas.JSON
+        - 📄 surlodas.md
+      - 📂 **2. Kereszt-Iparági Tudás-Híd Kereső (Cross-Industry Innovation Bridge)**
+        - 📄 tudashid.json
+        - 📄 tudashid.md
+      - 📂 **3. A Mikro-Helyi CSR Automata (The Neighborhood Watchman)**
+        - 📄 csr_automata.json
+        - 📄 csr_automata.md
     - 📄 TEST_BOOK.md
   - 📄 _AI_CHAT_LOG.json
   - 📄 _AI_CHAT_LOG.md
@@ -111349,10 +116383,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 _JULES_MAINTENANCE_TASKS.md
   - 📄 _PROJECT_STRUCTURE.md
   - 📄 _QUICK_START.md
-  - 📄 1.jpg
   - 📄 2026-02-06-.txt
   - 📄 2026-02-06-this-session-is-being-continued-from-a-previous-co.txt
   - 📄 2026-02-07-this-session-is-being-continued-from-a-previous-co.txt
+  - 📄 2026-02-11-this-session-is-being-continued-from-a-previous-co.txt
   - 📄 agents.db
   - 📄 AnythingLLM
   - 📄 audit_report.json
@@ -111364,6 +116398,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 docker-compose.yml
   - 📄 Dockerfile.node
   - 📄 Dockerfile.python
+  - 📄 eslint.config.js
   - 📄 GEMINI.md
   - 📄 git_sync.ps1
   - 📄 interactive.py
@@ -111371,11 +116406,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 JULES_INTEGRATION.md
   - 📄 konyvtarfa.md
   - 📄 latest_email.html
+  - 📄 LICENSE
+  - 📄 mag.md
   - 📄 mcp_servers.json
   - 📄 Ollama
   - 📄 package.json
   - 📄 peterpohankapersonal@gmail.com.ical.zip
+  - 📄 playwright.config.ts
   - 📄 pnpm-lock.yaml
+  - 📄 PROJEKT_DIAGRAM_2026-02-13.md
   - 📄 pyproject.toml
   - 📄 README.md
   - 📄 rendszer ellenorzes.md.txt
@@ -111401,5 +116440,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 USER_START.md
   - 📄 verify_port.ts
   - 📄 vite.config.ts
+  - 📄 vitest_output.txt
   - 📄 vitest.config.ts
+  - 📄 vitest.dashboard.config.ts
   - 📄 workflow.md

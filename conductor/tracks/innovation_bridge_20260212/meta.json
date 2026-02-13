@@ -1,0 +1,20 @@
+{
+  "id": "innovation_bridge_20260212",
+  "name": "Innovation Bridge - Cross-Industry Knowledge Transfer",
+  "status": "proposed",
+  "priority": "medium",
+  "progress": 0,
+  "created": "2026-02-12T00:00:00Z",
+  "updated": "2026-02-12T17:16:00Z",
+  "assignee": "ResearcherAgent + n8n",
+  "tags": [
+    "innovation",
+    "n8n",
+    "triz",
+    "cross-industry",
+    "patent-search"
+  ],
+  "estimatedHours": 12,
+  "description": "Data Flywheel alapú innovációs keresőmotor - iparági problémák cross-industry megoldáskeresése (TRIZ alapú).",
+  "spec_status": "pending_approval"
+}

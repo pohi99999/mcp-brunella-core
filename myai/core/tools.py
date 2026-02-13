@@ -2,13 +2,20 @@ import os
 import json
 import subprocess
 from typing import Dict, Any, List, Optional
-from myai.config import PROJECT_IGNORE
+from myai.config import PROJECT_IGNORE, WORKSPACE_ROOT
 from .llm import simple_completion
 
 
-def list_files(root: str = ".") -> List[str]:
+def list_files(root: str = "") -> List[str]:
+    """List project files. Uses WORKSPACE_ROOT as base to avoid cwd dependency."""
+    if root and os.path.isabs(root):
+        effective_root = root
+    elif root:
+        effective_root = str(WORKSPACE_ROOT / root)
+    else:
+        effective_root = str(WORKSPACE_ROOT)
     result = []
-    for base, dirs, files in os.walk(root):
+    for base, dirs, files in os.walk(effective_root):
         dirs[:] = [d for d in dirs if d not in PROJECT_IGNORE]
         for f in files:
             path = os.path.join(base, f)

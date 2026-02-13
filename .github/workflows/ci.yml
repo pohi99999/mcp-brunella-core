@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install dependencies
         run: npm ci
@@ -28,7 +28,7 @@ jobs:
       - name: Run tests
         run: npm test
         env:
-          WEB_UI_ENABLED: '0'
+          WEB_UI_ENABLED: "0"
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
@@ -41,7 +41,7 @@ jobs:
           N8N_TEST_URL: ${{ secrets.N8N_TEST_URL }}
           N8N_TEST_USER: ${{ secrets.N8N_TEST_USER }}
           N8N_TEST_PASSWORD: ${{ secrets.N8N_TEST_PASSWORD }}
-          BRUNELLA_SKIP_SECRETS_CHECK: '1'
+          BRUNELLA_SKIP_SECRETS_CHECK: "1"
 
   vitest:
     runs-on: ubuntu-latest
@@ -51,7 +51,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install deps
         run: npm ci
@@ -75,8 +75,8 @@ jobs:
           N8N_TEST_URL: ${{ secrets.N8N_TEST_URL }}
           N8N_TEST_USER: ${{ secrets.N8N_TEST_USER }}
           N8N_TEST_PASSWORD: ${{ secrets.N8N_TEST_PASSWORD }}
-          BRUNELLA_SKIP_SECRETS_CHECK: '1'
-          WEB_UI_ENABLED: '0'
+          BRUNELLA_SKIP_SECRETS_CHECK: "1"
+          WEB_UI_ENABLED: "0"
 
   build-python:
     runs-on: ubuntu-latest
@@ -86,8 +86,8 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
-          cache: 'pip'
+          python-version: "3.12"
+          cache: "pip"
 
       - name: Install Python dependencies
         run: pip install -r requirements.txt
@@ -110,7 +110,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Setup Python venv
         run: |
@@ -124,7 +124,7 @@ jobs:
       - name: PythonShell tests
         run: node --loader ts-node/esm --test test/python_shell.test.ts
         env:
-          WEB_UI_ENABLED: '0'
+          WEB_UI_ENABLED: "0"
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
           LLM_PROVIDER: ${{ secrets.LLM_PROVIDER }}
@@ -137,11 +137,11 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: "20"
 
       - name: Install dependencies
         run: npm ci
 
       - name: Run linter
-        run: npm run lint || echo "⚠️ Lint step skipped - not configured in package.json"
+        run: npm run lint
         continue-on-error: true

@@ -57,12 +57,12 @@ A Sprint 3 sikeresen lezárult a teljes 8-endpoint Browser Rendering API impleme
 
 **Performance célok:**
 
-| Metrika | Target | Measurement |
-|---------|---------|-------------|
-| Global Response Time | < 500ms | Multiple regions |
-| Cache Hit Ratio | > 80% | Static resources |
-| Compression | > 70% | Text/JSON responses |
-| Uptime | 99.9% | 30-day period |
+| Metrika              | Target  | Measurement         |
+| -------------------- | ------- | ------------------- |
+| Global Response Time | < 500ms | Multiple regions    |
+| Cache Hit Ratio      | > 80%   | Static resources    |
+| Compression          | > 70%   | Text/JSON responses |
+| Uptime               | 99.9%   | 30-day period       |
 
 ---
 
@@ -94,7 +94,7 @@ curl -X POST https://bas-browser.workers.dev/screenshot \
   -H "Authorization: Bearer TOKEN" \
   -d '{"url":"https://example.com"}'
 
-# PDF test  
+# PDF test
 curl -X POST https://bas-browser.workers.dev/pdf \
   -H "Authorization: Bearer TOKEN" \
   -d '{"url":"https://example.com"}'
@@ -118,12 +118,12 @@ curl -X POST https://bas-browser.workers.dev/content \
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     // 1. Authentication check
-    // 2. Route to Browser Rendering API  
+    // 2. Route to Browser Rendering API
     // 3. Cache handling
     // 4. Response optimization
     // 5. Error handling & logging
-  }
-}
+  },
+};
 ```
 
 ### **Environment Variables (Workers)**
@@ -131,10 +131,12 @@ export default {
 ```toml
 # wrangler.toml
 [env.production.vars]
-CF_API_TOKEN = "_kRlfpaBKWJohhumqMQtkDp45PgIdT6MAj0B5TRN"
-CF_GLOBAL_API_KEY = "3d477d3095d6174dd1f904c710c22763f7655"  
-CF_EMAIL = "peterpohankapersonal@gmail.com"
+CF_API_TOKEN = "***REDACTED***"
+CF_GLOBAL_API_KEY = "***REDACTED***"
+CF_EMAIL = "***REDACTED***"
 CLOUDFLARE_ACCOUNT_ID = "1bf6118df97f0e12f3592a89d90deb1e"
+
+> ⚠️ SECURITY NOTE: A fenti titkok korábban véletlenül bekerültek a repóba. Kezeld kompromittáltnak, és **rotáld** őket a Cloudflare dashboardon.
 ```
 
 ### **Cache Strategy**
@@ -155,13 +157,13 @@ CLOUDFLARE_ACCOUNT_ID = "1bf6118df97f0e12f3592a89d90deb1e"
 
 ## 📊 Success Metrics
 
-| Kategória | Metrika | Sprint 3 Baseline | Sprint 4 Target |
-|-----------|---------|------------------|-----------------|
-| **Functionality** | Endpoints Working | 8/8 (local) | 8/8 (global) |
-| **Performance** | Response Time | 575ms (local) | <500ms (global) |
-| **Reliability** | Uptime | N/A | 99.9% |
-| **Scale** | Concurrent Users | 1-5 | 100+ |
-| **Coverage** | Global Regions | 1 (EU) | 5+ regions |
+| Kategória         | Metrika           | Sprint 3 Baseline | Sprint 4 Target |
+| ----------------- | ----------------- | ----------------- | --------------- |
+| **Functionality** | Endpoints Working | 8/8 (local)       | 8/8 (global)    |
+| **Performance**   | Response Time     | 575ms (local)     | <500ms (global) |
+| **Reliability**   | Uptime            | N/A               | 99.9%           |
+| **Scale**         | Concurrent Users  | 1-5               | 100+            |
+| **Coverage**      | Global Regions    | 1 (EU)            | 5+ regions      |
 
 ---
 
@@ -171,10 +173,10 @@ CLOUDFLARE_ACCOUNT_ID = "1bf6118df97f0e12f3592a89d90deb1e"
 
 1. Wrangler CLI setup
 2. Workers project inicializálás
-3. Environment variables konfiguráció  
+3. Environment variables konfiguráció
 4. Basic routing implementáció
 
-### **Phase 2: Integration** (2-3 óra)  
+### **Phase 2: Integration** (2-3 óra)
 
 1. Browser Rendering API proxy
 2. Authentication flow integration
@@ -191,7 +193,7 @@ CLOUDFLARE_ACCOUNT_ID = "1bf6118df97f0e12f3592a89d90deb1e"
 ### **Phase 4: Validation** (1-2 óra)
 
 1. Élő tesztelés mind a 8 endpoint
-2. Load testing végrehajtása  
+2. Load testing végrehajtása
 3. Global latency measurement
 4. Documentation finalizálása
 
@@ -211,7 +213,7 @@ CLOUDFLARE_ACCOUNT_ID = "1bf6118df97f0e12f3592a89d90deb1e"
 **Sprint 3 Eredmények (baseline):**
 
 - ✅ 20/20 unit teszt sikeres
-- ✅ Dual authentication (Global key + Bearer token)  
+- ✅ Dual authentication (Global key + Bearer token)
 - ✅ TypeScript: 0 hiba
 - ✅ Production ready codebase
 
@@ -225,11 +227,11 @@ CLOUDFLARE_ACCOUNT_ID = "1bf6118df97f0e12f3592a89d90deb1e"
 **Mitigations:**
 
 - Warm-up scripts Workers-hez
-- Rate limiting implementation  
+- Rate limiting implementation
 - DNS pre-warming strategy
 - Cache invalidation plan
 
 ---
 
-*Készítette: GitHub Copilot*  
-*Utolsó frissítés: 2026-02-10*
+_Készítette: GitHub Copilot_  
+_Utolsó frissítés: 2026-02-10_
