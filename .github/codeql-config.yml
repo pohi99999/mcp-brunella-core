@@ -1,4 +1,14 @@
-name: "CodeQL Exclusions"
+name: "CodeQL Configuration"
+
+disable-default-queries: false
+
+paths:
+  - src
+  - myai
+
 paths-ignore:
-  - "external_research/**"
-  - "_KNOWLEDGE_BASE/**"
+  - external_research
+  - _KNOWLEDGE_BASE
+  - node_modules
+  - test
+  - scripts
