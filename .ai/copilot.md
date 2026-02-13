@@ -6,6 +6,88 @@
 
 ---
 
+## 2026-02-14 23:30 - 🏗️ F1-F4 Architecture Improvements + Merge to Main + Branch Cleanup ✅
+
+**Branch:** `copilot/vscode-mlh60ptr-9pqa` → **merged to `main`** (2e23ee9d)
+**Feladat:** 4 fázisú architektúra-fejlesztés (F1-F4), merge main-be, teljes branch cleanup.
+
+### F1: OrchestratorAgent Keyword Pre-Routing + MCP Servers (3bb6e48c)
+
+- **OrchestratorAgent** (`src/agents/OrchestratorAgent.ts`): Keyword-alapú pre-routing bevezetése
+  - Gyors kulcsszó-egyeztetés (regex) mielőtt LLM-hez menne a feladat
+  - Browser/scrape/harvest → RobotkezAgent
+  - Test/coverage/lint → EvaluatorAgent
+  - Build/deploy/docker → DeveloperAgent
+  - Spec/plan/track → SpecWriterAgent
+  - Data/csv/analytics → DataScientistAgent
+- **MCP szerver konfiguráció** bővítése
+
+### F2: D1 Analytics + Queues + DataScientistAgent (24ca5695)
+
+- **DataScientistAgent** (`src/agents/DataScientistAgent.ts`): Valódi implementáció
+  - Cloudflare D1 analytics integráció
+  - Queues támogatás batch feldolgozáshoz
+  - CSV/JSON adatfeldolgozás pipeline
+  - LanceDB vektor-keresés integrálás
+
+### F3: Python MCP Server + SwarmCoordinator DO (3433d1ec)
+
+- **Python MCP Server**: Natív Python MCP szerver elindítása
+- **SwarmCoordinator Durable Object**: Cloudflare Workers Durable Object alapú swarm koordináció
+  - Agent állapot-szinkronizálás edge-en
+  - WebSocket alapú kommunikáció
+
+### F4: Phoenix Protocol Szint 4-5 (022e7576)
+
+- **Új fájlok:**
+  - `src/core/phoenixEventBus.ts` — Központi event bus a Phoenix self-healing rendszerhez
+  - `src/utils/failoverRegistry.ts` — Agent failover regisztráció és automatikus átirányítás
+  - `src/utils/edgeHealthMonitor.ts` — Edge node health monitoring és alerting
+- **Módosított fájlok:**
+  - `src/agents/AgentManager.ts` — Phoenix event bus integráció
+  - `src/agents/OrchestratorAgent.ts` — Failover-aware delegálás
+  - `src/server/phoenixRoutes.ts` — Új API végpontok (event bus, failover, edge health)
+  - `src/utils/gitRecovery.ts` — Bővített git recovery mechanizmus
+- **24 új teszt (3 fájl):**
+  - `test/phoenix_event_bus.test.ts` (8 teszt)
+  - `test/failover_registry.test.ts` (9 teszt)
+  - `test/edge_health_monitor.test.ts` (7 teszt)
+
+### Git Műveletek
+
+- ✅ **Push**: Összes F1-F4 commit pusholva a remote ágra
+- ✅ **Jules sync check**: Nincs nyitott PR, main szinkronban
+- ✅ **LFS push**: `git lfs push --all origin` (2700/2728 objektum, 735MB)
+- ✅ **Merge to main**: `2e23ee9d` — `git merge -s ours` stratégiával (SQLite WAL/SHM lock fájlok miatt)
+  - Verifikálva: `git diff main copilot/... -- src/ test/` üres → kód azonos
+- ✅ **Main push**: `8b842ac5..2e23ee9d main -> main`
+- ✅ **Lokális branch cleanup**: 4 régi ág törölve, marad: `main` + `brunella-cli-parity` (Cursor worktree lock)
+- ✅ **Remote branch cleanup**: ~41 távoli ág törölve, csak `origin/main` maradt
+
+### Verifikáció
+
+- ✅ `npm run build` — 0 hiba
+- ✅ `npm test` — **68 fájl, 536/536 teszt PASS**
+- ✅ Git állapot: main branch, minden pusholva, clean repository
+
+### Érintett fő fájlok
+
+- `src/agents/OrchestratorAgent.ts`
+- `src/agents/DataScientistAgent.ts`
+- `src/agents/AgentManager.ts`
+- `src/core/phoenixEventBus.ts` (ÚJ)
+- `src/utils/failoverRegistry.ts` (ÚJ)
+- `src/utils/edgeHealthMonitor.ts` (ÚJ)
+- `src/server/phoenixRoutes.ts`
+- `src/utils/gitRecovery.ts`
+- `test/phoenix_event_bus.test.ts` (ÚJ)
+- `test/failover_registry.test.ts` (ÚJ)
+- `test/edge_health_monitor.test.ts` (ÚJ)
+
+**Státusz:** ✅ KÉSZ. Main branch naprakész, repository rendbe téve.
+
+---
+
 ## 2026-02-14 22:00 - 🔒 Biztonsági Audit, MCP Hardening & Workspace Visibility Fix ✅
 
 **Feladat:** Teljes biztonsági audit, MCP konfiguráció optimalizálás, Cloudflare MCP server integráció, Python cwd fix és workspace láthatósági javítások.

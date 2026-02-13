@@ -64,8 +64,9 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
 
 - [ ] **Phoenix Protocol v2 - Öngyógyító Rendszer** [MEDIUM]
   - **ID:** `phoenix_protocol_v2_20260205`
-  - **Progress:** 30%
-  - **Utolso aktivitas:** 2026-02-05
+  - **Progress:** 75%
+  - **Utolso aktivitas:** 2026-02-14
+  - **Implementált:** Szint 4-5 (phoenixEventBus, failoverRegistry, edgeHealthMonitor) — 24 teszt, commit 022e7576
   - Mappa: ./tracks/phoenix_protocol_v2_20260205/
 
 ---
