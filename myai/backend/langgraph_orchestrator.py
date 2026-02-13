@@ -6,6 +6,7 @@ from typing import Callable, List, Optional, TypedDict
 import requests
 
 from .config import BackendConfig, get_backend_config
+from .interpreter_adapter import OpenInterpreterAdapter
 from .schemas import ChatMessage
 
 
@@ -14,6 +15,8 @@ class IronCladState(TypedDict, total=False):
     diagnosis: str
     plan: str
     actions: List[str]
+    execution_result: str
+    execution_error: str
     next: str
 
 
@@ -47,9 +50,9 @@ class IronCladGatewayClient:
 
 
 class IronCladOrchestrator:
-    def __init__(self, llm: Callable[[List[ChatMessage]], str]):
+    def __init__(self, llm: Callable[[List[ChatMessage]], str], interpreter: Optional[OpenInterpreterAdapter] = None):
         self._llm = llm
-        self._graph = build_iron_clad_graph(llm)
+        self._graph = build_iron_clad_graph(llm, interpreter)
 
     def run(self, user_input: str, thread_id: str | None = None) -> IronCladState:
         state: IronCladState = {
@@ -59,7 +62,10 @@ class IronCladOrchestrator:
         return self._graph.invoke(state, config=config)
 
 
-def build_iron_clad_graph(llm: Callable[[List[ChatMessage]], str]):
+def build_iron_clad_graph(
+    llm: Callable[[List[ChatMessage]], str],
+    interpreter: Optional[OpenInterpreterAdapter] = None,
+):
     try:
         from langgraph.checkpoint.memory import MemorySaver
         from langgraph.graph import END, StateGraph
@@ -75,6 +81,8 @@ def build_iron_clad_graph(llm: Callable[[List[ChatMessage]], str]):
             return {"next": "plan"}
         if not state.get("actions"):
             return {"next": "remediate"}
+        if interpreter and interpreter.enabled and not state.get("execution_result"):
+            return {"next": "execute"}
         return {"next": "end"}
 
     def diagnose_node(state: IronCladState) -> IronCladState:
@@ -113,11 +121,27 @@ def build_iron_clad_graph(llm: Callable[[List[ChatMessage]], str]):
         messages.append(ChatMessage(role="assistant", content=response))
         return {"messages": messages, "actions": [response]}
 
+    def execute_node(state: IronCladState) -> IronCladState:
+        if not interpreter:
+            return {"execution_error": "OpenInterpreter adapter not configured"}
+        action = ""
+        actions = state.get("actions") or []
+        if actions:
+            action = actions[0]
+        if not action:
+            return {"execution_error": "No action provided for execution"}
+        try:
+            result = interpreter.run(action, mode="python")
+            return {"execution_result": result.output}
+        except Exception as exc:
+            return {"execution_error": str(exc)}
+
     graph = StateGraph(IronCladState)
     graph.add_node("supervisor", supervisor_node)
     graph.add_node("diagnose", diagnose_node)
     graph.add_node("plan", plan_node)
     graph.add_node("remediate", remediate_node)
+    graph.add_node("execute", execute_node)
 
     graph.set_entry_point("supervisor")
     graph.add_conditional_edges(
@@ -127,12 +151,14 @@ def build_iron_clad_graph(llm: Callable[[List[ChatMessage]], str]):
             "diagnose": "diagnose",
             "plan": "plan",
             "remediate": "remediate",
+            "execute": "execute",
             "end": END,
         },
     )
     graph.add_edge("diagnose", "supervisor")
     graph.add_edge("plan", "supervisor")
     graph.add_edge("remediate", "supervisor")
+    graph.add_edge("execute", "supervisor")
 
     return graph.compile(checkpointer=MemorySaver())
 
@@ -140,4 +166,5 @@ def build_iron_clad_graph(llm: Callable[[List[ChatMessage]], str]):
 def build_gateway_orchestrator(config: Optional[BackendConfig] = None) -> IronCladOrchestrator:
     backend_config = config or get_backend_config()
     client = IronCladGatewayClient(backend_config)
-    return IronCladOrchestrator(client.complete)
+    interpreter = OpenInterpreterAdapter(backend_config)
+    return IronCladOrchestrator(client.complete, interpreter)
