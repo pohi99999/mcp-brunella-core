@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 13. 4:50:08
+**Generálva:** 2026. 02. 13. 21:16:09
 **Script:** 
 
 ---
@@ -1381,6 +1381,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 web-fetch.md
     - 📄 web-search.md
     - 📄 webhook_server.py
+  - 📂 **ADR** _(Architecture Decision Records (ADR))_
+    - 📄 0001-living-documentation-system.md
+    - 📄 0002-embedding-standard-mxbai-with-legacy-fallback.md
+    - 📄 README.md
   - 📂 **agentenv**
     - 📂 **Include**
     - 📂 **Lib**
@@ -8481,6 +8485,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📂 **bubus**
           - 📂 **__pycache__**
             - 📄 __init__.cpython-314.pyc
+            - 📄 logging.cpython-314.pyc
             - 📄 models.cpython-314.pyc
             - 📄 service.cpython-314.pyc
           - 📄 __init__.py
@@ -41767,6 +41772,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 requirements.txt
     - 📂 **migrations**
       - 📄 0001_initial_schema.sql
+      - 📄 0002_task_analytics.sql
     - 📂 **n8n**
       - 📄 bas-task-handler-workflow.json
       - 📄 bas-task-handler.json
@@ -41831,6 +41837,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 plan másolata.md
         - 📄 plan.md
         - 📄 spec másolata.md
+        - 📄 spec.md
+      - 📂 **iron_clad_backend_20260212**
+        - 📄 meta.json
         - 📄 spec.md
       - 📂 **jules-async-test-automation-20260211**
         - 📄 meta.json
@@ -42018,6 +42027,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **jules_enterprise_cicd_20260212**
         - 📄 meta.json
         - 📄 spec.md
+      - 📂 **living_documentation_system_20260213**
+        - 📄 spec.md
       - 📂 **magyar-cli-menu-system-20260211**
         - 📄 meta.json
         - 📄 spec.md
@@ -42047,6 +42058,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **test-track-12345678**
       - 📂 **test-track-20260211**
     - 📄 BAS_ARCHITECTURE_v2.md
+    - 📄 CHANGELOG.md
     - 📄 Cocductornak_szeretettel.pdf
     - 📄 CONDUCTOR_MANIFEST.md
     - 📄 epp-v2.md
@@ -42091,6 +42103,28 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 fix_queue.json
     - 📄 tasks.db
   - 📂 **docs**
+    - 📂 **agents**
+      - 📄 DataScientistAgent.md
+      - 📄 DependencyGraphAgent.md
+      - 📄 DeveloperAgent.md
+      - 📄 DocsIntelligenceAgent.md
+      - 📄 DynamicAgent.md
+      - 📄 EdgeProxyAgent.md
+      - 📄 EvaluatorAgent.md
+      - 📄 LintFixerAgent.md
+      - 📄 OrchestratorAgent.md
+      - 📄 ProjectConductorAgent.md
+      - 📄 PythonAgent.md
+      - 📄 README_COVERAGE.md
+      - 📄 ResearcherAgent.md
+      - 📄 RobotkezAgent.md
+      - 📄 SpecWriterAgent.md
+      - 📄 TaskDecomposerAgent.md
+      - 📄 VoiceAgent.md
+    - 📂 **monitoring**
+      - 📂 **grafana** _(Grafana Dashboard Baseline)_
+        - 📄 brunella-agents-overview.dashboard.json
+        - 📄 README.md
     - 📄 AGENT_PERMISSIONS_GUIDE.md
     - 📄 CLOUDFLARE_INTEGRATION.md
     - 📄 cloudflare-tunnel-setup.md
@@ -42099,6 +42133,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 jules-repo-config.md
     - 📄 jules-setup.md
     - 📄 MCP_TOOL_PERMISSIONS_GUIDE.md
+    - 📄 MONITORING_PROMETHEUS.md
     - 📄 n8n-setup.md
     - 📄 ROBOTKEZ_SETUP.md
     - 📄 tunnel-config.example.yml
@@ -115384,6 +115419,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 STARTED_APPS.md
       - 📄 TECH_HARVESTER_README.md
       - 📄 tech_harvester.py
+    - 📂 **backend** _(Iron Clad Python AI Backend (Phase 1-5))_
+      - 📄 __init__.py
+      - 📄 app.py
+      - 📄 config.py
+      - 📄 interpreter_adapter.py
+      - 📄 langgraph_orchestrator.py
+      - 📄 opendevin_adapter.py
+      - 📄 providers.py
+      - 📄 README.md
+      - 📄 schemas.py
     - 📂 **config**
       - 📄 sources.json
     - 📂 **core**
@@ -115402,6 +115447,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **data**
       - 📂 **training**
         - 📄 golden_dataset.jsonl
+    - 📂 **examples** _(myai/examples)_
+      - 📄 rag_golden_dataset_walkthrough.ipynb
+      - 📄 README.md
     - 📂 **incubator**
       - 📄 Modelfile.template
       - 📄 train.py
@@ -115425,6 +115473,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 test_browser_worker.py
       - 📄 test_cli.py
       - 📄 test_dependencies.py
+      - 📄 test_iron_clad_backend_phase1.py
+      - 📄 test_iron_clad_interpreter_adapter.py
+      - 📄 test_iron_clad_langgraph_phase3.py
+      - 📄 test_iron_clad_opendevin_adapter.py
+      - 📄 test_iron_clad_provider.py
       - 📄 test_llm.py
       - 📄 test_project.py
       - 📄 test_sandbox.py
@@ -115803,6 +115856,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 pyproject.toml
     - 📄 README.md
   - 📂 **playwright-report**
+    - 📂 **data**
+      - 📄 10d9e53e1aa9a72651db3405f24c3f97fddd29a6.webm
+      - 📄 7a33d5db6370b6de345e990751aa1f1da65ad675.png
+      - 📄 7af5b73be4b26d34e5276c189510a6c6e3e43ad5.webm
+      - 📄 98792efc19c0e70ddeb6c70e3b9471f7555fed27.webm
     - 📄 index.html
   - 📂 **public**
     - 📄 index.html
@@ -116050,6 +116108,19 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 useEdgeWebSocket.ts
         - 📄 useMCP.ts
       - 📂 **lib**
+        - 📂 **chat**
+          - 📂 **providers**
+            - 📄 cloudflareChatProvider.ts
+            - 📄 cloudflareEdgeProvider.ts
+            - 📄 geminiProvider.ts
+            - 📄 githubProvider.ts
+            - 📄 ollamaProvider.ts
+            - 📄 orchestratorProvider.ts
+            - 📄 utils.ts
+          - 📄 contextBuilder.ts
+          - 📄 providerRegistry.ts
+          - 📄 sessionStore.ts
+          - 📄 types.ts
         - 📄 apiService.ts
         - 📄 auth.ts
         - 📄 externalApiService.ts
@@ -116163,6 +116234,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 mcpClient.ts
       - 📄 mcpClientManager.ts
       - 📄 memoryContext.ts
+      - 📄 metrics.ts
       - 📄 otelTracing.ts
       - 📄 pythonShell.ts
       - 📄 rag.ts
@@ -116184,6 +116256,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **dashboard**
       - 📂 **components**
         - 📄 ErrorBoundary.test.tsx
+        - 📄 NeuralLinkChat.test.tsx
       - 📂 **mocks**
         - 📄 handlers.ts
       - 📄 setup.ts
@@ -116215,6 +116288,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 context_builder.test.ts
     - 📄 core_tools.test.ts
     - 📄 coverage_analysis.test.ts
+    - 📄 dashboard_chat_lib.test.ts
     - 📄 data_refiner.test.ts
     - 📄 delegation_chain.test.ts
     - 📄 dev_commands.test.ts
@@ -116240,6 +116314,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 monitor.vitest.ts
     - 📄 n8n_automation.test.ts
     - 📄 phoenix_recovery.test.ts
+    - 📄 project_conductor_living_docs.test.ts
+    - 📄 prometheus_metrics.test.ts
     - 📄 python_shell.test.ts
     - 📄 rag.test.ts
     - 📄 retryStrategy.test.ts
@@ -116253,12 +116329,22 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 SpecWriterAgent.test.ts
     - 📄 state_restoration.test.ts
     - 📄 structured_output.test.ts
+    - 📄 swagger_spec.test.ts
     - 📄 task_queue.test.ts
     - 📄 taskDecomposerCore.test.ts
     - 📄 telemetry.test.ts
     - 📄 tracks_todos_routes.test.ts
     - 📄 trackTodoParser.test.ts
   - 📂 **test-results**
+    - 📂 **action-triggering-ErrorBou-599cf-ad-of-crash-on-widget-error-chromium**
+      - 📄 test-failed-1.png
+      - 📄 video.webm
+    - 📂 **action-triggering-ErrorBou-faa62--after-error-boundary-reset-chromium**
+      - 📄 test-failed-1.png
+      - 📄 video.webm
+    - 📂 **error-handling-Error-Handl-f57cb-hite-screen-on-initial-load-chromium**
+      - 📄 test-failed-1.png
+      - 📄 video.webm
   - 📂 **testing**
     - 📂 **egyeb**
     - 📂 **hirszerzes_test_1**
@@ -116323,7 +116409,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 LICENSE
   - 📄 mag.md
   - 📄 mcp_servers.json
-  - 📄 mcp-server-config.json
   - 📄 Ollama
   - 📄 package.json
   - 📄 peterpohankapersonal@gmail.com.ical.zip
@@ -116355,6 +116440,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 USER_START.md
   - 📄 verify_port.ts
   - 📄 vite.config.ts
+  - 📄 vitest_output.txt
   - 📄 vitest.config.ts
   - 📄 vitest.dashboard.config.ts
   - 📄 workflow.md

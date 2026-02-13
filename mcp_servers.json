@@ -68,5 +68,13 @@
     "env": {
       "MEMORY_FILE_PATH": "data/mcp_memory.json"
     }
+  },
+  {
+    "name": "brunella-python",
+    "command": "python",
+    "args": ["-m", "myai.mcp_server"],
+    "env": {
+      "PYTHONPATH": "."
+    }
   }
 ]

@@ -1,0 +1,569 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mF:/mcp-brunella-core[39m
+
+ [32mÔťô[39m test/health_check.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 651[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should return healthy when all services respond [33m 636[2mms[22m[39m
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on "check" command
+[22m[39m[STATUS] [LintFixer] working - check src/
+[INFO] [LintFixer] ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/approval_manager.test.ts[2m > [22m[2mApprovalManager[2m > [22m[2mshould create a request and return an ID
+[22m[39m[INFO] [ApprovalManager] New approval request [5ffdbcac-3e07-43d3-85fe-fa7ec784d623]: command_exec - Run rm -rf
+
+[90mstdout[2m | test/approval_manager.test.ts[2m > [22m[2mApprovalManager[2m > [22m[2mshould resolve waitForResult true when approved
+[22m[39m[INFO] [ApprovalManager] New approval request [a2197658-4ef9-4900-970f-a3f074f4a352]: file_edit - Edit config
+
+ [32mÔťô[39m test/task_queue.test.ts [2m([22m[2m25 tests[22m[2m)[22m[33m 823[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should add a task and return taskId [33m 776[2mms[22m[39m
+[90mstdout[2m | test/approval_manager.test.ts[2m > [22m[2mApprovalManager[2m > [22m[2mshould resolve waitForResult true when approved
+[22m[39m[INFO] [ApprovalManager] Request [a2197658-4ef9-4900-970f-a3f074f4a352] approved
+
+[90mstdout[2m | test/jules_workflow_routes.test.ts[2m > [22m[2mJules workflow routes[2m > [22m[2mPOST /api/jules/dispatch returns 503 when GITHUB_TOKEN missing
+[22m[39m[INFO] [JulesRoutes] Dispatch workflow: jules-async-tests.yml ref=main
+
+ [32mÔťô[39m test/jules_workflow_routes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 81[2mms[22m[39m
+[90mstdout[2m | test/approval_manager.test.ts[2m > [22m[2mApprovalManager[2m > [22m[2mshould resolve waitForResult false when rejected
+[22m[39m[INFO] [ApprovalManager] New approval request [19a72219-34b0-497e-ba23-0780abadbe6f]: critical_action - Delete DB
+
+[90mstdout[2m | test/approval_manager.test.ts[2m > [22m[2mApprovalManager[2m > [22m[2mshould resolve waitForResult false when rejected
+[22m[39m[INFO] [ApprovalManager] Request [19a72219-34b0-497e-ba23-0780abadbe6f] rejected
+
+[90mstdout[2m | test/rag.test.ts
+[22m[39m[INFO] [AIGateway] Ôťů AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+[90mstdout[2m | test/approval_manager.test.ts[2m > [22m[2mApprovalManager[2m > [22m[2mshould time out and expire
+[22m[39m[INFO] [ApprovalManager] New approval request [ce0480d8-aeca-46c8-8533-350ab9f508db]: command_exec - Sleep
+
+stderr | test/rag.test.ts > RAG Vector Search > should index and retrieve documents using vector similarity
+[ERROR] [AIGateway] Embeddings failed: Error: Ollama embeddings error: 404
+
+ [32mÔťô[39m test/cloudflare_routes.test.ts [2m([22m[2m9 tests[22m[2m)[22m[33m 313[2mms[22m[39m
+stderr | test/approval_manager.test.ts > ApprovalManager > should time out and expire
+[WARN] [ApprovalManager] Request [ce0480d8-aeca-46c8-8533-350ab9f508db] expired
+
+[90mstdout[2m | test/approval_manager.test.ts[2m > [22m[2mApprovalManager[2m > [22m[2mshould prevent responding to expired requests
+[22m[39m[INFO] [ApprovalManager] New approval request [8ce26e36-7dd8-40ae-8497-2eea72325ddb]: command_exec - Quick
+
+stderr | test/approval_manager.test.ts > ApprovalManager > should prevent responding to expired requests
+[WARN] [ApprovalManager] Attempted to respond to expired request [8ce26e36-7dd8-40ae-8497-2eea72325ddb]
+
+[90mstdout[2m | test/approval_manager.test.ts[2m > [22m[2mApprovalManager[2m > [22m[2mshould list requests by status
+[22m[39m[INFO] [ApprovalManager] New approval request [dba43e57-c83d-4360-adeb-d6a873c9c43b]: file_edit - One
+
+[90mstdout[2m | test/approval_manager.test.ts[2m > [22m[2mApprovalManager[2m > [22m[2mshould list requests by status
+[22m[39m[INFO] [ApprovalManager] New approval request [500bc507-9bdb-43d2-bea2-6086ced5725f]: file_edit - Two
+
+[90mstdout[2m | test/approval_manager.test.ts[2m > [22m[2mApprovalManager[2m > [22m[2mshould list requests by status
+[22m[39m[INFO] [ApprovalManager] Request [dba43e57-c83d-4360-adeb-d6a873c9c43b] approved
+
+ [32mÔťô[39m test/approval_manager.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 1611[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should resolve waitForResult true when approved [33m 511[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should resolve waitForResult false when rejected [33m 524[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should time out and expire [33m 509[2mms[22m[39m
+ [32mÔťô[39m test/SpecWriterAgent.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 113[2mms[22m[39m
+[90mstdout[2m | test/rag.test.ts[2m > [22m[2mRAG Vector Search[2m > [22m[2mshould index and retrieve documents using vector similarity
+[22m[39m[INFO] [RAG] Document indexed: unknown
+
+stderr | test/rag.test.ts > RAG Vector Search > should index and retrieve documents using vector similarity
+[ERROR] [AIGateway] Embeddings failed: Error: Ollama embeddings error: 404
+
+[90mstdout[2m | test/rag.test.ts[2m > [22m[2mRAG Vector Search[2m > [22m[2mshould index and retrieve documents using vector similarity
+[22m[39m[INFO] [RAG] Document indexed: unknown
+
+stderr | test/rag.test.ts > RAG Vector Search > should index and retrieve documents using vector similarity
+[ERROR] [AIGateway] Embeddings failed: Error: Ollama embeddings error: 404
+
+[90mstdout[2m | test/rag.test.ts[2m > [22m[2mRAG Vector Search[2m > [22m[2mshould index and retrieve documents using vector similarity
+[22m[39m[INFO] [RAG] Document indexed: unknown
+
+stderr | test/rag.test.ts > RAG Vector Search > should index and retrieve documents using vector similarity
+[ERROR] [AIGateway] Embeddings failed: Error: Ollama embeddings error: 404
+
+[90mstdout[2m | test/rag.test.ts[2m > [22m[2mRAG Vector Search[2m > [22m[2mshould index and retrieve documents using vector similarity
+[22m[39m[INFO] [RAG] Embedding unavailable for mxbai-embed-large, using text fallback on memory_v2_mxbai
+
+[90mstdout[2m | test/rag.test.ts[2m > [22m[2mRAG Vector Search[2m > [22m[2mshould index and retrieve documents using vector similarity
+[22m[39m[INFO] [RAG] Primary index empty, falling back to legacy index (memory)
+
+ [32mÔťô[39m test/project_conductor_living_docs.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 3805[2mms[22m[39m
+     [33m[2mÔťô[22m[39m creates missing agent docs and reports 100% coverage [33m 2601[2mms[22m[39m
+     [33m[2mÔťô[22m[39m does not recreate docs that already exist [33m 353[2mms[22m[39m
+     [33m[2mÔťô[22m[39m refreshes legacy template docs in place [33m 842[2mms[22m[39m
+ [32mÔťô[39m test/delegation_chain.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 196[2mms[22m[39m
+[90mstdout[2m | test/n8n_automation.test.ts[2m > [22m[2mRobotk├ęz n8n Integration Test[2m > [22m[2mshould create and rename a workflow via n8n API
+[22m[39mPython Script Stdout: Creating new workflow: Robotkez_Teszt_1
+Workflow created: Robotkez_Teszt_1 (ID: SUoAm7NIcicplXyE)
+Renaming workflow SUoAm7NIcicplXyE to Robotkez_Teszt_1_API
+Workflow renamed to: Robotkez_Teszt_1_API
+Scenario execution complete via API.
+
+
+ [32mÔťô[39m test/tracks_todos_routes.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 937[2mms[22m[39m
+     [33m[2mÔťô[22m[39m GET /api/v1/tracks/todos/active returns only active-ish tracks [33m 700[2mms[22m[39m
+stderr | test/rag.test.ts > RAG Vector Search > should index and retrieve documents using vector similarity
+[ERROR] [AIGateway] Embeddings failed: Error: Ollama embeddings error: 404
+
+[90mstdout[2m | test/rag.test.ts[2m > [22m[2mRAG Vector Search[2m > [22m[2mshould index and retrieve documents using vector similarity
+[22m[39m[INFO] [RAG] Embedding unavailable for mxbai-embed-large, using text fallback on memory_v2_mxbai
+
+ [32mÔťô[39m test/phoenix_recovery.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 536[2mms[22m[39m
+       [33m[2mÔťô[22m[39m should fallback to legacy shell if API fails [33m 451[2mms[22m[39m
+[90mstdout[2m | test/n8n_automation.test.ts[2m > [22m[2mRobotk├ęz n8n Integration Test[2m > [22m[2mshould create and rename a workflow via n8n API
+[22m[39mCleaned up workflow with ID: SUoAm7NIcicplXyE
+
+ [32mÔťô[39m test/n8n_automation.test.ts [2m([22m[2m2 tests[22m[2m)[22m[33m 4131[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should create and rename a workflow via n8n API [33m 4127[2mms[22m[39m
+ [32mÔťô[39m test/python_shell.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 2450[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should execute simple code via run() [33m 690[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should handle multi-line code [33m 1208[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should return error payload on Python exception [33m 550[2mms[22m[39m
+ [32mÔťô[39m test/rag.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 3143[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should index and retrieve documents using vector similarity [33m 2757[2mms[22m[39m
+ [32mÔťô[39m test/monitor.vitest.ts [2m([22m[2m4 tests[22m[2m)[22m[33m 1860[2mms[22m[39m
+     [33m[2mÔťô[22m[39m registers monitor_get_metrics and monitor_tail_logs [33m 1774[2mms[22m[39m
+ [32mÔťô[39m test/retryStrategy.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 74[2mms[22m[39m
+ [32mÔťô[39m test/routes_developer.test.ts [2m([22m[2m6 tests[22m[2m)[22m[33m 347[2mms[22m[39m
+ [32mÔťô[39m test/auditLog.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32mÔťô[39m test/browser_rendering.test.ts [2m([22m[2m20 tests[22m[2m)[22m[32m 50[2mms[22m[39m
+[90mstdout[2m | test/memoryRoutes.golden.test.ts
+[22m[39m[INFO] [AIGateway] Ôťů AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+ [32mÔťô[39m test/developer_pipeline.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 53[2mms[22m[39m
+ [32mÔťô[39m test/state_restoration.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 38[2mms[22m[39m
+[90mstdout[2m | test/llm_provider.test.ts
+[22m[39m[INFO] [AIGateway] Ôťů AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+ [32mÔťô[39m test/memoryRoutes.golden.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 85[2mms[22m[39m
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mstartSpan / endSpan[2m > [22m[2mcreates a span with unique traceId and spanId
+[22m[39m[INFO] [AgentTracer] [SPAN START] Developer::execute (trace=5674bfcb, span=3ab042aa)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mstartSpan / endSpan[2m > [22m[2mendSpan sets duration, status, and endTime
+[22m[39m[INFO] [AgentTracer] [SPAN START] Developer::execute (trace=bc779b78, span=eae63758)
+[INFO] [AgentTracer] [SPAN END] Developer::execute success (1ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mstartSpan / endSpan[2m > [22m[2mendSpan records error details
+[22m[39m[INFO] [AgentTracer] [SPAN START] Developer::execute (trace=a2cad6a0, span=ea3b4531)
+[INFO] [AgentTracer] [SPAN END] Developer::execute error (1ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mstartSpan / endSpan[2m > [22m[2mendSpan attaches token usage (RULE-OB3)
+[22m[39m[INFO] [AgentTracer] [SPAN START] LLM::llm_call (trace=1f0310eb, span=2c8ed7ed)
+[INFO] [AgentTracer] [SPAN END] LLM::llm_call success (0ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mstartSpan / endSpan[2m > [22m[2mspan creation < 2ms (performance)
+[22m[39m[INFO] [AgentTracer] [SPAN START] Perf::test (trace=ae131a6a, span=22b56920)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=203f0724, span=1f7b7760)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (1ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=fe3bd105, span=ef32948d)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=7f57ceff, span=581ac748)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=0e058ada, span=834e41d5)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=476f3e80, span=eedce598)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=7f67403e, span=0d0a0b47)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=369ee176, span=e72cec6b)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=3c7fd6ff, span=2c4752e4)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=09cc1134, span=526ca250)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=b87e3999, span=3fb79af1)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=c22be02a, span=562e69ec)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=4a077122, span=2b36ebc0)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=cc7517d1, span=049cd84f)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=eb2201b2, span=598d9447)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=4309f87e, span=95817d80)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=291fa0b4, span=466b1347)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=287719e6, span=ea5c9e62)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=771e92a1, span=f9f03de3)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=6a72a2d5, span=ddbe526f)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=a94d66a9, span=3d68934c)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=4f4e836b, span=467ebc84)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=1d3cc709, span=2e7971ad)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=2de7565f, span=139e7149)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=c5334cbe, span=f763cba4)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=32939358, span=bbd06643)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=487b91e4, span=16a24630)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=253da214, span=fd6592eb)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=e5e9a37f, span=12383738)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=a23d308a, span=c9fa01bb)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=589ffc16, span=dc8289f6)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=1a4dd20d, span=0c84a230)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=53b47029, span=c3bc1478)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=ba115bc4, span=d321e3ad)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=285d07eb, span=50b10908)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=4576ccf2, span=1b964fbd)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=77ffa733, span=cdbb545d)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=05ddb2d3, span=556de2af)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=df51512b, span=722c63a5)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=e441c367, span=cf0fe31c)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=7457c713, span=158a6402)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=d33e5f46, span=60e0b021)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=ad8f5ced, span=89a4552f)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=bf956cde, span=188e8912)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=f2b68db7, span=359db755)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=68e2e01a, span=3a52c2f4)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=e5571d32, span=3351acf6)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=322db8aa, span=c7c7ba14)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (1ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=25231c59, span=d8e91260)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=7405a8b5, span=8c0f517e)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=d1ffc950, span=e2488fa7)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=4d9dd083, span=6077b4e9)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=a7fc75f1, span=f8143ee8)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=5dfdf71c, span=e9b9eac5)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=add3e8c8, span=23d28a7a)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=e9c132f3, span=bd7d5b42)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=4b1f0438, span=1d2c71ec)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=7792b603, span=5454b22a)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=50bbea09, span=b7fd7e74)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=e696c8ae, span=e4ee4f28)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=e7fdbe5a, span=f1bc6fa5)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=ea0d7da0, span=201ca022)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=e9945b70, span=5c04412f)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=361d8885, span=fb9e8e63)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=37edac31, span=e5a0a2cf)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=7fd8df82, span=e3324524)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=4addaca5, span=f4ddfdf4)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=268f57fc, span=37c8e08f)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=59a18ebf, span=c1eb56d0)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=ef72b27a, span=acf759c9)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=01370a9a, span=def29161)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=af582d1b, span=8b097c2b)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=30e5050c, span=d54902e3)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=c5866cc9, span=69adcd4b)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=ee3b05b5, span=5ec39c50)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=b659752e, span=705e46c2)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=9eb5a74b, span=3c63d401)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=e3d335bf, span=77de7bae)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=40cc301c, span=e8e2801e)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=629c1f58, span=52b6f08c)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=d8be2b22, span=fcbdb7af)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=1d3f20a1, span=606d6951)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=41e34d25, span=6a943efc)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=9bf2246d, span=0cf3392c)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=5bd6b05d, span=d0860740)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=1d3ab6dc, span=ce47c3b8)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=c38e4011, span=915aecb6)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=4ffe1a59, span=33ccb21c)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=8dee3d0d, span=e6a38e4c)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=4ba109e8, span=532343b3)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=8858b644, span=6b00f295)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=29238390, span=6aea6665)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=ecdaf45b, span=59b726de)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=eb312580, span=d3741672)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=831e2110, span=d3a1151e)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=a63bfddc, span=2d1bc61a)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=4cf0344e, span=d9ac4a0d)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=b99f0db5, span=b0ade2c3)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=9551fb14, span=18283a10)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+[INFO] [AgentTracer] [SPAN START] Perf::test (trace=34e1335c, span=230d575d)
+[INFO] [AgentTracer] [SPAN END] Perf::test success (0ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mparent-child spans[2m > [22m[2mchild span inherits traceId from parent context
+[22m[39m[INFO] [AgentTracer] [SPAN START] Orchestrator::plan (trace=b641b4c9, span=940e9fbf)
+[INFO] [AgentTracer] [SPAN START] Developer::execute (trace=b641b4c9, span=ace351a8)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mparent-child spans[2m > [22m[2mgetTraceSpans returns both parent and child
+[22m[39m[INFO] [AgentTracer] [SPAN START] Orchestrator::plan (trace=3770391f, span=81c032a0)
+[INFO] [AgentTracer] [SPAN START] Developer::execute (trace=3770391f, span=4334355d)
+[INFO] [AgentTracer] [SPAN END] Developer::execute success (0ms)
+[INFO] [AgentTracer] [SPAN END] Orchestrator::plan success (0ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mtraceAgentExecution[2m > [22m[2mreturns span, context, and end helper
+[22m[39m[INFO] [AgentTracer] [SPAN START] Evaluator::execute (trace=c35848d6, span=9160dc6f)
+[INFO] [AgentTracer] [SPAN END] Evaluator::execute success (0ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mtraceAgentExecution[2m > [22m[2msupports parent context for delegation chain
+[22m[39m[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=863bb5e1, span=89a68ea0)
+[INFO] [AgentTracer] [SPAN START] Developer::execute (trace=863bb5e1, span=843c08eb)
+[INFO] [AgentTracer] [SPAN END] Developer::execute success (0ms)
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute success (1ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mtraceLLMCall[2m > [22m[2mcreates LLM span with model metadata
+[22m[39m[INFO] [AgentTracer] [SPAN START] Developer::llm_call (trace=87b6e184, span=b71ffb59)
+[INFO] [AgentTracer] [SPAN END] Developer::llm_call success (1ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mquery functions[2m > [22m[2mgetRecentSpans returns completed spans in reverse order
+[22m[39m[INFO] [AgentTracer] [SPAN START] A::op1 (trace=baf69790, span=0302a4e4)
+[INFO] [AgentTracer] [SPAN END] A::op1 success (0ms)
+[INFO] [AgentTracer] [SPAN START] B::op2 (trace=80c4ed41, span=e2ba498b)
+[INFO] [AgentTracer] [SPAN END] B::op2 success (0ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mquery functions[2m > [22m[2mgetActiveSpans returns only running spans
+[22m[39m[INFO] [AgentTracer] [SPAN START] A::op1 (trace=e4f9b2b0, span=bfba87be)
+[INFO] [AgentTracer] [SPAN START] B::op2 (trace=4edc4f4a, span=28b9e670)
+[INFO] [AgentTracer] [SPAN END] A::op1 success (0ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mquery functions[2m > [22m[2mgetTokenUsageSummary aggregates by agent and model
+[22m[39m[INFO] [AgentTracer] [SPAN START] Dev::llm_call (trace=1eb66de9, span=bf802c97)
+[INFO] [AgentTracer] [SPAN END] Dev::llm_call success (0ms)
+[INFO] [AgentTracer] [SPAN START] Dev::llm_call (trace=beff1005, span=844935ca)
+[INFO] [AgentTracer] [SPAN END] Dev::llm_call success (0ms)
+[INFO] [AgentTracer] [SPAN START] Eval::llm_call (trace=b6e4d2ff, span=48782836)
+[INFO] [AgentTracer] [SPAN END] Eval::llm_call success (0ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mquery functions[2m > [22m[2mgetRecentTraceIds returns unique trace IDs
+[22m[39m[INFO] [AgentTracer] [SPAN START] A::op (trace=05c83e28, span=dcfc0c18)
+[INFO] [AgentTracer] [SPAN END] A::op success (0ms)
+[INFO] [AgentTracer] [SPAN START] B::op (trace=05c83e28, span=5106c88e)
+[INFO] [AgentTracer] [SPAN END] B::op success (0ms)
+[INFO] [AgentTracer] [SPAN START] C::op (trace=619ac2db, span=39ffb5f3)
+[INFO] [AgentTracer] [SPAN END] C::op success (0ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mquery functions[2m > [22m[2mgetTracerStats returns correct counts
+[22m[39m[INFO] [AgentTracer] [SPAN START] A::op (trace=36474870, span=f6665bbe)
+[INFO] [AgentTracer] [SPAN START] B::op (trace=32b89480, span=cdf2fc12)
+[INFO] [AgentTracer] [SPAN END] B::op success (0ms)
+
+[90mstdout[2m | test/agentTracer.test.ts[2m > [22m[2magentTracer[2m > [22m[2mclearAllSpans[2m > [22m[2mresets all state
+[22m[39m[INFO] [AgentTracer] [SPAN START] A::op (trace=8991ceee, span=cb043a30)
+[INFO] [AgentTracer] [SPAN START] B::op (trace=63adb2ea, span=b0d9e34c)
+[INFO] [AgentTracer] [SPAN END] B::op success (0ms)
+
+ [32mÔťô[39m test/configSchema.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 36[2mms[22m[39m
+stderr | test/api_v1.test.ts > API v1 Route Tests > Error Handling Integration > should catch AppError and return formatted JSON
+[ERROR] [ErrorHandler] [400] Test triggered error (BAD_REQUEST)
+
+ [32mÔťô[39m test/api_v1.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 63[2mms[22m[39m
+[90mstdout[2m | test/llm_provider.test.ts[2m > [22m[2mBrunella 2.0 LLM Provider Test[2m > [22m[2mshould generate response via Ollama by default
+[22m[39m[INFO] [AIGateway] CF response received (llama3.1:8b)
+
+[90mstdout[2m | test/llm_provider.test.ts[2m > [22m[2mBrunella 2.0 LLM Provider Test[2m > [22m[2mshould fallback to Ollama if Gemini API key is missing/invalid
+[22m[39m[INFO] [LLM_CLIENT] Fallback ind├şt├ísa Ollama-ra...
+
+stderr | test/llm_provider.test.ts > Brunella 2.0 LLM Provider Test > should fallback to Ollama if Gemini API key is missing/invalid
+[ERROR] [LLM_CLIENT] Hiba a(z) gemini szolg├íltat├│n├íl: GEMINI_API_KEY not configured
+
+[90mstdout[2m | test/llm_provider.test.ts[2m > [22m[2mBrunella 2.0 LLM Provider Test[2m > [22m[2mshould fallback to Ollama if Gemini API key is missing/invalid
+[22m[39m[INFO] [AIGateway] CF response received (llama3.1:8b)
+
+ [32mÔťô[39m test/llm_provider.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 59[2mms[22m[39m
+ [32mÔťô[39m test/monitor.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 59[2mms[22m[39m
+stderr | test/middleware.test.ts > Middleware Tests > errorHandler > should handle AppError correctly
+[ERROR] [ErrorHandler] [400] Invalid input (TEST_ERROR)
+
+stderr | test/middleware.test.ts > Middleware Tests > errorHandler > should handle generic Error as 500
+[ERROR] [ErrorHandler] Unhandled error: Database crash
+
+stderr | test/middleware.test.ts > Middleware Tests > errorHandler > should include requestId in response if present on request
+[ERROR] [ErrorHandler] [500] Internal fail (INTERNAL_ERROR)
+
+ [32mÔťô[39m test/middleware.test.ts [2m([22m[2m10 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32mÔťô[39m test/git_integration.test.ts [2m([22m[2m21 tests[22m[2m)[22m[32m 21[2mms[22m[39m
+ [32mÔťô[39m test/agentTracer.test.ts [2m([22m[2m16 tests[22m[2m)[22m[32m 45[2mms[22m[39m
+ [32mÔťô[39m test/cloudflare_integration.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32mÔťô[39m test/prometheus_metrics.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32mÔťô[39m test/context_builder.test.ts [2m([22m[2m17 tests[22m[2m)[22m[32m 17[2mms[22m[39m
+ [32mÔťô[39m test/aiGateway.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 30[2mms[22m[39m
+ [32mÔťô[39m test/specStatus.test.ts [2m([22m[2m25 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32mÔťô[39m test/checkpoint.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 32[2mms[22m[39m
+ [32mÔťô[39m test/modelRouter.test.ts [2m([22m[2m22 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32mÔťô[39m test/cli_config.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mÔťô[39m test/memory_context.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 20[2mms[22m[39m
+ [32mÔťô[39m test/trackTodoParser.test.ts [2m([22m[2m14 tests[22m[2m)[22m[32m 11[2mms[22m[39m
+[90mstdout[2m | test/llm_client.test.ts
+[22m[39m[INFO] [AIGateway] Ôťů AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+[90mstdout[2m | test/llm_client.test.ts
+[22m[39m[INFO] [AIGateway] Ôťů AI Gateway v3.0 initialized: Ollama (llama3.1:8b)
+
+ [32mÔťô[39m test/code_scaffold.test.ts [2m([22m[2m9 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32mÔťô[39m test/code_review.test.ts [2m([22m[2m13 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+[90mstdout[2m | test/llm_client.test.ts[2m > [22m[2mllm_client[2m > [22m[2mgenerateResponse[2m > [22m[2mshould fallback to Ollama if primary provider fails (except Ollama itself)
+[22m[39m[INFO] [LLM_CLIENT] Fallback ind├şt├ísa Ollama-ra...
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should fallback to Ollama if primary provider fails (except Ollama itself)
+[ERROR] [LLM_CLIENT] Hiba a(z) github szolg├íltat├│n├íl: GitHub API Error
+
+[90mstdout[2m | test/llm_client.test.ts[2m > [22m[2mllm_client[2m > [22m[2mgenerateResponse[2m > [22m[2mshould fallback to Ollama if Gemini API key is missing
+[22m[39m[INFO] [LLM_CLIENT] Fallback ind├şt├ísa Ollama-ra...
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should fallback to Ollama if Gemini API key is missing
+[ERROR] [LLM_CLIENT] Hiba a(z) gemini szolg├íltat├│n├íl: GEMINI_API_KEY not configured
+
+[90mstdout[2m | test/llm_client.test.ts[2m > [22m[2mllm_client[2m > [22m[2mgenerateResponse[2m > [22m[2mshould fallback to Ollama if GitHub Token is missing
+[22m[39m[INFO] [LLM_CLIENT] Fallback ind├şt├ísa Ollama-ra...
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should fallback to Ollama if GitHub Token is missing
+[ERROR] [LLM_CLIENT] Hiba a(z) github szolg├íltat├│n├íl: GITHUB_TOKEN or GITHUB_PAT not configured
+
+[90mstdout[2m | test/llm_client.test.ts[2m > [22m[2mllm_client[2m > [22m[2mgenerateResponse[2m > [22m[2mshould throw error if both primary and fallback fail
+[22m[39m[INFO] [LLM_CLIENT] Fallback ind├şt├ísa Ollama-ra...
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should throw error if both primary and fallback fail
+[ERROR] [LLM_CLIENT] Hiba a(z) gemini szolg├íltat├│n├íl: GEMINI_API_KEY not configured
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should throw error if both primary and fallback fail
+[ERROR] [LLM_CLIENT] Hiba a(z) ollama szolg├íltat├│n├íl: Ollama Failed
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should throw error if both primary and fallback fail
+[ERROR] [LLM_CLIENT] Ollama fallback is sikertelen: Ollama Failed
+
+ [32mÔťô[39m test/llm_client.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 23[2mms[22m[39m
+ [32mÔťô[39m test/dev_commands.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 14[2mms[22m[39m
+ [32mÔťô[39m test/coverage_analysis.test.ts [2m([22m[2m11 tests[22m[2m)[22m[32m 15[2mms[22m[39m
+ [32mÔťô[39m test/socketService.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 22[2mms[22m[39m
+ [32mÔťô[39m test/DeveloperAgent.test.ts [2m([22m[2m6 tests[22m[2m)[22m[32m 19[2mms[22m[39m
+ [32mÔťô[39m test/skills_loader.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+[90mstdout[2m | test/goldenDatasetBridge.test.ts[2m > [22m[2mgoldenDatasetBridge[2m > [22m[2msaveGoldenSample[2m > [22m[2mshould save valid sample via Python API
+[22m[39m[INFO] [GoldenBridge] Sample saved from test-agent (quality: 0.85)
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > saveGoldenSample > should handle Python API errors gracefully
+[ERROR] [GoldenBridge] Save failed: Python API error: 500 Internal Server Error
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > saveGoldenSample > should handle network errors gracefully
+[ERROR] [GoldenBridge] Save failed: ECONNREFUSED
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > getGoldenStats > should return null on API failure
+[ERROR] [GoldenBridge] Failed to get golden dataset stats
+
+[90mstdout[2m | test/goldenDatasetBridge.test.ts[2m > [22m[2mgoldenDatasetBridge[2m > [22m[2mautoSaveGoldenSample[2m > [22m[2mshould attempt save on quality result
+[22m[39m[INFO] [GoldenBridge] Sample saved from TestAgent (quality: 0.70)
+
+ [32mÔťô[39m test/goldenDatasetBridge.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 18[2mms[22m[39m
+ [32mÔťô[39m test/activity_feed.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+[90mstdout[2m | test/codebaseIndexer.test.ts
+[22m[39m[INFO] [AIGateway] Ôťů AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+ [32mÔťô[39m test/input_sanitization.test.ts [2m([22m[2m15 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+ [32mÔťô[39m test/codebaseIndexer.test.ts [2m([22m[2m8 tests[22m[2m)[22m[32m 9[2mms[22m[39m
+ [32mÔťô[39m test/dashboard_chat_lib.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mÔťô[39m test/structured_output.test.ts [2m([22m[2m5 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+[90mstdout[2m | test/data_refiner.test.ts[2m > [22m[2mDataScientist Agent[2m > [22m[2mshould analyze data when task contains "analyze"
+[22m[39m[INFO] [DataScientistAgent] Analyzing data...
+
+ [32mÔťô[39m test/taskDecomposerCore.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 12[2mms[22m[39m
+[90mstdout[2m | test/data_refiner.test.ts[2m > [22m[2mDataScientist Agent[2m > [22m[2mshould accept Hungarian "elemz" keyword
+[22m[39m[INFO] [DataScientistAgent] Analyzing data...
+
+ [32mÔťô[39m test/data_refiner.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 13[2mms[22m[39m
+ [32mÔťô[39m test/telemetry.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 7[2mms[22m[39m
+ [32mÔťô[39m test/smoke.vitest.ts [2m([22m[2m1 test[22m[2m)[22m[32m 3[2mms[22m[39m
+ [32mÔťô[39m test/ev_hunter_research.test.ts [2m([22m[2m4 tests[22m[2m)[22m[32m 5[2mms[22m[39m
+ [32mÔťô[39m test/hooks.test.ts [2m([22m[2m7 tests[22m[2m)[22m[32m 6[2mms[22m[39m
+ [32mÔťô[39m test/agent_template.test.ts [2m([22m[2m1 test[22m[2m)[22m[32m 4[2mms[22m[39m
+ [32mÔťô[39m test/swagger_spec.test.ts [2m([22m[2m2 tests[22m[2m)[22m[32m 4[2mms[22m[39m
+[ERROR] [Server] WEB_UI_ENABLED=0 -> Web UI disabled
+MCP Brunella Core Server running on stdio
+ [32mÔťô[39m test/core_tools.test.ts [2m([22m[2m3 tests[22m[2m)[22m[33m 20788[2mms[22m[39m
+[90mstdout[2m | test/robotkez_integration.test.ts[2m > [22m[2mRobotk├ęz (Browser-Use) CLI Integration[2m > [22m[2mshould run a simple browser task via CLI
+[22m[39m­čôő Robotk├ęz CLI Output: {"success":true,"final_answer":"The title of the page is Google.","extracted_data":{"len":2},"screenshot_path":null,"error":null}
+Ôťů Robotk├ęz task sikeres!
+­čôŁ Final answer: The title of the page is Google.
+­čôŐ Metadata: {"len":2}
+
+ [32mÔťô[39m test/robotkez_integration.test.ts [2m([22m[2m1 test[22m[2m)[22m[33m 30560[2mms[22m[39m
+     [33m[2mÔťô[22m[39m should run a simple browser task via CLI [33m 30558[2mms[22m[39m
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on "check" command
+[22m[39m[STATUS] [LintFixer] idle
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on Hungarian command
+[22m[39m[STATUS] [LintFixer] working - ellen┼Ĺrizd a k├│dot
+[INFO] [LintFixer] ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on Hungarian command
+[22m[39m[STATUS] [LintFixer] idle
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould detect file path in task
+[22m[39m[STATUS] [LintFixer] working - check "src/cli.ts"
+[INFO] [LintFixer] ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould detect file path in task
+[22m[39m[STATUS] [LintFixer] idle
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run TypeScript check on "type" command
+[22m[39m[STATUS] [LintFixer] working - type check
+[INFO] [LintFixer] ESLint check ind├şt├ísa...
+

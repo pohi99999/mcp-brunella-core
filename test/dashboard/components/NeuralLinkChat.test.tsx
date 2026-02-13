@@ -1,17 +1,25 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { render, screen, fireEvent, waitFor, act } from "@testing-library/react";
+import {
+  render,
+  screen,
+  fireEvent,
+  waitFor,
+  act,
+} from "@testing-library/react";
 import React from "react";
 import { NeuralLinkChat } from "@/components/dashboard/NeuralLinkChat";
 import * as api from "@/lib/apiService";
 
 vi.mock("@/lib/apiService", () => ({
   getOllamaModels: vi.fn().mockResolvedValue([{ name: "llama3" }]),
-  getGithubModels: vi.fn().mockResolvedValue([
-    { name: "gpt-4.1", provider: "github" },
-  ]),
-  getGeminiModels: vi.fn().mockResolvedValue([
-    { name: "gemini-2.5-pro", provider: "gemini", tier: "pro" },
-  ]),
+  getGithubModels: vi
+    .fn()
+    .mockResolvedValue([{ name: "gpt-4.1", provider: "github" }]),
+  getGeminiModels: vi
+    .fn()
+    .mockResolvedValue([
+      { name: "gemini-2.5-pro", provider: "gemini", tier: "pro" },
+    ]),
   getCloudflareStatus: vi
     .fn()
     .mockResolvedValue({ status: { enabled: false, healthy: false } }),
@@ -66,9 +74,7 @@ describe("NeuralLinkChat", () => {
     });
 
     expect(screen.getByText("Üdv!")).toBeInTheDocument();
-    const modeSelect = screen.getByLabelText(
-      "Chat mód",
-    ) as HTMLSelectElement;
+    const modeSelect = screen.getByLabelText("Chat mód") as HTMLSelectElement;
     expect(modeSelect.value).toBe("github");
   });
 
@@ -99,9 +105,7 @@ describe("NeuralLinkChat", () => {
       render(<NeuralLinkChat />);
     });
 
-    const modeSelect = screen.getByLabelText(
-      "Chat mód",
-    ) as HTMLSelectElement;
+    const modeSelect = screen.getByLabelText("Chat mód") as HTMLSelectElement;
     fireEvent.change(modeSelect, { target: { value: "cloudflare" } });
 
     await waitFor(() => {

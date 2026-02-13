@@ -17,7 +17,11 @@ export function createRobotkezRoutes(): Router {
     const { task, headless = true, vision = true } = req.body;
 
     if (!task || typeof task !== "string") {
-      res.status(400).send({ error: "A 'task' mező kötelező és string típusú kell legyen." });
+      res
+        .status(400)
+        .send({
+          error: "A 'task' mező kötelező és string típusú kell legyen.",
+        });
       return;
     }
 
@@ -26,9 +30,12 @@ export function createRobotkezRoutes(): Router {
     try {
       const { stdout } = await execFileAsync("python", [
         "myai/browser_task_runner.py",
-        "--task", task,
-        "--headless", String(headless),
-        "--vision", String(vision),
+        "--task",
+        task,
+        "--headless",
+        String(headless),
+        "--vision",
+        String(vision),
       ]);
       const result = JSON.parse(stdout);
 
