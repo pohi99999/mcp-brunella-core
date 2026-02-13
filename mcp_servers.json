@@ -24,7 +24,7 @@
   {
     "name": "playwright",
     "command": "npx",
-    "args": ["-y", "@playwright/mcp@0.0.64"]
+    "args": ["-y", "@playwright/mcp@latest"]
   },
   {
     "name": "filesystem",
@@ -40,7 +40,7 @@
     "name": "docker",
     "command": "npx",
     "args": ["-y", "@modelcontextprotocol/server-docker"],
-    "disabled": true
+    "disabled": false
   },
   {
     "name": "cloudflare",
@@ -49,6 +49,24 @@
     "env": {
       "CLOUDFLARE_ACCOUNT_ID": "${CLOUDFLARE_ACCOUNT_ID}",
       "CLOUDFLARE_API_TOKEN": "${CLOUDFLARE_API_TOKEN}"
+    }
+  },
+  {
+    "name": "sqlite",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-sqlite", "data/brunella.db"]
+  },
+  {
+    "name": "fetch",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-fetch"]
+  },
+  {
+    "name": "memory",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-memory"],
+    "env": {
+      "MEMORY_FILE_PATH": "data/mcp_memory.json"
     }
   }
 ]
