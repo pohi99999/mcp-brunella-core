@@ -18,6 +18,14 @@ class BackendConfig:
     interpreter_system_message: str | None
     interpreter_allowed_modes: Tuple[str, ...]
     interpreter_max_chars: int
+    opendevin_enabled: bool
+    opendevin_mode: str
+    opendevin_base_url: str | None
+    opendevin_cli_command: str | None
+    opendevin_project_root: str | None
+    opendevin_model_endpoint: str | None
+    opendevin_timeout: int
+    opendevin_max_chars: int
 
 
 def _normalize_value(value: str | None) -> str | None:
@@ -80,4 +88,14 @@ def get_backend_config() -> BackendConfig:
             os.getenv("IRON_CLAD_INTERPRETER_ALLOWED_MODES", "python")
         ),
         interpreter_max_chars=_parse_int(os.getenv("IRON_CLAD_INTERPRETER_MAX_CHARS"), 4000),
+        opendevin_enabled=_parse_bool(os.getenv("IRON_CLAD_OPENDEVIN_ENABLED"), False),
+        opendevin_mode=os.getenv("IRON_CLAD_OPENDEVIN_MODE", "http").strip().lower(),
+        opendevin_base_url=_normalize_url(os.getenv("IRON_CLAD_OPENDEVIN_BASE_URL")),
+        opendevin_cli_command=_normalize_value(os.getenv("IRON_CLAD_OPENDEVIN_CLI")),
+        opendevin_project_root=_normalize_value(os.getenv("IRON_CLAD_OPENDEVIN_PROJECT_ROOT")),
+        opendevin_model_endpoint=_normalize_url(
+            os.getenv("IRON_CLAD_OPENDEVIN_MODEL_ENDPOINT", "http://127.0.0.1:8010")
+        ),
+        opendevin_timeout=_parse_int(os.getenv("IRON_CLAD_OPENDEVIN_TIMEOUT"), 300),
+        opendevin_max_chars=_parse_int(os.getenv("IRON_CLAD_OPENDEVIN_MAX_CHARS"), 8000),
     )

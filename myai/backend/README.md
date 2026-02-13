@@ -1,4 +1,4 @@
-# Iron Clad Python AI Backend (Phase 1-4)
+# Iron Clad Python AI Backend (Phase 1-5)
 
 OpenAI-kompatibilis FastAPI gateway skeleton + vLLM routing:
 
@@ -28,6 +28,20 @@ OpenAI-kompatibilis FastAPI gateway skeleton + vLLM routing:
 
 Az execute node az első javító akciót futtatja OpenInterpreterrel (ha engedélyezett),
 és az eredményt a workflow állapotába menti.
+
+## OpenDevin integráció (Phase 5)
+
+- `IRON_CLAD_OPENDEVIN_ENABLED`: `true/false` (alap: `false`)
+- `IRON_CLAD_OPENDEVIN_MODE`: `http` vagy `cli` (alap: `http`)
+- `IRON_CLAD_OPENDEVIN_BASE_URL`: HTTP mód esetén a szolgáltatás alap URL-je
+- `IRON_CLAD_OPENDEVIN_CLI`: CLI mód esetén parancs/útvonal
+- `IRON_CLAD_OPENDEVIN_PROJECT_ROOT`: opcionális projekt gyökér
+- `IRON_CLAD_OPENDEVIN_MODEL_ENDPOINT`: a gateway URL (alap: `http://127.0.0.1:8010`)
+- `IRON_CLAD_OPENDEVIN_TIMEOUT`: időlimit (alap: `300`)
+- `IRON_CLAD_OPENDEVIN_MAX_CHARS`: max feladat hossz (alap: `8000`)
+
+A `devin` node a diagnózis + terv + akció összefűzött feladatát adja át OpenDevinnek,
+és az eredményt visszacsatolja a workflow állapotába.
 
 ## Futtatás
 

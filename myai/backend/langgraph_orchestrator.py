@@ -7,6 +7,7 @@ import requests
 
 from .config import BackendConfig, get_backend_config
 from .interpreter_adapter import OpenInterpreterAdapter
+from .opendevin_adapter import OpenDevinAdapter
 from .schemas import ChatMessage
 
 
@@ -17,6 +18,8 @@ class IronCladState(TypedDict, total=False):
     actions: List[str]
     execution_result: str
     execution_error: str
+    devin_result: str
+    devin_error: str
     next: str
 
 
@@ -50,9 +53,14 @@ class IronCladGatewayClient:
 
 
 class IronCladOrchestrator:
-    def __init__(self, llm: Callable[[List[ChatMessage]], str], interpreter: Optional[OpenInterpreterAdapter] = None):
+    def __init__(
+        self,
+        llm: Callable[[List[ChatMessage]], str],
+        interpreter: Optional[OpenInterpreterAdapter] = None,
+        devin: Optional[OpenDevinAdapter] = None,
+    ):
         self._llm = llm
-        self._graph = build_iron_clad_graph(llm, interpreter)
+        self._graph = build_iron_clad_graph(llm, interpreter, devin)
 
     def run(self, user_input: str, thread_id: str | None = None) -> IronCladState:
         state: IronCladState = {
@@ -65,6 +73,7 @@ class IronCladOrchestrator:
 def build_iron_clad_graph(
     llm: Callable[[List[ChatMessage]], str],
     interpreter: Optional[OpenInterpreterAdapter] = None,
+    devin: Optional[OpenDevinAdapter] = None,
 ):
     try:
         from langgraph.checkpoint.memory import MemorySaver
@@ -83,6 +92,8 @@ def build_iron_clad_graph(
             return {"next": "remediate"}
         if interpreter and interpreter.enabled and not state.get("execution_result"):
             return {"next": "execute"}
+        if devin and devin.enabled and not state.get("devin_result"):
+            return {"next": "devin"}
         return {"next": "end"}
 
     def diagnose_node(state: IronCladState) -> IronCladState:
@@ -136,12 +147,31 @@ def build_iron_clad_graph(
         except Exception as exc:
             return {"execution_error": str(exc)}
 
+    def devin_node(state: IronCladState) -> IronCladState:
+        if not devin:
+            return {"devin_error": "OpenDevin adapter not configured"}
+        plan = state.get("plan") or ""
+        diagnosis = state.get("diagnosis") or ""
+        action = ""
+        actions = state.get("actions") or []
+        if actions:
+            action = actions[0]
+        task = "\n".join([item for item in [diagnosis, plan, action] if item])
+        if not task:
+            return {"devin_error": "No task available for OpenDevin execution"}
+        try:
+            result = devin.run(task)
+            return {"devin_result": result.output}
+        except Exception as exc:
+            return {"devin_error": str(exc)}
+
     graph = StateGraph(IronCladState)
     graph.add_node("supervisor", supervisor_node)
     graph.add_node("diagnose", diagnose_node)
     graph.add_node("plan", plan_node)
     graph.add_node("remediate", remediate_node)
     graph.add_node("execute", execute_node)
+    graph.add_node("devin", devin_node)
 
     graph.set_entry_point("supervisor")
     graph.add_conditional_edges(
@@ -152,6 +182,7 @@ def build_iron_clad_graph(
             "plan": "plan",
             "remediate": "remediate",
             "execute": "execute",
+            "devin": "devin",
             "end": END,
         },
     )
@@ -159,6 +190,7 @@ def build_iron_clad_graph(
     graph.add_edge("plan", "supervisor")
     graph.add_edge("remediate", "supervisor")
     graph.add_edge("execute", "supervisor")
+    graph.add_edge("devin", "supervisor")
 
     return graph.compile(checkpointer=MemorySaver())
 
@@ -167,4 +199,5 @@ def build_gateway_orchestrator(config: Optional[BackendConfig] = None) -> IronCl
     backend_config = config or get_backend_config()
     client = IronCladGatewayClient(backend_config)
     interpreter = OpenInterpreterAdapter(backend_config)
-    return IronCladOrchestrator(client.complete, interpreter)
+    devin = OpenDevinAdapter(backend_config)
+    return IronCladOrchestrator(client.complete, interpreter, devin)
