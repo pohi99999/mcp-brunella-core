@@ -68,6 +68,34 @@
 				"CLOUDFLARE_ACCOUNT_ID": "${input:cloudflareAccountId}",
 				"CLOUDFLARE_API_TOKEN": "${input:cloudflareApiToken}"
 			}
+		},
+		"sqlite": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-sqlite",
+				"data/brunella.db"
+			]
+		},
+		"fetch": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-fetch"
+			]
+		},
+		"memory": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-memory"
+			],
+			"env": {
+				"MEMORY_FILE_PATH": "data/mcp_memory.json"
+			}
 		}
 	},
 	"inputs": [
