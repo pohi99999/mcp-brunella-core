@@ -140,6 +140,7 @@ OrchestratorAgent (Planner & Dispatcher)
   ├── DataScientistAgent    - Adat tisztítás, LanceDB
   ├── EdgeProxyAgent        - Cloudflare Workers proxy
   ├── ProjectConductor      - Docs sync, track management
+  ├── TaskDecomposerAgent   - Komplex feladat dekompozíció (preview-only DAG)
   └── VoiceAgent            - Hangfelismerés (Whisper)
 ```
 
@@ -279,6 +280,12 @@ brunella run <tool>           # MCP tool futtatás
 brunella conductor status     # Projekt státusz
 brunella conductor sync       # Dokumentáció szinkron
 brunella conductor health     # Track-ek health check
+
+# Task Decomposer (komplex feladat bontás)
+brunella decompose [task]     # Feladat dekompozíció (preview-only DAG)
+
+# Agent Architect (új ügynök generálás)
+brunella architect create [description]  # Új ügynök létrehozása TOML config-ból
 ```
 
 ### Chat Parancsok (interaktív módban)
@@ -422,6 +429,40 @@ pytest tests/
 - [ ] `npm test` - Még mindig PASS
 - [ ] `.ai/<te_neved>.md` - Napló frissítve
 - [ ] `python scripts/sync_foszal.py` - FOSZAL szinkronizálva
+
+### 🤖 Jules Async Test Automation (GitHub Actions)
+
+**15 párhuzamos teszt suite 4 óránként + napi összesítő**
+
+```bash
+# CLI használat
+brunella jules tests           # Interaktív menü: futások / trigger
+
+# Dashboard
+# Mission Control → Jules Integration → "Async Tests" szekció
+# - Latest runs táblázat
+# - Success trend chart
+# - "Trigger" gomb
+```
+
+**Workflow-k:**
+- `.github/workflows/jules-async-tests.yml` - 15 suite (unit, integration, e2e, performance, security)
+- `.github/workflows/jules-test-coordinator.yml` - Napi összesítő (8 AM UTC)
+
+**Test Suites:**
+1. unit_fast / unit_slow
+2. integration_ollama / integration_gemini / integration_github_models
+3. dashboard
+4. e2e_full / e2e_critical
+5. performance_stress / performance_memory
+6. security_scan
+7. api_contracts
+8. accessibility / browser_compat / regression
+
+**Trigger:**
+- Automatikus: 4 óránként (cron)
+- Manuális: `brunella jules tests` → "Workflow indítása"
+- Dashboard: "Trigger" gomb
 
 ---
 
