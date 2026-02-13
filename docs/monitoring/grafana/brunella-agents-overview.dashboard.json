@@ -1,0 +1,81 @@
+{
+  "id": null,
+  "uid": "brunella-agents-overview",
+  "title": "Brunella Agents - Execution & LLM Usage",
+  "timezone": "browser",
+  "schemaVersion": 39,
+  "version": 1,
+  "refresh": "15s",
+  "tags": ["brunella", "agents", "prometheus"],
+  "panels": [
+    {
+      "type": "timeseries",
+      "title": "Agent execution p95 (seconds)",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 0 },
+      "targets": [
+        {
+          "expr": "histogram_quantile(0.95, sum(rate(agent_execution_seconds_bucket[5m])) by (le, agent_name))",
+          "legendFormat": "{{agent_name}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Agent success rate (5m)",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 0 },
+      "targets": [
+        {
+          "expr": "sum(rate(agent_executions_total{status=\"success\"}[5m])) by (agent_name) / clamp_min(sum(rate(agent_executions_total[5m])) by (agent_name), 0.0001)",
+          "legendFormat": "{{agent_name}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percentunit",
+          "min": 0,
+          "max": 1
+        },
+        "overrides": []
+      }
+    },
+    {
+      "type": "timeseries",
+      "title": "LLM tokens per minute",
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(rate(llm_tokens_total[1m])) by (provider, model, direction)",
+          "legendFormat": "{{provider}} {{model}} {{direction}}",
+          "refId": "A"
+        }
+      ]
+    },
+    {
+      "type": "timeseries",
+      "title": "Estimated LLM cost USD per hour",
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 8 },
+      "targets": [
+        {
+          "expr": "sum(increase(llm_cost_usd_total[1h])) by (provider, model)",
+          "legendFormat": "{{provider}} {{model}}",
+          "refId": "A"
+        }
+      ],
+      "fieldConfig": {
+        "defaults": {
+          "unit": "currencyUSD"
+        },
+        "overrides": []
+      }
+    }
+  ],
+  "templating": {
+    "list": []
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  }
+}
