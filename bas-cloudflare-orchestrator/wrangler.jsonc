@@ -55,5 +55,22 @@
   // 📊 Telemetria
   "observability": {
     "enabled": true
+  },
+  // 📬 Queues (Async Task Pipeline)
+  "queues": {
+    "producers": [
+      {
+        "binding": "TASK_QUEUE",
+        "queue": "bas-task-pipeline"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "bas-task-pipeline",
+        "max_batch_size": 10,
+        "max_retries": 3,
+        "dead_letter_queue": "bas-task-dlq"
+      }
+    ]
   }
 }
