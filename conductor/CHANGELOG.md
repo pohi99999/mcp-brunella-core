@@ -2,6 +2,35 @@
 
 A cél: minden jelentős rendszer- és fejlesztési módosítás rövid, visszakereshető naplózása.
 
+## 2026-02-13 - Copilot session: Living Documentation System starter package
+
+### Összefoglaló (Starter package)
+
+Elkészült a Living Documentation rendszer hiányzó alapcsomagja: dedikált track spec, ADR struktúra, interaktív notebook példa és Grafana dashboard baseline.
+
+### Implementált technikai változások (Starter package)
+
+- **Új conductor track spec**:
+  - `conductor/tracks/living_documentation_system_20260213/spec.md`
+
+- **Új ADR struktúra + döntések**:
+  - `ADR/README.md`
+  - `ADR/0001-living-documentation-system.md`
+  - `ADR/0002-embedding-standard-mxbai-with-legacy-fallback.md`
+
+- **Új interaktív notebook példák**:
+  - `myai/examples/README.md`
+  - `myai/examples/rag_golden_dataset_walkthrough.ipynb`
+
+- **Új Grafana dashboard baseline**:
+  - `docs/monitoring/grafana/brunella-agents-overview.dashboard.json`
+  - `docs/monitoring/grafana/README.md`
+
+### Verifikáció (Starter package)
+
+- A létrehozott markdown fájlok lint-kompatibilis formázásra igazítva.
+- A notebook valid JSON szerkezetben került létrehozásra.
+
 ## 2026-02-14 - Copilot session: Living Documentation legacy template refresh
 
 ### Összefoglaló (Living Docs refresh)
