@@ -448,10 +448,12 @@ brunella jules tests           # Interaktív menü: futások / trigger
 ```
 
 **Workflow-k:**
+
 - `.github/workflows/jules-async-tests.yml` - 15 suite (unit, integration, e2e, performance, security)
 - `.github/workflows/jules-test-coordinator.yml` - Napi összesítő (8 AM UTC)
 
 **Test Suites:**
+
 1. unit_fast / unit_slow
 2. integration_ollama / integration_gemini / integration_github_models
 3. dashboard
@@ -462,6 +464,7 @@ brunella jules tests           # Interaktív menü: futások / trigger
 8. accessibility / browser_compat / regression
 
 **Trigger:**
+
 - Automatikus: 4 óránként (cron)
 - Manuális: `brunella jules tests` → "Workflow indítása"
 - Dashboard: "Trigger" gomb

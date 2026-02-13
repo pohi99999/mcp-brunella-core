@@ -6,6 +6,33 @@
 
 ---
 
+## 2026-02-14 05:30 - 🧠 LanceDB Dual-Index Embedding Migration (mxbai + legacy fallback) ✅
+
+**Track:** `lancedb_dual_index_transition_20260214`
+**Feladat:** RAG embedding átállás `mxbai-embed-large` modellre, visszafelé kompatibilis dual-index stratégiával.
+
+**Eredmények:**
+
+- ✅ `src/utils/rag.ts` dual-index logika:
+  - primer index: `memory_v2_mxbai`
+  - legacy fallback: `memory`
+  - keresés primer → legacy fallback útvonallal
+  - dimenzió-normalizálás és text fallback
+- ✅ `src/utils/aiGateway.ts` embedding API bővítés: `expectedDimension` opció
+- ✅ `myai/tools/knowledge_integrator.py` dual-index felkészítés:
+  - külön summary/embedding model paraméterek
+  - primary + legacy embedding támogatás
+  - CLI opciók bővítve
+- ✅ `.env.example` frissítve RAG migration env változókkal
+
+**Verifikáció:**
+
+- ✅ `npm test` PASS (`61` test file, `479` test)
+
+**Megjegyzés:**
+
+- Ollama környezetben, ha a `mxbai-embed-large` modell még nincs telepítve, a rendszer automatikusan fallback-el (legacy index/text search), így szolgáltatás-kimaradás nélkül fut.
+
 ## 2026-02-13 05:20 - 📚 Conductor + Copilot Log Sync, Golden/Monitoring/Swagger hardening (DONE ✅)
 
 **Track:** `stabilization_docs_sync_20260213`
@@ -52,7 +79,6 @@
 - `conductor/index.md`
 
 **Státusz:** ✅ KÉSZ. Dokumentáció és verifikáció szinkronban.
-
 
 ## 2026-02-12 23:10 - Edge WebSocket Stabilization + Dashboard Key/Build Fixes ✅
 

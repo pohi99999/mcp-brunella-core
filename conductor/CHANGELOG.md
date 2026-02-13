@@ -2,6 +2,41 @@
 
 A cél: minden jelentős rendszer- és fejlesztési módosítás rövid, visszakereshető naplózása.
 
+## 2026-02-14 - Copilot session: LanceDB Dual-Index Embedding Migration (mxbai + legacy fallback)
+
+### Összefoglaló (Dual-index)
+
+A RAG embedding pipeline átállítása megtörtént a `mxbai-embed-large` modellre úgy, hogy közben megmaradjon a visszafelé kompatibilitás a `nomic-embed-text` indexszel.
+
+### Implementált technikai változások (Dual-index)
+
+- **Node RAG dual-index átállás** (`src/utils/rag.ts`):
+  - primer index: `memory_v2_mxbai` (alapértelmezett)
+  - legacy index: `memory`
+  - dual write támogatás (`RAG_DUAL_INDEX_WRITE=true`)
+  - keresésnél primer → legacy fallback stratégia
+  - embedding dimenzió normalizálás (pad/cut) modell-specifikusan
+
+- **AI Gateway embedding dimenzió-kezelés** (`src/utils/aiGateway.ts`):
+  - új `expectedDimension` opció az embedding hívásokban
+  - fallback vektorok mérete már hívás-specifikusan kezelhető
+
+- **Python Knowledge Integrator dual-index felkészítés** (`myai/tools/knowledge_integrator.py`):
+  - külön summary model és embedding model paraméterek
+  - primary (`mxbai`) + legacy (`nomic`) embedding generálás támogatás
+  - primary table: `tech_trends_v2_mxbai`
+  - legacy table: `tech_trends`
+  - CLI opciók bővítése embedding/dual-index konfigurációhoz
+
+- **Konfiguráció dokumentálás** (`.env.example`):
+  - `RAG_EMBEDDING_MODEL_PRIMARY`, `RAG_EMBEDDING_DIM_PRIMARY`
+  - `RAG_EMBEDDING_MODEL_LEGACY`, `RAG_EMBEDDING_DIM_LEGACY`
+  - `RAG_DUAL_INDEX_WRITE`
+
+### Verifikáció (Dual-index)
+
+- Teljes futtatás zöld: `npm test` (61 fájl, 479 teszt PASS)
+
 ## 2026-02-13 - Copilot session: Golden + Monitoring + Swagger + Doc Sync
 
 ### Összefoglaló
@@ -46,4 +81,3 @@ A repository-ban egyidejűleg több track/meta frissítés, archiválás és új
 
 - Céltesztek zöldek (Golden + Monitoring + Swagger)
 - Teljes futtatás zöld: `npm test`
-
