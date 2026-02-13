@@ -43,13 +43,13 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
     const content = fs.readFileSync(serverPath, "utf-8");
 
     expect(content).toContain("from fastmcp import FastMCP");
-    expect(content).toContain('@mcp.tool()');
-    expect(content).toContain('def python_execute');
-    expect(content).toContain('def data_refine');
-    expect(content).toContain('def rag_search');
-    expect(content).toContain('def harvest_scenario');
-    expect(content).toContain('def harvest_extract');
-    expect(content).toContain('def system_health');
+    expect(content).toContain("@mcp.tool()");
+    expect(content).toContain("def python_execute");
+    expect(content).toContain("def data_refine");
+    expect(content).toContain("def rag_search");
+    expect(content).toContain("def harvest_scenario");
+    expect(content).toContain("def harvest_extract");
+    expect(content).toContain("def system_health");
   });
 
   it("should define stdio and sse transport modes", () => {
@@ -62,7 +62,7 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
 
     expect(content).toContain('"stdio"');
     expect(content).toContain('"sse"');
-    expect(content).toContain('mcp.run(transport=');
+    expect(content).toContain("mcp.run(transport=");
   });
 
   it("should have a main() entry point", () => {

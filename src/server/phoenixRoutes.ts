@@ -1,7 +1,7 @@
 /**
  * Gold Protocol G7.2: Phoenix Protocol API Routes
  *
- * Checkpoint, health monitoring, and recovery log API
+ * Checkpoint, health monitoring, recovery log, failover & event-bus API
  *
  * Endpoints:
  *   GET /api/phoenix/checkpoints - List active checkpoints
@@ -10,6 +10,11 @@
  *   GET /api/phoenix/stats - Checkpoint database stats
  *   GET /api/phoenix/recovery-log - Recovery events log
  *   GET /api/phoenix/health - System health check
+ *   GET /api/phoenix/failover/registry - Failover mappings
+ *   GET /api/phoenix/failover/attempts - Failover attempt log
+ *   GET /api/phoenix/failover/stats - Failover statistics
+ *   GET /api/phoenix/event-bus/stats - Event bus statistics
+ *   GET /api/phoenix/event-bus/history - Event bus history
  */
 
 import { Router } from 'express';
@@ -20,6 +25,8 @@ import {
   getCheckpointStats,
 } from '../core/checkpoint.js';
 import { getRecoveryLog } from '../core/gitRecovery.js';
+import { phoenixEventBus } from '../core/phoenixEventBus.js';
+import { failoverRegistry } from '../core/failoverRegistry.js';
 import { socketService } from './SocketService.js';
 import os from 'os';
 
@@ -124,6 +131,81 @@ export function createPhoenixRouter(): Router {
       };
 
       res.json(health);
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  // ========================================================================
+  // PHOENIX PROTOCOL SZINT 4-5: Failover & Event Bus endpoints
+  // ========================================================================
+
+  /**
+   * GET /api/phoenix/failover/registry
+   * Returns all failover mappings (agent → fallback chain)
+   */
+  router.get('/failover/registry', (_req, res) => {
+    try {
+      const mappings = failoverRegistry.getAllMappings();
+      res.json({ mappings });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  /**
+   * GET /api/phoenix/failover/attempts
+   * Returns failover attempt log, optionally filtered by agent
+   * Query params: ?agent=Name&limit=50
+   */
+  router.get('/failover/attempts', (req, res) => {
+    try {
+      const agentFilter = typeof req.query.agent === 'string' ? req.query.agent : undefined;
+      const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : undefined;
+      const attempts = failoverRegistry.getAttempts(agentFilter, limit);
+      res.json({ attempts, total: attempts.length });
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  /**
+   * GET /api/phoenix/failover/stats
+   * Returns failover statistics (success/fail counts per agent)
+   */
+  router.get('/failover/stats', (_req, res) => {
+    try {
+      const stats = failoverRegistry.getStats();
+      res.json(stats);
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  /**
+   * GET /api/phoenix/event-bus/stats
+   * Returns event bus statistics (event counts, subscriber counts)
+   */
+  router.get('/event-bus/stats', (_req, res) => {
+    try {
+      const stats = phoenixEventBus.getStats();
+      res.json(stats);
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  /**
+   * GET /api/phoenix/event-bus/history
+   * Returns event bus history, optionally filtered by event type
+   * Query params: ?event=phoenix:agent_failed&limit=50
+   */
+  router.get('/event-bus/history', (req, res) => {
+    try {
+      const eventFilter = typeof req.query.event === 'string' ? req.query.event : undefined;
+      const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : undefined;
+      const history = phoenixEventBus.getHistory(eventFilter, limit);
+      res.json({ history, total: history.length });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }

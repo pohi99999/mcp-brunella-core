@@ -2,6 +2,7 @@ import { IAgent } from "./types.js";
 import { Logger } from "../utils/logger.js";
 import { agentManager } from "./AgentManager.js";
 import { chatWithOllama } from "../core/llm_client.js";
+import { phoenixEventBus } from "../core/phoenixEventBus.js";
 
 // ---------------------------------------------------------------------------
 // Keyword pre-routing table (order: more specific → less specific)
@@ -109,9 +110,31 @@ export class OrchestratorAgent implements IAgent {
   capabilities = ["plan", "delegate", "analyze_intent"];
 
   private logger: Logger;
+  private failedDuringSession: Set<string> = new Set();
 
   constructor() {
     this.logger = new Logger("orchestrator.log");
+    this.initPhoenixListeners();
+  }
+
+  /**
+   * Phoenix Protocol: Listen for agent failures and log them
+   * so future routing can avoid recently-failed agents.
+   */
+  private initPhoenixListeners(): void {
+    phoenixEventBus.subscribe('phoenix:agent_failed', (evt) => {
+      this.failedDuringSession.add(evt.agentName.toLowerCase());
+      this.logger.info(
+        `Phoenix: Agent '${evt.agentName}' failed (tracked for re-routing avoidance)`,
+      );
+    });
+
+    phoenixEventBus.subscribe('phoenix:failover_result', (evt) => {
+      if (evt.success) {
+        // Clear from failed set — agent was rescued by failover
+        this.failedDuringSession.delete(evt.originalAgent.toLowerCase());
+      }
+    });
   }
 
   // -------------------------------------------------------------------------
