@@ -1,11 +1,11 @@
 {
   "id": "iron_clad_backend_20260212",
   "name": "Iron Clad Python AI Backend",
-  "status": "proposed",
+  "status": "in_progress",
   "priority": "medium",
-  "progress": 0,
+  "progress": 25,
   "created": "2026-02-12T00:00:00Z",
-  "updated": "2026-02-12T15:44:00Z",
+  "updated": "2026-02-13T07:05:00Z",
   "assignee": "DeveloperAgent",
   "tags": [
     "python",
@@ -17,5 +17,5 @@
   ],
   "estimatedHours": 16,
   "description": "Egységes Python AI backend - FastAPI + LiteLLM Gateway + vLLM inference + LangGraph orchestration + OpenInterpreter.",
-  "spec_status": "pending_approval"
+  "spec_status": "approved"
 }
