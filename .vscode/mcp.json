@@ -56,6 +56,18 @@
 			],
 			"gallery": "https://api.mcp.github.com",
 			"version": "0.3.6"
+		},
+		"cloudflare": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@cloudflare/mcp-server-cloudflare"
+			],
+			"env": {
+				"CLOUDFLARE_ACCOUNT_ID": "${input:cloudflareAccountId}",
+				"CLOUDFLARE_API_TOKEN": "${input:cloudflareApiToken}"
+			}
 		}
 	},
 	"inputs": [
@@ -75,6 +87,18 @@
 			"id": "token",
 			"type": "promptString",
 			"description": "",
+			"password": true
+		},
+		{
+			"id": "cloudflareAccountId",
+			"type": "promptString",
+			"description": "Cloudflare Account ID",
+			"password": false
+		},
+		{
+			"id": "cloudflareApiToken",
+			"type": "promptString",
+			"description": "Cloudflare API Token (Workers/KV/D1/R2 permissions)",
 			"password": true
 		}
 	]

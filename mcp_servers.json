@@ -41,5 +41,14 @@
     "command": "npx",
     "args": ["-y", "@modelcontextprotocol/server-docker"],
     "disabled": true
+  },
+  {
+    "name": "cloudflare",
+    "command": "npx",
+    "args": ["-y", "@cloudflare/mcp-server-cloudflare"],
+    "env": {
+      "CLOUDFLARE_ACCOUNT_ID": "${CLOUDFLARE_ACCOUNT_ID}",
+      "CLOUDFLARE_API_TOKEN": "${CLOUDFLARE_API_TOKEN}"
+    }
   }
 ]
