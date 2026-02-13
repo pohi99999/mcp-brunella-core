@@ -4,7 +4,7 @@
     "command": "npx",
     "args": ["-y", "@modelcontextprotocol/server-github"],
     "env": {
-      "GITHUB_PERSONAL_ACCESS_TOKEN": "xxxxx"
+      "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
     }
   },
   {
@@ -17,29 +17,29 @@
     "command": "npx",
     "args": ["-y", "@simonb97/server-win-cli"],
     "env": {
-      "ALLOWED_PATHS": [
-        "C:\\Windows\\System32",
-        "F:\\mcp-brunella-core",
-        "G:\\Brunella",
-        "C:\\Users\\pohi9"
-      ]
+      "ALLOWED_PATHS": "C:\\Windows\\System32,F:\\mcp-brunella-core,G:\\Brunella,C:\\Users\\pohi9"
     },
     "disabled": false
   },
   {
     "name": "playwright",
     "command": "npx",
-    "args": ["-y", "@playwright/mcp@latest"]
+    "args": ["-y", "@playwright/mcp@0.0.64"]
+  },
+  {
+    "name": "filesystem",
+    "command": "npx",
+    "args": [
+      "-y",
+      "@modelcontextprotocol/server-filesystem",
+      "F:\\mcp-brunella-core",
+      "G:\\Brunella"
+    ]
   },
   {
     "name": "docker",
     "command": "npx",
     "args": ["-y", "@modelcontextprotocol/server-docker"],
     "disabled": true
-  },
-  {
-    "name": "chrome-devtools",
-    "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
   }
 ]
