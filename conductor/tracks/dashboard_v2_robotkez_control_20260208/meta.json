@@ -1,15 +1,21 @@
 {
   "id": "dashboard_v2_robotkez_control_20260208",
   "title": "Dashboard V2 Robotkéz Control",
-  "status": "completed",
+  "status": "archived",
   "priority": "high",
   "created": "2026-02-08",
   "updated": "2026-02-12",
   "owner": "System",
   "spec_status": "approved",
   "progress": 100,
-  "tags": ["dashboard", "robotkez", "playwright", "automation"],
+  "tags": [
+    "dashboard",
+    "robotkez",
+    "playwright",
+    "automation"
+  ],
   "dependencies": [],
   "estimated_effort": "medium",
-  "business_value": "Browser automation controllable from UI"
+  "business_value": "Browser automation controllable from UI",
+  "archived_at": "2026-02-13T00:00:00Z"
 }

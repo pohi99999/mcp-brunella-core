@@ -2,13 +2,38 @@
 
 **Track ID**: `cloudflare-iteration-2-20260212`  
 **Dependency**: `cloudflare-chat-integration-20260211` (✅ COMPLETED 100%)  
-**Status**: ⏳ **PENDING_APPROVAL**  
+**Status**: ✅ **COMPLETED**  
 **Priority**: HIGH  
 **Estimated Effort**: 6 hours
 
 ---
 
 ## Áttekintés
+
+### Post-Completion Stabilization Addendum (2026-02-12)
+
+Az Iteration 2 lezárása után futásidőben egy kapcsolati regresszió jelentkezett a dashboard `EdgePanel` komponensben:
+
+- tünet: `Connection closed: code 1006`
+- lokális ellenőrzés: `http://localhost:3000/ws` → `404`
+- gyökérok: a backend valós idejű csatornája Socket.IO (`/socket.io`), nem natív WebSocket `/ws` endpoint.
+
+**Végrehajtott javítások:**
+
+- `EdgePanel` átállítása Socket.IO provider használatra (`useSocket`) a natív `WebSocket` helyett.
+- Kapcsolati diagnosztika hozzáadása az UI-hoz.
+- Socket ID megjelenítés.
+- Transport megjelenítés.
+- Reconnect attempts számláló megjelenítés.
+- Last disconnect reason megjelenítés.
+- Dashboard key-stabilizálás és API export fix (`getCloudflareStatus`) külön validálva.
+
+**Validáció:**
+
+- `npm run build:ui` ✅
+- Edge kapcsolat dashboardon zöld (connected) ✅
+
+---
 
 Az Iteration 1 sikeres lezárása után (Backend API + Dashboard UI + Tests + Docs + Feature-flag 100%) az Iteration 2 három fő komponenst ad hozzá:
 

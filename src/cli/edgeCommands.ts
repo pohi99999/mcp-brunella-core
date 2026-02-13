@@ -86,8 +86,8 @@ export function registerEdgeCommands(program: Command) {
             task.status === "completed"
               ? chalk.green
               : task.status === "failed"
-              ? chalk.red
-              : chalk.yellow;
+                ? chalk.red
+                : chalk.yellow;
           console.log(
             `${chalk.dim(task.id.slice(0, 8))} [${statusColor(
               task.status,

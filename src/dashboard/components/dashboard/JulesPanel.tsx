@@ -16,7 +16,17 @@ import {
   ArrowsClockwise,
   Play,
   GitPullRequest,
+  ChartLine,
 } from "@phosphor-icons/react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
 import {
   getJulesSessions,
   createJulesTask,
@@ -308,6 +318,53 @@ export function JulesPanel() {
             </TableBody>
           </Table>
         </div>
+
+        {/* Test Trend Chart */}
+        {runs.length > 0 && (
+          <div className="rounded-md border border-white/10 overflow-hidden">
+            <div className="flex items-center justify-between px-3 py-2 bg-white/5">
+              <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+                <ChartLine size={16} />
+                Test Success Trend (Last 10 Runs)
+              </div>
+            </div>
+            <div className="p-4 bg-black/20">
+              <ResponsiveContainer width="100%" height={200}>
+                <LineChart
+                  data={runs
+                    .slice()
+                    .reverse()
+                    .map((r, idx) => ({
+                      run: `#${r.run_number ?? idx + 1}`,
+                      success: r.conclusion === "success" ? 100 : 0,
+                    }))}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="#333" />
+                  <XAxis dataKey="run" stroke="#888" fontSize={11} />
+                  <YAxis stroke="#888" fontSize={11} domain={[0, 100]} />
+                  <Tooltip
+                    contentStyle={{
+                      backgroundColor: "#1a1a1a",
+                      border: "1px solid #333",
+                      borderRadius: "4px",
+                    }}
+                  />
+                  <Line
+                    type="monotone"
+                    dataKey="success"
+                    stroke="#10b981"
+                    strokeWidth={2}
+                    dot={{ fill: "#10b981", r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+              <div className="mt-2 text-xs text-muted-foreground text-center">
+                {runs.filter((r) => r.conclusion === "success").length} / {runs.length} successful runs (
+                {Math.round((runs.filter((r) => r.conclusion === "success").length / runs.length) * 100)}% pass rate)
+              </div>
+            </div>
+          </div>
+        )}
       </CardContent>
     </Card>
   );

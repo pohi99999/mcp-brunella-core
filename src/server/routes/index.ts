@@ -20,6 +20,7 @@ import { createDeveloperRoutes } from "./developer.js";
 import { createRobotkezRoutes } from "./robotkez.js";
 import { createJulesRoutes } from "./jules.js";
 import { createCloudflareRoutes } from "./cloudflare.js";
+import { createTracksRoutes } from "./tracks.js";
 
 export {
   createHealthRoutes,
@@ -42,6 +43,7 @@ export {
   createDeveloperRoutes,
   createRobotkezRoutes,
   createCloudflareRoutes,
+  createTracksRoutes,
 };
 
 /**
@@ -71,6 +73,7 @@ export function createV1Router(): Router {
   router.use("/robotkez", createRobotkezRoutes());
   router.use("/jules", createJulesRoutes());
   router.use("/cloudflare", createCloudflareRoutes());
+  router.use("/tracks", createTracksRoutes());
 
   return router;
 }

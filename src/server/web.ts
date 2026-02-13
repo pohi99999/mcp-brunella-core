@@ -33,6 +33,12 @@ import {
 import { swaggerSpec } from "./swagger.js";
 import { socketService } from "./SocketService.js";
 import { globalErrorHandler } from "./middleware/errorHandler.js";
+import {
+  getPrometheusContentType,
+  getPrometheusMetrics,
+  initMetrics,
+  recordHttpRequest,
+} from "../utils/metrics.js";
 import { createTelemetryRouter } from "./telemetryRoutes.js";
 import { createAuditRouter } from "./auditRoutes.js";
 import { createSpecRouter } from "./specRoutes.js";
@@ -83,6 +89,8 @@ export async function startWebServer() {
     logError("Server", `Tasks DB Init failed: ${e.message}`);
   }
 
+  initMetrics();
+
   // Auto-connect to configured MCP servers (Stub for now based on configManager)
   // In a real scenario, we would read from mcp_servers.json
   logInfo("Server", "🔄 Starting MCP Bridge...");
@@ -96,6 +104,27 @@ export async function startWebServer() {
   app.use(requestId);
   app.use(requestLogging);
   app.use("/api", apiRateLimit);
+
+  /**
+   * @swagger
+   * /metrics:
+   *   get:
+   *     summary: Prometheus metrics scrape endpoint
+   *     description: Exposes BAS runtime metrics in Prometheus text format.
+   *     responses:
+   *       200:
+   *         description: Prometheus metrics text payload
+   */
+  app.get("/metrics", async (_req, res) => {
+    try {
+      res.set("Content-Type", getPrometheusContentType());
+      const metrics = await getPrometheusMetrics();
+      res.end(metrics);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ error: message });
+    }
+  });
 
   // Swagger UI
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
@@ -155,10 +184,19 @@ export async function startWebServer() {
 
   // Middleware to count requests and errors
   app.use((_req, res, next) => {
+    const requestStart = Date.now();
     requestCount++;
+
     res.on("finish", () => {
       if (res.statusCode >= 400) errorCount++;
+      const durationMs = Date.now() - requestStart;
+      const method = _req.method || "UNKNOWN";
+      const routePath = _req.route?.path
+        ? String(_req.route.path)
+        : _req.path || "unknown";
+      recordHttpRequest(method, routePath, res.statusCode, durationMs);
     });
+
     next();
   });
 

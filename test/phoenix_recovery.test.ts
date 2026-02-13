@@ -40,7 +40,12 @@ vi.mock("../src/core/retryStrategy.js", () => ({
     throw lastError;
   }),
   calculateDelay: vi.fn().mockReturnValue(0),
-  DEFAULT_RETRY_CONFIG: { maxRetries: 3, baseDelay: 0, maxDelay: 0, backoffMultiplier: 1 }
+  DEFAULT_RETRY_CONFIG: {
+    maxRetries: 3,
+    baseDelay: 0,
+    maxDelay: 0,
+    backoffMultiplier: 1,
+  },
 }));
 
 interface TaskResult {
@@ -92,7 +97,7 @@ describe("Phoenix Protocol: Recovery & Resilience", () => {
         "FailingAgent",
         "block test",
       )) as TaskResult;
-      
+
       expect(result.success).toBe(false);
       expect(result.message).toContain("Circuit Breaker");
     });
@@ -101,7 +106,7 @@ describe("Phoenix Protocol: Recovery & Resilience", () => {
   describe("PythonShell Fallback Recovery", () => {
     it("should fallback to legacy shell if API fails", async () => {
       vi.useFakeTimers();
-      
+
       // Mock fetch to simulate API failure
       global.fetch = vi
         .fn()
@@ -111,14 +116,11 @@ describe("Phoenix Protocol: Recovery & Resilience", () => {
 
       const shell = new PythonShell("test.py");
       const runLegacySpy = vi
-        .spyOn(
-          shell as any,
-          "runLegacy",
-        )
+        .spyOn(shell as any, "runLegacy")
         .mockResolvedValue("legacy output");
 
       const runPromise = shell.run("print('hello')");
-      
+
       // Advance past the 1500ms delay
       await vi.advanceTimersByTimeAsync(2000);
 

@@ -80,6 +80,16 @@
 			"isBackground": true,
 			"problemMatcher": [],
 			"group": "test"
+		},
+		{
+			"type": "func",
+			"label": "func: host start",
+			"command": "host start",
+			"problemMatcher": "$func-powershell-watch",
+			"isBackground": true,
+			"options": {
+				"cwd": "${workspaceFolder}/external_research\\brunella_azure\\app\\functions\\text_processor"
+			}
 		}
 	]
 }

@@ -1,0 +1,21 @@
+{
+  "id": "green_lightning_20260212",
+  "name": "Green Lightning - Autonomous EV Hunter",
+  "status": "proposed",
+  "priority": "high",
+  "progress": 0,
+  "created": "2026-02-12T00:00:00Z",
+  "updated": "2026-02-12T17:24:00Z",
+  "assignee": "RobotkezAgent + n8n",
+  "tags": [
+    "robotkez",
+    "browser-use",
+    "automation",
+    "willhaben",
+    "ev-hunter",
+    "email-notification"
+  ],
+  "estimatedHours": 8,
+  "description": "Automatizált ügynök elektromos autók keresésére willhaben.at-on. Szűrés ár és eladó típusa szerint, email értesítés a legjobb ajánlatokról.",
+  "spec_status": "pending_approval"
+}

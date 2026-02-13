@@ -1287,7 +1287,7 @@ harvestCmd
 
       // Extract last summary
       const lines = logContent.split("\n").reverse();
-      let summaryLines: string[] = [];
+      const summaryLines: string[] = [];
       let foundSummary = false;
 
       for (const line of lines) {

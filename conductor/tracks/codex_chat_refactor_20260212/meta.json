@@ -1,0 +1,20 @@
+{
+  "id": "codex_chat_refactor_20260212",
+  "name": "Codex NeuralLink Chat Refactor",
+  "status": "proposed",
+  "priority": "high",
+  "progress": 0,
+  "created": "2026-02-12T00:00:00Z",
+  "updated": "2026-02-12T15:42:00Z",
+  "assignee": "DeveloperAgent",
+  "tags": [
+    "dashboard",
+    "refactor",
+    "chat",
+    "provider-pattern",
+    "typescript"
+  ],
+  "estimatedHours": 6,
+  "description": "NeuralLinkChat.tsx komponens refaktor - Provider Adapter minta, típusbiztonság, session perzisztencia.",
+  "spec_status": "pending_approval"
+}

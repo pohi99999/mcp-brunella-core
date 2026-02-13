@@ -1,3 +1,4 @@
+import { useEffect, useMemo, useState } from "react";
 import {
   Card,
   CardContent,
@@ -8,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useEdgeWebSocket } from "@/hooks/useEdgeWebSocket";
+import { useSocket } from "@/context/SocketContext";
 import {
   CloudArrowUp,
   CheckCircle,
@@ -17,24 +18,155 @@ import {
   ArrowClockwise,
 } from "@phosphor-icons/react";
 
-export function EdgePanel() {
-  const wsUrl =
-    import.meta.env.VITE_EDGE_WS_URL || "wss://bas-orchestrator.iam-dd1.workers.dev/ws";
+interface EdgePanelMessage {
+  id: string;
+  type: string;
+  data: unknown;
+  timestamp: number;
+}
 
-  const {
-    status,
-    error,
-    messages,
-    isConnected,
-    lastMessage,
-    connect,
-    disconnect,
-    send,
-  } = useEdgeWebSocket({
-    url: wsUrl,
-    autoConnect: false,
-    maxHistory: 20,
-  });
+export function EdgePanel() {
+  const { socket, isConnected } = useSocket();
+  const [status, setStatus] = useState<
+    "disconnected" | "connecting" | "connected" | "error"
+  >("disconnected");
+  const [error, setError] = useState<string | undefined>(undefined);
+  const [messages, setMessages] = useState<EdgePanelMessage[]>([]);
+  const [lastMessage, setLastMessage] = useState<EdgePanelMessage | undefined>(
+    undefined,
+  );
+  const [socketId, setSocketId] = useState<string>("-");
+  const [transport, setTransport] = useState<string>("-");
+  const [reconnectAttempts, setReconnectAttempts] = useState(0);
+  const [lastDisconnectReason, setLastDisconnectReason] = useState<string>("-");
+
+  const getTransportName = (): string => {
+    const transportName = socket?.io?.engine?.transport?.name;
+    return typeof transportName === "string" ? transportName : "-";
+  };
+
+  const wsUrl = useMemo(() => {
+    const baseUrl =
+      import.meta.env.VITE_SOCKET_URL ||
+      (import.meta.env.DEV ? "http://localhost:3000" : window.location.origin);
+    return `${baseUrl.replace(/^http/i, "ws")}/socket.io/?EIO=4&transport=websocket`;
+  }, []);
+
+  useEffect(() => {
+    if (!socket) {
+      setStatus("disconnected");
+      return;
+    }
+
+    const pushMessage = (type: string, data: unknown) => {
+      const msg: EdgePanelMessage = {
+        id: `${type}-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+        type,
+        data,
+        timestamp: Date.now(),
+      };
+      setLastMessage(msg);
+      setMessages((prev) => [msg, ...prev].slice(0, 20));
+    };
+
+    const onConnect = () => {
+      setStatus("connected");
+      setError(undefined);
+      setSocketId(socket.id ?? "-");
+      setTransport(getTransportName());
+      setReconnectAttempts(0);
+    };
+
+    const onDisconnect = (reason: string) => {
+      setStatus("disconnected");
+      setLastDisconnectReason(reason || "unknown");
+      setSocketId("-");
+      setTransport("-");
+      if (reason && reason !== "io client disconnect") {
+        setError(`Connection closed: ${reason}`);
+      }
+    };
+
+    const onConnectError = (err: unknown) => {
+      setStatus("error");
+      const message =
+        err instanceof Error
+          ? err.message
+          : typeof err === "string"
+            ? err
+            : "Socket connection error";
+      setError(message);
+    };
+
+    const onReconnectAttempt = () => {
+      setReconnectAttempts((prev) => prev + 1);
+    };
+
+    const onReconnect = () => {
+      setReconnectAttempts(0);
+      setSocketId(socket.id ?? "-");
+      setTransport(getTransportName());
+    };
+
+    const onReconnectFailed = () => {
+      setError("Reconnect failed after max attempts");
+    };
+
+    const onTaskSubmitted = (payload: unknown) =>
+      pushMessage("edge:task:submitted", payload);
+    const onTaskProgress = (payload: unknown) =>
+      pushMessage("edge:task:progress", payload);
+    const onTaskComplete = (payload: unknown) =>
+      pushMessage("edge:task:complete", payload);
+    const onTaskError = (payload: unknown) =>
+      pushMessage("edge:task:error", payload);
+    const onStatusResponse = (payload: unknown) =>
+      pushMessage("edge:status:response", payload);
+    const onStatusError = (payload: unknown) =>
+      pushMessage("edge:status:error", payload);
+    const onChatResponse = (payload: unknown) =>
+      pushMessage("edge:chat:response", payload);
+    const onChatError = (payload: unknown) =>
+      pushMessage("edge:chat:error", payload);
+
+    socket.on("connect", onConnect);
+    socket.on("disconnect", onDisconnect);
+    socket.on("connect_error", onConnectError);
+    socket.io.on("reconnect_attempt", onReconnectAttempt);
+    socket.io.on("reconnect", onReconnect);
+    socket.io.on("reconnect_failed", onReconnectFailed);
+    socket.on("edge:task:submitted", onTaskSubmitted);
+    socket.on("edge:task:progress", onTaskProgress);
+    socket.on("edge:task:complete", onTaskComplete);
+    socket.on("edge:task:error", onTaskError);
+    socket.on("edge:status:response", onStatusResponse);
+    socket.on("edge:status:error", onStatusError);
+    socket.on("edge:chat:response", onChatResponse);
+    socket.on("edge:chat:error", onChatError);
+
+    setStatus(socket.connected ? "connected" : "disconnected");
+    if (socket.connected) {
+      setSocketId(socket.id ?? "-");
+      setTransport(getTransportName());
+    }
+
+    return () => {
+      socket.off("connect", onConnect);
+      socket.off("disconnect", onDisconnect);
+      socket.off("connect_error", onConnectError);
+      socket.io.off("reconnect_attempt", onReconnectAttempt);
+      socket.io.off("reconnect", onReconnect);
+      socket.io.off("reconnect_failed", onReconnectFailed);
+      socket.off("edge:task:submitted", onTaskSubmitted);
+      socket.off("edge:task:progress", onTaskProgress);
+      socket.off("edge:task:complete", onTaskComplete);
+      socket.off("edge:task:error", onTaskError);
+      socket.off("edge:status:response", onStatusResponse);
+      socket.off("edge:status:error", onStatusError);
+      socket.off("edge:chat:response", onChatResponse);
+      socket.off("edge:chat:error", onChatError);
+    };
+  }, [socket]);
 
   const statusConfig = {
     disconnected: {
@@ -62,11 +194,31 @@ export function EdgePanel() {
   const currentStatus = statusConfig[status];
 
   const handleTestMessage = () => {
-    send({
-      type: "ping",
-      timestamp: Date.now(),
-      message: "Test from Dashboard",
+    if (!socket || !socket.connected) {
+      setError("Socket is not connected");
+      return;
+    }
+
+    socket.emit("edge:chat:message", {
+      instruction: "ping",
+      history: [],
     });
+  };
+
+  const handleConnect = () => {
+    if (!socket) {
+      setError("Socket provider not available");
+      return;
+    }
+    setStatus("connecting");
+    setError(undefined);
+    socket.connect();
+  };
+
+  const handleDisconnect = () => {
+    if (!socket) return;
+    socket.disconnect();
+    setStatus("disconnected");
   };
 
   return (
@@ -94,7 +246,7 @@ export function EdgePanel() {
         <div className="flex items-center gap-2">
           <Button
             size="sm"
-            onClick={connect}
+            onClick={handleConnect}
             disabled={isConnected || status === "connecting"}
           >
             Connect
@@ -102,7 +254,7 @@ export function EdgePanel() {
           <Button
             size="sm"
             variant="outline"
-            onClick={disconnect}
+            onClick={handleDisconnect}
             disabled={!isConnected && status !== "connecting"}
           >
             Disconnect
@@ -135,6 +287,22 @@ export function EdgePanel() {
             <span className="font-mono">{wsUrl}</span>
           </div>
           <div className="flex justify-between">
+            <span className="text-muted-foreground">Socket ID:</span>
+            <span className="font-mono">{socketId}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Transport:</span>
+            <span className="font-mono">{transport}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Reconnect Attempts:</span>
+            <span>{reconnectAttempts}</span>
+          </div>
+          <div className="flex justify-between">
+            <span className="text-muted-foreground">Last Disconnect:</span>
+            <span className="font-mono">{lastDisconnectReason}</span>
+          </div>
+          <div className="flex justify-between">
             <span className="text-muted-foreground">Messages Received:</span>
             <span>{messages.length}</span>
           </div>
@@ -157,7 +325,7 @@ export function EdgePanel() {
               <div className="space-y-2 p-3">
                 {messages.map((msg, idx) => (
                   <div
-                    key={idx}
+                    key={`${msg.id}-${idx}`}
                     className="rounded-md border bg-card p-2 text-xs"
                   >
                     <div className="flex items-center justify-between text-muted-foreground">

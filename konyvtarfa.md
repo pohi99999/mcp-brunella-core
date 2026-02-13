@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 12. 12:52:41
+**Generálva:** 2026. 02. 13. 4:50:08
 **Script:** 
 
 ---
@@ -41788,13 +41788,21 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📂 **bin**
     - 📄 cloudflared.exe
   - 📂 **cloudflare**
+    - 📂 **migrations**
+      - 📄 0000_schema.sql
     - 📂 **src**
+      - 📄 edge-coordinator.ts
       - 📄 index.ts
+      - 📄 types.ts
     - 📄 package.json
     - 📄 tsconfig.json
     - 📄 wrangler.jsonc
   - 📂 **conductor**
     - 📂 **archive**
+      - 📂 **agent_architect_upgrade_20260205**
+        - 📄 meta.json
+        - 📄 spec.md
+        - 📄 track.md
       - 📂 **browser_use_harvester_20260131**
         - 📄 meta.json
         - 📄 plan.md
@@ -41809,6 +41817,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 metadata.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **dashboard-todo-widget-20260211**
+        - 📄 meta.json
+        - 📄 spec.md
+        - 📄 track.md
       - 📂 **data_flywheel_incubator_20260205**
         - 📄 meta.json
         - 📄 spec.md
@@ -41820,11 +41832,25 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 plan.md
         - 📄 spec másolata.md
         - 📄 spec.md
+      - 📂 **jules-async-test-automation-20260211**
+        - 📄 meta.json
+        - 📄 spec.md
+        - 📄 track.md
       - 📂 **jules-qa-integration_20260120**
         - 📄 index.md
         - 📄 metadata.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **spec-writer-agent-20260211**
+        - 📄 meta.json
+        - 📄 track.md
+      - 📂 **task-decomposer-agent-20260211**
+        - 📄 meta.json
+        - 📄 spec.md
+        - 📄 track.md
+      - 📂 **TR-20260212-TECH-HAR**
+        - 📄 meta.json
+        - 📄 TR-20260212-TECH-HARVESTER.md
       - 📂 **tracks_backup_20260209**
         - 📂 **agent_swarm_core_20260129**
           - 📄 plan.md
@@ -41930,33 +41956,39 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 CONDUCTOR_MANIFEST_backup_20260204.md
       - 📄 CONDUCTOR_MANIFEST_old.md
     - 📂 **tracks**
-      - 📂 **agent_architect_upgrade_20260205**
-        - 📄 meta.json
-        - 📄 spec.md
       - 📂 **bas_comprehensive_test_protocol_20260210**
         - 📄 meta.json
         - 📄 spec.md
+        - 📄 track.md
       - 📂 **cloudflare_edge_integration_20260202**
         - 📄 meta.json
         - 📄 plan.md
         - 📄 sprint4_spec.md
       - 📂 **cloudflare-chat-integration-20260211**
         - 📄 meta.json
+        - 📄 plan.md
         - 📄 spec.md
         - 📄 track.md
+      - 📂 **cloudflare-iteration-2-20260212**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **code_quality_improvements_20260210**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **codex_chat_refactor_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **creative_friction_mediator_20260212**
         - 📄 meta.json
         - 📄 spec.md
       - 📂 **dashboard_test_suite_20260210**
         - 📄 meta.json
+        - 📄 plan.md
         - 📄 spec.md
       - 📂 **dashboard_v2_robotkez_control_20260208**
         - 📄 meta.json
         - 📄 spec.md
-      - 📂 **dashboard-todo-widget-20260211**
-        - 📄 meta.json
-        - 📄 spec.md
-        - 📄 track.md
       - 📂 **developer_agent_2_0_20260206**
         - 📂 **P10_Metrics_Analytics**
           - 📄 spec.md
@@ -41966,19 +41998,33 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **epp-v2-protocol-20260211**
         - 📄 meta.json
         - 📄 track.md
+      - 📂 **gemini_git_agent_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
       - 📂 **gold_protocol**
         - 📄 meta.json
         - 📄 plan.md
         - 📄 spec.md
         - 📄 status.md
-      - 📂 **jules-async-test-automation-20260211**
+      - 📂 **green_lightning_20260212**
         - 📄 meta.json
         - 📄 spec.md
-        - 📄 track.md
+      - 📂 **innovation_bridge_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **iron_clad_backend_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **jules_enterprise_cicd_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
       - 📂 **magyar-cli-menu-system-20260211**
         - 📄 meta.json
         - 📄 spec.md
         - 📄 track.md
+      - 📂 **micro_csr_automator_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
       - 📂 **otel_agent_tracing_20260211**
         - 📄 meta.json
         - 📄 track.md
@@ -41995,13 +42041,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 track.md
       - 📂 **self_healing_core_20260213**
         - 📄 meta.json
-        - 📄 track.md
-      - 📂 **spec-writer-agent-20260211**
-        - 📄 meta.json
-        - 📄 track.md
-      - 📂 **task-decomposer-agent-20260211**
-        - 📄 meta.json
-        - 📄 spec.md
         - 📄 track.md
       - 📂 **test-20260211**
       - 📂 **test-feature-20260211**
@@ -115343,6 +115382,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 project_organizer.toml
       - 📄 README.md
       - 📄 STARTED_APPS.md
+      - 📄 TECH_HARVESTER_README.md
+      - 📄 tech_harvester.py
+    - 📂 **config**
+      - 📄 sources.json
     - 📂 **core**
       - 📂 **__pycache__**
         - 📄 __init__.cpython-314.pyc
@@ -115358,6 +115401,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 tools.py
     - 📂 **data**
       - 📂 **training**
+        - 📄 golden_dataset.jsonl
     - 📂 **incubator**
       - 📄 Modelfile.template
       - 📄 train.py
@@ -115388,7 +115432,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 test_tools.py
     - 📂 **tools**
       - 📄 __init__.py
+      - 📄 HARVEST_PIPELINE_README.md
+      - 📄 harvest_pipeline.py
       - 📄 integrated_research.py
+      - 📄 knowledge_integrator.py
     - 📂 **utils**
       - 📂 **__pycache__**
         - 📄 __init__.cpython-312.pyc
@@ -115755,6 +115802,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 poetry.lock
     - 📄 pyproject.toml
     - 📄 README.md
+  - 📂 **playwright-report**
+    - 📄 index.html
   - 📂 **public**
     - 📄 index.html
   - 📂 **schemas**
@@ -115822,12 +115871,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 test_cf_browser_rendering.ps1
     - 📄 test_cf_workers_ai.ps1
     - 📄 test_cloudflare_agents.py
+    - 📄 test_cloudflare_history.ts
     - 📄 test_prepare.cjs
     - 📄 test_swarm.ts
     - 📄 update_ollama_model.bat
     - 📄 watch-changes.js
   - 📂 **src**
     - 📂 **agents**
+      - 📂 **cloudflare**
+        - 📄 CloudflareClient.ts
       - 📄 AgentArchitect.ts
       - 📄 AgentManager.ts
       - 📄 BaseAgent.ts
@@ -115862,6 +115914,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 VoiceAgent.ts
     - 📂 **cli**
       - 📄 devCommands.ts
+      - 📄 edgeCommands.ts
       - 📄 goldCommands.ts
       - 📄 progressCommands.ts
       - 📄 taskDecomposerCommands.ts
@@ -115905,6 +115958,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 CostSummary.tsx
           - 📄 DeveloperPanel.tsx
           - 📄 DeveloperPipeline.tsx
+          - 📄 EdgePanel.tsx
           - 📄 EmbeddedWorkflow.tsx
           - 📄 FileExplorer.tsx
           - 📄 GoldStatusWidget.tsx
@@ -115934,6 +115988,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 TraceViewer.tsx
           - 📄 TrackGenerator.tsx
           - 📄 TrackProgress.tsx
+          - 📄 TrackTodoWidget.tsx
         - 📂 **ui**
           - 📄 accordion.tsx
           - 📄 alert-dialog.tsx
@@ -115992,6 +116047,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **hooks**
         - 📄 use-mobile.ts
         - 📄 useDashboardData.ts
+        - 📄 useEdgeWebSocket.ts
         - 📄 useMCP.ts
       - 📂 **lib**
         - 📄 apiService.ts
@@ -116042,6 +116098,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 robotkez.ts
         - 📄 tasks.ts
         - 📄 tools.ts
+        - 📄 tracks.ts
       - 📄 auditRoutes.ts
       - 📄 McpProcessManager.ts
       - 📄 memoryRoutes.ts
@@ -116057,6 +116114,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 ToolManager.ts
       - 📄 tracksRoutes.ts
       - 📄 web.ts
+      - 📄 websocket.ts
     - 📂 **servers**
       - 📄 automation.py
       - 📄 workspace.py
@@ -116113,8 +116171,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 systemHealth.ts
       - 📄 tasksDb.ts
       - 📄 telemetry.ts
+      - 📄 trackTodoParser.ts
       - 📄 validateSecrets.ts
     - 📄 cli-edge.ts
+    - 📄 cli-hu.ts
     - 📄 cli-jules-interactive.ts
     - 📄 cli.ts
     - 📄 index.ts
@@ -116122,6 +116182,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 SUMMARY.md
   - 📂 **test**
     - 📂 **dashboard**
+      - 📂 **components**
+        - 📄 ErrorBoundary.test.tsx
       - 📂 **mocks**
         - 📄 handlers.ts
       - 📄 setup.ts
@@ -116130,6 +116192,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 error-handling.spec.ts
       - 📄 mission-control.spec.ts
       - 📄 navigation.spec.ts
+      - 📄 socket-reconnect.spec.ts
       - 📄 tabs-advanced.spec.ts
       - 📄 tabs-basic.spec.ts
     - 📄 ## Chat Customization Diagnostics.md
@@ -116143,6 +116206,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 browser_rendering.test.ts
     - 📄 checkpoint.test.ts
     - 📄 cli_config.test.ts
+    - 📄 cloudflare_integration.test.ts
     - 📄 cloudflare_routes.test.ts
     - 📄 code_review.test.ts
     - 📄 code_scaffold.test.ts
@@ -116169,11 +116233,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 llm_provider.test.ts
     - 📄 mcp-brunella-core.code-workspace
     - 📄 memory_context.test.ts
+    - 📄 memoryRoutes.golden.test.ts
     - 📄 middleware.test.ts
     - 📄 modelRouter.test.ts
     - 📄 monitor.test.ts
     - 📄 monitor.vitest.ts
     - 📄 n8n_automation.test.ts
+    - 📄 phoenix_recovery.test.ts
     - 📄 python_shell.test.ts
     - 📄 rag.test.ts
     - 📄 retryStrategy.test.ts
@@ -116186,10 +116252,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 specStatus.test.ts
     - 📄 SpecWriterAgent.test.ts
     - 📄 state_restoration.test.ts
+    - 📄 structured_output.test.ts
     - 📄 task_queue.test.ts
     - 📄 taskDecomposerCore.test.ts
     - 📄 telemetry.test.ts
     - 📄 tracks_todos_routes.test.ts
+    - 📄 trackTodoParser.test.ts
   - 📂 **test-results**
   - 📂 **testing**
     - 📂 **egyeb**
@@ -116252,6 +116320,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 JULES_INTEGRATION.md
   - 📄 konyvtarfa.md
   - 📄 latest_email.html
+  - 📄 LICENSE
   - 📄 mag.md
   - 📄 mcp_servers.json
   - 📄 mcp-server-config.json
@@ -116260,6 +116329,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 peterpohankapersonal@gmail.com.ical.zip
   - 📄 playwright.config.ts
   - 📄 pnpm-lock.yaml
+  - 📄 PROJEKT_DIAGRAM_2026-02-13.md
   - 📄 pyproject.toml
   - 📄 README.md
   - 📄 rendszer ellenorzes.md.txt
