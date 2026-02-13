@@ -38,3 +38,7 @@ global.IntersectionObserver = vi.fn().mockImplementation(() => ({
     rootMargin: '',
     thresholds: [],
 }));
+
+if (!window.HTMLElement.prototype.scrollIntoView) {
+    window.HTMLElement.prototype.scrollIntoView = vi.fn();
+}

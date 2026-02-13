@@ -6,6 +6,77 @@
 
 ---
 
+## 2026-02-14 18:00 - 🔧 Codex NeuralLink Chat Refactor - Track Completion ✅
+
+**Track:** `codex_chat_refactor_20260212`
+**Feladat:** API type hardening, dashboard tesztek, track lezárás.
+
+**Eredmények:**
+
+✅ **API Type Hardening (`src/dashboard/lib/apiService.ts`):**
+
+- Minden `safeJson<any>` hívás eltávolítva és típusos verzióra cserélve
+- Új típusos hívások: `safeJson<CloudflareTaskResponse>`, `safeJson<{error?:string}>`, `safeJson<TrackData[]>`, stb.
+- Cloudflare, Jules, Track, Task, Approval API response type guardok bevezetve
+
+✅ **Dashboard NeuralLinkChat Tesztek:**
+
+- Új tesztfájl: `test/dashboard/components/NeuralLinkChat.test.tsx`
+- 3 teszt: session restore (localStorage), orchestrator provider send, edge status indicator (cloudflare mód)
+- `vi.mock` használat apiService és providerRegistry modulokra
+
+✅ **ErrorFallback.tsx javítás:**
+
+- `import.meta.env.DEV` → `import.meta.env.DEV && !import.meta.env.VITEST` ellenőrzés
+- Megakadályozza az újradobást teszt környezetben, miközben a dev viselkedés megmarad
+
+✅ **Dashboard setup.ts bővítés:**
+
+- `Element.prototype.scrollIntoView = vi.fn()` mock hozzáadva (jsdom hiányzó API)
+
+✅ **.gitignore frissítés:**
+
+- `developer_metrics.json` és `data/developer_metrics.json` kizárások hozzáadva
+
+✅ **Conductor Track lezárás:**
+
+- `meta.json`: status=completed, progress=100
+- `spec.md`: összes fázis kipipálva, DoD frissítve (méretcsökkentés halasztva)
+- `SUMMARY.md`: lezárási bejegyzés hozzáadva
+
+**Verifikáció:**
+
+- ✅ `npm test` PASS (63 fájl, 486 teszt)
+- ✅ Dashboard tesztek PASS (2 fájl, 5 teszt)
+
+**Érintett fájlok:**
+
+- `src/dashboard/lib/apiService.ts` (Módosítva)
+- `src/dashboard/ErrorFallback.tsx` (Módosítva)
+- `test/dashboard/setup.ts` (Módosítva)
+- `test/dashboard/components/NeuralLinkChat.test.tsx` (ÚJ)
+- `.gitignore` (Módosítva)
+- `conductor/tracks/codex_chat_refactor_20260212/meta.json` (Módosítva)
+- `conductor/tracks/codex_chat_refactor_20260212/spec.md` (Módosítva)
+- `conductor/SUMMARY.md` (Módosítva)
+
+**Státusz:** ✅ KÉSZ. Track lezárva, méretcsökkentés follow-up trackre halasztva.
+
+---
+
+## 2026-02-13 16:15 - 🚀 Bootstrap Protocol Verification ✅
+
+**Feladat:** Indulási protokoll lefuttatása az esti munkamenet előtt.
+
+**Lépések & eredmények:**
+
+- ✅ `scripts/sync.bat` futtatva (auto-stash → pull → stash restore, Jules PR lista naprakész)
+- ✅ README.md + `.ai/FOSZAL.md` átolvasva (protokoll és legutóbbi események frissítve)
+- ✅ `npm run build` sikeres (tsc)
+- ✅ `npm test` PASS (63 fájl, 486 teszt, start 16:09:25, teljes futás ~97s)
+
+**Megjegyzés:** Rendszer állapota zöld, további fejlesztés indítható.
+
 ## 2026-02-13 10:30 - 🧑‍💻 Iron Clad Python AI Backend (Phase 5 OpenDevin Integration) ✅
 
 **Track:** `iron_clad_backend_20260212`
