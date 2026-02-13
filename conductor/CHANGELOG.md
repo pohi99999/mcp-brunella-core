@@ -22,6 +22,7 @@ Elkészült az OpenDevin adapter és a LangGraph `devin` node. A workflow most m
   - `myai/tests/test_iron_clad_provider.py` config frissítés
 - **Dokumentáció** (`myai/backend/README.md`): Phase 5 ismertető
 - **Track meta** (`conductor/tracks/iron_clad_backend_20260212/meta.json`): progress `80 → 90`
+- **Archiválás**: `conductor/archive/iron_clad_backend_20260212/`
 
 ### Verifikáció (Iron Clad Phase 5)
 
