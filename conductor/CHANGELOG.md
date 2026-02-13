@@ -2,6 +2,48 @@
 
 A cél: minden jelentős rendszer- és fejlesztési módosítás rövid, visszakereshető naplózása.
 
+## 2026-02-13 - Copilot session: Codex NeuralLink Chat Refactor (Phase 1-3)
+
+### Összefoglaló (Chat provider refactor)
+
+Elindult a `codex_chat_refactor_20260212` track implementációja: a monolit chat send-logika provider adapter mintára lett szétbontva, valamint bekerült a session perzisztencia és célzott unit teszt lefedettség.
+
+### Implementált technikai változások (Chat provider refactor)
+
+- **Új chat architektúra** (`src/dashboard/lib/chat/`):
+  - `types.ts` (ChatMode/ChatMessage/ChatProvider szerződés)
+  - `contextBuilder.ts` (kontextus prompt építő)
+  - `sessionStore.ts` (localStorage mentés/visszatöltés)
+  - `providerRegistry.ts` (Map-alapú provider lookup)
+  - providerek:
+    - `providers/orchestratorProvider.ts`
+    - `providers/ollamaProvider.ts`
+    - `providers/githubProvider.ts`
+    - `providers/geminiProvider.ts`
+    - `providers/cloudflareEdgeProvider.ts`
+    - `providers/cloudflareChatProvider.ts`
+    - `providers/utils.ts` (válasz-normalizálás)
+
+- **NeuralLinkChat refaktor** (`src/dashboard/components/dashboard/NeuralLinkChat.tsx`):
+  - provider registry használat `send()` útvonalban
+  - mode-specifikus if/else blokkok kiváltása provider hívásokkal
+  - session restore initkor + 300ms debounce mentés
+
+- **Új tesztek**:
+  - `test/dashboard_chat_lib.test.ts`
+    - context builder viselkedés
+    - session store mentés/restore és invalid payload kezelés
+
+- **Track meta állapot frissítés**:
+  - `conductor/tracks/codex_chat_refactor_20260212/meta.json`
+  - státusz: `proposed` → `in_progress`
+  - spec státusz: `approved`
+
+### Verifikáció (Chat provider refactor)
+
+- Célteszt zöld: `npx vitest run test/dashboard_chat_lib.test.ts` (4 PASS)
+- Teljes futtatás zöld: `npm test` (63 fájl, 486 teszt PASS)
+
 ## 2026-02-13 - Copilot session: Living Documentation System starter package
 
 ### Összefoglaló (Starter package)
