@@ -4,8 +4,8 @@
  * Mission Control 2.0 - Service Control Widget backend
  */
 
-import { spawn, ChildProcess } from 'child_process';
 import path from 'path';
+import type { ChildProcess } from 'child_process';
 import { logInfo, logError } from '../utils/logger.js';
 import { checkOllamaHealth } from '../utils/health.js';
 
@@ -25,6 +25,15 @@ export interface ServiceHealthResult {
   ollama: boolean;
   python: boolean;
   anythingllm: boolean;
+}
+
+// Helper for dynamic import of child_process
+async function getChildProcess() {
+  try {
+    return await import('child_process');
+  } catch {
+    return null;
+  }
 }
 
 const ALLOWED_SERVICES: Record<ServiceId, { startCmd: string[]; cwd?: string; checkPort?: number }> = {
@@ -58,6 +67,10 @@ export class SystemController {
   }
 
   async startService(serviceId: ServiceId): Promise<{ success: boolean; message: string }> {
+    const cp = await getChildProcess();
+    if (!cp) return { success: false, message: 'Process management not supported in this environment' };
+    const { spawn } = cp;
+
     if (spawnedProcesses.has(serviceId)) {
       return { success: false, message: `${serviceId} már fut` };
     }
@@ -129,6 +142,10 @@ export class SystemController {
   }
 
   async stopService(serviceId: ServiceId): Promise<{ success: boolean; message: string }> {
+    const cp = await getChildProcess();
+    if (!cp) return { success: false, message: 'Process management not supported in this environment' };
+    const { spawn } = cp;
+
     const child = spawnedProcesses.get(serviceId);
     if (child && child.pid) {
       try {
