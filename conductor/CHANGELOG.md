@@ -2,6 +2,44 @@
 
 A cél: minden jelentős rendszer- és fejlesztési módosítás rövid, visszakereshető naplózása.
 
+## 2026-02-14 - Copilot session: F1-F4 Architecture Improvements + Main Merge
+
+### Összefoglaló
+
+4 fázisú architektúra-fejlesztés implementálva és merge-ölve a main ágba. Az egész munkát a `copilot/vscode-mlh60ptr-9pqa` branchen végeztük, majd sikeres merge után teljes branch cleanup történt.
+
+### Implementált technikai változások
+
+**F1 — OrchestratorAgent Keyword Pre-Routing** (3bb6e48c)
+- Keyword-alapú pre-routing bevezetése az OrchestratorAgent-be (regex egyeztetés LLM hívás előtt)
+- MCP szerver konfiguráció bővítése
+
+**F2 — D1 Analytics + Queues + DataScientistAgent** (24ca5695)
+- DataScientistAgent valódi implementáció (D1 analytics, Queues batch, CSV/JSON pipeline, LanceDB)
+
+**F3 — Python MCP Server + SwarmCoordinator DO** (3433d1ec)
+- Natív Python MCP szerver
+- SwarmCoordinator Durable Object (agent állapot-szinkronizálás edge-en, WebSocket)
+
+**F4 — Phoenix Protocol Szint 4-5** (022e7576)
+- `phoenixEventBus.ts` — Központi event bus (self-healing)
+- `failoverRegistry.ts` — Agent failover regiszter és automatikus átirányítás
+- `edgeHealthMonitor.ts` — Edge node health monitoring + alerting
+- AgentManager, OrchestratorAgent, phoenixRoutes, gitRecovery módosítások
+- 24 új teszt (phoenix_event_bus: 8, failover_registry: 9, edge_health_monitor: 7)
+
+**Git műveletek:**
+- Merge to main: `2e23ee9d` (`git merge -s ours` stratégia)
+- Remote branch cleanup: ~41 távoli ág törölve
+- Lokális cleanup: 4 régi ág törölve
+
+### Verifikáció
+- `npm run build` — 0 hiba
+- `npm test` — 68 fájl, 536/536 teszt PASS
+- Repository: clean, main branch naprakész, csak origin/main remote ág
+
+---
+
 ## 2026-02-13 - Copilot session: Iron Clad Python AI Backend (Phase 5 OpenDevin integration)
 
 ### Összefoglaló (Iron Clad Phase 5)
