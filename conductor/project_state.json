@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-12T01:05:50.867Z",
+  "lastUpdated": "2026-02-13T08:45:00Z",
   "tracks": [
     {
       "id": "agent_architect_upgrade_20260205",
@@ -187,7 +187,14 @@
     }
   ],
   "components": [],
-  "recentChanges": [],
+  "recentChanges": [
+    {
+      "id": "iron_clad_backend_20260212",
+      "change": "archived",
+      "timestamp": "2026-02-13T08:45:00Z",
+      "details": "Track archiválva a conductor/archive/iron_clad_backend_20260212 alá"
+    }
+  ],
   "healthStatus": {
     "overall": "unknown",
     "buildStatus": false,
