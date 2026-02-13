@@ -91,7 +91,7 @@
     "lancedbEnabled": true,
     "lancedbTable": "tech_trends",
     "goldenDatasetEnabled": true,
-    "goldenDatasetPath": "myai/incubator/training_data.jsonl",
+    "goldenDatasetPath": "data/training/golden_dataset.jsonl",
     "notifyOnCompletion": true
   }
 }

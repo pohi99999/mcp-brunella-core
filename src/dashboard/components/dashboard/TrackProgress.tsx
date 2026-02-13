@@ -214,8 +214,8 @@ export function TrackProgressWidget() {
                     Nincs aktív track
                   </SelectItem>
                 ) : (
-                  tracks.map((t) => (
-                    <SelectItem key={t.trackId} value={t.trackId}>
+                  tracks.map((t, i) => (
+                    <SelectItem key={`${t.trackId}-${i}`} value={t.trackId}>
                       {t.title} ({t.progress}%)
                     </SelectItem>
                   ))
@@ -252,9 +252,9 @@ export function TrackProgressWidget() {
               Nincs checkbox TODO a track.md-ben.
             </div>
           ) : (
-            todosState.todos.map((t) => (
+            todosState.todos.map((t, i) => (
               <label
-                key={t.id}
+                key={`${t.id}-${i}`}
                 className="flex items-start gap-2 rounded-md px-2 py-1.5 hover:bg-muted/30 transition-colors"
               >
                 <Checkbox

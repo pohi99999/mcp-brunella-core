@@ -1,18 +1,25 @@
 {
   "id": "robotkez_n8n_sandbox_edzesterv",
   "title": "Robotkéz n8n Sandbox és Edzésterv",
-  "status": "completed",
+  "status": "archived",
   "priority": "medium",
   "created": "2026-02-11",
   "updated": "2026-02-12",
   "owner": "Claude",
   "spec_status": "approved",
   "progress": 100,
-  "tags": ["robotkez", "n8n", "sandbox", "browser-use", "python"],
+  "tags": [
+    "robotkez",
+    "n8n",
+    "sandbox",
+    "browser-use",
+    "python"
+  ],
   "dependencies": [
     "browser_use_harvester_20260131",
     "bas_scale_up_stabilization_20260131"
   ],
   "estimated_effort": "medium",
-  "business_value": "Isolated training environment for Robotkéz automation"
+  "business_value": "Isolated training environment for Robotkéz automation",
+  "archived_at": "2026-02-13T00:00:00Z"
 }

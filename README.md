@@ -37,6 +37,8 @@ scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
 
 **Részletek:** [scripts/SYNC_README.md](scripts/SYNC_README.md)
 
+**Monitoring docs:** [docs/MONITORING_PROMETHEUS.md](docs/MONITORING_PROMETHEUS.md)
+
 ### 2. Dokumentáció Beolvasás
 
 ```

@@ -1,15 +1,22 @@
 {
   "id": "cloudflare_edge_integration_20260202",
   "title": "Cloudflare Edge Integration",
-  "status": "completed",
+  "status": "archived",
   "priority": "high",
   "created": "2026-02-02",
   "updated": "2026-02-12",
   "owner": "System",
   "spec_status": "approved",
   "progress": 100,
-  "tags": ["cloudflare", "edge", "workers", "browser-rendering", "r2"],
+  "tags": [
+    "cloudflare",
+    "edge",
+    "workers",
+    "browser-rendering",
+    "r2"
+  ],
   "dependencies": [],
   "estimated_effort": "multi-sprint",
-  "business_value": "Edge-first deployment and services"
+  "business_value": "Edge-first deployment and services",
+  "archived_at": "2026-02-13T00:00:00Z"
 }

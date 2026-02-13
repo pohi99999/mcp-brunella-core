@@ -175,7 +175,7 @@ class KnowledgeIntegrator:
         ollama_model: str = "qwen2.5-coder:latest",
         lancedb_path: str = "data/brunella_lancedb",
         lancedb_table: str = "tech_trends",
-        golden_dataset_path: str = "myai/incubator/training_data.jsonl",
+        golden_dataset_path: str = "data/training/golden_dataset.jsonl",
         dedup_threshold: float = 0.85,
         logger: Optional[logging.Logger] = None
     ):
@@ -516,7 +516,7 @@ def main():
     parser.add_argument("--ollama-model", default="qwen2.5-coder:latest", help="Ollama model name")
     parser.add_argument("--lancedb-path", default="data/brunella_lancedb", help="LanceDB database path")
     parser.add_argument("--lancedb-table", default="tech_trends", help="LanceDB table name")
-    parser.add_argument("--golden-dataset", default="myai/incubator/training_data.jsonl", help="Golden Dataset path")
+    parser.add_argument("--golden-dataset", default="data/training/golden_dataset.jsonl", help="Golden Dataset path")
     parser.add_argument("--dedup-threshold", type=float, default=0.85, help="Deduplication threshold (0-1)")
     parser.add_argument("--log-level", default="INFO", choices=["DEBUG", "INFO", "WARNING", "ERROR"])
 

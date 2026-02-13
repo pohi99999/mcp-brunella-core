@@ -104,7 +104,11 @@ export function useEdgeWebSocket(options: UseEdgeWebSocketOptions = {}) {
       };
 
       ws.onerror = () => {
-        const errorMsg = "WebSocket connection error";
+        const cloudflareAccessHint =
+          url.includes("workers.dev") || url.includes("cloudflare")
+            ? " (possible Cloudflare Access authentication required)"
+            : "";
+        const errorMsg = `WebSocket connection error${cloudflareAccessHint}`;
         setState((prev) => ({
           ...prev,
           status: "error",
@@ -114,7 +118,23 @@ export function useEdgeWebSocket(options: UseEdgeWebSocketOptions = {}) {
       };
 
       ws.onclose = (event: CloseEvent) => {
-        setState((prev) => ({ ...prev, status: "disconnected" }));
+        const closeReason =
+          event.reason?.trim() ||
+          (event.code ? `code ${event.code}` : "unknown reason");
+        const cloudflareAccessHint =
+          (url.includes("workers.dev") || url.includes("cloudflare")) &&
+          (event.code === 1006 || event.code === 1008)
+            ? " Cloudflare Access may be blocking unauthenticated WebSocket upgrades."
+            : "";
+
+        setState((prev) => ({
+          ...prev,
+          status: "disconnected",
+          error:
+            prev.status === "connecting" || prev.status === "error"
+              ? `Connection closed: ${closeReason}.${cloudflareAccessHint}`
+              : prev.error,
+        }));
         onDisconnect?.();
         wsRef.current = null;
 

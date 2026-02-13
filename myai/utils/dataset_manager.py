@@ -305,9 +305,46 @@ def cli_clear():
 
 # ===== Top-level API (for easy integration) =====
 
-def save_gold_sample(system_prompt: str, user_input: str, assistant_output: Any, source: str = "unknown", quality_score: float = 1.0, metadata: Optional[Dict[str, Any]] = None) -> bool:
-    """Top-level alias for DatasetManager.save_gold_sample"""
-    return DatasetManager.save_gold_sample(system_prompt, user_input, assistant_output, source, quality_score, metadata)
+def save_gold_sample(
+    system_prompt: Optional[str] = None,
+    user_input: Optional[str] = None,
+    assistant_output: Optional[Any] = None,
+    source: str = "unknown",
+    quality_score: float = 1.0,
+    metadata: Optional[Dict[str, Any]] = None,
+    **kwargs: Any,
+) -> bool:
+    """
+    Backward-compatible top-level alias for DatasetManager.save_gold_sample.
+
+    Supports both calling styles:
+      1) save_gold_sample(system_prompt=..., user_input=..., assistant_output=...)
+      2) save_gold_sample(prompt=..., completion=..., source=..., quality=...)
+    """
+    prompt = kwargs.get("prompt")
+    completion = kwargs.get("completion")
+    quality = kwargs.get("quality")
+
+    resolved_system_prompt = system_prompt or kwargs.get(
+        "system", "You are a helpful AI assistant."
+    )
+    resolved_user_input = user_input if user_input is not None else prompt
+    resolved_assistant_output = (
+        assistant_output if assistant_output is not None else completion
+    )
+    resolved_quality = quality_score if quality is None else float(quality)
+
+    if resolved_user_input is None or resolved_assistant_output is None:
+        return False
+
+    return DatasetManager.save_gold_sample(
+        resolved_system_prompt,
+        resolved_user_input,
+        resolved_assistant_output,
+        source,
+        resolved_quality,
+        metadata,
+    )
 
 def get_dataset_stats() -> Dict[str, Any]:
     """Top-level alias for DatasetManager.get_dataset_stats"""

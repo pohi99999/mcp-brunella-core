@@ -11,12 +11,12 @@
  * - Toast notifications (success/error)
  */
 
-import { useState } from 'react'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Textarea } from '@/components/ui/textarea'
-import { ScrollArea } from '@/components/ui/scroll-area'
-import { Badge } from '@/components/ui/badge'
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
 import {
   Sparkles,
   Send,
@@ -25,125 +25,134 @@ import {
   FileText,
   Rocket,
   AlertTriangle,
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
-import { toast } from 'sonner'
-import { marked } from 'marked'
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+import { marked } from "marked";
 
 // ==================== Types ====================
 
 interface GeneratedTrackResult {
-  trackId: string
-  trackPath: string
-  preview: string
+  trackId: string;
+  trackPath: string;
+  preview: string;
 }
 
 interface TrackMetadata {
-  id: string
-  title: string
-  priority: string
-  progress: number
-  created: string
+  id: string;
+  title: string;
+  priority: string;
+  progress: number;
+  created: string;
 }
 
 // ==================== API Helpers ====================
 
-const API_PREFIX = '/api/v1/tracks'
+const API_PREFIX = "/api/v1/tracks";
 
 async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_PREFIX}${path}`, {
-    headers: { 'Content-Type': 'application/json' },
+    headers: { "Content-Type": "application/json" },
     ...options,
-  })
+  });
 
-  const text = await response.text()
-  if (!text) throw new Error(`Empty response from ${path}`)
+  const text = await response.text();
+  if (!text) throw new Error(`Empty response from ${path}`);
 
-  const data = JSON.parse(text) as T
+  const data = JSON.parse(text) as T;
   if (!response.ok) {
-    throw new Error((data as Record<string, string>).error || `HTTP ${response.status}`)
+    throw new Error(
+      (data as Record<string, string>).error || `HTTP ${response.status}`,
+    );
   }
 
-  return data
+  return data;
 }
 
 async function generateTrack(idea: string): Promise<GeneratedTrackResult> {
-  return apiFetch<GeneratedTrackResult>('/generate', {
-    method: 'POST',
+  return apiFetch<GeneratedTrackResult>("/generate", {
+    method: "POST",
     body: JSON.stringify({ idea }),
-  })
+  });
 }
 
-async function listTracks(): Promise<{ count: number; tracks: TrackMetadata[] }> {
-  return apiFetch<{ success: boolean; count: number; tracks: TrackMetadata[] }>('/')
+async function listTracks(): Promise<{
+  count: number;
+  tracks: TrackMetadata[];
+}> {
+  return apiFetch<{ success: boolean; count: number; tracks: TrackMetadata[] }>(
+    "/",
+  );
 }
 
 // ==================== Component ====================
 
 export function TrackGenerator() {
-  const [idea, setIdea] = useState('')
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [currentStage, setCurrentStage] = useState(0) // 0 = idle, 1-3 = stages
-  const [generatedTrack, setGeneratedTrack] = useState<GeneratedTrackResult | null>(null)
-  const [recentTracks, setRecentTracks] = useState<TrackMetadata[]>([])
-  const [showRecentTracks, setShowRecentTracks] = useState(false)
+  const [idea, setIdea] = useState("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [currentStage, setCurrentStage] = useState(0); // 0 = idle, 1-3 = stages
+  const [generatedTrack, setGeneratedTrack] =
+    useState<GeneratedTrackResult | null>(null);
+  const [recentTracks, setRecentTracks] = useState<TrackMetadata[]>([]);
+  const [showRecentTracks, setShowRecentTracks] = useState(false);
 
   const handleGenerate = async () => {
-    const trimmedIdea = idea.trim()
+    const trimmedIdea = idea.trim();
     if (!trimmedIdea || trimmedIdea.length < 10) {
-      toast.error('Túl rövid ötlet! Írj legalább 2-3 mondatot.')
-      return
+      toast.error("Túl rövid ötlet! Írj legalább 2-3 mondatot.");
+      return;
     }
 
-    setIsGenerating(true)
-    setCurrentStage(1)
-    setGeneratedTrack(null)
+    setIsGenerating(true);
+    setCurrentStage(1);
+    setGeneratedTrack(null);
 
     try {
       // Stage 1: Requirements extraction
-      toast.info('📊 Stage 1/3: Követelmények kinyerése...')
-      setCurrentStage(1)
-      await new Promise((resolve) => setTimeout(resolve, 1000)) // Artificial delay for UX
+      toast.info("📊 Stage 1/3: Követelmények kinyerése...");
+      setCurrentStage(1);
+      await new Promise((resolve) => setTimeout(resolve, 1000)); // Artificial delay for UX
 
       // Stage 2: Track markdown generation
-      toast.info('📝 Stage 2/3: Track írása...')
-      setCurrentStage(2)
-      await new Promise((resolve) => setTimeout(resolve, 1000))
+      toast.info("📝 Stage 2/3: Track írása...");
+      setCurrentStage(2);
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       // Stage 3: Validation & file write
-      toast.info('✔️ Stage 3/3: Validálás...')
-      setCurrentStage(3)
+      toast.info("✔️ Stage 3/3: Validálás...");
+      setCurrentStage(3);
 
-      const result = await generateTrack(trimmedIdea)
+      const result = await generateTrack(trimmedIdea);
 
-      setGeneratedTrack(result)
-      toast.success(`✨ Track generálva: ${result.trackId}`)
-      setIdea('') // Clear input after success
+      setGeneratedTrack(result);
+      toast.success(`✨ Track generálva: ${result.trackId}`);
+      setIdea(""); // Clear input after success
     } catch (e: unknown) {
-      const errorMessage = e instanceof Error ? e.message : 'Ismeretlen hiba'
-      toast.error(`❌ Hiba történt: ${errorMessage}`)
-      console.error('Track generation failed:', e)
+      const errorMessage = e instanceof Error ? e.message : "Ismeretlen hiba";
+      toast.error(`❌ Hiba történt: ${errorMessage}`);
+      console.error("Track generation failed:", e);
     } finally {
-      setIsGenerating(false)
-      setCurrentStage(0)
+      setIsGenerating(false);
+      setCurrentStage(0);
     }
-  }
+  };
 
   const loadRecentTracks = async () => {
     try {
-      const result = await listTracks()
-      setRecentTracks(result.tracks.slice(0, 5)) // Show only 5 most recent
-      setShowRecentTracks(true)
-      toast.success(`${result.count} track található`)
+      const result = await listTracks();
+      setRecentTracks(result.tracks.slice(0, 5)); // Show only 5 most recent
+      setShowRecentTracks(true);
+      toast.success(`${result.count} track található`);
     } catch (e: unknown) {
-      const errorMessage = e instanceof Error ? e.message : 'Failed to load tracks'
-      toast.error(`Hiba: ${errorMessage}`)
+      const errorMessage =
+        e instanceof Error ? e.message : "Failed to load tracks";
+      toast.error(`Hiba: ${errorMessage}`);
     }
-  }
+  };
 
   const renderMarkdown = (markdown: string): string => {
-    return marked(markdown, { breaks: true, gfm: true }) as string
-  }
+    return marked(markdown, { breaks: true, gfm: true }) as string;
+  };
 
   return (
     <div className="space-y-6">
@@ -174,13 +183,15 @@ export function TrackGenerator() {
           <CardContent className="p-0">
             <ScrollArea className="h-[200px]">
               <div className="divide-y divide-border/50">
-                {recentTracks.map((track) => (
+                {recentTracks.map((track, i) => (
                   <div
-                    key={track.id}
+                    key={`${track.id}-${i}`}
                     className="flex items-center gap-3 px-4 py-3 hover:bg-muted/50 transition-colors"
                   >
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-medium truncate">{track.title}</p>
+                      <p className="text-sm font-medium truncate">
+                        {track.title}
+                      </p>
                       <p className="text-xs text-muted-foreground">
                         ID: {track.id} • {track.created}
                       </p>
@@ -188,7 +199,9 @@ export function TrackGenerator() {
                     <Badge variant="outline" className="text-xs">
                       {track.priority}
                     </Badge>
-                    <span className="text-xs text-muted-foreground">{track.progress}%</span>
+                    <span className="text-xs text-muted-foreground">
+                      {track.progress}%
+                    </span>
                   </div>
                 ))}
               </div>
@@ -216,7 +229,10 @@ export function TrackGenerator() {
           />
           <div className="flex items-center justify-between">
             <span className="text-xs text-muted-foreground">
-              {idea.length} karakter • {idea.trim().length < 10 ? 'Írj még legalább ' + (10 - idea.trim().length) + ' karaktert' : 'Rendben!'}
+              {idea.length} karakter •{" "}
+              {idea.trim().length < 10
+                ? "Írj még legalább " + (10 - idea.trim().length) + " karaktert"
+                : "Rendben!"}
             </span>
             <Button
               onClick={handleGenerate}
@@ -250,23 +266,31 @@ export function TrackGenerator() {
               </div>
               <div className="space-y-2">
                 {[
-                  { stage: 1, label: 'Követelmények kinyerése', icon: CheckCircle2 },
-                  { stage: 2, label: 'Track írása', icon: FileText },
-                  { stage: 3, label: 'Validálás', icon: CheckCircle2 },
+                  {
+                    stage: 1,
+                    label: "Követelmények kinyerése",
+                    icon: CheckCircle2,
+                  },
+                  { stage: 2, label: "Track írása", icon: FileText },
+                  { stage: 3, label: "Validálás", icon: CheckCircle2 },
                 ].map((item) => (
                   <div
                     key={item.stage}
                     className={cn(
-                      'flex items-center gap-2 text-xs transition-all',
-                      currentStage === item.stage && 'text-blue-500 font-medium',
-                      currentStage > item.stage && 'text-green-500',
-                      currentStage < item.stage && 'text-muted-foreground'
+                      "flex items-center gap-2 text-xs transition-all",
+                      currentStage === item.stage &&
+                        "text-blue-500 font-medium",
+                      currentStage > item.stage && "text-green-500",
+                      currentStage < item.stage && "text-muted-foreground",
                     )}
                   >
                     {currentStage > item.stage ? (
                       <CheckCircle2 size={12} className="text-green-500" />
                     ) : currentStage === item.stage ? (
-                      <Activity size={12} className="animate-spin text-blue-500" />
+                      <Activity
+                        size={12}
+                        className="animate-spin text-blue-500"
+                      />
                     ) : (
                       <div className="h-3 w-3 rounded-full border border-border" />
                     )}
@@ -297,7 +321,9 @@ export function TrackGenerator() {
             <ScrollArea className="h-[400px]">
               <div
                 className="prose prose-sm dark:prose-invert max-w-none px-4 py-3"
-                dangerouslySetInnerHTML={{ __html: renderMarkdown(generatedTrack.preview) }}
+                dangerouslySetInnerHTML={{
+                  __html: renderMarkdown(generatedTrack.preview),
+                }}
               />
             </ScrollArea>
           </CardContent>
@@ -308,12 +334,17 @@ export function TrackGenerator() {
       {!isGenerating && !generatedTrack && !showRecentTracks && (
         <Card className="glass-card">
           <CardContent className="p-8 text-center">
-            <Sparkles size={32} className="text-muted-foreground/50 mx-auto mb-3" />
+            <Sparkles
+              size={32}
+              className="text-muted-foreground/50 mx-auto mb-3"
+            />
             <p className="text-sm text-muted-foreground">
-              Írj be egy kreatív ötletet (2-5 mondat), majd kattints a &quot;Track Generálása&quot; gombra.
+              Írj be egy kreatív ötletet (2-5 mondat), majd kattints a
+              &quot;Track Generálása&quot; gombra.
             </p>
             <p className="text-xs text-muted-foreground/70 mt-1">
-              A SpecWriterAgent automatikusan létrehoz egy professzionális EPP v2 compliant track.md fájlt.
+              A SpecWriterAgent automatikusan létrehoz egy professzionális EPP
+              v2 compliant track.md fájlt.
             </p>
           </CardContent>
         </Card>
@@ -322,15 +353,24 @@ export function TrackGenerator() {
       {/* Info Card */}
       <Card className="glass-card border-yellow-500/20 bg-yellow-500/5">
         <CardContent className="p-4 flex items-start gap-3">
-          <AlertTriangle size={16} className="text-yellow-500 mt-0.5 shrink-0" />
+          <AlertTriangle
+            size={16}
+            className="text-yellow-500 mt-0.5 shrink-0"
+          />
           <div className="space-y-1">
-            <p className="text-sm font-medium">EPP v2 Rule #6: Dashboard + CLI Integration</p>
+            <p className="text-sm font-medium">
+              EPP v2 Rule #6: Dashboard + CLI Integration
+            </p>
             <p className="text-xs text-muted-foreground">
-              Minden generált track tartalmaz Dashboard komponens és CLI parancs leírást. A CLI-ből használd: <code className="bg-muted px-1 py-0.5 rounded text-[10px]">brunella tracks generate</code>
+              Minden generált track tartalmaz Dashboard komponens és CLI parancs
+              leírást. A CLI-ből használd:{" "}
+              <code className="bg-muted px-1 py-0.5 rounded text-[10px]">
+                brunella tracks generate
+              </code>
             </p>
           </div>
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }

@@ -173,6 +173,24 @@ export async function chatWithCloudflare(
   return data as CloudflareChatResponse;
 }
 
+export interface CloudflareStatus {
+  status: {
+    enabled: boolean;
+    healthy: boolean;
+  };
+}
+
+export async function getCloudflareStatus(): Promise<CloudflareStatus> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/cloudflare/status`,
+    {},
+    5000,
+  );
+  if (!response.ok)
+    throw new Error(`Cloudflare status: HTTP ${response.status}`);
+  return safeJson<CloudflareStatus>(response);
+}
+
 /**
  * Health Check
  */

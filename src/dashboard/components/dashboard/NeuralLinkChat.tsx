@@ -309,8 +309,8 @@ export function NeuralLinkChat() {
                 <SelectValue placeholder="Modell" />
               </SelectTrigger>
               <SelectContent>
-                {models.map((m) => (
-                  <SelectItem key={m.name} value={m.name}>
+                {models.map((m, i) => (
+                  <SelectItem key={`${m.name}-${i}`} value={m.name}>
                     {m.name}
                   </SelectItem>
                 ))}
@@ -323,8 +323,8 @@ export function NeuralLinkChat() {
                 <SelectValue placeholder="GitHub Model" />
               </SelectTrigger>
               <SelectContent>
-                {ghModels.map((m) => (
-                  <SelectItem key={m.name} value={m.name}>
+                {ghModels.map((m, i) => (
+                  <SelectItem key={`${m.name}-${i}`} value={m.name}>
                     {m.name}
                   </SelectItem>
                 ))}
@@ -340,8 +340,8 @@ export function NeuralLinkChat() {
                 <SelectValue placeholder="Gemini Model" />
               </SelectTrigger>
               <SelectContent>
-                {geminiModels.map((m) => (
-                  <SelectItem key={m.name} value={m.name}>
+                {geminiModels.map((m, i) => (
+                  <SelectItem key={`${m.name}-${i}`} value={m.name}>
                     {m.name}
                   </SelectItem>
                 ))}

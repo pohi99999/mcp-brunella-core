@@ -30,6 +30,7 @@ import {
   traceAgentExecution,
   type TraceContext,
 } from "../utils/agentTracer.js";
+import { recordAgentExecution } from "../utils/metrics.js";
 import { checkToolPermission } from "../tools/toolPermissions.js";
 import { record as auditRecord } from "../core/auditLog.js";
 import { getPendingFixes, updateFixStatus } from "../utils/fixQueue.js";
@@ -440,6 +441,7 @@ export class AgentManager extends EventEmitter {
     retries = 2,
     parentTraceContext?: TraceContext,
   ): Promise<TaskResult> {
+    const executionStart = Date.now();
     const cb = this.getCircuitBreaker(agentName);
 
     // RULE-OB1: Start trace span for this agent execution
@@ -599,6 +601,7 @@ export class AgentManager extends EventEmitter {
 
       // RULE-OB1: End trace span on success
       trace.end("success");
+      recordAgentExecution(agentName, "success", Date.now() - executionStart);
 
       return result;
     } catch (lastError: any) {
@@ -622,6 +625,7 @@ export class AgentManager extends EventEmitter {
 
       // RULE-OB1: End trace span on error
       trace.end("error", lastError?.message || "All retries exhausted");
+      recordAgentExecution(agentName, "error", Date.now() - executionStart);
 
       const runtime = this.ensureAgentRuntime(agentName);
       this.updateAgentRuntime(agentName, {

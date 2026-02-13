@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-02-12 22:25
+**Generálva:** 2026-02-13 04:50
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -62,6 +62,11 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `src/utils/fixQueue.ts` (ÚJ), `src/agents/AgentManager.ts`, `src/agents/OrchestratorAgent.ts`, `scripts/health_check.ts`, `conductor/tracks.md`
+
+#### 01:05 - [Claude] Dashboard TODO Widget 100% COMPLETE! Track Archiválva! 🎉
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** 1. `src/server/routes/tracks.ts` (MÓDOSÍTOTT - 3 endpoint: /todos/active, GET /:id/todos, PATCH /:id/todos/:todoId), 2. `src/cli/tracksCommands.ts` (MÓDOSÍTOTT - 2 új parancs: progress, todo), 3. `conductor/tracks/dashboard-todo-widget-20260211/meta.json` (FRISSÍTVE - 100%, completed, approved), 4. `conductor/tracks/dashboard-todo-widget-20260211/track.md` (FRISSÍTVE - COMPLETED ✅), 5. Archiválás: `conductor/archive/dashboard-todo-widget-20260211/` (ÁTHELYEZVE)
 
 ---
 
@@ -528,7 +533,7 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 32 | 2026-02-12 |
+| Claude | 33 | 2026-02-13 |
 | Gemini | 20 | 2026-02-12 |
 | Cursor | 0 | N/A |
 | Copilot | 45 | 2026-02-14 |

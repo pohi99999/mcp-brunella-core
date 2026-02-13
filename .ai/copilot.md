@@ -6,6 +6,96 @@
 
 ---
 
+## 2026-02-13 05:20 - 📚 Conductor + Copilot Log Sync, Golden/Monitoring/Swagger hardening (DONE ✅)
+
+**Track:** `stabilization_docs_sync_20260213`
+**Feladat:** Minden aktuális változás naplózása conductor dokumentációban és `.ai/copilot.md`-ban, majd GitHub commit + push előkészítése.
+
+**Eredmények:**
+
+✅ **Conductor dokumentáció frissítve:**
+
+- Új központi változásnapló: `conductor/CHANGELOG.md`
+- Linkelve az indexből: `conductor/index.md` → `Change Log`
+- A changelog tartalmazza a Golden Dataset, Monitoring (Prometheus), Swagger és docs változások összefoglalóját.
+
+✅ **Technikai stabilizációk rögzítve (session):**
+
+- Golden payload kompatibilitás (`input/output` + `prompt/completion`) és quality normalizálás
+- Golden canonical path konszolidáció: `data/training/golden_dataset.jsonl`
+- Prometheus metrika registry + `/metrics` endpoint + agent/LLM/HTTP instrumentáció
+- Swagger scan bővítés route modulokra + `/metrics` endpoint doc
+- Új regressziós tesztek (golden, metrics, swagger)
+
+✅ **Verifikáció:**
+
+- Céltesztek PASS
+- Teljes futtatás PASS: `npm test` (build + vitest)
+
+**Érintett fő fájlok (session fókusz):**
+
+- `src/server/memoryRoutes.ts`
+- `myai/server.py`
+- `myai/utils/dataset_manager.py`
+- `myai/tools/knowledge_integrator.py`
+- `myai/config/sources.json`
+- `src/utils/metrics.ts`
+- `src/server/web.ts`
+- `src/agents/AgentManager.ts`
+- `src/core/llm_client.ts`
+- `src/server/swagger.ts`
+- `docs/MONITORING_PROMETHEUS.md`
+- `test/memoryRoutes.golden.test.ts`
+- `test/prometheus_metrics.test.ts`
+- `test/swagger_spec.test.ts`
+- `conductor/CHANGELOG.md`
+- `conductor/index.md`
+
+**Státusz:** ✅ KÉSZ. Dokumentáció és verifikáció szinkronban.
+
+
+## 2026-02-12 23:10 - Edge WebSocket Stabilization + Dashboard Key/Build Fixes ✅
+
+**Track:** `cloudflare-iteration-2-20260212`
+**Feladat:** Edge panel kapcsolat-hibák javítása (`1006`, `/ws` mismatch), dashboard duplicate key warningok megszüntetése, hiányzó API export javítása.
+
+**Eredmények:**
+
+✅ **React duplicate key warningok javítva:**
+
+- Több dashboard listában erősített key stratégia (`id + index` kompozit kulcs).
+- Érintett UI panelek auditálva és stabilizálva.
+
+✅ **Build blocker javítva:**
+
+- `src/dashboard/lib/apiService.ts` hiányzó `getCloudflareStatus` export helyreállítva.
+- `npm run build` és `npm run build:ui` validálva.
+
+✅ **Edge kapcsolat gyökérok + fix:**
+
+- Diagnózis: natív `ws://localhost:3000/ws` lokálisan 404-et adott, emiatt `code 1006`.
+- Root cause: backend valójában Socket.IO-t használ (`/socket.io`), nem nyers `/ws` endpointot.
+- `EdgePanel` átállítva Socket.IO provider használatra (`useSocket`) natív WebSocket helyett.
+
+✅ **Mini diagnosztika bővítés az Edge panelen:**
+
+- Socket ID
+- Transport
+- Reconnect attempts
+- Last disconnect reason
+
+**Érintett fájlok:**
+
+- `src/dashboard/components/dashboard/EdgePanel.tsx`
+- `src/dashboard/hooks/useEdgeWebSocket.ts`
+- `src/dashboard/lib/apiService.ts`
+- `.ai/copilot.md`
+
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** Edge státusz a dashboardon zöldre váltott, kapcsolat stabil.
+
+---
+
 ### 2026-02-14 12:45 - 🚀 CLI Fix & GitHub Workflow Hardening (DONE! ✅)
 
 **Track:** `bootstrap_protocol_20260214`
