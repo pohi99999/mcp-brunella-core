@@ -11,16 +11,24 @@ const venvPy = path.resolve(
     ? ".venv/Scripts/python.exe"
     : ".venv/bin/python",
 );
-let hasPython = false;
+
+// Determine working python interpreter
+let pythonCmd: string | null = null;
+
 try {
   execSync(`"${venvPy}" --version`, { stdio: "ignore" });
-  hasPython = true;
+  pythonCmd = venvPy;
 } catch {
   try {
     execSync("python --version", { stdio: "ignore" });
-    hasPython = true;
+    pythonCmd = "python";
   } catch {
-    hasPython = false;
+    try {
+      execSync("python3 --version", { stdio: "ignore" });
+      pythonCmd = "python3";
+    } catch {
+      pythonCmd = null;
+    }
   }
 }
 
@@ -90,7 +98,7 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
     expect(pythonServer.args).toContain("myai.mcp_server");
   });
 
-  it.skipIf(!hasPython)(
+  it.skipIf(!pythonCmd)(
     "should have valid Python syntax",
     () => {
       const serverPath = path.resolve(
@@ -98,8 +106,8 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
         "myai",
         "mcp_server.py",
       );
-      const py = hasPython ? venvPy : "python";
-      const result = execSync(`"${py}" -m py_compile "${serverPath}"`, {
+      // Use the detected python command
+      const result = execSync(`"${pythonCmd}" -m py_compile "${serverPath}"`, {
         encoding: "utf-8",
         timeout: 15000,
       });
