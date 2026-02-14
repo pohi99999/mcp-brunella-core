@@ -52,10 +52,10 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
 
 - [ ] **Green Lightning - Autonomous EV Hunter** [HIGH]
   - **ID:** `green_lightning_20260212`
-  - **Progress:** 45%
+  - **Progress:** 100% (IMPLEMENTED)
   - **Utolso aktivitas:** 2026-02-14
   - **Assignee:** RobotkezAgent + n8n
-  - **Implementált:** ev_hunter.py (Browser-Use + Ollama), MCP tool (ev_hunter_search/status), deduplikáció, scoring, email HTML, 4 teszt pass
+  - **Implementált:** ev_hunter.py (Browser-Use + Ollama), MCP tool (ev_hunter_search/status), deduplikáció, scoring, email HTML, 4 teszt pass, config.json filters (10-19k, electric, private)
   - Mappa: ./tracks/green_lightning_20260212/
 
 ---
