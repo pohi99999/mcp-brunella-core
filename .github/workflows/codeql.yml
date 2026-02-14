@@ -42,12 +42,21 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Cleanup heavy directories
+        run: |
+          rm -rf external_research
+          rm -rf myai/agents
+          rm -rf node_modules
+          rm -rf _KNOWLEDGE_BASE
+          rm -rf bas-cloudflare-orchestrator/n8n
+          rm -rf open-interpreter
+
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v3
         with:
           languages: ${{ matrix.language }}
           build-mode: ${{ matrix.build-mode }}
-          config-file: ./.github/codeql-config.yml
+          config-file: .github/codeql-config.yml
           # Custom queries for security-focused analysis
           queries: +security-extended,security-and-quality
 
