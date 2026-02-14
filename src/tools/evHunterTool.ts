@@ -17,7 +17,9 @@ export interface EvHunterToolResponse {
   [key: string]: unknown;
 }
 
-export async function evHunterHandler(opts: EvHunterOptions): Promise<EvHunterToolResponse> {
+export async function evHunterHandler(
+  opts: EvHunterOptions,
+): Promise<EvHunterToolResponse> {
   const mock = opts.mock ?? false;
   const dryRun = opts.dryRun ?? opts.dry_run ?? false;
 
@@ -71,7 +73,9 @@ export function registerEvHunterTools(server: McpServer) {
       mock: z
         .boolean()
         .optional()
-        .describe("Use mock data instead of real browser scraping (default: false)"),
+        .describe(
+          "Use mock data instead of real browser scraping (default: false)",
+        ),
       dry_run: z
         .boolean()
         .optional()
@@ -83,7 +87,7 @@ export function registerEvHunterTools(server: McpServer) {
       return evHunterHandler({ mock, dryRun: dry_run }) as any;
     },
   );
-  
+
   server.tool(
     "ev_hunter_status",
     "Returns the latest EV Hunter results from the last run (if available).",

@@ -54,6 +54,7 @@ import { JulesPanel } from "./JulesPanel";
 import { TrackGenerator } from "./TrackGenerator";
 import { TaskDecomposerPanel } from "./TaskDecomposerPanel";
 import { TrackProgressWidget } from "./TrackProgress";
+import { TestResultsWidget } from "./TestResultsWidget";
 
 const SIDEBAR_ITEMS = [
   { id: "dashboard", label: "Mission Control", icon: LayoutDashboard },
@@ -65,6 +66,7 @@ const SIDEBAR_ITEMS = [
   { id: "knowledge", label: "Knowledge", icon: Brain },
   { id: "developer", label: "Developer", icon: Code2 },
   { id: "edge", label: "Edge", icon: Cloud },
+  { id: "tests", label: "Tests", icon: FlaskConical },
   { id: "robotkez", label: "Robotkéz", icon: Activity },
   { id: "tasks", label: "Tasks", icon: History },
   { id: "inventory", label: "Assets", icon: Box },
@@ -308,6 +310,7 @@ export function MissionControlLayout() {
               {activeTab === "providers" && <LLMProvidersPanel />}
               {activeTab === "knowledge" && <KnowledgeBasePanel />}
               {activeTab === "files" && <FileExplorer />}
+              {activeTab === "tests" && <TestResultsWidget />}
               {activeTab === "settings" && <SettingsPanel />}
             </div>
 

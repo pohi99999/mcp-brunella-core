@@ -50,6 +50,9 @@ import { createTracksRouter } from "./tracksRoutes.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
 import { registerEdgeWebSocketHandlers } from "./websocket.js";
+import testSchedulerRoutes from "./routes/testScheduler.js";
+import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
+import { initTestResultsDb } from "../core/testResultsService.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -93,6 +96,12 @@ export async function startWebServer() {
     initTasksDb();
   } catch (e: any) {
     logError("Server", `Tasks DB Init failed: ${e.message}`);
+  }
+
+  try {
+    await initTestResultsDb("data/brunella.db");
+  } catch (e: any) {
+    logError("Server", `Test Results DB Init failed: ${e.message}`);
   }
 
   initMetrics();
@@ -157,6 +166,9 @@ export async function startWebServer() {
 
   // Add Robotkéz routes to v1
   v1Router.use("/robotkez", createRobotkezRoutes());
+
+  // Add Test Scheduler routes to v1
+  v1Router.use("/tests", testSchedulerRoutes);
 
   // Mount v1 router at /api/v1 and /api (backwards compatibility)
   app.use("/api/v1", v1Router);
@@ -309,6 +321,10 @@ export async function startWebServer() {
 
   // Global error handler (MUST be after all routes)
   app.use(globalErrorHandler);
+
+  // Initialize test scheduler
+  logInfo("Server", "Starting test scheduler...");
+  startScheduler();
 
   io.on("connection", (socket) => {
     const DEFAULT_CHAT_ID = "main-session";

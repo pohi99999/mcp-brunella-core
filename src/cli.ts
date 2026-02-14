@@ -1216,6 +1216,244 @@ registerProgressCommands(program);
 registerEdgeCommands(program);
 
 // ════════════════════════════════════════════════════════════════════════════
+// TESTS COMMAND (Test Scheduler)
+// ════════════════════════════════════════════════════════════════════════════
+
+const testsCmd = program
+  .command("tests")
+  .description("Manage test scheduling and results")
+  .action(async () => {
+    const { action } = await inquirer.prompt([
+      {
+        type: "list",
+        name: "action",
+        message: "Local Test Scheduler - Mit szeretnél tenni?",
+        choices: [
+          { name: "📊 Scheduler státusza és eredmények", value: "status" },
+          { name: "🚀 Manuális tesztfuttatás indítása", value: "run" },
+          { name: "📋 Legutóbbi futások megjelenítése", value: "results" },
+          { name: "✅ Track spec frissítése 'completed'-re", value: "track" },
+          { name: "🖥️ Dashboard szerver indítása", value: "dashboard" },
+          { name: "📤 Git push (origin/main)", value: "push" },
+          { name: "📚 README dokumentáció frissítése", value: "docs" },
+          { name: "❌ Mégsem", value: "cancel" },
+        ],
+      },
+    ]);
+
+    if (action === "cancel") {
+      console.log(chalk.gray("Visszavonva."));
+      process.exit(0);
+    }
+
+    // Delegate to sub-command or custom actions
+    if (["status", "run", "results"].includes(action)) {
+      // Use sub-commands for existing functionality
+      process.argv[2] = "tests";
+      process.argv[3] = action;
+      if (action === "results") {
+        process.argv[4] = "10"; // default limit
+      }
+      // Re-parse will happen below
+    } else if (action === "track") {
+      // Update track spec to completed
+      const spinner = ora("Track spec frissítése...").start();
+      try {
+        const specPath = join(
+          process.cwd(),
+          "conductor/tracks/local_test_scheduler_20260215/spec.md",
+        );
+        const content = readFileSync(specPath, "utf-8");
+        const updated = content
+          .replace(/status:\s+pending|status:\s+active|status:\s+testing/i, "status: completed")
+          .replace(/completedAt:.*$/m, `completedAt: ${new Date().toISOString()}`);
+        writeFileSync(specPath, updated);
+        spinner.succeed("✅ Track spec frissítve: completed");
+        console.log(chalk.dim(`  Fájl: ${specPath}`));
+      } catch (e: any) {
+        spinner.fail("Hiba: " + e.message);
+      }
+      process.exit(0);
+    } else if (action === "dashboard") {
+      // Start development server
+      const spinner = ora(
+        "Dashboard szerver indítása (port 3000)...",
+      ).start();
+      const { spawn } = await import("child_process");
+      const proc = spawn("npm", ["run", "dev"], {
+        cwd: process.cwd(),
+        stdio: "inherit",
+        shell: true,
+      });
+      spinner.stop();
+      console.log(chalk.green("✅ Szerver elindítva!"));
+      console.log(chalk.cyan("📱 Nyisd meg: http://localhost:3000"));
+      console.log(chalk.dim("Kilépéshez: Ctrl+C\n"));
+      proc.on("exit", (code) => process.exit(code || 0));
+    } else if (action === "push") {
+      // Git push
+      const spinner = ora("Git push (origin/main)...").start();
+      const { execSync } = await import("child_process");
+      try {
+        execSync("git push origin main", { cwd: process.cwd(), stdio: "pipe" });
+        spinner.succeed("✅ Git push sikeres!");
+      } catch (e: any) {
+        spinner.fail("Hiba: " + e.message);
+      }
+      process.exit(0);
+    } else if (action === "docs") {
+      // Update README
+      const spinner = ora("README dokumentáció frissítése...").start();
+      try {
+        const readmePath = join(process.cwd(), "README.md");
+        const content = readFileSync(readmePath, "utf-8");
+
+        // Add Local Test Scheduler section if not exists
+        if (!content.includes("## Local Test Scheduler")) {
+          const newSection = `\n## Local Test Scheduler\n\n**Status:** ✅ Production Ready\n\nA Brunella rendszer egy helyi, ütemezett tesztfuttatást végez, amely **független a GitHub Actions-tól**.\n\n### Jellemzők:\n- 📅 Napi futtatás 2:00 AM-kor (konfigurálható)\n- 🖥️ Dashboard integráció a Tests fülön\n- 🛠️ CLI parancsok: \`brunella tests\`\n- 🔧 MCP tools: test-scheduler-run, test-scheduler-status\n- 💾 Persistent SQLite results (better-sqlite3)\n\n### Használat:\n\`\`\`bash\n# Interaktív menü\nbrunella tests\n\n# Vagy közvetlenül:\nbrunella tests status      # Státusz megtekintése\nbrunella tests run         # Manuális futtatás\nbrunella tests results 5   # Legutóbbi 5 futás\n\`\`\`\n\n### Dashboard\n\nA Dashboard Tests fülén valós idejű statisztikákat látsz: pass rate, átlagos futtatási idő, trend chart (7 nap).\n`;
+
+          const insertPos = content.indexOf("## Features");
+          if (insertPos > 0) {
+            const updated =
+              content.slice(0, insertPos) +
+              newSection +
+              "\n" +
+              content.slice(insertPos);
+            writeFileSync(readmePath, updated);
+          } else {
+            // Append to end
+            writeFileSync(readmePath, content + newSection);
+          }
+        }
+
+        spinner.succeed("✅ README frissítve!");
+        console.log(chalk.dim(`  Fájl: ${readmePath}`));
+      } catch (e: any) {
+        spinner.fail("Hiba: " + e.message);
+      }
+      process.exit(0);
+    }
+  });
+
+testsCmd
+  .command("status")
+  .description("Show test scheduler status and statistics")
+  .action(async () => {
+    const client = new BrunellaClient();
+    const spinner = ora("Fetching test scheduler status...").start();
+    try {
+      await client.connect();
+      const result = await client.callTool("test-scheduler-status", {
+        includeDetails: true,
+      });
+      spinner.stop();
+      // @ts-ignore
+      const text = result.content?.[0]?.text || JSON.stringify(result);
+      const data = JSON.parse(typeof text === "string" ? text : JSON.stringify(text));
+
+      console.log(chalk.bold("\n📊 Test Scheduler Status\n"));
+      console.log(`Schedule: ${chalk.cyan(data.schedule)}`);
+      console.log(`Enabled:  ${data.enabled ? chalk.green("✓") : chalk.red("✗")}`);
+      console.log(`Active:   ${data.active ? chalk.green("✓") : chalk.red("✗")}`);
+      
+      if (data.stats) {
+        console.log(chalk.bold("\n📈 Statistics (7 days)\n"));
+        console.log(`  Pass Rate:       ${chalk.green(data.stats.sevenDayPassRate)}`);
+        console.log(`  Total Runs:      ${chalk.cyan(data.stats.totalRuns)}`);
+        console.log(`  Avg Duration:    ${chalk.cyan(data.stats.averageDuration)}`);
+        console.log(`  Last Run Status: ${data.stats.lastRunStatus === "passed" ? chalk.green("✓ Passed") : chalk.red("✗ Failed")}`);
+        console.log(`  Last Run Time:   ${chalk.dim(data.stats.lastRunTime)}`);
+      }
+
+      if (data.recentRuns && data.recentRuns.length > 0) {
+        console.log(chalk.bold("\n📋 Recent Runs (Last 5)\n"));
+        data.recentRuns.forEach((run: any, i: number) => {
+          const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
+          console.log(`  ${i + 1}. ${status} (${run.passed}✓ / ${run.failed}✗) @ ${run.startedAt}`);
+        });
+      }
+    } catch (e: any) {
+      spinner.stop();
+      console.error(chalk.red("Error:"), e.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
+testsCmd
+  .command("run")
+  .description("Trigger a manual test run immediately")
+  .option("--reason <reason>", "Reason for triggering", "Manual CLI trigger")
+  .action(async (options) => {
+    const client = new BrunellaClient();
+    const spinner = ora("Triggering test run...").start();
+    try {
+      await client.connect();
+      const result = await client.callTool("test-scheduler-run", {
+        triggerReason: options.reason,
+      });
+      spinner.stop();
+      // @ts-ignore
+      const text = result.content?.[0]?.text || JSON.stringify(result);
+      const data = JSON.parse(typeof text === "string" ? text : JSON.stringify(text));
+
+      if (data.success) {
+        console.log(chalk.bold("\n✅ Test Run Triggered\n"));
+        console.log(`Run ID:  ${chalk.cyan(data.runId)}`);
+        console.log(`Status:  ${chalk.green(data.status)}`);
+        console.log(chalk.dim("\nMonitor progress in browser or use 'brunella tests status'"));
+      } else {
+        console.error(chalk.red("Failed to trigger test run:"), data.error);
+      }
+    } catch (e: any) {
+      spinner.stop();
+      console.error(chalk.red("Error:"), e.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
+testsCmd
+  .command("results [count]")
+  .description("Show recent test run results")
+  .action(async (count: string) => {
+    const client = new BrunellaClient();
+    const limit = parseInt(count || "10");
+    const spinner = ora("Fetching test results...").start();
+    try {
+      await client.connect();
+      
+      // Fetch results via HTTP (CLI-friendly)
+      const response = await fetch("http://localhost:3000/api/tests/results?limit=" + limit);
+      spinner.stop();
+      
+      if (!response.ok) throw new Error("Failed to fetch results");
+      
+      const data = (await response.json()) as { runs: any[] };
+      console.log(chalk.bold(`\n🧪 Recent Test Runs (Last ${limit})\n`));
+
+      if (data.runs.length === 0) {
+        console.log(chalk.dim("No test runs found"));
+      } else {
+        data.runs.forEach((run: any, i: number) => {
+          const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
+          const duration = run.duration || "N/A";
+          console.log(`${i + 1}. ${status} ID: ${chalk.cyan(run.id)} | ${run.passed}✓ ${run.failed}✗ | ${duration}`);
+          console.log(`   Started: ${chalk.dim(new Date(run.startedAt).toLocaleString("hu-HU"))}`);
+        });
+      }
+    } catch (e: any) {
+      spinner.stop();
+      console.error(chalk.red("Error:"), e.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
+// ════════════════════════════════════════════════════════════════════════════
 // HARVEST COMMAND (Tech-Harvester Pipeline)
 // ════════════════════════════════════════════════════════════════════════════
 

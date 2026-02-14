@@ -1,6 +1,12 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logWarn } from "../utils/logger.js";
+import {
+  testSchedulerRunDefinition,
+  testSchedulerStatusDefinition,
+  testSchedulerRunHandler,
+  testSchedulerStatusHandler,
+} from "../tools/testSchedulerTool.js";
 
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
@@ -59,6 +65,26 @@ const registeredToolsList: RegisteredToolInfo[] = [
       { name: "agentName", type: "string", required: true },
       { name: "task", type: "string", required: true },
       { name: "context", type: "string", required: false },
+    ],
+  },
+  {
+    id: "test-scheduler-run",
+    name: "test-scheduler-run",
+    description: "Trigger a manual test run immediately",
+    enabled: true,
+    category: "monitoring",
+    parameters: [
+      { name: "triggerReason", type: "string", required: false },
+    ],
+  },
+  {
+    id: "test-scheduler-status",
+    name: "test-scheduler-status",
+    description: "Get the current test scheduler status and recent test statistics",
+    enabled: true,
+    category: "monitoring",
+    parameters: [
+      { name: "includeDetails", type: "boolean", required: false },
     ],
   },
 ];
@@ -267,6 +293,43 @@ export async function registerAllTools(server: McpServer) {
       agentExecuteHandler,
     );
     toolHandlers.set("agent_execute", agentExecuteHandler);
+
+    // Register Test Scheduler Tools
+    const testSchedulerRunMcpHandler = async (args: any) => {
+      const result = await testSchedulerRunHandler(args);
+      return {
+        content: [
+          { type: "text" as const, text: JSON.stringify(result, null, 2) },
+        ],
+      };
+    };
+    server.tool(
+      "test-scheduler-run",
+      testSchedulerRunDefinition.description,
+      {
+        triggerReason: z.string().optional(),
+      },
+      testSchedulerRunMcpHandler,
+    );
+    toolHandlers.set("test-scheduler-run", testSchedulerRunMcpHandler);
+
+    const testSchedulerStatusMcpHandler = async (args: any) => {
+      const result = await testSchedulerStatusHandler(args);
+      return {
+        content: [
+          { type: "text" as const, text: JSON.stringify(result, null, 2) },
+        ],
+      };
+    };
+    server.tool(
+      "test-scheduler-status",
+      testSchedulerStatusDefinition.description,
+      {
+        includeDetails: z.boolean().optional(),
+      },
+      testSchedulerStatusMcpHandler,
+    );
+    toolHandlers.set("test-scheduler-status", testSchedulerStatusMcpHandler);
   }
 
   // Always register ping tool (works in any environment)
