@@ -69,3 +69,4 @@ const all_memory = {
         "Az MCP protokoll stratégiai utat jelöl ki a komplex, több-ügynökös rendszerek felé, ahol a Gemini CLI egy központi orchestrator szerepét töltheti be, amely külső, specializált ügynököket (MCP szervereket) koordinál."
       ]
     },
+  }\n};
