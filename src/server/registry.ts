@@ -119,6 +119,7 @@ export async function registerAllTools(server: McpServer) {
     const { registerKnowledgeTools } = await import("../tools/knowledge.js");
     const { registerSystemTools } = await import("../tools/system.js");
     const { registerBrowserTools } = await import("../tools/browser.js");
+    const { registerPersistentBrowserTools } = await import("../tools/persistentBrowserTools.js");
     const { registerInterpreterTools } =
       await import("../tools/interpreter.js");
     const { registerCopilotCliTool } =
@@ -143,6 +144,7 @@ export async function registerAllTools(server: McpServer) {
     registerKnowledgeTools(server);
     registerSystemTools(server);
     registerBrowserTools(server);
+    registerPersistentBrowserTools(server);
     registerInterpreterTools(server);
     registerCopilotCliTool(server);
     registerJulesCliTool(server);

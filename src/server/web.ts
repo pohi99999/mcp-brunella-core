@@ -25,6 +25,7 @@ import { toolManager } from "./ToolManager.js";
 import { mcpProcessManager } from "./McpProcessManager.js";
 import { mcpClientManager } from "../utils/mcpClientManager.js";
 import { agentManager } from "../agents/AgentManager.js";
+import { persistentBrowser } from "../utils/persistentBrowser.js";
 import {
   corsWhitelist,
   requestId,
@@ -127,6 +128,16 @@ export async function startWebServer() {
    *       200:
    *         description: Prometheus metrics text payload
    */
+  app.get("/api/browser/snapshot", (req, res) => {
+    const screenshot = persistentBrowser.getLastScreenshot();
+    if (screenshot) {
+      res.setHeader("Content-Type", "image/png");
+      res.send(screenshot);
+    } else {
+      res.status(404).send("No active browser session or screenshot available.");
+    }
+  });
+
   app.get("/metrics", async (_req, res) => {
     try {
       res.set("Content-Type", getPrometheusContentType());

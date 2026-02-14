@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PaperPlaneRight, Robot, User, Circle } from "@phosphor-icons/react";
+import { PaperPlaneRight, Robot, User, Circle, Eye, EyeSlash } from "@phosphor-icons/react";
 import { Brain, FileText } from "lucide-react";
 import * as api from "@/lib/apiService";
 import { toast } from "sonner";
@@ -32,6 +32,14 @@ export function NeuralLinkChat() {
     return restored?.messages ?? [];
   });
   const [input, setInput] = useState("");
+  const [showBrowser, setShowBrowser] = useState(false);
+  const [browserTimestamp, setBrowserTimestamp] = useState(Date.now());
+  useEffect(() => {
+    if (showBrowser) {
+      const interval = setInterval(() => setBrowserTimestamp(Date.now()), 1500);
+      return () => clearInterval(interval);
+    }
+  }, [showBrowser]);
   const [mode, setMode] = useState<ChatMode>(() => {
     const restored = loadChatSession();
     return restored?.mode ?? "orchestrator";
@@ -283,8 +291,17 @@ export function NeuralLinkChat() {
             </Select>
           )}
         </div>
+        <Button variant="ghost" size="icon" onClick={() => setShowBrowser(!showBrowser)} title={showBrowser ? "Bezár" : "Böngésző"}>
+          {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
+        </Button>
       </CardHeader>
       <CardContent className="flex-1 flex flex-col min-h-0 p-0">
+        {showBrowser && (
+          <div className="border-b border-border bg-black/20 p-2 flex flex-col items-center justify-center relative min-h-[200px] max-h-[400px] overflow-hidden">
+            <img src={`/api/browser/snapshot?t=${browserTimestamp}`} alt="Browser Live View" className="max-w-full h-auto max-h-[380px] object-contain border border-zinc-700 shadow-lg rounded" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} onLoad={(e) => { (e.target as HTMLImageElement).style.display = "block"; }} />
+            <div className="absolute top-2 right-2 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm">LIVE</div>
+          </div>
+        )}
         <ScrollArea className="flex-1 px-4">
           <div className="space-y-6 py-6">
             {messages.length === 0 && (
