@@ -11,18 +11,29 @@ const venvPy = path.resolve(
     ? ".venv/Scripts/python.exe"
     : ".venv/bin/python",
 );
-let hasPython = false;
+let hasVenvPython = false;
+let hasGlobalPython = false;
+
 try {
   execSync(`"${venvPy}" --version`, { stdio: "ignore" });
-  hasPython = true;
+  hasVenvPython = true;
+} catch {
+  hasVenvPython = false;
+}
+
+try {
+  execSync("python --version", { stdio: "ignore" });
+  hasGlobalPython = true;
 } catch {
   try {
-    execSync("python --version", { stdio: "ignore" });
-    hasPython = true;
+    execSync("python3 --version", { stdio: "ignore" });
+    hasGlobalPython = true;
   } catch {
-    hasPython = false;
+    hasGlobalPython = false;
   }
 }
+
+const hasAnyPython = hasVenvPython || hasGlobalPython;
 
 describe("Python MCP Server (myai/mcp_server.py)", () => {
   it("should exist as a file", () => {
@@ -90,7 +101,7 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
     expect(pythonServer.args).toContain("myai.mcp_server");
   });
 
-  it.skipIf(!hasPython)(
+  it.skipIf(!hasAnyPython)(
     "should have valid Python syntax",
     () => {
       const serverPath = path.resolve(
@@ -98,7 +109,20 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
         "myai",
         "mcp_server.py",
       );
-      const py = hasPython ? venvPy : "python";
+
+      let py = "python";
+      if (hasVenvPython) {
+        py = venvPy;
+      } else if (hasGlobalPython) {
+        // Check if 'python' works, otherwise try 'python3'
+        try {
+            execSync("python --version", { stdio: "ignore" });
+            py = "python";
+        } catch {
+            py = "python3";
+        }
+      }
+
       const result = execSync(`"${py}" -m py_compile "${serverPath}"`, {
         encoding: "utf-8",
         timeout: 15000,
