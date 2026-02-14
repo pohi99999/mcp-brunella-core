@@ -251,6 +251,12 @@ export async function indexCodebase(config: Partial<IndexerConfig> = {}): Promis
 
   try {
     const files = await discoverFiles(cfg);
+    if (files.length === 0) {
+      logInfo('CodebaseIndexer', 'No files found to index');
+      stats.durationMs = Date.now() - startTime;
+      return stats;
+    }
+
     const fs = await import('fs');
 
     // Concurrency limit for file processing
