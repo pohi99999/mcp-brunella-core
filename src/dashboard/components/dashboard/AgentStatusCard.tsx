@@ -198,7 +198,6 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
             <button
               className="rounded-full p-1 text-zinc-500 hover:bg-white/5 hover:text-zinc-300 transition-colors"
               aria-label={expanded ? 'Összecsuk' : 'Részletek'}
-              onClick={() => setExpanded(!expanded)}
             >
               {expanded ? <CaretUp size={18} /> : <CaretDown size={18} />}
             </button>
@@ -242,7 +241,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                             {cap}
                             <button
                               type="button"
-                              className="cursor-pointer hover:text-red-400 focus:outline-none focus:ring-1 focus:ring-red-400 rounded-sm ml-1"
+                              className="ml-1 rounded-full p-0.5 hover:bg-red-500/20 hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500/40"
                               onClick={() => handleRemoveCapability(cap)}
                               aria-label={`Remove capability ${cap}`}
                             >
