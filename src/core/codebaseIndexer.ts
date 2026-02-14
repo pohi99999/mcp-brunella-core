@@ -124,8 +124,8 @@ async function discoverFiles(config: IndexerConfig): Promise<string[]> {
     return [];
   }
 
-  const fs = await import('fs');
-  const path = await import('path');
+  const fs = await import('node:fs');
+  const path = await import('node:path');
   const files: string[] = [];
 
   function walkDir(dir: string): void {
@@ -177,7 +177,7 @@ async function getChangedFiles(sinceTimestamp: number): Promise<string[]> {
   }
 
   try {
-    const { execSync } = await import('child_process');
+    const { execSync } = await import('node:child_process');
     const sinceDate = new Date(sinceTimestamp).toISOString();
     const output = execSync(`git diff --name-only --diff-filter=ACMR HEAD`, {
       encoding: 'utf-8',
@@ -187,7 +187,7 @@ async function getChangedFiles(sinceTimestamp: number): Promise<string[]> {
 
     if (!output) return [];
 
-    const path = await import('path');
+    const path = await import('node:path');
     return output.split('\n')
       .filter(f => DEFAULT_CONFIG.extensions.some(ext => f.endsWith(ext)))
       .map(f => path.default.resolve(process.cwd(), f));
@@ -257,7 +257,7 @@ export async function indexCodebase(config: Partial<IndexerConfig> = {}): Promis
       return stats;
     }
 
-    const fs = await import('fs');
+    const fs = await import('node:fs');
 
     // Concurrency limit for file processing
     const CONCURRENCY_LIMIT = 10;
@@ -319,7 +319,7 @@ export async function reindexChangedFiles(): Promise<IndexStats> {
       return stats;
     }
 
-    const fs = await import('fs');
+    const fs = await import('node:fs');
 
     // Concurrency limit for file processing
     const CONCURRENCY_LIMIT = 10;
