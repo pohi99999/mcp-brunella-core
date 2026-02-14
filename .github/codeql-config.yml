@@ -10,7 +10,6 @@ paths-ignore:
   - 'myai/agents/openai-agents-python/**'
   - 'external_research/**'
   - 'node_modules/**'
-  - 'src/dashboard/components/dashboard/ChatInterface.tsx'
   - '**/_KNOWLEDGE_BASE/**'
   - '**/test/**'
   - '**/*.test.ts'
