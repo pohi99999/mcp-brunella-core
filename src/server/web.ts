@@ -49,10 +49,12 @@ import { createMemoryRouter } from "./memoryRoutes.js";
 import { createTracksRouter } from "./tracksRoutes.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
+import { suggestedTasksRouter } from "./routes/suggestedTasks.js";
 import { registerEdgeWebSocketHandlers } from "./websocket.js";
 import testSchedulerRoutes from "./routes/testScheduler.js";
 import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
 import { initTestResultsDb } from "../core/testResultsService.js";
+import { initSuggestedTasksDb } from "../core/suggestedTasksScanner.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -102,6 +104,12 @@ export async function startWebServer() {
     await initTestResultsDb("data/brunella.db");
   } catch (e: any) {
     logError("Server", `Test Results DB Init failed: ${e.message}`);
+  }
+
+  try {
+    await initSuggestedTasksDb("data/brunella.db");
+  } catch (e: any) {
+    logError("Server", `Suggested Tasks DB Init failed: ${e.message}`);
   }
 
   initMetrics();
@@ -169,6 +177,9 @@ export async function startWebServer() {
 
   // Add Test Scheduler routes to v1
   v1Router.use("/tests", testSchedulerRoutes);
+
+  // Add Suggested Tasks routes to v1
+  v1Router.use("/suggested-tasks", suggestedTasksRouter);
 
   // Mount v1 router at /api/v1 and /api (backwards compatibility)
   app.use("/api/v1", v1Router);
