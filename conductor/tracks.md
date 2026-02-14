@@ -41,7 +41,21 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
 
 ---
 
-## Aktiv Szalak (Active/In Progress) (2)
+## Aktiv Szalak (Active/In Progress) (3)
+
+- [ ] **Jules Continuous AI Integration (JCAI)** [🔥 CRITICAL]
+  - **ID:** `jules_continuous_ai_integration_20260215`
+  - **Progress:** 0% (JUST STARTED)
+  - **Start:** 2026-02-15 | **Target:** 2026-02-22
+  - **Assignee:** Claude Code + Jules AI
+  - **39 TASKS TOTAL** (TODO list created)
+  - **Components:**
+    - Phase 1: Suggested Tasks Scanner (TODO detection, confidence scoring)
+    - Phase 2: Scheduled Tasks Engine (Napi/heti/havi automata futtatás)
+    - Phase 3: GitHub Deploy Integration (Build fail → Jules auto-fix → retry)
+    - Phase 4: Integration testing + docs
+  - Mappa: ./tracks/jules_continuous_ai_integration_20260215/
+  - **Status:** `pending_approval` → Starting immediately!
 
 - [ ] **Phoenix Protocol v2 - Öngyógyító Rendszer** [MEDIUM]
   - **ID:** `phoenix_protocol_v2_20260205`
