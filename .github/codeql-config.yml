@@ -1,0 +1,8 @@
+name: "Brunella CodeQL Config"
+
+paths-ignore:
+  - 'myai/agents/**'
+  - 'external_research/**'
+  - 'node_modules/**'
+  - 'test/**'
+  - '_KNOWLEDGE_BASE/**'
