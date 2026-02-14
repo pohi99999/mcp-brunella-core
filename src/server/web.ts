@@ -15,7 +15,7 @@ import {
   logError,
   logWarn,
 } from "../utils/logger.js";
-import { initDb, saveMessage } from "../utils/db.js";
+import { initDb, saveMessage, getMessages } from "../utils/db.js";
 import { initTasksDb } from "../utils/tasksDb.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
@@ -367,14 +367,46 @@ export async function startWebServer() {
     // Chat Logic
     socket.on("user_message", async (data) => {
       const userMsg = data.text;
-      const options = {
-        model: data.model,
-        provider: data.provider,
-      };
+      const provider = data.provider || 'github';
+      const model = data.model;
+
       saveMessage(DEFAULT_CHAT_ID, "user", userMsg);
       socket.emit("bot_message_start", { isUser: false });
 
       try {
+        // Cloudflare Workers AI path
+        if (provider === 'cloudflare') {
+          const chatHistory = await getMessages(DEFAULT_CHAT_ID);
+          const recentHistory = chatHistory.slice(-10); // Get last 10 messages
+          const history = recentHistory.map((msg) => ({
+            role: msg.role === 'user' ? 'user' : 'assistant',
+            content: msg.content,
+          }));
+
+          const response = await fetch('http://localhost:3000/api/cloudflare/chat', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              instruction: userMsg,
+              history: history,
+              model: model,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`Cloudflare chat failed: ${response.status}`);
+          }
+
+          const result = await response.json();
+          const message = result.message || result.response || 'No response';
+
+          socket.emit("bot_message_chunk", { text: message });
+          saveMessage(DEFAULT_CHAT_ID, "bot", message);
+          socket.emit("bot_message_end", {});
+          return;
+        }
+
+        // Default Agent Manager path (GitHub, Gemini, Ollama)
         const plan = await agentManager.createPlan(userMsg);
         socket.emit("plan_created", plan);
 
@@ -390,8 +422,9 @@ export async function startWebServer() {
         socket.emit("bot_message_end", {});
       } catch (e: any) {
         const errMsg = `⚠️ Hiba: ${e.message}`;
-        socket.emit("bot_message", { text: errMsg });
+        socket.emit("bot_message_chunk", { text: errMsg });
         saveMessage(DEFAULT_CHAT_ID, "bot", errMsg);
+        socket.emit("bot_message_end", {});
       }
     });
   });

@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 13. 21:16:09
+**Generálva:** 2026. 02. 13. 23:41:00
 **Script:** 
 
 ---
@@ -36,6 +36,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 REPORT_REVISION_20260130.md
   - 📂 **_br_temp**
     - 📄 test_input.json
+    - 📄 test_out2.json
+    - 📄 test_output.json
   - 📂 **_KNOWLEDGE_BASE** _(MCP server for interacting with Google Drive)_
     - 📂 **_model_cards**
       - 📄 Gemini_Pro_2.5_model_card_melygondolkodás.pdf
@@ -41778,6 +41780,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 bas-task-handler.json
     - 📂 **src**
       - 📄 index.ts
+      - 📄 swarmCoordinator.ts
     - 📄 docker-compose.yml
     - 📄 GEMINI_CLI_INSTRUCTIONS.md
     - 📄 GEMINI.md
@@ -115518,6 +115521,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 chromadb_adapter.py
     - 📄 cli.py
     - 📄 config.py
+    - 📄 mcp_server.py
     - 📄 pydantic_models.py
     - 📄 rag.py
     - 📄 refiner_logic.py
@@ -115984,10 +115988,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 auditLog.ts
       - 📄 checkpoint.ts
       - 📄 codebaseIndexer.ts
+      - 📄 edgeHealthMonitor.ts
+      - 📄 failoverRegistry.ts
       - 📄 gitRecovery.ts
       - 📄 goldenDatasetBridge.ts
       - 📄 llm_client.ts
       - 📄 modelRouter.ts
+      - 📄 phoenixEventBus.ts
       - 📄 processMonitor.ts
       - 📄 retryStrategy.ts
     - 📂 **dashboard**
@@ -116294,7 +116301,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 dev_commands.test.ts
     - 📄 developer_pipeline.test.ts
     - 📄 DeveloperAgent.test.ts
+    - 📄 edge_health_monitor.test.ts
     - 📄 ev_hunter_research.test.ts
+    - 📄 failover_registry.test.ts
     - 📄 git_integration.test.ts
     - 📄 goldenDatasetBridge.test.ts
     - 📄 health_check.test.ts
@@ -116313,9 +116322,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 monitor.test.ts
     - 📄 monitor.vitest.ts
     - 📄 n8n_automation.test.ts
+    - 📄 phoenix_event_bus.test.ts
     - 📄 phoenix_recovery.test.ts
     - 📄 project_conductor_living_docs.test.ts
     - 📄 prometheus_metrics.test.ts
+    - 📄 python_mcp_server.test.ts
     - 📄 python_shell.test.ts
     - 📄 rag.test.ts
     - 📄 retryStrategy.test.ts
@@ -116330,6 +116341,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 state_restoration.test.ts
     - 📄 structured_output.test.ts
     - 📄 swagger_spec.test.ts
+    - 📄 swarm_coordinator.test.ts
     - 📄 task_queue.test.ts
     - 📄 taskDecomposerCore.test.ts
     - 📄 telemetry.test.ts

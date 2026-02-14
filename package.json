@@ -38,6 +38,9 @@
     "health": "npm run test:health",
     "test:phoenix": "vitest run test/state_restoration.test.ts",
     "test:full": "npm run build && vitest run && npm run test:health",
+    "migrate:dry": "npx tsx scripts/migrate-embeddings.ts --dry-run",
+    "migrate:backup": "npx tsx scripts/migrate-embeddings.ts --backup",
+    "migrate": "npx tsx scripts/migrate-embeddings.ts",
     "prepare": "husky"
   },
   "keywords": [

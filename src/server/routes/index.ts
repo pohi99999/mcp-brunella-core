@@ -21,6 +21,7 @@ import { createRobotkezRoutes } from "./robotkez.js";
 import { createJulesRoutes } from "./jules.js";
 import { createCloudflareRoutes } from "./cloudflare.js";
 import { createTracksRoutes } from "./tracks.js";
+import { createTTSRoutes } from "./tts.js";
 
 export {
   createHealthRoutes,
@@ -44,6 +45,7 @@ export {
   createRobotkezRoutes,
   createCloudflareRoutes,
   createTracksRoutes,
+  createTTSRoutes,
 };
 
 /**
@@ -74,6 +76,7 @@ export function createV1Router(): Router {
   router.use("/jules", createJulesRoutes());
   router.use("/cloudflare", createCloudflareRoutes());
   router.use("/tracks", createTracksRoutes());
+  router.use("/tts", createTTSRoutes());
 
   return router;
 }
