@@ -81,16 +81,17 @@ export function checkToolPermission(
 /**
  * Path-based permission check for file operations
  */
-export function checkFilePermission(
+export async function checkFilePermission(
     agentName: string | undefined,
     filePath: string,
     operation: 'read' | 'write' | 'delete'
-): { allowed: boolean; reason?: string } {
+): Promise<{ allowed: boolean; reason?: string }> {
     if (!agentName) {
         return { allowed: true };
     }
 
-    if (!globalPermissionManager.canAccessPath(agentName, filePath, operation)) {
+    const canAccess = await globalPermissionManager.canAccessPath(agentName, filePath, operation);
+    if (!canAccess) {
         const reason = `Agent ${agentName} cannot ${operation} file: ${filePath}`;
         globalPermissionManager.logDeniedOperation(agentName, `file:${operation}`, filePath, reason);
         return { allowed: false, reason };

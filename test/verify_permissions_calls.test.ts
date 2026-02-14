@@ -27,13 +27,13 @@ describe('Permission Check Integration', () => {
         );
     });
 
-    it('should log audit on file permission denial', () => {
+    it('should log audit on file permission denial', async () => {
         globalPermissionManager.registerAgent('TestAuditFile', {
             permissions: [],
             pathRestrictions: { allowed: [], denied: [] }
         });
 
-        checkFilePermission('TestAuditFile', '/tmp/test', 'read');
+        await checkFilePermission('TestAuditFile', '/tmp/test', 'read');
 
         expect(auditLog.record).toHaveBeenCalledWith(
             'DENIED',

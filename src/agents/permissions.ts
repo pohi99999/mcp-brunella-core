@@ -12,7 +12,6 @@
 
 import { logWarn, logError } from '../utils/logger.js';
 import { record } from '../core/auditLog.js';
-import path from 'path';
 
 /**
  * Permission types an agent can have
@@ -249,7 +248,7 @@ export class PermissionManager {
     /**
      * Check if agent can access a specific file path
      */
-    canAccessPath(agentName: string, filePath: string, operation: 'read' | 'write' | 'delete'): boolean {
+    async canAccessPath(agentName: string, filePath: string, operation: 'read' | 'write' | 'delete'): Promise<boolean> {
         const config = this.agentPermissions.get(agentName);
         if (!config) return false;
 
@@ -269,7 +268,16 @@ export class PermissionManager {
             return true;  // No restrictions
         }
 
-        const normalizedPath = path.normalize(filePath).replace(/\\/g, '/');
+        let normalizedPath = filePath.replace(/\\/g, '/');
+
+        try {
+            if (typeof process !== 'undefined' && process.versions?.node) {
+                const path = await import('path');
+                normalizedPath = path.default.normalize(filePath).replace(/\\/g, '/');
+            }
+        } catch (e) {
+            // Fallback
+        }
 
         // Check denied paths first
         for (const deniedPattern of config.pathRestrictions.denied) {
