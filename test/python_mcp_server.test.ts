@@ -12,13 +12,19 @@ const venvPy = path.resolve(
     : ".venv/bin/python",
 );
 let hasPython = false;
+let pythonCmd = "python"; // Default to system python
+
 try {
+  // First try venv
   execSync(`"${venvPy}" --version`, { stdio: "ignore" });
   hasPython = true;
+  pythonCmd = venvPy;
 } catch {
+  // If venv fails, try system python
   try {
     execSync("python --version", { stdio: "ignore" });
     hasPython = true;
+    pythonCmd = "python";
   } catch {
     hasPython = false;
   }
@@ -98,8 +104,8 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
         "myai",
         "mcp_server.py",
       );
-      const py = hasPython ? venvPy : "python";
-      const result = execSync(`"${py}" -m py_compile "${serverPath}"`, {
+      // Use the pythonCmd we determined above
+      const result = execSync(`"${pythonCmd}" -m py_compile "${serverPath}"`, {
         encoding: "utf-8",
         timeout: 15000,
       });
