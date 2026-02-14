@@ -3,11 +3,7 @@ name: "CodeQL config"
 disable-default-queries: false
 
 paths-ignore:
-  - 'myai/agents/a2a-go/**'
-  - 'myai/agents/acme/**'
-  - 'myai/agents/adk-samples/**'
-  - 'myai/agents/tools/**'
-  - 'myai/agents/openai-agents-python/**'
+  - 'myai/agents/**'
   - 'external_research/**'
   - 'node_modules/**'
   - '**/_KNOWLEDGE_BASE/**'
