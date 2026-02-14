@@ -39,9 +39,32 @@ def handle_undo(self, arguments):
                 f"**Removed message:** `\"{message['content'][:30]}...\"`"
             )
         elif "function_call" in message:
-            self.display_message(
-                f"**Removed codeblock**"
-            )  # TODO: Could add preview of code removed here.
+            # Code preview logic
+            code = ""
+            if "arguments" in message["function_call"]:
+                args = message["function_call"]["arguments"]
+                if isinstance(args, str):
+                    try:
+                        parsed_args = json.loads(args)
+                        if isinstance(parsed_args, dict) and "code" in parsed_args:
+                            code = parsed_args["code"]
+                        else:
+                            code = args
+                    except json.JSONDecodeError:
+                        code = args
+                elif isinstance(args, dict) and "code" in args:
+                    code = args["code"]
+
+            if code:
+                # Replace newlines with spaces for a single line preview
+                code = code.replace("\n", " ")
+                self.display_message(
+                    f"**Removed codeblock:** `\"{code[:30]}...\"`"
+                )
+            else:
+                self.display_message(
+                    f"**Removed codeblock**"
+                )
 
     print("")  # Aesthetics.
 
