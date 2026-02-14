@@ -15,35 +15,70 @@ export interface MemoryConfig {
   discoveryMaxDirs?: number;
 }
 
-function findProjectRoot(dir: string): string {
+async function exists(p: string): Promise<boolean> {
+  try {
+    await fs.promises.access(p);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+async function findProjectRoot(dir: string): Promise<string> {
   let d = path.resolve(dir);
   const root = path.parse(d).root;
   while (d !== root) {
-    if (fs.existsSync(path.join(d, '.git'))) return d;
+    if (await exists(path.join(d, '.git'))) return d;
     d = path.dirname(d);
   }
   return path.resolve(dir);
 }
 
-function resolveImports(content: string, baseDir: string, seen: Set<string>): string {
+async function resolveImports(content: string, baseDir: string, seen: Set<string>): Promise<string> {
   const re = /@([^\s\]<>]+\.md)/g;
-  return content.replace(re, (_, subPath: string) => {
+  const matches = Array.from(content.matchAll(re));
+
+  if (matches.length === 0) return content;
+
+  let result = '';
+  let lastIndex = 0;
+
+  for (const match of matches) {
+    const fullMatch = match[0];
+    const subPath = match[1];
+
+    result += content.slice(lastIndex, match.index!);
+
     const resolved = path.resolve(baseDir, subPath.replace(/^@/, ''));
     const norm = path.normalize(resolved);
-    if (seen.has(norm)) return '';
-    seen.add(norm);
-    if (!fs.existsSync(norm)) return `\n[missing: ${subPath}]\n`;
-    try {
-      const text = fs.readFileSync(norm, 'utf-8');
-      return '\n' + resolveImports(text, path.dirname(norm), seen) + '\n';
-    } catch {
-      return `\n[error: ${subPath}]\n`;
+
+    let replacement = '';
+    if (seen.has(norm)) {
+      replacement = '';
+    } else {
+      seen.add(norm);
+      if (!(await exists(norm))) {
+        replacement = `\n[missing: ${subPath}]\n`;
+      } else {
+        try {
+          const text = await fs.promises.readFile(norm, 'utf-8');
+          replacement = '\n' + await resolveImports(text, path.dirname(norm), seen) + '\n';
+        } catch {
+          replacement = `\n[error: ${subPath}]\n`;
+        }
+      }
     }
-  });
+
+    result += replacement;
+    lastIndex = match.index! + fullMatch.length;
+  }
+
+  result += content.slice(lastIndex);
+  return result;
 }
 
 /** Discover paths of context files: global (~/.brunella/<name>), project root and ancestors, then subdirs (limited). */
-export function discoverMemoryPaths(cwd: string, config: MemoryConfig): string[] {
+export async function discoverMemoryPaths(cwd: string, config: MemoryConfig): Promise<string[]> {
   const names: string[] = Array.isArray(config.fileName)
     ? config.fileName
     : config.fileName
@@ -54,16 +89,16 @@ export function discoverMemoryPaths(cwd: string, config: MemoryConfig): string[]
 
   for (const name of names) {
     const globalPath = path.join(home, '.brunella', name);
-    if (fs.existsSync(globalPath)) out.push(globalPath);
+    if (await exists(globalPath)) out.push(globalPath);
   }
 
-  const root = findProjectRoot(cwd);
+  const root = await findProjectRoot(cwd);
   let dir = cwd;
   const rootPath = path.parse(root).root;
   while (dir !== rootPath) {
     for (const name of names) {
       const p = path.join(dir, name);
-      if (fs.existsSync(p) && !out.includes(p)) out.push(p);
+      if ((await exists(p)) && !out.includes(p)) out.push(p);
     }
     if (dir === root) break;
     dir = path.dirname(dir);
@@ -71,15 +106,15 @@ export function discoverMemoryPaths(cwd: string, config: MemoryConfig): string[]
 
   const maxDirs = config.discoveryMaxDirs ?? MAX_DIRS;
   let count = 0;
-  function scan(dir: string) {
+  async function scan(dir: string) {
     if (count >= maxDirs) return;
     try {
-      const entries = fs.readdirSync(dir, { withFileTypes: true });
+      const entries = await fs.promises.readdir(dir, { withFileTypes: true });
       for (const e of entries) {
         if (e.name === 'node_modules' || e.name === '.git' || e.name.startsWith('.')) continue;
         if (e.isDirectory()) {
           count++;
-          if (count < maxDirs) scan(path.join(dir, e.name));
+          if (count < maxDirs) await scan(path.join(dir, e.name));
         } else if (e.isFile()) {
           for (const name of names) {
             if (e.name === name) {
@@ -93,16 +128,16 @@ export function discoverMemoryPaths(cwd: string, config: MemoryConfig): string[]
       /* skip */
     }
   }
-  scan(cwd);
+  await scan(cwd);
 
   const includeDirs = config.includeDirectories ?? [];
   for (const inc of includeDirs) {
     const expanded = inc.startsWith('~') ? path.join(home, inc.slice(1)) : inc;
     const resolved = path.isAbsolute(expanded) ? expanded : path.resolve(cwd, expanded);
-    if (!fs.existsSync(resolved)) continue;
+    if (!(await exists(resolved))) continue;
     for (const name of names) {
       const p = path.join(resolved, name);
-      if (fs.existsSync(p) && !out.includes(p)) out.push(p);
+      if ((await exists(p)) && !out.includes(p)) out.push(p);
     }
   }
 
@@ -110,13 +145,13 @@ export function discoverMemoryPaths(cwd: string, config: MemoryConfig): string[]
 }
 
 /** Load and concatenate memory files, resolving @path/to/file.md imports. */
-export function loadMemoryContent(paths: string[]): { combined: string; byPath: Array<{ path: string; content: string }> } {
+export async function loadMemoryContent(paths: string[]): Promise<{ combined: string; byPath: Array<{ path: string; content: string }> }> {
   const byPath: Array<{ path: string; content: string }> = [];
   const seen = new Set<string>();
   for (const p of paths) {
     try {
-      let content = fs.readFileSync(p, 'utf-8');
-      content = resolveImports(content, path.dirname(p), seen);
+      let content = await fs.promises.readFile(p, 'utf-8');
+      content = await resolveImports(content, path.dirname(p), seen);
       byPath.push({ path: p, content });
     } catch {
       byPath.push({ path: p, content: `[read error: ${p}]` });
@@ -127,7 +162,8 @@ export function loadMemoryContent(paths: string[]): { combined: string; byPath: 
 }
 
 /** One-shot: discover paths and load content. */
-export function getMemory(cwd: string, config: MemoryConfig) {
-  const paths = discoverMemoryPaths(cwd, config);
-  return { paths, ...loadMemoryContent(paths) };
+export async function getMemory(cwd: string, config: MemoryConfig) {
+  const paths = await discoverMemoryPaths(cwd, config);
+  const content = await loadMemoryContent(paths);
+  return { paths, ...content };
 }
