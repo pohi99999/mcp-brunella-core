@@ -1,0 +1,13 @@
+{
+  "track_id": "financial-auditor-agent-20260214",
+  "title": "Data Flywheel" Logikája",
+  "description": "Harvest (Aratás): A Robotkéz vagy az MCP Gmail tool összegyűjti a számlákat (pl. PDF-eket),
+  "priority": "HIGH",
+  "status": "in progress",
+  "spec_status": "active",
+  "implementation_allowed": true,
+  "created_at": "2026-02-14T00:00:00Z",
+  "updated_at": "2026-02-14T00:00:00Z",
+  "progress": 100,
+  "tags": ["financial; auditor; agent"]
+}

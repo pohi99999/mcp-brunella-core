@@ -1,0 +1,19 @@
+{
+  "track_id": "invoice-to-sheets-automation-20260214",
+  "title": "Számla Adatkinyerés és Google Sheets Automatizáció",
+  "description": "Automatizált folyamat a Számlázz.hu API és Gmail forrásokból történő adatkinyerésre, Pydantic alapú validálással és Google Sheets exporttal.",
+  "priority": "HIGH",
+  "status": "ACTIVE",
+  "spec_status": "COMPLETED",
+  "implementation_allowed": true,
+  "created_at": "2026-02-14T14:00:00Z",
+  "updated_at": "2026-02-14T14:00:00Z",
+  "progress": 15,
+  "phase": "Phase 1: Environment Setup & API Connect",
+  "tags": ["finance", "automation", "szamlazz.hu", "google-sheets", "data-flywheel"],
+  "compliance": {
+    "epp_v2": true,
+    "dashboard_widget": "PENDING",
+    "cli_command": "PENDING"
+  }
+}
