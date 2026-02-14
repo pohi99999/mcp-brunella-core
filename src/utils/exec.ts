@@ -1,4 +1,3 @@
-import { spawn } from "child_process";
 import { cliLogger } from "./logger.js";
 
 interface ExecOptions {
@@ -14,6 +13,7 @@ interface ExecResult {
 }
 
 export async function execCommand(command: string, args: string[], options: ExecOptions = {}): Promise<ExecResult> {
+    const { spawn } = await import("child_process");
     const cwd = options.cwd || process.cwd();
     
     // Log the execution attempt
@@ -29,8 +29,8 @@ export async function execCommand(command: string, args: string[], options: Exec
         let stdout = '';
         let stderr = '';
 
-        proc.stdout.on('data', (data) => stdout += data.toString());
-        proc.stderr.on('data', (data) => stderr += data.toString());
+        proc.stdout?.on('data', (data) => stdout += data.toString());
+        proc.stderr?.on('data', (data) => stderr += data.toString());
 
         const timeoutMs = options.timeout || 30000; // Default 30s timeout
         const timeout = setTimeout(() => {

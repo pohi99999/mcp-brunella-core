@@ -4,8 +4,7 @@
  * Mission Control 2.0 - Service Control Widget backend
  */
 
-import { spawn, ChildProcess } from 'child_process';
-import path from 'path';
+import type { ChildProcess } from 'child_process';
 import { logInfo, logError } from '../utils/logger.js';
 import { checkOllamaHealth } from '../utils/health.js';
 
@@ -40,7 +39,7 @@ const ALLOWED_SERVICES: Record<ServiceId, { startCmd: string[]; cwd?: string; ch
     startCmd: process.platform === 'win32'
       ? ['python', '-m', 'uvicorn', 'server:app', '--host', '0.0.0.0', '--port', '8000']
       : ['python', '-m', 'uvicorn', 'server:app', '--host', '0.0.0.0', '--port', '8000'],
-    cwd: path.join(process.cwd(), 'myai'),
+    // cwd resolved dynamically
     checkPort: 8000,
   },
 };
@@ -58,6 +57,9 @@ export class SystemController {
   }
 
   async startService(serviceId: ServiceId): Promise<{ success: boolean; message: string }> {
+    const { spawn } = await import('child_process');
+    const { default: path } = await import('path');
+
     if (spawnedProcesses.has(serviceId)) {
       return { success: false, message: `${serviceId} már fut` };
     }
@@ -106,8 +108,9 @@ export class SystemController {
 
     if (serviceId === 'python') {
       try {
+        const cwd = config.cwd || path.join(process.cwd(), 'myai');
         const child = spawn(config.startCmd[0], config.startCmd.slice(1), {
-          cwd: config.cwd || process.cwd(),
+          cwd,
           stdio: ['ignore', 'pipe', 'pipe'],
           shell: process.platform === 'win32',
         });
@@ -129,6 +132,7 @@ export class SystemController {
   }
 
   async stopService(serviceId: ServiceId): Promise<{ success: boolean; message: string }> {
+    const { spawn } = await import('child_process');
     const child = spawnedProcesses.get(serviceId);
     if (child && child.pid) {
       try {
