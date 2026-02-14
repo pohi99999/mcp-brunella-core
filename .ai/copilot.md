@@ -51,7 +51,18 @@
 
 - Gmail SMTP sender: `csuka.miklosj@icloud.com`
 - Recipients: `csuka.miklosj@icloud.com`, `peterpohankapersonal@gmail.com`
-- TOP 3 cars per email, HTML formatted
+- TOP 3 kiemelve (zöld háttér), max 10 autó listázva
+- HTML formatted, professzionális megjelenés
+
+### 2026-02-15 01:00 - Magyar nyelvű email sablon ✅
+
+- `myai/tasks/ev_hunter.py` — `build_email_html()` teljes átírás:
+  - **Teljesen magyar nyelvű** szöveggel (fejléc, táblázat, lábjegyzet, pontszámítás magyarázat)
+  - **Professzionális HTML dizájn:** stíluslapok, színes fejléc (sötétzöld), info-dobozok, kattintható linkek
+  - **Email tárgy sor:** `⚡ Elektromos autó találat: {modell} ({pont} pont) - {db} ajánlat`
+  - **Keresési paraméterek:** Budget, minimum pontszám megjelenítve
+  - **Pontszámítás formula leírás** az emailben (felhasználó érti, mire jó a szám)
+  - **Automatikus üzenet jelzés** a lábjegyzetben
 
 **Státusz:** ✅ KÉSZ. Ütemezett futás holnaptól 08:00-kor indul.
 
