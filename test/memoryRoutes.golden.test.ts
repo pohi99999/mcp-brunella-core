@@ -50,6 +50,10 @@ describe("memoryRoutes /golden", () => {
       quality: 80,
     });
 
+    if (response.status !== 200) {
+      console.error("Test failed with 500. Response body:", JSON.stringify(response.body, null, 2));
+    }
+
     expect(response.status).toBe(200);
     expect(mockFetch).toHaveBeenCalledTimes(1);
 
@@ -82,6 +86,10 @@ describe("memoryRoutes /golden", () => {
       prompt: "new prompt",
       completion: "new completion",
     });
+
+    if (response.status !== 200) {
+        console.error("Test failed with 500. Response body:", JSON.stringify(response.body, null, 2));
+    }
 
     expect(response.status).toBe(200);
 
