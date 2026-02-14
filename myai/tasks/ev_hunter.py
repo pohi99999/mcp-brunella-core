@@ -292,7 +292,7 @@ def _deduplicate(listings: list[EVListing]) -> list[EVListing]:
 # --- Email ---
 
 def build_email_html(listings: list[EVListing], config: EVConfig) -> str:
-    """HTML email generálás a top találatokkal"""
+    """HTML email generálás a top találatokkal - Teljesen magyar nyelvű"""
     top = sorted(listings, key=lambda x: x.score, reverse=True)
     qualified = [item for item in top if item.score >= config.min_score]
 
@@ -305,52 +305,90 @@ def build_email_html(listings: list[EVListing], config: EVConfig) -> str:
     for listing in top3:
         rows += f"""
         <tr style="background-color: #e8f5e9; font-weight: bold;">
-            <td>{listing.title}</td>
-            <td>{listing.price or '?'} €</td>
-            <td>{listing.km or '?'} km</td>
-            <td>{listing.year or '?'}</td>
-            <td>{listing.location or '?'}</td>
-            <td style="color: #2e7d32;">{listing.score}</td>
-            <td><a href="{listing.link or '#'}">Megtekintés</a></td>
-            <td>{listing.source}</td>
+            <td style="border:1px solid #ddd;padding:10px;">{listing.title}</td>
+            <td style="border:1px solid #ddd;padding:10px;text-align:right;"><strong>{listing.price or '?'} €</strong></td>
+            <td style="border:1px solid #ddd;padding:10px;text-align:right;">{listing.km or '?'} km</td>
+            <td style="border:1px solid #ddd;padding:10px;text-align:center;">{listing.year or '?'}</td>
+            <td style="border:1px solid #ddd;padding:10px;">{listing.location or '?'}</td>
+            <td style="border:1px solid #ddd;padding:10px;text-align:center;color: #2e7d32;font-weight:bold;">{listing.score}</td>
+            <td style="border:1px solid #ddd;padding:10px;"><a href="{listing.link or '#'}" style="color:#1976d2;text-decoration:none;">🔗 Megtekintés</a></td>
+            <td style="border:1px solid #ddd;padding:10px;text-align:center;">{listing.source}</td>
         </tr>"""
 
     rest_rows = ""
-    for listing in qualified[3:10]:
+    for idx, listing in enumerate(qualified[3:10], start=1):
         rest_rows += f"""
         <tr>
-            <td>{listing.title}</td>
-            <td>{listing.price or '?'} €</td>
-            <td>{listing.km or '?'} km</td>
-            <td>{listing.year or '?'}</td>
-            <td>{listing.location or '?'}</td>
-            <td>{listing.score}</td>
-            <td><a href="{listing.link or '#'}">Megtekintés</a></td>
-            <td>{listing.source}</td>
+            <td style="border:1px solid #ddd;padding:10px;">{listing.title}</td>
+            <td style="border:1px solid #ddd;padding:10px;text-align:right;">{listing.price or '?'} €</td>
+            <td style="border:1px solid #ddd;padding:10px;text-align:right;">{listing.km or '?'} km</td>
+            <td style="border:1px solid #ddd;padding:10px;text-align:center;">{listing.year or '?'}</td>
+            <td style="border:1px solid #ddd;padding:10px;">{listing.location or '?'}</td>
+            <td style="border:1px solid #ddd;padding:10px;text-align:center;">{listing.score}</td>
+            <td style="border:1px solid #ddd;padding:10px;"><a href="{listing.link or '#'}" style="color:#1976d2;text-decoration:none;">🔗 Link</a></td>
+            <td style="border:1px solid #ddd;padding:10px;text-align:center;">{listing.source}</td>
         </tr>"""
+
+    summary = f"encontrado {len(qualified)} megfelelő autó"
+    if len(qualified) > 10:
+        summary = f"{len(qualified)} megfelelő autó közül <strong>TOP 10</strong>"
+    else:
+        summary = f"az összes {len(qualified)} megfelelő autó"
 
     return f"""
     <html>
+    <head>
+        <meta charset="utf-8">
+        <style>
+            body {{ font-family: Arial, sans-serif; color: #333; background-color: #f5f5f5; }}
+            .container {{ background: white; padding: 20px; border-radius: 8px; max-width: 1200px; margin: auto; }}
+            h2 {{ color: #1976d2; border-bottom: 3px solid #2e7d32; padding-bottom: 10px; }}
+            h3 {{ color: #2e7d32; margin-top: 20px; }}
+            .info {{ background: #e3f2fd; padding: 12px; border-left: 4px solid #1976d2; margin: 15px 0; }}
+            table {{ border-collapse: collapse; width: 100%; margin-top: 10px; }}
+            th {{ background: #f2f2f2; padding: 12px; text-align: left; font-weight: bold; border: 1px solid #ddd; }}
+            .footer {{ margin-top: 20px; text-align: center; color: #999; font-size: 12px; }}
+        </style>
+    </head>
     <body>
-        <h2>⚡ Green Lightning - EV Vadászat ({datetime.now().strftime('%Y-%m-%d %H:%M')})</h2>
-        <p>Sweet Spot algoritmus | Budget: {config.min_price}-{config.max_price} € | Score >= {config.min_score}</p>
-        <h3>🏆 TOP 3</h3>
-        <table style="border-collapse:collapse;width:100%;">
-            <tr style="background:#f2f2f2;">
-                <th style="border:1px solid #ddd;padding:8px;">Modell</th>
-                <th style="border:1px solid #ddd;padding:8px;">Ár</th>
-                <th style="border:1px solid #ddd;padding:8px;">Km</th>
-                <th style="border:1px solid #ddd;padding:8px;">Év</th>
-                <th style="border:1px solid #ddd;padding:8px;">Hely</th>
-                <th style="border:1px solid #ddd;padding:8px;">Score</th>
-                <th style="border:1px solid #ddd;padding:8px;">Link</th>
-                <th style="border:1px solid #ddd;padding:8px;">Forrás</th>
-            </tr>
-            {rows}
-            {rest_rows}
-        </table>
-        <br>
-        <p><small>Brunella Green Lightning v1.0 | Ollama + Browser-Use</small></p>
+        <div class="container">
+            <h2>⚡ Green Lightning - Elektromos Autó Vadászat</h2>
+            <p style="color: #666;">📅 {datetime.now().strftime('%Y. %B %d. %H:%M')}</p>
+            
+            <div class="info">
+                <strong>Keresési paraméterek:</strong><br>
+                💰 Budget: <strong>{config.min_price:,} - {config.max_price:,} EUR</strong> |
+                ⭐ Minimum pontszám: <strong>{config.min_score}</strong>
+            </div>
+
+            <h3>🏆 TOP Ajánlatok ({summary})</h3>
+            <table>
+                <tr style="background:#2e7d32;color:white;">
+                    <th>Modell</th>
+                    <th style="text-align:right;">Ár</th>
+                    <th style="text-align:right;">Km</th>
+                    <th style="text-align:center;">Évjárat</th>
+                    <th>Hely</th>
+                    <th style="text-align:center;">Pontszám</th>
+                    <th></th>
+                    <th>Forrás</th>
+                </tr>
+                {rows}
+                {rest_rows}
+            </table>
+
+            <div class="info" style="margin-top: 20px;">
+                <strong>💡 Pontszámítás formula:</strong><br>
+                Alapérték: 100 pont, majd -4 pont/1000 EUR felett, -0.25 pont/1000 km, -2 pont/év. 
+                Magasabb pontszám = jobb érték az árához képest!
+            </div>
+
+            <div class="footer">
+                🚗 Brunella Green Lightning v1.0 | Ollama + Browser-Use<br>
+                Willhaben.at + AutoScout24.at/si | Kizárólag elektromos, magánszemélyek<br>
+                <em>Ez egy automatikus üzenet. A hirdetések linkjei közvetlenül az értékesítőhöz vezetnek.</em>
+            </div>
+        </div>
     </body>
     </html>
     """
@@ -386,7 +424,7 @@ def send_email_notification(listings: list[EVListing], config: EVConfig, dry_run
     try:
         msg = MIMEMultipart()
         best = sorted(qualified, key=lambda x: x.score, reverse=True)[0]
-        msg["Subject"] = f"⚡ EV Hunter: {best.title} ({best.score} pont) - {len(qualified)} találat"
+        msg["Subject"] = f"⚡ Elektromos autó találat: {best.title} ({best.score} pont) - {len(qualified)} ajánlat"
         msg["From"] = config.sender_email
         msg["To"] = ", ".join(config.recipient_emails)
         msg.attach(MIMEText(html, "html"))
