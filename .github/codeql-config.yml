@@ -1,0 +1,16 @@
+name: "CodeQL Config"
+
+paths:
+  - src
+  - myai
+
+paths-ignore:
+  - 'external_research'
+  - '_KNOWLEDGE_BASE'
+  - 'node_modules'
+  - 'myai/agents' # Huge embedded repositories causing timeouts
+  - 'dist'
+  - 'build'
+  - 'coverage'
+  - '**/*.test.ts'
+  - '**/*.spec.ts'
