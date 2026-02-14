@@ -1,6 +1,6 @@
 import express from "express";
 import request from "supertest";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, afterEach } from "vitest";
 
 vi.mock("../src/server/SocketService.js", () => ({
   socketService: {
@@ -16,12 +16,16 @@ type MockResponse = {
   json: () => Promise<unknown>;
 };
 
-const mockFetch = vi.fn();
-global.fetch = mockFetch;
-
 describe("memoryRoutes /golden", () => {
+  let fetchSpy: any;
+
   beforeEach(() => {
-    mockFetch.mockReset();
+    // Spy on global.fetch and mock implementation
+    fetchSpy = vi.spyOn(global, 'fetch').mockImplementation(vi.fn());
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   function createApp() {
@@ -32,7 +36,7 @@ describe("memoryRoutes /golden", () => {
   }
 
   it("maps legacy input/output payload to prompt/completion", async () => {
-    mockFetch.mockResolvedValueOnce({
+    fetchSpy.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ status: "success" }),
     } as MockResponse);
@@ -46,10 +50,13 @@ describe("memoryRoutes /golden", () => {
       quality: 80,
     });
 
+    if (response.status !== 200) {
+        console.error("Fail:", response.body);
+    }
     expect(response.status).toBe(200);
-    expect(mockFetch).toHaveBeenCalledTimes(1);
+    expect(fetchSpy).toHaveBeenCalledTimes(1);
 
-    const [, options] = mockFetch.mock.calls[0] as [string, { body?: unknown }];
+    const [, options] = fetchSpy.mock.calls[0] as [string, { body?: unknown }];
     const body = JSON.parse(String(options.body)) as {
       source: string;
       prompt: string;
@@ -66,7 +73,7 @@ describe("memoryRoutes /golden", () => {
   });
 
   it("accepts prompt/completion and defaults quality to 1.0", async () => {
-    mockFetch.mockResolvedValueOnce({
+    fetchSpy.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ status: "success" }),
     } as MockResponse);
@@ -81,7 +88,7 @@ describe("memoryRoutes /golden", () => {
 
     expect(response.status).toBe(200);
 
-    const [, options] = mockFetch.mock.calls[0] as [string, { body?: unknown }];
+    const [, options] = fetchSpy.mock.calls[0] as [string, { body?: unknown }];
     const body = JSON.parse(String(options.body)) as {
       quality: number;
       prompt: string;
@@ -103,6 +110,6 @@ describe("memoryRoutes /golden", () => {
 
     expect(response.status).toBe(400);
     expect(response.body.error).toContain("required");
-    expect(mockFetch).not.toHaveBeenCalled();
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 });
