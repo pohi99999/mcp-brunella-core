@@ -219,7 +219,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                 </span>
                 <Popover open={isEditingCaps} onOpenChange={setIsEditingCaps}>
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300" aria-label="Edit capabilities">
+                    <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300" aria-label="Képességek szerkesztése">
                       <PencilSimple size={12} />
                     </Button>
                   </PopoverTrigger>
@@ -233,7 +233,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                           placeholder="Új képesség..."
                           className="h-8 text-xs bg-white/5 border-white/10"
                         />
-                        <Button size="sm" onClick={handleAddCapability} className="h-8 w-8 p-0" aria-label="Add capability"><Plus size={14} /></Button>
+                        <Button size="sm" onClick={handleAddCapability} className="h-8 w-8 p-0" aria-label="Képesség hozzáadása"><Plus size={14} /></Button>
                       </div>
                       <div className="flex flex-wrap gap-1 max-h-[200px] overflow-y-auto">
                         {capabilities.map(cap => (
@@ -243,7 +243,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                               type="button"
                               className="ml-1 rounded-full p-0.5 hover:bg-red-500/20 hover:text-red-400 focus:outline-none focus:ring-2 focus:ring-red-500/40"
                               onClick={() => handleRemoveCapability(cap)}
-                              aria-label={`Remove capability ${cap}`}
+                              aria-label={`Képesség eltávolítása: ${cap}`}
                             >
                               <X size={10} />
                             </button>
@@ -300,7 +300,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                   className="shrink-0 h-auto py-1 bg-primary hover:bg-primary/90 text-primary-foreground"
                   onClick={handleQuickRun}
                   disabled={!quickTask.trim() || status === 'working'}
-                  aria-label="Execute quick task"
+                  aria-label="Gyors feladat végrehajtása"
                 >
                   <Play size={12} weight="fill" />
                 </Button>

@@ -17,11 +17,11 @@ type MockResponse = {
 };
 
 describe("memoryRoutes /golden", () => {
-  let fetchSpy: any;
+  let fetchSpy: ReturnType<typeof vi.spyOn<typeof globalThis, 'fetch'>>;
 
   beforeEach(() => {
     // Spy on global.fetch and mock implementation
-    fetchSpy = vi.spyOn(global, 'fetch').mockImplementation(vi.fn());
+    fetchSpy = vi.spyOn(globalThis, 'fetch').mockImplementation(vi.fn());
   });
 
   afterEach(() => {
@@ -50,10 +50,10 @@ describe("memoryRoutes /golden", () => {
       quality: 80,
     });
 
-    if (response.status !== 200) {
-        console.error("Fail:", response.body);
-    }
-    expect(response.status).toBe(200);
+    expect(
+      response.status,
+      `Expected 200 but got ${response.status}. Body: ${JSON.stringify(response.body)}`
+    ).toBe(200);
     expect(fetchSpy).toHaveBeenCalledTimes(1);
 
     const [, options] = fetchSpy.mock.calls[0] as [string, { body?: unknown }];

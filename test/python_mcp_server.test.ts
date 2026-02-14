@@ -92,18 +92,21 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
 
   it("should be registered in mcp_servers.json as brunella-python", () => {
     const configPath = path.resolve(config.workspaceRoot, "mcp_servers.json");
-    if (fs.existsSync(configPath)) {
-        const servers = JSON.parse(fs.readFileSync(configPath, "utf-8"));
-        const pythonServer = servers.find(
-          (s: { name: string }) => s.name === "brunella-python",
-        );
+    expect(
+      fs.existsSync(configPath),
+      `mcp_servers.json should exist at ${configPath}`
+    ).toBe(true);
 
-        expect(pythonServer).toBeDefined();
-        // command could be python or python3 depending on env, so we just check it exists
-        expect(pythonServer.command).toMatch(/python3?/);
-        expect(pythonServer.args).toContain("-m");
-        expect(pythonServer.args).toContain("myai.mcp_server");
-    }
+    const servers = JSON.parse(fs.readFileSync(configPath, "utf-8"));
+    const pythonServer = servers.find(
+      (s: { name: string }) => s.name === "brunella-python",
+    );
+
+    expect(pythonServer).toBeDefined();
+    // command could be python or python3 depending on env, so we just check it exists
+    expect(pythonServer.command).toMatch(/python3?/);
+    expect(pythonServer.args).toContain("-m");
+    expect(pythonServer.args).toContain("myai.mcp_server");
   });
 
   // Skip if no python detected
@@ -124,10 +127,19 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
             timeout: 15000,
             stdio: 'pipe'
           });
-      } catch (error: any) {
+      } catch (error: unknown) {
          // Fail the test if syntax check fails
          // If py_compile finds syntax errors, it exits with non-zero
-        throw new Error(`Python syntax check failed:\n${error.stderr || error.message}`);
+        let detail = "Unknown error";
+        if (error && typeof error === "object") {
+          const maybeError = error as { stderr?: unknown; message?: unknown };
+          if (typeof maybeError.stderr === "string") {
+            detail = maybeError.stderr;
+          } else if (typeof maybeError.message === "string") {
+            detail = maybeError.message;
+          }
+        }
+        throw new Error(`Python syntax check failed:\n${detail}`);
       }
     },
     15000,
