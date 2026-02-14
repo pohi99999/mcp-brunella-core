@@ -8,7 +8,6 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError } from '../utils/logger.js';
 import { v4 as uuidv4 } from 'uuid';
-import fetch from 'node-fetch';
 
 export class RobotkezAgent extends BaseAgent {
     name = 'Robotkez'; // Corrected name to match routing
