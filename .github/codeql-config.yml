@@ -1,0 +1,17 @@
+name: "CodeQL config"
+
+disable-default-queries: false
+
+paths-ignore:
+  - 'myai/agents/a2a-go/**'
+  - 'myai/agents/acme/**'
+  - 'myai/agents/adk-samples/**'
+  - 'myai/agents/tools/**'
+  - 'myai/agents/openai-agents-python/**'
+  - 'external_research/**'
+  - 'node_modules/**'
+  - 'src/dashboard/components/dashboard/ChatInterface.tsx'
+  - '**/_KNOWLEDGE_BASE/**'
+  - '**/test/**'
+  - '**/*.test.ts'
+  - '**/*.spec.ts'
