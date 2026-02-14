@@ -258,8 +258,8 @@ export async function indexCodebase(config: Partial<IndexerConfig> = {}): Promis
 
     await pMap(files, CONCURRENCY_LIMIT, async (filePath) => {
       try {
-        const content = await fs.default.promises.readFile(filePath, 'utf-8');
-        const chunks = chunkContent(content, filePath, cfg);
+        const content = await (fs.promises?.readFile || fs.default?.promises?.readFile || fs.readFileSync)(filePath, 'utf-8');
+        const chunks = chunkContent(content as string, filePath, cfg);
 
         if (chunks.length === 0) {
           stats.skippedFiles++;
@@ -320,8 +320,8 @@ export async function reindexChangedFiles(): Promise<IndexStats> {
 
     await pMap(changedFiles, CONCURRENCY_LIMIT, async (filePath) => {
       try {
-        const content = await fs.default.promises.readFile(filePath, 'utf-8');
-        const chunks = chunkContent(content, filePath);
+        const content = await (fs.promises?.readFile || fs.default?.promises?.readFile || fs.readFileSync)(filePath, 'utf-8');
+        const chunks = chunkContent(content as string, filePath);
 
         stats.fileCount++;
         stats.chunkCount += chunks.length;

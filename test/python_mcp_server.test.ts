@@ -4,23 +4,38 @@ import path from "path";
 import { execSync } from "child_process";
 import { config } from "../src/config/index.js";
 
-// Check if Python venv exists
+// Check if Python venv exists and determine correct python command
 const venvPy = path.resolve(
   config.workspaceRoot,
   process.platform === "win32"
     ? ".venv/Scripts/python.exe"
     : ".venv/bin/python",
 );
+
+let pythonCommand = "python";
 let hasPython = false;
+
 try {
-  execSync(`"${venvPy}" --version`, { stdio: "ignore" });
-  hasPython = true;
+  if (fs.existsSync(venvPy)) {
+      execSync(`"${venvPy}" --version`, { stdio: "ignore" });
+      pythonCommand = venvPy;
+      hasPython = true;
+  } else {
+      throw new Error("Venv not found");
+  }
 } catch {
   try {
-    execSync("python --version", { stdio: "ignore" });
+    execSync("python3 --version", { stdio: "ignore" });
+    pythonCommand = "python3";
     hasPython = true;
   } catch {
-    hasPython = false;
+    try {
+        execSync("python --version", { stdio: "ignore" });
+        pythonCommand = "python";
+        hasPython = true;
+    } catch {
+        hasPython = false;
+    }
   }
 }
 
@@ -98,7 +113,8 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
         "myai",
         "mcp_server.py",
       );
-      const py = hasPython ? venvPy : "python";
+      const py = pythonCommand;
+
       const result = execSync(`"${py}" -m py_compile "${serverPath}"`, {
         encoding: "utf-8",
         timeout: 15000,
