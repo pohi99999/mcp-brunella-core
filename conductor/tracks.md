@@ -1,7 +1,7 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-14T12:00:00.000000Z
-**Generator:** Claude Code AI
+**Utolso frissites:** 2026-02-15T00:15:00.000000Z
+**Generator:** Claude Code AI + GitHub Copilot
 
 Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
 
@@ -52,10 +52,17 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
 
 - [ ] **Green Lightning - Autonomous EV Hunter** [HIGH]
   - **ID:** `green_lightning_20260212`
-  - **Progress:** 100% (IMPLEMENTED)
-  - **Utolso aktivitas:** 2026-02-14
-  - **Assignee:** RobotkezAgent + n8n
-  - **Implementált:** ev_hunter.py (Browser-Use + Ollama), MCP tool (ev_hunter_search/status), deduplikáció, scoring, email HTML, 4 teszt pass, config.json filters (10-19k, electric, private)
+  - **Progress:** 100% (IMPLEMENTED & DEPLOYED)
+  - **Utolso aktivitas:** 2026-02-15
+  - **Assignee:** RobotkezAgent (Browser-Use + Ollama)
+  - **Implementált:**
+    - Core: `myai/tasks/ev_hunter.py` (Browser-Use, Ollama qwen2.5-coder, willhaben.at + autoscout24 scraping)
+    - Backend: `src/tools/evHunterTool.ts` (MCP tool), `src/server/routes/evhunter.ts` (API), `src/server/cron.ts` (scheduler)
+    - Config: `external_research/ev_hunter_bot/config.json` (10-19k EUR, electric only, private sellers, 13 models)
+    - Email: Gmail SMTP + HTML templates (TOP 3 cars per email)
+    - Schedule: 08:00 / 13:00 / 18:00 daily (node-cron)
+    - Tests: `test/evHunterTool.test.ts` (4 teszt, all PASS)
+    - Commits: 289bd2fe + 5025bc35 + 36ccba7a
   - Mappa: ./tracks/green_lightning_20260212/
 
 ---

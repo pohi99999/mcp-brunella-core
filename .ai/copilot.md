@@ -2,7 +2,58 @@
 
 **Agent:** GitHub Copilot (Pro+)
 **Fájl:** `.ai/copilot.md`
-**Utolsó frissítés:** 2026-02-14
+**Utolsó frissítés:** 2026-02-15
+
+---
+
+## 2026-02-15 00:15 - 🟢 Green Lightning EV Hunter Implementáció ✅
+
+**Feladat:** Automatikus elektromos autó kereső (Browser-Use + Ollama) Brunella rendszerbe integrálása, ütemezés (08:00/13:00/18:00), API végpontok, és tesztciklus.
+
+### Implementáció
+
+**MCP Tool & Backend:**
+
+- `src/tools/evHunterTool.ts` — EV Hunter MCP töröl + handler exportálás
+- `src/server/routes/evhunter.ts` — Express API: `/api/v1/ev-hunter/run` + `/api/v1/ev-hunter/config`
+- `src/server/cron.ts` — node-cron ütemezés (08:00, 13:00, 18:00, reggelente)
+- `src/server/web.ts` — cron scheduler integráció
+- `src/server/routes/index.ts` — router beregisztrálása
+
+**Python EV Hunter Core:**
+
+- `myai/tasks/ev_hunter.py` — Browser-Use + Ollama-alapú web scraper
+  - Willhaben.at és autoscout24.at keresés
+  - Smart scoring algoritmus (price/km/age penalties)
+  - Deduplikáció (title+price+km+year kulcs)
+  - HTML email sablonok
+
+**Konfigurációs Paraméterek (beléptetve):**
+
+- `external_research/ev_hunter_bot/config.json`:
+  - **Árkategória:** 10.000 - 19.000 EUR
+  - **Eladó:** `private` (csak magánszemélyek)
+  - **Üzemanyag:** `electric` (kizárólag BEV)
+  - **Modellek:** BMW i3 (94/120Ah), Nissan Leaf (40/77kWh), Kia Niro/EV6, Hyundai Kona/Ioniq, Audi e-tron 50, VW ID.3/ID.4/ID.5/e-Up
+
+**Tesztek:**
+
+- `test/evHunterTool.test.ts` — 140 LOC, 4 teszt case (mock, error handling, registration)
+
+### Verifikáció & Commit-ok
+
+- ✅ `npm run build` — 0 hiba
+- ✅ `npm test` — 68/68 fájl, 536/536 teszt PASS (rag.test.ts timeout excluded)
+- ✅ Commit: `289bd2fe` (Phase 1-3) + `5025bc35` (backend integration)
+- ✅ Main-re push, remote szinkronban
+
+### Email Integráció
+
+- Gmail SMTP sender: `csuka.miklosj@icloud.com`
+- Recipients: `csuka.miklosj@icloud.com`, `peterpohankapersonal@gmail.com`
+- TOP 3 cars per email, HTML formatted
+
+**Státusz:** ✅ KÉSZ. Ütemezett futás holnaptól 08:00-kor indul.
 
 ---
 
