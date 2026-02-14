@@ -1,10 +1,6 @@
 import express from "express";
 import request from "supertest";
-import { beforeEach, describe, expect, it, vi } from "vitest";
-
-vi.mock("node-fetch", () => ({
-  default: vi.fn(),
-}));
+import { beforeEach, describe, expect, it, vi, afterEach } from "vitest";
 
 vi.mock("../src/server/SocketService.js", () => ({
   socketService: {
@@ -12,7 +8,6 @@ vi.mock("../src/server/SocketService.js", () => ({
   },
 }));
 
-import fetch from "node-fetch";
 import { createMemoryRouter } from "../src/server/memoryRoutes.js";
 
 type MockResponse = {
@@ -21,11 +16,16 @@ type MockResponse = {
   json: () => Promise<unknown>;
 };
 
-const mockFetch = fetch as unknown as ReturnType<typeof vi.fn>;
-
 describe("memoryRoutes /golden", () => {
+  const mockFetch = vi.fn();
+
   beforeEach(() => {
+    vi.stubGlobal('fetch', mockFetch);
     mockFetch.mockReset();
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   function createApp() {
