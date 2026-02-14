@@ -1,0 +1,16 @@
+name: "Brunella Core CodeQL Config"
+
+disable-default-queries: false
+
+paths-ignore:
+  - 'external_research/**'
+  - 'myai/agents/**'
+  - 'node_modules/**'
+  - 'dist/**'
+  - 'build/**'
+  - '_KNOWLEDGE_BASE/**'
+  - 'bas-cloudflare-orchestrator/n8n/**'
+  - 'open-interpreter/**'
+
+queries:
+  - uses: security-and-quality
