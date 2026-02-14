@@ -6,7 +6,7 @@
 
 \*\*Prioritás:\*\* HIGH (Immediate Value)
 
-\*\*Status:\*\* PROPOSED
+\*\*Status:\*\* IMPLEMENTED ✅
 
 
 
