@@ -19,6 +19,7 @@ import {
 import { ChatMessage, User, AgentTool, OllamaStatus } from '@/lib/types'
 import { useMcpStore } from '@/lib/mcpStore'
 import { useMCP } from '@/hooks/useMCP'
+import { useTTS } from '@/hooks/useTTS'
 import {
   PaperPlaneRight,
   Robot,
@@ -32,7 +33,9 @@ import {
   FileJs,
   CalendarBlank,
   Image as ImageIcon,
-  Microphone
+  Microphone,
+  SpeakerHigh,
+  SpeakerSlash
 } from '@phosphor-icons/react'
 import { formatTimestamp } from '@/lib/mockData'
 import { toast } from 'sonner'
@@ -50,6 +53,7 @@ interface ChatInterfaceProps {
 export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfaceProps) {
   const { chatMessages, addChatMessage } = useMcpStore()
   const { sendMessage, isConnected } = useMCP()
+  const { speak, stop, isSpeaking } = useTTS()
   const [newMessage, setNewMessage] = useState('') // Renamed 'input' to 'newMessage'
   const [isProcessing, setIsProcessing] = useState(false); // Replaced 'isLoading' with 'isProcessing'
   const [searchQuery, setSearchQuery] = useState('')
@@ -57,7 +61,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
   const [isRecording, setIsRecording] = useState(false); // Added for voice recording
   const mediaRecorderRef = useRef<MediaRecorder | null>(null); // Added for voice recording
   const audioChunksRef = useRef<Blob[]>([]); // Added for voice recording
-  const [selectedProvider, setSelectedProvider] = useState<'github' | 'gemini' | 'ollama'>('github');
+  const [selectedProvider, setSelectedProvider] = useState<'github' | 'gemini' | 'ollama' | 'cloudflare'>('github');
   const [selectedModel, setSelectedModel] = useState<string>('gpt-4o');
   
   const [dateRange, setDateRange] = useState<{ from: Date | undefined; to: Date | undefined }>({
@@ -324,7 +328,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 <Button variant="outline" size="sm" className="flex items-center gap-2 min-w-[140px] justify-between h-8">
                   <div className="flex items-center gap-2">
                     <Badge variant="outline" className="h-5 px-1 bg-muted">
-                      {selectedProvider === 'github' ? 'GH' : selectedProvider === 'gemini' ? 'G' : 'O'}
+                      {selectedProvider === 'github' ? 'GH' : selectedProvider === 'gemini' ? 'G' : selectedProvider === 'cloudflare' ? 'CF' : 'O'}
                     </Badge>
                     <span className="truncate max-w-[100px]">{selectedModel}</span>
                   </div>
@@ -341,6 +345,11 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 <div className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-t mt-1 pt-2">Ollama</div>
                 <DropdownMenuItem onClick={() => { setSelectedProvider('ollama'); setSelectedModel('llama3.1:8b'); }}>Llama 3.1 8B</DropdownMenuItem>
                 <DropdownMenuItem onClick={() => { setSelectedProvider('ollama'); setSelectedModel('qwen2.5-coder:7b'); }}>Qwen 2.5 Coder</DropdownMenuItem>
+
+                <div className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider border-t mt-1 pt-2">☁️ Cloudflare Edge</div>
+                <DropdownMenuItem onClick={() => { setSelectedProvider('cloudflare'); setSelectedModel('@cf/meta/llama-3.1-8b-instruct'); }}>Llama 3.1 8B (Edge)</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setSelectedProvider('cloudflare'); setSelectedModel('@cf/mistral/mistral-7b-instruct-v0.1'); }}>Mistral 7B (Edge)</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => { setSelectedProvider('cloudflare'); setSelectedModel('@cf/qwen/qwen1.5-7b-chat-awq'); }}>Qwen 1.5 7B (Edge)</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
@@ -592,9 +601,27 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                           <span className="inline-block w-2 h-4 bg-current animate-pulse ml-1" />
                         )}
                       </div>
-                      <span className="text-xs text-muted-foreground">
-                        {formatTimestamp(message.timestamp)}
-                      </span>
+                      <div className="flex items-center gap-2">
+                        <span className="text-xs text-muted-foreground">
+                          {formatTimestamp(message.timestamp)}
+                        </span>
+                        {message.role === 'assistant' && !message.isStreaming && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-6 px-2 text-xs"
+                            onClick={() => speak(message.content)}
+                            disabled={isSpeaking}
+                          >
+                            {isSpeaking ? (
+                              <SpeakerSlash size={14} className="mr-1" />
+                            ) : (
+                              <SpeakerHigh size={14} className="mr-1" />
+                            )}
+                            Brunella beszél
+                          </Button>
+                        )}
+                      </div>
                     </div>
 
                     {message.role === 'user' && (

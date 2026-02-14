@@ -17,18 +17,18 @@
  *   GET /api/phoenix/event-bus/history - Event bus history
  */
 
-import { Router } from 'express';
+import { Router } from "express";
 import {
   listActiveCheckpoints,
   loadAllCheckpoints,
   clearCheckpoints,
   getCheckpointStats,
-} from '../core/checkpoint.js';
-import { getRecoveryLog } from '../core/gitRecovery.js';
-import { phoenixEventBus } from '../core/phoenixEventBus.js';
-import { failoverRegistry } from '../core/failoverRegistry.js';
-import { socketService } from './SocketService.js';
-import os from 'os';
+} from "../core/checkpoint.js";
+import { getRecoveryLog } from "../core/gitRecovery.js";
+import { phoenixEventBus } from "../core/phoenixEventBus.js";
+import { failoverRegistry } from "../core/failoverRegistry.js";
+import { socketService } from "./SocketService.js";
+import os from "os";
 
 export function createPhoenixRouter(): Router {
   const router = Router();
@@ -37,7 +37,7 @@ export function createPhoenixRouter(): Router {
    * GET /api/phoenix/checkpoints
    * List all active checkpoints (latest per task)
    */
-  router.get('/checkpoints', async (_req, res) => {
+  router.get("/checkpoints", async (_req, res) => {
     try {
       const checkpoints = await listActiveCheckpoints();
       res.json({ checkpoints });
@@ -50,7 +50,7 @@ export function createPhoenixRouter(): Router {
    * GET /api/phoenix/checkpoints/:taskId
    * Get all checkpoints for a specific task
    */
-  router.get('/checkpoints/:taskId', async (req, res) => {
+  router.get("/checkpoints/:taskId", async (req, res) => {
     try {
       const { taskId } = req.params;
       const checkpoints = await loadAllCheckpoints(taskId);
@@ -64,11 +64,14 @@ export function createPhoenixRouter(): Router {
    * DELETE /api/phoenix/checkpoints/:taskId
    * Clear all checkpoints for a completed task
    */
-  router.delete('/checkpoints/:taskId', async (req, res) => {
+  router.delete("/checkpoints/:taskId", async (req, res) => {
     try {
       const { taskId } = req.params;
       const success = await clearCheckpoints(taskId);
-      socketService.emit('gold:checkpoint_cleared', { taskId, timestamp: new Date().toISOString() });
+      socketService.emit("gold:checkpoint_cleared", {
+        taskId,
+        timestamp: new Date().toISOString(),
+      });
       res.json({ success, message: `Checkpoints cleared for task: ${taskId}` });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
@@ -79,7 +82,7 @@ export function createPhoenixRouter(): Router {
    * GET /api/phoenix/stats
    * Get checkpoint database statistics
    */
-  router.get('/stats', async (_req, res) => {
+  router.get("/stats", async (_req, res) => {
     try {
       const stats = await getCheckpointStats();
       res.json(stats);
@@ -92,7 +95,7 @@ export function createPhoenixRouter(): Router {
    * GET /api/phoenix/recovery-log
    * Get recovery events log
    */
-  router.get('/recovery-log', (_req, res) => {
+  router.get("/recovery-log", (_req, res) => {
     try {
       const events = getRecoveryLog();
       res.json({ events });
@@ -105,14 +108,14 @@ export function createPhoenixRouter(): Router {
    * GET /api/phoenix/health
    * System health check (CPU, memory, process)
    */
-  router.get('/health', (_req, res) => {
+  router.get("/health", (_req, res) => {
     try {
       const totalMem = os.totalmem();
       const freeMem = os.freemem();
       const usedMem = totalMem - freeMem;
 
       const health = {
-        status: 'healthy',
+        status: "healthy",
         uptime: process.uptime(),
         memory: {
           total: totalMem,
@@ -144,7 +147,7 @@ export function createPhoenixRouter(): Router {
    * GET /api/phoenix/failover/registry
    * Returns all failover mappings (agent → fallback chain)
    */
-  router.get('/failover/registry', (_req, res) => {
+  router.get("/failover/registry", (_req, res) => {
     try {
       const mappings = failoverRegistry.getAllMappings();
       res.json({ mappings });
@@ -158,10 +161,14 @@ export function createPhoenixRouter(): Router {
    * Returns failover attempt log, optionally filtered by agent
    * Query params: ?agent=Name&limit=50
    */
-  router.get('/failover/attempts', (req, res) => {
+  router.get("/failover/attempts", (req, res) => {
     try {
-      const agentFilter = typeof req.query.agent === 'string' ? req.query.agent : undefined;
-      const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : undefined;
+      const agentFilter =
+        typeof req.query.agent === "string" ? req.query.agent : undefined;
+      const limit =
+        typeof req.query.limit === "string"
+          ? parseInt(req.query.limit, 10)
+          : undefined;
       const attempts = failoverRegistry.getAttempts(agentFilter, limit);
       res.json({ attempts, total: attempts.length });
     } catch (e: any) {
@@ -173,7 +180,7 @@ export function createPhoenixRouter(): Router {
    * GET /api/phoenix/failover/stats
    * Returns failover statistics (success/fail counts per agent)
    */
-  router.get('/failover/stats', (_req, res) => {
+  router.get("/failover/stats", (_req, res) => {
     try {
       const stats = failoverRegistry.getStats();
       res.json(stats);
@@ -186,7 +193,7 @@ export function createPhoenixRouter(): Router {
    * GET /api/phoenix/event-bus/stats
    * Returns event bus statistics (event counts, subscriber counts)
    */
-  router.get('/event-bus/stats', (_req, res) => {
+  router.get("/event-bus/stats", (_req, res) => {
     try {
       const stats = phoenixEventBus.getStats();
       res.json(stats);
@@ -200,10 +207,14 @@ export function createPhoenixRouter(): Router {
    * Returns event bus history, optionally filtered by event type
    * Query params: ?event=phoenix:agent_failed&limit=50
    */
-  router.get('/event-bus/history', (req, res) => {
+  router.get("/event-bus/history", (req, res) => {
     try {
-      const eventFilter = typeof req.query.event === 'string' ? req.query.event : undefined;
-      const limit = typeof req.query.limit === 'string' ? parseInt(req.query.limit, 10) : undefined;
+      const eventFilter =
+        typeof req.query.event === "string" ? req.query.event : undefined;
+      const limit =
+        typeof req.query.limit === "string"
+          ? parseInt(req.query.limit, 10)
+          : undefined;
       const history = phoenixEventBus.getHistory(eventFilter, limit);
       res.json({ history, total: history.length });
     } catch (e: any) {
