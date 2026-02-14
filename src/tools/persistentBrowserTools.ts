@@ -4,7 +4,7 @@ import { persistentBrowser } from "../utils/persistentBrowser.js";
 
 export function registerPersistentBrowserTools(server: McpServer) {
     server.tool(
-        "browser_launch",
+        "pb_launch",
         "Launch a persistent browser session for interactive use.",
         {
             headless: z.boolean().optional().default(true).describe("Run headless (default: true). Set to false to see the browser (if supported environment)."),
@@ -20,7 +20,7 @@ export function registerPersistentBrowserTools(server: McpServer) {
     );
 
     server.tool(
-        "browser_navigate",
+        "pb_navigate",
         "Navigate to a URL in the persistent browser.",
         {
             url: z.string().url().describe("The URL to navigate to"),
@@ -38,7 +38,7 @@ export function registerPersistentBrowserTools(server: McpServer) {
     );
 
     server.tool(
-        "browser_click",
+        "pb_click",
         "Click an element on the page.",
         {
             selector: z.string().describe("CSS selector of the element to click"),
@@ -56,7 +56,7 @@ export function registerPersistentBrowserTools(server: McpServer) {
     );
 
     server.tool(
-        "browser_type",
+        "pb_type",
         "Type text into an input field.",
         {
             selector: z.string().describe("CSS selector of the input field"),
@@ -74,7 +74,7 @@ export function registerPersistentBrowserTools(server: McpServer) {
     );
 
     server.tool(
-        "browser_screenshot",
+        "pb_screenshot",
         "Take a screenshot of the current page. This updates the 'Live View' in the dashboard.",
         {},
         async () => {
@@ -88,7 +88,7 @@ export function registerPersistentBrowserTools(server: McpServer) {
     );
 
     server.tool(
-        "browser_content",
+        "pb_content",
         "Get the HTML content of the current page.",
         {},
         async () => {
@@ -102,7 +102,7 @@ export function registerPersistentBrowserTools(server: McpServer) {
     );
 
     server.tool(
-        "browser_close",
+        "pb_close",
         "Close the persistent browser session.",
         {},
         async () => {

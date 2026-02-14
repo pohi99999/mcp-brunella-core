@@ -1,7 +1,4 @@
-import { spawn, ChildProcess } from 'child_process';
-import path from 'path';
 import { logInfo, logError } from './logger.js';
-import fs from 'fs';
 
 export interface BrowserCommand {
     action: string;
@@ -20,14 +17,17 @@ export interface BrowserResponse {
 }
 
 export class PersistentBrowser {
-    private process: ChildProcess | null = null;
-    private lastScreenshot: Buffer | null = null;
+    private process: any = null; // ChildProcess
+    private lastScreenshot: Uint8Array | null = null;
     private pendingCommands: { resolve: (value: any) => void; reject: (reason?: any) => void }[] = [];
     private buffer: string = '';
+    private startPromise: Promise<void> | null = null;
 
     constructor() {}
 
-    private getPythonPath(): string {
+    private async getPythonPath(): Promise<string> {
+        if (typeof process === 'undefined' || !process.versions?.node) return 'python';
+        const fs = await import('fs');
         const venvPath = process.platform === 'win32' ? '.venv/Scripts/python.exe' : '.venv/bin/python';
         if (fs.existsSync(venvPath)) {
             return venvPath;
@@ -35,11 +35,17 @@ export class PersistentBrowser {
         return 'python';
     }
 
-    private startProcess() {
+    private async startProcess() {
         if (this.process) return;
+        if (typeof process === 'undefined' || !process.versions?.node) {
+             throw new Error("Browser agent only supported in Node.js environment");
+        }
+
+        const path = (await import('path')).default;
+        const { spawn } = await import('child_process');
 
         const scriptPath = path.resolve(process.cwd(), 'myai/interactive_browser.py');
-        const pythonExec = this.getPythonPath();
+        const pythonExec = await this.getPythonPath();
 
         logInfo('BrowserManager', `Spawning browser process: ${pythonExec} ${scriptPath}`);
 
@@ -47,7 +53,7 @@ export class PersistentBrowser {
             stdio: ['pipe', 'pipe', 'pipe']
         });
 
-        this.process.stdout?.on('data', (data) => {
+        this.process.stdout.on('data', (data: any) => {
             this.buffer += data.toString();
 
             let lines = this.buffer.split('\n');
@@ -64,11 +70,11 @@ export class PersistentBrowser {
             }
         });
 
-        this.process.stderr?.on('data', (data) => {
+        this.process.stderr.on('data', (data: any) => {
             logError('BrowserManager', `Python Error: ${data.toString()}`);
         });
 
-        this.process.on('close', (code) => {
+        this.process.on('close', (code: any) => {
             logInfo('BrowserManager', `Browser process exited with code ${code}`);
             this.process = null;
             // Reject all pending
@@ -102,9 +108,15 @@ export class PersistentBrowser {
 
     public async sendCommand(command: BrowserCommand): Promise<BrowserResponse> {
         if (!this.process) {
-            this.startProcess();
-            // Wait a small delay to let python start up?
-            // The python script loops immediately, so it should buffer stdin until ready.
+            if (!this.startPromise) {
+                this.startPromise = this.startProcess();
+            }
+            try {
+                await this.startPromise;
+            } catch (e) {
+                this.startPromise = null;
+                throw new Error("Failed to start browser process: " + String(e));
+            }
         }
 
         return new Promise((resolve, reject) => {
@@ -113,19 +125,19 @@ export class PersistentBrowser {
             if (this.process && this.process.stdin) {
                 this.process.stdin.write(jsonCmd);
             } else {
-                reject(new Error("Process failed to start"));
+                reject(new Error("Process failed to start or is not running"));
             }
         });
     }
 
-    public getLastScreenshot(): Buffer | null {
+    public getLastScreenshot(): Uint8Array | null {
         return this.lastScreenshot;
     }
 
     public async close() {
         if (this.process) {
             await this.sendCommand({ action: 'close' }).catch(() => {}); // Ignore error if already closed
-            this.process.kill();
+            if (this.process) this.process.kill();
             this.process = null;
             this.lastScreenshot = null;
         }
