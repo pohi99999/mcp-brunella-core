@@ -36,7 +36,7 @@ export function KnowledgeBasePanel() {
     const fetchStats = async () => {
         setIsLoading(true)
         try {
-            const response = await fetch(`${API_BASE}/rag/stats`)
+            const response = await fetch(`${API_BASE}/api/rag/stats`)
             const data = await response.json()
             setStats(data)
             setRowCount(data.rowCount || 0)
@@ -64,7 +64,7 @@ export function KnowledgeBasePanel() {
 
             try {
                 toast.info(`${file.name} indexelése folyamatban...`)
-                const response = await fetch(`${API_BASE}/rag/ingest`, {
+                const response = await fetch(`${API_BASE}/api/rag/ingest`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -102,7 +102,7 @@ export function KnowledgeBasePanel() {
         if (!query.trim()) return
         setIsSearching(true)
         try {
-            const response = await fetch(`${API_BASE}/rag/query?query=${encodeURIComponent(query)}`)
+            const response = await fetch(`${API_BASE}/api/rag/query?query=${encodeURIComponent(query)}`)
             const data = await response.json()
             setResults(data.results || [])
             if (data.results?.length === 0) {
