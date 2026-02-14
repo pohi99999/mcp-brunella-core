@@ -1,67 +1,75 @@
 
     <html>
-      <head>
-    <style>
-        table { border-collapse: collapse; width: 100%; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
-        th { background-color: #f2f2f2; }
-        tr:nth-child(even) { background-color: #f9f9f9; }
-        .score { font-weight: bold; color: #2e7d32; }
-        .highlight { background-color: #e8f5e9; font-weight: bold; }
-    </style>
-    </head>
-      <body>
-        <h2>⚡ Mai EV Vadászat Eredménye</h2>
-        <p>A "Sweet Spot" algoritmus alapján a legjobb ajánlatok (Score >= 60):</p>
-        
-        <h3>🏆 TOP 3 Ajánlat</h3>
-        <table>
-            <tr>
-                <th>Modell</th>
-                <th>Ár</th>
-                <th>Km</th>
-                <th>Év</th>
-                <th>Ország</th>
-                <th>Pontszám</th>
-                <th>Link</th>
+    <body>
+        <h2>⚡ Green Lightning - EV Vadászat (2026-02-14 20:00)</h2>
+        <p>Sweet Spot algoritmus | Budget: 10000-19000 € | Score >= 60</p>
+        <h3>🏆 TOP 3</h3>
+        <table style="border-collapse:collapse;width:100%;">
+            <tr style="background:#f2f2f2;">
+                <th style="border:1px solid #ddd;padding:8px;">Modell</th>
+                <th style="border:1px solid #ddd;padding:8px;">Ár</th>
+                <th style="border:1px solid #ddd;padding:8px;">Km</th>
+                <th style="border:1px solid #ddd;padding:8px;">Év</th>
+                <th style="border:1px solid #ddd;padding:8px;">Hely</th>
+                <th style="border:1px solid #ddd;padding:8px;">Score</th>
+                <th style="border:1px solid #ddd;padding:8px;">Link</th>
+                <th style="border:1px solid #ddd;padding:8px;">Forrás</th>
             </tr>
-    
-            <tr class="highlight">
-                <td>VW e-Up! (Jó ajánlat)</td>
-                <td>11000 €</td>
-                <td>25000 km</td>
-                <td>2022</td>
-                <td>AT</td>
-                <td class="score">83.2</td>
-                <td><a href="https://autoscout24.at/example3">Megtekintés</a></td>
-            </tr>
-        
-            <tr class="highlight">
-                <td>BMW i3 120 Ah (Sweet Spot)</td>
-                <td>16500 €</td>
-                <td>38000 km</td>
-                <td>2021</td>
-                <td>AT</td>
-                <td class="score">64.2</td>
-                <td><a href="https://autoscout24.at/example1">Megtekintés</a></td>
-            </tr>
-        
-            <tr class="highlight">
-                <td>Nissan Leaf 40 kWh</td>
-                <td>12500 €</td>
-                <td>65000 km</td>
-                <td>2019</td>
-                <td>SI</td>
-                <td class="score">63.5</td>
-                <td><a href="https://autoscout24.si/example2">Megtekintés</a></td>
-            </tr>
-        
+            
+        <tr style="background-color: #e8f5e9; font-weight: bold;">
+            <td>Hyundai Kona Electric</td>
+            <td>15800 €</td>
+            <td>31000 km</td>
+            <td>2021</td>
+            <td>Linz</td>
+            <td style="color: #2e7d32;">67.8</td>
+            <td><a href="https://www.willhaben.at/mock/hyundai-kona-electric">Megtekintés</a></td>
+            <td>willhaben</td>
+        </tr>
+        <tr style="background-color: #e8f5e9; font-weight: bold;">
+            <td>BMW i3 120 Ah</td>
+            <td>16500 €</td>
+            <td>38000 km</td>
+            <td>2021</td>
+            <td>Wien</td>
+            <td style="color: #2e7d32;">64.2</td>
+            <td><a href="https://www.willhaben.at/mock/bmw-i3-120-ah">Megtekintés</a></td>
+            <td>willhaben</td>
+        </tr>
+        <tr style="background-color: #e8f5e9; font-weight: bold;">
+            <td>Nissan Leaf 40 kWh</td>
+            <td>12500 €</td>
+            <td>65000 km</td>
+            <td>2019</td>
+            <td>Graz</td>
+            <td style="color: #2e7d32;">63.5</td>
+            <td><a href="https://www.willhaben.at/mock/nissan-leaf-40-kwh">Megtekintés</a></td>
+            <td>willhaben</td>
+        </tr>
+            
+        <tr>
+            <td>VW ID.3 Pro</td>
+            <td>18900 €</td>
+            <td>25000 km</td>
+            <td>2022</td>
+            <td>Salzburg</td>
+            <td>63.5</td>
+            <td><a href="https://www.willhaben.at/mock/vw-id.3-pro">Megtekintés</a></td>
+            <td>willhaben</td>
+        </tr>
+        <tr>
+            <td>Kia e-Niro 64 kWh</td>
+            <td>17500 €</td>
+            <td>42000 km</td>
+            <td>2022</td>
+            <td>Ljubljana</td>
+            <td>62.8</td>
+            <td><a href="https://www.willhaben.at/mock/kia-e-niro-64-kwh">Megtekintés</a></td>
+            <td>willhaben</td>
+        </tr>
         </table>
         <br>
-        <h3>📋 További találatok</h3>
-        <p>Nincs több kiemelkedő találat mára.</p>
-        <br>
-        <p><small><i>Brunella EV Hunter v2.0 | Config: Budget 10-19k, AT/SI</i></small></p>
-      </body>
+        <p><small>Brunella Green Lightning v1.0 | Ollama + Browser-Use</small></p>
+    </body>
     </html>
     

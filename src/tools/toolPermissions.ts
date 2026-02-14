@@ -41,6 +41,10 @@ export const ToolPermissionMap: Record<string, Permission[]> = {
     // HTTP Tools
     'http_request': [Permission.HTTP_REQUEST],
     'web_search': [Permission.HTTP_REQUEST],
+
+    // EV Hunter Tools
+    'ev_hunter_search': [Permission.BROWSER_CONTROL, Permission.HTTP_REQUEST],
+    'ev_hunter_status': [Permission.READ_FILE],
 };
 
 /**

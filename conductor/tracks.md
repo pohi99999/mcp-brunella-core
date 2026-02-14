@@ -1,32 +1,19 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-13T04:30:00.000000Z
+**Utolso frissites:** 2026-02-14T12:00:00.000000Z
 **Generator:** Claude Code AI
 
 Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
 
 ---
 
-## Tervezett Szalak (Proposed) (8)
-
-- [ ] **Codex NeuralLink Chat Refactor** [HIGH]
-  - **ID:** `codex_chat_refactor_20260212`
-  - **Becsles:** 6 ora
-  - **Assignee:** DeveloperAgent
-  - Mappa: ./tracks/codex_chat_refactor_20260212/
+## Tervezett Szalak (Proposed) (5)
 
 - [ ] **Gemini Git Autonomous Agent Architecture** [HIGH]
   - **ID:** `gemini_git_agent_20260212`
   - **Becsles:** 12 ora
   - **Assignee:** Gemini CLI
   - Mappa: ./tracks/gemini_git_agent_20260212/
-
-- [ ] **Green Lightning - Autonomous EV Hunter** [HIGH]
-  - **ID:** `green_lightning_20260212`
-  - **Becsles:** 8 ora
-  - **Assignee:** RobotkezAgent + n8n
-  - Mappa: ./tracks/green_lightning_20260212/
-
 
 - [ ] **Innovation Bridge - Cross-Industry Knowledge Transfer** [MEDIUM]
   - **ID:** `innovation_bridge_20260212`
@@ -52,15 +39,9 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
   - **Assignee:** ResearcherAgent + LangFlow
   - Mappa: ./tracks/creative_friction_mediator_20260212/
 
-- [ ] **Micro-Local CSR Automator (Neighborhood Watchman)** [LOW]
-  - **ID:** `micro_csr_automator_20260212`
-  - **Becsles:** 10 ora
-  - **Assignee:** RobotkezAgent + n8n
-  - Mappa: ./tracks/micro_csr_automator_20260212/
-
 ---
 
-## Aktiv Szalak (Active/In Progress) (1)
+## Aktiv Szalak (Active/In Progress) (2)
 
 - [ ] **Phoenix Protocol v2 - Öngyógyító Rendszer** [MEDIUM]
   - **ID:** `phoenix_protocol_v2_20260205`
@@ -68,6 +49,14 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
   - **Utolso aktivitas:** 2026-02-14
   - **Implementált:** Szint 4-5 (phoenixEventBus, failoverRegistry, edgeHealthMonitor) — 24 teszt, commit 022e7576
   - Mappa: ./tracks/phoenix_protocol_v2_20260205/
+
+- [ ] **Green Lightning - Autonomous EV Hunter** [HIGH]
+  - **ID:** `green_lightning_20260212`
+  - **Progress:** 45%
+  - **Utolso aktivitas:** 2026-02-14
+  - **Assignee:** RobotkezAgent + n8n
+  - **Implementált:** ev_hunter.py (Browser-Use + Ollama), MCP tool (ev_hunter_search/status), deduplikáció, scoring, email HTML, 4 teszt pass
+  - Mappa: ./tracks/green_lightning_20260212/
 
 ---
 
@@ -77,7 +66,7 @@ Nincs szuneteltetett szal
 
 ---
 
-## Archivalt Szalak (Archived) (16)
+## Archivalt Szalak (Archived) (20)
 
 - [x] **Tech-Harvester Protocol (Self-Learning Pipeline)** [HIGH] (2026-02-13) ⭐
   - **ID:** `TR-20260212-TECH-HAR`
@@ -140,6 +129,26 @@ Nincs szuneteltetett szal
 
 - [x] **N/A** (2026-02-13)
   - Mappa: ./tracks/robotkez_n8n_sandbox_edzesterv/
+
+- [x] **Codex NeuralLink Chat Refactor** [HIGH] (2026-02-13)
+  - **ID:** `codex_chat_refactor_20260212`
+  - **Befejezes:** 100% (Provider Adapter pattern + session persistence)
+  - Mappa: ./tracks/codex_chat_refactor_20260212/
+
+- [x] **OpenTelemetry Agent Tracing** [HIGH] (2026-02-11)
+  - **ID:** `otel_agent_tracing_20260211`
+  - **Befejezes:** 100% (OTLP tracing for agent execution spans)
+  - Mappa: ./tracks/otel_agent_tracing_20260211/
+
+- [x] **Robotkéz Stabilizáció & Gemini 2.0** [MEDIUM] (2026-02-12)
+  - **ID:** `robotkez_stabilization_20260212`
+  - **Befejezes:** 100% (Gemini 2.0 Flash + clean JSON stdout bridge)
+  - Mappa: ./tracks/robotkez_stabilization_20260212/
+
+- [x] **Self-Healing & Auto-Fix Protocol** [HIGH] (2026-02-13)
+  - **ID:** `self_healing_core_20260213`
+  - **Befejezes:** 100% (Auto-fix queue + startup remediation)
+  - Mappa: ./tracks/self_healing_core_20260213/
 
 ---
 

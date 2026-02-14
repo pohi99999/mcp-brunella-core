@@ -1,0 +1,52 @@
+[
+  {
+    "title": "Hyundai Kona Electric",
+    "price": 15800,
+    "km": 31000,
+    "year": 2021,
+    "location": "Linz",
+    "link": "https://www.willhaben.at/mock/hyundai-kona-electric",
+    "source": "willhaben",
+    "score": 67.8
+  },
+  {
+    "title": "BMW i3 120 Ah",
+    "price": 16500,
+    "km": 38000,
+    "year": 2021,
+    "location": "Wien",
+    "link": "https://www.willhaben.at/mock/bmw-i3-120-ah",
+    "source": "willhaben",
+    "score": 64.2
+  },
+  {
+    "title": "Nissan Leaf 40 kWh",
+    "price": 12500,
+    "km": 65000,
+    "year": 2019,
+    "location": "Graz",
+    "link": "https://www.willhaben.at/mock/nissan-leaf-40-kwh",
+    "source": "willhaben",
+    "score": 63.5
+  },
+  {
+    "title": "VW ID.3 Pro",
+    "price": 18900,
+    "km": 25000,
+    "year": 2022,
+    "location": "Salzburg",
+    "link": "https://www.willhaben.at/mock/vw-id.3-pro",
+    "source": "willhaben",
+    "score": 63.5
+  },
+  {
+    "title": "Kia e-Niro 64 kWh",
+    "price": 17500,
+    "km": 42000,
+    "year": 2022,
+    "location": "Ljubljana",
+    "link": "https://www.willhaben.at/mock/kia-e-niro-64-kwh",
+    "source": "willhaben",
+    "score": 62.8
+  }
+]
