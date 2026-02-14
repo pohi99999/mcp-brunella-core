@@ -11,6 +11,7 @@
  */
 
 import { logWarn, logError } from '../utils/logger.js';
+import { record } from '../core/auditLog.js';
 import path from 'path';
 
 /**
@@ -314,9 +315,13 @@ export class PermissionManager {
     /**
      * Audit log for denied operations
      */
-    logDeniedOperation(agentName: string, operation: string, reason: string): void {
-        logError('PermissionManager', `DENIED: ${agentName} attempted ${operation} - ${reason}`);
-        // TODO: Integrate with audit trail / monitoring system
+    logDeniedOperation(agentName: string, operation: string, resource: string, reason: string): void {
+        logError('PermissionManager', `DENIED: ${agentName} attempted ${operation} on ${resource} - ${reason}`);
+
+        // Fire-and-forget (non-blocking)
+        record('DENIED', agentName, operation, resource, reason).catch((err) => {
+            logError('PermissionManager', `Failed to record audit log: ${err}`);
+        });
     }
 }
 
