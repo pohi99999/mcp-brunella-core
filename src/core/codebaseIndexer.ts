@@ -221,6 +221,24 @@ async function generateEmbedding(text: string): Promise<number[] | null> {
 // ============================================================================
 
 /**
+ * Helper for concurrency-limited processing
+ */
+async function pMap<T>(
+  items: T[],
+  concurrency: number,
+  iterator: (item: T) => Promise<void>
+): Promise<void> {
+  const tasks = [...items];
+  const workers = Array(Math.min(concurrency, items.length)).fill(null).map(async () => {
+    while (tasks.length > 0) {
+      const task = tasks.shift();
+      if (task !== undefined) await iterator(task);
+    }
+  });
+  await Promise.all(workers);
+}
+
+/**
  * Index the full codebase.
  * Reads all matching files, chunks them, and sends to Python backend for LanceDB storage.
  */
@@ -235,14 +253,17 @@ export async function indexCodebase(config: Partial<IndexerConfig> = {}): Promis
     const files = await discoverFiles(cfg);
     const fs = await import('fs');
 
-    for (const filePath of files) {
+    // Concurrency limit for file processing
+    const CONCURRENCY_LIMIT = 10;
+
+    await pMap(files, CONCURRENCY_LIMIT, async (filePath) => {
       try {
-        const content = fs.default.readFileSync(filePath, 'utf-8');
+        const content = await fs.default.promises.readFile(filePath, 'utf-8');
         const chunks = chunkContent(content, filePath, cfg);
 
         if (chunks.length === 0) {
           stats.skippedFiles++;
-          continue;
+          return;
         }
 
         stats.fileCount++;
@@ -257,7 +278,7 @@ export async function indexCodebase(config: Partial<IndexerConfig> = {}): Promis
         const msg = error instanceof Error ? error.message : String(error);
         stats.errors.push(`${filePath}: ${msg}`);
       }
-    }
+    });
 
     stats.durationMs = Date.now() - startTime;
     lastIndexTime = Date.now();
@@ -294,14 +315,12 @@ export async function reindexChangedFiles(): Promise<IndexStats> {
 
     const fs = await import('fs');
 
-    for (const filePath of changedFiles) {
-      try {
-        if (!fs.default.existsSync(filePath)) {
-          stats.skippedFiles++;
-          continue;
-        }
+    // Concurrency limit for file processing
+    const CONCURRENCY_LIMIT = 10;
 
-        const content = fs.default.readFileSync(filePath, 'utf-8');
+    await pMap(changedFiles, CONCURRENCY_LIMIT, async (filePath) => {
+      try {
+        const content = await fs.default.promises.readFile(filePath, 'utf-8');
         const chunks = chunkContent(content, filePath);
 
         stats.fileCount++;
@@ -313,7 +332,7 @@ export async function reindexChangedFiles(): Promise<IndexStats> {
       } catch (error: unknown) {
         stats.skippedFiles++;
       }
-    }
+    });
 
     stats.durationMs = Date.now() - startTime;
     lastIndexTime = Date.now();
