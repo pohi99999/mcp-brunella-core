@@ -5,6 +5,64 @@ import { logInfo, logError } from "../utils/logger.js";
 
 const AGENT = "EVHunter";
 
+export interface EvHunterOptions {
+  mock?: boolean;
+  dryRun?: boolean;
+  dry_run?: boolean; // For compat
+}
+
+export interface EvHunterToolResponse {
+  isError?: boolean;
+  content: { type: "text"; text: string }[];
+  [key: string]: unknown;
+}
+
+export async function evHunterHandler(opts: EvHunterOptions): Promise<EvHunterToolResponse> {
+  const mock = opts.mock ?? false;
+  const dryRun = opts.dryRun ?? opts.dry_run ?? false;
+
+  logInfo(AGENT, `EV Hunter running (mock=${mock}, dryRun=${dryRun})`);
+
+  const flags: string[] = [];
+  if (mock) flags.push("--mock");
+  if (dryRun) flags.push("--dry-run");
+
+  const code = `
+import sys
+import json
+import asyncio
+from pathlib import Path
+
+# Setup paths
+sys.argv = ['ev_hunter.py'${flags.map((f) => `, '${f}'`).join("")}]
+sys.path.insert(0, 'myai/tasks')
+
+try:
+    from ev_hunter import run_ev_hunter
+    results = asyncio.run(run_ev_hunter(mock=${mock ? "True" : "False"}, dry_run=${dryRun ? "True" : "False"}))
+    print(json.dumps([r.model_dump() for r in results], indent=2, ensure_ascii=False))
+except Exception as e:
+    import traceback
+    traceback.print_exc(file=sys.stderr)
+    print(json.dumps({"error": str(e)}))
+`;
+
+  try {
+    const output = await globalPythonShell.run(code);
+    logInfo(AGENT, `EV Hunter completed, output length: ${output.length}`);
+    return {
+      content: [{ type: "text", text: output }],
+    };
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    logError(AGENT, `EV Hunter error: ${msg}`);
+    return {
+      isError: true,
+      content: [{ type: "text", text: `EV Hunter error: ${msg}` }],
+    };
+  }
+}
+
 export function registerEvHunterTools(server: McpServer) {
   server.tool(
     "ev_hunter_search",
@@ -20,40 +78,12 @@ export function registerEvHunterTools(server: McpServer) {
         .describe("Skip email sending, only generate results (default: false)"),
     },
     async ({ mock, dry_run }) => {
-      logInfo(AGENT, `EV Hunter search starting (mock=${mock ?? false}, dry_run=${dry_run ?? false})`);
-
-      const flags: string[] = [];
-      if (mock) flags.push("--mock");
-      if (dry_run) flags.push("--dry-run");
-
-      const code = `
-import sys
-sys.argv = ['ev_hunter.py'${flags.map((f) => `, '${f}'`).join("")}]
-sys.path.insert(0, 'myai/tasks')
-import asyncio
-from ev_hunter import run_ev_hunter
-results = asyncio.run(run_ev_hunter(mock=${mock ? "True" : "False"}, dry_run=${dry_run ? "True" : "False"}))
-import json
-print(json.dumps([r.model_dump() for r in results], indent=2, ensure_ascii=False))
-`;
-
-      try {
-        const output = await globalPythonShell.run(code);
-        logInfo(AGENT, `EV Hunter completed, output length: ${output.length}`);
-        return {
-          content: [{ type: "text", text: output }],
-        };
-      } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : String(e);
-        logError(AGENT, `EV Hunter error: ${msg}`);
-        return {
-          isError: true,
-          content: [{ type: "text", text: `EV Hunter error: ${msg}` }],
-        };
-      }
+      // Map tool params to handler options
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return evHunterHandler({ mock, dryRun: dry_run }) as any;
     },
   );
-
+  
   server.tool(
     "ev_hunter_status",
     "Returns the latest EV Hunter results from the last run (if available).",
