@@ -49,6 +49,7 @@ import { createRouterRouter } from "./routerRoutes.js";
 import { createMemoryRouter } from "./memoryRoutes.js";
 import { createTracksRouter } from "./tracksRoutes.js";
 import ceanRouter from "./routes/cean.js";
+import { createWranglerRouter } from "./routes/wrangler.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
 import { suggestedTasksRouter } from "./routes/suggestedTasks.js";
@@ -178,6 +179,9 @@ export async function startWebServer() {
 
   // Add CEAN routes (Cloudflare Edge Agents Network)
   v1Router.use(ceanRouter);
+
+  // Add Wrangler routes (D1 & Worker deployment)
+  v1Router.use(createWranglerRouter());
 
   // Add Robotkéz routes to v1
   v1Router.use("/robotkez", createRobotkezRoutes());
