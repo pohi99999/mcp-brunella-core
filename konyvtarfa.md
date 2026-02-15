@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 15. 16:08:45
+**Generálva:** 2026. 02. 15. 18:12:21
 **Script:** 
 
 ---
@@ -42479,6 +42479,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 meta.json
         - 📄 spec.md
         - 📄 track.md
+      - 📂 **cean_operations_center_ui_20260215**
+        - 📄 components.md
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **cloudflare_edge_agents_network_20260215**
         - 📄 meta.json
         - 📄 plan.md
@@ -42725,6 +42729,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 2026-02-07-this-session-is-being-continued-from-a-previous-co.txt
     - 📄 2026-02-11-this-session-is-being-continued-from-a-previous-co.txt
     - 📄 AGENT_PERMISSIONS_GUIDE.md
+    - 📄 CEAN_INFRASTRUCTURE_SNAPSHOT.md
     - 📄 CLOUDFLARE_INTEGRATION.md
     - 📄 cloudflare-tunnel-setup.md
     - 📄 github-runner-setup.md
@@ -115965,6 +115970,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 SECURITY.md
           - 📄 setup.cfg
           - 📄 setup.py
+      - 📂 **workers**
+        - 📂 **schema**
+          - 📄 d1_schema.sql
       - 📄 ADK_WEB_TROUBLESHOOTING.md
       - 📄 agent_architect.toml
       - 📄 BOBS_BRAIN_SETUP.md
@@ -116578,6 +116586,23 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 LoginForm.tsx
           - 📄 PermissionGuard.tsx
           - 📄 UserProfile.tsx
+        - 📂 **cean**
+          - 📂 **chat**
+            - 📄 OrchestratorChat.tsx
+          - 📂 **components**
+          - 📂 **hooks**
+            - 📄 useCEANSocket.ts
+          - 📂 **tabs**
+            - 📄 DashboardTab.tsx
+            - 📄 DataTab.tsx
+            - 📄 SettingsTab.tsx
+            - 📄 TasksTab.tsx
+            - 📄 WorkersTab.tsx
+          - 📂 **utils**
+            - 📄 constants.ts
+          - 📄 CEANLayout.tsx
+          - 📄 CEANNavBar.tsx
+          - 📄 types.ts
         - 📂 **dashboard**
           - 📄 AgentFactory.tsx
           - 📄 AgentManagementPanel.tsx
@@ -116718,6 +116743,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 command.tsx
         - 📄 skeleton.tsx
         - 📄 theme-provider.tsx
+      - 📂 **utils**
+        - 📄 logger.ts
       - 📄 App.tsx
       - 📄 components.json
       - 📄 ErrorFallback.tsx
@@ -116805,6 +116832,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 toolPermissions.ts
       - 📄 workspace.ts
     - 📂 **types**
+      - 📄 cean.ts
       - 📄 llm.ts
     - 📂 **utils**
       - 📄 activityFeed.ts
@@ -117092,3 +117120,4 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 vitest.config.ts
   - 📄 vitest.dashboard.config.ts
   - 📄 workflow.md
+  - 📄 wrangler.toml
