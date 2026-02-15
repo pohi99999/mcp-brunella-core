@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 13. 23:41:00
+**Generálva:** 2026. 02. 15. 16:08:45
 **Script:** 
 
 ---
@@ -38,6 +38,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 test_input.json
     - 📄 test_out2.json
     - 📄 test_output.json
+  - 📂 **_diag**
+    - 📄 Runner_20260214-024202-utc.log
+    - 📄 Runner_20260214-024252-utc.log
+    - 📄 Runner_20260214-024511-utc.log
   - 📂 **_KNOWLEDGE_BASE** _(MCP server for interacting with Google Drive)_
     - 📂 **_model_cards**
       - 📄 Gemini_Pro_2.5_model_card_melygondolkodás.pdf
@@ -1383,6 +1387,265 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 web-fetch.md
     - 📄 web-search.md
     - 📄 webhook_server.py
+  - 📂 **actions-runner**
+    - 📂 **_diag**
+      - 📄 Runner_20260214-024702-utc.log
+      - 📄 Runner_20260214-025025-utc.log
+    - 📂 **bin**
+      - 📄 api-ms-win-core-console-l1-1-0.dll
+      - 📄 api-ms-win-core-console-l1-2-0.dll
+      - 📄 api-ms-win-core-datetime-l1-1-0.dll
+      - 📄 api-ms-win-core-debug-l1-1-0.dll
+      - 📄 api-ms-win-core-errorhandling-l1-1-0.dll
+      - 📄 api-ms-win-core-fibers-l1-1-0.dll
+      - 📄 api-ms-win-core-file-l1-1-0.dll
+      - 📄 api-ms-win-core-file-l1-2-0.dll
+      - 📄 api-ms-win-core-file-l2-1-0.dll
+      - 📄 api-ms-win-core-handle-l1-1-0.dll
+      - 📄 api-ms-win-core-heap-l1-1-0.dll
+      - 📄 api-ms-win-core-interlocked-l1-1-0.dll
+      - 📄 api-ms-win-core-libraryloader-l1-1-0.dll
+      - 📄 api-ms-win-core-localization-l1-2-0.dll
+      - 📄 api-ms-win-core-memory-l1-1-0.dll
+      - 📄 api-ms-win-core-namedpipe-l1-1-0.dll
+      - 📄 api-ms-win-core-processenvironment-l1-1-0.dll
+      - 📄 api-ms-win-core-processthreads-l1-1-0.dll
+      - 📄 api-ms-win-core-processthreads-l1-1-1.dll
+      - 📄 api-ms-win-core-profile-l1-1-0.dll
+      - 📄 api-ms-win-core-rtlsupport-l1-1-0.dll
+      - 📄 api-ms-win-core-string-l1-1-0.dll
+      - 📄 api-ms-win-core-synch-l1-1-0.dll
+      - 📄 api-ms-win-core-synch-l1-2-0.dll
+      - 📄 api-ms-win-core-sysinfo-l1-1-0.dll
+      - 📄 api-ms-win-core-timezone-l1-1-0.dll
+      - 📄 api-ms-win-core-util-l1-1-0.dll
+      - 📄 api-ms-win-crt-conio-l1-1-0.dll
+      - 📄 api-ms-win-crt-convert-l1-1-0.dll
+      - 📄 api-ms-win-crt-environment-l1-1-0.dll
+      - 📄 api-ms-win-crt-filesystem-l1-1-0.dll
+      - 📄 api-ms-win-crt-heap-l1-1-0.dll
+      - 📄 api-ms-win-crt-locale-l1-1-0.dll
+      - 📄 api-ms-win-crt-math-l1-1-0.dll
+      - 📄 api-ms-win-crt-multibyte-l1-1-0.dll
+      - 📄 api-ms-win-crt-private-l1-1-0.dll
+      - 📄 api-ms-win-crt-process-l1-1-0.dll
+      - 📄 api-ms-win-crt-runtime-l1-1-0.dll
+      - 📄 api-ms-win-crt-stdio-l1-1-0.dll
+      - 📄 api-ms-win-crt-string-l1-1-0.dll
+      - 📄 api-ms-win-crt-time-l1-1-0.dll
+      - 📄 api-ms-win-crt-utility-l1-1-0.dll
+      - 📄 clretwrc.dll
+      - 📄 clrjit.dll
+      - 📄 coreclr.dll
+      - 📄 createdump.exe
+      - 📄 dbgshim.dll
+      - 📄 hostfxr.dll
+      - 📄 hostpolicy.dll
+      - 📄 Microsoft.CSharp.dll
+      - 📄 Microsoft.DiaSymReader.Native.amd64.dll
+      - 📄 Microsoft.IdentityModel.Logging.dll
+      - 📄 Microsoft.IdentityModel.Tokens.dll
+      - 📄 Microsoft.VisualBasic.Core.dll
+      - 📄 Microsoft.VisualBasic.dll
+      - 📄 Microsoft.Win32.Primitives.dll
+      - 📄 Microsoft.Win32.Registry.dll
+      - 📄 Minimatch.dll
+      - 📄 mscordaccore_amd64_amd64_6.0.2323.48002.dll
+      - 📄 mscordaccore.dll
+      - 📄 mscordbi.dll
+      - 📄 mscorlib.dll
+      - 📄 mscorrc.dll
+      - 📄 msquic.dll
+      - 📄 netstandard.dll
+      - 📄 Newtonsoft.Json.Bson.dll
+      - 📄 Newtonsoft.Json.dll
+      - 📄 Runner.Common.dll
+      - 📄 Runner.Listener.dll
+      - 📄 Runner.Listener.exe
+      - 📄 Runner.PluginHost.dll
+      - 📄 Runner.PluginHost.exe
+      - 📄 Runner.Plugins.dll
+      - 📄 Runner.Sdk.dll
+      - 📄 Runner.Worker.dll
+      - 📄 Runner.Worker.exe
+      - 📄 RunnerService.exe
+      - 📄 Sdk.dll
+      - 📄 System.AppContext.dll
+      - 📄 System.Buffers.dll
+      - 📄 System.Collections.Concurrent.dll
+      - 📄 System.Collections.dll
+      - 📄 System.Collections.Immutable.dll
+      - 📄 System.Collections.NonGeneric.dll
+      - 📄 System.Collections.Specialized.dll
+      - 📄 System.ComponentModel.Annotations.dll
+      - 📄 System.ComponentModel.DataAnnotations.dll
+      - 📄 System.ComponentModel.dll
+      - 📄 System.ComponentModel.EventBasedAsync.dll
+      - 📄 System.ComponentModel.Primitives.dll
+      - 📄 System.ComponentModel.TypeConverter.dll
+      - 📄 System.Configuration.dll
+      - 📄 System.Console.dll
+      - 📄 System.Core.dll
+      - 📄 System.Data.Common.dll
+      - 📄 System.Data.DataSetExtensions.dll
+      - 📄 System.Data.dll
+      - 📄 System.Diagnostics.Contracts.dll
+      - 📄 System.Diagnostics.Debug.dll
+      - 📄 System.Diagnostics.DiagnosticSource.dll
+      - 📄 System.Diagnostics.FileVersionInfo.dll
+      - 📄 System.Diagnostics.Process.dll
+      - 📄 System.Diagnostics.StackTrace.dll
+      - 📄 System.Diagnostics.TextWriterTraceListener.dll
+      - 📄 System.Diagnostics.Tools.dll
+      - 📄 System.Diagnostics.TraceSource.dll
+      - 📄 System.Diagnostics.Tracing.dll
+      - 📄 System.dll
+      - 📄 System.Drawing.dll
+      - 📄 System.Drawing.Primitives.dll
+      - 📄 System.Dynamic.Runtime.dll
+      - 📄 System.Formats.Asn1.dll
+      - 📄 System.Globalization.Calendars.dll
+      - 📄 System.Globalization.dll
+      - 📄 System.Globalization.Extensions.dll
+      - 📄 System.IdentityModel.Tokens.Jwt.dll
+      - 📄 System.IO.Compression.Brotli.dll
+      - 📄 System.IO.Compression.dll
+      - 📄 System.IO.Compression.FileSystem.dll
+      - 📄 System.IO.Compression.Native.dll
+      - 📄 System.IO.Compression.ZipFile.dll
+      - 📄 System.IO.dll
+      - 📄 System.IO.FileSystem.AccessControl.dll
+      - 📄 System.IO.FileSystem.dll
+      - 📄 System.IO.FileSystem.DriveInfo.dll
+      - 📄 System.IO.FileSystem.Primitives.dll
+      - 📄 System.IO.FileSystem.Watcher.dll
+      - 📄 System.IO.IsolatedStorage.dll
+      - 📄 System.IO.MemoryMappedFiles.dll
+      - 📄 System.IO.Pipes.AccessControl.dll
+      - 📄 System.IO.Pipes.dll
+      - 📄 System.IO.UnmanagedMemoryStream.dll
+      - 📄 System.Linq.dll
+      - 📄 System.Linq.Expressions.dll
+      - 📄 System.Linq.Parallel.dll
+      - 📄 System.Linq.Queryable.dll
+      - 📄 System.Memory.dll
+      - 📄 System.Net.dll
+      - 📄 System.Net.Http.dll
+      - 📄 System.Net.Http.Formatting.dll
+      - 📄 System.Net.Http.Json.dll
+      - 📄 System.Net.HttpListener.dll
+      - 📄 System.Net.Mail.dll
+      - 📄 System.Net.NameResolution.dll
+      - 📄 System.Net.NetworkInformation.dll
+      - 📄 System.Net.Ping.dll
+      - 📄 System.Net.Primitives.dll
+      - 📄 System.Net.Quic.dll
+      - 📄 System.Net.Requests.dll
+      - 📄 System.Net.Security.dll
+      - 📄 System.Net.ServicePoint.dll
+      - 📄 System.Net.Sockets.dll
+      - 📄 System.Net.WebClient.dll
+      - 📄 System.Net.WebHeaderCollection.dll
+      - 📄 System.Net.WebProxy.dll
+      - 📄 System.Net.WebSockets.Client.dll
+      - 📄 System.Net.WebSockets.dll
+      - 📄 System.Numerics.dll
+      - 📄 System.Numerics.Vectors.dll
+      - 📄 System.ObjectModel.dll
+      - 📄 System.Private.CoreLib.dll
+      - 📄 System.Private.DataContractSerialization.dll
+      - 📄 System.Private.Uri.dll
+      - 📄 System.Private.Xml.dll
+      - 📄 System.Private.Xml.Linq.dll
+      - 📄 System.Reflection.DispatchProxy.dll
+      - 📄 System.Reflection.dll
+      - 📄 System.Reflection.Emit.dll
+      - 📄 System.Reflection.Emit.ILGeneration.dll
+      - 📄 System.Reflection.Emit.Lightweight.dll
+      - 📄 System.Reflection.Extensions.dll
+      - 📄 System.Reflection.Metadata.dll
+      - 📄 System.Reflection.Primitives.dll
+      - 📄 System.Reflection.TypeExtensions.dll
+      - 📄 System.Resources.Reader.dll
+      - 📄 System.Resources.ResourceManager.dll
+      - 📄 System.Resources.Writer.dll
+      - 📄 System.Runtime.CompilerServices.Unsafe.dll
+      - 📄 System.Runtime.CompilerServices.VisualC.dll
+      - 📄 System.Runtime.dll
+      - 📄 System.Runtime.Extensions.dll
+      - 📄 System.Runtime.Handles.dll
+      - 📄 System.Runtime.InteropServices.dll
+      - 📄 System.Runtime.InteropServices.RuntimeInformation.dll
+      - 📄 System.Runtime.Intrinsics.dll
+      - 📄 System.Runtime.Loader.dll
+      - 📄 System.Runtime.Numerics.dll
+      - 📄 System.Runtime.Serialization.dll
+      - 📄 System.Runtime.Serialization.Formatters.dll
+      - 📄 System.Runtime.Serialization.Json.dll
+      - 📄 System.Runtime.Serialization.Primitives.dll
+      - 📄 System.Runtime.Serialization.Xml.dll
+      - 📄 System.Security.AccessControl.dll
+      - 📄 System.Security.Claims.dll
+      - 📄 System.Security.Cryptography.Algorithms.dll
+      - 📄 System.Security.Cryptography.Cng.dll
+      - 📄 System.Security.Cryptography.Csp.dll
+      - 📄 System.Security.Cryptography.Encoding.dll
+      - 📄 System.Security.Cryptography.OpenSsl.dll
+      - 📄 System.Security.Cryptography.Pkcs.dll
+      - 📄 System.Security.Cryptography.Primitives.dll
+      - 📄 System.Security.Cryptography.ProtectedData.dll
+      - 📄 System.Security.Cryptography.X509Certificates.dll
+      - 📄 System.Security.dll
+      - 📄 System.Security.Principal.dll
+      - 📄 System.Security.Principal.Windows.dll
+      - 📄 System.Security.SecureString.dll
+      - 📄 System.ServiceModel.Web.dll
+      - 📄 System.ServiceProcess.dll
+      - 📄 System.ServiceProcess.ServiceController.dll
+      - 📄 System.Text.Encoding.CodePages.dll
+      - 📄 System.Text.Encoding.dll
+      - 📄 System.Text.Encoding.Extensions.dll
+      - 📄 System.Text.Encodings.Web.dll
+      - 📄 System.Text.Json.dll
+      - 📄 System.Text.RegularExpressions.dll
+      - 📄 System.Threading.Channels.dll
+      - 📄 System.Threading.dll
+      - 📄 System.Threading.Overlapped.dll
+      - 📄 System.Threading.Tasks.Dataflow.dll
+      - 📄 System.Threading.Tasks.dll
+      - 📄 System.Threading.Tasks.Extensions.dll
+      - 📄 System.Threading.Tasks.Parallel.dll
+      - 📄 System.Threading.Thread.dll
+      - 📄 System.Threading.ThreadPool.dll
+      - 📄 System.Threading.Timer.dll
+      - 📄 System.Transactions.dll
+      - 📄 System.Transactions.Local.dll
+      - 📄 System.ValueTuple.dll
+      - 📄 System.Web.dll
+      - 📄 System.Web.HttpUtility.dll
+      - 📄 System.Windows.dll
+      - 📄 System.Xml.dll
+      - 📄 System.Xml.Linq.dll
+      - 📄 System.Xml.ReaderWriter.dll
+      - 📄 System.Xml.Serialization.dll
+      - 📄 System.Xml.XDocument.dll
+      - 📄 System.Xml.XmlDocument.dll
+      - 📄 System.Xml.XmlSerializer.dll
+      - 📄 System.Xml.XPath.dll
+      - 📄 System.Xml.XPath.XDocument.dll
+      - 📄 ucrtbase.dll
+      - 📄 WindowsBase.dll
+      - 📄 YamlDotNet.dll
+    - 📂 **externals**
+      - 📂 **node16**
+        - 📂 **bin**
+          - 📄 node.exe
+      - 📂 **node20**
+        - 📂 **bin**
+          - 📄 node.exe
+    - 📄 config.cmd
+    - 📄 run-helper.cmd
+    - 📄 run.cmd
   - 📂 **ADR** _(Architecture Decision Records (ADR))_
     - 📄 0001-living-documentation-system.md
     - 📄 0002-embedding-standard-mxbai-with-legacy-fallback.md
@@ -41795,7 +42058,251 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 VECTORIZE_POC.md
     - 📄 wrangler.jsonc
   - 📂 **bin**
+    - 📄 api-ms-win-core-console-l1-1-0.dll
+    - 📄 api-ms-win-core-console-l1-2-0.dll
+    - 📄 api-ms-win-core-datetime-l1-1-0.dll
+    - 📄 api-ms-win-core-debug-l1-1-0.dll
+    - 📄 api-ms-win-core-errorhandling-l1-1-0.dll
+    - 📄 api-ms-win-core-fibers-l1-1-0.dll
+    - 📄 api-ms-win-core-file-l1-1-0.dll
+    - 📄 api-ms-win-core-file-l1-2-0.dll
+    - 📄 api-ms-win-core-file-l2-1-0.dll
+    - 📄 api-ms-win-core-handle-l1-1-0.dll
+    - 📄 api-ms-win-core-heap-l1-1-0.dll
+    - 📄 api-ms-win-core-interlocked-l1-1-0.dll
+    - 📄 api-ms-win-core-libraryloader-l1-1-0.dll
+    - 📄 api-ms-win-core-localization-l1-2-0.dll
+    - 📄 api-ms-win-core-memory-l1-1-0.dll
+    - 📄 api-ms-win-core-namedpipe-l1-1-0.dll
+    - 📄 api-ms-win-core-processenvironment-l1-1-0.dll
+    - 📄 api-ms-win-core-processthreads-l1-1-0.dll
+    - 📄 api-ms-win-core-processthreads-l1-1-1.dll
+    - 📄 api-ms-win-core-profile-l1-1-0.dll
+    - 📄 api-ms-win-core-rtlsupport-l1-1-0.dll
+    - 📄 api-ms-win-core-string-l1-1-0.dll
+    - 📄 api-ms-win-core-synch-l1-1-0.dll
+    - 📄 api-ms-win-core-synch-l1-2-0.dll
+    - 📄 api-ms-win-core-sysinfo-l1-1-0.dll
+    - 📄 api-ms-win-core-timezone-l1-1-0.dll
+    - 📄 api-ms-win-core-util-l1-1-0.dll
+    - 📄 api-ms-win-crt-conio-l1-1-0.dll
+    - 📄 api-ms-win-crt-convert-l1-1-0.dll
+    - 📄 api-ms-win-crt-environment-l1-1-0.dll
+    - 📄 api-ms-win-crt-filesystem-l1-1-0.dll
+    - 📄 api-ms-win-crt-heap-l1-1-0.dll
+    - 📄 api-ms-win-crt-locale-l1-1-0.dll
+    - 📄 api-ms-win-crt-math-l1-1-0.dll
+    - 📄 api-ms-win-crt-multibyte-l1-1-0.dll
+    - 📄 api-ms-win-crt-private-l1-1-0.dll
+    - 📄 api-ms-win-crt-process-l1-1-0.dll
+    - 📄 api-ms-win-crt-runtime-l1-1-0.dll
+    - 📄 api-ms-win-crt-stdio-l1-1-0.dll
+    - 📄 api-ms-win-crt-string-l1-1-0.dll
+    - 📄 api-ms-win-crt-time-l1-1-0.dll
+    - 📄 api-ms-win-crt-utility-l1-1-0.dll
     - 📄 cloudflared.exe
+    - 📄 clretwrc.dll
+    - 📄 clrjit.dll
+    - 📄 coreclr.dll
+    - 📄 createdump.exe
+    - 📄 dbgshim.dll
+    - 📄 hostfxr.dll
+    - 📄 hostpolicy.dll
+    - 📄 Microsoft.CSharp.dll
+    - 📄 Microsoft.DiaSymReader.Native.amd64.dll
+    - 📄 Microsoft.IdentityModel.Logging.dll
+    - 📄 Microsoft.IdentityModel.Tokens.dll
+    - 📄 Microsoft.VisualBasic.Core.dll
+    - 📄 Microsoft.VisualBasic.dll
+    - 📄 Microsoft.Win32.Primitives.dll
+    - 📄 Microsoft.Win32.Registry.dll
+    - 📄 Minimatch.dll
+    - 📄 mscordaccore_amd64_amd64_6.0.2323.48002.dll
+    - 📄 mscordaccore.dll
+    - 📄 mscordbi.dll
+    - 📄 mscorlib.dll
+    - 📄 mscorrc.dll
+    - 📄 msquic.dll
+    - 📄 netstandard.dll
+    - 📄 Newtonsoft.Json.Bson.dll
+    - 📄 Newtonsoft.Json.dll
+    - 📄 Runner.Common.dll
+    - 📄 Runner.Listener.dll
+    - 📄 Runner.Listener.exe
+    - 📄 Runner.PluginHost.dll
+    - 📄 Runner.PluginHost.exe
+    - 📄 Runner.Plugins.dll
+    - 📄 Runner.Sdk.dll
+    - 📄 Runner.Worker.dll
+    - 📄 Runner.Worker.exe
+    - 📄 RunnerService.exe
+    - 📄 Sdk.dll
+    - 📄 System.AppContext.dll
+    - 📄 System.Buffers.dll
+    - 📄 System.Collections.Concurrent.dll
+    - 📄 System.Collections.dll
+    - 📄 System.Collections.Immutable.dll
+    - 📄 System.Collections.NonGeneric.dll
+    - 📄 System.Collections.Specialized.dll
+    - 📄 System.ComponentModel.Annotations.dll
+    - 📄 System.ComponentModel.DataAnnotations.dll
+    - 📄 System.ComponentModel.dll
+    - 📄 System.ComponentModel.EventBasedAsync.dll
+    - 📄 System.ComponentModel.Primitives.dll
+    - 📄 System.ComponentModel.TypeConverter.dll
+    - 📄 System.Configuration.dll
+    - 📄 System.Console.dll
+    - 📄 System.Core.dll
+    - 📄 System.Data.Common.dll
+    - 📄 System.Data.DataSetExtensions.dll
+    - 📄 System.Data.dll
+    - 📄 System.Diagnostics.Contracts.dll
+    - 📄 System.Diagnostics.Debug.dll
+    - 📄 System.Diagnostics.DiagnosticSource.dll
+    - 📄 System.Diagnostics.FileVersionInfo.dll
+    - 📄 System.Diagnostics.Process.dll
+    - 📄 System.Diagnostics.StackTrace.dll
+    - 📄 System.Diagnostics.TextWriterTraceListener.dll
+    - 📄 System.Diagnostics.Tools.dll
+    - 📄 System.Diagnostics.TraceSource.dll
+    - 📄 System.Diagnostics.Tracing.dll
+    - 📄 System.dll
+    - 📄 System.Drawing.dll
+    - 📄 System.Drawing.Primitives.dll
+    - 📄 System.Dynamic.Runtime.dll
+    - 📄 System.Formats.Asn1.dll
+    - 📄 System.Globalization.Calendars.dll
+    - 📄 System.Globalization.dll
+    - 📄 System.Globalization.Extensions.dll
+    - 📄 System.IdentityModel.Tokens.Jwt.dll
+    - 📄 System.IO.Compression.Brotli.dll
+    - 📄 System.IO.Compression.dll
+    - 📄 System.IO.Compression.FileSystem.dll
+    - 📄 System.IO.Compression.Native.dll
+    - 📄 System.IO.Compression.ZipFile.dll
+    - 📄 System.IO.dll
+    - 📄 System.IO.FileSystem.AccessControl.dll
+    - 📄 System.IO.FileSystem.dll
+    - 📄 System.IO.FileSystem.DriveInfo.dll
+    - 📄 System.IO.FileSystem.Primitives.dll
+    - 📄 System.IO.FileSystem.Watcher.dll
+    - 📄 System.IO.IsolatedStorage.dll
+    - 📄 System.IO.MemoryMappedFiles.dll
+    - 📄 System.IO.Pipes.AccessControl.dll
+    - 📄 System.IO.Pipes.dll
+    - 📄 System.IO.UnmanagedMemoryStream.dll
+    - 📄 System.Linq.dll
+    - 📄 System.Linq.Expressions.dll
+    - 📄 System.Linq.Parallel.dll
+    - 📄 System.Linq.Queryable.dll
+    - 📄 System.Memory.dll
+    - 📄 System.Net.dll
+    - 📄 System.Net.Http.dll
+    - 📄 System.Net.Http.Formatting.dll
+    - 📄 System.Net.Http.Json.dll
+    - 📄 System.Net.HttpListener.dll
+    - 📄 System.Net.Mail.dll
+    - 📄 System.Net.NameResolution.dll
+    - 📄 System.Net.NetworkInformation.dll
+    - 📄 System.Net.Ping.dll
+    - 📄 System.Net.Primitives.dll
+    - 📄 System.Net.Quic.dll
+    - 📄 System.Net.Requests.dll
+    - 📄 System.Net.Security.dll
+    - 📄 System.Net.ServicePoint.dll
+    - 📄 System.Net.Sockets.dll
+    - 📄 System.Net.WebClient.dll
+    - 📄 System.Net.WebHeaderCollection.dll
+    - 📄 System.Net.WebProxy.dll
+    - 📄 System.Net.WebSockets.Client.dll
+    - 📄 System.Net.WebSockets.dll
+    - 📄 System.Numerics.dll
+    - 📄 System.Numerics.Vectors.dll
+    - 📄 System.ObjectModel.dll
+    - 📄 System.Private.CoreLib.dll
+    - 📄 System.Private.DataContractSerialization.dll
+    - 📄 System.Private.Uri.dll
+    - 📄 System.Private.Xml.dll
+    - 📄 System.Private.Xml.Linq.dll
+    - 📄 System.Reflection.DispatchProxy.dll
+    - 📄 System.Reflection.dll
+    - 📄 System.Reflection.Emit.dll
+    - 📄 System.Reflection.Emit.ILGeneration.dll
+    - 📄 System.Reflection.Emit.Lightweight.dll
+    - 📄 System.Reflection.Extensions.dll
+    - 📄 System.Reflection.Metadata.dll
+    - 📄 System.Reflection.Primitives.dll
+    - 📄 System.Reflection.TypeExtensions.dll
+    - 📄 System.Resources.Reader.dll
+    - 📄 System.Resources.ResourceManager.dll
+    - 📄 System.Resources.Writer.dll
+    - 📄 System.Runtime.CompilerServices.Unsafe.dll
+    - 📄 System.Runtime.CompilerServices.VisualC.dll
+    - 📄 System.Runtime.dll
+    - 📄 System.Runtime.Extensions.dll
+    - 📄 System.Runtime.Handles.dll
+    - 📄 System.Runtime.InteropServices.dll
+    - 📄 System.Runtime.InteropServices.RuntimeInformation.dll
+    - 📄 System.Runtime.Intrinsics.dll
+    - 📄 System.Runtime.Loader.dll
+    - 📄 System.Runtime.Numerics.dll
+    - 📄 System.Runtime.Serialization.dll
+    - 📄 System.Runtime.Serialization.Formatters.dll
+    - 📄 System.Runtime.Serialization.Json.dll
+    - 📄 System.Runtime.Serialization.Primitives.dll
+    - 📄 System.Runtime.Serialization.Xml.dll
+    - 📄 System.Security.AccessControl.dll
+    - 📄 System.Security.Claims.dll
+    - 📄 System.Security.Cryptography.Algorithms.dll
+    - 📄 System.Security.Cryptography.Cng.dll
+    - 📄 System.Security.Cryptography.Csp.dll
+    - 📄 System.Security.Cryptography.Encoding.dll
+    - 📄 System.Security.Cryptography.OpenSsl.dll
+    - 📄 System.Security.Cryptography.Pkcs.dll
+    - 📄 System.Security.Cryptography.Primitives.dll
+    - 📄 System.Security.Cryptography.ProtectedData.dll
+    - 📄 System.Security.Cryptography.X509Certificates.dll
+    - 📄 System.Security.dll
+    - 📄 System.Security.Principal.dll
+    - 📄 System.Security.Principal.Windows.dll
+    - 📄 System.Security.SecureString.dll
+    - 📄 System.ServiceModel.Web.dll
+    - 📄 System.ServiceProcess.dll
+    - 📄 System.ServiceProcess.ServiceController.dll
+    - 📄 System.Text.Encoding.CodePages.dll
+    - 📄 System.Text.Encoding.dll
+    - 📄 System.Text.Encoding.Extensions.dll
+    - 📄 System.Text.Encodings.Web.dll
+    - 📄 System.Text.Json.dll
+    - 📄 System.Text.RegularExpressions.dll
+    - 📄 System.Threading.Channels.dll
+    - 📄 System.Threading.dll
+    - 📄 System.Threading.Overlapped.dll
+    - 📄 System.Threading.Tasks.Dataflow.dll
+    - 📄 System.Threading.Tasks.dll
+    - 📄 System.Threading.Tasks.Extensions.dll
+    - 📄 System.Threading.Tasks.Parallel.dll
+    - 📄 System.Threading.Thread.dll
+    - 📄 System.Threading.ThreadPool.dll
+    - 📄 System.Threading.Timer.dll
+    - 📄 System.Transactions.dll
+    - 📄 System.Transactions.Local.dll
+    - 📄 System.ValueTuple.dll
+    - 📄 System.Web.dll
+    - 📄 System.Web.HttpUtility.dll
+    - 📄 System.Windows.dll
+    - 📄 System.Xml.dll
+    - 📄 System.Xml.Linq.dll
+    - 📄 System.Xml.ReaderWriter.dll
+    - 📄 System.Xml.Serialization.dll
+    - 📄 System.Xml.XDocument.dll
+    - 📄 System.Xml.XmlDocument.dll
+    - 📄 System.Xml.XmlSerializer.dll
+    - 📄 System.Xml.XPath.dll
+    - 📄 System.Xml.XPath.XDocument.dll
+    - 📄 ucrtbase.dll
+    - 📄 WindowsBase.dll
+    - 📄 YamlDotNet.dll
   - 📂 **cloudflare**
     - 📂 **migrations**
       - 📄 0000_schema.sql
@@ -41972,6 +42479,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 meta.json
         - 📄 spec.md
         - 📄 track.md
+      - 📂 **cloudflare_edge_agents_network_20260215**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **cloudflare_edge_integration_20260202**
         - 📄 meta.json
         - 📄 plan.md
@@ -42024,13 +42535,24 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **innovation_bridge_20260212**
         - 📄 meta.json
         - 📄 spec.md
+      - 📂 **invoice-to-sheets-automation-20260214**
+        - 📄 Jules_prompt.md
+        - 📄 meta.json
+        - 📄 spec.md
+        - 📄 ui_spec.md
       - 📂 **iron_clad_backend_20260212**
         - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **jules_continuous_ai_integration_20260215**
+        - 📄 meta.json
+        - 📄 plan.md
         - 📄 spec.md
       - 📂 **jules_enterprise_cicd_20260212**
         - 📄 meta.json
         - 📄 spec.md
       - 📂 **living_documentation_system_20260213**
+        - 📄 spec.md
+      - 📂 **local_test_scheduler_20260215**
         - 📄 spec.md
       - 📂 **magyar-cli-menu-system-20260211**
         - 📄 meta.json
@@ -42039,6 +42561,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **micro_csr_automator_20260212**
         - 📄 meta.json
         - 📄 spec.md
+      - 📂 **onboarding-knowledge-manager-20260214**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
+        - 📄 Új Szöveges dokumentum.txt
       - 📂 **otel_agent_tracing_20260211**
         - 📄 meta.json
         - 📄 track.md
@@ -42053,6 +42580,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **robotkez_stabilization_20260212**
         - 📄 meta.json
         - 📄 track.md
+      - 📂 **robotkezv2-full-comet-20260215**
+        - 📄 checklist.md
+        - 📄 diary.md
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **self_healing_core_20260213**
         - 📄 meta.json
         - 📄 track.md
@@ -42094,15 +42627,20 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1.manifest
         - 📂 **data**
           - 📄 1000100100010001011000007dbdcd457db9ec321cc5b15c3d.lance
+    - 📂 **n8n**
     - 📂 **training**
       - 📄 golden_dataset.jsonl
     - 📄 audit.db
     - 📄 audit.db-shm
     - 📄 audit.db-wal
+    - 📄 brunella.db
+    - 📄 brunella.db-shm
+    - 📄 brunella.db-wal
     - 📄 checkpoints.db
     - 📄 checkpoints.db-shm
     - 📄 checkpoints.db-wal
     - 📄 developer_metrics.json
+    - 📄 ev_hunter_results.json
     - 📄 fix_queue.json
     - 📄 tasks.db
   - 📂 **docs**
@@ -42124,57 +42662,29 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 SpecWriterAgent.md
       - 📄 TaskDecomposerAgent.md
       - 📄 VoiceAgent.md
-    - 📂 **monitoring**
-      - 📂 **grafana** _(Grafana Dashboard Baseline)_
-        - 📄 brunella-agents-overview.dashboard.json
+    - 📂 **Egyéb**
+      - 📂 **cloudflare llm prompt**
+        - 📂 **llm**
+          - 📄 fejlesztoi_platform.md
+          - 📄 keresesllm.md
+          - 📄 llm.md
+          - 📄 prompt.md
+        - 📄 ai_tooling.md
+        - 📄 certs.json
+        - 📄 cloudflare_bovites.md
+        - 📄 Cloudflare_MCP_Server_One_Pager.pdf
+        - 📄 developer_cloudflare.md
+      - 📂 **Jules** _(Example Workflows)_
+        - 📄 enterprise.yml
         - 📄 README.md
-    - 📄 AGENT_PERMISSIONS_GUIDE.md
-    - 📄 CLOUDFLARE_INTEGRATION.md
-    - 📄 cloudflare-tunnel-setup.md
-    - 📄 github-runner-setup.md
-    - 📄 harvester-structured-json.md
-    - 📄 jules-repo-config.md
-    - 📄 jules-setup.md
-    - 📄 MCP_TOOL_PERMISSIONS_GUIDE.md
-    - 📄 MONITORING_PROMETHEUS.md
-    - 📄 n8n-setup.md
-    - 📄 ROBOTKEZ_SETUP.md
-    - 📄 tunnel-config.example.yml
-    - 📄 tunnel-config.yml
-  - 📂 **Egyéb**
-    - 📂 **cloudflare llm prompt**
-      - 📂 **llm**
-        - 📄 fejlesztoi_platform.md
-        - 📄 keresesllm.md
-        - 📄 llm.md
-        - 📄 prompt.md
-      - 📄 ai_tooling.md
-      - 📄 certs.json
-      - 📄 cloudflare_bovites.md
-      - 📄 Cloudflare_MCP_Server_One_Pager.pdf
-      - 📄 developer_cloudflare.md
-    - 📂 **Jules** _(Example Workflows)_
-      - 📄 enterprise.yml
-      - 📄 README.md
-    - 📂 **n8n+robotkez+agentfactory**
-      - 📄 myaitasksev_hunter.py
-      - 📄 n8n_workflowsev_hunter.json
-      - 📄 track_new.md
-      - 📄 workersscraper-worker.js
-    - 📂 **Workflow (n8n, Langflow)**
-      - 📂 **1. A Kreatív Súrlódás Mediátor (The Vibe-Check Mediator)**
-        - 📄 surlodas.json
-        - 📄 surlodas.md
-      - 📂 **2. Kereszt-Iparági Tudás-Híd Kereső (Cross-Industry Innovation Bridge)**
-        - 📄 tudashid.json
-        - 📄 tudashid.md
-      - 📂 **3. A Mikro-Helyi CSR Automata (The Neighborhood Watchman)**
-        - 📄 csr_automata.json
-        - 📄 csr_automata.md
-      - 📂 **KÉSZ**
+      - 📂 **n8n+robotkez+agentfactory**
+        - 📄 myaitasksev_hunter.py
+        - 📄 n8n_workflowsev_hunter.json
+        - 📄 track_new.md
+        - 📄 workersscraper-worker.js
+      - 📂 **Workflow (n8n, Langflow)**
         - 📂 **1. A Kreatív Súrlódás Mediátor (The Vibe-Check Mediator)**
-          - 📄 BAS_AI_Research_Pipeline_v1.json
-          - 📄 surlodas.JSON
+          - 📄 surlodas.json
           - 📄 surlodas.md
         - 📂 **2. Kereszt-Iparági Tudás-Híd Kereső (Cross-Industry Innovation Bridge)**
           - 📄 tudashid.json
@@ -42182,7 +42692,55 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📂 **3. A Mikro-Helyi CSR Automata (The Neighborhood Watchman)**
           - 📄 csr_automata.json
           - 📄 csr_automata.md
-    - 📄 cloudflare_chat.md
+        - 📂 **KÉSZ**
+          - 📂 **1. A Kreatív Súrlódás Mediátor (The Vibe-Check Mediator)**
+            - 📄 BAS_AI_Research_Pipeline_v1.json
+            - 📄 surlodas.JSON
+            - 📄 surlodas.md
+          - 📂 **2. Kereszt-Iparági Tudás-Híd Kereső (Cross-Industry Innovation Bridge)**
+            - 📄 tudashid.json
+            - 📄 tudashid.md
+          - 📂 **3. A Mikro-Helyi CSR Automata (The Neighborhood Watchman)**
+            - 📄 csr_automata.json
+            - 📄 csr_automata.md
+      - 📄 cloudflare_chat.md
+    - 📂 **jules_session_10830104862054860677**
+      - 📂 **docs**
+        - 📄 ROBOTKEZ_SETUP.md
+      - 📂 **scripts**
+        - 📄 cloudflare_check_workers.py
+        - 📄 monitor_loop.py
+        - 📄 robotkez_cli.py
+        - 📄 robotkez_test_level1.py
+        - 📄 robotkez_test_level2_n8n.py
+        - 📄 robotkez_test_level3_monitoring.py
+    - 📂 **monitoring**
+      - 📂 **grafana** _(Grafana Dashboard Baseline)_
+        - 📄 brunella-agents-overview.dashboard.json
+        - 📄 README.md
+    - 📂 **users**
+    - 📄 ## Chat Customization Diagnostics.md
+    - 📄 2026-02-06-.txt
+    - 📄 2026-02-06-this-session-is-being-continued-from-a-previous-co.txt
+    - 📄 2026-02-07-this-session-is-being-continued-from-a-previous-co.txt
+    - 📄 2026-02-11-this-session-is-being-continued-from-a-previous-co.txt
+    - 📄 AGENT_PERMISSIONS_GUIDE.md
+    - 📄 CLOUDFLARE_INTEGRATION.md
+    - 📄 cloudflare-tunnel-setup.md
+    - 📄 github-runner-setup.md
+    - 📄 GYOKER_RENDEZESI_JAVASLAT.md
+    - 📄 harvester-structured-json.md
+    - 📄 jules-repo-config.md
+    - 📄 jules-setup.md
+    - 📄 MCP_TOOL_PERMISSIONS_GUIDE.md
+    - 📄 MONITORING_PROMETHEUS.md
+    - 📄 n8n-setup.md
+    - 📄 PROJECT_ARCHITECTURE_DIAGRAM.md
+    - 📄 PROJEKT_DIAGRAM_2026-02-13.md
+    - 📄 ROBOTKEZ_SETUP.md
+    - 📄 TUNNEL_ARCHITECTURE.md
+    - 📄 tunnel-config.example.yml
+    - 📄 tunnel-config.yml
   - 📂 **external_research**
     - 📂 **Auralia** _(🎤 Auralia - Intelligent Voice Assistant)_
       - 📂 **app**
@@ -61302,20 +61860,17 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 pytest.ini
       - 📄 README.md
     - 📄 crewai_tool_example.py
+  - 📂 **externals**
+    - 📂 **node16**
+      - 📂 **bin**
+        - 📄 node.exe
+    - 📂 **node20**
+      - 📂 **bin**
+        - 📄 node.exe
   - 📂 **files**
     - 📄 ice_edits.json
     - 📄 silver_path_memories.json
     - 📄 smart_edits.json
-  - 📂 **jules_session_10830104862054860677**
-    - 📂 **docs**
-      - 📄 ROBOTKEZ_SETUP.md
-    - 📂 **scripts**
-      - 📄 cloudflare_check_workers.py
-      - 📄 monitor_loop.py
-      - 📄 robotkez_cli.py
-      - 📄 robotkez_test_level1.py
-      - 📄 robotkez_test_level2_n8n.py
-      - 📄 robotkez_test_level3_monitoring.py
   - 📂 **mcp-brunella-core-UIX** _(✨ Welcome to Your Spark Template!)_
     - 📂 **src**
       - 📂 **assets**
@@ -61423,6 +61978,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 chromadb_adapter.cpython-312.pyc
       - 📄 chromadb_adapter.cpython-314.pyc
       - 📄 config.cpython-314.pyc
+      - 📄 interactive_browser.cpython-314.pyc
+      - 📄 mcp_server.cpython-312.pyc
+      - 📄 mcp_server.cpython-314.pyc
       - 📄 pydantic_models.cpython-312.pyc
       - 📄 pydantic_models.cpython-314.pyc
       - 📄 rag.cpython-312.pyc
@@ -115456,6 +116014,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **incubator**
       - 📄 Modelfile.template
       - 📄 train.py
+    - 📂 **prompts**
+      - 📄 ev_hunter_prompt.md
     - 📂 **sandbox_env**
     - 📂 **scenarios**
       - 📄 harvester_extraction_example.json
@@ -115469,6 +116029,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 n8n_training_ui.json
       - 📄 n8n_training.json
       - 📄 ROBOTKEZ_N8N_TRAINING_PLAN.md
+    - 📂 **tasks**
+      - 📄 ev_hunter.py
     - 📂 **tests**
       - 📂 **__pycache__**
         - 📄 test_browser_worker.cpython-312-pytest-9.0.2.pyc
@@ -115521,6 +116083,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 chromadb_adapter.py
     - 📄 cli.py
     - 📄 config.py
+    - 📄 interactive_browser.py
     - 📄 mcp_server.py
     - 📄 pydantic_models.py
     - 📄 rag.py
@@ -115903,6 +116466,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 jules_cli_wrapper.py
     - 📄 JULES_SYNC_README.md
     - 📄 jules_sync_watchdog.py
+    - 📄 migrate-embeddings.ts
     - 📄 Modelfile.nightly
     - 📄 monitor_loop.py
     - 📄 nightly_train.ps1
@@ -115967,6 +116531,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 registry.json
       - 📄 ResearcherAgent.ts
       - 📄 RobotkezAgent.ts
+      - 📄 RobotkezV2Agent.ts
       - 📄 specStatus.ts
       - 📄 SpecWriterAgent.ts
       - 📄 TaskDecomposerAgent.ts
@@ -115979,6 +116544,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 edgeCommands.ts
       - 📄 goldCommands.ts
       - 📄 progressCommands.ts
+      - 📄 robotkezCommands.ts
+      - 📄 suggestedTasksCommands.ts
       - 📄 taskDecomposerCommands.ts
       - 📄 tracksCommands.ts
     - 📂 **config**
@@ -115992,11 +116559,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 failoverRegistry.ts
       - 📄 gitRecovery.ts
       - 📄 goldenDatasetBridge.ts
+      - 📄 julesAutomationService.ts
+      - 📄 julesConfigParser.ts
       - 📄 llm_client.ts
       - 📄 modelRouter.ts
       - 📄 phoenixEventBus.ts
       - 📄 processMonitor.ts
       - 📄 retryStrategy.ts
+      - 📄 scheduledTasksEngine.ts
+      - 📄 suggestedTasksScanner.ts
+      - 📄 testResultsService.ts
     - 📂 **dashboard**
       - 📂 **assets**
         - 📂 **documents**
@@ -116040,14 +116612,17 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 NeuralLinkChat.tsx
           - 📄 PhoenixPanel.tsx
           - 📄 RobotkezPanel.tsx
+          - 📄 RobotkezV2Chat.tsx
           - 📄 ServiceControlWidget.tsx
           - 📄 SettingsPanel.tsx
           - 📄 SpecManagerPanel.tsx
           - 📄 StatusCard.tsx
+          - 📄 SuggestedTasksWidget.tsx
           - 📄 SystemHealthCard.tsx
           - 📄 TaskDecomposerPanel.tsx
           - 📄 TaskQueueMonitor.tsx
           - 📄 TerminalLog.tsx
+          - 📄 TestResultsWidget.tsx
           - 📄 TokenUsageChart.tsx
           - 📄 ToolsCard.tsx
           - 📄 TraceViewer.tsx
@@ -116114,6 +116689,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 useDashboardData.ts
         - 📄 useEdgeWebSocket.ts
         - 📄 useMCP.ts
+        - 📄 useTTS.ts
       - 📂 **lib**
         - 📂 **chat**
           - 📂 **providers**
@@ -116159,6 +116735,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 schema.sql
     - 📂 **pipeline**
       - 📄 llmPipeline.ts
+    - 📂 **scheduler**
     - 📂 **server**
       - 📂 **middleware**
         - 📄 errorHandler.ts
@@ -116167,6 +116744,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 chat.ts
         - 📄 cloudflare.ts
         - 📄 developer.ts
+        - 📄 evhunter.ts
         - 📄 external.ts
         - 📄 files.ts
         - 📄 health.ts
@@ -116174,10 +116752,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 jules.ts
         - 📄 llm.ts
         - 📄 robotkez.ts
+        - 📄 scheduledTasks.ts
+        - 📄 suggestedTasks.ts
         - 📄 tasks.ts
+        - 📄 testScheduler.ts
         - 📄 tools.ts
         - 📄 tracks.ts
+        - 📄 tts.ts
+        - 📄 webhooks.ts
+      - 📂 **schedulers**
+        - 📄 testRunner.ts
       - 📄 auditRoutes.ts
+      - 📄 cron.ts
       - 📄 McpProcessManager.ts
       - 📄 memoryRoutes.ts
       - 📄 middleware.ts
@@ -116202,6 +116788,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 browserBridge.ts
       - 📄 claudeTool.ts
       - 📄 copilotCliTool.ts
+      - 📄 evHunterTool.ts
       - 📄 geminiTool.ts
       - 📄 githubModelsTool.ts
       - 📄 googleWorkspace.ts
@@ -116211,8 +116798,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 monitor.ts
       - 📄 n8n.ts
       - 📄 ollamaTool.ts
+      - 📄 persistentBrowserTools.ts
       - 📄 swarmTools.ts
       - 📄 system.ts
+      - 📄 testSchedulerTool.ts
       - 📄 toolPermissions.ts
       - 📄 workspace.ts
     - 📂 **types**
@@ -116223,6 +116812,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 aiGateway.ts
       - 📄 AppError.ts
       - 📄 approvalManager.ts
+      - 📄 backgroundTaskManager.ts
       - 📄 browserRendering.ts
       - 📄 checkpoint.ts
       - 📄 cliConfig.ts
@@ -116233,16 +116823,20 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 exec.ts
       - 📄 fixQueue.ts
       - 📄 fsInspector.ts
+      - 📄 globalDb.ts
       - 📄 googleAuth.ts
       - 📄 health_check.ts
       - 📄 health.ts
       - 📄 hooks.ts
+      - 📄 llmPlanner.ts
       - 📄 logger.ts
       - 📄 mcpClient.ts
       - 📄 mcpClientManager.ts
       - 📄 memoryContext.ts
       - 📄 metrics.ts
+      - 📄 notificationService.ts
       - 📄 otelTracing.ts
+      - 📄 persistentBrowser.ts
       - 📄 pythonShell.ts
       - 📄 rag.ts
       - 📄 serverManager.ts
@@ -116251,6 +116845,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 tasksDb.ts
       - 📄 telemetry.ts
       - 📄 trackTodoParser.ts
+      - 📄 tts.ts
       - 📄 validateSecrets.ts
     - 📄 cli-edge.ts
     - 📄 cli-hu.ts
@@ -116283,6 +116878,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 api_v1.test.ts
     - 📄 approval_manager.test.ts
     - 📄 auditLog.test.ts
+    - 📄 backgroundTaskManager.test.ts
     - 📄 browser_rendering.test.ts
     - 📄 checkpoint.test.ts
     - 📄 cli_config.test.ts
@@ -116303,6 +116899,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 DeveloperAgent.test.ts
     - 📄 edge_health_monitor.test.ts
     - 📄 ev_hunter_research.test.ts
+    - 📄 evHunterTool.test.ts
     - 📄 failover_registry.test.ts
     - 📄 git_integration.test.ts
     - 📄 goldenDatasetBridge.test.ts
@@ -116310,10 +116907,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 hooks.test.ts
     - 📄 incubator_test.py
     - 📄 input_sanitization.test.ts
+    - 📄 jules_e2e_pipeline.test.ts
     - 📄 jules_workflow_routes.test.ts
     - 📄 lint_fixer.test.ts
     - 📄 llm_client.test.ts
     - 📄 llm_provider.test.ts
+    - 📄 llmPlanner.test.ts
     - 📄 mcp-brunella-core.code-workspace
     - 📄 memory_context.test.ts
     - 📄 memoryRoutes.golden.test.ts
@@ -116322,6 +116921,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 monitor.test.ts
     - 📄 monitor.vitest.ts
     - 📄 n8n_automation.test.ts
+    - 📄 notificationService.test.ts
+    - 📄 persistentBrowser.test.ts
     - 📄 phoenix_event_bus.test.ts
     - 📄 phoenix_recovery.test.ts
     - 📄 project_conductor_living_docs.test.ts
@@ -116331,6 +116932,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 rag.test.ts
     - 📄 retryStrategy.test.ts
     - 📄 robotkez_integration.test.ts
+    - 📄 robotkezAPI.test.ts
+    - 📄 robotkezV2Agent.test.ts
     - 📄 routes_developer.test.ts
     - 📄 setup.ts
     - 📄 skills_loader.test.ts
@@ -116340,6 +116943,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 SpecWriterAgent.test.ts
     - 📄 state_restoration.test.ts
     - 📄 structured_output.test.ts
+    - 📄 suggestedTasks.test.ts
     - 📄 swagger_spec.test.ts
     - 📄 swarm_coordinator.test.ts
     - 📄 task_queue.test.ts
@@ -116348,14 +116952,43 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 tracks_todos_routes.test.ts
     - 📄 trackTodoParser.test.ts
   - 📂 **test-results**
-    - 📂 **action-triggering-ErrorBou-599cf-ad-of-crash-on-widget-error-chromium**
-      - 📄 test-failed-1.png
+    - 📂 **error-handling-Error-Handl-357b7-at-different-viewport-sizes-chromium**
       - 📄 video.webm
-    - 📂 **action-triggering-ErrorBou-faa62--after-error-boundary-reset-chromium**
-      - 📄 test-failed-1.png
+    - 📂 **error-handling-Error-Handl-cfea5-e-XSS-like-input-gracefully-chromium**
       - 📄 video.webm
-    - 📂 **error-handling-Error-Handl-f57cb-hite-screen-on-initial-load-chromium**
-      - 📄 test-failed-1.png
+    - 📂 **error-handling-Socket-IO-C-628c9-establish-socket-connection-chromium**
+      - 📄 video.webm
+    - 📂 **mission-control-Mission-Co-0c860-d-show-terminal-log-section-chromium**
+      - 📄 video.webm
+    - 📂 **mission-control-Mission-Co-1896c-between-list-and-graph-view-chromium**
+      - 📄 video.webm
+    - 📂 **mission-control-Mission-Co-5e342--agent-cards-or-empty-state-chromium**
+      - 📄 video.webm
+    - 📂 **mission-control-Mission-Co-eadd8-lay-SystemHealthCard-widget-chromium**
+      - 📄 video.webm
+    - 📂 **navigation-Dashboard-Navig-043c1-10-sidebar-navigation-items-chromium**
+      - 📄 video.webm
+    - 📂 **navigation-Dashboard-Navig-129e6-pen-CommandMenu-with-Ctrl-K-chromium**
+      - 📄 video.webm
+    - 📂 **navigation-Dashboard-Navig-326cc-tab-switching-without-crash-chromium**
+      - 📄 video.webm
+    - 📂 **navigation-Dashboard-Navig-51425-ld-navigate-via-CommandMenu-chromium**
+      - 📄 video.webm
+    - 📂 **navigation-Dashboard-Navig-9e741-hboard-without-white-screen-chromium**
+      - 📄 video.webm
+    - 📂 **navigation-Dashboard-Navig-c743b-when-clicking-sidebar-items-chromium**
+      - 📄 video.webm
+    - 📂 **socket-reconnect-Socket-IO-9c1a8-econnect-when-it-comes-back-chromium**
+      - 📄 video.webm
+    - 📂 **tabs-advanced-Developer-Ta-8a83f-action-buttons-in-Build-tab-chromium**
+      - 📄 video.webm
+    - 📂 **tabs-advanced-Developer-Ta-c5adb-ween-sub-tabs-without-error-chromium**
+      - 📄 video.webm
+    - 📂 **tabs-advanced-Developer-Tab-should-have-sub-tabs-chromium**
+      - 📄 video.webm
+    - 📂 **tabs-advanced-Developer-Tab-should-load-developer-panel-chromium**
+      - 📄 video.webm
+    - 📂 **tabs-advanced-Tasks-Tab-should-load-task-queue-monitor-chromium**
       - 📄 video.webm
   - 📂 **testing**
     - 📂 **egyeb**
@@ -116395,17 +117028,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 _JULES_MAINTENANCE_TASKS.md
   - 📄 _PROJECT_STRUCTURE.md
   - 📄 _QUICK_START.md
-  - 📄 2026-02-06-.txt
-  - 📄 2026-02-06-this-session-is-being-continued-from-a-previous-co.txt
-  - 📄 2026-02-07-this-session-is-being-continued-from-a-previous-co.txt
-  - 📄 2026-02-11-this-session-is-being-continued-from-a-previous-co.txt
   - 📄 agents.db
+  - 📄 AGENTS.md
   - 📄 AnythingLLM
   - 📄 audit_report.json
   - 📄 Brunella
   - 📄 Brunella.md
   - 📄 build.log
   - 📄 CLAUDE.md
+  - 📄 config.cmd
   - 📄 CONTRIBUTING.md
   - 📄 docker-compose.yml
   - 📄 Dockerfile.node
@@ -116421,16 +117052,21 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 LICENSE
   - 📄 mag.md
   - 📄 mcp_servers.json
+  - 📄 npm-test-full.log
+  - 📄 npm-test.log
+  - 📄 nul
   - 📄 Ollama
   - 📄 package.json
   - 📄 peterpohankapersonal@gmail.com.ical.zip
   - 📄 playwright.config.ts
   - 📄 pnpm-lock.yaml
-  - 📄 PROJEKT_DIAGRAM_2026-02-13.md
   - 📄 pyproject.toml
   - 📄 README.md
   - 📄 rendszer ellenorzes.md.txt
   - 📄 requirements.txt
+  - 📄 run-helper.cmd.template
+  - 📄 run-helper.sh.template
+  - 📄 run.cmd
   - 📄 schema.sql
   - 📄 server_debug.log
   - 📄 server_direct.log

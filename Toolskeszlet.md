@@ -1,7 +1,7 @@
 # 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
 
 Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
-**Generálva:** 2026. 02. 13. 23:41:07
+**Generálva:** 2026. 02. 15. 16:08:52
 
 ---
 
@@ -29,6 +29,10 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 
 ## 📦 copilotCliTool
 - **copilot_cli**: Executes GitHub Copilot CLI commands (suggest, explain, test, fix).
+
+## 📦 evHunterTool
+- **ev_hunter_search**: Runs the Green Lightning EV Hunter - searches willhaben.at and autoscout24 for electric vehicles matching configured criteria. Returns scored results as JSON.
+- **ev_hunter_status**: Returns the latest EV Hunter results from the last run (if available).
 
 ## 📦 geminiTool
 - **gemini_generate**: Generate text using Google Gemini API (2.5 Pro, 2.0 Flash, etc.).
@@ -61,6 +65,18 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 
 ## 📦 ollamaTool
 - **ollama_generate**: Generates text using a local Ollama model.
+
+## 📦 persistentBrowserTools
+- **pb_launch**: Launch a persistent browser session for interactive use.
+- **pb_navigate**: Navigate to a URL in the persistent browser.
+- **pb_click**: Click an element on the page.
+- **pb_type**: Type text into an input field.
+- **pb_screenshot**: Take a screenshot of the current page. This updates the 
+- **pb_content**: Get the HTML content of the current page.
+- **pb_scroll**: Scroll the page in a specified direction.
+- **pb_wait**: Wait for an element to appear on the page.
+- **pb_extract**: Extract data from elements on the page.
+- **pb_close**: Close the persistent browser session.
 
 ## 📦 swarmTools
 - **swarm_ingest**: Browse -> Refine -> Knowledge Store.
