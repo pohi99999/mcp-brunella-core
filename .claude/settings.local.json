@@ -63,7 +63,8 @@
       "Bash(brunella agents execute:*)",
       "Bash(npm run migrate:dry:*)",
       "Bash(npm run migrate:backup:*)",
-      "Bash(npx tsx:*)"
+      "Bash(npx tsx:*)",
+      "WebSearch"
     ]
   },
   "enableAllProjectMcpServers": true,

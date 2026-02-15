@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-15T00:15:00.000000Z
+**Utolso frissites:** 2026-02-15T01:45:00.000000Z
 **Generator:** Claude Code AI + GitHub Copilot
 
 Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
@@ -41,7 +41,16 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
 
 ---
 
-## Aktiv Szalak (Active/In Progress) (3)
+## Aktiv Szalak (Active/In Progress) (4)
+
+- [ ] **RobotkezV2 - Full Comet (Magyar Agentic Browser)** [🔥 CRITICAL]
+  - **ID:** `robotkezv2-full-comet-20260215`
+  - **Progress:** 5% (PLANNING DONE)
+  - **Start:** 2026-02-15 | **Target:** 2026-02-22
+  - **Assignee:** Claude Code
+  - Mappa: ./tracks/robotkezv2-full-comet-20260215/
+  - **Description:** Perplexity Comet-szerű intelligens böngésző ügynök magyar nyelven. LLM-based multi-step automation, Dashboard + CLI, background tasks.
+  - **Tags:** robotkezv2, comet, agentic-browser, magyar-nyelv, llm, dashboard, cli
 
 - [ ] **Jules Continuous AI Integration (JCAI)** [🔥 CRITICAL]
   - **ID:** `jules_continuous_ai_integration_20260215`
