@@ -290,5 +290,35 @@ export function createRobotkezRoutes(): Router {
         }
     });
 
+    /**
+     * GET /api/v1/robotkez/screenshot
+     * Get latest browser screenshot (PNG image)
+     *
+     * Response: PNG image (Content-Type: image/png)
+     */
+    router.get('/screenshot', async (req: Request, res: Response) => {
+        try {
+            const screenshot = persistentBrowser.getLastScreenshot();
+
+            if (!screenshot) {
+                return res.status(404).json({
+                    success: false,
+                    error: 'No screenshot available'
+                });
+            }
+
+            res.setHeader('Content-Type', 'image/png');
+            res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+            res.send(Buffer.from(screenshot));
+
+        } catch (error: any) {
+            logError('RobotkezAPI', `Screenshot error: ${error.message}`);
+            res.status(500).json({
+                success: false,
+                error: error.message
+            });
+        }
+    });
+
     return router;
 }

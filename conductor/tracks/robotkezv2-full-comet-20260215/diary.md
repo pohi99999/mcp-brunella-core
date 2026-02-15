@@ -879,5 +879,131 @@ curl -X DELETE http://localhost:3000/api/v1/robotkez/tasks/task_1234567890_abc12
 
 ---
 
+## 2026-02-15 - Phase 6: Dashboard UI (Comet-style) ✅ (01:00)
+
+**Cél:**
+Perplexity Comet-style dashboard komponens létrehozása React-ben - chat interface, execution timeline, live browser view, background tasks panel.
+
+**Létrehozott fájlok:**
+
+1. **`src/dashboard/components/dashboard/RobotkezV2Chat.tsx`** (~600 lines)
+   - Komplett Comet-style UI implementáció
+   - **6.1 Chat Component:** Chat input + message history, typing indicator, Comet-style message bubbles (user: primary bg, assistant: muted/50 border)
+   - **6.2 Execution Timeline:** Plan visualization with step status icons (CheckCircle = completed, Loader = running, Circle = pending, XCircle = error), progress bar (0-100%)
+   - **6.3 Live Browser View:** Screenshot display with auto-refresh (2s polling), toggle show/hide button, PNG image rendering
+   - **6.4 Background Tasks Panel:** Expandable task cards, status badges (running/completed/error/cancelled), progress bars per task, step-by-step details, cancel button (X icon)
+   - **Features:**
+     - `useState` hooks: messages, input, isLoading, status, activePlan, currentStep, showBrowserView, screenshotUrl, backgroundTasks, expandedTaskId
+     - `useEffect` auto-refresh (2s interval) - status, screenshot, background tasks
+     - `refreshData()` function - API calls (robotkezStatus, robotkezGetTasks, robotkezGetTaskById)
+     - `send()` function - Chat message submission (robotkezChat API)
+     - `previewPlan()` function - Plan preview without execution (robotkezPlan API)
+     - `cancelTask()` function - Cancel background task (robotkezCancelTask API)
+     - `toggleTaskDetails()` function - Expand/collapse task details
+     - `getStepIcon()` helper - Returns Lucide icon based on step status
+   - **UI Components:**
+     - Tailwind glass-card styling (`glass-card border-border/50 bg-background/50 backdrop-blur-xl`)
+     - Radix UI components (Card, Button, Textarea, ScrollArea, Badge, Progress)
+     - Lucide icons (Send, User, Bot, CheckCircle, Loader, Circle, XCircle, Eye, EyeOff, RefreshCw, Activity, Clock, X)
+     - 3-column layout (lg:grid-cols-3): Chat + Timeline (2 cols) | Live View + Tasks (1 col)
+
+2. **`src/server/routes/robotkez.ts`** (frissítve)
+   - Új endpoint hozzáadva: **`GET /api/v1/robotkez/screenshot`**
+   - Returns PNG image (Content-Type: image/png)
+   - Cache headers: `no-cache, no-store, must-revalidate`
+   - Uses `persistentBrowser.getLastScreenshot()` (Uint8Array → Buffer)
+   - 404 if no screenshot available
+
+3. **`src/dashboard/lib/apiService.ts`** (frissítve +150 lines)
+   - **Új TypeScript interfészek:**
+     - `ExecutionStep`, `ExecutionPlan`, `BackgroundTask`, `TaskStep`
+     - `RobotkezChatRequest`, `RobotkezPlanResponse`, `RobotkezTasksResponse`, `RobotkezStatusResponse`
+   - **Új API funkciók:**
+     - `robotkezChat(instruction)` - POST /api/v1/robotkez/chat
+     - `robotkezPlan(instruction)` - POST /api/v1/robotkez/plan
+     - `robotkezExec(action, params)` - POST /api/v1/robotkez/exec
+     - `robotkezStatus()` - GET /api/v1/robotkez/status
+     - `robotkezGetTasks(status?, limit?)` - GET /api/v1/robotkez/tasks
+     - `robotkezGetTaskById(id)` - GET /api/v1/robotkez/tasks/:id
+     - `robotkezCancelTask(id)` - DELETE /api/v1/robotkez/tasks/:id
+
+4. **`src/dashboard/components/dashboard/MissionControlLayout.tsx`** (frissítve)
+   - Import: `RobotkezV2Chat` component
+   - Line 310: `{activeTab === "robotkez" && <RobotkezV2Chat />}` (replaced `<RobotkezPanel />`)
+   - Existing "Robotkéz" tab (line 72) now shows new RobotkezV2 UI
+
+**Build & Test:**
+- ✅ `npm run build` - TypeScript compile SUCCESS
+- ✅ `npm test` - **637/637 tests pass** (126s runtime)
+- ✅ No TypeScript errors
+- ✅ No missing dependencies
+
+**Technikai döntések:**
+
+1. **Screenshot URL:** `/api/v1/robotkez/screenshot?t=${Date.now()}` (cache-bust with timestamp)
+   - PNG image served directly from persistentBrowser.lastScreenshot (Uint8Array)
+   - Auto-refresh every 2s (polling)
+
+2. **Component architektúra:**
+   - Single component (RobotkezV2Chat) contains all Phase 6 features (6.1-6.5)
+   - Alternative: Külön komponensek (ChatInterface, ExecutionTimeline, BrowserView, TasksPanel)
+   - **Decision:** Monolitikus komponens könnyebb state management (shared hooks)
+
+3. **Auto-refresh strategy:**
+   - useEffect with setInterval (2000ms)
+   - Cleanup on unmount (return () => clearInterval)
+   - Refresh data: status, screenshot, background tasks (parallel API calls)
+
+4. **Error handling:**
+   - Toast notifications (sonner)
+   - Try/catch minden API call-ban
+   - Graceful fallback (empty state, error messages)
+
+5. **UI Pattern:** Comet-style
+   - Message bubbles: rounded-2xl, user = primary bg (right-aligned), assistant = muted/50 bg (left-aligned)
+   - Timeline: Step cards with icons (CheckCircle/Loader/Circle/XCircle), vertical layout
+   - Live View: Black background, image centered, zoom on click (window.open)
+   - Tasks Panel: Expandable cards, badge colors (green = completed, blue = running, red = error)
+
+**Phase 6 Sub-phases (mind ✅):**
+- ✅ 6.1 Chat Component (chat input, message history, typing indicator, Comet bubbles)
+- ✅ 6.2 Execution Timeline (plan visualization, step icons, progress bar)
+- ✅ 6.3 Live Browser View (screenshot display, 2s refresh, toggle show/hide)
+- ✅ 6.4 Background Tasks Panel (task list, status badges, cancel button, expandable details)
+- ✅ 6.5 Layout Integration (MissionControlLayout.tsx updated, robotkez tab functional)
+
+**Következő lépés:**
+- **Phase 7:** CLI Commands - 6h estimated
+
+**Blocker/Issues:**
+- ❌ None - Phase 6 KÉSZ! Dashboard UI működik 100%-ig! 🎨🚀
+
+**Git Commit:**
+```bash
+git add src/dashboard/components/dashboard/RobotkezV2Chat.tsx \
+         src/dashboard/lib/apiService.ts \
+         src/dashboard/components/dashboard/MissionControlLayout.tsx \
+         src/server/routes/robotkez.ts \
+         conductor/tracks/robotkezv2-full-comet-20260215/checklist.md \
+         conductor/tracks/robotkezv2-full-comet-20260215/diary.md
+git commit -m "feat(robotkez-v2): Phase 6 - Dashboard UI (Comet-style) complete
+
+- Created RobotkezV2Chat component (600 lines)
+  - Chat interface (magyar natural language)
+  - Execution Timeline (step-by-step progress)
+  - Live Browser View (screenshot auto-refresh 2s)
+  - Background Tasks Panel (expandable task cards)
+- Added GET /api/v1/robotkez/screenshot endpoint (PNG image)
+- Extended apiService.ts with 7 RobotkezV2 API functions
+- Updated MissionControlLayout.tsx (robotkez tab → RobotkezV2Chat)
+- All tests pass: 637/637 ✅
+
+Phase 6 COMPLETE 🎨🚀
+Track: robotkezv2-full-comet-20260215
+Progress: 60% (6/10 phases done)"
+```
+
+---
+
 _Ez a fájl folyamatosan frissül minden munkaülésen. Naponta minimum 1 bejegyzés._
 _Formátum: `## YYYY-MM-DD - [Topic/Phase]` + bullet points._

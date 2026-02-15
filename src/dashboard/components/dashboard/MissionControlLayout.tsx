@@ -43,6 +43,7 @@ import { AgentGraph } from "@/components/AgentGraph";
 import { Skeleton } from "@/components/ui/skeleton";
 import { AgentFactory } from "@/components/dashboard/AgentFactory";
 import { RobotkezPanel } from "@/components/dashboard/RobotkezPanel";
+import { RobotkezV2Chat } from "@/components/dashboard/RobotkezV2Chat";
 import { AgentManagementPanel } from "@/components/dashboard/AgentManagementPanel";
 import { TaskQueueMonitor } from "@/components/dashboard/TaskQueueMonitor";
 import { LLMProvidersPanel } from "@/components/dashboard/LLMProvidersPanel";
@@ -307,7 +308,7 @@ export function MissionControlLayout() {
               )}
               {activeTab === "factory" && <AgentFactory />}
               {activeTab === "management" && <AgentManagementPanel />}
-              {activeTab === "robotkez" && <RobotkezPanel />}
+              {activeTab === "robotkez" && <RobotkezV2Chat />}
               {activeTab === "tasks" && <TaskQueueMonitor />}
               {activeTab === "providers" && <LLMProvidersPanel />}
               {activeTab === "knowledge" && <KnowledgeBasePanel />}

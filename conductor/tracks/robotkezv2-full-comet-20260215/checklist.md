@@ -172,40 +172,40 @@
 
 ---
 
-### Phase 6: Dashboard UI (Comet-style)
+### Phase 6: Dashboard UI (Comet-style) ✅
 
-#### 6.1 Chat Component
-- [ ] `src/dashboard/components/dashboard/RobotkezV2Chat.tsx` létrehozva
-- [ ] Chat input + message history
-- [ ] Comet-style message bubbles
-- [ ] Typing indicator (loading state)
-- [ ] **Checkpoint:** Chat component renders
+#### 6.1 Chat Component ✅
+- [x] `src/dashboard/components/dashboard/RobotkezV2Chat.tsx` létrehozva
+- [x] Chat input + message history
+- [x] Comet-style message bubbles
+- [x] Typing indicator (loading state)
+- [x] **Checkpoint:** Chat component renders
 
-#### 6.2 Execution Timeline
-- [ ] Execution plan visualization (step-by-step progress)
-- [ ] Step status icons (✅ completed, ⏳ running, ⚪ pending, ❌ error)
-- [ ] Progress bar
-- [ ] **Checkpoint:** Timeline updates dynamically
+#### 6.2 Execution Timeline ✅
+- [x] Execution plan visualization (step-by-step progress)
+- [x] Step status icons (✅ completed, ⏳ running, ⚪ pending, ❌ error)
+- [x] Progress bar
+- [x] **Checkpoint:** Timeline updates dynamically
 
-#### 6.3 Live Browser View
-- [ ] Screenshot display (`/api/browser/snapshot`)
-- [ ] Auto-refresh (2s interval)
-- [ ] Toggle show/hide
-- [ ] Current URL display
-- [ ] **Checkpoint:** Live View frissül automatikusan
+#### 6.3 Live Browser View ✅
+- [x] Screenshot display (`/api/v1/robotkez/screenshot`)
+- [x] Auto-refresh (2s interval)
+- [x] Toggle show/hide
+- [x] Current URL display (in status)
+- [x] **Checkpoint:** Live View frissül automatikusan
 
-#### 6.4 Background Tasks Panel
-- [ ] Background tasks dropdown
-- [ ] Task list (active + completed)
-- [ ] Task status badges
-- [ ] Cancel button
-- [ ] **Checkpoint:** Background tasks megjelennek
+#### 6.4 Background Tasks Panel ✅
+- [x] Background tasks dropdown (expandable)
+- [x] Task list (active + completed)
+- [x] Task status badges
+- [x] Cancel button
+- [x] **Checkpoint:** Background tasks megjelennek
 
-#### 6.5 Layout Integration
-- [ ] `src/dashboard/components/dashboard/MissionControlLayout.tsx` frissítve
-- [ ] Új tab: "Robotkéz V2"
-- [ ] Route: `/robotkez`
-- [ ] **Checkpoint:** Dashboard navigáció működik
+#### 6.5 Layout Integration ✅
+- [x] `src/dashboard/components/dashboard/MissionControlLayout.tsx` frissítve
+- [x] Új tab: "Robotkéz V2" (már volt "Robotkéz" tab)
+- [x] Route: `/robotkez`
+- [x] **Checkpoint:** Dashboard navigáció működik
 
 ---
 
