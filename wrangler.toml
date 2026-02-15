@@ -1,0 +1,90 @@
+# Wrangler Project Template for CEAN
+# Reference: https://developers.cloudflare.com/workers/wrangler/configuration/
+
+name = "bas-cean-orchestrator"
+main = "src/index.ts"
+compatibility_date = "2026-02-15"
+
+# Account Configuration (from .env)
+account_id = "1bf6118df97f0e12f3592a89d90deb1e"
+
+# Environment Variables
+vars = { ENVIRONMENT = "production", LOG_LEVEL = "info" }
+
+# Bindings Configuration
+[env.production]
+name = "bas-cean-prod"
+vars = { ENVIRONMENT = "production" }
+
+# D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "cean-tasks"
+database_id = "TBD"  # Will be populated after D1 creation in Cloudflare
+
+# R1 Bucket Binding (Vectorize)
+[[vectorize]]
+binding = "EMBEDDINGS"
+index_name = "cean-embeddings"
+
+# KV Namespace Binding (for state/caching)
+[[kv_namespaces]]
+binding = "CACHE"
+id = "TBD"  # Will be populated after KV namespace creation
+
+# Durable Objects Binding (for worker coordination)
+[[durable_objects.bindings]]
+name = "ORCHESTRATOR"
+class_name = "CEANOrchestrator"
+script_name = "bas-cean-orchestrator"
+
+# Environment: Development
+[env.development]
+name = "bas-cean-dev"
+vars = { ENVIRONMENT = "development", LOG_LEVEL = "debug" }
+
+[[env.development.d1_databases]]
+binding = "DB"
+database_name = "cean-tasks-dev"
+database_id = "TBD"
+
+# Routes (optional, for binding to domains)
+[[routes]]
+pattern = "api.cean.example.com/*"
+zone_name = "example.com"
+
+# Triggers - Scheduled Jobs
+[triggers]
+crons = [
+  "0 2 * * * /worker/research",      # 2am UTC: Research agent nightly
+  "0 8 * * * /worker/grant",         # 8am UTC: Grant monitor daily
+]
+
+# Build Configuration
+[build]
+command = "npm run build"
+cwd = "./workers"
+
+# Observability
+[observability]
+enabled = true
+
+# Browser Rendering (optional for data extraction)
+[browser]
+binding = "BROWSER"
+
+# Analytics Engine (optional for metrics)
+[analytics_engine_datasets]
+binding = "ANALYTICS"
+
+# Version
+version = "1.0.0"
+
+# Notes:
+# Phase 1A: This is the base template. Database IDs and resource IDs will be
+# populated after creation in the Cloudflare dashboard.
+# 
+# Deployment: wrangler deploy --env production
+# Local dev: wrangler dev
+#
+# Related: myai/agents/workers/schema/d1_schema.sql
