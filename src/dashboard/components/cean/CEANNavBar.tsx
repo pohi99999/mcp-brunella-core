@@ -1,7 +1,7 @@
 import { Button } from '@radix-ui/react-button';
 import { ChevronDown } from 'lucide-react';
-import { CEANTabId } from './types.js';
-import { CEAN_TABS } from './utils/constants.js';
+import { CEANTabId } from './types';
+import { CEAN_TABS } from './utils/constants';
 
 interface CEANNavBarProps {
   activeTab: CEANTabId;

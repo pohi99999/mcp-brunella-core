@@ -1,4 +1,4 @@
-import { OrchestratorChat } from './chat/OrchestratorChat.js';
+import { OrchestratorChat } from './chat/OrchestratorChat';
 
 /**
  * CEAN Primary Page: OrchestratorChat-focused
