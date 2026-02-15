@@ -1008,6 +1008,171 @@ export async function getN8nWorkflows(): Promise<unknown> {
 }
 
 /**
+ * RobotkezV2 API (New Persistent Browser + LLM Planning)
+ */
+export interface RobotkezChatRequest {
+  instruction: string;
+}
+
+export interface RobotkezPlanRequest {
+  instruction: string;
+}
+
+export interface RobotkezExecRequest {
+  action: string;
+  [key: string]: any; // Other action params (url, selector, text, etc.)
+}
+
+export interface ExecutionStep {
+  action: string;
+  description: string;
+  selector?: string;
+  text?: string;
+  url?: string;
+}
+
+export interface ExecutionPlan {
+  plan: ExecutionStep[];
+  estimatedDuration: number;
+  backgroundEligible: boolean;
+}
+
+export interface RobotkezPlanResponse {
+  success: boolean;
+  plan: ExecutionPlan;
+  message: string;
+}
+
+export interface RobotkezTasksResponse {
+  success: boolean;
+  tasks: BackgroundTask[];
+  count: number;
+}
+
+export interface BackgroundTask {
+  id: string;
+  instruction: string;
+  plan: ExecutionPlan;
+  status: 'running' | 'completed' | 'error' | 'cancelled';
+  progress: number;
+  startedAt: number;
+  completedAt?: number;
+  steps: TaskStep[];
+  currentStepIndex: number;
+  error?: string;
+}
+
+export interface TaskStep {
+  action: string;
+  status: 'pending' | 'running' | 'completed' | 'error';
+  description: string;
+  startedAt?: number;
+  completedAt?: number;
+  error?: string;
+}
+
+export interface RobotkezStatusResponse {
+  success: boolean;
+  agent: {
+    name: string;
+    role: string;
+    capabilities: string[];
+  };
+  browser: {
+    active: boolean;
+    type: string;
+    engine: string;
+  };
+  tasks: {
+    total: number;
+    running: number;
+    completed: number;
+    error: number;
+  };
+}
+
+export async function robotkezChat(instruction: string): Promise<any> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/robotkez/chat`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ instruction }),
+    },
+    LONG_TIMEOUT_MS
+  );
+  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || 'Robotkez chat failed');
+  return data;
+}
+
+export async function robotkezPlan(instruction: string): Promise<RobotkezPlanResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/robotkez/plan`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ instruction }),
+    },
+    LONG_TIMEOUT_MS
+  );
+  if (!response.ok) throw new Error(`Plan: HTTP ${response.status}`);
+  return safeJson<RobotkezPlanResponse>(response);
+}
+
+export async function robotkezExec(action: string, params: Record<string, any> = {}): Promise<any> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/robotkez/exec`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action, ...params }),
+    },
+    DEFAULT_TIMEOUT_MS
+  );
+  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || 'Robotkez exec failed');
+  return data;
+}
+
+export async function robotkezStatus(): Promise<RobotkezStatusResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/status`);
+  if (!response.ok) throw new Error(`Status: HTTP ${response.status}`);
+  return safeJson<RobotkezStatusResponse>(response);
+}
+
+export async function robotkezGetTasks(status?: string, limit?: number): Promise<RobotkezTasksResponse> {
+  const qs = new URLSearchParams();
+  if (status) qs.set('status', status);
+  if (limit) qs.set('limit', String(limit));
+
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/robotkez/tasks${qs.toString() ? `?${qs.toString()}` : ''}`
+  );
+  if (!response.ok) throw new Error(`Tasks: HTTP ${response.status}`);
+  return safeJson<RobotkezTasksResponse>(response);
+}
+
+export async function robotkezGetTaskById(id: string): Promise<{ success: boolean; task: BackgroundTask }> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/tasks/${encodeURIComponent(id)}`);
+  if (!response.ok) throw new Error(`Task ${id}: HTTP ${response.status}`);
+  return safeJson<{ success: boolean; task: BackgroundTask }>(response);
+}
+
+export async function robotkezCancelTask(id: string): Promise<{ success: boolean; cancelled: boolean }> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/robotkez/tasks/${encodeURIComponent(id)}`,
+    { method: 'DELETE' }
+  );
+  if (!response.ok) throw new Error(`Cancel ${id}: HTTP ${response.status}`);
+  return safeJson<{ success: boolean; cancelled: boolean }>(response);
+}
+
+/**
  * Incubator (Training) API
  */
 export interface DatasetStats {
