@@ -55,6 +55,7 @@ import { TrackGenerator } from "./TrackGenerator";
 import { TaskDecomposerPanel } from "./TaskDecomposerPanel";
 import { TrackProgressWidget } from "./TrackProgress";
 import { TestResultsWidget } from "./TestResultsWidget";
+import { SuggestedTasksWidget } from "./SuggestedTasksWidget";
 
 const SIDEBAR_ITEMS = [
   { id: "dashboard", label: "Mission Control", icon: LayoutDashboard },
@@ -66,6 +67,7 @@ const SIDEBAR_ITEMS = [
   { id: "knowledge", label: "Knowledge", icon: Brain },
   { id: "developer", label: "Developer", icon: Code2 },
   { id: "edge", label: "Edge", icon: Cloud },
+  { id: "suggested-tasks", label: "Todos", icon: FileText },
   { id: "tests", label: "Tests", icon: FlaskConical },
   { id: "robotkez", label: "Robotkéz", icon: Activity },
   { id: "tasks", label: "Tasks", icon: History },
@@ -311,6 +313,7 @@ export function MissionControlLayout() {
               {activeTab === "knowledge" && <KnowledgeBasePanel />}
               {activeTab === "files" && <FileExplorer />}
               {activeTab === "tests" && <TestResultsWidget />}
+              {activeTab === "suggested-tasks" && <SuggestedTasksWidget />}
               {activeTab === "settings" && <SettingsPanel />}
             </div>
 

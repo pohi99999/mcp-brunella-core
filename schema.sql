@@ -94,6 +94,20 @@ CREATE TABLE IF NOT EXISTS scheduled_tasks (
 CREATE INDEX IF NOT EXISTS idx_scheduled_tasks_enabled ON scheduled_tasks(enabled);
 CREATE INDEX IF NOT EXISTS idx_scheduled_tasks_next_run ON scheduled_tasks(next_run_at);
 
+-- 7. Webhook Események (Webhook Events) - GitHub integráció
+CREATE TABLE IF NOT EXISTS webhook_events (
+    id TEXT PRIMARY KEY,
+    type TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    payload TEXT NOT NULL,
+    processed BOOLEAN DEFAULT 0,
+    created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_webhook_events_provider ON webhook_events(provider);
+CREATE INDEX IF NOT EXISTS idx_webhook_events_processed ON webhook_events(processed);
+CREATE INDEX IF NOT EXISTS idx_webhook_events_created_at ON webhook_events(created_at DESC);
+
 -- Kezdeti teszt adat
 INSERT INTO tracks (id, name, status, progress, priority) 
 VALUES ('bas-init', 'BAS Cloud Initialization', 'completed', 100, 'HIGH');

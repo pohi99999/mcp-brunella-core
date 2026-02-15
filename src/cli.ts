@@ -29,6 +29,7 @@ import { registerTracksCommands } from "./cli/tracksCommands.js";
 import { registerTaskDecomposerCommands } from "./cli/taskDecomposerCommands.js";
 import { registerProgressCommands } from "./cli/progressCommands.js";
 import { registerEdgeCommands } from "./cli/edgeCommands.js";
+import { registerSuggestedTasksCommands } from "./cli/suggestedTasksCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -1214,6 +1215,9 @@ registerProgressCommands(program);
 
 // Register Edge commands (Cloudflare)
 registerEdgeCommands(program);
+
+// Register Suggested Tasks commands (TODO/FIXME Scanner)
+registerSuggestedTasksCommands(program);
 
 // ════════════════════════════════════════════════════════════════════════════
 // TESTS COMMAND (Test Scheduler)

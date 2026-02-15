@@ -1,0 +1,209 @@
+import { Router, Request, Response } from 'express';
+import Database from 'better-sqlite3';
+import { v4 as uuidv4 } from 'uuid';
+import { logInfo, logError } from '../../utils/logger.js';
+import { JulesAutomationService } from '../../core/julesAutomationService.js';
+
+interface WebhookEvent {
+  id: string;
+  type: string;
+  provider: string;
+  payload: string;
+  processed: boolean;
+  created_at: string;
+}
+
+export function createWebhookRoutes(db: Database.Database): Router {
+  const router = Router();
+
+  /**
+   * GitHub Push Webhook
+   * Triggered on repository push events
+   */
+  router.post('/github/push', async (req: Request, res: Response) => {
+    try {
+      const { repository, pusher, ref, head_commit } = req.body;
+
+      if (!repository || !pusher) {
+        return res.status(400).json({ error: 'Invalid GitHub webhook payload' });
+      }
+
+      const webhookId = uuidv4();
+      const eventType = 'github.push';
+
+      // Store webhook event
+      db.prepare(`
+        INSERT INTO webhook_events (id, type, provider, payload, processed)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(webhookId, eventType, 'github', JSON.stringify(req.body), false);
+
+      logInfo('Webhooks', `GitHub push detected: ${repository.name} (${ref})`);
+
+      // Trigger auto-scan for suggested tasks
+      try {
+        await fetch('http://localhost:3000/api/v1/suggested-tasks/scan', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            source: 'webhook',
+            provider: 'github',
+            repository: repository.name,
+            commit: head_commit?.id || 'unknown',
+          }),
+        });
+
+        // Mark event as processed
+        db.prepare('UPDATE webhook_events SET processed = 1 WHERE id = ?').run(webhookId);
+
+        logInfo('Webhooks', `Auto-scan triggered for ${repository.name}`);
+      } catch (err) {
+        logError('Webhooks', `Auto-scan failed: ${err}`);
+      }
+
+      res.json({
+        success: true,
+        webhookId,
+        message: 'Webhook processed successfully',
+      });
+    } catch (error) {
+      logError('Webhooks', `GitHub webhook error: ${error}`);
+      res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
+  /**
+   * Render Deployment Webhook
+   * Triggered when Render deploys the app - imports Jules automations
+   */
+  router.post('/render/deploy', async (req: Request, res: Response) => {
+    try {
+      const webhookId = uuidv4();
+      const eventType = 'render.deploy';
+
+      // Store webhook event
+      db.prepare(`
+        INSERT INTO webhook_events (id, type, provider, payload, processed)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(webhookId, eventType, 'render', JSON.stringify(req.body), false);
+
+      logInfo('Webhooks', `Render deployment detected`);
+
+      // Initialize Jules Automation Service
+      const julesService = new JulesAutomationService(db);
+      
+      try {
+        // Import Jules automations from config
+        const result = await julesService.importJulesAutomations({
+          skipIfExists: true,
+          enableImmediately: true,
+        });
+
+        // Mark event as processed
+        db.prepare('UPDATE webhook_events SET processed = 1 WHERE id = ?').run(webhookId);
+
+        logInfo('Webhooks', `Jules automations imported: ${result.imported} imported, ${result.skipped} skipped`);
+
+        res.json({
+          success: true,
+          webhookId,
+          message: 'Render webhook processed successfully',
+          result,
+        });
+      } catch (err) {
+        logError('Webhooks', `Jules automation import failed: ${err}`);
+        res.status(500).json({ 
+          success: false,
+          webhookId,
+          error: 'Jules automation import failed',
+        });
+      }
+    } catch (error) {
+      logError('Webhooks', `Render webhook error: ${error}`);
+      res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
+  /**
+   * Generic Webhook Receiver
+   * For scheduled tasks or custom integrations
+   */
+  router.post('/webhook/:provider', async (req: Request, res: Response) => {
+    try {
+      const { provider } = req.params;
+      const webhookId = uuidv4();
+
+      // Store event
+      db.prepare(`
+        INSERT INTO webhook_events (id, type, provider, payload, processed)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(webhookId, `${provider}.custom`, provider, JSON.stringify(req.body), false);
+
+      logInfo('Webhooks', `Webhook received from ${provider}`);
+
+      res.json({
+        success: true,
+        webhookId,
+        message: 'Webhook queued for processing',
+      });
+    } catch (error) {
+      logError('Webhooks', `Webhook error: ${error}`);
+      res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
+  /**
+   * Get webhook events history
+   */
+  router.get('/webhook-events', (req: Request, res: Response) => {
+    try {
+      const limit = Math.min(parseInt(req.query.limit as string) || 50, 100);
+      const events = db
+        .prepare(`
+          SELECT * FROM webhook_events 
+          ORDER BY created_at DESC 
+          LIMIT ?
+        `)
+        .all(limit) as WebhookEvent[];
+
+      res.json({
+        success: true,
+        count: events.length,
+        events: events.map((e) => ({
+          ...e,
+          payload: JSON.parse(e.payload),
+        })),
+      });
+    } catch (error) {
+      logError('Webhooks', `Failed to fetch events: ${error}`);
+      res.status(500).json({ error: 'Failed to fetch webhook events' });
+    }
+  });
+
+  /**
+   * Clear old webhook events (cleanup)
+   */
+  router.post('/webhook-events/cleanup', (req: Request, res: Response) => {
+    try {
+      const daysOld = parseInt(req.body.daysOld) || 7;
+      const result = db.prepare(`
+        DELETE FROM webhook_events 
+        WHERE created_at < datetime('now', '-' || ? || ' days')
+      `).run(daysOld);
+
+      logInfo('Webhooks', `Cleaned up ${result.changes} old events`);
+
+      res.json({
+        success: true,
+        deleted: result.changes,
+        message: `Deleted webhook events older than ${daysOld} days`,
+      });
+    } catch (error) {
+      logError('Webhooks', `Cleanup failed: ${error}`);
+      res.status(500).json({ error: 'Cleanup failed' });
+    }
+  });
+
+  return router;
+}
+
+export default createWebhookRoutes;

@@ -17,7 +17,6 @@ import {
 } from "../utils/logger.js";
 import { initDb, saveMessage, getMessages } from "../utils/db.js";
 import { initTasksDb } from "../utils/tasksDb.js";
-import { getGlobalDb, closeGlobalDb } from "../utils/globalDb.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { registerAllTools } from "./registry.js";
@@ -26,6 +25,7 @@ import { toolManager } from "./ToolManager.js";
 import { mcpProcessManager } from "./McpProcessManager.js";
 import { mcpClientManager } from "../utils/mcpClientManager.js";
 import { agentManager } from "../agents/AgentManager.js";
+import { persistentBrowser } from "../utils/persistentBrowser.js";
 import {
   corsWhitelist,
   requestId,
@@ -50,14 +50,7 @@ import { createMemoryRouter } from "./memoryRoutes.js";
 import { createTracksRouter } from "./tracksRoutes.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
-import { suggestedTasksRouter } from "./routes/suggestedTasks.js";
 import { registerEdgeWebSocketHandlers } from "./websocket.js";
-import testSchedulerRoutes from "./routes/testScheduler.js";
-import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
-import { initTestResultsDb } from "../core/testResultsService.js";
-import { initSuggestedTasksDb } from "../core/suggestedTasksScanner.js";
-import { createScheduledTasksRoutes } from "./routes/scheduledTasks.js";
-import createWebhookRoutes from "./routes/webhooks.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -103,18 +96,6 @@ export async function startWebServer() {
     logError("Server", `Tasks DB Init failed: ${e.message}`);
   }
 
-  try {
-    await initTestResultsDb("data/brunella.db");
-  } catch (e: any) {
-    logError("Server", `Test Results DB Init failed: ${e.message}`);
-  }
-
-  try {
-    await initSuggestedTasksDb("data/brunella.db");
-  } catch (e: any) {
-    logError("Server", `Suggested Tasks DB Init failed: ${e.message}`);
-  }
-
   initMetrics();
 
   logInfo("Server", "🔄 Starting MCP Bridge...");
@@ -147,6 +128,16 @@ export async function startWebServer() {
    *       200:
    *         description: Prometheus metrics text payload
    */
+  app.get("/api/browser/snapshot", (req, res) => {
+    const screenshot = persistentBrowser.getLastScreenshot();
+    if (screenshot) {
+      res.setHeader("Content-Type", "image/png");
+      res.send(screenshot);
+    } else {
+      res.status(404).send("No active browser session or screenshot available.");
+    }
+  });
+
   app.get("/metrics", async (_req, res) => {
     try {
       res.set("Content-Type", getPrometheusContentType());
@@ -177,19 +168,6 @@ export async function startWebServer() {
 
   // Add Robotkéz routes to v1
   v1Router.use("/robotkez", createRobotkezRoutes());
-
-  // Add Test Scheduler routes to v1
-  v1Router.use("/tests", testSchedulerRoutes);
-
-  // Add Suggested Tasks routes to v1
-  v1Router.use("/suggested-tasks", suggestedTasksRouter);
-
-  // Add Scheduled Tasks routes to v1
-  const db = getGlobalDb();
-  v1Router.use("/scheduled-tasks", createScheduledTasksRoutes(db));
-
-  // Add Webhook routes to v1
-  v1Router.use("/webhooks", createWebhookRoutes(db));
 
   // Mount v1 router at /api/v1 and /api (backwards compatibility)
   app.use("/api/v1", v1Router);
@@ -342,10 +320,6 @@ export async function startWebServer() {
 
   // Global error handler (MUST be after all routes)
   app.use(globalErrorHandler);
-
-  // Initialize test scheduler
-  logInfo("Server", "Starting test scheduler...");
-  startScheduler();
 
   io.on("connection", (socket) => {
     const DEFAULT_CHAT_ID = "main-session";
