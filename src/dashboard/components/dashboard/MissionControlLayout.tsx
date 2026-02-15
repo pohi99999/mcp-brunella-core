@@ -58,10 +58,12 @@ import { TrackProgressWidget } from "./TrackProgress";
 import { TestResultsWidget } from "./TestResultsWidget";
 import { SuggestedTasksWidget } from "./SuggestedTasksWidget";
 import { CEANLayout } from "@/components/cean/CEANLayout";
+import { CloudflareDeployment } from "@/pages/CloudflareDeployment";
 
 const SIDEBAR_ITEMS = [
   { id: "dashboard", label: "Mission Control", icon: LayoutDashboard },
   { id: "cean", label: "CEAN Orchestrator", icon: Rocket },
+  { id: "cloudflare", label: "Cloudflare Deploy", icon: Cloud },
   { id: "chat", label: "Chat", icon: MessageSquare },
   { id: "management", label: "Agents", icon: Sparkles },
   { id: "decomposer", label: "Decompose", icon: Network },
@@ -312,6 +314,7 @@ export function MissionControlLayout() {
               {activeTab === "management" && <AgentManagementPanel />}
               {activeTab === "robotkez" && <RobotkezV2Chat />}
               {activeTab === "cean" && <CEANLayout />}
+              {activeTab === "cloudflare" && <CloudflareDeployment />}
               {activeTab === "tasks" && <TaskQueueMonitor />}
               {activeTab === "providers" && <LLMProvidersPanel />}
               {activeTab === "knowledge" && <KnowledgeBasePanel />}

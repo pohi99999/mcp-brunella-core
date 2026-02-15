@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 15. 18:12:21
+**Generálva:** 2026. 02. 15. 18:38:05
 **Script:** 
 
 ---
@@ -42640,6 +42640,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 brunella.db
     - 📄 brunella.db-shm
     - 📄 brunella.db-wal
+    - 📄 cean.db
     - 📄 checkpoints.db
     - 📄 checkpoints.db-shm
     - 📄 checkpoints.db-wal
@@ -116592,6 +116593,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📂 **components**
           - 📂 **hooks**
             - 📄 useCEANSocket.ts
+            - 📄 useChatHistory.ts
           - 📂 **tabs**
             - 📄 DashboardTab.tsx
             - 📄 DataTab.tsx
@@ -116768,6 +116770,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 errorHandler.ts
       - 📂 **routes**
         - 📄 agents.ts
+        - 📄 cean.ts
         - 📄 chat.ts
         - 📄 cloudflare.ts
         - 📄 developer.ts
@@ -116787,6 +116790,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 tracks.ts
         - 📄 tts.ts
         - 📄 webhooks.ts
+        - 📄 wrangler.ts
       - 📂 **schedulers**
         - 📄 testRunner.ts
       - 📄 auditRoutes.ts
@@ -116875,6 +116879,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 trackTodoParser.ts
       - 📄 tts.ts
       - 📄 validateSecrets.ts
+      - 📄 wranglerHelper.ts
     - 📄 cli-edge.ts
     - 📄 cli-hu.ts
     - 📄 cli-jules-interactive.ts
