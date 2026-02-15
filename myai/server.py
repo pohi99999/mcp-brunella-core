@@ -613,6 +613,41 @@ async def incubator_stats():
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=str(e))
 
+@app.post("/incubator/train")
+async def start_training(req: dict = None):
+    """
+    Start fine-tuning with the Golden Dataset.
+    Currently a placeholder - will trigger Unsloth LoRA training later.
+    """
+    try:
+        # Get current stats
+        stats = get_dataset_stats()
+
+        # Check minimum samples
+        if stats["total_samples"] < 10:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Legalább 10 minta szükséges. Jelenlegi: {stats['total_samples']}"
+            )
+
+        # TODO: Later - implement actual Unsloth training
+        # For now, return success placeholder
+        import time
+        task_id = f"train_{int(time.time())}"
+
+        return {
+            "success": True,
+            "message": f"Training elindítva {stats['total_samples']} mintával! (Placeholder - valódi training hamarosan)",
+            "task_id": task_id,
+            "samples": stats["total_samples"],
+            "avg_quality": stats["avg_quality"]
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/harvest/check")
 async def harvest_check(scenario_path: str = "myai/scenarios/n8n_training.json"):
     """

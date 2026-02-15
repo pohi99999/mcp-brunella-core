@@ -31,6 +31,22 @@ export function createIncubatorRoutes(): Router {
         }
     });
 
+    router.post('/train', async (req, res) => {
+        try {
+            const pythonBaseUrl = process.env.PYTHON_SUBSET_URL || 'http://127.0.0.1:8000';
+            const response = await fetch(`${pythonBaseUrl}/incubator/train`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(req.body)
+            });
+            const data = await response.json();
+            res.status(response.status).json(data);
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
     return router;
 }
 

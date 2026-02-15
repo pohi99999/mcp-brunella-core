@@ -1206,6 +1206,23 @@ export async function getIncubatorStats(): Promise<DatasetStats> {
   return data.stats;
 }
 
+export async function trainModel(config?: Record<string, unknown>): Promise<{ success: boolean; message: string; task_id?: string }> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/incubator/train`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(config || {}),
+    },
+    LONG_TIMEOUT_MS // Training lehet hosszú
+  );
+  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || 'Training failed');
+  return data;
+}
+
 /**
  * Developer Agent API (Pipeline-based)
  */
