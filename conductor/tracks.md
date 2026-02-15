@@ -43,26 +43,49 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
 
 ## Aktiv Szalak (Active/In Progress) (6)
 
-- [ ] **CEAN Operations Center UI** [🔥 CRITICAL]
+- [x] **CEAN Operations Center UI - Phase 1B.5** [✅ COMPLETE]
   - **ID:** `cean_operations_center_ui_20260215`
-  - **Progress:** 10% (SPEC + PLAN + COMPONENTS DONE)
-  - **Start:** 2026-02-15 | **Target:** 2026-03-06
+  - **Progress:** 100% (IMPLEMENTED & DEPLOYED)
+  - **Start:** 2026-02-15 | **Completed:** 2026-02-15
   - **Assignee:** Claude Code (Developer)
-  - **Duration:** 14-16 munkanap (~3.5 hét)
-  - **Components:**
-    - Phase 1: Frontend Layout & Navigation (2 nap)
-    - Phase 2: Chat Interface (2-3 nap)
-    - Phase 3: Worker Management (2-3 nap)
-    - Phase 4: D1/R1 Explorer (1-2 nap)
-    - Phase 5: Backend API Routes (2-3 nap)
-    - Phase 6: Orchestrator Integration (1-2 nap)
-    - Phase 7: Metrics Dashboard (1-2 nap)
-    - Phase 8: Testing & Polish (1-2 nap)
-  - **Features:** Hungarian UI, Orchestrator chat, worker control, D1/R1 browser, real-time metrics
-  - **Stack:** React 18 + TypeScript + Radix UI + Tailwind + Socket.IO + recharts
-  - **API:** 30+ REST endpoints + WebSocket events
+  - **Completed Components:**
+    - ✅ OrchestratorChat.tsx - WebSocket + SQLite chat history
+    - ✅ CloudflareDeployment.tsx - D1 init, Worker deploy, migration UI
+    - ✅ useChatHistory hook - React persistence
+    - ✅ Backend API: /api/cean/chat/* + /api/wrangler/*
+    - ✅ Backend API: routes/cean.ts, routes/wrangler.ts
+    - ✅ Dashboard Integration: Sidebar + Navigation
+  - **Stack:** React 18 + TypeScript + Radix UI + Tailwind + Socket.IO
   - Mappa: ./tracks/cean_operations_center_ui_20260215/
-  - **Tags:** cean, dashboard, ui, orchestrator, react, socket.io, real-time, magyar
+  - **Tags:** cean, dashboard, ui, cloudflare-deploy, react, socket.io, magyar
+
+- [ ] **CEAN Phase 2: Worker Fleet Management** [🚀 PROPOSED]
+  - **ID:** `cean_phase_2_fleet_management_20260215`
+  - **Progress:** 0% (SPEC + PLAN + COMPONENTS DOCUMENTED)
+  - **Start:** 2026-02-16 | **Target:** 2026-02-23
+  - **Assignee:** Claude Code (Developer)
+  - **Status:** `pending_approval`
+  - **Duration:** 5-7 munkanap
+  - **Sprints:**
+    - Sprint 1: Database & Backend API (3-4 nap)
+    - Sprint 2: Frontend Dashboard (2-3 nap)
+    - Sprint 3: Prometheus & Monitoring (2 nap)
+    - Sprint 4: Auto-scaling Engine (1.5 nap)
+    - Sprint 5: Testing & Documentation (1.5 nap)
+  - **Features:**
+    - Fleet management (create/list/delete fleets)
+    - Worker CRUD operations
+    - Real-time Prometheus metrics (latency, error rate, RPS)
+    - Auto-scaling logic (scale-up based on latency/errors, scale-down)
+    - Metrics dashboard with Recharts charts
+    - WebSocket real-time updates
+  - **Components:** FleetManager.tsx, FleetOverview, MetricsDashboard, WorkerDetails, ScalingConfig
+  - **Database:** D1 tables (fleets, workers, scaling_events, metrics_cache)
+  - **API:** 12 new routes (/api/fleet/*, /api/metrics/*, /api/scaling/*)
+  - **Monitoring:** Prometheus integration, Docker-based Prometheus server
+  - **Stack:** React 18 + Recharts + Prometheus + D1 + Socket.IO
+  - Mappa: ./tracks/cean_phase_2_fleet_management_20260215/
+  - **Tags:** cean, fleet-management, prometheus, auto-scaling, monitoring, react, socket.io
 
 - [ ] **Cloudflare Edge Agents Network (CEAN)** [🔥 CRITICAL]
   - **ID:** `cloudflare_edge_agents_network_20260215`
