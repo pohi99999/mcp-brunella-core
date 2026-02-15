@@ -59,33 +59,53 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
   - Mappa: ./tracks/cean_operations_center_ui_20260215/
   - **Tags:** cean, dashboard, ui, cloudflare-deploy, react, socket.io, magyar
 
-- [ ] **CEAN Phase 2: Worker Fleet Management** [🚀 PROPOSED]
+- [x] **CEAN Phase 2: Sprint 1 & 2 - Backend + Frontend** [✅ COMPLETE (A+B)]
   - **ID:** `cean_phase_2_fleet_management_20260215`
-  - **Progress:** 0% (SPEC + PLAN + COMPONENTS DOCUMENTED)
-  - **Start:** 2026-02-16 | **Target:** 2026-02-23
+  - **Progress:** 66% (Sprint 1 + 2A + 2B DONE, 2C IN-PROGRESS)
+  - **Start:** 2026-02-16 | **Status:** ✅ SPRINT 1-2 COMPLETE
   - **Assignee:** Claude Code (Developer)
-  - **Status:** `pending_approval`
-  - **Duration:** 5-7 munkanap
-  - **Sprints:**
-    - Sprint 1: Database & Backend API (3-4 nap)
-    - Sprint 2: Frontend Dashboard (2-3 nap)
-    - Sprint 3: Prometheus & Monitoring (2 nap)
-    - Sprint 4: Auto-scaling Engine (1.5 nap)
-    - Sprint 5: Testing & Documentation (1.5 nap)
-  - **Features:**
-    - Fleet management (create/list/delete fleets)
-    - Worker CRUD operations
-    - Real-time Prometheus metrics (latency, error rate, RPS)
-    - Auto-scaling logic (scale-up based on latency/errors, scale-down)
-    - Metrics dashboard with Recharts charts
-    - WebSocket real-time updates
-  - **Components:** FleetManager.tsx, FleetOverview, MetricsDashboard, WorkerDetails, ScalingConfig
-  - **Database:** D1 tables (fleets, workers, scaling_events, metrics_cache)
-  - **API:** 12 new routes (/api/fleet/*, /api/metrics/*, /api/scaling/*)
-  - **Monitoring:** Prometheus integration, Docker-based Prometheus server
-  - **Stack:** React 18 + Recharts + Prometheus + D1 + Socket.IO
+  - **Completed:**
+    - ✅ Sprint 1: D1 schema + 5 backend API routes + service logic + tests (all 649 tests pass)
+    - ✅ Sprint 2A: 6 React components (FleetManager, FleetOverview, MetricsDashboard, WorkerDetails, ScalingConfig, types)
+    - ✅ Sprint 2B: 4 hooks (useFleet, useFleetList, useWorkerMetrics, useScaling), WebSocket events
+  - **In Progress:**
+    - 🟡 Sprint 2C (Phase C): Prometheus integration, Grafana dashboard, real-time metrics
+  - **Stack:** React 18 + TypeScript + Tailwind + Socket.IO + better-sqlite3
   - Mappa: ./tracks/cean_phase_2_fleet_management_20260215/
-  - **Tags:** cean, fleet-management, prometheus, auto-scaling, monitoring, react, socket.io
+  - **Tags:** cean, fleet-management, backend, frontend, react, socket.io
+
+- [ ] **CEAN Phase 2 - Phase C: Prometheus & Monitoring** [🟡 APPROVED & IN-PROGRESS]
+  - **ID:** `cean_phase2_c_prometheus_20250216`
+  - **Progress:** 15% (SPEC + PLAN + COMPONENTS DOCUMENTED)
+  - **Start:** 2026-02-16 | **Target:** 2026-02-17
+  - **Assignee:** Claude Code (Developer)
+  - **Status:** `approved` → `in_progress`
+  - **Duration:** 10-16 hours (1 day intensive)
+  - **Phases:**
+    - C.1: Backend Prometheus integration + `/metrics` endpoint (2-3h)
+    - C.2: D1 schema + metrics archival (1-2h)
+    - C.3: Grafana dashboard template JSON (2-3h)
+    - C.4: WebSocket `metrics_snapshot` event (1-2h)
+    - C.5: Frontend monitoring component (3-4h)
+    - Testing: Integration tests (1-2h)
+  - **Features:**
+    - Prometheus client integration (`prom-client`)
+    - `/metrics` endpoint (Prometheus text format)
+    - Real-time WebSocket metrics push (`metrics_snapshot`)
+    - Grafana pre-built dashboard (JSON template)
+    - Frontend monitoring dashboard with charts (Recharts)
+    - D1 metrics archival (30-day retention)
+    - Health gauges: workers, requests, errors, latency
+  - **Components:**
+    - Backend: prometheus.ts, routes/prometheus.ts, metricsArchiveService.ts
+    - WebSocket: metrics_snapshot handler + scheduled emit (10s)
+    - Frontend: PrometheusMonitor.tsx + 6 sub-components + useMetricsSnapshot hook
+    - Dashboards: Grafana JSON + alert rules
+  - **Database:** New table: metrics_archive (timestamp, fleet_id, metric_name, metric_value, labels)
+  - **API:** GET /metrics (Prometheus format)
+  - **Stack:** prom-client + Recharts + D1 + Socket.IO
+  - Mappa: ./tracks/cean_phase2_c_prometheus_20250216/
+  - **Tags:** cean, prometheus, grafana, monitoring, metrics, real-time, socket.io
 
 - [ ] **Cloudflare Edge Agents Network (CEAN)** [🔥 CRITICAL]
   - **ID:** `cloudflare_edge_agents_network_20260215`

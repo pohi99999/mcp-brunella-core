@@ -57,7 +57,7 @@ import { createFleetRouter } from "./routes/fleet.js";
 import { createWorkersRouter } from "./routes/workers.js";
 import { createMetricsRouter } from "./routes/metrics.js";
 import { createScalingRouter } from "./routes/scaling.js";
-import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers } from "./websocket.js";
+import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers, registerFleetWebSocketHandlers } from "./websocket.js";
 import testSchedulerRoutes from "./routes/testScheduler.js";
 import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
 import { initTestResultsDb } from "../core/testResultsService.js";
@@ -230,6 +230,9 @@ export async function startWebServer() {
 
   // Register CEAN Orchestrator Chat WebSocket handlers
   registerCEANWebSocketHandlers(io);
+
+  // Register Fleet Management WebSocket handlers
+  registerFleetWebSocketHandlers(io);
 
   const agentLogBuffer = new Map<string, LogEvent[]>();
   const MAX_AGENT_LOGS = 500;

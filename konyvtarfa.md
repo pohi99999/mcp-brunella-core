@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 15. 18:38:05
+**Generálva:** 2026. 02. 15. 19:24:00
 **Script:** 
 
 ---
@@ -42480,6 +42480,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 spec.md
         - 📄 track.md
       - 📂 **cean_operations_center_ui_20260215**
+        - 📄 components.md
+        - 📄 plan.md
+        - 📄 spec.md
+      - 📂 **cean_phase_2_fleet_management_20260215**
         - 📄 components.md
         - 📄 plan.md
         - 📄 spec.md
@@ -116739,6 +116743,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 ollamaService.ts
         - 📄 types.ts
         - 📄 utils.ts
+      - 📂 **pages**
+        - 📄 CloudflareDeployment.tsx
       - 📂 **styles**
         - 📄 theme.css
       - 📂 **ui**
@@ -116777,11 +116783,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 evhunter.ts
         - 📄 external.ts
         - 📄 files.ts
+        - 📄 fleet.ts
         - 📄 health.ts
         - 📄 index.ts
         - 📄 jules.ts
         - 📄 llm.ts
+        - 📄 metrics.ts
         - 📄 robotkez.ts
+        - 📄 scaling.ts
         - 📄 scheduledTasks.ts
         - 📄 suggestedTasks.ts
         - 📄 tasks.ts
@@ -116790,6 +116799,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 tracks.ts
         - 📄 tts.ts
         - 📄 webhooks.ts
+        - 📄 workers.ts
         - 📄 wrangler.ts
       - 📂 **schedulers**
         - 📄 testRunner.ts
@@ -116813,6 +116823,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **servers**
       - 📄 automation.py
       - 📄 workspace.py
+    - 📂 **services**
+      - 📄 fleetService.ts
+      - 📄 metricsService.ts
+      - 📄 scalingService.ts
     - 📂 **tools**
       - 📄 anythingllm.ts
       - 📄 browser.ts
@@ -116934,6 +116948,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 ev_hunter_research.test.ts
     - 📄 evHunterTool.test.ts
     - 📄 failover_registry.test.ts
+    - 📄 fleetService.test.ts
     - 📄 git_integration.test.ts
     - 📄 goldenDatasetBridge.test.ts
     - 📄 health_check.test.ts
@@ -116949,6 +116964,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 mcp-brunella-core.code-workspace
     - 📄 memory_context.test.ts
     - 📄 memoryRoutes.golden.test.ts
+    - 📄 metricsService.test.ts
     - 📄 middleware.test.ts
     - 📄 modelRouter.test.ts
     - 📄 monitor.test.ts
@@ -116968,6 +116984,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 robotkezAPI.test.ts
     - 📄 robotkezV2Agent.test.ts
     - 📄 routes_developer.test.ts
+    - 📄 scalingService.test.ts
     - 📄 setup.ts
     - 📄 skills_loader.test.ts
     - 📄 smoke.vitest.ts
