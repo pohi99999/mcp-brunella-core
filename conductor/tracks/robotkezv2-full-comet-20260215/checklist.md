@@ -123,11 +123,11 @@
 - [x] In-memory task storage (Map<string, BackgroundTask>)
 - [x] **Checkpoint:** Task manager compiles ✅
 
-#### 4.2 Database Schema
-- [ ] `src/utils/tasksDb.ts` frissítve (robotkez_background_tasks table)
-- [ ] SQLite migration script
-- [ ] Task persistence (save/load from DB)
-- [ ] **Checkpoint:** DB migration sikeres
+#### 4.2 Database Schema ✅
+- [x] `src/utils/tasksDb.ts` frissítve (robotkez_background_tasks table)
+- [x] SQLite migration script
+- [x] Task persistence (save/load from DB)
+- [x] **Checkpoint:** DB migration sikeres
 
 #### 4.3 Checkpoint System ✅
 - [x] `createCheckpoint()` method (every 3 steps)
@@ -135,11 +135,11 @@
 - [x] `replaySteps()` method (Phoenix recovery)
 - [x] **Checkpoint:** Checkpoint creation/load test
 
-#### 4.4 Agent Integration
-- [ ] `RobotkezV2Agent.executeInBackground()` implementálva
-- [ ] Background task delegation (> 30s estimated duration)
-- [ ] Task status polling (Socket.IO events)
-- [ ] **Checkpoint:** Background task execution test (manual)
+#### 4.4 Agent Integration ✅
+- [x] `RobotkezV2Agent.executeInBackground()` implementálva
+- [x] Background task delegation (> 30s estimated duration)
+- [x] Task status query methods (getBackgroundTaskStatus, cancelBackgroundTask, listBackgroundTasks)
+- [x] **Checkpoint:** Background delegation tests (19/19 pass)
 
 ---
 

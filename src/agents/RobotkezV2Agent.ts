@@ -14,6 +14,7 @@ import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
 import { persistentBrowser } from '../utils/persistentBrowser.js';
 import { generateExecutionPlan, ExecutionPlan, ExecutionStep } from '../utils/llmPlanner.js';
+import { backgroundTaskManager } from '../utils/backgroundTaskManager.js';
 
 /**
  * Intent (Phase 2 MVP - simple regex parsing)
@@ -72,7 +73,25 @@ export class RobotkezV2Agent extends BaseAgent {
                 };
             }
 
-            // Execute multi-step plan
+            // Phase 4: Background task delegation (> 30s or backgroundEligible)
+            if (plan.backgroundEligible || plan.estimatedDuration > 30000) {
+                logInfo(this.name, `📤 Long task detected (~${plan.estimatedDuration}ms), delegating to background...`);
+                const taskId = await backgroundTaskManager.startTask(instruction, plan);
+                return {
+                    success: true,
+                    message: `Háttérben fut: ${instruction} (Task ID: ${taskId})`,
+                    data: {
+                        taskId,
+                        plan: plan.plan,
+                        estimatedDuration: plan.estimatedDuration,
+                        backgroundEligible: plan.backgroundEligible
+                    },
+                    thoughts: `Task delegated to background (ID: ${taskId})`,
+                    contextUsed: ['background_task_manager']
+                };
+            }
+
+            // Execute multi-step plan (foreground)
             const completedSteps: Array<ExecutionStep & { status: string; error?: string }> = [];
 
             for (let i = 0; i < plan.plan.length; i++) {
@@ -119,6 +138,66 @@ export class RobotkezV2Agent extends BaseAgent {
         } finally {
             setAgentStatus(this.name, 'idle');
         }
+    }
+
+    /**
+     * Execute task in background (Phase 4.4)
+     * For explicit background delegation (manual override)
+     *
+     * @param instruction - Magyar nyelvű utasítás
+     * @returns Task ID for status tracking
+     */
+    async executeInBackground(instruction: string): Promise<{ taskId: string; plan: ExecutionPlan }> {
+        setAgentStatus(this.name, 'working', `Background: ${instruction.slice(0, 50)}`);
+
+        try {
+            logInfo(this.name, `📤 Background execution: ${instruction}`);
+
+            // Generate plan
+            const plan = await generateExecutionPlan(instruction);
+            logInfo(this.name, `🤖 Plan: ${plan.plan.length} lépés, ~${plan.estimatedDuration}ms`);
+
+            // Delegate to background task manager
+            const taskId = await backgroundTaskManager.startTask(instruction, plan);
+            logInfo(this.name, `✅ Background task started: ${taskId}`);
+
+            return { taskId, plan };
+
+        } catch (error: any) {
+            logError(this.name, `Background execution failed: ${error.message}`);
+            throw error;
+        } finally {
+            setAgentStatus(this.name, 'idle');
+        }
+    }
+
+    /**
+     * Get background task status (Phase 4.4)
+     *
+     * @param taskId - Task ID
+     * @returns Task status or null
+     */
+    getBackgroundTaskStatus(taskId: string) {
+        return backgroundTaskManager.getTaskStatus(taskId);
+    }
+
+    /**
+     * Cancel background task (Phase 4.4)
+     *
+     * @param taskId - Task ID
+     * @returns boolean - true if cancelled
+     */
+    cancelBackgroundTask(taskId: string): boolean {
+        return backgroundTaskManager.cancelTask(taskId);
+    }
+
+    /**
+     * List all background tasks (Phase 4.4)
+     *
+     * @returns Array of all tasks
+     */
+    listBackgroundTasks() {
+        return backgroundTaskManager.getAllTasks();
     }
 
     /**

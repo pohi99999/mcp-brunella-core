@@ -37,6 +37,16 @@ vi.mock('../src/utils/logger.js', () => ({
     setAgentStatus: vi.fn()
 }));
 
+// Mock backgroundTaskManager (Phase 4.4)
+vi.mock('../src/utils/backgroundTaskManager.js', () => ({
+    backgroundTaskManager: {
+        startTask: vi.fn().mockResolvedValue('mock_task_id_123'),
+        getTaskStatus: vi.fn().mockReturnValue(null),
+        cancelTask: vi.fn().mockReturnValue(false),
+        getAllTasks: vi.fn().mockReturnValue([])
+    }
+}));
+
 describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
     let agent: RobotkezV2Agent;
 
@@ -270,6 +280,126 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
 
             // Main task should still succeed even if screenshot failed
             expect(result.success).toBe(true);
+        });
+    });
+
+    describe('Background Task Delegation (Phase 4.4)', () => {
+        it('should delegate long tasks (> 30s) to background automatically', async () => {
+            // Mock LLM to return a plan with > 30s duration
+            const longPlan = {
+                plan: [
+                    { action: 'navigate', url: 'https://test.com', description: 'Step 1' },
+                    { action: 'wait', selector: 'body', timeout: 20000, description: 'Long wait' },
+                    { action: 'click', selector: '.button', description: 'Step 3' }
+                ],
+                estimatedDuration: 45000, // > 30s
+                backgroundEligible: false,
+                requiresUserInput: []
+            };
+
+            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
+            vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(longPlan);
+
+            mockSendCommand.mockResolvedValue({ status: 'success' });
+
+            const context: AgentContext = {
+                task: 'Végezd el ezt a hosszú műveletet'
+            };
+
+            const result = await agent.executeTask(context);
+
+            // Should delegate to background
+            expect(result.success).toBe(true);
+            expect(result.message).toContain('Háttérben fut');
+            expect(result.data?.taskId).toBeDefined();
+        });
+
+        it('should delegate tasks marked as backgroundEligible', async () => {
+            const backgroundPlan = {
+                plan: [
+                    { action: 'navigate', url: 'https://test.com', description: 'Navigate' },
+                    { action: 'screenshot', description: 'Screenshot' }
+                ],
+                estimatedDuration: 10000, // < 30s
+                backgroundEligible: true, // But explicitly marked as background
+                requiresUserInput: []
+            };
+
+            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
+            vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(backgroundPlan);
+
+            mockSendCommand.mockResolvedValue({ status: 'success' });
+
+            const context: AgentContext = {
+                task: 'Background task test'
+            };
+
+            const result = await agent.executeTask(context);
+
+            expect(result.success).toBe(true);
+            expect(result.message).toContain('Háttérben fut');
+        });
+
+        it('should execute short tasks (< 30s) in foreground', async () => {
+            const shortPlan = {
+                plan: [
+                    { action: 'navigate', url: 'https://test.com', description: 'Quick nav' },
+                    { action: 'screenshot', description: 'Screenshot' }
+                ],
+                estimatedDuration: 5000, // < 30s
+                backgroundEligible: false,
+                requiresUserInput: []
+            };
+
+            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
+            vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(shortPlan);
+
+            mockSendCommand.mockResolvedValue({ status: 'success' });
+
+            const context: AgentContext = {
+                task: 'Quick task'
+            };
+
+            const result = await agent.executeTask(context);
+
+            // Should execute in foreground
+            expect(result.success).toBe(true);
+            expect(result.message).not.toContain('Háttérben fut');
+            expect(result.message).toContain('Végrehajtva');
+        });
+
+        it('should provide executeInBackground method for manual delegation', async () => {
+            const plan = {
+                plan: [
+                    { action: 'navigate', url: 'https://test.com', description: 'Test' }
+                ],
+                estimatedDuration: 5000,
+                backgroundEligible: false,
+                requiresUserInput: []
+            };
+
+            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
+            vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(plan);
+
+            mockSendCommand.mockResolvedValue({ status: 'success' });
+
+            const result = await agent.executeInBackground('Manual background test');
+
+            expect(result.taskId).toBeDefined();
+            expect(result.plan).toEqual(plan);
+        });
+
+        it('should provide background task status methods', () => {
+            // getBackgroundTaskStatus
+            expect(agent.getBackgroundTaskStatus('test_id')).toBeDefined();
+
+            // cancelBackgroundTask
+            const cancelled = agent.cancelBackgroundTask('non_existent');
+            expect(cancelled).toBe(false);
+
+            // listBackgroundTasks
+            const tasks = agent.listBackgroundTasks();
+            expect(Array.isArray(tasks)).toBe(true);
         });
     });
 });
