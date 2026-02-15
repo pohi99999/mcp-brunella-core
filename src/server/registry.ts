@@ -107,6 +107,7 @@ export async function registerAgents() {
   const { EvaluatorAgent } = await import("../agents/EvaluatorAgent.js");
   const { DeveloperAgent } = await import("../agents/DeveloperAgent.js");
   const { RobotkezAgent } = await import("../agents/RobotkezAgent.js");
+  const { RobotkezV2Agent } = await import("../agents/RobotkezV2Agent.js");
   const { DynamicAgent } = await import("../agents/DynamicAgent.js");
 
   // Initialize Static Agents
@@ -117,6 +118,7 @@ export async function registerAgents() {
   agentManager.registerAgent(new EvaluatorAgent());
   agentManager.registerAgent(new DeveloperAgent());
   agentManager.registerAgent(new RobotkezAgent());
+  agentManager.registerAgent(new RobotkezV2Agent());
 
   // Initialize Dynamic Agents
   try {

@@ -219,6 +219,37 @@
       "priority": 2
     },
     {
+      "name": "robotkezv2",
+      "title": "RobotkezV2 Agent",
+      "description": "Magyar nyelvű agentic browser (Comet-style) - Perplexity Comet-szerű intelligens böngésző",
+      "class": "RobotkezV2Agent",
+      "module": "./agents/RobotkezV2Agent.js",
+      "capabilities": [
+        "agentic_browsing",
+        "multi_step_automation",
+        "context_awareness",
+        "magyar_nyelv",
+        "tool_orchestration"
+      ],
+      "triggers": [
+        "robotkéz",
+        "böngésző",
+        "navigálj",
+        "keress rá",
+        "kattints",
+        "tölts ki",
+        "rendelj",
+        "keresd meg",
+        "írj be",
+        "gépelj",
+        "képernyőkép"
+      ],
+      "category": "automation",
+      "status": "active",
+      "tags": ["browser", "comet", "agentic", "magyar", "automation"],
+      "priority": 3
+    },
+    {
       "name": "voice",
       "title": "Voice Agent",
       "description": "Hangutasítások és multimodális interakciók specialistája.",
