@@ -1,0 +1,120 @@
+{
+  "metadata": {
+    "account": "Peterpohankapersonal@gmail.com",
+    "accountId": "1bf6118df97f0e12f3592a89d90deb1e",
+    "auditDate": "2026-02-15T19:52:00Z",
+    "status": "VERIFIED",
+    "note": "Phase 1A Infrastructure Audit - All resources verified with wrangler CLI"
+  },
+  "workers": {
+    "deployed": [
+      {
+        "name": "bas-cloudflare-orchestrator",
+        "status": "DEPLOYED",
+        "latestDeployment": "2026-02-05T04:37:46.425Z",
+        "deploymentCount": 8,
+        "environments": ["production", "staging"],
+        "description": "Main BAS orchestration worker for CEAN"
+      }
+    ],
+    "total": 1,
+    "available": "unlimited"
+  },
+  "databases": {
+    "d1": [
+      {
+        "name": "bas-metadata",
+        "uuid": "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab",
+        "createdAt": "2026-02-03T17:40:41.532Z",
+        "version": "production",
+        "tables": 0,
+        "fileSizeBytes": 102400,
+        "jurisdiction": "",
+        "description": "Current D1 database for BAS metadata",
+        "status": "READY_FOR_SCHEMA_MIGRATION"
+      }
+    ],
+    "total": 1,
+    "quota": "100 MB free tier"
+  },
+  "objectStorage": {
+    "r2": [
+      {
+        "name": "vodor1",
+        "createdAt": "2026-02-03T12:50:31.327Z",
+        "description": "R2 bucket for object storage",
+        "status": "ACTIVE"
+      }
+    ],
+    "total": 1,
+    "quota": "unlimited (free tier included)"
+  },
+  "vectorizeR1": {
+    "indexes": [],
+    "note": "Not yet created - will be set up in Phase 1B for semantic search",
+    "quota": "5 MB free tier"
+  },
+  "kvNamespaces": {
+    "note": "To be listed with: npx wrangler kv namespace list",
+    "quota": "1 GB free tier"
+  },
+  "ceanDeploymentPlan": {
+    "phase1a": {
+      "status": "COMPLETE",
+      "tasks": [
+        "✅ Wrangler CLI setup and authentication",
+        "✅ Infrastructure inventory (this file)",
+        "✅ Workers audit (1 deployed: bas-cloudflare-orchestrator)",
+        "✅ D1 database ready (bas-metadata)",
+        "✅ R2 bucket ready (vodor1)",
+        "⏳ Fix wrangler.toml for CEAN project"
+      ]
+    },
+    "phase1b": {
+      "status": "PENDING",
+      "tasks": [
+        "Create cean-tasks D1 database",
+        "Design CEAN D1 schema (edge_tasks, edge_executions, edge_results)",
+        "Create Vectorize index for embedded data",
+        "Generate TypeScript types from schema",
+        "Test D1 connectivity with read/write operations"
+      ]
+    },
+    "phase1c": {
+      "status": "PENDING",
+      "tasks": [
+        "Create GitHub Actions CI/CD workflow",
+        "Configure secrets (CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID)",
+        "Test dry-run deploy",
+        "Set up automatic deploy on main push"
+      ]
+    },
+    "phase2": {
+      "status": "PENDING",
+      "tasks": [
+        "Deploy 5 Agent Workers",
+        "Orchestrator for task queue",
+        "D1 + R2 integration",
+        "Cost tracking dashboard"
+      ]
+    }
+  },
+  "costEstimate": {
+    "currentUsage": "Minimal (1 worker, 1 D1, 1 R2)",
+    "projectedCEANUsage": "<$3/month",
+    "breakdown": {
+      "workers": "$0.50/month (100k free req/mo)",
+      "d1": "$0.50/month (storage + ops)",
+      "r2": "$0.00 (free tier)",
+      "vectorize": "TBD (vector search indexing)",
+      "kvStore": "$0.00 (free tier)"
+    }
+  },
+  "nextSteps": [
+    "Phase 1B: Create CEAN D1 schema (edge_tasks, edge_executions, edge_results)",
+    "Phase 1B: Design R1 Vectorize mapping for semantic search",
+    "Phase 1B: Generate TypeScript types (src/types/cean.ts)",
+    "Phase 1C: GitHub Actions workflow for automated deployment",
+    "Phase 2: Deploy 5 Agent Workers (research, grant, harvester, extractor, builder)"
+  ]
+}

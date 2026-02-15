@@ -366,6 +366,39 @@ CREATE TABLE IF NOT EXISTS cean_metrics_cache (
 );
 
 -- ============================================================================
+-- 12. CEAN_METRICS_ARCHIVE - Long-term metrics storage with retention (Phase 2 C.2)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS cean_metrics_archive (
+  id TEXT PRIMARY KEY,                          -- UUID
+  
+  -- Time
+  timestamp TEXT NOT NULL,                      -- ISO-8601: measurement time
+  
+  -- Fleet Information
+  fleet_id TEXT,                                -- FK to cean_fleets
+  worker_id TEXT,                               -- FK to cean_workers
+  
+  -- Metric Metadata
+  metric_name TEXT NOT NULL,                    -- e.g., fleet_requests_total, worker_latency_ms
+  metric_type TEXT,                             -- gauge|counter|histogram
+  
+  -- Metric Value
+  metric_value REAL NOT NULL,                   -- Numeric value
+  
+  -- Labels (JSON)
+  labels TEXT,                                  -- JSON: {worker_id, region, status, ...}
+  
+  -- Metadata
+  created_at TEXT NOT NULL,
+  
+  INDEX idx_fleet_time ON cean_metrics_archive(fleet_id, timestamp DESC),
+  INDEX idx_worker_time ON cean_metrics_archive(worker_id, timestamp DESC),
+  INDEX idx_metric_name (metric_name),
+  INDEX idx_timestamp (timestamp),
+  INDEX idx_created_at (created_at)
+);
+
+-- ============================================================================
 -- Trigger: Update edge_tasks.updated_at on modification
 -- ============================================================================
 -- Note: SQLite doesn't support triggers in D1, so updates must be explicit

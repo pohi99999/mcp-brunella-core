@@ -65,7 +65,9 @@
       "Bash(npm run migrate:backup:*)",
       "Bash(npx tsx:*)",
       "WebSearch",
-      "Bash(git commit:*)"
+      "Bash(git commit:*)",
+      "Bash(tee:*)",
+      "Bash(taskkill:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

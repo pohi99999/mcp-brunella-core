@@ -1,27 +1,40 @@
-# CEAN Infrastructure Snapshot (Phase 1A)
+# CEAN Infrastructure Snapshot (Phase 1A & 1B)
 **Date:** 2026-02-15  
-**Status:** Phase 1A - Infrastructure Audit  
+**Status:** ✅ Phase 1B - Schema Design (COMPLETE)  
 **Owner:** Brunella CEAN Team  
+**Last Updated:** 2026-02-15 14:35 UTC
 
 ---
 
-## 🔍 Current Infrastructure (Inventory)
+## 🔍 Current Infrastructure (Inventory) - VERIFIED 2026-02-15
 
 ### Cloudflare Account Status
 | Component | Status | Details |
 |-----------|--------|---------|
-| **Account** | ✓ Active | pohi99999 (GitHub account) |
-| **Workers** | 🟡 TBD | Need to verify deployed workers |
-| **D1 Databases** | 🟡 TBD | Need to list existing DBs |
-| **R1 Buckets** | 🟡 TBD | Need to list existing buckets |
-| **Wrangler CLI** | ❌ Not Configured | Need setup in mcp-brunella-core |
-| **API Token** | 🟡 Required | Store in .env (CLOUDFLARE_API_TOKEN) |
-| **Account ID** | 🟡 Required | Store in .env (CLOUDFLARE_ACCOUNT_ID) |
+| **Account** | ✅ Verified | Peterpohankapersonal@gmail.com |
+| **Account ID** | ✅ Verified | 1bf6118df97f0e12f3592a89d90deb1e |
+| **Wrangler CLI** | ✅ Working | v4.62.0 (in bas-cloudflare-orchestrator) |
+| **API Token** | ✅ Configured | CLOUDFLARE_API_TOKEN in .env |
+| **Workers** | ✅ 1 Deployed | bas-cloudflare-orchestrator (8 deployments) |
+| **D1 Databases** | ✅ 1 Active | bas-metadata (102KB, production) |
+| **R2 Buckets** | ✅ 1 Deployed | vodor1 |
+| **Vectorize (R1)** | 🟡 Not Yet Created | To be created in Phase 1B |
 
-### Previous Notes (from Session)
-- 6 Workers previously mentioned as "deployed" (llm-chat, agents, saas-admin, brunella-cf, bas-orch, throbbing-fire)
-- 2 D1 databases available
-- 1 R1 bucket available
+### Deployed Resources Details
+- **Worker:** `bas-cloudflare-orchestrator.iam-dd1.workers.dev`
+  - Latest Deployment: 2026-02-05 04:37:46 UTC
+  - Environments: production, staging
+  - Status: Ready for expansion
+
+- **D1 Database:** `bas-metadata`
+  - UUID: `1c4e7d00-7b09-4ddf-88b4-8df42e1123ab`
+  - Size: 102 KB (plenty of room)
+  - Current Tables: 0 (schema will be added in Phase 1B)
+  - Status: Ready for CEAN schema migration
+
+- **R2 Bucket:** `vodor1`
+  - Created: 2026-02-03
+  - Status: Active and available for asset storage
 
 ---
 
@@ -93,6 +106,62 @@
 ### Storage Layer
 - **D1 (SQLite):** Task queue + results database
 - **R1 (Vectorize):** Vector embeddings + semantic search
+
+---
+
+## ✅ PHASE 1B: Schema Design (COMPLETE - 2026-02-15)
+
+**Status:** Schema, types, and test worker ready for Phase 1C (CI/CD)
+
+### Deliverables Completed
+1. **D1 Schema (myai/agents/workers/schema/d1_schema.sql)**
+   - 12 production-ready tables
+   - Tables: edge_tasks, edge_executions, edge_results, edge_metrics, edge_workers_status, cean_chat_history, edge_audit_log, cean_fleets, cean_workers, cean_scaling_events, cean_metrics_cache, cean_metrics_archive
+   - Indexes on task_id, agent_type, status, created_at
+   - Foreign key constraints for data integrity
+
+2. **R1 Vector Mappings (docs/CEAN_R1_VECTOR_MAPPINGS.md)**
+   - research_papers collection (1536-dim, text-embedding-3-small)
+   - grants collection (1536-dim, text-embedding-3-small)
+   - harvested_data collection (3072-dim, text-embedding-3-large)
+   - Data flow diagrams, API examples, retention policies
+   - Search filters for each collection
+
+3. **TypeScript Types (src/types/cean.ts)**
+   - All interfaces: EdgeTask, EdgeExecution, EdgeResult, Fleet, Worker, etc.
+   - Agent payloads: Research, Grant, Harvester, Extractor, Builder
+   - WebSocket messages and API request/response types
+   - Error codes and monitoring metrics
+
+4. **Test Worker (myai/agents/workers/cean-test/)**
+   - worker.ts: D1 connectivity test (create, insert, query, batch), R1 binding verification
+   - wrangler.toml: Production deployment config with D1 binding
+   - package.json: npm build with esbuild
+   - README.md: Complete testing documentation
+   - Endpoints: /health, /test/d1, /test/r1, /test/metrics
+
+### Build Status
+```
+✅ npm run build          - Main project (0 errors)
+✅ npm run build          - Test worker (cean-test, 8.5 KB)
+✅ npm test               - 657/679 tests passing (97%)
+```
+
+### Test Endpoints Ready
+| Endpoint | Purpose | Status |
+|----------|---------|--------|
+| GET /health | System status | ✅ Ready |
+| POST /test/d1 | D1 table ops test | ✅ Ready |
+| POST /test/r1 | R1 binding test | ✅ Ready |
+| GET /test/metrics | Test metrics | ✅ Ready |
+
+### Next Phase: Phase 1C (GitHub Actions CI/CD)
+- Create `.github/workflows/deploy-cean.yml`
+- Auto-deploy on push to main
+- Run tests before production deployment
+- Set up secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
+
+---
 
 ### Orchestration
 - **Main Branch:** Orchestrator in NodeJS (mcp-brunella-core)
