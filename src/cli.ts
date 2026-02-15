@@ -30,6 +30,7 @@ import { registerTaskDecomposerCommands } from "./cli/taskDecomposerCommands.js"
 import { registerProgressCommands } from "./cli/progressCommands.js";
 import { registerEdgeCommands } from "./cli/edgeCommands.js";
 import { registerSuggestedTasksCommands } from "./cli/suggestedTasksCommands.js";
+import { registerRobotkezCommands } from "./cli/robotkezCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -1218,6 +1219,9 @@ registerEdgeCommands(program);
 
 // Register Suggested Tasks commands (TODO/FIXME Scanner)
 registerSuggestedTasksCommands(program);
+
+// Register Robotkez commands (RobotkezV2 Agent)
+registerRobotkezCommands(program);
 
 // ════════════════════════════════════════════════════════════════════════════
 // TESTS COMMAND (Test Scheduler)
