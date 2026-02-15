@@ -143,32 +143,32 @@
 
 ---
 
-### Phase 5: REST API Endpoints
+### Phase 5: REST API Endpoints ✅
 
-#### 5.1 Routes Implementation
-- [ ] `src/server/routes/robotkezRoutes.ts` létrehozva
-- [ ] `POST /api/v1/robotkez/chat` endpoint
-- [ ] `POST /api/v1/robotkez/plan` endpoint (plan preview)
-- [ ] `POST /api/v1/robotkez/exec` endpoint (direct action)
-- [ ] `GET /api/v1/robotkez/status` endpoint
-- [ ] `GET /api/v1/robotkez/tasks` endpoint (background tasks list)
-- [ ] `GET /api/v1/robotkez/tasks/:id` endpoint (task status)
-- [ ] `DELETE /api/v1/robotkez/tasks/:id` endpoint (cancel task)
-- [ ] **Checkpoint:** All routes compile ✅
+#### 5.1 Routes Implementation ✅
+- [x] `src/server/routes/robotkez.ts` frissítve (replaced old Browser-Use routes)
+- [x] `POST /api/v1/robotkez/chat` endpoint
+- [x] `POST /api/v1/robotkez/plan` endpoint (plan preview)
+- [x] `POST /api/v1/robotkez/exec` endpoint (direct action)
+- [x] `GET /api/v1/robotkez/status` endpoint
+- [x] `GET /api/v1/robotkez/tasks` endpoint (background tasks list)
+- [x] `GET /api/v1/robotkez/tasks/:id` endpoint (task status)
+- [x] `DELETE /api/v1/robotkez/tasks/:id` endpoint (cancel task)
+- [x] **Checkpoint:** All routes compile ✅
 
-#### 5.2 Router Integration
-- [ ] `src/server/routes/index.ts` frissítve (robotkezRoutes import)
-- [ ] `src/server/web.ts` frissítve (router mount)
-- [ ] **Checkpoint:** Server starts, routes accessible
+#### 5.2 Router Integration ✅
+- [x] `src/server/routes/index.ts` already configured (no changes needed)
+- [x] Routes already mounted at `/api/v1/robotkez`
+- [x] **Checkpoint:** Routes accessible ✅
 
-#### 5.3 API Tests (Postman/cURL)
-- [ ] Chat endpoint test (simple instruction)
-- [ ] Plan endpoint test (plan preview without execution)
-- [ ] Exec endpoint test (direct navigate)
-- [ ] Status endpoint test
-- [ ] Tasks list test
-- [ ] Task cancel test
-- [ ] **Checkpoint:** All API tests pass ✅
+#### 5.3 API Tests ✅
+- [x] Chat endpoint test (simple instruction)
+- [x] Plan endpoint test (plan preview without execution)
+- [x] Exec endpoint test (direct navigate)
+- [x] Status endpoint test
+- [x] Tasks list test
+- [x] Task cancel test (404 handling)
+- [x] **Checkpoint:** All API tests pass ✅ (10/10)
 
 ---
 
