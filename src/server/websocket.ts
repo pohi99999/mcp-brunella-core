@@ -1,6 +1,7 @@
 import { Server, Socket } from "socket.io";
 import { logInfo, logError } from "../utils/logger.js";
 import { cloudflareClient } from "../agents/cloudflare/CloudflareClient.js";
+import { agentManager } from "../agents/AgentManager.js";
 
 /**
  * Register Cloudflare Edge WebSocket event handlers
@@ -170,4 +171,71 @@ export function registerEdgeWebSocketHandlers(io: Server) {
   });
 
   logInfo("EdgeWebSocket", "Edge WebSocket handlers registered ✅");
+}
+
+/**
+ * Register CEAN Orchestrator Chat WebSocket handlers
+ *
+ * Events:
+ * - cean:orchestrator:prompt - User sends prompt to OrchestratorAgent
+ * - cean:orchestrator:response - Agent sends response back to client
+ *
+ * @param io - Socket.IO Server instance
+ */
+export function registerCEANWebSocketHandlers(io: Server) {
+  io.on("connection", (socket: Socket) => {
+    /**
+     * Event: cean:orchestrator:prompt
+     * Client sends a prompt to the Orchestrator Agent
+     *
+     * Payload: { prompt: string, timestamp: number }
+     * Response: cean:orchestrator:response { content, taskId?, error? }
+     */
+    socket.on(
+      "cean:orchestrator:prompt",
+      async (data: { prompt: string; timestamp: number }) => {
+        try {
+          logInfo("CEANChat", `Prompt received: ${data.prompt.slice(0, 50)}`);
+
+          // Get OrchestratorAgent and execute prompt
+          const orchestrator = agentManager.getAgent("OrchestratorAgent");
+          if (!orchestrator) {
+            throw new Error("OrchestratorAgent not found");
+          }
+
+          const result = await orchestrator.execute(data.prompt);
+
+          // Extract response and taskId from result
+          const responseContent =
+            typeof result === "string"
+              ? result
+              : typeof result === "object" && result !== null
+                ? (result as Record<string, unknown>).data || JSON.stringify(result)
+                : String(result);
+
+          const taskId = (result as Record<string, unknown>)?.taskId || undefined;
+
+          logInfo("CEANChat", `Response sent (${String(responseContent).length} chars)`);
+
+          // Emit response back to client
+          socket.emit("cean:orchestrator:response", {
+            content: responseContent,
+            taskId,
+            timestamp: Date.now(),
+          });
+        } catch (error: unknown) {
+          const errorMsg =
+            error instanceof Error ? error.message : String(error);
+          logError("CEANChat", errorMsg);
+
+          socket.emit("cean:orchestrator:response", {
+            error: errorMsg,
+            timestamp: Date.now(),
+          });
+        }
+      },
+    );
+  });
+
+  logInfo("CEANChat", "CEAN Orchestrator WebSocket handlers registered ✅");
 }

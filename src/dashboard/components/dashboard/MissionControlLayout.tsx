@@ -57,9 +57,11 @@ import { TaskDecomposerPanel } from "./TaskDecomposerPanel";
 import { TrackProgressWidget } from "./TrackProgress";
 import { TestResultsWidget } from "./TestResultsWidget";
 import { SuggestedTasksWidget } from "./SuggestedTasksWidget";
+import { CEANLayout } from "@/components/cean/CEANLayout";
 
 const SIDEBAR_ITEMS = [
   { id: "dashboard", label: "Mission Control", icon: LayoutDashboard },
+  { id: "cean", label: "CEAN Orchestrator", icon: Rocket },
   { id: "chat", label: "Chat", icon: MessageSquare },
   { id: "management", label: "Agents", icon: Sparkles },
   { id: "decomposer", label: "Decompose", icon: Network },
