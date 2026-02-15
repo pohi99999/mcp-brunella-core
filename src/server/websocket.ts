@@ -239,3 +239,131 @@ export function registerCEANWebSocketHandlers(io: Server) {
 
   logInfo("CEANChat", "CEAN Orchestrator WebSocket handlers registered ✅");
 }
+
+/**
+ * Register Fleet Management WebSocket handlers
+ *
+ * Events broadcasted to all connected clients:
+ * - fleet_scaled - When a fleet is scaled up/down
+ * - worker_status_changed - When a worker status changes
+ * - metrics_updated - When metrics are updated
+ *
+ * @param io - Socket.IO Server instance
+ */
+export function registerFleetWebSocketHandlers(io: Server) {
+  io.on("connection", (socket: Socket) => {
+    logInfo("FleetWS", `Fleet client connected: ${socket.id}`);
+
+    /**
+     * Event: fleet_scaled
+     * Emitted when a fleet scaling event occurs
+     * Broadcasted to ALL clients
+     *
+     * Payload:
+     * {
+     *   fleet_id: string
+     *   old_worker_count: number
+     *   new_worker_count: number
+     *   direction: 'up' | 'down'
+     *   timestamp: number
+     * }
+     */
+    socket.on(
+      "broadcast:fleet_scaled",
+      (data: {
+        fleet_id: string;
+        old_worker_count: number;
+        new_worker_count: number;
+        direction: "up" | "down";
+        timestamp: number;
+      }) => {
+        logInfo(
+          "FleetWS",
+          `Fleet ${data.fleet_id} scaled ${data.direction}: ${data.old_worker_count} → ${data.new_worker_count} workers`
+        );
+
+        // Broadcast to all clients
+        io.emit("fleet_scaled", data);
+      }
+    );
+
+    /**
+     * Event: worker_status_changed
+     * Emitted when a worker status changes
+     * Broadcasted to ALL clients
+     *
+     * Payload:
+     * {
+     *   worker_id: string
+     *   fleet_id: string
+     *   status: 'healthy' | 'degraded' | 'offline'
+     *   latency_p95?: number
+     *   error_rate?: number
+     *   timestamp: number
+     * }
+     */
+    socket.on(
+      "broadcast:worker_status_changed",
+      (data: {
+        worker_id: string;
+        fleet_id: string;
+        status: "healthy" | "degraded" | "offline";
+        latency_p95?: number;
+        error_rate?: number;
+        timestamp: number;
+      }) => {
+        logInfo("FleetWS", `Worker ${data.worker_id} status: ${data.status}`);
+
+        // Broadcast to all clients
+        io.emit("worker_status_changed", data);
+      }
+    );
+
+    /**
+     * Event: metrics_updated
+     * Emitted when fleet or worker metrics are updated
+     * Broadcasted to ALL clients
+     *
+     * Payload:
+     * {
+     *   fleet_id?: string
+     *   worker_id?: string
+     *   avg_latency?: number
+     *   p95_latency?: number
+     *   p99_latency?: number
+     *   error_rate?: number
+     *   rps?: number
+     *   timestamp: number
+     * }
+     */
+    socket.on(
+      "broadcast:metrics_updated",
+      (data: {
+        fleet_id?: string;
+        worker_id?: string;
+        avg_latency?: number;
+        p95_latency?: number;
+        p99_latency?: number;
+        error_rate?: number;
+        rps?: number;
+        total_workers?: number;
+        healthy_workers?: number;
+        timestamp: number;
+      }) => {
+        logInfo(
+          "FleetWS",
+          `Metrics updated${data.fleet_id ? ` (fleet: ${data.fleet_id})` : data.worker_id ? ` (worker: ${data.worker_id})` : ""}`
+        );
+
+        // Broadcast to all clients
+        io.emit("metrics_updated", data);
+      }
+    );
+
+    socket.on("disconnect", () => {
+      logInfo("FleetWS", `Fleet client disconnected: ${socket.id}`);
+    });
+  });
+
+  logInfo("FleetWS", "Fleet Management WebSocket handlers registered ✅");
+}

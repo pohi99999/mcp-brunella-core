@@ -240,16 +240,18 @@
 ### Phase 8: Integration Testing (E2E)
 
 #### 8.1 E2E Test Scenarios
-- [ ] **Scenario 1:** Google search ("Keress rá az AI hírekre")
-- [ ] **Scenario 2:** Form fill ("Töltsd ki a nevet 'Test User'-rel")
-- [ ] **Scenario 3:** Multi-step workflow ("Navigálj a google.com-ra, keress rá a 'TypeScript', kattints az első találatra")
-- [ ] **Scenario 4:** Background task (long-running, > 30s)
-- [ ] **Scenario 5:** Error recovery (selector not found)
-- [ ] **Scenario 6:** LLM hallucination (invalid plan)
-- [ ] **Scenario 7:** Browser crash recovery (Phoenix protocol)
-- [ ] **Scenario 8:** Screenshot capture
-- [ ] **Scenario 9:** Data extraction (extract text from page)
-- [ ] **Scenario 10:** Parallel tasks (3+ background tasks)
+- [x] **E2E Test File Created:** `test/robotkezV2.e2e.test.ts` (10 scenarios)
+- [x] **Scenario 1:** Google search ("Keress rá az AI hírekre")
+- [x] **Scenario 2:** Form fill ("Töltsd ki a nevet 'Test User'-rel")
+- [x] **Scenario 3:** Multi-step workflow ("Navigálj a google.com-ra, keress rá a 'TypeScript', kattints az első találatra")
+- [x] **Scenario 4:** Background task (long-running, > 30s)
+- [x] **Scenario 5:** Error recovery (selector not found)
+- [x] **Scenario 6:** LLM hallucination (invalid plan)
+- [x] **Scenario 7:** Browser crash recovery (Phoenix protocol)
+- [x] **Scenario 8:** Screenshot capture
+- [x] **Scenario 9:** Data extraction (extract text from page)
+- [x] **Scenario 10:** Parallel tasks (3+ background tasks)
+- [ ] **Test Execution:** Run all scenarios (`npm test robotkezV2.e2e`)
 - [ ] **Checkpoint:** All E2E scenarios pass ✅
 
 #### 8.2 Performance Testing
