@@ -1,124 +1,457 @@
 {
-  "lastUpdated": "2026-02-13T08:45:00Z",
+  "lastUpdated": "2026-02-15T21:15:11.357Z",
   "tracks": [
-    {
-      "id": "agent_architect_upgrade_20260205",
-      "name": "Agent Architect 2.0 Meta-Ügynök",
-      "status": "active",
-      "priority": "medium",
-      "progress": 25,
-      "lastActivity": "2026-02-05",
-      "blockers": []
-    },
     {
       "id": "bas_comprehensive_test_protocol_20260210",
       "name": "BAS Átfogó Tesztprotokol",
       "status": "active",
       "priority": "critical",
       "progress": 85,
-      "lastActivity": "2026-02-12T00:00:00Z",
-      "blockers": [],
-      "assignee": "DeveloperAgent"
+      "created": "2026-02-10T18:00:00Z",
+      "updated": "2026-02-12T00:00:00Z",
+      "assignee": "DeveloperAgent",
+      "tags": [
+        "testing",
+        "infrastructure",
+        "ci-cd",
+        "phoenix",
+        "health-check",
+        "husky",
+        "resilience"
+      ],
+      "dependencies": [
+        "code_quality_improvements_20260210",
+        "dashboard_test_suite_20260210"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\bas_comprehensive_test_protocol_20260210",
+      "_isArchived": false
     },
     {
       "id": "cloudflare-chat-integration-20260211",
       "name": "Cloudflare Chat Integration",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 20,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "progress": 100,
+      "created": "2026-02-11",
+      "updated": "2026-02-12T18:00:00Z",
+      "tags": [
+        "cloudflare",
+        "chat",
+        "dashboard",
+        "cli",
+        "websocket",
+        "d1"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare-chat-integration-20260211",
+      "_isArchived": false
+    },
+    {
+      "id": "cloudflare-iteration-2-20260212",
+      "name": "Cloudflare Chat Integration - Iteration 2 (WebSocket + D1 + CLI)",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-12T18:20:00Z",
+      "updated": "2026-02-12T23:10:00Z",
+      "assignee": "DeveloperAgent + RobotkezAgent",
+      "tags": [
+        "cloudflare",
+        "websocket",
+        "d1",
+        "cli",
+        "integration",
+        "iteration-2"
+      ],
+      "dependencies": [
+        "cloudflare-chat-integration-20260211"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare-iteration-2-20260212",
+      "_isArchived": false
+    },
+    {
+      "id": "cloudflare_edge_agents_network_20260215",
+      "name": "Cloudflare Edge Agents Network (CEAN)",
+      "status": "active",
+      "priority": "medium",
+      "progress": 5,
+      "tags": [
+        "cloudflare",
+        "workers",
+        "edge-computing",
+        "ai-agents",
+        "orchestration",
+        "distributed-systems"
+      ],
+      "dependencies": [
+        "Cloudflare API token",
+        "GitHub Personal Access Token",
+        "OpenAI API key (or Gemini key)",
+        "Slack webhook URL (optional)",
+        "wrangler CLI installed"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_edge_agents_network_20260215",
+      "_isArchived": false
     },
     {
       "id": "cloudflare_edge_integration_20260202",
       "name": "Cloudflare Edge Integration",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-02",
+      "updated": "2026-02-12",
+      "tags": [
+        "cloudflare",
+        "edge",
+        "workers",
+        "browser-rendering",
+        "r2"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_edge_integration_20260202",
+      "_isArchived": false
+    },
+    {
+      "id": "codex_chat_refactor_20260212",
+      "name": "Codex NeuralLink Chat Refactor",
       "status": "completed",
       "priority": "high",
       "progress": 100,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-13T18:00:00Z",
+      "assignee": "DeveloperAgent",
+      "tags": [
+        "dashboard",
+        "refactor",
+        "chat",
+        "provider-pattern",
+        "typescript"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\codex_chat_refactor_20260212",
+      "_isArchived": false
     },
     {
       "id": "code_quality_improvements_20260210",
       "name": "Code Quality Improvements",
-      "status": "completed",
+      "status": "archived",
       "priority": "medium",
       "progress": 100,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "created": "2026-02-10",
+      "updated": "2026-02-12",
+      "tags": [
+        "quality",
+        "testing",
+        "ci",
+        "security"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\code_quality_improvements_20260210",
+      "_isArchived": false
     },
     {
-      "id": "dashboard-todo-widget-20260211",
-      "name": "Dashboard TODO Widget",
+      "id": "creative_friction_mediator_20260212",
+      "name": "Creative Friction Mediator (The Vibe-Check)",
       "status": "proposed",
-      "priority": "medium",
+      "priority": "low",
       "progress": 0,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T17:19:00Z",
+      "assignee": "ResearcherAgent + LangFlow",
+      "tags": [
+        "experimental",
+        "soft-skills",
+        "mediation",
+        "langflow",
+        "sentiment-analysis"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\creative_friction_mediator_20260212",
+      "_isArchived": false
     },
     {
       "id": "dashboard_test_suite_20260210",
       "name": "Dashboard Komplett Tesztsorozat",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 80,
-      "lastActivity": "2026-02-10T17:30:00Z",
-      "blockers": [],
-      "assignee": "DeveloperAgent"
+      "progress": 100,
+      "created": "2026-02-10T15:00:00Z",
+      "updated": "2026-02-12T10:30:00Z",
+      "assignee": "DeveloperAgent",
+      "tags": [
+        "testing",
+        "dashboard",
+        "playwright",
+        "e2e",
+        "vitest"
+      ],
+      "dependencies": [
+        "code_quality_improvements_20260210"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_test_suite_20260210",
+      "_isArchived": false
     },
     {
       "id": "dashboard_v2_robotkez_control_20260208",
       "name": "Dashboard V2 Robotkéz Control",
-      "status": "completed",
+      "status": "archived",
       "priority": "high",
       "progress": 100,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "created": "2026-02-08",
+      "updated": "2026-02-12",
+      "tags": [
+        "dashboard",
+        "robotkez",
+        "playwright",
+        "automation"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_v2_robotkez_control_20260208",
+      "_isArchived": false
     },
     {
       "id": "developer_agent_2_0_20260206",
       "name": "DeveloperAgent 2.0/3.0 – Unified Development Platform",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 75,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "progress": 100,
+      "created": "2026-02-06",
+      "updated": "2026-02-12",
+      "completed": "2026-02-12",
+      "tags": [
+        "developer-agent",
+        "self-healing",
+        "cli",
+        "dashboard",
+        "pipeline",
+        "vitest"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\developer_agent_2_0_20260206",
+      "_isArchived": false
     },
     {
       "id": "epp-v2-protocol-20260211",
       "name": "Engineering Precision Protocol v2 (EPP v2)",
-      "status": "proposed",
+      "status": "archived",
       "priority": "critical",
+      "progress": 100,
+      "created": "2026-02-11",
+      "updated": "2026-02-12",
+      "tags": [
+        "process",
+        "protocol",
+        "conductor",
+        "dashboard",
+        "cli"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\epp-v2-protocol-20260211",
+      "_isArchived": false
+    },
+    {
+      "id": "gemini_git_agent_20260212",
+      "name": "Gemini Git Autonomous Agent Architecture",
+      "status": "proposed",
+      "priority": "high",
       "progress": 0,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T15:49:00Z",
+      "assignee": "Gemini CLI",
+      "tags": [
+        "gemini",
+        "git",
+        "autonomous",
+        "memory",
+        "github-actions"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\gemini_git_agent_20260212",
+      "_isArchived": false
     },
     {
       "id": "gold_protocol",
       "name": "Gold Protocol - BAS Observability & Governance",
-      "status": "completed",
+      "status": "archived",
       "priority": "critical",
       "progress": 100,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "created": "2026-02-09",
+      "updated": "2026-02-12",
+      "tags": [
+        "observability",
+        "governance",
+        "automation",
+        "spec-driven"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\gold_protocol",
+      "_isArchived": false
     },
     {
-      "id": "jules-async-test-automation-20260211",
-      "name": "Jules Async Test Automation (GitHub Actions)",
+      "id": "green_lightning_20260212",
+      "name": "Green Lightning - Autonomous EV Hunter",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T17:24:00Z",
+      "assignee": "RobotkezAgent + n8n",
+      "tags": [
+        "robotkez",
+        "browser-use",
+        "automation",
+        "willhaben",
+        "ev-hunter",
+        "email-notification"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\green_lightning_20260212",
+      "_isArchived": false
+    },
+    {
+      "id": "innovation_bridge_20260212",
+      "name": "Innovation Bridge - Cross-Industry Knowledge Transfer",
+      "status": "proposed",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T17:16:00Z",
+      "assignee": "ResearcherAgent + n8n",
+      "tags": [
+        "innovation",
+        "n8n",
+        "triz",
+        "cross-industry",
+        "patent-search"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\innovation_bridge_20260212",
+      "_isArchived": false
+    },
+    {
+      "id": "invoice-to-sheets-automation-20260214",
+      "name": "Számla Adatkinyerés és Google Sheets Automatizáció",
       "status": "active",
       "priority": "high",
-      "progress": 30,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "progress": 15,
+      "created": "2026-02-14T14:00:00Z",
+      "updated": "2026-02-14T14:00:00Z",
+      "tags": [
+        "finance",
+        "automation",
+        "szamlazz.hu",
+        "google-sheets",
+        "data-flywheel"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\invoice-to-sheets-automation-20260214",
+      "_isArchived": false
+    },
+    {
+      "id": "iron_clad_backend_20260212",
+      "name": "Iron Clad Python AI Backend",
+      "status": "active",
+      "priority": "medium",
+      "progress": 90,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-13T07:05:00Z",
+      "assignee": "DeveloperAgent",
+      "tags": [
+        "python",
+        "fastapi",
+        "litellm",
+        "vllm",
+        "langgraph",
+        "backend"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\iron_clad_backend_20260212",
+      "_isArchived": false
+    },
+    {
+      "id": "jules_continuous_ai_integration_20260215",
+      "name": "Jules Continuous AI Integration (JCAI)",
+      "status": "active",
+      "priority": "critical",
+      "progress": 0,
+      "created": "2026-02-15T00:00:00Z",
+      "updated": "2026-02-15T00:00:00Z",
+      "tags": [
+        "automation",
+        "ci-cd",
+        "jules",
+        "continuous-ai",
+        "scheduler",
+        "github"
+      ],
+      "dependencies": [
+        "local_test_scheduler_20260215",
+        "github_sync_scripts",
+        "dashboard_framework"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\jules_continuous_ai_integration_20260215",
+      "_isArchived": false
+    },
+    {
+      "id": "jules_enterprise_cicd_20260212",
+      "name": "Jules Enterprise CI/CD & Security Suite",
+      "status": "proposed",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T15:50:00Z",
+      "assignee": "Jules AI + GitHub Actions",
+      "tags": [
+        "jules",
+        "cicd",
+        "github-actions",
+        "security",
+        "automation"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\jules_enterprise_cicd_20260212",
+      "_isArchived": false
     },
     {
       "id": "magyar-cli-menu-system-20260211",
       "name": "Magyar CLI Menürendszer (Teljes Átírás)",
-      "status": "proposed",
+      "status": "archived",
       "priority": "critical",
+      "progress": 100,
+      "created": "2026-02-11",
+      "updated": "2026-02-12",
+      "tags": [
+        "cli",
+        "i18n",
+        "ux",
+        "menus",
+        "inquirer",
+        "chalk"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\magyar-cli-menu-system-20260211",
+      "_isArchived": false
+    },
+    {
+      "id": "micro_csr_automator_20260212",
+      "name": "Micro-Local CSR Automator (Neighborhood Watchman)",
+      "status": "proposed",
+      "priority": "low",
       "progress": 0,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T17:17:00Z",
+      "assignee": "RobotkezAgent + n8n",
+      "tags": [
+        "csr",
+        "geo-fencing",
+        "n8n",
+        "social-good",
+        "local-news"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\micro_csr_automator_20260212",
+      "_isArchived": false
     },
     {
       "id": "otel_agent_tracing_20260211",
@@ -126,9 +459,19 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
-      "lastActivity": "2026-02-11T00:00:00Z",
-      "blockers": [],
-      "assignee": "GitHub Copilot"
+      "created": "2026-02-11T00:00:00Z",
+      "updated": "2026-02-11T00:00:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "otel",
+        "opentelemetry",
+        "otlp",
+        "tracing",
+        "observability"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\otel_agent_tracing_20260211",
+      "_isArchived": false
     },
     {
       "id": "phoenix_protocol_v2_20260205",
@@ -136,17 +479,70 @@
       "status": "active",
       "priority": "medium",
       "progress": 30,
-      "lastActivity": "2026-02-05",
-      "blockers": []
+      "created": "2026-02-05",
+      "updated": "2026-02-05",
+      "tags": [
+        "self-healing",
+        "resilience",
+        "checkpoint",
+        "monitoring"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\phoenix_protocol_v2_20260205",
+      "_isArchived": false
+    },
+    {
+      "id": "robotkezv2-full-comet-20260215",
+      "name": "RobotkezV2 - Full Comet (Magyar Agentic Browser)",
+      "status": "completed",
+      "priority": "critical",
+      "progress": 100,
+      "created": "2026-02-15T01:30:00Z",
+      "updated": "2026-02-15T22:00:00Z",
+      "completed": "2026-02-15T22:00:00Z",
+      "assignee": "Claude Code",
+      "tags": [
+        "robotkezv2",
+        "comet",
+        "agentic-browser",
+        "persistent-browser",
+        "magyar-nyelv",
+        "llm-orchestration",
+        "multi-step-automation",
+        "dashboard",
+        "cli",
+        "epp-v2-compliance"
+      ],
+      "dependencies": [
+        "Jules Persistent Browser infrastruktúra",
+        "Ollama/Gemini LLM integráció",
+        "Dashboard komponens (React)",
+        "CLI framework (Commander.js)"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkezv2-full-comet-20260215",
+      "_isArchived": false
     },
     {
       "id": "robotkez_n8n_sandbox_edzesterv",
       "name": "Robotkéz n8n Sandbox és Edzésterv",
-      "status": "completed",
+      "status": "archived",
       "priority": "medium",
       "progress": 100,
-      "lastActivity": "2026-02-12",
-      "blockers": []
+      "created": "2026-02-11",
+      "updated": "2026-02-12",
+      "tags": [
+        "robotkez",
+        "n8n",
+        "sandbox",
+        "browser-use",
+        "python"
+      ],
+      "dependencies": [
+        "browser_use_harvester_20260131",
+        "bas_scale_up_stabilization_20260131"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_n8n_sandbox_edzesterv",
+      "_isArchived": false
     },
     {
       "id": "robotkez_stabilization_20260212",
@@ -154,8 +550,17 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
-      "lastActivity": "2026-02-12T00:00:00Z",
-      "blockers": []
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T00:00:00Z",
+      "tags": [
+        "robotkez",
+        "browser-use",
+        "gemini",
+        "stability"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_stabilization_20260212",
+      "_isArchived": false
     },
     {
       "id": "self_healing_core_20260213",
@@ -163,43 +568,199 @@
       "status": "completed",
       "priority": "high",
       "progress": 100,
-      "lastActivity": "2026-02-13T00:00:00Z",
-      "blockers": []
+      "created": "2026-02-13T00:00:00Z",
+      "updated": "2026-02-13T00:00:00Z",
+      "tags": [
+        "phoenix",
+        "self-healing",
+        "fix-queue"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\self_healing_core_20260213",
+      "_isArchived": false
+    },
+    {
+      "id": "agent_architect_upgrade_20260205",
+      "name": "Agent Architect 2.0 Meta-Ügynök",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-05",
+      "updated": "2026-02-13",
+      "completed": "2026-02-13",
+      "tags": [
+        "meta-agent",
+        "code-generation",
+        "toml",
+        "dynamic-loading"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_architect_upgrade_20260205",
+      "_isArchived": true
+    },
+    {
+      "id": "browser_use_harvester_20260131",
+      "name": "Browser-Use Harvester with Structured JSON Output",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-01-31T12:00:00Z",
+      "assignee": "Brunella",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\browser_use_harvester_20260131",
+      "_isArchived": true
+    },
+    {
+      "id": "dashboard-todo-widget-20260211",
+      "name": "Dashboard TODO Widget",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-11",
+      "updated": "2026-02-13",
+      "tags": [
+        "dashboard",
+        "tracks",
+        "todo",
+        "realtime",
+        "chokidar",
+        "socket"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard-todo-widget-20260211",
+      "_isArchived": true
+    },
+    {
+      "id": "data_flywheel_incubator_20260205",
+      "name": "Data Flywheel & Incubator",
+      "status": "archived",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-02-05",
+      "updated": "2026-02-05",
+      "tags": [
+        "fine-tuning",
+        "llm",
+        "automation",
+        "unsloth",
+        "lora"
+      ],
+      "dependencies": [
+        "browser_use_harvester_20260131"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\data_flywheel_incubator_20260205",
+      "_isArchived": true
+    },
+    {
+      "id": "iron_clad_backend_20260212",
+      "name": "Iron Clad Python AI Backend",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-13T08:45:00Z",
+      "assignee": "DeveloperAgent",
+      "tags": [
+        "python",
+        "fastapi",
+        "litellm",
+        "vllm",
+        "langgraph",
+        "backend"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\iron_clad_backend_20260212",
+      "_isArchived": true
+    },
+    {
+      "id": "jules-async-test-automation-20260211",
+      "name": "Jules Async Test Automation (GitHub Actions)",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-11",
+      "updated": "2026-02-13",
+      "tags": [
+        "ci",
+        "github-actions",
+        "testing",
+        "automation",
+        "dashboard",
+        "cli"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules-async-test-automation-20260211",
+      "_isArchived": true
     },
     {
       "id": "spec-writer-agent-20260211",
       "name": "SpecWriter Agent (Ötlet → Track Generátor)",
-      "status": "active",
+      "status": "archived",
       "priority": "critical",
-      "progress": 75,
-      "lastActivity": "2026-02-12T00:00:00Z",
-      "blockers": [],
-      "assignee": "SpecWriterAgent"
+      "progress": 100,
+      "created": "2026-02-11T00:00:00Z",
+      "updated": "2026-02-13T02:00:00Z",
+      "assignee": "SpecWriterAgent",
+      "tags": [
+        "epp-v2",
+        "conductor",
+        "tracks",
+        "dashboard",
+        "cli"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\spec-writer-agent-20260211",
+      "_isArchived": true
     },
     {
       "id": "task-decomposer-agent-20260211",
       "name": "Task Decomposer Agent (Mikro-Ügynök Orchestrator)",
-      "status": "proposed",
+      "status": "archived",
       "priority": "medium",
-      "progress": 0,
-      "lastActivity": "2026-02-12",
-      "blockers": []
-    }
-  ],
-  "components": [],
-  "recentChanges": [
+      "progress": 100,
+      "created": "2026-02-11",
+      "updated": "2026-02-13",
+      "tags": [
+        "agents",
+        "orchestration",
+        "dag",
+        "parallelism",
+        "dashboard",
+        "cli"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\task-decomposer-agent-20260211",
+      "_isArchived": true
+    },
     {
-      "id": "iron_clad_backend_20260212",
-      "change": "archived",
-      "timestamp": "2026-02-13T08:45:00Z",
-      "details": "Track archiválva a conductor/archive/iron_clad_backend_20260212 alá"
+      "id": "TR-20260212-TECH-HAR",
+      "name": "BAS Neural Expansion & Tech-Harvester Protocol",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-13T04:00:00Z",
+      "completed": "2026-02-13T04:00:00Z",
+      "assignee": "Claude + DataScientistAgent",
+      "tags": [
+        "tech-harvester",
+        "browser-use",
+        "lancedb",
+        "rag",
+        "self-learning",
+        "incubator"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\TR-20260212-TECH-HAR",
+      "_isArchived": true
     }
   ],
-  "healthStatus": {
-    "overall": "unknown",
-    "buildStatus": false,
-    "testStatus": false,
-    "documentationSync": false,
-    "lastHealthCheck": ""
+  "stats": {
+    "total": 37,
+    "active": 6,
+    "completed": 6,
+    "archived": 9,
+    "proposed": 6
   }
 }

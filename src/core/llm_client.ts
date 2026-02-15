@@ -14,8 +14,8 @@ import { aiGateway } from "../utils/aiGateway.js";
 import { recordLlmUsageAndCost } from "../utils/metrics.js";
 
 // Configuration
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "llama3.1:8b";
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen2.5-coder:7b";
+const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
 const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS || "120000"); // 2 minutes default
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
@@ -127,7 +127,26 @@ export const generateResponse: (
         `Hiba a(z) ${provider} szolgáltatónál: ${error.message}`,
       );
 
-      // Fallback: if not already using Ollama, try Ollama as fallback
+      // Fallback: prefer Gemini 2.0 Flash if Ollama is unavailable
+      if (provider === "ollama" && process.env.GEMINI_API_KEY) {
+        logInfo("LLM_CLIENT", "Ollama hiba → fallback Gemini 2.0 Flash...");
+        try {
+          const fallbackResponse = await generateResponse(
+            prompt,
+            "gemini",
+            GEMINI_MODEL,
+          );
+          return fallbackResponse;
+        } catch (fallbackError: any) {
+          logError(
+            "LLM_CLIENT",
+            `Gemini fallback is sikertelen: ${fallbackError.message}`,
+          );
+          throw lastError;
+        }
+      }
+
+      // Fallback: if not already using Ollama, try Ollama
       if (provider !== "ollama") {
         logInfo("LLM_CLIENT", "Fallback indítása Ollama-ra...");
         try {

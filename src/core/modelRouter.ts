@@ -62,7 +62,7 @@ export const MODEL_REGISTRY: ModelProfile[] = [
     strengths: ['planning', 'architecture', 'analysis', 'complex_reasoning', 'code_review']
   },
   {
-    name: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
+    name: process.env.GEMINI_MODEL || 'gemini-2.0-flash',
     provider: 'gemini',
     role: 'brain',
     contextWindow: 1000000,
@@ -72,7 +72,7 @@ export const MODEL_REGISTRY: ModelProfile[] = [
   },
   // Muscle models (Ollama local) — code gen, tests, repetitive tasks
   {
-    name: process.env.OLLAMA_MODEL || 'llama3.1:8b',
+    name: process.env.OLLAMA_MODEL || 'qwen2.5-coder:7b',
     provider: 'ollama',
     role: 'muscle',
     contextWindow: 32768,

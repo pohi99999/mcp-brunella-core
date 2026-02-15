@@ -2,7 +2,42 @@
 
 **Agent:** GitHub Copilot (Pro+)  
 **Fájl:** `.ai/copilot.md`  
-**Utolsó frissítés:** 2026-02-15 19:52
+**Utolsó frissítés:** 2026-02-15 21:05
+
+---
+
+## 2026-02-15 21:05 - ⚙️ LLM Fallback beállítás: Ollama qwen2.5 → Gemini 2.0 Flash ✅
+
+**Feladat:** Alapértelmezett helyi modell váltás **qwen2.5-coder:7b**-re, és automatikus fallback **Gemini 2.0 Flash**-re, ha az Ollama nem elérhető.
+
+### Változtatások
+
+**Core logika:**
+
+- `src/core/llm_client.ts`
+  - Default Ollama modell: `qwen2.5-coder:7b`
+  - Default Gemini modell: `gemini-2.0-flash`
+  - Új fallback: Ollama hiba → Gemini 2.0 Flash
+
+**Model Router:**
+
+- `src/core/modelRouter.ts`
+  - Gemini default: `gemini-2.0-flash`
+  - Ollama default: `qwen2.5-coder:7b`
+
+**Environment:**
+
+- `.env`
+  - `OLLAMA_MODEL=qwen2.5-coder:7b`
+  - `OLLAMA_MODEL_SECONDARY=llama3.1:8b`
+  - `GEMINI_MODEL=gemini-2.0-flash`
+- `.env.example`
+  - `GEMINI_MODEL=gemini-2.0-flash`
+  - Ollama default model frissítve
+
+**Megjegyzés:** szerver restart szükséges a .env változások érvényesítéséhez.
+
+**Status:** ✅ KÉSZ, commit + push következik.
 
 ---
 
