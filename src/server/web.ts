@@ -51,7 +51,7 @@ import { createTracksRouter } from "./tracksRoutes.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
 import { suggestedTasksRouter } from "./routes/suggestedTasks.js";
-import { registerEdgeWebSocketHandlers } from "./websocket.js";
+import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers } from "./websocket.js";
 import testSchedulerRoutes from "./routes/testScheduler.js";
 import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
 import { initTestResultsDb } from "../core/testResultsService.js";
@@ -209,6 +209,9 @@ export async function startWebServer() {
 
   // Register Cloudflare Edge WebSocket handlers (Iteration 2)
   registerEdgeWebSocketHandlers(io);
+
+  // Register CEAN Orchestrator Chat WebSocket handlers
+  registerCEANWebSocketHandlers(io);
 
   const agentLogBuffer = new Map<string, LogEvent[]>();
   const MAX_AGENT_LOGS = 500;
