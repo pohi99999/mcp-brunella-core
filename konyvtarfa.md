@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 15. 19:24:00
+**Generálva:** 2026. 02. 15. 21:01:02
 **Script:** 
 
 ---
@@ -42487,6 +42487,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 components.md
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **cean_phase2_c_prometheus_20250216**
+        - 📄 components.md
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **cloudflare_edge_agents_network_20260215**
         - 📄 meta.json
         - 📄 plan.md
@@ -42644,6 +42648,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 brunella.db
     - 📄 brunella.db-shm
     - 📄 brunella.db-wal
+    - 📄 cean_infrastructure_inventory.json
     - 📄 cean.db
     - 📄 checkpoints.db
     - 📄 checkpoints.db-shm
@@ -42725,7 +42730,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 robotkez_test_level3_monitoring.py
     - 📂 **monitoring**
       - 📂 **grafana** _(Grafana Dashboard Baseline)_
+        - 📄 brunella-agents-dashboard.json
         - 📄 brunella-agents-overview.dashboard.json
+        - 📄 GRAFANA_SETUP.md
         - 📄 README.md
     - 📂 **users**
     - 📄 ## Chat Customization Diagnostics.md
@@ -42735,6 +42742,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 2026-02-11-this-session-is-being-continued-from-a-previous-co.txt
     - 📄 AGENT_PERMISSIONS_GUIDE.md
     - 📄 CEAN_INFRASTRUCTURE_SNAPSHOT.md
+    - 📄 CEAN_R1_VECTOR_MAPPINGS.md
     - 📄 CLOUDFLARE_INTEGRATION.md
     - 📄 cloudflare-tunnel-setup.md
     - 📄 github-runner-setup.md
@@ -116578,6 +116586,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 modelRouter.ts
       - 📄 phoenixEventBus.ts
       - 📄 processMonitor.ts
+      - 📄 prometheus.ts
       - 📄 retryStrategy.ts
       - 📄 scheduledTasksEngine.ts
       - 📄 suggestedTasksScanner.ts
@@ -116660,6 +116669,17 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 TrackGenerator.tsx
           - 📄 TrackProgress.tsx
           - 📄 TrackTodoWidget.tsx
+        - 📂 **fleet**
+          - 📂 **hooks**
+            - 📄 useFleet.ts
+            - 📄 useFleetList.ts
+            - 📄 useScaling.ts
+            - 📄 useWorkerMetrics.ts
+          - 📄 FleetOverview.tsx
+          - 📄 MetricsDashboard.tsx
+          - 📄 ScalingConfig.tsx
+          - 📄 types.ts
+          - 📄 WorkerDetails.tsx
         - 📂 **ui**
           - 📄 accordion.tsx
           - 📄 alert-dialog.tsx
@@ -116745,6 +116765,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 utils.ts
       - 📂 **pages**
         - 📄 CloudflareDeployment.tsx
+        - 📄 FleetManager.tsx
       - 📂 **styles**
         - 📄 theme.css
       - 📂 **ui**
@@ -116789,6 +116810,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 jules.ts
         - 📄 llm.ts
         - 📄 metrics.ts
+        - 📄 prometheus.ts
         - 📄 robotkez.ts
         - 📄 scaling.ts
         - 📄 scheduledTasks.ts
@@ -116825,6 +116847,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 workspace.py
     - 📂 **services**
       - 📄 fleetService.ts
+      - 📄 metricsArchiveService.ts
       - 📄 metricsService.ts
       - 📄 scalingService.ts
     - 📂 **tools**
@@ -116964,6 +116987,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 mcp-brunella-core.code-workspace
     - 📄 memory_context.test.ts
     - 📄 memoryRoutes.golden.test.ts
+    - 📄 metricsArchiveService.test.ts
     - 📄 metricsService.test.ts
     - 📄 middleware.test.ts
     - 📄 modelRouter.test.ts
@@ -116982,6 +117006,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 retryStrategy.test.ts
     - 📄 robotkez_integration.test.ts
     - 📄 robotkezAPI.test.ts
+    - 📄 robotkezV2.e2e.test.ts
     - 📄 robotkezV2Agent.test.ts
     - 📄 routes_developer.test.ts
     - 📄 scalingService.test.ts
@@ -117086,11 +117111,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 Brunella.md
   - 📄 build.log
   - 📄 CLAUDE.md
+  - 📄 COMPLETED_PROJECTS.md
   - 📄 config.cmd
   - 📄 CONTRIBUTING.md
   - 📄 docker-compose.yml
   - 📄 Dockerfile.node
   - 📄 Dockerfile.python
+  - 📄 e2e-test-results.log
   - 📄 eslint.config.js
   - 📄 GEMINI.md
   - 📄 git_sync.ps1

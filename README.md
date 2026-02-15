@@ -869,6 +869,7 @@ npx wrangler deploy
 | Ügynök               | Szerep                                        | Státusz |
 | -------------------- | --------------------------------------------- | ------- |
 | **Orchestrator**     | Központi koordinátor, feladat delegálás       | Active  |
+| **RobotkezV2**       | Magyar agentic browser (Perplexity Comet-style) | Active  |
 | **Developer**        | Kód generálás, self-healing pipeline          | Active  |
 | **Evaluator**        | Rendszer audit, tesztelés, health check       | Active  |
 | **Researcher**       | RAG keresés, tudásbázis, összefoglalás        | Active  |
@@ -877,6 +878,34 @@ npx wrangler deploy
 | **EdgeProxy**        | Cloudflare Workers proxy                      | Active  |
 | **VoiceAgent**       | Hangfelismerés (Whisper)                      | Active  |
 | **LintFixer**        | Automatikus lint javítás (mikro-ügynök)       | Active  |
+
+### RobotkezV2 - Magyar Agentic Browser
+
+**Comet-style intelligens böngésző ügynök magyar természetes nyelv támogatással.**
+
+**Funkciók:**
+- 🇭🇺 Magyar nyelvű utasítások ("Keress rá az AI hírekre")
+- 🤖 LLM-based multi-step planning (GPT-4o/Gemini)
+- 🌐 Automated browser control (Playwright + Python)
+- ⏱️ Background task management (long-running operations)
+- 📊 Live View dashboard + CLI interface
+
+**Gyors használat:**
+
+```bash
+# Dashboard
+# http://localhost:5173 → "Robotkéz V2" tab
+
+# CLI
+brunella robotkez chat "Navigálj a google.com-ra és keress rá az AI hírekre"
+brunella robotkez plan "..."  # Plan preview (no execution)
+brunella robotkez status      # Agent status
+```
+
+**Dokumentáció:**
+- 📖 [User Guide (magyar)](docs/robotkezv2-user-guide.md) - Felhasználói útmutató
+- 🔧 [Developer Guide](docs/robotkezv2-dev-guide.md) - API & architecture
+- 📋 [Track Details](conductor/tracks/robotkezv2-full-comet-20260215/) - Implementation plan
 
 ---
 
@@ -893,6 +922,16 @@ npx wrangler deploy
 ---
 
 ## 📋 Changelog
+
+### v2.4.0 (2026-02-15)
+
+- **NEW:** RobotkezV2 Agent - Magyar agentic browser (Comet-style) ⭐
+- **NEW:** LLM-based multi-step planning (GPT-4o/Gemini)
+- **NEW:** Background task manager for long-running browser operations
+- **NEW:** Live View dashboard with real-time screenshots
+- **NEW:** CLI commands (`brunella robotkez ...`)
+- **IMPROVED:** Persistent Browser (Playwright + Python bridge)
+- **DOCS:** User Guide + Developer Guide for RobotkezV2
 
 ### v2.3.0 (2026-02-06)
 

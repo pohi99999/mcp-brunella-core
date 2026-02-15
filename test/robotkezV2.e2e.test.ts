@@ -41,11 +41,11 @@ describe('RobotkezV2 - E2E Test Scenarios (Phase 8.1)', () => {
     expect(response.status).toBe(200);
     expect(response.data).toHaveProperty('success');
     expect(response.data.success).toBe(true);
-    expect(response.data).toHaveProperty('executedSteps');
-    expect(response.data.executedSteps.length).toBeGreaterThan(0);
+    expect(response.data.data).toHaveProperty('completedSteps');
+    expect(response.data.data.completedSteps.length).toBeGreaterThan(0);
 
     // Check that at least one step was "navigate"
-    const hasNavigate = response.data.executedSteps.some(
+    const hasNavigate = response.data.data.completedSteps.some(
       (step: any) => step.action === 'navigate'
     );
     expect(hasNavigate).toBe(true);
@@ -73,7 +73,7 @@ describe('RobotkezV2 - E2E Test Scenarios (Phase 8.1)', () => {
     expect(response.data.success).toBe(true);
 
     // Check that there was a "type" action
-    const hasType = response.data.executedSteps.some(
+    const hasType = response.data.data.completedSteps.some(
       (step: any) => step.action === 'type'
     );
     expect(hasType).toBe(true);
@@ -95,10 +95,10 @@ describe('RobotkezV2 - E2E Test Scenarios (Phase 8.1)', () => {
 
     expect(response.status).toBe(200);
     expect(response.data.success).toBe(true);
-    expect(response.data.executedSteps.length).toBeGreaterThanOrEqual(3);
+    expect(response.data.data.completedSteps.length).toBeGreaterThanOrEqual(3);
 
     // Check that plan contains navigate, type, click
-    const actions = response.data.executedSteps.map((s: any) => s.action);
+    const actions = response.data.data.completedSteps.map((s: any) => s.action);
     expect(actions).toContain('navigate');
     expect(actions.some((a: string) => a === 'type' || a === 'click')).toBe(true);
 
@@ -153,13 +153,14 @@ describe('RobotkezV2 - E2E Test Scenarios (Phase 8.1)', () => {
 
     expect(response.status).toBe(200);
 
-    // Agent may return success: false or executedSteps with errors
+    // Agent may return success: false or completedSteps with errors
     if (!response.data.success) {
-      expect(response.data).toHaveProperty('error');
+      // Error is in data.error, not top-level error
+      expect(response.data.data).toHaveProperty('error');
       console.log('✅ Scenario 5 PASS: Error handled gracefully');
     } else {
       // Check if any step has error status
-      const hasError = response.data.executedSteps.some(
+      const hasError = response.data.data.completedSteps.some(
         (step: any) => step.status === 'error' || step.error
       );
       expect(hasError).toBe(true);
@@ -190,7 +191,7 @@ describe('RobotkezV2 - E2E Test Scenarios (Phase 8.1)', () => {
       console.log('✅ Scenario 6 PASS: Hallucination detected');
     } else {
       // Check that plan is safe (no dangerous actions)
-      const actions = response.data.executedSteps.map((s: any) => s.action);
+      const actions = response.data.data.completedSteps.map((s: any) => s.action);
       expect(actions.every((a: string) => ['screenshot', 'content'].includes(a))).toBe(true);
       console.log('✅ Scenario 6 PASS: Safe fallback plan');
     }
@@ -262,16 +263,17 @@ describe('RobotkezV2 - E2E Test Scenarios (Phase 8.1)', () => {
     expect(response.data.success).toBe(true);
 
     // Check if extract action was used
-    const hasExtract = response.data.executedSteps.some(
+    const hasExtract = response.data.data.completedSteps.some(
       (step: any) => step.action === 'extract'
     );
 
     if (hasExtract) {
-      expect(response.data).toHaveProperty('result');
+      expect(response.data).toHaveProperty('data');
+      expect(response.data.data).toHaveProperty('completedSteps');
       console.log('✅ Scenario 9 PASS: Data extracted');
     } else {
       // Agent may have returned result in different format
-      expect(response.data).toHaveProperty('result');
+      expect(response.data).toHaveProperty('message');
       console.log('ℹ️ Scenario 9: Data returned (no explicit extract step)');
     }
   }, TEST_TIMEOUT);

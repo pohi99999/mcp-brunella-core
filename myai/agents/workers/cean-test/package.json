@@ -1,0 +1,22 @@
+{
+  "name": "cean-test",
+  "version": "1.0.0",
+  "description": "CEAN Test Worker - D1 + R1 Connectivity Verification",
+  "main": "dist/worker.js",
+  "type": "module",
+  "scripts": {
+    "build": "esbuild worker.ts --bundle --target=esnext --platform=neutral --format=esm --outfile=dist/worker.js",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --env production",
+    "test": "node --loader tsx test.ts"
+  },
+  "dependencies": {
+    "itty-router": "^4.0.20"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250217.7",
+    "esbuild": "^0.23.1",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.72.0"
+  }
+}

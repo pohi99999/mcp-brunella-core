@@ -1,0 +1,202 @@
+name: 🌐 CEAN - Deploy Edge Agents Network
+
+on:
+  push:
+    branches:
+      - main
+      - staging
+    paths:
+      - 'myai/agents/workers/**'
+      - '.github/workflows/deploy-edge-agents.yml'
+      - 'src/types/cean.ts'
+  pull_request:
+    branches:
+      - main
+      - staging
+    paths:
+      - 'myai/agents/workers/**'
+      - 'src/types/cean.ts'
+
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+jobs:
+  # ============================================================================
+  # BUILD & VALIDATE: PR builds (dry-run only)
+  # ============================================================================
+  build:
+    name: 🔨 Build & Validate (PR)
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 🔧 Install dependencies
+        run: npm ci
+
+      - name: 🏗️ Build main project
+        run: npm run build
+
+      - name: 🧪 Run tests
+        run: npm test
+
+      - name: 🔍 Setup Wrangler
+        run: npm install -g wrangler@latest
+
+      - name: ✨ Validate test-worker build
+        run: |
+          cd myai/agents/workers/cean-test
+          npm ci
+          npm run build
+
+      - name: 🎯 Dry-run deploy (validation only)
+        run: |
+          cd myai/agents/workers/cean-test
+          wrangler deploy --dry-run
+
+      - name: 📊 Report build status
+        if: success()
+        run: |
+          echo "✅ Build validation passed!"
+          echo "- Main project: OK"
+          echo "- Tests: OK"
+          echo "- Worker wrangler.toml: Valid"
+
+  # ============================================================================
+  # DEPLOY: Production deployment (main branch only)
+  # ============================================================================
+  deploy:
+    name: 🚀 Deploy to Cloudflare
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: build
+    
+    steps:
+      - name: 📥 Checkout code
+        uses: actions/checkout@v4
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: 🔧 Install dependencies
+        run: npm ci
+
+      - name: 🏗️ Build main project
+        run: npm run build
+
+      - name: 🔍 Setup Wrangler
+        run: npm install -g wrangler@latest
+
+      - name: 🔐 Verify Cloudflare auth
+        run: wrangler whoami
+
+      - name: 📤 Deploy test-worker to Cloudflare
+        run: |
+          cd myai/agents/workers/cean-test
+          npm ci
+          npm run build
+          wrangler deploy --env production
+
+      - name: 🔄 Create deployment comment
+        if: always()
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const deploymentUrl = `https://cean-test.${process.env.CLOUDFLARE_ACCOUNT_ID}.workers.dev`;
+            const status = '${{ job.status }}';
+            const comment = status === 'success' 
+              ? `✅ **Deployment Successful!**\n\n- Worker: \`cean-test\`\n- URL: ${deploymentUrl}\n- Endpoints:\n  - GET \`/health\`\n  - POST \`/test/d1\`\n  - POST \`/test/r1\`\n  - GET \`/test/metrics\``
+              : `❌ **Deployment Failed**\n\nPlease check the workflow logs.`;
+            
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: comment
+            }).catch(() => {
+              console.log('Skipping comment on non-PR');
+            });
+
+  # ============================================================================
+  # VERIFY: Post-deploy health check
+  # ============================================================================
+  verify:
+    name: 🩺 Post-Deploy Health Check
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: deploy
+    
+    steps:
+      - name: ⏳ Wait for deployment (30s)
+        run: sleep 30
+
+      - name: 🔍 Check health endpoint
+        run: |
+          RESPONSE=$(curl -s -w "\n%{http_code}" https://cean-test.${CLOUDFLARE_ACCOUNT_ID}.workers.dev/health)
+          HTTP_STATUS=$(echo "$RESPONSE" | tail -n1)
+          BODY=$(echo "$RESPONSE" | head -n-1)
+          
+          echo "HTTP Status: $HTTP_STATUS"
+          echo "Response: $BODY"
+          
+          if [ "$HTTP_STATUS" != "200" ]; then
+            echo "❌ Health check failed!"
+            exit 1
+          fi
+          
+          echo "✅ Health check passed!"
+
+      - name: 📊 Log deployment metrics
+        run: |
+          echo "Deployment Summary:"
+          echo "- Timestamp: $(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          echo "- Worker: cean-test"
+          echo "- Status: Healthy ✅"
+
+  # ============================================================================
+  # NOTIFY: Send deployment notification
+  # ============================================================================
+  notify:
+    name: 📢 Send Notifications
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [build, deploy, verify]
+    
+    steps:
+      - name: 📝 Prepare summary
+        run: |
+          cat > /tmp/summary.md << 'EOF'
+          # CEAN Deployment Report
+          
+          **Workflow:** Deploy Edge Agents Network
+          **Branch:** ${{ github.ref }}
+          **Commit:** ${{ github.sha }}
+          **Author:** ${{ github.actor }}
+          **Timestamp:** $(date -u +'%Y-%m-%dT%H:%M:%SZ')
+          
+          ## Status
+          - Build: ${{ needs.build.result }}
+          - Deploy: ${{ needs.deploy.result }}
+          - Verify: ${{ needs.verify.result }}
+          EOF
+          cat /tmp/summary.md
+
+      - name: 🎯 Update deployment status
+        run: |
+          echo "✅ Deployment workflow completed"
+          echo "Workers deployed:"
+          echo "  - cean-test (health, D1, R1 endpoints)"

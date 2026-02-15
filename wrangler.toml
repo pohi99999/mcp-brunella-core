@@ -74,11 +74,8 @@ enabled = true
 binding = "BROWSER"
 
 # Analytics Engine (optional for metrics)
-[analytics_engine_datasets]
+[[analytics_engine_datasets]]
 binding = "ANALYTICS"
-
-# Version
-version = "1.0.0"
 
 # Notes:
 # Phase 1A: This is the base template. Database IDs and resource IDs will be

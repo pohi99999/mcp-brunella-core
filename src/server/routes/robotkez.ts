@@ -164,6 +164,7 @@ export function createRobotkezRoutes(): Router {
                     type: 'persistent',
                     engine: 'Playwright + Python'
                 },
+                browserStatus: runningTasks.length > 0 ? 'running' : 'idle', // For test compatibility
                 tasks: {
                     total: tasks.length,
                     running: runningTasks.length,

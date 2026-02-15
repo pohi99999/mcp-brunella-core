@@ -60,26 +60,45 @@ ELÉRHETŐ MŰVELETEK:
 SZABÁLYOK:
 1. Minden lépésnek legyen magyar description (pl. "Google megnyitása")
 2. Használj wait()-et oldal betöltés után (selector: tipikusan első interaktív elem)
-3. CSS selectorok legyenek pontosak (használj ID-t, class-t vagy attribute selector-okat)
-4. Estimated duration legyen reális (ms-ben, átlagosan 2-5s/lépés)
-5. Ha user input kell (cím, jelszó, stb.), add hozzá a requiresUserInput array-hez
-6. backgroundEligible: true ha > 30s várható időtartam
-7. Minden navigate után használj wait()-et hogy biztos legyen hogy betöltött az oldal
+3. CSS selectorok legyenek ÁLTALÁNOSAK, NE használj specifikus ID-kat!
+   - ✅ JÓ: "input[type='search']", "textarea[name='q']", "button[type='submit']"
+   - ❌ ROSSZ: "#gbqfq", "#search-box-id", "#specific-unique-id"
+4. Wait timeout legyen HOSSZÚ (min 8000-10000ms), mert oldalak lassan tölthetnek!
+5. Estimated duration legyen reális (ms-ben, átlagosan 3-8s/lépés)
+6. Ha user input kell (cím, jelszó, stb.), add hozzá a requiresUserInput array-hez
+7. backgroundEligible: true ha > 30s várható időtartam
+8. Minden navigate után használj wait()-et hogy biztos legyen hogy betöltött az oldal
 
 VÁLASZ FORMÁTUM (CSAK JSON, semmi más):
 {
   "plan": [
     { "action": "navigate", "url": "https://example.com", "description": "Példa oldal megnyitása" },
-    { "action": "wait", "selector": "h1", "timeout": 3000, "description": "Főcím betöltésre vár" },
-    { "action": "click", "selector": ".button", "description": "Gomb megnyomása" }
+    { "action": "wait", "selector": "input[type='text']", "timeout": 10000, "description": "Input mező betöltésre vár" },
+    { "action": "click", "selector": "button[type='submit']", "description": "Submit gomb megnyomása" }
   ],
-  "estimatedDuration": 10000,
+  "estimatedDuration": 15000,
   "requiresUserInput": [],
   "backgroundEligible": false,
   "contextNeeded": []
 }
 
-FONTOS: Csak valid JSON-t adj vissza, semmi más szöveget!`;
+FONTOS: Csak valid JSON-t adj vissza, semmi más szöveget!
+
+PÉLDA - Google keresés:
+Utasítás: "Keress rá az AI hírekre"
+Válasz:
+{
+  "plan": [
+    { "action": "navigate", "url": "https://www.google.com", "description": "Google megnyitása" },
+    { "action": "wait", "selector": "textarea[name='q']", "timeout": 10000, "description": "Keresőmező betöltése" },
+    { "action": "type", "selector": "textarea[name='q']", "text": "AI hírek", "description": "Keresőszó beírása" },
+    { "action": "click", "selector": "input[type='submit']", "description": "Keresés indítása" }
+  ],
+  "estimatedDuration": 20000,
+  "requiresUserInput": [],
+  "backgroundEligible": false,
+  "contextNeeded": []
+}`;
 
 /**
  * Generate Execution Plan from magyar instruction
@@ -96,17 +115,21 @@ export async function generateExecutionPlan(instruction: string): Promise<Execut
 Készíts részletes execution plan-t a fenti utasítás végrehajtásához.`;
 
     try {
-        // Call LLM (Ollama by default, falls back automatically)
+        // Call LLM (GPT-4 via GitHub Models for best accuracy)
         const fullPrompt = `${SYSTEM_PROMPT}\n\n${userPrompt}`;
-        const response = await generateResponse(fullPrompt, 'ollama');
+        const response = await generateResponse(fullPrompt, 'github', 'gpt-4o');
 
         logInfo('LLMPlanner', `Raw LLM response: ${response.slice(0, 200)}...`);
 
-        // Clean up response (remove markdown code fences if present)
-        const cleaned = response
-            .replace(/```json\n?/g, '')
-            .replace(/```\n?/g, '')
-            .trim();
+        // Clean up response: extract JSON between first { and last }
+        const firstBrace = response.indexOf('{');
+        const lastBrace = response.lastIndexOf('}');
+
+        if (firstBrace === -1 || lastBrace === -1 || firstBrace >= lastBrace) {
+            throw new Error('No valid JSON object found in LLM response');
+        }
+
+        const cleaned = response.slice(firstBrace, lastBrace + 1);
 
         // Parse JSON
         let plan: ExecutionPlan;
@@ -147,6 +170,17 @@ Készíts részletes execution plan-t a fenti utasítás végrehajtásához.`;
 
         if (typeof plan.backgroundEligible !== 'boolean') {
             plan.backgroundEligible = plan.estimatedDuration > 30000;
+        }
+
+        // POST-PROCESSING: Override short wait timeouts (LLM often generates too short timeouts)
+        for (const step of plan.plan) {
+            if (step.action === 'wait') {
+                if (!step.timeout || step.timeout < 10000) {
+                    const oldTimeout = step.timeout || 0;
+                    step.timeout = 10000; // Force 10s minimum for wait actions
+                    logWarn('LLMPlanner', `⚠️ Overriding wait timeout ${oldTimeout}ms → 10000ms for selector: ${step.selector}`);
+                }
+            }
         }
 
         logInfo('LLMPlanner', `✅ Plan generated: ${plan.plan.length} steps, ${plan.estimatedDuration}ms`);

@@ -242,7 +242,7 @@ export class RobotkezV2Agent extends BaseAgent {
                 await persistentBrowser.sendCommand({
                     action: 'wait',
                     selector: step.selector,
-                    timeout: step.timeout || 5000
+                    timeout: step.timeout || 10000 // Növelt timeout (5s → 10s)
                 });
                 break;
 
