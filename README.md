@@ -4,6 +4,20 @@
 
 AI multi-agent rendszer szoftverfejlesztés automatizálására lokális LLM-ekkel (Ollama), MCP protokollal és hibrid Node.js/Python architektúrával.
 
+## 🔒 Biztonság & Code Quality
+
+[![CodeQL](https://github.com/pohi99999/mcp-brunella-core/workflows/CodeQL%20Analysis/badge.svg)](https://github.com/pohi99999/mcp-brunella-core/actions/workflows/codeql.yml)
+
+> ⚠️ **Figyelem**: A GitHub Code Scanning aktiválása szükséges!  
+> 📖 Lásd: [Code Scanning Setup Útmutató](.github/CODEQL_SETUP.md)
+
+### Biztonsági jellemzők:
+- ✅ Automatikus CodeQL biztonsági elemzés
+- ✅ Python + JavaScript/TypeScript támogatás
+- ✅ Security-extended query pack
+- ✅ Heti ütemezett scan-ek
+- 📋 [Biztonsági irányelvek](.github/SECURITY.md)
+
 ---
 
 # ⚠️ AI ÜGYNÖKÖK - OLVASD EL ELŐSZÖR! (KÖTELEZŐ BOOTSTRAP PROTOKOLL)
