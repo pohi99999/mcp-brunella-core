@@ -34,6 +34,14 @@ export const OrchestratorChat = () => {
     chatHistory.loadHistory(sid).catch((e) => logError('OrchestratorChat', `Failed to load history: ${e}`));
   }, [chatHistory]);
 
+  // Sync loaded history to local messages state
+  useEffect(() => {
+    if (chatHistory.messages.length > 0) {
+      setMessages(chatHistory.messages);
+      logInfo('OrchestratorChat', `Loaded ${chatHistory.messages.length} messages from history`);
+    }
+  }, [chatHistory.messages]);
+
   // Auto-scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
