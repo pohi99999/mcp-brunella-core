@@ -1,0 +1,165 @@
+{
+  "trackId": "cloudflare_edge_agents_network_20260215",
+  "title": "Cloudflare Edge Agents Network (CEAN)",
+  "owner": "Brunella AI",
+  "createdAt": "2026-02-15T16:50:00Z",
+  "status": "planning",
+  "progress": 5,
+  "targetCompletion": "2026-03-15",
+  "estimatedWeeks": 4,
+  "description": "Build a global distributed agent network on Cloudflare Edge for research, grant monitoring, data harvesting, extraction, and CI/CD automation.",
+  "phases": [
+    {
+      "id": "1",
+      "name": "Foundation & Infrastructure",
+      "estimatedDays": 7,
+      "subphases": [
+        {
+          "id": "1A",
+          "name": "Cloudflare Asset Audit",
+          "estimatedDays": 2,
+          "deliverable": "Infrastructure snapshot + audit checklist"
+        },
+        {
+          "id": "1B",
+          "name": "Schema Design (D1 + R1)",
+          "estimatedDays": 2,
+          "deliverable": "schema.sql + vector mappings + TypeScript types"
+        },
+        {
+          "id": "1C",
+          "name": "GitHub Actions CI/CD",
+          "estimatedDays": 3,
+          "deliverable": "Deploy workflow file"
+        }
+      ]
+    },
+    {
+      "id": "2",
+      "name": "Individual Agent Workers",
+      "estimatedDays": 10,
+      "subphases": [
+        {
+          "id": "2A",
+          "name": "Research Agent Worker",
+          "estimatedDays": 2,
+          "deliverable": "Deployed research-agent.iam-dd1.workers.dev"
+        },
+        {
+          "id": "2B",
+          "name": "Grant Monitor Worker",
+          "estimatedDays": 3,
+          "deliverable": "Deployed grant-monitor.iam-dd1.workers.dev"
+        },
+        {
+          "id": "2C",
+          "name": "Data Harvester Worker",
+          "estimatedDays": 3,
+          "deliverable": "Deployed data-harvester.iam-dd1.workers.dev"
+        },
+        {
+          "id": "2D",
+          "name": "Data Extractor Worker",
+          "estimatedDays": 2,
+          "deliverable": "Deployed data-extractor.iam-dd1.workers.dev"
+        },
+        {
+          "id": "2E",
+          "name": "Builder Agent Worker",
+          "estimatedDays": 2,
+          "deliverable": "Deployed builder-agent.iam-dd1.workers.dev"
+        }
+      ]
+    },
+    {
+      "id": "3",
+      "name": "Orchestration & Pipeline",
+      "estimatedDays": 7,
+      "subphases": [
+        {
+          "id": "3A",
+          "name": "Task Orchestrator Worker",
+          "estimatedDays": 3,
+          "deliverable": "Deployed orchestrator.iam-dd1.workers.dev"
+        },
+        {
+          "id": "3B",
+          "name": "Dashboard Integration",
+          "estimatedDays": 4,
+          "deliverable": "EdgeAgentsMonitor.tsx component + live metrics"
+        }
+      ]
+    },
+    {
+      "id": "4",
+      "name": "Testing & Optimization",
+      "estimatedDays": 7,
+      "subphases": [
+        {
+          "id": "4A",
+          "name": "Load Testing",
+          "estimatedDays": 3,
+          "deliverable": "Performance report + profiling results"
+        },
+        {
+          "id": "4B",
+          "name": "Cost Optimization",
+          "estimatedDays": 2,
+          "deliverable": "Optimized workers + updated cost model"
+        },
+        {
+          "id": "4C",
+          "name": "E2E Testing",
+          "estimatedDays": 2,
+          "deliverable": "Full pipeline test documented + passing"
+        }
+      ]
+    }
+  ],
+  "resources": {
+    "cloudflare": {
+      "workers": 6,
+      "d1_databases": 2,
+      "r1_vectorstore": 1,
+      "free_requests_per_month": 100000,
+      "estimated_cost_per_month": 3
+    },
+    "github": {
+      "repositories_affected": [
+        "pohi99999/mcp-brunella-core",
+        "pohi99999/bas-cloudflare-orchestrator"
+      ],
+      "new_worker_repos": [
+        "research-agent",
+        "grant-monitor",
+        "data-harvester",
+        "data-extractor",
+        "builder-agent",
+        "orchestrator"
+      ]
+    }
+  },
+  "dependencies": [
+    "Cloudflare API token",
+    "GitHub Personal Access Token",
+    "OpenAI API key (or Gemini key)",
+    "Slack webhook URL (optional)",
+    "wrangler CLI installed"
+  ],
+  "successCriteria": [
+    "All 5 agent workers deployed + tests passing",
+    "D1/R1 schemas created + data flowing",
+    "30-day uptime >99.9%",
+    "Cost <$5/month",
+    "Monthly report: 10k+ research findings, 50+ qualifying grants, 100k+ data points harvested",
+    "Dashboard shows real-time metrics"
+  ],
+  "tags": [
+    "cloudflare",
+    "workers",
+    "edge-computing",
+    "ai-agents",
+    "orchestration",
+    "distributed-systems"
+  ]
+}
