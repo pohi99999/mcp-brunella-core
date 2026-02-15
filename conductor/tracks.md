@@ -41,7 +41,28 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
 
 ---
 
-## Aktiv Szalak (Active/In Progress) (5)
+## Aktiv Szalak (Active/In Progress) (6)
+
+- [ ] **CEAN Operations Center UI** [🔥 CRITICAL]
+  - **ID:** `cean_operations_center_ui_20260215`
+  - **Progress:** 10% (SPEC + PLAN + COMPONENTS DONE)
+  - **Start:** 2026-02-15 | **Target:** 2026-03-06
+  - **Assignee:** Claude Code (Developer)
+  - **Duration:** 14-16 munkanap (~3.5 hét)
+  - **Components:**
+    - Phase 1: Frontend Layout & Navigation (2 nap)
+    - Phase 2: Chat Interface (2-3 nap)
+    - Phase 3: Worker Management (2-3 nap)
+    - Phase 4: D1/R1 Explorer (1-2 nap)
+    - Phase 5: Backend API Routes (2-3 nap)
+    - Phase 6: Orchestrator Integration (1-2 nap)
+    - Phase 7: Metrics Dashboard (1-2 nap)
+    - Phase 8: Testing & Polish (1-2 nap)
+  - **Features:** Hungarian UI, Orchestrator chat, worker control, D1/R1 browser, real-time metrics
+  - **Stack:** React 18 + TypeScript + Radix UI + Tailwind + Socket.IO + recharts
+  - **API:** 30+ REST endpoints + WebSocket events
+  - Mappa: ./tracks/cean_operations_center_ui_20260215/
+  - **Tags:** cean, dashboard, ui, orchestrator, react, socket.io, real-time, magyar
 
 - [ ] **Cloudflare Edge Agents Network (CEAN)** [🔥 CRITICAL]
   - **ID:** `cloudflare_edge_agents_network_20260215`
@@ -51,7 +72,7 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
   - **Components:**
     - Phase 1: Infrastructure Audit (D1/R1/Workers) + CI/CD setup
     - Phase 2: 5 Agent Workers (Research, Grant Monitor, Data Harvester, Extractor, Builder)
-    - Phase 3: Orchestration + Dashboard integration
+    - Phase 3: Orchestration + Dashboard integration (👈 coords with CEAN UI track)
     - Phase 4: Load testing + cost optimization + E2E testing
   - **Resources:** 100k free requests/month, 6 Workers deployed, R1 + D1 available
   - **Cost Model:** <$3/month (within free tier)
