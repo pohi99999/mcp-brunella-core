@@ -120,7 +120,10 @@ def get_llm(config: EVConfig):
             temperature=0.1,
         )
     else:
-        from langchain_ollama import ChatOllama
+        try:
+            from langchain_ollama import ChatOllama
+        except ImportError:
+            from langchain_community.chat_models import ChatOllama
         log.info("LLM: Ollama %s (ingyenes)", config.ollama_model)
         return ChatOllama(
             model=config.ollama_model,

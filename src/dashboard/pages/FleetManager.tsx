@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Tabs } from '@radix-ui/themes';
+import * as Tabs from '@radix-ui/react-tabs';
 import { FleetOverview } from '../components/fleet/FleetOverview.js';
 import { MetricsDashboard } from '../components/fleet/MetricsDashboard.js';
 import { WorkerDetails } from '../components/fleet/WorkerDetails.js';

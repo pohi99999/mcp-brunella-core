@@ -5,7 +5,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { ScalingPolicy } from '../types.js';
-import { useCEANSocket } from '../../../cean/hooks/useCEANSocket.js';
+import { useCEANSocket } from '../../cean/hooks/useCEANSocket.js';
 
 interface UseScalingResult {
   policy: ScalingPolicy | null;
