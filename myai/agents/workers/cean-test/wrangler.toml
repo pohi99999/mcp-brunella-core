@@ -1,50 +1,29 @@
 name = "cean-test"
-type = "javascript"
 main = "worker.ts"
 compatibility_date = "2024-12-16"
-
-# Route configuration
-route = "cean-test.iam-dd1.workers.dev"
+workers_dev = true
 
 # D1 Database binding
 [[d1_databases]]
 binding = "DB"
-database_name = "cean"
-database_id = "f08bdb63-4e3f-4ac7-9644-aac34c96ab76"  # Replace with actual ID from wrangler d1 list
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"  # bas-metadata from wrangler d1 list
 
 # Environment-specific configurations
 [env.production]
-routes = [
-  {
-    pattern = "cean-test.iam-dd1.workers.dev/*",
-    zone_name = "iam-dd1.workers.dev"
-  }
-]
-d1_databases = [
-  {
-    binding = "DB",
-    database_name = "cean",
-    database_id = "f08bdb63-4e3f-4ac7-9644-aac34c96ab76"
-  }
-]
+name = "cean-test"
+workers_dev = true
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
 
 [env.development]
 name = "cean-test-dev"
-routes = []
-d1_databases = [
-  {
-    binding = "DB",
-    database_name = "cean-dev",
-    database_id = "f08bdb63-4e3f-4ac7-9644-aac34c96ab76"
-  }
-]
+workers_dev = true
 
-# Build configuration
-[build]
-command = "npm install && npm run build"
-cwd = "."
-main = "./dist/worker.js"
-
-[build.upload]
-format = "service-worker"
-dir = "./dist"
+[[env.development.d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"

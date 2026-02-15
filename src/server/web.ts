@@ -60,6 +60,7 @@ import { createScalingRouter } from "./routes/scaling.js";
 import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers, registerFleetWebSocketHandlers } from "./websocket.js";
 import testSchedulerRoutes from "./routes/testScheduler.js";
 import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
+import { startScheduler as startCronScheduler } from "./cron.js";
 import { initTestResultsDb } from "../core/testResultsService.js";
 import { initSuggestedTasksDb } from "../core/suggestedTasksScanner.js";
 import { createScheduledTasksRoutes } from "./routes/scheduledTasks.js";
@@ -370,6 +371,10 @@ export async function startWebServer() {
   // Initialize test scheduler
   logInfo("Server", "Starting test scheduler...");
   startScheduler();
+
+  // Initialize cron scheduler (EV Hunter, etc.)
+  logInfo("Server", "Starting cron scheduler (EV Hunter 08:00)...");
+  startCronScheduler();
 
   io.on("connection", (socket) => {
     const DEFAULT_CHAT_ID = "main-session";

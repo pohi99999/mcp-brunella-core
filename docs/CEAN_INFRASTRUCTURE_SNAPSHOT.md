@@ -1,8 +1,8 @@
-# CEAN Infrastructure Snapshot (Phase 1A & 1B)
+# CEAN Infrastructure Snapshot (Phase 1A–1D)
 **Date:** 2026-02-15  
-**Status:** ✅ Phase 1B - Schema Design (COMPLETE)  
+**Status:** ✅ Phase 1D - Test Worker Deployment (COMPLETE)  
 **Owner:** Brunella CEAN Team  
-**Last Updated:** 2026-02-15 14:35 UTC
+**Last Updated:** 2026-02-15 20:41 UTC
 
 ---
 
@@ -15,16 +15,22 @@
 | **Account ID** | ✅ Verified | 1bf6118df97f0e12f3592a89d90deb1e |
 | **Wrangler CLI** | ✅ Working | v4.62.0 (in bas-cloudflare-orchestrator) |
 | **API Token** | ✅ Configured | CLOUDFLARE_API_TOKEN in .env |
-| **Workers** | ✅ 1 Deployed | bas-cloudflare-orchestrator (8 deployments) |
+| **Workers** | ✅ 2 Deployed | bas-cloudflare-orchestrator, cean-test |
 | **D1 Databases** | ✅ 1 Active | bas-metadata (102KB, production) |
 | **R2 Buckets** | ✅ 1 Deployed | vodor1 |
-| **Vectorize (R1)** | 🟡 Not Yet Created | To be created in Phase 1B |
+| **Vectorize (R1)** | 🟡 Not Bound | R1 binding not yet configured |
 
 ### Deployed Resources Details
 - **Worker:** `bas-cloudflare-orchestrator.iam-dd1.workers.dev`
   - Latest Deployment: 2026-02-05 04:37:46 UTC
   - Environments: production, staging
   - Status: Ready for expansion
+
+- **Worker:** `cean-test.iam-dd1.workers.dev`
+  - Latest Deployment: 2026-02-15 20:41 UTC
+  - Environment: production
+  - Status: ✅ Healthy (D1 OK, R1 binding pending)
+  - Version ID: `249beab7-bd64-4727-a1d8-f98e250a494b`
 
 - **D1 Database:** `bas-metadata`
   - UUID: `1c4e7d00-7b09-4ddf-88b4-8df42e1123ab`
@@ -160,6 +166,27 @@
 - Auto-deploy on push to main
 - Run tests before production deployment
 - Set up secrets: CLOUDFLARE_API_TOKEN, CLOUDFLARE_ACCOUNT_ID
+
+---
+
+## ✅ PHASE 1D: Test Worker Deployment (COMPLETE - 2026-02-15)
+
+### Deployment Summary
+- **Worker URL:** https://cean-test.iam-dd1.workers.dev
+- **Deployment Time:** 2026-02-15 20:41 UTC
+- **D1 Binding:** bas-metadata (`1c4e7d00-7b09-4ddf-88b4-8df42e1123ab`)
+- **R1 Binding:** ❌ Not configured (VECTORIZE_INDEX missing)
+
+### Endpoint Verification Results
+| Endpoint | Result | Notes |
+|----------|--------|-------|
+| GET /health | ✅ 200 OK | d1_available: true, r1_available: false |
+| POST /test/d1 | ✅ 200 OK | Basic D1 query succeeded |
+| POST /test/r1 | ✅ 200 OK | R1 binding available flag false (no index) |
+| GET /test/metrics | ✅ 200 OK | Metrics endpoint responding |
+
+### Open Item
+- 🔧 Bind R1 Vectorize index in wrangler.toml (VECTORIZE_INDEX)
 
 ---
 

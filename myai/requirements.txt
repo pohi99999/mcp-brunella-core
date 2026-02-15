@@ -12,6 +12,8 @@ python-dotenv>=1.0
 browser-use>=0.11.9
 playwright>=1.40
 langchain-google-genai>=2.0
+langchain-community>=0.4
+langchain-ollama>=1.0
 langsmith
 lancedb
 chromadb
