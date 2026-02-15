@@ -11,8 +11,9 @@
  */
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
 import { persistentBrowser } from '../utils/persistentBrowser.js';
+import { generateExecutionPlan, ExecutionPlan, ExecutionStep } from '../utils/llmPlanner.js';
 
 /**
  * Intent (Phase 2 MVP - simple regex parsing)
@@ -40,6 +41,7 @@ export class RobotkezV2Agent extends BaseAgent {
 
     /**
      * Fő entry point (IAgent interface)
+     * Phase 3: LLM-based multi-step planning
      *
      * @param context - AgentContext (task + opcionális context)
      * @returns AgentResult - success/message/data
@@ -49,26 +51,62 @@ export class RobotkezV2Agent extends BaseAgent {
         setAgentStatus(this.name, 'working', instruction.slice(0, 50));
 
         try {
-            logInfo(this.name, `Utasítás: ${instruction}`);
+            logInfo(this.name, `📋 Utasítás: ${instruction}`);
 
-            // 1. Intent parsing (egyszerű verzió Phase 2-ben, LLM Phase 3-ban)
-            const intent = this.parseHungarianIntent(instruction);
-            logInfo(this.name, `Intent típus: ${intent.type}`);
+            // Phase 3: LLM-based planning
+            let plan: ExecutionPlan;
+            try {
+                plan = await generateExecutionPlan(instruction);
+                logInfo(this.name, `🤖 LLM plan: ${plan.plan.length} lépés, ~${plan.estimatedDuration}ms`);
+            } catch (llmError: any) {
+                // Fallback to Phase 2 simple parsing if LLM fails
+                logWarn(this.name, `LLM planning failed, using simple fallback: ${llmError.message}`);
+                const intent = this.parseHungarianIntent(instruction);
+                const result = await this.executeSimplePlan(intent);
+                await persistentBrowser.sendCommand({ action: 'screenshot' }).catch(() => {});
+                return {
+                    success: true,
+                    message: result.message + ' (fallback mode)',
+                    data: result.data,
+                    thoughts: `Fallback mode: ${intent.type}`
+                };
+            }
 
-            // 2. Simple plan execution (direct browser tool calls)
-            const result = await this.executeSimplePlan(intent);
+            // Execute multi-step plan
+            const completedSteps: Array<ExecutionStep & { status: string; error?: string }> = [];
 
-            // 3. Screenshot (Live View frissítés)
+            for (let i = 0; i < plan.plan.length; i++) {
+                const step = plan.plan[i];
+                logInfo(this.name, `▶️ Lépés ${i + 1}/${plan.plan.length}: ${step.description}`);
+
+                try {
+                    await this.executeStep(step);
+                    completedSteps.push({ ...step, status: 'completed' });
+                } catch (stepError: any) {
+                    logError(this.name, `❌ Lépés ${i + 1} hiba: ${stepError.message}`);
+                    completedSteps.push({ ...step, status: 'error', error: stepError.message });
+
+                    // Stop execution on critical errors
+                    throw new Error(`Lépés ${i + 1} sikertelen: ${stepError.message}`);
+                }
+            }
+
+            // Final screenshot (Live View frissítés)
             await persistentBrowser.sendCommand({ action: 'screenshot' }).catch(() => {});
 
-            logInfo(this.name, `✅ Sikeres végrehajtás: ${result.message}`);
+            logInfo(this.name, `✅ Végrehajtva: ${completedSteps.length}/${plan.plan.length} lépés`);
 
             return {
                 success: true,
-                message: result.message,
-                data: result.data,
-                thoughts: `Intent: ${intent.type}`,
-                contextUsed: ['persistent_browser']
+                message: `Végrehajtva: ${completedSteps.length} lépés sikeres`,
+                data: {
+                    plan: plan.plan,
+                    completedSteps,
+                    estimatedDuration: plan.estimatedDuration,
+                    requiresUserInput: plan.requiresUserInput
+                },
+                thoughts: `LLM-generated plan executed successfully (${plan.plan.length} steps)`,
+                contextUsed: ['persistent_browser', 'llm_planner']
             };
 
         } catch (error: any) {
@@ -80,6 +118,74 @@ export class RobotkezV2Agent extends BaseAgent {
             };
         } finally {
             setAgentStatus(this.name, 'idle');
+        }
+    }
+
+    /**
+     * Execute single step from LLM-generated plan
+     * Phase 3: Multi-step execution
+     *
+     * @param step - ExecutionStep to execute
+     */
+    private async executeStep(step: ExecutionStep): Promise<void> {
+        switch (step.action) {
+            case 'navigate':
+                if (!step.url) throw new Error('Navigate action requires url');
+                await persistentBrowser.sendCommand({ action: 'navigate', url: step.url });
+                break;
+
+            case 'click':
+                if (!step.selector) throw new Error('Click action requires selector');
+                await persistentBrowser.sendCommand({ action: 'click', selector: step.selector });
+                break;
+
+            case 'type':
+                if (!step.selector || step.text === undefined) {
+                    throw new Error('Type action requires selector and text');
+                }
+                await persistentBrowser.sendCommand({
+                    action: 'type',
+                    selector: step.selector,
+                    text: step.text
+                });
+                break;
+
+            case 'scroll':
+                await persistentBrowser.sendCommand({
+                    action: 'scroll',
+                    direction: step.direction || 'down',
+                    amount: step.amount || 100
+                });
+                break;
+
+            case 'wait':
+                if (!step.selector) throw new Error('Wait action requires selector');
+                await persistentBrowser.sendCommand({
+                    action: 'wait',
+                    selector: step.selector,
+                    timeout: step.timeout || 5000
+                });
+                break;
+
+            case 'screenshot':
+                await persistentBrowser.sendCommand({ action: 'screenshot' });
+                break;
+
+            case 'extract':
+                if (!step.selector) throw new Error('Extract action requires selector');
+                const res = await persistentBrowser.sendCommand({
+                    action: 'extract',
+                    selector: step.selector,
+                    type: step.type || 'text',
+                    attribute: step.attribute
+                });
+                // Store extracted data in step (for future context use)
+                (step as any).extractedData = res.data;
+                logInfo(this.name, `📊 Extracted ${res.count} items`);
+                break;
+
+            default:
+                throw new Error(`Unknown action: ${(step as any).action}`);
         }
     }
 

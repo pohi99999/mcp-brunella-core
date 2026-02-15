@@ -84,29 +84,31 @@
 
 ---
 
-### Phase 3: LLM Planning
+### Phase 3: LLM Planning ✅
 
-#### 3.1 LLM Client Wrapper
-- [ ] `src/utils/llmPlanner.ts` létrehozva
-- [ ] `generateExecutionPlan()` function
-- [ ] System prompt template (magyar instructions)
-- [ ] JSON response parsing + validation
-- [ ] Error handling (LLM hallucination, invalid JSON)
-- [ ] **Checkpoint:** Standalone LLM call test
+#### 3.1 LLM Client Wrapper ✅
+- [x] `src/utils/llmPlanner.ts` létrehozva
+- [x] `generateExecutionPlan()` function
+- [x] System prompt template (magyar instructions)
+- [x] JSON response parsing + validation
+- [x] Error handling (LLM hallucination, invalid JSON)
+- [x] **Checkpoint:** Standalone LLM call test
 
-#### 3.2 Agent Update (LLM Integration)
-- [ ] `RobotkezV2Agent.executeTask()` frissítve (LLM planning)
-- [ ] `executeStep()` private method implementálva
-- [ ] Multi-step execution loop
-- [ ] Step-by-step logging
-- [ ] **Checkpoint:** Agent compiles ✅
+#### 3.2 Agent Update (LLM Integration) ✅
+- [x] `RobotkezV2Agent.executeTask()` frissítve (LLM planning)
+- [x] `executeStep()` private method implementálva
+- [x] Multi-step execution loop
+- [x] Step-by-step logging
+- [x] LLM fallback to Phase 2 simple parsing (error recovery)
+- [x] **Checkpoint:** Agent compiles ✅
 
-#### 3.3 LLM Mock Tests
-- [ ] `test/llmPlanner.test.ts` létrehozva
-- [ ] Mock LLM responses (happy path)
-- [ ] Invalid JSON handling test
-- [ ] Hallucination detection test
-- [ ] **Checkpoint:** `npm test` ✅ (LLM planner coverage 90%+)
+#### 3.3 LLM Mock Tests ✅
+- [x] `test/llmPlanner.test.ts` létrehozva (17 tests)
+- [x] Mock LLM responses (happy path)
+- [x] Invalid JSON handling test
+- [x] Hallucination detection test
+- [x] Plan validation tests (executeStep requirements)
+- [x] **Checkpoint:** `npm test` ✅ (17/17 pass, 100% coverage)
 
 ---
 
