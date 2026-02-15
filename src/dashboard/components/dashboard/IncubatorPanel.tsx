@@ -19,12 +19,13 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Progress } from '@/components/ui/progress';
 import { toast } from 'sonner';
-import { addGoldSample, getIncubatorStats, type DatasetStats } from '@/lib/apiService';
+import { addGoldSample, getIncubatorStats, trainModel, type DatasetStats } from '@/lib/apiService';
 
 export function IncubatorPanel() {
     const [stats, setStats] = useState<DatasetStats | null>(null);
     const [loading, setLoading] = useState(true);
     const [activeTab, setActiveTab] = useState('overview');
+    const [isTraining, setIsTraining] = useState(false);
 
     // Form state
     const [prompt, setPrompt] = useState('');
@@ -57,7 +58,7 @@ export function IncubatorPanel() {
         setIsSaving(true);
         try {
             await addGoldSample(prompt, completion, 'manual', 1.0);
-            toast.success('„Arany Minta” sikeresen elmentve!');
+            toast.success('„Arany Minta" sikeresen elmentve!');
             setPrompt('');
             setCompletion('');
             fetchStats();
@@ -65,6 +66,30 @@ export function IncubatorPanel() {
             toast.error('Hiba a mentés során: ' + e.message);
         } finally {
             setIsSaving(false);
+        }
+    };
+
+    const handleStartTraining = async () => {
+        if (!stats || stats.total_samples < 10) {
+            toast.error('Legalább 10 minta szükséges a training indításához!');
+            return;
+        }
+
+        setIsTraining(true);
+        try {
+            const result = await trainModel();
+            if (result.success) {
+                toast.success(result.message || 'Training elindítva! Ez eltarthat néhány percig...');
+                if (result.task_id) {
+                    toast.info(`Task ID: ${result.task_id}`);
+                }
+            } else {
+                toast.error('Training indítás sikertelen');
+            }
+        } catch (e: any) {
+            toast.error('Training hiba: ' + e.message);
+        } finally {
+            setIsTraining(false);
         }
     };
 
@@ -84,8 +109,12 @@ export function IncubatorPanel() {
                     <Button variant="outline" onClick={fetchStats} className="gap-2">
                         <ClockCounterClockwise /> Frissítés
                     </Button>
-                    <Button className="gap-2 bg-primary hover:bg-primary/80" onClick={() => toast.info('Training funkció hamarosan elérhető!')}>
-                        <Play weight="fill" /> Training indítása
+                    <Button
+                        className="gap-2 bg-primary hover:bg-primary/80"
+                        onClick={handleStartTraining}
+                        disabled={isTraining || !stats || stats.total_samples < 10}
+                    >
+                        <Play weight="fill" /> {isTraining ? 'Training fut...' : 'Training indítása'}
                     </Button>
                 </div>
             </div>
