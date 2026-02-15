@@ -114,14 +114,14 @@
 
 ### Phase 4: Background Task Manager
 
-#### 4.1 Task Manager Class
-- [ ] `src/utils/backgroundTaskManager.ts` létrehozva
-- [ ] `BackgroundTaskManager` class implementálva
-- [ ] `startTask()` method (async execution)
-- [ ] `getTaskStatus()` method
-- [ ] `cancelTask()` method
-- [ ] In-memory task storage (Map<string, BackgroundTask>)
-- [ ] **Checkpoint:** Task manager compiles ✅
+#### 4.1 Task Manager Class ✅
+- [x] `src/utils/backgroundTaskManager.ts` létrehozva
+- [x] `BackgroundTaskManager` class implementálva
+- [x] `startTask()` method (async execution)
+- [x] `getTaskStatus()` method
+- [x] `cancelTask()` method
+- [x] In-memory task storage (Map<string, BackgroundTask>)
+- [x] **Checkpoint:** Task manager compiles ✅
 
 #### 4.2 Database Schema
 - [ ] `src/utils/tasksDb.ts` frissítve (robotkez_background_tasks table)
@@ -129,11 +129,11 @@
 - [ ] Task persistence (save/load from DB)
 - [ ] **Checkpoint:** DB migration sikeres
 
-#### 4.3 Checkpoint System
-- [ ] `createCheckpoint()` method (every 3 steps)
-- [ ] `loadLastCheckpoint()` method
-- [ ] `replaySteps()` method (Phoenix recovery)
-- [ ] **Checkpoint:** Checkpoint creation/load test
+#### 4.3 Checkpoint System ✅
+- [x] `createCheckpoint()` method (every 3 steps)
+- [x] `loadLastCheckpoint()` method
+- [x] `replaySteps()` method (Phoenix recovery)
+- [x] **Checkpoint:** Checkpoint creation/load test
 
 #### 4.4 Agent Integration
 - [ ] `RobotkezV2Agent.executeInBackground()` implementálva
