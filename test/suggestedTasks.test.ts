@@ -1,210 +1,219 @@
-import { describe, it, expect, beforeAll, vi } from 'vitest';
-import { initSuggestedTasksDb, scanCodebaseForTodos, getAllSuggestedTasks, getSuggestedTasksByStatus, updateSuggestedTaskStatus } from '../src/core/suggestedTasksScanner';
+import { describe, it, expect, beforeEach, afterEach } from "vitest";
+import express from "express";
+import request from "supertest";
+import fs from "fs/promises";
+import os from "os";
+import path from "path";
+import { suggestedTasksRouter } from "../src/server/routes/suggestedTasks.js";
+import { initSuggestedTasksDb, getSuggestedTasksDb } from "../src/core/suggestedTasksScanner.js";
 
-describe('SuggestedTasksScanner API Routes', () => {
-  let testDbPath = ':memory:';
+interface TaskRecord {
+  id: string;
+  todo_text: string;
+  file_path: string;
+  line_number: number;
+  confidence_score: number;
+  status: string;
+}
 
-  beforeAll(async () => {
-    try {
-      await initSuggestedTasksDb(testDbPath);
-    } catch (e) {
-      // Database init in :memory: might fail - that's OK for this test
-    }
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null;
+}
+
+function getString(value: unknown, key: string): string | undefined {
+  if (!isRecord(value)) return undefined;
+  const entry = value[key];
+  return typeof entry === "string" ? entry : undefined;
+}
+
+function getNumber(value: unknown, key: string): number | undefined {
+  if (!isRecord(value)) return undefined;
+  const entry = value[key];
+  return typeof entry === "number" ? entry : undefined;
+}
+
+function getArray(value: unknown, key: string): unknown[] {
+  if (!isRecord(value)) return [];
+  const entry = value[key];
+  return Array.isArray(entry) ? entry : [];
+}
+
+async function seedWorkspace(root: string) {
+  const srcDir = path.join(root, "src");
+  await fs.mkdir(srcDir, { recursive: true });
+  await fs.writeFile(
+    path.join(srcDir, "sample.ts"),
+    "// TODO CRITICAL: fix this\nconst sample = true;\n",
+    "utf-8",
+  );
+}
+
+function insertTask(status = "pending"): TaskRecord {
+  const db = getSuggestedTasksDb();
+  if (!db) throw new Error("Suggested tasks DB not initialized");
+
+  const id = `todo_test_${status}`;
+  db.prepare(
+    `
+      INSERT OR REPLACE INTO suggested_tasks
+      (id, file_path, line_number, todo_text, context, confidence_score, status, created_at, updated_at)
+      VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+    `,
+  ).run(id, "src/sample.ts", 1, "TODO: test", "context", 0.7, status);
+
+  return {
+    id,
+    todo_text: "TODO: test",
+    file_path: "src/sample.ts",
+    line_number: 1,
+    confidence_score: 0.7,
+    status,
+  };
+}
+
+describe("SuggestedTasksScanner API Routes", () => {
+  let app: express.Express;
+  let tempDir: string;
+  const prevEnv = { ...process.env };
+
+  beforeEach(async () => {
+    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "suggested-tasks-"));
+    await seedWorkspace(tempDir);
+    process.env.BRUNELLA_WORKSPACE_ROOT = tempDir;
+
+    await initSuggestedTasksDb(":memory:");
+
+    app = express();
+    app.use(express.json());
+    app.use("/api/v1/suggested-tasks", suggestedTasksRouter);
   });
 
-  describe('GET /api/v1/suggested-tasks', () => {
-    it('should return all non-archived tasks', async () => {
-      const response = await fetch('http://localhost:3000/api/v1/suggested-tasks', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+  afterEach(async () => {
+    process.env = { ...prevEnv };
+    await fs.rm(tempDir, { recursive: true, force: true });
+  });
+
+  describe("GET /api/v1/suggested-tasks", () => {
+    it("should return all non-archived tasks", async () => {
+      insertTask("pending");
+      const response = await request(app).get("/api/v1/suggested-tasks");
 
       expect(response.status).toBe(200);
-      const data = await response.json();
-      expect(data.success).toBe(true);
-      expect(Array.isArray(data.data)).toBe(true);
+      expect(response.body.success).toBe(true);
+      expect(Array.isArray(response.body.data)).toBe(true);
     });
   });
 
-  describe('GET /api/v1/suggested-tasks/:status', () => {
-    it('should filter tasks by pending status', async () => {
-      const response = await fetch('http://localhost:3000/api/v1/suggested-tasks/pending', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+  describe("GET /api/v1/suggested-tasks/:status", () => {
+    it("should filter tasks by pending status", async () => {
+      insertTask("pending");
+      insertTask("in_progress");
+
+      const response = await request(app).get("/api/v1/suggested-tasks/pending");
 
       expect(response.status).toBe(200);
-      const data = await response.json();
-      expect(data.success).toBe(true);
-      expect(Array.isArray(data.data)).toBe(true);
-
-      // All returned tasks should be pending
-      if (data.data.length > 0) {
-        data.data.forEach((task: any) => {
-          expect(task.status).toBe('pending');
-        });
-      }
+      expect(response.body.success).toBe(true);
+      const tasks = Array.isArray(response.body.data) ? response.body.data : [];
+      tasks.forEach((task: unknown) => {
+        expect(getString(task, "status")).toBe("pending");
+      });
     });
 
-    it('should filter tasks by in_progress status', async () => {
-      const response = await fetch('http://localhost:3000/api/v1/suggested-tasks/in_progress', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+    it("should filter tasks by in_progress status", async () => {
+      insertTask("in_progress");
+      const response = await request(app).get("/api/v1/suggested-tasks/in_progress");
 
       expect(response.status).toBe(200);
-      const data = await response.json();
-      expect(data.success).toBe(true);
+      expect(response.body.success).toBe(true);
     });
 
-    it('should return 400 for invalid status', async () => {
-      const response = await fetch('http://localhost:3000/api/v1/suggested-tasks/invalid_status', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
-
+    it("should return 400 for invalid status", async () => {
+      const response = await request(app).get("/api/v1/suggested-tasks/invalid_status");
       expect(response.status).toBe(400);
     });
   });
 
-  describe('POST /api/v1/suggested-tasks/scan', () => {
-    it('should scan codebase and return new tasks', async () => {
-      const response = await fetch('http://localhost:3000/api/v1/suggested-tasks/scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-      });
+  describe("POST /api/v1/suggested-tasks/scan", () => {
+    it("should scan codebase and return new tasks", async () => {
+      const response = await request(app).post("/api/v1/suggested-tasks/scan");
 
       expect(response.status).toBe(200);
-      const data = await response.json();
-      expect(data.success).toBe(true);
-      expect(data.data).toHaveProperty('count');
-      expect(data.data).toHaveProperty('tasks');
-      expect(typeof data.data.count).toBe('number');
+      expect(response.body.success).toBe(true);
+      const count = getNumber(response.body.data, "count");
+      expect(typeof count).toBe("number");
     });
   });
 
-  describe('PATCH /api/v1/suggested-tasks/:taskId/status', () => {
-    it('should update task status successfully', async () => {
-      // First, get a task
-      const getResponse = await fetch('http://localhost:3000/api/v1/suggested-tasks', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+  describe("PATCH /api/v1/suggested-tasks/:taskId/status", () => {
+    it("should update task status successfully", async () => {
+      const task = insertTask("pending");
 
-      const data = await getResponse.json();
-      if (data.data && data.data.length > 0) {
-        const taskId = data.data[0].id;
+      const response = await request(app)
+        .patch(`/api/v1/suggested-tasks/${task.id}/status`)
+        .send({ status: "in_progress" });
 
-        const response = await fetch(
-          `http://localhost:3000/api/v1/suggested-tasks/${taskId}/status`,
-          {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ status: 'in_progress' }),
-          }
-        );
-
-        expect(response.status).toBe(200);
-        const updateData = await response.json();
-        expect(updateData.success).toBe(true);
-        expect(updateData.data.status).toBe('in_progress');
-      }
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(getString(response.body.data, "status")).toBe("in_progress");
     });
 
-    it('should return 400 for invalid status value', async () => {
-      const response = await fetch(
-        'http://localhost:3000/api/v1/suggested-tasks/test-id/status',
-        {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'invalid' }),
-        }
-      );
+    it("should return 400 for invalid status value", async () => {
+      const response = await request(app)
+        .patch("/api/v1/suggested-tasks/test-id/status")
+        .send({ status: "invalid" });
 
-      expect([400, 404]).toContain(response.status);
+      expect(response.status).toBe(400);
     });
 
-    it('should return 404 for non-existent task', async () => {
-      const response = await fetch(
-        'http://localhost:3000/api/v1/suggested-tasks/nonexistent-id/status',
-        {
-          method: 'PATCH',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: 'completed' }),
-        }
-      );
+    it("should return 404 for non-existent task", async () => {
+      const response = await request(app)
+        .patch("/api/v1/suggested-tasks/nonexistent-id/status")
+        .send({ status: "completed" });
 
       expect(response.status).toBe(404);
     });
   });
 
-  describe('DELETE /api/v1/suggested-tasks/:taskId', () => {
-    it('should archive a task successfully', async () => {
-      // First, get a task
-      const getResponse = await fetch('http://localhost:3000/api/v1/suggested-tasks', {
-        method: 'GET',
-        headers: { 'Content-Type': 'application/json' },
-      });
+  describe("DELETE /api/v1/suggested-tasks/:taskId", () => {
+    it("should archive a task successfully", async () => {
+      const task = insertTask("pending");
 
-      const data = await getResponse.json();
-      if (data.data && data.data.length > 0) {
-        const taskId = data.data[0].id;
+      const response = await request(app).delete(`/api/v1/suggested-tasks/${task.id}`);
 
-        const response = await fetch(
-          `http://localhost:3000/api/v1/suggested-tasks/${taskId}`,
-          {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-          }
-        );
-
-        expect(response.status).toBe(200);
-        const deleteData = await response.json();
-        expect(deleteData.success).toBe(true);
-        expect(deleteData.data.archived).toBe(true);
-      }
+      expect(response.status).toBe(200);
+      expect(response.body.success).toBe(true);
+      expect(response.body.data.archived).toBe(true);
     });
 
-    it('should return 404 for non-existent task', async () => {
-      const response = await fetch(
-        'http://localhost:3000/api/v1/suggested-tasks/nonexistent-id',
-        {
-          method: 'DELETE',
-          headers: { 'Content-Type': 'application/json' },
-        }
-      );
-
+    it("should return 404 for non-existent task", async () => {
+      const response = await request(app).delete("/api/v1/suggested-tasks/nonexistent-id");
       expect(response.status).toBe(404);
     });
   });
 
-  describe('Scanner Confidence Scoring', () => {
-    it('should assign higher confidence to critical keywords', async () => {
-      // Scan should pick up existing TODOs with keywords like URGENT, CRITICAL, SECURITY
-      const response = await fetch('http://localhost:3000/api/v1/suggested-tasks/scan', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+  describe("Scanner Confidence Scoring", () => {
+    it("should assign higher confidence to critical keywords", async () => {
+      const response = await request(app).post("/api/v1/suggested-tasks/scan");
+      expect(response.status).toBe(200);
+
+      const tasks = getArray(response.body.data, "tasks");
+      tasks.forEach((task) => {
+        const score = getNumber(task, "confidence_score");
+        expect(typeof score).toBe("number");
+        if (typeof score === "number") {
+          expect(score).toBeGreaterThanOrEqual(0);
+          expect(score).toBeLessThanOrEqual(1);
+        }
       });
 
-      const data = await response.json();
-      if (data.data.tasks && data.data.tasks.length > 0) {
-        const tasks = data.data.tasks;
+      const criticalTasks = tasks.filter((task) => {
+        const text = getString(task, "todo_text");
+        return text?.toLowerCase().includes("critical") ?? false;
+      });
 
-        // All tasks should have a confidence score between 0 and 1
-        tasks.forEach((task: any) => {
-          expect(task.confidence_score).toBeGreaterThanOrEqual(0);
-          expect(task.confidence_score).toBeLessThanOrEqual(1);
-        });
-
-        // If any has URGENT/CRITICAL should have higher score
-        const criticalTasks = tasks.filter(
-          (t: any) =>
-            t.todo_text.toLowerCase().includes('urgent') ||
-            t.todo_text.toLowerCase().includes('critical')
-        );
-        if (criticalTasks.length > 0) {
-          expect(criticalTasks[0].confidence_score).toBeGreaterThan(0.5);
-        }
+      if (criticalTasks.length > 0) {
+        const score = getNumber(criticalTasks[0], "confidence_score");
+        expect(score).toBeGreaterThan(0.5);
       }
     });
   });

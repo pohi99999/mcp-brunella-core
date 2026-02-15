@@ -23,9 +23,16 @@ vi.mock('../src/utils/persistentBrowser.js', () => ({
     }
 }));
 
+// Mock llmPlanner to force fallback to Phase 2 simple parsing
+// (Phase 3 LLM planning has separate tests)
+vi.mock('../src/utils/llmPlanner.js', () => ({
+    generateExecutionPlan: vi.fn().mockRejectedValue(new Error('LLM mocked - using fallback'))
+}));
+
 // Mock logger
 vi.mock('../src/utils/logger.js', () => ({
     logInfo: vi.fn(),
+    logWarn: vi.fn(),
     logError: vi.fn(),
     setAgentStatus: vi.fn()
 }));
