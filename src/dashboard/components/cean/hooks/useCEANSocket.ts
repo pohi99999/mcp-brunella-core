@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
-import { logInfo, logError } from '../../../utils/logger.js';
+import { logInfo, logError } from '@/utils/logger';
 
 /**
  * Socket.IO hook for CEAN real-time events
