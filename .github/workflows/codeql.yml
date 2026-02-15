@@ -21,7 +21,7 @@ jobs:
   analyze:
     name: Analyze (${{ matrix.language }})
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 60
 
     permissions:
       actions: read
@@ -49,6 +49,7 @@ jobs:
           build-mode: ${{ matrix.build-mode }}
           # Custom queries for security-focused analysis
           queries: +security-extended,security-and-quality
+          config-file: .github/codeql-config.yml
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
