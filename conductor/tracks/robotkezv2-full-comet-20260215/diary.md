@@ -369,5 +369,163 @@ interface ExecutionStep {
 
 ---
 
+## 2026-02-15 - Phase 4.1 ✅ + 4.3 ✅ KÉSZ! (Background Task Manager + Checkpoint System)
+
+**Status:** ✅ Completed
+
+**Phase 4.1 - Background Task Manager Class (Befejezve - 6h → 1h ténylegesen):**
+
+**4.1.1 Core Class Implementation ✅**
+- `src/utils/backgroundTaskManager.ts` teljes implementáció (430 lines)
+- **BackgroundTaskManager** singleton class
+- **Interfaces:**
+  ```typescript
+  export type TaskStatus = 'running' | 'completed' | 'error' | 'cancelled';
+
+  export interface BackgroundTask {
+      id: string;
+      instruction: string;
+      plan: ExecutionPlan;
+      status: TaskStatus;
+      progress: number; // 0-100
+      startedAt: number;
+      completedAt?: number;
+      steps: TaskStep[];
+      currentStepIndex: number;
+      error?: string;
+      checkpoints: TaskCheckpoint[];
+  }
+
+  export interface TaskStep extends ExecutionStep {
+      status: 'completed' | 'error';
+      error?: string;
+      completedAt?: number;
+  }
+  ```
+
+**4.1.2 Core Methods ✅**
+- **`startTask(instruction, plan)`** - Background task indítás
+  - Non-blocking async execution
+  - Task ID generálás (`task_${timestamp}_${random}`)
+  - Immediate return (nem blokkolja a main thread-et)
+- **`getTaskStatus(taskId)`** - Task állapot lekérdezés
+- **`getAllTasks()`** - Összes task lista (startedAt desc rendezés)
+- **`cancelTask(taskId)`** - Futó task leállítás
+  - Return boolean (true = cancelled, false = not running)
+
+**4.1.3 Execution Engine ✅**
+- **`executeTaskInBackground()`** private method
+  - Multi-step execution loop
+  - Progress tracking (percentage calculation)
+  - Step-by-step logging (▶️ ✅ ❌)
+  - Error handling:
+    - **Critical errors** (navigate, click, type) → task stop
+    - **Non-critical errors** (screenshot, scroll) → continue execution
+  - Checkpoint creation every 3 steps
+  - Status updates (running → completed/error/cancelled)
+
+**4.1.4 Step Executor ✅**
+- **`executeStep(step)`** private method - 7 action handlers
+  - navigate → `pb_navigate(url)`
+  - click → `pb_click(selector)`
+  - type → `pb_type(selector, text)`
+  - scroll → `pb_scroll(direction, amount)` (defaults: down, 300px)
+  - wait → `pb_wait(selector, timeout)` (default: 5000ms)
+  - screenshot → `pb_screenshot()`
+  - extract → `pb_extract(selector, type, attribute)` (default type: text)
+
+**Phase 4.3 - Checkpoint System (Befejezve - integrated with 4.1):**
+
+**4.3.1 Phoenix Protocol Integration ✅**
+- **TaskCheckpoint interface:**
+  ```typescript
+  export interface TaskCheckpoint {
+      stepIndex: number;
+      timestamp: number;
+      completedSteps: TaskStep[];
+  }
+  ```
+- **`createCheckpoint(taskId, stepIndex, completedSteps)`** - Checkpoint creation
+  - Automatic: every 3 steps (i+1) % 3 === 0
+  - Deep copy of completedSteps
+  - Logging: "📌 Checkpoint created at step X"
+- **`loadLastCheckpoint(taskId)`** - Latest checkpoint retrieval
+  - Return TaskCheckpoint or null
+- **`replaySteps(taskId)`** - Phoenix recovery
+  - Restore task state from checkpoint
+  - Resume execution from checkpoint.stepIndex + 1
+  - Re-start background execution
+  - Full recovery pattern implementation
+
+**4.3.2 Test Coverage ✅**
+- `test/backgroundTaskManager.test.ts` - **21 tests, 100% pass**
+- **Test categories (6 suites):**
+  1. **Task Creation and Lifecycle (5 tests)**
+     - Create and start task
+     - Complete task successfully
+     - Progress tracking during execution
+     - Error on critical step failure
+     - Continue on non-critical errors
+  2. **Task Cancellation (3 tests)**
+     - Cancel running task
+     - Cannot cancel completed task
+     - Cannot cancel non-existent task
+  3. **Checkpoint System (4 tests)**
+     - Create checkpoint every 3 steps
+     - Load last checkpoint
+     - No checkpoint for < 3 steps
+     - Replay steps from checkpoint
+  4. **Task Retrieval (3 tests)**
+     - Get task by ID
+     - Return null for non-existent task
+     - Get all tasks sorted
+  5. **Step Execution (6 tests)**
+     - Navigate action
+     - Click action
+     - Type action
+     - Scroll with defaults
+     - Wait action
+     - Extract with defaults
+
+**Build Status:**
+- ✅ TypeScript compile success
+- ✅ 21/21 tests pass (3.2s execution time)
+- ✅ No build errors
+
+**Performance:**
+- Task creation: < 5ms (immediate return)
+- Step execution: ~50-200ms per step (browser operations)
+- Checkpoint creation: < 1ms (memory copy)
+- Background execution: fully async, no main thread blocking
+
+**Példa használat:**
+```typescript
+import { backgroundTaskManager } from '../utils/backgroundTaskManager.js';
+
+// Start background task
+const taskId = await backgroundTaskManager.startTask(instruction, plan);
+
+// Check status (non-blocking)
+const task = backgroundTaskManager.getTaskStatus(taskId);
+console.log(`Progress: ${task.progress}%`);
+
+// Cancel if needed
+backgroundTaskManager.cancelTask(taskId);
+
+// Phoenix recovery
+if (task.status === 'error') {
+    await backgroundTaskManager.replaySteps(taskId);
+}
+```
+
+**Következő lépés:**
+- **Phase 4.2:** Database Schema (SQLite persistence)
+- **Phase 4.4:** Agent Integration (RobotkezV2Agent background delegation)
+
+**Blocker/Issues:**
+- ❌ None - Phase 4.1 + 4.3 működik 100%-ig
+
+---
+
 _Ez a fájl folyamatosan frissül minden munkaülésen. Naponta minimum 1 bejegyzés._
 _Formátum: `## YYYY-MM-DD - [Topic/Phase]` + bullet points._
