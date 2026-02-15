@@ -15,6 +15,12 @@
 import { persistentBrowser } from './persistentBrowser.js';
 import { ExecutionPlan, ExecutionStep } from './llmPlanner.js';
 import { logInfo, logWarn, logError } from './logger.js';
+import {
+    saveBackgroundTask,
+    updateBackgroundTask,
+    loadBackgroundTask,
+    loadAllBackgroundTasks
+} from './tasksDb.js';
 
 /**
  * Background Task Status
@@ -64,6 +70,38 @@ export interface TaskCheckpoint {
 class BackgroundTaskManager {
     private tasks: Map<string, BackgroundTask> = new Map();
     private runningTasks: Set<string> = new Set();
+    private initialized: boolean = false;
+
+    /**
+     * Initialize BackgroundTaskManager and recover tasks from database
+     * Call this once on app startup
+     */
+    async initialize(): Promise<void> {
+        if (this.initialized) return;
+
+        logInfo('BackgroundTaskManager', 'Initializing and recovering tasks from database...');
+
+        try {
+            const dbTasks = await loadAllBackgroundTasks(100);
+
+            for (const task of dbTasks) {
+                this.tasks.set(task.id, task);
+
+                // If task was running when app crashed, mark it for potential recovery
+                if (task.status === 'running') {
+                    logWarn('BackgroundTaskManager', `Found interrupted task ${task.id}: "${task.instruction}"`);
+                    // Don't auto-restart, just load into memory
+                    // User can manually replay via replaySteps()
+                }
+            }
+
+            logInfo('BackgroundTaskManager', `Recovered ${dbTasks.length} tasks from database`);
+            this.initialized = true;
+
+        } catch (error: any) {
+            logError('BackgroundTaskManager', `Failed to initialize from DB: ${error.message}`);
+        }
+    }
 
     /**
      * Start a new background task
@@ -89,6 +127,11 @@ class BackgroundTaskManager {
 
         this.tasks.set(taskId, task);
         this.runningTasks.add(taskId);
+
+        // Persist to database
+        await saveBackgroundTask(task).catch(err => {
+            logWarn('BackgroundTaskManager', `Failed to save task ${taskId} to DB: ${err.message}`);
+        });
 
         logInfo('BackgroundTaskManager', `▶️ Started task ${taskId}: "${instruction}" (${plan.plan.length} steps)`);
 
@@ -184,9 +227,18 @@ class BackgroundTaskManager {
 
                     logInfo('BackgroundTaskManager', `✅ Task ${taskId} - Step ${i + 1} completed (${task.progress}%)`);
 
+                    // Persist progress to database
+                    await updateBackgroundTask(task).catch(err => {
+                        logWarn('BackgroundTaskManager', `Failed to update task ${taskId} progress in DB: ${err.message}`);
+                    });
+
                     // Create checkpoint every 3 steps (Phoenix Protocol)
                     if ((i + 1) % 3 === 0) {
                         this.createCheckpoint(taskId, i, task.steps);
+                        // Persist checkpoint to database
+                        await updateBackgroundTask(task).catch(err => {
+                            logWarn('BackgroundTaskManager', `Failed to save checkpoint for task ${taskId}: ${err.message}`);
+                        });
                     }
 
                 } catch (stepError: any) {
@@ -303,6 +355,11 @@ class BackgroundTaskManager {
         }
 
         this.runningTasks.delete(taskId);
+
+        // Persist to database
+        updateBackgroundTask(task).catch(err => {
+            logWarn('BackgroundTaskManager', `Failed to update task ${taskId} in DB: ${err.message}`);
+        });
     }
 
     /**

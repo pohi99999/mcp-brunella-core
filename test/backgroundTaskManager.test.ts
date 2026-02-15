@@ -33,6 +33,14 @@ vi.mock('../src/utils/logger.js', () => ({
     logError: vi.fn()
 }));
 
+// Mock tasksDb (Phase 4.2 persistence)
+vi.mock('../src/utils/tasksDb.js', () => ({
+    saveBackgroundTask: vi.fn().mockResolvedValue(undefined),
+    updateBackgroundTask: vi.fn().mockResolvedValue(undefined),
+    loadBackgroundTask: vi.fn().mockResolvedValue(null),
+    loadAllBackgroundTasks: vi.fn().mockResolvedValue([])
+}));
+
 describe('BackgroundTaskManager (Phase 4)', () => {
     beforeEach(() => {
         mockSendCommand.mockClear();
@@ -466,6 +474,106 @@ describe('BackgroundTaskManager (Phase 4)', () => {
                 type: 'text',
                 attribute: undefined
             });
+        });
+    });
+
+    describe('Database Persistence (Phase 4.2)', () => {
+        it('should save task to database on creation', async () => {
+            const plan: ExecutionPlan = {
+                plan: [{ action: 'navigate', url: 'https://test.com', description: 'Test' }],
+                estimatedDuration: 5000,
+                backgroundEligible: false
+            };
+
+            const tasksDb = await import('../src/utils/tasksDb.js');
+            const saveBackgroundTaskSpy = vi.spyOn(tasksDb, 'saveBackgroundTask');
+
+            mockSendCommand.mockResolvedValue({ status: 'success' });
+
+            const taskId = await backgroundTaskManager.startTask('DB test', plan);
+
+            // Should have called saveBackgroundTask
+            expect(saveBackgroundTaskSpy).toHaveBeenCalled();
+            const savedTask = saveBackgroundTaskSpy.mock.calls[0][0];
+            expect(savedTask.id).toBe(taskId);
+            expect(savedTask.instruction).toBe('DB test');
+        });
+
+        it('should update task in database on progress change', async () => {
+            const plan: ExecutionPlan = {
+                plan: [
+                    { action: 'navigate', url: 'https://test.com', description: 'Step 1' },
+                    { action: 'screenshot', description: 'Step 2' }
+                ],
+                estimatedDuration: 5000,
+                backgroundEligible: false
+            };
+
+            const tasksDb = await import('../src/utils/tasksDb.js');
+            const updateBackgroundTaskSpy = vi.spyOn(tasksDb, 'updateBackgroundTask');
+
+            mockSendCommand.mockResolvedValue({ status: 'success' });
+
+            const taskId = await backgroundTaskManager.startTask('Progress test', plan);
+
+            // Wait for at least one step to complete
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            // Should have called updateBackgroundTask for progress
+            expect(updateBackgroundTaskSpy).toHaveBeenCalled();
+        });
+
+        it('should update task in database on completion', async () => {
+            const plan: ExecutionPlan = {
+                plan: [{ action: 'screenshot', description: 'Quick task' }],
+                estimatedDuration: 2000,
+                backgroundEligible: false
+            };
+
+            const tasksDb = await import('../src/utils/tasksDb.js');
+            const updateBackgroundTaskSpy = vi.spyOn(tasksDb, 'updateBackgroundTask');
+
+            mockSendCommand.mockResolvedValue({ status: 'success' });
+
+            const taskId = await backgroundTaskManager.startTask('Completion test', plan);
+
+            // Wait for completion
+            await new Promise(resolve => setTimeout(resolve, 200));
+
+            const task = backgroundTaskManager.getTaskStatus(taskId);
+            expect(task!.status).toBe('completed');
+
+            // Should have updated DB
+            expect(updateBackgroundTaskSpy).toHaveBeenCalled();
+        });
+
+        it('should initialize and recover tasks from database', async () => {
+            const tasksDb = await import('../src/utils/tasksDb.js');
+
+            const mockRecoveredTask = {
+                id: 'recovered_task_123',
+                instruction: 'Recovered task',
+                plan: {
+                    plan: [{ action: 'navigate', url: 'https://test.com', description: 'Test' }],
+                    estimatedDuration: 5000,
+                    backgroundEligible: false
+                },
+                status: 'running',
+                progress: 50,
+                startedAt: Date.now() - 10000,
+                steps: [],
+                currentStepIndex: 0,
+                checkpoints: []
+            };
+
+            vi.spyOn(tasksDb, 'loadAllBackgroundTasks').mockResolvedValue([mockRecoveredTask]);
+
+            await backgroundTaskManager.initialize();
+
+            const task = backgroundTaskManager.getTaskStatus('recovered_task_123');
+            expect(task).toBeDefined();
+            expect(task!.instruction).toBe('Recovered task');
+            expect(task!.status).toBe('running');
         });
     });
 });
