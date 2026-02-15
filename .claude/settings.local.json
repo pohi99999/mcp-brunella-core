@@ -64,7 +64,8 @@
       "Bash(npm run migrate:dry:*)",
       "Bash(npm run migrate:backup:*)",
       "Bash(npx tsx:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(git commit:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

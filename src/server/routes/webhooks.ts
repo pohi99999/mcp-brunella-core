@@ -35,7 +35,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
       db.prepare(`
         INSERT INTO webhook_events (id, type, provider, payload, processed)
         VALUES (?, ?, ?, ?, ?)
-      `).run(webhookId, eventType, 'github', JSON.stringify(req.body), false);
+      `).run(webhookId, eventType, 'github', JSON.stringify(req.body), 0);
 
       logInfo('Webhooks', `GitHub push detected: ${repository.name} (${ref})`);
 
@@ -84,7 +84,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
       db.prepare(`
         INSERT INTO webhook_events (id, type, provider, payload, processed)
         VALUES (?, ?, ?, ?, ?)
-      `).run(webhookId, eventType, 'render', JSON.stringify(req.body), false);
+      `).run(webhookId, eventType, 'render', JSON.stringify(req.body), 0);
 
       logInfo('Webhooks', `Render deployment detected`);
 
@@ -136,7 +136,7 @@ export function createWebhookRoutes(db: Database.Database): Router {
       db.prepare(`
         INSERT INTO webhook_events (id, type, provider, payload, processed)
         VALUES (?, ?, ?, ?, ?)
-      `).run(webhookId, `${provider}.custom`, provider, JSON.stringify(req.body), false);
+      `).run(webhookId, `${provider}.custom`, provider, JSON.stringify(req.body), 0);
 
       logInfo('Webhooks', `Webhook received from ${provider}`);
 
