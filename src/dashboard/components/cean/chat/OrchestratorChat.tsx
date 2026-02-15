@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { Send, Trash2, Copy } from 'lucide-react';
 import { useCEANSocket } from '../hooks/useCEANSocket';
+import { useChatHistory } from '../hooks/useChatHistory';
 import { SOCKET_EVENTS, TASK_TEMPLATES, MAX_CHAT_MESSAGES } from '../utils/constants';
 import { logInfo, logError } from '@/utils/logger';
 
@@ -17,8 +18,21 @@ export const OrchestratorChat = () => {
   const [inputValue, setInputValue] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [expandedTemplate, setExpandedTemplate] = useState<string | null>(null);
+  const [sessionId, setSessionId] = useState<string>('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const { socket, connected, emit, on } = useCEANSocket();
+  const chatHistory = useChatHistory();
+
+  // Initialize session ID and load history
+  useEffect(() => {
+    let sid = sessionStorage.getItem('cean_session_id');
+    if (!sid) {
+      sid = `session-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+      sessionStorage.setItem('cean_session_id', sid);
+    }
+    setSessionId(sid);
+    chatHistory.loadHistory(sid).catch((e) => logError('OrchestratorChat', `Failed to load history: ${e}`));
+  }, [chatHistory]);
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
@@ -51,16 +65,17 @@ export const OrchestratorChat = () => {
             },
           ]);
         } else if (response.content) {
-          setMessages((prev) => [
-            ...prev,
-            {
-              id: `msg-${Date.now()}`,
-              role: 'assistant',
-              content: response.content,
-              timestamp: Date.now(),
-              taskId: response.taskId,
-            },
-          ]);
+          const assistantMsg = {
+            id: `msg-${Date.now()}`,
+            role: 'assistant' as const,
+            content: response.content,
+            timestamp: Date.now(),
+            taskId: response.taskId,
+          };
+          setMessages((prev) => [...prev, assistantMsg]);
+          if (sessionId) {
+            chatHistory.saveMessage(sessionId, 'assistant', response.content, response.taskId).catch((e) => logError('OrchestratorChat', `Failed to save assistant message: ${e}`));
+          }
         }
       } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
@@ -93,6 +108,16 @@ export const OrchestratorChat = () => {
 
     logInfo('OrchestratorChat', `Sending prompt: ${prompt.slice(0, 50)}`);
 
+    // Save user message to history
+    if (sessionId) {
+      try {
+        await chatHistory.saveMessage(sessionId, 'user', prompt);
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        logError('OrchestratorChat', `Failed to save user message: ${msg}`);
+      }
+    }
+
     emit(SOCKET_EVENTS.ORCHESTRATOR_PROMPT, {
       prompt,
       timestamp: Date.now(),
@@ -111,6 +136,9 @@ export const OrchestratorChat = () => {
   const clearHistory = () => {
     setMessages([]);
     logInfo('OrchestratorChat', 'Chat history cleared');
+    if (sessionId) {
+      chatHistory.clearHistory(sessionId).catch((e) => logError('OrchestratorChat', `Failed to clear history: ${e}`));
+    }
   };
 
   const copyMessage = (content: string) => {
