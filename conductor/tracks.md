@@ -41,7 +41,22 @@ Ez a fajl koveti nyomon a fo fejlesztesi szalakat (tracks).
 
 ---
 
-## Aktiv Szalak (Active/In Progress) (4)
+## Aktiv Szalak (Active/In Progress) (5)
+
+- [ ] **Cloudflare Edge Agents Network (CEAN)** [🔥 CRITICAL]
+  - **ID:** `cloudflare_edge_agents_network_20260215`
+  - **Progress:** 5% (SPEC CREATED)
+  - **Start:** 2026-02-15 | **Target:** 2026-03-15
+  - **Assignee:** Claude Code + Wrangler
+  - **Components:**
+    - Phase 1: Infrastructure Audit (D1/R1/Workers) + CI/CD setup
+    - Phase 2: 5 Agent Workers (Research, Grant Monitor, Data Harvester, Extractor, Builder)
+    - Phase 3: Orchestration + Dashboard integration
+    - Phase 4: Load testing + cost optimization + E2E testing
+  - **Resources:** 100k free requests/month, 6 Workers deployed, R1 + D1 available
+  - **Cost Model:** <$3/month (within free tier)
+  - Mappa: ./tracks/cloudflare_edge_agents_network_20260215/
+  - **Tags:** cloudflare, workers, edge-computing, ai-agents, orchestration, distributed-systems
 
 - [ ] **RobotkezV2 - Full Comet (Magyar Agentic Browser)** [🔥 CRITICAL]
   - **ID:** `robotkezv2-full-comet-20260215`
