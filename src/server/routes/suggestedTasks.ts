@@ -7,6 +7,7 @@ import {
   deleteSuggestedTask,
   scanCodebaseForTodos,
 } from '../../core/suggestedTasksScanner.js';
+import { sendCriticalTasksEmail } from '../../utils/notificationService.js';
 
 export const suggestedTasksRouter = Router();
 
@@ -60,8 +61,26 @@ suggestedTasksRouter.post('/scan', async (req, res) => {
 
     const newTasks = await scanCodebaseForTodos(codebasePath);
     logInfo('suggestedTasksAPI', `Scan complete: ${newTasks.length} new/updated tasks`);
+    const criticalTasks = newTasks.filter((task) => task.confidence_score >= 0.8);
+    const emailResult = await sendCriticalTasksEmail({
+      count: criticalTasks.length,
+      tasks: criticalTasks.map((task) => ({
+        id: task.id,
+        todo_text: task.todo_text,
+        file_path: task.file_path,
+        line_number: task.line_number,
+      })),
+    });
 
-    res.json({ success: true, data: { count: newTasks.length, tasks: newTasks } });
+    res.json({
+      success: true,
+      data: {
+        count: newTasks.length,
+        tasks: newTasks,
+        criticalCount: criticalTasks.length,
+        email: emailResult,
+      },
+    });
   } catch (err: unknown) {
     const error = err instanceof Error ? err.message : String(err);
     logError('suggestedTasksAPI', error);

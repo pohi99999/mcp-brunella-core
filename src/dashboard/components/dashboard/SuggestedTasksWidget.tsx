@@ -96,8 +96,7 @@ export function SuggestedTasksWidget() {
       const computedStats = {
         total: tasks.length,
         pending: tasks.filter((t: SuggestedTask) => t.status === "pending").length,
-        in_progress: tasks.filter((t: SuggestedTask) => t.status === "in_progress")
-          .length,
+        in_progress: tasks.filter((t: SuggestedTask) => t.status === "in_progress").length,
         completed: tasks.filter((t: SuggestedTask) => t.status === "completed").length,
         critical: tasks.filter((t: SuggestedTask) => t.confidence_score >= 0.8).length,
         avg_confidence:
@@ -220,6 +219,18 @@ export function SuggestedTasksWidget() {
 
       const data = await response.json();
       toast.success(`Found ${data.data.count} TODOs`);
+
+      const criticalCount =
+        typeof data.data?.criticalCount === "number"
+          ? data.data.criticalCount
+          : (data.data?.tasks || []).filter(
+              (task: { confidence_score?: number }) =>
+                typeof task.confidence_score === "number" && task.confidence_score >= 0.8,
+            ).length;
+
+      if (criticalCount > 0) {
+        toast.error(`Kritikus TODO-k: ${criticalCount}. Email riasztás küldve.`);
+      }
       await fetchStats();
     } catch (err: unknown) {
       const error = err instanceof Error ? err.message : "Scan failed";
