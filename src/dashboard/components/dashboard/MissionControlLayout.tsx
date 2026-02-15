@@ -311,6 +311,7 @@ export function MissionControlLayout() {
               {activeTab === "factory" && <AgentFactory />}
               {activeTab === "management" && <AgentManagementPanel />}
               {activeTab === "robotkez" && <RobotkezV2Chat />}
+              {activeTab === "cean" && <CEANLayout />}
               {activeTab === "tasks" && <TaskQueueMonitor />}
               {activeTab === "providers" && <LLMProvidersPanel />}
               {activeTab === "knowledge" && <KnowledgeBasePanel />}
