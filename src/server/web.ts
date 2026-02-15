@@ -53,6 +53,10 @@ import { createWranglerRouter } from "./routes/wrangler.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
 import { suggestedTasksRouter } from "./routes/suggestedTasks.js";
+import { createFleetRouter } from "./routes/fleet.js";
+import { createWorkersRouter } from "./routes/workers.js";
+import { createMetricsRouter } from "./routes/metrics.js";
+import { createScalingRouter } from "./routes/scaling.js";
 import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers } from "./websocket.js";
 import testSchedulerRoutes from "./routes/testScheduler.js";
 import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
@@ -183,6 +187,13 @@ export async function startWebServer() {
   // Add Wrangler routes (D1 & Worker deployment)
   v1Router.use(createWranglerRouter());
 
+  // Add Fleet Management routes (Phase 2)
+  const db = getGlobalDb();
+  v1Router.use("/fleet", createFleetRouter(db));
+  v1Router.use("/workers", createWorkersRouter(db));
+  v1Router.use("/metrics", createMetricsRouter(db));
+  v1Router.use("/scaling", createScalingRouter(db));
+
   // Add Robotkéz routes to v1
   v1Router.use("/robotkez", createRobotkezRoutes());
 
@@ -193,7 +204,6 @@ export async function startWebServer() {
   v1Router.use("/suggested-tasks", suggestedTasksRouter);
 
   // Add Scheduled Tasks routes to v1
-  const db = getGlobalDb();
   v1Router.use("/scheduled-tasks", createScheduledTasksRoutes(db));
 
   // Add Webhook routes to v1

@@ -252,6 +252,120 @@ CREATE TABLE IF NOT EXISTS edge_audit_log (
 );
 
 -- ============================================================================
+-- 8. CEAN_FLEETS - Worker fleet definitions (Phase 2)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS cean_fleets (
+  id TEXT PRIMARY KEY,                          -- UUID: fleet-{timestamp}-{random}
+  name TEXT NOT NULL,                           -- Fleet name
+  environment TEXT NOT NULL DEFAULT 'production',  -- dev|staging|production
+  status TEXT NOT NULL DEFAULT 'active',        -- active|paused|draining
+  description TEXT,                             -- Optional description
+  
+  -- Configuration
+  config JSON,                                  -- Fleet-specific config
+  
+  -- Metadata
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  
+  INDEX idx_name (name),
+  INDEX idx_environment (environment),
+  INDEX idx_status (status),
+  INDEX idx_created_at (created_at)
+);
+
+-- ============================================================================
+-- 9. CEAN_WORKERS - Individual worker instances in fleets (Phase 2)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS cean_workers (
+  id TEXT PRIMARY KEY,                          -- UUID: worker-{timestamp}-{random}
+  fleet_id TEXT NOT NULL,                       -- FK to cean_fleets
+  name TEXT NOT NULL,                           -- Worker name
+  url TEXT NOT NULL,                            -- Worker URL (Cloudflare endpoint)
+  cloudflare_id TEXT,                           -- Cloudflare resource ID
+  
+  -- Status
+  status TEXT NOT NULL DEFAULT 'active',        -- active|paused|draining|removing
+  
+  -- Metrics
+  last_heartbeat TEXT,                          -- ISO-8601: last ping
+  error_count INTEGER DEFAULT 0,                -- Accumulated errors
+  
+  -- Metadata
+  created_at TEXT NOT NULL,
+  updated_at TEXT NOT NULL,
+  
+  INDEX idx_fleet_id (fleet_id),
+  INDEX idx_status (status),
+  INDEX idx_created_at (created_at),
+  FOREIGN KEY (fleet_id) REFERENCES cean_fleets(id) ON DELETE CASCADE
+);
+
+-- ============================================================================
+-- 10. CEAN_SCALING_EVENTS - Auto-scaling history (Phase 2)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS cean_scaling_events (
+  id TEXT PRIMARY KEY,                          -- UUID: scale-{timestamp}-{random}
+  fleet_id TEXT NOT NULL,                       -- FK to cean_fleets
+  
+  -- Event Details
+  event_type TEXT NOT NULL,                     -- scale_up|scale_down|failed
+  reason TEXT NOT NULL,                         -- Why scaling was triggered
+  
+  -- Counts
+  instance_count_before INTEGER NOT NULL,       -- Worker count before
+  instance_count_after INTEGER NOT NULL,        -- Worker count after
+  
+  -- Outcome
+  status TEXT NOT NULL DEFAULT 'completed',     -- completed|failed
+  error_message TEXT,                           -- Error details if failed
+  
+  -- Metadata
+  created_at TEXT NOT NULL,
+  
+  INDEX idx_fleet_id (fleet_id),
+  INDEX idx_event_type (event_type),
+  INDEX idx_created_at (created_at),
+  FOREIGN KEY (fleet_id) REFERENCES cean_fleets(id) ON DELETE CASCADE
+);
+
+-- ============================================================================
+-- 11. CEAN_METRICS_CACHE - Prometheus metrics cache (Phase 2)
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS cean_metrics_cache (
+  id TEXT PRIMARY KEY,                          -- UUID
+  worker_id TEXT NOT NULL,                      -- FK to cean_workers
+  
+  -- Timestamp
+  timestamp TEXT NOT NULL,                      -- ISO-8601: measurement time
+  
+  -- Latency Metrics
+  latency_p50 REAL,                             -- Milliseconds (50th percentile)
+  latency_p95 REAL,                             -- Milliseconds (95th percentile)
+  latency_p99 REAL,                             -- Milliseconds (99th percentile)
+  
+  -- Request Metrics
+  request_count INTEGER DEFAULT 0,              -- Total requests in window
+  error_count INTEGER DEFAULT 0,                -- Error count
+  error_rate REAL,                              -- Error % (0-100)
+  
+  -- Resource Metrics
+  memory_usage_mb REAL,                         -- Memory used
+  memory_limit_mb REAL,                         -- Memory limit
+  
+  -- Geographic
+  cloudflare_location TEXT,                     -- Edge location (e.g., 'LAX')
+  
+  -- Metadata
+  created_at TEXT NOT NULL,
+  
+  INDEX idx_worker_id (worker_id),
+  INDEX idx_timestamp (timestamp),
+  INDEX idx_created_at (created_at),
+  FOREIGN KEY (worker_id) REFERENCES cean_workers(id) ON DELETE CASCADE
+);
+
+-- ============================================================================
 -- Trigger: Update edge_tasks.updated_at on modification
 -- ============================================================================
 -- Note: SQLite doesn't support triggers in D1, so updates must be explicit
