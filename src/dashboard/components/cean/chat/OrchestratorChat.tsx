@@ -1,8 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
-import { Send, Trash2, Copy, Plus } from 'lucide-react';
+import { Send, Trash2, Copy } from 'lucide-react';
 import { useCEANSocket } from '../hooks/useCEANSocket.js';
 import { SOCKET_EVENTS, TASK_TEMPLATES, MAX_CHAT_MESSAGES } from '../utils/constants.js';
-import { logInfo, logError } from '../../../utils/logger.js';
+import { logInfo, logError } from '../../utils/logger.js';
 
 interface ChatMessage {
   id: string;
