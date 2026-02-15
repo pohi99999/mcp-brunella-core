@@ -18,7 +18,7 @@
 | **Workers** | ✅ 2 Deployed | bas-cloudflare-orchestrator, cean-test |
 | **D1 Databases** | ✅ 1 Active | bas-metadata (102KB, production) |
 | **R2 Buckets** | ✅ 1 Deployed | vodor1 |
-| **Vectorize (R1)** | 🟡 Not Bound | R1 binding not yet configured |
+| **Vectorize (R1)** | ✅ Bound | Vectorize index: cean-vector |
 
 ### Deployed Resources Details
 - **Worker:** `bas-cloudflare-orchestrator.iam-dd1.workers.dev`
@@ -27,10 +27,10 @@
   - Status: Ready for expansion
 
 - **Worker:** `cean-test.iam-dd1.workers.dev`
-  - Latest Deployment: 2026-02-15 20:41 UTC
+  - Latest Deployment: 2026-02-15 20:52 UTC
   - Environment: production
-  - Status: ✅ Healthy (D1 OK, R1 binding pending)
-  - Version ID: `249beab7-bd64-4727-a1d8-f98e250a494b`
+  - Status: ✅ Healthy (D1 OK, R1 OK)
+  - Version ID: `34f36c00-fa70-48d4-a13b-f50ed08cfe84`
 
 - **D1 Database:** `bas-metadata`
   - UUID: `1c4e7d00-7b09-4ddf-88b4-8df42e1123ab`
@@ -173,20 +173,20 @@
 
 ### Deployment Summary
 - **Worker URL:** https://cean-test.iam-dd1.workers.dev
-- **Deployment Time:** 2026-02-15 20:41 UTC
+- **Deployment Time:** 2026-02-15 20:52 UTC
 - **D1 Binding:** bas-metadata (`1c4e7d00-7b09-4ddf-88b4-8df42e1123ab`)
-- **R1 Binding:** ❌ Not configured (VECTORIZE_INDEX missing)
+- **R1 Binding:** ✅ Vectorize index `cean-vector`
 
 ### Endpoint Verification Results
 | Endpoint | Result | Notes |
 |----------|--------|-------|
-| GET /health | ✅ 200 OK | d1_available: true, r1_available: false |
+| GET /health | ✅ 200 OK | d1_available: true, r1_available: true |
 | POST /test/d1 | ✅ 200 OK | Basic D1 query succeeded |
-| POST /test/r1 | ✅ 200 OK | R1 binding available flag false (no index) |
+| POST /test/r1 | ✅ 200 OK | Vectorize binding active |
 | GET /test/metrics | ✅ 200 OK | Metrics endpoint responding |
 
 ### Open Item
-- 🔧 Bind R1 Vectorize index in wrangler.toml (VECTORIZE_INDEX)
+- 🔧 Add embedding test once OPENAI_API_KEY is configured
 
 ---
 

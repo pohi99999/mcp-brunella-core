@@ -9,6 +9,10 @@ binding = "DB"
 database_name = "bas-metadata"
 database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"  # bas-metadata from wrangler d1 list
 
+[[vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "cean-vector"
+
 # Environment-specific configurations
 [env.production]
 name = "cean-test"
@@ -19,6 +23,10 @@ binding = "DB"
 database_name = "bas-metadata"
 database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
 
+[[env.production.vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "cean-vector"
+
 [env.development]
 name = "cean-test-dev"
 workers_dev = true
@@ -27,3 +35,7 @@ workers_dev = true
 binding = "DB"
 database_name = "bas-metadata"
 database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+
+[[env.development.vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "cean-vector"

@@ -372,9 +372,16 @@ export async function startWebServer() {
   logInfo("Server", "Starting test scheduler...");
   startScheduler();
 
-  // Initialize cron scheduler (EV Hunter, etc.)
-  logInfo("Server", "Starting cron scheduler (EV Hunter 08:00)...");
+  // Initialize cron scheduler (EV Hunter, Track Sync, etc.)
+  logInfo("Server", "Starting cron scheduler (EV Hunter 08:00, Track Sync hourly)...");
   startCronScheduler();
+
+  // Initialize Track State Manager (realtime file watcher + initial sync)
+  logInfo("Server", "Starting Track State Manager...");
+  const { trackStateManager } = await import("../services/trackStateManager.js");
+  await trackStateManager.fullSync(); // Initial sync on startup
+  trackStateManager.startWatcher(); // Start realtime file watcher
+  logInfo("Server", "Track State Manager active (realtime sync enabled)");
 
   io.on("connection", (socket) => {
     const DEFAULT_CHAT_ID = "main-session";

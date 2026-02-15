@@ -1,6 +1,7 @@
 import cron from 'node-cron';
 import { logInfo, logError } from '../utils/logger.js';
 import { evHunterHandler } from '../tools/evHunterTool.js';
+import { trackStateManager } from '../services/trackStateManager.js';
 
 export function startScheduler() {
     logInfo('Scheduler', 'Initializing scheduled tasks...');
@@ -21,5 +22,17 @@ export function startScheduler() {
         }
     });
 
-    logInfo('Scheduler', 'Scheduled tasks active: EV Hunter (08:00 daily)');
+    // Track State Manager - Every hour (full sync)
+    cron.schedule('0 * * * *', async () => {
+        logInfo('Scheduler', 'Running hourly Track State sync...');
+        try {
+            await trackStateManager.fullSync();
+            logInfo('Scheduler', 'Track State sync completed successfully');
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('Scheduler', `Track State sync exception: ${msg}`);
+        }
+    });
+
+    logInfo('Scheduler', 'Scheduled tasks active: EV Hunter (08:00 daily), Track Sync (hourly)');
 }

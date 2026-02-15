@@ -31,6 +31,7 @@ import { registerProgressCommands } from "./cli/progressCommands.js";
 import { registerEdgeCommands } from "./cli/edgeCommands.js";
 import { registerSuggestedTasksCommands } from "./cli/suggestedTasksCommands.js";
 import { registerRobotkezCommands } from "./cli/robotkezCommands.js";
+import { registerConductorCommands } from "./cli/conductorCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -908,6 +909,9 @@ conductorCmd
     }
   });
 
+// Register additional Conductor commands (Track State Manager v2)
+registerConductorCommands(conductorCmd);
+
 // --- jules (Jules AI Integration)
 const julesCmd = program
   .command("jules")
@@ -1222,6 +1226,8 @@ registerSuggestedTasksCommands(program);
 
 // Register Robotkez commands (RobotkezV2 Agent)
 registerRobotkezCommands(program);
+
+// Register Conductor commands (Track State Management) - MOVED AFTER conductorCmd definition
 
 // ════════════════════════════════════════════════════════════════════════════
 // TESTS COMMAND (Test Scheduler)
