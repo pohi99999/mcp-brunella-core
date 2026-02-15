@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { CaretDown, CaretUp, Robot, Lightning, Play, ShareNetwork, PencilSimple, Plus, X } from '@phosphor-icons/react'
+import { CaretDown, CaretUp, Lightning, Play, ShareNetwork, PencilSimple, Plus, X } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import type { RegistryAgent } from '@/lib/apiService'
 import {
@@ -19,6 +19,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
@@ -94,7 +99,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
       setDelegateOpen(false)
       setDelegateTask('')
       setSelectedDelegate('')
-    } catch (e) {
+    } catch {
       toast.error('Delegálás sikertelen')
     }
   }
@@ -152,11 +157,16 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
           </div>
           <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
             <Dialog open={delegateOpen} onOpenChange={setDelegateOpen}>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-accent hover:bg-accent/10 rounded-full" title="Delegálás">
-                  <ShareNetwork size={16} />
-                </Button>
-              </DialogTrigger>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-accent hover:bg-accent/10 rounded-full" aria-label="Delegálás">
+                      <ShareNetwork size={16} />
+                    </Button>
+                  </DialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Delegálás</TooltipContent>
+              </Tooltip>
               <DialogContent className="glass-panel border-white/10 sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle className="text-foreground">Feladat Delegálás</DialogTitle>
@@ -195,12 +205,19 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
               </DialogContent>
             </Dialog>
 
-            <button
-              className="rounded-full p-1 text-zinc-500 hover:bg-white/5 hover:text-zinc-300 transition-colors"
-              aria-label={expanded ? 'Összecsuk' : 'Részletek'}
-            >
-              {expanded ? <CaretUp size={18} /> : <CaretDown size={18} />}
-            </button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  type="button"
+                  className="rounded-full p-1 text-zinc-500 hover:bg-white/5 hover:text-zinc-300 transition-colors cursor-pointer"
+                  onClick={() => setExpanded(!expanded)}
+                  aria-label={expanded ? 'Összecsuk' : 'Részletek'}
+                >
+                  {expanded ? <CaretUp size={18} /> : <CaretDown size={18} />}
+                </button>
+              </TooltipTrigger>
+              <TooltipContent>{expanded ? 'Összecsuk' : 'Részletek'}</TooltipContent>
+            </Tooltip>
           </div>
         </CardTitle>
       </CardHeader>
@@ -218,11 +235,16 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                   Capabilities
                 </span>
                 <Popover open={isEditingCaps} onOpenChange={setIsEditingCaps}>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300">
-                      <PencilSimple size={12} />
-                    </Button>
-                  </PopoverTrigger>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300" aria-label="Képességek szerkesztése">
+                          <PencilSimple size={12} />
+                        </Button>
+                      </PopoverTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>Képességek szerkesztése</TooltipContent>
+                  </Tooltip>
                   <PopoverContent className="w-80 glass-panel border-white/10 p-3">
                     <div className="space-y-3">
                       <h4 className="font-medium text-sm text-zinc-100">Képességek Szerkesztése</h4>
@@ -239,11 +261,19 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                         {capabilities.map(cap => (
                           <Badge key={cap} variant="secondary" className="text-[10px] gap-1 pr-1">
                             {cap}
-                            <X
-                              size={10}
-                              className="cursor-pointer hover:text-red-400"
-                              onClick={() => handleRemoveCapability(cap)}
-                            />
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
+                                  className="cursor-pointer hover:text-red-400 focus:outline-none focus:text-red-400 rounded-sm"
+                                  onClick={() => handleRemoveCapability(cap)}
+                                  aria-label={`Törlés: ${cap}`}
+                                >
+                                  <X size={10} />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Képesség törlése</TooltipContent>
+                            </Tooltip>
                           </Badge>
                         ))}
                       </div>
@@ -291,15 +321,23 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                     ENTER
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="default"
-                  className="shrink-0 h-auto py-1 bg-primary hover:bg-primary/90 text-primary-foreground"
-                  onClick={handleQuickRun}
-                  disabled={!quickTask.trim() || status === 'working'}
-                >
-                  <Play size={12} weight="fill" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span tabIndex={(!quickTask.trim() || status === 'working') ? 0 : -1} className="inline-flex outline-none">
+                      <Button
+                        size="sm"
+                        variant="default"
+                        className="shrink-0 h-auto py-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                        onClick={handleQuickRun}
+                        disabled={!quickTask.trim() || status === 'working'}
+                        aria-label="Gyors futtatás"
+                      >
+                        <Play size={12} weight="fill" />
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>Gyors futtatás</TooltipContent>
+                </Tooltip>
               </div>
             )}
           </div>
