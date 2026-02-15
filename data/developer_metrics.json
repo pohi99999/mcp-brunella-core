@@ -12,9 +12,9 @@
     "lastDurationMs": 0
   },
   "tasks": {
-    "total": 10,
-    "success": 7,
-    "error": 3,
+    "total": 3,
+    "success": 2,
+    "error": 1,
     "avgDurationMs": 0
   },
   "ai": {
@@ -25,73 +25,23 @@
     {
       "type": "task",
       "status": "error",
-      "details": "dev-1771117101023-1",
+      "details": "dev-1771117799645-1",
       "durationMs": 0,
-      "timestamp": 1771117101058
+      "timestamp": 1771117799676
     },
     {
       "type": "task",
       "status": "success",
-      "details": "dev-1771116038343-1",
+      "details": "dev-1771117799672-1",
       "durationMs": 0,
-      "timestamp": 1771116038372
+      "timestamp": 1771117799676
     },
     {
       "type": "task",
       "status": "success",
-      "details": "dev-1771115727123-1",
+      "details": "dev-1771117799669-1",
       "durationMs": 0,
-      "timestamp": 1771115727129
-    },
-    {
-      "type": "task",
-      "status": "error",
-      "details": "dev-1771115727063-1",
-      "durationMs": 0,
-      "timestamp": 1771115727127
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771115595239-1",
-      "durationMs": 0,
-      "timestamp": 1771115595250
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771114998813-1",
-      "durationMs": 0,
-      "timestamp": 1771114998823
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771114760869-1",
-      "durationMs": 0,
-      "timestamp": 1771114760876
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771114603548-1",
-      "durationMs": 0,
-      "timestamp": 1771114603552
-    },
-    {
-      "type": "task",
-      "status": "error",
-      "details": "dev-1771114362395-1",
-      "durationMs": 0,
-      "timestamp": 1771114362415
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771114362410-1",
-      "durationMs": 0,
-      "timestamp": 1771114362415
+      "timestamp": 1771117799676
     }
   ]
-}
 }
