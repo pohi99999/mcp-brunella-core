@@ -212,7 +212,24 @@ CREATE TABLE IF NOT EXISTS edge_workers_status (
 );
 
 -- ============================================================================
--- 6. EDGE_AUDIT_LOG - Audit trail for compliance
+-- 6. CEAN_CHAT_HISTORY - OrchestratorChat message storage
+-- ============================================================================
+CREATE TABLE IF NOT EXISTS cean_chat_history (
+  id TEXT PRIMARY KEY,                          -- UUID: msg-{timestamp}-{random}
+  session_id TEXT NOT NULL,                     -- Chat session ID
+  role TEXT NOT NULL,                           -- user|assistant
+  content TEXT NOT NULL,                        -- Message text
+  task_id TEXT,                                 -- Associated task ID (if any)
+  timestamp INTEGER NOT NULL,                   -- Unix epoch timestamp
+  created_at TEXT NOT NULL,                     -- ISO-8601
+  
+  INDEX idx_session_id (session_id),
+  INDEX idx_role (role),
+  INDEX idx_created_at (created_at)
+);
+
+-- ============================================================================
+-- 7. EDGE_AUDIT_LOG - Audit trail for compliance
 -- ============================================================================
 CREATE TABLE IF NOT EXISTS edge_audit_log (
   id TEXT PRIMARY KEY,                          -- UUID
