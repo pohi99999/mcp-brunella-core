@@ -92,8 +92,6 @@ const PACKAGE_VERSION = (() => {
 })();
 
 export async function startWebServer() {
-  const osUtilsName = "os-utils";
-  const osUtils = (await import(osUtilsName)) as any;
   const webUiEnabled =
     process.env.WEB_UI_ENABLED !== "0" &&
     process.env.WEB_UI_ENABLED !== "false";
@@ -305,24 +303,36 @@ export async function startWebServer() {
   });
 
   // Metrics Loop
+  let lastCpus = os.cpus();
   setInterval(() => {
-    osUtils.cpuUsage((percentage: number) => {
-      const totalMem = os.totalmem();
-      const freeMem = os.freemem();
+    const cpus = os.cpus();
+    let idle = 0;
+    let total = 0;
+    for (let i = 0; i < cpus.length; i++) {
+      const cpu = cpus[i];
+      const lastCpu = lastCpus[i];
+      for (const type in cpu.times) {
+        // @ts-ignore
+        total += cpu.times[type] - lastCpu.times[type];
+      }
+      idle += cpu.times.idle - lastCpu.times.idle;
+    }
+    const cpuUsage = total > 0 ? (100 - Math.round(100 * idle / total)) : 0;
+    lastCpus = cpus;
+    const totalMem = os.totalmem();
+    const freeMem = os.freemem();
 
-      io.emit("metrics_update", {
-        requestsPerMinute: lastMinuteRequests,
-        activeConnections: io.sockets.sockets.size,
-        errorRate:
-          lastMinuteRequests > 0
-            ? (lastMinuteErrors / lastMinuteRequests) * 100
-            : 0,
-        averageResponseTime: 0,
-        cpuUsage: Math.round(percentage * 100 * 100) / 100,
-        memoryUsage: ((totalMem - freeMem) / totalMem) * 100,
-      });
+    io.emit("metrics_update", {
+      requestsPerMinute: lastMinuteRequests,
+      activeConnections: io.sockets.sockets.size,
+      errorRate:
+        lastMinuteRequests > 0
+          ? (lastMinuteErrors / lastMinuteRequests) * 100
+          : 0,
+      averageResponseTime: 0,
+      cpuUsage: cpuUsage,
+      memoryUsage: ((totalMem - freeMem) / totalMem) * 100,
     });
-
     io.emit("mcp_servers_status", mcpProcessManager.getServersStatus());
 
     // Push Agent & Tool status updates
