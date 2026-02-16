@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 16. 0:30:42
+**Generálva:** 2026. 02. 16. 14:28:15
 **Script:** 
 
 ---
@@ -42476,10 +42476,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 CONDUCTOR_MANIFEST_backup_20260204.md
       - 📄 CONDUCTOR_MANIFEST_old.md
     - 📂 **tracks**
+      - 📂 **ai_recommendation_system_20260216**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **bas_comprehensive_test_protocol_20260210**
         - 📄 meta.json
         - 📄 spec.md
         - 📄 track.md
+      - 📂 **bas_enterprise_suite**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **cean_operations_center_ui_20260215**
         - 📄 components.md
         - 📄 plan.md
@@ -42532,6 +42540,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 meta.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **enterprise_suite_master_20260216**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **epp-v2-protocol-20260211**
         - 📄 meta.json
         - 📄 track.md
@@ -42545,6 +42557,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 status.md
       - 📂 **green_lightning_20260212**
         - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **hyper_local_supply_chain_20260216**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
+      - 📂 **industrial_machine_hunter_20260216**
+        - 📄 meta.json
+        - 📄 plan.md
         - 📄 spec.md
       - 📂 **innovation_bridge_20260212**
         - 📄 meta.json
@@ -42572,6 +42592,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 meta.json
         - 📄 spec.md
         - 📄 track.md
+      - 📂 **marketing_swarm_20260216**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **micro_csr_automator_20260212**
         - 📄 meta.json
         - 📄 spec.md
@@ -42585,6 +42609,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 track.md
       - 📂 **phoenix_protocol_v2_20260205**
         - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **real_estate_sales_campaign_20260216**
+        - 📄 meta.json
+        - 📄 plan.md
         - 📄 spec.md
       - 📂 **robotkez_n8n_sandbox_edzesterv**
         - 📄 BROWSER_USE_TEST_REPORT.md
@@ -42603,6 +42631,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **self_healing_core_20260213**
         - 📄 meta.json
         - 📄 track.md
+      - 📂 **software_genesis_protocol_20260216**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **test-20260211**
       - 📂 **test-feature-20260211**
       - 📂 **test-track-12345678**
@@ -42626,6 +42658,26 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 workflow.md
   - 📂 **data**
     - 📂 **brunella_lancedb**
+      - 📂 **memory_v2_nomic.lance**
+        - 📂 **_transactions**
+          - 📄 0-22b1b609-0384-4b54-b058-166111f24d02.txn
+          - 📄 1-c584d712-c43b-4664-bece-8425e4a2847a.txn
+        - 📂 **_versions**
+          - 📄 1.manifest
+          - 📄 2.manifest
+        - 📂 **data**
+          - 📄 01001101110011000010100147d1ff4654beb68359848bbc27.lance
+          - 📄 11100100011011101000001197d9934a4d879c6dc360f37151.lance
+      - 📂 **memory_v3_nomic.lance**
+        - 📂 **_transactions**
+          - 📄 0-6ec9c1db-e38e-41d1-9137-6b2f4489fcdb.txn
+          - 📄 1-b9545f4c-d87a-48ab-a08d-00ab944853df.txn
+        - 📂 **_versions**
+          - 📄 1.manifest
+          - 📄 2.manifest
+        - 📂 **data**
+          - 📄 011000011111100010001001ec05cc42b7ba142c1a026dc628.lance
+          - 📄 011010011011111000111110d84914439192e965cecbeac9e8.lance
       - 📂 **memory.lance**
         - 📂 **_transactions**
           - 📄 0-d2558cf7-a79c-4ece-b386-98d5a394a520.txn
@@ -42661,9 +42713,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 tasks.db
   - 📂 **docs**
     - 📂 **agents**
+      - 📄 ArchitectAgent.md
       - 📄 DataScientistAgent.md
       - 📄 DependencyGraphAgent.md
       - 📄 DeveloperAgent.md
+      - 📄 DevOpsAgent.md
       - 📄 DocsIntelligenceAgent.md
       - 📄 DynamicAgent.md
       - 📄 EdgeProxyAgent.md
@@ -42675,9 +42729,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 README_COVERAGE.md
       - 📄 ResearcherAgent.md
       - 📄 RobotkezAgent.md
+      - 📄 RobotkezV2Agent.md
       - 📄 SpecWriterAgent.md
       - 📄 TaskDecomposerAgent.md
       - 📄 VoiceAgent.md
+    - 📂 **changelog**
+      - 📄 2026-02-16-agent-response-formatter.md
     - 📂 **Egyéb**
       - 📂 **cloudflare llm prompt**
         - 📂 **llm**
@@ -42738,10 +42795,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 README.md
     - 📂 **users**
     - 📄 ## Chat Customization Diagnostics.md
+    - 📄 1.jpg
+    - 📄 2.jpg
     - 📄 2026-02-06-.txt
     - 📄 2026-02-06-this-session-is-being-continued-from-a-previous-co.txt
     - 📄 2026-02-07-this-session-is-being-continued-from-a-previous-co.txt
     - 📄 2026-02-11-this-session-is-being-continued-from-a-previous-co.txt
+    - 📄 3.jpg
     - 📄 AGENT_PERMISSIONS_GUIDE.md
     - 📄 CEAN_GITHUB_ACTIONS_SETUP.md
     - 📄 CEAN_INFRASTRUCTURE_SNAPSHOT.md
@@ -119534,6 +119594,69 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
               - 📄 TestNet8InProcProject.pdb
           - 📂 **WorkerExtensions**
             - 📂 **debug**
+              - 📂 **bin**
+                - 📄 extensions.json
+                - 📄 function.deps.json
+                - 📄 Microsoft.Azure.Functions.Worker.Extensions.dll
+                - 📄 Microsoft.Azure.Functions.Worker.Extensions.pdb
+                - 📄 Microsoft.Azure.WebJobs.Host.Storage.dll
+                - 📄 Microsoft.WindowsAzure.Storage.dll
+              - 📄 Microsoft.AspNetCore.Authentication.Abstractions.dll
+              - 📄 Microsoft.AspNetCore.Authentication.Core.dll
+              - 📄 Microsoft.AspNetCore.Authorization.dll
+              - 📄 Microsoft.AspNetCore.Authorization.Policy.dll
+              - 📄 Microsoft.AspNetCore.Hosting.Abstractions.dll
+              - 📄 Microsoft.AspNetCore.Hosting.Server.Abstractions.dll
+              - 📄 Microsoft.AspNetCore.Http.Abstractions.dll
+              - 📄 Microsoft.AspNetCore.Http.dll
+              - 📄 Microsoft.AspNetCore.Http.Extensions.dll
+              - 📄 Microsoft.AspNetCore.Http.Features.dll
+              - 📄 Microsoft.AspNetCore.JsonPatch.dll
+              - 📄 Microsoft.AspNetCore.Mvc.Abstractions.dll
+              - 📄 Microsoft.AspNetCore.Mvc.Core.dll
+              - 📄 Microsoft.AspNetCore.Mvc.Formatters.Json.dll
+              - 📄 Microsoft.AspNetCore.Mvc.WebApiCompatShim.dll
+              - 📄 Microsoft.AspNetCore.ResponseCaching.Abstractions.dll
+              - 📄 Microsoft.AspNetCore.Routing.Abstractions.dll
+              - 📄 Microsoft.AspNetCore.Routing.dll
+              - 📄 Microsoft.AspNetCore.WebUtilities.dll
+              - 📄 Microsoft.Azure.Functions.Worker.Extensions.deps.json
+              - 📄 Microsoft.Azure.Functions.Worker.Extensions.dll
+              - 📄 Microsoft.Azure.Functions.Worker.Extensions.pdb
+              - 📄 Microsoft.Azure.WebJobs.dll
+              - 📄 Microsoft.Azure.WebJobs.Extensions.dll
+              - 📄 Microsoft.Azure.WebJobs.Extensions.Http.dll
+              - 📄 Microsoft.Azure.WebJobs.Host.dll
+              - 📄 Microsoft.Azure.WebJobs.Host.Storage.dll
+              - 📄 Microsoft.DotNet.PlatformAbstractions.dll
+              - 📄 Microsoft.Extensions.Configuration.Abstractions.dll
+              - 📄 Microsoft.Extensions.Configuration.Binder.dll
+              - 📄 Microsoft.Extensions.Configuration.dll
+              - 📄 Microsoft.Extensions.Configuration.EnvironmentVariables.dll
+              - 📄 Microsoft.Extensions.Configuration.FileExtensions.dll
+              - 📄 Microsoft.Extensions.Configuration.Json.dll
+              - 📄 Microsoft.Extensions.DependencyInjection.Abstractions.dll
+              - 📄 Microsoft.Extensions.DependencyInjection.dll
+              - 📄 Microsoft.Extensions.DependencyModel.dll
+              - 📄 Microsoft.Extensions.FileProviders.Abstractions.dll
+              - 📄 Microsoft.Extensions.FileProviders.Physical.dll
+              - 📄 Microsoft.Extensions.FileSystemGlobbing.dll
+              - 📄 Microsoft.Extensions.Hosting.Abstractions.dll
+              - 📄 Microsoft.Extensions.Hosting.dll
+              - 📄 Microsoft.Extensions.Logging.Abstractions.dll
+              - 📄 Microsoft.Extensions.Logging.Configuration.dll
+              - 📄 Microsoft.Extensions.Logging.dll
+              - 📄 Microsoft.Extensions.ObjectPool.dll
+              - 📄 Microsoft.Extensions.Options.ConfigurationExtensions.dll
+              - 📄 Microsoft.Extensions.Options.dll
+              - 📄 Microsoft.Extensions.Primitives.dll
+              - 📄 Microsoft.Net.Http.Headers.dll
+              - 📄 Microsoft.WindowsAzure.Storage.dll
+              - 📄 NCrontab.Signed.dll
+              - 📄 Newtonsoft.Json.Bson.dll
+              - 📄 Newtonsoft.Json.dll
+              - 📄 System.Memory.Data.dll
+              - 📄 System.Net.Http.Formatting.dll
           - 📂 **ZippedExe**
             - 📂 **debug**
               - 📄 ZippedExe.deps.json
@@ -119956,13 +120079,21 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📂 **WorkerExtensions**
             - 📂 **debug**
               - 📂 **ref**
+                - 📄 Microsoft.Azure.Functions.Worker.Extensions.dll
               - 📂 **refint**
+                - 📄 Microsoft.Azure.Functions.Worker.Extensions.dll
+              - 📄 Microsoft.Azure.Functions.Worker.Extensions.dll
+              - 📄 Microsoft.Azure.Functions.Worker.Extensions.pdb
+              - 📄 WorkerEx.422953E6.Up2Date
               - 📄 WorkerExtensions.AssemblyInfo.cs
               - 📄 WorkerExtensions.AssemblyInfoInputs.cache
               - 📄 WorkerExtensions.assets.cache
               - 📄 WorkerExtensions.csproj.AssemblyReference.cache
+              - 📄 WorkerExtensions.csproj.CoreCompileInputs.cache
+              - 📄 WorkerExtensions.csproj.FileListAbsolute.txt
               - 📄 WorkerExtensions.GeneratedMSBuildEditorConfig.editorconfig
               - 📄 WorkerExtensions.GlobalUsings.g.cs
+              - 📄 WorkerExtensions.sourcelink.json
             - 📄 project.assets.json
             - 📄 project.nuget.cache
             - 📄 WorkerExtensions.csproj.nuget.dgspec.json
@@ -179934,10 +180065,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 BOBS_BRAIN_SETUP.md
       - 📄 coding-assistant-agent-example.py
       - 📄 coding-assistant-tools-example.py
+      - 📄 CopywriterAgent.toml
       - 📄 ev_hunter.toml
       - 📄 GEMINI_ENTERPRISE_ALTERNATIVES.md
       - 📄 INTEGRACIOS_UTMUTATO.md
       - 📄 lint_fixer.toml
+      - 📄 MarketingDirectorAgent.toml
       - 📄 PROAKTIV_KODIRO_UGYNOK_GUIDE.md
       - 📄 project_organizer.toml
       - 📄 README.md
@@ -180419,6 +180552,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 conductor_diagnostics.mjs
     - 📄 daily_trigger.ts
     - 📄 debug_robotkez.py
+    - 📄 deploy_fixer_prompt.md
     - 📄 generate_tools_inventory.mjs
     - 📄 generate_tree.mjs
     - 📄 generate-ai-context.js
@@ -180464,6 +180598,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 test_cloudflare_history.ts
     - 📄 test_prepare.cjs
     - 📄 test_swarm.ts
+    - 📄 test_webhook_e2e.ts
     - 📄 update_ollama_model.bat
     - 📄 watch-changes.js
   - 📂 **src**
@@ -180472,6 +180607,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 CloudflareClient.ts
       - 📄 AgentArchitect.ts
       - 📄 AgentManager.ts
+      - 📄 ArchitectAgent.ts
       - 📄 BaseAgent.ts
       - 📄 codeReview.ts
       - 📄 codeScaffold.ts
@@ -180481,6 +180617,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 DependencyGraphAgent.ts
       - 📄 DeveloperAgent.ts
       - 📄 developerPipeline.ts
+      - 📄 DevOpsAgent.ts
       - 📄 DocsIntelligenceAgent.ts
       - 📄 DynamicAgent.ts
       - 📄 DynamicAgentLoader.ts
@@ -180510,6 +180647,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 goldCommands.ts
       - 📄 progressCommands.ts
       - 📄 robotkezCommands.ts
+      - 📄 scheduledTasksCommands.ts
       - 📄 suggestedTasksCommands.ts
       - 📄 taskDecomposerCommands.ts
       - 📄 tracksCommands.ts
@@ -180597,8 +180735,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 PhoenixPanel.tsx
           - 📄 RobotkezPanel.tsx
           - 📄 RobotkezV2Chat.tsx
+          - 📄 ScheduledTasksPanel.tsx
           - 📄 ServiceControlWidget.tsx
           - 📄 SettingsPanel.tsx
+          - 📄 SidebarItems.ts
           - 📄 SpecManagerPanel.tsx
           - 📄 StatusCard.tsx
           - 📄 SuggestedTasksWidget.tsx
@@ -180675,6 +180815,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 tooltip.tsx
         - 📄 AgentGraph.tsx
         - 📄 CommandMenu.tsx
+        - 📄 SystemBootSequence.tsx
         - 📄 theme-provider.tsx
         - 📄 ThemeToggle.tsx
       - 📂 **context**
@@ -180699,6 +180840,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 providerRegistry.ts
           - 📄 sessionStore.ts
           - 📄 types.ts
+        - 📄 agentResponseFormatter.ts
         - 📄 apiService.ts
         - 📄 auth.ts
         - 📄 externalApiService.ts
@@ -180801,8 +180943,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 browserBridge.ts
       - 📄 claudeTool.ts
       - 📄 copilotCliTool.ts
+      - 📄 deploymentAnalyzer.ts
       - 📄 evHunterTool.ts
       - 📄 geminiTool.ts
+      - 📄 gitAutomation.ts
       - 📄 githubModelsTool.ts
       - 📄 googleWorkspace.ts
       - 📄 interpreter.ts
@@ -180909,6 +181053,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 dashboard_chat_lib.test.ts
     - 📄 data_refiner.test.ts
     - 📄 delegation_chain.test.ts
+    - 📄 deploymentAnalyzer.test.ts
     - 📄 dev_commands.test.ts
     - 📄 developer_pipeline.test.ts
     - 📄 DeveloperAgent.test.ts
@@ -180955,6 +181100,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 robotkezV2Agent.test.ts
     - 📄 routes_developer.test.ts
     - 📄 scalingService.test.ts
+    - 📄 scheduledTasks.test.ts
     - 📄 setup.ts
     - 📄 skills_loader.test.ts
     - 📄 smoke.vitest.ts
@@ -180971,45 +181117,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 telemetry.test.ts
     - 📄 tracks_todos_routes.test.ts
     - 📄 trackTodoParser.test.ts
+    - 📄 webhooks.test.ts
   - 📂 **test-results**
-    - 📂 **error-handling-Error-Handl-357b7-at-different-viewport-sizes-chromium**
-      - 📄 video.webm
-    - 📂 **error-handling-Error-Handl-cfea5-e-XSS-like-input-gracefully-chromium**
-      - 📄 video.webm
-    - 📂 **error-handling-Socket-IO-C-628c9-establish-socket-connection-chromium**
-      - 📄 video.webm
-    - 📂 **mission-control-Mission-Co-0c860-d-show-terminal-log-section-chromium**
-      - 📄 video.webm
-    - 📂 **mission-control-Mission-Co-1896c-between-list-and-graph-view-chromium**
-      - 📄 video.webm
-    - 📂 **mission-control-Mission-Co-5e342--agent-cards-or-empty-state-chromium**
-      - 📄 video.webm
-    - 📂 **mission-control-Mission-Co-eadd8-lay-SystemHealthCard-widget-chromium**
-      - 📄 video.webm
-    - 📂 **navigation-Dashboard-Navig-043c1-10-sidebar-navigation-items-chromium**
-      - 📄 video.webm
-    - 📂 **navigation-Dashboard-Navig-129e6-pen-CommandMenu-with-Ctrl-K-chromium**
-      - 📄 video.webm
-    - 📂 **navigation-Dashboard-Navig-326cc-tab-switching-without-crash-chromium**
-      - 📄 video.webm
-    - 📂 **navigation-Dashboard-Navig-51425-ld-navigate-via-CommandMenu-chromium**
-      - 📄 video.webm
-    - 📂 **navigation-Dashboard-Navig-9e741-hboard-without-white-screen-chromium**
-      - 📄 video.webm
-    - 📂 **navigation-Dashboard-Navig-c743b-when-clicking-sidebar-items-chromium**
-      - 📄 video.webm
-    - 📂 **socket-reconnect-Socket-IO-9c1a8-econnect-when-it-comes-back-chromium**
-      - 📄 video.webm
-    - 📂 **tabs-advanced-Developer-Ta-8a83f-action-buttons-in-Build-tab-chromium**
-      - 📄 video.webm
-    - 📂 **tabs-advanced-Developer-Ta-c5adb-ween-sub-tabs-without-error-chromium**
-      - 📄 video.webm
-    - 📂 **tabs-advanced-Developer-Tab-should-have-sub-tabs-chromium**
-      - 📄 video.webm
-    - 📂 **tabs-advanced-Developer-Tab-should-load-developer-panel-chromium**
-      - 📄 video.webm
     - 📂 **tabs-advanced-Tasks-Tab-should-load-task-queue-monitor-chromium**
-      - 📄 video.webm
   - 📂 **testing**
     - 📂 **egyeb**
     - 📂 **hirszerzes_test_1**
@@ -181060,6 +181170,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 COMPLETED_PROJECTS.md
   - 📄 config.cmd
   - 📄 CONTRIBUTING.md
+  - 📄 DASHBOARD_TEST_REPORT.md
   - 📄 docker-compose.yml
   - 📄 Dockerfile.node
   - 📄 Dockerfile.python
@@ -181109,6 +181220,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 test_error.log
   - 📄 test_full_system.ps1
   - 📄 test_part.ps1
+  - 📄 test_results.log
   - 📄 test_robotkez_dashboard.ts
   - 📄 Toolskeszlet.md
   - 📄 tsconfig.json

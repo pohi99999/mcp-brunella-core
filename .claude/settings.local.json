@@ -67,7 +67,13 @@
       "WebSearch",
       "Bash(git commit:*)",
       "Bash(tee:*)",
-      "Bash(taskkill:*)"
+      "Bash(taskkill:*)",
+      "Bash(tasklist:*)",
+      "Bash(uvicorn:*)",
+      "Bash(.venv/Scripts/python.exe:*)",
+      "Bash(npm run --silent)",
+      "Bash(npx playwright test:*)",
+      "Bash(claude mcp list:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -57,11 +57,6 @@
     "args": ["-y", "@modelcontextprotocol/server-sqlite", "data/brunella.db"]
   },
   {
-    "name": "fetch",
-    "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-fetch"]
-  },
-  {
     "name": "memory",
     "command": "npx",
     "args": ["-y", "@modelcontextprotocol/server-memory"],

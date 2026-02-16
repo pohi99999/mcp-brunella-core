@@ -28,6 +28,7 @@ import { getRecoveryLog } from "../core/gitRecovery.js";
 import { phoenixEventBus } from "../core/phoenixEventBus.js";
 import { failoverRegistry } from "../core/failoverRegistry.js";
 import { socketService } from "./SocketService.js";
+import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
 import os from "os";
 
 export function createPhoenixRouter(): Router {
@@ -134,6 +135,38 @@ export function createPhoenixRouter(): Router {
       };
 
       res.json(health);
+    } catch (e: any) {
+      res.status(500).json({ error: e.message });
+    }
+  });
+
+  /**
+   * GET /api/phoenix/heartbeat
+   * Phoenix Protocol v2 - Heartbeat Monitor status (all services)
+   */
+  router.get("/heartbeat", (_req, res) => {
+    try {
+      const services = heartbeatMonitor.getStatus();
+      const overall = heartbeatMonitor.getOverallHealth();
+
+      // Convert Map to plain object for JSON serialization
+      const servicesArray = Array.from(services.entries()).map(([_, health]) => ({
+        name: health.name,
+        status: health.status,
+        lastCheck: health.lastCheck.toISOString(),
+        lastSuccess: health.lastSuccess ? health.lastSuccess.toISOString() : null,
+        consecutiveFailures: health.consecutiveFailures,
+        latencyMs: health.latencyMs,
+        error: health.error,
+      }));
+
+      res.json({
+        overall: overall.status,
+        unhealthyServices: overall.unhealthyServices,
+        isActive: heartbeatMonitor.isActive(),
+        services: servicesArray,
+        timestamp: new Date().toISOString(),
+      });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
     }

@@ -66,6 +66,7 @@ import { initTestResultsDb } from "../core/testResultsService.js";
 import { initSuggestedTasksDb } from "../core/suggestedTasksScanner.js";
 import { createScheduledTasksRoutes } from "./routes/scheduledTasks.js";
 import createWebhookRoutes from "./routes/webhooks.js";
+import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -386,6 +387,23 @@ export async function startWebServer() {
   await trackStateManager.fullSync(); // Initial sync on startup
   trackStateManager.startWatcher(); // Start realtime file watcher
   logInfo("Server", "Track State Manager active (realtime sync enabled)");
+
+  // Initialize Phoenix Protocol v2 - Heartbeat Monitor
+  logInfo("Server", "Starting Phoenix Heartbeat Monitor...");
+  heartbeatMonitor.start();
+
+  // Register failure handlers for critical services
+  heartbeatMonitor.onFailure("ollama", async (health) => {
+    logError("Phoenix", `Ollama service failed: ${health.error}`);
+    // TODO: Implement silent restart logic (Phase 2)
+  });
+
+  heartbeatMonitor.onFailure("fastapi", async (health) => {
+    logError("Phoenix", `FastAPI service failed: ${health.error}`);
+    // TODO: Implement silent restart logic (Phase 2)
+  });
+
+  logInfo("Server", "Phoenix Heartbeat Monitor active (5s interval)");
 
   io.on("connection", (socket) => {
     const DEFAULT_CHAT_ID = "main-session";

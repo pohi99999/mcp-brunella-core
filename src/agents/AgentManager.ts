@@ -11,7 +11,7 @@
  */
 
 import { EventEmitter } from "events";
-import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
+import { logInfo, logError, logWarn, setAgentStatus } from "../utils/logger.js";
 import { saveTask, updateTaskStatus } from "../utils/tasksDb.js";
 import {
   withRetry,
@@ -23,6 +23,7 @@ import {
   saveCheckpoint,
   loadCheckpoint,
   clearCheckpoints,
+  type CheckpointState,
 } from "../core/checkpoint.js";
 import { gitAutoCheckpoint, logRecoveryEvent } from "../core/gitRecovery.js";
 import { autoSaveGoldenSample } from "../core/goldenDatasetBridge.js";
@@ -754,6 +755,297 @@ export class AgentManager extends EventEmitter {
       });
     }
     return this.circuitBreakers.get(agentName)!;
+  }
+
+  // --------------------------------------------------------------------------
+  // PHOENIX PROTOCOL V2 - RECOVERY LOGIC
+  // --------------------------------------------------------------------------
+
+  /**
+   * Execute agent with automatic recovery (Phoenix Protocol v2).
+   *
+   * This method wraps executeAgentWithRetry() with additional recovery logic:
+   * - Service restart on failure
+   * - State restoration from checkpoints
+   * - Graceful degradation on max retries
+   *
+   * @param agentName - Name of the agent to execute
+   * @param instruction - Task instruction
+   * @param context - Optional execution context
+   * @returns Task result with recovery status
+   */
+  async executeWithRecovery(
+    agentName: string,
+    instruction: string,
+    context?: Record<string, unknown>
+  ): Promise<TaskResult & { recoveryAttempts?: number }> {
+    const MAX_RECOVERY_ATTEMPTS = 3;
+    let recoveryAttempts = 0;
+
+    logInfo('AgentManager', `[Phoenix Recovery] Starting execution: ${agentName} - ${instruction.slice(0, 50)}...`);
+
+    for (let attempt = 1; attempt <= MAX_RECOVERY_ATTEMPTS; attempt++) {
+      try {
+        // Attempt execution with retry logic
+        const result = await this.executeAgentWithRetry(
+          agentName,
+          instruction,
+          context
+        );
+
+        if (result.success) {
+          logInfo('AgentManager', `[Phoenix Recovery] Success on attempt ${attempt}`);
+          phoenixEventBus.publish('phoenix:recovery', {
+            type: 'restart',
+            agent: agentName,
+            details: `Recovery succeeded on attempt ${attempt}`,
+            timestamp: new Date().toISOString(),
+          });
+
+          return { ...result, recoveryAttempts: attempt - 1 };
+        }
+
+        // Execution failed but didn't throw - treat as error
+        const errorMsg = result.message || 'Execution failed';
+        recoveryAttempts++;
+
+        logWarn('AgentManager', `[Phoenix Recovery] Attempt ${attempt}/${MAX_RECOVERY_ATTEMPTS} failed: ${errorMsg}`);
+
+        phoenixEventBus.publish('phoenix:recovery', {
+          type: 'restart',
+          agent: agentName,
+          details: `Recovery attempt ${attempt}: ${errorMsg}`,
+          timestamp: new Date().toISOString(),
+        });
+
+        // If not the last attempt, try recovery
+        if (attempt < MAX_RECOVERY_ATTEMPTS) {
+          // 1. Attempt service restart
+          const restartSuccess = await this.restartService(agentName);
+          if (restartSuccess) {
+            logInfo('AgentManager', `[Phoenix Recovery] Service restart successful: ${agentName}`);
+          }
+
+          // 2. Attempt state restoration
+          const stateRestored = await this.restoreState(agentName, instruction);
+          if (stateRestored) {
+            logInfo('AgentManager', `[Phoenix Recovery] State restored from checkpoint`);
+          }
+
+          // 3. Wait before retry (exponential backoff)
+          const delay = calculateDelay(attempt, DEFAULT_RETRY_CONFIG);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue; // Try next attempt
+        }
+
+        // Last attempt failed (non-exception)
+        // Max retries exhausted - graceful degradation
+        logError('AgentManager', `[Phoenix Recovery] Max recovery attempts exhausted for ${agentName}`);
+
+        phoenixEventBus.publish('phoenix:recovery', {
+          type: 'crash',
+          agent: agentName,
+          details: `Graceful degradation after max retries: ${errorMsg}`,
+          timestamp: new Date().toISOString(),
+        });
+
+        return {
+          success: false,
+          message: `Service degraded after ${MAX_RECOVERY_ATTEMPTS} recovery attempts: ${errorMsg}`,
+          data: null,
+          executedBy: agentName,
+          recoveryAttempts,
+        };
+
+      } catch (error: any) {
+        // Exception thrown during execution - same recovery logic as failed result
+        recoveryAttempts++;
+        const errorMsg = error?.message || 'Unknown error';
+
+        logWarn('AgentManager', `[Phoenix Recovery] Attempt ${attempt}/${MAX_RECOVERY_ATTEMPTS} threw exception: ${errorMsg}`);
+
+        phoenixEventBus.publish('phoenix:recovery', {
+          type: 'restart',
+          agent: agentName,
+          details: `Recovery attempt ${attempt} (exception): ${errorMsg}`,
+          timestamp: new Date().toISOString(),
+        });
+
+        // If not the last attempt, try recovery
+        if (attempt < MAX_RECOVERY_ATTEMPTS) {
+          // 1. Attempt service restart
+          const restartSuccess = await this.restartService(agentName);
+          if (restartSuccess) {
+            logInfo('AgentManager', `[Phoenix Recovery] Service restart successful: ${agentName}`);
+          }
+
+          // 2. Attempt state restoration
+          const stateRestored = await this.restoreState(agentName, instruction);
+          if (stateRestored) {
+            logInfo('AgentManager', `[Phoenix Recovery] State restored from checkpoint`);
+          }
+
+          // 3. Wait before retry (exponential backoff)
+          const delay = calculateDelay(attempt, DEFAULT_RETRY_CONFIG);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue; // Try next attempt
+        }
+
+        // Last attempt failed (exception)
+        // Max retries exhausted - graceful degradation
+        logError('AgentManager', `[Phoenix Recovery] Max recovery attempts exhausted for ${agentName}`);
+
+        phoenixEventBus.publish('phoenix:recovery', {
+          type: 'crash',
+          agent: agentName,
+          details: `Graceful degradation after max retries (exception): ${errorMsg}`,
+          timestamp: new Date().toISOString(),
+        });
+
+        return {
+          success: false,
+          message: `Service degraded after ${MAX_RECOVERY_ATTEMPTS} recovery attempts: ${errorMsg}`,
+          data: null,
+          executedBy: agentName,
+          recoveryAttempts,
+        };
+      }
+    }
+
+    // Fallback return (should never reach here in normal execution)
+    logError('AgentManager', `[Phoenix Recovery] Unexpected loop exit for ${agentName}`);
+    return {
+      success: false,
+      message: 'Unexpected recovery loop exit',
+      data: null,
+      executedBy: agentName,
+      recoveryAttempts,
+    };
+  }
+
+  /**
+   * Attempt to restart a service/agent (Phoenix Protocol v2).
+   *
+   * Service-specific restart logic:
+   * - Agents: soft reset (clear runtime state, reset circuit breaker)
+   * - Ollama/FastAPI: skip (external services managed by Heartbeat Monitor)
+   *
+   * @param agentName - Name of the agent/service to restart
+   * @returns True if restart was attempted successfully
+   */
+  private async restartService(agentName: string): Promise<boolean> {
+    try {
+      logInfo('AgentManager', `[Phoenix Restart] Attempting restart: ${agentName}`);
+
+      // External services (managed by Heartbeat Monitor)
+      const externalServices = ['ollama', 'fastapi', 'dashboard'];
+      if (externalServices.includes(agentName.toLowerCase())) {
+        logInfo('AgentManager', `[Phoenix Restart] External service ${agentName} - skipping (managed by Heartbeat Monitor)`);
+        return false;
+      }
+
+      // Agent soft reset
+      const agent = this.agents.get(agentName);
+      if (!agent) {
+        logWarn('AgentManager', `[Phoenix Restart] Agent not found: ${agentName}`);
+        return false;
+      }
+
+      // Reset circuit breaker
+      const cb = this.getCircuitBreaker(agentName);
+      cb.failures = 0;
+      cb.isOpen = false;
+      cb.lastFailure = 0;
+
+      // Reset runtime status
+      this.updateAgentRuntime(agentName, {
+        status: 'idle',
+        lastTaskAt: new Date().toISOString(),
+      });
+      setAgentStatus(agentName, 'idle', '');
+
+      // Call agent's initialize method if available (soft restart)
+      if (agent.initialize && typeof agent.initialize === 'function') {
+        await agent.initialize();
+        logInfo('AgentManager', `[Phoenix Restart] Agent re-initialized: ${agentName}`);
+      }
+
+      phoenixEventBus.publish('phoenix:restart', {
+        serviceName: agentName,
+        success: true,
+        timestamp: new Date().toISOString(),
+      });
+
+      logInfo('AgentManager', `[Phoenix Restart] Success: ${agentName}`);
+      return true;
+
+    } catch (error: any) {
+      const errorMsg = error?.message || 'Unknown error';
+      logError('AgentManager', `[Phoenix Restart] Failed for ${agentName}: ${errorMsg}`);
+
+      phoenixEventBus.publish('phoenix:restart', {
+        serviceName: agentName,
+        success: false,
+        error: errorMsg,
+        timestamp: new Date().toISOString(),
+      });
+
+      return false;
+    }
+  }
+
+  /**
+   * Restore agent state from the latest checkpoint (Phoenix Protocol v2).
+   *
+   * Loads the most recent checkpoint for the given task and returns
+   * the restored state for the agent to continue from.
+   *
+   * @param agentName - Name of the agent
+   * @param taskId - Task identifier (instruction hash or custom ID)
+   * @returns True if state was successfully restored
+   */
+  private async restoreState(
+    agentName: string,
+    taskId: string
+  ): Promise<boolean> {
+    try {
+      logInfo('AgentManager', `[Phoenix Restore] Attempting state restoration: ${agentName}`);
+
+      // Generate checkpoint ID from task instruction
+      const checkpointId = `${agentName}:${taskId.slice(0, 100)}`;
+
+      // Load latest checkpoint
+      const checkpoint = await loadCheckpoint(checkpointId);
+
+      if (!checkpoint) {
+        logInfo('AgentManager', `[Phoenix Restore] No checkpoint found for ${agentName}`);
+        return false;
+      }
+
+      // Parse checkpoint state
+      const state = JSON.parse(checkpoint.stateJson) as CheckpointState;
+
+      logInfo('AgentManager', `[Phoenix Restore] Checkpoint loaded: step=${checkpoint.stepIndex} (${checkpoint.stepName})`);
+
+      phoenixEventBus.publish('phoenix:state_restored', {
+        agentName,
+        taskId: checkpointId,
+        stepIndex: checkpoint.stepIndex,
+        stepName: checkpoint.stepName,
+        timestamp: new Date().toISOString(),
+      });
+
+      // NOTE: State restoration is passive - agents should query checkpoints
+      // themselves during execution if they support resumption logic.
+      // This method verifies that a checkpoint exists and publishes the event.
+
+      return true;
+
+    } catch (error: any) {
+      const errorMsg = error?.message || 'Unknown error';
+      logError('AgentManager', `[Phoenix Restore] State restoration failed for ${agentName}: ${errorMsg}`);
+      return false;
+    }
   }
 
   /**
