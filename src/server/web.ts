@@ -92,7 +92,8 @@ const PACKAGE_VERSION = (() => {
 })();
 
 export async function startWebServer() {
-  const osUtils = await import("os-utils");
+  const osUtilsName = "os-utils";
+  const osUtils = (await import(osUtilsName)) as any;
   const webUiEnabled =
     process.env.WEB_UI_ENABLED !== "0" &&
     process.env.WEB_UI_ENABLED !== "false";
@@ -305,7 +306,7 @@ export async function startWebServer() {
 
   // Metrics Loop
   setInterval(() => {
-    osUtils.cpuUsage((percentage) => {
+    osUtils.cpuUsage((percentage: number) => {
       const totalMem = os.totalmem();
       const freeMem = os.freemem();
 
