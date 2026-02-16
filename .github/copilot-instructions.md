@@ -1,3 +1,5 @@
+MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.
+
 # 🧠 BAS (Brunella Agent System) - Copilot System Instructions
 # Version: 2.4.0 (Green Lightning Phase)
 

@@ -233,7 +233,7 @@ export class ProjectConductorAgent extends BaseAgent {
     const tracks = this.projectState.tracks
       .map((t) => `${t.name}: ${t.status} (${t.progress}%)`)
       .join(", ");
-    const health = `Build: ${this.projectState.healthStatus.buildStatus}, Test: ${this.projectState.healthStatus.testStatus}`;
+    const health = `Build: ${this.projectState.healthStatus?.buildStatus || "unknown"}, Test: ${this.projectState.healthStatus?.testStatus || "unknown"}`;
 
     const systemPrompt = `
 Te vagy a Project Conductor, a Brunella projekt menedzsere.
@@ -287,7 +287,7 @@ A Válaszod legyen rövid, tömör, és szakmai. Markdown formázást használha
     const completedTracks = this.projectState.tracks.filter(
       (t) => t.status === "completed",
     );
-    const recentChanges = this.projectState.recentChanges.slice(0, 10);
+    const recentChanges = (this.projectState.recentChanges || []).slice(0, 10);
 
     const statusReport = `
 # 📊 Projekt Státusz Jelentés
@@ -296,13 +296,13 @@ A Válaszod legyen rövid, tömör, és szakmai. Markdown formázást használha
 **Utolsó frissítés:** ${this.projectState.lastUpdated}
 
 ## 🏥 Egészségi Állapot
-- **Összesített:** ${this.projectState.healthStatus.overall === "healthy" ? "✅ Egészséges" : "⚠️ " + this.projectState.healthStatus.overall}
-- **Build:** ${this.projectState.healthStatus.buildStatus ? "✅" : "❌"}
-- **Tesztek:** ${this.projectState.healthStatus.testStatus ? "✅" : "❌"}
-- **Dokumentáció szinkron:** ${this.projectState.healthStatus.documentationSync ? "✅" : "❌"}
+- **Összesített:** ${this.projectState.healthStatus?.overall === "healthy" ? "✅ Egészséges" : "⚠️ " + (this.projectState.healthStatus?.overall || "unknown")}
+- **Build:** ${this.projectState.healthStatus?.buildStatus ? "✅" : "❌"}
+- **Tesztek:** ${this.projectState.healthStatus?.testStatus ? "✅" : "❌"}
+- **Dokumentáció szinkron:** ${this.projectState.healthStatus?.documentationSync ? "✅" : "❌"}
 
 ## 🚀 Aktív Fejlesztési Szálak (${activeTracks.length})
-${activeTracks.map((t) => `- **${t.name}** [${t.priority.toUpperCase()}] - ${t.progress}% ${t.blockers.length > 0 ? "⚠️ Blokkolók: " + t.blockers.join(", ") : ""}`).join("\n")}
+${activeTracks.map((t) => `- **${t.name}** [${t.priority.toUpperCase()}] - ${t.progress}% ${(t.blockers?.length || 0) > 0 ? "⚠️ Blokkolók: " + t.blockers.join(", ") : ""}`).join("\n")}
 
 ## ✅ Lezárt Szálak (${completedTracks.length})
 ${completedTracks
@@ -314,7 +314,7 @@ ${completedTracks
 ${recentChanges.map((c) => `- [${c.timestamp.slice(0, 10)}] ${c.action}: ${c.path}`).join("\n")}
 
 ## 📁 Komponens Állapotok
-${this.projectState.components.map((c) => `- **${c.name}:** ${c.status === "healthy" ? "✅" : c.status === "warning" ? "⚠️" : "❌"}`).join("\n")}
+${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status === "healthy" ? "✅" : c.status === "warning" ? "⚠️" : "❌"}`).join("\n")}
 `;
 
     return {
@@ -867,7 +867,7 @@ ${activeTracks
   - **ID:** \`${t.id}\`
   - **Progress:** ${t.progress}%
   - **Utolsó aktivitás:** ${t.lastActivity.slice(0, 10)}
-  ${t.blockers.length > 0 ? `- **Blokkolók:** ${t.blockers.join(", ")}` : ""}
+  ${(t.blockers?.length || 0) > 0 ? `- **Blokkolók:** ${t.blockers.join(", ")}` : ""}
   - 📂 *[./tracks/${t.id}/](./tracks/${t.id}/)*
 `,
   )
@@ -995,7 +995,7 @@ Ez a mappa tartalmazza a Brunella projekt specifikáció-vezérelt fejlesztési 
 ## 📊 Jelenlegi Állapot
 - **Aktív track-ek:** ${this.projectState.tracks.filter((t) => t.status === "active").length}
 - **Lezárt track-ek:** ${this.projectState.tracks.filter((t) => t.status === "completed").length}
-- **Egészségi állapot:** ${this.projectState.healthStatus.overall}
+- **Egészségi állapot:** ${this.projectState.healthStatus?.overall || "unknown"}
 
 ---
 *Generálta: ProjectConductorAgent*
@@ -1272,6 +1272,11 @@ ${capabilities.length > 0 ? capabilities.map((c) => `- \`${c}\``).join("\n") : "
     path: string,
     description: string,
   ): void {
+    // Inicializálás ha undefined
+    if (!this.projectState.recentChanges) {
+      this.projectState.recentChanges = [];
+    }
+
     this.projectState.recentChanges.unshift({
       timestamp: new Date().toISOString(),
       type,

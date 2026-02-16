@@ -78,7 +78,10 @@
       "Bash(powershell -Command \"Get-Process -Name python* -ErrorAction SilentlyContinue | Select-Object Id,ProcessName,Path | Format-Table\")",
       "Bash(powershell -Command \"Get-Process -Name python* -ErrorAction SilentlyContinue | Stop-Process -Force\")",
       "Bash(ngrok version:*)",
-      "Bash(cmd.exe //c \"taskkill /F /PID 26980\")"
+      "Bash(cmd.exe //c \"taskkill /F /PID 26980\")",
+      "Bash(bash .ai/bootstrap.sh)",
+      "Bash(brunella conductor status:*)",
+      "Bash(.ai/claude_new_entry.md:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -1,4 +1,6 @@
-# GEMINI.md
+MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.
+
+
 
 **⚠️ EZ A FÁJL ELAVULT (2026-02-06)**
 
