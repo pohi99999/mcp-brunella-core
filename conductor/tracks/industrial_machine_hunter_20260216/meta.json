@@ -1,0 +1,29 @@
+{
+  "track_id": "industrial_machine_hunter_20260216",
+  "name": "Industrial Machine Hunter",
+  "status": "active",
+  "priority": "HIGH",
+  "created": "2026-02-16T00:00:00Z",
+  "updated": "2026-02-16T00:00:00Z",
+  "owner": "SpecWriterAgent",
+  "description": "Aukciós ipari gép listákból arbitrázs lehetőségek detektálása.",
+  "objectives": [
+    "Aukciós adatgyűjtés",
+    "Valuation + arbitrage scoring",
+    "Dashboard alerting"
+  ],
+  "tags": ["auction", "arbitrage", "industrial", "scraping"],
+  "related_files": [
+    "src/agents/ResearcherAgent.ts",
+    "src/agents/DataScientistAgent.ts",
+    "myai/refiner_logic.py",
+    "src/servers/automation.py"
+  ],
+  "dependencies": ["robotkezv2"],
+  "blockers": [],
+  "constraints": [
+    "Anti-bot védelem",
+    "Valuta normalizálás EUR-ra",
+    "Zajszűrés kötelező"
+  ]
+}
