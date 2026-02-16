@@ -30,6 +30,7 @@ export const ConfigSchema = z.object({
   githubToken: z.string().optional(),
   githubPat: z.string().optional(), // Alternative to githubToken
   githubModel: z.string().default('gpt-4o'),
+  githubWebhookSecret: z.string().optional(),
 
   // Python Backend
   pythonBaseUrl: z.string().url().default('http://localhost:8000'),
@@ -69,6 +70,7 @@ function parseConfig(): Config {
       githubToken: process.env.GITHUB_TOKEN,
       githubPat: process.env.GITHUB_PAT,
       githubModel: process.env.GITHUB_MODEL,
+      githubWebhookSecret: process.env.GITHUB_WEBHOOK_SECRET,
 
       // Python Backend (normalize PYTHON_SUBSET_URL to pythonBaseUrl)
       pythonBaseUrl: process.env.PYTHON_BASE_URL || process.env.PYTHON_SUBSET_URL,

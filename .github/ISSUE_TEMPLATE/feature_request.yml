@@ -1,0 +1,31 @@
+name: ✨ Feature Request (EPP v2)
+description: Új funkció javaslata (Track indításához)
+title: "[FEAT]: "
+labels: ["enhancement", "planning"]
+body:
+  - type: input
+    id: track_id
+    attributes:
+      label: Tervezett Track ID
+      description: Ha már van (pl. feature_login_20260216), írd ide.
+      placeholder: feature_name_YYYYMMDD
+  - type: textarea
+    id: goal
+    attributes:
+      label: Célkitűzés (Goal)
+      description: Mit szeretnénk elérni? (User Story formátum előnyben)
+    validations:
+      required: true
+  - type: textarea
+    id: tech_details
+    attributes:
+      label: Technikai Megvalósítás (Plan)
+      description: Milyen fájlokat kell módosítani? Milyen új függőségek kellenek?
+  - type: checkboxes
+    id: definition_of_done
+    attributes:
+      label: Definition of Done
+      options:
+        - label: Dokumentáció (README/CLAUDE.md) frissítése
+        - label: Tesztek írása (Vitest)
+        - label: Dashboard UI integráció
