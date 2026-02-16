@@ -1,6 +1,5 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import fetch from "node-fetch";
 import { logInfo, logError } from "../utils/logger.js";
 
 /**

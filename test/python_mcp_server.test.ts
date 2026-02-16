@@ -4,24 +4,34 @@ import path from "path";
 import { execSync } from "child_process";
 import { config } from "../src/config/index.js";
 
-// Check if Python venv exists
-const venvPy = path.resolve(
-  config.workspaceRoot,
-  process.platform === "win32"
-    ? ".venv/Scripts/python.exe"
-    : ".venv/bin/python",
-);
-let hasPython = false;
-try {
-  execSync(`"${venvPy}" --version`, { stdio: "ignore" });
-  hasPython = true;
-} catch {
+// Helper to find valid python
+let validPython = "";
+
+const checkPython = (cmd: string): boolean => {
   try {
-    execSync("python --version", { stdio: "ignore" });
-    hasPython = true;
+    execSync(`"${cmd}" --version`, { stdio: "ignore" });
+    return true;
   } catch {
-    hasPython = false;
+    return false;
   }
+};
+
+// 1. Try venv (only if file exists to avoid false positives with some shells)
+const venvPath = path.resolve(
+  config.workspaceRoot,
+  process.platform === "win32" ? ".venv/Scripts/python.exe" : ".venv/bin/python",
+);
+
+if (fs.existsSync(venvPath) && checkPython(venvPath)) {
+  validPython = venvPath;
+}
+// 2. Try python3 (standard on Linux/macOS)
+else if (checkPython("python3")) {
+  validPython = "python3";
+}
+// 3. Try python (standard on Windows or some Linux)
+else if (checkPython("python")) {
+  validPython = "python";
 }
 
 describe("Python MCP Server (myai/mcp_server.py)", () => {
@@ -90,7 +100,7 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
     expect(pythonServer.args).toContain("myai.mcp_server");
   });
 
-  it.skipIf(!hasPython)(
+  it.skipIf(!validPython)(
     "should have valid Python syntax",
     () => {
       const serverPath = path.resolve(
@@ -98,12 +108,11 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
         "myai",
         "mcp_server.py",
       );
-      const py = hasPython ? venvPy : "python";
-      const result = execSync(`"${py}" -m py_compile "${serverPath}"`, {
+      // Use the detected valid python
+      const result = execSync(`"${validPython}" -m py_compile "${serverPath}"`, {
         encoding: "utf-8",
         timeout: 15000,
       });
-      // py_compile returns empty stdout on success
       expect(result).toBe("");
     },
     15000,

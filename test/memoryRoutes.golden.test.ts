@@ -1,31 +1,27 @@
 import express from "express";
 import request from "supertest";
-import { beforeEach, describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi, afterEach } from "vitest";
 
-vi.mock("node-fetch", () => ({
-  default: vi.fn(),
-}));
-
+// Mock SocketService
 vi.mock("../src/server/SocketService.js", () => ({
   socketService: {
     emit: vi.fn(),
   },
 }));
 
-import fetch from "node-fetch";
 import { createMemoryRouter } from "../src/server/memoryRoutes.js";
 
-type MockResponse = {
-  ok: boolean;
-  statusText?: string;
-  json: () => Promise<unknown>;
-};
-
-const mockFetch = fetch as unknown as ReturnType<typeof vi.fn>;
+// Mock global fetch
+const mockFetch = vi.fn();
 
 describe("memoryRoutes /golden", () => {
   beforeEach(() => {
     mockFetch.mockReset();
+    vi.stubGlobal("fetch", mockFetch);
+  });
+
+  afterEach(() => {
+    vi.unstubAllGlobals();
   });
 
   function createApp() {
@@ -39,7 +35,7 @@ describe("memoryRoutes /golden", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ status: "success" }),
-    } as MockResponse);
+    });
 
     const app = createApp();
 
@@ -53,8 +49,8 @@ describe("memoryRoutes /golden", () => {
     expect(response.status).toBe(200);
     expect(mockFetch).toHaveBeenCalledTimes(1);
 
-    const [, options] = mockFetch.mock.calls[0] as [string, { body?: unknown }];
-    const body = JSON.parse(String(options.body)) as {
+    const [, options] = mockFetch.mock.calls[0] as [string, { body?: string }];
+    const body = JSON.parse(options.body || "{}") as {
       source: string;
       prompt: string;
       completion: string;
@@ -73,7 +69,7 @@ describe("memoryRoutes /golden", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ status: "success" }),
-    } as MockResponse);
+    });
 
     const app = createApp();
 
@@ -85,8 +81,8 @@ describe("memoryRoutes /golden", () => {
 
     expect(response.status).toBe(200);
 
-    const [, options] = mockFetch.mock.calls[0] as [string, { body?: unknown }];
-    const body = JSON.parse(String(options.body)) as {
+    const [, options] = mockFetch.mock.calls[0] as [string, { body?: string }];
+    const body = JSON.parse(options.body || "{}") as {
       quality: number;
       prompt: string;
       completion: string;
