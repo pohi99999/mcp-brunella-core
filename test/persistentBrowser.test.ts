@@ -5,8 +5,13 @@ describe('Persistent Browser (RobotkezV2 - Phase 1)', () => {
     // Timeout for browser operations (increased for Playwright setup)
     const BROWSER_TIMEOUT = 30000;
 
+    // Pre-launch browser BEFORE first test
+    beforeAll(async () => {
+        await persistentBrowser.sendCommand({ action: 'launch' });
+    }, BROWSER_TIMEOUT);
+
     afterAll(async () => {
-        // Close browser after all tests
+        // Close browser after ALL tests complete
         await persistentBrowser.close();
     }, BROWSER_TIMEOUT);
 
