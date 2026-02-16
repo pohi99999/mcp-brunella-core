@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-16T15:00:00.059Z
+**Utolso frissites:** 2026-02-16T16:00:00.063Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 46 total | 14 active | 6 completed | 9 archived
+**Stats:** 46 total | 13 active | 7 completed | 9 archived
 
 ---
 
@@ -53,7 +53,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (14)
+## Aktiv Szalak (Active) (13)
 
 - [ ] **AI Recommendation System Integration** [MEDIUM]
   - **ID:** `ai_recommendation_system_20260216`
@@ -122,12 +122,6 @@
   - **Updated:** 2026-02-14T00:00:00Z
   - Mappa: ./tracks/financial-auditor-agent-20260214/
 
-- [ ] **Phoenix Protocol v2 - Öngyógyító Rendszer** [MEDIUM]
-  - **ID:** `phoenix_protocol_v2_20260205`
-  - **Progress:** 70%
-  - **Updated:** 2026-02-16T15:45:00Z
-  - Mappa: ./tracks/phoenix_protocol_v2_20260205/
-
 - [ ] **Real Estate Sales Campaign (Asset Analyst + Corporate Hunter)** [HIGH]
   - **ID:** `real_estate_sales_campaign_20260216`
   - **Progress:** 0%
@@ -142,7 +136,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (6)
+## Befejezett (Completed - Not Archived) (7)
 
 - [x] **Codex NeuralLink Chat Refactor**
   - **ID:** `codex_chat_refactor_20260212`
@@ -155,6 +149,11 @@
 - [x] **OpenTelemetry Agent Tracing**
   - **ID:** `otel_agent_tracing_20260211`
   - Mappa: ./tracks/otel_agent_tracing_20260211/
+
+- [x] **Phoenix Protocol v2 - Öngyógyító Rendszer**
+  - **ID:** `phoenix_protocol_v2_20260205`
+  - **Completed:** 2026-02-16T16:20:00Z
+  - Mappa: ./tracks/phoenix_protocol_v2_20260205/
 
 - [x] **RobotkezV2 - Full Comet (Magyar Agentic Browser)**
   - **ID:** `robotkezv2-full-comet-20260215`

@@ -1,0 +1,46 @@
+name: 🐛 Bug Report (Phoenix Protocol)
+description: Hiba jelentése a BAS rendszerben
+title: "[BUG]: "
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Köszönjük a jelentést! Kérlek, töltsd ki a mezőket, hogy a Copilot és Jules azonnal javíthassa.
+  - type: input
+    id: component
+    attributes:
+      label: Érintett Komponens
+      description: Pl. AgentManager, Robotkéz, Dashboard, MCP Server
+      placeholder: src/agents/...
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Hiba Leírása
+      description: Mi történt? Mi volt az elvárt működés?
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Phoenix Logs / Error Trace
+      description: Másold be a hibaüzenetet (NE használj képernyőképet kódról!)
+      render: shell
+  - type: dropdown
+    id: severity
+    attributes:
+      label: Súlyosság
+      options:
+        - 🔴 Critical (Rendszerleállás)
+        - 🟠 High (Funkció nem működik)
+        - 🟡 Medium (Zavaró, de van workaround)
+        - 🟢 Low (Kozmetikai)
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: EPP v2 Checklist
+      options:
+        - label: A hiba reprodukálható a legfrissebb main ágon.
+        - label: Rákerestem a meglévő hibajegyek között.

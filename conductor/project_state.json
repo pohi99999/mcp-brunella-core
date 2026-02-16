@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-16T15:00:00.059Z",
+  "lastUpdated": "2026-02-16T16:00:00.063Z",
   "tracks": [
     {
       "id": "ai_recommendation_system_20260216",
@@ -621,16 +621,18 @@
     {
       "id": "phoenix_protocol_v2_20260205",
       "name": "Phoenix Protocol v2 - Öngyógyító Rendszer",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 70,
+      "progress": 100,
       "created": "2026-02-05",
-      "updated": "2026-02-16T15:45:00Z",
+      "updated": "2026-02-16T16:20:00Z",
+      "completed": "2026-02-16T16:20:00Z",
       "tags": [
         "self-healing",
         "resilience",
         "checkpoint",
-        "monitoring"
+        "monitoring",
+        "degradation"
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\phoenix_protocol_v2_20260205",
@@ -945,8 +947,8 @@
   ],
   "stats": {
     "total": 46,
-    "active": 14,
-    "completed": 6,
+    "active": 13,
+    "completed": 7,
     "archived": 9,
     "proposed": 7
   }

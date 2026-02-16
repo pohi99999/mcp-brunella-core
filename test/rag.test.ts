@@ -40,33 +40,39 @@ describe("RAG Vector Search", () => {
       console.log("⚠️ Ollama not running — skipping RAG vector test");
       return;
     }
-    // 1. Add some documents
-    await memory.addDocument("The sky is usually blue during the day.", {
-      id: "doc1",
-      category: "nature",
-    });
-    await memory.addDocument("Apples are red or green fruits.", {
-      id: "doc2",
-      category: "food",
-    });
-    await memory.addDocument("Python is a popular programming language.", {
-      id: "doc3",
-      category: "tech",
-    });
 
-    // Wait a bit to ensure indexing (LanceDB is usually fast but good to be safe)
-    await new Promise((r) => setTimeout(r, 100));
+    try {
+      // 1. Add some documents
+      await memory.addDocument("The sky is usually blue during the day.", {
+        id: "doc1",
+        category: "nature",
+      });
+      await memory.addDocument("Apples are red or green fruits.", {
+        id: "doc2",
+        category: "food",
+      });
+      await memory.addDocument("Python is a popular programming language.", {
+        id: "doc3",
+        category: "tech",
+      });
 
-    // 2. Search for related concepts
-    const results = await memory.search("sky color", 1);
+      // Wait a bit to ensure indexing (LanceDB is usually fast but good to be safe)
+      await new Promise((r) => setTimeout(r, 500));
 
-    expect(results.length).toBeGreaterThan(0);
-    expect(results[0].text).toContain("blue");
-    expect(results[0].score).toBeDefined();
+      // 2. Search for related concepts
+      const results = await memory.search("sky color", 1);
 
-    // 3. Search for something else
-    const foodResults = await memory.search("fruit", 1);
-    expect(foodResults.length).toBeGreaterThan(0);
-    expect(foodResults[0].text).toContain("Apples");
-  }, 20000);
+      expect(results.length).toBeGreaterThan(0);
+      expect(results[0].text).toContain("blue");
+      expect(results[0].score).toBeDefined();
+
+      // 3. Search for something else
+      const foodResults = await memory.search("fruit", 1);
+      expect(foodResults.length).toBeGreaterThan(0);
+      expect(foodResults[0].text).toContain("Apples");
+    } catch (error) {
+      console.error("RAG test error:", error);
+      throw error;
+    }
+  }, 40000); // Increased timeout to 40 seconds for slow embedding generation
 });

@@ -1,8 +1,10 @@
 import { Router, Request, Response } from 'express';
 import Database from 'better-sqlite3';
 import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 import { logInfo, logError } from '../../utils/logger.js';
 import { JulesAutomationService } from '../../core/julesAutomationService.js';
+import { config } from '../../config/schema.js';
 
 interface WebhookEvent {
   id: string;
@@ -64,6 +66,65 @@ export function createWebhookRoutes(db: Database.Database): Router {
         success: true,
         webhookId,
         message: 'Webhook processed successfully',
+      });
+    } catch (error) {
+      logError('Webhooks', `GitHub webhook error: ${error}`);
+      res.status(500).json({ error: 'Webhook processing failed' });
+    }
+  });
+
+  /**
+   * GitHub Workflow Run Webhook
+   * Triggered when GitHub Actions workflow completes (for CI/CD failure detection)
+   */
+  router.post('/github/webhook', async (req: Request, res: Response) => {
+    try {
+      // Verify GitHub signature
+      const signature = req.headers['x-hub-signature-256'] as string;
+      const event = req.headers['x-github-event'] as string;
+
+      if (config.githubWebhookSecret && signature) {
+        const rawBody = (req as any).rawBody;
+        if (!rawBody) {
+          return res.status(400).json({ error: 'Raw body not available for signature verification' });
+        }
+
+        const hmac = crypto.createHmac('sha256', config.githubWebhookSecret);
+        const digest = 'sha256=' + hmac.update(rawBody).digest('hex');
+
+        if (signature !== digest) {
+          logError('Webhooks', 'Invalid GitHub webhook signature');
+          return res.status(401).json({ error: 'Invalid signature' });
+        }
+      }
+
+      const webhookId = uuidv4();
+      const eventType = `github.${event || 'unknown'}`;
+
+      // Store webhook event
+      db.prepare(`
+        INSERT INTO webhook_events (id, type, provider, payload, processed)
+        VALUES (?, ?, ?, ?, ?)
+      `).run(webhookId, eventType, 'github', JSON.stringify(req.body), 0);
+
+      logInfo('Webhooks', `GitHub ${event} event received`);
+
+      // Handle workflow_run events
+      if (event === 'workflow_run' && req.body.action === 'completed') {
+        const { workflow_run } = req.body;
+
+        if (workflow_run?.conclusion === 'failure') {
+          logInfo('Webhooks', `Workflow failure detected: ${workflow_run.id}`);
+
+          // Mark as processed
+          db.prepare('UPDATE webhook_events SET processed = 1 WHERE id = ?').run(webhookId);
+        }
+      }
+
+      res.json({
+        success: true,
+        webhookId,
+        message: 'Webhook received',
       });
     } catch (error) {
       logError('Webhooks', `GitHub webhook error: ${error}`);

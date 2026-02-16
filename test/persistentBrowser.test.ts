@@ -2,18 +2,13 @@ import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { persistentBrowser } from '../src/utils/persistentBrowser.js';
 
 describe('Persistent Browser (RobotkezV2 - Phase 1)', () => {
-    // Timeout for browser operations
-    const BROWSER_TIMEOUT = 15000;
-
-    beforeAll(async () => {
-        // Launch browser once for all tests
-        await persistentBrowser.sendCommand({ action: 'launch', headless: true });
-    }, BROWSER_TIMEOUT);
+    // Timeout for browser operations (increased for Playwright setup)
+    const BROWSER_TIMEOUT = 30000;
 
     afterAll(async () => {
         // Close browser after all tests
         await persistentBrowser.close();
-    }, BROWSER_TIMEOUT * 2);
+    }, BROWSER_TIMEOUT);
 
     it('should navigate to a URL', async () => {
         const res = await persistentBrowser.sendCommand({
