@@ -284,6 +284,48 @@
       "priority": 10
     },
     {
+      "name": "copywriter",
+      "title": "✍️ Copywriter",
+      "description": "Szociális média és email copywriting specialista - kreatív tartalom generálása márkavocal-ban",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/CopywriterAgent.toml"
+      },
+      "capabilities": [
+        "social_media_generation",
+        "email_drafting",
+        "copywriting",
+        "slogan_creation"
+      ],
+      "triggers": ["copywriter", "copywriting", "content", "post"],
+      "category": "marketing",
+      "status": "active",
+      "tags": ["marketing", "content", "copywriting"],
+      "priority": 4
+    },
+    {
+      "name": "marketing_director",
+      "title": "🎯 Marketing Director",
+      "description": "Marketing kampány orchestrator - trendkutatás, copywriting szervezés, média assembly és kampánya végrehajtás",
+      "class": "DynamicAgent",
+      "module": "./agents/DynamicAgent.js",
+      "config": {
+        "tomlPath": "myai/agents/MarketingDirectorAgent.toml"
+      },
+      "capabilities": [
+        "campaign_orchestration",
+        "content_assembly",
+        "trend_analysis_coordination",
+        "budget_estimation"
+      ],
+      "triggers": ["marketing", "campaign", "director", "coordinációs"],
+      "category": "marketing",
+      "status": "active",
+      "tags": ["marketing", "campaign", "orchestration"],
+      "priority": 4
+    },
+    {
       "name": "SpecWriter",
       "title": "SpecWriter Agent",
       "description": "Automatikus track generálás EPP v2 protokoll szerint. 3-stage LLM pipeline: requirement extraction → track generation → validation.",
