@@ -2,7 +2,66 @@
 
 **Agent:** GitHub Copilot (Pro+)  
 **Fájl:** `.ai/copilot.md`  
-**Utolsó frissítés:** 2026-02-15 21:05
+**Utolsó frissítés:** 2026-02-16 02:15
+
+---
+
+## 2026-02-16 02:15 - ✅ TrackProgress Widget + Minden teszt zöld (82/82) 🎉
+
+**Feladat:** Dashboard widget refaktor (Track Progress - kategorikus + real-time frissítés), majd teljes teszt suite futtatás és hibák javítása.
+
+### Változtatások
+
+**Dashboard (Frontend):**
+
+- `src/dashboard/components/dashboard/TrackProgress.tsx`
+  - **Kategorikus megjelenítés:** "Várakozó fejlesztésre" (proposed, waiting) vs "Fejlesztés alatt" (active, testing)
+  - Real-time frissítés Socket.IO-n keresztül (`socket.on('track-updated')`)
+  - **Progress bar** minden trackhez (TODO százalékos állapot alapján)
+  - **Priority badges** megjelenítés (P0, P1, P2, P3)
+  - 100%-ban kész (archived) track-ek elrejtése
+
+**API (Backend):**
+
+- `src/server/web.ts`
+  - `GET /api/tracks` - összes track lekérése
+  - `GET /api/tracks/:id/todos` - track TODO-k lekérése
+  - `POST /api/tracks/:id/todos/:todoId/toggle` - TODO állapot toggle
+- `src/dashboard/lib/apiService.ts`
+  - `getTracks()`, `getTrackTodos()`, `toggleTrackTodo()` wrapper-ek
+
+**Test Fixes:**
+
+1. **llmPlanner** - Mock `generateRouted` hiányzó módszer implementálva
+2. **llm_client** - Model/URL expectation mismatch javítva (qwen2.5, gemini-2.0 flash)
+3. **metricsArchiveService** - SQL inline INDEX schema fix (`myai/agents/workers/schema/d1_schema.sql`)
+4. **scalingService** - Worker count logic fix (dynamic calculate based on metrics)
+5. **RobotkezV2 E2E** 
+   - Scenario 6: Guard `completedSteps === undefined`
+   - Scenario 7: Phoenix assertion fix
+6. **persistentBrowser** - `afterAll` timeout növelése (10s)
+7. **metricsService** - Time range query fix (+1s tolerance)
+
+**Eredmény:** 🎯
+
+```
+✅ 82 test file pass (679 tests)
+⏱️ Duration: 5m 16s
+```
+
+### Commit
+
+```
+feat(dashboard): TrackProgress widget + test fixes (all green)
+
+- TrackProgress widget refactored: categorized tracks (waiting/dev), real-time updates, progress bars
+- API endpoints: getTracks, getTrackTodos, toggleTrackTodo
+- Test fixes: llmPlanner, llm_client, metricsArchiveService, scalingService, RobotkezV2 E2E, persistentBrowser, metricsService
+- All 82 test files pass (679 tests)
+- SQL schema: d1_schema.sql inline INDEX fix
+```
+
+**Git:** `3386b488` (pushed to main)
 
 ---
 
