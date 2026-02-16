@@ -73,7 +73,10 @@
       "Bash(.venv/Scripts/python.exe:*)",
       "Bash(npm run --silent)",
       "Bash(npx playwright test:*)",
-      "Bash(claude mcp list:*)"
+      "Bash(claude mcp list:*)",
+      "Bash(powershell -Command \"Get-Process | Where-Object {$_ProcessName -like ''*python*''} | Select-Object ProcessName,Id,Path\")",
+      "Bash(powershell -Command \"Get-Process -Name python* -ErrorAction SilentlyContinue | Select-Object Id,ProcessName,Path | Format-Table\")",
+      "Bash(powershell -Command \"Get-Process -Name python* -ErrorAction SilentlyContinue | Stop-Process -Force\")"
     ]
   },
   "enableAllProjectMcpServers": true,

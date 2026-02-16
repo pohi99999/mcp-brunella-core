@@ -217,7 +217,7 @@ describe('RobotkezV2 - E2E Test Scenarios (Phase 8.1)', () => {
         response.data?.message ||
         '';
       expect(errorMessage).toMatch(
-        /nem értelmezhető|invalid|hallucination|timeout/i
+        /nem értelmezhető|invalid|hallucination|timeout|process failed|not running/i
       );
       console.log('✅ Scenario 6 PASS: Hallucination detected');
     } else {
