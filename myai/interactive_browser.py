@@ -17,10 +17,20 @@ async def main():
         async def get_page():
             nonlocal browser, context, page
             if not browser:
-                # Default to headless unless specified otherwise in env or args
-                headless = os.getenv("HEADLESS", "true").lower() == "true"
+                # Check ROBOTKEZ_HEADLESS first, fallback to HEADLESS
+                # Default: true (headless = no browser window visible)
+                # Set ROBOTKEZ_HEADLESS=false in .env to see the browser window!
+                robotkez_headless = os.getenv("ROBOTKEZ_HEADLESS", os.getenv("HEADLESS", "true"))
+                headless = robotkez_headless.lower() == "true"
+
+                # Get viewport settings from env or use defaults
+                viewport_width = int(os.getenv("ROBOTKEZ_VIEWPORT_WIDTH", "1280"))
+                viewport_height = int(os.getenv("ROBOTKEZ_VIEWPORT_HEIGHT", "720"))
+
+                print(f"[Robotkéz] Böngésző indítás: headless={headless}, viewport={viewport_width}x{viewport_height}", file=sys.stderr)
+
                 browser = await p.chromium.launch(headless=headless, args=['--no-sandbox', '--disable-setuid-sandbox'])
-                context = await browser.new_context(viewport={'width': 1280, 'height': 720})
+                context = await browser.new_context(viewport={'width': viewport_width, 'height': viewport_height})
                 page = await context.new_page()
             return page
 
