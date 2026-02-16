@@ -20,16 +20,31 @@ export function createFileRoutes(): Router {
             }
 
             const entries = await fs.promises.readdir(fullPath, { withFileTypes: true });
-            const files = entries.map(entry => {
-                const stats = fs.statSync(path.join(fullPath, entry.name));
-                return {
-                    name: entry.name,
-                    isDirectory: entry.isDirectory(),
-                    path: path.join(relPath, entry.name).replace(/\\/g, '/'),
-                    size: entry.isFile() ? stats.size : 0,
-                    modified: stats.mtime
-                };
-            });
+
+            // Batched async processing to avoid blocking event loop
+            const files: Array<{
+                name: string;
+                isDirectory: boolean;
+                path: string;
+                size: number;
+                modified: Date;
+            }> = [];
+            const BATCH_SIZE = 50;
+
+            for (let i = 0; i < entries.length; i += BATCH_SIZE) {
+                const batch = entries.slice(i, i + BATCH_SIZE);
+                const batchResults = await Promise.all(batch.map(async entry => {
+                    const stats = await fs.promises.stat(path.join(fullPath, entry.name));
+                    return {
+                        name: entry.name,
+                        isDirectory: entry.isDirectory(),
+                        path: path.join(relPath, entry.name).replace(/\\/g, '/'),
+                        size: entry.isFile() ? stats.size : 0,
+                        modified: stats.mtime
+                    };
+                }));
+                files.push(...batchResults);
+            }
 
             res.json({ files });
         } catch (e: unknown) {
