@@ -1,0 +1,30 @@
+{
+  "track_id": "ai_recommendation_system_20260216",
+  "name": "AI Recommendation System Integration",
+  "status": "active",
+  "priority": "MEDIUM",
+  "created": "2026-02-16T00:00:00Z",
+  "updated": "2026-02-16T00:00:00Z",
+  "owner": "SpecWriterAgent",
+  "description": "Dinamikus ajánló API Orchestrator + RAG + MCP tool integrációval.",
+  "objectives": [
+    "Új ajánló REST endpoint",
+    "MCP tool regisztráció",
+    "RAG-alapú ajánlás",
+    "Fallback statikus ajánlásra"
+  ],
+  "tags": ["recommendation", "rag", "api", "orchestrator"],
+  "related_files": [
+    "src/server/web.ts",
+    "src/server/registry.ts",
+    "src/utils/rag.ts",
+    "src/agents/OrchestratorAgent.ts"
+  ],
+  "dependencies": ["lancedb_rag"],
+  "blockers": [],
+  "constraints": [
+    "2s latency SLA",
+    "Fallback szükséges",
+    "Anonim userSessionId"
+  ]
+}

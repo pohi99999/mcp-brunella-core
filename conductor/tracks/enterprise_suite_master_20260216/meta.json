@@ -1,0 +1,120 @@
+{
+  "track_id": "enterprise_suite_master_20260216",
+  "name": "Enterprise Suite Master - 14 Modulos Vállalati Irányító",
+  "status": "pending_approval",
+  "priority": "CRITICAL",
+  "created": "2026-02-16T00:00:00Z",
+  "updated": "2026-02-16T00:00:00Z",
+  "owner": "ArchitectAgent",
+  "description": "A Brunella Agent System teljes vállalati szoftver kiterjesztése: HR, Pénzügy, Értékesítés, Logisztika, Piaci Hírszerzés.",
+  "objectives": [
+    "14 moduláris ügynök implementálása",
+    "Enterprise Event Hub arquitektúra",
+    "LanceDB-based shared memory",
+    "Google Workspace full integration",
+    "Phoenix Protocol compliance"
+  ],
+  "tags": [
+    "enterprise",
+    "multi-module",
+    "orchestration",
+    "ai-agents",
+    "automation",
+    "hr",
+    "finance",
+    "sales",
+    "logistics",
+    "intelligence"
+  ],
+  "related_files": [
+    "src/agents/EnterpriseOrchestrator.ts",
+    "src/agents/HeadHunterAgent.ts",
+    "src/agents/FinanceGuardian.ts",
+    "src/agents/SalesAgent.ts",
+    "src/agents/LogisticsDispatcher.ts",
+    "src/agents/ComplianceAgent.ts",
+    "myai/refiners/factory.py",
+    "src/tools/unified_workspace_tool.ts",
+    "src/utils/rag.ts"
+  ],
+  "dependencies": [],
+  "blockers": [],
+  "milestones": [
+    {
+      "name": "Phase 1: Infrastructure Ready",
+      "target_date": "2026-03-01",
+      "status": "planned"
+    },
+    {
+      "name": "Phase 2-4: Modules 80% Complete",
+      "target_date": "2026-03-21",
+      "status": "planned"
+    },
+    {
+      "name": "Phase 5: Full Integration & Testing",
+      "target_date": "2026-04-04",
+      "status": "planned"
+    },
+    {
+      "name": "Éles bevetés (Production Ready)",
+      "target_date": "2026-04-15",
+      "status": "planned"
+    }
+  ],
+  "metrics": {
+    "code_coverage_target": 80,
+    "test_pass_rate_target": 100,
+    "deployment_success_rate": 99.5,
+    "module_count": 14,
+    "estimated_loc": 45000
+  },
+  "teams": [
+    {
+      "role": "DeveloperAgent",
+      "responsibility": "Backend implementation",
+      "modules": ["All Phase 1-5"]
+    },
+    {
+      "role": "ArchitectAgent",
+      "responsibility": "System design validation",
+      "modules": ["Phase 1 design"]
+    },
+    {
+      "role": "ResearcherAgent",
+      "responsibility": "Market intelligence",
+      "modules": ["Sales modules"]
+    },
+    {
+      "role": "DataScientistAgent",
+      "responsibility": "LanceDB optimization",
+      "modules": ["Memory layer"]
+    },
+    {
+      "role": "EvaluatorAgent",
+      "responsibility": "Testing & QA",
+      "modules": ["All"]
+    }
+  ],
+  "estimated_effort": {
+    "phase_1": { "hours": 80, "weeks": 2 },
+    "phase_2": { "hours": 120, "weeks": 3 },
+    "phase_3": { "hours": 120, "weeks": 3 },
+    "phase_4": { "hours": 120, "weeks": 3 },
+    "phase_5": { "hours": 80, "weeks": 2 },
+    "total": { "hours": 520, "weeks": 13 }
+  },
+  "constraints": [
+    "Type safety (NO any types)",
+    "Concurrency safe LanceDB writes",
+    "HR/Finance data isolation",
+    "Error handling with try/finally",
+    "Module latency SLA <2s"
+  ],
+  "success_criteria": [
+    "All 14 modules operational",
+    "npm test 100% pass",
+    "brunella health reports green",
+    "E2E workflows tested",
+    "Conductor tracks updated"
+  ]
+}

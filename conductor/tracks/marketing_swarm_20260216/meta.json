@@ -1,0 +1,36 @@
+{
+  "track_id": "marketing_swarm_20260216",
+  "name": "Marketing Swarm - Automated Campaign Factory",
+  "status": "active",
+  "priority": "HIGH",
+  "created": "2026-02-16T00:00:00Z",
+  "updated": "2026-02-16T00:00:00Z",
+  "owner": "SpecWriterAgent",
+  "description": "Automatizált marketing kampánycsomag előállítás trendkutatás, copywriting és media generálás alapján.",
+  "objectives": [
+    "Trendkutatás és piaci insight generálás",
+    "Több platformra optimalizált kampánycsomag",
+    "Media assetek gyártása Draft Mode-dal",
+    "Kampánycsomag mentés a KNOWLEDGE_BASE struktúrába"
+  ],
+  "tags": ["marketing", "swarm", "automation", "copywriting", "media"],
+  "related_files": [
+    "src/agents/MarketingDirectorAgent.ts",
+    "src/agents/CopywriterAgent.ts",
+    "myai/workers/trend_analyst.py",
+    "myai/workers/media_factory.py",
+    "src/tools/workspace.ts"
+  ],
+  "dependencies": ["robotkezv2", "lancedb_rag"],
+  "blockers": [],
+  "milestones": [
+    { "name": "Swarm orchestration ready", "target_date": "2026-02-23", "status": "planned" },
+    { "name": "Trend analyst online", "target_date": "2026-03-02", "status": "planned" },
+    { "name": "Media factory + assembly", "target_date": "2026-03-09", "status": "planned" }
+  ],
+  "constraints": [
+    "Draft Mode alapértelmezett a költségkontroll miatt",
+    "Max 3 perces trendkutatási timeout",
+    "Fájlmentés csak _KNOWLEDGE_BASE alá"
+  ]
+}
