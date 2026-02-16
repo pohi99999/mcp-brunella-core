@@ -7,6 +7,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Progress } from '@/components/ui/progress'
 import { toast } from 'sonner'
 import { getAgentStatuses, executeAgent, API_BASE } from '@/lib/apiService'
+import { formatAgentResponse } from '@/lib/agentResponseFormatter'
 
 interface AgentStatus {
     name: string;
@@ -61,7 +62,8 @@ export function AgentManagementPanel() {
             try {
                 const data = JSON.parse(event.data)
                 const timestamp = new Date().toLocaleTimeString()
-                setLogs((prev: string[]) => [...prev, `[${timestamp}] ${data.message || JSON.stringify(data)}`])
+                const message = data.message || formatAgentResponse(data, agentName)
+                setLogs((prev: string[]) => [...prev, `[${timestamp}] ${message}`])
             } catch (e) {
                 setLogs((prev: string[]) => [...prev, event.data])
             }
@@ -82,7 +84,8 @@ export function AgentManagementPanel() {
         try {
             const result = await executeAgent(selectedAgent, taskInput)
             toast.success('Feladat sikeresen beküldve')
-            setLogs((prev: string[]) => [...prev, `<<< Eredmény: ${JSON.stringify(result, null, 2)}`])
+            const formattedResult = formatAgentResponse(result, selectedAgent)
+            setLogs((prev: string[]) => [...prev, `<<< Eredmény:\n${formattedResult}`])
             setTaskInput('')
         } catch (err: any) {
             toast.error(`Végrehajtási hiba: ${err.message}`)

@@ -72,11 +72,11 @@ export function createFleetRouter(db: Database) {
       const fleets = stmt.all();
 
       logInfo('FleetAPI', `Listed ${fleets.length} fleets`);
-      return res.json(fleets);
+      return res.json({ success: true, data: fleets });
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error);
       logError('FleetAPI', `List fleets error: ${msg}`);
-      return res.status(500).json({ error: msg });
+      return res.status(500).json({ success: false, error: msg });
     }
   });
 
