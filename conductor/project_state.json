@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-16T14:00:00.048Z",
+  "lastUpdated": "2026-02-16T15:00:00.059Z",
   "tracks": [
     {
       "id": "ai_recommendation_system_20260216",
@@ -26,9 +26,9 @@
       "name": "BAS Átfogó Tesztprotokol",
       "status": "active",
       "priority": "critical",
-      "progress": 85,
+      "progress": 90,
       "created": "2026-02-10T18:00:00Z",
-      "updated": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-16T15:05:00Z",
       "assignee": "DeveloperAgent",
       "tags": [
         "testing",
@@ -623,9 +623,9 @@
       "name": "Phoenix Protocol v2 - Öngyógyító Rendszer",
       "status": "active",
       "priority": "medium",
-      "progress": 48,
+      "progress": 70,
       "created": "2026-02-05",
-      "updated": "2026-02-16",
+      "updated": "2026-02-16T15:45:00Z",
       "tags": [
         "self-healing",
         "resilience",

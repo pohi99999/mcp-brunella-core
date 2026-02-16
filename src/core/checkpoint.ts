@@ -245,6 +245,78 @@ export async function getCheckpointStats(): Promise<{
   }
 }
 
+/**
+ * Clean up old checkpoints (retention policy: 7 days).
+ * Deletes checkpoints older than the specified number of days.
+ */
+export async function cleanupOldCheckpoints(retentionDays: number = 7): Promise<number> {
+  try {
+    const database = await getDb();
+    if (!database) return 0;
+
+    const cutoffDate = new Date();
+    cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
+    const cutoffIso = cutoffDate.toISOString();
+
+    const stmt = database.prepare('DELETE FROM checkpoints WHERE created_at < ?');
+    const result = stmt.run(cutoffIso);
+
+    const deleted = result.changes || 0;
+    if (deleted > 0) {
+      logInfo('Checkpoint', `Cleaned up ${deleted} checkpoints older than ${retentionDays} days`);
+    }
+
+    return deleted;
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    logError('Checkpoint', `Cleanup failed: ${msg}`);
+    return 0;
+  }
+}
+
+/**
+ * Start automatic checkpoint cleanup (daily at 3 AM).
+ * Returns cleanup interval handle.
+ */
+export function startAutomaticCleanup(retentionDays: number = 7): NodeJS.Timeout {
+  const DAILY_MS = 24 * 60 * 60 * 1000;
+
+  logInfo('Checkpoint', `Starting automatic cleanup (retention: ${retentionDays} days)`);
+
+  // Run cleanup immediately
+  cleanupOldCheckpoints(retentionDays);
+
+  // Schedule daily cleanup
+  return setInterval(() => {
+    cleanupOldCheckpoints(retentionDays);
+  }, DAILY_MS);
+}
+
+/**
+ * Clear ALL checkpoints (for testing purposes only).
+ * WARNING: This deletes all checkpoint data!
+ */
+export async function clearAllCheckpoints(): Promise<number> {
+  try {
+    const database = await getDb();
+    if (!database) return 0;
+
+    const stmt = database.prepare('DELETE FROM checkpoints');
+    const result = stmt.run();
+
+    const deleted = result.changes || 0;
+    if (deleted > 0) {
+      logInfo('Checkpoint', `Cleared ALL ${deleted} checkpoints`);
+    }
+
+    return deleted;
+  } catch (error: unknown) {
+    const msg = error instanceof Error ? error.message : String(error);
+    logError('Checkpoint', `ClearAll failed: ${msg}`);
+    return 0;
+  }
+}
+
 /** Close checkpoint database (for tests / graceful shutdown). */
 export async function closeCheckpointDb(): Promise<void> {
   if (db) {

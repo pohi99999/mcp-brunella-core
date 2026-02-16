@@ -39,28 +39,61 @@ scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
 
 **Monitoring docs:** [docs/MONITORING_PROMETHEUS.md](docs/MONITORING_PROMETHEUS.md)
 
-### 2. Dokumentáció Beolvasás
+### 2. KRITIKUS Fájlok Beolvasása (KÖTELEZŐ MINDEN INDÍTÁSKOR!)
+
+**🔴 MINDIG olvasd be ezeket a fájlokat munkamenet kezdéskor:**
 
 ```
-✅ KÖTELEZŐ:
-1. README.md (ez a fájl) - TELJES TARTALOM!
-2. .ai/FOSZAL.md - Mi történt legutóbb? (Egyesített napló)
-3. .ai/<te_neved>.md - Van félbehagyott feladatod?
+✅ KÖTELEZŐ KONFIGURÁCIÓK:
+1. package.json - Függőségek, scriptek, verzió
+2. tsconfig.json - TypeScript konfiguráció
+3. src/agents/registry.json - Ügynök regisztráció
 
-❌ NEM KÖTELEZŐ (csak ha konkrét track-en dolgozol):
-- conductor/tracks.md - Aktív track-ek
+✅ KÖTELEZŐ PROJEKT ÁLLAPOT:
+4. PROJEKT_DIAGRAM.md - Rendszer architektúra (KÖTELEZŐ!)
+5. conductor/tracks.md - Aktív track-ek (mi van folyamatban?)
+6. .ai/FOSZAL.md - Mi történt legutóbb? (Egyesített napló)
+7. TEST_RESULTS.md - Legutóbbi teszt eredmények (KÖTELEZŐ!)
+
+✅ KÖTELEZŐ HIBAKEZELÉS:
+8. logs/ könyvtár - Legfrissebb log fájlok
+   - logs/phoenix.log - Phoenix Protocol hibák és állapotok
+   - logs/agent_*.log - Ügynök specifikus logok
+   - logs/developer.log - Legutóbbi fejlesztési események
+
+✅ OPCIONÁLIS (csak ha track-en dolgozol):
+- .ai/<te_neved>.md - Van félbehagyott feladatod?
+- conductor/tracks/<track_id>/plan.md - Track részletes terv
 - conductor/workflow.md - Részletes workflow
 ```
 
-### 3. Rendszer Validáció (Munka ELŐTT)
+**⚠️ FIGYELEM:** Ha ezek bármelyikét NEM olvasod be, hibás döntéseket hozhatsz!
+
+### 3. Rendszer Validáció & Teszt Protokoll (Munka ELŐTT - KÖTELEZŐ!)
 
 ```bash
-# Ha nem futtattad a sync --build -ot:
+# STEP 1: Build check
 npm run build                 # TypeScript fordítás (MUSZÁJ OK!)
+
+# STEP 2: Test check
 npm test                      # Vitest tesztek (MUSZÁJ PASS!)
+
+# STEP 3: Teszt eredmények dokumentálása
+# Ha új tesztet írtál vagy teszteket futtattál:
+echo "## Teszt Futás - $(date +%Y-%m-%d_%H-%M)" >> TEST_RESULTS.md
+npm test 2>&1 | tee -a TEST_RESULTS.md
+
+# STEP 4: Phoenix Protocol Állapot Ellenőrzés
+# Ellenőrizd a legfrissebb Phoenix logokat:
+tail -n 50 logs/phoenix.log   # Windows: type logs\phoenix.log | more
 ```
 
-**Ha bármelyik FAIL** → **NE kezdj fejlesztésbe!** Javítsd először!
+**⚠️ 0-HIBA STRATÉGIA:**
+- **Ha BUILD FAIL** → NE kezdj fejlesztésbe! Javítsd először!
+- **Ha TESZT FAIL** → Dokumentáld TEST_RESULTS.md-ben, majd javítsd!
+- **Ha Phoenix hibát ír** → Olvasd el logs/phoenix.log-ot és reagálj rá!
+
+**🔴 KRITIKUS:** A Phoenix Protocol öngyógyító, de TE vagy felelős a logok ellenőrzéséért!
 
 ### 3. Dokumentálás (Munka UTÁN)
 

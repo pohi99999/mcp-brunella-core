@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-16T14:00:00.048Z
+**Utolso frissites:** 2026-02-16T15:00:00.059Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -63,9 +63,9 @@
 
 - [ ] **BAS Átfogó Tesztprotokol** [CRITICAL]
   - **ID:** `bas_comprehensive_test_protocol_20260210`
-  - **Progress:** 85%
+  - **Progress:** 90%
   - **Assignee:** DeveloperAgent
-  - **Updated:** 2026-02-12T00:00:00Z
+  - **Updated:** 2026-02-16T15:05:00Z
   - Mappa: ./tracks/bas_comprehensive_test_protocol_20260210/
 
 - [ ] **Cloudflare Edge Agents Network (CEAN)** [MEDIUM]
@@ -124,8 +124,8 @@
 
 - [ ] **Phoenix Protocol v2 - Öngyógyító Rendszer** [MEDIUM]
   - **ID:** `phoenix_protocol_v2_20260205`
-  - **Progress:** 48%
-  - **Updated:** 2026-02-16
+  - **Progress:** 70%
+  - **Updated:** 2026-02-16T15:45:00Z
   - Mappa: ./tracks/phoenix_protocol_v2_20260205/
 
 - [ ] **Real Estate Sales Campaign (Asset Analyst + Corporate Hunter)** [HIGH]
