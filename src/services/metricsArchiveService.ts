@@ -131,7 +131,7 @@ export async function deleteOldMetrics(
 
     const stmt = db.prepare(`
       DELETE FROM cean_metrics_archive 
-      WHERE created_at < ?
+      WHERE timestamp < ?
     `);
 
     const result = stmt.run(cutoffIso) as any;

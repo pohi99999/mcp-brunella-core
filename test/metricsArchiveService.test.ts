@@ -134,7 +134,6 @@ describe('MetricsArchiveService', () => {
     const fleetId = 'fleet-1';
     const now = new Date();
     const startTime = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
-    const endTime = now.toISOString();
 
     // Archive multiple values for same metric
     await archiveMetric(db, {
@@ -152,6 +151,8 @@ describe('MetricsArchiveService', () => {
       metricValue: 150,
       fleetId,
     });
+
+    const endTime = new Date().toISOString();
 
     // Get aggregate
     const agg = await getMetricsAggregate(db, fleetId, startTime, endTime);

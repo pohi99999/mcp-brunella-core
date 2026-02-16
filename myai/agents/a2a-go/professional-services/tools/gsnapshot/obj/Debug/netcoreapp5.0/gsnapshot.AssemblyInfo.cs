@@ -16,7 +16,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyDescriptionAttribute(("Creates snapshots of the disks of an instance and allows rolling back to those sn" +
     "apshots."))]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.2.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2.0+bc701d6e83090b1b79a6353b573ac7c57d901cd5")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.2.0+90a690d8100a450963155185887ff895839f4735")]
 [assembly: System.Reflection.AssemblyProductAttribute("gsnapshot")]
 [assembly: System.Reflection.AssemblyTitleAttribute("gsnapshot")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.2.0.0")]

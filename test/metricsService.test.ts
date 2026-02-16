@@ -94,16 +94,18 @@ describe('MetricsService', () => {
     const now = new Date();
     const oneHourAgo = new Date(now.getTime() - 60 * 60 * 1000).toISOString();
 
+    // Save metrics BEFORE defining the time range
     metricsService.saveWorkerMetrics('worker-1', {
       latency_p50: 100,
       latency_p95: 250,
       error_rate: 0.5
     });
 
+    // Now query the range (should include the saved metric)
     const metrics = metricsService.getMetricsInRange(
       'worker-1',
       oneHourAgo,
-      now.toISOString(),
+      new Date(now.getTime() + 1000).toISOString(), // +1s to ensure inclusion
       100
     );
 

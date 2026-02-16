@@ -55,7 +55,7 @@ describe('llm_client', () => {
 
             const result = await generateResponse('test prompt', 'gemini');
 
-            expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: 'gemini-2.5-flash' });
+            expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: 'gemini-2.0-flash' });
             expect(mockGenerateContent).toHaveBeenCalledWith('test prompt');
             expect(result).toBe('Gemini response');
         });
@@ -97,7 +97,7 @@ describe('llm_client', () => {
                 expect.stringContaining('/api/chat'),
                 expect.objectContaining({
                     method: 'POST',
-                    body: expect.stringContaining('llama3.1:8b')
+                    body: expect.stringContaining('qwen2.5-coder:7b')
                 })
             );
             expect(result).toBe('Ollama response');

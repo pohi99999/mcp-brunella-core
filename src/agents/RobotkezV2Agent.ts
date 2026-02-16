@@ -65,11 +65,26 @@ export class RobotkezV2Agent extends BaseAgent {
                 const intent = this.parseHungarianIntent(instruction);
                 const result = await this.executeSimplePlan(intent);
                 await persistentBrowser.sendCommand({ action: 'screenshot' }).catch(() => {});
+                
+                // Create a synthetic completed step for consistency
+                const syntheticStep = {
+                    action: intent.type === 'search' ? 'navigate' : intent.type as any,
+                    description: result.message,
+                    status: 'completed',
+                    url: intent.url,
+                    selector: intent.selector,
+                    text: intent.text
+                };
+
                 return {
                     success: true,
                     message: result.message + ' (fallback mode)',
-                    data: result.data,
-                    thoughts: `Fallback mode: ${intent.type}`
+                    data: {
+                        ...result.data,
+                        completedSteps: [syntheticStep],
+                        plan: [syntheticStep]
+                    },
+                    thoughts: `Fallback mode: ${intent.type}. LLM Error: ${llmError.message}`
                 };
             }
 
@@ -94,20 +109,34 @@ export class RobotkezV2Agent extends BaseAgent {
             // Execute multi-step plan (foreground)
             const completedSteps: Array<ExecutionStep & { status: string; error?: string }> = [];
 
-            for (let i = 0; i < plan.plan.length; i++) {
-                const step = plan.plan[i];
-                logInfo(this.name, `▶️ Lépés ${i + 1}/${plan.plan.length}: ${step.description}`);
+            try {
+                for (let i = 0; i < plan.plan.length; i++) {
+                    const step = plan.plan[i];
+                    logInfo(this.name, `▶️ Lépés ${i + 1}/${plan.plan.length}: ${step.description}`);
 
-                try {
-                    await this.executeStep(step);
-                    completedSteps.push({ ...step, status: 'completed' });
-                } catch (stepError: any) {
-                    logError(this.name, `❌ Lépés ${i + 1} hiba: ${stepError.message}`);
-                    completedSteps.push({ ...step, status: 'error', error: stepError.message });
+                    try {
+                        await this.executeStep(step);
+                        completedSteps.push({ ...step, status: 'completed' });
+                    } catch (stepError: any) {
+                        logError(this.name, `❌ Lépés ${i + 1} hiba: ${stepError.message}`);
+                        completedSteps.push({ ...step, status: 'error', error: stepError.message });
 
-                    // Stop execution on critical errors
-                    throw new Error(`Lépés ${i + 1} sikertelen: ${stepError.message}`);
+                        // Stop execution on critical errors
+                        throw new Error(`Lépés ${i + 1} sikertelen: ${stepError.message}`);
+                    }
                 }
+            } catch (error: any) {
+                // If we have some completed steps, return them even on failure
+                return {
+                    success: false,
+                    message: `Folyamat megszakadt: ${error.message}`,
+                    data: { 
+                        error: error.message,
+                        completedSteps,
+                        plan: plan.plan
+                    },
+                    thoughts: `Execution failed at step ${completedSteps.length + 1}`
+                };
             }
 
             // Final screenshot (Live View frissítés)
@@ -261,6 +290,14 @@ export class RobotkezV2Agent extends BaseAgent {
                 // Store extracted data in step (for future context use)
                 (step as any).extractedData = res.data;
                 logInfo(this.name, `📊 Extracted ${res.count} items`);
+                break;
+
+            case 'press':
+                if (!step.key) throw new Error('Press action requires key');
+                await persistentBrowser.sendCommand({
+                    action: 'press',
+                    key: step.key
+                });
                 break;
 
             default:

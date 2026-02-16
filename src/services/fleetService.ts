@@ -42,13 +42,69 @@ export interface FleetHealth {
   status: string;
   worker_count: number;
   active_workers: number;
-  error_rate: number; // percentage
+  avg_error_rate: number; // percentage
   avg_latency_p95: number; // milliseconds
   last_update: string;
 }
 
 export class FleetService {
   constructor(private db: Database) {}
+
+  /**
+   * Create a new fleet
+   */
+  createFleet(id: string, environment: string, name: string, description?: string): string {
+    try {
+      const now = new Date().toISOString();
+      const stmt = this.db.prepare(`
+        INSERT INTO cean_fleets (id, name, environment, status, description, created_at, updated_at)
+        VALUES (?, ?, ?, 'active', ?, ?, ?)
+      `);
+      stmt.run(id, name, environment, description || '', now, now);
+      logInfo('FleetService', `Fleet created: ${id}`);
+      return id;
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('FleetService', `createFleet error: ${msg}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Get a single fleet by ID
+   */
+  getFleet(id: string): FleetData | null {
+    try {
+      const stmt = this.db.prepare('SELECT * FROM cean_fleets WHERE id = ?');
+      return (stmt.get(id) as FleetData) || null;
+    } catch (error: unknown) {
+      return null;
+    }
+  }
+
+  /**
+   * Get all fleets
+   */
+  getAllFleets(): FleetData[] {
+    try {
+      const stmt = this.db.prepare('SELECT * FROM cean_fleets ORDER BY created_at DESC');
+      return stmt.all() as FleetData[];
+    } catch (error: unknown) {
+      return [];
+    }
+  }
+
+  /**
+   * Get a single worker by ID
+   */
+  getWorker(id: string): WorkerData | null {
+    try {
+      const stmt = this.db.prepare('SELECT * FROM cean_workers WHERE id = ?');
+      return (stmt.get(id) as WorkerData) || null;
+    } catch (error: unknown) {
+      return null;
+    }
+  }
 
   /**
    * Get fleet health status
@@ -105,7 +161,7 @@ export class FleetService {
         status: fleet.status,
         worker_count: workerStats.total || 0,
         active_workers: workerStats.active || 0,
-        error_rate: (metrics.avg_error_rate as number) || 0,
+        avg_error_rate: (metrics.avg_error_rate as number) || 0,
         avg_latency_p95: (metrics.avg_latency_p95 as number) || 0,
         last_update: (metrics.last_update as string) || new Date().toISOString()
       };
@@ -145,9 +201,9 @@ export class FleetService {
   /**
    * Add worker to fleet
    */
-  addWorkerToFleet(fleetId: string, workerName: string, workerUrl: string): WorkerData | null {
+  addWorkerToFleet(fleetId: string, identifier: string, workerName: string, workerUrl: string): string | null {
     try {
-      const workerId = `worker-${Date.now()}-${uuidv4().slice(0, 8)}`;
+      const workerId = identifier || `worker-${Date.now()}-${uuidv4().slice(0, 8)}`;
       const now = new Date().toISOString();
 
       const stmt = this.db.prepare(`
@@ -159,16 +215,7 @@ export class FleetService {
 
       logInfo('FleetService', `Worker added to fleet ${fleetId}: ${workerId}`);
 
-      return {
-        id: workerId,
-        fleet_id: fleetId,
-        name: workerName,
-        url: workerUrl,
-        status: 'active',
-        error_count: 0,
-        created_at: now,
-        updated_at: now
-      };
+      return workerId;
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error);
       logError('FleetService', `addWorkerToFleet error: ${msg}`);
@@ -230,24 +277,24 @@ export class FleetService {
   /**
    * Increment worker error count
    */
-  incrementWorkerErrorCount(workerId: string): boolean {
+  incrementWorkerErrorCount(workerId: string, amount: number = 1): boolean {
     try {
       const now = new Date().toISOString();
 
       const stmt = this.db.prepare(`
         UPDATE cean_workers
-        SET error_count = error_count + 1, updated_at = ?
+        SET error_count = error_count + ?, updated_at = ?
         WHERE id = ?
       `);
 
-      const result = stmt.run(now, workerId);
+      const result = stmt.run(amount, now, workerId);
 
       const resultObj = result as unknown as Record<string, unknown>;
       if (resultObj.changes === 0) {
         return false;
       }
 
-      logInfo('FleetService', `Worker error count incremented: ${workerId}`);
+      logInfo('FleetService', `Worker error count incremented by ${amount}: ${workerId}`);
       return true;
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error);

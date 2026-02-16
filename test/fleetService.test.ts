@@ -19,9 +19,11 @@ beforeEach(() => {
     CREATE TABLE cean_fleets (
       id TEXT PRIMARY KEY,
       name TEXT NOT NULL,
-      region TEXT,
-      enabled INTEGER DEFAULT 1,
-      created_at TEXT NOT NULL
+      environment TEXT,
+      status TEXT DEFAULT 'active',
+      description TEXT,
+      created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL
     );
 
     CREATE TABLE cean_workers (
@@ -34,6 +36,7 @@ beforeEach(() => {
       requests_total INTEGER DEFAULT 0,
       last_heartbeat TEXT,
       created_at TEXT NOT NULL,
+      updated_at TEXT NOT NULL,
       FOREIGN KEY (fleet_id) REFERENCES cean_fleets(id)
     );
 
@@ -77,7 +80,8 @@ describe('FleetService', () => {
 
     const fleets = fleetService.getAllFleets();
     expect(fleets).length(2);
-    expect(fleets[0].name).toBe('Fleet 1');
+    expect(fleets.some(f => f.id === 'fleet-1' && f.name === 'Fleet 1')).toBeTruthy();
+    expect(fleets.some(f => f.id === 'fleet-2' && f.name === 'Fleet 2')).toBeTruthy();
   });
 
   it('should add a worker to fleet', () => {
@@ -150,7 +154,7 @@ describe('FleetService', () => {
     expect(success).toBeTruthy();
 
     const worker = fleetService.getWorker(workerId);
-    expect(worker).toBeUndefined();
+    expect(worker).toBeNull();
   });
 
   it('should calculate error rate correctly', () => {
@@ -160,15 +164,14 @@ describe('FleetService', () => {
       'w1',
       'worker-1',
       'https://w1.com'
-    );
+    ) as string;
 
-    // Simulate 100 requests, 5 errors = 5% error rate
-    const stmt = db.prepare(`
-      UPDATE cean_workers
-      SET requests_total = 100, error_count = 5
-      WHERE id = ?
-    `);
-    stmt.run(workerId);
+    // Insert into metrics cache
+    const now = new Date().toISOString();
+    db.prepare(`
+      INSERT INTO cean_metrics_cache (id, worker_id, timestamp, error_rate, created_at)
+      VALUES (?, ?, ?, ?, ?)
+    `).run('m1', workerId, now, 5, now);
 
     const health = fleetService.getFleetHealth(fleetId);
     expect(health?.avg_error_rate).toBe(5); // 5% error rate

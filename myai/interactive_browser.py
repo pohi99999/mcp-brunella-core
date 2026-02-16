@@ -170,6 +170,18 @@ async def main():
                         except Exception as e:
                             result = {"status": "error", "message": str(e)}
 
+                elif action == "press":
+                    pg = await get_page()
+                    key = cmd.get("key")
+                    if key:
+                        try:
+                            await pg.keyboard.press(key)
+                            result = {"status": "success", "message": f"Pressed {key}"}
+                        except Exception as e:
+                            result = {"status": "error", "message": str(e)}
+                    else:
+                        result = {"status": "error", "message": "Key missing"}
+
                 # ==================== END NEW ACTIONS ====================
 
                 elif action == "close":

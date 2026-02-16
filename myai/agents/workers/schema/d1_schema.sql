@@ -36,14 +36,14 @@ CREATE TABLE IF NOT EXISTS edge_tasks (
   -- Cost Tracking
   estimated_cost REAL,                          -- Estimated $ for this task
   actual_cost REAL,                             -- Actual $ spent
-  duration_seconds INTEGER,                     -- Execution time
-  
-  INDEX idx_status (status),
-  INDEX idx_agent_type (agent_type),
-  INDEX idx_created_at (created_at),
-  INDEX idx_priority (priority),
-  UNIQUE INDEX idx_request_id (request_id)
+  duration_seconds INTEGER                      -- Execution time
 );
+
+CREATE INDEX IF NOT EXISTS idx_edge_tasks_status ON edge_tasks(status);
+CREATE INDEX IF NOT EXISTS idx_edge_tasks_agent_type ON edge_tasks(agent_type);
+CREATE INDEX IF NOT EXISTS idx_edge_tasks_created_at ON edge_tasks(created_at);
+CREATE INDEX IF NOT EXISTS idx_edge_tasks_priority ON edge_tasks(priority);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_edge_tasks_request_id ON edge_tasks(request_id);
 
 -- ============================================================================
 -- 2. EDGE_EXECUTIONS - Detailed execution logs
@@ -79,14 +79,15 @@ CREATE TABLE IF NOT EXISTS edge_executions (
   
   -- Cost
   cost_usd REAL,                                -- Cloudflare cost for this exec
-  
+
   -- Metadata
   created_at TEXT NOT NULL,
-  INDEX idx_task_id (task_id),
-  INDEX idx_worker_name (worker_name),
-  INDEX idx_status (status),
   FOREIGN KEY (task_id) REFERENCES edge_tasks(id) ON DELETE CASCADE
 );
+
+CREATE INDEX IF NOT EXISTS idx_edge_executions_task_id ON edge_executions(task_id);
+CREATE INDEX IF NOT EXISTS idx_edge_executions_worker_name ON edge_executions(worker_name);
+CREATE INDEX IF NOT EXISTS idx_edge_executions_status ON edge_executions(status);
 
 -- ============================================================================
 -- 3. EDGE_RESULTS - Processed results and findings
@@ -123,13 +124,14 @@ CREATE TABLE IF NOT EXISTS edge_results (
   created_at TEXT NOT NULL,
   synced_to_r1_at TEXT,                         -- When synced to Vector DB
   expires_at TEXT,                              -- Optional expiration
-  
-  INDEX idx_task_id (task_id),
-  INDEX idx_result_type (result_type),
-  INDEX idx_relevance_score (relevance_score),
-  INDEX idx_created_at (created_at),
+
   FOREIGN KEY (task_id) REFERENCES edge_tasks(id) ON DELETE CASCADE
 );
+
+CREATE INDEX IF NOT EXISTS idx_edge_results_task_id ON edge_results(task_id);
+CREATE INDEX IF NOT EXISTS idx_edge_results_result_type ON edge_results(result_type);
+CREATE INDEX IF NOT EXISTS idx_edge_results_relevance_score ON edge_results(relevance_score);
+CREATE INDEX IF NOT EXISTS idx_edge_results_created_at ON edge_results(created_at);
 
 -- ============================================================================
 -- 4. EDGE_METRICS - Aggregate metrics and monitoring
@@ -170,11 +172,11 @@ CREATE TABLE IF NOT EXISTS edge_metrics (
   uptime_percent REAL DEFAULT 100,              -- Availability %
   
   created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  
-  UNIQUE INDEX idx_bucket (bucket_date, agent_type),
-  INDEX idx_agent_type (agent_type)
+  updated_at TEXT NOT NULL
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS idx_edge_metrics_bucket ON edge_metrics(bucket_date, agent_type);
+CREATE INDEX IF NOT EXISTS idx_edge_metrics_agent_type ON edge_metrics(agent_type);
 
 -- ============================================================================
 -- 5. EDGE_WORKERS_STATUS - Worker health and status
@@ -206,10 +208,10 @@ CREATE TABLE IF NOT EXISTS edge_workers_status (
   config JSON,                                  -- Worker config (env, etc)
   
   created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  
-  INDEX idx_status (status)
+  updated_at TEXT NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_edge_workers_status ON edge_workers_status(status);
 
 -- ============================================================================
 -- 6. CEAN_CHAT_HISTORY - OrchestratorChat message storage
@@ -221,12 +223,12 @@ CREATE TABLE IF NOT EXISTS cean_chat_history (
   content TEXT NOT NULL,                        -- Message text
   task_id TEXT,                                 -- Associated task ID (if any)
   timestamp INTEGER NOT NULL,                   -- Unix epoch timestamp
-  created_at TEXT NOT NULL,                     -- ISO-8601
-  
-  INDEX idx_session_id (session_id),
-  INDEX idx_role (role),
-  INDEX idx_created_at (created_at)
+  created_at TEXT NOT NULL                      -- ISO-8601
 );
+
+CREATE INDEX IF NOT EXISTS idx_cean_chat_session_id ON cean_chat_history(session_id);
+CREATE INDEX IF NOT EXISTS idx_cean_chat_role ON cean_chat_history(role);
+CREATE INDEX IF NOT EXISTS idx_cean_chat_created_at ON cean_chat_history(created_at);
 
 -- ============================================================================
 -- 7. EDGE_AUDIT_LOG - Audit trail for compliance
@@ -244,12 +246,12 @@ CREATE TABLE IF NOT EXISTS edge_audit_log (
   action TEXT NOT NULL,                         -- What happened
   details JSON,                                 -- Additional context
   
-  created_at TEXT NOT NULL,
-  
-  INDEX idx_event_type (event_type),
-  INDEX idx_entity (entity_type, entity_id),
-  INDEX idx_created_at (created_at)
+  created_at TEXT NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_edge_audit_event_type ON edge_audit_log(event_type);
+CREATE INDEX IF NOT EXISTS idx_edge_audit_entity ON edge_audit_log(entity_type, entity_id);
+CREATE INDEX IF NOT EXISTS idx_edge_audit_created_at ON edge_audit_log(created_at);
 
 -- ============================================================================
 -- 8. CEAN_FLEETS - Worker fleet definitions (Phase 2)
@@ -266,13 +268,13 @@ CREATE TABLE IF NOT EXISTS cean_fleets (
   
   -- Metadata
   created_at TEXT NOT NULL,
-  updated_at TEXT NOT NULL,
-  
-  INDEX idx_name (name),
-  INDEX idx_environment (environment),
-  INDEX idx_status (status),
-  INDEX idx_created_at (created_at)
+  updated_at TEXT NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_cean_fleets_name ON cean_fleets(name);
+CREATE INDEX IF NOT EXISTS idx_cean_fleets_environment ON cean_fleets(environment);
+CREATE INDEX IF NOT EXISTS idx_cean_fleets_status ON cean_fleets(status);
+CREATE INDEX IF NOT EXISTS idx_cean_fleets_created_at ON cean_fleets(created_at);
 
 -- ============================================================================
 -- 9. CEAN_WORKERS - Individual worker instances in fleets (Phase 2)
@@ -295,11 +297,12 @@ CREATE TABLE IF NOT EXISTS cean_workers (
   created_at TEXT NOT NULL,
   updated_at TEXT NOT NULL,
   
-  INDEX idx_fleet_id (fleet_id),
-  INDEX idx_status (status),
-  INDEX idx_created_at (created_at),
   FOREIGN KEY (fleet_id) REFERENCES cean_fleets(id) ON DELETE CASCADE
 );
+
+CREATE INDEX IF NOT EXISTS idx_cean_workers_fleet_id ON cean_workers(fleet_id);
+CREATE INDEX IF NOT EXISTS idx_cean_workers_status ON cean_workers(status);
+CREATE INDEX IF NOT EXISTS idx_cean_workers_created_at ON cean_workers(created_at);
 
 -- ============================================================================
 -- 10. CEAN_SCALING_EVENTS - Auto-scaling history (Phase 2)
@@ -323,11 +326,12 @@ CREATE TABLE IF NOT EXISTS cean_scaling_events (
   -- Metadata
   created_at TEXT NOT NULL,
   
-  INDEX idx_fleet_id (fleet_id),
-  INDEX idx_event_type (event_type),
-  INDEX idx_created_at (created_at),
   FOREIGN KEY (fleet_id) REFERENCES cean_fleets(id) ON DELETE CASCADE
 );
+
+CREATE INDEX IF NOT EXISTS idx_cean_scaling_fleet_id ON cean_scaling_events(fleet_id);
+CREATE INDEX IF NOT EXISTS idx_cean_scaling_event_type ON cean_scaling_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_cean_scaling_created_at ON cean_scaling_events(created_at);
 
 -- ============================================================================
 -- 11. CEAN_METRICS_CACHE - Prometheus metrics cache (Phase 2)
@@ -359,11 +363,12 @@ CREATE TABLE IF NOT EXISTS cean_metrics_cache (
   -- Metadata
   created_at TEXT NOT NULL,
   
-  INDEX idx_worker_id (worker_id),
-  INDEX idx_timestamp (timestamp),
-  INDEX idx_created_at (created_at),
   FOREIGN KEY (worker_id) REFERENCES cean_workers(id) ON DELETE CASCADE
 );
+
+CREATE INDEX IF NOT EXISTS idx_cean_metrics_worker_id ON cean_metrics_cache(worker_id);
+CREATE INDEX IF NOT EXISTS idx_cean_metrics_timestamp ON cean_metrics_cache(timestamp);
+CREATE INDEX IF NOT EXISTS idx_cean_metrics_created_at ON cean_metrics_cache(created_at);
 
 -- ============================================================================
 -- 12. CEAN_METRICS_ARCHIVE - Long-term metrics storage with retention (Phase 2 C.2)
@@ -389,14 +394,14 @@ CREATE TABLE IF NOT EXISTS cean_metrics_archive (
   labels TEXT,                                  -- JSON: {worker_id, region, status, ...}
   
   -- Metadata
-  created_at TEXT NOT NULL,
-  
-  INDEX idx_fleet_time ON cean_metrics_archive(fleet_id, timestamp DESC),
-  INDEX idx_worker_time ON cean_metrics_archive(worker_id, timestamp DESC),
-  INDEX idx_metric_name (metric_name),
-  INDEX idx_timestamp (timestamp),
-  INDEX idx_created_at (created_at)
+  created_at TEXT NOT NULL
 );
+
+CREATE INDEX IF NOT EXISTS idx_cean_metrics_archive_fleet_time ON cean_metrics_archive(fleet_id, timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_cean_metrics_archive_worker_time ON cean_metrics_archive(worker_id, timestamp DESC);
+CREATE INDEX IF NOT EXISTS idx_cean_metrics_archive_metric_name ON cean_metrics_archive(metric_name);
+CREATE INDEX IF NOT EXISTS idx_cean_metrics_archive_timestamp ON cean_metrics_archive(timestamp);
+CREATE INDEX IF NOT EXISTS idx_cean_metrics_archive_created_at ON cean_metrics_archive(created_at);
 
 -- ============================================================================
 -- Trigger: Update edge_tasks.updated_at on modification

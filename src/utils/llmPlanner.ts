@@ -9,7 +9,7 @@
  * @phase Phase 3 - LLM Planning Integration
  */
 
-import { generateResponse } from '../core/llm_client.js';
+import { generateRouted } from '../core/llm_client.js';
 import { logInfo, logWarn, logError } from './logger.js';
 
 /**
@@ -29,10 +29,11 @@ export interface ExecutionPlan {
  * Single atomic browser operation
  */
 export interface ExecutionStep {
-    action: 'navigate' | 'click' | 'type' | 'scroll' | 'wait' | 'screenshot' | 'extract';
+    action: 'navigate' | 'click' | 'type' | 'scroll' | 'wait' | 'screenshot' | 'extract' | 'press';
     selector?: string;
     url?: string;
     text?: string;
+    key?: string; // NEW: for press action
     timeout?: number;
     direction?: 'up' | 'down' | 'left' | 'right';
     amount?: number;
@@ -52,6 +53,7 @@ ELÉRHETŐ MŰVELETEK:
 - navigate(url): Navigálás URL-re
 - click(selector): Kattintás CSS selector alapján (pl. ".button", "#submit", "a.link")
 - type(selector, text): Szöveg gépelés input mezőbe
+- press(key): Billentyű megnyomása (pl. "Enter", "Tab", "Escape")
 - scroll(direction, amount): Görgetés (direction: up/down/left/right, amount: pixels)
 - wait(selector, timeout): Várakozás elem megjelenésére (timeout ms-ben)
 - screenshot(): Képernyőkép készítés
@@ -92,7 +94,7 @@ Válasz:
     { "action": "navigate", "url": "https://www.google.com", "description": "Google megnyitása" },
     { "action": "wait", "selector": "textarea[name='q']", "timeout": 10000, "description": "Keresőmező betöltése" },
     { "action": "type", "selector": "textarea[name='q']", "text": "AI hírek", "description": "Keresőszó beírása" },
-    { "action": "click", "selector": "input[type='submit']", "description": "Keresés indítása" }
+    { "action": "press", "key": "Enter", "description": "Keresés indítása Enterrel" }
   ],
   "estimatedDuration": 20000,
   "requiresUserInput": [],
@@ -115,9 +117,9 @@ export async function generateExecutionPlan(instruction: string): Promise<Execut
 Készíts részletes execution plan-t a fenti utasítás végrehajtásához.`;
 
     try {
-        // Call LLM (GPT-4 via GitHub Models for best accuracy)
+        // Call LLM (using Model Router to pick brain model)
         const fullPrompt = `${SYSTEM_PROMPT}\n\n${userPrompt}`;
-        const response = await generateResponse(fullPrompt, 'github', 'gpt-4o');
+        const { response } = await generateRouted(fullPrompt, instruction, { category: 'planning' });
 
         logInfo('LLMPlanner', `Raw LLM response: ${response.slice(0, 200)}...`);
 

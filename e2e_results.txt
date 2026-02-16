@@ -1,0 +1,120 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mF:/mcp-brunella-core[39m
+
+[90mstdout[2m | test/robotkezV2.e2e.test.ts[2m > [22m[2mRobotkezV2 - E2E Test Scenarios (Phase 8.1)
+[22m[39mÔťů Server is running: {
+  success: [33mtrue[39m,
+  agent: {
+    name: [32m'RobotkezV2'[39m,
+    role: [32m'Magyar Agentic Browser'[39m,
+    capabilities: [
+      [32m'agentic_browsing'[39m,
+      [32m'multi_step_automation'[39m,
+      [32m'context_awareness'[39m,
+      [32m'magyar_nyelv'[39m,
+      [32m'tool_orchestration'[39m
+    ]
+  },
+  browser: { active: [33mtrue[39m, type: [32m'persistent'[39m, engine: [32m'Playwright + Python'[39m },
+  browserStatus: [32m'idle'[39m,
+  tasks: { total: [33m0[39m, running: [33m0[39m, completed: [33m0[39m, error: [33m0[39m }
+}
+
+[90mstdout[2m | test/robotkezV2.e2e.test.ts[2m > [22m[2mRobotkezV2 - E2E Test Scenarios (Phase 8.1)[2m > [22m[2mScenario 4: Background task (long-running, > 30s)
+[22m[39mÔä╣´ŞĆ Scenario 4: Task executed synchronously (< 30s estimate)
+
+[90mstdout[2m | test/robotkezV2.e2e.test.ts[2m > [22m[2mRobotkezV2 - E2E Test Scenarios (Phase 8.1)[2m > [22m[2mScenario 5: Error recovery (selector not found)
+[22m[39mÔťů Scenario 5 PASS: Error handled gracefully
+
+[90mstdout[2m | test/robotkezV2.e2e.test.ts[2m > [22m[2mRobotkezV2 - E2E Test Scenarios (Phase 8.1)[2m > [22m[2mScenario 7: Browser crash recovery (Phoenix protocol)
+[22m[39mÔťů Scenario 7 PASS: Phoenix recovery verified
+
+[90mstdout[2m | test/robotkezV2.e2e.test.ts[2m > [22m[2mRobotkezV2 - E2E Test Scenarios (Phase 8.1)[2m > [22m[2mScenario 8: Screenshot capture
+[22m[39mÔťů Scenario 8 PASS: Screenshot captured
+
+[90mstdout[2m | test/robotkezV2.e2e.test.ts[2m > [22m[2mRobotkezV2 - E2E Test Scenarios (Phase 8.1)[2m > [22m[2mScenario 10: Parallel tasks (3+ background tasks)
+[22m[39mÔä╣´ŞĆ Scenario 10: Tasks executed synchronously (no background delegation)
+
+[90mstdout[2m | test/robotkezV2.e2e.test.ts[2m > [22m[2mRobotkezV2 - E2E Test Scenarios (Phase 8.1)
+[22m[39m­čž╣ E2E tests completed
+
+ [31mÔŁ»[39m test/robotkezV2.e2e.test.ts [2m([22m[2m10 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[33m 21603[2mms[22m[39m
+[31m     [31m├Ś[31m Scenario 1: Google search ("Keress r├í az AI h├şrekre")[39m[33m 1699[2mms[22m[39m
+[31m     [31m├Ś[31m Scenario 2: Form fill ("T├Âltsd ki a nevet 'Test User'-rel")[39m[33m 3409[2mms[22m[39m
+[31m     [31m├Ś[31m Scenario 3: Multi-step workflow ("Navig├ílj Ôćĺ Keress Ôćĺ Kattints")[39m[33m 1190[2mms[22m[39m
+     [33m[2mÔťô[22m[39m Scenario 4: Background task (long-running, > 30s) [33m 1316[2mms[22m[39m
+     [33m[2mÔťô[22m[39m Scenario 5: Error recovery (selector not found) [33m 5148[2mms[22m[39m
+[31m     [31m├Ś[31m Scenario 6: LLM hallucination (invalid plan)[39m[33m 1195[2mms[22m[39m
+     [33m[2mÔťô[22m[39m Scenario 7: Browser crash recovery (Phoenix protocol) [33m 1529[2mms[22m[39m
+     [33m[2mÔťô[22m[39m Scenario 8: Screenshot capture [33m 1191[2mms[22m[39m
+[31m     [31m├Ś[31m Scenario 9: Data extraction (extract text from page)[39m[33m 1143[2mms[22m[39m
+     [33m[2mÔťô[22m[39m Scenario 10: Parallel tasks (3+ background tasks) [33m 3695[2mms[22m[39m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Tests 5 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  test/robotkezV2.e2e.test.ts > RobotkezV2 - E2E Test Scenarios (Phase 8.1) > Scenario 1: Google search ("Keress r├í az AI h├şrekre")
+AssertionError: expected { ÔÇŽ(2) } to have property "completedSteps"
+ ÔŁ» test/robotkezV2.e2e.test.ts:44:32
+     42|     expect(response.data).toHaveProperty('success');
+     43|     expect(response.data.success).toBe(true);
+     44|     expect(response.data.data).toHaveProperty('completedSteps');
+       |                                ^
+     45|     expect(response.data.data.completedSteps.length).toBeGreaterThan(0ÔÇŽ
+     46| 
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/5]ÔÄ»
+
+ FAIL  test/robotkezV2.e2e.test.ts > RobotkezV2 - E2E Test Scenarios (Phase 8.1) > Scenario 2: Form fill ("T├Âltsd ki a nevet 'Test User'-rel")
+TypeError: Cannot read properties of undefined (reading 'some')
+ ÔŁ» test/robotkezV2.e2e.test.ts:76:55
+     74| 
+     75|     // Check that there was a "type" action
+     76|     const hasType = response.data.data.completedSteps.some(
+       |                                                       ^
+     77|       (step: any) => step.action === 'type'
+     78|     );
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[2/5]ÔÄ»
+
+ FAIL  test/robotkezV2.e2e.test.ts > RobotkezV2 - E2E Test Scenarios (Phase 8.1) > Scenario 3: Multi-step workflow ("Navig├ílj Ôćĺ Keress Ôćĺ Kattints")
+TypeError: Cannot read properties of undefined (reading 'length')
+ ÔŁ» test/robotkezV2.e2e.test.ts:98:46
+     96|     expect(response.status).toBe(200);
+     97|     expect(response.data.success).toBe(true);
+     98|     expect(response.data.data.completedSteps.length).toBeGreaterThanOrÔÇŽ
+       |                                              ^
+     99| 
+    100|     // Check that plan contains navigate, type, click
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[3/5]ÔÄ»
+
+ FAIL  test/robotkezV2.e2e.test.ts > RobotkezV2 - E2E Test Scenarios (Phase 8.1) > Scenario 6: LLM hallucination (invalid plan)
+TypeError: Cannot read properties of undefined (reading 'map')
+ ÔŁ» test/robotkezV2.e2e.test.ts:194:57
+    192|     } else {
+    193|       // Check that plan is safe (no dangerous actions)
+    194|       const actions = response.data.data.completedSteps.map((s: any) =ÔÇŽ
+       |                                                         ^
+    195|       expect(actions.every((a: string) => ['screenshot', 'content'].inÔÇŽ
+    196|       console.log('Ôťů Scenario 6 PASS: Safe fallback plan');
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[4/5]ÔÄ»
+
+ FAIL  test/robotkezV2.e2e.test.ts > RobotkezV2 - E2E Test Scenarios (Phase 8.1) > Scenario 9: Data extraction (extract text from page)
+TypeError: Cannot read properties of undefined (reading 'some')
+ ÔŁ» test/robotkezV2.e2e.test.ts:266:58
+    264| 
+    265|     // Check if extract action was used
+    266|     const hasExtract = response.data.data.completedSteps.some(
+       |                                                          ^
+    267|       (step: any) => step.action === 'extract'
+    268|     );
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[5/5]ÔÄ»
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m5 failed[39m[22m[2m | [22m[1m[32m5 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m 23:15:11
+[2m   Duration [22m 22.75s[2m (transform 94ms, setup 85ms, import 356ms, tests 21.60s, environment 0ms)[22m
+

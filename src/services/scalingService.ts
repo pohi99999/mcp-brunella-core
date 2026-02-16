@@ -238,7 +238,7 @@ export class ScalingService {
   private getCurrentWorkerCount(fleetId: string): number {
     try {
       const stmt = this.db.prepare(
-        'SELECT COUNT(*) as count FROM cean_workers WHERE fleet_id = ? AND status = "active"'
+        "SELECT COUNT(*) as count FROM cean_workers WHERE fleet_id = ? AND status = 'active'"
       );
       const result = stmt.get(fleetId) as { count: number };
       return result.count || 0;

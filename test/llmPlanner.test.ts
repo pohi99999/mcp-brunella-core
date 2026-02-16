@@ -15,9 +15,23 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { generateExecutionPlan, validateExecutionPlan, ExecutionPlan } from '../src/utils/llmPlanner.js';
 import * as llmClient from '../src/core/llm_client.js';
 
+const mockDecision = {
+    model: {
+        name: 'test-model',
+        provider: 'ollama',
+        role: 'brain',
+        contextWindow: 4096,
+        costPerToken: 0,
+        speed: 'fast',
+        strengths: []
+    },
+    reason: 'test',
+    timestamp: Date.now()
+};
+
 // Mock llm_client
 vi.mock('../src/core/llm_client.js', () => ({
-    generateResponse: vi.fn()
+    generateRouted: vi.fn()
 }));
 
 // Mock logger
@@ -45,7 +59,10 @@ describe('LLM Planner (Phase 3)', () => {
                 contextNeeded: []
             };
 
-            vi.spyOn(llmClient, 'generateResponse').mockResolvedValue(JSON.stringify(mockPlan));
+            vi.spyOn(llmClient, 'generateRouted').mockResolvedValue({
+                response: JSON.stringify(mockPlan),
+                decision: mockDecision
+            });
 
             const plan = await generateExecutionPlan('Keress rá az AI hírekre');
 
@@ -70,7 +87,10 @@ describe('LLM Planner (Phase 3)', () => {
                 backgroundEligible: false
             };
 
-            vi.spyOn(llmClient, 'generateResponse').mockResolvedValue(JSON.stringify(mockPlan));
+            vi.spyOn(llmClient, 'generateRouted').mockResolvedValue({
+                response: JSON.stringify(mockPlan),
+                decision: mockDecision
+            });
 
             const plan = await generateExecutionPlan('Tölts ki egy form-ot');
 
@@ -88,7 +108,10 @@ describe('LLM Planner (Phase 3)', () => {
             };
 
             const markdownResponse = '```json\n' + JSON.stringify(mockPlan) + '\n```';
-            vi.spyOn(llmClient, 'generateResponse').mockResolvedValue(markdownResponse);
+            vi.spyOn(llmClient, 'generateRouted').mockResolvedValue({
+                response: markdownResponse,
+                decision: mockDecision
+            });
 
             const plan = await generateExecutionPlan('Test');
 
@@ -106,7 +129,10 @@ describe('LLM Planner (Phase 3)', () => {
                 backgroundEligible: false
             };
 
-            vi.spyOn(llmClient, 'generateResponse').mockResolvedValue(JSON.stringify(mockPlan));
+            vi.spyOn(llmClient, 'generateRouted').mockResolvedValue({
+                response: JSON.stringify(mockPlan),
+                decision: mockDecision
+            });
 
             const plan = await generateExecutionPlan('Test');
 
@@ -122,7 +148,10 @@ describe('LLM Planner (Phase 3)', () => {
                 // backgroundEligible missing
             };
 
-            vi.spyOn(llmClient, 'generateResponse').mockResolvedValue(JSON.stringify(mockPlan));
+            vi.spyOn(llmClient, 'generateRouted').mockResolvedValue({
+                response: JSON.stringify(mockPlan),
+                decision: mockDecision
+            });
 
             const plan = await generateExecutionPlan('Long task');
 
@@ -132,9 +161,14 @@ describe('LLM Planner (Phase 3)', () => {
 
     describe('generateExecutionPlan - Error Handling', () => {
         it('should throw on invalid JSON from LLM', async () => {
-            vi.spyOn(llmClient, 'generateResponse').mockResolvedValue('This is not valid JSON at all');
+            vi.spyOn(llmClient, 'generateRouted').mockResolvedValue({
+                response: 'This is not valid JSON at all',
+                decision: mockDecision
+            });
 
-            await expect(generateExecutionPlan('Test')).rejects.toThrow('Invalid JSON from LLM');
+            await expect(generateExecutionPlan('Test')).rejects.toThrow(
+                /Invalid JSON from LLM|No valid JSON object found/i
+            );
         });
 
         it('should throw on missing plan array', async () => {
@@ -143,7 +177,10 @@ describe('LLM Planner (Phase 3)', () => {
                 estimatedDuration: 10000
             };
 
-            vi.spyOn(llmClient, 'generateResponse').mockResolvedValue(JSON.stringify(malformedPlan));
+            vi.spyOn(llmClient, 'generateRouted').mockResolvedValue({
+                response: JSON.stringify(malformedPlan),
+                decision: mockDecision
+            });
 
             await expect(generateExecutionPlan('Test')).rejects.toThrow('Invalid plan structure');
         });
@@ -155,7 +192,10 @@ describe('LLM Planner (Phase 3)', () => {
                 backgroundEligible: false
             };
 
-            vi.spyOn(llmClient, 'generateResponse').mockResolvedValue(JSON.stringify(emptyPlan));
+            vi.spyOn(llmClient, 'generateRouted').mockResolvedValue({
+                response: JSON.stringify(emptyPlan),
+                decision: mockDecision
+            });
 
             await expect(generateExecutionPlan('Test')).rejects.toThrow('Invalid plan: empty plan array');
         });
@@ -169,7 +209,10 @@ describe('LLM Planner (Phase 3)', () => {
                 backgroundEligible: false
             };
 
-            vi.spyOn(llmClient, 'generateResponse').mockResolvedValue(JSON.stringify(invalidPlan));
+            vi.spyOn(llmClient, 'generateRouted').mockResolvedValue({
+                response: JSON.stringify(invalidPlan),
+                decision: mockDecision
+            });
 
             await expect(generateExecutionPlan('Test')).rejects.toThrow('missing action');
         });
@@ -183,7 +226,10 @@ describe('LLM Planner (Phase 3)', () => {
                 backgroundEligible: false
             };
 
-            vi.spyOn(llmClient, 'generateResponse').mockResolvedValue(JSON.stringify(planWithoutDesc));
+            vi.spyOn(llmClient, 'generateRouted').mockResolvedValue({
+                response: JSON.stringify(planWithoutDesc),
+                decision: mockDecision
+            });
 
             const plan = await generateExecutionPlan('Test');
 
@@ -192,7 +238,7 @@ describe('LLM Planner (Phase 3)', () => {
         });
 
         it('should propagate LLM client errors', async () => {
-            vi.spyOn(llmClient, 'generateResponse').mockRejectedValue(new Error('LLM service unavailable'));
+            vi.spyOn(llmClient, 'generateRouted').mockRejectedValue(new Error('LLM service unavailable'));
 
             await expect(generateExecutionPlan('Test')).rejects.toThrow('LLM service unavailable');
         });

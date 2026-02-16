@@ -1,10 +1,11 @@
 import { logInfo, logError } from './logger.js';
 
 export interface BrowserCommand {
-    action: 'launch' | 'navigate' | 'click' | 'type' | 'screenshot' | 'content' | 'scroll' | 'wait' | 'extract' | 'close';
+    action: 'launch' | 'navigate' | 'click' | 'type' | 'screenshot' | 'content' | 'scroll' | 'wait' | 'extract' | 'close' | 'press';
     url?: string;
     selector?: string;
     text?: string;
+    key?: string; // NEW: for press action
     headless?: boolean;
     // NEW: scroll parameters
     direction?: 'up' | 'down' | 'left' | 'right';

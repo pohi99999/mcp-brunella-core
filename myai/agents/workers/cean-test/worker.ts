@@ -182,7 +182,7 @@ router.post('/test/r1', async (_req: Request, env: Env) => {
       status: 'ready',
       message: 'R1 (Vectorize) binding is available',
       requirements: {
-        vectorize_index_bound: !!env.VECTORIZE_INDEX,
+        lejár a tokenvectorize_index_bound: !!env.VECTORIZE_INDEX,
         openai_api_key_present: !!env.OPENAI_API_KEY,
         embedding_model: 'text-embedding-3-small',
         next_steps: [
