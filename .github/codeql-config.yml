@@ -1,0 +1,15 @@
+name: "CodeQL Configuration"
+
+disable-default-queries: false
+
+paths-ignore:
+  - "myai/agents"
+  - "external_research"
+  - "open-interpreter"
+  - "node_modules"
+  - "test"
+  - "_KNOWLEDGE_BASE"
+  - "dist"
+  - "build"
+  - "coverage"
+  - ".next"
