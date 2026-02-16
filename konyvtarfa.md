@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 16. 16:26:18
+**Generálva:** 2026. 02. 16. 16:39:35
 **Script:** 
 
 ---
@@ -42819,6 +42819,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 n8n-setup.md
     - 📄 PROJECT_ARCHITECTURE_DIAGRAM.md
     - 📄 PROJEKT_DIAGRAM_2026-02-13.md
+    - 📄 ROBOTKEZ_LIVE_VIEW_SETUP.md
     - 📄 ROBOTKEZ_SETUP.md
     - 📄 robotkezv2-dev-guide.md
     - 📄 robotkezv2-user-guide.md
