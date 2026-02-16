@@ -71,6 +71,21 @@ export interface PhoenixRecoveryEvent {
   timestamp: string;
 }
 
+export interface PhoenixRestartEvent {
+  serviceName: string;
+  success: boolean;
+  error?: string;
+  timestamp: string;
+}
+
+export interface PhoenixStateRestoredEvent {
+  agentName: string;
+  taskId: string;
+  stepIndex: number;
+  stepName: string;
+  timestamp: string;
+}
+
 export type PhoenixEventMap = {
   'phoenix:agent_failed': PhoenixAgentFailedEvent;
   'phoenix:failover_triggered': PhoenixFailoverTriggeredEvent;
@@ -78,6 +93,8 @@ export type PhoenixEventMap = {
   'phoenix:edge_health': PhoenixEdgeHealthEvent;
   'phoenix:circuit_breaker': PhoenixCircuitBreakerEvent;
   'phoenix:recovery': PhoenixRecoveryEvent;
+  'phoenix:restart': PhoenixRestartEvent;
+  'phoenix:state_restored': PhoenixStateRestoredEvent;
 };
 
 export type PhoenixEventName = keyof PhoenixEventMap;

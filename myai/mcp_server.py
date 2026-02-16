@@ -47,10 +47,7 @@ def _get_rag():
 
 # --- MCP Server Setup ---
 
-mcp = FastMCP(
-    "brunella-python",
-    description="Brunella Agent System - Python subsystem MCP tools (refine, execute, harvest, RAG search)",
-)
+mcp = FastMCP("brunella-python")
 
 
 # --- Tool Definitions ---

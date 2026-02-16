@@ -110,6 +110,11 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
     setSocketInstance(socket);
 
+    // Expose socket to window for E2E testing
+    if (typeof window !== 'undefined') {
+      (window as any).__BRUNELLA_SOCKET__ = socket;
+    }
+
     const getErrorMessage = (error: unknown): string => {
       if (error instanceof Error) return error.message;
       if (typeof error === "string") return error;

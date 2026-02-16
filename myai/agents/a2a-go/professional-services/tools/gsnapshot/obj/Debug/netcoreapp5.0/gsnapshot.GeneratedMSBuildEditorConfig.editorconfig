@@ -13,5 +13,5 @@ build_property.RootNamespace = gsnapshot
 build_property.ProjectDir = F:\mcp-brunella-core\myai\agents\a2a-go\professional-services\tools\gsnapshot\
 build_property.EnableComHosting = 
 build_property.EnableGeneratedComInterfaceComImportInterop = 
-build_property.EffectiveAnalysisLevelStyle = 10.0
+build_property.EffectiveAnalysisLevelStyle = 11.0
 build_property.EnableCodeStyleSeverity = 
