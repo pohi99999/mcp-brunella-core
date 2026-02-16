@@ -4,6 +4,7 @@ import { Server } from "socket.io";
 import path from "path";
 import { readFileSync } from "fs";
 import os from "os";
+import osUtils from "os-utils";
 import swaggerUi from "swagger-ui-express";
 import { config } from "../config/schema.js";
 import {
@@ -303,26 +304,23 @@ export async function startWebServer() {
 
   // Metrics Loop
   setInterval(() => {
-    const totalMem = os.totalmem();
-    const freeMem = os.freemem();
-    const cpus = os.cpus();
-    const cpuUsage =
-      cpus.reduce((acc, cpu) => {
-        const total = Object.values(cpu.times).reduce((a, b) => a + b, 0);
-        return acc + ((total - cpu.times.idle) / total) * 100;
-      }, 0) / cpus.length;
+    osUtils.cpuUsage((percentage) => {
+      const totalMem = os.totalmem();
+      const freeMem = os.freemem();
 
-    io.emit("metrics_update", {
-      requestsPerMinute: lastMinuteRequests,
-      activeConnections: io.sockets.sockets.size,
-      errorRate:
-        lastMinuteRequests > 0
-          ? (lastMinuteErrors / lastMinuteRequests) * 100
-          : 0,
-      averageResponseTime: 0,
-      cpuUsage: Math.round(cpuUsage * 100) / 100,
-      memoryUsage: ((totalMem - freeMem) / totalMem) * 100,
+      io.emit("metrics_update", {
+        requestsPerMinute: lastMinuteRequests,
+        activeConnections: io.sockets.sockets.size,
+        errorRate:
+          lastMinuteRequests > 0
+            ? (lastMinuteErrors / lastMinuteRequests) * 100
+            : 0,
+        averageResponseTime: 0,
+        cpuUsage: Math.round(percentage * 100 * 100) / 100,
+        memoryUsage: ((totalMem - freeMem) / totalMem) * 100,
+      });
     });
+
     io.emit("mcp_servers_status", mcpProcessManager.getServersStatus());
 
     // Push Agent & Tool status updates
