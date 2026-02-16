@@ -16,6 +16,7 @@ from fastapi.responses import FileResponse, StreamingResponse
 from pydantic import BaseModel
 import uvicorn
 import shutil
+import aiofiles
 from dotenv import load_dotenv
 
 load_dotenv() # Load .env file
@@ -398,21 +399,20 @@ async def get_latest_screenshot():
 
 
 async def _read_stream(stream: asyncio.StreamReader, session_id: str, level: str, log_path: Path) -> None:
-    while True:
-        line = await stream.readline()
-        if not line:
-            break
-        text = line.decode(errors="ignore").rstrip()
-        if not text:
-            continue
+    await asyncio.to_thread(log_path.parent.mkdir, parents=True, exist_ok=True)
+    async with aiofiles.open(log_path, "a", encoding="utf-8") as f:
+        while True:
+            line = await stream.readline()
+            if not line:
+                break
+            text = line.decode(errors="ignore").rstrip()
+            if not text:
+                continue
 
-        log_path.parent.mkdir(parents=True, exist_ok=True)
-        with log_path.open("a", encoding="utf-8") as f:
-            f.write(f"[{datetime.utcnow().isoformat()}Z] {level.upper()} {text}\n")
+            await f.write(f"[{datetime.utcnow().isoformat()}Z] {level.upper()} {text}\n")
+            await f.flush()
 
-        await broadcast_log(text, level, f"robotkez-test:{session_id}")
-
-
+            await broadcast_log(text, level, f"robotkez-test:{session_id}")
 @app.post("/test/run")
 async def run_robotkez_test(req: TestRunRequest):
     level = req.level
