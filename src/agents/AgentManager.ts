@@ -38,6 +38,7 @@ import { checkToolPermission } from "../tools/toolPermissions.js";
 import { record as auditRecord } from "../core/auditLog.js";
 import { getPendingFixes, updateFixStatus } from "../utils/fixQueue.js";
 import type { IAgent } from "./types.js";
+import { formatResponse } from "../utils/responseFormatter.js";
 
 // ============================================================================
 // INTERFACES
@@ -567,12 +568,21 @@ export class AgentManager extends EventEmitter {
               resObj["success"] =
                 resObj["status"] === "success" || resObj["status"] === "ok";
             }
+
+            // Format response as Hungarian human-readable text (if not already formatted)
+            if (!resObj["message"] || typeof resObj["message"] !== "string") {
+              const formatted = formatResponse(resObj, agentName, { useEmojis: true });
+              resObj["message"] = formatted;
+            }
+
             return resObj as unknown as TaskResult;
           } else {
+            // Format simple response
+            const formatted = formatResponse(res, agentName, { useEmojis: true });
             return {
               success: true,
               data: res,
-              message: "Végrehajtva",
+              message: formatted,
             } as TaskResult;
           }
         },

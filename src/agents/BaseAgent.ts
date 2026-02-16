@@ -7,6 +7,7 @@
  */
 
 import { IAgent, ISwarmContext, AgentHandoff, AgentResponse } from './types.js';
+import { formatAgentResult } from '../utils/responseFormatter.js';
 
 export interface AgentContext {
   task?: string;
@@ -42,6 +43,8 @@ export abstract class BaseAgent implements IAgent {
    * IAgent-kompatibilis execute bridge.
    * Az AgentManager és az MCP eszközök egységesen hívhatják:
    *   agent.execute(task, context?)
+   *
+   * Magyar nyelvű válaszokat ad vissza az AgentResult formázásával.
    */
   async execute(task: string, context?: any): Promise<AgentResponse> {
     const agentContext: AgentContext = {
@@ -51,8 +54,12 @@ export abstract class BaseAgent implements IAgent {
 
     const result = await this.executeTask(agentContext);
 
+    // Format result as Hungarian human-readable text
+    const formattedMessage = formatAgentResult(result, this.name, { useEmojis: true });
+
     return {
       status: result.success ? 'success' : 'error',
+      message: formattedMessage, // Magyar nyelvű szöveg
       data: result.data,
       error: result.success ? undefined : result.message,
       handoff: result.handoff,
