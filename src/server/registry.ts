@@ -1,12 +1,6 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logWarn } from "../utils/logger.js";
-import {
-  testSchedulerRunDefinition,
-  testSchedulerStatusDefinition,
-  testSchedulerRunHandler,
-  testSchedulerStatusHandler,
-} from "../tools/testSchedulerTool.js";
 
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
@@ -298,7 +292,14 @@ export async function registerAllTools(server: McpServer) {
     );
     toolHandlers.set("agent_execute", agentExecuteHandler);
 
-    // Register Test Scheduler Tools
+    // Register Test Scheduler Tools (Dynamic Import for Worker compatibility)
+    const {
+      testSchedulerRunDefinition,
+      testSchedulerStatusDefinition,
+      testSchedulerRunHandler,
+      testSchedulerStatusHandler,
+    } = await import("../tools/testSchedulerTool.js");
+
     const testSchedulerRunMcpHandler = async (args: any) => {
       const result = await testSchedulerRunHandler(args);
       return {

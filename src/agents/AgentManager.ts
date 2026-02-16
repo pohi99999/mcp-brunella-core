@@ -193,7 +193,7 @@ export class AgentManager extends EventEmitter {
    * This implements the "Self-Healing" protocol requested.
    */
   async processFixQueue(): Promise<void> {
-    const pendingFixes = getPendingFixes();
+    const pendingFixes = await getPendingFixes();
     if (pendingFixes.length === 0) return;
 
     logInfo(
@@ -207,7 +207,7 @@ export class AgentManager extends EventEmitter {
         "AgentManager",
         `🔧 Applying Fix: ${fix.description} [${fix.id}]`,
       );
-      updateFixStatus(fix.id, "in-progress");
+      await updateFixStatus(fix.id, "in-progress");
 
       // Prefer DeveloperAgent for fixes
       const targetAgent = this.agents.get("Developer")
@@ -223,17 +223,17 @@ export class AgentManager extends EventEmitter {
         // Check result
         const success = (result as any)?.success ?? false;
         if (success) {
-          updateFixStatus(fix.id, "resolved");
+          await updateFixStatus(fix.id, "resolved");
           logInfo("AgentManager", `✅ Fix Resolved: ${fix.id}`);
         } else {
-          updateFixStatus(
+          await updateFixStatus(
             fix.id,
             "failed",
             (result as any)?.message || "Unknown error",
           );
         }
       } catch (e) {
-        updateFixStatus(fix.id, "failed", (e as Error).message);
+        await updateFixStatus(fix.id, "failed", (e as Error).message);
         logError(
           "AgentManager",
           `❌ Fix Failed: ${fix.id} - ${(e as Error).message}`,

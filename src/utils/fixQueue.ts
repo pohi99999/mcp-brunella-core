@@ -1,8 +1,19 @@
-import fs from "fs";
-import path from "path";
 import { logInfo, logError } from "./logger.js";
 
-const FIX_QUEUE_FILE = path.join(process.cwd(), "data", "fix_queue.json");
+let fs: any;
+let path: any;
+
+async function loadDeps() {
+  if (typeof process !== "undefined" && process.versions && process.versions.node) {
+    if (!fs) fs = await import("fs");
+    if (!path) path = await import("path");
+  }
+}
+
+const getQueueFile = () => {
+  if (!path) return null;
+  return path.join(process.cwd(), "data", "fix_queue.json");
+};
 
 export interface FixItem {
   id: string;
@@ -18,7 +29,11 @@ export interface FixItem {
 /**
  * Ensures the fix queue file exists.
  */
-function ensureQueueFile() {
+async function ensureQueueFile() {
+  await loadDeps();
+  if (!fs || !path) return false;
+
+  const FIX_QUEUE_FILE = getQueueFile();
   const dir = path.dirname(FIX_QUEUE_FILE);
   if (!fs.existsSync(dir)) {
     fs.mkdirSync(dir, { recursive: true });
@@ -26,18 +41,21 @@ function ensureQueueFile() {
   if (!fs.existsSync(FIX_QUEUE_FILE)) {
     fs.writeFileSync(FIX_QUEUE_FILE, JSON.stringify([], null, 2), "utf-8");
   }
+  return true;
 }
 
 /**
  * Adds a new item to the Fix Queue.
  */
-export function addToFixQueue(
+export async function addToFixQueue(
   description: string,
   source: string = "System",
   priority: FixItem["priority"] = "normal",
-): string {
-  ensureQueueFile();
+): Promise<string> {
+  if (!(await ensureQueueFile())) return "error-env";
+
   try {
+    const FIX_QUEUE_FILE = getQueueFile();
     const queue: FixItem[] = JSON.parse(
       fs.readFileSync(FIX_QUEUE_FILE, "utf-8"),
     );
@@ -75,9 +93,11 @@ export function addToFixQueue(
 /**
  * Gets all pending items sorted by priority.
  */
-export function getPendingFixes(): FixItem[] {
-  ensureQueueFile();
+export async function getPendingFixes(): Promise<FixItem[]> {
+  if (!(await ensureQueueFile())) return [];
+
   try {
+    const FIX_QUEUE_FILE = getQueueFile();
     const queue: FixItem[] = JSON.parse(
       fs.readFileSync(FIX_QUEUE_FILE, "utf-8"),
     );
@@ -95,13 +115,15 @@ export function getPendingFixes(): FixItem[] {
 /**
  * Updates the status of a fix item.
  */
-export function updateFixStatus(
+export async function updateFixStatus(
   id: string,
   status: FixItem["status"],
   lastError?: string,
 ) {
-  ensureQueueFile();
+  if (!(await ensureQueueFile())) return;
+
   try {
+    const FIX_QUEUE_FILE = getQueueFile();
     const queue: FixItem[] = JSON.parse(
       fs.readFileSync(FIX_QUEUE_FILE, "utf-8"),
     );
