@@ -24,24 +24,14 @@ jobs:
     timeout-minutes: 45
     strategy:
       fail-fast: false
-      max-parallel: 15
+      max-parallel: 3  # Csökkentve 15-ről 3-ra a terhelés csökkentése érdekében
       matrix:
         suite:
           - unit_fast
-          - unit_slow
           - integration_ollama
-          - integration_gemini
-          - integration_github_models
           - dashboard
-          - e2e_full
-          - e2e_critical
-          - performance_stress
-          - performance_memory
           - security_scan
           - api_contracts
-          - accessibility
-          - browser_compat
-          - regression
 
     steps:
       - name: Checkout

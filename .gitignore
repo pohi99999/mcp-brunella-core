@@ -78,6 +78,30 @@ logs/
 *.db-wal
 *.db-shm
 *.log
+
+# Temporary test and output files
+build_errors.txt
+e2e_results.txt
+vitest_output.txt
+audit_report.json
+out_scen*.txt
+latest_email.html
+test_call.ts
+verify_port.ts
+test_robotkez_dashboard.ts
+
+# AI generated temporary files
+_AI_CHAT_LOG.*
+_AI_CONTEXT.md
+_AI_WORKFLOW.md
+_CHANGE_REPORT.md
+_CONDUCTOR_UPDATE_TEMPLATE.md
+_COPILOT_NEXT_TASKS.md
+_DASHBOARD_IMPLEMENTATION_PLAN.md
+_FIX_INSTRUCTIONS.md
+_JULES_MAINTENANCE_TASKS.md
+_PROJECT_STRUCTURE.md
+_QUICK_START.md
 .tmp.driveupload/
 developer_metrics.json
 data/developer_metrics.json
