@@ -12,17 +12,32 @@ const venvPy = path.resolve(
     : ".venv/bin/python",
 );
 let hasPython = false;
+let pythonCommand = "python";
+
+// Try to find a working python
 try {
   execSync(`"${venvPy}" --version`, { stdio: "ignore" });
   hasPython = true;
+  pythonCommand = venvPy;
 } catch {
   try {
-    execSync("python --version", { stdio: "ignore" });
+    execSync("python3 --version", { stdio: "ignore" });
     hasPython = true;
+    pythonCommand = "python3";
   } catch {
-    hasPython = false;
+    try {
+      execSync("python --version", { stdio: "ignore" });
+      hasPython = true;
+      pythonCommand = "python";
+    } catch {
+      hasPython = false;
+    }
   }
 }
+
+// In CI environment, often neither venv nor system python is easily available/configured as expected for tests
+// so we might need to skip execution tests if no python is found.
+const isCI = process.env.CI === 'true';
 
 describe("Python MCP Server (myai/mcp_server.py)", () => {
   it("should exist as a file", () => {
@@ -98,8 +113,8 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
         "myai",
         "mcp_server.py",
       );
-      const py = hasPython ? venvPy : "python";
-      const result = execSync(`"${py}" -m py_compile "${serverPath}"`, {
+
+      const result = execSync(`"${pythonCommand}" -m py_compile "${serverPath}"`, {
         encoding: "utf-8",
         timeout: 15000,
       });

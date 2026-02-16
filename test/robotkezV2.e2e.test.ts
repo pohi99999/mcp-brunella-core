@@ -5,7 +5,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import axios from 'axios';
 
-const API_BASE = 'http://localhost:3000/api/v1/robotkez';
+const API_BASE = 'http://127.0.0.1:3000/api/v1/robotkez';
 const TEST_TIMEOUT = 60000; // 60s for browser operations
 
 describe('RobotkezV2 - E2E Test Scenarios (Phase 8.1)', () => {

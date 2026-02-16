@@ -40,10 +40,21 @@ export class PersistentBrowser {
         if (typeof process === 'undefined' || !process.versions?.node) return 'python';
         const fs = await import('fs');
         const venvPath = process.platform === 'win32' ? '.venv/Scripts/python.exe' : '.venv/bin/python';
+
+        // Check for venv python
         if (fs.existsSync(venvPath)) {
             return venvPath;
         }
-        return 'python';
+
+        // Check if python3 is available
+        try {
+            const { execSync } = await import('child_process');
+            execSync('python3 --version', { stdio: 'ignore' });
+            return 'python3';
+        } catch {
+            // Fallback to python
+            return 'python';
+        }
     }
 
     private async startProcess() {
