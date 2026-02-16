@@ -42,7 +42,7 @@ biztosítása.
 Ha végrehajtandó akciót javasolsz, használd a következő struktúrát:
 - **Állapot:** [Elemzés/Tervezés/Végrehajtás]
 - **Terv:** [Lépések listája]
-- **Javasolt Akció:** [Pl. "Futtasd ezt a parancsot a terminálban" vagy "Létrehoztam ezt a dokumentumot"]
+- **Akció:** [Pl. "Futtasd ezt a parancsot a terminálban" vagy "Létrehoztam ezt a dokumentumot"]
 - **Kódblokk:** (Ha szükséges)
 
 közös munkaterületeink egyike: https://drive.google.com/drive/folders/15ArDrVabYPX3bDmFp6uPnDqcGslMkevv?usp=drive_link , ezen a felületen minden a rendelkezésedre áll. 

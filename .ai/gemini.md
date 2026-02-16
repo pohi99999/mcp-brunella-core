@@ -1,3 +1,6 @@
+### CRITICAL: Before any action, you MUST read .ai/BOOTSTRAP.md to understand the current architecture and state.
+
+
 # Gemini CLI - Agent Napló
 
 **Agent:** Gemini CLI (Google)

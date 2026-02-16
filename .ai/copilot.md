@@ -1,3 +1,7 @@
+### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
+
+
+
 # GitHub Copilot - Agent Napló
 
 **Agent:** GitHub Copilot (Pro+)  
