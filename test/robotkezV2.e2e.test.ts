@@ -4,25 +4,57 @@
 
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import axios from 'axios';
+import { spawn, ChildProcess } from 'child_process';
+import path from 'path';
 
 const API_BASE = 'http://127.0.0.1:3000/api/v1/robotkez';
 const TEST_TIMEOUT = 60000; // 60s for browser operations
 
+let serverProcess: ChildProcess | null = null;
+
+async function waitForServer(retries = 30): Promise<void> {
+  for (let i = 0; i < retries; i++) {
+    try {
+      await axios.get('http://127.0.0.1:3000/api/health', { timeout: 1000 });
+      return;
+    } catch (e) {
+      await new Promise(r => setTimeout(r, 1000));
+    }
+  }
+  throw new Error('Server failed to start in time');
+}
+
 describe('RobotkezV2 - E2E Test Scenarios (Phase 8.1)', () => {
 
   beforeAll(async () => {
-    // Ensure server is running
+    // Check if server is already running
     try {
-      const response = await axios.get(`${API_BASE}/status`, { timeout: 5000 });
-      console.log('✅ Server is running:', response.data);
+      await axios.get('http://127.0.0.1:3000/api/health', { timeout: 1000 });
+      console.log('✅ Server already running');
     } catch (error) {
-      console.warn('⚠️ Server may not be running on port 3000');
-      console.warn('   Start it with: npm run dev');
+      console.log('🚀 Starting test server...');
+      // Start server via CLI to ensure full environment (Node.js)
+      // Assuming 'npm start' or similar runs the server
+      // We use spawn to run it in background
+      serverProcess = spawn('node', ['--loader', 'ts-node/esm', 'src/index.ts'], {
+        cwd: process.cwd(),
+        env: { ...process.env, PORT: '3000', WEB_UI_ENABLED: 'true' },
+        stdio: 'pipe' // Pipe output for debugging if needed
+      });
+
+      serverProcess.stdout?.on('data', (data) => console.log(`[Server]: ${data}`));
+      serverProcess.stderr?.on('data', (data) => console.error(`[Server Error]: ${data}`));
+
+      await waitForServer();
+      console.log('✅ Server started and ready');
     }
-  });
+  }, 120000); // Allow time for build/start
 
   afterAll(async () => {
-    // Cleanup if needed
+    if (serverProcess) {
+      console.log('🛑 Stopping test server...');
+      serverProcess.kill('SIGTERM');
+    }
     console.log('🧹 E2E tests completed');
   });
 

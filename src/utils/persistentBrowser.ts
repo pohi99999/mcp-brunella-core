@@ -93,7 +93,12 @@ export class PersistentBrowser {
         });
 
         this.process.stderr.on('data', (data: any) => {
-            logError('PersistentBrowser', `Python stderr: ${data.toString()}`);
+            const stderr = data.toString();
+            logError('PersistentBrowser', `Python stderr: ${stderr}`);
+            // Try to capture tracebacks or specific import errors
+            if (stderr.includes("ModuleNotFoundError")) {
+                 logError('PersistentBrowser', 'Critical: Missing Python dependencies for browser agent.');
+            }
         });
 
         this.process.on('close', (code: any) => {
@@ -102,7 +107,7 @@ export class PersistentBrowser {
             // Reject all pending
             while (this.pendingCommands.length > 0) {
                 const { reject } = this.pendingCommands.shift()!;
-                reject(new Error('Browser process exited'));
+                reject(new Error(`Browser process exited with code ${code}. Check server logs for Python stderr.`));
             }
         });
     }
@@ -145,7 +150,14 @@ export class PersistentBrowser {
             this.pendingCommands.push({ resolve, reject });
             const jsonCmd = JSON.stringify(command) + '\n';
             if (this.process && this.process.stdin) {
-                this.process.stdin.write(jsonCmd);
+                try {
+                    const result = this.process.stdin.write(jsonCmd);
+                    if (!result) {
+                        reject(new Error("Failed to write to browser process stdin (buffer full)"));
+                    }
+                } catch (err) {
+                     reject(new Error("Failed to write to browser process stdin: " + String(err)));
+                }
             } else {
                 reject(new Error("Process failed to start or is not running"));
             }

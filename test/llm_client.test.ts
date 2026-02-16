@@ -96,7 +96,10 @@ describe('llm_client', () => {
                 expect.stringMatching(/.*\/api\/chat/),
                 expect.objectContaining({
                     method: 'POST',
-                    body: expect.stringContaining('qwen2.5-coder:7b')
+                    body: expect.stringContaining('qwen2.5-coder:7b'),
+                    headers: expect.objectContaining({
+                        'Content-Type': 'application/json'
+                    })
                 })
             );
             expect(result).toBe('Ollama response');
