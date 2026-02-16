@@ -33,8 +33,19 @@ except ImportError:
     AsyncTokenCredential = None
     HttpResponseError = None
 
-from PIL import Image
-from pypdf import PdfReader
+try:
+    from PIL import Image
+    HAS_PIL = True
+except ImportError:
+    Image = None
+    HAS_PIL = False
+
+try:
+    from pypdf import PdfReader
+    HAS_PYPDF = True
+except ImportError:
+    PdfReader = None
+    HAS_PYPDF = False
 
 from .page import ImageOnPage, Page
 from .parser import Parser
@@ -49,6 +60,10 @@ class LocalPdfParser(Parser):
     """
 
     async def parse(self, content: IO) -> AsyncGenerator[Page, None]:
+        if not HAS_PYPDF:
+            logger.warning("pypdf not available, skipping PDF parsing")
+            return
+
         logger.info("Extracting text from '%s' using local PDF parser (pypdf)", getattr(content, "name", "stream"))
 
         reader = PdfReader(content)

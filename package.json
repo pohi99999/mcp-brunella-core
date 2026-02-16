@@ -5,9 +5,9 @@
   "type": "module",
   "main": "build/index.js",
   "bin": {
-    "brunella": "./build/cli.js",
-    "brunella-jules": "./build/cli-jules-interactive.js",
-    "brunella-hu": "./build/cli-hu.js"
+    "brunella": "build/cli.js",
+    "brunella-jules": "build/cli-jules-interactive.js",
+    "brunella-hu": "build/cli-hu.js"
   },
   "scripts": {
     "build": "tsc",
@@ -55,6 +55,7 @@
     "@hookform/resolvers": "^5.2.2",
     "@lancedb/lancedb": "^0.23.0",
     "@modelcontextprotocol/sdk": "^1.0.0",
+    "@ngrok/ngrok": "^1.7.0",
     "@opentelemetry/api": "^1.9.0",
     "@opentelemetry/exporter-trace-otlp-http": "^0.211.0",
     "@opentelemetry/resources": "^2.5.0",
@@ -185,5 +186,17 @@
     "typescript-eslint": "^8.55.0",
     "vite": "^7.3.1",
     "vitest": "^4.0.18"
-  }
+  },
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pohi99999/mcp-brunella-core.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pohi99999/mcp-brunella-core/issues"
+  },
+  "homepage": "https://github.com/pohi99999/mcp-brunella-core#readme"
 }

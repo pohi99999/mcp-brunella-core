@@ -99,29 +99,12 @@ export async function registerAgents() {
     agentManager = (await import("../agents/AgentManager.js")).agentManager;
   }
 
-  const DataScientistAgent = (await import("../agents/DataScientistAgent.js"))
-    .default;
-  const ResearcherAgent = (await import("../agents/ResearcherAgent.js"))
-    .default;
-  const { OrchestratorAgent } = await import("../agents/OrchestratorAgent.js");
-  const { EvaluatorAgent } = await import("../agents/EvaluatorAgent.js");
-  const { DeveloperAgent } = await import("../agents/DeveloperAgent.js");
-  const { RobotkezAgent } = await import("../agents/RobotkezAgent.js");
-  const { RobotkezV2Agent } = await import("../agents/RobotkezV2Agent.js");
-  const { DynamicAgent } = await import("../agents/DynamicAgent.js");
+  // Initialize AgentManager - this loads all agents from registry.json
+  await agentManager.initialize();
 
-  // Initialize Static Agents
-  await agentManager.initialize(); // Ensure manager itself is initialized
-  agentManager.registerAgent(new DataScientistAgent());
-  agentManager.registerAgent(new ResearcherAgent());
-  agentManager.registerAgent(new OrchestratorAgent());
-  agentManager.registerAgent(new EvaluatorAgent());
-  agentManager.registerAgent(new DeveloperAgent());
-  agentManager.registerAgent(new RobotkezAgent());
-  agentManager.registerAgent(new RobotkezV2Agent());
-
-  // Initialize Dynamic Agents
+  // Initialize Dynamic Agents (not in registry.json)
   try {
+    const { DynamicAgent } = await import("../agents/DynamicAgent.js");
     const path = await import("path");
     const agentsDir = path.default.join(process.cwd(), "myai/agents");
     agentManager.registerAgent(

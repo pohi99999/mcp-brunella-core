@@ -1,3 +1,4 @@
+import "dotenv/config"; // CRITICAL: Load .env before anything else
 import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";

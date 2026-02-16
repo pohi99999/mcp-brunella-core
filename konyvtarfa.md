@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 16. 16:39:35
+**Generálva:** 2026. 02. 16. 19:52:29
 **Script:** 
 
 ---
@@ -181001,6 +181001,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 persistentBrowser.ts
       - 📄 pythonShell.ts
       - 📄 rag.ts
+      - 📄 responseFormatter.ts
       - 📄 serverManager.ts
       - 📄 skillsLoader.ts
       - 📄 systemHealth.ts
@@ -181102,6 +181103,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 python_mcp_server.test.ts
     - 📄 python_shell.test.ts
     - 📄 rag.test.ts
+    - 📄 responseFormatter.test.ts
     - 📄 retryStrategy.test.ts
     - 📄 robotkez_integration.test.ts
     - 📄 robotkezAPI.test.ts
