@@ -2,7 +2,6 @@
  * Health check helpers: structured responses, retry, timeout config.
  */
 
-import fetch from "node-fetch";
 import { Logger } from "./logger.js";
 
 const healthLogger = new Logger("health.log");
@@ -74,7 +73,7 @@ async function fetchWithRetry(
         method: options.method || "GET",
         signal: AbortSignal.timeout(options.timeout),
         headers: options.headers,
-      } as any);
+      });
       const latencyMs = Date.now() - start;
       lastStatus = res.status;
       if (res.ok) return { ok: true, latencyMs, status: res.status };

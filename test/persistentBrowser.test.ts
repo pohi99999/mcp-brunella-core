@@ -13,7 +13,7 @@ describe('Persistent Browser (RobotkezV2 - Phase 1)', () => {
     afterAll(async () => {
         // Close browser after all tests
         await persistentBrowser.close();
-    });
+    }, BROWSER_TIMEOUT * 2);
 
     it('should navigate to a URL', async () => {
         const res = await persistentBrowser.sendCommand({
@@ -140,8 +140,9 @@ describe('Persistent Browser (RobotkezV2 - Phase 1)', () => {
                 timeout: 2000
             });
             expect.fail('Should have thrown timeout error');
-        } catch (error: any) {
-            expect(error.message).toContain('Timeout');
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            expect(message).toContain('Timeout');
         }
     }, BROWSER_TIMEOUT);
 

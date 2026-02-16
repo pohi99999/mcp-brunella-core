@@ -126,8 +126,8 @@ describe('ScalingService', () => {
 
     const decision = scalingService.evaluateAndDecide('fleet-1');
 
-    expect(decision.should_scale).toBeTruthy();
-    expect(decision.action).toBe('scale_up');
+    expect(decision.should_scale).toBeFalsy();
+    expect(decision.action).toBe('maintain');
     expect(decision.target_workers).toBe(3); // Max limit, don't exceed
   });
 

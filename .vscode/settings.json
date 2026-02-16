@@ -294,7 +294,7 @@
         "scminput": true
     },
     "files.autoSave": "afterDelay",
-    "chat.agent.maxRequests": 100,
+    "chat.agent.maxRequests": 300,
     "chat.edits2.enabled": true,
     "chat.tools.terminal.autoReplyToPrompts": true,
     "chat.tools.terminal.ignoreDefaultAutoApproveRules": true,
@@ -420,5 +420,6 @@
     "inlineChat.finishOnType": true,
     "inlineChat.defaultModel": "Auto (copilot)",
     "chat.allowAnonymousAccess": true,
-    "chat.disableAIFeatures": false
+    "chat.disableAIFeatures": false,
+    "python-envs.defaultEnvManager": "ms-python.python:system"
 }

@@ -4,8 +4,8 @@
  */
 
 import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@radix-ui/themes';
-import { Button } from '@radix-ui/themes';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { ScalingPolicy } from './types.js';
 
 interface ScalingConfigProps {

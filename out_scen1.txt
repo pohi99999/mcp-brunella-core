@@ -17,6 +17,6 @@
   },
   browser: { active: [33mtrue[39m, type: [32m'persistent'[39m, engine: [32m'Playwright + Python'[39m },
   browserStatus: [32m'idle'[39m,
-  tasks: { total: [33m0[39m, running: [33m0[39m, completed: [33m0[39m, error: [33m0[39m }
+  tasks: { total: [33m1[39m, running: [33m0[39m, completed: [33m1[39m, error: [33m0[39m }
 }
 

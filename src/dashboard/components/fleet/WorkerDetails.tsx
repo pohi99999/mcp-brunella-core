@@ -4,8 +4,9 @@
  */
 
 import React from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@radix-ui/themes';
-import { Badge, Button } from '@radix-ui/themes';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Worker } from './types.js';
 
 interface WorkerDetailsProps {

@@ -595,6 +595,41 @@ export interface TrackTodosResponse {
   updatedAt: string;
 }
 
+/**
+ * Track teljes adatai (lista endpoint válasz)
+ */
+export interface Track {
+  id: string;
+  title: string;
+  priority?: string; // P0, P1, P2 (SpecWriter lista)
+  progress: number; // 0-100
+  path?: string;
+}
+
+export interface TracksListResponse {
+  success: boolean;
+  count: number;
+  tracks: Track[];
+}
+
+/**
+ * Track-ek listázása a conductor/tracks/ mappából
+ */
+export async function getTracks(): Promise<TracksListResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/tracks`);
+  const data = await safeJson<TracksListResponse | { error?: string }>(
+    response,
+  ).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+
+  if (!response.ok || !data) {
+    throw new Error(getErrorMessage(data) || "Tracks list failed");
+  }
+
+  return data as TracksListResponse;
+}
+
 export async function getActiveTrackTodoSummaries(): Promise<
   TrackTodoSummary[]
 > {

@@ -52,6 +52,7 @@ import ceanRouter from "./routes/cean.js";
 import { createWranglerRouter } from "./routes/wrangler.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
+import { createTaskRoutes } from "./routes/tasks.js";
 import { suggestedTasksRouter } from "./routes/suggestedTasks.js";
 import { createFleetRouter } from "./routes/fleet.js";
 import { createWorkersRouter } from "./routes/workers.js";
@@ -197,6 +198,9 @@ export async function startWebServer() {
 
   // Add Robotkéz routes to v1
   v1Router.use("/robotkez", createRobotkezRoutes());
+
+  // Add Task Queue routes to v1
+  v1Router.use("/tasks", createTaskRoutes());
 
   // Add Test Scheduler routes to v1
   v1Router.use("/tests", testSchedulerRoutes);

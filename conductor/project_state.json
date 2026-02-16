@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-15T21:15:11.357Z",
+  "lastUpdated": "2026-02-16T01:03:12.246Z",
   "tracks": [
     {
       "id": "bas_comprehensive_test_protocol_20260210",
@@ -23,7 +23,7 @@
         "code_quality_improvements_20260210",
         "dashboard_test_suite_20260210"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\bas_comprehensive_test_protocol_20260210",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\bas_comprehensive_test_protocol_20260210",
       "_isArchived": false
     },
     {
@@ -43,7 +43,7 @@
         "d1"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare-chat-integration-20260211",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\cloudflare-chat-integration-20260211",
       "_isArchived": false
     },
     {
@@ -66,7 +66,7 @@
       "dependencies": [
         "cloudflare-chat-integration-20260211"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare-iteration-2-20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\cloudflare-iteration-2-20260212",
       "_isArchived": false
     },
     {
@@ -90,7 +90,7 @@
         "Slack webhook URL (optional)",
         "wrangler CLI installed"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_edge_agents_network_20260215",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_edge_agents_network_20260215",
       "_isArchived": false
     },
     {
@@ -109,7 +109,7 @@
         "r2"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_edge_integration_20260202",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_edge_integration_20260202",
       "_isArchived": false
     },
     {
@@ -129,7 +129,7 @@
         "typescript"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\codex_chat_refactor_20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\codex_chat_refactor_20260212",
       "_isArchived": false
     },
     {
@@ -147,7 +147,7 @@
         "security"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\code_quality_improvements_20260210",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\code_quality_improvements_20260210",
       "_isArchived": false
     },
     {
@@ -167,7 +167,7 @@
         "sentiment-analysis"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\creative_friction_mediator_20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\creative_friction_mediator_20260212",
       "_isArchived": false
     },
     {
@@ -189,7 +189,7 @@
       "dependencies": [
         "code_quality_improvements_20260210"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_test_suite_20260210",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\dashboard_test_suite_20260210",
       "_isArchived": false
     },
     {
@@ -207,7 +207,7 @@
         "automation"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_v2_robotkez_control_20260208",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\dashboard_v2_robotkez_control_20260208",
       "_isArchived": false
     },
     {
@@ -228,7 +228,7 @@
         "vitest"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\developer_agent_2_0_20260206",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\developer_agent_2_0_20260206",
       "_isArchived": false
     },
     {
@@ -247,7 +247,7 @@
         "cli"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\epp-v2-protocol-20260211",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\epp-v2-protocol-20260211",
       "_isArchived": false
     },
     {
@@ -267,7 +267,7 @@
         "github-actions"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\gemini_git_agent_20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\gemini_git_agent_20260212",
       "_isArchived": false
     },
     {
@@ -285,7 +285,7 @@
         "spec-driven"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\gold_protocol",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\gold_protocol",
       "_isArchived": false
     },
     {
@@ -306,7 +306,7 @@
         "email-notification"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\green_lightning_20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\green_lightning_20260212",
       "_isArchived": false
     },
     {
@@ -326,7 +326,7 @@
         "patent-search"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\innovation_bridge_20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\innovation_bridge_20260212",
       "_isArchived": false
     },
     {
@@ -345,7 +345,7 @@
         "data-flywheel"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\invoice-to-sheets-automation-20260214",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\invoice-to-sheets-automation-20260214",
       "_isArchived": false
     },
     {
@@ -366,7 +366,7 @@
         "backend"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\iron_clad_backend_20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\iron_clad_backend_20260212",
       "_isArchived": false
     },
     {
@@ -390,7 +390,7 @@
         "github_sync_scripts",
         "dashboard_framework"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\jules_continuous_ai_integration_20260215",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\jules_continuous_ai_integration_20260215",
       "_isArchived": false
     },
     {
@@ -410,7 +410,7 @@
         "automation"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\jules_enterprise_cicd_20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\jules_enterprise_cicd_20260212",
       "_isArchived": false
     },
     {
@@ -430,7 +430,7 @@
         "chalk"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\magyar-cli-menu-system-20260211",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\magyar-cli-menu-system-20260211",
       "_isArchived": false
     },
     {
@@ -450,7 +450,7 @@
         "local-news"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\micro_csr_automator_20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\micro_csr_automator_20260212",
       "_isArchived": false
     },
     {
@@ -470,7 +470,7 @@
         "observability"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\otel_agent_tracing_20260211",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\otel_agent_tracing_20260211",
       "_isArchived": false
     },
     {
@@ -488,7 +488,7 @@
         "monitoring"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\phoenix_protocol_v2_20260205",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\phoenix_protocol_v2_20260205",
       "_isArchived": false
     },
     {
@@ -519,7 +519,7 @@
         "Dashboard komponens (React)",
         "CLI framework (Commander.js)"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkezv2-full-comet-20260215",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\robotkezv2-full-comet-20260215",
       "_isArchived": false
     },
     {
@@ -541,7 +541,7 @@
         "browser_use_harvester_20260131",
         "bas_scale_up_stabilization_20260131"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_n8n_sandbox_edzesterv",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\robotkez_n8n_sandbox_edzesterv",
       "_isArchived": false
     },
     {
@@ -559,7 +559,7 @@
         "stability"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_stabilization_20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\robotkez_stabilization_20260212",
       "_isArchived": false
     },
     {
@@ -576,7 +576,7 @@
         "fix-queue"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\self_healing_core_20260213",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\tracks\\self_healing_core_20260213",
       "_isArchived": false
     },
     {
@@ -595,7 +595,7 @@
         "dynamic-loading"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_architect_upgrade_20260205",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\archive\\agent_architect_upgrade_20260205",
       "_isArchived": true
     },
     {
@@ -608,7 +608,7 @@
       "assignee": "Brunella",
       "tags": [],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\browser_use_harvester_20260131",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\archive\\browser_use_harvester_20260131",
       "_isArchived": true
     },
     {
@@ -628,7 +628,7 @@
         "socket"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard-todo-widget-20260211",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\archive\\dashboard-todo-widget-20260211",
       "_isArchived": true
     },
     {
@@ -649,7 +649,7 @@
       "dependencies": [
         "browser_use_harvester_20260131"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\data_flywheel_incubator_20260205",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\archive\\data_flywheel_incubator_20260205",
       "_isArchived": true
     },
     {
@@ -670,7 +670,7 @@
         "backend"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\iron_clad_backend_20260212",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\archive\\iron_clad_backend_20260212",
       "_isArchived": true
     },
     {
@@ -690,7 +690,7 @@
         "cli"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules-async-test-automation-20260211",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\archive\\jules-async-test-automation-20260211",
       "_isArchived": true
     },
     {
@@ -710,7 +710,7 @@
         "cli"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\spec-writer-agent-20260211",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\archive\\spec-writer-agent-20260211",
       "_isArchived": true
     },
     {
@@ -730,7 +730,7 @@
         "cli"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\task-decomposer-agent-20260211",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\archive\\task-decomposer-agent-20260211",
       "_isArchived": true
     },
     {
@@ -752,7 +752,7 @@
         "incubator"
       ],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\TR-20260212-TECH-HAR",
+      "_sourcePath": "f:\\mcp-brunella-core\\conductor\\archive\\TR-20260212-TECH-HAR",
       "_isArchived": true
     }
   ],

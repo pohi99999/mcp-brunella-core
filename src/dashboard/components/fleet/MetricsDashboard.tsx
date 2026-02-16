@@ -24,7 +24,7 @@ import {
   Pie,
   Cell
 } from 'recharts';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@radix-ui/themes';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { MetricsChartData, FleetHealth } from './types.js';
 
 interface MetricsDashboardProps {
