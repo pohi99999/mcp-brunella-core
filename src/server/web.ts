@@ -4,7 +4,7 @@ import { Server } from "socket.io";
 import path from "path";
 import { readFileSync } from "fs";
 import os from "os";
-import osUtils from "os-utils";
+
 import swaggerUi from "swagger-ui-express";
 import { config } from "../config/schema.js";
 import {
@@ -92,6 +92,7 @@ const PACKAGE_VERSION = (() => {
 })();
 
 export async function startWebServer() {
+  const osUtils = await import("os-utils");
   const webUiEnabled =
     process.env.WEB_UI_ENABLED !== "0" &&
     process.env.WEB_UI_ENABLED !== "false";
