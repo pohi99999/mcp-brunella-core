@@ -1,12 +1,13 @@
 import { Router } from 'express';
-import path from 'path';
-import fs from 'fs';
 
 export function createFileRoutes(): Router {
     const router = Router();
 
     router.get('/list', async (req, res) => {
         try {
+            const { default: path } = await import('path');
+            const fs = await import('fs');
+
             const relPath = req.query.path as string || '.';
             if (relPath.includes('..')) {
                 res.status(400).json({ error: 'Invalid path' });
@@ -55,6 +56,9 @@ export function createFileRoutes(): Router {
 
     router.get('/content', async (req, res) => {
         try {
+            const { default: path } = await import('path');
+            const fs = await import('fs');
+
             const filePath = req.query.path as string;
             if (!filePath || filePath.includes('..')) {
                 res.status(400).json({ error: 'Invalid path' });
