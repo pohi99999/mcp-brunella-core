@@ -86,6 +86,13 @@ export interface PhoenixStateRestoredEvent {
   timestamp: string;
 }
 
+export interface PhoenixDegradedEvent {
+  level: 'full' | 'partial' | 'minimal' | 'offline';
+  services: string[];
+  message: string;
+  timestamp: string;
+}
+
 export type PhoenixEventMap = {
   'phoenix:agent_failed': PhoenixAgentFailedEvent;
   'phoenix:failover_triggered': PhoenixFailoverTriggeredEvent;
@@ -95,6 +102,7 @@ export type PhoenixEventMap = {
   'phoenix:recovery': PhoenixRecoveryEvent;
   'phoenix:restart': PhoenixRestartEvent;
   'phoenix:state_restored': PhoenixStateRestoredEvent;
+  'phoenix:degraded': PhoenixDegradedEvent;
 };
 
 export type PhoenixEventName = keyof PhoenixEventMap;

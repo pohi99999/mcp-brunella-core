@@ -10,6 +10,7 @@
 
 import { logInfo, logWarn, logError } from './logger.js';
 import { phoenixEventBus } from '../core/phoenixEventBus.js';
+import { degradationPolicy } from './degradationPolicy.js';
 
 // ============================================================================
 // CONFIG
@@ -156,6 +157,10 @@ class HeartbeatMonitorClass {
   private async checkAllServices(): Promise<void> {
     const checks = DEFAULT_SERVICES.map((svc) => this.checkService(svc));
     await Promise.all(checks);
+
+    // Assess system degradation after all checks complete
+    const overall = this.getOverallHealth();
+    degradationPolicy.assessDegradation(overall.unhealthyServices);
   }
 
   /**
