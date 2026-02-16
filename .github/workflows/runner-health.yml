@@ -5,8 +5,8 @@ name: "Self-Hosted Runner Health"
 
 on:
   schedule:
-    # 30 percenként fut
-    - cron: '*/30 * * * *'
+    # 6 óránként fut (csökkentve a túlzott futtatásból)
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       verbose:
