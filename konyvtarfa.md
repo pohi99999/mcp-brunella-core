@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 16. 14:28:15
+**Generálva:** 2026. 02. 16. 16:26:18
 **Script:** 
 
 ---
@@ -42609,6 +42609,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 track.md
       - 📂 **phoenix_protocol_v2_20260205**
         - 📄 meta.json
+        - 📄 phase4_degradation_policy.md
+        - 📄 recovery_logic_implementation.md
         - 📄 spec.md
       - 📂 **real_estate_sales_campaign_20260216**
         - 📄 meta.json
@@ -42642,7 +42644,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 BAS_ARCHITECTURE_v2.md
     - 📄 CHANGELOG.md
     - 📄 Cocductornak_szeretettel.pdf
-    - 📄 CONDUCTOR_MANIFEST.md
     - 📄 epp-v2.md
     - 📄 index.md
     - 📄 meta-schema.json
@@ -42705,8 +42706,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 cean_infrastructure_inventory.json
     - 📄 cean.db
     - 📄 checkpoints.db
-    - 📄 checkpoints.db-shm
-    - 📄 checkpoints.db-wal
     - 📄 developer_metrics.json
     - 📄 ev_hunter_results.json
     - 📄 fix_queue.json
@@ -42826,6 +42825,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 TUNNEL_ARCHITECTURE.md
     - 📄 tunnel-config.example.yml
     - 📄 tunnel-config.yml
+    - 📄 VS_CODE_INSIDERS_SETUP.md
   - 📂 **external_research**
     - 📂 **Auralia** _(🎤 Auralia - Intelligent Voice Assistant)_
       - 📂 **app**
@@ -180078,6 +180078,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 TECH_HARVESTER_README.md
       - 📄 tech_harvester.py
     - 📂 **backend** _(Iron Clad Python AI Backend (Phase 1-5))_
+      - 📂 **__pycache__**
+        - 📄 __init__.cpython-314.pyc
+        - 📄 app.cpython-314.pyc
+        - 📄 config.cpython-314.pyc
+        - 📄 providers.cpython-314.pyc
+        - 📄 schemas.cpython-314.pyc
       - 📄 __init__.py
       - 📄 app.py
       - 📄 config.py
@@ -180520,11 +180526,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 pyproject.toml
     - 📄 README.md
   - 📂 **playwright-report**
-    - 📂 **data**
-      - 📄 10d9e53e1aa9a72651db3405f24c3f97fddd29a6.webm
-      - 📄 7a33d5db6370b6de345e990751aa1f1da65ad675.png
-      - 📄 7af5b73be4b26d34e5276c189510a6c6e3e43ad5.webm
-      - 📄 98792efc19c0e70ddeb6c70e3b9471f7555fed27.webm
     - 📄 index.html
   - 📂 **public**
     - 📄 index.html
@@ -180977,6 +180978,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 cloud_storage.ts
       - 📄 cloudflareClient.ts
       - 📄 db.ts
+      - 📄 degradationPolicy.ts
       - 📄 developerMetrics.ts
       - 📄 exec.ts
       - 📄 fixQueue.ts
@@ -180985,6 +180987,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 googleAuth.ts
       - 📄 health_check.ts
       - 📄 health.ts
+      - 📄 heartbeatMonitor.ts
       - 📄 hooks.ts
       - 📄 llmPlanner.ts
       - 📄 logger.ts
@@ -181040,6 +181043,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 backgroundTaskManager.test.ts
     - 📄 browser_rendering.test.ts
     - 📄 checkpoint.test.ts
+    - 📄 checkpointRetention.test.ts
     - 📄 cli_config.test.ts
     - 📄 cloudflare_integration.test.ts
     - 📄 cloudflare_routes.test.ts
@@ -181052,6 +181056,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 coverage_analysis.test.ts
     - 📄 dashboard_chat_lib.test.ts
     - 📄 data_refiner.test.ts
+    - 📄 degradationPolicy.test.ts
     - 📄 delegation_chain.test.ts
     - 📄 deploymentAnalyzer.test.ts
     - 📄 dev_commands.test.ts
@@ -181065,9 +181070,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 git_integration.test.ts
     - 📄 goldenDatasetBridge.test.ts
     - 📄 health_check.test.ts
+    - 📄 heartbeatMonitor.test.ts
     - 📄 hooks.test.ts
     - 📄 incubator_test.py
     - 📄 input_sanitization.test.ts
+    - 📄 ironCladBackend.test.ts
     - 📄 jules_e2e_pipeline.test.ts
     - 📄 jules_workflow_routes.test.ts
     - 📄 lint_fixer.test.ts
@@ -181088,6 +181095,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 persistentBrowser.test.ts
     - 📄 phoenix_event_bus.test.ts
     - 📄 phoenix_recovery.test.ts
+    - 📄 phoenixRecoveryLogic.test.ts
     - 📄 project_conductor_living_docs.test.ts
     - 📄 prometheus_metrics.test.ts
     - 📄 python_mcp_server.test.ts
@@ -181119,7 +181127,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 trackTodoParser.test.ts
     - 📄 webhooks.test.ts
   - 📂 **test-results**
-    - 📂 **tabs-advanced-Tasks-Tab-should-load-task-queue-monitor-chromium**
   - 📂 **testing**
     - 📂 **egyeb**
     - 📂 **hirszerzes_test_1**
@@ -181190,11 +181197,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 npm-test.log
   - 📄 nul
   - 📄 Ollama
+  - 📄 open-vscode-insiders.bat
   - 📄 out_scen1.txt
   - 📄 package.json
   - 📄 peterpohankapersonal@gmail.com.ical.zip
   - 📄 playwright.config.ts
   - 📄 pnpm-lock.yaml
+  - 📄 PROJEKT_DIAGRAM.md
   - 📄 pyproject.toml
   - 📄 README.md
   - 📄 rendszer ellenorzes.md.txt
@@ -181213,6 +181222,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 start_brunella.ps1
   - 📄 start_coder.ps1
   - 📄 start_default.ps1
+  - 📄 start-all.bat
   - 📄 start-full.bat
   - 📄 start.bat
   - 📄 tailwind.config.js
@@ -181221,6 +181231,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 test_full_system.ps1
   - 📄 test_part.ps1
   - 📄 test_results.log
+  - 📄 TEST_RESULTS.md
   - 📄 test_robotkez_dashboard.ts
   - 📄 Toolskeszlet.md
   - 📄 tsconfig.json
