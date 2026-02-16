@@ -1,0 +1,288 @@
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    BRUNELLA CLOUDFLARE INFRASTRUCTURE                         ║
+║                          Full System Diagram                                  ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                       CLOUDFLARE EDGE NETWORK                                │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │                       DEPLOYED WORKERS (6)                           │   │
+│  ├──────────────────────────────────────────────────────────────────────┤   │
+│  │                                                                      │   │
+│  │  [llm-chat-app-template]    Chat interface template                 │   │
+│  │  [agents-api]               MCP agent proxy                          │   │
+│  │  [saas-admin]               Admin dashboard                          │   │
+│  │  [brunella-cf]              Core API edge proxy                      │   │
+│  │  [bas-orchestrator]  ✨     Central delegation hub                   │   │
+│  │  [throbbing-fire]           Unknown (audit needed)                   │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                              │
+│  ┌──────────────────────────────────────────────────────────────────────┐   │
+│  │               PLANNED WORKERS (CEAN) - 5% Progress                  │   │
+│  ├──────────────────────────────────────────────────────────────────────┤   │
+│  │                                                                      │   │
+│  │  [research-agent]           GitHub/arXiv AI trends (nightly 2 AM)   │   │
+│  │  [grant-monitor]            EU/USA grant tracker (daily 6 AM)       │   │
+│  │  [data-harvester]           Playwright web scraper (on-demand)      │   │
+│  │  [data-extractor]           LLM structured extraction (queued)      │   │
+│  │  [builder-agent]            CI/CD monitor + auto-fix PRs            │   │
+│  │  [cean-orchestrator]        Upgraded task scheduler + queue mgmt    │   │
+│  │                                                                      │   │
+│  └──────────────────────────────────────────────────────────────────────┘   │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ API Calls
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                         INFRASTRUCTURE SERVICES                              │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ✅ AI GATEWAY                                                               │
+│     └─ URL: gateway.ai.cloudflare.com/v1/.../brunella-gateway/compat        │
+│     └─ Model: @cf/meta/llama-3.1-8b-instruct                                │
+│     └─ Token: CF_API_TOKEN (siTRHomo1G_...)                                 │
+│                                                                              │
+│  ✅ TUNNEL                                                                   │
+│     └─ URL: https://accidents-experimental-unwrap-feeding.trycloudflare.com │
+│     └─ Purpose: GitHub webhooks testing                                     │
+│     └─ Note: URL changes on restart (named tunnel needed for prod)          │
+│                                                                              │
+│  ✅ BROWSER RENDERING API                                                    │
+│     └─ Purpose: Playwright automation on Edge                               │
+│     └─ Token: CF_API_TOKEN (Browser Rendering scope)                        │
+│     └─ Usage: CEAN Data Harvester (planned)                                 │
+│                                                                              │
+│  ⏳ R2 OBJECT STORAGE                                                        │
+│     └─ Purpose: File storage (images, docs, build artifacts)                │
+│     └─ Account: dd107933ac970dac857f27cee7a7ff46                            │
+│     └─ Status: Configured but not actively used                             │
+│                                                                              │
+│  ⏳ D1 DATABASE (SQLite Edge)                                                │
+│     └─ Name: cean-tasks (prod), cean-tasks-dev (dev)                        │
+│     └─ Tables: edge_tasks, edge_executions, edge_results                    │
+│     └─ Status: Schema designed, DB creation pending                         │
+│                                                                              │
+│  ⏳ VECTORIZE (R1 Vector DB)                                                 │
+│     └─ Index: cean-embeddings                                               │
+│     └─ Models: text-embedding-3-small (1536), text-embedding-3-large (3072) │
+│     └─ Status: Configured in wrangler.toml, not created                     │
+│                                                                              │
+│  ⏳ KV NAMESPACE                                                              │
+│     └─ Purpose: Caching, rate limiting, session state                       │
+│     └─ Namespace: cean-cache                                                │
+│     └─ Status: Planned, not created                                         │
+│                                                                              │
+│  ⏳ DURABLE OBJECTS                                                           │
+│     └─ Class: CEANOrchestrator                                              │
+│     └─ Purpose: Stateful worker coordination                                │
+│     └─ Status: Planned, not implemented                                     │
+│                                                                              │
+│  ❌ CLOUDFLARE PAGES (2 deployed, not documented)                            │
+│  ❌ CUSTOM DOMAIN (not planned yet)                                          │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    │ Data Flow
+                                    ▼
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                          LOCAL SYSTEM (Port 3000)                            │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                              │
+│  ┌────────────────────────────────────────────────────────────────────┐     │
+│  │                    Node.js Backend (Express)                       │     │
+│  │                                                                    │     │
+│  │  • AgentManager ─────────────┐                                    │     │
+│  │  • EdgeProxyAgent ────────┐  │                                    │     │
+│  │  • CloudflareClient ───┐  │  │                                    │     │
+│  │  • BrowserRendering ─┐ │  │  │                                    │     │
+│  │  • EdgeHealthMonitor │ │  │  │                                    │     │
+│  │                      │ │  │  │                                    │     │
+│  │                      │ │  │  └─► Delegálás Edge-re              │     │
+│  │                      │ │  └────► Worker proxy calls              │     │
+│  │                      │ └───────► CF API wrapper                  │     │
+│  │                      └─────────► Browser automation              │     │
+│  │                                                                    │     │
+│  └────────────────────────────────────────────────────────────────────┘     │
+│                                    │                                         │
+│  ┌────────────────────────────────────────────────────────────────────┐     │
+│  │                  Python Backend (FastAPI :8000)                    │     │
+│  │                                                                    │     │
+│  │  • browser_worker.py ──► Playwright automation                    │     │
+│  │  • refiner_logic.py  ──► LLM data cleaning + LanceDB             │     │
+│  │  • server.py         ──► FastAPI endpoints                        │     │
+│  │                                                                    │     │
+│  └────────────────────────────────────────────────────────────────────┘     │
+│                                    │                                         │
+│  ┌────────────────────────────────────────────────────────────────────┐     │
+│  │                    Dashboard (Vite :5173)                          │     │
+│  │                                                                    │     │
+│  │  • EdgePanel.tsx         ──► Real-time worker status              │     │
+│  │  • CloudflareChatProvider ──► Chat routing via CF                 │     │
+│  │  • MissionControlLayout  ──► Main dashboard UI                    │     │
+│  │                                                                    │     │
+│  └────────────────────────────────────────────────────────────────────┘     │
+│                                                                              │
+└─────────────────────────────────────────────────────────────────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                           CEAN PIPELINE FLOW                                  ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+   ┌─────────────────┐
+   │  GitHub Event   │
+   │  (push/PR)      │
+   └────────┬────────┘
+            │
+            ▼
+   ┌─────────────────────────┐
+   │  CEAN Orchestrator      │◄───── Cron Triggers (daily/nightly)
+   │  (Task Scheduler)       │
+   └───┬─────────────────┬───┘
+       │                 │
+       │                 └──────────────────────┐
+       │                                        │
+       ▼                                        ▼
+┌──────────────┐                      ┌─────────────────┐
+│ Research     │                      │  Grant Monitor  │
+│ Agent        │                      │                 │
+│ (nightly 2AM)│                      │  (daily 6AM)    │
+└──────┬───────┘                      └────────┬────────┘
+       │                                       │
+       ├───────────────────────────────────────┤
+       │                                       │
+       ▼                                       ▼
+   ┌────────────────────────────────────────────────┐
+   │           D1 Database (edge_tasks)             │
+   │  • Task queue                                  │
+   │  • Execution logs                              │
+   │  • Results metadata                            │
+   └────────┬───────────────────────────────────────┘
+            │
+            ├──────────────┬─────────────────┐
+            │              │                 │
+            ▼              ▼                 ▼
+   ┌───────────────┐  ┌───────────────┐  ┌──────────────┐
+   │ Data          │  │ Data          │  │ Builder      │
+   │ Harvester     │  │ Extractor     │  │ Agent        │
+   │ (on-demand)   │  │ (queued)      │  │ (webhooks)   │
+   └───────┬───────┘  └───────┬───────┘  └──────┬───────┘
+           │                  │                  │
+           │                  ▼                  │
+           │          ┌──────────────┐           │
+           │          │  Vectorize   │           │
+           │          │  (R1 Vector  │           │
+           │          │   Embeddings)│           │
+           │          └──────┬───────┘           │
+           │                 │                   │
+           └─────────────────┼───────────────────┘
+                             │
+                             ▼
+                    ┌─────────────────┐
+                    │   Dashboard     │
+                    │   Aggregation   │
+                    │   & Reports     │
+                    └─────────────────┘
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                           COST BREAKDOWN                                      ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+Free Tier Limits (Monthly):
+├─ Workers Requests: 100,000
+├─ CPU Time: 10ms/invocation
+├─ D1 Reads: 5,000,000
+├─ D1 Writes: 100,000
+├─ Vectorize Queries: 30,000,000
+├─ KV Reads: 100,000
+├─ R2 Reads: 10,000,000
+└─ Durable Objects: 30 minutes
+
+CEAN Estimated Usage (Monthly):
+├─ Research Agent (daily):         $0.00075   (30 runs × 50ms)
+├─ Grant Monitor (daily):          $0.006     (30 runs × 200ms)
+├─ Data Harvester (1k requests):   $1.00      (1000 runs × 1000ms)
+├─ Data Extractor (5k batched):    $1.00      (5000 runs × 200ms)
+├─ Builder Agent (weekly):         $0.024     (4 runs × 3000ms)
+├─ D1/KV/Vectorize operations:     $0.50
+└─ R2 storage:                     $0.10
+    ───────────────────────────────────
+    TOTAL: ~$2.63/month ✅ (well within free tier)
+
+Overage: +$0.50/million requests (if >100k/month)
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                    HEALTH CHECK & TROUBLESHOOTING                             ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+Command:
+  curl http://localhost:3000/api/health | python -m json.tool
+
+Expected (Cloudflare section):
+  {
+    "services": {
+      "cloudflare": {
+        "status": "healthy",      ✅
+        "latencyMs": 136,
+        "error": null
+      }
+    }
+  }
+
+Common Issues:
+  HTTP 401 (Unauthorized)
+    ├─ Token invalid/expired
+    ├─ Server didn't reload .env
+    └─ Fix: Restart Node.js backend (npm run dev)
+
+  HTTP 502 (Bad Gateway)
+    ├─ AI Gateway URL wrong
+    ├─ Worker not responding
+    └─ Fix: Check CLOUDFLARE_WORKER_URL + worker deploy status
+
+  "unhealthy" despite valid token
+    ├─ Token missing Workers AI scope
+    └─ Fix: Generate new token (Workers AI + Scripts + Account Settings)
+
+Token Verification:
+  curl -s "https://api.cloudflare.com/client/v4/user/tokens/verify" \
+    -H "Authorization: Bearer $CF_API_TOKEN" | python -m json.tool
+
+  Expected: "This API Token is valid and active"
+
+╔═══════════════════════════════════════════════════════════════════════════════╗
+║                              QUICK REFERENCE                                  ║
+╚═══════════════════════════════════════════════════════════════════════════════╝
+
+Deployment:
+  wrangler deploy --env production
+
+Local Dev:
+  wrangler dev
+
+View Workers:
+  wrangler deployments list
+
+Tunnel Start:
+  cloudflared tunnel --url http://localhost:3000
+
+D1 Database Create:
+  wrangler d1 create cean-tasks
+
+Vectorize Index Create:
+  wrangler vectorize create cean-embeddings --dimensions=1536 --metric=cosine
+
+KV Namespace Create:
+  wrangler kv:namespace create cean-cache
+
+Related Docs:
+  • INFRASTRUCTURE.md  - This document
+  • CEAN Spec          - conductor/tracks/cloudflare_edge_agents_network_20260215/spec.md
+  • Wrangler Config    - wrangler.toml
+  • EdgeProxyAgent     - src/agents/EdgeProxyAgent.ts
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+Last Updated: 2026-02-16 | Owner: Brunella Core Team | Status: Active Development
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

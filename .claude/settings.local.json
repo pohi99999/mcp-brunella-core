@@ -76,7 +76,9 @@
       "Bash(claude mcp list:*)",
       "Bash(powershell -Command \"Get-Process | Where-Object {$_ProcessName -like ''*python*''} | Select-Object ProcessName,Id,Path\")",
       "Bash(powershell -Command \"Get-Process -Name python* -ErrorAction SilentlyContinue | Select-Object Id,ProcessName,Path | Format-Table\")",
-      "Bash(powershell -Command \"Get-Process -Name python* -ErrorAction SilentlyContinue | Stop-Process -Force\")"
+      "Bash(powershell -Command \"Get-Process -Name python* -ErrorAction SilentlyContinue | Stop-Process -Force\")",
+      "Bash(ngrok version:*)",
+      "Bash(cmd.exe //c \"taskkill /F /PID 26980\")"
     ]
   },
   "enableAllProjectMcpServers": true,

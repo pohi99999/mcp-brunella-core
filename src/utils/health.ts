@@ -150,24 +150,23 @@ export async function checkPythonHealth(): Promise<HealthServiceResult> {
 }
 
 export async function checkCloudflareHealth(): Promise<HealthServiceResult> {
-  const token = process.env.CF_API_TOKEN || process.env.CF_TOKEN;
-  const accountId = process.env.CF_ACCOUNT_ID;
-  const gatewayId = process.env.CF_GATEWAY_ID || "brunella-gateway";
+  // Check Cloudflare Workers deployment (not AI Gateway directly)
+  const workerUrl = process.env.CLOUDFLARE_WORKER_URL;
 
-  if (!token || !accountId) {
-    return { status: "unhealthy", error: "Missing CF configuration" };
+  if (!workerUrl) {
+    return { status: "unhealthy", error: "Missing CLOUDFLARE_WORKER_URL" };
   }
 
   const { timeoutMs, retries } = HEALTH_CONFIG.cloudflare;
-  const url = `https://gateway.ai.cloudflare.com/v1/${accountId}/${gatewayId}`;
 
+  // Ping the worker's health endpoint (if exists) or root
   const { ok, latencyMs, status, error } = await fetchWithRetry(
-    url,
-    { timeout: timeoutMs, headers: { Authorization: `Bearer ${token}` } },
+    workerUrl,
+    { timeout: timeoutMs },
     retries,
   );
 
-  // 404 is actually "online" but empty, 401 is bad token
+  // 200 OK or 404 (worker exists but no route) are both healthy
   const isHealthy = ok || status === 404;
   await healthLogger.log("Cloudflare health", {
     ok: isHealthy,
