@@ -537,6 +537,17 @@ def get_whisper_model():
         print("Whisper model loaded.")
     return whisper_model
 
+def _run_transcription(model, temp_filename):
+    """
+    Helper function to run transcription in a separate thread.
+    This iterates the generator returned by model.transcribe, which is the blocking part.
+    """
+    segments, info = model.transcribe(temp_filename, beam_size=5)
+    full_text = ""
+    for segment in segments:
+        full_text += segment.text + " "
+    return full_text.strip(), info
+
 @app.post("/voice/transcribe")
 async def transcribe_audio(file: UploadFile = File(...)):
     """
@@ -551,13 +562,10 @@ async def transcribe_audio(file: UploadFile = File(...)):
         
         # 2. Transcribe
         model = get_whisper_model()
-        segments, info = model.transcribe(temp_filename, beam_size=5)
         
-        full_text = ""
-        for segment in segments:
-            full_text += segment.text + " "
-            
-        full_text = full_text.strip()
+        # Offload blocking transcription to a thread
+        full_text, info = await asyncio.to_thread(_run_transcription, model, temp_filename)
+
         print(f"Transcription detected language '{info.language}' with probability {info.language_probability}")
         print(f"Transcribed text: {full_text}")
 
