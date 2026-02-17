@@ -32,6 +32,7 @@ import { registerEdgeCommands } from "./cli/edgeCommands.js";
 import { registerSuggestedTasksCommands } from "./cli/suggestedTasksCommands.js";
 import { registerRobotkezCommands } from "./cli/robotkezCommands.js";
 import { registerConductorCommands } from "./cli/conductorCommands.js";
+import { registerInvoiceCommands } from "./cli/invoiceCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -1226,6 +1227,9 @@ registerSuggestedTasksCommands(program);
 
 // Register Robotkez commands (RobotkezV2 Agent)
 registerRobotkezCommands(program);
+
+// Register Invoice Automation commands (Phase 5)
+registerInvoiceCommands(program);
 
 // Register Conductor commands (Track State Management) - MOVED AFTER conductorCmd definition
 

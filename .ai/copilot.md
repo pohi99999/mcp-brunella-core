@@ -6,9 +6,45 @@
 
 **Agent:** GitHub Copilot (Pro+)  
 **Fájl:** `.ai/copilot.md`  
-**Utolsó frissítés:** 2026-02-17 07:15
+**Utolsó frissítés:** 2026-02-17 20:45
 
 ---
+
+## 2026-02-17 20:45 - ✅ Invoice Automation Phase 5 (CLI + Dashboard) IN PROGRESS
+
+**Track:** `invoice-to-sheets-automation-20260214` (re-opened Phase 5)
+**Feladat:** CLI sync parancs + Dashboard widget + UI spec + track rescan
+
+### ✅ Elkészült
+- **CLI parancs:** `brunella invoices sync` (Commander)
+  - Fájlok: `src/cli/invoiceCommands.ts`, `src/cli/invoiceSync.ts`
+  - Flag-ek: since, limit, unpaid-only, overdue, force-refresh, replace, clear-first, batch-size, skip-duplicates, dry-run
+- **Magyar CLI menü:** új „Számlák (Szinkron)” menü + interaktív kérdések (`src/cli-hu.ts`)
+- **Dashboard widget:** `InvoiceSyncWidget` + Mission Control integráció
+  - Hely: jobb oszlop, SystemHealthCard alatt
+- **Tool registry frissítés:** invoice tool paraméterek kibővítve (`src/server/registry.ts`)
+- **UI spec kitöltve:** `conductor/tracks/invoice-to-sheets-automation-20260214/ui_spec.md`
+- **Track rescan:** `npm run cli -- conductor rescan` → tracks.md + project_state.json frissítve
+
+### 🧪 Tesztek
+- `npm test`
+  - **Test Files:** 92 passed
+  - **Tests:** 782 passed | 8 skipped
+
+### Érintett fájlok (főbb)
+- `src/cli.ts`
+- `src/cli-hu.ts`
+- `src/cli/invoiceCommands.ts`
+- `src/cli/invoiceSync.ts`
+- `src/dashboard/components/dashboard/InvoiceSyncWidget.tsx`
+- `src/dashboard/components/dashboard/MissionControlLayout.tsx`
+- `src/server/registry.ts`
+- `conductor/tracks/invoice-to-sheets-automation-20260214/ui_spec.md`
+- `conductor/tracks/invoice-to-sheets-automation-20260214/meta.json`
+
+### Státusz
+Phase 5: **IN PROGRESS** (CLI + Dashboard kész, commit/push előkészítve)
+
 
 ## 2026-02-17 07:15 - ✅ JCAI Phase 3 - FINAL VERIFICATION (100% COMPLETE & DOCUMENTED)
 

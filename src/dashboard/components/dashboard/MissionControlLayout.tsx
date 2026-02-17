@@ -58,6 +58,7 @@ import { TaskDecomposerPanel } from "./TaskDecomposerPanel";
 import { TrackProgressWidget } from "./TrackProgress";
 import { TestResultsWidget } from "./TestResultsWidget";
 import { SuggestedTasksWidget } from "./SuggestedTasksWidget";
+import { InvoiceSyncWidget } from "./InvoiceSyncWidget";
 import { CEANLayout } from "@/components/cean/CEANLayout";
 import { CloudflareDeployment } from "@/pages/CloudflareDeployment";
 import FleetManager from "@/pages/FleetManager";
@@ -118,11 +119,11 @@ export function MissionControlLayout() {
     <>
       {isBooting && <SystemBootSequence onComplete={() => setIsBooting(false)} />}
       
-      <div className={cn("flex-1 flex flex-col min-h-0 overflow-hidden transition-opacity duration-1000 bg-[#020205] bg-grid-pattern", isBooting ? "opacity-0" : "opacity-100")}>
+      <div className={cn("min-h-screen max-h-screen flex flex-col overflow-hidden transition-opacity duration-1000 bg-[#020205] bg-grid-pattern", isBooting ? "opacity-0" : "opacity-100")}>
         <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
 
         {/* Top Header - Glass Submerged */}
-        <header className="h-16 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-6 z-30">
+        <header className="h-16 shrink-0 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-6 z-30">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center border border-primary/30">
@@ -153,7 +154,7 @@ export function MissionControlLayout() {
         </header>
 
         {/* Global Body Container */}
-        <div className="flex-1 flex overflow-hidden px-6 pb-6 pt-2 gap-6 relative z-0 min-h-0">
+        <div className="flex-1 flex overflow-hidden px-6 pb-4 pt-2 gap-6 relative z-0 min-h-0">
           
           {/* Cyber Sidebar */}
           <aside className="w-[64px] lg:w-[260px] flex flex-col gap-4 py-4 z-10 transition-all duration-300 shrink-0">
@@ -218,7 +219,7 @@ export function MissionControlLayout() {
             >
               <div className={cn(
                 "mx-auto w-full max-w-[1800px]",
-                activeTab === "chat" ? "h-full p-0" : "p-6 md:p-10 pb-32"
+                activeTab === "chat" ? "h-full p-0" : "p-6 md:p-8"
               )}>
                 {activeTab === "dashboard" && (
                   <div className="space-y-8 animate-in fade-in duration-500">
@@ -305,6 +306,7 @@ export function MissionControlLayout() {
 
                       <div className="space-y-6">
                         <SystemHealthCard />
+                        <InvoiceSyncWidget />
                         <TrackProgressWidget />
                         
                         <Card className="glass-card rounded-2xl border-white/5 flex flex-col overflow-hidden">

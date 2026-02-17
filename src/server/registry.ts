@@ -105,6 +105,8 @@ const registeredToolsList: RegisteredToolInfo[] = [
       { name: "since_date", type: "string", required: false },
       { name: "limit", type: "integer", required: false },
       { name: "force_refresh", type: "boolean", required: false },
+      { name: "include_unpaid_only", type: "boolean", required: false },
+      { name: "get_overdue", type: "boolean", required: false },
     ],
   },
   {
@@ -118,6 +120,8 @@ const registeredToolsList: RegisteredToolInfo[] = [
       { name: "append", type: "boolean", required: false },
       { name: "include_line_items", type: "boolean", required: false },
       { name: "clear_first", type: "boolean", required: false },
+      { name: "skip_duplicates", type: "boolean", required: false },
+      { name: "batch_size", type: "number", required: false },
     ],
   },
 ];
@@ -367,6 +371,8 @@ export async function registerAllTools(server: McpServer) {
         since_date: z.string().optional(),
         limit: z.number().optional(),
         force_refresh: z.boolean().optional(),
+        include_unpaid_only: z.boolean().optional(),
+        get_overdue: z.boolean().optional(),
       },
       getSzamlazzInvoicesMcpHandler,
     );
@@ -389,6 +395,8 @@ export async function registerAllTools(server: McpServer) {
         append: z.boolean().optional(),
         include_line_items: z.boolean().optional(),
         clear_first: z.boolean().optional(),
+        skip_duplicates: z.boolean().optional(),
+        batch_size: z.number().optional(),
       },
       writeSheetsInvoicesMcpHandler,
     );
