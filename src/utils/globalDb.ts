@@ -75,12 +75,74 @@ function initSchema(): void {
         created_at TEXT DEFAULT (datetime('now'))
       );
 
+      CREATE TABLE IF NOT EXISTS cean_fleets (
+        id TEXT PRIMARY KEY,
+        name TEXT NOT NULL,
+        environment TEXT DEFAULT 'production',
+        status TEXT DEFAULT 'active' CHECK(status IN ('active', 'paused', 'archived')),
+        description TEXT,
+        config TEXT DEFAULT '{}',
+        created_at TEXT DEFAULT (datetime('now')),
+        updated_at TEXT DEFAULT (datetime('now'))
+      );
+
+      CREATE TABLE IF NOT EXISTS cean_workers (
+        id TEXT PRIMARY KEY,
+        fleet_id TEXT NOT NULL,
+        name TEXT NOT NULL,
+        status TEXT DEFAULT 'active' CHECK(status IN ('active', 'paused', 'draining', 'error')),
+        url TEXT NOT NULL,
+        error_count INTEGER DEFAULT 0,
+        requests_total INTEGER DEFAULT 0,
+        last_heartbeat TEXT,
+        created_at TEXT DEFAULT (datetime('now')),
+        FOREIGN KEY (fleet_id) REFERENCES cean_fleets(id) ON DELETE CASCADE
+      );
+
+      CREATE TABLE IF NOT EXISTS cean_metrics (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        worker_id TEXT NOT NULL,
+        timestamp TEXT DEFAULT (datetime('now')),
+        latency_p50 REAL,
+        latency_p95 REAL,
+        latency_p99 REAL,
+        request_count INTEGER DEFAULT 0,
+        error_count INTEGER DEFAULT 0,
+        error_rate REAL DEFAULT 0,
+        memory_usage_mb REAL,
+        cloudflare_location TEXT,
+        FOREIGN KEY (worker_id) REFERENCES cean_workers(id) ON DELETE CASCADE
+      );
+
       CREATE INDEX IF NOT EXISTS idx_suggested_tasks_status ON suggested_tasks(status);
       CREATE INDEX IF NOT EXISTS idx_scheduled_tasks_enabled ON scheduled_tasks(enabled);
       CREATE INDEX IF NOT EXISTS idx_webhook_events_provider ON webhook_events(provider);
+      CREATE INDEX IF NOT EXISTS idx_cean_workers_fleet ON cean_workers(fleet_id);
+      CREATE INDEX IF NOT EXISTS idx_cean_metrics_worker ON cean_metrics(worker_id);
+      CREATE INDEX IF NOT EXISTS idx_cean_metrics_timestamp ON cean_metrics(timestamp);
     `);
 
     logInfo('GlobalDb', 'Schema initialized');
+
+    // Create default "Brunella Agents" fleet if it doesn't exist
+    const fleetCheck = globalDb.prepare('SELECT COUNT(*) as count FROM cean_fleets WHERE id = ?').get('fleet-brunella-agents') as { count: number };
+
+    if (fleetCheck.count === 0) {
+      const now = new Date().toISOString();
+      globalDb.prepare(`
+        INSERT INTO cean_fleets (id, name, environment, status, description, created_at, updated_at)
+        VALUES (?, ?, ?, ?, ?, ?, ?)
+      `).run(
+        'fleet-brunella-agents',
+        'Brunella Agents',
+        'local',
+        'active',
+        'Brunella AI Agent Fleet - All local agents',
+        now,
+        now
+      );
+      logInfo('GlobalDb', 'Default Brunella Agents fleet created');
+    }
   } catch (error) {
     logError('GlobalDb', `Schema initialization failed: ${error}`);
   }

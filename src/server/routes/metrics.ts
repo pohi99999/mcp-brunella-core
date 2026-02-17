@@ -13,6 +13,7 @@ import { Router, Request, Response } from 'express';
 import { Database } from 'better-sqlite3';
 import { v4 as uuidv4 } from 'uuid';
 import { logInfo, logError } from '../../utils/logger.js';
+import { agentManager } from '../../agents/AgentManager.js';
 
 export function createMetricsRouter(db: Database) {
   const router = Router();
@@ -84,13 +85,38 @@ export function createMetricsRouter(db: Database) {
 
   /**
    * GET /api/metrics/fleet/:fleetId/summary
-   * Get aggregate metrics for entire fleet
+   * Get aggregate metrics for entire fleet (with Brunella Agents support)
    */
   router.get('/fleet/:fleetId/summary', (req: Request, res: Response) => {
     try {
       const { fleetId } = req.params;
 
-      // Verify fleet exists
+      // Special handling for Brunella Agents fleet
+      if (fleetId === 'fleet-brunella-agents') {
+        const agentStatuses = agentManager.listAgentStatuses();
+
+        const activeWorkers = agentStatuses.filter(a => a.status === 'idle' || a.status === 'working').length;
+        const totalErrors = agentStatuses.reduce((sum, a) => sum + a.errorCount, 0);
+        const totalSuccesses = agentStatuses.reduce((sum, a) => sum + a.successCount, 0);
+        const totalTasks = totalSuccesses + totalErrors;
+        const errorRate = totalTasks > 0 ? (totalErrors / totalTasks) * 100 : 0;
+
+        const summary = {
+          fleet_id: fleetId,
+          worker_count: agentStatuses.length,
+          active_workers: activeWorkers,
+          avg_error_rate: Math.round(errorRate * 100) / 100,
+          max_latency_p95: 0, // Agents don't track latency
+          avg_latency_p95: 0,
+          total_requests: totalTasks,
+          total_errors: totalErrors
+        };
+
+        logInfo('MetricsAPI', `Retrieved Brunella Agents fleet summary: ${agentStatuses.length} agents, ${activeWorkers} active`);
+        return res.json({ success: true, data: summary });
+      }
+
+      // Verify fleet exists (for non-Brunella fleets)
       const fleetStmt = db.prepare('SELECT id FROM cean_fleets WHERE id = ?');
       const fleet = fleetStmt.get(fleetId);
 
@@ -98,9 +124,9 @@ export function createMetricsRouter(db: Database) {
         return res.status(404).json({ error: 'Fleet not found' });
       }
 
-      // Get latest metrics for all workers in fleet
+      // Get latest metrics for all workers in fleet (SQLite-compatible query)
       const stmt = db.prepare(`
-        SELECT 
+        SELECT
           COUNT(DISTINCT w.id) as worker_count,
           AVG(m.latency_p50) as avg_latency_p50,
           AVG(m.latency_p95) as avg_latency_p95,
@@ -110,23 +136,19 @@ export function createMetricsRouter(db: Database) {
           SUM(m.error_count) as total_errors,
           MAX(m.timestamp) as last_update
         FROM cean_workers w
-        LEFT JOIN (
-          SELECT DISTINCT ON (worker_id) worker_id, timestamp, latency_p50, latency_p95,
-                 latency_p99, error_rate, request_count, error_count
-          FROM cean_metrics_cache
-          ORDER BY worker_id, timestamp DESC
-        ) m ON w.id = m.worker_id
+        LEFT JOIN cean_metrics m ON w.id = m.worker_id
         WHERE w.fleet_id = ?
+        GROUP BY w.fleet_id
       `);
 
       const summary = stmt.get(fleetId);
 
       logInfo('MetricsAPI', `Retrieved summary metrics for fleet ${fleetId}`);
-      return res.json(summary);
+      return res.json({ success: true, data: summary });
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error);
       logError('MetricsAPI', `Get fleet summary error: ${msg}`);
-      return res.status(500).json({ error: msg });
+      return res.status(500).json({ success: false, error: msg });
     }
   });
 
@@ -136,9 +158,9 @@ export function createMetricsRouter(db: Database) {
    */
   router.post('/prometheus/scrape', (req: Request, res: Response) => {
     try {
-      // Get all latest metrics
+      // Get all latest metrics (SQLite-compatible query)
       const stmt = db.prepare(`
-        SELECT DISTINCT ON (worker_id)
+        SELECT
           w.id as worker_id,
           w.name as worker_name,
           f.environment,
@@ -147,8 +169,11 @@ export function createMetricsRouter(db: Database) {
           m.cloudflare_location
         FROM cean_workers w
         LEFT JOIN cean_fleets f ON w.fleet_id = f.id
-        LEFT JOIN cean_metrics_cache m ON w.id = m.worker_id
-        ORDER BY worker_id, m.timestamp DESC
+        LEFT JOIN cean_metrics m ON w.id = m.worker_id
+        WHERE m.id IN (
+          SELECT MAX(id) FROM cean_metrics GROUP BY worker_id
+        )
+        OR m.id IS NULL
       `);
 
       const metrics = stmt.all() as Array<Record<string, unknown>>;
