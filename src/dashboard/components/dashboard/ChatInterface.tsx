@@ -1,4 +1,3 @@
-```
 import { useState, useRef, useEffect, useMemo } from 'react'
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
@@ -530,7 +529,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                 {filteredMessages.map(message => (
                   <div
                     key={message.id}
-                    className={`flex gap - 3 ${ message.role === 'user' ? 'justify-end' : 'justify-start' } `}
+                    className={`flex gap-3 ${message.role === 'user' ? 'justify-end' : 'justify-start'}`}
                   >
                     {message.role === 'assistant' && (
                       <div className="flex-shrink-0">
@@ -541,12 +540,12 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                     )}
 
                     <div
-                      className={`flex flex - col gap - 1 max - w - [80 %] ${
+                      className={`flex flex-col gap-1 max-w-[80%] ${
   message.role === 'user' ? 'items-end' : 'items-start'
 } `}
                     >
                       <div
-                        className={`px - 4 py - 3 rounded - lg ${
+                        className={`px-4 py-3 rounded-lg ${
   message.role === 'user'
     ? 'bg-primary text-primary-foreground'
     : 'bg-card border border-border'
@@ -584,13 +583,13 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
                         {message.image && (
                           <div className="mt-3 rounded-md overflow-hidden border border-border bg-black/5">
                             <img
-                              src={message.image.startsWith('data:') ? message.image : `data: image / png; base64, ${ message.image } `}
+                              src={message.image.startsWith('data:') ? message.image : `data:image/png;base64,${message.image}`}
                               alt="Böngésző nézet"
                               className="w-full h-auto max-h-[300px] object-contain cursor-zoom-in transition-transform hover:scale-[1.02]"
                               onClick={() => {
                                 const win = window.open();
                                 if (win) {
-                                  win.document.write(`< img src = "${message.image.startsWith('data:') ? message.image : `data:image/png;base64,${message.image}`}" style = "max-width:100%" > `);
+                                  win.document.write(`<img src="${message.image.startsWith('data:') ? message.image : `data:image/png;base64,${message.image}`}" style="max-width:100%">`);
                                 }
                               }}
                             />
@@ -686,7 +685,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
             type="button"
             size="icon"
             variant={isRecording ? "destructive" : "ghost"}
-            className={`h - 10 w - 10 shrink - 0 transition - all ${ isRecording ? "animate-pulse" : "" } `}
+            className={`h-10 w-10 shrink-0 transition-all ${isRecording ? "animate-pulse" : ""}`}
             onClick={isRecording ? stopRecording : startRecording}
             disabled={isProcessing}
             title={isRecording ? "Leállítás" : "Hangfelvétel indítása"}
@@ -719,4 +718,3 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
     </Card>
   )
 }
-```
