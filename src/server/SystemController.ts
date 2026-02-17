@@ -4,11 +4,10 @@
  * Mission Control 2.0 - Service Control Widget backend
  */
 
-import { spawn, ChildProcess } from 'child_process';
+import type { ChildProcess } from 'child_process';
 import path from 'path';
 import { logInfo, logError } from '../utils/logger.js';
 import { checkOllamaHealth } from '../utils/health.js';
-import fetch from 'node-fetch';
 
 export type ServiceId = 'ollama' | 'anythingllm' | 'python';
 
@@ -64,6 +63,9 @@ export class SystemController {
     }
 
     const config = ALLOWED_SERVICES[serviceId];
+
+    // Dynamic import to support Cloudflare Workers (where child_process is unavailable)
+    const { spawn } = await import('child_process');
 
     if (serviceId === 'anythingllm') {
       const exePath = process.env.ANYTHINGLLM_EXE_PATH;
@@ -143,6 +145,8 @@ export class SystemController {
     }
 
     if (serviceId === 'ollama') {
+      // Dynamic import for child_process
+      const { spawn } = await import('child_process');
       try {
         if (process.platform === 'win32') {
           spawn('taskkill', ['/IM', 'ollama.exe', '/F'], { stdio: 'ignore' });
