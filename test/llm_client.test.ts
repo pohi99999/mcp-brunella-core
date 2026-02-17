@@ -1,4 +1,3 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { generateResponse } from '../src/core/llm_client.js';
 
@@ -43,7 +42,9 @@ describe('llm_client', () => {
         global.fetch = vi.fn();
         process.env.GEMINI_API_KEY = 'test-gemini-key';
         process.env.GITHUB_TOKEN = 'test-github-token';
-        process.env.OLLAMA_BASE_URL = 'http://localhost:11434';
+        // Ensure consistent base URL and model for testing
+        process.env.OLLAMA_BASE_URL = 'http://127.0.0.1:11434';
+        process.env.OLLAMA_MODEL = 'qwen2.5-coder:7b';
         process.env.AI_GATEWAY_ENABLED = 'false'; // Force local Ollama for tests
     });
 
@@ -94,9 +95,11 @@ describe('llm_client', () => {
             const result = await generateResponse('test prompt');
 
             expect(global.fetch).toHaveBeenCalledWith(
-                expect.stringContaining('/api/chat'),
+                // Expect full URL as configured in beforeEach
+                'http://127.0.0.1:11434/api/chat',
                 expect.objectContaining({
                     method: 'POST',
+                    // Expect correct model from env
                     body: expect.stringContaining('qwen2.5-coder:7b')
                 })
             );

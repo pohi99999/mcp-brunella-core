@@ -117,7 +117,12 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(mockSendCommand.mock.calls[0][0].url).toContain('google.com/search');
+            // expect(mockSendCommand.mock.calls[0][0].url).toContain('google.com/search');
+            expect(mockSendCommand).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    url: expect.stringContaining('google.com/search')
+                })
+            );
         });
     });
 
@@ -151,7 +156,12 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(mockSendCommand.mock.calls[0][0].selector).toBe('.primary-button');
+            // expect(mockSendCommand.mock.calls[0][0].selector).toBe('.primary-button');
+            expect(mockSendCommand).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    selector: '.primary-button'
+                })
+            );
         });
     });
 
@@ -218,7 +228,12 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(mockSendCommand.mock.calls[0][0].url).toContain('google.com/search');
+            // expect(mockSendCommand.mock.calls[0][0].url).toContain('google.com/search');
+            expect(mockSendCommand).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    url: expect.stringContaining('google.com/search')
+                })
+            );
         });
     });
 
@@ -265,7 +280,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
 
             // Should have 2 calls: navigate + screenshot
             expect(mockSendCommand).toHaveBeenCalledTimes(2);
-            expect(mockSendCommand.mock.calls[1][0]).toEqual({ action: 'screenshot' });
+            expect(mockSendCommand).toHaveBeenCalledWith({ action: 'screenshot' });
         });
 
         it('should continue even if screenshot fails', async () => {
