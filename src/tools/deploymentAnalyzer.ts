@@ -1,4 +1,3 @@
-
 /**
  * Deployment Analyzer
  * 
@@ -95,7 +94,9 @@ export class DeploymentAnalyzer {
         /assertion.*failed/i,
         / failing( test)?/i,
         /mocha|jest|vitest/i,
-        /expected.*to/i
+        /expected.*to/i,
+        /FAIL/i, // Added FAIL for Vitest output
+        /failed/i // Generic failed
       ],
       lint: [
         /eslint|prettier|stylelint/i,
@@ -227,9 +228,10 @@ export class DeploymentAnalyzer {
    * Generates a prompt for Jules to fix the detected issue
    */
   static generateFixPrompt(analysis: DeploymentAnalysis, fileContent?: string): string {
+    const errorCategory = analysis.category ? analysis.category.toUpperCase() : 'UNKNOWN';
     const basePrompt = `## Jules Continuous AI - Automated Fix Request
 
-**Error Category:** ${analysis.category.toUpperCase()}  
+**Error Category:** ${errorCategory}
 **Title:** ${analysis.title}  
 **Confidence:** ${(analysis.confidence * 100).toFixed(0)}%
 
@@ -237,11 +239,11 @@ export class DeploymentAnalyzer {
 ${analysis.message}
 
 ### Raw Error Logs
-\`\`\`
+```
 ${analysis.rawError}
-\`\`\`
+```
 
-${analysis.affectedFiles.length > 0 ? `### Affected Files\n${analysis.affectedFiles.map((f) => `- \`${f}\``).join('\n')}\n` : ''}`;
+${analysis.affectedFiles.length > 0 ? `### Affected Files\n${analysis.affectedFiles.map((f) => `- `${f}``).join('\n')}\n` : ''}`;
 
     if (analysis.errorLocation) {
       return `${basePrompt}
@@ -250,7 +252,7 @@ ${analysis.affectedFiles.length > 0 ? `### Affected Files\n${analysis.affectedFi
 **File:** ${analysis.errorLocation.file}  
 ${analysis.errorLocation.line ? `**Line:** ${analysis.errorLocation.line}` : ''}
 
-${fileContent ? `### File Content\n\`\`\`typescript\n${fileContent}\n\`\`\`` : ''}
+${fileContent ? `### File Content\n```typescript\n${fileContent}\n```` : ''}
 
 ### Task
 1. Analyze the error and context
