@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-17T13:46:05.114Z
+**Utolso frissites:** 2026-02-17T14:00:00.041Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -86,9 +86,8 @@
 
 - [ ] **Számla Adatkinyerés és Google Sheets Automatizáció** [HIGH]
   - **ID:** `invoice-to-sheets-automation-20260214`
-  - **Progress:** 75%
-  - **Updated:** 2026-02-17T14:55:00Z
-  - **Status:** Phase 1, 2, 3 COMPLETE | Phase 4 IN-PROGRESS
+  - **Progress:** 40%
+  - **Updated:** 2026-02-17T15:30:00Z
   - Mappa: ./tracks/invoice-to-sheets-automation-20260214/
 
 - [ ] **Jules Continuous AI Integration (JCAI)** [CRITICAL]
