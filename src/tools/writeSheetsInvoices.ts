@@ -9,7 +9,7 @@ import { logInfo, logError } from "../utils/logger.js";
 export const writeSheetsInvoicesTool = {
   name: "write_sheets_invoices",
   description:
-    "Invoice adatok írása Google Sheets-be (batch mode, append/replace)",
+    "Invoice adatok írása Google Sheets-be (Phase 4: batch, duplicate detection, Phoenix Protocol retry)",
   inputSchema: {
     type: "object",
     properties: {
@@ -35,6 +35,16 @@ export const writeSheetsInvoicesTool = {
         description: "Clear sheet before writing (if append=false)",
         default: false,
       },
+      skip_duplicates: {
+        type: "boolean",
+        description: "Skip duplicate invoices by invoice_no (Phase 4)",
+        default: true,
+      },
+      batch_size: {
+        type: "number",
+        description: "Rows per batch (optimal: 50-100, default: 75)",
+        default: 75,
+      },
     },
     required: ["invoices"],
   },
@@ -42,12 +52,15 @@ export const writeSheetsInvoicesTool = {
 
 /**
  * Write invoices to Google Sheets
+ * Phase 4 features: duplicate detection, batch write, Phoenix Protocol retry
  */
 export async function writeSheetsInvoicesHandler(params: {
   invoices: Record<string, unknown>[];
   append?: boolean;
   include_line_items?: boolean;
   clear_first?: boolean;
+  skip_duplicates?: boolean;
+  batch_size?: number;
 }): Promise<{
   success: boolean;
   data?: Record<string, unknown>;
@@ -59,6 +72,8 @@ export async function writeSheetsInvoicesHandler(params: {
       append = true,
       include_line_items = false,
       clear_first = false,
+      skip_duplicates = true,
+      batch_size = 75,
     } = params;
 
     if (!invoices || invoices.length === 0) {
@@ -68,9 +83,9 @@ export async function writeSheetsInvoicesHandler(params: {
       };
     }
 
-    logInfo("writeSheetsInvoices", `Writing ${invoices.length} invoices to Sheets`);
+    logInfo("writeSheetsInvoices", `Writing ${invoices.length} invoices to Sheets (Phase 4: skip_duplicates=${skip_duplicates}, batch_size=${batch_size})`);
 
-    // Python subprocess
+    // Python subprocess (updated for Phase 4)
     const pythonCode = `import sys
 sys.path.insert(0, '"'"'.'"'"')
 import json
@@ -97,10 +112,13 @@ try:
     if ${clear_first}:
         client.clear_sheet()
     
+    # Phase 4: Use enhanced write_invoices with duplicate detection & batch optimization
     result = client.write_invoices(
         invoices=invoice_objects,
         append=${append},
-        include_line_items=${include_line_items}
+        include_line_items=${include_line_items},
+        skip_duplicates=${skip_duplicates},
+        batch_size=${batch_size}
     )
     
     print(json.dumps(result))
@@ -143,7 +161,10 @@ except Exception as e:
           const result = JSON.parse(output);
 
           if (result.success) {
-            logInfo("writeSheetsInvoices", `${result.row_count} invoices written`);
+            const duplicatesInfo = result.duplicates_skipped > 0 
+              ? ` (${result.duplicates_skipped} duplicates skipped)` 
+              : "";
+            logInfo("writeSheetsInvoices", `✅ ${result.row_count} invoices written${duplicatesInfo}`);
           } else {
             logError("writeSheetsInvoices", result.error);
           }

@@ -12,7 +12,7 @@ const KEYWORD_ROUTES: ReadonlyArray<{
   agent: string;
 }> = [
   {
-    keywords: ["lint", "eslint", "format", "type error", "típushiba"],
+    keywords: ["lint", "eslint", "format", "type error", "típushiba", "szintaktika", "formázás"],
     agent: "lint_fixer",
   },
   {
@@ -36,8 +36,10 @@ const KEYWORD_ROUTES: ReadonlyArray<{
       "válaszd ki",
       "görgess",
       "keresés a weben",
+      "weboldal",
+      "robotkéz"
     ],
-    agent: "robotkez",
+    agent: "robotkezv2",
   },
   {
     keywords: [
@@ -49,6 +51,9 @@ const KEYWORD_ROUTES: ReadonlyArray<{
       "diagnos",
       "ellenőriz",
       "smoke",
+      "állapot",
+      "működik",
+      "rendszerellenőrzés"
     ],
     agent: "evaluator",
   },
@@ -63,6 +68,8 @@ const KEYWORD_ROUTES: ReadonlyArray<{
       "knowledge",
       "tudás",
       "web search",
+      "információ",
+      "nézz utána"
     ],
     agent: "researcher",
   },
@@ -77,6 +84,10 @@ const KEYWORD_ROUTES: ReadonlyArray<{
       "refactor",
       "self-healing",
       "pipeline",
+      "fejleszt",
+      "programozz",
+      "alkalmazás",
+      "funkció"
     ],
     agent: "developer",
   },
@@ -90,11 +101,13 @@ const KEYWORD_ROUTES: ReadonlyArray<{
       "könyvtár",
       "map update",
       "tartalomjegyzék",
+      "rendszerez",
+      "takaríts"
     ],
     agent: "project_organizer",
   },
   {
-    keywords: ["spec", "ötlet", "idea", "generate track", "requirement"],
+    keywords: ["spec", "ötlet", "idea", "generate track", "requirement", "terv", "leírás", "dokumentáció"],
     agent: "SpecWriter",
   },
   {
@@ -103,10 +116,13 @@ const KEYWORD_ROUTES: ReadonlyArray<{
       "projekt státusz",
       "project status",
       "track status",
+      "hogy állunk",
+      "mi újság",
+      "haladás"
     ],
     agent: "ProjectConductor",
   },
-  { keywords: ["voice", "hang", "audio", "hangutasítás"], agent: "voice" },
+  { keywords: ["voice", "hang", "audio", "hangutasítás", "beszélj"], agent: "voice" },
 ];
 
 export class OrchestratorAgent implements IAgent {
@@ -127,19 +143,36 @@ export class OrchestratorAgent implements IAgent {
   /**
    * Phoenix Protocol: Listen for agent failures and log them
    * so future routing can avoid recently-failed agents.
+   * Kiterjesztve: Automatikus javítási ciklus (Self-healing loop)
    */
   private initPhoenixListeners(): void {
-    phoenixEventBus.subscribe('phoenix:agent_failed', (evt) => {
+    phoenixEventBus.subscribe('phoenix:agent_failed', async (evt) => {
       this.failedDuringSession.add(evt.agentName.toLowerCase());
       this.logger.info(
-        `Phoenix: Agent '${evt.agentName}' failed (tracked for re-routing avoidance)`,
+        `Phoenix: Agent '${evt.agentName}' failed. Orchestrator attempting self-healing...`,
       );
+
+      // Ha nem a Developer Agent bukott el, kérjük meg a Developert, hogy javítsa ki
+      if (evt.agentName.toLowerCase() !== 'developer') {
+        const fixTask = `HIBA JAVÍTÁSA: A(z) ${evt.agentName} ügynök hibát jelzett: "${evt.error}". Elemezd a hiba okát és javítsd ki a kódot vagy konfigurációt.`;
+        try {
+          const id = await agentManager.queueTask(fixTask, 'developer', {
+            originalError: evt.error,
+            failedAgent: evt.agentName,
+            autoFix: true
+          });
+          this.logger.info(`Self-healing: Fix task queued for Developer (ID: ${id})`);
+        } catch (e) {
+          this.logger.error(`Self-healing: Failed to queue fix task: ${e}`);
+        }
+      }
     });
 
     phoenixEventBus.subscribe('phoenix:failover_result', (evt) => {
       if (evt.success) {
         // Clear from failed set — agent was rescued by failover
         this.failedDuringSession.delete(evt.originalAgent.toLowerCase());
+        this.logger.info(`Phoenix: Agent '${evt.originalAgent}' successfully recovered via failover.`);
       }
     });
   }
@@ -218,10 +251,18 @@ export class OrchestratorAgent implements IAgent {
 
       const prompt = `
 You are the Orchestrator of the Brunella Agent System. 
-Your goal is to break down the user request into a list of tasks for specialized agents.
+Your goal is to break down the user request into a list of tasks for specialized agents. 
+You are PROACTIVE, professional, and you speak fluent HUNGARIAN.
 
 Available agents:
 ${agents}
+
+Available specialized tools (via MCP):
+- GitHub Copilot: Use for complex code generation, refactoring, and AI-assisted debugging.
+- Web Search (Google/Brave): Use for finding real-time information, documentation, and troubleshooting.
+- GitHub: Use for creating issues, pull requests, and managing repository state.
+- n8n: Use for automated workflows and external service integrations.
+- Knowledge Graph / Memory: Use for long-term project context and structured memory.
 
 User Request: "${task}"
 
@@ -230,8 +271,9 @@ Instructions:
 2. Select the best agent(s) for the job.
 3. If the request is about checking health, tests, or system audit, use Evaluator.
 4. If the request is about web search, RAG, or summarizing knowledge, use Researcher.
-5. If the request is about code generation, fixing bugs, or self-healing, use Developer.
-6. If the request is about browser automation, web interaction, or opening URLs, use Robotkez.
+5. If the request is about code generation, fixing bugs, or self-healing, use Developer. 
+   - Protip: If the task is complex, instruct Developer to use Copilot tools.
+6. If the request is about browser automation, web interaction, or opening URLs, use robotkezv2.
 7. If the request is about project structure, map updates, board organization or directory analysis, use project_organizer.
 8. If the request is about linting or TypeScript micro-fixes, use lint_fixer.
 
@@ -239,7 +281,7 @@ IMPORTANT: If the user says "Delegate X to Agent Y" or "Have Agent Y do X", resp
 
 Output a JSON array of tasks in this format:
 [
-  { "agent": "AgentName", "description": "precise task description", "context": { "key": "value" } }
+  { "agent": "AgentName", "description": "precise task description in Hungarian", "context": { "key": "value" } }
 ]
 
 Respond ONLY with the JSON array. Do not add markdown blocks.

@@ -1,7 +1,9 @@
 """Google Sheets API Client for Invoice Data Sync
 
 Features:
-- Batch write invoices to Google Sheet
+- Batch write invoices to Google Sheet (50-100 rows optimized)
+- Phoenix Protocol: Auto-retry with exponential backoff
+- Duplicate detection via invoice_no
 - Auto-create headers from invoice fields
 - Support for line items expansion
 - Append-only (avoid overwrites)
@@ -10,7 +12,8 @@ Features:
 
 import os
 import json
-from typing import Optional, List, Dict, Any
+import logging
+from typing import Optional, List, Dict, Any, Set
 from dataclasses import dataclass, asdict
 from datetime import datetime
 from google.auth.transport.requests import Request
@@ -22,6 +25,9 @@ from gspread_dataframe import set_with_dataframe
 import pandas as pd
 
 from myai.schemas.invoice import InvoiceData
+from myai.utils.phoenix_protocol import retry_on_network_error, get_checkpoint
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -168,53 +174,195 @@ class GoogleSheetsClient:
 
         return row
 
+    def _get_existing_invoice_numbers(self) -> Set[str]:
+        """
+        Get set of existing invoice numbers from sheet.
+        
+        Used for duplicate detection.
+        
+        Returns:
+            Set of invoice_no strings already in sheet
+        """
+        try:
+            values = self.worksheet.get_all_values()
+            if not values or len(values) < 2:  # No data rows (only header or empty)
+                return set()
+            
+            # First column is invoice_no
+            invoice_numbers = {row[0] for row in values[1:] if row and row[0]}
+            logger.info(f"Found {len(invoice_numbers)} existing invoices in sheet")
+            return invoice_numbers
+            
+        except Exception as e:
+            logger.warning(f"Could not fetch existing invoices: {e}")
+            return set()
+
+    def _filter_duplicates(
+        self, 
+        invoices: List[InvoiceData],
+        skip_duplicates: bool = True
+    ) -> tuple[List[InvoiceData], List[str]]:
+        """
+        Filter out duplicate invoices by invoice_no.
+        
+        Args:
+            invoices: List of invoices to check
+            skip_duplicates: If True, skip duplicates; if False, keep them
+        
+        Returns:
+            Tuple of (filtered_invoices, duplicate_invoice_nos)
+        """
+        if not skip_duplicates:
+            return invoices, []
+        
+        existing_nos = self._get_existing_invoice_numbers()
+        
+        filtered_invoices = []
+        duplicates = []
+        
+        for invoice in invoices:
+            if invoice.invoice_no in existing_nos:
+                duplicates.append(invoice.invoice_no)
+                logger.debug(f"Skipping duplicate invoice: {invoice.invoice_no}")
+            else:
+                filtered_invoices.append(invoice)
+        
+        if duplicates:
+            logger.info(f"Filtered {len(duplicates)} duplicate invoices: {duplicates[:5]}...")
+        
+        return filtered_invoices, duplicates
+
+    @retry_on_network_error(max_retries=5, initial_delay=2.0)
     def write_invoices(
         self,
         invoices: List[InvoiceData],
         append: bool = True,
         include_line_items: bool = False,
+        skip_duplicates: bool = True,
+        batch_size: int = 75,
     ) -> Dict[str, Any]:
-        """Write invoices to sheet.
+        """Write invoices to sheet with Phoenix Protocol retry logic.
+        
+        Phoenix Protocol features:
+        - Auto-retry on network errors (5 attempts, exponential backoff)
+        - Checkpoint state before batch write
+        - Duplicate detection via invoice_no
+        - Batch optimization (50-100 rows per batch)
         
         Args:
             invoices: List of invoice objects
             append: If True, append to sheet; if False, replace content
             include_line_items: Include line items in output
+            skip_duplicates: Skip invoices already in sheet (duplicate detection)
+            batch_size: Number of rows per batch write (default 75, optimal: 50-100)
             
         Returns:
-            Success/error status with row count
+            Success/error status with row count and duplicate info
         """
         try:
+            # Phoenix Protocol: Save checkpoint
+            checkpoint = get_checkpoint()
+            checkpoint.save("write_invoices_start", {
+                "count": len(invoices),
+                "append": append,
+                "timestamp": datetime.now().isoformat(),
+            })
+            
+            # Duplicate detection
+            filtered_invoices, duplicates = self._filter_duplicates(
+                invoices, 
+                skip_duplicates=skip_duplicates
+            )
+            
+            if not filtered_invoices:
+                logger.warning("No invoices to write after duplicate filtering")
+                return {
+                    "success": True,
+                    "row_count": 0,
+                    "duplicates_skipped": len(duplicates),
+                    "duplicate_invoice_nos": duplicates,
+                    "sheet": self.config.sheet_name,
+                    "timestamp": datetime.now().isoformat(),
+                }
+            
             headers = self._get_headers(include_line_items)
             rows = [headers]
             rows.extend([
                 self._invoice_to_row(inv, include_line_items)
-                for inv in invoices
+                for inv in filtered_invoices
             ])
 
             # Check if sheet has content
             existing_values = self.worksheet.get_all_values()
 
             if append and existing_values:
-                # Append mode: skip header, append rows
-                self.worksheet.append_rows(rows[1:])
+                # Append mode with batch optimization
+                data_rows = rows[1:]  # Skip header
+                
+                # Batch write for large datasets (50-100 rows optimal)
+                if len(data_rows) > batch_size:
+                    logger.info(f"Batch writing {len(data_rows)} rows in batches of {batch_size}")
+                    
+                    for i in range(0, len(data_rows), batch_size):
+                        batch = data_rows[i:i + batch_size]
+                        self.worksheet.append_rows(batch)
+                        logger.debug(f"Wrote batch {i // batch_size + 1}: {len(batch)} rows")
+                else:
+                    # Small dataset, single write
+                    self.worksheet.append_rows(data_rows)
             else:
                 # Replace mode: clear and write all
                 self.worksheet.clear()
-                self.worksheet.append_rows(rows)
-
+                
+                # Batch write for large datasets
+                if len(rows) > batch_size:
+                    logger.info(f"Batch writing {len(rows)} rows (with header) in batches of {batch_size}")
+                    
+                    # Write header first
+                    self.worksheet.append_row(rows[0])
+                    
+                    # Batch write data rows
+                    data_rows = rows[1:]
+                    for i in range(0, len(data_rows), batch_size):
+                        batch = data_rows[i:i + batch_size]
+                        self.worksheet.append_rows(batch)
+                        logger.debug(f"Wrote batch {i // batch_size + 1}: {len(batch)} rows")
+                else:
+                    # Small dataset, single write
+                    self.worksheet.append_rows(rows)
+            
+            # Phoenix Protocol: Clear checkpoint on success
+            checkpoint.clear("write_invoices_start")
+            
+            logger.info(
+                f"✅ Successfully wrote {len(filtered_invoices)} invoices "
+                f"(skipped {len(duplicates)} duplicates)"
+            )
+            
             return {
                 "success": True,
-                "row_count": len(invoices),
+                "row_count": len(filtered_invoices),
+                "duplicates_skipped": len(duplicates),
+                "duplicate_invoice_nos": duplicates[:10],  # First 10 for logging
                 "sheet": self.config.sheet_name,
                 "timestamp": datetime.now().isoformat(),
+                "batch_size": batch_size,
             }
 
         except Exception as e:
+            # Phoenix Protocol: Log error and checkpoint state
+            checkpoint_state = checkpoint.restore("write_invoices_start")
+            logger.error(
+                f"Phoenix Protocol: write_invoices failed "
+                f"(checkpoint: {checkpoint_state})",
+                exc_info=True
+            )
+            
             return {
                 "success": False,
                 "error": str(e),
                 "sheet": self.config.sheet_name,
+                "checkpoint": checkpoint_state,
             }
 
     def read_invoices(self) -> Dict[str, Any]:
@@ -252,15 +400,18 @@ class GoogleSheetsClient:
                 "count": 0,
             }
 
+    @retry_on_network_error(max_retries=3, initial_delay=1.0)
     def clear_sheet(self) -> Dict[str, Any]:
-        """Clear all data from sheet."""
+        """Clear all data from sheet (with Phoenix Protocol retry)."""
         try:
             self.worksheet.clear()
+            logger.info(f"✅ Sheet '{self.config.sheet_name}' cleared")
             return {
                 "success": True,
                 "message": f"Sheet '{self.config.sheet_name}' cleared",
             }
         except Exception as e:
+            logger.error(f"Failed to clear sheet: {e}", exc_info=True)
             return {
                 "success": False,
                 "error": str(e),
