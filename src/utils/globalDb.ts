@@ -120,6 +120,20 @@ function initSchema(): void {
       CREATE INDEX IF NOT EXISTS idx_cean_workers_fleet ON cean_workers(fleet_id);
       CREATE INDEX IF NOT EXISTS idx_cean_metrics_worker ON cean_metrics(worker_id);
       CREATE INDEX IF NOT EXISTS idx_cean_metrics_timestamp ON cean_metrics(timestamp);
+
+      CREATE TABLE IF NOT EXISTS edge_tasks (
+        task_id TEXT PRIMARY KEY,
+        type TEXT,
+        status TEXT,
+        payload TEXT,
+        result TEXT,
+        created_at TEXT,
+        completed_at TEXT,
+        synced_at TEXT DEFAULT (datetime('now'))
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_edge_tasks_status ON edge_tasks(status);
+      CREATE INDEX IF NOT EXISTS idx_edge_tasks_created_at ON edge_tasks(created_at);
     `);
 
     logInfo('GlobalDb', 'Schema initialized');
