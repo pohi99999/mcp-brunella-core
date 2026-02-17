@@ -76,6 +76,15 @@ class Llm:
         # Budget manager powered by LiteLLM
         self.max_budget = None
 
+    def detect_vision(self):
+        try:
+            if litellm.supports_vision(self.model):
+                return True
+            else:
+                return False
+        except:
+            return False
+
     def run(self, messages):
         """
         We're responsible for formatting the call into the llm.completions object,
@@ -138,13 +147,7 @@ class Llm:
 
         # Detect vision support
         if self.supports_vision == None:
-            try:
-                if litellm.supports_vision(model):
-                    self.supports_vision = True
-                else:
-                    self.supports_vision = False
-            except:
-                self.supports_vision = False
+            self.supports_vision = self.detect_vision()
 
         # Trim image messages if they're there
         image_messages = [msg for msg in messages if msg["type"] == "image"]

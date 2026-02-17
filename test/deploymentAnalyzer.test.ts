@@ -1,6 +1,5 @@
-
 import { describe, it, expect } from 'vitest';
-import { DeploymentAnalyzer } from '../src/tools/deploymentAnalyzer.js';
+import { DeploymentAnalyzer, DeploymentAnalysis } from '../src/tools/deploymentAnalyzer.js';
 
 describe('DeploymentAnalyzer', () => {
   it('should detect TypeScript build errors', () => {
@@ -51,9 +50,9 @@ describe('DeploymentAnalyzer', () => {
   });
 
   it('should generate a valid fix prompt', () => {
-    const analysis = {
-      type: 'build' as const,
-      category: 'build' as const,
+    const analysis: DeploymentAnalysis = {
+      type: 'build',
+      category: 'build',
       title: 'Build Error',
       summary: "Cannot find name 'foo'",
       message: "Cannot find name 'foo'",
