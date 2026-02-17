@@ -11,6 +11,7 @@ import { marked } from "marked";
 import TerminalRenderer from "marked-terminal";
 import { readdirSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
+import { runInvoiceSync } from './cli/invoiceSync.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 marked.setOptions({ renderer: new TerminalRenderer() as any });
@@ -78,7 +79,8 @@ async function mainLoop() {
             choices: [
                 { name: '🤖  Ügynökök (Kezelés & Futtatás)', value: 'agents' },
                 { name: '📋  Track-ek (Projekt Ütemterv)', value: 'tracks' },
-                { name: '💬  Chat & Kommunikáció', value: 'chat' },
+                { name: '📄  Számlák (Szinkron)', value: 'invoices' },
+                { name: '�  Chat & Kommunikáció', value: 'chat' },
                 { name: '🔧  Rendszer & Diagnosztika', value: 'system' },
                 { name: '⚙️   Beállítások', value: 'settings' },
                 new inquirer.Separator(),
@@ -94,6 +96,7 @@ async function mainLoop() {
         try {
             if (choice === 'agents') await agentsMenu();
             else if (choice === 'tracks') await tracksMenu();
+            else if (choice === 'invoices') await invoiceMenu();
             else if (choice === 'chat') await chatMenu();
             else if (choice === 'system') await systemMenu();
             else if (choice === 'settings') await settingsMenu();
@@ -236,6 +239,147 @@ async function tracksMenu() {
         console.log('\n' + (result.content?.[0]?.text || 'Kész'));
         await pause();
     }
+}
+
+async function invoiceMenu() {
+    const { mode } = await inquirer.prompt([
+        {
+            type: 'list',
+            name: 'mode',
+            message: '📄 Számla szinkron mód:',
+            choices: [
+                { name: '📥  Alap (legfrissebb számlák)', value: 'default' },
+                { name: '💸  Csak nem fizetett', value: 'unpaid' },
+                { name: '⏰  Csak lejárt', value: 'overdue' },
+                { name: '📅  Dátumtól', value: 'since' },
+                new inquirer.Separator(),
+                { name: '⬅️   Vissza', value: BACK }
+            ]
+        }
+    ]);
+
+    if (mode === BACK) return;
+
+    let sinceDate: string | undefined;
+    if (mode === 'since') {
+        const { since } = await inquirer.prompt([
+            {
+                type: 'input',
+                name: 'since',
+                message: 'Dátumtól (YYYY-MM-DD):',
+                default: ''
+            }
+        ]);
+        sinceDate = since || undefined;
+    }
+
+    const { limit } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'limit',
+            message: 'Limit (default 100):',
+            default: '100'
+        }
+    ]);
+
+    const { forceRefresh } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'forceRefresh',
+            message: 'Cache bypass?',
+            default: false
+        }
+    ]);
+
+    const { appendMode } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'appendMode',
+            message: 'Append mód (új sorok hozzáfűzése)?',
+            default: true
+        }
+    ]);
+
+    const { clearFirst } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'clearFirst',
+            message: 'Sheet ürítése írás előtt?',
+            default: false
+        }
+    ]);
+
+    const { skipDuplicates } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'skipDuplicates',
+            message: 'Duplikátumok kihagyása?',
+            default: true
+        }
+    ]);
+
+    const { batchSize } = await inquirer.prompt([
+        {
+            type: 'input',
+            name: 'batchSize',
+            message: 'Batch méret (default 75):',
+            default: '75'
+        }
+    ]);
+
+    const { dryRun } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'dryRun',
+            message: 'Dry-run (csak lekérés, nem ír)?',
+            default: false
+        }
+    ]);
+
+    const { confirmRun } = await inquirer.prompt([
+        {
+            type: 'confirm',
+            name: 'confirmRun',
+            message: 'Indítsuk a szinkront?',
+            default: true
+        }
+    ]);
+
+    if (!confirmRun) return;
+
+    console.log(chalk.cyan('\nSzámlák lekérése & írás folyamatban...'));
+
+    const result = await runInvoiceSync(client, {
+        sinceDate,
+        limit: Number(limit) || 100,
+        forceRefresh: Boolean(forceRefresh),
+        includeUnpaidOnly: mode === 'unpaid',
+        getOverdue: mode === 'overdue',
+        append: Boolean(appendMode),
+        clearFirst: Boolean(clearFirst),
+        skipDuplicates: Boolean(skipDuplicates),
+        batchSize: Number(batchSize) || 75,
+        dryRun: Boolean(dryRun)
+    });
+
+    if (!result.success) {
+        console.log(chalk.red(`\nHiba: ${result.message || 'Ismeretlen hiba'}`));
+        await pause();
+        return;
+    }
+
+    if (dryRun) {
+        console.log(chalk.green(`\n✅ Dry-run kész: ${result.fetched} számla (forrás: ${result.source})`));
+        await pause();
+        return;
+    }
+
+    console.log(
+        chalk.green(
+            `\n✅ Szinkron kész: ${result.fetched} → ${result.written} sor (duplikátum: ${result.duplicatesSkipped})`
+        )
+    );
+    await pause();
 }
 
 async function chatMenu() {
