@@ -67,10 +67,11 @@ describe('DeploymentAnalyzer', () => {
     
     const prompt = DeploymentAnalyzer.generateFixPrompt(analysis, "console.log(foo);");
     
-    expect(prompt).toContain('Error Category: BUILD');
+    // Updated expectations to match markdown output
+    expect(prompt).toContain('**Error Category:** BUILD');
     expect(prompt).toContain("Cannot find name 'foo'");
-    expect(prompt).toContain('Error Location');
-    expect(prompt).toContain('File: src/app.ts');
-    expect(prompt).toContain('File Content');
+    expect(prompt).toContain('### Error Location');
+    expect(prompt).toContain('**File:** src/app.ts');
+    expect(prompt).toContain('### File Content');
   });
 });

@@ -14,9 +14,10 @@ import { aiGateway } from "../utils/aiGateway.js";
 import { recordLlmUsageAndCost } from "../utils/metrics.js";
 
 // Configuration
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen2.5-coder:7b";
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
-const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS || "120000"); // 2 minutes default
+// Dynamic getters to allow test overrides
+const getOllamaModel = () => process.env.OLLAMA_MODEL || "qwen2.5-coder:7b";
+const getGeminiModel = () => process.env.GEMINI_MODEL || "gemini-2.0-flash";
+const getLlmTimeout = () => parseInt(process.env.LLM_TIMEOUT_MS || "120000"); // 2 minutes default
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY || "");
 
@@ -46,13 +47,13 @@ export const generateResponse: (
           throw new Error("GEMINI_API_KEY not configured");
         }
         const model = genAI.getGenerativeModel({
-          model: modelName || GEMINI_MODEL,
+          model: modelName || getGeminiModel(),
         });
         const result = await model.generateContent(prompt);
         const text = result.response.text();
         recordLlmUsageAndCost({
           provider: "gemini",
-          model: modelName || GEMINI_MODEL,
+          model: modelName || getGeminiModel(),
           prompt,
           completion: text,
         });
@@ -107,14 +108,14 @@ export const generateResponse: (
       // Default: Ollama/CF Workers AI via AI Gateway v3.0 (pure fetch)
 
       const response = await aiGateway.generate(prompt, {
-        model: modelName || OLLAMA_MODEL,
+        model: modelName || getOllamaModel(),
         temperature: 0.7,
         maxTokens: 4096,
       });
 
       recordLlmUsageAndCost({
         provider: provider || "ollama",
-        model: modelName || OLLAMA_MODEL,
+        model: modelName || getOllamaModel(),
         prompt,
         completion: response,
       });
@@ -134,7 +135,7 @@ export const generateResponse: (
           const fallbackResponse = await generateResponse(
             prompt,
             "gemini",
-            GEMINI_MODEL,
+            getGeminiModel(),
           );
           return fallbackResponse;
         } catch (fallbackError: any) {

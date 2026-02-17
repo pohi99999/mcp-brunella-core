@@ -137,6 +137,16 @@ export class DeploymentAnalyzer {
 
     // 2. Check for Test failures (Vitest/Jest)
     if (logs.includes('FAIL') || logs.includes('failing')) {
+      // Try to find specific test failure message (Vitest style)
+      // Look for lines starting with '×' or '●' followed by the test name
+      const specificFailure = logs.match(/(?:×|●)\s+(.+)/);
+      if (specificFailure) {
+        return {
+          title: 'Test Failed',
+          message: `Test failed: ${specificFailure[1].trim()}`
+        };
+      }
+
       return {
         title: 'Test Failed',
         message: 'Unit tests failed - see logs for details'
