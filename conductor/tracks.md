@@ -86,14 +86,15 @@
 
 - [ ] **Számla Adatkinyerés és Google Sheets Automatizáció** [HIGH]
   - **ID:** `invoice-to-sheets-automation-20260214`
-  - **Progress:** 15%
-  - **Updated:** 2026-02-14T14:00:00Z
+  - **Progress:** 40%
+  - **Updated:** 2026-02-17T15:30:00Z
+  - **Status:** Phase 1 COMPLETED (Schema + ENV + Templates)
   - Mappa: ./tracks/invoice-to-sheets-automation-20260214/
 
 - [ ] **Jules Continuous AI Integration (JCAI)** [CRITICAL]
   - **ID:** `jules_continuous_ai_integration_20260215`
-  - **Progress:** 60%
-  - **Updated:** 2026-02-17T06:00:00Z
+  - **Progress:** 72%
+  - **Updated:** 2026-02-17T15:00:00Z
   - Mappa: ./tracks/jules_continuous_ai_integration_20260215/
 
 - [ ] **Marketing Swarm - Automated Campaign Factory** [HIGH]
