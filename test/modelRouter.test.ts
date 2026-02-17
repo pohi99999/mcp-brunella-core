@@ -87,6 +87,9 @@ describe('Model Router (G3)', () => {
   // ========================================================================
   describe('RULE-MR1: High complexity → Cloud', () => {
     it('should select a cloud model for high complexity tasks', () => {
+      // Mock API keys to ensure cloud models are available
+      vi.stubEnv('GITHUB_TOKEN', 'dummy_token');
+
       const task: TaskProfile = {
         description: 'Architect the microservice migration',
         complexity: 'high',
@@ -96,6 +99,8 @@ describe('Model Router (G3)', () => {
       const decision = selectModel(task, { budget: 50 });
       expect(decision.model.provider).not.toBe('ollama');
       expect(decision.reason).toContain('RULE-MR1');
+
+      vi.unstubAllEnvs();
     });
 
     it('should provide Ollama fallback for high complexity', () => {

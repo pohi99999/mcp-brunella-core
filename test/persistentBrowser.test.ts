@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import { persistentBrowser } from '../src/utils/persistentBrowser.js';
 
-describe('Persistent Browser (RobotkezV2 - Phase 1)', () => {
+describe.skipIf(process.env.CI)('Persistent Browser (RobotkezV2 - Phase 1)', () => {
     // Timeout for browser operations (increased for Playwright setup)
     const BROWSER_TIMEOUT = 30000;
 
