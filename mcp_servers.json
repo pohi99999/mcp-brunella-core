@@ -1,30 +1,74 @@
 [
   {
+    "name": "brunella-core",
+    "command": "node",
+    "args": ["./build/index.js"],
+    "description": "The primary BAS controller (Host)"
+  },
+  {
     "name": "github",
     "command": "npx",
     "args": ["-y", "@modelcontextprotocol/server-github"],
     "env": {
-      "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PERSONAL_ACCESS_TOKEN}"
+      "GITHUB_PERSONAL_ACCESS_TOKEN": "${GITHUB_PAT}"
     }
   },
   {
-    "name": "brunella-core",
-    "command": "node",
-    "args": ["./build/index.js"]
+    "name": "copilot",
+    "command": "npx",
+    "args": ["-y", "@aykahshi/copilot-mcp-server"],
+    "env": {
+      "GITHUB_TOKEN": "${COPILOT_PAT}"
+    }
   },
   {
-    "name": "brunella-windows-manager",
+    "name": "windows-manager",
     "command": "npx",
     "args": ["-y", "@simonb97/server-win-cli"],
     "env": {
       "ALLOWED_PATHS": "C:\\Windows\\System32,F:\\mcp-brunella-core,G:\\Brunella,C:\\Users\\pohi9"
-    },
-    "disabled": false
+    }
   },
   {
-    "name": "playwright",
+    "name": "google-search",
     "command": "npx",
-    "args": ["-y", "@playwright/mcp@latest"]
+    "args": ["-y", "@modelcontextprotocol/server-google-search"],
+    "env": {
+      "GOOGLE_API_KEY": "${GOOGLE_API_KEY}",
+      "GOOGLE_SEARCH_ENGINE_ID": "${GOOGLE_SEARCH_ENGINE_ID}"
+    },
+    "disabled": true
+  },
+  {
+    "name": "brave-search",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+    "env": {
+      "BRAVE_API_KEY": "${BRAVE_API_KEY}"
+    },
+    "disabled": true
+  },
+  {
+    "name": "memory",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-memory"],
+    "env": {
+      "MEMORY_FILE_PATH": "data/mcp_memory.json"
+    }
+  },
+  {
+    "name": "sqlite",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-sqlite", "data/brunella.db"]
+  },
+  {
+    "name": "n8n",
+    "command": "npx",
+    "args": ["-y", "@modelcontextprotocol/server-n8n"],
+    "env": {
+      "N8N_API_KEY": "${N8N_API_KEY}",
+      "N8N_BASE_URL": "${N8N_BASE_URL}"
+    }
   },
   {
     "name": "filesystem",
@@ -37,32 +81,9 @@
     ]
   },
   {
-    "name": "docker",
+    "name": "playwright",
     "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-docker"],
-    "disabled": false
-  },
-  {
-    "name": "cloudflare",
-    "command": "npx",
-    "args": ["-y", "@cloudflare/mcp-server-cloudflare"],
-    "env": {
-      "CLOUDFLARE_ACCOUNT_ID": "${CLOUDFLARE_ACCOUNT_ID}",
-      "CLOUDFLARE_API_TOKEN": "${CLOUDFLARE_API_TOKEN}"
-    }
-  },
-  {
-    "name": "sqlite",
-    "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-sqlite", "data/brunella.db"]
-  },
-  {
-    "name": "memory",
-    "command": "npx",
-    "args": ["-y", "@modelcontextprotocol/server-memory"],
-    "env": {
-      "MEMORY_FILE_PATH": "data/mcp_memory.json"
-    }
+    "args": ["-y", "@playwright/mcp@latest"]
   },
   {
     "name": "brunella-python",

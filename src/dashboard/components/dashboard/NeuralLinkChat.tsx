@@ -62,9 +62,21 @@ export function NeuralLinkChat() {
     return restored?.selectedGeminiModel ?? "";
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [activeAgents, setActiveAgents] = useState<{name: string, task: string}[]>([]);
   const [expandedThoughts, setExpandedThoughts] = useState<
     Record<number, boolean>
   >({});
+
+  // Fetch active tasks periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      api.getActiveTasks().then(tasks => {
+        const agents = tasks.map((t: any) => ({ name: t.agent, task: t.description }));
+        setActiveAgents(agents);
+      }).catch(() => {});
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
   const [edgeStatus, setEdgeStatus] = useState<{
     enabled: boolean;
     healthy: boolean;
@@ -289,6 +301,20 @@ export function NeuralLinkChat() {
           {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
         </Button>
       </CardHeader>
+      
+      {activeAgents.length > 0 && (
+        <div className="bg-primary/5 border-b border-border/50 px-4 py-2 flex items-center gap-3 overflow-x-auto no-scrollbar">
+          <span className="text-[10px] font-bold text-primary uppercase tracking-tighter shrink-0">Aktív raj:</span>
+          {activeAgents.map((agent, idx) => (
+            <div key={idx} className="flex items-center gap-1.5 bg-background/80 border border-primary/20 rounded-full px-2 py-0.5 animate-pulse shrink-0">
+              <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
+              <span className="text-[10px] font-medium">{agent.name}</span>
+              <span className="text-[9px] text-muted-foreground truncate max-w-[100px] italic"> - {agent.task}</span>
+            </div>
+          ))}
+        </div>
+      )}
+
       <CardContent className="flex-1 flex flex-col min-h-0 p-0">
         {showBrowser && (
           <div className="border-b border-border bg-black/20 p-2 flex flex-col items-center justify-center relative min-h-[200px] max-h-[400px] overflow-hidden">
