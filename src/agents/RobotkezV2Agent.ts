@@ -138,7 +138,7 @@ export class RobotkezV2Agent extends BaseAgent {
             history: context.swarm?.history,
             browserState: browserState
           });
-        } catch (_err: unknown) {
+        } catch {
           // Final fallback
           plan = {
             plan: [{ action: 'navigate', url: `https://www.google.com/search?q=${encodeURIComponent(task)}`, description: 'Keresés' }],
@@ -168,7 +168,7 @@ export class RobotkezV2Agent extends BaseAgent {
         try {
           // Strip description and other non-command properties for browser compatibility
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
-          const { description, ...command } = step as unknown as Record<string, unknown>;
+          const { description: _desc, ...command } = step as unknown as Record<string, unknown>;
           const response = await persistentBrowser.sendCommand(command as any);
           completedSteps.push({
             ...step,
@@ -199,7 +199,7 @@ export class RobotkezV2Agent extends BaseAgent {
       let screenshotResult;
       try {
         screenshotResult = await persistentBrowser.sendCommand({ action: 'screenshot' });
-      } catch (_e) {
+      } catch {
         // Ignored
       }
 

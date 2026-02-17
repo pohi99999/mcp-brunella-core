@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-17T04:00:00.071Z",
+  "lastUpdated": "2026-02-17T05:00:00.163Z",
   "tracks": [
     {
       "id": "ai_recommendation_system_20260216",
@@ -480,9 +480,9 @@
       "name": "Jules Continuous AI Integration (JCAI)",
       "status": "active",
       "priority": "critical",
-      "progress": 0,
+      "progress": 60,
       "created": "2026-02-15T00:00:00Z",
-      "updated": "2026-02-15T00:00:00Z",
+      "updated": "2026-02-17T06:00:00Z",
       "tags": [
         "automation",
         "ci-cd",
@@ -788,6 +788,31 @@
       "_isArchived": true
     },
     {
+      "id": "bas_comprehensive_test_protocol_20260210",
+      "name": "BAS Átfogó Tesztprotokol",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 90,
+      "created": "2026-02-10T18:00:00Z",
+      "updated": "2026-02-16T15:05:00Z",
+      "assignee": "DeveloperAgent",
+      "tags": [
+        "testing",
+        "infrastructure",
+        "ci-cd",
+        "phoenix",
+        "health-check",
+        "husky",
+        "resilience"
+      ],
+      "dependencies": [
+        "code_quality_improvements_20260210",
+        "dashboard_test_suite_20260210"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\bas_comprehensive_test_protocol_20260210",
+      "_isArchived": true
+    },
+    {
       "id": "browser_use_harvester_20260131",
       "name": "Browser-Use Harvester with Structured JSON Output",
       "status": "archived",
@@ -946,10 +971,10 @@
     }
   ],
   "stats": {
-    "total": 46,
+    "total": 47,
     "active": 13,
     "completed": 7,
-    "archived": 9,
+    "archived": 10,
     "proposed": 7
   }
 }

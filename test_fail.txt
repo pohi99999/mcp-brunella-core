@@ -1,0 +1,61 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mF:/mcp-brunella-core[39m
+
+[90mstdout[2m | test/robotkezV2.e2e.test.ts[2m:11:1[22m[2m[2m > [22m[2mRobotkezV2 - E2E Test Scenarios (Phase 8.1)
+[22m[39mÔťů Server is running: {
+  success: [33mtrue[39m,
+  agent: {
+    name: [32m'RobotkezV2'[39m,
+    role: [32m'Hybrid Browser Automation Agent'[39m,
+    capabilities: [
+      [32m'browser_automation'[39m,
+      [32m'screenshot'[39m,
+      [32m'pdf_generation'[39m,
+      [32m'web_scraping'[39m,
+      [32m'ai_browsing'[39m,
+      [32m'multi_step_workflow'[39m
+    ]
+  },
+  browser: { active: [33mtrue[39m, type: [32m'persistent'[39m, engine: [32m'Playwright + Python'[39m },
+  browserStatus: [32m'idle'[39m,
+  tasks: { total: [33m0[39m, running: [33m0[39m, completed: [33m0[39m, error: [33m0[39m }
+}
+
+[90mstdout[2m | test/robotkezV2.e2e.test.ts[2m:343:3[22m[2m[2m > [22m[2mRobotkezV2 - E2E Test Scenarios (Phase 8.1)[2m > [22m[2mScenario 10: Parallel tasks (3+ background tasks)
+[22m[39mÔä╣´ŞĆ Scenario 10: Tasks executed synchronously (no background delegation)
+
+[90mstdout[2m | test/robotkezV2.e2e.test.ts[2m:11:1[22m[2m[2m > [22m[2mRobotkezV2 - E2E Test Scenarios (Phase 8.1)
+[22m[39m­čž╣ E2E tests completed
+
+ [31mÔŁ»[39m test/robotkezV2.e2e.test.ts [2m([22m[2m10 tests[22m[2m | [22m[31m1 failed[39m[2m | [22m[33m8 skipped[39m[2m)[22m[33m 37758[2mms[22m[39m
+[31m     [31m├Ś[31m Scenario 1: Google search ("Keress r├í az AI h├şrekre")[39m[33m 11785[2mms[22m[39m
+     [2m[90mÔćô[39m[22m Scenario 2: Form fill ("T├Âltsd ki a nevet 'Test User'-rel")
+     [2m[90mÔćô[39m[22m Scenario 3: Multi-step workflow ("Navig├ílj Ôćĺ Keress Ôćĺ Kattints")
+     [2m[90mÔćô[39m[22m Scenario 4: Background task (long-running, > 30s)
+     [2m[90mÔćô[39m[22m Scenario 5: Error recovery (selector not found)
+     [2m[90mÔćô[39m[22m Scenario 6: LLM hallucination (invalid plan)
+     [2m[90mÔćô[39m[22m Scenario 7: Browser crash recovery (Phoenix protocol)
+     [2m[90mÔćô[39m[22m Scenario 8: Screenshot capture
+     [2m[90mÔćô[39m[22m Scenario 9: Data extraction (extract text from page)
+     [33m[2mÔťô[22m[39m Scenario 10: Parallel tasks (3+ background tasks) [33m 25881[2mms[22m[39m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Tests 1 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  test/robotkezV2.e2e.test.ts:34:3 > RobotkezV2 - E2E Test Scenarios (Phase 8.1) > Scenario 1: Google search ("Keress r├í az AI h├şrekre")
+AssertionError: expected { status: 'error', ÔÇŽ(1) } to have property "success"
+ ÔŁ» test/robotkezV2.e2e.test.ts:42:27
+     40| 
+     41|     expect(response.status).toBe(200);
+     42|     expect(response.data).toHaveProperty('success');
+       |                           ^
+     43| 
+     44|     // If Robotk├ęz failed (browser not available, etc.), skip test graÔÇŽ
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/1]ÔÄ»
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m1 failed[39m[22m[2m | [22m[1m[32m1 passed[39m[22m[2m | [22m[33m8 skipped[39m[90m (10)[39m
+[2m   Start at [22m 05:52:45
+[2m   Duration [22m 38.59s[2m (transform 113ms, setup 83ms, import 336ms, tests 37.76s, environment 0ms)[22m
+
