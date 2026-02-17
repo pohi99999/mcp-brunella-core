@@ -175,17 +175,20 @@ export function formatAgentResponse(
   const prefix = agentName && useEmojis ? `🤖 **${agentName}:**\n\n` : '';
 
   switch (response.status) {
-    case 'success':
+    case 'success': {
       const successMsg = response.message || 'A művelet sikeres volt';
       return prefix + formatSuccess(successMsg, response.data, options);
+    }
 
-    case 'error':
+    case 'error': {
       const errorMsg = response.error || 'Ismeretlen hiba történt';
       return prefix + formatError(errorMsg, options);
+    }
 
-    case 'delegated':
+    case 'delegated': {
       const targetAgent = response.delegatedTo || 'másik ügynök';
       return prefix + formatDelegated(targetAgent, response.message, options);
+    }
 
     case 'handoff':
       if (response.handoff) {

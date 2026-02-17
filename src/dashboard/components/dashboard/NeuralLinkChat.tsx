@@ -493,6 +493,7 @@ export function NeuralLinkChat() {
               onClick={send}
               disabled={!input.trim() || isLoading}
               className="bg-emerald-600 hover:bg-emerald-500 shrink-0"
+              aria-label="Send message"
             >
               <PaperPlaneRight size={18} />
             </Button>

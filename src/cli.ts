@@ -49,9 +49,7 @@ try {
     const pkg = JSON.parse(readFileSync(pkgPath, "utf-8"));
     version = pkg.version;
   }
-} catch (e) {
-  // ignore
-}
+} catch (e) { /* non-critical */ }
 
 const rawArgs = process.argv.slice(2);
 const showBanner =
@@ -81,7 +79,7 @@ try {
       server_url: String(all.serverUrl ?? configManager.get("serverUrl") ?? ""),
     });
   }
-} catch (_) {}
+} catch (e) { /* non-critical */ }
 process.on("beforeExit", () => {
   flushTelemetry();
 });
@@ -151,8 +149,8 @@ program
 
       // Check Agents
       const agents = await client.callTool("agent_list", {});
-      // @ts-ignore
-      if (agents.content[0].text) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      if ((agents as any)?.content?.[0]?.text) {
         console.log(chalk.green("✔ Agents: Active"));
       }
     } catch (e: any) {
@@ -212,7 +210,7 @@ program
       await client.connect();
       // Use the agent_list tool
       const result = await client.callTool("agent_list", {});
-      // @ts-ignore
+      // @ts-expect-error The result from agent_list tool might not have 'content[0].text'.
       const text = result.content?.[0]?.text;
       if (text) {
         console.log(chalk.bold("Registered Agents:"));
@@ -271,9 +269,8 @@ program
 
         if (opts.json) {
           console.log(JSON.stringify(result, null, 2));
-        } else {
-          // @ts-ignore
-          const text = result.content?.[0]?.text;
+                    } else {
+                      // @ts-expect-error The result.content might not be a valid array or might be missing.          const text = result.content?.[0]?.text;
           if (text) {
             console.log(chalk.bold(`\n✅ ${agentName} Response:`));
             console.log(text);
@@ -314,8 +311,7 @@ program
           parsedArgs[key] = value;
         } else if (arg.startsWith("{")) {
           try {
-            Object.assign(parsedArgs, JSON.parse(arg));
-          } catch {}
+          } catch (e) { /* non-critical */ }
         }
       }
 
@@ -327,7 +323,7 @@ program
         if (opts.json) {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          // @ts-ignore
+          // @ts-expect-error
           const text = result.content?.[0]?.text;
           if (text) console.log(text);
           else console.log(JSON.stringify(result, null, 2));
@@ -696,7 +692,7 @@ program
         const result = await client.callTool("interpreter_run_python", {
           code,
         });
-        // @ts-ignore
+        // @ts-expect-error The result from interpreter_run_python might not have content[0].text.
         console.log(result.content[0].text);
       }
     } catch (e: any) {
@@ -725,7 +721,7 @@ conductorCmd
         task: "status",
       });
       spinner.stop();
-      // @ts-ignore
+      // @ts-expect-error The result from agent_delegate tool might not have 'content[0].text'.
       const text = result.content?.[0]?.text || "No response";
 
       try {
@@ -836,12 +832,11 @@ conductorCmd
       await client.connect();
       const result = await client.callTool("agent_delegate", {
         agent_name: "ProjectConductor",
-        task: "sync",
+        task: "sync documentation",
       });
       spinner.stop();
-      // @ts-ignore
-      const response = result.content?.[0]?.text || "Sync completed";
-      console.log(chalk.green("✓"), response);
+      // @ts-expect-error The response might not have content[0].text.
+      console.log(chalk.green("✓"), result);
     } catch (e: any) {
       spinner.stop();
       console.error(chalk.red("Error:"), e.message);
@@ -861,10 +856,9 @@ conductorCmd
       await client.connect();
       const result = await client.callTool("agent_delegate", {
         agent_name: "ProjectConductor",
-        task: "health",
       });
       spinner.stop();
-      // @ts-ignore
+      // @ts-expect-error The response might not have content[0].text.
       const response = result.content?.[0]?.text || "Health check completed";
       console.log(marked(response));
     } catch (e: any) {
@@ -898,7 +892,7 @@ conductorCmd
         task,
       });
       spinner.stop();
-      // @ts-ignore
+      // @ts-expect-error The response might not have content[0].text.
       const response = result.content?.[0]?.text || "Done";
       console.log(marked(response));
     } catch (e: any) {
@@ -1239,7 +1233,126 @@ registerInvoiceCommands(program);
 
 const testsCmd = program
   .command("tests")
-  .description("Manage test scheduling and results")
+  .description("Manage test scheduling and results");
+
+
+
+testsCmd
+  .command("status")
+  .description("Show test scheduler status and statistics")
+  .action(async () => {
+    const client = new BrunellaClient();
+    const spinner = ora("Fetching test scheduler status...").start();
+    try {
+      await client.connect();
+      spinner.stop();
+      // @ts-expect-error The result from test-scheduler-status tool might not have 'content[0].text'.
+      const text = result.content?.[0]?.text || JSON.stringify(result);
+      const data = JSON.parse(typeof text === "string" ? text : JSON.stringify(text));
+
+      console.log(chalk.bold("\n📊 Test Scheduler Status\n"));
+      console.log(`Schedule: ${chalk.cyan(data.schedule)}`);
+      console.log(`Enabled:  ${data.enabled ? chalk.green("✓") : chalk.red("✗")}`);
+      console.log(`Active:   ${data.active ? chalk.green("✓") : chalk.red("✗")}`);
+      
+      if (data.stats) {
+        console.log(chalk.bold("\n📈 Statistics (7 days)\n"));
+        console.log(`  Pass Rate:       ${chalk.green(data.stats.sevenDayPassRate)}`);
+        console.log(`  Total Runs:      ${chalk.cyan(data.stats.totalRuns)}`);
+        console.log(`  Avg Duration:    ${chalk.cyan(data.stats.averageDuration)}`);
+        console.log(`  Last Run Status: ${data.stats.lastRunStatus === "passed" ? chalk.green("✓ Passed") : chalk.red("✗ Failed")}`);
+        console.log(`  Last Run Time:   ${chalk.dim(data.stats.lastRunTime)}`);
+      }
+
+      if (data.recentRuns && data.recentRuns.length > 0) {
+        console.log(chalk.bold("\n📋 Recent Runs (Last 5)\n"));
+        data.recentRuns.forEach((run: any, i: number) => {
+          const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
+          console.log(`  ${i + 1}. ${status} (${run.passed}✓ / ${run.failed}✗) @ ${run.startedAt}`);
+        });
+      }
+    } catch (e: any) {
+      spinner.stop();
+      console.error(chalk.red("Error:"), e.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
+testsCmd
+  .command("run")
+  .description("Trigger a manual test run immediately")
+  .option("--reason <reason>", "Reason for triggering", "Manual CLI trigger")
+  .action(async (options) => {
+    const client = new BrunellaClient();
+    const spinner = ora("Triggering test run...").start();
+    try {
+      await client.connect();
+      const result = await client.callTool("test-scheduler-run", {
+        triggerReason: options.reason,
+      });
+      spinner.stop();
+      // @ts-expect-error The result from test-scheduler-run tool might not have 'content[0].text'.
+      const text = result.content?.[0]?.text || JSON.stringify(result);
+      const data = JSON.parse(typeof text === "string" ? text : JSON.stringify(text));
+
+      if (data.success) {
+        console.log(chalk.bold("\n✅ Test Run Triggered\n"));
+        console.log(`Run ID:  ${chalk.cyan(data.runId)}`);
+        console.log(`Status:  ${chalk.green(data.status)}`);
+        console.log(chalk.dim("\nMonitor progress in browser or use 'brunella tests status'"));
+      } else {
+        console.error(chalk.red("Failed to trigger test run:"), data.error);
+      }
+    } catch (e: any) {
+      spinner.stop();
+      console.error(chalk.red("Error:"), e.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
+testsCmd
+  .command("results [count]")
+  .description("Show recent test run results")
+  .action(async (count: string) => {
+    const client = new BrunellaClient();
+    const limit = parseInt(count || "10");
+    const spinner = ora("Fetching test results...").start();
+    try {
+      await client.connect();
+      
+      // Fetch results via HTTP (CLI-friendly)
+      const response = await fetch("http://localhost:3000/api/tests/results?limit=" + limit);
+      spinner.stop();
+      
+      if (!response.ok) throw new Error("Failed to fetch results");
+      
+      const data = (await response.json()) as { runs: any[] };
+      console.log(chalk.bold(`\n🧪 Recent Test Runs (Last ${limit})\n`));
+
+      if (data.runs.length === 0) {
+        console.log(chalk.dim("No test runs found"));
+      } else {
+        data.runs.forEach((run: any, i: number) => {
+          const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
+          const duration = run.duration || "N/A";
+          console.log(`${i + 1}. ${status} ID: ${chalk.cyan(run.id)} | ${run.passed}✓ ${run.failed}✗ | ${duration}`);
+          console.log(`   Started: ${chalk.dim(new Date(run.startedAt).toLocaleString("hu-HU"))}`);
+        });
+      }
+    } catch (e: any) {
+      spinner.stop();
+      console.error(chalk.red("Error:"), e.message);
+    } finally {
+      await client.close();
+      process.exit(0);
+    }
+  });
+
+testsCmd
   .action(async () => {
     const { action } = await inquirer.prompt([
       {
@@ -1352,128 +1465,6 @@ const testsCmd = program
       process.exit(0);
     }
   });
-
-testsCmd
-  .command("status")
-  .description("Show test scheduler status and statistics")
-  .action(async () => {
-    const client = new BrunellaClient();
-    const spinner = ora("Fetching test scheduler status...").start();
-    try {
-      await client.connect();
-      const result = await client.callTool("test-scheduler-status", {
-        includeDetails: true,
-      });
-      spinner.stop();
-      // @ts-ignore
-      const text = result.content?.[0]?.text || JSON.stringify(result);
-      const data = JSON.parse(typeof text === "string" ? text : JSON.stringify(text));
-
-      console.log(chalk.bold("\n📊 Test Scheduler Status\n"));
-      console.log(`Schedule: ${chalk.cyan(data.schedule)}`);
-      console.log(`Enabled:  ${data.enabled ? chalk.green("✓") : chalk.red("✗")}`);
-      console.log(`Active:   ${data.active ? chalk.green("✓") : chalk.red("✗")}`);
-      
-      if (data.stats) {
-        console.log(chalk.bold("\n📈 Statistics (7 days)\n"));
-        console.log(`  Pass Rate:       ${chalk.green(data.stats.sevenDayPassRate)}`);
-        console.log(`  Total Runs:      ${chalk.cyan(data.stats.totalRuns)}`);
-        console.log(`  Avg Duration:    ${chalk.cyan(data.stats.averageDuration)}`);
-        console.log(`  Last Run Status: ${data.stats.lastRunStatus === "passed" ? chalk.green("✓ Passed") : chalk.red("✗ Failed")}`);
-        console.log(`  Last Run Time:   ${chalk.dim(data.stats.lastRunTime)}`);
-      }
-
-      if (data.recentRuns && data.recentRuns.length > 0) {
-        console.log(chalk.bold("\n📋 Recent Runs (Last 5)\n"));
-        data.recentRuns.forEach((run: any, i: number) => {
-          const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
-          console.log(`  ${i + 1}. ${status} (${run.passed}✓ / ${run.failed}✗) @ ${run.startedAt}`);
-        });
-      }
-    } catch (e: any) {
-      spinner.stop();
-      console.error(chalk.red("Error:"), e.message);
-    } finally {
-      await client.close();
-      process.exit(0);
-    }
-  });
-
-testsCmd
-  .command("run")
-  .description("Trigger a manual test run immediately")
-  .option("--reason <reason>", "Reason for triggering", "Manual CLI trigger")
-  .action(async (options) => {
-    const client = new BrunellaClient();
-    const spinner = ora("Triggering test run...").start();
-    try {
-      await client.connect();
-      const result = await client.callTool("test-scheduler-run", {
-        triggerReason: options.reason,
-      });
-      spinner.stop();
-      // @ts-ignore
-      const text = result.content?.[0]?.text || JSON.stringify(result);
-      const data = JSON.parse(typeof text === "string" ? text : JSON.stringify(text));
-
-      if (data.success) {
-        console.log(chalk.bold("\n✅ Test Run Triggered\n"));
-        console.log(`Run ID:  ${chalk.cyan(data.runId)}`);
-        console.log(`Status:  ${chalk.green(data.status)}`);
-        console.log(chalk.dim("\nMonitor progress in browser or use 'brunella tests status'"));
-      } else {
-        console.error(chalk.red("Failed to trigger test run:"), data.error);
-      }
-    } catch (e: any) {
-      spinner.stop();
-      console.error(chalk.red("Error:"), e.message);
-    } finally {
-      await client.close();
-      process.exit(0);
-    }
-  });
-
-testsCmd
-  .command("results [count]")
-  .description("Show recent test run results")
-  .action(async (count: string) => {
-    const client = new BrunellaClient();
-    const limit = parseInt(count || "10");
-    const spinner = ora("Fetching test results...").start();
-    try {
-      await client.connect();
-      
-      // Fetch results via HTTP (CLI-friendly)
-      const response = await fetch("http://localhost:3000/api/tests/results?limit=" + limit);
-      spinner.stop();
-      
-      if (!response.ok) throw new Error("Failed to fetch results");
-      
-      const data = (await response.json()) as { runs: any[] };
-      console.log(chalk.bold(`\n🧪 Recent Test Runs (Last ${limit})\n`));
-
-      if (data.runs.length === 0) {
-        console.log(chalk.dim("No test runs found"));
-      } else {
-        data.runs.forEach((run: any, i: number) => {
-          const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
-          const duration = run.duration || "N/A";
-          console.log(`${i + 1}. ${status} ID: ${chalk.cyan(run.id)} | ${run.passed}✓ ${run.failed}✗ | ${duration}`);
-          console.log(`   Started: ${chalk.dim(new Date(run.startedAt).toLocaleString("hu-HU"))}`);
-        });
-      }
-    } catch (e: any) {
-      spinner.stop();
-      console.error(chalk.red("Error:"), e.message);
-    } finally {
-      await client.close();
-      process.exit(0);
-    }
-  });
-
-// ════════════════════════════════════════════════════════════════════════════
-// HARVEST COMMAND (Tech-Harvester Pipeline)
-// ════════════════════════════════════════════════════════════════════════════
 
 const harvestCmd = program
   .command("harvest")

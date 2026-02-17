@@ -9,6 +9,7 @@ import {
 import React from "react";
 import { NeuralLinkChat } from "@/components/dashboard/NeuralLinkChat";
 import * as api from "@/lib/apiService";
+import { SocketProvider } from "@/context/SocketContext";
 
 vi.mock("@/lib/apiService", () => ({
   getOllamaModels: vi.fn().mockResolvedValue([{ name: "llama3" }]),
@@ -39,6 +40,7 @@ vi.mock("@/lib/apiService", () => ({
     message: "CF chat",
     endpoint: "/api/chat",
   }),
+  getActiveTasks: vi.fn().mockResolvedValue([]),
 }));
 
 const mockedApi = api as unknown as {
@@ -70,7 +72,11 @@ describe("NeuralLinkChat", () => {
     );
 
     await act(async () => {
-      render(<NeuralLinkChat />);
+      render(
+        <SocketProvider>
+          <NeuralLinkChat />
+        </SocketProvider>,
+      );
     });
 
     expect(screen.getByText("Üdv!")).toBeInTheDocument();
@@ -80,13 +86,17 @@ describe("NeuralLinkChat", () => {
 
   it("sends message via orchestrator provider", async () => {
     await act(async () => {
-      render(<NeuralLinkChat />);
+      render(
+        <SocketProvider>
+          <NeuralLinkChat />
+        </SocketProvider>,
+      );
     });
 
     const textbox = screen.getByRole("textbox");
     fireEvent.change(textbox, { target: { value: "Szia" } });
 
-    const sendButton = screen.getByRole("button");
+    const sendButton = screen.getByRole("button", { name: /Send message/i });
     fireEvent.click(sendButton);
 
     await waitFor(() => {
@@ -102,7 +112,11 @@ describe("NeuralLinkChat", () => {
 
   it("shows edge status indicator in cloudflare mode", async () => {
     await act(async () => {
-      render(<NeuralLinkChat />);
+      render(
+        <SocketProvider>
+          <NeuralLinkChat />
+        </SocketProvider>,
+      );
     });
 
     const modeSelect = screen.getByLabelText("Chat mód") as HTMLSelectElement;

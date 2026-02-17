@@ -172,7 +172,7 @@ export class DeploymentAnalyzer {
    */
   private static extractErrorLocation(logs: string): { file: string; line?: number } | undefined {
     // Match: file.ts:42:15 or file.ts(42,15)
-    const match = logs.match(/([a-zA-Z0-9_/.-]+\.(?:ts|tsx|js|jsx|py))[:\(](\d+)/);
+    const match = logs.match(/([a-zA-Z0-9_/.-]+\.(?:ts|tsx|js|jsx|py))[:(](\d+)/);
     if (match) {
       return {
         file: match[1],
@@ -187,7 +187,7 @@ export class DeploymentAnalyzer {
    */
   private static extractAffectedFiles(logs: string): string[] {
     const files = new Set<string>();
-    const filePattern = /(?:src|test|lib|app)\/[^\s:]+\.(?:ts|tsx|js|jsx|py|go|rs)/g;
+    const filePattern = new RegExp("(?:src|test|lib|app)\\/[^\\s:]+\\.(?:ts|tsx|js|jsx|py|go|rs)", "g");
     const matches = logs.match(filePattern);
 
     if (matches) {

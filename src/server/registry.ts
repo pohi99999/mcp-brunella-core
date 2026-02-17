@@ -124,6 +124,18 @@ const registeredToolsList: RegisteredToolInfo[] = [
       { name: "batch_size", type: "number", required: false },
     ],
   },
+  {
+    id: "get_ai_recommendation",
+    name: "get_ai_recommendation",
+    description: "AI-alapú ajánlásokat ad vissza LanceDB RAG keresés segítségével",
+    enabled: true,
+    category: "custom",
+    parameters: [
+      { name: "query", type: "string", required: true },
+      { name: "limit", type: "number", required: false },
+      { name: "context", type: "string", required: false },
+    ],
+  },
 ];
 
 // Internal tool handler map
@@ -206,6 +218,10 @@ export async function registerAllTools(server: McpServer) {
     registerGithubModelsTool(server);
     registerGeminiTool(server);
     registerEvHunterTools(server);
+
+    // AI Recommendation tool (Track: ai_recommendation_system_20260216)
+    const { registerAiRecommendationTool } = await import("../tools/getAiRecommendation.js");
+    registerAiRecommendationTool(server);
 
     // Register Agent Tools with double-registration (server + internal map)
     const agentListHandler = async () => {

@@ -36,7 +36,7 @@ describe('Monitor Tools', () => {
         expect(tool).toBeDefined();
 
         const result = await tool({ log_file: testLog, lines: 3 });
-        // @ts-ignore
+        // @ts-expect-error The result from the mock tool might not have the expected structure in tests.
         const content = result.content[0].text;
 
         expect(content).toMatch(/Line 8/);

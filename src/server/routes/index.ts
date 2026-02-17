@@ -22,6 +22,8 @@ import { createJulesRoutes } from "./jules.js";
 import { createCloudflareRoutes } from "./cloudflare.js";
 import { createTracksRoutes } from "./tracks.js";
 import { createTTSRoutes } from "./tts.js";
+import { createRecommendationRoutes } from "./recommendation.js";
+import { createMachinesRouter } from "./machines.js";
 
 export {
   createHealthRoutes,
@@ -77,6 +79,8 @@ export function createV1Router(): Router {
   router.use("/cloudflare", createCloudflareRoutes());
   router.use("/tracks", createTracksRoutes());
   router.use("/tts", createTTSRoutes());
+  router.use("/brunella", createRecommendationRoutes());
+  router.use("/machines", createMachinesRouter());
 
   return router;
 }

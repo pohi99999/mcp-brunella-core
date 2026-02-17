@@ -7,6 +7,7 @@ import {
   getTestStats,
   getTestRunsByDateRange
 } from '../../core/testResultsService.js';
+import cron from 'node-cron';
 
 const router = Router();
 
@@ -44,7 +45,7 @@ router.post('/schedule', async (req: Request, res: Response) => {
     }
 
     // Validate cron expression
-    const cron = require('node-cron');
+
     if (!cron.validate(schedule)) {
       return res.status(400).json({ success: false, error: 'Invalid cron expression' });
     }

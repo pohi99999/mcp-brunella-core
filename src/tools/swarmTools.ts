@@ -70,7 +70,7 @@ export function registerSwarmTools(server: McpServer) {
         const filePath = path.join(kbDir, fileName);
         const md = `# ${title}\n\n**Source:** ${url}\n\n${refined.clean_content}`;
         await fs.writeFile(filePath, md, 'utf-8');
-        try { await addToIndex(path.join('07_KNOWLEDGE_BASE', 'swarm_ingested', fileName), md); } catch {}
+        try { await addToIndex(path.join('07_KNOWLEDGE_BASE', 'swarm_ingested', fileName), md); } catch { /* non-critical */ }
 
         return { content: [{ type: "text", text: `Success: ${title}\nSaved: ${fileName}` }] };
       } catch (error: any) {

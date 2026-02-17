@@ -102,7 +102,7 @@ export class PythonShell {
 
     try {
       await fs.mkdir(config.systemLogDir, { recursive: true });
-    } catch (e) {} // Ignore if dir exists
+    } catch (e) { /* non-critical */ } // Ignore if dir exists
 
     try {
       await fs.writeFile(tempIn, JSON.stringify(context || {}), "utf-8");

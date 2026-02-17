@@ -1,0 +1,98 @@
+{
+  "campaign_id": "camp_20260217_220655",
+  "query": "AI marketing",
+  "slug": "ai-marketing",
+  "assets": [
+    {
+      "asset_type": "headline",
+      "platform": "general",
+      "content": "🚀 [HEADLINE PLACEHOLDER] – AI marketing – Innovatív megoldások",
+      "is_draft": true,
+      "word_count": 9
+    },
+    {
+      "asset_type": "body_copy",
+      "platform": "general",
+      "content": "📝 [BODY COPY PLACEHOLDER] – Ez a szöveg bemutatja a AI marketing előnyeit és lehetőségeit. A trendek alapján...",
+      "is_draft": true,
+      "word_count": 18
+    },
+    {
+      "asset_type": "cta",
+      "platform": "general",
+      "content": "👉 [CTA PLACEHOLDER] – Kezdje el most!",
+      "is_draft": true,
+      "word_count": 7
+    },
+    {
+      "asset_type": "social_post",
+      "platform": "general",
+      "content": "📱 [SOCIAL POST PLACEHOLDER] – AI marketing | #AI #Innovation #BAS",
+      "is_draft": true,
+      "word_count": 11
+    },
+    {
+      "asset_type": "headline",
+      "platform": "facebook",
+      "content": "🚀 [HEADLINE PLACEHOLDER] – AI marketing – Innovatív megoldások",
+      "is_draft": true,
+      "word_count": 9
+    },
+    {
+      "asset_type": "body_copy",
+      "platform": "facebook",
+      "content": "📝 [BODY COPY PLACEHOLDER] – Ez a szöveg bemutatja a AI marketing előnyeit és lehetőségeit. A trendek alapján...",
+      "is_draft": true,
+      "word_count": 18
+    },
+    {
+      "asset_type": "cta",
+      "platform": "facebook",
+      "content": "👉 [CTA PLACEHOLDER] – Kezdje el most!",
+      "is_draft": true,
+      "word_count": 7
+    },
+    {
+      "asset_type": "social_post",
+      "platform": "facebook",
+      "content": "📱 [SOCIAL POST PLACEHOLDER] – AI marketing | #AI #Innovation #BAS",
+      "is_draft": true,
+      "word_count": 11
+    },
+    {
+      "asset_type": "headline",
+      "platform": "linkedin",
+      "content": "🚀 [HEADLINE PLACEHOLDER] – AI marketing – Innovatív megoldások",
+      "is_draft": true,
+      "word_count": 9
+    },
+    {
+      "asset_type": "body_copy",
+      "platform": "linkedin",
+      "content": "📝 [BODY COPY PLACEHOLDER] – Ez a szöveg bemutatja a AI marketing előnyeit és lehetőségeit. A trendek alapján...",
+      "is_draft": true,
+      "word_count": 18
+    },
+    {
+      "asset_type": "cta",
+      "platform": "linkedin",
+      "content": "👉 [CTA PLACEHOLDER] – Kezdje el most!",
+      "is_draft": true,
+      "word_count": 7
+    },
+    {
+      "asset_type": "social_post",
+      "platform": "linkedin",
+      "content": "📱 [SOCIAL POST PLACEHOLDER] – AI marketing | #AI #Innovation #BAS",
+      "is_draft": true,
+      "word_count": 11
+    }
+  ],
+  "top_trends": [],
+  "summary_path": "",
+  "generated_at": "2026-02-17T22:06:55.743046",
+  "duration_seconds": 0.0009996891021728516,
+  "draft_mode": true,
+  "success": true,
+  "error_message": null
+}

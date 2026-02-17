@@ -637,6 +637,32 @@
       "tags": ["insurance", "risk", "fraud", "claims", "automation", "enterprise"],
       "priority": 8,
       "enterpriseModuleId": "insurance"
+    },
+    {
+      "name": "Nurturer",
+      "title": "Nurturer Agent",
+      "description": "Ingatlan hirdetések és marketing kampányok automatikus generálása az elemzések alapján.",
+      "class": "NurturerAgent",
+      "module": "./agents/NurturerAgent.js",
+      "capabilities": ["copywriting", "campaign_planning", "lead_nurturing"],
+      "triggers": ["kampány", "hirdetés", "campaign", "listing", "marketing"],
+      "category": "marketing",
+      "status": "active",
+      "tags": ["real-estate", "marketing", "copywriting"],
+      "priority": 5
+    },
+    {
+      "name": "GenesisOrchestrator",
+      "title": "Genesis Orchestrator",
+      "description": "A szoftver genesis protokoll automatikus vezénylése a feladatsor alapján.",
+      "class": "GenesisOrchestrator",
+      "module": "./agents/GenesisOrchestrator.js",
+      "capabilities": ["task_orchestration", "parallel_execution", "genesis_protocol"],
+      "triggers": ["genesis", "futtasd", "orchestrate", "genesis run"],
+      "category": "engineering",
+      "status": "active",
+      "tags": ["genesis", "automation", "orchestration"],
+      "priority": 10
     }
   ]
 }

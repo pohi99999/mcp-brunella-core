@@ -44,12 +44,11 @@ const mockResponses: Record<string, JulesFixResponse> = {
         change: "import { exec } from 'child_process';",
         location: 'line 1',
         reason: 'Missing import for exec function',
-        diffHunk: '+import { exec } from \'child_process\';'
+        diffHunk: `+import { exec } from 'child_process';`
       }
     ],
     explanation: 'The error occurs because exec is not imported from child_process. Adding the import statement will resolve the build failure.',
     confidence: 0.98,
-    testSuggestions: ['npm run build', 'npm run build:watch'],
     timestamp: new Date().toISOString()
   },
 
@@ -61,14 +60,14 @@ const mockResponses: Record<string, JulesFixResponse> = {
         change: 'interface RequestQuery extends Record<string, unknown> {}',
         location: 'line 12',
         reason: 'Type declaration for API query parameters',
-        diffHunk: '+interface RequestQuery extends Record<string, unknown> {}'
+        diffHunk: `+interface RequestQuery extends Record<string, unknown> {}`
       },
       {
         file: 'src/server/routes/api.ts',
         change: 'const query = req.query as RequestQuery;',
         location: 'line 45',
         reason: 'Type assertion to prevent implicit any',
-        diffHunk: '+const query = req.query as RequestQuery;'
+        diffHunk: `+const query = req.query as RequestQuery;`
       }
     ],
     explanation: 'TypeScript strict mode requires explicit type definitions. Adding proper interfaces solves type errors.',
@@ -86,7 +85,7 @@ const mockResponses: Record<string, JulesFixResponse> = {
         change: "it('should handle large files', async () => { pass: true });",
         location: 'line 42',
         reason: 'Increase test timeout from 5000ms to 10000ms',
-        diffHunk: "-  it('should handle large files', async () => {\n+ it('should handle large files', async () => { return Promise.resolve(); });"
+        diffHunk: '-  it(\'should handle large files\', async () => {\n+ it(\'should handle large files\', async () => { return Promise.resolve(); });'
       }
     ],
     explanation: 'The test is timing out because large file processing takes longer than 5 seconds. Increasing the timeout threshold resolves this.',
@@ -101,10 +100,10 @@ const mockResponses: Record<string, JulesFixResponse> = {
       {
         file: 'test/utils/parser.test.ts',
         change:
-          'expect(parser.parse(input)).toEqual({ name: \"test\", value: 123 });',
+          'expect(parser.parse(input)).toEqual({ name: "test", value: 123 });',
         location: 'line 28',
         reason: 'Update mock data to match expected output',
-        diffHunk: 'const expectedOutput = { name: \"test\", value: 123, active: true };'
+        diffHunk: `const expectedOutput = { name: "test", value: 123, active: true };`
       }
     ],
     explanation: 'The test assertion expects additional fields in the output. Updating mock data or parser logic fixes this.',
@@ -129,8 +128,7 @@ const mockResponses: Record<string, JulesFixResponse> = {
         change: 'const token = process.env.CLOUDFLARE_API_TOKEN;\\nif (!token) throw new Error("Missing CLOUDFLARE_API_TOKEN");',
         location: 'line 20',
         reason: 'Add validation and clear error message',
-        diffHunk:
-          '+const token = process.env.CLOUDFLARE_API_TOKEN;\\n+if (!token) throw new Error("Missing CLOUDFLARE_API_TOKEN");'
+        diffHunk: '+const token = process.env.CLOUDFLARE_API_TOKEN;\\n+if (!token) throw new Error("Missing CLOUDFLARE_API_TOKEN");'
       }
     ],
     explanation: 'Authentication failed because the API token environment variable is not set. Check .env file and ensure credentials are valid.',
@@ -154,7 +152,7 @@ const mockResponses: Record<string, JulesFixResponse> = {
         change: 'const unused = require(\"heavy-library\"); // Remove or lazy-load',
         location: 'line 12',
         reason: 'Remove unused dependencies from deployment bundle',
-        diffHunk: '-const unused = require("heavy-library");'
+        diffHunk: `-const unused = require("heavy-library");`
       }
     ],
     explanation: 'Deployment failed because the bundle exceeds CloudFlare Workers size limit (1MB). Removing unused dependencies solves this.',
@@ -172,7 +170,7 @@ const mockResponses: Record<string, JulesFixResponse> = {
         change: 'console.error("Detailed error context:", error);',
         location: 'line 50',
         reason: 'Improve error logging for better diagnosis',
-        diffHunk: '+console.error("Detailed error context:", error);'
+        diffHunk: `+console.error("Detailed error context:", error);`
       }
     ],
     explanation:
@@ -358,3 +356,5 @@ export function getAllMockResponses() {
 export function getMockResponse(key: string): JulesFixResponse | undefined {
   return mockResponses[key as keyof typeof mockResponses];
 }
+
+

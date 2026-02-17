@@ -1030,7 +1030,7 @@ export async function startInteractiveMenu(): Promise<void> {
     try {
         const { readFileSync, existsSync } = await import('fs');
         const { join } = await import('path');
-        let pkgPath = join(process.cwd(), 'package.json');
+        const pkgPath = join(process.cwd(), 'package.json');
         if (existsSync(pkgPath)) {
             const pkg = JSON.parse(readFileSync(pkgPath, 'utf-8'));
             version = pkg.version;

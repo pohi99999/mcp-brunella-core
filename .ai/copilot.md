@@ -6,19 +6,182 @@
 
 **Agent:** GitHub Copilot (Pro+)  
 **Fájl:** `.ai/copilot.md`  
-**Utolsó frissítés:** 2026-02-17 21:15
+**Utolsó frissítés:** 2026-02-18 01:00
 
 ---
 
-## 2026-02-17 21:15 - ✅ PHASE 6 COMPLETE: Enterprise Suite Integration & Testing
+## 2026-02-18 01:00 - ✅ Industrial Machine Hunter Phase 3 + Real Estate Phase 1 + Software Genesis Phase 1
 
-**Track:** `enterprise_suite_master_20260216`  
-**Feladat:** Phase 6 Integration tests fix + documentation update
+**Track 1:** `industrial_machine_hunter_20260216` – Phase 3 Complete (100%) ✅  
+**Track 2:** `real_estate_sales_campaign_20260216` – Phase 1 Complete (50%)  
+**Track 3:** `software_genesis_protocol_20260216` – Phase 1 Complete (30%)
 
-### ✅ Elvégzett munkálatok
+**Létrehozott/módosított fájlok:**
 
-1. **Phase 6 Integration Tests Fixes**
-   - **Problem:** 22 failing tests in `test/phase6-integration.test.ts`
+### Machine Hunter – Phase 3 (Alert Pipeline + API Route)
+- `src/server/routes/machines.ts` – Machine Hunter REST API endpoint
+  - `GET /api/machines/hunt` – Auction hunt + valuation
+  - `POST /api/machines/alert` – Socket.IO real-time alert dispatch
+  - Hibakezelés + JSON válasz struktúra
+- `src/server/routes/index.ts` – machines route regisztrálva
+
+### Real Estate Sales Campaign – Phase 1 (Vision OCR)
+- `myai/core/vision_worker.py` – Gemini Vision alapú OCR worker
+  - PropertyDocument (Floor Plan, Certificate, Contract, Valuation) elemzés
+  - ExtractedPropertyData Pydantic schema (32 mező)
+  - Mock mode: determinisztikus teszt adatok kategóriánként
+  - CLI: `--doc-type`, `--property-id`, `--mock`, `--image`
+- `src/types/property.ts` – TypeScript interfészek (PropertyAsset, OCRResult, ValuationReport)
+- `src/agents/PropertyAnalystAgent.ts` – PropertyAnalystAgent (IAgent implementáció)
+  - OCR → Értékelés → Kampány pipeline
+  - Magyar városnév → térség mapping (budapesti, vidéki kategorizáció)
+  - Befektetési score kiszámítás
+- `myai/tests/test_vision_worker.py` – 10 unit teszt (mock mode, CLI, Pydantic validáció), 10/10 PASS
+
+### Software Genesis Protocol – Phase 1 (ArchitectAgent + Blueprint)
+- `src/types/blueprint.ts` – SystemBlueprint teljes séma TypeScript-ben
+  - BlueprintModule (7 réteg: frontend/backend/db/ai/infra/mobile/testing)
+  - InterviewQuestion / InterviewSession / RequirementInterview
+  - GenesisResult (ügynök feladatok, időbecslés)
+  - QAGate, AgentAssignment, DeployTarget
+- `src/agents/ArchitectAgent.ts` – Phase 1 upgrade
+  - Private state: `_currentBlueprint`, `_isApproved`
+  - Human-in-the-Loop: "jóváhagyom" / "approve" handler
+  - Blueprint státusz lekérdezés
+  - Smart tech stack detektálás (szövegből: React/FastAPI/PostgreSQL/Cloudflare)
+  - Arbitrázs: módszerek megtartva, interview loop hozzáadva
+
+**Build & Tesztek:**
+- `npm run build`: ✅ 0 hiba, 0 figyelmeztetés
+- `npx vitest run`: ✅ 94 test file | 817 PASS | 8 skipped | 0 FAIL
+
+## 2026-02-16 12:00 - ✅ Hyper-Local Supply Chain + Industrial Machine Hunter – Phase 1+2 COMPLETE
+
+**Track 1:** `hyper_local_supply_chain_20260216` – Phase 1 Complete (40%)
+**Track 2:** `industrial_machine_hunter_20260216` – Phase 1+2 Complete (65%)
+
+**Létrehozott fájlok:**
+- `myai/workers/geo_scraper.py` – Geo-fenced freight scraper (TIMOCOM + Trans.eu)
+  - GeoPoint, GeoFence, FreightCapacity, FreightScrapeRequest/Result Pydantic modellek
+  - Haversine távolságszámítás, geo-fence szűrés, távolság szerinti rendezés
+  - Mock adatok: 8 közép-európai fuvar tétel (5 belül, 3 kívül 50 km-es körön)
+  - Live stubs (TIMOCOM + Trans.eu – browser-use integrációra váró)
+  - CLI: `--lat/lng/radius`, `--min-pallets`, `--vehicle-types`, `--mock`, `--markdown`
+  - Stdin JSON + argparse dual mode
+- `myai/tests/test_geo_scraper.py` – 56 unit teszt, 56/56 PASS
+  - Haversine: 6 teszt (Zala→Graz, Zala→Budapest, szimmetria stb.)
+  - GeoFence.contains(): 5 teszt (közép, belső, külső, határ, szűk sugár)
+  - Pydantic validáció: 11 teszt (GeoPoint, GeoFence, FreightCapacity, Request)
+  - Mock scraperek: 6 teszt (timocom, trans_eu, limit, tagging, distance)
+  - scrape_freight() mock: 12 teszt (szűrők, rendezés, metadata, single source)
+  - to_markdown(): 3 teszt
+  - CLI: 8 teszt (JSON, markdown, stdin, --min-pallets filter, invalid input)
+
+- `myai/workers/machine_hunter.py` – Multi-source aukciós scraper + értékelő motor
+  - MachineListing, ValuationResult, MachineHuntRequest/Result Pydantic modellek
+  - EUR normalizáció: 9 valuta (EUR, HUF, USD, GBP, PLN, CZK, CHF, RON, SEK)
+  - Leárazási modell: 8%/év + 0.003%/üzemóra, min 15% roncsérték
+  - Arbitrázs score + BUY (>25%) / WATCH (>10%) / IGNORE döntés
+  - Zajszűrés: for_parts, 'parts only', 'defective', 'ersatzteile', 'nicht fahrbereit'
+  - 12 gépes mock pool (CNC, targonca, lézer, daru, robot, nyomda)
+  - Anti-bot: random 2-5s delay + user-agent rotáció (live módban)
+  - Live stubs: Machineseeker, Maschinensucher, BidSpotter
+  - CLI: `--query`, `--sources`, `--min-year`, `--max-hours`, `--max-price`, `--mock`, `--markdown`
+- `myai/tests/test_machine_hunter.py` – 70 unit teszt, 70/70 PASS
+  - Pydantic modellek: 14 teszt
+  - Valutakonverzió: 5 teszt
+  - Értékbecslés: 4 teszt
+  - Arbitrázs score: 5 teszt
+  - Ajánlás logika: 7 teszt (BUY/WATCH/IGNORE + zajszűrés)
+  - valuate_listing(): 9 teszt
+  - Mock scraperek: 4 teszt
+  - hunt_machines(): 15 teszt (szűrők, for_parts szűrés, BUY rendezés)
+  - to_markdown(): 3 teszt
+  - CLI: 9 teszt
+
+- `data/internal_needs.json` – 5 belső logisztikai igény (Zalaegerszeg hub)
+  - IN-001 Zalaegerszeg→Graz (HIGH, 6 raklap, tautliner)
+  - IN-002 Wien→Zalaegerszeg (MEDIUM, 18 raklap, flatbed)
+  - IN-003 Nagykanizsa→Ljubljana (LOW, 4 raklap, curtainsider)
+  - IN-004 Körmend→München (HIGH, 12 raklap, mega)
+  - IN-005 Keszthely→Bratislava (MEDIUM, spot, árérzékeny)
+
+**Bug fix:** geo_scraper.py CLI default ágban `--min-pallets` nem kerül át → javítva
+
+**Teszteredmények:** 126/126 PASS (7.94s) – mind a két worker +tesztek zöld
+
+---
+
+## 2026-02-17 23:30 - ✅ Marketing Swarm Testing COMPLETE (98/98 PASS)
+
+**Track:** `marketing_swarm_20260216` – Testing Phase  
+**Eredmény:** 98 teszt, 100% PASS, 0 FAIL
+
+**Létrehozott tesztfájlok:**
+- `myai/tests/test_trend_analyst.py` – 41 unit teszt:
+  - Pydantic modellek (TrendItem, Request, Report) validáció
+  - `analyze_trends()` mock + Ollama fallback (connection error mock)
+  - `FALLBACK_TRENDS` konstans validáció
+  - CLI belépési pont (stdin JSON, args, markdown, limit)
+  - Windows encoding fix: `PYTHONIOENCODING=utf-8` + `encoding='utf-8'`
+- `myai/tests/test_media_factory.py` – 49 unit teszt:
+  - Pydantic modellek (TrendItemInput, MediaAsset, CampaignPackage)
+  - Segédfüggvények: `_slugify`, `_generate_campaign_id`, `_generate_placeholder_asset`
+  - `produce_campaign()` mock módban
+  - Mentési pipeline: `campaign.json`, `SUMMARY.md`, platform `.txt`
+  - Summary markdown generálás
+  - CLI belépési pont
+- `test/marketing_swarm_integration_test.py` – 8 integrációs teszt:
+  - E2E: `trend_analyst → media_factory → fájlrendszer`
+  - JSON round-trip konzisztencia
+  - SUMMARY.md trend tartalom ellenőrzés
+  - Több termék izolációja
+  - Score sorrend megőrzés
+  - Edge cases: üres trendlista, 1 platform, speciális karakterek
+
+**Track státusz:** ✅ COMPLETE (100% | összes fázis befejezve)
+
+---
+
+## 2026-02-17 22:45 - ✅ AI Recommendation System + Marketing Swarm Phase 2-3
+
+**Trackek:** `ai_recommendation_system_20260216` + `marketing_swarm_20260216`
+
+### ✅ AI Recommendation System (Phase 1-2 COMPLETE)
+
+| Fájl | Leírás |
+|------|--------|
+| `src/server/routes/recommendation.ts` | Express Router: POST /brunella/recommend + GET /brunella/recommend/health |
+| `src/tools/getAiRecommendation.ts` | MCP Tool: `get_ai_recommendation` (zod-validált paraméterek) |
+| `src/server/routes/index.ts` | createRecommendationRoutes import + `/brunella` route regisztráció |
+| `src/server/registry.ts` | Tool metadata dashboard-ban + registerAiRecommendationTool() hívás |
+
+**Architekturális döntések:**
+- 30s timeout védelem a RAG híváshoz (Promise.race)
+- 4 statikus fallback ajánlás ha Ollama/LanceDB nem elérhető
+- Stricten typed: `source: "rag" | "fallback"` union type
+
+### ✅ Marketing Swarm Phase 2-3 COMPLETE
+
+| Fájl | Leírás |
+|------|--------|
+| `myai/workers/trend_analyst.py` | Pydantic-validált trendanalízis, 3 perces timeout, retry (exponenciális) |
+| `myai/workers/media_factory.py` | Kampányasset generátor, _KNOWLEDGE_BASE/campaigns mentés, SUMMARY.md |
+
+**Worker Funkciók:**
+- `trend_analyst.py`: CLI + stdin JSON, mock mód, Ollama fallback → statikus trendek
+- `media_factory.py`: Draft mód + AI mód, 4 asset típus × N platform, JSON + TXT + Markdown kimenet
+
+### 📊 Build & Test Eredmény
+
+```
+npm run build: ✅ 0 errors
+npm test:      ✅ 94 fájl, 817 teszt PASS, 0 FAIL, 8 skipped
+```
+
+---
+
+
      - Tests expected `EnterpriseOrchestrator` methods: `getModuleRegistry()`, `getModuleStats()`, `getModulesByCategory()`
      - Reality: EnterpriseOrchestrator has event-based architecture (different purpose)
    

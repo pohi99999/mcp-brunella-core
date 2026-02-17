@@ -15,6 +15,7 @@ import { approvalManager } from '../../utils/approvalManager.js';
 import { activityFeed } from '../../utils/activityFeed.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
+import * as path from 'path';
 
 export function createDeveloperRoutes(): Router {
     const router = Router();
@@ -304,7 +305,7 @@ export function createDeveloperRoutes(): Router {
                 summary = await coverageAnalyzer.runCoverage({ include, exclude });
             } else {
                 // Try to parse existing coverage JSON
-                const coveragePath = require('path').join(process.cwd(), 'coverage/coverage-final.json');
+                const coveragePath = path.join(process.cwd(), 'coverage/coverage-final.json');
                 summary = await coverageAnalyzer.parseCoverageJson(coveragePath, { exclude });
             }
 
