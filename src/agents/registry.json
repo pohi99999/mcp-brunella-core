@@ -363,6 +363,132 @@
       "tags": ["premium", "gpt-4o", "orchestration"],
       "priority": 9,
       "model": "gpt-4o"
+    },
+    {
+      "name": "sales",
+      "title": "Sales Agent",
+      "description": "Automata Értékesítő Gép - Lead generation, CRM integration, email drafting",
+      "class": "SalesAgent",
+      "module": "./agents/SalesAgent.js",
+      "capabilities": [
+        "lead_generation",
+        "crm_integration",
+        "email_drafting",
+        "market_research",
+        "sheets_export"
+      ],
+      "triggers": ["értékesítés", "sales", "leads", "lead generation"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["sales", "crm", "automation", "enterprise"],
+      "priority": 6,
+      "enterpriseModuleId": "sales"
+    },
+    {
+      "name": "pricing",
+      "title": "Pricing Agent",
+      "description": "Dinamikus Árazó & Piaci Hírszerző - Market intelligence, competitive analysis, pricing recommendations",
+      "class": "PricingAgent",
+      "module": "./agents/PricingAgent.js",
+      "capabilities": [
+        "market_analysis",
+        "competitor_tracking",
+        "price_optimization",
+        "trend_forecasting",
+        "sentiment_analysis"
+      ],
+      "triggers": ["árazás", "pricing", "market", "intelligence"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["pricing", "market-intel", "automation", "enterprise"],
+      "priority": 6,
+      "enterpriseModuleId": "sales"
+    },
+    {
+      "name": "finance_guardian",
+      "title": "Finance Guardian",
+      "description": "Pénzügyi Őrszem - Invoice OCR, anomaly detection, financial trend analysis",
+      "class": "FinanceGuardian",
+      "module": "./agents/FinanceGuardian.js",
+      "capabilities": [
+        "invoice_processing",
+        "ocr_extraction",
+        "anomaly_detection",
+        "trend_analysis",
+        "cost_optimization"
+      ],
+      "triggers": ["finance", "számla", "invoice", "anomaly"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["finance", "invoice", "ocr", "automation", "enterprise"],
+      "priority": 6,
+      "enterpriseModuleId": "finance"
+    },
+    {
+      "name": "digital_office_manager",
+      "title": "Digital Office Manager",
+      "description": "Digitális Irodavezető - Email triage, inbox automation, smart labeling",
+      "class": "DigitalOfficeManager",
+      "module": "./agents/DigitalOfficeManager.js",
+      "capabilities": [
+        "email_triage",
+        "automation_rules",
+        "priority_scoring",
+        "smart_labeling",
+        "workflow_automation"
+      ],
+      "triggers": ["email", "inbox", "triage", "automation"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["email", "gmail", "automation", "enterprise"],
+      "priority": 6,
+      "enterpriseModuleId": "finance"
+    },
+    {
+      "name": "grant_hunter",
+      "title": "Grant Hunter",
+      "description": "Pályázatfigyelő - Identifies grant opportunities, assesses eligibility, tracks deadlines",
+      "class": "GrantHunter",
+      "module": "./agents/GrantHunter.js",
+      "capabilities": [
+        "grant_matching",
+        "eligibility_assessment",
+        "compliance_checking",
+        "deadline_tracking",
+        "portfolio_analysis"
+      ],
+      "triggers": ["grant", "funding", "pályázat", "eligibility"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["grants", "funding", "compliance", "automation", "enterprise"],
+      "priority": 6,
+      "enterpriseModuleId": "finance"
+    },
+    {
+      "name": "property_analyst",
+      "title": "Property Analyst",
+      "description": "Ingatlanfotók és dokumentumok elemzése, értékbecslés és piaci trendek kinyerése Vision technológiával.",
+      "class": "PropertyAnalystAgent",
+      "module": "./agents/PropertyAnalystAgent.js",
+      "capabilities": ["vision", "ocr", "property_analysis", "valuation"],
+      "triggers": ["ingatlan", "property", "ház", "lakás", "értékbecslés"],
+      "category": "knowledge",
+      "status": "active",
+      "tags": ["vision", "real-estate", "analysis"],
+      "priority": 4
+    },
+    {
+      "name": "trend_analyst",
+      "title": "Trend Analyst",
+      "description": "Marketing kutatás és piaci trendek elemzése a böngésző segítségével. Kulcsszavak, vizuális stílusok és versenytársak követése.",
+      "class": "RobotkezV2Agent",
+      "module": "./agents/RobotkezV2Agent.js",
+      "capabilities": ["market_research", "competitor_analysis", "trend_tracking"],
+      "triggers": ["trend", "piackutatás", "marketing", "versenytárs"],
+      "category": "automation",
+      "status": "active",
+      "tags": ["marketing", "research", "browser"],
+      "priority": 4
     }
   ]
 }

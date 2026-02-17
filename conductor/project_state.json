@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-17T16:02:27.972Z",
+  "lastUpdated": "2026-02-17T17:00:00.062Z",
   "tracks": [
     {
       "id": "ai_recommendation_system_20260216",
@@ -411,6 +411,27 @@
       "_isArchived": false
     },
     {
+      "id": "invoice-e2e-testing-20260217",
+      "name": "Invoice Automation E2E Testing & Validation",
+      "status": "proposed",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-02-17T22:00:00Z",
+      "updated": "2026-02-17T22:00:00Z",
+      "tags": [
+        "testing",
+        "invoice",
+        "e2e",
+        "validation",
+        "ci-cd"
+      ],
+      "dependencies": [
+        "invoice-to-sheets-automation-20260214 (COMPLETED)"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\invoice-e2e-testing-20260217",
+      "_isArchived": false
+    },
+    {
       "id": "invoice-to-sheets-automation-20260214",
       "name": "Számla Adatkinyerés és Google Sheets Automatizáció",
       "status": "active",
@@ -434,7 +455,7 @@
       "name": "Jules Continuous AI Integration (JCAI)",
       "status": "active",
       "priority": "critical",
-      "progress": 72,
+      "progress": 100,
       "created": "2026-02-15T00:00:00Z",
       "updated": "2026-02-17T15:00:00Z",
       "tags": [
@@ -821,6 +842,25 @@
       "_isArchived": true
     },
     {
+      "id": "invoice-to-sheets-automation-20260214",
+      "name": "Számla Adatkinyerés és Google Sheets Automatizáció",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-14T14:00:00Z",
+      "updated": "2026-02-17T21:05:00Z",
+      "tags": [
+        "finance",
+        "automation",
+        "szamlazz.hu",
+        "google-sheets",
+        "data-flywheel"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\invoice-to-sheets-automation-20260214",
+      "_isArchived": true
+    },
+    {
       "id": "iron_clad_backend_20260212",
       "name": "Iron Clad Python AI Backend",
       "status": "archived",
@@ -926,10 +966,10 @@
     }
   ],
   "stats": {
-    "total": 45,
+    "total": 47,
     "active": 11,
     "completed": 7,
-    "archived": 10,
-    "proposed": 7
+    "archived": 11,
+    "proposed": 8
   }
 }

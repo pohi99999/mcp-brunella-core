@@ -20,6 +20,22 @@ export interface LogEntry {
 
 export type AgentStatusPayload = "idle" | "working" | "error";
 
+export interface RobotkezStep {
+  index: number;
+  status: 'pending' | 'working' | 'completed' | 'error';
+  description: string;
+  screenshot?: string;
+  error?: string;
+}
+
+export interface RobotkezPlan {
+  taskId: string;
+  plan: {
+    plan: RobotkezStep[];
+    estimatedDuration: number;
+  };
+}
+
 export interface AgentStatusEntry {
   name: string;
   status: AgentStatusPayload;
@@ -31,6 +47,8 @@ interface SocketState {
   isConnected: boolean;
   logs: LogEntry[];
   agents: Map<string, AgentStatusEntry>;
+  robotkezPlan: RobotkezPlan | null;
+  robotkezSteps: RobotkezStep[];
 }
 
 type SocketAction =
@@ -44,7 +62,10 @@ type SocketAction =
         status: AgentStatusPayload;
         taskDescription?: string;
       };
-    };
+    }
+  | { type: "robotkez_plan"; payload: RobotkezPlan }
+  | { type: "robotkez_step"; payload: Partial<RobotkezStep> & { index: number } }
+  | { type: "robotkez_clear" };
 
 const MAX_LOGS = 200;
 let logIdCounter = 0;
@@ -74,6 +95,24 @@ function socketReducer(state: SocketState, action: SocketAction): SocketState {
       });
       return { ...state, agents };
     }
+    case "robotkez_plan": {
+      return { 
+        ...state, 
+        robotkezPlan: action.payload,
+        robotkezSteps: action.payload.plan.plan.map((s, i) => ({ ...s, index: i, status: 'pending' }))
+      };
+    }
+    case "robotkez_step": {
+      const steps = [...state.robotkezSteps];
+      const idx = action.payload.index;
+      if (steps[idx]) {
+        steps[idx] = { ...steps[idx], ...action.payload };
+      }
+      return { ...state, robotkezSteps: steps };
+    }
+    case "robotkez_clear": {
+      return { ...state, robotkezPlan: null, robotkezSteps: [] };
+    }
     default:
       return state;
   }
@@ -83,6 +122,8 @@ const initialState: SocketState = {
   isConnected: false,
   logs: [],
   agents: new Map(),
+  robotkezPlan: null,
+  robotkezSteps: []
 };
 
 interface SocketContextValue extends SocketState {
@@ -205,26 +246,37 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       },
     );
 
-    socket.on(
-      "agent:update",
-      (data: {
-        agentName: string;
-        status: AgentStatusPayload;
-        taskDescription?: string;
-      }) => {
-        if (data.agentName && data.status) {
-          dispatch({
-            type: "agent_update",
-            payload: {
-              agentName: data.agentName,
-              status: data.status,
-              taskDescription: data.taskDescription,
+          socket.on(
+            "agent:update",
+            (data: {
+              agentName: string;
+              status: AgentStatusPayload;
+              taskDescription?: string;
+            }) => {
+              if (data.agentName && data.status) {
+                dispatch({
+                  type: "agent_update",
+                  payload: {
+                    agentName: data.agentName,
+                    status: data.status,
+                    taskDescription: data.taskDescription,
+                  },
+                });
+              }
             },
+          );
+    
+          socket.on("robotkez:plan", (data: RobotkezPlan) => {
+            dispatch({ type: "robotkez_plan", payload: data });
           });
-        }
-      },
-    );
-
+    
+          socket.on("robotkez:step", (data: Partial<RobotkezStep> & { index: number }) => {
+            dispatch({ type: "robotkez_step", payload: data });
+          });
+    
+          socket.on("robotkez:aborted", () => {
+            dispatch({ type: "robotkez_clear" });
+          });
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);

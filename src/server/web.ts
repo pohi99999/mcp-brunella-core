@@ -249,6 +249,21 @@ export async function startWebServer() {
   });
   socketService.init(io);
 
+  io.on("connection", (socket) => {
+    logInfo("WebSocket", `Client connected: ${socket.id}`);
+
+    socket.on("robotkez:abort", async () => {
+      logWarn("WebSocket", "User triggered Robotkez Abort");
+      await persistentBrowser.close();
+      persistentBrowser.forceKill();
+      socket.emit("robotkez:aborted", { status: "success", message: "Munkamenet megszakítva." });
+    });
+
+    socket.on("disconnect", () => {
+      logInfo("WebSocket", `Client disconnected: ${socket.id}`);
+    });
+  });
+
   // Register Cloudflare Edge WebSocket handlers (Iteration 2)
   registerEdgeWebSocketHandlers(io);
 

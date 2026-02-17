@@ -37,4 +37,5 @@ export interface AgentResponse {
     nextStep?: string;
     delegatedTo?: string; // Target agent name when status is 'delegated'
     handoff?: AgentHandoff; // If status is 'handoff'
+    metadata?: Record<string, unknown>; // Optional metadata (e.g. metrics, processing info)
 }

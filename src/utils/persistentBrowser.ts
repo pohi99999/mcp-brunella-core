@@ -2,9 +2,10 @@ import type { ChildProcess } from 'child_process';
 import { logInfo, logError } from './logger.js';
 
 export interface BrowserCommand {
-    action: 'launch' | 'navigate' | 'click' | 'type' | 'screenshot' | 'content' | 'scroll' | 'wait' | 'extract' | 'close' | 'press' | 'state';
+    action: 'launch' | 'navigate' | 'click' | 'type' | 'screenshot' | 'content' | 'scroll' | 'wait' | 'extract' | 'close' | 'press' | 'state' | 'query';
     url?: string;
     selector?: string;
+    description?: string;
     text?: string;
     key?: string; // NEW: for press action
     headless?: boolean;
@@ -153,6 +154,23 @@ export class PersistentBrowser {
             if (this.process) this.process.kill();
             this.process = null;
             this.lastScreenshot = null;
+        }
+    }
+
+    public forceKill() {
+        if (this.process) {
+            this.process.kill('SIGKILL');
+            this.process = null;
+        }
+        
+        // OS-level cleanup for chromium
+        const { exec } = require('child_process');
+        if (process.platform === 'win32') {
+            exec('taskkill /F /IM chrome.exe /T');
+            exec('taskkill /F /IM chromedriver.exe /T');
+        } else {
+            exec('pkill -f chromium');
+            exec('pkill -f chrome');
         }
     }
 }

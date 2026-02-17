@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 17. 17:02:01
+**Generálva:** 2026. 02. 17. 17:58:54
 **Script:** 
 
 ---
@@ -42352,6 +42352,17 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 plan.md
         - 📄 spec másolata.md
         - 📄 spec.md
+      - 📂 **invoice-to-sheets-automation-20260214**
+        - 📄 Jules_prompt.md
+        - 📄 meta.json
+        - 📄 PHASE_2_SUMMARY.md
+        - 📄 PHASE_3_SUMMARY.md
+        - 📄 PHASE_4_SUMMARY.md
+        - 📄 PHASE_5_SUMMARY.md
+        - 📄 SETUP.md
+        - 📄 spec.md
+        - 📄 TRACK_COMPLETION_SUMMARY.md
+        - 📄 ui_spec.md
       - 📂 **iron_clad_backend_20260212**
         - 📄 meta.json
         - 📄 spec.md
@@ -42568,6 +42579,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **innovation_bridge_20260212**
         - 📄 meta.json
         - 📄 spec.md
+      - 📂 **invoice-e2e-testing-20260217**
+        - 📄 meta.json
+        - 📄 spec.md
       - 📂 **invoice-to-sheets-automation-20260214**
         - 📄 Jules_prompt.md
         - 📄 meta.json
@@ -42581,6 +42595,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **jules_continuous_ai_integration_20260215**
         - 📄 meta.json
         - 📄 PHASE_3_IMPLEMENTATION_PLAN.md
+        - 📄 PHASE_4_COMPLETION_SUMMARY.md
         - 📄 plan.md
         - 📄 spec.md
       - 📂 **jules_enterprise_cicd_20260212**
@@ -180562,10 +180577,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 schemas.py
     - 📂 **clients**
       - 📂 **__pycache__**
+        - 📄 __init__.cpython-312.pyc
         - 📄 __init__.cpython-314.pyc
+        - 📄 enhanced_invoice_client.cpython-312.pyc
         - 📄 enhanced_invoice_client.cpython-314.pyc
+        - 📄 gmail_invoice_client.cpython-312.pyc
         - 📄 gmail_invoice_client.cpython-314.pyc
+        - 📄 google_sheets_client.cpython-312.pyc
         - 📄 google_sheets_client.cpython-314.pyc
+        - 📄 szamlazz_hu_client.cpython-312.pyc
         - 📄 szamlazz_hu_client.cpython-314.pyc
       - 📄 __init__.py
       - 📄 enhanced_invoice_client.py
@@ -180601,10 +180621,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 ev_hunter_prompt.md
     - 📂 **refiner**
       - 📂 **__pycache__**
+        - 📄 __init__.cpython-312.pyc
         - 📄 __init__.cpython-314.pyc
+        - 📄 invoice_refiner.cpython-312.pyc
         - 📄 invoice_refiner.cpython-314.pyc
       - 📄 __init__.py
       - 📄 invoice_refiner.py
+    - 📂 **refiners**
+      - 📄 enterprise_factory.py
     - 📂 **sandbox_env**
     - 📂 **scenarios**
       - 📄 harvester_extraction_example.json
@@ -180620,7 +180644,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 ROBOTKEZ_N8N_TRAINING_PLAN.md
     - 📂 **schemas**
       - 📂 **__pycache__**
+        - 📄 __init__.cpython-312.pyc
         - 📄 __init__.cpython-314.pyc
+        - 📄 invoice.cpython-312.pyc
         - 📄 invoice.cpython-314.pyc
       - 📄 __init__.py
       - 📄 invoice.py
@@ -180663,6 +180689,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 parser.cpython-314.pyc
         - 📄 pdfparser.cpython-312.pyc
         - 📄 pdfparser.cpython-314.pyc
+        - 📄 phoenix_protocol.cpython-312.pyc
         - 📄 phoenix_protocol.cpython-314.pyc
         - 📄 textsplitter.cpython-312.pyc
         - 📄 textsplitter.cpython-314.pyc
@@ -181196,8 +181223,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 test_cf_workers_ai.ps1
     - 📄 test_cloudflare_agents.py
     - 📄 test_cloudflare_history.ts
+    - 📄 test_planner_diag.ts
     - 📄 test_prepare.cjs
     - 📄 test_swarm.ts
+    - 📄 test_vision_deps.py
     - 📄 test_webhook_e2e.ts
     - 📄 update_ollama_model.bat
     - 📄 watch-changes.js
@@ -181222,6 +181251,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 DynamicAgent.ts
       - 📄 DynamicAgentLoader.ts
       - 📄 EdgeProxyAgent.ts
+      - 📄 EnterpriseOrchestrator.ts
       - 📄 EvaluatorAgent.ts
       - 📄 GitHubModelsAgent.ts
       - 📄 gitIntegration.ts
@@ -181333,6 +181363,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 InvoiceSyncWidget.tsx
           - 📄 JulesPanel.tsx
           - 📄 KnowledgeBasePanel.tsx
+          - 📄 LiveExecutionMonitor.tsx
           - 📄 LiveIndicator.tsx
           - 📄 LLMProvidersPanel.tsx
           - 📄 LogViewer.tsx
@@ -181570,6 +181601,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 system.ts
       - 📄 testSchedulerTool.ts
       - 📄 toolPermissions.ts
+      - 📄 unifiedGoogleWorkspaceTool.ts
       - 📄 workspace.ts
       - 📄 writeSheetsInvoices.ts
     - 📂 **types**
@@ -181634,6 +181666,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 gmail_invoice_client_test.cpython-314-pytest-9.0.1.pyc
       - 📄 google_sheets_client_phase4_test.cpython-314-pytest-9.0.1.pyc
       - 📄 incubator_test.cpython-314-pytest-9.0.1.pyc
+      - 📄 invoice_automation_e2e_test.cpython-312-pytest-9.0.2.pyc
       - 📄 invoice_automation_e2e_test.cpython-314-pytest-9.0.1.pyc
       - 📄 invoice_refiner_test.cpython-314-pytest-9.0.1.pyc
       - 📄 phoenix_protocol_test.cpython-314-pytest-9.0.1.pyc
@@ -181697,6 +181730,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 hooks.test.ts
     - 📄 incubator_test.py
     - 📄 input_sanitization.test.ts
+    - 📄 invoice_automation_e2e_test.py
     - 📄 invoice_enhanced.test.py
     - 📄 invoice_refiner_test.py
     - 📄 ironCladBackend.test.ts
@@ -181937,6 +181971,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 csr_automata.json
         - 📄 csr_automata.md
     - 📄 TEST_BOOK.md
+  - 📄 _ARCHIVE_SESSION_COMPLETION_REPORT.md
   - 📄 agents.db
   - 📄 AnythingLLM
   - 📄 api_verbose.log
@@ -181988,6 +182023,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 run.cmd
   - 📄 schema.sql
   - 📄 screenshot.png
+  - 📄 server_boot_2.log
+  - 📄 server_boot.log
   - 📄 server_debug.log
   - 📄 server_direct.log
   - 📄 server_final.log
