@@ -28,14 +28,14 @@ describe('Core Tools', () => {
 
   it('should respond to ping', async () => {
     const result = await client.callTool({ name: "ping", arguments: {} });
-    // @ts-ignore
+    // @ts-expect-error The result.content might not be a valid array or might be missing.
     const text = result.content[0].text;
     expect(text).toMatch(/Pong/);
   });
 
   it('should list agents', async () => {
     const result = await client.callTool({ name: "agent_list", arguments: {} });
-    // @ts-ignore
+    // @ts-expect-error The result.content might not be a valid array or might be missing.
     const text = result.content[0].text;
     expect(() => JSON.parse(text)).not.toThrow();
     const agents = JSON.parse(text);
@@ -44,7 +44,7 @@ describe('Core Tools', () => {
 
   it('should provide system metrics', async () => {
     const result = await client.callTool({ name: "monitor_get_metrics", arguments: {} });
-    // @ts-ignore
+    // @ts-expect-error The result.content might not be a valid array or might be missing.
     const text = result.content[0].text;
     const metrics = JSON.parse(text);
     expect(metrics.uptime).toBeDefined();

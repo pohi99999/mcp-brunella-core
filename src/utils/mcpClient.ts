@@ -39,8 +39,8 @@ export class BrunellaClient {
       }
       try {
         // For 'brunella-core', we use the build path directly if it's relative
-        let command = server.command;
-        let args = [...server.args];
+        const command = server.command;
+        const args = [...server.args];
 
         if (server.name === "brunella-core" && args[0] === "./build/index.js") {
           args[0] = path.resolve(process.cwd(), "build", "index.js");

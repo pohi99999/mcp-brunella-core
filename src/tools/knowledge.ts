@@ -27,10 +27,9 @@ async function searchFiles(dir: string, pattern: string, results: string[]) {
           if (content.toLowerCase().includes(pattern.toLowerCase())) {
             results.push(fullPath);
           }
-        } catch (e) {}
-      }
+                    } catch (e) { /* non-critical */ }      }
     }
-  } catch (e) {}
+  } catch (e) { /* non-critical */ }
 }
 
 export function registerKnowledgeTools(server: McpServer) {
@@ -120,7 +119,7 @@ export function registerKnowledgeTools(server: McpServer) {
             try {
                 const content = await fs.readFile(fullPath, 'utf-8');
                 context += `\n--- FILE: ${filePath} ---\n${content}\n`;
-            } catch (e) {}
+            } catch (e) { /* non-critical */ }
         }
         return {
             content: [{ type: "text", text: context }]

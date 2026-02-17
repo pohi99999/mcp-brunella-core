@@ -509,7 +509,7 @@ export async function checkService(
         case 'node':
         case 'node process':
             return checkNodeProcess();
-        default:
+        default: {
             // Check registered services
             const registered = SERVICES.find(s =>
                 s.name.toLowerCase() === name
@@ -523,5 +523,6 @@ export async function checkService(
                 lastCheck: new Date(),
                 error: 'Service not found'
             };
+        }
     }
 }

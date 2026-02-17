@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "version": "1.0.0",
+    "created": "2026-02-16",
+    "track": "hyper_local_supply_chain_20260216",
+    "description": "Belső logisztikai igények és kapacitások – Geo-fenced illesztési forrás",
+    "owner": "Brunella Supply Chain Agent",
+    "center": {
+      "lat": 46.8417,
+      "lng": 16.8416,
+      "name": "Zalaegerszeg, HU"
+    }
+  },
+  "internal_needs": [
+    {
+      "id": "IN-001",
+      "priority": "HIGH",
+      "type": "outbound_freight",
+      "description": "Prototípus alkatrészek Graz-ba – sürgős",
+      "origin": "Zalaegerszeg, HU",
+      "destination": "Graz, AT",
+      "required_pallets": 6,
+      "vehicle_type": "tautliner",
+      "latest_date": "2026-02-20",
+      "weight_kg": 1200,
+      "value_eur": 25000,
+      "contact": "pohanka.peter@brunella.ai",
+      "notes": "Törékeny alkatrészek – kesztyűs kezelés szükséges"
+    },
+    {
+      "id": "IN-002",
+      "priority": "MEDIUM",
+      "type": "inbound_freight",
+      "description": "Nyersanyag szállítás Bécsből – acéltáblák",
+      "origin": "Wien, AT",
+      "destination": "Zalaegerszeg, HU",
+      "required_pallets": 18,
+      "vehicle_type": "flatbed",
+      "latest_date": "2026-02-25",
+      "weight_kg": 8400,
+      "value_eur": 12000,
+      "contact": "logistics@brunella.ai",
+      "notes": "Rakodási nehézség: daru szükséges a célállomáson"
+    },
+    {
+      "id": "IN-003",
+      "priority": "LOW",
+      "type": "outbound_freight",
+      "description": "Kész termék szállítás Ljubljanába – kismennyiség",
+      "origin": "Nagykanizsa, HU",
+      "destination": "Ljubljana, SI",
+      "required_pallets": 4,
+      "vehicle_type": "curtainsider",
+      "latest_date": "2026-03-05",
+      "weight_kg": 900,
+      "value_eur": 8500,
+      "contact": "export@brunella.ai",
+      "notes": "Ajánlott szállítmánybiztosítás"
+    },
+    {
+      "id": "IN-004",
+      "priority": "HIGH",
+      "type": "outbound_freight",
+      "description": "Ipari berendezés transzport Münchenbe",
+      "origin": "Körmend, HU",
+      "destination": "München, DE",
+      "required_pallets": 12,
+      "vehicle_type": "mega",
+      "latest_date": "2026-02-22",
+      "weight_kg": 5200,
+      "value_eur": 45000,
+      "contact": "logistics@brunella.ai",
+      "notes": "ADR nem szükséges – standard szállítás"
+    },
+    {
+      "id": "IN-005",
+      "priority": "MEDIUM",
+      "type": "spot_freight",
+      "description": "Sürgős spot igény Bratislavába – kis tétel",
+      "origin": "Keszthely, HU",
+      "destination": "Bratislava, SK",
+      "required_pallets": 8,
+      "vehicle_type": "tautliner",
+      "latest_date": "2026-02-19",
+      "weight_kg": 2100,
+      "value_eur": 5500,
+      "contact": "spot@brunella.ai",
+      "notes": "Spot igény – árérzékeny, max 1450 EUR/szállítás"
+    }
+  ],
+  "capacity_thresholds": {
+    "min_pallets_to_match": 4,
+    "max_price_per_km_eur": 2.0,
+    "preferred_vehicle_types": ["tautliner", "mega", "curtainsider", "flatbed"],
+    "geo_fence_radius_km": 50
+  }
+}

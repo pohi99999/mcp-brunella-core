@@ -574,7 +574,7 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
         const content = fs.readFileSync(planPath, "utf-8");
 
         // Státusz és progress kinyerése a plan.md-ből
-        const statusMatch = content.match(/Státusz:\s*([🟢🟡🔴⏸️✅])\s*(\w+)/);
+        const statusMatch = content.match(/Státusz:\s*(\w+)/);
         const progressMatch = content.match(/Progress:\s*(\d+)%/);
         const priorityMatch = content.match(/Prioritás:\s*(\w+)/i);
 
@@ -582,7 +582,7 @@ ${(this.projectState.components || []).map((c) => `- **${c.name}:** ${c.status =
           id: dir,
           name: this.extractTrackNameFromContent(content) || dir,
           status: this.parseStatus(
-            statusMatch?.[2] || existingTrack?.status || "active",
+            statusMatch?.[1] || existingTrack?.status || "active",
           ),
           priority: this.parsePriority(
             priorityMatch?.[1] || existingTrack?.priority || "medium",
@@ -1188,14 +1188,14 @@ ${capabilities.length > 0 ? capabilities.map((c) => `- \`${c}\``).join("\n") : "
 
   private extractAssignedString(source: string, property: string): string | null {
     const directMatch = source.match(
-      new RegExp(`${property}\\s*=\\s*['\"]([^'\"]+)['\"]`),
+      new RegExp(`${property}\\s*=\\s*['"]([^'"]+)['"]`),
     );
     if (directMatch?.[1]) {
       return directMatch[1].trim();
     }
 
     const blockMatch = source.match(
-      new RegExp(`${property}\\s*=\\s*([\"'\`])([\\s\\S]*?)\\1`),
+      new RegExp(`${property}\\s*=\\s*(['"\`])([\\s\\S]*?)\\1`),
     );
     if (blockMatch?.[2]) {
       return blockMatch[2].replace(/\s+/g, " ").trim();
@@ -1212,9 +1212,9 @@ ${capabilities.length > 0 ? capabilities.map((c) => `- \`${c}\``).join("\n") : "
       return [];
     }
 
-    const entries = capabilitiesMatch[1].match(/['\"]([^'\"]+)['\"]/g) || [];
+    const entries = capabilitiesMatch[1].match(/['"]([^'"]+)['"]/g) || [];
     return entries
-      .map((entry) => entry.replace(/['\"]/g, "").trim())
+      .map((entry) => entry.replace(/['"]/g, "").trim())
       .filter(Boolean);
   }
 

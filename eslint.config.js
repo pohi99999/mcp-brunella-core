@@ -16,6 +16,7 @@ export default tseslint.config(
       "agentenv/**",
       "public/**",
       "coverage/**",
+      "src/dashboard/.vite/**",
       "*.config.js",
       "*.config.ts",
     ],

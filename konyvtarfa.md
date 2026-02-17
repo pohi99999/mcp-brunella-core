@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 17. 17:58:54
+**Generálva:** 2026. 02. 17. 22:12:41
 **Script:** 
 
 ---
@@ -35,6 +35,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 JELENTES.md
       - 📄 REPORT_REVISION_20260130.md
   - 📂 **_br_temp**
+    - 📄 enterprise_audit.db
     - 📄 test_input.json
     - 📄 test_out2.json
     - 📄 test_output.json
@@ -42739,8 +42740,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 cean_infrastructure_inventory.json
     - 📄 cean.db
     - 📄 checkpoints.db
-    - 📄 checkpoints.db-shm
-    - 📄 checkpoints.db-wal
     - 📄 developer_metrics.json
     - 📄 ev_hunter_results.json
     - 📄 fix_queue.json
@@ -42824,6 +42823,20 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 cloudflare_chat.md
     - 📂 **github**
       - 📄 GITHUB_CHEAT_SHEET.md
+    - 📂 **jules_session_10296005880240118694**
+      - 📂 **myai**
+        - 📂 **core**
+          - 📄 vision_worker.py
+        - 📄 requirements.txt
+      - 📂 **src**
+        - 📂 **agents**
+          - 📄 PropertyAnalystAgent.ts
+        - 📂 **types**
+          - 📄 property.ts
+        - 📂 **utils**
+          - 📄 propertyDb.ts
+      - 📂 **test**
+        - 📄 property_analyst_agent.test.ts
     - 📂 **jules_session_10830104862054860677**
       - 📂 **docs**
         - 📄 ROBOTKEZ_SETUP.md
@@ -42834,6 +42847,40 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 robotkez_test_level1.py
         - 📄 robotkez_test_level2_n8n.py
         - 📄 robotkez_test_level3_monitoring.py
+    - 📂 **jules_session_14523312123441564704**
+      - 📂 **data**
+        - 📄 developer_metrics.json
+      - 📂 **myai**
+        - 📂 **tests**
+          - 📄 test_interactive_browser.py
+        - 📄 interactive_browser.py
+        - 📄 requirements.txt
+      - 📂 **src**
+        - 📂 **agents**
+          - 📄 RobotkezAgent.ts
+          - 📄 RobotkezV2Agent.ts
+        - 📂 **server**
+          - 📄 memoryRoutes.ts
+          - 📄 SystemController.ts
+        - 📂 **tools**
+          - 📄 deploymentAnalyzer.ts
+          - 📄 n8n.ts
+        - 📂 **utils**
+          - 📄 exec.ts
+          - 📄 persistentBrowser.ts
+          - 📄 pythonShell.ts
+          - 📄 serverManager.ts
+      - 📂 **test**
+        - 📄 deploymentAnalyzer.test.ts
+        - 📄 llm_client.test.ts
+        - 📄 robotkez_v2_integration.test.ts
+        - 📄 robotkezV2Agent.test.ts
+      - 📄 pnpm-lock.yaml
+      - 📄 vitest.config.ts
+    - 📂 **jules_session_8716822409536279237**
+      - 📂 **myai**
+        - 📂 **workers**
+          - 📄 trend_analyst.py
     - 📂 **monitoring**
       - 📂 **grafana** _(Grafana Dashboard Baseline)_
         - 📄 brunella-agents-dashboard.json
@@ -42864,6 +42911,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 github-runner-setup.md
     - 📄 GYOKER_RENDEZESI_JAVASLAT.md
     - 📄 harvester-structured-json.md
+    - 📄 interpreter clli.md
     - 📄 JCAI_PHASE_3_TESTING_GUIDE.md
     - 📄 JCAI_PHASE_3_VERIFICATION_REPORT.md
     - 📄 JCAI_PROGRESS_UPDATE.md
@@ -181223,10 +181271,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 test_cf_workers_ai.ps1
     - 📄 test_cloudflare_agents.py
     - 📄 test_cloudflare_history.ts
-    - 📄 test_planner_diag.ts
     - 📄 test_prepare.cjs
     - 📄 test_swarm.ts
-    - 📄 test_vision_deps.py
     - 📄 test_webhook_e2e.ts
     - 📄 update_ollama_model.bat
     - 📄 watch-changes.js
@@ -181240,6 +181286,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 BaseAgent.ts
       - 📄 codeReview.ts
       - 📄 codeScaffold.ts
+      - 📄 ConflictMediatorAgent.ts
       - 📄 contextBuilder.ts
       - 📄 coverageAnalysis.ts
       - 📄 DataScientistAgent.ts
@@ -181247,23 +181294,35 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 DeveloperAgent.ts
       - 📄 developerPipeline.ts
       - 📄 DevOpsAgent.ts
+      - 📄 DigitalOfficeManager.ts
       - 📄 DocsIntelligenceAgent.ts
       - 📄 DynamicAgent.ts
       - 📄 DynamicAgentLoader.ts
       - 📄 EdgeProxyAgent.ts
       - 📄 EnterpriseOrchestrator.ts
       - 📄 EvaluatorAgent.ts
+      - 📄 FinanceGuardian.ts
       - 📄 GitHubModelsAgent.ts
       - 📄 gitIntegration.ts
+      - 📄 GrantHunter.ts
+      - 📄 HeadHunterAgent.ts
+      - 📄 KnowledgeBuilder.ts
       - 📄 LintFixerAgent.ts
+      - 📄 LocalCSRBot.ts
+      - 📄 LogisticsDispatcher.ts
       - 📄 OrchestratorAgent.ts
       - 📄 permissions.ts
+      - 📄 PricingAgent.ts
+      - 📄 ProactiveClaimsAgent.ts
       - 📄 ProjectConductorAgent.ts
+      - 📄 PropertyAnalystAgent.ts
       - 📄 PythonAgent.ts
       - 📄 registry.json
       - 📄 ResearcherAgent.ts
       - 📄 RobotkezAgent.ts
       - 📄 RobotkezV2Agent.ts
+      - 📄 SalesAgent.ts
+      - 📄 SentimentAnalysisModule.ts
       - 📄 specStatus.ts
       - 📄 SpecWriterAgent.ts
       - 📄 TaskDecomposerAgent.ts
@@ -181356,6 +181415,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 DeveloperPipeline.tsx
           - 📄 EdgePanel.tsx
           - 📄 EmbeddedWorkflow.tsx
+          - 📄 EnterpriseModulePanel.tsx
           - 📄 FileExplorer.tsx
           - 📄 GoldStatusWidget.tsx
           - 📄 IncubatorPanel.tsx
@@ -181491,6 +181551,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **pages**
         - 📄 CloudflareDeployment.tsx
         - 📄 FleetManager.tsx
+        - 📄 NeuralMap.tsx
       - 📂 **styles**
         - 📄 theme.css
       - 📂 **ui**
@@ -181516,6 +181577,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 schema.sql
     - 📂 **pipeline**
       - 📄 llmPipeline.ts
+    - 📂 **routes**
+      - 📄 enterpriseApi.ts
     - 📂 **scheduler**
     - 📂 **server**
       - 📂 **middleware**
@@ -181575,6 +181638,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 fleetService.ts
       - 📄 metricsArchiveService.ts
       - 📄 metricsService.ts
+      - 📄 ModuleRegistry.ts
       - 📄 scalingService.ts
       - 📄 trackStateManager.ts
     - 📂 **tools**
@@ -181595,6 +181659,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 knowledge.ts
       - 📄 monitor.ts
       - 📄 n8n.ts
+      - 📄 negotiationEngine.ts
       - 📄 ollamaTool.ts
       - 📄 persistentBrowserTools.ts
       - 📄 swarmTools.ts
@@ -181609,6 +181674,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 deploymentErrors.ts
       - 📄 github.ts
       - 📄 llm.ts
+      - 📄 property.ts
     - 📂 **utils**
       - 📄 activityFeed.ts
       - 📄 agentTracer.ts
@@ -181717,6 +181783,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 developer_pipeline.test.ts
     - 📄 DeveloperAgent.test.ts
     - 📄 edge_health_monitor.test.ts
+    - 📄 enterpriseOrchestrator.test.ts
     - 📄 ev_hunter_research.test.ts
     - 📄 evHunterTool.test.ts
     - 📄 failover_registry.test.ts
@@ -181755,6 +181822,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 n8n_automation.test.ts
     - 📄 notificationService.test.ts
     - 📄 persistentBrowser.test.ts
+    - 📄 phase6-integration.test.ts
     - 📄 phoenix_event_bus.test.ts
     - 📄 phoenix_protocol_test.py
     - 📄 phoenix_recovery.test.ts
@@ -181979,6 +182047,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 BOOTSTRAP.md
   - 📄 Brunella
   - 📄 Brunella.md
+  - 📄 build-phase4.log
   - 📄 build.log
   - 📄 checkpoint_verbose.log
   - 📄 CLAUDE.md
@@ -182001,6 +182070,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 LICENSE
   - 📄 mag.md
   - 📄 mcp_servers.json
+  - 📄 meta.json
   - 📄 NEXT_STEPS.md
   - 📄 npm-test-full.log
   - 📄 npm-test.log
@@ -182012,6 +182082,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 playwright.config.ts
   - 📄 pnpm-lock.yaml
   - 📄 PROJEKT_DIAGRAM.md
+  - 📄 push-output.log
   - 📄 pyproject.toml
   - 📄 README.md
   - 📄 rendszer ellenorzes.md.txt
@@ -182023,8 +182094,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 run.cmd
   - 📄 schema.sql
   - 📄 screenshot.png
-  - 📄 server_boot_2.log
-  - 📄 server_boot.log
   - 📄 server_debug.log
   - 📄 server_direct.log
   - 📄 server_final.log
@@ -182048,6 +182117,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 TEST_RESULTS.md
   - 📄 test_verbose_v2.log
   - 📄 test_verbose.log
+  - 📄 test-phase4.log
   - 📄 test-research-query.json
   - 📄 testout.txt
   - 📄 Toolskeszlet.md

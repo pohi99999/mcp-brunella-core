@@ -173,7 +173,7 @@ export class ConflictMediatorAgent implements IAgent {
    */
   private analyzeSentiment(msg: Message, id: number): SentimentAnalysis {
     let sentiment = 0;
-    let emotions: string[] = [];
+    const emotions: string[] = [];
     const keyPhrases: string[] = [];
 
     // Simple sentiment scoring based on keywords

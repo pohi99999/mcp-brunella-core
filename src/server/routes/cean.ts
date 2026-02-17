@@ -129,7 +129,7 @@ router.post('/cean/chat/save', (req: Request, res: Response): void => {
 router.get('/cean/chat/history/:sessionId', (req: Request, res: Response): void => {
   try {
     const { sessionId } = req.params;
-    let { limit, offset } = req.query;
+    const { limit, offset } = req.query;
 
     // Parse and validate pagination
     let limitNum = parseInt(String(limit) || '100', 10);

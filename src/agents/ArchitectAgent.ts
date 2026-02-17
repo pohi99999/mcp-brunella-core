@@ -1,11 +1,11 @@
 /**
  * ArchitectAgent - Rendszerarchitektúra tervezés és SystemBlueprint generálás
- * Software Genesis Protocol része
+ * Software Genesis Protocol – Phase 1 (Interview + Blueprint + Human-in-the-Loop)
  */
 
 import { IAgent, AgentResponse, ISwarmContext } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
-import { generateResponse } from '../core/llm_client.js';
+import { v4 as uuidv4 } from 'uuid';
 
 export interface GenesisRequest {
   originalIdea: string;
@@ -51,21 +51,58 @@ export default class ArchitectAgent implements IAgent {
     'module_decomposition',
     'dependency_mapping',
     'blueprint_generation',
+    'requirement_interview',
+    'human_in_the_loop',
   ];
+
+  // Phase 1: interview + approval állapot
+  private _currentBlueprint: SystemBlueprint | null = null;
+  private _isApproved = false;
+  private _interviewAnswers: Record<string, string> = {};
+
+  get currentBlueprint() { return this._currentBlueprint; }
+  get isApproved() { return this._isApproved; }
 
   async execute(
     task: string,
-    context?: { swarm?: ISwarmContext }
+    context?: { swarm?: ISwarmContext; [key: string]: unknown }
   ): Promise<AgentResponse> {
     setAgentStatus(this.name, 'working', task.slice(0, 50));
 
     try {
+      const taskLower = task.toLowerCase();
+
+      // ── Human-in-the-Loop: Jóváhagyás ───────────────────────────────────
+      if (taskLower.includes('jóváhagyom') || taskLower.includes('approve') || taskLower.includes('elfogadom')) {
+        if (!this._currentBlueprint) {
+          return { status: 'error', error: 'Nincs generált blueprint. Először hívd "tervezd meg: <leírás>".' };
+        }
+        this._isApproved = true;
+        logInfo(this.name, `Blueprint jóváhagyva: ${this._currentBlueprint.modules.length} modul`);
+        return {
+          status: 'success',
+          data: this._currentBlueprint,
+          message: `✅ Blueprint jóváhagyva! ${this._currentBlueprint.modules.length} modul kész fejlesztésre. Delegálom a DeveloperAgent-nek.`,
+          nextStep: 'developer',
+        };
+      }
+
+      // ── Blueprint státusz ────────────────────────────────────────────────
+      if (taskLower.includes('státusz') || taskLower.includes('status')) {
+        if (!this._currentBlueprint) {
+          return { status: 'success', data: null, message: 'Nincs aktív blueprint.' };
+        }
+        const approvalStatus = this._isApproved ? '✅ Jóváhagyva' : '⏳ Jóváhagyásra vár';
+        return {
+          status: 'success',
+          data: { blueprint: this._currentBlueprint, is_approved: this._isApproved },
+          message: `📐 Blueprint: ${approvalStatus} | Modulok: ${this._currentBlueprint.modules.length}`,
+        };
+      }
+
+      // ── Tervezés (Phase 1 fő feladat) ────────────────────────────────────
       logInfo(this.name, `Architecture design task: ${task}`);
-
-      // Parse GenesisRequest
-      const request = this.parseRequest(task, context);
-
-      // Validate
+      const request = this.parseRequest(task, context as { swarm?: ISwarmContext });
       if (!request.clarifiedSpecs || request.clarifiedSpecs.coreFeatures.length === 0) {
         return {
           status: 'error',
@@ -73,22 +110,17 @@ export default class ArchitectAgent implements IAgent {
         };
       }
 
-      logInfo(
-        this.name,
-        `Designing architecture for ${request.clarifiedSpecs.platform} app with ${request.clarifiedSpecs.coreFeatures.length} features`
-      );
-
-      // Generate SystemBlueprint
+      logInfo(this.name, `Designing architecture for ${request.clarifiedSpecs.platform} app with ${request.clarifiedSpecs.coreFeatures.length} features`);
       const blueprint = await this.generateBlueprint(request);
+      this._currentBlueprint = blueprint;
+      this._isApproved = false;
 
-      logInfo(
-        this.name,
-        `Blueprint generated: ${blueprint.modules.length} modules, ${blueprint.techStack.frameworks.length} frameworks`
-      );
+      logInfo(this.name, `Blueprint generated: ${blueprint.modules.length} modules`);
 
       return {
         status: 'success',
         data: blueprint,
+        message: `📐 SystemBlueprint generálva: ${blueprint.modules.length} modul, ${blueprint.techStack.frameworks.join(', ')}.\n✋ Hívd "jóváhagyom" a fejlesztés indításához.`,
         handoff: {
           type: 'handoff',
           targetAgent: 'specwriter',
@@ -99,10 +131,7 @@ export default class ArchitectAgent implements IAgent {
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError(this.name, `Architecture design failed: ${error}`);
-      return {
-        status: 'error',
-        error: `Architecture design failed: ${error}`,
-      };
+      return { status: 'error', error: `Architecture design failed: ${error}` };
     } finally {
       setAgentStatus(this.name, 'idle');
     }

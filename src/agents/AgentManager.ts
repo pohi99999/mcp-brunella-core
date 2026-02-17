@@ -559,7 +559,7 @@ export class AgentManager extends EventEmitter {
           });
           setAgentStatus(agentName, "working", instruction);
 
-          let res = await agent.execute(instruction, context);
+          const res = await agent.execute(instruction, context);
 
           // Result normalizálás (status -> success mapping)
           if (typeof res === "object" && res !== null) {

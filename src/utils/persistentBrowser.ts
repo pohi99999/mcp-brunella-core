@@ -1,5 +1,6 @@
 import type { ChildProcess } from 'child_process';
 import { logInfo, logError } from './logger.js';
+import { exec } from 'child_process';
 
 export interface BrowserCommand {
     action: 'launch' | 'navigate' | 'click' | 'type' | 'screenshot' | 'content' | 'scroll' | 'wait' | 'extract' | 'close' | 'press' | 'state' | 'query';
@@ -164,7 +165,7 @@ export class PersistentBrowser {
         }
         
         // OS-level cleanup for chromium
-        const { exec } = require('child_process');
+
         if (process.platform === 'win32') {
             exec('taskkill /F /IM chrome.exe /T');
             exec('taskkill /F /IM chromedriver.exe /T');

@@ -67,7 +67,7 @@ export async function testSchedulerStatusHandler(params: {
     const scheduleStatus = getSchedulerStatus();
     const stats = await getTestStats();
     
-    let response: any = {
+    const response: any = {
       success: true,
       ...scheduleStatus,
       stats: {

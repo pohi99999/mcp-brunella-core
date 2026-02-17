@@ -42,7 +42,7 @@ export function registerInvoiceCommands(program: Command): void {
       const options: InvoiceSyncOptions = {
         sinceDate: typeof opts.since === "string" ? opts.since : undefined,
         limit: toNumber(opts.limit as string | undefined, 100),
-        forceRefresh: Boolean(opts.forceRefresh),
+        forceRefresh: opts.forceRefresh,
         includeUnpaidOnly: Boolean(opts.unpaidOnly),
         getOverdue: Boolean(opts.overdue),
         append: !Boolean(opts.replace),

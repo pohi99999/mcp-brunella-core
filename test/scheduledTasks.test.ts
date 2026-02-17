@@ -76,7 +76,7 @@ describe("ScheduledTasksEngine Integráció", () => {
     db.close();
     try {
       await fs.unlink(tempDbPath);
-    } catch {}
+    } catch { /* non-critical */ }
     vi.restoreAllMocks();
   });
 
@@ -93,7 +93,7 @@ describe("ScheduledTasksEngine Integráció", () => {
         created_at: new Date().toISOString()
       };
 
-      // @ts-ignore
+      // @ts-expect-error The task object type mismatch is intentional for this test case.
       const result = engine.scheduleTask(task);
       expect(result.success).toBe(true);
       expect(result.message).toContain("scheduled");

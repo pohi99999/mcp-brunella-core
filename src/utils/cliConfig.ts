@@ -180,7 +180,7 @@ function getSystemDefaultsPath(): string | null {
   const env = process.env.BRUNELLA_CLI_SYSTEM_DEFAULTS_PATH;
   if (env) return env;
   const plat = process.platform;
-  if (plat === 'win32') return path.join(process.env.PROGRAMDATA || 'C:\ProgramData', 'brunella-cli', 'system-defaults.json');
+  if (plat === 'win32') return path.join(process.env.PROGRAMDATA || 'C:/ProgramData', 'brunella-cli', 'system-defaults.json');
   if (plat === 'darwin') return path.join(os.homedir(), 'Library', 'Application Support', 'BrunellaCli', 'system-defaults.json');
   return '/etc/brunella-cli/system-defaults.json';
 }
@@ -189,7 +189,7 @@ function getSystemSettingsPath(): string | null {
   const env = process.env.BRUNELLA_CLI_SYSTEM_SETTINGS_PATH;
   if (env) return env;
   const plat = process.platform;
-  if (plat === 'win32') return path.join(process.env.PROGRAMDATA || 'C:\ProgramData', 'brunella-cli', 'settings.json');
+  if (plat === 'win32') return path.join(process.env.PROGRAMDATA || 'C:/ProgramData', 'brunella-cli', 'settings.json');
   if (plat === 'darwin') return path.join(os.homedir(), 'Library', 'Application Support', 'BrunellaCli', 'settings.json');
   return '/etc/brunella-cli/settings.json';
 }

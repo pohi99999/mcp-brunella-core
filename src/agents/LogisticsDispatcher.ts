@@ -1,5 +1,12 @@
 import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { spawn } from "child_process";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const SUPPLY_MATCHER = path.resolve(__dirname, "../../myai/workers/supply_matcher.py");
+const ROUTE_OPTIMIZER = path.resolve(__dirname, "../../myai/workers/route_optimizer.py");
 
 /**
  * Shipment Tracking Data
@@ -69,6 +76,37 @@ export class LogisticsDispatcher implements IAgent {
   private notifications: ProactiveNotification[] = [];
 
   /**
+   * callSupplyMatcher - Python supply_matcher.py hívás (Phase 2)
+   */
+  private callSupplyMatcher(region: string, mock = false): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const args = mock ? ["--mock"] : [];
+      const proc = spawn("python", [SUPPLY_MATCHER, ...args], { stdio: ["pipe", "pipe", "pipe"] });
+      let stdout = "";
+      let stderr = "";
+
+      proc.stdout.on("data", (chunk: Buffer) => { stdout += chunk.toString(); });
+      proc.stderr.on("data", (chunk: Buffer) => { stderr += chunk.toString(); });
+      
+      if (!mock) {
+        // Here we would pass actual scraped capacities if they were in the context
+        const input = JSON.stringify({ region, capacities: [] });
+        proc.stdin.write(input);
+      }
+      proc.stdin.end();
+
+      proc.on("close", (code) => {
+        if (code !== 0) return reject(new Error(stderr || `Exit ${code}`));
+        try {
+          resolve(JSON.parse(stdout.trim()));
+        } catch {
+          reject(new Error("Match JSON hiba."));
+        }
+      });
+    });
+  }
+
+  /**
    * Execute agent task
    */
   async execute(task: string, context?: unknown): Promise<AgentResponse> {
@@ -82,6 +120,32 @@ export class LogisticsDispatcher implements IAgent {
 
       if (task.toLowerCase().includes('route') || task.toLowerCase().includes('útvonal')) {
         return await this.optimizeRoutes(task, context);
+      }
+
+      if (task.toLowerCase().includes('match') || task.toLowerCase().includes('párosít')) {
+        const region = (context as any)?.region || "Budapest";
+        const mock = (context as any)?.mock ?? task.includes("mock");
+        logInfo(this.name, `Példány párosítás indítása: ${region}`);
+
+        try {
+          const matchResult = await this.callSupplyMatcher(region, mock);
+          const report = matchResult.summary 
+            ? `📊 Párosítás kész: ${matchResult.summary.matches} párosítva, ${matchResult.summary.avg_score}/10 átlag score.\n${matchResult.alerts.join("\n")}`
+            : `📊 Párosítás kész: ${matchResult.matches.length} párosítva.`;
+
+          return {
+        success: true,
+        status: 'success',
+        message: matchResult.summary 
+          ? `📊 Párosítás kész: ${matchResult.summary.matches} párosítva.`
+          : `📊 Párosítás kész: ${matchResult.matches.length} párosítva.`,
+        data: matchResult
+      };
+        } catch (e: unknown) {
+          const error = e instanceof Error ? e.message : String(e);
+          logError(this.name, `Match hiba: ${error}`);
+          return { status: 'error', error };
+        }
       }
 
       if (task.toLowerCase().includes('notify') || task.toLowerCase().includes('értesít')) {
@@ -165,6 +229,7 @@ export class LogisticsDispatcher implements IAgent {
     const notifications = this.detectIssues(mockShipments);
 
     return {
+      success: true,
       status: 'success',
       data: {
         trackingCount: mockShipments.length,
@@ -190,57 +255,79 @@ export class LogisticsDispatcher implements IAgent {
   }
 
   /**
+   * callRouteOptimizer - Python route_optimizer.py hívás (Phase 3)
+   */
+  private callRouteOptimizer(locations: any[], mock = false): Promise<any> {
+    return new Promise((resolve, reject) => {
+      const args = mock ? ["--mock"] : [];
+      const proc = spawn("python", [ROUTE_OPTIMIZER, ...args], { stdio: ["pipe", "pipe", "pipe"] });
+      let stdout = "";
+      let stderr = "";
+
+      proc.stdout.on("data", (chunk: Buffer) => { stdout += chunk.toString(); });
+      proc.stderr.on("data", (chunk: Buffer) => { stderr += chunk.toString(); });
+      
+      if (!mock) {
+        const input = JSON.stringify({ locations });
+        proc.stdin.write(input);
+      }
+      proc.stdin.end();
+
+      proc.on("close", (code) => {
+        if (code !== 0) return reject(new Error(stderr || `Exit ${code}`));
+        try {
+          resolve(JSON.parse(stdout.trim()));
+        } catch {
+          reject(new Error("Route JSON hiba."));
+        }
+      });
+    });
+  }
+
+  /**
    * Optimize delivery routes
    */
-  private async optimizeRoutes(_task: string, _context?: unknown): Promise<AgentResponse> {
+  private async optimizeRoutes(_task: string, context?: unknown): Promise<AgentResponse> {
     logInfo(this.name, 'Útvonalak optimizálása...');
 
-    const shipments = Array.from(this.shipmentDatabase.values()).filter(
-      s => s.status === 'pending' || s.status === 'in_transit'
-    );
+    const mock = (context as any)?.mock ?? _task.includes("mock");
+    const locations = (context as any)?.locations || [];
 
-    // Create optimized route
-    const route: Route = {
-      routeId: `ROUTE-${Date.now()}`,
-      shipments,
-      totalDistance: Math.random() * 300 + 100, // 100-400 km
-      estimatedTime: Math.random() * 12 + 4, // 4-16 hours
-      waypointCount: shipments.length,
-      optimizationScore: Math.random() * 20 + 80, // 80-100%
-      estimatedCost: shipments.length * Math.random() * 50 + 100,
-      environmentalImpact: {
-        co2Emissions: Math.random() * 50 + 20, // kg
-        fuelConsumption: Math.random() * 20 + 5 // liters
-      }
-    };
-
-    this.routes.set(route.routeId, route);
-
-    logInfo(this.name, `Útvonal optimizálva: ${route.routeId} (${route.optimizationScore}% hatékonyság)`);
-
-    return {
-      status: 'success',
-      data: {
-        routeId: route.routeId,
-        shipmentsInRoute: route.shipments.length,
-        totalDistance: Math.round(route.totalDistance * 10) / 10,
-        estimatedTime: Math.round(route.estimatedTime * 10) / 10,
-        optimizationScore: Math.round(route.optimizationScore),
-        estimatedCost: Math.round(route.estimatedCost * 100) / 100,
+    try {
+      const routeResult = await this.callRouteOptimizer(locations, mock);
+      
+      const route: Route = {
+        routeId: `ROUTE-${Date.now()}`,
+        shipments: [], // No real mapping yet from points back to shipments
+        totalDistance: routeResult.total_distance,
+        estimatedTime: routeResult.total_distance / 60, // Assumed 60 km/h avg
+        waypointCount: routeResult.route?.length || 0,
+        optimizationScore: routeResult.optimization_score || 90,
+        estimatedCost: routeResult.total_distance * 0.15, // Cost per km
         environmentalImpact: {
-          co2Emissions: Math.round(route.environmentalImpact.co2Emissions * 10) / 10,
-          fuelConsumption: Math.round(route.environmentalImpact.fuelConsumption * 10) / 10
-        },
-        recommendations: [
-          'Combine nearby deliveries to reduce distance',
-          'Schedule deliveries during low-traffic hours',
-          'Consider electric vehicles for urban routes',
-          'Implement real-time tracking to reduce delays'
-        ],
-        estimatedTimeSavings: `${Math.round(Math.random() * 30 + 10)} minutes`,
-        estimatedCostSavings: `${Math.round(Math.random() * 200 + 50)} currency units`
-      }
-    };
+          co2Emissions: routeResult.total_distance * 0.1, // kg/km
+          fuelConsumption: routeResult.total_distance * 0.08 // liters/km
+        }
+      };
+
+      this.routes.set(route.routeId, route);
+
+      logInfo(this.name, `Útvonal optimizálva: ${route.routeId} (${route.optimizationScore}% hatékonyság)`);
+
+      return {
+        success: true,
+        status: 'success',
+        message: `🏁 Útvonal optimizálva: ${route.totalDistance} km, ${route.waypointCount} megálló.`,
+        data: {
+          ...routeResult,
+          route_id: route.routeId
+        }
+      };
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError(this.name, `Route optimization hiba: ${error}`);
+      return { status: 'error', error };
+    }
   }
 
   /**
@@ -297,9 +384,10 @@ export class LogisticsDispatcher implements IAgent {
     this.notifications.push(...notifications);
 
     return {
+      success: true,
       status: 'success',
       data: {
-        totalNotifications: notifications.length,
+        totalNotifications: mockShipments.length,
         notifications: notifications.map(n => ({
           shipmentId: n.shipmentId,
           type: n.notificationType,
