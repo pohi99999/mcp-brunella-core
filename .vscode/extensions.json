@@ -1,7 +1,6 @@
 {
   "recommendations": [
     // --- CORE BAS EXTENSIONS ---
-    "github.copilot",
     "github.copilot-chat",
     "sbroenne.windows-mcp", // MCP kliens Windowsra
     // --- PYTHON (Robotkéz & AI) ---
