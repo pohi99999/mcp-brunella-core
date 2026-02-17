@@ -1,4 +1,3 @@
-
 /**
  * Deployment Analyzer
  * 
@@ -90,24 +89,26 @@ export class DeploymentAnalyzer {
         /module not found/i,
         /cannot find.*module/i
       ],
+      deploy: [
+        /deployment.*failed/i,
+        /(push|pull|clone).*(failed|error)/i,
+        /remote:.*error/i,
+        /npm.*publish/i
+      ],
       test: [
         /test failed/i,
         /assertion.*failed/i,
         / failing( test)?/i,
         /^\s*FAIL\s+/im,
         /mocha|jest|vitest/i,
-        /expected.*to/i
+        /expected.*to/i,
+        /FAIL/i, // Added FAIL for Vitest output
+        /failed/i // Generic failed
       ],
       lint: [
         /eslint|prettier|stylelint/i,
         /linting.*failed/i,
         /✖/i
-      ],
-      deploy: [
-        /deployment.*failed/i,
-        /(push|pull|clone).*(failed|error)/i,
-        /remote:.*error/i,
-        /npm.*publish/i
       ]
     };
 
@@ -228,9 +229,10 @@ export class DeploymentAnalyzer {
    * Generates a prompt for Jules to fix the detected issue
    */
   static generateFixPrompt(analysis: DeploymentAnalysis, fileContent?: string): string {
+    const errorCategory = analysis.category ? analysis.category.toUpperCase() : 'UNKNOWN';
     const basePrompt = `## Jules Continuous AI - Automated Fix Request
 
-**Error Category:** ${analysis.category.toUpperCase()}  
+**Error Category:** ${errorCategory}
 **Title:** ${analysis.title}  
 **Confidence:** ${(analysis.confidence * 100).toFixed(0)}%
 

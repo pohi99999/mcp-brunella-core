@@ -1,0 +1,12 @@
+node_modules/
+.git/
+.github/
+.vscode/
+.venv/
+myai/
+open-interpreter/
+test/
+coverage/
+dist/
+build/
+*.log

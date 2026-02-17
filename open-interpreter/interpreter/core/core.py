@@ -248,12 +248,23 @@ class OpenInterpreter:
             # REENABLE this when multimodal becomes more common:
 
             # Make sure we're using a model that can handle this
-            # if not self.llm.supports_vision:
-            #     for message in self.messages:
-            #         if message["type"] == "image":
-            #             raise Exception(
-            #                 "Use a multimodal model and set `interpreter.llm.supports_vision` to True to handle image messages."
-            #             )
+            if self.llm.supports_vision is None:
+                self.llm.supports_vision = self.llm.detect_vision()
+
+            if not self.llm.supports_vision:
+                try:
+                    import importlib
+                    importlib.import_module("transformers")
+                    has_local_vision = True
+                except ImportError:
+                    has_local_vision = False
+
+                if not has_local_vision:
+                    for message in self.messages:
+                        if message["type"] == "image":
+                            raise Exception(
+                                "Use a multimodal model and set `interpreter.llm.supports_vision` to True to handle image messages."
+                            )
 
             # This is where it all happens!
             yield from self._respond_and_store()

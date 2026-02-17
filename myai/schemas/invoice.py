@@ -17,7 +17,7 @@ class LineItem(BaseModel):
     unit_price: float = Field(..., ge=0, description="Unit price (nettó)")
     vat_rate: float = Field(27.0, ge=0, le=100, description="VAT rate % for this item")
 
-    model_config = ConfigDict(json_encoders={float: lambda v: round(v, 2)})
+    model_config = ConfigDict()  # Note: Pydantic v2+ auto-serializes float
 
     @property
     def amount(self) -> float:
@@ -144,7 +144,9 @@ class InvoiceData(BaseModel):
         description="Data source",
     )
 
-    model_config = ConfigDict(json_encoders={date: lambda v: v.isoformat()})
+    # Note: Pydantic v2+ uses model_dump(mode='json') for serialization
+    # json_encoders is deprecated; dates are automatically serialized via field_serializer if needed
+    model_config = ConfigDict()
 
     @field_validator("due_date")
     @classmethod

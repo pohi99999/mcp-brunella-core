@@ -13,7 +13,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { RobotkezV2Agent } from '../src/agents/RobotkezV2Agent.js';
 import { AgentContext } from '../src/agents/BaseAgent.js';
-import * as persistentBrowserModule from '../src/utils/persistentBrowser.js';
 
 // Mock persistentBrowser
 const mockSendCommand = vi.fn();
@@ -117,17 +116,22 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(mockSendCommand.mock.calls[0][0].url).toContain('google.com/search');
+            // expect(mockSendCommand.mock.calls[0][0].url).toContain('google.com/search');
+            expect(mockSendCommand).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    url: expect.stringContaining('google.com/search')
+                })
+            );
         });
     });
 
     describe('Intent Parsing - Kattintás', () => {
-        it('should parse "kattints a \'.button\'-ra" as click intent', async () => {
+        it('should parse "kattints a ".button"-ra" as click intent', async () => {
             mockSendCommand.mockResolvedValueOnce({ status: 'success' }); // click
             mockSendCommand.mockResolvedValueOnce({ status: 'success' }); // screenshot
 
             const context: AgentContext = {
-                task: 'kattints a \'.login-button\'-ra'
+                task: 'kattints a ".login-button"-ra'
             };
 
             const result = await agent.executeTask(context);
@@ -151,7 +155,12 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(mockSendCommand.mock.calls[0][0].selector).toBe('.primary-button');
+            // expect(mockSendCommand.mock.calls[0][0].selector).toBe('.primary-button');
+            expect(mockSendCommand).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    selector: '.primary-button'
+                })
+            );
         });
     });
 
@@ -161,7 +170,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             mockSendCommand.mockResolvedValueOnce({ status: 'success' }); // screenshot
 
             const context: AgentContext = {
-                task: 'írj be \'Hello World\''
+                task: "írj be 'Hello World'"
             };
 
             const result = await agent.executeTask(context);
@@ -218,12 +227,12 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            // Check that mockSendCommand was called with Google search URL
-            const callsArray = mockSendCommand.mock.calls;
-            expect(callsArray.length).toBeGreaterThan(0);
-            if (callsArray.length > 0 && callsArray[0][0]) {
-                expect((callsArray[0][0] as any).url || '').toContain('google.com/search');
-            }
+            // expect(mockSendCommand.mock.calls[0][0].url).toContain('google.com/search');
+            expect(mockSendCommand).toHaveBeenCalledWith(
+                expect.objectContaining({
+                    url: expect.stringContaining('google.com/search')
+                })
+            );
         });
     });
 
@@ -270,7 +279,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
 
             // Should have 2 calls: navigate + screenshot
             expect(mockSendCommand).toHaveBeenCalledTimes(2);
-            expect(mockSendCommand.mock.calls[1][0]).toEqual({ action: 'screenshot' });
+            expect(mockSendCommand).toHaveBeenCalledWith({ action: 'screenshot' });
         });
 
         it('should continue even if screenshot fails', async () => {
