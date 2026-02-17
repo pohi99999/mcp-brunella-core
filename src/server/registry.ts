@@ -7,6 +7,10 @@ import {
   testSchedulerRunHandler,
   testSchedulerStatusHandler,
 } from "../tools/testSchedulerTool.js";
+import {
+  getSzamlazzInvoicesTool,
+  getSzamlazzInvoicesHandler,
+} from "../tools/getSzamlazzInvoices.js";
 
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
@@ -85,6 +89,18 @@ const registeredToolsList: RegisteredToolInfo[] = [
     category: "monitoring",
     parameters: [
       { name: "includeDetails", type: "boolean", required: false },
+    ],
+  },
+  {
+    id: "get_szamlazz_invoices",
+    name: "get_szamlazz_invoices",
+    description: "Lekéri a számlákat a Számlázz.hu API-ból InvoiceData formátumban",
+    enabled: true,
+    category: "custom",
+    parameters: [
+      { name: "since_date", type: "string", required: false },
+      { name: "limit", type: "integer", required: false },
+      { name: "force_refresh", type: "boolean", required: false },
     ],
   },
 ];
@@ -317,6 +333,27 @@ export async function registerAllTools(server: McpServer) {
       testSchedulerStatusMcpHandler,
     );
     toolHandlers.set("test-scheduler-status", testSchedulerStatusMcpHandler);
+
+    // Register Számlázz.hu Invoice Fetcher Tool
+    const getSzamlazzInvoicesMcpHandler = async (args: any) => {
+      const result = await getSzamlazzInvoicesHandler(args);
+      return {
+        content: [
+          { type: "text" as const, text: JSON.stringify(result, null, 2) },
+        ],
+      };
+    };
+    server.tool(
+      "get_szamlazz_invoices",
+      getSzamlazzInvoicesTool.description,
+      {
+        since_date: z.string().optional(),
+        limit: z.number().optional(),
+        force_refresh: z.boolean().optional(),
+      },
+      getSzamlazzInvoicesMcpHandler,
+    );
+    toolHandlers.set("get_szamlazz_invoices", getSzamlazzInvoicesMcpHandler);
   }
 
   // Always register ping tool (works in any environment)
