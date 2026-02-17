@@ -16,7 +16,7 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { backgroundTaskManager } from '../utils/backgroundTaskManager.js';
-import { persistentBrowser } from '../utils/persistentBrowser.js';
+import { persistentBrowser, BrowserCommand } from '../utils/persistentBrowser.js';
 import { generateExecutionPlan, ExecutionPlan } from '../utils/llmPlanner.js';
 
 // No longer using execAsync here
@@ -33,8 +33,8 @@ export interface RobotkezV2Options {
 
 export class RobotkezV2Agent extends BaseAgent {
   name = 'RobotkezV2';
-  role = 'Magyar Agentic Browser';
-  description = 'Playwright (fast) + Browser-Use (AI) hybrid browser automation';
+  role = 'Magyar Agentic Browser (Comet Stílus)';
+  description = 'Folyékonyan kommunikáló, proaktív böngésző ügynök vizuális visszajelzéssel.';
   capabilities = [
     'browser_automation',
     'screenshot',
@@ -46,9 +46,6 @@ export class RobotkezV2Agent extends BaseAgent {
     'agentic_browsing'
   ];
 
-  /**
-   * Internal execution logic - implements BaseAgent.executeTask
-   */
   /**
    * Internal execution logic - implements BaseAgent.executeTask
    */
@@ -71,16 +68,16 @@ export class RobotkezV2Agent extends BaseAgent {
         if (url) {
           plan = {
             plan: [
-              { action: 'navigate', url, description: `Navigáció a ${url} oldalra` }
+              { action: 'navigate', url, description: `Navigálás a(z) ${url} weboldalra` }
             ],
             estimatedDuration: 5000,
             backgroundEligible: false
           };
-        } else if (taskLower.includes('navigálj')) {
+        } else {
           // Fallback to search if "navigálj" but no URL
           const query = task.replace(/navigálj/i, '').trim();
           plan = {
-            plan: [{ action: 'navigate', url: `https://www.google.com/search?q=${encodeURIComponent(query)}`, description: `Keresés: ${query}` }],
+            plan: [{ action: 'navigate', url: `https://www.google.com/search?q=${encodeURIComponent(query)}`, description: `Keresés indítása: ${query}` }],
             estimatedDuration: 5000,
             backgroundEligible: false
           };
@@ -88,7 +85,7 @@ export class RobotkezV2Agent extends BaseAgent {
       } else if (taskLower.includes('keress rá')) {
         const query = task.replace(/keress rá a? /i, '').trim();
         plan = {
-          plan: [{ action: 'navigate', url: `https://www.google.com/search?q=${encodeURIComponent(query)}`, description: `Keresés: ${query}` }],
+          plan: [{ action: 'navigate', url: `https://www.google.com/search?q=${encodeURIComponent(query)}`, description: `Google keresés: ${query}` }],
           estimatedDuration: 5000,
           backgroundEligible: false
         };
@@ -96,7 +93,7 @@ export class RobotkezV2Agent extends BaseAgent {
         const selector = task.match(/['"]([^'"]+)['"]/)?.[1] || (taskLower === 'kattints' ? '.primary-button' : null);
         if (selector) {
           plan = {
-            plan: [{ action: 'click', selector, description: `Kattintás: ${selector}` }],
+            plan: [{ action: 'click', selector, description: `Kattintás a(z) '${selector}' elemre` }],
             estimatedDuration: 3000,
             backgroundEligible: false
           };
@@ -105,13 +102,13 @@ export class RobotkezV2Agent extends BaseAgent {
         const text = task.match(/['"]([^'"]+)['"]/)?.[1] || 'Hello World';
         const selector = task.match(/a '([^']+)' mezőbe/)?.[1] || 'input';
         plan = {
-          plan: [{ action: 'type', selector, text, description: `Gépelés: ${text}` }],
+          plan: [{ action: 'type', selector, text, description: `Szöveg beírása a(z) '${selector}' mezőbe: "${text}"` }],
           estimatedDuration: 4000,
           backgroundEligible: false
         };
       } else if (taskLower.includes('képernyőkép')) {
         plan = {
-          plan: [{ action: 'screenshot', description: 'Képernyőkép készítése' }],
+          plan: [{ action: 'screenshot', description: 'Pillanatkép készítése a jelenlegi oldalról' }],
           estimatedDuration: 3000,
           backgroundEligible: false
         };
@@ -141,7 +138,7 @@ export class RobotkezV2Agent extends BaseAgent {
         } catch {
           // Final fallback
           plan = {
-            plan: [{ action: 'navigate', url: `https://www.google.com/search?q=${encodeURIComponent(task)}`, description: 'Keresés' }],
+            plan: [{ action: 'navigate', url: `https://www.google.com/search?q=${encodeURIComponent(task)}`, description: 'Általános keresés indítása' }],
             estimatedDuration: 5000,
             backgroundEligible: false
           };
@@ -153,7 +150,7 @@ export class RobotkezV2Agent extends BaseAgent {
         const taskId = await backgroundTaskManager.startTask(task, plan);
         return {
           success: true,
-          message: `Háttérben futó feladat elindítva ID: ${taskId}`,
+          message: `Rendben, elindítottam a feladatot a háttérben. A folyamatot a "Background Tasks" panelen követheted nyomon. (Task ID: ${taskId})`,
           data: { taskId, background: true }
         };
       }
@@ -169,7 +166,9 @@ export class RobotkezV2Agent extends BaseAgent {
           // Strip description and other non-command properties for browser compatibility
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { description: _desc, ...command } = step as unknown as Record<string, unknown>;
-          const response = await persistentBrowser.sendCommand(command as any);
+          // Ensure type safety
+          const browserCommand = command as unknown as BrowserCommand;
+          const response = await persistentBrowser.sendCommand(browserCommand);
           completedSteps.push({
             ...step,
             status: 'completed',
@@ -177,7 +176,7 @@ export class RobotkezV2Agent extends BaseAgent {
           });
         } catch (stepError: unknown) {
           const msg = stepError instanceof Error ? stepError.message : String(stepError);
-          const action = (step as any).action;
+          const action = step.action;
           logError(this.name, `Step failed: ${step.description} - ${msg}`);
           completedSteps.push({
             ...step,
@@ -189,7 +188,7 @@ export class RobotkezV2Agent extends BaseAgent {
           if (['navigate', 'click', 'type'].includes(action)) {
              return {
                success: false,
-               message: `Nem sikerült: ${step.description} - ${msg}`
+               message: `Sajnos nem sikerült végrehajtani a következő lépést: "${step.description}". Hibaüzenet: ${msg}`
              };
           }
         }
@@ -204,7 +203,9 @@ export class RobotkezV2Agent extends BaseAgent {
       }
 
       const isScreenshotTask = taskLower.includes('képernyőkép');
-      const baseMessage = isScreenshotTask ? 'Képernyőkép elkészült' : `Végrehajtva: ${task}`;
+      const baseMessage = isScreenshotTask
+        ? 'Elkészítettem a kért képernyőképet.'
+        : `Sikeresen végrehajtottam a feladatot: "${task}".`;
 
       return {
         success: true,
@@ -221,7 +222,7 @@ export class RobotkezV2Agent extends BaseAgent {
       logError(this.name, `Execution failed: ${msg}`);
       return {
         success: false,
-        message: `Nem sikerült: ${msg}`
+        message: `Hiba történt a végrehajtás során: ${msg}`
       };
     } finally {
       setAgentStatus(this.name, 'idle');
@@ -229,7 +230,7 @@ export class RobotkezV2Agent extends BaseAgent {
   }
 
   // Phase 4.4 Background Task Methods
-  async executeInBackground(task: string): Promise<{ taskId: string; plan?: any }> {
+  async executeInBackground(task: string): Promise<{ taskId: string; plan?: ExecutionPlan }> {
     const plan = await generateExecutionPlan(task);
     const taskId = await backgroundTaskManager.startTask(task, plan);
     return { taskId, plan };

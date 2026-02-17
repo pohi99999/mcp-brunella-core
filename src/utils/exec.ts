@@ -1,4 +1,3 @@
-import { spawn } from "child_process";
 import { cliLogger } from "./logger.js";
 
 interface ExecOptions {
@@ -18,6 +17,13 @@ export async function execCommand(command: string, args: string[], options: Exec
     
     // Log the execution attempt
     await cliLogger.log(`Executing: ${command} ${args.join(' ')}`, { cwd });
+
+    // Ensure we are in a Node.js environment
+    if (typeof process === 'undefined' || !process.versions?.node) {
+        throw new Error("execCommand is only supported in Node.js environment");
+    }
+
+    const { spawn } = await import('child_process');
 
     return new Promise((resolve, reject) => {
         const proc = spawn(command, args, {
