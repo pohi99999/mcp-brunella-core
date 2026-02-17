@@ -2,7 +2,7 @@
 
 from datetime import date, datetime
 from typing import Optional, List
-from pydantic import BaseModel, Field, validator
+from pydantic import BaseModel, Field, field_validator, ConfigDict
 import json
 
 
@@ -17,9 +17,7 @@ class LineItem(BaseModel):
     unit_price: float = Field(..., ge=0, description="Unit price (nettó)")
     vat_rate: float = Field(27.0, ge=0, le=100, description="VAT rate % for this item")
 
-    class Config:
-        """Pydantic config."""
-        json_encoders = {float: lambda v: round(v, 2)}
+    model_config = ConfigDict(json_encoders={float: lambda v: round(v, 2)})
 
     @property
     def amount(self) -> float:
@@ -59,16 +57,6 @@ class VATType(BaseModel):
     standard_rate: float = Field(27.0, ge=0, le=100, description="Standard VAT rate (%)")
     reduced_rate: float = Field(19.0, ge=0, le=100, description="Reduced rate (%) - food, books, etc.")
     super_reduced_rate: float = Field(5.0, ge=0, le=100, description="Super reduced rate (%)")
-
-    class Config:
-        """Pydantic config."""
-
-        example = {
-            "code": "HU",
-            "standard_rate": 27.0,
-            "reduced_rate": 19.0,
-            "super_reduced_rate": 5.0,
-        }
 
 
 # Standard Hungary VAT configuration
@@ -140,67 +128,54 @@ class InvoiceData(BaseModel):
     # VAT region support
     vat_type: str = Field(
         "HU",
-        regex="^(HU|AT|DE|SK)$",
+        pattern="^(HU|AT|DE|SK)$",
         description="VAT region code (HU=Hungary, AT=Austria, DE=Germany, SK=Slovakia)",
     )
     
     currency: str = Field("HUF", min_length=3, max_length=3, description="Currency code")
     payment_status: str = Field(
         "pending",
-        regex="^(pending|paid|overdue|cancelled|partial)$",
+        pattern="^(pending|paid|overdue|cancelled|partial)$",
         description="Payment status (auto-set to 'overdue' if due_date passed)",
     )
     source: str = Field(
         "unknown",
-        regex="^(szamlazz_api|gmail|upload|harvest)$",
+        pattern="^(szamlazz_api|gmail|upload|harvest)$",
         description="Data source",
     )
 
-    class Config:
-        """Pydantic config."""
-        json_encoders = {date: lambda v: v.isoformat()}
-        example = {
-            "partner": "Acme Corp",
-            "amount": 100000.00,
-            "vat_amount": 27000.00,
-            "vat_rate": 27.0,
-            "invoice_date": "2026-02-14",
-            "due_date": "2026-03-14",
-            "invoice_no": "2026-00123",
-            "total_amount": 127000.00,
-            "description": "Consulting services",
-            "currency": "HUF",
-            "payment_status": "pending",
-            "source": "szamlazz_api",
-        }
+    model_config = ConfigDict(json_encoders={date: lambda v: v.isoformat()})
 
-    @validator("due_date")
-    def due_date_after_invoice_date(cls, v: date, values: dict) -> date:
+    @field_validator("due_date")
+    @classmethod
+    def due_date_after_invoice_date(cls, v: date, info) -> date:
         """Validate that due_date is after invoice_date."""
-        if "invoice_date" in values and v < values["invoice_date"]:
+        if "invoice_date" in info.data and v < info.data["invoice_date"]:
             raise ValueError("due_date must be after invoice_date")
         return v
 
-    @validator("payment_status", pre=False, always=True)
-    def calculate_overdue_status(cls, v: str, values: dict) -> str:
+    @field_validator("payment_status")
+    @classmethod
+    def calculate_overdue_status(cls, v: str, info) -> str:
         """
         AUTOMATIC OVERDUE CALCULATION:
         If due_date has passed and status is 'pending', set to 'overdue'.
         """
-        if "due_date" in values and "payment_status" in values:
+        if "due_date" in info.data and "payment_status" in info.data:
             # Only auto-set to overdue if currently pending
-            current_status = values.get("payment_status", "pending")
-            if current_status == "pending" and values["due_date"] < date.today():
+            current_status = info.data.get("payment_status", "pending")
+            if current_status == "pending" and info.data["due_date"] < date.today():
                 return "overdue"
         return v
 
-    @validator("total_amount", pre=True, always=True)
-    def calculate_total(cls, v: Optional[float], values: dict) -> float:
+    @field_validator("total_amount")
+    @classmethod
+    def calculate_total(cls, v: Optional[float], info) -> float:
         """Auto-calculate total_amount if not provided."""
         if v is not None:
             return v
-        if "amount" in values and "vat_amount" in values:
-            return values["amount"] + values["vat_amount"]
+        if "amount" in info.data and "vat_amount" in info.data:
+            return info.data["amount"] + info.data["vat_amount"]
         return 0.0
 
     def dict_for_sheets(self) -> dict:
