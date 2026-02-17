@@ -1,4 +1,4 @@
-import { ChildProcess, spawn } from 'child_process';
+import type { ChildProcess } from 'child_process';
 import { logInfo, logError } from './logger.js';
 
 export interface BrowserCommand {
@@ -55,6 +55,7 @@ export class PersistentBrowser {
         }
 
         const path = (await import('path')).default;
+        const { spawn } = await import('child_process');
 
         const scriptPath = path.resolve(process.cwd(), 'myai/interactive_browser.py');
         const pythonExec = await this.getPythonPath();
