@@ -29,6 +29,13 @@ const KEYWORD_ROUTES: ReadonlyArray<{
       "open url",
       "open page",
       "keress rá",
+      "írj be",
+      "keresd meg",
+      "állítsd be",
+      "nyomd meg",
+      "válaszd ki",
+      "görgess",
+      "keresés a weben",
     ],
     agent: "robotkez",
   },
@@ -270,8 +277,9 @@ Respond ONLY with the JSON array. Do not add markdown blocks.
           message: `Plan created with ${taskIds.length} tasks.`,
           taskIds,
         };
-      } catch (parseErr) {
-        this.logger.error(`Plan parsing failed. Raw: ${responseText}`);
+      } catch (parseErr: unknown) {
+        const msg = parseErr instanceof Error ? parseErr.message : String(parseErr);
+        this.logger.error(`Plan parsing failed: ${msg}. Raw: ${responseText}`);
         return { status: "error", error: "Failed to parse LLM plan." };
       }
     } catch (e: unknown) {

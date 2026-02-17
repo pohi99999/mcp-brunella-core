@@ -43,6 +43,7 @@ interface ChatMessage {
   plan?: api.ExecutionPlan;
   taskId?: string;
   backgroundTask?: boolean;
+  screenshot?: string; // NEW: for inline visual feedback
 }
 
 export function RobotkezV2Chat() {
@@ -132,8 +133,9 @@ export function RobotkezV2Chat() {
       } else {
         setMessages(prev => [...prev, {
           role: 'assistant',
-          content: result.message || result.success ? 'Kész!' : 'Hiba történt',
-          timestamp: Date.now()
+          content: result.message || (result.success ? 'Kész!' : 'Hiba történt'),
+          timestamp: Date.now(),
+          screenshot: result.data?.screenshot
         }]);
         toast.success('Feladat befejezve');
       }
@@ -258,6 +260,16 @@ export function RobotkezV2Chat() {
                         <p className="whitespace-pre-wrap leading-relaxed">
                           {msg.content}
                         </p>
+                        {msg.screenshot && (
+                          <div className="mt-2 rounded-lg overflow-hidden border border-border/50 bg-black/20">
+                            <img 
+                              src={msg.screenshot.startsWith('data:') ? msg.screenshot : `data:image/png;base64,${msg.screenshot}`} 
+                              alt="Screenshot" 
+                              className="w-full h-auto cursor-zoom-in hover:scale-[1.02] transition-transform"
+                              onClick={() => window.open(msg.screenshot?.startsWith('data:') ? msg.screenshot : `data:image/png;base64,${msg.screenshot}`, '_blank')}
+                            />
+                          </div>
+                        )}
                       </div>
 
                       {/* Background Task Badge */}

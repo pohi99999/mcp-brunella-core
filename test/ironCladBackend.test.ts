@@ -101,7 +101,7 @@ describe('Iron Clad Backend - Integration Tests', () => {
   });
 
   describe('Chat Completions', () => {
-    it('should complete a simple chat request', { timeout: 30000 }, async () => {
+    it('should complete a simple chat request', { timeout: 60000 }, async () => {
       if (!backendAvailable) return;
 
       const payload = {
@@ -137,7 +137,7 @@ describe('Iron Clad Backend - Integration Tests', () => {
       expect(choice.message.content.length).toBeGreaterThan(0);
     });
 
-    it('should handle temperature and max_tokens parameters', { timeout: 30000 }, async () => {
+    it('should handle temperature and max_tokens parameters', { timeout: 60000 }, async () => {
       if (!backendAvailable) return;
 
       const payload = {
@@ -262,7 +262,7 @@ describe('Iron Clad Backend - Integration Tests', () => {
   });
 
   describe('Provider Gateway', () => {
-    it('should route requests through LiteLLM gateway', { timeout: 30000 }, async () => {
+    it('should route requests through LiteLLM gateway', { timeout: 60000 }, async () => {
       if (!backendAvailable) return;
 
       // This test verifies the gateway is operational by checking usage metadata

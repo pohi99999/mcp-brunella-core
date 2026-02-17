@@ -58,6 +58,7 @@ export abstract class BaseAgent implements IAgent {
     const formattedMessage = formatAgentResult(result, this.name, { useEmojis: true });
 
     return {
+      success: result.success,
       status: result.success ? 'success' : 'error',
       message: formattedMessage, // Magyar nyelvű szöveg
       data: result.data,

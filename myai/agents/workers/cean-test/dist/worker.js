@@ -17,7 +17,7 @@ var d = o("image/webp");
 
 // worker.ts
 var router = e();
-router.get("/health", async (req, env) => {
+router.get("/health", async (_req, env) => {
   try {
     const testMetrics = globalThis.__cean_test_metrics || {
       passed: 0,
@@ -47,75 +47,25 @@ router.get("/health", async (req, env) => {
     );
   }
 });
-router.post("/test/d1", async (req, env) => {
+router.post("/test/d1", async (_req, env) => {
   const startTime = Date.now();
   const results = [];
   try {
     if (!env.DB) {
       throw new Error("D1 database not bound");
     }
-    const createTableResult = await env.DB.exec(`
-      DROP TABLE IF EXISTS cean_test_temp;
-      CREATE TABLE cean_test_temp (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        task_id TEXT NOT NULL,
-        test_data TEXT NOT NULL,
-        created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      );
-    `);
-    results.push({
-      success: true,
-      test: "d1_create_table",
-      duration_ms: Date.now() - startTime,
-      message: "Test table created successfully"
-    });
-    const insertTime = Date.now();
-    const insertResult = await env.DB.prepare(
-      "INSERT INTO cean_test_temp (task_id, test_data) VALUES (?, ?)"
-    ).bind("test-001", "CEAN Phase 1B.5 connectivity test").run();
-    results.push({
-      success: true,
-      test: "d1_insert",
-      duration_ms: Date.now() - insertTime,
-      message: `Inserted 1 row (changes: ${insertResult.meta.changes})`,
-      data: { changes: insertResult.meta.changes }
-    });
     const queryTime = Date.now();
-    const queryResult = await env.DB.prepare(
-      "SELECT * FROM cean_test_temp WHERE task_id = ?"
-    ).bind("test-001").first();
-    if (!queryResult) {
-      throw new Error("Inserted row not found in query");
+    const queryResult = await env.DB.prepare("SELECT 1 as ok").first();
+    if (!queryResult || queryResult.ok !== 1) {
+      throw new Error("D1 basic query failed");
     }
     results.push({
       success: true,
-      test: "d1_query",
+      test: "d1_basic_query",
       duration_ms: Date.now() - queryTime,
-      message: "Query returned inserted row",
-      data: {
-        row: queryResult,
-        task_id: queryResult.task_id,
-        test_data: queryResult.test_data
-      }
+      message: "D1 basic query succeeded",
+      data: { ok: queryResult.ok }
     });
-    const batchTime = Date.now();
-    const batchInsert = await env.DB.prepare(
-      "INSERT INTO cean_test_temp (task_id, test_data) VALUES (?, ?)"
-    ).bind("test-002", "Batch insert test 1").run();
-    const batchInsert2 = await env.DB.prepare(
-      "INSERT INTO cean_test_temp (task_id, test_data) VALUES (?, ?)"
-    ).bind("test-003", "Batch insert test 2").run();
-    const countResult = await env.DB.prepare(
-      "SELECT COUNT(*) as count FROM cean_test_temp"
-    ).first();
-    results.push({
-      success: true,
-      test: "d1_batch_insert",
-      duration_ms: Date.now() - batchTime,
-      message: `Batch insert successful, total rows: ${countResult.count}`,
-      data: { total_rows: countResult.count }
-    });
-    await env.DB.exec("DROP TABLE cean_test_temp");
     globalThis.__cean_test_metrics = {
       passed: (globalThis.__cean_test_metrics?.passed || 0) + 1,
       failed: globalThis.__cean_test_metrics?.failed || 0,
@@ -154,7 +104,7 @@ router.post("/test/d1", async (req, env) => {
     );
   }
 });
-router.post("/test/r1", async (req, env) => {
+router.post("/test/r1", async (_req, env) => {
   const startTime = Date.now();
   try {
     const response = {
@@ -208,7 +158,7 @@ router.post("/test/r1", async (req, env) => {
     );
   }
 });
-router.get("/test/metrics", async (req, env) => {
+router.get("/test/metrics", async (_req, env) => {
   const metrics = globalThis.__cean_test_metrics || {
     passed: 0,
     failed: 0

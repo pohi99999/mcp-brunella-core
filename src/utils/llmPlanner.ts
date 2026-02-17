@@ -106,15 +106,31 @@ Válasz:
  * Generate Execution Plan from magyar instruction
  *
  * @param instruction - Magyar nyelvű utasítás (pl. "Keress rá az AI hírekre")
+ * @param options - Contextual options (history, browser state)
  * @returns ExecutionPlan - Multi-step browser automation plan
  * @throws Error if LLM response is invalid or cannot be parsed
  */
-export async function generateExecutionPlan(instruction: string): Promise<ExecutionPlan> {
+export async function generateExecutionPlan(
+    instruction: string, 
+    options?: { 
+        history?: Array<{ role: string, content: string }>,
+        browserState?: { url: string, title?: string }
+    }
+): Promise<ExecutionPlan> {
     logInfo('LLMPlanner', `Generating plan for: "${instruction}"`);
 
-    const userPrompt = `Utasítás: ${instruction}
+    let contextPrompt = '';
+    if (options?.browserState) {
+        contextPrompt += `\nJELENLEGI BÖNGÉSZŐ ÁLLAPOT:\n- URL: ${options.browserState.url}\n- Cím: ${options.browserState.title || 'N/A'}\n`;
+    }
 
-Készíts részletes execution plan-t a fenti utasítás végrehajtásához.`;
+    if (options?.history && options.history.length > 0) {
+        contextPrompt += `\nKORÁBBI BESZÉLGETÉS:\n${options.history.map(h => `${h.role}: ${h.content}`).join('\n')}\n`;
+    }
+
+    const userPrompt = `${contextPrompt}\nÚJ UTASÍTÁS: ${instruction}
+
+Készíts részletes execution plan-t a fenti utasítás végrehajtásához, figyelembe véve a kontextust.`;
 
     try {
         // Call LLM (using Model Router to pick brain model)
@@ -137,10 +153,11 @@ Készíts részletes execution plan-t a fenti utasítás végrehajtásához.`;
         let plan: ExecutionPlan;
         try {
             plan = JSON.parse(cleaned) as ExecutionPlan;
-        } catch (parseError: any) {
-            logError('LLMPlanner', `JSON parse error: ${parseError.message}`);
+        } catch (parseError: unknown) {
+            const msg = parseError instanceof Error ? parseError.message : String(parseError);
+            logError('LLMPlanner', `JSON parse error: ${msg}`);
             logError('LLMPlanner', `Attempted to parse: ${cleaned.slice(0, 500)}`);
-            throw new Error(`Invalid JSON from LLM: ${parseError.message}`);
+            throw new Error(`Invalid JSON from LLM: ${msg}`);
         }
 
         // Validation
@@ -189,8 +206,9 @@ Készíts részletes execution plan-t a fenti utasítás végrehajtásához.`;
 
         return plan;
 
-    } catch (error: any) {
-        logError('LLMPlanner', `Failed to generate plan: ${error.message}`);
+    } catch (error: unknown) {
+        const msg = error instanceof Error ? error.message : String(error);
+        logError('LLMPlanner', `Failed to generate plan: ${msg}`);
         throw error;
     }
 }

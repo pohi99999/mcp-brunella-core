@@ -17,7 +17,49 @@
 
 ---
 
----
+### 2026-02-17 05:40 - RobotkezV2 "Comet" Experience Implementation (COMPLETE ✅)
+
+**Feladat:**
+A RobotkezV2 böngésző ügynök interaktívvá tétele, "Comet" stílusú magyar nyelvű élmény megteremtése (kontextus-tudatos beszélgetés, vizuális visszacsatolás a chatben).
+
+**Érintett fájlok:**
+
+- `src/agents/OrchestratorAgent.ts` (Bővített magyar kulcsszavak böngészéshez)
+- `src/utils/llmPlanner.ts` (Kontextus-tudatos tervezés history és browser state alapján)
+- `src/agents/RobotkezV2Agent.ts` (Browser state lekérdezés + history átadás a plannernek)
+- `src/server/routes/robotkez.ts` (Perzisztens chat history a database-ben)
+- `src/utils/persistentBrowser.ts` & `myai/interactive_browser.py` (Új `state` command az URL/Cím lekérdezéséhez)
+- `src/dashboard/components/dashboard/NeuralLinkChat.tsx` (Vizuális chat: screenshotok megjelenítése a buborékokban)
+
+**Eredmények:**
+
+- ✅ **Kontextus-tudatosság:** Az ügynök most már emlékszik az előző kérésekre és tudja, melyik oldalon áll éppen.
+- ✅ **Vizuális Chat:** A fő chatben is megjelennek a böngésző állapotáról készült screenshotok.
+- ✅ **Magyar támogatás:** Jobb intenció-detektálás a magyar nyelvű böngésző parancsokra.
+- ✅ **History:** A Robotkez chat session mostantól elmentődik a SQLite adatbázisba.
+
+**Státusz:** ✅ **BEFEJEZVE**
+
+### 2026-02-17 05:15 - Agent Execution & Webhook Fixes (COMPLETE ✅)
+
+**Feladat:**
+Fix `RobotkezV2Agent` execution errors (TypeError: not a function), align with `BaseAgent` interface, and resolve failing integration tests (Webhooks, API, Checkpoint Retention).
+
+**Érintett fájlok:**
+
+- `src/agents/RobotkezV2Agent.ts` (Refactor: executeTask implementation + intent parsing fallback)
+- `src/server/routes/webhooks.ts` (Fix: GitHub webhook path)
+- `test/robotkezAPI.test.ts` (Fix: Agent mock alignment)
+- `test/checkpointRetention.test.ts` (Fix: Database lock cleanup on Windows)
+
+**Eredmények:**
+
+- ✅ **Agent Fix:** `RobotkezV2Agent` correctly implements `BaseAgent`. Sequential execution via `PersistentBrowser` is functional.
+- ✅ **Webhook Fix:** GitHub webhooks mounted at `/github` (accessible as `/api/github`), passing tests.
+- ✅ **Test Stability:** Resolved database file lock issues (`EBUSY`) in checkpoint tests.
+- ✅ **Full Suite:** 39 tests passed in targeted suites (`webhooks`, `robotkezV2Agent`, `robotkezAPI`, `checkpointRetention`).
+
+**Státusz:** ✅ **BEFEJEZVE**
 
 ### 2026-02-16 17:30 - Dashboard Design Refresh & System Boot Integration (COMPLETE ✅)
 

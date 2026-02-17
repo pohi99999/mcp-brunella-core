@@ -1,7 +1,8 @@
+import { ChildProcess, spawn } from 'child_process';
 import { logInfo, logError } from './logger.js';
 
 export interface BrowserCommand {
-    action: 'launch' | 'navigate' | 'click' | 'type' | 'screenshot' | 'content' | 'scroll' | 'wait' | 'extract' | 'close' | 'press';
+    action: 'launch' | 'navigate' | 'click' | 'type' | 'screenshot' | 'content' | 'scroll' | 'wait' | 'extract' | 'close' | 'press' | 'state';
     url?: string;
     selector?: string;
     text?: string;
@@ -21,16 +22,17 @@ export interface BrowserResponse {
     status: 'success' | 'error';
     message?: string;
     url?: string;
+    title?: string; // NEW: for state results
     screenshot?: string; // base64
     content?: string;
-    data?: any; // NEW: for extract results
+    data?: unknown; // NEW: for extract results
     count?: number; // NEW: number of extracted elements
 }
 
 export class PersistentBrowser {
-    private process: any = null; // ChildProcess
+    private process: ChildProcess | null = null; 
     private lastScreenshot: Uint8Array | null = null;
-    private pendingCommands: { resolve: (value: any) => void; reject: (reason?: any) => void }[] = [];
+    private pendingCommands: { resolve: (value: BrowserResponse) => void; reject: (reason?: unknown) => void }[] = [];
     private buffer: string = '';
     private startPromise: Promise<void> | null = null;
 
@@ -53,7 +55,6 @@ export class PersistentBrowser {
         }
 
         const path = (await import('path')).default;
-        const { spawn } = await import('child_process');
 
         const scriptPath = path.resolve(process.cwd(), 'myai/interactive_browser.py');
         const pythonExec = await this.getPythonPath();
@@ -64,10 +65,10 @@ export class PersistentBrowser {
             stdio: ['pipe', 'pipe', 'pipe']
         });
 
-        this.process.stdout.on('data', (data: any) => {
+        this.process.stdout?.on('data', (data: Buffer | string) => {
             this.buffer += data.toString();
 
-            let lines = this.buffer.split('\n');
+            const lines = this.buffer.split('\n');
             this.buffer = lines.pop() || ''; // Keep the last partial line
 
             for (const line of lines) {
@@ -75,17 +76,17 @@ export class PersistentBrowser {
                 try {
                     const response = JSON.parse(line);
                     this.handleResponse(response);
-                } catch (e) {
+                } catch {
                     logError('PersistentBrowser', `Failed to parse response: ${line}`);
                 }
             }
         });
 
-        this.process.stderr.on('data', (data: any) => {
+        this.process.stderr?.on('data', (data: Buffer | string) => {
             logError('PersistentBrowser', `Python stderr: ${data.toString()}`);
         });
 
-        this.process.on('close', (code: any) => {
+        this.process.on('close', (code: number | null) => {
             logInfo('PersistentBrowser', `Browser process exited with code ${code}`);
             this.process = null;
             // Reject all pending
@@ -106,7 +107,7 @@ export class PersistentBrowser {
                         this.lastScreenshot = Buffer.from(response.screenshot, 'base64');
                         // Remove base64 from object to keep it light
                         delete response.screenshot;
-                    } catch (e) {
+                    } catch {
                         logError('PersistentBrowser', 'Failed to decode screenshot');
                     }
                 }
