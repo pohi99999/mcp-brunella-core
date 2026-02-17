@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-17T13:00:00.046Z
+**Utolso frissites:** 2026-02-17T13:46:05.114Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 47 total | 11 active | 7 completed | 10 archived
+**Stats:** 45 total | 11 active | 7 completed | 10 archived
 
 ---
 
@@ -33,7 +33,7 @@
   - **Assignee:** RobotkezAgent + n8n
   - Mappa: ./tracks/green_lightning_20260212/
 
-- [~] **Innovation Bridge - Cross-Industry Knowledge Transfer** [MEDIUM]
+- [ ] **Innovation Bridge - Cross-Industry Knowledge Transfer** [MEDIUM]
   - **ID:** `innovation_bridge_20260212`
   - **Progress:** 0%
   - **Assignee:** ResearcherAgent + n8n
@@ -86,11 +86,8 @@
 
 - [ ] **Számla Adatkinyerés és Google Sheets Automatizáció** [HIGH]
   - **ID:** `invoice-to-sheets-automation-20260214`
-  - **Progress:** 75%
-  - **Updated:** 2026-02-17T14:45:00Z
-  - **Status:** Phase 2 COMPLETE - Enhanced Client (Caching + Gmail Fallback + MCP Tool Integration)
-  - **Completed:** Enhanced Invoice Client, Gmail Fallback, Updated MCP Tool, Registry Fixes
-  - **Next:** Dashboard Testing, Performance Tuning
+  - **Progress:** 40%
+  - **Updated:** 2026-02-17T15:30:00Z
   - Mappa: ./tracks/invoice-to-sheets-automation-20260214/
 
 - [ ] **Jules Continuous AI Integration (JCAI)** [CRITICAL]
@@ -168,7 +165,7 @@
 - [x] **Browser-Use Harvester with Structured JSON Output** (N/A)
 - [x] **Dashboard TODO Widget** (2026-02-13)
 - [x] **Data Flywheel & Incubator** (2026-02-05)
-- [x] **Iron Clad Python AI Backend** (2026-02-13T08:45:00Z)
+- [x] **Iron Clad Python AI Backend** (2026-02-17T14:30:00Z)
 - [x] **Jules Async Test Automation (GitHub Actions)** (2026-02-13)
 - [x] **SpecWriter Agent (Ötlet → Track Generátor)** (2026-02-13T02:00:00Z)
 - [x] **Task Decomposer Agent (Mikro-Ügynök Orchestrator)** (2026-02-13)
