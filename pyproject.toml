@@ -29,6 +29,11 @@ dependencies = [
     "aiofiles>=24.0.0",
     # Tokenization
     "tiktoken>=0.7.0",
+    "gspread>=6.2.1",
+    "google-auth>=2.48.0",
+    "google-auth-oauthlib>=1.2.4",
+    "pandas>=3.0.0",
+    "gspread-dataframe>=4.0.0",
 ]
 
 [project.optional-dependencies]
