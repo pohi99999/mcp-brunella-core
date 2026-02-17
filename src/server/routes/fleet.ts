@@ -14,6 +14,7 @@ import { Router, Request, Response } from 'express';
 import { Database } from 'better-sqlite3';
 import { v4 as uuidv4 } from 'uuid';
 import { logInfo, logError } from '../../utils/logger.js';
+import { agentManager } from '../../agents/AgentManager.js';
 
 export function createFleetRouter(db: Database) {
   const router = Router();
@@ -59,7 +60,7 @@ export function createFleetRouter(db: Database) {
 
   /**
    * GET /api/fleet/list
-   * List all fleets
+   * List all fleets (including Brunella Agents as workers)
    */
   router.get('/list', (req: Request, res: Response) => {
     try {
@@ -69,10 +70,36 @@ export function createFleetRouter(db: Database) {
         ORDER BY created_at DESC
       `);
 
-      const fleets = stmt.all();
+      const fleets = stmt.all() as Array<{
+        id: string;
+        name: string;
+        environment: string;
+        status: string;
+        description: string;
+        created_at: string;
+        updated_at: string;
+      }>;
 
-      logInfo('FleetAPI', `Listed ${fleets.length} fleets`);
-      return res.json({ success: true, data: fleets });
+      // Enrich Brunella Agents fleet with actual agent count
+      const enrichedFleets = fleets.map(fleet => {
+        if (fleet.id === 'fleet-brunella-agents') {
+          const agentStatuses = agentManager.listAgentStatuses();
+          return {
+            ...fleet,
+            worker_count: agentStatuses.length,
+            enabled: true,
+            region: 'local'
+          };
+        }
+        return {
+          ...fleet,
+          enabled: fleet.status === 'active',
+          region: fleet.environment
+        };
+      });
+
+      logInfo('FleetAPI', `Listed ${enrichedFleets.length} fleets`);
+      return res.json({ success: true, data: enrichedFleets });
     } catch (error: unknown) {
       const msg = error instanceof Error ? error.message : String(error);
       logError('FleetAPI', `List fleets error: ${msg}`);
