@@ -11,6 +11,10 @@ import {
   getSzamlazzInvoicesTool,
   getSzamlazzInvoicesHandler,
 } from "../tools/getSzamlazzInvoices.js";
+import {
+  writeSheetsInvoicesTool,
+  writeSheetsInvoicesHandler,
+} from "../tools/writeSheetsInvoices.js";
 
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
@@ -101,6 +105,19 @@ const registeredToolsList: RegisteredToolInfo[] = [
       { name: "since_date", type: "string", required: false },
       { name: "limit", type: "integer", required: false },
       { name: "force_refresh", type: "boolean", required: false },
+    ],
+  },
+  {
+    id: "write_sheets_invoices",
+    name: "write_sheets_invoices",
+    description: "Invoice adatok írása Google Sheets-be (batch mode)",
+    enabled: true,
+    category: "custom",
+    parameters: [
+      { name: "invoices", type: "array", required: true },
+      { name: "append", type: "boolean", required: false },
+      { name: "include_line_items", type: "boolean", required: false },
+      { name: "clear_first", type: "boolean", required: false },
     ],
   },
 ];
@@ -354,6 +371,28 @@ export async function registerAllTools(server: McpServer) {
       getSzamlazzInvoicesMcpHandler,
     );
     toolHandlers.set("get_szamlazz_invoices", getSzamlazzInvoicesMcpHandler);
+
+    // Register Google Sheets Invoice Writer Tool
+    const writeSheetsInvoicesMcpHandler = async (args: any) => {
+      const result = await writeSheetsInvoicesHandler(args);
+      return {
+        content: [
+          { type: "text" as const, text: JSON.stringify(result, null, 2) },
+        ],
+      };
+    };
+    server.tool(
+      "write_sheets_invoices",
+      writeSheetsInvoicesTool.description,
+      {
+        invoices: z.array(z.record(z.any())).optional(),
+        append: z.boolean().optional(),
+        include_line_items: z.boolean().optional(),
+        clear_first: z.boolean().optional(),
+      },
+      writeSheetsInvoicesMcpHandler,
+    );
+    toolHandlers.set("write_sheets_invoices", writeSheetsInvoicesMcpHandler);
   }
 
   // Always register ping tool (works in any environment)
