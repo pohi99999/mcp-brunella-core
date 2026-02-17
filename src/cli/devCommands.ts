@@ -16,6 +16,7 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import ora from 'ora';
+import inquirer from 'inquirer';
 import { BrunellaClient } from '../utils/mcpClient.js';
 import { logInfo, logError } from '../utils/logger.js';
 
@@ -227,6 +228,84 @@ export function registerDevCommands(program: Command): void {
                 const msg = e instanceof Error ? e.message : String(e);
                 spinner.fail(chalk.red(`Self-heal failed: ${msg}`));
                 process.exit(1);
+            }
+        });
+
+    // brunella dev ai-interpreter
+    dev
+        .command('ai-interpreter')
+        .alias('ai')
+        .description('AI-powered persistent Python interpreter (Comet-style)')
+        .option('-m, --model <name>', 'Preferred model (gpt-4o, qwen2.5-coder)')
+        .action(async (opts: { model?: string }) => {
+            console.log(chalk.cyan.bold('\n🧠 Brunella AI-Interpreter (Comet Mode)'));
+            console.log(chalk.dim('Utasításaidat Python kódra fordítom és azonnal futtatom.'));
+            console.log(chalk.dim('Kilépés: "exit" vagy "quit"\n'));
+
+            const client = new BrunellaClient();
+            try {
+                await client.connect();
+                
+                // Conversational context (RULE-OB2: History tracking)
+                const history: Array<{ role: 'user' | 'assistant', content: string }> = [];
+
+                while (true) {
+                    const { instruction } = await inquirer.prompt([
+                        {
+                            type: 'input',
+                            name: 'instruction',
+                            message: chalk.green('AI ❯'),
+                        }
+                    ]);
+
+                    if (['exit', 'quit'].includes(instruction.toLowerCase().trim())) break;
+                    if (!instruction.trim()) continue;
+
+                    const spinner = ora('Gondolkozom...').start();
+
+                    try {
+                        // Special mode for the developer agent: interpreter
+                        const { taskId } = await executeDevTask(instruction, {
+                            mode: 'interpreter',
+                            model: opts.model,
+                            persist: true,
+                            history: history.slice(-10) // Keep last 10 messages for context
+                        });
+
+                        spinner.text = 'Kód futtatása...';
+                        
+                        // We poll the pipeline, but we want the ACTUAL output once done
+                        await pollPipeline(taskId, spinner);
+                        
+                        // After polling, fetch the pipeline result
+                        const { pipeline } = await apiFetch<{ pipeline: { result?: any, error?: string } }>(`/pipeline/${taskId}`);
+                        
+                        if (pipeline.result && pipeline.result.status === 'success') {
+                            const output = pipeline.result.data.output;
+                            const generatedCode = pipeline.result.data.code;
+
+                            console.log(chalk.white('\n--- Kimenet ---'));
+                            console.log(output || chalk.dim('(nincs szöveges kimenet)'));
+                            console.log(chalk.white('---------------\n'));
+
+                            // Add to history
+                            history.push({ role: 'user', content: instruction });
+                            history.push({ role: 'assistant', content: `Kód futtatva. Kimenet: ${output}` });
+
+                        } else if (pipeline.error) {
+                            console.log(chalk.red(`\n❌ Hiba: ${pipeline.error}\n`));
+                        }
+
+                    } catch (e: any) {
+                        spinner.fail(chalk.red('Hiba történt.'));
+                        console.error(chalk.red(e.message));
+                    }
+                }
+            } catch (e: any) {
+                console.error(chalk.red(`Kapcsolati hiba: ${e.message}`));
+            } finally {
+                await client.close();
+                process.exit(0);
             }
         });
 

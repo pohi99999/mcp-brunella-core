@@ -35,6 +35,7 @@ const STRINGS: Record<Lang, Record<string, string>> = {
         'menu.agents.list': '📋  Ügynökök listázása',
         'menu.agents.execute': '▶️  Ügynök futtatása',
         'menu.agents.dev_generate': '💻  Kód generálás (Developer)',
+        'menu.agents.dev_ai': '🧠  AI-Interpreter (Comet)',
         'menu.agents.dev_test': '🧪  Teszt generálás (Developer)',
         'menu.agents.dev_fix': '🔧  Hiba javítás (Fix)',
         'menu.agents.dev_heal': '💊  Self-healing',
@@ -176,6 +177,7 @@ const STRINGS: Record<Lang, Record<string, string>> = {
         'menu.agents.list': '📋  List agents',
         'menu.agents.execute': '▶️  Execute agent',
         'menu.agents.dev_generate': '💻  Code generation (Developer)',
+        'menu.agents.dev_ai': '🧠  AI-Interpreter (Comet)',
         'menu.agents.dev_test': '🧪  Test generation (Developer)',
         'menu.agents.dev_fix': '🔧  Bug fix',
         'menu.agents.dev_heal': '💊  Self-healing',
@@ -360,6 +362,7 @@ async function agentsMenuV2(): Promise<void> {
         { name: t('menu.agents.list'), value: 'list' },
         { name: t('menu.agents.execute'), value: 'execute' },
         { name: t('menu.agents.dev_generate'), value: 'dev_generate' },
+        { name: t('menu.agents.dev_ai'), value: 'dev_ai' },
         { name: t('menu.agents.dev_test'), value: 'dev_test' },
         { name: t('menu.agents.dev_fix'), value: 'dev_fix' },
         { name: t('menu.agents.dev_heal'), value: 'dev_heal' },
@@ -385,6 +388,8 @@ async function agentsMenuV2(): Promise<void> {
         if (!prompt) return;
         runCli(`dev generate "${prompt}"`);
         await pause();
+    } else if (action === 'dev_ai') {
+        runCli('dev ai');
     } else if (action === 'dev_test') {
         const file = await askInput(t('prompt.file_path'));
         if (!file) return;

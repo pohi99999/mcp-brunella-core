@@ -489,6 +489,154 @@
       "status": "active",
       "tags": ["marketing", "research", "browser"],
       "priority": 4
+    },
+    {
+      "name": "headhunter",
+      "title": "HeadHunter Agent",
+      "description": "Digitális Fejvadász - CV feldolgozás, jelölt szűrés, interjúkérdések generálása",
+      "class": "HeadHunterAgent",
+      "module": "./agents/HeadHunterAgent.js",
+      "capabilities": [
+        "cv_parsing",
+        "candidate_matching",
+        "interview_questions",
+        "skill_gap_analysis",
+        "talent_pool_management"
+      ],
+      "triggers": ["fejvadász", "headhunter", "cv", "jelölt", "interjú"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["hr", "recruitment", "automation", "enterprise"],
+      "priority": 7,
+      "enterpriseModuleId": "hr"
+    },
+    {
+      "name": "conflict_mediator",
+      "title": "Conflict Mediator Agent",
+      "description": "Kreatív Súrlódás Mediátor - Email hangulatelemzés, konfliktusfeloldás, szervezeti légkör monitorozása",
+      "class": "ConflictMediatorAgent",
+      "module": "./agents/ConflictMediatorAgent.js",
+      "capabilities": [
+        "sentiment_analysis",
+        "conflict_detection",
+        "emotion_recognition",
+        "mediation_suggestions",
+        "team_health_monitoring",
+        "escalation_risk_assessment"
+      ],
+      "triggers": ["mediátor", "mediator", "conflict", "sentiment", "hangulat"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["hr", "sentiment", "nlp", "automation", "enterprise"],
+      "priority": 7,
+      "enterpriseModuleId": "hr"
+    },
+    {
+      "name": "local_csr_bot",
+      "title": "Local CSR Bot",
+      "description": "Helyi CSR & Szabályozás Segéd - Szabályozás megfelelőség, közösségi fejlesztés, fenntarthatóság tanácsadás",
+      "class": "LocalCSRBot",
+      "module": "./agents/LocalCSRBot.js",
+      "capabilities": [
+        "regulatory_compliance_checking",
+        "csr_initiative_recommendation",
+        "sustainability_reporting",
+        "community_needs_assessment",
+        "partnership_identification",
+        "esg_goal_tracking"
+      ],
+      "triggers": ["csr", "sustainability", "regulation", "szabályozás", "közösség"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["hr", "csr", "sustainability", "automation", "enterprise"],
+      "priority": 7,
+      "enterpriseModuleId": "hr"
+    },
+    {
+      "name": "sentiment_analyzer",
+      "title": "Sentiment Analysis Module",
+      "description": "Advanced NLP Hangulatelemzés - Érzelmek analízise, kulcsfontosságú kifejezések kinyerése, entitás felismerés",
+      "class": "SentimentAnalysisModule",
+      "module": "./agents/SentimentAnalysisModule.js",
+      "capabilities": [
+        "sentiment_analysis",
+        "emotion_detection",
+        "key_phrase_extraction",
+        "entity_recognition",
+        "language_detection",
+        "urgency_assessment",
+        "batch_processing"
+      ],
+      "triggers": ["sentiment", "emotion", "nlp", "analysis", "érzelem"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["nlp", "sentiment", "emotions", "automation", "enterprise"],
+      "priority": 7,
+      "enterpriseModuleId": "hr"
+    },
+    {
+      "name": "logistics_dispatcher",
+      "title": "Logistics Dispatcher",
+      "description": "Logisztikai Diszpécser - Szállítmány követés, szállítási útvonalak optimizálása, proaktív értesítések",
+      "class": "LogisticsDispatcher",
+      "module": "./agents/LogisticsDispatcher.js",
+      "capabilities": [
+        "tracking_extraction",
+        "route_optimization",
+        "proactive_notifications",
+        "carrier_coordination",
+        "delivery_scheduling"
+      ],
+      "triggers": ["logisztika", "logistics", "tracking", "szállítmány", "útvonal"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["logistics", "supply_chain", "automation", "enterprise"],
+      "priority": 8,
+      "enterpriseModuleId": "logistics"
+    },
+    {
+      "name": "knowledge_builder",
+      "title": "Knowledge Builder",
+      "description": "Tudástár Építő - Dokumentáció kezelés, wiki oldalak, tudásgráf, keresés és kategorizálás",
+      "class": "KnowledgeBuilder",
+      "module": "./agents/KnowledgeBuilder.js",
+      "capabilities": [
+        "document_creation",
+        "wiki_management",
+        "knowledge_graph",
+        "content_search",
+        "category_organization",
+        "version_control",
+        "feedback_aggregation"
+      ],
+      "triggers": ["knowledge", "wiki", "documentation", "doc", "tudás", "oktatás"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["knowledge", "wiki", "documentation", "enterprise"],
+      "priority": 8,
+      "enterpriseModuleId": "wiki"
+    },
+    {
+      "name": "proactive_claims",
+      "title": "Proactive Claims Agent",
+      "description": "Proaktív Biztosítási Ügyek Kezelő - Biztosítási ügyek feldolgozása, kockázatfelmérés, csalások felderítése",
+      "class": "ProactiveClaimsAgent",
+      "module": "./agents/ProactiveClaimsAgent.js",
+      "capabilities": [
+        "claims_processing",
+        "risk_assessment",
+        "fraud_detection",
+        "document_analysis",
+        "proactive_intervention",
+        "settlement_recommendations",
+        "compliance_check"
+      ],
+      "triggers": ["insurance", "claims", "biztosítás", "ügy", "fraud", "fraud_detection"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["insurance", "risk", "fraud", "claims", "automation", "enterprise"],
+      "priority": 8,
+      "enterpriseModuleId": "insurance"
     }
   ]
 }

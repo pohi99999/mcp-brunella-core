@@ -174,34 +174,36 @@ async def handle_browser_task(req: TaskRequest):
         raise HTTPException(status_code=500, detail=f"Browser task failed: {str(e)}")
 
 
+# --- Persistent Session State ---
+execution_scope = {
+    "json": json,
+    "os": os,
+    "sys": sys,
+    "asyncio": asyncio,
+    "datetime": datetime
+}
+
 @app.post("/execute")
 def execute_code(req: ExecuteRequest):
     """
-    Executes arbitrary Python code.
-    Context variables are available as a 'context' dictionary.
-    Captures stdout and returns it.
+    Executes arbitrary Python code in a persistent global scope.
     """
+    global execution_scope
     try:
-        # Prepare execution environment
-        # We include common imports usually expected by the snippets
-        local_scope = {
-            "context": req.context, 
-            "json": json, 
-            "os": os, 
-            "sys": sys
-        }
+        # Update context if provided
+        if req.context:
+            execution_scope["context"] = req.context
         
         f = io.StringIO()
         with redirect_stdout(f):
-            exec(req.code, {}, local_scope)
+            # Execute in the global execution_scope to maintain state
+            exec(req.code, execution_scope)
         
         output = f.getvalue().strip()
         return {"stdout": output}
 
     except Exception as e:
         traceback.print_exc()
-        # Return error structure compatible with PythonShell expectations if possible,
-        # or HTTP 500
         return {"stdout": "", "error": str(e)}
 
 @app.post("/refine")
