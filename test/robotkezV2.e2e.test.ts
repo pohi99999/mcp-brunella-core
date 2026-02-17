@@ -37,8 +37,10 @@ describe('RobotkezV2 - E2E Test Scenarios (Phase 8.1)', () => {
     const response = await axios.post(`${API_BASE}/chat`, {
       instruction,
     });
-
     expect(response.status).toBe(200);
+
+    console.log('DEBUG Response Data:', JSON.stringify(response.data, null, 2));
+
     expect(response.data).toHaveProperty('success');
 
     // If Robotkéz failed (browser not available, etc.), skip test gracefully
