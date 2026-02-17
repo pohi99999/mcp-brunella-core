@@ -5,7 +5,8 @@ export default defineConfig({
   test: {
     environment: 'node',
     include: ['test/**/*.test.ts', 'test/**/*.vitest.ts'],
-    exclude: ['**/node_modules/**', '**/build/**', '**/src/dashboard/**'],
+    // Exclude e2e tests from standard unit test runs as they require running server
+    exclude: ['**/node_modules/**', '**/build/**', '**/src/dashboard/**', '**/*.e2e.test.ts'],
     globals: true,
     setupFiles: ['./test/setup.ts'],
   },
