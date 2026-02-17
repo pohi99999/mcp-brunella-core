@@ -11,7 +11,7 @@ from pathlib import Path
 import hashlib
 
 from myai.clients.szamlazz_hu_client import SzamlazzHuClient, SzamlazzHuError
-from myai.clients.gmail_invoice_fallback import GmailInvoiceFallback
+from myai.clients.gmail_invoice_client import GmailInvoiceClient, GmailInvoiceError
 from myai.schemas.invoice import InvoiceData
 
 logger = logging.getLogger(__name__)
@@ -126,7 +126,8 @@ class EnhancedInvoiceClient:
         cache_dir: str = ".cache/invoices",
         api_key: Optional[str] = None,
         account_id: Optional[str] = None,
-        gmail_credentials: Optional[str] = None,
+        gmail_email: Optional[str] = None,
+        gmail_password: Optional[str] = None,
     ):
         """
         Inicializálás.
@@ -135,16 +136,19 @@ class EnhancedInvoiceClient:
             cache_dir: Cache könyvtár
             api_key: Szamlazz.hu API key
             account_id: Szamlazz.hu account ID
-            gmail_credentials: Google Cloud JSON credentials
+            gmail_email: Gmail cím (env: GMAIL_EMAIL)
+            gmail_password: Gmail jelszó (env: GMAIL_APP_PASSWORD)
         """
         self.cache = InvoiceCache(cache_dir)
         self.szamlazz_client = SzamlazzHuClient(api_key=api_key, account_id=account_id)
         self.gmail_client = None
         
-        if gmail_credentials or os.getenv("GOOGLE_CREDENTIALS_FILE"):
+        # Gmail fallback inicializálása (csak ha credentials elérhető)
+        if gmail_email or os.getenv("GMAIL_EMAIL"):
             try:
-                self.gmail_client = GmailInvoiceFallback(
-                    credentials_file=gmail_credentials
+                self.gmail_client = GmailInvoiceClient(
+                    gmail_email=gmail_email,
+                    gmail_password=gmail_password,
                 )
                 logger.info("Gmail fallback inicializálva")
             except Exception as e:
@@ -215,23 +219,32 @@ class EnhancedInvoiceClient:
         if self.gmail_client:
             try:
                 logger.info("Falling back to Gmail...")
-                gmail_invoices = self.gmail_client.get_invoices_from_gmail()
+                
+                # Async Gmail fallback - run in sync context
+                import asyncio
+                loop = asyncio.new_event_loop()
+                asyncio.set_event_loop(loop)
+                
+                try:
+                    days_back = (date.today() - (since_date or (date.today() - timedelta(days=30)))).days
+                    gmail_pdfs = loop.run_until_complete(
+                        self.gmail_client.fetch_invoice_pdfs(days_back=days_back, max_emails=limit)
+                    )
+                    
+                    logger.info(f"✅ Gmail fallback: {len(gmail_pdfs)} PDF downloaded")
+                    
+                    # Note: Phase 3-ban ezt majd parse-oljuk InvoiceData-vá (OCR + extraction)
+                    # Egyelőre csak a metadata-t log-oljuk
+                    for pdf in gmail_pdfs:
+                        logger.info(f"  - {pdf.get('filename')} from {pdf.get('email_from', 'unknown')}")
+                    
+                finally:
+                    loop.close()
 
-                # Filter by since_date
-                if since_date:
-                    gmail_invoices = [
-                        inv for inv in gmail_invoices
-                        if inv.invoice_date >= since_date
-                    ]
-
-                # Limit
-                gmail_invoices = gmail_invoices[:limit - len(invoices)]
-
-                invoices.extend(gmail_invoices)
-                logger.info(f"✅ Gmail fallback: {len(gmail_invoices)} számlá")
-
-            except Exception as e:
+            except GmailInvoiceError as e:
                 logger.warning(f"Gmail fallback failed: {e}")
+            except Exception as e:
+                logger.warning(f"Gmail fallback error: {e}")
 
         # 3. Deduplicate + sort
         invoices = self._deduplicate_invoices(invoices)
