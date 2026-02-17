@@ -1,4 +1,4 @@
-import { spawn, ChildProcess } from 'child_process';
+import type { ChildProcess } from 'child_process';
 import net from 'net';
 import path from 'path';
 
@@ -22,7 +22,8 @@ export async function checkServerRunning(port: number = 3000): Promise<boolean> 
   });
 }
 
-export function startServer(): ChildProcess {
+export async function startServer(): Promise<ChildProcess> {
+  const { spawn } = await import('child_process');
   const serverPath = path.join(__dirname, '../../build/index.js');
   
   // We spawn the server. It will use stdio for MCP, but also start the web server on port 3000.
@@ -35,7 +36,7 @@ export function startServer(): ChildProcess {
     env: { ...process.env, WEB_UI_ENABLED: 'true' }
   });
 
-  child.stderr.on('data', (data) => {
+  child.stderr?.on('data', (data) => {
     // Log server stderr?
   });
 

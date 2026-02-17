@@ -2,9 +2,9 @@ import express from "express";
 import request from "supertest";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("node-fetch", () => ({
-  default: vi.fn(),
-}));
+// Mock the global fetch
+const mockFetch = vi.fn();
+vi.stubGlobal("fetch", mockFetch);
 
 vi.mock("../src/server/SocketService.js", () => ({
   socketService: {
@@ -12,16 +12,7 @@ vi.mock("../src/server/SocketService.js", () => ({
   },
 }));
 
-import fetch from "node-fetch";
 import { createMemoryRouter } from "../src/server/memoryRoutes.js";
-
-type MockResponse = {
-  ok: boolean;
-  statusText?: string;
-  json: () => Promise<unknown>;
-};
-
-const mockFetch = fetch as unknown as ReturnType<typeof vi.fn>;
 
 describe("memoryRoutes /golden", () => {
   beforeEach(() => {
@@ -39,7 +30,7 @@ describe("memoryRoutes /golden", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ status: "success" }),
-    } as MockResponse);
+    });
 
     const app = createApp();
 
@@ -73,7 +64,7 @@ describe("memoryRoutes /golden", () => {
     mockFetch.mockResolvedValueOnce({
       ok: true,
       json: async () => ({ status: "success" }),
-    } as MockResponse);
+    });
 
     const app = createApp();
 

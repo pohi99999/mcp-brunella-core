@@ -8,6 +8,25 @@ from playwright.async_api import async_playwright
 # Ensure we use unbuffered stdout for JSON communication
 # sys.stdout.reconfigure(encoding='utf-8') # Python 3.7+
 
+async def highlight_element(page, selector):
+    """
+    Highlights an element with a red outline and background for visual feedback.
+    """
+    try:
+        await page.evaluate("""(selector) => {
+            const el = document.querySelector(selector);
+            if (el) {
+                el.style.outline = '3px solid red';
+                el.style.backgroundColor = 'rgba(255, 0, 0, 0.1)';
+                el.style.transition = 'all 0.3s ease';
+                el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }""", selector)
+        # Give a short pause for the scroll/style to render before screenshot
+        await asyncio.sleep(0.2)
+    except Exception:
+        pass # Ignore highlighting errors
+
 async def main():
     async with async_playwright() as p:
         browser = None
@@ -56,6 +75,9 @@ async def main():
                     if url:
                         await pg.goto(url)
                         result = {"status": "success", "url": pg.url}
+                        # Capture screenshot after navigation
+                        screenshot_bytes = await pg.screenshot(type='png')
+                        result["screenshot"] = base64.b64encode(screenshot_bytes).decode('utf-8')
                     else:
                         result = {"status": "error", "message": "URL missing"}
 
@@ -64,8 +86,20 @@ async def main():
                     selector = cmd.get("selector")
                     if selector:
                         try:
+                            # 1. Highlight
+                            await highlight_element(pg, selector)
+                            # 2. Screenshot (Intent)
+                            screenshot_bytes = await pg.screenshot(type='png')
+                            screenshot_b64 = base64.b64encode(screenshot_bytes).decode('utf-8')
+
+                            # 3. Action
                             await pg.click(selector, timeout=5000)
-                            result = {"status": "success", "message": f"Clicked {selector}"}
+
+                            result = {
+                                "status": "success",
+                                "message": f"Clicked {selector}",
+                                "screenshot": screenshot_b64
+                            }
                         except Exception as e:
                             result = {"status": "error", "message": str(e)}
                     else:
@@ -77,8 +111,20 @@ async def main():
                     text = cmd.get("text")
                     if selector and text is not None:
                         try:
+                            # 1. Highlight
+                            await highlight_element(pg, selector)
+                            # 2. Screenshot (Intent)
+                            screenshot_bytes = await pg.screenshot(type='png')
+                            screenshot_b64 = base64.b64encode(screenshot_bytes).decode('utf-8')
+
+                            # 3. Action
                             await pg.fill(selector, text, timeout=5000)
-                            result = {"status": "success", "message": f"Typed into {selector}"}
+
+                            result = {
+                                "status": "success",
+                                "message": f"Typed into {selector}",
+                                "screenshot": screenshot_b64
+                            }
                         except Exception as e:
                             result = {"status": "error", "message": str(e)}
                     else:
@@ -119,7 +165,15 @@ async def main():
                             print(json.dumps(result), flush=True)
                             continue
 
-                        result = {"status": "success", "message": f"Scrolled {direction} by {amount}px"}
+                        # Screenshot after scroll
+                        screenshot_bytes = await pg.screenshot(type='png')
+                        screenshot_b64 = base64.b64encode(screenshot_bytes).decode('utf-8')
+
+                        result = {
+                            "status": "success",
+                            "message": f"Scrolled {direction} by {amount}px",
+                            "screenshot": screenshot_b64
+                        }
                     except Exception as e:
                         result = {"status": "error", "message": str(e)}
 
@@ -186,7 +240,14 @@ async def main():
                     if key:
                         try:
                             await pg.keyboard.press(key)
-                            result = {"status": "success", "message": f"Pressed {key}"}
+                            # Screenshot after press
+                            screenshot_bytes = await pg.screenshot(type='png')
+                            screenshot_b64 = base64.b64encode(screenshot_bytes).decode('utf-8')
+                            result = {
+                                "status": "success",
+                                "message": f"Pressed {key}",
+                                "screenshot": screenshot_b64
+                            }
                         except Exception as e:
                             result = {"status": "error", "message": str(e)}
                     else:

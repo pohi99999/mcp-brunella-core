@@ -61,7 +61,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
     describe('Agent Metadata', () => {
         it('should have correct name and properties', () => {
             expect(agent.name).toBe('RobotkezV2');
-            expect(agent.role).toBe('Magyar Agentic Browser');
+            expect(agent.role).toBe('Magyar Agentic Browser (Comet Stílus)');
             expect(agent.capabilities).toContain('agentic_browsing');
             expect(agent.capabilities).toContain('magyar_nyelv');
         });
@@ -210,7 +210,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(result.message).toContain('Képernyőkép');
+            expect(result.message).toContain('képernyőképet');
             expect(mockSendCommand).toHaveBeenCalledWith({ action: 'screenshot' });
         });
     });
@@ -247,7 +247,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(false);
-            expect(result.message).toContain('Nem sikerült');
+            expect(result.message).toContain('nem sikerült');
             expect(result.message).toContain('Browser not responding');
         });
 
@@ -324,7 +324,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
 
             // Should delegate to background
             expect(result.success).toBe(true);
-            expect(result.message).toContain('Háttérben fut');
+            expect(result.message).toContain('háttérben');
             expect(result.data?.taskId).toBeDefined();
         });
 
@@ -351,7 +351,7 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(result.message).toContain('Háttérben fut');
+            expect(result.message).toContain('háttérben');
         });
 
         it('should execute short tasks (< 30s) in foreground', async () => {
@@ -378,8 +378,8 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
 
             // Should execute in foreground
             expect(result.success).toBe(true);
-            expect(result.message).not.toContain('Háttérben fut');
-            expect(result.message).toContain('Végrehajtva');
+            expect(result.message).not.toContain('háttérben');
+            expect(result.message).toContain('végrehajtottam');
         });
 
         it('should provide executeInBackground method for manual delegation', async () => {

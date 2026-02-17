@@ -15,7 +15,6 @@ import { Router } from "express";
 import { getGoldenStats } from "../core/goldenDatasetBridge.js";
 import { getIndexStatus, scheduleReindex } from "../core/codebaseIndexer.js";
 import { socketService } from "./SocketService.js";
-import fetch from "node-fetch";
 
 export function createMemoryRouter(): Router {
   const router = Router();
