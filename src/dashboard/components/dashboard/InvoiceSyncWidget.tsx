@@ -32,10 +32,13 @@ type WriteResult = {
 export function InvoiceSyncWidget() {
   const [status, setStatus] = useState<SyncStatus>("idle");
   const [lastSyncAt, setLastSyncAt] = useState<string | null>(null);
+  const [lastDurationMs, setLastDurationMs] = useState<number | null>(null);
   const [lastFetched, setLastFetched] = useState<number>(0);
   const [lastWritten, setLastWritten] = useState<number>(0);
   const [lastDuplicates, setLastDuplicates] = useState<number>(0);
   const [lastSource, setLastSource] = useState<string>("API");
+  const [lastFilter, setLastFilter] = useState<string>("N/A");
+  const [lastWriteMode, setLastWriteMode] = useState<string>("Append");
   const [showOptions, setShowOptions] = useState(false);
 
   const [sinceDate, setSinceDate] = useState<string>("");
@@ -49,15 +52,67 @@ export function InvoiceSyncWidget() {
   const [batchSize, setBatchSize] = useState<number>(DEFAULT_BATCH);
 
   const statusBadge = useMemo(() => {
-    if (status === "running") return { label: "RUNNING", variant: "default" as const };
-    if (status === "success") return { label: "SUCCESS", variant: "secondary" as const };
-    if (status === "error") return { label: "ERROR", variant: "destructive" as const };
-    return { label: "IDLE", variant: "secondary" as const };
+    if (status === "running") {
+      return {
+        label: "FUT",
+        variant: "secondary" as const,
+        className: "bg-blue-500/20 text-blue-200 border border-blue-500/40",
+      };
+    }
+    if (status === "success") {
+      return {
+        label: "SIKER",
+        variant: "secondary" as const,
+        className: "bg-emerald-500/20 text-emerald-200 border border-emerald-500/40",
+      };
+    }
+    if (status === "error") {
+      return {
+        label: "HIBA",
+        variant: "secondary" as const,
+        className: "bg-red-500/20 text-red-200 border border-red-500/40",
+      };
+    }
+    return {
+      label: "IDLE",
+      variant: "secondary" as const,
+      className: "bg-zinc-500/20 text-zinc-200 border border-zinc-500/40",
+    };
   }, [status]);
+
+  const efficiency = useMemo(() => {
+    if (!lastFetched) return "0%";
+    return `${Math.min(100, Math.round((lastWritten / lastFetched) * 100))}%`;
+  }, [lastFetched, lastWritten]);
+
+  const durationLabel = useMemo(() => {
+    if (!lastDurationMs) return "N/A";
+    const seconds = Math.max(1, Math.round(lastDurationMs / 1000));
+    if (seconds < 60) return `${seconds}s`;
+    const mins = Math.floor(seconds / 60);
+    const rest = seconds % 60;
+    return `${mins}m ${rest}s`;
+  }, [lastDurationMs]);
 
   const handleSync = async () => {
     setStatus("running");
     const startedAt = new Date().toISOString();
+    const startMs = Date.now();
+    const filterLabel = overdueOnly
+      ? "Lejárt"
+      : unpaidOnly
+        ? "Nem fizetett"
+        : sinceDate
+          ? `Dátum: ${sinceDate}`
+          : "Minden";
+    const writeModeLabel = appendMode
+      ? "Append"
+      : clearFirst
+        ? "Replace + Clear"
+        : "Replace";
+
+    setLastFilter(filterLabel);
+    setLastWriteMode(writeModeLabel);
 
     try {
       const fetchResult = (await executeTool("get_szamlazz_invoices", {
@@ -84,6 +139,7 @@ export function InvoiceSyncWidget() {
         setLastWritten(0);
         setLastDuplicates(0);
         setLastSyncAt(startedAt);
+        setLastDurationMs(Date.now() - startMs);
         setStatus("success");
         toast.info("Nincs új számla a szinkronhoz");
         return;
@@ -104,10 +160,12 @@ export function InvoiceSyncWidget() {
       setLastWritten(writeResult.data?.row_count ?? invoices.length);
       setLastDuplicates(writeResult.data?.duplicates_skipped ?? 0);
       setLastSyncAt(startedAt);
+      setLastDurationMs(Date.now() - startMs);
       setStatus("success");
       toast.success("Szinkron sikeres");
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Szinkron hiba";
+      setLastDurationMs(Date.now() - startMs);
       setStatus("error");
       toast.error(msg);
     }
@@ -121,11 +179,16 @@ export function InvoiceSyncWidget() {
             <FileSpreadsheet size={16} className="text-emerald-400" />
             Invoice Sync
           </span>
-          <Badge variant={statusBadge.variant}>{statusBadge.label}</Badge>
+          <Badge
+            variant={statusBadge.variant}
+            className={statusBadge.className}
+          >
+            {statusBadge.label}
+          </Badge>
         </CardTitle>
       </CardHeader>
       <CardContent className="p-4 space-y-4">
-        <div className="grid grid-cols-2 gap-3 text-[11px] text-zinc-400">
+        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 text-[11px] text-zinc-400">
           <div>
             <span className="uppercase text-[10px] text-zinc-500">Utolsó futás</span>
             <div className="text-zinc-200 font-mono">
@@ -135,6 +198,10 @@ export function InvoiceSyncWidget() {
           <div>
             <span className="uppercase text-[10px] text-zinc-500">Forrás</span>
             <div className="text-zinc-200 font-mono">{lastSource}</div>
+          </div>
+          <div>
+            <span className="uppercase text-[10px] text-zinc-500">Szűrő</span>
+            <div className="text-zinc-200 font-mono">{lastFilter}</div>
           </div>
           <div>
             <span className="uppercase text-[10px] text-zinc-500">Lekért</span>
@@ -147,6 +214,18 @@ export function InvoiceSyncWidget() {
           <div>
             <span className="uppercase text-[10px] text-zinc-500">Duplikátum</span>
             <div className="text-zinc-200 font-mono">{lastDuplicates}</div>
+          </div>
+          <div>
+            <span className="uppercase text-[10px] text-zinc-500">Hatékonyság</span>
+            <div className="text-zinc-200 font-mono">{efficiency}</div>
+          </div>
+          <div>
+            <span className="uppercase text-[10px] text-zinc-500">Írás mód</span>
+            <div className="text-zinc-200 font-mono">{lastWriteMode}</div>
+          </div>
+          <div>
+            <span className="uppercase text-[10px] text-zinc-500">Időtartam</span>
+            <div className="text-zinc-200 font-mono">{durationLabel}</div>
           </div>
         </div>
 
