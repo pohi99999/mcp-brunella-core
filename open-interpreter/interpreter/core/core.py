@@ -253,7 +253,8 @@ class OpenInterpreter:
 
             if not self.llm.supports_vision:
                 try:
-                    import transformers
+                    import importlib
+                    importlib.import_module("transformers")
                     has_local_vision = True
                 except ImportError:
                     has_local_vision = False
