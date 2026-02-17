@@ -366,12 +366,50 @@ async def example_usage():
 
 if __name__ == "__main__":
     import sys
+    import argparse
 
-    if len(sys.argv) > 1:
-        # CLI mode
-        instruction = " ".join(sys.argv[1:])
-        asyncio.run(cli_execute(instruction))
-    else:
-        # Example mode
-        print("Running examples...")
-        asyncio.run(example_usage())
+    # Parse CLI arguments
+    parser = argparse.ArgumentParser(description='RobotkezV2 Hybrid Browser Automation')
+    parser.add_argument('instruction', help='Natural language instruction')
+    parser.add_argument('--mode', choices=['auto', 'playwright', 'browser-use'], default='auto')
+    parser.add_argument('--headless', type=str, default='true', choices=['true', 'false'])
+    parser.add_argument('--url', help='Target URL')
+    parser.add_argument('--screenshot', help='Screenshot output path')
+    parser.add_argument('--pdf', help='PDF output path')
+    parser.add_argument('--selector', help='CSS selector')
+    parser.add_argument('--timeout', type=int, help='Timeout in ms')
+
+    args = parser.parse_args()
+
+    # Build kwargs
+    kwargs = {}
+    if args.url:
+        kwargs['url'] = args.url
+    if args.screenshot:
+        kwargs['screenshot_path'] = args.screenshot
+    if args.pdf:
+        kwargs['pdf_path'] = args.pdf
+    if args.selector:
+        kwargs['selector'] = args.selector
+    if args.timeout:
+        kwargs['timeout'] = args.timeout
+
+    # Execute
+    robot = RobotkezV2(default_mode=args.mode, headless=(args.headless == 'true'))
+
+    # Run async execution
+    async def run():
+        result = await robot.execute(args.instruction, mode=args.mode, **kwargs)
+
+        # Print JSON result for TypeScript parsing
+        import json
+        print(json.dumps({
+            "success": result.success,
+            "mode": result.mode,
+            "result": result.result,
+            "duration_ms": result.duration_ms,
+            "error": result.error,
+            "screenshot_path": result.screenshot_path
+        }))
+
+    asyncio.run(run())
