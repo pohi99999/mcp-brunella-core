@@ -143,8 +143,7 @@ export async function startWebServer() {
 
   const app = express();
   
-  // Parse raw body BEFORE json() for webhook signature verification
-  app.use(express.raw({ type: 'application/json' }));
+  // Parse body (standard)
   app.use(express.json());
   app.use(corsWhitelist);
   app.use(requestId);
