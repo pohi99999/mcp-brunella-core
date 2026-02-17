@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { CaretDown, CaretUp, Robot, Lightning, Play, ShareNetwork, PencilSimple, Plus, X } from '@phosphor-icons/react'
+import { CaretDown, CaretUp, Lightning, Play, ShareNetwork, PencilSimple, Plus, X } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import type { RegistryAgent } from '@/lib/apiService'
 import {
@@ -95,7 +95,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
       setDelegateOpen(false)
       setDelegateTask('')
       setSelectedDelegate('')
-    } catch (e) {
+    } catch {
       toast.error('Delegálás sikertelen')
     }
   }
