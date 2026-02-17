@@ -12,10 +12,10 @@
     "lastDurationMs": 0
   },
   "tasks": {
-    "total": 10,
-    "success": 8,
-    "error": 2,
-    "avgDurationMs": 1
+    "total": 3,
+    "success": 2,
+    "error": 1,
+    "avgDurationMs": 0
   },
   "ai": {
     "totalTokenUsage": 0,
@@ -24,74 +24,24 @@
   "history": [
     {
       "type": "task",
-      "status": "error",
-      "details": "dev-1771339445912-1",
+      "status": "success",
+      "details": "dev-1771344806929-1",
       "durationMs": 0,
-      "timestamp": 1771339445928
+      "timestamp": 1771344806932
     },
     {
       "type": "task",
       "status": "success",
-      "details": "dev-1771339327420-1",
+      "details": "dev-1771344806927-1",
       "durationMs": 0,
-      "timestamp": 1771339327425
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771338774557-1",
-      "durationMs": 0,
-      "timestamp": 1771338774561
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771338265382-1",
-      "durationMs": 0,
-      "timestamp": 1771338265387
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771338065127-1",
-      "durationMs": 0,
-      "timestamp": 1771338065133
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771337632553-1",
-      "durationMs": 0,
-      "timestamp": 1771337632559
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771337476837-1",
-      "durationMs": 0,
-      "timestamp": 1771337476840
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771337413145-1",
-      "durationMs": 0,
-      "timestamp": 1771337413149
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771337413143-1",
-      "durationMs": 0,
-      "timestamp": 1771337413149
+      "timestamp": 1771344806932
     },
     {
       "type": "task",
       "status": "error",
-      "details": "dev-1771337413135-1",
-      "durationMs": 1,
-      "timestamp": 1771337413149
+      "details": "dev-1771344806889-1",
+      "durationMs": 0,
+      "timestamp": 1771344806932
     }
   ]
-}
 }

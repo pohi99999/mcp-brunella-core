@@ -6,7 +6,75 @@
 
 **Agent:** GitHub Copilot (Pro+)  
 **Fájl:** `.ai/copilot.md`  
-**Utolsó frissítés:** 2026-02-17 21:10
+**Utolsó frissítés:** 2026-02-17 22:30
+
+---
+
+## 2026-02-17 22:30 - ✅ Invoice Automation Track ARCHIVED + Future E2E Testing Planned
+
+**Track:** `invoice-to-sheets-automation-20260214` (ARCHIVED)  
+**Feladat:** Track archival, future E2E testing planning, documentation update
+
+### ✅ Elvégzett módosítások
+
+1. **Track Archival (Archívum)**
+   - Teljes track directory másolva: `conductor/archive/invoice-to-sheets-automation-20260214/`
+   - Archív tartalom: spec.md, plan.md, all phase summaries, meta.json, ui_spec.md
+
+2. **Future E2E Testing Track (Tervezett)**
+   - Új track létrehozva: **`invoice-e2e-testing-20260217`**
+   - **Status:** PROPOSED (future work)
+   - **Phases:** 5 phase plan (Infrastructure → Pipeline Testing → Performance → Docs → CI/CD)
+   - **Spec:** `conductor/tracks/invoice-e2e-testing-20260217/spec.md`
+   - **Meta:** `conductor/tracks/invoice-e2e-testing-20260217/meta.json`
+   - **Purpose:** Comprehensive E2E testing + validation of Phase 1-5 pipeline
+   - **Test Scenarios:** 8 scenarios (API → Fallback → Dedup → Batch write → Rate limit handling)
+
+3. **Conductor Documentation Update**
+   - `conductor/tracks.md` frissítve:
+     - Stats: 46 total | 10 active | 7 completed | 11 archived (updated)
+     - Új "Proposed" section: `invoice-e2e-testing-20260217` hozzáadva
+     - Active tracks: eltávolítva (archívál)
+     - Archived list: `invoice-to-sheets-automation-20260214` hozzáadva timestamp-mal
+
+4. **Assets Created**
+   - `conductor/tracks/invoice-e2e-testing-20260217/spec.md` (74 lines)
+   - `conductor/tracks/invoice-e2e-testing-20260217/meta.json` (PROPOSED status)
+
+### 📋 Invoice Automation Track Summary
+
+**Phases Completed (5/5):**
+- ✅ Phase 1: Environment + Pydantic Schema
+- ✅ Phase 2: Számlázz.hu API + Gmail Fallback
+- ✅ Phase 3: Refiner Logic + LanceDB Indexing
+- ✅ Phase 4: Google Sheets Client + Phoenix Protocol
+- ✅ Phase 5: CLI Commands + Dashboard Widget + UI Polish
+
+**Test Baseline:** 782/782 tests passing (100%)  
+**Implementation Completed:** All 5 phases fully implemented and tested  
+**Archival Date:** 2026-02-17T22:30:00Z
+
+### 🎯 Future E2E Testing Track Details
+
+**invoice-e2e-testing-20260217** (Proposed):
+- **Phase 1:** E2E test infrastructure (fixtures, mocks, test datasets)
+- **Phase 2:** Pipeline testing (6+ test chains: harvest → refine → index → export)
+- **Phase 3:** Performance & load testing (1000+ invoices, latency, memory)
+- **Phase 4:** Environment setup & documentation (.env.example, test guide)
+- **Phase 5:** CI/CD integration (GitHub Actions workflow, scheduled runs)
+- **Timeline:** ~1 week (if activated)
+- **Notes:** E2E tests optional for local dev, CI runs with mocked data
+
+### Érintett fájlok
+
+- `conductor/tracks.md` (stats + active/proposed sections updated)
+- `conductor/archive/invoice-to-sheets-automation-20260214/` (NEW ARCHIVE DIR)
+- `conductor/tracks/invoice-e2e-testing-20260217/spec.md` (NEW)
+- `conductor/tracks/invoice-e2e-testing-20260217/meta.json` (NEW)
+
+### Státusz
+✅ **Invoice Track COMPLETE & ARCHIVED**  
+⏳ **E2E Testing Track PROPOSED (future activation)**
 
 ---
 

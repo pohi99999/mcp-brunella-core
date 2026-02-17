@@ -28,7 +28,8 @@ except ImportError:
     HAS_WHISPER = False
 
 try:
-    from browser_use import Agent, ChatGoogle
+    from browser_use import Agent
+    from langchain_google_genai import ChatGoogleGenerativeAI as ChatGoogle
     HAS_BROWSER_USE = True
 except ImportError:
     Agent = None
@@ -143,12 +144,12 @@ async def handle_browser_task(req: TaskRequest):
 
     try:
         llm = ChatGoogle(model=model_name)
-        agent = Agent(task=instruction, viewport=context.get("viewport", {"width": 1280, "height": 720}))
+        agent = Agent(task=instruction, llm=llm)
         
         # Pass headless option if present
-        headless = context.get("headless", True)
+        # headless = context.get("headless", True)
         
-        result = await agent.run(headless=headless)
+        result = await agent.run()
 
         # browser-use can return various types, we'll summarize for the test
         summary = ""
