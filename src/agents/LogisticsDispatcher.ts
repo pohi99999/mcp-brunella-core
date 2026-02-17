@@ -3,6 +3,7 @@ import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { spawn } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
+import { googleWorkspaceHandler } from '../tools/unifiedGoogleWorkspaceTool.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const SUPPLY_MATCHER = path.resolve(__dirname, "../../myai/workers/supply_matcher.py");
@@ -56,6 +57,21 @@ interface ProactiveNotification {
 }
 
 /**
+ * Draft Outreach Email (Phase 4)
+ */
+interface OutreachDraft {
+  draftId: string;
+  to: string[];
+  subject: string;
+  body: string;
+  approved: boolean;
+  createdAt: Date;
+  approvedAt?: Date;
+  sentAt?: Date;
+  matchData?: unknown;
+}
+
+/**
  * LogisticsDispatcher - Logisztikai Diszpécser
  * Manages shipment tracking, route optimization, and proactive notifications
  */
@@ -74,6 +90,7 @@ export class LogisticsDispatcher implements IAgent {
   private shipmentDatabase: Map<string, Shipment> = new Map();
   private routes: Map<string, Route> = new Map();
   private notifications: ProactiveNotification[] = [];
+  private drafts: Map<string, OutreachDraft> = new Map();
 
   /**
    * callSupplyMatcher - Python supply_matcher.py hívás (Phase 2)
@@ -150,6 +167,19 @@ export class LogisticsDispatcher implements IAgent {
 
       if (task.toLowerCase().includes('notify') || task.toLowerCase().includes('értesít')) {
         return await this.manageNotifications(task, context);
+      }
+
+      // Phase 4: Draft & Approval Workflow (specific keyword matching)
+      if (task.toLowerCase().includes('approve') || task.toLowerCase().includes('jóváhagy')) {
+        return await this.approveDraft(task, context);
+      }
+
+      if (task.toLowerCase().includes('send') && (task.toLowerCase().includes('email') || task.toLowerCase().includes('draft'))) {
+        return await this.sendApprovedDraft(task, context);
+      }
+
+      if (task.toLowerCase().includes('draft') || task.toLowerCase().includes('outreach') || task.toLowerCase().includes('levél')) {
+        return await this.createOutreachDraft(task, context);
       }
 
       // Default: track shipments
@@ -387,7 +417,7 @@ export class LogisticsDispatcher implements IAgent {
       success: true,
       status: 'success',
       data: {
-        totalNotifications: mockShipments.length,
+        totalNotifications: this.shipmentDatabase.size,
         notifications: notifications.map(n => ({
           shipmentId: n.shipmentId,
           type: n.notificationType,
@@ -440,5 +470,216 @@ export class LogisticsDispatcher implements IAgent {
     }
 
     return alerts;
+  }
+
+  /**
+   * Create outreach draft email (Phase 4)
+   * Human-in-the-loop approval required before sending
+   */
+  private async createOutreachDraft(_task: string, context?: unknown): Promise<AgentResponse> {
+    logInfo(this.name, '📝 Draft email létrehozása freight partnereknek...');
+
+    const matchData = (context as any)?.matchData || {};
+    const partners = (context as any)?.partners || [
+      { name: 'TIMOCOM Transport', email: 'contact@timocom.example.com' },
+      { name: 'Trans.eu Freight', email: 'freight@trans.eu.example.com' }
+    ];
+
+    const to = partners.map((p: any) => p.email);
+    const subject = 'Freight Capacity Partnership Opportunity - Budapest Region';
+    const body = `
+Dear Partner,
+
+We are reaching out to explore potential collaboration opportunities in the Budapest region freight capacity market.
+
+Our analysis shows strong demand for:
+- Pallet capacity: 15-20 pallets
+- Heavy goods transport
+- Regular routes: Budapest → Vienna, Budapest → Prague
+
+${matchData.summary ? 
+  `We have identified ${matchData.summary.matches} potential matches with an average score of ${matchData.summary.avg_score}/10.` 
+  : 'We believe there are significant synergies between our logistics networks.'}
+
+Would you be interested in discussing a partnership?
+
+Best regards,
+Logistics Dispatch Team
+
+---
+*This is a draft email. Please review and approve before sending.*
+    `.trim();
+
+    try {
+      // Create draft via Gmail API
+      const result = await googleWorkspaceHandler({
+        operation: 'email_draft',
+        params: { to, subject, body }
+      });
+
+      if (!result.success) {
+        throw new Error(result.error || 'Draft creation failed');
+      }
+
+      const draftId = (result.data as any)?.draftId || `draft_${Date.now()}`;
+
+      // Store draft for approval tracking
+      const draft: OutreachDraft = {
+        draftId,
+        to,
+        subject,
+        body,
+        approved: false,
+        createdAt: new Date(),
+        matchData
+      };
+
+      this.drafts.set(draftId, draft);
+
+      logInfo(this.name, `✅ Draft létrehozva: ${draftId} (${to.length} címzett)`);
+
+      return {
+        success: true,
+        status: 'success',
+        message: `📧 Draft email létrehozva ${to.length} partnernek. Jóváhagyásra vár!`,
+        data: {
+          draftId,
+          recipients: to,
+          subject,
+          bodyPreview: body.slice(0, 150) + '...',
+          requiresApproval: true,
+          createdAt: draft.createdAt
+        }
+      };
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError(this.name, `Draft creation hiba: ${error}`);
+      return { status: 'error', error };
+    }
+  }
+
+  /**
+   * Approve draft email (Human-in-the-loop)
+   */
+  private async approveDraft(_task: string, context?: unknown): Promise<AgentResponse> {
+    const draftId = (context as any)?.draftId || Array.from(this.drafts.keys())[0];
+
+    if (!draftId) {
+      return {
+        status: 'error',
+        error: 'Nincs draft ID megadva és nincs elérhető draft.'
+      };
+    }
+
+    const draft = this.drafts.get(draftId);
+    if (!draft) {
+      return {
+        status: 'error',
+        error: `Draft nem található: ${draftId}`
+      };
+    }
+
+    if (draft.approved) {
+      return {
+        status: 'success',
+        message: `✅ Draft ${draftId} már korábban jóvá lett hagyva.`,
+        data: { draftId, approvedAt: draft.approvedAt }
+      };
+    }
+
+    // Approve draft
+    draft.approved = true;
+    draft.approvedAt = new Date();
+    this.drafts.set(draftId, draft);
+
+    logInfo(this.name, `✅ Draft jóváhagyva: ${draftId}`);
+
+    return {
+      success: true,
+      status: 'success',
+      message: `✅ Draft ${draftId} jóváhagyva. Most már elküldhető!`,
+      data: {
+        draftId,
+        approvedAt: draft.approvedAt,
+        recipients: draft.to,
+        readyToSend: true
+      }
+    };
+  }
+
+  /**
+   * Send approved draft email
+   * Only sends if draft is approved (Human-in-the-loop safety)
+   */
+  private async sendApprovedDraft(_task: string, context?: unknown): Promise<AgentResponse> {
+    const draftId = (context as any)?.draftId || Array.from(this.drafts.keys()).find(
+      id => this.drafts.get(id)?.approved && !this.drafts.get(id)?.sentAt
+    );
+
+    if (!draftId) {
+      return {
+        status: 'error',
+        error: 'Nincs jóváhagyott, de még el nem küldött draft.'
+      };
+    }
+
+    const draft = this.drafts.get(draftId);
+    if (!draft) {
+      return {
+        status: 'error',
+        error: `Draft nem található: ${draftId}`
+      };
+    }
+
+    if (!draft.approved) {
+      return {
+        status: 'error',
+        error: `❌ Draft ${draftId} nincs jóváhagyva. Küldés megtagadva!`
+      };
+    }
+
+    if (draft.sentAt) {
+      return {
+        status: 'error',
+        error: `Draft ${draftId} már el lett küldve: ${draft.sentAt.toLocaleString()}`
+      };
+    }
+
+    try {
+      // Send email via Gmail API
+      const result = await googleWorkspaceHandler({
+        operation: 'email_send',
+        params: {
+          to: draft.to,
+          subject: draft.subject,
+          body: draft.body
+        }
+      });
+
+      if (!result.success) {
+        throw new Error(result.error || 'Email sending failed');
+      }
+
+      draft.sentAt = new Date();
+      this.drafts.set(draftId, draft);
+
+      logInfo(this.name, `📧 Email elküldve: ${draftId} (${draft.to.length} címzett)`);
+
+      return {
+        success: true,
+        status: 'success',
+        message: `📧 Email sikeresen elküldve ${draft.to.length} partnernek!`,
+        data: {
+          draftId,
+          recipients: draft.to,
+          sentAt: draft.sentAt,
+          messageId: (result.data as any)?.messageId
+        }
+      };
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError(this.name, `Email sending hiba: ${error}`);
+      return { status: 'error', error };
+    }
   }
 }

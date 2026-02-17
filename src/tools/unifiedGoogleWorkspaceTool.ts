@@ -59,7 +59,7 @@ export interface DriveFile {
 
 export interface GoogleWorkspaceResult {
   success: boolean;
-  operation: 'sheet_read' | 'sheet_write' | 'email_send' | 'email_search' | 'drive_upload' | 'drive_list';
+  operation: 'sheet_read' | 'sheet_write' | 'email_send' | 'email_search' | 'email_draft' | 'drive_upload' | 'drive_list';
   data?: unknown;
   error?: string;
   timestamp: Date;
@@ -362,6 +362,64 @@ class GmailClient {
     }
   }
 
+  /**
+   * Create draft email (Phase 4: Supply Chain)
+   */
+  async createDraft(
+    to: string[],
+    subject: string,
+    body: string,
+    cc?: string[]
+  ): Promise<{ draftId: string; message: string }> {
+    try {
+      logInfo('GmailClient', `📝 Creating draft for ${to.length} recipients`);
+
+      if (!this.apiKey) {
+        return this.mockCreateDraft(to, subject);
+      }
+
+      // Construct RFC 2822 message format
+      const emailLines = [
+        `To: ${to.join(', ')}`,
+        cc && cc.length > 0 ? `Cc: ${cc.join(', ')}` : '',
+        `Subject: ${subject}`,
+        '',
+        body,
+      ].filter(Boolean);
+
+      const rawMessage = Buffer.from(emailLines.join('\n')).toString('base64url');
+
+      const url = `${this.baseUrl}/drafts`;
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${this.apiKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: { raw: rawMessage },
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Gmail API error: ${response.statusText}`);
+      }
+
+      const data = (await response.json()) as Record<string, unknown>;
+      const draftId = (data.id as string) || `draft_${Date.now()}`;
+
+      logInfo('GmailClient', `✅ Draft created: ${draftId}`);
+      return {
+        draftId,
+        message: `Draft created successfully for ${to.join(', ')}`,
+      };
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError('GmailClient', `Draft creation failed: ${error}`);
+      throw e;
+    }
+  }
+
   private mockSearchEmails(query: string, maxResults: number): GmailMessage[] {
     return [
       {
@@ -390,6 +448,15 @@ class GmailClient {
       subject: 'Mock Subject',
       body: 'Mock body content',
       timestamp: new Date(),
+    };
+  }
+
+  private mockCreateDraft(to: string[], subject: string): { draftId: string; message: string } {
+    const draftId = `draft_mock_${Date.now()}`;
+    logInfo('GmailClient', `📝 Mock: Draft created ${draftId}`);
+    return {
+      draftId,
+      message: `Mock draft created for ${to.join(', ')} with subject: "${subject}"`,
     };
   }
 }
@@ -576,6 +643,8 @@ export class UnifiedGoogleWorkspaceTool {
           return await this.handleEmailSearch(params);
         case 'email_send':
           return await this.handleEmailSend(params);
+        case 'email_draft':
+          return await this.handleEmailDraft(params);
         case 'drive_upload':
           return await this.handleDriveUpload(params);
         case 'drive_list':
@@ -659,6 +728,21 @@ export class UnifiedGoogleWorkspaceTool {
     };
   }
 
+  private async handleEmailDraft(params: Record<string, unknown>): Promise<GoogleWorkspaceResult> {
+    const to = params.to as string[];
+    const subject = String(params.subject);
+    const body = String(params.body);
+    const cc = params.cc as string[] | undefined;
+
+    const result = await this.gmail.createDraft(to, subject, body, cc);
+    return {
+      success: true,
+      operation: 'email_draft',
+      data: result,
+      timestamp: new Date(),
+    };
+  }
+
   private async handleDriveUpload(params: Record<string, unknown>): Promise<GoogleWorkspaceResult> {
     const fileName = String(params.fileName);
     const content = Buffer.from(String(params.content));
@@ -705,6 +789,7 @@ export const googleWorkspaceToolDefinition = {
           'sheet_write',
           'email_search',
           'email_send',
+          'email_draft',
           'drive_upload',
           'drive_list',
         ],
