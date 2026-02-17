@@ -23,6 +23,7 @@ import { generateExecutionPlan } from '../../utils/llmPlanner.js';
 import { persistentBrowser } from '../../utils/persistentBrowser.js';
 import { backgroundTaskManager } from '../../utils/backgroundTaskManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
+import { getMessages, saveMessage } from '../../utils/db.js';
 
 export function createRobotkezRoutes(): Router {
     const router = Router();
@@ -48,15 +49,39 @@ export function createRobotkezRoutes(): Router {
 
             logInfo('RobotkezAPI', `Chat request: "${instruction}"`);
 
-            const result = await agent.execute(instruction);
+            const CHAT_ID = 'robotkez-chat';
+            
+            // Save user message
+            await saveMessage(CHAT_ID, 'user', instruction);
+
+            // Get history (last 10 messages)
+            const allMessages = await getMessages(CHAT_ID);
+            const history = allMessages.slice(-10).map(m => ({
+                role: m.role,
+                content: m.content
+            }));
+
+            const result = await agent.execute(instruction, { 
+                swarm: { 
+                    sessionId: CHAT_ID,
+                    history,
+                    artifacts: {}
+                } 
+            });
+
+            // Save assistant response
+            if (result.status === 'success' || result.status === 'handoff') {
+                await saveMessage(CHAT_ID, 'assistant', result.message || 'Kész');
+            }
 
             res.json(result);
 
-        } catch (error: any) {
-            logError('RobotkezAPI', `Chat error: ${error.message}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `Chat error: ${msg}`);
             res.status(500).json({
                 success: false,
-                error: error.message
+                error: msg
             });
         }
     });
@@ -89,11 +114,12 @@ export function createRobotkezRoutes(): Router {
                 message: `Plan generálva: ${plan.plan.length} lépés`
             });
 
-        } catch (error: any) {
-            logError('RobotkezAPI', `Plan error: ${error.message}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `Plan error: ${msg}`);
             res.status(500).json({
                 success: false,
-                error: error.message
+                error: msg
             });
         }
     });
@@ -132,11 +158,12 @@ export function createRobotkezRoutes(): Router {
                 message: `Action executed: ${action}`
             });
 
-        } catch (error: any) {
-            logError('RobotkezAPI', `Exec error: ${error.message}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `Exec error: ${msg}`);
             res.status(500).json({
                 success: false,
-                error: error.message
+                error: msg
             });
         }
     });
@@ -173,11 +200,12 @@ export function createRobotkezRoutes(): Router {
                 }
             });
 
-        } catch (error: any) {
-            logError('RobotkezAPI', `Status error: ${error.message}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `Status error: ${msg}`);
             res.status(500).json({
                 success: false,
-                error: error.message
+                error: msg
             });
         }
     });
@@ -215,11 +243,12 @@ export function createRobotkezRoutes(): Router {
                 count: tasks.length
             });
 
-        } catch (error: any) {
-            logError('RobotkezAPI', `Tasks list error: ${error.message}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `Tasks list error: ${msg}`);
             res.status(500).json({
                 success: false,
-                error: error.message
+                error: msg
             });
         }
     });
@@ -248,11 +277,12 @@ export function createRobotkezRoutes(): Router {
                 task
             });
 
-        } catch (error: any) {
-            logError('RobotkezAPI', `Task status error: ${error.message}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `Task status error: ${msg}`);
             res.status(500).json({
                 success: false,
-                error: error.message
+                error: msg
             });
         }
     });
@@ -282,11 +312,12 @@ export function createRobotkezRoutes(): Router {
                 message: `Task ${id} cancelled`
             });
 
-        } catch (error: any) {
-            logError('RobotkezAPI', `Task cancel error: ${error.message}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `Task cancel error: ${msg}`);
             res.status(500).json({
                 success: false,
-                error: error.message
+                error: msg
             });
         }
     });
@@ -312,11 +343,12 @@ export function createRobotkezRoutes(): Router {
             res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
             res.send(Buffer.from(screenshot));
 
-        } catch (error: any) {
-            logError('RobotkezAPI', `Screenshot error: ${error.message}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `Screenshot error: ${msg}`);
             res.status(500).json({
                 success: false,
-                error: error.message
+                error: msg
             });
         }
     });

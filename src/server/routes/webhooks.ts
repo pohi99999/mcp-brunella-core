@@ -67,8 +67,9 @@ export function createWebhookRoutes(db: Database.Database): Router {
         webhookId,
         message: 'Webhook processed successfully',
       });
-    } catch (error) {
-      logError('Webhooks', `GitHub webhook error: ${error}`);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('Webhooks', `GitHub webhook error: ${msg}`);
       res.status(500).json({ error: 'Webhook processing failed' });
     }
   });
@@ -77,14 +78,15 @@ export function createWebhookRoutes(db: Database.Database): Router {
    * GitHub Workflow Run Webhook
    * Triggered when GitHub Actions workflow completes (for CI/CD failure detection)
    */
-  router.post('/github/webhook', async (req: Request, res: Response) => {
+  router.post('/github', async (req: Request, res: Response) => {
     try {
       // Verify GitHub signature
       const signature = req.headers['x-hub-signature-256'] as string;
       const event = req.headers['x-github-event'] as string;
 
       if (config.githubWebhookSecret && signature) {
-        const rawBody = (req as any).rawBody;
+        // @ts-expect-error - rawBody added by middleware
+        const rawBody = req.rawBody as Buffer | string;
         if (!rawBody) {
           return res.status(400).json({ error: 'Raw body not available for signature verification' });
         }
@@ -126,8 +128,9 @@ export function createWebhookRoutes(db: Database.Database): Router {
         webhookId,
         message: 'Webhook received',
       });
-    } catch (error) {
-      logError('Webhooks', `GitHub webhook error: ${error}`);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('Webhooks', `GitHub webhook error: ${msg}`);
       res.status(500).json({ error: 'Webhook processing failed' });
     }
   });
@@ -170,16 +173,18 @@ export function createWebhookRoutes(db: Database.Database): Router {
           message: 'Render webhook processed successfully',
           result,
         });
-      } catch (err) {
-        logError('Webhooks', `Jules automation import failed: ${err}`);
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        logError('Webhooks', `Jules automation import failed: ${msg}`);
         res.status(500).json({ 
           success: false,
           webhookId,
           error: 'Jules automation import failed',
         });
       }
-    } catch (error) {
-      logError('Webhooks', `Render webhook error: ${error}`);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('Webhooks', `Render webhook error: ${msg}`);
       res.status(500).json({ error: 'Webhook processing failed' });
     }
   });
@@ -206,8 +211,9 @@ export function createWebhookRoutes(db: Database.Database): Router {
         webhookId,
         message: 'Webhook queued for processing',
       });
-    } catch (error) {
-      logError('Webhooks', `Webhook error: ${error}`);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('Webhooks', `Webhook error: ${msg}`);
       res.status(500).json({ error: 'Webhook processing failed' });
     }
   });
@@ -234,8 +240,9 @@ export function createWebhookRoutes(db: Database.Database): Router {
           payload: JSON.parse(e.payload),
         })),
       });
-    } catch (error) {
-      logError('Webhooks', `Failed to fetch events: ${error}`);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('Webhooks', `Failed to fetch events: ${msg}`);
       res.status(500).json({ error: 'Failed to fetch webhook events' });
     }
   });
@@ -258,8 +265,9 @@ export function createWebhookRoutes(db: Database.Database): Router {
         deleted: result.changes,
         message: `Deleted webhook events older than ${daysOld} days`,
       });
-    } catch (error) {
-      logError('Webhooks', `Cleanup failed: ${error}`);
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('Webhooks', `Cleanup failed: ${msg}`);
       res.status(500).json({ error: 'Cleanup failed' });
     }
   });

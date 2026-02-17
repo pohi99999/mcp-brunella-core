@@ -29,6 +29,7 @@ export interface AgentHandoff {
 
 // Standard Agent Response
 export interface AgentResponse {
+    success?: boolean; // Legacy support
     status: 'success' | 'error' | 'delegated' | 'handoff';
     data?: unknown;
     error?: string;

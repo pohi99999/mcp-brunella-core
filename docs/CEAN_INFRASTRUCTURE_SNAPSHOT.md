@@ -169,24 +169,57 @@
 
 ---
 
-## ✅ PHASE 1D: Test Worker Deployment (COMPLETE - 2026-02-15)
+## ✅ PHASE 1D: Test Worker Deployment & D1/R1 Connectivity (COMPLETE - 2026-02-17)
 
 ### Deployment Summary
+
 - **Worker URL:** https://cean-test.iam-dd1.workers.dev
-- **Deployment Time:** 2026-02-15 20:52 UTC
+- **Deployment Date:** 2026-02-17 04:15 UTC
+- **Deployment Time:** 6.51 seconds
+- **Version ID:** 4abe7294-fd19-4b67-8783-9992fb6b2d96
 - **D1 Binding:** bas-metadata (`1c4e7d00-7b09-4ddf-88b4-8df42e1123ab`)
 - **R1 Binding:** ✅ Vectorize index `cean-vector`
 
-### Endpoint Verification Results
-| Endpoint | Result | Notes |
-|----------|--------|-------|
-| GET /health | ✅ 200 OK | d1_available: true, r1_available: true |
-| POST /test/d1 | ✅ 200 OK | Basic D1 query succeeded |
-| POST /test/r1 | ✅ 200 OK | Vectorize binding active |
-| GET /test/metrics | ✅ 200 OK | Metrics endpoint responding |
+### D1 Schema Application
 
-### Open Item
-- 🔧 Add embedding test once OPENAI_API_KEY is configured
+- **Status:** ✅ SUCCESS
+- **Query Execution:** 52 queries successfully executed
+- **Database Size:** 0.39 MB (plenty of headroom)
+- **Rows Written:** 96 rows (schema metadata)
+- **Last Bookmark:** `00000009-0000000b-00005015-...`
+- **Schema Version:** 1.0.0 (2026-02-15)
+
+### Endpoint Verification Results
+
+| Endpoint | Result | Duration |
+| --- | --- | --- |
+| POST /test/d1 | ✅ 200 OK (d1_basic_query: SUCCESS) | 47ms |
+| POST /test/r1 | ✅ 200 OK (vectorize_index_bound: TRUE) | 0ms |
+| GET /health | ✅ 200 OK | <5ms |
+| GET /test/metrics | ✅ 200 OK | <5ms |
+
+### Test Results Summary
+
+```text
+✅ D1 Connectivity Test
+   - Test: d1_basic_query
+   - Duration: 47ms
+   - Result: "D1 basic query succeeded"
+   - Status: SUCCESS
+
+✅ R1 (Vectorize) Binding Test
+   - Binding Status: ACTIVE
+   - Embedding Model: text-embedding-3-small (1536-dim)
+   - Status: READY (awaiting OPENAI_API_KEY for full embedding test)
+```
+
+### Next Steps (Phase 1D.4-5)
+
+- 🔄 **Deploy via wrangler:** ✅ DONE (deployed to production)
+- 📝 **Update infrastructure snapshot:** ✅ DONE (this document)
+- 🔑 **Configure OPENAI_API_KEY:** PENDING (environment setup)
+- 🧪 **Full embedding test:** PENDING (requires API key)
+
 
 ---
 

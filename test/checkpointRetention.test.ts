@@ -161,8 +161,15 @@ describe('Phoenix Protocol v2 - Checkpoint Retention Policy', () => {
       await closeCheckpointDb();
 
       // Delete the database file
-      if (fs.existsSync(TEST_DB_PATH)) {
-        fs.unlinkSync(TEST_DB_PATH);
+      try {
+        if (fs.existsSync(TEST_DB_PATH)) {
+          fs.unlinkSync(TEST_DB_PATH);
+        }
+        // Also cleanup WAL files if they exist
+        if (fs.existsSync(`${TEST_DB_PATH}-wal`)) fs.unlinkSync(`${TEST_DB_PATH}-wal`);
+        if (fs.existsSync(`${TEST_DB_PATH}-shm`)) fs.unlinkSync(`${TEST_DB_PATH}-shm`);
+      } catch (e) {
+        console.warn('Failed to delete test DB, might be locked by another process:', e);
       }
 
       const deleted = await cleanupOldCheckpoints(7);

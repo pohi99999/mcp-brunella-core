@@ -17,16 +17,18 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { Request, Response } from 'express';
 import { createRobotkezRoutes } from '../src/server/routes/robotkez.js';
 
+// Spies for agent methods
+export const mockExecute = vi.fn().mockResolvedValue({ success: true, message: 'Task executed' });
+export const mockExecuteTask = vi.fn().mockResolvedValue({ success: true, message: 'Task executed' });
+
 // Mock dependencies
 vi.mock('../src/agents/RobotkezV2Agent.js', () => ({
     RobotkezV2Agent: class {
         name = 'RobotkezV2';
         role = 'Magyar Agentic Browser';
         capabilities = ['agentic_browsing', 'magyar_nyelv'];
-
-        async executeTask() {
-            return { success: true, message: 'Task executed' };
-        }
+        execute = mockExecute;
+        executeTask = mockExecuteTask;
     }
 }));
 

@@ -4,7 +4,7 @@
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 46 total | 13 active | 7 completed | 9 archived
+**Stats:** 46 total | 11 active | 7 completed | 11 archived
 
 ---
 
@@ -61,13 +61,6 @@
   - **Updated:** 2026-02-16T00:00:00Z
   - Mappa: ./tracks/ai_recommendation_system_20260216/
 
-- [ ] **BAS Átfogó Tesztprotokol** [CRITICAL]
-  - **ID:** `bas_comprehensive_test_protocol_20260210`
-  - **Progress:** 90%
-  - **Assignee:** DeveloperAgent
-  - **Updated:** 2026-02-16T15:05:00Z
-  - Mappa: ./tracks/bas_comprehensive_test_protocol_20260210/
-
 - [ ] **Cloudflare Edge Agents Network (CEAN)** [MEDIUM]
   - **ID:** `cloudflare_edge_agents_network_20260215`
   - **Progress:** 30%
@@ -99,13 +92,6 @@
   - **Progress:** 15%
   - **Updated:** 2026-02-14T14:00:00Z
   - Mappa: ./tracks/invoice-to-sheets-automation-20260214/
-
-- [ ] **Iron Clad Python AI Backend** [MEDIUM]
-  - **ID:** `iron_clad_backend_20260212`
-  - **Progress:** 95%
-  - **Assignee:** DeveloperAgent
-  - **Updated:** 2026-02-16T14:54:00Z
-  - Mappa: ./tracks/iron_clad_backend_20260212/
 
 - [ ] **Jules Continuous AI Integration (JCAI)** [CRITICAL]
   - **ID:** `jules_continuous_ai_integration_20260215`
@@ -173,11 +159,12 @@
 
 ---
 
-## Archivalt (Archived) (9)
+## Archivalt (Archived) (11)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
+- [x] **BAS Comprehensive Test Protocol** (2026-02-17)
 - [x] **Browser-Use Harvester with Structured JSON Output** (N/A)
 - [x] **Dashboard TODO Widget** (2026-02-13)
 - [x] **Data Flywheel & Incubator** (2026-02-05)

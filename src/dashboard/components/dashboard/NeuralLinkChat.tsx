@@ -156,6 +156,7 @@ export function NeuralLinkChat() {
           thoughts: response.thoughts,
           contextUsed: response.contextUsed,
           executedBy: response.executedBy,
+          screenshot: response.screenshot,
         },
       ]);
     } catch (e: unknown) {
@@ -333,6 +334,15 @@ export function NeuralLinkChat() {
                     <p className="whitespace-pre-wrap leading-relaxed">
                       {msg.content}
                     </p>
+                    {msg.screenshot && (
+                      <div className="mt-2 rounded-lg overflow-hidden border border-border/50">
+                        <img 
+                          src={msg.screenshot.startsWith('data:') ? msg.screenshot : `/api/v1/robotkez/screenshot?t=${Date.now()}`} 
+                          alt="Screenshot" 
+                          className="max-w-full h-auto"
+                        />
+                      </div>
+                    )}
                   </div>
 
                   {msg.role === "assistant" &&

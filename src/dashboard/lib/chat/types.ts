@@ -7,6 +7,7 @@ export interface ChatMessage {
   thoughts?: string;
   contextUsed?: string[];
   executedBy?: string;
+  screenshot?: string;
 }
 
 export type ChatMode =
@@ -31,6 +32,7 @@ export interface ChatSendOutput {
   thoughts?: string;
   contextUsed?: string[];
   executedBy?: string;
+  screenshot?: string;
 }
 
 export interface ChatProvider {

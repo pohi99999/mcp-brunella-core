@@ -192,6 +192,15 @@ async def main():
                     else:
                         result = {"status": "error", "message": "Key missing"}
 
+                elif action == "state" or action == "status":
+                    pg = await get_page()
+                    try:
+                        url = pg.url
+                        title = await pg.title()
+                        result = {"status": "success", "url": url, "title": title}
+                    except Exception as e:
+                        result = {"status": "error", "message": str(e)}
+
                 # ==================== END NEW ACTIONS ====================
 
                 elif action == "close":

@@ -113,7 +113,7 @@ describe('Webhook Routes Integration', () => {
     const signature = 'sha256=' + hmac.update(payloadString).digest('hex');
 
     const response = await request(app)
-      .post('/api/github/webhook')
+      .post('/api/github')
       .set('X-GitHub-Event', 'workflow_run')
       .set('X-Hub-Signature-256', signature)
       .set('Content-Type', 'application/json')
@@ -137,7 +137,7 @@ describe('Webhook Routes Integration', () => {
     const payload = { foo: 'bar' };
     
     const response = await request(app)
-      .post('/api/github/webhook')
+      .post('/api/github')
       .set('X-GitHub-Event', 'push')
       .set('X-Hub-Signature-256', 'sha256=invalid')
       .send(payload);
