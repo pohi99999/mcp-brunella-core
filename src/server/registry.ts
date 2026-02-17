@@ -146,6 +146,7 @@ export async function registerAllTools(server: McpServer) {
     const { registerKnowledgeTools } = await import("../tools/knowledge.js");
     const { registerSystemTools } = await import("../tools/system.js");
     const { registerBrowserTools } = await import("../tools/browser.js");
+    const { registerPersistentBrowserTools } = await import("../tools/persistentBrowserTools.js");
     const { registerInterpreterTools } =
       await import("../tools/interpreter.js");
     const { registerCopilotCliTool } =
@@ -165,12 +166,12 @@ export async function registerAllTools(server: McpServer) {
       await import("../tools/githubModelsTool.js");
     const { registerGeminiTool } = await import("../tools/geminiTool.js");
     const { registerEvHunterTools } = await import("../tools/evHunterTool.js");
-    const { registerPersistentBrowserTools } = await import("../tools/persistentBrowserTools.js");
 
     registerWorkspaceTools(server);
     registerKnowledgeTools(server);
     registerSystemTools(server);
     registerBrowserTools(server);
+    registerPersistentBrowserTools(server);
     registerInterpreterTools(server);
     registerCopilotCliTool(server);
     registerJulesCliTool(server);
@@ -184,7 +185,6 @@ export async function registerAllTools(server: McpServer) {
     registerGithubModelsTool(server);
     registerGeminiTool(server);
     registerEvHunterTools(server);
-    registerPersistentBrowserTools(server);
 
     // Register Agent Tools with double-registration (server + internal map)
     const agentListHandler = async () => {
