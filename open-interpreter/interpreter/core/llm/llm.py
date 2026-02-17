@@ -184,6 +184,7 @@ class Llm:
                         ocr = self.interpreter.computer.vision.ocr(lmc=img_msg)
 
                         # It would be nice to format this as a message to the user and display it like: "I see: image_description"
+                        self.interpreter.display_message(f"I see: {image_description}")
 
                         img_msg["content"] = (
                             precursor
