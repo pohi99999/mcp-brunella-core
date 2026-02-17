@@ -14,7 +14,7 @@ import { aiGateway } from "../utils/aiGateway.js";
 import { recordLlmUsageAndCost } from "../utils/metrics.js";
 
 // Configuration
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "qwen2.5-coder:7b";
+const getOllamaModel = () => process.env.OLLAMA_MODEL || "qwen2.5-coder:7b";
 const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";
 const LLM_TIMEOUT_MS = parseInt(process.env.LLM_TIMEOUT_MS || "120000"); // 2 minutes default
 
@@ -107,14 +107,14 @@ export const generateResponse: (
       // Default: Ollama/CF Workers AI via AI Gateway v3.0 (pure fetch)
 
       const response = await aiGateway.generate(prompt, {
-        model: modelName || OLLAMA_MODEL,
+        model: modelName || getOllamaModel(),
         temperature: 0.7,
         maxTokens: 4096,
       });
 
       recordLlmUsageAndCost({
         provider: provider || "ollama",
-        model: modelName || OLLAMA_MODEL,
+        model: modelName || getOllamaModel(),
         prompt,
         completion: response,
       });

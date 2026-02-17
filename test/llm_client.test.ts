@@ -44,6 +44,7 @@ describe('llm_client', () => {
         process.env.GITHUB_TOKEN = 'test-github-token';
         process.env.OLLAMA_BASE_URL = 'http://localhost:11434';
         process.env.AI_GATEWAY_ENABLED = 'false'; // Force local Ollama for tests
+        process.env.OLLAMA_MODEL = 'qwen2.5-coder:7b';
     });
 
     describe('generateResponse', () => {
