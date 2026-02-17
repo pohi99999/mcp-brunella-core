@@ -13,7 +13,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { RobotkezV2Agent } from '../src/agents/RobotkezV2Agent.js';
 import { AgentContext } from '../src/agents/BaseAgent.js';
-import * as persistentBrowserModule from '../src/utils/persistentBrowser.js';
 
 // Mock persistentBrowser
 const mockSendCommand = vi.fn();
@@ -218,9 +217,18 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            // Updated assertion:
-            const callArgs = mockSendCommand.mock.calls[0][0];
-            expect(callArgs.url).toContain('google.com/search');
+
+            // Check if mockSendCommand was called
+            expect(mockSendCommand).toHaveBeenCalled();
+
+            // Safe access to call arguments
+            const calls = mockSendCommand.mock.calls;
+            if (calls.length > 0 && calls[0][0]) {
+               expect(calls[0][0].url).toContain('google.com/search');
+            } else {
+               // Fail if not called as expected
+               expect(true).toBe(false);
+            }
         });
     });
 
