@@ -239,18 +239,15 @@ class Llm:
                 except:
                     if len(messages) == 1:
                         if self.interpreter.in_terminal_interface:
-                            self.interpreter.display_message(
-                                """
+                            self.interpreter.display_message("""
 **We were unable to determine the context window of this model.** Defaulting to 8000.
 
 If your model can handle more, run `interpreter --context_window {token limit} --max_tokens {max tokens per response}`.
 
 Continuing...
-                            """
-                            )
+                            """)
                         else:
-                            self.interpreter.display_message(
-                                """
+                            self.interpreter.display_message("""
 **We were unable to determine the context window of this model.** Defaulting to 8000.
 
 If your model can handle more, run `self.context_window = {token limit}`.
@@ -258,8 +255,7 @@ If your model can handle more, run `self.context_window = {token limit}`.
 Also please set `self.max_tokens = {max tokens per response}`.
 
 Continuing...
-                            """
-                            )
+                            """)
                     messages = tt.trim(
                         messages, system_message=system_message, max_tokens=8000
                     )

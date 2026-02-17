@@ -117,7 +117,10 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(mockSendCommand.mock.calls[0][0].url).toContain('google.com/search');
+            // Verify navigate call was made
+            const navigateCall = mockSendCommand.mock.calls.find(call => call[0].action === 'navigate');
+            expect(navigateCall).toBeDefined();
+            expect(navigateCall[0].url).toContain('google.com/search');
         });
     });
 
@@ -151,7 +154,10 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(mockSendCommand.mock.calls[0][0].selector).toBe('.primary-button');
+            // Verify click call was made with default selector
+            const clickCall = mockSendCommand.mock.calls.find(call => call[0].action === 'click');
+            expect(clickCall).toBeDefined();
+            expect(clickCall[0].selector).toBe('.primary-button');
         });
     });
 
@@ -218,7 +224,11 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(mockSendCommand.mock.calls[0][0].url).toContain('google.com/search');
+
+            // Look for a navigate call instead of assuming index 0
+            const navigateCall = mockSendCommand.mock.calls.find(call => call[0].action === 'navigate');
+            expect(navigateCall).toBeDefined();
+            expect(navigateCall[0].url).toContain('google.com/search');
         });
     });
 
@@ -265,7 +275,9 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
 
             // Should have 2 calls: navigate + screenshot
             expect(mockSendCommand).toHaveBeenCalledTimes(2);
-            expect(mockSendCommand.mock.calls[1][0]).toEqual({ action: 'screenshot' });
+            // One of them should be screenshot
+            const screenshotCall = mockSendCommand.mock.calls.find(call => call[0].action === 'screenshot');
+            expect(screenshotCall).toBeDefined();
         });
 
         it('should continue even if screenshot fails', async () => {

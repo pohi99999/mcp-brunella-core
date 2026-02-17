@@ -95,7 +95,8 @@ export class DeploymentAnalyzer {
         /assertion.*failed/i,
         / failing( test)?/i,
         /mocha|jest|vitest/i,
-        /expected.*to/i
+        /expected.*to/i,
+        /FAIL /i
       ],
       lint: [
         /eslint|prettier|stylelint/i,
@@ -227,9 +228,11 @@ export class DeploymentAnalyzer {
    * Generates a prompt for Jules to fix the detected issue
    */
   static generateFixPrompt(analysis: DeploymentAnalysis, fileContent?: string): string {
+    // Default to 'unknown' if category is missing (defensive)
+    const category = (analysis.category || 'unknown').toUpperCase();
     const basePrompt = `## Jules Continuous AI - Automated Fix Request
 
-**Error Category:** ${analysis.category.toUpperCase()}  
+**Error Category:** ${category}
 **Title:** ${analysis.title}  
 **Confidence:** ${(analysis.confidence * 100).toFixed(0)}%
 
