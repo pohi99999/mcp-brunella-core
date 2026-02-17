@@ -86,9 +86,11 @@
 
 - [ ] **Számla Adatkinyerés és Google Sheets Automatizáció** [HIGH]
   - **ID:** `invoice-to-sheets-automation-20260214`
-  - **Progress:** 50%
-  - **Updated:** 2026-02-17T16:30:00Z
-  - **Status:** Phase 2 IN PROGRESS (Szamlazz.hu API Client + MCP Tool)
+  - **Progress:** 75%
+  - **Updated:** 2026-02-17T14:45:00Z
+  - **Status:** Phase 2 COMPLETE - Enhanced Client (Caching + Gmail Fallback + MCP Tool Integration)
+  - **Completed:** Enhanced Invoice Client, Gmail Fallback, Updated MCP Tool, Registry Fixes
+  - **Next:** Dashboard Testing, Performance Tuning
   - Mappa: ./tracks/invoice-to-sheets-automation-20260214/
 
 - [ ] **Jules Continuous AI Integration (JCAI)** [CRITICAL]
