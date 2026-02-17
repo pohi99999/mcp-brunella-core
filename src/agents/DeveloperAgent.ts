@@ -73,6 +73,10 @@ export class DeveloperAgent implements IAgent {
       // ── END SPEC GATE ───────────────────────────────────────────
 
       // Route to appropriate handler
+      if (context?.mode === 'interpreter') {
+        return await this.handleInterpreterTask(task, context);
+      }
+
       if (this.isCodeGenerationTask(task)) {
         return await this.handleCodeGeneration(task, context);
       } else if (this.isTestGenerationTask(task)) {
@@ -336,6 +340,51 @@ Provide the fixed code:`;
   }
 
   // ==================== Python Execution ====================
+
+  private async handleInterpreterTask(
+    task: string,
+    context?: any,
+  ): Promise<AgentResponse> {
+    logInfo(this.name, "🧠 AI-Interpreter mode");
+
+    let historyText = "";
+    if (context?.history && Array.isArray(context.history)) {
+      historyText = "\nELŐZMÉNYEK:\n" + context.history.map((h: any) => `${h.role === 'user' ? 'Mester' : 'Brunella'}: ${h.content}`).join('\n') + "\n";
+    }
+
+    const systemPrompt = `Te egy Python szakértő vagy, aki egy folyamatos (perzisztens) interpretert irányít.
+- A Mester magyar nyelvű utasításait fordítsd valid, futtatható Python kódra.
+- Az interpreter állapota MEGMARAD (változók, importok élnek a hívások között).
+- Van hozzáférésed a Mester fájljaihoz az aktuális mappában.
+- Fájlműveletekhez használd az 'os' és 'pathlib' modulokat.
+- Ha az előzményekben a Mester korábbi kódmódosítást kért, vedd figyelembe.
+- VÁLASZ: CSAK a tiszta Python kódot add vissza, markdown és magyarázat nélkül.`;
+
+    const provider = context?.model === 'qwen2.5-coder' ? 'ollama' : this.llmProvider;
+    const model = context?.model || (provider === 'ollama' ? 'qwen2.5-coder:7b' : 'gpt-4o');
+
+    const prompt = `${historyText}\nAKTUÁLIS UTASÍTÁS: ${task}\n\nGeneráld a Python kódot:`;
+
+    try {
+      const code = await generateResponse(
+        this.formatPromptWithSystem(prompt, systemPrompt),
+        provider,
+        model,
+      );
+
+      logInfo(this.name, `🚀 Executing generated code via ${model}...`);
+      const result = await globalPythonShell.run(code);
+
+      return {
+        status: "success",
+        data: { output: result, code },
+        message: "AI code executed successfully",
+      };
+    } catch (e: any) {
+      logError(this.name, `AI-Interpreter failed: ${e.message}`);
+      return { status: "error", error: e.message };
+    }
+  }
 
   private async handlePythonExecution(
     task: string,
