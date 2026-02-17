@@ -18,6 +18,7 @@ import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { backgroundTaskManager } from '../utils/backgroundTaskManager.js';
 import { persistentBrowser, BrowserCommand } from '../utils/persistentBrowser.js';
 import { generateExecutionPlan, ExecutionPlan } from '../utils/llmPlanner.js';
+import { socketService } from '../server/SocketService.js';
 
 // No longer using execAsync here
 
@@ -58,17 +59,21 @@ export class RobotkezV2Agent extends BaseAgent {
       let plan: ExecutionPlan | null = null;
       
       const taskLower = task.toLowerCase();
-      if (taskLower.includes('navigálj')) {
+      if (taskLower.includes('navigálj') || taskLower.includes('frissíts')) {
         let url = task.match(/https?:\/\/[^\s]+/)?.[0];
-        if (!url) {
+        if (!url && !taskLower.includes('frissíts')) {
            const domainMatch = task.match(/([a-z0-9]+\.)+[a-z]{2,}/i);
            if (domainMatch) url = `https://${domainMatch[0]}`;
         }
         
-        if (url) {
+        if (url || taskLower.includes('frissíts')) {
           plan = {
             plan: [
-              { action: 'navigate', url, description: `Navigálás a(z) ${url} weboldalra` }
+              { 
+                action: url ? 'navigate' : 'screenshot', 
+                url: url, 
+                description: url ? `Navigálás a(z) ${url} weboldalra` : 'Oldal frissítése és szinkronizálása' 
+              }
             ],
             estimatedDuration: 5000,
             backgroundEligible: false
@@ -145,6 +150,9 @@ export class RobotkezV2Agent extends BaseAgent {
         }
       }
 
+      // EMIT PLAN to Dashboard (Comet-style)
+      socketService.emit('robotkez:plan', { taskId: `rk-${Date.now()}`, plan });
+
       // 3. Background Delegation (Phase 4.4)
       if (context.backgroundEligible || plan.estimatedDuration > 30000 || plan.backgroundEligible) {
         const taskId = await backgroundTaskManager.startTask(task, plan);
@@ -159,30 +167,67 @@ export class RobotkezV2Agent extends BaseAgent {
       logInfo(this.name, `Executing plan: ${plan.plan.length} steps`);
       const completedSteps: unknown[] = [];
 
-      for (const step of plan.plan) {
+      for (let i = 0; i < plan.plan.length; i++) {
+        const step = plan.plan[i];
         logInfo(this.name, `Step: ${step.description} (${step.action})`);
         
+        // EMIT STEP START
+        socketService.emit('robotkez:step', { index: i, status: 'working', description: step.description });
+
         try {
+          // DYNAMIC VISION: If selector is missing but description exists, use query
+          if (['click', 'type', 'wait', 'extract'].includes(step.action) && !step.selector && step.description) {
+             logInfo(this.name, `Dynamic vision query for: ${step.description}`);
+             const queryResp = await persistentBrowser.sendCommand({
+                action: 'query',
+                description: step.description
+             });
+             if (queryResp.status === 'success') {
+                const queryData = queryResp.data as Record<string, unknown>;
+                if (queryData.selector) {
+                   step.selector = String(queryData.selector);
+                   logInfo(this.name, `Resolved selector: ${step.selector}`);
+                } else {
+                   throw new Error(`Nem találtam meg a következő elemet: "${step.description}"`);
+                }
+             } else {
+                throw new Error(`Nem találtam meg a következő elemet: "${step.description}"`);
+             }
+          }
+
           // Strip description and other non-command properties for browser compatibility
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { description: _desc, ...command } = step as unknown as Record<string, unknown>;
           // Ensure type safety
           const browserCommand = command as unknown as BrowserCommand;
           const response = await persistentBrowser.sendCommand(browserCommand);
+          
           completedSteps.push({
             ...step,
             status: 'completed',
             result: response
           });
+
+          // EMIT STEP SUCCESS
+          socketService.emit('robotkez:step', { 
+            index: i, 
+            status: 'completed', 
+            screenshot: response.screenshot // If returned by action
+          });
+
         } catch (stepError: unknown) {
           const msg = stepError instanceof Error ? stepError.message : String(stepError);
           const action = step.action;
           logError(this.name, `Step failed: ${step.description} - ${msg}`);
+          
           completedSteps.push({
             ...step,
             status: 'error',
             error: msg
           });
+
+          // EMIT STEP ERROR
+          socketService.emit('robotkez:step', { index: i, status: 'error', error: msg });
           
           // Stop on critical error
           if (['navigate', 'click', 'type'].includes(action)) {

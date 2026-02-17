@@ -262,6 +262,35 @@ async def main():
                     except Exception as e:
                         result = {"status": "error", "message": str(e)}
 
+                elif action == "query":
+                    pg = await get_page()
+                    description = cmd.get("description")
+                    if not description:
+                        result = {"status": "error", "message": "Description missing"}
+                    else:
+                        try:
+                            from browser_use.dom.service import DomService
+                            from langchain_google_genai import ChatGoogleGenerativeAI
+                            
+                            dom_service = DomService(pg)
+                            dom_state = await dom_service.get_clickable_elements()
+                            
+                            # Use LLM to find the best element
+                            api_key = os.getenv('GEMINI_API_KEY') or os.getenv('GOOGLE_API_KEY')
+                            llm = ChatGoogleGenerativeAI(model="gemini-2.0-flash", google_api_key=api_key)
+                            
+                            prompt = f"Itt a weboldal interaktív elemeinek listája:\n{dom_state}\n\nKeresd meg az elemet, ami a leginkább illik erre a leírásra: '{description}'.\nAdj vissza CSAK egy CSS selectort vagy egy üres stringet ha nem találod. Semmi mást!"
+                            
+                            response = await llm.ainvoke(prompt)
+                            selector = response.content.strip().replace('`', '')
+                            
+                            if selector:
+                                result = {"status": "success", "selector": selector}
+                            else:
+                                result = {"status": "error", "message": f"Nem található elem a leíráshoz: {description}"}
+                        except Exception as e:
+                            result = {"status": "error", "message": str(e)}
+
                 # ==================== END NEW ACTIONS ====================
 
                 elif action == "close":

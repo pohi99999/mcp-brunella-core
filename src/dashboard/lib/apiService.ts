@@ -334,6 +334,15 @@ export async function getTasks(
   return safeJson<TasksResponse>(response);
 }
 
+export async function getActiveTasks(): Promise<QueuedTask[]> {
+  try {
+    const data = await getTasks(50, 0, "running");
+    return data.tasks || [];
+  } catch {
+    return [];
+  }
+}
+
 export async function getTaskById(taskId: number): Promise<QueuedTask> {
   const response = await fetchWithTimeout(`${API_BASE}/api/tasks/${taskId}`);
   if (!response.ok) throw new Error(`Task: HTTP ${response.status}`);

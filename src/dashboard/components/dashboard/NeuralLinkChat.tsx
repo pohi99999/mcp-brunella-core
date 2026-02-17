@@ -24,6 +24,7 @@ import { toast } from "sonner";
 import { buildConversationPrompt } from "@/lib/chat/contextBuilder";
 import { getProvider } from "@/lib/chat/providerRegistry";
 import { loadChatSession, saveChatSession } from "@/lib/chat/sessionStore";
+import { LiveExecutionMonitor } from "@/components/dashboard/LiveExecutionMonitor";
 import type { ChatMessage as Message, ChatMode } from "@/lib/chat/types";
 
 export function NeuralLinkChat() {
@@ -297,9 +298,22 @@ export function NeuralLinkChat() {
             </Select>
           )}
         </div>
-        <Button variant="ghost" size="icon" onClick={() => setShowBrowser(!showBrowser)} title={showBrowser ? "Bez??r" : "B??ng??sz??"}>
-          {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
-        </Button>
+        <div className="flex items-center gap-1">
+          {showBrowser && (
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              onClick={() => setBrowserTimestamp(Date.now())} 
+              title="Képernyő frissítése"
+              className="text-zinc-400 hover:text-primary"
+            >
+              <ArrowsClockwise size={16} className={isLoading ? "animate-spin" : ""} />
+            </Button>
+          )}
+          <Button variant="ghost" size="icon" onClick={() => setShowBrowser(!showBrowser)} title={showBrowser ? "Bezár" : "Böngésző"}>
+            {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
+          </Button>
+        </div>
       </CardHeader>
       
       {activeAgents.length > 0 && (
@@ -324,7 +338,9 @@ export function NeuralLinkChat() {
         )}
         <ScrollArea className="flex-1 px-4">
           <div className="space-y-6 py-6">
-            {messages.length === 0 && (
+            <LiveExecutionMonitor />
+            
+            {messages.length === 0 && !api.getActiveTasks && (
               <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
                 <div className="p-4 rounded-full bg-primary/10 border border-primary/20">
                   <Brain size={32} className="text-primary animate-pulse" />
