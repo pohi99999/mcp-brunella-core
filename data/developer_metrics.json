@@ -12,8 +12,8 @@
     "lastDurationMs": 0
   },
   "tasks": {
-    "total": 4,
-    "success": 3,
+    "total": 7,
+    "success": 6,
     "error": 1,
     "avgDurationMs": 0
   },
@@ -22,6 +22,27 @@
     "estimatedCost": 0
   },
   "history": [
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1771336340737-1",
+      "durationMs": 1,
+      "timestamp": 1771336340741
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1771336236711-1",
+      "durationMs": 0,
+      "timestamp": 1771336236715
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1771335976434-1",
+      "durationMs": 0,
+      "timestamp": 1771335976437
+    },
     {
       "type": "task",
       "status": "success",

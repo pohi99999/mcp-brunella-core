@@ -71,7 +71,7 @@ export async function getSzamlazzInvoicesHandler(params: {
 
     logInfo(
       "getSzamlazzInvoices",
-      `Enhanced: since=$`+'{since_date}, limit=$`'+'{limit}, force=$`'+'{force_refresh}`'
+      `Enhanced: since=${since_date}, limit=${limit}, force=${force_refresh}`
     );
 
     // Python subprocess - using EnhancedInvoiceClient
@@ -137,12 +137,13 @@ except Exception as e:
 
       python.on("close", (code: number) => {
         if (code !== 0) {
-          logError("getSzamlazzInvoices", `Python error: $`+'{error.substring(0, 200)}`'
+          logError(
+            "getSzamlazzInvoices",
+            `Python error: ${error.substring(0, 200)}`
           );
           resolve({
             success: false,
-            error: `Python error: $`+'{error}`'
-,
+            error: `Python error: ${error}`,
           });
           return;
         }
@@ -157,8 +158,7 @@ except Exception as e:
               error: result.error,
             });
           } else {
-            logInfo("getSzamlazzInvoices", `$`+'{result.count} invoices fetched`'
-            );
+            logInfo("getSzamlazzInvoices", `${result.count} invoices fetched`);
             resolve({
               success: true,
               data: result.invoices,
@@ -168,13 +168,11 @@ except Exception as e:
               },
             });
           }
-        } catch (parseError) {
-          logError("getSzamlazzInvoices", `JSON parse: $`+'{parseError}`'
-          );
+        } catch {
+          logError("getSzamlazzInvoices", "JSON parse error");
           resolve({
             success: false,
-            error: `Parse error: $`+'{output.substring(0, 200)}`'
-,
+            error: `Parse error: ${output.substring(0, 200)}`,
           });
         }
       });

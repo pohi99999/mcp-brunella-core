@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-17T13:00:00.046Z",
+  "lastUpdated": "2026-02-17T13:46:05.114Z",
   "tracks": [
     {
       "id": "ai_recommendation_system_20260216",
@@ -19,31 +19,6 @@
         "lancedb_rag"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\ai_recommendation_system_20260216",
-      "_isArchived": false
-    },
-    {
-      "id": "bas_comprehensive_test_protocol_20260210",
-      "name": "BAS Átfogó Tesztprotokol",
-      "status": "active",
-      "priority": "critical",
-      "progress": 90,
-      "created": "2026-02-10T18:00:00Z",
-      "updated": "2026-02-16T15:05:00Z",
-      "assignee": "DeveloperAgent",
-      "tags": [
-        "testing",
-        "infrastructure",
-        "ci-cd",
-        "phoenix",
-        "health-check",
-        "husky",
-        "resilience"
-      ],
-      "dependencies": [
-        "code_quality_improvements_20260210",
-        "dashboard_test_suite_20260210"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\bas_comprehensive_test_protocol_20260210",
       "_isArchived": false
     },
     {
@@ -440,9 +415,9 @@
       "name": "Számla Adatkinyerés és Google Sheets Automatizáció",
       "status": "active",
       "priority": "high",
-      "progress": 15,
+      "progress": 40,
       "created": "2026-02-14T14:00:00Z",
-      "updated": "2026-02-14T14:00:00Z",
+      "updated": "2026-02-17T15:30:00Z",
       "tags": [
         "finance",
         "automation",
@@ -455,34 +430,13 @@
       "_isArchived": false
     },
     {
-      "id": "iron_clad_backend_20260212",
-      "name": "Iron Clad Python AI Backend",
-      "status": "active",
-      "priority": "medium",
-      "progress": 95,
-      "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-16T14:54:00Z",
-      "assignee": "DeveloperAgent",
-      "tags": [
-        "python",
-        "fastapi",
-        "litellm",
-        "vllm",
-        "langgraph",
-        "backend"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\iron_clad_backend_20260212",
-      "_isArchived": false
-    },
-    {
       "id": "jules_continuous_ai_integration_20260215",
       "name": "Jules Continuous AI Integration (JCAI)",
       "status": "active",
       "priority": "critical",
-      "progress": 60,
+      "progress": 72,
       "created": "2026-02-15T00:00:00Z",
-      "updated": "2026-02-17T06:00:00Z",
+      "updated": "2026-02-17T15:00:00Z",
       "tags": [
         "automation",
         "ci-cd",
@@ -873,7 +827,8 @@
       "priority": "medium",
       "progress": 100,
       "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-13T08:45:00Z",
+      "updated": "2026-02-17T14:30:00Z",
+      "completed": "2026-02-17T14:30:00Z",
       "assignee": "DeveloperAgent",
       "tags": [
         "python",
@@ -971,8 +926,8 @@
     }
   ],
   "stats": {
-    "total": 47,
-    "active": 13,
+    "total": 45,
+    "active": 11,
     "completed": 7,
     "archived": 10,
     "proposed": 7
