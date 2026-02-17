@@ -1,11 +1,31 @@
 # TaskDecomposerAgent
 
+**Agent Name:** `task_decomposer`
 **Source:** `src/agents/TaskDecomposerAgent.ts`
+**Role:** Task Decomposer
 
-## Purpose
+## Description
 
-Breaks complex tasks into smaller actionable units.
+Komplex feladatok dekompozíciója mikro-taskokra (preview-only, DAG).
+
+## Capabilities
+
+- `task_decomposition`
+- `dag`
+- `preview`
+
+## Inputs / Outputs
+
+- **Primary input:** Task string + optional context object.
+- **Primary output:** Agent result/response object.
+
+## Operational Notes
+
+- Generated automatically by `ProjectConductorAgent` during `conductor sync`.
+- Replace placeholders and expand with concrete examples over time.
 
 ## TODO
 
-- Add capabilities and examples
+- [ ] Add real-world usage examples
+- [ ] Add failure modes and recovery notes
+- [ ] Add integration touchpoints

@@ -94,6 +94,7 @@ export class DeploymentAnalyzer {
         /test failed/i,
         /assertion.*failed/i,
         / failing( test)?/i,
+        /^\s*FAIL\s+/im,
         /mocha|jest|vitest/i,
         /expected.*to/i
       ],
