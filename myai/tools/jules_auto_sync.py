@@ -63,8 +63,8 @@ def get_jules_branches() -> List[str]:
     if not success:
         log("WARN", "Git fetch failed, continuing with local branches")
 
-    # List all remote branches with 'jules/' prefix
-    success, output = run_command("git branch -r | grep 'origin/jules/'")
+    # List all remote branches with 'jules' in name (jules/ OR jules-)
+    success, output = run_command("git branch -r | grep -i 'origin/jules'")
     if not success:
         log("INFO", "No Jules branches found")
         return []
@@ -72,7 +72,7 @@ def get_jules_branches() -> List[str]:
     branches = []
     for line in output.strip().split('\n'):
         line = line.strip()
-        if line and 'origin/jules/' in line:
+        if line and 'origin/jules' in line.lower():
             branch = line.replace('origin/', '').strip()
             branches.append(branch)
 
@@ -131,15 +131,27 @@ def analyze_usefulness(branch_info: Dict, current_tracks: str) -> Dict:
     # Initialize LLM (Gemini preferred, Ollama fallback)
     llm = None
     if HAS_GEMINI and os.getenv('GEMINI_API_KEY'):
-        llm = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash-exp",
-            google_api_key=os.getenv('GEMINI_API_KEY'),
-            temperature=0.1
-        )
-    elif HAS_OLLAMA:
-        llm = ChatOllama(model="qwen2.5-coder:7b", temperature=0.1)
-    else:
-        log("ERROR", "No LLM available (Gemini or Ollama)")
+        try:
+            llm = ChatGoogleGenerativeAI(
+                model="gemini-2.0-flash-exp",
+                google_api_key=os.getenv('GEMINI_API_KEY'),
+                temperature=0.1
+            )
+        except Exception as e:
+            log("WARN", f"Gemini init failed: {e}")
+
+    if llm is None and HAS_OLLAMA:
+        try:
+            llm = ChatOllama(
+                model="qwen2.5-coder:7b",
+                temperature=0.1,
+                base_url="http://localhost:11434"
+            )
+        except Exception as e:
+            log("WARN", f"Ollama init failed: {e}")
+
+    if llm is None:
+        log("WARN", "No LLM available, using default score")
         return {"score": 50, "reasoning": "No LLM available for analysis", "recommendation": "review"}
 
     # Build prompt
