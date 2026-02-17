@@ -12,13 +12,23 @@ const venvPy = path.resolve(
     : ".venv/bin/python",
 );
 let hasPython = false;
-try {
-  execSync(`"${venvPy}" --version`, { stdio: "ignore" });
-  hasPython = true;
-} catch {
+let pythonExecutable = "python";
+
+if (fs.existsSync(venvPy)) {
+  try {
+    execSync(`"${venvPy}" --version`, { stdio: "ignore" });
+    hasPython = true;
+    pythonExecutable = venvPy;
+  } catch {
+    // venv exists but is invalid/broken
+  }
+}
+
+if (!hasPython) {
   try {
     execSync("python --version", { stdio: "ignore" });
     hasPython = true;
+    pythonExecutable = "python";
   } catch {
     hasPython = false;
   }
@@ -98,7 +108,7 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
         "myai",
         "mcp_server.py",
       );
-      const py = hasPython ? venvPy : "python";
+      const py = pythonExecutable;
       const result = execSync(`"${py}" -m py_compile "${serverPath}"`, {
         encoding: "utf-8",
         timeout: 15000,
