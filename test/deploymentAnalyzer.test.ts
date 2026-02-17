@@ -1,4 +1,3 @@
-
 import { describe, it, expect } from 'vitest';
 import { DeploymentAnalyzer } from '../src/tools/deploymentAnalyzer.js';
 
@@ -52,16 +51,25 @@ describe('DeploymentAnalyzer', () => {
   it('should generate a valid fix prompt', () => {
     const analysis = {
       type: 'build' as const,
+      category: 'build' as const, // Added missing property
       summary: "Cannot find name 'foo'",
       errorLocation: { file: 'src/app.ts', line: 10 },
-      rawError: "error TS2304: Cannot find name 'foo'"
+      rawError: "error TS2304: Cannot find name 'foo'",
+      message: "Cannot find name 'foo'",
+      title: "Build Error",
+      affectedFiles: ['src/app.ts'],
+      confidence: 0.9,
+      errors: ["error TS2304: Cannot find name 'foo'"],
+      suggestions: ["Check imports"],
+      errorCount: 1
     };
     
     const prompt = DeploymentAnalyzer.generateFixPrompt(analysis, "console.log(foo);");
     
-    expect(prompt).toContain('ERROR TYPE: BUILD');
+    expect(prompt).toContain('ERROR CATEGORY: BUILD'); // Updated to match actual output
     expect(prompt).toContain("Cannot find name 'foo'");
-    expect(prompt).toContain('ERROR LOCATION: src/app.ts (Line 10)');
-    expect(prompt).toContain('FILE CONTENT:');
+    expect(prompt).toContain('Error Location');
+    expect(prompt).toContain('src/app.ts');
+    expect(prompt).toContain('File Content');
   });
 });

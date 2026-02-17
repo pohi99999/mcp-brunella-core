@@ -11,13 +11,18 @@ const venvPy = path.resolve(
     ? ".venv/Scripts/python.exe"
     : ".venv/bin/python",
 );
+
+let pythonExecutable = "python";
 let hasPython = false;
+
 try {
   execSync(`"${venvPy}" --version`, { stdio: "ignore" });
+  pythonExecutable = venvPy;
   hasPython = true;
 } catch {
   try {
     execSync("python --version", { stdio: "ignore" });
+    pythonExecutable = "python";
     hasPython = true;
   } catch {
     hasPython = false;
@@ -98,8 +103,8 @@ describe("Python MCP Server (myai/mcp_server.py)", () => {
         "myai",
         "mcp_server.py",
       );
-      const py = hasPython ? venvPy : "python";
-      const result = execSync(`"${py}" -m py_compile "${serverPath}"`, {
+      // Use the detected executable
+      const result = execSync(`"${pythonExecutable}" -m py_compile "${serverPath}"`, {
         encoding: "utf-8",
         timeout: 15000,
       });

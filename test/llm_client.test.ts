@@ -1,4 +1,3 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { generateResponse } from '../src/core/llm_client.js';
 
@@ -94,7 +93,7 @@ describe('llm_client', () => {
             const result = await generateResponse('test prompt');
 
             expect(global.fetch).toHaveBeenCalledWith(
-                expect.stringContaining('/api/chat'),
+                expect.stringContaining('/api/chat'), // Use stringContaining to match absolute URL
                 expect.objectContaining({
                     method: 'POST',
                     body: expect.stringContaining('qwen2.5-coder:7b')
