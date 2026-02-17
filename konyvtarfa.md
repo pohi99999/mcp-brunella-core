@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 17. 1:35:58
+**Generálva:** 2026. 02. 17. 3:03:24
 **Script:** 
 
 ---
@@ -42706,6 +42706,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 cean_infrastructure_inventory.json
     - 📄 cean.db
     - 📄 checkpoints.db
+    - 📄 checkpoints.db-shm
+    - 📄 checkpoints.db-wal
     - 📄 developer_metrics.json
     - 📄 ev_hunter_results.json
     - 📄 fix_queue.json
@@ -42813,6 +42815,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 2026-02-07-this-session-is-being-continued-from-a-previous-co.txt
     - 📄 2026-02-11-this-session-is-being-continued-from-a-previous-co.txt
     - 📄 3.jpg
+    - 📄 4.jpg
+    - 📄 5.jpg
     - 📄 AGENT_PERMISSIONS_GUIDE.md
     - 📄 CEAN_GITHUB_ACTIONS_SETUP.md
     - 📄 CEAN_INFRASTRUCTURE_SNAPSHOT.md

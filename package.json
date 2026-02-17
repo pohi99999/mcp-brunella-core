@@ -185,7 +185,8 @@
     "typescript": "^5.0.0",
     "typescript-eslint": "^8.55.0",
     "vite": "^7.3.1",
-    "vitest": "^4.0.18"
+    "vitest": "^4.0.18",
+    "wrangler": "^4.65.0"
   },
   "directories": {
     "doc": "docs",

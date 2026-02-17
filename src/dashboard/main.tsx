@@ -10,7 +10,7 @@ import "./main.css"
 import "./styles/theme.css"
 import "./index.css"
 
-import { ThemeProvider } from "./components/theme-provider.tsx"
+import { ThemeProvider } from "./components/ui/theme-provider.tsx"
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -24,7 +24,7 @@ const queryClient = new QueryClient({
 createRoot(document.getElementById('root')!).render(
   <ErrorBoundary FallbackComponent={ErrorFallback}>
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
         <SocketProvider>
           <App />
         </SocketProvider>
