@@ -93,10 +93,12 @@ describe('Model Router (G3)', () => {
         category: 'planning'
       };
 
+      process.env.GEMINI_API_KEY = 'test-key';
       const decision = selectModel(task, { budget: 50 });
       expect(decision.model.provider).not.toBe('ollama');
       expect(decision.reason).toContain('RULE-MR1');
     });
+      delete process.env.GEMINI_API_KEY;
 
     it('should provide Ollama fallback for high complexity', () => {
       const task: TaskProfile = {

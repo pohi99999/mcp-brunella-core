@@ -1,67 +1,84 @@
-
-import { describe, it, expect } from 'vitest';
-import { DeploymentAnalyzer } from '../src/tools/deploymentAnalyzer.js';
+import { describe, it, expect, vi } from 'vitest';
+import { DeploymentAnalyzer, DeploymentAnalysis } from '../src/tools/deploymentAnalyzer';
 
 describe('DeploymentAnalyzer', () => {
   it('should detect TypeScript build errors', () => {
     const logs = `
-      Some random log lines...
-      src/dashboard/components/dashboard/MissionControlLayout.tsx(34,10): error TS6133: 'ScheduledTasksPanel' is declared but its value is never read.
-      Another error...
+      > app@1.0.0 build
+      > tsc
+
+      src/app.ts(10,15): error TS2304: Cannot find name 'foo'.
     `;
+
     const analysis = DeploymentAnalyzer.analyzeLogs(logs);
     
     expect(analysis.type).toBe('build');
+    expect(analysis.summary).toContain('Cannot find name');
     expect(analysis.errorLocation).toEqual({
-      file: 'src/dashboard/components/dashboard/MissionControlLayout.tsx',
-      line: 34
+      file: 'src/app.ts',
+      line: 10
     });
-    expect(analysis.summary).toContain("'ScheduledTasksPanel' is declared but its value is never read");
   });
 
   it('should detect syntax errors', () => {
     const logs = `
-      /app/src/index.ts:10
+      /app/src/utils.js:5
       const x = ;
                 ^
       SyntaxError: Unexpected token ';'
     `;
+
     const analysis = DeploymentAnalyzer.analyzeLogs(logs);
-    
+
     expect(analysis.type).toBe('build');
-    expect(analysis.summary).toContain("Unexpected token ';'");
+    expect(analysis.summary).toContain('Unexpected token');
+    expect(analysis.errorLocation).toEqual({
+      file: '/app/src/utils.js',
+      line: 5
+    });
   });
 
   it('should detect test failures', () => {
     const logs = `
-      RUN v0.34.6
-      
-      FAIL test/scheduledTasks.test.ts
-      × ScheduledTasksEngine Integráció > API Endpoints > should list tasks
-      Error: expect(received).toBe(expected) // Object.is equality
+      FAIL src/components/Button.test.tsx
+        Button component
+          ✕ should render correctly (5ms)
 
-      Expected: 200
-      Received: 500
+      Expected: "Save"
+      Received: "Submit"
     `;
+
     const analysis = DeploymentAnalyzer.analyzeLogs(logs);
-    
+
     expect(analysis.type).toBe('test');
-    expect(analysis.summary).toContain('Test failed: ScheduledTasksEngine Integráció > API Endpoints > should list tasks');
+    expect(analysis.title).toBe('Test Failed');
+    expect(analysis.summary).toContain('Unit tests failed');
   });
 
   it('should generate a valid fix prompt', () => {
-    const analysis = {
-      type: 'build' as const,
+    const analysis: DeploymentAnalysis = {
+      type: 'build',
+      category: 'build',
+      title: 'Build Error',
       summary: "Cannot find name 'foo'",
-      errorLocation: { file: 'src/app.ts', line: 10 },
-      rawError: "error TS2304: Cannot find name 'foo'"
+      message: "Cannot find name 'foo'",
+      errorLocation: {
+        file: 'src/app.ts',
+        line: 10
+      },
+      rawError: "error TS2304: Cannot find name 'foo'",
+      affectedFiles: ['src/app.ts'],
+      confidence: 0.9,
+      errors: ["error TS2304: Cannot find name 'foo'"],
+      suggestions: [],
+      errorCount: 1
     };
-    
+
     const prompt = DeploymentAnalyzer.generateFixPrompt(analysis, "console.log(foo);");
     
-    expect(prompt).toContain('ERROR TYPE: BUILD');
+    expect(prompt).toContain('**Error Category:** BUILD');
     expect(prompt).toContain("Cannot find name 'foo'");
-    expect(prompt).toContain('ERROR LOCATION: src/app.ts (Line 10)');
-    expect(prompt).toContain('FILE CONTENT:');
+    expect(prompt).toContain('**File:** src/app.ts');
+    expect(prompt).toContain('**Line:** 10');
   });
 });

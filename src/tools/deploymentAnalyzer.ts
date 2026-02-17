@@ -1,4 +1,3 @@
-
 /**
  * Deployment Analyzer
  * 
@@ -95,7 +94,8 @@ export class DeploymentAnalyzer {
         /assertion.*failed/i,
         / failing( test)?/i,
         /mocha|jest|vitest/i,
-        /expected.*to/i
+        /expected.*to/i,
+        /FAIL / // Standard vitest failure indicator
       ],
       lint: [
         /eslint|prettier|stylelint/i,
@@ -227,9 +227,10 @@ export class DeploymentAnalyzer {
    * Generates a prompt for Jules to fix the detected issue
    */
   static generateFixPrompt(analysis: DeploymentAnalysis, fileContent?: string): string {
+    const category = analysis.category || analysis.type || 'unknown';
     const basePrompt = `## Jules Continuous AI - Automated Fix Request
 
-**Error Category:** ${analysis.category.toUpperCase()}  
+**Error Category:** ${category.toUpperCase()}
 **Title:** ${analysis.title}  
 **Confidence:** ${(analysis.confidence * 100).toFixed(0)}%
 
@@ -241,7 +242,7 @@ ${analysis.message}
 ${analysis.rawError}
 \`\`\`
 
-${analysis.affectedFiles.length > 0 ? `### Affected Files\n${analysis.affectedFiles.map((f) => `- \`${f}\``).join('\n')}\n` : ''}`;
+${analysis.affectedFiles.length > 0 ? `### Affected Files\n${analysis.affectedFiles.map((f) => `- ` + f).join('\n')}\n` : ''}`;
 
     if (analysis.errorLocation) {
       return `${basePrompt}
@@ -250,7 +251,7 @@ ${analysis.affectedFiles.length > 0 ? `### Affected Files\n${analysis.affectedFi
 **File:** ${analysis.errorLocation.file}  
 ${analysis.errorLocation.line ? `**Line:** ${analysis.errorLocation.line}` : ''}
 
-${fileContent ? `### File Content\n\`\`\`typescript\n${fileContent}\n\`\`\`` : ''}
+${fileContent ? `### File Content\n\`\`\`typescript\n${fileContent}\n\`\`\`\n` : ''}
 
 ### Task
 1. Analyze the error and context
@@ -260,7 +261,7 @@ ${fileContent ? `### File Content\n\`\`\`typescript\n${fileContent}\n\`\`\`` : '
 5. Return complete code diff
 
 ### Requirements
-- Must resolve the ${analysis.category} error
+- Must resolve the ${category} error
 - Preserve existing functionality
 - Follow project code style
 - Minimum test coverage: 80%
