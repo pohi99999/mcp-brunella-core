@@ -22,6 +22,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 export type AgentStatus = 'idle' | 'working' | 'error'
 
@@ -152,11 +153,16 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
           </div>
           <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
             <Dialog open={delegateOpen} onOpenChange={setDelegateOpen}>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-accent hover:bg-accent/10 rounded-full" title="Delegálás">
-                  <ShareNetwork size={16} />
-                </Button>
-              </DialogTrigger>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-accent hover:bg-accent/10 rounded-full" aria-label="Delegate task">
+                      <ShareNetwork size={16} />
+                    </Button>
+                  </DialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Delegate task</TooltipContent>
+              </Tooltip>
               <DialogContent className="glass-panel border-white/10 sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle className="text-foreground">Feladat Delegálás</DialogTitle>
@@ -196,7 +202,9 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
             </Dialog>
 
             <button
-              className="rounded-full p-1 text-zinc-500 hover:bg-white/5 hover:text-zinc-300 transition-colors"
+              type="button"
+              onClick={() => setExpanded(!expanded)}
+              className="rounded-full p-1 text-zinc-500 hover:bg-white/5 hover:text-zinc-300 transition-colors focus-visible:ring-1 focus-visible:ring-zinc-400 outline-none"
               aria-label={expanded ? 'Összecsuk' : 'Részletek'}
             >
               {expanded ? <CaretUp size={18} /> : <CaretDown size={18} />}
@@ -218,11 +226,16 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                   Capabilities
                 </span>
                 <Popover open={isEditingCaps} onOpenChange={setIsEditingCaps}>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300">
-                      <PencilSimple size={12} />
-                    </Button>
-                  </PopoverTrigger>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300" aria-label="Edit capabilities">
+                          <PencilSimple size={12} />
+                        </Button>
+                      </PopoverTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>Edit capabilities</TooltipContent>
+                  </Tooltip>
                   <PopoverContent className="w-80 glass-panel border-white/10 p-3">
                     <div className="space-y-3">
                       <h4 className="font-medium text-sm text-zinc-100">Képességek Szerkesztése</h4>
@@ -232,18 +245,32 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                           onChange={(e) => setNewCapability(e.target.value)}
                           placeholder="Új képesség..."
                           className="h-8 text-xs bg-white/5 border-white/10"
+                          aria-label="New capability name"
                         />
-                        <Button size="sm" onClick={handleAddCapability} className="h-8 w-8 p-0"><Plus size={14} /></Button>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button size="sm" onClick={handleAddCapability} className="h-8 w-8 p-0" aria-label="Add capability"><Plus size={14} /></Button>
+                          </TooltipTrigger>
+                          <TooltipContent>Add capability</TooltipContent>
+                        </Tooltip>
                       </div>
                       <div className="flex flex-wrap gap-1 max-h-[200px] overflow-y-auto">
                         {capabilities.map(cap => (
                           <Badge key={cap} variant="secondary" className="text-[10px] gap-1 pr-1">
                             {cap}
-                            <X
-                              size={10}
-                              className="cursor-pointer hover:text-red-400"
-                              onClick={() => handleRemoveCapability(cap)}
-                            />
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <button
+                                  type="button"
+                                  onClick={() => handleRemoveCapability(cap)}
+                                  className="ml-0.5 rounded-full p-0.5 text-zinc-400 hover:bg-red-500/10 hover:text-red-400 focus:outline-none focus:ring-1 focus:ring-red-500 transition-colors"
+                                  aria-label={`Remove capability: ${cap}`}
+                                >
+                                  <X size={10} />
+                                </button>
+                              </TooltipTrigger>
+                              <TooltipContent>Remove {cap}</TooltipContent>
+                            </Tooltip>
                           </Badge>
                         ))}
                       </div>
@@ -286,20 +313,32 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
                     value={quickTask}
                     onChange={(e) => setQuickTask(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleQuickRun()}
+                    aria-label="Quick task input"
                   />
                   <div className="absolute right-1 top-1/2 -translate-y-1/2 text-[10px] text-zinc-600 font-mono pointer-events-none">
                     ENTER
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="default"
-                  className="shrink-0 h-auto py-1 bg-primary hover:bg-primary/90 text-primary-foreground"
-                  onClick={handleQuickRun}
-                  disabled={!quickTask.trim() || status === 'working'}
-                >
-                  <Play size={12} weight="fill" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    {/* Wrap disabled button in span to allow tooltip if needed, but Button usually handles it.
+                        However, disabled buttons don't fire events. shadcn/radix tooltip on disabled button needs a wrapper.
+                    */}
+                    <span tabIndex={(!quickTask.trim() || status === 'working') ? 0 : -1} className="inline-flex">
+                      <Button
+                        size="sm"
+                        variant="default"
+                        className="shrink-0 h-auto py-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                        onClick={handleQuickRun}
+                        disabled={!quickTask.trim() || status === 'working'}
+                        aria-label="Execute task"
+                      >
+                        <Play size={12} weight="fill" />
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>Execute task</TooltipContent>
+                </Tooltip>
               </div>
             )}
           </div>
