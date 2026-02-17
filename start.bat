@@ -23,6 +23,14 @@ if not exist "build\public\index.html" (
     echo    [!] UI build hianyzik. Kerlek futtasd: npm run build:ui
 )
 
+:: 2.5. Jules Auto-Sync (Automatikus letoltes + merge ha hasznos)
+echo [2.5/5] Jules Auto-Sync...
+if exist "myai\tools\jules_auto_sync.py" (
+    call .venv\Scripts\python.exe myai\tools\jules_auto_sync.py
+) else (
+    echo    [!] Jules Auto-Sync script nem talalhato.
+)
+
 :: 3. Python API Szerver inditasa
 echo [3/5] Python API inditasa...
 start "Python API" /MIN cmd /c "call .venv\Scripts\activate && uvicorn myai.server:app --port 8000"
