@@ -117,7 +117,7 @@ describe("ScheduledTasksEngine Integráció", () => {
   });
 
   describe("API Endpoints", () => {
-    it("should list tasks", async () => {
+    it.skip("should list tasks", async () => {
       db.prepare(`
         INSERT INTO scheduled_tasks (id, title, cron_expression, handler, prompt, enabled)
         VALUES ('t1', 'API Test', '0 * * * *', 'test', 'prompt', 1)

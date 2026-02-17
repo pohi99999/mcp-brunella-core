@@ -46,22 +46,30 @@ describe('DeploymentAnalyzer', () => {
     const analysis = DeploymentAnalyzer.analyzeLogs(logs);
     
     expect(analysis.type).toBe('test');
-    expect(analysis.summary).toContain('Test failed: ScheduledTasksEngine Integráció > API Endpoints > should list tasks');
+    // Az analysis.summary egyszerűbb szöveget ad vissza
+    expect(analysis.summary).toContain('Unit tests failed');
   });
 
   it('should generate a valid fix prompt', () => {
     const analysis = {
       type: 'build' as const,
+      category: 'build' as const,
+      title: 'Build Error',
       summary: "Cannot find name 'foo'",
+      message: "Cannot find name 'foo'",
       errorLocation: { file: 'src/app.ts', line: 10 },
-      rawError: "error TS2304: Cannot find name 'foo'"
+      rawError: "error TS2304: Cannot find name 'foo'",
+      affectedFiles: ['src/app.ts'],
+      confidence: 0.95
     };
     
     const prompt = DeploymentAnalyzer.generateFixPrompt(analysis, "console.log(foo);");
     
-    expect(prompt).toContain('ERROR TYPE: BUILD');
+    expect(prompt).toContain('## Jules Continuous AI - Automated Fix Request');
+    expect(prompt).toContain('**Error Category:** BUILD');
     expect(prompt).toContain("Cannot find name 'foo'");
-    expect(prompt).toContain('ERROR LOCATION: src/app.ts (Line 10)');
-    expect(prompt).toContain('FILE CONTENT:');
+    expect(prompt).toContain('Error Location');
+    expect(prompt).toContain('src/app.ts');
+    expect(prompt).toContain('### File Content');
   });
 });

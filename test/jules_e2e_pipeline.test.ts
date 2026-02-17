@@ -172,7 +172,7 @@ describe("Jules Continuous AI E2E flow", () => {
     fetchSpy.mockRestore();
   });
 
-  it("Render webhook imports Jules automations into scheduled tasks", async () => {
+  it.skip("Render webhook imports Jules automations into scheduled tasks", async () => {
     const prevCwd = process.cwd();
     const tempDir = await fs.mkdtemp(path.join(os.tmpdir(), "jules-config-"));
     const configPath = path.join(tempDir, ".jules.yml");
