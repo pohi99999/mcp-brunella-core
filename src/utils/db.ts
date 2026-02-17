@@ -95,6 +95,9 @@ export async function saveMessage(chatId: string, role: string, content: string,
     const database = await getDb();
     if (!database) return;
 
+    const stmtChat = database.prepare('INSERT OR IGNORE INTO chats (id) VALUES (?)');
+    stmtChat.run(chatId);
+
     const stmt = database.prepare('INSERT INTO messages (chat_id, role, content, is_log) VALUES (?, ?, ?, ?)');
     stmt.run(chatId, role, content, isLog ? 1 : 0);
 }

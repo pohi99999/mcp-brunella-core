@@ -17,14 +17,22 @@ import type {
   GitHubPullRequestPayload,
   GitHubCheckRunPayload
 } from '../../types/github.js';
+import { GitHubAPIClient } from '../../core/githubAPIClient.js';
+import { DeploymentAnalyzer } from '../../tools/deploymentAnalyzer.js';
+import { processWorkflowFailure } from '../../core/julesIntegration.js';
 
 const router = Router();
 
 // Get webhook secret from environment
 const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
+const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
 if (!GITHUB_WEBHOOK_SECRET) {
   logError('GitHubWebhook', 'GITHUB_WEBHOOK_SECRET environment variable not set');
+}
+
+if (!GITHUB_TOKEN) {
+  logError('GitHubWebhook', 'GITHUB_TOKEN environment variable not set');
 }
 
 /**
@@ -108,8 +116,56 @@ async function handleWorkflowRun(payload: unknown, res: Response): Promise<void>
       `Detected failed workflow: ${workflowName} (ID: ${runId}) on branch: ${branch}`
     );
 
-    // TODO: Queue to scheduled tasks engine or direct handler
-    // For now, just acknowledge
+    // Queue Jules auto-fix in background (non-blocking)
+    const ownerLogin = owner?.login || 'unknown';
+
+    // Start fix workflow asynchronously
+    setImmediate(async () => {
+      try {
+        logInfo(
+          'GitHubWebhook',
+          `Starting Jules auto-fix for workflow ${runId} (${ownerLogin}/${repoName})`
+        );
+
+        const fixWorkflow = await processWorkflowFailure(ownerLogin, repoName, runId, branch);
+
+        logInfo(
+          'GitHubWebhook',
+          `Jules fix workflow complete: ${fixWorkflow.status} - PR #${fixWorkflow.prNumber || 'N/A'}`
+        );
+      } catch (fixErr: unknown) {
+        const err = fixErr instanceof Error ? fixErr.message : String(fixErr);
+        logError('GitHubWebhook', `Jules auto-fix failed: ${err}`);
+        // Error handling is done in julesIntegration, just log here
+      }
+    });
+
+    // Fetch and analyze workflow logs
+    let analysis = null;
+
+    if (GITHUB_TOKEN) {
+      try {
+        const apiClient = new GitHubAPIClient(GITHUB_TOKEN);
+        logInfo('GitHubWebhook', `Fetching logs for workflow ${runId}...`);
+
+        const logs = await apiClient.getWorkflowRunLogs(ownerLogin, repoName, runId);
+
+        if (logs) {
+          analysis = DeploymentAnalyzer.analyzeLogs(logs);
+
+          logInfo(
+            'GitHubWebhook',
+            `Analysis complete: ${analysis.category} error with ${(analysis.confidence * 100).toFixed(0)}% confidence`
+          );
+        }
+      } catch (analyzeErr: unknown) {
+        const err = analyzeErr instanceof Error ? analyzeErr.message : String(analyzeErr);
+        logError('GitHubWebhook', `Error analyzing logs: ${err}`);
+        // Continue anyway, analysis is optional
+      }
+    } else {
+      logError('GitHubWebhook', 'GITHUB_TOKEN not set, skipping error analysis');
+    }
 
     const response = {
       taskId: `workflow-${runId}`,
@@ -122,6 +178,7 @@ async function handleWorkflowRun(payload: unknown, res: Response): Promise<void>
         repo: repoName,
         owner: owner?.login || 'unknown'
       },
+      analysis: analysis || null,
       message: 'Workflow failure detected, error analysis queued'
     };
 
@@ -219,7 +276,6 @@ async function handleCheckRun(payload: unknown, res: Response): Promise<void> {
 router.post(
   '/webhook',
   // Parse raw body for signature verification
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   (req: Request, res: Response, next) => {
     // Read raw body for signature verification
     let rawBodyData = '';
@@ -266,8 +322,7 @@ router.post(
         return res.status(400).json({ error: 'Missing X-GitHub-Event header' });
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const payload = req.body || {};
+      const payload = req.body as unknown;
 
       logInfo('GitHubWebhook', `Event: ${event} (delivery: ${deliveryId})`);
 
