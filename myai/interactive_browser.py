@@ -22,10 +22,7 @@ async def highlight_element(page, selector):
                 el.scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
         }""", selector)
-    except Exception as e:
-        # Ignore highlighting errors, but log them for debugging
-        print(f"Failed to highlight element '{selector}': {e}", file=sys.stderr)
-        pass # Ignore highlighting errors
+        # Give a short pause for the scroll/style to render before screenshot
         await asyncio.sleep(0.2)
     except Exception:
         pass # Ignore highlighting errors

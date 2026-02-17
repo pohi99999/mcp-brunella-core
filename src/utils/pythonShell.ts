@@ -1,4 +1,3 @@
-import { exec, execSync } from "child_process";
 import path from "path";
 import fs from "fs/promises";
 import { config } from "../config/index.js";
@@ -20,8 +19,17 @@ export class PythonShell {
       process.env.BRUNELLA_PYTHON_API_URL ?? "http://127.0.0.1:8000";
     this.useApi = this.apiUrl !== "" && this.apiUrl !== "disabled";
 
-    // Validate python path for legacy fallback
+    this.pythonPath = "python"; // Default fallback
+
+    // Validate python path for legacy fallback - ONLY in Node environment
+    if (typeof process !== 'undefined' && process.versions?.node) {
+       this.validatePythonPath(candidatePath);
+    }
+  }
+
+  private async validatePythonPath(candidatePath: string) {
     try {
+      const { execSync } = await import("child_process");
       execSync(`"${candidatePath}" --version`, { stdio: "ignore" });
       this.pythonPath = candidatePath;
     } catch (e) {
@@ -83,6 +91,11 @@ export class PythonShell {
   }
 
   private async runLegacy(code: string, context?: any): Promise<string> {
+    if (typeof process === 'undefined' || !process.versions?.node) {
+        throw new Error("Legacy Python execution is only supported in Node.js environment");
+    }
+
+    const { exec } = await import("child_process");
     const root = config.workspaceRoot.replace(/\\/g, "/");
     const tempIn = path.join(config.systemLogDir, `py_in_${Date.now()}.json`);
     const tempPy = path.join(config.systemLogDir, `py_run_${Date.now()}.py`);
