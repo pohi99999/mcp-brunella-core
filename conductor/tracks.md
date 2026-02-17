@@ -4,7 +4,7 @@
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 47 total | 13 active | 7 completed | 10 archived
+**Stats:** 47 total | 11 active | 7 completed | 10 archived
 
 ---
 
@@ -53,20 +53,13 @@
 
 ---
 
-## Aktiv Szalak (Active) (13)
+## Aktiv Szalak (Active) (11)
 
 - [ ] **AI Recommendation System Integration** [MEDIUM]
   - **ID:** `ai_recommendation_system_20260216`
   - **Progress:** 0%
   - **Updated:** 2026-02-16T00:00:00Z
   - Mappa: ./tracks/ai_recommendation_system_20260216/
-
-- [ ] **BAS Átfogó Tesztprotokol** [CRITICAL]
-  - **ID:** `bas_comprehensive_test_protocol_20260210`
-  - **Progress:** 90%
-  - **Assignee:** DeveloperAgent
-  - **Updated:** 2026-02-16T15:05:00Z
-  - Mappa: ./tracks/bas_comprehensive_test_protocol_20260210/
 
 - [ ] **Cloudflare Edge Agents Network (CEAN)** [MEDIUM]
   - **ID:** `cloudflare_edge_agents_network_20260215`
@@ -96,13 +89,6 @@
   - **Progress:** 15%
   - **Updated:** 2026-02-14T14:00:00Z
   - Mappa: ./tracks/invoice-to-sheets-automation-20260214/
-
-- [ ] **Iron Clad Python AI Backend** [MEDIUM]
-  - **ID:** `iron_clad_backend_20260212`
-  - **Progress:** 95%
-  - **Assignee:** DeveloperAgent
-  - **Updated:** 2026-02-16T14:54:00Z
-  - Mappa: ./tracks/iron_clad_backend_20260212/
 
 - [ ] **Jules Continuous AI Integration (JCAI)** [CRITICAL]
   - **ID:** `jules_continuous_ai_integration_20260215`
