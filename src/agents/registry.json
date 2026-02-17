@@ -343,6 +343,26 @@
       "tags": ["tracks", "epp-v2", "automation"],
       "priority": 5,
       "model": "qwen2.5-coder:latest"
+    },
+    {
+      "name": "github_models",
+      "title": "GitHub Models Agent",
+      "description": "Premium AI ügynök GitHub Models API (GPT-4o) használatával. Orkesztrálás, kódgenerálás és komplex reasoning feladatokra.",
+      "class": "GitHubModelsAgent",
+      "module": "./agents/GitHubModelsAgent.js",
+      "capabilities": [
+        "code_generation",
+        "code_review",
+        "architecture_design",
+        "orchestration",
+        "reasoning"
+      ],
+      "triggers": ["gpt", "github", "premium", "orchestrate"],
+      "category": "core",
+      "status": "active",
+      "tags": ["premium", "gpt-4o", "orchestration"],
+      "priority": 9,
+      "model": "gpt-4o"
     }
   ]
 }
