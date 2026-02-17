@@ -48,7 +48,7 @@ export function createRobotkezRoutes(): Router {
 
             logInfo('RobotkezAPI', `Chat request: "${instruction}"`);
 
-            const result = await agent.executeTask({ task: instruction });
+            const result = await agent.execute(instruction);
 
             res.json(result);
 

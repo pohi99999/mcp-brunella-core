@@ -85,6 +85,66 @@ export function registerRobotkezCommands(program: Command) {
         .description('RobotkezV2 - Magyar Agentic Browser (Comet-style)');
 
     /**
+     * brunella robotkez hybrid <instruction>
+     * Direct Python hybrid engine execution (Playwright + Browser-Use)
+     */
+    robotkez
+        .command('hybrid')
+        .argument('<instruction>', 'Natural language instruction (e.g., "screenshot github.com")')
+        .option('-m, --mode <mode>', 'Execution mode: auto, playwright, browser-use', 'auto')
+        .option('--headless', 'Run in headless mode', true)
+        .option('--url <url>', 'Target URL')
+        .option('--screenshot <path>', 'Screenshot output path')
+        .option('--pdf <path>', 'PDF output path')
+        .description('Hybrid browser automation (Playwright + Browser-Use)')
+        .action(async (instruction: string, options: any) => {
+            const spinner = ora(`Executing: "${instruction}" (mode=${options.mode})`).start();
+
+            try {
+                // Import agent dynamically (avoid top-level import in CLI)
+                const { RobotkezV2Agent } = await import('../agents/RobotkezV2Agent.js');
+                const agent = new RobotkezV2Agent();
+
+                // Build context
+                const context: any = {
+                    mode: options.mode,
+                    headless: options.headless
+                };
+                if (options.url) context.url = options.url;
+                if (options.screenshot) context.screenshot_path = options.screenshot;
+                if (options.pdf) context.pdf_path = options.pdf;
+
+                // Execute
+                const result = await agent.execute(instruction, context);
+
+                if (result.status === 'success') {
+                    spinner.succeed(chalk.green('Success!'));
+                    console.log(chalk.cyan('\n📝 Result:'));
+                    const data = result.data as any;
+                    if (data?.mode) console.log(chalk.gray(`   Mode: ${data.mode}`));
+                    if (data?.duration_ms) console.log(chalk.gray(`   Duration: ${data.duration_ms}ms`));
+                    if (data?.screenshot_path) {
+                        console.log(chalk.green(`   Screenshot: ${data.screenshot_path}`));
+                    }
+                    if (result.message) {
+                        console.log(chalk.gray(`   ${result.message}`));
+                    }
+                } else {
+                    spinner.fail(chalk.red('Failed'));
+                    console.log(chalk.red(`Error: ${result.error}`));
+                    process.exit(1);
+                }
+            } catch (e: any) {
+                spinner.fail(chalk.red('Execution error'));
+                console.log(chalk.red(e.message));
+                if (e.stack) {
+                    console.log(chalk.gray(e.stack));
+                }
+                process.exit(1);
+            }
+        });
+
+    /**
      * brunella robotkez chat <instruction>
      * Natural language browser automation
      */
