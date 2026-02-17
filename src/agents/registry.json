@@ -663,6 +663,44 @@
       "status": "active",
       "tags": ["genesis", "automation", "orchestration"],
       "priority": 10
+    },
+    {
+      "name": "marketing",
+      "title": "Marketing Agent",
+      "description": "Lead outreach és teaser email kampányok generálása - Corporate hunting, personalizálás, CRM integráció",
+      "class": "MarketingAgent",
+      "module": "./agents/MarketingAgent.js",
+      "capabilities": [
+        "corporate_lead_hunting",
+        "teaser_email_generation",
+        "personalization",
+        "multi_language_support",
+        "crm_integration"
+      ],
+      "triggers": ["marketing", "leads", "teaser", "outreach", "corporate hunt"],
+      "category": "marketing",
+      "status": "active",
+      "tags": ["real-estate", "marketing", "outreach", "automation"],
+      "priority": 5
+    },
+    {
+      "name": "ux_designer",
+      "title": "UX Designer Agent",
+      "description": "UI/UX design specifikációk, wireframe-ek és komponens blueprintek generálása - Accessibility compliance",
+      "class": "UXDesignerAgent",
+      "module": "./agents/UXDesignerAgent.js",
+      "capabilities": [
+        "design_spec_generation",
+        "component_blueprint",
+        "wireframe_creation",
+        "accessibility_audit",
+        "design_system_creation"
+      ],
+      "triggers": ["ux", "design", "wireframe", "accessibility", "a11y"],
+      "category": "engineering",
+      "status": "active",
+      "tags": ["design", "ux", "accessibility", "genesis"],
+      "priority": 8
     }
   ]
 }
