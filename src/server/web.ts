@@ -67,6 +67,7 @@ import { initTestResultsDb } from "../core/testResultsService.js";
 import { initSuggestedTasksDb } from "../core/suggestedTasksScanner.js";
 import { createScheduledTasksRoutes } from "./routes/scheduledTasks.js";
 import createWebhookRoutes from "./routes/webhooks.js";
+import githubWebhookRouter from "./routes/githubWebhook.js";
 import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
 
 const logger = new Logger("web_ui.log");
@@ -141,6 +142,9 @@ export async function startWebServer() {
   // Megjegyzés: Ez már megtörténik az index.ts-ben a registerAllTools-on keresztül.
 
   const app = express();
+  
+  // Parse raw body BEFORE json() for webhook signature verification
+  app.use(express.raw({ type: 'application/json' }));
   app.use(express.json());
   app.use(corsWhitelist);
   app.use(requestId);
@@ -219,6 +223,9 @@ export async function startWebServer() {
   // Mount v1 router at /api/v1 and /api (backwards compatibility)
   app.use("/api/v1", v1Router);
   app.use("/api", v1Router);
+
+  // GitHub Webhook Integration (Phase 3: JCAI)
+  app.use("/api/github", githubWebhookRouter);
 
   const httpServer = createServer(app);
   const io = new Server(httpServer, {

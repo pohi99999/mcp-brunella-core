@@ -98,8 +98,9 @@ class BackgroundTaskManager {
             logInfo('BackgroundTaskManager', `Recovered ${dbTasks.length} tasks from database`);
             this.initialized = true;
 
-        } catch (error: any) {
-            logError('BackgroundTaskManager', `Failed to initialize from DB: ${error.message}`);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('BackgroundTaskManager', `Failed to initialize from DB: ${msg}`);
         }
     }
 
@@ -241,13 +242,14 @@ class BackgroundTaskManager {
                         });
                     }
 
-                } catch (stepError: any) {
-                    logError('BackgroundTaskManager', `❌ Task ${taskId} - Step ${i + 1} failed: ${stepError.message}`);
+                } catch (stepError: unknown) {
+                    const msg = stepError instanceof Error ? stepError.message : String(stepError);
+                    logError('BackgroundTaskManager', `❌ Task ${taskId} - Step ${i + 1} failed: ${msg}`);
 
                     const errorStep: TaskStep = {
                         ...step,
                         status: 'error',
-                        error: stepError.message,
+                        error: msg,
                         completedAt: Date.now()
                     };
                     task.steps.push(errorStep);
@@ -255,7 +257,7 @@ class BackgroundTaskManager {
                     // Decide: continue or stop on error?
                     // For now: stop on critical errors (navigate, click, type)
                     if (['navigate', 'click', 'type'].includes(step.action)) {
-                        throw new Error(`Critical step failed: ${step.description} - ${stepError.message}`);
+                        throw new Error(`Critical step failed: ${step.description} - ${msg}`);
                     }
                     // Non-critical errors (screenshot, scroll): continue
                     logWarn('BackgroundTaskManager', `⚠️ Non-critical error, continuing...`);
@@ -266,9 +268,10 @@ class BackgroundTaskManager {
             this.updateTaskStatus(taskId, 'completed');
             logInfo('BackgroundTaskManager', `✅ Task ${taskId} completed (${task.steps.length} steps)`);
 
-        } catch (error: any) {
-            logError('BackgroundTaskManager', `❌ Task ${taskId} failed: ${error.message}`);
-            this.updateTaskStatus(taskId, 'error', error.message);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('BackgroundTaskManager', `❌ Task ${taskId} failed: ${msg}`);
+            this.updateTaskStatus(taskId, 'error', msg);
         }
     }
 

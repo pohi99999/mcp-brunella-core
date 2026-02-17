@@ -199,18 +199,11 @@ export function NeuralLinkChat() {
           {(mode === "cloudflare" || mode === "cloudflare_chat") &&
             edgeStatus && (
               <div
-                className="flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium"
-                style={{
-                  backgroundColor:
-                    edgeStatus.enabled && edgeStatus.healthy
-                      ? "rgba(34, 197, 94, 0.15)"
-                      : "rgba(239, 68, 68, 0.15)",
-                  color:
-                    edgeStatus.enabled && edgeStatus.healthy
-                      ? "rgb(34, 197, 94)"
-                      : "rgb(239, 68, 68)",
-                  border: `1px solid ${edgeStatus.enabled && edgeStatus.healthy ? "rgba(34, 197, 94, 0.3)" : "rgba(239, 68, 68, 0.3)"}`,
-                }}
+                className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium border ${
+                  edgeStatus.enabled && edgeStatus.healthy
+                    ? "bg-green-500/15 text-green-500 border-green-500/30"
+                    : "bg-red-500/15 text-red-500 border-red-500/30"
+                }`}
                 title={
                   edgeStatus.enabled
                     ? edgeStatus.healthy
