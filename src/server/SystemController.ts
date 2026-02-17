@@ -4,11 +4,10 @@
  * Mission Control 2.0 - Service Control Widget backend
  */
 
-import { spawn, ChildProcess } from 'child_process';
+import type { ChildProcess } from 'child_process';
 import path from 'path';
 import { logInfo, logError } from '../utils/logger.js';
 import { checkOllamaHealth } from '../utils/health.js';
-import fetch from 'node-fetch';
 
 export type ServiceId = 'ollama' | 'anythingllm' | 'python';
 
@@ -63,6 +62,11 @@ export class SystemController {
       return { success: false, message: `${serviceId} már fut` };
     }
 
+    if (typeof process === 'undefined' || !process.versions?.node) {
+       return { success: false, message: 'SystemController not supported in this environment' };
+    }
+
+    const { spawn } = await import('child_process');
     const config = ALLOWED_SERVICES[serviceId];
 
     if (serviceId === 'anythingllm') {
@@ -130,6 +134,11 @@ export class SystemController {
   }
 
   async stopService(serviceId: ServiceId): Promise<{ success: boolean; message: string }> {
+    if (typeof process === 'undefined' || !process.versions?.node) {
+        return { success: false, message: 'SystemController not supported in this environment' };
+    }
+
+    const { spawn } = await import('child_process');
     const child = spawnedProcesses.get(serviceId);
     if (child && child.pid) {
       try {
