@@ -44,3 +44,8 @@ dev = [
 interpreter = [
     "open-interpreter>=0.2.0",
 ]
+
+[tool.pytest.ini_options]
+markers = [
+    "e2e: end-to-end invoice automation smoke tests",
+]

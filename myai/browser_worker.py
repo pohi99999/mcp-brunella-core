@@ -145,7 +145,8 @@ async def run_n8n_scenario_ui(scenario_path: str):
     Környezet: N8N_TEST_USER, N8N_TEST_PASSWORD, GOOGLE_API_KEY
     """
     try:
-        from browser_use import Agent, ChatGoogle
+        from browser_use import Agent
+        from langchain_google_genai import ChatGoogleGenerativeAI as ChatGoogle
     except ImportError:
         print("HIBA: browser-use nincs telepítve. Futtasd: pip install browser-use")
         return {"error": "browser-use not installed"}
@@ -200,7 +201,8 @@ async def run_structured_extraction(config: dict, schema_source: str):
     - Pydantic validáció után JSON-t ad vissza
     """
     try:
-        from browser_use import Agent, ChatGoogle
+        from browser_use import Agent
+        from langchain_google_genai import ChatGoogleGenerativeAI as ChatGoogle
     except ImportError:
         print("HIBA: browser-use nincs telepítve. Futtasd: pip install browser-use")
         return {"error": "browser-use not installed"}
@@ -303,7 +305,8 @@ def check_setup(scenario_path: str) -> bool:
 
     if use_ui:
         try:
-            from browser_use import Agent, ChatGoogle  # noqa: F401
+            from browser_use import Agent
+            from langchain_google_genai import ChatGoogleGenerativeAI as ChatGoogle  # noqa: F401
         except ImportError:
             print("HIBA: browser-use nincs telepítve. Futtasd: pip install browser-use")
             return False
