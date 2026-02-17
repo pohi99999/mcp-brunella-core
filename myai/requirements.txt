@@ -20,3 +20,4 @@ chromadb
 pypdf
 pymupdf
 tiktoken
+google-generativeai>=0.7.0
