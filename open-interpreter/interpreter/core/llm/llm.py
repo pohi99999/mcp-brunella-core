@@ -183,7 +183,7 @@ class Llm:
                         image_description = self.vision_renderer(lmc=img_msg)
                         ocr = self.interpreter.computer.vision.ocr(lmc=img_msg)
 
-                        # It would be nice to format this as a message to the user and display it like: "I see: image_description"
+                        # Display the image description to the user as a message: "I see: image_description"
                         self.interpreter.display_message(f"I see: {image_description}")
 
                         img_msg["content"] = (
