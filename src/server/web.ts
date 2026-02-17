@@ -14,11 +14,10 @@ import {
   type AgentStatusEvent,
   logInfo,
   logError,
-  logWarn,
 } from "../utils/logger.js";
 import { initDb, saveMessage, getMessages } from "../utils/db.js";
 import { initTasksDb } from "../utils/tasksDb.js";
-import { getGlobalDb, closeGlobalDb } from "../utils/globalDb.js";
+import { getGlobalDb } from "../utils/globalDb.js";
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
 import { registerAllTools } from "./registry.js";
@@ -49,7 +48,7 @@ import { createPhoenixRouter } from "./phoenixRoutes.js";
 import { createRouterRouter } from "./routerRoutes.js";
 import { createMemoryRouter } from "./memoryRoutes.js";
 import { createTracksRouter } from "./tracksRoutes.js";
-import ceanRouter from "./routes/cean.js";
+import { createCeanRouter } from "./routes/cean.js";
 import { createWranglerRouter } from "./routes/wrangler.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
@@ -61,12 +60,12 @@ import { createMetricsRouter } from "./routes/metrics.js";
 import { createScalingRouter } from "./routes/scaling.js";
 import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers, registerFleetWebSocketHandlers } from "./websocket.js";
 import testSchedulerRoutes from "./routes/testScheduler.js";
-import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
+import { startScheduler } from "./schedulers/testRunner.js";
 import { startScheduler as startCronScheduler } from "./cron.js";
 import { initTestResultsDb } from "../core/testResultsService.js";
 import { initSuggestedTasksDb } from "../core/suggestedTasksScanner.js";
 import { createScheduledTasksRoutes } from "./routes/scheduledTasks.js";
-import createWebhookRoutes from "./routes/webhooks.js";
+import { createWebhookRoutes } from "./routes/webhooks.js";
 import githubWebhookRouter from "./routes/githubWebhook.js";
 import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
 
@@ -189,6 +188,7 @@ export async function startWebServer() {
   v1Router.use("/tracks", createTracksRouter());
 
   // Add CEAN routes (Cloudflare Edge Agents Network)
+  const ceanRouter = await createCeanRouter();
   v1Router.use(ceanRouter);
 
   // Add Wrangler routes (D1 & Worker deployment)
