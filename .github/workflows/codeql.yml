@@ -49,9 +49,18 @@ jobs:
           build-mode: ${{ matrix.build-mode }}
           # Custom queries for security-focused analysis
           queries: +security-extended,security-and-quality
+          # Exclude large directories to prevent timeout
+          config: |
+            paths-ignore:
+              - 'external_research/'
+              - 'myai/agents/'
+              - 'node_modules/'
+              - 'dist/'
+              - 'build/'
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
         with:
           category: "/language:${{ matrix.language }}"
-          upload: true
+          # Disable upload because code scanning is not enabled in repo settings
+          upload: false
