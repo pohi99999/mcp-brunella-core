@@ -79,6 +79,16 @@ logs/
 *.db-shm
 *.log
 
+# Wrangler and local state files
+.wrangler/
+.mf_state/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# LanceDB vector embeddings
+data/brunella_lancedb/
+
 # Temporary test and output files
 build_errors.txt
 e2e_results.txt
