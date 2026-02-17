@@ -1,5 +1,4 @@
-### CRITICAL: Before any action, you MUST read .ai/BOOTSTRAP.md to understand the current architecture and state.
-
+### CRITICAL: Before any action, you MUST read .ai/BOOTSTRAP.md to understand the current architecture and state
 
 # Gemini CLI - Agent Napló
 
@@ -18,11 +17,29 @@
 
 ---
 
-## Aktív Feladatok
-
-<!-- Ide írj ha valami félbe maradt -->
-
 ---
+
+### 2026-02-16 17:30 - Dashboard Design Refresh & System Boot Integration (COMPLETE ✅)
+
+**Feladat:**
+A Dashboard UI teljes megújítása a modern "Cyber/Glass" dizájnnal, a cinematic "System Boot Sequence" bevezetése, és a technikai stabilitás (scrolling, theme provider conflict) javítása, miközben minden korábbi funkció (Inkubátor, RAG, stb.) megmarad.
+
+**Érintett fájlok:**
+
+- `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Teljes strukturális és vizuális overhaul)
+- `src/dashboard/main.tsx` (ThemeProvider harmonizálás a next-themes-zel)
+- `src/dashboard/App.tsx` (ThemeProvider és alapértelmezett beállítások ellenőrzése)
+
+**Eredmények:**
+
+- ✅ **New Design:** Prémium Cyberpunk-Glassmorphism téma alkalmazva a teljes Dashboardon.
+- ✅ **Cinematic Boot:** A `SystemBootSequence` sikeresen integrálva, biztosítva a professzionális élményt induláskor.
+- ✅ **Functionality Parity:** Az Inkubátor, Neural Knowledge (RAG), és az összes korábbi ügynök-kezelő funkció elérhető maradt.
+- ✅ **Scroll Fix:** Native `overflow-y-auto` alkalmazása a ScrollArea helyett, `key={activeTab}` alapú automatikus görgetés-reseteléssel.
+- ✅ **Theme Sync:** A `main.tsx` és `App.tsx` mostantól egységesen a `next-themes` szolgáltatót használja, megszüntetve a sötét/világos mód váltási hibákat.
+- ✅ **Build Success:** `npm run build:ui` hiba nélkül lefutott (0 TypeScript error).
+
+**Státusz:** ✅ **BEFEJEZVE**
 
 ### 2026-02-12 10:30 - Dashboard Test Suite Complete (100% ✅)
 
@@ -191,12 +208,12 @@ Egy teljesen szigorúan menüvezérelt, magyar nyelvű terminál interfész (Mag
 
 **Elvégzett lépések:**
 
-1.  Kijavítottam a `should return error if idea is missing` teszt hibaüzenetének elvárását.
-2.  Robusztusabbá tettem a JSON-parsolási logikát a `stage1_extractRequirements` metódusban, beleértve a `rawResponse` string típusának explicit ellenőrzését és a JSON blokkok pontosabb kinyerését.
-3.  Kijavítottam a `rawResponse` duplikált deklarációját a `SpecWriterAgent.ts` fájlban.
-4.  Módosítottam a `catch` blokkokat a `SpecWriterAgent.ts` fájlban, hogy az `errorMessage` mindig string legyen.
-5.  Biztosítottam, hogy minden `generateResponse` hívás a tesztpipeline során fedezve legyen `mockResolvedValueOnce` hívásokkal.
-6.  Frissítettem a `mockTrackMarkdown` értékét a `should generate EPP v2 compliant track.md` tesztben, hogy teljesen EPP v2 kompatibilis legyen.
+1. Kijavítottam a `should return error if idea is missing` teszt hibaüzenetének elvárását.
+2. Robusztusabbá tettem a JSON-parsolási logikát a `stage1_extractRequirements` metódusban, beleértve a `rawResponse` string típusának explicit ellenőrzését és a JSON blokkok pontosabb kinyerését.
+3. Kijavítottam a `rawResponse` duplikált deklarációját a `SpecWriterAgent.ts` fájlban.
+4. Módosítottam a `catch` blokkokat a `SpecWriterAgent.ts` fájlban, hogy az `errorMessage` mindig string legyen.
+5. Biztosítottam, hogy minden `generateResponse` hívás a tesztpipeline során fedezve legyen `mockResolvedValueOnce` hívásokkal.
+6. Frissítettem a `mockTrackMarkdown` értékét a `should generate EPP v2 compliant track.md` tesztben, hogy teljesen EPP v2 kompatibilis legyen.
 
 **Státusz:** ✅ Befejezve
 

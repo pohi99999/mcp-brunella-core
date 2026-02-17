@@ -20,11 +20,11 @@ vars = { ENVIRONMENT = "production" }
 [[d1_databases]]
 binding = "DB"
 database_name = "cean-tasks"
-database_id = "TBD"  # Will be populated after D1 creation in Cloudflare
+database_id = "960ec488-9e16-4d3d-ad74-9bf978594498"  # Production CEAN tasks database
 
-# R1 Bucket Binding (Vectorize)
+# Vectorize Binding (CREATED: 2026-02-17)
 [[vectorize]]
-binding = "EMBEDDINGS"
+binding = "VECTORIZE"
 index_name = "cean-embeddings"
 
 # KV Namespace Binding (for state/caching)
@@ -46,7 +46,7 @@ vars = { ENVIRONMENT = "development", LOG_LEVEL = "debug" }
 [[env.development.d1_databases]]
 binding = "DB"
 database_name = "cean-tasks-dev"
-database_id = "TBD"
+database_id = "34ca90b1-385e-4400-bdeb-60e72722f7d1"  # Development database
 
 # Routes (optional, for binding to domains)
 [[routes]]

@@ -18,13 +18,17 @@ import {
   FlaskConical,
   Code2,
   Cloud,
+  Layers,
+  Zap,
+  Shield,
+  Gauge,
+  Ghost,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { AgentStatusCard } from "@/components/dashboard/AgentStatusCard";
 import { TerminalLog } from "@/components/dashboard/TerminalLog";
-import { SystemHealthCard } from "@/components/dashboard/SystemHealthCard"; // Swapped
+import { SystemHealthCard } from "@/components/dashboard/SystemHealthCard";
 import { InventoryCatalog } from "@/components/dashboard/InventoryCatalog";
 import { NeuralLinkChat } from "@/components/dashboard/NeuralLinkChat";
 import { EmbeddedWorkflow } from "@/components/dashboard/EmbeddedWorkflow";
@@ -41,12 +45,9 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { CommandMenu } from "@/components/CommandMenu";
 import { AgentGraph } from "@/components/AgentGraph";
 import { Skeleton } from "@/components/ui/skeleton";
-import { AgentFactory } from "@/components/dashboard/AgentFactory";
-import { RobotkezPanel } from "@/components/dashboard/RobotkezPanel";
 import { RobotkezV2Chat } from "@/components/dashboard/RobotkezV2Chat";
 import { AgentManagementPanel } from "@/components/dashboard/AgentManagementPanel";
 import { TaskQueueMonitor } from "@/components/dashboard/TaskQueueMonitor";
-import { LLMProvidersPanel } from "@/components/dashboard/LLMProvidersPanel";
 import { KnowledgeBasePanel } from "@/components/dashboard/KnowledgeBasePanel";
 import { IncubatorPanel } from "@/components/dashboard/IncubatorPanel";
 import { DeveloperPanel } from "@/components/dashboard/DeveloperPanel";
@@ -60,58 +61,37 @@ import { SuggestedTasksWidget } from "./SuggestedTasksWidget";
 import { CEANLayout } from "@/components/cean/CEANLayout";
 import { CloudflareDeployment } from "@/pages/CloudflareDeployment";
 import FleetManager from "@/pages/FleetManager";
+import { SystemBootSequence } from "@/components/SystemBootSequence";
 
 const SIDEBAR_ITEMS = [
   { id: "dashboard", label: "Mission Control", icon: LayoutDashboard },
   { id: "cean", label: "CEAN Orchestrator", icon: Rocket },
   { id: "cloudflare", label: "Cloudflare Deploy", icon: Cloud },
   { id: "fleet_manager", label: "Fleet Manager", icon: Cpu },
-  { id: "chat", label: "Chat", icon: MessageSquare },
-  { id: "management", label: "Agents", icon: Sparkles },
+  { id: "chat", label: "Neural Chat", icon: MessageSquare },
+  { id: "management", label: "Agent Roster", icon: Sparkles },
   { id: "decomposer", label: "Decompose", icon: Network },
-  { id: "tracks", label: "Tracks", icon: Rocket },
+  { id: "tracks", label: "Tracks", icon: History },
   { id: "incubator", label: "Incubator", icon: FlaskConical },
-  { id: "knowledge", label: "Knowledge", icon: Brain },
+  { id: "knowledge", label: "Neural Knowledge", icon: Brain },
   { id: "developer", label: "Developer", icon: Code2 },
   { id: "edge", label: "Edge", icon: Cloud },
-  { id: "suggested-tasks", label: "Todos", icon: FileText },
-  { id: "tests", label: "Tests", icon: FlaskConical },
+  { id: "suggested-tasks", label: "Suggested", icon: FileText },
+  { id: "tests", label: "Precision Tests", icon: Gauge },
   { id: "robotkez", label: "Robotkéz", icon: Activity },
-  { id: "tasks", label: "Tasks", icon: History },
+  { id: "tasks", label: "Task Queue", icon: History },
   { id: "inventory", label: "Assets", icon: Box },
-  { id: "files", label: "Files", icon: FolderOpen },
-  { id: "settings", label: "Settings", icon: Settings },
+  { id: "files", label: "Filesystem", icon: FolderOpen },
+  { id: "settings", label: "System Config", icon: Settings },
 ];
-
-const DEFAULT_MEMORY_CONTEXT: MemoryFile[] = [
-  { id: "1", name: "project_context.md", size: "12kb", type: "text/markdown" },
-  { id: "2", name: "api_specs.yaml", size: "45kb", type: "application/yaml" },
-  {
-    id: "3",
-    name: "user_preferences.json",
-    size: "2kb",
-    type: "application/json",
-  },
-];
-
-interface MemoryFile {
-  id: string;
-  name: string;
-  size: string;
-  type: string;
-}
-
-type AgentStatus = "working" | "idle" | "error" | "offline";
-
-const N8N_URL = "http://localhost:5678";
-const LANGFLOW_URL = "http://localhost:3000";
 
 export function MissionControlLayout() {
   const [activeTab, setActiveTab] = useState<string>("dashboard");
   const [viewMode, setViewMode] = useState<"list" | "graph">("graph");
   const [registryAgents, setRegistryAgents] = useState<RegistryAgent[]>([]);
   const [isLoadingAgents, setIsLoadingAgents] = useState(true);
-  const { logs, agents, isConnected } = useSocket();
+  const [isBooting, setIsBooting] = useState(true);
+  const { logs, agents } = useSocket();
 
   useEffect(() => {
     setIsLoadingAgents(true);
@@ -121,255 +101,282 @@ export function MissionControlLayout() {
       .finally(() => setIsLoadingAgents(false));
   }, []);
 
-  const socketStatusMap = new Map<
-    string,
-    { status: string; taskDescription?: string }
-  >(
-    Array.from(agents.entries()).map(([name, data]: [string, any]) => [
-      name,
-      data,
-    ]),
-  );
-  const agentsToShow = registryAgents;
+  // useSocket's agents is Map<string, AgentStatusEntry>
+  const socketStatusMap = agents;
 
   const handleExecuteAgent = async (agentName: string, task: string) => {
     try {
-      toast.info(`${agentName} futtatása...`);
-      const result = await executeAgent(agentName, task);
-      toast.success(
-        typeof result === "string"
-          ? result.slice(0, 100) + (result.length > 100 ? "..." : "")
-          : "Kész",
-      );
+      toast.info(`${agentName} initiating protocol...`);
+      await executeAgent(agentName, task);
+      toast.success("Protocol execution verified");
     } catch (e: unknown) {
-      toast.error(e instanceof Error ? e.message : "Hiba");
+      toast.error(e instanceof Error ? e.message : "System failure");
     }
   };
 
   return (
-    <div className="min-h-screen bg-transparent text-foreground antialiased overflow-hidden flex flex-col">
-      <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
+    <>
+      {isBooting && <SystemBootSequence onComplete={() => setIsBooting(false)} />}
+      
+      <div className={cn("flex-1 flex flex-col min-h-0 overflow-hidden transition-opacity duration-1000 bg-[#020205] bg-grid-pattern", isBooting ? "opacity-0" : "opacity-100")}>
+        <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
 
-      {/* Header */}
-      <header className="flex h-14 items-center gap-4 border-b bg-background/50 px-6 backdrop-blur-lg lg:h-[60px]">
-        <div className="flex flex-1 items-center gap-2 font-semibold">
-          <span className="text-primary">Brunella</span>
-          <span className="text-muted-foreground">/</span>
-          <span>Mission Control</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <ThemeToggle />
-        </div>
-      </header>
-
-      {/* Main Layout */}
-      <div className="flex flex-1 overflow-hidden">
-        {/* Sidebar */}
-        <aside className="w-[60px] lg:w-[240px] border-r bg-background/50 backdrop-blur-lg flex flex-col">
-          <div className="flex-1 py-4">
-            <nav className="grid gap-1 px-2">
-              {SIDEBAR_ITEMS.map((item) => (
-                <button
-                  key={item.id}
-                  onClick={() => setActiveTab(item.id)}
-                  className={cn(
-                    "flex items-center gap-3 rounded-lg px-3 py-2 text-muted-foreground transition-all hover:text-primary hover:bg-muted",
-                    activeTab === item.id &&
-                      "bg-muted text-primary font-medium",
-                  )}
-                >
-                  <item.icon className="h-4 w-4" />
-                  <span className="hidden lg:inline">{item.label}</span>
-                </button>
-              ))}
+        {/* Top Header - Glass Submerged */}
+        <header className="h-16 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-6 z-30">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center border border-primary/30">
+                <Zap size={18} className="text-primary animate-pulse" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold tracking-tighter text-white uppercase italic">Brunella Cortex</span>
+                <span className="text-[10px] font-mono text-primary/60 tracking-widest leading-none">NEURAL NETWORK OS v2.3.0</span>
+              </div>
+            </div>
+            
+            <div className="h-4 w-[1px] bg-white/10 mx-2" />
+            
+            <nav className="hidden md:flex items-center gap-1">
+               <span className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer px-2 py-1 rounded">SYS_LOG</span>
+               <span className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer px-2 py-1 rounded">NET_STAT</span>
+               <span className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer px-2 py-1 rounded">DATA_FLUX</span>
             </nav>
           </div>
-        </aside>
 
-        {/* Center Content */}
-        <main className="flex-1 overflow-auto p-6 scroll-smooth">
-          <div className="mx-auto grid max-w-7xl gap-6 lg:grid-cols-[1fr_320px]">
-            {/* Primary Column */}
-            <div className="space-y-6">
-              {activeTab === "dashboard" && (
-                <div className="space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h2 className="flex items-center gap-2 text-lg font-space font-bold text-foreground">
-                      <Activity size={20} className="text-primary" />
-                      Active Neural Agents ({agentsToShow.length})
-                    </h2>
-                    <div className="flex items-center gap-2">
-                      <button
-                        onClick={() => setViewMode("list")}
-                        className={cn(
-                          "px-3 py-1 text-xs rounded-md border transition-colors",
-                          viewMode === "list"
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "text-muted-foreground hover:bg-muted",
-                        )}
-                      >
-                        List
-                      </button>
-                      <button
-                        onClick={() => setViewMode("graph")}
-                        className={cn(
-                          "px-3 py-1 text-xs rounded-md border transition-colors",
-                          viewMode === "graph"
-                            ? "bg-primary text-primary-foreground border-primary"
-                            : "text-muted-foreground hover:bg-muted",
-                        )}
-                      >
-                        Graph
-                      </button>
-                    </div>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
+               <div className="w-2 h-2 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
+               <span className="text-[10px] font-mono font-bold text-zinc-400">CORE_SYNC_READY</span>
+            </div>
+            <ThemeToggle />
+          </div>
+        </header>
+
+        {/* Global Body Container */}
+        <div className="flex-1 flex overflow-hidden px-6 pb-6 pt-2 gap-6 relative z-0 min-h-0">
+          
+          {/* Cyber Sidebar */}
+          <aside className="w-[64px] lg:w-[260px] flex flex-col gap-4 py-4 z-10 transition-all duration-300 shrink-0">
+            <div className="glass-panel rounded-2xl flex-1 flex flex-col overflow-hidden border-white/5">
+              <div className="p-4 border-b border-white/5 flex items-center justify-between">
+                 <span className="text-[10px] font-bold text-zinc-500 tracking-widest uppercase hidden lg:inline">Primary Menu</span>
+                 <Layers size={14} className="text-zinc-500" />
+              </div>
+              
+              <div className="flex-1 overflow-y-auto custom-scrollbar p-2 space-y-1">
+                {SIDEBAR_ITEMS.map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => setActiveTab(item.id)}
+                    className={cn(
+                      "w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative",
+                      activeTab === item.id 
+                        ? "bg-primary/20 text-white border border-primary/30" 
+                        : "text-zinc-500 hover:text-zinc-200 hover:bg-white/5"
+                    )}
+                  >
+                    <item.icon size={18} className={cn(
+                      "shrink-0 transition-transform duration-300 group-hover:scale-110",
+                      activeTab === item.id ? "text-primary" : "text-zinc-500"
+                    )} />
+                    <span className="hidden lg:inline text-xs font-medium font-space tracking-wide">{item.label}</span>
+                    
+                    {activeTab === item.id && (
+                      <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-4 bg-primary rounded-r-full" />
+                    )}
+                  </button>
+                ))}
+              </div>
+
+              <div className="p-4 border-t border-white/5 bg-black/20">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-8 h-8 rounded-full bg-zinc-800 border border-white/10 flex items-center justify-center">
+                    <Shield size={14} className="text-primary" />
                   </div>
-
-                  {viewMode === "graph" ? (
-                    <AgentGraph />
-                  ) : (
-                    <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                      {isLoadingAgents ? (
-                        Array.from({ length: 3 }).map((_, i) => (
-                          <div key={i} className="space-y-3">
-                            <Skeleton className="h-[125px] w-full rounded-xl" />
-                            <div className="space-y-2">
-                              <Skeleton className="h-4 w-[250px]" />
-                              <Skeleton className="h-4 w-[200px]" />
-                            </div>
-                          </div>
-                        ))
-                      ) : agentsToShow.length > 0 ? (
-                        agentsToShow.map((agent) => {
-                          const socketData = socketStatusMap.get(agent.name);
-                          return (
-                            <div
-                              key={agent.name}
-                              className="hover:scale-[1.02] transition-transform duration-200"
-                            >
-                              <AgentStatusCard
-                                agent={agent}
-                                status={(socketData?.status as any) || "idle"}
-                                taskDescription={socketData?.taskDescription}
-                                onExecute={handleExecuteAgent}
-                                allAgents={registryAgents}
-                              />
-                            </div>
-                          );
-                        })
-                      ) : (
-                        <div className="col-span-full p-8 text-center glass-panel rounded-xl border-dashed border-2 border-white/10">
-                          <Brain
-                            size={48}
-                            className="mx-auto text-muted-foreground/20 mb-4"
-                          />
-                          <h3 className="text-lg font-medium text-muted-foreground">
-                            No Agents Online
-                          </h3>
-                          <p className="text-sm text-muted-foreground/60 max-w-sm mx-auto mt-2">
-                            Start an agent from the CLI or check your
-                            configuration.
-                          </p>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="lg:col-span-3 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                    <JulesPanel />
-                    <div className="glass-card rounded-xl p-1 h-full">
-                      <div className="flex items-center gap-2 px-4 py-3 border-b border-border/50">
-                        <Terminal size={18} className="text-muted-foreground" />
-                        <h2 className="text-sm font-medium text-muted-foreground">
-                          System Terminals
-                        </h2>
-                      </div>
-                      <div className="p-2">
-                        <TerminalLog logs={logs} />
-                      </div>
-                    </div>
+                  <div className="flex flex-col min-w-0 hidden lg:flex">
+                    <span className="text-[10px] font-bold text-white truncate uppercase">Master Admin</span>
+                    <span className="text-[9px] font-mono text-emerald-500/80">AUTHORIZED</span>
                   </div>
                 </div>
-              )}
-
-              {activeTab === "developer" && <DeveloperPanel />}
-              {activeTab === "edge" && <EdgePanel />}
-              {activeTab === "decomposer" && <TaskDecomposerPanel />}
-              {activeTab === "tracks" && <TrackGenerator />}
-              {activeTab === "inventory" && <InventoryCatalog />}
-              {activeTab === "chat" && <NeuralLinkChat />}
-              {activeTab === "incubator" && <IncubatorPanel />}
-              {activeTab === "n8n" && (
-                <EmbeddedWorkflow
-                  title="n8n Automation"
-                  url={N8N_URL}
-                  icon={<Workflow size={20} className="text-[#FF6D5A]" />}
-                />
-              )}
-              {activeTab === "langflow" && (
-                <EmbeddedWorkflow
-                  title="Langflow Orchestration"
-                  url={LANGFLOW_URL}
-                  icon={<Sparkles size={20} className="text-violet-500" />}
-                />
-              )}
-              {activeTab === "factory" && <AgentFactory />}
-              {activeTab === "management" && <AgentManagementPanel />}
-              {activeTab === "robotkez" && <RobotkezV2Chat />}
-              {activeTab === "cean" && <CEANLayout />}
-              {activeTab === "cloudflare" && <CloudflareDeployment />}
-              {activeTab === "fleet_manager" && <FleetManager />}
-              {activeTab === "tasks" && <TaskQueueMonitor />}
-              {activeTab === "providers" && <LLMProvidersPanel />}
-              {activeTab === "knowledge" && <KnowledgeBasePanel />}
-              {activeTab === "files" && <FileExplorer />}
-              {activeTab === "tests" && <TestResultsWidget />}
-              {activeTab === "suggested-tasks" && <SuggestedTasksWidget />}
-              {activeTab === "settings" && <SettingsPanel />}
+                <button className="w-full text-[10px] font-bold text-zinc-500 hover:text-white transition-colors flex items-center justify-between py-1 border-t border-white/5 pt-3">
+                   <span>DISCONNECT</span>
+                   <Ghost size={12} />
+                </button>
+              </div>
             </div>
+          </aside>
 
-            {/* Right Column: Widgets */}
-            <div className="space-y-6 lg:sticky lg:top-6 h-fit">
-              <SystemHealthCard />
-
-              <TrackProgressWidget />
-
-              <Card className="glass-card border-white/10 overflow-hidden">
-                <CardHeader className="pb-3 border-b border-border/50 bg-muted/20">
-                  <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-muted-foreground">
-                    <Brain size={16} className="text-cyan-400" />
-                    Short-term Memory
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="p-0">
-                  <ScrollArea className="h-[300px]">
-                    <ul className="divide-y divide-border/50">
-                      {DEFAULT_MEMORY_CONTEXT.map((file: MemoryFile) => (
-                        <li
-                          key={file.id}
-                          className="flex items-center justify-between px-4 py-3 hover:bg-muted/50 transition-colors cursor-pointer group"
+          {/* Main Content Area - Glass Floating */}
+          <main className="flex-1 min-w-0 glass-panel rounded-2xl border-white/5 relative z-10 flex flex-col overflow-hidden bg-black/20">
+            {/* Native Scrollable Wrapper with Key Reset */}
+            <div 
+              key={activeTab} 
+              className={cn(
+                "flex-1 overflow-y-auto custom-scrollbar scroll-smooth",
+                activeTab === "chat" && "overflow-hidden" // Chat logic takes care of its own scrolling
+              )}
+            >
+              <div className={cn(
+                "mx-auto w-full max-w-[1800px]",
+                activeTab === "chat" ? "h-full p-0" : "p-6 md:p-10 pb-32"
+              )}>
+                {activeTab === "dashboard" && (
+                  <div className="space-y-8 animate-in fade-in duration-500">
+                    <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-8">
+                      <div>
+                        <h1 className="text-3xl font-space font-bold text-white tracking-tight flex items-center gap-3">
+                          Mission Control
+                          <div className="px-2 py-0.5 rounded bg-primary/10 border border-primary/20 text-[10px] font-mono text-primary align-middle">ONLINE</div>
+                        </h1>
+                        <p className="text-zinc-500 text-sm mt-1 font-space">Real-time neural agent synchronization and command interface.</p>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 bg-black/40 p-1 rounded-lg border border-white/5">
+                        <button
+                          onClick={() => setViewMode("graph")}
+                          className={cn(
+                            "flex items-center gap-2 px-4 py-2 text-xs font-bold transition-all duration-300 rounded-md",
+                            viewMode === "graph"
+                              ? "bg-primary text-white shadow-[0_0_15px_rgba(var(--primary),0.4)]"
+                              : "text-zinc-500 hover:text-zinc-300"
+                          )}
                         >
-                          <div className="flex items-center gap-3 overflow-hidden">
-                            <FileText
-                              size={16}
-                              className="text-muted-foreground group-hover:text-primary transition-colors"
-                            />
-                            <span className="truncate text-sm font-mono text-foreground/80 group-hover:text-foreground transition-colors">
-                              {file.name}
-                            </span>
+                          <Network size={14} />
+                          NEURAL_MAP
+                        </button>
+                        <button
+                          onClick={() => setViewMode("list")}
+                          className={cn(
+                            "flex items-center gap-2 px-4 py-2 text-xs font-bold transition-all duration-300 rounded-md",
+                            viewMode === "list"
+                              ? "bg-primary text-white shadow-[0_0_15px_rgba(var(--primary),0.4)]"
+                              : "text-zinc-500 hover:text-zinc-300"
+                          )}
+                        >
+                          <Layers size={14} />
+                          DATA_LIST
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                      <div className="lg:col-span-2 space-y-6">
+                        {viewMode === "graph" ? (
+                          <div className="glass-card rounded-2xl border-white/5 p-1 h-[600px] relative group overflow-hidden">
+                            <AgentGraph />
                           </div>
-                          <span className="shrink-0 text-xs font-mono text-muted-foreground">
-                            {file.size}
-                          </span>
-                        </li>
-                      ))}
-                    </ul>
-                  </ScrollArea>
-                </CardContent>
-              </Card>
+                        ) : (
+                          <div className="grid gap-4 grid-cols-1 md:grid-cols-2">
+                            {isLoadingAgents ? (
+                              Array.from({ length: 4 }).map((_, i) => (
+                                <Skeleton key={i} className="h-40 w-full rounded-2xl bg-white/5" />
+                              ))
+                            ) : (
+                              registryAgents.map((agent: RegistryAgent) => {
+                                const statusData = socketStatusMap.get(agent.name);
+                                return (
+                                  <AgentStatusCard
+                                    key={agent.name}
+                                    agent={agent}
+                                    status={statusData?.status || "idle"}
+                                    taskDescription={statusData?.taskDescription}
+                                    onExecute={handleExecuteAgent}
+                                    allAgents={registryAgents}
+                                  />
+                                );
+                              })
+                            )}
+                          </div>
+                        )}
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                           <JulesPanel />
+                           <div className="glass-card rounded-2xl border-white/5 flex flex-col h-[500px]">
+                              <div className="p-4 border-b border-white/5 flex items-center gap-2">
+                                <Terminal size={16} className="text-primary" />
+                                <span className="text-xs font-bold text-white tracking-widest uppercase">Kernel Logs</span>
+                              </div>
+                              <div className="flex-1 min-h-0">
+                                <TerminalLog logs={logs} />
+                              </div>
+                           </div>
+                        </div>
+                      </div>
+
+                      <div className="space-y-6">
+                        <SystemHealthCard />
+                        <TrackProgressWidget />
+                        
+                        <Card className="glass-card rounded-2xl border-white/5 flex flex-col overflow-hidden">
+                          <CardHeader className="p-4 bg-white/5 border-b border-white/5">
+                            <CardTitle className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-white">
+                              <Brain size={16} className="text-cyan-400" />
+                              Neural Memory
+                            </CardTitle>
+                          </CardHeader>
+                          <CardContent className="p-1 max-h-[400px] overflow-y-auto custom-scrollbar">
+                             <div className="p-3 space-y-3">
+                                {[
+                                  { n: "protocol_v3.md", s: "4.2kb", t: "NEURAL" },
+                                  { n: "agent_nexus.json", s: "18kb", t: "CONFIG" },
+                                  { n: "active_stream.log", s: "125kb", t: "STREAM" }
+                                ].map((f, i) => (
+                                  <div key={i} className="flex items-center justify-between p-3 rounded-xl bg-white/5 border border-white/5 hover:border-primary/30 transition-colors group cursor-pointer">
+                                     <div className="flex items-center gap-3">
+                                        <FileText size={16} className="text-zinc-500 group-hover:text-primary transition-colors" />
+                                        <span className="text-xs font-mono text-zinc-300">{f.n}</span>
+                                     </div>
+                                     <div className="flex flex-col items-end">
+                                        <span className="text-[10px] font-mono text-zinc-600">{f.s}</span>
+                                        <span className="text-[8px] font-bold text-primary/50 uppercase">{f.t}</span>
+                                     </div>
+                                  </div>
+                                ))}
+                             </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {activeTab === "chat" && <NeuralLinkChat />}
+                {activeTab === "developer" && <DeveloperPanel />}
+                {activeTab === "knowledge" && <KnowledgeBasePanel />}
+                {activeTab === "incubator" && <IncubatorPanel />}
+                {activeTab === "edge" && <EdgePanel />}
+                {activeTab === "decomposer" && <TaskDecomposerPanel />}
+                {activeTab === "tracks" && <TrackGenerator />}
+                {activeTab === "management" && <AgentManagementPanel />}
+                {activeTab === "robotkez" && <RobotkezV2Chat />}
+                {activeTab === "cean" && <CEANLayout />}
+                {activeTab === "cloudflare" && <CloudflareDeployment />}
+                {activeTab === "fleet_manager" && <FleetManager />}
+                {activeTab === "tasks" && <TaskQueueMonitor />}
+                {activeTab === "inventory" && <InventoryCatalog />}
+                {activeTab === "files" && <FileExplorer />}
+                {activeTab === "tests" && <TestResultsWidget />}
+                {activeTab === "suggested-tasks" && <SuggestedTasksWidget />}
+                {activeTab === "settings" && <SettingsPanel />}
+                {activeTab === "n8n" && (
+                  <EmbeddedWorkflow
+                    title="n8n Automation"
+                    url={"http://localhost:5678"}
+                    icon={<Workflow size={20} className="text-[#FF6D5A]" />}
+                  />
+                )}
+                {activeTab === "langflow" && (
+                  <EmbeddedWorkflow
+                    title="Langflow Orchestration"
+                    url={"http://localhost:3000"}
+                    icon={<Sparkles size={20} className="text-violet-500" />}
+                  />
+                )}
+              </div>
             </div>
-          </div>
-        </main>
+          </main>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
