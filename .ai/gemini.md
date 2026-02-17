@@ -17,6 +17,29 @@
 
 ---
 
+### 2026-02-17 07:01 - RobotkezV2 E2E Fix & Middleware Stabilization (COMPLETE ✅)
+
+**Feladat:**
+A "Scenario 1: Google search" E2E teszt hibájának elhárítása (`400 Bad Request`, majd `500 Internal Server Error`). A rendszer stabilizálása a tesztek futtatásához.
+
+**Érintett fájlok:**
+
+- `src/server/web.ts` (Fix: `express.raw` és `express.json` konfliktus feloldása)
+- `src/server/routes/robotkez.ts` (Debug logging, majd cleanup)
+- `src/utils/db.ts` (Fix: `saveMessage` Foreign Key constraint hiba javítása az `INSERT OR IGNORE` chat létrehozással)
+- `src/agents/types.ts` & `src/agents/BaseAgent.ts` (Feature: `success` mező visszaállítása a backward compatibility érdekében)
+- `test/robotkezV2.e2e.test.ts` (Debug logging)
+- `src/dashboard/components/dashboard/NeuralLinkChat.tsx` (UI: Screenshot megjelenítés javítása, lint fixek)
+
+**Eredmények:**
+
+- ✅ **E2E Success:** A "Scenario 1" teszt most már stabilan fut és PASS eredménnyel zárul.
+- ✅ **API Stabilitás:** A `400 Bad Request` hiba megszűnt a body parsing middleware javításával.
+- ✅ **Adatbázis Integritás:** Az `500`-as hibát okozó FK constraint violation javítva; a chatek automatikusan létrejönnek üzenetmentéskor.
+- ✅ **Code Quality:** Linting hibák javítva (`any` típusok, unused vars) több fájlban.
+
+**Státusz:** ✅ **BEFEJEZVE**
+
 ### 2026-02-17 05:40 - RobotkezV2 "Comet" Experience Implementation (COMPLETE ✅)
 
 **Feladat:**
