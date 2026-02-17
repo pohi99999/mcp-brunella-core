@@ -157,13 +157,12 @@ class Llm:
                         if self.interpreter.verbose:
                             print("Removing image message!")
             else:
-                # Delete all the middle ones (leave only the first and last 2 images) from messages_for_llm
+                # Set detail: low for the middle messages, instead of deleting them
                 if len(image_messages) > 3:
                     for img_msg in image_messages[1:-2]:
-                        messages.remove(img_msg)
+                        img_msg["detail"] = "low"
                         if self.interpreter.verbose:
-                            print("Removing image message!")
-                # Idea: we could set detail: low for the middle messages, instead of deleting them
+                            print("Low detail for image message!")
         elif self.supports_vision == False and self.vision_renderer:
             for img_msg in image_messages:
                 if img_msg["format"] != "description":

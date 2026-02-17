@@ -207,7 +207,7 @@ def convert_to_openai_messages(
                     "content": [
                         {
                             "type": "image_url",
-                            "image_url": {"url": content, "detail": "low"},
+                            "image_url": {"url": content, "detail": message.get("detail", "auto")},
                         }
                     ],
                 }
