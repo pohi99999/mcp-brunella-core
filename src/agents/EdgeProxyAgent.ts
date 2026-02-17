@@ -13,6 +13,7 @@
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { getGlobalDb } from '../utils/globalDb.js';
 
 // ============================================================================
 // INTERFACES
@@ -180,7 +181,7 @@ export class EdgeProxyAgent extends BaseAgent {
           tunnel: data.tunnel || 'unknown',
           latency,
           lastCheck: new Date().toISOString()
-        };
+       };
       } else {
         this.health.edge = 'degraded';
         this.health.latency = latency;
@@ -265,7 +266,7 @@ export class EdgeProxyAgent extends BaseAgent {
           n8n: this.config.tunnelN8nUrl,
           browser: this.config.tunnelBrowserUrl,
           dashboard: this.config.tunnelDashboardUrl
-        };
+       };
         logInfo(this.name, `Tunnel callback URL-ek hozzáadva: ${this.config.tunnelUrl}`);
       }
 
@@ -294,11 +295,11 @@ export class EdgeProxyAgent extends BaseAgent {
       logError(this.name, `Task beküldés sikertelen: ${error}`);
 
       if (this.config.fallbackToLocal) {
-        return {
-          success: false,
+       return {
+         success: false,
           message: `Edge hiba, lokális fallback: ${error}`,
           data: { fallback: true, error: String(error) }
-        };
+       };
       }
 
       throw error;
@@ -343,13 +344,91 @@ export class EdgeProxyAgent extends BaseAgent {
       };
     }
 
-    // TODO: Implementálni a KV ↔ SQLite szinkronizációt
+    try {
+      const db = getGlobalDb();
+      let syncedCount = 0;
+      let updatedCount = 0;
 
-    return {
-      success: true,
-      message: 'Szinkronizálás befejezve',
-      data: { health: this.health }
-    };
+      // 1. Fetch history from Cloudflare Worker
+      const response = await fetch(`${this.config.workerUrl}/history?limit=50`, {
+        method: 'GET',
+        headers: this.getHeaders(),
+        signal: AbortSignal.timeout(10000)
+      });
+
+      if (response.ok) {
+        const data = await response.json() as { tasks: any[] };
+        const tasks = data.tasks || [];
+
+        const stmt = db.prepare(`
+          INSERT INTO edge_tasks (task_id, type, status, payload, result, created_at, completed_at, synced_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, datetime('now'))
+          ON CONFLICT(task_id) DO UPDATE SET
+            status = excluded.status,
+            result = excluded.result,
+            completed_at = excluded.completed_at,
+            synced_at = datetime('now')
+        `);
+
+        const insertMany = db.transaction((tasks: any[]) => {
+          for (const task of tasks) {
+            stmt.run(
+              task.taskId || task.id,
+              task.type || 'unknown',
+              task.status,
+              JSON.stringify(task.payload || {}),
+              JSON.stringify(task.result || null),
+              task.createdAt || new Date().toISOString(),
+              task.completedAt || null
+           );
+          }
+        });
+
+        insertMany(tasks);
+        syncedCount = tasks.length;
+      }
+
+      // 2. Update pending tasks status
+      const pendingTasks = db.prepare("SELECT task_id FROM edge_tasks WHERE status IN ('pending', 'dispatched')").all() as { task_id: string }[];
+
+      const updateStmt = db.prepare(`
+        UPDATE edge_tasks
+        SET status = ?, result = ?, completed_at = ?, synced_at = datetime('now')
+        WHERE task_id = ?
+      `);
+
+      for (const { task_id } of pendingTasks) {
+        const taskStatus = await this.getTaskStatus(task_id);
+        if (taskStatus) {
+          updateStmt.run(
+            taskStatus.status,
+            JSON.stringify(taskStatus.result || null),
+            taskStatus.completedAt || null,
+            task_id
+          );
+          updatedCount++;
+        }
+      }
+
+      logInfo(this.name, `Szinkronizálás kész: ${syncedCount} új/frissített, ${updatedCount} státusz ellenőrzött`);
+
+      return {
+        success: true,
+        message: 'Szinkronizálás befejezve',
+        data: {
+          health: this.health,
+          stats: { syncedCount, updatedCount }
+        }
+      };
+
+    } catch (error) {
+      logError(this.name, `Szinkronizálási hiba: ${error}`);
+      return {
+        success: false,
+        message: `Szinkronizálási hiba: ${error}`,
+        data: { health: this.health }
+      };
+    }
   }
 
   /**
@@ -377,7 +456,7 @@ export class EdgeProxyAgent extends BaseAgent {
       } catch (error) {
         results.push({
           test: test.name,
-          success: false,
+         success: false,
           duration: Date.now() - start,
           error: String(error)
         });
