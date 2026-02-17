@@ -300,9 +300,7 @@ export function ChatInterface({ user, agentTools, onToolExecution }: ChatInterfa
               </span>
             </div>
             {currentMessages.length > 0 && (
-              <>
-            {currentMessages.length > 0 && (
-              <DropdownMenu>
+                <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="icon" className="h-8 w-8">
                     <Download size={16} />
