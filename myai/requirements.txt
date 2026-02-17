@@ -14,7 +14,8 @@ playwright>=1.40
 langchain-google-genai>=2.0
 langchain-community>=0.4
 langchain-ollama>=1.0
-langsmith
+langsmith>=0.1.0,<0.2.0
+google-genai>=0.2.0
 lancedb
 chromadb
 pypdf
