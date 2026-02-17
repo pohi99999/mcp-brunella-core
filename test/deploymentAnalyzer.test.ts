@@ -51,7 +51,7 @@ describe('DeploymentAnalyzer', () => {
   it('should generate a valid fix prompt', () => {
     const analysis = {
       type: 'build' as const,
-      category: 'build' as const, // Added missing property
+      category: 'build' as const,
       summary: "Cannot find name 'foo'",
       errorLocation: { file: 'src/app.ts', line: 10 },
       rawError: "error TS2304: Cannot find name 'foo'",
@@ -66,7 +66,7 @@ describe('DeploymentAnalyzer', () => {
     
     const prompt = DeploymentAnalyzer.generateFixPrompt(analysis, "console.log(foo);");
     
-    expect(prompt).toContain('ERROR CATEGORY: BUILD'); // Updated to match actual output
+    expect(prompt).toContain('Error Category:** BUILD');
     expect(prompt).toContain("Cannot find name 'foo'");
     expect(prompt).toContain('Error Location');
     expect(prompt).toContain('src/app.ts');

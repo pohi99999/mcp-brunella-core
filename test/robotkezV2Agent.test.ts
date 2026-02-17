@@ -218,7 +218,9 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
             const result = await agent.executeTask(context);
 
             expect(result.success).toBe(true);
-            expect(mockSendCommand.mock.calls[0][0].url).toContain('google.com/search');
+            // Updated assertion:
+            const callArgs = mockSendCommand.mock.calls[0][0];
+            expect(callArgs.url).toContain('google.com/search');
         });
     });
 

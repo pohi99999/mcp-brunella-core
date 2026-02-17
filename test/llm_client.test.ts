@@ -93,7 +93,7 @@ describe('llm_client', () => {
             const result = await generateResponse('test prompt');
 
             expect(global.fetch).toHaveBeenCalledWith(
-                expect.stringContaining('/api/chat'), // Use stringContaining to match absolute URL
+                'http://127.0.0.1:11434/api/chat',
                 expect.objectContaining({
                     method: 'POST',
                     body: expect.stringContaining('qwen2.5-coder:7b')
