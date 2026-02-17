@@ -10,7 +10,7 @@ globalThis.testDb = testDb;
 // Mock globalDb
 vi.mock('../src/utils/globalDb.js', () => ({
   // @ts-ignore
-  getGlobalDb: () => globalThis.testDb
+  getGlobalDb: async () => globalThis.testDb
 }));
 
 // Mock logger

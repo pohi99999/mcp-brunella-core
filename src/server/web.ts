@@ -195,7 +195,7 @@ export async function startWebServer() {
   v1Router.use(createWranglerRouter());
 
   // Add Fleet Management routes (Phase 2)
-  const db = getGlobalDb();
+  const db = await getGlobalDb();
   v1Router.use("/fleet", createFleetRouter(db));
   v1Router.use("/workers", createWorkersRouter(db));
   v1Router.use("/metrics", createMetricsRouter(db));

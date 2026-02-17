@@ -345,7 +345,7 @@ export class EdgeProxyAgent extends BaseAgent {
     }
 
     try {
-      const db = getGlobalDb();
+      const db = await getGlobalDb();
       let syncedCount = 0;
       let updatedCount = 0;
 

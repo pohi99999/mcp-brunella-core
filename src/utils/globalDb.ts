@@ -1,25 +1,27 @@
-import Database from 'better-sqlite3';
-import path from 'path';
+import type { Database as DatabaseType } from 'better-sqlite3';
 import { logInfo, logError } from './logger.js';
 
-let globalDb: Database.Database | null = null;
+let globalDb: DatabaseType | null = null;
 
 /**
  * Initialize and get the global database instance
  */
-export function getGlobalDb(): Database.Database {
+export async function getGlobalDb(): Promise<DatabaseType> {
   if (globalDb) {
     return globalDb;
   }
 
   try {
+    const { default: Database } = await import('better-sqlite3');
+    const path = await import('path');
+
     const dbPath = path.join(process.cwd(), 'data', 'brunella.db');
     globalDb = new Database(dbPath);
     
     logInfo('GlobalDb', `Database opened: ${dbPath}`);
     
     // Initialize schema if needed
-    initSchema();
+    initSchema(globalDb);
     
     return globalDb;
   } catch (error) {
@@ -31,12 +33,10 @@ export function getGlobalDb(): Database.Database {
 /**
  * Initialize database schema
  */
-function initSchema(): void {
-  if (!globalDb) return;
-
+function initSchema(db: DatabaseType): void {
   try {
     // Create tables if they don't exist
-    globalDb.exec(`
+    db.exec(`
       CREATE TABLE IF NOT EXISTS suggested_tasks (
         id TEXT PRIMARY KEY,
         file_path TEXT NOT NULL,
@@ -139,11 +139,11 @@ function initSchema(): void {
     logInfo('GlobalDb', 'Schema initialized');
 
     // Create default "Brunella Agents" fleet if it doesn't exist
-    const fleetCheck = globalDb.prepare('SELECT COUNT(*) as count FROM cean_fleets WHERE id = ?').get('fleet-brunella-agents') as { count: number };
+    const fleetCheck = db.prepare('SELECT COUNT(*) as count FROM cean_fleets WHERE id = ?').get('fleet-brunella-agents') as { count: number };
 
     if (fleetCheck.count === 0) {
       const now = new Date().toISOString();
-      globalDb.prepare(`
+      db.prepare(`
         INSERT INTO cean_fleets (id, name, environment, status, description, created_at, updated_at)
         VALUES (?, ?, ?, ?, ?, ?, ?)
       `).run(
