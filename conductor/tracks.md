@@ -33,7 +33,7 @@
   - **Assignee:** RobotkezAgent + n8n
   - Mappa: ./tracks/green_lightning_20260212/
 
-- [ ] **Innovation Bridge - Cross-Industry Knowledge Transfer** [MEDIUM]
+- [~] **Innovation Bridge - Cross-Industry Knowledge Transfer** [MEDIUM]
   - **ID:** `innovation_bridge_20260212`
   - **Progress:** 0%
   - **Assignee:** ResearcherAgent + n8n
@@ -86,9 +86,9 @@
 
 - [ ] **Számla Adatkinyerés és Google Sheets Automatizáció** [HIGH]
   - **ID:** `invoice-to-sheets-automation-20260214`
-  - **Progress:** 40%
-  - **Updated:** 2026-02-17T15:30:00Z
-  - **Status:** Phase 1 COMPLETED (Schema + ENV + Templates)
+  - **Progress:** 50%
+  - **Updated:** 2026-02-17T16:30:00Z
+  - **Status:** Phase 2 IN PROGRESS (Szamlazz.hu API Client + MCP Tool)
   - Mappa: ./tracks/invoice-to-sheets-automation-20260214/
 
 - [ ] **Jules Continuous AI Integration (JCAI)** [CRITICAL]
