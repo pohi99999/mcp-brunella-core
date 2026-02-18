@@ -111,11 +111,12 @@ export class BifrostGateway {
 
     // 2. Gemini (Google, fast & reliable)
     const geminiKey = process.env.GEMINI_API_KEY;
+    const geminiModel = process.env.GEMINI_MODEL || 'gemini-1.5-pro';
     this.providers.set('gemini', {
       type: 'gemini',
       enabled: !!(geminiKey && geminiKey !== ''),
       apiKey: geminiKey,
-      defaultModel: 'gemini-2.0-flash-exp',  // Latest Gemini 2.0 Flash model
+      defaultModel: geminiModel,  // Use GEMINI_MODEL from .env
       priority: 2,
       maxRetries: 3
     });
