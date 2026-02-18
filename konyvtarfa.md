@@ -1,7 +1,11 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
+<<<<<<< Updated upstream
 **Generálva:** 2026. 02. 18. 2:43:47
+=======
+**Generálva:** 2026. 02. 17. 20:51:07
+>>>>>>> Stashed changes
 **Script:** 
 
 ---
@@ -181507,7 +181511,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 EnterpriseOrchestrator.ts
       - 📄 EvaluatorAgent.ts
       - 📄 FinanceGuardian.ts
+<<<<<<< Updated upstream
       - 📄 GenesisOrchestrator.ts
+=======
+>>>>>>> Stashed changes
       - 📄 GitHubModelsAgent.ts
       - 📄 gitIntegration.ts
       - 📄 GrantHunter.ts
@@ -181516,8 +181523,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 LintFixerAgent.ts
       - 📄 LocalCSRBot.ts
       - 📄 LogisticsDispatcher.ts
+<<<<<<< Updated upstream
       - 📄 MarketingAgent.ts
       - 📄 NurturerAgent.ts
+=======
+>>>>>>> Stashed changes
       - 📄 OrchestratorAgent.ts
       - 📄 permissions.ts
       - 📄 PricingAgent.ts
@@ -182037,11 +182047,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 n8n_automation.test.ts
     - 📄 notificationService.test.ts
     - 📄 persistentBrowser.test.ts
+<<<<<<< Updated upstream
     - 📄 phase2_integration.test.ts
     - 📄 phase3_integration.test.ts
     - 📄 phase4_real_estate.test.ts
     - 📄 phase4_software_genesis.test.ts
     - 📄 phase4_supply_chain.test.ts
+=======
+>>>>>>> Stashed changes
     - 📄 phase6-integration.test.ts
     - 📄 phoenix_event_bus.test.ts
     - 📄 phoenix_protocol_test.py

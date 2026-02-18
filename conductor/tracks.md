@@ -1,10 +1,18 @@
 # Projekt Nyomkovetes (Tracks)
 
+<<<<<<< Updated upstream
 **Utolso frissites:** 2026-02-18T03:00:00.464Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
 **Stats:** 44 total | 6 active | 0 completed | 20 archived
+=======
+**Utolso frissites:** 2026-02-17T19:51:48.212Z
+**Generator:** Track State Manager v2.0
+**Auto-Sync:** Enabled (realtime)
+
+**Stats:** 47 total | 10 active | 8 completed | 11 archived
+>>>>>>> Stashed changes
 
 ---
 
@@ -58,7 +66,11 @@
 
 ---
 
+<<<<<<< Updated upstream
 ## Aktiv Szalak (Active) (6)
+=======
+## Aktiv Szalak (Active) (10)
+>>>>>>> Stashed changes
 
 - [ ] **AI Recommendation System Integration** [MEDIUM]
   - **ID:** `ai_recommendation_system_20260216`
@@ -71,6 +83,15 @@
   - **Progress:** 5%
   - Mappa: ./tracks/cloudflare_edge_agents_network_20260215/
 
+<<<<<<< Updated upstream
+=======
+- [ ] **Hyper-Local Supply Chain** [HIGH]
+  - **ID:** `hyper_local_supply_chain_20260216`
+  - **Progress:** 0%
+  - **Updated:** 2026-02-16T00:00:00Z
+  - Mappa: ./tracks/hyper_local_supply_chain_20260216/
+
+>>>>>>> Stashed changes
 - [ ] **Industrial Machine Hunter** [HIGH]
   - **ID:** `industrial_machine_hunter_20260216`
   - **Progress:** 0%
@@ -97,7 +118,49 @@
 
 ---
 
+<<<<<<< Updated upstream
 ## Archivalt (Archived) (20)
+=======
+## Befejezett (Completed - Not Archived) (8)
+
+- [x] **Codex NeuralLink Chat Refactor**
+  - **ID:** `codex_chat_refactor_20260212`
+  - Mappa: ./tracks/codex_chat_refactor_20260212/
+
+- [x] **Dashboard Komplett Tesztsorozat**
+  - **ID:** `dashboard_test_suite_20260210`
+  - Mappa: ./tracks/dashboard_test_suite_20260210/
+
+- [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító**
+  - **ID:** `enterprise_suite_master_20260216`
+  - Mappa: ./tracks/enterprise_suite_master_20260216/
+
+- [x] **OpenTelemetry Agent Tracing**
+  - **ID:** `otel_agent_tracing_20260211`
+  - Mappa: ./tracks/otel_agent_tracing_20260211/
+
+- [x] **Phoenix Protocol v2 - Öngyógyító Rendszer**
+  - **ID:** `phoenix_protocol_v2_20260205`
+  - **Completed:** 2026-02-16T16:20:00Z
+  - Mappa: ./tracks/phoenix_protocol_v2_20260205/
+
+- [x] **RobotkezV2 - Full Comet (Magyar Agentic Browser)**
+  - **ID:** `robotkezv2-full-comet-20260215`
+  - **Completed:** 2026-02-15T22:00:00Z
+  - Mappa: ./tracks/robotkezv2-full-comet-20260215/
+
+- [x] **Robotkéz Stabilizáció & Gemini 2.0**
+  - **ID:** `robotkez_stabilization_20260212`
+  - Mappa: ./tracks/robotkez_stabilization_20260212/
+
+- [x] **Self-Healing & Auto-Fix Protocol**
+  - **ID:** `self_healing_core_20260213`
+  - Mappa: ./tracks/self_healing_core_20260213/
+
+---
+
+## Archivalt (Archived) (11)
+>>>>>>> Stashed changes
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
