@@ -1,0 +1,117 @@
+[
+  {
+    "name": "CEAN Slack Critical",
+    "type": "slack",
+    "description": "Critical alerts to #dev-alerts Slack channel",
+    "settings": {
+      "url": "${SLACK_WEBHOOK_CRITICAL}",
+      "channel": "#dev-alerts",
+      "username": "CEAN Alerter",
+      "iconEmoji": ":warning:",
+      "title": "{{ .GroupLabels.alertname }} - {{ .GroupLabels.severity }}",
+      "message": "{{ range .Alerts }}{{ .Annotations.description }}{{ end }}",
+      "mentions": "@devops-team"
+    },
+    "severities": ["critical"],
+    "enabled": true
+  },
+  {
+    "name": "CEAN Slack Warnings",
+    "type": "slack",
+    "description": "Warning alerts to #dev-alerts Slack channel",
+    "settings": {
+      "url": "${SLACK_WEBHOOK_WARNINGS}",
+      "channel": "#dev-alerts",
+      "username": "CEAN Alerter",
+      "title": "{{ .GroupLabels.alertname }} - Warning",
+      "message": "{{ .CommonAnnotations.description }}"
+    },
+    "severities": ["warning"],
+    "enabled": true
+  },
+  {
+    "name": "CEAN PagerDuty Critical",
+    "type": "pagerduty",
+    "description": "Page on-call engineer for critical incidents",
+    "settings": {
+      "integrationKey": "${PAGERDUTY_INTEGRATION_KEY}",
+      "description": "{{ .GroupLabels.alertname }}",
+      "details": "{{ .CommonAnnotations.description }}",
+      "severity": "critical"
+    },
+    "severities": ["critical"],
+    "enabled": true,
+    "groupWait": "30s",
+    "groupInterval": "5m",
+    "repeatInterval": "4h"
+  },
+  {
+    "name": "CEAN Email",
+    "type": "email",
+    "description": "Email notifications for all alerts",
+    "settings": {
+      "to": ["devops@company.com", "cean-team@company.com"],
+      "from": "cean-alerts@company.com",
+      "smartHosting": true,
+      "subject": "[{{ .GroupLabels.severity }}] {{ .GroupLabels.alertname }}",
+      "body": "{{ .CommonAnnotations.description }}\n\nRunbook: {{ .CommonAnnotations.runbook }}"
+    },
+    "severities": ["critical", "warning"],
+    "enabled": true,
+    "groupWait": "10s",
+    "groupInterval": "10m",
+    "repeatInterval": "24h"
+  },
+  {
+    "name": "CEAN Webhook (Custom Integration)",
+    "type": "webhook",
+    "description": "Generic webhook for custom integrations",
+    "settings": {
+      "url": "${CEAN_WEBHOOK_URL}",
+      "method": "POST",
+      "httpHeaders": {
+        "Authorization": "Bearer ${WEBHOOK_AUTH_TOKEN}",
+        "Content-Type": "application/json"
+      },
+      "payload": {
+        "alert": "{{ .GroupLabels.alertname }}",
+        "severity": "{{ .GroupLabels.severity }}",
+        "description": "{{ .CommonAnnotations.description }}",
+        "runbook": "{{ .CommonAnnotations.runbook }}",
+        "timestamp": "{{ now }}",
+        "alerts": "{{ .Alerts | len }}"
+      }
+    },
+    "severities": ["critical", "warning"],
+    "enabled": false,
+    "note": "Enable this to send alerts to custom webhook endpoints"
+  },
+  {
+    "name": "CEAN OpsGenie",
+    "type": "opsgenie",
+    "description": "Create incidents in OpsGenie",
+    "settings": {
+      "apiKey": "${OPSGENIE_API_KEY}",
+      "apiUrl": "https://api.opsgenie.com",
+      "description": "{{ .GroupLabels.alertname }} - {{ .GroupLabels.severity }}",
+      "details": {
+        "alert_summary": "{{ .CommonAnnotations.summary }}",
+        "alert_description": "{{ .CommonAnnotations.description }}",
+        "dashboard_link": "{{ .CommonAnnotations.dashboard }}",
+        "runbook_link": "{{ .CommonAnnotations.runbook }}"
+      },
+      "responders": [
+        {
+          "type": "team",
+          "name": "DevOps"
+        }
+      ],
+      "priority": "{{ if eq .GroupLabels.severity \"critical\" }}P1{{ else }}P2{{ end }}"
+    },
+    "severities": ["critical"],
+    "enabled": true,
+    "groupWait": "0s",
+    "groupInterval": "5m",
+    "repeatInterval": "30m"
+  }
+]

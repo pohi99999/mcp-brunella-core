@@ -1,0 +1,52 @@
+name = "cean-orchestrator"
+main = "src/index.ts"
+compatibility_date = "2024-11-25"
+
+[env.production]
+name = "cean-orchestrator"
+account_id = "dd107933ac970dac857f27cee7a7ff46"
+
+[env.production.vars]
+ENV = "production"
+# CEAN_API_KEY - Set via: wrangler secret put CEAN_API_KEY --env production
+# Or Cloudflare Dashboard -> Workers & Pages -> cean-orchestrator -> Settings -> Variables
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+
+[[env.production.analytics_engine_bindings]]
+binding = "CAE"
+dataset = "cean_metrics"
+
+[[env.production.kv_namespaces]]
+binding = "KV"
+id = "cean_backup_kv"
+
+# Cron Trigger: D1 Backup every 15 minutes (Phase 6.2 DR Improvement)
+[[env.production.triggers.crons]]
+crons = ["*/15 * * * *"]
+
+[env.staging]
+name = "cean-orchestrator-staging"
+account_id = "dd107933ac970dac857f27cee7a7ff46"
+
+[env.staging.vars]
+ENV = "staging"
+
+[[env.staging.d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+
+[[env.staging.analytics_engine_bindings]]
+binding = "CAE"
+dataset = "cean_metrics_staging"
+
+[[env.staging.kv_namespaces]]
+binding = "KV"
+id = "cean_backup_kv_staging"
+
+[[env.staging.triggers.crons]]
+crons = ["*/15 * * * *"]

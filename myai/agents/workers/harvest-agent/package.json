@@ -1,0 +1,31 @@
+{
+  "name": "harvest-agent-worker",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "CEAN Harvest Agent Worker - Data harvesting and collection",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "wrangler dev --env development",
+    "deploy": "wrangler deploy --env production",
+    "test": "vitest"
+  },
+  "keywords": [
+    "cloudflare",
+    "workers",
+    "data-harvesting",
+    "agent"
+  ],
+  "author": "Brunella AI",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250218.0",
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^4.66.0",
+    "vitest": "^1.0.4"
+  },
+  "dependencies": {
+    "pako": "^2.1.0"
+  }
+}
