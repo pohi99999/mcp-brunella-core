@@ -96,7 +96,9 @@ export class E2BSandboxManager {
     try {
       // 1. Create sandbox (with startup timeout)
       logInfo('E2BSandboxManager', `Creating ${template} sandbox...`);
-      const sandboxPromise = Sandbox.create(template, { apiKey });
+
+      // Use base Python sandbox (no template required)
+      const sandboxPromise = Sandbox.create({ apiKey });
       const timeoutPromise = new Promise<never>((_, reject) =>
         setTimeout(() => reject(new Error('Sandbox startup timeout (5s)')), 5000)
       );
