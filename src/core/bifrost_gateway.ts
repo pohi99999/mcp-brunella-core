@@ -115,7 +115,7 @@ export class BifrostGateway {
       type: 'gemini',
       enabled: !!(geminiKey && geminiKey !== ''),
       apiKey: geminiKey,
-      defaultModel: 'gemini-1.5-flash',  // Stable production model
+      defaultModel: 'gemini-2.0-flash-exp',  // Latest Gemini 2.0 Flash model
       priority: 2,
       maxRetries: 3
     });
