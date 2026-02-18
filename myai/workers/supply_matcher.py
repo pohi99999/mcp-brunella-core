@@ -218,30 +218,30 @@ def build_reason(score: MatchScore, cap: FreightCapacity, need: InternalNeed) ->
 
     # Raklapszám
     if cap.available_pallets >= need.required_pallets:
-        parts.append(f"✅ Raklapszám OK ({cap.available_pallets}/{need.required_pallets})")
+        parts.append(f"[OK] Raklapszám OK ({cap.available_pallets}/{need.required_pallets})")
     else:
-        parts.append(f"⚠️ Részleges kapacitás ({cap.available_pallets}/{need.required_pallets} raklap)")
+        parts.append(f"[WARN] Részleges kapacitás ({cap.available_pallets}/{need.required_pallets} raklap)")
 
     # Jármű
     if score.vehicle_score >= 0.9:
-        parts.append(f"✅ Jármű egyezés ({cap.vehicle_type})")
+        parts.append(f"[OK] Jármű egyezés ({cap.vehicle_type})")
     elif score.vehicle_score >= 0.5:
-        parts.append(f"🔶 Hasonló jármű ({cap.vehicle_type} ↔ {need.vehicle_type})")
+        parts.append(f"[MODERATE] Hasonló jármű ({cap.vehicle_type} <-> {need.vehicle_type})")
     else:
-        parts.append(f"❌ Jármű eltérés ({cap.vehicle_type} ↔ {need.vehicle_type})")
+        parts.append(f"[FAIL] Jármű eltérés ({cap.vehicle_type} <-> {need.vehicle_type})")
 
     # Dátum
     avail = cap.avail_date()
     dl = need.deadline()
     days_diff = (dl - avail).days
     if days_diff >= 0:
-        parts.append(f"✅ Dátum OK ({avail} → határidő: {dl})")
+        parts.append(f"[OK] Dátum OK ({avail} -> határidő: {dl})")
     else:
-        parts.append(f"❌ Késő ({avail} > határidő: {dl})")
+        parts.append(f"[FAIL] Késő ({avail} > határidő: {dl})")
 
     # Geo
     if cap.distance_km > 0:
-        parts.append(f"📍 {cap.distance_km:.1f} km a bázistól")
+        parts.append(f"[GEO] {cap.distance_km:.1f} km a bázistól")
 
     return " | ".join(parts)
 
@@ -287,7 +287,7 @@ def match_all(capacities: list[FreightCapacity], needs: list[InternalNeed]) -> M
     skip = [r for r in results if r.decision == "SKIP"]
 
     return MatchReport(
-        generated_at=datetime.utcnow().isoformat(),
+        generated_at=datetime.now().isoformat(),
         total_needs=len(needs),
         total_capacities=len(capacities),
         matches=results,
@@ -358,10 +358,10 @@ MOCK_NEEDS_JSON = {
 
 def to_markdown(report: MatchReport) -> str:
     lines = [
-        "# 🔗 Supply Chain Match Report",
+        "# [MATCH] Supply Chain Match Report",
         f"**Generálva:** {report.generated_at}",
         f"**Igények:** {report.total_needs} | **Kapacitások:** {report.total_capacities}",
-        f"**📦 BOOK:** {report.book_count} | **🔶 CONSIDER:** {report.consider_count} | **❌ SKIP:** {report.skip_count}",
+        f"**[BOOK]:** {report.book_count} | **[CONSIDER]:** {report.consider_count} | **[SKIP]:** {report.skip_count}",
         "",
     ]
 
@@ -369,21 +369,21 @@ def to_markdown(report: MatchReport) -> str:
     consider = [r for r in report.matches if r.decision == "CONSIDER"]
 
     if book:
-        lines.append("## 📦 Azonnali foglalás (BOOK)")
+        lines.append("## [BOOK] Azonnali foglalás (BOOK)")
         for r in book[:5]:
             lines.append(
-                f"- **{r.need_id}** ↔ `{r.capacity_id}` | "
+                f"- **{r.need_id}** <-> `{r.capacity_id}` | "
                 f"Score: **{r.score.total:.2f}** | {r.available_pallets}/{r.required_pallets} raklap | "
-                f"{r.vehicle_type_capacity} | {r.available_date} → {r.deadline}"
+                f"{r.vehicle_type_capacity} | {r.available_date} -> {r.deadline}"
             )
             lines.append(f"  > {r.reason}")
         lines.append("")
 
     if consider:
-        lines.append("## 🔶 Megfontolásra (CONSIDER)")
+        lines.append("## [CONSIDER] Megfontolásra (CONSIDER)")
         for r in consider[:5]:
             lines.append(
-                f"- **{r.need_id}** ↔ `{r.capacity_id}` | "
+                f"- **{r.need_id}** <-> `{r.capacity_id}` | "
                 f"Score: {r.score.total:.2f} | {r.vehicle_type_capacity} | {r.available_date}"
             )
         lines.append("")
@@ -433,13 +433,13 @@ def main() -> None:
         # Stdin: FreightScrapeResult JSON
         capacities = load_capacities_from_stdin()
         if not sys.stdin.isatty() and not capacities:
-            print("❌ Nincs stdin adat. Használj --mock-ot teszteléshez.", file=sys.stderr)
+            print("[ERROR] Nincs stdin adat. Használj --mock-ot teszteléshez.", file=sys.stderr)
             sys.exit(1)
 
         # Internal needs fájlból
         needs_path = args.needs
         if not os.path.exists(needs_path):
-            print(f"❌ Igények fájl nem található: {needs_path}", file=sys.stderr)
+            print(f"[ERROR] Igények fájl nem található: {needs_path}", file=sys.stderr)
             sys.exit(1)
         needs = load_needs(needs_path)
 

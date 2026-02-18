@@ -26,14 +26,28 @@ import { toast } from 'sonner'
 export type AgentStatus = 'idle' | 'working' | 'error'
 
 interface AgentStatusCardProps {
-  agent: RegistryAgent
-  status: AgentStatus
+  agent?: RegistryAgent  // Optional to prevent crashes
+  status?: AgentStatus
   taskDescription?: string
   onExecute?: (agentName: string, task: string) => void
   allAgents?: RegistryAgent[] // For delegation list
 }
 
-export function AgentStatusCard({ agent, status, taskDescription, onExecute, allAgents = [] }: AgentStatusCardProps) {
+export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExecute, allAgents = [] }: AgentStatusCardProps) {
+  // Early return if no agent provided
+  if (!agent) {
+    return (
+      <Card className="glass-card border-white/5">
+        <CardHeader>
+          <CardTitle className="text-sm font-mono text-zinc-400">No Agent Loaded</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-xs text-zinc-500">Agent data is not available</p>
+        </CardContent>
+      </Card>
+    )
+  }
+
   const [expanded, setExpanded] = useState(false)
   const [quickTask, setQuickTask] = useState('')
   const [delegateOpen, setDelegateOpen] = useState(false)
@@ -129,7 +143,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
   return (
     <Card
       className={cn(
-        'glass-card group',
+        'glass-card group h-full flex flex-col',
         status === 'working' ? 'border-primary/30 shadow-[0_0_15px_rgba(139,92,246,0.1)]' : 'border-white/5'
       )}
       onClick={() => setExpanded(!expanded)}
@@ -204,7 +218,7 @@ export function AgentStatusCard({ agent, status, taskDescription, onExecute, all
           </div>
         </CardTitle>
       </CardHeader>
-      <CardContent className="pt-0 space-y-2">
+      <CardContent className="pt-0 space-y-2 flex-1 overflow-auto">
         {(taskDescription || agent.description) && (
           <p className="text-sm text-zinc-400 line-clamp-2 px-1 font-mono leading-relaxed">{taskDescription || agent.description}</p>
         )}

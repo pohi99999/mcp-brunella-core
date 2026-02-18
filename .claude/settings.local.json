@@ -81,7 +81,9 @@
       "Bash(cmd.exe //c \"taskkill /F /PID 26980\")",
       "Bash(bash .ai/bootstrap.sh)",
       "Bash(brunella conductor status:*)",
-      "Bash(.ai/claude_new_entry.md:*)"
+      "Bash(.ai/claude_new_entry.md:*)",
+      "Bash(npx eslint:*)",
+      "Bash(git fetch:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

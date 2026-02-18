@@ -55,6 +55,7 @@ export function TrackProgressWidget() {
     Record<string, TrackTodosState>
   >({});
   const [error, setError] = useState<string | null>(null);
+  const [showWaitingTracks, setShowWaitingTracks] = useState(false);
 
   const refreshTracks = useCallback(async () => {
     setIsLoadingTracks(true);
@@ -239,50 +240,53 @@ export function TrackProgressWidget() {
       <CardContent className="space-y-4 p-4">
         {error && <div className="text-xs text-red-400">❌ {error}</div>}
 
-        <div className="space-y-2">
-          <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
-            <ClockCountdown size={14} className="text-blue-400" />
-            Várakozó fejlesztésre
-            <Badge variant="outline" className="ml-auto">
-              {waitingTracks.length}
-            </Badge>
-          </div>
-          {waitingTracks.length === 0 ? (
-            <div className="text-xs text-muted-foreground pl-5">
-              Nincs várakozó track
-            </div>
-          ) : (
-            <div className="space-y-2 pl-5">
-              {waitingTracks.map((track) => {
-                const badge = getPriorityBadge(track.priority);
-                return (
-                  <div
-                    key={track.id}
-                    className="rounded-md border border-border/40 bg-background/40 p-3"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="min-w-0">
-                        <p className="truncate text-sm font-medium">
-                          {track.title}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          0% • várakozó fejlesztésre
-                        </p>
+        {/* Várakozó track-ek - Collapsible, alapból összecsukva */}
+        {waitingTracks.length > 0 && (
+          <div className="space-y-2">
+            <button
+              onClick={() => setShowWaitingTracks(!showWaitingTracks)}
+              className="flex items-center gap-2 text-xs font-semibold text-muted-foreground w-full hover:text-foreground transition-colors"
+            >
+              <ClockCountdown size={14} className="text-blue-400" />
+              Várakozó fejlesztésre
+              <Badge variant="outline" className="ml-auto">
+                {waitingTracks.length}
+              </Badge>
+              <span className="text-[10px]">{showWaitingTracks ? "▼" : "▶"}</span>
+            </button>
+            {showWaitingTracks && (
+              <div className="space-y-2 pl-5">
+                {waitingTracks.map((track) => {
+                  const badge = getPriorityBadge(track.priority);
+                  return (
+                    <div
+                      key={track.id}
+                      className="rounded-md border border-border/40 bg-background/40 p-2"
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="min-w-0">
+                          <p className="truncate text-xs font-medium">
+                            {track.title}
+                          </p>
+                          <p className="text-[10px] text-muted-foreground">
+                            0% • NAP
+                          </p>
+                        </div>
+                        <Badge
+                          variant="outline"
+                          className={`text-[9px] px-1 py-0 ${badge.className}`}
+                        >
+                          {badge.label}
+                        </Badge>
                       </div>
-                      <Badge
-                        variant="outline"
-                        className={`text-[10px] ${badge.className}`}
-                      >
-                        {badge.label}
-                      </Badge>
+                      <Progress value={0} className="mt-1.5 h-1" />
                     </div>
-                    <Progress value={0} className="mt-2 h-1.5" />
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        )}
 
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
@@ -297,7 +301,7 @@ export function TrackProgressWidget() {
               Nincs aktív fejlesztés
             </div>
           ) : (
-            <div className="space-y-3 pl-5">
+            <div className="space-y-2 pl-5">
               {activeTracks.map((track) => {
                 const badge = getPriorityBadge(track.priority);
                 const todoState = todosByTrack[track.id];
@@ -312,32 +316,32 @@ export function TrackProgressWidget() {
                 return (
                   <div
                     key={track.id}
-                    className="rounded-md border border-border/40 bg-background/40 p-3"
+                    className="rounded-md border border-border/40 bg-background/40 p-2"
                   >
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-medium">
+                        <p className="truncate text-xs font-medium">
                           {track.title}
                         </p>
-                        <p className="text-xs text-muted-foreground">
-                          {progress}% • fejlesztés alatt
+                        <p className="text-[10px] text-muted-foreground">
+                          {progress}%
                           {remaining !== null ? ` • ${remaining} hátra` : ""}
                         </p>
                       </div>
                       <Badge
                         variant="outline"
-                        className={`text-[10px] ${badge.className}`}
+                        className={`text-[9px] px-1 py-0 ${badge.className}`}
                       >
                         {badge.label}
                       </Badge>
                     </div>
 
-                    <Progress value={progress} className="mt-2 h-1.5" />
+                    <Progress value={progress} className="mt-1.5 h-1" />
 
-                    <div className="mt-3 space-y-2">
+                    <div className="mt-2 space-y-1">
                       {todoState?.todos?.length ? (
-                        <ul className="space-y-1 text-xs">
-                          {todoState.todos.slice(0, 4).map((todo) => (
+                        <ul className="space-y-0.5 text-[10px]">
+                          {todoState.todos.slice(0, 2).map((todo) => (
                             <li
                               key={todo.id}
                               className="flex items-start gap-2"

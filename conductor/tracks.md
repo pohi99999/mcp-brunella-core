@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-17T22:00:00.232Z
+**Utolso frissites:** 2026-02-18T02:00:00.036Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 47 total | 2 active | 13 completed | 14 archived
+**Stats:** 44 total | 7 active | 8 completed | 11 archived
 
 ---
 
@@ -58,7 +58,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (2)
+## Aktiv Szalak (Active) (7)
 
 - [ ] **AI Recommendation System Integration** [MEDIUM]
   - **ID:** `ai_recommendation_system_20260216`
@@ -68,42 +68,42 @@
 
 - [ ] **Cloudflare Edge Agents Network (CEAN)** [MEDIUM]
   - **ID:** `cloudflare_edge_agents_network_20260215`
-  - **Progress:** 30%
-  - **Updated:** 2026-02-18T12:00:00Z
+  - **Progress:** 5%
   - Mappa: ./tracks/cloudflare_edge_agents_network_20260215/
+
+- [ ] **Industrial Machine Hunter** [HIGH]
+  - **ID:** `industrial_machine_hunter_20260216`
+  - **Progress:** 0%
+  - **Updated:** 2026-02-16T00:00:00Z
+  - Mappa: ./tracks/industrial_machine_hunter_20260216/
+
+- [x] **Számla Adatkinyerés és Google Sheets Automatizáció** [HIGH]
+  - **ID:** `invoice-to-sheets-automation-20260214`
+  - **Progress:** 100%
+  - **Updated:** 2026-02-17T21:05:00Z
+  - Mappa: ./tracks/invoice-to-sheets-automation-20260214/
+
+- [x] **Jules Continuous AI Integration (JCAI)** [CRITICAL]
+  - **ID:** `jules_continuous_ai_integration_20260215`
+  - **Progress:** 100%
+  - **Updated:** 2026-02-17T15:00:00Z
+  - Mappa: ./tracks/jules_continuous_ai_integration_20260215/
+
+- [ ] **Marketing Swarm - Automated Campaign Factory** [HIGH]
+  - **ID:** `marketing_swarm_20260216`
+  - **Progress:** 0%
+  - **Updated:** 2026-02-16T00:00:00Z
+  - Mappa: ./tracks/marketing_swarm_20260216/
+
+- [x] **Data Flywheel Logikája** [HIGH]
+  - **ID:** `financial-auditor-agent-20260214`
+  - **Progress:** 100%
+  - **Updated:** 2026-02-14T00:00:00Z
+  - Mappa: ./tracks/financial-auditor-agent-20260214/
 
 ---
 
-## Befejezett (Completed - Not Archived) (10)
-
-- [x] **Industrial Machine Hunter** [HIGH] ✅
-  - **ID:** `industrial_machine_hunter_20260216`
-  - **Completed:** 2026-02-18T00:00:00Z
-  - **Summary:** machine_hunter.py, Socket.IO alerting, 70/70 tests PASS
-  - Mappa: ./tracks/industrial_machine_hunter_20260216/
-
-- [x] **Számla Adatkinyerés és Google Sheets Automatizáció** [HIGH] ✅
-  - **ID:** `invoice-to-sheets-automation-20260214`
-  - **Completed:** 2026-02-17T21:05:00Z
-  - **Summary:** Phase 1-5 complete, CLI + Dashboard
-  - Mappa: ./tracks/invoice-to-sheets-automation-20260214/
-
-- [x] **Jules Continuous AI Integration (JCAI)** [CRITICAL] ✅
-  - **ID:** `jules_continuous_ai_integration_20260215`
-  - **Completed:** 2026-02-17T15:00:00Z
-  - **Summary:** Phase 1-3 complete, webhook integration
-  - Mappa: ./tracks/jules_continuous_ai_integration_20260215/
-
-- [x] **Marketing Swarm - Automated Campaign Factory** [HIGH] ✅
-  - **ID:** `marketing_swarm_20260216`
-  - **Completed:** 2026-02-17T23:30:00Z
-  - **Summary:** 98 tests, 100% PASS
-  - Mappa: ./tracks/marketing_swarm_20260216/
-
-- [x] **Data Flywheel Logikája** [HIGH] ✅
-  - **ID:** `financial-auditor-agent-20260214`
-  - **Completed:** 2026-02-14T00:00:00Z
-  - Mappa: ./tracks/financial-auditor-agent-20260214/
+## Befejezett (Completed - Not Archived) (8)
 
 - [x] **Codex NeuralLink Chat Refactor**
   - **ID:** `codex_chat_refactor_20260212`
@@ -141,21 +141,9 @@
 
 ---
 
-## Archivalt (Archived) (14)
+## Archivalt (Archived) (11)
 
-> Archived tracks are hidden by default. View in `_archive/conductor/tracks/`
-
-- [x] **Hyper-Local Supply Chain** [HIGH] ✅ (2026-02-18T12:00:00Z)
-  - **Summary:** Gmail draft + approval flow, 5/5 tests PASS
-  - Location: `_archive/conductor/tracks/hyper_local_supply_chain_20260216/`
-
-- [x] **Real Estate Sales Campaign** [HIGH] ✅ (2026-02-18T12:00:00Z)
-  - **Summary:** Corporate hunter + CRM integration, 6/6 tests PASS
-  - Location: `_archive/conductor/tracks/real_estate_sales_campaign_20260216/`
-
-- [x] **Software Genesis Protocol** [HIGH] ✅ (2026-02-18T12:00:00Z)
-  - **Summary:** UX + DevOps integration, 6/6 tests PASS
-  - Location: `_archive/conductor/tracks/software_genesis_protocol_20260216/`
+> Archived tracks are hidden by default. View in `conductor/archive/`
 
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
