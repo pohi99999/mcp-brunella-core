@@ -58,6 +58,7 @@ import { CEANLayout } from "@/components/cean/CEANLayout";
 import { CloudflareDeployment } from "@/pages/CloudflareDeployment";
 import FleetManager from "@/pages/FleetManager";
 import { NeuralMap } from "@/pages/NeuralMap";
+import { MCPCommandCenter } from "./MCPCommandCenter";
 import {
   Accordion,
   AccordionContent,
@@ -78,6 +79,7 @@ const SIDEBAR_ITEMS = [
   { id: "tracks", label: "Tracks", icon: History },
   { id: "incubator", label: "Incubator", icon: FlaskConical },
   { id: "knowledge", label: "Neural Knowledge", icon: Brain },
+  { id: "mcp", label: "MCP Command Center", icon: Shield },
   { id: "developer", label: "Developer", icon: Code2 },
   { id: "edge", label: "Edge", icon: Zap },
   { id: "suggested-tasks", label: "Suggested", icon: FileText },
@@ -312,6 +314,7 @@ export function MissionControlLayout() {
                 {activeTab === "cloudflare" && <CloudflareDeployment />}
                 {activeTab === "fleet_manager" && <FleetManager />}
                 {activeTab === "tasks" && <TaskQueueMonitor />}
+                {activeTab === "mcp" && <MCPCommandCenter />}
                 {activeTab === "inventory" && <InventoryCatalog />}
                 {activeTab === "files" && <FileExplorer />}
                 {activeTab === "tests" && <TestResultsWidget />}

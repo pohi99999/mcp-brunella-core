@@ -1,0 +1,590 @@
+import { Ollama } from 'ollama';
+import { GoogleGenerativeAI } from '@google/generative-ai';
+import { Anthropic } from '@anthropic-ai/sdk';
+import { logInfo, logError, logWarn } from '../utils/logger.js';
+
+/**
+ * Bifrost Gateway - Multi-Provider LLM Routing
+ *
+ * Purpose:
+ * - Unified interface for 4 LLM providers (Ollama, Gemini, GitHub Models, Anthropic)
+ * - Auto-select best provider based on task type
+ * - Fallback mechanism (cloud → Ollama)
+ * - Health monitoring & provider availability tracking
+ *
+ * Usage:
+ * ```typescript
+ * const gateway = new BifrostGateway();
+ * const response = await gateway.generate({
+ *   prompt: "Explain quantum computing",
+ *   taskType: "general"
+ * });
+ * ```
+ */
+
+export type ProviderType = 'ollama' | 'gemini' | 'github' | 'anthropic';
+export type TaskType = 'code' | 'general' | 'reasoning' | 'creative' | 'fast';
+
+export interface GenerateOptions {
+  prompt: string;
+  taskType?: TaskType;
+  provider?: ProviderType;  // Force specific provider
+  temperature?: number;
+  maxTokens?: number;
+  systemPrompt?: string;
+  model?: string;  // Override default model
+}
+
+export interface GenerateResponse {
+  success: boolean;
+  content?: string;
+  provider: ProviderType;
+  model: string;
+  duration_ms: number;
+  tokens?: {
+    prompt: number;
+    completion: number;
+    total: number;
+  };
+  error?: string;
+  fallback_used?: boolean;
+}
+
+export interface ProviderHealth {
+  provider: ProviderType;
+  available: boolean;
+  last_check: string;
+  response_time_ms?: number;
+  error?: string;
+}
+
+interface ProviderConfig {
+  type: ProviderType;
+  enabled: boolean;
+  apiKey?: string;
+  baseUrl?: string;
+  defaultModel: string;
+  priority: number;  // 1 = highest
+  maxRetries: number;
+}
+
+/**
+ * Bifrost Gateway - Unified multi-provider LLM interface
+ */
+export class BifrostGateway {
+  private providers: Map<ProviderType, ProviderConfig>;
+  private healthStatus: Map<ProviderType, ProviderHealth>;
+  private requestCount: Map<ProviderType, number>;
+  private lastHealthCheck: number;
+  private healthCheckInterval: number;
+
+  // Provider clients
+  private ollamaClient?: Ollama;
+  private geminiClient?: GoogleGenerativeAI;
+  private anthropicClient?: Anthropic;
+  // GitHub Models uses Ollama client with custom baseUrl
+
+  constructor() {
+    this.providers = new Map();
+    this.healthStatus = new Map();
+    this.requestCount = new Map();
+    this.lastHealthCheck = 0;
+    this.healthCheckInterval = 5 * 60 * 1000; // 5 minutes
+
+    this.initializeProviders();
+    logInfo('BifrostGateway', 'Initialized with 4 provider adapters');
+  }
+
+  /**
+   * Initialize provider configurations from environment
+   */
+  private initializeProviders(): void {
+    // 1. Ollama (local, always highest priority)
+    this.providers.set('ollama', {
+      type: 'ollama',
+      enabled: true,
+      baseUrl: process.env.OLLAMA_BASE_URL || 'http://localhost:11434',
+      defaultModel: 'qwen2.5-coder:7b',
+      priority: 1,
+      maxRetries: 2
+    });
+
+    // 2. Gemini (Google, fast & reliable)
+    const geminiKey = process.env.GEMINI_API_KEY;
+    this.providers.set('gemini', {
+      type: 'gemini',
+      enabled: !!(geminiKey && geminiKey !== ''),
+      apiKey: geminiKey,
+      defaultModel: 'gemini-1.5-flash',  // Stable production model
+      priority: 2,
+      maxRetries: 3
+    });
+
+    // 3. GitHub Models (Microsoft-hosted, GPT-4o)
+    const githubPat = process.env.GITHUB_PAT;
+    this.providers.set('github', {
+      type: 'github',
+      enabled: !!(githubPat && githubPat !== ''),
+      apiKey: githubPat,
+      baseUrl: 'https://models.inference.ai.azure.com',
+      defaultModel: 'gpt-4o',
+      priority: 3,
+      maxRetries: 3
+    });
+
+    // 4. Anthropic (Claude, most capable)
+    const anthropicKey = process.env.ANTHROPIC_API_KEY;
+    this.providers.set('anthropic', {
+      type: 'anthropic',
+      enabled: !!(anthropicKey && anthropicKey !== ''),
+      apiKey: anthropicKey,
+      defaultModel: 'claude-3-5-sonnet-20241022',
+      priority: 4,
+      maxRetries: 3
+    });
+
+    // Initialize clients for enabled providers
+    this.initializeClients();
+
+    // Log enabled providers
+    const enabled = Array.from(this.providers.values())
+      .filter(p => p.enabled)
+      .map(p => p.type);
+    logInfo('BifrostGateway', `Enabled providers: ${enabled.join(', ')}`);
+  }
+
+  /**
+   * Initialize API clients for enabled providers
+   */
+  private initializeClients(): void {
+    const ollamaConfig = this.providers.get('ollama');
+    if (ollamaConfig?.enabled) {
+      this.ollamaClient = new Ollama({ host: ollamaConfig.baseUrl });
+    }
+
+    const geminiConfig = this.providers.get('gemini');
+    if (geminiConfig?.enabled && geminiConfig.apiKey) {
+      this.geminiClient = new GoogleGenerativeAI(geminiConfig.apiKey);
+    }
+
+    const anthropicConfig = this.providers.get('anthropic');
+    if (anthropicConfig?.enabled && anthropicConfig.apiKey) {
+      this.anthropicClient = new Anthropic({ apiKey: anthropicConfig.apiKey });
+    }
+
+    // GitHub Models uses Ollama-compatible API
+    // No separate client needed - will use custom Ollama instance
+  }
+
+  /**
+   * Generate LLM response with auto-provider selection
+   */
+  async generate(options: GenerateOptions): Promise<GenerateResponse> {
+    const startTime = Date.now();
+
+    try {
+      // 1. Select provider (manual override or auto-select)
+      const selectedProvider = options.provider
+        ? options.provider
+        : this.autoSelectProvider(options.taskType || 'general');
+
+      logInfo('BifrostGateway', `Selected provider: ${selectedProvider} (task: ${options.taskType || 'general'})`);
+
+      // 2. Attempt generation with selected provider
+      const result = await this.generateWithProvider(selectedProvider, options);
+
+      if (result.success) {
+        this.recordRequest(selectedProvider);
+        return result;
+      }
+
+      // 3. Fallback to Ollama if cloud provider failed
+      if (selectedProvider !== 'ollama') {
+        logWarn('BifrostGateway', `${selectedProvider} failed, falling back to Ollama...`);
+        const fallbackResult = await this.generateWithProvider('ollama', options);
+        fallbackResult.fallback_used = true;
+        this.recordRequest('ollama');
+        return fallbackResult;
+      }
+
+      // 4. All providers failed
+      return {
+        success: false,
+        provider: selectedProvider,
+        model: 'unknown',
+        duration_ms: Date.now() - startTime,
+        error: result.error || 'All providers failed'
+      };
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError('BifrostGateway', `Generation failed: ${error}`);
+      return {
+        success: false,
+        provider: 'ollama',
+        model: 'unknown',
+        duration_ms: Date.now() - startTime,
+        error
+      };
+    }
+  }
+
+  /**
+   * Auto-select best provider based on task type
+   */
+  private autoSelectProvider(taskType: TaskType): ProviderType {
+    // Task-specific routing logic
+    const routing: Record<TaskType, ProviderType[]> = {
+      code: ['ollama', 'github', 'gemini', 'anthropic'],        // Prefer local Qwen2.5-Coder
+      general: ['gemini', 'ollama', 'github', 'anthropic'],     // Prefer fast Gemini
+      reasoning: ['anthropic', 'github', 'gemini', 'ollama'],   // Prefer Claude
+      creative: ['anthropic', 'gemini', 'github', 'ollama'],    // Prefer Claude
+      fast: ['gemini', 'ollama', 'github', 'anthropic']         // Prefer Gemini Flash
+    };
+
+    const candidates = routing[taskType] || routing.general;
+
+    // Select first available provider from candidates
+    for (const providerType of candidates) {
+      const config = this.providers.get(providerType);
+      if (config?.enabled) {
+        return providerType;
+      }
+    }
+
+    // Fallback to Ollama (always available)
+    return 'ollama';
+  }
+
+  /**
+   * Generate with specific provider
+   */
+  private async generateWithProvider(
+    provider: ProviderType,
+    options: GenerateOptions
+  ): Promise<GenerateResponse> {
+    const startTime = Date.now();
+    const config = this.providers.get(provider);
+
+    if (!config?.enabled) {
+      return {
+        success: false,
+        provider,
+        model: 'unknown',
+        duration_ms: Date.now() - startTime,
+        error: `Provider ${provider} not enabled`
+      };
+    }
+
+    const model = options.model || config.defaultModel;
+
+    try {
+      switch (provider) {
+        case 'ollama':
+          return await this.generateOllama(model, options, startTime);
+
+        case 'gemini':
+          return await this.generateGemini(model, options, startTime);
+
+        case 'github':
+          return await this.generateGitHub(model, options, startTime);
+
+        case 'anthropic':
+          return await this.generateAnthropic(model, options, startTime);
+
+        default:
+          throw new Error(`Unknown provider: ${provider}`);
+      }
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError('BifrostGateway', `${provider} generation failed: ${error}`);
+      return {
+        success: false,
+        provider,
+        model,
+        duration_ms: Date.now() - startTime,
+        error
+      };
+    }
+  }
+
+  /**
+   * Generate with Ollama (local)
+   */
+  private async generateOllama(
+    model: string,
+    options: GenerateOptions,
+    startTime: number
+  ): Promise<GenerateResponse> {
+    if (!this.ollamaClient) {
+      throw new Error('Ollama client not initialized');
+    }
+
+    const response = await this.ollamaClient.generate({
+      model,
+      prompt: options.systemPrompt
+        ? `${options.systemPrompt}\n\n${options.prompt}`
+        : options.prompt,
+      stream: false,
+      options: {
+        temperature: options.temperature ?? 0.7,
+        num_predict: options.maxTokens ?? 2048
+      }
+    });
+
+    return {
+      success: true,
+      content: response.response,
+      provider: 'ollama',
+      model,
+      duration_ms: Date.now() - startTime,
+      tokens: {
+        prompt: response.prompt_eval_count || 0,
+        completion: response.eval_count || 0,
+        total: (response.prompt_eval_count || 0) + (response.eval_count || 0)
+      }
+    };
+  }
+
+  /**
+   * Generate with Gemini (Google)
+   */
+  private async generateGemini(
+    model: string,
+    options: GenerateOptions,
+    startTime: number
+  ): Promise<GenerateResponse> {
+    if (!this.geminiClient) {
+      throw new Error('Gemini client not initialized');
+    }
+
+    const geminiModel = this.geminiClient.getGenerativeModel({ model });
+
+    const result = await geminiModel.generateContent({
+      contents: [{ role: 'user', parts: [{ text: options.prompt }] }],
+      generationConfig: {
+        temperature: options.temperature ?? 0.7,
+        maxOutputTokens: options.maxTokens ?? 2048
+      },
+      systemInstruction: options.systemPrompt
+    });
+
+    const content = result.response.text();
+
+    return {
+      success: true,
+      content,
+      provider: 'gemini',
+      model,
+      duration_ms: Date.now() - startTime,
+      tokens: {
+        prompt: result.response.usageMetadata?.promptTokenCount || 0,
+        completion: result.response.usageMetadata?.candidatesTokenCount || 0,
+        total: result.response.usageMetadata?.totalTokenCount || 0
+      }
+    };
+  }
+
+  /**
+   * Generate with GitHub Models (Azure OpenAI)
+   */
+  private async generateGitHub(
+    model: string,
+    options: GenerateOptions,
+    startTime: number
+  ): Promise<GenerateResponse> {
+    const config = this.providers.get('github');
+    if (!config?.apiKey || !config.baseUrl) {
+      throw new Error('GitHub Models not configured');
+    }
+
+    // Use Ollama client with custom baseUrl (OpenAI-compatible API)
+    const githubClient = new Ollama({
+      host: config.baseUrl
+    });
+
+    const messages = [];
+    if (options.systemPrompt) {
+      messages.push({ role: 'system', content: options.systemPrompt });
+    }
+    messages.push({ role: 'user', content: options.prompt });
+
+    // GitHub Models uses chat endpoint (OpenAI-compatible)
+    const response = await githubClient.chat({
+      model,
+      messages: messages as any,
+      stream: false,
+      options: {
+        temperature: options.temperature ?? 0.7,
+        num_predict: options.maxTokens ?? 2048
+      }
+    });
+
+    return {
+      success: true,
+      content: response.message.content,
+      provider: 'github',
+      model,
+      duration_ms: Date.now() - startTime
+    };
+  }
+
+  /**
+   * Generate with Anthropic (Claude)
+   */
+  private async generateAnthropic(
+    model: string,
+    options: GenerateOptions,
+    startTime: number
+  ): Promise<GenerateResponse> {
+    if (!this.anthropicClient) {
+      throw new Error('Anthropic client not initialized');
+    }
+
+    const response = await this.anthropicClient.messages.create({
+      model,
+      max_tokens: options.maxTokens ?? 2048,
+      temperature: options.temperature ?? 0.7,
+      system: options.systemPrompt,
+      messages: [
+        { role: 'user', content: options.prompt }
+      ]
+    });
+
+    const content = response.content
+      .filter((block: { type: string }) => block.type === 'text')
+      .map((block: { type: string; text?: string }) => block.text || '')
+      .join('\n');
+
+    return {
+      success: true,
+      content,
+      provider: 'anthropic',
+      model,
+      duration_ms: Date.now() - startTime,
+      tokens: {
+        prompt: response.usage.input_tokens,
+        completion: response.usage.output_tokens,
+        total: response.usage.input_tokens + response.usage.output_tokens
+      }
+    };
+  }
+
+  /**
+   * Check health of all providers
+   */
+  async checkHealth(): Promise<ProviderHealth[]> {
+    const now = Date.now();
+
+    // Skip if recently checked
+    if (now - this.lastHealthCheck < this.healthCheckInterval) {
+      return Array.from(this.healthStatus.values());
+    }
+
+    this.lastHealthCheck = now;
+    const healthChecks: Promise<ProviderHealth>[] = [];
+
+    // Check each enabled provider
+    for (const [type, config] of this.providers.entries()) {
+      if (!config.enabled) continue;
+
+      healthChecks.push(this.checkProviderHealth(type));
+    }
+
+    const results = await Promise.allSettled(healthChecks);
+
+    results.forEach((result, index) => {
+      if (result.status === 'fulfilled') {
+        this.healthStatus.set(result.value.provider, result.value);
+      }
+    });
+
+    return Array.from(this.healthStatus.values());
+  }
+
+  /**
+   * Check health of single provider
+   */
+  private async checkProviderHealth(provider: ProviderType): Promise<ProviderHealth> {
+    const startTime = Date.now();
+
+    try {
+      const result = await this.generateWithProvider(provider, {
+        prompt: 'ping',
+        maxTokens: 10
+      });
+
+      return {
+        provider,
+        available: result.success,
+        last_check: new Date().toISOString(),
+        response_time_ms: Date.now() - startTime,
+        error: result.error
+      };
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      return {
+        provider,
+        available: false,
+        last_check: new Date().toISOString(),
+        error
+      };
+    }
+  }
+
+  /**
+   * Record request for usage tracking
+   */
+  private recordRequest(provider: ProviderType): void {
+    const current = this.requestCount.get(provider) || 0;
+    this.requestCount.set(provider, current + 1);
+  }
+
+  /**
+   * Get usage statistics
+   */
+  getStats(): {
+    total_requests: number;
+    by_provider: Record<ProviderType, number>;
+    enabled_providers: ProviderType[];
+  } {
+    const enabled = Array.from(this.providers.values())
+      .filter(p => p.enabled)
+      .map(p => p.type);
+
+    const byProvider: Record<string, number> = {};
+    let total = 0;
+
+    for (const [provider, count] of this.requestCount.entries()) {
+      byProvider[provider] = count;
+      total += count;
+    }
+
+    return {
+      total_requests: total,
+      by_provider: byProvider as Record<ProviderType, number>,
+      enabled_providers: enabled
+    };
+  }
+
+  /**
+   * Get list of enabled providers
+   */
+  getEnabledProviders(): ProviderType[] {
+    return Array.from(this.providers.values())
+      .filter(p => p.enabled)
+      .map(p => p.type);
+  }
+}
+
+// Singleton instance
+let gatewayInstance: BifrostGateway | null = null;
+
+/**
+ * Get singleton BifrostGateway instance
+ */
+export function getBifrostGateway(): BifrostGateway {
+  if (!gatewayInstance) {
+    gatewayInstance = new BifrostGateway();
+  }
+  return gatewayInstance;
+}

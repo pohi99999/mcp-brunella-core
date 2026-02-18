@@ -1,5 +1,6 @@
 // arXiv API Integration
-import { ResearchResult } from '../types';
+import { ResearchResult } from '../types.js';
+import { logError } from '../utils/logger.js';
 
 export async function fetchArxivPapers(
   query: string,
@@ -14,7 +15,7 @@ export async function fetchArxivPapers(
     const response = await fetch(searchUrl);
     
     if (!response.ok) {
-      console.error(`arXiv API error: ${response.status}`);
+      logError("arXiv API error", { status: response.status });
       return results;
     }
 
@@ -59,7 +60,9 @@ export async function fetchArxivPapers(
 
     return results;
   } catch (error: any) {
-    console.error('arXiv fetch error:', error.message);
+    logError("arXiv fetch error", {
+      message: error instanceof Error ? error.message : String(error),
+    });
     return results;
   }
 }

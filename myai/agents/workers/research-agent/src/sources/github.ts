@@ -1,5 +1,6 @@
 // GitHub Trending API Integration
-import { ResearchResult } from '../types';
+import { ResearchResult } from '../types.js';
+import { logError } from '../utils/logger.js';
 
 export async function fetchGitHubTrends(
   query: string,
@@ -24,7 +25,10 @@ export async function fetchGitHubTrends(
     const response = await fetch(searchUrl, { headers });
     
     if (!response.ok) {
-      console.error(`GitHub API error: ${response.status} ${response.statusText}`);
+      logError("GitHub API error", {
+        status: response.status,
+        statusText: response.statusText,
+      });
       return results;
     }
 
@@ -51,7 +55,9 @@ export async function fetchGitHubTrends(
 
     return results;
   } catch (error: any) {
-    console.error('GitHub fetch error:', error.message);
+    logError("GitHub fetch error", {
+      message: error instanceof Error ? error.message : String(error),
+    });
     return results;
   }
 }

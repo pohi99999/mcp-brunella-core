@@ -2,12 +2,14 @@
 // Purpose: Daily research aggregation from GitHub, HackerNews, arXiv
 // Phase 1A Implementation
 
-import { Env, ResearchQuery, AnalyzedResult, EdgeTask } from './types';
-import { fetchGitHubTrends } from './sources/github';
-import { fetchHackerNews } from './sources/hackernews';
-import { fetchArxivPapers } from './sources/arxiv';
-import { analyzeWithLLM } from './llm/analyzer';
-import { storeResults } from './storage/d1';
+import { Env, ResearchQuery } from './types.js';
+import { fetchGitHubTrends } from './sources/github.js';
+import { fetchHackerNews } from './sources/hackernews.js';
+import { fetchArxivPapers } from './sources/arxiv.js';
+import { analyzeWithLLM } from './llm/analyzer.js';
+import { storeResults } from './storage/d1.js';
+import { storeEmbeddings } from './storage/vectorize.js';
+import { logError, logInfo } from './utils/logger.js';
 
 export default {
   /**
@@ -75,7 +77,10 @@ export default {
         const analyzed = await analyzeWithLLM(results, query, env);
 
         // Store results in D1
-        await storeResults(env.DB, taskId, analyzed);
+        const storedResults = await storeResults(env.DB, taskId, analyzed);
+
+        // Store embeddings in Vectorize (if configured)
+        await storeEmbeddings(env, taskId, storedResults);
 
         // Update task status
         await updateTaskStatus(env.DB, taskId, 'completed', {
@@ -106,10 +111,12 @@ export default {
       });
 
     } catch (error: any) {
-      console.error('Research Agent Error:', error);
+      logError("Research Agent Error", {
+        message: error instanceof Error ? error.message : String(error),
+      });
       return new Response(JSON.stringify({
         error: 'Internal Server Error',
-        message: error.message,
+        message: error instanceof Error ? error.message : String(error),
       }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -122,7 +129,7 @@ export default {
    * Runs daily at 2 AM UTC
    */
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
-    console.log('Research Agent - Daily Scheduled Run');
+    logInfo('Research Agent - Daily Scheduled Run');
     
     try {
       // Default daily research queries
@@ -145,18 +152,24 @@ export default {
 
         const results = await executeResearch(query, ['github', 'hackernews', 'arxiv'], 50, env);
         const analyzed = await analyzeWithLLM(results, query, env);
-        await storeResults(env.DB, taskId, analyzed);
+        const storedResults = await storeResults(env.DB, taskId, analyzed);
+        await storeEmbeddings(env, taskId, storedResults);
         await updateTaskStatus(env.DB, taskId, 'completed', {
           results_count: analyzed.length,
           scheduled: true,
         });
 
-        console.log(`Completed research for: ${query} (${analyzed.length} results)`);
+        logInfo('Completed scheduled research', {
+          query,
+          resultsCount: analyzed.length,
+        });
       }
 
-      console.log('Daily research run completed successfully');
+      logInfo('Daily research run completed successfully');
     } catch (error: any) {
-      console.error('Scheduled run failed:', error);
+      logError('Scheduled run failed', {
+        message: error instanceof Error ? error.message : String(error),
+      });
       throw error;
     }
   },

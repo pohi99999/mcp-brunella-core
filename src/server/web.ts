@@ -52,6 +52,7 @@ import { createMemoryRouter } from "./memoryRoutes.js";
 import { createTracksRouter } from "./tracksRoutes.js";
 import ceanRouter from "./routes/cean.js";
 import { createWranglerRouter } from "./routes/wrangler.js";
+import mcpRouter from "./routes/mcp.js";
 import { createV1Router } from "./routes/index.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
 import { createTaskRoutes } from "./routes/tasks.js";
@@ -195,6 +196,7 @@ export async function startWebServer() {
   v1Router.use("/phoenix", createPhoenixRouter());
   v1Router.use("/router", createRouterRouter());
   v1Router.use("/memory", createMemoryRouter());
+  v1Router.use("/mcp", mcpRouter);
 
   // Add Tracks routes (EPP v2)
   v1Router.use("/tracks", createTracksRouter());

@@ -4,6 +4,7 @@ import { exec } from "child_process";
 import path from "path";
 import fs from "fs/promises";
 import { config } from "../config/index.js";
+import { getE2BSandboxManager } from "../security/e2b_sandbox_manager.js";
 
 interface RefineResult {
   clean_content?: string;
@@ -30,10 +31,24 @@ export default class DataScientistAgent implements IAgent {
   ];
 
   private apiUrl: string;
+  private useE2B: boolean;
 
   constructor() {
     this.apiUrl =
       process.env.BRUNELLA_PYTHON_API_URL ?? "http://127.0.0.1:8000";
+
+    // Enable E2B if API key is configured
+    this.useE2B = !!(
+      process.env.E2B_API_KEY &&
+      process.env.E2B_API_KEY !== '' &&
+      process.env.E2B_API_KEY !== 'your-e2b-api-key-here'
+    );
+
+    if (this.useE2B) {
+      logInfo(this.name, 'E2B sandbox mode enabled (secure isolation)');
+    } else {
+      logInfo(this.name, 'E2B disabled - using subprocess (less secure)');
+    }
   }
 
   async execute(
@@ -190,18 +205,30 @@ export default class DataScientistAgent implements IAgent {
     return { status: "success", data: entities };
   }
 
-  /** Call Python refiner — API first, subprocess fallback */
+  /** Call Python refiner — API first, E2B second, subprocess fallback */
   private async callRefiner(
     content: string,
     source = "DataScientistAgent",
   ): Promise<RefineResult | null> {
+    // Priority 1: FastAPI (fastest, already running)
     if (this.apiUrl && this.apiUrl !== "" && this.apiUrl !== "disabled") {
       try {
         return await this.callRefinerApi(content, source);
       } catch {
-        logInfo(this.name, "API unavailable, falling back to subprocess");
+        logInfo(this.name, "API unavailable, trying E2B sandbox...");
       }
     }
+
+    // Priority 2: E2B Sandbox (secure, isolated)
+    if (this.useE2B) {
+      try {
+        return await this.callRefinerE2B(content, source);
+      } catch {
+        logInfo(this.name, "E2B sandbox failed, falling back to subprocess");
+      }
+    }
+
+    // Priority 3: Subprocess (legacy, less secure)
     return this.callRefinerSubprocess(content, source);
   }
 
@@ -228,6 +255,69 @@ export default class DataScientistAgent implements IAgent {
       return (await response.json()) as RefineResult;
     } finally {
       clearTimeout(timeout);
+    }
+  }
+
+  /** E2B Sandbox execution — secure isolated environment */
+  private async callRefinerE2B(
+    content: string,
+    source: string
+  ): Promise<RefineResult | null> {
+    const manager = getE2BSandboxManager();
+
+    // Python code to run refiner logic
+    const pythonCode = `
+import json
+import sys
+
+# Inline refiner logic (simplified for sandbox)
+content = ${JSON.stringify(content)}
+source = ${JSON.stringify(source)}
+
+# Basic filtering
+priority_keywords = [
+  "AI", "machine learning", "LLM", "GPT", "Claude", "agent",
+  "automation", "workflow", "integration", "API"
+]
+
+detected_topics = [kw for kw in priority_keywords if kw.lower() in content.lower()]
+is_actionable = len(detected_topics) >= 2
+
+if len(detected_topics) == 0:
+  result = {"status": "REJECTED", "reason": "No priority topics"}
+else:
+  result = {
+    "clean_content": content[:1000],  # Truncate for safety
+    "metadata": {
+      "detected_topics": detected_topics,
+      "is_actionable": is_actionable,
+      "timestamps": "2026-02-18"
+    },
+    "source": source,
+    "status": "SUCCESS"
+  }
+
+print(json.dumps(result))
+`;
+
+    const executionResult = await manager.executeCode(pythonCode, {
+      timeout_ms: 30000,
+      export_artifacts: false  // No artifacts needed for refiner
+    });
+
+    if (!executionResult.success || !executionResult.output) {
+      logError(this.name, `E2B execution failed: ${executionResult.error}`);
+      return null;
+    }
+
+    try {
+      const parsed = JSON.parse(executionResult.output) as RefineResult;
+      logInfo(this.name, `E2B refiner: ${parsed.status}`);
+      return parsed;
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      logError(this.name, `E2B output parse error: ${msg}`);
+      return null;
     }
   }
 
