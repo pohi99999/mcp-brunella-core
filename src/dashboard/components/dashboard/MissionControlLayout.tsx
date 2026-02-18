@@ -264,32 +264,35 @@ export function MissionControlLayout() {
               )}>
                 {activeTab === "dashboard" && (
                   <div className="grid grid-cols-12 gap-6 animate-in fade-in duration-500">
-                    {/* Top Row */}
-                    <div className="col-span-12 lg:col-span-8">
+                    {/* Row 1: System Health - Full Width */}
+                    <div className="col-span-12">
                       <SystemHealthCard />
                     </div>
-                    <div className="col-span-12 lg:col-span-4">
-                       <TrackProgressWidget />
+
+                    {/* Row 2: Main Control Panel - 50/50 Split - Stretch to fill height */}
+                    <div className="col-span-12 lg:col-span-6 flex">
+                      <div className="w-full">
+                        <AgentStatusCard
+                          agent={registryAgents[0]}
+                          status={socketStatusMap[registryAgents[0]?.name]?.status || 'idle'}
+                          taskDescription={socketStatusMap[registryAgents[0]?.name]?.task}
+                          onExecute={handleExecuteAgent}
+                          allAgents={registryAgents}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-span-12 lg:col-span-6 flex">
+                      <div className="w-full">
+                        <JulesPanel />
+                      </div>
                     </div>
 
-                    {/* Middle Row - Core Tools */}
-                    <div className="col-span-12 lg:col-span-4">
-                      <AgentStatusCard 
-                        agents={registryAgents} 
-                        socketStatusMap={socketStatusMap} 
-                        isLoading={isLoadingAgents}
-                        onExecute={handleExecuteAgent}
-                      />
-                    </div>
-                     <div className="col-span-12 lg:col-span-8">
-                      <JulesPanel />
-                    </div>
-
-                    {/* Bottom Row - Logs and Results */}
+                    {/* Row 3: Activity Monitor - 2/3 + 1/3 Split */}
                     <div className="col-span-12 lg:col-span-8">
                       <TerminalLog logs={logs} />
                     </div>
-                    <div className="col-span-12 lg:col-span-4">
+                    <div className="col-span-12 lg:col-span-4 space-y-6">
+                      <TrackProgressWidget />
                       <TestResultsWidget />
                     </div>
                   </div>

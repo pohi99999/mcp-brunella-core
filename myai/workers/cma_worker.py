@@ -335,15 +335,15 @@ def calc_investment_score(estimate: PriceEstimate, trend: MarketTrend, query: Pr
 
 def generate_recommendation(estimate: PriceEstimate, trend: MarketTrend, inv_score: float) -> str:
     if inv_score >= 7.5:
-        return (f"📈 ERŐS VÁSÁRLÁSI JAVASLAT – Dinamikusan növekvő piac, "
+        return (f"[STRONG BUY] ERŐS VÁSÁRLÁSI JAVASLAT – Dinamikusan növekvő piac, "
                 f"becsült ár: {estimate.value_eur:,.0f} EUR "
                 f"(±{CONFIDENCE_BAND_PCT*100:.0f}%, megbízhatóság: {estimate.confidence*100:.0f}%). "
                 f"Gyors eladásnál: {estimate.quick_sale_eur:,.0f} EUR.")
     if inv_score >= 5.0:
-        return (f"🔶 MÉRSÉKELT JAVASLAT – Stabil piac, normál forgási sebesség. "
+        return (f"[MODERATE] MÉRSÉKELT JAVASLAT – Stabil piac, normál forgási sebesség. "
                 f"Becsült ár: {estimate.value_eur:,.0f} EUR "
                 f"(sáv: {estimate.low_eur:,.0f}–{estimate.high_eur:,.0f} EUR).")
-    return (f"⚠️ ÓVATOS MEGKÖZELÍTÉS – Lassú piac, long-term tartás ajánlott. "
+    return (f"[CAUTION] ÓVATOS MEGKÖZELÍTÉS – Lassú piac, long-term tartás ajánlott. "
             f"Becsült ár: {estimate.value_eur:,.0f} EUR, "
             f"gyors eladásnál akár {estimate.quick_sale_eur:,.0f} EUR.")
 
@@ -369,7 +369,7 @@ def run_cma(query: PropertyQuery) -> CMAReport:
     recommendation = generate_recommendation(estimate, trend, inv_score)
 
     return CMAReport(
-        generated_at=datetime.utcnow().isoformat(),
+        generated_at=datetime.now().isoformat(),
         query=query,
         estimate=estimate,
         comparables=comparables,

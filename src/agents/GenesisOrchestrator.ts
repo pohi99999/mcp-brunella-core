@@ -31,7 +31,7 @@ export class GenesisOrchestrator extends BaseAgent {
 
     try {
       if (task.includes("genesis") || task.includes("futtasd") || task.includes("run")) {
-        const spec = context.metadata?.spec as SpecDocument;
+        const spec = (context as any)?.metadata?.spec as SpecDocument;
         if (!spec) {
           return { success: false, message: "Hiányzó SpecDocument (metadata.spec). Először generálj egyet a SpecWriterAgent-tel." };
         }

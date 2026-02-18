@@ -45,8 +45,11 @@ export function JulesPanel() {
   const [isLoading, setIsLoading] = useState(false);
   const [runs, setRuns] = useState<JulesWorkflowRun[]>([]);
   const [isLoadingRuns, setIsLoadingRuns] = useState(false);
+  const [showAllSessions, setShowAllSessions] = useState(false);
+  const [showAsyncTests, setShowAsyncTests] = useState(false);
 
   const WORKFLOW = "jules-async-tests.yml";
+  const MAX_VISIBLE_SESSIONS = 5;
 
   const refreshSessions = async () => {
     setIsLoading(true);
@@ -128,8 +131,8 @@ export function JulesPanel() {
   };
 
   return (
-    <Card className="glass-panel border-purple-500/20 shadow-purple-900/10">
-      <CardHeader className="flex flex-row items-center justify-between">
+    <Card className="glass-panel border-purple-500/20 shadow-purple-900/10 h-full flex flex-col">
+      <CardHeader className="flex flex-row items-center justify-between shrink-0">
         <CardTitle className="flex items-center gap-2 text-purple-400">
           <Robot size={24} weight="duotone" />
           Jules Integration
@@ -146,7 +149,7 @@ export function JulesPanel() {
           />
         </Button>
       </CardHeader>
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 flex-1 overflow-auto">
         {/* Input Area */}
         <div className="space-y-2">
           <Textarea
@@ -171,15 +174,15 @@ export function JulesPanel() {
           </div>
         </div>
 
-        {/* Sessions List */}
+        {/* Sessions List - Compact */}
         <div className="rounded-md border border-white/10 overflow-hidden">
           <Table>
             <TableHeader className="bg-white/5">
-              <TableRow>
-                <TableHead className="w-[100px]">Session ID</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Task</TableHead>
-                <TableHead className="text-right">Action</TableHead>
+              <TableRow className="text-xs">
+                <TableHead className="w-[80px] py-2">Session</TableHead>
+                <TableHead className="py-2">Status</TableHead>
+                <TableHead className="py-2">Task</TableHead>
+                <TableHead className="text-right py-2">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -187,83 +190,109 @@ export function JulesPanel() {
                 <TableRow>
                   <TableCell
                     colSpan={4}
-                    className="text-center text-muted-foreground h-24"
+                    className="text-center text-muted-foreground h-16 text-xs"
                   >
                     No active sessions found.
                   </TableCell>
                 </TableRow>
               ) : (
-                sessions.map((session) => (
-                  <TableRow key={session.id}>
-                    <TableCell className="font-mono text-xs">
-                      {session.id}
-                    </TableCell>
-                    <TableCell>
-                      <Badge
-                        variant={
-                          session.status?.toLowerCase().includes("completed")
-                            ? "default"
-                            : session.status?.toLowerCase().includes("running")
-                              ? "secondary"
-                              : "outline"
-                        }
+                sessions
+                  .slice(0, showAllSessions ? undefined : MAX_VISIBLE_SESSIONS)
+                  .map((session) => (
+                    <TableRow key={session.id} className="text-xs">
+                      <TableCell className="font-mono text-[10px] py-2">
+                        {session.id.slice(0, 12)}...
+                      </TableCell>
+                      <TableCell className="py-2">
+                        <Badge
+                          variant={
+                            session.status?.toLowerCase().includes("completed")
+                              ? "default"
+                              : session.status?.toLowerCase().includes("running")
+                                ? "secondary"
+                                : "outline"
+                          }
+                          className="text-[10px] px-1.5 py-0"
+                        >
+                          {session.status}
+                        </Badge>
+                      </TableCell>
+                      <TableCell
+                        className="max-w-[200px] truncate py-2"
+                        title={session.task}
                       >
-                        {session.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell
-                      className="max-w-[300px] truncate"
-                      title={session.task}
-                    >
-                      {session.task}
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleSync(session.id)}
-                        title="Sync / Pull"
-                      >
-                        <GitPullRequest size={16} />
-                      </Button>
-                    </TableCell>
-                  </TableRow>
-                ))
+                        {session.task}
+                      </TableCell>
+                      <TableCell className="text-right py-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleSync(session.id)}
+                          title="Sync / Pull"
+                          className="h-6 w-6 p-0"
+                        >
+                          <GitPullRequest size={14} />
+                        </Button>
+                      </TableCell>
+                    </TableRow>
+                  ))
               )}
             </TableBody>
           </Table>
-        </div>
-
-        {/* Async Tests (GitHub Actions) */}
-        <div className="rounded-md border border-white/10 overflow-hidden">
-          <div className="flex items-center justify-between px-3 py-2 bg-white/5">
-            <div className="text-sm font-medium text-muted-foreground">
-              Async Tests (GitHub Actions)
-            </div>
-            <div className="flex gap-2">
+          {sessions.length > MAX_VISIBLE_SESSIONS && (
+            <div className="border-t border-white/10 bg-white/5 p-2 text-center">
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={refreshRuns}
+                onClick={() => setShowAllSessions(!showAllSessions)}
+                className="text-xs text-purple-400 hover:text-purple-300"
+              >
+                {showAllSessions
+                  ? "Show Less"
+                  : `Show ${sessions.length - MAX_VISIBLE_SESSIONS} More`}
+              </Button>
+            </div>
+          )}
+        </div>
+
+        {/* Async Tests (GitHub Actions) - Collapsible */}
+        <div className="rounded-md border border-white/10 overflow-hidden">
+          <button
+            className="flex items-center justify-between px-3 py-2 bg-white/5 w-full hover:bg-white/10 transition-colors"
+            onClick={() => setShowAsyncTests(!showAsyncTests)}
+          >
+            <div className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+              Async Tests (GitHub Actions)
+              {runs.length > 0 && (
+                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                  {runs.filter((r) => r.conclusion === "success").length}/{runs.length} Pass
+                </Badge>
+              )}
+            </div>
+            <div className="flex gap-2 items-center">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  refreshRuns();
+                }}
                 disabled={isLoadingRuns}
                 title="Frissítés"
+                className="h-6 w-6 p-0"
               >
                 <ArrowsClockwise
-                  size={16}
+                  size={14}
                   className={isLoadingRuns ? "animate-spin" : ""}
                 />
               </Button>
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={triggerAsyncTests}
-                title="workflow_dispatch indítás"
-              >
-                <Play className="mr-2 h-4 w-4" />
-                Trigger
-              </Button>
+              <span className="text-xs text-muted-foreground">
+                {showAsyncTests ? "▼" : "▶"}
+              </span>
             </div>
-          </div>
+          </button>
+          {showAsyncTests && (
+            <div>
           <Table>
             <TableHeader className="bg-white/5">
               <TableRow>
@@ -317,10 +346,12 @@ export function JulesPanel() {
               )}
             </TableBody>
           </Table>
+          </div>
+          )}
         </div>
 
-        {/* Test Trend Chart */}
-        {runs.length > 0 && (
+        {/* Test Trend Chart - Only show if tests are visible and there are successes */}
+        {showAsyncTests && runs.length > 0 && runs.some(r => r.conclusion === "success") && (
           <div className="rounded-md border border-white/10 overflow-hidden">
             <div className="flex items-center justify-between px-3 py-2 bg-white/5">
               <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">

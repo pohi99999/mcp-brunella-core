@@ -269,8 +269,9 @@ program
 
         if (opts.json) {
           console.log(JSON.stringify(result, null, 2));
-                    } else {
-                      // @ts-expect-error The result.content might not be a valid array or might be missing.          const text = result.content?.[0]?.text;
+        } else {
+          // @ts-expect-error The result.content might not be a valid array or might be missing.
+          const text = result.content?.[0]?.text;
           if (text) {
             console.log(chalk.bold(`\n✅ ${agentName} Response:`));
             console.log(text);
@@ -835,7 +836,6 @@ conductorCmd
         task: "sync documentation",
       });
       spinner.stop();
-      // @ts-expect-error The response might not have content[0].text.
       console.log(chalk.green("✓"), result);
     } catch (e: any) {
       spinner.stop();

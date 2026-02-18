@@ -238,7 +238,7 @@ export class PropertyAnalystAgent extends BaseAgent {
 
       try {
         const cmaReport = await callCMAWorker(
-          asset.address?.city || asset.address?.full_address || "Budapest",
+          asset.address?.city || asset.address?.formatted || "Budapest",
           asset.property_type || "apartment",
           asset.area_sqm || 0,
           mock

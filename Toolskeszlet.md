@@ -1,7 +1,7 @@
 # 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
 
 Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
-**Generálva:** 2026. 02. 17. 22:13:18
+**Generálva:** 2026. 02. 18. 2:43:58
 
 ---
 
@@ -36,6 +36,9 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 
 ## 📦 geminiTool
 - **gemini_generate**: Generate text using Google Gemini API (2.5 Pro, 2.0 Flash, etc.).
+
+## 📦 getAiRecommendation
+- **get_ai_recommendation**: AI-alapú ajánlásokat ad vissza egy lekérdezésre LanceDB RAG keresés segítségével. Ha a vektoros keresés nem elérhető, statikus fallback ajánlásokat ad.
 
 ## 📦 githubModelsTool
 - **github_models_generate**: Generate text using GitHub Models API (GPT-4o, DeepSeek-R1, Grok 3, etc.). Requires GitHub Pro+ subscription.

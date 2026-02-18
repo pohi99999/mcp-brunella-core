@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 17. 22:12:41
+**Generálva:** 2026. 02. 18. 2:43:47
 **Script:** 
 
 ---
@@ -14,6 +14,20 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 manifest.json.txt
       - 📄 popup.html.txt
       - 📄 popup.js.txt
+    - 📂 **conductor**
+      - 📂 **tracks**
+        - 📂 **hyper_local_supply_chain_20260216**
+          - 📄 meta.json
+          - 📄 plan.md
+          - 📄 spec.md
+        - 📂 **real_estate_sales_campaign_20260216**
+          - 📄 meta.json
+          - 📄 plan.md
+          - 📄 spec.md
+        - 📂 **software_genesis_protocol_20260216**
+          - 📄 meta.json
+          - 📄 plan.md
+          - 📄 spec.md
     - 📂 **deleted_files**
       - 📄 main.py
     - 📂 **docs**
@@ -252,6 +266,176 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 Resources.csv
         - 📄 September 13, 2025_Session details__AI-Powered Co... - September 13, 2025_Session details__AI-Powered Co....csv
         - 📄 tartalom.csv
+    - 📂 **campaigns**
+      - 📂 **ai-marketing**
+        - 📂 **camp_20260217_220616**
+          - 📄 campaign.json
+          - 📄 facebook_body_copy.txt
+          - 📄 facebook_cta.txt
+          - 📄 facebook_headline.txt
+          - 📄 facebook_social_post.txt
+          - 📄 general_body_copy.txt
+          - 📄 general_cta.txt
+          - 📄 general_headline.txt
+          - 📄 general_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
+        - 📂 **camp_20260217_220617**
+          - 📄 campaign.json
+          - 📄 facebook_body_copy.txt
+          - 📄 facebook_cta.txt
+          - 📄 facebook_headline.txt
+          - 📄 facebook_social_post.txt
+          - 📄 general_body_copy.txt
+          - 📄 general_cta.txt
+          - 📄 general_headline.txt
+          - 📄 general_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
+        - 📂 **camp_20260217_220655**
+          - 📄 campaign.json
+          - 📄 facebook_body_copy.txt
+          - 📄 facebook_cta.txt
+          - 📄 facebook_headline.txt
+          - 📄 facebook_social_post.txt
+          - 📄 general_body_copy.txt
+          - 📄 general_cta.txt
+          - 📄 general_headline.txt
+          - 📄 general_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
+        - 📂 **camp_20260217_220656**
+          - 📄 campaign.json
+          - 📄 facebook_body_copy.txt
+          - 📄 facebook_cta.txt
+          - 📄 facebook_headline.txt
+          - 📄 facebook_social_post.txt
+          - 📄 general_body_copy.txt
+          - 📄 general_cta.txt
+          - 📄 general_headline.txt
+          - 📄 general_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
+      - 📂 **ai-tools-2026**
+        - 📂 **camp_20260217_220620**
+          - 📄 campaign.json
+          - 📄 facebook_body_copy.txt
+          - 📄 facebook_cta.txt
+          - 📄 facebook_headline.txt
+          - 📄 facebook_social_post.txt
+          - 📄 general_body_copy.txt
+          - 📄 general_cta.txt
+          - 📄 general_headline.txt
+          - 📄 general_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
+        - 📂 **camp_20260217_220659**
+          - 📄 campaign.json
+          - 📄 facebook_body_copy.txt
+          - 📄 facebook_cta.txt
+          - 📄 facebook_headline.txt
+          - 📄 facebook_social_post.txt
+          - 📄 general_body_copy.txt
+          - 📄 general_cta.txt
+          - 📄 general_headline.txt
+          - 📄 general_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
+      - 📂 **stdin-kampány-teszt**
+        - 📂 **camp_20260217_220619**
+          - 📄 campaign.json
+          - 📄 facebook_body_copy.txt
+          - 📄 facebook_cta.txt
+          - 📄 facebook_headline.txt
+          - 📄 facebook_social_post.txt
+          - 📄 general_body_copy.txt
+          - 📄 general_cta.txt
+          - 📄 general_headline.txt
+          - 📄 general_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
+        - 📂 **camp_20260217_220658**
+          - 📄 campaign.json
+          - 📄 facebook_body_copy.txt
+          - 📄 facebook_cta.txt
+          - 📄 facebook_headline.txt
+          - 📄 facebook_social_post.txt
+          - 📄 general_body_copy.txt
+          - 📄 general_cta.txt
+          - 📄 general_headline.txt
+          - 📄 general_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
+      - 📂 **teszt**
+        - 📂 **camp_20260217_220618**
+          - 📄 campaign.json
+          - 📄 email_body_copy.txt
+          - 📄 email_cta.txt
+          - 📄 email_headline.txt
+          - 📄 email_social_post.txt
+          - 📄 facebook_body_copy.txt
+          - 📄 facebook_cta.txt
+          - 📄 facebook_headline.txt
+          - 📄 facebook_social_post.txt
+          - 📄 general_body_copy.txt
+          - 📄 general_cta.txt
+          - 📄 general_headline.txt
+          - 📄 general_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
+        - 📂 **camp_20260217_220656**
+          - 📄 campaign.json
+          - 📄 facebook_body_copy.txt
+          - 📄 facebook_cta.txt
+          - 📄 facebook_headline.txt
+          - 📄 facebook_social_post.txt
+          - 📄 general_body_copy.txt
+          - 📄 general_cta.txt
+          - 📄 general_headline.txt
+          - 📄 general_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
+        - 📂 **camp_20260217_220657**
+          - 📄 campaign.json
+          - 📄 email_body_copy.txt
+          - 📄 email_cta.txt
+          - 📄 email_headline.txt
+          - 📄 email_social_post.txt
+          - 📄 linkedin_body_copy.txt
+          - 📄 linkedin_cta.txt
+          - 📄 linkedin_headline.txt
+          - 📄 linkedin_social_post.txt
+          - 📄 SUMMARY.md
     - 📂 **config**
       - 📂 **commands**
         - 📂 **github**
@@ -42569,10 +42753,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **green_lightning_20260212**
         - 📄 meta.json
         - 📄 spec.md
-      - 📂 **hyper_local_supply_chain_20260216**
-        - 📄 meta.json
-        - 📄 plan.md
-        - 📄 spec.md
       - 📂 **industrial_machine_hunter_20260216**
         - 📄 meta.json
         - 📄 plan.md
@@ -42630,10 +42810,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 phase4_degradation_policy.md
         - 📄 recovery_logic_implementation.md
         - 📄 spec.md
-      - 📂 **real_estate_sales_campaign_20260216**
-        - 📄 meta.json
-        - 📄 plan.md
-        - 📄 spec.md
       - 📂 **robotkez_n8n_sandbox_edzesterv**
         - 📄 BROWSER_USE_TEST_REPORT.md
         - 📄 meta.json
@@ -42651,20 +42827,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **self_healing_core_20260213**
         - 📄 meta.json
         - 📄 track.md
-      - 📂 **software_genesis_protocol_20260216**
-        - 📄 meta.json
-        - 📄 plan.md
-        - 📄 spec.md
       - 📂 **test-20260211**
       - 📂 **test-feature-20260211**
       - 📂 **test-track-12345678**
       - 📂 **test-track-20260211**
+      - 📄 PHASE_3_COMPLETION_REPORT.md
     - 📄 BAS_ARCHITECTURE_v2.md
     - 📄 CHANGELOG.md
     - 📄 Cocductornak_szeretettel.pdf
     - 📄 epp-v2.md
     - 📄 index.md
     - 📄 meta-schema.json
+    - 📄 PHASE_4_COMPLETION_SUMMARY.md
     - 📄 product-guidelines.md
     - 📄 product.md
     - 📄 project_state.json
@@ -42743,6 +42917,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 developer_metrics.json
     - 📄 ev_hunter_results.json
     - 📄 fix_queue.json
+    - 📄 internal_needs.json
     - 📄 tasks.db
   - 📂 **docs**
     - 📂 **agents**
@@ -180656,6 +180831,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 project.py
       - 📄 sandbox.py
       - 📄 tools.py
+      - 📄 vision_worker.py
     - 📂 **data**
       - 📂 **training**
         - 📄 golden_dataset.jsonl
@@ -180699,14 +180875,23 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 __init__.py
       - 📄 invoice.py
     - 📂 **tasks**
+      - 📄 corporate_hunter.py
       - 📄 ev_hunter.py
     - 📂 **tests**
       - 📂 **__pycache__**
         - 📄 test_browser_worker.cpython-312-pytest-9.0.2.pyc
+        - 📄 test_cma_worker.cpython-314-pytest-9.0.1.pyc
+        - 📄 test_geo_scraper.cpython-312-pytest-9.0.2.pyc
+        - 📄 test_machine_hunter.cpython-312-pytest-9.0.2.pyc
+        - 📄 test_media_factory.cpython-312-pytest-9.0.2.pyc
+        - 📄 test_supply_matcher.cpython-314-pytest-9.0.1.pyc
+        - 📄 test_trend_analyst.cpython-312-pytest-9.0.2.pyc
       - 📄 test_agent.py
       - 📄 test_browser_worker.py
       - 📄 test_cli.py
+      - 📄 test_cma_worker.py
       - 📄 test_dependencies.py
+      - 📄 test_geo_scraper.py
       - 📄 test_interactive_browser.py
       - 📄 test_iron_clad_backend_phase1.py
       - 📄 test_iron_clad_interpreter_adapter.py
@@ -180714,10 +180899,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 test_iron_clad_opendevin_adapter.py
       - 📄 test_iron_clad_provider.py
       - 📄 test_llm.py
+      - 📄 test_machine_hunter.py
+      - 📄 test_media_factory.py
       - 📄 test_project.py
       - 📄 test_sandbox.py
       - 📄 test_structure.py
+      - 📄 test_supply_matcher.py
       - 📄 test_tools.py
+      - 📄 test_trend_analyst.py
+      - 📄 test_vision_worker.py
     - 📂 **tools**
       - 📄 __init__.py
       - 📄 HARVEST_PIPELINE_README.md
@@ -180750,6 +180940,21 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 pdfparser.py
       - 📄 phoenix_protocol.py
       - 📄 textsplitter.py
+    - 📂 **workers**
+      - 📂 **__pycache__**
+        - 📄 cma_worker.cpython-314.pyc
+        - 📄 geo_scraper.cpython-312.pyc
+        - 📄 machine_hunter.cpython-312.pyc
+        - 📄 media_factory.cpython-312.pyc
+        - 📄 supply_matcher.cpython-314.pyc
+        - 📄 trend_analyst.cpython-312.pyc
+      - 📄 cma_worker.py
+      - 📄 geo_scraper.py
+      - 📄 machine_hunter.py
+      - 📄 media_factory.py
+      - 📄 route_optimizer.py
+      - 📄 supply_matcher.py
+      - 📄 trend_analyst.py
     - 📂 **workflows**
       - 📄 n8n_lint_fixer_automation.json
     - 📄 __init__.py
@@ -181302,6 +181507,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 EnterpriseOrchestrator.ts
       - 📄 EvaluatorAgent.ts
       - 📄 FinanceGuardian.ts
+      - 📄 GenesisOrchestrator.ts
       - 📄 GitHubModelsAgent.ts
       - 📄 gitIntegration.ts
       - 📄 GrantHunter.ts
@@ -181310,6 +181516,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 LintFixerAgent.ts
       - 📄 LocalCSRBot.ts
       - 📄 LogisticsDispatcher.ts
+      - 📄 MarketingAgent.ts
+      - 📄 NurturerAgent.ts
       - 📄 OrchestratorAgent.ts
       - 📄 permissions.ts
       - 📄 PricingAgent.ts
@@ -181329,6 +181537,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 taskDecomposerCore.ts
       - 📄 taskQueue.ts
       - 📄 types.ts
+      - 📄 UXDesignerAgent.ts
       - 📄 VoiceAgent.ts
     - 📂 **cli**
       - 📄 conductorCommands.ts
@@ -181598,8 +181807,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 index.ts
         - 📄 jules.ts
         - 📄 llm.ts
+        - 📄 machines.ts
         - 📄 metrics.ts
         - 📄 prometheus.ts
+        - 📄 recommendation.ts
         - 📄 robotkez.ts
         - 📄 scaling.ts
         - 📄 scheduledTasks.ts
@@ -181650,6 +181861,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 deploymentAnalyzer.ts
       - 📄 evHunterTool.ts
       - 📄 geminiTool.ts
+      - 📄 getAiRecommendation.ts
       - 📄 getSzamlazzInvoices.ts
       - 📄 gitAutomation.ts
       - 📄 githubModelsTool.ts
@@ -181670,6 +181882,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 workspace.ts
       - 📄 writeSheetsInvoices.ts
     - 📂 **types**
+      - 📄 blueprint.ts
       - 📄 cean.ts
       - 📄 deploymentErrors.ts
       - 📄 github.ts
@@ -181735,6 +181948,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 invoice_automation_e2e_test.cpython-312-pytest-9.0.2.pyc
       - 📄 invoice_automation_e2e_test.cpython-314-pytest-9.0.1.pyc
       - 📄 invoice_refiner_test.cpython-314-pytest-9.0.1.pyc
+      - 📄 marketing_swarm_integration_test.cpython-312-pytest-9.0.2.pyc
       - 📄 phoenix_protocol_test.cpython-314-pytest-9.0.1.pyc
       - 📄 szamlazz_hu_client_test.cpython-314-pytest-9.0.1.pyc
     - 📂 **dashboard**
@@ -181810,6 +182024,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 llm_client.test.ts
     - 📄 llm_provider.test.ts
     - 📄 llmPlanner.test.ts
+    - 📄 marketing_swarm_integration_test.py
     - 📄 mcp-brunella-core.code-workspace
     - 📄 memory_context.test.ts
     - 📄 memoryRoutes.golden.test.ts
@@ -181822,6 +182037,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 n8n_automation.test.ts
     - 📄 notificationService.test.ts
     - 📄 persistentBrowser.test.ts
+    - 📄 phase2_integration.test.ts
+    - 📄 phase3_integration.test.ts
+    - 📄 phase4_real_estate.test.ts
+    - 📄 phase4_software_genesis.test.ts
+    - 📄 phase4_supply_chain.test.ts
     - 📄 phase6-integration.test.ts
     - 📄 phoenix_event_bus.test.ts
     - 📄 phoenix_protocol_test.py
