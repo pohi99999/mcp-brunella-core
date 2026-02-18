@@ -1,14 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-18T02:00:00.036Z
+**Utolso frissites:** 2026-02-18T03:50:00.000Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 44 total | 7 active | 8 completed | 11 archived
+**Stats:** 34 total | 9 proposed | 4 active | 0 completed | 21 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (8)
+## Tervezett Szalak (Proposed) (9)
 
 - [ ] **BAS Enterprise Suite - 18 Module Business Automation** [HIGH]
   - **ID:** `bas_enterprise_suite`
@@ -50,6 +50,13 @@
   - **Assignee:** Jules AI + GitHub Actions
   - Mappa: ./tracks/jules_enterprise_cicd_20260212/
 
+- [ ] **MCP + Ollama Integration - Secure Filesystem & Multi-Provider Gateway** [CRITICAL]
+  - **ID:** `mcp_ollama_integration_20260218`
+  - **Progress:** 0%
+  - **Assignee:** DeveloperAgent, DataScientistAgent, EdgeProxyAgent
+  - **Estimated:** 80h (3 weeks)
+  - Mappa: ./tracks/mcp_ollama_integration_20260218/
+
 - [ ] **Micro-Local CSR Automator (Neighborhood Watchman)** [LOW]
   - **ID:** `micro_csr_automator_20260212`
   - **Progress:** 0%
@@ -58,7 +65,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (7)
+## Aktiv Szalak (Active) (4)
 
 - [ ] **AI Recommendation System Integration** [MEDIUM]
   - **ID:** `ai_recommendation_system_20260216`
@@ -77,86 +84,42 @@
   - **Updated:** 2026-02-16T00:00:00Z
   - Mappa: ./tracks/industrial_machine_hunter_20260216/
 
-- [x] **Számla Adatkinyerés és Google Sheets Automatizáció** [HIGH]
-  - **ID:** `invoice-to-sheets-automation-20260214`
-  - **Progress:** 100%
-  - **Updated:** 2026-02-17T21:05:00Z
-  - Mappa: ./tracks/invoice-to-sheets-automation-20260214/
-
-- [x] **Jules Continuous AI Integration (JCAI)** [CRITICAL]
-  - **ID:** `jules_continuous_ai_integration_20260215`
-  - **Progress:** 100%
-  - **Updated:** 2026-02-17T15:00:00Z
-  - Mappa: ./tracks/jules_continuous_ai_integration_20260215/
-
 - [ ] **Marketing Swarm - Automated Campaign Factory** [HIGH]
   - **ID:** `marketing_swarm_20260216`
   - **Progress:** 0%
   - **Updated:** 2026-02-16T00:00:00Z
   - Mappa: ./tracks/marketing_swarm_20260216/
 
-- [x] **Data Flywheel Logikája** [HIGH]
-  - **ID:** `financial-auditor-agent-20260214`
-  - **Progress:** 100%
-  - **Updated:** 2026-02-14T00:00:00Z
-  - Mappa: ./tracks/financial-auditor-agent-20260214/
-
 ---
 
-## Befejezett (Completed - Not Archived) (8)
-
-- [x] **Codex NeuralLink Chat Refactor**
-  - **ID:** `codex_chat_refactor_20260212`
-  - Mappa: ./tracks/codex_chat_refactor_20260212/
-
-- [x] **Dashboard Komplett Tesztsorozat**
-  - **ID:** `dashboard_test_suite_20260210`
-  - Mappa: ./tracks/dashboard_test_suite_20260210/
-
-- [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító**
-  - **ID:** `enterprise_suite_master_20260216`
-  - Mappa: ./tracks/enterprise_suite_master_20260216/
-
-- [x] **OpenTelemetry Agent Tracing**
-  - **ID:** `otel_agent_tracing_20260211`
-  - Mappa: ./tracks/otel_agent_tracing_20260211/
-
-- [x] **Phoenix Protocol v2 - Öngyógyító Rendszer**
-  - **ID:** `phoenix_protocol_v2_20260205`
-  - **Completed:** 2026-02-16T16:20:00Z
-  - Mappa: ./tracks/phoenix_protocol_v2_20260205/
-
-- [x] **RobotkezV2 - Full Comet (Magyar Agentic Browser)**
-  - **ID:** `robotkezv2-full-comet-20260215`
-  - **Completed:** 2026-02-15T22:00:00Z
-  - Mappa: ./tracks/robotkezv2-full-comet-20260215/
-
-- [x] **Robotkéz Stabilizáció & Gemini 2.0**
-  - **ID:** `robotkez_stabilization_20260212`
-  - Mappa: ./tracks/robotkez_stabilization_20260212/
-
-- [x] **Self-Healing & Auto-Fix Protocol**
-  - **ID:** `self_healing_core_20260213`
-  - Mappa: ./tracks/self_healing_core_20260213/
-
----
-
-## Archivalt (Archived) (11)
+## Archivalt (Archived) (21)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
+**Legutóbbi archivlások (2026-02-18):**
+- [x] **Codex NeuralLink Chat Refactor** (2026-02-18T03:45:00Z)
+- [x] **Dashboard Komplett Tesztsorozat** (2026-02-18T03:45:00Z)
+- [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító** (2026-02-18T03:45:00Z)
+- [x] **Jules Continuous AI Integration (JCAI)** (2026-02-18T03:45:00Z)
+- [x] **OpenTelemetry Agent Tracing** (2026-02-18T03:45:00Z)
+- [x] **Phoenix Protocol v2 - Öngyógyító Rendszer** (2026-02-18T03:45:00Z)
+- [x] **RobotkezV2 - Full Comet (Magyar Agentic Browser)** (2026-02-18T03:45:00Z)
+- [x] **Robotkéz Stabilizáció & Gemini 2.0** (2026-02-18T03:45:00Z)
+- [x] **Self-Healing & Auto-Fix Protocol** (2026-02-18T03:45:00Z)
+- [x] **Számla Adatkinyerés és Google Sheets Automatizáció** (2026-02-18T03:45:00Z)
+
+**Korábbi archivlások:**
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **Browser-Use Harvester with Structured JSON Output** (N/A)
 - [x] **Dashboard TODO Widget** (2026-02-13)
 - [x] **Data Flywheel & Incubator** (2026-02-05)
-- [x] **Számla Adatkinyerés és Google Sheets Automatizáció** (2026-02-17T21:05:00Z)
 - [x] **Iron Clad Python AI Backend** (2026-02-17T14:30:00Z)
 - [x] **Jules Async Test Automation (GitHub Actions)** (2026-02-13)
 - [x] **SpecWriter Agent (Ötlet → Track Generátor)** (2026-02-13T02:00:00Z)
 - [x] **Task Decomposer Agent (Mikro-Ügynök Orchestrator)** (2026-02-13)
 
-... and 1 more archived tracks
+... and 2 more archived tracks
 
 ---
 

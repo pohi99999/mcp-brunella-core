@@ -83,7 +83,9 @@
       "Bash(brunella conductor status:*)",
       "Bash(.ai/claude_new_entry.md:*)",
       "Bash(npx eslint:*)",
-      "Bash(git fetch:*)"
+      "Bash(git fetch:*)",
+      "Bash(git pull:*)",
+      "Bash(git lfs push:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

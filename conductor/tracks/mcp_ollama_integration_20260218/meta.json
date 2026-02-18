@@ -1,0 +1,185 @@
+{
+  "track_id": "mcp_ollama_integration_20260218",
+  "title": "MCP + Ollama Integration - Secure Filesystem & Multi-Provider Gateway",
+  "description": "Comprehensive integration of Model Context Protocol with Ollama for filesystem-aware LLM operations, E2B sandboxes for DataScientistAgent, and Bifrost Gateway for multi-provider routing (Ollama, Gemini, GitHub Models, Anthropic).",
+  "priority": "P0",
+  "status": "ACTIVE",
+  "spec_status": "COMPLETED",
+  "implementation_allowed": true,
+  "created_at": "2026-02-18T03:30:00Z",
+  "updated_at": "2026-02-18T04:15:00Z",
+  "started_at": "2026-02-18T04:00:00Z",
+  "progress": 15,
+  "phase": "Phase 1: MCP Filesystem Foundation - IN PROGRESS (70%)",
+  "completion_phase_1": false,
+  "completion_phase_2": false,
+  "completion_phase_3": false,
+  "completion_phase_4": false,
+  "completion_phase_5": false,
+  "tags": [
+    "mcp",
+    "ollama",
+    "security",
+    "e2b-sandboxes",
+    "bifrost-gateway",
+    "multi-llm",
+    "filesystem",
+    "python-bridge"
+  ],
+  "estimated_hours": 80,
+  "target_completion": "2026-03-04",
+  "owner": "Brunella AI Development Team",
+  "assignees": [
+    "DeveloperAgent",
+    "DataScientistAgent",
+    "EdgeProxyAgent"
+  ],
+  "dependencies": [
+    "@modelcontextprotocol/sdk",
+    "@e2b/sdk",
+    "ollama",
+    "@google/generative-ai",
+    "@anthropic-ai/sdk"
+  ],
+  "success_metrics": {
+    "mcp_tool_response_time": {
+      "target": "<100ms",
+      "current": null,
+      "unit": "ms"
+    },
+    "e2b_sandbox_start_time": {
+      "target": "<5s",
+      "current": null,
+      "unit": "s"
+    },
+    "bifrost_auto_select_accuracy": {
+      "target": "≥85%",
+      "current": null,
+      "unit": "%"
+    },
+    "security_audit_coverage": {
+      "target": "100%",
+      "current": null,
+      "unit": "operations"
+    },
+    "test_pass_rate": {
+      "target": "≥98%",
+      "current": null,
+      "unit": "%"
+    },
+    "provider_fallback_success": {
+      "target": "≥95%",
+      "current": null,
+      "unit": "%"
+    }
+  },
+  "phases": {
+    "phase_1": {
+      "name": "MCP Filesystem Foundation",
+      "estimated_hours": 20,
+      "status": "NOT_STARTED",
+      "progress": 0,
+      "key_deliverables": [
+        "MCP server with 4 filesystem tools",
+        "Ollama MCP integration",
+        "Safe Zone security framework",
+        "Audit log system"
+      ]
+    },
+    "phase_2": {
+      "name": "E2B Sandboxes for DataScientistAgent",
+      "estimated_hours": 18,
+      "status": "NOT_STARTED",
+      "progress": 0,
+      "key_deliverables": [
+        "E2B Python sandbox manager",
+        "DataScientistAgent integration",
+        "Artifact export to Safe Zone",
+        "Error handling & timeouts"
+      ]
+    },
+    "phase_3": {
+      "name": "Bifrost Gateway - Multi-Provider LLM Routing",
+      "estimated_hours": 16,
+      "status": "NOT_STARTED",
+      "progress": 0,
+      "key_deliverables": [
+        "Unified LLM interface (4 providers)",
+        "Auto-selection logic",
+        "Fallback mechanism",
+        "Provider health monitor"
+      ]
+    },
+    "phase_4": {
+      "name": "Dashboard MCPCommandCenter",
+      "estimated_hours": 14,
+      "status": "NOT_STARTED",
+      "progress": 0,
+      "key_deliverables": [
+        "MCP tool management UI",
+        "Real-time audit log viewer",
+        "Provider health dashboard",
+        "Safe Zone permission editor"
+      ]
+    },
+    "phase_5": {
+      "name": "Python MCP Bridge",
+      "estimated_hours": 12,
+      "status": "NOT_STARTED",
+      "progress": 0,
+      "key_deliverables": [
+        "myai/tools/mcp_bridge.py",
+        "Python API for MCP operations",
+        "DataScientist workflow integration",
+        "Unit & integration tests"
+      ]
+    }
+  },
+  "security_considerations": [
+    "Safe Zone whitelist-based access control",
+    "Blacklist enforcement (.env, .pem files)",
+    "E2B sandbox network isolation",
+    "MCP protocol stdio-only transport",
+    "Audit trail for all filesystem operations"
+  ],
+  "testing": {
+    "unit_tests": 60,
+    "integration_tests": 25,
+    "security_tests": 15,
+    "total_tests": 100,
+    "coverage_target": "98%"
+  },
+  "rollout": {
+    "week_1": "Phase 1 + 2 (MCP + E2B)",
+    "week_2": "Phase 3 + 4 (Bifrost + Dashboard)",
+    "week_3": "Phase 5 + Testing (Python Bridge + QA)"
+  },
+  "risks": [
+    {
+      "risk": "E2B quota exceeded",
+      "impact": "HIGH",
+      "mitigation": "Monitor daily usage, implement quota warnings"
+    },
+    {
+      "risk": "Ollama offline",
+      "impact": "MEDIUM",
+      "mitigation": "Health checks + fallback to Gemini"
+    },
+    {
+      "risk": "MCP security breach",
+      "impact": "CRITICAL",
+      "mitigation": "Safe Zone validation + audit logs"
+    },
+    {
+      "risk": "Provider API costs",
+      "impact": "MEDIUM",
+      "mitigation": "Usage tracking + budget alerts"
+    }
+  ],
+  "future_enhancements": [
+    "Multi-user MCP sessions",
+    "WebAssembly sandboxes (browser execution)",
+    "MCP tool marketplace",
+    "LangChain MCP adapter"
+  ]
+}
