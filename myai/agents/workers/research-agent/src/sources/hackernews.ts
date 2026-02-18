@@ -15,7 +15,9 @@ export async function fetchHackerNews(
     const response = await fetch(searchUrl);
     
     if (!response.ok) {
-      logError("HackerNews API error", { status: response.status });
+      logError("ResearchAgent", "HackerNews API error", {
+        status: response.status,
+      });
       return results;
     }
 
@@ -43,7 +45,7 @@ export async function fetchHackerNews(
 
     return results;
   } catch (error: any) {
-    logError("HackerNews fetch error", {
+    logError("ResearchAgent", "HackerNews fetch error", {
       message: error instanceof Error ? error.message : String(error),
     });
     return results;

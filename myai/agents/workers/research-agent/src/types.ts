@@ -46,6 +46,11 @@ export interface AnalyzedResult extends ResearchResult {
   summary: string;
 }
 
+export interface StoredResult {
+  id: string;
+  result: AnalyzedResult;
+}
+
 export interface TaskPayload {
   query: string;
   sources: string[];

@@ -85,7 +85,10 @@
       "Bash(npx eslint:*)",
       "Bash(git fetch:*)",
       "Bash(git pull:*)",
-      "Bash(git lfs push:*)"
+      "Bash(git lfs push:*)",
+      "Bash(python3:*)",
+      "Bash(cmd /c:*)",
+      "Bash(npx tsc)"
     ]
   },
   "enableAllProjectMcpServers": true,

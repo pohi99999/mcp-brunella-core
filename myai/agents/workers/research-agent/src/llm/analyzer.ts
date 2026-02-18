@@ -12,7 +12,7 @@ export async function analyzeWithLLM(
 ): Promise<AnalyzedResult[]> {
   // If no API key available, return results without additional analysis
   if (!env.GEMINI_API_KEY && !env.OPENAI_API_KEY) {
-    logWarn("No LLM API key configured, skipping AI analysis");
+    logWarn("ResearchAgent", "No LLM API key configured, skipping AI analysis");
     return results.map(r => ({
       ...r,
       confidence_score: r.relevance_score,
@@ -37,7 +37,7 @@ export async function analyzeWithLLM(
         ...analysis,
       });
     } catch (error: any) {
-      logError("Analysis failed", {
+      logError("ResearchAgent", "Analysis failed", {
         resultId: result.id,
         message: error instanceof Error ? error.message : String(error),
       });
@@ -87,7 +87,7 @@ Provide analysis in JSON format:
     try {
       return await analyzeWithGemini(prompt, env.GEMINI_API_KEY);
     } catch (error: any) {
-      logError("Gemini analysis failed", {
+      logError("ResearchAgent", "Gemini analysis failed", {
         message: error instanceof Error ? error.message : String(error),
       });
     }

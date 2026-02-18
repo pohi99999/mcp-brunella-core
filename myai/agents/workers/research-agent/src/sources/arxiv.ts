@@ -15,7 +15,9 @@ export async function fetchArxivPapers(
     const response = await fetch(searchUrl);
     
     if (!response.ok) {
-      logError("arXiv API error", { status: response.status });
+      logError("ResearchAgent", "arXiv API error", {
+        status: response.status,
+      });
       return results;
     }
 
@@ -60,7 +62,7 @@ export async function fetchArxivPapers(
 
     return results;
   } catch (error: any) {
-    logError("arXiv fetch error", {
+    logError("ResearchAgent", "arXiv fetch error", {
       message: error instanceof Error ? error.message : String(error),
     });
     return results;

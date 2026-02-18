@@ -7,9 +7,9 @@ import { fetchGitHubTrends } from './sources/github.js';
 import { fetchHackerNews } from './sources/hackernews.js';
 import { fetchArxivPapers } from './sources/arxiv.js';
 import { analyzeWithLLM } from './llm/analyzer.js';
-import { storeResults } from './storage/d1.js';
-import { storeEmbeddings } from './storage/vectorize.js';
-import { logError, logInfo } from './utils/logger.js';
+import { markResultsSynced, storeResults } from "./storage/d1.js";
+import { upsertResultsToVectorize } from "./storage/vectorize.js";
+import { logError, logInfo } from "./utils/logger.js";
 
 export default {
   /**
@@ -80,7 +80,8 @@ export default {
         const storedResults = await storeResults(env.DB, taskId, analyzed);
 
         // Store embeddings in Vectorize (if configured)
-        await storeEmbeddings(env, taskId, storedResults);
+        const vectorizeEntries = await upsertResultsToVectorize(taskId, storedResults, env);
+        await markResultsSynced(env.DB, vectorizeEntries);
 
         // Update task status
         await updateTaskStatus(env.DB, taskId, 'completed', {
@@ -111,7 +112,7 @@ export default {
       });
 
     } catch (error: any) {
-      logError("Research Agent Error", {
+      logError("ResearchAgent", "Request handler failed", {
         message: error instanceof Error ? error.message : String(error),
       });
       return new Response(JSON.stringify({
@@ -129,7 +130,7 @@ export default {
    * Runs daily at 2 AM UTC
    */
   async scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void> {
-    logInfo('Research Agent - Daily Scheduled Run');
+    logInfo("ResearchAgent", "Daily scheduled run started");
     
     try {
       // Default daily research queries
@@ -153,21 +154,22 @@ export default {
         const results = await executeResearch(query, ['github', 'hackernews', 'arxiv'], 50, env);
         const analyzed = await analyzeWithLLM(results, query, env);
         const storedResults = await storeResults(env.DB, taskId, analyzed);
-        await storeEmbeddings(env, taskId, storedResults);
+        const vectorizeEntries = await upsertResultsToVectorize(taskId, storedResults, env);
+        await markResultsSynced(env.DB, vectorizeEntries);
         await updateTaskStatus(env.DB, taskId, 'completed', {
           results_count: analyzed.length,
           scheduled: true,
         });
 
-        logInfo('Completed scheduled research', {
+        logInfo("ResearchAgent", "Scheduled query completed", {
           query,
           resultsCount: analyzed.length,
         });
       }
 
-      logInfo('Daily research run completed successfully');
+      logInfo("ResearchAgent", "Daily scheduled run completed");
     } catch (error: any) {
-      logError('Scheduled run failed', {
+      logError("ResearchAgent", "Scheduled run failed", {
         message: error instanceof Error ? error.message : String(error),
       });
       throw error;
