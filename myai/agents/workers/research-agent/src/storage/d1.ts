@@ -1,5 +1,11 @@
 // D1 Database Storage Module
-import { AnalyzedResult } from '../types';
+import { AnalyzedResult } from '../types.js';
+import { logError, logInfo } from '../utils/logger.js';
+
+export interface StoredResult {
+  id: string;
+  result: AnalyzedResult;
+}
 
 /**
  * Store analyzed results in D1
@@ -8,17 +14,20 @@ export async function storeResults(
   db: D1Database,
   taskId: string,
   results: AnalyzedResult[]
-): Promise<void> {
+): Promise<StoredResult[]> {
   if (results.length === 0) {
-    return;
+    return [];
   }
 
   try {
-    // Batch insert to edge_results table
-    const statements = results.map(result => {
-      const resultId = `result-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`;
-      const now = new Date().toISOString();
+    const now = new Date().toISOString();
+    const storedResults: StoredResult[] = results.map(result => ({
+      id: `result-${crypto.randomUUID()}`,
+      result,
+    }));
 
+    // Batch insert to edge_results table
+    const statements = storedResults.map(({ id, result }) => {
       return db.prepare(`
         INSERT INTO edge_results (
           id, task_id, result_type, title, description,
@@ -26,7 +35,7 @@ export async function storeResults(
           category, tags, source_url, source_name, created_at
         ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
       `).bind(
-        resultId,
+        id,
         taskId,
         'research',
         result.title,
@@ -45,11 +54,45 @@ export async function storeResults(
     // Execute batch
     await db.batch(statements);
 
-    console.log(`Stored ${results.length} results for task ${taskId}`);
+    logInfo("Stored results in D1", {
+      taskId,
+      count: results.length,
+    });
+
+    return storedResults;
   } catch (error: any) {
-    console.error('D1 storage error:', error.message);
+    logError("D1 storage error", {
+      message: error instanceof Error ? error.message : String(error),
+    });
     throw error;
   }
+}
+
+/**
+ * Mark D1 results as synced to Vectorize.
+ */
+export async function markResultsSynced(
+  db: D1Database,
+  results: StoredResult[],
+  embeddingModel: string
+): Promise<void> {
+  if (results.length === 0) {
+    return;
+  }
+
+  const syncedAt = new Date().toISOString();
+  const statements = results.map(({ id }) =>
+    db.prepare(`
+      UPDATE edge_results
+      SET embedding_id = ?, embedding_model = ?, synced_to_r1_at = ?
+      WHERE id = ?
+    `).bind(id, embeddingModel, syncedAt, id)
+  );
+
+  await db.batch(statements);
+  logInfo("Marked results synced to Vectorize", {
+    count: results.length,
+  });
 }
 
 /**

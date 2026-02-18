@@ -1,5 +1,6 @@
 // HackerNews API Integration
-import { ResearchResult } from '../types';
+import { ResearchResult } from '../types.js';
+import { logError } from '../utils/logger.js';
 
 export async function fetchHackerNews(
   query: string,
@@ -14,7 +15,7 @@ export async function fetchHackerNews(
     const response = await fetch(searchUrl);
     
     if (!response.ok) {
-      console.error(`HackerNews API error: ${response.status}`);
+      logError("HackerNews API error", { status: response.status });
       return results;
     }
 
@@ -42,7 +43,9 @@ export async function fetchHackerNews(
 
     return results;
   } catch (error: any) {
-    console.error('HackerNews fetch error:', error.message);
+    logError("HackerNews fetch error", {
+      message: error instanceof Error ? error.message : String(error),
+    });
     return results;
   }
 }

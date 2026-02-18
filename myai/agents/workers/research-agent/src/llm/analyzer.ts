@@ -1,5 +1,6 @@
 // LLM Analyzer - Gemini/OpenAI integration for result analysis
-import { ResearchResult, AnalyzedResult, Env } from '../types';
+import { ResearchResult, AnalyzedResult, Env } from '../types.js';
+import { logError, logWarn } from '../utils/logger.js';
 
 /**
  * Analyze research results with LLM (Gemini Flash or GPT-4o-mini)
@@ -11,7 +12,7 @@ export async function analyzeWithLLM(
 ): Promise<AnalyzedResult[]> {
   // If no API key available, return results without additional analysis
   if (!env.GEMINI_API_KEY && !env.OPENAI_API_KEY) {
-    console.warn('No LLM API key configured, skipping AI analysis');
+    logWarn("No LLM API key configured, skipping AI analysis");
     return results.map(r => ({
       ...r,
       confidence_score: r.relevance_score,
@@ -36,7 +37,10 @@ export async function analyzeWithLLM(
         ...analysis,
       });
     } catch (error: any) {
-      console.error(`Analysis failed for ${result.id}:`, error.message);
+      logError("Analysis failed", {
+        resultId: result.id,
+        message: error instanceof Error ? error.message : String(error),
+      });
       // Fallback to basic analysis
       analyzed.push({
         ...result,
@@ -83,7 +87,9 @@ Provide analysis in JSON format:
     try {
       return await analyzeWithGemini(prompt, env.GEMINI_API_KEY);
     } catch (error: any) {
-      console.error('Gemini analysis failed:', error.message);
+      logError("Gemini analysis failed", {
+        message: error instanceof Error ? error.message : String(error),
+      });
     }
   }
 

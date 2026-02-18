@@ -70,7 +70,7 @@ wrangler secret put GITHUB_TOKEN --env production
 
 Secrets (set via `wrangler secret put`):
 - `GEMINI_API_KEY` - Google Gemini API key (optional)
-- `OPENAI_API_KEY` - OpenAI API key (optional)
+- `OPENAI_API_KEY` - OpenAI API key (optional, required for Vectorize embeddings)
 - `GITHUB_TOKEN` - GitHub PAT for higher rate limits (optional)
 
 ## Scheduled Jobs
@@ -82,7 +82,7 @@ Daily research runs at 2 AM UTC for default queries:
 4. AI safety and alignment
 5. Edge computing AI deployment
 
-Results stored in D1 `edge_results` table.
+Results stored in D1 `edge_results` table (binding: `bas-metadata`).
 
 ## Database Schema
 

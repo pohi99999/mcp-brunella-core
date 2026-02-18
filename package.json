@@ -50,6 +50,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.75.0",
+    "@e2b/code-interpreter": "^2.3.3",
     "@github/copilot-sdk": "^0.1.23",
     "@google/generative-ai": "^0.21.0",
     "@hookform/resolvers": "^5.2.2",

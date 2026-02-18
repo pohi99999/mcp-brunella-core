@@ -12,8 +12,8 @@ vars = { ENVIRONMENT = "production", LOG_LEVEL = "info" }
 # D1 Database Binding
 [[d1_databases]]
 binding = "DB"
-database_name = "cean-tasks"
-database_id = "960ec488-9e16-4d3d-ad74-9bf978594498"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
 
 # Vectorize Binding (CREATED: 2026-02-17)
 [[vectorize]]
@@ -32,8 +32,8 @@ vars = { ENVIRONMENT = "production", LOG_LEVEL = "info" }
 
 [[env.production.d1_databases]]
 binding = "DB"
-database_name = "cean-tasks"
-database_id = "960ec488-9e16-4d3d-ad74-9bf978594498"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
 
 [[env.production.vectorize]]
 binding = "VECTORIZE"
@@ -47,8 +47,8 @@ vars = { ENVIRONMENT = "development", LOG_LEVEL = "debug" }
 
 [[env.development.d1_databases]]
 binding = "DB"
-database_name = "cean-tasks"
-database_id = "960ec488-9e16-4d3d-ad74-9bf978594498"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
 
 [[env.development.vectorize]]
 binding = "VECTORIZE"
