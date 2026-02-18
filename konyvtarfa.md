@@ -1,11 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-<<<<<<< Updated upstream
-**Generálva:** 2026. 02. 18. 2:43:47
-=======
-**Generálva:** 2026. 02. 17. 20:51:07
->>>>>>> Stashed changes
+**Generálva:** 2026. 02. 18. 14:09:04
 **Script:** 
 
 ---
@@ -42521,6 +42517,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 metadata.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **codex_chat_refactor_20260212**
+        - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **dashboard_test_suite_20260210**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **dashboard-integration_20260120**
         - 📄 index.md
         - 📄 metadata.json
@@ -42532,6 +42535,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 track.md
       - 📂 **data_flywheel_incubator_20260205**
         - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **enterprise_suite_master_20260216**
+        - 📄 meta.json
+        - 📄 plan.md
         - 📄 spec.md
       - 📂 **ev_hunter_ai_research_20260202**
         - 📄 plan.md
@@ -42550,10 +42557,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 PHASE_5_SUMMARY.md
         - 📄 SETUP.md
         - 📄 spec.md
-        - 📄 TRACK_COMPLETION_SUMMARY.md
         - 📄 ui_spec.md
       - 📂 **iron_clad_backend_20260212**
         - 📄 meta.json
+        - 📄 spec.md
+      - 📂 **jules_continuous_ai_integration_20260215**
+        - 📄 meta.json
+        - 📄 PHASE_3_IMPLEMENTATION_PLAN.md
+        - 📄 PHASE_4_COMPLETION_SUMMARY.md
+        - 📄 plan.md
         - 📄 spec.md
       - 📂 **jules-async-test-automation-20260211**
         - 📄 meta.json
@@ -42564,6 +42576,30 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 metadata.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **mcp_ollama_integration_20260218**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 TODO.md
+      - 📂 **otel_agent_tracing_20260211**
+        - 📄 meta.json
+        - 📄 track.md
+      - 📂 **phoenix_protocol_v2_20260205**
+        - 📄 meta.json
+        - 📄 phase4_degradation_policy.md
+        - 📄 recovery_logic_implementation.md
+        - 📄 spec.md
+      - 📂 **robotkez_stabilization_20260212**
+        - 📄 meta.json
+        - 📄 track.md
+      - 📂 **robotkezv2-full-comet-20260215**
+        - 📄 checklist.md
+        - 📄 diary.md
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
+      - 📂 **self_healing_core_20260213**
+        - 📄 meta.json
+        - 📄 track.md
       - 📂 **spec-writer-agent-20260211**
         - 📄 meta.json
         - 📄 track.md
@@ -42720,15 +42756,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **code_quality_improvements_20260210**
         - 📄 meta.json
         - 📄 spec.md
-      - 📂 **codex_chat_refactor_20260212**
-        - 📄 meta.json
-        - 📄 spec.md
       - 📂 **creative_friction_mediator_20260212**
         - 📄 meta.json
-        - 📄 spec.md
-      - 📂 **dashboard_test_suite_20260210**
-        - 📄 meta.json
-        - 📄 plan.md
         - 📄 spec.md
       - 📂 **dashboard_v2_robotkez_control_20260208**
         - 📄 meta.json
@@ -42736,10 +42765,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **developer_agent_2_0_20260206**
         - 📂 **P10_Metrics_Analytics**
           - 📄 spec.md
-        - 📄 meta.json
-        - 📄 plan.md
-        - 📄 spec.md
-      - 📂 **enterprise_suite_master_20260216**
         - 📄 meta.json
         - 📄 plan.md
         - 📄 spec.md
@@ -42767,22 +42792,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **invoice-e2e-testing-20260217**
         - 📄 meta.json
         - 📄 spec.md
-      - 📂 **invoice-to-sheets-automation-20260214**
-        - 📄 Jules_prompt.md
-        - 📄 meta.json
-        - 📄 PHASE_2_SUMMARY.md
-        - 📄 PHASE_3_SUMMARY.md
-        - 📄 PHASE_4_SUMMARY.md
-        - 📄 PHASE_5_SUMMARY.md
-        - 📄 SETUP.md
-        - 📄 spec.md
-        - 📄 ui_spec.md
-      - 📂 **jules_continuous_ai_integration_20260215**
-        - 📄 meta.json
-        - 📄 PHASE_3_IMPLEMENTATION_PLAN.md
-        - 📄 PHASE_4_COMPLETION_SUMMARY.md
-        - 📄 plan.md
-        - 📄 spec.md
       - 📂 **jules_enterprise_cicd_20260212**
         - 📄 meta.json
         - 📄 spec.md
@@ -42806,31 +42815,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 plan.md
         - 📄 spec.md
         - 📄 Új Szöveges dokumentum.txt
-      - 📂 **otel_agent_tracing_20260211**
-        - 📄 meta.json
-        - 📄 track.md
-      - 📂 **phoenix_protocol_v2_20260205**
-        - 📄 meta.json
-        - 📄 phase4_degradation_policy.md
-        - 📄 recovery_logic_implementation.md
-        - 📄 spec.md
       - 📂 **robotkez_n8n_sandbox_edzesterv**
         - 📄 BROWSER_USE_TEST_REPORT.md
         - 📄 meta.json
         - 📄 plan.md
         - 📄 spec.md
-      - 📂 **robotkez_stabilization_20260212**
-        - 📄 meta.json
-        - 📄 track.md
-      - 📂 **robotkezv2-full-comet-20260215**
-        - 📄 checklist.md
-        - 📄 diary.md
-        - 📄 meta.json
-        - 📄 plan.md
-        - 📄 spec.md
-      - 📂 **self_healing_core_20260213**
-        - 📄 meta.json
-        - 📄 track.md
       - 📂 **test-20260211**
       - 📂 **test-feature-20260211**
       - 📂 **test-track-12345678**
@@ -42855,6 +42844,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 workflow.md
   - 📂 **config**
     - 📄 google-service-account.json.example
+    - 📄 safe_zones.json
   - 📂 **data**
     - 📂 **brunella_lancedb**
       - 📂 **memory_v2_nomic.lance**
@@ -43077,6 +43067,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 3.jpg
     - 📄 4.jpg
     - 📄 5.jpg
+    - 📄 6.jpg
+    - 📄 7.jpg
+    - 📄 8.jpg
     - 📄 AGENT_PERMISSIONS_GUIDE.md
     - 📄 CEAN_GITHUB_ACTIONS_SETUP.md
     - 📄 CEAN_INFRASTRUCTURE_SNAPSHOT.md
@@ -43096,6 +43089,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 JCAI_PROGRESS_UPDATE.md
     - 📄 jules-repo-config.md
     - 📄 jules-setup.md
+    - 📄 MCP_DEPLOYMENT_GUIDE.md
     - 📄 MCP_TOOL_PERMISSIONS_GUIDE.md
     - 📄 MONITORING_PROMETHEUS.md
     - 📄 n8n-setup.md
@@ -43105,6 +43099,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 ROBOTKEZ_SETUP.md
     - 📄 robotkezv2-dev-guide.md
     - 📄 robotkezv2-user-guide.md
+    - 📄 STATUS_REPORT_2026_02_18.md
     - 📄 TUNNEL_ARCHITECTURE.md
     - 📄 tunnel-config.example.yml
     - 📄 tunnel-config.yml
@@ -180756,6 +180751,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
               - 📄 hackernews.ts
             - 📂 **storage**
               - 📄 d1.ts
+              - 📄 vectorize.ts
+            - 📂 **utils**
+              - 📄 logger.ts
             - 📄 index.ts
             - 📄 types.ts
           - 📄 package.json
@@ -180887,6 +180885,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 test_cma_worker.cpython-314-pytest-9.0.1.pyc
         - 📄 test_geo_scraper.cpython-312-pytest-9.0.2.pyc
         - 📄 test_machine_hunter.cpython-312-pytest-9.0.2.pyc
+        - 📄 test_mcp_bridge.cpython-314-pytest-9.0.1.pyc
         - 📄 test_media_factory.cpython-312-pytest-9.0.2.pyc
         - 📄 test_supply_matcher.cpython-314-pytest-9.0.1.pyc
         - 📄 test_trend_analyst.cpython-312-pytest-9.0.2.pyc
@@ -180904,6 +180903,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 test_iron_clad_provider.py
       - 📄 test_llm.py
       - 📄 test_machine_hunter.py
+      - 📄 test_mcp_bridge.py
       - 📄 test_media_factory.py
       - 📄 test_project.py
       - 📄 test_sandbox.py
@@ -180913,12 +180913,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 test_trend_analyst.py
       - 📄 test_vision_worker.py
     - 📂 **tools**
+      - 📂 **__pycache__**
+        - 📄 __init__.cpython-314.pyc
+        - 📄 mcp_bridge.cpython-314.pyc
       - 📄 __init__.py
       - 📄 HARVEST_PIPELINE_README.md
       - 📄 harvest_pipeline.py
       - 📄 integrated_research.py
       - 📄 jules_auto_sync.py
       - 📄 knowledge_integrator.py
+      - 📄 mcp_bridge.py
     - 📂 **utils**
       - 📂 **__pycache__**
         - 📄 __init__.cpython-312.pyc
@@ -181511,10 +181515,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 EnterpriseOrchestrator.ts
       - 📄 EvaluatorAgent.ts
       - 📄 FinanceGuardian.ts
-<<<<<<< Updated upstream
       - 📄 GenesisOrchestrator.ts
-=======
->>>>>>> Stashed changes
       - 📄 GitHubModelsAgent.ts
       - 📄 gitIntegration.ts
       - 📄 GrantHunter.ts
@@ -181523,11 +181524,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 LintFixerAgent.ts
       - 📄 LocalCSRBot.ts
       - 📄 LogisticsDispatcher.ts
-<<<<<<< Updated upstream
       - 📄 MarketingAgent.ts
       - 📄 NurturerAgent.ts
-=======
->>>>>>> Stashed changes
       - 📄 OrchestratorAgent.ts
       - 📄 permissions.ts
       - 📄 PricingAgent.ts
@@ -181568,6 +181566,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 schema.ts
     - 📂 **core**
       - 📄 auditLog.ts
+      - 📄 bifrost_gateway.ts
       - 📄 checkpoint.ts
       - 📄 codebaseIndexer.ts
       - 📄 edgeHealthMonitor.ts
@@ -181581,6 +181580,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 julesMock.ts
       - 📄 llm_client.ts
       - 📄 modelRouter.ts
+      - 📄 ollama_mcp_client.ts
       - 📄 phoenixEventBus.ts
       - 📄 processMonitor.ts
       - 📄 prometheus.ts
@@ -181646,6 +181646,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 LiveIndicator.tsx
           - 📄 LLMProvidersPanel.tsx
           - 📄 LogViewer.tsx
+          - 📄 MCPCommandCenter.tsx
           - 📄 MetricsCard.tsx
           - 📄 MissionControlLayout.tsx
           - 📄 ModelRouterPanel.tsx
@@ -181799,6 +181800,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **routes**
       - 📄 enterpriseApi.ts
     - 📂 **scheduler**
+    - 📂 **security**
+      - 📄 e2b_sandbox_manager.ts
+      - 📄 safe_zone_validator.ts
     - 📂 **server**
       - 📂 **middleware**
         - 📄 errorHandler.ts
@@ -181818,6 +181822,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 jules.ts
         - 📄 llm.ts
         - 📄 machines.ts
+        - 📄 mcp.ts
         - 📄 metrics.ts
         - 📄 prometheus.ts
         - 📄 recommendation.ts
@@ -181837,6 +181842,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 testRunner.ts
       - 📄 auditRoutes.ts
       - 📄 cron.ts
+      - 📄 mcp_server.ts
       - 📄 McpProcessManager.ts
       - 📄 memoryRoutes.ts
       - 📄 middleware.ts
@@ -181985,6 +181991,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 approval_manager.test.ts
     - 📄 auditLog.test.ts
     - 📄 backgroundTaskManager.test.ts
+    - 📄 bifrost_gateway.test.ts
     - 📄 browser_rendering.test.ts
     - 📄 checkpoint.test.ts
     - 📄 checkpointRetention.test.ts
@@ -182006,6 +182013,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 dev_commands.test.ts
     - 📄 developer_pipeline.test.ts
     - 📄 DeveloperAgent.test.ts
+    - 📄 e2b_sandbox_manager.test.ts
     - 📄 edge_health_monitor.test.ts
     - 📄 enterpriseOrchestrator.test.ts
     - 📄 ev_hunter_research.test.ts
@@ -182035,6 +182043,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 llm_provider.test.ts
     - 📄 llmPlanner.test.ts
     - 📄 marketing_swarm_integration_test.py
+    - 📄 mcp_server.test.ts
     - 📄 mcp-brunella-core.code-workspace
     - 📄 memory_context.test.ts
     - 📄 memoryRoutes.golden.test.ts
@@ -182047,14 +182056,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 n8n_automation.test.ts
     - 📄 notificationService.test.ts
     - 📄 persistentBrowser.test.ts
-<<<<<<< Updated upstream
     - 📄 phase2_integration.test.ts
     - 📄 phase3_integration.test.ts
     - 📄 phase4_real_estate.test.ts
     - 📄 phase4_software_genesis.test.ts
     - 📄 phase4_supply_chain.test.ts
-=======
->>>>>>> Stashed changes
     - 📄 phase6-integration.test.ts
     - 📄 phoenix_event_bus.test.ts
     - 📄 phoenix_protocol_test.py
@@ -182073,6 +182079,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 robotkezV2.e2e.test.ts
     - 📄 robotkezV2Agent.test.ts
     - 📄 routes_developer.test.ts
+    - 📄 safe_zone_validator.test.ts
     - 📄 scalingService.test.ts
     - 📄 scheduledTasks.test.ts
     - 📄 setup.ts
@@ -182327,6 +182334,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 run.cmd
   - 📄 schema.sql
   - 📄 screenshot.png
+  - 📄 SECURITY.md
   - 📄 server_debug.log
   - 📄 server_direct.log
   - 📄 server_final.log

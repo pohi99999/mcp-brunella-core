@@ -1,11 +1,7 @@
 // D1 Database Storage Module
-import { AnalyzedResult } from '../types.js';
-import { logError, logInfo } from '../utils/logger.js';
-
-export interface StoredResult {
-  id: string;
-  result: AnalyzedResult;
-}
+import { AnalyzedResult, StoredResult } from "../types.js";
+import { VectorizeInsertResult } from "./vectorize.js";
+import { logError, logInfo } from "../utils/logger.js";
 
 /**
  * Store analyzed results in D1
@@ -54,14 +50,14 @@ export async function storeResults(
     // Execute batch
     await db.batch(statements);
 
-    logInfo("Stored results in D1", {
+    logInfo("ResearchAgent", "Stored results in D1", {
       taskId,
       count: results.length,
     });
 
     return storedResults;
   } catch (error: any) {
-    logError("D1 storage error", {
+    logError("ResearchAgent", "D1 storage error", {
       message: error instanceof Error ? error.message : String(error),
     });
     throw error;
@@ -73,25 +69,23 @@ export async function storeResults(
  */
 export async function markResultsSynced(
   db: D1Database,
-  results: StoredResult[],
-  embeddingModel: string
+  entries: VectorizeInsertResult[]
 ): Promise<void> {
-  if (results.length === 0) {
+  if (entries.length === 0) {
     return;
   }
 
-  const syncedAt = new Date().toISOString();
-  const statements = results.map(({ id }) =>
+  const statements = entries.map(({ storedResultId, vectorId, model, syncedAt }) =>
     db.prepare(`
       UPDATE edge_results
       SET embedding_id = ?, embedding_model = ?, synced_to_r1_at = ?
       WHERE id = ?
-    `).bind(id, embeddingModel, syncedAt, id)
+    `).bind(vectorId, model, syncedAt, storedResultId)
   );
 
   await db.batch(statements);
-  logInfo("Marked results synced to Vectorize", {
-    count: results.length,
+  logInfo("ResearchAgent", "Marked results synced to Vectorize", {
+    count: entries.length,
   });
 }
 

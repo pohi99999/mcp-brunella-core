@@ -1,10 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-<<<<<<< Updated upstream
-**Generálva:** 2026-02-18 02:43
-=======
-**Generálva:** 2026-02-17 20:51
->>>>>>> Stashed changes
+**Generálva:** 2026-02-18 21:59
 **Script:** `scripts/sync_foszal.py`
 
 ---

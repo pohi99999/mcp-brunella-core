@@ -158,11 +158,13 @@ print(f"Installed {len(packages)} packages")
         };
       }
 
-      // 5. Collect output
-      const output = execution.results
+      // 5. Collect output - stdout logs (print() output) + rich results
+      const stdoutOutput = (execution.logs?.stdout || []).join('\n');
+      const richOutput = execution.results
         .map((r: Result) => r.text || r.html || r.png || '')
         .filter(Boolean)
         .join('\n');
+      const output = [stdoutOutput, richOutput].filter(Boolean).join('\n');
 
       logs.push(`Execution successful (${duration}ms)`);
       logInfo('E2BSandboxManager', `Execution complete: ${output.slice(0, 100)}...`);
@@ -172,7 +174,8 @@ print(f"Installed {len(packages)} packages")
         const exportedArtifacts = await this.exportArtifacts(
           sandbox,
           safe_zone_path,
-          execution
+          execution,
+          stdoutOutput
         );
         artifacts.push(...exportedArtifacts);
       }
@@ -218,21 +221,33 @@ print(f"Installed {len(packages)} packages")
   private async exportArtifacts(
     sandbox: Sandbox,
     targetPath: string,
-    execution: { results: Result[] }
+    execution: { results: Result[] },
+    stdoutText?: string
   ): Promise<string[]> {
     const exported: string[] = [];
 
     try {
-      // Validate Safe Zone access
-      if (!this.validator.validate(targetPath, 'write')) {
-        logWarn('E2BSandboxManager', `Safe Zone denied: ${targetPath}`);
-        return exported;
-      }
-
-      // Create target directory
+      // Create target directory (no need to validate directory path itself)
       await fs.mkdir(targetPath, { recursive: true });
 
-      // Export PNG images
+      // Export stdout as JSON artifact if it looks like JSON (from print() calls)
+      if (stdoutText && (stdoutText.trim().startsWith('{') || stdoutText.trim().startsWith('['))) {
+        try {
+          JSON.parse(stdoutText.trim()); // Validate JSON
+          const filename = `artifact_${Date.now()}_stdout.json`;
+          const filepath = path.join(targetPath, filename);
+
+          if (this.validator.validate(filepath, 'write')) {
+            await fs.writeFile(filepath, stdoutText.trim(), 'utf-8');
+            exported.push(filepath);
+            logInfo('E2BSandboxManager', `Exported JSON: ${filepath}`);
+          }
+        } catch {
+          // Not valid JSON, skip
+        }
+      }
+
+      // Export rich results (PNG images, HTML, JSON from execution.results)
       for (let i = 0; i < execution.results.length; i++) {
         const result = execution.results[i];
 
@@ -240,12 +255,13 @@ print(f"Installed {len(packages)} packages")
           const filename = `artifact_${Date.now()}_${i}.png`;
           const filepath = path.join(targetPath, filename);
 
-          // Decode base64 PNG
-          const buffer = Buffer.from(result.png, 'base64');
-          await fs.writeFile(filepath, buffer);
-
-          exported.push(filepath);
-          logInfo('E2BSandboxManager', `Exported PNG: ${filepath}`);
+          if (this.validator.validate(filepath, 'write')) {
+            // Decode base64 PNG
+            const buffer = Buffer.from(result.png, 'base64');
+            await fs.writeFile(filepath, buffer);
+            exported.push(filepath);
+            logInfo('E2BSandboxManager', `Exported PNG: ${filepath}`);
+          }
         }
 
         // Export HTML
@@ -253,10 +269,11 @@ print(f"Installed {len(packages)} packages")
           const filename = `artifact_${Date.now()}_${i}.html`;
           const filepath = path.join(targetPath, filename);
 
-          await fs.writeFile(filepath, result.html, 'utf-8');
-
-          exported.push(filepath);
-          logInfo('E2BSandboxManager', `Exported HTML: ${filepath}`);
+          if (this.validator.validate(filepath, 'write')) {
+            await fs.writeFile(filepath, result.html, 'utf-8');
+            exported.push(filepath);
+            logInfo('E2BSandboxManager', `Exported HTML: ${filepath}`);
+          }
         }
 
         // Export JSON (if text looks like JSON)
@@ -266,10 +283,11 @@ print(f"Installed {len(packages)} packages")
             const filename = `artifact_${Date.now()}_${i}.json`;
             const filepath = path.join(targetPath, filename);
 
-            await fs.writeFile(filepath, result.text, 'utf-8');
-
-            exported.push(filepath);
-            logInfo('E2BSandboxManager', `Exported JSON: ${filepath}`);
+            if (this.validator.validate(filepath, 'write')) {
+              await fs.writeFile(filepath, result.text, 'utf-8');
+              exported.push(filepath);
+              logInfo('E2BSandboxManager', `Exported JSON: ${filepath}`);
+            }
           } catch {
             // Not valid JSON, skip
           }

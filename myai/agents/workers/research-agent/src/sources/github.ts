@@ -25,7 +25,7 @@ export async function fetchGitHubTrends(
     const response = await fetch(searchUrl, { headers });
     
     if (!response.ok) {
-      logError("GitHub API error", {
+      logError("ResearchAgent", "GitHub API error", {
         status: response.status,
         statusText: response.statusText,
       });
@@ -55,7 +55,7 @@ export async function fetchGitHubTrends(
 
     return results;
   } catch (error: any) {
-    logError("GitHub fetch error", {
+    logError("ResearchAgent", "GitHub fetch error", {
       message: error instanceof Error ? error.message : String(error),
     });
     return results;

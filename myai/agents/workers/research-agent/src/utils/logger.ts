@@ -1,25 +1,54 @@
 type LogLevel = "info" | "warn" | "error";
 
-interface LogContext {
-  [key: string]: unknown;
+interface LogEntry {
+  level: LogLevel;
+  scope: string;
+  message: string;
+  timestamp: string;
+  meta?: Record<string, unknown>;
 }
 
-const AGENT_NAME = "research-agent";
+const getLogStore = (): LogEntry[] => {
+  const store = (globalThis as unknown as { __cean_logs?: LogEntry[] })
+    .__cean_logs;
+  if (store) {
+    return store;
+  }
 
-function formatMessage(level: LogLevel, message: string, context?: LogContext) {
-  const timestamp = new Date().toISOString();
-  const suffix = context ? ` ${JSON.stringify(context)}` : "";
-  return `[${timestamp}] [${AGENT_NAME}] [${level.toUpperCase()}] ${message}${suffix}`;
-}
+  const created: LogEntry[] = [];
+  (globalThis as unknown as { __cean_logs?: LogEntry[] }).__cean_logs = created;
+  return created;
+};
 
-export function logInfo(message: string, context?: LogContext) {
-  console.info(formatMessage("info", message, context));
-}
+const writeLog = (
+  level: LogLevel,
+  scope: string,
+  message: string,
+  meta?: Record<string, unknown>,
+) => {
+  getLogStore().push({
+    level,
+    scope,
+    message,
+    meta,
+    timestamp: new Date().toISOString(),
+  });
+};
 
-export function logWarn(message: string, context?: LogContext) {
-  console.warn(formatMessage("warn", message, context));
-}
+export const logInfo = (
+  scope: string,
+  message: string,
+  meta?: Record<string, unknown>,
+) => writeLog("info", scope, message, meta);
 
-export function logError(message: string, context?: LogContext) {
-  console.error(formatMessage("error", message, context));
-}
+export const logWarn = (
+  scope: string,
+  message: string,
+  meta?: Record<string, unknown>,
+) => writeLog("warn", scope, message, meta);
+
+export const logError = (
+  scope: string,
+  message: string,
+  meta?: Record<string, unknown>,
+) => writeLog("error", scope, message, meta);

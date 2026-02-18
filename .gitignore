@@ -3,10 +3,17 @@
 .env.local
 .env.*.local
 credentials.json
+.claude/settings.local.json
+
+# Local LLM Knowledge Base (DO NOT COMMIT TO GIT)
+# This is Ollama/AnythingLLM's local memory database
+# - Contains indexed documents, embeddings, and vector stores
+# - Size: ~100+ MB (varies based on loaded models)
+# - User-specific: Not version controlled
+_KNOWLEDGE_BASE/
 _KNOWLEDGE_BASE/.env_*
 _KNOWLEDGE_BASE/env_*
 _KNOWLEDGE_BASE/config/.env_*
-.claude/settings.local.json
 
 # Sync .project/sourceTexts/ folder (source text files)
 

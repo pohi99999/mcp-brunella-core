@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-18T03:12:03.310Z",
+  "lastUpdated": "2026-02-18T16:00:00.043Z",
   "tracks": [
     {
       "id": "ai_recommendation_system_20260216",
@@ -408,34 +408,6 @@
       "_isArchived": false
     },
     {
-      "id": "mcp_ollama_integration_20260218",
-      "name": "MCP + Ollama Integration - Secure Filesystem & Multi-Provider Gateway",
-      "status": "active",
-      "priority": "critical",
-      "progress": 25,
-      "created": "2026-02-18T03:30:00Z",
-      "updated": "2026-02-18T05:10:00Z",
-      "tags": [
-        "mcp",
-        "ollama",
-        "security",
-        "e2b-sandboxes",
-        "bifrost-gateway",
-        "multi-llm",
-        "filesystem",
-        "python-bridge"
-      ],
-      "dependencies": [
-        "@modelcontextprotocol/sdk",
-        "@e2b/sdk",
-        "ollama",
-        "@google/generative-ai",
-        "@anthropic-ai/sdk"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\mcp_ollama_integration_20260218",
-      "_isArchived": false
-    },
-    {
       "id": "micro_csr_automator_20260212",
       "name": "Micro-Local CSR Automator (Neighborhood Watchman)",
       "status": "proposed",
@@ -744,6 +716,34 @@
       "_isArchived": true
     },
     {
+      "id": "mcp_ollama_integration_20260218",
+      "name": "MCP + Ollama Integration - Secure Filesystem & Multi-Provider Gateway",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "created": "2026-02-18T03:30:00Z",
+      "updated": "2026-02-18T09:00:00Z",
+      "tags": [
+        "mcp",
+        "ollama",
+        "security",
+        "e2b-sandboxes",
+        "bifrost-gateway",
+        "multi-llm",
+        "filesystem",
+        "python-bridge"
+      ],
+      "dependencies": [
+        "@modelcontextprotocol/sdk",
+        "@e2b/sdk",
+        "ollama",
+        "@google/generative-ai",
+        "@anthropic-ai/sdk"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\mcp_ollama_integration_20260218",
+      "_isArchived": true
+    },
+    {
       "id": "otel_agent_tracing_20260211",
       "name": "OpenTelemetry Agent Tracing",
       "status": "archived",
@@ -914,9 +914,9 @@
   ],
   "stats": {
     "total": 44,
-    "active": 6,
+    "active": 5,
     "completed": 0,
-    "archived": 20,
+    "archived": 21,
     "proposed": 8
   }
 }
