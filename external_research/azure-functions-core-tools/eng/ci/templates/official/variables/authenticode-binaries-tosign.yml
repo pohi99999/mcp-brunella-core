@@ -1,5 +1,0 @@
-variables:
-  authenticodeBinariesToSign: >
-    func.dll,func.exe,gozip.exe,
-    DurableTask.AzureStorage.Internal.dll,DurableTask.Core.Internal.dll,
-    Microsoft.Azure.WebSites.DataProtection.dll
