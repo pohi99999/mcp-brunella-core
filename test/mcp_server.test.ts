@@ -27,10 +27,15 @@ describe('MCP Filesystem Server', () => {
       fs.rmSync(testDataDir, { recursive: true, force: true });
     }
 
-    // Clean audit log
+    // Clean audit log with error handling
     const auditLogPath = path.resolve('logs/mcp_audit.log');
     if (fs.existsSync(auditLogPath)) {
-      fs.unlinkSync(auditLogPath);
+      try {
+        fs.unlinkSync(auditLogPath);
+      } catch (err) {
+        // Ignore file deletion errors (file may be in use)
+        console.debug('Could not delete audit log:', err);
+      }
     }
   });
 

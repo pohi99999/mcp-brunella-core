@@ -1,0 +1,50 @@
+﻿name = "grant-monitor"
+main = "src/index.ts"
+compatibility_date = "2026-02-18"
+workers_dev = true
+
+# Account Configuration
+account_id = "dd107933ac970dac857f27cee7a7ff46"
+
+# Environment Variables
+vars = { ENVIRONMENT = "production", LOG_LEVEL = "info" }
+
+# D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+
+# Scheduled Jobs (Cron Triggers)
+[triggers]
+crons = ["0 6 * * *"]  # Daily at 6 AM UTC
+
+# Environment: Production
+[env.production]
+name = "grant-monitor"
+vars = { ENVIRONMENT = "production", LOG_LEVEL = "info" }
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+
+# Environment: Development
+[env.development]
+name = "grant-monitor-dev"
+vars = { ENVIRONMENT = "development", LOG_LEVEL = "debug" }
+
+[[env.development.d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+
+# Build Configuration
+[build]
+command = "npm run build"
+
+# Observability
+[observability]
+enabled = true
+
+
