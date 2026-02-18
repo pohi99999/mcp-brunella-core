@@ -1,0 +1,188 @@
+groups:
+  - name: cean_alerts
+    interval: 30s
+    rules:
+      # ═══════════════════════════════════════════════════════════════
+      # CRITICAL: PIPELINE FAILURES
+      # ═══════════════════════════════════════════════════════════════
+      - alert: CEANHighFailureRate
+        expr: |
+          (cean_pipelines_failed / cean_pipelines_total) > 0.1
+        for: 5m
+        labels:
+          severity: critical
+          service: cean
+          component: orchestrator
+        annotations:
+          summary: "CEAN Pipeline failure rate > 10% (5m)"
+          description: |
+            {{ $value | humanizePercentage }} of pipelines failed in last 5 minutes
+            Value: {{ $value }}
+            Pipeline Failures: {{ query "cean_pipelines_failed" | first | value }}
+          runbook: "https://github.com/pohi99999/mcp-brunella-core/docs/CEAN_ALERTING_RUNBOOK.md#high-failure-rate"
+          dashboard: "https://grafana.example.com/d/cean-dashboard"
+
+      # ═══════════════════════════════════════════════════════════════
+      # WARNING: SUCCESS RATE DROP
+      # ═══════════════════════════════════════════════════════════════
+      - alert: CEANLowSuccessRate
+        expr: cean_pipeline_success_rate < 95
+        for: 10m
+        labels:
+          severity: warning
+          service: cean
+          component: orchestrator
+        annotations:
+          summary: "CEAN Success rate below 95% (10m)"
+          description: |
+            Pipeline success rate: {{ $value | humanize }}%
+            Expected: >= 95%
+          runbook: "https://github.com/pohi99999/mcp-brunella-core/docs/CEAN_ALERTING_RUNBOOK.md#low-success-rate"
+
+      # ═══════════════════════════════════════════════════════════════
+      # WARNING: HIGH LATENCY (P95)
+      # ═══════════════════════════════════════════════════════════════
+      - alert: CEANHighLatencyP95
+        expr: cean_latency_ms{quantile="p95"} > 1000
+        for: 5m
+        labels:
+          severity: warning
+          service: cean
+          component: orchestrator
+        annotations:
+          summary: "CEAN P95 latency > 1s (5m)"
+          description: |
+            95th percentile latency: {{ $value | humanize }}ms
+            Threshold: 1000ms
+            This may indicate slow agent endpoints or D1 query slowdown.
+          runbook: "https://github.com/pohi99999/mcp-brunella-core/docs/CEAN_ALERTING_RUNBOOK.md#high-latency"
+
+      # ═══════════════════════════════════════════════════════════════
+      # WARNING: VERY HIGH LATENCY (P99)
+      # ═══════════════════════════════════════════════════════════════
+      - alert: CEANVeryHighLatencyP99
+        expr: cean_latency_ms{quantile="p99"} > 3000
+        for: 3m
+        labels:
+          severity: critical
+          service: cean
+          component: orchestrator
+        annotations:
+          summary: "CEAN P99 latency > 3s (3m) - CRITICAL"
+          description: |
+            99th percentile latency: {{ $value | humanize }}ms
+            Threshold: 3000ms
+            Possible causes:
+            - D1 database timeout
+            - Slow agent endpoint (research-agent, grant-monitor, harvest-agent)
+            - Network congestion
+          runbook: "https://github.com/pohi99999/mcp-brunella-core/docs/CEAN_ALERTING_RUNBOOK.md#critical-latency"
+
+      # ═══════════════════════════════════════════════════════════════
+      # INFO: CACHE MISS RATE SPIKE
+      # ═══════════════════════════════════════════════════════════════
+      - alert: CEANCacheMissRateHigh
+        expr: (100 - cean_cache_hit_rate) > 30
+        for: 10m
+        labels:
+          severity: info
+          service: cean
+          component: orchestrator
+        annotations:
+          summary: "CEAN Cache miss rate > 30% (10m)"
+          description: |
+            Cache hit rate: {{ $value | humanize }}%
+            May indicate cache eviction or increased unique agent requests.
+
+      # ═══════════════════════════════════════════════════════════════
+      # WARNING: NO PIPELINE EXECUTION
+      # ═══════════════════════════════════════════════════════════════
+      - alert: CEANNoPipelineExecution
+        expr: increase(cean_pipelines_total[1h]) == 0
+        for: 1h
+        labels:
+          severity: warning
+          service: cean
+          component: orchestrator
+        annotations:
+          summary: "CEAN: No pipeline execution in 1 hour"
+          description: |
+            No pipelines were executed in the last hour.
+            This may indicate:
+            - No incoming requests (normal if not in production)
+            - Orchestrator is down or unresponsive
+            - Database connection issues
+          runbook: "https://github.com/pohi99999/mcp-brunella-core/docs/CEAN_ALERTING_RUNBOOK.md#no-execution"
+
+      # ═══════════════════════════════════════════════════════════════
+      # WARNING: D1 QUERY COUNT SPIKE
+      # ═══════════════════════════════════════════════════════════════
+      - alert: CEANHighDatabaseLoad
+        expr: rate(cean_d1_queries_total[5m]) > 100
+        for: 5m
+        labels:
+          severity: warning
+          service: cean
+          component: database
+        annotations:
+          summary: "CEAN: D1 query rate > 100/sec (5m)"
+          description: |
+            D1 queries per second: {{ $value | humanize }}
+            Threshold: 100/sec
+            May indicate cache ineffectiveness or inefficient queries.
+
+      # ═══════════════════════════════════════════════════════════════
+      # INFO: COST SPIKE
+      # ═══════════════════════════════════════════════════════════════
+      - alert: CEANCostSpike
+        expr: cean_cost_usd > 0.01
+        for: 30m
+        labels:
+          severity: info
+          service: cean
+          component: cost
+        annotations:
+          summary: "CEAN: Daily cost > $0.01 (30m average)"
+          description: |
+            Estimated 24h cost: ${{ $value | humanize }}
+            This is an informational alert - verify if this is expected load.
+
+      # ═══════════════════════════════════════════════════════════════
+      # CRITICAL: WORKER HEALTH CHECK FAILURE
+      # ═══════════════════════════════════════════════════════════════
+      - alert: CEANOrchestratorDown
+        expr: up{job="cean-orchestrator"} == 0
+        for: 2m
+        labels:
+          severity: critical
+          service: cean
+          component: orchestrator
+        annotations:
+          summary: "CEAN Orchestrator worker is DOWN (2m)"
+          description: |
+            The CEAN Orchestrator worker at https://cean-orchestrator.{account}.workers.dev
+            is not responding to health checks.
+            
+            Immediate actions:
+            1. Check Cloudflare Dashboard for errors
+            2. Verify D1 database connectivity
+            3. Check for rate limiting
+            4. Redeploy worker if needed
+          runbook: "https://github.com/pohi99999/mcp-brunella-core/docs/CEAN_ALERTING_RUNBOOK.md#worker-down"
+          dashboard: "https://grafana.example.com/d/cean-dashboard"
+
+  - name: cean_recording_rules
+    interval: 30s
+    rules:
+      # Recording rules for efficient dashboard queries
+      - record: cean:pipeline:success_rate:5m
+        expr: avg_over_time(cean_pipeline_success_rate[5m])
+
+      - record: cean:latency:p95:5m
+        expr: avg_over_time(cean_latency_ms{quantile="p95"}[5m])
+
+      - record: cean:cache:hit_rate:5m
+        expr: avg_over_time(cean_cache_hit_rate[5m])
+
+      - record: cean:cost:daily
+        expr: cean_cost_usd * 1

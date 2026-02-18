@@ -1,0 +1,19 @@
+{
+  "name": "cean-orchestrator",
+  "version": "1.0.0",
+  "description": "CEAN (Cloudflare Edge Agents Network) Task Orchestrator",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "build": "tsc",
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy --env production",
+    "deploy:staging": "wrangler deploy --env staging"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20241218.0",
+    "typescript": "^5.3.3",
+    "wrangler": "^3.32.0"
+  }
+}

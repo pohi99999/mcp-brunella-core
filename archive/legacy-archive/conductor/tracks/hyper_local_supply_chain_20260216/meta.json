@@ -1,0 +1,29 @@
+{
+  "track_id": "hyper_local_supply_chain_20260216",
+  "name": "Hyper-Local Supply Chain",
+  "status": "active",
+  "priority": "HIGH",
+  "created": "2026-02-16T00:00:00Z",
+  "updated": "2026-02-16T00:00:00Z",
+  "owner": "SpecWriterAgent",
+  "description": "Geo-fenced freight capacity matching and outreach automation.",
+  "objectives": [
+    "Helyi freight exchange harvest",
+    "Matchmaking belső igényekkel",
+    "Human-in-the-loop email outreach"
+  ],
+  "tags": ["logistics", "geo-fencing", "automation", "matchmaking"],
+  "related_files": [
+    "src/agents/ResearcherAgent.ts",
+    "src/agents/DataScientistAgent.ts",
+    "myai/refiner_logic.py",
+    "src/tools/googleWorkspace.ts"
+  ],
+  "dependencies": ["robotkezv2"],
+  "blockers": [],
+  "constraints": [
+    "Real-time adatfrissítés",
+    "GDPR compliance",
+    "Jóváhagyás nélküli küldés tiltott"
+  ]
+}

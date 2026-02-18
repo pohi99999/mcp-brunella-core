@@ -1,0 +1,65 @@
+﻿name = "research-agent"
+main = "src/index.ts"
+compatibility_date = "2026-02-15"
+workers_dev = true
+
+# Account Configuration
+account_id = "1bf6118df97f0e12f3592a89d90deb1e"
+
+# Environment Variables
+vars = { ENVIRONMENT = "production", LOG_LEVEL = "info" }
+
+# D1 Database Binding
+[[d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+
+# Vectorize Binding (CREATED: 2026-02-17)
+[[vectorize]]
+binding = "VECTORIZE"
+index_name = "cean-embeddings"
+index_id = "4879dbab-2628-4b9b-81f8-1ae15b04c00f"
+
+# Scheduled Jobs (Cron Triggers)
+[triggers]
+crons = ["0 2 * * *"]  # Daily at 2 AM UTC
+
+# Environment: Production
+[env.production]
+name = "research-agent"
+vars = { ENVIRONMENT = "production", LOG_LEVEL = "info" }
+
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+
+[[env.production.vectorize]]
+binding = "VECTORIZE"
+index_name = "cean-embeddings"
+index_id = "4879dbab-2628-4b9b-81f8-1ae15b04c00f"
+
+# Environment: Development
+[env.development]
+name = "research-agent-dev"
+vars = { ENVIRONMENT = "development", LOG_LEVEL = "debug" }
+
+[[env.development.d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+
+[[env.development.vectorize]]
+binding = "VECTORIZE"
+index_name = "cean-embeddings"
+index_id = "4879dbab-2628-4b9b-81f8-1ae15b04c00f"
+
+# Build Configuration
+[build]
+command = "npm run build"
+
+# Observability
+[observability]
+enabled = true
+

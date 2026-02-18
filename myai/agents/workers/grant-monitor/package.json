@@ -1,0 +1,22 @@
+{
+  "name": "grant-monitor-worker",
+  "version": "1.0.0",
+  "description": "CEAN Grant Monitor - Daily funding opportunities aggregator",
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "deploy:prod": "wrangler deploy --env production",
+    "build": "tsc",
+    "test": "vitest"
+  },
+  "keywords": ["cloudflare", "workers", "grants", "funding", "cean"],
+  "author": "Brunella Core Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250110.0",
+    "typescript": "^5.3.3",
+    "vitest": "^2.1.8",
+    "wrangler": "^4.65.0"
+  }
+}

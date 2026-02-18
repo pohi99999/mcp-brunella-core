@@ -1,0 +1,28 @@
+﻿name = "cean-test"
+main = "worker.ts"
+compatibility_date = "2024-12-16"
+workers_dev = true
+
+# PHASE 1D: Minimal deployment (D1/R1 bindings temporarily disabled)
+# These will be enabled in Phase 2 once the resources are created in Cloudflare Dashboard
+
+# DISABLED: D1 Database binding (will be created via Cloudflare Dashboard)
+[[d1_databases]]
+binding = "DB"
+database_name = "bas-metadata"
+database_id = "d1_demo_dev"
+
+# DISABLED: Vectorize binding (will be created via Cloudflare Dashboard)
+# [[vectorize]]
+# binding = "VECTORIZE_INDEX"
+# index_name = "cean-vector"
+
+# Environment-specific configurations
+[env.production]
+name = "cean-test"
+workers_dev = true
+
+[env.development]
+name = "cean-test-dev"
+workers_dev = true
+
