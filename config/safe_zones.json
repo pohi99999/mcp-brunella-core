@@ -1,0 +1,90 @@
+{
+  "version": "1.0",
+  "description": "MCP Filesystem Safe Zone Configuration - Defines allowed directories for AI agent file operations",
+  "safe_zones": [
+    {
+      "name": "Data Directory",
+      "path": "./data",
+      "permissions": ["read", "write", "delete"],
+      "description": "General data storage for artifacts, analysis results, and temporary files",
+      "max_file_size_mb": 100,
+      "allowed_extensions": ["txt", "json", "csv", "md", "log", "png", "jpg", "pdf"]
+    },
+    {
+      "name": "Track Workspace",
+      "path": "./conductor/tracks",
+      "permissions": ["read", "write"],
+      "description": "Development track files - planning documents, TODO lists, metadata",
+      "max_file_size_mb": 10,
+      "allowed_extensions": ["md", "json", "txt"]
+    },
+    {
+      "name": "Incubator",
+      "path": "./myai/incubator",
+      "permissions": ["read", "write", "execute"],
+      "description": "Python experimental workspace for data science and ML prototypes",
+      "max_file_size_mb": 500,
+      "allowed_extensions": ["py", "ipynb", "json", "csv", "pkl", "h5", "joblib"]
+    },
+    {
+      "name": "Logs",
+      "path": "./logs",
+      "permissions": ["read", "write", "append"],
+      "description": "System logs and audit trails",
+      "max_file_size_mb": 50,
+      "allowed_extensions": ["log", "txt", "json"]
+    },
+    {
+      "name": "Artifacts",
+      "path": "./data/artifacts",
+      "permissions": ["read", "write"],
+      "description": "AI-generated artifacts (charts, reports, exports)",
+      "max_file_size_mb": 200,
+      "allowed_extensions": ["png", "jpg", "svg", "pdf", "csv", "json", "html"]
+    }
+  ],
+  "blacklist": [
+    ".env",
+    ".env.*",
+    ".git/**",
+    "node_modules/**",
+    "*.key",
+    "*.pem",
+    "*.p12",
+    "*.pfx",
+    "config/google-service-account.json",
+    "config/*-credentials.json",
+    "*.db",
+    "*.sqlite",
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    "yarn.lock"
+  ],
+  "audit": {
+    "enabled": true,
+    "log_path": "./logs/mcp_audit.log",
+    "retention_days": 90,
+    "log_denied_attempts": true,
+    "alert_on_suspicious_patterns": true,
+    "suspicious_patterns": [
+      "../",
+      "..\\",
+      "/etc/",
+      "/root/",
+      "C:\\Windows\\",
+      "C:\\Program Files\\"
+    ]
+  },
+  "rate_limiting": {
+    "enabled": true,
+    "max_operations_per_minute": 100,
+    "max_operations_per_hour": 5000,
+    "burst_allowance": 20
+  },
+  "security": {
+    "enforce_path_normalization": true,
+    "block_symlinks": true,
+    "verify_file_signatures": false,
+    "sandbox_mode": true
+  }
+}

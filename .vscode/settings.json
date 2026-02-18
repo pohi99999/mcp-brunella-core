@@ -513,5 +513,7 @@
     "inlineChat.defaultModel": "Auto (copilot)",
     "chat.allowAnonymousAccess": true,
     "chat.disableAIFeatures": false,
-    "python-envs.defaultEnvManager": "ms-python.python:system"
+    "python-envs.defaultEnvManager": "ms-python.python:system",
+    "geminicodeassist.inlineSuggestions.nextEditPredictions": true,
+    "geminicodeassist.verboseLogging": true
 }
