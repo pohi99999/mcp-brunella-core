@@ -4,7 +4,7 @@
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 47 total | 5 active | 16 completed | 11 archived
+**Stats:** 47 total | 2 active | 13 completed | 14 archived
 
 ---
 
@@ -58,7 +58,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (5)
+## Aktiv Szalak (Active) (2)
 
 - [ ] **AI Recommendation System Integration** [MEDIUM]
   - **ID:** `ai_recommendation_system_20260216`
@@ -72,45 +72,9 @@
   - **Updated:** 2026-02-18T12:00:00Z
   - Mappa: ./tracks/cloudflare_edge_agents_network_20260215/
 
-- [x] **Hyper-Local Supply Chain** [HIGH] ✅
-  - **ID:** `hyper_local_supply_chain_20260216`
-  - **Progress:** 100% (Phase 1-4 ✅: Gmail draft + approval flow, 5/5 tests PASS)
-  - **Updated:** 2026-02-18T12:00:00Z
-  - Mappa: ./tracks/hyper_local_supply_chain_20260216/
-
-- [x] **Real Estate Sales Campaign** [HIGH] ✅
-  - **ID:** `real_estate_sales_campaign_20260216`
-  - **Progress:** 100% (Phase 1-4 ✅: Corporate hunter + CRM, 6/6 tests PASS)
-  - **Updated:** 2026-02-18T12:00:00Z
-  - Mappa: ./tracks/real_estate_sales_campaign_20260216/
-
-- [x] **Software Genesis Protocol** [HIGH] ✅
-  - **ID:** `software_genesis_protocol_20260216`
-  - **Progress:** 100% (Phase 1-4 ✅: UX + DevOps integration, 6/6 tests PASS)
-  - **Updated:** 2026-02-18T12:00:00Z
-  - Mappa: ./tracks/software_genesis_protocol_20260216/
-
 ---
 
-## Befejezett (Completed - Not Archived) (13)
-
-- [x] **Hyper-Local Supply Chain** [HIGH] ✅
-  - **ID:** `hyper_local_supply_chain_20260216`
-  - **Completed:** 2026-02-18T12:00:00Z
-  - **Summary:** Gmail draft + approval flow, 5/5 tests PASS
-  - Mappa: ./tracks/hyper_local_supply_chain_20260216/
-
-- [x] **Real Estate Sales Campaign** [HIGH] ✅
-  - **ID:** `real_estate_sales_campaign_20260216`
-  - **Completed:** 2026-02-18T12:00:00Z
-  - **Summary:** Corporate hunter + CRM integration, 6/6 tests PASS
-  - Mappa: ./tracks/real_estate_sales_campaign_20260216/
-
-- [x] **Software Genesis Protocol** [HIGH] ✅
-  - **ID:** `software_genesis_protocol_20260216`
-  - **Completed:** 2026-02-18T12:00:00Z
-  - **Summary:** UX + DevOps integration, 6/6 tests PASS
-  - Mappa: ./tracks/software_genesis_protocol_20260216/
+## Befejezett (Completed - Not Archived) (10)
 
 - [x] **Industrial Machine Hunter** [HIGH] ✅
   - **ID:** `industrial_machine_hunter_20260216`
@@ -177,9 +141,21 @@
 
 ---
 
-## Archivalt (Archived) (11)
+## Archivalt (Archived) (14)
 
-> Archived tracks are hidden by default. View in `conductor/archive/`
+> Archived tracks are hidden by default. View in `_archive/conductor/tracks/`
+
+- [x] **Hyper-Local Supply Chain** [HIGH] ✅ (2026-02-18T12:00:00Z)
+  - **Summary:** Gmail draft + approval flow, 5/5 tests PASS
+  - Location: `_archive/conductor/tracks/hyper_local_supply_chain_20260216/`
+
+- [x] **Real Estate Sales Campaign** [HIGH] ✅ (2026-02-18T12:00:00Z)
+  - **Summary:** Corporate hunter + CRM integration, 6/6 tests PASS
+  - Location: `_archive/conductor/tracks/real_estate_sales_campaign_20260216/`
+
+- [x] **Software Genesis Protocol** [HIGH] ✅ (2026-02-18T12:00:00Z)
+  - **Summary:** UX + DevOps integration, 6/6 tests PASS
+  - Location: `_archive/conductor/tracks/software_genesis_protocol_20260216/`
 
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
