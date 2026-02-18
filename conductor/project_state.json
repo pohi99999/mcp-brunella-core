@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-18T02:00:00.036Z",
+  "lastUpdated": "2026-02-18T03:00:00.464Z",
   "tracks": [
     {
       "id": "ai_recommendation_system_20260216",
@@ -130,26 +130,6 @@
       "_isArchived": false
     },
     {
-      "id": "codex_chat_refactor_20260212",
-      "name": "Codex NeuralLink Chat Refactor",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-13T18:00:00Z",
-      "assignee": "DeveloperAgent",
-      "tags": [
-        "dashboard",
-        "refactor",
-        "chat",
-        "provider-pattern",
-        "typescript"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\codex_chat_refactor_20260212",
-      "_isArchived": false
-    },
-    {
       "id": "code_quality_improvements_20260210",
       "name": "Code Quality Improvements",
       "status": "archived",
@@ -185,28 +165,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\creative_friction_mediator_20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "dashboard_test_suite_20260210",
-      "name": "Dashboard Komplett Tesztsorozat",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-10T15:00:00Z",
-      "updated": "2026-02-12T10:30:00Z",
-      "assignee": "DeveloperAgent",
-      "tags": [
-        "testing",
-        "dashboard",
-        "playwright",
-        "e2e",
-        "vitest"
-      ],
-      "dependencies": [
-        "code_quality_improvements_20260210"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_test_suite_20260210",
       "_isArchived": false
     },
     {
@@ -246,30 +204,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\developer_agent_2_0_20260206",
-      "_isArchived": false
-    },
-    {
-      "id": "enterprise_suite_master_20260216",
-      "name": "Enterprise Suite Master - 14 Modulos Vállalati Irányító",
-      "status": "completed",
-      "priority": "critical",
-      "progress": 0,
-      "created": "2026-02-16T00:00:00Z",
-      "updated": "2026-02-17T21:15:00Z",
-      "tags": [
-        "enterprise",
-        "multi-module",
-        "orchestration",
-        "ai-agents",
-        "automation",
-        "hr",
-        "finance",
-        "sales",
-        "logistics",
-        "intelligence"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\enterprise_suite_master_20260216",
       "_isArchived": false
     },
     {
@@ -412,49 +346,6 @@
       "_isArchived": false
     },
     {
-      "id": "invoice-to-sheets-automation-20260214",
-      "name": "Számla Adatkinyerés és Google Sheets Automatizáció",
-      "status": "active",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-14T14:00:00Z",
-      "updated": "2026-02-17T21:05:00Z",
-      "tags": [
-        "finance",
-        "automation",
-        "szamlazz.hu",
-        "google-sheets",
-        "data-flywheel"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\invoice-to-sheets-automation-20260214",
-      "_isArchived": false
-    },
-    {
-      "id": "jules_continuous_ai_integration_20260215",
-      "name": "Jules Continuous AI Integration (JCAI)",
-      "status": "active",
-      "priority": "critical",
-      "progress": 100,
-      "created": "2026-02-15T00:00:00Z",
-      "updated": "2026-02-17T15:00:00Z",
-      "tags": [
-        "automation",
-        "ci-cd",
-        "jules",
-        "continuous-ai",
-        "scheduler",
-        "github"
-      ],
-      "dependencies": [
-        "local_test_scheduler_20260215",
-        "github_sync_scripts",
-        "dashboard_framework"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\jules_continuous_ai_integration_20260215",
-      "_isArchived": false
-    },
-    {
       "id": "jules_enterprise_cicd_20260212",
       "name": "Jules Enterprise CI/CD & Security Suite",
       "status": "proposed",
@@ -517,6 +408,34 @@
       "_isArchived": false
     },
     {
+      "id": "mcp_ollama_integration_20260218",
+      "name": "MCP + Ollama Integration - Secure Filesystem & Multi-Provider Gateway",
+      "status": "active",
+      "priority": "critical",
+      "progress": 15,
+      "created": "2026-02-18T03:30:00Z",
+      "updated": "2026-02-18T04:15:00Z",
+      "tags": [
+        "mcp",
+        "ollama",
+        "security",
+        "e2b-sandboxes",
+        "bifrost-gateway",
+        "multi-llm",
+        "filesystem",
+        "python-bridge"
+      ],
+      "dependencies": [
+        "@modelcontextprotocol/sdk",
+        "@e2b/sdk",
+        "ollama",
+        "@google/generative-ai",
+        "@anthropic-ai/sdk"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\mcp_ollama_integration_20260218",
+      "_isArchived": false
+    },
+    {
       "id": "micro_csr_automator_20260212",
       "name": "Micro-Local CSR Automator (Neighborhood Watchman)",
       "status": "proposed",
@@ -554,77 +473,6 @@
       "_isArchived": false
     },
     {
-      "id": "otel_agent_tracing_20260211",
-      "name": "OpenTelemetry Agent Tracing",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-11T00:00:00Z",
-      "updated": "2026-02-11T00:00:00Z",
-      "assignee": "GitHub Copilot",
-      "tags": [
-        "otel",
-        "opentelemetry",
-        "otlp",
-        "tracing",
-        "observability"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\otel_agent_tracing_20260211",
-      "_isArchived": false
-    },
-    {
-      "id": "phoenix_protocol_v2_20260205",
-      "name": "Phoenix Protocol v2 - Öngyógyító Rendszer",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-02-05",
-      "updated": "2026-02-16T16:20:00Z",
-      "completed": "2026-02-16T16:20:00Z",
-      "tags": [
-        "self-healing",
-        "resilience",
-        "checkpoint",
-        "monitoring",
-        "degradation"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\phoenix_protocol_v2_20260205",
-      "_isArchived": false
-    },
-    {
-      "id": "robotkezv2-full-comet-20260215",
-      "name": "RobotkezV2 - Full Comet (Magyar Agentic Browser)",
-      "status": "completed",
-      "priority": "critical",
-      "progress": 100,
-      "created": "2026-02-15T01:30:00Z",
-      "updated": "2026-02-15T22:00:00Z",
-      "completed": "2026-02-15T22:00:00Z",
-      "assignee": "Claude Code",
-      "tags": [
-        "robotkezv2",
-        "comet",
-        "agentic-browser",
-        "persistent-browser",
-        "magyar-nyelv",
-        "llm-orchestration",
-        "multi-step-automation",
-        "dashboard",
-        "cli",
-        "epp-v2-compliance"
-      ],
-      "dependencies": [
-        "Jules Persistent Browser infrastruktúra",
-        "Ollama/Gemini LLM integráció",
-        "Dashboard komponens (React)",
-        "CLI framework (Commander.js)"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkezv2-full-comet-20260215",
-      "_isArchived": false
-    },
-    {
       "id": "robotkez_n8n_sandbox_edzesterv",
       "name": "Robotkéz n8n Sandbox és Edzésterv",
       "status": "archived",
@@ -644,41 +492,6 @@
         "bas_scale_up_stabilization_20260131"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_n8n_sandbox_edzesterv",
-      "_isArchived": false
-    },
-    {
-      "id": "robotkez_stabilization_20260212",
-      "name": "Robotkéz Stabilizáció & Gemini 2.0",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-12T00:00:00Z",
-      "tags": [
-        "robotkez",
-        "browser-use",
-        "gemini",
-        "stability"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_stabilization_20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "self_healing_core_20260213",
-      "name": "Self-Healing & Auto-Fix Protocol",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-13T00:00:00Z",
-      "updated": "2026-02-13T00:00:00Z",
-      "tags": [
-        "phoenix",
-        "self-healing",
-        "fix-queue"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\self_healing_core_20260213",
       "_isArchived": false
     },
     {
@@ -739,6 +552,26 @@
       "_isArchived": true
     },
     {
+      "id": "codex_chat_refactor_20260212",
+      "name": "Codex NeuralLink Chat Refactor",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-13T18:00:00Z",
+      "assignee": "DeveloperAgent",
+      "tags": [
+        "dashboard",
+        "refactor",
+        "chat",
+        "provider-pattern",
+        "typescript"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\codex_chat_refactor_20260212",
+      "_isArchived": true
+    },
+    {
       "id": "dashboard-todo-widget-20260211",
       "name": "Dashboard TODO Widget",
       "status": "archived",
@@ -756,6 +589,28 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard-todo-widget-20260211",
+      "_isArchived": true
+    },
+    {
+      "id": "dashboard_test_suite_20260210",
+      "name": "Dashboard Komplett Tesztsorozat",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-10T15:00:00Z",
+      "updated": "2026-02-12T10:30:00Z",
+      "assignee": "DeveloperAgent",
+      "tags": [
+        "testing",
+        "dashboard",
+        "playwright",
+        "e2e",
+        "vitest"
+      ],
+      "dependencies": [
+        "code_quality_improvements_20260210"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard_test_suite_20260210",
       "_isArchived": true
     },
     {
@@ -777,6 +632,30 @@
         "browser_use_harvester_20260131"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\data_flywheel_incubator_20260205",
+      "_isArchived": true
+    },
+    {
+      "id": "enterprise_suite_master_20260216",
+      "name": "Enterprise Suite Master - 14 Modulos Vállalati Irányító",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 0,
+      "created": "2026-02-16T00:00:00Z",
+      "updated": "2026-02-17T21:15:00Z",
+      "tags": [
+        "enterprise",
+        "multi-module",
+        "orchestration",
+        "ai-agents",
+        "automation",
+        "hr",
+        "finance",
+        "sales",
+        "logistics",
+        "intelligence"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\enterprise_suite_master_20260216",
       "_isArchived": true
     },
     {
@@ -838,6 +717,136 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules-async-test-automation-20260211",
+      "_isArchived": true
+    },
+    {
+      "id": "jules_continuous_ai_integration_20260215",
+      "name": "Jules Continuous AI Integration (JCAI)",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "created": "2026-02-15T00:00:00Z",
+      "updated": "2026-02-17T15:00:00Z",
+      "tags": [
+        "automation",
+        "ci-cd",
+        "jules",
+        "continuous-ai",
+        "scheduler",
+        "github"
+      ],
+      "dependencies": [
+        "local_test_scheduler_20260215",
+        "github_sync_scripts",
+        "dashboard_framework"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules_continuous_ai_integration_20260215",
+      "_isArchived": true
+    },
+    {
+      "id": "otel_agent_tracing_20260211",
+      "name": "OpenTelemetry Agent Tracing",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-11T00:00:00Z",
+      "updated": "2026-02-11T00:00:00Z",
+      "assignee": "GitHub Copilot",
+      "tags": [
+        "otel",
+        "opentelemetry",
+        "otlp",
+        "tracing",
+        "observability"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\otel_agent_tracing_20260211",
+      "_isArchived": true
+    },
+    {
+      "id": "phoenix_protocol_v2_20260205",
+      "name": "Phoenix Protocol v2 - Öngyógyító Rendszer",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-05",
+      "updated": "2026-02-16T16:20:00Z",
+      "completed": "2026-02-16T16:20:00Z",
+      "tags": [
+        "self-healing",
+        "resilience",
+        "checkpoint",
+        "monitoring",
+        "degradation"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\phoenix_protocol_v2_20260205",
+      "_isArchived": true
+    },
+    {
+      "id": "robotkezv2-full-comet-20260215",
+      "name": "RobotkezV2 - Full Comet (Magyar Agentic Browser)",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "created": "2026-02-15T01:30:00Z",
+      "updated": "2026-02-15T22:00:00Z",
+      "completed": "2026-02-15T22:00:00Z",
+      "assignee": "Claude Code",
+      "tags": [
+        "robotkezv2",
+        "comet",
+        "agentic-browser",
+        "persistent-browser",
+        "magyar-nyelv",
+        "llm-orchestration",
+        "multi-step-automation",
+        "dashboard",
+        "cli",
+        "epp-v2-compliance"
+      ],
+      "dependencies": [
+        "Jules Persistent Browser infrastruktúra",
+        "Ollama/Gemini LLM integráció",
+        "Dashboard komponens (React)",
+        "CLI framework (Commander.js)"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkezv2-full-comet-20260215",
+      "_isArchived": true
+    },
+    {
+      "id": "robotkez_stabilization_20260212",
+      "name": "Robotkéz Stabilizáció & Gemini 2.0",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T00:00:00Z",
+      "tags": [
+        "robotkez",
+        "browser-use",
+        "gemini",
+        "stability"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkez_stabilization_20260212",
+      "_isArchived": true
+    },
+    {
+      "id": "self_healing_core_20260213",
+      "name": "Self-Healing & Auto-Fix Protocol",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-13T00:00:00Z",
+      "updated": "2026-02-13T00:00:00Z",
+      "tags": [
+        "phoenix",
+        "self-healing",
+        "fix-queue"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\self_healing_core_20260213",
       "_isArchived": true
     },
     {
@@ -905,9 +914,9 @@
   ],
   "stats": {
     "total": 44,
-    "active": 7,
-    "completed": 8,
-    "archived": 11,
+    "active": 6,
+    "completed": 0,
+    "archived": 20,
     "proposed": 8
   }
 }

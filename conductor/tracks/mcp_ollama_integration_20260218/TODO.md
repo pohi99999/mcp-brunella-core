@@ -5,7 +5,7 @@
 
 ---
 
-## Phase 1: MCP Filesystem Foundation (7/10)
+## Phase 1: MCP Filesystem Foundation (8/10)
 
 - [x] Create MCP server base structure (`src/server/mcp_server.ts`) ✅
 - [x] Implement `read_file` tool with Safe Zone validation ✅
@@ -14,8 +14,8 @@
 - [x] Implement `search_files` tool with glob pattern support ✅
 - [x] Create Safe Zone configuration file (`config/safe_zones.json`) ✅
 - [x] Implement SafeZoneValidator class with blacklist enforcement ✅
-- [ ] Implement audit log system (`logs/mcp_audit.log`) - PARTIAL (logging implemented in validator)
-- [ ] Create Ollama MCP client (`src/core/ollama_mcp_client.ts`)
+- [x] Implement audit log system (`logs/mcp_audit.log`) ✅ (integrated in SafeZoneValidator)
+- [x] Create Ollama MCP client (`src/core/ollama_mcp_client.ts`) ✅
 - [ ] Write unit tests for Phase 1 (15 tests)
 
 ---
