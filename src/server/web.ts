@@ -201,6 +201,9 @@ export async function startWebServer() {
   // Add Tracks routes (EPP v2)
   v1Router.use("/tracks", createTracksRouter());
 
+  // Add MCP routes (Model Context Protocol)
+  v1Router.use("/mcp", mcpRouter);
+
   // Add CEAN routes (Cloudflare Edge Agents Network)
   v1Router.use(ceanRouter);
 
