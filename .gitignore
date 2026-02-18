@@ -96,6 +96,10 @@ logs/
 # LanceDB vector embeddings
 data/brunella_lancedb/
 
+# Research and external projects (not part of main CEAN project)
+external_research/
+external/
+
 # Temporary test and output files
 build_errors.txt
 e2e_results.txt
