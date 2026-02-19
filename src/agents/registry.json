@@ -448,6 +448,28 @@
       "notes": "Alerts when competitor prices drop >10%. Stores historical data in LanceDB."
     },
     {
+      "name": "procurement",
+      "title": "Procurement Agent (Auto-Negotiator)",
+      "description": "Phase 2 - Automated supplier negotiation with market price analysis and validated email drafting",
+      "class": "ProcurementAgent",
+      "module": "./agents/ProcurementAgent.js",
+      "capabilities": [
+        "supplier_price_analysis",
+        "market_comparison",
+        "negotiation_strategy_selection",
+        "email_draft_generation",
+        "source_validation",
+        "fact_checking"
+      ],
+      "triggers": ["procurement", "negotiate", "supplier pricing", "price negotiation"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["procurement", "negotiation", "finance", "phase2", "bas-suite"],
+      "priority": 7,
+      "enterpriseModuleId": "finance",
+      "notes": "CRITICAL: All price claims must include source citations. Requires human review before sending."
+    },
+    {
       "name": "pricing",
       "title": "Pricing Agent",
       "description": "Dinamikus Árazó & Piaci Hírszerző - Market intelligence, competitive analysis, pricing recommendations",
