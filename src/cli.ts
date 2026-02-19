@@ -33,6 +33,7 @@ import { registerSuggestedTasksCommands } from "./cli/suggestedTasksCommands.js"
 import { registerRobotkezCommands } from "./cli/robotkezCommands.js";
 import { registerConductorCommands } from "./cli/conductorCommands.js";
 import { registerInvoiceCommands } from "./cli/invoiceCommands.js";
+import { registerWorkspaceCommands } from "./cli/workspaceCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -1224,6 +1225,9 @@ registerRobotkezCommands(program);
 
 // Register Invoice Automation commands (Phase 5)
 registerInvoiceCommands(program);
+
+// Register Workspace commands (Google Workspace API)
+registerWorkspaceCommands(program);
 
 // Register Conductor commands (Track State Management) - MOVED AFTER conductorCmd definition
 
