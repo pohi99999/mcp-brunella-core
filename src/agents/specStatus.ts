@@ -170,17 +170,16 @@ export async function isSpecApproved(trackId: string): Promise<boolean> {
 export async function listSpecStatuses(): Promise<SpecMeta[]> {
     try {
         const entries = await fs.readdir(TRACKS_DIR, { withFileTypes: true });
-        const results: SpecMeta[] = [];
 
-        for (const entry of entries) {
-            if (!entry.isDirectory()) continue;
-            const meta = await readMeta(entry.name);
-            if (meta) {
-                results.push(meta);
-            }
-        }
+        // Optimize: Use Promise.all for concurrent file reads
+        const metaPromises = entries
+            .filter(entry => entry.isDirectory())
+            .map(entry => readMeta(entry.name));
 
-        return results;
+        const metaList = await Promise.all(metaPromises);
+
+        // Filter out nulls (failed reads or missing meta.json)
+        return metaList.filter((meta): meta is SpecMeta => meta !== null);
     } catch (error: unknown) {
         const msg = error instanceof Error ? error.message : String(error);
         logError('SpecStatus', `Failed to list spec statuses: ${msg}`);
