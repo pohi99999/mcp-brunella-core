@@ -71,6 +71,7 @@ import { createScheduledTasksRoutes } from "./routes/scheduledTasks.js";
 import createWebhookRoutes from "./routes/webhooks.js";
 import githubWebhookRouter from "./routes/githubWebhook.js";
 import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
+import { createEnterpriseRouter } from "./routes/enterprise.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -228,6 +229,9 @@ export async function startWebServer() {
 
   // Add Suggested Tasks routes to v1
   v1Router.use("/suggested-tasks", suggestedTasksRouter);
+
+  // Add Enterprise Suite routes to v1
+  v1Router.use("/enterprise", createEnterpriseRouter());
 
   // Add Scheduled Tasks routes to v1
   v1Router.use("/scheduled-tasks", createScheduledTasksRoutes(db));
