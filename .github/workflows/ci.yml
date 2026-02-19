@@ -56,6 +56,20 @@ jobs:
       - name: Install deps
         run: npm ci
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install Python dependencies
+        run: |
+          if [ -f "myai/requirements.txt" ]; then
+            pip install -r myai/requirements.txt
+          elif [ -f "requirements.txt" ]; then
+            pip install -r requirements.txt
+          fi
+
       - name: Build
         run: npm run build
 

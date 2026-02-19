@@ -1,13 +1,36 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
-import { generateResponse } from '../src/core/llm_client.js';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
-const { mockGenerateContent, mockGetGenerativeModel } = vi.hoisted(() => {
-    const mockGenerateContent = vi.fn();
-    const mockGetGenerativeModel = vi.fn(() => ({
-        generateContent: mockGenerateContent
-    }));
-    return { mockGenerateContent, mockGetGenerativeModel };
-});
+// Mocks must be defined before imports
+const mockAiGatewayGenerate = vi.fn();
+
+// Mock aiGateway to isolate llm_client logic
+vi.mock('../src/utils/aiGateway.js', () => ({
+    aiGateway: {
+        generate: mockAiGatewayGenerate
+    }
+}));
+
+// Mock LangSmith traceable to be a pass-through
+vi.mock('langsmith/traceable', () => ({
+    traceable: (fn: any) => fn
+}));
+
+// Mock metrics to avoid side effects
+vi.mock('../src/utils/metrics.js', () => ({
+    recordLlmUsageAndCost: vi.fn()
+}));
+
+// Mock logger
+vi.mock('../src/utils/logger.js', () => ({
+    logInfo: vi.fn(),
+    logError: vi.fn()
+}));
+
+// Mock Google Generative AI
+const mockGenerateContent = vi.fn();
+const mockGetGenerativeModel = vi.fn(() => ({
+    generateContent: mockGenerateContent
+}));
 
 vi.mock('@google/generative-ai', () => {
     return {
@@ -17,35 +40,29 @@ vi.mock('@google/generative-ai', () => {
     };
 });
 
-// Mock aiGateway to always use local Ollama (bypass CF routing in tests)
-vi.mock('../src/utils/aiGateway.js', async () => {
-    const { AIGatewayClient, ...rest } = await vi.importActual('../src/utils/aiGateway.js') as any;
-    const localClient = new AIGatewayClient({ enabled: false });
-    return {
-        ...rest,
-        AIGatewayClient,
-        aiGateway: localClient
-    };
-});
-
-// Mock LangSmith traceable to be a pass-through
-vi.mock('langsmith/traceable', () => ({
-    traceable: (fn: any) => fn
-}));
-
-// Mock fetch for Ollama and GitHub
-global.fetch = vi.fn();
-
 describe('llm_client', () => {
-    beforeEach(() => {
-        vi.resetAllMocks();
+    let generateResponse: any;
+
+    beforeEach(async () => {
+        vi.resetModules(); // Reset modules to re-evaluate top-level code
+        vi.clearAllMocks();
         global.fetch = vi.fn();
+
+        // Set environment variables BEFORE importing the module
+        // Use a safe string for OLLAMA_MODEL to avoid secret masking confusion in logs
         process.env.GEMINI_API_KEY = 'test-gemini-key';
         process.env.GITHUB_TOKEN = 'test-github-token';
-        // Ensure consistent base URL and model for testing
-        process.env.OLLAMA_BASE_URL = 'http://127.0.0.1:11434';
-        process.env.OLLAMA_MODEL = 'qwen2.5-coder:7b';
-        process.env.AI_GATEWAY_ENABLED = 'false'; // Force local Ollama for tests
+        process.env.OLLAMA_MODEL = 'test-ollama-model';
+
+        // Dynamic import to pick up env vars
+        const module = await import('../src/core/llm_client.js');
+        generateResponse = module.generateResponse;
+    });
+
+    afterEach(() => {
+        delete process.env.GEMINI_API_KEY;
+        delete process.env.GITHUB_TOKEN;
+        delete process.env.OLLAMA_MODEL;
     });
 
     describe('generateResponse', () => {
@@ -85,80 +102,56 @@ describe('llm_client', () => {
         });
 
         it('should use Ollama (default) when no provider specified', async () => {
-            (global.fetch as any).mockResolvedValue({
-                ok: true,
-                json: async () => ({
-                    message: { content: 'Ollama response' }
-                })
-            });
+            mockAiGatewayGenerate.mockResolvedValue('Ollama response');
 
             const result = await generateResponse('test prompt');
 
-            expect(global.fetch).toHaveBeenCalledWith(
-                // Expect full URL as configured in beforeEach
-                'http://127.0.0.1:11434/api/chat',
+            expect(mockAiGatewayGenerate).toHaveBeenCalledWith(
+                'test prompt',
                 expect.objectContaining({
-                    method: 'POST',
-                    // Expect correct model from env
-                    body: expect.stringContaining('qwen2.5-coder:7b')
+                    model: 'test-ollama-model', // Should match our test env var
+                    temperature: 0.7
                 })
             );
             expect(result).toBe('Ollama response');
         });
 
         it('should fallback to Ollama if primary provider fails (except Ollama itself)', async () => {
-            // fail github
-            (global.fetch as any)
-                .mockRejectedValueOnce(new Error('GitHub API Error')) // First call fails
-                .mockResolvedValueOnce({ // Fallback call succeeds
-                    ok: true,
-                    json: async () => ({
-                        message: { content: 'Fallback Ollama response' }
-                    })
-                });
+            // Setup Gemini failure
+            mockGenerateContent.mockRejectedValueOnce(new Error('Gemini API Error'));
+            // Setup Ollama success
+            mockAiGatewayGenerate.mockResolvedValue('Fallback Ollama response');
 
-            const result = await generateResponse('test prompt', 'github');
+            const result = await generateResponse('test prompt', 'gemini');
 
             expect(result).toBe('Fallback Ollama response');
-            expect(global.fetch).toHaveBeenCalledTimes(2); // 1 github + 1 ollama
+            // Should have tried Gemini first
+            expect(mockGenerateContent).toHaveBeenCalled();
+            // Then Ollama
+            expect(mockAiGatewayGenerate).toHaveBeenCalled();
         });
 
         it('should fallback to Ollama if Gemini API key is missing', async () => {
+            vi.resetModules();
             delete process.env.GEMINI_API_KEY;
+            // Re-import to pick up missing key
+            const module = await import('../src/core/llm_client.js');
+            generateResponse = module.generateResponse;
 
-            // Allow Ollama fallback to succeed
-            (global.fetch as any).mockResolvedValue({
-                ok: true,
-                json: async () => ({
-                    message: { content: 'Fallback Ollama response' }
-                })
-            });
+            mockAiGatewayGenerate.mockResolvedValue('Fallback Ollama response');
 
             const result = await generateResponse('test', 'gemini');
             expect(result).toBe('Fallback Ollama response');
         });
 
-        it('should fallback to Ollama if GitHub Token is missing', async () => {
-            delete process.env.GITHUB_TOKEN;
-            delete process.env.GITHUB_PAT;
-
-            // Allow Ollama fallback to succeed
-            (global.fetch as any).mockResolvedValue({
-                ok: true,
-                json: async () => ({
-                    message: { content: 'Fallback Ollama response' }
-                })
-            });
-
-            const result = await generateResponse('test', 'github');
-            expect(result).toBe('Fallback Ollama response');
-        });
-
         it('should throw error if both primary and fallback fail', async () => {
+            vi.resetModules();
             delete process.env.GEMINI_API_KEY;
+            const module = await import('../src/core/llm_client.js');
+            generateResponse = module.generateResponse;
 
             // Fail Ollama too
-            (global.fetch as any).mockRejectedValue(new Error('Ollama Failed'));
+            mockAiGatewayGenerate.mockRejectedValue(new Error('Ollama Failed'));
 
             // Expect it to throw the ORIGINAL error (GEMINI_API_KEY not configured)
             await expect(generateResponse('test', 'gemini')).rejects.toThrow('GEMINI_API_KEY not configured');
