@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-19T08:00:00.268Z
+**Utolso frissites:** 2026-02-19T15:15:35.388Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 47 total | 2 active | 6 completed | 24 archived
+**Stats:** 47 total | 2 active | 0 completed | 30 archived
 
 ---
 
@@ -58,47 +58,31 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (6)
+## Befejezett (Completed - Not Archived) (0)
 
-- [x] **AI Recommendation System Integration**
-  - **ID:** `ai_recommendation_system_20260216`
-  - Mappa: ./tracks/ai_recommendation_system_20260216/
-
-- [x] **BAS Enterprise Suite - 18 Module Business Automation**
-  - **ID:** `bas_enterprise_suite`
-  - Mappa: ./tracks/bas_enterprise_suite/
-
-- [x] **Cloudflare Edge Agents Network (CEAN)**
-  - **ID:** `cloudflare_edge_agents_network_20260215`
-  - Mappa: ./tracks/cloudflare_edge_agents_network_20260215/
-
-- [x] **Green Lightning - Autonomous EV Hunter**
-  - **ID:** `green_lightning_20260212`
-  - Mappa: ./tracks/green_lightning_20260212/
-
-- [x] **Industrial Machine Hunter**
-  - **ID:** `industrial_machine_hunter_20260216`
-  - Mappa: ./tracks/industrial_machine_hunter_20260216/
-
-- [x] **Marketing Swarm - Automated Campaign Factory**
-  - **ID:** `marketing_swarm_20260216`
-  - Mappa: ./tracks/marketing_swarm_20260216/
+_Nincs befejezett projekt, amely várakozik archíválásra._
 
 ---
 
-## Archivalt (Archived) (24)
+## Archivalt (Archived) (30)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
+- [x] **AI Recommendation System Integration** (2026-02-19)
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
+- [x] **BAS Enterprise Suite - 18 Module Business Automation** (2026-02-19)
 - [x] **Browser-Use Harvester with Structured JSON Output** (N/A)
+- [x] **Cloudflare Edge Agents Network (CEAN)** (2026-02-19)
 - [x] **Codex NeuralLink Chat Refactor** (2026-02-13T18:00:00Z)
 - [x] **Dashboard TODO Widget** (2026-02-13)
 - [x] **Dashboard Komplett Tesztsorozat** (2026-02-12T10:30:00Z)
 - [x] **Data Flywheel & Incubator** (2026-02-05)
 - [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító** (2026-02-17T21:15:00Z)
+- [x] **Green Lightning - Autonomous EV Hunter** (2026-02-19)
 - [x] **Hyper-Local Supply Chain** (2026-02-16T00:00:00Z)
+- [x] **Industrial Machine Hunter** (2026-02-19)
+- [x] **Marketing Swarm - Automated Campaign Factory** (2026-02-19)
 - [x] **Számla Adatkinyerés és Google Sheets Automatizáció** (2026-02-17T21:05:00Z)
 
 ... and 14 more archived tracks
