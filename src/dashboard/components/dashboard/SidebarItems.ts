@@ -1,34 +1,10 @@
-import {
-  LayoutDashboard,
-  MessageSquare,
-  Workflow,
-  Sparkles,
-  FolderOpen,
-  Settings,
-  Activity,
-  Terminal,
-  Brain,
-  FileText,
-  Rocket,
-  History,
-  Network,
-  Cpu,
-  FlaskConical,
-  Code2,
-  Cloud,
-  CalendarClock,
-} from "lucide-react";
+import { navigationRegistry } from "@/lib/navigation";
 
-export const SIDEBAR_ITEMS = [
-  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { id: "chat", label: "Neural Chat", icon: MessageSquare },
-  { id: "tasks", label: "Tasks", icon: Code2 },
-  { id: "suggested-tasks", label: "Suggested", icon: FileText },
-  { id: "scheduled-tasks", label: "Scheduled", icon: CalendarClock },
-  { id: "incubator", label: "Incubator", icon: FlaskConical },
-  { id: "knowledge", label: "Knowledge", icon: Brain },
-  { id: "n8n", label: "n8n", icon: Workflow },
-  { id: "langflow", label: "Langflow", icon: Sparkles },
-  { id: "files", label: "Files", icon: FolderOpen },
-  { id: "settings", label: "Settings", icon: Settings },
-];
+export const SIDEBAR_ITEMS = navigationRegistry.getAllItems().map(item => ({
+  id: item.id,
+  label: item.label,
+  icon: item.icon
+}));
+
+// Backward compatibility for components using groups
+export const MENU_GROUPS = navigationRegistry.getGroups();

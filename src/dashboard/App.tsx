@@ -1,14 +1,14 @@
 import { Toaster } from 'sonner'
 import { MissionControlLayout } from '@/components/dashboard/MissionControlLayout'
-import { ThemeProvider } from '@/components/ui/theme-provider'
+import { ExperimentProvider } from '@/context/ExperimentContext'
 
 function App() {
   return (
     <>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ExperimentProvider>
         <Toaster position="top-right" />
         <MissionControlLayout />
-      </ThemeProvider>
+      </ExperimentProvider>
     </>
   )
 }

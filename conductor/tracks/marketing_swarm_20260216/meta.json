@@ -1,10 +1,12 @@
 {
   "track_id": "marketing_swarm_20260216",
   "name": "Marketing Swarm - Automated Campaign Factory",
-  "status": "active",
+  "status": "completed",
+  "progress": 100,
   "priority": "HIGH",
   "created": "2026-02-16T00:00:00Z",
-  "updated": "2026-02-16T00:00:00Z",
+  "updated": "2026-02-17T23:30:00Z",
+  "actualCompletion": "2026-02-17",
   "owner": "SpecWriterAgent",
   "description": "Automatizált marketing kampánycsomag előállítás trendkutatás, copywriting és media generálás alapján.",
   "objectives": [
@@ -24,9 +26,9 @@
   "dependencies": ["robotkezv2", "lancedb_rag"],
   "blockers": [],
   "milestones": [
-    { "name": "Swarm orchestration ready", "target_date": "2026-02-23", "status": "planned" },
-    { "name": "Trend analyst online", "target_date": "2026-03-02", "status": "planned" },
-    { "name": "Media factory + assembly", "target_date": "2026-03-09", "status": "planned" }
+    { "name": "Swarm orchestration ready", "status": "completed" },
+    { "name": "Trend analyst online", "status": "completed" },
+    { "name": "Media factory + assembly", "status": "completed" }
   ],
   "constraints": [
     "Draft Mode alapértelmezett a költségkontroll miatt",

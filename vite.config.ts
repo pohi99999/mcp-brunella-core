@@ -28,6 +28,9 @@ export default defineConfig({
     // createIconImportProxy() as PluginOption,
     // sparkPlugin() as PluginOption,
   ],
+  optimizeDeps: {
+    include: ['react-grid-layout', 'react-grid-layout/legacy'],
+  },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src/dashboard')

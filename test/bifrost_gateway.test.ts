@@ -8,14 +8,23 @@ import { BifrostGateway, ProviderType, TaskType } from '../src/core/bifrost_gate
  * Tests will be skipped if providers are not configured
  */
 
+// Dynamic Ollama availability check (top-level await, ES module)
+let hasOllama = false;
+try {
+  const resp = await fetch('http://localhost:11434', {
+    signal: AbortSignal.timeout(2000)
+  });
+  hasOllama = true; // any HTTP response means Ollama is running
+} catch {
+  hasOllama = false;
+}
+
+const hasGemini = !!(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== '');
+const hasGitHub = !!(process.env.GITHUB_PAT && process.env.GITHUB_PAT !== '');
+const hasAnthropic = !!(process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== '');
+
 describe('Bifrost Gateway', () => {
   let gateway: BifrostGateway;
-
-  // Check which providers are configured
-  const hasOllama = true; // Assume Ollama is always available locally
-  const hasGemini = !!(process.env.GEMINI_API_KEY && process.env.GEMINI_API_KEY !== '');
-  const hasGitHub = !!(process.env.GITHUB_PAT && process.env.GITHUB_PAT !== '');
-  const hasAnthropic = !!(process.env.ANTHROPIC_API_KEY && process.env.ANTHROPIC_API_KEY !== '');
 
   beforeEach(() => {
     gateway = new BifrostGateway();
@@ -55,7 +64,7 @@ describe('Bifrost Gateway', () => {
   });
 
   describe('Provider Selection', () => {
-    it('should auto-select provider for "code" task type', async () => {
+    it.skipIf(!hasOllama)('should auto-select provider for "code" task type', async () => {
       const result = await gateway.generate({
         prompt: 'Write a hello world in Python',
         taskType: 'code',
@@ -67,7 +76,7 @@ describe('Bifrost Gateway', () => {
       expect(result.provider).toBe('ollama');
     }, 30000);
 
-    it('should auto-select provider for "general" task type', async () => {
+    it.skipIf(!hasOllama && !hasGemini)('should auto-select provider for "general" task type', async () => {
       const result = await gateway.generate({
         prompt: 'What is 2+2?',
         taskType: 'general',
@@ -80,7 +89,7 @@ describe('Bifrost Gateway', () => {
       expect(['gemini', 'ollama']).toContain(result.provider);
     }, 30000);
 
-    it('should allow manual provider override', async () => {
+    it.skipIf(!hasOllama)('should allow manual provider override', async () => {
       const result = await gateway.generate({
         prompt: 'Test prompt',
         provider: 'ollama',
@@ -205,7 +214,7 @@ describe('Bifrost Gateway', () => {
   });
 
   describe('Fallback Mechanism', () => {
-    it('should fallback to Ollama if cloud provider fails', async () => {
+    it.skipIf(!hasOllama && !hasGemini)('should fallback to Ollama if cloud provider fails', async () => {
       // Force Gemini with invalid config to trigger fallback
       const result = await gateway.generate({
         prompt: 'Test fallback',
@@ -218,7 +227,7 @@ describe('Bifrost Gateway', () => {
       expect(['gemini', 'ollama']).toContain(result.provider);
     }, 30000);
 
-    it('should not use fallback if Ollama is selected directly', async () => {
+    it.skipIf(!hasOllama)('should not use fallback if Ollama is selected directly', async () => {
       const result = await gateway.generate({
         prompt: 'Direct Ollama test',
         provider: 'ollama',
@@ -258,7 +267,7 @@ describe('Bifrost Gateway', () => {
   });
 
   describe('Statistics', () => {
-    it('should track request counts by provider', async () => {
+    it.skipIf(!hasOllama)('should track request counts by provider', async () => {
       const statsBefore = gateway.getStats();
       const initialCount = statsBefore.total_requests;
 
@@ -294,7 +303,7 @@ describe('Bifrost Gateway', () => {
     const taskTypes: TaskType[] = ['code', 'general', 'reasoning', 'creative', 'fast'];
 
     taskTypes.forEach(taskType => {
-      it(`should handle "${taskType}" task type`, async () => {
+      it.skipIf(!hasOllama && !hasGemini)(`should handle "${taskType}" task type`, async () => {
         const result = await gateway.generate({
           prompt: `Test ${taskType} task`,
           taskType,
@@ -309,7 +318,7 @@ describe('Bifrost Gateway', () => {
   });
 
   describe('Error Handling', () => {
-    it('should handle unavailable provider gracefully', async () => {
+    it.skipIf(!hasOllama && !hasGemini)('should handle unavailable provider gracefully', async () => {
       // Try to use a provider that might not be configured
       const result = await gateway.generate({
         prompt: 'Test',
@@ -322,7 +331,7 @@ describe('Bifrost Gateway', () => {
       expect(['anthropic', 'ollama']).toContain(result.provider);
     }, 30000);
 
-    it('should handle invalid model gracefully', async () => {
+    it.skipIf(!hasOllama)('should handle invalid model gracefully', async () => {
       const result = await gateway.generate({
         prompt: 'Test',
         provider: 'ollama',

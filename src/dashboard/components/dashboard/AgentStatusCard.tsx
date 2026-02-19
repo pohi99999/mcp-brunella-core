@@ -22,6 +22,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
+import agentCapsHu from '../../data/agentCapabilities_hu.json'
 
 export type AgentStatus = 'idle' | 'working' | 'error'
 
@@ -54,8 +55,15 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
   const [selectedDelegate, setSelectedDelegate] = useState<string>('')
   const [delegateTask, setDelegateTask] = useState('')
 
+  // Hungarian data fallback
+  const huData = (agentCapsHu as any)[agent.name] || {};
+  const displayTitle = huData.title || agent.name;
+  const displayRole = huData.description ? "Specializált Ügynök" : (agent.role || 'Agent');
+  const displayDescription = huData.description || agent.description;
+  const displayCapabilities = huData.capabilities || agent.capabilities || [];
+
   // Capability Editing State
-  const [capabilities, setCapabilities] = useState<string[]>(agent.capabilities || [])
+  const [capabilities, setCapabilities] = useState<string[]>(displayCapabilities)
   const [newCapability, setNewCapability] = useState('')
   const [isEditingCaps, setIsEditingCaps] = useState(false)
 
@@ -160,8 +168,8 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
               aria-hidden
             />
             <div className="flex flex-col">
-              <span className="font-space font-bold tracking-wide text-zinc-100 group-hover:text-primary transition-colors">{agent.name}</span>
-              <span className="text-[10px] font-mono text-zinc-500 uppercase">{agent.role || 'Agent'}</span>
+              <span className="font-space font-bold tracking-wide text-zinc-100 group-hover:text-primary transition-colors">{displayTitle}</span>
+              <span className="text-[10px] font-mono text-zinc-500 uppercase">{displayRole}</span>
             </div>
           </div>
           <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -175,7 +183,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                 <DialogHeader>
                   <DialogTitle className="text-foreground">Feladat Delegálás</DialogTitle>
                   <DialogDescription>
-                    Válassz célügynököt és add meg a feladatot. {agent.name} fogja továbbítani.
+                    Válassz célügynököt és add meg a feladatot. {displayTitle} fogja továbbítani.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="grid gap-4 py-4">
@@ -219,8 +227,8 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
         </CardTitle>
       </CardHeader>
       <CardContent className="pt-0 space-y-2 flex-1 overflow-auto">
-        {(taskDescription || agent.description) && (
-          <p className="text-sm text-zinc-400 line-clamp-2 px-1 font-mono leading-relaxed">{taskDescription || agent.description}</p>
+        {(taskDescription || displayDescription) && (
+          <p className="text-sm text-zinc-400 line-clamp-2 px-1 font-mono leading-relaxed">{taskDescription || displayDescription}</p>
         )}
 
         {expanded && (
@@ -229,7 +237,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
               <div className="flex items-center justify-between">
                 <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
                   <Lightning size={10} className="text-yellow-500" />
-                  Capabilities
+                  Képességek (Capabilities)
                 </span>
                 <Popover open={isEditingCaps} onOpenChange={setIsEditingCaps}>
                   <PopoverTrigger asChild>
@@ -295,7 +303,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                 <div className="relative flex-1">
                   <input
                     type="text"
-                    placeholder="Execute quick task..."
+                    placeholder="Gyors parancs..."
                     className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-1.5 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors font-mono"
                     value={quickTask}
                     onChange={(e) => setQuickTask(e.target.value)}
