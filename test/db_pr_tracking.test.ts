@@ -7,7 +7,7 @@ import os from 'os';
 const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), 'brunella-test-'));
 process.env.BRUNELLA_SYSTEM_LOG_DIR = tempDir;
 
-const { mockDbInstance, mockPrepare, mockRun, mockGet, mockAll, mockExec } = vi.hoisted(() => {
+const { mockDbInstance, mockPrepare, mockRun, mockGet, mockAll } = vi.hoisted(() => {
     const mockRun = vi.fn();
     const mockGet = vi.fn();
     const mockAll = vi.fn();
@@ -62,7 +62,9 @@ describe('Database PR Tracking', () => {
     afterAll(() => {
         try {
             fs.rmSync(tempDir, { recursive: true, force: true });
-        } catch (e) {}
+        } catch {
+            // Ignore cleanup errors
+        }
     });
 
     it('should save a pull request', async () => {
