@@ -1,17 +1,22 @@
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
-import { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
-import {
-  CallToolRequestSchema,
-  ListToolsRequestSchema,
+// Removed static SDK imports to prevent bundling in Workers
+import type { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import type { StdioServerTransport } from '@modelcontextprotocol/sdk/server/stdio.js';
+import type {
   Tool,
   TextContent
 } from '@modelcontextprotocol/sdk/types.js';
 // Removed static fs/glob imports
-// import fs from 'fs';
 import path from 'path';
-// import { glob } from 'glob';
 import { getSafeZoneValidator, SafeZoneValidator } from '../security/safe_zone_validator.js';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
+
+// Schemas must be defined manually or imported dynamically to avoid SDK dependency in runtime
+const CallToolRequestSchema = {
+    method: "tools/call"
+};
+const ListToolsRequestSchema = {
+    method: "tools/list"
+};
 
 /**
  * MCP Filesystem Server
@@ -20,34 +25,22 @@ import { logInfo, logError, logWarn } from '../utils/logger.js';
  * All operations are validated against Safe Zone configuration.
  */
 export class MCPFilesystemServer {
-  private server: Server;
+  private server: Server | null = null;
   public validator: SafeZoneValidator; // Public for testing
 
   constructor() {
     this.validator = getSafeZoneValidator();
-
-    this.server = new Server(
-      {
-        name: 'brunella-mcp-filesystem',
-        version: '1.0.0'
-      },
-      {
-        capabilities: {
-          tools: {}
-        }
-      }
-    );
-
-    this.setupHandlers();
-    logInfo('MCPFilesystemServer', 'MCP server initialized');
+    logInfo('MCPFilesystemServer', 'MCP server initialized (waiting for start)');
   }
 
   /**
    * Setup MCP request handlers
    */
   private setupHandlers(): void {
+    if (!this.server) return;
+
     // List available tools
-    this.server.setRequestHandler(ListToolsRequestSchema, async () => {
+    this.server.setRequestHandler(ListToolsRequestSchema as any, async () => {
       logInfo('MCPFilesystemServer', 'Listing tools');
       return {
         tools: this.getTools()
@@ -55,7 +48,7 @@ export class MCPFilesystemServer {
     });
 
     // Call tool
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    this.server.setRequestHandler(CallToolRequestSchema as any, async (request: any) => {
       const { name, arguments: args } = request.params;
       logInfo('MCPFilesystemServer', `Calling tool: ${name}`);
 
@@ -90,7 +83,7 @@ export class MCPFilesystemServer {
   /**
    * Get tool definitions
    */
-  private getTools(): Tool[] {
+  public getTools(): Tool[] {
     return [
       {
         name: 'read_file',
@@ -170,7 +163,7 @@ export class MCPFilesystemServer {
   /**
    * Handle read_file tool
    */
-  private async handleReadFile(args: any): Promise<any> {
+  public async handleReadFile(args: any): Promise<any> {
     const filePath = args.path as string;
     const fs = await import('fs');
 
@@ -221,7 +214,7 @@ export class MCPFilesystemServer {
   /**
    * Handle write_file tool
    */
-  private async handleWriteFile(args: any): Promise<any> {
+  public async handleWriteFile(args: any): Promise<any> {
     const filePath = args.path as string;
     const content = args.content as string;
     const createDirs = args.create_dirs !== false; // Default true
@@ -273,7 +266,7 @@ export class MCPFilesystemServer {
   /**
    * Handle list_directory tool
    */
-  private async handleListDirectory(args: any): Promise<any> {
+  public async handleListDirectory(args: any): Promise<any> {
     const dirPath = args.path as string;
     const includeHidden = args.include_hidden === true;
     const fs = await import('fs');
@@ -340,7 +333,7 @@ export class MCPFilesystemServer {
   /**
    * Handle search_files tool
    */
-  private async handleSearchFiles(args: any): Promise<any> {
+  public async handleSearchFiles(args: any): Promise<any> {
     const pattern = args.pattern as string;
     const directory = args.directory || process.cwd();
     const { glob } = await import('glob');
@@ -392,6 +385,24 @@ export class MCPFilesystemServer {
    * Start MCP server
    */
   async start(): Promise<void> {
+    // Dynamic import of SDK components
+    const { Server } = await import('@modelcontextprotocol/sdk/server/index.js');
+    const { StdioServerTransport } = await import('@modelcontextprotocol/sdk/server/stdio.js');
+
+    this.server = new Server(
+      {
+        name: 'brunella-mcp-filesystem',
+        version: '1.0.0'
+      },
+      {
+        capabilities: {
+          tools: {}
+        }
+      }
+    );
+
+    this.setupHandlers();
+
     const transport = new StdioServerTransport();
     await this.server.connect(transport);
     logInfo('MCPFilesystemServer', 'MCP Filesystem Server running on stdio');
@@ -401,7 +412,7 @@ export class MCPFilesystemServer {
 /**
  * Main entry point for MCP server
  */
-if (import.meta.url === `file://${process.argv[1]}`) {
+if (typeof process !== 'undefined' && process.versions && process.versions.node && import.meta.url === `file://${process.argv[1]}`) {
   const server = new MCPFilesystemServer();
   server.start().catch(error => {
     logError('MCPFilesystemServer', `Failed to start server: ${error.message}`);
