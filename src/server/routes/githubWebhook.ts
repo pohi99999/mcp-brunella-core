@@ -20,6 +20,7 @@ import type {
 import { GitHubAPIClient } from '../../core/githubAPIClient.js';
 import { DeploymentAnalyzer } from '../../tools/deploymentAnalyzer.js';
 import { processWorkflowFailure } from '../../core/julesIntegration.js';
+import { savePullRequest } from '../../utils/db.js';
 
 const router = Router();
 
@@ -206,15 +207,26 @@ async function handlePullRequest(payload: unknown, res: Response): Promise<void>
 
   try {
     const {
-      id: prNumber,
+      id: githubId,
       title: prTitle,
       head: { ref: branch }
     } = pullRequest;
 
+    const prNumber = prPayload.number || (pullRequest as any).number;
+
     logInfo('GitHubWebhook', `PR event (${action}): #${prNumber} "${prTitle}" on ${branch}`);
 
     // Track PR for potential auto-merge
-    // TODO: Store in database for tracking
+    await savePullRequest({
+        pr_number: prNumber,
+        github_id: githubId,
+        title: prTitle,
+        owner: prPayload.repository.owner.login,
+        repo: prPayload.repository.name,
+        branch: branch,
+        state: pullRequest.state,
+        action: action
+    });
 
     res.status(200).json({
       status: 'acknowledged',

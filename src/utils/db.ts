@@ -12,6 +12,20 @@ export interface DbMessage {
     timestamp: string;
 }
 
+export interface DbPullRequest {
+    id: number;
+    pr_number: number;
+    github_id: number;
+    title: string;
+    owner: string;
+    repo: string;
+    branch: string;
+    state: string;
+    action: string;
+    created_at: string;
+    updated_at: string;
+}
+
 async function ensureDeps() {
     if (typeof process !== 'undefined' && process.versions?.node) {
         if (!path) path = await import('path');
@@ -83,6 +97,30 @@ function _initTables(database: any) {
             FOREIGN KEY(parent_id) REFERENCES tasks(id)
         )
     `);
+
+    database.exec(`
+        CREATE TABLE IF NOT EXISTS pull_requests (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            pr_number INTEGER,
+            github_id INTEGER,
+            title TEXT,
+            owner TEXT,
+            repo TEXT,
+            branch TEXT,
+            state TEXT,
+            action TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    try {
+        database.exec(`
+            CREATE UNIQUE INDEX IF NOT EXISTS idx_pull_requests_unique ON pull_requests (owner, repo, pr_number)
+        `);
+    } catch (e) {
+        // Ignore if index already exists or other error, table creation is main goal
+    }
 }
 
 // Public API - Async wrappers
@@ -149,4 +187,39 @@ export async function getTaskCount() {
 
     const stmt = database.prepare('SELECT COUNT(*) as count FROM tasks');
     return (stmt.get() as any).count;
+}
+
+export async function savePullRequest(pr: {
+    pr_number: number,
+    github_id: number,
+    title: string,
+    owner: string,
+    repo: string,
+    branch: string,
+    state: string,
+    action: string
+}) {
+    const database = await getDb();
+    if (!database) return;
+
+    const stmt = database.prepare(`
+        INSERT INTO pull_requests (pr_number, github_id, title, owner, repo, branch, state, action, updated_at)
+        VALUES (@pr_number, @github_id, @title, @owner, @repo, @branch, @state, @action, CURRENT_TIMESTAMP)
+        ON CONFLICT(owner, repo, pr_number) DO UPDATE SET
+            title = excluded.title,
+            github_id = excluded.github_id,
+            branch = excluded.branch,
+            state = excluded.state,
+            action = excluded.action,
+            updated_at = CURRENT_TIMESTAMP
+    `);
+    stmt.run(pr);
+}
+
+export async function getPullRequest(owner: string, repo: string, prNumber: number): Promise<DbPullRequest | null> {
+    const database = await getDb();
+    if (!database) return null;
+
+    const stmt = database.prepare('SELECT * FROM pull_requests WHERE owner = ? AND repo = ? AND pr_number = ?');
+    return stmt.get(owner, repo, prNumber) as DbPullRequest || null;
 }
