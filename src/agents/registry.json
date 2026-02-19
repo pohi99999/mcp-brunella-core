@@ -405,6 +405,27 @@
       "enterpriseModuleId": "sales"
     },
     {
+      "name": "sales_hunter",
+      "title": "Sales Hunter Agent",
+      "description": "Phase 2 - LinkedIn-based lead discovery with email drafting, scoring, and Sheets export",
+      "class": "SalesHunterAgent",
+      "module": "./agents/SalesHunterAgent.js",
+      "capabilities": [
+        "linkedin_scraping",
+        "lead_scoring",
+        "email_draft_generation",
+        "crm_export",
+        "decision_maker_identification"
+      ],
+      "triggers": ["sales hunter", "lead discovery", "linkedin", "lead scraping"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["sales", "linkedin", "automation", "phase2", "bas-suite"],
+      "priority": 7,
+      "enterpriseModuleId": "sales",
+      "notes": "Rate limited: max 50 LinkedIn profiles/hour. Requires human approval for email sending."
+    },
+    {
       "name": "pricing",
       "title": "Pricing Agent",
       "description": "Dinamikus Árazó & Piaci Hírszerző - Market intelligence, competitive analysis, pricing recommendations",
