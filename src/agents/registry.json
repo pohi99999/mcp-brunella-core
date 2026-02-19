@@ -14,6 +14,26 @@
       "tags": ["coordination", "workflow"]
     },
     {
+      "name": "enterprise_orchestrator",
+      "title": "Enterprise Orchestrator",
+      "description": "Koordinalja a 18 BAS Enterprise Suite modul végrehajtását prioritás alapú routing-gal.",
+      "class": "EnterpriseOrchestratorAgent",
+      "module": "./agents/EnterpriseOrchestratorAgent.js",
+      "capabilities": [
+        "enterprise_event_parsing",
+        "priority_assignment",
+        "module_routing",
+        "execution_monitoring",
+        "approval_management"
+      ],
+      "tools": [],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["enterprise", "coordination", "multi-module", "erp"],
+      "priority": 9,
+      "notes": "Central coordinator for BAS Enterprise Suite - routes to 18 specialized modules"
+    },
+    {
       "name": "researcher",
       "title": "Research Agent",
       "description": "Keres a tudasbazisban, majd osszefoglalja a relevans informaciokat.",
