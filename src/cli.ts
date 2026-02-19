@@ -210,7 +210,7 @@ program
       await client.connect();
       // Use the agent_list tool
       const result = await client.callTool("agent_list", {});
-      // @ts-expect-error The result from agent_list tool might not have 'content[0].text'.
+      // @ts-expect-error content might be missing The result from agent_list tool might not have 'content[0].text'.
       const text = result.content?.[0]?.text;
       if (text) {
         console.log(chalk.bold("Registered Agents:"));
@@ -270,7 +270,7 @@ program
         if (opts.json) {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          // @ts-expect-error The result.content might not be a valid array or might be missing.
+          // @ts-expect-error content might be missing The result.content might not be a valid array or might be missing.
           const text = result.content?.[0]?.text;
           if (text) {
             console.log(chalk.bold(`\n✅ ${agentName} Response:`));
@@ -311,7 +311,7 @@ program
           const value = parts.slice(1).join("=");
           parsedArgs[key] = value;
         } else if (arg.startsWith("{")) {
-          try {
+          try { /* empty */
           } catch (e) { /* non-critical */ }
         }
       }
@@ -324,7 +324,7 @@ program
         if (opts.json) {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          // @ts-expect-error
+          // @ts-expect-error content might be missing
           const text = result.content?.[0]?.text;
           if (text) console.log(text);
           else console.log(JSON.stringify(result, null, 2));
@@ -693,7 +693,7 @@ program
         const result = await client.callTool("interpreter_run_python", {
           code,
         });
-        // @ts-expect-error The result from interpreter_run_python might not have content[0].text.
+        // @ts-expect-error content might be missing The result from interpreter_run_python might not have content[0].text.
         console.log(result.content[0].text);
       }
     } catch (e: any) {
@@ -722,7 +722,7 @@ conductorCmd
         task: "status",
       });
       spinner.stop();
-      // @ts-expect-error The result from agent_delegate tool might not have 'content[0].text'.
+      // @ts-expect-error content might be missing The result from agent_delegate tool might not have 'content[0].text'.
       const text = result.content?.[0]?.text || "No response";
 
       try {
@@ -804,7 +804,7 @@ conductorCmd
             const json = JSON.parse(text);
             responseText =
               json.message || json.data?.text || JSON.stringify(json, null, 2);
-          } catch {}
+          } catch { /* empty */ }
 
           console.log(marked(responseText));
 
@@ -858,7 +858,7 @@ conductorCmd
         agent_name: "ProjectConductor",
       });
       spinner.stop();
-      // @ts-expect-error The response might not have content[0].text.
+      // @ts-expect-error content might be missing The response might not have content[0].text.
       const response = result.content?.[0]?.text || "Health check completed";
       console.log(marked(response));
     } catch (e: any) {
@@ -892,7 +892,7 @@ conductorCmd
         task,
       });
       spinner.stop();
-      // @ts-expect-error The response might not have content[0].text.
+      // @ts-expect-error content might be missing The response might not have content[0].text.
       const response = result.content?.[0]?.text || "Done";
       console.log(marked(response));
     } catch (e: any) {
@@ -1246,7 +1246,7 @@ testsCmd
     try {
       await client.connect();
       spinner.stop();
-      // @ts-expect-error The result from test-scheduler-status tool might not have 'content[0].text'.
+      // @ts-expect-error content might be missing The result from test-scheduler-status tool might not have 'content[0].text'.
       const text = result.content?.[0]?.text || JSON.stringify(result);
       const data = JSON.parse(typeof text === "string" ? text : JSON.stringify(text));
 
@@ -1293,7 +1293,7 @@ testsCmd
         triggerReason: options.reason,
       });
       spinner.stop();
-      // @ts-expect-error The result from test-scheduler-run tool might not have 'content[0].text'.
+      // @ts-expect-error content might be missing The result from test-scheduler-run tool might not have 'content[0].text'.
       const text = result.content?.[0]?.text || JSON.stringify(result);
       const data = JSON.parse(typeof text === "string" ? text : JSON.stringify(text));
 

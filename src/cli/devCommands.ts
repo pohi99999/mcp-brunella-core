@@ -1432,7 +1432,7 @@ export function registerDevCommands(program: Command): void {
                     return result.activities[0]?.id || lastId; // Latest ID
                 };
 
-                let latestId = await fetchAndShow();
+                const latestId = await fetchAndShow();
 
                 if (opts.watch) {
                     console.log(chalk.dim('\nWatching for new activities... (Ctrl+C to stop)'));

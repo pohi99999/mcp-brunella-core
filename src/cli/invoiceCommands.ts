@@ -45,7 +45,7 @@ export function registerInvoiceCommands(program: Command): void {
         forceRefresh: Boolean(opts.forceRefresh),
         includeUnpaidOnly: Boolean(opts.unpaidOnly),
         getOverdue: Boolean(opts.overdue),
-        append: !Boolean(opts.replace),
+        append: !opts.replace,
         clearFirst: Boolean(opts.clearFirst),
         skipDuplicates: opts.skipDuplicates !== false,
         batchSize: toNumber(opts.batchSize as string | undefined, 75),
