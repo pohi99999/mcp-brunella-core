@@ -539,6 +539,132 @@
       "notes": "Flags anomalies when amount >2x vendor average. Requires Python OCR worker (Tesseract/Vision)."
     },
     {
+      "name": "email_triage",
+      "title": "Email Triage Agent",
+      "description": "Phase 3 - Automated email classification with priority detection and smart auto-responses",
+      "class": "EmailTriageAgent",
+      "module": "./agents/EmailTriageAgent.js",
+      "capabilities": [
+        "email_classification",
+        "priority_detection",
+        "auto_response",
+        "spam_filtering",
+        "sender_history_tracking"
+      ],
+      "triggers": ["email triage", "inbox automation", "email sorting", "irodavezető"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["email", "automation", "triage", "phase3", "bas-suite"],
+      "priority": 8,
+      "enterpriseModuleId": "admin",
+      "notes": "Uses template-based auto-responses from data/email_templates/. Tracks sender reputation."
+    },
+    {
+      "name": "grant_watcher",
+      "title": "Grant Watcher Agent",
+      "description": "Phase 3 - Automated grant/tender monitoring with TEÁOR-based eligibility matching",
+      "class": "GrantWatcherAgent",
+      "module": "./agents/GrantWatcherAgent.js",
+      "capabilities": [
+        "grant_scraping",
+        "eligibility_matching",
+        "teaor_filtering",
+        "deadline_tracking",
+        "document_generation"
+      ],
+      "triggers": ["grant watcher", "pályázatfigyelő", "tender monitoring", "palyazat"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["grants", "tenders", "monitoring", "phase3", "bas-suite"],
+      "priority": 7,
+      "enterpriseModuleId": "admin",
+      "notes": "Scrapes Magyar Közlöny + EU portals. Requires company TEÁOR code in input."
+    },
+    {
+      "name": "digital_headhunter",
+      "title": "Digital Headhunter Agent",
+      "description": "Phase 4 - CV screening with LinkedIn integration and bias-free candidate scoring",
+      "class": "DigitalHeadhunterAgent",
+      "module": "./agents/DigitalHeadhunterAgent.js",
+      "capabilities": [
+        "cv_parsing",
+        "linkedin_scraping",
+        "skill_matching",
+        "bias_free_scoring",
+        "interview_scheduling"
+      ],
+      "triggers": ["headhunter", "cv screening", "recruitment", "toborzas"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["hr", "recruitment", "screening", "phase4", "bas-suite"],
+      "priority": 6,
+      "enterpriseModuleId": "hr",
+      "notes": "Uses Python OCR for CV parsing. LinkedIn scraping via RobotkezV2."
+    },
+    {
+      "name": "local_csr",
+      "title": "Local CSR Agent",
+      "description": "Phase 4 - Carbon footprint tracking and ESG reporting with local charity discovery",
+      "class": "LocalCSRAgent",
+      "module": "./agents/LocalCSRAgent.js",
+      "capabilities": [
+        "carbon_footprint_tracking",
+        "esg_reporting",
+        "charity_discovery",
+        "impact_measurement",
+        "compliance_monitoring"
+      ],
+      "triggers": ["csr", "sustainability", "carbon", "esg", "fenntarthatosag"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["csr", "sustainability", "esg", "phase4", "bas-suite"],
+      "priority": 5,
+      "enterpriseModuleId": "csr",
+      "notes": "Calculates CO2 footprint using Hungarian grid factors. Compliance with EU Taxonomy."
+    },
+    {
+      "name": "logistics_dispatcher",
+      "title": "Logistics Dispatcher Agent",
+      "description": "Phase 5 - Multi-carrier shipment tracking with delay prediction and complaint generation",
+      "class": "LogisticsDispatcherAgent",
+      "module": "./agents/LogisticsDispatcherAgent.js",
+      "capabilities": [
+        "shipment_tracking",
+        "delay_prediction",
+        "complaint_generation",
+        "customer_notification",
+        "route_optimization"
+      ],
+      "triggers": ["logistics", "shipment", "tracking", "szallitmany"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["logistics", "tracking", "delivery", "phase5", "bas-suite"],
+      "priority": 7,
+      "enterpriseModuleId": "logistics",
+      "notes": "Supports GLS, DPD, Magyar Posta. Uses RobotkezV2 for carrier scraping."
+    },
+    {
+      "name": "knowledge_base_builder",
+      "title": "Knowledge Base Builder Agent",
+      "description": "Phase 5 - Automated FAQ extraction and wiki generation from Slack/Email with LanceDB RAG",
+      "class": "KnowledgeBaseBuilderAgent",
+      "module": "./agents/KnowledgeBaseBuilderAgent.js",
+      "capabilities": [
+        "message_analysis",
+        "faq_extraction",
+        "wiki_generation",
+        "embedding_storage",
+        "auto_categorization"
+      ],
+      "triggers": ["knowledge base", "wiki", "faq", "tudásbázis"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["knowledge", "wiki", "documentation", "phase5", "bas-suite"],
+      "priority": 6,
+      "enterpriseModuleId": "knowledge",
+      "notes": "Integrates with Slack API and Gmail. Stores embeddings in LanceDB for semantic search."
+    },
+    {
       "name": "digital_office_manager",
       "title": "Digital Office Manager",
       "description": "Digitális Irodavezető - Email triage, inbox automation, smart labeling",

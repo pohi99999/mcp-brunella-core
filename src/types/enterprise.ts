@@ -116,6 +116,16 @@ export interface ProcurementData {
 }
 
 // ----------------------------------------------------------------------------
+// CSR Impact Data Extension (Phase 4)
+// ----------------------------------------------------------------------------
+
+export interface CSRImpactData {
+  trackingPeriod?: string; // e.g., "Q1 2026"
+  officeEnergyKwh?: number;
+  businessTravelKm?: number;
+}
+
+// ----------------------------------------------------------------------------
 // Sales Module Payloads
 // ----------------------------------------------------------------------------
 
