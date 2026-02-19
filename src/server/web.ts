@@ -48,6 +48,7 @@ import { createAuditRouter } from "./auditRoutes.js";
 import { createSpecRouter } from "./specRoutes.js";
 import { createPhoenixRouter } from "./phoenixRoutes.js";
 import { createRouterRouter } from "./routerRoutes.js";
+import { systemController } from "./SystemController.js";
 import { createMemoryRouter } from "./memoryRoutes.js";
 import { createTracksRouter } from "./tracksRoutes.js";
 import ceanRouter from "./routes/cean.js";
@@ -440,8 +441,23 @@ export async function startWebServer() {
 
   // Register failure handlers for critical services
   heartbeatMonitor.onFailure("ollama", async (health) => {
-    logError("Phoenix", `Ollama service failed: ${health.error}`);
-    // TODO: Implement silent restart logic (Phase 2)
+    logError("Phoenix", `Ollama service failed: ${health.error}. Initiating silent restart...`);
+
+    // Stop existing instance (force kill if necessary)
+    await systemController.stopService("ollama");
+
+    // Wait for port release (3s)
+    await new Promise(resolve => setTimeout(resolve, 3000));
+
+    // Start new instance
+    const startResult = await systemController.startService("ollama");
+    if (startResult.success) {
+       logInfo("Phoenix", "Ollama service restarted successfully.");
+       // Reset failure count so it doesn't immediately trigger again
+       heartbeatMonitor.resetFailures("ollama");
+    } else {
+       logError("Phoenix", `Failed to restart Ollama: ${startResult.message}`);
+    }
   });
 
   heartbeatMonitor.onFailure("fastapi", async (health) => {
