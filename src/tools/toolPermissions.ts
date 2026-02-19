@@ -74,7 +74,7 @@ export function checkToolPermission(
     for (const permission of requiredPermissions) {
         if (!globalPermissionManager.hasPermission(agentName, permission)) {
             const reason = `Agent ${agentName} lacks ${permission} permission for ${toolName}`;
-            globalPermissionManager.logDeniedOperation(agentName, `tool:${toolName}`, reason);
+            globalPermissionManager.logDeniedOperation(agentName, `tool:${toolName}`, reason, toolName);
             return { allowed: false, reason };
         }
     }
@@ -96,7 +96,7 @@ export function checkFilePermission(
 
     if (!globalPermissionManager.canAccessPath(agentName, filePath, operation)) {
         const reason = `Agent ${agentName} cannot ${operation} file: ${filePath}`;
-        globalPermissionManager.logDeniedOperation(agentName, `file:${operation}`, reason);
+        globalPermissionManager.logDeniedOperation(agentName, `file:${operation}`, reason, filePath);
         return { allowed: false, reason };
     }
 
