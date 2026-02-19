@@ -3,6 +3,7 @@ import logging
 import json
 import asyncio
 import io
+import requests
 from typing import List, Optional, Dict, Any
 
 try:
@@ -28,7 +29,21 @@ class RAGService:
         self.table_name = "knowledge_base"
         self.pdf_parser = LocalPdfParser()
         self.text_splitter = SentenceTextSplitter(max_tokens_per_section=500)
-        self.embedding_dim = 1536 # Default to OpenAI text-embedding-ada-002 size
+
+        # Embedding configuration
+        self.provider = os.environ.get("EMBEDDING_PROVIDER", "openai").lower()
+        self.model = os.environ.get("EMBEDDING_MODEL")
+
+        # Set default model and dimension based on provider
+        if self.provider == "openai":
+            self.model = self.model or "text-embedding-3-small"
+            self.embedding_dim = int(os.environ.get("EMBEDDING_DIM", "1536"))
+        elif self.provider == "ollama":
+            self.model = self.model or "mxbai-embed-large"
+            self.embedding_dim = int(os.environ.get("EMBEDDING_DIM", "1024"))
+        else:
+            # Fallback/Default
+            self.embedding_dim = int(os.environ.get("EMBEDDING_DIM", "1536"))
 
     async def _get_db(self):
         if not lancedb:
@@ -50,11 +65,65 @@ class RAGService:
             await db.create_table(self.table_name, schema=schema)
         return await db.open_table(self.table_name)
 
+    async def _get_openai_embedding(self, text: str) -> List[float]:
+        api_key = os.environ.get("OPENAI_API_KEY")
+        if not api_key:
+            logger.error("OPENAI_API_KEY not set")
+            raise ValueError("OPENAI_API_KEY not set")
+
+        def _call_api():
+            url = "https://api.openai.com/v1/embeddings"
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            }
+            data = {
+                "input": text,
+                "model": self.model
+            }
+            response = requests.post(url, headers=headers, json=data, timeout=10)
+            response.raise_for_status()
+            return response.json()["data"][0]["embedding"]
+
+        return await asyncio.to_thread(_call_api)
+
+    async def _get_ollama_embedding(self, text: str) -> List[float]:
+        ollama_url = os.environ.get("OLLAMA_BASE_URL", "http://localhost:11434")
+
+        def _call_api():
+            url = f"{ollama_url}/api/embeddings"
+            data = {
+                "model": self.model,
+                "prompt": text
+            }
+            response = requests.post(url, json=data, timeout=30)
+            response.raise_for_status()
+            return response.json()["embedding"]
+
+        return await asyncio.to_thread(_call_api)
+
     async def _generate_embedding(self, text: str) -> List[float]:
-        # TODO: Integrate with OpenAI or Ollama for real embeddings
-        # For now, return a random or zero vector to allow the pipeline to run
-        # Ideally check os.environ.get("OPENAI_API_KEY") and use it
-        return [0.0] * self.embedding_dim
+        try:
+            if self.provider == "openai":
+                embedding = await self._get_openai_embedding(text)
+            elif self.provider == "ollama":
+                embedding = await self._get_ollama_embedding(text)
+            else:
+                logger.warning(f"Unknown embedding provider: {self.provider}. Falling back to zero vector.")
+                return [0.0] * self.embedding_dim
+
+            # Dimension correction
+            if len(embedding) != self.embedding_dim:
+                logger.warning(f"Embedding dimension mismatch: expected {self.embedding_dim}, got {len(embedding)}")
+                if len(embedding) < self.embedding_dim:
+                    embedding.extend([0.0] * (self.embedding_dim - len(embedding)))
+                else:
+                    embedding = embedding[:self.embedding_dim]
+            return embedding
+        except Exception as e:
+            logger.error(f"Failed to generate embedding: {e}")
+            # Fallback to zero vector to allow pipeline to continue
+            return [0.0] * self.embedding_dim
 
     async def ingest_document(self, file_content: bytes, filename: str) -> Dict[str, Any]:
         """
