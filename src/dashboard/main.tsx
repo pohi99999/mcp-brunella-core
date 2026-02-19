@@ -11,6 +11,17 @@ import "./styles/theme.css"
 import "./index.css"
 
 import { ThemeProvider } from "./components/ui/theme-provider.tsx"
+import { initializeNavigation } from "./lib/navigation.tsx"
+
+try {
+  initializeNavigation();
+} catch (e) {
+  console.error("Failed to initialize navigation:", e);
+}
+
+window.onerror = function(message, source, lineno, colno, error) {
+  console.error("Global Error:", message, "at", source, lineno, colno, error);
+};
 
 const queryClient = new QueryClient({
   defaultOptions: {

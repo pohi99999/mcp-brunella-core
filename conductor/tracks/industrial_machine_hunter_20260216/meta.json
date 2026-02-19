@@ -1,10 +1,12 @@
 {
   "track_id": "industrial_machine_hunter_20260216",
   "name": "Industrial Machine Hunter",
-  "status": "active",
+  "status": "completed",
+  "progress": 100,
   "priority": "HIGH",
   "created": "2026-02-16T00:00:00Z",
-  "updated": "2026-02-16T00:00:00Z",
+  "updated": "2026-02-18T01:00:00Z",
+  "actualCompletion": "2026-02-18",
   "owner": "SpecWriterAgent",
   "description": "Aukciós ipari gép listákból arbitrázs lehetőségek detektálása.",
   "objectives": [

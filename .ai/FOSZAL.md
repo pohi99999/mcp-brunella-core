@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-02-18 21:59
+**Generálva:** 2026-02-19 05:24
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -28,22 +28,31 @@ start-full.bat
 
 ## Összesített Napló (Időrendben)
 
+### 2026-02-19
+
+#### 05:30 - [Claude] Teljes Rendszer Ellenőrzés + Dashboard Problem Fix ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/App.tsx` (SZERKESZTVE - ThemeProvider eltávolítva), `src/dashboard/components/dashboard/MissionControlLayout.tsx` (SZERKESZTVE - 25+ unused import törölve), `src/dashboard/lib/navigationRegistry.ts` (TÖRÖLVE - duplikátum)
+
+---
+
 ### 2026-02-17
 
 #### 07:01 - [Gemini] RobotkezV2 E2E Fix & Middleware Stabilization (COMPLETE ✅)
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/server/web.ts` (Fix: `express.raw` és `express.json` konfliktus feloldása), `src/server/routes/robotkez.ts` (Debug logging, majd cleanup), `src/utils/db.ts` (Fix: `saveMessage` Foreign Key constraint hiba javítása az `INSERT OR IGNORE` chat létrehozással), `src/agents/types.ts` & `src/agents/BaseAgent.ts` (Feature: `success` mező visszaállítása a backward compatibility érdekében), `test/robotkezV2.e2e.test.ts` (Debug logging) (+1 további)
+- **Érintett fájlok:** * `src/server/web.ts` (Fix: `express.raw` és `express.json` konfliktus feloldása), * `src/server/routes/robotkez.ts` (Debug logging, majd cleanup), * `src/utils/db.ts` (Fix: `saveMessage` Foreign Key constraint hiba javítása az `INSERT OR IGNORE` chat létrehozással), * `src/agents/types.ts` & `src/agents/BaseAgent.ts` (Feature: `success` mező visszaállítása a backward compatibility érdekében), * `test/robotkezV2.e2e.test.ts` (Debug logging) (+1 további)
 
 #### 05:40 - [Gemini] RobotkezV2 "Comet" Experience Implementation (COMPLETE ✅)
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/agents/OrchestratorAgent.ts` (Bővített magyar kulcsszavak böngészéshez), `src/utils/llmPlanner.ts` (Kontextus-tudatos tervezés history és browser state alapján), `src/agents/RobotkezV2Agent.ts` (Browser state lekérdezés + history átadás a plannernek), `src/server/routes/robotkez.ts` (Perzisztens chat history a database-ben), `src/utils/persistentBrowser.ts` & `myai/interactive_browser.py` (Új `state` command az URL/Cím lekérdezéséhez) (+1 további)
+- **Érintett fájlok:** * `src/agents/OrchestratorAgent.ts` (Bővített magyar kulcsszavak böngészéshez), * `src/utils/llmPlanner.ts` (Kontextus-tudatos tervezés history és browser state alapján), * `src/agents/RobotkezV2Agent.ts` (Browser state lekérdezés + history átadás a plannernek), * `src/server/routes/robotkez.ts` (Perzisztens chat history a database-ben), * `src/utils/persistentBrowser.ts` & `myai/interactive_browser.py` (Új `state` command az URL/Cím lekérdezéséhez) (+1 további)
 
 #### 05:15 - [Gemini] Agent Execution & Webhook Fixes (COMPLETE ✅)
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/agents/RobotkezV2Agent.ts` (Refactor: executeTask implementation + intent parsing fallback), `src/server/routes/webhooks.ts` (Fix: GitHub webhook path), `test/robotkezAPI.test.ts` (Fix: Agent mock alignment), `test/checkpointRetention.test.ts` (Fix: Database lock cleanup on Windows)
+- **Érintett fájlok:** * `src/agents/RobotkezV2Agent.ts` (Refactor: executeTask implementation + intent parsing fallback), * `src/server/routes/webhooks.ts` (Fix: GitHub webhook path), * `test/robotkezAPI.test.ts` (Fix: Agent mock alignment), * `test/checkpointRetention.test.ts` (Fix: Database lock cleanup on Windows)
 
 #### 04:15 - [Claude] CEAN Phase 1D Test Worker Deployment ✅
 - **Agent:** Claude
@@ -62,7 +71,7 @@ start-full.bat
 #### 17:30 - [Gemini] Dashboard Design Refresh & System Boot Integration (COMPLETE ✅)
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Teljes strukturális és vizuális overhaul), `src/dashboard/main.tsx` (ThemeProvider harmonizálás a next-themes-zel), `src/dashboard/App.tsx` (ThemeProvider és alapértelmezett beállítások ellenőrzése)
+- **Érintett fájlok:** * `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Teljes strukturális és vizuális overhaul), * `src/dashboard/main.tsx` (ThemeProvider harmonizálás a next-themes-zel), * `src/dashboard/App.tsx` (ThemeProvider és alapértelmezett beállítások ellenőrzése)
 
 ---
 
@@ -93,12 +102,12 @@ start-full.bat
 #### 00:00 - [Gemini] SpecWriter Agent Registration Fix & Completion
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/agents/SpecWriterAgent.ts` (Fixed missing `export default`), `src/agents/registry.json` (Entry verified), `conductor/tracks/spec-writer-agent-20260211/track.md` (Updated to COMPLETED), `conductor/tracks.md` (Updated master list)
+- **Érintett fájlok:** * `src/agents/SpecWriterAgent.ts` (Fixed missing `export default`), * `src/agents/registry.json` (Entry verified), * `conductor/tracks/spec-writer-agent-20260211/track.md` (Updated to COMPLETED), * `conductor/tracks.md` (Updated master list)
 
 #### 00:00 - [Gemini] Workflow Hardening & CLI Integration (Priority 3-5)
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/utils/mcpClient.ts` (Recursive port 3000 fix), `src/cli.ts` (`conductor` subcommand bekötése), `.github/workflows/gemini-*.yml` (Timeoutok és secrets validáció), `.github/workflows/bas-*.yml` (Secrets validáció), `_COPILOT_NEXT_TASKS.md` (Státusz frissítés)
+- **Érintett fájlok:** * `src/utils/mcpClient.ts` (Recursive port 3000 fix), * `src/cli.ts` (`conductor` subcommand bekötése), * `.github/workflows/gemini-*.yml` (Timeoutok és secrets validáció), * `.github/workflows/bas-*.yml` (Secrets validáció), * `_COPILOT_NEXT_TASKS.md` (Státusz frissítés)
 
 ---
 
@@ -131,12 +140,12 @@ start-full.bat
 #### 21:15 - [Gemini] DeveloperAgent P8 Git Dashboard UI Befejezés (COMPLETE ✅)
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/dashboard/components/dashboard/DeveloperPanel.tsx` (+381 sor React kód, 1843 → 2224 sor), `conductor/tracks/developer_agent_2_0_20260206/spec.md` (P8 dokumentáció frissítés: [IDEA] → [DONE ✅]), `conductor/tracks/developer_agent_2_0_20260206/meta.json` (progress: 75 → 100, status: active → completed), `conductor/tracks/developer_agent_2_0_20260206/plan.md` (Fázis 1-5 DONE státusz)
+- **Érintett fájlok:** * `src/dashboard/components/dashboard/DeveloperPanel.tsx` (+381 sor React kód, 1843 → 2224 sor), * `conductor/tracks/developer_agent_2_0_20260206/spec.md` (P8 dokumentáció frissítés: [IDEA] → [DONE ✅]), * `conductor/tracks/developer_agent_2_0_20260206/meta.json` (progress: 75 → 100, status: active → completed), * `conductor/tracks/developer_agent_2_0_20260206/plan.md` (Fázis 1-5 DONE státusz)
 
 #### 20:30 - [Gemini] Phoenix Protocol Teszt Javítás & Git Szinkronizáció
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `test/phoenix_recovery.test.ts` (Mock implementációk: retryStrategy, gitRecovery, fake timers), Git commit & push: `copilot/vscode-mlh60ptr-9pqa` branch
+- **Érintett fájlok:** * `test/phoenix_recovery.test.ts` (Mock implementációk: retryStrategy, gitRecovery, fake timers), * Git commit & push: `copilot/vscode-mlh60ptr-9pqa` branch
 
 #### 18:30 - [Copilot] 🛡️ Rendszer Hardening & Startup Health Check (100% STABIL! ✅)
 - **Agent:** Copilot
@@ -161,7 +170,7 @@ start-full.bat
 #### 10:30 - [Gemini] Dashboard Test Suite Complete (100% ✅)
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `conductor/tracks/dashboard_test_suite_20260210/plan.md` (LÉTREHOZVA - 250+ sor implementációs roadmap), `conductor/tracks/dashboard_test_suite_20260210/meta.json` (progress: 80 → 100, status: in_progress → completed), `conductor/tracks.md` (track áthelyezve: Aktív Szálak → Lezárt Szálak), `test/e2e/*.spec.ts` (7 spec file - mind PASS ✅)
+- **Érintett fájlok:** * `conductor/tracks/dashboard_test_suite_20260210/plan.md` (LÉTREHOZVA - 250+ sor implementációs roadmap), * `conductor/tracks/dashboard_test_suite_20260210/meta.json` (progress: 80 → 100, status: in_progress → completed), * `conductor/tracks.md` (track áthelyezve: Aktív Szálak → Lezárt Szálak), * `test/e2e/*.spec.ts` (7 spec file - mind PASS ✅)
 
 #### 10:30 - [Copilot] 🤖 Robotkéz Stabilizáció & Gemini 2.0 Integráció (FIX KÉSZ! ✅)
 - **Agent:** Copilot
@@ -176,17 +185,17 @@ start-full.bat
 #### 00:00 - [Gemini] Magyar CLI Menürendszer (MAG-1.0)
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/cli-hu.ts` (Új: Magyar CLI belépési pont), `package.json` (Új parancsok: `npm run cli:hu` és `brunella-hu` bináris), `conductor/tracks/magyar-cli-menu-system-20260211/track.md` (Update), `conductor/tracks.md` (Update)
+- **Érintett fájlok:** * `src/cli-hu.ts` (Új: Magyar CLI belépési pont), * `package.json` (Új parancsok: `npm run cli:hu` és `brunella-hu` bináris), * `conductor/tracks/magyar-cli-menu-system-20260211/track.md` (Update), * `conductor/tracks.md` (Update)
 
 #### 00:00 - [Gemini] SpecWriterAgent Tesztjavítás
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `test/specWriterAgent.test.ts`, `src/agents/SpecWriterAgent.ts`
+- **Érintett fájlok:** * `test/specWriterAgent.test.ts`, * `src/agents/SpecWriterAgent.ts`
 
 #### 00:00 - [Gemini] Engineering Precision Protocol v2 (EPP v2) Finalizálás
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `conductor/epp-v2.md` (EPP v2 részletes dokumentáció), `README.md` (Quick reference és integrációs szabályok), `conductor/tracks/epp-v2-protocol-20260211/track.md` (Update to COMPLETED), `conductor/tracks.md` (Track list frissítés)
+- **Érintett fájlok:** * `conductor/epp-v2.md` (EPP v2 részletes dokumentáció), * `README.md` (Quick reference és integrációs szabályok), * `conductor/tracks/epp-v2-protocol-20260211/track.md` (Update to COMPLETED), * `conductor/tracks.md` (Track list frissítés)
 
 ---
 
@@ -389,12 +398,12 @@ start-full.bat
 #### 04:00 - [Gemini] Robotkéz (Browser-Use) Setup Kísérlet
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `myai/` (Python függőségek: browser-use, playwright, asyncio), `scripts/robotkez_test_level1.py` (Teszt script), `scripts/debug_robotkez.py` (Debug script), `scripts/start_server_debug.ps1` (Server indító script), `myai/server.py` (FastAPI backend) (+1 további)
+- **Érintett fájlok:** * `myai/` (Python függőségek: browser-use, playwright, asyncio), * `scripts/robotkez_test_level1.py` (Teszt script), * `scripts/debug_robotkez.py` (Debug script), * `scripts/start_server_debug.ps1` (Server indító script), * `myai/server.py` (FastAPI backend) (+1 további)
 
 #### 04:00 - [Gemini] Dashboard V2 Phase 5 & Stability Enhancements
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/dashboard/components/dashboard/KnowledgeBasePanel.tsx` (Új komponens: RAG vizualizáció és fájl feltöltés), `src/server/web.ts` (Új API végpontok: `/api/rag/stats`, `/api/rag/query`, `/api/rag/ingest`; Fix: Port 3000 EADDRINUSE), `src/agents/AgentManager.ts` (Új funkciók: Circuit Breaker, Retry Logic), `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Új "Knowledge" tab), `task.md`, `implementation_plan.md`, `walkthrough.md` (Dokumentáció frissítése)
+- **Érintett fájlok:** * `src/dashboard/components/dashboard/KnowledgeBasePanel.tsx` (Új komponens: RAG vizualizáció és fájl feltöltés), * `src/server/web.ts` (Új API végpontok: `/api/rag/stats`, `/api/rag/query`, `/api/rag/ingest`; Fix: Port 3000 EADDRINUSE), * `src/agents/AgentManager.ts` (Új funkciók: Circuit Breaker, Retry Logic), * `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Új "Knowledge" tab), * `task.md`, `implementation_plan.md`, `walkthrough.md` (Dokumentáció frissítése)
 
 ---
 
@@ -461,7 +470,7 @@ start-full.bat
 #### 07:45 - [Gemini] CLI & Dashboard Modernizálás (Model Selector Update)
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/cli.ts` (CLI /switch parancs, formázott output), `src/dashboard/components/dashboard/ChatInterface.tsx` (UI Modellválasztó Dropdown, markdown renderelés), `src/core/llm_client.ts` (Provider paraméter támogatás, default modell GPT-4o), `src/server/web.ts` (Socket argumentumok bővítése), `src/agents/OrchestratorAgent.ts` (Magyar nyelvű instrukciók, dinamikus provider kezelés) (+2 további)
+- **Érintett fájlok:** * `src/cli.ts` (CLI /switch parancs, formázott output), * `src/dashboard/components/dashboard/ChatInterface.tsx` (UI Modellválasztó Dropdown, markdown renderelés), * `src/core/llm_client.ts` (Provider paraméter támogatás, default modell GPT-4o), * `src/server/web.ts` (Socket argumentumok bővítése), * `src/agents/OrchestratorAgent.ts` (Magyar nyelvű instrukciók, dinamikus provider kezelés) (+2 további)
 
 #### 03:30 - [Claude] Rendszer Diagnosztika + Gemini Hibák Javítása + CLAUDE.md Refaktor
 - **Agent:** Claude
@@ -471,12 +480,12 @@ start-full.bat
 #### 02:45 - [Gemini] Dashboard Mentés & Ügynök Stabilizáció
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/dashboard/components/dashboard/ChatInterface.tsx` (Tailwind class fix), `src/dashboard/components/dashboard/AgentStatusCard.tsx` (Ikon fix: Chevron -> Caret, Zap -> Lightning), `src/dashboard/components/AgentGraph.tsx` (Ikon fix: Wand -> MagicWand), `src/agents/ResearcherAgent.ts` (Refaktor: BaseAgent extend + RAG Search Context), `src/agents/EvaluatorAgent.ts` (Refaktor: BaseAgent extend + Standard Results) (+1 további)
+- **Érintett fájlok:** * `src/dashboard/components/dashboard/ChatInterface.tsx` (Tailwind class fix), * `src/dashboard/components/dashboard/AgentStatusCard.tsx` (Ikon fix: Chevron -> Caret, Zap -> Lightning), * `src/dashboard/components/AgentGraph.tsx` (Ikon fix: Wand -> MagicWand), * `src/agents/ResearcherAgent.ts` (Refaktor: BaseAgent extend + RAG Search Context), * `src/agents/EvaluatorAgent.ts` (Refaktor: BaseAgent extend + Standard Results) (+1 további)
 
 #### 01:40 - [Gemini] Auralia Voice Integration & System Audit
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `myai/server.py` (Új `/voice/transcribe` végpont + faster-whisper), `src/agents/VoiceAgent.ts` (Új ügynök), `src/agents/registry.json` (VoiceAgent regisztráció), `src/dashboard/components/dashboard/ChatInterface.tsx` (Mikrofon UI és logika), `src/tools/n8n.ts` (Zod fix) (+2 további)
+- **Érintett fájlok:** * `myai/server.py` (Új `/voice/transcribe` végpont + faster-whisper), * `src/agents/VoiceAgent.ts` (Új ügynök), * `src/agents/registry.json` (VoiceAgent regisztráció), * `src/dashboard/components/dashboard/ChatInterface.tsx` (Mikrofon UI és logika), * `src/tools/n8n.ts` (Zod fix) (+2 további)
 
 ---
 
@@ -485,12 +494,12 @@ start-full.bat
 #### 23:30 - [Gemini] Security & Cleanup
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `.env`, `.env.example`, `package.json`
+- **Érintett fájlok:** * `.env`, * `.env.example`, * `package.json`
 
 #### 22:00 - [Gemini] Agent Factory & n8n Bridge (The "New Gen" Update)
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/dashboard/components/dashboard/AgentFactory.tsx` (Új UI), `src/tools/n8n.ts` (Bridge MCP Tool), `src/dashboard/components/AgentGraph.tsx` (Fénycsóva effektek), `registry.json` (Agent Architect regisztráció)
+- **Érintett fájlok:** * `src/dashboard/components/dashboard/AgentFactory.tsx` (Új UI), * `src/tools/n8n.ts` (Bridge MCP Tool), * `src/dashboard/components/AgentGraph.tsx` (Fénycsóva effektek), * `registry.json` (Agent Architect regisztráció)
 
 #### 21:30 - [Claude] IAgent/BaseAgent Egységesítés + Track Nagytakarítás
 - **Agent:** Claude
@@ -500,7 +509,7 @@ start-full.bat
 #### 10:45 - [Gemini] CLI VIP Upgrade & Cloudflare Integration
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/cli.ts` (Edge chat integráció, /edge switch, UI boxok, build fix), `src/interactive.ts` (Hierarchikus VIP menürendszer, almenük, parancsvégrehajtó segéd), `src/utils/cloudflareClient.ts` (ÚJ: API kliens a Workerhez), `bas-cloudflare-orchestrator/src/index.ts` (Context history patch), `conductor/tracks.md` (Track frissítés)
+- **Érintett fájlok:** * `src/cli.ts` (Edge chat integráció, /edge switch, UI boxok, build fix), * `src/interactive.ts` (Hierarchikus VIP menürendszer, almenük, parancsvégrehajtó segéd), * `src/utils/cloudflareClient.ts` (ÚJ: API kliens a Workerhez), * `bas-cloudflare-orchestrator/src/index.ts` (Context history patch), * `conductor/tracks.md` (Track frissítés)
 
 #### 09:15 - [Claude] Mikro-Ügynökök + Robotkéz Fejlesztés
 - **Agent:** Claude
@@ -515,12 +524,12 @@ start-full.bat
 #### 06:40 - [Gemini] Files Explorer & Neural Link Enhancement
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/server/web.ts` (API: /files/list, /files/content), `src/dashboard/lib/apiService.ts` (Files API kliens, Result refactor), `src/dashboard/components/dashboard/FileExplorer.tsx` (Új komponens), `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Files fül integráció), `src/agents/AgentManager.ts` (Thoughts & Context metadata támogatás) (+2 további)
+- **Érintett fájlok:** * `src/server/web.ts` (API: /files/list, /files/content), * `src/dashboard/lib/apiService.ts` (Files API kliens, Result refactor), * `src/dashboard/components/dashboard/FileExplorer.tsx` (Új komponens), * `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Files fül integráció), * `src/agents/AgentManager.ts` (Thoughts & Context metadata támogatás) (+2 további)
 
 #### 06:30 - [Gemini] Dashboard V2 Upgrade & Mission Control
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Layout refactor, V2 integration), `src/dashboard/components/AgentGraph.tsx` (Live React Flow visualization), `src/dashboard/components/CommandMenu.tsx` (Ctrl+K Palette), `src/dashboard/components/ThemeToggle.tsx` (Dark/Light mode switch), `src/dashboard/index.css` (V4 refactor, pure CSS variables) (+2 további)
+- **Érintett fájlok:** * `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Layout refactor, V2 integration), * `src/dashboard/components/AgentGraph.tsx` (Live React Flow visualization), * `src/dashboard/components/CommandMenu.tsx` (Ctrl+K Palette), * `src/dashboard/components/ThemeToggle.tsx` (Dark/Light mode switch), * `src/dashboard/index.css` (V4 refactor, pure CSS variables) (+2 további)
 
 #### 02:30 - [Claude] Munkamenet Összefoglaló (TOKEN LEJÁRT - REGGEL FOLYTATJUK)
 - **Agent:** Claude
@@ -576,7 +585,7 @@ start-full.bat
 #### 00:00 - [Gemini] Hybrid Cloud Integration
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `bas-cloudflare-orchestrator/wrangler.jsonc`, `bas-cloudflare-orchestrator/migrations/0001_initial_schema.sql`, `myai/sync_to_r2.py`, `.github/copilot-instructions.md`, `.github/workflows/bas-cloud-sync.yml` (+2 további)
+- **Érintett fájlok:** * `bas-cloudflare-orchestrator/wrangler.jsonc`, * `bas-cloudflare-orchestrator/migrations/0001_initial_schema.sql`, * `myai/sync_to_r2.py`, * `.github/copilot-instructions.md`, * `.github/workflows/bas-cloud-sync.yml` (+2 további)
 
 ---
 
@@ -584,7 +593,7 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 35 | 2026-02-17 |
+| Claude | 36 | 2026-02-19 |
 | Gemini | 24 | 2026-02-17 |
 | Cursor | 0 | N/A |
 | Copilot | 47 | 2026-02-15 |

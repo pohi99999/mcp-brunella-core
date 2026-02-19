@@ -1,10 +1,12 @@
 {
   "track_id": "ai_recommendation_system_20260216",
   "name": "AI Recommendation System Integration",
-  "status": "active",
+  "status": "completed",
+  "progress": 100,
   "priority": "MEDIUM",
   "created": "2026-02-16T00:00:00Z",
-  "updated": "2026-02-16T00:00:00Z",
+  "updated": "2026-02-17T22:45:00Z",
+  "actualCompletion": "2026-02-17",
   "owner": "SpecWriterAgent",
   "description": "Dinamikus ajánló API Orchestrator + RAG + MCP tool integrációval.",
   "objectives": [

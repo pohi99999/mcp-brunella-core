@@ -1,7 +1,7 @@
 # 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
 
 Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
-**Generálva:** 2026. 02. 18. 14:09:17
+**Generálva:** 2026. 02. 19. 4:46:50
 
 ---
 

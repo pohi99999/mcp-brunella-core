@@ -1,5 +1,42 @@
 ### CRITICAL: Before any action, you MUST read .ai/BOOTSTRAP.md to understand the current architecture and state
 
+# Gemini Agent Napló - BAS Core
+
+## 2026-02-19 04:20 - ✅ Kritikus Rendszer Helyreállítás & Stabilizáció (6 órás Debug Lezárása) 🎯
+
+**Feladat:** A teljes rendszer működésképtelenségének (Ollama 404, Frontend Crash, Backend ECONNREFUSED) elhárítása és stabilizálása.
+
+### 🛠️ Elvégzett Javítások
+
+1. **Ollama Konfiguráció Javítása:**
+    * **Hiba:** A `.env` olyan modelleket hívott (`qwen2.5-coder:7b`), amik nem voltak telepítve -> "Fallback Loop of Death" (Cloudflare/Gemini kvóta túllépés).
+    * **Megoldás:** Átállítva a ténylegesen telepített modellekre: `mistral:latest` (Primary), `llama3.2:latest` (Secondary).
+
+2. **Frontend Build Helyreállítás:**
+    * **Hiba:** `[ERROR] Could not resolve "react-is"` -> Dashboard összeomlott.
+    * **Megoldás:** Hiányzó függőség telepítése (`npm install react-is --legacy-peer-deps`).
+
+3. **WidgetGrid.tsx Import Javítás:**
+    * **Hiba:** `Uncaught TypeError: WidthProvider is not a function`.
+    * **Ok:** `react-grid-layout` v2 breaking change (legacy path).
+    * **Megoldás:** Import módosítása: `import { Responsive, WidthProvider } from "react-grid-layout/legacy";`.
+
+4. **Szolgáltatás Újraindítás:**
+    * Backend (3000), Frontend (5173) és Python (8000) szolgáltatások újraindítva és ellenőrizve.
+
+### 📊 Rendszer Állapot (Health Check)
+
+* ✅ **Node.js Backend:** FUT (Port 3000)
+* ✅ **Python Backend:** FUT (Port 8000 - `{"status":"ok"}`)
+* ✅ **Frontend:** FUT (Port 5173)
+* ✅ **Tesztek:** 1031 PASS / 0 FAIL (Vitest futás alatt)
+
+**Következő lépés:** A felhasználó folytathatja a fejlesztést.
+
+---
+
+### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján
+
 # Gemini CLI - Agent Napló
 
 **Agent:** Gemini CLI (Google)
@@ -24,19 +61,19 @@ A "Scenario 1: Google search" E2E teszt hibájának elhárítása (`400 Bad Requ
 
 **Érintett fájlok:**
 
-- `src/server/web.ts` (Fix: `express.raw` és `express.json` konfliktus feloldása)
-- `src/server/routes/robotkez.ts` (Debug logging, majd cleanup)
-- `src/utils/db.ts` (Fix: `saveMessage` Foreign Key constraint hiba javítása az `INSERT OR IGNORE` chat létrehozással)
-- `src/agents/types.ts` & `src/agents/BaseAgent.ts` (Feature: `success` mező visszaállítása a backward compatibility érdekében)
-- `test/robotkezV2.e2e.test.ts` (Debug logging)
-- `src/dashboard/components/dashboard/NeuralLinkChat.tsx` (UI: Screenshot megjelenítés javítása, lint fixek)
+* `src/server/web.ts` (Fix: `express.raw` és `express.json` konfliktus feloldása)
+* `src/server/routes/robotkez.ts` (Debug logging, majd cleanup)
+* `src/utils/db.ts` (Fix: `saveMessage` Foreign Key constraint hiba javítása az `INSERT OR IGNORE` chat létrehozással)
+* `src/agents/types.ts` & `src/agents/BaseAgent.ts` (Feature: `success` mező visszaállítása a backward compatibility érdekében)
+* `test/robotkezV2.e2e.test.ts` (Debug logging)
+* `src/dashboard/components/dashboard/NeuralLinkChat.tsx` (UI: Screenshot megjelenítés javítása, lint fixek)
 
 **Eredmények:**
 
-- ✅ **E2E Success:** A "Scenario 1" teszt most már stabilan fut és PASS eredménnyel zárul.
-- ✅ **API Stabilitás:** A `400 Bad Request` hiba megszűnt a body parsing middleware javításával.
-- ✅ **Adatbázis Integritás:** Az `500`-as hibát okozó FK constraint violation javítva; a chatek automatikusan létrejönnek üzenetmentéskor.
-- ✅ **Code Quality:** Linting hibák javítva (`any` típusok, unused vars) több fájlban.
+* ✅ **E2E Success:** A "Scenario 1" teszt most már stabilan fut és PASS eredménnyel zárul.
+* ✅ **API Stabilitás:** A `400 Bad Request` hiba megszűnt a body parsing middleware javításával.
+* ✅ **Adatbázis Integritás:** Az `500`-as hibát okozó FK constraint violation javítva; a chatek automatikusan létrejönnek üzenetmentéskor.
+* ✅ **Code Quality:** Linting hibák javítva (`any` típusok, unused vars) több fájlban.
 
 **Státusz:** ✅ **BEFEJEZVE**
 
@@ -47,19 +84,19 @@ A RobotkezV2 böngésző ügynök interaktívvá tétele, "Comet" stílusú magy
 
 **Érintett fájlok:**
 
-- `src/agents/OrchestratorAgent.ts` (Bővített magyar kulcsszavak böngészéshez)
-- `src/utils/llmPlanner.ts` (Kontextus-tudatos tervezés history és browser state alapján)
-- `src/agents/RobotkezV2Agent.ts` (Browser state lekérdezés + history átadás a plannernek)
-- `src/server/routes/robotkez.ts` (Perzisztens chat history a database-ben)
-- `src/utils/persistentBrowser.ts` & `myai/interactive_browser.py` (Új `state` command az URL/Cím lekérdezéséhez)
-- `src/dashboard/components/dashboard/NeuralLinkChat.tsx` (Vizuális chat: screenshotok megjelenítése a buborékokban)
+* `src/agents/OrchestratorAgent.ts` (Bővített magyar kulcsszavak böngészéshez)
+* `src/utils/llmPlanner.ts` (Kontextus-tudatos tervezés history és browser state alapján)
+* `src/agents/RobotkezV2Agent.ts` (Browser state lekérdezés + history átadás a plannernek)
+* `src/server/routes/robotkez.ts` (Perzisztens chat history a database-ben)
+* `src/utils/persistentBrowser.ts` & `myai/interactive_browser.py` (Új `state` command az URL/Cím lekérdezéséhez)
+* `src/dashboard/components/dashboard/NeuralLinkChat.tsx` (Vizuális chat: screenshotok megjelenítése a buborékokban)
 
 **Eredmények:**
 
-- ✅ **Kontextus-tudatosság:** Az ügynök most már emlékszik az előző kérésekre és tudja, melyik oldalon áll éppen.
-- ✅ **Vizuális Chat:** A fő chatben is megjelennek a böngésző állapotáról készült screenshotok.
-- ✅ **Magyar támogatás:** Jobb intenció-detektálás a magyar nyelvű böngésző parancsokra.
-- ✅ **History:** A Robotkez chat session mostantól elmentődik a SQLite adatbázisba.
+* ✅ **Kontextus-tudatosság:** Az ügynök most már emlékszik az előző kérésekre és tudja, melyik oldalon áll éppen.
+* ✅ **Vizuális Chat:** A fő chatben is megjelennek a böngésző állapotáról készült screenshotok.
+* ✅ **Magyar támogatás:** Jobb intenció-detektálás a magyar nyelvű böngésző parancsokra.
+* ✅ **History:** A Robotkez chat session mostantól elmentődik a SQLite adatbázisba.
 
 **Státusz:** ✅ **BEFEJEZVE**
 
@@ -70,17 +107,17 @@ Fix `RobotkezV2Agent` execution errors (TypeError: not a function), align with `
 
 **Érintett fájlok:**
 
-- `src/agents/RobotkezV2Agent.ts` (Refactor: executeTask implementation + intent parsing fallback)
-- `src/server/routes/webhooks.ts` (Fix: GitHub webhook path)
-- `test/robotkezAPI.test.ts` (Fix: Agent mock alignment)
-- `test/checkpointRetention.test.ts` (Fix: Database lock cleanup on Windows)
+* `src/agents/RobotkezV2Agent.ts` (Refactor: executeTask implementation + intent parsing fallback)
+* `src/server/routes/webhooks.ts` (Fix: GitHub webhook path)
+* `test/robotkezAPI.test.ts` (Fix: Agent mock alignment)
+* `test/checkpointRetention.test.ts` (Fix: Database lock cleanup on Windows)
 
 **Eredmények:**
 
-- ✅ **Agent Fix:** `RobotkezV2Agent` correctly implements `BaseAgent`. Sequential execution via `PersistentBrowser` is functional.
-- ✅ **Webhook Fix:** GitHub webhooks mounted at `/github` (accessible as `/api/github`), passing tests.
-- ✅ **Test Stability:** Resolved database file lock issues (`EBUSY`) in checkpoint tests.
-- ✅ **Full Suite:** 39 tests passed in targeted suites (`webhooks`, `robotkezV2Agent`, `robotkezAPI`, `checkpointRetention`).
+* ✅ **Agent Fix:** `RobotkezV2Agent` correctly implements `BaseAgent`. Sequential execution via `PersistentBrowser` is functional.
+* ✅ **Webhook Fix:** GitHub webhooks mounted at `/github` (accessible as `/api/github`), passing tests.
+* ✅ **Test Stability:** Resolved database file lock issues (`EBUSY`) in checkpoint tests.
+* ✅ **Full Suite:** 39 tests passed in targeted suites (`webhooks`, `robotkezV2Agent`, `robotkezAPI`, `checkpointRetention`).
 
 **Státusz:** ✅ **BEFEJEZVE**
 
@@ -91,18 +128,18 @@ A Dashboard UI teljes megújítása a modern "Cyber/Glass" dizájnnal, a cinemat
 
 **Érintett fájlok:**
 
-- `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Teljes strukturális és vizuális overhaul)
-- `src/dashboard/main.tsx` (ThemeProvider harmonizálás a next-themes-zel)
-- `src/dashboard/App.tsx` (ThemeProvider és alapértelmezett beállítások ellenőrzése)
+* `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Teljes strukturális és vizuális overhaul)
+* `src/dashboard/main.tsx` (ThemeProvider harmonizálás a next-themes-zel)
+* `src/dashboard/App.tsx` (ThemeProvider és alapértelmezett beállítások ellenőrzése)
 
 **Eredmények:**
 
-- ✅ **New Design:** Prémium Cyberpunk-Glassmorphism téma alkalmazva a teljes Dashboardon.
-- ✅ **Cinematic Boot:** A `SystemBootSequence` sikeresen integrálva, biztosítva a professzionális élményt induláskor.
-- ✅ **Functionality Parity:** Az Inkubátor, Neural Knowledge (RAG), és az összes korábbi ügynök-kezelő funkció elérhető maradt.
-- ✅ **Scroll Fix:** Native `overflow-y-auto` alkalmazása a ScrollArea helyett, `key={activeTab}` alapú automatikus görgetés-reseteléssel.
-- ✅ **Theme Sync:** A `main.tsx` és `App.tsx` mostantól egységesen a `next-themes` szolgáltatót használja, megszüntetve a sötét/világos mód váltási hibákat.
-- ✅ **Build Success:** `npm run build:ui` hiba nélkül lefutott (0 TypeScript error).
+* ✅ **New Design:** Prémium Cyberpunk-Glassmorphism téma alkalmazva a teljes Dashboardon.
+* ✅ **Cinematic Boot:** A `SystemBootSequence` sikeresen integrálva, biztosítva a professzionális élményt induláskor.
+* ✅ **Functionality Parity:** Az Inkubátor, Neural Knowledge (RAG), és az összes korábbi ügynök-kezelő funkció elérhető maradt.
+* ✅ **Scroll Fix:** Native `overflow-y-auto` alkalmazása a ScrollArea helyett, `key={activeTab}` alapú automatikus görgetés-reseteléssel.
+* ✅ **Theme Sync:** A `main.tsx` és `App.tsx` mostantól egységesen a `next-themes` szolgáltatót használja, megszüntetve a sötét/világos mód váltási hibákat.
+* ✅ **Build Success:** `npm run build:ui` hiba nélkül lefutott (0 TypeScript error).
 
 **Státusz:** ✅ **BEFEJEZVE**
 
@@ -113,22 +150,22 @@ Dashboard Test Suite track befejezése 80% → 100%. Teljes E2E tesztlefedettsé
 
 **Érintett fájlok:**
 
-- `conductor/tracks/dashboard_test_suite_20260210/plan.md` (LÉTREHOZVA - 250+ sor implementációs roadmap)
-- `conductor/tracks/dashboard_test_suite_20260210/meta.json` (progress: 80 → 100, status: in_progress → completed)
-- `conductor/tracks.md` (track áthelyezve: Aktív Szálak → Lezárt Szálak)
-- `test/e2e/*.spec.ts` (7 spec file - mind PASS ✅)
+* `conductor/tracks/dashboard_test_suite_20260210/plan.md` (LÉTREHOZVA - 250+ sor implementációs roadmap)
+* `conductor/tracks/dashboard_test_suite_20260210/meta.json` (progress: 80 → 100, status: in_progress → completed)
+* `conductor/tracks.md` (track áthelyezve: Aktív Szálak → Lezárt Szálak)
+* `test/e2e/*.spec.ts` (7 spec file - mind PASS ✅)
 
 **Build Validation:**
 
-- `npx tsc --noEmit` → **0 TypeScript errors** ✅
-- Build clean, production-ready
+* `npx tsc --noEmit` → **0 TypeScript errors** ✅
+* Build clean, production-ready
 
 **Test Results:**
 
-- **Total E2E Tests:** 44/44 PASSING ✅
-- **Execution Time:** 3.3 minutes
-- **Test Coverage:** 260% of spec requirements (44 tests vs 17 documented)
-- **Existing Tests:** 449/449 Vitest tests maintained ✅
+* **Total E2E Tests:** 44/44 PASSING ✅
+* **Execution Time:** 3.3 minutes
+* **Test Coverage:** 260% of spec requirements (44 tests vs 17 documented)
+* **Existing Tests:** 449/449 Vitest tests maintained ✅
 
 **Test Files Breakdown:**
 
@@ -148,13 +185,13 @@ Dashboard Test Suite track befejezése 80% → 100%. Teljes E2E tesztlefedettsé
 
 **Spec Phases Coverage (Fázis 0-15):**
 
-- ✅ Fázis 0: Infrastructure (Playwright, MSW, config)
-- ✅ Fázis 1: Navigation (6 tests)
-- ✅ Fázis 2: Mission Control (4 tests)
-- ✅ Fázis 3-12: All tabs (19 tests)
-- ✅ Fázis 13: Socket.IO (1 test)
-- ✅ Fázis 14: Error handling (7 tests)
-- ✅ Fázis 15: Stability (7 tests)
+* ✅ Fázis 0: Infrastructure (Playwright, MSW, config)
+* ✅ Fázis 1: Navigation (6 tests)
+* ✅ Fázis 2: Mission Control (4 tests)
+* ✅ Fázis 3-12: All tabs (19 tests)
+* ✅ Fázis 13: Socket.IO (1 test)
+* ✅ Fázis 14: Error handling (7 tests)
+* ✅ Fázis 15: Stability (7 tests)
 
 **Success Metrics:**
 
@@ -169,14 +206,14 @@ Dashboard Test Suite track befejezése 80% → 100%. Teljes E2E tesztlefedettsé
 
 **Known Issues:**
 
-- 1 flaky test (Developer Tab sub-tab switching - timing issue, non-blocking)
+* 1 flaky test (Developer Tab sub-tab switching - timing issue, non-blocking)
 
 **Documentation:**
 
-- ✅ spec.md (frozen, approved 2026-02-10)
-- ✅ plan.md (generated with full implementation details)
-- ✅ meta.json (updated to 100% complete)
-- ✅ tracks.md (moved to Completed Tracks)
+* ✅ spec.md (frozen, approved 2026-02-10)
+* ✅ plan.md (generated with full implementation details)
+* ✅ meta.json (updated to 100% complete)
+* ✅ tracks.md (moved to Completed Tracks)
 
 **Track Status:** ✅ **100% COMPLETE**
 
@@ -189,19 +226,19 @@ DeveloperAgent 2.0/3.0 track 75% → 100% befejezése. P8 Git Workflow Dashboard
 
 **Érintett fájlok:**
 
-- `src/dashboard/components/dashboard/DeveloperPanel.tsx` (+381 sor React kód, 1843 → 2224 sor)
-- `conductor/tracks/developer_agent_2_0_20260206/spec.md` (P8 dokumentáció frissítés: [IDEA] → [DONE ✅])
-- `conductor/tracks/developer_agent_2_0_20260206/meta.json` (progress: 75 → 100, status: active → completed)
-- `conductor/tracks/developer_agent_2_0_20260206/plan.md` (Fázis 1-5 DONE státusz)
+* `src/dashboard/components/dashboard/DeveloperPanel.tsx` (+381 sor React kód, 1843 → 2224 sor)
+* `conductor/tracks/developer_agent_2_0_20260206/spec.md` (P8 dokumentáció frissítés: [IDEA] → [DONE ✅])
+* `conductor/tracks/developer_agent_2_0_20260206/meta.json` (progress: 75 → 100, status: active → completed)
+* `conductor/tracks/developer_agent_2_0_20260206/plan.md` (Fázis 1-5 DONE státusz)
 
 **Implementált funkciók:**
 
-- **Git Tab UI** (8. tab a DeveloperPanel-ben)
-- **Interaktív File Staging:** Checkbox-based selection, stage/unstage műveletek
-- **Commit Form:** Textarea + validáció (üres üzenet tiltva)
-- **Push/Pull UI:** Remote sync gombok (ahead/behind számláló)
-- **Branch Management:** Dropdown selector + "Create New Branch" input
-- **10 UI Section:**
+* **Git Tab UI** (8. tab a DeveloperPanel-ben)
+* **Interaktív File Staging:** Checkbox-based selection, stage/unstage műveletek
+* **Commit Form:** Textarea + validáció (üres üzenet tiltva)
+* **Push/Pull UI:** Remote sync gombok (ahead/behind számláló)
+* **Branch Management:** Dropdown selector + "Create New Branch" input
+* **10 UI Section:**
   1. Header (cím + frissítés gomb)
   2. Loading state (spinner)
   3. Branch status card (branch badge + ahead/behind counter)
@@ -215,25 +252,25 @@ DeveloperAgent 2.0/3.0 track 75% → 100% befejezése. P8 Git Workflow Dashboard
 
 **Technikai részletek:**
 
-- **7 Git API Helper Function:** `getGitStatus()`, `getGitBranches()`, `stageGitFiles()`, `unstageGitFiles()`, `commitGit()`, `pushGit()`, `checkoutBranch()`
-- **3 TypeScript Interface:** `GitFileData` (path, status), `GitStatusData` (branch, ahead, behind, staged, unstaged, conflicts), `GitBranchData` (name, current, remote)
-- **7 React State Variable:** `gitStatus`, `gitBranches`, `isLoadingGit`, `selectedFiles` (Set), `commitMessage`, `isCommitting`, `isPushing`
-- **loadGitStatus Callback:** `Promise.all` párhuzamos API hívás (status + branches)
-- **useEffect Integration:** Automatikus `loadGitStatus()` hívás amikor `activeTab === 'git'`
-- **Handler Functions:** `handleGitStage()`, `handleGitCommit()`, `handleGitPush()`, `handleGitCheckout()`
+* **7 Git API Helper Function:** `getGitStatus()`, `getGitBranches()`, `stageGitFiles()`, `unstageGitFiles()`, `commitGit()`, `pushGit()`, `checkoutBranch()`
+* **3 TypeScript Interface:** `GitFileData` (path, status), `GitStatusData` (branch, ahead, behind, staged, unstaged, conflicts), `GitBranchData` (name, current, remote)
+* **7 React State Variable:** `gitStatus`, `gitBranches`, `isLoadingGit`, `selectedFiles` (Set), `commitMessage`, `isCommitting`, `isPushing`
+* **loadGitStatus Callback:** `Promise.all` párhuzamos API hívás (status + branches)
+* **useEffect Integration:** Automatikus `loadGitStatus()` hívás amikor `activeTab === 'git'`
+* **Handler Functions:** `handleGitStage()`, `handleGitCommit()`, `handleGitPush()`, `handleGitCheckout()`
 
 **EPP v2 Compliance:**
 
-- ✅ **P8 Git Workflow TELJES:** CLI (7 subcommand) + API (8 endpoint) + Dashboard (Git tab) minden implementálva
-- ✅ **DeveloperAgent Track 100% COMPLETE:** Minden P1-P12 komponens kész
-- ✅ **Dashboard/CLI Paritás:** Minden funkció elérhető mind CLI-ből, mind Dashboard UI-ból
+* ✅ **P8 Git Workflow TELJES:** CLI (7 subcommand) + API (8 endpoint) + Dashboard (Git tab) minden implementálva
+* ✅ **DeveloperAgent Track 100% COMPLETE:** Minden P1-P12 komponens kész
+* ✅ **Dashboard/CLI Paritás:** Minden funkció elérhető mind CLI-ből, mind Dashboard UI-ból
 
 **Validáció:**
 
-- Spec.md frissítve (P8 teljes dokumentációval)
-- meta.json: progress=100, status=completed, completed="2026-02-12"
-- plan.md: Fázis 1-5 DONE, track COMPLETE
-- Markdown lint warnings elfogadva (táblázat alignment - nem kritikus)
+* Spec.md frissítve (P8 teljes dokumentációval)
+* meta.json: progress=100, status=completed, completed="2026-02-12"
+* plan.md: Fázis 1-5 DONE, track COMPLETE
+* Markdown lint warnings elfogadva (táblázat alignment - nem kritikus)
 
 **Státusz:** ✅ **TRACK COMPLETE** - DeveloperAgent 2.0/3.0 100% kész
 
@@ -246,10 +283,10 @@ Egy teljesen szigorúan menüvezérelt, magyar nyelvű terminál interfész (Mag
 
 **Érintett fájlok:**
 
-- `src/cli-hu.ts` (Új: Magyar CLI belépési pont)
-- `package.json` (Új parancsok: `npm run cli:hu` és `brunella-hu` bináris)
-- `conductor/tracks/magyar-cli-menu-system-20260211/track.md` (Update)
-- `conductor/tracks.md` (Update)
+* `src/cli-hu.ts` (Új: Magyar CLI belépési pont)
+* `package.json` (Új parancsok: `npm run cli:hu` és `brunella-hu` bináris)
+* `conductor/tracks/magyar-cli-menu-system-20260211/track.md` (Update)
+* `conductor/tracks.md` (Update)
 
 **Eredmények:**
 ✅ **Szigorú Menüvezérlés:** Az `inquirer` csomagnak köszönhetően a felhasználó hierarchikus menükben (Ügynökök, Trackek, Chat, Rendszer, Beállítások) navigálhat begépelés nélkül.
@@ -268,8 +305,8 @@ Egy teljesen szigorúan menüvezérelt, magyar nyelvű terminál interfész (Mag
 
 **Érintett fájlok:**
 
-- `test/specWriterAgent.test.ts`
-- `src/agents/SpecWriterAgent.ts`
+* `test/specWriterAgent.test.ts`
+* `src/agents/SpecWriterAgent.ts`
 
 **Elvégzett lépések:**
 
@@ -292,12 +329,12 @@ Egy teljesen szigorúan menüvezérelt, magyar nyelvű terminál interfész (Mag
 
 **Főbb eredmények:**
 
-- R2 bucket (vodor1) létrehozva és konfigurálva
-- D1 database (bas-metadata) létrehozva, séma migrálva
-- Worker újradeployolva (R2+D1+KV bindings)
-- sync_to_r2.py script megírva és tesztelve
-- LanceDB inicializálva (Node.js + Python)
-- Cloudflare Tunnel telepítés elkezdve
+* R2 bucket (vodor1) létrehozva és konfigurálva
+* D1 database (bas-metadata) létrehozva, séma migrálva
+* Worker újradeployolva (R2+D1+KV bindings)
+* sync_to_r2.py script megírva és tesztelve
+* LanceDB inicializálva (Node.js + Python)
+* Cloudflare Tunnel telepítés elkezdve
 
 **Státusz:** Tunnel konfiguráció folyamatban (kvóta elfogyott)
 
@@ -309,13 +346,13 @@ Egy teljesen szigorúan menüvezérelt, magyar nyelvű terminál interfész (Mag
 
 **Érintett fájlok:**
 
-- `bas-cloudflare-orchestrator/wrangler.jsonc`
-- `bas-cloudflare-orchestrator/migrations/0001_initial_schema.sql`
-- `myai/sync_to_r2.py`
-- `.github/copilot-instructions.md`
-- `.github/workflows/bas-cloud-sync.yml`
-- `docs/github-runner-setup.md`
-- `scripts/init_lancedb.py`
+* `bas-cloudflare-orchestrator/wrangler.jsonc`
+* `bas-cloudflare-orchestrator/migrations/0001_initial_schema.sql`
+* `myai/sync_to_r2.py`
+* `.github/copilot-instructions.md`
+* `.github/workflows/bas-cloud-sync.yml`
+* `docs/github-runner-setup.md`
+* `scripts/init_lancedb.py`
 
 **Státusz:** ✅ 95% kész (Tunnel hátra van)
 
@@ -325,17 +362,17 @@ Egy teljesen szigorúan menüvezérelt, magyar nyelvű terminál interfész (Mag
 
 **Feladat:**
 
-- Brunella CLI (`src/interactive.ts`, `src/cli.ts`) stabilizálása és Gemini-szerű VIP szintre emelése.
-- Felhő alapú integráció megvalósítása a Cloudflare Workerrel.
-- UI élmény fokozása (boxen, chalk, marked).
+* Brunella CLI (`src/interactive.ts`, `src/cli.ts`) stabilizálása és Gemini-szerű VIP szintre emelése.
+* Felhő alapú integráció megvalósítása a Cloudflare Workerrel.
+* UI élmény fokozása (boxen, chalk, marked).
 
 **Érintett fájlok:**
 
-- `src/cli.ts` (Edge chat integráció, /edge switch, UI boxok, build fix)
-- `src/interactive.ts` (Hierarchikus VIP menürendszer, almenük, parancsvégrehajtó segéd)
-- `src/utils/cloudflareClient.ts` (ÚJ: API kliens a Workerhez)
-- `bas-cloudflare-orchestrator/src/index.ts` (Context history patch)
-- `conductor/tracks.md` (Track frissítés)
+* `src/cli.ts` (Edge chat integráció, /edge switch, UI boxok, build fix)
+* `src/interactive.ts` (Hierarchikus VIP menürendszer, almenük, parancsvégrehajtó segéd)
+* `src/utils/cloudflareClient.ts` (ÚJ: API kliens a Workerhez)
+* `bas-cloudflare-orchestrator/src/index.ts` (Context history patch)
+* `conductor/tracks.md` (Track frissítés)
 
 **Eredmények:**
 ✅ **VIP Interfész:** Új, professzionális menürendszer kategóriákkal (Chat, Agents, Settings, Dev).
@@ -356,14 +393,14 @@ A `test/phoenix_recovery.test.ts` időtúllépési hibáinak elhárítása és a
 
 **Érintett fájlok:**
 
-- `test/phoenix_recovery.test.ts` (Mock implementációk: retryStrategy, gitRecovery, fake timers)
-- Git commit & push: `copilot/vscode-mlh60ptr-9pqa` branch
+* `test/phoenix_recovery.test.ts` (Mock implementációk: retryStrategy, gitRecovery, fake timers)
+* Git commit & push: `copilot/vscode-mlh60ptr-9pqa` branch
 
 **Probléma:**
 A pre-commit hook által futtatott tesztek közül a `phoenix_recovery.test.ts` 15 másodperces időtúllépéssel hibázott:
 
-- **Circuit Breaker teszt:** Valós retry késleltetések (1s, 3s, 10s) miatt 15s timeout.
-- **PythonShell teszt:** Valós 1500ms alvás miatt 5s futási idő.
+* **Circuit Breaker teszt:** Valós retry késleltetések (1s, 3s, 10s) miatt 15s timeout.
+* **PythonShell teszt:** Valós 1500ms alvás miatt 5s futási idő.
 
 **Megoldás:**
 
@@ -399,10 +436,10 @@ Az EPP v2 protokoll véglegesítése, dokumentálása és a track lezárása. A 
 
 **Érintett fájlok:**
 
-- `conductor/epp-v2.md` (EPP v2 részletes dokumentáció)
-- `README.md` (Quick reference és integrációs szabályok)
-- `conductor/tracks/epp-v2-protocol-20260211/track.md` (Update to COMPLETED)
-- `conductor/tracks.md` (Track list frissítés)
+* `conductor/epp-v2.md` (EPP v2 részletes dokumentáció)
+* `README.md` (Quick reference és integrációs szabályok)
+* `conductor/tracks/epp-v2-protocol-20260211/track.md` (Update to COMPLETED)
+* `conductor/tracks.md` (Track list frissítés)
 
 **Eredmények:**
 ✅ **Protokoll Hardening:** Rögzítésre került a "7 Arany Szabály", beleértve az új kötelező Dashboard + CLI integrációt.
@@ -418,10 +455,10 @@ A `SpecWriterAgent` (Ötlet → Track Generátor) track lezárása és a regiszt
 
 **Érintett fájlok:**
 
-- `src/agents/SpecWriterAgent.ts` (Fixed missing `export default`)
-- `src/agents/registry.json` (Entry verified)
-- `conductor/tracks/spec-writer-agent-20260211/track.md` (Updated to COMPLETED)
-- `conductor/tracks.md` (Updated master list)
+* `src/agents/SpecWriterAgent.ts` (Fixed missing `export default`)
+* `src/agents/registry.json` (Entry verified)
+* `conductor/tracks/spec-writer-agent-20260211/track.md` (Updated to COMPLETED)
+* `conductor/tracks.md` (Updated master list)
 
 **Eredmények:**
 ✅ **Registration Fix:** Kiderült, hogy a `SpecWriterAgent.ts` fájlból hiányzott az `export default`, ami miatt az `AgentManager` nem tudta példányosítani. A javítás után az ügynök sikeresen betöltődik.
@@ -439,11 +476,11 @@ A `_COPILOT_NEXT_TASKS.md` manifestben rögzített prioritások (3, 4, 5) végre
 
 **Érintett fájlok:**
 
-- `src/utils/mcpClient.ts` (Recursive port 3000 fix)
-- `src/cli.ts` (`conductor` subcommand bekötése)
-- `.github/workflows/gemini-*.yml` (Timeoutok és secrets validáció)
-- `.github/workflows/bas-*.yml` (Secrets validáció)
-- `_COPILOT_NEXT_TASKS.md` (Státusz frissítés)
+* `src/utils/mcpClient.ts` (Recursive port 3000 fix)
+* `src/cli.ts` (`conductor` subcommand bekötése)
+* `.github/workflows/gemini-*.yml` (Timeoutok és secrets validáció)
+* `.github/workflows/bas-*.yml` (Secrets validáció)
+* `_COPILOT_NEXT_TASKS.md` (Státusz frissítés)
 
 **Eredmények:**
 ✅ **CLI Conductor Fix:** Mostantól a `brunella conductor status` nem okoz port ütközést és helyesen delegál az ügynöknek.
@@ -461,12 +498,12 @@ A Robotkéz (Browser-Use) funkció telepítése és tesztelése a README.md és 
 
 **Érintett fájlok:**
 
-- `myai/` (Python függőségek: browser-use, playwright, asyncio)
-- `scripts/robotkez_test_level1.py` (Teszt script)
-- `scripts/debug_robotkez.py` (Debug script)
-- `scripts/start_server_debug.ps1` (Server indító script)
-- `myai/server.py` (FastAPI backend)
-- `src/agents/RobotkezAgent.ts` (Node.js ügynök)
+* `myai/` (Python függőségek: browser-use, playwright, asyncio)
+* `scripts/robotkez_test_level1.py` (Teszt script)
+* `scripts/debug_robotkez.py` (Debug script)
+* `scripts/start_server_debug.ps1` (Server indító script)
+* `myai/server.py` (FastAPI backend)
+* `src/agents/RobotkezAgent.ts` (Node.js ügynök)
 
 **Elvégzett lépések:**
 ✅ Python függőségek telepítése (`uv pip install browser-use playwright asyncio`)
@@ -484,8 +521,8 @@ A Robotkéz (Browser-Use) funkció telepítése és tesztelése a README.md és 
 
 **Státusz:** ⏳ Folyamatban / Blokkolt
 
-- A Python backend (uvicorn) indítási problémája megoldásra vár
-- A Node.js backend (`npm run dev`) elindult, de a teljes rendszer tesztelése függőben
+* A Python backend (uvicorn) indítási problémája megoldásra vár
+* A Node.js backend (`npm run dev`) elindult, de a teljes rendszer tesztelése függőben
 
 **Következő lépések:**
 
@@ -502,23 +539,23 @@ Befejezni a Dashboard V2 Phase 5-öt (Knowledge Base UI), implementálni a RAG A
 
 **Érintett fájlok:**
 
-- `src/dashboard/components/dashboard/KnowledgeBasePanel.tsx` (Új komponens: RAG vizualizáció és fájl feltöltés)
-- `src/server/web.ts` (Új API végpontok: `/api/rag/stats`, `/api/rag/query`, `/api/rag/ingest`; Fix: Port 3000 EADDRINUSE)
-- `src/agents/AgentManager.ts` (Új funkciók: Circuit Breaker, Retry Logic)
-- `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Új "Knowledge" tab)
-- `task.md`, `implementation_plan.md`, `walkthrough.md` (Dokumentáció frissítése)
+* `src/dashboard/components/dashboard/KnowledgeBasePanel.tsx` (Új komponens: RAG vizualizáció és fájl feltöltés)
+* `src/server/web.ts` (Új API végpontok: `/api/rag/stats`, `/api/rag/query`, `/api/rag/ingest`; Fix: Port 3000 EADDRINUSE)
+* `src/agents/AgentManager.ts` (Új funkciók: Circuit Breaker, Retry Logic)
+* `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Új "Knowledge" tab)
+* `task.md`, `implementation_plan.md`, `walkthrough.md` (Dokumentáció frissítése)
 
 **Eredmények:**
 ✅ **Knowledge Base UI:** Teljes körű RAG vizualizáció a Dashboardon.
 
-- **Statisztikák:** Valós idejű LanceDB adatok (sorok száma, státusz).
-- **Keresés:** Szemantikus keresőfelület a memóriában.
-- **Ingestion:** Kliensoldali fájlbeolvasás (TXT, MD, LOG, JSON, TS, JS, PY támogatás) és indexelés.
+* **Statisztikák:** Valós idejű LanceDB adatok (sorok száma, státusz).
+* **Keresés:** Szemantikus keresőfelület a memóriában.
+* **Ingestion:** Kliensoldali fájlbeolvasás (TXT, MD, LOG, JSON, TS, JS, PY támogatás) és indexelés.
   ✅ **Backend API:** Stabil `/api/rag/*` végpontok.
   ✅ **Port Konfliktus Fix:** A `web.ts`-ben lévő redundáns ügynök regisztráció eltávolítva, ami megszüntette a kettős inicializálást és a port ütközést.
   ✅ **Stabilitás:**
-- **Circuit Breaker:** 3 hiba után az ügynök pihenőre kerül.
-- **Retry Logic:** Automatikus újrapróbálkozás hiba esetén.
+* **Circuit Breaker:** 3 hiba után az ügynök pihenőre kerül.
+* **Retry Logic:** Automatikus újrapróbálkozás hiba esetén.
 
 **Státusz:** ✅ Befejezve (Phase 5 Complete)
 
@@ -531,13 +568,13 @@ A Brunella rendszer felhasználói élményének javítása a modellválasztás 
 
 **Érintett fájlok:**
 
-- `src/cli.ts` (CLI /switch parancs, formázott output)
-- `src/dashboard/components/dashboard/ChatInterface.tsx` (UI Modellválasztó Dropdown, markdown renderelés)
-- `src/core/llm_client.ts` (Provider paraméter támogatás, default modell GPT-4o)
-- `src/server/web.ts` (Socket argumentumok bővítése)
-- `src/agents/OrchestratorAgent.ts` (Magyar nyelvű instrukciók, dinamikus provider kezelés)
-- `src/agents/AgentManager.ts` (Plan készítés paraméterezése)
-- `interactive.py` (CLI Interpreter támogatás)
+* `src/cli.ts` (CLI /switch parancs, formázott output)
+* `src/dashboard/components/dashboard/ChatInterface.tsx` (UI Modellválasztó Dropdown, markdown renderelés)
+* `src/core/llm_client.ts` (Provider paraméter támogatás, default modell GPT-4o)
+* `src/server/web.ts` (Socket argumentumok bővítése)
+* `src/agents/OrchestratorAgent.ts` (Magyar nyelvű instrukciók, dinamikus provider kezelés)
+* `src/agents/AgentManager.ts` (Plan készítés paraméterezése)
+* `interactive.py` (CLI Interpreter támogatás)
 
 **Eredmények:**
 ✅ **Modellválasztó:** Mind a CLI-ben (`/switch`), mind a Dashboard-on (Dropdown) választható a használt AI modell (GitHub GPT-4o, Gemini 2.0 Flash, Ollama).
@@ -552,16 +589,16 @@ A Brunella rendszer felhasználói élményének javítása a modellválasztás 
 
 **Feladat:**
 
-- Kódmentes ügynökgeneráló felület (Agent Factory) létrehozása.
-- n8n és Langflow munkafolyamatok közvetlen hívása ("Super-Bridge").
-- A Dashboard vizuális tuningja (élő gráf animációk).
+* Kódmentes ügynökgeneráló felület (Agent Factory) létrehozása.
+* n8n és Langflow munkafolyamatok közvetlen hívása ("Super-Bridge").
+* A Dashboard vizuális tuningja (élő gráf animációk).
 
 **Érintett fájlok:**
 
-- `src/dashboard/components/dashboard/AgentFactory.tsx` (Új UI)
-- `src/tools/n8n.ts` (Bridge MCP Tool)
-- `src/dashboard/components/AgentGraph.tsx` (Fénycsóva effektek)
-- `registry.json` (Agent Architect regisztráció)
+* `src/dashboard/components/dashboard/AgentFactory.tsx` (Új UI)
+* `src/tools/n8n.ts` (Bridge MCP Tool)
+* `src/dashboard/components/AgentGraph.tsx` (Fénycsóva effektek)
+* `registry.json` (Agent Architect regisztráció)
 
 **Eredmények:**
 ✅ **Agent Factory:** Kattintással lehet új ügynököket gyártani (Agent Architect a háttérben).
@@ -576,14 +613,14 @@ A Brunella rendszer felhasználói élményének javítása a modellválasztás 
 
 **Feladat:**
 
-- Környezeti változók (.env) auditálása és biztonságos sablon (.env.example) készítése.
-- Felesleges fájlok takarítása.
+* Környezeti változók (.env) auditálása és biztonságos sablon (.env.example) készítése.
+* Felesleges fájlok takarítása.
 
 **Érintett fájlok:**
 
-- `.env`
-- `.env.example`
-- `package.json`
+* `.env`
+* `.env.example`
+* `package.json`
 
 **Eredmények:**
 ✅ `.env.example` létrehozva (érzékeny adatok nélkül).
@@ -597,19 +634,19 @@ A Brunella rendszer felhasználói élményének javítása a modellválasztás 
 
 **Feladat:**
 
-- Brunella rendszer teljes körű auditálása és `external_research` mappa feltérképezése.
-- Auralia hangmodul integrálása (Backend + Frontend + Agent).
-- Dokumentáció rendezése (`USER_START.md`).
+* Brunella rendszer teljes körű auditálása és `external_research` mappa feltérképezése.
+* Auralia hangmodul integrálása (Backend + Frontend + Agent).
+* Dokumentáció rendezése (`USER_START.md`).
 
 **Érintett fájlok:**
 
-- `myai/server.py` (Új `/voice/transcribe` végpont + faster-whisper)
-- `src/agents/VoiceAgent.ts` (Új ügynök)
-- `src/agents/registry.json` (VoiceAgent regisztráció)
-- `src/dashboard/components/dashboard/ChatInterface.tsx` (Mikrofon UI és logika)
-- `src/tools/n8n.ts` (Zod fix)
-- `USER_START.md` (Új segédlet)
-- `.ai/gemini.md` (Napló frissítés)
+* `myai/server.py` (Új `/voice/transcribe` végpont + faster-whisper)
+* `src/agents/VoiceAgent.ts` (Új ügynök)
+* `src/agents/registry.json` (VoiceAgent regisztráció)
+* `src/dashboard/components/dashboard/ChatInterface.tsx` (Mikrofon UI és logika)
+* `src/tools/n8n.ts` (Zod fix)
+* `USER_START.md` (Új segédlet)
+* `.ai/gemini.md` (Napló frissítés)
 
 **Eredmények:**
 ✅ **Rendszer Audit:** Minden szerviz (Ollama, API-k, UI) stabilan fut.
@@ -625,19 +662,19 @@ A Brunella rendszer felhasználói élményének javítása a modellválasztás 
 
 **Feladat:**
 
-- Valódi fájlrendszer böngésző (Files fül) implementálása a Dashboardon.
-- Neural Link Chat okosítása: AI belső gondolatok (Inner Monologue) és RAG kontextus megjelenítése.
-- Backend kiterjesztése fájlkezelő műveletekkel.
+* Valódi fájlrendszer böngésző (Files fül) implementálása a Dashboardon.
+* Neural Link Chat okosítása: AI belső gondolatok (Inner Monologue) és RAG kontextus megjelenítése.
+* Backend kiterjesztése fájlkezelő műveletekkel.
 
 **Érintett fájlok:**
 
-- `src/server/web.ts` (API: /files/list, /files/content)
-- `src/dashboard/lib/apiService.ts` (Files API kliens, Result refactor)
-- `src/dashboard/components/dashboard/FileExplorer.tsx` (Új komponens)
-- `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Files fül integráció)
-- `src/agents/AgentManager.ts` (Thoughts & Context metadata támogatás)
-- `src/agents/BaseAgent.ts` (AgentResult interfész bővítés)
-- `src/dashboard/components/dashboard/NeuralLinkChat.tsx` (Intel/Thoughts UI)
+* `src/server/web.ts` (API: /files/list, /files/content)
+* `src/dashboard/lib/apiService.ts` (Files API kliens, Result refactor)
+* `src/dashboard/components/dashboard/FileExplorer.tsx` (Új komponens)
+* `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Files fül integráció)
+* `src/agents/AgentManager.ts` (Thoughts & Context metadata támogatás)
+* `src/agents/BaseAgent.ts` (AgentResult interfész bővítés)
+* `src/dashboard/components/dashboard/NeuralLinkChat.tsx` (Intel/Thoughts UI)
 
 **Eredmények:**
 ✅ **Fájl Böngésző:** Teljes körű navigáció a projekt fájljai és a `_KNOWLEDGE_BASE` között, valós idejű előnézettel.
@@ -653,18 +690,18 @@ A Brunella rendszer felhasználói élményének javítása a modellválasztás 
 
 **Feladat:**
 
-- A Brunella Dashboard (V2) fejlesztése prémium funkciókkal: Grafikus nézet, Témakezelés, Parancssor.
-- Tailwind CSS v4 kompatibilitási problémák elhárítása.
+* A Brunella Dashboard (V2) fejlesztése prémium funkciókkal: Grafikus nézet, Témakezelés, Parancssor.
+* Tailwind CSS v4 kompatibilitási problémák elhárítása.
 
 **Érintett fájlok:**
 
-- `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Layout refactor, V2 integration)
-- `src/dashboard/components/AgentGraph.tsx` (Live React Flow visualization)
-- `src/dashboard/components/CommandMenu.tsx` (Ctrl+K Palette)
-- `src/dashboard/components/ThemeToggle.tsx` (Dark/Light mode switch)
-- `src/dashboard/index.css` (V4 refactor, pure CSS variables)
-- `src/dashboard/components/ui/theme-provider.tsx` (New)
-- `src/dashboard/components/ui/skeleton.tsx` (New)
+* `src/dashboard/components/dashboard/MissionControlLayout.tsx` (Layout refactor, V2 integration)
+* `src/dashboard/components/AgentGraph.tsx` (Live React Flow visualization)
+* `src/dashboard/components/CommandMenu.tsx` (Ctrl+K Palette)
+* `src/dashboard/components/ThemeToggle.tsx` (Dark/Light mode switch)
+* `src/dashboard/index.css` (V4 refactor, pure CSS variables)
+* `src/dashboard/components/ui/theme-provider.tsx` (New)
+* `src/dashboard/components/ui/skeleton.tsx` (New)
 
 **Eredmények:**
 ✅ Prémium "Icy Glass" (Ice) és Cyberpunk (Dark) témák működnek.
@@ -684,12 +721,12 @@ A Dashboard működését blokkoló UI hibák elhárítása (fehér képernyő, 
 
 **Érintett fájlok:**
 
-- `src/dashboard/components/dashboard/ChatInterface.tsx` (Tailwind class fix)
-- `src/dashboard/components/dashboard/AgentStatusCard.tsx` (Ikon fix: Chevron -> Caret, Zap -> Lightning)
-- `src/dashboard/components/AgentGraph.tsx` (Ikon fix: Wand -> MagicWand)
-- `src/agents/ResearcherAgent.ts` (Refaktor: BaseAgent extend + RAG Search Context)
-- `src/agents/EvaluatorAgent.ts` (Refaktor: BaseAgent extend + Standard Results)
-- `task.md` (Feladat követés)
+* `src/dashboard/components/dashboard/ChatInterface.tsx` (Tailwind class fix)
+* `src/dashboard/components/dashboard/AgentStatusCard.tsx` (Ikon fix: Chevron -> Caret, Zap -> Lightning)
+* `src/dashboard/components/AgentGraph.tsx` (Ikon fix: Wand -> MagicWand)
+* `src/agents/ResearcherAgent.ts` (Refaktor: BaseAgent extend + RAG Search Context)
+* `src/agents/EvaluatorAgent.ts` (Refaktor: BaseAgent extend + Standard Results)
+* `task.md` (Feladat követés)
 
 **Eredmények:**
 ✅ **Működő Dashboard:** Sikeresen elhárítottuk a fehér képernyőt okozó szintaktikai hibákat és a build-et megakasztó ikon importokat.

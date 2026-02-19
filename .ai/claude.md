@@ -2,7 +2,7 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-02-16 20:30
+**Utolsó frissítés:** 2026-02-19 05:30
 
 ---
 
@@ -48,6 +48,46 @@
 ---
 
 ## Napló
+
+### 2026-02-19 05:30 - Teljes Rendszer Ellenőrzés + Dashboard Problem Fix ✅
+
+**Feladat:** Startup protokoll lefuttatása, teljes tesztcsomag futtatása, dashboard problémák megoldása
+
+**Elvégzett munkák:**
+
+**1. Teljes Tesztcsomag - ZÖLD ✅**
+- 107 tesztfájl | 1012 teszt PASSED | 19 SKIPPED
+- Előzetes javítások: `test/bifrost_gateway.test.ts` (dinamikus Ollama check), `test/llm_client.test.ts` (model-agnosztikus assertion), `masterOrchestratorProvider.ts` (típus import javítás)
+- Gemini 429 quota error → BifrostGateway fallback Ollama-ra → tesztek zöldek maradnak
+
+**2. Dashboard Problem - Gyökérok Azonosítva és Javítva ✅**
+
+**Probléma #1: Dupla ThemeProvider**
+- `main.tsx`: `<ThemeProvider attribute="class" defaultTheme="dark" enableSystem>` ← HELYES (Tailwind dark mode)
+- `App.tsx` belső: `<ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">` ← `attribute="class"` HIÁNYZIK
+- Következmény: belső provider `data-theme="dark"` attribútumot írt, `class="dark"` helyett → Tailwind `.dark:` variánsok NEM működtek
+- **Javítás:** `src/dashboard/App.tsx` - ThemeProvider importját és wrapperét eltávolítottuk
+
+**Probléma #2: 25+ felesleges import a MissionControlLayout-ban**
+- A Gemini "Dashboard Design Refresh" (2026-02-16) óta az összes panel-komponens a `navigation.tsx` `{activeItem?.component}` mintán keresztül töltődik
+- A régi switch-case routing komponens-importjai (`NeuralLinkChat`, `SettingsPanel`, stb.) sosem lettek eltávolítva
+- **Javítás:** `src/dashboard/components/dashboard/MissionControlLayout.tsx` - csak a ténylegesen használt importok maradtak
+
+**Probléma #3: Duplikált navigationRegistry.ts**
+- `src/dashboard/lib/navigationRegistry.ts` - sose volt importálva sehol, üres duplikátum
+- **Javítás:** Fájl törölve
+
+**Érintett fájlok:**
+- `src/dashboard/App.tsx` (SZERKESZTVE - ThemeProvider eltávolítva)
+- `src/dashboard/components/dashboard/MissionControlLayout.tsx` (SZERKESZTVE - 25+ unused import törölve)
+- `src/dashboard/lib/navigationRegistry.ts` (TÖRÖLVE - duplikátum)
+
+**Ellenőrzések:**
+- Vite build: ✅ Sikeres (8014 modul, ~10s, CSS warningok nem kritikusak)
+- Backend TypeScript build: ✅ 0 hiba
+- Spot tesztek: ✅ smoke, hooks, llm_client, configSchema, safe_zone_validator - mind zöld
+
+**Idő:** ~3 óra | **Státusz:** ✅ **DASHBOARD PROBLEM SOLVED**
 
 ### 2026-02-17 04:15 - CEAN Phase 1D Test Worker Deployment ✅
 
