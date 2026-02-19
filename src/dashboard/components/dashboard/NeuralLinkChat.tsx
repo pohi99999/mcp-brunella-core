@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PaperPlaneRight, Robot, User, Circle, Eye, EyeSlash } from "@phosphor-icons/react";
+import { PaperPlaneRight, Robot, User, Circle, Eye, EyeSlash, ArrowsClockwise } from "@phosphor-icons/react";
 import { Brain, FileText } from "lucide-react";
 import * as api from "@/lib/apiService";
 import { toast } from "sonner";
@@ -197,7 +197,7 @@ export function NeuralLinkChat() {
   };
 
   return (
-    <Card className="border-border/50 bg-background/50 backdrop-blur-xl flex flex-col h-[600px] glass-card overflow-hidden">
+    <Card className="border-border/50 bg-background/50 backdrop-blur-xl flex flex-col h-full glass-card overflow-hidden">
       <CardHeader className="flex flex-row items-center justify-between pb-2 gap-2 flex-wrap border-b border-border/50">
         <CardTitle className="flex items-center gap-2 text-base font-medium">
           <Robot size={18} className="text-primary" />

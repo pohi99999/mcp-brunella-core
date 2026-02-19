@@ -76,7 +76,7 @@ export function LiveExecutionMonitor() {
               <span>Progress</span>
               <span>{Math.round(progress)}% ({completedSteps}/{totalSteps})</span>
             </div>
-            <Progress value={progress} className="h-1.5 bg-white/5" indicatorClassName="bg-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+            <Progress value={progress} className="h-1.5 bg-white/5" />
           </div>
 
           {/* Steps List */}

@@ -141,7 +141,7 @@ export function SystemBootSequence({ onComplete }: SystemBootSequenceProps) {
                     <span>SYSTEM INTEGRITY CHECK</span>
                     <span>{Math.round(progress)}%</span>
                 </div>
-                <Progress value={progress} className="h-2 rounded-none bg-white/5 border border-white/10" indicatorClassName="bg-gradient-to-r from-primary/50 to-primary shadow-[0_0_10px_rgba(var(--primary),0.5)]" />
+                <Progress value={progress} className="h-2 rounded-none bg-white/5 border border-white/10" />
             </div>
 
             {/* Terminal Logs */}

@@ -89,7 +89,7 @@ export function RobotkezV2Chat() {
         );
       }
     } catch (err) {
-      logError('RobotkezV2Chat', `Refresh error: ${err instanceof Error ? err.message : String(err)}`);
+      console.error('[RobotkezV2Chat] Refresh error:', err instanceof Error ? err.message : String(err));
     }
   };
 

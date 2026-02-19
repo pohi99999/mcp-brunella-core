@@ -10,6 +10,8 @@ import { Button } from "@/components/ui/button";
 
 const ResponsiveGridLayout = WidthProvider(Responsive);
 
+const LAYOUT_VERSION = "v2";
+
 interface WidgetGridProps {
   registryAgents: any[];
   socketStatusMap: any;
@@ -21,27 +23,38 @@ export function WidgetGrid({ registryAgents, socketStatusMap, handleExecuteAgent
   const [isEditMode, setIsEditMode] = useState(false);
 
   const defaultLayout: any[] = [
-    { i: "health", x: 0, y: 0, w: 12, h: 4 },
-    { i: "agent_status", x: 0, y: 4, w: 6, h: 8 },
-    { i: "jules", x: 6, y: 4, w: 6, h: 8 },
-    { i: "logs", x: 0, y: 12, w: 8, h: 10 },
-    { i: "track_progress", x: 8, y: 12, w: 4, h: 5 },
-    { i: "test_results", x: 8, y: 17, w: 4, h: 5 },
+    { i: "health",        x: 0, y: 0,  w: 12, h: 4  },
+    { i: "agent_status",  x: 0, y: 4,  w: 6,  h: 9  },
+    { i: "jules",         x: 6, y: 4,  w: 6,  h: 9  },
+    { i: "logs",          x: 0, y: 13, w: 8,  h: 12 },
+    { i: "track_progress",x: 8, y: 13, w: 4,  h: 12 },
+    { i: "test_results",  x: 0, y: 25, w: 12, h: 14 },
   ];
 
   const [layouts, setLayouts] = useState<{ lg: any[] }>(() => {
-    const saved = localStorage.getItem("bas-vcc-layout");
-    return saved ? JSON.parse(saved) : { lg: defaultLayout };
+    try {
+      const savedVersion = localStorage.getItem("bas-vcc-layout-version");
+      if (savedVersion !== LAYOUT_VERSION) {
+        localStorage.removeItem("bas-vcc-layout");
+        return { lg: defaultLayout };
+      }
+      const saved = localStorage.getItem("bas-vcc-layout");
+      return saved ? JSON.parse(saved) : { lg: defaultLayout };
+    } catch {
+      return { lg: defaultLayout };
+    }
   });
 
   const onLayoutChange = (currentLayout: any[], allLayouts: { [key: string]: any[] }) => {
     setLayouts(allLayouts as { lg: any[] });
     localStorage.setItem("bas-vcc-layout", JSON.stringify(allLayouts));
+    localStorage.setItem("bas-vcc-layout-version", LAYOUT_VERSION);
   };
 
   const resetLayout = () => {
     setLayouts({ lg: defaultLayout });
     localStorage.removeItem("bas-vcc-layout");
+    localStorage.removeItem("bas-vcc-layout-version");
   };
 
   return (
