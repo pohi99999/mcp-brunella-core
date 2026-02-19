@@ -1,10 +1,12 @@
 import type { ChildProcess } from 'child_process';
-import net from 'net';
 import path from 'path';
 
 export async function checkServerRunning(port: number = 3000): Promise<boolean> {
+  // Dynamic import to avoid bundling 'net' in Cloudflare Workers
+  const { Socket } = await import('net');
+
   return new Promise((resolve) => {
-    const socket = new net.Socket();
+    const socket = new Socket();
     socket.setTimeout(1000);
     socket.on('connect', () => {
       socket.destroy();

@@ -1,4 +1,4 @@
-import { spawn, type ChildProcess } from 'child_process';
+import type { ChildProcess } from 'child_process';
 import { config } from '../config/index.js';
 import { logInfo, logError } from '../utils/logger.js';
 import { resolvePythonPath } from '../utils/pythonUtils.js';
@@ -33,6 +33,7 @@ export class FastApiService {
     const pythonPath = await resolvePythonPath(config.workspaceRoot);
     logInfo('FastAPI', `Starting service with ${pythonPath}...`);
 
+    const { spawn } = await import('child_process');
     this.child = spawn(pythonPath, ['-m', 'myai.server'], {
       cwd: config.workspaceRoot,
       env: { ...process.env, PYTHONUNBUFFERED: '1' },
