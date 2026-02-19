@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { CaretDown, CaretUp, Robot, Lightning, Play, ShareNetwork, PencilSimple, Plus, X } from '@phosphor-icons/react'
+import { CaretDown, CaretUp, Lightning, Play, ShareNetwork, PencilSimple, Plus, X } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
 import type { RegistryAgent } from '@/lib/apiService'
 import {
@@ -19,6 +19,11 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { toast } from 'sonner'
@@ -81,6 +86,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
   }
 
   const config = statusConfig[status]
+  const isExecuteDisabled = !quickTask.trim() || status === 'working'
 
   const handleQuickRun = () => {
     if (quickTask.trim() && onExecute) {
@@ -108,7 +114,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
       setDelegateOpen(false)
       setDelegateTask('')
       setSelectedDelegate('')
-    } catch (e) {
+    } catch {
       toast.error('Delegálás sikertelen')
     }
   }
@@ -166,11 +172,16 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
           </div>
           <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
             <Dialog open={delegateOpen} onOpenChange={setDelegateOpen}>
-              <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-accent hover:bg-accent/10 rounded-full" title="Delegálás">
-                  <ShareNetwork size={16} />
-                </Button>
-              </DialogTrigger>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <DialogTrigger asChild>
+                    <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-accent hover:bg-accent/10 rounded-full" aria-label="Delegate task">
+                      <ShareNetwork size={16} />
+                    </Button>
+                  </DialogTrigger>
+                </TooltipTrigger>
+                <TooltipContent>Delegálás</TooltipContent>
+              </Tooltip>
               <DialogContent className="glass-panel border-white/10 sm:max-w-[425px]">
                 <DialogHeader>
                   <DialogTitle className="text-foreground">Feladat Delegálás</DialogTitle>
@@ -232,11 +243,16 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                   Capabilities
                 </span>
                 <Popover open={isEditingCaps} onOpenChange={setIsEditingCaps}>
-                  <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300">
-                      <PencilSimple size={12} />
-                    </Button>
-                  </PopoverTrigger>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
+                      <PopoverTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300" aria-label="Edit capabilities">
+                          <PencilSimple size={12} />
+                        </Button>
+                      </PopoverTrigger>
+                    </TooltipTrigger>
+                    <TooltipContent>Edit Capabilities</TooltipContent>
+                  </Tooltip>
                   <PopoverContent className="w-80 glass-panel border-white/10 p-3">
                     <div className="space-y-3">
                       <h4 className="font-medium text-sm text-zinc-100">Képességek Szerkesztése</h4>
@@ -253,11 +269,14 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                         {capabilities.map(cap => (
                           <Badge key={cap} variant="secondary" className="text-[10px] gap-1 pr-1">
                             {cap}
-                            <X
-                              size={10}
-                              className="cursor-pointer hover:text-red-400"
-                              onClick={() => handleRemoveCapability(cap)}
-                            />
+                            <button
+                              type="button"
+                              onClick={(e) => { e.stopPropagation(); handleRemoveCapability(cap); }}
+                              className="rounded-full p-0.5 hover:bg-red-500/20 hover:text-red-400 transition-colors focus:outline-none focus:ring-1 focus:ring-red-500"
+                              aria-label={`Remove capability ${cap}`}
+                            >
+                              <X size={10} />
+                            </button>
                           </Badge>
                         ))}
                       </div>
@@ -305,15 +324,23 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                     ENTER
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  variant="default"
-                  className="shrink-0 h-auto py-1 bg-primary hover:bg-primary/90 text-primary-foreground"
-                  onClick={handleQuickRun}
-                  disabled={!quickTask.trim() || status === 'working'}
-                >
-                  <Play size={12} weight="fill" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span tabIndex={isExecuteDisabled ? 0 : -1} className="outline-none">
+                      <Button
+                        size="sm"
+                        variant="default"
+                        className="shrink-0 h-auto py-1 bg-primary hover:bg-primary/90 text-primary-foreground"
+                        onClick={handleQuickRun}
+                        disabled={isExecuteDisabled}
+                        aria-label="Execute quick task"
+                      >
+                        <Play size={12} weight="fill" />
+                      </Button>
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent>Execute Quick Task</TooltipContent>
+                </Tooltip>
               </div>
             )}
           </div>
