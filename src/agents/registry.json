@@ -517,6 +517,28 @@
       "enterpriseModuleId": "finance"
     },
     {
+      "name": "financial_guard",
+      "title": "Financial Guard Agent",
+      "description": "Phase 3 - Automated invoice OCR processing with duplicate detection, anomaly alerts, and Sheets export",
+      "class": "FinancialGuardAgent",
+      "module": "./agents/FinancialGuardAgent.js",
+      "capabilities": [
+        "invoice_ocr",
+        "pdf_processing",
+        "duplicate_detection",
+        "anomaly_detection",
+        "sheets_export",
+        "alert_generation"
+      ],
+      "triggers": ["financial guard", "invoice processing", "invoice ocr", "számla feldolgozás"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["finance", "invoice", "ocr", "automation", "phase3", "bas-suite"],
+      "priority": 8,
+      "enterpriseModuleId": "finance",
+      "notes": "Flags anomalies when amount >2x vendor average. Requires Python OCR worker (Tesseract/Vision)."
+    },
+    {
       "name": "digital_office_manager",
       "title": "Digital Office Manager",
       "description": "Digitális Irodavezető - Email triage, inbox automation, smart labeling",
