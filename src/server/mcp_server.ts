@@ -181,16 +181,21 @@ export class MCPFilesystemServer {
     try {
       const resolvedPath = path.resolve(filePath);
 
-      if (!fs.existsSync(resolvedPath)) {
-        throw new Error(`File not found: ${filePath}`);
+      let stats;
+      try {
+        stats = await fs.promises.stat(resolvedPath);
+      } catch (error: any) {
+        if (error.code === 'ENOENT') {
+           throw new Error(`File not found: ${filePath}`);
+        }
+        throw error;
       }
 
-      const stats = fs.statSync(resolvedPath);
       if (!stats.isFile()) {
         throw new Error(`Path is not a file: ${filePath}`);
       }
 
-      const content = fs.readFileSync(resolvedPath, 'utf-8');
+      const content = await fs.promises.readFile(resolvedPath, 'utf-8');
 
       return {
         content: [
@@ -229,14 +234,19 @@ export class MCPFilesystemServer {
       const dirPath = path.dirname(resolvedPath);
 
       // Create parent directories if needed
-      if (createDirs && !fs.existsSync(dirPath)) {
-        fs.mkdirSync(dirPath, { recursive: true });
+      if (createDirs) {
+        // Use async mkdir if not exists
+        try {
+            await fs.promises.access(dirPath);
+        } catch {
+             await fs.promises.mkdir(dirPath, { recursive: true });
+        }
       }
 
       // Write file
-      fs.writeFileSync(resolvedPath, content, 'utf-8');
+      await fs.promises.writeFile(resolvedPath, content, 'utf-8');
 
-      const stats = fs.statSync(resolvedPath);
+      const stats = await fs.promises.stat(resolvedPath);
 
       return {
         content: [
@@ -272,17 +282,20 @@ export class MCPFilesystemServer {
     try {
       const resolvedPath = path.resolve(dirPath);
 
-      if (!fs.existsSync(resolvedPath)) {
-        throw new Error(`Directory not found: ${dirPath}`);
+      let stats;
+      try {
+        stats = await fs.promises.stat(resolvedPath);
+      } catch(e: any) {
+         if (e.code === 'ENOENT') throw new Error(`Directory not found: ${dirPath}`);
+         throw e;
       }
 
-      const stats = fs.statSync(resolvedPath);
       if (!stats.isDirectory()) {
         throw new Error(`Path is not a directory: ${dirPath}`);
       }
 
       // Read directory
-      const entries = fs.readdirSync(resolvedPath);
+      const entries = await fs.promises.readdir(resolvedPath);
 
       // Filter hidden files if needed
       const filteredEntries = includeHidden
@@ -290,9 +303,9 @@ export class MCPFilesystemServer {
         : entries.filter(e => !e.startsWith('.'));
 
       // Get metadata for each entry
-      const items = filteredEntries.map(entry => {
+      const items = await Promise.all(filteredEntries.map(async (entry) => {
         const entryPath = path.join(resolvedPath, entry);
-        const entryStat = fs.statSync(entryPath);
+        const entryStat = await fs.promises.stat(entryPath);
 
         return {
           name: entry,
@@ -300,7 +313,7 @@ export class MCPFilesystemServer {
           size: entryStat.size,
           modified: entryStat.mtime.toISOString()
         };
-      });
+      }));
 
       return {
         content: [
