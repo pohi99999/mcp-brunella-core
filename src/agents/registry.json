@@ -426,7 +426,36 @@
       "notes": "Rate limited: max 50 LinkedIn profiles/hour. Requires human approval for email sending."
     },
     {
+      "name": "market_intel",
+      "title": "Market Intelligence Agent",
+      "description": "Phase 2 - Competitor price monitoring, trend analysis, and automated alerting",
+      "class": "MarketIntelAgent",
+      "module": "./agents/MarketIntelAgent.js",
+      "capabilities": [
+        "competitor_scraping",
+        "price_extraction",
+        "trend_analysis",
+        "price_alerts",
+        "lancedb_storage",
+        "chart_generation"
+      ],
+      "triggers": ["market intel", "price tracking", "competitor monitoring", "price analysis"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["intelligence", "pricing", "competitor-analysis", "phase2", "bas-suite"],
+      "priority": 7,
+      "enterpriseModuleId": "intelligence",
+      "notes": "Alerts when competitor prices drop >10%. Stores historical data in LanceDB."
+    },
+    {
       "name": "pricing",
+      "title": "Pricing Agent",
+      "description": "Dinamikus Árazó & Piaci Hírszerző - Market intelligence, competitive analysis, pricing recommendations",
+      "class": "PricingAgent",
+      "module": "./agents/PricingAgent.js",
+      "capabilities": [
+        "market_analysis",
+        "competitor_tracking",
       "title": "Pricing Agent",
       "description": "Dinamikus Árazó & Piaci Hírszerző - Market intelligence, competitive analysis, pricing recommendations",
       "class": "PricingAgent",
