@@ -5,18 +5,20 @@ import { githubProvider } from "./providers/githubProvider";
 import { geminiProvider } from "./providers/geminiProvider";
 import { cloudflareEdgeProvider } from "./providers/cloudflareEdgeProvider";
 import { cloudflareChatProvider } from "./providers/cloudflareChatProvider";
+import { MasterOrchestratorProvider } from "./providers/masterOrchestratorProvider";
 
-const providers = new Map<ChatMode, ChatProvider>([
-  ["orchestrator", orchestratorProvider],
-  ["ollama", ollamaProvider],
-  ["github", githubProvider],
-  ["gemini", geminiProvider],
-  ["cloudflare", cloudflareEdgeProvider],
-  ["cloudflare_chat", cloudflareChatProvider],
-]);
+const providers: Record<ChatMode, ChatProvider> = {
+  orchestrator: orchestratorProvider,
+  ollama: ollamaProvider,
+  github: githubProvider,
+  gemini: geminiProvider,
+  cloudflare: cloudflareEdgeProvider,
+  cloudflare_chat: cloudflareChatProvider,
+  master_orchestrator: new MasterOrchestratorProvider(),
+};
 
 export function getProvider(mode: ChatMode): ChatProvider {
-  const provider = providers.get(mode);
+  const provider = providers[mode];
   if (!provider) {
     throw new Error(`No chat provider registered for mode: ${mode}`);
   }

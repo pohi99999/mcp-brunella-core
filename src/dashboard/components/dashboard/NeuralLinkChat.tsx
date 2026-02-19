@@ -210,7 +210,8 @@ export function NeuralLinkChat() {
             aria-label="Chat mód"
             className="rounded-md border border-border bg-background/50 px-2 py-1.5 text-sm"
           >
-            <option value="orchestrator">Orchestrator</option>
+            <option value="master_orchestrator">Master Orchestrator</option>
+            <option value="orchestrator">Local Orchestrator</option>
             <option value="cloudflare_chat">Cloudflare Chat</option>
             <option value="cloudflare">Cloudflare (Edge)</option>
             <option value="ollama">Ollama</option>

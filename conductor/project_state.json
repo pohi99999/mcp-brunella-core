@@ -1,14 +1,14 @@
 {
-  "lastUpdated": "2026-02-18T16:00:00.043Z",
+  "lastUpdated": "2026-02-19T04:00:00.043Z",
   "tracks": [
     {
       "id": "ai_recommendation_system_20260216",
       "name": "AI Recommendation System Integration",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-02-16T00:00:00Z",
-      "updated": "2026-02-16T00:00:00Z",
+      "updated": "2026-02-17T22:45:00Z",
       "tags": [
         "recommendation",
         "rag",
@@ -24,9 +24,9 @@
     {
       "id": "bas_enterprise_suite",
       "name": "BAS Enterprise Suite - 18 Module Business Automation",
-      "status": "proposed",
+      "status": "active",
       "priority": "high",
-      "progress": 0,
+      "progress": 5,
       "tags": [
         "enterprise",
         "automation",
@@ -89,9 +89,9 @@
     {
       "id": "cloudflare_edge_agents_network_20260215",
       "name": "Cloudflare Edge Agents Network (CEAN)",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 5,
+      "progress": 100,
       "tags": [
         "cloudflare",
         "workers",
@@ -100,13 +100,7 @@
         "orchestration",
         "distributed-systems"
       ],
-      "dependencies": [
-        "Cloudflare API token",
-        "GitHub Personal Access Token",
-        "OpenAI API key (or Gemini key)",
-        "Slack webhook URL (optional)",
-        "wrangler CLI installed"
-      ],
+      "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_edge_agents_network_20260215",
       "_isArchived": false
     },
@@ -266,11 +260,11 @@
     {
       "id": "green_lightning_20260212",
       "name": "Green Lightning - Autonomous EV Hunter",
-      "status": "proposed",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-12T17:24:00Z",
+      "updated": "2026-02-15T00:15:00Z",
       "assignee": "RobotkezAgent + n8n",
       "tags": [
         "robotkez",
@@ -287,11 +281,11 @@
     {
       "id": "industrial_machine_hunter_20260216",
       "name": "Industrial Machine Hunter",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-02-16T00:00:00Z",
-      "updated": "2026-02-16T00:00:00Z",
+      "updated": "2026-02-18T01:00:00Z",
       "tags": [
         "auction",
         "arbitrage",
@@ -307,11 +301,11 @@
     {
       "id": "innovation_bridge_20260212",
       "name": "Innovation Bridge - Cross-Industry Knowledge Transfer",
-      "status": "proposed",
+      "status": "active",
       "priority": "medium",
-      "progress": 0,
+      "progress": 5,
       "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-12T17:16:00Z",
+      "updated": "2026-02-19T10:15:00Z",
       "assignee": "ResearcherAgent + n8n",
       "tags": [
         "innovation",
@@ -388,11 +382,11 @@
     {
       "id": "marketing_swarm_20260216",
       "name": "Marketing Swarm - Automated Campaign Factory",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-02-16T00:00:00Z",
-      "updated": "2026-02-16T00:00:00Z",
+      "updated": "2026-02-17T23:30:00Z",
       "tags": [
         "marketing",
         "swarm",
@@ -631,6 +625,26 @@
       "_isArchived": true
     },
     {
+      "id": "hyper_local_supply_chain_20260216",
+      "name": "Hyper-Local Supply Chain",
+      "status": "archived",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-02-16T00:00:00Z",
+      "updated": "2026-02-16T00:00:00Z",
+      "tags": [
+        "logistics",
+        "geo-fencing",
+        "automation",
+        "matchmaking"
+      ],
+      "dependencies": [
+        "robotkezv2"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\hyper_local_supply_chain_20260216",
+      "_isArchived": true
+    },
+    {
       "id": "invoice-to-sheets-automation-20260214",
       "name": "Számla Adatkinyerés és Google Sheets Automatizáció",
       "status": "archived",
@@ -784,6 +798,28 @@
       "_isArchived": true
     },
     {
+      "id": "real_estate_sales_campaign_20260216",
+      "name": "Real Estate Sales Campaign (Asset Analyst + Corporate Hunter)",
+      "status": "archived",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-02-16T00:00:00Z",
+      "updated": "2026-02-16T00:00:00Z",
+      "tags": [
+        "real-estate",
+        "valuation",
+        "crm",
+        "sales"
+      ],
+      "dependencies": [
+        "gemini_vision",
+        "lancedb_rag",
+        "google_workspace_api"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\real_estate_sales_campaign_20260216",
+      "_isArchived": true
+    },
+    {
       "id": "robotkezv2-full-comet-20260215",
       "name": "RobotkezV2 - Full Comet (Magyar Agentic Browser)",
       "status": "archived",
@@ -850,6 +886,26 @@
       "_isArchived": true
     },
     {
+      "id": "software_genesis_protocol_20260216",
+      "name": "Software Genesis Protocol (Alkalmazásgyár)",
+      "status": "archived",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-02-16T00:00:00Z",
+      "updated": "2026-02-16T00:00:00Z",
+      "tags": [
+        "sdlc",
+        "automation",
+        "multi-agent",
+        "workflow"
+      ],
+      "dependencies": [
+        "orchestrator_v2"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\software_genesis_protocol_20260216",
+      "_isArchived": true
+    },
+    {
       "id": "spec-writer-agent-20260211",
       "name": "SpecWriter Agent (Ötlet → Track Generátor)",
       "status": "archived",
@@ -913,10 +969,10 @@
     }
   ],
   "stats": {
-    "total": 44,
-    "active": 5,
-    "completed": 0,
-    "archived": 21,
-    "proposed": 8
+    "total": 47,
+    "active": 3,
+    "completed": 5,
+    "archived": 24,
+    "proposed": 5
   }
 }

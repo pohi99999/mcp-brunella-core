@@ -16,7 +16,8 @@ export type ChatMode =
   | "github"
   | "gemini"
   | "cloudflare"
-  | "cloudflare_chat";
+  | "cloudflare_chat"
+  | "master_orchestrator";
 
 export interface ChatSendInput {
   text: string;

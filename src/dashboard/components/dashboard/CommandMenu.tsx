@@ -15,6 +15,8 @@ import {
     Search
 } from "lucide-react"
 
+import { navigationRegistry } from "@/lib/navigation"
+
 import {
     CommandDialog,
     CommandEmpty,
@@ -33,6 +35,7 @@ interface CommandMenuProps {
 
 export function CommandMenu({ setActiveTab, activeTab }: CommandMenuProps) {
     const [open, setOpen] = useState(false)
+    const items = navigationRegistry.getAllItems();
 
     useEffect(() => {
         const down = (e: KeyboardEvent) => {
@@ -66,37 +69,15 @@ export function CommandMenu({ setActiveTab, activeTab }: CommandMenuProps) {
                 <CommandList className="glass-panel border-0">
                     <CommandEmpty>Nincs találat.</CommandEmpty>
                     <CommandGroup heading="Navigáció">
-                        <CommandItem onSelect={() => { setActiveTab('dashboard'); setOpen(false) }}>
-                            <LayoutDashboard className="mr-2 h-4 w-4" />
-                            <span>Dashboard</span>
-                        </CommandItem>
-                        <CommandItem onSelect={() => { setActiveTab('inventory'); setOpen(false) }}>
-                            <Package className="mr-2 h-4 w-4" />
-                            <span>Inventory</span>
-                        </CommandItem>
-                        <CommandItem onSelect={() => { setActiveTab('chat'); setOpen(false) }}>
-                            <MessageCircle className="mr-2 h-4 w-4" />
-                            <span>Neural Link Chat</span>
-                        </CommandItem>
-                        <CommandItem onSelect={() => { setActiveTab('files'); setOpen(false) }}>
-                            <FileText className="mr-2 h-4 w-4" />
-                            <span>Fájlrendszer</span>
-                        </CommandItem>
-                        <CommandItem onSelect={() => { setActiveTab('settings'); setOpen(false) }}>
-                            <Settings className="mr-2 h-4 w-4" />
-                            <span>Beállítások</span>
-                        </CommandItem>
-                    </CommandGroup>
-                    <CommandSeparator />
-                    <CommandGroup heading="Eszközök">
-                        <CommandItem onSelect={() => { setActiveTab('n8n'); setOpen(false) }}>
-                            <Workflow className="mr-2 h-4 w-4" />
-                            <span>n8n Automatizáció</span>
-                        </CommandItem>
-                        <CommandItem onSelect={() => { setActiveTab('langflow'); setOpen(false) }}>
-                            <Sparkles className="mr-2 h-4 w-4" />
-                            <span>Langflow</span>
-                        </CommandItem>
+                        {items.map(item => (
+                            <CommandItem 
+                                key={item.id} 
+                                onSelect={() => { setActiveTab(item.id); setOpen(false) }}
+                            >
+                                <item.icon className="mr-2 h-4 w-4" />
+                                <span>{item.label}</span>
+                            </CommandItem>
+                        ))}
                     </CommandGroup>
                 </CommandList>
             </CommandDialog>
