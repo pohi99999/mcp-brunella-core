@@ -9,8 +9,13 @@ describe('MCP Filesystem Server', () => {
   const testFile = path.join(testDataDir, 'test_file.txt');
   const testFileContent = 'Hello MCP Server!';
 
-  beforeEach(() => {
+  beforeEach(async () => {
     server = new MCPFilesystemServer();
+    // Initialize server validator internally if needed, but the tests call handle methods directly
+    // which now await imports. We might need to ensure SafeZoneValidator is initialized.
+    // The server constructor gets the validator singleton.
+    const validator = (server as any).validator;
+    await validator.initialize();
 
     // Create test directory
     if (!fs.existsSync(testDataDir)) {

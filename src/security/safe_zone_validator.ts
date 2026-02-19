@@ -1,4 +1,5 @@
-import fs from 'fs';
+// Removed static fs import
+// import fs from 'fs';
 import path from 'path';
 import { minimatch } from 'minimatch';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
@@ -51,45 +52,71 @@ export interface AuditEntry {
 }
 
 export class SafeZoneValidator {
-  private config: SafeZoneConfig;
-  private zones: SafeZone[];
-  private blacklist: string[];
+  private config: SafeZoneConfig | null = null;
+  private zones: SafeZone[] = [];
+  private blacklist: string[] = [];
   private operationCounts: Map<string, { minute: number; hour: number; lastReset: Date }>;
+  private configPath: string;
 
   constructor(configPath: string = 'config/safe_zones.json') {
-    this.config = this.loadConfig(configPath);
-    this.zones = this.config.safe_zones.map(z => ({
-      ...z,
-      path: path.resolve(z.path)
-    }));
-    this.blacklist = this.config.blacklist;
+    this.configPath = configPath;
     this.operationCounts = new Map();
-
-    logInfo('SafeZoneValidator', `Loaded config with ${this.zones.length} safe zones`);
+    // Config loading is now async/lazy or handled via init
   }
 
-  private loadConfig(configPath: string): SafeZoneConfig {
+  // New async init method to handle FS loading
+  async initialize(): Promise<void> {
+    if (this.config) return;
+
+    // Only attempt to load if in Node environment
+    if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+        this.config = await this.loadConfig(this.configPath);
+        this.zones = this.config.safe_zones.map(z => ({
+          ...z,
+          path: path.resolve(z.path)
+        }));
+        this.blacklist = this.config.blacklist;
+        logInfo('SafeZoneValidator', `Loaded config with ${this.zones.length} safe zones`);
+    } else {
+        logWarn('SafeZoneValidator', 'Not running in Node.js environment, Safe Zones disabled.');
+    }
+  }
+
+  private async loadConfig(configPath: string): Promise<SafeZoneConfig> {
     try {
+      const fs = await import('fs');
       const fullPath = path.resolve(configPath);
-      const content = fs.readFileSync(fullPath, 'utf-8');
+      const content = await fs.promises.readFile(fullPath, 'utf-8');
       return JSON.parse(content) as SafeZoneConfig;
     } catch (error: any) {
       logError('SafeZoneValidator', `Failed to load config: ${error.message}`);
-      throw new Error(`SafeZoneValidator: Config load failed - ${error.message}`);
+      // Return default safe config to prevent crash
+      return {
+          version: "1.0",
+          description: "Fallback Config",
+          safe_zones: [],
+          blacklist: [],
+          audit: { enabled: false, log_path: "", retention_days: 0, log_denied_attempts: false, alert_on_suspicious_patterns: false, suspicious_patterns: [] },
+          rate_limiting: { enabled: false, max_operations_per_minute: 0, max_operations_per_hour: 0, burst_allowance: 0 },
+          security: { enforce_path_normalization: true, block_symlinks: true, verify_file_signatures: false, sandbox_mode: true }
+      };
     }
   }
 
   /**
    * Validate if a file operation is allowed
    */
-  validate(
+  async validate(
     targetPath: string,
     operation: 'read' | 'write' | 'delete' | 'execute' | 'append',
     metadata?: Record<string, any>
-  ): boolean {
+  ): Promise<boolean> {
+    if (!this.config) await this.initialize();
+    if (!this.config || this.zones.length === 0) return false;
+
     // Rate limiting check
     if (this.config.rate_limiting.enabled && !this.checkRateLimit()) {
-      this.audit('DENIED', targetPath, operation, 'Rate limit exceeded', undefined, metadata);
+      await this.audit('DENIED', targetPath, operation, 'Rate limit exceeded', undefined, metadata);
       return false;
     }
 
@@ -100,7 +127,7 @@ export class SafeZoneValidator {
         ? path.resolve(targetPath)
         : targetPath;
     } catch (error: any) {
-      this.audit('DENIED', targetPath, operation, 'Path normalization failed', undefined, metadata);
+      await this.audit('DENIED', targetPath, operation, 'Path normalization failed', undefined, metadata);
       return false;
     }
 
@@ -109,7 +136,7 @@ export class SafeZoneValidator {
       for (const pattern of this.config.audit.suspicious_patterns) {
         if (normalizedPath.includes(pattern)) {
           logWarn('SafeZoneValidator', `Suspicious pattern detected: ${pattern} in ${normalizedPath}`);
-          this.audit('DENIED', targetPath, operation, `Suspicious pattern: ${pattern}`, undefined, metadata);
+          await this.audit('DENIED', targetPath, operation, `Suspicious pattern: ${pattern}`, undefined, metadata);
           return false;
         }
       }
@@ -117,26 +144,26 @@ export class SafeZoneValidator {
 
     // Check blacklist
     if (this.isBlacklisted(normalizedPath)) {
-      this.audit('DENIED', targetPath, operation, 'Blacklisted file/pattern', undefined, metadata);
+      await this.audit('DENIED', targetPath, operation, 'Blacklisted file/pattern', undefined, metadata);
       return false;
     }
 
     // Check symlinks (if enabled)
-    if (this.config.security.block_symlinks && this.isSymlink(normalizedPath)) {
-      this.audit('DENIED', targetPath, operation, 'Symlinks are blocked', undefined, metadata);
+    if (this.config.security.block_symlinks && await this.isSymlink(normalizedPath)) {
+      await this.audit('DENIED', targetPath, operation, 'Symlinks are blocked', undefined, metadata);
       return false;
     }
 
     // Find matching safe zone
     const zone = this.findMatchingZone(normalizedPath);
     if (!zone) {
-      this.audit('DENIED', targetPath, operation, 'Outside Safe Zone boundaries', undefined, metadata);
+      await this.audit('DENIED', targetPath, operation, 'Outside Safe Zone boundaries', undefined, metadata);
       return false;
     }
 
     // Check permissions
     if (!zone.permissions.includes(operation)) {
-      this.audit('DENIED', targetPath, operation, `Permission denied in zone: ${zone.name}`, zone.name, metadata);
+      await this.audit('DENIED', targetPath, operation, `Permission denied in zone: ${zone.name}`, zone.name, metadata);
       return false;
     }
 
@@ -144,23 +171,28 @@ export class SafeZoneValidator {
     if (operation === 'write' || operation === 'append') {
       const ext = path.extname(normalizedPath).slice(1); // Remove leading dot
       if (zone.allowed_extensions.length > 0 && !zone.allowed_extensions.includes(ext)) {
-        this.audit('DENIED', targetPath, operation, `Extension .${ext} not allowed in zone`, zone.name, metadata);
+        await this.audit('DENIED', targetPath, operation, `Extension .${ext} not allowed in zone`, zone.name, metadata);
         return false;
       }
     }
 
     // Check file size (for write operations)
-    if ((operation === 'write' || operation === 'append') && fs.existsSync(normalizedPath)) {
-      const stats = fs.statSync(normalizedPath);
-      const sizeMB = stats.size / (1024 * 1024);
-      if (sizeMB > zone.max_file_size_mb) {
-        this.audit('DENIED', targetPath, operation, `File size ${sizeMB.toFixed(2)}MB exceeds limit ${zone.max_file_size_mb}MB`, zone.name, metadata);
-        return false;
-      }
+    if ((operation === 'write' || operation === 'append')) {
+        const fs = await import('fs');
+        try {
+            const stats = await fs.promises.stat(normalizedPath);
+            const sizeMB = stats.size / (1024 * 1024);
+            if (sizeMB > zone.max_file_size_mb) {
+                await this.audit('DENIED', targetPath, operation, `File size ${sizeMB.toFixed(2)}MB exceeds limit ${zone.max_file_size_mb}MB`, zone.name, metadata);
+                return false;
+            }
+        } catch {
+            // File doesn't exist yet, ignore size check
+        }
     }
 
     // All checks passed
-    this.audit('ALLOWED', targetPath, operation, `Operation permitted in ${zone.name}`, zone.name, metadata);
+    await this.audit('ALLOWED', targetPath, operation, `Operation permitted in ${zone.name}`, zone.name, metadata);
     return true;
   }
 
@@ -193,12 +225,17 @@ export class SafeZoneValidator {
   /**
    * Check if path is a symlink
    */
-  private isSymlink(targetPath: string): boolean {
+  private async isSymlink(targetPath: string): Promise<boolean> {
     try {
-      if (!fs.existsSync(targetPath)) {
-        return false;
+      const fs = await import('fs');
+      try {
+          // Use access to check existence first to avoid errors
+          await fs.promises.access(targetPath);
+      } catch {
+          return false;
       }
-      const stats = fs.lstatSync(targetPath);
+
+      const stats = await fs.promises.lstat(targetPath);
       return stats.isSymbolicLink();
     } catch {
       return false;
@@ -216,6 +253,8 @@ export class SafeZoneValidator {
    * Check rate limiting
    */
   private checkRateLimit(): boolean {
+    if (!this.config) return false;
+
     const key = 'global'; // Can be extended to per-user rate limiting
     const now = new Date();
     const counts = this.operationCounts.get(key) || { minute: 0, hour: 0, lastReset: now };
@@ -252,15 +291,15 @@ export class SafeZoneValidator {
   /**
    * Write audit entry to log
    */
-  private audit(
+  private async audit(
     verdict: 'ALLOWED' | 'DENIED',
     targetPath: string,
     operation: 'read' | 'write' | 'delete' | 'execute' | 'append',
     reason: string,
     zone?: string,
     metadata?: Record<string, any>
-  ): void {
-    if (!this.config.audit.enabled) {
+  ): Promise<void> {
+    if (!this.config || !this.config.audit.enabled) {
       return;
     }
 
@@ -280,16 +319,19 @@ export class SafeZoneValidator {
     };
 
     try {
+      const fs = await import('fs');
       const logPath = path.resolve(this.config.audit.log_path);
       const logDir = path.dirname(logPath);
 
       // Ensure log directory exists
-      if (!fs.existsSync(logDir)) {
-        fs.mkdirSync(logDir, { recursive: true });
+      try {
+          await fs.promises.access(logDir);
+      } catch {
+          await fs.promises.mkdir(logDir, { recursive: true });
       }
 
       // Append to audit log
-      fs.appendFileSync(logPath, JSON.stringify(entry) + '\n', 'utf-8');
+      await fs.promises.appendFile(logPath, JSON.stringify(entry) + '\n', 'utf-8');
 
       // Log to console for visibility
       if (verdict === 'DENIED') {
@@ -312,14 +354,19 @@ export class SafeZoneValidator {
   /**
    * Get audit log entries (last N entries)
    */
-  getAuditLog(limit: number = 100): AuditEntry[] {
+  async getAuditLog(limit: number = 100): Promise<AuditEntry[]> {
+    if (!this.config) return [];
     try {
+      const fs = await import('fs');
       const logPath = path.resolve(this.config.audit.log_path);
-      if (!fs.existsSync(logPath)) {
-        return [];
+
+      try {
+          await fs.promises.access(logPath);
+      } catch {
+          return [];
       }
 
-      const content = fs.readFileSync(logPath, 'utf-8');
+      const content = await fs.promises.readFile(logPath, 'utf-8');
       const lines = content.trim().split('\n').filter(l => l.length > 0);
 
       // Get last N lines
@@ -342,17 +389,22 @@ export class SafeZoneValidator {
   /**
    * Clean old audit log entries
    */
-  cleanAuditLog(): void {
+  async cleanAuditLog(): Promise<void> {
+    if (!this.config) return;
     try {
+      const fs = await import('fs');
       const logPath = path.resolve(this.config.audit.log_path);
-      if (!fs.existsSync(logPath)) {
-        return;
+
+      try {
+          await fs.promises.access(logPath);
+      } catch {
+          return;
       }
 
       const retentionMs = this.config.audit.retention_days * 24 * 60 * 60 * 1000;
       const cutoffDate = new Date(Date.now() - retentionMs);
 
-      const content = fs.readFileSync(logPath, 'utf-8');
+      const content = await fs.promises.readFile(logPath, 'utf-8');
       const lines = content.trim().split('\n').filter(l => l.length > 0);
 
       const filteredLines = lines.filter(line => {
@@ -364,7 +416,7 @@ export class SafeZoneValidator {
         }
       });
 
-      fs.writeFileSync(logPath, filteredLines.join('\n') + '\n', 'utf-8');
+      await fs.promises.writeFile(logPath, filteredLines.join('\n') + '\n', 'utf-8');
       logInfo('SafeZoneValidator', `Audit log cleaned: ${lines.length - filteredLines.length} old entries removed`);
     } catch (error: any) {
       logError('SafeZoneValidator', `Failed to clean audit log: ${error.message}`);

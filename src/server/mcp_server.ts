@@ -10,7 +10,7 @@ import {
 // import fs from 'fs';
 import path from 'path';
 // import { glob } from 'glob';
-import { getSafeZoneValidator } from '../security/safe_zone_validator.js';
+import { getSafeZoneValidator, SafeZoneValidator } from '../security/safe_zone_validator.js';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 
 /**
@@ -21,7 +21,7 @@ import { logInfo, logError, logWarn } from '../utils/logger.js';
  */
 export class MCPFilesystemServer {
   private server: Server;
-  private validator: ReturnType<typeof getSafeZoneValidator>;
+  public validator: SafeZoneValidator; // Public for testing
 
   constructor() {
     this.validator = getSafeZoneValidator();
@@ -175,7 +175,7 @@ export class MCPFilesystemServer {
     const fs = await import('fs');
 
     // Validate access
-    if (!this.validator.validate(filePath, 'read')) {
+    if (!await this.validator.validate(filePath, 'read')) {
       throw new Error(`Access denied: ${filePath} is outside Safe Zone or blacklisted`);
     }
 
@@ -228,7 +228,7 @@ export class MCPFilesystemServer {
     const fs = await import('fs');
 
     // Validate access
-    if (!this.validator.validate(filePath, 'write')) {
+    if (!await this.validator.validate(filePath, 'write')) {
       throw new Error(`Access denied: ${filePath} is outside Safe Zone or blacklisted`);
     }
 
@@ -279,7 +279,7 @@ export class MCPFilesystemServer {
     const fs = await import('fs');
 
     // Validate access (list operation is treated as read)
-    if (!this.validator.validate(dirPath, 'read')) {
+    if (!await this.validator.validate(dirPath, 'read')) {
       throw new Error(`Access denied: ${dirPath} is outside Safe Zone`);
     }
 
@@ -346,7 +346,7 @@ export class MCPFilesystemServer {
     const { glob } = await import('glob');
 
     // Validate directory access
-    if (!this.validator.validate(directory, 'read')) {
+    if (!await this.validator.validate(directory, 'read')) {
       throw new Error(`Access denied: ${directory} is outside Safe Zone`);
     }
 
@@ -361,10 +361,13 @@ export class MCPFilesystemServer {
       });
 
       // Validate each match is in Safe Zone
-      const validMatches = matches.filter(match => {
-        const fullPath = path.join(resolvedDir, match);
-        return this.validator.validate(fullPath, 'read');
-      });
+      const validMatches = [];
+      for (const match of matches) {
+          const fullPath = path.join(resolvedDir, match);
+          if (await this.validator.validate(fullPath, 'read')) {
+              validMatches.push(match);
+          }
+      }
 
       return {
         content: [

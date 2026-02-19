@@ -1,9 +1,8 @@
 import express from 'express';
 import { getBifrostGateway } from '../../core/bifrost_gateway.js';
-import { getSafeZoneValidator } from '../../security/safe_zone_validator.js';
+// Removed static import: import { getSafeZoneValidator } from '../../security/safe_zone_validator.js';
 import { getE2BSandboxManager } from '../../security/e2b_sandbox_manager.js';
 import { logInfo, logError } from '../../utils/logger.js';
-// Removed static import: import { MCPFilesystemServer } from '../mcp_server.js';
 
 /**
  * MCP API Routes
@@ -22,10 +21,10 @@ const router = express.Router();
 
 // Initialize services
 const bifrost = getBifrostGateway();
-const validator = getSafeZoneValidator();
 const e2bManager = getE2BSandboxManager();
 
 let mcpServerInstance: any = null;
+let validatorInstance: any = null;
 
 async function getMcpServer() {
   if (mcpServerInstance) return mcpServerInstance;
@@ -42,6 +41,25 @@ async function getMcpServer() {
   } else {
       throw new Error("MCP Filesystem Server is not available in this environment.");
   }
+}
+
+async function getValidator() {
+    if (validatorInstance) return validatorInstance;
+
+    if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+        try {
+            const { getSafeZoneValidator } = await import('../../security/safe_zone_validator.js');
+            validatorInstance = getSafeZoneValidator();
+            // Initialize config
+            await validatorInstance.initialize();
+            return validatorInstance;
+        } catch (error) {
+            logError('MCP API', `Failed to load SafeZoneValidator: ${error}`);
+            throw error;
+        }
+    } else {
+        throw new Error("SafeZoneValidator is not available in this environment.");
+    }
 }
 
 /**
@@ -109,18 +127,27 @@ router.post('/generate', async (req, res) => {
  */
 router.get('/tools', async (req, res) => {
   try {
-    const server = await getMcpServer();
-    const tools = server.getTools();
+    try {
+        const server = await getMcpServer();
+        const tools = server.getTools();
 
-    res.json({
-      success: true,
-      tools: tools.map((t: any) => ({
-        name: t.name,
-        description: t.description,
-        inputSchema: t.inputSchema
-      })),
-      count: tools.length
-    });
+        res.json({
+        success: true,
+        tools: tools.map((t: any) => ({
+            name: t.name,
+            description: t.description,
+            inputSchema: t.inputSchema
+        })),
+        count: tools.length
+        });
+    } catch {
+        // Return empty list if not available
+        res.json({
+            success: true,
+            tools: [],
+            count: 0
+        });
+    }
   } catch (e: unknown) {
     const error = e instanceof Error ? e.message : String(e);
     logError('MCP API', `GET /tools failed: ${error}`);
@@ -148,34 +175,44 @@ router.post('/tools/:toolName', async (req, res) => {
 
     logInfo('MCP API', `Tool execution: ${toolName} with args: ${JSON.stringify(args).slice(0, 100)}`);
 
-    const server = await getMcpServer();
+    try {
+        const server = await getMcpServer();
 
-    // Route to appropriate handler
-    let result;
-    switch (toolName) {
-      case 'read_file':
-        result = await server.handleReadFile(args);
-        break;
-      case 'write_file':
-        result = await server.handleWriteFile(args);
-        break;
-      case 'list_directory':
-        result = await server.handleListDirectory(args);
-        break;
-      case 'search_files':
-        result = await server.handleSearchFiles(args);
-        break;
-      default:
-        return res.status(404).json({
-          success: false,
-          error: `Tool not found: ${toolName}`
-        });
+        // Route to appropriate handler
+        let result;
+        switch (toolName) {
+        case 'read_file':
+            result = await server.handleReadFile(args);
+            break;
+        case 'write_file':
+            result = await server.handleWriteFile(args);
+            break;
+        case 'list_directory':
+            result = await server.handleListDirectory(args);
+            break;
+        case 'search_files':
+            result = await server.handleSearchFiles(args);
+            break;
+        default:
+            return res.status(404).json({
+            success: false,
+            error: `Tool not found: ${toolName}`
+            });
+        }
+
+        // Parse result content
+        const parsed = JSON.parse(result.content[0].text);
+
+        res.json(parsed);
+    } catch (e: any) {
+        if (e.message.includes("not available")) {
+             return res.status(501).json({
+                success: false,
+                error: "MCP Filesystem Server not available in this environment"
+            });
+        }
+        throw e;
     }
-
-    // Parse result content
-    const parsed = JSON.parse(result.content[0].text);
-
-    res.json(parsed);
   } catch (e: unknown) {
     const error = e instanceof Error ? e.message : String(e);
     logError('MCP API', `POST /tools/${req.params.toolName} failed: ${error}`);
@@ -189,16 +226,26 @@ router.post('/tools/:toolName', async (req, res) => {
  *
  * Query: ?limit=50
  */
-router.get('/audit', (req, res) => {
+router.get('/audit', async (req, res) => {
   try {
     const limit = parseInt(req.query.limit as string) || 50;
-    const auditLog = validator.getAuditLog(limit);
+    try {
+        const validator = await getValidator();
+        const auditLog = await validator.getAuditLog(limit);
 
-    res.json({
-      success: true,
-      audit_log: auditLog,
-      count: auditLog.length
-    });
+        res.json({
+        success: true,
+        audit_log: auditLog,
+        count: auditLog.length
+        });
+    } catch {
+        res.json({
+            success: true,
+            audit_log: [],
+            count: 0,
+            note: "Audit log unavailable"
+        });
+    }
   } catch (e: unknown) {
     const error = e instanceof Error ? e.message : String(e);
     logError('MCP API', `GET /audit failed: ${error}`);
@@ -210,22 +257,39 @@ router.get('/audit', (req, res) => {
  * GET /api/mcp/safezones
  * List Safe Zone configurations
  */
-router.get('/safezones', (req, res) => {
+router.get('/safezones', async (req, res) => {
   try {
-    const config = (validator as any).config;
+    try {
+        const validator = await getValidator();
+        // Access config via getter or public property if available, but validator structure changed
+        // We'll expose a method or access config property if possible
+        const config = (validator as any).config; // Assuming config is accessible or we add a getter
 
-    res.json({
-      success: true,
-      safe_zones: config.safe_zones.map((zone: any) => ({
-        name: zone.name,
-        path: zone.path,
-        permissions: zone.permissions,
-        max_file_size_mb: zone.max_file_size_mb,
-        allowed_extensions: zone.allowed_extensions
-      })),
-      blacklist: config.blacklist,
-      rate_limiting: config.rate_limiting
-    });
+        if (!config) {
+             throw new Error("Config not loaded");
+        }
+
+        res.json({
+        success: true,
+        safe_zones: config.safe_zones.map((zone: any) => ({
+            name: zone.name,
+            path: zone.path,
+            permissions: zone.permissions,
+            max_file_size_mb: zone.max_file_size_mb,
+            allowed_extensions: zone.allowed_extensions
+        })),
+        blacklist: config.blacklist,
+        rate_limiting: config.rate_limiting
+        });
+    } catch {
+        res.json({
+            success: true,
+            safe_zones: [],
+            blacklist: [],
+            rate_limiting: {},
+            note: "Safe Zone config unavailable"
+        });
+    }
   } catch (e: unknown) {
     const error = e instanceof Error ? e.message : String(e);
     logError('MCP API', `GET /safezones failed: ${error}`);
