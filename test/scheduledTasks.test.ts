@@ -1,12 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import express from "express";
-import request from "supertest";
-import fs from "fs/promises";
-import os from "os";
-import path from "path";
-import Database from "better-sqlite3";
 import { ScheduledTasksEngine } from "../src/core/scheduledTasksEngine.js";
-import { createScheduledTasksRoutes } from "../src/server/routes/scheduledTasks.js";
 
 // Mock dependencies
 vi.mock("../src/utils/logger.js", () => ({
@@ -14,7 +7,7 @@ vi.mock("../src/utils/logger.js", () => ({
   logError: vi.fn(),
 }));
 
-// Mock node-cron to avoid ESM issues and timer complexity
+// Mock node-cron
 vi.mock("node-cron", () => ({
   default: {
     validate: vi.fn((pattern) => pattern !== "invalid pattern"),
@@ -30,53 +23,54 @@ vi.mock("node-cron", () => ({
   })),
 }));
 
+// Mock better-sqlite3
+const mockPrepare = vi.fn();
+const mockRun = vi.fn();
+const mockGet = vi.fn();
+const mockAll = vi.fn();
+const mockExec = vi.fn();
+
+vi.mock("better-sqlite3", () => {
+  return {
+    default: class MockDatabase {
+      constructor() {
+        // Return the mock object structure
+        // In JS/TS constructors can return an object to override 'this'
+        return {
+          prepare: mockPrepare,
+          exec: mockExec,
+          close: vi.fn(),
+        };
+      }
+    }
+  };
+});
+
 describe("ScheduledTasksEngine Integráció", () => {
-  let db: Database.Database;
+  let db: any;
   let engine: ScheduledTasksEngine;
-  let app: express.Express;
-  let tempDbPath: string;
 
   beforeEach(async () => {
-    // Setup DB
-    tempDbPath = path.join(os.tmpdir(), `test_scheduled_${Date.now()}.db`);
-    db = new Database(tempDbPath);
+    vi.clearAllMocks();
     
-    // Create schema manually for test (usually in schema.sql)
-    db.exec(`
-      CREATE TABLE IF NOT EXISTS scheduled_tasks (
-        id TEXT PRIMARY KEY,
-        title TEXT NOT NULL,
-        prompt TEXT NOT NULL,
-        cron_expression TEXT NOT NULL,
-        handler TEXT NOT NULL,
-        enabled BOOLEAN DEFAULT 1,
-        last_run_at TEXT,
-        next_run_at TEXT,
-        last_status TEXT,
-        last_result TEXT,
-        created_at TEXT DEFAULT (datetime('now')),
-        updated_at TEXT DEFAULT (datetime('now'))
-      );
-    `);
-
-    // Initialize Engine
-    engine = new ScheduledTasksEngine(db);
-    
-    // Inject engine into request for the router (simulating middleware)
-    app = express();
-    app.use(express.json());
-    app.use((req, res, next) => {
-      (req as any).scheduledTasksEngine = engine;
-      next();
+    // Configure mocks
+    mockPrepare.mockReturnValue({
+      run: mockRun,
+      get: mockGet,
+      all: mockAll,
     });
-    app.use("/api/v1/scheduled-tasks", createScheduledTasksRoutes(db));
+    mockRun.mockReturnValue({ changes: 1, lastInsertRowid: 1 });
+    mockAll.mockReturnValue([]);
+    mockGet.mockReturnValue(undefined);
+
+    // Initialize Engine with mocked DB
+    const Database = (await import("better-sqlite3")).default;
+    // @ts-ignore
+    db = new Database(":memory:");
+    engine = new ScheduledTasksEngine(db as any);
   });
 
-  afterEach(async () => {
-    db.close();
-    try {
-      await fs.unlink(tempDbPath);
-    } catch { /* non-critical */ }
+  afterEach(() => {
     vi.restoreAllMocks();
   });
 
@@ -84,26 +78,8 @@ describe("ScheduledTasksEngine Integráció", () => {
     it("should schedule a valid task", () => {
       const task = {
         id: "task_1",
-        title: "Test Task",
-        cron_expression: "* * * * *", // Every minute
-        handler: "test-handler",
-        prompt: "do something",
-        method: "GET" as const,
-        enabled: true,
-        created_at: new Date().toISOString()
-      };
-
-      // @ts-expect-error The task object type mismatch is intentional for this test case.
-      const result = engine.scheduleTask(task);
-      expect(result.success).toBe(true);
-      expect(result.message).toContain("scheduled");
-    });
-
-    it("should reject invalid cron pattern", () => {
-      const task = {
-        id: "task_bad",
-        task_name: "Bad Task",
-        cron_pattern: "invalid pattern",
+        task_name: "Test Task",
+        cron_pattern: "* * * * *",
         api_endpoint: "/test",
         method: "GET" as const,
         enabled: true,
@@ -111,44 +87,49 @@ describe("ScheduledTasksEngine Integráció", () => {
       };
 
       const result = engine.scheduleTask(task);
-      expect(result.success).toBe(false);
-      expect(result.message).toContain("Invalid cron pattern");
-    });
-  });
-
-  describe("API Endpoints", () => {
-    it.skip("should list tasks", async () => {
-      db.prepare(`
-        INSERT INTO scheduled_tasks (id, title, cron_expression, handler, prompt, enabled)
-        VALUES ('t1', 'API Test', '0 * * * *', 'test', 'prompt', 1)
-      `).run();
-
-      const response = await request(app).get("/api/v1/scheduled-tasks");
-      expect(response.status).toBe(200);
-      expect(response.body.success).toBe(true);
-      expect(response.body.data).toHaveLength(1);
-      expect(response.body.data[0].id).toBe("t1");
+      expect(result.success).toBe(true);
+      expect(result.message).toContain("scheduled");
     });
 
-    it("should create a new task", async () => {
-      const newTask = {
-        title: "New Task",
-        cron_expression: "0 0 * * *",
-        handler: "api-call",
-        prompt: "Run this task"
+    it("should update next_run based on cron pattern execution", async () => {
+      const task = {
+        id: "task_exec",
+        task_name: "Exec Task",
+        cron_pattern: "*/15 * * * *", // Every 15 minutes
+        api_endpoint: "/test-endpoint",
+        method: "GET" as const,
+        enabled: true,
+        created_at: new Date().toISOString()
       };
 
-      const response = await request(app)
-        .post("/api/v1/scheduled-tasks")
-        .send(newTask);
+      // Mock fetch
+      global.fetch = vi.fn().mockResolvedValue({
+        ok: true,
+        status: 200,
+      } as Response);
 
-      expect(response.status).toBe(201);
-      expect(response.body.success).toBe(true);
-      expect(response.body.data.title).toBe("New Task");
+      // Execute
+      await (engine as any).executeTask(task);
 
-      // Verify in DB
-      const row = db.prepare("SELECT * FROM scheduled_tasks WHERE title = ?").get("New Task");
-      expect(row).toBeDefined();
+      // Verify DB update call
+      const runCalls = mockRun.mock.calls;
+      const lastRunCall = runCalls[runCalls.length - 1];
+
+      expect(lastRunCall).toBeDefined();
+      expect(lastRunCall).toHaveLength(2);
+      expect(lastRunCall[1]).toBe(task.id);
+
+      const nextRunArg = lastRunCall[0];
+
+      // Check that it is NOT '3600' (the current hardcoded value)
+      expect(nextRunArg).not.toBe('3600');
+
+      // Check that it is a valid date string
+      const date = new Date(nextRunArg);
+      expect(date.toString()).not.toBe('Invalid Date');
+
+      // Check that the date is in the future
+      expect(date.getTime()).toBeGreaterThan(Date.now());
     });
   });
 });

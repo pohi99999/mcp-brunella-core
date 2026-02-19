@@ -1,4 +1,5 @@
 import * as cron from 'node-cron';
+import * as cronParser from 'cron-parser';
 import Database from 'better-sqlite3';
 import { logInfo, logError } from '../utils/logger.js';
 
@@ -85,13 +86,35 @@ export class ScheduledTasksEngine {
       const response = await fetch(url, options);
       const status = response.ok ? 'success' : 'failed';
 
-      // Update last_run in DB
-      this.db.prepare(`
-        UPDATE scheduled_tasks 
-        SET last_run = datetime('now'),
-            next_run = datetime(datetime('now'), '+' || ? || 's')
-        WHERE id = ?
-      `).run('3600', record.id); // TODO: Calculate actual next run from cron
+      // Calculate actual next run from cron
+      let nextRun = '';
+      try {
+        // Use CronExpressionParser from namespace import to handle ESM/CJS interop.
+        // In this environment, cron-parser v5 exports CronExpressionParser which has a static parse method.
+        const interval = cronParser.CronExpressionParser.parse(record.cron_pattern);
+        nextRun = interval.next().toDate().toISOString();
+      } catch (cronError) {
+        logError('ScheduledTasksEngine', `Failed to calculate next run for ${record.task_name}: ${cronError}`);
+      }
+
+      if (nextRun) {
+        // Update last_run in DB
+        this.db.prepare(`
+          UPDATE scheduled_tasks
+          SET last_run = datetime('now'),
+              next_run = datetime(?)
+          WHERE id = ?
+        `).run(nextRun, record.id);
+      } else {
+        // Fallback: If calculation failed, add 1 hour to avoid infinite loop
+        // Uses previous hardcoded logic as safe default
+         this.db.prepare(`
+          UPDATE scheduled_tasks
+          SET last_run = datetime('now'),
+              next_run = datetime(datetime('now'), '+3600s')
+          WHERE id = ?
+        `).run(record.id);
+      }
 
       logInfo('ScheduledTasksEngine', `Task executed: ${record.task_name} → ${status} (${response.status})`);
     } catch (error) {
