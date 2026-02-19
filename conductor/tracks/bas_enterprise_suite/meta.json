@@ -4,7 +4,7 @@
   "description": "14 core + 4 advanced business automation modules covering HR, Finance, Sales, Logistics, Market Intelligence with full BAS integration",
   "status": "active",
   "priority": "high",
-  "progress": 5,
+  "progress": 20,
   "tags": ["enterprise", "automation", "multi-agent", "business-intelligence", "erp"],
   "estimatedEffort": "80-120 hours",
   "dependencies": [
