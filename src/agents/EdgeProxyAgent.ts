@@ -95,8 +95,25 @@ export class EdgeProxyAgent extends BaseAgent {
   async initialize(): Promise<void> {
     logInfo(this.name, `Inicializálás: ${this.config.workerUrl}`);
 
-    // Adatbázis inicializálás
-    this.initDb();
+    // Adatbázis séma inicializálás (ha még nincs meg a tábla)
+    try {
+      const db = getGlobalDb();
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS edge_tasks (
+          taskId TEXT PRIMARY KEY,
+          type TEXT,
+          status TEXT,
+          payload TEXT,
+          result TEXT,
+          createdAt TEXT,
+          completedAt TEXT,
+          syncedAt TEXT DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_edge_tasks_status ON edge_tasks(status);
+      `);
+    } catch (error) {
+      logError(this.name, `Adatbázis hiba: ${error}`);
+    }
 
     // Kezdeti health check
     await this.checkHealth();
@@ -162,30 +179,6 @@ export class EdgeProxyAgent extends BaseAgent {
   // --------------------------------------------------------------------------
   // CORE FUNCTIONS
   // --------------------------------------------------------------------------
-
-  /**
-   * Initialize local database table for edge tasks
-   */
-  private initDb(): void {
-    try {
-      const db = getGlobalDb();
-      db.exec(`
-        CREATE TABLE IF NOT EXISTS edge_tasks (
-          taskId TEXT PRIMARY KEY,
-          type TEXT,
-          status TEXT,
-          payload TEXT,
-          result TEXT,
-          createdAt TEXT,
-          completedAt TEXT,
-          syncedAt TEXT DEFAULT (datetime('now'))
-        );
-        CREATE INDEX IF NOT EXISTS idx_edge_tasks_status ON edge_tasks(status);
-      `);
-    } catch (error) {
-      logError(this.name, `Adatbázis hiba: ${error}`);
-    }
-  }
 
   /**
    * Edge health check
