@@ -89,7 +89,8 @@
       "Bash(python3:*)",
       "Bash(cmd /c:*)",
       "Bash(npx tsc)",
-      "Bash(npm run)"
+      "Bash(npm run)",
+      "Bash(npx tsc:*)"
     ]
   },
   "enableAllProjectMcpServers": true,

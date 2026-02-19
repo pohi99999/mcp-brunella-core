@@ -121,10 +121,9 @@ export const FleetOverview: React.FC<FleetOverviewProps> = ({ fleetId }) => {
                   <span>Cluster Health</span>
                   <span className={errorRate < 1 ? "text-emerald-500" : "text-amber-500"}>Optimal</span>
                 </div>
-                <Progress 
-                  value={100 - errorRate} 
-                  className="h-1 bg-white/5" 
-                  indicatorClassName={cn("transition-all duration-1000", getHealthColor(errorRate))} 
+                <Progress
+                  value={100 - errorRate}
+                  className="h-1 bg-white/5"
                 />
               </div>
 
