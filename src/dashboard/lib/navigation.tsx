@@ -29,6 +29,7 @@ import { InventoryCatalog } from "@/components/dashboard/InventoryCatalog";
 import { TestResultsWidget } from "@/components/dashboard/TestResultsWidget";
 import { EmbeddedWorkflow } from "@/components/dashboard/EmbeddedWorkflow";
 import { PythonWorkersPanel } from "@/components/dashboard/PythonWorkersPanel";
+import { logInfo } from "@/utils/logger";
 
 export interface NavItem {
   id: string;
@@ -71,7 +72,7 @@ class NavigationRegistry {
 export const navigationRegistry = new NavigationRegistry();
 
 export function initializeNavigation() {
-  console.log("Initializing Navigation Registry...");
+  logInfo("NavigationRegistry", "Initializing Navigation Registry...");
 
   // Register all items
   const items: NavItem[] = [
@@ -110,5 +111,5 @@ export function initializeNavigation() {
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] });
   navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "inventory", "files", "settings", "n8n", "langflow"] });
 
-  console.log("Navigation Registry Initialized.");
+  logInfo("NavigationRegistry", "Navigation Registry Initialized.");
 }
