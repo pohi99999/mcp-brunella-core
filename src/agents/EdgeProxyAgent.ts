@@ -13,6 +13,8 @@
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { getGlobalDb } from '../utils/globalDb.js';
+import type { Database } from 'better-sqlite3';
 
 // ============================================================================
 // INTERFACES
@@ -93,6 +95,9 @@ export class EdgeProxyAgent extends BaseAgent {
   async initialize(): Promise<void> {
     logInfo(this.name, `Inicializálás: ${this.config.workerUrl}`);
 
+    // Adatbázis inicializálás
+    this.initDb();
+
     // Kezdeti health check
     await this.checkHealth();
 
@@ -157,6 +162,30 @@ export class EdgeProxyAgent extends BaseAgent {
   // --------------------------------------------------------------------------
   // CORE FUNCTIONS
   // --------------------------------------------------------------------------
+
+  /**
+   * Initialize local database table for edge tasks
+   */
+  private initDb(): void {
+    try {
+      const db = getGlobalDb();
+      db.exec(`
+        CREATE TABLE IF NOT EXISTS edge_tasks (
+          taskId TEXT PRIMARY KEY,
+          type TEXT,
+          status TEXT,
+          payload TEXT,
+          result TEXT,
+          createdAt TEXT,
+          completedAt TEXT,
+          syncedAt TEXT DEFAULT (datetime('now'))
+        );
+        CREATE INDEX IF NOT EXISTS idx_edge_tasks_status ON edge_tasks(status);
+      `);
+    } catch (error) {
+      logError(this.name, `Adatbázis hiba: ${error}`);
+    }
+  }
 
   /**
    * Edge health check
@@ -343,13 +372,93 @@ export class EdgeProxyAgent extends BaseAgent {
       };
     }
 
-    // TODO: Implementálni a KV ↔ SQLite szinkronizációt
+    try {
+      const db = getGlobalDb();
 
-    return {
-      success: true,
-      message: 'Szinkronizálás befejezve',
-      data: { health: this.health }
-    };
+      // 1. Fetch history from Edge
+      const response = await fetch(`${this.config.workerUrl}/history`, {
+        method: 'GET',
+        headers: this.getHeaders(),
+        signal: AbortSignal.timeout(30000)
+      });
+
+      if (!response.ok) {
+        throw new Error(`History fetch failed: ${response.status}`);
+      }
+
+      const tasks = await response.json() as EdgeTask[];
+
+      // 2. Upsert fetched tasks to local DB
+      const insert = db.prepare(`
+        INSERT INTO edge_tasks (taskId, type, status, payload, result, createdAt, completedAt, syncedAt)
+        VALUES (@taskId, @type, @status, @payload, @result, @createdAt, @completedAt, datetime('now'))
+        ON CONFLICT(taskId) DO UPDATE SET
+          status = excluded.status,
+          result = excluded.result,
+          completedAt = excluded.completedAt,
+          syncedAt = datetime('now')
+      `);
+
+      const transaction = db.transaction((taskList: EdgeTask[]) => {
+        for (const task of taskList) {
+          insert.run({
+            taskId: task.taskId,
+            type: task.type || 'unknown',
+            status: task.status,
+            payload: JSON.stringify(task.payload),
+            result: JSON.stringify(task.result),
+            createdAt: task.createdAt,
+            completedAt: task.completedAt || null
+          });
+        }
+      });
+
+      transaction(tasks);
+      logInfo(this.name, `${tasks.length} task szinkronizálva az edge-ről`);
+
+      // 3. Check for pending tasks locally and poll for updates
+      const pendingTasks = db.prepare("SELECT taskId FROM edge_tasks WHERE status = 'pending'").all() as { taskId: string }[];
+
+      let updatedCount = 0;
+      for (const pending of pendingTasks) {
+        const currentStatus = await this.getTaskStatus(pending.taskId);
+
+        if (currentStatus && currentStatus.status !== 'pending') {
+          insert.run({
+            taskId: currentStatus.taskId,
+            type: currentStatus.type || 'unknown',
+            status: currentStatus.status,
+            payload: JSON.stringify(currentStatus.payload),
+            result: JSON.stringify(currentStatus.result),
+            createdAt: currentStatus.createdAt,
+            completedAt: currentStatus.completedAt || null
+          });
+          updatedCount++;
+        }
+      }
+
+      if (updatedCount > 0) {
+        logInfo(this.name, `${updatedCount} pending task frissítve`);
+      }
+
+      return {
+        success: true,
+        message: 'Szinkronizálás befejezve',
+        data: {
+          health: this.health,
+          syncedCount: tasks.length,
+          updatedPendingCount: updatedCount
+        }
+      };
+
+    } catch (error) {
+      logError(this.name, `Szinkronizációs hiba: ${error}`);
+      return {
+        success: false,
+        message: `Szinkronizációs hiba: ${error}`,
+        data: { error: String(error) }
+      };
+    }
   }
 
   /**
