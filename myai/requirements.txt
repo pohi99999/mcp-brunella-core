@@ -21,3 +21,13 @@ pypdf
 pymupdf
 tiktoken
 google-generativeai>=0.7.0
+
+# OCR Workers
+pytesseract>=0.3.10
+Pillow>=10.0.0
+paddleocr>=2.7.0
+easyocr>=1.7.0
+
+# LanceDB Batch & Embeddings
+sentence-transformers>=2.2.0
+pyarrow>=12.0.0
