@@ -1,7 +1,7 @@
 import React from "react";
-import { 
-  LayoutDashboard, Network, Rocket, Cloud, Cpu, MessageSquare, 
-  Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2, 
+import {
+  LayoutDashboard, Network, Rocket, Cloud, Cpu, MessageSquare,
+  Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
   Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow
 } from "lucide-react";
 
@@ -28,6 +28,7 @@ import { MCPCommandCenter } from "@/components/dashboard/MCPCommandCenter";
 import { InventoryCatalog } from "@/components/dashboard/InventoryCatalog";
 import { TestResultsWidget } from "@/components/dashboard/TestResultsWidget";
 import { EmbeddedWorkflow } from "@/components/dashboard/EmbeddedWorkflow";
+import { PythonWorkersPanel } from "@/components/dashboard/PythonWorkersPanel";
 
 export interface NavItem {
   id: string;
@@ -71,7 +72,7 @@ export const navigationRegistry = new NavigationRegistry();
 
 export function initializeNavigation() {
   console.log("Initializing Navigation Registry...");
-  
+
   // Register all items
   const items: NavItem[] = [
     { id: "dashboard", label: "Mission Control", icon: LayoutDashboard, component: null },
@@ -92,6 +93,7 @@ export function initializeNavigation() {
     { id: "tests", label: "Precision Tests", icon: Gauge, component: <TestResultsWidget /> },
     { id: "robotkez", label: "Robotkéz", icon: Activity, component: <RobotkezV2Chat /> },
     { id: "tasks", label: "Task Queue", icon: History, component: <TaskQueueMonitor /> },
+    { id: "python-workers", label: "Python Workers", icon: Cpu, component: <PythonWorkersPanel /> },
     { id: "inventory", label: "Assets", icon: Box, component: <InventoryCatalog /> },
     { id: "files", label: "Filesystem", icon: FolderOpen, component: <FileExplorer /> },
     { id: "settings", label: "System Config", icon: Settings, component: <SettingsPanel /> },
@@ -106,7 +108,7 @@ export function initializeNavigation() {
   navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez"] });
   navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "tasks"] });
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] });
-  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["inventory", "files", "settings", "n8n", "langflow"] });
+  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "inventory", "files", "settings", "n8n", "langflow"] });
 
   console.log("Navigation Registry Initialized.");
 }
