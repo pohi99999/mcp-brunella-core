@@ -6,9 +6,10 @@ import {
   Tool,
   TextContent
 } from '@modelcontextprotocol/sdk/types.js';
-import fs from 'fs';
+// Removed static fs/glob imports
+// import fs from 'fs';
 import path from 'path';
-import { glob } from 'glob';
+// import { glob } from 'glob';
 import { getSafeZoneValidator } from '../security/safe_zone_validator.js';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 
@@ -171,6 +172,7 @@ export class MCPFilesystemServer {
    */
   private async handleReadFile(args: any): Promise<any> {
     const filePath = args.path as string;
+    const fs = await import('fs');
 
     // Validate access
     if (!this.validator.validate(filePath, 'read')) {
@@ -223,6 +225,7 @@ export class MCPFilesystemServer {
     const filePath = args.path as string;
     const content = args.content as string;
     const createDirs = args.create_dirs !== false; // Default true
+    const fs = await import('fs');
 
     // Validate access
     if (!this.validator.validate(filePath, 'write')) {
@@ -273,6 +276,7 @@ export class MCPFilesystemServer {
   private async handleListDirectory(args: any): Promise<any> {
     const dirPath = args.path as string;
     const includeHidden = args.include_hidden === true;
+    const fs = await import('fs');
 
     // Validate access (list operation is treated as read)
     if (!this.validator.validate(dirPath, 'read')) {
@@ -339,6 +343,7 @@ export class MCPFilesystemServer {
   private async handleSearchFiles(args: any): Promise<any> {
     const pattern = args.pattern as string;
     const directory = args.directory || process.cwd();
+    const { glob } = await import('glob');
 
     // Validate directory access
     if (!this.validator.validate(directory, 'read')) {

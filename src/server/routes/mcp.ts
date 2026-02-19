@@ -3,7 +3,7 @@ import { getBifrostGateway } from '../../core/bifrost_gateway.js';
 import { getSafeZoneValidator } from '../../security/safe_zone_validator.js';
 import { getE2BSandboxManager } from '../../security/e2b_sandbox_manager.js';
 import { logInfo, logError } from '../../utils/logger.js';
-import { MCPFilesystemServer } from '../mcp_server.js';
+// Removed static import: import { MCPFilesystemServer } from '../mcp_server.js';
 
 /**
  * MCP API Routes
@@ -24,7 +24,25 @@ const router = express.Router();
 const bifrost = getBifrostGateway();
 const validator = getSafeZoneValidator();
 const e2bManager = getE2BSandboxManager();
-const mcpServer = new MCPFilesystemServer();
+
+let mcpServerInstance: any = null;
+
+async function getMcpServer() {
+  if (mcpServerInstance) return mcpServerInstance;
+
+  if (typeof process !== 'undefined' && process.versions && process.versions.node) {
+      try {
+        const { MCPFilesystemServer } = await import('../mcp_server.js');
+        mcpServerInstance = new MCPFilesystemServer();
+        return mcpServerInstance;
+      } catch (error) {
+        logError('MCP API', `Failed to load MCPFilesystemServer: ${error}`);
+        throw error;
+      }
+  } else {
+      throw new Error("MCP Filesystem Server is not available in this environment.");
+  }
+}
 
 /**
  * GET /api/mcp/providers
@@ -89,9 +107,10 @@ router.post('/generate', async (req, res) => {
  * GET /api/mcp/tools
  * List all MCP filesystem tools
  */
-router.get('/tools', (req, res) => {
+router.get('/tools', async (req, res) => {
   try {
-    const tools = (mcpServer as any).getTools();
+    const server = await getMcpServer();
+    const tools = server.getTools();
 
     res.json({
       success: true,
@@ -129,20 +148,22 @@ router.post('/tools/:toolName', async (req, res) => {
 
     logInfo('MCP API', `Tool execution: ${toolName} with args: ${JSON.stringify(args).slice(0, 100)}`);
 
+    const server = await getMcpServer();
+
     // Route to appropriate handler
     let result;
     switch (toolName) {
       case 'read_file':
-        result = await (mcpServer as any).handleReadFile(args);
+        result = await server.handleReadFile(args);
         break;
       case 'write_file':
-        result = await (mcpServer as any).handleWriteFile(args);
+        result = await server.handleWriteFile(args);
         break;
       case 'list_directory':
-        result = await (mcpServer as any).handleListDirectory(args);
+        result = await server.handleListDirectory(args);
         break;
       case 'search_files':
-        result = await (mcpServer as any).handleSearchFiles(args);
+        result = await server.handleSearchFiles(args);
         break;
       default:
         return res.status(404).json({
