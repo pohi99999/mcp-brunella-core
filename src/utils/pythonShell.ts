@@ -1,5 +1,4 @@
 import path from "path";
-import fs from "fs/promises";
 import { config } from "../config/index.js";
 import { resolvePythonPath } from "./pythonUtils.js";
 
@@ -84,6 +83,8 @@ export class PythonShell {
     }
 
     const { exec } = await import("child_process");
+    const fs = (await import("fs")).promises;
+
     const root = config.workspaceRoot.replace(/\\/g, "/");
     const tempIn = path.join(config.systemLogDir, `py_in_${Date.now()}.json`);
     const tempPy = path.join(config.systemLogDir, `py_run_${Date.now()}.py`);
