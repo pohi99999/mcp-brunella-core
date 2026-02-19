@@ -65,7 +65,7 @@ describe("ScheduledTasksEngine Integráció", () => {
 
     // Initialize Engine with mocked DB
     const Database = (await import("better-sqlite3")).default;
-    // @ts-ignore
+    // @ts-expect-error
     db = new Database(":memory:");
     engine = new ScheduledTasksEngine(db as any);
   });

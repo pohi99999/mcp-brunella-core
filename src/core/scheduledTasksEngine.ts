@@ -1,5 +1,4 @@
 import * as cron from 'node-cron';
-import * as cronParser from 'cron-parser';
 import Database from 'better-sqlite3';
 import { logInfo, logError } from '../utils/logger.js';
 
@@ -89,10 +88,31 @@ export class ScheduledTasksEngine {
       // Calculate actual next run from cron
       let nextRun = '';
       try {
-        // Use CronExpressionParser from namespace import to handle ESM/CJS interop.
-        // In this environment, cron-parser v5 exports CronExpressionParser which has a static parse method.
-        const interval = cronParser.CronExpressionParser.parse(record.cron_pattern);
-        nextRun = interval.next().toDate().toISOString();
+        // Use dynamic import to avoid static import issues in non-Node environments (e.g. Workers build)
+        const cronParser = await import('cron-parser');
+        // Handle cron-parser v5 exports which might be wrapped or namespaced differently
+        // In v5 CJS, default export is CronExpressionParser class which has static 'parse'
+        const parser = cronParser.default;
+
+        let interval;
+        if (parser && typeof parser.parse === 'function') {
+            interval = parser.parse(record.cron_pattern);
+        } else if (cronParser.parseExpression) {
+            // Check named export
+            interval = cronParser.parseExpression(record.cron_pattern);
+        } else if ((cronParser as any).CronExpressionParser && typeof (cronParser as any).CronExpressionParser.parse === 'function') {
+            // Check nested named export
+            interval = (cronParser as any).CronExpressionParser.parse(record.cron_pattern);
+        }
+
+        if (interval) {
+             nextRun = interval.next().toDate().toISOString();
+        } else {
+             // If we can't parse, it might be that imports failed or structure is weird.
+             // We fallback gracefully.
+             logError('ScheduledTasksEngine', 'Could not resolve cron-parser method');
+        }
+
       } catch (cronError) {
         logError('ScheduledTasksEngine', `Failed to calculate next run for ${record.task_name}: ${cronError}`);
       }
@@ -107,7 +127,6 @@ export class ScheduledTasksEngine {
         `).run(nextRun, record.id);
       } else {
         // Fallback: If calculation failed, add 1 hour to avoid infinite loop
-        // Uses previous hardcoded logic as safe default
          this.db.prepare(`
           UPDATE scheduled_tasks
           SET last_run = datetime('now'),
