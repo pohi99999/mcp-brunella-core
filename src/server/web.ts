@@ -73,6 +73,7 @@ import githubWebhookRouter from "./routes/githubWebhook.js";
 import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
 import { createEnterpriseRouter } from "./routes/enterprise.js";
 import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
+import { fastApiService } from "../services/fastApiService.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -446,7 +447,8 @@ export async function startWebServer() {
 
   heartbeatMonitor.onFailure("fastapi", async (health) => {
     logError("Phoenix", `FastAPI service failed: ${health.error}`);
-    // TODO: Implement silent restart logic (Phase 2)
+    logInfo("Phoenix", "Triggering FastAPI silent restart...");
+    await fastApiService.restart();
   });
 
   logInfo("Server", "Phoenix Heartbeat Monitor active (5s interval)");

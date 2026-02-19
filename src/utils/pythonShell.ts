@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 import { config } from "../config/index.js";
+import { resolvePythonPath } from "./pythonUtils.js";
 
 export class PythonShell {
   private scriptPath: string;
@@ -10,11 +11,6 @@ export class PythonShell {
 
   constructor(scriptRelativePath: string) {
     this.scriptPath = path.resolve(config.workspaceRoot, scriptRelativePath);
-    const venvRel =
-      process.platform === "win32"
-        ? ".venv/Scripts/python.exe"
-        : ".venv/bin/python";
-    const candidatePath = path.resolve(config.workspaceRoot, venvRel);
     this.apiUrl =
       process.env.BRUNELLA_PYTHON_API_URL ?? "http://127.0.0.1:8000";
     this.useApi = this.apiUrl !== "" && this.apiUrl !== "disabled";
@@ -23,17 +19,9 @@ export class PythonShell {
 
     // Validate python path for legacy fallback - ONLY in Node environment
     if (typeof process !== 'undefined' && process.versions?.node) {
-       this.validatePythonPath(candidatePath);
-    }
-  }
-
-  private async validatePythonPath(candidatePath: string) {
-    try {
-      const { execSync } = await import("child_process");
-      execSync(`"${candidatePath}" --version`, { stdio: "ignore" });
-      this.pythonPath = candidatePath;
-    } catch (e) {
-      this.pythonPath = "python"; // Fallback
+       resolvePythonPath(config.workspaceRoot).then((p) => {
+         this.pythonPath = p;
+       });
     }
   }
 
