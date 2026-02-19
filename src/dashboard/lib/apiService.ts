@@ -267,6 +267,7 @@ export async function getAgents(): Promise<Agent[]> {
 
 export interface RegistryAgent {
   name: string;
+  role?: string;
   class: string;
   module: string;
   description: string;
