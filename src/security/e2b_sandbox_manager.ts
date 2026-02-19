@@ -237,7 +237,8 @@ print(f"Installed {len(packages)} packages")
           const filename = `artifact_${Date.now()}_stdout.json`;
           const filepath = path.join(targetPath, filename);
 
-          if (this.validator.validate(filepath, 'write')) {
+          // Correctly await the validation result
+          if (await this.validator.validate(filepath, 'write')) {
             await fs.writeFile(filepath, stdoutText.trim(), 'utf-8');
             exported.push(filepath);
             logInfo('E2BSandboxManager', `Exported JSON: ${filepath}`);
@@ -255,7 +256,8 @@ print(f"Installed {len(packages)} packages")
           const filename = `artifact_${Date.now()}_${i}.png`;
           const filepath = path.join(targetPath, filename);
 
-          if (this.validator.validate(filepath, 'write')) {
+          // Correctly await the validation result
+          if (await this.validator.validate(filepath, 'write')) {
             // Decode base64 PNG
             const buffer = Buffer.from(result.png, 'base64');
             await fs.writeFile(filepath, buffer);
@@ -269,7 +271,8 @@ print(f"Installed {len(packages)} packages")
           const filename = `artifact_${Date.now()}_${i}.html`;
           const filepath = path.join(targetPath, filename);
 
-          if (this.validator.validate(filepath, 'write')) {
+          // Correctly await the validation result
+          if (await this.validator.validate(filepath, 'write')) {
             await fs.writeFile(filepath, result.html, 'utf-8');
             exported.push(filepath);
             logInfo('E2BSandboxManager', `Exported HTML: ${filepath}`);
@@ -283,7 +286,8 @@ print(f"Installed {len(packages)} packages")
             const filename = `artifact_${Date.now()}_${i}.json`;
             const filepath = path.join(targetPath, filename);
 
-            if (this.validator.validate(filepath, 'write')) {
+            // Correctly await the validation result
+            if (await this.validator.validate(filepath, 'write')) {
               await fs.writeFile(filepath, result.text, 'utf-8');
               exported.push(filepath);
               logInfo('E2BSandboxManager', `Exported JSON: ${filepath}`);
