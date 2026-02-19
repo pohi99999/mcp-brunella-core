@@ -1,0 +1,102 @@
+name: Docker Publish (Production)
+
+on:
+  push:
+    branches: ["main"]
+    paths:
+      - "Dockerfile.node"
+      - "Dockerfile.python"
+      - "docker-compose.prod.yml"
+      - "src/**"
+      - "myai/**"
+      - ".github/workflows/docker-publish.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  build-and-test:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Test
+        run: npm test
+
+  docker-core:
+    name: Build & Push brunella-core
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push (brunella-core)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.node
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/mcp-brunella-core:latest
+            ghcr.io/${{ github.repository_owner }}/mcp-brunella-core:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=${{ github.repositoryUrl }}
+            org.opencontainers.image.revision=${{ github.sha }}
+
+  docker-ai:
+    name: Build & Push brunella-ai
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push (brunella-ai)
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: Dockerfile.python
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/mcp-brunella-ai:latest
+            ghcr.io/${{ github.repository_owner }}/mcp-brunella-ai:${{ github.sha }}
+          labels: |
+            org.opencontainers.image.source=${{ github.repositoryUrl }}
+            org.opencontainers.image.revision=${{ github.sha }}

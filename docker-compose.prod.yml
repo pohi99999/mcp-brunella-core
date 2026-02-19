@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  brunella-core:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    container_name: brunella-core
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://host.docker.internal:11434}
+      BRUNELLA_WORKSPACE_ROOT: /app
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    depends_on:
+      - brunella-ai
+
+  brunella-ai:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: brunella-ai
+    environment:
+      PYTHONUNBUFFERED: 1
+    ports:
+      - "8000:8000"
+    restart: unless-stopped

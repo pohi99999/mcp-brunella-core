@@ -72,6 +72,7 @@ import createWebhookRoutes from "./routes/webhooks.js";
 import githubWebhookRouter from "./routes/githubWebhook.js";
 import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
 import { createEnterpriseRouter } from "./routes/enterprise.js";
+import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -232,6 +233,9 @@ export async function startWebServer() {
 
   // Add Enterprise Suite routes to v1
   v1Router.use("/enterprise", createEnterpriseRouter());
+
+  // Add Python Workers routes to v1
+  v1Router.use("/python-workers", createPythonWorkersRouter());
 
   // Add Scheduled Tasks routes to v1
   v1Router.use("/scheduled-tasks", createScheduledTasksRoutes(db));
