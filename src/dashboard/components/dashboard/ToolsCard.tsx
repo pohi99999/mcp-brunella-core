@@ -218,7 +218,7 @@ export function ToolsCard() {
                 {["github", "a2a", "adk", "mcp", "native"].map((tag) => (
                   <Button
                     key={tag}
-                    size="xs"
+                    size="sm"
                     variant={quickFilter === tag ? "default" : "outline"}
                     onClick={() =>
                       setQuickFilter((prev) => (prev === tag ? null : tag))

@@ -17,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 import { Play, RefreshCw, Clock, Zap, CheckCircle, XCircle } from "lucide-react";
-import { apiService } from "@/lib/apiService";
 
 interface TestStats {
   totalRuns: number;

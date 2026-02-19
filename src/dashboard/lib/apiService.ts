@@ -273,6 +273,7 @@ export interface RegistryAgent {
   capabilities: string[];
   priority: number;
   autoStart: boolean;
+  role?: string;
   systemPrompt?: string;
   triggers?: string[];
   config?: Record<string, unknown>;
@@ -538,7 +539,7 @@ export async function getJulesWorkflowRuns(params?: {
   );
   const data = await safeJson<{ runs?: JulesWorkflowRun[]; error?: string }>(
     response,
-  ).catch(() => ({
+  ).catch((): { runs?: JulesWorkflowRun[]; error?: string } => ({
     error: `HTTP ${response.status}`,
   }));
   if (!response.ok)
@@ -647,7 +648,7 @@ export async function getActiveTrackTodoSummaries(): Promise<
   );
   const data = await safeJson<{ tracks?: TrackTodoSummary[]; error?: string }>(
     response,
-  ).catch(() => ({
+  ).catch((): { tracks?: TrackTodoSummary[]; error?: string } => ({
     error: `HTTP ${response.status}: ${response.statusText}`,
   }));
   if (!response.ok)
@@ -728,7 +729,7 @@ export async function generateWithOllama(
   );
   const data = await safeJson<{ response?: string; error?: string }>(
     response,
-  ).catch(() => ({ error: `HTTP ${response.status}` }));
+  ).catch((): { response?: string; error?: string } => ({ error: `HTTP ${response.status}` }));
   if (!response.ok) throw new Error(data.error || "Ollama generation failed");
   return typeof data.response === "string"
     ? data.response
@@ -770,7 +771,7 @@ export async function generateWithGithubModels(
   );
   const data = await safeJson<{ response?: string; error?: string }>(
     response,
-  ).catch(() => ({ error: `HTTP ${response.status}` }));
+  ).catch((): { response?: string; error?: string } => ({ error: `HTTP ${response.status}` }));
   if (!response.ok)
     throw new Error(data.error || "GitHub Models generation failed");
   return typeof data.response === "string"
@@ -814,7 +815,7 @@ export async function generateWithGemini(
   );
   const data = await safeJson<{ response?: string; error?: string }>(
     response,
-  ).catch(() => ({ error: `HTTP ${response.status}` }));
+  ).catch((): { response?: string; error?: string } => ({ error: `HTTP ${response.status}` }));
   if (!response.ok) throw new Error(data.error || "Gemini generation failed");
   return typeof data.response === "string"
     ? data.response
@@ -847,7 +848,7 @@ export async function chatWithAnythingLLM(
   });
   const data = await safeJson<{ response?: string; error?: string }>(
     response,
-  ).catch(() => ({ error: `HTTP ${response.status}` }));
+  ).catch((): { response?: string; error?: string } => ({ error: `HTTP ${response.status}` }));
   if (!response.ok) throw new Error(data.error || "AnythingLLM chat failed");
   return typeof data.response === "string"
     ? data.response
@@ -905,7 +906,7 @@ export async function startService(
   });
   const data = await safeJson<{ success?: boolean; message?: string }>(
     response,
-  ).catch(() => ({}));
+  ).catch((): { success?: boolean; message?: string } => ({}));
   return {
     success: data.success ?? false,
     message: data.message ?? `HTTP ${response.status}`,
@@ -922,7 +923,7 @@ export async function stopService(
   });
   const data = await safeJson<{ success?: boolean; message?: string }>(
     response,
-  ).catch(() => ({}));
+  ).catch((): { success?: boolean; message?: string } => ({}));
   return {
     success: data.success ?? false,
     message: data.message ?? `HTTP ${response.status}`,
@@ -939,7 +940,7 @@ export async function executeTool(toolName: string, args: any): Promise<any> {
     },
   );
   const data = await safeJson<{ result?: any; error?: string }>(response).catch(
-    () => ({ error: `HTTP ${response.status}` }),
+    (): { result?: any; error?: string } => ({ error: `HTTP ${response.status}` }),
   );
   if (!response.ok) throw new Error(data.error || "Tool execution failed");
   return data.result;

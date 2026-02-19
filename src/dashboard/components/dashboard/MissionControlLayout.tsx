@@ -9,7 +9,7 @@ import {
 } from "@/lib/apiService";
 import { toast } from "sonner";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { CommandMenu } from "@/components/CommandMenu";
+import { CommandMenu } from "@/components/dashboard/CommandMenu";
 import { SystemBootSequence } from "@/components/SystemBootSequence";
 
 import { navigationRegistry } from "@/lib/navigation";
@@ -92,13 +92,13 @@ export function MissionControlLayout() {
             <div 
               key={activeTab} 
               className={cn(
-                "flex-1 overflow-y-auto custom-scrollbar scroll-smooth",
-                activeTab === "chat" && "overflow-hidden"
+                "flex-1 min-h-0 overflow-y-auto custom-scrollbar scroll-smooth",
+                (activeTab === "chat" || activeTab === "neural-map") && "overflow-hidden"
               )}
             >
               <div className={cn(
                 "mx-auto w-full max-w-[1800px]",
-                activeTab === "chat" ? "h-full p-0" : layoutDensity === "A" ? "p-6 md:p-8" : "p-2 md:p-4"
+                (activeTab === "chat" || activeTab === "neural-map") ? "h-full p-0" : layoutDensity === "A" ? "p-6 md:p-8" : "p-2 md:p-4"
               )}>
                 {activeTab === "dashboard" && (
                   <WidgetGrid 

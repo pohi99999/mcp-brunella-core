@@ -241,7 +241,7 @@ export function InvoiceSyncWidget() {
           </Button>
 
           <Button
-            size="xs"
+            size="sm"
             variant="ghost"
             className="text-[10px] text-zinc-400 justify-start"
             onClick={() => setShowOptions((prev) => !prev)}

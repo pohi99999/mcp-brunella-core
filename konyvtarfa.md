@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 19. 4:46:40
+**Generálva:** 2026. 02. 19. 7:02:26
 **Script:** 
 
 ---
@@ -74259,6 +74259,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 cean_infrastructure_inventory.json
     - 📄 cean.db
     - 📄 checkpoints.db
+    - 📄 checkpoints.db-shm
+    - 📄 checkpoints.db-wal
     - 📄 developer_metrics.json
     - 📄 ev_hunter_results.json
     - 📄 fix_queue.json
@@ -87570,6 +87572,62 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
               - 📄 postinst_template
             - 📄 driver.py
             - 📄 requirements.txt
+      - 📂 **out**
+        - 📂 **obj**
+          - 📂 **ArtifactAssembler**
+            - 📄 ArtifactAssembler.csproj.nuget.dgspec.json
+            - 📄 ArtifactAssembler.csproj.nuget.g.props
+            - 📄 ArtifactAssembler.csproj.nuget.g.targets
+            - 📄 project.assets.json
+            - 📄 project.nuget.cache
+          - 📂 **Azure.Functions.Cli**
+            - 📄 Azure.Functions.Cli.csproj.nuget.dgspec.json
+            - 📄 Azure.Functions.Cli.csproj.nuget.g.props
+            - 📄 Azure.Functions.Cli.csproj.nuget.g.targets
+            - 📄 project.assets.json
+            - 📄 project.nuget.cache
+          - 📂 **Azure.Functions.Cli.Abstractions**
+            - 📄 Azure.Functions.Cli.Abstractions.csproj.nuget.dgspec.json
+            - 📄 Azure.Functions.Cli.Abstractions.csproj.nuget.g.props
+            - 📄 Azure.Functions.Cli.Abstractions.csproj.nuget.g.targets
+            - 📄 project.assets.json
+            - 📄 project.nuget.cache
+          - 📂 **Azure.Functions.Cli.E2ETests**
+            - 📄 Azure.Functions.Cli.E2ETests.csproj.nuget.dgspec.json
+            - 📄 Azure.Functions.Cli.E2ETests.csproj.nuget.g.props
+            - 📄 Azure.Functions.Cli.E2ETests.csproj.nuget.g.targets
+            - 📄 project.assets.json
+            - 📄 project.nuget.cache
+          - 📂 **Azure.Functions.Cli.TestFramework**
+            - 📄 Azure.Functions.Cli.TestFramework.csproj.nuget.dgspec.json
+            - 📄 Azure.Functions.Cli.TestFramework.csproj.nuget.g.props
+            - 📄 Azure.Functions.Cli.TestFramework.csproj.nuget.g.targets
+            - 📄 project.assets.json
+            - 📄 project.nuget.cache
+          - 📂 **Azure.Functions.Cli.UnitTests**
+            - 📄 Azure.Functions.Cli.UnitTests.csproj.nuget.dgspec.json
+            - 📄 Azure.Functions.Cli.UnitTests.csproj.nuget.g.props
+            - 📄 Azure.Functions.Cli.UnitTests.csproj.nuget.g.targets
+            - 📄 project.assets.json
+            - 📄 project.nuget.cache
+          - 📂 **CoreToolsHost**
+            - 📄 CoreToolsHost.csproj.nuget.dgspec.json
+            - 📄 CoreToolsHost.csproj.nuget.g.props
+            - 📄 CoreToolsHost.csproj.nuget.g.targets
+            - 📄 project.assets.json
+            - 📄 project.nuget.cache
+          - 📂 **GoZipTool**
+            - 📄 GoZipTool.csproj.nuget.dgspec.json
+            - 📄 GoZipTool.csproj.nuget.g.props
+            - 📄 GoZipTool.csproj.nuget.g.targets
+            - 📄 project.assets.json
+            - 📄 project.nuget.cache
+          - 📂 **ZippedExe**
+            - 📄 project.assets.json
+            - 📄 project.nuget.cache
+            - 📄 ZippedExe.csproj.nuget.dgspec.json
+            - 📄 ZippedExe.csproj.nuget.g.props
+            - 📄 ZippedExe.csproj.nuget.g.targets
       - 📂 **src**
         - 📂 **ArtifactAssembler** _(Azure Functions Artifact Assembler)_
           - 📂 **assets**
@@ -148156,56 +148214,21 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 README.md
   - 📂 **playwright-report**
     - 📂 **data**
-      - 📄 091acf70536c7306aff18630074d40955924f6a5.png
-      - 📄 0d50c7124cde1aedacfdd57ea96537d803f0cac6.md
-      - 📄 115bd716c207424d849f58bb2ca9d2d370a14993.webm
-      - 📄 1c9e5cdf86c42cda5d5d15564141e1d3bb8f3584.md
-      - 📄 254fb56a9b878dccab1ac0a84eecd489cfaa8b9f.webm
-      - 📄 2a456ff952c0a71eb3f7be9650590ab73b82bf7d.webm
-      - 📄 42d2dc81114b67f969869c8c22df7d03968bc901.webm
-      - 📄 4912f05dc7f43939ec651fe79a05f94ac13165f4.webm
-      - 📄 540c88ba04f29aff6b26b2719ad3fd024e95153e.png
-      - 📄 5f3c3ea55aa87a61c0c5192698968b32b78c0983.webm
-      - 📄 602fa180d9945721a3437e6e9e62a49717adb0f8.webm
-      - 📄 65160a6f2f542d176c90f4536a48ec68e0cb9bfa.webm
-      - 📄 687193f03d9f9a502fc311c80561cc15ee3c81fd.md
-      - 📄 69963812c64a8c6b40f53be4badb42585eb3f503.webm
-      - 📄 6e70b30ddb69885a9e625d38c48951b883091bc1.webm
-      - 📄 7081065e91fa41d1cee22008fc160a07d3d38f57.webm
-      - 📄 755b6a658d9c9c2e8c36dcc758c2bd2cd04345ec.png
-      - 📄 7a33d5db6370b6de345e990751aa1f1da65ad675.png
-      - 📄 83b45ee41d35478c8fa1b33c7b7ca39ced32c47b.webm
-      - 📄 8d4e17f51d9745960cab13e1e67d611c30d65d9a.webm
-      - 📄 9a30a9279e9ad96af568a455c763d8a79fed23f2.webm
-      - 📄 9a3e1fce60d86c40af4e81ae790cd1f1288dd69e.webm
-      - 📄 9bc5450c17e177e3b186f2fa5fafffc6597a4190.webm
-      - 📄 a053f820af8cc53d45993d1cd7d60bf49be31344.webm
-      - 📄 a5a00a9882133b13ce9c907f6da3937c2737a618.png
-      - 📄 ae110fa6a69d04d3e4aa52098fb9856339844382.webm
-      - 📄 b032e356eee4ab6a0e1b5529a3c435f356052e90.webm
-      - 📄 cc2689d4ea291c88c9ec5e4e628e7157d469284d.webm
-      - 📄 d6567c8198e51002ff931a0f4619d765d81400ee.webm
-      - 📄 e2ccc29037b4446a8ce48f31c77b6fb58b0feffe.webm
-      - 📄 f2d69f01c67871754a2daaf5231f5d0a007ee082.webm
-      - 📄 f35b721e08f44d97015054f68428ef7415e1aeae.webm
-    - 📂 **trace**
-      - 📂 **assets**
-        - 📄 codeMirrorModule-a5XoALAZ.js
-        - 📄 defaultSettingsView-CJSZINFr.js
-      - 📄 codeMirrorModule.DYBRYzYX.css
-      - 📄 codicon.DCmgc-ay.ttf
-      - 📄 defaultSettingsView.7ch9cixO.css
-      - 📄 index.BDwrLSGN.js
-      - 📄 index.BVu7tZDe.css
-      - 📄 index.html
-      - 📄 manifest.webmanifest
-      - 📄 playwright-logo.svg
-      - 📄 snapshot.html
-      - 📄 sw.bundle.js
-      - 📄 uiMode.Btcz36p_.css
-      - 📄 uiMode.CQJ9SCIQ.js
-      - 📄 uiMode.html
-      - 📄 xtermModule.DYP7pi_n.css
+      - 📄 056bf1e284c9aaa835e177c2e34ab69816ccb28b.md
+      - 📄 12c2c8a75d9fbf666a36fe8645908507911ce8b6.png
+      - 📄 1b9245275d3b261f77336a1e011fc6e5cb841a99.md
+      - 📄 2b10b5d28aa46c69f0f33ae22f8447082bef8826.png
+      - 📄 4d073e539df787e4c805bd82e05e6ed8cf6eee4a.webm
+      - 📄 54b6c16810307c4961601ffd0499c0e61c82762f.webm
+      - 📄 658311d922d81ec2bc31626e100fb64711421785.md
+      - 📄 70c2d4ee0e1b790609401be58c6c84113097fd1e.webm
+      - 📄 7d960aa87d5936e7247689171f4b263bd675dcd5.png
+      - 📄 a50c6b1576ac7d326cd96d3d4ea3f6aedd477b54.png
+      - 📄 a57174a1fbdb777a4a4b5aef3f94b734750d8345.webm
+      - 📄 a99c9b42ef9968955fd561be9d6f97cbe6f97224.png
+      - 📄 b45bfdd29f2c6dc48af5033b77a07f6b82edf336.webm
+      - 📄 c126e6a6ec8be2f8618b1a004865df8735643914.md
+      - 📄 f7424e72f693480332e0af60410f84b1bb378c51.md
     - 📄 index.html
   - 📂 **public**
     - 📄 index.html
@@ -148585,7 +148608,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 mcpStore.ts
         - 📄 mockData.ts
         - 📄 navigation.tsx
-        - 📄 navigationRegistry.ts
         - 📄 ollamaService.ts
         - 📄 types.ts
         - 📄 utils.ts
@@ -148800,6 +148822,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 setup.ts
     - 📂 **e2e**
       - 📄 action-triggering.spec.ts
+      - 📄 dashboard-comprehensive.spec.ts
       - 📄 error-handling.spec.ts
       - 📄 mission-control.spec.ts
       - 📄 navigation.spec.ts
@@ -148928,6 +148951,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 tracks_todos_routes.test.ts
     - 📄 trackTodoParser.test.ts
     - 📄 webhooks.test.ts
+  - 📂 **test-results**
+    - 📂 **dashboard-comprehensive-🎯-3ad41-d---szolgáltatások-állapota-chromium**
+    - 📂 **dashboard-comprehensive-🎯-582ca-Control-Kártyák-megjelennek-chromium**
+      - 📄 error-context.md
+      - 📄 test-failed-1.png
+      - 📄 video.webm
+    - 📂 **dashboard-comprehensive-🎯-980af-gáció---minden-tab-elérhető-chromium**
+      - 📄 error-context.md
+      - 📄 test-failed-1.png
+      - 📄 video.webm
   - 📂 **testing**
     - 📂 **hirszerzes_test_1**
       - 📄 ai_research_pipeline.json
@@ -148965,6 +148998,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 config.cmd
   - 📄 CONTRIBUTING.md
   - 📄 DAILY_SUMMARY_2026_02_18.txt
+  - 📄 DASHBOARD_TEST_REPORT_COMPREHENSIVE.md
   - 📄 DASHBOARD_TEST_REPORT.md
   - 📄 docker-compose.yml
   - 📄 Dockerfile.node
