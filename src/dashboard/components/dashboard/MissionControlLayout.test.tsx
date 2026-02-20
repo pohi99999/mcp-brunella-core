@@ -136,8 +136,7 @@ describe('MissionControlLayout', () => {
     expect(mainContentDiv).toBeInTheDocument();
 
     // Check for default layout grid styles
-    expect(mainContentDiv).toHaveStyle('grid-template-areas: \'header header header\' \'sidebar main-top main-top\' \'sidebar main-left main-right\' \'sidebar footer footer\'
-');
+    expect(mainContentDiv).toHaveStyle('grid-template-areas: \'header header header\' \'sidebar main-top main-top\' \'sidebar main-left main-right\' \'sidebar footer footer\'');
     expect(mainContentDiv).toHaveStyle('grid-template-columns: auto 1fr 1fr');
     expect(mainContentDiv).toHaveStyle('grid-template-rows: auto 1fr 1fr auto');
 
@@ -150,8 +149,7 @@ describe('MissionControlLayout', () => {
     await waitFor(() => {
       // Re-query the element to get updated styles after state change
       const updatedMainContentDiv = screen.getByRole('grid', { hidden: true });
-      expect(updatedMainContentDiv).toHaveStyle('grid-template-areas: \'header header header\' \'sidebar dev-main dev-main\' \'sidebar dev-bottom dev-right\' \'sidebar footer footer\'
-');
+      expect(updatedMainContentDiv).toHaveStyle('grid-template-areas: \'header header header\' \'sidebar dev-main dev-main\' \'sidebar dev-bottom dev-right\' \'sidebar footer footer\'');
       expect(updatedMainContentDiv).toHaveStyle('grid-template-columns: auto 2fr 1fr');
       expect(updatedMainContentDiv).toHaveStyle('grid-template-rows: auto 2fr 1fr auto');
     });
