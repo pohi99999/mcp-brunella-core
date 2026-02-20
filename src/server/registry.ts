@@ -1,6 +1,8 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logWarn } from "../utils/logger.js";
+import { zodToJsonSchema } from "zod-to-json-schema";
+import { ToolDefinition } from "../agents/types.js";
 import {
   testSchedulerRunDefinition,
   testSchedulerStatusDefinition,
@@ -140,6 +142,11 @@ const registeredToolsList: RegisteredToolInfo[] = [
 
 // Internal tool handler map
 const toolHandlers = new Map<string, (args: any) => Promise<any>>();
+const registeredToolDefinitions: ToolDefinition[] = [];
+
+export function getAllToolDefinitions(): ToolDefinition[] {
+  return registeredToolDefinitions;
+}
 
 let agentManager: any = null;
 
@@ -168,6 +175,45 @@ export async function registerAgents() {
 }
 
 export async function registerAllTools(server: McpServer) {
+  // Monkey patch server.tool to capture tool definitions and handlers
+  const originalTool = server.tool.bind(server);
+  // @ts-ignore
+  server.tool = (name: string, description: string, parameters: any, handler: any) => {
+    // 1. Store handler for local execution
+    toolHandlers.set(name, handler);
+
+    // 2. Convert schema and store definition for agents
+    try {
+      // If parameters is a Zod schema, convert it
+      let jsonSchema: any;
+      if (parameters && typeof parameters.parse === 'function') {
+         jsonSchema = zodToJsonSchema(parameters);
+         // zod-to-json-schema wraps output, if it's not a direct schema we might need to adjust
+         // But usually it returns a valid JSON schema object
+         if ('$schema' in jsonSchema) delete (jsonSchema as any).$schema;
+      } else {
+         // Assume it's already a schema or undefined
+         jsonSchema = parameters || { type: "object", properties: {} };
+      }
+
+      registeredToolDefinitions.push({
+        name,
+        description,
+        inputSchema: jsonSchema
+      });
+    } catch (e) {
+      logWarn("Registry", `Failed to convert schema for tool ${name}: ${e}`);
+      registeredToolDefinitions.push({
+        name,
+        description,
+        inputSchema: { type: "object", properties: {} }
+      });
+    }
+
+    return originalTool(name, description, parameters, handler);
+  };
+
+
   // Dynamically import Node.js-specific modules only in Node environment
   const isNode = typeof process !== "undefined" && process.versions?.node;
 

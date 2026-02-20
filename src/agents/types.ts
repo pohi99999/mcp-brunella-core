@@ -39,3 +39,14 @@ export interface AgentResponse {
     handoff?: AgentHandoff; // If status is 'handoff'
     metadata?: Record<string, unknown>; // Optional metadata (e.g. metrics, processing info)
 }
+
+// MCP Tool Definition
+export interface ToolDefinition {
+  name: string;
+  description: string;
+  inputSchema?: {
+    type: string;
+    properties?: Record<string, unknown>;
+    required?: string[];
+  };
+}

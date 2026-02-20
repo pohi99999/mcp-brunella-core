@@ -2,20 +2,10 @@
 // PURPOSE: GitHub Models API (GPT-4o) wrapper agent with MCP tool support
 // CREATED: 2026-02-17
 
-import { IAgent, AgentResponse } from './types.js';
+import { IAgent, AgentResponse, ToolDefinition } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { generateResponse } from '../core/llm_client.js';
-
-// MCP Tool Definition (local interface)
-interface ToolDefinition {
-  name: string;
-  description: string;
-  inputSchema?: {
-    type: string;
-    properties?: Record<string, unknown>;
-    required?: string[];
-  };
-}
+import { getAllToolDefinitions, executeLocalTool } from '../server/registry.js';
 
 export interface GitHubModelsConfig {
   model?: string; // Default: gpt-4o
@@ -84,6 +74,14 @@ export class GitHubModelsAgent implements IAgent {
         };
       }
 
+      // Auto-load tools if not provided
+      if (this.config.mcpTools.length === 0) {
+        const tools = getAllToolDefinitions();
+        if (tools.length > 0) {
+          this.setMcpTools(tools);
+        }
+      }
+
       // Build messages
       const messages = this.buildMessages(task, context);
 
@@ -128,48 +126,106 @@ export class GitHubModelsAgent implements IAgent {
    *
    * Supports function calling (MCP tools átadása)
    */
-  private async callGitHubModels(messages: Array<{ role: string; content: string }>): Promise<string> {
+  private async callGitHubModels(messages: Array<{ role: string; content: string | null; tool_calls?: any[] }>): Promise<string> {
     const apiKey = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
+    let currentMessages = [...messages];
+    let iteration = 0;
+    const MAX_ITERATIONS = 10;
 
-    // Build request body
-    const requestBody: Record<string, unknown> = {
-      messages,
-      model: this.config.model,
-      temperature: this.config.temperature,
-      max_tokens: this.config.maxTokens,
-      top_p: 1.0
-    };
+    while (iteration < MAX_ITERATIONS) {
+      iteration++;
 
-    // Add MCP tools if available (function calling)
-    if (this.config.mcpTools.length > 0) {
-      requestBody.tools = this.convertMcpToolsToOpenAI(this.config.mcpTools);
-      requestBody.tool_choice = 'auto'; // Let GPT decide when to use tools
+      // Build request body
+      const requestBody: Record<string, unknown> = {
+        messages: currentMessages,
+        model: this.config.model,
+        temperature: this.config.temperature,
+        max_tokens: this.config.maxTokens,
+        top_p: 1.0
+      };
+
+      // Add MCP tools if available (function calling)
+      if (this.config.mcpTools.length > 0) {
+        requestBody.tools = this.convertMcpToolsToOpenAI(this.config.mcpTools);
+        requestBody.tool_choice = 'auto'; // Let GPT decide when to use tools
+      }
+
+      logInfo(this.name, `Calling GitHub Models API (Iteration ${iteration})`);
+
+      const response = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${apiKey}`
+        },
+        body: JSON.stringify(requestBody)
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`GitHub Models API error: ${response.status} ${response.statusText} - ${errorText}`);
+      }
+
+      const data = await response.json();
+      const choice = data.choices[0];
+      const message = choice.message;
+
+      // Add assistant response to history
+      currentMessages.push(message);
+
+      // Handle tool calls (if GPT wants to use MCP tools)
+      if (message.tool_calls && message.tool_calls.length > 0) {
+        logInfo(this.name, `GPT requested tool calls: ${message.tool_calls.length}`);
+
+        for (const toolCall of message.tool_calls) {
+            const functionName = toolCall.function.name;
+            const argumentsStr = toolCall.function.arguments;
+
+            logInfo(this.name, `Executing tool: ${functionName}`);
+
+            let resultContent: string;
+            try {
+              const args = JSON.parse(argumentsStr);
+              const result = await executeLocalTool(functionName, args);
+
+              // Format result for OpenAI
+              // MCP tools usually return { content: [{ type: 'text', text: '...' }] }
+              if (result && result.content && Array.isArray(result.content)) {
+                 // Join all text parts
+                 resultContent = result.content
+                    .filter((c: any) => c.type === 'text')
+                    .map((c: any) => c.text || '')
+                    .join('\n');
+
+                 // If no text, check for other types or dump JSON
+                 if (!resultContent && result.content.length > 0) {
+                     resultContent = JSON.stringify(result.content);
+                 }
+              } else {
+                 resultContent = typeof result === 'string' ? result : JSON.stringify(result);
+              }
+            } catch (e: any) {
+              logError(this.name, `Tool execution failed (${functionName}): ${e.message}`);
+              resultContent = `Error executing tool ${functionName}: ${e.message}`;
+            }
+
+            // Add tool result to messages
+            currentMessages.push({
+              role: 'tool',
+              tool_call_id: toolCall.id,
+              name: functionName,
+              content: resultContent
+            } as any);
+        }
+
+        // Loop continues...
+      } else {
+        // No tool calls, return final content
+        return message.content || '';
+      }
     }
 
-    const response = await fetch('https://models.inference.ai.azure.com/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`
-      },
-      body: JSON.stringify(requestBody)
-    });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`GitHub Models API error: ${response.status} ${response.statusText} - ${errorText}`);
-    }
-
-    const data = await response.json();
-
-    // Handle tool calls (if GPT wants to use MCP tools)
-    if (data.choices[0].message.tool_calls) {
-      logInfo(this.name, `GPT requested tool calls: ${data.choices[0].message.tool_calls.length}`);
-      // TODO: Implement tool execution loop (Phase 2)
-      // For now, just return the message
-    }
-
-    return data.choices[0].message.content;
+    throw new Error(`Max iterations (${MAX_ITERATIONS}) reached in tool execution loop.`);
   }
 
   /**
