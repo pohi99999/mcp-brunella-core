@@ -478,13 +478,6 @@
       "capabilities": [
         "market_analysis",
         "competitor_tracking",
-      "title": "Pricing Agent",
-      "description": "Dinamikus Árazó & Piaci Hírszerző - Market intelligence, competitive analysis, pricing recommendations",
-      "class": "PricingAgent",
-      "module": "./agents/PricingAgent.js",
-      "capabilities": [
-        "market_analysis",
-        "competitor_tracking",
         "price_optimization",
         "trend_forecasting",
         "sentiment_analysis"
