@@ -1,137 +1,16 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logWarn } from "../utils/logger.js";
-import { ToolDefinition } from "../agents/types.js";
+import {
+  registerToolHandler,
+  registerToolDefinition,
+  getAllToolDefinitions,
+  executeLocalTool,
+  getRegisteredToolsList
+} from "./toolRegistry.js";
 
-// Tool list for dashboard display
-export interface RegisteredToolInfo {
-  id: string;
-  name: string;
-  description: string;
-  enabled: boolean;
-  category: "server" | "monitoring" | "configuration" | "custom";
-  parameters: { name: string; type: string; required: boolean }[];
-}
-
-const registeredToolsList: RegisteredToolInfo[] = [
-  {
-    id: "ping",
-    name: "ping",
-    description: "Ellenőrzi a szerver elérhetőségét",
-    enabled: true,
-    category: "server",
-    parameters: [],
-  },
-  {
-    id: "agent_list",
-    name: "agent_list",
-    description: "Aktív ágensek listázása",
-    enabled: true,
-    category: "server",
-    parameters: [],
-  },
-  {
-    id: "agent_registry",
-    name: "agent_registry",
-    description: "Összes ágens definíció listázása",
-    enabled: true,
-    category: "server",
-    parameters: [],
-  },
-  {
-    id: "agent_delegate",
-    name: "agent_delegate",
-    description: "Feladat delegálása ágensnek",
-    enabled: true,
-    category: "server",
-    parameters: [
-      { name: "agent_name", type: "string", required: true },
-      { name: "task", type: "string", required: true },
-    ],
-  },
-  {
-    id: "agent_execute",
-    name: "agent_execute",
-    description:
-      "Execute an agent with optional JSON context (CLI compatibility)",
-    enabled: true,
-    category: "server",
-    parameters: [
-      { name: "agentName", type: "string", required: true },
-      { name: "task", type: "string", required: true },
-      { name: "context", type: "string", required: false },
-    ],
-  },
-  {
-    id: "test-scheduler-run",
-    name: "test-scheduler-run",
-    description: "Trigger a manual test run immediately",
-    enabled: true,
-    category: "monitoring",
-    parameters: [
-      { name: "triggerReason", type: "string", required: false },
-    ],
-  },
-  {
-    id: "test-scheduler-status",
-    name: "test-scheduler-status",
-    description: "Get the current test scheduler status and recent test statistics",
-    enabled: true,
-    category: "monitoring",
-    parameters: [
-      { name: "includeDetails", type: "boolean", required: false },
-    ],
-  },
-  {
-    id: "get_szamlazz_invoices",
-    name: "get_szamlazz_invoices",
-    description: "Lekéri a számlákat a Számlázz.hu API-ból InvoiceData formátumban",
-    enabled: true,
-    category: "custom",
-    parameters: [
-      { name: "since_date", type: "string", required: false },
-      { name: "limit", type: "integer", required: false },
-      { name: "force_refresh", type: "boolean", required: false },
-      { name: "include_unpaid_only", type: "boolean", required: false },
-      { name: "get_overdue", type: "boolean", required: false },
-    ],
-  },
-  {
-    id: "write_sheets_invoices",
-    name: "write_sheets_invoices",
-    description: "Invoice adatok írása Google Sheets-be (batch mode)",
-    enabled: true,
-    category: "custom",
-    parameters: [
-      { name: "invoices", type: "array", required: true },
-      { name: "append", type: "boolean", required: false },
-      { name: "include_line_items", type: "boolean", required: false },
-      { name: "clear_first", type: "boolean", required: false },
-      { name: "skip_duplicates", type: "boolean", required: false },
-      { name: "batch_size", type: "number", required: false },
-    ],
-  },
-  {
-    id: "get_ai_recommendation",
-    name: "get_ai_recommendation",
-    description: "AI-alapú ajánlásokat ad vissza LanceDB RAG keresés segítségével",
-    enabled: true,
-    category: "custom",
-    parameters: [
-      { name: "query", type: "string", required: true },
-      { name: "limit", type: "number", required: false },
-      { name: "context", type: "string", required: false },
-    ],
-  },
-];
-
-// Internal tool handler map
-const toolHandlers = new Map<string, (args: any) => Promise<any>>();
-const registeredToolDefinitions: ToolDefinition[] = [];
-
-export function getAllToolDefinitions(): ToolDefinition[] {
-  return registeredToolDefinitions;
-}
+// Re-export for compatibility
+export { getAllToolDefinitions, executeLocalTool, getRegisteredToolsList };
 
 let agentManager: any = null;
 
@@ -164,7 +43,6 @@ export async function registerAllTools(server: McpServer) {
   const isNode = typeof process !== "undefined" && process.versions?.node;
 
   // Monkey patch server.tool to capture tool definitions and handlers
-  // Note: We need zodToJsonSchema for this, which is likely Node-only or needs dynamic import if it causes build issues
   let zodToJsonSchema: any;
   if (isNode) {
     try {
@@ -179,7 +57,7 @@ export async function registerAllTools(server: McpServer) {
   // @ts-ignore
   server.tool = (name: string, description: string, parameters: any, handler: any) => {
     // 1. Store handler for local execution
-    toolHandlers.set(name, handler);
+    registerToolHandler(name, handler);
 
     // 2. Convert schema and store definition for agents
     try {
@@ -193,14 +71,14 @@ export async function registerAllTools(server: McpServer) {
          jsonSchema = parameters || { type: "object", properties: {} };
       }
 
-      registeredToolDefinitions.push({
+      registerToolDefinition({
         name,
         description,
         inputSchema: jsonSchema
       });
     } catch (e) {
       logWarn("Registry", `Failed to convert schema for tool ${name}: ${e}`);
-      registeredToolDefinitions.push({
+      registerToolDefinition({
         name,
         description,
         inputSchema: { type: "object", properties: {} }
@@ -296,7 +174,6 @@ export async function registerAllTools(server: McpServer) {
       {},
       agentListHandler,
     );
-    toolHandlers.set("agent_list", agentListHandler);
 
     const agentRegistryHandler = async () => {
       const agents = agentManager.listRegistryDefinitions();
@@ -312,7 +189,6 @@ export async function registerAllTools(server: McpServer) {
       {},
       agentRegistryHandler,
     );
-    toolHandlers.set("agent_registry", agentRegistryHandler);
 
     const agentDelegateHandler = async ({ agent_name, task }: any) => {
       try {
@@ -338,7 +214,6 @@ export async function registerAllTools(server: McpServer) {
       },
       agentDelegateHandler,
     );
-    toolHandlers.set("agent_delegate", agentDelegateHandler);
 
     // CLI compatibility: src/cli.ts expects an MCP tool called `agent_execute`
     // with params { agentName, task, context?: string }
@@ -390,7 +265,6 @@ export async function registerAllTools(server: McpServer) {
       },
       agentExecuteHandler,
     );
-    toolHandlers.set("agent_execute", agentExecuteHandler);
 
     // Register Test Scheduler Tools
     const testSchedulerRunMcpHandler = async (args: any) => {
@@ -409,7 +283,6 @@ export async function registerAllTools(server: McpServer) {
       },
       testSchedulerRunMcpHandler,
     );
-    toolHandlers.set("test-scheduler-run", testSchedulerRunMcpHandler);
 
     const testSchedulerStatusMcpHandler = async (args: any) => {
       const result = await testSchedulerStatusHandler(args);
@@ -427,7 +300,6 @@ export async function registerAllTools(server: McpServer) {
       },
       testSchedulerStatusMcpHandler,
     );
-    toolHandlers.set("test-scheduler-status", testSchedulerStatusMcpHandler);
 
     // Register Számlázz.hu Invoice Fetcher Tool
     const getSzamlazzInvoicesMcpHandler = async (args: any) => {
@@ -450,7 +322,6 @@ export async function registerAllTools(server: McpServer) {
       },
       getSzamlazzInvoicesMcpHandler,
     );
-    toolHandlers.set("get_szamlazz_invoices", getSzamlazzInvoicesMcpHandler);
 
     // Register Google Sheets Invoice Writer Tool
     const writeSheetsInvoicesMcpHandler = async (args: any) => {
@@ -474,7 +345,6 @@ export async function registerAllTools(server: McpServer) {
       },
       writeSheetsInvoicesMcpHandler,
     );
-    toolHandlers.set("write_sheets_invoices", writeSheetsInvoicesMcpHandler);
   }
 
   // Always register ping tool (works in any environment)
@@ -484,17 +354,4 @@ export async function registerAllTools(server: McpServer) {
     ],
   });
   server.tool("ping", "A simple ping tool.", {}, pingHandler);
-  toolHandlers.set("ping", pingHandler);
-}
-
-export async function executeLocalTool(name: string, args: any) {
-  const handler = toolHandlers.get(name);
-  if (handler) {
-    return await handler(args);
-  }
-  throw new Error(`Tool ${name} not found or not executable directly.`);
-}
-
-export function getRegisteredToolsList(): RegisteredToolInfo[] {
-  return registeredToolsList;
 }
