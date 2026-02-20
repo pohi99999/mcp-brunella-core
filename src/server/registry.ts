@@ -1,22 +1,7 @@
 import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logWarn } from "../utils/logger.js";
-import { zodToJsonSchema } from "zod-to-json-schema";
 import { ToolDefinition } from "../agents/types.js";
-import {
-  testSchedulerRunDefinition,
-  testSchedulerStatusDefinition,
-  testSchedulerRunHandler,
-  testSchedulerStatusHandler,
-} from "../tools/testSchedulerTool.js";
-import {
-  getSzamlazzInvoicesTool,
-  getSzamlazzInvoicesHandler,
-} from "../tools/getSzamlazzInvoices.js";
-import {
-  writeSheetsInvoicesTool,
-  writeSheetsInvoicesHandler,
-} from "../tools/writeSheetsInvoices.js";
 
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
@@ -175,7 +160,21 @@ export async function registerAgents() {
 }
 
 export async function registerAllTools(server: McpServer) {
+  // Dynamically import Node.js-specific modules only in Node environment
+  const isNode = typeof process !== "undefined" && process.versions?.node;
+
   // Monkey patch server.tool to capture tool definitions and handlers
+  // Note: We need zodToJsonSchema for this, which is likely Node-only or needs dynamic import if it causes build issues
+  let zodToJsonSchema: any;
+  if (isNode) {
+    try {
+        const mod = await import("zod-to-json-schema");
+        zodToJsonSchema = mod.zodToJsonSchema;
+    } catch (e) {
+        logWarn("Registry", "Could not load zod-to-json-schema");
+    }
+  }
+
   const originalTool = server.tool.bind(server);
   // @ts-ignore
   server.tool = (name: string, description: string, parameters: any, handler: any) => {
@@ -186,13 +185,11 @@ export async function registerAllTools(server: McpServer) {
     try {
       // If parameters is a Zod schema, convert it
       let jsonSchema: any;
-      if (parameters && typeof parameters.parse === 'function') {
+      if (isNode && zodToJsonSchema && parameters && typeof parameters.parse === 'function') {
          jsonSchema = zodToJsonSchema(parameters);
-         // zod-to-json-schema wraps output, if it's not a direct schema we might need to adjust
-         // But usually it returns a valid JSON schema object
          if ('$schema' in jsonSchema) delete (jsonSchema as any).$schema;
       } else {
-         // Assume it's already a schema or undefined
+         // Assume it's already a schema or undefined, or we can't convert
          jsonSchema = parameters || { type: "object", properties: {} };
       }
 
@@ -213,12 +210,27 @@ export async function registerAllTools(server: McpServer) {
     return originalTool(name, description, parameters, handler);
   };
 
-
-  // Dynamically import Node.js-specific modules only in Node environment
-  const isNode = typeof process !== "undefined" && process.versions?.node;
-
   if (isNode) {
     await registerAgents();
+
+    // Dynamically import tools to avoid top-level imports of Node-specific modules (like child_process)
+    const {
+        testSchedulerRunDefinition,
+        testSchedulerStatusDefinition,
+        testSchedulerRunHandler,
+        testSchedulerStatusHandler,
+    } = await import("../tools/testSchedulerTool.js");
+
+    const {
+        getSzamlazzInvoicesTool,
+        getSzamlazzInvoicesHandler,
+    } = await import("../tools/getSzamlazzInvoices.js");
+
+    const {
+        writeSheetsInvoicesTool,
+        writeSheetsInvoicesHandler,
+    } = await import("../tools/writeSheetsInvoices.js");
+
 
     // Register Node-specific tools
     const { registerWorkspaceTools } = await import("../tools/workspace.js");
