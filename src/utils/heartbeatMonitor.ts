@@ -301,6 +301,26 @@ class HeartbeatMonitorClass {
     };
   }
 
+  getAggregatedHealth(): {
+    status: ServiceStatus;
+    services: { name: string; status: ServiceStatus; error: string | null; latencyMs: number | null; }[];
+    timestamp: string;
+  } {
+    const overall = this.getOverallHealth();
+    const detailedServices = Array.from(this.services.values()).map(svc => ({
+      name: svc.name,
+      status: svc.status,
+      error: svc.error,
+      latencyMs: svc.latencyMs,
+    }));
+
+    return {
+      status: overall.status,
+      services: detailedServices,
+      timestamp: new Date().toISOString(),
+    };
+  }
+
   /**
    * Manually trigger a health check for a specific service.
    */

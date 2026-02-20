@@ -9,7 +9,7 @@ export type LogType = 'info' | 'error' | 'success';
 
 export type AgentStatusPayload = 'idle' | 'working' | 'error';
 
-class SocketServiceClass {
+export class SocketServiceClass {
   private io: Server | null = null;
 
   init(io: Server): void {
@@ -26,6 +26,17 @@ class SocketServiceClass {
     this.io.emit('agent:update', { agentName, status, taskDescription, timestamp: Date.now() });
   }
 
+  broadcastChatter(sender: string, message: string, receiver?: string, context?: any): void {
+    if (!this.io) return;
+    this.io.emit('agent:chatter', {
+      sender,
+      receiver,
+      message,
+      context,
+      timestamp: Date.now()
+    });
+  }
+
   isReady(): boolean {
     return this.io !== null;
   }
@@ -36,6 +47,10 @@ class SocketServiceClass {
   emit(event: string, data: any): void {
     if (!this.io) return;
     this.io.emit(event, data);
+  }
+
+  get connectedClientsCount(): number {
+    return this.io?.engine.clientsCount || 0;
   }
 }
 

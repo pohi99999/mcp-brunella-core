@@ -1,48 +1,6 @@
 {
-  "lastUpdated": "2026-02-19T15:15:35.388Z",
+  "lastUpdated": "2026-02-20T03:00:00.038Z",
   "tracks": [
-    {
-      "id": "ai_recommendation_system_20260216",
-      "name": "AI Recommendation System Integration",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-02-16T00:00:00Z",
-      "updated": "2026-02-17T22:45:00Z",
-      "tags": [
-        "recommendation",
-        "rag",
-        "api",
-        "orchestrator"
-      ],
-      "dependencies": [
-        "lancedb_rag"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\ai_recommendation_system_20260216",
-      "_isArchived": false
-    },
-    {
-      "id": "bas_enterprise_suite",
-      "name": "BAS Enterprise Suite - 18 Module Business Automation",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "enterprise",
-        "automation",
-        "multi-agent",
-        "business-intelligence",
-        "erp"
-      ],
-      "dependencies": [
-        "robotkezv2",
-        "lancedb_rag",
-        "google_workspace_api",
-        "orchestrator_v2"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\bas_enterprise_suite",
-      "_isArchived": false
-    },
     {
       "id": "cloudflare-chat-integration-20260211",
       "name": "Cloudflare Chat Integration",
@@ -84,24 +42,6 @@
         "cloudflare-chat-integration-20260211"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare-iteration-2-20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "cloudflare_edge_agents_network_20260215",
-      "name": "Cloudflare Edge Agents Network (CEAN)",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 100,
-      "tags": [
-        "cloudflare",
-        "workers",
-        "edge-computing",
-        "ai-agents",
-        "orchestration",
-        "distributed-systems"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_edge_agents_network_20260215",
       "_isArchived": false
     },
     {
@@ -177,6 +117,17 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_v2_robotkez_control_20260208",
+      "_isArchived": false
+    },
+    {
+      "id": "dashboard_v3_command_center_20260219",
+      "name": "dashboard_v3_command_center_20260219",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_v3_command_center_20260219",
       "_isArchived": false
     },
     {
@@ -258,47 +209,6 @@
       "_isArchived": false
     },
     {
-      "id": "green_lightning_20260212",
-      "name": "Green Lightning - Autonomous EV Hunter",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-15T00:15:00Z",
-      "assignee": "RobotkezAgent + n8n",
-      "tags": [
-        "robotkez",
-        "browser-use",
-        "automation",
-        "willhaben",
-        "ev-hunter",
-        "email-notification"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\green_lightning_20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "industrial_machine_hunter_20260216",
-      "name": "Industrial Machine Hunter",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-16T00:00:00Z",
-      "updated": "2026-02-18T01:00:00Z",
-      "tags": [
-        "auction",
-        "arbitrage",
-        "industrial",
-        "scraping"
-      ],
-      "dependencies": [
-        "robotkezv2"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\industrial_machine_hunter_20260216",
-      "_isArchived": false
-    },
-    {
       "id": "innovation_bridge_20260212",
       "name": "Innovation Bridge - Cross-Industry Knowledge Transfer",
       "status": "active",
@@ -377,28 +287,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\magyar-cli-menu-system-20260211",
-      "_isArchived": false
-    },
-    {
-      "id": "marketing_swarm_20260216",
-      "name": "Marketing Swarm - Automated Campaign Factory",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-16T00:00:00Z",
-      "updated": "2026-02-17T23:30:00Z",
-      "tags": [
-        "marketing",
-        "swarm",
-        "automation",
-        "copywriting",
-        "media"
-      ],
-      "dependencies": [
-        "robotkezv2",
-        "lancedb_rag"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\marketing_swarm_20260216",
       "_isArchived": false
     },
     {
@@ -969,9 +857,9 @@
     }
   ],
   "stats": {
-    "total": 47,
-    "active": 2,
-    "completed": 6,
+    "total": 42,
+    "active": 3,
+    "completed": 0,
     "archived": 24,
     "proposed": 5
   }

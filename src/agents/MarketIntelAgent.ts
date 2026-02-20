@@ -15,9 +15,10 @@
  * @version 1.0.0
  */
 
-import { BaseAgent } from './BaseAgent.js';
+import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
+import { agentManager } from './AgentManager.js';
 import type { MarketIntelData, MarketIntelRecord } from '../types/enterprise.js';
 
 // ============================================================================
@@ -76,9 +77,9 @@ export class MarketIntelAgent extends BaseAgent {
   description = 'Automated competitor website scraping, price tracking, and trend analysis with LanceDB storage';
   capabilities = [
     'competitor_scraping',
-    'price_extraction',
+    'price_tracking',
     'trend_analysis',
-    'price_alerts',
+    'alert_system',
     'lancedb_storage',
     'chart_generation'
   ];
@@ -87,55 +88,58 @@ export class MarketIntelAgent extends BaseAgent {
   private priceHistory: Map<string, PricePoint[]> = new Map();
 
   /**
-   * Execute task (BaseAgent interface)
+   * Execute task (BaseAgent interface implementation)
    */
-  async executeTask(context: any): Promise<any> {
-    const task = context.task || context;
-    return this.execute(task, context);
-  }
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = (context.task || '').trim();
+    if (!task) return { success: false, message: 'Üres feladat leírás' };
 
-  /**
-   * Execute market intelligence task
-   * 
-   * @param task - JSON with MarketIntelData or natural language
-   * @param context - Additional context
-   */
-  async execute(task: string, context?: unknown): Promise<AgentResponse> {
-    setAgentStatus(this.name, 'working', `Market intel: ${task.substring(0, 50)}...`);
+    setAgentStatus(this.name, 'working', `Piaci hírszerzés: ${task.substring(0, 50)}...`);
+
+    // Memory awareness: Check for past alerts or errors
+    const alerts = (context.pastExperiences as any[])?.filter(e => e.text.includes('critical') || e.text.includes('HIBA')) || [];
+    if (alerts.length > 0) {
+      logWarn(this.name, `Releváns múltbeli figyelmeztetések/hibák (${alerts.length}). Adatok összehasonlítása indul...`);
+    }
 
     try {
-      logInfo(this.name, 'Starting market intelligence analysis...');
+      logInfo(this.name, 'Piaci elemzés indítása...');
 
       // Parse input
       const params = this.parseMarketIntelRequest(task);
-      logInfo(this.name, `Analyzing: ${params.productCategory}, ${params.competitors?.length || 0} competitors`);
+      logInfo(this.name, `Elemzés: ${params.productCategory}, ${params.competitors?.length || 0} versenytárs`);
 
       // Execute market intelligence pipeline
       const result = await this.analyzeMarket(params);
 
-      // Store in LanceDB (simulated)
-      await this.storeInLanceDB(result.pricePoints);
+      // Store in LanceDB (now using real addToIndex via saveToMemory in BaseAgent)
+      // BaseAgent already saves the outcome, but here we can save detailed price points
+      const priceSummary = result.priceSnapshots.map((p: any) => `${p.productName}: ${p.price} ${p.currency}`).join(', ');
+      await this.saveToMemory(`Részletes árak: ${priceSummary}`, { category: params.productCategory });
 
-      logInfo(this.name, `✅ Market analysis complete: ${result.pricePoints.length} prices tracked`);
+      logInfo(this.name, `✅ Piaci elemzés kész: ${result.priceSnapshots.length} ár követve`);
 
       return {
-        status: 'success',
-        message: `Tracked ${result.pricePoints.length} prices from ${result.summary.competitorsScraped} competitors. ${result.alerts.length} alerts generated.`,
+        success: true,
+        message: `Követve ${result.priceSnapshots.length} ár ${result.summary.competitorsScraped} versenytárstól. ${result.alerts.length} riasztás generálva.`,
         data: result,
       };
 
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
-      logError(this.name, `Market intel failed: ${errorMsg}`);
+      logError(this.name, `Piaci hírszerzés hiba: ${errorMsg}`);
       
       return {
-        status: 'error',
-        error: errorMsg,
+        success: false,
+        message: errorMsg,
       };
     } finally {
       setAgentStatus(this.name, 'idle');
     }
   }
+
+  // Remove the old execute method as it's now handled by executeTask and BaseAgent bridge
+
 
   // ==========================================================================
   // Core Pipeline Methods
@@ -144,59 +148,92 @@ export class MarketIntelAgent extends BaseAgent {
   /**
    * Main market intelligence analysis pipeline
    */
-  private async analyzeMarket(params: MarketIntelData): Promise<MarketIntelResult> {
+  private async analyzeMarket(params: MarketIntelData): Promise<any> {
     // Step 1: Scrape competitor prices
-    const pricePoints = await this.scrapeCompetitorPrices(params);
+    const priceSnapshots = await this.scrapeCompetitorPrices(params);
 
     // Step 2: Analyze trends
-    const trends = this.analyzeTrends(pricePoints, params);
+    const trends = this.analyzeTrends(priceSnapshots, params);
 
     // Step 3: Generate alerts
-    const alerts = this.generatePriceAlerts(pricePoints);
+    const alerts = this.generatePriceAlerts(priceSnapshots);
 
     // Step 4: Calculate summary
     const summary = {
-      productsTracked: new Set(pricePoints.map(p => p.productName)).size,
-      competitorsScraped: new Set(pricePoints.map(p => p.competitor)).size,
+      productsTracked: new Set(priceSnapshots.map(p => p.productName)).size,
+      competitorsScraped: new Set(priceSnapshots.map(p => p.competitor)).size,
       priceDropsDetected: alerts.filter(a => a.severity === 'critical').length,
-      averagePriceChangePercent: this.calculateAveragePriceChange(pricePoints),
+      averagePriceChangePercent: this.calculateAveragePriceChange(priceSnapshots),
     };
 
     return {
-      pricePoints,
+      priceSnapshots,
       trends,
+      priceChanges: trends, // Alias for compatibility
       alerts,
       summary,
     };
   }
 
   /**
-   * Scrape competitor websites for prices
-   * 
-   * NOTE: This is simulated. In production:
-   * - Use RobotkezV2Agent/browser-use for actual scraping
-   * - Implement anti-bot detection bypass
-   * - Add rate limiting and random delays
-   * - Handle dynamic pricing and AJAX-loaded content
+   * Scrape competitor websites for prices using RobotkezV2 (Real-world discovery)
    */
   private async scrapeCompetitorPrices(params: MarketIntelData): Promise<PricePoint[]> {
-    logInfo(this.name, `Scraping prices for: ${params.productCategory}...`);
+    logInfo(this.name, `Scraping real prices for: ${params.productCategory} via RobotkezV2...`);
 
-    const pricePoints: PricePoint[] = [];
     const competitors = params.competitors || this.getDefaultCompetitors(params.productCategory);
+    const pricePoints: PricePoint[] = [];
 
-    for (const competitor of competitors) {
-      // Simulated scraping (in production, would use browser automation)
-      const scraped = this.simulateCompetitorScrape(competitor, params.productCategory);
-      pricePoints.push(...scraped);
+    const instruction = `
+      Navigálj a következő versenytársak weboldalaira vagy keress rájuk: ${competitors.join(', ')}.
+      Gyűjtsd ki a ${params.productCategory} kategóriába tartozó termékek árait.
+      Add vissza az adatokat JSON formátumban a következő mezőkkel: productName, competitor, price, currency, sourceUrl.
+      Az árakat HUF-ban add meg. Csak a JSON tömböt add vissza.
+    `;
+
+    try {
+      const response = await agentManager.delegate('RobotkezV2', instruction) as any;
+      
+      if (response && response.success && response.data) {
+        logInfo(this.name, `✅ Real price scraping successful via RobotkezV2`);
+        
+        let scrapedPoints: PricePoint[] = [];
+        try {
+          const content = response.message || response.data.message || '';
+          const jsonMatch = content.match(/\[[\s\S]*\]/);
+          if (jsonMatch) {
+            scrapedPoints = JSON.parse(jsonMatch[0]);
+          } else if (Array.isArray(response.data)) {
+            scrapedPoints = response.data;
+          }
+        } catch (e) {
+          logError(this.name, `Failed to parse RobotkezV2 price JSON: ${e}`);
+        }
+
+        if (scrapedPoints.length > 0) {
+          return scrapedPoints.map(p => ({
+            ...p,
+            scrapedAt: new Date().toISOString()
+          }));
+        }
+      }
+      
+      logWarn(this.name, 'RobotkezV2 scraping returned no data, falling back to simulation for stability');
+    } catch (error) {
+      logError(this.name, `RobotkezV2 price scraping delegation failed: ${error}`);
     }
 
-    logInfo(this.name, `📊 Scraped ${pricePoints.length} price points from ${competitors.length} competitors`);
+    // Fallback to simulation (only if real fails)
+    for (const competitor of competitors) {
+      const simulated = this.simulateCompetitorScrape(competitor, params.productCategory);
+      pricePoints.push(...simulated);
+    }
+
     return pricePoints;
   }
 
   /**
-   * Simulate competitor website scraping (mock data for development)
+   * Simulate competitor website scraping (Fallback for development)
    */
   private simulateCompetitorScrape(competitor: string, category: string): PricePoint[] {
     const products = this.generateProductNames(category, 3);

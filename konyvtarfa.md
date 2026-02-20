@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 19. 7:02:26
+**Generálva:** 2026. 02. 20. 3:10:39
 **Script:** 
 
 ---
@@ -74064,14 +74064,35 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 CONDUCTOR_MANIFEST_backup_20260204.md
       - 📄 CONDUCTOR_MANIFEST_old.md
     - 📂 **tracks**
-      - 📂 **ai_recommendation_system_20260216**
-        - 📄 meta.json
-        - 📄 plan.md
-        - 📄 spec.md
-      - 📂 **bas_enterprise_suite**
-        - 📄 meta.json
-        - 📄 plan.md
-        - 📄 spec.md
+      - 📂 **archive**
+        - 📂 **ai_recommendation_system_20260216**
+          - 📄 meta.json
+          - 📄 plan.md
+          - 📄 spec.md
+        - 📂 **bas_enterprise_suite**
+          - 📄 meta.json
+          - 📄 plan.md
+          - 📄 spec.md
+        - 📂 **cloudflare_edge_agents_network_20260215**
+          - 📄 meta.json
+          - 📄 phase_1d_spec.md
+          - 📄 PHASE_5_COMPLETION.md
+          - 📄 PHASE_6_COMPLETION.md
+          - 📄 plan.md
+          - 📄 spec.md
+        - 📂 **green_lightning_20260212**
+          - 📄 meta.json
+          - 📄 spec.md
+        - 📂 **industrial_machine_hunter_20260216**
+          - 📄 meta.json
+          - 📄 plan.md
+          - 📄 spec.md
+        - 📂 **marketing_swarm_20260216**
+          - 📄 meta.json
+          - 📄 plan.md
+          - 📄 spec.md
+      - 📂 **basic-test-task-structure-20260219**
+        - 📄 track.md
       - 📂 **cean_operations_center_ui_20260215**
         - 📄 components.md
         - 📄 plan.md
@@ -74082,13 +74103,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 spec.md
       - 📂 **cean_phase2_c_prometheus_20250216**
         - 📄 components.md
-        - 📄 plan.md
-        - 📄 spec.md
-      - 📂 **cloudflare_edge_agents_network_20260215**
-        - 📄 meta.json
-        - 📄 phase_1d_spec.md
-        - 📄 PHASE_5_COMPLETION.md
-        - 📄 PHASE_6_COMPLETION.md
         - 📄 plan.md
         - 📄 spec.md
       - 📂 **cloudflare_edge_integration_20260202**
@@ -74113,6 +74127,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **dashboard_v2_robotkez_control_20260208**
         - 📄 meta.json
         - 📄 spec.md
+      - 📂 **dashboard_v3_command_center_20260219**
+        - 📄 meta.json
+        - 📄 plan.md
+        - 📄 spec.md
       - 📂 **developer_agent_2_0_20260206**
         - 📂 **P10_Metrics_Analytics**
           - 📄 spec.md
@@ -74130,13 +74148,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 plan.md
         - 📄 spec.md
         - 📄 status.md
-      - 📂 **green_lightning_20260212**
-        - 📄 meta.json
-        - 📄 spec.md
-      - 📂 **industrial_machine_hunter_20260216**
-        - 📄 meta.json
-        - 📄 plan.md
-        - 📄 spec.md
       - 📂 **innovation_bridge_20260212**
         - 📄 meta.json
         - 📄 spec.md
@@ -74154,13 +74165,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 meta.json
         - 📄 spec.md
         - 📄 track.md
-      - 📂 **marketing_swarm_20260216**
-        - 📄 meta.json
-        - 📄 plan.md
-        - 📄 spec.md
       - 📂 **micro_csr_automator_20260212**
         - 📄 meta.json
         - 📄 spec.md
+      - 📂 **modular-command-center-dashboard-v3-20260219**
+        - 📄 track.md
       - 📂 **onboarding-knowledge-manager-20260214**
         - 📄 meta.json
         - 📄 plan.md
@@ -74202,34 +74211,526 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📂 **_transactions**
           - 📄 0-22b1b609-0384-4b54-b058-166111f24d02.txn
           - 📄 1-c584d712-c43b-4664-bece-8425e4a2847a.txn
+          - 📄 11-21afb9b5-2dd6-4a85-892e-2d180f3b9eb5.txn
+          - 📄 12-bb538fc3-a1f6-46a3-b7fe-76c1b9d95f07.txn
+          - 📄 13-97fbf33f-14a5-4ca8-9b08-8bf3cab32f34.txn
+          - 📄 14-26125191-f72b-4f03-ad05-1beab81f1fd5.txn
+          - 📄 15-a3cc019b-0529-4828-a691-f7cd6543917a.txn
+          - 📄 16-00e7e845-cfb3-451b-b28f-d6a8f34d49ba.txn
+          - 📄 17-1b71eb2d-465a-42c1-bcea-c0c7fa60c796.txn
+          - 📄 18-262c9e67-ad99-4771-83e1-d7ed3d346e8b.txn
+          - 📄 19-bf365f01-7244-465d-be50-d000c5eff262.txn
           - 📄 2-44441ade-3efe-4fa7-8a80-6ed184b6c513.txn
+          - 📄 20-e37c4db6-9f9e-44a7-8bce-e98bfcd68685.txn
+          - 📄 21-37bb8d23-0ad0-45e8-b717-e4775f8971b1.txn
+          - 📄 22-e928c245-0484-4dec-ba56-18725de4c5dc.txn
+          - 📄 23-ce859250-dde0-42be-a91d-3ab55d90b022.txn
+          - 📄 24-4350d8a3-a9b4-4603-b278-cc8d8db0b050.txn
+          - 📄 25-e69739d4-ee17-4e2d-9687-b7ac7bb2434e.txn
+          - 📄 26-e40d05a5-8a30-42e8-aa6c-bbcf7859122b.txn
+          - 📄 27-f3394ff2-15f6-426e-aaa5-c4836229b7cc.txn
+          - 📄 28-e9b46a16-e165-4bff-9f89-ad54eb335cb8.txn
+          - 📄 29-27ebb328-f45c-4ce5-a426-bf82bcd05d40.txn
           - 📄 3-6480bb03-686b-4c7b-8abb-4ec0499ff9d5.txn
+          - 📄 30-73a4d2da-bcc2-4db8-a308-4566ca251d73.txn
+          - 📄 31-63f12051-1ad2-4d2e-bfb7-fa5609460b75.txn
+          - 📄 32-bac9cb92-60ca-4ab9-b33f-26e6967b9b20.txn
+          - 📄 33-ee2f99f5-a778-46eb-9112-307016bd323e.txn
+          - 📄 34-b45dcaef-21e2-42ce-950b-5ba87d5b3dbc.txn
+          - 📄 35-96ecf311-2e2c-45ca-ad8a-a84b27c1c96d.txn
+          - 📄 36-be445491-ec5f-4826-bec0-fac4bb1e7a71.txn
+          - 📄 37-9a03bc65-ff24-4c00-9fee-0a72538114a8.txn
+          - 📄 38-7e95a7ca-9c03-4a4e-82da-c8517422c843.txn
+          - 📄 39-637d00f3-9992-4eac-9978-874b012eaedc.txn
+          - 📄 4-f8880b8c-ee5f-4fb4-9c13-a9de9b0f2d2f.txn
+          - 📄 40-a7227d4e-682f-474d-9a87-1f4bdf82a6fe.txn
+          - 📄 41-ac246833-92aa-42ed-9695-6baa131c541b.txn
+          - 📄 42-2a84b4cf-844d-49a5-b4a9-d43b6b01cd76.txn
+          - 📄 43-4c4178e3-411e-4f01-b97b-366749dd24ba.txn
+          - 📄 44-a77648e4-5188-4bc3-8e6b-70f040594896.txn
+          - 📄 45-5006e3b4-3a64-4147-b26e-2f166df81eca.txn
+          - 📄 46-556bdbc4-5b97-440c-a989-d9fb53ed3be8.txn
+          - 📄 47-a1d26354-a3ca-45b7-a553-77ee2bc1fe11.txn
+          - 📄 48-56f0e250-64dc-4074-a246-44b3051d106c.txn
+          - 📄 49-7f7e3de5-7c65-47bc-8ca6-3d1f6700b50f.txn
+          - 📄 5-ab5d42a8-8e6a-4221-a9a6-87c145f0b8e1.txn
+          - 📄 50-4aed086f-6227-461a-8b9f-1268ef3a32d3.txn
+          - 📄 51-86c315d1-ab2e-428c-a40d-d3cad38bd558.txn
+          - 📄 52-694448ac-a5e5-45e0-87e9-80ad1ffa8983.txn
+          - 📄 53-b5a7eec5-8d5d-4239-a569-d14bd1581746.txn
+          - 📄 54-63d1c0e3-d7e6-4b6a-8268-0a155a1f7d75.txn
+          - 📄 55-4d46c84c-4cdf-4161-86ae-26859a1db35d.txn
+          - 📄 56-fc16b8cd-cdf6-4241-a0af-86a95379167e.txn
+          - 📄 57-d4904b99-b387-47ca-b89a-8b279c7ff926.txn
+          - 📄 58-af29faca-f609-4584-a66f-dfa4f33c514f.txn
+          - 📄 59-5fd24e39-971d-4fd3-8918-209164fd0571.txn
+          - 📄 6-40c84606-114d-49a2-a638-83b13bbe7830.txn
+          - 📄 60-4ef13eec-4c03-499e-accf-53849db89430.txn
+          - 📄 61-4e2f0df0-c06c-4715-8e55-30b2350efbad.txn
+          - 📄 62-34aed858-dc5e-4f5f-844e-4562371e599a.txn
+          - 📄 63-ba9d97e5-69bc-4550-9345-5ac45fb46601.txn
+          - 📄 64-efaa333c-511d-48f8-aae4-270b502ac774.txn
+          - 📄 65-3303c489-ade0-434b-a43d-cd238ad0fc31.txn
+          - 📄 66-c4837494-8393-4214-befd-d0b6e5fc247e.txn
+          - 📄 67-7bb08e88-6df5-4c25-a36c-14af1a9047cf.txn
+          - 📄 68-49808f82-69c7-460c-94b7-f9466bda3f28.txn
+          - 📄 69-22021abf-2ce6-4eca-ad05-1fb296dcccb2.txn
+          - 📄 7-cadd66f7-b170-4a22-9c94-e7051628a3e2.txn
+          - 📄 70-3b033be1-9f13-41ef-aceb-23e65bdafadf.txn
+          - 📄 71-80c74b8c-a818-42be-8164-93f3e41d8fc7.txn
+          - 📄 72-ba7ca004-c893-402e-8a9e-21f7044bde2c.txn
+          - 📄 73-4b12f95c-65c4-4469-a390-6a4c75ca1778.txn
+          - 📄 74-4d674461-16b0-45e4-8bc1-80fb66f88898.txn
+          - 📄 75-623ac56e-4a20-4d6f-96eb-70c541ef3f1c.txn
+          - 📄 76-760ec9a2-3f58-454c-af2b-c64aa5630751.txn
+          - 📄 77-e0bbdf06-4b04-4bdf-b7c1-5a2001a211b5.txn
+          - 📄 78-0ea394bd-c426-4192-86b8-adacfa6a2e07.txn
+          - 📄 79-8da73e42-540a-4bf3-ab0f-06c057e0b610.txn
+          - 📄 8-a67f1678-4d26-42da-8ab8-30562bb80037.txn
+          - 📄 80-279bd0c2-bbbf-4e49-959f-6b578627d6c3.txn
+          - 📄 81-63a2727b-a4dc-4237-a6ad-46966b369d0c.txn
+          - 📄 82-f71fd58b-9bbe-4051-b667-23bf2eb35ee7.txn
+          - 📄 83-078af291-3cf9-48c4-866f-a5849ba89ed8.txn
+          - 📄 84-a5b18656-df2d-4530-b6ac-c8b42f18b6ab.txn
+          - 📄 85-33d68c3e-cfb4-409c-b87a-176c6ec5a7ed.txn
+          - 📄 9-2d068e16-e73f-4119-b15b-f6acb9a8160b.txn
+          - 📄 9-8246354c-b5b3-4114-87dc-8d4e3b4e9d7a.txn
         - 📂 **_versions**
           - 📄 1.manifest
+          - 📄 10.manifest
+          - 📄 11.manifest
+          - 📄 12.manifest
+          - 📄 13.manifest
+          - 📄 14.manifest
+          - 📄 15.manifest
+          - 📄 16.manifest
+          - 📄 17.manifest
+          - 📄 18.manifest
+          - 📄 19.manifest
           - 📄 2.manifest
+          - 📄 20.manifest
+          - 📄 21.manifest
+          - 📄 22.manifest
+          - 📄 23.manifest
+          - 📄 24.manifest
+          - 📄 25.manifest
+          - 📄 26.manifest
+          - 📄 27.manifest
+          - 📄 28.manifest
+          - 📄 29.manifest
           - 📄 3.manifest
+          - 📄 30.manifest
+          - 📄 31.manifest
+          - 📄 32.manifest
+          - 📄 33.manifest
+          - 📄 34.manifest
+          - 📄 35.manifest
+          - 📄 36.manifest
+          - 📄 37.manifest
+          - 📄 38.manifest
+          - 📄 39.manifest
           - 📄 4.manifest
+          - 📄 40.manifest
+          - 📄 41.manifest
+          - 📄 42.manifest
+          - 📄 43.manifest
+          - 📄 44.manifest
+          - 📄 45.manifest
+          - 📄 46.manifest
+          - 📄 47.manifest
+          - 📄 48.manifest
+          - 📄 49.manifest
+          - 📄 5.manifest
+          - 📄 50.manifest
+          - 📄 51.manifest
+          - 📄 52.manifest
+          - 📄 53.manifest
+          - 📄 54.manifest
+          - 📄 55.manifest
+          - 📄 56.manifest
+          - 📄 57.manifest
+          - 📄 58.manifest
+          - 📄 59.manifest
+          - 📄 6.manifest
+          - 📄 60.manifest
+          - 📄 61.manifest
+          - 📄 62.manifest
+          - 📄 63.manifest
+          - 📄 64.manifest
+          - 📄 65.manifest
+          - 📄 66.manifest
+          - 📄 67.manifest
+          - 📄 68.manifest
+          - 📄 69.manifest
+          - 📄 7.manifest
+          - 📄 70.manifest
+          - 📄 71.manifest
+          - 📄 72.manifest
+          - 📄 73.manifest
+          - 📄 74.manifest
+          - 📄 75.manifest
+          - 📄 76.manifest
+          - 📄 77.manifest
+          - 📄 78.manifest
+          - 📄 79.manifest
+          - 📄 8.manifest
+          - 📄 80.manifest
+          - 📄 81.manifest
+          - 📄 82.manifest
+          - 📄 83.manifest
+          - 📄 84.manifest
+          - 📄 85.manifest
+          - 📄 86.manifest
+          - 📄 9.manifest
         - 📂 **data**
+          - 📄 0000000011110100010110103c90cf45be91fb2109259aa691.lance
+          - 📄 000010010010001011011111865a4d4ea3921679fae9c677e9.lance
+          - 📄 00001011011000010111101093b68b456797a62982fbd39666.lance
+          - 📄 000011000011111101101011ac72c74127a79ffa23ca7d9e10.lance
+          - 📄 000011111011110001100000a05c234c00ac2c4430c2b93ab6.lance
+          - 📄 00010110001010001000001077370c4ddf9da14c6f42a6b39c.lance
+          - 📄 000111000110011101011010262ef14fb287ddd09199a78a7e.lance
+          - 📄 0001110001101000101101107fb4894a729d6ae849d5c7d349.lance
+          - 📄 0001110101010100010001004c367c43c596064803ee0fd068.lance
+          - 📄 0001110111000101001011112574764574a45c1fa32f4567d0.lance
+          - 📄 0001111010100011010000102c5a1d46a097efa41f76064458.lance
+          - 📄 00011111101001110001111071f8e742f29d0b0f6b0641667b.lance
+          - 📄 001000110100111001110010cdfda046cc8722412933629a05.lance
+          - 📄 00100110000110111010111170aea64a0699d12b29e1fb49b0.lance
+          - 📄 001001100001110001010000cf5bca45eb9ebf2e1054605ccb.lance
+          - 📄 00101000000000001110111045611849d39d3522626c83fb11.lance
+          - 📄 001010011010001111101111f92c2b436c9556d969544b8a97.lance
+          - 📄 001010111101110001011011cd43fd454f9bdd7e47ebdd793e.lance
+          - 📄 0011000010110001011000117bc9ac46c3badd767d5131ddc4.lance
+          - 📄 001101001001000011100010d86c314ebd84b73174f32bae48.lance
+          - 📄 00111100111111010100100001b0324df8a55c91670cec57ca.lance
+          - 📄 001111011100101000110011b762ba4eebaa2e165146e612ce.lance
+          - 📄 01000000100001111100101074b5cf486793a5594ac9cfd6ed.lance
+          - 📄 010000011011010010101011fa8d604192b0e377bc798c040e.lance
+          - 📄 0100001110100101110100008af29d4b84a542b3a00e93a4f4.lance
           - 📄 010001011110011111101011f94db34a57980559a895fe7d01.lance
+          - 📄 0100101111001001001110012db1b74192b29c662b63c108cc.lance
           - 📄 01001101110011000010100147d1ff4654beb68359848bbc27.lance
+          - 📄 0100111100011110100101113845374c01ace55c8fa302399c.lance
+          - 📄 01010101011100001110000117733b4de0ade0c4c7f793f8c8.lance
+          - 📄 01010101100111100010110059f06b4e6c81df38d7b18c7583.lance
+          - 📄 010101100100111011000000e305c2461db71c85b66b134094.lance
+          - 📄 0101011101010010011010003d1cfc41439002b872049b0372.lance
+          - 📄 0101100001110010010100119f752f4dd5beea3ddd27c972a3.lance
+          - 📄 0101110000110001110001112972d440bcab66548b8a4b0740.lance
+          - 📄 011000100011000010010010bbfba142fb9adcca39085e8dd2.lance
+          - 📄 0110001011000011001101018664694923a7e5f57cf700d906.lance
+          - 📄 0110001111110110010000002483ad49af8417a47fc3cf8c1e.lance
+          - 📄 011001100001001100001000cea1164b3fab7ea8a54edecb71.lance
+          - 📄 011010001100111100101110dfcf0245bf940655518488839a.lance
+          - 📄 01101001110111010101111131fef643649ade884e969e23c7.lance
+          - 📄 011010110010000101011011ec76fd4f0f8795e5b2e7bcf0e6.lance
+          - 📄 011011000100100111010010e1e13645a9bc3f5881d39337af.lance
+          - 📄 01101110011011011011000051b0e249bb8ed8628b4e0cc90d.lance
+          - 📄 011011110011010110101011394c6c44fc8b0a7bfeafed2799.lance
+          - 📄 011101001000000011111110b759ae499abcacaa1f78d1ff88.lance
+          - 📄 100000010101010000011010b2211748cb802cf89cc0016e46.lance
+          - 📄 100000101101011101110101f819e84a1680f6d0a4da127a61.lance
+          - 📄 1000001011011000001010000c3e934144a3e70c4028a74c1d.lance
+          - 📄 10001010010101001101101114cb7b4c1ca38e87ca2904c3d0.lance
+          - 📄 1000101010100111010011112d11d34822946761edb027e529.lance
+          - 📄 100010110011110110101001b1ec0d4cbd87c4121f3fa8f99c.lance
+          - 📄 1000111111110010101000105ccc204682b6feaa25cf8e8fb7.lance
+          - 📄 100101010111011010110100a8e61f4e568353e489fa9cee09.lance
+          - 📄 10010110110001010000011012f79e4f5fb7b79427e8a21c29.lance
+          - 📄 100110110110110010000010ce5afb4083b66e586e67d596d4.lance
+          - 📄 1001110010001010111000013c3b364e8a8b364701851112c7.lance
+          - 📄 100111100110101111101010839eb44491b6e797855318c63d.lance
+          - 📄 1001111010111010110101100a1f3d4ce386bf0e2825863657.lance
+          - 📄 100111101101010011001110ab6cff4f099dd2468f94e65866.lance
+          - 📄 1010001111011110000110107e9686461fa7d75934ee16ce65.lance
+          - 📄 1010100110010101110110017a42024a019a8ea164cb6d8510.lance
+          - 📄 101011010101100101100011aacaf84405901919bc90e2ef5c.lance
+          - 📄 101101001101111011111100065eb246daa354a44ef5abe0be.lance
           - 📄 1011011001100011100001014f95204af987ab2b02a54b8278.lance
+          - 📄 1011011100100001110011113f0dd943bf8fa2666df1efed63.lance
+          - 📄 10111001100111110000001073ae3240439d866aabb4cc806d.lance
+          - 📄 101111100001010111000011feb1f74db1981eaa9c946def1d.lance
+          - 📄 110001011011010011100010edc4f541d9b3582b75a0bd6834.lance
+          - 📄 110100000011111101011001d1c19a483ea2b8e54992a80f87.lance
+          - 📄 110101001100111011100001a87e9c4ba4abf78ed54cb8e428.lance
+          - 📄 11010101101000111010111152e3cc4b7d82e8dd8c3b133dec.lance
+          - 📄 1101011001011010011001014cd6bd4e9bb6a26c5ffb6d6eba.lance
+          - 📄 110101101010000000101000b8607549549a255095be42b5b4.lance
+          - 📄 1101011010100000111111113d7caa4c83b3b0673b291293c0.lance
+          - 📄 110111000100010010111100636ca344ac96381feca1d1b774.lance
           - 📄 11100100011011101000001197d9934a4d879c6dc360f37151.lance
+          - 📄 111001101001100001000100dca3364e93a0734100711e3823.lance
+          - 📄 11100111100011001100110172563743fcb4eebe7c8b9399b6.lance
+          - 📄 11101011010011001011001080f06848c2bb981c41021df8dd.lance
+          - 📄 111100011001101111011010023b514df6979c4b7be01ca03d.lance
+          - 📄 111100110001110001110110c570ad4d03ad72464f373a8cf3.lance
+          - 📄 111100111100000110111111d99c7342868f57b99342d26c86.lance
+          - 📄 1111100100110010000110004c879a423a847e31909a7a8a2f.lance
+          - 📄 11111010100000011011011059345a4062bacfae4cdae48845.lance
+          - 📄 111111011101010001000100f47dd74e3f8be0eb0dbc687091.lance
       - 📂 **memory_v3_nomic.lance**
         - 📂 **_transactions**
           - 📄 0-6ec9c1db-e38e-41d1-9137-6b2f4489fcdb.txn
           - 📄 1-b9545f4c-d87a-48ab-a08d-00ab944853df.txn
+          - 📄 11-6dd78734-7b62-47c2-9f0f-a407d945196b.txn
+          - 📄 12-b182ef72-4b52-4c95-a3ca-5cabd1400a10.txn
+          - 📄 13-1c83bb5f-5b5a-4296-868a-e12b76a96377.txn
+          - 📄 14-9f8cf9a8-1d0f-4f0f-bc77-8e0fcd05e09e.txn
+          - 📄 15-d614081e-4887-41aa-9aca-65abf18dd900.txn
+          - 📄 16-2ad96941-2b3f-4b49-bd87-a510bb8901a6.txn
+          - 📄 16-7f83f015-86e6-454b-b6e5-34d970e255bc.txn
+          - 📄 18-96931312-5e05-4ac2-a355-358d1b08c08c.txn
+          - 📄 19-e21b2b19-be1a-43df-b8cb-cd2b10126170.txn
           - 📄 2-5ee7c95f-4bad-40b9-ae90-468e15e4e81c.txn
+          - 📄 20-77863f12-3b23-41c3-b2de-989e7de903c0.txn
+          - 📄 21-68ecd11f-41b7-4a8b-92fc-44857ca2c457.txn
+          - 📄 22-5da66edc-8857-4fb6-b6e1-a51390a15e3f.txn
+          - 📄 23-9095b235-ed5d-4ebb-a231-58c79b594b82.txn
+          - 📄 24-52a9870d-3c06-4b6c-9826-07ee30d66b03.txn
+          - 📄 25-e0c7e337-f396-4af1-b2e4-414ae3d91426.txn
+          - 📄 26-76a741e9-8e9f-4a69-bc88-f90b9ef813f0.txn
+          - 📄 27-8c49c5f2-3d5c-482b-887d-4036ad282510.txn
+          - 📄 28-3cefb32e-270c-4844-97fb-ac24de71b9af.txn
+          - 📄 29-9b9e47ca-a902-4462-bc8c-c60e36c6c012.txn
           - 📄 3-6c76e3ef-09b3-44fb-aacb-d96be0da8a0a.txn
+          - 📄 30-d523f8d8-0358-4e9a-8922-6f8c63344426.txn
+          - 📄 31-12039ee6-9375-4dae-bccc-9f9dafb4a787.txn
+          - 📄 32-a70bd206-3be2-41b6-8a72-5cdff2eff459.txn
+          - 📄 33-a9c27e7a-bf2c-403f-a48c-fb965b2738a3.txn
+          - 📄 34-8e7a67cc-6a7e-412c-9ca7-27363cccfd87.txn
+          - 📄 35-122714d4-4d93-4979-87a9-a0a84f1f35d0.txn
+          - 📄 36-3fd85ada-be8a-481f-bb3d-423680bb1461.txn
+          - 📄 37-d24b4aad-8d50-49fa-90de-37ad8cdc66dc.txn
+          - 📄 38-0af25efb-bb14-4b96-b3c8-759634e3ae35.txn
+          - 📄 39-b572af73-b621-4473-8c22-13f9c1852f51.txn
+          - 📄 4-57758caa-b40a-48f7-a31b-59b89c6c0a3d.txn
+          - 📄 4-a134aa7c-6082-402d-8d6d-21d2d34ae5be.txn
+          - 📄 40-b213f20b-497f-4fa2-a459-3cc82a7c4c31.txn
+          - 📄 41-0e4404dc-d155-474b-8b8a-739e7cc5ee63.txn
+          - 📄 42-a4af5df7-0d91-48cb-92db-e1896e6dd484.txn
+          - 📄 43-79a481c5-58a4-449a-ac41-fa5ed59ce0f3.txn
+          - 📄 44-30d3cb02-e5a7-4147-85c7-dcc037884a2a.txn
+          - 📄 45-9e40e99c-83cd-4bd2-80e2-c6323c9f6155.txn
+          - 📄 46-3a205f58-ac30-4952-9894-6c2b0b49d130.txn
+          - 📄 47-7ab390f9-b8ec-46ce-9370-6566633c832a.txn
+          - 📄 48-3fe8df5b-769b-4492-8d10-fe7dfca5a333.txn
+          - 📄 49-cbf6c2f6-3d09-4292-8dbd-5c00a1e7212e.txn
+          - 📄 50-3a04374b-d8d6-4bce-bb06-417f19ff4754.txn
+          - 📄 51-5c8b9dad-f36a-4a04-b626-0f117a63da35.txn
+          - 📄 52-95121811-b4c3-4750-87bc-0964cd4b07ac.txn
+          - 📄 53-708d1ea1-b9f6-4699-814d-9308a13b3663.txn
+          - 📄 54-99c3ed98-5137-46e2-add3-6d2329923fe9.txn
+          - 📄 55-bb935efc-7bce-44d1-94e0-fb851b574e9a.txn
+          - 📄 56-0d8382c2-6d54-485e-b0d7-e08225bf18ea.txn
+          - 📄 57-28946d4c-0938-4093-ac84-48e711ea6bc8.txn
+          - 📄 58-2bea150e-240a-4902-a212-61f0e8fee4a3.txn
+          - 📄 59-f24a63c1-2273-43c9-b389-071ab0f54865.txn
+          - 📄 6-3f7fc8fa-b32c-4005-bc57-524323f7f213.txn
+          - 📄 60-d02c2791-ee93-4fb9-b67f-39a63b9a8c52.txn
+          - 📄 61-12729a43-95f0-44b4-87fd-4a4090d10501.txn
+          - 📄 62-96825f62-8a22-4c9f-8889-98ce7a47fc18.txn
+          - 📄 63-19f31066-bd58-4f8d-a8a3-a1176c8c1d0b.txn
+          - 📄 64-107907c2-9e8d-4430-9cce-a3781b2ee316.txn
+          - 📄 65-0adbd4e2-996b-4f1f-ac82-52e120347622.txn
+          - 📄 66-f7f27824-f16b-4ab1-90b4-8ed2be21fd12.txn
+          - 📄 67-dc5811ef-0c56-431b-91b8-f08b3e553512.txn
+          - 📄 68-f6e9ef69-f610-469c-8221-ea06990cc522.txn
+          - 📄 69-38c86880-6e96-4651-be97-c606706ea433.txn
+          - 📄 7-ef19fa09-a344-4028-aab9-e709299a0393.txn
+          - 📄 70-5b6f43c9-ffee-4bc5-914a-46e7489bff36.txn
+          - 📄 71-3d1ffcaf-bf5b-4275-b66a-b91d72db8b6b.txn
+          - 📄 72-196d3968-8830-4bc4-8c42-190f7f206856.txn
+          - 📄 73-43407dbc-9464-4399-b8fd-77f9176207fc.txn
+          - 📄 74-d65c1e88-8dfc-4031-ad75-16411e4decf0.txn
+          - 📄 75-3544be25-f6ee-4ca5-bd8d-d008b6482ba5.txn
+          - 📄 76-f79fe13d-7282-4fca-87c1-091b6090a068.txn
+          - 📄 77-49ea9397-9647-4f91-86fd-0a2970d4dcf3.txn
+          - 📄 78-48bc698f-2beb-4507-859f-8346e0e7b082.txn
+          - 📄 79-9b771382-981c-4e77-99f7-8f70dec7358c.txn
+          - 📄 8-1351929e-84e8-4958-a373-ffc2ac86bd77.txn
+          - 📄 80-0aedaf36-9001-493e-9581-37e1dcea3e66.txn
+          - 📄 81-93abcb87-e056-4452-9a36-58456be241dd.txn
+          - 📄 82-b93d19d5-ba37-4131-bc4c-94742f0d8e2e.txn
+          - 📄 83-4692c4b7-9961-4185-a13e-b4098f23df4e.txn
+          - 📄 84-a7038eac-5d99-43fb-aec5-2ca03290e221.txn
+          - 📄 85-840a5ce6-17d3-4476-92b1-1c658147bded.txn
+          - 📄 9-2aad9d50-657d-4c50-957b-b3db34c93a9d.txn
+          - 📄 9-6de274a4-b716-4dc7-84a1-2abee3b291c9.txn
         - 📂 **_versions**
           - 📄 1.manifest
+          - 📄 10.manifest
+          - 📄 11.manifest
+          - 📄 12.manifest
+          - 📄 13.manifest
+          - 📄 14.manifest
+          - 📄 15.manifest
+          - 📄 16.manifest
+          - 📄 17.manifest
+          - 📄 18.manifest
+          - 📄 19.manifest
           - 📄 2.manifest
+          - 📄 20.manifest
+          - 📄 21.manifest
+          - 📄 22.manifest
+          - 📄 23.manifest
+          - 📄 24.manifest
+          - 📄 25.manifest
+          - 📄 26.manifest
+          - 📄 27.manifest
+          - 📄 28.manifest
+          - 📄 29.manifest
           - 📄 3.manifest
+          - 📄 30.manifest
+          - 📄 31.manifest
+          - 📄 32.manifest
+          - 📄 33.manifest
+          - 📄 34.manifest
+          - 📄 35.manifest
+          - 📄 36.manifest
+          - 📄 37.manifest
+          - 📄 38.manifest
+          - 📄 39.manifest
           - 📄 4.manifest
+          - 📄 40.manifest
+          - 📄 41.manifest
+          - 📄 42.manifest
+          - 📄 43.manifest
+          - 📄 44.manifest
+          - 📄 45.manifest
+          - 📄 46.manifest
+          - 📄 47.manifest
+          - 📄 48.manifest
+          - 📄 49.manifest
+          - 📄 5.manifest
+          - 📄 50.manifest
+          - 📄 51.manifest
+          - 📄 52.manifest
+          - 📄 53.manifest
+          - 📄 54.manifest
+          - 📄 55.manifest
+          - 📄 56.manifest
+          - 📄 57.manifest
+          - 📄 58.manifest
+          - 📄 59.manifest
+          - 📄 6.manifest
+          - 📄 60.manifest
+          - 📄 61.manifest
+          - 📄 62.manifest
+          - 📄 63.manifest
+          - 📄 64.manifest
+          - 📄 65.manifest
+          - 📄 66.manifest
+          - 📄 67.manifest
+          - 📄 68.manifest
+          - 📄 69.manifest
+          - 📄 7.manifest
+          - 📄 70.manifest
+          - 📄 71.manifest
+          - 📄 72.manifest
+          - 📄 73.manifest
+          - 📄 74.manifest
+          - 📄 75.manifest
+          - 📄 76.manifest
+          - 📄 77.manifest
+          - 📄 78.manifest
+          - 📄 79.manifest
+          - 📄 8.manifest
+          - 📄 80.manifest
+          - 📄 81.manifest
+          - 📄 82.manifest
+          - 📄 83.manifest
+          - 📄 84.manifest
+          - 📄 85.manifest
+          - 📄 86.manifest
+          - 📄 9.manifest
         - 📂 **data**
+          - 📄 0000001110100111001101109f74a949829a89f741d8009ba3.lance
+          - 📄 0000011111111000111011109147db4762991ee1138aec3d0e.lance
+          - 📄 0000100100100011100100117df27b4f5abe803373ee5f986e.lance
+          - 📄 00001001001100000001110118abd94a05955dcf0ea3a4238e.lance
+          - 📄 000010101010111001000000b223e74555b9f7812e68517db9.lance
+          - 📄 000010111110111001000100fc4be84fe989c4340e375d4fc0.lance
+          - 📄 000011000100101010101110f6d18c4bf2bf5a684231a9bdf5.lance
+          - 📄 000011001101101111101101b3ce1442cfb7d14932877d1bdc.lance
+          - 📄 00001100111100011100011130a91e403882921ef1a3a7d519.lance
+          - 📄 000011100000011100110001daff1d4957a84f85b8594048af.lance
+          - 📄 000101000101101111011000feef814155bb5bcef35d9cda7f.lance
+          - 📄 0001010101100010000010005e91244d7896b1a8c82a4a54ba.lance
+          - 📄 0010000010101110101101002a6f4848679e8dffe1a0b12cf8.lance
+          - 📄 0010000101101101010000005c34964d88b776b6fa8205c703.lance
+          - 📄 001000100101110100110000ad92794a7cbd9f2d4a35552f5f.lance
+          - 📄 00100101010000110101001049a96b4faaa391f4a8c90ef6be.lance
+          - 📄 0010010101101111101011019115cc47abaf58b3528862f590.lance
+          - 📄 0010101111111111101010117158294d91a7580582bd1bbfc2.lance
+          - 📄 0010110011100111000101111fa4ea4647a1cb0d0c1d504f05.lance
           - 📄 00101110011101011011110176d1e745cca74a0b4409c0c106.lance
+          - 📄 0011101111001110011010013330a34dc4b3998dc302e36864.lance
+          - 📄 00111101001101100011100029eed743dea406cde575804357.lance
+          - 📄 00111111001100100110100002e63741ea8620d36835c6e49d.lance
+          - 📄 0100001001111111001000101f1eda4345984f4e54d8a41dda.lance
           - 📄 0100001100000110111000118c99614349854df4ec291924f7.lance
+          - 📄 0100100001101101100110111fd1fb43e9bc1cb0b81620a0a3.lance
+          - 📄 010010001000111110110100925cfc4d99b87ebbc5d5377bd4.lance
+          - 📄 0100101000011011000010014decf64532bba37d59ea6fdec5.lance
+          - 📄 0100110110010110000100005ef2624aa285b190dde89c9b71.lance
+          - 📄 0101000011010011000001111ad5604f9ab27793210abae27d.lance
+          - 📄 0101000100011010010110116ff2ce4e69bfdf916715d6c7d1.lance
+          - 📄 010100100011100000100110da31a642079a635127ec36773a.lance
+          - 📄 01010011110001101011001065256f467f8285a884956921b8.lance
+          - 📄 010111010000101010111001d6661c4e198bbcc6f9b6821202.lance
+          - 📄 0101110101110001101000106125bf4cc090918ffa6541ee4b.lance
+          - 📄 010111110100101101111100c60e784482883014de099a3c9f.lance
           - 📄 011000011111100010001001ec05cc42b7ba142c1a026dc628.lance
+          - 📄 0110001111110110110100117334964a9ba983db1082c62004.lance
+          - 📄 0110011101100010001000017a6a124b6e9848e25f67c1c4f3.lance
+          - 📄 011010011011100010011101c64a5b4b198e0da38ac40f6ad5.lance
           - 📄 011010011011111000111110d84914439192e965cecbeac9e8.lance
+          - 📄 01101101010110010011110123aff94c28a25bb3a3a9cbe736.lance
+          - 📄 0111000001100011010101105dfefa42a3ba35f241cbf4b9e6.lance
+          - 📄 0111001011000011110011104b0c614b22991763505d5a6c81.lance
+          - 📄 011101000000101100110011738eec4ead97dd2db536d89cf5.lance
+          - 📄 0111101111101001011011107e8fca4dbf92d54b04435bcced.lance
+          - 📄 0111111011011011000011010fa5f746b1a06da41533cdcf28.lance
+          - 📄 100010000011110001000000ac6d184985b266e299f0579754.lance
+          - 📄 1001001010001101110000106558854878899bd5adb3c1808a.lance
+          - 📄 1001001010001111111111115428c94cba98cbed9f2e24ede7.lance
+          - 📄 1001111010100011010000013095de4e54abc3abc2851df59f.lance
+          - 📄 1010101010011010110110119132744614b191c324c59491bb.lance
+          - 📄 1010110111100001111010112628b24e9bb555ba52d914182f.lance
+          - 📄 1011001100111111011001113f4a8c463a986d5c19f4fc7c65.lance
+          - 📄 1011010101010100110100113c51a44d869b629bc3f4dd1c5b.lance
+          - 📄 101111001001001110000000404bd0454eba7b5eb54423dbb5.lance
+          - 📄 101111001011111100000101dff1e1460b8d163b813861d83e.lance
+          - 📄 10111100110001111000011191351d4563b204fb316d3b210a.lance
+          - 📄 101111011011101011011110c403cd4c88ae21424dc57993bc.lance
+          - 📄 11000001101101101100010074ef2c45fb94f03b1b58ac0d66.lance
+          - 📄 11000011101111110001001168fa2147eda0702e01742c0038.lance
+          - 📄 11000011111100010011010084955a4e3c979700471710b447.lance
+          - 📄 110001010111100001111101c1035f4494bb8796dc12de65a8.lance
+          - 📄 1100011000001100110000006518884453a8588cbb0231be78.lance
+          - 📄 1100011000101010101110118791eb404fb253583f965b91fb.lance
+          - 📄 1100101101100110100011111d21ac4293b664af7de20d774a.lance
+          - 📄 1100110011011101100000009ac470481b8849790cfe328a20.lance
+          - 📄 11001110001011100010100078fd3348d5a0ec96559083ea63.lance
+          - 📄 11010101001010011110101110dfb64821876f2a6d536ed251.lance
+          - 📄 1101010110010000000011010dcb584a82acf9b8bf787c50d3.lance
+          - 📄 110101111111000010001010b41000434c8ab47d1d9f29d2d2.lance
+          - 📄 110110001010000100101111ce49bf491ebdf39aa5432647c2.lance
+          - 📄 11011000101011100010110051450e4019becc5fc3299ae9e5.lance
+          - 📄 110110001101000100011100bc74e1442abdf6166c879965f2.lance
+          - 📄 1101111101001001000101103eaa0e47b599eff3af17f7f270.lance
+          - 📄 111000100001111000110010f12d23431ca663b947329d7ea1.lance
+          - 📄 111001001101110100011001eb8c8b4f9598fbc2f2706eca06.lance
+          - 📄 111010000011011111100101fbfef54a9b83ba8b52982f7b7b.lance
+          - 📄 111011001011111110100100697e5c4175a187afc283bfb05e.lance
+          - 📄 111011100010001001101110450139441da761f3dc6d50b52d.lance
+          - 📄 1111010011100101100100001ded0a4a538dfde68ef210c037.lance
+          - 📄 1111010111001011110101115745494c5d99276b35587a2840.lance
+          - 📄 1111101010011110011101003a091f44b3964137b4dd248a4b.lance
+          - 📄 111110101111101010011011d11acf460f8cdbbcca63988ea3.lance
+          - 📄 111111011010000100101111c8df7740729108a291f7b95e10.lance
+          - 📄 11111111110101110011000086d7154aebaebfa5452b24ffd6.lance
       - 📂 **memory.lance**
         - 📂 **_transactions**
           - 📄 0-d2558cf7-a79c-4ece-b386-98d5a394a520.txn
@@ -74412,6 +74913,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📂 **users**
     - 📄 ## Chat Customization Diagnostics.md
     - 📄 1.jpg
+    - 📄 10.jpg
+    - 📄 11.jpg
+    - 📄 12.jpg
     - 📄 2.jpg
     - 📄 2026-02-06-.txt
     - 📄 2026-02-06-this-session-is-being-continued-from-a-previous-co.txt
@@ -74423,6 +74927,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 6.jpg
     - 📄 7.jpg
     - 📄 8.jpg
+    - 📄 9.jpg
     - 📄 AGENT_PERMISSIONS_GUIDE.md
     - 📄 CEAN_ALERTING_RUNBOOK.md
     - 📄 CEAN_API_KEY_SETUP_GUIDE.md
@@ -74470,6 +74975,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 cloudflare-tunnel-setup.md
     - 📄 DASHBOARD_INVOICE_TEST_REPORT.md
     - 📄 github-runner-setup.md
+    - 📄 GOOGLE_WORKSPACE_SETUP.md
     - 📄 GYOKER_RENDEZESI_JAVASLAT.md
     - 📄 harvester-structured-json.md
     - 📄 interpreter clli.md
@@ -147756,7 +148262,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 __init__.py
       - 📄 invoice_refiner.py
     - 📂 **refiners**
+      - 📄 __init__.py
       - 📄 enterprise_factory.py
+      - 📄 factory.py
     - 📂 **sandbox_env**
     - 📂 **scenarios**
       - 📄 harvester_extraction_example.json
@@ -147814,6 +148322,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 test_tools.py
       - 📄 test_trend_analyst.py
       - 📄 test_vision_worker.py
+      - 📄 test_workers_lancedb_batch.py
+      - 📄 test_workers_ocr.py
+      - 📄 test_workers_web_scraper.py
     - 📂 **tools**
       - 📂 **__pycache__**
         - 📄 __init__.cpython-314.pyc
@@ -147860,11 +148371,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 trend_analyst.cpython-312.pyc
       - 📄 cma_worker.py
       - 📄 geo_scraper.py
+      - 📄 lancedb_batch.py
       - 📄 machine_hunter.py
       - 📄 media_factory.py
+      - 📄 ocr_worker.py
       - 📄 route_optimizer.py
       - 📄 supply_matcher.py
       - 📄 trend_analyst.py
+      - 📄 web_scraper.py
     - 📂 **workflows**
       - 📄 n8n_lint_fixer_automation.json
     - 📄 __init__.py
@@ -148214,21 +148728,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 README.md
   - 📂 **playwright-report**
     - 📂 **data**
-      - 📄 056bf1e284c9aaa835e177c2e34ab69816ccb28b.md
-      - 📄 12c2c8a75d9fbf666a36fe8645908507911ce8b6.png
-      - 📄 1b9245275d3b261f77336a1e011fc6e5cb841a99.md
-      - 📄 2b10b5d28aa46c69f0f33ae22f8447082bef8826.png
-      - 📄 4d073e539df787e4c805bd82e05e6ed8cf6eee4a.webm
-      - 📄 54b6c16810307c4961601ffd0499c0e61c82762f.webm
-      - 📄 658311d922d81ec2bc31626e100fb64711421785.md
-      - 📄 70c2d4ee0e1b790609401be58c6c84113097fd1e.webm
-      - 📄 7d960aa87d5936e7247689171f4b263bd675dcd5.png
-      - 📄 a50c6b1576ac7d326cd96d3d4ea3f6aedd477b54.png
-      - 📄 a57174a1fbdb777a4a4b5aef3f94b734750d8345.webm
-      - 📄 a99c9b42ef9968955fd561be9d6f97cbe6f97224.png
-      - 📄 b45bfdd29f2c6dc48af5033b77a07f6b82edf336.webm
-      - 📄 c126e6a6ec8be2f8618b1a004865df8735643914.md
-      - 📄 f7424e72f693480332e0af60410f84b1bb378c51.md
+      - 📄 53a19fc0634178bd3ab8ab37b3722a2f822a276c.webm
     - 📄 index.html
   - 📂 **public**
     - 📄 index.html
@@ -148263,6 +148763,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 generate_tree.mjs
     - 📄 generate-ai-context.js
     - 📄 github_token_help.txt
+    - 📄 health_check.js
     - 📄 health_check.ts
     - 📄 init_lancedb.py
     - 📄 jules_api_client.py
@@ -148334,29 +148835,39 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 DeveloperAgent.ts
       - 📄 developerPipeline.ts
       - 📄 DevOpsAgent.ts
+      - 📄 DigitalHeadhunterAgent.ts
       - 📄 DigitalOfficeManager.ts
       - 📄 DocsIntelligenceAgent.ts
       - 📄 DynamicAgent.ts
       - 📄 DynamicAgentLoader.ts
       - 📄 EdgeProxyAgent.ts
+      - 📄 EmailTriageAgent.ts
       - 📄 EnterpriseOrchestrator.ts
+      - 📄 EnterpriseOrchestratorAgent.ts
       - 📄 EvaluatorAgent.ts
       - 📄 FinanceGuardian.ts
+      - 📄 FinancialGuardAgent.ts
       - 📄 GenesisOrchestrator.ts
       - 📄 GitHubModelsAgent.ts
       - 📄 gitIntegration.ts
       - 📄 GrantHunter.ts
+      - 📄 GrantWatcherAgent.ts
       - 📄 HeadHunterAgent.ts
+      - 📄 KnowledgeBaseBuilderAgent.ts
       - 📄 KnowledgeBuilder.ts
       - 📄 LintFixerAgent.ts
+      - 📄 LocalCSRAgent.ts
       - 📄 LocalCSRBot.ts
       - 📄 LogisticsDispatcher.ts
+      - 📄 LogisticsDispatcherAgent.ts
       - 📄 MarketingAgent.ts
+      - 📄 MarketIntelAgent.ts
       - 📄 NurturerAgent.ts
       - 📄 OrchestratorAgent.ts
       - 📄 permissions.ts
       - 📄 PricingAgent.ts
       - 📄 ProactiveClaimsAgent.ts
+      - 📄 ProcurementAgent.ts
       - 📄 ProjectConductorAgent.ts
       - 📄 PropertyAnalystAgent.ts
       - 📄 PythonAgent.ts
@@ -148365,6 +148876,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 RobotkezAgent.ts
       - 📄 RobotkezV2Agent.ts
       - 📄 SalesAgent.ts
+      - 📄 SalesHunterAgent.ts
       - 📄 SentimentAnalysisModule.ts
       - 📄 specStatus.ts
       - 📄 SpecWriterAgent.ts
@@ -148376,6 +148888,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 VoiceAgent.ts
     - 📂 **cli**
       - 📄 conductorCommands.ts
+      - 📄 dashboardCommands.test.ts
+      - 📄 dashboardCommands.ts
       - 📄 devCommands.ts
       - 📄 edgeCommands.ts
       - 📄 goldCommands.ts
@@ -148387,6 +148901,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 suggestedTasksCommands.ts
       - 📄 taskDecomposerCommands.ts
       - 📄 tracksCommands.ts
+      - 📄 workspaceCommands.ts
     - 📂 **commands**
     - 📂 **config**
       - 📄 index.ts
@@ -148452,10 +148967,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 CEANNavBar.tsx
           - 📄 types.ts
         - 📂 **dashboard**
+          - 📄 AdminSelfCheckWidget.test.tsx
+          - 📄 AdminSelfCheckWidget.tsx
           - 📄 AgentFactory.tsx
           - 📄 AgentManagementPanel.tsx
           - 📄 AgentRegistryCard.tsx
           - 📄 AgentStatusCard.tsx
+          - 📄 AgentStatusMonitor.tsx
           - 📄 AgentToolsManager.tsx
           - 📄 AnythingLLMIntegration.tsx
           - 📄 AuditPanel.tsx
@@ -148478,16 +148996,21 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 InvoiceSyncWidget.tsx
           - 📄 JulesPanel.tsx
           - 📄 KnowledgeBasePanel.tsx
+          - 📄 LiveChatterWidget.tsx
           - 📄 LiveExecutionMonitor.tsx
           - 📄 LiveIndicator.tsx
           - 📄 LLMProvidersPanel.tsx
           - 📄 LogViewer.tsx
           - 📄 MCPCommandCenter.tsx
           - 📄 MetricsCard.tsx
+          - 📄 MissionControlLayout.test.tsx
           - 📄 MissionControlLayout.tsx
           - 📄 ModelRouterPanel.tsx
           - 📄 NeuralLinkChat.tsx
           - 📄 PhoenixPanel.tsx
+          - 📄 ProcessControlWidget.test.tsx
+          - 📄 ProcessControlWidget.tsx
+          - 📄 PythonWorkersPanel.tsx
           - 📄 QuickActionsPanel.tsx
           - 📄 RobotkezPanel.tsx
           - 📄 RobotkezV2Chat.tsx
@@ -148500,6 +149023,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 SuggestedTasksWidget.tsx
           - 📄 SystemHealthCard.tsx
           - 📄 TaskDecomposerPanel.tsx
+          - 📄 TaskDetailsModal.tsx
           - 📄 TaskQueueMonitor.tsx
           - 📄 TerminalLog.tsx
           - 📄 TestResultsWidget.tsx
@@ -148585,6 +149109,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 useDashboardData.ts
         - 📄 useEdgeWebSocket.ts
         - 📄 useMCP.ts
+        - 📄 useSystemSignal.test.ts
+        - 📄 useSystemSignal.ts
         - 📄 useTTS.ts
       - 📂 **lib**
         - 📂 **chat**
@@ -148601,6 +149127,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 providerRegistry.ts
           - 📄 sessionStore.ts
           - 📄 types.ts
+        - 📂 **layout**
+          - 📄 LayoutContext.test.tsx
+          - 📄 LayoutContext.tsx
+          - 📄 types.ts
         - 📄 agentResponseFormatter.ts
         - 📄 apiService.ts
         - 📄 auth.ts
@@ -148616,6 +149146,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 CloudflareDeployment.tsx
         - 📄 FleetManager.tsx
         - 📄 NeuralMap.tsx
+      - 📂 **store**
+        - 📄 systemSignalStore.ts
       - 📂 **styles**
         - 📄 theme.css
       - 📂 **ui**
@@ -148655,7 +149187,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 cean.ts
         - 📄 chat.ts
         - 📄 cloudflare.ts
+        - 📄 dashboard.ts
         - 📄 developer.ts
+        - 📄 enterprise.ts
         - 📄 evhunter.ts
         - 📄 external.ts
         - 📄 files.ts
@@ -148669,6 +149203,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 mcp.ts
         - 📄 metrics.ts
         - 📄 prometheus.ts
+        - 📄 pythonWorkers.ts
         - 📄 recommendation.ts
         - 📄 robotkez.ts
         - 📄 scaling.ts
@@ -148683,6 +149218,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 workers.ts
         - 📄 wrangler.ts
       - 📂 **schedulers**
+        - 📄 scheduledTasksRunner.ts
         - 📄 testRunner.ts
       - 📄 auditRoutes.ts
       - 📄 cron.ts
@@ -148739,12 +149275,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 testSchedulerTool.ts
       - 📄 toolPermissions.ts
       - 📄 unifiedGoogleWorkspaceTool.ts
+      - 📄 unifiedWorkspace.ts
       - 📄 workspace.ts
       - 📄 writeSheetsInvoices.ts
     - 📂 **types**
       - 📄 blueprint.ts
       - 📄 cean.ts
       - 📄 deploymentErrors.ts
+      - 📄 enterprise.ts
       - 📄 github.ts
       - 📄 llm.ts
       - 📄 property.ts
@@ -148815,151 +149353,294 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 szamlazz_hu_client_test.cpython-314-pytest-9.0.1.pyc
     - 📂 **dashboard**
       - 📂 **components**
+        - 📄 ErrorBoundary.test.js
         - 📄 ErrorBoundary.test.tsx
+        - 📄 NeuralLinkChat.test.js
         - 📄 NeuralLinkChat.test.tsx
       - 📂 **mocks**
+        - 📄 handlers.js
         - 📄 handlers.ts
+      - 📄 setup.js
       - 📄 setup.ts
     - 📂 **e2e**
+      - 📄 action-triggering.spec.js
       - 📄 action-triggering.spec.ts
+      - 📄 dashboard-comprehensive.spec.js
       - 📄 dashboard-comprehensive.spec.ts
+      - 📄 error-handling.spec.js
       - 📄 error-handling.spec.ts
+      - 📄 mission-control.spec.js
       - 📄 mission-control.spec.ts
+      - 📄 navigation.spec.js
       - 📄 navigation.spec.ts
+      - 📄 smoke-v3.spec.ts
+      - 📄 socket-reconnect.spec.js
       - 📄 socket-reconnect.spec.ts
+      - 📄 tabs-advanced.spec.js
       - 📄 tabs-advanced.spec.ts
+      - 📄 tabs-basic.spec.js
       - 📄 tabs-basic.spec.ts
     - 📄 ## Chat Customization Diagnostics.md
+    - 📄 activity_feed.test.js
     - 📄 activity_feed.test.ts
+    - 📄 agent_template.test.js
     - 📄 agent_template.test.ts
+    - 📄 agentTracer.test.js
     - 📄 agentTracer.test.ts
+    - 📄 aiGateway.test.js
     - 📄 aiGateway.test.ts
+    - 📄 api_v1.test.js
     - 📄 api_v1.test.ts
+    - 📄 approval_manager.test.js
     - 📄 approval_manager.test.ts
+    - 📄 auditLog.test.js
     - 📄 auditLog.test.ts
+    - 📄 backgroundTaskManager.test.js
     - 📄 backgroundTaskManager.test.ts
+    - 📄 bifrost_gateway.test.js
     - 📄 bifrost_gateway.test.ts
+    - 📄 browser_rendering.test.js
     - 📄 browser_rendering.test.ts
+    - 📄 cean-alerting.test.js
     - 📄 cean-alerting.test.ts
+    - 📄 cean-metrics.test.js
     - 📄 cean-metrics.test.ts
+    - 📄 checkpoint.test.js
     - 📄 checkpoint.test.ts
+    - 📄 checkpointRetention.test.js
     - 📄 checkpointRetention.test.ts
+    - 📄 cli_config.test.js
     - 📄 cli_config.test.ts
+    - 📄 cloudflare_integration.test.js
     - 📄 cloudflare_integration.test.ts
+    - 📄 cloudflare_routes.test.js
     - 📄 cloudflare_routes.test.ts
+    - 📄 code_review.test.js
     - 📄 code_review.test.ts
+    - 📄 code_scaffold.test.js
     - 📄 code_scaffold.test.ts
+    - 📄 codebaseIndexer.test.js
     - 📄 codebaseIndexer.test.ts
+    - 📄 configSchema.test.js
     - 📄 configSchema.test.ts
+    - 📄 conflictMediatorAgent.test.js
+    - 📄 conflictMediatorAgent.test.ts
+    - 📄 context_builder.test.js
     - 📄 context_builder.test.ts
+    - 📄 core_tools.test.js
     - 📄 core_tools.test.ts
+    - 📄 coverage_analysis.test.js
     - 📄 coverage_analysis.test.ts
+    - 📄 dashboard_chat_lib.test.js
     - 📄 dashboard_chat_lib.test.ts
+    - 📄 data_refiner.test.js
     - 📄 data_refiner.test.ts
+    - 📄 degradationPolicy.test.js
     - 📄 degradationPolicy.test.ts
+    - 📄 delegation_chain.test.js
     - 📄 delegation_chain.test.ts
+    - 📄 deploymentAnalyzer.test.js
     - 📄 deploymentAnalyzer.test.ts
+    - 📄 dev_commands.test.js
     - 📄 dev_commands.test.ts
+    - 📄 developer_pipeline.test.js
     - 📄 developer_pipeline.test.ts
+    - 📄 DeveloperAgent.test.js
     - 📄 DeveloperAgent.test.ts
+    - 📄 digitalHeadhunterAgent.test.js
+    - 📄 digitalHeadhunterAgent.test.ts
+    - 📄 e2b_sandbox_manager.test.js
     - 📄 e2b_sandbox_manager.test.ts
+    - 📄 edge_health_monitor.test.js
     - 📄 edge_health_monitor.test.ts
+    - 📄 emailTriageAgent.test.js
+    - 📄 emailTriageAgent.test.ts
+    - 📄 enterpriseOrchestrator.test.js
     - 📄 enterpriseOrchestrator.test.ts
+    - 📄 enterpriseOrchestratorAgent.test.js
+    - 📄 enterpriseOrchestratorAgent.test.ts
+    - 📄 ev_hunter_research.test.js
     - 📄 ev_hunter_research.test.ts
+    - 📄 evHunterTool.test.js
     - 📄 evHunterTool.test.ts
+    - 📄 failover_registry.test.js
     - 📄 failover_registry.test.ts
+    - 📄 financialGuardAgent.test.js
+    - 📄 financialGuardAgent.test.ts
+    - 📄 fleetService.test.js
     - 📄 fleetService.test.ts
+    - 📄 git_integration.test.js
     - 📄 git_integration.test.ts
     - 📄 gmail_invoice_client_test.py
+    - 📄 goldenDatasetBridge.test.js
     - 📄 goldenDatasetBridge.test.ts
     - 📄 google_sheets_client_phase4_test.py
+    - 📄 grantWatcherAgent.test.js
+    - 📄 grantWatcherAgent.test.ts
+    - 📄 health_check.test.js
     - 📄 health_check.test.ts
+    - 📄 heartbeatMonitor.test.js
     - 📄 heartbeatMonitor.test.ts
+    - 📄 hooks.test.js
     - 📄 hooks.test.ts
     - 📄 incubator_test.py
+    - 📄 input_sanitization.test.js
     - 📄 input_sanitization.test.ts
     - 📄 invoice_automation_e2e_test.py
     - 📄 invoice_enhanced.test.py
     - 📄 invoice_refiner_test.py
+    - 📄 ironCladBackend.test.js
     - 📄 ironCladBackend.test.ts
+    - 📄 jcai-e2e-test.js
     - 📄 jcai-e2e-test.ts
+    - 📄 jcai-phase3-verification.test.js
     - 📄 jcai-phase3-verification.test.ts
+    - 📄 jcai-webhook-manual-test.js
     - 📄 jcai-webhook-manual-test.ts
+    - 📄 jules_e2e_pipeline.test.js
     - 📄 jules_e2e_pipeline.test.ts
+    - 📄 jules_workflow_routes.test.js
     - 📄 jules_workflow_routes.test.ts
+    - 📄 knowledgeBaseBuilderAgent.test.js
+    - 📄 knowledgeBaseBuilderAgent.test.ts
+    - 📄 lint_fixer.test.js
     - 📄 lint_fixer.test.ts
+    - 📄 llm_client.test.js
     - 📄 llm_client.test.ts
+    - 📄 llm_provider.test.js
     - 📄 llm_provider.test.ts
+    - 📄 llmPlanner.test.js
     - 📄 llmPlanner.test.ts
+    - 📄 localCSRAgent.test.js
+    - 📄 localCSRAgent.test.ts
+    - 📄 logisticsDispatcherAgent.test.js
+    - 📄 logisticsDispatcherAgent.test.ts
     - 📄 marketing_swarm_integration_test.py
+    - 📄 marketIntelAgent.test.js
+    - 📄 marketIntelAgent.test.ts
+    - 📄 mcp_server.test.js
     - 📄 mcp_server.test.ts
     - 📄 mcp-brunella-core.code-workspace
+    - 📄 memory_context.test.js
     - 📄 memory_context.test.ts
+    - 📄 memoryRoutes.golden.test.js
     - 📄 memoryRoutes.golden.test.ts
+    - 📄 metricsArchiveService.test.js
     - 📄 metricsArchiveService.test.ts
+    - 📄 metricsService.test.js
     - 📄 metricsService.test.ts
+    - 📄 middleware.test.js
     - 📄 middleware.test.ts
+    - 📄 modelRouter.test.js
     - 📄 modelRouter.test.ts
+    - 📄 monitor.test.js
     - 📄 monitor.test.ts
+    - 📄 monitor.vitest.js
     - 📄 monitor.vitest.ts
+    - 📄 n8n_automation.test.js
     - 📄 n8n_automation.test.ts
+    - 📄 notificationService.test.js
     - 📄 notificationService.test.ts
+    - 📄 persistentBrowser.test.js
     - 📄 persistentBrowser.test.ts
+    - 📄 phase2_integration.test.js
     - 📄 phase2_integration.test.ts
+    - 📄 phase3_integration.test.js
     - 📄 phase3_integration.test.ts
+    - 📄 phase4_real_estate.test.js
     - 📄 phase4_real_estate.test.ts
+    - 📄 phase4_software_genesis.test.js
     - 📄 phase4_software_genesis.test.ts
+    - 📄 phase4_supply_chain.test.js
     - 📄 phase4_supply_chain.test.ts
+    - 📄 phase42-costopt.test.js
     - 📄 phase42-costopt.test.ts
+    - 📄 phase43-e2e.test.js
     - 📄 phase43-e2e.test.ts
+    - 📄 phase6-integration.test.js
     - 📄 phase6-integration.test.ts
+    - 📄 phoenix_event_bus.test.js
     - 📄 phoenix_event_bus.test.ts
     - 📄 phoenix_protocol_test.py
+    - 📄 phoenix_recovery.test.js
     - 📄 phoenix_recovery.test.ts
+    - 📄 phoenixRecoveryLogic.test.js
     - 📄 phoenixRecoveryLogic.test.ts
+    - 📄 procurementAgent.test.js
+    - 📄 procurementAgent.test.ts
+    - 📄 project_conductor_living_docs.test.js
     - 📄 project_conductor_living_docs.test.ts
+    - 📄 prometheus_metrics.test.js
     - 📄 prometheus_metrics.test.ts
+    - 📄 python_mcp_server.test.js
     - 📄 python_mcp_server.test.ts
+    - 📄 python_shell.test.js
     - 📄 python_shell.test.ts
+    - 📄 rag.test.js
     - 📄 rag.test.ts
+    - 📄 responseFormatter.test.js
     - 📄 responseFormatter.test.ts
+    - 📄 retryStrategy.test.js
     - 📄 retryStrategy.test.ts
+    - 📄 robotkez_integration.test.js
     - 📄 robotkez_integration.test.ts
+    - 📄 robotkez_v2_integration.test.js
     - 📄 robotkez_v2_integration.test.ts
+    - 📄 robotkezAPI.test.js
     - 📄 robotkezAPI.test.ts
+    - 📄 robotkezV2.e2e.test.js
     - 📄 robotkezV2.e2e.test.ts
+    - 📄 robotkezV2Agent.test.js
     - 📄 robotkezV2Agent.test.ts
+    - 📄 routes_developer.test.js
     - 📄 routes_developer.test.ts
+    - 📄 safe_zone_validator.test.js
     - 📄 safe_zone_validator.test.ts
+    - 📄 salesHunterAgent.test.js
+    - 📄 salesHunterAgent.test.ts
+    - 📄 scalingService.test.js
     - 📄 scalingService.test.ts
+    - 📄 scheduledTasks.test.js
     - 📄 scheduledTasks.test.ts
+    - 📄 setup.js
     - 📄 setup.ts
+    - 📄 skills_loader.test.js
     - 📄 skills_loader.test.ts
+    - 📄 smoke.vitest.js
     - 📄 smoke.vitest.ts
+    - 📄 socketService.test.js
     - 📄 socketService.test.ts
+    - 📄 specStatus.test.js
     - 📄 specStatus.test.ts
+    - 📄 SpecWriterAgent.test.js
     - 📄 SpecWriterAgent.test.ts
+    - 📄 state_restoration.test.js
     - 📄 state_restoration.test.ts
+    - 📄 structured_output.test.js
     - 📄 structured_output.test.ts
+    - 📄 suggestedTasks.test.js
     - 📄 suggestedTasks.test.ts
+    - 📄 swagger_spec.test.js
     - 📄 swagger_spec.test.ts
+    - 📄 swarm_coordinator.test.js
     - 📄 swarm_coordinator.test.ts
     - 📄 szamlazz_hu_client_test.py
+    - 📄 task_queue.test.js
     - 📄 task_queue.test.ts
+    - 📄 taskDecomposerCore.test.js
     - 📄 taskDecomposerCore.test.ts
+    - 📄 telemetry.test.js
     - 📄 telemetry.test.ts
+    - 📄 tracks_todos_routes.test.js
     - 📄 tracks_todos_routes.test.ts
+    - 📄 trackTodoParser.test.js
     - 📄 trackTodoParser.test.ts
+    - 📄 unifiedWorkspace.test.js
+    - 📄 unifiedWorkspace.test.ts
+    - 📄 webhooks.test.js
     - 📄 webhooks.test.ts
   - 📂 **test-results**
-    - 📂 **dashboard-comprehensive-🎯-3ad41-d---szolgáltatások-állapota-chromium**
-    - 📂 **dashboard-comprehensive-🎯-582ca-Control-Kártyák-megjelennek-chromium**
-      - 📄 error-context.md
-      - 📄 test-failed-1.png
-      - 📄 video.webm
-    - 📂 **dashboard-comprehensive-🎯-980af-gáció---minden-tab-elérhető-chromium**
-      - 📄 error-context.md
-      - 📄 test-failed-1.png
+    - 📂 **smoke-v3-Dashboard-V3-Smok-e235b-tcher-and-essential-widgets-chromium**
       - 📄 video.webm
   - 📂 **testing**
     - 📂 **hirszerzes_test_1**
@@ -148989,6 +149670,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 _ARCHIVE_SESSION_COMPLETION_REPORT.md
   - 📄 agents.db
   - 📄 AnythingLLM
+  - 📄 aranyfolyam.md
   - 📄 BEFORE_AFTER_COMPARISON.md
   - 📄 BOOTSTRAP.md
   - 📄 Brunella
@@ -149000,6 +149682,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 DAILY_SUMMARY_2026_02_18.txt
   - 📄 DASHBOARD_TEST_REPORT_COMPREHENSIVE.md
   - 📄 DASHBOARD_TEST_REPORT.md
+  - 📄 docker-compose.prod.yml
   - 📄 docker-compose.yml
   - 📄 Dockerfile.node
   - 📄 Dockerfile.python
@@ -149067,5 +149750,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 vitest_results.json
   - 📄 vitest.config.ts
   - 📄 vitest.dashboard.config.ts
+  - 📄 vitest.ui.config.ts
   - 📄 workflow.md
   - 📄 wrangler.toml.disabled

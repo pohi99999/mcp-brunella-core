@@ -1,6 +1,6 @@
 import React from "react";
 import { SystemHealthCard } from "@/components/dashboard/SystemHealthCard";
-import { AgentStatusCard } from "@/components/dashboard/AgentStatusCard";
+import { AgentStatusMonitor } from "@/components/dashboard/AgentStatusMonitor";
 import { JulesPanel } from "@/components/dashboard/JulesPanel";
 import { TerminalLog } from "@/components/dashboard/TerminalLog";
 import { TrackProgressWidget } from "@/components/dashboard/TrackProgress";
@@ -9,6 +9,10 @@ import { SuggestedTasksWidget } from "@/components/dashboard/SuggestedTasksWidge
 import { TaskQueueMonitor } from "@/components/dashboard/TaskQueueMonitor";
 import { FileExplorer } from "@/components/dashboard/FileExplorer";
 import { QuickActionsPanel } from "@/components/dashboard/QuickActionsPanel";
+import { LiveChatterWidget } from "@/components/dashboard/LiveChatterWidget";
+import { ScheduledTasksPanel } from "@/components/dashboard/ScheduledTasksPanel";
+import { ProcessControlWidget } from "@/components/dashboard/ProcessControlWidget";
+import { AdminSelfCheckWidget } from "@/components/dashboard/AdminSelfCheckWidget";
 
 export interface WidgetDefinition {
   id: string;
@@ -33,7 +37,7 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
   agent_status: {
     id: "agent_status",
     label: "Agent Status",
-    component: AgentStatusCard,
+    component: AgentStatusMonitor,
     defaultSize: { w: 6, h: 8 }
   },
   jules: {
@@ -72,10 +76,34 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
     component: TaskQueueMonitor,
     defaultSize: { w: 6, h: 8 }
   },
+  agent_chatter: {
+    id: "agent_chatter",
+    label: "Agent Chatter",
+    component: LiveChatterWidget,
+    defaultSize: { w: 6, h: 8 }
+  },
+  scheduled_tasks: {
+    id: "scheduled_tasks",
+    label: "Scheduled Tasks",
+    component: ScheduledTasksPanel,
+    defaultSize: { w: 6, h: 8 }
+  },
   files: {
     id: "files",
     label: "Filesystem",
     component: FileExplorer,
+    defaultSize: { w: 6, h: 8 }
+  },
+  process_control: {
+    id: "process_control",
+    label: "Process Control",
+    component: ProcessControlWidget,
+    defaultSize: { w: 6, h: 8 }
+  },
+  admin_self_check: {
+    id: "admin_self_check",
+    label: "Admin Self-Check",
+    component: AdminSelfCheckWidget,
     defaultSize: { w: 6, h: 8 }
   }
 };

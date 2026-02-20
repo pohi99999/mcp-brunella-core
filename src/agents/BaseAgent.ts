@@ -8,6 +8,8 @@
 
 import { IAgent, ISwarmContext, AgentHandoff, AgentResponse } from './types.js';
 import { formatAgentResult } from '../utils/responseFormatter.js';
+import { searchRAG, addToIndex } from '../utils/rag.js';
+import { logInfo, logError } from '../utils/logger.js';
 
 export interface AgentContext {
   task?: string;
@@ -18,6 +20,7 @@ export interface AgentContext {
 export interface AgentResult {
   success: boolean;
   message: string;
+  status?: string;       // Opcionális státusz (pl. 'success', 'error' - teszt kompatibilitás)
   data?: unknown;
   handoff?: AgentHandoff;
   thoughts?: string;
@@ -47,12 +50,24 @@ export abstract class BaseAgent implements IAgent {
    * Magyar nyelvű válaszokat ad vissza az AgentResult formázásával.
    */
   async execute(task: string, context?: any): Promise<AgentResponse> {
+    // 1. Kognitív memória lekérdezése végrehajtás előtt
+    const pastExperiences = await this.queryMemory(task, 3);
+    
     const agentContext: AgentContext = {
       task,
+      pastExperiences, // Átadjuk az ügynöknek a múltbeli tapasztalatokat
       ...(context || {})
     };
 
     const result = await this.executeTask(agentContext);
+
+    // 2. Tapasztalat mentése a memóriába (siker és hiba is)
+    const outcome = result.success ? 'SIKER' : 'HIBA';
+    const experienceContent = `Feladat: "${task}" | Eredmény: ${outcome} | Üzenet: ${result.message}`;
+    await this.saveToMemory(experienceContent, { 
+      status: result.success ? 'success' : 'error',
+      taskId: context?.taskId 
+    });
 
     // Format result as Hungarian human-readable text
     const formattedMessage = formatAgentResult(result, this.name, { useEmojis: true });
@@ -81,5 +96,34 @@ export abstract class BaseAgent implements IAgent {
         reason
       }
     };
+  }
+
+  /**
+   * Query the agent's cognitive memory (LanceDB)
+   */
+  protected async queryMemory(query: string, limit = 5): Promise<Array<{ text: string; score?: number }>> {
+    logInfo(this.name, `Memória lekérdezése: "${query.substring(0, 50)}..."`);
+    try {
+      const results = await searchRAG(query, limit);
+      return results.map(r => ({ text: r.text, score: r.score }));
+    } catch (e) {
+      logError(this.name, `Memória lekérdezés hiba: ${e}`);
+      return [];
+    }
+  }
+
+  /**
+   * Save an experience to the cognitive memory
+   */
+  protected async saveToMemory(content: string, metadata: any = {}): Promise<void> {
+    const memoryContent = `[${this.name}] ${content}`;
+    const memoryId = metadata.id || `${this.name.toLowerCase()}_${Date.now()}`;
+    
+    logInfo(this.name, `Tapasztalat mentése a memóriába: ${memoryId}`);
+    try {
+      await addToIndex(memoryId, memoryContent);
+    } catch (e) {
+      logError(this.name, `Memória mentési hiba: ${e}`);
+    }
   }
 }

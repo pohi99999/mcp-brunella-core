@@ -21,7 +21,8 @@ async function main() {
       await import("@modelcontextprotocol/sdk/server/stdio.js");
     const { startWebServer } = await import("./server/web.js");
     const { registerAllTools } = await import("./server/registry.js");
-    const { agentManager } = await import("./agents/AgentManager.js");
+    const { initializeAgentManager } = await import("./agents/AgentManager.js"); // agentManager removed from destructuring
+    const { socketService } = await import("./server/SocketService.js");
     const { validateSecrets } = await import("./utils/validateSecrets.js");
     const { readFileSync } = await import("fs");
 
@@ -41,15 +42,17 @@ async function main() {
       version: pkgVersion,
     });
 
-    // Register Tools
-    await registerAllTools(server);
-
     validateSecrets();
 
+    // Start web server first to initialize socketService and agentManager
     await startWebServer();
+    const initializedAgentManager = initializeAgentManager(socketService); // Call the initializer and capture the returned instance
+
+    // Register Tools - agentManager should now be initialized
+    await registerAllTools(server);
 
     // Start Autonomous Worker Loop
-    agentManager.startWorkerLoop();
+    initializedAgentManager.startWorkerLoop();
 
     const transport = new StdioServerTransport();
     await server.connect(transport);
@@ -61,7 +64,7 @@ async function main() {
         `\n[Shutdown] Received ${signal}, graceful shutdown initiated...`,
       );
       try {
-        agentManager.stopWorkerLoop();
+        initializedAgentManager.stopWorkerLoop(); // Use the captured instance
         // Flush and shut down OpenTelemetry before exit
         const { shutdownOtelTracing } = await import("./utils/otelTracing.js");
         await shutdownOtelTracing();
