@@ -11,8 +11,27 @@
  * - JULES_RESPONSE_DELAY=1000  // Simulate network latency
  */
 
-import { logInfo, logWarn } from '../utils/logger.js';
-import type { DeploymentAnalysis } from '../tools/deploymentAnalyzer.js';
+// Removing dependencies to fix Cloudflare Worker build failures
+// import { logInfo, logWarn } from '../utils/logger.js';
+// import type { DeploymentAnalysis } from '../tools/deploymentAnalyzer.js';
+
+function logInfo(tag: string, message: string) {
+  // console.log(`[INFO] [${tag}] ${message}`);
+}
+
+function logWarn(tag: string, message: string) {
+  // console.warn(`[WARN] [${tag}] ${message}`);
+}
+
+// Minimal interface to avoid import dependency
+interface DeploymentAnalysis {
+  category: string;
+  errors?: string[];
+  summary: string;
+  suggestions?: string[];
+  confidence: number;
+  [key: string]: any;
+}
 
 export interface JulesFixResponse {
   status: 'success' | 'error' | 'partial';
