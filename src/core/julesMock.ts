@@ -224,6 +224,19 @@ function selectMockResponse(analysis: DeploymentAnalysis): JulesFixResponse {
 }
 
 /**
+ * Helper to safely access environment variables in diverse environments (Worker, Node.js)
+ */
+function getEnv(key: string): string | undefined {
+  if (typeof process !== 'undefined' && process.env) {
+    return process.env[key];
+  }
+  // Fallback for Cloudflare Workers where env might be on globalThis or not available directly
+  // Note: Usually Workers pass env to the handler, but for shared code we might check globalThis if configured.
+  // If env is not available, return undefined.
+  return undefined;
+}
+
+/**
  * Jules AI Client with Mock Support
  */
 export class JulesAICoreClient {
@@ -232,9 +245,10 @@ export class JulesAICoreClient {
   private responseDelay: number;
 
   constructor() {
-    this.useMock = process.env.JULES_MOCK_MODE !== 'false';
-    this.apiUrl = process.env.JULES_API_URL || '';
-    this.responseDelay = parseInt(process.env.JULES_RESPONSE_DELAY || '1000', 10);
+    const mockMode = getEnv('JULES_MOCK_MODE');
+    this.useMock = mockMode !== 'false';
+    this.apiUrl = getEnv('JULES_API_URL') || '';
+    this.responseDelay = parseInt(getEnv('JULES_RESPONSE_DELAY') || '1000', 10);
   }
 
   /**
@@ -298,7 +312,7 @@ export class JulesAICoreClient {
    * Call real Jules AI API
    */
   private async callRemoteJulesAPI(analysis: DeploymentAnalysis): Promise<JulesFixResponse> {
-    const apiKey = process.env.JULES_API_KEY;
+    const apiKey = getEnv('JULES_API_KEY');
     if (!apiKey) {
       throw new Error("Missing JULES_API_KEY environment variable");
     }
@@ -307,7 +321,13 @@ export class JulesAICoreClient {
     const timeoutId = setTimeout(() => controller.abort(), 30000); // 30s timeout
 
     try {
-      const response = await fetch(`${this.apiUrl}/v1/generate-fix`, {
+      // Ensure fetch is available
+      const fetchFn = globalThis.fetch;
+      if (!fetchFn) {
+        throw new Error("Global fetch is not available in this environment");
+      }
+
+      const response = await fetchFn(`${this.apiUrl}/v1/generate-fix`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
