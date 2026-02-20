@@ -403,7 +403,10 @@ export function NeuralLinkChat() {
                       <div className="flex flex-col gap-1 px-1">
                         <button
                           onClick={() => toggleThoughts(i)}
-                          className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors w-fit"
+                          aria-expanded={!!expandedThoughts[i]}
+                          aria-controls={`thought-content-${i}`}
+                          aria-label={expandedThoughts[i] ? "Hide thought process details" : "Show thought process details"}
+                          className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-sm"
                         >
                           <span
                             className={`w-1.5 h-1.5 rounded-full ${msg.thoughts ? "bg-amber-500 animate-pulse" : "bg-zinc-500"}`}
@@ -417,7 +420,7 @@ export function NeuralLinkChat() {
                         </button>
 
                         {expandedThoughts[i] && (
-                          <div className="mt-2 space-y-3 animate-in fade-in duration-200">
+                          <div id={`thought-content-${i}`} className="mt-2 space-y-3 animate-in fade-in duration-200">
                             {msg.thoughts && (
                               <div className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
                                 <p className="text-[11px] italic text-amber-500/80 leading-normal">
