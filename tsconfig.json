@@ -9,8 +9,8 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
-    "types": ["node"]
+    "types": ["node", "vitest/globals"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "src/dashboard"]
+  "exclude": ["node_modules", "src/dashboard", "src/cli/dashboardCommands.test.ts"]
 }

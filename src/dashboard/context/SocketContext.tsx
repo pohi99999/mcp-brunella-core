@@ -43,10 +43,20 @@ export interface AgentStatusEntry {
   lastUpdated: number;
 }
 
+export interface ChatterEntry {
+  id: string;
+  sender: string;
+  receiver?: string;
+  message: string;
+  context?: any;
+  timestamp: number;
+}
+
 interface SocketState {
   isConnected: boolean;
   logs: LogEntry[];
   agents: Map<string, AgentStatusEntry>;
+  chatter: ChatterEntry[];
   robotkezPlan: RobotkezPlan | null;
   robotkezSteps: RobotkezStep[];
 }
@@ -55,6 +65,7 @@ type SocketAction =
   | { type: "connect" }
   | { type: "disconnect" }
   | { type: "log"; payload: Omit<LogEntry, "id"> }
+  | { type: "chatter"; payload: Omit<ChatterEntry, "id"> }
   | {
       type: "agent_update";
       payload: {
@@ -68,7 +79,9 @@ type SocketAction =
   | { type: "robotkez_clear" };
 
 const MAX_LOGS = 200;
+const MAX_CHATTER = 100;
 let logIdCounter = 0;
+let chatterIdCounter = 0;
 
 function socketReducer(state: SocketState, action: SocketAction): SocketState {
   switch (action.type) {
@@ -83,6 +96,14 @@ function socketReducer(state: SocketState, action: SocketAction): SocketState {
       };
       const logs = [newLog, ...state.logs].slice(0, MAX_LOGS);
       return { ...state, logs };
+    }
+    case "chatter": {
+      const newChatter: ChatterEntry = {
+        ...action.payload,
+        id: `chat-${++chatterIdCounter}`,
+      };
+      const chatter = [newChatter, ...state.chatter].slice(0, MAX_CHATTER);
+      return { ...state, chatter };
     }
     case "agent_update": {
       const { agentName, status, taskDescription } = action.payload;
@@ -122,6 +143,7 @@ const initialState: SocketState = {
   isConnected: false,
   logs: [],
   agents: new Map(),
+  chatter: [],
   robotkezPlan: null,
   robotkezSteps: []
 };
@@ -132,9 +154,7 @@ interface SocketContextValue extends SocketState {
 
 const SocketContext = createContext<SocketContextValue | null>(null);
 
-const SOCKET_URL =
-  import.meta.env.VITE_SOCKET_URL ||
-  (import.meta.env.DEV ? "http://localhost:3000" : window.location.origin);
+const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "";
 
 export function SocketProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(socketReducer, initialState);
@@ -143,7 +163,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const socket = io(SOCKET_URL, {
       path: "/socket.io",
-      transports: ["websocket", "polling"],
+      transports: ["polling", "websocket"],
       reconnection: true,
       reconnectionAttempts: 5,
       reconnectionDelay: 1000,
@@ -241,6 +261,28 @@ export function SocketProvider({ children }: { children: ReactNode }) {
             type: data.type ?? "info",
             timestamp: data.timestamp ?? Date.now(),
             source: data.source,
+          },
+        });
+      },
+    );
+
+    socket.on(
+      "agent:chatter",
+      (data: {
+        sender: string;
+        receiver?: string;
+        message: string;
+        context?: any;
+        timestamp?: number;
+      }) => {
+        dispatch({
+          type: "chatter",
+          payload: {
+            sender: data.sender,
+            receiver: data.receiver,
+            message: data.message,
+            context: data.context,
+            timestamp: data.timestamp ?? Date.now(),
           },
         });
       },

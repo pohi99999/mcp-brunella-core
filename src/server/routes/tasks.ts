@@ -117,5 +117,58 @@ export function createTaskRoutes(): Router {
         }
     });
 
+    router.post('/pause', async (req, res) => {
+        try {
+            const taskId = Number(req.body.taskId);
+            if (Number.isNaN(taskId)) {
+                res.status(400).json({ error: 'taskId is required' });
+                return;
+            }
+            const ok = await agentManager.pauseTask(taskId);
+            if (!ok) {
+                res.status(404).json({ error: 'Task not found or not resumable' });
+                return;
+            }
+            res.json({ status: 'paused', taskId });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    router.post('/resume', async (req, res) => {
+        try {
+            const taskId = Number(req.body.taskId);
+            if (Number.isNaN(taskId)) {
+                res.status(400).json({ error: 'taskId is required' });
+                return;
+            }
+            const ok = await agentManager.resumeTask(taskId);
+            if (!ok) {
+                res.status(404).json({ error: 'Task not found or not resumable' });
+                return;
+            }
+            res.json({ status: 'pending', taskId });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    router.post('/reorder', async (req, res) => {
+        try {
+            const { taskIds } = req.body;
+            if (!Array.isArray(taskIds) || taskIds.some(isNaN)) {
+                res.status(400).json({ error: 'taskIds must be an array of numbers' });
+                return;
+            }
+            agentManager.updateTaskOrder(taskIds);
+            res.json({ status: 'reordered', taskIds });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
     return router;
 }

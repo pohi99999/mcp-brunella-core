@@ -2,6 +2,7 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { Terminal } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { LogEntry, LogType } from '@/context/SocketContext'
+import { useSystemSignal } from '@/hooks/useSystemSignal'
 
 interface TerminalLogProps {
   /** Real-time logs from SocketContext. If empty, shows placeholder. */
@@ -26,7 +27,10 @@ function logTypeToTerminalType(type: LogType): 'output' | 'command' | 'error' | 
   }
 }
 
-export function TerminalLog({ logs = [], className }: TerminalLogProps) {
+export function TerminalLog({ logs: propLogs, className }: TerminalLogProps) {
+  const { logs: signalLogs } = useSystemSignal();
+  const logs = propLogs || signalLogs || [];
+
   const displayLines =
     logs.length > 0
       ? logs.map((log) => ({

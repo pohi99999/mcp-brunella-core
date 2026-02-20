@@ -97,6 +97,7 @@ export interface InvoiceData {
   vendorName?: string;
   pdfPath?: string;
   extractedText?: string;
+  description?: string;
 }
 
 export interface GrantEligibilityData {

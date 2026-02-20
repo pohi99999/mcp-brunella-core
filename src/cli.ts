@@ -34,6 +34,7 @@ import { registerRobotkezCommands } from "./cli/robotkezCommands.js";
 import { registerConductorCommands } from "./cli/conductorCommands.js";
 import { registerInvoiceCommands } from "./cli/invoiceCommands.js";
 import { registerWorkspaceCommands } from "./cli/workspaceCommands.js";
+import { dashboardCommand } from "./cli/dashboardCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -231,17 +232,34 @@ program
 
 // --- agent (execute specific agent)
 program
-  .command("agent <agentName> <task>")
+  .command("agent <agentName> [task]") // Make task optional if --file is used
   .description("Execute a specific agent with a task")
+  .option("--file <path>", "Read task from a file") // New option
   .option("--context <json>", "Context as JSON string")
   .option("--json", "Output raw JSON response")
   .action(
     async (
       agentName: string,
-      task: string,
-      cmd?: { opts: () => { context?: string; json?: boolean } },
+      task: string | undefined, // task can be undefined now
+      cmd?: { opts: () => { file?: string; context?: string; json?: boolean } },
     ) => {
       const opts = cmd?.opts?.() ?? {};
+      let finalTask: string;
+
+      if (opts.file) {
+        try {
+          finalTask = readFileSync(opts.file, "utf-8");
+        } catch (e: any) {
+          console.error(chalk.red(`Error reading task file: ${e.message}`));
+          process.exit(1);
+        }
+      } else if (task) {
+        finalTask = task;
+      } else {
+        console.error(chalk.red("Error: Task or --file option is required."));
+        process.exit(1);
+      }
+      
       let context: any = {};
 
       if (opts.context) {
@@ -262,7 +280,7 @@ program
         // Call agent_execute tool
         const result = await client.callTool("agent_execute", {
           agentName,
-          task,
+          task: finalTask, // Use finalTask here
           context: JSON.stringify(context),
         });
 
@@ -1228,6 +1246,7 @@ registerInvoiceCommands(program);
 
 // Register Workspace commands (Google Workspace API)
 registerWorkspaceCommands(program);
+dashboardCommand(program);
 
 // Register Conductor commands (Track State Management) - MOVED AFTER conductorCmd definition
 

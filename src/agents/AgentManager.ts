@@ -37,6 +37,7 @@ import { recordAgentExecution } from "../utils/metrics.js";
 import { checkToolPermission } from "../tools/toolPermissions.js";
 import { record as auditRecord } from "../core/auditLog.js";
 import { getPendingFixes, updateFixStatus } from "../utils/fixQueue.js";
+import { SocketServiceClass } from "../server/SocketService.js"; // Import SocketServiceClass type
 import type { IAgent } from "./types.js";
 import { formatResponse } from "../utils/responseFormatter.js";
 
@@ -114,7 +115,7 @@ interface QueuedTask {
   parentId?: number;
   createdAt: string;
   startedAt?: string;
-  status: "pending" | "running" | "done" | "error" | "cancelled";
+  status: "pending" | "running" | "done" | "error" | "cancelled" | "paused";
 }
 
 export class AgentManager extends EventEmitter {
@@ -133,8 +134,16 @@ export class AgentManager extends EventEmitter {
   private readonly FAILURE_THRESHOLD = 3;
   private readonly RESET_TIMEOUT = 5 * 60 * 1000; // 5 perc
 
-  constructor() {
+  public socketService: SocketServiceClass; // Public property
+
+  constructor(socketService?: SocketServiceClass) {
     super();
+    // Use provided socketService or create a no-op mock for testing
+    this.socketService = socketService || ({
+      broadcastChatter: () => {},
+      emit: () => {},
+      on: () => {},
+    } as any);
     this.registry = this.loadRegistry();
     this.edgeConfig = this.loadEdgeConfig();
   }
@@ -340,6 +349,7 @@ export class AgentManager extends EventEmitter {
       "AgentManager",
       `Task delegálás: ${task.instruction.slice(0, 50)}...`,
     );
+    this.socketService.broadcastChatter("Orchestrator", `Feladat delegálása folyamatban: ${task.instruction.slice(0, 50)}...`);
 
     // 1. Edge-first stratégia (ha engedélyezve és elérhető)
     if (this.edgeConfig.enabled && this.edgeProxy?.isEdgeHealthy?.()) {
@@ -448,6 +458,8 @@ export class AgentManager extends EventEmitter {
   ): Promise<TaskResult> {
     const executionStart = Date.now();
     const cb = this.getCircuitBreaker(agentName);
+
+    this.socketService.broadcastChatter("System", `Ügynök indítása: ${agentName}`, agentName);
 
     // RULE-OB1: Start trace span for this agent execution
     const trace = traceAgentExecution(
@@ -601,6 +613,7 @@ export class AgentManager extends EventEmitter {
         successCount: runtime.successCount + 1,
       });
       setAgentStatus(agentName, "idle", instruction);
+      this.socketService.broadcastChatter(agentName, `Feladat sikeresen elvégezve: ${instruction.slice(0, 50)}...`, "System");
 
       // RULE-PH1: checkpoint on success
       await saveCheckpoint(
@@ -655,6 +668,7 @@ export class AgentManager extends EventEmitter {
         errorCount: runtime.errorCount + 1,
       });
       setAgentStatus(agentName, "error", instruction);
+      this.socketService.broadcastChatter(agentName, `⚠️ HIBA a végrehajtás során: ${lastError?.message || "Ismeretlen hiba"}`, "System");
 
       // ================================================================
       // PHOENIX PROTOCOL SZINT 4: Cross-Agent Failover
@@ -687,6 +701,7 @@ export class AgentManager extends EventEmitter {
           });
 
           logInfo('AgentManager', `Phoenix Failover: ${agentName} → ${fallbackAgent} (attempt ${i + 1}/${fallbacks.length})`);
+          this.socketService.broadcastChatter(agentName, `🔄 Phoenix Failover aktiválva: ${agentName} → ${fallbackAgent}`, fallbackAgent);
           const failoverStart = Date.now();
 
           try {
@@ -1389,8 +1404,49 @@ export class AgentManager extends EventEmitter {
     if (!task) return false;
     task.status = "pending";
     task.startedAt = undefined;
-    await updateTaskStatus(taskId, "pending");
+    await updateTaskStatus(taskId, "pending", "Retried by user");
     return true;
+  }
+
+  async pauseTask(taskId: number): Promise<boolean> {
+    const task = this.taskQueue.find((t) => t.id === taskId);
+    if (!task) return false;
+    if (task.status === "running" || task.status === "pending") {
+      task.status = "paused";
+      await updateTaskStatus(taskId, "paused", "Paused by user");
+      return true;
+    }
+    return false;
+  }
+
+  async resumeTask(taskId: number): Promise<boolean> {
+    const task = this.taskQueue.find((t) => t.id === taskId);
+    if (!task) return false;
+    if (task.status === "paused") {
+      task.status = "pending";
+      await updateTaskStatus(taskId, "pending", "Resumed by user");
+      return true;
+    }
+    return false;
+  }
+
+  updateTaskOrder(taskIds: number[]): void {
+    // Create a map for quick lookup of tasks by their ID
+    const taskMap = new Map<number, QueuedTask>();
+    this.taskQueue.forEach(task => taskMap.set(task.id, task));
+
+    const newQueue: QueuedTask[] = [];
+    for (const id of taskIds) {
+      const task = taskMap.get(id);
+      if (task) {
+        newQueue.push(task);
+        taskMap.delete(id); // Remove from map to handle tasks not in new order
+      }
+    }
+
+    // Add any remaining tasks that were not in the newOrderIds (e.g., newly queued tasks)
+    this.taskQueue = [...newQueue, ...Array.from(taskMap.values())];
+    logInfo("AgentManager", `Task queue reordered. New order: ${this.taskQueue.map(t => t.id).join(", ")}`);
   }
 
   /** Registry definíciók (alias listAgentDefinitions) */
@@ -1587,5 +1643,11 @@ export class AgentManager extends EventEmitter {
   }
 }
 
-export const agentManager = new AgentManager();
+export const agentManager = new AgentManager(); // Initialize singleton with undefined socketService (can be set later)
+
+export function initializeAgentManager(socketService: SocketServiceClass): AgentManager {
+  agentManager.socketService = socketService; // Set the socketService
+  return agentManager;
+}
+
 export default AgentManager;

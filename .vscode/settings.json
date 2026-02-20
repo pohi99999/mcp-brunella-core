@@ -231,7 +231,6 @@
             "allowedModels": [
                 "copilot/auto",
                 "copilot/claude-haiku-4.5",
-                "copilot/claude-opus-41",
                 "copilot/claude-opus-4.5",
                 "copilot/claude-opus-4.6",
                 "copilot/claude-opus-4.6-fast",
@@ -242,9 +241,7 @@
                 "copilot/gemini-3-pro-preview",
                 "copilot/gpt-4.1",
                 "copilot/gpt-4o",
-                "copilot/gpt-5",
                 "copilot/gpt-5-mini",
-                "copilot/gpt-5-codex",
                 "copilot/gpt-5.1",
                 "copilot/gpt-5.1-codex",
                 "copilot/gpt-5.1-codex-max",
