@@ -131,6 +131,21 @@
 			],
 			"gallery": "https://api.mcp.github.com",
 			"version": "0.0.1-seed"
+		},
+		"my-mcp-server-ae032121": {
+			"type": "stdio",
+			"command": "@modelcontextprotocol/server-filesystem",
+			"args": []
+		},
+		"filesystem": {
+			"command": "npx",
+			"args": [
+				"-y",
+				"@modelcontextprotocol/server-filesystem",
+				"/Users/username/Desktop",
+				"/path/to/other/allowed/dir"
+			],
+			"type": "stdio"
 		}
 	},
 	"inputs": [

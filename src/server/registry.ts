@@ -7,6 +7,7 @@ import {
   testSchedulerRunHandler,
   testSchedulerStatusHandler,
 } from "../tools/testSchedulerTool.js";
+import { agentManager } from "../agents/AgentManager.js";
 import {
   getSzamlazzInvoicesTool,
   getSzamlazzInvoicesHandler,
@@ -141,12 +142,9 @@ const registeredToolsList: RegisteredToolInfo[] = [
 // Internal tool handler map
 const toolHandlers = new Map<string, (args: any) => Promise<any>>();
 
-let agentManager: any = null;
-
 export async function registerAgents() {
-  if (!agentManager) {
-    agentManager = (await import("../agents/AgentManager.js")).agentManager;
-  }
+  // AgentManager is now directly imported and always available
+  // No need for conditional import here
 
   // Initialize AgentManager - this loads all agents from registry.json
   await agentManager.initialize();

@@ -26,7 +26,7 @@ import { v4 as uuidv4 } from "uuid";
 import { toolManager } from "./ToolManager.js";
 import { mcpProcessManager } from "./McpProcessManager.js";
 import { mcpClientManager } from "../utils/mcpClientManager.js";
-import { agentManager } from "../agents/AgentManager.js";
+import { AgentManager, agentManager, initializeAgentManager } from "../agents/AgentManager.js"; // Import class and init function, and the exported singleton variable
 import { persistentBrowser } from "../utils/persistentBrowser.js";
 import {
   corsWhitelist,
@@ -65,6 +65,7 @@ import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers, registerF
 import testSchedulerRoutes from "./routes/testScheduler.js";
 import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
 import { startScheduler as startCronScheduler } from "./cron.js";
+import { scheduledTasksRunner } from "./schedulers/scheduledTasksRunner.js";
 import { initTestResultsDb } from "../core/testResultsService.js";
 import { initSuggestedTasksDb } from "../core/suggestedTasksScanner.js";
 import { createScheduledTasksRoutes } from "./routes/scheduledTasks.js";
@@ -73,6 +74,7 @@ import githubWebhookRouter from "./routes/githubWebhook.js";
 import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
 import { createEnterpriseRouter } from "./routes/enterprise.js";
 import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
+import { createDashboardRoutes } from "./routes/dashboard.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -240,6 +242,9 @@ export async function startWebServer() {
   // Add Scheduled Tasks routes to v1
   v1Router.use("/scheduled-tasks", createScheduledTasksRoutes(db));
 
+  // Add Dashboard routes to v1
+  v1Router.use("/dashboard", createDashboardRoutes());
+
   // Add Webhook routes to v1
   v1Router.use("/webhooks", createWebhookRoutes(db));
 
@@ -261,6 +266,7 @@ export async function startWebServer() {
     },
   });
   socketService.init(io);
+  initializeAgentManager(socketService); // Initialize agentManager here
 
   io.on("connection", (socket) => {
     logInfo("WebSocket", `Client connected: ${socket.id}`);
@@ -426,6 +432,10 @@ export async function startWebServer() {
   // Initialize cron scheduler (EV Hunter, Track Sync, etc.)
   logInfo("Server", "Starting cron scheduler (EV Hunter 08:00, Track Sync hourly)...");
   startCronScheduler();
+
+  // Initialize dynamic scheduled tasks runner
+  logInfo("Server", "Starting dynamic scheduled tasks runner...");
+  scheduledTasksRunner.start();
 
   // Initialize Track State Manager (realtime file watcher + initial sync)
   logInfo("Server", "Starting Track State Manager...");

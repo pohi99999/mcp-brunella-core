@@ -1,0 +1,166 @@
+
+[1m[46m RUN [49m[22m [36mv4.0.18 [39m[90mF:/mcp-brunella-core[39m
+
+[90mstdout[2m | test/emailTriageAgent.test.ts
+[22m[39m[INFO] [AIGateway] Ôťů AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mEmail Classification[2m > [22m[2mshould classify urgent emails
+[22m[39m[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"URGENT: Server Down","emailBody":...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"URGENT: Server Down","emailBody":"We need immediate assistance!","from":"client@example.com"}"
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mEmail Classification[2m > [22m[2mshould classify urgent emails
+[22m[39m[INFO] [EmailTriage] Ôťů Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mEmail Classification[2m > [22m[2mshould classify meeting requests
+[22m[39m[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Meeting invitation for next week"...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Meeting invitation for next week","emailBody":"Let's schedule a call to discuss the project.","from":"partner@company.com"}"
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mEmail Classification[2m > [22m[2mshould classify meeting requests
+[22m[39m[INFO] [EmailTriage] Ôťů Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mEmail Classification[2m > [22m[2mshould classify invoices
+[22m[39m[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Invoice #12345","emailBody":"Plea...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Invoice #12345","emailBody":"Please find attached the invoice for this month.","from":"billing@supplier.com"}"
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mEmail Classification[2m > [22m[2mshould classify invoices
+[22m[39m[INFO] [EmailTriage] Ôťů Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mPriority Scoring[2m > [22m[2mshould assign high priority to urgent emails
+[22m[39m[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Critical: Payment Deadline Tomorr...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Critical: Payment Deadline Tomorrow","from":"finance@company.com"}"
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mPriority Scoring[2m > [22m[2mshould assign high priority to urgent emails
+[22m[39m[INFO] [EmailTriage] Ôťů Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mPriority Scoring[2m > [22m[2mshould assign low priority to newsletters
+[22m[39m[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Weekly Newsletter - Tech Updates"...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Weekly Newsletter - Tech Updates","from":"newsletter@techblog.com"}"
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mPriority Scoring[2m > [22m[2mshould assign low priority to newsletters
+[22m[39m[INFO] [EmailTriage] Ôťů Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mAuto Response[2m > [22m[2mshould generate auto-responses for common queries
+[22m[39m[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Pricing inquiry","emailBody":"How...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Pricing inquiry","emailBody":"How much does your service cost?","from":"potential@client.com"}"
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mAuto Response[2m > [22m[2mshould generate auto-responses for common queries
+[22m[39m[INFO] [EmailTriage] Ôťů Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mCalendar Integration[2m > [22m[2mshould suggest calendar events for meeting requests
+[22m[39m[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Let's meet next Tuesday at 2 PM",...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Let's meet next Tuesday at 2 PM","from":"colleague@company.com"}"
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mCalendar Integration[2m > [22m[2mshould suggest calendar events for meeting requests
+[22m[39m[INFO] [EmailTriage] Ôťů Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mError Handling[2m > [22m[2mshould handle empty email body
+[22m[39m[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Test","emailBody":""}...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Test","emailBody":""}"
+
+[90mstdout[2m | test/emailTriageAgent.test.ts[2m > [22m[2mEmailTriageAgent[2m > [22m[2mError Handling[2m > [22m[2mshould handle empty email body
+[22m[39m[INFO] [EmailTriage] Ôťů Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+ [31mÔŁ»[39m test/emailTriageAgent.test.ts [2m([22m[2m10 tests[22m[2m | [22m[31m5 failed[39m[2m)[22m[32m 14[2mms[22m[39m
+       [32mÔťô[39m should have correct name[32m 1[2mms[22m[39m
+[31m       [31m├Ś[31m should have correct capabilities[39m[32m 4[2mms[22m[39m
+       [32mÔťô[39m should classify urgent emails[32m 1[2mms[22m[39m
+[31m       [31m├Ś[31m should classify meeting requests[39m[32m 3[2mms[22m[39m
+[31m       [31m├Ś[31m should classify invoices[39m[32m 1[2mms[22m[39m
+       [32mÔťô[39m should assign high priority to urgent emails[32m 0[2mms[22m[39m
+[31m       [31m├Ś[31m should assign low priority to newsletters[39m[32m 1[2mms[22m[39m
+       [32mÔťô[39m should generate auto-responses for common queries[32m 1[2mms[22m[39m
+[31m       [31m├Ś[31m should suggest calendar events for meeting requests[39m[32m 1[2mms[22m[39m
+       [32mÔťô[39m should handle empty email body[32m 0[2mms[22m[39m
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ» Failed Tests 5 ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»
+
+ FAIL  test/emailTriageAgent.test.ts > EmailTriageAgent > Agent Metadata > should have correct capabilities
+AssertionError: expected [ 'email_classification', ÔÇŽ(4) ] to include 'priority_scoring'
+ ÔŁ» test/emailTriageAgent.test.ts:23:34
+     21|     it('should have correct capabilities', () => {
+     22|       expect(agent.capabilities).toContain('email_classification');
+     23|       expect(agent.capabilities).toContain('priority_scoring');
+       |                                  ^
+     24|       expect(agent.capabilities).toContain('auto_response');
+     25|       expect(agent.capabilities).toContain('calendar_integration');
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[1/5]ÔÄ»
+
+ FAIL  test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify meeting requests
+AssertionError: expected 'urgent' to be 'meeting_request' // Object.is equality
+
+Expected: "meeting_request"
+Received: "urgent"
+
+ ÔŁ» test/emailTriageAgent.test.ts:53:42
+     51| 
+     52|       expect(result.status).toBe('success');
+     53|       expect(result.data.classification).toBe('meeting_request');
+       |                                          ^
+     54|     });
+     55| 
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[2/5]ÔÄ»
+
+ FAIL  test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify invoices
+AssertionError: expected 'urgent' to be 'invoice' // Object.is equality
+
+Expected: "invoice"
+Received: "urgent"
+
+ ÔŁ» test/emailTriageAgent.test.ts:66:42
+     64| 
+     65|       expect(result.status).toBe('success');
+     66|       expect(result.data.classification).toBe('invoice');
+       |                                          ^
+     67|     });
+     68|   });
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[3/5]ÔÄ»
+
+ FAIL  test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign low priority to newsletters
+AssertionError: expected 9 to be less than or equal to 3
+ ÔŁ» test/emailTriageAgent.test.ts:92:41
+     90| 
+     91|       expect(result.status).toBe('success');
+     92|       expect(result.data.priorityScore).toBeLessThanOrEqual(3);
+       |                                         ^
+     93|     });
+     94|   });
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[4/5]ÔÄ»
+
+ FAIL  test/emailTriageAgent.test.ts > EmailTriageAgent > Calendar Integration > should suggest calendar events for meeting requests
+AssertionError: expected undefined to be defined
+ ÔŁ» test/emailTriageAgent.test.ts:123:46
+    121| 
+    122|       expect(result.status).toBe('success');
+    123|       expect(result.data.calendarSuggestion).toBeDefined();
+       |                                              ^
+    124|     });
+    125|   });
+
+ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»ÔÄ»[5/5]ÔÄ»
+
+
+[2m Test Files [22m [1m[31m1 failed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[31m5 failed[39m[22m[2m | [22m[1m[32m5 passed[39m[22m[90m (10)[39m
+[2m   Start at [22m 04:13:54
+[2m   Duration [22m 491ms[2m (transform 98ms, setup 39ms, import 219ms, tests 14ms, environment 0ms)[22m
+

@@ -1,0 +1,74 @@
+import express from "express";
+import request from "supertest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+// Mock the global fetch
+const mockFetch = vi.fn();
+vi.stubGlobal("fetch", mockFetch);
+vi.mock("../src/server/SocketService.js", () => ({
+    socketService: {
+        emit: vi.fn(),
+    },
+}));
+import { createMemoryRouter } from "../src/server/memoryRoutes.js";
+describe("memoryRoutes /golden", () => {
+    beforeEach(() => {
+        mockFetch.mockReset();
+    });
+    function createApp() {
+        const app = express();
+        app.use(express.json());
+        app.use("/memory", createMemoryRouter());
+        return app;
+    }
+    it("maps legacy input/output payload to prompt/completion", async () => {
+        mockFetch.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ status: "success" }),
+        });
+        const app = createApp();
+        const response = await request(app).post("/memory/golden").send({
+            source: "legacy-ui",
+            input: "legacy prompt",
+            output: "legacy completion",
+            quality: 80,
+        });
+        expect(response.status).toBe(200);
+        expect(mockFetch).toHaveBeenCalledTimes(1);
+        const [, options] = mockFetch.mock.calls[0];
+        const body = JSON.parse(String(options.body));
+        expect(body).toEqual({
+            source: "legacy-ui",
+            prompt: "legacy prompt",
+            completion: "legacy completion",
+            quality: 0.8,
+        });
+    });
+    it("accepts prompt/completion and defaults quality to 1.0", async () => {
+        mockFetch.mockResolvedValueOnce({
+            ok: true,
+            json: async () => ({ status: "success" }),
+        });
+        const app = createApp();
+        const response = await request(app).post("/memory/golden").send({
+            source: "new-ui",
+            prompt: "new prompt",
+            completion: "new completion",
+        });
+        expect(response.status).toBe(200);
+        const [, options] = mockFetch.mock.calls[0];
+        const body = JSON.parse(String(options.body));
+        expect(body.prompt).toBe("new prompt");
+        expect(body.completion).toBe("new completion");
+        expect(body.quality).toBe(1);
+    });
+    it("returns 400 when required fields are missing", async () => {
+        const app = createApp();
+        const response = await request(app).post("/memory/golden").send({
+            source: "incomplete",
+            prompt: "missing completion",
+        });
+        expect(response.status).toBe(400);
+        expect(response.body.error).toContain("required");
+        expect(mockFetch).not.toHaveBeenCalled();
+    });
+});

@@ -8,7 +8,7 @@ const DEFAULT_TIMEOUT_MS = 30000; // 30 seconds default timeout
 const LONG_TIMEOUT_MS = 120000; // 2 minutes for LLM calls
 
 /** Fetch with timeout support */
-async function fetchWithTimeout(
+export async function fetchWithTimeout(
   url: string,
   options: RequestInit = {},
   timeoutMs: number = DEFAULT_TIMEOUT_MS,
@@ -403,6 +403,42 @@ export async function retryTask(taskId: number): Promise<void> {
     error: `HTTP ${response.status}`,
   }));
   if (!response.ok) throw new Error(data.error || "Task retry failed");
+}
+
+export async function pauseTask(taskId: number): Promise<void> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/pause`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ taskId }),
+  });
+  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Task pause failed");
+}
+
+export async function resumeTask(taskId: number): Promise<void> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/resume`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ taskId }),
+  });
+  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Task resume failed");
+}
+
+export async function updateTaskOrder(taskIds: number[]): Promise<void> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/reorder`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ taskIds }),
+  });
+  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Task reorder failed");
 }
 
 export interface ProviderStatus {

@@ -49,20 +49,20 @@ export function ScheduledTasksPanel() {
   // New task form state
   const [newTask, setNewTask] = useState({
     title: "",
-    cron_expression: "0 0 * * *",
+    cron_expression: "0 9 * * *",
     prompt: "",
-    handler: "default",
+    handler: "agent",
   });
 
   const fetchTasks = async () => {
     try {
       setLoading(true);
       const res = await fetch("/api/v1/scheduled-tasks");
-      if (!res.ok) throw new Error("Failed to fetch tasks");
+      if (!res.ok) throw new Error("Hiba a feladatok betöltésekor");
       const data = await res.json();
       setTasks(data.data || []);
     } catch (err: any) {
-      toast.error(err.message || "Error loading tasks");
+      toast.error(err.message || "Hiba a feladatok betöltésekor");
     } finally {
       setLoading(false);
     }
@@ -83,11 +83,11 @@ export function ScheduledTasksPanel() {
       });
       if (!res.ok) {
         const error = await res.json();
-        throw new Error(error.error || "Failed to create task");
+        throw new Error(error.error || "Sikertelen mentés");
       }
-      toast.success("Task scheduled successfully");
+      toast.success("Feladat sikeresen ütemezve");
       setIsDialogOpen(false);
-      setNewTask({ title: "", cron_expression: "0 0 * * *", prompt: "", handler: "default" });
+      setNewTask({ title: "", cron_expression: "0 9 * * *", prompt: "", handler: "agent" });
       fetchTasks();
     } catch (err: any) {
       toast.error(err.message);
@@ -95,22 +95,22 @@ export function ScheduledTasksPanel() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Are you sure?")) return;
+    if (!confirm("Biztosan törlöd?")) return;
     try {
       await fetch(`/api/v1/scheduled-tasks/${id}`, { method: "DELETE" });
-      toast.success("Task deleted");
+      toast.success("Feladat törölve");
       fetchTasks();
     } catch (err) {
-      toast.error("Failed to delete");
+      toast.error("Sikertelen törlés");
     }
   };
 
   const handleTrigger = async (id: string) => {
     try {
-      toast.info("Triggering task...");
+      toast.info("Feladat indítása...");
       const res = await fetch(`/api/v1/scheduled-tasks/${id}/trigger`, { method: "POST" });
-      if (!res.ok) throw new Error("Trigger failed");
-      toast.success("Task executed");
+      if (!res.ok) throw new Error("Sikertelen indítás");
+      toast.success("Feladat végrehajtva");
       fetchTasks();
     } catch (err: any) {
       toast.error(err.message);
@@ -122,7 +122,7 @@ export function ScheduledTasksPanel() {
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="text-sm font-medium flex items-center gap-2">
           <CalendarClock className="h-4 w-4 text-purple-500" />
-          Scheduled AI Tasks
+          Ütemezett MI Feladatok
         </CardTitle>
         <div className="flex gap-2">
           <Button variant="ghost" size="icon" onClick={fetchTasks} disabled={loading}>
@@ -132,37 +132,37 @@ export function ScheduledTasksPanel() {
             <DialogTrigger asChild>
               <Button size="sm" variant="outline" className="h-8 gap-1">
                 <Plus className="h-3.5 w-3.5" />
-                Add Task
+                Új feladat
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Schedule New Task</DialogTitle>
+                <DialogTitle>Új feladat ütemezése</DialogTitle>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid gap-2">
-                  <Label>Title</Label>
+                  <Label>Megnevezés</Label>
                   <Input
                     value={newTask.title}
                     onChange={(e) => setNewTask({ ...newTask, title: e.target.value })}
-                    placeholder="e.g. Daily Code Cleanup"
+                    placeholder="pl. Napi lead generálás"
                   />
                 </div>
                 <div className="grid gap-2">
-                  <Label>Cron Expression</Label>
+                  <Label>Cron Kifejezés</Label>
                   <Input
                     value={newTask.cron_expression}
                     onChange={(e) => setNewTask({ ...newTask, cron_expression: e.target.value })}
-                    placeholder="0 0 * * *"
+                    placeholder="0 9 * * *"
                   />
-                  <p className="text-xs text-muted-foreground">Standard cron syntax (min hr dom mon dow)</p>
+                  <p className="text-xs text-muted-foreground">Standard cron szintaxis (perc óra nap hó nap_hete)</p>
                 </div>
                 <div className="grid gap-2">
-                  <Label>Prompt / Instruction</Label>
+                  <Label>Prompt / Utasítás</Label>
                   <Input
                     value={newTask.prompt}
                     onChange={(e) => setNewTask({ ...newTask, prompt: e.target.value })}
-                    placeholder="What should the generic handler do?"
+                    placeholder="Mit tegyen az ügynök?"
                   />
                 </div>
                 <div className="grid gap-2">
@@ -170,10 +170,10 @@ export function ScheduledTasksPanel() {
                   <Input
                     value={newTask.handler}
                     onChange={(e) => setNewTask({ ...newTask, handler: e.target.value })}
-                    placeholder="default or scan-todos"
+                    placeholder="agent vagy scan-todos"
                   />
                 </div>
-                <Button onClick={handleCreate}>Create Schedule</Button>
+                <Button onClick={handleCreate}>Ütemezés mentése</Button>
               </div>
             </DialogContent>
           </Dialog>
@@ -183,17 +183,17 @@ export function ScheduledTasksPanel() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Title</TableHead>
-              <TableHead>Schedule</TableHead>
-              <TableHead>Last Run</TableHead>
-              <TableHead className="text-right">Actions</TableHead>
+              <TableHead>Megnevezés</TableHead>
+              <TableHead>Ütemezés</TableHead>
+              <TableHead>Utolsó futás</TableHead>
+              <TableHead className="text-right">Műveletek</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {tasks.length === 0 ? (
               <TableRow>
                 <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
-                  No scheduled tasks found.
+                  Nincs ütemezett feladat.
                 </TableCell>
               </TableRow>
             ) : (
@@ -213,12 +213,12 @@ export function ScheduledTasksPanel() {
                   <TableCell>
                     <div className="flex flex-col text-xs">
                       <span className={task.last_status === 'success' ? 'text-green-500' : task.last_status === 'failed' ? 'text-red-500' : ''}>
-                        {task.last_run_at ? new Date(task.last_run_at).toLocaleString() : 'Never'}
+                        {task.last_run_at ? new Date(task.last_run_at).toLocaleString('hu-HU') : 'Soha'}
                       </span>
                       {task.next_run_at && (
                         <span className="text-muted-foreground flex items-center gap-1">
                           <Clock className="h-3 w-3" />
-                          {new Date(task.next_run_at).toLocaleTimeString()}
+                          {new Date(task.next_run_at).toLocaleTimeString('hu-HU')}
                         </span>
                       )}
                     </div>
@@ -230,7 +230,7 @@ export function ScheduledTasksPanel() {
                         size="icon"
                         className="h-8 w-8 hover:text-blue-500"
                         onClick={() => handleTrigger(task.id)}
-                        title="Run Now"
+                        title="Futtatás most"
                       >
                         <Play className="h-4 w-4" />
                       </Button>
@@ -239,6 +239,7 @@ export function ScheduledTasksPanel() {
                         size="icon"
                         className="h-8 w-8 hover:text-destructive"
                         onClick={() => handleDelete(task.id)}
+                        title="Törlés"
                       >
                         <Trash className="h-4 w-4" />
                       </Button>
