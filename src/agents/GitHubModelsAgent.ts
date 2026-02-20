@@ -5,7 +5,6 @@
 import { IAgent, AgentResponse, ToolDefinition } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { generateResponse } from '../core/llm_client.js';
-import { getAllToolDefinitions, executeLocalTool } from '../server/registry.js';
 
 export interface GitHubModelsConfig {
   model?: string; // Default: gpt-4o
@@ -76,6 +75,8 @@ export class GitHubModelsAgent implements IAgent {
 
       // Auto-load tools if not provided
       if (this.config.mcpTools.length === 0) {
+        // Dynamic import to avoid bundling registry.js (Node-only) in Worker builds
+        const { getAllToolDefinitions } = await import('../server/registry.js');
         const tools = getAllToolDefinitions();
         if (tools.length > 0) {
           this.setMcpTools(tools);
@@ -131,6 +132,9 @@ export class GitHubModelsAgent implements IAgent {
     let currentMessages = [...messages];
     let iteration = 0;
     const MAX_ITERATIONS = 10;
+
+    // Dynamic import to avoid bundling registry.js (Node-only) in Worker builds
+    const { executeLocalTool } = await import('../server/registry.js');
 
     while (iteration < MAX_ITERATIONS) {
       iteration++;
