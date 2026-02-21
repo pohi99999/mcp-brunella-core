@@ -20,6 +20,7 @@ import { gatherMetrics, formatPrometheusMetrics, formatJsonMetrics } from './met
 import { writeAnalyticsEvent, PipelineEventBuilder } from './analytics.js';
 import { exportD1ToKV } from './backup.js';
 import { validateApiKey, unauthorizedResponse, requiresAuth } from './auth.js';
+import { executeBrowserCommand, validateBrowserCommand } from './browser.js';
 
 // ═══════════════════════════════════════════════════════════════════
 // CACHE CLASS (Phase 4.2 Optimization - Agent URL Caching)
@@ -375,6 +376,54 @@ export default {
       }
 
       // ═══════════════════════════════════════════════════════════════
+      // BROWSER RENDERING (Phase: Robotkez CF Browser Engine)
+      // ═══════════════════════════════════════════════════════════════
+      if (url.pathname === '/browser' && request.method === 'POST') {
+        // Check if browser binding is available
+        if (!env.BROWSER) {
+          return new Response(
+            JSON.stringify({
+              status: 'error',
+              error: 'Browser Rendering not available',
+              message: 'BROWSER binding not configured in wrangler.toml'
+            }),
+            {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              status: 503
+            }
+          );
+        }
+
+        const command = await request.json();
+
+        // Validate command
+        if (!validateBrowserCommand(command)) {
+          return new Response(
+            JSON.stringify({
+              status: 'error',
+              error: 'Invalid browser command',
+              message: 'Required fields missing or invalid action type'
+            }),
+            {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              status: 400
+            }
+          );
+        }
+
+        // Execute browser command
+        const result = await executeBrowserCommand(env.BROWSER, command);
+
+        return new Response(
+          JSON.stringify(result),
+          {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            status: result.status === 'success' ? 200 : 500
+          }
+        );
+      }
+
+      // ═══════════════════════════════════════════════════════════════
       // SCHEDULE NEW TASK
       // ═══════════════════════════════════════════════════════════════
       if (
@@ -534,6 +583,7 @@ export default {
           error: 'Not found',
           available: [
             'GET  /health',
+            'POST /browser',
             'POST /schedule/{agent_type}',
             'GET  /task/{task_id}',
             'GET  /stats',

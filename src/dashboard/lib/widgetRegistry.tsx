@@ -13,6 +13,10 @@ import { LiveChatterWidget } from "@/components/dashboard/LiveChatterWidget";
 import { ScheduledTasksPanel } from "@/components/dashboard/ScheduledTasksPanel";
 import { ProcessControlWidget } from "@/components/dashboard/ProcessControlWidget";
 import { AdminSelfCheckWidget } from "@/components/dashboard/AdminSelfCheckWidget";
+import { NeuralCommandWidget } from "@/components/dashboard/NeuralCommandWidget";
+import { CloudflareAgentsCard } from "@/components/dashboard/CloudflareAgentsCard";
+import { RAGMemoryWidget } from "@/components/dashboard/RAGMemoryWidget";
+import { VectorizeAnalyticsWidget } from "@/components/dashboard/VectorizeAnalyticsWidget";
 
 export interface WidgetDefinition {
   id: string;
@@ -104,6 +108,30 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
     id: "admin_self_check",
     label: "Admin Self-Check",
     component: AdminSelfCheckWidget,
+    defaultSize: { w: 6, h: 8 }
+  },
+  neural_command: {
+    id: "neural_command",
+    label: "Neural Command",
+    component: NeuralCommandWidget,
+    defaultSize: { w: 12, h: 6 }
+  },
+  cloudflare_agents: {
+    id: "cloudflare_agents",
+    label: "Cloudflare Workers Audit",
+    component: CloudflareAgentsCard,
+    defaultSize: { w: 6, h: 8 }
+  },
+  rag_memory: {
+    id: "rag_memory",
+    label: "RAG Memória",
+    component: RAGMemoryWidget,
+    defaultSize: { w: 6, h: 8 }
+  },
+  vectorize_analytics: {
+    id: "vectorize_analytics",
+    label: "Vectorize Analytics",
+    component: VectorizeAnalyticsWidget,
     defaultSize: { w: 6, h: 8 }
   }
 };

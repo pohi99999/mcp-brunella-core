@@ -16,6 +16,11 @@
 import { Env } from './types.js';
 declare const _default: {
     fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response>;
+    /**
+     * Scheduled Handler: D1 Backup to KV (Phase 6.2)
+     * Runs every 15 minutes via Cron Trigger
+     */
+    scheduled(event: ScheduledEvent, env: Env, ctx: ExecutionContext): Promise<void>;
 };
 export default _default;
 //# sourceMappingURL=index.d.ts.map

@@ -2,17 +2,17 @@
   "trackName": "cloudflare_vectorize_rag_20260221",
   "type": "AI / Vector Database",
   "priority": "MEDIUM",
-  "status": "active",
-  "progress": 0,
+  "status": "completed",
+  "progress": 100,
   "goal": "A LanceDB lokális vector adatbázist kiegészíteni / kiváltani Cloudflare Vectorize-zal. A RAG (Retrieval-Augmented Generation) memória az edge-en él — ügynökök bárhonnan lekérdezhetik korábbi tapasztalataikat. LanceDB lokális fallback-ként megmarad.",
   "assignee": "DeveloperAgent",
   "createdAt": "2026-02-21T00:00:00Z",
-  "updatedAt": "2026-02-21T00:00:00Z",
+  "updatedAt": "2026-02-21T13:45:00Z",
   "phases": [
     {
       "id": "phase1",
       "name": "Phase 1: Vectorize index létrehozása",
-      "status": "pending",
+      "status": "completed",
       "tasks": [
         "Vectorize index létrehozása: brunella-agent-memory (dimensions: 384, metric: cosine)",
         "Wrangler binding konfigurálása",
@@ -23,7 +23,7 @@
     {
       "id": "phase2",
       "name": "Phase 2: RAG utils átírása",
-      "status": "pending",
+      "status": "completed",
       "tasks": [
         "src/utils/rag.ts: searchRAG() Vectorize-t használ elsőként, LanceDB fallback",
         "goldenDatasetBridge.ts: sikeres végrehajtás → Vectorize-ba is bekerül",
@@ -34,12 +34,24 @@
     {
       "id": "phase3",
       "name": "Phase 3: Knowledge migrálás + Dashboard",
-      "status": "pending",
+      "status": "completed",
       "tasks": [
         "Meglévő LanceDB rekordok export → Vectorize import (migration script)",
         "Dashboard: RAG Memory widget — top 5 relevants találat megjelenítés",
         "Tech Harvester: összegyűjtött tudás Vectorize-ba kerül",
         "npm test PASS"
+      ]
+    },
+    {
+      "id": "phase4",
+      "name": "Phase 4: Production enhancements",
+      "status": "completed",
+      "tasks": [
+        "Automatikus cleanup script: régi (90+ napos) vektorok törlése",
+        "Batch migration: nagyobb LanceDB táblák batch-enkénti migrálása",
+        "Analytics: Vectorize keresési statisztikák Dashboard widget",
+        "Scheduled task dokumentáció (Windows Task Scheduler, cron)",
+        "Migration best practices dokumentáció"
       ]
     }
   ],
@@ -59,12 +71,19 @@
     ],
     "created": [
       "src/utils/vectorize.ts",
-      "scripts/migrate_lancedb_to_vectorize.ts"
+      "scripts/migrate_lancedb_to_vectorize.ts",
+      "scripts/cleanup_old_vectors.ts",
+      "src/dashboard/components/dashboard/RAGMemoryWidget.tsx",
+      "src/dashboard/components/dashboard/VectorizeAnalyticsWidget.tsx",
+      "docs/VECTORIZE_CLEANUP_SCHEDULE.md",
+      "docs/VECTORIZE_BATCH_MIGRATION.md",
+      "test_vectorize.ts"
     ],
     "modified": [
       "src/utils/rag.ts",
       "src/core/goldenDatasetBridge.ts",
-      "wrangler.toml"
+      "src/dashboard/lib/widgetRegistry.tsx",
+      "src/server/routes/files.ts"
     ]
   }
 }

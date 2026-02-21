@@ -26,6 +26,60 @@ Returns worker status and task count.
 }
 ```
 
+### Browser Rendering (Robotkez CF Engine)
+```bash
+POST /browser
+Content-Type: application/json
+
+{
+  "action": "navigate",
+  "url": "https://www.google.com",
+  "options": {
+    "waitUntil": "networkidle0",
+    "fullPage": true
+  }
+}
+```
+
+**Actions:**
+- `navigate` - Load URL (auto-handles consent)
+- `click` - Click element by selector
+- `type` - Type text into input
+- `extract` - Extract text/HTML from element
+- `screenshot` - Capture page screenshot
+- `wait` - Wait for specified time
+
+**Response:**
+```json
+{
+  "status": "success",
+  "url": "https://www.google.com",
+  "screenshot": "data:image/png;base64,...",
+  "duration_ms": 3421,
+  "consoleMessages": ["[log] Page loaded"],
+  "networkErrors": []
+}
+```
+
+**Example - Click & Extract:**
+```bash
+curl -X POST https://orchestrator.iam-dd1.workers.dev/browser \
+  -H "Content-Type: application/json" \
+  -d '{
+    "action": "click",
+    "selector": "button.search",
+    "options": { "fullPage": false }
+  }'
+
+curl -X POST https://orchestrator.iam-dd1.workers.dev/browser \
+  -H "Content-Type: application/json" \
+  -d '{
+    "action": "extract",
+    "extractSelector": "div#results",
+    "options": { "fullPage": false }
+  }'
+```
+
 ### Schedule New Task
 ```bash
 POST /schedule/{agent_type}

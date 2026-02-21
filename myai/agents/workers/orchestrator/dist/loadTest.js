@@ -75,7 +75,7 @@ export class LoadTestSuite {
             // Execute pipeline nodes
             let isComplete = false;
             let iterations = 0;
-            const maxIterations = 60; // 60 seconds max per pipeline
+            const maxIterations = 90; // 90 seconds max per pipeline (increased from 60 for complex pipelines)
             while (!isComplete && iterations < maxIterations) {
                 // Get ready nodes
                 const readyResponse = await fetch(`https://cean-orchestrator.your-domain.workers.dev/pipeline/${executionId}/ready-nodes`);

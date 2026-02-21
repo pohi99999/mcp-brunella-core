@@ -101,6 +101,7 @@ export class StateCompressor {
 export interface Env {
   DB: D1Database;
   KV: KVNamespace; // Phase 6.2: D1 backup storage
+  BROWSER?: any; // Cloudflare Browser Rendering binding (Phase: Robotkez CF Browser Engine)
   CAE?: AnalyticsEngineDataset;
   CEAN_API_KEY?: string; // Phase 6.3: API authentication
   RESEARCH_AGENT_URL?: string;
@@ -146,4 +147,42 @@ export interface AgentResponse {
   data?: Record<string, unknown>;
   error?: string;
   duration_ms?: number;
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// BROWSER RENDERING TYPES (Phase: Robotkez CF Browser Engine)
+// ═══════════════════════════════════════════════════════════════════
+
+export type BrowserAction = 
+  | 'navigate' 
+  | 'click' 
+  | 'type' 
+  | 'extract'
+  | 'screenshot'
+  | 'wait';
+
+export interface BrowserCommand {
+  action: BrowserAction;
+  url?: string;
+  selector?: string;
+  text?: string;
+  waitTime?: number; // milliseconds
+  extractSelector?: string; // CSS selector for extraction
+  options?: {
+    waitUntil?: 'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2';
+    timeout?: number;
+    fullPage?: boolean; // for screenshots
+  };
+}
+
+export interface BrowserResponse {
+  status: 'success' | 'error';
+  url?: string;
+  screenshot?: string; // Base64 encoded
+  extractedText?: string;
+  extractedHtml?: string;
+  error?: string;
+  duration_ms?: number;
+  consoleMessages?: string[]; // Browser console logs
+  networkErrors?: string[]; // Network failures
 }

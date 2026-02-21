@@ -30,31 +30,38 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
       name: 'Developer Mode',
       description: 'Layout optimized for development with terminal/editor focus.',
       gridTemplateAreas: [
-        '"dev-main dev-main"',
-        '"dev-bottom dev-right"'
+        '"dev-main dev-main dev-right"',
+        '"dev-logs dev-tasks dev-right"',
+        '"dev-neural dev-neural dev-right"'
       ],
-      gridTemplateColumns: '2fr 1fr',
-      gridTemplateRows: '2fr 1fr',
+      gridTemplateColumns: '1.5fr 1fr 1fr',
+      gridTemplateRows: '140px 1fr 180px',
       widgetAssignments: {
-        logs: 'dev-main', // Terminal/Logs
-        task_queue: 'dev-bottom', // For active tasks related to dev
+        health: 'dev-main', // System health check
+        logs: 'dev-logs', // Terminal/Activity Monitor
+        task_queue: 'dev-tasks', // Active development tasks
         files: 'dev-right', // Code Editor / File Explorer
+        neural_command: 'dev-neural', // Quick command execution
       },
     },
     {
       id: 'ops-mode',
       name: 'Operations Mode',
-      description: 'Layout focused on system health and metrics.',
+      description: 'Layout focused on system health, agents, and process control.',
       gridTemplateAreas: [
-        '"ops-main ops-main"',
-        '"ops-metrics ops-alerts"'
+        '"ops-health ops-health ops-cf"',
+        '"ops-agents ops-process ops-cf"',
+        '"ops-tasks ops-tasks ops-scheduled"'
       ],
-      gridTemplateColumns: '2fr 1fr',
-      gridTemplateRows: '2fr 1fr',
+      gridTemplateColumns: '1.5fr 1fr 1fr',
+      gridTemplateRows: '140px 1.5fr 1fr',
       widgetAssignments: {
-        health: 'ops-main', // System Health
-        agent_status: 'ops-metrics', // Individual agent health/metrics
-        process_control: 'ops-alerts', // Process intervention/alerts
+        health: 'ops-health', // System Health
+        agent_status: 'ops-agents', // Individual agent monitoring
+        process_control: 'ops-process', // Process intervention/alerts
+        cloudflare_agents: 'ops-cf', // Cloudflare Workers audit
+        task_queue: 'ops-tasks', // Active task monitoring
+        scheduled_tasks: 'ops-scheduled', // Scheduled automation
       },
     },
     {
@@ -68,6 +75,26 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
       gridTemplateRows: '1fr',
       widgetAssignments: {
         'health': 'focused-main',
+      },
+    },
+    {
+      id: 'ai-control',
+      name: 'AI Control Center',
+      description: 'AI-focused layout with Jules, Neural Command, and agent monitoring.',
+      gridTemplateAreas: [
+        '"ai-health ai-health ai-cf"',
+        '"ai-jules ai-chatter ai-cf"',
+        '"ai-neural ai-neural ai-agents"'
+      ],
+      gridTemplateColumns: '1.5fr 1fr 1fr',
+      gridTemplateRows: '140px 1.5fr 180px',
+      widgetAssignments: {
+        health: 'ai-health', // System health
+        jules: 'ai-jules', // Jules AI assistant
+        agent_chatter: 'ai-chatter', // Agent communication
+        cloudflare_agents: 'ai-cf', // Cloudflare edge agents
+        neural_command: 'ai-neural', // Natural language command
+        agent_status: 'ai-agents', // Agent status monitoring
       },
     },
   ],
@@ -84,7 +111,7 @@ const LayoutContext = createContext<LayoutContextType | undefined>(undefined);
 export function LayoutProvider({ children }: { children: ReactNode }) {
   const [activeLayoutId, setActiveLayoutId] = useState<LayoutModeId>(defaultLayoutConfig.defaultMode);
 
-  const currentLayout = useMemo(() => 
+  const currentLayout = useMemo(() =>
     defaultLayoutConfig.modes.find(mode => mode.id === activeLayoutId) || defaultLayoutConfig.modes[0],
     [activeLayoutId]
   );
