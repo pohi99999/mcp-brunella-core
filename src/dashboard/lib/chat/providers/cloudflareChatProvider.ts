@@ -6,15 +6,20 @@ export const cloudflareChatProvider: ChatProvider = {
   mode: "cloudflare_chat",
 
   async send(input) {
-    const response = await api.chatWithCloudflare(
-      input.text,
-      input.history.map((m) => ({ role: m.role, content: m.content })),
-    );
+    const historyContext = input.history
+      .map((m) => `${m.role === "user" ? "User" : "Assistant"}: ${m.content}`)
+      .join("\n");
+    const prompt = historyContext
+      ? `${historyContext}\nUser: ${input.text}`
+      : input.text;
+
+    const response = await api.generateWithWorkersAI(prompt);
 
     return toChatOutput(
       {
-        message: response.message,
-        contextUsed: [response.endpoint || "/api/chat"],
+        message: response.text,
+        contextUsed: [`Cloudflare Workers AI — ${response.model}`],
+        executedBy: "cloudflare_workers_ai",
       },
       "cloudflare_chat",
     );
