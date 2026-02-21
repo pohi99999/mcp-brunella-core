@@ -1,11 +1,12 @@
 import { render, screen, act, waitFor } from '@testing-library/react';
+import '@testing-library/jest-dom';
 import userEvent from '@testing-library/user-event';
 import { ProcessControlWidget } from './ProcessControlWidget';
 import { useSystemSignalStore } from '@/store/systemSignalStore';
 import * as apiService from '@/lib/apiService';
 import { toast } from 'sonner';
-import { DndContext, DragEndEvent } from '@dnd-kit/core';
-import { arrayMove } from '@dnd-kit/sortable';
+import { DragEndEvent } from '@dnd-kit/core';
+import React from 'react';
 
 // Mock Zustand store
 const mockTasks = [
@@ -14,11 +15,14 @@ const mockTasks = [
   { id: 3, description: 'Task 3', agent: 'AgentC', status: 'paused', created_at: new Date().toISOString() },
 ];
 
-vi.mock('@/store/systemSignalStore', () => ({
-  useSystemSignalStore: vi.fn((selector) => selector({
-    tasks: mockTasks,
-  })),
-}));
+vi.mock('@/store/systemSignalStore', () => {
+    let state = { tasks: [] as any[] };
+    const useSystemSignalStore = vi.fn((selector) => selector(state));
+    (useSystemSignalStore as any).setState = vi.fn((newState) => {
+        state = { ...state, ...newState };
+    });
+    return { useSystemSignalStore };
+});
 
 // Mock useSystemSignal to provide refetchData
 vi.mock('@/hooks/useSystemSignal', () => ({
@@ -38,6 +42,46 @@ vi.mock('@/lib/apiService', () => ({
 vi.mock('sonner', () => ({
   toast: { info: vi.fn(), success: vi.fn(), error: vi.fn() },
 }));
+
+vi.mock('@dnd-kit/core', async (importOriginal) => {
+  const original = await importOriginal() as any;
+  const MockDndContext = ({ children, onDragEnd }: { children: React.ReactNode; onDragEnd: (event: any) => void }) => {
+    const simulateDragEnd = (activeId: any, overId: any) => {
+      const event: any = {
+        active: { id: activeId } as any,
+        over: overId ? ({ id: overId } as any) : null,
+        activatorEvent: {} as any,
+        collisions: [],
+        delta: { x: 0, y: 0 },
+        pointer: {x:0, y:0, over: activeId as any, identifier: 'mock'}
+      };
+      onDragEnd(event);
+    };
+    return (
+      <div data-testid="dnd-context-mock">
+        <button onClick={() => simulateDragEnd(1, 2)}>Simulate Drag 1 to 2</button>
+        <button onClick={() => simulateDragEnd(2, 1)}>Simulate Drag 2 to 1</button>
+        {children}
+      </div>
+    );
+  };
+  return {
+    ...original,
+    DndContext: MockDndContext,
+    useSensor: vi.fn(),
+    useSensors: vi.fn(() => [null, null]),
+  };
+});
+
+vi.mock('@dnd-kit/sortable', async (importOriginal) => {
+  const original = await importOriginal() as any;
+  return {
+    ...original,
+    useSortable: vi.fn((props) => ({
+      attributes: {}, listeners: {}, setNodeRef: vi.fn(), transform: { x: 0, y: 0, scaleX: 1, scaleY: 1 }, transition: ''
+    })),
+  };
+});
 
 describe('ProcessControlWidget', () => {
   beforeEach(() => {
@@ -62,7 +106,8 @@ describe('ProcessControlWidget', () => {
 
   it('calls pauseTask and shows toast on pause button click', async () => {
     render(<ProcessControlWidget />);
-    await userEvent.click(screen.getAllByTitle('Szüneteltetés')[0]);
+    const buttons = screen.getAllByRole('button', { name: /Szüneteltetés/i });
+    await userEvent.click(buttons[0]);
 
     await waitFor(() => {
       expect(apiService.pauseTask).toHaveBeenCalledWith(1);
@@ -72,7 +117,8 @@ describe('ProcessControlWidget', () => {
 
   it('calls resumeTask and shows toast on resume button click', async () => {
     render(<ProcessControlWidget />);
-    await userEvent.click(screen.getAllByTitle('Folytatás')[0]);
+    const buttons = screen.getAllByRole('button', { name: /Folytatás/i });
+    await userEvent.click(buttons[0]);
 
     await waitFor(() => {
       expect(apiService.resumeTask).toHaveBeenCalledWith(1);
@@ -82,7 +128,8 @@ describe('ProcessControlWidget', () => {
 
   it('calls cancelTask and shows toast on kill button click', async () => {
     render(<ProcessControlWidget />);
-    await userEvent.click(screen.getAllByTitle('Leállítás')[0]);
+    const buttons = screen.getAllByRole('button', { name: /Leállítás/i });
+    await userEvent.click(buttons[0]);
 
     await waitFor(() => {
       expect(apiService.cancelTask).toHaveBeenCalledWith(1);
@@ -92,7 +139,8 @@ describe('ProcessControlWidget', () => {
 
   it('calls retryTask and shows toast on retry button click', async () => {
     render(<ProcessControlWidget />);
-    await userEvent.click(screen.getAllByTitle('Újrapróbálkozás')[0]);
+    const buttons = screen.getAllByRole('button', { name: /Újrapróbálkozás/i });
+    await userEvent.click(buttons[0]);
 
     await waitFor(() => {
       expect(apiService.retryTask).toHaveBeenCalledWith(1);
@@ -102,56 +150,18 @@ describe('ProcessControlWidget', () => {
 
   it('opens and closes TaskDetailsModal on details button click', async () => {
     render(<ProcessControlWidget />);
-    const detailsButton = screen.getAllByTitle('Részletek')[0];
+    const detailsButtons = screen.getAllByRole('button', { name: /Részletek/i });
 
-    await userEvent.click(detailsButton);
+    await userEvent.click(detailsButtons[0]);
     expect(screen.getByText('Feladat Részletei: Task 1')).toBeInTheDocument();
 
-    // Simulate clicking the overlay to close the dialog
-    await userEvent.click(screen.getByRole('dialog', { hidden: true }));
-    expect(screen.queryByText('Feladat Részletei: Task 1')).not.toBeInTheDocument();
-  });
+    // Simulate clicking the close button to close the dialog
+    const closeButton = screen.getByRole('button', { name: /close/i });
+    await userEvent.click(closeButton);
 
-  // This mock allows us to simulate the drag and drop events without actual DOM interaction
-  const mockDndContext = ({ children, onDragEnd }: { children: React.ReactNode; onDragEnd: (event: DragEndEvent) => void }) => {
-    const simulateDragEnd = (activeId: any, overId: any) => {
-      const event: DragEndEvent = {
-        active: { id: activeId } as any,
-        over: overId ? ({ id: overId } as any) : null,
-        activatorEvent: {} as any,
-        collisions: [],
-        delta: { x: 0, y: 0 },
-        pointer: {x:0, y:0, over: activeId as any, identifier: 'mock'}
-      };
-      onDragEnd(event);
-    };
-    return (
-      <div data-testid="dnd-context-mock">
-        <button onClick={() => simulateDragEnd(1, 2)}>Simulate Drag 1 to 2</button>
-        <button onClick={() => simulateDragEnd(2, 1)}>Simulate Drag 2 to 1</button>
-        {children}
-      </div>
-    );
-  };
-
-  vi.mock('@dnd-kit/core', async (importOriginal) => {
-    const original = await importOriginal() as any;
-    return {
-      ...original,
-      DndContext: mockDndContext,
-      useSensor: vi.fn(),
-      useSensors: vi.fn(() => [null, null]),
-    };
-  });
-
-  vi.mock('@dnd-kit/sortable', async (importOriginal) => {
-    const original = await importOriginal() as any;
-    return {
-      ...original,
-      useSortable: vi.fn((props) => ({
-        attributes: {}, listeners: {}, setNodeRef: vi.fn(), transform: { x: 0, y: 0, scaleX: 1, scaleY: 1 }, transition: ''
-      })),
-    };
+    await waitFor(() => {
+        expect(screen.queryByText('Feladat Részletei: Task 1')).not.toBeInTheDocument();
+    });
   });
 
   it('reorders tasks on drag and calls updateTaskOrder', async () => {

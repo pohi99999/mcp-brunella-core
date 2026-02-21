@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSystemSignalStore } from "@/store/systemSignalStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Zap, Pause, Play, XCircle, RefreshCcw, Info } from "lucide-react";
 import { toast } from "sonner";
 import { cancelTask, retryTask, pauseTask, resumeTask, updateTaskOrder, QueuedTask } from "@/lib/apiService";
@@ -51,27 +52,83 @@ function SortableItem({ task, onControlAction, onViewDetails }: SortableItemProp
         <span className="text-xs text-zinc-600">Státusz: {task.status}</span>
       </div>
       <div className="flex items-center gap-2" {...listeners}>
-        <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'pause')} title="Szüneteltetés"><Pause size={16} /></Button>
-        <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'resume')} title="Folytatás"><Play size={16} /></Button>
-        <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'kill')} title="Leállítás"><XCircle size={16} /></Button>
-        <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'retry')} title="Újrapróbálkozás"><RefreshCcw size={16} /></Button>
-        <Button variant="ghost" size="sm" onClick={() => onViewDetails(task)} title="Részletek"><Info size={16} /></Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'pause')} aria-label="Szüneteltetés">
+              <Pause size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Szüneteltetés</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'resume')} aria-label="Folytatás">
+              <Play size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Folytatás</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'kill')} aria-label="Leállítás">
+              <XCircle size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Leállítás</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'retry')} aria-label="Újrapróbálkozás">
+              <RefreshCcw size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Újrapróbálkozás</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onViewDetails(task)} aria-label="Részletek">
+              <Info size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Részletek</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
     </div>
   );
 }
 
 export function ProcessControlWidget() {
-  const { tasks } = useSystemSignalStore((state) => ({ tasks: state.tasks }));
+  const tasks = useSystemSignalStore((state) => state.tasks);
   const { refetchData } = useSystemSignal();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<QueuedTask | null>(null);
   const [sortedTasks, setSortedTasks] = useState<QueuedTask[]>([]);
 
+  const handleViewDetails = (task: QueuedTask) => {
+    setSelectedTask(task);
+    setIsModalOpen(true);
+  };
+
   useEffect(() => {
     // Initialize sortedTasks with tasks from the store, filter for active/pending
-    const active = tasks.filter(task => task.status === "running" || task.status === "pending" || task.status === "paused");
-    setSortedTasks(active);
+    if (tasks) {
+      const active = tasks.filter(task => task.status === "running" || task.status === "pending" || task.status === "paused");
+      setSortedTasks(active);
+    }
   }, [tasks]);
 
   const sensors = useSensors(
@@ -161,7 +218,7 @@ export function ProcessControlWidget() {
                     key={task.id} 
                     task={task} 
                     onControlAction={handleControlAction} 
-                    onViewDetails={setSelectedTask} // Simplified, will trigger modal via onClick on item
+                    onViewDetails={handleViewDetails} // Simplified, will trigger modal via onClick on item
                   />
                 ))}
               </div>
