@@ -1,6 +1,11 @@
 name = "cean-orchestrator"
 main = "src/index.ts"
 compatibility_date = "2024-11-25"
+compatibility_flags = ["nodejs_compat"]
+
+# Default Browser Rendering binding (Cloudflare Browser API)
+[browser]
+binding = "BROWSER"
 
 [env.production]
 name = "cean-orchestrator"
@@ -22,14 +27,14 @@ dataset = "cean_metrics"
 
 [[env.production.kv_namespaces]]
 binding = "KV"
-id = "cean_backup_kv"
+id = "b6718ab359ac401bb24da7c34c24f11b"
 
 # Browser Rendering binding (Phase: Robotkez CF Browser Engine)
-[[env.production.browser]]
+[env.production.browser]
 binding = "BROWSER"
 
 # Cron Trigger: D1 Backup every 15 minutes (Phase 6.2 DR Improvement)
-[[env.production.triggers.crons]]
+[env.production.triggers]
 crons = ["*/15 * * * *"]
 
 [env.staging]
@@ -53,8 +58,8 @@ binding = "KV"
 id = "cean_backup_kv_staging"
 
 # Browser Rendering binding (Phase: Robotkez CF Browser Engine)
-[[env.staging.browser]]
+[env.staging.browser]
 binding = "BROWSER"
 
-[[env.staging.triggers.crons]]
+[env.staging.triggers]
 crons = ["*/15 * * * *"]

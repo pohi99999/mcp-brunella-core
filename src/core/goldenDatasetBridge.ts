@@ -1,9 +1,10 @@
 // FILE: src/core/goldenDatasetBridge.ts
-// PURPOSE: G4.1 — Node.js → Python golden dataset bridge
+// PURPOSE: G4.1 — Node.js → D1 golden dataset bridge (Phase 3: D1 Integration)
 // RULES: RULE-GD1 (success+LLM→save), RULE-GD2 (quality threshold), RULE-GD3 (dedup SHA256)
 
 import { logInfo, logError } from '../utils/logger.js';
 import { vectorizeClient } from '../utils/vectorize.js';
+import { getD1Adapter } from '../utils/globalDb.js';
 
 // ============================================================================
 // TYPES
@@ -109,7 +110,7 @@ export function calculateQuality(prompt: string, completion: string): number {
 // ============================================================================
 
 /**
- * Save a golden sample to the Python backend.
+ * Save a golden sample to D1 database (Phase 3: Cloud-first storage).
  * Applies RULE-GD1 (success check), RULE-GD2 (quality threshold), RULE-GD3 (dedup).
  */
 export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSaveResult> {
@@ -130,7 +131,31 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
       return { success: false, message: 'Duplicate sample (RULE-GD3)' };
     }
 
-    // Call Python backend
+    // Save to D1 (cloud-first strategy)
+    const d1Adapter = getD1Adapter();
+    if (d1Adapter) {
+      try {
+        await d1Adapter.insertGoldenSample({
+          id: `golden_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+          instruction: sample.prompt,
+          output: sample.completion,
+          source: sample.source,
+        });
+        
+        logInfo('GoldenBridge', `Sample saved to D1 from ${sample.source} (quality: ${sample.quality.toFixed(2)})`);
+        return { 
+          success: true, 
+          message: 'Saved to D1 cloud storage',
+          stats: { storage: 'd1', quality: sample.quality }
+        };
+      } catch (d1Error: unknown) {
+        const msg = d1Error instanceof Error ? d1Error.message : String(d1Error);
+        logError('GoldenBridge', `D1 save failed, falling back to Python: ${msg}`);
+        // Fall through to Python backup
+      }
+    }
+
+    // Fallback: Python backend (legacy support)
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), SAVE_TIMEOUT_MS);
 
@@ -154,7 +179,7 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
       }
 
       const data = await response.json();
-      logInfo('GoldenBridge', `Sample saved from ${sample.source} (quality: ${sample.quality.toFixed(2)})`);
+      logInfo('GoldenBridge', `Sample saved to Python backup from ${sample.source} (quality: ${sample.quality.toFixed(2)})`);
       return { success: true, message: data.message, stats: data.stats };
     } catch (fetchError: unknown) {
       clearTimeout(timeoutId);
@@ -168,10 +193,32 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
 }
 
 /**
- * Get golden dataset statistics from Python backend.
+ * Get golden dataset statistics from D1 (cloud-first) or Python backup.
  */
 export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
   try {
+    // Try D1 first
+    const d1Adapter = getD1Adapter();
+    if (d1Adapter) {
+      try {
+        const samplesResult = await d1Adapter.getAllGoldenSamples(1000);
+        const samples = samplesResult.results || [];
+        return {
+          totalSamples: samples.length,
+          newSinceLastTraining: samples.filter(s => {
+            const created = new Date(s.created_at);
+            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+            return created > weekAgo;
+          }).length,
+          lastTrainingAt: undefined // TODO: track training runs in D1
+        };
+      } catch (d1Error: unknown) {
+        const msg = d1Error instanceof Error ? d1Error.message : String(d1Error);
+        logError('GoldenBridge', `D1 stats failed, trying Python backup: ${msg}`);
+      }
+    }
+
+    // Fallback: Python backend
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), SAVE_TIMEOUT_MS);
 
@@ -186,7 +233,7 @@ export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
     const data = await response.json();
     return data.stats as GoldenDatasetStats;
   } catch {
-    logError('GoldenBridge', 'Failed to get golden dataset stats');
+    logError('GoldenBridge', 'Failed to get golden dataset stats from both D1 and Python');
     return null;
   }
 }

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-21T10:32:26.248Z",
+  "lastUpdated": "2026-02-21T14:32:20.944Z",
   "tracks": [
     {
       "id": "cloudflare-chat-integration-20260211",
@@ -47,9 +47,9 @@
     {
       "id": "cloudflare_browser_rendering_robotkez_20260221",
       "name": "cloudflare_browser_rendering_robotkez_20260221",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 20,
+      "progress": 100,
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
@@ -61,8 +61,8 @@
       "name": "cloudflare_d1_kv_storage_20260221",
       "status": "active",
       "priority": "medium",
-      "progress": 8,
-      "assignee": "DeveloperAgent",
+      "progress": 25,
+      "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_d1_kv_storage_20260221",
@@ -90,9 +90,9 @@
     {
       "id": "cloudflare_vectorize_rag_20260221",
       "name": "cloudflare_vectorize_rag_20260221",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 8,
+      "progress": 100,
       "assignee": "DeveloperAgent",
       "tags": [],
       "dependencies": [],
@@ -184,7 +184,8 @@
       "name": "dashboard_v3_command_center_20260219",
       "status": "active",
       "priority": "high",
-      "progress": 0,
+      "progress": 35,
+      "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard_v3_command_center_20260219",
@@ -372,11 +373,11 @@
     {
       "id": "financial-auditor-agent-20260214",
       "name": "Data Flywheel Logikája",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
       "progress": 100,
       "created": "2026-02-14T00:00:00Z",
-      "updated": "2026-02-14T00:00:00Z",
+      "updated": "2026-02-21T14:20:00Z",
       "tags": [
         "financial",
         "auditor",
@@ -570,6 +571,23 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\enterprise_suite_master_20260216",
+      "_isArchived": true
+    },
+    {
+      "id": "financial-auditor-agent-20260214",
+      "name": "Data Flywheel Logikája",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-14T00:00:00Z",
+      "updated": "2026-02-21T14:20:00Z",
+      "tags": [
+        "financial",
+        "auditor",
+        "agent"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\financial-auditor-agent-20260214",
       "_isArchived": true
     },
     {
@@ -917,10 +935,10 @@
     }
   ],
   "stats": {
-    "total": 47,
-    "active": 6,
-    "completed": 2,
-    "archived": 24,
+    "total": 48,
+    "active": 3,
+    "completed": 5,
+    "archived": 25,
     "proposed": 5
   }
 }

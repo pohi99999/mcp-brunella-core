@@ -12,6 +12,8 @@
  *   GET  /task/{task_id}         - Get task status
  *   GET  /health                 - Health check
  *   GET  /stats                  - Usage stats
+ *   POST /d1/query               - Execute D1 query (Node.js → D1 proxy)
+ *   POST /browser                - Browser automation (Cloudflare Puppeteer)
  */
 
 import { Env } from './types.js';
@@ -376,6 +378,56 @@ export default {
       }
 
       // ═══════════════════════════════════════════════════════════════
+      // D1 QUERY PROXY (Phase 1: Enable Node.js → D1 queries)
+      // ═══════════════════════════════════════════════════════════════
+      if (url.pathname === '/d1/query' && request.method === 'POST') {
+        try {
+          const { sql, params } = await request.json() as { sql: string; params?: unknown[] };
+
+          if (!sql || typeof sql !== 'string') {
+            return new Response(
+              JSON.stringify({
+                status: 'error',
+                error: 'Invalid SQL query',
+                message: 'SQL query must be a non-empty string'
+              }),
+              {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                status: 400
+              }
+            );
+          }
+
+          // Execute query with optional params
+          const stmt = params ? db.prepare(sql).bind(...params) : db.prepare(sql);
+          const result = await stmt.all();
+
+          return new Response(
+            JSON.stringify({
+              status: 'success',
+              results: result.results || [],
+              meta: result.meta || {}
+            }),
+            {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            }
+          );
+        } catch (error) {
+          const errorMsg = error instanceof Error ? error.message : String(error);
+          return new Response(
+            JSON.stringify({
+              status: 'error',
+              error: errorMsg
+            }),
+            {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              status: 500
+            }
+          );
+        }
+      }
+
+      // ═══════════════════════════════════════════════════════════════
       // BROWSER RENDERING (Phase: Robotkez CF Browser Engine)
       // ═══════════════════════════════════════════════════════════════
       if (url.pathname === '/browser' && request.method === 'POST') {
@@ -386,6 +438,25 @@ export default {
               status: 'error',
               error: 'Browser Rendering not available',
               message: 'BROWSER binding not configured in wrangler.toml'
+            }),
+            {
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+              status: 503
+            }
+          );
+        }
+
+        // Validate binding shape (must provide fetch)
+        if (typeof env.BROWSER.fetch !== 'function') {
+          return new Response(
+            JSON.stringify({
+              status: 'error',
+              error: 'Invalid BROWSER binding',
+              message: 'env.BROWSER.fetch is missing - browser binding not initialized',
+              debug: {
+                type: typeof env.BROWSER,
+                keys: Object.keys(env.BROWSER || {})
+              }
             }),
             {
               headers: { ...corsHeaders, 'Content-Type': 'application/json' },
@@ -411,8 +482,8 @@ export default {
           );
         }
 
-        // Execute browser command
-        const result = await executeBrowserCommand(env.BROWSER, command);
+        // Execute browser command with KV for cookie persistence
+        const result = await executeBrowserCommand(env.BROWSER, command, env.KV);
 
         return new Response(
           JSON.stringify(result),
@@ -420,6 +491,32 @@ export default {
             headers: { ...corsHeaders, 'Content-Type': 'application/json' },
             status: result.status === 'success' ? 200 : 500
           }
+        );
+      }
+
+      // ═══════════════════════════════════════════════════════════════
+      // BROWSER DEBUG (Phase: Robotkez CF Browser Engine)
+      // ═══════════════════════════════════════════════════════════════
+      if (url.pathname === '/browser/debug' && request.method === 'GET') {
+        const authResult = validateApiKey(request, env);
+        if (!authResult.authorized) {
+          return unauthorizedResponse(authResult.error || 'Unauthorized');
+        }
+
+        const browserBinding = env.BROWSER as unknown as { fetch?: unknown };
+
+        return new Response(
+          JSON.stringify({
+            status: 'ok',
+            hasBrowserBinding: Boolean(env.BROWSER),
+            fetchType: typeof browserBinding?.fetch,
+            fetchIsGlobal: browserBinding?.fetch === fetch,
+            bindingType: typeof env.BROWSER,
+            bindingKeys: env.BROWSER ? Object.keys(env.BROWSER as Record<string, unknown>) : [],
+          }),
+          {
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          },
         );
       }
 

@@ -95,6 +95,7 @@ export interface BrowserCommand {
     text?: string;
     waitTime?: number;
     extractSelector?: string;
+    sessionId?: string;
     options?: {
         waitUntil?: 'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2';
         timeout?: number;
