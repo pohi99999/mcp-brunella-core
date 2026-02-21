@@ -1,0 +1,77 @@
+{
+  "trackName": "cloudflare_workers_ai_20260221",
+  "type": "Cloud Infrastructure / LLM Integration",
+  "priority": "CRITICAL",
+  "status": "active",
+  "progress": 75,
+  "goal": "Cloudflare Workers AI integrálása az LLM rétegbe — Gemini/Ollama quota kiváltása ingyenes edge-alapú inferenciával. A Robotkez LLM planner, EV Hunter és az orchestrátor egyaránt képes legyen @cf/meta/llama-3.3-70b-instruct és egyéb CF modelleket használni. Quota exhaustion megszüntetése.",
+  "assignee": "DeveloperAgent + Claude",
+  "createdAt": "2026-02-21T00:00:00Z",
+  "updatedAt": "2026-02-21T00:00:00Z",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Phase 1: CloudflareAI Provider az llm_client.ts-ben",
+      "status": "completed",
+      "tasks": [
+        "CF_ACCOUNT_ID + CF_AI_API_TOKEN env var ellenőrzés",
+        "generateRouted() bővítése 'cloudflare' providerrel",
+        "fetch('@cf/meta/llama-3.3-70b-instruct') wrapper implementálás",
+        "Fallback logika: CF → Gemini → Ollama sorrend",
+        "Unit teszt: test/llm_client.test.ts bővítés"
+      ]
+    },
+    {
+      "id": "phase2",
+      "name": "Phase 2: Robotkez LLM Planner átállítása",
+      "status": "pending",
+      "tasks": [
+        "llmPlanner.ts: generateExecutionPlan() Cloudflare AI-on fut",
+        "EV Hunter: EV_HUNTER_LLM=cloudflare opció hozzáadása",
+        "ev_hunter.py: get_llm() Cloudflare AI ág implementálás (REST API)",
+        "Teszt: mock plan generation CF AI-jal"
+      ]
+    },
+    {
+      "id": "phase3",
+      "name": "Phase 3: Dashboard + CLI CF AI bekötés",
+      "status": "completed",
+      "tasks": [
+        "OrchestratorAgent: CF AI mint elsődleges provider",
+        "ModelRouter: cloudflare ág hozzáadása",
+        "Dashboard: AI Provider státusz widget (melyik LLM fut)",
+        "npm test — ALL GREEN"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    "generateRouted('cloudflare', prompt) visszaad szöveges választ",
+    "EV Hunter lefut Cloudflare AI-jal (--llm cloudflare flag)",
+    "Robotkez LLM planner CF AI-n tervez (nem Gemini quota)",
+    "Ha CF AI nem elérhető, automatikusan Gemini/Ollama fallback",
+    "npm test PASS"
+  ],
+  "relatedFiles": {
+    "existing": [
+      "src/core/llm_client.ts",
+      "src/core/modelRouter.ts",
+      "src/utils/llmPlanner.ts",
+      "myai/tasks/ev_hunter.py",
+      "src/agents/OrchestratorAgent.ts"
+    ],
+    "created": [],
+    "modified": [
+      "src/core/llm_client.ts",
+      "src/core/modelRouter.ts",
+      "src/utils/llmPlanner.ts",
+      "myai/tasks/ev_hunter.py"
+    ]
+  },
+  "cloudflareModels": [
+    "@cf/meta/llama-3.3-70b-instruct",
+    "@cf/meta/llama-3.1-8b-instruct",
+    "@cf/mistral/mistral-7b-instruct-v0.1",
+    "@cf/google/gemma-7b-it"
+  ],
+  "apiEndpoint": "https://api.cloudflare.com/client/v4/accounts/{CF_ACCOUNT_ID}/ai/run/{model}"
+}

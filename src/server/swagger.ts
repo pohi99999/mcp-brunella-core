@@ -2,7 +2,7 @@ import swaggerJsdoc from "swagger-jsdoc";
 import path from "path";
 
 const options = {
-  definition: {
+  swaggerDefinition: {
     openapi: "3.0.0",
     info: {
       title: "Brunella Agent System API",

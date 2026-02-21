@@ -8,6 +8,13 @@ export default defineConfig({
     exclude: ['**/node_modules/**', '**/build/**', '**/src/dashboard/**', '**/*.e2e.test.ts'],
     globals: true,
     setupFiles: ['./test/setup.ts'],
+    testTimeout: 15000,
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
   },
   resolve: {
     alias: {

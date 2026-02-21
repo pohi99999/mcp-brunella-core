@@ -1,0 +1,70 @@
+{
+  "trackName": "cloudflare_vectorize_rag_20260221",
+  "type": "AI / Vector Database",
+  "priority": "MEDIUM",
+  "status": "active",
+  "progress": 0,
+  "goal": "A LanceDB lokális vector adatbázist kiegészíteni / kiváltani Cloudflare Vectorize-zal. A RAG (Retrieval-Augmented Generation) memória az edge-en él — ügynökök bárhonnan lekérdezhetik korábbi tapasztalataikat. LanceDB lokális fallback-ként megmarad.",
+  "assignee": "DeveloperAgent",
+  "createdAt": "2026-02-21T00:00:00Z",
+  "updatedAt": "2026-02-21T00:00:00Z",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Phase 1: Vectorize index létrehozása",
+      "status": "pending",
+      "tasks": [
+        "Vectorize index létrehozása: brunella-agent-memory (dimensions: 384, metric: cosine)",
+        "Wrangler binding konfigurálása",
+        "src/utils/vectorize.ts wrapper létrehozása",
+        "Embeddings generálás: @cf/baai/bge-small-en-v1.5 Workers AI modell"
+      ]
+    },
+    {
+      "id": "phase2",
+      "name": "Phase 2: RAG utils átírása",
+      "status": "pending",
+      "tasks": [
+        "src/utils/rag.ts: searchRAG() Vectorize-t használ elsőként, LanceDB fallback",
+        "goldenDatasetBridge.ts: sikeres végrehajtás → Vectorize-ba is bekerül",
+        "AgentManager: enrichedInstruction Vectorize-ból",
+        "Unit teszt: mock Vectorize responses"
+      ]
+    },
+    {
+      "id": "phase3",
+      "name": "Phase 3: Knowledge migrálás + Dashboard",
+      "status": "pending",
+      "tasks": [
+        "Meglévő LanceDB rekordok export → Vectorize import (migration script)",
+        "Dashboard: RAG Memory widget — top 5 relevants találat megjelenítés",
+        "Tech Harvester: összegyűjtött tudás Vectorize-ba kerül",
+        "npm test PASS"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    "searchRAG('used car price Hungary') → relevans találatok Vectorize-ból",
+    "goldenDatasetBridge: sikeres végrehajtás Vectorize-ba kerül",
+    "LanceDB fallback működik ha Vectorize nem elérhető",
+    "AgentManager enrichedInstruction tartalmaz Vectorize kontextust",
+    "npm test PASS"
+  ],
+  "relatedFiles": {
+    "existing": [
+      "src/utils/rag.ts",
+      "src/core/goldenDatasetBridge.ts",
+      "src/agents/AgentManager.ts",
+      "wrangler.toml"
+    ],
+    "created": [
+      "src/utils/vectorize.ts",
+      "scripts/migrate_lancedb_to_vectorize.ts"
+    ],
+    "modified": [
+      "src/utils/rag.ts",
+      "src/core/goldenDatasetBridge.ts",
+      "wrangler.toml"
+    ]
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "trackName": "cloudflare_browser_rendering_robotkez_20260221",
+  "type": "Browser Automation / Edge Infrastructure",
+  "priority": "HIGH",
+  "status": "active",
+  "progress": 0,
+  "goal": "A Robotkez böngésző automatizálást Cloudflare Browser Rendering API-ra migrálni. A jelenlegi lokális Playwright (interactive_browser.py) helyett Cloudflare managed Chrome-ot használni — amely nem kap Google bot detection-t, nincs consent popup probléma, és edge-en fut. A lokális Playwright fallback-ként megmarad.",
+  "assignee": "DeveloperAgent + Claude",
+  "createdAt": "2026-02-21T00:00:00Z",
+  "updatedAt": "2026-02-21T00:00:00Z",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Phase 1: CF Browser Rendering Worker bővítése",
+      "status": "pending",
+      "tasks": [
+        "bas-orchestrator Worker: /browser endpoint hozzáadása",
+        "navigate(url) → screenshot visszaadás (base64 PNG)",
+        "click(selector), type(selector, text), extract(selector) műveletek",
+        "Puppeteer Core használata (CF Browser Rendering natív API)",
+        "Wrangler deploy"
+      ]
+    },
+    {
+      "id": "phase2",
+      "name": "Phase 2: CloudflareBrowser adapter a Node.js oldalon",
+      "status": "pending",
+      "tasks": [
+        "src/utils/cloudfareBrowser.ts létrehozása (BrowserCommand interfész implementáció)",
+        "PersistentBrowser.sendCommand() → CF Worker HTTP hívás",
+        "ROBOTKEZ_ENGINE=cloudflare env var: CF engine használata",
+        "ROBOTKEZ_ENGINE=local: jelenlegi Playwright marad (fallback)",
+        "Unit teszt: mock CF Browser responses"
+      ]
+    },
+    {
+      "id": "phase3",
+      "name": "Phase 3: Consent + Bot Detection megszüntetése",
+      "status": "pending",
+      "tasks": [
+        "CF Browser Rendering tesztelés Google-lal (consent popup?)",
+        "Ha szükséges: cookie state perzisztálás CF KV-ben",
+        "Dashboard monitor widget: 'CF Browser' badge megjelenítés",
+        "EV Hunter willhaben.at + autoscout24 tesztelés CF engine-nel",
+        "npm test PASS"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    "POST /api/v1/robotkez/chat 'navigálj google.com-ra' → screenshot consent nélkül",
+    "Google keresés végigmegy (nem áll meg consent oldalnál)",
+    "CF Browser Rendering engine-nel EV Hunter lefut",
+    "Lokális Playwright fallback működik ha CF nem elérhető",
+    "npm test PASS"
+  ],
+  "relatedFiles": {
+    "existing": [
+      "src/utils/persistentBrowser.ts",
+      "src/agents/RobotkezV2Agent.ts",
+      "src/utils/browserRendering.ts",
+      "src/server/routes/robotkez.ts",
+      "myai/interactive_browser.py",
+      "wrangler.toml"
+    ],
+    "created": [
+      "src/utils/cloudflareBrowser.ts"
+    ],
+    "modified": [
+      "src/utils/persistentBrowser.ts",
+      "myai/interactive_browser.py"
+    ]
+  },
+  "cfWorker": "bas-orchestrator.iam-dd1.workers.dev",
+  "notes": "A lokális interactive_browser.py javítások (anti-detection args, consent kezelés) megmaradnak fallback-ként. CF Browser Rendering az elsődleges engine."
+}

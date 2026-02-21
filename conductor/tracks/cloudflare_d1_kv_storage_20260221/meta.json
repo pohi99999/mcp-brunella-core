@@ -1,0 +1,73 @@
+{
+  "trackName": "cloudflare_d1_kv_storage_20260221",
+  "type": "Cloud Storage / Data Infrastructure",
+  "priority": "MEDIUM",
+  "status": "active",
+  "progress": 0,
+  "goal": "A lokális SQLite adatbázisok és file-alapú adattárolás egy részét Cloudflare D1 (SQL) és KV (key-value) tárhelyre migrálni. A Golden Dataset, agent task queue és session state felhőbe kerül — így több gépről is elérhető, és a rendszer skálázható.",
+  "assignee": "DeveloperAgent",
+  "createdAt": "2026-02-21T00:00:00Z",
+  "updatedAt": "2026-02-21T00:00:00Z",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Phase 1: D1 adatbázis séma és migráció",
+      "status": "pending",
+      "tasks": [
+        "D1 adatbázis létrehozása: brunella-core-db",
+        "enterprise_events tábla migráció D1-be",
+        "agent_tasks tábla migráció D1-be",
+        "Wrangler D1 binding konfigurálása",
+        "src/utils/globalDb.ts: D1 adapter implementálás (helyi fallback megmarad)"
+      ]
+    },
+    {
+      "id": "phase2",
+      "name": "Phase 2: KV cache réteg",
+      "status": "pending",
+      "tasks": [
+        "KV namespace létrehozása: brunella-agent-cache",
+        "Agent eredmények cache-elése KV-ben (TTL: 1 óra)",
+        "EV Hunter eredmények KV-ben (ev_hunter_results)",
+        "Session state: robotkez chat history KV-ben",
+        "src/utils/kvCache.ts létrehozása"
+      ]
+    },
+    {
+      "id": "phase3",
+      "name": "Phase 3: Golden Dataset szinkron",
+      "status": "pending",
+      "tasks": [
+        "golden_dataset.jsonl → D1 golden_samples tábla",
+        "goldenDatasetBridge.ts: D1-be írás (helyi JSONL mellé)",
+        "Dashboard: dataset méret D1-ből lekérdezve",
+        "npm test PASS"
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    "enterprise_events D1-ben perzisztálódnak (nem csak lokális SQLite)",
+    "KV cache: agent eredmény 1 percen belül visszaolvasható",
+    "Golden Dataset D1-ben is megjelenik",
+    "Lokális SQLite fallback működik offline módban",
+    "npm test PASS"
+  ],
+  "relatedFiles": {
+    "existing": [
+      "src/utils/globalDb.ts",
+      "src/utils/tasksDb.ts",
+      "src/core/goldenDatasetBridge.ts",
+      "src/core/enterpriseEventBus.ts",
+      "wrangler.toml"
+    ],
+    "created": [
+      "src/utils/kvCache.ts",
+      "src/utils/d1Adapter.ts"
+    ],
+    "modified": [
+      "src/utils/globalDb.ts",
+      "src/core/goldenDatasetBridge.ts",
+      "wrangler.toml"
+    ]
+  }
+}
