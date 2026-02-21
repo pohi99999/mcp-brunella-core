@@ -24,6 +24,7 @@ import { createTracksRoutes } from "./tracks.js";
 import { createTTSRoutes } from "./tts.js";
 import { createRecommendationRoutes } from "./recommendation.js";
 import { createMachinesRouter } from "./machines.js";
+import { createEnterpriseRouter, createEnterpriseAnalyticsRouter } from "./enterprise.js";
 
 export {
   createHealthRoutes,
@@ -48,6 +49,8 @@ export {
   createCloudflareRoutes,
   createTracksRoutes,
   createTTSRoutes,
+  createEnterpriseRouter,
+  createEnterpriseAnalyticsRouter,
 };
 
 /**
@@ -81,6 +84,8 @@ export function createV1Router(): Router {
   router.use("/tts", createTTSRoutes());
   router.use("/brunella", createRecommendationRoutes());
   router.use("/machines", createMachinesRouter());
+  router.use("/enterprise", createEnterpriseRouter());
+  router.use("/enterprise/analytics", createEnterpriseAnalyticsRouter());
 
   return router;
 }

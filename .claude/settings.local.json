@@ -90,7 +90,8 @@
       "Bash(cmd /c:*)",
       "Bash(npx tsc)",
       "Bash(npm run)",
-      "Bash(npx tsc:*)"
+      "Bash(npx tsc:*)",
+      "Bash(python -c \"print\\('python works'\\)\" 2>&1 || py -c \"print\\('py works'\\)\" 2>&1 || node -e \"console.log\\('node works'\\)\" 2>&1)"
     ]
   },
   "enableAllProjectMcpServers": true,

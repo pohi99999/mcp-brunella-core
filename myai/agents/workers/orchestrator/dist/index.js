@@ -256,6 +256,21 @@ export default {
                         status: 503
                     });
                 }
+                // Validate binding shape (must provide fetch)
+                if (typeof env.BROWSER.fetch !== 'function') {
+                    return new Response(JSON.stringify({
+                        status: 'error',
+                        error: 'Invalid BROWSER binding',
+                        message: 'env.BROWSER.fetch is missing - browser binding not initialized',
+                        debug: {
+                            type: typeof env.BROWSER,
+                            keys: Object.keys(env.BROWSER || {})
+                        }
+                    }), {
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                        status: 503
+                    });
+                }
                 const command = await request.json();
                 // Validate command
                 if (!validateBrowserCommand(command)) {
@@ -268,11 +283,31 @@ export default {
                         status: 400
                     });
                 }
-                // Execute browser command
-                const result = await executeBrowserCommand(env.BROWSER, command);
+                // Execute browser command with KV for cookie persistence
+                const result = await executeBrowserCommand(env.BROWSER, command, env.KV);
                 return new Response(JSON.stringify(result), {
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
                     status: result.status === 'success' ? 200 : 500
+                });
+            }
+            // ═══════════════════════════════════════════════════════════════
+            // BROWSER DEBUG (Phase: Robotkez CF Browser Engine)
+            // ═══════════════════════════════════════════════════════════════
+            if (url.pathname === '/browser/debug' && request.method === 'GET') {
+                const authResult = validateApiKey(request, env);
+                if (!authResult.authorized) {
+                    return unauthorizedResponse(authResult.error || 'Unauthorized');
+                }
+                const browserBinding = env.BROWSER;
+                return new Response(JSON.stringify({
+                    status: 'ok',
+                    hasBrowserBinding: Boolean(env.BROWSER),
+                    fetchType: typeof browserBinding?.fetch,
+                    fetchIsGlobal: browserBinding?.fetch === fetch,
+                    bindingType: typeof env.BROWSER,
+                    bindingKeys: env.BROWSER ? Object.keys(env.BROWSER) : [],
+                }), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
                 });
             }
             // ═══════════════════════════════════════════════════════════════

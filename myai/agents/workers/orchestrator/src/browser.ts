@@ -15,6 +15,89 @@ import puppeteer from '@cloudflare/puppeteer';
 import { BrowserCommand, BrowserResponse, BrowserAction } from './types.js';
 
 /**
+ * Cookie persistence in Cloudflare KV
+ * Session lifetime: 24 hours (TTL)
+ */
+interface CookieState {
+  cookies: any[];
+  url: string;
+  timestamp: string;
+}
+
+const COOKIE_TTL_SECONDS = 24 * 60 * 60; // 24 hours
+
+/**
+ * Save cookies to KV for session persistence
+ */
+async function saveCookiesToKV(
+  kv: KVNamespace | undefined,
+  sessionId: string,
+  page: any,
+  url: string
+): Promise<void> {
+  if (!kv) {
+    console.warn('[BROWSER] KV not available, skipping cookie persistence');
+    return;
+  }
+
+  try {
+    const cookies = await page.cookies();
+    const state: CookieState = {
+      cookies,
+      url,
+      timestamp: new Date().toISOString()
+    };
+
+    const key = `browser_session:${sessionId}`;
+    await kv.put(key, JSON.stringify(state), {
+      expirationTtl: COOKIE_TTL_SECONDS
+    });
+
+    console.log(`[BROWSER] Saved ${cookies.length} cookies for session ${sessionId}`);
+  } catch (error) {
+    console.error('[BROWSER] Failed to save cookies to KV:', error);
+    // Don't fail the request if cookie save fails
+  }
+}
+
+/**
+ * Load cookies from KV and restore to page
+ */
+async function loadCookiesFromKV(
+  kv: KVNamespace | undefined,
+  sessionId: string,
+  page: any
+): Promise<boolean> {
+  if (!kv) {
+    console.warn('[BROWSER] KV not available, skipping cookie restore');
+    return false;
+  }
+
+  try {
+    const key = `browser_session:${sessionId}`;
+    const stateJson = await kv.get(key);
+
+    if (!stateJson) {
+      console.log(`[BROWSER] No saved session for ${sessionId}`);
+      return false;
+    }
+
+    const state: CookieState = JSON.parse(stateJson);
+    
+    if (state.cookies && state.cookies.length > 0) {
+      await page.setCookie(...state.cookies);
+      console.log(`[BROWSER] Restored ${state.cookies.length} cookies for session ${sessionId}`);
+      return true;
+    }
+
+    return false;
+  } catch (error) {
+    console.error('[BROWSER] Failed to load cookies from KV:', error);
+    return false;
+  }
+}
+
+/**
  * Handle Google consent popups automatically
  * Cloudflare Browser Rendering typically bypasses these, but we handle them just in case
  */
@@ -55,7 +138,8 @@ async function handleConsent(page: any): Promise<void> {
  */
 export async function executeBrowserCommand(
   browser: any,
-  command: BrowserCommand
+  command: BrowserCommand,
+  kv?: KVNamespace
 ): Promise<BrowserResponse> {
   const startTime = Date.now();
   let page: any;
@@ -63,9 +147,24 @@ export async function executeBrowserCommand(
   const networkErrors: string[] = [];
 
   try {
+    // Wrap binding fetch to ensure absolute URL for nodejs_compat fetch
+    const endpoint = {
+      fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+        if (typeof input === 'string' && input.startsWith('/')) {
+          return browser.fetch(`https://browser${input}`, init);
+        }
+        return browser.fetch(input, init);
+      }
+    };
+
     // Launch browser session
-    const browserInstance = await puppeteer.launch(browser);
+    const browserInstance = await puppeteer.launch(endpoint as any);
     page = await browserInstance.newPage();
+
+    // Restore cookies from KV if sessionId provided
+    if (command.sessionId) {
+      await loadCookiesFromKV(kv, command.sessionId, page);
+    }
 
     // Capture console logs
     page.on('console', (msg: any) => {
@@ -93,6 +192,11 @@ export async function executeBrowserCommand(
         
         // Handle consent popups
         await handleConsent(page);
+        
+        // Save cookies to KV for session persistence
+        if (command.sessionId) {
+          await saveCookiesToKV(kv, command.sessionId, page, page.url());
+        }
         
         const screenshot = await page.screenshot({ 
           encoding: 'base64',

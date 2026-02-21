@@ -215,6 +215,18 @@ export function RobotkezV2Chat() {
               <Badge variant={status?.browser.active ? 'default' : 'secondary'} className={status?.browser.active ? 'bg-green-500/20 text-green-500 border-green-500/50' : ''}>
                 {status?.browser.active ? 'AKTÍV' : 'LEÁLLÍTVA'}
               </Badge>
+              {status?.browser.engine && (
+                <Badge
+                  variant="outline"
+                  className={
+                    status.browser.engine.toLowerCase().includes('cloudflare')
+                      ? 'bg-blue-500/10 text-blue-400 border-blue-400/40'
+                      : 'bg-zinc-500/10 text-zinc-300 border-zinc-400/30'
+                  }
+                >
+                  {status.browser.engine.toLowerCase().includes('cloudflare') ? '☁ CF Browser' : '🖥 Local'}
+                </Badge>
+              )}
               <Button variant="ghost" size="icon" onClick={refreshData} title="Frissítés">
                 <RefreshCw className="w-4 h-4" />
               </Button>

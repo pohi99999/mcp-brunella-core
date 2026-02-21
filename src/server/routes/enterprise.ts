@@ -279,3 +279,191 @@ export function createEnterpriseRouter(): Router {
 
   return router;
 }
+
+/**
+ * Create Enterprise Analytics router (D1-powered)
+ * Phase 3: Cloud-first analytics from D1 database
+ */
+export function createEnterpriseAnalyticsRouter(): Router {
+  const router = Router();
+
+  /**
+   * GET /api/enterprise/analytics/events
+   * Get enterprise events from D1
+   * 
+   * Query params:
+   *  - type: Event type filter
+   *  - limit: Max events (default: 100)
+   *  - days: Days to look back (default: 7)
+   */
+  router.get('/events', async (req: Request, res: Response) => {
+    try {
+      const { type, limit = 100, days = 7 } = req.query;
+
+      logInfo('EnterpriseAnalytics', `Fetching events: type=${type || 'all'}, limit=${limit}, days=${days}`);
+
+      // Import D1 adapter dynamically to avoid circular deps
+      const { getD1Adapter } = await import('../../utils/globalDb.js');
+      const d1Adapter = getD1Adapter();
+
+      if (!d1Adapter) {
+        return res.status(503).json({
+          status: 'error',
+          error: 'D1 adapter not available',
+          fallback: 'SQLite',
+        });
+      }
+
+      // Fetch from D1
+      const limitNum = parseInt(limit as string) || 100;
+      const daysNum = parseInt(days as string) || 7;
+      
+      // getEnterpriseEventsByType takes (type, limit) - no days parameter
+      // We'll need to filter by date manually
+      const eventsResult = await d1Adapter.getEnterpriseEventsByType(
+        type as string,
+        limitNum * 2 // Fetch more to filter
+      );
+
+      const events = eventsResult.results || [];
+      
+      // Filter by days
+      const cutoffTime = Date.now() - (daysNum * 24 * 60 * 60 * 1000);
+      const filteredEvents = events.filter(e => e.created_at >= cutoffTime).slice(0, limitNum);
+
+      res.json({
+        status: 'success',
+        source: 'd1',
+        events: filteredEvents,
+        total: filteredEvents.length,
+        query: { type: type || 'all', limit: limitNum, days: daysNum },
+      });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('EnterpriseAnalytics', `Failed to fetch events: ${msg}`);
+      res.status(500).json({
+        status: 'error',
+        error: msg,
+      });
+    }
+  });
+
+  /**
+   * GET /api/enterprise/analytics/stats
+   * Get enterprise analytics statistics from D1
+   */
+  router.get('/stats', async (req: Request, res: Response) => {
+    try {
+      logInfo('EnterpriseAnalytics', 'Fetching analytics stats from D1');
+
+      const { getD1Adapter } = await import('../../utils/globalDb.js');
+      const d1Adapter = getD1Adapter();
+
+      if (!d1Adapter) {
+        return res.status(503).json({
+          status: 'error',
+          error: 'D1 adapter not available',
+        });
+      }
+
+      // Get all event types with high limit
+      // Note: getEnterpriseEventsByType takes (type, limit) - we pass undefined for all types
+      const eventsResult = await d1Adapter.getEnterpriseEventsByType('all_types_query', 10000);
+      const events = eventsResult.results || [];
+
+      // Calculate statistics
+      const stats = {
+        totalEvents: events.length,
+        byType: {} as Record<string, number>,
+        byPriority: {} as Record<string, number>,
+        byStatus: {} as Record<string, number>,
+        last24h: 0,
+        last7d: 0,
+      };
+
+      const now = Date.now();
+      const day = 24 * 60 * 60 * 1000;
+
+      events.forEach((event: any) => {
+        // Count by type
+        stats.byType[event.type] = (stats.byType[event.type] || 0) + 1;
+
+        // Count by priority
+        stats.byPriority[event.priority] = (stats.byPriority[event.priority] || 0) + 1;
+
+        // Count by status
+        stats.byStatus[event.status] = (stats.byStatus[event.status] || 0) + 1;
+
+        // Time-based counts
+        const eventTime = new Date(event.created_at).getTime();
+        if (now - eventTime < day) stats.last24h++;
+        if (now - eventTime < 7 * day) stats.last7d++;
+      });
+
+      res.json({
+        status: 'success',
+        source: 'd1',
+        stats,
+      });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('EnterpriseAnalytics', `Failed to fetch stats: ${msg}`);
+      res.status(500).json({
+        status: 'error',
+        error: msg,
+      });
+    }
+  });
+
+  /**
+   * POST /api/enterprise/analytics/event
+   * Create a new enterprise event in D1
+   */
+  router.post('/event', async (req: Request, res: Response) => {
+    try {
+      const { type, payload, source_module, priority = 'MEDIUM' } = req.body;
+
+      if (!type || !payload) {
+        return res.status(400).json({
+          status: 'error',
+          error: 'type and payload are required',
+        });
+      }
+
+      logInfo('EnterpriseAnalytics', `Creating event: ${type}`);
+
+      const { getD1Adapter } = await import('../../utils/globalDb.js');
+      const d1Adapter = getD1Adapter();
+
+      if (!d1Adapter) {
+        return res.status(503).json({
+          status: 'error',
+          error: 'D1 adapter not available',
+        });
+      }
+
+      await d1Adapter.insertEnterpriseEvent({
+        id: `evt_${Date.now()}_${Math.random().toString(36).slice(2)}`,
+        type,
+        payload: payload || {},
+        source_module: source_module || 'api',
+        priority,
+        status: 'PENDING',
+      });
+
+      res.json({
+        status: 'success',
+        message: 'Event created',
+      });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('EnterpriseAnalytics', `Failed to create event: ${msg}`);
+      res.status(500).json({
+        status: 'error',
+        error: msg,
+      });
+    }
+  });
+
+  return router;
+}
