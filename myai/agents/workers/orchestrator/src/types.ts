@@ -168,6 +168,7 @@ export interface BrowserCommand {
   text?: string;
   waitTime?: number; // milliseconds
   extractSelector?: string; // CSS selector for extraction
+  sessionId?: string; // Session ID for cookie persistence in KV
   options?: {
     waitUntil?: 'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2';
     timeout?: number;

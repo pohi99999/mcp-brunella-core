@@ -1,11 +1,13 @@
 import Database from 'better-sqlite3';
 import path from 'path';
 import { logInfo, logError } from './logger.js';
+import { D1Adapter, createD1Adapter } from './d1Adapter.js';
 
 let globalDb: Database.Database | null = null;
+let d1Adapter: D1Adapter | null = null;
 
 /**
- * Initialize and get the global database instance
+ * Initialize and get the global database instance (Local SQLite)
  */
 export function getGlobalDb(): Database.Database {
   if (globalDb) {
@@ -26,6 +28,31 @@ export function getGlobalDb(): Database.Database {
     logError('GlobalDb', `Failed to open database: ${error}`);
     throw error;
   }
+}
+
+/**
+ * Get D1 Adapter for cloud storage (Phase 1)
+ * 
+ * Returns null if D1 is not configured (falls back to local SQLite)
+ * 
+ * Environment variables:
+ *   - CLOUDFLARE_WORKER_URL: Worker URL (e.g., https://cean-orchestrator.iam-dd1.workers.dev)
+ *   - CEAN_API_KEY: API key for worker authentication
+ */
+export function getD1Adapter(): D1Adapter | null {
+  if (d1Adapter) {
+    return d1Adapter;
+  }
+
+  d1Adapter = createD1Adapter();
+
+  if (d1Adapter) {
+    logInfo('GlobalDb', 'D1 Adapter initialized (cloud mode)');
+  } else {
+    logInfo('GlobalDb', 'D1 Adapter not available (local mode)');
+  }
+
+  return d1Adapter;
 }
 
 /**

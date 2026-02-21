@@ -14,7 +14,7 @@ import { BrowserCommand, BrowserResponse } from './types.js';
 /**
  * Execute browser command via Cloudflare Puppeteer
  */
-export declare function executeBrowserCommand(browser: any, command: BrowserCommand): Promise<BrowserResponse>;
+export declare function executeBrowserCommand(browser: any, command: BrowserCommand, kv?: KVNamespace): Promise<BrowserResponse>;
 /**
  * Validate browser command
  */

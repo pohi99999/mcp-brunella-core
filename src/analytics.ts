@@ -1,6 +1,6 @@
 /**
- * CEAN Analytics Engine
- * Provides event building and pipeline analytics
+ * CEAN Analytics Engine (Phase 3: D1 Integration)
+ * Provides event building and pipeline analytics with cloud-first D1 storage
  */
 
 export interface PipelineEvent {
@@ -84,5 +84,66 @@ export class PipelineEventBuilder {
       success: true,
       timestamp: Math.floor(Date.now() / 1000),
     };
+  }
+}
+
+/**
+ * Analytics Service (D1-powered)
+ * Tracks all pipeline events to D1 cloud storage
+ */
+export class AnalyticsService {
+  /**
+   * Track a pipeline event to D1 (async, non-blocking)
+   */
+  static async trackEvent(event: PipelineEvent): Promise<void> {
+    try {
+      // Import dynamically to avoid circular deps
+      const { getD1Adapter } = await import('./utils/globalDb.js');
+      const d1Adapter = getD1Adapter();
+
+      if (!d1Adapter) {
+        // Silently skip if D1 not available (non-critical)
+        return;
+      }
+
+      // Convert PipelineEvent to EnterpriseEvent format for D1
+      await d1Adapter.insertEnterpriseEvent({
+        id: `analytics_${event.task_id}_${Date.now()}`,
+        type: event.event_type,
+        payload: {
+          task_id: event.task_id,
+          agent_type: event.agent_type,
+          latency_ms: event.latency_ms,
+          error_message: event.error_message,
+        },
+        source_module: event.agent_type || 'analytics',
+        priority: event.success === false ? 'HIGH' : 'LOW',
+        status: event.success === false ? 'FAILED' : 'COMPLETED',
+      });
+    } catch (error) {
+      // Non-critical: analytics tracking should never break the main flow
+      console.warn('Analytics tracking failed:', error);
+    }
+  }
+
+  /**
+   * Track agent execution (convenience wrapper)
+   */
+  static async trackAgentExecution(
+    agentName: string,
+    taskId: string,
+    success: boolean,
+    latencyMs: number,
+    errorMessage?: string
+  ): Promise<void> {
+    if (success) {
+      await this.trackEvent(
+        PipelineEventBuilder.complete(taskId, agentName, latencyMs, true)
+      );
+    } else {
+      await this.trackEvent(
+        PipelineEventBuilder.error(taskId, agentName, errorMessage || 'Unknown error')
+      );
+    }
   }
 }
