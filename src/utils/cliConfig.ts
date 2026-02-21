@@ -355,18 +355,31 @@ let _instance: ConfigManager | null = null;
 
 /** Singleton for default cwd. Use ConfigManager constructor when cwd matters. */
 export function getConfigManager(cwd?: string): ConfigManager {
-  const effectiveCwd = cwd ? path.resolve(cwd) : process.cwd();
-
-  if (process.env.NODE_ENV === 'test') {
+  // Test environment isolation: return fresh instance every time
+  const isNode = typeof process !== 'undefined' && !!process.versions?.node;
+  if (isNode && process.env?.NODE_ENV === 'test') {
     _instance = new ConfigManager(cwd);
     return _instance;
   }
 
-  let instance = _instances.get(effectiveCwd);
-  if (!instance) {
-    instance = new ConfigManager(effectiveCwd);
-    _instances.set(effectiveCwd, instance);
+  // Fallback if not in Node (e.g. during build-time bundling for Worker)
+  if (!isNode) {
+    if (!_instance || cwd !== undefined) {
+      _instance = new ConfigManager(cwd);
+    }
+    return _instance;
   }
+
+  // Normal Node.js behavior with caching
+  const effectiveCwd = cwd || process.cwd();
+  const cacheKey = path.resolve(effectiveCwd);
+
+  let instance = _instances.get(cacheKey);
+  if (!instance) {
+    instance = new ConfigManager(cwd);
+    _instances.set(cacheKey, instance);
+  }
+
   _instance = instance;
   return instance;
 }
