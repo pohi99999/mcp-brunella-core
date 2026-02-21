@@ -14,6 +14,11 @@
  *   GET  /stats                  - Usage stats
  */
 import { handleLoadTest } from './loadTest.js';
+import { gatherMetrics, formatPrometheusMetrics, formatJsonMetrics } from './metrics.js';
+import { writeAnalyticsEvent, PipelineEventBuilder } from './analytics.js';
+import { exportD1ToKV } from './backup.js';
+import { validateApiKey, unauthorizedResponse, requiresAuth } from './auth.js';
+import { executeBrowserCommand, validateBrowserCommand } from './browser.js';
 // ═══════════════════════════════════════════════════════════════════
 // CACHE CLASS (Phase 4.2 Optimization - Agent URL Caching)
 // ═══════════════════════════════════════════════════════════════════
@@ -69,6 +74,31 @@ const agentCache = new AgentCache();
 // ═══════════════════════════════════════════════════════════════════
 // HELPER FUNCTIONS
 // ═══════════════════════════════════════════════════════════════════
+/**
+ * fetchWithRetry: Exponential backoff for rate-limited requests
+ * (Phase 6.1 Optimization - Handles Durable Object 503 errors)
+ *
+ * @param url - Request URL
+ * @param options - Fetch options
+ * @param maxRetries - Maximum retry attempts (default: 3)
+ * @returns Response object
+ * @throws Error if rate limited after all retries
+ */
+async function fetchWithRetry(url, options, maxRetries = 3) {
+    for (let i = 0; i < maxRetries; i++) {
+        const response = await fetch(url, options);
+        // Success or non-retryable error
+        if (response.status !== 503) {
+            return response;
+        }
+        // Rate limited - exponential backoff (1s, 2s, 4s)
+        if (i < maxRetries - 1) {
+            const delay = Math.pow(2, i) * 1000;
+            await new Promise(resolve => setTimeout(resolve, delay));
+        }
+    }
+    throw new Error(`Rate limited after ${maxRetries} retries`);
+}
 function generateTaskId() {
     return `task_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
 }
@@ -176,6 +206,7 @@ export default {
     async fetch(request, env, ctx) {
         const url = new URL(request.url);
         const db = env.DB;
+        const cae = env.CAE;
         const corsHeaders = {
             'Access-Control-Allow-Origin': '*',
             'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
@@ -183,6 +214,15 @@ export default {
         };
         if (request.method === 'OPTIONS') {
             return new Response(null, { headers: corsHeaders });
+        }
+        // ═══════════════════════════════════════════════════════════════
+        // API KEY AUTHENTICATION (Phase 6.3 Security Fix)
+        // ═════════════════════════════════════════════════════════════
+        if (requiresAuth(url.pathname)) {
+            const authResult = validateApiKey(request, env);
+            if (!authResult.authorized) {
+                return unauthorizedResponse(authResult.error || 'Unauthorized');
+            }
         }
         try {
             // ═══════════════════════════════════════════════════════════════
@@ -199,6 +239,40 @@ export default {
                     tasks_total: taskCount?.count || 0,
                 }), {
                     headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                });
+            }
+            // ═══════════════════════════════════════════════════════════════
+            // BROWSER RENDERING (Phase: Robotkez CF Browser Engine)
+            // ═══════════════════════════════════════════════════════════════
+            if (url.pathname === '/browser' && request.method === 'POST') {
+                // Check if browser binding is available
+                if (!env.BROWSER) {
+                    return new Response(JSON.stringify({
+                        status: 'error',
+                        error: 'Browser Rendering not available',
+                        message: 'BROWSER binding not configured in wrangler.toml'
+                    }), {
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                        status: 503
+                    });
+                }
+                const command = await request.json();
+                // Validate command
+                if (!validateBrowserCommand(command)) {
+                    return new Response(JSON.stringify({
+                        status: 'error',
+                        error: 'Invalid browser command',
+                        message: 'Required fields missing or invalid action type'
+                    }), {
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                        status: 400
+                    });
+                }
+                // Execute browser command
+                const result = await executeBrowserCommand(env.BROWSER, command);
+                return new Response(JSON.stringify(result), {
+                    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                    status: result.status === 'success' ? 200 : 500
                 });
             }
             // ═══════════════════════════════════════════════════════════════
@@ -222,18 +296,33 @@ export default {
                     error: null,
                 };
                 await insertTask(db, task);
-                // Queue execution (async via Durable Objects or wait 100ms)
+                // Queue execution with analytics
                 ctx.waitUntil((async () => {
+                    const startTime = Date.now();
                     try {
+                        // Log pipeline start event
+                        if (cae) {
+                            await writeAnalyticsEvent(cae, PipelineEventBuilder.start(taskId, agentType));
+                        }
                         // Use cached endpoint (Phase 4.2 optimization)
                         const endpoint = getAgentEndpoint(agentType);
                         await updateTaskStatus(db, taskId, 'running');
                         const result = await callAgent(endpoint, taskId, payload);
+                        const latencyMs = Date.now() - startTime;
                         await updateTaskStatus(db, taskId, 'completed', result);
+                        // Log completion event (success)
+                        if (cae) {
+                            await writeAnalyticsEvent(cae, PipelineEventBuilder.complete(taskId, agentType, latencyMs, true));
+                        }
                     }
                     catch (error) {
                         const errorMsg = error instanceof Error ? error.message : String(error);
+                        const latencyMs = Date.now() - startTime;
                         await updateTaskStatus(db, taskId, 'failed', undefined, errorMsg);
+                        // Log error event
+                        if (cae) {
+                            await writeAnalyticsEvent(cae, PipelineEventBuilder.error(taskId, agentType, errorMsg));
+                        }
                     }
                 })());
                 return new Response(JSON.stringify({
@@ -273,6 +362,26 @@ export default {
                 });
             }
             // ═══════════════════════════════════════════════════════════════
+            // PROMETHEUS METRICS
+            // ═══════════════════════════════════════════════════════════════
+            if (url.pathname === '/metrics' && request.method === 'GET') {
+                const metrics = await gatherMetrics(db);
+                // Support both Prometheus and JSON formats
+                const format = url.searchParams.get('format') || 'prometheus';
+                if (format === 'json') {
+                    return new Response(JSON.stringify(formatJsonMetrics(metrics)), {
+                        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+                    });
+                }
+                // Default: Prometheus text format
+                return new Response(formatPrometheusMetrics(metrics), {
+                    headers: {
+                        ...corsHeaders,
+                        'Content-Type': 'text/plain; version=0.0.4; charset=utf-8',
+                    },
+                });
+            }
+            // ═══════════════════════════════════════════════════════════════
             // LOAD TESTING (Phase 4)
             // ═══════════════════════════════════════════════════════════════
             if (url.pathname.startsWith('/load-test')) {
@@ -283,9 +392,11 @@ export default {
                 error: 'Not found',
                 available: [
                     'GET  /health',
+                    'POST /browser',
                     'POST /schedule/{agent_type}',
                     'GET  /task/{task_id}',
                     'GET  /stats',
+                    'GET  /metrics?format=prometheus|json',
                     'GET  /load-test/run?pipelines=100&concurrency=10'
                 ],
             }), {
@@ -302,6 +413,20 @@ export default {
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' },
                 status: 500,
             });
+        }
+    },
+    /**
+     * Scheduled Handler: D1 Backup to KV (Phase 6.2)
+     * Runs every 15 minutes via Cron Trigger
+     */
+    async scheduled(event, env, ctx) {
+        try {
+            console.log('[CRON] Starting D1 backup to KV...', event.cron);
+            const metadata = await exportD1ToKV(env);
+            console.log('[CRON] Backup complete:', metadata);
+        }
+        catch (error) {
+            console.error('[CRON] Backup failed:', error);
         }
     },
 };

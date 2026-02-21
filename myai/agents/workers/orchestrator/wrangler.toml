@@ -24,6 +24,10 @@ dataset = "cean_metrics"
 binding = "KV"
 id = "cean_backup_kv"
 
+# Browser Rendering binding (Phase: Robotkez CF Browser Engine)
+[[env.production.browser]]
+binding = "BROWSER"
+
 # Cron Trigger: D1 Backup every 15 minutes (Phase 6.2 DR Improvement)
 [[env.production.triggers.crons]]
 crons = ["*/15 * * * *"]
@@ -47,6 +51,10 @@ dataset = "cean_metrics_staging"
 [[env.staging.kv_namespaces]]
 binding = "KV"
 id = "cean_backup_kv_staging"
+
+# Browser Rendering binding (Phase: Robotkez CF Browser Engine)
+[[env.staging.browser]]
+binding = "BROWSER"
 
 [[env.staging.triggers.crons]]
 crons = ["*/15 * * * *"]

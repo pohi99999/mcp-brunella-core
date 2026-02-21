@@ -8,7 +8,7 @@ import { Env } from './types';
  * - Target RPO: 5 minutes
  * - This reduces RPO to 15 minutes (interim solution until dual-database replication)
  * 
- * Scheduled via Cron Trigger: 0 */15 * * * (every 15 minutes)
+ * Scheduled via Cron Trigger (every 15 minutes)
  */
 
 export interface D1BackupMetadata {

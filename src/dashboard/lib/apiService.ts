@@ -157,6 +157,15 @@ export interface CloudflareChatResponse {
   endpoint?: string;
 }
 
+export interface CloudflareWorkerTaskResponse {
+  success: boolean;
+  workerId: string;
+  workerName: string;
+  endpoint?: string;
+  result?: unknown;
+  error?: string;
+}
+
 export async function submitCloudflareTask(
   instruction: string,
   context: Record<string, unknown> = {},
@@ -223,6 +232,33 @@ export async function chatWithCloudflare(
   if (!isCloudflareChatResponse(data))
     throw new Error("Érvénytelen Cloudflare chat válasz");
   return data;
+}
+
+export async function submitCloudflareWorkerTask(
+  workerId: string,
+  instruction: string,
+  context: Record<string, unknown> = {},
+): Promise<CloudflareWorkerTaskResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/cloudflare/agents/${encodeURIComponent(workerId)}/task`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ instruction, context }),
+    },
+    LONG_TIMEOUT_MS,
+  );
+
+  const data = await safeJson<CloudflareWorkerTaskResponse | { error?: string }>(
+    response,
+  ).catch(() => ({
+    error: `HTTP ${response.status}: ${response.statusText}`,
+  }));
+
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Cloudflare worker task failed");
+
+  return data as CloudflareWorkerTaskResponse;
 }
 
 export interface CloudflareStatus {

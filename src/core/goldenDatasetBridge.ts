@@ -3,6 +3,7 @@
 // RULES: RULE-GD1 (success+LLM→save), RULE-GD2 (quality threshold), RULE-GD3 (dedup SHA256)
 
 import { logInfo, logError } from '../utils/logger.js';
+import { vectorizeClient } from '../utils/vectorize.js';
 
 // ============================================================================
 // TYPES
@@ -213,4 +214,13 @@ export async function autoSaveGoldenSample(
     source: agentName,
     quality
   }).catch(() => { /* non-critical */ });
+
+  // Vectorize upsert
+  if (process.env.CF_VECTORIZE_ENABLED === 'true' || vectorizeClient.getStatus().enabled) {
+    vectorizeClient.upsertText(
+      `golden-${Date.now()}`,
+      `${task}\n${completion}`,
+      { source: agentName, type: 'golden_sample', quality }
+    ).catch(e => logError('GoldenBridge', `Vectorize upsert failed: ${e.message}`));
+  }
 }

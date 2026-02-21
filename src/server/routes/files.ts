@@ -1,6 +1,52 @@
 import { Router } from 'express';
 import path from 'path';
 import fs from 'fs';
+import { vectorizeClient } from '../../utils/vectorize.js';
+
+// Analytics tracking for Vectorize searches
+interface SearchAnalytics {
+  totalSearches: number;
+  averageResults: number;
+  topQueries: Array<{ query: string; count: number }>;
+  lastSearches: Array<{ query: string; results: number; timestamp: string }>;
+}
+
+const searchStats: SearchAnalytics = {
+  totalSearches: 0,
+  averageResults: 0,
+  topQueries: [],
+  lastSearches: []
+};
+
+const queryCounter = new Map<string, number>();
+
+function trackSearch(query: string, resultCount: number): void {
+    searchStats.totalSearches++;
+    
+    // Update average
+    const currentTotal = searchStats.averageResults * (searchStats.totalSearches - 1);
+    searchStats.averageResults = (currentTotal + resultCount) / searchStats.totalSearches;
+    
+    // Track query frequency
+    queryCounter.set(query, (queryCounter.get(query) || 0) + 1);
+    
+    // Update top queries (top 10)
+    searchStats.topQueries = Array.from(queryCounter.entries())
+        .map(([q, count]) => ({ query: q, count }))
+        .sort((a, b) => b.count - a.count)
+        .slice(0, 10);
+    
+    // Track last searches (max 20)
+    searchStats.lastSearches.unshift({
+        query,
+        results: resultCount,
+        timestamp: new Date().toISOString()
+    });
+    
+    if (searchStats.lastSearches.length > 20) {
+        searchStats.lastSearches = searchStats.lastSearches.slice(0, 20);
+    }
+}
 
 export function createFileRoutes(): Router {
     const router = Router();
@@ -70,11 +116,17 @@ export function createRagRoutes(): Router {
         try {
             const { getRAGCount } = await import('../../utils/rag.js');
             const count = await getRAGCount();
+            const vectorizeStatus = vectorizeClient.getStatus();
+            
             res.json({
                 table: 'memory',
-                provider: 'LanceDB',
+                provider: vectorizeStatus.enabled ? 'Vectorize + LanceDB' : 'LanceDB',
                 status: 'online',
-                rowCount: count
+                rowCount: count,
+                vectorize: {
+                    enabled: vectorizeStatus.enabled,
+                    indexName: vectorizeStatus.indexName
+                }
             });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
@@ -91,7 +143,26 @@ export function createRagRoutes(): Router {
             }
             const { searchRAG } = await import('../../utils/rag.js');
             const results = await searchRAG(query as string, limit ? parseInt(limit as string) : 5);
+            
+            // Track analytics
+            trackSearch(query as string, results.length);
+            
             res.json({ results });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    router.get('/analytics', (req, res) => {
+        try {
+            res.json({
+                success: true,
+                analytics: {
+                    ...searchStats,
+                    vectorizeEnabled: vectorizeClient.getStatus().enabled
+                }
+            });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });

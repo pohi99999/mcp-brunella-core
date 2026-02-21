@@ -8,6 +8,7 @@ import fs from "fs/promises";
 import path from "path";
 import { logInfo, logError, logWarn } from "./logger.js";
 import { aiGateway } from "./aiGateway.js";
+import { vectorizeClient } from "./vectorize.js";
 
 const DB_PATH = "./data/brunella_lancedb";
 const HARVEST_BACKUP_PATH = "./logs/harvest_backup.jsonl";
@@ -286,6 +287,16 @@ export async function addToIndex(
   pathOrId: string,
   content: string,
 ): Promise<void> {
+  // 1. Vectorize (cloud, elsődleges)
+  if (process.env.CF_VECTORIZE_ENABLED === 'true' || vectorizeClient.getStatus().enabled) {
+    try {
+      await vectorizeClient.upsertText(pathOrId, content, { source: pathOrId });
+    } catch (e: any) {
+      logWarn('RAG', `Vectorize upsert failed: ${e.message}`);
+    }
+  }
+
+  // 2. LanceDB fallback (lokális)
   await fs.mkdir(path.dirname(DB_PATH), { recursive: true }).catch(() => {});
   await memory.addDocument(content, { path: pathOrId });
 }
@@ -300,6 +311,23 @@ export async function searchRAG(
   query: string,
   limit = 20,
 ): Promise<Array<{ text: string; path?: string; score?: number }>> {
+  // 1. Vectorize (cloud, elsődleges)
+  if (process.env.CF_VECTORIZE_ENABLED === 'true' || vectorizeClient.getStatus().enabled) {
+    try {
+      const results = await vectorizeClient.searchText(query, limit);
+      if (results.length > 0) {
+        return results.map(r => ({
+          text: (r.metadata?.text as string) || '',
+          path: (r.metadata?.source as string) || r.id,
+          score: r.score
+        }));
+      }
+    } catch (e: any) {
+      logWarn('RAG', `Vectorize search failed, fallback LanceDB: ${e.message}`);
+    }
+  }
+
+  // 2. LanceDB fallback (lokális)
   return await memory.search(query, limit);
 }
 

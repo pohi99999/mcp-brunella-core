@@ -3,7 +3,8 @@ Green Lightning - EV Hunter
 Browser-Use alapú elektromos autó kereső (willhaben.at + autoscout24)
 
 LLM: Ollama (llama3.1:8b) - ingyenes, lokális
-Átváltható Gemini-re ENV változóval: EV_HUNTER_LLM=gemini
+Átváltható Gemini-re ENV változóval:    EV_HUNTER_LLM=gemini
+Átváltható Cloudflare-re ENV változóval: EV_HUNTER_LLM=cloudflare  (ingyenes edge inferencia!)
 
 Usage:
     python ev_hunter.py              # Éles futtatás
@@ -51,7 +52,7 @@ class EVConfig:
     max_pages: int = 3
     sender_email: str = ""
     recipient_emails: list[str] = field(default_factory=list)
-    llm_provider: str = "ollama"  # "ollama" vagy "gemini"
+    llm_provider: str = "ollama"  # "ollama" | "gemini" | "cloudflare"
     ollama_model: str = "llama3.1:8b"
     ollama_url: str = "http://localhost:11434"
 
@@ -104,9 +105,119 @@ def calculate_score(price: Optional[int], km: Optional[int], year: Optional[int]
     return round(max(0.0, min(100.0, base - price_penalty - km_penalty - age_penalty)), 1)
 
 
+class CloudflareWorkersAIChatModel:
+    """
+    LangChain-kompatibilis wrapper a Cloudflare Workers AI REST API-hoz.
+    Browser-Use Agent számára — ingyenes edge inferencia.
+
+    Szükséges env változók:
+        CF_ACCOUNT_ID   - Cloudflare fiók azonosító
+        CF_AI_API_TOKEN - Workers AI API token (vagy CF_API_TOKEN)
+    """
+
+    def __init__(self, model: str, account_id: str, api_token: str, temperature: float = 0.1):
+        self.model = model
+        self.account_id = account_id
+        self.api_token = api_token
+        self.temperature = temperature
+        # LangChain BaseChatModel kompatibilitáshoz
+        self._llm_type = "cloudflare_workers_ai"
+
+    def _call_cf_api(self, messages: list[dict]) -> str:
+        """Szinkron REST hívás a Cloudflare Workers AI-ra"""
+        import urllib.request
+        import json as _json
+
+        url = (
+            f"https://api.cloudflare.com/client/v4/accounts/{self.account_id}"
+            f"/ai/run/{self.model}"
+        )
+        payload = _json.dumps({"messages": messages}).encode("utf-8")
+        req = urllib.request.Request(
+            url,
+            data=payload,
+            headers={
+                "Authorization": f"Bearer {self.api_token}",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+        )
+        with urllib.request.urlopen(req, timeout=90) as resp:
+            result = _json.loads(resp.read().decode("utf-8"))
+
+        if not result.get("success", True):
+            errors = result.get("errors", [])
+            raise RuntimeError(f"Cloudflare Workers AI hiba: {errors}")
+
+        return result.get("result", {}).get("response", "")
+
+    # --- LangChain BaseChatModel interface ---
+
+    def invoke(self, input_messages, config=None, **kwargs):
+        """Szinkron meghívás (LangChain Runnable interface)"""
+        from langchain_core.messages import AIMessage
+
+        if isinstance(input_messages, str):
+            messages = [{"role": "user", "content": input_messages}]
+        else:
+            messages = []
+            for msg in input_messages:
+                role = getattr(msg, "type", "human")
+                role = "user" if role == "human" else "assistant"
+                content = getattr(msg, "content", str(msg))
+                messages.append({"role": role, "content": content})
+
+        text = self._call_cf_api(messages)
+        return AIMessage(content=text)
+
+    async def ainvoke(self, input_messages, config=None, **kwargs):
+        """Async meghívás — szinkronos CF hívást futtat thread pool-ban"""
+        import asyncio
+        from functools import partial
+
+        loop = asyncio.get_event_loop()
+        result = await loop.run_in_executor(
+            None, partial(self.invoke, input_messages, config, **kwargs)
+        )
+        return result
+
+    def __call__(self, messages, stop=None, **kwargs):
+        """Közvetlen hívás kompatibilitáshoz"""
+        return self.invoke(messages)
+
+    # Browser-Use néhány LangChain attribútumot vár:
+    @property
+    def model_name(self) -> str:
+        return self.model
+
+    @property
+    def temperature(self) -> float:
+        return self._temperature
+
+    @temperature.setter
+    def temperature(self, value: float):
+        self._temperature = value
+
+
 def get_llm(config: EVConfig):
-    """LLM inicializálás - Ollama (ingyenes) vagy Gemini (cloud)"""
+    """LLM inicializálás - Ollama (lokális), Gemini (cloud) vagy Cloudflare (ingyenes edge)"""
     provider = config.llm_provider.lower()
+
+    if provider == "cloudflare":
+        account_id = os.getenv("CF_ACCOUNT_ID", "")
+        token = os.getenv("CF_AI_API_TOKEN") or os.getenv("CF_API_TOKEN", "")
+        if not account_id or not token:
+            raise ValueError(
+                "CF_ACCOUNT_ID és CF_AI_API_TOKEN (vagy CF_API_TOKEN) env változók szükségesek "
+                "a Cloudflare provider használatához"
+            )
+        model = os.getenv("CF_AI_FAST_MODEL", "@cf/meta/llama-3.1-8b-instruct")
+        log.info("LLM: Cloudflare Workers AI %s (ingyenes edge inferencia)", model)
+        return CloudflareWorkersAIChatModel(
+            model=model,
+            account_id=account_id,
+            api_token=token,
+        )
 
     if provider == "gemini":
         from langchain_google_genai import ChatGoogleGenerativeAI
@@ -119,17 +230,18 @@ def get_llm(config: EVConfig):
             google_api_key=api_key,
             temperature=0.1,
         )
-    else:
-        try:
-            from langchain_ollama import ChatOllama
-        except ImportError:
-            from langchain_community.chat_models import ChatOllama
-        log.info("LLM: Ollama %s (ingyenes)", config.ollama_model)
-        return ChatOllama(
-            model=config.ollama_model,
-            base_url=config.ollama_url,
-            temperature=0.1,
-        )
+
+    # Default: Ollama (lokális, ingyenes)
+    try:
+        from langchain_ollama import ChatOllama
+    except ImportError:
+        from langchain_community.chat_models import ChatOllama
+    log.info("LLM: Ollama %s (ingyenes)", config.ollama_model)
+    return ChatOllama(
+        model=config.ollama_model,
+        base_url=config.ollama_url,
+        temperature=0.1,
+    )
 
 
 # --- URL Builders ---
