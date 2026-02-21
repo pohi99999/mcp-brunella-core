@@ -3,6 +3,8 @@ import chalk from "chalk";
 import ora from "ora";
 import { cloudflareClient } from "../utils/cloudflareClient.js";
 
+const API_BASE = process.env.BRUNELLA_API_URL || "http://localhost:3000";
+
 export function registerEdgeCommands(program: Command) {
   const edgeGroup = program
     .command("edge")
@@ -64,6 +66,71 @@ export function registerEdgeCommands(program: Command) {
     });
 
   edgeGroup
+    .command("submit-worker <workerId> <instruction>")
+    .description("Submit a task to a specific Cloudflare worker")
+    .option("-c, --context <json>", "Context JSON string")
+    .action(
+      async (
+        workerId: string,
+        instruction: string,
+        options: { context?: string },
+      ) => {
+        const spinner = ora(`Submitting task to worker '${workerId}'...`).start();
+
+        try {
+          let context = {};
+          if (options.context) {
+            try {
+              context = JSON.parse(options.context);
+            } catch {
+              console.warn(chalk.yellow("Invalid JSON context, ignoring."));
+            }
+          }
+
+          const response = await fetch(
+            `${API_BASE}/api/cloudflare/agents/${encodeURIComponent(workerId)}/task`,
+            {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ instruction, context }),
+            },
+          );
+
+          const data = (await response.json()) as {
+            success: boolean;
+            workerId: string;
+            workerName: string;
+            endpoint?: string;
+            result?: unknown;
+            error?: string;
+          };
+
+          if (!response.ok || !data.success) {
+            throw new Error(data.error || `HTTP ${response.status}`);
+          }
+
+          spinner.succeed(
+            chalk.green(`Task dispatched to ${data.workerName} (${data.workerId})`),
+          );
+
+          if (data.endpoint) {
+            console.log(chalk.dim(`Endpoint: ${data.endpoint}`));
+          }
+          if (typeof data.result === "string") {
+            console.log(chalk.bold("\nResult:"));
+            console.log(data.result);
+          } else if (typeof data.result !== "undefined") {
+            console.log(chalk.bold("\nResult:"));
+            console.log(JSON.stringify(data.result, null, 2));
+          }
+        } catch (error: any) {
+          spinner.fail(chalk.red("Worker task dispatch failed"));
+          console.error(chalk.red(error.message));
+        }
+      },
+    );
+
+  edgeGroup
     .command("history")
     .description("View task history")
     .option("-l, --limit <number>", "Number of tasks to show", "10")
@@ -98,6 +165,70 @@ export function registerEdgeCommands(program: Command) {
         });
       } catch (error: any) {
         spinner.fail(chalk.red("Failed to fetch history"));
+        console.error(chalk.red(error.message));
+      }
+    });
+
+  edgeGroup
+    .command("audit")
+    .description("Audit all configured Cloudflare workers")
+    .action(async () => {
+      const spinner = ora("Running Cloudflare workers audit...").start();
+
+      try {
+        const response = await fetch(`${API_BASE}/api/cloudflare/agents`);
+        const data = (await response.json()) as {
+          status: "connected" | "degraded" | "error";
+          summary: { total: number; online: number; offline: number; unknown: number };
+          workers: Array<{
+            id: string;
+            name: string;
+            url?: string;
+            kind: "public" | "internal";
+            status: "online" | "offline" | "unknown";
+            latencyMs?: number;
+            statusCode?: number;
+            error?: string;
+          }>;
+          error?: string;
+        };
+
+        if (!response.ok) {
+          throw new Error(data.error || `HTTP ${response.status}`);
+        }
+
+        spinner.succeed(chalk.green(`Audit completed: ${data.status.toUpperCase()}`));
+
+        console.log(
+          chalk.dim(
+            `\nSummary: total=${data.summary.total}, online=${data.summary.online}, offline=${data.summary.offline}, unknown=${data.summary.unknown}`,
+          ),
+        );
+
+        for (const worker of data.workers) {
+          const statusColor =
+            worker.status === "online"
+              ? chalk.green
+              : worker.status === "offline"
+                ? chalk.red
+                : chalk.yellow;
+          const latencyText =
+            typeof worker.latencyMs === "number" ? ` (${worker.latencyMs}ms)` : "";
+          const kindText = worker.kind === "public" ? "public" : "internal";
+
+          console.log(
+            `${statusColor(worker.status.toUpperCase())} ${chalk.bold(worker.name)} [${kindText}]${latencyText}`,
+          );
+          console.log(chalk.dim(`  url: ${worker.url || "(not configured)"}`));
+          if (typeof worker.statusCode === "number") {
+            console.log(chalk.dim(`  http: ${worker.statusCode}`));
+          }
+          if (worker.error) {
+            console.log(chalk.dim(`  note: ${worker.error}`));
+          }
+        }
+      } catch (error: any) {
+        spinner.fail(chalk.red("Cloudflare workers audit failed"));
         console.error(chalk.red(error.message));
       }
     });

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-20T03:00:00.038Z",
+  "lastUpdated": "2026-02-21T10:32:26.248Z",
   "tracks": [
     {
       "id": "cloudflare-chat-integration-20260211",
@@ -45,6 +45,30 @@
       "_isArchived": false
     },
     {
+      "id": "cloudflare_browser_rendering_robotkez_20260221",
+      "name": "cloudflare_browser_rendering_robotkez_20260221",
+      "status": "active",
+      "priority": "high",
+      "progress": 20,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_browser_rendering_robotkez_20260221",
+      "_isArchived": false
+    },
+    {
+      "id": "cloudflare_d1_kv_storage_20260221",
+      "name": "cloudflare_d1_kv_storage_20260221",
+      "status": "active",
+      "priority": "medium",
+      "progress": 8,
+      "assignee": "DeveloperAgent",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_d1_kv_storage_20260221",
+      "_isArchived": false
+    },
+    {
       "id": "cloudflare_edge_integration_20260202",
       "name": "Cloudflare Edge Integration",
       "status": "archived",
@@ -61,6 +85,42 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_edge_integration_20260202",
+      "_isArchived": false
+    },
+    {
+      "id": "cloudflare_vectorize_rag_20260221",
+      "name": "cloudflare_vectorize_rag_20260221",
+      "status": "active",
+      "priority": "medium",
+      "progress": 8,
+      "assignee": "DeveloperAgent",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_vectorize_rag_20260221",
+      "_isArchived": false
+    },
+    {
+      "id": "cloudflare_workers_ai_20260221",
+      "name": "cloudflare_workers_ai_20260221",
+      "status": "completed",
+      "priority": "critical",
+      "progress": 100,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_workers_ai_20260221",
+      "_isArchived": false
+    },
+    {
+      "id": "cloudflare_workers_audit_20260221",
+      "name": "cloudflare_workers_audit_20260221",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_workers_audit_20260221",
       "_isArchived": false
     },
     {
@@ -857,9 +917,9 @@
     }
   ],
   "stats": {
-    "total": 42,
-    "active": 3,
-    "completed": 0,
+    "total": 47,
+    "active": 6,
+    "completed": 2,
     "archived": 24,
     "proposed": 5
   }

@@ -3,6 +3,7 @@ import { evHunterHandler } from '../../tools/evHunterTool.js';
 import path from 'path';
 import fs from 'fs/promises';
 import { logInfo, logError } from '../../utils/logger.js';
+import { kvCache } from '../../utils/kvCache.js';
 
 export function createEvHunterRouter(): Router {
     const router = Router();
@@ -18,17 +19,49 @@ export function createEvHunterRouter(): Router {
 
     router.post('/run', async (req, res) => {
         try {
-            const { mock, dryRun } = req.body;
-            logInfo('API', `Triggering EV Hunter via API (mock=${mock}, dryRun=${dryRun})`);
+            const { mock, dryRun, useCache = true } = req.body;
+            logInfo('API', `Triggering EV Hunter via API (mock=${mock}, dryRun=${dryRun}, useCache=${useCache})`);
             
-            // Run async to not block response? 
-            // Better to await it so client knows result.
-            const result = await evHunterHandler({ mock, dryRun });
+            // Generate cache key based on search parameters
+            const cacheKey = `evhunter:results:${mock ? 'mock' : 'live'}:${dryRun ? 'dry' : 'real'}`;
             
-            if (result.isError) {
-                res.status(500).json(result);
+            // If useCache is enabled, try to get from cache first
+            if (useCache) {
+                try {
+                    const result = await kvCache.getOrCompute(
+                        cacheKey,
+                        async () => {
+                            logInfo('EV Hunter', 'Cache miss, running EV Hunter search...');
+                            return await evHunterHandler({ mock, dryRun });
+                        },
+                        3600 // Cache for 1 hour (EV listings don't change that frequently)
+                    );
+                    
+                    if (result.isError) {
+                        res.status(500).json(result);
+                    } else {
+                        res.json({ ...result, cached: true });
+                    }
+                } catch (cacheError: unknown) {
+                    const msg = cacheError instanceof Error ? cacheError.message : String(cacheError);
+                    logError('API', `Cache error, falling back to fresh run: ${msg}`);
+                    
+                    // Fallback to direct run if cache fails
+                    const result = await evHunterHandler({ mock, dryRun });
+                    if (result.isError) {
+                        res.status(500).json(result);
+                    } else {
+                        res.json({ ...result, cached: false });
+                    }
+                }
             } else {
-                res.json(result);
+                // Direct run without cache
+                const result = await evHunterHandler({ mock, dryRun });
+                if (result.isError) {
+                    res.status(500).json(result);
+                } else {
+                    res.json({ ...result, cached: false });
+                }
             }
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
@@ -45,6 +78,32 @@ export function createEvHunterRouter(): Router {
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: `Failed to read config: ${msg}` });
+        }
+    });
+
+    router.get('/cache/status', async (req, res) => {
+        try {
+            const status = kvCache.status();
+            res.json({
+                ...status,
+                prefix: 'evhunter:',
+                description: 'EV Hunter results cache status'
+            });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: `Failed to get cache status: ${msg}` });
+        }
+    });
+
+    router.post('/cache/invalidate', async (req, res) => {
+        try {
+            await kvCache.invalidateByPrefix('evhunter:');
+            logInfo('API', 'EV Hunter cache invalidated');
+            res.json({ success: true, message: 'EV Hunter cache invalidated' });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('API', `Cache invalidation error: ${msg}`);
+            res.status(500).json({ error: msg });
         }
     });
 

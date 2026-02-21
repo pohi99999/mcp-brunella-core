@@ -9,8 +9,13 @@
  * @phase Phase 3 - LLM Planning Integration
  */
 
-import { generateRouted } from '../core/llm_client.js';
+import { generateRouted, generateResponse } from '../core/llm_client.js';
 import { logInfo, logWarn, logError } from './logger.js';
+
+// Ha beállítva, felülírja a ModelRouter döntését (pl. 'cloudflare', 'gemini', 'ollama')
+const PLANNER_LLM_OVERRIDE = process.env.ROBOTKEZ_LLM_PROVIDER || process.env.LLM_PLANNER_PROVIDER;
+// Cloudflare Workers AI brain modell a tervező számára
+const CF_PLANNER_MODEL = process.env.CF_AI_SMART_MODEL || '@cf/meta/llama-3.3-70b-instruct';
 
 /**
  * Execution Plan Interface
@@ -133,9 +138,20 @@ export async function generateExecutionPlan(
 Készíts részletes execution plan-t a fenti utasítás végrehajtásához, figyelembe véve a kontextust.`;
 
     try {
-        // Call LLM (using Model Router to pick brain model)
+        // Call LLM (using Model Router to pick brain model, or env var override)
         const fullPrompt = `${SYSTEM_PROMPT}\n\n${userPrompt}`;
-        const { response } = await generateRouted(fullPrompt, instruction, { category: 'planning' });
+        let response: string;
+
+        if (PLANNER_LLM_OVERRIDE === 'cloudflare') {
+            logInfo('LLMPlanner', `CF AI override aktív (ROBOTKEZ_LLM_PROVIDER=cloudflare), modell: ${CF_PLANNER_MODEL}`);
+            response = await generateResponse(fullPrompt, 'cloudflare', CF_PLANNER_MODEL);
+        } else if (PLANNER_LLM_OVERRIDE) {
+            logInfo('LLMPlanner', `LLM override aktív: ${PLANNER_LLM_OVERRIDE}`);
+            response = await generateResponse(fullPrompt, PLANNER_LLM_OVERRIDE);
+        } else {
+            const routed = await generateRouted(fullPrompt, instruction, { category: 'planning' });
+            response = routed.response;
+        }
 
         logInfo('LLMPlanner', `Raw LLM response: ${response.slice(0, 200)}...`);
 

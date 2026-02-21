@@ -20,7 +20,7 @@
 import { Router, Request, Response } from 'express';
 import { RobotkezV2Agent } from '../../agents/RobotkezV2Agent.js';
 import { generateExecutionPlan } from '../../utils/llmPlanner.js';
-import { persistentBrowser } from '../../utils/persistentBrowser.js';
+import { getRobotkezBrowserEngine, getRobotkezEngineName } from '../../utils/browserEngine.js';
 import { backgroundTaskManager } from '../../utils/backgroundTaskManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
 import { getMessages, saveMessage } from '../../utils/db.js';
@@ -147,7 +147,9 @@ export function createRobotkezRoutes(): Router {
 
             logInfo('RobotkezAPI', `Exec request: ${action}`);
 
-            const result = await persistentBrowser.sendCommand({
+            const browserEngine = getRobotkezBrowserEngine();
+
+            const result = await browserEngine.sendCommand({
                 action,
                 ...params
             });
@@ -189,7 +191,7 @@ export function createRobotkezRoutes(): Router {
                 browser: {
                     active: true, // TODO: Check actual browser status
                     type: 'persistent',
-                    engine: 'Playwright + Python'
+                    engine: getRobotkezEngineName() === 'cloudflare' ? 'Cloudflare Browser Rendering' : 'Playwright + Python'
                 },
                 browserStatus: runningTasks.length > 0 ? 'running' : 'idle', // For test compatibility
                 tasks: {
@@ -330,7 +332,8 @@ export function createRobotkezRoutes(): Router {
      */
     router.get('/screenshot', async (req: Request, res: Response) => {
         try {
-            const screenshot = persistentBrowser.getLastScreenshot();
+            const browserEngine = getRobotkezBrowserEngine();
+            const screenshot = browserEngine.getLastScreenshot();
 
             if (!screenshot) {
                 return res.status(404).json({

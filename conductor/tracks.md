@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-20T03:00:00.038Z
+**Utolso frissites:** 2026-02-21T14:00:00.000Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 42 total | 3 active | 0 completed | 24 archived
+**Stats:** 47 total | 5 active | 3 completed | 24 archived
 
 ---
 
@@ -41,7 +41,19 @@
 
 ---
 
-## Aktiv Szalak (Active) (3)
+## Aktiv Szalak (Active) (5)
+
+- [ ] **cloudflare_browser_rendering_robotkez_20260221** [HIGH]
+  - **ID:** `cloudflare_browser_rendering_robotkez_20260221`
+  - **Progress:** 20%
+  - **Assignee:** DeveloperAgent + Claude
+  - Mappa: ./tracks/cloudflare_browser_rendering_robotkez_20260221/
+
+- [ ] **cloudflare_d1_kv_storage_20260221** [MEDIUM]
+  - **ID:** `cloudflare_d1_kv_storage_20260221`
+  - **Progress:** 8%
+  - **Assignee:** DeveloperAgent
+  - Mappa: ./tracks/cloudflare_d1_kv_storage_20260221/
 
 - [ ] **dashboard_v3_command_center_20260219** [HIGH]
   - **ID:** `dashboard_v3_command_center_20260219`
@@ -60,6 +72,25 @@
   - **Progress:** 100%
   - **Updated:** 2026-02-14T00:00:00Z
   - Mappa: ./tracks/financial-auditor-agent-20260214/
+
+---
+
+## Befejezett (Completed - Not Archived) (3)
+
+- [x] **cloudflare_workers_ai_20260221**
+  - **ID:** `cloudflare_workers_ai_20260221`
+  - Mappa: ./tracks/cloudflare_workers_ai_20260221/
+
+- [x] **cloudflare_workers_audit_20260221**
+  - **ID:** `cloudflare_workers_audit_20260221`
+  - Mappa: ./tracks/cloudflare_workers_audit_20260221/
+
+- [x] **cloudflare_vectorize_rag_20260221**
+  - **ID:** `cloudflare_vectorize_rag_20260221`
+  - **Progress:** 100%
+  - **Assignee:** DeveloperAgent
+  - **Updated:** 2026-02-21T14:00:00Z
+  - Mappa: ./tracks/cloudflare_vectorize_rag_20260221/
 
 ---
 

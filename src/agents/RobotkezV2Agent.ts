@@ -16,7 +16,8 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { backgroundTaskManager } from '../utils/backgroundTaskManager.js';
-import { persistentBrowser, BrowserCommand } from '../utils/persistentBrowser.js';
+import { BrowserCommand } from '../utils/persistentBrowser.js';
+import { getRobotkezBrowserEngine } from '../utils/browserEngine.js';
 import { generateExecutionPlan, ExecutionPlan } from '../utils/llmPlanner.js';
 import { socketService } from '../server/SocketService.js';
 
@@ -55,6 +56,8 @@ export class RobotkezV2Agent extends BaseAgent {
     setAgentStatus(this.name, 'working', task.slice(0, 50));
 
     try {
+      const browserEngine = getRobotkezBrowserEngine();
+
       // 1. Simple Intent Parsing (Phase 2 compatibility for tests)
       let plan: ExecutionPlan | null = null;
       
@@ -125,7 +128,7 @@ export class RobotkezV2Agent extends BaseAgent {
           // Get current browser state if possible
           let browserState;
           try {
-             const stateResponse = await persistentBrowser.sendCommand({ action: 'state' });
+             const stateResponse = await browserEngine.sendCommand({ action: 'state' });
              if (stateResponse.status === 'success') {
                 browserState = {
                   url: stateResponse.url || '',
@@ -163,7 +166,7 @@ export class RobotkezV2Agent extends BaseAgent {
         };
       }
 
-      // 4. Sequential Execution via PersistentBrowser
+      // 4. Sequential execution via selected browser engine
       logInfo(this.name, `Executing plan: ${plan.plan.length} steps`);
       const completedSteps: unknown[] = [];
 
@@ -178,7 +181,7 @@ export class RobotkezV2Agent extends BaseAgent {
           // DYNAMIC VISION: If selector is missing but description exists, use query
           if (['click', 'type', 'wait', 'extract'].includes(step.action) && !step.selector && step.description) {
              logInfo(this.name, `Dynamic vision query for: ${step.description}`);
-             const queryResp = await persistentBrowser.sendCommand({
+             const queryResp = await browserEngine.sendCommand({
                 action: 'query',
                 description: step.description
              });
@@ -200,7 +203,7 @@ export class RobotkezV2Agent extends BaseAgent {
           const { description: _desc, ...command } = step as unknown as Record<string, unknown>;
           // Ensure type safety
           const browserCommand = command as unknown as BrowserCommand;
-          const response = await persistentBrowser.sendCommand(browserCommand);
+          const response = await browserEngine.sendCommand(browserCommand);
           
           completedSteps.push({
             ...step,
@@ -242,7 +245,7 @@ export class RobotkezV2Agent extends BaseAgent {
       // 5. Auto-Screenshot (Phase 2 expectation)
       let screenshotResult;
       try {
-        screenshotResult = await persistentBrowser.sendCommand({ action: 'screenshot' });
+        screenshotResult = await browserEngine.sendCommand({ action: 'screenshot' });
       } catch {
         // Ignored
       }

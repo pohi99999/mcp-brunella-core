@@ -1,0 +1,50 @@
+{
+  "trackName": "cloudflare_workers_audit_20260221",
+  "type": "Cloud Infrastructure / Integration Audit",
+  "priority": "HIGH",
+  "status": "completed",
+  "progress": 100,
+  "goal": "Cloudflare Worker fleet audit (6 fő worker) és teljes CLI + Dashboard bekötés biztosítása.",
+  "assignee": "DeveloperAgent + Claude",
+  "createdAt": "2026-02-21T10:40:00Z",
+  "updatedAt": "2026-02-21T11:01:00Z",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Worker inventory + health audit endpoint",
+      "status": "completed",
+      "tasks": [
+        "GET /api/cloudflare/agents endpoint",
+        "6 worker inventory (public/internal)",
+        "health + latency + statusCode check"
+      ]
+    },
+    {
+      "id": "phase2",
+      "name": "CLI integration",
+      "status": "completed",
+      "tasks": [
+        "brunella edge audit parancs",
+        "összes worker státusz táblázatos lista"
+      ]
+    },
+    {
+      "id": "phase3",
+      "name": "Dashboard integration",
+      "status": "completed",
+      "tasks": [
+        "CloudflareAgentsCard payload update",
+        "Widget registry bekötés"
+      ]
+    },
+    {
+      "id": "phase4",
+      "name": "End-to-end wire-up",
+      "status": "completed",
+      "tasks": [
+        "edge parancsok bővítése direct worker dispatch opcióval",
+        "dashboardból worker-level action trigger"
+      ]
+    }
+  ]
+}

@@ -3,34 +3,34 @@
   "type": "Browser Automation / Edge Infrastructure",
   "priority": "HIGH",
   "status": "active",
-  "progress": 0,
+  "progress": 50,
   "goal": "A Robotkez böngésző automatizálást Cloudflare Browser Rendering API-ra migrálni. A jelenlegi lokális Playwright (interactive_browser.py) helyett Cloudflare managed Chrome-ot használni — amely nem kap Google bot detection-t, nincs consent popup probléma, és edge-en fut. A lokális Playwright fallback-ként megmarad.",
   "assignee": "DeveloperAgent + Claude",
   "createdAt": "2026-02-21T00:00:00Z",
-  "updatedAt": "2026-02-21T00:00:00Z",
+  "updatedAt": "2026-02-21T12:45:00Z",
   "phases": [
     {
       "id": "phase1",
       "name": "Phase 1: CF Browser Rendering Worker bővítése",
-      "status": "pending",
+      "status": "completed",
       "tasks": [
-        "bas-orchestrator Worker: /browser endpoint hozzáadása",
-        "navigate(url) → screenshot visszaadás (base64 PNG)",
-        "click(selector), type(selector, text), extract(selector) műveletek",
-        "Puppeteer Core használata (CF Browser Rendering natív API)",
-        "Wrangler deploy"
+        "✅ bas-orchestrator Worker: /browser endpoint hozzáadása",
+        "✅ navigate(url) → screenshot visszaadás (base64 PNG)",
+        "✅ click(selector), type(selector, text), extract(selector) műveletek",
+        "✅ Puppeteer Core használata (@cloudflare/puppeteer)",
+        "⏳ Wrangler deploy (pending)"
       ]
     },
     {
       "id": "phase2",
       "name": "Phase 2: CloudflareBrowser adapter a Node.js oldalon",
-      "status": "pending",
+      "status": "completed",
       "tasks": [
-        "src/utils/cloudfareBrowser.ts létrehozása (BrowserCommand interfész implementáció)",
-        "PersistentBrowser.sendCommand() → CF Worker HTTP hívás",
-        "ROBOTKEZ_ENGINE=cloudflare env var: CF engine használata",
-        "ROBOTKEZ_ENGINE=local: jelenlegi Playwright marad (fallback)",
-        "Unit teszt: mock CF Browser responses"
+        "✅ src/utils/cloudflareBrowser.ts frissítése (CF API válasz formátum)",
+        "✅ CloudflareBrowser.sendCommand() → CF Worker /browser HTTP hívás",
+        "✅ ROBOTKEZ_ENGINE=cloudflare env var: CF engine használata",
+        "✅ ROBOTKEZ_ENGINE=local: jelenlegi Playwright marad (fallback)",
+        "⏳ Unit teszt: mock CF Browser responses (pending)"
       ]
     },
     {
@@ -63,11 +63,19 @@
       "wrangler.toml"
     ],
     "created": [
-      "src/utils/cloudflareBrowser.ts"
+      "src/utils/cloudflareBrowser.ts",
+      "src/utils/browserEngine.ts",
+      "myai/agents/workers/orchestrator/src/browser.ts",
+      "myai/agents/workers/orchestrator/src/types.ts (extended with Browser types)"
     ],
     "modified": [
-      "src/utils/persistentBrowser.ts",
-      "myai/interactive_browser.py"
+      "src/utils/cloudflareBrowser.ts",
+      "src/agents/RobotkezV2Agent.ts",
+      "src/server/routes/robotkez.ts",
+      "myai/agents/workers/orchestrator/wrangler.toml",
+      "myai/agents/workers/orchestrator/package.json",
+      "myai/agents/workers/orchestrator/src/index.ts",
+      "myai/agents/workers/orchestrator/README.md"
     ]
   },
   "cfWorker": "bas-orchestrator.iam-dd1.workers.dev",

@@ -43,6 +43,10 @@ export declare class StateCompressor {
 }
 export interface Env {
     DB: D1Database;
+    KV: KVNamespace;
+    BROWSER?: any;
+    CAE?: AnalyticsEngineDataset;
+    CEAN_API_KEY?: string;
     RESEARCH_AGENT_URL?: string;
     GRANT_MONITOR_URL?: string;
     HARVESTER_AGENT_URL?: string;
@@ -82,5 +86,30 @@ export interface AgentResponse {
     data?: Record<string, unknown>;
     error?: string;
     duration_ms?: number;
+}
+export type BrowserAction = 'navigate' | 'click' | 'type' | 'extract' | 'screenshot' | 'wait';
+export interface BrowserCommand {
+    action: BrowserAction;
+    url?: string;
+    selector?: string;
+    text?: string;
+    waitTime?: number;
+    extractSelector?: string;
+    options?: {
+        waitUntil?: 'load' | 'domcontentloaded' | 'networkidle0' | 'networkidle2';
+        timeout?: number;
+        fullPage?: boolean;
+    };
+}
+export interface BrowserResponse {
+    status: 'success' | 'error';
+    url?: string;
+    screenshot?: string;
+    extractedText?: string;
+    extractedHtml?: string;
+    error?: string;
+    duration_ms?: number;
+    consoleMessages?: string[];
+    networkErrors?: string[];
 }
 //# sourceMappingURL=types.d.ts.map
