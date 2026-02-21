@@ -3,7 +3,7 @@
   "type": "Cloud Storage / Data Infrastructure",
   "priority": "MEDIUM",
   "status": "active",
-  "progress": 90,
+  "progress": 95,
   "goal": "A lokális SQLite adatbázisok és file-alapú adattárolás egy részét Cloudflare D1 (SQL) és KV (key-value) tárhelyre migrálni. A Golden Dataset, agent task queue és session state felhőbe kerül — így több gépről is elérhető, és a rendszer skálázható.",
   "assignee": "DeveloperAgent + Claude",
   "createdAt": "2026-02-21T00:00:00Z",
@@ -54,6 +54,21 @@
         "✅ npm test PASS (all 657/679 tests passing)"
       ],
       "notes": "Phase 3 complete! goldenDatasetBridge now uses D1 adapter for cloud-first storage with Python fallback. AnalyticsService tracks all pipeline events to D1 (non-blocking, async). New Enterprise Analytics dashboard widget shows real-time stats (total events, priority/status distribution, recent events). 3 new API endpoints for event history, statistics, and manual event creation. All TypeScript errors fixed, build clean, tests passing."
+    },
+    {
+      "id": "phase4",
+      "name": "Phase 4: Dashboard Navigation & UI Integration",
+      "status": "completed",
+      "tasks": [
+        "✅ Dashboard navigation: Enterprise Analytics item registered",
+        "✅ navigation.tsx: BarChart3 icon import + EnterpriseAnalyticsWidget",
+        "✅ Project Mgmt group: added 'enterprise-analytics' item",
+        "✅ apiService.ts: exported safeJson() helper (missing export fix)",
+        "✅ Frontend build: npm run build:ui successful (1.66 MB bundle)",
+        "✅ Backend build: npm run build successful (0 errors)",
+        "✅ Widget accessible via sidebar navigation"
+      ],
+      "notes": "Phase 4 complete! Enterprise Analytics widget is now fully integrated into the dashboard navigation. Users can access real-time D1 analytics by clicking 'Enterprise Analytics' in the 'Project Mgmt' sidebar section. Frontend build successful (7,989 modules transformed, 490 KB gzipped). API service enhanced with exported safeJson() for shared JSON parsing across all components. Ready for user testing!"
     }
   ],
   "acceptanceCriteria": [
@@ -78,7 +93,8 @@
       "test/testD1Adapter.ts (Integration test: 7 tests, all PASS)",
       "src/server/routes/enterpriseAnalytics.ts (Phase 3: 461 lines, 3 endpoints)",
       "src/dashboard/components/dashboard/EnterpriseAnalyticsWidget.tsx (Phase 3: 283 lines)",
-      "conductor/tracks/cloudflare_d1_kv_storage_20260221/PHASE_3_COMPLETION.md"
+      "conductor/tracks/cloudflare_d1_kv_storage_20260221/PHASE_3_COMPLETION.md",
+      "conductor/tracks/cloudflare_d1_kv_storage_20260221/PHASE_4_COMPLETION.md"
     ],
     "modified": [
       "src/server/routes/evhunter.ts (KV cache integration for results)",
@@ -88,7 +104,9 @@
       "src/core/goldenDatasetBridge.ts (Phase 3: D1 integration, cloud-first strategy)",
       "src/analytics.ts (Phase 3: AnalyticsService class, D1 tracking)",
       "src/server/routes/enterprise.ts (Phase 3: D1 event history endpoint fixes)",
-      "src/server/routes/index.ts (Phase 3: mounted /enterprise/analytics router)"
+      "src/server/routes/index.ts (Phase 3: mounted /enterprise/analytics router)",
+      "src/dashboard/lib/navigation.tsx (Phase 4: Enterprise Analytics integration)",
+      "src/dashboard/lib/apiService.ts (Phase 4: exported safeJson helper)"
     ],
     "pending": []
   }

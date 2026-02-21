@@ -33,7 +33,7 @@ export async function fetchWithTimeout(
 }
 
 /** Biztonságos JSON parse – üres vagy hibás válasz kezelése */
-async function safeJson<T>(response: Response): Promise<T> {
+export async function safeJson<T>(response: Response): Promise<T> {
   const text = await response.text();
   if (!text || text.trim().length === 0) {
     throw new Error(
