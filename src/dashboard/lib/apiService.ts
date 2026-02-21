@@ -246,6 +246,54 @@ export async function getCloudflareStatus(): Promise<CloudflareStatus> {
   return data;
 }
 
+export interface WorkersAIResponse {
+  text: string;
+  provider: string;
+  model: string;
+}
+
+export async function generateWithWorkersAI(
+  prompt: string,
+  model?: string,
+): Promise<WorkersAIResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/llm/generate`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt, provider: "cloudflare", model }),
+    },
+    LONG_TIMEOUT_MS,
+  );
+  const data = await safeJson<WorkersAIResponse | { error?: string }>(
+    response,
+  ).catch(() => ({ error: `HTTP ${response.status}: ${response.statusText}` }));
+  if (!response.ok)
+    throw new Error(getErrorMessage(data) || "Workers AI generálás sikertelen");
+  return data as WorkersAIResponse;
+}
+
+export interface LLMProviderStatus {
+  providers: Array<{
+    id: string;
+    name: string;
+    status: "online" | "offline";
+    latency?: number;
+    error?: string;
+  }>;
+}
+
+export async function getLLMProviderStatus(): Promise<LLMProviderStatus> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/llm/status`,
+    {},
+    30000,
+  );
+  if (!response.ok)
+    throw new Error(`LLM provider status: HTTP ${response.status}`);
+  return safeJson<LLMProviderStatus>(response);
+}
+
 /**
  * Health Check
  */

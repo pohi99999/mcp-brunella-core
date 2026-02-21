@@ -390,7 +390,7 @@ program
 
       // Session State
       let history: Array<{ role: "user" | "assistant"; content: string }> = [];
-      let activeProvider: "ollama" | "gemini" | "github" = "github";
+      let activeProvider: "ollama" | "gemini" | "github" | "cloudflare" = "github";
       let activeModel: string = "gpt-4o"; // Updated to valid model
 
       let edgeMode = false;
@@ -544,7 +544,7 @@ program
                 type: "list",
                 name: "provider",
                 message: "Select AI Provider:",
-                choices: ["github", "gemini", "ollama"],
+                choices: ["github", "gemini", "cloudflare", "ollama"],
               },
             ]);
 
@@ -558,6 +558,11 @@ program
                 "gemini-2.0-flash",
                 "gemini-flash-latest",
                 "gemini-2.5-pro",
+              ];
+            if (provider === "cloudflare")
+              modelChoices = [
+                "@cf/meta/llama-3.3-70b-instruct",
+                "@cf/meta/llama-3.1-8b-instruct",
               ];
             if (provider === "ollama")
               modelChoices = ["llama3.1:8b", "deepseek-r1:8b", "qwen2.5-coder"];
@@ -582,13 +587,16 @@ program
             } else if (target === "gemini") {
               activeProvider = "gemini";
               activeModel = "gemini-2.5-flash";
+            } else if (target === "cloudflare" || target === "cf") {
+              activeProvider = "cloudflare";
+              activeModel = "@cf/meta/llama-3.3-70b-instruct";
             } else if (target === "ollama") {
               activeProvider = "ollama";
               activeModel = "llama3.1:8b";
             } else {
               console.log(
                 chalk.red(
-                  "Unknown provider. Use interactive mode (just /switch) or github/gemini/ollama.",
+                  "Unknown provider. Use interactive mode (just /switch) or github/gemini/cloudflare/ollama.",
                 ),
               );
               continue;
@@ -623,11 +631,21 @@ program
             // Local / API Providers via Tools
             let result: any;
 
-            if (activeProvider === "github") {
+            if (activeProvider === "cloudflare") {
+              const serverUrl = (configManager.get("serverUrl") as string) || "http://localhost:3000";
+              const cfRes = await fetch(`${serverUrl}/api/llm/generate`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ prompt, provider: "cloudflare", model: activeModel }),
+              });
+              if (!cfRes.ok) throw new Error(`Workers AI hiba: ${cfRes.status} ${cfRes.statusText}`);
+              const cfData = await cfRes.json() as { text?: string; error?: string };
+              responseText = cfData.text || cfData.error || JSON.stringify(cfData);
+            } else if (activeProvider === "github") {
               result = await client.callTool("github_models_generate", {
                 prompt,
                 model: activeModel,
-                system: "You are Brunella, a helpful AI assistant.",
+                system: "Te Brunella vagy, a Brunella Agent System AI asszisztense. Folyékonyan, természetesen és barátságosan kommunikálsz magyarul. Szakszerű és tömör válaszokat adsz. Ha kódot generálsz, magyarázod és kommentálod magyarul.",
               });
             } else if (activeProvider === "gemini") {
               result = await client.callTool("gemini_generate", {
@@ -648,18 +666,20 @@ program
               });
             }
 
-            // Parse Tool Result safely
-            if (
-              result &&
-              result.content &&
-              Array.isArray(result.content) &&
-              result.content.length > 0
-            ) {
-              responseText = result.content[0].text;
-            } else if (result && result.message) {
-              responseText = result.message;
-            } else {
-              responseText = JSON.stringify(result, null, 2);
+            // Parse Tool Result safely (cloudflare ág már responseText-et állít)
+            if (!responseText) {
+              if (
+                result &&
+                result.content &&
+                Array.isArray(result.content) &&
+                result.content.length > 0
+              ) {
+                responseText = result.content[0].text;
+              } else if (result && result.message) {
+                responseText = result.message;
+              } else {
+                responseText = JSON.stringify(result, null, 2);
+              }
             }
           }
 
