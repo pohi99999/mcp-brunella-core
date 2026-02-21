@@ -9,12 +9,7 @@ export default defineConfig({
     globals: true,
     setupFiles: ['./test/setup.ts'],
     testTimeout: 15000,
-    pool: 'forks',
-    poolOptions: {
-      forks: {
-        singleFork: true,
-      },
-    },
+    fileParallelism: false,
   },
   resolve: {
     alias: {
