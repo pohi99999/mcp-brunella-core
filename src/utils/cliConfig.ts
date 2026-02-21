@@ -351,15 +351,23 @@ export class ConfigManager {
 }
 
 const _instances = new Map<string, ConfigManager>();
+let _instance: ConfigManager | null = null;
 
 /** Singleton for default cwd. Use ConfigManager constructor when cwd matters. */
 export function getConfigManager(cwd?: string): ConfigManager {
   const effectiveCwd = cwd ? path.resolve(cwd) : process.cwd();
+
+  if (process.env.NODE_ENV === 'test') {
+    _instance = new ConfigManager(cwd);
+    return _instance;
+  }
+
   let instance = _instances.get(effectiveCwd);
   if (!instance) {
     instance = new ConfigManager(effectiveCwd);
     _instances.set(effectiveCwd, instance);
   }
+  _instance = instance;
   return instance;
 }
 
