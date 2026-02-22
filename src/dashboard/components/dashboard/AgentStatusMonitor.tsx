@@ -7,8 +7,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 
 export function AgentStatusMonitor() {
   const { agents } = useSystemSignal();
-  
-  const agentsList = Object.values(agents || {});
+
+  // agents is a Map<string, AgentStatusEntry> — Array.from is required, Object.values(Map) returns []
+  const agentsList = agents ? Array.from(agents.values()) : [];
 
   const getStatusIcon = (status: string) => {
     switch (status) {

@@ -1,0 +1,51 @@
+{
+  "trackName": "aider_integration_20260222",
+  "type": "Tooling & AI Team Expansion",
+  "priority": "MEDIUM",
+  "status": "active",
+  "progress": 10,
+  "goal": "Aider AI coding assistant beillesztése a Brunella csapatba, mint önálló kód-író ügynök. LiteLLM proxyn keresztül GPT-4o / Gemini hajtja. Definiálni mire vetjük be, mire nem, és hogyan koordinál a többi ügynökkel.",
+  "assignee": "Claude + Aider (GPT-4o/Gemini)",
+  "createdAt": "2026-02-22T00:00:00Z",
+  "updatedAt": "2026-02-22T00:00:00Z",
+  "context": "Aider már fut és bevethető. LiteLLM proxy localhost-on fut, /chat/completions endpointon keresztül kapcsolódik GPT-4o-hoz (GitHub Models) vagy Gemini-hez. Az integráció célja: ne legyen 'vadkirály' — tudjuk mire engedjük rá, mire nem.",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Phase 1: Aider Scope & Határok Definiálása",
+      "status": "active",
+      "tasks": [
+        "Task 1.1: Dokumentálni mire való Aider (kis-közepes fájlmódosítások, refactor, önálló feature branch-ek) és mire NEM (protected fájlok, conductor/tracks.md, CLAUDE.md, registry.json).",
+        "Task 1.2: .aiderignore fájl létrehozása a repo gyökerében — tiltott fájlok listája.",
+        "Task 1.3: Aider preset parancsok dokumentálása (melyik modell, melyik feladat típushoz)."
+      ]
+    },
+    {
+      "id": "phase2",
+      "name": "Phase 2: LiteLLM Konfiguráció Rögzítése",
+      "status": "pending",
+      "tasks": [
+        "Task 2.1: litellm_config.yaml ellenőrzése / létrehozása — modellek, API key-ek, fallback sorrend dokumentálva.",
+        "Task 2.2: LiteLLM indítási parancs rögzítése CLAUDE.md-be vagy start.bat-ba.",
+        "Task 2.3: Tesztelni: aider --model litellm/gpt-4o → sikeres /chat/completions 200 OK."
+      ]
+    },
+    {
+      "id": "phase3",
+      "name": "Phase 3: Első Éles Feladat Aiderrel",
+      "status": "pending",
+      "tasks": [
+        "Task 3.1: Kijelölni az első valódi feladatot Aider számára (pl. egy önálló widget, teszt fájl, vagy utility refactor).",
+        "Task 3.2: Lefuttatni, commit-ot ellenőrizni, eredményt értékelni.",
+        "Task 3.3: Visszajelzés: mit csinált jól, mit nem — workflow finomítás."
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    ".aiderignore létezik és lefedi a protected fájlokat.",
+    "LiteLLM konfig dokumentált, újraindítható.",
+    "Aider sikeresen teljesített legalább 1 valódi kód feladatot a repóban.",
+    "A csapat tagok (Claude, Aider, Brunella agents) koordinációja értett és dokumentált."
+  ],
+  "nextStep": "Task 1.1 + 1.2: .aiderignore létrehozása, Aider scope definiálása."
+}

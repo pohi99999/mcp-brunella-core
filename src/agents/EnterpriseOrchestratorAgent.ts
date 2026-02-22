@@ -470,3 +470,5 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
     };
   }
 }
+
+export default EnterpriseOrchestratorAgent;

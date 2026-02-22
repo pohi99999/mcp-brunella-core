@@ -9,7 +9,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useSocket } from "@/context/SocketContext";
+import { useSystemSignal } from "@/hooks/useSystemSignal";
 import {
   CloudArrowUp,
   CheckCircle,
@@ -26,7 +26,7 @@ interface EdgePanelMessage {
 }
 
 export function EdgePanel() {
-  const { socket, isConnected } = useSocket();
+  const { socket, isConnected } = useSystemSignal();
   const [status, setStatus] = useState<
     "disconnected" | "connecting" | "connected" | "error"
   >("disconnected");

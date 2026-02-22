@@ -347,3 +347,5 @@ export class PricingAgent implements IAgent {
  * Export for registry
  */
 export const createPricingAgent = (): PricingAgent => new PricingAgent();
+
+export default PricingAgent;

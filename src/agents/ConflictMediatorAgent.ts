@@ -414,3 +414,5 @@ export class ConflictMediatorAgent implements IAgent {
     return recommendations;
   }
 }
+
+export default ConflictMediatorAgent;

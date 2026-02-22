@@ -1,5 +1,5 @@
-import { IAgent } from "./types.js";
-import { Logger } from "../utils/logger.js";
+import { IAgent, AgentResponse, ChainStep, ChainContext } from "./types.js";
+import { Logger, logInfo, logError, setAgentStatus } from "../utils/logger.js";
 import { agentManager } from "./AgentManager.js";
 import { chatWithOllama } from "../core/llm_client.js";
 import { phoenixEventBus } from "../core/phoenixEventBus.js";
@@ -207,6 +207,91 @@ export class OrchestratorAgent implements IAgent {
     return best;
   }
 
+  /**
+   * Szekvenciális chain pipeline: minden lépés outputja a következő lépés kontextusa.
+   * Ha bármely lépés status: 'error' → a chain leáll, hibaüzenettel tér vissza.
+   */
+  async executeChain(
+    steps: ChainStep[],
+    metadata: Record<string, unknown> = {},
+  ): Promise<AgentResponse> {
+    this.logger.info(`[Chain] Indítás: ${steps.length} lépés`);
+    const accumulated: AgentResponse[] = [];
+
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+
+      const chainContext: ChainContext = {
+        steps,
+        currentStep: i,
+        accumulated: [...accumulated], // snapshot — nem mutálható referencia
+        metadata,
+      };
+
+      setAgentStatus(
+        "OrchestratorAgent",
+        "working",
+        `Chain ${i + 1}/${steps.length}: ${step.agentName}`,
+      );
+      this.logger.info(
+        `[Chain] Step ${i + 1}/${steps.length}: ${step.agentName} → "${step.task.slice(0, 60)}"`,
+      );
+
+      let result: unknown;
+      try {
+        result = await agentManager.delegate(step.agentName, step.task, {
+          chainContext: chainContext as unknown as Record<string, unknown>,
+          ...metadata,
+        });
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        logError("OrchestratorAgent", `[Chain] Step ${i + 1} kivétel: ${msg}`);
+        setAgentStatus("OrchestratorAgent", "idle");
+        return {
+          status: "error",
+          error: `Chain leállt a(z) ${i + 1}. lépésnél (${step.agentName}): ${msg}`,
+          data: { accumulated, failedStep: i },
+        };
+      }
+
+      // AgentResponse-ként kezeljük az eredményt
+      const response = (
+        result && typeof result === "object" && "status" in result
+          ? result
+          : { status: "success", data: result }
+      ) as AgentResponse;
+
+      accumulated.push(response);
+
+      if (response.status === "error") {
+        this.logger.error(
+          `[Chain] Step ${i + 1} hiba (${step.agentName}): ${response.error}`,
+        );
+        setAgentStatus("OrchestratorAgent", "idle");
+        return {
+          status: "error",
+          error: `Chain leállt a(z) ${i + 1}. lépésnél (${step.agentName}): ${response.error}`,
+          data: { accumulated, failedStep: i },
+        };
+      }
+
+      this.logger.info(`[Chain] Step ${i + 1} kész ✓`);
+    }
+
+    setAgentStatus("OrchestratorAgent", "idle");
+    this.logger.info(`[Chain] Kész: ${steps.length} lépés sikeresen végrehajtva`);
+
+    return {
+      status: "success",
+      message: `Chain kész: ${steps.length} lépés sikeresen végrehajtva.`,
+      data: {
+        stepsCount: steps.length,
+        results: accumulated,
+        finalOutput: accumulated[accumulated.length - 1],
+      },
+    };
+  }
+
   async execute(
     task: string,
     context?: Record<string, unknown>,
@@ -300,8 +385,24 @@ Respond ONLY with the JSON array. Do not add markdown blocks.
           .replace(/```json/g, "")
           .replace(/```/g, "")
           .trim();
-        const tasks = JSON.parse(cleanJson.match(/.*\[.*\]/s)?.[0] || "[]");
+        const match = cleanJson.match(/\[.*\]/s);
+        const tasks = JSON.parse(match ? match[0] : "[]");
 
+        // === COMPOUND TASK: szekvenciális chain pipeline ===
+        if (isCompound && tasks.length > 1) {
+          this.logger.info(
+            `[Chain] Compound feladat → chain pipeline (${tasks.length} lépés)`,
+          );
+          const chainSteps: ChainStep[] = tasks.map(
+            (t: { agent: string; description: string }) => ({
+              agentName: t.agent,
+              task: t.description,
+            }),
+          );
+          return await this.executeChain(chainSteps, context ?? {});
+        }
+
+        // === SIMPLE TASKS: párhuzamos queue (nem-compound) ===
         const taskIds: number[] = [];
 
         for (const t of tasks) {

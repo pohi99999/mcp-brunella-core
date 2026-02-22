@@ -12,10 +12,10 @@
     "lastDurationMs": 0
   },
   "tasks": {
-    "total": 4,
-    "success": 3,
+    "total": 8,
+    "success": 7,
     "error": 1,
-    "avgDurationMs": 0
+    "avgDurationMs": 4
   },
   "ai": {
     "totalTokenUsage": 0,
@@ -25,30 +25,58 @@
     {
       "type": "task",
       "status": "success",
-      "details": "dev-1771685900465-1",
+      "details": "dev-1771737007417-1",
       "durationMs": 0,
-      "timestamp": 1771685900470
+      "timestamp": 1771737007423
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1771731937206-1",
+      "durationMs": 32,
+      "timestamp": 1771731937239
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1771722648792-1",
+      "durationMs": 1,
+      "timestamp": 1771722648796
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1771715960513-1",
+      "durationMs": 0,
+      "timestamp": 1771715960515
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1771714090911-1",
+      "durationMs": 0,
+      "timestamp": 1771714090913
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1771711717974-1",
+      "durationMs": 1,
+      "timestamp": 1771711717979
+    },
+    {
+      "type": "task",
+      "status": "success",
+      "details": "dev-1771711717972-1",
+      "durationMs": 0,
+      "timestamp": 1771711717979
     },
     {
       "type": "task",
       "status": "error",
-      "details": "dev-1771683139894-1",
+      "details": "dev-1771711717970-1",
       "durationMs": 0,
-      "timestamp": 1771683139899
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771683139895-1",
-      "durationMs": 0,
-      "timestamp": 1771683139899
-    },
-    {
-      "type": "task",
-      "status": "success",
-      "details": "dev-1771683139896-1",
-      "durationMs": 0,
-      "timestamp": 1771683139898
+      "timestamp": 1771711717979
     }
   ]
 }

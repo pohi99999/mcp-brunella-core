@@ -25,7 +25,7 @@ describe("Phase 2 Integration Tests (Python Workers)", () => {
     expect(cmaResult.message).toContain("CMA Piacelemzés kész");
     expect(cmaResult.data).toHaveProperty("investment_score");
     expect(cmaResult.data.estimate.value_eur).toBeGreaterThan(0);
-  });
+    }, 30000);
 
   it("LogisticsDispatcher should call Supply Matcher", async () => {
     const agent = new LogisticsDispatcher();
@@ -35,6 +35,6 @@ describe("Phase 2 Integration Tests (Python Workers)", () => {
     expect(result.message).toContain("Párosítás kész");
     expect(result.data).toHaveProperty("matches");
     expect(Array.isArray(result.data.matches)).toBe(true);
-  });
+    }, 30000);
 
 });

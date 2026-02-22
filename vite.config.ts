@@ -21,6 +21,39 @@ export default defineConfig({
   build: {
     outDir: '../../build/public',
     emptyOutDir: true,
+    // Performance Optimization (Phase 6)
+    rollupOptions: {
+      output: {
+        // Manual chunk splitting for better caching
+        manualChunks: {
+          // Vendor chunk: React ecosystem
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          // Vendor chunk: UI libraries
+          'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tooltip', '@radix-ui/react-slot'],
+          // Vendor chunk: Charts & visualization
+          'vendor-charts': ['recharts', 'react-grid-layout'],
+          // Vendor chunk: Icons
+          'vendor-icons': ['lucide-react'],
+        },
+        // Optimize chunk naming for cache busting
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash][extname]',
+      },
+    },
+    // Compression & minification
+    minify: 'terser',
+    terserOptions: {
+      compress: {
+        drop_console: true, // Remove console.log in production
+        drop_debugger: true,
+        pure_funcs: ['console.log', 'console.debug'], // Remove specific console methods
+      },
+    },
+    // Source maps for debugging (disable in production for smaller size)
+    sourcemap: false,
+    // Chunk size warning threshold
+    chunkSizeWarningLimit: 1000, // 1MB warning
   },
   plugins: [
     react(),

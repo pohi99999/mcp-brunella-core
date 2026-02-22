@@ -394,3 +394,5 @@ export class LocalCSRBot implements IAgent {
     };
   }
 }
+
+export default LocalCSRBot;

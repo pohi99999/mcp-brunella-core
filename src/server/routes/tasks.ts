@@ -101,16 +101,17 @@ export function createTaskRoutes(): Router {
     router.post('/retry', async (req, res) => {
         try {
             const taskId = Number(req.body.taskId);
+            const debugMode = Boolean(req.body.debugMode);
             if (Number.isNaN(taskId)) {
                 res.status(400).json({ error: 'taskId is required' });
                 return;
             }
-            const ok = await agentManager.retryTask(taskId);
+            const ok = await agentManager.retryTask(taskId, debugMode);
             if (!ok) {
                 res.status(404).json({ error: 'Task not found' });
                 return;
             }
-            res.json({ status: 'pending', taskId });
+            res.json({ status: 'pending', taskId, debugMode });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });

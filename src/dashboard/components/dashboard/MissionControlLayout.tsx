@@ -72,14 +72,16 @@ export function MissionControlLayout() {
         </div>
       </header>
 
-      <div className="flex-1 flex overflow-hidden h-full">
+      <div className="flex-1 flex overflow-hidden min-h-0">
         <DynamicSidebar activeTab={activeTab} onTabChange={setActiveTab} />
-        
-        <main className="flex-1 p-6 overflow-hidden relative h-full">
+
+        <main className="flex-1 flex flex-col min-h-0 p-6 relative">
           {activeTab === 'dashboard' ? (
-            <WidgetGrid />
+            <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
+              <WidgetGrid />
+            </div>
           ) : (
-            <div className="h-full w-full overflow-auto custom-scrollbar">
+            <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
               {activeItem?.component || <div className="text-zinc-500 font-mono">CONTENT_MISSING: {activeTab}</div>}
             </div>
           )}

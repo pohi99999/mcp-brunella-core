@@ -683,3 +683,5 @@ Logistics Dispatch Team
     }
   }
 }
+
+export default LogisticsDispatcher;

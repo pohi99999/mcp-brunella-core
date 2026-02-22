@@ -161,6 +161,18 @@ function initSchema(): void {
 
       CREATE INDEX IF NOT EXISTS idx_edge_tasks_status ON edge_tasks(status);
       CREATE INDEX IF NOT EXISTS idx_edge_tasks_created_at ON edge_tasks(created_at);
+
+      CREATE TABLE IF NOT EXISTS tasks (
+        id TEXT PRIMARY KEY,
+        type TEXT,
+        status TEXT DEFAULT 'pending' CHECK(status IN ('pending', 'running', 'completed', 'failed')),
+        payload TEXT,
+        result TEXT,
+        created_at TEXT DEFAULT (datetime('now')),
+        updated_at TEXT DEFAULT (datetime('now'))
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status);
     `);
 
     logInfo('GlobalDb', 'Schema initialized');

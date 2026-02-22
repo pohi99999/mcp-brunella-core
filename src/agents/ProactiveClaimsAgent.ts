@@ -467,3 +467,5 @@ export class ProactiveClaimsAgent implements IAgent {
     return 'low';
   }
 }
+
+export default ProactiveClaimsAgent;

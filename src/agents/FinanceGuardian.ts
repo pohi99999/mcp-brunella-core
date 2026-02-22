@@ -394,3 +394,5 @@ export class FinanceGuardian implements IAgent {
  * Export for registry
  */
 export const createFinanceGuardian = (): FinanceGuardian => new FinanceGuardian();
+
+export default FinanceGuardian;

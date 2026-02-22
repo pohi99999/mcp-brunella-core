@@ -1,12 +1,20 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import { useSystemSignalStore } from "@/store/systemSignalStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Zap, Pause, Play, XCircle, RefreshCcw, Info } from "lucide-react";
+import { Zap, Pause, Play, XCircle, RefreshCcw, Info, Bug, FileSearch } from "lucide-react";
 import { toast } from "sonner";
-import { cancelTask, retryTask, pauseTask, resumeTask, updateTaskOrder, QueuedTask } from "@/lib/apiService";
-import { useSystemSignal } from "@/hooks/useSystemSignal";
+import {
+  cancelTask,
+  retryTask,
+  pauseTask,
+  resumeTask,
+  updateTaskOrder,
+  getTasks,
+  QueuedTask,
+} from "@/lib/apiService";
 import { TaskDetailsModal } from "./TaskDetailsModal";
+import { TraceViewerModal } from "./TraceViewerModal";
 import {
   DndContext,
   closestCenter,
@@ -26,11 +34,12 @@ import { CSS } from '@dnd-kit/utilities';
 
 interface SortableItemProps {
   task: QueuedTask;
-  onControlAction: (taskId: number, action: 'pause' | 'resume' | 'kill' | 'retry') => void;
+  onControlAction: (taskId: number, action: 'pause' | 'resume' | 'kill' | 'retry' | 'debugRetry') => void;
   onViewDetails: (task: QueuedTask) => void;
+  onViewTrace: (taskId: number) => void;
 }
 
-function SortableItem({ task, onControlAction, onViewDetails }: SortableItemProps) {
+function SortableItem({ task, onControlAction, onViewDetails, onViewTrace }: SortableItemProps) {
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({ id: task.id });
 
   const style = {
@@ -55,6 +64,8 @@ function SortableItem({ task, onControlAction, onViewDetails }: SortableItemProp
         <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'resume')} title="Folytatás"><Play size={16} /></Button>
         <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'kill')} title="Leállítás"><XCircle size={16} /></Button>
         <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'retry')} title="Újrapróbálkozás"><RefreshCcw size={16} /></Button>
+        <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'debugRetry')} title="Debug újrapróbálkozás"><Bug size={16} /></Button>
+        <Button variant="ghost" size="sm" onClick={() => onViewTrace(task.id)} title="Trace megjelenítése"><FileSearch size={16} /></Button>
         <Button variant="ghost" size="sm" onClick={() => onViewDetails(task)} title="Részletek"><Info size={16} /></Button>
       </div>
     </div>
@@ -62,11 +73,29 @@ function SortableItem({ task, onControlAction, onViewDetails }: SortableItemProp
 }
 
 export function ProcessControlWidget() {
-  const { tasks } = useSystemSignalStore((state) => ({ tasks: state.tasks }));
-  const { refetchData } = useSystemSignal();
+  const { tasks, setTasks } = useSystemSignalStore((state) => ({
+    tasks: state.tasks,
+    setTasks: state.setTasks,
+  }));
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isTraceModalOpen, setIsTraceModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<QueuedTask | null>(null);
+  const [selectedTraceTaskId, setSelectedTraceTaskId] = useState<number | null>(null);
   const [sortedTasks, setSortedTasks] = useState<QueuedTask[]>([]);
+  const [isRefreshing, setIsRefreshing] = useState(false);
+
+  const refreshActiveTasks = async () => {
+    setIsRefreshing(true);
+    try {
+      const response = await getTasks(50, 0);
+      setTasks(response.tasks || []);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      toast.error(`Feladatlista frissítés hiba: ${message}`);
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
 
   useEffect(() => {
     // Initialize sortedTasks with tasks from the store, filter for active/pending
@@ -81,7 +110,7 @@ export function ProcessControlWidget() {
     }),
   );
 
-  const handleControlAction = async (taskId: number, action: 'pause' | 'resume' | 'kill' | 'retry') => {
+  const handleControlAction = async (taskId: number, action: 'pause' | 'resume' | 'kill' | 'retry' | 'debugRetry') => {
     try {
       switch (action) {
         case 'pause':
@@ -97,14 +126,18 @@ export function ProcessControlWidget() {
           toast.success(`Feladat ${taskId} leállítva.`);
           break;
         case 'retry':
-          await retryTask(taskId);
+          await retryTask(taskId, false);
           toast.success(`Feladat ${taskId} újrapróbálva.`);
+          break;
+        case 'debugRetry':
+          await retryTask(taskId, true);
+          toast.success(`Feladat ${taskId} újrapróbálva debug móddal.`);
           break;
         default:
           toast.error(`Ismeretlen akció: ${action}`);
           return;
       }
-      refetchData(); // Refresh tasks after action
+      await refreshActiveTasks();
     } catch (error: any) {
       toast.error(`Sikertelen akció ${action} a feladaton ${taskId}: ${error.message}`);
     }
@@ -117,7 +150,7 @@ export function ProcessControlWidget() {
     if (active.id !== over.id) {
       const oldIndex = sortedTasks.findIndex((task) => task.id === active.id);
       const newIndex = sortedTasks.findIndex((task) => task.id === over.id);
-      
+
       if (oldIndex !== -1 && newIndex !== -1) {
         const newSortedTasks = [...sortedTasks];
         const [removed] = newSortedTasks.splice(oldIndex, 1);
@@ -149,27 +182,41 @@ export function ProcessControlWidget() {
         {sortedTasks.length === 0 ? (
           <p className="text-sm text-zinc-500">Nincsenek aktív vagy függőben lévő feladatok.</p>
         ) : (
-          <DndContext 
-            sensors={sensors} 
-            collisionDetection={closestCenter} 
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
             onDragEnd={handleDragEnd}
           >
             <SortableContext items={sortedTasks.map(task => task.id)} strategy={verticalListSortingStrategy}>
               <div className="space-y-4">
                 {sortedTasks.map((task) => (
-                  <SortableItem 
-                    key={task.id} 
-                    task={task} 
-                    onControlAction={handleControlAction} 
-                    onViewDetails={setSelectedTask} // Simplified, will trigger modal via onClick on item
+                  <SortableItem
+                    key={task.id}
+                    task={task}
+                    onControlAction={handleControlAction}
+                    onViewDetails={(task) => {
+                      setSelectedTask(task);
+                      setIsModalOpen(true);
+                    }}
+                    onViewTrace={(taskId) => {
+                      setSelectedTraceTaskId(taskId);
+                      setIsTraceModalOpen(true);
+                    }}
                   />
                 ))}
               </div>
             </SortableContext>
           </DndContext>
         )}
+        <div className="mt-4 flex justify-end">
+          <Button variant="outline" size="sm" onClick={refreshActiveTasks} disabled={isRefreshing}>
+            <RefreshCcw size={14} className={isRefreshing ? "mr-2 animate-spin" : "mr-2"} />
+            Frissítés
+          </Button>
+        </div>
       </CardContent>
       <TaskDetailsModal task={selectedTask} isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
+      <TraceViewerModal taskId={selectedTraceTaskId} isOpen={isTraceModalOpen} onClose={() => setIsTraceModalOpen(false)} />
     </Card>
   );
 }

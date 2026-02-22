@@ -13,7 +13,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ```bash
 # Build & Run
 npm run build        # TypeScript fordítás (kötelező deploy előtt)
-npm run dev          # MCP szerver + HTTP API (port 3000, ts-node/esm)
+npm run dev          # HTTP API + MCP szerver (port 3000, ts-node/esm)
 npm run dev:ui       # Vite Dashboard (port 5173)
 npm run lint         # ESLint (max-warnings=0)
 npm run lint:fix     # ESLint auto-fix
@@ -26,6 +26,7 @@ npm run test:dashboard                # Dashboard-specifikus tesztek
 npm run test:coverage                 # Coverage riport
 npm run test:e2e                      # Playwright e2e tesztek
 npm run health                        # Health check (scripts/health_check.ts)
+npm run test:phoenix                  # Phoenix Protocol state restoration tesztek
 
 # CLI
 brunella                     # Interaktív menü (nyilak + Enter)
@@ -57,6 +58,7 @@ Mindkettő `registerAllTools()` hívásával regisztrálja az MCP eszközöket (
 src/
 ├── index.ts         # MCP szerver (StdioServerTransport) - AI klienseknek
 ├── cli.ts           # CLI belépési pont (Commander.js, 70+ parancs)
+├── analytics.ts     # CEAN Analytics Engine (PipelineEventBuilder → D1)
 ├── agents/          # AI ügynökök (IAgent interfész implementációk)
 │   ├── types.ts     # IAgent, AgentResponse, AgentHandoff interfaces
 │   ├── BaseAgent.ts # Absztrakt ősosztály (Bridge pattern)
@@ -71,47 +73,70 @@ src/
 │   ├── routes/      # REST API route-ok (~30 endpoint csoport)
 │   └── SocketService.ts  # WebSocket kezelés
 ├── core/            # Infrastruktúra primitívek
-│   ├── llm_client.ts     # Multi-provider LLM kliens (Ollama/Gemini/GitHub Models)
-│   ├── modelRouter.ts    # Intelligent routing: "brain" (cloud) vs "muscle" (local)
-│   ├── checkpoint.ts     # Phoenix Protocol - állapot mentés/visszaállítás
-│   ├── retryStrategy.ts  # Retry logika exponential backoff-fal
-│   ├── auditLog.ts       # Audit trail SQLite-ban
-│   └── phoenixEventBus.ts # Öngyógyító esemény bus
+│   ├── llm_client.ts       # Multi-provider LLM kliens (Ollama/Gemini/GitHub Models)
+│   ├── modelRouter.ts      # Intelligent routing: "brain" (cloud) vs "muscle" (local)
+│   ├── goldenDatasetBridge.ts  # G4.1 - Agent outputs → D1 golden samples
+│   ├── checkpoint.ts       # Phoenix Protocol - állapot mentés/visszaállítás
+│   ├── retryStrategy.ts    # Retry logika exponential backoff-fal
+│   ├── auditLog.ts         # Audit trail SQLite-ban
+│   └── phoenixEventBus.ts  # Öngyógyító esemény bus
 ├── dashboard/       # React UI (Vite, Tailwind v4, Radix UI)
 │   ├── components/dashboard/  # Dashboard komponensek
 │   ├── lib/apiService.ts       # API client methods
-│   └── lib/navigation.tsx      # Routing (activeItem?.component minta)
+│   └── lib/navigation.tsx      # NavigationRegistry - panel regisztrációk
 ├── config/
 │   └── schema.ts    # Zod config validáció (kötelező env vars)
 └── utils/
-    ├── logger.ts    # Structured logging (HASZNÁLD console.log helyett!)
-    ├── health.ts    # Service health checks
-    ├── metrics.ts   # Prometheus metrics
+    ├── logger.ts       # Structured logging (HASZNÁLD console.log helyett!)
+    ├── health.ts       # Service health checks
+    ├── metrics.ts      # Prometheus metrics
+    ├── d1Adapter.ts    # Cloudflare D1 HTTP bridge (Node.js → Worker → D1)
+    ├── vectorize.ts    # Cloudflare Vectorize kliens
     └── pythonShell.ts  # Python alrendszer kommunikáció
 ```
 
 ### Ügynök Hierarchia
 
 ```
-OrchestratorAgent (Központi koordinátor)
-  ├── DeveloperAgent        - Kód írás, Python végrehajtás, self-healing build
-  ├── EvaluatorAgent        - Audit, testing, code review
-  ├── ResearcherAgent       - Web search, RAG keresés (LanceDB)
-  ├── DataScientistAgent    - Adat elemzés, LanceDB
-  ├── EdgeProxyAgent        - Cloudflare Workers proxy
-  ├── ProjectConductorAgent - Docs sync, track management, anomaly scan
-  ├── SpecWriterAgent       - Automatikus track generálás LLM-mel
-  ├── TaskDecomposerAgent   - Komplex feladat dekompozíció
-  └── DynamicAgent          - TOML konfigból betöltött ügynök (myai/agents/*.toml)
+OrchestratorAgent / EnterpriseOrchestratorAgent (Koordinátorok)
+├── Core: DeveloperAgent, EvaluatorAgent, ResearcherAgent, TaskDecomposerAgent
+├── Automation: RobotkezAgent, RobotkezV2Agent (Playwright), VoiceAgent
+├── Enterprise Suite (~20 ügynök):
+│   ├── Finance: FinanceGuardian, FinancialGuardAgent, ProcurementAgent
+│   ├── Sales: SalesAgent, SalesHunterAgent, MarketingAgent, PricingAgent
+│   ├── HR: HeadHunterAgent, ConflictMediatorAgent, SentimentAnalysisModule
+│   ├── Logistics: LogisticsDispatcherAgent, LogisticsDispatcher
+│   ├── Admin: EmailTriageAgent, GrantWatcherAgent, GrantHunter
+│   └── Knowledge: KnowledgeBaseBuilderAgent, KnowledgeBuilder
+├── Marketing: CopywriterAgent, MarketingDirectorAgent (TOML-alapú DynamicAgent)
+├── Engineering: SpecWriterAgent, GenesisOrchestrator, UXDesignerAgent, LintFixerAgent
+└── Management: ProjectConductorAgent (tracks.md szinkron)
 ```
 
-`AgentManager` kezeli a registry-t (`registry.json`), Task Queue-t (SQLite), és a Worker Loop-ot (autonóm feladat feldolgozás). Ügynökök betöltése: `initialize()` → `registry.json` alapján dinamikus import.
+`AgentManager` kezeli a registry-t (`registry.json`), Task Queue-t (SQLite), és a Worker Loop-ot. `DynamicAgent` TOML konfigurációból tölti be az ügynöket (`myai/agents/*.toml`).
 
 ### Model Router (Brain vs Muscle)
 
-A `src/core/modelRouter.ts` intelligensen route-olja a feladatokat:
-- **Brain (Cloud):** Gemini, GitHub Models (GPT-4o) — komplex tervezés, magas komplexitás
-- **Muscle (Local):** Ollama — végrehajtás, alacsony komplexitás, budget=0
+A `src/core/modelRouter.ts` RULE-MR1–4 szabályok alapján route-ol:
+- **Brain (Cloud):** Gemini (1M context), GitHub Models GPT-4o — `complexity: 'high'` esetén
+- **Muscle (Local):** Ollama `qwen2.5-coder:7b` — `complexity: 'low'` vagy `budget=0` esetén
+- Auto-detect: `routeTask(description)` → felismeri a komplexitást regex alapján
+
+### Cloudflare D1 Adapter
+
+`src/utils/d1Adapter.ts` — Node.js nem érheti el D1-et közvetlenül:
+```
+Node.js → HTTP POST /d1/query → Cloudflare Worker → D1 Database
+```
+Táblák: `enterprise_events`, `agent_tasks`, `golden_samples`
+Aktiválás: `CLOUDFLARE_WORKER_URL` + `CEAN_API_KEY` env változók szükségesek.
+
+### Golden Dataset Bridge (G4.1)
+
+`src/core/goldenDatasetBridge.ts` — Sikeres agent futások mentése D1-be fine-tuning célra:
+- RULE-GD1: Ha egy agent sikeres + LLM volt → mentés
+- RULE-GD2: Min. 10 karakter prompt, min. 0.5 quality score
+- RULE-GD3: FNV-1a hash dedup (500 elem cache)
 
 ### Agent Permission System (RBAC)
 
@@ -187,7 +212,6 @@ export const myToolDefinition = {
 };
 
 export async function myToolHandler(params: { param: string }) {
-  // ... implementáció
   return { success: true, data: result };
 }
 
@@ -219,17 +243,22 @@ npm test        # Vitest tesztek - MUSZÁJ mind PASS!
 
 ### Új Agent Létrehozása
 
+**Kód-alapú:**
 1. `src/agents/MyNewAgent.ts` — Implementáció (IAgent interfész)
-2. `src/agents/registry.json` — Regisztráció (name, module, class, triggers)
+2. `src/agents/registry.json` — Regisztráció (name, module, class, triggers, priority)
 3. `test/myNewAgent.test.ts` — Tesztek
 4. `npm run build && npm test`
+
+**TOML-alapú (DynamicAgent):**
+1. `myai/agents/MyAgent.toml` — Konfiguráció (system_prompt, capabilities)
+2. `src/agents/registry.json` — Regisztráció: `"class": "DynamicAgent"`, `"config": { "tomlPath": "myai/agents/MyAgent.toml" }`
 
 ### Dashboard Komponens Hozzáadása
 
 1. `src/dashboard/components/dashboard/MyComponent.tsx` — Komponens (Radix UI + Tailwind v4)
 2. `src/dashboard/lib/apiService.ts` — API client method
 3. `src/server/routes/` — Backend endpoint
-4. `src/dashboard/lib/navigation.tsx` — Navigáció bekötése
+4. `src/dashboard/lib/navigation.tsx` — `navigationRegistry.registerItem(...)` hívással, majd a megfelelő grouphoz add hozzá
 
 ## Environment Variables (.env)
 
@@ -239,14 +268,34 @@ OLLAMA_BASE_URL=http://localhost:11434
 BRUNELLA_WORKSPACE_ROOT=.
 ```
 
-**OPCIONÁLIS (de ajánlott):**
+**LLM Providerek:**
 ```env
 GEMINI_API_KEY=...
-GITHUB_PAT=...            # GitHub Models (GPT-4o) + Copilot
-LANGCHAIN_API_KEY=...     # LangSmith tracing
-CLOUDFLARE_API_TOKEN=...  # Edge deploy
-CLOUDFLARE_WORKER_URL=... # Deployed worker URL
-EDGE_ENABLED=true         # Cloudflare Edge funkciók bekapcsolása
+GEMINI_MODEL=gemini-2.0-flash   # Default model
+GITHUB_PAT=...                   # GitHub Models (GPT-4o) + Copilot
+OLLAMA_MODEL=qwen2.5-coder:7b   # Default local model
+```
+
+**Model Router vezérlés:**
+```env
+ROUTER_BUDGET=50            # 0=csak Ollama, 100=mindig Cloud
+ROUTER_PREFER_LOCAL=true    # Medium komplexitásnál local preferált
+ROUTER_FALLBACK=true        # Cloud fallback engedélyezése
+ROUTER_OVERRIDE_MODEL=...   # Kényszer model (manuális override)
+```
+
+**Cloudflare/Edge:**
+```env
+CLOUDFLARE_API_TOKEN=...
+CLOUDFLARE_WORKER_URL=...   # CEAN Worker URL
+CEAN_API_KEY=...            # D1 hozzáférés (Worker ↔ D1)
+EDGE_ENABLED=true
+```
+
+**Opcionális:**
+```env
+LANGCHAIN_API_KEY=...       # LangSmith tracing
+PYTHON_BASE_URL=http://localhost:8000
 ```
 
 ## Hibaelhárítás
@@ -260,6 +309,7 @@ EDGE_ENABLED=true         # Cloudflare Edge funkciók bekapcsolása
 | Teszt fail | **JAVÍTSD**, ne töröld! |
 | `.js` import hiba | Add hozzá `.js` kiterjesztést |
 | Cloudflare health fail | `.env` frissítés → Node.js restart → health check |
+| D1 disabled | `CLOUDFLARE_WORKER_URL` + `CEAN_API_KEY` hiányzik |
 
 ## API Végpontok
 
@@ -282,6 +332,7 @@ EDGE_ENABLED=true         # Cloudflare Edge funkciók bekapcsolása
 - Import `.js` kiterjesztés nélkül
 - Agent-ben hiányzó `finally` blokk
 - `conductor/tracks.md` kézi szerkesztése (ProjectConductor kezeli)
+- D1 közvetlen elérése Node.js-ből (mindig D1Adapter HTTP bridge-en keresztül)
 
 ## További Dokumentáció
 
