@@ -20,7 +20,7 @@
     "cli": "node build/cli.js",
     "cli:hu": "node build/cli-hu.js",
     "test": "npm run build && vitest run",
-    "lint": "eslint src/ test/ --max-warnings=0",
+    "lint": "eslint src/ test/",
     "lint:fix": "eslint src/ test/ --fix",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
