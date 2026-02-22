@@ -86,7 +86,7 @@ async function checkOllama(): Promise<CheckResult> {
 async function checkPython(): Promise<CheckResult> {
   const start = Date.now();
   // Prefer 127.0.0.1 over localhost to avoid IPv6/IPv4 resolution delay on Windows
-  const pythonUrl = process.env.PYTHON_API_URL || "http://127.0.0.1:8000";
+  const pythonUrl = process.env.PYTHON_API_URL || "http://127.0.0.1:8010";
   try {
     const resp = await fetch(`${pythonUrl}/health`, {
       signal: AbortSignal.timeout(8000),
