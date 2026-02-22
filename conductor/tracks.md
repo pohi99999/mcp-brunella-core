@@ -1,10 +1,18 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-22T03:15:00.000Z
+**Utolso frissites:** 2026-02-22T03:30:00.000Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 52 total | 4 active | 7 completed | 26 archived
+**Stats:** 51 total | 4 active | 6 completed | 27 archived
+
+---
+
+## LATEST UPDATE: CEAN Track Archival ✅ (2026-02-22 03:30)
+
+**Action:** Archived `cloudflare_d1_kv_storage_20260221` (100% COMPLETE)
+**New Location:** `conductor/archive/cloudflare_d1_kv_storage_20260221_archived_20260222/`
+**Status:** 5/5 Phases Complete (D1 + KV + Golden Dataset + Dashboard + Production)
 
 ---
 
@@ -87,15 +95,11 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (7)
+## Befejezett (Completed - Not Archived) (6)
 
 - [x] **bas_orchestration_chain_20260221**
   - **ID:** `bas_orchestration_chain_20260221`
   - Mappa: ./tracks/bas_orchestration_chain_20260221/
-
-- [x] **cloudflare_d1_kv_storage_20260221**
-  - **ID:** `cloudflare_d1_kv_storage_20260221`
-  - Mappa: ./tracks/cloudflare_d1_kv_storage_20260221/
 
 - [x] **cloudflare_vectorize_rag_20260221**
   - **ID:** `cloudflare_vectorize_rag_20260221`
@@ -119,7 +123,7 @@
 
 ---
 
-## Archivalt (Archived) (26)
+## Archivalt (Archived) (27)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
