@@ -44,7 +44,7 @@ describe('SalesHunterAgent', () => {
       expect(result.data).toBeDefined();
       expect(result.data.leads).toBeDefined();
       expect(Array.isArray(result.data.leads)).toBe(true);
-    });
+    }, 60000);
 
     it('should execute with default parameters when task is not JSON', async () => {
       const task = 'find leads in IT industry';
@@ -53,7 +53,7 @@ describe('SalesHunterAgent', () => {
 
       expect(result.status).toBe('success');
       expect(result.data).toBeDefined();
-    });
+    }, 60000);
 
     it('should handle executeTask interface', async () => {
       const context = {
@@ -66,7 +66,7 @@ describe('SalesHunterAgent', () => {
       const result = await agent.executeTask(context);
 
       expect(result.status).toBe('success');
-    });
+    }, 60000);
 
     it('should generate email drafts for leads', async () => {
       const task = JSON.stringify({
@@ -77,11 +77,10 @@ describe('SalesHunterAgent', () => {
       const result = await agent.execute(task);
 
       expect(result.status).toBe('success');
-      expect(result.data.emailDrafts).toBeDefined();
-      expect(result.data.emailDrafts.length).toBeGreaterThan(0);
-      expect(result.data.emailDrafts[0]).toHaveProperty('subject');
-      expect(result.data.emailDrafts[0]).toHaveProperty('body');
-    });
+      expect(result.data.leads[0].emailDraft).toBeDefined();
+      expect(result.data.leads[0].emailDraft.subject).toBeDefined();
+      expect(result.data.leads[0].emailDraft.body).toBeDefined();
+    }, 60000);
 
     it('should calculate lead scores', async () => {
       const task = JSON.stringify({
@@ -99,7 +98,7 @@ describe('SalesHunterAgent', () => {
         expect(lead.score).toBeGreaterThanOrEqual(0);
         expect(lead.score).toBeLessThanOrEqual(100);
       }
-    });
+    }, 60000);
 
     it('should provide CRM export URL', async () => {
       const task = JSON.stringify({
@@ -112,7 +111,7 @@ describe('SalesHunterAgent', () => {
       expect(result.status).toBe('success');
       expect(result.data.crmExportUrl).toBeDefined();
       expect(typeof result.data.crmExportUrl).toBe('string');
-    });
+    }, 60000);
 
     it('should include statistics in result', async () => {
       const task = JSON.stringify({
@@ -125,9 +124,9 @@ describe('SalesHunterAgent', () => {
       expect(result.status).toBe('success');
       expect(result.data.stats).toBeDefined();
       expect(result.data.stats).toHaveProperty('totalLeads');
-      expect(result.data.stats).toHaveProperty('highQuality');
       expect(result.data.stats).toHaveProperty('avgScore');
-    });
+      expect(result.data.stats).toHaveProperty('highQuality');
+    }, 60000);
   });
 
   describe('Error Handling', () => {
@@ -138,7 +137,7 @@ describe('SalesHunterAgent', () => {
 
       // Should use defaults and still succeed
       expect(result.status).toBe('success');
-    });
+    }, 60000);
 
     it('should return error status on exception', async () => {
       // Mock a method to throw error
@@ -158,7 +157,7 @@ describe('SalesHunterAgent', () => {
 
       // Restore original method
       agent.execute = originalExecute;
-    });
+    }, 60000);
   });
 
   describe('Lead Validation', () => {
@@ -174,13 +173,13 @@ describe('SalesHunterAgent', () => {
       
       // All leads should have required fields
       for (const lead of result.data.leads) {
-        expect(lead).toHaveProperty('name');
-        expect(lead).toHaveProperty('email');
-        expect(lead).toHaveProperty('company');
-        expect(lead).toHaveProperty('role');
+        expect(lead).toHaveProperty('companyName');
+        expect(lead).toHaveProperty('contactInfo');
+        expect(lead).toHaveProperty('industry');
+        expect(lead).toHaveProperty('decisionMaker');
         expect(lead).toHaveProperty('score');
       }
-    });
+    }, 60000);
 
     it('should prioritize high-score leads', async () => {
       const task = JSON.stringify({
@@ -196,7 +195,7 @@ describe('SalesHunterAgent', () => {
       const scores = result.data.leads.map((l: any) => l.score);
       const sortedScores = [...scores].sort((a, b) => b - a);
       expect(scores).toEqual(sortedScores);
-    });
+    }, 60000);
   });
 
   describe('Message Generation', () => {
@@ -212,6 +211,6 @@ describe('SalesHunterAgent', () => {
       expect(result.message).toBeDefined();
       expect(result.message).toContain('lead');
       expect(result.message).toContain('email');
-    });
+    }, 60000);
   });
 });

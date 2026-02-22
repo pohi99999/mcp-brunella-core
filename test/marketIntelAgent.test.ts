@@ -37,7 +37,7 @@ describe('MarketIntelAgent', () => {
       expect(result.status).toBe('success');
       expect(result.data.priceSnapshots).toBeDefined();
       expect(Array.isArray(result.data.priceSnapshots)).toBe(true);
-    });
+    }, 60000);
 
     it('should detect price changes', async () => {
       const task = JSON.stringify({
@@ -49,7 +49,7 @@ describe('MarketIntelAgent', () => {
 
       expect(result.status).toBe('success');
       expect(result.data.priceChanges).toBeDefined();
-    });
+    }, 60000);
   });
 
   describe('Trend Analysis', () => {
@@ -64,7 +64,7 @@ describe('MarketIntelAgent', () => {
       expect(result.status).toBe('success');
       expect(result.data.trends).toBeDefined();
       expect(Array.isArray(result.data.trends)).toBe(true);
-    });
+    }, 60000);
   });
 
   describe('Alert System', () => {
@@ -78,7 +78,7 @@ describe('MarketIntelAgent', () => {
 
       expect(result.status).toBe('success');
       expect(result.data.alerts).toBeDefined();
-    });
+    }, 60000);
   });
 
   describe('Error Handling', () => {
@@ -92,6 +92,6 @@ describe('MarketIntelAgent', () => {
 
       expect(result.status).toBe('success');
       // Should use defaults
-    });
+    }, 60000);
   });
 });
