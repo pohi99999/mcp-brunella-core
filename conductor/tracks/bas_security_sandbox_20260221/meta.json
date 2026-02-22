@@ -1,0 +1,52 @@
+{
+  "trackName": "bas_security_sandbox_20260221",
+  "type": "Security & Reinforcement Learning",
+  "priority": "HIGH",
+  "status": "active",
+  "progress": 25,
+  "goal": "E2B Sandbox Manager implementálása a Python kódvégrehajtás izolálásához, és az EvaluatorAgent felvértezése hallucináció-detektáló guardrail szabályokkal.",
+  "assignee": "DeveloperAgent + Claude",
+  "createdAt": "2026-02-21T10:00:00Z",
+  "updatedAt": "2026-02-21T10:00:00Z",
+  "context": "Leválasztva a bas_core_architecture_v3 track-ből. FONTOS: A Golden Dataset Bridge (src/core/goldenDatasetBridge.ts) és az autoSaveGoldenSample() hívás az AgentManager-ben (sor 632) már IMPLEMENTÁLT. Az @e2b/code-interpreter csomag már a package.json-ban van. Ez a track csak a sandbox managert és a guardrail-eket hidalja át.",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Phase 1: E2B Sandbox Manager",
+      "status": "pending",
+      "tasks": [
+        "Task 1.1: src/security/e2b_sandbox_manager.ts létrehozása. Wrapper a @e2b/code-interpreter felett: createSandbox(), runPython(code), runNode(code), destroySandbox(). Timeout: 30s. Output: { stdout, stderr, exitCode }.",
+        "Task 1.2: DeveloperAgent Python-végrehajtás átirányítása: ha E2B_ENABLED=true env változó van, a PythonShell helyett E2BSandboxManager.runPython() hívódjon.",
+        "Task 1.3: Sandbox teszt: test/e2b_sandbox.test.ts - egyszerű Python snippet izolált futtatása és eredmény ellenőrzése.",
+        "Task 1.4: .env dokumentáció: E2B_API_KEY és E2B_ENABLED változók hozzáadása a CLAUDE.md env szekciójához."
+      ]
+    },
+    {
+      "id": "phase2",
+      "name": "Phase 2: Golden Dataset Bridge Verifikáció",
+      "status": "pending",
+      "tasks": [
+        "Task 2.1: AgentManager sor 632 körüli autoSaveGoldenSample() hívás ellenőrzése: valóban ment-e D1-be + Vectorize-ba ha a config megvan.",
+        "Task 2.2: test/goldenDataset.test.ts: mock D1Adapter-rel ellenőrzi, hogy sikeres agent futás után mentés történik, sikertelen futásnál nem.",
+        "Task 2.3: GET /api/golden-dataset/stats endpoint (src/server/routes/enterprise.ts-be) - mutatja a mentett minták számát."
+      ]
+    },
+    {
+      "id": "phase3",
+      "name": "Phase 3: EvaluatorAgent Guardrails",
+      "status": "pending",
+      "tasks": [
+        "Task 3.1: EvaluatorAgent bővítése: checkHallucination(response: AgentResponse) metódus, amely LLM-as-Judge mintával ellenőrzi a választ (Ollama lokálisan).",
+        "Task 3.2: Guardrail szabályok definiálása: RULE-G1 (tény-állítás forrás nélkül = flag), RULE-G2 (konfidencia < 0.6 = warn), RULE-G3 (külső URL hivatkozás = ellenőriz).",
+        "Task 3.3: npm run test:full - 0 hiba."
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    "Python kód E2B_ENABLED=true esetén sandbox-ban fut, nem a gazdagépen.",
+    "Sikeres agent futás után a Golden Dataset rekordszáma nő (D1 golden_samples tábla).",
+    "EvaluatorAgent képes jelölni a konfidencia-hiányos válaszokat.",
+    "0 TypeScript build hiba, minden vitest teszt ZÖLD."
+  ],
+  "nextStep": "Task 1.1: src/security/ mappa létrehozása, e2b_sandbox_manager.ts vázlata."
+}

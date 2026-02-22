@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Suspense } from "react";
 import {
   LayoutDashboard, Network, Rocket, Cloud, Cpu, MessageSquare,
   Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
@@ -30,8 +30,13 @@ import { InventoryCatalog } from "@/components/dashboard/InventoryCatalog";
 import { TestResultsWidget } from "@/components/dashboard/TestResultsWidget";
 import { EmbeddedWorkflow } from "@/components/dashboard/EmbeddedWorkflow";
 import { PythonWorkersPanel } from "@/components/dashboard/PythonWorkersPanel";
-import { EnterpriseAnalyticsWidget } from "@/components/dashboard/EnterpriseAnalyticsWidget";
+import { SystemArchitectureWidget } from "@/components/dashboard/SystemArchitectureWidget";
 import { logInfo } from "@/utils/logger";
+
+const LazyEnterpriseAnalyticsWidget = React.lazy(async () => {
+  const module = await import("@/components/dashboard/EnterpriseAnalyticsWidget");
+  return { default: module.EnterpriseAnalyticsWidget };
+});
 
 export interface NavItem {
   id: string;
@@ -80,6 +85,7 @@ export function initializeNavigation() {
   const items: NavItem[] = [
     { id: "dashboard", label: "Mission Control", icon: LayoutDashboard, component: null },
     { id: "neural-map", label: "Neural Map", icon: Network, component: <NeuralMap /> },
+    { id: "system-arch", label: "Architecture", icon: Layers, component: <SystemArchitectureWidget /> },
     { id: "cean", label: "CEAN Orchestrator", icon: Rocket, component: <CEANLayout /> },
     { id: "cloudflare", label: "Cloudflare Deploy", icon: Cloud, component: <CloudflareDeployment /> },
     { id: "fleet_manager", label: "Fleet Manager", icon: Cpu, component: <FleetManager /> },
@@ -94,7 +100,16 @@ export function initializeNavigation() {
     { id: "edge", label: "Edge", icon: Zap, component: <EdgePanel /> },
     { id: "suggested-tasks", label: "Suggested", icon: FileText, component: <SuggestedTasksWidget /> },
     { id: "tests", label: "Precision Tests", icon: Gauge, component: <TestResultsWidget /> },
-    { id: "enterprise-analytics", label: "Enterprise Analytics", icon: BarChart3, component: <EnterpriseAnalyticsWidget /> },
+    {
+      id: "enterprise-analytics",
+      label: "Enterprise Analytics",
+      icon: BarChart3,
+      component: (
+        <Suspense fallback={<div className="p-4 text-sm text-zinc-400">Enterprise Analytics betöltése...</div>}>
+          <LazyEnterpriseAnalyticsWidget />
+        </Suspense>
+      ),
+    },
     { id: "robotkez", label: "Robotkéz", icon: Activity, component: <RobotkezV2Chat /> },
     { id: "tasks", label: "Task Queue", icon: History, component: <TaskQueueMonitor /> },
     { id: "python-workers", label: "Python Workers", icon: Cpu, component: <PythonWorkersPanel /> },
@@ -108,7 +123,7 @@ export function initializeNavigation() {
   items.forEach(item => navigationRegistry.registerItem(item));
 
   // Register groups
-  navigationRegistry.registerGroup({ title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map"] });
+  navigationRegistry.registerGroup({ title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch"] });
   navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez"] });
   navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "tasks"] });
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests", "enterprise-analytics"] });

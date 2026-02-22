@@ -135,12 +135,16 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
     const d1Adapter = getD1Adapter();
     if (d1Adapter) {
       try {
-        await d1Adapter.insertGoldenSample({
+        const d1Result = await d1Adapter.insertGoldenSample({
           id: `golden_${Date.now()}_${Math.random().toString(36).slice(2)}`,
           instruction: sample.prompt,
           output: sample.completion,
           source: sample.source,
         });
+        
+        if (d1Result.status === 'error') {
+          throw new Error(d1Result.error || 'Unknown D1 error');
+        }
         
         logInfo('GoldenBridge', `Sample saved to D1 from ${sample.source} (quality: ${sample.quality.toFixed(2)})`);
         return { 
@@ -152,6 +156,12 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
         const msg = d1Error instanceof Error ? d1Error.message : String(d1Error);
         logError('GoldenBridge', `D1 save failed, falling back to Python: ${msg}`);
         // Fall through to Python backup
+        
+        // If it's a network error like ECONNREFUSED, we should probably fail fast
+        // since the Python backend is likely also unreachable if it's a local network issue
+        if (msg.includes('ECONNREFUSED')) {
+          return { success: false, message: `Save failed: ${msg}` };
+        }
       }
     }
 
@@ -183,7 +193,8 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
       return { success: true, message: data.message, stats: data.stats };
     } catch (fetchError: unknown) {
       clearTimeout(timeoutId);
-      throw fetchError;
+      const msg = fetchError instanceof Error ? fetchError.message : String(fetchError);
+      return { success: false, message: `Save failed: ${msg}` };
     }
   } catch (error: unknown) {
     const msg = error instanceof Error ? error.message : String(error);
@@ -202,16 +213,18 @@ export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
     if (d1Adapter) {
       try {
         const samplesResult = await d1Adapter.getAllGoldenSamples(1000);
-        const samples = samplesResult.results || [];
-        return {
-          totalSamples: samples.length,
-          newSinceLastTraining: samples.filter(s => {
-            const created = new Date(s.created_at);
-            const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
-            return created > weekAgo;
-          }).length,
-          lastTrainingAt: undefined // TODO: track training runs in D1
-        };
+        if (samplesResult.status === 'success' && samplesResult.results) {
+          const samples = samplesResult.results;
+          return {
+            totalSamples: samples.length,
+            newSinceLastTraining: samples.filter(s => {
+              const created = new Date(s.created_at);
+              const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
+              return created > weekAgo;
+            }).length,
+            lastTrainingAt: undefined // TODO: track training runs in D1
+          };
+        }
       } catch (d1Error: unknown) {
         const msg = d1Error instanceof Error ? d1Error.message : String(d1Error);
         logError('GoldenBridge', `D1 stats failed, trying Python backup: ${msg}`);
@@ -222,16 +235,21 @@ export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
     const controller = new AbortController();
     const timeoutId = setTimeout(() => controller.abort(), SAVE_TIMEOUT_MS);
 
-    const response = await fetch(`${PYTHON_BASE_URL}/incubator/stats`, {
-      signal: controller.signal
-    });
+    try {
+      const response = await fetch(`${PYTHON_BASE_URL}/incubator/stats`, {
+        signal: controller.signal
+      });
 
-    clearTimeout(timeoutId);
+      clearTimeout(timeoutId);
 
-    if (!response.ok) return null;
+      if (!response.ok) return null;
 
-    const data = await response.json();
-    return data.stats as GoldenDatasetStats;
+      const data = await response.json();
+      return data.stats as GoldenDatasetStats;
+    } catch (fetchError) {
+      clearTimeout(timeoutId);
+      return null;
+    }
   } catch {
     logError('GoldenBridge', 'Failed to get golden dataset stats from both D1 and Python');
     return null;

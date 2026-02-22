@@ -263,3 +263,5 @@ You have access to Brunella's MCP tools for:
     return { ...this.config };
   }
 }
+
+export default GitHubModelsAgent;

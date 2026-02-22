@@ -1,8 +1,8 @@
 # Cloudflare Infrastructure - Master Documentation
 
 **Owner:** Brunella Core Team
-**Last Updated:** 2026-02-16
-**Status:** Active Development (CEAN: 5% complete)
+**Last Updated:** 2026-02-22
+**Status:** Production Ready — Enterprise Suite KÉSZ, D1/Vectorize/KV integrálva
 
 ---
 
@@ -32,10 +32,10 @@ A Brunella Agent System **teljes Cloudflare integrációja**, amely globális ed
 │  │ ✅ Tunnel       - Public URL for localhost               │  │
 │  │ ✅ AI Gateway   - LLM routing (@cf/meta/llama-3.1-8b)    │  │
 │  │ ✅ Browser API  - Playwright automation (siTRHomo1G_...)  │  │
-│  │ ⏳ R2 Storage   - Object storage (NOT R1 vector!)         │  │
-│  │ ⏳ D1 Database  - SQLite edge database (CEAN tasks)       │  │
-│  │ ⏳ KV Storage   - Key-value store (caching)               │  │
-│  │ ⏳ Vectorize    - Vector embeddings (CEAN research)       │  │
+│  │ ⏳ R2 Storage   - Object storage (credentials kész)       │  │
+│  │ ✅ D1 Database  - SQLite edge database (KÉSZ, Phase 3-4)  │  │
+│  │ ✅ KV Storage   - Key-value store (integrálva)            │  │
+│  │ ✅ Vectorize    - Vector embeddings (KÉSZ, Phase 3)       │  │
 │  │ ⏳ Durable Obj. - Stateful workers (orchestration)        │  │
 │  │ ❌ Pages        - Static site hosting (2 deployed)        │  │
 │  │ ❌ Domain       - Custom domain (nem tervezett még)       │  │

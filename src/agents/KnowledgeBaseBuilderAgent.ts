@@ -490,3 +490,5 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
     return 'other';
   }
 }
+
+export default KnowledgeBaseBuilderAgent;

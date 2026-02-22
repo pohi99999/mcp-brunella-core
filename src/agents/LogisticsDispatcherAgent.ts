@@ -392,3 +392,5 @@ Automated Logistics System
     };
   }
 }
+
+export default LogisticsDispatcherAgent;

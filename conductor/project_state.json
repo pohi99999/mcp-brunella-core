@@ -1,6 +1,42 @@
 {
-  "lastUpdated": "2026-02-21T14:32:20.944Z",
+  "lastUpdated": "2026-02-22T06:00:00.065Z",
   "tracks": [
+    {
+      "id": "aider_integration_20260222",
+      "name": "aider_integration_20260222",
+      "status": "active",
+      "priority": "medium",
+      "progress": 10,
+      "assignee": "Claude + Aider (GPT-4o/Gemini)",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\aider_integration_20260222",
+      "_isArchived": false
+    },
+    {
+      "id": "bas_orchestration_chain_20260221",
+      "name": "bas_orchestration_chain_20260221",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\bas_orchestration_chain_20260221",
+      "_isArchived": false
+    },
+    {
+      "id": "bas_security_sandbox_20260221",
+      "name": "bas_security_sandbox_20260221",
+      "status": "active",
+      "priority": "high",
+      "progress": 25,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\bas_security_sandbox_20260221",
+      "_isArchived": false
+    },
     {
       "id": "cloudflare-chat-integration-20260211",
       "name": "Cloudflare Chat Integration",
@@ -42,30 +78,6 @@
         "cloudflare-chat-integration-20260211"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare-iteration-2-20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "cloudflare_browser_rendering_robotkez_20260221",
-      "name": "cloudflare_browser_rendering_robotkez_20260221",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "assignee": "DeveloperAgent + Claude",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_browser_rendering_robotkez_20260221",
-      "_isArchived": false
-    },
-    {
-      "id": "cloudflare_d1_kv_storage_20260221",
-      "name": "cloudflare_d1_kv_storage_20260221",
-      "status": "active",
-      "priority": "medium",
-      "progress": 25,
-      "assignee": "DeveloperAgent + Claude",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_d1_kv_storage_20260221",
       "_isArchived": false
     },
     {
@@ -184,7 +196,7 @@
       "name": "dashboard_v3_command_center_20260219",
       "status": "active",
       "priority": "high",
-      "progress": 35,
+      "progress": 85,
       "assignee": "DeveloperAgent + Claude",
       "tags": [],
       "dependencies": [],
@@ -331,6 +343,36 @@
       "_isArchived": false
     },
     {
+      "id": "jules_pr_integration_20260222",
+      "name": "jules_pr_integration_20260222",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "assignee": "Claude + Pohánka Péter",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\jules_pr_integration_20260222",
+      "_isArchived": false
+    },
+    {
+      "id": "logistics_vertical_20260222",
+      "name": "PohiAIPro Logistics Vertical — Brunella integráció",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 5,
+      "created": "2026-02-22",
+      "tags": [],
+      "dependencies": [
+        "TimberMatchAgent (src/agents/TimberMatchAgent.ts) — ÚJ, létrehozandó (a meglévő LogisticsDispatcherAgent parcel tracking, más domain!)",
+        "globalDb.ts — tasks tábla (most hozzáadva)",
+        "d1Adapter.ts — enterprise_events tábla (kész)",
+        "goldenDatasetBridge.ts — sikeres logistics match-ek mentése (kész)",
+        "Socket.IO — real-time shipment tracking (kész)"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\logistics_vertical_20260222",
+      "_isArchived": false
+    },
+    {
       "id": "magyar-cli-menu-system-20260211",
       "name": "Magyar CLI Menürendszer (Teljes Átírás)",
       "status": "archived",
@@ -410,6 +452,18 @@
       "_isArchived": false
     },
     {
+      "id": "test_stabilization_20260221",
+      "name": "test_stabilization_20260221",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\test_stabilization_20260221",
+      "_isArchived": false
+    },
+    {
       "id": "agent_architect_upgrade_20260205",
       "name": "Agent Architect 2.0 Meta-Ügynök",
       "status": "archived",
@@ -464,6 +518,30 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\browser_use_harvester_20260131",
+      "_isArchived": true
+    },
+    {
+      "id": "cloudflare_browser_rendering_robotkez_20260221",
+      "name": "cloudflare_browser_rendering_robotkez_20260221",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_browser_rendering_robotkez_20260221",
+      "_isArchived": true
+    },
+    {
+      "id": "cloudflare_d1_kv_storage_20260221_archived_20260222",
+      "name": "cloudflare_d1_kv_storage_20260221_archived_20260222",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_d1_kv_storage_20260221_archived_20260222",
       "_isArchived": true
     },
     {
@@ -935,10 +1013,10 @@
     }
   ],
   "stats": {
-    "total": 48,
-    "active": 3,
-    "completed": 5,
-    "archived": 25,
-    "proposed": 5
+    "total": 54,
+    "active": 5,
+    "completed": 6,
+    "archived": 27,
+    "proposed": 6
   }
 }

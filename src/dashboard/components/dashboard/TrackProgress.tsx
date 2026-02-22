@@ -13,7 +13,7 @@ import {
   type TrackTodoItem,
   type TrackTodosResponse,
 } from "@/lib/apiService";
-import { useSocket } from "@/context/SocketContext";
+import { useSystemSignal } from "@/hooks/useSystemSignal";
 import {
   ArrowsClockwise,
   ListChecks,
@@ -46,7 +46,7 @@ const getPriorityBadge = (priority?: string) => {
 };
 
 export function TrackProgressWidget() {
-  const { socket, isConnected } = useSocket();
+  const { socket, isConnected } = useSystemSignal();
 
   const [isLoadingTracks, setIsLoadingTracks] = useState(false);
   const [isLoadingTodos, setIsLoadingTodos] = useState(false);
@@ -308,9 +308,9 @@ export function TrackProgressWidget() {
                 const progress = todoState?.progress ?? track.progress;
                 const remaining = todoState
                   ? Math.max(
-                      todoState.totalCount - todoState.completedCount,
-                      0,
-                    )
+                    todoState.totalCount - todoState.completedCount,
+                    0,
+                  )
                   : null;
 
                 return (

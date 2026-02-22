@@ -122,7 +122,9 @@ export class AnalyticsService {
       });
     } catch (error) {
       // Non-critical: analytics tracking should never break the main flow
-      console.warn('Analytics tracking failed:', error);
+      const { logWarn } = await import('./utils/logger.js');
+      const message = error instanceof Error ? error.message : String(error);
+      logWarn('AnalyticsService', `Analytics tracking failed: ${message}`);
     }
   }
 

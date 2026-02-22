@@ -172,6 +172,30 @@ export class D1Adapter {
   }
 
   /**
+   * Get enterprise events without type filter
+   */
+  async getEnterpriseEvents(
+    limit = 100,
+  ): Promise<D1QueryResult<{
+    id: string;
+    type: string;
+    payload: string;
+    source_module: string;
+    priority: string;
+    status: string;
+    created_at: number;
+    processed_at: number | null;
+  }>> {
+    const sql = `
+      SELECT * FROM enterprise_events
+      ORDER BY created_at DESC
+      LIMIT ?
+    `;
+
+    return this.query(sql, [limit]);
+  }
+
+  /**
    * Insert agent task
    */
   async insertAgentTask(task: {

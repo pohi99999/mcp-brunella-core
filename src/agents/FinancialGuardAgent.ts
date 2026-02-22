@@ -634,3 +634,5 @@ export class FinancialGuardAgent extends BaseAgent {
     return vendors[Math.floor(Math.random() * vendors.length)];
   }
 }
+
+export default FinancialGuardAgent;

@@ -390,3 +390,5 @@ export class GrantHunter implements IAgent {
  * Export for registry
  */
 export const createGrantHunter = (): GrantHunter => new GrantHunter();
+
+export default GrantHunter;

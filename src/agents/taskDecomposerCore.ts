@@ -150,6 +150,37 @@ export function detectCycle(tasks: MicroTask[]): string[] | null {
   return null;
 }
 
+/**
+ * Dekompozíció + Kahn-rendezés → ChainStep[] az OrchestratorAgent számára.
+ * preview=false módban ezt hívja a TaskDecomposerAgent.
+ */
+export interface ChainStepCompact {
+  agentName: string;
+  task: string;
+}
+
+export function decomposeToChain(
+  originalTask: string,
+  kahnSortFn: (tasks: MicroTask[]) => MicroTask[],
+  opts?: { defaultAgent?: string },
+): ChainStepCompact[] {
+  const tasks = buildMicroTasks(originalTask, {
+    defaultAgent: opts?.defaultAgent ?? 'Developer',
+  });
+
+  const cycle = detectCycle(tasks);
+  if (cycle) {
+    throw new Error(`Dependency cycle: ${cycle.join(' -> ')}`);
+  }
+
+  const sorted = kahnSortFn(tasks);
+
+  return sorted.map(t => ({
+    agentName: t.agent,
+    task: t.task,
+  }));
+}
+
 export function decomposePreview(
   originalTask: string,
   opts?: { defaultAgent?: string },

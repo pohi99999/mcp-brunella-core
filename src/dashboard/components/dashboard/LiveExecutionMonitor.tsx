@@ -3,21 +3,22 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { ScrollArea } from '@/components/ui/scroll-area';
-import { 
-  CheckCircle, 
-  Circle, 
-  XCircle, 
-  StopCircle, 
-  Clock, 
+import {
+  CheckCircle,
+  Circle,
+  XCircle,
+  StopCircle,
+  Clock,
   Eye,
   ArrowRight
 } from 'lucide-react';
-import { useSocket, RobotkezStep } from '@/context/SocketContext';
+import { useSystemSignal } from '@/hooks/useSystemSignal';
+import { RobotkezStep } from '@/context/SocketContext';
 import { cn } from '@/lib/utils';
 import { toast } from 'sonner';
 
 export function LiveExecutionMonitor() {
-  const { robotkezPlan, robotkezSteps, socket } = useSocket();
+  const { robotkezPlan, robotkezSteps, socket } = useSystemSignal();
   const [selectedScreenshot, setSelectedScreenshot] = useState<string | null>(null);
 
   if (!robotkezPlan) return null;
@@ -55,11 +56,11 @@ export function LiveExecutionMonitor() {
             </CardTitle>
             <p className="text-[10px] font-mono text-zinc-500">MISSION_ID: {robotkezPlan.taskId}</p>
           </div>
-          
+
           {!isFinished && (
-            <Button 
-              variant="destructive" 
-              size="sm" 
+            <Button
+              variant="destructive"
+              size="sm"
               className="h-8 gap-2 bg-red-500/20 hover:bg-red-500 text-red-500 hover:text-white border border-red-500/30"
               onClick={handleAbort}
             >
@@ -68,7 +69,7 @@ export function LiveExecutionMonitor() {
             </Button>
           )}
         </CardHeader>
-        
+
         <CardContent className="p-4 space-y-4">
           {/* Progress Section */}
           <div className="space-y-2">
@@ -83,13 +84,13 @@ export function LiveExecutionMonitor() {
           <ScrollArea className="h-[300px] pr-4">
             <div className="space-y-3">
               {robotkezSteps.map((step, idx) => (
-                <div 
-                  key={idx} 
+                <div
+                  key={idx}
                   className={cn(
                     "flex items-start gap-3 p-3 rounded-xl border transition-all duration-300",
-                    step.status === 'working' ? "bg-primary/10 border-primary/30" : 
-                    step.status === 'completed' ? "bg-white/5 border-emerald-500/20" :
-                    "bg-black/20 border-white/5 opacity-60"
+                    step.status === 'working' ? "bg-primary/10 border-primary/30" :
+                      step.status === 'completed' ? "bg-white/5 border-emerald-500/20" :
+                        "bg-black/20 border-white/5 opacity-60"
                   )}
                 >
                   <div className="mt-0.5 shrink-0">
@@ -107,9 +108,9 @@ export function LiveExecutionMonitor() {
                     )}
                   </div>
                   {step.screenshot && (
-                    <Button 
-                      variant="ghost" 
-                      size="icon" 
+                    <Button
+                      variant="ghost"
+                      size="icon"
                       className="h-6 w-6 rounded-full hover:bg-white/10"
                       onClick={() => setSelectedScreenshot(step.screenshot || null)}
                     >
@@ -125,12 +126,12 @@ export function LiveExecutionMonitor() {
           <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-zinc-500 uppercase">
             <div className="flex items-center gap-1.5">
               <Clock size={12} />
-              <span>Est. Remaining: {Math.round((robotkezPlan.plan.estimatedDuration * (1 - progress/100)) / 1000)}s</span>
+              <span>Est. Remaining: {Math.round((robotkezPlan.plan.estimatedDuration * (1 - progress / 100)) / 1000)}s</span>
             </div>
             {isFinished && (
-              <Button 
-                variant="link" 
-                size="sm" 
+              <Button
+                variant="link"
+                size="sm"
                 className="h-auto p-0 text-[10px] text-zinc-400 hover:text-primary"
                 onClick={() => { /* Potential clear/archive logic */ }}
               >
@@ -143,14 +144,14 @@ export function LiveExecutionMonitor() {
 
       {/* Screenshot Modal/Overlay */}
       {selectedScreenshot && (
-        <div 
+        <div
           className="fixed inset-0 z-[100] bg-black/90 flex items-center justify-center p-8 animate-in fade-in duration-300"
           onClick={() => setSelectedScreenshot(null)}
         >
           <div className="relative max-w-5xl w-full max-h-full flex flex-col items-center gap-4">
-            <img 
-              src={selectedScreenshot.startsWith('data:') ? selectedScreenshot : `data:image/png;base64,${selectedScreenshot}`} 
-              alt="Step Screenshot" 
+            <img
+              src={selectedScreenshot.startsWith('data:') ? selectedScreenshot : `data:image/png;base64,${selectedScreenshot}`}
+              alt="Step Screenshot"
               className="max-w-full max-h-[85vh] rounded-lg border border-white/10 shadow-2xl"
             />
             <Button variant="outline" className="bg-white/5 border-white/10 text-white hover:bg-white/10">

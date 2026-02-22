@@ -3,11 +3,11 @@
   "type": "UI/UX & System Architecture Refactor",
   "priority": "HIGH",
   "status": "active",
-  "progress": 35,
+  "progress": 85,
   "goal": "A jelenlegi Mission Control Dashboard (v2.1) átalakítása egy teljesen moduláris, testreszabható és mély integrációval rendelkező \"Parancsnoki Központtá\". A cél, hogy a felhasználó minden háttérfolyamatot valós időben lásson és beavatkozhasson, miközben a kódháttér (wiring) egységes és karbantartható marad.",
   "assignee": "DeveloperAgent + Claude",
   "createdAt": "2026-02-19T00:00:00Z",
-  "updatedAt": "2026-02-21T13:15:00Z",
+  "updatedAt": "2026-02-22T06:30:00Z",
   "phases": [
     {
       "name": "Phase 1: A \u201eSmart Grid\u201d Architektúra (Layout & Positioning)",
@@ -26,24 +26,41 @@
     },
     {
       "name": "Phase 2: Unified Signal Bus (A \u201eBek\u00f6t\u00e9s\u201d T\u00f6k\u00e9letes\u00edt\u00e9se)",
+      "status": "completed",
       "problem": "A Socket.IO eventek \u00e9s a REST API h\u00edv\u00e1sok n\u00e9hol redund\u00e1nsak vagy nem szinkronizáltak.",
       "solution": " hozz létre egy **`useSystemSignal`** nev\u0171 k\u00f6zponti React hook-ot.",
       "function": "Ez az egyetlen hook feleljen az \u00f6sszes val\u00f3s idej\u0171 adat (Logs, AgentStatus, TaskQueue) szinkroniz\u00e1l\u00e1s\u00e1\u00e9rt. Ha a Socket megszakad, automatikusan v\u00e1ltson REST pollingra (Fallback), majd vissza. Garant\u00e1ld a \u201eSingle Source of Truth\u201d elvet a frontend \u00e1llapotkezel\u00e9s\u00e9ben (Zustand store)."
     },
     {
       "name": "Phase 3: The Process Governor (Vez\u00e9rl\u00e9s minden szinten)",
+      "status": "completed",
       "problem": "L\u00e1tjuk a feladatokat, de neh\u00e9zkes a beavatkoz\u00e1s.",
       "solution": "Fejleszd ki a **`ProcessControlWidget`** k\u00f6mponeust.",
       "function": [
         "**Live Intervenci\u00f3:** Gombok a folyamatokhoz: [PAUSE], [RESUME], [KILL], [RETRY w/ DEBUG].",
         "**M\u00e9lyf\u00far\u00e1s:** Egy folyamatra kattintva mutassa a teljes Trace-t (LangSmith/OpenTelemetry adatok vizualiz\u00e1ci\u00f3ja).",
         "**Priorit\u00e1s v\u00e1lt\u00e1s:** Drag-and-drop a Task Queue-ban a sorrend megv\u00e1ltoztat\u00e1s\u00e1hoz."
+      ],
+      "tasks": [
+        "✅ ProcessControlWidget mind a 6 akció implementálva: PAUSE, RESUME, KILL, RETRY, DEBUG RETRY, TRACE",
+        "✅ Backend API /api/tasks/retry bővítve debugMode flag támogatással",
+        "✅ AgentManager.retryTask() debug context injection",
+        "✅ TraceViewerModal komponens létrehozva (JSON trace viewer + LangSmith integration placeholder)",
+        "✅ Drag-and-drop task reordering (dnd-kit)",
+        "✅ apiService.retryTask() frissítve debug paraméterrel"
       ]
     },
     {
       "name": "Phase 4: Self-Maintenance & Health (Karbantart\u00e1s)",
+      "status": "completed",
       "solution": "Integr\u00e1lj egy **UI Test Suite**-ot a Dashboardon bel\u00fcl.",
-      "function": "Egy rejtett \u201eAdmin/Self-Check\u201d f\u00fcl, ahol gombnyom\u00e1sra lefuttathat\u00f3 egy kliens oldali diagnosztika (el\u00e9ri-e a backendet, renderel\u0151dnek-e a komponensek, v\u00e1laszolnak-e a socketek)."
+      "function": "Egy rejtett \u201eAdmin/Self-Check\u201d f\u00fcl, ahol gombnyom\u00e1sra lefuttathat\u00f3 egy kliens oldali diagnosztika (el\u00e9ri-e a backendet, renderel\u0151dnek-e a komponensek, v\u00e1laszolnak-e a socketek).",
+      "tasks": [
+        "✅ AdminSelfCheckWidget implementálva",
+        "✅ Backend health check integrálva (/api/system/health)",
+        "✅ CLI brunella dashboard status parancs integrálva",
+        "✅ Dashboard komponens render check"
+      ]
     }
   ],
   "expectedOutput": [

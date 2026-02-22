@@ -1,5 +1,12 @@
 @echo off
 setlocal
+cd /d "%~dp0"
+if not exist "src\cli.ts" (
+    echo [HIBA] Ez a start.bat nem a Brunella repo mappabol fut.
+    echo Tipp: F:\mcp-brunella-core\start.bat
+    pause
+    exit /b 1
+)
 echo [Brunella Core] Rendszerinditas...
 
 :: 1. Ollama ellenorzes es inditas
