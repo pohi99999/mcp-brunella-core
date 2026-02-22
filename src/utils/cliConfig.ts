@@ -177,6 +177,7 @@ function parseEnvBool(v: string | undefined): boolean {
 }
 
 function getSystemDefaultsPath(): string | null {
+  if (!isNodeEnvironment()) return null;
   const env = process.env.BRUNELLA_CLI_SYSTEM_DEFAULTS_PATH;
   if (env) return env;
   const plat = process.platform;
@@ -186,6 +187,7 @@ function getSystemDefaultsPath(): string | null {
 }
 
 function getSystemSettingsPath(): string | null {
+  if (!isNodeEnvironment()) return null;
   const env = process.env.BRUNELLA_CLI_SYSTEM_SETTINGS_PATH;
   if (env) return env;
   const plat = process.platform;
@@ -216,18 +218,30 @@ function migrateLegacyToNested(flat: Record<string, unknown>): Record<string, un
   return out;
 }
 
+function isNodeEnvironment(): boolean {
+  return typeof process !== 'undefined' && !!process.versions?.node;
+}
+
 export class ConfigManager {
-  private userConfigPath: string;
-  private projectConfigPath: string | null;
+  private userConfigPath: string = '';
+  private projectConfigPath: string | null = null;
   private settings: CliSettings;
   private cwd: string;
 
-  constructor(cwd: string = process.cwd()) {
-    this.cwd = cwd;
+  constructor(cwd?: string) {
+    if (!isNodeEnvironment()) {
+      this.cwd = cwd || '.';
+      this.settings = { ...DEFAULT_LEGACY, ...DEFAULT_NESTED } as CliSettings;
+      return;
+    }
+
+    this.cwd = cwd || process.cwd();
     const homeDir = os.homedir();
     const configDir = path.join(homeDir, '.brunella');
     if (!fs.existsSync(configDir)) {
-      fs.mkdirSync(configDir, { recursive: true });
+      try {
+        fs.mkdirSync(configDir, { recursive: true });
+      } catch { /* best effort */ }
     }
     this.userConfigPath = path.join(configDir, 'settings.json');
     this.projectConfigPath = this.findProjectSettings();
@@ -235,21 +249,25 @@ export class ConfigManager {
   }
 
   private findProjectSettings(): string | null {
+    if (!isNodeEnvironment()) return null;
     let dir = this.cwd;
-    const projectFile = path.join(dir, '.brunella', 'settings.json');
-    if (fs.existsSync(projectFile)) return projectFile;
-    const root = path.parse(dir).root;
-    while (dir !== root) {
-      dir = path.dirname(dir);
-      const p = path.join(dir, '.brunella', 'settings.json');
-      if (fs.existsSync(p)) return p;
-    }
+    try {
+      const projectFile = path.join(dir, '.brunella', 'settings.json');
+      if (fs.existsSync(projectFile)) return projectFile;
+      const root = path.parse(dir).root;
+      while (dir !== root) {
+        dir = path.dirname(dir);
+        const p = path.join(dir, '.brunella', 'settings.json');
+        if (fs.existsSync(p)) return p;
+      }
+    } catch { /* best effort */ }
     return null;
   }
 
   private loadJson(filePath: string): Record<string, unknown> {
-    if (!fs.existsSync(filePath)) return {};
+    if (!isNodeEnvironment()) return {};
     try {
+      if (!fs.existsSync(filePath)) return {};
       const data = fs.readFileSync(filePath, 'utf-8');
       return JSON.parse(data) as Record<string, unknown>;
     } catch {
@@ -259,6 +277,8 @@ export class ConfigManager {
 
   private loadSettings(): CliSettings {
     let base = { ...DEFAULT_LEGACY, ...DEFAULT_NESTED } as CliSettings;
+
+    if (!isNodeEnvironment()) return base;
 
     const sysDefaultsPath = getSystemDefaultsPath();
     if (sysDefaultsPath && fs.existsSync(sysDefaultsPath)) {
@@ -336,9 +356,12 @@ export class ConfigManager {
   }
 
   private saveUser(): void {
-    const dir = path.dirname(this.userConfigPath);
-    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(this.userConfigPath, JSON.stringify(this.settings, null, 2), 'utf-8');
+    if (!isNodeEnvironment() || !this.userConfigPath) return;
+    try {
+      const dir = path.dirname(this.userConfigPath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(this.userConfigPath, JSON.stringify(this.settings, null, 2), 'utf-8');
+    } catch { /* best effort */ }
   }
 
   get userSettingsPath(): string {
@@ -355,15 +378,17 @@ let _instance: ConfigManager | null = null;
 
 /** Singleton for default cwd. Use ConfigManager constructor when cwd matters. */
 export function getConfigManager(cwd?: string): ConfigManager {
-  // Test environment isolation: return fresh instance every time
-  const isNode = typeof process !== 'undefined' && !!process.versions?.node;
+  // Check for Node environment safety
+  const isNode = isNodeEnvironment();
+
+  // Test environment isolation: fresh instance every time
   if (isNode && process.env?.NODE_ENV === 'test') {
     _instance = new ConfigManager(cwd);
     return _instance;
   }
 
-  // Fallback if not in Node (e.g. during build-time bundling for Worker)
   if (!isNode) {
+    // Fallback if not in Node (e.g. during build-time bundling for Worker)
     if (!_instance || cwd !== undefined) {
       _instance = new ConfigManager(cwd);
     }
@@ -384,4 +409,25 @@ export function getConfigManager(cwd?: string): ConfigManager {
   return instance;
 }
 
-export const configManager = getConfigManager();
+/** Proxy to avoid top-level Node API calls during module import/build */
+class ConfigManagerProxy {
+  private _instance: ConfigManager | undefined;
+
+  private get instance(): ConfigManager {
+    if (!this._instance) {
+      this._instance = getConfigManager();
+    }
+    return this._instance;
+  }
+
+  get<K extends keyof CliSettings>(key: K): CliSettings[K];
+  get(key: string): unknown;
+  get(key: string): unknown { return this.instance.get(key); }
+  set(key: string, value: unknown): void { this.instance.set(key, value); }
+  getAll(): CliSettings { return this.instance.getAll(); }
+  setAll(updates: Partial<CliSettings>): void { this.instance.setAll(updates); }
+  get userSettingsPath(): string { return this.instance.userSettingsPath; }
+  get projectSettingsPath(): string | null { return this.instance.projectSettingsPath; }
+}
+
+export const configManager = new ConfigManagerProxy() as unknown as ConfigManager;
