@@ -160,8 +160,9 @@ export function ProcessControlWidget() {
           return;
       }
       refetchData(); // Refresh tasks after action
-    } catch (error: any) {
-      toast.error(`Sikertelen akció ${action} a feladaton ${taskId}: ${error.message}`);
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : String(error);
+      toast.error(`Sikertelen akció ${action} a feladaton ${taskId}: ${errorMessage}`);
     }
   };
 
@@ -184,8 +185,9 @@ export function ProcessControlWidget() {
           const newOrderIds = newSortedTasks.map(task => task.id);
           await updateTaskOrder(newOrderIds); // This API call needs to be implemented
           toast.success("Feladatok sorrendje frissítve.");
-        } catch (error: any) {
-          toast.error(`Sikertelen sorrendfrissítés: ${error.message}`);
+        } catch (error) {
+          const errorMessage = error instanceof Error ? error.message : String(error);
+          toast.error(`Sikertelen sorrendfrissítés: ${errorMessage}`);
           // Revert UI on error
           setSortedTasks(tasks.filter(task => task.status === "running" || task.status === "pending" || task.status === "paused"));
         }

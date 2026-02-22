@@ -69,9 +69,10 @@ export function useSystemSignal(options?: UseSystemSignalOptions) {
       if (devMetricsRes.status === "fulfilled") setDeveloperMetrics(devMetricsRes.value);
       else setError(devMetricsRes.reason.message);
 
-    } catch (err: any) {
-      setError(err.message || "Adatlekérdezési hiba");
-      addLog({ message: `REST adatlekérdezési hiba: ${err.message}`, type: "error", source: "SystemSignal" });
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : String(err);
+      setError(msg || "Adatlekérdezési hiba");
+      addLog({ message: `REST adatlekérdezési hiba: ${msg}`, type: "error", source: "SystemSignal" });
     } finally {
       setLoading(false);
     }
@@ -142,7 +143,7 @@ export function useSystemSignal(options?: UseSystemSignalOptions) {
 
     socket.on(
       "agent:chatter",
-      (data: { sender: string; receiver?: string; message: string; context?: any; timestamp?: number }) => {
+      (data: { sender: string; receiver?: string; message: string; context?: unknown; timestamp?: number }) => {
         addChatter({ ...data, timestamp: data.timestamp ?? Date.now() });
       },
     );
