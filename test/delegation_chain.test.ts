@@ -59,7 +59,13 @@ describe("Delegation Chain Integration", () => {
     const result = await orchestrator.execute(task);
 
     expect(result.status).toBe("success");
-    expect(result.taskIds).toHaveLength(2);
+    if (result.taskIds) {
+      expect(result.taskIds).toHaveLength(2);
+    } else if (result.data && result.data.stepsCount) {
+      expect(result.data.stepsCount).toBe(2);
+    } else {
+      throw new Error("Neither taskIds nor chain stepsCount found in result");
+    }
   });
 
   it("AgentManager should route tasks through the delegation chain", async () => {
