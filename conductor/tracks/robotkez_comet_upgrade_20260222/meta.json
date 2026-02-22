@@ -1,0 +1,107 @@
+{
+  "id": "robotkez_comet_upgrade_20260222",
+  "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
+  "status": "PROPOSED",
+  "priority": "HIGH",
+  "created": "2026-02-22",
+  "owner": "Pohánka Péter",
+  "progress": 10,
+  "description": "A meglévő RobotkezV2Agent-et Perplexity Comet-szintűre fejlesztjük: Planner→Actor→Critic háromrétegű multi-agent architektúrával, önjavítással, vision-alapú selector generálással, memóriával és cross-tab kezeléssel. Az alap (Playwright + Browser-Use) már megvan — csak a magasabb szintű intelligencia hiányzik.",
+  "existing_assets": {
+    "python": [
+      "myai/browser_worker.py — Playwright async, JSON extraction, screenshot",
+      "myai/server.py — FastAPI (:8000), /execute endpoint",
+      "myai/pydantic_models.py — BrowserTask, BrowserResult modellek"
+    ],
+    "typescript": [
+      "src/agents/RobotkezV2Agent.ts — Agent wrapper, Browser-Use integráció",
+      "src/core/llm_client.ts — Multi-provider LLM (GitHub Models GPT-4o, Gemini, Ollama)"
+    ],
+    "dependencies": [
+      "playwright ✅ (már telepítve)",
+      "browser-use ✅ (már telepítve)",
+      "pydantic ✅",
+      "fastapi ✅",
+      "GITHUB_PAT ✅ (GPT-4o via GitHub Models API)"
+    ]
+  },
+  "new_components": {
+    "python": [
+      "myai/agents/comet/planner.py — TaskPlanner: feladat→lépéslista",
+      "myai/agents/comet/actor.py — BrowserActor: lépés végrehajtás Playwright-tel",
+      "myai/agents/comet/critic.py — CriticAgent: screenshot+DOM → siker/hiba értékelés",
+      "myai/agents/comet/memory.py — ActionMemory: SQLite alapú akció history",
+      "myai/agents/comet/orchestrator.py — CometOrchestrator: Planner→Actor→Critic loop"
+    ],
+    "typescript": [
+      "src/agents/CometBrowserAgent.ts — Brunella-ba integrált wrapper"
+    ]
+  },
+  "llm_strategy": {
+    "planner": "GitHub Models GPT-4o (GITHUB_PAT) — komplex feladatlebontás",
+    "critic": "Gemini Flash (gyors, olcsó screenshot elemzés)",
+    "fallback": "Ollama qwen2.5-coder:7b — ha nincs internet / budget=0",
+    "vision": "GPT-4o vision — selector generálás screenshot-ból"
+  },
+  "phases": [
+    {
+      "phase": 1,
+      "name": "Foundation — Planner + Actor",
+      "status": "PENDING",
+      "duration": "~4 óra",
+      "tasks": [
+        "CometOrchestrator alap struktúra (fájlok, import-ok)",
+        "TaskPlanner: természetes nyelv → JSON lépéslista (GPT-4o)",
+        "BrowserActor: lépések végrehajtása meglévő browser_worker.py-ra építve",
+        "Alap loop: plan → execute → result"
+      ]
+    },
+    {
+      "phase": 2,
+      "name": "Self-Correction — Critic + Retry",
+      "status": "PENDING",
+      "duration": "~3 óra",
+      "tasks": [
+        "CriticAgent: screenshot → 'sikeres?' értékelés (Gemini vision)",
+        "Retry loop: max 3 kísérlet, minden körben új plan",
+        "Selector regenerálás hiba esetén (DOM dump → GPT-4o → új selector)",
+        "Hibakód map: CAPTCHA / ELEMENT_NOT_FOUND / TIMEOUT"
+      ]
+    },
+    {
+      "phase": 3,
+      "name": "Memory + Cross-Tab",
+      "status": "PENDING",
+      "duration": "~3 óra",
+      "tasks": [
+        "ActionMemory SQLite: korábban sikeres lépések tárolása",
+        "Memory-alapú hint: 'Múltkor ennél a site-nál ez a selector működött'",
+        "Multi-tab kezelés: BrowserContext több oldalra",
+        "Cookie / session persistence"
+      ]
+    },
+    {
+      "phase": 4,
+      "name": "Brunella integráció + Demo",
+      "status": "PENDING",
+      "duration": "~2 óra",
+      "tasks": [
+        "CometBrowserAgent.ts: Brunella IAgent interfész",
+        "Dashboard: RobotkezV2Chat widget frissítés (lépéslog megjelenítés)",
+        "Demo task: 'Keresd meg az elektromos autókat mobile.de-n' end-to-end",
+        "Golden Dataset: sikeres browse session-ök mentése"
+      ]
+    }
+  ],
+  "success_criteria": [
+    "Természetes nyelvű task → automatikus végrehajtás emberi közbeavatkozás nélkül",
+    "CAPTCHA helyzetben graceful fallback (nem crash, hanem logolt skip)",
+    "80%+ success rate 10 ismétlés-teszten (google keresés, form kitöltés, adat kinyerés)",
+    "Critic 3 próbálkozásból sikeresen javít legalább 1 hibás esetben",
+    "npm test PASS, myai FastAPI HealthCheck OK"
+  ],
+  "comparison": {
+    "before": "RobotkezV2: 1 lépés, nincs önjavítás, fix selector, CAPTCHA-nál megáll",
+    "after": "Comet-szint: multi-lépés plan, önjavító critic, vision selector, 3x retry, memória"
+  }
+}
