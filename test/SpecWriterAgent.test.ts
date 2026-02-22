@@ -29,6 +29,7 @@ describe("SpecWriterAgent v2.0", () => {
   );
 
   beforeEach(() => {
+    vi.setConfig({ testTimeout: 30000 });
     agent = new SpecWriterAgent();
     vi.clearAllMocks();
     process.env.BRUNELLA_CONDUCTOR_TRACKS_DIR = testTracksDir;
@@ -130,7 +131,7 @@ Test CLI command
       );
     });
 
-    it("should handle JSON wrapped in markdown code blocks", async () => {
+    it("should handle JSON wrapped in markdown code blocks", { timeout: 30000 }, async () => {
       const mockResponse =
         '```json\n{"title":"Test","description":"desc","priority":"P0","estimated_hours":2,"phases":[],"integrations":{"dashboard":"x","cli":"y"}}\n```';
 

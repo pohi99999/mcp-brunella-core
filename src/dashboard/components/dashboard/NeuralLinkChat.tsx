@@ -489,12 +489,14 @@ export function NeuralLinkChat() {
               }
               className="min-h-[60px] bg-zinc-900 border-zinc-800 resize-none"
               disabled={isLoading}
+              data-testid="neural-chat-input"
             />
             <Button
               onClick={send}
               disabled={!input.trim() || isLoading}
               className="bg-emerald-600 hover:bg-emerald-500 shrink-0"
               aria-label="Send message"
+              data-testid="neural-chat-send-button"
             >
               <PaperPlaneRight size={18} />
             </Button>

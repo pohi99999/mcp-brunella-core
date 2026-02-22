@@ -41,7 +41,7 @@ describe('Health Check Script', () => {
             return Promise.reject(new Error('Unknown URL'));
         });
 
-        const { runHealthCheck } = await import('../scripts/health_check.js');
+        const { runHealthCheck } = await import('../scripts/health_check.ts');
         const report = await runHealthCheck();
 
         expect(report).toBeDefined();
@@ -59,7 +59,7 @@ describe('Health Check Script', () => {
             return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
         });
 
-        const { runHealthCheck } = await import('../scripts/health_check.js');
+        const { runHealthCheck } = await import('../scripts/health_check.ts');
         const report = await runHealthCheck();
 
         const ollamaCheck = report.checks.find((c: { name: string }) => c.name === 'Ollama');
@@ -79,7 +79,7 @@ describe('Health Check Script', () => {
             return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
         });
 
-        const { runHealthCheck } = await import('../scripts/health_check.js');
+        const { runHealthCheck } = await import('../scripts/health_check.ts');
         const report = await runHealthCheck();
 
         const ollamaCheck = report.checks.find((c: { name: string }) => c.name === 'Ollama');
@@ -88,7 +88,7 @@ describe('Health Check Script', () => {
     });
 
     it('should check build freshness', async () => {
-        const { runHealthCheck } = await import('../scripts/health_check.js');
+        const { runHealthCheck } = await import('../scripts/health_check.ts');
         const report = await runHealthCheck();
 
         const buildCheck = report.checks.find((c: { name: string }) => c.name === 'Build');
@@ -99,7 +99,7 @@ describe('Health Check Script', () => {
     it('should check API secrets', async () => {
         mockFetch.mockResolvedValue({ ok: true, json: () => Promise.resolve({}) });
 
-        const { runHealthCheck } = await import('../scripts/health_check.js');
+        const { runHealthCheck } = await import('../scripts/health_check.ts');
         const report = await runHealthCheck();
 
         const secretsCheck = report.checks.find((c: { name: string }) => c.name === 'API Kulcsok');
@@ -109,7 +109,7 @@ describe('Health Check Script', () => {
     it('should report overall unhealthy when critical checks fail', async () => {
         mockFetch.mockRejectedValue(new Error('Network error'));
 
-        const { runHealthCheck } = await import('../scripts/health_check.js');
+        const { runHealthCheck } = await import('../scripts/health_check.ts');
         const report = await runHealthCheck();
 
         expect(report.failCount).toBeGreaterThan(0);
