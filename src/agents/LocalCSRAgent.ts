@@ -457,3 +457,5 @@ export class LocalCSRAgent extends BaseAgent {
     };
   }
 }
+
+export default LocalCSRAgent;

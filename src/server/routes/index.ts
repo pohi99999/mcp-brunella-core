@@ -25,6 +25,7 @@ import { createTTSRoutes } from "./tts.js";
 import { createRecommendationRoutes } from "./recommendation.js";
 import { createMachinesRouter } from "./machines.js";
 import { createEnterpriseRouter, createEnterpriseAnalyticsRouter } from "./enterprise.js";
+import { createSystemArchitectureRouter } from "./system.js";
 
 export {
   createHealthRoutes,
@@ -51,6 +52,7 @@ export {
   createTTSRoutes,
   createEnterpriseRouter,
   createEnterpriseAnalyticsRouter,
+  createSystemArchitectureRouter,
 };
 
 /**
@@ -86,6 +88,7 @@ export function createV1Router(): Router {
   router.use("/machines", createMachinesRouter());
   router.use("/enterprise", createEnterpriseRouter());
   router.use("/enterprise/analytics", createEnterpriseAnalyticsRouter());
+  router.use("/system", createSystemArchitectureRouter());
 
   return router;
 }

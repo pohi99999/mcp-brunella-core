@@ -489,6 +489,7 @@ async function systemMenu() {
         message: '🔧 Rendszer & Karbantartás:',
         choices: [
             { name: '🩺  Brunella Health Check (Mélyszkennelés)', value: 'health' },
+            { name: '🏗️   System Architecture Status (4 réteg)', value: 'arch' },
             { name: '🧰  MCP Eszközök listázása', value: 'tools' },
             { name: '🐍  Python Interpreter indítása', value: 'python' },
             { name: '🛠️   Rendszer logok megtekintése', value: 'logs' },
@@ -499,7 +500,34 @@ async function systemMenu() {
 
     if (action === BACK) return;
 
-    if (action === 'health') {
+    if (action === 'arch') {
+        console.log(chalk.bold('\n🏗️  System Architecture Status lekérdezése...\n'));
+        try {
+            const port = process.env.PORT ?? '3000';
+            const resp = await fetch(`http://localhost:${port}/api/v1/system/architecture-status`);
+            if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
+            const d = await resp.json() as Record<string, Record<string, unknown>>;
+            const layers = ['ingestion', 'knowledge', 'orchestration', 'security'] as const;
+            for (const layer of layers) {
+                const info = d[layer] as Record<string, unknown>;
+                const status = String(info?.status ?? '?');
+                const isOk = status === 'healthy' || status === 'hardened';
+                console.log(
+                    chalk.bold((isOk ? chalk.green('[OK] ') : chalk.red('[!!] ')) + layer.toUpperCase()) +
+                    ' — ' + (isOk ? chalk.green(status) : chalk.red(status))
+                );
+                for (const [k, v] of Object.entries(info)) {
+                    if (k !== 'status') {
+                        console.log(`     ${chalk.dim(k)}: ${chalk.cyan(String(v))}`);
+                    }
+                }
+            }
+        } catch (e: unknown) {
+            console.log(chalk.red(`Hiba: ${e instanceof Error ? e.message : String(e)}`));
+            console.log(chalk.dim('(Ellenőrizd, hogy fut-e a szerver: npm run dev)'));
+        }
+        await pause();
+    } else if (action === 'health') {
         console.log(chalk.bold("\n🏥 Rendszer Diagnosztika futtatása..."));
         const { execSync } = await import('child_process');
         try {

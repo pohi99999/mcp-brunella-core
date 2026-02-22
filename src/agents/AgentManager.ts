@@ -1399,12 +1399,15 @@ export class AgentManager extends EventEmitter {
     return true;
   }
 
-  async retryTask(taskId: number): Promise<boolean> {
+  async retryTask(taskId: number, debugMode = false): Promise<boolean> {
     const task = this.taskQueue.find((t) => t.id === taskId);
     if (!task) return false;
     task.status = "pending";
     task.startedAt = undefined;
-    await updateTaskStatus(taskId, "pending", "Retried by user");
+    if (debugMode) {
+      task.context = { ...task.context, debugMode: true, verboseLogging: true };
+    }
+    await updateTaskStatus(taskId, "pending", debugMode ? "Retried with debug mode" : "Retried by user");
     return true;
   }
 

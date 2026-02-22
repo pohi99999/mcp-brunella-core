@@ -27,6 +27,20 @@ export interface AgentHandoff {
     contextUpdates?: Record<string, unknown>;
 }
 
+// Chain Pipeline Types (bas_orchestration_chain_20260221)
+export interface ChainStep {
+  agentName: string;
+  task: string;
+  dependsOn?: number; // lépés index (0-based), amelyre ez a lépés vár
+}
+
+export interface ChainContext {
+  steps: ChainStep[];
+  currentStep: number;          // jelenlegi lépés indexe
+  accumulated: AgentResponse[]; // minden eddigi lépés eredménye
+  metadata: Record<string, unknown>;
+}
+
 // Standard Agent Response
 export interface AgentResponse {
     success?: boolean; // Legacy support

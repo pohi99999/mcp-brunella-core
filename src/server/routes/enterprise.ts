@@ -317,13 +317,10 @@ export function createEnterpriseAnalyticsRouter(): Router {
       // Fetch from D1
       const limitNum = parseInt(limit as string) || 100;
       const daysNum = parseInt(days as string) || 7;
-      
-      // getEnterpriseEventsByType takes (type, limit) - no days parameter
-      // We'll need to filter by date manually
-      const eventsResult = await d1Adapter.getEnterpriseEventsByType(
-        type as string,
-        limitNum * 2 // Fetch more to filter
-      );
+
+      const eventsResult = typeof type === 'string' && type.length > 0
+        ? await d1Adapter.getEnterpriseEventsByType(type, limitNum * 2)
+        : await d1Adapter.getEnterpriseEvents(limitNum * 2);
 
       const events = eventsResult.results || [];
       
@@ -366,9 +363,8 @@ export function createEnterpriseAnalyticsRouter(): Router {
         });
       }
 
-      // Get all event types with high limit
-      // Note: getEnterpriseEventsByType takes (type, limit) - we pass undefined for all types
-      const eventsResult = await d1Adapter.getEnterpriseEventsByType('all_types_query', 10000);
+      // Get all recent events with high limit
+      const eventsResult = await d1Adapter.getEnterpriseEvents(10000);
       const events = eventsResult.results || [];
 
       // Calculate statistics

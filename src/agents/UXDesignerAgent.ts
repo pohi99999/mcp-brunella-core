@@ -266,3 +266,5 @@ export class UXDesignerAgent implements IAgent {
     }
   }
 }
+
+export default UXDesignerAgent;

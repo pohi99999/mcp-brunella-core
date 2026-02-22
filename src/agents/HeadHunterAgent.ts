@@ -395,3 +395,5 @@ export class HeadHunterAgent implements IAgent {
     };
   }
 }
+
+export default HeadHunterAgent;

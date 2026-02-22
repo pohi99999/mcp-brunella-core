@@ -1,5 +1,6 @@
 import { BaseAgent, type AgentContext, type AgentResult } from "./BaseAgent.js";
-import { decomposePreview } from "./taskDecomposerCore.js";
+import { decomposePreview, decomposeToChain } from "./taskDecomposerCore.js";
+import { kahnSort } from "../utils/dagSort.js";
 import { logError, setAgentStatus } from "../utils/logger.js";
 
 export class TaskDecomposerAgent extends BaseAgent {
@@ -15,6 +16,9 @@ export class TaskDecomposerAgent extends BaseAgent {
       typeof context.defaultAgent === "string" && context.defaultAgent.trim()
         ? context.defaultAgent.trim()
         : "Developer";
+    // preview=false → ChainStep[] visszaadása az OrchestratorAgent számára
+    const preview = context.preview !== false;
+
     setAgentStatus(this.name, "working", task.slice(0, 60) || "decompose");
 
     try {
@@ -26,9 +30,18 @@ export class TaskDecomposerAgent extends BaseAgent {
         };
       }
 
-      // Iteration 1: preview-only (no execution)
-      const result = decomposePreview(task, { defaultAgent });
+      if (!preview) {
+        // Execution mode: Kahn-rendezett ChainStep[] visszaadása
+        const chainSteps = decomposeToChain(task, kahnSort, { defaultAgent });
+        return {
+          success: true,
+          message: `Lánc dekompozíció kész (${chainSteps.length} lépés, Kahn-rendezett).`,
+          data: { chainSteps, count: chainSteps.length },
+        };
+      }
 
+      // Preview mode (default): DecompositionResult visszaadása
+      const result = decomposePreview(task, { defaultAgent });
       return {
         success: true,
         message: `Dekompozíció elkészült (${result.tasks.length} mikro-task).`,

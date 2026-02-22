@@ -9,6 +9,12 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
 
+// Mock getD1Adapter
+vi.mock('../src/utils/globalDb.js', () => ({
+  getD1Adapter: vi.fn()
+}));
+
+import { getD1Adapter } from '../src/utils/globalDb.js';
 import {
   saveGoldenSample,
   getGoldenStats,
@@ -101,6 +107,11 @@ describe('goldenDatasetBridge', () => {
 
   describe('getGoldenStats', () => {
     it('should return stats from Python API', async () => {
+      // Mock D1 adapter to fail so it falls back to Python
+      vi.mocked(getD1Adapter).mockReturnValueOnce({
+        getAllGoldenSamples: vi.fn().mockRejectedValue(new Error('D1 error'))
+      } as any);
+
       mockFetch.mockResolvedValueOnce({
         ok: true,
         json: async () => ({ stats: { totalSamples: 42, newSinceLastTraining: 10 } })
@@ -112,6 +123,11 @@ describe('goldenDatasetBridge', () => {
     });
 
     it('should return null on API failure', async () => {
+      // Mock D1 adapter to fail so it falls back to Python
+      vi.mocked(getD1Adapter).mockReturnValueOnce({
+        getAllGoldenSamples: vi.fn().mockRejectedValue(new Error('D1 error'))
+      } as any);
+
       mockFetch.mockRejectedValueOnce(new Error('timeout'));
 
       const stats = await getGoldenStats();

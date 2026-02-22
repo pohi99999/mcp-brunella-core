@@ -481,3 +481,5 @@ export class KnowledgeBuilder implements IAgent {
     return results.sort((a, b) => b.relevanceScore - a.relevanceScore);
   }
 }
+
+export default KnowledgeBuilder;

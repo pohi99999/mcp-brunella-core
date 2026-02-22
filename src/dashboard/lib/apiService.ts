@@ -477,11 +477,11 @@ export async function cancelTask(taskId: number): Promise<void> {
   if (!response.ok) throw new Error(data.error || "Task cancel failed");
 }
 
-export async function retryTask(taskId: number): Promise<void> {
+export async function retryTask(taskId: number, debugMode = false): Promise<void> {
   const response = await fetchWithTimeout(`${API_BASE}/api/tasks/retry`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ taskId }),
+    body: JSON.stringify({ taskId, debugMode }),
   });
   const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
     error: `HTTP ${response.status}`,
@@ -1604,4 +1604,45 @@ export async function getActivityFeed(
   if (!response.ok) throw new Error(`Activity feed: HTTP ${response.status}`);
   const data = await safeJson<{ activities: ActivityFeedItem[] }>(response);
   return data.activities || [];
+}
+
+/**
+ * System Architecture Status API
+ * Track: bas_orchestration_chain_20260221 / Phase 3
+ */
+export interface ArchitectureStatus {
+  timestamp: string;
+  ingestion: {
+    lancedbRows: number;
+    status: 'healthy' | 'empty';
+  };
+  knowledge: {
+    sqliteTasksPending: number;
+    sqliteTasksDone: number;
+    sqliteTasksFailed: number;
+    status: 'healthy' | 'degraded';
+  };
+  orchestration: {
+    totalAgents: number;
+    activeAgents: number;
+    idleAgents: number;
+    chainEnabled: boolean;
+    status: 'healthy' | 'degraded';
+  };
+  security: {
+    sandboxEnabled: boolean;
+    guardrailsEnabled: boolean;
+    goldenSamples: number;
+    status: 'hardened' | 'basic';
+  };
+}
+
+export async function getArchitectureStatus(): Promise<ArchitectureStatus> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/system/architecture-status`,
+    {},
+    10000,
+  );
+  if (!response.ok) throw new Error(`Architecture status: HTTP ${response.status}`);
+  return safeJson<ArchitectureStatus>(response);
 }

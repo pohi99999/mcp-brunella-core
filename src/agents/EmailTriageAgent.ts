@@ -407,3 +407,5 @@ Megkaptuk üzenetét. Kollégánk hamarosan válaszol.
     return templates[templateName] || 'Köszönjük az üzenetet!';
   }
 }
+
+export default EmailTriageAgent;

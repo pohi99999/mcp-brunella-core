@@ -14,7 +14,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { getRegistry, type RegistryAgent } from '@/lib/apiService';
-import { useSocket } from '@/context/SocketContext';
+import { useSystemSignal } from '@/hooks/useSystemSignal';
 import {
     Robot,
     Brain,
@@ -40,7 +40,7 @@ const AGENT_ICONS: Record<string, any> = {
 export function AgentGraph() {
     const [nodes, setNodes, onNodesChange] = useNodesState([]);
     const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-    const { agents: liveAgents } = useSocket();
+    const { agents: liveAgents } = useSystemSignal();
 
     const updateGraph = useCallback(async () => {
         try {

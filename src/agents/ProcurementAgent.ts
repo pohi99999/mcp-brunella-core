@@ -562,3 +562,5 @@ Kérem, jelezzen vissza az árazási lehetőségekkel kapcsolatban.
     return `contact@${supplier.toLowerCase().replace(/\s+/g, '')}.com`;
   }
 }
+
+export default ProcurementAgent;

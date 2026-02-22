@@ -2,11 +2,17 @@ import {
   createContext,
   useContext,
   useEffect,
-  useReducer,
   useState,
   type ReactNode,
 } from "react";
 import { io, type Socket } from "socket.io-client";
+import { useSystemSignalStore } from "../store/systemSignalStore";
+import {
+  getTasks,
+  getTaskStats,
+  checkHealth,
+  getDeveloperMetrics,
+} from "../lib/apiService";
 
 export type LogType = "info" | "error" | "success";
 
@@ -52,103 +58,7 @@ export interface ChatterEntry {
   timestamp: number;
 }
 
-interface SocketState {
-  isConnected: boolean;
-  logs: LogEntry[];
-  agents: Map<string, AgentStatusEntry>;
-  chatter: ChatterEntry[];
-  robotkezPlan: RobotkezPlan | null;
-  robotkezSteps: RobotkezStep[];
-}
-
-type SocketAction =
-  | { type: "connect" }
-  | { type: "disconnect" }
-  | { type: "log"; payload: Omit<LogEntry, "id"> }
-  | { type: "chatter"; payload: Omit<ChatterEntry, "id"> }
-  | {
-      type: "agent_update";
-      payload: {
-        agentName: string;
-        status: AgentStatusPayload;
-        taskDescription?: string;
-      };
-    }
-  | { type: "robotkez_plan"; payload: RobotkezPlan }
-  | { type: "robotkez_step"; payload: Partial<RobotkezStep> & { index: number } }
-  | { type: "robotkez_clear" };
-
-const MAX_LOGS = 200;
-const MAX_CHATTER = 100;
-let logIdCounter = 0;
-let chatterIdCounter = 0;
-
-function socketReducer(state: SocketState, action: SocketAction): SocketState {
-  switch (action.type) {
-    case "connect":
-      return { ...state, isConnected: true };
-    case "disconnect":
-      return { ...state, isConnected: false };
-    case "log": {
-      const newLog: LogEntry = {
-        ...action.payload,
-        id: `log-${++logIdCounter}`,
-      };
-      const logs = [newLog, ...state.logs].slice(0, MAX_LOGS);
-      return { ...state, logs };
-    }
-    case "chatter": {
-      const newChatter: ChatterEntry = {
-        ...action.payload,
-        id: `chat-${++chatterIdCounter}`,
-      };
-      const chatter = [newChatter, ...state.chatter].slice(0, MAX_CHATTER);
-      return { ...state, chatter };
-    }
-    case "agent_update": {
-      const { agentName, status, taskDescription } = action.payload;
-      const agents = new Map(state.agents);
-      agents.set(agentName, {
-        name: agentName,
-        status,
-        taskDescription,
-        lastUpdated: Date.now(),
-      });
-      return { ...state, agents };
-    }
-    case "robotkez_plan": {
-      return { 
-        ...state, 
-        robotkezPlan: action.payload,
-        robotkezSteps: action.payload.plan.plan.map((s, i) => ({ ...s, index: i, status: 'pending' }))
-      };
-    }
-    case "robotkez_step": {
-      const steps = [...state.robotkezSteps];
-      const idx = action.payload.index;
-      if (steps[idx]) {
-        steps[idx] = { ...steps[idx], ...action.payload };
-      }
-      return { ...state, robotkezSteps: steps };
-    }
-    case "robotkez_clear": {
-      return { ...state, robotkezPlan: null, robotkezSteps: [] };
-    }
-    default:
-      return state;
-  }
-}
-
-const initialState: SocketState = {
-  isConnected: false,
-  logs: [],
-  agents: new Map(),
-  chatter: [],
-  robotkezPlan: null,
-  robotkezSteps: []
-};
-
-interface SocketContextValue extends SocketState {
+interface SocketContextValue {
   socket: Socket | null;
 }
 
@@ -157,8 +67,67 @@ const SocketContext = createContext<SocketContextValue | null>(null);
 const SOCKET_URL = import.meta.env.VITE_SOCKET_URL || "";
 
 export function SocketProvider({ children }: { children: ReactNode }) {
-  const [state, dispatch] = useReducer(socketReducer, initialState);
   const [socketInstance, setSocketInstance] = useState<Socket | null>(null);
+
+  // Get actions from the store
+  const setConnected = useSystemSignalStore((state) => state.setConnected);
+  const addLog = useSystemSignalStore((state) => state.addLog);
+  const addChatter = useSystemSignalStore((state) => state.addChatter);
+  const updateAgentStatus = useSystemSignalStore((state) => state.updateAgentStatus);
+  const setRobotkezPlan = useSystemSignalStore((state) => state.setRobotkezPlan);
+  const updateRobotkezStep = useSystemSignalStore((state) => state.updateRobotkezStep);
+  const clearRobotkez = useSystemSignalStore((state) => state.clearRobotkez);
+  const setError = useSystemSignalStore((state) => state.setError);
+  const setLoading = useSystemSignalStore((state) => state.setLoading);
+  const setTasks = useSystemSignalStore((state) => state.setTasks);
+  const setTaskStats = useSystemSignalStore((state) => state.setTaskStats);
+  const setHealthStatus = useSystemSignalStore((state) => state.setHealthStatus);
+  const setDeveloperMetrics = useSystemSignalStore((state) => state.setDeveloperMetrics);
+
+  // Initial REST fetch
+  useEffect(() => {
+    let isMounted = true;
+    const fetchData = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const [tasksRes, taskStatsRes, healthRes, devMetricsRes] = await Promise.allSettled([
+          getTasks(50, 0, "running"),
+          getTaskStats(),
+          checkHealth(),
+          getDeveloperMetrics(),
+        ]);
+
+        if (!isMounted) return;
+
+        if (tasksRes.status === "fulfilled") setTasks(tasksRes.value.tasks);
+        else setError(tasksRes.reason.message);
+
+        if (taskStatsRes.status === "fulfilled") setTaskStats(taskStatsRes.value);
+        else setError(taskStatsRes.reason.message);
+
+        if (healthRes.status === "fulfilled") setHealthStatus(healthRes.value);
+        else setError(healthRes.reason.message);
+
+        if (devMetricsRes.status === "fulfilled") setDeveloperMetrics(devMetricsRes.value);
+        else setError(devMetricsRes.reason.message);
+
+      } catch (err: any) {
+        if (!isMounted) return;
+        setError(err.message || "Adatlekérdezési hiba");
+        addLog({ message: `REST adatlekérdezési hiba: ${err.message}`, type: "error", source: "SystemSignal" });
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+
+    fetchData();
+    const interval = setInterval(fetchData, 5000);
+    return () => {
+      isMounted = false;
+      clearInterval(interval);
+    };
+  }, [setLoading, setError, setTasks, setTaskStats, setHealthStatus, setDeveloperMetrics, addLog]);
 
   useEffect(() => {
     const socket = io(SOCKET_URL, {
@@ -187,26 +156,22 @@ export function SocketProvider({ children }: { children: ReactNode }) {
     };
 
     const log = (message: string, type: LogType = "info") => {
-      dispatch({
-        type: "log",
-        payload: {
-          message,
-          type,
-          timestamp: Date.now(),
-          source: "Socket",
-        },
+      addLog({
+        message,
+        type,
+        timestamp: Date.now(),
+        source: "Socket",
       });
     };
 
     const onConnect = () => {
-      dispatch({ type: "connect" });
+      setConnected(true);
       log("Socket csatlakozva ✅", "success");
     };
 
     const onDisconnect = (reason: unknown) => {
-      dispatch({ type: "disconnect" });
+      setConnected(false);
       const r = typeof reason === "string" ? reason : "unknown";
-      // socket.io reasons: 'transport close', 'io client disconnect', 'io server disconnect', ...
       log(`Socket bontva: ${r}`, "error");
     };
 
@@ -254,14 +219,11 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         timestamp?: number;
         source?: string;
       }) => {
-        dispatch({
-          type: "log",
-          payload: {
-            message: data.message,
-            type: data.type ?? "info",
-            timestamp: data.timestamp ?? Date.now(),
-            source: data.source,
-          },
+        addLog({
+          message: data.message,
+          type: data.type ?? "info",
+          timestamp: data.timestamp ?? Date.now(),
+          source: data.source,
         });
       },
     );
@@ -275,50 +237,41 @@ export function SocketProvider({ children }: { children: ReactNode }) {
         context?: any;
         timestamp?: number;
       }) => {
-        dispatch({
-          type: "chatter",
-          payload: {
-            sender: data.sender,
-            receiver: data.receiver,
-            message: data.message,
-            context: data.context,
-            timestamp: data.timestamp ?? Date.now(),
-          },
+        addChatter({
+          sender: data.sender,
+          receiver: data.receiver,
+          message: data.message,
+          context: data.context,
+          timestamp: data.timestamp ?? Date.now(),
         });
       },
     );
 
-          socket.on(
-            "agent:update",
-            (data: {
-              agentName: string;
-              status: AgentStatusPayload;
-              taskDescription?: string;
-            }) => {
-              if (data.agentName && data.status) {
-                dispatch({
-                  type: "agent_update",
-                  payload: {
-                    agentName: data.agentName,
-                    status: data.status,
-                    taskDescription: data.taskDescription,
-                  },
-                });
-              }
-            },
-          );
-    
-          socket.on("robotkez:plan", (data: RobotkezPlan) => {
-            dispatch({ type: "robotkez_plan", payload: data });
-          });
-    
-          socket.on("robotkez:step", (data: Partial<RobotkezStep> & { index: number }) => {
-            dispatch({ type: "robotkez_step", payload: data });
-          });
-    
-          socket.on("robotkez:aborted", () => {
-            dispatch({ type: "robotkez_clear" });
-          });
+    socket.on(
+      "agent:update",
+      (data: {
+        agentName: string;
+        status: AgentStatusPayload;
+        taskDescription?: string;
+      }) => {
+        if (data.agentName && data.status) {
+          updateAgentStatus(data.agentName, data.status, data.taskDescription);
+        }
+      },
+    );
+
+    socket.on("robotkez:plan", (data: RobotkezPlan) => {
+      setRobotkezPlan(data);
+    });
+
+    socket.on("robotkez:step", (data: Partial<RobotkezStep> & { index: number }) => {
+      updateRobotkezStep(data);
+    });
+
+    socket.on("robotkez:aborted", () => {
+      clearRobotkez();
+    });
+
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -332,13 +285,16 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 
       socket.off("system:log");
       socket.off("agent:update");
+      socket.off("agent:chatter");
+      socket.off("robotkez:plan");
+      socket.off("robotkez:step");
+      socket.off("robotkez:aborted");
       socket.disconnect();
       setSocketInstance(null);
     };
-  }, []);
+  }, [setConnected, addLog, addChatter, updateAgentStatus, setRobotkezPlan, updateRobotkezStep, clearRobotkez]);
 
   const value: SocketContextValue = {
-    ...state,
     socket: socketInstance,
   };
 

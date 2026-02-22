@@ -12,6 +12,8 @@
  *   GET  /task/{task_id}         - Get task status
  *   GET  /health                 - Health check
  *   GET  /stats                  - Usage stats
+ *   POST /d1/query               - Execute D1 query (Node.js → D1 proxy)
+ *   POST /browser                - Browser automation (Cloudflare Puppeteer)
  */
 import { Env } from './types.js';
 declare const _default: {

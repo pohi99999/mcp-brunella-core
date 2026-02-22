@@ -339,3 +339,5 @@ ${template.closing}
     }
   }
 }
+
+export default MarketingAgent;

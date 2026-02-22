@@ -511,3 +511,5 @@ export class SentimentAnalysisModule implements IAgent {
     return mostFrequent ? mostFrequent[0] : 'neutral';
   }
 }
+
+export default SentimentAnalysisModule;

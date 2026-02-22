@@ -499,3 +499,5 @@ export class DigitalOfficeManager implements IAgent {
  * Export for registry
  */
 export const createDigitalOfficeManager = (): DigitalOfficeManager => new DigitalOfficeManager();
+
+export default DigitalOfficeManager;

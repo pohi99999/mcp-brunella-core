@@ -432,3 +432,5 @@ export class GrantWatcherAgent extends BaseAgent {
     };
   }
 }
+
+export default GrantWatcherAgent;

@@ -433,3 +433,5 @@ export class DigitalHeadhunterAgent extends BaseAgent {
     };
   }
 }
+
+export default DigitalHeadhunterAgent;

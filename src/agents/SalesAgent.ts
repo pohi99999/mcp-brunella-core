@@ -321,3 +321,5 @@ Brunella Agent System
  * Export for registry
  */
 export const createSalesAgent = (): SalesAgent => new SalesAgent();
+
+export default SalesAgent;
