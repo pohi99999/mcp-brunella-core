@@ -20,7 +20,7 @@ export const HEALTH_CONFIG = {
   python: {
     timeoutMs: 8_000,
     retries: 1,
-    baseUrl: process.env.PYTHON_API_URL || "http://127.0.0.1:8000",
+    baseUrl: process.env.PYTHON_API_URL || "http://127.0.0.1:8010",
   },
   cloudflare: {
     timeoutMs: 8_000,
@@ -107,18 +107,11 @@ export async function checkOllamaHealth(): Promise<HealthServiceResult> {
 }
 
 export async function checkAnythingLLMHealth(): Promise<HealthServiceResult> {
-  const apiKey = process.env.ANYTHINGLLM_API_KEY;
-  if (!apiKey) {
-    await healthLogger.log("AnythingLLM health skipped", {
-      reason: "no API key",
-    });
-    return { status: "unhealthy", error: "API key not configured" };
-  }
   const { baseUrl, timeoutMs, retries } = HEALTH_CONFIG.anythingllm;
-  const url = `${baseUrl}/api/v1/workspaces`;
+  const url = `${baseUrl}/api/ping`;
   const { ok, latencyMs, error } = await fetchWithRetry(
     url,
-    { timeout: timeoutMs, headers: { Authorization: `Bearer ${apiKey}` } },
+    { timeout: timeoutMs },
     retries,
   );
   await healthLogger.log("AnythingLLM health", {

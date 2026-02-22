@@ -7,7 +7,7 @@ describe("Phase 2 Integration Tests (Python Workers)", () => {
   
   it("PropertyAnalystAgent should call CMA worker", async () => {
     const agent = new PropertyAnalystAgent();
-    const result = await agent.execute("CMA piacelemzés: Budapest, 50m2 mock");
+    const result = await agent.execute("CMA piacelemzés: Budapest, 50m2", { mock: true });
     
     // We need at least one analyzed asset for CMA to work in the current impl
     // Let's mock an analyzed asset first
@@ -19,7 +19,7 @@ describe("Phase 2 Integration Tests (Python Workers)", () => {
       property_type: "apartment"
     });
 
-    const cmaResult = await agent.execute("értékeld cma mock");
+    const cmaResult = await agent.execute("értékeld cma", { mock: true });
     
     expect(cmaResult.status).toBe("success");
     expect(cmaResult.message).toContain("CMA Piacelemzés kész");
