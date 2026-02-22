@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { io, type Socket } from "socket.io-client";
+import { useShallow } from "zustand/react/shallow";
 import { useSystemSignalStore } from "../store/systemSignalStore";
 import { 
   LogType, 
@@ -185,21 +186,23 @@ export function useSystemSignal(options?: UseSystemSignalOptions) {
   }, [addChatter, addLog, clearRobotkez, setConnected, setError, setRobotkezPlan, updateAgentStatus, updateRobotkezStep]);
 
       // Return state and actions from the store, or specific derived values
+      const storeState = useSystemSignalStore(useShallow((state) => ({
+        isConnected: state.isConnected,
+        logs: state.logs,
+        agents: state.agents,
+        chatter: state.chatter,
+        robotkezPlan: state.robotkezPlan,
+        robotkezSteps: state.robotkezSteps,
+        tasks: state.tasks,
+        taskStats: state.taskStats,
+        healthStatus: state.healthStatus,
+        developerMetrics: state.developerMetrics,
+        error: state.error,
+        isLoading: state.isLoading,
+      })));
+
       return {
-        ...useSystemSignalStore((state) => ({
-          isConnected: state.isConnected,
-          logs: state.logs,
-          agents: state.agents,
-          chatter: state.chatter,
-          robotkezPlan: state.robotkezPlan,
-          robotkezSteps: state.robotkezSteps,
-          tasks: state.tasks,
-          taskStats: state.taskStats,
-          healthStatus: state.healthStatus,
-          developerMetrics: state.developerMetrics,
-          error: state.error,
-          isLoading: state.isLoading,
-        })),
+        ...storeState,
         refetchData: fetchData, // Expose fetchData for manual refetch
       };
     }
