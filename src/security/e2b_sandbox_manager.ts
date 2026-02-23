@@ -141,8 +141,6 @@ print(f"Installed {len(packages)} packages")
 
       // 4. Process results
       const duration = Date.now() - startTime;
-      this.executionCount++;
-      this.totalDuration += duration;
 
       if (execution.error) {
         logWarn('E2BSandboxManager', `Execution error: ${execution.error.name}`);
@@ -203,6 +201,10 @@ print(f"Installed {len(packages)} packages")
         metadata: sandbox ? { sandbox_id: sandbox.sandboxId } : undefined
       };
     } finally {
+      // Always count this execution attempt (success or failure)
+      this.executionCount++;
+      this.totalDuration += Date.now() - startTime;
+
       // 7. Cleanup sandbox
       if (sandbox) {
         await this.cleanup(sandbox);

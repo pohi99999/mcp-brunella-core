@@ -1,6 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 import { config } from "../config/index.js";
+import { E2BSandboxManager } from "../security/e2b_sandbox_manager.js";
 
 export class PythonShell {
   private scriptPath: string;
@@ -39,6 +40,11 @@ export class PythonShell {
 
   /** Zone IV: Phoenix Protocol – retry on failure, then fallback. */
   async run(code: string, context?: any): Promise<string> {
+    // E2B Sandbox mode: isolated cloud execution (highest security)
+    if (process.env.E2B_ENABLED === 'true') {
+      return this.runViaE2B(code);
+    }
+
     if (this.useApi) {
       try {
         return await this.runViaApi(code, context);
@@ -53,6 +59,15 @@ export class PythonShell {
       }
     }
     return this.runLegacy(code, context);
+  }
+
+  private async runViaE2B(code: string): Promise<string> {
+    const sandbox = new E2BSandboxManager();
+    const result = await sandbox.executeCode(code, { export_artifacts: false });
+    if (!result.success) {
+      return JSON.stringify({ error: result.error ?? 'E2B execution failed' });
+    }
+    return result.output ?? '';
   }
 
   private async runViaApi(code: string, context?: any): Promise<string> {
