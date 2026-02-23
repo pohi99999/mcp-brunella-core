@@ -56,6 +56,7 @@ from myai.browser_worker import run_scenario, run_structured_extraction, check_s
 from myai.utils.dataset_manager import save_gold_sample, get_dataset_stats
 from myai.agents.comet.orchestrator import CometOrchestrator
 from myai.agents.comet.models import CometTask
+from myai.agents.comet.memory import ActionMemory
 
 app = FastAPI(title="Brunella Python Subsystem")
 
@@ -470,6 +471,20 @@ async def comet_execute(req: CometTask):
     except Exception as e:
         traceback.print_exc()
         raise HTTPException(status_code=500, detail=f"Comet execution failed: {str(e)}")
+
+@app.get("/comet/memory/{domain}")
+async def get_comet_memory(domain: str):
+    """Visszaadja a mentett akciókat egy domainhez"""
+    memory = ActionMemory()
+    hints = await memory.get_hints(domain, "")
+    return {"domain": domain, "hints": hints}
+
+@app.delete("/comet/memory")
+async def clear_comet_memory(days: int = 30):
+    """Törli a régi memória bejegyzéseket"""
+    memory = ActionMemory()
+    await memory.clear_old(days)
+    return {"status": "ok", "message": f"Bejegyzések törölve ({days} napnál régebbiek)"}
 
 
 async def _read_stream(stream: asyncio.StreamReader, session_id: str, level: str, log_path: Path) -> None:

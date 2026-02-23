@@ -65,8 +65,19 @@ export function MachineHunterWidget() {
     const handleStartHunt = async () => {
         setIsHunting(true);
         toast.info("Gépvadászat elindítva...");
-        // TODO: Backend API hívás a vadászat indításához
-        setTimeout(() => setIsHunting(false), 5000);
+        
+        try {
+            socket?.emit('agent:execute', {
+                agent: 'MarketIntel',
+                task: 'machine hunt',
+                query: 'CNC machine'
+            });
+        } catch (err) {
+            toast.error("Hiba a vadászat indításakor.");
+        } finally {
+            // Success/failure will be reported via socket events or agent status
+            setTimeout(() => setIsHunting(false), 5000);
+        }
     };
 
     const formatCurrency = (val: number) => {

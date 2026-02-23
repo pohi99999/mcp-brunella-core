@@ -4,7 +4,7 @@
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 76 total | 11 active | 11 completed | 39 archived
+**Stats:** 76 total | 10 active | 12 completed | 39 archived
 
 ---
 
@@ -59,6 +59,11 @@
 ---
 
 ## Aktiv Szalak (Active) (15)
+
+- [x] **Master Track 5 - Industrial Machine Hunter Live & Outreach**
+  - **ID:** `industrial_machine_hunter_20260223`
+  - **Result:** Live scraping + Arbitrage valuation + Automated Gmail outreach implemented.
+  - Mappa: ./tracks/industrial_machine_hunter_20260223/
 
 - [ ] **Master Track 1 - RobotkezV2 & Lead Mining Integration** [HIGH]
   - **ID:** `master_track_1_lead_mining_20260223`
@@ -149,11 +154,6 @@
   - **Assignee:** System
   - Mappa: ./tracks/test-track-20260211/
 
-- [ ] **robotkez_comet_upgrade_20260222** [HIGH]
-  - **ID:** `robotkez_comet_upgrade_20260222`
-  - **Progress:** 50%
-  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
-
 ---
 
 ## Befejezett (Completed - Not Archived) (6)
@@ -166,6 +166,11 @@
   - **ID:** `modular-command-center-dashboard-v3-20260219`
   - **Result:** Customizable grid layout + Unified signal bus + Process governor + UI diagnostics.
   - Mappa: ./tracks/modular-command-center-dashboard-v3-20260219/
+
+- [x] **RobotkezV2 Comet Upgrade** 🤖 ☄️
+  - **ID:** `robotkez_comet_upgrade_20260222`
+  - **Result:** Self-healing multi-agent browser with GPT-4o planner, Gemini Critic, and SQLite Action Memory.
+  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
 
 - [x] **Data Flywheel Logikája**
   - **ID:** `financial-auditor-agent-20260214`
