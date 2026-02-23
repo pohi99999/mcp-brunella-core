@@ -1,0 +1,54 @@
+{
+  "trackName": "apify_deep_scraping_agent_20260223",
+  "type": "Agent Development",
+  "priority": "LOW",
+  "status": "proposed",
+  "progress": 0,
+  "goal": "Professzionális web scraping és adatkinyerés agent: ApifyScrapingAgent, amely a meglévő browser_worker.py Playwright scrapert kiegészíti strukturált, multi-target scraping képességekkel. Célok: Google keresési eredmények, social media profilok, e-commerce adatok, LinkedIn leads. A fejlesztes.md dokumentumban 'Research & Intelligence Agent (apify-agent-skills)' névvel szerepel.",
+  "assignee": "ResearcherAgent + DeveloperAgent",
+  "createdAt": "2026-02-23T08:00:00Z",
+  "updatedAt": "2026-02-23T08:00:00Z",
+  "phases": [
+    {
+      "name": "Phase 1: Apify SDK integráció",
+      "status": "pending",
+      "description": "apify-client npm csomag + API kulcs konfiguráció",
+      "tasks": [
+        "[ ] npm install apify-client",
+        "[ ] .env.example: APIFY_API_TOKEN bejegyzés",
+        "[ ] src/agents/ApifyScrapingAgent.ts - IAgent implementáció",
+        "[ ] Alapfunkció: runActor(actorId, input) → scraped data"
+      ]
+    },
+    {
+      "name": "Phase 2: Scraping képességek",
+      "status": "pending",
+      "description": "Specializált scraper funkciók üzleti use case-ekre",
+      "tasks": [
+        "[ ] googleSearch(query, limit) → { title, url, snippet }[]",
+        "[ ] linkedinLeads(company, limit) → { name, title, company }[]",
+        "[ ] ecommerceProducts(url, selectors) → { title, price, url }[]",
+        "[ ] trendData(topic, source) → { trend, volume, related }[]"
+      ]
+    },
+    {
+      "name": "Phase 3: Tech-Harvester integráció",
+      "status": "pending",
+      "description": "Meglévő tech-harvester pipeline bővítése Apify forrásokkal",
+      "tasks": [
+        "[ ] myai/config/sources.json: Apify actor-ok mint adatforrások",
+        "[ ] harvest_pipeline.py: ApifyScrapingAgent hívás Python-ból HTTP-n",
+        "[ ] LanceDB + Golden Dataset: scraped data indexelése",
+        "[ ] test/apifyScrapingAgent.test.ts (mock Apify client)"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "ApifyScrapingAgent - teljes IAgent implementáció",
+    "4 specializált scraper funkció (Google, LinkedIn, ecommerce, trends)",
+    "Tech-harvester pipeline integráció",
+    "LanceDB indexelés scraped adatokból",
+    "registry.json-ban regisztrálva",
+    "npm run build && npm test → 0 hiba"
+  ]
+}
