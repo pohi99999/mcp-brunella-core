@@ -1,8 +1,10 @@
 import asyncio
 import logging
 import base64
+import os
 from typing import List, Dict, Any, Optional
 from playwright.async_api import async_playwright, Page, BrowserContext
+from openai import AsyncOpenAI
 from .models import BrowserStep, ActorResult
 
 logger = logging.getLogger(__name__)
@@ -13,6 +15,51 @@ class BrowserActor:
     def __init__(self, headless: bool = True):
         self.headless = headless
         self.timeout = 30000  # 30s alapértelmezett timeout
+        github_pat = os.getenv("GITHUB_PAT")
+        if github_pat:
+            self.vision_client = AsyncOpenAI(
+                base_url="https://models.inference.ai.azure.com",
+                api_key=github_pat
+            )
+        else:
+            self.vision_client = None
+
+    async def _vision_selector(self, page: Page, description: str) -> Optional[str]:
+        """Screenshot → GPT-4o vision → CSS selector"""
+        if not self.vision_client:
+            logger.warning("[BrowserActor] Nincs GITHUB_PAT, Vision Selector nem érhető el.")
+            return None
+
+        try:
+            logger.info(f"[BrowserActor] Vision Selector keresése: {description}")
+            screenshot_bytes = await page.screenshot()
+            base64_image = base64.b64encode(screenshot_bytes).decode('utf-8')
+
+            prompt = f"A csatolt képernyőképen keresd meg a következőt: '{description}'. Adj vissza egy pontos CSS selectort, amivel kattintani lehet rá vagy ki lehet tölteni. Csak a selectort add vissza, semmi mást."
+
+            response = await self.vision_client.chat.completions.create(
+                model="gpt-4o",
+                messages=[
+                    {
+                        "role": "user",
+                        "content": [
+                            {"type": "text", "text": prompt},
+                            {
+                                "type": "image_url",
+                                "image_url": {"url": f"data:image/png;base64,{base64_image}"}
+                            }
+                        ]
+                    }
+                ],
+                max_tokens=50
+            )
+
+            selector = response.choices[0].message.content.strip().replace('`', '')
+            logger.info(f"[BrowserActor] Vision által talált selector: {selector}")
+            return selector
+        except Exception as e:
+            logger.error(f"[BrowserActor] Vision Selector hiba: {e}")
+            return None
 
     async def execute_steps(self, steps: List[BrowserStep], pages: List[Page], context: BrowserContext) -> List[ActorResult]:
         """Lépéslista végrehajtása az adott kontextusban"""
@@ -56,23 +103,34 @@ class BrowserActor:
                 return ActorResult(success=True)
 
             elif action == "search":
+                if not step.selector and step.description:
+                    step.selector = await self._vision_selector(page, step.description)
+                
                 if not step.selector or not step.text:
                     return ActorResult(success=False, error="Hiányzó selector vagy szöveg a kereséshez")
+                
                 await page.fill(step.selector, step.text)
                 await page.press(step.selector, "Enter")
                 await page.wait_for_load_state("networkidle")
                 return ActorResult(success=True)
 
             elif action == "click":
+                if not step.selector and step.description:
+                    step.selector = await self._vision_selector(page, step.description)
+                
                 if not step.selector:
-                    # Itt majd a Vision Selector jönne
-                    return ActorResult(success=False, error="Nincs selector a kattintáshoz (Vision Selector még nincs kész)")
+                    return ActorResult(success=False, error="Nem sikerült selectort találni a kattintáshoz.")
+                
                 await page.click(step.selector, timeout=10000)
                 return ActorResult(success=True)
 
             elif action == "fill":
+                if not step.selector and step.description:
+                    step.selector = await self._vision_selector(page, step.description)
+                
                 if not step.selector or not step.text:
                     return ActorResult(success=False, error="Hiányzó selector vagy szöveg a kitöltéshez")
+                
                 await page.fill(step.selector, step.text)
                 return ActorResult(success=True)
 
