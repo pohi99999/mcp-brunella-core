@@ -36,6 +36,13 @@ async def parse_invoice_text(text: str) -> InvoiceData:
     inv_date = parse_date(date_match.group(1) if date_match else None)
     due_date = parse_date(due_date_match.group(1) if due_date_match else None)
 
+    # Biztosítsunk legalább egy üres vagy alapértelmezett sort a LanceDB típusfelismeréséhez
+    items = []
+    if "Tárgy:" in text:
+        items.append(InvoiceItem(description=text.split("Tárgy:")[1].strip(), quantity=1, unit_price=total_amount, total=total_amount))
+    else:
+        items.append(InvoiceItem(description="Szolgáltatás", quantity=1, unit_price=total_amount, total=total_amount))
+
     return InvoiceData(
         invoice_number=inv_no,
         vendor_name=vendor,
@@ -43,6 +50,7 @@ async def parse_invoice_text(text: str) -> InvoiceData:
         currency="HUF",
         invoice_date=inv_date,
         due_date=due_date,
+        line_items=items,
         confidence=90.0
     )
 

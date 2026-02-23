@@ -17,7 +17,7 @@ Ez a dokumentum a Brunella Rendszer központi katalógusa és stratégiai irány
 | 6 | **Lead Mining-as-a-Service** | Validált lead listák MI által írt jégtörő mondatokkal. | **Master Track 1 Aktív** |
 | 7 | **Digitális Fejvadász (HR)** | Önéletrajz szűrés, pontozás és interjúkérdés generálás. | **Alvó / Tervezett** |
 | 8 | **Innovation Bridge** | Kereszt-iparági technológiai megoldás kereső. | **Tervezett** |
-| 9 | **Automata Pályázatfigyelő** | TEÁOR alapú pályázatfigyelés és doksi előkészítés. | **Alvó / Tervezett** |
+| 9 | **Law Detective** | Közlöny figyelő és pályázat előkészítés. | **AKTÍV (Phase 1)** |
 
 ---
 

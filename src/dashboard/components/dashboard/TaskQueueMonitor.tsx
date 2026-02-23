@@ -30,9 +30,9 @@ import {
     executePendingTask,
     cancelTask,
     retryTask,
-    type QueuedTask,
     type TaskStats
 } from '@/lib/apiService'
+import { TaskItem } from '../../types/dashboard'
 import { toast } from 'sonner'
 import { format } from 'date-fns'
 import {
@@ -45,13 +45,13 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 export function TaskQueueMonitor() {
-    const [tasks, setTasks] = useState<QueuedTask[]>([])
+    const [tasks, setTasks] = useState<TaskItem[]>([])
     const [total, setTotal] = useState(0)
     const [stats, setStats] = useState<TaskStats | null>(null)
     const [page, setPage] = useState(1)
     const [loading, setLoading] = useState(true)
     const [executing, setExecuting] = useState(false)
-    const [selectedTask, setSelectedTask] = useState<QueuedTask | null>(null)
+    const [selectedTask, setSelectedTask] = useState<TaskItem | null>(null)
     const limit = 10
 
     const fetchData = async () => {
@@ -111,7 +111,7 @@ export function TaskQueueMonitor() {
         }
     }
 
-    const getStatusBadge = (status: string) => {
+    const getStatusBadge = (status: TaskItem['status']) => {
         switch (status) {
             case 'done':
                 return <Badge variant="outline" className="bg-green-500/10 text-green-500 gap-1 border-green-500/20"><CheckCircle2 size={12} /> Done</Badge>

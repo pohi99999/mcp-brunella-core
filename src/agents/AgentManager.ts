@@ -131,6 +131,7 @@ export class AgentManager extends EventEmitter {
     string,
     { failures: number; lastFailure: number; isOpen: boolean }
   > = new Map();
+  private activeExecutions: Map<number, AbortController> = new Map(); // Új: futó feladatok megszakíthatósága
   private readonly FAILURE_THRESHOLD = 3;
   private readonly RESET_TIMEOUT = 5 * 60 * 1000; // 5 perc
 
@@ -571,31 +572,40 @@ export class AgentManager extends EventEmitter {
           });
           setAgentStatus(agentName, "working", instruction);
 
-          const res = await agent.execute(instruction, context);
+          // Task ID keresése a kontextusban vagy a sorban (ha van)
+          const taskId = (context as any)?.taskId || 0;
+          const controller = new AbortController();
+          if (taskId) this.activeExecutions.set(taskId, controller);
 
-          // Result normalizálás (status -> success mapping)
-          if (typeof res === "object" && res !== null) {
-            const resObj = res as Record<string, unknown>;
-            if (resObj["success"] === undefined) {
-              resObj["success"] =
-                resObj["status"] === "success" || resObj["status"] === "ok";
+          try {
+            const res = await agent.execute(instruction, { ...context, signal: controller.signal });
+
+            // Result normalizálás (status -> success mapping)
+            if (typeof res === "object" && res !== null) {
+              const resObj = res as Record<string, unknown>;
+              if (resObj["success"] === undefined) {
+                resObj["success"] =
+                  resObj["status"] === "success" || resObj["status"] === "ok";
+              }
+
+              // Format response as Hungarian human-readable text (if not already formatted)
+              if (!resObj["message"] || typeof resObj["message"] !== "string") {
+                const formatted = formatResponse(resObj, agentName, { useEmojis: true });
+                resObj["message"] = formatted;
+              }
+
+              return resObj as unknown as TaskResult;
+            } else {
+              // Format simple response
+              const formatted = formatResponse(res, agentName, { useEmojis: true });
+              return {
+                success: true,
+                data: res,
+                message: formatted,
+              } as TaskResult;
             }
-
-            // Format response as Hungarian human-readable text (if not already formatted)
-            if (!resObj["message"] || typeof resObj["message"] !== "string") {
-              const formatted = formatResponse(resObj, agentName, { useEmojis: true });
-              resObj["message"] = formatted;
-            }
-
-            return resObj as unknown as TaskResult;
-          } else {
-            // Format simple response
-            const formatted = formatResponse(res, agentName, { useEmojis: true });
-            return {
-              success: true,
-              data: res,
-              message: formatted,
-            } as TaskResult;
+          } finally {
+            if (taskId) this.activeExecutions.delete(taskId);
           }
         },
         `${agentName}:execute`,
@@ -1394,6 +1404,15 @@ export class AgentManager extends EventEmitter {
   async cancelTask(taskId: number): Promise<boolean> {
     const task = this.taskQueue.find((t) => t.id === taskId);
     if (!task) return false;
+
+    // Ha fut a feladat, megszakítjuk
+    const controller = this.activeExecutions.get(taskId);
+    if (controller) {
+      controller.abort();
+      this.activeExecutions.delete(taskId);
+      logInfo("AgentManager", `Feladat ${taskId} végrehajtása megszakítva.`);
+    }
+
     task.status = "cancelled";
     await updateTaskStatus(taskId, "cancelled", "Cancelled by user");
     return true;

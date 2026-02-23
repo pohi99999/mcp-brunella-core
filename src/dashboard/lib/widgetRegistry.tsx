@@ -19,6 +19,7 @@ import { RAGMemoryWidget } from "@/components/dashboard/RAGMemoryWidget";
 import { VectorizeAnalyticsWidget } from "@/components/dashboard/VectorizeAnalyticsWidget";
 import { InvoiceSyncWidget } from "@/components/dashboard/InvoiceSyncWidget";
 import { MarketWatcherConfig } from "@/components/dashboard/MarketWatcherConfig";
+import { LeadMiningWidget } from "@/components/dashboard/LeadMiningWidget";
 
 export interface WidgetDefinition {
   id: string;
@@ -146,6 +147,12 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
     id: "market_watcher",
     label: "Market Watcher",
     component: MarketWatcherConfig,
+    defaultSize: { w: 6, h: 8 }
+  },
+  lead_mining: {
+    id: "lead_mining",
+    label: "Lead Mining",
+    component: LeadMiningWidget,
     defaultSize: { w: 6, h: 8 }
   }
 };

@@ -100,18 +100,19 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
     {
       id: 'business-mode',
       name: 'Business Dashboard',
-      description: 'Layout for monitoring monetization services like Invoices and Market Intel.',
+      description: 'Layout for monitoring monetization services like Invoices, Market Intel and Lead Mining.',
       gridTemplateAreas: [
-        '"biz-health biz-health biz-market"',
-        '"biz-invoice biz-invoice biz-market"',
+        '"biz-health biz-market biz-lead"',
+        '"biz-invoice biz-market biz-lead"',
         '"biz-tasks biz-tasks biz-tasks"'
       ],
-      gridTemplateColumns: '1.5fr 1fr 1.2fr',
+      gridTemplateColumns: '1.2fr 1fr 1fr',
       gridTemplateRows: '140px 1.5fr 1fr',
       widgetAssignments: {
         health: 'biz-health',
         invoice_sync: 'biz-invoice',
         market_watcher: 'biz-market',
+        lead_mining: 'biz-lead',
         task_queue: 'biz-tasks'
       },
     },
