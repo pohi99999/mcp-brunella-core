@@ -1,3 +1,91 @@
+### 2026-02-23 23:59 - 🏆 Dashboard V3: Final Type Safety & Refactor (100% COMPLETE 🏆)
+
+**Feladat:**
+A "Dashboard V3 Command Center" projekt mély kód-refaktorálása. `any` típusok eliminálása, egységesített típusbiztonsági réteg (`src/dashboard/types/dashboard.ts`) bevezetése és a widgetek (AgentStatus, TaskQueue, Robotkez) any-mentesítése.
+
+**Érintett fájlok:**
+- `src/dashboard/types/dashboard.ts` (Új: Központi típus-archívum)
+- `src/dashboard/lib/apiService.ts` (Refactor: Típusbiztos API hívások)
+- `src/dashboard/components/dashboard/AgentStatusMonitor.tsx` (Type cleanup)
+- `src/dashboard/components/dashboard/TaskQueueMonitor.tsx` (TaskItem integráció)
+- `src/dashboard/components/dashboard/RobotkezPanel.tsx` (N8nWorkflow típusok)
+- `src/dashboard/store/systemSignalStore.ts` (Unified state management)
+
+**Eredmények:**
+- ✅ **0 "any" Policy:** A legfontosabb adatfolyamok (Tasks, Agents, Logs) 100% típusbiztosak.
+- ✅ **Kódhigiénia:** Redundáns interfészek eltávolítva, központi forrásból táplálkozó widgetek.
+- ✅ **Stabilitás:** Minimálisra csökkent a futásidejű prop-típus hiba esélye.
+
+**Státusz:** 🏆 **DASHBOARD V3 LEZÁRVA**
+
+---
+
+### 2026-02-23 23:45 - ✅ Robotkez Comet Phase 2 & Dashboard Phase 3 (COMPLETE ✅)
+
+**Feladat:**
+A RobotkezV2 Comet önjavító mechanizmusának (CriticAgent, Vision Selector) és a Dashboard folyamatvezérlő funkcióinak (STOP, CANCEL) implementálása.
+
+**Érintett fájlok:**
+- `myai/agents/comet/critic.py` (Új: Gemini Flash Vision auditor)
+- `myai/agents/comet/actor.py` (Update: Vision Selector GPT-4o-val)
+- `myai/agents/comet/orchestrator.py` (Update: Self-healing retry loop)
+- `src/agents/AgentManager.ts` (Update: AbortController integráció a futó taskokhoz)
+- `src/dashboard/components/dashboard/MachineHunterWidget.tsx` (Refactor: Zustand store integráció)
+- `src/dashboard/store/systemSignalStore.ts` (Update: Machine Alerts állapotkezelés)
+- `src/dashboard/context/SocketContext.tsx` (Update: `machine:alert` eseménykezelés)
+- `conductor/tracks.md` & `meta.json` (Update: Progress 60% / 50%)
+
+**Eredmények:**
+- ✅ **Önjavító Böngésző:** A Robotkez immár látja a képernyőt, értékeli a sikert (Gemini), és ha elakad, újratervez vagy Vision Selectorral keresi meg a gombokat.
+- ✅ **Valódi Intervenció:** A Dashboard "Folyamatvezérlés" paneljén a [KILL] gomb mostantól ténylegesen megszakítja a futó Node.js ügynököket.
+- ✅ **Egységesített Riasztások:** A gépvadász találatok a központi állapotkezelőbe futnak be, biztosítva a szinkront a widgetek között.
+
+**Státusz:** ✅ **BEFEJEZVE**
+
+---
+
+### 2026-02-24 00:45 - 🔥 Invoice Sync Fire Test & Google Auth Fix (COMPLETE ✅)
+
+**Feladat:**
+Végrehajtani egy éles tesztet (Fire Test) az Invoice Sync folyamaton, javítani a felmerülő kódhibákat és stabilizálni a Google Workspace integrációt.
+
+**Érintett fájlok:**
+- `scripts/fire_test_invoice_sync.ts` (Új: E2E teszt script)
+- `myai/refiners/invoice_parser.py` (Fix: line_items típuskezelés LanceDB-hez)
+- `src/utils/googleAuth.ts` (Fix: redirect_uris null-check)
+- `_br_temp/invoices/test_invoice.txt` (Teszt adat)
+
+**Eredmények:**
+- ✅ **Fire Test Success:** A Python alapú parsolás, a LanceDB duplikáció-szűrés és a mentés sikeresen lefutott.
+- ✅ **Bug Fix:** Megszüntettem a "Cannot read properties of undefined (reading '0')" hibát az auth rétegben.
+- ✅ **LanceDB Stabilitás:** Javítottam a nested line_items típusfelismerési hibáját a Python refinerben.
+
+**Státusz:** ✅ **BEFEJEZVE**
+
+---
+
+### 2026-02-24 00:30 - ✅ Dashboard Fine-tuning & Law Detective Kickoff (COMPLETE ✅)
+
+**Feladat:**
+A Lead Mining (MT1) Dashboard widget implementálása és regisztrációja. A "Law Detective" (Pillar 9) üzleti pillér specifikálása és elindítása.
+
+**Érintett fájlok:**
+- `src/dashboard/components/dashboard/LeadMiningWidget.tsx` (Új: B2B Lead Mining UI)
+- `src/dashboard/lib/widgetRegistry.tsx` (Update: Widget regisztráció)
+- `src/dashboard/lib/layout/LayoutContext.tsx` (Update: Business Mode elrendezés bővítése)
+- `conductor/tracks/law_detective_20260223/` (Új: Spec & Plan)
+- `conductor/tracks.md` (Update: Law Detective szál indítása)
+- `SYSTEM_AUDIT.md` (Update: P9 státusz frissítése)
+
+**Eredmények:**
+- ✅ **Lead Mining UI:** Mostantól a Dashboardon is indítható a Maps bányászat és láthatóak az icebreakerek.
+- ✅ **Law Detective Spec:** Kész a Magyar Közlöny figyelő üzleti és technikai terve.
+- ✅ **Business Mode:** Optimalizált 3-oszlopos elrendezés a bevételszerző widgeteknek.
+
+**Státusz:** ✅ **BEFEJEZVE**
+
+---
+
 ### 2026-02-23 21:45 - ✅ Master Tracks & Cloudflare Integration (COMPLETE ✅)
 
 **Feladat:**

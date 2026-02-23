@@ -17,9 +17,17 @@ const SCOPES = [
 export async function getGoogleAuth() {
     const secretContent = await fs.readFile(SECRET_PATH, 'utf-8');
     const credentials = JSON.parse(secretContent);
-    const { client_secret, client_id, redirect_uris } = credentials.installed || credentials.web;
+    const creds = credentials.installed || credentials.web;
+    if (!creds) {
+        throw new Error('Invalid client_secret.json format (no installed or web property found)');
+    }
+    const { client_secret, client_id, redirect_uris } = creds;
     
-    const oAuth2Client = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+    const oAuth2Client = new google.auth.OAuth2(
+        client_id, 
+        client_secret, 
+        redirect_uris ? redirect_uris[0] : 'http://localhost'
+    );
 
     try {
         const token = await fs.readFile(TOKEN_PATH, 'utf-8');

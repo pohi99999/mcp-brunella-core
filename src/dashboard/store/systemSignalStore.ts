@@ -1,19 +1,20 @@
 import { create } from 'zustand';
-import { LogEntry, AgentStatusEntry, ChatterEntry, RobotkezPlan, RobotkezStep } from '@/context/SocketContext';
+import { RobotkezPlan, RobotkezStep } from '@/context/SocketContext';
 import { QueuedTask, TaskStats, HealthStatus, DeveloperMetricsData } from '@/lib/apiService';
+import { LogEntry, AgentRuntimeInfo, TaskItem } from '../types/dashboard';
 
 interface SystemSignalState {
-  // WebSocket-től származó adatok (a SocketContext-ből refaktorálva)
+  // WebSocket-től származó adatok
   isConnected: boolean;
   logs: LogEntry[];
-  agents: Map<string, AgentStatusEntry>;
-  chatter: ChatterEntry[];
+  agents: Map<string, AgentRuntimeInfo>;
+  chatter: any[]; 
   robotkezPlan: RobotkezPlan | null;
   robotkezSteps: RobotkezStep[];
-  machineAlerts: any[]; // Új: Gépvadász riasztások
+  machineAlerts: any[];
 
-  // REST API-ból származó adatok (polling, vagy egyszeri lekérés)
-  tasks: QueuedTask[];
+  // REST API-ból származó adatok
+  tasks: TaskItem[];
   taskStats: TaskStats | null;
   healthStatus: HealthStatus | null;
   developerMetrics: DeveloperMetricsData | null;

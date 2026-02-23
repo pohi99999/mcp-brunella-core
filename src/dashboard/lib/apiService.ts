@@ -3,6 +3,8 @@
  * Centralized API calls to the MCP Brunella Core backend
  */
 
+import { AgentStatusType, TaskItem } from '../types/dashboard.js';
+
 export const API_BASE = ""; // Same origin
 const DEFAULT_TIMEOUT_MS = 30000; // 30 seconds default timeout
 const LONG_TIMEOUT_MS = 120000; // 2 minutes for LLM calls
@@ -112,22 +114,11 @@ export interface Agent {
 export interface AgentStatus {
   name: string;
   description: string;
-  status: "idle" | "working" | "error" | "loaded";
+  status: AgentStatusType;
   lastTaskAt?: string;
   successCount?: number;
   errorCount?: number;
   lastTask?: string;
-}
-
-export interface Task {
-  id: number;
-  description: string;
-  agent_name: string;
-  status: string;
-  context?: string;
-  result?: string;
-  created_at: string;
-  updated_at: string;
 }
 
 export interface OllamaModel {
@@ -383,19 +374,8 @@ export async function getAgentStatuses(): Promise<AgentStatus[]> {
   return data.agents || [];
 }
 
-export interface QueuedTask {
-  id: number;
-  agent: string;
-  task: string;
-  status: string;
-  created_at: string;
-  completed_at?: string | null;
-  context?: string;
-  result?: string;
-}
-
 export interface TasksResponse {
-  tasks: QueuedTask[];
+  tasks: TaskItem[];
   total: number;
   limit: number;
   offset: number;
@@ -419,7 +399,7 @@ export async function getTasks(
   return safeJson<TasksResponse>(response);
 }
 
-export async function getActiveTasks(): Promise<QueuedTask[]> {
+export async function getActiveTasks(): Promise<TaskItem[]> {
   try {
     const data = await getTasks(50, 0, "running");
     return data.tasks || [];
@@ -428,10 +408,10 @@ export async function getActiveTasks(): Promise<QueuedTask[]> {
   }
 }
 
-export async function getTaskById(taskId: number): Promise<QueuedTask> {
+export async function getTaskById(taskId: number): Promise<TaskItem> {
   const response = await fetchWithTimeout(`${API_BASE}/api/tasks/${taskId}`);
   if (!response.ok) throw new Error(`Task: HTTP ${response.status}`);
-  const data = await safeJson<{ task: QueuedTask }>(response);
+  const data = await safeJson<{ task: TaskItem }>(response);
   return data.task;
 }
 

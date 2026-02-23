@@ -16,13 +16,18 @@ import {
     BrowserStatus
 } from '../../lib/apiService';
 
+interface N8nWorkflow {
+    name: string;
+    active: boolean;
+}
+
 export function RobotkezPanel() {
     const [status, setStatus] = useState<BrowserStatus>({ active: false });
     const [loading, setLoading] = useState(false);
     const [runningTest, setRunningTest] = useState<number | null>(null);
     const [logs, setLogs] = useState<string[]>([]);
     const [screenshotUrl, setScreenshotUrl] = useState<string>('');
-    const [n8nWorkflows, setN8nWorkflows] = useState<any[]>([]);
+    const [n8nWorkflows, setN8nWorkflows] = useState<N8nWorkflow[]>([]);
     const [n8nLoading, setN8nLoading] = useState(false);
 
     // Refresh status and screenshot
