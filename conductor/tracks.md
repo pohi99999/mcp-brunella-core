@@ -1,14 +1,57 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-23T05:00:00.052Z
+**Utolso frissites:** 2026-02-23T09:00:00.000Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 67 total | 16 active | 1 completed | 33 archived
+**Stats:** 73 total | 16 active | 1 completed | 33 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (7)
+## Tervezett Szalak (Proposed) (13)
+
+- [ ] **PAIOS Orchestrator Chat Réteg** [HIGH] ⭐
+  - **ID:** `paios_orchestrator_chat_20260223`
+  - **Progress:** 0%
+  - **Assignee:** DeveloperAgent + Claude
+  - **Leírás:** POST /api/paios/chat endpoint + OrchestratorCore + PAIOS rendszerprompt (magyar)
+  - Mappa: ./tracks/paios_orchestrator_chat_20260223/
+
+- [ ] **PAIOS ModelSelector UI** [MEDIUM]
+  - **ID:** `paios_model_selector_ui_20260223`
+  - **Progress:** 0%
+  - **Assignee:** DeveloperAgent + Claude
+  - **Blokkolt:** paios_orchestrator_chat_20260223 kész kell
+  - **Leírás:** GPT-4o / Gemini / Local / Workers AI váltó a Dashboard-on
+  - Mappa: ./tracks/paios_model_selector_ui_20260223/
+
+- [ ] **PAIOS PhoenixEventsPanel UI** [MEDIUM]
+  - **ID:** `paios_phoenix_events_panel_20260223`
+  - **Progress:** 0%
+  - **Assignee:** DeveloperAgent + Claude
+  - **Leírás:** Phoenix Protocol recovery/restart/error események valós idejű megjelenítése
+  - Mappa: ./tracks/paios_phoenix_events_panel_20260223/
+
+- [ ] **PAIOS Unified Config (paios.config.yaml)** [LOW]
+  - **ID:** `paios_unified_config_20260223`
+  - **Progress:** 0%
+  - **Assignee:** DeveloperAgent + Claude
+  - **Leírás:** Egységes Zod-validált YAML konfig az összes PAIOS komponenshez
+  - Mappa: ./tracks/paios_unified_config_20260223/
+
+- [ ] **Chrome DevTools MCP Agent** [LOW]
+  - **ID:** `chrome_devtools_mcp_agent_20260223`
+  - **Progress:** 0%
+  - **Assignee:** DeveloperAgent + Claude
+  - **Leírás:** CDP-alapú web debug agent: hálózati kérések, JS hibák, performance
+  - Mappa: ./tracks/chrome_devtools_mcp_agent_20260223/
+
+- [ ] **Apify Deep Scraping Agent** [LOW]
+  - **ID:** `apify_deep_scraping_agent_20260223`
+  - **Progress:** 0%
+  - **Assignee:** ResearcherAgent + DeveloperAgent
+  - **Leírás:** Professzionális scraping: Google, LinkedIn leads, e-commerce, trendek
+  - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
 
 - [ ] **Creative Friction Mediator (The Vibe-Check)** [LOW]
   - **ID:** `creative_friction_mediator_20260212`

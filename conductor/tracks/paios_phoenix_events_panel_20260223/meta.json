@@ -1,0 +1,51 @@
+{
+  "trackName": "paios_phoenix_events_panel_20260223",
+  "type": "Dashboard UI",
+  "priority": "MEDIUM",
+  "status": "proposed",
+  "progress": 0,
+  "goal": "Phoenix Protocol események valós idejű megjelenítése a Dashboard-on. A Phoenix Protocol teljesen működik backenden (phoenixEventBus.ts, checkpoint.ts, retryStrategy.ts), de a UI-n egyetlen esemény sem látható. Ez a track a megfigyelhetőséget (observability) javítja.",
+  "assignee": "DeveloperAgent + Claude",
+  "createdAt": "2026-02-23T08:00:00Z",
+  "updatedAt": "2026-02-23T08:00:00Z",
+  "phases": [
+    {
+      "name": "Phase 1: Backend Socket.IO emit",
+      "status": "pending",
+      "description": "phoenixEventBus → Socket.IO broadcast bekötése",
+      "tasks": [
+        "[ ] src/core/phoenixEventBus.ts bővítése: minden emit() → Socket.IO broadcast",
+        "[ ] Esemény típusok: phoenix:recovery, phoenix:restart, phoenix:state_restored, phoenix:checkpoint_saved, phoenix:error",
+        "[ ] Payload: { type, timestamp, agent?, taskId?, details? }"
+      ]
+    },
+    {
+      "name": "Phase 2: PhoenixEventsPanel komponens",
+      "status": "pending",
+      "description": "React komponens Socket.IO subscription-nel",
+      "tasks": [
+        "[ ] src/dashboard/components/dashboard/PhoenixEventsPanel.tsx",
+        "[ ] Socket.IO client: 'phoenix:*' event-ek feliratkozása",
+        "[ ] Event lista: timestamp, típus (ikon), agent, részletek",
+        "[ ] Filter: típus szerinti szűrés (recovery / restart / error / checkpoint)",
+        "[ ] Max 100 event tárolása memóriában (FIFO)"
+      ]
+    },
+    {
+      "name": "Phase 3: Navigáció + Dashboard integráció",
+      "status": "pending",
+      "description": "Panel regisztrálása a Dashboard navigációba",
+      "tasks": [
+        "[ ] navigationRegistry.registerItem({ id: 'phoenix-events', label: 'Phoenix Events', ... })",
+        "[ ] Összefoglaló counter a nav badge-en: hány recovery történt ma"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "PhoenixEventsPanel.tsx - valós idejű event stream",
+    "phoenixEventBus.ts → Socket.IO broadcast bekötve",
+    "Filter lehetőség (recovery / restart / error / checkpoint)",
+    "Dashboard navigációba regisztrálva",
+    "npm run build && npm test → 0 hiba"
+  ]
+}
