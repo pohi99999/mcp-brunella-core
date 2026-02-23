@@ -30,6 +30,10 @@ export interface AuditEntry {
 // DATABASE (lazy singleton)
 // ============================================================================
 
+export async function getAuditDb(): Promise<any> {
+  return await getDb();
+}
+
 let db: any = null;
 let resolvedDbPath: string | null = null;
 

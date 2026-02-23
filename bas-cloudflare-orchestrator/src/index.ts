@@ -10,6 +10,7 @@
  */
 
 import { Ai } from "@cloudflare/ai";
+import { handleBrowserTask } from "./browser.js";
 
 // Re-export Durable Object for wrangler
 export { SwarmCoordinator } from "./swarmCoordinator.js";
@@ -21,6 +22,7 @@ interface Env {
   R2_KNOWLEDGE: R2Bucket;
   TASK_QUEUE: Queue;
   SWARM_COORDINATOR: DurableObjectNamespace;
+  BROWSER: any; // Browser Rendering API binding
   N8N_WEBHOOK_URL: string;
   BROWSER_USE_ENDPOINT: string;
   DEFAULT_CODE_MODEL: string;
@@ -443,6 +445,11 @@ export default {
         },
         { headers: corsHeaders },
       );
+    }
+
+    // POST /browser - Direct Cloudflare Browser Rendering API
+    if (path === "/browser" && request.method === "POST") {
+      return handleBrowserTask(request, env);
     }
 
     // GET /status/:taskId - Check status

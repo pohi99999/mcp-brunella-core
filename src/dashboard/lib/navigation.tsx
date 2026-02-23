@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Network, Rocket, Cloud, Cpu, MessageSquare,
   Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
   Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow,
-  BarChart3
+  BarChart3, Flame
 } from "lucide-react";
 
 // Component Imports
@@ -11,6 +11,8 @@ import { NeuralLinkChat } from "@/components/dashboard/NeuralLinkChat";
 import { SettingsPanel } from "@/components/dashboard/SettingsPanel";
 import { FileExplorer } from "@/components/dashboard/FileExplorer";
 import { RobotkezV2Chat } from "@/components/dashboard/RobotkezV2Chat";
+import { PAIOSOrchestratorChat } from "@/components/dashboard/PAIOSOrchestratorChat";
+import { PhoenixEventsPanel } from "@/components/dashboard/PhoenixEventsPanel";
 import { AgentManagementPanel } from "@/components/dashboard/AgentManagementPanel";
 import { TaskQueueMonitor } from "@/components/dashboard/TaskQueueMonitor";
 import { KnowledgeBasePanel } from "@/components/dashboard/KnowledgeBasePanel";
@@ -31,6 +33,7 @@ import { TestResultsWidget } from "@/components/dashboard/TestResultsWidget";
 import { EmbeddedWorkflow } from "@/components/dashboard/EmbeddedWorkflow";
 import { PythonWorkersPanel } from "@/components/dashboard/PythonWorkersPanel";
 import { SystemArchitectureWidget } from "@/components/dashboard/SystemArchitectureWidget";
+import { MarketWatcherConfig } from "@/components/dashboard/MarketWatcherConfig";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy(async () => {
@@ -90,6 +93,8 @@ export function initializeNavigation() {
     { id: "cloudflare", label: "Cloudflare Deploy", icon: Cloud, component: <CloudflareDeployment /> },
     { id: "fleet_manager", label: "Fleet Manager", icon: Cpu, component: <FleetManager /> },
     { id: "chat", label: "Neural Chat", icon: MessageSquare, component: <NeuralLinkChat /> },
+    { id: "paios", label: "PAIOS Orchestrator", icon: Brain, component: <PAIOSOrchestratorChat /> },
+    { id: "phoenix", label: "Phoenix Events", icon: Flame, component: <PhoenixEventsPanel /> },
     { id: "management", label: "Agent Roster", icon: Sparkles, component: <AgentManagementPanel /> },
     { id: "decomposer", label: "Decompose", icon: Layers, component: <TaskDecomposerPanel /> },
     { id: "tracks", label: "Tracks", icon: History, component: <TrackGenerator /> },
@@ -115,6 +120,7 @@ export function initializeNavigation() {
     { id: "python-workers", label: "Python Workers", icon: Cpu, component: <PythonWorkersPanel /> },
     { id: "inventory", label: "Assets", icon: Box, component: <InventoryCatalog /> },
     { id: "files", label: "Filesystem", icon: FolderOpen, component: <FileExplorer /> },
+    { id: "marketwatcher", label: "Market Watcher", icon: Activity, component: <MarketWatcherConfig /> },
     { id: "settings", label: "System Config", icon: Settings, component: <SettingsPanel /> },
     { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={<Workflow size={20} />} /> },
     { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={<Sparkles size={20} />} /> }
@@ -124,7 +130,7 @@ export function initializeNavigation() {
 
   // Register groups
   navigationRegistry.registerGroup({ title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch"] });
-  navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez"] });
+  navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "paios", "phoenix", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez", "marketwatcher"] });
   navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "tasks"] });
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests", "enterprise-analytics"] });
   navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "inventory", "files", "settings", "n8n", "langflow"] });

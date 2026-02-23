@@ -2,12 +2,13 @@
   "trackName": "paios_phoenix_events_panel_20260223",
   "type": "Dashboard UI",
   "priority": "MEDIUM",
-  "status": "proposed",
-  "progress": 0,
+  "status": "completed",
+  "progress": 100,
   "goal": "Phoenix Protocol események valós idejű megjelenítése a Dashboard-on. A Phoenix Protocol teljesen működik backenden (phoenixEventBus.ts, checkpoint.ts, retryStrategy.ts), de a UI-n egyetlen esemény sem látható. Ez a track a megfigyelhetőséget (observability) javítja.",
   "assignee": "DeveloperAgent + Claude",
   "createdAt": "2026-02-23T08:00:00Z",
-  "updatedAt": "2026-02-23T08:00:00Z",
+  "updatedAt": "2026-02-23T17:30:00Z",
+  "completedAt": "2026-02-23T17:30:00Z",
   "phases": [
     {
       "name": "Phase 1: Backend Socket.IO emit",

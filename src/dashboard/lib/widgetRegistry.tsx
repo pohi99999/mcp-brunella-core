@@ -17,6 +17,8 @@ import { NeuralCommandWidget } from "@/components/dashboard/NeuralCommandWidget"
 import { CloudflareAgentsCard } from "@/components/dashboard/CloudflareAgentsCard";
 import { RAGMemoryWidget } from "@/components/dashboard/RAGMemoryWidget";
 import { VectorizeAnalyticsWidget } from "@/components/dashboard/VectorizeAnalyticsWidget";
+import { InvoiceSyncWidget } from "@/components/dashboard/InvoiceSyncWidget";
+import { MarketWatcherConfig } from "@/components/dashboard/MarketWatcherConfig";
 
 export interface WidgetDefinition {
   id: string;
@@ -132,6 +134,18 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
     id: "vectorize_analytics",
     label: "Vectorize Analytics",
     component: VectorizeAnalyticsWidget,
+    defaultSize: { w: 6, h: 8 }
+  },
+  invoice_sync: {
+    id: "invoice_sync",
+    label: "Invoice Automation",
+    component: InvoiceSyncWidget,
+    defaultSize: { w: 6, h: 8 }
+  },
+  market_watcher: {
+    id: "market_watcher",
+    label: "Market Watcher",
+    component: MarketWatcherConfig,
     defaultSize: { w: 6, h: 8 }
   }
 };

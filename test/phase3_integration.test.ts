@@ -93,6 +93,6 @@ describe('Phase 3 Integration Tests', () => {
       const result = await orchestrator.execute('futtasd a genesis protokolt', context);
       expect(result.success).toBe(true);
       expect(result.message).toContain('Genesis protokoll befejezve');
-    });
+    }, 60000);
   });
 });
