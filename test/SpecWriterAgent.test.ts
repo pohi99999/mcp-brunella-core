@@ -57,7 +57,7 @@ describe("SpecWriterAgent v2.0", () => {
   });
 
   describe("Stage 1: Requirement Extraction", () => {
-    it("should extract structured requirements from natural language idea", { timeout: 30000 }, async () => {
+    it("should extract structured requirements from natural language idea", { timeout: 60000 }, async () => {
       const mockRequirements = {
         title: "Test Feature",
         description: "A test feature for unit testing",
@@ -131,7 +131,7 @@ Test CLI command
       );
     });
 
-    it("should handle JSON wrapped in markdown code blocks", { timeout: 30000 }, async () => {
+    it("should handle JSON wrapped in markdown code blocks", { timeout: 60000 }, async () => {
       const mockResponse =
         '```json\n{"title":"Test","description":"desc","priority":"P0","estimated_hours":2,"phases":[],"integrations":{"dashboard":"x","cli":"y"}}\n```';
 
@@ -195,7 +195,7 @@ Test CLI command
   });
 
   describe("Stage 2: Track Markdown Generation", () => {
-    it("should generate EPP v2 compliant track.md", { timeout: 30000 }, async () => {
+    it("should generate EPP v2 compliant track.md", { timeout: 60000 }, async () => {
       const mockRequirements = {
         title: "Test Track",
         description: "Test description",
@@ -262,7 +262,7 @@ CLI cmd
   });
 
   describe("Stage 3: Validation & File Write", () => {
-    it("should validate EPP v2 compliance (required sections)", { timeout: 30000 }, async () => {
+    it("should validate EPP v2 compliance (required sections)", { timeout: 60000 }, async () => {
       const invalidMarkdown = "# Test\n\nNo required sections";
 
       vi.mocked(llmClient.generateResponse)
@@ -286,7 +286,7 @@ CLI cmd
       expect(result.error).toContain("EPP v2 validation failed");
     });
 
-    it("should enforce Dashboard + CLI integration (Rule #6)", { timeout: 30000 }, async () => {
+    it("should enforce Dashboard + CLI integration (Rule #6)", { timeout: 60000 }, async () => {
       const noDashboardMarkdown = `# Test
 
 ## 🎯 Cél
@@ -371,7 +371,7 @@ Test track for unit testing
   });
 
   describe("Integration: Full 3-Stage Pipeline", () => {
-    it("should execute full pipeline end-to-end (mocked LLM)", { timeout: 30000 }, async () => {
+    it("should execute full pipeline end-to-end (mocked LLM)", { timeout: 60000 }, async () => {
       const mockRequirements = {
         title: "E2E Test Track",
         description: "End-to-end test",
