@@ -71,4 +71,62 @@ export function registerGoogleWorkspaceTools(server: McpServer) {
             }
         }
     );
+
+    // SHEETS: Append Data
+    server.tool(
+        "sheets_append_data",
+        "Appends rows of data to a Google Sheet.",
+        {
+            spreadsheetId: z.string(),
+            range: z.string().default("Sheet1!A1"),
+            values: z.array(z.array(z.any())),
+        },
+        async ({ spreadsheetId, range, values }) => {
+            try {
+                const auth = await getGoogleAuth();
+                const sheets = google.sheets({ version: 'v4', auth });
+                const res = await sheets.spreadsheets.values.append({
+                    spreadsheetId,
+                    range,
+                    valueInputOption: 'RAW',
+                    requestBody: { values },
+                });
+
+                return {
+                    content: [{ type: "text", text: `Success: Updated ${res.data.updates?.updatedCells} cells.` }]
+                };
+            } catch (e: any) {
+                return { isError: true, content: [{ type: "text", text: `Sheets Error: ${e.message}` }] };
+            }
+        }
+    );
+
+    // SHEETS: Create Spreadsheet
+    server.tool(
+        "sheets_create_spreadsheet",
+        "Creates a new Google Sheet.",
+        {
+            title: z.string(),
+        },
+        async ({ title }) => {
+            try {
+                const auth = await getGoogleAuth();
+                const sheets = google.sheets({ version: 'v4', auth });
+                const res = await sheets.spreadsheets.create({
+                    requestBody: {
+                        properties: { title }
+                    }
+                });
+
+                return {
+                    content: [{ type: "text", text: JSON.stringify({
+                        spreadsheetId: res.data.spreadsheetId,
+                        spreadsheetUrl: res.data.spreadsheetUrl
+                    }, null, 2) }]
+                };
+            } catch (e: any) {
+                return { isError: true, content: [{ type: "text", text: `Sheets Error: ${e.message}` }] };
+            }
+        }
+    );
 }

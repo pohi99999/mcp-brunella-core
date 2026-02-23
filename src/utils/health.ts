@@ -153,9 +153,14 @@ export async function checkCloudflareHealth(): Promise<HealthServiceResult> {
   const { timeoutMs, retries } = HEALTH_CONFIG.cloudflare;
 
   // Ping the worker's health endpoint (if exists) or root
+  const headers: Record<string, string> = {};
+  if (process.env.CEAN_API_KEY) {
+    headers['X-CEAN-API-Key'] = process.env.CEAN_API_KEY;
+  }
+
   const { ok, latencyMs, status, error } = await fetchWithRetry(
     workerUrl,
-    { timeout: timeoutMs },
+    { timeout: timeoutMs, headers },
     retries,
   );
 

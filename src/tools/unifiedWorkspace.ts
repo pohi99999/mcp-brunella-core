@@ -10,6 +10,7 @@
 
 import { google, Auth } from 'googleapis';
 import { logInfo, logError } from '../utils/logger.js';
+import { getGoogleAuth } from '../utils/googleAuth.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
@@ -63,33 +64,17 @@ export class UnifiedWorkspaceClient {
   private drive: any;
   private calendar: any;
 
-  private readonly SCOPES = [
-    'https://www.googleapis.com/auth/gmail.modify',
-    'https://www.googleapis.com/auth/spreadsheets',
-    'https://www.googleapis.com/auth/drive',
-    'https://www.googleapis.com/auth/calendar'
-  ];
-
-  constructor(private config: WorkspaceConfig) {
-    this.config.scopes = this.config.scopes || this.SCOPES;
-  }
+  constructor(private config: WorkspaceConfig) {}
 
   /**
    * Initialize authentication with Google Workspace
    */
   async initialize(): Promise<void> {
     try {
-      logInfo('UnifiedWorkspace', 'Initializing Google Workspace authentication...');
+      logInfo('UnifiedWorkspace', 'Initializing Google Workspace authentication via utility...');
 
-      // Load credentials
-      const credentials = await this.loadCredentials();
-      
-      const { client_secret, client_id, redirect_uris } = credentials.installed || credentials.web;
-      this.auth = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
-
-      // Load or create token
-      const token = await this.getTokenOrAuthorize();
-      this.auth.setCredentials(token);
+      // Use shared auth utility
+      this.auth = await getGoogleAuth() as Auth.OAuth2Client;
 
       // Initialize service clients
       this.gmail = google.gmail({ version: 'v1', auth: this.auth });
@@ -114,7 +99,7 @@ export class UnifiedWorkspaceClient {
    */
   async createEmailDraft(draft: EmailDraft): Promise<{ draftId: string; url: string }> {
     if (!this.gmail) {
-      throw new Error('Gmail client not initialized');
+      await this.initialize();
     }
 
     try {
@@ -147,7 +132,7 @@ export class UnifiedWorkspaceClient {
    */
   async searchEmails(query: string, maxResults: number = 10): Promise<any[]> {
     if (!this.gmail) {
-      throw new Error('Gmail client not initialized');
+      await this.initialize();
     }
 
     try {
@@ -172,7 +157,7 @@ export class UnifiedWorkspaceClient {
    */
   async getEmailAttachments(messageId: string): Promise<{ filename: string; data: Buffer }[]> {
     if (!this.gmail) {
-      throw new Error('Gmail client not initialized');
+      await this.initialize();
     }
 
     try {
@@ -217,7 +202,7 @@ export class UnifiedWorkspaceClient {
    */
   async performSheetOperation(operation: SheetOperation): Promise<any> {
     if (!this.sheets) {
-      throw new Error('Sheets client not initialized');
+      await this.initialize();
     }
 
     try {
@@ -268,7 +253,7 @@ export class UnifiedWorkspaceClient {
    */
   async createSpreadsheet(title: string): Promise<{ spreadsheetId: string; url: string }> {
     if (!this.sheets) {
-      throw new Error('Sheets client not initialized');
+      await this.initialize();
     }
 
     try {
@@ -301,7 +286,7 @@ export class UnifiedWorkspaceClient {
    */
   async uploadFile(fileInfo: DriveFileInfo): Promise<{ fileId: string; webViewLink: string }> {
     if (!this.drive) {
-      throw new Error('Drive client not initialized');
+      await this.initialize();
     }
 
     try {
@@ -348,7 +333,7 @@ export class UnifiedWorkspaceClient {
    */
   async listFiles(folderId?: string, query?: string): Promise<any[]> {
     if (!this.drive) {
-      throw new Error('Drive client not initialized');
+      await this.initialize();
     }
 
     try {
@@ -380,7 +365,7 @@ export class UnifiedWorkspaceClient {
    */
   async createCalendarEvent(event: CalendarEvent, calendarId: string = 'primary'): Promise<{ eventId: string; htmlLink: string }> {
     if (!this.calendar) {
-      throw new Error('Calendar client not initialized');
+      await this.initialize();
     }
 
     try {
@@ -425,42 +410,6 @@ export class UnifiedWorkspaceClient {
 
     return message;
   }
-
-  /**
-   * Load Google OAuth credentials
-   */
-  private async loadCredentials(): Promise<any> {
-    const credPath = this.config.credentialsPath || 
-      path.join(process.cwd(), 'config', 'google_credentials.json');
-
-    try {
-      const content = await fs.readFile(credPath, 'utf-8');
-      return JSON.parse(content);
-    } catch (error) {
-      throw new Error(
-        `Failed to load Google credentials from ${credPath}. ` +
-        `See docs/GOOGLE_WORKSPACE_SETUP.md for setup instructions.`
-      );
-    }
-  }
-
-  /**
-   * Get existing token or prompt for authorization
-   */
-  private async getTokenOrAuthorize(): Promise<any> {
-    const tokenPath = this.config.tokenPath || 
-      path.join(process.cwd(), 'config', 'google_token.json');
-
-    try {
-      const content = await fs.readFile(tokenPath, 'utf-8');
-      return JSON.parse(content);
-    } catch {
-      // Token doesn't exist - would need user authorization flow
-      throw new Error(
-        'Google token not found. Run `brunella workspace auth` to authorize.'
-      );
-    }
-  }
 }
 
 // ============================================================================
@@ -480,8 +429,7 @@ export async function getWorkspaceClient(config?: Partial<WorkspaceConfig>): Pro
   };
 
   _workspaceClient = new UnifiedWorkspaceClient(fullConfig);
-  await _workspaceClient.initialize();
-
+  // Do not initialize here to allow lazy auth
   return _workspaceClient;
 }
 

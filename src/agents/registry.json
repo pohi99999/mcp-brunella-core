@@ -914,6 +914,19 @@
       "status": "active",
       "tags": ["design", "ux", "accessibility", "genesis"],
       "priority": 8
+    },
+    {
+      "name": "lead_mining",
+      "title": "Lead Mining Agent",
+      "description": "Generates targeted B2B lead lists with icebreakers.",
+      "class": "LeadMiningAgent",
+      "module": "./agents/LeadMiningAgent.js",
+      "capabilities": ["lead_generation", "web_scraping", "icebreaker_generation"],
+      "triggers": ["lead mining", "lead generálás", "mining", "jégtörő"],
+      "category": "enterprise",
+      "status": "active",
+      "tags": ["leads", "sales", "mining", "icebreaker"],
+      "priority": 7
     }
   ]
 }

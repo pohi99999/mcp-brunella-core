@@ -78,6 +78,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const setRobotkezPlan = useSystemSignalStore((state) => state.setRobotkezPlan);
   const updateRobotkezStep = useSystemSignalStore((state) => state.updateRobotkezStep);
   const clearRobotkez = useSystemSignalStore((state) => state.clearRobotkez);
+  const addMachineAlert = useSystemSignalStore((state) => state.addMachineAlert);
   const setError = useSystemSignalStore((state) => state.setError);
   const setLoading = useSystemSignalStore((state) => state.setLoading);
   const setTasks = useSystemSignalStore((state) => state.setTasks);
@@ -279,6 +280,10 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       }
     });
 
+    socket.on("machine:alert", (data: any) => {
+      addMachineAlert(data);
+    });
+
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -297,6 +302,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       socket.off("robotkez:step");
       socket.off("robotkez:aborted");
       socket.off("agents:snapshot");
+      socket.off("machine:alert");
       socket.disconnect();
       setSocketInstance(null);
     };

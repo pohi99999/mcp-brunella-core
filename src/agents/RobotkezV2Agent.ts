@@ -48,6 +48,78 @@ export class RobotkezV2Agent extends BaseAgent {
     'agentic_browsing'
   ];
 
+  private chatEndpoint = process.env.BROWSER_CHAT_ENDPOINT || 'http://localhost:8000/browser/chat';
+  private screenshotEndpoint = process.env.BROWSER_SCREENSHOT_ENDPOINT || 'http://localhost:8000/browser/screenshot';
+
+  async chat(message: string, sessionId?: string): Promise<string> {
+    logInfo(this.name, `Chat request: ${message}`);
+
+    try {
+      const importAxios = await import('axios');
+      const axios = importAxios.default;
+      const response = await axios.post(this.chatEndpoint, {
+        message,
+        sessionId: sessionId || this.generateSessionId()
+      });
+
+      const data = response.data;
+
+      if (data.screenshot) {
+        await this.saveScreenshot(sessionId, data.screenshot);
+      }
+
+      return data.response;
+    } catch (error) {
+      logError(this.name, `Chat error: ${error}`);
+      return 'Hiba történt a böngésző interakcióban. Kérlek próbáld újra.';
+    }
+  }
+
+  async takeScreenshot(sessionId?: string): Promise<string> {
+    try {
+      const importAxios = await import('axios');
+      const axios = importAxios.default;
+      const response = await axios.get(this.screenshotEndpoint, {
+        responseType: 'arraybuffer'
+      });
+
+      const screenshot = Buffer.from(response.data, 'binary').toString('base64');
+      await this.saveScreenshot(sessionId, screenshot);
+
+      return screenshot;
+    } catch (error) {
+      logError(this.name, `Screenshot error: ${error}`);
+      throw error;
+    }
+  }
+
+  private async saveScreenshot(sessionId: string | undefined, screenshot: string): Promise<void> {
+    const sessionDir = sessionId
+      ? `data/screenshots/${sessionId}`
+      : `data/screenshots/${Date.now()}`;
+
+    try {
+      const fs = await import('fs/promises');
+      // Mappa létrehozása (ha nem létezik)
+      await fs.mkdir(sessionDir, { recursive: true });
+
+      // Screenshot mentése
+      const filename = `screenshot_${Date.now()}.png`;
+      await fs.writeFile(
+        `${sessionDir}/${filename}`,
+        Buffer.from(screenshot, 'base64')
+      );
+
+      logInfo(this.name, `Screenshot mentve: ${sessionDir}/${filename}`);
+    } catch (err) {
+      logError(this.name, `Failed to save screenshot: ${err}`);
+    }
+  }
+
+  private generateSessionId(): string {
+    return `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+  }
+
   /**
    * Internal execution logic - implements BaseAgent.executeTask
    */

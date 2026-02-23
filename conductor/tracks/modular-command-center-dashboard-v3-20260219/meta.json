@@ -1,27 +1,53 @@
 {
   "trackName": "modular-command-center-dashboard-v3-20260219",
-  "type": "Restored Track",
-  "priority": "MEDIUM",
+  "type": "UI/UX & System Architecture Refactor",
+  "priority": "HIGH",
   "status": "active",
-  "progress": 0,
-  "goal": "Restored goal for modular-command-center-dashboard-v3-20260219. Please update with actual goal.",
+  "progress": 40,
+  "goal": "Refactor Mission Control Dashboard to a modular, customizable command center with deep integrations, real-time process visibility, and intervention capabilities.",
   "assignee": "System",
-  "createdAt": "2026-02-22T19:45:47.009Z",
-  "updatedAt": "2026-02-22T19:45:47.009Z",
-  "context": "Automatically generated meta.json due to missing file.",
+  "createdAt": "2026-02-19T00:00:00.000Z",
+  "updatedAt": "2026-02-23T23:00:00.000Z",
+  "context": "Phase 1 & 2 are completed. Next is Phase 3 (Process Governor).",
   "phases": [
     {
       "id": "phase1",
-      "name": "Phase 1: Restoration Assessment",
+      "name": "Phase 1: Smart Grid Architecture",
+      "status": "completed",
+      "tasks": [
+        "Implement Context-Aware Layout Engine",
+        "Refactor MissionControlLayout.tsx",
+        "Implement React Context API for layout state"
+      ]
+    },
+    {
+      "id": "phase2",
+      "name": "Phase 2: Unified Signal Bus",
+      "status": "completed",
+      "tasks": [
+        "Create useSystemSignal React hook",
+        "Implement Socket.IO integration",
+        "Implement REST polling fallback",
+        "Integrate with Zustand store"
+      ]
+    },
+    {
+      "id": "phase3",
+      "name": "Phase 3: Process Governor",
       "status": "active",
       "tasks": [
-        "Task 1.1: Review project contents and update meta.json goal and context.",
-        "Task 1.2: Identify current status and update progress."
+        "Develop ProcessControlWidget component",
+        "Implement live intervention buttons",
+        "Implement task queue drag-and-drop",
+        "Integrate Trace visualization"
       ]
     }
   ],
   "acceptanceCriteria": [
-    "meta.json is accurate reflecting the project state."
+    "Dashboard integration allows real-time process intervention",
+    "CLI integration (brunella dashboard status) works",
+    "npm test and npm run build pass",
+    "EPP v2 compliance"
   ],
-  "nextStep": "Review and update meta.json"
+  "nextStep": "Begin Phase 2: Unified Signal Bus implementation"
 }

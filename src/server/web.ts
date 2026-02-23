@@ -73,6 +73,7 @@ import createWebhookRoutes from "./routes/webhooks.js";
 import githubWebhookRouter from "./routes/githubWebhook.js";
 import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
 import { createEnterpriseRouter } from "./routes/enterprise.js";
+import paiosOrchestratorRouter from "./routes/paiosOrchestrator.js";
 import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
 import { createDashboardRoutes } from "./routes/dashboard.js";
 
@@ -252,6 +253,9 @@ export async function startWebServer() {
   app.use("/api/v1", v1Router);
   app.use("/api", v1Router);
 
+  // PAIOS Orchestrator Chat Interface
+  app.use("/api/paios", paiosOrchestratorRouter);
+
   // GitHub Webhook Integration (Phase 3: JCAI)
   app.use("/api/github", githubWebhookRouter);
 
@@ -267,6 +271,12 @@ export async function startWebServer() {
   });
   socketService.init(io);
   initializeAgentManager(socketService); // Initialize agentManager here
+
+  // Connect Phoenix Event Bus to Socket.IO for real-time dashboard updates
+  const { phoenixEventBus } = await import('../core/phoenixEventBus.js');
+  phoenixEventBus.connectSocketBroadcaster((event: string, data: unknown) => {
+    socketService.emit(event, data);
+  });
 
   io.on("connection", (socket) => {
     logInfo("WebSocket", `Client connected: ${socket.id}`);

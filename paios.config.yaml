@@ -1,0 +1,44 @@
+# PAIOS 1.0 Unified Configuration
+# Minden PAIOS-specifikus beállítás egyetlen helyen, Zod validációval
+
+# Orchestrator központi beállítások
+orchestrator:
+  default_model: gemini              # gpt4o | gemini | local | anthropic
+  system_prompt_path: src/orchestrator/systemPrompt/paios_orchestrator_prompt.md
+  max_tasks_per_request: 5           # LLM max ennyi task-ot bonthat ki egyszerre
+
+# LLM Provider konfigurációk
+providers:
+  gpt4o:
+    enabled: true
+    model: gpt-4o
+    api_key_env: GITHUB_PAT          # .env-ből olvassa az API kulcsot
+  
+  gemini:
+    enabled: true
+    model: gemini-2.0-flash-exp
+    api_key_env: GEMINI_API_KEY
+  
+  local:
+    enabled: true
+    model: qwen2.5-coder:7b
+    base_url_env: OLLAMA_BASE_URL    # http://localhost:11434
+  
+  anthropic:
+    enabled: true
+    model: claude-sonnet-3-5-20241022
+    api_key_env: ANTHROPIC_API_KEY
+
+# Phoenix Protocol beállítások
+phoenix:
+  retry_max_attempts: 3
+  retry_base_delay_ms: 1000
+  checkpoint_interval_ms: 30000      # 30s
+  heartbeat_interval_ms: 5000        # 5s
+
+# Dashboard UI funkciók
+dashboard:
+  base_url: http://localhost:5173
+  chat_panel_enabled: true
+  phoenix_events_enabled: true
+  model_selector_enabled: true

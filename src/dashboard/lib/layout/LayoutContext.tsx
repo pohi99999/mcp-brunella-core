@@ -97,6 +97,24 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
         agent_status: 'ai-agents', // Agent status monitoring
       },
     },
+    {
+      id: 'business-mode',
+      name: 'Business Dashboard',
+      description: 'Layout for monitoring monetization services like Invoices and Market Intel.',
+      gridTemplateAreas: [
+        '"biz-health biz-health biz-market"',
+        '"biz-invoice biz-invoice biz-market"',
+        '"biz-tasks biz-tasks biz-tasks"'
+      ],
+      gridTemplateColumns: '1.5fr 1fr 1.2fr',
+      gridTemplateRows: '140px 1.5fr 1fr',
+      widgetAssignments: {
+        health: 'biz-health',
+        invoice_sync: 'biz-invoice',
+        market_watcher: 'biz-market',
+        task_queue: 'biz-tasks'
+      },
+    },
   ],
 };
 

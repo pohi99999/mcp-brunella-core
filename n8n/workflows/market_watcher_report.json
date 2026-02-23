@@ -1,0 +1,70 @@
+{
+  "name": "Market Watcher Daily Report",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "days",
+              "interval": 1
+            }
+          ]
+        }
+      },
+      "id": "trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.1,
+      "position": [250, 300]
+    },
+    {
+      "parameters": {
+        "command": "brunella run mcp__lance_db__query '{\"tableName\": \"market_intel_data\", \"filter\": \"recommendation = \\\"BUY\\\"\"}'"
+      },
+      "id": "fetch_data",
+      "name": "Fetch BUY Recommendations",
+      "type": "n8n-nodes-base.executeCommand",
+      "typeVersion": 1,
+      "position": [450, 300]
+    },
+    {
+      "parameters": {
+        "fromEmail": "brunella@pohanka.com",
+        "toEmail": "peter@pohanka.com",
+        "subject": "Market Watcher - Daily BUY Alerts",
+        "text": "Íme a mai legjobb vételi ajánlatok a BAS-tól:\n\n{{$node[\"Fetch BUY Recommendations\"].json}}",
+        "options": {}
+      },
+      "id": "send_email",
+      "name": "Send Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2,
+      "position": [650, 300]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Fetch BUY Recommendations",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch BUY Recommendations": {
+      "main": [
+        [
+          {
+            "node": "Send Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  }
+}

@@ -1,0 +1,188 @@
+/**
+ * PAIOS Unified Configuration System
+ * 
+ * Zod-validated YAML configuration for all PAIOS-specific settings.
+ * Replaces scattered config from .env, registry.json, and hardcoded values.
+ * 
+ * @track paios_unified_config_20260223
+ */
+
+import { z } from 'zod';
+import yaml from 'js-yaml';
+import fs from 'fs';
+import path from 'path';
+
+// ============================================================================
+// ZOD SCHEMAS
+// ============================================================================
+
+const ProviderSchema = z.object({
+  enabled: z.boolean().default(true),
+  model: z.string(),
+  api_key_env: z.string().optional(),
+  base_url_env: z.string().optional(),
+  gateway_url_env: z.string().optional(),
+});
+
+export const PAIOSConfigSchema = z.object({
+  orchestrator: z.object({
+    default_model: z.enum(['gpt4o', 'gemini', 'local', 'anthropic']).default('gemini'),
+    system_prompt_path: z.string(),
+    max_tasks_per_request: z.number().int().min(1).max(20).default(5),
+  }),
+  providers: z.object({
+    gpt4o: ProviderSchema.optional(),
+    gemini: ProviderSchema.optional(),
+    local: ProviderSchema.optional(),
+    anthropic: ProviderSchema.optional(),
+  }),
+  phoenix: z.object({
+    retry_max_attempts: z.number().int().min(1).max(10).default(3),
+    retry_base_delay_ms: z.number().int().min(100).max(10000).default(1000),
+    checkpoint_interval_ms: z.number().int().min(5000).max(300000).default(30000),
+    heartbeat_interval_ms: z.number().int().min(1000).max(60000).default(5000),
+  }).optional(),
+  dashboard: z.object({
+    base_url: z.string().url().default('http://localhost:5173'),
+    chat_panel_enabled: z.boolean().default(true),
+    phoenix_events_enabled: z.boolean().default(true),
+    model_selector_enabled: z.boolean().default(true),
+  }).optional(),
+});
+
+export type PAIOSConfig = z.infer<typeof PAIOSConfigSchema>;
+export type ProviderConfig = z.infer<typeof ProviderSchema>;
+export type ModelProvider = 'gpt4o' | 'gemini' | 'local' | 'anthropic';
+
+// ============================================================================
+// CONFIG LOADER
+// ============================================================================
+
+let cachedConfig: PAIOSConfig | null = null;
+
+/**
+ * Load and validate PAIOS configuration from YAML file.
+ * Falls back to sensible defaults if file doesn't exist.
+ */
+export function loadPaiosConfig(configPath = 'paios.config.yaml'): PAIOSConfig {
+  // Return cached config if already loaded
+  if (cachedConfig) {
+    return cachedConfig;
+  }
+
+  const fullPath = path.resolve(process.cwd(), configPath);
+
+  // If config file doesn't exist, use .env fallback
+  if (!fs.existsSync(fullPath)) {
+    console.warn(`[PAIOS Config] File not found: ${fullPath} - using .env fallback`);
+    
+    const fallbackConfig = {
+      orchestrator: {
+        default_model: (process.env.PAIOS_DEFAULT_MODEL as ModelProvider) ?? 'gemini',
+        system_prompt_path: 'src/orchestrator/systemPrompt/paios_orchestrator_prompt.md',
+        max_tasks_per_request: 5,
+      },
+      providers: {
+        local: {
+          enabled: true,
+          model: process.env.OLLAMA_MODEL ?? 'qwen2.5-coder:7b',
+          base_url_env: 'OLLAMA_BASE_URL',
+        },
+        gemini: {
+          enabled: !!process.env.GEMINI_API_KEY,
+          model: process.env.GEMINI_MODEL ?? 'gemini-2.0-flash-exp',
+          api_key_env: 'GEMINI_API_KEY',
+        },
+      },
+    };
+
+    cachedConfig = PAIOSConfigSchema.parse(fallbackConfig);
+    return cachedConfig;
+  }
+
+  try {
+    // Read and parse YAML
+    const fileContent = fs.readFileSync(fullPath, 'utf-8');
+    const rawConfig = yaml.load(fileContent) as unknown;
+
+    // Validate with Zod
+    cachedConfig = PAIOSConfigSchema.parse(rawConfig);
+    
+    console.log(`[PAIOS Config] Loaded from ${fullPath}`);
+    return cachedConfig;
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      console.error('[PAIOS Config] Validation failed:', error.errors);
+      throw new Error(`PAIOS config validation failed: ${error.errors.map(e => e.message).join(', ')}`);
+    }
+    throw error;
+  }
+}
+
+/**
+ * Get a specific provider configuration.
+ * Returns undefined if provider is not configured or disabled.
+ */
+export function getProviderConfig(provider: ModelProvider): ProviderConfig | undefined {
+  const config = loadPaiosConfig();
+  const providerConfig = config.providers[provider];
+  
+  if (!providerConfig || !providerConfig.enabled) {
+    return undefined;
+  }
+
+  return providerConfig;
+}
+
+/**
+ * Get the API key for a provider from environment variables.
+ */
+export function getProviderApiKey(provider: ModelProvider): string | undefined {
+  const providerConfig = getProviderConfig(provider);
+  if (!providerConfig || !providerConfig.api_key_env) {
+    return undefined;
+  }
+
+  return process.env[providerConfig.api_key_env];
+}
+
+/**
+ * Get the base URL for a provider from environment variables.
+ */
+export function getProviderBaseUrl(provider: ModelProvider): string | undefined {
+  const providerConfig = getProviderConfig(provider);
+  if (!providerConfig || !providerConfig.base_url_env) {
+    return undefined;
+  }
+
+  return process.env[providerConfig.base_url_env];
+}
+
+/**
+ * Clear cached config (useful for tests or hot reload).
+ */
+export function clearConfigCache(): void {
+  cachedConfig = null;
+}
+
+/**
+ * Get list of enabled providers.
+ */
+export function getEnabledProviders(): ModelProvider[] {
+  const config = loadPaiosConfig();
+  const providers: ModelProvider[] = [];
+
+  for (const [key, value] of Object.entries(config.providers)) {
+    if (value && value.enabled) {
+      providers.push(key as ModelProvider);
+    }
+  }
+
+  return providers;
+}
+
+// ============================================================================
+// EXPORTS
+// ============================================================================
+
+export default loadPaiosConfig;

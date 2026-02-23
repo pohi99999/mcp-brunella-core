@@ -7,6 +7,13 @@ import fs from "fs/promises"; // Import Node.js file system promises module
 
 const execAsync = util.promisify(exec);
 
+export interface HallucinationCheckResult {
+  confident: boolean;
+  confidenceScore: number;
+  flags: string[];
+  recommendations: string[];
+}
+
 export class EvaluatorAgent extends BaseAgent {
   name = "Evaluator";
   role = "QA_Lead";
@@ -156,6 +163,136 @@ export class EvaluatorAgent extends BaseAgent {
         success: false,
         message: `Failed to verify dataset growth for ${filePath}: ${error.message}`,
         data: { filePath, error: error.message }
+      };
+    }
+  }
+
+  /**
+   * Guardrails: LLM-as-Judge hallucination check (BAS Security Sandbox Phase 1)
+   * 
+   * Uses Ollama (local LLM) to evaluate agent responses for:
+   * - RULE-G1: Source-less fact assertions
+   * - RULE-G2: Confidence below threshold (0.6)
+   * - RULE-G3: Referenced URLs validation via HTTP HEAD
+   * 
+   * This is a soft check (non-blocking) used for audit/metrics only.
+   */
+  async checkHallucination(
+    agentResponse: string,
+    context?: { agentName?: string; task?: string }
+  ): Promise<HallucinationCheckResult> {
+    const flags: string[] = [];
+    const recommendations: string[] = [];
+    let confidenceScore = 0.8; // Default baseline
+
+    try {
+      // RULE-G1 & G2: LLM hallucination check via Ollama
+      const ollamaBaseUrl = process.env.OLLAMA_BASE_URL || 'http://localhost:11434';
+      const ollamaModel = process.env.OLLAMA_MODEL || 'qwen2.5-coder:7b';
+
+      const prompt = `You are a quality assurance checker. Analyze the following agent response and evaluate:
+
+1. Does it make factual claims without citing sources?
+2. Are there vague or uncertain statements?
+3. Overall confidence level (0.0 - 1.0)?
+
+Agent Response:
+"""
+${agentResponse}
+"""
+
+Respond with JSON:
+{
+  "factual_claims_without_source": boolean,
+  "vague_statements": boolean,
+  "confidence": number (0.0 - 1.0),
+  "reasoning": string
+}`;
+
+      const response = await fetch(`${ollamaBaseUrl}/api/generate`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: ollamaModel,
+          prompt,
+          stream: false,
+          options: { temperature: 0.1 }
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const llmOutput = data.response;
+
+        // Parse LLM JSON response
+        try {
+          const jsonMatch = llmOutput.match(/\{[\s\S]*\}/);
+          if (jsonMatch) {
+            const parsed = JSON.parse(jsonMatch[0]);
+            confidenceScore = parsed.confidence || 0.8;
+
+            if (parsed.factual_claims_without_source) {
+              flags.push('RULE-G1: Factual claims without citation');
+              recommendations.push('Add sources or references to factual statements');
+            }
+
+            if (parsed.vague_statements) {
+              flags.push('Vague or uncertain statements detected');
+              recommendations.push('Provide more specific details or caveats');
+            }
+          }
+        } catch (parseError) {
+          this.logger.warn(`Failed to parse LLM hallucination check output: ${parseError}`);
+        }
+      }
+
+      // RULE-G2: Confidence threshold
+      if (confidenceScore < 0.6) {
+        flags.push(`RULE-G2: Low confidence score (${confidenceScore.toFixed(2)})`);
+        recommendations.push('Consider regenerating response or adding uncertainty caveats');
+      }
+
+      // RULE-G3: URL validation via HTTP HEAD
+      const urlRegex = /https?:\/\/[^\s)]+/g;
+      const urls = agentResponse.match(urlRegex) || [];
+
+      for (const url of urls.slice(0, 5)) { // Limit to 5 URLs
+        try {
+          const headResponse = await fetch(url, {
+            method: 'HEAD',
+            signal: AbortSignal.timeout(3000)
+          });
+
+          if (!headResponse.ok && headResponse.status >= 400) {
+            flags.push(`RULE-G3: Invalid URL reference: ${url} (HTTP ${headResponse.status})`);
+            recommendations.push(`Verify URL ${url} or remove it`);
+          }
+        } catch (urlError) {
+          flags.push(`RULE-G3: Unreachable URL: ${url}`);
+          recommendations.push(`Check connectivity or remove broken link: ${url}`);
+        }
+      }
+
+      // Log results (async, non-blocking)
+      if (flags.length > 0) {
+        this.logger.warn(`Hallucination check flags for ${context?.agentName || 'unknown'}: ${flags.join(', ')}`);
+      }
+
+      return {
+        confident: confidenceScore >= 0.6 && flags.length === 0,
+        confidenceScore,
+        flags,
+        recommendations
+      };
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      this.logger.error(`Hallucination check failed: ${msg}`);
+
+      return {
+        confident: true, // Fail-open (don't block on check failure)
+        confidenceScore: 0.5,
+        flags: [`Hallucination check error: ${msg}`],
+        recommendations: ['Manual review recommended']
       };
     }
   }

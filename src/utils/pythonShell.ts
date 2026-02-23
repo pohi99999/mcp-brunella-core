@@ -171,3 +171,50 @@ except Exception as e:
 }
 
 export const globalPythonShell = new PythonShell("interactive.py");
+
+/**
+ * Runs a specific Python worker script with JSON arguments.
+ */
+export async function runPythonWorker(scriptName: string, args: any): Promise<any> {
+  const code = `
+import asyncio
+import json
+import sys
+from importlib import import_module
+
+# Add project root to path
+sys.path.append('.')
+
+async def main():
+    module_name = "${scriptName.replace('.py', '').replace('/', '.')}"
+    # Try different locations
+    try:
+        module = import_module(module_name)
+    except ImportError:
+        try:
+            module = import_module("myai.workers." + module_name)
+        except ImportError:
+            module = import_module("myai.refiners." + module_name)
+            
+    # Look for common entry points
+    if hasattr(module, 'scrape_page_data'):
+        res = await module.scrape_page_data(**context)
+    elif hasattr(module, 'evaluate_product_potential'):
+        res = await module.evaluate_product_potential(context)
+    elif hasattr(module, 'parse_invoice_text'):
+        res = await module.parse_invoice_text(context.get('text', ''))
+    else:
+        raise AttributeError(f"No valid entry point found in {module_name}")
+        
+    print(json.dumps(res))
+
+if __name__ == "__main__":
+    asyncio.run(main())
+`;
+  const output = await globalPythonShell.run(code, args);
+  try {
+    return JSON.parse(output);
+  } catch (e) {
+    throw new Error(`Failed to parse Python worker output: ${output}. Error: ${e}`);
+  }
+}
