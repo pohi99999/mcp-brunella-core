@@ -1,0 +1,27 @@
+{
+  "trackName": "basic-test-task-structure-20260219",
+  "type": "Restored Track",
+  "priority": "MEDIUM",
+  "status": "active",
+  "progress": 0,
+  "goal": "Restored goal for basic-test-task-structure-20260219. Please update with actual goal.",
+  "assignee": "System",
+  "createdAt": "2026-02-22T19:45:46.996Z",
+  "updatedAt": "2026-02-22T19:45:46.996Z",
+  "context": "Automatically generated meta.json due to missing file.",
+  "phases": [
+    {
+      "id": "phase1",
+      "name": "Phase 1: Restoration Assessment",
+      "status": "active",
+      "tasks": [
+        "Task 1.1: Review project contents and update meta.json goal and context.",
+        "Task 1.2: Identify current status and update progress."
+      ]
+    }
+  ],
+  "acceptanceCriteria": [
+    "meta.json is accurate reflecting the project state."
+  ],
+  "nextStep": "Review and update meta.json"
+}

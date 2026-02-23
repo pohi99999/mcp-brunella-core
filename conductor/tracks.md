@@ -1,14 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-22T06:00:00.065Z
+**Utolso frissites:** 2026-02-23T05:00:00.052Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 54 total | 5 active | 6 completed | 27 archived
+**Stats:** 67 total | 16 active | 1 completed | 33 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (6)
+## Tervezett Szalak (Proposed) (7)
 
 - [ ] **Creative Friction Mediator (The Vibe-Check)** [LOW]
   - **ID:** `creative_friction_mediator_20260212`
@@ -44,9 +44,14 @@
   - **Assignee:** RobotkezAgent + n8n
   - Mappa: ./tracks/micro_csr_automator_20260212/
 
+- [ ] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser** [HIGH]
+  - **ID:** `robotkez_comet_upgrade_20260222`
+  - **Progress:** 10%
+  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
+
 ---
 
-## Aktiv Szalak (Active) (5)
+## Aktiv Szalak (Active) (16)
 
 - [ ] **aider_integration_20260222** [MEDIUM]
   - **ID:** `aider_integration_20260222`
@@ -54,17 +59,41 @@
   - **Assignee:** Claude + Aider (GPT-4o/Gemini)
   - Mappa: ./tracks/aider_integration_20260222/
 
+- [ ] **archive** [MEDIUM]
+  - **ID:** `archive`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/archive/
+
+- [ ] **basic-test-task-structure-20260219** [MEDIUM]
+  - **ID:** `basic-test-task-structure-20260219`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/basic-test-task-structure-20260219/
+
 - [ ] **bas_security_sandbox_20260221** [HIGH]
   - **ID:** `bas_security_sandbox_20260221`
-  - **Progress:** 25%
-  - **Assignee:** DeveloperAgent + Claude
+  - **Progress:** 45%
+  - **Assignee:** DeveloperAgent + SecurityAgent
   - Mappa: ./tracks/bas_security_sandbox_20260221/
 
-- [ ] **dashboard_v3_command_center_20260219** [HIGH]
-  - **ID:** `dashboard_v3_command_center_20260219`
-  - **Progress:** 85%
-  - **Assignee:** DeveloperAgent + Claude
-  - Mappa: ./tracks/dashboard_v3_command_center_20260219/
+- [ ] **cean_operations_center_ui_20260215** [MEDIUM]
+  - **ID:** `cean_operations_center_ui_20260215`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/cean_operations_center_ui_20260215/
+
+- [ ] **cean_phase2_c_prometheus_20250216** [MEDIUM]
+  - **ID:** `cean_phase2_c_prometheus_20250216`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/cean_phase2_c_prometheus_20250216/
+
+- [ ] **cean_phase_2_fleet_management_20260215** [MEDIUM]
+  - **ID:** `cean_phase_2_fleet_management_20260215`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/cean_phase_2_fleet_management_20260215/
 
 - [ ] **Innovation Bridge - Cross-Industry Knowledge Transfer** [MEDIUM]
   - **ID:** `innovation_bridge_20260212`
@@ -79,52 +108,74 @@
   - **Assignee:** Claude + Pohánka Péter
   - Mappa: ./tracks/jules_pr_integration_20260222/
 
+- [ ] **living_documentation_system_20260213** [MEDIUM]
+  - **ID:** `living_documentation_system_20260213`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/living_documentation_system_20260213/
+
+- [ ] **local_test_scheduler_20260215** [MEDIUM]
+  - **ID:** `local_test_scheduler_20260215`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/local_test_scheduler_20260215/
+
+- [ ] **modular-command-center-dashboard-v3-20260219** [MEDIUM]
+  - **ID:** `modular-command-center-dashboard-v3-20260219`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/modular-command-center-dashboard-v3-20260219/
+
+- [ ] **test-20260211** [MEDIUM]
+  - **ID:** `test-20260211`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/test-20260211/
+
+- [ ] **test-feature-20260211** [MEDIUM]
+  - **ID:** `test-feature-20260211`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/test-feature-20260211/
+
+- [ ] **test-track-12345678** [MEDIUM]
+  - **ID:** `test-track-12345678`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/test-track-12345678/
+
+- [ ] **test-track-20260211** [MEDIUM]
+  - **ID:** `test-track-20260211`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/test-track-20260211/
+
 ---
 
-## Befejezett (Completed - Not Archived) (6)
-
-- [x] **bas_orchestration_chain_20260221**
-  - **ID:** `bas_orchestration_chain_20260221`
-  - Mappa: ./tracks/bas_orchestration_chain_20260221/
-
-- [x] **cloudflare_vectorize_rag_20260221**
-  - **ID:** `cloudflare_vectorize_rag_20260221`
-  - Mappa: ./tracks/cloudflare_vectorize_rag_20260221/
-
-- [x] **cloudflare_workers_ai_20260221**
-  - **ID:** `cloudflare_workers_ai_20260221`
-  - Mappa: ./tracks/cloudflare_workers_ai_20260221/
-
-- [x] **cloudflare_workers_audit_20260221**
-  - **ID:** `cloudflare_workers_audit_20260221`
-  - Mappa: ./tracks/cloudflare_workers_audit_20260221/
+## Befejezett (Completed - Not Archived) (1)
 
 - [x] **Data Flywheel Logikája**
   - **ID:** `financial-auditor-agent-20260214`
   - Mappa: ./tracks/financial-auditor-agent-20260214/
 
-- [x] **test_stabilization_20260221**
-  - **ID:** `test_stabilization_20260221`
-  - Mappa: ./tracks/test_stabilization_20260221/
-
 ---
 
-## Archivalt (Archived) (27)
+## Archivalt (Archived) (33)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
+- [x] **bas_orchestration_chain_20260221** (N/A)
 - [x] **Browser-Use Harvester with Structured JSON Output** (N/A)
 - [x] **cloudflare_browser_rendering_robotkez_20260221** (N/A)
 - [x] **cloudflare_d1_kv_storage_20260221_archived_20260222** (N/A)
+- [x] **cloudflare_vectorize_rag_20260221** (N/A)
+- [x] **cloudflare_workers_ai_20260221** (N/A)
+- [x] **cloudflare_workers_audit_20260221** (N/A)
 - [x] **Codex NeuralLink Chat Refactor** (2026-02-13T18:00:00Z)
-- [x] **Dashboard TODO Widget** (2026-02-13)
-- [x] **Dashboard Komplett Tesztsorozat** (2026-02-12T10:30:00Z)
-- [x] **Data Flywheel & Incubator** (2026-02-05)
-- [x] **Enterprise Suite Master - 14 Modulos Vállalati Irányító** (2026-02-17T21:15:00Z)
 
-... and 17 more archived tracks
+... and 23 more archived tracks
 
 ---
 
