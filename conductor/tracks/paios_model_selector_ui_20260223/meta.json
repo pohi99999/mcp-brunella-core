@@ -1,0 +1,52 @@
+{
+  "trackName": "paios_model_selector_ui_20260223",
+  "type": "Dashboard UI",
+  "priority": "MEDIUM",
+  "status": "proposed",
+  "progress": 0,
+  "goal": "ModelSelector React komponens a Dashboard-on: dropdown/tabváltó, amellyel Péter runtime válthat GPT-4o / Gemini / Local / Workers AI között. A kiválasztott model átkerül a POST /api/paios/chat hívásba. A modelRouter.ts már kész backenden — csak a UI hiányzik.",
+  "assignee": "DeveloperAgent + Claude",
+  "createdAt": "2026-02-23T08:00:00Z",
+  "updatedAt": "2026-02-23T08:00:00Z",
+  "blockedBy": ["paios_orchestrator_chat_20260223"],
+  "phases": [
+    {
+      "name": "Phase 1: ModelSelector komponens",
+      "status": "pending",
+      "description": "Radix UI Select komponens 4 providerrel",
+      "tasks": [
+        "[ ] src/dashboard/components/dashboard/ModelSelector.tsx - új komponens",
+        "[ ] Provider opciók: GPT-4o (GitHub Models), Gemini 2.0, Local (Ollama), Workers AI",
+        "[ ] Aktív model mentése localStorage-ba (session persistence)",
+        "[ ] Vizuális indikátor: zöld/piros dot ha a provider elérhető"
+      ]
+    },
+    {
+      "name": "Phase 2: PAIOS Chat Panel integráció",
+      "status": "pending",
+      "description": "Chat panel + ModelSelector összekapcsolása",
+      "tasks": [
+        "[ ] Meglévő vagy új ChatPanel.tsx: model state prop fogadja a ModelSelector értékét",
+        "[ ] POST /api/paios/chat hívásban: model paraméter átadva",
+        "[ ] Teszt: ModelSelector változás → API hívás más model paramétert küld"
+      ]
+    },
+    {
+      "name": "Phase 3: Provider health check UI",
+      "status": "pending",
+      "description": "GET /api/health alapján provider elérhetőség megjelenítése",
+      "tasks": [
+        "[ ] GET /api/health polling (30s interval)",
+        "[ ] ModelSelector melletti badge: provider státusz (UP/DOWN/UNKNOWN)",
+        "[ ] Ha provider DOWN → tooltip warninggal"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "ModelSelector.tsx komponens (Radix UI Select + Tailwind v4)",
+    "Runtime model váltás Dashboard-ról",
+    "Provider health badge (UP/DOWN indikátor)",
+    "localStorage persistence (session-en belül megmarad a választás)",
+    "npm run build && npm test → 0 hiba"
+  ]
+}

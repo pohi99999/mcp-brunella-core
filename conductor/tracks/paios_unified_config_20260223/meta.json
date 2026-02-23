@@ -1,0 +1,50 @@
+{
+  "trackName": "paios_unified_config_20260223",
+  "type": "Infrastructure",
+  "priority": "LOW",
+  "status": "proposed",
+  "progress": 0,
+  "goal": "PAIOS egységes konfigurációs réteg: paios.config.yaml (vagy paios.config.ts) a Zod schema validációval, amely egyetlen helyről konfigurálja az összes provider (GPT-4o, Gemini, Local, Workers AI), agent beállításokat, dashboard URL-eket és Phoenix Protocol paramétereket. A jelenlegi .env + registry.json kombináció helyett strukturáltabb, dokumentált konfig.",
+  "assignee": "DeveloperAgent + Claude",
+  "createdAt": "2026-02-23T08:00:00Z",
+  "updatedAt": "2026-02-23T08:00:00Z",
+  "phases": [
+    {
+      "name": "Phase 1: Config séma tervezés",
+      "status": "pending",
+      "description": "Zod schema + TypeScript típusok az összes PAIOS beállításhoz",
+      "tasks": [
+        "[ ] src/config/paiosConfig.ts - Zod schema (orchestrator, providers, agents, phoenix, dashboard)",
+        "[ ] paios.config.example.yaml - dokumentált példa minden beállítással",
+        "[ ] loadPaiosConfig() - YAML betöltés + Zod validáció + .env override lehetőség"
+      ]
+    },
+    {
+      "name": "Phase 2: Integráció meglévő kóddal",
+      "status": "pending",
+      "description": "modelRouter.ts és orchestratorCore.ts a PAIOS konfig alapján dolgozzon",
+      "tasks": [
+        "[ ] modelRouter.ts: provider config a paiosConfig-ból (ne raw env var-okból)",
+        "[ ] AgentManager.ts: default timeout + retry config a paiosConfig-ból",
+        "[ ] Visszafelé kompatibilis: ha nincs paios.config.yaml, .env fallback"
+      ]
+    },
+    {
+      "name": "Phase 3: Dokumentáció",
+      "status": "pending",
+      "description": "CLAUDE.md frissítés + README példák",
+      "tasks": [
+        "[ ] CLAUDE.md: paios.config.yaml dokumentálása",
+        "[ ] paios.config.example.yaml kommentekkel",
+        "[ ] npm run build && npm test → 0 hiba"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "src/config/paiosConfig.ts - Zod schema + loadPaiosConfig()",
+    "paios.config.example.yaml - teljes, dokumentált konfig példa",
+    "modelRouter.ts + orchestratorCore.ts: konfig alapú működés",
+    "Backward compatible: .env fallback ha nincs YAML",
+    "npm run build && npm test → 0 hiba"
+  ]
+}

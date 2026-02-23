@@ -1,0 +1,52 @@
+{
+  "trackName": "chrome_devtools_mcp_agent_20260223",
+  "type": "Agent Development",
+  "priority": "LOW",
+  "status": "proposed",
+  "progress": 0,
+  "goal": "Chrome DevTools MCP Agent implementálása: ChromeDevToolsAgent, amely Chrome DevTools Protocol (CDP)-n keresztül képes weboldalak hálózati kéréseit vizsgálni, JavaScript hibákat detektálni, és performance profilt készíteni. Hasznos API debug-oláshoz és frontend hibák azonosításához. A fejlesztes.md dokumentumban 'UX & Web Debug Agent' névvel szerepel.",
+  "assignee": "DeveloperAgent + Claude",
+  "createdAt": "2026-02-23T08:00:00Z",
+  "updatedAt": "2026-02-23T08:00:00Z",
+  "phases": [
+    {
+      "name": "Phase 1: CDP integráció",
+      "status": "pending",
+      "description": "chrome-remote-interface npm csomag + alapvető CDP kapcsolat",
+      "tasks": [
+        "[ ] npm install chrome-remote-interface",
+        "[ ] src/agents/ChromeDevToolsAgent.ts - IAgent implementáció",
+        "[ ] CDP kapcsolat: chrome --remote-debugging-port=9222",
+        "[ ] Alapfunkciók: Network.enable, Console.enable, Page.navigate"
+      ]
+    },
+    {
+      "name": "Phase 2: Debug képességek",
+      "status": "pending",
+      "description": "Hálózati kérések, JS hibák, performance rögzítése",
+      "tasks": [
+        "[ ] captureNetworkRequests(url, timeout) → NetworkRequest[]",
+        "[ ] captureConsoleErrors(url, timeout) → ConsoleMessage[]",
+        "[ ] getPerformanceMetrics(url) → PerformanceMetrics",
+        "[ ] generateDebugReport(url) → markdown report"
+      ]
+    },
+    {
+      "name": "Phase 3: Regisztráció + tesztek",
+      "status": "pending",
+      "description": "AgentManager registry + unit tesztek",
+      "tasks": [
+        "[ ] src/agents/registry.json bővítése: ChromeDevToolsAgent",
+        "[ ] test/chromeDevToolsAgent.test.ts (mock CDP)",
+        "[ ] npm run build && npm test → 0 hiba"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "ChromeDevToolsAgent - teljes IAgent implementáció",
+    "Képességek: network capture, console errors, performance metrics",
+    "registry.json-ban regisztrálva",
+    "Mock-alapú unit tesztek",
+    "npm run build && npm test → 0 hiba"
+  ]
+}
