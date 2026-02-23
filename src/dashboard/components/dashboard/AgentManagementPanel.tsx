@@ -3,6 +3,7 @@ import { Brain, Terminal, Play, Activity, CheckCircle2, AlertCircle, Clock, Tras
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Progress } from '@/components/ui/progress'
 import { toast } from 'sonner'
@@ -190,9 +191,16 @@ export function AgentManagementPanel() {
                                         <Terminal className="w-4 h-4" />
                                         Agent Logs: {selectedAgent}
                                     </CardTitle>
-                                    <Button variant="ghost" size="icon" onClick={clearLogs} className="h-8 w-8 text-muted-foreground hover:text-destructive">
-                                        <Trash2 className="w-4 h-4" />
-                                    </Button>
+                                    <Tooltip>
+                                        <TooltipTrigger asChild>
+                                            <Button variant="ghost" size="icon" onClick={clearLogs} className="h-8 w-8 text-muted-foreground hover:text-destructive" aria-label="Clear logs">
+                                                <Trash2 className="w-4 h-4" />
+                                            </Button>
+                                        </TooltipTrigger>
+                                        <TooltipContent>
+                                            <p>Clear logs</p>
+                                        </TooltipContent>
+                                    </Tooltip>
                                 </CardHeader>
                                 <CardContent className="p-0 flex-1 relative">
                                     <ScrollArea className="h-[350px] w-full bg-black/40 p-4 font-mono text-[12px]">
