@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-23T06:00:00.055Z",
+  "lastUpdated": "2026-02-23T22:16:00.772Z",
   "tracks": [
     {
       "id": "aider_integration_20260222",
@@ -11,6 +11,18 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\aider_integration_20260222",
+      "_isArchived": false
+    },
+    {
+      "id": "apify_deep_scraping_agent_20260223",
+      "name": "apify_deep_scraping_agent_20260223",
+      "status": "proposed",
+      "priority": "low",
+      "progress": 0,
+      "assignee": "ResearcherAgent + DeveloperAgent",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\apify_deep_scraping_agent_20260223",
       "_isArchived": false
     },
     {
@@ -40,9 +52,9 @@
     {
       "id": "bas_security_sandbox_20260221",
       "name": "bas_security_sandbox_20260221",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 45,
+      "progress": 100,
       "assignee": "DeveloperAgent + SecurityAgent",
       "tags": [],
       "dependencies": [],
@@ -83,6 +95,18 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cean_phase_2_fleet_management_20260215",
+      "_isArchived": false
+    },
+    {
+      "id": "chrome_devtools_mcp_agent_20260223",
+      "name": "chrome_devtools_mcp_agent_20260223",
+      "status": "proposed",
+      "priority": "low",
+      "progress": 0,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\chrome_devtools_mcp_agent_20260223",
       "_isArchived": false
     },
     {
@@ -463,6 +487,54 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\onboarding-knowledge-manager-20260214",
+      "_isArchived": false
+    },
+    {
+      "id": "paios_model_selector_ui_20260223",
+      "name": "paios_model_selector_ui_20260223",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 100,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\paios_model_selector_ui_20260223",
+      "_isArchived": false
+    },
+    {
+      "id": "paios_orchestrator_chat_20260223",
+      "name": "paios_orchestrator_chat_20260223",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\paios_orchestrator_chat_20260223",
+      "_isArchived": false
+    },
+    {
+      "id": "paios_phoenix_events_panel_20260223",
+      "name": "paios_phoenix_events_panel_20260223",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 100,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\paios_phoenix_events_panel_20260223",
+      "_isArchived": false
+    },
+    {
+      "id": "paios_unified_config_20260223",
+      "name": "paios_unified_config_20260223",
+      "status": "completed",
+      "priority": "low",
+      "progress": 100,
+      "assignee": "DeveloperAgent + Claude",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\paios_unified_config_20260223",
       "_isArchived": false
     },
     {
@@ -1168,84 +1240,11 @@
       "_isArchived": true
     }
   ],
-    {
-      "id": "paios_orchestrator_chat_20260223",
-      "name": "PAIOS Orchestrator Chat Réteg",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "assignee": "DeveloperAgent + Claude",
-      "tags": ["paios", "orchestrator", "chat", "api"],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\paios_orchestrator_chat_20260223",
-      "_isArchived": false
-    },
-    {
-      "id": "paios_model_selector_ui_20260223",
-      "name": "PAIOS ModelSelector UI",
-      "status": "proposed",
-      "priority": "medium",
-      "progress": 0,
-      "assignee": "DeveloperAgent + Claude",
-      "tags": ["paios", "dashboard", "ui", "model-selector"],
-      "dependencies": ["paios_orchestrator_chat_20260223"],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\paios_model_selector_ui_20260223",
-      "_isArchived": false
-    },
-    {
-      "id": "paios_phoenix_events_panel_20260223",
-      "name": "PAIOS PhoenixEventsPanel UI",
-      "status": "proposed",
-      "priority": "medium",
-      "progress": 0,
-      "assignee": "DeveloperAgent + Claude",
-      "tags": ["paios", "dashboard", "phoenix", "observability"],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\paios_phoenix_events_panel_20260223",
-      "_isArchived": false
-    },
-    {
-      "id": "paios_unified_config_20260223",
-      "name": "PAIOS Unified Config (paios.config.yaml)",
-      "status": "proposed",
-      "priority": "low",
-      "progress": 0,
-      "assignee": "DeveloperAgent + Claude",
-      "tags": ["paios", "config", "yaml", "zod"],
-      "dependencies": ["paios_orchestrator_chat_20260223"],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\paios_unified_config_20260223",
-      "_isArchived": false
-    },
-    {
-      "id": "chrome_devtools_mcp_agent_20260223",
-      "name": "Chrome DevTools MCP Agent",
-      "status": "proposed",
-      "priority": "low",
-      "progress": 0,
-      "assignee": "DeveloperAgent + Claude",
-      "tags": ["agent", "cdp", "debug", "network", "performance"],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\chrome_devtools_mcp_agent_20260223",
-      "_isArchived": false
-    },
-    {
-      "id": "apify_deep_scraping_agent_20260223",
-      "name": "Apify Deep Scraping Agent",
-      "status": "proposed",
-      "priority": "low",
-      "progress": 0,
-      "assignee": "ResearcherAgent + DeveloperAgent",
-      "tags": ["agent", "scraping", "apify", "google", "linkedin"],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\apify_deep_scraping_agent_20260223",
-      "_isArchived": false
-    }
-  ],
   "stats": {
     "total": 73,
-    "active": 16,
-    "completed": 1,
+    "active": 15,
+    "completed": 6,
     "archived": 33,
-    "proposed": 13
+    "proposed": 9
   }
 }

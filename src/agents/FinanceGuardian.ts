@@ -1,5 +1,9 @@
-import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
+import { logInfo, logError } from '../utils/logger.js';
+import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
+import { invoiceStore } from '../utils/lancedb_client.js';
+import * as fs from 'fs/promises';
+import * as path from 'path';
 
 /**
  * Invoice Data Structure
@@ -70,7 +74,7 @@ interface FinancialTrendReport {
  * - LanceDB price history integration
  * - Trend forecasting
  */
-export class FinanceGuardian implements IAgent {
+export class FinanceGuardian extends BaseAgent {
   name = 'FinanceGuardian';
   role = 'Financial Monitoring & Anomaly Detection';
   description = 'Pénzügyi Őrszem - Processes invoices, detects anomalies, generates financial reports';
@@ -81,13 +85,28 @@ export class FinanceGuardian implements IAgent {
   private anomaliesDetected: PriceAnomaly[] = [];
 
   /**
-   * Execute invoice processing workflow
+   * Internal execution logic
    */
-  async execute(task: string, _context?: unknown): Promise<AgentResponse> {
-    setAgentStatus(this.name, 'working', task.slice(0, 50));
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = context.task || '';
     const startTime = Date.now();
 
     try {
+      // MASTER TRACK 2: Task 1 - Gmail PDF Download
+      if (task.toLowerCase().includes('download pdf invoice from gmail') || (context.context as any)?.taskType === 'download_invoice') {
+        return await this.handleGmailDownload(context);
+      }
+
+      // MASTER TRACK 2: Task 3 - Process & Duplicate Detection
+      if (task.toLowerCase().includes('process invoice data')) {
+        return await this.handleProcessInvoice(context);
+      }
+
+      // MASTER TRACK 2: Task 4 - Google Sheets Export
+      if (task.toLowerCase().includes('export invoice to google sheets')) {
+        return await this.handleSheetsExport(context);
+      }
+
       logInfo(this.name, `Starting invoice processing: ${task.slice(0, 40)}`);
 
       // Step 1: Extract invoices from PDFs (mock OCR)
@@ -124,7 +143,8 @@ export class FinanceGuardian implements IAgent {
       logInfo(this.name, `Financial report generated: ${anomalies.length} anomalies, ${costSavings.length} opportunities`);
 
       return {
-        status: 'success',
+        success: true,
+        message: `Processed ${invoices.length} invoices. Found ${anomalies.length} anomalies.`,
         data: report,
         metadata: {
           invoicesProcessed: invoices.length,
@@ -137,13 +157,126 @@ export class FinanceGuardian implements IAgent {
       const error = e instanceof Error ? e.message : String(e);
       logError(this.name, `Invoice processing failed: ${error}`);
       return {
-        status: 'error',
-        error: error,
+        success: false,
+        message: `Invoice processing failed: ${error}`,
         metadata: { invoicesProcessed: this.invoiceHistory.size }
       };
-    } finally {
-      setAgentStatus(this.name, 'idle');
     }
+  }
+
+  /**
+   * Handle Gmail PDF download for Master Track 2
+   */
+  private async handleGmailDownload(context: AgentContext): Promise<AgentResult> {
+    const query = (context.query as string) || 'has:attachment filename:pdf "számla" OR "invoice"';
+    logInfo(this.name, `Searching Gmail for invoices with query: "${query}"`);
+
+    const workspace = await getWorkspaceClient();
+    const messages = await workspace.searchEmails(query, 5);
+
+    if (messages.length === 0) {
+      return {
+        success: true,
+        message: "Nem találtam újabb PDF számlát a megadott feltételek alapján.",
+        data: { downloadedFiles: [] }
+      };
+    }
+
+    const downloadedFiles: string[] = [];
+    const tempDir = path.join(process.cwd(), '_br_temp', 'invoices');
+    await fs.mkdir(tempDir, { recursive: true });
+
+    for (const msg of messages) {
+      const attachments = await workspace.getEmailAttachments(msg.id!);
+      for (const att of attachments) {
+        if (att.filename.toLowerCase().endsWith('.pdf')) {
+          const localPath = path.join(tempDir, `${msg.id}_${att.filename}`);
+          await fs.writeFile(localPath, att.data);
+          downloadedFiles.push(localPath);
+          logInfo(this.name, `Downloaded invoice: ${att.filename} to ${localPath}`);
+        }
+      }
+    }
+
+    return {
+      success: true,
+      message: `Sikeresen letöltöttem ${downloadedFiles.length} db PDF számlát a Gmail fiókból.`,
+      data: { downloadedFiles }
+    };
+  }
+
+  /**
+   * Handle invoice processing and duplicate detection
+   */
+  private async handleProcessInvoice(context: AgentContext): Promise<AgentResult> {
+    const invoiceData = (context.invoiceData || context.context) as any;
+    
+    if (!invoiceData || !invoiceData.invoice_number) {
+      return { success: false, message: "Érvénytelen számlaadatok.", data: null };
+    }
+
+    const isDuplicate = await invoiceStore.isDuplicate(invoiceData.invoice_number);
+
+    if (isDuplicate) {
+      logInfo(this.name, `Duplicate invoice ignored: ${invoiceData.invoice_number}`);
+      return {
+        success: true,
+        message: `A számla (${invoiceData.invoice_number}) már létezik a rendszerben. Duplikátum kihagyva.`,
+        data: { isDuplicate: true, invoiceData }
+      };
+    }
+
+    await invoiceStore.addInvoice(invoiceData);
+
+    return {
+      success: true,
+      message: `Számla (${invoiceData.invoice_number}) sikeresen feldolgozva és mentve.`,
+      data: { isDuplicate: false, invoiceData }
+    };
+  }
+
+  /**
+   * Handle exporting invoice to Google Sheets
+   */
+  private async handleSheetsExport(context: AgentContext): Promise<AgentResult> {
+    const invoiceData = (context.invoiceData || context.context) as any;
+    const spreadsheetId = (context.spreadsheetId as string) || process.env.INVOICE_SPREADSHEET_ID;
+
+    if (!invoiceData || !invoiceData.invoice_number) {
+      return { success: false, message: "Érvénytelen számlaadatok az exporthoz.", data: null };
+    }
+
+    if (!spreadsheetId) {
+      return { success: false, message: "Hiányzó Google Sheets ID.", data: null };
+    }
+
+    const workspace = await getWorkspaceClient();
+    
+    // Prepare row data
+    const row = [
+      invoiceData.invoice_number,
+      invoiceData.vendor_name,
+      invoiceData.amount,
+      invoiceData.currency || 'HUF',
+      invoiceData.invoice_date || invoiceData.date || new Date().toISOString().split('T')[0],
+      invoiceData.due_date || '',
+      new Date().toISOString() // Feldolgozás ideje
+    ];
+
+    await workspace.performSheetOperation({
+      operation: 'append',
+      spreadsheetId,
+      range: 'Sheet1!A:G',
+      values: [row]
+    });
+
+    logInfo(this.name, `Invoice ${invoiceData.invoice_number} exported to Google Sheet.`);
+
+    return {
+      success: true,
+      message: `Számla (${invoiceData.invoice_number}) sikeresen exportálva a Google Sheets táblázatba.`,
+      data: { spreadsheetId, invoiceData }
+    };
   }
 
   /**

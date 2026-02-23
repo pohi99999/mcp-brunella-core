@@ -54,6 +54,8 @@ from myai.rag import rag_service
 from myai.refiner_logic import refiner
 from myai.browser_worker import run_scenario, run_structured_extraction, check_setup
 from myai.utils.dataset_manager import save_gold_sample, get_dataset_stats
+from myai.agents.comet.orchestrator import CometOrchestrator
+from myai.agents.comet.models import CometTask
 
 app = FastAPI(title="Brunella Python Subsystem")
 
@@ -74,6 +76,60 @@ class ExecuteRequest(BaseModel):
 class RefineRequest(BaseModel):
     content: str
     source: Optional[str] = "unknown"
+
+class ChatRequest(BaseModel):
+    message: str
+    session_id: Optional[str] = None
+
+class ChatResponse(BaseModel):
+    response: str
+    screenshot: Optional[str] = None
+    session_id: str
+
+@app.post("/browser/chat", response_model=ChatResponse)
+async def browser_chat(request: ChatRequest):
+    if not HAS_PLAYWRIGHT:
+        raise HTTPException(status_code=501, detail="playwright not installed")
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+
+        ai_response = await process_message_simple(request.message, page)
+
+        screenshot_bytes = await page.screenshot(full_page=False)
+        screenshot_base64 = base64.b64encode(screenshot_bytes).decode('utf-8')
+
+        await browser.close()
+
+        return ChatResponse(
+            response=ai_response,
+            screenshot=screenshot_base64,
+            session_id=request.session_id or f"session_{int(asyncio.get_event_loop().time())}"
+        )
+
+@app.get("/browser/screenshot")
+async def browser_screenshot():
+    if not HAS_PLAYWRIGHT:
+        raise HTTPException(status_code=501, detail="playwright not installed")
+
+    async with async_playwright() as p:
+        browser = await p.chromium.launch(headless=True)
+        page = await browser.new_page()
+
+        screenshot_bytes = await page.screenshot(full_page=False)
+        await browser.close()
+
+        return StreamingResponse(io.BytesIO(screenshot_bytes), media_type="image/png")
+
+async def process_message_simple(message: str, page) -> str:
+    # A Cloudflare observe/act API-t imitáljuk itt, vagy csak egy egyszerű navigációt
+    if message.startswith("http"):
+        await page.goto(message)
+        return f"Navigáltam ide: {message}"
+    
+    # Placeholder a komplexebb logikához
+    return f"Készítettem: {message}"
 
 class HarvestRequest(BaseModel):
     scenario_path: str
@@ -398,6 +454,22 @@ async def get_latest_screenshot():
         return FileResponse(str(screenshot_path))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Screenshot failed: {str(e)}")
+
+# --- Comet (Perplexity Style) Agentic Browser Endpoints ---
+
+@app.post("/comet/execute")
+async def comet_execute(req: CometTask):
+    """
+    High-level agentic browser execution using CometOrchestrator.
+    Combines GPT-4o planning with Playwright/Vision execution.
+    """
+    try:
+        orchestrator = CometOrchestrator(headless=True)
+        result = await orchestrator.execute(req.task, context=req.context)
+        return result
+    except Exception as e:
+        traceback.print_exc()
+        raise HTTPException(status_code=500, detail=f"Comet execution failed: {str(e)}")
 
 
 async def _read_stream(stream: asyncio.StreamReader, session_id: str, level: str, log_path: Path) -> None:

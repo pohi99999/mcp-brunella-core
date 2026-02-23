@@ -2,12 +2,13 @@
   "trackName": "paios_model_selector_ui_20260223",
   "type": "Dashboard UI",
   "priority": "MEDIUM",
-  "status": "proposed",
-  "progress": 0,
+  "status": "completed",
+  "progress": 100,
   "goal": "ModelSelector React komponens a Dashboard-on: dropdown/tabváltó, amellyel Péter runtime válthat GPT-4o / Gemini / Local / Workers AI között. A kiválasztott model átkerül a POST /api/paios/chat hívásba. A modelRouter.ts már kész backenden — csak a UI hiányzik.",
   "assignee": "DeveloperAgent + Claude",
   "createdAt": "2026-02-23T08:00:00Z",
-  "updatedAt": "2026-02-23T08:00:00Z",
+  "updatedAt": "2026-02-23T17:05:00Z",
+  "completedAt": "2026-02-23T17:05:00Z",
   "blockedBy": ["paios_orchestrator_chat_20260223"],
   "phases": [
     {

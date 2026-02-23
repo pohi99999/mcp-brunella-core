@@ -19,6 +19,8 @@ import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
 import { agentManager } from './AgentManager.js';
+import { runPythonWorker } from '../utils/pythonShell.js';
+import { lanceDBClient } from '../utils/lancedb_client.js';
 import type { MarketIntelData, MarketIntelRecord } from '../types/enterprise.js';
 
 // ============================================================================
@@ -100,6 +102,11 @@ export class MarketIntelAgent extends BaseAgent {
 
     setAgentStatus(this.name, 'working', `Piaci hírszerzés: ${task.substring(0, 50)}...`);
 
+    // MASTER TRACK 3: Task 3 - Monitor product prices
+    if (task.toLowerCase().includes('monitor product prices') || (context.context as any)?.taskType === 'monitor_market') {
+      return await this.handleMarketMonitoring(context);
+    }
+
     // Memory awareness: Check for past alerts or errors
     const alerts = (context.pastExperiences as any[])?.filter(e => e.text.includes('critical') || e.text.includes('HIBA')) || [];
     if (alerts.length > 0) {
@@ -144,6 +151,87 @@ export class MarketIntelAgent extends BaseAgent {
 
   // Remove the old execute method as it's now handled by executeTask and BaseAgent bridge
 
+
+  /**
+   * Handle market monitoring task for Master Track 3
+   */
+  private async handleMarketMonitoring(context: AgentContext): Promise<AgentResult> {
+    const { url, selectors, productCategory } = (context.context || context) as any;
+
+    if (!url || !selectors) {
+      return { success: false, message: "URL és selectorok megadása kötelező.", data: null };
+    }
+
+    try {
+      // 1. Scraping via Python Worker
+      logInfo(this.name, `Scraping product data from ${url}...`);
+      const scrapedData = await runPythonWorker('market_scraper.py', { url, selectors });
+
+      if (!scrapedData || Object.keys(scrapedData).length === 0) {
+        return { success: false, message: "Nem sikerült adatokat kinyerni az oldalról.", data: null };
+      }
+
+      // 2. Valuation via Python Worker
+      logInfo(this.name, `Evaluating product potential...`);
+      // Simulating some market baseline for the valuation
+      const valuationInput = {
+        ...scrapedData,
+        market_average: scrapedData.price ? parseFloat(scrapedData.price) * 1.2 : 1000, // Mock baseline
+        demand_score: 0.7,
+        rarity: "medium"
+      };
+      const valuationResult = await runPythonWorker('product_valuation.py', valuationInput);
+
+      const marketData = {
+        ...scrapedData,
+        ...valuationResult,
+        category: productCategory || "general",
+        timestamp: new Date().toISOString(),
+        url: url
+      };
+
+      // 3. Store in LanceDB
+      await lanceDBClient.addData('market_intel_data', marketData);
+
+      // 4. Trigger alert if BUY recommendation
+      if (valuationResult.recommendation === 'BUY') {
+        await this.triggerAlert(marketData);
+      }
+
+      return {
+        success: true,
+        message: `Piaci adatok sikeresen gyűjtve és értékelve. Ajánlás: ${valuationResult.recommendation}`,
+        data: marketData
+      };
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError(this.name, `Market monitoring failed: ${error}`);
+      return { success: false, message: `Hiba a piaci figyelés során: ${error}`, data: null };
+    }
+  }
+
+  /**
+   * Trigger an alert via n8n for high potential products
+   */
+  private async triggerAlert(data: any): Promise<void> {
+    logInfo(this.name, `Triggering alert for: ${data.title || data.productName}`);
+    
+    const workflowId = process.env.MARKET_WATCHER_WORKFLOW_ID || 'market_watcher_alert';
+    
+    try {
+      // In a real environment, we'd call the n8n_trigger_workflow tool
+      // Here we simulate the notification
+      logInfo(this.name, `[ALERT] HIGH POTENTIAL: ${data.title} @ ${data.price} ${data.currency}. Score: ${data.potential_score}`);
+      
+      // Attempt to notify n8n if configured
+      if (process.env.N8N_API_KEY) {
+        // This is a placeholder for actual tool call logic
+        // await agentManager.delegate('integrator', `Indíts n8n workflow-t: ${workflowId} adatokkal: ${JSON.stringify(data)}`);
+      }
+    } catch (e) {
+      logError(this.name, `Failed to trigger n8n alert: ${e}`);
+    }
+  }
 
   // ==========================================================================
   // Core Pipeline Methods

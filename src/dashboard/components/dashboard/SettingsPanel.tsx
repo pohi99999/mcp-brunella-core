@@ -2,13 +2,26 @@
  * SettingsPanel - Beállítások és parancsok interaktív kezelése
  */
 
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Separator } from '@/components/ui/separator'
-import { ServiceControlWidget } from './ServiceControlWidget'
-import { Settings, RefreshCw, Terminal, Zap } from 'lucide-react'
+import { useState } from 'react';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
+import { Separator } from '@/components/ui/separator';
+import { ServiceControlWidget } from './ServiceControlWidget';
+import { ModelSelector, type ModelProvider } from './ModelSelector';
+import { PAIOSConfigDisplay } from './PAIOSConfigDisplay';
+import { Settings, RefreshCw, Terminal, Zap, Brain, FileCode2 } from 'lucide-react';
+import { toast } from 'sonner';
 
 export function SettingsPanel() {
+  const [defaultModel, setDefaultModel] = useState<ModelProvider>('gemini');
+
+  const handleModelChange = (provider: ModelProvider) => {
+    setDefaultModel(provider);
+    // Save to localStorage
+    localStorage.setItem('paios_default_model', provider);
+    toast.success(`Model provider changed to: ${provider}`);
+  };
+
   return (
     <div className="space-y-6">
       <Card className="border-zinc-800/80 bg-zinc-950/60">
@@ -23,6 +36,25 @@ export function SettingsPanel() {
         </CardHeader>
         <CardContent className="space-y-6">
           <ServiceControlWidget />
+
+          <Separator className="bg-zinc-800" />
+
+          {/* PAIOS Model Provider Selection */}
+          <div>
+            <h3 className="text-sm font-medium text-zinc-300 mb-3 flex items-center gap-2">
+              <Brain size={16} className="text-blue-500" />
+              PAIOS Model Provider
+            </h3>
+            <p className="text-xs text-zinc-500 mb-3">
+              Alapértelmezett LLM provider a PAIOS Orchestrator számára
+            </p>
+            <ModelSelector
+              value={defaultModel}
+              onChange={handleModelChange}
+              showHealth={true}
+              className="max-w-sm"
+            />
+          </div>
 
           <Separator className="bg-zinc-800" />
 
@@ -51,6 +83,20 @@ export function SettingsPanel() {
                 Oldal frissítés
               </Button>
             </div>
+          </div>
+
+          <Separator className="bg-zinc-800" />
+
+          {/* PAIOS Unified Config Display */}
+          <div>
+            <h3 className="text-sm font-medium text-zinc-300 mb-3 flex items-center gap-2">
+              <FileCode2 size={16} className="text-cyan-500" />
+              PAIOS Unified Config
+            </h3>
+            <p className="text-xs text-zinc-500 mb-3">
+              Betöltött konfiguráció: paios.config.yaml
+            </p>
+            <PAIOSConfigDisplay />
           </div>
 
           <Separator className="bg-zinc-800" />

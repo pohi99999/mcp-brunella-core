@@ -8,9 +8,10 @@ const SECRET_PATH = 'F:\\OneDrive\\Desktop\\Brunella_es_en\\09_SECRETS (1)\\clie
 const TOKEN_PATH = path.join(config.systemLogDir, 'google_token.json');
 
 const SCOPES = [
-    'https://www.googleapis.com/auth/gmail.readonly',
-    'https://www.googleapis.com/auth/calendar.readonly',
-    'https://www.googleapis.com/auth/drive.readonly'
+    'https://www.googleapis.com/auth/gmail.modify',
+    'https://www.googleapis.com/auth/calendar',
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/spreadsheets'
 ];
 
 export async function getGoogleAuth() {

@@ -10,6 +10,7 @@ interface SystemSignalState {
   chatter: ChatterEntry[];
   robotkezPlan: RobotkezPlan | null;
   robotkezSteps: RobotkezStep[];
+  machineAlerts: any[]; // Új: Gépvadász riasztások
 
   // REST API-ból származó adatok (polling, vagy egyszeri lekérés)
   tasks: QueuedTask[];
@@ -32,6 +33,8 @@ interface SystemSignalActions {
   updateRobotkezStep: (step: Partial<RobotkezStep> & { index: number }) => void;
   clearRobotkez: () => void;
   setAllAgentStatuses: (statuses: AgentStatusEntry[]) => void;
+  addMachineAlert: (alert: any) => void;
+  clearMachineAlerts: () => void;
 
   // REST API actionök
   setTasks: (tasks: QueuedTask[]) => void;
@@ -60,6 +63,7 @@ export const useSystemSignalStore = create<SystemSignalState & SystemSignalActio
   chatter: [],
   robotkezPlan: null,
   robotkezSteps: [],
+  machineAlerts: [],
   tasks: [],
   taskStats: null,
   healthStatus: null,
@@ -99,6 +103,11 @@ export const useSystemSignalStore = create<SystemSignalState & SystemSignalActio
     statuses.forEach(s => newAgents.set(s.name, { ...s, lastUpdated: Date.now() }));
     return { agents: newAgents };
   }),
+
+  addMachineAlert: (alert) => set((state) => ({
+    machineAlerts: [alert, ...state.machineAlerts].slice(0, 50)
+  })),
+  clearMachineAlerts: () => set({ machineAlerts: [] }),
 
   setTasks: (tasks) => set({ tasks }),
   setTaskStats: (taskStats) => set({ taskStats }),

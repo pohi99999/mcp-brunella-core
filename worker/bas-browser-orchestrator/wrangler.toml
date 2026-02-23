@@ -1,0 +1,13 @@
+name = "bas-browser-orchestrator"
+main = "index.js"
+compatibility_date = "2026-02-23"
+
+[vars]
+SESSION_TIMEOUT = "300"
+
+[browser]
+binding = "BROWSER"
+
+[[ai_gateway]]
+binding = "AI"
+id = "bas-gateway"

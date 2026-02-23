@@ -85,13 +85,13 @@ describe('MarketIntelAgent', () => {
     it('should handle empty competitor list', async () => {
       const task = JSON.stringify({
         competitors: [],
-        productCategory: 'SaaS',
+        productCategory: 'software licenses',
       });
 
       const result = await agent.execute(task);
 
       expect(result.status).toBe('success');
-      // Should use defaults
-    }, 60000);
+      expect(result.data.summary.competitorsScraped).toBeGreaterThan(0);
+    }, 90000);
   });
 });

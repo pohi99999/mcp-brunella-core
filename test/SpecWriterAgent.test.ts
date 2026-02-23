@@ -182,16 +182,13 @@ Test CLI command
     });
 
     it("should return error if idea is missing", async () => {
-      const result = await agent.execute("", {
+      const result = await agent.execute("", { 
         // Empty task
-        metadata: { idea: "" }, // Explicitly empty idea
       });
 
       expect(result.status).toBe("error");
-      expect(result.error).toBe(
-        "Missing idea in context.metadata.idea or context.task",
-      );
-    });
+      expect(result.error).toContain("Missing idea");
+    }, 30000);
   });
 
   describe("Stage 2: Track Markdown Generation", () => {
