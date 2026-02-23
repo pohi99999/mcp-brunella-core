@@ -61,7 +61,29 @@
       "autoStart": false
     },
     {
-      "name": "developer",
+      "name": "CometBrowser",
+      "class": "CometBrowserAgent",
+      "module": "./agents/CometBrowserAgent.js",
+      "description": "Comet-szintű autonóm böngésző ügynök önjavítással és memóriával.",
+      "capabilities": [
+        "web_search",
+        "data_extract",
+        "form_fill",
+        "self_healing",
+        "selector_memory"
+      ],
+      "priority": 2,
+      "autoStart": false,
+      "triggers": [
+        "böngéssz",
+        "keress a weben",
+        "tölts ki",
+        "keresd a legolcsóbb",
+        "comet"
+      ]
+    },
+    {
+      "name": "Developer",
       "title": "Developer Agent",
       "description": "Kodol es javit a self-healing pipeline segitsegevel.",
       "class": "DeveloperAgent",
@@ -927,6 +949,35 @@
       "status": "active",
       "tags": ["leads", "sales", "mining", "icebreaker"],
       "priority": 7
+    },
+    {
+      "name": "apify_scraping",
+      "title": "Apify Deep Scraping Agent",
+      "description": "Professional web scraping via Apify platform: Google Search, LinkedIn leads, e-commerce products, social media trends",
+      "class": "ApifyScrapingAgent",
+      "module": "./agents/ApifyScrapingAgent.js",
+      "capabilities": [
+        "google_search",
+        "linkedin_leads",
+        "ecommerce_scrape",
+        "trend_analysis",
+        "social_media"
+      ],
+      "triggers": [
+        "scrape",
+        "google",
+        "linkedin",
+        "leads",
+        "ecommerce",
+        "apify",
+        "amazon",
+        "twitter",
+        "trend"
+      ],
+      "category": "research",
+      "status": "active",
+      "tags": ["scraping", "apify", "research", "intelligence", "leads"],
+      "priority": 4
     }
   ]
 }
