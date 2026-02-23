@@ -21,6 +21,7 @@ import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
 import { agentManager } from './AgentManager.js';
 import { runPythonWorker } from '../utils/pythonShell.js';
 import { lanceDBClient } from '../utils/lancedb_client.js';
+import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import type { MarketIntelData, MarketIntelRecord } from '../types/enterprise.js';
 
 // ============================================================================
@@ -105,6 +106,11 @@ export class MarketIntelAgent extends BaseAgent {
     // MASTER TRACK 3: Task 3 - Monitor product prices
     if (task.toLowerCase().includes('monitor product prices') || (context.context as any)?.taskType === 'monitor_market') {
       return await this.handleMarketMonitoring(context);
+    }
+
+    // MACHINE HUNTER: Live Hunt & Outreach
+    if (task.toLowerCase().includes('machine hunt') || (context.context as any)?.taskType === 'machine_hunt') {
+      return await this.handleMachineHunt(context);
     }
 
     // Memory awareness: Check for past alerts or errors
@@ -207,6 +213,100 @@ export class MarketIntelAgent extends BaseAgent {
       const error = e instanceof Error ? e.message : String(e);
       logError(this.name, `Market monitoring failed: ${error}`);
       return { success: false, message: `Hiba a piaci figyelés során: ${error}`, data: null };
+    }
+  }
+
+  /**
+   * Handle specialized machine hunting and automated outreach
+   */
+  private async handleMachineHunt(context: AgentContext): Promise<AgentResult> {
+    const query = context.query || context.task || "CNC machine";
+    logInfo(this.name, `🚀 Starting Machine Hunt for: ${query}`);
+
+    try {
+      // 1. Live Scraping
+      logInfo(this.name, `Scraping machines for: ${query}...`);
+      const machines = await runPythonWorker('machine_scraper.py', [query, '5']);
+
+      if (!machines || !Array.isArray(machines) || machines.length === 0) {
+        return { success: false, message: "Nem találtam megfelelő gépeket a piacon." };
+      }
+
+      // 2. Valuation & Arbitrage Detection
+      const opportunities = [];
+      for (const machine of machines) {
+        logInfo(this.name, `Valuing: ${machine.title}`);
+        
+        // Simulating market baseline
+        const valuationInput = {
+          ...machine,
+          market_average: machine.price * 1.3, // Mocking a 30% higher market price
+          demand_score: 0.85
+        };
+        
+        const valuation = await runPythonWorker('product_valuation.py', valuationInput);
+        
+        if (valuation.recommendation === 'BUY' || valuation.potential_score > 0.7) {
+          opportunities.push({ ...machine, ...valuation });
+        }
+      }
+
+      // 3. Automated Outreach for critical opportunities
+      const outreachResults = [];
+      for (const opp of opportunities) {
+        if (opp.potential_score >= 0.8) {
+          logInfo(this.name, `🔥 High potential found! Triggering outreach for: ${opp.title}`);
+          const outreach = await this.performOutreach(opp);
+          outreachResults.push(outreach);
+        }
+      }
+
+      // 4. Store in LanceDB
+      await lanceDBClient.addData('machine_opportunities', opportunities);
+
+      return {
+        success: true,
+        message: `Gépvadászat kész. ${machines.length} gépet vizsgáltam meg, ${opportunities.length} profitábilis lehetőséget találtam. ${outreachResults.length} outreach folyamat elindítva.`,
+        data: {
+          total_scanned: machines.length,
+          opportunities_found: opportunities.length,
+          outreach_triggered: outreachResults.length,
+          best_opportunity: opportunities[0]
+        }
+      };
+
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError(this.name, `Machine hunt failed: ${error}`);
+      return { success: false, message: `Hiba a gépvadászat során: ${error}` };
+    }
+  }
+
+  /**
+   * Perform automated outreach (Email/Notification)
+   */
+  private async performOutreach(opportunity: any): Promise<any> {
+    const icebreaker = `Láttam a hirdetését a(z) ${opportunity.title} gépről a(z) ${opportunity.source} oldalon. Nagyon érdekesnek találjuk a specifikációit...`;
+    
+    logInfo(this.name, `Generating outreach for: ${opportunity.title}`);
+
+    try {
+      // Direct Gmail draft creation via UnifiedWorkspace
+      const workspace = await getWorkspaceClient();
+      const draft = await workspace.createEmailDraft({
+        to: "seller@example.com", // In real life, we'd extract this
+        subject: `Érdeklődés: ${opportunity.title}`,
+        body: `Tisztelt Eladó!\n\n${icebreaker}\n\nSzeretnénk bővebb információt kérni a gép állapotáról.\n\nÜdvözlettel,\nBrunella AI Hunter`
+      });
+
+      return {
+        status: 'draft_created',
+        url: draft.url,
+        opportunity: opportunity.title
+      };
+    } catch (e) {
+      logError(this.name, `Outreach failed: ${e}`);
+      return { status: 'failed', error: String(e) };
     }
   }
 

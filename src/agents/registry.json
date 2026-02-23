@@ -978,6 +978,33 @@
       "status": "active",
       "tags": ["scraping", "apify", "research", "intelligence", "leads"],
       "priority": 4
+    },
+    {
+      "name": "chrome_devtools",
+      "title": "Chrome DevTools Debug Agent",
+      "description": "Chrome DevTools Protocol (CDP) based web debugger: network requests, console errors, performance metrics, debug reports",
+      "class": "ChromeDevToolsAgent",
+      "module": "./agents/ChromeDevToolsAgent.js",
+      "capabilities": [
+        "network_capture",
+        "console_errors",
+        "performance_metrics",
+        "debug_report"
+      ],
+      "triggers": [
+        "debug",
+        "network",
+        "performance",
+        "chrome",
+        "devtools",
+        "console",
+        "teljesítmény",
+        "hálózat"
+      ],
+      "category": "engineering",
+      "status": "active",
+      "tags": ["debug", "devtools", "performance", "cdp", "playwright"],
+      "priority": 3
     }
   ]
 }

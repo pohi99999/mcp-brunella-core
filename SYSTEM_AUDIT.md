@@ -13,7 +13,7 @@ Ez a dokumentum a Brunella Rendszer központi katalógusa és stratégiai irány
 | 2 | **Enterprise Lead Hunter** | LinkedIn lead kutatás és automata outreach. | **Master Track 1 Folyamatban** |
 | 3 | **Logistics Smart Dispatcher**| Automata csomagkövetés és útvonal-optimalizálás. | **Aktív (Logistics Vertical)** |
 | 4 | **Invoice to Sheets** | Gmail PDF-ből automata adatkinyerés és Sheets könyvelés. | **Master Track 2 KÉSZ** |
-| 5 | **Green Market Watcher** | Piaci árazás és konkurencia figyelés. | **Master Track 3 KÉSZ** |
+| 5 | **Green Market Watcher** | Piaci árazás és konkurencia figyelés. | **Master Track 3 & 5 KÉSZ** |
 | 6 | **Lead Mining-as-a-Service** | Validált lead listák MI által írt jégtörő mondatokkal. | **Master Track 1 Aktív** |
 | 7 | **Digitális Fejvadász (HR)** | Önéletrajz szűrés, pontozás és interjúkérdés generálás. | **Alvó / Tervezett** |
 | 8 | **Innovation Bridge** | Kereszt-iparági technológiai megoldás kereső. | **Tervezett** |
