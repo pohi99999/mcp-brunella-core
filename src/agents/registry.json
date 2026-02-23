@@ -10,7 +10,7 @@
       "capabilities": ["planning", "routing", "delegation"],
       "tools": ["agent_list", "agent_delegate"],
       "category": "core",
-      "status": "planned",
+      "status": "active",
       "tags": ["coordination", "workflow"]
     },
     {
@@ -86,7 +86,7 @@
         "system_run_command"
       ],
       "category": "quality",
-      "status": "planned",
+      "status": "active",
       "tags": ["testing", "qa"]
     },
     {
@@ -110,7 +110,7 @@
       "capabilities": ["docs", "summarization"],
       "tools": ["workspace_read_file", "knowledge_read_context"],
       "category": "product",
-      "status": "planned",
+      "status": "active",
       "tags": ["docs", "communication"]
     },
     {
@@ -133,7 +133,7 @@
     {
       "name": "project_organizer",
       "title": "Project Organizer",
-      "description": "Rendszerezi a projektet, mappánkénti tartalomjegyzéket készít és frissíti a könyvtártérképet.",
+      "description": "Rendszerezi a projektet, mappánkénti tartalomjegyzéket készít és frissíti a könyvtár térképet.",
       "class": "DynamicAgent",
       "module": "./agents/DynamicAgent.js",
       "config": {
@@ -181,7 +181,7 @@
         "knowledge_index_file"
       ],
       "category": "integration",
-      "status": "planned",
+      "status": "active",
       "tags": ["anythingllm", "sync"]
     },
     {
@@ -617,22 +617,22 @@
     },
     {
       "name": "logistics_dispatcher",
-      "title": "Logistics Dispatcher Agent",
-      "description": "Phase 5 - Multi-carrier shipment tracking with delay prediction and complaint generation",
-      "class": "LogisticsDispatcherAgent",
-      "module": "./agents/LogisticsDispatcherAgent.js",
+      "title": "Logistics Dispatcher",
+      "description": "Logisztikai Diszpécser - Szállítmány követés, szállítási útvonalak optimizálása, proaktív értesítések",
+      "class": "LogisticsDispatcher",
+      "module": "./agents/LogisticsDispatcher.js",
       "capabilities": [
-        "shipment_tracking",
-        "delay_prediction",
-        "complaint_generation",
-        "customer_notification",
-        "route_optimization"
+        "tracking_extraction",
+        "route_optimization",
+        "proactive_notifications",
+        "carrier_coordination",
+        "delivery_scheduling"
       ],
-      "triggers": ["logistics", "shipment", "tracking", "szallitmany"],
+      "triggers": ["logisztika", "logistics", "tracking", "szállítmány", "útvonal"],
       "category": "enterprise",
       "status": "active",
-      "tags": ["logistics", "tracking", "delivery", "phase5", "bas-suite"],
-      "priority": 7,
+      "tags": ["logistics", "supply_chain", "automation", "enterprise"],
+      "priority": 8,
       "enterpriseModuleId": "logistics",
       "notes": "Supports GLS, DPD, Magyar Posta. Uses RobotkezV2 for carrier scraping."
     },
@@ -806,26 +806,6 @@
       "tags": ["nlp", "sentiment", "emotions", "automation", "enterprise"],
       "priority": 7,
       "enterpriseModuleId": "hr"
-    },
-    {
-      "name": "logistics_dispatcher",
-      "title": "Logistics Dispatcher",
-      "description": "Logisztikai Diszpécser - Szállítmány követés, szállítási útvonalak optimizálása, proaktív értesítések",
-      "class": "LogisticsDispatcher",
-      "module": "./agents/LogisticsDispatcher.js",
-      "capabilities": [
-        "tracking_extraction",
-        "route_optimization",
-        "proactive_notifications",
-        "carrier_coordination",
-        "delivery_scheduling"
-      ],
-      "triggers": ["logisztika", "logistics", "tracking", "szállítmány", "útvonal"],
-      "category": "enterprise",
-      "status": "active",
-      "tags": ["logistics", "supply_chain", "automation", "enterprise"],
-      "priority": 8,
-      "enterpriseModuleId": "logistics"
     },
     {
       "name": "knowledge_builder",

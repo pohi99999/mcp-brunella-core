@@ -271,6 +271,10 @@ export async function startWebServer() {
   io.on("connection", (socket) => {
     logInfo("WebSocket", `Client connected: ${socket.id}`);
 
+    // Send initial agent statuses to the newly connected client
+    const statuses = agentManager.listAgentStatuses();
+    socket.emit('agents:snapshot', statuses);
+
     socket.on("robotkez:abort", async () => {
       logWarn("WebSocket", "User triggered Robotkez Abort");
       await persistentBrowser.close();
@@ -568,8 +572,26 @@ export async function startWebServer() {
           },
         );
 
-        socket.emit("bot_message_chunk", { text: result });
-        saveMessage(DEFAULT_CHAT_ID, "bot", result);
+        // Neural Link: Extract human-friendly reply if available
+        let replyText = "";
+        if (typeof result === "object" && result !== null && "reply" in result) {
+            replyText = (result as any).reply;
+            // Also log the tasks to the console/dashboard for transparency
+            if ((result as any).tasks) {
+                socket.emit("system:log", {
+                    message: `Tasks generated: ${JSON.stringify((result as any).tasks.length)}`,
+                    type: "info",
+                    timestamp: Date.now()
+                });
+            }
+        } else if (typeof result === "object" && result !== null && "message" in result) {
+             replyText = (result as any).message;
+        } else {
+            replyText = String(result);
+        }
+
+        socket.emit("bot_message_chunk", { text: replyText });
+        saveMessage(DEFAULT_CHAT_ID, "bot", replyText);
         socket.emit("bot_message_end", {});
       } catch (e: any) {
         const errMsg = `⚠️ Hiba: ${e.message}`;

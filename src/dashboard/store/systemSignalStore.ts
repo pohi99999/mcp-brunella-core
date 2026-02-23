@@ -31,6 +31,7 @@ interface SystemSignalActions {
   setRobotkezPlan: (plan: RobotkezPlan) => void;
   updateRobotkezStep: (step: Partial<RobotkezStep> & { index: number }) => void;
   clearRobotkez: () => void;
+  setAllAgentStatuses: (statuses: AgentStatusEntry[]) => void;
 
   // REST API actionök
   setTasks: (tasks: QueuedTask[]) => void;
@@ -92,6 +93,12 @@ export const useSystemSignalStore = create<SystemSignalState & SystemSignalActio
     return { robotkezSteps: steps };
   }),
   clearRobotkez: () => set({ robotkezPlan: null, robotkezSteps: [] }),
+
+  setAllAgentStatuses: (statuses) => set(() => {
+    const newAgents = new Map<string, AgentStatusEntry>();
+    statuses.forEach(s => newAgents.set(s.name, { ...s, lastUpdated: Date.now() }));
+    return { agents: newAgents };
+  }),
 
   setTasks: (tasks) => set({ tasks }),
   setTaskStats: (taskStats) => set({ taskStats }),

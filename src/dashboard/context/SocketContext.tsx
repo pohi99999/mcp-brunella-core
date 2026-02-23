@@ -74,6 +74,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
   const addLog = useSystemSignalStore((state) => state.addLog);
   const addChatter = useSystemSignalStore((state) => state.addChatter);
   const updateAgentStatus = useSystemSignalStore((state) => state.updateAgentStatus);
+  const setAllAgentStatuses = useSystemSignalStore((state) => state.setAllAgentStatuses);
   const setRobotkezPlan = useSystemSignalStore((state) => state.setRobotkezPlan);
   const updateRobotkezStep = useSystemSignalStore((state) => state.updateRobotkezStep);
   const clearRobotkez = useSystemSignalStore((state) => state.clearRobotkez);
@@ -272,6 +273,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       clearRobotkez();
     });
 
+    socket.on("agents:snapshot", (data: AgentStatusEntry[]) => {
+      if (Array.isArray(data)) {
+        setAllAgentStatuses(data);
+      }
+    });
+
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -289,10 +296,11 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       socket.off("robotkez:plan");
       socket.off("robotkez:step");
       socket.off("robotkez:aborted");
+      socket.off("agents:snapshot");
       socket.disconnect();
       setSocketInstance(null);
     };
-  }, [setConnected, addLog, addChatter, updateAgentStatus, setRobotkezPlan, updateRobotkezStep, clearRobotkez]);
+  }, [setConnected, addLog, addChatter, updateAgentStatus, setAllAgentStatuses, setRobotkezPlan, updateRobotkezStep, clearRobotkez]);
 
   const value: SocketContextValue = {
     socket: socketInstance,
