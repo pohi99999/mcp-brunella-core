@@ -335,41 +335,42 @@ export class OrchestratorAgent implements IAgent {
         .join("\n");
 
       const prompt = `
-You are the Orchestrator of the Brunella Agent System. 
-Your goal is to break down the user request into a list of tasks for specialized agents. 
-You are PROACTIVE, professional, and you speak fluent HUNGARIAN.
+You are Brunella, the intelligent Project Manager of the Brunella Agent System.
+Your goal is to understand the user's intent (written in Hungarian) and orchestrate the right agents to fulfill it.
 
-Available agents:
+**Persona:**
+- Name: Brunella
+- Language: Hungarian (Magyar)
+- Tone: Professional, helpful, concise, and proactive.
+- Role: You are the bridge between the human creative director and the specialized AI agents.
+
+**Available Agents:**
 ${agents}
 
-Available specialized tools (via MCP):
-- GitHub Copilot: Use for complex code generation, refactoring, and AI-assisted debugging.
-- Web Search (Google/Brave): Use for finding real-time information, documentation, and troubleshooting.
-- GitHub: Use for creating issues, pull requests, and managing repository state.
-- n8n: Use for automated workflows and external service integrations.
-- Knowledge Graph / Memory: Use for long-term project context and structured memory.
+**Specialized Tools (via MCP):**
+- GitHub Copilot, Web Search, n8n, Knowledge Graph.
 
-User Request: "${task}"
+**User Request:** "${task}"
 
-Instructions:
+**Instructions:**
 1. Analyze the request.
-2. Select the best agent(s) for the job.
-3. If the request is about checking health, tests, or system audit, use Evaluator.
-4. If the request is about web search, RAG, or summarizing knowledge, use Researcher.
-5. If the request is about code generation, fixing bugs, or self-healing, use Developer. 
-   - Protip: If the task is complex, instruct Developer to use Copilot tools.
-6. If the request is about browser automation, web interaction, or opening URLs, use robotkezv2.
-7. If the request is about project structure, map updates, board organization or directory analysis, use project_organizer.
-8. If the request is about linting or TypeScript micro-fixes, use lint_fixer.
+2. Select the best agent(s).
+3. Generate a plan.
 
-IMPORTANT: If the user says "Delegate X to Agent Y" or "Have Agent Y do X", respect that explicit assignment.
+**Output Format:**
+You must provide a JSON object with two fields:
+1. "reply": A short, friendly Hungarian message to the user confirming what you are about to do (e.g., "Rendben, elindítom a kutatást...").
+2. "tasks": The JSON array of tasks for the agents.
 
-Output a JSON array of tasks in this format:
-[
-  { "agent": "AgentName", "description": "precise task description in Hungarian", "context": { "key": "value" } }
-]
+Example JSON:
+{
+  "reply": "Értettem, ráállítom a Fejlesztőt a hiba javítására.",
+  "tasks": [
+    { "agent": "developer", "description": "Fix the bug in app.ts", "context": { "file": "app.ts" } }
+  ]
+}
 
-Respond ONLY with the JSON array. Do not add markdown blocks.
+Respond ONLY with the valid JSON object. No markdown blocks.
 `;
 
       const responseText = await chatWithOllama(
@@ -385,8 +386,28 @@ Respond ONLY with the JSON array. Do not add markdown blocks.
           .replace(/```json/g, "")
           .replace(/```/g, "")
           .trim();
-        const match = cleanJson.match(/\[.*\]/s);
-        const tasks = JSON.parse(match ? match[0] : "[]");
+        
+        let tasks = [];
+        let reply = "";
+
+        try {
+            const parsed = JSON.parse(cleanJson);
+            if (Array.isArray(parsed)) {
+                tasks = parsed;
+                reply = `Feldolgozva: ${tasks.length} feladat generálva.`;
+            } else if (parsed.tasks && Array.isArray(parsed.tasks)) {
+                tasks = parsed.tasks;
+                reply = parsed.reply || "A feladatokat kiosztottam.";
+            }
+        } catch (e) {
+            // Fallback: try to find array in string
+            const match = cleanJson.match(/\[.*\]/s);
+            tasks = JSON.parse(match ? match[0] : "[]");
+            reply = "A terv elkészült.";
+        }
+
+        // Log the human-friendly reply (which should ideally be sent to UI via socket)
+        this.logger.info(`[Brunella]: ${reply}`);
 
         // === COMPOUND TASK: szekvenciális chain pipeline ===
         if (isCompound && tasks.length > 1) {
