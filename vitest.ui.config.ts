@@ -7,11 +7,11 @@ export default defineConfig({
     include: ['src/dashboard/**/*.test.{ts,tsx}'], // Include tests within the dashboard directory
     exclude: ['**/node_modules/**', '**/build/**'],
     globals: true,
-    setupFiles: ['./test/setup.ts'], // Re-use existing setup if compatible
+    setupFiles: ['./test/setup-ui.ts'], // Re-use existing setup if compatible
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'),
+      '@': path.resolve(__dirname, './src/dashboard'),
     },
   },
 });

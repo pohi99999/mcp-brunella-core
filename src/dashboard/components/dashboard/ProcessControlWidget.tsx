@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useSystemSignalStore } from "@/store/systemSignalStore";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useShallow } from 'zustand/react/shallow';
 import { Zap, Pause, Play, XCircle, RefreshCcw, Info, Bug, FileSearch } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -60,23 +62,78 @@ function SortableItem({ task, onControlAction, onViewDetails, onViewTrace }: Sor
         <span className="text-xs text-zinc-600">Státusz: {task.status}</span>
       </div>
       <div className="flex items-center gap-2" {...listeners}>
-        <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'pause')} title="Szüneteltetés"><Pause size={16} /></Button>
-        <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'resume')} title="Folytatás"><Play size={16} /></Button>
-        <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'kill')} title="Leállítás"><XCircle size={16} /></Button>
-        <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'retry')} title="Újrapróbálkozás"><RefreshCcw size={16} /></Button>
-        <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'debugRetry')} title="Debug újrapróbálkozás"><Bug size={16} /></Button>
-        <Button variant="ghost" size="sm" onClick={() => onViewTrace(task.id)} title="Trace megjelenítése"><FileSearch size={16} /></Button>
-        <Button variant="ghost" size="sm" onClick={() => onViewDetails(task)} title="Részletek"><Info size={16} /></Button>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'pause')} aria-label="Szüneteltetés"><Pause size={16} /></Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Szüneteltetés</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'resume')} aria-label="Folytatás"><Play size={16} /></Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Folytatás</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'kill')} aria-label="Leállítás"><XCircle size={16} /></Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Leállítás</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'retry')} aria-label="Újrapróbálkozás"><RefreshCcw size={16} /></Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Újrapróbálkozás</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onControlAction(task.id, 'debugRetry')} aria-label="Debug újrapróbálkozás"><Bug size={16} /></Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Debug újrapróbálkozás</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onViewTrace(task.id)} aria-label="Trace megjelenítése"><FileSearch size={16} /></Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Trace megjelenítése</p>
+          </TooltipContent>
+        </Tooltip>
+
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button variant="ghost" size="sm" onClick={() => onViewDetails(task)} aria-label="Részletek"><Info size={16} /></Button>
+          </TooltipTrigger>
+          <TooltipContent>
+            <p>Részletek</p>
+          </TooltipContent>
+        </Tooltip>
       </div>
     </div>
   );
 }
 
 export function ProcessControlWidget() {
-  const { tasks, setTasks } = useSystemSignalStore((state) => ({
+  const { tasks, setTasks } = useSystemSignalStore(useShallow((state) => ({
     tasks: state.tasks,
     setTasks: state.setTasks,
-  }));
+  })));
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isTraceModalOpen, setIsTraceModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState<QueuedTask | null>(null);
