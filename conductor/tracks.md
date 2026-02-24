@@ -1,12 +1,12 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-24T02:05:00.000Z
-**Generator:** Track State Manager v2.0
+**Utolso frissites:** 2026-02-24T02:15:00.000Z
+**Generator:** Track State Manager v2.0 (Manual Cleanup)
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 89 total tracks | 26 active | 63 archived
+**Stats:** 88 total | 14 active tracks | 74 archived
 
-**Rendszerezés:** 2026-02-24 - Duplikált archive mappa tisztítása + 6 track archiválása
+**Rendszerezés:** 2026-02-24 - Teljes conductor cleanup (23+ track archiválva, JSON-ok frissítve)
 
 ---
 

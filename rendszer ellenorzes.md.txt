@@ -1,8 +1,0 @@
- Kész! Mostantól, amikor a Karmestert hívod, vagy elkezded a munkát, csak annyit kell mondanod (vagy nekem kell
-  automatikusan futtatnom):
-
-  brunella conductor check
-
-  vagy ha én (az AI) dolgozom: node scripts/conductor_diagnostics.mjs.
-
-  Ez azonnal megmondja, ha pl. az Ollama leállt, vagy ha a tracks.md elavult.
