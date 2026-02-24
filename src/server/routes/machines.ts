@@ -16,6 +16,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { socketService } from "../SocketService.js";
 import { logInfo, logError } from "../../utils/logger.js";
+import { alertDispatcher } from "../../pipeline/alertDispatcher.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const WORKER_PATH = path.resolve(__dirname, "../../../myai/workers/machine_hunter.py");
@@ -143,17 +144,11 @@ export function createMachinesRouter(): Router {
     }
 
     const buyResults = huntResult.top_buys ?? [];
-    const broadcastSent = buyResults.length > 0 && socketService.isReady();
-
-    if (broadcastSent) {
-      // 🔔 BUY ajánlások broadcast a dashboardnak (machine_alert event)
-      socketService.emit("machine_alert", {
-        query: huntReq.query,
-        buy_count: buyResults.length,
-        alerts: buyResults,
-        timestamp: Date.now(),
-      });
-      logInfo("MachinesRoute", `Socket.IO machine_alert broadcast – ${buyResults.length} BUY ajánlás`);
+    
+    // 🔔 BUY ajánlások feldolgozása (riasztás + automata outreach)
+    if (buyResults.length > 0) {
+      await alertDispatcher.processHunterResults(huntResult);
+      logInfo("MachinesRoute", `AlertDispatcher feldolgozás kész – ${buyResults.length} BUY ajánlás`);
     }
 
     const response: HuntResponse = {
@@ -163,7 +158,7 @@ export function createMachinesRouter(): Router {
       buy_count: buyResults.length,
       results: huntResult.valuations,
       top_buys: buyResults,
-      broadcast_sent: broadcastSent,
+      broadcast_sent: buyResults.length > 0,
       duration_seconds: huntResult.duration_seconds,
     };
 
