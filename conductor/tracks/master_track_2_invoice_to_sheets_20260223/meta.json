@@ -1,0 +1,11 @@
+{
+  "trackName": "master_track_2_invoice_to_sheets_20260223",
+  "type": "Master Track - Business",
+  "priority": "HIGH",
+  "status": "active",
+  "progress": 80,
+  "goal": "Pillar 2: Invoice → Google Sheets automation. FinanceGuardian OCR + Sheets sync.",
+  "assignee": "Gemini (Phase 1-3 Complete)",
+  "createdAt": "2026-02-23T00:00:00Z",
+  "updatedAt": "2026-02-24T00:00:00Z"
+}

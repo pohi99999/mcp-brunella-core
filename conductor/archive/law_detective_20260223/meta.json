@@ -1,0 +1,12 @@
+{
+  "trackName": "law_detective_20260223",
+  "type": "Agent Development - Compliance",
+  "priority": "MEDIUM",
+  "status": "completed",
+  "progress": 100,
+  "goal": "Magyar Közlöny figyelő agent (Pillar 9): automata jogszabály-figyelés és elemzés KKV-k számára.",
+  "assignee": "Claude (Complete)",
+  "createdAt": "2026-02-23T00:00:00Z",
+  "updatedAt": "2026-02-24T01:47:00Z",
+  "completedAt": "2026-02-24T01:47:00Z"
+}

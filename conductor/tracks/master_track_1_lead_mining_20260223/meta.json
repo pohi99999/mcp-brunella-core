@@ -1,0 +1,11 @@
+{
+  "trackName": "master_track_1_lead_mining_20260223",
+  "type": "Master Track - Business",
+  "priority": "HIGH",
+  "status": "active",
+  "progress": 80,
+  "goal": "Pillar 1: B2B Lead Mining - LeadMiningAgent + SalesHunterAgent implementáció, Dashboard + CLI.",
+  "assignee": "Gemini (Phase 1-3 Complete)",
+  "createdAt": "2026-02-23T00:00:00Z",
+  "updatedAt": "2026-02-24T00:00:00Z"
+}
