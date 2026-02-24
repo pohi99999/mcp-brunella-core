@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-24T00:06:55.523Z
+**Utolso frissites:** 2026-02-24T01:20:00.000Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 73 total | 15 active | 8 completed | 33 archived
+**Stats:** 74 total | 13 active | 12 completed | 33 archived
 
 ---
 
@@ -65,7 +65,6 @@
   - **Assignee:** LawDetectiveAgent
   - Mappa: ./tracks/law_detective_20260223/
 
-- [ ] **aider_integration_20260222** [MEDIUM]
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
   - **Progress:** 60%
