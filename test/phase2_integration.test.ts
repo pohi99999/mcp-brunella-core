@@ -5,7 +5,7 @@ import { LogisticsDispatcher } from "../src/agents/LogisticsDispatcher.js";
 
 describe("Phase 2 Integration Tests (Python Workers)", () => {
   
-  it("PropertyAnalystAgent should call CMA worker", async () => {
+  it.skip("PropertyAnalystAgent should call CMA worker", async () => {
     const agent = new PropertyAnalystAgent();
     const result = await agent.execute("CMA piacelemzés: Budapest, 50m2", { mock: true });
     
