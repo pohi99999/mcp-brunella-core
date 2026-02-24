@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-24T01:00:00.000Z
+**Utolso frissites:** 2026-02-24T00:06:55.523Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 74 total | 14 active | 10 completed | 33 archived
+**Stats:** 73 total | 15 active | 8 completed | 33 archived
 
 ---
 
@@ -49,16 +49,23 @@
   - **Progress:** 10%
   - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
 
----
+--- 
 
-## Aktiv Szalak (Active) (15)
+## Aktiv Szalak (Active) (17)
+
+- [ ] **Master Track 1 - RobotkezV2 & Lead Mining Integration** [HIGH]
+  - **ID:** `master_track_1_lead_mining_20260223`
+  - **Progress:** 100% (Widget integrated, fire test ready)
+  - **Assignee:** LeadMiningAgent + RobotkezV2
+  - Mappa: ./tracks/master_track_1_lead_mining_20260223/
+
+- [ ] **Master Track 4 - Law Detective (Pillar 9)** [MEDIUM]
+  - **ID:** `law_detective_20260223`
+  - **Progress:** 15% (Spec & Plan created, ready for implementation)
+  - **Assignee:** LawDetectiveAgent
+  - Mappa: ./tracks/law_detective_20260223/
 
 - [ ] **aider_integration_20260222** [MEDIUM]
-  - **ID:** `aider_integration_20260222`
-  - **Progress:** 10%
-  - **Assignee:** Claude + Aider (GPT-4o/Gemini)
-  - Mappa: ./tracks/aider_integration_20260222/
-
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
   - **Progress:** 60%
@@ -146,7 +153,7 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (10)
+## Befejezett (Completed - Not Archived) (8)
 
 - [x] **bas_security_sandbox_20260221**
   - **ID:** `bas_security_sandbox_20260221`
@@ -154,8 +161,6 @@
 
 - [x] **chrome_devtools_mcp_agent_20260223**
   - **ID:** `chrome_devtools_mcp_agent_20260223`
-  - **Progress:** 100% ✅
-  - **Completed:** 2026-02-24 (Claude)
   - Mappa: ./tracks/chrome_devtools_mcp_agent_20260223/
 
 - [x] **modular-command-center-dashboard-v3-20260219**

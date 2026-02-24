@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-23T23:00:00.100Z",
+  "lastUpdated": "2026-02-24T00:06:55.523Z",
   "tracks": [
     {
       "id": "aider_integration_20260222",
@@ -16,10 +16,10 @@
     {
       "id": "apify_deep_scraping_agent_20260223",
       "name": "apify_deep_scraping_agent_20260223",
-      "status": "proposed",
+      "status": "active",
       "priority": "low",
-      "progress": 0,
-      "assignee": "ResearcherAgent + DeveloperAgent",
+      "progress": 60,
+      "assignee": "Claude (Phase 1-2 Complete)",
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\apify_deep_scraping_agent_20260223",
@@ -100,10 +100,10 @@
     {
       "id": "chrome_devtools_mcp_agent_20260223",
       "name": "chrome_devtools_mcp_agent_20260223",
-      "status": "proposed",
+      "status": "completed",
       "priority": "low",
-      "progress": 0,
-      "assignee": "DeveloperAgent + Claude",
+      "progress": 100,
+      "assignee": "Claude (All phases completed)",
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\chrome_devtools_mcp_agent_20260223",
@@ -463,9 +463,9 @@
     {
       "id": "modular-command-center-dashboard-v3-20260219",
       "name": "modular-command-center-dashboard-v3-20260219",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 40,
+      "progress": 100,
       "assignee": "System",
       "tags": [],
       "dependencies": [],
@@ -1243,8 +1243,8 @@
   "stats": {
     "total": 73,
     "active": 15,
-    "completed": 6,
+    "completed": 8,
     "archived": 33,
-    "proposed": 9
+    "proposed": 7
   }
 }

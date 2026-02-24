@@ -26,14 +26,20 @@ class CometOrchestrator:
         """Feladat végrehajtása fázisokra bontva, önjavító mechanizmussal és memóriával"""
         logger.info(f"[CometOrchestrator] Feladat indítása: {task}")
         
+        session_path = "data/comet_session.json"
         memory_hints = []
         all_results = []
         
         async with async_playwright() as p:
             browser = await p.chromium.launch(headless=self.actor.headless)
+            
+            # Munkamenet betöltése ha létezik
+            storage_state = session_path if os.path.exists(session_path) else None
+            
             browser_context = await browser.new_context(
                 viewport={"width": 1280, "height": 800},
-                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+                user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+                storage_state=storage_state
             )
             
             # Első oldal létrehozása
@@ -79,6 +85,8 @@ class CometOrchestrator:
                         current_attempt_results.append(result)
                     
                     if not failed:
+                        # Mentjük a munkamenetet sikeres végrehajtás után
+                        await browser_context.storage_state(path=session_path)
                         await browser.close()
                         return CometResult(
                             success=True,
