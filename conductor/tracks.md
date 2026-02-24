@@ -1,14 +1,16 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-24T01:50:00.000Z
+**Utolso frissites:** 2026-02-24T02:05:00.000Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 76 total | 11 active | 14 completed | 39 archived
+**Stats:** 89 total tracks | 26 active | 63 archived
+
+**Rendszerezés:** 2026-02-24 - Duplikált archive mappa tisztítása + 6 track archiválása
 
 ---
 
-## Tervezett Szalak (Proposed) (8)
+## Tervezett Szalak (Proposed) (7)
 
 - [ ] **Creative Friction Mediator (The Vibe-Check)** [LOW]
   - **ID:** `creative_friction_mediator_20260212`
@@ -44,20 +46,14 @@
   - **Assignee:** RobotkezAgent + n8n
   - Mappa: ./tracks/micro_csr_automator_20260212/
 
+- [ ] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser** [HIGH]
+  - **ID:** `robotkez_comet_upgrade_20260222`
+  - **Progress:** 10%
+  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
+
 ---
-## Aktiv Szalak (Active) (17)
 
-- [ ] **Master Track 1 - RobotkezV2 & Lead Mining Integration** [HIGH]
-  - **ID:** `master_track_1_lead_mining_20260223`
-  - **Progress:** 100% (Widget integrated, fire test ready)
-  - **Assignee:** LeadMiningAgent + RobotkezV2
-  - Mappa: ./tracks/master_track_1_lead_mining_20260223/
-
-- [ ] **Master Track 4 - Law Detective (Pillar 9)** [MEDIUM]
-  - **ID:** `law_detective_20260223`
-  - **Progress:** 15% (Spec & Plan created, ready for implementation)
-  - **Assignee:** LawDetectiveAgent
-  - Mappa: ./tracks/law_detective_20260223/
+## Aktiv Szalak (Active) (13)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -94,13 +90,6 @@
   - **Progress:** 0%
   - **Assignee:** System
   - Mappa: ./tracks/cean_phase_2_fleet_management_20260215/
-
-- [ ] **Innovation Bridge - Cross-Industry Knowledge Transfer** [MEDIUM]
-  - **ID:** `innovation_bridge_20260212`
-  - **Progress:** 5%
-  - **Assignee:** ResearcherAgent + n8n
-  - **Updated:** 2026-02-19T10:15:00Z
-  - Mappa: ./tracks/innovation_bridge_20260212/
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
@@ -146,7 +135,11 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (8)
+## Befejezett (Completed - Not Archived) (10)
+
+- [x] **aider_integration_20260222**
+  - **ID:** `aider_integration_20260222`
+  - Mappa: ./tracks/aider_integration_20260222/
 
 - [x] **bas_security_sandbox_20260221**
   - **ID:** `bas_security_sandbox_20260221`
@@ -156,20 +149,13 @@
   - **ID:** `chrome_devtools_mcp_agent_20260223`
   - Mappa: ./tracks/chrome_devtools_mcp_agent_20260223/
 
+- [x] **Innovation Bridge - Cross-Industry Knowledge Transfer**
+  - **ID:** `innovation_bridge_20260212`
+  - Mappa: ./tracks/innovation_bridge_20260212/
+
 - [x] **modular-command-center-dashboard-v3-20260219**
   - **ID:** `modular-command-center-dashboard-v3-20260219`
-  - **Result:** 100% Complete. Modular grid layout, unified signal bus, process governor, and self-check diagnostics.
   - Mappa: ./tracks/modular-command-center-dashboard-v3-20260219/
-
-- [x] **RobotkezV2 Comet Upgrade** 🤖 ☄️
-  - **ID:** `robotkez_comet_upgrade_20260222`
-  - **Result:** 100% Complete. Self-healing multi-agent browser with GPT-4o planner, Gemini Critic, and SQLite Action Memory.
-  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
-
-- [x] **Industrial Machine Hunter** 🏭 💰
-  - **ID:** `industrial_machine_hunter_20260216`
-  - **Result:** Live scrapers integrated with Comet engine, real-time alert pipeline, and automated outreach.
-  - Mappa: ./tracks/industrial_machine_hunter_20260216/
 
 - [x] **Data Flywheel Logikája**
   - **ID:** `financial-auditor-agent-20260214`

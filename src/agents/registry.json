@@ -530,6 +530,35 @@
       "status": "active",
       "tags": ["innovation", "triz", "cross-industry", "research", "knowledge-transfer"],
       "priority": 5
+    },
+    {
+      "name": "law_detective",
+      "title": "Law Detective Agent",
+      "description": "Magyar Közlöny intelligence: automated legal monitoring, compliance analysis, and business impact assessment for SMEs",
+      "class": "LawDetectiveAgent",
+      "module": "./agents/LawDetectiveAgent.js",
+      "capabilities": [
+        "law_monitoring",
+        "legal_intelligence",
+        "compliance_analysis",
+        "business_impact_assessment",
+        "magyar_kozlony_tracking"
+      ],
+      "triggers": [
+        "law",
+        "legal",
+        "jogszabály",
+        "közlöny",
+        "compliance",
+        "törvény",
+        "kata",
+        "minimálbér",
+        "adó"
+      ],
+      "category": "compliance",
+      "status": "active",
+      "tags": ["legal", "compliance", "monitoring", "magyar-kozlony", "sme"],
+      "priority": 7
     }
   ]
 }
