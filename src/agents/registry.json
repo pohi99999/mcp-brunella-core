@@ -503,6 +503,33 @@
       "status": "active",
       "tags": ["leads", "sales", "mining"],
       "priority": 7
+    },
+    {
+      "name": "innovation_bridge",
+      "title": "Innovation Bridge Agent",
+      "description": "TRIZ-based cross-industry knowledge transfer: solve industry problems with innovations from completely different industries",
+      "class": "InnovationBridgeAgent",
+      "module": "./agents/InnovationBridgeAgent.js",
+      "capabilities": [
+        "problem_abstraction",
+        "triz_analysis",
+        "cross_industry_search",
+        "analogy_matching",
+        "innovation_reporting"
+      ],
+      "triggers": [
+        "innovation",
+        "triz",
+        "cross-industry",
+        "innovate",
+        "innováció",
+        "find solution",
+        "analogy"
+      ],
+      "category": "research",
+      "status": "active",
+      "tags": ["innovation", "triz", "cross-industry", "research", "knowledge-transfer"],
+      "priority": 5
     }
   ]
 }
