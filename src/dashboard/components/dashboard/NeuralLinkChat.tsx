@@ -8,6 +8,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
@@ -301,19 +302,38 @@ export function NeuralLinkChat() {
         </div>
         <div className="flex items-center gap-1">
           {showBrowser && (
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setBrowserTimestamp(Date.now())} 
-              title="Képernyő frissítése"
-              className="text-zinc-400 hover:text-primary"
-            >
-              <ArrowsClockwise size={16} className={isLoading ? "animate-spin" : ""} />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setBrowserTimestamp(Date.now())}
+                  aria-label="Képernyő frissítése"
+                  className="text-zinc-400 hover:text-primary"
+                >
+                  <ArrowsClockwise size={16} className={isLoading ? "animate-spin" : ""} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Képernyő frissítése</p>
+              </TooltipContent>
+            </Tooltip>
           )}
-          <Button variant="ghost" size="icon" onClick={() => setShowBrowser(!showBrowser)} title={showBrowser ? "Bezár" : "Böngésző"}>
-            {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowBrowser(!showBrowser)}
+                aria-label={showBrowser ? "Bezár" : "Böngésző"}
+              >
+                {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>
+              <p>{showBrowser ? "Bezár" : "Böngésző"}</p>
+            </TooltipContent>
+          </Tooltip>
         </div>
       </CardHeader>
       
