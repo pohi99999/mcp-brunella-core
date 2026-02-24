@@ -1,6 +1,6 @@
 # Brunella Agent System (BAS)
 
-**Verzió:** 2.3.0 | **Utolsó frissítés:** 2026-02-06
+**Verzió:** 2.4.0 | **Utolsó frissítés:** 2026-02-24
 
 AI multi-agent rendszer szoftverfejlesztés automatizálására lokális LLM-ekkel (Ollama), MCP protokollal és hibrid Node.js/Python architektúrával.
 
@@ -205,7 +205,7 @@ PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 ```
 
 Minden nagyobb fejlesztés = Track a `conductor/tracks/` mappában.
-**Jelenleg:** 9 aktív track, 4 lezárt, 25 archivált.
+**Jelenleg:** 14 aktív track, 74 archivált. (2026-02-24 rendszerezés)
 
 ---
 
@@ -965,6 +965,16 @@ brunella robotkez status      # Agent status
 - **NEW:** CLI commands (`brunella robotkez ...`)
 - **IMPROVED:** Persistent Browser (Playwright + Python bridge)
 - **DOCS:** User Guide + Developer Guide for RobotkezV2
+
+### v2.4.0 (2026-02-24)
+
+- **NEW:** 4 új production agent (ApifyScrapingAgent, ChromeDevToolsAgent, InnovationBridgeAgent, LawDetectiveAgent)
+- **NEW:** Aider AI coding assistant integráció
+- **NEW:** 39/39 új teszt (100% pass rate)
+- **CLEANUP:** Teljes projekt rendszerezés (gyökér, conductor, GitHub PRs)
+- **CLEANUP:** 41 nyitott PR bezárva, 74 track archiválva
+- **CLEANUP:** Root gyökér fájlok rendezése (29 temp fájl törölve, 12 áthelyezve)
+- **UPDATED:** project_state.json, tracks.md, SUMMARY.md frissítve
 
 ### v2.3.0 (2026-02-06)
 
