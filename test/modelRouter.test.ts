@@ -26,6 +26,8 @@ import {
 describe('Model Router (G3)', () => {
   beforeEach(() => {
     clearRoutingHistory();
+    // Ensure cloud provider availability for tests
+    process.env.GEMINI_API_KEY = 'test-gemini-key';
   });
 
   // ========================================================================

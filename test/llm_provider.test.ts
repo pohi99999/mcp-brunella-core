@@ -14,7 +14,10 @@ describe.skipIf(isCI)("Brunella 2.0 LLM Provider Test", () => {
         process.env.GEMINI_API_KEY = originalGeminiKey;
         vi.stubGlobal("fetch", vi.fn(async () => ({
             ok: true,
-            json: async () => ({ response: "ok" })
+            json: async () => ({
+                response: "ok",
+                message: { content: "ok" } // Ollama format
+            })
         })) as unknown as typeof fetch);
     });
 
