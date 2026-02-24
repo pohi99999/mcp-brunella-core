@@ -1,26 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-23T23:00:00.100Z
+**Utolso frissites:** 2026-02-24T01:00:00.000Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 76 total | 10 active | 12 completed | 39 archived
+**Stats:** 74 total | 14 active | 10 completed | 33 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (9)
-
-- [ ] **apify_deep_scraping_agent_20260223** [LOW]
-  - **ID:** `apify_deep_scraping_agent_20260223`
-  - **Progress:** 0%
-  - **Assignee:** ResearcherAgent + DeveloperAgent
-  - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
-
-- [ ] **chrome_devtools_mcp_agent_20260223** [LOW]
-  - **ID:** `chrome_devtools_mcp_agent_20260223`
-  - **Progress:** 0%
-  - **Assignee:** DeveloperAgent + Claude
-  - Mappa: ./tracks/chrome_devtools_mcp_agent_20260223/
+## Tervezett Szalak (Proposed) (7)
 
 - [ ] **Creative Friction Mediator (The Vibe-Check)** [LOW]
   - **ID:** `creative_friction_mediator_20260212`
@@ -56,28 +44,26 @@
   - **Assignee:** RobotkezAgent + n8n
   - Mappa: ./tracks/micro_csr_automator_20260212/
 
+- [ ] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser** [HIGH]
+  - **ID:** `robotkez_comet_upgrade_20260222`
+  - **Progress:** 10%
+  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
+
 ---
 
 ## Aktiv Szalak (Active) (15)
 
-- [x] **Master Track 5 - Industrial Machine Hunter Live & Outreach**
-  - **ID:** `industrial_machine_hunter_20260223`
-  - **Result:** Live scraping + Arbitrage valuation + Automated Gmail outreach implemented.
-  - Mappa: ./tracks/industrial_machine_hunter_20260223/
-
-- [ ] **Master Track 1 - RobotkezV2 & Lead Mining Integration** [HIGH]
-  - **ID:** `master_track_1_lead_mining_20260223`
-  - **Progress:** 100% (Widget integrated, fire test ready)
-  - **Assignee:** LeadMiningAgent + RobotkezV2
-  - Mappa: ./tracks/master_track_1_lead_mining_20260223/
-
-- [ ] **Master Track 4 - Law Detective (Pillar 9)** [MEDIUM]
-  - **ID:** `law_detective_20260223`
-  - **Progress:** 10% (Spec & Plan created, ready for implementation)
-  - **Assignee:** LawDetectiveAgent
-  - Mappa: ./tracks/law_detective_20260223/
-
 - [ ] **aider_integration_20260222** [MEDIUM]
+  - **ID:** `aider_integration_20260222`
+  - **Progress:** 10%
+  - **Assignee:** Claude + Aider (GPT-4o/Gemini)
+  - Mappa: ./tracks/aider_integration_20260222/
+
+- [ ] **apify_deep_scraping_agent_20260223** [LOW]
+  - **ID:** `apify_deep_scraping_agent_20260223`
+  - **Progress:** 60%
+  - **Assignee:** Claude (Phase 1-2 Complete)
+  - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
 
 - [ ] **archive** [MEDIUM]
   - **ID:** `archive`
@@ -135,6 +121,10 @@
   - Mappa: ./tracks/local_test_scheduler_20260215/
 
 - [ ] **test-20260211** [MEDIUM]
+  - **ID:** `test-20260211`
+  - **Progress:** 0%
+  - **Assignee:** System
+  - Mappa: ./tracks/test-20260211/
 
 - [ ] **test-feature-20260211** [MEDIUM]
   - **ID:** `test-feature-20260211`
@@ -156,21 +146,21 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (6)
+## Befejezett (Completed - Not Archived) (10)
 
 - [x] **bas_security_sandbox_20260221**
   - **ID:** `bas_security_sandbox_20260221`
   - Mappa: ./tracks/bas_security_sandbox_20260221/
 
-- [x] **Modular Command Center Dashboard V3** ⭐ 📊
-  - **ID:** `modular-command-center-dashboard-v3-20260219`
-  - **Result:** Customizable grid layout + Unified signal bus + Process governor + UI diagnostics.
-  - Mappa: ./tracks/modular-command-center-dashboard-v3-20260219/
+- [x] **chrome_devtools_mcp_agent_20260223**
+  - **ID:** `chrome_devtools_mcp_agent_20260223`
+  - **Progress:** 100% ✅
+  - **Completed:** 2026-02-24 (Claude)
+  - Mappa: ./tracks/chrome_devtools_mcp_agent_20260223/
 
-- [x] **RobotkezV2 Comet Upgrade** 🤖 ☄️
-  - **ID:** `robotkez_comet_upgrade_20260222`
-  - **Result:** Self-healing multi-agent browser with GPT-4o planner, Gemini Critic, and SQLite Action Memory.
-  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
+- [x] **modular-command-center-dashboard-v3-20260219**
+  - **ID:** `modular-command-center-dashboard-v3-20260219`
+  - Mappa: ./tracks/modular-command-center-dashboard-v3-20260219/
 
 - [x] **Data Flywheel Logikája**
   - **ID:** `financial-auditor-agent-20260214`
