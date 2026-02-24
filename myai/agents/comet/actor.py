@@ -69,11 +69,22 @@ class BrowserActor:
             logger.info(f"[BrowserActor] Végrehajtás: {step.action} (Tab: {step.tab_index})")
             
             # Megfelelő fül (page) kiválasztása vagy létrehozása
-            while step.tab_index >= len(pages):
-                new_page = await context.new_page()
-                pages.append(new_page)
+            if step.tab_index == -1:
+                # Kifejezetten új fül kérése
+                page = await context.new_page()
+                pages.append(page)
+            else:
+                # Meglévő fül választása vagy automatikus bővítés
+                while step.tab_index >= len(pages):
+                    new_page = await context.new_page()
+                    pages.append(new_page)
+                page = pages[step.tab_index]
             
-            page = pages[step.tab_index]
+            # Fül előtérbe hozása
+            try:
+                await page.bring_to_front()
+            except:
+                pass
             
             try:
                 result = await self.execute_step(step, page)

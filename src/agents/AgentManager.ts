@@ -1090,19 +1090,23 @@ export class AgentManager extends EventEmitter {
     const lowerInstruction = instruction.toLowerCase();
 
     // Routing szabályok ellenőrzése
-    for (const rule of this.registry.routingRules) {
-      const regex = new RegExp(rule.pattern, "i");
-      if (regex.test(lowerInstruction)) {
-        return rule.agent;
+    if (Array.isArray(this.registry.routingRules)) {
+      for (const rule of this.registry.routingRules) {
+        const regex = new RegExp(rule.pattern, "i");
+        if (regex.test(lowerInstruction)) {
+          return rule.agent;
+        }
       }
     }
 
     // Ügynök trigger-ek ellenőrzése
-    for (const agentConfig of this.registry.agents) {
-      if (agentConfig.triggers) {
-        for (const trigger of agentConfig.triggers) {
-          if (lowerInstruction.includes(trigger.toLowerCase())) {
-            return agentConfig.name;
+    if (Array.isArray(this.registry.agents)) {
+      for (const agentConfig of this.registry.agents) {
+        if (agentConfig.triggers) {
+          for (const trigger of agentConfig.triggers) {
+            if (lowerInstruction.includes(trigger.toLowerCase())) {
+              return agentConfig.name;
+            }
           }
         }
       }

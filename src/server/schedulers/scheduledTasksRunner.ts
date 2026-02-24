@@ -179,8 +179,12 @@ export class ScheduledTasksRunner {
         });
         result = await response.json();
       } else if (task.handler === 'python_script') {
-        logInfo('ScheduledTasksRunner', `Executing Python script: ${task.prompt}`);
-        const pythonShell = new PythonShell(task.prompt.split(' ')[0], {
+        const path = await import('path');
+        const scriptPath = task.prompt.split(' ')[0];
+        const absoluteScriptPath = path.default.resolve(process.cwd(), scriptPath);
+        
+        logInfo('ScheduledTasksRunner', `Executing Python script: ${absoluteScriptPath}`);
+        const pythonShell = new PythonShell(absoluteScriptPath, {
           mode: 'text',
           pythonOptions: ['-u'],
           args: task.prompt.split(' ').slice(1),
