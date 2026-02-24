@@ -1,5 +1,6 @@
 import { socketService } from '../server/SocketService.js';
 import { logInfo, logError } from '../utils/logger.js';
+import { salesOutreach } from './salesOutreach.js';
 
 export interface BuyAlert {
     id: string;
@@ -43,7 +44,13 @@ class AlertDispatcher {
                 this.TAG
             );
 
-            // TODO: Itt lehetne bekötni a NotificationService-t (Email/Slack)
+            // 3. Automatikus Outreach indítása
+            if (alert.score > 0.7) {
+                // Nem várjuk meg a végét (async), hogy ne blokkolja a riasztást
+                salesOutreach.initiateOutreach(alert).catch(err => 
+                    logError(this.TAG, `Outreach hiba: ${err}`)
+                );
+            }
             
         } catch (error) {
             logError(this.TAG, `Hiba a riasztás kiküldése során: ${error}`);
