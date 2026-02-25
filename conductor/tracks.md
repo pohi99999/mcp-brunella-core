@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-25T17:24:26.521Z
+**Utolso frissites:** 2026-02-25T20:30:15.328Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 83 total | 7 active | 1 completed | 68 archived
+**Stats:** 88 total | 7 active | 6 completed | 68 archived
 
 ---
 
@@ -97,7 +97,31 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (1)
+## Befejezett (Completed - Not Archived) (6)
+
+- [x] **Automata Kampány Generátor Ügynök és UI**
+  - **ID:** `campaign-generator-agent-20260225`
+  - **Completed:** 2026-02-25
+  - Mappa: ./tracks/campaign-generator-agent-20260225/
+
+- [x] **Dashboard Teljes Stabilizálása és Auditálása**
+  - **ID:** `dashboard-stabilization-20260225`
+  - **Completed:** 2026-02-25
+  - Mappa: ./tracks/dashboard-stabilization-20260225/
+
+- [x] **Dashboard Funkcionális Integritás Javítása**
+  - **ID:** `functional-integrity-fix-20260225`
+  - **Completed:** 2026-02-25
+  - Mappa: ./tracks/functional-integrity-fix-20260225/
+
+- [x] **Magyar Nyelvű Orkesztráció és Intelligens Irányítás**
+  - **ID:** `hungarian-orchestration-tuning-20260225`
+  - **Completed:** 2026-02-25
+  - Mappa: ./tracks/hungarian-orchestration-tuning-20260225/
+
+- [x] **Innovation Bridge (8. Pillér) - TRIZ Cross-Industry Swarm**
+  - **ID:** `innovation_bridge_20260225`
+  - Mappa: ./tracks/innovation_bridge_20260225/
 
 - [x] **trojan-horse-campaign-20260224**
   - **ID:** `trojan-horse-campaign-20260224`

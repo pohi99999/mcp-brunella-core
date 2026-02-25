@@ -152,6 +152,7 @@ export async function registerAgents() {
   // Initialize Dynamic Agents (not in registry.json)
   try {
     const { DynamicAgent } = await import("../agents/DynamicAgent.js");
+    const { UXDesignerAgent } = await import("../agents/UXDesignerAgent.js");
     const path = await import("path");
     const agentsDir = path.default.join(process.cwd(), "myai/agents");
     agentManager.registerAgent(
@@ -160,6 +161,7 @@ export async function registerAgents() {
     agentManager.registerAgent(
       new DynamicAgent(path.default.join(agentsDir, "agent_architect.toml")),
     );
+    agentManager.registerAgent(new UXDesignerAgent());
   } catch (e: any) {
     logWarn("System", `Could not load dynamic agents: ${e.message}`);
   }

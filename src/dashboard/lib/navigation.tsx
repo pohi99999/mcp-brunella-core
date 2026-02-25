@@ -3,7 +3,7 @@ import {
   LayoutDashboard, Network, Rocket, Cloud, Cpu, MessageSquare,
   Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
   Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow,
-  BarChart3, Flame
+  BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb
 } from "lucide-react";
 
 // Component Imports
@@ -33,7 +33,14 @@ import { TestResultsWidget } from "@/components/dashboard/TestResultsWidget";
 import { EmbeddedWorkflow } from "@/components/dashboard/EmbeddedWorkflow";
 import { PythonWorkersPanel } from "@/components/dashboard/PythonWorkersPanel";
 import { SystemArchitectureWidget } from "@/components/dashboard/SystemArchitectureWidget";
-import { MarketWatcherConfig } from "@/components/dashboard/MarketWatcherConfig";
+import { EnterpriseSuitePanel } from "@/components/dashboard/EnterpriseSuitePanel";
+import { BrunellaStudio } from "@/components/dashboard/BrunellaStudio";
+import { CampaignStudio } from "@/components/dashboard/CampaignStudio";
+import { InnovationBridgeWidget } from "@/components/dashboard/InnovationBridgeWidget";
+import { DigitalHRWidget } from "@/components/dashboard/DigitalHRWidget";
+import { GrantHunterWidget } from "@/components/dashboard/GrantHunterWidget";
+import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
+import { PropertyVisionaryWidget } from "@/components/dashboard/PropertyVisionaryWidget";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy(async () => {
@@ -120,21 +127,31 @@ export function initializeNavigation() {
     { id: "python-workers", label: "Python Workers", icon: Cpu, component: <PythonWorkersPanel /> },
     { id: "inventory", label: "Assets", icon: Box, component: <InventoryCatalog /> },
     { id: "files", label: "Filesystem", icon: FolderOpen, component: <FileExplorer /> },
+    { id: "enterprise-suite", label: "Enterprise Suite", icon: Briefcase, component: <EnterpriseSuitePanel /> },
+    { id: "studio", label: "Brunella Studio", icon: Palette, component: <BrunellaStudio /> },
+    { id: "campaign-studio", label: "Kampány Stúdió", icon: DollarSign, component: <CampaignStudio /> },
+    { id: "innovation-bridge", label: "Innovation Bridge", icon: Lightbulb, component: <InnovationBridgeWidget /> },
+    { id: "digital-hr", label: "Digital HR", icon: Briefcase, component: <DigitalHRWidget /> },
+    { id: "grant-hunter", label: "Grant Hunter", icon: Search, component: <GrantHunterWidget /> },
+    { id: "law-detective", label: "Law Detective", icon: Shield, component: <LawDetectiveWidget /> },
+    { id: "property-visionary", label: "Property Visionary", icon: Box, component: <PropertyVisionaryWidget /> },
     { id: "marketwatcher", label: "Market Watcher", icon: Activity, component: <MarketWatcherConfig /> },
     { id: "settings", label: "System Config", icon: Settings, component: <SettingsPanel /> },
     { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={<Workflow size={20} />} /> },
     { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={<Sparkles size={20} />} /> },
-    { id: "vscode", label: "VSCode Editor", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
+    { id: "vscode", label: "VSCode Stream", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
   ];
 
   items.forEach(item => navigationRegistry.registerItem(item));
 
   // Register groups
-  navigationRegistry.registerGroup({ title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch"] });
-  navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "paios", "phoenix", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez", "marketwatcher"] });
+  navigationRegistry.registerGroup({ title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode"] });
+  navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "paios", "phoenix", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez"] });
+  navigationRegistry.registerGroup({ title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "enterprise-analytics"] });
+  navigationRegistry.registerGroup({ title: "Bevétel", icon: DollarSign, items: ["campaign-studio", "innovation-bridge", "marketwatcher", "inventory"] });
   navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "tasks"] });
-  navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests", "enterprise-analytics"] });
-  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "inventory", "files", "settings", "n8n", "langflow", "vscode"] });
+  navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] });
+  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "files", "settings", "n8n", "langflow"] });
 
   logInfo("NavigationRegistry", "Navigation Registry Initialized.");
 }
