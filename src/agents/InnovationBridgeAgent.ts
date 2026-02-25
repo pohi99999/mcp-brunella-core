@@ -4,6 +4,7 @@ import trizMatrix from "../data/triz_matrix.json" assert { type: "json" };
 import trizPrinciples from "../data/triz_principles.json" assert { type: "json" };
 import { logInfo, logError } from "../utils/logger.js";
 import { agentManager } from "./AgentManager.js";
+import { addToIndex, searchRAG } from "../utils/rag.js";
 
 export class InnovationBridgeAgent extends BaseAgent {
   name = "InnovationBridge";
@@ -16,6 +17,17 @@ export class InnovationBridgeAgent extends BaseAgent {
     logInfo(this.name, `Starting innovation process for: ${task}`);
 
     try {
+      // Step 0: Search memory for existing analogies
+      const previousAnalogies = await searchRAG(`TRIZ analogy for: ${task}`, 3);
+      if (previousAnalogies.length > 0 && previousAnalogies[0].score && previousAnalogies[0].score < 0.2) {
+        logInfo(this.name, "Found high-confidence analogy in memory.");
+        return {
+          success: true,
+          message: `Találtam egy korábbi analógiát, ami segíthet: ${previousAnalogies[0].text.substring(0, 200)}...`,
+          data: { source: "memory", analogy: previousAnalogies[0] }
+        };
+      }
+
       // Stage 1: Analyze Intent and Extract TRIZ Parameters
       const analysis = await this.stage1_analyzeIntent(task);
       logInfo(this.name, `TRIZ Analysis complete: Improved=${analysis.improvedParam}, Worsened=${analysis.worsenedParam}`);
@@ -37,10 +49,15 @@ export class InnovationBridgeAgent extends BaseAgent {
       // Stage 3: Launch Swarm Research
       const swarmResults = await this.stage3_launchSwarm(principles as any[], task);
 
+      // Step 4: Persist findings to RAG
+      const consolidatedFindings = swarmResults.map(r => r.message || JSON.stringify(r)).join("\n\n");
+      const memoryContent = `[TRIZ Analogy] Probléma: ${task} | Ellentmondás: ${analysis.improvedParam} vs ${analysis.worsenedParam} | Megoldások: ${consolidatedFindings}`;
+      await addToIndex(`innovation_${Date.now()}`, memoryContent);
+
       return {
         success: true,
         message: `Innovációs kutatás befejeződött. Azonosított ellentmondás: ${analysis.improvedParam} vs ${analysis.worsenedParam}. Javasolt megoldások száma: ${swarmResults.length}.`,
-        thoughts: `A kutató raj ${swarmResults.length} analógiát talált távoli iparágakban. A szintézis motor készen áll az értékelésre.`,
+        thoughts: `A kutató raj ${swarmResults.length} analógiát talált távoli iparágakban. Az eredményeket elmentettem a LanceDB-be hosszú távú tanuláshoz.`,
         data: {
           trizAnalysis: analysis,
           suggestedPrinciples: principles,
