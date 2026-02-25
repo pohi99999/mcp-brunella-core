@@ -1,0 +1,9 @@
+{
+  "id": "functional-integrity-fix-20260225",
+  "title": "Dashboard Funkcionális Integritás Javítása",
+  "status": "completed",
+  "created": "2026-02-25",
+  "completed": "2026-02-25",
+  "owner": "Gemini",
+  "summary": "A Dashboard és a Backend közötti 'süket' kommunikáció elhárítása. Biztosítva, hogy a gombnyomások valódi háttérfolyamatokat indítsanak el."
+}

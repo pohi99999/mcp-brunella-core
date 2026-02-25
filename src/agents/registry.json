@@ -64,6 +64,36 @@
       "priority": 1
     },
     {
+      "name": "CampaignGenerator",
+      "title": "Campaign Generator",
+      "description": "Teljes marketing kampányt generál: leadek, posztok, landing oldal és akcióterv.",
+      "class": "CampaignGeneratorAgent",
+      "module": "./agents/CampaignGeneratorAgent.js",
+      "category": "marketing",
+      "status": "active",
+      "priority": 5
+    },
+    {
+      "name": "MarketingDirector",
+      "title": "Marketing Director",
+      "description": "Marketing kampány orchestrator és stratégiai irányító.",
+      "class": "MarketingDirectorAgent",
+      "module": "./agents/MarketingDirectorAgent.js",
+      "category": "marketing",
+      "status": "active",
+      "priority": 6
+    },
+    {
+      "name": "PropertyVisionary",
+      "title": "Property Visionary",
+      "description": "Ingatlan elemző és befektetési tanácsadó ágens.",
+      "class": "PropertyVisionaryAgent",
+      "module": "./agents/PropertyVisionaryAgent.js",
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
       "name": "ConflictMediator",
       "module": "./agents/ConflictMediatorAgent.js",
       "class": "ConflictMediatorAgent",
