@@ -12,7 +12,8 @@
 | **D1 Database** | `bas-metadata` → ID: `1c4e7d00-7b09-4ddf-88b4-8df42e1123ab` |
 | **KV Namespace** | ID: `b6718ab359ac401bb24da7c34c24f11b` |
 | **Domain** | `peterpohanka.com` |
-| **Workers** | 20 db (köztük: research-agent, harvest-agent, bas-orchestrator) |
+| **Lead Intelligence Worker** | `https://brunella-lead-intelligence.iam-dd1.workers.dev` |
+| **Workers** | 20+1 db (research-agent, harvest-agent, bas-orchestrator, **brunella-lead-intelligence** ★) |
 | **Dashboard** | https://dash.cloudflare.com/dd107933ac970dac857f27cee7a7ff46 |
 
 > ⚠️ A .env fájlban lévő `CLOUDFLARE_ACCOUNT_ID=1bf6118df97f0e12f3592a89d90deb1e` egy **másik account** (nem BAS_server)!

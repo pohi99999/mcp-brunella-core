@@ -1,16 +1,18 @@
 /**
  * 📊 BRUNELLA Lead Intelligence — Google Sheets Master Sablon
  * ==============================================================
- * HASZNÁLAT:
- *   1. Hozz létre egy új Google Sheet-et
- *   2. Extensions → Apps Script → illeszd be ezt
- *   3. Run → inicializalMasterSheet()
+ * MEGLÉVŐ SHEET-BE INTEGRÁCIÓ:
+ *   https://docs.google.com/spreadsheets/d/1Ja4sdeHs9mSJGJrPhwjnrUr2jNbcR63tJtH34qfHfLY
  *
- * Tabbok:
- *   📋 Leads_Master     — összes lead iparág szerint szűrhető
- *   🎯 Outreach_Pipeline — ügynökségek + küldési státusz
- *   📈 Dashboard        — napi összesítők, grafikonok
- *   ⚙️  Config          — Worker URL, beállítások
+ * HASZNÁLAT:
+ *   1. Nyisd meg a fenti Sheet-et
+ *   2. Extensions → Apps Script → illeszd be ezt a fájlt
+ *   3. Run → inicializalLeadIntelligence()
+ *
+ * Új tabok kerülnek a meglévő Fogorvosok/Ügynökségek mellé:
+ *   📋 Leads_Master     — összes lead (kozmetika, fitness, stb.)
+ *   🎯 Outreach_Pipeline — ügynökség követés (a 10 email státusza)
+ *   📈 Dashboard        — napi összesítők
  */
 
 // ============================================================================
@@ -18,7 +20,7 @@
 // ============================================================================
 
 const CONFIG = {
-  WORKER_URL: 'https://brunella-lead-intelligence.dd107933ac970dac857f27cee7a7ff46.workers.dev',
+  WORKER_URL: 'https://brunella-lead-intelligence.iam-dd1.workers.dev',
   AUTO_REFRESH_HOURS: 6,     // Minden 6 órában frissít
   MIN_PAIN_SCORE: 40,        // Csak 40+ score-os leadek kerülnek be
   MAX_LEADS_PER_SHEET: 500,  // Ennyi sornál több nem kell
@@ -27,6 +29,10 @@ const CONFIG = {
 // ============================================================================
 // FŐ BELÉPÉSI PONT
 // ============================================================================
+
+function inicializalLeadIntelligence() {
+  inicializalMasterSheet();
+}
 
 function inicializalMasterSheet() {
   var ss = SpreadsheetApp.getActiveSpreadsheet();
