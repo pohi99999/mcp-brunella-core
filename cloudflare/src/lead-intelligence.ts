@@ -82,7 +82,7 @@ const INDUSTRY_KEYWORDS: Record<string, string[]> = {
 // ============================================================================
 
 export default {
-  async fetch(request: Request, env: Env): Promise<Response> {
+  async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
     const url = new URL(request.url);
     const path = url.pathname;
 
@@ -106,7 +106,7 @@ export default {
       if (path === '/health') {
         response = await handleHealth(env);
       } else if (path === '/research' && request.method === 'POST') {
-        response = await handleStartResearch(request, env);
+        response = await handleStartResearch(request, env, ctx);
       } else if (path.startsWith('/research/')) {
         const jobId = path.split('/')[2];
         response = await handleGetJob(jobId, env);
@@ -237,7 +237,7 @@ async function handleHealth(env: Env): Promise<Response> {
   }), { headers: { 'Content-Type': 'application/json' } });
 }
 
-async function handleStartResearch(request: Request, env: Env): Promise<Response> {
+async function handleStartResearch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
   const body = await request.json() as { industry: string; city?: string; limit?: number };
   const { industry, city = 'Budapest', limit = 25 } = body;
 
@@ -257,10 +257,10 @@ async function handleStartResearch(request: Request, env: Env): Promise<Response
     VALUES (?, ?, ?, 'running', ?)
   `).bind(jobId, industry, city, now).run();
 
-  // Kutatás futtatása (async — nem várjuk meg)
-  runResearch(industry, city, env, jobId, limit).catch(console.error);
+  // Kutatás futtatása — ctx.waitUntil() biztosítja hogy a Worker ne álljon le előbb
+      ctx.waitUntil(runResearch(industry, city, env, jobId, limit));
 
-  return new Response(JSON.stringify({
+      return new Response(JSON.stringify({
     job_id: jobId,
     status: 'running',
     industry,

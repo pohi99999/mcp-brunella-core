@@ -2,7 +2,39 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-02-25 23:45
+**Utolsó frissítés:** 2026-02-25 03:40
+
+---
+
+## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-02-25 01:00-03:40 - Lead Intelligence Worker + Trojan Horse Campaign Deploy
+
+**Feladat:** Cloudflare Worker deploy lead kutatáshoz + Google Places API integráció + email kampány előkészítés
+
+**Érintett fájlok:**
+- `cloudflare/src/lead-intelligence.ts` (ÚJ — 550 sor Worker kód)
+- `cloudflare/wrangler.lead-intelligence.jsonc` (ÚJ — valódi D1/KV ID-kkal)
+- `conductor/tracks/trojan-horse-campaign-20260224/leads_master_sheets.gs` (ÚJ — Google Sheets sablon)
+- `scripts/deploy-lead-intelligence.bat` (ÚJ)
+- `mcp_servers.json` (ÚJ — hiányzott)
+- `package.json` (módosítva — build script PAIOS prompt copy fix)
+- `docs/cloudflare/INFRASTRUCTURE.md` (frissítve — Worker URL + account adatok)
+
+**Eredmények:**
+✅ Worker deployed: `https://brunella-lead-intelligence.iam-dd1.workers.dev`
+✅ Google Places API kulcs beállítva (secret)
+✅ Valódi teszt: 30 kozmetikai szalon Budapest (score 0-61)
+✅ D1 + KV + AI binding csatolva
+✅ Cron: naponta 02:00-kor automatikus kutatás (kozmetika, fitness, fogorvos)
+✅ 10 email piszkozat Gmail-ben (holnap 10:00 küldés)
+✅ Google Sheets dashboard kész (Fogorvosok + Ügynökségek + Campaign Tracking)
+✅ PAIOS Orchestrator javítva (system prompt .md átmásolás build-be)
+
+**Státusz:** 🟢 100% KÉSZ — Production ready
+**Következő:** 2026-02-26 10:00 → 10 email kiküld ügynökségeknek
+
+**Megjegyzés:** Gemini CLI párhuzamosan dolgozott dashboard teszteken + GitHub push-on (4× timeout, végül sikeres).
 
 ---
 

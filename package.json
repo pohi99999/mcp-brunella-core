@@ -10,7 +10,7 @@
     "brunella-hu": "build/cli-hu.js"
   },
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && node -e \"const fs=require('fs');const src='src/orchestrator/systemPrompt/paios_orchestrator_prompt.md';const dst='build/orchestrator/systemPrompt/paios_orchestrator_prompt.md';fs.mkdirSync('build/orchestrator/systemPrompt',{recursive:true});fs.copyFileSync(src,dst);console.log('✅ PAIOS prompt copied');\"",
     "start": "node build/index.js",
     "dev": "node --loader ts-node/esm src/index.ts",
     "watch": "tsc -w",
