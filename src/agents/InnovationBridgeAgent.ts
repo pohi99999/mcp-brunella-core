@@ -3,6 +3,7 @@ import { generateResponse } from "../core/llm_client.js";
 import trizMatrix from "../data/triz_matrix.json" assert { type: "json" };
 import trizPrinciples from "../data/triz_principles.json" assert { type: "json" };
 import { logInfo, logError } from "../utils/logger.js";
+import { agentManager } from "./AgentManager.js";
 
 export class InnovationBridgeAgent extends BaseAgent {
   name = "InnovationBridge";
@@ -20,25 +21,30 @@ export class InnovationBridgeAgent extends BaseAgent {
       logInfo(this.name, `TRIZ Analysis complete: Improved=${analysis.improvedParam}, Worsened=${analysis.worsenedParam}`);
 
       // Stage 2: Map to TRIZ Principles
-      const principles = this.stage2_mapPrinciples(analysis.improvedIndex, analysis.worsenedParamIndex);
+      const principleIds = this.stage2_mapPrinciples(analysis.improvedIndex, analysis.worsenedParamIndex);
       
-      if (principles.length === 0) {
+      if (principleIds.length === 0) {
         return {
           success: true,
-          message: "A TRIZ mátrix alapján nem találtam közvetlen alapelvet erre az ellentmondásra, de általános innovációs kutatást indíthatok.",
+          message: "A TRIZ mátrix alapján nem találtam közvetlen alapelvet erre az ellentmondásra, de általános kutatást indíthatok.",
           data: { analysis, principles: [] }
         };
       }
 
-      const principlesWithDesc = principles.map(id => trizPrinciples.find(p => p.id === id)).filter(Boolean);
+      const principles = principleIds.map(id => trizPrinciples.find(p => p.id === id)).filter(Boolean);
+      logInfo(this.name, `Launching swarm for principles: ${principleIds.join(", ")}`);
+
+      // Stage 3: Launch Swarm Research
+      const swarmResults = await this.stage3_launchSwarm(principles as any[], task);
 
       return {
         success: true,
-        message: `Azonosítottam az ellentmondást: ${analysis.improvedParam} vs ${analysis.worsenedParam}. Javasolt TRIZ alapelvek: ${principlesWithDesc.map(p => p?.name).join(", ")}.`,
-        thoughts: `A probléma absztrakciója sikeres volt. A következő lépés a kutató raj indítása lesz ezekre az alapelvekre: ${principles.join(", ")}.`,
+        message: `Innovációs kutatás befejeződött. Azonosított ellentmondás: ${analysis.improvedParam} vs ${analysis.worsenedParam}. Javasolt megoldások száma: ${swarmResults.length}.`,
+        thoughts: `A kutató raj ${swarmResults.length} analógiát talált távoli iparágakban. A szintézis motor készen áll az értékelésre.`,
         data: {
           trizAnalysis: analysis,
-          suggestedPrinciples: principlesWithDesc
+          suggestedPrinciples: principles,
+          swarmResults
         }
       };
 
@@ -49,6 +55,23 @@ export class InnovationBridgeAgent extends BaseAgent {
         message: `Hiba az innovációs folyamat során: ${error instanceof Error ? error.message : String(error)}`
       };
     }
+  }
+
+  /**
+   * Stage 3: Launch parallel research swarm
+   */
+  private async stage3_launchSwarm(principles: any[], originalTask: string) {
+    const researchTasks = principles.map(p => {
+      const instruction = `Find cross-industry analogies for the TRIZ principle "${p.name}" (${p.description}) to solve this problem: "${originalTask}". Look in biology, aerospace, or architecture. EXCLUDE software/electronics.`;
+      
+      return agentManager.delegate("Researcher", instruction);
+    });
+
+    const results = await Promise.allSettled(researchTasks);
+    
+    return results
+      .filter(r => r.status === "fulfilled")
+      .map(r => (r as PromiseFulfilledResult<any>).value);
   }
 
   /**
