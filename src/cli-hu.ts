@@ -12,6 +12,7 @@ import TerminalRenderer from "marked-terminal";
 import { readdirSync, existsSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { runInvoiceSync } from './cli/invoiceSync.js';
+import { innovateCommand } from './cli/commands/innovate-hu.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 marked.setOptions({ renderer: new TerminalRenderer() as any });
@@ -79,6 +80,7 @@ async function mainLoop() {
             choices: [
                 { name: '🤖  Ügynökök (Kezelés & Futtatás)', value: 'agents' },
                 { name: '📋  Track-ek (Projekt Ütemterv)', value: 'tracks' },
+                { name: '🌉  Innováció (Innovation Bridge)', value: 'innovation' },
                 { name: '📄  Számlák (Szinkron)', value: 'invoices' },
                 { name: '�  Chat & Kommunikáció', value: 'chat' },
                 { name: '🔧  Rendszer & Diagnosztika', value: 'system' },
@@ -96,6 +98,7 @@ async function mainLoop() {
         try {
             if (choice === 'agents') await agentsMenu();
             else if (choice === 'tracks') await tracksMenu();
+            else if (choice === 'innovation') await innovateCommand();
             else if (choice === 'invoices') await invoiceMenu();
             else if (choice === 'chat') await chatMenu();
             else if (choice === 'system') await systemMenu();
