@@ -18,8 +18,18 @@ import { CloudflareAgentsCard } from "@/components/dashboard/CloudflareAgentsCar
 import { RAGMemoryWidget } from "@/components/dashboard/RAGMemoryWidget";
 import { VectorizeAnalyticsWidget } from "@/components/dashboard/VectorizeAnalyticsWidget";
 import { InvoiceSyncWidget } from "@/components/dashboard/InvoiceSyncWidget";
-import { MarketWatcherConfig } from "@/components/dashboard/MarketWatcherConfig";
+import { MarketWatcherWidget } from "@/components/dashboard/MarketWatcherWidget";
 import { LeadMiningWidget } from "@/components/dashboard/LeadMiningWidget";
+import { EnterpriseSuitePanel } from "@/components/dashboard/EnterpriseSuitePanel";
+import { InnovationBridgeWidget } from "@/components/dashboard/InnovationBridgeWidget";
+import { DigitalHRWidget } from "@/components/dashboard/DigitalHRWidget";
+import { GrantHunterWidget } from "@/components/dashboard/GrantHunterWidget";
+import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
+import { PropertyVisionaryWidget } from "@/components/dashboard/PropertyVisionaryWidget";
+import { SystemGuideWidget } from "@/components/dashboard/SystemGuideWidget";
+import { BrunellaStudio } from "@/components/dashboard/BrunellaStudio";
+import { CampaignGeneratorWidget } from "@/components/dashboard/CampaignGeneratorWidget";
+import { SalesPipelineWidget } from "@/components/dashboard/SalesPipelineWidget";
 
 export interface WidgetDefinition {
   id: string;
@@ -146,7 +156,7 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
   market_watcher: {
     id: "market_watcher",
     label: "Market Watcher",
-    component: MarketWatcherConfig,
+    component: MarketWatcherWidget,
     defaultSize: { w: 6, h: 8 }
   },
   lead_mining: {
@@ -154,5 +164,65 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
     label: "Lead Mining",
     component: LeadMiningWidget,
     defaultSize: { w: 6, h: 8 }
+  },
+  enterprise_suite: {
+    id: "enterprise_suite",
+    label: "Enterprise Suite",
+    component: EnterpriseSuitePanel,
+    defaultSize: { w: 12, h: 10 }
+  },
+  innovation_bridge: {
+    id: "innovation_bridge",
+    label: "Innovation Bridge",
+    component: InnovationBridgeWidget,
+    defaultSize: { w: 12, h: 10 }
+  },
+  digital_hr: {
+    id: "digital_hr",
+    label: "Digital HR",
+    component: DigitalHRWidget,
+    defaultSize: { w: 6, h: 8 }
+  },
+  grant_hunter: {
+    id: "grant_hunter",
+    label: "Grant Hunter",
+    component: GrantHunterWidget,
+    defaultSize: { w: 6, h: 8 }
+  },
+  sales_pipeline: {
+    id: "sales_pipeline",
+    label: "Sales Pipeline",
+    component: SalesPipelineWidget,
+    defaultSize: { w: 12, h: 10 }
+  },
+  law_detective: {
+    id: "law_detective",
+    label: "Law Detective",
+    component: LawDetectiveWidget,
+    defaultSize: { w: 6, h: 8 }
+  },
+  property_visionary: {
+    id: "property_visionary",
+    label: "Property Visionary",
+    component: PropertyVisionaryWidget,
+    defaultSize: { w: 12, h: 10 }
+  },
+  system_guide: {
+    id: "system_guide",
+    label: "Brunella Atlas",
+    component: SystemGuideWidget,
+    defaultSize: { w: 12, h: 10 }
+  },
+  campaign_generator: {
+    id: "campaign_generator",
+    label: "Campaign Generator",
+    component: CampaignGeneratorWidget,
+    defaultSize: { w: 12, h: 10 }
+  },
+  studio: {
+    id: "studio",
+    label: "Brunella Studio",
+    component: BrunellaStudio,
+    defaultSize: { w: 12, h: 12 }
   }
 };
