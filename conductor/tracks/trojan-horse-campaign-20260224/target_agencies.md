@@ -1,4 +1,4 @@
-# Célpont Marketing Ügynökségek a Trójai Faló Kampányhoz
+# Célpont Marketing Ügynökségek (10 db) a Trójai Faló Kampányhoz
 
 | Név | Weboldal | Email cím | Fókusz |
 | :--- | :--- | :--- | :--- |

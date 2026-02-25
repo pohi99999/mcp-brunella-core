@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-25T03:00:00.091Z
+**Utolso frissites:** 2026-02-25T17:24:26.521Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 82 total | 7 active | 0 completed | 68 archived
+**Stats:** 83 total | 7 active | 1 completed | 68 archived
 
 ---
 
@@ -94,6 +94,14 @@
   - **Progress:** 80%
   - **Assignee:** Gemini (Phase 1-3 Complete)
   - Mappa: ./tracks/master_track_3_market_watcher_20260223/
+
+---
+
+## Befejezett (Completed - Not Archived) (1)
+
+- [x] **trojan-horse-campaign-20260224**
+  - **ID:** `trojan-horse-campaign-20260224`
+  - Mappa: ./tracks/trojan-horse-campaign-20260224/
 
 ---
 
