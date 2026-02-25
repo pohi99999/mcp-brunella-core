@@ -1,0 +1,19 @@
+{
+  "parameters": [
+    "Weight of moving object", "Weight of stationary object", "Length of moving object", "Length of stationary object",
+    "Area of moving object", "Area of stationary object", "Volume of moving object", "Volume of stationary object",
+    "Speed", "Force", "Stress or pressure", "Shape", "Stability of object composition", "Strength",
+    "Duration of action of moving object", "Duration of action of stationary object", "Temperature", "Brightness",
+    "Energy spent by moving object", "Energy spent by stationary object", "Power", "Waste of energy",
+    "Waste of substance", "Loss of information", "Waste of time", "Amount of substance", "Reliability",
+    "Accuracy of measurement", "Accuracy of manufacturing", "Harmful factors acting on object",
+    "Harmful side effects", "Manufacturability", "Convenience of use", "Repairability", "Adaptability",
+    "Complexity of object", "Complexity of control", "Level of automation", "Productivity"
+  ],
+  "matrix": {
+    "1": { "2": [1, 28, 15, 35], "9": [8, 15, 35, 2], "17": [2, 28, 29, 35], "39": [28, 2, 35, 18] },
+    "9": { "1": [2, 28, 15, 35], "17": [13, 15, 19, 35], "27": [8, 10, 18, 35], "39": [35, 28, 10, 19] },
+    "17": { "1": [2, 28, 29, 35], "9": [13, 15, 19, 35], "27": [19, 35, 38, 31], "39": [28, 31, 35, 19] },
+    "27": { "9": [8, 10, 18, 35], "17": [19, 35, 38, 31], "36": [1, 28, 15, 35] }
+  }
+}
