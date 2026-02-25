@@ -195,38 +195,23 @@ export function registerCEANWebSocketHandlers(io: Server) {
       "cean:orchestrator:prompt",
       async (data: { prompt: string; timestamp: number }) => {
         try {
-          logInfo("CEANChat", `Prompt received: ${data.prompt.slice(0, 50)}`);
+          logInfo("CEANChat", `Prompt received for Edge: ${data.prompt.slice(0, 50)}`);
 
-          // Get OrchestratorAgent and execute prompt
-          const orchestrator = agentManager.getAgent("OrchestratorAgent");
-          if (!orchestrator) {
-            throw new Error("OrchestratorAgent not found");
-          }
+          // Call Cloudflare Worker directly for global orchestration
+          const response = await cloudflareClient.chat(data.prompt);
 
-          const result = await orchestrator.execute(data.prompt);
-
-          // Extract response and taskId from result
-          const responseContent =
-            typeof result === "string"
-              ? result
-              : typeof result === "object" && result !== null
-                ? (result as Record<string, unknown>).data || JSON.stringify(result)
-                : String(result);
-
-          const taskId = (result as Record<string, unknown>)?.taskId || undefined;
-
-          logInfo("CEANChat", `Response sent (${String(responseContent).length} chars)`);
+          logInfo("CEANChat", `Edge response received`);
 
           // Emit response back to client
           socket.emit("cean:orchestrator:response", {
-            content: responseContent,
-            taskId,
+            content: response.response,
+            taskId: (response as any).taskId,
             timestamp: Date.now(),
           });
         } catch (error: unknown) {
           const errorMsg =
             error instanceof Error ? error.message : String(error);
-          logError("CEANChat", errorMsg);
+          logError("CEANChat", `Edge Error: ${errorMsg}`);
 
           socket.emit("cean:orchestrator:response", {
             error: errorMsg,

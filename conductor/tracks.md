@@ -1,12 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-24T02:15:00.000Z
-**Generator:** Track State Manager v2.0 (Manual Cleanup)
+**Utolso frissites:** 2026-02-25T01:16:58.071Z
+**Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 88 total | 14 active tracks | 74 archived
-
-**Rendszerezés:** 2026-02-24 - Teljes conductor cleanup (23+ track archiválva, JSON-ok frissítve)
+**Stats:** 82 total | 7 active | 0 completed | 68 archived
 
 ---
 
@@ -53,43 +51,13 @@
 
 ---
 
-## Aktiv Szalak (Active) (13)
+## Aktiv Szalak (Active) (7)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
   - **Progress:** 60%
   - **Assignee:** Claude (Phase 1-2 Complete)
   - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
-
-- [ ] **archive** [MEDIUM]
-  - **ID:** `archive`
-  - **Progress:** 0%
-  - **Assignee:** System
-  - Mappa: ./tracks/archive/
-
-- [ ] **basic-test-task-structure-20260219** [MEDIUM]
-  - **ID:** `basic-test-task-structure-20260219`
-  - **Progress:** 0%
-  - **Assignee:** System
-  - Mappa: ./tracks/basic-test-task-structure-20260219/
-
-- [ ] **cean_operations_center_ui_20260215** [MEDIUM]
-  - **ID:** `cean_operations_center_ui_20260215`
-  - **Progress:** 0%
-  - **Assignee:** System
-  - Mappa: ./tracks/cean_operations_center_ui_20260215/
-
-- [ ] **cean_phase2_c_prometheus_20250216** [MEDIUM]
-  - **ID:** `cean_phase2_c_prometheus_20250216`
-  - **Progress:** 0%
-  - **Assignee:** System
-  - Mappa: ./tracks/cean_phase2_c_prometheus_20250216/
-
-- [ ] **cean_phase_2_fleet_management_20260215** [MEDIUM]
-  - **ID:** `cean_phase_2_fleet_management_20260215`
-  - **Progress:** 0%
-  - **Assignee:** System
-  - Mappa: ./tracks/cean_phase_2_fleet_management_20260215/
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
@@ -109,92 +77,42 @@
   - **Assignee:** System
   - Mappa: ./tracks/local_test_scheduler_20260215/
 
-- [ ] **test-20260211** [MEDIUM]
-  - **ID:** `test-20260211`
-  - **Progress:** 0%
-  - **Assignee:** System
-  - Mappa: ./tracks/test-20260211/
+- [ ] **master_track_1_lead_mining_20260223** [HIGH]
+  - **ID:** `master_track_1_lead_mining_20260223`
+  - **Progress:** 80%
+  - **Assignee:** Gemini (Phase 1-3 Complete)
+  - Mappa: ./tracks/master_track_1_lead_mining_20260223/
 
-- [ ] **test-feature-20260211** [MEDIUM]
-  - **ID:** `test-feature-20260211`
-  - **Progress:** 0%
-  - **Assignee:** System
-  - Mappa: ./tracks/test-feature-20260211/
+- [ ] **master_track_2_invoice_to_sheets_20260223** [HIGH]
+  - **ID:** `master_track_2_invoice_to_sheets_20260223`
+  - **Progress:** 80%
+  - **Assignee:** Gemini (Phase 1-3 Complete)
+  - Mappa: ./tracks/master_track_2_invoice_to_sheets_20260223/
 
-- [ ] **test-track-12345678** [MEDIUM]
-  - **ID:** `test-track-12345678`
-  - **Progress:** 0%
-  - **Assignee:** System
-  - Mappa: ./tracks/test-track-12345678/
-
-- [ ] **test-track-20260211** [MEDIUM]
-  - **ID:** `test-track-20260211`
-  - **Progress:** 0%
-  - **Assignee:** System
-  - Mappa: ./tracks/test-track-20260211/
+- [ ] **master_track_3_market_watcher_20260223** [HIGH]
+  - **ID:** `master_track_3_market_watcher_20260223`
+  - **Progress:** 80%
+  - **Assignee:** Gemini (Phase 1-3 Complete)
+  - Mappa: ./tracks/master_track_3_market_watcher_20260223/
 
 ---
 
-## Befejezett (Completed - Not Archived) (10)
-
-- [x] **aider_integration_20260222**
-  - **ID:** `aider_integration_20260222`
-  - Mappa: ./tracks/aider_integration_20260222/
-
-- [x] **bas_security_sandbox_20260221**
-  - **ID:** `bas_security_sandbox_20260221`
-  - Mappa: ./tracks/bas_security_sandbox_20260221/
-
-- [x] **chrome_devtools_mcp_agent_20260223**
-  - **ID:** `chrome_devtools_mcp_agent_20260223`
-  - Mappa: ./tracks/chrome_devtools_mcp_agent_20260223/
-
-- [x] **Innovation Bridge - Cross-Industry Knowledge Transfer**
-  - **ID:** `innovation_bridge_20260212`
-  - Mappa: ./tracks/innovation_bridge_20260212/
-
-- [x] **modular-command-center-dashboard-v3-20260219**
-  - **ID:** `modular-command-center-dashboard-v3-20260219`
-  - Mappa: ./tracks/modular-command-center-dashboard-v3-20260219/
-
-- [x] **Data Flywheel Logikája**
-  - **ID:** `financial-auditor-agent-20260214`
-  - Mappa: ./tracks/financial-auditor-agent-20260214/
-
-- [x] **paios_model_selector_ui_20260223**
-  - **ID:** `paios_model_selector_ui_20260223`
-  - Mappa: ./tracks/paios_model_selector_ui_20260223/
-
-- [x] **paios_orchestrator_chat_20260223**
-  - **ID:** `paios_orchestrator_chat_20260223`
-  - Mappa: ./tracks/paios_orchestrator_chat_20260223/
-
-- [x] **paios_phoenix_events_panel_20260223**
-  - **ID:** `paios_phoenix_events_panel_20260223`
-  - Mappa: ./tracks/paios_phoenix_events_panel_20260223/
-
-- [x] **paios_unified_config_20260223**
-  - **ID:** `paios_unified_config_20260223`
-  - Mappa: ./tracks/paios_unified_config_20260223/
-
----
-
-## Archivalt (Archived) (33)
+## Archivalt (Archived) (68)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
+- [x] **aider_integration_20260222** (N/A)
+- [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
+- [x] **basic-test-task-structure-20260219** (N/A)
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
+- [x] **BAS Enterprise Suite - 18 Module Business Automation** (N/A)
 - [x] **bas_orchestration_chain_20260221** (N/A)
+- [x] **bas_security_sandbox_20260221** (N/A)
 - [x] **Browser-Use Harvester with Structured JSON Output** (N/A)
-- [x] **cloudflare_browser_rendering_robotkez_20260221** (N/A)
-- [x] **cloudflare_d1_kv_storage_20260221_archived_20260222** (N/A)
-- [x] **cloudflare_vectorize_rag_20260221** (N/A)
-- [x] **cloudflare_workers_ai_20260221** (N/A)
-- [x] **cloudflare_workers_audit_20260221** (N/A)
-- [x] **Codex NeuralLink Chat Refactor** (2026-02-13T18:00:00Z)
+- [x] **cean_operations_center_ui_20260215** (N/A)
 
-... and 23 more archived tracks
+... and 58 more archived tracks
 
 ---
 

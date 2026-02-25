@@ -65,7 +65,7 @@ function requestLogging(req: Request, res: Response, next: NextFunction) {
 
 const apiRateLimit = rateLimit({
   windowMs: Number(process.env.RATE_LIMIT_WINDOW_MS) || 60_000,
-  max: Number(process.env.RATE_LIMIT_MAX_PER_WINDOW) || 120,
+  max: Number(process.env.RATE_LIMIT_MAX_PER_WINDOW) || 2000,
   message: { error: "Too many requests" },
   standardHeaders: true,
   legacyHeaders: false,

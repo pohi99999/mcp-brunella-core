@@ -198,8 +198,8 @@ export function JulesPanel() {
               ) : (
                 sessions
                   .slice(0, showAllSessions ? undefined : MAX_VISIBLE_SESSIONS)
-                  .map((session) => (
-                    <TableRow key={session.id} className="text-xs">
+                  .map((session, i) => (
+                    <TableRow key={`session-${session.id || i}`} className="text-xs">
                       <TableCell className="font-mono text-[10px] py-2">
                         {session.id.slice(0, 12)}...
                       </TableCell>
@@ -256,44 +256,50 @@ export function JulesPanel() {
         </div>
 
         {/* Async Tests (GitHub Actions) - Collapsible */}
-        <div className="rounded-md border border-white/10 overflow-hidden">
-          <button
-            className="flex items-center justify-between px-3 py-2 bg-white/5 w-full hover:bg-white/10 transition-colors"
-            onClick={() => setShowAsyncTests(!showAsyncTests)}
-          >
-            <div className="text-xs font-medium text-muted-foreground flex items-center gap-2">
-              Async Tests (GitHub Actions)
-              {runs.length > 0 && (
-                <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
-                  {runs.filter((r) => r.conclusion === "success").length}/{runs.length} Pass
-                </Badge>
-              )}
-            </div>
-            <div className="flex gap-2 items-center">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  refreshRuns();
-                }}
-                disabled={isLoadingRuns}
-                title="Frissítés"
-                className="h-6 w-6 p-0"
-              >
-                <ArrowsClockwise
-                  size={14}
-                  className={isLoadingRuns ? "animate-spin" : ""}
-                />
-              </Button>
-              <span className="text-xs text-muted-foreground">
-                {showAsyncTests ? "▼" : "▶"}
-              </span>
-            </div>
-          </button>
-          {showAsyncTests && (
-            <div>
-          <Table>
+        <div
+          className="flex items-center justify-between px-3 py-2 bg-white/5 w-full hover:bg-white/10 transition-colors cursor-pointer"
+          onClick={() => setShowAsyncTests(!showAsyncTests)}
+          role="button"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              setShowAsyncTests(!showAsyncTests);
+            }
+          }}
+        >
+          <div className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+            Async Tests (GitHub Actions)
+            {runs.length > 0 && (
+              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+                {runs.filter((r) => r.conclusion === "success").length}/{runs.length} Pass
+              </Badge>
+            )}
+          </div>
+          <div className="flex gap-2 items-center">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={(e) => {
+                e.stopPropagation();
+                refreshRuns();
+              }}
+              disabled={isLoadingRuns}
+              title="Frissítés"
+              className="h-6 w-6 p-0"
+            >
+              <ArrowsClockwise
+                size={14}
+                className={isLoadingRuns ? "animate-spin" : ""}
+              />
+            </Button>
+            <span className="text-xs text-muted-foreground">
+              {showAsyncTests ? "▼" : "▶"}
+            </span>
+          </div>
+        </div>
+        {showAsyncTests && (
+          <div className="rounded-md border border-white/10 overflow-hidden">
+            <Table>
             <TableHeader className="bg-white/5">
               <TableRow>
                 <TableHead className="w-[80px]">#</TableHead>
@@ -315,8 +321,8 @@ export function JulesPanel() {
                   </TableCell>
                 </TableRow>
               ) : (
-                runs.map((r) => (
-                  <TableRow key={r.id}>
+                runs.map((r, i) => (
+                  <TableRow key={`run-${r.id || i}`}>
                     <TableCell className="font-mono text-xs">
                       {r.run_number ?? r.id}
                     </TableCell>
@@ -348,7 +354,6 @@ export function JulesPanel() {
           </Table>
           </div>
           )}
-        </div>
 
         {/* Test Trend Chart - Only show if tests are visible and there are successes */}
         {showAsyncTests && runs.length > 0 && runs.some(r => r.conclusion === "success") && (

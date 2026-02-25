@@ -1,7 +1,7 @@
 # 🌌 BRUNELLA MASTER CONTEXT (Élő Rendszertérkép)
 
 **Verzió:** 1.0.0
-**Frissítve:** 2026-02-23
+**Frissítve:** 2026-02-25
 **Státusz:** ACTIVE (Élő rendszer)
 
 ---
@@ -20,7 +20,7 @@ A **Brunella Agent System (BAS)** egy hibrid, multi-agent AI ökoszisztéma, ame
 
 ## 2. 🤖 Az Ügynök Sereg (The Legion)
 
-A rendszer **49** regisztrált ügynökkel rendelkezik.
+A rendszer **32** regisztrált ügynökkel rendelkezik.
 
 ### 👑 Vezérkar (Core Leadership)
 | Ügynök | Szerep | Képességek |
@@ -40,7 +40,8 @@ A rendszer **49** regisztrált ügynökkel rendelkezik.
 | **enterprise_orchestrator** | undefined | enterprise_event_parsing, priority_assignment, module_routing |
 | **researcher** | undefined | rag_search, summarization |
 | **task_decomposer** | undefined | task_decomposition, dag, preview |
-| **developer** | undefined | code_generation, self_healing |
+| **Developer** | undefined | code_generation, self_healing |
+| **robotkezv2** | undefined | web_search, data_extract, form_fill |
 | **qa** | undefined | test_execution, validation |
 | **documenter** | undefined | docs, summarization |
 | **ops** | undefined | monitoring, diagnostics |
@@ -48,8 +49,6 @@ A rendszer **49** regisztrált ügynökkel rendelkezik.
 | **agent_architect** | undefined | prompt_engineering, agent_design, configuration |
 | **integrator** | undefined | integration, knowledge_sync |
 | **lint_fixer** | undefined | lint_check, auto_fix, suggest_fix |
-| **robotkez** | undefined | browser_automation, ui_interaction, screenshots |
-| **robotkezv2** | undefined | agentic_browsing, multi_step_automation, context_awareness |
 | **voice** | undefined | voice_command_refinement, multimodal_context_analysis |
 | **ProjectConductor** | undefined | project_management, documentation_sync, track_management |
 | **copywriter** | undefined | social_media_generation, email_drafting, copywriting |
@@ -59,31 +58,15 @@ A rendszer **49** regisztrált ügynökkel rendelkezik.
 | **sales** | undefined | lead_generation, crm_integration, email_drafting |
 | **sales_hunter** | undefined | linkedin_scraping, lead_scoring, email_draft_generation |
 | **market_intel** | undefined | competitor_scraping, price_extraction, trend_analysis |
-| **procurement** | undefined | supplier_price_analysis, market_comparison, negotiation_strategy_selection |
-| **pricing** | undefined | market_analysis, competitor_tracking, price_optimization |
+| **procurement** | undefined | supplier_price_analysis, negotiation_strategy_selection |
 | **finance_guardian** | undefined | invoice_processing, ocr_extraction, anomaly_detection |
-| **financial_guard** | undefined | invoice_ocr, pdf_processing, duplicate_detection |
 | **email_triage** | undefined | email_classification, priority_detection, auto_response |
-| **grant_watcher** | undefined | grant_scraping, eligibility_matching, teaor_filtering |
-| **digital_headhunter** | undefined | cv_parsing, linkedin_scraping, skill_matching |
-| **local_csr** | undefined | carbon_footprint_tracking, esg_reporting, charity_discovery |
-| **logistics_dispatcher** | undefined | tracking_extraction, route_optimization, proactive_notifications |
-| **knowledge_base_builder** | undefined | message_analysis, faq_extraction, wiki_generation |
-| **digital_office_manager** | undefined | email_triage, automation_rules, priority_scoring |
-| **grant_hunter** | undefined | grant_matching, eligibility_assessment, compliance_checking |
-| **property_analyst** | undefined | vision, ocr, property_analysis |
-| **trend_analyst** | undefined | market_research, competitor_analysis, trend_tracking |
-| **headhunter** | undefined | cv_parsing, candidate_matching, interview_questions |
-| **conflict_mediator** | undefined | sentiment_analysis, conflict_detection, emotion_recognition |
-| **local_csr_bot** | undefined | regulatory_compliance_checking, csr_initiative_recommendation, sustainability_reporting |
-| **sentiment_analyzer** | undefined | sentiment_analysis, emotion_detection, key_phrase_extraction |
-| **knowledge_builder** | undefined | document_creation, wiki_management, knowledge_graph |
-| **proactive_claims** | undefined | claims_processing, risk_assessment, fraud_detection |
-| **Nurturer** | undefined | copywriting, campaign_planning, lead_nurturing |
-| **GenesisOrchestrator** | undefined | task_orchestration, parallel_execution, genesis_protocol |
-| **marketing** | undefined | corporate_lead_hunting, teaser_email_generation, personalization |
-| **ux_designer** | undefined | design_spec_generation, component_blueprint, wireframe_creation |
+| **grant_watcher** | undefined | grant_scraping, eligibility_matching |
+| **logistics_dispatcher** | undefined | tracking_extraction, route_optimization |
+| **knowledge_base_builder** | undefined | message_analysis, wiki_generation |
 | **lead_mining** | undefined | lead_generation, web_scraping, icebreaker_generation |
+| **innovation_bridge** | undefined | problem_abstraction, triz_analysis, cross_industry_search |
+| **law_detective** | undefined | law_monitoring, legal_intelligence, compliance_analysis |
 
 
 ---

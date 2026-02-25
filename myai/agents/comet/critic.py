@@ -3,7 +3,10 @@ import json
 import logging
 import base64
 from typing import Optional, Dict, Any
-import google.generativeai as genai
+try:
+    from google import genai  # Új SDK (google-genai)
+except ImportError:
+    import google.generativeai as genai  # type: ignore  # Fallback régi SDK
 from .models import CriticResult
 
 logger = logging.getLogger(__name__)
@@ -38,8 +41,16 @@ class CriticAgent:
             logger.warning("[CriticAgent] Hiányzó Gemini API kulcs, heurisztikus mód aktív.")
             self.model = None
         else:
-            genai.configure(api_key=api_key)
-            self.model = genai.GenerativeModel('gemini-2.0-flash')
+            try:
+                # Új google-genai SDK
+                self._client = genai.Client(api_key=api_key)
+                self.model = 'gemini-2.0-flash'
+                self._use_new_sdk = True
+            except AttributeError:
+                # Fallback: régi google.generativeai SDK
+                genai.configure(api_key=api_key)  # type: ignore
+                self.model = genai.GenerativeModel('gemini-2.0-flash')  # type: ignore
+                self._use_new_sdk = False
             logger.info("[CriticAgent] Gemini Flash Vision inicializálva.")
 
     async def evaluate(self, screenshot_bytes: bytes, task: str, last_step: Dict[str, Any]) -> CriticResult:
@@ -58,7 +69,15 @@ class CriticAgent:
                 "data": screenshot_bytes
             }
 
-            response = await self.model.generate_content_async([prompt, image_part])
+            if getattr(self, '_use_new_sdk', False):
+                # Új google-genai SDK
+                response = await self._client.aio.models.generate_content(
+                    model=self.model,
+                    contents=[prompt, image_part]
+                )
+            else:
+                # Régi SDK fallback
+                response = await self.model.generate_content_async([prompt, image_part])  # type: ignore
             content = response.text.strip()
             
             # JSON kinyerése
