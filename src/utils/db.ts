@@ -19,7 +19,7 @@ async function ensureDeps() {
     }
 }
 
-async function getDb() {
+export async function getDb() {
     if (db) return db;
 
     await ensureDeps();
@@ -83,12 +83,191 @@ function _initTables(database: any) {
             FOREIGN KEY(parent_id) REFERENCES tasks(id)
         )
     `);
+
+    database.exec(`
+        CREATE TABLE IF NOT EXISTS business_jobs (
+            id TEXT PRIMARY KEY,
+            type TEXT, -- e.g., 'lead_mining', 'invoice_sync'
+            status TEXT DEFAULT 'pending',
+            query TEXT,
+            results_json TEXT,
+            metadata TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
+
+    database.exec(`
+        CREATE TABLE IF NOT EXISTS business_leads (
+            id TEXT PRIMARY KEY,
+            job_id TEXT,
+            company_name TEXT,
+            contact_person TEXT,
+            contact_email TEXT,
+            status TEXT DEFAULT 'new', -- stages: new, outreach, responded, meeting, loi, closed, lost
+            notes TEXT,
+            metadata TEXT, -- stores icebreaker, value proposition, etc.
+            last_interaction_at DATETIME,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY(job_id) REFERENCES business_jobs(id)
+        )
+    `);
+
+    database.exec(`
+        CREATE TABLE IF NOT EXISTS studio_projects (
+            id TEXT PRIMARY KEY,
+            name TEXT,
+            description TEXT,
+            tech_stack TEXT, -- e.g., 'React', 'Next.js', 'Python'
+            status TEXT DEFAULT 'ideation', -- stages: ideation, coding, testing, ready
+            root_dir TEXT,
+            preview_url TEXT,
+            created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    `);
 }
 
 // Public API - Async wrappers
 
 export async function initDb() {
     await getDb();
+}
+
+export async function saveStudioProject(project: { id: string, name: string, description: string, tech_stack: string, root_dir: string }) {
+    const database = await getDb();
+    if (!database) return null;
+
+    const stmt = database.prepare('INSERT INTO studio_projects (id, name, description, tech_stack, root_dir) VALUES (?, ?, ?, ?, ?)');
+    stmt.run(project.id, project.name, project.description, project.tech_stack, project.root_dir);
+    return project.id;
+}
+
+export async function getStudioProjects() {
+    const database = await getDb();
+    if (!database) return [];
+    return database.prepare('SELECT * FROM studio_projects ORDER BY created_at DESC').all();
+}
+
+export async function updateProjectStatus(id: string, status: string, previewUrl?: string) {
+    const database = await getDb();
+    if (!database) return;
+    const stmt = database.prepare('UPDATE studio_projects SET status = ?, preview_url = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?');
+    stmt.run(status, previewUrl || null, id);
+}
+
+export async function saveBusinessLead(lead: { 
+    id: string, 
+    job_id: string, 
+    company_name: string, 
+    contact_person?: string, 
+    contact_email?: string, 
+    metadata?: string 
+}) {
+    const database = await getDb();
+    if (!database) return null;
+
+    const stmt = database.prepare(`
+        INSERT INTO business_leads (id, job_id, company_name, contact_person, contact_email, metadata) 
+        VALUES (?, ?, ?, ?, ?, ?)
+    `);
+    stmt.run(lead.id, lead.job_id, lead.company_name, lead.contact_person || null, lead.contact_email || null, lead.metadata || null);
+    return lead.id;
+}
+
+export async function updateLeadStatus(id: string, status: string, notes?: string) {
+    const database = await getDb();
+    if (!database) return;
+
+    const stmt = database.prepare(`
+        UPDATE business_leads 
+        SET status = ?, notes = ?, last_interaction_at = CURRENT_TIMESTAMP, updated_at = CURRENT_TIMESTAMP 
+        WHERE id = ?
+    `);
+    stmt.run(status, notes || null, id);
+}
+
+export async function getLeadsByJob(jobId: string) {
+    const database = await getDb();
+    if (!database) return [];
+
+    const stmt = database.prepare('SELECT * FROM business_leads WHERE job_id = ? ORDER BY created_at DESC');
+    return stmt.all(jobId);
+}
+
+export async function getPipelineStats() {
+    const database = await getDb();
+    if (!database) return [];
+
+    const stmt = database.prepare('SELECT status, COUNT(*) as count FROM business_leads GROUP BY status');
+    return stmt.all();
+}
+
+export async function saveBusinessJob(job: { id: string, type: string, query: string, metadata?: string }) {
+    const database = await getDb();
+    if (!database) return null;
+
+    const stmt = database.prepare('INSERT INTO business_jobs (id, type, query, metadata) VALUES (?, ?, ?, ?)');
+    stmt.run(job.id, job.type, job.query, job.metadata || null);
+    return job.id;
+}
+
+export async function getBusinessJobs(limit: number = 20, type?: string) {
+    const database = await getDb();
+    if (!database) return [];
+
+    let query = 'SELECT * FROM business_jobs';
+    const params: any[] = [];
+
+    if (type) {
+        query += ' WHERE type = ?';
+        params.push(type);
+    }
+
+    query += ' ORDER BY created_at DESC LIMIT ?';
+    params.push(limit);
+
+    const stmt = database.prepare(query);
+    return stmt.all(...params);
+}
+
+export async function updateBusinessJobStatus(id: string, status: string, resultsJson?: string) {
+    const database = await getDb();
+    if (!database) return;
+
+    const stmt = database.prepare('UPDATE business_jobs SET status = ?, results_json = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?');
+    stmt.run(status, resultsJson || null, id);
+
+    // Feed successful jobs to the Incubator (Golden Dataset)
+    if (status === 'completed' && resultsJson) {
+        try {
+            const jobStmt = database.prepare('SELECT type, query FROM business_jobs WHERE id = ?');
+            const job = jobStmt.get(id) as any;
+            if (job) {
+                const url = process.env.PYTHON_API_URL || 'http://127.0.0.1:8000';
+                // Fire and forget
+                fetch(`${url}/incubator/gold-sample`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        prompt: job.query,
+                        completion: resultsJson,
+                        source: job.type,
+                        quality: 0.9
+                    })
+                }).then(res => {
+                    if (res.ok) {
+                        console.log(`[GoldenBridge] Sample saved to Dataset from ${job.type}`);
+                    }
+                }).catch(e => {
+                    console.error(`[GoldenBridge] Failed to connect to Python API:`, e.message);
+                });
+            }
+        } catch (err: any) {
+            console.error(`[GoldenBridge] Error processing sample:`, err.message);
+        }
+    }
 }
 
 export async function saveMessage(chatId: string, role: string, content: string, isLog: boolean = false) {

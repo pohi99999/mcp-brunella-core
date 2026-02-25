@@ -26,7 +26,12 @@ import { v4 as uuidv4 } from "uuid";
 import { toolManager } from "./ToolManager.js";
 import { mcpProcessManager } from "./McpProcessManager.js";
 import { mcpClientManager } from "../utils/mcpClientManager.js";
-import { AgentManager, agentManager, initializeAgentManager } from "../agents/AgentManager.js"; // Import class and init function, and the exported singleton variable
+import { AgentManager, agentManager, initializeAgentManager } from "../agents/AgentManager.js";
+import { InnovationBridgeAgent } from "../agents/InnovationBridgeAgent.js";
+import { DigitalHeadhunterAgent } from "../agents/DigitalHeadhunterAgent.js";
+import { GrantHunter } from "../agents/GrantHunter.js";
+import { LawDetectiveAgent } from "../agents/LawDetectiveAgent.js";
+import { PropertyVisionaryAgent } from "../agents/PropertyVisionaryAgent.js";
 import { persistentBrowser } from "../utils/persistentBrowser.js";
 import {
   corsWhitelist,
@@ -78,6 +83,8 @@ import { createEnterpriseRouter } from "./routes/enterprise.js";
 import paiosOrchestratorRouter from "./routes/paiosOrchestrator.js";
 import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
 import { createDashboardRoutes } from "./routes/dashboard.js";
+import { createBusinessJobsRoutes } from "./routes/businessJobs.js";
+import { createStudioRoutes } from "./routes/studio.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -252,6 +259,12 @@ export async function startWebServer() {
   // Add Dashboard routes to v1
   v1Router.use("/dashboard", createDashboardRoutes());
 
+  // Add Business Jobs routes to v1
+  v1Router.use("/business-jobs", createBusinessJobsRoutes());
+
+  // Add Studio routes to v1
+  v1Router.use("/studio", createStudioRoutes());
+
   // Add Webhook routes to v1
   v1Router.use("/webhooks", createWebhookRoutes(db));
 
@@ -277,6 +290,13 @@ export async function startWebServer() {
   });
   socketService.init(io);
   initializeAgentManager(socketService); // Initialize agentManager here
+
+  // Register Enterprise Suite Agents
+  agentManager.registerAgent(new InnovationBridgeAgent());
+  agentManager.registerAgent(new DigitalHeadhunterAgent());
+  agentManager.registerAgent(new GrantHunter());
+  agentManager.registerAgent(new LawDetectiveAgent());
+  agentManager.registerAgent(new PropertyVisionaryAgent());
 
   // Connect Phoenix Event Bus to Socket.IO for real-time dashboard updates
   const { phoenixEventBus } = await import('../core/phoenixEventBus.js');
