@@ -573,36 +573,36 @@ export function DeveloperPanel() {
 
   // Poll active pipeline
   useEffect(() => {
-    if (
-      !activePipeline ||
-      activePipeline.status === "done" ||
-      activePipeline.status === "error"
-    )
-      return;
+    const taskId = activePipeline?.taskId;
+    const status = activePipeline?.status;
+
+    if (!taskId || status === "done" || status === "error") return;
 
     const interval = setInterval(async () => {
       try {
         const result = await devApiFetch<{ pipeline: PipelineData }>(
-          `/pipeline/${activePipeline.taskId}`,
+          `/pipeline/${taskId}`,
         );
-        setActivePipeline(result.pipeline);
+        
+        // Csak akkor frissítsünk, ha változott az állapot vagy a fázisok száma
+        if (JSON.stringify(result.pipeline) !== JSON.stringify(activePipeline)) {
+          setActivePipeline(result.pipeline);
 
-        if (result.pipeline.status === "done") {
-          toast.success("Task completed!");
-          refreshData();
-        } else if (result.pipeline.status === "error") {
-          toast.error(
-            `Task failed: ${result.pipeline.error || "Unknown error"}`,
-          );
-          refreshData();
+          if (result.pipeline.status === "done") {
+            toast.success("Task completed!");
+            refreshData();
+          } else if (result.pipeline.status === "error") {
+            toast.error(`Task failed: ${result.pipeline.error || "Unknown error"}`);
+            refreshData();
+          }
         }
       } catch {
         // ignore polling errors
       }
-    }, 1000);
+    }, 2000); // 2mp-re emelve a stabilitásért
 
     return () => clearInterval(interval);
-  }, [activePipeline, refreshData]);
+  }, [activePipeline?.taskId, activePipeline?.status, refreshData]);
 
   const handleSubmit = async (taskOverride?: string) => {
     const task = taskOverride || prompt.trim();
@@ -797,38 +797,23 @@ export function DeveloperPanel() {
     }
   };
 
-  // Tab-change data loading effects (must be after useCallback definitions)
+  // Tab-change data loading effects
   useEffect(() => {
-    if (activeTab === "metrics") {
-      if (!metricsData && !isLoadingMetrics) {
-        loadMetrics();
-      }
-    } else if (activeTab === "approvals") {
-      if (!isLoadingApprovals) {
+    switch (activeTab) {
+      case "metrics":
+        if (!metricsData) loadMetrics();
+        break;
+      case "approvals":
         loadApprovals(approvalFilter);
-      }
-    } else if (activeTab === "activity") {
-      if (!isLoadingActivity) {
+        break;
+      case "activity":
         loadActivity(activityLimit);
-      }
-    } else if (activeTab === "git") {
-      if (!isLoadingGit) {
+        break;
+      case "git":
         loadGitStatus();
-      }
+        break;
     }
-  }, [
-    activeTab,
-    activityLimit,
-    approvalFilter,
-    isLoadingActivity,
-    isLoadingApprovals,
-    isLoadingMetrics,
-    isLoadingGit,
-    loadActivity,
-    loadApprovals,
-    loadMetrics,
-    metricsData,
-  ]);
+  }, [activeTab, approvalFilter, activityLimit]); // Csak a lényeges váltókra figyelünk
 
   useEffect(() => {
     if (activeTab !== "activity") return;

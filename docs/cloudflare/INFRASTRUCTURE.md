@@ -1,8 +1,22 @@
 # Cloudflare Infrastructure - Master Documentation
 
 **Owner:** Brunella Core Team
-**Last Updated:** 2026-02-22
+**Last Updated:** 2026-02-25
 **Status:** Production Ready — Enterprise Suite KÉSZ, D1/Vectorize/KV integrálva
+
+## 🔑 CLOUDFLARE ACCOUNT ADATOK (BAS_server)
+
+| Adat | Érték |
+|------|-------|
+| **Account ID** | `dd107933ac970dac857f27cee7a7ff46` |
+| **D1 Database** | `bas-metadata` → ID: `1c4e7d00-7b09-4ddf-88b4-8df42e1123ab` |
+| **KV Namespace** | ID: `b6718ab359ac401bb24da7c34c24f11b` |
+| **Domain** | `peterpohanka.com` |
+| **Workers** | 20 db (köztük: research-agent, harvest-agent, bas-orchestrator) |
+| **Dashboard** | https://dash.cloudflare.com/dd107933ac970dac857f27cee7a7ff46 |
+
+> ⚠️ A .env fájlban lévő `CLOUDFLARE_ACCOUNT_ID=1bf6118df97f0e12f3592a89d90deb1e` egy **másik account** (nem BAS_server)!
+> Mindig a `dd107933...` accountot használd a Cloudflare worker deploy-hoz!
 
 ---
 

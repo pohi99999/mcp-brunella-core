@@ -2,7 +2,22 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-02-24 01:15
+**Utolsó frissítés:** 2026-02-25 23:45
+
+---
+
+## 🔑 CLOUDFLARE ACCOUNT ADATOK (BAS_server) — 2026-02-25
+
+| Adat | Érték |
+|------|-------|
+| **BAS_server Account ID** | `dd107933ac970dac857f27cee7a7ff46` |
+| **D1: bas-metadata** | `1c4e7d00-7b09-4ddf-88b4-8df42e1123ab` |
+| **KV Namespace** | `b6718ab359ac401bb24da7c34c24f11b` |
+| **Domain** | `peterpohanka.com` |
+| **Workers** | 20 db (research-agent, harvest-agent, bas-orchestrator, stb.) |
+
+> ⚠️ A `.env` `CLOUDFLARE_ACCOUNT_ID` egy MÁSIK account — ne keverd össze!
+> Deploy-hoz mindig: `wrangler deploy --config cloudflare/wrangler.lead-intelligence.jsonc`
 
 ---
 

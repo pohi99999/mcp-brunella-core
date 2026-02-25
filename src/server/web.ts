@@ -54,6 +54,8 @@ import ceanRouter from "./routes/cean.js";
 import { createWranglerRouter } from "./routes/wrangler.js";
 import mcpRouter from "./routes/mcp.js";
 import { createV1Router } from "./routes/index.js";
+import { createAgentRoutes } from "./routes/agents.js";
+import { createChatRoutes } from "./routes/chat.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
 import { createTaskRoutes } from "./routes/tasks.js";
 import { suggestedTasksRouter } from "./routes/suggestedTasks.js";
@@ -224,6 +226,10 @@ export async function startWebServer() {
 
   // Add Robotkéz routes to v1
   v1Router.use("/robotkez", createRobotkezRoutes());
+
+  // Add missing agent and chat routes
+  v1Router.use("/agents", createAgentRoutes());
+  v1Router.use("/chat", createChatRoutes());
 
   // Add Task Queue routes to v1
   v1Router.use("/tasks", createTaskRoutes());

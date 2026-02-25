@@ -1,5 +1,6 @@
 import { render, screen, act, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import { useEffect } from 'react';
 import { MissionControlLayout } from './MissionControlLayout';
 import { LayoutProvider } from '@/lib/layout/LayoutContext';
 

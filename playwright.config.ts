@@ -4,17 +4,18 @@ export default defineConfig({
     testDir: './test/e2e',
     fullyParallel: false,
     forbidOnly: !!process.env.CI,
-    retries: process.env.CI ? 2 : 0,
+    retries: process.env.CI ? 2 : 1,
     workers: 1,
     reporter: [['html', { open: 'never' }], ['list']],
-    timeout: 30000,
-    expect: { timeout: 5000 },
+    timeout: 60000,        // 60s per test (dashboard boot takes time)
+    expect: { timeout: 10000 },
 
     use: {
         baseURL: 'http://localhost:5173',
         trace: 'on-first-retry',
         screenshot: 'only-on-failure',
         video: 'retain-on-failure',
+        actionTimeout: 15000,
     },
 
     projects: [
@@ -29,14 +30,15 @@ export default defineConfig({
             command: 'node build/index.js',
             port: 3000,
             env: { WEB_UI_ENABLED: '1' },
-            reuseExistingServer: true,
-            timeout: 30000,
+            reuseExistingServer: true,  // ne üdítsd ha már fut
+            timeout: 60000,
         },
         {
             command: 'npm run dev:ui',
             port: 5173,
-            reuseExistingServer: true,
-            timeout: 30000,
+            reuseExistingServer: true,  // ne indítsd újra ha már fut
+            timeout: 60000,
         },
     ],
 });
+

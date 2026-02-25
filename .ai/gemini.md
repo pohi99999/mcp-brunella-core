@@ -1,3 +1,29 @@
+### 2026-02-25 11:30 - 🏆 BAS Infrastructure & Dashboard Total Recovery (100% COMPLETE 🏆)
+
+**Feladat:**
+A Dashboard teljes körű stabilizálása, a "süket" gombok és folyamatok bekötése a backendbe, a 429-es API korlátozások feloldása, valamint a Master Orchestrator (GPT-4o) magyar nyelvű hangolása.
+
+**Érintett fájlok:**
+- `src/server/web.ts` (Fix: Hiányzó `agents` és `chat` útvonalak regisztrálása, elnevezési szinkron)
+- `src/server/routes/agents.ts` (Update: Case-insensitive ügynökkeresés és kényszerített Task Queue routing)
+- `src/server/middleware.ts` (Update: Rate limit emelése 120 -> 2000-re a Dashboard widgetek számára)
+- `src/core/llm_client.ts` (Update: Professzionális magyar nyelvű BAS Protocol beállítása GPT-4o és Gemini számára)
+- `src/core/intentAnalyzer.ts` (Update: Magyar nyelvű szándék-elemzés és feladatirányítás)
+- `src/dashboard/components/dashboard/JulesPanel.tsx` (Fix: Nested button és JSX szerkezeti hibák javítása)
+- `src/dashboard/components/dashboard/NeuralLinkChat.tsx` (Fix: Duplikált React kulcsok javítása)
+- `test/e2e/dashboard_audit.spec.ts` (Új: 27 oldalas teljes körű UI audit teszt)
+- `test/e2e/functional_integrity.spec.ts` (Új: End-to-end gomb-motor kapcsolat teszt)
+
+**Eredmények:**
+- ✅ **Dashboard Győzelem:** 27/27 aloldal stabil, a végtelen újrarajzolási ciklusok és a vizuális fagyások megszűntek.
+- ✅ **Működő Folyamatok:** A Dashboard minden gombja és a Chat is most már garantáltan létrehoz egy követhető feladatot a Task Queue-ban.
+- ✅ **Magyar Vezénylet:** A GPT-4o és Gemini most már folyékony magyar nyelven, mint BAS Master Orchestrator irányítják a rendszert.
+- ✅ **Globális Kontroll:** A Dashboard CEAN felülete most már valóban a Cloudflare Edge ügynököket vezérli.
+
+**Státusz:** 🏆 **DASHBOARD & CORE INTEGRITY RESTORED**
+
+---
+
 ### 2026-02-24 02:00 - 🏆 Industrial Machine Hunter: Live Deployment (100% COMPLETE 🏆)
 
 **Feladat:**

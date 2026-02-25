@@ -59,7 +59,7 @@ export function createAgentRoutes(): Router {
 
     router.post('/:agentName/execute', async (req, res) => {
         try {
-            const { agentName } = req.params;
+            let { agentName } = req.params;
             const { task, context } = req.body;
 
             if (!task) {
@@ -67,8 +67,23 @@ export function createAgentRoutes(): Router {
                 return;
             }
 
-            const result = await agentManager.delegate(agentName, task, context);
-            res.json({ result });
+            // RULE-OB2: Case-insensitive agent lookup
+            const registry = agentManager.listAgentDefinitions();
+            const actualAgent = registry.find(a => a.name.toLowerCase() === agentName.toLowerCase());
+            
+            if (actualAgent) {
+                agentName = actualAgent.name; // Use the correctly cased name from registry
+            }
+
+            // A ténylegesen létező queueTask-ot használjuk a várólistához
+            const taskId = await agentManager.queueTask(task, agentName, context);
+            
+            // Azonnali végrehajtás elindítása a háttérben
+            agentManager.delegate(agentName, task, { ...context, taskId }).catch((err: unknown) => {
+                console.error(`Execution error for task ${taskId}:`, err);
+            });
+
+            res.json({ success: true, taskId, message: `Task #${taskId} started for ${agentName}` });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });

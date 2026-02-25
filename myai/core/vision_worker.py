@@ -376,18 +376,26 @@ def _gemini_vision_ocr(file_path: str) -> str:
     Környezeti változó: GEMINI_API_KEY
     """
     try:
-        import google.generativeai as genai  # type: ignore
+        from google import genai  # Új SDK (google-genai)
+        _new_sdk = True
     except ImportError:
-        raise ImportError(
-            "google-generativeai csomag szükséges: pip install google-generativeai"
-        )
+        try:
+            import google.generativeai as genai  # type: ignore
+            _new_sdk = False
+        except ImportError:
+            raise ImportError(
+                "Google Genai csomag szükséges: pip install google-genai"
+            )
 
     api_key = os.environ.get("GEMINI_API_KEY", "")
     if not api_key:
         raise EnvironmentError("GEMINI_API_KEY hiányzik a környezetből.")
 
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    if _new_sdk:
+        client = genai.Client(api_key=api_key)
+    else:
+        genai.configure(api_key=api_key)  # type: ignore
+        model = genai.GenerativeModel("gemini-1.5-flash")  # type: ignore
 
     ext = Path(file_path).suffix.lower()
     supported_image = ext in (".jpg", ".jpeg", ".png", ".webp", ".gif")
@@ -429,7 +437,13 @@ def _gemini_vision_ocr(file_path: str) -> str:
             prompt
         ]
 
-    response = model.generate_content(content)
+    if _new_sdk:
+        response = client.models.generate_content(
+            model="gemini-1.5-flash",
+            contents=content
+        )
+    else:
+        response = model.generate_content(content)  # type: ignore
     return response.text
 
 
