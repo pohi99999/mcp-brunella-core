@@ -59,6 +59,20 @@ export class LanceDBClient {
     }
     return await q.limit(limit).toArray();
   }
+
+  async searchVector(tableName: string, vector: number[], limit: number = 5): Promise<any[]> {
+    await this.connect();
+    const tableNames = await this.db!.tableNames();
+    
+    if (!tableNames.includes(tableName)) {
+      return [];
+    }
+
+    const table = await this.db!.openTable(tableName);
+    return await table.vectorSearch(vector)
+      .limit(limit)
+      .toArray();
+  }
 }
 
 export const lanceDBClient = new LanceDBClient();
