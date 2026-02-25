@@ -31,6 +31,7 @@
     "test:all": "npm run test:unit:cli && npm run test:factory && npm run test:cli && npm test",
     "build:ui": "vite build src/dashboard",
     "dev:ui": "vite src/dashboard",
+    "dev:vscode": "code-server --bind-addr 127.0.0.1:8080 --auth none --disable-telemetry .",
     "test:dashboard": "vitest run --config vitest.dashboard.config.ts",
     "test:ui": "vitest run --config vitest.ui.config.ts",
     "test:e2e": "playwright test",

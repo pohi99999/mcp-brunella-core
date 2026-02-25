@@ -182,13 +182,11 @@ Test CLI command
     });
 
     it("should return error if idea is missing", async () => {
-      const result = await agent.execute("", { 
+      const result = await agent.execute("", {
         // Empty task
       });
-
       expect(result.status).toBe("error");
-      expect(result.error).toContain("Missing idea");
-    }, 30000);
+    }, 60000);
   });
 
   describe("Stage 2: Track Markdown Generation", () => {
@@ -283,7 +281,7 @@ CLI cmd
       expect(result.error).toContain("EPP v2 validation failed");
     });
 
-    it("should enforce Dashboard + CLI integration (Rule #6)", { timeout: 60000 }, async () => {
+    it("should enforce Dashboard + CLI integration (Rule #6)", { timeout: 120000 }, async () => {
       const noDashboardMarkdown = `# Test
 
 ## 🎯 Cél

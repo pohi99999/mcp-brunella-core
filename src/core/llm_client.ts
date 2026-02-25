@@ -48,7 +48,8 @@ export const generateResponse: (
         const model = genAI.getGenerativeModel({
           model: modelName || GEMINI_MODEL,
         });
-        const result = await model.generateContent(prompt);
+        const systemInstruction = "Te vagy a BAS (Brunella Agent System) Specialistája. Beszélj folyékony magyarul. Válaszaid legyenek mérnöki pontosságúak.";
+        const result = await model.generateContent(`${systemInstruction}\n\nKérés: ${prompt}`);
         const text = result.response.text();
         recordLlmUsageAndCost({
           provider: "gemini",
@@ -76,7 +77,10 @@ export const generateResponse: (
             },
             body: JSON.stringify({
               messages: [
-                { role: "system", content: "You are a helpful AI assistant." },
+                { 
+                  role: "system", 
+                  content: "Te vagy a BAS (Brunella Agent System) Master Orchestrator. Beszélj kizárólag folyékony, professzionális magyar nyelven. Feladatod a komplex fejlesztési és üzleti folyamatok koordinálása a rendelkezésre álló ügynökök (Developer, Robotkez, Researcher, stb.) segítségével. Válaszaid legyenek tömörek, mérnöki szemléletűek és cselekvésorientáltak." 
+                },
                 { role: "user", content: prompt },
               ],
               model: model,

@@ -123,7 +123,8 @@ export function initializeNavigation() {
     { id: "marketwatcher", label: "Market Watcher", icon: Activity, component: <MarketWatcherConfig /> },
     { id: "settings", label: "System Config", icon: Settings, component: <SettingsPanel /> },
     { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={<Workflow size={20} />} /> },
-    { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={<Sparkles size={20} />} /> }
+    { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={<Sparkles size={20} />} /> },
+    { id: "vscode", label: "VSCode Editor", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
   ];
 
   items.forEach(item => navigationRegistry.registerItem(item));
@@ -133,7 +134,7 @@ export function initializeNavigation() {
   navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "paios", "phoenix", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez", "marketwatcher"] });
   navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "tasks"] });
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests", "enterprise-analytics"] });
-  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "inventory", "files", "settings", "n8n", "langflow"] });
+  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "inventory", "files", "settings", "n8n", "langflow", "vscode"] });
 
   logInfo("NavigationRegistry", "Navigation Registry Initialized.");
 }

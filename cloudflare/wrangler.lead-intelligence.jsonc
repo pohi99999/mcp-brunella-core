@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json.schemastore.org/wrangler.json",
+  "name": "brunella-lead-intelligence",
+  "main": "src/lead-intelligence.ts",
+  "compatibility_date": "2024-11-01",
+  "compatibility_flags": ["nodejs_compat"],
+
+  // ✅ MEGLÉVŐ D1 adatbázis — bas-metadata
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "bas-metadata",
+      "database_id": "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+    }
+  ],
+
+  // ✅ MEGLÉVŐ KV namespace (BAS_server account)
+  "kv_namespaces": [
+    {
+      "binding": "BAS_TASKS",
+      "id": "b6718ab359ac401bb24da7c34c24f11b"
+    }
+  ],
+
+  // ✅ Workers AI binding
+  "ai": {
+    "binding": "AI"
+  },
+
+  // Cron: naponta 02:00-kor automatikus kutatás
+  "triggers": {
+    "crons": ["0 2 * * *"]
+  },
+
+  // Domain: peterpohanka.com → workers.dev alá is elérhető lesz
+  // URL: https://brunella-lead-intelligence.ACCOUNT_ID.workers.dev
+  // GOOGLE_PLACES_API_KEY → wrangler secret put GOOGLE_PLACES_API_KEY
+  // Ha nincs kulcs: mock adatokkal dolgozik (teszteléshez elég!)
+
+  "dev": {
+    "port": 8788
+  }
+}
