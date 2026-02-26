@@ -1,0 +1,19 @@
+[package]
+name = "brunella-mission-control"
+version = "1.0.0"
+description = "Native Desktop Client for Brunella Agent System"
+authors = ["Pohánka Péter"]
+edition = "2021"
+rust-version = "1.56"
+
+[build-dependencies]
+tauri-build = { version = "1.5" }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+tauri = { version = "1.6", features = ["api-all"] }
+
+[features]
+default = [ "custom-protocol" ]
+custom-protocol = [ "tauri/custom-protocol" ]
