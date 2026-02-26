@@ -678,3 +678,4 @@ export async function startWebServer() {
     logInfo("Server", `🌐 Web UI: http://localhost:${config.port}`);
   });
 }
+
