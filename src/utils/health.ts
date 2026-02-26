@@ -20,7 +20,7 @@ export const HEALTH_CONFIG = {
   python: {
     timeoutMs: 8_000,
     retries: 1,
-    baseUrl: process.env.PYTHON_API_URL || "http://127.0.0.1:8010",
+    baseUrl: process.env.PYTHON_API_URL || "http://127.0.0.1:8000",
   },
   cloudflare: {
     timeoutMs: 8_000,

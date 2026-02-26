@@ -123,7 +123,7 @@ async function checkOllama(timeoutMs: number): Promise<ServiceHealth> {
 async function checkPythonAPI(timeoutMs: number): Promise<ServiceHealth> {
     const name = 'Python API';
     const start = Date.now();
-    const baseUrl = process.env.PYTHON_API_URL || 'http://localhost:8010';
+    const baseUrl = process.env.PYTHON_API_URL || 'http://localhost:8000';
 
     try {
         const controller = new AbortController();
