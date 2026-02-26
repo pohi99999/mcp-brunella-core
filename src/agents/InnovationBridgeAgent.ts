@@ -1,7 +1,13 @@
 import { BaseAgent, AgentContext, AgentResult } from "./BaseAgent.js";
 import { generateResponse } from "../core/llm_client.js";
-import trizMatrix from "../data/triz_matrix.json" assert { type: "json" };
-import trizPrinciples from "../data/triz_principles.json" assert { type: "json" };
+import { readFileSync } from 'fs';
+import { resolve, dirname } from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+const trizMatrix = JSON.parse(readFileSync(resolve(__dirname, '../data/triz_matrix.json'), 'utf-8'));
+const trizPrinciples = JSON.parse(readFileSync(resolve(__dirname, '../data/triz_principles.json'), 'utf-8'));
 import { logInfo, logError } from "../utils/logger.js";
 import { agentManager } from "./AgentManager.js";
 import { addToIndex, searchRAG } from "../utils/rag.js";
@@ -43,7 +49,7 @@ export class InnovationBridgeAgent extends BaseAgent {
         };
       }
 
-      const principles = principleIds.map(id => trizPrinciples.find(p => p.id === id)).filter(Boolean);
+      const principles = principleIds.map(id => trizPrinciples.find((p: any) => p.id === id)).filter(Boolean);
       logInfo(this.name, `Launching swarm for principles: ${principleIds.join(", ")}`);
 
       // Stage 3: Launch Swarm Research
@@ -100,7 +106,7 @@ export class InnovationBridgeAgent extends BaseAgent {
 Problem: "${task}"
 
 Available TRIZ Parameters:
-${trizMatrix.parameters.map((p, i) => `${i + 1}. ${p}`).join("\n")}
+${trizMatrix.parameters.map((p: any, i: number) => `${i + 1}. ${p}`).join("\n")}
 
 Respond ONLY with a JSON object in this format:
 {
@@ -111,7 +117,7 @@ Respond ONLY with a JSON object in this format:
   "reasoning": "short explanation"
 }`;
 
-    const response = await generateResponse(prompt, { provider: "github" }); // Use GPT-4o for precision
+    const response = await generateResponse(prompt); // Use GPT-4o for precision
     
     try {
       // Extract JSON from response
@@ -134,3 +140,4 @@ Respond ONLY with a JSON object in this format:
 }
 
 export default InnovationBridgeAgent;
+
