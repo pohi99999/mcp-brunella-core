@@ -1,0 +1,216 @@
+name: Auto Sync — Docs & State
+
+# =============================================
+# Automatikus dokumentum szinkronizálás
+# Futtat: minden push main-re + naponta éjjel
+# Mit csinál:
+#   1. FOSZAL.md újragenerálása (ai naplók → összesítő)
+#   2. conductor/tracks.md konzisztencia ellenőrzés
+#   3. Ha változott valami → auto-commit vissza a repo-ba
+# =============================================
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".ai/claude.md"
+      - ".ai/gemini.md"
+      - ".ai/copilot.md"
+      - "conductor/tracks/**"
+      - "src/agents/**"
+  schedule:
+    # Minden nap 03:00 UTC (05:00 magyar idő)
+    - cron: "0 3 * * *"
+  workflow_dispatch:
+    inputs:
+      force_foszal:
+        description: "FOSZAL regenerálás kényszer"
+        required: false
+        default: "false"
+        type: boolean
+
+permissions:
+  contents: write
+
+jobs:
+  # -----------------------------------------------
+  # JOB 1: Docs szinkron (FOSZAL + tracks)
+  # -----------------------------------------------
+  docs-sync:
+    name: Docs Sync
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install Python deps
+        run: |
+          pip install python-dateutil 2>/dev/null || true
+
+      - name: Regenerate FOSZAL.md
+        run: |
+          python scripts/sync_foszal.py
+        continue-on-error: true
+
+      - name: Check tracks consistency
+        run: |
+          python - <<'PYEOF'
+          import json, os, glob
+
+          tracks_dir = "conductor/tracks"
+          issues = []
+
+          for meta_path in glob.glob(f"{tracks_dir}/*/meta.json"):
+              try:
+                  with open(meta_path) as f:
+                      meta = json.load(f)
+                  # Status case check
+                  status = meta.get("status", "")
+                  if status != status.lower():
+                      issues.append(f"WARN: {meta_path} — status '{status}' should be lowercase")
+                      meta["status"] = status.lower()
+                      with open(meta_path, "w") as f:
+                          json.dump(meta, f, indent=2, ensure_ascii=False)
+                      print(f"[FIX] {meta_path}: status '{status}' -> '{status.lower()}'")
+              except Exception as e:
+                  issues.append(f"ERROR: {meta_path} — {e}")
+
+          if issues:
+              for i in issues:
+                  print(i)
+          else:
+              print("[OK] All tracks consistent.")
+          PYEOF
+        continue-on-error: true
+
+      - name: Commit updated docs (if changed)
+        run: |
+          git config user.name "brunella-bot"
+          git config user.email "brunella-bot@users.noreply.github.com"
+
+          git add .ai/FOSZAL.md conductor/tracks/ 2>/dev/null || true
+
+          if git diff --staged --quiet; then
+            echo "[OK] No doc changes to commit."
+          else
+            TIMESTAMP=$(date -u '+%Y-%m-%d %H:%M UTC')
+            git commit -m "chore: auto-sync docs — $TIMESTAMP [skip ci]"
+            git push origin main
+            echo "[OK] Docs committed and pushed."
+          fi
+
+  # -----------------------------------------------
+  # JOB 2: Build ellenőrzés (push esetén)
+  # -----------------------------------------------
+  build-check:
+    name: Build Check
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: TypeScript build
+        run: npm run build
+
+      - name: Quick test run
+        run: npx vitest run --reporter=dot
+        timeout-minutes: 5
+        env:
+          BRUNELLA_SKIP_SECRETS_CHECK: "1"
+          WEB_UI_ENABLED: "0"
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GOOGLE_API_KEY: ${{ secrets.GOOGLE_API_KEY }}
+
+      - name: Post status summary
+        if: always()
+        run: |
+          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- Branch: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Commit: ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Triggered by: ${{ github.actor }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Time: $(date -u '+%Y-%m-%d %H:%M UTC')" >> $GITHUB_STEP_SUMMARY
+
+  # -----------------------------------------------
+  # JOB 3: Nightly state snapshot (csak éjjel)
+  # -----------------------------------------------
+  nightly-snapshot:
+    name: Nightly State Snapshot
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule'
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+          cache: "npm"
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      - name: Generate project state snapshot
+        run: |
+          node -e "
+          const fs = require('fs');
+          const { execSync } = require('child_process');
+
+          const state = {
+            timestamp: new Date().toISOString(),
+            branch: '${{ github.ref_name }}',
+            lastCommit: '${{ github.sha }}'.slice(0, 8),
+            tracks: { active: 0, completed: 0, proposed: 0, archived: 0 },
+            buildStatus: 'passing',
+          };
+
+          // Count tracks
+          try {
+            const tracksContent = fs.readFileSync('conductor/tracks.md', 'utf-8');
+            state.tracks.active = (tracksContent.match(/\[ACTIVE\]/g) || []).length;
+            state.tracks.completed = (tracksContent.match(/\[COMPLETED\]/g) || []).length;
+            state.tracks.proposed = (tracksContent.match(/\[PROPOSED\]/g) || []).length;
+          } catch(e) {}
+
+          fs.writeFileSync('conductor/project_state.json', JSON.stringify(state, null, 2));
+          console.log('State snapshot written:', JSON.stringify(state, null, 2));
+          "
+
+      - name: Commit snapshot
+        run: |
+          git config user.name "brunella-bot"
+          git config user.email "brunella-bot@users.noreply.github.com"
+          git add conductor/project_state.json
+          if git diff --staged --quiet; then
+            echo "No state changes."
+          else
+            git commit -m "chore: nightly state snapshot — $(date -u '+%Y-%m-%d') [skip ci]"
+            git push origin main
+            echo "[OK] State snapshot pushed."
+          fi
