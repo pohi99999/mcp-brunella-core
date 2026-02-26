@@ -1,5 +1,5 @@
 # windows_bridge/tests/test_core.py
-from wab_server import run_powershell, PSRequest, FileOp
+from wab_server import run_powershell
 
 def test_run_powershell_success():
     result = run_powershell("Write-Output 'Hello WAB'")
