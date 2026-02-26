@@ -142,3 +142,5 @@ myai/agents/ready-agents/pohi-ai-agents/
 myai/agents/tools/gemini-cli/
 
 .aider*
+
+.worktrees/
