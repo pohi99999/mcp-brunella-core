@@ -17,7 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { PaperPlaneRight, Robot, User, Circle, Eye, EyeSlash, ArrowsClockwise } from "@phosphor-icons/react";
+import { PaperPlaneRight, Robot, User, Circle, Eye, EyeSlash, ArrowsClockwise, Microphone, SpeakerHigh } from "@phosphor-icons/react";
 import { Brain, FileText } from "lucide-react";
 import * as api from "@/lib/apiService";
 import { toast } from "sonner";
@@ -506,4 +506,6 @@ export function NeuralLinkChat() {
     </Card>
   );
 }
+
+
 
