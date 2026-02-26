@@ -27,5 +27,14 @@
     ],
     "description": "Filesystem MCP server — fájlrendszer hozzáférés",
     "disabled": false
+  },
+  {
+    "name": "windows_automation_bridge",
+    "command": "python",
+    "args": [
+      "windows_bridge/wab_server.py"
+    ],
+    "description": "Windows Automation Bridge — natív PowerShell és fájlrendszer hozzáférés",
+    "disabled": false
   }
 ]
