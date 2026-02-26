@@ -3,17 +3,15 @@ import textwrap
 import logging
 from typing import Optional
 from pathlib import Path
-from fastapi import FastAPI
 from pydantic import BaseModel
+from fastmcp import FastMCP
 
 BASE_DIR = Path(__file__).parent.absolute()
 log_dir = BASE_DIR / "logs"
 log_dir.mkdir(exist_ok=True)
 
-# Create explicit logger
 wab_logger = logging.getLogger("wab_audit")
 wab_logger.setLevel(logging.INFO)
-# Clear any existing handlers to prevent duplicates
 if wab_logger.hasHandlers():
     wab_logger.handlers.clear()
 
@@ -22,16 +20,7 @@ formatter = logging.Formatter('%(asctime)s - WAB - %(message)s')
 file_handler.setFormatter(formatter)
 wab_logger.addHandler(file_handler)
 
-app = FastAPI(title="Windows Automation Bridge", version="0.1.0")
-
-class PSRequest(BaseModel):
-    command: str
-
-class FileOp(BaseModel):
-    action: str  # "list", "move", "copy", "delete", "mkdir"
-    src: Optional[str] = None
-    dst: Optional[str] = None
-    path: Optional[str] = None
+mcp = FastMCP("Windows Automation Bridge", version="0.1.0")
 
 def run_powershell(cmd: str) -> dict:
     ps_cmd = ["pwsh", "-NoLogo", "-NoProfile", "-Command", cmd]
@@ -44,7 +33,6 @@ def run_powershell(cmd: str) -> dict:
         )
         is_ok = result.returncode == 0
         wab_logger.info(f"CMD: {cmd} | OK: {is_ok} | STDOUT: {result.stdout.strip()} | STDERR: {result.stderr.strip()}")
-        # Call flush to ensure the log is written immediately for testing
         for handler in wab_logger.handlers:
             handler.flush()
             
@@ -65,38 +53,49 @@ def run_powershell(cmd: str) -> dict:
             "returncode": -1,
         }
 
-@app.post("/ps/execute")
-def ps_execute(req: PSRequest):
-    return run_powershell(req.command)
+@mcp.tool()
+def ps_execute(command: str) -> dict:
+    """
+    Tetszoleges PowerShell parancs futtatasa.
+    FIGYELEM: Ezt csak megbizhato LLM-eknek add oda.
+    """
+    return run_powershell(command)
 
-@app.post("/fs")
-def fs_op(op: FileOp):
-    if op.action == "list":
-        path = op.path or "."
+@mcp.tool()
+def fs_op(action: str, src: str = None, dst: str = None, path: str = None) -> dict:
+    """
+    Alap fajlmuveletek – LLM-barat, strukturalt API.
+    A valid actions: list, move, copy, delete, mkdir
+    """
+    if action == "list":
+        path = path or "."
         cmd = textwrap.dedent(f"""
         Get-ChildItem -LiteralPath "{path}" | Select-Object Name, FullName, Length, LastWriteTime | ConvertTo-Json
         """)
         return run_powershell(cmd)
 
-    if op.action == "mkdir":
-        if not op.path:
+    if action == "mkdir":
+        if not path:
             return {"ok": False, "error": "path required"}
-        cmd = f'New-Item -ItemType Directory -Path "{op.path}" -Force | ConvertTo-Json'
+        cmd = f'New-Item -ItemType Directory -Path "{path}" -Force | ConvertTo-Json'
         return run_powershell(cmd)
 
-    if op.action in ("move", "copy", "delete"):
-        if op.action in ("move", "copy") and (not op.src or not op.dst):
+    if action in ("move", "copy", "delete"):
+        if action in ("move", "copy") and (not src or not dst):
             return {"ok": False, "error": "src and dst required"}
-        if op.action == "delete" and not op.path:
+        if action == "delete" and not path:
             return {"ok": False, "error": "path required"}
 
-        if op.action == "move":
-            cmd = f'Move-Item -LiteralPath "{op.src}" -Destination "{op.dst}" -Force'
-        elif op.action == "copy":
-            cmd = f'Copy-Item -LiteralPath "{op.src}" -Destination "{op.dst}" -Force'
+        if action == "move":
+            cmd = f'Move-Item -LiteralPath "{src}" -Destination "{dst}" -Force'
+        elif action == "copy":
+            cmd = f'Copy-Item -LiteralPath "{src}" -Destination "{dst}" -Force'
         else:  # delete
-            cmd = f'Remove-Item -LiteralPath "{op.path}" -Recurse -Force'
+            cmd = f'Remove-Item -LiteralPath "{path}" -Recurse -Force'
 
         return run_powershell(cmd)
 
-    return {"ok": False, "error": f"unknown action: {op.action}"}
+    return {"ok": False, "error": f"unknown action: {action}"}
+
+if __name__ == "__main__":
+    mcp.run()
