@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { PaperPlaneRight, Robot, User, Circle, Eye, EyeSlash, ArrowsClockwise, Microphone, SpeakerHigh } from "@phosphor-icons/react";
 import { Brain, FileText } from "lucide-react";
 import * as api from "@/lib/apiService";
@@ -301,19 +302,34 @@ export function NeuralLinkChat() {
         </div>
         <div className="flex items-center gap-1">
           {showBrowser && (
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setBrowserTimestamp(Date.now())} 
-              title="Képernyő frissítése"
-              className="text-zinc-400 hover:text-primary"
-            >
-              <ArrowsClockwise size={16} className={isLoading ? "animate-spin" : ""} />
-            </Button>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setBrowserTimestamp(Date.now())}
+                  aria-label="Képernyő frissítése"
+                  className="text-zinc-400 hover:text-primary"
+                >
+                  <ArrowsClockwise size={16} className={isLoading ? "animate-spin" : ""} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Képernyő frissítése</TooltipContent>
+            </Tooltip>
           )}
-          <Button variant="ghost" size="icon" onClick={() => setShowBrowser(!showBrowser)} title={showBrowser ? "Bezár" : "Böngésző"}>
-            {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
-          </Button>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowBrowser(!showBrowser)}
+                aria-label={showBrowser ? "Bezár" : "Böngésző"}
+              >
+                {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{showBrowser ? "Bezár" : "Böngésző"}</TooltipContent>
+          </Tooltip>
         </div>
       </CardHeader>
       
@@ -506,6 +522,3 @@ export function NeuralLinkChat() {
     </Card>
   );
 }
-
-
-
