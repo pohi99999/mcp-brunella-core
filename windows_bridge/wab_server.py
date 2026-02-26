@@ -1,4 +1,5 @@
 import subprocess
+import textwrap
 from typing import Optional
 from fastapi import FastAPI
 from pydantic import BaseModel
@@ -37,3 +38,39 @@ def run_powershell(cmd: str) -> dict:
             "stderr": str(e),
             "returncode": -1,
         }
+
+@app.post("/ps/execute")
+def ps_execute(req: PSRequest):
+    return run_powershell(req.command)
+
+@app.post("/fs")
+def fs_op(op: FileOp):
+    if op.action == "list":
+        path = op.path or "."
+        cmd = textwrap.dedent(f"""
+        Get-ChildItem -LiteralPath "{path}" | Select-Object Name, FullName, Length, LastWriteTime | ConvertTo-Json
+        """)
+        return run_powershell(cmd)
+
+    if op.action == "mkdir":
+        if not op.path:
+            return {"ok": False, "error": "path required"}
+        cmd = f'New-Item -ItemType Directory -Path "{op.path}" -Force | ConvertTo-Json'
+        return run_powershell(cmd)
+
+    if op.action in ("move", "copy", "delete"):
+        if op.action in ("move", "copy") and (not op.src or not op.dst):
+            return {"ok": False, "error": "src and dst required"}
+        if op.action == "delete" and not op.path:
+            return {"ok": False, "error": "path required"}
+
+        if op.action == "move":
+            cmd = f'Move-Item -LiteralPath "{op.src}" -Destination "{op.dst}" -Force'
+        elif op.action == "copy":
+            cmd = f'Copy-Item -LiteralPath "{op.src}" -Destination "{op.dst}" -Force'
+        else:  # delete
+            cmd = f'Remove-Item -LiteralPath "{op.path}" -Recurse -Force'
+
+        return run_powershell(cmd)
+
+    return {"ok": False, "error": f"unknown action: {op.action}"}
