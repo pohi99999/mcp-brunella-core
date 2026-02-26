@@ -1,7 +1,7 @@
 {
   "id": "robotkez_comet_upgrade_20260222",
   "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
-  "status": "PROPOSED",
+  "status": "proposed",
   "priority": "HIGH",
   "created": "2026-02-22",
   "owner": "Pohánka Péter",

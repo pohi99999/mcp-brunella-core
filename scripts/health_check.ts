@@ -86,7 +86,7 @@ async function checkOllama(): Promise<CheckResult> {
 async function checkPython(): Promise<CheckResult> {
   const start = Date.now();
   // Prefer 127.0.0.1 over localhost to avoid IPv6/IPv4 resolution delay on Windows
-  const pythonUrl = process.env.PYTHON_API_URL || "http://127.0.0.1:8010";
+  const pythonUrl = process.env.PYTHON_API_URL || "http://127.0.0.1:8000";
   try {
     const resp = await fetch(`${pythonUrl}/health`, {
       signal: AbortSignal.timeout(8000),
@@ -141,7 +141,8 @@ async function checkCloudflare(): Promise<CheckResult> {
           signal: AbortSignal.timeout(5000),
         });
 
-        if (resp.ok || resp.status === 404) {
+        // 200/404 = gateway exists, 400 = request reached CF (wrong format but token OK)
+        if (resp.ok || resp.status === 404 || resp.status === 400) {
           aiStatus = "pass";
           aiMessage = `AI Gateway OK (${tokenObj.name})`;
           break;
@@ -282,7 +283,7 @@ function checkSecrets(): CheckResult {
 function checkDatabases(): CheckResult {
   const start = Date.now();
   const dbFiles = [
-    { path: "data/checkpoint.db", name: "Checkpoint DB" },
+    { path: "data/checkpoints.db", name: "Checkpoint DB" },
     { path: "data/audit.db", name: "Audit DB" },
     { path: "data/tasks.db", name: "Tasks DB" },
   ];

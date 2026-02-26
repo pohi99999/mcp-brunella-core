@@ -10,6 +10,39 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Master dokumentum:** `README.md` — ha ellentmondást találsz, a README az irányadó.
 
+---
+
+## KÖTELEZŐ Bootstrap Protokoll (Munkamenet Elején!)
+
+### 1. GitHub Szinkronizálás (MINDIG ELŐSZÖR!)
+```bash
+bash scripts/sync.sh          # Git Bash / WSL
+# VAGY: scripts\sync.bat (Windows CMD)
+```
+
+### 2. Kritikus Fájlok Beolvasása
+```
+KÖTELEZŐ:
+- package.json                    # Függőségek, scriptek, verzió
+- tsconfig.json                   # TypeScript konfiguráció
+- src/agents/registry.json        # Ügynök regisztráció
+- PROJEKT_DIAGRAM.md              # Rendszer architektúra
+- conductor/tracks.md             # Aktív track-ek
+- .ai/FOSZAL.md                   # Mi történt legutóbb?
+- TEST_RESULTS.md                 # Legutóbbi teszt eredmények
+```
+
+### 3. Rendszer Validáció
+```bash
+npm run build                 # TypeScript fordítás (MUSZÁJ OK!)
+npm test                      # Vitest tesztek (MUSZÁJ PASS!)
+tail -n 50 logs/phoenix.log   # Phoenix Protocol hibák ellenőrzése
+```
+
+**Ha BUILD FAIL vagy TESZT FAIL → NE kezdj fejlesztésbe! Javítsd először!**
+
+---
+
 ## Parancsok
 
 ```bash
@@ -31,23 +64,38 @@ npm run test:phoenix                  # Phoenix Protocol state restoration teszt
 npm run health                        # Health check (scripts/health_check.ts)
 
 # CLI
-brunella                     # Interaktív menü (nyilak + Enter)
-brunella chat                # Interaktív chat (/edge on|off, /switch ollama|gemini|claude)
-brunella agents              # Ügynökök listázása
-brunella conductor status    # Projekt státusz
-brunella run <tool>          # MCP tool futtatás
-brunella harvest run         # Tech-harvester pipeline
-brunella robotkez chat "..."  # RobotkezV2 böngésző ügynök
-brunella jules tests          # Jules async test suite
+brunella                        # Interaktív menü (nyilak + Enter)
+brunella chat                   # Interaktív chat
+brunella agents                 # Ügynökök listázása
+brunella conductor status       # Projekt státusz
+brunella run <tool>             # MCP tool futtatás
+brunella harvest run            # Tech-harvester pipeline
+brunella robotkez chat "..."    # RobotkezV2 böngésző ügynök
+brunella robotkez plan "..."    # RobotkezV2 plan preview (végrehajtás nélkül)
+brunella robotkez status        # RobotkezV2 státusz
+brunella decompose [task]       # Feladat dekompozíció (preview-only DAG)
+brunella architect create [d]   # Új ügynök létrehozása TOML config-ból
+brunella jules tests            # Jules async test suite
+
+# Chat interaktív parancsok (brunella chat-en belül)
+/edge on|off         # Cloudflare Edge mód be/ki
+/switch ollama       # Váltás Ollama-ra
+/switch gemini       # Váltás Gemini-re
+/switch claude       # Váltás Claude-ra
+/model <név>         # Ollama modell váltás
+/save                # Utolsó kód mentése
+/run                 # Utolsó kód futtatása
 
 # Python alrendszer
 cd myai && uv sync           # Függőségek
 uvicorn server:app --reload --port 8000
 
 # Szinkron & koordináció (munkamenet elején!)
-bash scripts/sync.sh         # GitHub szinkronizálás (Jules PR-ek pull)
+bash scripts/sync.sh           # GitHub szinkronizálás (Jules PR-ek pull)
 python scripts/sync_foszal.py  # .ai/FOSZAL.md frissítése munka után
 ```
+
+---
 
 ## Architektúra
 
@@ -82,7 +130,7 @@ src/
 ├── core/
 │   ├── llm_client.ts         # Multi-provider LLM kliens (Ollama/Gemini/GitHub Models)
 │   ├── modelRouter.ts        # Brain vs Muscle routing (RULE-MR1–4)
-│   ├── bifrost_gateway.ts    # Multi-LLM Gateway (auto provider-select)
+│   ├── bifrost_gateway.ts    # Multi-LLM Gateway (auto provider-select, 4 provider)
 │   ├── goldenDatasetBridge.ts # G4.1 - Agent outputs → D1 golden samples
 │   ├── checkpoint.ts         # Phoenix Protocol — állapot mentés/visszaállítás
 │   ├── auditLog.ts           # Audit trail SQLite-ban
@@ -156,6 +204,8 @@ Aktiválás: `CLOUDFLARE_WORKER_URL` + `CEAN_API_KEY` env változók szükséges
 ### Agent Permission System (RBAC)
 
 `src/agents/permissions.ts` — Minden agent-hez `PermissionProfile` definiál engedélyeket és path-korlátozásokat. `globalPermissionManager.hasPermission(agentName, Permission.WRITE_FILE)`.
+
+---
 
 ## Kód Konvenciók (KRITIKUS!)
 
@@ -240,6 +290,8 @@ export async function myToolHandler(params: { param: string }) {
 // Regisztráció: src/server/registry.ts → registerAllTools()
 ```
 
+---
+
 ## Fejlesztési Workflow
 
 ### Track Rendszer
@@ -250,7 +302,7 @@ PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 
 Minden nagyobb fejlesztés = Track a `conductor/tracks/` mappában. Track archiválásnál: mozgasd `conductor/archive/<track-id>/`-ba.
 
-**Aktuális állapot:** `conductor/tracks.md` — 17 aktív track, 6 befejezett, 27 archivált.
+**Aktuális állapot:** `conductor/tracks.md` — 14 aktív track, 74 archivált.
 
 ### Engineering Precision Protocol v2 (EPP v2) — 7 Arany Szabály
 
@@ -260,7 +312,7 @@ Minden nagyobb fejlesztés = Track a `conductor/tracks/` mappában. Track archiv
 | 2 | Fix Bugs First | Fejlesztés közben talált hibák azonnal javítandók |
 | 3 | Commit Often | Minden Phase befejezése után git commit |
 | 4 | TODO List | Track.md checkbox lista folyamatos frissítése |
-| 5 | All Tests Green | COMPLETED csak ha: build ✅ + test ✅ |
+| 5 | All Tests Green | COMPLETED csak ha: build ✅ + test ✅ + manual ✅ |
 | **6** | **Dashboard + CLI** | **Mindkettő KÖTELEZŐ minden új funkcióhoz!** |
 | 7 | Final Docs | Track befejezés után: `.ai/<agent>.md` + `sync_foszal.py` |
 
@@ -268,7 +320,7 @@ Minden nagyobb fejlesztés = Track a `conductor/tracks/` mappában. Track archiv
 - `src/dashboard/components/dashboard/MyComponent.tsx` — Radix UI + Tailwind
 - `src/server/routes/` — Backend endpoint
 - `src/dashboard/lib/navigation.tsx` — `navigationRegistry.registerItem(...)` hívás
-- `src/cli.ts` — CLI parancs hozzáadása (magyar, inquirer.js menü)
+- `src/cli.ts` — CLI parancs hozzáadása (magyar, inquirer.js menü, nyíl+enter navigáció)
 
 ### 0-Hiba Stratégia (KÖTELEZŐ minden commit előtt)
 
@@ -297,6 +349,14 @@ npm test        # Vitest tesztek - MUSZÁJ mind PASS!
 ```
 Majd: `python scripts/sync_foszal.py`
 
+### Teszt Eredmények Dokumentálása
+
+Ha új tesztet írtál vagy teszteket futtattál:
+```bash
+echo "## Teszt Futás - $(date +%Y-%m-%d_%H-%M)" >> TEST_RESULTS.md
+npm test 2>&1 | tee -a TEST_RESULTS.md
+```
+
 ### Új Agent Létrehozása
 
 **Kód-alapú:**
@@ -308,6 +368,8 @@ Majd: `python scripts/sync_foszal.py`
 **TOML-alapú (DynamicAgent):**
 1. `myai/agents/MyAgent.toml` — system_prompt, capabilities
 2. `registry.json` — `"class": "DynamicAgent"`, `"config": { "tomlPath": "..." }`
+
+---
 
 ## Environment Variables (.env)
 
@@ -343,6 +405,8 @@ CEAN_API_KEY=...            # D1 hozzáférés
 EDGE_ENABLED=true
 ```
 
+---
+
 ## API Végpontok
 
 | Végpont | Leírás |
@@ -356,6 +420,8 @@ EDGE_ENABLED=true
 | `GET /metrics` | Prometheus metrics |
 | `GET /api-docs` | Swagger UI |
 | `GET /api/cloudflare/status` | Edge státusz |
+
+---
 
 ## Hibaelhárítás
 
@@ -371,6 +437,9 @@ EDGE_ENABLED=true
 | D1 disabled | `CLOUDFLARE_WORKER_URL` + `CEAN_API_KEY` hiányzik |
 | Dashboard fehér képernyő | Console import hiba, ellenőrizd a props-okat |
 | LanceDB ImportError | `cd myai && uv pip install lancedb pyarrow` |
+| uv sync lock hiba | `Remove-Item -Recurse -Force .venv && uv venv && uv sync` |
+
+---
 
 ## Anti-Patterns (Kerülendők!)
 
@@ -383,14 +452,19 @@ EDGE_ENABLED=true
 - D1 közvetlen elérése Node.js-ből (mindig D1Adapter HTTP bridge-en keresztül)
 - Új funkció Dashboard + CLI nélkül (EPP v2 6. szabály!)
 
+---
+
 ## További Dokumentáció
 
 - **README.md** — Master dokumentum (ez az elsődleges forrás!)
+- **`PROJEKT_DIAGRAM.md`** — Rendszer architektúra (munkamenet elején KÖTELEZŐ!)
 - **`.ai/FOSZAL.md`** — Mi történt legutóbb? (munkamenet elején KÖTELEZŐ!)
+- **`TEST_RESULTS.md`** — Legutóbbi teszt eredmények
 - **`docs/cloudflare/INFRASTRUCTURE.md`** — Cloudflare Workers részletek
 - **`conductor/tracks.md`** — Aktív fejlesztési szálak
 - **`conductor/epp-v2.md`** — EPP v2 teljes protokoll
 - **`conductor/workflow.md`** — Data Flywheel & Phoenix Protocol
+- **`docs/robotkezv2-user-guide.md`** — RobotkezV2 felhasználói útmutató
 
 ---
 

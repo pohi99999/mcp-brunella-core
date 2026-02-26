@@ -3,7 +3,8 @@ import {
   LayoutDashboard, Network, Rocket, Cloud, Cpu, MessageSquare,
   Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
   Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow,
-  BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb
+  BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb,
+  Search, Target, Receipt
 } from "lucide-react";
 
 // Component Imports
@@ -20,6 +21,9 @@ import { IncubatorPanel } from "@/components/dashboard/IncubatorPanel";
 import { DeveloperPanel } from "@/components/dashboard/DeveloperPanel";
 import { EdgePanel } from "@/components/dashboard/EdgePanel";
 import { JulesPanel } from "@/components/dashboard/JulesPanel";
+import { MarketWatcherConfig } from "@/components/dashboard/MarketWatcherConfig";
+import { InvoiceSyncWidget } from "@/components/dashboard/InvoiceSyncWidget";
+import { LeadMiningWidget } from "@/components/dashboard/LeadMiningWidget";
 import { TrackGenerator } from "@/components/dashboard/TrackGenerator";
 import { TaskDecomposerPanel } from "@/components/dashboard/TaskDecomposerPanel";
 import { SuggestedTasksWidget } from "@/components/dashboard/SuggestedTasksWidget";
@@ -131,6 +135,9 @@ export function initializeNavigation() {
     { id: "studio", label: "Brunella Studio", icon: Palette, component: <BrunellaStudio /> },
     { id: "campaign-studio", label: "Kampány Stúdió", icon: DollarSign, component: <CampaignStudio /> },
     { id: "innovation-bridge", label: "Innovation Bridge", icon: Lightbulb, component: <InnovationBridgeWidget /> },
+    { id: "invoice-sync", label: "Számla Szinkron", icon: Receipt, component: <InvoiceSyncWidget /> },
+    { id: "lead-mining", label: "Lead Mining", icon: Target, component: <LeadMiningWidget /> },
+    { id: "jules", label: "Jules AI", icon: Zap, component: <JulesPanel /> },
     { id: "digital-hr", label: "Digital HR", icon: Briefcase, component: <DigitalHRWidget /> },
     { id: "grant-hunter", label: "Grant Hunter", icon: Search, component: <GrantHunterWidget /> },
     { id: "law-detective", label: "Law Detective", icon: Shield, component: <LawDetectiveWidget /> },
@@ -146,9 +153,9 @@ export function initializeNavigation() {
 
   // Register groups
   navigationRegistry.registerGroup({ title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode"] });
-  navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "paios", "phoenix", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez"] });
+  navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "paios", "phoenix", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez", "jules"] });
   navigationRegistry.registerGroup({ title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "enterprise-analytics"] });
-  navigationRegistry.registerGroup({ title: "Bevétel", icon: DollarSign, items: ["campaign-studio", "innovation-bridge", "marketwatcher", "inventory"] });
+  navigationRegistry.registerGroup({ title: "Bevétel", icon: DollarSign, items: ["campaign-studio", "innovation-bridge", "invoice-sync", "lead-mining", "marketwatcher", "inventory"] });
   navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "tasks"] });
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] });
   navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "files", "settings", "n8n", "langflow"] });

@@ -3,7 +3,7 @@
   "title": "Invoice Automation E2E Testing & Validation",
   "description": "End-to-end testing and validation of the invoice automation pipeline (harvest → refine → index → export)",
   "priority": "MEDIUM",
-  "status": "PROPOSED",
+  "status": "proposed",
   "spec_status": "DRAFT",
   "implementation_allowed": false,
   "created_at": "2026-02-17T22:00:00Z",
