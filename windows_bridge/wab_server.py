@@ -1,8 +1,26 @@
 import subprocess
 import textwrap
+import logging
 from typing import Optional
+from pathlib import Path
 from fastapi import FastAPI
 from pydantic import BaseModel
+
+BASE_DIR = Path(__file__).parent.absolute()
+log_dir = BASE_DIR / "logs"
+log_dir.mkdir(exist_ok=True)
+
+# Create explicit logger
+wab_logger = logging.getLogger("wab_audit")
+wab_logger.setLevel(logging.INFO)
+# Clear any existing handlers to prevent duplicates
+if wab_logger.hasHandlers():
+    wab_logger.handlers.clear()
+
+file_handler = logging.FileHandler(log_dir / "wab_audit.log")
+formatter = logging.Formatter('%(asctime)s - WAB - %(message)s')
+file_handler.setFormatter(formatter)
+wab_logger.addHandler(file_handler)
 
 app = FastAPI(title="Windows Automation Bridge", version="0.1.0")
 
@@ -25,6 +43,11 @@ def run_powershell(cmd: str) -> dict:
             timeout=300
         )
         is_ok = result.returncode == 0
+        wab_logger.info(f"CMD: {cmd} | OK: {is_ok} | STDOUT: {result.stdout.strip()} | STDERR: {result.stderr.strip()}")
+        # Call flush to ensure the log is written immediately for testing
+        for handler in wab_logger.handlers:
+            handler.flush()
+            
         return {
             "ok": is_ok,
             "stdout": result.stdout.strip(),
@@ -32,6 +55,9 @@ def run_powershell(cmd: str) -> dict:
             "returncode": result.returncode,
         }
     except Exception as e:
+        wab_logger.error(f"CMD: {cmd} | ERROR: {str(e)}")
+        for handler in wab_logger.handlers:
+            handler.flush()
         return {
             "ok": False,
             "stdout": "",
