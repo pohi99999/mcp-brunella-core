@@ -3,7 +3,7 @@ import express from "express";
 import { createServer } from "http";
 import { Server } from "socket.io";
 import path from "path";
-import { readFileSync } from "fs";
+import { readFileSync, existsSync } from "fs";
 import os from "os";
 import swaggerUi from "swagger-ui-express";
 import { config } from "../config/schema.js";
@@ -461,6 +461,42 @@ export async function startWebServer() {
   });
 
   app.use(express.static(path.join(process.cwd(), "build", "public")));
+
+  // Fallback root: fejlesztési módban átirányítás a Vite dev szerverre
+  app.get("/", (_req, res) => {
+    const isDev = process.env.NODE_ENV !== "production";
+    const indexPath = path.join(process.cwd(), "build", "public", "index.html");
+    if (!existsSync(indexPath)) {
+      if (isDev) {
+        res.redirect("http://localhost:5173");
+      } else {
+        res.status(503).send(
+          `<html><head><title>Brunella API Server</title></head>` +
+          `<body style="font-family:monospace;padding:2rem;background:#0a0a0a;color:#e0e0e0">` +
+          `<h2>Brunella Agent System - API Server</h2>` +
+          `<p>Dashboard build hiányzik. Futtasd: <code>npm run build &amp;&amp; npm run dev:ui</code></p>` +
+          `<p>API docs: <a href="/api-docs" style="color:#7c3aed">/api-docs</a> | ` +
+          `Health: <a href="/api/health" style="color:#7c3aed">/api/health</a></p>` +
+          `</body></html>`
+        );
+      }
+      return;
+    }
+    res.sendFile(indexPath);
+  });
+
+  // SPA fallback: minden más route → index.html (ha van build)
+  app.get("*", (req, res, next) => {
+    if (req.path.startsWith("/api") || req.path.startsWith("/socket.io")) {
+      return next();
+    }
+    const indexPath = path.join(process.cwd(), "build", "public", "index.html");
+    if (existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      next();
+    }
+  });
 
   // Global error handler (MUST be after all routes)
   app.use(globalErrorHandler);

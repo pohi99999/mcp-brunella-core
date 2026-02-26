@@ -2,6 +2,7 @@ import cron from 'node-cron';
 import { logInfo, logError } from '../utils/logger.js';
 import { evHunterHandler } from '../tools/evHunterTool.js';
 import { trackStateManager } from '../services/trackStateManager.js';
+import { agentManager } from '../agents/AgentManager.js';
 
 export function startScheduler() {
     logInfo('Scheduler', 'Initializing scheduled tasks...');
@@ -19,6 +20,18 @@ export function startScheduler() {
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             logError('Scheduler', `EV Hunter execution exception: ${msg}`);
+        }
+    });
+
+    // Email Triage & Pipeline Monitor - Every 15 minutes
+    cron.schedule('*/15 * * * *', async () => {
+        logInfo('Scheduler', 'Running periodic Email Triage & Pipeline monitor...');
+        try {
+            await agentManager.delegate('email_triage', 'process inbox', { mode: 'auto' });
+            logInfo('Scheduler', 'Email Triage check completed');
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            logError('Scheduler', `Email Triage exception: ${msg}`);
         }
     });
 
