@@ -1,0 +1,4 @@
+Output: 
+> mcp-brunella-core@1.0.0 build
+> tsc
+Process Group PGID: 23116

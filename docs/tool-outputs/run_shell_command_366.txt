@@ -1,0 +1,533 @@
+Output: 
+> mcp-brunella-core@1.0.0 build
+> tsc && node -e "const fs=require('fs');const src='src/orchestrator/systemPrompt/paios_orchestrator_prompt.md';const dst='build/orchestrator/systemPrompt/paios_orchestrator_prompt.md';fs.mkdirSync('build/orchestrator/systemPrompt',{recursive:true});fs.copyFileSync(src,dst);console.log('✅ PAIOS prompt copied');"
+
+src/agents/FinanceGuardian.ts:181:9 - error TS1128: Declaration or statement expected.
+
+181         }
+            ~
+
+src/agents/FinanceGuardian.ts:195:5 - error TS1128: Declaration or statement expected.
+
+195     } catch (error: any) {
+        ~
+
+src/agents/FinanceGuardian.ts:195:7 - error TS1005: 'try' expected.
+
+195     } catch (error: any) {
+          ~~~~~
+
+src/agents/FinanceGuardian.ts:203:3 - error TS1128: Declaration or statement expected.
+
+203   }
+      ~
+
+src/agents/FinanceGuardian.ts:208:3 - error TS1128: Declaration or statement expected.
+
+208   private async handleGmailDownload(context: AgentContext): Promise<AgentResult> {
+      ~~~~~~~
+
+src/agents/FinanceGuardian.ts:208:11 - error TS1434: Unexpected keyword or identifier.
+
+208   private async handleGmailDownload(context: AgentContext): Promise<AgentResult> {
+              ~~~~~
+
+src/agents/FinanceGuardian.ts:208:44 - error TS1005: ',' expected.
+
+208   private async handleGmailDownload(context: AgentContext): Promise<AgentResult> {
+                                               ~
+
+src/agents/FinanceGuardian.ts:208:59 - error TS1005: ';' expected.
+
+208   private async handleGmailDownload(context: AgentContext): Promise<AgentResult> {
+                                                              ~
+
+src/agents/FinanceGuardian.ts:209:11 - error TS1005: ':' expected.
+
+209     const query = (context.query as string) || 'has:attachment filename:pdf "számla" OR "invoice"';
+              ~~~~~
+
+src/agents/FinanceGuardian.ts:209:99 - error TS1005: ',' expected.
+
+209     const query = (context.query as string) || 'has:attachment filename:pdf "számla" OR "invoice"';
+                                                                                                      ~
+
+src/agents/FinanceGuardian.ts:210:17 - error TS1005: ',' expected.
+
+210     logInfo(this.name, `Searching Gmail for invoices with query: "${query}"`);
+                    ~
+
+src/agents/FinanceGuardian.ts:210:24 - error TS1136: Property assignment expected.
+
+210     logInfo(this.name, `Searching Gmail for invoices with query: "${query}"`);
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:210:77 - error TS1005: ';' expected.
+
+210     logInfo(this.name, `Searching Gmail for invoices with query: "${query}"`);
+                                                                                ~
+
+src/agents/FinanceGuardian.ts:244:3 - error TS1128: Declaration or statement expected.
+
+244   }
+      ~
+
+src/agents/FinanceGuardian.ts:249:3 - error TS1128: Declaration or statement expected.
+
+249   private async handleProcessInvoice(context: AgentContext): Promise<AgentResult> {
+      ~~~~~~~
+
+src/agents/FinanceGuardian.ts:249:11 - error TS1434: Unexpected keyword or identifier.
+
+249   private async handleProcessInvoice(context: AgentContext): Promise<AgentResult> {
+              ~~~~~
+
+src/agents/FinanceGuardian.ts:249:45 - error TS1005: ',' expected.
+
+249   private async handleProcessInvoice(context: AgentContext): Promise<AgentResult> {
+                                                ~
+
+src/agents/FinanceGuardian.ts:249:60 - error TS1005: ';' expected.
+
+249   private async handleProcessInvoice(context: AgentContext): Promise<AgentResult> {
+                                                               ~
+
+src/agents/FinanceGuardian.ts:250:11 - error TS1005: ':' expected.
+
+250     const filePath = (context.filePath || (context as any).context?.filePath) as string;
+              ~~~~~~~~
+
+src/agents/FinanceGuardian.ts:250:88 - error TS1005: ',' expected.
+
+250     const filePath = (context.filePath || (context as any).context?.filePath) as string;
+                                                                                           ~
+
+src/agents/FinanceGuardian.ts:252:9 - error TS1003: Identifier expected.
+
+252     if (!filePath) {
+            ~
+
+src/agents/FinanceGuardian.ts:256:5 - error TS1005: ',' expected.
+
+256     logInfo(this.name, `Processing invoice file with Gemini Vision: ${filePath}`);
+        ~~~~~~~
+
+src/agents/FinanceGuardian.ts:256:17 - error TS1005: ',' expected.
+
+256     logInfo(this.name, `Processing invoice file with Gemini Vision: ${filePath}`);
+                    ~
+
+src/agents/FinanceGuardian.ts:256:24 - error TS1136: Property assignment expected.
+
+256     logInfo(this.name, `Processing invoice file with Gemini Vision: ${filePath}`);
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:256:81 - error TS1005: ';' expected.
+
+256     logInfo(this.name, `Processing invoice file with Gemini Vision: ${filePath}`);
+                                                                                    ~
+
+src/agents/FinanceGuardian.ts:304:3 - error TS1128: Declaration or statement expected.
+
+304   }
+      ~
+
+src/agents/FinanceGuardian.ts:309:3 - error TS1128: Declaration or statement expected.
+
+309   private async handleSheetsExport(context: AgentContext): Promise<AgentResult> {
+      ~~~~~~~
+
+src/agents/FinanceGuardian.ts:309:11 - error TS1434: Unexpected keyword or identifier.
+
+309   private async handleSheetsExport(context: AgentContext): Promise<AgentResult> {
+              ~~~~~
+
+src/agents/FinanceGuardian.ts:309:43 - error TS1005: ',' expected.
+
+309   private async handleSheetsExport(context: AgentContext): Promise<AgentResult> {
+                                              ~
+
+src/agents/FinanceGuardian.ts:309:58 - error TS1005: ';' expected.
+
+309   private async handleSheetsExport(context: AgentContext): Promise<AgentResult> {
+                                                             ~
+
+src/agents/FinanceGuardian.ts:310:11 - error TS1005: ':' expected.
+
+310     const invoiceData = (context.invoiceData || context.context) as any;
+              ~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:310:72 - error TS1005: ',' expected.
+
+310     const invoiceData = (context.invoiceData || context.context) as any;
+                                                                           ~
+
+src/agents/FinanceGuardian.ts:311:11 - error TS1005: ':' expected.
+
+311     const spreadsheetId = (context.spreadsheetId as string) || process.env.INVOICE_SPREADSHEET_ID;
+              ~~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:311:98 - error TS1005: ',' expected.
+
+311     const spreadsheetId = (context.spreadsheetId as string) || process.env.INVOICE_SPREADSHEET_ID;
+                                                                                                     ~
+
+src/agents/FinanceGuardian.ts:313:9 - error TS1003: Identifier expected.
+
+313     if (!invoiceData || !invoiceData.invoice_number) {
+            ~
+
+src/agents/FinanceGuardian.ts:313:22 - error TS1005: ',' expected.
+
+313     if (!invoiceData || !invoiceData.invoice_number) {
+                         ~~
+
+src/agents/FinanceGuardian.ts:313:52 - error TS1005: ';' expected.
+
+313     if (!invoiceData || !invoiceData.invoice_number) {
+                                                       ~
+
+src/agents/FinanceGuardian.ts:348:3 - error TS1128: Declaration or statement expected.
+
+348   }
+      ~
+
+src/agents/FinanceGuardian.ts:353:3 - error TS1128: Declaration or statement expected.
+
+353   private async extractInvoicesFromPDFs(): Promise<InvoiceData[]> {
+      ~~~~~~~
+
+src/agents/FinanceGuardian.ts:353:11 - error TS1434: Unexpected keyword or identifier.
+
+353   private async extractInvoicesFromPDFs(): Promise<InvoiceData[]> {
+              ~~~~~
+
+src/agents/FinanceGuardian.ts:353:42 - error TS1005: ';' expected.
+
+353   private async extractInvoicesFromPDFs(): Promise<InvoiceData[]> {
+                                             ~
+
+src/agents/FinanceGuardian.ts:353:64 - error TS1011: An element access expression should take an argument.
+
+353   private async extractInvoicesFromPDFs(): Promise<InvoiceData[]> {
+   
+
+src/agents/FinanceGuardian.ts:355:11 - error TS1005: ':' expected.
+
+355     const mockInvoices: InvoiceData[] = [
+              ~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:355:23 - error TS1005: ',' expected.
+
+355     const mockInvoices: InvoiceData[] = [
+                          ~
+
+src/agents/FinanceGuardian.ts:355:36 - error TS1005: ',' expected.
+
+355     const mockInvoices: InvoiceData[] = [
+                                       ~
+
+src/agents/FinanceGuardian.ts:355:37 - error TS1109: Expression expected.
+
+355     const mockInvoices: InvoiceData[] = [
+                                        ~
+
+src/agents/FinanceGuardian.ts:355:39 - error TS1005: ':' expected.
+
+355     const mockInvoices: InvoiceData[] = [
+                                          ~
+
+src/agents/FinanceGuardian.ts:403:6 - error TS1005: ',' expected.
+
+403     ];
+         ~
+
+src/agents/FinanceGuardian.ts:405:12 - error TS1005: ':' expected.
+
+405     return mockInvoices;
+               ~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:405:24 - error TS1005: ',' expected.
+
+405     return mockInvoices;
+                           ~
+
+src/agents/FinanceGuardian.ts:411:3 - error TS1128: Declaration or statement expected.
+
+411   private async storeInvoiceHistory(invoices: InvoiceData[]): Promise<void> {
+      ~~~~~~~
+
+src/agents/FinanceGuardian.ts:411:11 - error TS1434: Unexpected keyword or identifier.
+
+411   private async storeInvoiceHistory(invoices: InvoiceData[]): Promise<void> {
+              ~~~~~
+
+src/agents/FinanceGuardian.ts:411:45 - error TS1005: ',' expected.
+
+411   private async storeInvoiceHistory(invoices: InvoiceData[]): Promise<void> {
+                                                ~
+
+src/agents/FinanceGuardian.ts:411:59 - error TS1011: An element access expression should take an argument.
+
+411   private async storeInvoiceHistory(invoices: InvoiceData[]): Promise<void> {
+   
+
+src/agents/FinanceGuardian.ts:411:61 - error TS1005: ';' expected.
+
+411   private async storeInvoiceHistory(invoices: InvoiceData[]): Promise<void> {
+                                                                ~
+
+src/agents/FinanceGuardian.ts:411:75 - error TS1109: Expression expected.
+
+411   private async storeInvoiceHistory(invoices: InvoiceData[]): Promise<void> {
+                                                                              ~
+
+src/agents/FinanceGuardian.ts:412:13 - error TS1005: ',' expected.
+
+412     invoices.forEach(invoice => {
+                ~
+
+src/agents/FinanceGuardian.ts:416:7 - error TS1005: ',' expected.
+
+416     });
+          ~
+
+src/agents/FinanceGuardian.ts:418:17 - error TS1005: ',' expected.
+
+418     logInfo(this.name, `Stored ${invoices.length} invoices in history`);
+                    ~
+
+src/agents/FinanceGuardian.ts:418:24 - error TS1136: Property assignment expected.
+
+418     logInfo(this.name, `Stored ${invoices.length} invoices in history`);
+                           ~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:418:71 - error TS1005: ';' expected.
+
+418     logInfo(this.name, `Stored ${invoices.length} invoices in history`);
+                                                                          ~
+
+src/agents/FinanceGuardian.ts:419:3 - error TS1128: Declaration or statement expected.
+
+419   }
+      ~
+
+src/agents/FinanceGuardian.ts:424:3 - error TS1128: Declaration or statement expected.
+
+424   private calculateVendorBaselines(): void {
+      ~~~~~~~
+
+src/agents/FinanceGuardian.ts:424:37 - error TS1005: ';' expected.
+
+424   private calculateVendorBaselines(): void {
+                                        ~
+
+src/agents/FinanceGuardian.ts:425:9 - error TS1005: ':' expected.
+
+425     this.invoiceHistory.forEach((invoices, vendorName) => {
+            ~
+
+src/agents/FinanceGuardian.ts:434:7 - error TS1005: ',' expected.
+
+434     });
+          ~
+
+src/agents/FinanceGuardian.ts:436:17 - error TS1005: ',' expected.
+
+436     logInfo(this.name, `Calculated baselines for ${this.priceBaselineByVendor.size} vendors`);
+                    ~
+
+src/agents/FinanceGuardian.ts:436:24 - error TS1136: Property assignment expected.
+
+436     logInfo(this.name, `Calculated baselines for ${this.priceBaselineByVendor.size} vendors`);
+                           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:436:93 - error TS1005: ';' expected.
+
+436     logInfo(this.name, `Calculated baselines for ${this.priceBaselineByVendor.size} vendors`);
+                                                                                                ~
+
+src/agents/FinanceGuardian.ts:437:3 - error TS1128: Declaration or statement expected.
+
+437   }
+      ~
+
+src/agents/FinanceGuardian.ts:442:3 - error TS1128: Declaration or statement expected.
+
+442   private detectAnomalies(invoices: InvoiceData[]): PriceAnomaly[] {
+      ~~~~~~~
+
+src/agents/FinanceGuardian.ts:442:35 - error TS1005: ',' expected.
+
+442   private detectAnomalies(invoices: InvoiceData[]): PriceAnomaly[] {
+                                      ~
+
+src/agents/FinanceGuardian.ts:442:49 - error TS1011: An element access expression should take an argument.
+
+442   private detectAnomalies(invoices: InvoiceData[]): PriceAnomaly[] {
+   
+
+src/agents/FinanceGuardian.ts:442:51 - error TS1005: ';' expected.
+
+442   private detectAnomalies(invoices: InvoiceData[]): PriceAnomaly[] {
+                                                      ~
+
+src/agents/FinanceGuardian.ts:442:66 - error TS1011: An element access expression should take an argument.
+
+442   private detectAnomalies(invoices: InvoiceData[]): PriceAnomaly[] {
+   
+
+src/agents/FinanceGuardian.ts:442:68 - error TS1005: ';' expected.
+
+442   private detectAnomalies(invoices: InvoiceData[]): PriceAnomaly[] {
+                                                                       ~
+
+src/agents/FinanceGuardian.ts:482:3 - error TS1128: Declaration or statement expected.
+
+482   private analyzeVendorSpending(): Array<{
+      ~~~~~~~
+
+src/agents/FinanceGuardian.ts:482:34 - error TS1005: ';' expected.
+
+482   private analyzeVendorSpending(): Array<{
+                                     ~
+
+src/agents/FinanceGuardian.ts:483:23 - error TS1005: ',' expected.
+
+483     vendorName: string;
+                          ~
+
+src/agents/FinanceGuardian.ts:484:25 - error TS1005: ',' expected.
+
+484     invoiceCount: number;
+                            ~
+
+src/agents/FinanceGuardian.ts:485:23 - error TS1005: ',' expected.
+
+485     totalSpent: number;
+                          ~
+
+src/agents/FinanceGuardian.ts:486:29 - error TS1005: ',' expected.
+
+486     avgInvoiceAmount: number;
+                                ~
+
+src/agents/FinanceGuardian.ts:487:59 - error TS1005: ',' expected.
+
+487     trendDirection: 'increasing' | 'decreasing' | 'stable';
+                                                              ~
+
+src/agents/FinanceGuardian.ts:489:12 - error TS1005: ':' expected.
+
+489     return Array.from(this.invoiceHistory.entries()).map(([vendorName, invoices]) => {
+               ~~~~~
+
+src/agents/FinanceGuardian.ts:510:7 - error TS1005: ',' expected.
+
+510     });
+          ~
+
+src/agents/FinanceGuardian.ts:516:3 - error TS1128: Declaration or statement expected.
+
+516   private identifyCostSavings(anomalies: PriceAnomaly[]): Array<{
+      ~~~~~~~
+
+src/agents/FinanceGuardian.ts:516:40 - error TS1005: ',' expected.
+
+516   private identifyCostSavings(anomalies: PriceAnomaly[]): Array<{
+                                           ~
+
+src/agents/FinanceGuardian.ts:516:55 - error TS1011: An element access expression should take an argument.
+
+516   private identifyCostSavings(anomalies: PriceAnomaly[]): Array<{
+   
+
+src/agents/FinanceGuardian.ts:516:57 - error TS1005: ';' expected.
+
+516   private identifyCostSavings(anomalies: PriceAnomaly[]): Array<{
+                                                            ~
+
+src/agents/FinanceGuardian.ts:517:18 - error TS1005: ',' expected.
+
+517     title: string;
+                     ~
+
+src/agents/FinanceGuardian.ts:518:29 - error TS1005: ',' expected.
+
+518     estimatedSavings: number;
+                                ~
+
+src/agents/FinanceGuardian.ts:519:40 - error TS1005: ',' expected.
+
+519     priority: 'high' | 'medium' | 'low';
+                                           ~
+
+src/agents/FinanceGuardian.ts:521:11 - error TS1005: ':' expected.
+
+521     const opportunities: Array<{ title: string; estimatedSavings: number; priority: 'high' | 'medium' | 'low' }> = [];
+              ~~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:521:24 - error TS1005: ',' expected.
+
+521     const opportunities: Array<{ title: string; estimatedSavings: number; priority: 'high' | 'medium' | 'low' }> = [];
+                           ~
+
+src/agents/FinanceGuardian.ts:521:32 - error TS1005: '>' expected.
+
+521     const opportunities: Array<{ title: string; estimatedSavings: number; priority: 'high' | 'medium' | 'low' }> = [];
+                                   ~
+
+src/agents/FinanceGuardian.ts:521:112 - error TS1005: ',' expected.
+
+521     const opportunities: Array<{ title: string; estimatedSavings: number; priority: 'high' | 'medium' | 'low' }> = [];
+                                                                                                                   ~
+
+src/agents/FinanceGuardian.ts:521:114 - error TS1109: Expression expected.
+
+521     const opportunities: Array<{ title: string; estimatedSavings: number; priority: 'high' | 'medium' | 'low' }> = [];
+                                                                                                                     ~
+
+src/agents/FinanceGuardian.ts:566:3 - error TS1128: Declaration or statement expected.
+
+566   }
+      ~
+
+src/agents/FinanceGuardian.ts:571:3 - error TS1128: Declaration or statement expected.
+
+571   private generateRecommendations(anomalies: PriceAnomaly[]): string[] {
+      ~~~~~~~
+
+src/agents/FinanceGuardian.ts:571:44 - error TS1005: ',' expected.
+
+571   private generateRecommendations(anomalies: PriceAnomaly[]): string[] {
+                                               ~
+
+src/agents/FinanceGuardian.ts:571:59 - error TS1011: An element access expression should take an argument.
+
+571   private generateRecommendations(anomalies: PriceAnomaly[]): string[] {
+   
+
+src/agents/FinanceGuardian.ts:571:61 - error TS1005: ';' expected.
+
+571   private generateRecommendations(anomalies: PriceAnomaly[]): string[] {
+                                                                ~
+
+src/agents/FinanceGuardian.ts:571:70 - error TS1011: An element access expression should take an argument.
+
+571   private generateRecommendations(anomalies: PriceAnomaly[]): string[] {
+   
+
+src/agents/FinanceGuardian.ts:571:72 - error TS1005: ';' expected.
+
+571   private generateRecommendations(anomalies: PriceAnomaly[]): string[] {
+                                                                           ~
+
+src/agents/FinanceGuardian.ts:592:1 - error TS1128: Declaration or statement expected.
+
+592 }
+    ~
+
+
+Found 105 errors in the same file, starting at: src/agents/FinanceGuardian.ts:181
+Exit Code: 1
+Process Group PGID: 46560

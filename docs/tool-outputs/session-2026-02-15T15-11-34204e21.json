@@ -1,0 +1,72 @@
+{
+  "sessionId": "34204e21-f402-4ebb-b035-a44a7a3c7ac3",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-15T15:12:00.455Z",
+  "lastUpdated": "2026-02-15T15:14:23.098Z",
+  "messages": [
+    {
+      "id": "bfa3f754-18fd-4d0f-9f3e-36fec45195bb",
+      "timestamp": "2026-02-15T15:12:00.455Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'docker': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "6a876bbd-8eed-42d2-9d1c-0ff4f499d1d4",
+      "timestamp": "2026-02-15T15:12:01.107Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'sqlite': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "2f3d8f88-6fa8-4ee4-bb57-68cbf2cdf9d5",
+      "timestamp": "2026-02-15T15:12:01.162Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'fetch': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "794d3f23-5ca2-45f3-bf57-49c96d805ccc",
+      "timestamp": "2026-02-15T15:12:02.129Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'brunella-python': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "fb8f2676-cd1e-4aa3-a8d3-1aca2f02d7fb",
+      "timestamp": "2026-02-15T15:12:04.404Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'brunella-core': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "4397c7eb-3caf-4944-b6a6-86eb645af83e",
+      "timestamp": "2026-02-15T15:12:05.777Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'cloudflare': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "45c2a3a6-3cce-471d-9e0f-eaf6570cbd37",
+      "timestamp": "2026-02-15T15:12:07.043Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'FileSearch': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "e8b1a8e9-3eae-4be3-8aa9-fa1f6ac79f36",
+      "timestamp": "2026-02-15T15:12:07.056Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'computerUse': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "08040cb2-99e8-4135-8a35-af038487eb2a",
+      "timestamp": "2026-02-15T15:14:22.607Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "szia magyarul kommunikálunk kérlek olvasd be a readme.md fájlt a protokol elindításához"
+        }
+      ]
+    },
+    {
+      "id": "f497b20e-9355-4730-b3c7-09fed2926bcc",
+      "timestamp": "2026-02-15T15:14:23.098Z",
+      "type": "error",
+      "content": "[API Error: {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 400,\\n    \\\"message\\\": \\\"schema at properties.connectionConfig requires unspecified property 'connectionId'\\\",\\n    \\\"status\\\": \\\"INVALID_ARGUMENT\\\"\\n  }\\n}\\n\",\"code\":400,\"status\":\"Bad Request\"}}]"
+    }
+  ]
+}

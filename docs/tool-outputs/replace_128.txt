@@ -1,0 +1,3 @@
+{
+  "error": "A secondary check by an LLM determined that no changes were necessary to fulfill the instruction. Explanation: The original search failed because the target code, including the return type and the `return agentManager;` statement, was already present in the file. The `replace` string had already been applied, making the original `search` string (which represented the *before* state) no longer findable. No changes are required as the file already contains the desired modification.. Original error with the parameters given: Failed to edit, 0 occurrences found for old_string in F:\\mcp-brunella-core\\src\\agents\\AgentManager.ts. Ensure you're not escaping content incorrectly and check whitespace, indentation, and context. Use read_file tool to verify."
+}

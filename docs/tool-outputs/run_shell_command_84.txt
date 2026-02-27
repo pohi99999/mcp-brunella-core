@@ -1,0 +1,10 @@
+Output: Invoke-RestMethod : {"detail":"There was an error parsing the body"}
+At line:6 char:1
++ Invoke-RestMethod -Uri "http://localhost:8000/comet/execute" -Method  ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-RestM  
+   ethod], WebException
+    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeRestMeth  
+   odCommand
+Exit Code: 1
+Process Group PGID: 3528

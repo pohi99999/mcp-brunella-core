@@ -1,0 +1,194 @@
+Found 100 matches for pattern "key=" in path "src/dashboard/components/dashboard" (results limited to 100 matches for performance):
+---
+File: WidgetGrid.tsx
+L56:             <div key={widgetId} style={{ gridArea }} className="relative overflow-hidden rounded-2xl border border-white/5 bg-black/20 backdrop-blur-md">
+---
+File: VectorizeAnalyticsWidget.tsx
+L98:                   key={idx}
+L120:                   key={idx}
+---
+File: TrackTodoWidget.tsx
+L146:                 <SelectItem key={track.id} value={track.id}>
+L201:                     key={todo.id}
+---
+File: TrackProgress.tsx
+L263:                       key={track.id}
+L318:                     key={track.id}
+L346:                               key={todo.id}
+---
+File: TrackGenerator.tsx
+L188:                     key={`${track.id}-${i}`}
+L278:                     key={item.stage}
+---
+File: TraceViewerModal.tsx
+L271:                                                 key={idx}
+---
+File: TraceViewer.tsx
+L153:                 key={t.traceId}
+L180:               <SpanRow key={span.spanId} span={span} depth={depth} />
+---
+File: ToolsCard.tsx
+L202:                   <option key={`${cat}-${i}`} value={cat}>
+L220:                     key={tag}
+L237:                 key={`${tool.id ?? tool.name}-${i}`}
+L289:               <div key={p.name} className="space-y-1">
+L326:                         <SelectItem key={opt} value={opt}>
+---
+File: TokenUsageChart.tsx
+L100:                     <div key={agent} className="flex items-center justify-between text-sm">
+L117:                     <div key={model} className="flex items-center justify-between text-sm">
+---
+File: TerminalLog.tsx
+L71:               key={line.id}
+---
+File: TestResultsWidget.tsx
+L251:               <XAxis dataKey="date" />
+L259:                 dataKey="passRate"
+L264:               <Bar yAxisId="right" dataKey="passed" fill="#3b82f6" name="Sikeres" />
+L265:               <Bar yAxisId="right" dataKey="failed" fill="#ef4444" name="Sikertelen" />
+L297:                     <tr key={run.id} className="border-b hover:bg-gray-50">
+---
+File: TaskQueueMonitor.tsx
+L228:                                         <TableRow key={task.id} className="hover:bg-white/5 transition-colors">
+---
+File: SystemHealthCard.tsx
+L201:                 key={service.id}
+---
+File: SuggestedTasksWidget.tsx
+L358:                 <XAxis dataKey="range" />
+L361:                 <Bar dataKey="count" fill="#3b82f6" />
+L379:                   dataKey="value"
+L382:                     <Cell key={`cell-${index}`} fill={entry.color} />
+L407:                   key={task.id}
+---
+File: SpecManagerPanel.tsx
+L153:                 key={spec.id}
+---
+File: ServiceControlWidget.tsx
+L116:               key={`${svc.id}-${i}`}
+---
+File: ScheduledTasksPanel.tsx
+L201:                 <TableRow key={task.id}>
+---
+File: RobotkezV2Chat.tsx
+L256:                     key={i}
+L368:                     key={i}
+L445:                     <div key={task.id} className="border border-border/50 rounded-lg bg-muted/20">
+L483:                               <div key={i} className="flex items-start gap-2 text-xs">
+---
+File: RAGMemoryWidget.tsx
+L108:               key={idx}
+---
+File: RobotkezPanel.tsx
+L199:                                     key={level}
+L256:                                 <div key={i} className="mb-1 whitespace-pre-wrap">{log}</div>
+L285:                             <div key={idx} className="flex justify-between items-center text-xs p-2 bg-secondary/30 rounded border border-primary/5">
+---
+File: PythonWorkersPanel.tsx
+L211:                     <Card key={worker.name}>
+---
+File: ProcessControlWidget.tsx
+L194:                     key={task.id}
+---
+File: PhoenixPanel.tsx
+L101:               <div key={idx} className="p-3 border rounded-lg">
+L166:                 <div key={idx} className="p-3 border rounded-lg border-orange-300 bg-orange-50 dark:bg-orange-900/10">
+---
+File: PhoenixEventsPanel.tsx
+L215:                                     <SelectItem key={type} value={type}>
+L243:                                 <EventCard key={event.id} event={event} />
+---
+File: PAIOSConfigDisplay.tsx
+L100:                             <div key={name} className="flex items-center justify-between">
+L138:                                 <div key={key} className="flex items-center gap-2">
+---
+File: PAIOSOrchestratorChat.tsx
+L185:                                     key={model.value}
+L219:                                 key={idx}
+L242:                                                 <div key={i} className="flex items-start gap-2 text-xs">
+L260:                                                 <Badge key={id} variant="secondary" className="text-xs">
+---
+File: NeuralCommandWidget.tsx
+L158:                                 key={index}
+---
+File: NeuralLinkChat.tsx
+L263:                   <SelectItem key={`${m.name}-${i}`} value={m.name}>
+L277:                   <SelectItem key={`${m.name}-${i}`} value={m.name}>
+L294:                   <SelectItem key={`${m.name}-${i}`} value={m.name}>
+L324:             <div key={idx} className="flex items-center gap-1.5 bg-background/80 border border-primary/20 rounded-full px-2 py-0.5 animate-pulse shrink-0">
+L371:                 key={i}
+L432:                                     key={ci}
+---
+File: ModelSelector.tsx
+L142:                         <SelectItem key={provider.id} value={provider.id}>
+---
+File: ModelRouterPanel.tsx
+L91:               <div key={model.model} className="p-4 border rounded-lg">
+L98:                     <Badge key={spec} className="bg-blue-500 text-xs">
+L123:               <div key={idx} className="p-3 border rounded-lg">
+L152:                     <div key={model} className="flex items-center justify-between p-2 border rounded">
+L165:                     <div key={category} className="p-2 border rounded">
+L169:                           <Badge key={model} variant="outline" className="text-xs">
+---
+File: MissionControlLayout.tsx
+L53:                   <DropdownMenuItem key={mode.id} onClick={() => setLayoutMode(mode.id)} className="cursor-pointer">
+---
+File: MCPCommandCenter.tsx
+L199:                 <Card key={provider.provider} className="bg-zinc-900/30 border-zinc-800/50">
+L251:                     key={tool.name}
+L340:                     key={idx}
+L408:                         <div key={provider} className="flex justify-between text-xs">
+---
+File: MarketWatcherConfig.tsx
+L95:               <div key={target.id} className="p-4 flex items-center justify-between hover:bg-slate-50 transition-colors">
+---
+File: LogViewer.tsx
+L131:                   key={log.id}
+---
+File: MachineHunterWidget.tsx
+L153:                                         key={alert.id}
+---
+File: LLMProvidersPanel.tsx
+L71:                     <Card key={p.id} className="glass-card border-white/10 overflow-hidden group hover:border-primary/50 transition-all">
+L110:                         <Card key={i} className="glass-card animate-pulse h-[160px] border-white/10" />
+---
+File: LiveChatterWidget.tsx
+L41:                   key={entry.id}
+---
+File: LiveExecutionMonitor.tsx
+L88:                   key={idx}
+---
+File: LeadMiningWidget.tsx
+L120:                                         key={i}
+---
+File: JulesPanel.tsx
+L202:                     <TableRow key={session.id} className="text-xs">
+L325:                   <TableRow key={r.id}>
+L380:                   <XAxis dataKey="run" stroke="#888" fontSize={11} />
+L391:                     dataKey="success"
+---
+File: KnowledgeBasePanel.tsx
+L200:                                     <div key={idx} className="p-3 rounded-lg bg-muted/50 border border-border space-y-2">
+---
+File: InventoryCatalog.tsx
+L125:               <Card key={agent.name} className="border-zinc-800/80 bg-zinc-950/60">
+L149:               <Card key={tool.id || tool.name} className="border-zinc-800/80 bg-zinc-950/60">
+L163:                         <Badge key={p.name} variant="outline" className="text-[10px]">
+L196:               <div key={p.name} className="space-y-1">
+---
+File: GoldStatusWidget.tsx
+L132:               key={pillar.id}
+---
+File: FileExplorer.tsx
+L106:                                         <div key={i} className="flex items-center gap-4 px-4 py-3">
+L115:                                             key={file.path}
+---
+File: EnterpriseModulePanel.tsx
+L213:                 key={cat}
+L237:                   key={module.name}
+L249:                       <span key={kw} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+L273:                 <div key={exec.taskId} className="p-3 border-l-4 border-green-500 bg-green-50">
+---
+File: EnterpriseAnalyticsWidget.tsx
+L268:                                     <li key={flag}>{flag}</li>
+---

@@ -1,0 +1,610 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 2001-2605 of 2605 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 2605.
+
+--- FILE CONTENT (truncated) ---
+EOF
+
+📦 3. STEP: Node.js Agent Frissítése
+
+Frissítsd a src/agents/robotkezV2.ts fájlt:
+
+
+
+bash
+
+
+
+
+
+cat > src/agents/robotkezV2.ts << 'EOF'
+
+import { Agent } from './agent';
+
+import axios from 'axios';
+
+export class RobotkezV2 extends Agent {
+
+&nbsp; private chatEndpoint = process.env.BROWSER\_CHAT\_ENDPOINT || 'http://localhost:3000/browser/chat';
+
+&nbsp; private screenshotEndpoint = process.env.BROWSER\_SCREENSHOT\_ENDPOINT || 'http://localhost:3000/browser/screenshot';
+
+&nbsp; 
+
+&nbsp; async chat(message: string, sessionId?: string): Promise<string> {
+
+&nbsp;   console.log(\\`\[RobotkezV2] Chat request: \\${message}\\`);
+
+&nbsp;   
+
+&nbsp;   try {
+
+&nbsp;     const response = await axios.post(this.chatEndpoint, {
+
+&nbsp;       message,
+
+&nbsp;       sessionId: sessionId || this.generateSessionId()
+
+&nbsp;     });
+
+&nbsp;     
+
+&nbsp;     const data = response.data;
+
+&nbsp;     
+
+&nbsp;     if (data.screenshot) {
+
+&nbsp;       await this.saveScreenshot(sessionId, data.screenshot);
+
+&nbsp;     }
+
+&nbsp;     
+
+&nbsp;     return data.response;
+
+&nbsp;   } catch (error) {
+
+&nbsp;     console.error('\[RobotkezV2] Chat error:', error);
+
+&nbsp;     return 'Hiba történt a böngésző interakcióban. Kérlek próbáld újra.';
+
+&nbsp;   }
+
+&nbsp; }
+
+&nbsp; 
+
+&nbsp; async takeScreenshot(sessionId?: string): Promise<string> {
+
+&nbsp;   try {
+
+&nbsp;     const response = await axios.get(this.screenshotEndpoint, {
+
+&nbsp;       responseType: 'arraybuffer'
+
+&nbsp;     });
+
+&nbsp;     
+
+&nbsp;     const screenshot = Buffer.from(response.data, 'binary').toString('base64');
+
+&nbsp;     await this.saveScreenshot(sessionId, screenshot);
+
+&nbsp;     
+
+&nbsp;     return screenshot;
+
+&nbsp;   } catch (error) {
+
+&nbsp;     console.error('\[RobotkezV2] Screenshot error:', error);
+
+&nbsp;     throw error;
+
+&nbsp;   }
+
+&nbsp; }
+
+&nbsp; 
+
+&nbsp; private async saveScreenshot(sessionId: string | undefined, screenshot: string): Promise<void> {
+
+&nbsp;   const sessionDir = sessionId 
+
+&nbsp;     ? \\`data/screenshots/\\${sessionId}\\` 
+
+&nbsp;     : \\`data/screenshots/\\${Date.now()}\\`;
+
+&nbsp;   
+
+&nbsp;   const fs = await import('fs/promises');
+
+&nbsp;   await fs.mkdir(sessionDir, { recursive: true });
+
+&nbsp;   
+
+&nbsp;   const filename = \\`screenshot\_\\${Date.now()}.png\\`;
+
+&nbsp;   await fs.writeFile(
+
+&nbsp;     \\`\\${sessionDir}/\\${filename}\\`,
+
+&nbsp;     Buffer.from(screenshot, 'base64')
+
+&nbsp;   );
+
+&nbsp;   
+
+&nbsp;   console.log(\\`\[RobotkezV2] Screenshot mentve: \\${sessionDir}/\\${filename}\\`);
+
+&nbsp; }
+
+&nbsp; 
+
+&nbsp; private generateSessionId(): string {
+
+&nbsp;   return \\`session\_\\${Date.now()}\_\\${Math.random().toString(36).substr(2, 9)}\\`;
+
+&nbsp; }
+
+}
+
+EOF
+
+🎨 4. STEP: React Frontend Frissítése
+
+Frissítsd a src/components/ChatInterface.tsx fájlt:
+
+
+
+bash
+
+
+
+
+
+cat > src/components/ChatInterface.tsx << 'EOF'
+
+import React, { useState, useEffect, useRef } from 'react';
+
+import axios from 'axios';
+
+interface Message {
+
+&nbsp; id: string;
+
+&nbsp; text: string;
+
+&nbsp; sender: 'user' | 'agent';
+
+&nbsp; timestamp: Date;
+
+&nbsp; screenshot?: string;
+
+}
+
+const ChatInterface: React.FC = () => {
+
+&nbsp; const \[messages, setMessages] = useState<Message\[]>(\[]);
+
+&nbsp; const \[input, setInput] = useState('');
+
+&nbsp; const \[screenshot, setScreenshot] = useState<string>('');
+
+&nbsp; const \[isTyping, setIsTyping] = useState(false);
+
+&nbsp; const messagesEndRef = useRef<HTMLDivElement>(null);
+
+&nbsp; 
+
+&nbsp; const chatEndpoint = process.env.REACT\_APP\_BROWSER\_CHAT\_ENDPOINT || 'http://localhost:3000/browser/chat';
+
+&nbsp; const screenshotEndpoint = process.env.REACT\_APP\_BROWSER\_SCREENSHOT\_ENDPOINT || 'http://localhost:3000/browser/screenshot';
+
+&nbsp; 
+
+&nbsp; useEffect(() => {
+
+&nbsp;   scrollToBottom();
+
+&nbsp; }, \[messages, screenshot]);
+
+&nbsp; 
+
+&nbsp; useEffect(() => {
+
+&nbsp;   const interval = setInterval(async () => {
+
+&nbsp;     if (messages.length > 0) {
+
+&nbsp;       try {
+
+&nbsp;         const response = await axios.get(screenshotEndpoint, {
+
+&nbsp;           responseType: 'arraybuffer'
+
+&nbsp;         });
+
+&nbsp;         const base64 = Buffer.from(response.data, 'binary').toString('base64');
+
+&nbsp;         setScreenshot(base64);
+
+&nbsp;       } catch (error) {
+
+&nbsp;         console.error('Screenshot error:', error);
+
+&nbsp;       }
+
+&nbsp;     }
+
+&nbsp;   }, 2000);
+
+&nbsp;   
+
+&nbsp;   return () => clearInterval(interval);
+
+&nbsp; }, \[messages.length]);
+
+&nbsp; 
+
+&nbsp; const scrollToBottom = () => {
+
+&nbsp;   messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+
+&nbsp; };
+
+&nbsp; 
+
+&nbsp; const handleSend = async () => {
+
+&nbsp;   if (!input.trim()) return;
+
+&nbsp;   
+
+&nbsp;   const userMessage: Message = {
+
+&nbsp;     id: Date.now().toString(),
+
+&nbsp;     text: input,
+
+&nbsp;     sender: 'user',
+
+&nbsp;     timestamp: new Date()
+
+&nbsp;   };
+
+&nbsp;   
+
+&nbsp;   setMessages(\[...messages, userMessage]);
+
+&nbsp;   setInput('');
+
+&nbsp;   setIsTyping(true);
+
+&nbsp;   
+
+&nbsp;   try {
+
+&nbsp;     const response = await axios.post(chatEndpoint, {
+
+&nbsp;       message: input,
+
+&nbsp;       session\_id: messages.length > 0 ? messages\[messages.length - 1].id : undefined
+
+&nbsp;     });
+
+&nbsp;     
+
+&nbsp;     const agentMessage: Message = {
+
+&nbsp;       id: response.data.session\_id,
+
+&nbsp;       text: response.data.response,
+
+&nbsp;       sender: 'agent',
+
+&nbsp;       timestamp: new Date(),
+
+&nbsp;       screenshot: response.data.screenshot
+
+&nbsp;     };
+
+&nbsp;     
+
+&nbsp;     setMessages(\[...messages, userMessage, agentMessage]);
+
+&nbsp;     setScreenshot(response.data.screenshot || '');
+
+&nbsp;   } catch (error) {
+
+&nbsp;     console.error('Chat error:', error);
+
+&nbsp;   } finally {
+
+&nbsp;     setIsTyping(false);
+
+&nbsp;   }
+
+&nbsp; };
+
+&nbsp; 
+
+&nbsp; return (
+
+&nbsp;   <div className="flex flex-col h-screen bg-gray-900 text-white">
+
+&nbsp;     <div className="p-4 bg-gray-800 border-b border-gray-700">
+
+&nbsp;       <h1 className="text-xl font-bold">Brunella Browser Automation</h1>
+
+&nbsp;       <p className="text-sm text-gray-400">Magyar nyelvű chat és élő böngésző példány</p>
+
+&nbsp;     </div>
+
+&nbsp;     
+
+&nbsp;     {screenshot \&\& (
+
+&nbsp;       <div className="p-4 bg-gray-800 border-b border-gray-700">
+
+&nbsp;         <h2 className="text-sm font-semibold mb-2">Élő Böngésző Képernyő:</h2>
+
+&nbsp;         <img 
+
+&nbsp;           src={\\`data:image/png;base64,\\${screenshot}\\`} 
+
+&nbsp;           alt="Live Browser" 
+
+&nbsp;           className="w-full h-auto rounded-lg border border-gray-600"
+
+&nbsp;         />
+
+&nbsp;       </div>
+
+&nbsp;     )}
+
+&nbsp;     
+
+&nbsp;     <div className="flex-1 overflow-y-auto p-4 space-y-4">
+
+&nbsp;       {messages.map((message) => (
+
+&nbsp;         <div
+
+&nbsp;           key={message.id}
+
+&nbsp;           className={\\`flex \\${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
+
+&nbsp;         >
+
+&nbsp;           <div
+
+&nbsp;             className={\\`max-w-xs lg:max-w-md p-3 rounded-lg \\${message.sender === 'user' ? 'bg-blue-600' : 'bg-gray-700'}\\`}
+
+&nbsp;           >
+
+&nbsp;             {message.screenshot \&\& (
+
+&nbsp;               <img 
+
+&nbsp;                 src={\\`data:image/png;base64,\\${message.screenshot}\\`} 
+
+&nbsp;                 alt="Agent Screenshot" 
+
+&nbsp;                 className="w-full h-auto rounded mb-2"
+
+&nbsp;               />
+
+&nbsp;             )}
+
+&nbsp;             <p className="text-sm">{message.text}</p>
+
+&nbsp;             <span className="text-xs text-gray-400">
+
+&nbsp;               {message.timestamp.toLocaleTimeString('hu-HU')}
+
+&nbsp;             </span>
+
+&nbsp;           </div>
+
+&nbsp;         </div>
+
+&nbsp;       ))}
+
+&nbsp;       
+
+&nbsp;       {isTyping \&\& (
+
+&nbsp;         <div className="flex justify-start">
+
+&nbsp;           <div className="bg-gray-700 p-3 rounded-lg">
+
+&nbsp;             <span className="text-sm">Gondolkodok...</span>
+
+&nbsp;           </div>
+
+&nbsp;         </div>
+
+&nbsp;       )}
+
+&nbsp;       
+
+&nbsp;       <div ref={messagesEndRef} />
+
+&nbsp;     </div>
+
+&nbsp;     
+
+&nbsp;     <div className="p-4 bg-gray-800 border-t border-gray-700">
+
+&nbsp;       <div className="flex gap-2">
+
+&nbsp;         <input
+
+&nbsp;           type="text"
+
+&nbsp;           value={input}
+
+&nbsp;           onChange={(e) => setInput(e.target.value)}
+
+&nbsp;           onKeyPress={(e) => e.key === 'Enter' \&\& handleSend()}
+
+&nbsp;           placeholder="Írd meg az utasítást magyarul..."
+
+&nbsp;           className="flex-1 px-4 py-2 rounded-lg bg-gray-700 text-white border border-gray-600 focus:outline-none focus:border-blue-500"
+
+&nbsp;         />
+
+&nbsp;         <button
+
+&nbsp;           onClick={handleSend}
+
+&nbsp;           disabled={isTyping}
+
+&nbsp;           className="px-6 py-2 bg-blue-600 rounded-lg hover:bg-blue-700 disabled:bg-gray-600"
+
+&nbsp;         >
+
+&nbsp;           Küldés
+
+&nbsp;         </button>
+
+&nbsp;       </div>
+
+&nbsp;     </div>
+
+&nbsp;   </div>
+
+&nbsp; );
+
+};
+
+export default ChatInterface;
+
+EOF
+
+🔑 5. STEP: AI Gateway Secret beállítása
+
+Válaszd az egyiket:
+
+
+
+A) Workers AI (Ingyenes)
+
+bash
+
+
+
+
+
+npx wrangler secret put WORKERS\_AI\_TOKEN
+
+\# Csak Enter, ha nincs token
+
+B) OpenAI (Teljesítményesebb)
+
+bash
+
+
+
+
+
+npx wrangler secret put OPENAI\_API\_KEY
+
+\# Illeszd be az OpenAI API kulcsodat
+
+📦 6. STEP: Függőségek telepítése
+
+bash
+
+
+
+
+
+\# 6.1. Node.js csomagok
+
+cd /path/to/brunella
+
+npm install axios
+
+\# 6.2. Python csomagok
+
+cd myai
+
+pip install fastapi uvicorn playwright pydantic
+
+\# 6.3. Playwright böngésző telepítése
+
+playwright install chromium
+
+🚀 7. STEP: Szolgáltatások Indítása
+
+Nyisd meg 3 külön terminált:
+
+
+
+Terminál 1: Python Backend
+
+bash
+
+
+
+
+
+cd myai
+
+python server.py
+
+Terminál 2: React Frontend
+
+bash
+
+
+
+
+
+cd /path/to/brunella
+
+npm run dev
+
+Terminál 3: Brunella CLI
+
+bash
+
+
+
+
+
+brunella
+
+✅ 8. STEP: Ellenőrzés
+
+Nyisd meg a böngészőt és látogass el:
+
+
+
+
+
+
+
+http://localhost:5173
+
+Health check:
+
+
+
+bash
+
+
+
+
+
+curl https://bas-browser-orchestrator.dd107933ac970dac857f27cee7a7ff46.workers.dev/health
+
+
+
+
+
+
+

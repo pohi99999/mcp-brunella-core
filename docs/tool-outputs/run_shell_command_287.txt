@@ -1,0 +1,15 @@
+Output: 
+Running 1 test using 1 worker
+
+  ok 1 …ashboard Full UI Audit (Enhanced) › Audit Page: dashboard (6.2s)
+--- Auditing: dashboard ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+     > Failed to load resource: the server responded with a status of 500 (Internal Server Error)
+  ❌ FAILED REQUESTS: 1
+     > GET http://localhost:5173/components/dashboard/JulesPanel.tsx?t=1771976068450: net::ERR_ABORTED
+
+
+  1 passed (8.2s)
+Process Group PGID: 33076

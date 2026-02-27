@@ -1,0 +1,4 @@
+Directory listing for F:\mcp-brunella-core\conductor\tracks\logistics_vertical_20260222:
+meta.json
+plan.md
+spec.md

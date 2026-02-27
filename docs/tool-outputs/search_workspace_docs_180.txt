@@ -1,0 +1,45 @@
+{
+  "results": [
+    {
+      "title": "Row & column operations",
+      "url": "https://developers.google.com/workspace/sheets/api/samples/rowcolumn"
+    },
+    {
+      "title": "Tables",
+      "url": "https://developers.google.com/workspace/sheets/api/guides/tables"
+    },
+    {
+      "title": "Read & write cell values",
+      "url": "https://developers.google.com/workspace/sheets/api/guides/values"
+    },
+    {
+      "title": "Working with tables",
+      "url": "https://developers.google.com/workspace/docs/api/how-tos/tables"
+    },
+    {
+      "title": "Method: spreadsheets.values.append",
+      "url": "https://developers.google.com/workspace/sheets/api/reference/rest/v4/spreadsheets.values/append"
+    },
+    {
+      "title": "Class Sheet",
+      "url": "https://developers.google.com/apps-script/reference/spreadsheet/sheet"
+    },
+    {
+      "title": "Clean up data in a Google Sheets spreadsheet",
+      "url": "https://developers.google.com/workspace/add-ons/samples/clean-sheet"
+    },
+    {
+      "title": "Extending Google Sheets",
+      "url": "https://developers.google.com/apps-script/guides/sheets"
+    },
+    {
+      "title": "Sheet operations",
+      "url": "https://developers.google.com/workspace/sheets/api/samples/sheet"
+    },
+    {
+      "title": "Google Sheets API Overview",
+      "url": "https://developers.google.com/workspace/sheets/api/guides/concepts"
+    }
+  ],
+  "summary": "To create a Google Sheet and add rows, you'll generally follow a two-step process. First, you'll need to create the sheet itself. Once the sheet exists, you can then add rows to it.\n\nAdding rows can be done in several ways. You can append empty rows to the end of a sheet. Alternatively, you can insert new rows for new data, which will automatically create rows if needed. If you're working with a table within a sheet, you can use a specific request to insert rows. When adding data, you can provide the values to be appended, and the system will handle the row creation. The operation's scope, whether it applies to rows or columns, is determined by a dimension field."
+}

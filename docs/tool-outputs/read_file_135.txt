@@ -1,0 +1,1188 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-1183 of 1183 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 1183.
+
+--- FILE CONTENT (truncated) ---
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "# Actor information\n## [Google Maps Scraper](https://apify.com/compass/crawler-google-places) (`compass/crawler-google-places`)\n- **URL:** https://apify.com/compass/crawler-google-places\n- **Description:** Extract data from thousands of Google Maps locations and businesses, including reviews, reviewer details, images, contact info, including full name, email, and job title, opening hours, prices & more. Export data, run via API, schedule and monitor runs, or integrate with other tools.\n- **[Pricing](https://apify.com/compass/crawler-google-places/pricing):** This Actor is paid per event. You are not charged for the Apify platform usage, but only a fixed price for the following events:\n\t- **Scraped place**: Cost per place successfully scraped from Google Maps. <a href=\"https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing\">More details</a> (Tiered pricing: FREE: $0.004, BRONZE: $0.004, SILVER: $0.003, GOLD: $0.0021, PLATINUM: $0.00126, DIAMOND: $0.000756 per event)\n\t- **Add-on: Filter applied**: Extra cost per place for each filter applied (e.g. category, title match, minimum stars, website availability, or skipping closed places). Final price = places scraped * filter price * number of filters. <a href=\"https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing\">More details</a> (Tiered pricing: FREE: $0.001, BRONZE: $0.001, SILVER: $0.00075, GOLD: $0.000525, PLATINUM: $0.000315, DIAMOND: $0.000189 per event)\n\t- **Add-on: Additional place details scraped**: Flat cost per place to retrieve additional place details (e.g. table reservation data, web results, or max questions). The price remains the same no matter how many details you select. <a href=\"https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing\">More details</a> (Tiered pricing: FREE: $0.002, BRONZE: $0.002, SILVER: $0.0015, GOLD: $0.00105, PLATINUM: $0.0... [truncated]
+    },
+    {
+      "type": "text",
+      "text": "# README summary\n## Google Maps Scraper\n\nGoogle Maps Scraper automates Google Maps searches and user interactions to extract structured place and business data at scale. It locates places via search terms, categories, direct place URLs, or custom geolocation areas (polygons, multipolygons, point+radius), scrolls result lists, opens place pages and captures visible details. The Actor outputs rich place-level data including business name and address, geocoordinates, phone numbers and websites, company contact enrichment (emails, contact numbers, social links), leads enrichment (person names, job titles, LinkedIn/profile links, work emails when available), social profile enrichment (platform profiles and metrics), review data (review text, ratings, publish dates, owner responses, review images, per-service ratings and distributions), average ratings and review counts, opening hours, popular times histograms and live occupancy, images, menus, price brackets, booking/order links, hotel- and restaurant-specific metadata, indoor/multi-venue relations, and a variety of additional attributes and tags. Technical capabilities include simulating human interactions on Google Maps (search, scroll, enqueue place pages), flexible search scopes (free-text queries, categories, coordinates, custom GeoJSON areas), support for large-area scraping via tiled polygons or circles, and optional add-on enrichment modules for deeper contact and social profile data.\n\n## Use cases\n\n- Generate qualified leads by extracting business contact details, websites, and enriched contact profiles for prospecting.\n- Track competitors across regions by monitoring locations, ratings, and review counts.\n- Perform market analysis: assess market saturation, identify service gaps, and benchmark businesses by size, rating, and visibility.\n- Discover partnership opportunities by finding top-rated or high-volume locations for outreach.\n- Automate and scale local research workflows to repla... [truncated]
+    },
+    {
+      "type": "text",
+      "text": "# [Input schema](https://apify.com/compass/crawler-google-places/input)\n```json\n{\"title\":\"Google Maps Scraper\",\"description\":\"Our base charge for Google Maps is just <b>$4 per 1,000 places</b>. See detailed prices <a href='https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing'>here</a>. To extract place data or contact details from Google Places, simply Enter ­čöŹ <b>Search term</b>, add ­čôŹ <b>Location</b>, and ­čĺ» <b>Number of places</b> to extract. The section  ­čöŹ <b>Search filters & categories</b> contains various extra features, filters, and sorting options. These are an additional cost, and the ($) sign indicates filters or options that incur an incremental cost to the run. You also have the option to customize using various filters and add additional data like reviews or images, which are charged at an additional cost and are marked by the ($) sign below. <br><br> You can find more details about the pricing <a href='https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing'>here.</a> <br><br> Sections <b>with asterisk*</b> are just alternative ways to start the input (­čôí Geolocation parameters, ­čŤ░ Polygons, ­čöŚ URLs). They can be combined with any of the features and sorting options from the <b>Filters</b> section\",\"type\":\"object\",\"schemaVersion\":1,\"properties\":{\"searchStringsArray\":{\"title\":\"­čöŹ Search term(s)\",\"description\":\"Type what you'd normally search for in the Google Maps search bar, like <b>English breakfast</b> or <b>pet shelter</b>. Aim for unique terms for faster processing. Using similar terms (e.g., <b>bar</b> vs. <b>restaurant</b> vs. <b>cafe</b>) may slightly increase your capture rate but is less efficient.<br><br>ÔÜá´ŞĆ <b>Searching for a specific place?</b> If you're looking for a particular business or location (e.g., <b>M&M Indian Thai Halal Restaurant</b>), make sure to also specify the city or coun...\... [truncated]
+    }
+  ],
+  "structuredContent": {
+    "actorInfo": {
+      "title": "Google Maps Scraper",
+      "url": "https://apify.com/compass/crawler-google-places",
+      "fullName": "compass/crawler-google-places",
+      "pictureUrl": "https://images.apifyusercontent.com/PsZ95ouLI8j01obb1T6dds6qvsPx8lI4Qy-ZnCKl-PY/rs:fill:76:76/cb:1/aHR0cHM6Ly9hcGlmeS1pbWFnZS11cGxvYWRzLXByb2QuczMudXMtZWFzdC0xLmFtYXpvbmF3cy5jb20vUjZIQ0ZZYVpOcWpRQTlaV3gtYWN0b3Itbnd1YTlHdTVZckFETDdaRGotUmV6UVBwdUMzQy1Hb29nbGVfTWFwc19TZWFyY2gucG5n.webp",
+      "developer": {
+        "username": "compass",
+        "isOfficialApify": false,
+        "url": "https://apify.com/compass"
+      },
+      "description": "Extract data from thousands of Google Maps locations and businesses, including reviews, reviewer details, images, contact info, including full name, email, and job title, opening hours, prices & more. Export data, run via API, schedule and monitor runs, or integrate with other tools.",
+      "categories": [
+        "Lead Generation",
+        "Travel"
+      ],
+      "pricing": {
+        "model": "PAY_PER_EVENT",
+        "isFree": false,
+        "events": [
+          {
+            "title": "Scraped place",
+            "description": "Cost per place successfully scraped from Google Maps. <a href=\"https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing\">More details</a>",
+            "tieredPricing": [
+              {
+                "tier": "FREE",
+                "priceUsd": 0.004
+              },
+              {
+                "tier": "BRONZE",
+                "priceUsd": 0.004
+              },
+              {
+                "tier": "SILVER",
+                "priceUsd": 0.003
+              },
+              {
+                "tier": "GOLD",
+                "priceUsd": 0.0021
+              },
+              {
+                "tier": "PLATINUM",
+                "priceUsd": 0.00126
+              },
+              {
+                "tier": "DIAMOND",
+                "priceUsd": 0.000756
+              }
+            ]
+          },
+          {
+            "title": "Add-on: Filter applied",
+            "description": "Extra cost per place for each filter applied (e.g. category, title match, minimum stars, website availability, or skipping closed places). Final price = places scraped * filter price * number of filters. <a href=\"https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing\">More details</a>",
+            "tieredPricing": [
+              {
+                "tier": "FREE",
+                "priceUsd": 0.001
+              },
+              {
+                "tier": "BRONZE",
+                "priceUsd": 0.001
+              },
+              {
+                "tier": "SILVER",
+                "priceUsd": 0.00075
+              },
+              {
+                "tier": "GOLD",
+                "priceUsd": 0.000525
+              },
+              {
+                "tier": "PLATINUM",
+                "priceUsd": 0.000315
+              },
+              {
+                "tier": "DIAMOND",
+                "priceUsd": 0.000189
+              }
+            ]
+          },
+          {
+            "title": "Add-on: Additional place details scraped",
+            "description": "Flat cost per place to retrieve additional place details (e.g. table reservation data, web results, or max questions). The price remains the same no matter how many details you select. <a href=\"https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing\">More details</a>",
+            "tieredPricing": [
+              {
+                "tier": "FREE",
+                "priceUsd": 0.002
+              },
+              {
+                "tier": "BRONZE",
+                "priceUsd": 0.002
+              },
+              {
+                "tier": "SILVER",
+                "priceUsd": 0.0015
+              },
+              {
+                "tier": "GOLD",
+                "priceUsd": 0.00105
+              },
+              {
+                "tier": "PLATINUM",
+                "priceUsd": 0.00063
+              },
+              {
+                "tier": "DIAMOND",
+                "priceUsd": 0.000378
+              }
+            ]
+          },
+          {
+            "title": "Add-on: Company contacts enrichment",
+            "description": "Extra cost per place for finding the associated web page and extracting contact information (e.g. social media accounts or company email). <a href=\"https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing\">More details</a>",
+            "tieredPricing": [
+              {
+                "tier": "FREE",
+                "priceUsd": 0.002
+              },
+              {
+                "tier": "BRONZE",
+                "priceUsd": 0.002
+              },
+              {
+                "tier": "SILVER",
+                "priceUsd": 0.0015
+              },
+              {
+                "tier": "GOLD",
+                "priceUsd": 0.00105
+              },
+              {
+                "tier": "PLATINUM",
+                "priceUsd": 0.00063
+              },
+              {
+                "tier": "DIAMOND",
+                "priceUsd": 0.000378
+              }
+            ]
+          },
+          {
+            "title": "Add-on: Business leads enrichment",
+            "description": "Cost per successfully extracted business lead. Get key prospect details: full name, work email, phone number, job title, and LinkedIn profile. Enable the 'scrape places with website' filter to only show places that have an active website. <a href=\"https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing\">More details</a>",
+            "tieredPricing": [
+              {
+                "tier": "FREE",
+                "priceUsd": 0.1
+              },
+              {
+                "tier": "BRONZE",
+                "priceUsd": 0.005
+              },
+              {
+                "tier": "SILVER",
+                "priceUsd": 0.005
+              },
+              {
+                "tier": "GOLD",
+                "priceUsd": 0.004
+              },
+              {
+                "tier": "PLATINUM",
+                "priceUsd": 0.003
+              },
+              {
+                "tier": "DIAMOND",
+                "priceUsd": 0.003
+              }
+            ]
+          },
+          {
+            "title": "Add-on: Social media profile enrichment",
+            "description": "Flat cost per 1,000 social media profiles enriched with detailed data (e.g., follower counts, profile name, description). This price applies to the total number of profiles enriched, regardless of how many different platforms (Facebook, TikTok, etc.) you select.",
+            "tieredPricing": [
+              {
+                "tier": "FREE",
+                "priceUsd": 0.1
+              },
+              {
+                "tier": "BRONZE",
+                "priceUsd": 0.008
+              },
+              {
+                "tier": "SILVER",
+                "priceUsd": 0.007
+              },
+              {
+                "tier": "GOLD",
+                "priceUsd": 0.006
+              },
+              {
+                "tier": "PLATINUM",
+                "priceUsd": 0.004
+              },
+              {
+                "tier": "DIAMOND",
+                "priceUsd": 0.003
+              }
+            ]
+          },
+          {
+            "title": "Add-on: Review scraped",
+            "description": "Extra cost per individual review scraped. <a href=\"https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing\">More details</a>",
+            "tieredPricing": [
+              {
+                "tier": "FREE",
+                "priceUsd": 0.0005
+              },
+              {
+                "tier": "BRONZE",
+                "priceUsd": 0.0005
+              },
+              {
+                "tier": "SILVER",
+                "priceUsd": 0.00037
+              },
+              {
+                "tier": "GOLD",
+                "priceUsd": 0.00026
+              },
+              {
+                "tier": "PLATINUM",
+                "priceUsd": 0.0001575
+              },
+              {
+                "tier": "DIAMOND",
+                "priceUsd": 0.0000945
+              }
+            ]
+          },
+          {
+            "title": "Add-on: Image scraped",
+            "description": "Extra cost per image retrieved from a place, including author details. <a href=\"https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing\">More details</a>",
+            "tieredPricing": [
+              {
+                "tier": "FREE",
+                "priceUsd": 0.0005
+              },
+              {
+                "tier": "BRONZE",
+                "priceUsd": 0.0005
+              },
+              {
+                "tier": "SILVER",
+                "priceUsd": 0.00037
+              },
+              {
+                "tier": "GOLD",
+                "priceUsd": 0.00026
+              },
+              {
+                "tier": "PLATINUM",
+                "priceUsd": 0.0001575
+              },
+              {
+                "tier": "DIAMOND",
+                "priceUsd": 0.0000945
+              }
+            ]
+          },
+          {
+            "title": "Actor Start",
+            "description": "Charged when the Actor starts running. Number of events charged depends on Actor memory (one event per GB, minimum one event).",
+            "priceUsd": 0.00005
+          }
+        ]
+      },
+      "isDeprecated": false,
+      "stats": {
+        "totalUsers": 284554,
+        "monthlyUsers": 15429,
+        "successRate": 95.9,
+        "bookmarks": 3287
+      },
+      "rating": {
+        "average": 4.692936094768117,
+        "count": 902
+      },
+      "modifiedAt": "2026-02-24T17:11:58.675Z"
+    },
+    "readme": "## Google Maps Scraper\n\nGoogle Maps Scraper automates Google Maps searches and user interactions to extract structured place and business data at scale. It locates places via search terms, categories, direct place URLs, or custom geolocation areas (polygons, multipolygons, point+radius), scrolls result lists, opens place pages and captures visible details. The Actor outputs rich place-level data including business name and address, geocoordinates, phone numbers and websites, company contact enrichment (emails, contact numbers, social links), leads enrichment (person names, job titles, LinkedIn/profile links, work emails when available), social profile enrichment (platform profiles and metrics), review data (review text, ratings, publish dates, owner responses, review images, per-service ratings and distributions), average ratings and review counts, opening hours, popular times histograms and live occupancy, images, menus, price brackets, booking/order links, hotel- and restaurant-specific metadata, indoor/multi-venue relations, and a variety of additional attributes and tags. Technical capabilities include simulating human interactions on Google Maps (search, scroll, enqueue place pages), flexible search scopes (free-text queries, categories, coordinates, custom GeoJSON areas), support for large-area scraping via tiled polygons or circles, and optional add-on enrichment modules for deeper contact and social profile data.\n\n## Use cases\n\n- Generate qualified leads by extracting business contact details, websites, and enriched contact profiles for prospecting.\n- Track competitors across regions by monitoring locations, ratings, and review counts.\n- Perform market analysis: assess market saturation, identify service gaps, and benchmark businesses by size, rating, and visibility.\n- Discover partnership opportunities by finding top-rated or high-volume locations for outreach.\n- Automate and scale local research workflows to replace manual Google M... [truncated]
+    "inputSchema": {
+      "title": "Google Maps Scraper",
+      "description": "Our base charge for Google Maps is just <b>$4 per 1,000 places</b>. See detailed prices <a href='https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing'>here</a>. To extract place data or contact details from Google Places, simply Enter ­čöŹ <b>Search term</b>, add ­čôŹ <b>Location</b>, and ­čĺ» <b>Number of places</b> to extract. The section  ­čöŹ <b>Search filters & categories</b> contains various extra features, filters, and sorting options. These are an additional cost, and the ($) sign indicates filters or options that incur an incremental cost to the run. You also have the option to customize using various filters and add additional data like reviews or images, which are charged at an additional cost and are marked by the ($) sign below. <br><br> You can find more details about the pricing <a href='https://help.apify.com/en/articles/10774732-google-maps-scraper-is-going-to-pay-per-event-pricing'>here.</a> <br><br> Sections <b>with asterisk*</b> are just alternative ways to start the input (­čôí Geolocation parameters, ­čŤ░ Polygons, ­čöŚ URLs). They can be combined with any of the features and sorting options from the <b>Filters</b> section",
+      "type": "object",
+      "schemaVersion": 1,
+      "properties": {
+        "searchStringsArray": {
+          "title": "­čöŹ Search term(s)",
+          "description": "Type what you'd normally search for in the Google Maps search bar, like <b>English breakfast</b> or <b>pet shelter</b>. Aim for unique terms for faster processing. Using similar terms (e.g., <b>bar</b> vs. <b>restaurant</b> vs. <b>cafe</b>) may slightly increase your capture rate but is less efficient.<br><br>ÔÜá´ŞĆ <b>Searching for a specific place?</b> If you're looking for a particular business or location (e.g., <b>M&M Indian Thai Halal Restaurant</b>), make sure to also specify the city or coun...",
+          "type": "array",
+          "prefill": [
+            "restaurant"
+          ]
+        },
+        "locationQuery": {
+          "title": "­čôŹ Location (use only one location per run)",
+          "description": "Define location using free text. Simpler formats work best; e.g., use City + Country rather than City + Country + State. Verify with the <a href='https://nominatim.openstreetmap.org/ui/search.html'>OpenStreetMap webapp</a> for visual validation of the exact area you want to cover. <br><br>­čĺí <b>Pro tip:</b> Always specify a location when searching for specific place names in the <b>­čöŹ Search terms</b> field above. This helps narrow down results to the geographic area you're interested in and pre...",
+          "type": "string",
+          "prefill": "New York, USA"
+        },
+        "maxCrawledPlacesPerSearch": {
+          "title": "­čĺ» Number of places to extract (per each search term or URL)",
+          "description": "Number of results you expect to get per each Search term, Category or URL. The higher the number, the longer it will take. <br><br>If you want to scrape all the places available, <b>leave this field empty</b> or use this section <b>­čžş Scrape all places on the map*</b>.",
+          "type": "integer",
+          "prefill": 50
+        },
+        "language": {
+          "title": "­čîŹ Language",
+          "description": "Results details will show in this language.",
+          "enum": [
+            "en",
+            "af",
+            "az",
+            "id",
+            "ms",
+            "bs",
+            "ca",
+            "cs",
+            "da",
+            "de",
+            "et",
+            "es",
+            "es-419",
+            "eu",
+            "fil",
+            "fr",
+            "gl",
+            "hr",
+            "zu",
+            "is",
+            "it",
+            "sw",
+            "lv",
+            "lt",
+            "hu",
+            "nl",
+            "no",
+            "uz",
+            "pl",
+            "pt-BR",
+            "pt-PT",
+            "ro",
+            "sq",
+            "sk",
+            "sl",
+            "fi",
+            "sv",
+            "vi",
+            "tr",
+            "el",
+            "bg",
+            "ky",
+            "kk",
+            "mk",
+            "mn",
+            "ru",
+            "sr",
+            "uk",
+            "ka",
+            "hy",
+            "iw",
+            "ur",
+            "ar",
+            "fa",
+            "am",
+            "ne",
+            "hi",
+            "mr",
+            "bn",
+            "pa",
+            "gu",
+            "ta",
+            "te",
+            "kn",
+            "ml",
+            "si",
+            "th",
+            "lo",
+            "my",
+            "km",
+            "ko",
+            "ja",
+            "zh-CN",
+            "zh-TW"
+          ],
+          "type": "string",
+          "default": "en",
+          "prefill": "en"
+        },
+        "categoryFilterWords": {
+          "title": "­čÄó Place categories ($)",
+          "description": "You can limit the places that are scraped based on the Category filter; you can choose as many categories for one flat fee for the whole field. ÔÜá´ŞĆ Using categories can sometimes lead to false negatives, as many places do not properly categorize themselves, and there are over <a href='https://api.apify.com/v2/key-value-stores/epxZwNRgmnzzBpNJd/records/categories'> 4,000</a> available categories which Google Maps has. Using categories might filter out places that youÔÇÖd like to scrape. To avoid thi...",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "abbey",
+              "accountant",
+              "accounting",
+              "acupuncturist",
+              "aeroclub",
+              "agriculture",
+              "airline",
+              "airport",
+              "airstrip",
+              "allergist",
+              "amphitheater",
+              "amphitheatre",
+              "anesthesiologist",
+              "appraiser",
+              "aquarium",
+              "arboretum",
+              "architect",
+              "archive",
+              "arena",
+              "artist",
+              "ashram",
+              "astrologer",
+              "atm",
+              "attorney",
+              "audiologist",
+              "auditor",
+              "auditorium",
+              "bakery",
+              "band",
+              "bank",
+              "bar",
+              "barrister",
+              "basilica",
+              "bazar",
+              "beach",
+              "beautician",
+              "bistro",
+              "blacksmith",
+              "bodega",
+              "bookbinder",
+              "botanica",
+              "boutique",
+              "brasserie",
+              "brewery",
+              "brewpub",
+              "bricklayer",
+              "bridge",
+              "builder",
+              "building",
+              "bullring",
+              "butchers",
+              "cafe",
+              "cafeteria",
+              "campground",
+              "cannery",
+              "cardiologist",
+              "carpenter",
+              "cars",
+              "carvery",
+              "cashpoint",
+              "casino",
+              "castle",
+              "caterer",
+              "catering",
+              "cathedral",
+              "cattery",
+              "cemetery",
+              "chalet",
+              "chapel",
+              "charcuterie",
+              "charity",
+              "chemist",
+              "childminder",
+              "chiropractor",
+              "choir",
+              "church",
+              "churreria",
+              "circus",
+              "cleaners",
+              "clergyman",
+              "clinic",
+              "club",
+              "coalfield",
+              "college",
+              "company",
+              "computers",
+              "congregation",
+              "construction",
+              "consultant",
+              "contractor",
+              "conveyancer",
+              "coppersmith",
+              "cottage",
+              "council",
+              "counselor",
+              "courthouse",
+              "creperie",
+              "dairy",
+              "deli",
+              "delicatessen",
+              "dentist",
+              "dermatologist",
+              "design",
+              "dhaba",
+              "diabetologist",
+              "dietitian",
+              "diner",
+              "distillery",
+              "dj",
+              "doctor",
+              "doula",
+              "dressmaker",
+              "dyeworks",
+              "eatery",
+              "education",
+              "electrician",
+              "electronics",
+              "embassy",
+              "endocrinologist",
+              "endodontist",
+              "endoscopist",
+              "engineer",
+              "engraver",
+              "entertainer",
+              "entertainment",
+              "establishment",
+              "executor",
+              "exhibit",
+              "exporter",
+              "fairground",
+              "farm",
+              "farmstay",
+              "favela",
+              "festival",
+              "florist",
+              "fortress",
+              "foundation",
+              "foundry",
+              "frituur",
+              "garden",
+              "gardener",
+              "gasfitter",
+              "gastroenterologist",
+              "gastropub",
+              "gemologist",
+              "genealogist",
+              "geriatrician",
+              "glazier",
+              "goldsmith",
+              "government",
+              "greengrocer",
+              "greenhouse",
+              "grill",
+              "gurudwara",
+              "gym",
+              "gynecologist",
+              "haberdashery",
+              "hairdresser",
+              "hammam",
+              "handicraft",
+              "handyman/handywoman/handyperson",
+              "health",
+              "heliport",
+              "hematologist",
+              "hepatologist",
+              "herbalist",
+              "homeopath",
+              "homestay",
+              "hospice",
+              "hospital",
+              "hostel",
+              "hotel",
+              "hypermarket",
+              "immunologist",
+              "importer",
+              "inn",
+              "instruction",
+              "intensivist",
+              "internist",
+              "island",
+              "jeweler",
+              "joiner",
+              "junkyard",
+              "karaoke",
+              "kennel",
+              "kindergarten",
+              "kinesiologist",
+              "kinesiotherapist",
+              "kiosk",
+              "laboratory",
+              "lake",
+              "landscaper",
+              "lapidary",
+              "laundromat",
+              "laundry",
+              "lawyer",
+              "library",
+              "lido",
+              "liquidator",
+              "locksmith",
+              "lodge",
+              "lodging",
+              "lounge",
+              "lyceum",
+              "magician",
+              "makerspace",
+              "manufacturer",
+              "marae",
+              "marina",
+              "market",
+              "mechanic",
+              "memorial",
+              "metalwork",
+              "meyhane",
+              "midwife",
+              "mill",
+              "mine",
+              "mission",
+              "mohel",
+              "monastery",
+              "monument",
+              "mortuary",
+              "mosque",
+              "motel",
+              "mover",
+              "musalla",
+              "museum",
+              "musician",
+              "nephrologist",
+              "neurologist",
+              "neurophysiologist",
+              "neuropsychologist",
+              "neurosurgeon",
+              "newsstand",
+              "numerologist",
+              "nutritionist",
+              "observatory"
+            ]
+          }
+        },
+        "searchMatching": {
+          "title": "Get exact name matches (no similar results) ($)",
+          "description": "Restrict what places are scraped based on matching their name with provided ­čöŹ <b>Search term</b>. E.g., all places that have <b>chicken</b> in their name vs. places called <b>Kentucky Fried Chicken</b>.",
+          "enum": [
+            "all",
+            "only_includes",
+            "only_exact"
+          ],
+          "type": "string",
+          "default": "all"
+        },
+        "placeMinimumStars": {
+          "title": "Set a minimum star rating ($)",
+          "description": "Scrape only places with a rating equal to or above the selected stars. Places without reviews will also be skipped. Keep in mind, filtering by reviews reduces the number of places found per credit spent, as many will be excluded.",
+          "enum": [
+            "two",
+            "twoAndHalf",
+            "three",
+            "threeAndHalf",
+            "four",
+            "fourAndHalf"
+          ],
+          "type": "string",
+          "default": ""
+        },
+        "website": {
+          "title": "Scrape places with/without a website ($)",
+          "description": "Use this to exclude places without a website, or vice versa. This option is turned off by default.",
+          "enum": [
+            "allPlaces",
+            "withWebsite",
+            "withoutWebsite"
+          ],
+          "type": "string",
+          "default": "allPlaces"
+        },
+        "skipClosedPlaces": {
+          "title": "ÔĆę Skip closed places ($)",
+          "description": "Skip places that are marked as temporary or permanently closed. Ideal for focusing on currently open places.",
+          "type": "boolean",
+          "default": false
+        },
+        "scrapePlaceDetailPage": {
+          "title": "Scrape place detail page ($)",
+          "description": "Scrape detail pages of each place the Actor finds. This will slow down the Actor since it needs to open another page for each place individually.<br><br> The fields available only when scrapePlaceDetailPage is enabled include: `reviewsDistribution`, `imageCategories`, popularTimes fields, `openingHours`, `BusinessConfirmationText`, `peopleAlsoSearch`, `reviewsTags`, `updatesFromCustomers`, `questionsAndAnswers`, `tableReservationLinks`, `orderBy`, `ownerUpdates` and hotel fields. <br><br> Enabli...",
+          "type": "boolean",
+          "default": false
+        },
+        "scrapeTableReservationProvider": {
+          "title": "Scrape table reservation provider data ($)",
+          "description": "Scrape table reservation provider data like name, address, email or phone. This data is present only in restaurants that have blue \"RESERVE A TABLE\" button",
+          "type": "boolean",
+          "default": false
+        },
+        "includeWebResults": {
+          "title": "­čîÉ Include \"Web results\" ($)",
+          "description": "Extract the \"Web results\" section located at the bottom of every place listing.",
+          "type": "boolean",
+          "default": false
+        },
+        "scrapeDirectories": {
+          "title": "­čŤŹ Scrape inside places (e.g. malls or shopping center) ($)",
+          "description": "Some places (e.g. malls) can have multiple businesses located inside them. This option will scrape inside the \"Directory\" or \"At this place\" as per different categories (example <a href='https://www.google.com/maps/place/Forum+Karl├şn/@50.0914263,14.4522411,532m/data=!3m1!1e3!4m7!3m6!1s0x470b94a14fd738ff:0x6a75e391416ab4fa!8m2!3d50.0914263!4d14.454816!10e3!16s%2Fg%2F1ptxlz77_?entry=ttu&g_ep=EgoyMDI1MDQwMi4xIKXMDSoASAFQAw%3D%3D'>here</a>). Turn this toggle on to include those places in your result...",
+          "type": "boolean",
+          "default": false
+        },
+        "maxQuestions": {
+          "title": "Number of questions to extract ($)",
+          "description": "Set the number of questions per place you expect to scrape. If you fill in <b>0</b> or leave the field empty, only the first question and answer will be scraped. To extract all questions, type <b>999</b> into the field.<br><br>ÔÜá´ŞĆ Note that some of the fields contain <b>personal data</b>.",
+          "type": "integer",
+          "default": 0
+        },
+        "scrapeContacts": {
+          "title": "ÔĆę Add-on: Company contacts enrichment (from website) ($)",
+          "description": "Enrich Google Maps places with contact details extracted from the business website, including business emails and social media profiles (Meta, LinkedIn, X, etc). Price is charged per place at $2 per 1000 places that have a website. <br><br>We exclude contacts of big chains: mcdonalds, starbucks, dominos, pizzahut, burgerking, kfc, subway, wendys, dunkindonuts, tacobell.",
+          "type": "boolean",
+          "default": false
+        },
+        "scrapeSocialMediaProfiles": {
+          "title": "­čöŹ Add-on: Social media profile enrichment ($)",
+          "description": "Enable enrichment for any social media profiles found. This add-on retrieves detailed public data for each profile, including <b>profile names, follower/following counts, descriptions, post/video counts, and verification status</b>.<br><br>Pricing depends on your <b>subscription plan</b> (please see the 'Pricing' tab for details). You are charged a flat rate for the <b>total number of profiles enriched</b>, regardless of how many platforms (Facebook, YouTube, etc.) you select.<hr><b>Feature Depe...",
+          "type": "object",
+          "default": {
+            "facebooks": false,
+            "instagrams": false,
+            "youtubes": false,
+            "tiktoks": false,
+            "twitters": false
+          },
+          "prefill": {
+            "facebooks": false,
+            "instagrams": false,
+            "youtubes": false,
+            "tiktoks": false,
+            "twitters": false
+          },
+          "properties": {
+            "facebooks": {
+              "title": "Enable Facebook profile scraping",
+              "type": "boolean",
+              "description": "Enable scraping detailed Facebook profile information for discovered Facebook URLs. This will provide additional data like follower counts, profile pictures, and more."
+            },
+            "instagrams": {
+              "title": "Enable Instagram profile scraping",
+              "type": "boolean",
+              "description": "Enable scraping detailed Instagram profile information for discovered Instagram URLs. This will provide additional data like follower counts, profile pictures, and more."
+            },
+            "youtubes": {
+              "title": "Enable YouTube channel scraping",
+              "type": "boolean",
+              "description": "Enable scraping detailed YouTube channel information for discovered YouTube URLs. This will provide additional data like subscriber counts, channel descriptions, and more."
+            },
+            "tiktoks": {
+              "title": "Enable TikTok profile scraping",
+              "type": "boolean",
+              "description": "Enable scraping detailed TikTok profile information for discovered TikTok URLs. This will provide additional data like follower counts, profile pictures, and more."
+            },
+            "twitters": {
+              "title": "Enable X (Twitter) profile scraping",
+              "type": "boolean",
+              "description": "Enable scraping detailed Twitter profile information for discovered X (Twitter) URLs. This will provide additional data like follower counts, profile pictures, and more."
+            }
+          }
+        },
+        "maximumLeadsEnrichmentRecords": {
+          "title": "ÔĆę Add-on: Extract business leads information - Maximum leads per place ($)",
+          "description": "Enrich your results with detailed contact and company information, including employee names, job titles, emails, phone numbers, LinkedIn profiles, and key company data like industry and number of employees. <br><br> This setting allows you to set the maximum number of leads records you want to scrape per each place found on the map (that has a website). By default, it's set to 0 which means that no leads information will be scraped. <br><br>ÔÜá´ŞĆ Note that some of the fields contain <b>personal dat...",
+          "type": "integer",
+          "default": 0,
+          "prefill": 0
+        },
+        "leadsEnrichmentDepartments": {
+          "title": "Leads departments selection",
+          "description": "You can use this filter to include only specific departments (like Sales, Marketing, or C-Suite). Note: This will only work if the ÔĆę Add-on: Extract business leads information - Maximum leads per place (maximumLeadsEnrichmentRecords) option is enabled. Please note that some job titles are sometimes miscategorized in the wrong departments.",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "c_suite",
+              "product",
+              "engineering_technical",
+              "design",
+              "education",
+              "finance",
+              "human_resources",
+              "information_technology",
+              "legal",
+              "marketing",
+              "medical_health",
+              "operations",
+              "sales",
+              "consulting"
+            ],
+            "enumTitles": [
+              "C-Suite",
+              "Product",
+              "Engineering & Technical",
+              "Design",
+              "Education",
+              "Finance",
+              "Human Resources",
+              "Information Technology",
+              "Legal",
+              "Marketing",
+              "Medical & Health",
+              "Operations",
+              "Sales",
+              "Consulting"
+            ]
+          }
+        },
+        "maxReviews": {
+          "title": "Number of reviews to extract ($)",
+          "description": "Set the number of reviews you expect to get per place.<br> <br>Please be aware that the `Add-on: additional place details scraped` charge applies to each place you scrape for reviews, as the Actor must access the detail page first. All prices are determined by your subscription plan.<br> <br>To extract all reviews, <b>leave this field empty</b>. <br> <br>Each output place item can contain maximum 5,000 reviews so in case more reviews are extracted, a duplicate place is stored with the next 5,000...",
+          "type": "integer",
+          "default": 0
+        },
+        "reviewsStartDate": {
+          "title": "Extract only reviews posted after [date]",
+          "description": "Either absolute date (e.g. `2024-05-03`) or relative date from now into the past (e.g. `8 days`, `3 months`). JSON input also supports adding time in both absolute (ISO standard, e.g. `2024-05-03T20:00:00`) and relative  (e.g. `3 hours`) formats. Absolute time is always interpreted in the UTC timezone, not your local timezone - please convert accordingly. Supported relative date & time units: `minutes`, `hours`, `days`, `weeks`, `months`, `years`. <br><br> ÔÜá´ŞĆ Heads up: If this parameter is speci...",
+          "type": "string"
+        },
+        "reviewsSort": {
+          "title": "Sort reviews by",
+          "description": "Define the order in which reviews should be sorted.",
+          "enum": [
+            "newest",
+            "mostRelevant",
+            "highestRanking",
+            "lowestRanking"
+          ],
+          "type": "string",
+          "default": "newest"
+        },
+        "reviewsFilterString": {
+          "title": "Filter reviews by keywords",
+          "description": "If you enter keywords, only reviews containing those keywords will be scraped. Leave it blank to scrape all reviews.",
+          "type": "string",
+          "default": ""
+        },
+        "reviewsOrigin": {
+          "title": "Reviews origin",
+          "description": "Select whether you want all reviews (from Google, Tripadvisor, etc.) or only reviews from Google",
+          "enum": [
+            "all",
+            "google"
+          ],
+          "type": "string",
+          "default": "all"
+        },
+        "scrapeReviewsPersonalData": {
+          "title": "­čžŤÔÇŹÔÖé´ŞĆ Include reviewers' data",
+          "description": "This setting allows you to get personal data about the reviewer (their ID, name, URL, and photo URL) and about review (URL). Note: review ID (<code>reviewId</code>) is always included regardless of this setting. <br><br>ÔÜá´ŞĆ Personal data is protected by the GDPR in the European Union and by other regulations around the world. You should not scrape personal data unless you have a legitimate reason to do so. If you're unsure whether your reason is legitimate, consult your lawyers.",
+          "type": "boolean",
+          "default": true
+        },
+        "maxImages": {
+          "title": "Number of additional images to extract ($)",
+          "description": "Set the number of images per place you expect to scrape. <br> <br>Please be aware that the `Add-on: additional place details scraped` charge applies to each place you scrape for images, as the Actor must access the detail page first. All prices are determined by your subscription plan.<br> <br>To extract all images, <b>leave this field empty</b>. The higher the number, the slower the search.",
+          "type": "integer",
+          "prefill": 0
+        },
+        "scrapeImageAuthors": {
+          "title": "­čžĹÔÇŹ­čÄĘ Include the image authors",
+          "description": "Include the author name for each image. <br><br>ÔÜá´ŞĆ Enabling this toggle may slow down processing as it requires fetching information for each image individually.",
+          "type": "boolean",
+          "default": false
+        },
+        "countryCode": {
+          "title": "­čŚ║ Country",
+          "description": "Set the country where the data extraction should be carried out, e.g., <b>United States</b>.",
+          "enum": [
+            "us",
+            "af",
+            "al",
+            "dz",
+            "as",
+            "ad",
+            "ao",
+            "ai",
+            "aq",
+            "ag",
+            "ar",
+            "am",
+            "aw",
+            "au",
+            "at",
+            "az",
+            "bs",
+            "bh",
+            "bd",
+            "bb",
+            "by",
+            "be",
+            "bz",
+            "bj",
+            "bm",
+            "bt",
+            "bo",
+            "ba",
+            "bw",
+            "bv",
+            "br",
+            "io",
+            "bn",
+            "bg",
+            "bf",
+            "bi",
+            "kh",
+            "cm",
+            "ca",
+            "cv",
+            "ky",
+            "cf",
+            "td",
+            "cl",
+            "cn",
+            "cx",
+            "cc",
+            "co",
+            "km",
+            "cg",
+            "cd",
+            "ck",
+            "cr",
+            "ci",
+            "hr",
+            "cu",
+            "cy",
+            "cz",
+            "dk",
+            "dj",
+            "dm",
+            "do",
+            "ec",
+            "eg",
+            "sv",
+            "gq",
+            "er",
+            "ee",
+            "et",
+            "fk",
+            "fo",
+            "fj",
+            "fi",
+            "fr",
+            "gf",
+            "pf",
+            "tf",
+            "ga",
+            "gm",
+            "ge",
+            "de",
+            "gh",
+            "gi",
+            "gr",
+            "gl",
+            "gd",
+            "gp",
+            "gu",
+            "gt",
+            "gn",
+            "gw",
+            "gy",
+            "ht",
+            "hm",
+            "va",
+            "hn",
+            "hu",
+            "is",
+            "in",
+            "id",
+            "ir",
+            "iq",
+            "ie",
+            "il",
+            "it",
+            "jm",
+            "jp",
+            "jo",
+            "kz",
+            "ke",
+            "ki",
+            "kp",
+            "kr",
+            "kw",
+            "kg",
+            "la",
+            "lv",
+            "lb",
+            "ls",
+            "lr",
+            "ly",
+            "li",
+            "lt",
+            "lu",
+            "mo",
+            "mk",
+            "mg",
+            "mw",
+            "my",
+            "mv",
+            "ml",
+            "mt",
+            "mh",
+            "mq",
+            "mr",
+            "mu",
+            "yt",
+            "mx",
+            "fm",
+            "md",
+            "mc",
+            "mn",
+            "me",
+            "ms",
+            "ma",
+            "mz",
+            "mm",
+            "na",
+            "nr",
+            "np",
+            "nl",
+            "an",
+            "nc",
+            "nz",
+            "ni",
+            "ne",
+            "ng",
+            "nu",
+            "nf",
+            "mp",
+            "no",
+            "om",
+            "pk",
+            "pw",
+            "ps",
+            "pa",
+            "pg",
+            "py",
+            "pe",
+            "ph",
+            "pn",
+            "pl",
+            "pt",
+            "pr",
+            "qa",
+            "re",
+            "ro",
+            "ru",
+            "rw",
+            "sh",
+            "kn",
+            "lc",
+            "pm",
+            "vc",
+            "ws",
+            "sm",
+            "st",
+            "sa",
+            "sn",
+            "rs",
+            "sc",
+            "sl",
+            "sg",
+            "sk",
+            "si",
+            "sb",
+            "so",
+            "za",
+            "gs",
+            "ss",
+            "es",
+            "lk",
+            "sd",
+            "sr",
+            "sj",
+            "sz",
+            "se",
+            "ch",
+            "sy",
+            "tw",
+            "tj",
+            "tz",
+            "th",
+            "tl",
+            "tg",
+            "tk",
+            "to",
+            "tt",
+            "tn",
+            "tr",
+            "tm",
+            "tc",
+            "tv",
+            "ug",
+            "ua",
+            "ae",
+            "gb",
+            "um",
+            "uy",
+            "uz",
+            "vu",
+            "ve",
+            "vn",
+            "vg",
+            "vi",
+            "wf",
+            "eh",
+            "ye",
+            "zm",
+            "zw"
+          ],
+          "type": "string"
+        },
+        "city": {
+          "title": "­čîç City",
+          "description": "Enter the city where the data extraction should be carried out, e.g., <b>Pittsburgh</b>.<br><br>ÔÜá´ŞĆ <b>Do not include State or Country names here.</b><br><br>ÔÜá´ŞĆ Automatic City polygons may be smaller than expected (e.g., they don't include agglomeration areas). If you need that, set up the location using Country, State, County, City, or Postal code.<br>For an even more precise location definition (, head over to <b>­čŤ░ Custom search area</b> section to create polygon shapes of the areas you want t...",
+          "type": "string"
+        },
+        "state": {
+          "title": "State",
+          "description": "Set a state where the data extraction should be carried out, e.g., <b>Massachusetts</b> (mainly for the US addresses).",
+          "type": "string"
+        },
+        "county": {
+          "title": "County",
+          "description": "Set the county where the data extraction should be carried out.<br><br>ÔÜá´ŞĆ Note that <b>county</b> may represent different administrative areas in different countries: a county (e.g., US), regional district (e.g., Canada) or d├ępartement (e.g., France).",
+          "type": "string"
+        },
+        "postalCode": {
+          "title": "Postal code",
+          "description": "Set the postal code of the area where the data extraction should be carried out, e.g., <b>10001</b>. <br><br>ÔÜá´ŞĆ <b>Combine Postal code only with ­čŚ║ Country, never with ­čîç City. You can only input one postal code at a time.</b>",
+          "type": "string"
+        },
+        "customGeolocation": {
+          "title": "­čŤ░ Custom search area (coordinate order must be: [ÔćĽ longitude, Ôćö latitude])",
+          "description": "Use this field to define the exact search area if other search area parameters don't work for you. See <a href='https://apify.com/compass/crawler-google-places#custom-search-area' target='_blank' rel='noopener'>readme</a> or <a href='https://blog.apify.com/google-places-api-limits/#1-create-a-custom-area-by-using-pairs-of-coordinates-%F0%9F%93%A1' target='_blank' rel='noopener'>our guide</a> for details.",
+          "type": "object"
+        },
+        "startUrls": {
+          "title": "Google Maps URLs",
+          "description": "Max 300 results per search URL. Valid format for URLs contains <code>google.com/maps/</code>. This feature also supports uncommon URL formats such as: <code>google.com?cid=***</code>, <code>goo.gl/maps</code>, and custom place list URL.",
+          "type": "array"
+        },
+        "placeIds": {
+          "title": "­čŚâ Place IDs",
+          "description": "List of place IDs. You can add place IDs one by one or upload a list using the <strong>Bulk edit</strong> option. <b>Place ID</b> has format `ChIJreV9aqYWdkgROM_boL6YbwA`",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "\\S+"
+          }
+        },
+        "allPlacesNoSearchAction": {
+          "title": "Scrape all places",
+          "description": "Extract all places visible on the map. Use the <b>Override zoom level</b> parameter to select the level of detail. Higher zoom will scrape more places but will take longer to finish. You can test what place pins are visible with a specific zoom by changing the <a href=\"https://www.google.com/maps/@40.745204,-73.9390184,16z\">16z</a> part of the Google Maps URL.",
+          "enum": [
+            "all_places_no_search_ocr",
+            "all_places_no_search_mouse"
+          ],
+          "type": "string",
+          "default": ""
+        }
+      },
+      "required": []
+    }
+  },
+  "isError": false
+}

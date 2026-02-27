@@ -1,0 +1,8 @@
+Output: ╭─────────────────────────╮
+│                         │
+│   Brunella CLI v0.0.0   │
+│                         │
+╰─────────────────────────╯
+error: unknown option '->'
+Exit Code: 1
+Process Group PGID: 32180

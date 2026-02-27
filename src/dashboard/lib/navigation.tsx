@@ -45,6 +45,7 @@ import { DigitalHRWidget } from "@/components/dashboard/DigitalHRWidget";
 import { GrantHunterWidget } from "@/components/dashboard/GrantHunterWidget";
 import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
 import { PropertyVisionaryWidget } from "@/components/dashboard/PropertyVisionaryWidget";
+import { LeadsMasterMonitor } from "@/components/dashboard/LeadsMasterMonitor";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy(async () => {
@@ -137,6 +138,7 @@ export function initializeNavigation() {
     { id: "innovation-bridge", label: "Innovation Bridge", icon: Lightbulb, component: <InnovationBridgeWidget /> },
     { id: "invoice-sync", label: "Számla Szinkron", icon: Receipt, component: <InvoiceSyncWidget /> },
     { id: "lead-mining", label: "Lead Mining", icon: Target, component: <LeadMiningWidget /> },
+    { id: "leads-master", label: "Leads Monitor", icon: DollarSign, component: <LeadsMasterMonitor /> },
     { id: "jules", label: "Jules AI", icon: Zap, component: <JulesPanel /> },
     { id: "digital-hr", label: "Digital HR", icon: Briefcase, component: <DigitalHRWidget /> },
     { id: "grant-hunter", label: "Grant Hunter", icon: Search, component: <GrantHunterWidget /> },
@@ -155,7 +157,7 @@ export function initializeNavigation() {
   navigationRegistry.registerGroup({ title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode"] });
   navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "paios", "phoenix", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez", "jules"] });
   navigationRegistry.registerGroup({ title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "enterprise-analytics"] });
-  navigationRegistry.registerGroup({ title: "Bevétel", icon: DollarSign, items: ["campaign-studio", "innovation-bridge", "invoice-sync", "lead-mining", "marketwatcher", "inventory"] });
+  navigationRegistry.registerGroup({ title: "Bevétel", icon: DollarSign, items: ["campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "lead-mining", "marketwatcher", "inventory"] });
   navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "tasks"] });
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] });
   navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "files", "settings", "n8n", "langflow"] });

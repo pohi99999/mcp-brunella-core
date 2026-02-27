@@ -1,0 +1,9 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\src\dashboard\components\ui
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 01. 22.     17:04           4805 command.tsx
+Process Group PGID: 50036

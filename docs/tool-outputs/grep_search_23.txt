@@ -1,0 +1,200 @@
+Found 100 matches for pattern "fileURLToPath" in path "." (results limited to 100 matches for performance):
+---
+File: _KNOWLEDGE_BASE\scripts\check-lockfile.js
+L9: import { fileURLToPath } from 'node:url';
+L11: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\scripts\build.js
+L23: import { fileURLToPath } from 'node:url';
+L25: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\scripts\generate-git-commit-info.js
+L23: import { fileURLToPath } from 'node:url';
+L26: const __dirname = dirname(fileURLToPath(import.meta.url));
+L28: const scriptPath = relative(root, fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\scripts\get-release-version.js
+L10: import { fileURLToPath } from 'node:url';
+L231: if (process.argv[1] === fileURLToPath(import.meta.url)) {
+---
+File: _KNOWLEDGE_BASE\scripts\copy_bundle_assets.js
+L22: import { fileURLToPath } from 'node:url';
+L25: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\scripts\local_telemetry.js
+L12: import { fileURLToPath } from 'node:url';
+L23: const __filename = fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\scripts\clean.js
+L22: import { fileURLToPath } from 'node:url';
+L25: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\scripts\prepare-package.js
+L9: import { fileURLToPath } from 'node:url';
+L12: const __filename = fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\scripts\start.js
+L22: import { fileURLToPath } from 'node:url';
+L25: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\scripts\telemetry_utils.js
+L14: import { fileURLToPath } from 'node:url';
+L17: const __filename = fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\scripts\test-windows-paths.js
+L8: import { fileURLToPath } from 'node:url';
+L46:   const __filename = fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\scripts\build_vscode_companion.js
+L22: import { fileURLToPath } from 'node:url';
+L24: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\packages\vscode-ide-companion\scripts\generate-notices.js
+L9: import { fileURLToPath } from 'node:url';
+L12:   path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', '..'),
+---
+File: _KNOWLEDGE_BASE\packages\cli\src\utils\package.ts
+L11: import { fileURLToPath } from 'node:url';
+L20: const __filename = fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\packages\cli\src\utils\sandbox.ts
+L12: import { fileURLToPath } from 'node:url';
+L208:       let profileFile = fileURLToPath(
+---
+File: _KNOWLEDGE_BASE\packages\cli\src\commands\extensions\new.ts
+L10: import { fileURLToPath } from 'node:url';
+L18: const __filename = fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\packages\a2a-server\src\http\server.ts
+L17:   path.resolve(url.fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\index.ts
+L15: import { fileURLToPath } from 'url';
+L180:   path.dirname(fileURLToPath(import.meta.url)),
+L188:       path.dirname(fileURLToPath(import.meta.url)),
+---
+File: _KNOWLEDGE_BASE\config\eslint.config.js
+L20: const __filename = url.fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\config\esbuild.config.js
+L8: import { fileURLToPath } from 'node:url';
+L20: const __filename = fileURLToPath(import.meta.url);
+L53:       js: `import { createRequire } from 'module'; const require = createRequire(import.meta.url); globalThis.__filename = require('url').fileURLToPath(import.meta.url); globalThis.__dirname = require('path').dirname(globalThis.__filename);`,
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\build.js
+L23: import { fileURLToPath } from 'node:url';
+L25: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\build_vscode_companion.js
+L22: import { fileURLToPath } from 'node:url';
+L24: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\generate-git-commit-info.js
+L23: import { fileURLToPath } from 'node:url';
+L26: const __dirname = dirname(fileURLToPath(import.meta.url));
+L28: const scriptPath = relative(root, fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\copy_bundle_assets.js
+L22: import { fileURLToPath } from 'node:url';
+L25: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\prepare-package.js
+L9: import { fileURLToPath } from 'node:url';
+L12: const __filename = fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\test-windows-paths.js
+L8: import { fileURLToPath } from 'node:url';
+L46:   const __filename = fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\update-notifier.js
+L3: import {fileURLToPath} from 'node:url';
+L19: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\start.js
+L22: import { fileURLToPath } from 'node:url';
+L25: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\telemetry_utils.js
+L14: import { fileURLToPath } from 'node:url';
+L17: const __filename = fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\local_telemetry.js
+L12: import { fileURLToPath } from 'node:url';
+L23: const __filename = fileURLToPath(import.meta.url);
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\clean.js
+L22: import { fileURLToPath } from 'node:url';
+L25: const __dirname = dirname(fileURLToPath(import.meta.url));
+---
+File: _KNOWLEDGE_BASE\3_training_and_tuning\BrunellaTuning\index.X0nbfr6-.js
+L2: import { fileURLToPath } from 'node:url';
+L221: const toPath$1 = urlOrPath => urlOrPath instanceof URL ? fileURLToPath(urlOrPath) : urlOrPath;
+L248: const toPath = urlOrPath => urlOrPath instanceof URL ? fileURLToPath(urlOrPath) : urlOrPath;
+---
+File: vite.config.ts
+L5: import { fileURLToPath } from "url";
+L7: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: test\ev_hunter_research.test.ts
+L7: import { fileURLToPath } from 'url';
+L9: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: test\ev_hunter_research.test.js
+L7: import { fileURLToPath } from 'url';
+L8: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: src\utils\mcpClient.ts
+L5: import { fileURLToPath } from "url";
+L8: const __filename = fileURLToPath(import.meta.url);
+---
+File: src\server\routes\jules.ts
+L4: import { fileURLToPath } from "url";
+---
+File: src\server\routes\machines.ts
+L16: import { fileURLToPath } from "url";
+L20: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: src\orchestrator\orchestratorCore.ts
+L6: import { fileURLToPath } from 'url';
+L12: const __filename = fileURLToPath(import.meta.url);
+---
+File: src\dashboard\vite.config.ts
+L5: import { fileURLToPath } from "url";
+L7: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: src\cli-jules-interactive.ts
+L9: import { fileURLToPath } from 'url';
+L11: const __filename = fileURLToPath(import.meta.url);
+---
+File: scripts\security_check.mjs
+L3: import { fileURLToPath } from 'url';
+L5: const __filename = fileURLToPath(import.meta.url);
+---
+File: scripts\sync-agent.js
+L15: import { fileURLToPath } from 'url';
+L18: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: scripts\watch-changes.js
+L16: import { fileURLToPath } from 'url';
+L19: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: src\agents\PropertyAnalystAgent.ts
+L20: import { fileURLToPath } from "url";
+L28: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: src\agents\MarketingAgent.ts
+L5: import { fileURLToPath } from "url";
+L8: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: src\agents\LogisticsDispatcher.ts
+L5: import { fileURLToPath } from "url";
+L8: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: scripts\generate-ai-context.js
+L16: import { fileURLToPath } from 'url';
+L19: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---
+File: scripts\ai-chat-log.js
+L18: import { fileURLToPath } from 'url';
+L21: const __dirname = path.dirname(fileURLToPath(import.meta.url));
+---

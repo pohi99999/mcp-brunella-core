@@ -1,0 +1,21 @@
+Directory listing for F:\mcp-brunella-core\conductor:
+[DIR] .qodo
+[DIR] archive
+[DIR] tracks
+BAS_ARCHITECTURE_v2.md
+CHANGELOG.md
+Cocductornak_szeretettel.pdf
+epp-v2.md
+index.md
+meta-schema.json
+PHASE_4_COMPLETION_SUMMARY.md
+product-guidelines.md
+product.md
+project_state.json
+setup_state.json
+ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAA.txt
+SUMMARY.md
+SYSTEM_STATE_ANALYSIS_20260130.md
+tech-stack.md
+tracks.md
+workflow.md

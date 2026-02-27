@@ -1,0 +1,10 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\conductor\tracks
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 23.     20:31                master_track_2_invoice_to_sheets_20260223
+d-----     2026. 02. 23.     20:31                master_track_3_market_watcher_20260223
+Process Group PGID: 24704

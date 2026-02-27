@@ -1,0 +1,44 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\src\server\routes
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 09.      3:04           4660 agents.ts
+-a----     2026. 02. 22.      8:26           6001 cean.ts
+-a----     2026. 02. 09.      3:04           3300 chat.ts
+-a----     2026. 02. 22.      8:26          14926 cloudflare.ts        
+-a----     2026. 02. 22.      8:26           2675 dashboard.ts
+-a----     2026. 02. 22.      8:26          34058 developer.ts
+-a----     2026. 02. 22.      8:26          13429 enterprise.ts        
+-a----     2026. 02. 22.      8:26           4777 evhunter.ts
+-a----     2026. 02. 22.      8:26           2938 external.ts
+-a----     2026. 02. 22.      8:26           6532 files.ts
+-a----     2026. 02. 22.      8:26           6917 fleet.ts
+-a----     2026. 02. 22.      8:26          11874 githubWebhook.ts      
+-a----     2026. 02. 13.     22:32           1510 health.ts
+-a----     2026. 02. 22.      8:26           3495 index.ts
+-a----     2026. 02. 13.     22:32           7746 jules.ts
+-a----     2026. 02. 21.      9:28           7568 llm.ts
+-a----     2026. 02. 24.      1:17           5236 machines.ts
+-a----     2026. 02. 22.      8:26           7677 mcp.ts
+-a----     2026. 02. 22.      8:26          11457 metrics.ts
+-a----     2026. 02. 23.     18:33           2724 paiosOrchestrator.ts  
+-a----     2026. 02. 22.      8:26           1653 prometheus.ts
+-a----     2026. 02. 22.      8:26           3912 pythonWorkers.ts      
+-a----     2026. 02. 22.      8:26           6013 recommendation.ts     
+-a----     2026. 02. 22.      8:26          12005 robotkez.ts
+-a----     2026. 02. 22.      8:26           7856 scaling.ts
+-a----     2026. 02. 22.      8:26           7907 scheduledTasks.ts     
+-a----     2026. 02. 22.      8:26           4806 suggestedTasks.ts     
+-a----     2026. 02. 22.      8:26           4168 system.ts
+-a----     2026. 02. 22.      8:26           6513 tasks.ts
+-a----     2026. 02. 22.      8:26           5729 testScheduler.ts      
+-a----     2026. 02. 09.      3:04           2336 tools.ts
+-a----     2026. 02. 13.     22:32           7288 tracks.ts
+-a----     2026. 02. 14.      1:52           2984 tts.ts
+-a----     2026. 02. 22.      8:26           9317 webhooks.ts
+-a----     2026. 02. 22.      8:26           6029 workers.ts
+-a----     2026. 02. 22.      8:26           5030 wrangler.ts
+Process Group PGID: 3292

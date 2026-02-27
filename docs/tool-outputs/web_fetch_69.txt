@@ -1,0 +1,3 @@
+{
+  "error": "Error processing web content for prompt \"Find contact emails (info@, hello@, etc.) for thes...\": Failed to generate content with model gemini-2.5-flash: Request contains an invalid argument."
+}

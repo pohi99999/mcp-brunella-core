@@ -1,0 +1,306 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 561-860 of 2743 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 860.
+
+--- FILE CONTENT (truncated) ---
+      if (statusResult) setStatus(statusResult);
+      setHistory(historyResult.history);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshData();
+    const interval = setInterval(refreshData, 5000);
+    return () => clearInterval(interval);
+  }, [refreshData]);
+
+  // Poll active pipeline
+  useEffect(() => {
+    if (
+      !activePipeline ||
+      activePipeline.status === "done" ||
+      activePipeline.status === "error"
+    )
+      return;
+
+    const interval = setInterval(async () => {
+      try {
+        const result = await devApiFetch<{ pipeline: PipelineData }>(
+          `/pipeline/${activePipeline.taskId}`,
+        );
+        setActivePipeline(result.pipeline);
+
+        if (result.pipeline.status === "done") {
+          toast.success("Task completed!");
+          refreshData();
+        } else if (result.pipeline.status === "error") {
+          toast.error(
+            `Task failed: ${result.pipeline.error || "Unknown error"}`,
+          );
+          refreshData();
+        }
+      } catch {
+        // ignore polling errors
+      }
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [activePipeline, refreshData]);
+
+  const handleSubmit = async (taskOverride?: string) => {
+    const task = taskOverride || prompt.trim();
+    if (!task) return;
+
+    setIsLoading(true);
+    try {
+      const { taskId } = await executeDeveloperTask(task);
+      toast.info(`Pipeline started: ${taskId.slice(0, 15)}...`);
+
+      // Fetch initial pipeline state
+      const result = await devApiFetch<{ pipeline: PipelineData }>(
+        `/pipeline/${taskId}`,
+      );
+      setActivePipeline(result.pipeline);
+      setPrompt("");
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Failed to start task");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleQuickAction = (action: string) => {
+    handleSubmit(action);
+  };
+
+  const calculateProgress = (pipeline: PipelineData): number => {
+    const total = pipeline.phases.length;
+    const done = pipeline.phases.filter(
+      (p) => p.status === "done" || p.status === "skipped",
+    ).length;
+    const running = pipeline.phases.filter(
+      (p) => p.status === "running",
+    ).length;
+    return Math.round(((done + running * 0.5) / total) * 100);
+  };
+
+  const loadMetrics = useCallback(async () => {
+    setIsLoadingMetrics(true);
+    try {
+      const data = await fetchMetrics();
+      setMetricsData(data);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to load metrics";
+      toast.error(msg);
+    } finally {
+      setIsLoadingMetrics(false);
+    }
+  }, []);
+
+  const loadApprovals = useCallback(
+    async (status: ApprovalStatus | undefined = approvalFilter) => {
+      setIsLoadingApprovals(true);
+      try {
+        const items = await fetchApprovals(status);
+        setApprovals(items);
+        if (status !== approvalFilter) {
+          setApprovalFilter(status);
+        }
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : "Failed to load approvals";
+        toast.error(msg);
+      } finally {
+        setIsLoadingApprovals(false);
+      }
+    },
+    [approvalFilter],
+  );
+
+  const handleApprovalAction = async (
+    id: string,
+    action: "approve" | "reject",
+  ) => {
+    setRespondingId(id);
+    try {
+      await respondApproval(id, action);
+      toast.success(action === "approve" ? "Approved" : "Rejected");
+      await loadApprovals(approvalFilter);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Action failed";
+      toast.error(msg);
+    } finally {
+      setRespondingId(null);
+    }
+  };
+
+  const loadActivity = useCallback(
+    async (limit: number = activityLimit) => {
+      setIsLoadingActivity(true);
+      try {
+        const data = await fetchActivity(limit);
+        setActivities(data);
+        setActivityLimit(limit);
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : "Failed to load activity feed";
+        toast.error(msg);
+      } finally {
+        setIsLoadingActivity(false);
+      }
+    },
+    [activityLimit],
+  );
+
+  // P8: Git data loading
+  const loadGitStatus = useCallback(async () => {
+    setIsLoadingGit(true);
+    try {
+      const [status, branches] = await Promise.all([
+        getGitStatus(),
+        getGitBranches(false),
+      ]);
+      setGitStatus(status);
+      setGitBranches(branches);
+      setSelectedFiles(new Set());
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error ? err.message : "Failed to load git status";
+      toast.error(msg);
+    } finally {
+      setIsLoadingGit(false);
+    }
+  }, []);
+
+  const handleStageFiles = async (files: string[]) => {
+    try {
+      await stageGitFiles(files);
+      toast.success(`Staged ${files.length} file(s)`);
+      loadGitStatus();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to stage files";
+      toast.error(msg);
+    }
+  };
+
+  const handleUnstageFiles = async (files: string[]) => {
+    try {
+      await unstageGitFiles(files);
+      toast.success(`Unstaged ${files.length} file(s)`);
+      loadGitStatus();
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error ? err.message : "Failed to unstage files";
+      toast.error(msg);
+    }
+  };
+
+  const handleCommit = async () => {
+    if (!commitMessage.trim()) {
+      toast.error("Commit message required");
+      return;
+    }
+    setIsCommitting(true);
+    try {
+      await commitGit(commitMessage);
+      toast.success("Committed successfully");
+      setCommitMessage("");
+      loadGitStatus();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to commit";
+      toast.error(msg);
+    } finally {
+      setIsCommitting(false);
+    }
+  };
+
+  const handlePush = async () => {
+    setIsPushing(true);
+    try {
+      await pushGit();
+      toast.success("Pushed successfully");
+      loadGitStatus();
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Failed to push";
+      toast.error(msg);
+    } finally {
+      setIsPushing(false);
+    }
+  };
+
+  const handleBranchSwitch = async (branchName: string) => {
+    try {
+      await checkoutBranch(branchName);
+      toast.success(`Switched to ${branchName}`);
+      loadGitStatus();
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error ? err.message : "Failed to switch branch";
+      toast.error(msg);
+    }
+  };
+
+  // Tab-change data loading effects (must be after useCallback definitions)
+  useEffect(() => {
+    if (activeTab === "metrics") {
+      if (!metricsData && !isLoadingMetrics) {
+        loadMetrics();
+      }
+    } else if (activeTab === "approvals") {
+      if (!isLoadingApprovals) {
+        loadApprovals(approvalFilter);
+      }
+    } else if (activeTab === "activity") {
+      if (!isLoadingActivity) {
+        loadActivity(activityLimit);
+      }
+    } else if (activeTab === "git") {
+      if (!isLoadingGit) {
+        loadGitStatus();
+      }
+    }
+  }, [
+    activeTab,
+    activityLimit,
+    approvalFilter,
+    isLoadingActivity,
+    isLoadingApprovals,
+    isLoadingMetrics,
+    isLoadingGit,
+    loadActivity,
+    loadApprovals,
+    loadMetrics,
+    metricsData,
+  ]);
+
+  useEffect(() => {
+    if (activeTab !== "activity") return;
+    const interval = setInterval(() => {
+      loadActivity(activityLimit);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [activeTab, activityLimit, loadActivity]);
+
+  // P4: Submit code review
+  const handleReview = async () => {
+    const path = reviewPath.trim();
+    if (!path) return;
+
+    setIsReviewing(true);
+    setReviewResult(null);
+    try {
+      const result = await reviewFile(path);
+      setReviewResult(result);
+      toast.success(`Review complete: ${result.score}/100`);
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Review failed");
+    } finally {
+      setIsReviewing(false);
+    }
+  };
+
+  // Score color helper
+  const getScoreColor = (score: number): string => {

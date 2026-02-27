@@ -1,0 +1,28 @@
+{
+  "sessionId": "d43fda10-c170-4a49-98fa-f901d76ea08c",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-24T20:18:50.989Z",
+  "lastUpdated": "2026-02-24T20:20:03.011Z",
+  "messages": [
+    {
+      "id": "34ca4815-61af-49ee-b170-afc28a7040bc",
+      "timestamp": "2026-02-24T20:18:50.989Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "Your task is to answer the following question about Gemini CLI:\n<question>\nList all tool names for the MCP server 'google-workspace'.\n</question>"
+        }
+      ]
+    },
+    {
+      "id": "ac25f08e-c54d-44c6-bd60-29802984d8da",
+      "timestamp": "2026-02-24T20:20:03.011Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "You have exceeded the maximum number of turns. You have one final chance to complete the task with a short grace period. You MUST call `complete_task` immediately with your best answer and explain that your investigation was interrupted. Do not call any other tools."
+        }
+      ]
+    }
+  ]
+}

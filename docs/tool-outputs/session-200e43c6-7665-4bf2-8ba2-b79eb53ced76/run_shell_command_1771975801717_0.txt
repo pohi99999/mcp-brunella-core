@@ -1,0 +1,711 @@
+Output: 
+Running 1 test using 1 worker
+
+     1 …5 › 🚀 Brunella Dashboard Full UI Audit › Audit Page: neural-map
+--- Auditing: neural-map ---
+Found 51 buttons on neural-map
+  Clicking button: "Keresés...
+⌘
+K"
+  Clicking button: "LAYOUT:
+DEFAULT_DASHBOARD"
+  Failed to click button 1: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(1)
+    - locator resolved to <button type="button" id="radix-_r_5_" data-state="closed" aria-haspopup="menu" aria-expanded="false" data-slot="dropdown-menu-trigger" class="inline-flex items-center justify-center whitespace-nowrap font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destru…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "Toggle theme"
+  Failed to click button 2: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(2)
+    - locator resolved to <button type="button" id="radix-_r_7_" data-state="closed" aria-haspopup="menu" aria-expanded="false" data-slot="dropdown-menu-trigger" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-dest…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+
+  Clicking button: "CORE SYSTEMS"
+  Failed to click button 3: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(3)
+    - locator resolved to <button type="button" id="radix-_r_9_" data-state="open" aria-expanded="true" aria-controls="radix-_r_a_" data-orientation="vertical" data-slot="accordion-trigger" data-radix-collection-item="" class="focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 text-left transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180 text-xs font-bold text-zinc-500 hover:text-zinc-200 upperc…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+
+  Clicking button: "Mission Control"
+  Failed to click button 4: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(4)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative hover:text-zinc-100 hover:bg-white/5 bg-primary/10 text-white border border-primary/20">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+
+  Clicking button: "Neural Map"
+  Failed to click button 5: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(5)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative text-zinc-400 hover:text-zinc-100 hover:bg-white/5">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "Architecture"
+  Failed to click button 6: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(6)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative text-zinc-400 hover:text-zinc-100 hover:bg-white/5">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "AI & AGENTS"
+  Failed to click button 7: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(7)
+    - locator resolved to <button type="button" id="radix-_r_b_" data-state="open" aria-expanded="true" aria-controls="radix-_r_c_" data-orientation="vertical" data-slot="accordion-trigger" data-radix-collection-item="" class="focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 text-left transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180 text-xs font-bold text-zinc-500 hover:text-zinc-200 upperc…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "Neural Chat"
+  Failed to click button 8: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(8)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative text-zinc-400 hover:text-zinc-100 hover:bg-white/5">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+
+  Clicking button: "PAIOS Orchestrator"
+  Failed to click button 9: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(9)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative text-zinc-400 hover:text-zinc-100 hover:bg-white/5">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+❌ FOUND 5 CONSOLE ERRORS on neural-map:
+   - In HTML, %s cannot be a descendant of <%s>.
+This will cause a hydration error.%s <button> button
+
+  ...
+    <div className="min-h-scre...">
+      <CommandMenu>
+      <header>
+      <div className="flex-1 fle...">
+        <DynamicSidebar>
+        <main className="flex-1 fle...">
+          <div className="flex-1 min...">
+            <WidgetGrid>
+              <div className="space-y-4 ...">
+                <div>
+                <div className="grid flex-..." style={{...}}>
+                  <div>
+                  <div>
+                  <div>
+                  <div style={{gridArea:"..."}} className="relative o...">
+                    <div className="h-full w-f...">
+                      <JulesPanel>
+                        <Card className="glass-pane...">
+                          <div data-slot="card" className="bg-card te...">
+                            <CardHeader>
+                            <CardContent className="space-y-6 ...">     
+                              <div data-slot="card-content" className="px-6 space...">
+                                <div>
+                                <div>
+                                <div className="rounded-md...">
+>                                 <button
+>                                   className="flex items-center justify-between px-3 py-2 bg-white/5 w-full hover:bg-..."
+>                                   onClick={function onClick}
+>                                 >
+                                    <div>
+                                    <div className="flex gap-2...">     
+                                      <Button variant="ghost" size="sm" onClick={function onClick} disabled={false} ...>
+>                                       <button
+>                                         data-slot="button"
+>                                         className={"inline-flex items-center justify-center whitespace-nowrap text-..."}
+>                                         onClick={function onClick}    
+>                                         disabled={false}
+>                                         title="Frissítés"
+>                                       >
+                                      ...
+                  ...
+
+   - <%s> cannot contain a nested %s.
+See this log for the ancestor stack trace. button <button>
+   - Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+   - Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+   - Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+  x  1 …runella Dashboard Full UI Audit › Audit Page: neural-map (25.0s)
+     2 …ella Dashboard Full UI Audit › Audit Page: neural-map (retry #1)
+
+--- Auditing: neural-map ---
+Found 51 buttons on neural-map
+  Clicking button: "Keresés...
+⌘
+K"
+  Clicking button: "LAYOUT:
+DEFAULT_DASHBOARD"
+  Failed to click button 1: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(1)
+    - locator resolved to <button type="button" id="radix-_r_5_" data-state="closed" aria-haspopup="menu" aria-expanded="false" data-slot="dropdown-menu-trigger" class="inline-flex items-center justify-center whitespace-nowrap font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destru…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+    - element is visible, enabled and stable
+    - scrolling into view if needed
+
+  Clicking button: "Toggle theme"
+  Failed to click button 2: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(2)
+    - locator resolved to <button type="button" id="radix-_r_7_" data-state="closed" aria-haspopup="menu" aria-expanded="false" data-slot="dropdown-menu-trigger" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-dest…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "CORE SYSTEMS"
+  Failed to click button 3: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(3)
+    - locator resolved to <button type="button" id="radix-_r_9_" data-state="open" aria-expanded="true" aria-controls="radix-_r_a_" data-orientation="vertical" data-slot="accordion-trigger" data-radix-collection-item="" class="focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 text-left transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180 text-xs font-bold text-zinc-500 hover:text-zinc-200 upperc…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "Mission Control"
+  Failed to click button 4: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(4)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative hover:text-zinc-100 hover:bg-white/5 bg-primary/10 text-white border border-primary/20">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "Neural Map"
+  Failed to click button 5: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(5)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative text-zinc-400 hover:text-zinc-100 hover:bg-white/5">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "Architecture"
+  Failed to click button 6: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(6)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative text-zinc-400 hover:text-zinc-100 hover:bg-white/5">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "AI & AGENTS"
+  Failed to click button 7: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(7)
+    - locator resolved to <button type="button" id="radix-_r_b_" data-state="open" aria-expanded="true" aria-controls="radix-_r_c_" data-orientation="vertical" data-slot="accordion-trigger" data-radix-collection-item="" class="focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 text-left transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180 text-xs font-bold text-zinc-500 hover:text-zinc-200 upperc…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+
+  Clicking button: "Neural Chat"
+  Failed to click button 8: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(8)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative text-zinc-400 hover:text-zinc-100 hover:bg-white/5">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "PAIOS Orchestrator"
+  Failed to click button 9: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(9)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative text-zinc-400 hover:text-zinc-100 hover:bg-white/5">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+
+❌ FOUND 5 CONSOLE ERRORS on neural-map:
+   - In HTML, %s cannot be a descendant of <%s>.
+This will cause a hydration error.%s <button> button
+
+  ...
+    <div className="min-h-scre...">
+      <CommandMenu>
+      <header>
+      <div className="flex-1 fle...">
+        <DynamicSidebar>
+        <main className="flex-1 fle...">
+          <div className="flex-1 min...">
+            <WidgetGrid>
+              <div className="space-y-4 ...">
+                <div>
+                <div className="grid flex-..." style={{...}}>
+                  <div>
+                  <div>
+                  <div>
+                  <div style={{gridArea:"..."}} className="relative o...">
+                    <div className="h-full w-f...">
+                      <JulesPanel>
+                        <Card className="glass-pane...">
+                          <div data-slot="card" className="bg-card te...">
+                            <CardHeader>
+                            <CardContent className="space-y-6 ...">     
+                              <div data-slot="card-content" className="px-6 space...">
+                                <div>
+                                <div>
+                                <div className="rounded-md...">
+>                                 <button
+>                                   className="flex items-center justify-between px-3 py-2 bg-white/5 w-full hover:bg-..."
+>                                   onClick={function onClick}
+>                                 >
+                                    <div>
+                                    <div className="flex gap-2...">     
+                                      <Button variant="ghost" size="sm" onClick={function onClick} disabled={false} ...>
+>                                       <button
+>                                         data-slot="button"
+>                                         className={"inline-flex items-center justify-center whitespace-nowrap text-..."}
+>                                         onClick={function onClick}    
+>                                         disabled={false}
+>                                         title="Frissítés"
+>                                       >
+                                      ...
+                  ...
+
+   - <%s> cannot contain a nested %s.
+See this log for the ancestor stack trace. button <button>
+   - Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+   - Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+   - Encountered two children with the same key, `%s`. Keys should be unique so that components maintain their identity across updates. Non-unique keys may cause children to be duplicated and/or omitted — the behavior is unsupported and could change in a future version.
+  x  2 …hboard Full UI Audit › Audit Page: neural-map (retry #1) (26.5s)
+
+
+  1) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit › Audit Page: neural-map
+
+    Error: Console errors detected on neural-map
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-77320-Audit-Audit-Page-neuraal-map-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-77320-Audit-Audit-Page-neuraal-map-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-77320-Audit-AAudit-Page-neural-map-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────
+
+    Error: Console errors detected on neural-map
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-77320-Audit-Audit-Page-neuraal-map-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-77320-Audit-Audit-Page-neuraal-map-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-77320-Audit-AAudit-Page-neural-map-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-77320-Audit-Audit-Page-neuraal-map-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\dashboard_audit-🚀-Brunelll-77320-Audit-Audit-Page-neural-map-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: neural-map
+Exit Code: 1
+Process Group PGID: 19472

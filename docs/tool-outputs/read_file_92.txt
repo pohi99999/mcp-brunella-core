@@ -1,0 +1,206 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-200 of 2743 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 200.
+
+--- FILE CONTENT (truncated) ---
+/**
+ * DeveloperPanel.tsx — Developer Agent 3.0 Dashboard Panel
+ *
+ * Tartalom:
+ * 1. Prompt input + „Generálj" gomb
+ * 2. Pipeline progress (fázisonkénti vizualizáció)
+ * 3. One-Click műveletek (Generate, Test, Fix, Heal)
+ * 4. Feladat történet táblázat
+ */
+
+import { useState, useEffect, useCallback } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Badge } from "@/components/ui/badge";
+import {
+  Code2,
+  Play,
+  TestTube2,
+  Wrench,
+  HeartPulse,
+  Send,
+  RefreshCw,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  Activity,
+  Search,
+  FileSearch,
+  AlertTriangle,
+  Info,
+  Lightbulb,
+  ShieldAlert,
+  FolderOpen,
+  ChevronDown,
+  ChevronRight,
+  BarChart3,
+  ListTodo,
+  X,
+  RotateCw,
+  Gauge,
+  Bell,
+  History,
+  GitBranch,
+  GitCommit,
+  GitPullRequest,
+  Upload,
+  Download,
+  Plus,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { DeveloperPipeline, type PipelinePhaseView } from "./DeveloperPipeline";
+import { toast } from "sonner";
+
+// ==================== Types ====================
+
+interface PipelineData {
+  taskId: string;
+  task: string;
+  status: string;
+  phases: PipelinePhaseView[];
+  createdAt: number;
+  completedAt?: number;
+  error?: string;
+}
+
+interface DevStatus {
+  activeTasks: number;
+  completedTasks: number;
+  failedTasks: number;
+  totalTasks: number;
+}
+
+interface HistoryEntry {
+  taskId: string;
+  task: string;
+  status: string;
+  createdAt: number;
+  completedAt?: number;
+}
+
+// ==================== P8: Git Types ====================
+
+interface GitFileData {
+  path: string;
+  status: string;
+}
+
+interface GitStatusData {
+  branch: string;
+  ahead: number;
+  behind: number;
+  staged: GitFileData[];
+  unstaged: GitFileData[];
+  untracked: GitFileData[];
+}
+
+interface GitBranchData {
+  name: string;
+  current: boolean;
+  remote?: boolean;
+}
+
+interface GitLogEntry {
+  hash: string;
+  author: string;
+  date: string;
+  message: string;
+}
+
+// ==================== API helpers ====================
+
+const API_PREFIX = "/api/v1/developer";
+
+async function devApiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const response = await fetch(`${API_PREFIX}${path}`, {
+    headers: { "Content-Type": "application/json" },
+    ...options,
+  });
+  const data = await response.json();
+  if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
+  return data as T;
+}
+
+async function executeDeveloperTask(
+  task: string,
+  context?: Record<string, unknown>,
+): Promise<{ taskId: string }> {
+  return devApiFetch("/execute", {
+    method: "POST",
+    body: JSON.stringify({ task, context }),
+  });
+}
+
+// ==================== P8: Git API Helpers ====================
+
+async function getGitStatus(): Promise<GitStatusData> {
+  const result = await devApiFetch<{ status: GitStatusData }>("/git/status");
+  return result.status;
+}
+
+async function getGitBranches(remote = false): Promise<GitBranchData[]> {
+  const result = await devApiFetch<{ branches: GitBranchData[] }>(
+    `/git/branches?remote=${remote}`,
+  );
+  return result.branches;
+}
+
+async function stageGitFiles(files: string[]): Promise<void> {
+  await devApiFetch("/git/stage", {
+    method: "POST",
+    body: JSON.stringify({ files }),
+  });
+}
+
+async function unstageGitFiles(files: string[]): Promise<void> {
+  await devApiFetch("/git/unstage", {
+    method: "POST",
+    body: JSON.stringify({ files }),
+  });
+}
+
+async function commitGit(message: string): Promise<void> {
+  await devApiFetch("/git/commit", {
+    method: "POST",
+    body: JSON.stringify({ message }),
+  });
+}
+
+async function pushGit(remote?: string, branch?: string): Promise<void> {
+  await devApiFetch("/git/push", {
+    method: "POST",
+    body: JSON.stringify({ remote, branch }),
+  });
+}
+
+async function checkoutBranch(name: string): Promise<void> {
+  await devApiFetch(`/git/branch/${name}`, {
+    method: "PUT",
+    body: JSON.stringify({ action: "checkout" }),
+  });
+}
+
+// ==================== P4: Review Types & API ====================
+
+interface ReviewFinding {
+  severity: "critical" | "warning" | "info" | "suggestion";
+  line?: number;
+  message: string;
+  rule?: string;
+  suggestion?: string;
+}
+
+interface ReviewResult {
+  filePath: string;
+  fileName: string;
+  language: string;
+  score: number;
+  summary: string;
+  findings: ReviewFinding[];

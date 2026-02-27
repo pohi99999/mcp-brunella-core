@@ -1,0 +1,17 @@
+Output: 
+src\dashboard\components\dashboard\AdminSelfCheckWidget
+.test.tsx:8:// Mock Zustand store
+src\dashboard\components\dashboard\ProcessControlWidget
+.test.tsx:10:// Mock Zustand store
+src\dashboard\hooks\useSystemSignal.test.ts:36:    // R
+eset Zustand store to initial state before each test    
+src\dashboard\hooks\useSystemSignal.ts:2:import { useSh
+allow } from "zustand/react/shallow";
+src\dashboard\hooks\useSystemSignal.ts:10:  // causing  
+useSyncExternalStore (Zustand v5) to trigger an infinit 
+e re-render loop
+src\dashboard\lib\mcpStore.ts:1:import { create } from 
+'zustand'
+src\dashboard\store\systemSignalStore.ts:1:import { cre
+ate } from 'zustand';
+Process Group PGID: 52812

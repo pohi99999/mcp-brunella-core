@@ -1,0 +1,3 @@
+{
+  "error": "Tool \"agent_delegate\" not found. Did you mean one of: \"get_trace\", \"get_issue\", \"auth.clear\"?"
+}

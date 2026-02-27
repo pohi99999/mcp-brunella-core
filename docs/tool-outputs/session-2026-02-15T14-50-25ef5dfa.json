@@ -1,0 +1,60 @@
+{
+  "sessionId": "25ef5dfa-74cc-4de3-8c5b-41ae2acaf528",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-15T14:50:16.592Z",
+  "lastUpdated": "2026-02-15T14:56:18.194Z",
+  "messages": [
+    {
+      "id": "e378b0c1-637f-4d0f-8efb-1a05a63abfe5",
+      "timestamp": "2026-02-15T14:50:16.592Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'docker': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "02303838-c57f-40a7-8bde-0c1d70923183",
+      "timestamp": "2026-02-15T14:50:16.663Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'fetch': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "3c2e06a0-8b8f-45c3-b881-20300c00d27e",
+      "timestamp": "2026-02-15T14:50:17.126Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'sqlite': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "95f51feb-30e0-4c09-b974-e4ecca328433",
+      "timestamp": "2026-02-15T14:50:17.659Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'brunella-python': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "cb1b42f1-3908-415f-a3d0-7594dccb186c",
+      "timestamp": "2026-02-15T14:50:19.636Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'cloudflare': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "14b0e254-417c-4f53-a93d-d6c8ae8faec9",
+      "timestamp": "2026-02-15T14:55:59.736Z",
+      "type": "info",
+      "content": "Opening extensions page in your browser: https://geminicli.com/extensions/"
+    },
+    {
+      "id": "3088367c-f207-40ca-9577-8bf3b77835f8",
+      "timestamp": "2026-02-15T14:56:17.754Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "gemini extensions install https://github.com/jnorthrup/conductor2"
+        }
+      ]
+    },
+    {
+      "id": "4ee146b0-0156-4bab-aebf-b137df6b7431",
+      "timestamp": "2026-02-15T14:56:18.194Z",
+      "type": "error",
+      "content": "[API Error: {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 400,\\n    \\\"message\\\": \\\"schema at properties.connectionConfig requires unspecified property 'connectionId'\\\",\\n    \\\"status\\\": \\\"INVALID_ARGUMENT\\\"\\n  }\\n}\\n\",\"code\":400,\"status\":\"Bad Request\"}}]"
+    }
+  ]
+}

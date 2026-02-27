@@ -1,0 +1,628 @@
+Output too large. Showing first 8000 and last 32 000 characters. For full output see: C:\Users\pohi9\.gemini\tmp\mcp-brunella-core\tool-outputs\session-26d77dbf-14b2-4b80-a9ba-3f01aa561cf8\run_shell_command_1771881229542_0.txt
+Output: 
+> mcp-brunella-core@1.0.0 build
+> tsc
+
+
+ RUN  v4.0.18 F:/mcp-brunella-core
+
+stdout | test/phase3_integration.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Woorkers AI (@cf/meta/llama-3.1-8b-instruct)
+
+*
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > LogisticsDispatcher + RouteOptimizer > should calculate optimized route via python worker        
+[STATUS] [LogisticsDispatcher] working - optimizáld az útvonalat
+[INFO] [LogisticsDispatcher] Feladat indítása: optimizáld az útvonalat...
+[INFO] [LogisticsDispatcher] Útvonalak optimizálása...  
+
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > LogisticsDispatcher + RouteOptimizer > should calculate optimized route via python worker        
+[INFO] [LogisticsDispatcher] Útvonal optimizálva: ROUTE-1771881259568 (90% hatékonyság)
+
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > LogisticsDispatcher + RouteOptimizer > should calculate optimized route via python worker        
+[STATUS] [LogisticsDispatcher] idle
+
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > NurturerAgent (Real Estate) > should generate marketing campaigns from property analysis
+[INFO] [NurturerAgent] Memória lekérdezése: "generálj hirdetést..."
+·**
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > NurturerAgent (Real Estate) > should generate marketing campaigns from property analysis
+[STATUS] [NurturerAgent] working - Kampány generálás... 
+[INFO] [NurturerAgent] Kampány generálás: 1234/A/1      
+
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > NurturerAgent (Real Estate) > should generate marketing campaigns from property analysis
+[STATUS] [NurturerAgent] idle
+
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > NurturerAgent (Real Estate) > should generate marketing campaigns from property analysis
+[INFO] [NurturerAgent] Tapasztalat mentése a memóriába: nurtureragent_1771881260711
+
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > GenesisOrchestrator (Software) > should orchestrate a genesis protocol from spec
+[INFO] [AgentManager] Ügynök regisztrálva: Developer    
+[INFO] [AgentManager] Ügynök regisztrálva: Evaluator    
+[INFO] [GenesisOrchestrator] Memória lekérdezése: "futtasd a genesis protokolt..."
+·x*
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > GenesisOrchestrator (Software) > should orchestrate a genesis protocol from spec
+[STATUS] [GenesisOrchestrator] working - Genesis orchestrating...
+[INFO] [GenesisOrchestrator] 🚀 Genesis indítása: TestAppp
+[INFO] [GenesisOrchestrator]    Összesen 2 task vár végrehajtásra.
+[INFO] [GenesisOrchestrator] ⚡ Task delegálása: TASK-1  [Developer]
+[INFO] [GenesisOrchestrator]    -> Developer: Create index.ts...
+[INFO] [GenesisOrchestrator]    ✅ TASK-1 kész.
+[INFO] [GenesisOrchestrator] ⚡ Task delegálása: TASK-2  [Evaluator]
+[INFO] [GenesisOrchestrator]    -> Evaluator: Test index.ts...
+[INFO] [GenesisOrchestrator]    ✅ TASK-2 kész.
+
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > GenesisOrchestrator (Software) > should orchestrate a genesis protocol from spec
+[STATUS] [GenesisOrchestrator] idle
+
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > GenesisOrchestrator (Software) > should orchestrate a genesis protocol from spec
+[INFO] [GenesisOrchestrator] Tapasztalat mentése a memóriába: genesisorchestrator_1771881274974
+
+stdout | test/phase3_integration.test.ts > Phase 3 Integration Tests > GenesisOrchestrator (Software) > should orchestrate a genesis protocol from spec
+[INFO] [RAG] Document indexed: genesisorchestrator_1771881274974
+·x·*
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should initialize with default scopes
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should initialize with default scopes
+[ERROR] [UnifiedWorkspace] Failed to initialize: [vitest] No "default" export is defined on the "fs/promises" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should load credentials from config directory
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should load credentials from config directory
+[ERROR] [UnifiedWorkspace] Failed to initialize: [vitest] No "default" export is defined on the "fs/promises" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should throw error if credentials file is missing
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should throw error if credentials file is missing
+[ERROR] [UnifiedWorkspace] Failed to initialize: [vitest] No "default" export is defined on the "fs/promises" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[ERROR] [UnifiedWorkspace] Failed to initialize: [vitest] No "default" export is defined on the "fs/promises" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[ERROR] [UnifiedWorkspace] Failed to initialize: [vitest] No "default" export is defined on the "fs/promises" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+[ERROR] [UnifiedWorkspace] Failed to initialize: [vitest] No "default" export is defined on the "fs/promises" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+[ERROR] [UnifiedWorkspace] Failed to initialize: [vitest] No "default" export is defined on the "fs/promises" mock. Did you forget to return it from "vi.mock"?
+If you need to partially mock a module, you can use "importOriginal" helper inside:
+
+
+stdout | test/unifiedWorkspace.test.ts > Unif
+
+... [6 567 269 characters omitted] ...
+
+ireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Uncaught Exception ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Error: Cannot find module 'F:\mcp-brunella-core\src\core\worker_thread_executor.js'
+ ❯ Module._resolveFilename node:internal/modules/cjs/loader:1421:15
+ ❯ defaultResolveImpl node:internal/modules/cjs/loader:1059:19
+ ❯ resolveForCJSWithHooks node:internal/modules/cjs/loader:1064:22
+ ❯ Module._load node:internal/modules/cjs/loader:1227:37
+ ❯ TracingChannel.traceSync node:diagnostics_channel:328:14
+ ❯ wrapModuleLoad node:internal/modules/cjs/loader:245:24
+ ❯ Module.executeUserEntryPoint [as runMain] node:internal/modules/run_main:154:5
+ ❯ MessagePort.<anonymous> node:internal/main/worker_thread:223:26
+ ❯ [nodejs.internal.kHybridDispatch] node:internal/event_target:845:20
+ ❯ MessagePort.<anonymous> node:internal/per_context/messageport:23:28
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+Serialized Error: { code: 'MODULE_NOT_FOUND', requireStack: [] }
+This error originated in "test/workerThreadPool.test.ts" test file. It doesn't mean the error was thrown inside the file itself, but while it was running.
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+
+ Test Files  4 failed | 129 passed (133)
+      Tests  38 failed | 1195 passed | 19 skipped (1252)
+     Errors  4209 errors
+   Start at  22:14:18
+   Duration  400.94s (transform 4.05s, setup 2.06s, import 20.74s, tests 334.17s, environment 20ms)
+
+husky - pre-commit script failed (code 1)
+Everything up-to-date
+Process Group PGID: 38884

@@ -1,0 +1,98 @@
+{
+  "sessionId": "5ec4292f-7596-4baa-9dab-89f0bdd0dce4",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-25T18:05:05.364Z",
+  "lastUpdated": "2026-02-25T18:05:29.355Z",
+  "messages": [
+    {
+      "id": "d2308019-e0f9-4adb-bd9a-015f9b26a11e",
+      "timestamp": "2026-02-25T18:05:05.364Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/session-start.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/session-start.js\" 2>/dev/null || true] failed for event SessionStart. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "54b06cb1-fd7f-4e09-9018-e834948ba5d7",
+      "timestamp": "2026-02-25T18:05:05.385Z",
+      "type": "info",
+      "content": "Warning: At line:1 char:99\r\n+ ... ng-gemini-code/scripts/hooks/session-start.js\" 2>/dev/null || node \"$ ...\r\n+                                                                ~~\r\nThe token '||' is not a valid statement separator in this version.\r\nAt line:1 char:166\r\n+ ... de \"$HOME/.gemini/scripts/hooks/session-start.js\" 2>/dev/null || true\r\n+                                                                   ~~\r\nThe token '||' is not a valid statement separator in this version.\r\n    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : InvalidEndOfLine"
+    },
+    {
+      "id": "df45dd1c-1abb-4838-bade-2cfbae5ee1b8",
+      "timestamp": "2026-02-25T18:05:20.748Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'uuv': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "b31dcc9e-beba-445d-96ee-6c0e12b35f78",
+      "timestamp": "2026-02-25T18:05:20.847Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "e260139e-ee16-4e0a-b254-6e1a0107ce60",
+      "timestamp": "2026-02-25T18:05:20.847Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "240ce18e-c98d-4409-ae1d-710c6154a65b",
+      "timestamp": "2026-02-25T18:05:20.848Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "cf8a1ab1-42ae-4554-824b-665f5225860e",
+      "timestamp": "2026-02-25T18:05:21.018Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "3e068208-6d37-4ae4-95a3-34b269a342d4",
+      "timestamp": "2026-02-25T18:05:21.034Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "a5d6f94e-218a-4c0d-8ad7-f6d415263679",
+      "timestamp": "2026-02-25T18:05:21.035Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "2e4976e9-f223-4f75-a68f-b65abf3eb7b3",
+      "timestamp": "2026-02-25T18:05:21.081Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "2f6fced6-6de9-4ef4-9c90-b97c8b86e767",
+      "timestamp": "2026-02-25T18:05:21.081Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "8454b9b3-f1b6-4aee-a9be-e0c52dc9c3c8",
+      "timestamp": "2026-02-25T18:05:21.100Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "cd5fd066-999e-481d-8bd6-786f55c6af8c",
+      "timestamp": "2026-02-25T18:05:21.129Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "9bd1017d-ec36-40a9-b3c6-d33c84e40b2d",
+      "timestamp": "2026-02-25T18:05:28.283Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/session-end.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/session-end.js\" 2>/dev/null || true, node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/evaluate-session.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/evaluate-session.js\" 2>/dev/null || true] failed for event SessionEnd. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "0d4979de-22e5-4ee4-9646-74a77fe75e6c",
+      "timestamp": "2026-02-25T18:05:29.355Z",
+      "type": "info",
+      "content": "Warning: At line:1 char:99\r\n+ ... ng-gemini-code/scripts/hooks/session-start.js\" 2>/dev/null || node \"$ ...\r\n+                                                                ~~\r\nThe token '||' is not a valid statement separator in this version.\r\nAt line:1 char:166\r\n+ ... de \"$HOME/.gemini/scripts/hooks/session-start.js\" 2>/dev/null || true\r\n+                                                                   ~~\r\nThe token '||' is not a valid statement separator in this version.\r\n    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException\r\n    + FullyQualifiedErrorId : InvalidEndOfLine"
+    }
+  ]
+}

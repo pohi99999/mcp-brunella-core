@@ -1,0 +1,14 @@
+Directory listing for F:\mcp-brunella-core\myai\workers:
+[DIR] __pycache__
+cma_worker.py
+geo_scraper.py
+google_maps_scraper.py
+icebreaker_generator.py
+lancedb_batch.py
+machine_hunter.py
+media_factory.py
+ocr_worker.py
+route_optimizer.py
+supply_matcher.py
+trend_analyst.py
+web_scraper.py

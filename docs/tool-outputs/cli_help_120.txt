@@ -1,0 +1,12 @@
+Subagent 'cli_help' finished.
+Termination Reason: GOAL
+Result:
+{
+  "answer": "In the Gemini CLI, MCP tools are invoked by the Gemini model rather than being executed directly by the user via a specific manual command. To \"call\" a tool by its registered name, you interact with the CLI as follows:\n\n1.  **Find the Registered Name**: Run the `/mcp` or `/tools` command to see the exact names of registered tools. If there are name conflicts between servers, the CLI automatically prefixes the name (e.g., `serverName__toolName`). It also sanitizes names (e.g., replacing invalid characters with underscores).\n2.  **Prompt the Model**: Since tools are managed by the model, you trigger them by describing a task in natural language. You can explicitly guide the model by mentioning the registered name in your prompt (e.g., \"Use the `agent_execute` tool to analyze this file\").\n3.  **Confirmation**: The CLI will typically display a confirmation prompt before executing the tool (unless the server is configured as \"trusted\").\n\n**Note on MCP Prompts**: Unlike tools, MCP **Prompts** can be invoked directly by the user as slash commands (e.g., `/my_prompt_name arg1 arg2`). If you need a direct command-like interface, ensure the functionality is exposed as a Prompt rather than a Tool.",
+  "sources": [
+    "tools/mcp-server.md",
+    "cli/commands.md",
+    "core/tools-api.md",
+    "core/subagents.md"
+  ]
+}

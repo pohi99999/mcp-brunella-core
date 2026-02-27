@@ -1,0 +1,13 @@
+Output: 
+Running 1 test using 1 worker
+
+  ok 1 …ashboard Full UI Audit (Enhanced) › Audit Page: dashboard (6.2s)
+--- Auditing: dashboard ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 2
+  ❌ FAILED REQUESTS: 2
+
+
+  1 passed (8.9s)
+Process Group PGID: 20280

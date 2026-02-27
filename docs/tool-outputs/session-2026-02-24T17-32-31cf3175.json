@@ -1,0 +1,1238 @@
+{
+  "sessionId": "31cf3175-bfa9-4708-9a6e-5f5adeb8a47d",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-24T17:32:26.011Z",
+  "lastUpdated": "2026-02-24T17:55:35.382Z",
+  "messages": [
+    {
+      "id": "96752e16-c5d2-4348-87d8-7d6713f07bea",
+      "timestamp": "2026-02-24T17:32:26.011Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "18ace050-110c-4875-8d3e-1ae50e1b3287",
+      "timestamp": "2026-02-24T17:32:26.013Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "4f799f3a-bf9d-483e-83c0-5605e04f6b2e",
+      "timestamp": "2026-02-24T17:32:26.014Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "6e007a6b-331b-4074-be6c-6610c3d5bd3e",
+      "timestamp": "2026-02-24T17:32:26.452Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "0eeebff0-c9df-4208-ac60-41f53a294ea7",
+      "timestamp": "2026-02-24T17:32:26.522Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "bba3f369-2cad-4c9a-9eae-1d240df68743",
+      "timestamp": "2026-02-24T17:32:26.523Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "dd153a25-def8-4261-9970-6e04745cf899",
+      "timestamp": "2026-02-24T17:32:28.141Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/session-start.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/session-start.js\" 2>/dev/null || true] failed for event SessionStart. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "f8d72710-d68e-4360-af4d-4e5484e6c3b3",
+      "timestamp": "2026-02-24T17:32:28.267Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "639cccab-9f1a-4fa0-8826-5a5e8817c791",
+      "timestamp": "2026-02-24T17:32:28.269Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "c2a5f8bb-b89c-4f1e-9b77-bf75da2181ae",
+      "timestamp": "2026-02-24T17:32:28.275Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "f7bd811e-3a01-4d17-ac0b-8449c11d2d01",
+      "timestamp": "2026-02-24T17:32:28.588Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "2a522205-a785-4691-bd93-41c54497c279",
+      "timestamp": "2026-02-24T17:32:29.682Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'brunella-core': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "d380f05b-bcee-4844-96ed-1d8d32014f8d",
+      "timestamp": "2026-02-24T17:32:29.923Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "acd814ac-6b26-4b64-ae46-643427fe5e1a",
+      "timestamp": "2026-02-24T17:32:29.924Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "b368f740-6b2a-4c9d-9c2e-a49a19d575f9",
+      "timestamp": "2026-02-24T17:32:29.995Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "4652e941-13db-4739-913d-f0a8c5cec1bb",
+      "timestamp": "2026-02-24T17:32:30.690Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "8d06d1d1-5fcc-4a69-a0b0-e94fd76e204b",
+      "timestamp": "2026-02-24T17:32:30.691Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "e3727cf5-95d5-4e77-a2cd-f29f99bd06d0",
+      "timestamp": "2026-02-24T17:32:30.768Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "ebdcf744-b4db-4696-a3f5-08675424d50a",
+      "timestamp": "2026-02-24T17:32:30.947Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "884ddb9e-5448-4816-9c22-b6857d1211d7",
+      "timestamp": "2026-02-24T17:32:37.447Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "223515a9-7a62-447f-baf3-25595a41b70a",
+      "timestamp": "2026-02-24T17:32:37.448Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "54938354-eb3f-4f84-bac3-f7b735cdc287",
+      "timestamp": "2026-02-24T17:32:37.478Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "63a7ad19-c03b-4b53-a550-e59e499f1fb7",
+      "timestamp": "2026-02-24T17:32:37.697Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "593eb8e8-13ed-422a-898f-42f7641ed9e3",
+      "timestamp": "2026-02-24T17:32:37.698Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "867b186f-2c18-4f8b-b79a-bfde958710a0",
+      "timestamp": "2026-02-24T17:32:37.733Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "e4270b3a-f2b9-4ec0-b475-f6f02f56e096",
+      "timestamp": "2026-02-24T17:32:37.860Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "95e93d48-d83f-468b-9e4c-d0543bd3930c",
+      "timestamp": "2026-02-24T17:32:38.066Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'filesystem': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "dd45e158-10c1-44ba-973e-da1ac85e183e",
+      "timestamp": "2026-02-24T17:32:38.217Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "34d3d817-ea8d-4f8d-9440-dad01a2cbfee",
+      "timestamp": "2026-02-24T17:32:38.218Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "ae2756ff-11de-4555-be70-efab5c623da5",
+      "timestamp": "2026-02-24T17:32:38.221Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "1876a908-6025-4cdb-9c94-10ba8f5fbe83",
+      "timestamp": "2026-02-24T17:32:38.629Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "877de2b9-b931-4d22-9702-a4c6ae91b10c",
+      "timestamp": "2026-02-24T17:32:38.630Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "d2641b59-81c7-4072-89a2-fdf040067992",
+      "timestamp": "2026-02-24T17:32:38.670Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "4dd05bf9-c133-45d1-b321-09aa21d964d1",
+      "timestamp": "2026-02-24T17:32:38.785Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "f5de1d63-9330-43e9-85bd-01bfa773fc69",
+      "timestamp": "2026-02-24T17:32:38.956Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'computerUse': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "50f5a55a-bee5-4892-ac3f-5fb6c7f9d423",
+      "timestamp": "2026-02-24T17:32:39.000Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'screenshare': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "7c53bbca-fd98-4869-a7f0-7d27616c69e2",
+      "timestamp": "2026-02-24T17:32:39.034Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'FileSearch': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "9a87da2a-d07f-4894-8485-b7ce79a2a931",
+      "timestamp": "2026-02-24T17:32:39.171Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'reference-library': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "c08e6723-f984-452c-923c-3024ac906ab4",
+      "timestamp": "2026-02-24T17:32:39.275Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "8756e282-8b7b-4ef3-933f-08ff4e4d5f1c",
+      "timestamp": "2026-02-24T17:32:39.302Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "fee85b3c-4623-41d2-b80b-fae62292bd19",
+      "timestamp": "2026-02-24T17:32:39.303Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "25e15baf-b421-4125-a011-3eb41beed818",
+      "timestamp": "2026-02-24T17:32:39.322Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'dataplex': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "5a3779bc-ab58-4e89-92fc-8c0e6eeba43c",
+      "timestamp": "2026-02-24T17:32:39.393Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "d7df07e7-5952-46d0-89d6-d0178c9d8bfd",
+      "timestamp": "2026-02-24T17:32:39.394Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "87520011-89c2-4660-abd3-a29ff5a786d0",
+      "timestamp": "2026-02-24T17:32:39.395Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "06490cc1-6c9c-4eab-bb38-f266f80cfbc2",
+      "timestamp": "2026-02-24T17:32:39.491Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "d03630b3-92bf-4796-b2cb-bf076a428d31",
+      "timestamp": "2026-02-24T17:32:39.510Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "bf0b9bd9-6f05-4c83-8d3c-d8fcf00a8b8a",
+      "timestamp": "2026-02-24T17:32:39.511Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "254cb032-5c00-4f2a-84ba-e24bfc65e254",
+      "timestamp": "2026-02-24T17:32:39.565Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "3072cd13-3234-43ab-b399-f5f1dcfe2108",
+      "timestamp": "2026-02-24T17:32:39.566Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "53edd034-3ac5-49e5-8ee9-1128608d265c",
+      "timestamp": "2026-02-24T17:32:39.567Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "20b1d107-cf09-464e-af7c-a568851ae28c",
+      "timestamp": "2026-02-24T17:32:39.614Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "06162e69-2d75-40bd-b4ef-c77431f9adfd",
+      "timestamp": "2026-02-24T17:32:39.735Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "47b9898b-7f1e-4e66-9e7f-1db76513eb5c",
+      "timestamp": "2026-02-24T17:32:39.746Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "0d7c9e22-619f-4edb-bd69-bd6d1b12efbc",
+      "timestamp": "2026-02-24T17:32:39.747Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "0c5c20fa-65ca-4040-befe-75eb9ef13eda",
+      "timestamp": "2026-02-24T17:32:39.809Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "3a02713e-2bdc-4629-9bcd-c36b2d6c55ce",
+      "timestamp": "2026-02-24T17:32:39.810Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "1a003447-b4fe-490e-b710-7a8ca84a1e73",
+      "timestamp": "2026-02-24T17:32:39.830Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "d6f644e3-7e0d-4ea1-a173-8558ae277538",
+      "timestamp": "2026-02-24T17:32:39.865Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "3ef1b164-5b83-4737-ab91-c218daac92cd",
+      "timestamp": "2026-02-24T17:32:40.573Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "1f5c9192-9c56-4330-b4ca-b037356f052b",
+      "timestamp": "2026-02-24T17:32:40.574Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "0c763355-5445-4f98-af64-3da8e37bc864",
+      "timestamp": "2026-02-24T17:32:40.586Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "1d727930-b1d7-4641-8800-b8507b274239",
+      "timestamp": "2026-02-24T17:32:40.641Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "e2fe73b3-0eec-4760-9182-3020afee4468",
+      "timestamp": "2026-02-24T17:32:40.642Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "132be022-b5bf-4ae1-ae1d-929d763a3718",
+      "timestamp": "2026-02-24T17:32:40.644Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "5e5be93b-f104-4b4d-85c8-c6524ba0eef8",
+      "timestamp": "2026-02-24T17:32:40.685Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "0d11779c-c51b-45d5-a1a1-ed13b6dc3d58",
+      "timestamp": "2026-02-24T17:32:40.790Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "44c7c8ce-aa37-474a-8c4b-808db17bfb6c",
+      "timestamp": "2026-02-24T17:32:40.805Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "e38c101b-351e-46b0-b6cf-26df54831085",
+      "timestamp": "2026-02-24T17:32:40.805Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "543d5df4-b096-4bf9-b77c-9f6f68b3bbab",
+      "timestamp": "2026-02-24T17:32:40.872Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "8e20b4e8-1478-4f57-809f-979a4989e36a",
+      "timestamp": "2026-02-24T17:32:40.873Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "343f3132-5cbc-424f-b1c2-14a320135747",
+      "timestamp": "2026-02-24T17:32:40.895Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "94bb9dc3-3c47-4eb7-9103-031ee1d8b088",
+      "timestamp": "2026-02-24T17:32:40.929Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "4568cc25-db05-4031-877e-0b26935b8a11",
+      "timestamp": "2026-02-24T17:32:41.025Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "0e736a1f-a8a3-440a-877d-b0611665f34a",
+      "timestamp": "2026-02-24T17:32:41.041Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "fac6810f-7166-4936-a595-8a0b8dae0267",
+      "timestamp": "2026-02-24T17:32:41.054Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "09a62509-e7b1-4107-8579-e613760672c7",
+      "timestamp": "2026-02-24T17:32:41.090Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "87eec3a8-39f4-4433-8a17-632b48acc097",
+      "timestamp": "2026-02-24T17:32:41.091Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "e9ade643-a2b0-4ba2-bd3f-a648c1f8e435",
+      "timestamp": "2026-02-24T17:32:41.107Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "7f628384-b83e-4173-84d4-6508a8eaf718",
+      "timestamp": "2026-02-24T17:32:41.136Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "8adba210-338d-4b22-a868-e4c44b03af9c",
+      "timestamp": "2026-02-24T17:32:41.213Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "c33790d0-846d-40e1-9268-67489575e52e",
+      "timestamp": "2026-02-24T17:32:41.217Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "b8afd208-a492-4f95-a209-fbfe9e439412",
+      "timestamp": "2026-02-24T17:32:41.218Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "bf3619a8-2ae4-4563-9463-d59332e3bf94",
+      "timestamp": "2026-02-24T17:32:41.249Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "d15e8c49-a1a7-40e4-af48-f3d7a091e475",
+      "timestamp": "2026-02-24T17:32:41.250Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "d5433ce8-56e4-46e1-9cf8-fafc7a8ccb2d",
+      "timestamp": "2026-02-24T17:32:41.253Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "f2b8a888-10ba-4cd5-b080-f2eea6fd8345",
+      "timestamp": "2026-02-24T17:32:41.275Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "7fcb07ad-dd5b-4ae9-8eb0-0fc387ee08ff",
+      "timestamp": "2026-02-24T17:32:41.360Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "e1f678e7-734b-42ed-acaf-9efdc18d1809",
+      "timestamp": "2026-02-24T17:32:41.360Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "9d58c9fa-1e85-49e2-afd6-10ac402929e6",
+      "timestamp": "2026-02-24T17:32:41.366Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "c37a4322-fc5b-46e9-98d8-ba7fdc9368d0",
+      "timestamp": "2026-02-24T17:32:41.407Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "09d93652-b5cc-4558-9340-9fca90bcf4a3",
+      "timestamp": "2026-02-24T17:32:41.408Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "9e431135-7abb-4195-a448-c0f04b6fa3a2",
+      "timestamp": "2026-02-24T17:32:41.414Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "5431df57-8cc4-4756-80ee-0d0370f6dc77",
+      "timestamp": "2026-02-24T17:32:41.428Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "65fec356-e014-47d0-aad2-0c8339ea23f8",
+      "timestamp": "2026-02-24T17:32:41.533Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "1e2ff4a5-b5d7-4ffd-baac-30e1344da479",
+      "timestamp": "2026-02-24T17:32:41.543Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "ac9a687d-6f60-492a-a497-3294ee8f71d0",
+      "timestamp": "2026-02-24T17:32:41.544Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "f75eb388-0eff-465b-8305-7fb65a0fcb57",
+      "timestamp": "2026-02-24T17:32:41.588Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "21f19409-254a-4a7a-89a0-e13db6342a1f",
+      "timestamp": "2026-02-24T17:32:41.589Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "47bc15fd-ccfa-4b77-abe0-5c4b84b82eab",
+      "timestamp": "2026-02-24T17:32:41.611Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "48a8c2a7-abd7-40d0-8db8-808ec31596b4",
+      "timestamp": "2026-02-24T17:32:41.643Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "0c2a4b0d-bc63-4ed3-bfb8-f515ff45fe59",
+      "timestamp": "2026-02-24T17:32:41.726Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "3e9e270c-2255-42e5-9b49-4c9454fd2d42",
+      "timestamp": "2026-02-24T17:32:41.740Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "2f92521e-1639-400b-bb35-44bd2aee64a3",
+      "timestamp": "2026-02-24T17:32:41.751Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "78b35fc0-6898-4578-817f-d920a515d8b9",
+      "timestamp": "2026-02-24T17:32:41.809Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "c3c917e1-ebba-454c-ac78-f5b0d562322f",
+      "timestamp": "2026-02-24T17:32:41.810Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "6c498820-10cf-4c01-87ce-f1f9de894ccc",
+      "timestamp": "2026-02-24T17:32:41.832Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "a12e8356-b06b-45d1-a22c-dd1ebe9252bb",
+      "timestamp": "2026-02-24T17:32:41.887Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "d3388a3a-3f6e-466d-a20e-3ebfd8d748b8",
+      "timestamp": "2026-02-24T17:32:41.902Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "f398d223-65a6-44a4-967c-1fc1a25796cb",
+      "timestamp": "2026-02-24T17:32:41.903Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "96803b68-ed79-4323-8ff9-1f321b127ad2",
+      "timestamp": "2026-02-24T17:32:41.969Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "fb0f28dd-8302-496d-abd5-96752885bc88",
+      "timestamp": "2026-02-24T17:32:41.986Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "7af567b5-b082-42e5-90b1-6a9d69054c6c",
+      "timestamp": "2026-02-24T17:32:41.986Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "4552041e-5008-4947-ab19-b3c5b2cec03d",
+      "timestamp": "2026-02-24T17:32:42.042Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "1ce152f6-ddbe-4eea-9a8a-60d3e3a138b6",
+      "timestamp": "2026-02-24T17:32:42.043Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "c93e6496-c356-4aa0-9a07-851584c478c1",
+      "timestamp": "2026-02-24T17:32:42.066Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "7c888399-3d24-44e9-8e2c-dfd8a2b9efcc",
+      "timestamp": "2026-02-24T17:32:42.098Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "a565a4b4-5d2b-4ae6-93df-b3831db355b6",
+      "timestamp": "2026-02-24T17:32:42.285Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "124f337c-6c97-4226-b280-ca3bbb10104c",
+      "timestamp": "2026-02-24T17:32:42.289Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "32ae646e-63ee-4058-ba8b-00f6db0a93bf",
+      "timestamp": "2026-02-24T17:32:42.290Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "31944869-03eb-4301-8098-d21f14a3fc41",
+      "timestamp": "2026-02-24T17:32:42.326Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "9edd15bf-98b0-43ac-846f-b22abc0633ec",
+      "timestamp": "2026-02-24T17:32:42.327Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "85b3789f-cce4-448f-9c3c-e19c8a65739e",
+      "timestamp": "2026-02-24T17:32:42.337Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "4c10cb61-401e-4ac2-a9da-0c39c594f623",
+      "timestamp": "2026-02-24T17:32:42.355Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "6692dcb3-dafc-463a-a677-62b01300e502",
+      "timestamp": "2026-02-24T17:32:42.967Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "66a424eb-b2ce-4861-a528-dfc38d817ec2",
+      "timestamp": "2026-02-24T17:32:42.979Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "dae9db4e-02f4-47ad-8caf-6e4a0d48fd4c",
+      "timestamp": "2026-02-24T17:32:42.980Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "d2119d7c-c410-4703-a31f-d8ff97b6f931",
+      "timestamp": "2026-02-24T17:32:43.030Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "1c67b7b8-2cec-420b-aa86-610a6388696e",
+      "timestamp": "2026-02-24T17:32:43.031Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "ae890ccb-b7e3-4e9f-a26c-efc8edacb708",
+      "timestamp": "2026-02-24T17:32:43.054Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "0b7e5f8c-5c73-4b53-a657-b0a643ad7584",
+      "timestamp": "2026-02-24T17:32:43.098Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "fd5f6992-3b0f-49e4-8052-892d82cf1872",
+      "timestamp": "2026-02-24T17:32:43.519Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "096c3806-3c3c-426c-803f-178346850a85",
+      "timestamp": "2026-02-24T17:32:43.520Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "aa88845d-3624-4b42-8ddb-177b2ca5dee0",
+      "timestamp": "2026-02-24T17:32:43.536Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "dc303634-1395-4db4-abf6-265bb0ecb8da",
+      "timestamp": "2026-02-24T17:32:43.600Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "2254983e-0252-4914-8ae0-69f21f2977af",
+      "timestamp": "2026-02-24T17:32:43.601Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "bd9d5caa-193e-4efa-b6f0-1295b3ccae5b",
+      "timestamp": "2026-02-24T17:32:43.618Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "838debcc-da27-49cd-b9da-274d8fc04cbd",
+      "timestamp": "2026-02-24T17:32:43.679Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "7e10b773-8f71-4303-bbd3-e51354d6ea52",
+      "timestamp": "2026-02-24T17:32:43.681Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "d502ceca-bb9b-477a-bdd8-b0210f31ba33",
+      "timestamp": "2026-02-24T17:32:43.703Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "3ddf154d-4cbc-4572-88dc-36cff7fd252a",
+      "timestamp": "2026-02-24T17:32:43.745Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "c32e0862-a999-496e-82ad-24230257f078",
+      "timestamp": "2026-02-24T17:32:44.446Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "83e4a3e1-cf59-4976-9997-2740538c38cb",
+      "timestamp": "2026-02-24T17:32:44.462Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "79bb3bd9-f881-4aab-81d8-730e4b82ca6a",
+      "timestamp": "2026-02-24T17:32:44.463Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "8fc6b151-83db-45da-8529-cf314f294c01",
+      "timestamp": "2026-02-24T17:32:44.521Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "f2310cda-7a75-4004-a9fd-258e143d54c9",
+      "timestamp": "2026-02-24T17:32:44.522Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "d71111c2-2548-4f36-bfff-e58b890aa43b",
+      "timestamp": "2026-02-24T17:32:44.544Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "f18d6a07-e684-468a-8898-52a8f3b0cc0a",
+      "timestamp": "2026-02-24T17:32:44.578Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "e98e6799-92ca-4b66-bdfc-faeda1ab8239",
+      "timestamp": "2026-02-24T17:32:47.042Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "7f7d6426-05fd-4624-b614-49d0595da354",
+      "timestamp": "2026-02-24T17:32:47.043Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "962e1586-548a-4df9-b708-0a2a8067ae88",
+      "timestamp": "2026-02-24T17:32:47.074Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "b5616bfb-c3ee-494e-8f38-01b006ce04a9",
+      "timestamp": "2026-02-24T17:32:47.691Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "6607a66d-90fc-4e85-8926-9693a835a2b7",
+      "timestamp": "2026-02-24T17:32:47.692Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "5e71417a-c1df-4e80-870a-e50af9f50b68",
+      "timestamp": "2026-02-24T17:32:47.694Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "27c92db5-415f-4046-b594-029bcc11de21",
+      "timestamp": "2026-02-24T17:32:47.851Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "0cdbd696-2e7e-401d-b169-11032c27cce9",
+      "timestamp": "2026-02-24T17:32:47.852Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "459d14d5-f96a-429c-9c55-e219a9347b75",
+      "timestamp": "2026-02-24T17:32:47.919Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "eea54cc6-66c1-4043-8277-800fdb5f18e6",
+      "timestamp": "2026-02-24T17:32:47.975Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "b71f7b48-0768-480f-b6fc-c1696aa29ff4",
+      "timestamp": "2026-02-24T17:32:47.976Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "800146ec-1462-4986-bc45-99e7b8a408c8",
+      "timestamp": "2026-02-24T17:32:47.979Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "5fe03339-42c3-44fa-b2af-0c4c32dc100c",
+      "timestamp": "2026-02-24T17:32:48.019Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "1f7bd2a3-487a-488b-b6a8-ae3b26636feb",
+      "timestamp": "2026-02-24T17:33:26.411Z",
+      "type": "info",
+      "content": "Gemini CLI update available! 0.29.6 → 0.29.7\nInstalled with npm. Attempting to automatically update now..."
+    },
+    {
+      "id": "c5c690b0-4ddf-44f5-ab9c-eae4f90338ec",
+      "timestamp": "2026-02-24T17:34:20.182Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'uuv': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "39a7f554-c98e-4c30-9e3b-b04ad987e3c6",
+      "timestamp": "2026-02-24T17:34:20.261Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "d9c9339a-c9ec-48c7-8360-976774c63ea9",
+      "timestamp": "2026-02-24T17:34:20.262Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "32767262-4c6c-456d-b970-8b919993f595",
+      "timestamp": "2026-02-24T17:34:20.278Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "21d4091f-3d05-4047-b56e-39063f38308d",
+      "timestamp": "2026-02-24T17:34:20.414Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "4c29866a-58ac-4f04-a899-939546133c26",
+      "timestamp": "2026-02-24T17:34:20.425Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "ab0e3c8f-2221-415a-896c-adeaab49d1bf",
+      "timestamp": "2026-02-24T17:34:20.425Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "76c0ce6b-f7b0-4f7d-b5a5-1b6db354705e",
+      "timestamp": "2026-02-24T17:34:20.471Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "ae15ef93-92f1-49ce-a02c-8c3b964c882d",
+      "timestamp": "2026-02-24T17:34:20.473Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "d8e0f4c8-d65d-4f53-a383-b4a510667171",
+      "timestamp": "2026-02-24T17:34:20.489Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "254e6c09-e03f-478e-a923-4c7b1ea037e2",
+      "timestamp": "2026-02-24T17:34:20.523Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "e8bdad4a-dfb5-4e22-ae42-04d02c4805e0",
+      "timestamp": "2026-02-24T17:34:41.680Z",
+      "type": "info",
+      "content": "Update successful! The new version will be used on your next run."
+    },
+    {
+      "id": "52285760-f295-4722-893c-d45d7b3dafa2",
+      "timestamp": "2026-02-24T17:43:02.402Z",
+      "type": "info",
+      "content": "Opening extensions page in your browser: https://geminicli.com/extensions/"
+    },
+    {
+      "id": "cefdeb0e-4f0e-43f7-8abe-dc18a151b363",
+      "timestamp": "2026-02-24T17:46:26.620Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/pre-compact.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/pre-compact.js\" 2>/dev/null || true] failed for event PreCompress. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "26600fcf-9e09-4a65-8ca7-59ff3d36c2d2",
+      "timestamp": "2026-02-24T17:46:26.630Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "ki tudnád nekem listázni a bövítményeket magyarul melyik milyen funciót kapcsolt be és mire lehet használni kérlek?"
+        }
+      ]
+    },
+    {
+      "id": "53976ad2-bb62-42f2-9dce-9ab1b8635b4d",
+      "timestamp": "2026-02-24T17:47:26.723Z",
+      "type": "gemini",
+      "content": "Rendben, örömmel listázom neked a Gemini CLI bővítményeket, magyarul, kitérve a fő funkcióikra és felhasználási területeikre. Ezek a kiterjesztések adják a Brunella Agent System \"szuperképességeit\".\n\nÍme a listád:\n\n### 🧩 Gemini CLI Bővítmények - Képességek és Használat\n\n**1. `skill-creator` (Készség-létrehozó)**\n*   **Funkció:** Segít új készségeket (skill) létrehozni vagy meglévőket frissíteni a Gemini CLI számára.\n*   **Használat:** Ha a Gemini CLI képességeit bővíteni szeretnéd egy új, speciális tudásterülettel vagy munkafolyamattal.\n\n**2. `apify-ultimate-scraper` (Apify Végső Webkaparó)**\n*   **Funkció:** Univerzális, AI-alapú webkaparó a legtöbb platformról (Instagram, Facebook, TikTok, YouTube, Google Maps, stb.).\n*   **Használat:** Lead generálásra, márkafigyelésre, versenytárselemzésre, trendkutatásra, vagy bármilyen adatkinyerési feladatra.\n\n**3. `apify-trend-analysis` (Apify Trendelemzés)**\n*   **Funkció:** Feltörekvő trendek felfedezése és követése a Google Trends, Instagram, Facebook, YouTube és TikTok platformokon.\n*   **Használat:** Tartalomstratégia kialakításához és piaci elemzésekhez.\n\n**4. `apify-market-research` (Apify Piackutatás)**\n*   **Funkció:** Piaci feltételek, földrajzi lehetőségek, árazás, fogyasztói magatartás elemzése a Google Maps, Facebook, Instagram, Booking.com, TripAdvisor adatai alapján.\n*   **Használat:** Részletes piackutatáshoz és üzleti döntések alátámasztásához.\n\n**5. `apify-lead-generation` (Apify Lead Generálás)**\n*   **Funkció:** B2B/B2C leadek generálása weboldalak, Google Maps, Instagram, TikTok, Facebook, LinkedIn, YouTube és Google Kereső adatainak kaparásával.\n*   **Használat:** Prospektusok felkutatására, lead listák építésére, kapcsolati adatok gazdagítására, értékesítési megkeresésekhez.\n\n**6. `apify-influencer-discovery` (Apify Influenszer Keresés)**\n*   **Funkció:** Influenszerek keresése és értékelése márkapartnerségekhez, hitelesség ellenőrzése, együttműködések teljesítményének követése.\n*   **Használat:** Marketing kampányokhoz és befolyásolók azonosításához.\n\n**7. `apify-ecommerce` (Apify E-kereskedelem)**\n*   **Funkció:** E-kereskedelmi adatok kaparása árfigyeléshez, vásárlói véleményekhez és eladók felkutatásához az Amazon, Walmart, eBay és 50+ piactéren.\n*   **Használat:** Árfigyelésre, versenytársak követésére, termékkutatásra, vélemények elemzésére.\n\n**8. `apify-content-analytics` (Apify Tartalomelemzés)**\n*   **Funkció:** Elkötelezettségi mutatók követése, kampány ROI mérése és tartalom teljesítményének elemzése az Instagram, Facebook, YouTube és TikTok platformokon.\n*   **Használat:** Tartalomstratégia optimalizálásához és kampányelemzéshez.\n\n**9. `apify-competitor-intelligence` (Apify Versenytárs Elemzés)**\n*   **Funkció:** Versenytársak stratégiáinak, tartalmainak, árazásának, hirdetéseinek és piaci pozíciójának elemzése számos platformon.\n*   **Használat:** Versenytársak megfigyelésére és piaci előny szerzésére.\n\n**10. `apify-brand-reputation-monitoring` (Apify Márka Hírnév Figyelés)**\n*   **Funkció:** Vélemények, értékelések, hangulat és márkaemlítések követése a Google Maps, Booking.com, TripAdvisor, Facebook, Instagram, YouTube és TikTok platformokon.\n*   **Használat:** Márka hírnevének figyelésére, ügyfél visszajelzések gyűjtésére.\n\n**11. `apify-audience-analysis` (Apify Közönségelemzés)**\n*   **Funkció:** Közönség demográfiai adatainak, preferenciáinak, viselkedési mintáinak és elkötelezettségének elemzése a Facebook, Instagram, YouTube és TikTok platformokon.\n*   **Használat:** Célközönség jobb megértéséhez és marketing célzás optimalizálásához.\n\n**12. `apify-actorization` (Apify Actorizálás)**\n*   **Funkció:** Meglévő projektek (JS/TS, Python, vagy bármilyen nyelv) Apify Actorokká alakítása.\n*   **Használat:** Kód Apify platformra való migrálásához, CLI eszközök Actorokká alakításához.\n\n**13. `apify-actor-development` (Apify Actor Fejlesztés)**\n*   **Funkció:** Apify Actorok (szerver nélküli felhőprogramok) fejlesztése, debugolása és telepítése webkaparáshoz, automatizáláshoz és adatfeldolgozáshoz.\n*   **Használat:** Új Actorok létrehozásához, meglévők módosításához vagy Actor kódok hibaelhárításához.\n\n**14. `chrome-devtools` (Chrome DevTools)**\n*   **Funkció:** Hatékony hibakeresés, böngésző automatizálás, teljesítményelemzés és hálózati kérések vizsgálata a Chrome DevTools protokollon keresztül.\n*   **Használat:** Weboldalak hibakereséséhez, böngésző interakciók automatizálásához.\n\n**15. `tdd-workflow` (TDD Munkafolyamat)**\n*   **Funkció:** A tesztvezérelt fejlesztés (TDD) kikényszerítése, legalább 80%-os tesztlefedettséggel.\n*   **Használat:** Új funkciók írásához, hibák javításához vagy kód refaktorálásához.\n\n**16. `strategic-compact` (Stratégiai Kompaktálás)**\n*   **Funkció:** Javasolja a manuális kontextus kompaktálását logikai időközönként, a kontextus megőrzése érdekében.\n*   **Használat:** Hosszú munkamenetek során a kontextus méretének menedzseléséhez.\n\n**17. `springboot-verification` (Spring Boot Verifikáció)**\n*   **Funkció:** Verifikációs ciklus Spring Boot projektekhez: build, statikus analízis, tesztek lefedettséggel, biztonsági ellenőrzések.\n*   **Használat:** Release vagy PR előtt a minőségbiztosításhoz.\n\n**18. `springboot-tdd` (Spring Boot TDD)**\n*   **Funkció:** Tesztvezérelt fejlesztés Spring Boot alkalmazásokhoz JUnit 5, Mockito, MockMvc, Testcontainers és JaCoCo használatával.\n*   **Használat:** Funkciók hozzáadásához, hibák javításához vagy refaktoráláshoz.\n\n**19. `springboot-security` (Spring Boot Biztonság)**\n*   **Funkció:** Spring Security legjobb gyakorlatok: autentikáció/autorizáció, validáció, CSRF, titkok kezelése, fejlécek, sebességkorlátozás és függőségi biztonság.\n*   **Használat:** Spring Boot alapú Java szolgáltatások biztonságos fejlesztéséhez.\n\n**20. `springboot-patterns` (Spring Boot Minták)**\n*   **Funkció:** Spring Boot architektúra minták, REST API tervezés, réteges szolgáltatások, adatelérés, gyorsítótárazás, aszinkron feldolgozás és naplózás.\n*   **Használat:** Java Spring Boot backend fejlesztési feladatokhoz.\n\n**21. `security-review` (Biztonsági Felülvizsgálat)**\n*   **Funkció:** Átfogó biztonsági ellenőrzési lista és minták.\n*   **Használat:** Hitelesítés hozzáadásakor, felhasználói bevitel kezelésekor, titkokkal való munka során, API végpontok létrehozásakor vagy érzékeny funkciók implementálásakor.\n\n**22. `python-testing` (Python Tesztelés)**\n*   **Funkció:** Python tesztelési stratégiák pytest-tel, TDD módszertannal, fixture-ökkel, mockinggal, parametrizálással és lefedettségi követelményekkel.\n*   **Használat:** Python kód teszteléséhez.\n\n**23. `python-patterns` (Python Minták)**\n*   **Funkció:** Pythonikus idiómák, PEP 8 szabványok és legjobb gyakorlatok robusztus, hatékony és karbantartható Python alkalmazások építéséhez.\n*   **Használat:** Python kód írásához.\n\n**24. `postgres-patterns` (PostgreSQL Minták)**\n*   **Funkció:** PostgreSQL adatbázis minták lekérdezés optimalizáláshoz, séma tervezéshez, indexeléshez és biztonsághoz.\n*   **Használat:** PostgreSQL adatbázisokkal való munkához.\n\n**25. `nutrient-document-processing` (Nutrient Dokumentumfeldolgozás)**\n*   **Funkció:** Dokumentumok feldolgozása, konvertálása, OCR, kinyerése, redaktálása, aláírása és kitöltése a Nutrient DWS API segítségével.\n*   **Használat:** PDF-ek, DOCX, XLSX, PPTX, HTML és képek kezeléséhez.\n\n**26. `jpa-patterns` (JPA Minták)**\n*   **Funkció:** JPA/Hibernate minták entitás tervezéshez, kapcsolatokhoz, lekérdezés optimalizáláshoz, tranzakciókhoz, auditáláshoz, indexeléshez, lapozáshoz és poolinghoz Spring Bootban.\n*   **Használat:** Java Spring Boot projektekben JPA/Hibernate használatához.\n\n**27. `java-coding-standards` (Java Kódolási Szabványok)**\n*   **Funkció:** Java kódolási szabványok Spring Boot szolgáltatásokhoz: elnevezés, immutabilitás, Optional használat, streamek, kivételek, generikusok és projekt elrendezés.\n*   **Használat:** Java Spring Boot kód írásához.\n\n**28. `iterative-retrieval` (Iteratív Visszakeresés)**\n*   **Funkció:** Minta a kontextus visszakeresés fokozatos finomítására a subagent kontextus problémájának megoldására.\n*   **Használat:** Komplex feladatoknál a releváns információk pontosabb azonosításához.\n\n**29. `golang-testing` (Go Tesztelés)**\n*   **Funkció:** Go tesztelési minták: táblázatvezérelt tesztek, altesztek, benchmarkok, fuzzing és tesztlefedettség. TDD módszertant követ.\n*   **Használat:** Go kód teszteléséhez.\n\n**30. `golang-patterns` (Go Minták)**\n*   **Funkció:** Idiomatikus Go minták, legjobb gyakorlatok és konvenciók robusztus, hatékony és karbantartható Go alkalmazások építéséhez.\n*   **Használat:** Go kód írásához.\n\n**31. `frontend-patterns` (Frontend Minták)**\n*   **Funkció:** Frontend fejlesztési minták React, Next.js, állapotkezeléshez, teljesítményoptimalizáláshoz és UI legjobb gyakorlatokhoz.\n*   **Használat:** React és Next.js alapú frontend fejlesztéshez.\n\n**32. `eval-harness` (Értékelési Keretrendszer)**\n*   **Funkció:** Formális értékelési keretrendszer Gemini CLI sessionökhöz, eval-driven development (EDD) alapelvekkel.\n*   **Használat:** Az ügynök teljesítményének mérésére és javítására.\n\n**33. `django-verification` (Django Verifikáció)**\n*   **Funkció:** Verifikációs ciklus Django projektekhez: migrációk, linting, tesztek lefedettséggel, biztonsági ellenőrzések.\n*   **Használat:** Release vagy PR előtt a minőségbiztosításhoz.\n\n**34. `django-tdd` (Django TDD)**\n*   **Funkció:** Django tesztelési stratégiák pytest-django-val, TDD módszertannal, factory_boy-jal, mockinggal, lefedettséggel és Django REST Framework API-k tesztelésével.\n*   **Használat:** Django kód teszteléséhez.\n\n**35. `django-security` (Django Biztonság)**\n*   **Funkció:** Django biztonsági legjobb gyakorlatok: hitelesítés, autorizáció, CSRF védelem, SQL injekció megelőzése, XSS megelőzése és biztonságos telepítési konfigurációk.\n*   **Használat:** Django alkalmazások biztonságos fejlesztéséhez.\n\n**36. `django-patterns` (Django Minták)**\n*   **Funkció:** Django architektúra minták, REST API tervezés DRF-fel, ORM legjobb gyakorlatok, gyorsítótárazás, jelek, middleware és production-grade Django alkalmazások.\n*   **Használat:** Django backend fejlesztéshez.\n\n**37. `continuous-learning-v2` (Folyamatos Tanulás V2)**\n*   **Funkció:** Instinktus-alapú tanulási rendszer, amely megfigyeli a sessionöket, atomi instinktusokat hoz létre és készségekké/parancsokká/ügynökökké alakítja őket.\n*   **Használat:** Az ügynök képességeinek automatikus bővítéséhez.\n\n**38. `continuous-learning` (Folyamatos Tanulás)**\n*   **Funkció:** Reutilizálható minták automatikus kinyerése a Gemini CLI sessionökből és elmentésük tanulási készségként.\n*   **Használat:** Az ügynök képességeinek automatikus bővítéséhez.\n\n**39. `configure-ecc` (ECC Konfigurálás)**\n*   **Funkció:** Interaktív telepítő az Everything Gemini CLI-hez, amely végigvezeti a felhasználókat a készségek és szabályok kiválasztásán és telepítésén.\n*   **Használat:** A Gemini CLI környezet beállításához és testreszabásához.\n\n**40. `coding-standards` (Kódolási Szabványok)**\n*   **Funkció:** Univerzális kódolási szabványok, legjobb gyakorlatok és minták TypeScript, JavaScript, React és Node.js fejlesztéshez.\n*   **Használat:** Kód írásához.\n\n**41. `clickhouse-io` (ClickHouse IO)**\n*   **Funkció:** ClickHouse adatbázis minták, lekérdezés optimalizálás, analitika és adat mérnöki legjobb gyakorlatok nagy teljesítményű analitikai feladatokhoz.\n*   **Használat:** ClickHouse adatbázisokkal való munkához.\n\n**42. `backend-patterns` (Backend Minták)**\n*   **Funkció:** Backend architektúra minták, API tervezés, adatbázis optimalizálás és szerver-oldali legjobb gyakorlatok Node.js, Express és Next.js API route-okhoz.\n*   **Használat:** Backend fejlesztéshez.\n\n**43. `testing` (Tesztelés)**\n*   **Funkció:** Egységes tesztelési parancsok és minták frontend és backend között.\n*   **Használat:** Teszteléshez.\n\n**44. `session-resume` (Munkamenet Folytatás)**\n*   **Funkció:** Kontextus folytatása az előző munkamenetből.\n*   **Használat:** Munkamenetek közötti zökkenőmentes átmenethez.\n\n**45. `file-todos` (Fájl alapú Teendők)**\n*   **Funkció:** Fájl alapú teendőkövetés kezelése a `todos/` könyvtárban.\n*   **Használat:** Feladatok szervezéséhez és követéséhez.\n\n**46. `debug` (Hibakeresés)**\n*   **Funkció:** Szisztematikus hibakeresés strukturált reprodukcióval és a hiba okának elemzésével.\n*   **Használat:** Hibák és váratlan viselkedések elemzéséhez.\n\n**47. `compound-docs` (Összetett Dokumentumok)**\n*   **Funkció:** Megoldott problémák dokumentálása a tudás megőrzése érdekében.\n*   **Használat:** Tudásbázis építéséhez.\n\n**48. `code-review` (Kód Felülvizsgálat)**\n*   **Funkció:** Önálló kód felülvizsgálati módszertan strukturált, súlyosság szerint osztályozott kódértékeléshez.\n*   **Használat:** Kód minőségének ellenőrzéséhez.\n\n**49. `council-chairman` (Tanács Elnöke)**\n*   **Funkció:** Az LLM Tanács (több-modelles kollektíva) kezelése és konzultációja szakértői tanácsokért.\n*   **Használat:** Konfigurálhatod a tanács tagjait, ellenőrizheted az állapotukat, vagy kérhetsz \"Konzultációt\", ahol több LLM független tervezeteket és peer review-kat biztosít a magas minőségű szintézis érdekében.\n\n**50. `writing-skills` (Készségírás)**\n*   **Funkció:** Útmutató hatékony készségek létrehozásához.\n*   **Használat:** Új készségek létrehozásához vagy meglévők frissítéséhez.\n\n**51. `writing-plans` (Tervezés)**\n*   **Funkció:** Használja, ha specifikációja vagy követelményei vannak egy több lépésből álló feladathoz, még mielőtt a kódhoz nyúlna.\n*   **Használat:** Részletes implementációs tervek készítéséhez.\n\n**52. `verification-before-completion` (Verifikáció Befejezés Előtt)**\n*   **Funkció:** Minden munka befejezése előtt futtass ellenőrző parancsokat és erősítsd meg a kimenetet.\n*   **Használat:** A munka minőségének biztosításához.\n\n**53. `using-superpowers` (Szuperképességek Használata)**\n*   **Funkció:** Bevezető a készségek használatához, megkövetelve a Skill eszköz hívását bármilyen válasz előtt.\n*   **Használat:** A Gemini CLI képességeinek felfedezéséhez.\n\n**54. `using-git-worktrees` (Git Worktree-k Használata)**\n*   **Funkció:** Elszigetelt git worktree-k létrehozása.\n*   **Használat:** Funkciófejlesztéshez.\n\n**55. `test-driven-development` (Tesztvezérelt Fejlesztés)**\n*   **Funkció:** Tesztvezérelt fejlesztés (TDD) implementálása bármilyen funkció vagy hibajavítás során.\n*   **Használat:** Minőségi kód írásához.\n\n**56. `systematic-debugging` (Szisztematikus Hibakeresés)**\n*   **Funkció:** Szisztematikus hibakeresés bármilyen bug, teszt kudarc vagy váratlan viselkedés esetén.\n*   **Használat:** Hibák megoldásához.\n\n**57. `subagent-driven-development` (Subagent-vezérelt Fejlesztés)**\n*   **Funkció:** Implementációs tervek végrehajtása független feladatokkal az aktuális munkamenetben.\n*   **Használat:** Komplex feladatok felosztásához.\n\n**58. `requesting-code-review` (Kód Felülvizsgálat Kérése)**\n*   **Funkció:** Kód felülvizsgálat kérése, mielőtt a változtatásokat egyesítenék vagy PR-t hoznának létre.\n*   **Használat:** Kód minőségének és megfelelőségének ellenőrzéséhez.\n\n**59. `receiving-code-review` (Kód Felülvizsgálat Fogadása)**\n*   **Funkció:** Kód felülvizsgálati visszajelzések fogadása és feldolgozása.\n*   **Használat:** Visszajelzések alapján történő fejlesztéshez.\n\n**60. `finishing-a-development-branch` (Fejlesztési ág Befejezése)**\n*   **Funkció:** Útmutató a fejlesztési munka befejezéséhez és integrálásához.\n*   **Használat:** Fejlesztési ágak lezárásához.\n\n**61. `executing-plans` (Tervek Végrehajtása)**\n*   **Funkció:** Implementációs tervek végrehajtása külön munkamenetben, ellenőrző pontokkal.\n*   **Használat:** Tervek megvalósításához.\n\n**62. `dispatching-parallel-agents` (Párhuzamos Ügynökök Kiküldése)**\n*   **Funkció:** 2+ független feladat kezelése párhuzamos ügynökökkel.\n*   **Használat:** Több feladat egyidejű végrehajtásához.\n\n**63. `code-reviewer` (Kód Felülvizsgáló)**\n*   **Funkció:** Kód felülvizsgálata az eredeti terv és a kódolási szabványok alapján.\n*   **Használat:** Kód minőségének ellenőrzéséhez.\n\n**64. `brainstorming` (Ötletelés)**\n*   **Funkció:** Felhasználói szándék, követelmények és tervezés feltárása implementáció előtt.\n*   **Használat:** Kreatív munkához.\n\n**65. `validation` (Validáció)**\n*   **Funkció:** Keresztmetszeti validációs módszertan a fázis kimenetek és a projekt integritásának ellenőrzésére.\n*   **Használat:** A projekt integritásának biztosításához.\n\n**66. `session-management` (Munkamenet Kezelés)**\n*   **Funkció:** Orchestrációs munkamenet állapotának, követésének és folytatásának kezelése.\n*   **Használat:** Munkamenetek kezeléséhez.\n\n**67. `implementation-planning` (Implementációs Tervezés)**\n*   **Funkció:** Részletes implementációs tervek generálása véglegesített tervek alapján.\n*   **Használat:** Tervezéshez.\n\n**68. `execution` (Végrehajtás)**\n*   **Funkció:** Fázisvégrehajtási módszertan orchestrációs munkafolyamatokhoz, hibakezeléssel és befejezési protokollokkal.\n*   **Használat:** Munkafolyamatok végrehajtásához.\n\n**69. `design-dialogue` (Tervezési Párbeszéd)**\n*   **Funkció:** Strukturált tervezési beszélgetések irányítása komplex mérnöki feladatokhoz.\n*   **Használat:** Tervezési fázisban.\n\n**70. `delegation` (Delegálás)**\n*   **Funkció:** Ügynök delegálási legjobb gyakorlatok hatékony subagent promptok konstruálásához.\n*   **Használat:** Feladatok delegálásához.\n\n**71. `prompt engineering` (Prompt Mérnök)**\n*   **Funkció:** Promptok létrehozása, finomítása, elemzése vagy optimalizálása nagy nyelvi modellek (LLM) számára.\n*   **Használat:** Promptok tervezéséhez és optimalizálásához.\n\n**72. `expert-librarian` (Szakértő Könyvtáros)**\n*   **Funkció:** Segít rendszerezni, keresni és szintetizálni a Readwise highlightokat és dokumentumokat.\n*   **Használat:** Tudásbázis kezeléséhez.\n\n**73. `package-manager-expert` (Csomagkezelő Szakértő)**\n*   **Funkció:** Windows szoftvercsomagok telepítésének megtalálása és javaslása (WinGet).\n*   **Használat:** Windows környezet beállításához.\n\n**74. `security-audit` (Biztonsági Audit)**\n*   **Funkció:** Átfogó biztonsági audit.\n*   **Használat:** Biztonsági felülvizsgálathoz.",
+      "thoughts": [],
+      "tokens": {
+        "input": 480925,
+        "output": 6031,
+        "cached": 0,
+        "thoughts": 0,
+        "tool": 0,
+        "total": 486956
+      },
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "id": "4fa77c2f-9742-4ad1-96e5-791a576ee0ee",
+      "timestamp": "2026-02-24T17:47:27.430Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/check-console-log.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/check-console-log.js\" 2>/dev/null || true] failed for event AfterAgent. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "43e3eb88-eee2-494b-aa2b-4ff4fc4b4990",
+      "timestamp": "2026-02-24T17:48:09.187Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/pre-compact.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/pre-compact.js\" 2>/dev/null || true] failed for event PreCompress. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "1576964f-e758-4687-b015-a1961d5b159a",
+      "timestamp": "2026-02-24T17:48:09.197Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "fuh egy BOVITMENY.md fájlba kérlek mentsd le nekem a projekt gyökerébe"
+        }
+      ]
+    },
+    {
+      "id": "89c4b551-af10-4eab-bfd1-c0a1b14edbd2",
+      "timestamp": "2026-02-24T17:49:17.906Z",
+      "type": "gemini",
+      "content": "Nagyszerű ötlet! Elkészítem a `BOVITMENY.md` fájlt a projekt gyökerében a kért tartalommal.",
+      "thoughts": [
+        {
+          "subject": "Creating the File",
+          "description": "I'm ready to write the list of extensions to `BOVITMENY.md`. I'll use the `write_file` tool to make sure this happens in the project root. This should be a straightforward operation.",
+          "timestamp": "2026-02-24T17:49:12.710Z"
+        }
+      ],
+      "tokens": {
+        "input": 473675,
+        "output": 6006,
+        "cached": 0,
+        "thoughts": 45,
+        "tool": 0,
+        "total": 479726
+      },
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "id": "31c8431f-8e00-4e6d-801d-db0c12ee211d",
+      "timestamp": "2026-02-24T17:49:18.638Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/suggest-compact.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/suggest-compact.js\" 2>/dev/null || true] failed for event BeforeTool. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "f093e490-932e-4b69-97c6-dc923c7a790b",
+      "timestamp": "2026-02-24T17:49:18.679Z",
+      "type": "gemini",
+      "content": "",
+      "toolCalls": [
+        {
+          "id": "write_file_1771955357904_0",
+          "name": "write_file",
+          "args": {
+            "file_path": "BOVITMENY.md",
+            "content": "### 🧩 Gemini CLI Bővítmények - Képességek és Használat\n\n**1. `skill-creator` (Készség-létrehozó)**\n*   **Funkció:** Segít új készségeket (skill) létrehozni vagy meglévőket frissíteni a Gemini CLI számára.\n*   **Használat:** Ha a Gemini CLI képességeit bővíteni szeretnéd egy új, speciális tudásterülettel vagy munkafolyamattal.\n\n**2. `apify-ultimate-scraper` (Apify Végső Webkaparó)**\n*   **Funkció:** Univerzális, AI-alapú webkaparó a legtöbb platformról (Instagram, Facebook, TikTok, YouTube, Google Maps, stb.).\n*   **Használat:** Lead generálásra, márkafigyelésre, versenytárselemzésre, trendkutatásra, vagy bármilyen adatkinyerési feladatra.\n\n**3. `apify-trend-analysis` (Apify Trendelemzés)**\n*   **Funkció:** Feltörekvő trendek felfedezése és követése a Google Trends, Instagram, Facebook, YouTube és TikTok platformokon.\n*   **Használat:** Tartalomstratégia kialakításához és piaci elemzésekhez.\n\n**4. `apify-market-research` (Apify Piackutatás)**\n*   **Funkció:** Piaci feltételek, földrajzi lehetőségek, árazás, fogyasztói magatartás elemzése a Google Maps, Facebook, Instagram, Booking.com, TripAdvisor adatai alapján.\n*   **Használat:** Részletes piackutatáshoz és üzleti döntések alátámasztásához.\n\n**5. `apify-lead-generation` (Apify Lead Generálás)**\n*   **Funkció:** B2B/B2C leadek generálása weboldalak, Google Maps, Instagram, TikTok, Facebook, LinkedIn, YouTube és Google Kereső adatainak kaparásával.\n*   **Használat:** Prospektusok felkutatására, lead listák építésére, kapcsolati adatok gazdagítására, értékesítési megkeresésekhez.\n\n**6. `apify-influencer-discovery` (Apify Influenszer Keresés)**\n*   **Funkció:** Influenszerek keresése és értékelése márkapartnerségekhez, hitelesség ellenőrzése, együttműködések teljesítményének követése.\n*   **Használat:** Marketing kampányokhoz és befolyásolók azonosításához.\n\n**7. `apify-ecommerce` (Apify E-kereskedelem)**\n*   **Funkció:** E-kereskedelmi adatok kaparása árfigyeléshez, vásárlói véleményekhez és eladók felkutatásához az Amazon, Walmart, eBay és 50+ piactéren.\n*   **Használat:** Árfigyelésre, versenytársak követésére, termékkutatásra, vélemények elemzésére.\n\n**8. `apify-content-analytics` (Apify Tartalomelemzés)**\n*   **Funkció:** Elkötelezettségi mutatók követése, kampány ROI mérése és tartalom teljesítményének elemzése az Instagram, Facebook, YouTube és TikTok platformokon.\n*   **Használat:** Tartalomstratégia optimalizálásához és kampányelemzéshez.\n\n**9. `apify-competitor-intelligence` (Apify Versenytárs Elemzés)**\n*   **Funkció:** Versenytársak stratégiáinak, tartalmainak, árazásának, hirdetéseinek és piaci pozíciójának elemzése számos platformon.\n*   **Használat:** Versenytársak megfigyelésére és piaci előny szerzésére.\n\n**10. `apify-brand-reputation-monitoring` (Apify Márka Hírnév Figyelés)**\n*   **Funkció:** Vélemények, értékelések, hangulat és márkaemlítések követése a Google Maps, Booking.com, TripAdvisor, Facebook, Instagram, YouTube és TikTok platformokon.\n*   **Használat:** Márka hírnevének figyelésére, ügyfél visszajelzések gyűjtésére.\n\n**11. `apify-audience-analysis` (Apify Közönségelemzés)**\n*   **Funkció:** Közönség demográfiai adatainak, preferenciáinak, viselkedési mintáinak és elkötelezettségének elemzése a Facebook, Instagram, YouTube és TikTok platformokon.\n*   **Használat:** Célközönség jobb megértéséhez és marketing célzás optimalizálásához.\n\n**12. `apify-actorization` (Apify Actorizálás)**\n*   **Funkció:** Meglévő projektek (JS/TS, Python, vagy bármilyen nyelv) Apify Actorokká alakítása.\n*   **Használat:** Kód Apify platformra való migrálásához, CLI eszközök Actorokká alakításához.\n\n**13. `apify-actor-development` (Apify Actor Fejlesztés)**\n*   **Funkció:** Apify Actorok (szerver nélküli felhőprogramok) fejlesztése, debugolása és telepítése webkaparáshoz, automatizáláshoz és adatfeldolgozáshoz.\n*   **Használat:** Új Actorok létrehozásához, meglévők módosításához vagy Actor kódok hibaelhárításához.\n\n**14. `chrome-devtools` (Chrome DevTools)**\n*   **Funkció:** Hatékony hibakeresés, böngésző automatizálás, teljesítményelemzés és hálózati kérések vizsgálata a Chrome DevTools protokollon keresztül.\n*   **Használat:** Weboldalak hibakereséséhez, böngésző interakciók automatizálásához.\n\n**15. `tdd-workflow` (TDD Munkafolyamat)**\n*   **Funkció:** A tesztvezérelt fejlesztés (TDD) kikényszerítése, legalább 80%-os tesztlefedettséggel.\n*   **Használat:** Új funkciók írásához, hibák javításához vagy kód refaktorálásához.\n\n**16. `strategic-compact` (Stratégiai Kompaktálás)**\n*   **Funkció:** Javasolja a manuális kontextus kompaktálását logikai időközönként, a kontextus megőrzése érdekében.\n*   **Használat:** Hosszú munkamenetek során a kontextus méretének menedzseléséhez.\n\n**17. `springboot-verification` (Spring Boot Verifikáció)**\n*   **Funkció:** Verifikációs ciklus Spring Boot projektekhez: build, statikus analízis, tesztek lefedettséggel, biztonsági ellenőrzések.\n*   **Használat:** Release vagy PR előtt a minőségbiztosításhoz.\n\n**18. `springboot-tdd` (Spring Boot TDD)**\n*   **Funkció:** Tesztvezérelt fejlesztés Spring Boot alkalmazásokhoz JUnit 5, Mockito, MockMvc, Testcontainers és JaCoCo használatával.\n*   **Használat:** Funkciók hozzáadásához, hibák javításához vagy refaktoráláshoz.\n\n**19. `springboot-security` (Spring Boot Biztonság)**\n*   **Funkció:** Spring Security legjobb gyakorlatok: autentikáció/autorizáció, validáció, CSRF, titkok kezelése, fejlécek, sebességkorlátozás és függőségi biztonság.\n*   **Használat:** Spring Boot alapú Java szolgáltatások biztonságos fejlesztéséhez.\n\n**20. `springboot-patterns` (Spring Boot Minták)**\n*   **Funkció:** Spring Boot architektúra minták, REST API tervezés, réteges szolgáltatások, adatelérés, gyorsítótárazás, aszinkron feldolgozás és naplózás.\n*   **Használat:** Java Spring Boot backend fejlesztési feladatokhoz.\n\n**21. `security-review` (Biztonsági Felülvizsgálat)**\n*   **Funkció:** Átfogó biztonsági ellenőrzési lista és minták.\n*   **Használat:** Hitelesítés hozzáadásakor, felhasználói bevitel kezelésekor, titkokkal való munka során, API végpontok létrehozásakor vagy érzékeny funkciók implementálásakor.\n\n**22. `python-testing` (Python Tesztelés)**\n*   **Funkció:** Python tesztelési stratégiák pytest-tel, TDD módszertannal, fixture-ökkel, mockinggal, parametrizálással és lefedettségi követelményekkel.\n*   **Használat:** Python kód teszteléséhez.\n\n**23. `python-patterns` (Python Minták)**\n*   **Funkció:** Pythonikus idiómák, PEP 8 szabványok és legjobb gyakorlatok robusztus, hatékony és karbantartható Python alkalmazások építéséhez.\n*   **Használat:** Python kód írásához.\n\n**24. `postgres-patterns` (PostgreSQL Minták)**\n*   **Funkció:** PostgreSQL adatbázis minták lekérdezés optimalizáláshoz, séma tervezéshez, indexeléshez és biztonsághoz.\n*   **Használat:** PostgreSQL adatbázisokkal való munkához.\n\n**25. `nutrient-document-processing` (Nutrient Dokumentumfeldolgozás)**\n*   **Funkció:** Dokumentumok feldolgozása, konvertálása, OCR, kinyerése, redaktálása, aláírása és kitöltése a Nutrient DWS API segítségével.\n*   **Használat:** PDF-ek, DOCX, XLSX, PPTX, HTML és képek kezeléséhez.\n\n**26. `jpa-patterns` (JPA Minták)**\n*   **Funkció:** JPA/Hibernate minták entitás tervezéshez, kapcsolatokhoz, lekérdezés optimalizáláshoz, tranzakciókhoz, auditáláshoz, indexeléshez, lapozáshoz és poolinghoz Spring Bootban.\n*   **Használat:** Java Spring Boot projektekben JPA/Hibernate használatához.\n\n**27. `java-coding-standards` (Java Kódolási Szabványok)**\n*   **Funkció:** Java kódolási szabványok Spring Boot szolgáltatásokhoz: elnevezés, immutabilitás, Optional használat, streamek, kivételek, generikusok és projekt elrendezés.\n*   **Használat:** Java Spring Boot kód írásához.\n\n**28. `iterative-retrieval` (Iteratív Visszakeresés)**\n*   **Funkció:** Minta a kontextus visszakeresés fokozatos finomítására a subagent kontextus problémájának megoldására.\n*   **Használat:** Komplex feladatoknál a releváns információk pontosabb azonosításához.\n\n**29. `golang-testing` (Go Tesztelés)**\n*   **Funkció:** Go tesztelési minták: táblázatvezérelt tesztek, altesztek, benchmarkok, fuzzing és tesztlefedettség. TDD módszertant követ.\n*   **Használat:** Go kód teszteléséhez.\n\n**30. `golang-patterns` (Go Minták)**\n*   **Funkció:** Idiomatikus Go minták, legjobb gyakorlatok és konvenciók robusztus, hatékony és karbantartható Go alkalmazások építéséhez.\n*   **Használat:** Go kód írásához.\n\n**31. `frontend-patterns` (Frontend Minták)**\n*   **Funkció:** Frontend fejlesztési minták React, Next.js, állapotkezeléshez, teljesítményoptimalizáláshoz és UI legjobb gyakorlatokhoz.\n*   **Használat:** React és Next.js alapú frontend fejlesztéshez.\n\n**32. `eval-harness` (Értékelési Keretrendszer)**\n*   **Funkció:** Formális értékelési keretrendszer Gemini CLI sessionökhöz, eval-driven development (EDD) alapelvekkel.\n*   **Használat:** Az ügynök teljesítményének mérésére és javítására.\n\n**33. `django-verification` (Django Verifikáció)**\n*   **Funkció:** Verifikációs ciklus Django projektekhez: migrációk, linting, tesztek lefedettséggel, biztonsági ellenőrzések.\n*   **Használat:** Release vagy PR előtt a minőségbiztosításhoz.\n\n**34. `django-tdd` (Django TDD)**\n*   **Funkció:** Django tesztelési stratégiák pytest-django-val, TDD módszertannal, factory_boy-jal, mockinggal, lefedettséggel és Django REST Framework API-k tesztelésével.\n*   **Használat:** Django kód teszteléséhez.\n\n**35. `django-security` (Django Biztonság)**\n*   **Funkció:** Django biztonsági legjobb gyakorlatok: hitelesítés, autorizáció, CSRF védelem, SQL injekció megelőzése, XSS megelőzése és biztonságos telepítési konfigurációk.\n*   **Használat:** Django alkalmazások biztonságos fejlesztéséhez.\n\n**36. `django-patterns` (Django Minták)**\n*   **Funkció:** Django architektúra minták, REST API tervezés DRF-fel, ORM legjobb gyakorlatok, gyorsítótárazás, jelek, middleware és production-grade Django alkalmazások.\n*   **Használat:** Django backend fejlesztéshez.\n\n**37. `continuous-learning-v2` (Folyamatos Tanulás V2)**\n*   **Funkció:** Instinktus-alapú tanulási rendszer, amely megfigyeli a sessionöket, atomi instinktusokat hoz létre és készségekké/parancsokká/ügynökökké alakítja őket.\n*   **Használat:** Az ügynök képességeinek automatikus bővítéséhez.\n\n**38. `continuous-learning` (Folyamatos Tanulás)**\n*   **Funkció:** Reutilizálható minták automatikus kinyerése a Gemini CLI sessionökből és elmentésük tanulási készségként.\n*   **Használat:** Az ügynök képességeinek automatikus bővítéséhez.\n\n**39. `configure-ecc` (ECC Konfigurálás)**\n*   **Funkció:** Interaktív telepítő az Everything Gemini CLI-hez, amely végigvezeti a felhasználókat a készségek és szabályok kiválasztásán és telepítésén.\n*   **Használat:** A Gemini CLI környezet beállításához és testreszabásához.\n\n**40. `coding-standards` (Kódolási Szabványok)**\n*   **Funkció:** Univerzális kódolási szabványok, legjobb gyakorlatok és minták TypeScript, JavaScript, React és Node.js fejlesztéshez.\n*   **Használat:** Kód írásához.\n\n**41. `clickhouse-io` (ClickHouse IO)**\n*   **Funkció:** ClickHouse adatbázis minták, lekérdezés optimalizálás, analitika és adat mérnöki legjobb gyakorlatok nagy teljesítményű analitikai feladatokhoz.\n*   **Használat:** ClickHouse adatbázisokkal való munkához.\n\n**42. `backend-patterns` (Backend Minták)**\n*   **Funkció:** Backend architektúra minták, API tervezés, adatbázis optimalizálás és szerver-oldali legjobb gyakorlatok Node.js, Express és Next.js API route-okhoz.\n*   **Használat:** Backend fejlesztéshez.\n\n**43. `testing` (Tesztelés)**\n*   **Funkció:** Egységes tesztelési parancsok és minták frontend és backend között.\n*   **Használat:** Teszteléshez.\n\n**44. `session-resume` (Munkamenet Folytatás)**\n*   **Funkció:** Kontextus folytatása az előző munkamenetből.\n*   **Használat:** Munkamenetek közötti zökkenőmentes átmenethez.\n\n**45. `file-todos` (Fájl alapú Teendők)**\n*   **Funkció:** Fájl alapú teendőkövetés kezelése a `todos/` könyvtárban.\n*   **Használat:** Feladatok szervezéséhez és követéséhez.\n\n**46. `debug` (Hibakeresés)**\n*   **Funkció:** Szisztematikus hibakeresés strukturált reprodukcióval és a hiba okának elemzésével.\n*   **Használat:** Hibák és váratlan viselkedések elemzéséhez.\n\n**47. `compound-docs` (Összetett Dokumentumok)**\n*   **Funkció:** Megoldott problémák dokumentálása a tudás megőrzése érdekében.\n*   **Használat:** Tudásbázis építéséhez.\n\n**48. `code-review` (Kód Felülvizsgálat)**\n*   **Funkció:** Önálló kód felülvizsgálati módszertan strukturált, súlyosság szerint osztályozott kódértékeléshez.\n*   **Használat:** Kód minőségének ellenőrzéséhez.\n\n**49. `council-chairman` (Tanács Elnöke)**\n*   **Funkció:** Az LLM Tanács (több-modelles kollektíva) kezelése és konzultációja szakértői tanácsokért.\n*   **Használat:** Konfigurálhatod a tanács tagjait, ellenőrizheted az állapotukat, vagy kérhetsz \"Konzultációt\", ahol több LLM független tervezeteket és peer review-kat biztosít a magas minőségű szintézis érdekében.\n\n**50. `writing-skills` (Készségírás)**\n*   **Funkció:** Útmutató hatékony készségek létrehozásához.\n*   **Használat:** Új készségek létrehozásához vagy meglévők frissítéséhez.\n\n**51. `writing-plans` (Tervezés)**\n*   **Funkció:** Használja, ha specifikációja vagy követelményei vannak egy több lépésből álló feladathoz, még mielőtt a kódhoz nyúlna.\n*   **Használat:** Részletes implementációs tervek készítéséhez.\n\n**52. `verification-before-completion` (Verifikáció Befejezés Előtt)**\n*   **Funkció:** Minden munka befejezése előtt futtass ellenőrző parancsokat és erősítsd meg a kimenetet.\n*   **Használat:** A munka minőségének biztosításához.\n\n**53. `using-superpowers` (Szuperképességek Használata)**\n*   **Funkció:** Bevezető a készségek használatához, megkövetelve a Skill eszköz hívását bármilyen válasz előtt.\n*   **Használat:** A Gemini CLI képességeinek felfedezéséhez.\n\n**54. `using-git-worktrees` (Git Worktree-k Használata)**\n*   **Funkció:** Elszigetelt git worktree-k létrehozása.\n*   **Használat:** Funkciófejlesztéshez.\n\n**55. `test-driven-development` (Tesztvezérelt Fejlesztés)**\n*   **Funkció:** Tesztvezérelt fejlesztés (TDD) implementálása bármilyen funkció vagy hibajavítás során.\n*   **Használat:** Minőségi kód írásához.\n\n**56. `systematic-debugging` (Szisztematikus Hibakeresés)**\n*   **Funkció:** Szisztematikus hibakeresés bármilyen bug, teszt kudarc vagy váratlan viselkedés esetén.\n*   **Használat:** Hibák megoldásához.\n\n**57. `subagent-driven-development` (Subagent-vezérelt Fejlesztés)**\n*   **Funkció:** Implementációs tervek végrehajtása független feladatokkal az aktuális munkamenetben.\n*   **Használat:** Komplex feladatok felosztásához.\n\n**58. `requesting-code-review` (Kód Felülvizsgálat Kérése)**\n*   **Funkció:** Kód felülvizsgálat kérése, mielőtt a változtatásokat egyesítenék vagy PR-t hoznának létre.\n*   **Használat:** Kód minőségének és megfelelőségének ellenőrzéséhez.\n\n**59. `receiving-code-review` (Kód Felülvizsgálat Fogadása)**\n*   **Funkció:** Kód felülvizsgálati visszajelzések fogadása és feldolgozása.\n*   **Használat:** Visszajelzések alapján történő fejlesztéshez.\n\n**60. `finishing-a-development-branch` (Fejlesztési ág Befejezése)**\n*   **Funkció:** Útmutató a fejlesztési munka befejezéséhez és integrálásához.\n*   **Használat:** Fejlesztési ágak lezárásához.\n\n**61. `executing-plans` (Tervek Végrehajtása)**\n*   **Funkció:** Implementációs tervek végrehajtása külön munkamenetben, ellenőrző pontokkal.\n*   **Használat:** Tervek megvalósításához.\n\n**62. `dispatching-parallel-agents` (Párhuzamos Ügynökök Kiküldése)**\n*   **Funkció:** 2+ független feladat kezelése párhuzamos ügynökökkel.\n*   **Használat:** Több feladat egyidejű végrehajtásához.\n\n**63. `code-reviewer` (Kód Felülvizsgáló)**\n*   **Funkció:** Kód felülvizsgálata az eredeti terv és a kódolási szabványok alapján.\n*   **Használat:** Kód minőségének ellenőrzéséhez.\n\n**64. `brainstorming` (Ötletelés)**\n*   **Funkció:** Felhasználói szándék, követelmények és tervezés feltárása implementáció előtt.\n*   **Használat:** Kreatív munkához.\n\n**65. `validation` (Validáció)**\n*   **Funkció:** Keresztmetszeti validációs módszertan a fázis kimenetek és a projekt integritásának ellenőrzésére.\n*   **Használat:** A projekt integritásának biztosításához.\n\n**66. `session-management` (Munkamenet Kezelés)**\n*   **Funkció:** Orchestrációs munkamenet állapotának, követésének és folytatásának kezelése.\n*   **Használat:** Munkamenetek kezeléséhez.\n\n**67. `implementation-planning` (Implementációs Tervezés)**\n*   **Funkció:** Részletes implementációs tervek generálása véglegesített tervek alapján.\n*   **Használat:** Tervezéshez.\n\n**68. `execution` (Végrehajtás)**\n*   **Funkció:** Fázisvégrehajtási módszertan orchestrációs munkafolyamatokhoz, hibakezeléssel és befejezési protokollokkal.\n*   **Használat:** Munkafolyamatok végrehajtásához.\n\n**69. `design-dialogue` (Tervezési Párbeszéd)**\n*   **Funkció:** Strukturált tervezési beszélgetések irányítása komplex mérnöki feladatokhoz.\n*   **Használat:** Tervezési fázisban.\n\n**70. `delegation` (Delegálás)**\n*   **Funkció:** Ügynök delegálási legjobb gyakorlatok hatékony subagent promptok konstruálásához.\n*   **Használat:** Feladatok delegálásához.\n\n**71. `prompt engineering` (Prompt Mérnök)**\n*   **Funkció:** Promptok létrehozása, finomítása, elemzése vagy optimalizálása nagy nyelvi modellek (LLM) számára.\n*   **Használat:** Promptok tervezéséhez és optimalizálásához.\n\n**72. `expert-librarian` (Szakértő Könyvtáros)**\n*   **Funkció:** Segít rendszerezni, keresni és szintetizálni a Readwise highlightokat és dokumentumokat.\n*   **Használat:** Tudásbázis kezeléséhez.\n\n**73. `package-manager-expert` (Csomagkezelő Szakértő)**\n*   **Funkció:** Windows szoftvercsomagok telepítésének megtalálása és javaslása (WinGet).\n*   **Használat:** Windows környezet beállításához.\n\n**74. `security-audit` (Biztonsági Audit)**\n*   **Funkció:** Átfogó biztonsági audit.\n*   **Használat:** Biztonsági felülvizsgálathoz."
+          },
+          "result": [
+            {
+              "functionResponse": {
+                "id": "write_file_1771955357904_0",
+                "name": "write_file",
+                "response": {
+                  "output": "Successfully created and wrote to new file: F:\\mcp-brunella-core\\BOVITMENY.md."
+                }
+              }
+            }
+          ],
+          "status": "success",
+          "timestamp": "2026-02-24T17:49:18.679Z",
+          "resultDisplay": {
+            "fileDiff": "Index: BOVITMENY.md\n===================================================================\n--- BOVITMENY.md\tOriginal\n+++ BOVITMENY.md\tWritten\n@@ -0,0 +1,297 @@\n+### 🧩 Gemini CLI Bővítmények - Képességek és Használat\n+\n+**1. `skill-creator` (Készség-létrehozó)**\n+*   **Funkció:** Segít új készségeket (skill) létrehozni vagy meglévőket frissíteni a Gemini CLI számára.\n+*   **Használat:** Ha a Gemini CLI képességeit bővíteni szeretnéd egy új, speciális tudásterülettel vagy munkafolyamattal.\n+\n+**2. `apify-ultimate-scraper` (Apify Végső Webkaparó)**\n+*   **Funkció:** Univerzális, AI-alapú webkaparó a legtöbb platformról (Instagram, Facebook, TikTok, YouTube, Google Maps, stb.).\n+*   **Használat:** Lead generálásra, márkafigyelésre, versenytárselemzésre, trendkutatásra, vagy bármilyen adatkinyerési feladatra.\n+\n+**3. `apify-trend-analysis` (Apify Trendelemzés)**\n+*   **Funkció:** Feltörekvő trendek felfedezése és követése a Google Trends, Instagram, Facebook, YouTube és TikTok platformokon.\n+*   **Használat:** Tartalomstratégia kialakításához és piaci elemzésekhez.\n+\n+**4. `apify-market-research` (Apify Piackutatás)**\n+*   **Funkció:** Piaci feltételek, földrajzi lehetőségek, árazás, fogyasztói magatartás elemzése a Google Maps, Facebook, Instagram, Booking.com, TripAdvisor adatai alapján.\n+*   **Használat:** Részletes piackutatáshoz és üzleti döntések alátámasztásához.\n+\n+**5. `apify-lead-generation` (Apify Lead Generálás)**\n+*   **Funkció:** B2B/B2C leadek generálása weboldalak, Google Maps, Instagram, TikTok, Facebook, LinkedIn, YouTube és Google Kereső adatainak kaparásával.\n+*   **Használat:** Prospektusok felkutatására, lead listák építésére, kapcsolati adatok gazdagítására, értékesítési megkeresésekhez.\n+\n+**6. `apify-influencer-discovery` (Apify Influenszer Keresés)**\n+*   **Funkció:** Influenszerek keresése és értékelése márkapartnerségekhez, hitelesség ellenőrzése, együttműködések teljesítményének követése.\n+*   **Használat:** Marketing kampányokhoz és befolyásolók azonosításához.\n+\n+**7. `apify-ecommerce` (Apify E-kereskedelem)**\n+*   **Funkció:** E-kereskedelmi adatok kaparása árfigyeléshez, vásárlói véleményekhez és eladók felkutatásához az Amazon, Walmart, eBay és 50+ piactéren.\n+*   **Használat:** Árfigyelésre, versenytársak követésére, termékkutatásra, vélemények elemzésére.\n+\n+**8. `apify-content-analytics` (Apify Tartalomelemzés)**\n+*   **Funkció:** Elkötelezettségi mutatók követése, kampány ROI mérése és tartalom teljesítményének elemzése az Instagram, Facebook, YouTube és TikTok platformokon.\n+*   **Használat:** Tartalomstratégia optimalizálásához és kampányelemzéshez.\n+\n+**9. `apify-competitor-intelligence` (Apify Versenytárs Elemzés)**\n+*   **Funkció:** Versenytársak stratégiáinak, tartalmainak, árazásának, hirdetéseinek és piaci pozíciójának elemzése számos platformon.\n+*   **Használat:** Versenytársak megfigyelésére és piaci előny szerzésére.\n+\n+**10. `apify-brand-reputation-monitoring` (Apify Márka Hírnév Figyelés)**\n+*   **Funkció:** Vélemények, értékelések, hangulat és márkaemlítések követése a Google Maps, Booking.com, TripAdvisor, Facebook, Instagram, YouTube és TikTok platformokon.\n+*   **Használat:** Márka hírnevének figyelésére, ügyfél visszajelzések gyűjtésére.\n+\n+**11. `apify-audience-analysis` (Apify Közönségelemzés)**\n+*   **Funkció:** Közönség demográfiai adatainak, preferenciáinak, viselkedési mintáinak és elkötelezettségének elemzése a Facebook, Instagram, YouTube és TikTok platformokon.\n+*   **Használat:** Célközönség jobb megértéséhez és marketing célzás optimalizálásához.\n+\n+**12. `apify-actorization` (Apify Actorizálás)**\n+*   **Funkció:** Meglévő projektek (JS/TS, Python, vagy bármilyen nyelv) Apify Actorokká alakítása.\n+*   **Használat:** Kód Apify platformra való migrálásához, CLI eszközök Actorokká alakításához.\n+\n+**13. `apify-actor-development` (Apify Actor Fejlesztés)**\n+*   **Funkció:** Apify Actorok (szerver nélküli felhőprogramok) fejlesztése, debugolása és telepítése webkaparáshoz, automatizáláshoz és adatfeldolgozáshoz.\n+*   **Használat:** Új Actorok létrehozásához, meglévők módosításához vagy Actor kódok hibaelhárításához.\n+\n+**14. `chrome-devtools` (Chrome DevTools)**\n+*   **Funkció:** Hatékony hibakeresés, böngésző automatizálás, teljesítményelemzés és hálózati kérések vizsgálata a Chrome DevTools protokollon keresztül.\n+*   **Használat:** Weboldalak hibakereséséhez, böngésző interakciók automatizálásához.\n+\n+**15. `tdd-workflow` (TDD Munkafolyamat)**\n+*   **Funkció:** A tesztvezérelt fejlesztés (TDD) kikényszerítése, legalább 80%-os tesztlefedettséggel.\n+*   **Használat:** Új funkciók írásához, hibák javításához vagy kód refaktorálásához.\n+\n+**16. `strategic-compact` (Stratégiai Kompaktálás)**\n+*   **Funkció:** Javasolja a manuális kontextus kompaktálását logikai időközönként, a kontextus megőrzése érdekében.\n+*   **Használat:** Hosszú munkamenetek során a kontextus méretének menedzseléséhez.\n+\n+**17. `springboot-verification` (Spring Boot Verifikáció)**\n+*   **Funkció:** Verifikációs ciklus Spring Boot projektekhez: build, statikus analízis, tesztek lefedettséggel, biztonsági ellenőrzések.\n+*   **Használat:** Release vagy PR előtt a minőségbiztosításhoz.\n+\n+**18. `springboot-tdd` (Spring Boot TDD)**\n+*   **Funkció:** Tesztvezérelt fejlesztés Spring Boot alkalmazásokhoz JUnit 5, Mockito, MockMvc, Testcontainers és JaCoCo használatával.\n+*   **Használat:** Funkciók hozzáadásához, hibák javításához vagy refaktoráláshoz.\n+\n+**19. `springboot-security` (Spring Boot Biztonság)**\n+*   **Funkció:** Spring Security legjobb gyakorlatok: autentikáció/autorizáció, validáció, CSRF, titkok kezelése, fejlécek, sebességkorlátozás és függőségi biztonság.\n+*   **Használat:** Spring Boot alapú Java szolgáltatások biztonságos fejlesztéséhez.\n+\n+**20. `springboot-patterns` (Spring Boot Minták)**\n+*   **Funkció:** Spring Boot architektúra minták, REST API tervezés, réteges szolgáltatások, adatelérés, gyorsítótárazás, aszinkron feldolgozás és naplózás.\n+*   **Használat:** Java Spring Boot backend fejlesztési feladatokhoz.\n+\n+**21. `security-review` (Biztonsági Felülvizsgálat)**\n+*   **Funkció:** Átfogó biztonsági ellenőrzési lista és minták.\n+*   **Használat:** Hitelesítés hozzáadásakor, felhasználói bevitel kezelésekor, titkokkal való munka során, API végpontok létrehozásakor vagy érzékeny funkciók implementálásakor.\n+\n+**22. `python-testing` (Python Tesztelés)**\n+*   **Funkció:** Python tesztelési stratégiák pytest-tel, TDD módszertannal, fixture-ökkel, mockinggal, parametrizálással és lefedettségi követelményekkel.\n+*   **Használat:** Python kód teszteléséhez.\n+\n+**23. `python-patterns` (Python Minták)**\n+*   **Funkció:** Pythonikus idiómák, PEP 8 szabványok és legjobb gyakorlatok robusztus, hatékony és karbantartható Python alkalmazások építéséhez.\n+*   **Használat:** Python kód írásához.\n+\n+**24. `postgres-patterns` (PostgreSQL Minták)**\n+*   **Funkció:** PostgreSQL adatbázis minták lekérdezés optimalizáláshoz, séma tervezéshez, indexeléshez és biztonsághoz.\n+*   **Használat:** PostgreSQL adatbázisokkal való munkához.\n+\n+**25. `nutrient-document-processing` (Nutrient Dokumentumfeldolgozás)**\n+*   **Funkció:** Dokumentumok feldolgozása, konvertálása, OCR, kinyerése, redaktálása, aláírása és kitöltése a Nutrient DWS API segítségével.\n+*   **Használat:** PDF-ek, DOCX, XLSX, PPTX, HTML és képek kezeléséhez.\n+\n+**26. `jpa-patterns` (JPA Minták)**\n+*   **Funkció:** JPA/Hibernate minták entitás tervezéshez, kapcsolatokhoz, lekérdezés optimalizáláshoz, tranzakciókhoz, auditáláshoz, indexeléshez, lapozáshoz és poolinghoz Spring Bootban.\n+*   **Használat:** Java Spring Boot projektekben JPA/Hibernate használatához.\n+\n+**27. `java-coding-standards` (Java Kódolási Szabványok)**\n+*   **Funkció:** Java kódolási szabványok Spring Boot szolgáltatásokhoz: elnevezés, immutabilitás, Optional használat, streamek, kivételek, generikusok és projekt elrendezés.\n+*   **Használat:** Java Spring Boot kód írásához.\n+\n+**28. `iterative-retrieval` (Iteratív Visszakeresés)**\n+*   **Funkció:** Minta a kontextus visszakeresés fokozatos finomítására a subagent kontextus problémájának megoldására.\n+*   **Használat:** Komplex feladatoknál a releváns információk pontosabb azonosításához.\n+\n+**29. `golang-testing` (Go Tesztelés)**\n+*   **Funkció:** Go tesztelési minták: táblázatvezérelt tesztek, altesztek, benchmarkok, fuzzing és tesztlefedettség. TDD módszertant követ.\n+*   **Használat:** Go kód teszteléséhez.\n+\n+**30. `golang-patterns` (Go Minták)**\n+*   **Funkció:** Idiomatikus Go minták, legjobb gyakorlatok és konvenciók robusztus, hatékony és karbantartható Go alkalmazások építéséhez.\n+*   **Használat:** Go kód írásához.\n+\n+**31. `frontend-patterns` (Frontend Minták)**\n+*   **Funkció:** Frontend fejlesztési minták React, Next.js, állapotkezeléshez, teljesítményoptimalizáláshoz és UI legjobb gyakorlatokhoz.\n+*   **Használat:** React és Next.js alapú frontend fejlesztéshez.\n+\n+**32. `eval-harness` (Értékelési Keretrendszer)**\n+*   **Funkció:** Formális értékelési keretrendszer Gemini CLI sessionökhöz, eval-driven development (EDD) alapelvekkel.\n+*   **Használat:** Az ügynök teljesítményének mérésére és javítására.\n+\n+**33. `django-verification` (Django Verifikáció)**\n+*   **Funkció:** Verifikációs ciklus Django projektekhez: migrációk, linting, tesztek lefedettséggel, biztonsági ellenőrzések.\n+*   **Használat:** Release vagy PR előtt a minőségbiztosításhoz.\n+\n+**34. `django-tdd` (Django TDD)**\n+*   **Funkció:** Django tesztelési stratégiák pytest-django-val, TDD módszertannal, factory_boy-jal, mockinggal, lefedettséggel és Django REST Framework API-k tesztelésével.\n+*   **Használat:** Django kód teszteléséhez.\n+\n+**35. `django-security` (Django Biztonság)**\n+*   **Funkció:** Django biztonsági legjobb gyakorlatok: hitelesítés, autorizáció, CSRF védelem, SQL injekció megelőzése, XSS megelőzése és biztonságos telepítési konfigurációk.\n+*   **Használat:** Django alkalmazások biztonságos fejlesztéséhez.\n+\n+**36. `django-patterns` (Django Minták)**\n+*   **Funkció:** Django architektúra minták, REST API tervezés DRF-fel, ORM legjobb gyakorlatok, gyorsítótárazás, jelek, middleware és production-grade Django alkalmazások.\n+*   **Használat:** Django backend fejlesztéshez.\n+\n+**37. `continuous-learning-v2` (Folyamatos Tanulás V2)**\n+*   **Funkció:** Instinktus-alapú tanulási rendszer, amely megfigyeli a sessionöket, atomi instinktusokat hoz létre és készségekké/parancsokká/ügynökökké alakítja őket.\n+*   **Használat:** Az ügynök képességeinek automatikus bővítéséhez.\n+\n+**38. `continuous-learning` (Folyamatos Tanulás)**\n+*   **Funkció:** Reutilizálható minták automatikus kinyerése a Gemini CLI sessionökből és elmentésük tanulási készségként.\n+*   **Használat:** Az ügynök képességeinek automatikus bővítéséhez.\n+\n+**39. `configure-ecc` (ECC Konfigurálás)**\n+*   **Funkció:** Interaktív telepítő az Everything Gemini CLI-hez, amely végigvezeti a felhasználókat a készségek és szabályok kiválasztásán és telepítésén.\n+*   **Használat:** A Gemini CLI környezet beállításához és testreszabásához.\n+\n+**40. `coding-standards` (Kódolási Szabványok)**\n+*   **Funkció:** Univerzális kódolási szabványok, legjobb gyakorlatok és minták TypeScript, JavaScript, React és Node.js fejlesztéshez.\n+*   **Használat:** Kód írásához.\n+\n+**41. `clickhouse-io` (ClickHouse IO)**\n+*   **Funkció:** ClickHouse adatbázis minták, lekérdezés optimalizálás, analitika és adat mérnöki legjobb gyakorlatok nagy teljesítményű analitikai feladatokhoz.\n+*   **Használat:** ClickHouse adatbázisokkal való munkához.\n+\n+**42. `backend-patterns` (Backend Minták)**\n+*   **Funkció:** Backend architektúra minták, API tervezés, adatbázis optimalizálás és szerver-oldali legjobb gyakorlatok Node.js, Express és Next.js API route-okhoz.\n+*   **Használat:** Backend fejlesztéshez.\n+\n+**43. `testing` (Tesztelés)**\n+*   **Funkció:** Egységes tesztelési parancsok és minták frontend és backend között.\n+*   **Használat:** Teszteléshez.\n+\n+**44. `session-resume` (Munkamenet Folytatás)**\n+*   **Funkció:** Kontextus folytatása az előző munkamenetből.\n+*   **Használat:** Munkamenetek közötti zökkenőmentes átmenethez.\n+\n+**45. `file-todos` (Fájl alapú Teendők)**\n+*   **Funkció:** Fájl alapú teendőkövetés kezelése a `todos/` könyvtárban.\n+*   **Használat:** Feladatok szervezéséhez és követéséhez.\n+\n+**46. `debug` (Hibakeresés)**\n+*   **Funkció:** Szisztematikus hibakeresés strukturált reprodukcióval és a hiba okának elemzésével.\n+*   **Használat:** Hibák és váratlan viselkedések elemzéséhez.\n+\n+**47. `compound-docs` (Összetett Dokumentumok)**\n+*   **Funkció:** Megoldott problémák dokumentálása a tudás megőrzése érdekében.\n+*   **Használat:** Tudásbázis építéséhez.\n+\n+**48. `code-review` (Kód Felülvizsgálat)**\n+*   **Funkció:** Önálló kód felülvizsgálati módszertan strukturált, súlyosság szerint osztályozott kódértékeléshez.\n+*   **Használat:** Kód minőségének ellenőrzéséhez.\n+\n+**49. `council-chairman` (Tanács Elnöke)**\n+*   **Funkció:** Az LLM Tanács (több-modelles kollektíva) kezelése és konzultációja szakértői tanácsokért.\n+*   **Használat:** Konfigurálhatod a tanács tagjait, ellenőrizheted az állapotukat, vagy kérhetsz \"Konzultációt\", ahol több LLM független tervezeteket és peer review-kat biztosít a magas minőségű szintézis érdekében.\n+\n+**50. `writing-skills` (Készségírás)**\n+*   **Funkció:** Útmutató hatékony készségek létrehozásához.\n+*   **Használat:** Új készségek létrehozásához vagy meglévők frissítéséhez.\n+\n+**51. `writing-plans` (Tervezés)**\n+*   **Funkció:** Használja, ha specifikációja vagy követelményei vannak egy több lépésből álló feladathoz, még mielőtt a kódhoz nyúlna.\n+*   **Használat:** Részletes implementációs tervek készítéséhez.\n+\n+**52. `verification-before-completion` (Verifikáció Befejezés Előtt)**\n+*   **Funkció:** Minden munka befejezése előtt futtass ellenőrző parancsokat és erősítsd meg a kimenetet.\n+*   **Használat:** A munka minőségének biztosításához.\n+\n+**53. `using-superpowers` (Szuperképességek Használata)**\n+*   **Funkció:** Bevezető a készségek használatához, megkövetelve a Skill eszköz hívását bármilyen válasz előtt.\n+*   **Használat:** A Gemini CLI képességeinek felfedezéséhez.\n+\n+**54. `using-git-worktrees` (Git Worktree-k Használata)**\n+*   **Funkció:** Elszigetelt git worktree-k létrehozása.\n+*   **Használat:** Funkciófejlesztéshez.\n+\n+**55. `test-driven-development` (Tesztvezérelt Fejlesztés)**\n+*   **Funkció:** Tesztvezérelt fejlesztés (TDD) implementálása bármilyen funkció vagy hibajavítás során.\n+*   **Használat:** Minőségi kód írásához.\n+\n+**56. `systematic-debugging` (Szisztematikus Hibakeresés)**\n+*   **Funkció:** Szisztematikus hibakeresés bármilyen bug, teszt kudarc vagy váratlan viselkedés esetén.\n+*   **Használat:** Hibák megoldásához.\n+\n+**57. `subagent-driven-development` (Subagent-vezérelt Fejlesztés)**\n+*   **Funkció:** Implementációs tervek végrehajtása független feladatokkal az aktuális munkamenetben.\n+*   **Használat:** Komplex feladatok felosztásához.\n+\n+**58. `requesting-code-review` (Kód Felülvizsgálat Kérése)**\n+*   **Funkció:** Kód felülvizsgálat kérése, mielőtt a változtatásokat egyesítenék vagy PR-t hoznának létre.\n+*   **Használat:** Kód minőségének és megfelelőségének ellenőrzéséhez.\n+\n+**59. `receiving-code-review` (Kód Felülvizsgálat Fogadása)**\n+*   **Funkció:** Kód felülvizsgálati visszajelzések fogadása és feldolgozása.\n+*   **Használat:** Visszajelzések alapján történő fejlesztéshez.\n+\n+**60. `finishing-a-development-branch` (Fejlesztési ág Befejezése)**\n+*   **Funkció:** Útmutató a fejlesztési munka befejezéséhez és integrálásához.\n+*   **Használat:** Fejlesztési ágak lezárásához.\n+\n+**61. `executing-plans` (Tervek Végrehajtása)**\n+*   **Funkció:** Implementációs tervek végrehajtása külön munkamenetben, ellenőrző pontokkal.\n+*   **Használat:** Tervek megvalósításához.\n+\n+**62. `dispatching-parallel-agents` (Párhuzamos Ügynökök Kiküldése)**\n+*   **Funkció:** 2+ független feladat kezelése párhuzamos ügynökökkel.\n+*   **Használat:** Több feladat egyidejű végrehajtásához.\n+\n+**63. `code-reviewer` (Kód Felülvizsgáló)**\n+*   **Funkció:** Kód felülvizsgálata az eredeti terv és a kódolási szabványok alapján.\n+*   **Használat:** Kód minőségének ellenőrzéséhez.\n+\n+**64. `brainstorming` (Ötletelés)**\n+*   **Funkció:** Felhasználói szándék, követelmények és tervezés feltárása implementáció előtt.\n+*   **Használat:** Kreatív munkához.\n+\n+**65. `validation` (Validáció)**\n+*   **Funkció:** Keresztmetszeti validációs módszertan a fázis kimenetek és a projekt integritásának ellenőrzésére.\n+*   **Használat:** A projekt integritásának biztosításához.\n+\n+**66. `session-management` (Munkamenet Kezelés)**\n+*   **Funkció:** Orchestrációs munkamenet állapotának, követésének és folytatásának kezelése.\n+*   **Használat:** Munkamenetek kezeléséhez.\n+\n+**67. `implementation-planning` (Implementációs Tervezés)**\n+*   **Funkció:** Részletes implementációs tervek generálása véglegesített tervek alapján.\n+*   **Használat:** Tervezéshez.\n+\n+**68. `execution` (Végrehajtás)**\n+*   **Funkció:** Fázisvégrehajtási módszertan orchestrációs munkafolyamatokhoz, hibakezeléssel és befejezési protokollokkal.\n+*   **Használat:** Munkafolyamatok végrehajtásához.\n+\n+**69. `design-dialogue` (Tervezési Párbeszéd)**\n+*   **Funkció:** Strukturált tervezési beszélgetések irányítása komplex mérnöki feladatokhoz.\n+*   **Használat:** Tervezési fázisban.\n+\n+**70. `delegation` (Delegálás)**\n+*   **Funkció:** Ügynök delegálási legjobb gyakorlatok hatékony subagent promptok konstruálásához.\n+*   **Használat:** Feladatok delegálásához.\n+\n+**71. `prompt engineering` (Prompt Mérnök)**\n+*   **Funkció:** Promptok létrehozása, finomítása, elemzése vagy optimalizálása nagy nyelvi modellek (LLM) számára.\n+*   **Használat:** Promptok tervezéséhez és optimalizálásához.\n+\n+**72. `expert-librarian` (Szakértő Könyvtáros)**\n+*   **Funkció:** Segít rendszerezni, keresni és szintetizálni a Readwise highlightokat és dokumentumokat.\n+*   **Használat:** Tudásbázis kezeléséhez.\n+\n+**73. `package-manager-expert` (Csomagkezelő Szakértő)**\n+*   **Funkció:** Windows szoftvercsomagok telepítésének megtalálása és javaslása (WinGet).\n+*   **Használat:** Windows környezet beállításához.\n+\n+**74. `security-audit` (Biztonsági Audit)**\n+*   **Funkció:** Átfogó biztonsági audit.\n+*   **Használat:** Biztonsági felülvizsgálathoz.\n\\ No newline at end of file\n",
+            "fileName": "BOVITMENY.md",
+            "filePath": "F:\\mcp-brunella-core\\BOVITMENY.md",
+            "originalContent": "",
+            "newContent": "### 🧩 Gemini CLI Bővítmények - Képességek és Használat\n\n**1. `skill-creator` (Készség-létrehozó)**\n*   **Funkció:** Segít új készségeket (skill) létrehozni vagy meglévőket frissíteni a Gemini CLI számára.\n*   **Használat:** Ha a Gemini CLI képességeit bővíteni szeretnéd egy új, speciális tudásterülettel vagy munkafolyamattal.\n\n**2. `apify-ultimate-scraper` (Apify Végső Webkaparó)**\n*   **Funkció:** Univerzális, AI-alapú webkaparó a legtöbb platformról (Instagram, Facebook, TikTok, YouTube, Google Maps, stb.).\n*   **Használat:** Lead generálásra, márkafigyelésre, versenytárselemzésre, trendkutatásra, vagy bármilyen adatkinyerési feladatra.\n\n**3. `apify-trend-analysis` (Apify Trendelemzés)**\n*   **Funkció:** Feltörekvő trendek felfedezése és követése a Google Trends, Instagram, Facebook, YouTube és TikTok platformokon.\n*   **Használat:** Tartalomstratégia kialakításához és piaci elemzésekhez.\n\n**4. `apify-market-research` (Apify Piackutatás)**\n*   **Funkció:** Piaci feltételek, földrajzi lehetőségek, árazás, fogyasztói magatartás elemzése a Google Maps, Facebook, Instagram, Booking.com, TripAdvisor adatai alapján.\n*   **Használat:** Részletes piackutatáshoz és üzleti döntések alátámasztásához.\n\n**5. `apify-lead-generation` (Apify Lead Generálás)**\n*   **Funkció:** B2B/B2C leadek generálása weboldalak, Google Maps, Instagram, TikTok, Facebook, LinkedIn, YouTube és Google Kereső adatainak kaparásával.\n*   **Használat:** Prospektusok felkutatására, lead listák építésére, kapcsolati adatok gazdagítására, értékesítési megkeresésekhez.\n\n**6. `apify-influencer-discovery` (Apify Influenszer Keresés)**\n*   **Funkció:** Influenszerek keresése és értékelése márkapartnerségekhez, hitelesség ellenőrzése, együttműködések teljesítményének követése.\n*   **Használat:** Marketing kampányokhoz és befolyásolók azonosításához.\n\n**7. `apify-ecommerce` (Apify E-kereskedelem)**\n*   **Funkció:** E-kereskedelmi adatok kaparása árfigyeléshez, vásárlói véleményekhez és eladók felkutatásához az Amazon, Walmart, eBay és 50+ piactéren.\n*   **Használat:** Árfigyelésre, versenytársak követésére, termékkutatásra, vélemények elemzésére.\n\n**8. `apify-content-analytics` (Apify Tartalomelemzés)**\n*   **Funkció:** Elkötelezettségi mutatók követése, kampány ROI mérése és tartalom teljesítményének elemzése az Instagram, Facebook, YouTube és TikTok platformokon.\n*   **Használat:** Tartalomstratégia optimalizálásához és kampányelemzéshez.\n\n**9. `apify-competitor-intelligence` (Apify Versenytárs Elemzés)**\n*   **Funkció:** Versenytársak stratégiáinak, tartalmainak, árazásának, hirdetéseinek és piaci pozíciójának elemzése számos platformon.\n*   **Használat:** Versenytársak megfigyelésére és piaci előny szerzésére.\n\n**10. `apify-brand-reputation-monitoring` (Apify Márka Hírnév Figyelés)**\n*   **Funkció:** Vélemények, értékelések, hangulat és márkaemlítések követése a Google Maps, Booking.com, TripAdvisor, Facebook, Instagram, YouTube és TikTok platformokon.\n*   **Használat:** Márka hírnevének figyelésére, ügyfél visszajelzések gyűjtésére.\n\n**11. `apify-audience-analysis` (Apify Közönségelemzés)**\n*   **Funkció:** Közönség demográfiai adatainak, preferenciáinak, viselkedési mintáinak és elkötelezettségének elemzése a Facebook, Instagram, YouTube és TikTok platformokon.\n*   **Használat:** Célközönség jobb megértéséhez és marketing célzás optimalizálásához.\n\n**12. `apify-actorization` (Apify Actorizálás)**\n*   **Funkció:** Meglévő projektek (JS/TS, Python, vagy bármilyen nyelv) Apify Actorokká alakítása.\n*   **Használat:** Kód Apify platformra való migrálásához, CLI eszközök Actorokká alakításához.\n\n**13. `apify-actor-development` (Apify Actor Fejlesztés)**\n*   **Funkció:** Apify Actorok (szerver nélküli felhőprogramok) fejlesztése, debugolása és telepítése webkaparáshoz, automatizáláshoz és adatfeldolgozáshoz.\n*   **Használat:** Új Actorok létrehozásához, meglévők módosításához vagy Actor kódok hibaelhárításához.\n\n**14. `chrome-devtools` (Chrome DevTools)**\n*   **Funkció:** Hatékony hibakeresés, böngésző automatizálás, teljesítményelemzés és hálózati kérések vizsgálata a Chrome DevTools protokollon keresztül.\n*   **Használat:** Weboldalak hibakereséséhez, böngésző interakciók automatizálásához.\n\n**15. `tdd-workflow` (TDD Munkafolyamat)**\n*   **Funkció:** A tesztvezérelt fejlesztés (TDD) kikényszerítése, legalább 80%-os tesztlefedettséggel.\n*   **Használat:** Új funkciók írásához, hibák javításához vagy kód refaktorálásához.\n\n**16. `strategic-compact` (Stratégiai Kompaktálás)**\n*   **Funkció:** Javasolja a manuális kontextus kompaktálását logikai időközönként, a kontextus megőrzése érdekében.\n*   **Használat:** Hosszú munkamenetek során a kontextus méretének menedzseléséhez.\n\n**17. `springboot-verification` (Spring Boot Verifikáció)**\n*   **Funkció:** Verifikációs ciklus Spring Boot projektekhez: build, statikus analízis, tesztek lefedettséggel, biztonsági ellenőrzések.\n*   **Használat:** Release vagy PR előtt a minőségbiztosításhoz.\n\n**18. `springboot-tdd` (Spring Boot TDD)**\n*   **Funkció:** Tesztvezérelt fejlesztés Spring Boot alkalmazásokhoz JUnit 5, Mockito, MockMvc, Testcontainers és JaCoCo használatával.\n*   **Használat:** Funkciók hozzáadásához, hibák javításához vagy refaktoráláshoz.\n\n**19. `springboot-security` (Spring Boot Biztonság)**\n*   **Funkció:** Spring Security legjobb gyakorlatok: autentikáció/autorizáció, validáció, CSRF, titkok kezelése, fejlécek, sebességkorlátozás és függőségi biztonság.\n*   **Használat:** Spring Boot alapú Java szolgáltatások biztonságos fejlesztéséhez.\n\n**20. `springboot-patterns` (Spring Boot Minták)**\n*   **Funkció:** Spring Boot architektúra minták, REST API tervezés, réteges szolgáltatások, adatelérés, gyorsítótárazás, aszinkron feldolgozás és naplózás.\n*   **Használat:** Java Spring Boot backend fejlesztési feladatokhoz.\n\n**21. `security-review` (Biztonsági Felülvizsgálat)**\n*   **Funkció:** Átfogó biztonsági ellenőrzési lista és minták.\n*   **Használat:** Hitelesítés hozzáadásakor, felhasználói bevitel kezelésekor, titkokkal való munka során, API végpontok létrehozásakor vagy érzékeny funkciók implementálásakor.\n\n**22. `python-testing` (Python Tesztelés)**\n*   **Funkció:** Python tesztelési stratégiák pytest-tel, TDD módszertannal, fixture-ökkel, mockinggal, parametrizálással és lefedettségi követelményekkel.\n*   **Használat:** Python kód teszteléséhez.\n\n**23. `python-patterns` (Python Minták)**\n*   **Funkció:** Pythonikus idiómák, PEP 8 szabványok és legjobb gyakorlatok robusztus, hatékony és karbantartható Python alkalmazások építéséhez.\n*   **Használat:** Python kód írásához.\n\n**24. `postgres-patterns` (PostgreSQL Minták)**\n*   **Funkció:** PostgreSQL adatbázis minták lekérdezés optimalizáláshoz, séma tervezéshez, indexeléshez és biztonsághoz.\n*   **Használat:** PostgreSQL adatbázisokkal való munkához.\n\n**25. `nutrient-document-processing` (Nutrient Dokumentumfeldolgozás)**\n*   **Funkció:** Dokumentumok feldolgozása, konvertálása, OCR, kinyerése, redaktálása, aláírása és kitöltése a Nutrient DWS API segítségével.\n*   **Használat:** PDF-ek, DOCX, XLSX, PPTX, HTML és képek kezeléséhez.\n\n**26. `jpa-patterns` (JPA Minták)**\n*   **Funkció:** JPA/Hibernate minták entitás tervezéshez, kapcsolatokhoz, lekérdezés optimalizáláshoz, tranzakciókhoz, auditáláshoz, indexeléshez, lapozáshoz és poolinghoz Spring Bootban.\n*   **Használat:** Java Spring Boot projektekben JPA/Hibernate használatához.\n\n**27. `java-coding-standards` (Java Kódolási Szabványok)**\n*   **Funkció:** Java kódolási szabványok Spring Boot szolgáltatásokhoz: elnevezés, immutabilitás, Optional használat, streamek, kivételek, generikusok és projekt elrendezés.\n*   **Használat:** Java Spring Boot kód írásához.\n\n**28. `iterative-retrieval` (Iteratív Visszakeresés)**\n*   **Funkció:** Minta a kontextus visszakeresés fokozatos finomítására a subagent kontextus problémájának megoldására.\n*   **Használat:** Komplex feladatoknál a releváns információk pontosabb azonosításához.\n\n**29. `golang-testing` (Go Tesztelés)**\n*   **Funkció:** Go tesztelési minták: táblázatvezérelt tesztek, altesztek, benchmarkok, fuzzing és tesztlefedettség. TDD módszertant követ.\n*   **Használat:** Go kód teszteléséhez.\n\n**30. `golang-patterns` (Go Minták)**\n*   **Funkció:** Idiomatikus Go minták, legjobb gyakorlatok és konvenciók robusztus, hatékony és karbantartható Go alkalmazások építéséhez.\n*   **Használat:** Go kód írásához.\n\n**31. `frontend-patterns` (Frontend Minták)**\n*   **Funkció:** Frontend fejlesztési minták React, Next.js, állapotkezeléshez, teljesítményoptimalizáláshoz és UI legjobb gyakorlatokhoz.\n*   **Használat:** React és Next.js alapú frontend fejlesztéshez.\n\n**32. `eval-harness` (Értékelési Keretrendszer)**\n*   **Funkció:** Formális értékelési keretrendszer Gemini CLI sessionökhöz, eval-driven development (EDD) alapelvekkel.\n*   **Használat:** Az ügynök teljesítményének mérésére és javítására.\n\n**33. `django-verification` (Django Verifikáció)**\n*   **Funkció:** Verifikációs ciklus Django projektekhez: migrációk, linting, tesztek lefedettséggel, biztonsági ellenőrzések.\n*   **Használat:** Release vagy PR előtt a minőségbiztosításhoz.\n\n**34. `django-tdd` (Django TDD)**\n*   **Funkció:** Django tesztelési stratégiák pytest-django-val, TDD módszertannal, factory_boy-jal, mockinggal, lefedettséggel és Django REST Framework API-k tesztelésével.\n*   **Használat:** Django kód teszteléséhez.\n\n**35. `django-security` (Django Biztonság)**\n*   **Funkció:** Django biztonsági legjobb gyakorlatok: hitelesítés, autorizáció, CSRF védelem, SQL injekció megelőzése, XSS megelőzése és biztonságos telepítési konfigurációk.\n*   **Használat:** Django alkalmazások biztonságos fejlesztéséhez.\n\n**36. `django-patterns` (Django Minták)**\n*   **Funkció:** Django architektúra minták, REST API tervezés DRF-fel, ORM legjobb gyakorlatok, gyorsítótárazás, jelek, middleware és production-grade Django alkalmazások.\n*   **Használat:** Django backend fejlesztéshez.\n\n**37. `continuous-learning-v2` (Folyamatos Tanulás V2)**\n*   **Funkció:** Instinktus-alapú tanulási rendszer, amely megfigyeli a sessionöket, atomi instinktusokat hoz létre és készségekké/parancsokká/ügynökökké alakítja őket.\n*   **Használat:** Az ügynök képességeinek automatikus bővítéséhez.\n\n**38. `continuous-learning` (Folyamatos Tanulás)**\n*   **Funkció:** Reutilizálható minták automatikus kinyerése a Gemini CLI sessionökből és elmentésük tanulási készségként.\n*   **Használat:** Az ügynök képességeinek automatikus bővítéséhez.\n\n**39. `configure-ecc` (ECC Konfigurálás)**\n*   **Funkció:** Interaktív telepítő az Everything Gemini CLI-hez, amely végigvezeti a felhasználókat a készségek és szabályok kiválasztásán és telepítésén.\n*   **Használat:** A Gemini CLI környezet beállításához és testreszabásához.\n\n**40. `coding-standards` (Kódolási Szabványok)**\n*   **Funkció:** Univerzális kódolási szabványok, legjobb gyakorlatok és minták TypeScript, JavaScript, React és Node.js fejlesztéshez.\n*   **Használat:** Kód írásához.\n\n**41. `clickhouse-io` (ClickHouse IO)**\n*   **Funkció:** ClickHouse adatbázis minták, lekérdezés optimalizálás, analitika és adat mérnöki legjobb gyakorlatok nagy teljesítményű analitikai feladatokhoz.\n*   **Használat:** ClickHouse adatbázisokkal való munkához.\n\n**42. `backend-patterns` (Backend Minták)**\n*   **Funkció:** Backend architektúra minták, API tervezés, adatbázis optimalizálás és szerver-oldali legjobb gyakorlatok Node.js, Express és Next.js API route-okhoz.\n*   **Használat:** Backend fejlesztéshez.\n\n**43. `testing` (Tesztelés)**\n*   **Funkció:** Egységes tesztelési parancsok és minták frontend és backend között.\n*   **Használat:** Teszteléshez.\n\n**44. `session-resume` (Munkamenet Folytatás)**\n*   **Funkció:** Kontextus folytatása az előző munkamenetből.\n*   **Használat:** Munkamenetek közötti zökkenőmentes átmenethez.\n\n**45. `file-todos` (Fájl alapú Teendők)**\n*   **Funkció:** Fájl alapú teendőkövetés kezelése a `todos/` könyvtárban.\n*   **Használat:** Feladatok szervezéséhez és követéséhez.\n\n**46. `debug` (Hibakeresés)**\n*   **Funkció:** Szisztematikus hibakeresés strukturált reprodukcióval és a hiba okának elemzésével.\n*   **Használat:** Hibák és váratlan viselkedések elemzéséhez.\n\n**47. `compound-docs` (Összetett Dokumentumok)**\n*   **Funkció:** Megoldott problémák dokumentálása a tudás megőrzése érdekében.\n*   **Használat:** Tudásbázis építéséhez.\n\n**48. `code-review` (Kód Felülvizsgálat)**\n*   **Funkció:** Önálló kód felülvizsgálati módszertan strukturált, súlyosság szerint osztályozott kódértékeléshez.\n*   **Használat:** Kód minőségének ellenőrzéséhez.\n\n**49. `council-chairman` (Tanács Elnöke)**\n*   **Funkció:** Az LLM Tanács (több-modelles kollektíva) kezelése és konzultációja szakértői tanácsokért.\n*   **Használat:** Konfigurálhatod a tanács tagjait, ellenőrizheted az állapotukat, vagy kérhetsz \"Konzultációt\", ahol több LLM független tervezeteket és peer review-kat biztosít a magas minőségű szintézis érdekében.\n\n**50. `writing-skills` (Készségírás)**\n*   **Funkció:** Útmutató hatékony készségek létrehozásához.\n*   **Használat:** Új készségek létrehozásához vagy meglévők frissítéséhez.\n\n**51. `writing-plans` (Tervezés)**\n*   **Funkció:** Használja, ha specifikációja vagy követelményei vannak egy több lépésből álló feladathoz, még mielőtt a kódhoz nyúlna.\n*   **Használat:** Részletes implementációs tervek készítéséhez.\n\n**52. `verification-before-completion` (Verifikáció Befejezés Előtt)**\n*   **Funkció:** Minden munka befejezése előtt futtass ellenőrző parancsokat és erősítsd meg a kimenetet.\n*   **Használat:** A munka minőségének biztosításához.\n\n**53. `using-superpowers` (Szuperképességek Használata)**\n*   **Funkció:** Bevezető a készségek használatához, megkövetelve a Skill eszköz hívását bármilyen válasz előtt.\n*   **Használat:** A Gemini CLI képességeinek felfedezéséhez.\n\n**54. `using-git-worktrees` (Git Worktree-k Használata)**\n*   **Funkció:** Elszigetelt git worktree-k létrehozása.\n*   **Használat:** Funkciófejlesztéshez.\n\n**55. `test-driven-development` (Tesztvezérelt Fejlesztés)**\n*   **Funkció:** Tesztvezérelt fejlesztés (TDD) implementálása bármilyen funkció vagy hibajavítás során.\n*   **Használat:** Minőségi kód írásához.\n\n**56. `systematic-debugging` (Szisztematikus Hibakeresés)**\n*   **Funkció:** Szisztematikus hibakeresés bármilyen bug, teszt kudarc vagy váratlan viselkedés esetén.\n*   **Használat:** Hibák megoldásához.\n\n**57. `subagent-driven-development` (Subagent-vezérelt Fejlesztés)**\n*   **Funkció:** Implementációs tervek végrehajtása független feladatokkal az aktuális munkamenetben.\n*   **Használat:** Komplex feladatok felosztásához.\n\n**58. `requesting-code-review` (Kód Felülvizsgálat Kérése)**\n*   **Funkció:** Kód felülvizsgálat kérése, mielőtt a változtatásokat egyesítenék vagy PR-t hoznának létre.\n*   **Használat:** Kód minőségének és megfelelőségének ellenőrzéséhez.\n\n**59. `receiving-code-review` (Kód Felülvizsgálat Fogadása)**\n*   **Funkció:** Kód felülvizsgálati visszajelzések fogadása és feldolgozása.\n*   **Használat:** Visszajelzések alapján történő fejlesztéshez.\n\n**60. `finishing-a-development-branch` (Fejlesztési ág Befejezése)**\n*   **Funkció:** Útmutató a fejlesztési munka befejezéséhez és integrálásához.\n*   **Használat:** Fejlesztési ágak lezárásához.\n\n**61. `executing-plans` (Tervek Végrehajtása)**\n*   **Funkció:** Implementációs tervek végrehajtása külön munkamenetben, ellenőrző pontokkal.\n*   **Használat:** Tervek megvalósításához.\n\n**62. `dispatching-parallel-agents` (Párhuzamos Ügynökök Kiküldése)**\n*   **Funkció:** 2+ független feladat kezelése párhuzamos ügynökökkel.\n*   **Használat:** Több feladat egyidejű végrehajtásához.\n\n**63. `code-reviewer` (Kód Felülvizsgáló)**\n*   **Funkció:** Kód felülvizsgálata az eredeti terv és a kódolási szabványok alapján.\n*   **Használat:** Kód minőségének ellenőrzéséhez.\n\n**64. `brainstorming` (Ötletelés)**\n*   **Funkció:** Felhasználói szándék, követelmények és tervezés feltárása implementáció előtt.\n*   **Használat:** Kreatív munkához.\n\n**65. `validation` (Validáció)**\n*   **Funkció:** Keresztmetszeti validációs módszertan a fázis kimenetek és a projekt integritásának ellenőrzésére.\n*   **Használat:** A projekt integritásának biztosításához.\n\n**66. `session-management` (Munkamenet Kezelés)**\n*   **Funkció:** Orchestrációs munkamenet állapotának, követésének és folytatásának kezelése.\n*   **Használat:** Munkamenetek kezeléséhez.\n\n**67. `implementation-planning` (Implementációs Tervezés)**\n*   **Funkció:** Részletes implementációs tervek generálása véglegesített tervek alapján.\n*   **Használat:** Tervezéshez.\n\n**68. `execution` (Végrehajtás)**\n*   **Funkció:** Fázisvégrehajtási módszertan orchestrációs munkafolyamatokhoz, hibakezeléssel és befejezési protokollokkal.\n*   **Használat:** Munkafolyamatok végrehajtásához.\n\n**69. `design-dialogue` (Tervezési Párbeszéd)**\n*   **Funkció:** Strukturált tervezési beszélgetések irányítása komplex mérnöki feladatokhoz.\n*   **Használat:** Tervezési fázisban.\n\n**70. `delegation` (Delegálás)**\n*   **Funkció:** Ügynök delegálási legjobb gyakorlatok hatékony subagent promptok konstruálásához.\n*   **Használat:** Feladatok delegálásához.\n\n**71. `prompt engineering` (Prompt Mérnök)**\n*   **Funkció:** Promptok létrehozása, finomítása, elemzése vagy optimalizálása nagy nyelvi modellek (LLM) számára.\n*   **Használat:** Promptok tervezéséhez és optimalizálásához.\n\n**72. `expert-librarian` (Szakértő Könyvtáros)**\n*   **Funkció:** Segít rendszerezni, keresni és szintetizálni a Readwise highlightokat és dokumentumokat.\n*   **Használat:** Tudásbázis kezeléséhez.\n\n**73. `package-manager-expert` (Csomagkezelő Szakértő)**\n*   **Funkció:** Windows szoftvercsomagok telepítésének megtalálása és javaslása (WinGet).\n*   **Használat:** Windows környezet beállításához.\n\n**74. `security-audit` (Biztonsági Audit)**\n*   **Funkció:** Átfogó biztonsági audit.\n*   **Használat:** Biztonsági felülvizsgálathoz.",
+            "diffStat": {
+              "model_added_lines": 297,
+              "model_removed_lines": 0,
+              "model_added_chars": 17638,
+              "model_removed_chars": 0,
+              "user_added_lines": 0,
+              "user_removed_lines": 0,
+              "user_added_chars": 0,
+              "user_removed_chars": 0
+            },
+            "isNewFile": true
+          },
+          "displayName": "WriteFile",
+          "description": "Writes content to a specified file in the local filesystem.\n\n      The user has the ability to modify `content`. If modified, this will be stated in the response.",
+          "renderOutputAsMarkdown": true
+        }
+      ],
+      "thoughts": [],
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "id": "84ffab14-5dc3-47f6-ab2c-c8578c3cee11",
+      "timestamp": "2026-02-24T17:49:19.644Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/pre-compact.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/pre-compact.js\" 2>/dev/null || true] failed for event PreCompress. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "b7ec345a-f024-4c7e-b9d8-fdafd27e6386",
+      "timestamp": "2026-02-24T17:49:37.411Z",
+      "type": "gemini",
+      "content": "Elmentettem a Gemini CLI bővítmények listáját a `BOVITMENY.md` fájlba a projekt gyökerébe.\n\nVan-e még valami, amiben segíthetek a mai napon?",
+      "thoughts": [],
+      "tokens": {
+        "input": 492952,
+        "output": 51,
+        "cached": 0,
+        "thoughts": 0,
+        "tool": 0,
+        "total": 493003
+      },
+      "model": "gemini-2.5-flash"
+    },
+    {
+      "id": "5445ace5-e079-42d5-912a-0ff81f1855dc",
+      "timestamp": "2026-02-24T17:49:38.144Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/check-console-log.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/check-console-log.js\" 2>/dev/null || true] failed for event AfterAgent. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "912d3c35-ae0a-4d89-acc3-c463a761ae9b",
+      "timestamp": "2026-02-24T17:49:52.177Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/pre-compact.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/pre-compact.js\" 2>/dev/null || true] failed for event PreCompress. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "aef13f32-9b69-4fa4-bb78-ba21663b7539",
+      "timestamp": "2026-02-24T17:51:14.103Z",
+      "type": "info",
+      "content": ""
+    },
+    {
+      "id": "d0ca5d7b-b979-4f5e-a07e-0a5a76150588",
+      "timestamp": "2026-02-24T17:55:35.381Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/session-end.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/session-end.js\" 2>/dev/null || true, node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/evaluate-session.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/evaluate-session.js\" 2>/dev/null || true] failed for event SessionEnd. Press F12 to see the debug drawer for more details.\n"
+    }
+  ]
+}

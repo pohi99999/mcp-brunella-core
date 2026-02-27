@@ -1,0 +1,11 @@
+Subagent 'cli_help' finished.
+Termination Reason: GOAL
+Result:
+{
+  "answer": "Based on the provided internal documentation for Gemini CLI (version 0.29.7), there is no specific list of tool names for an MCP server named 'google-workspace'. \n\nThe documentation describes the architecture and configuration of MCP servers in `tools/mcp-server.md`, explaining how tools are discovered, sanitized, and registered (including automatic prefixing like `serverName__toolName` in case of conflicts). It also mentions that the `/mcp` command can be used within the CLI to list available tools for any connected server. \n\nWhile 'google-workspace' is a well-known MCP server in the broader Model Context Protocol ecosystem (typically providing tools for Gmail, Calendar, Drive, etc.), its specific tool definitions are not included in the Gemini CLI's internal documentation files provided in this environment. \n\nInvestigation was interrupted due to the turn limit.",
+  "sources": [
+    "tools/mcp-server.md",
+    "cli/cli-reference.md",
+    "core/tools-api.md"
+  ]
+}

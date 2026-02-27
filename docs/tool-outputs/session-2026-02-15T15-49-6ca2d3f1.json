@@ -1,0 +1,24 @@
+{
+  "sessionId": "6ca2d3f1-e096-42e1-b245-d15bfaac6908",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-15T15:49:51.886Z",
+  "lastUpdated": "2026-02-15T15:49:52.631Z",
+  "messages": [
+    {
+      "id": "05c1de54-1afa-476e-969c-94d159ee112d",
+      "timestamp": "2026-02-15T15:49:51.886Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "szia beolvasnád a readme.md fájlt és végig mennél az inditó protokollon? és magyarul kommunikálunk."
+        }
+      ]
+    },
+    {
+      "id": "66bb6130-ffcf-4f59-94d5-709680405677",
+      "timestamp": "2026-02-15T15:49:52.631Z",
+      "type": "error",
+      "content": "[API Error: [{\n  \"error\": {\n    \"code\": 400,\n    \"message\": \"Request contains an invalid argument.\",\n    \"errors\": [\n      {\n        \"message\": \"Request contains an invalid argument.\",\n        \"domain\": \"global\",\n        \"reason\": \"badRequest\"\n      }\n    ],\n    \"status\": \"INVALID_ARGUMENT\"\n  }\n}\n]]"
+    }
+  ]
+}

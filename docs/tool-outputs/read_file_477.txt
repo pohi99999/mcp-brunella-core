@@ -1,0 +1,106 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-100 of 521 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 100.
+
+--- FILE CONTENT (truncated) ---
+import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
+import { logInfo, logError } from '../utils/logger.js';
+import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
+import { invoiceStore } from '../utils/lancedb_client.js';
+import { updateBusinessJobStatus } from '../utils/db.js';
+import { socketService } from '../server/SocketService.js';
+import { globalPythonShell } from '../utils/pythonShell.js';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+
+// ... (previous interfaces remain the same) ...
+
+/**
+ * FinanceGuardian - Pénzügyi Őrszem
+ * Responsibility: Invoice OCR, anomaly detection, financial trend analysis
+ */
+export class FinanceGuardian extends BaseAgent {
+  name = 'FinanceGuardian';
+  role = 'Financial Monitoring & Anomaly Detection';
+  description = 'Pénzügyi Őrszem - Processes invoices, detects anomalies, generates financial reports';
+  capabilities = ['invoice_processing', 'ocr_extraction', 'anomaly_detection', 'trend_analysis', 'cost_optimization'];
+  
+  private invoiceHistory: Map<string, InvoiceData[]> = new Map();
+  private priceBaselineByVendor: Map<string, { avgPrice: number; stdDev: number }> = new Map();
+  private anomaliesDetected: PriceAnomaly[] = [];
+
+  /**
+   * Internal execution logic
+   */
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = context.task || '';
+    const jobId = (context as any).jobId;
+    const startTime = Date.now();
+
+    if (jobId) {
+        await updateBusinessJobStatus(jobId, 'running');
+        socketService.emit('business_job:updated', { jobId, status: 'running' });
+    }
+
+    try {
+      // MASTER TRACK 2: Full Automation Orchestrator
+      if (task.toLowerCase().includes('szinkronizáld a számlákat') || (context as any).taskType === 'full_sync') {
+        return await this.handleFullSync(context);
+      }
+
+      // MASTER TRACK 2: Task 1 - Gmail PDF Download
+      if (task.toLowerCase().includes('download pdf invoice from gmail') || (context as any).taskType === 'download_invoice') {
+        const result = await this.handleGmailDownload(context);
+        if (jobId && !result.success) {
+            await updateBusinessJobStatus(jobId, 'failed', JSON.stringify(result));
+            socketService.emit('business_job:updated', { jobId, status: 'failed' });
+        }
+        return result;
+      }
+      
+      // ... (rest of generic processing) ...
+    } catch (e: any) {
+      logError(this.name, `Task failed: ${e.message}`);
+      return { success: false, message: `Task failed: ${e.message}` };
+    }
+  }
+
+  /**
+   * Orchestrate the entire invoice sync flow
+   */
+  private async handleFullSync(context: AgentContext): Promise<AgentResult> {
+    const jobId = (context as any).jobId;
+    logInfo(this.name, `Starting full invoice sync orchestrator (Job: ${jobId})`);
+
+    try {
+        // 1. Download from Gmail
+        const downloadResult = await this.handleGmailDownload(context);
+        const files = downloadResult.data?.downloadedFiles || [];
+
+        if (files.length === 0) {
+            if (jobId) {
+                await updateBusinessJobStatus(jobId, 'completed', JSON.stringify({ message: "No new invoices found", count: 0 }));
+                socketService.emit('business_job:updated', { jobId, status: 'completed' });
+            }
+            return downloadResult;
+        }
+
+        // 2. Process each file
+        const processedResults = [];
+        for (const file of files) {
+            logInfo(this.name, `Processing file in full sync: ${file}`);
+            const processResult = await this.handleProcessInvoice({ ...context, filePath: file });
+            processedResults.push({
+                file: path.basename(file),
+                success: processResult.success,
+                message: processResult.message,
+                data: processResult.data
+            });
+
+            // 3. Export to Sheets if successful
+            if (processResult.success && processResult.data?.invoiceData && !processResult.data.isDuplicate) {
+                await this.handleSheetsExport({ 
+                    ...context, 
+                    invoiceData: processResult.data.invoiceData 
+                });

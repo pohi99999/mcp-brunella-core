@@ -1,0 +1,9 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\myai\clients
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 22.      8:26          17052 google_sheets_client.py
+Process Group PGID: 23068

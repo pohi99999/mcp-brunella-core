@@ -1,0 +1,106 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 81-180 of 364 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 180.
+
+--- FILE CONTENT (truncated) ---
+    if (!spreadsheetId) {
+      return { success: false, message: "Hiányzó Google Sheets ID.", data: null };
+    }
+
+    const workspace = await getWorkspaceClient();
+    
+    // Prepare row data
+    const row = [
+      invoiceData.invoice_number,
+      invoiceData.vendor_name,
+      invoiceData.amount,
+      invoiceData.currency || 'HUF',
+      invoiceData.invoice_date || invoiceData.date || new Date().toISOString().split('T')[0],
+      invoiceData.due_date || '',
+      new Date().toISOString() // Feldolgozás ideje
+    ];
+
+    await workspace.performSheetOperation({
+      operation: 'append',
+      spreadsheetId,
+      range: 'Sheet1!A:G',
+      values: [row]
+    });
+
+    logInfo(this.name, `Invoice ${invoiceData.invoice_number} exported to Google Sheet.`);
+
+    return {
+      success: true,
+      message: `Számla (${invoiceData.invoice_number}) sikeresen exportálva a Google Sheets táblázatba.`,
+      data: { spreadsheetId, invoiceData }
+    };
+  }
+
+  /**
+   * Extract invoices from PDFs (mock OCR)
+   */
+  private async extractInvoicesFromPDFs(): Promise<InvoiceData[]> {
+    // Mock invoice data
+    const mockInvoices: InvoiceData[] = [
+      {
+        invoiceNumber: 'INV-2024-001',
+        vendor: 'TechSupply Hungary',
+        amount: 125000,
+        currency: 'HUF',
+        date: new Date('2024-02-01'),
+        dueDate: new Date('2024-02-15'),
+        lineItems: [
+          { description: 'Laptop', quantity: 5, unitPrice: 22000, total: 110000 },
+          { description: 'Software licenses', quantity: 1, unitPrice: 15000, total: 15000 }
+        ],
+        confidence: 98
+      },
+      {
+        invoiceNumber: 'INV-2024-002',
+        vendor: 'OfficeWorld',
+        amount: 45000,
+        currency: 'HUF',
+        date: new Date('2024-02-05'),
+        lineItems: [
+          { description: 'Office furniture', quantity: 10, unitPrice: 4500, total: 45000 }
+        ],
+        confidence: 95
+      },
+      {
+        invoiceNumber: 'INV-2024-003',
+        vendor: 'TechSupply Hungary',
+        amount: 135000,
+        currency: 'HUF',
+        date: new Date('2024-02-10'),
+        lineItems: [
+          { description: 'Laptop', quantity: 5, unitPrice: 26000, total: 130000 },
+          { description: 'Warranty', quantity: 1, unitPrice: 5000, total: 5000 }
+        ],
+        confidence: 96
+      },
+      {
+        invoiceNumber: 'INV-2024-004',
+        vendor: 'Utilities Inc',
+        amount: 28000,
+        currency: 'HUF',
+        date: new Date('2024-02-12'),
+        lineItems: [
+          { description: 'Electricity', quantity: 1, unitPrice: 28000, total: 28000 }
+        ],
+        confidence: 99
+      }
+    ];
+
+    return mockInvoices;
+  }
+
+  /**
+   * Store invoice history in memory/LanceDB
+   */
+  private async storeInvoiceHistory(invoices: InvoiceData[]): Promise<void> {
+    invoices.forEach(invoice => {
+      const vendorKey = invoice.vendor;
+      const existing = this.invoiceHistory.get(vendorKey) || [];
+      this.invoiceHistory.set(vendorKey, [...existing, invoice]);
+    });

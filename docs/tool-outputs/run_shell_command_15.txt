@@ -1,0 +1,842 @@
+Output too large. Showing first 8000 and last 32 000 characters. For full output see: C:\Users\pohi9\.gemini\tmp\mcp-brunella-core\tool-outputs\session-26d77dbf-14b2-4b80-a9ba-3f01aa561cf8\run_shell_command_1771883510533_0.txt
+Output: 
+ RUN  v4.0.18 F:/mcp-brunella-core
+
+
+ ❯ test/unifiedWorkspace.test.ts [queued]
+
+ Test Files 0 passed (2)
+      Tests 0 passed (0)
+   Start at 22:51:55
+
+ ❯ test/unifiedWorkspace.test.ts 0/26
+
+ Test Files 0 passed (2)
+      Tests 0 passed (26)
+   Start at 22:51:55
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should initialize with default scopes
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should initialize with default scopes
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should load credentials from config directory
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should load credentials from config directory
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should load credentials from config directory
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should load credentials from config directory
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should throw error if credentials file is missing
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should throw error if credentials file is missing
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should throw error if credentials file is missing
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should throw error if credentials file is missing
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[INFO] [UnifiedWorkspace] Creating email draft to: recipient@example.com
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[INFO] [UnifiedWorkspace] ✅ Draft created: draft_123   
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[INFO] [UnifiedWorkspace] Creating email draft to: recipient@example.com
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[INFO] [UnifiedWorkspace] ✅ Draft created: draft_123   
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+[INFO] [UnifiedWorkspace] Creating email draft to: test@example.com
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+[INFO] [UnifiedWorkspace] ✅ Draft created: draft_123   
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+[INFO] [UnifiedWorkspace] Searching emails: "is:unread" 
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] Searching emails: "from:nobody@example.com"
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | t
+
+... [9829 characters omitted] ...
+
+ting > should handle Drive API errors gracefully
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should handle Drive API errors gracefully
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+
+ ❯ test/workerThreadPool.test.ts [queued]
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 22 passed (26)
+   Start at 22:51:55
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should handle Drive API errors gracefully
+[ERROR] [UnifiedWorkspace] Failed to list files: Drive API error
+
+
+ ❯ test/workerThreadPool.test.ts [queued]
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 22 passed (26)
+   Start at 22:51:55
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+[INFO] [UnifiedWorkspace] Creating calendar event: Team Meeting
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+[INFO] [UnifiedWorkspace] ✅ Event created: event_123   
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+[INFO] [UnifiedWorkspace] Creating calendar event: Personal Reminder
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+[INFO] [UnifiedWorkspace] ✅ Event created: event_123   
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should return singleton instance on subsequent calls
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should return singleton instance on subsequent calls
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should reset singleton on resetWorkspaceClient()
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should reset singleton on resetWorkspaceClient()
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+ ❯ test/unifiedWorkspace.test.ts (26 tests | 4 failed) 35ms
+       ✓ should initialize with default scopes 4ms      
+       × should load credentials from config directory 5ms
+       × should throw error if credentials file is missing 3ms
+       ✓ should create an email draft with required fields 1ms
+       ✓ should create an email draft with attachments (placeholder) 1ms
+       × should throw error if Gmail client not initialized 4ms
+       ✓ should search emails by query 1ms
+       ✓ should return empty array if no emails match query 1ms
+       ✓ should handle Gmail API errors gracefully 1ms  
+       ✓ should retrieve email attachments 1ms
+       ✓ should return empty array if no attachments found 1ms
+       ✓ should read data from a spreadsheet 1ms        
+       ✓ should append data to a spreadsheet 0ms        
+       ✓ should update data in a spreadsheet 0ms        
+       ✓ should throw error for unknown sheet operation 1ms
+       ✓ should create a new spreadsheet 1ms
+       × should upload a file to Google Drive 1ms       
+       ✓ should upload file to specific folder 1ms      
+       ✓ should throw error if localPath is missing 1ms 
+       ✓ should list files in Drive 1ms
+       ✓ should list files in specific folder 0ms       
+       ✓ should handle Drive API errors gracefully 1ms  
+       ✓ should create a calendar event 1ms
+       ✓ should create event in specific calendar 1ms   
+       ✓ should return singleton instance on subsequent calls 1ms
+       ✓ should reset singleton on resetWorkspaceClient() 1ms
+
+ ❯ test/workerThreadPool.test.ts [queued]
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 22 passed (26)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should create minimum number of workers on init
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 727
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should create minimum number of workers on init
+[INFO] [WorkerPool] Worker thread started: 46
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should create minimum number of workers on init
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should create minimum number of workers on init
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 240
+[INFO] [WorkerPool] Worker thread started: 835
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should create minimum number of workers on init
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should report correct initial stats
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 345
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should report correct initial stats
+[INFO] [WorkerPool] Worker thread started: 91
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should report correct initial stats
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should report correct initial stats
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 717
+[INFO] [WorkerPool] Worker thread started: 730
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should report correct initial stats
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple Python code  
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 995
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple Python code  
+[INFO] [WorkerPool] Worker thread started: 754
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple Python code  
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+
+ ❯ test/workerThreadPool.test.ts 1/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 23 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple Python code  
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 827
+[INFO] [WorkerPool] Worker thread started: 600
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple Python code  
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple JavaScript code
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 74
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple JavaScript code
+[INFO] [WorkerPool] Worker thread started: 640
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple JavaScript code
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+
+ ❯ test/workerThreadPool.test.ts 3/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 25 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple JavaScript code
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 312
+[INFO] [WorkerPool] Worker thread started: 5
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple JavaScript code
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should handle code execution errors
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 895
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should handle code execution errors
+[INFO] [WorkerPool] Worker thread started: 534
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should handle code execution errors
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+
+ ❯ test/workerThreadPool.test.ts 4/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 26 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should handle code execution errors
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 13
+[INFO] [WorkerPool] Worker thread started: 980
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should handle code execution errors
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 254
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Worker thread started: 341
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+
+ ❯ test/workerThreadPool.test.ts 5/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 27 passed (39)
+   Start at 22:51:55
+
+ ❯ test/workerThreadPool.test.ts 5/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 27 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Worker thread started: 916
+
+
+ ❯ test/workerThreadPool.test.ts 5/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 27 passed (39)
+   Start at 22:51:55
+stderr | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[ERROR] [WorkerPool] Task test-timeout-1 failed: Task test-timeout-1 timed out
+
+
+ ❯ test/workerThreadPool.test.ts 5/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 27 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 706
+[INFO] [WorkerPool] Worker thread started: 28
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 516
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Worker thread started: 120
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Worker thread started: 743
+[INFO] [WorkerPool] Worker thread started: 559
+[INFO] [WorkerPool] Worker thread started: 302
+[INFO] [WorkerPool] Worker thread started: 953
+[INFO] [WorkerPool] Worker thread started: 372
+[INFO] [WorkerPool] Worker thread started: 922
+
+
+ ❯ test/workerThreadPool.test.ts 5/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 27 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 714
+[INFO] [WorkerPool] Worker thread started: 961
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should reject tasks when queue is full
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 135
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should reject tasks when queue is full
+[INFO] [WorkerPool] Worker thread started: 956
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should reject tasks when queue is full
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should reject tasks when queue is full
+[INFO] [WorkerPool] Worker thread started: 636
+[INFO] [WorkerPool] Worker thread started: 719
+[INFO] [WorkerPool] Worker thread started: 680
+[INFO] [WorkerPool] Worker thread started: 449
+[INFO] [WorkerPool] Worker thread started: 352
+[INFO] [WorkerPool] Worker thread started: 522
+[INFO] [WorkerPool] Worker thread started: 223
+[INFO] [WorkerPool] Worker thread started: 519
+[INFO] [WorkerPool] Worker thread started: 996
+[INFO] [WorkerPool] Worker thread started: 870
+[INFO] [WorkerPool] Worker thread started: 373
+[INFO] [WorkerPool] Worker thread started: 893
+[INFO] [WorkerPool] Worker thread started: 515
+[INFO] [WorkerPool] Worker thread started: 688
+[INFO] [WorkerPool] Worker thread started: 746
+[INFO] [WorkerPool] Worker thread started: 37
+[INFO] [WorkerPool] Worker thread started: 722
+[INFO] [WorkerPool] Worker thread started: 549
+
+
+ ❯ test/workerThreadPool.test.ts 7/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 4 failed | 29 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should reject tasks when queue is full
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 941
+[INFO] [WorkerPool] Worker thread started: 674
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should reject tasks when queue is full
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should scale up to maxThreads under load
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 923
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should scale up to maxThreads under load
+[INFO] [WorkerPool] Worker thread started: 952
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should scale up to maxThreads under load
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should scale up to maxThreads under load
+[INFO] [WorkerPool] Worker thread started: 929
+[INFO] [WorkerPool] Worker thread started: 19
+[INFO] [WorkerPool] Worker thread started: 804
+
+
+ ❯ test/workerThreadPool.test.ts 8/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 5 failed | 29 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should scale up to maxThreads under load
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 257
+[INFO] [WorkerPool] Worker thread started: 753
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should scale up to maxThreads under load
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should update stats correctly after task completion
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 925
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should update stats correctly after task completion
+[INFO] [WorkerPool] Worker thread started: 931
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should update stats correctly after task completion
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+
+ ❯ test/workerThreadPool.test.ts 9/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 6 failed | 29 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should update stats correctly after task completion
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 579
+[INFO] [WorkerPool] Worker thread started: 948
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should update stats correctly after task completion
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 493
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Worker thread started: 64
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 814
+[INFO] [WorkerPool] Worker thread started: 261
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Shutting down pool...
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should reject queued tasks on shutdown
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 144
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should reject queued tasks on shutdown
+[INFO] [WorkerPool] Worker thread started: 819
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should reject queued tasks on shutdown
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should reject queued tasks on shutdown
+[INFO] [WorkerPool] Worker thread started: 919
+[INFO] [WorkerPool] Worker thread started: 223
+[INFO] [WorkerPool] Worker thread started: 579
+[INFO] [WorkerPool] Worker thread started: 516
+[INFO] [WorkerPool] Worker thread started: 442
+[INFO] [WorkerPool] Worker thread started: 154
+[INFO] [WorkerPool] Worker thread started: 258
+[INFO] [WorkerPool] Worker thread started: 358
+[INFO] [WorkerPool] Worker thread started: 423
+[INFO] [WorkerPool] Worker thread started: 342
+[INFO] [WorkerPool] Worker thread started: 515
+[INFO] [WorkerPool] Worker thread started: 272
+[INFO] [WorkerPool] Worker thread started: 504
+
+
+ ❯ test/workerThreadPool.test.ts 10/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 6 failed | 30 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should reject queued tasks on shutdown
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 394
+[INFO] [WorkerPool] Worker thread started: 897
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should reject queued tasks on shutdown
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should reject queued tasks on shutdown
+[INFO] [WorkerPool] Shutting down pool...
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should reject queued tasks on shutdown
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 978
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Worker thread started: 293
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+
+ ❯ test/workerThreadPool.test.ts 12/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 7 failed | 31 passed (39)
+   Start at 22:51:55
+stderr | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[WARN] [WorkerPool] Worker exited with code 1
+
+
+ ❯ test/workerThreadPool.test.ts 12/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 7 failed | 31 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Worker thread started: 675
+
+
+ ❯ test/workerThreadPool.test.ts 12/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 7 failed | 31 passed (39)
+   Start at 22:51:55
+
+ ❯ test/workerThreadPool.test.ts 12/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 7 failed | 31 passed (39)
+   Start at 22:51:55
+
+ ❯ test/workerThreadPool.test.ts 12/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 7 failed | 31 passed (39)
+   Start at 22:51:55
+
+ ❯ test/workerThreadPool.test.ts 12/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 7 failed | 31 passed (39)
+   Start at 22:51:55
+
+ ❯ test/workerThreadPool.test.ts 12/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 7 failed | 31 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Terminating idle worker
+
+
+ ❯ test/workerThreadPool.test.ts 13/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 8 failed | 31 passed (39)
+   Start at 22:51:55
+stderr | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[ERROR] [WorkerPool] Task crash-test-1 failed: Task crash-test-1 timed out
+
+
+ ❯ test/workerThreadPool.test.ts 13/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 8 failed | 31 passed (39)
+   Start at 22:51:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 243
+[INFO] [WorkerPool] Worker thread started: 654
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+[INFO] [WorkerPool] Pool shutdown complete
+
+
+ ❯ test/workerThreadPool.test.ts 13/13
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 8 failed | 31 passed (39)
+   Start at 22:51:55
+ ❯ test/workerThreadPool.test.ts (13 tests | 4 failed) 8009ms
+       ✓ should create minimum number of workers on init 9ms
+       ✓ should report correct initial stats 2ms        
+       ✓ should execute simple Python code 106ms        
+       ✓ should execute simple JavaScript code 107ms    
+       ✓ should handle code execution errors 110ms      
+       ✓ should timeout long-running tasks  2004ms      
+       ✓ should queue tasks when all workers are busy 110ms
+       × should reject tasks when queue is full 112ms   
+       × should scale up to maxThreads under load 217ms 
+       ✓ should update stats correctly after task completion 109ms
+       ✓ should shutdown gracefully 3ms
+       × should reject queued tasks on shutdown 106ms   
+       × should handle worker crashes gracefully 5012ms 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 8 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should load credentials from config directory
+AssertionError: expected "vi.fn()" to be called with arguments: [ StringContaining{…}, 'utf-8' ]
+
+Number of calls: 0
+
+ ❯ test/unifiedWorkspace.test.ts:216:27
+    214|       await newClient.initialize();
+    215|
+    216|       expect(readFileSpy).toHaveBeenCalledWith(
+       |                           ^
+    217|         expect.stringContaining('google_creden…
+    218|         'utf-8'
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/8]⎯
+
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should throw error if credentials file is missing
+AssertionError: promise resolved "undefined" instead of rejecting
+
+- Expected:
+Error {
+  "message": "rejected promise",
+}
+
++ Received:
+undefined
+
+ ❯ test/unifiedWorkspace.test.ts:226:42
+    224|       const newClient = new UnifiedWorkspaceCl…
+    225|
+    226|       await expect(newClient.initialize()).rej…
+       |                                          ^     
+    227|     });
+    228|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/8]⎯
+
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+AssertionError: promise resolved "{ draftId: 'draft_123', …(1) }" instead of rejecting
+
+- Expected
++ Received
+
+- Error {
+-   "message": "rejected promise",
++ {
++   "draftId": "draft_123",
++   "url": "https://mail.google.com/mail/u/0/#drafts/draft_123",
+  }
+
+ ❯ test/unifiedWorkspace.test.ts:272:7
+    270|           body: 'Test',
+    271|         })
+    272|       ).rejects.toThrow('Gmail client not init…
+       |       ^
+    273|     });
+    274|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/8]⎯
+
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload a file to Google Drive
+Error: File not found
+ ❯ test/unifiedWorkspace.test.ts:223:54
+    221|
+    222|     it('should throw error if credentials file…
+    223|       vi.spyOn(fs, 'readFile').mockRejectedVal…
+       |                                                
+      ^
+    224|       const newClient = new UnifiedWorkspaceCl…
+    225|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/8]⎯
+
+ FAIL  test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should reject tasks when queue is full
+AssertionError: expected 0 to be greater than 0
+ ❯ test/workerThreadPool.test.ts:183:31
+    181|
+    182|       const failures = results.filter(r => 'er…
+    183|       expect(failures.length).toBeGreaterThan(…
+       |                               ^
+    184|     }, 30000);
+    185|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/8]⎯
+
+ FAIL  test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should scale up to maxThreads under load
+AssertionError: expected 0 to be greater than 2
+ ❯ test/workerThreadPool.test.ts:203:35
+    201|
+    202|       const stats = pool.getStats();
+    203|       expect(stats.activeThreads).toBeGreaterT…
+       |                                   ^
+    204|
+    205|       await Promise.all(promises);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/8]⎯
+
+ FAIL  test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should reject queued tasks on shutdown
+AssertionError: expected 0 to be greater than 0
+ ❯ test/workerThreadPool.test.ts:261:37
+    259|       );
+    260|
+    261|       expect(shutdownErrors.length).toBeGreate…
+       |                                     ^
+    262|     }, 20000);
+    263|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/8]⎯
+
+ FAIL  test/workerThreadPool.test.ts > WorkerThreadPool > Error Recovery > should handle worker crashes gracefully
+Error: Task crash-test-1 timed out
+ ❯ Timeout._onTimeout src/core/workerThreadPool.ts:133:16
+    131|     return new Promise((resolve, reject) => {  
+    132|       const timeout = setTimeout(() => {       
+    133|         reject(new Error(`Task ${task.id} time…
+       |                ^
+    134|         this.terminate(); // Kill hanging work…
+    135|       }, task.timeout || 60000);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/8]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  8 failed | 31 passed (39)
+   Start at  22:51:55
+   Duration  8.70s (transform 127ms, setup 67ms, import 159ms, tests 8.04s, environment 0ms)
+Exit Code: 1
+Process Group PGID: 50972

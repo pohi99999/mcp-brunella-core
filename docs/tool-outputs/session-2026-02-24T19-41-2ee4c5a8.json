@@ -1,0 +1,972 @@
+{
+  "sessionId": "2ee4c5a8-3000-45e4-aece-2f16bd20274f",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-24T19:41:52.874Z",
+  "lastUpdated": "2026-02-24T19:46:22.915Z",
+  "messages": [
+    {
+      "id": "ea68c5c9-fd9a-457b-b83a-174751d17932",
+      "timestamp": "2026-02-24T19:41:52.874Z",
+      "type": "info",
+      "content": "Waiting for MCP servers to initialize... Slash commands are still available and prompts will be queued."
+    },
+    {
+      "id": "2b267cfd-fb2b-49cd-90c8-088e0266e213",
+      "timestamp": "2026-02-24T19:41:53.181Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'chrome': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "67e5705a-6bb8-45c2-824e-31d35fe03c37",
+      "timestamp": "2026-02-24T19:41:53.589Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "74095b75-8530-4a62-8d23-367c685d4232",
+      "timestamp": "2026-02-24T19:41:53.606Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "fb860cf0-f62c-4f9b-b572-f2b4c40a546e",
+      "timestamp": "2026-02-24T19:41:53.608Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "aecc2743-2e6a-4b63-99f5-d9c1ed964478",
+      "timestamp": "2026-02-24T19:41:54.205Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "c5cd19ac-36cd-47c2-b017-6c539a8d96f6",
+      "timestamp": "2026-02-24T19:41:54.207Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "60ff075c-5432-40dc-873c-3f432335edf9",
+      "timestamp": "2026-02-24T19:41:54.209Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "1901b27f-994a-480c-8e69-9c7d44ec4eab",
+      "timestamp": "2026-02-24T19:41:55.560Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "6111b440-a325-4295-8459-8488b7ddfe5c",
+      "timestamp": "2026-02-24T19:41:55.563Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "c7a9c6de-b0f9-495b-af1a-e825af8c1b59",
+      "timestamp": "2026-02-24T19:41:55.639Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "8a3e53b8-e692-4872-b22c-cb27ff8fc4cf",
+      "timestamp": "2026-02-24T19:41:55.910Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "f2e57706-a0c1-4d90-865c-113cf68a869e",
+      "timestamp": "2026-02-24T19:41:56.148Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/session-start.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/session-start.js\" 2>/dev/null || true] failed for event SessionStart. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "9f20bd96-4e0e-4f24-b6b2-b5c4e2cd20ad",
+      "timestamp": "2026-02-24T19:42:01.522Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'brunella-core': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "caa38391-6dda-4099-917b-62a02c9d557a",
+      "timestamp": "2026-02-24T19:42:01.592Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "a9ab2395-270b-47c6-9e8d-f2c1cd4d7243",
+      "timestamp": "2026-02-24T19:42:01.593Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "3d91477a-9ba7-4d41-bdc9-2d3d62d2c92f",
+      "timestamp": "2026-02-24T19:42:01.665Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "72c940cc-52d7-44a7-a7f6-64811f9cd57e",
+      "timestamp": "2026-02-24T19:42:02.030Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "71ee2e6f-a380-4a61-8514-9d14c59d2f02",
+      "timestamp": "2026-02-24T19:42:02.032Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "ee2cb9be-777e-4863-ae59-428d0b6e5ebc",
+      "timestamp": "2026-02-24T19:42:02.056Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "d57a06a8-7b67-4537-b47c-7f39b9dad631",
+      "timestamp": "2026-02-24T19:42:02.209Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "1e3b1f3c-13cb-44e7-891b-e9d83ab431df",
+      "timestamp": "2026-02-24T19:42:08.700Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "2b610307-2b25-4b90-851b-57f0c2f59146",
+      "timestamp": "2026-02-24T19:42:08.717Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "bb0ae829-69d6-43eb-8164-f82ded0033d1",
+      "timestamp": "2026-02-24T19:42:08.732Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "97983799-2160-4a97-ada5-709077ba3313",
+      "timestamp": "2026-02-24T19:42:08.871Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "cf90026f-4955-4849-b294-5ed5f3ce9e1d",
+      "timestamp": "2026-02-24T19:42:08.890Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "36a62dff-b524-4203-80a8-c6d826ba19a6",
+      "timestamp": "2026-02-24T19:42:08.891Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "9ac8ca6a-2627-4430-b2ee-e8c092dbb2f6",
+      "timestamp": "2026-02-24T19:42:09.234Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "a2d8b745-252a-40fd-ac30-52b0aadfbf68",
+      "timestamp": "2026-02-24T19:42:09.317Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "39ca46a4-3462-40b0-8cdd-22318972988f",
+      "timestamp": "2026-02-24T19:42:09.318Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "729af8b9-ef47-4274-b368-63116c538889",
+      "timestamp": "2026-02-24T19:42:09.474Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "32029f82-111b-4a08-885c-e6f4702dfaab",
+      "timestamp": "2026-02-24T19:42:09.961Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'reference-library': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "1e8253b1-372e-4660-adb0-bbb18835859f",
+      "timestamp": "2026-02-24T19:42:09.995Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'filesystem': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "493d01b0-1e55-40f8-83a8-009adaef4136",
+      "timestamp": "2026-02-24T19:42:10.121Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "26797907-0b1f-40c8-a7b3-bf759bc8708f",
+      "timestamp": "2026-02-24T19:42:10.122Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "a069be42-e283-4376-ab90-cfdf4d813a9f",
+      "timestamp": "2026-02-24T19:42:10.198Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "e888d93e-c4d7-471b-a4dc-530c805cc4f2",
+      "timestamp": "2026-02-24T19:42:10.328Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "fa20ed58-c119-4402-8bdf-bbba421b3632",
+      "timestamp": "2026-02-24T19:42:10.330Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "27564c68-460a-41b5-acf6-b7dbfb4436f8",
+      "timestamp": "2026-02-24T19:42:10.333Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "808d4f1d-a9a5-4804-9310-8332ab85dfe2",
+      "timestamp": "2026-02-24T19:42:10.402Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "3f9503af-4c58-4354-8dd3-7c4c10132b42",
+      "timestamp": "2026-02-24T19:42:11.341Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "efb0e93d-d67a-4052-8d3c-1e6f3abe4143",
+      "timestamp": "2026-02-24T19:42:11.342Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "34c0a5fe-6e53-4225-bbfc-f7398a97a5a6",
+      "timestamp": "2026-02-24T19:42:11.343Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "7bf0a512-cce5-4170-8dd6-0844c4bb7a2c",
+      "timestamp": "2026-02-24T19:42:11.501Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "3d3bd0be-0200-46b7-b2fa-33a83be8807c",
+      "timestamp": "2026-02-24T19:42:11.502Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "9a01d480-40e9-4047-b78f-4316aa96287c",
+      "timestamp": "2026-02-24T19:42:11.528Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "7a7dec36-61a8-4914-878b-f89ed46aa804",
+      "timestamp": "2026-02-24T19:42:11.758Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "d650b0de-6d03-4ebc-b319-a8035198ab08",
+      "timestamp": "2026-02-24T19:42:11.759Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "fd0efc10-c1f8-4abc-9404-b1827bfd7edf",
+      "timestamp": "2026-02-24T19:42:11.760Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "1759d469-af8b-450b-8d93-6d4783a81363",
+      "timestamp": "2026-02-24T19:42:11.987Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "82729bbd-270a-4f3b-bc34-fb833887d63f",
+      "timestamp": "2026-02-24T19:42:11.989Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "50e1ac33-2ba2-46f9-8dec-30ba56803b24",
+      "timestamp": "2026-02-24T19:42:12.000Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "c2f6901e-6c41-4a7c-ac19-2013ecfccad7",
+      "timestamp": "2026-02-24T19:42:12.194Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "903b05c7-0dd0-4160-93b1-683b20c1c04c",
+      "timestamp": "2026-02-24T19:42:12.195Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "1295c74b-0e0f-400d-9542-ee302c867c12",
+      "timestamp": "2026-02-24T19:42:12.216Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "98ab5aa2-4f09-40f1-b5b3-af9dc14a86fa",
+      "timestamp": "2026-02-24T19:42:12.289Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "76ec1d5b-4322-46e6-80c1-2cce47cabf9a",
+      "timestamp": "2026-02-24T19:42:12.295Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "4db11d93-a52d-463b-929f-4825c3c21524",
+      "timestamp": "2026-02-24T19:42:12.324Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "1b9683cc-206b-445e-8766-1bab531f4a0f",
+      "timestamp": "2026-02-24T19:42:12.362Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "2ab7acaf-f15b-48b4-a136-c14a9598c926",
+      "timestamp": "2026-02-24T19:42:12.902Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'dataplex': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "782c0ab5-cedc-44aa-babb-e87003492eba",
+      "timestamp": "2026-02-24T19:42:12.918Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "d7181e2c-5d86-4133-83e2-c90bffe0d74a",
+      "timestamp": "2026-02-24T19:42:12.919Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "645da901-9b11-4f5d-92c0-9a65ab0d971c",
+      "timestamp": "2026-02-24T19:42:12.935Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "ad416b77-3f52-4163-a05e-079a41502e21",
+      "timestamp": "2026-02-24T19:42:12.992Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "0164ca0e-5e0e-4646-9d2f-b4b289846c27",
+      "timestamp": "2026-02-24T19:42:12.993Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "0741f70a-fb45-468c-9f6b-8ad35ecfc3c8",
+      "timestamp": "2026-02-24T19:42:13.007Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "f6d829c6-bb23-43b5-b53f-ec0e22eecae3",
+      "timestamp": "2026-02-24T19:42:13.038Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "4536948b-1169-40ef-8986-3547e9c60dcd",
+      "timestamp": "2026-02-24T19:42:13.123Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "589b5ab0-ce93-47ef-bae9-c40f59e9a403",
+      "timestamp": "2026-02-24T19:42:13.133Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "25228170-6d02-4d98-86ce-4e22b1a8cb41",
+      "timestamp": "2026-02-24T19:42:13.134Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "1742966a-18ba-4909-9911-c8a0008defb9",
+      "timestamp": "2026-02-24T19:42:13.199Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "c1a9a29e-0ad1-4e82-8ec6-ecfa393f0704",
+      "timestamp": "2026-02-24T19:42:13.209Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "99f43e94-4bb2-4ab0-9b2a-97aaef91f66c",
+      "timestamp": "2026-02-24T19:42:13.212Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "5f007a69-74f4-4217-8e24-d4596d8bc704",
+      "timestamp": "2026-02-24T19:42:13.283Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "530bffa8-e547-4f1e-8be1-789966943513",
+      "timestamp": "2026-02-24T19:42:13.283Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "16f3e1b0-f771-415f-a9dc-7a919d74e707",
+      "timestamp": "2026-02-24T19:42:13.298Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "f000c7c7-34c6-447e-a044-47c052f44314",
+      "timestamp": "2026-02-24T19:42:13.391Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "ccdb18c3-825e-454a-b4af-1888d48b01b3",
+      "timestamp": "2026-02-24T19:42:13.393Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "907a9ee6-e627-42d6-92b5-d7e0bbd34de4",
+      "timestamp": "2026-02-24T19:42:13.395Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "fb59e5d9-9726-4b57-bc3f-55f426efbdfa",
+      "timestamp": "2026-02-24T19:42:13.450Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "11582bd6-e743-4b42-b01b-3737a0939376",
+      "timestamp": "2026-02-24T19:42:13.464Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "b334154d-e5bc-4c15-aaf4-5498216d5e92",
+      "timestamp": "2026-02-24T19:42:13.465Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "9525d9b3-1577-4d55-8c63-4e4dbf1fd2ea",
+      "timestamp": "2026-02-24T19:42:13.517Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "26a263c6-e7d3-48e6-bc9f-1bf36a42a259",
+      "timestamp": "2026-02-24T19:42:13.532Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "debd2fd3-b757-4ecd-9eca-2cfc7168fae6",
+      "timestamp": "2026-02-24T19:42:13.534Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "3db000d4-91af-4f37-af8e-6ffe7a52b86f",
+      "timestamp": "2026-02-24T19:42:13.748Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "eba2d945-2da4-4c89-84dc-3079d96b5770",
+      "timestamp": "2026-02-24T19:42:13.765Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "e82e2b56-07ae-4bc3-b5e1-d98a62a7138e",
+      "timestamp": "2026-02-24T19:42:13.766Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "608dc126-b251-4b83-8723-d7ed65b1b0a1",
+      "timestamp": "2026-02-24T19:42:13.945Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "eda98d4b-8761-4b36-ad9b-dd6a061bc8bb",
+      "timestamp": "2026-02-24T19:42:13.965Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "5c02ed2c-59e7-4881-b014-9fa1360c5a65",
+      "timestamp": "2026-02-24T19:42:13.969Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "c106337b-7257-411c-8752-d4e565c5d69d",
+      "timestamp": "2026-02-24T19:42:14.042Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "a575ab01-011a-4234-82a3-fcf89622b019",
+      "timestamp": "2026-02-24T19:42:14.047Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "2869ba5b-92bd-41ed-a91b-d666802ef622",
+      "timestamp": "2026-02-24T19:42:14.050Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "302706a7-95eb-467e-ac9f-4b2dfe5e9a9e",
+      "timestamp": "2026-02-24T19:42:14.167Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "0c0164fb-6fc0-4fc2-8a87-b1ab8d58b65f",
+      "timestamp": "2026-02-24T19:42:14.168Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "e7d56118-aa65-41a7-b6b1-846b45e1e9f0",
+      "timestamp": "2026-02-24T19:42:14.189Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "e0020971-2508-498a-a312-11bab4bb4a21",
+      "timestamp": "2026-02-24T19:42:14.244Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "10134d90-c68a-452a-b62a-bb29864584dd",
+      "timestamp": "2026-02-24T19:42:14.246Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "755be398-d616-4fdf-8dc8-1923fd4eb17b",
+      "timestamp": "2026-02-24T19:42:14.260Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "158e12a4-d098-4d5e-8517-293c158c594f",
+      "timestamp": "2026-02-24T19:42:14.288Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "e9050770-e615-47a1-aab1-761afd1576ab",
+      "timestamp": "2026-02-24T19:42:14.684Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "15179d6f-2783-4c82-84d2-01caf75709cd",
+      "timestamp": "2026-02-24T19:42:14.710Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "43e25649-e23a-4ab0-918a-e736ea384c53",
+      "timestamp": "2026-02-24T19:42:14.715Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "2ca45db1-47c5-4f31-b916-fb0ac45ed67d",
+      "timestamp": "2026-02-24T19:42:14.798Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "7d0bfde7-e901-4072-9d63-5c212c8d1bc8",
+      "timestamp": "2026-02-24T19:42:14.799Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "137b8a84-6609-47bf-94ab-3112989977e0",
+      "timestamp": "2026-02-24T19:42:14.803Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "cd473957-30b3-469f-989c-0e0b992e34b7",
+      "timestamp": "2026-02-24T19:42:14.901Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "aa97bdce-5a40-43df-9cab-d903c1c75f02",
+      "timestamp": "2026-02-24T19:42:14.936Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "48aefa63-a444-4dff-acff-f28cda328bd3",
+      "timestamp": "2026-02-24T19:42:14.937Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "da8ebaa8-cae9-4f2a-bf20-055b66696eff",
+      "timestamp": "2026-02-24T19:42:15.027Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "121fabd0-d52a-4b1e-960d-7fc906463814",
+      "timestamp": "2026-02-24T19:42:15.031Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "5fda73b6-5607-47de-8038-950caeef807b",
+      "timestamp": "2026-02-24T19:42:15.032Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "36e224a1-59c1-4f13-931d-37b99d825f5f",
+      "timestamp": "2026-02-24T19:42:15.082Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "63c93fb9-6078-40b2-af86-f8b75315a669",
+      "timestamp": "2026-02-24T19:42:15.392Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "c6a77e74-4486-42b9-874f-ee8dc05bc74f",
+      "timestamp": "2026-02-24T19:42:15.394Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "ae9f2506-45ca-4386-940a-e0dd5830acb6",
+      "timestamp": "2026-02-24T19:42:15.406Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "49576d07-fdab-40c4-9c90-20d134aca88d",
+      "timestamp": "2026-02-24T19:42:15.453Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "d3b955db-8e2f-460e-a65c-3edb20b53892",
+      "timestamp": "2026-02-24T19:42:15.468Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "f095daea-10ef-48c6-91ac-1c7cdb56e56e",
+      "timestamp": "2026-02-24T19:42:15.472Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "a0a88a69-b5aa-4c3f-a398-2cc73ebb5a90",
+      "timestamp": "2026-02-24T19:42:15.560Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "0f58ec3d-e611-4196-a260-2c786c70f9bb",
+      "timestamp": "2026-02-24T19:42:15.880Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "bfc36c5e-fbee-4bc6-bc1c-5728a60f4f73",
+      "timestamp": "2026-02-24T19:42:15.895Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "3e9f54ad-dc40-4e05-918d-670f26052bf8",
+      "timestamp": "2026-02-24T19:42:15.897Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "04a8359d-e278-4d0f-a383-ea1001411cda",
+      "timestamp": "2026-02-24T19:42:15.938Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "62bddb79-f2c7-4f35-9448-2192cc494b2a",
+      "timestamp": "2026-02-24T19:42:15.940Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "60daf43d-464a-4099-8a12-e6b79fd276ab",
+      "timestamp": "2026-02-24T19:42:15.953Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "94c3daa0-6ea0-45e6-a2e5-f2ab20c3c8a8",
+      "timestamp": "2026-02-24T19:42:15.980Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'genkit': MCP error -32001: Request timed out"
+    },
+    {
+      "id": "75063897-5e5b-4d2a-a23f-3699c20ad58f",
+      "timestamp": "2026-02-24T19:42:15.997Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "3781b974-9cd6-4533-ab41-97ae2f448b03",
+      "timestamp": "2026-02-24T19:42:16.137Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "9b932df7-0aa3-4362-b103-e39ec6947f48",
+      "timestamp": "2026-02-24T19:42:16.160Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "e2d03800-a98d-4f9d-b3e7-1f3f1a208126",
+      "timestamp": "2026-02-24T19:42:16.167Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "4c03d7a0-5ef8-47fe-9446-832451542958",
+      "timestamp": "2026-02-24T19:42:16.410Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "366d802b-55a1-4e45-8c89-20e0a283e844",
+      "timestamp": "2026-02-24T19:42:16.414Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "c7b2e723-3a0d-437f-bf48-c83fbc76e56d",
+      "timestamp": "2026-02-24T19:42:16.435Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "34b81d24-e6da-427b-a07f-30063aa5ffb7",
+      "timestamp": "2026-02-24T19:42:16.499Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "2b294bad-0ae6-44f3-babc-7d56d3a9db00",
+      "timestamp": "2026-02-24T19:42:16.500Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "ae30c226-0918-4a7c-af32-85d193b444ac",
+      "timestamp": "2026-02-24T19:42:16.533Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "3252cb04-4816-4210-b457-cccf99be0298",
+      "timestamp": "2026-02-24T19:42:16.575Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "cd0b4b41-526c-45cb-b7ce-4f215a0cca16",
+      "timestamp": "2026-02-24T19:42:43.433Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'uuv': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "ba524799-ab43-4886-849e-97bfde4d66c5",
+      "timestamp": "2026-02-24T19:42:43.614Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "430e24db-02a7-4c9f-8e58-82739eedbb25",
+      "timestamp": "2026-02-24T19:42:43.616Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "85a654e3-3299-4dcd-a888-b630e86a24cd",
+      "timestamp": "2026-02-24T19:42:43.617Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "d7068780-4e6a-42b4-b1c5-ce5336d648a8",
+      "timestamp": "2026-02-24T19:42:43.919Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "8951226a-0ed3-46f8-952f-32400a37e9c3",
+      "timestamp": "2026-02-24T19:42:43.940Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "7f14a90e-02a3-49ec-aa12-d97d80228928",
+      "timestamp": "2026-02-24T19:42:43.942Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "3dd2b2ed-6ec4-46a9-be01-243662f9cfaa",
+      "timestamp": "2026-02-24T19:42:44.042Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "bd4b088f-5d79-41a5-86ee-8ac50c5f7804",
+      "timestamp": "2026-02-24T19:42:44.044Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "93dbe5f4-aaf1-4656-9495-8406fc18a2ee",
+      "timestamp": "2026-02-24T19:42:44.071Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "5a0f87b6-5c71-4012-ad16-5f4f6fb0718e",
+      "timestamp": "2026-02-24T19:42:44.119Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    },
+    {
+      "id": "f486398c-7bd7-4f21-80d5-c4b049da03f2",
+      "timestamp": "2026-02-24T19:42:44.781Z",
+      "type": "warning",
+      "content": "Hook(s) [node \"$HOME/.gemini/extensions/everything-gemini-code/scripts/hooks/pre-compact.js\" 2>/dev/null || node \"$HOME/.gemini/scripts/hooks/pre-compact.js\" 2>/dev/null || true] failed for event PreCompress. Press F12 to see the debug drawer for more details.\n"
+    },
+    {
+      "id": "9e636048-fcd3-4f51-ae0d-3dde3bd274df",
+      "timestamp": "2026-02-24T19:42:44.790Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "tools"
+        }
+      ]
+    },
+    {
+      "id": "a7d90269-22ef-49f1-8fc1-bdc66c52e455",
+      "timestamp": "2026-02-24T19:46:22.574Z",
+      "type": "error",
+      "content": "MCP ERROR (apify)"
+    },
+    {
+      "id": "bd0b45d2-073d-48c5-8908-3beb18a30eaf",
+      "timestamp": "2026-02-24T19:46:22.659Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\ops.toml. Validation errors:"
+    },
+    {
+      "id": "de00e02e-5451-4453-8221-ae5bf7c06355",
+      "timestamp": "2026-02-24T19:46:22.663Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\dev.toml. Validation errors:"
+    },
+    {
+      "id": "8caf72d2-3ff1-4b31-be03-813b4f0458fe",
+      "timestamp": "2026-02-24T19:46:22.694Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\cloudflare-mcp\\commands\\cloudflare\\info.toml. Validation errors:"
+    },
+    {
+      "id": "a4956100-acda-4233-bf34-1a39dad09737",
+      "timestamp": "2026-02-24T19:46:22.799Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\docker.toml. Validation errors:"
+    },
+    {
+      "id": "73616761-a64d-4486-b9fd-a19b77440e8b",
+      "timestamp": "2026-02-24T19:46:22.801Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\devops\\ci-cd.toml. Validation errors:"
+    },
+    {
+      "id": "d519553d-a144-4253-9ebb-081d5cac6677",
+      "timestamp": "2026-02-24T19:46:22.825Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Skipping invalid command file: C:\\Users\\pohi9\\.gemini\\extensions\\gemini-cli-prompt-library\\commands\\api\\graphql.toml. Validation errors:"
+    },
+    {
+      "id": "bc1324dd-a569-41c5-8cef-7c1eae421101",
+      "timestamp": "2026-02-24T19:46:22.915Z",
+      "type": "error",
+      "content": "[FileCommandLoader] Failed to parse TOML file C:\\Users\\pohi9\\.gemini\\extensions\\gemini-kit\\commands\\docs.toml:"
+    }
+  ]
+}

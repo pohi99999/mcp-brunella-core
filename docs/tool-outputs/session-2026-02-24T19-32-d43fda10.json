@@ -1,0 +1,28 @@
+{
+  "sessionId": "d43fda10-c170-4a49-98fa-f901d76ea08c",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-24T19:32:30.219Z",
+  "lastUpdated": "2026-02-24T19:33:17.296Z",
+  "messages": [
+    {
+      "id": "4c36f5da-298c-4245-ab8a-dfc0df27faec",
+      "timestamp": "2026-02-24T19:32:30.219Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "Your task is to answer the following question about Gemini CLI:\n<question>\nWhat are the tool names provided by the 'apify' MCP server?\n</question>"
+        }
+      ]
+    },
+    {
+      "id": "9a421939-3ecb-4673-95fe-49365e1dde97",
+      "timestamp": "2026-02-24T19:33:17.296Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "You have exceeded the maximum number of turns. You have one final chance to complete the task with a short grace period. You MUST call `complete_task` immediately with your best answer and explain that your investigation was interrupted. Do not call any other tools."
+        }
+      ]
+    }
+  ]
+}

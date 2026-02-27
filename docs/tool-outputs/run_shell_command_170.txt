@@ -1,0 +1,36 @@
+Output: (node:4172) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/pohi9/.gemini/extensions/apify-agent-skills/skills/apify-lead-generation/reference/scripts/run_actor.js is not specified and it doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\pohi9\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+Apify Actor Runner - Run Apify actors and export results
+
+Usage:
+  node --env-file=.env scripts/run_actor.js --actor ACTOR_ID --input '{}'
+
+Options:
+  --actor, -a       Actor ID (e.g., compass/crawler-google-places) [required]
+  --input, -i       Actor input as JSON string [required]
+  --output, -o      Output file path (optional - if not provided, displays quick answer)
+  --format, -f      Output format: csv, json (default: csv)
+  --timeout, -t     Max wait time in seconds (default: 600)
+  --poll-interval   Seconds between status checks (default: 5)
+  --help, -h        Show this help message
+
+Output Formats:
+  JSON (all data)     --output file.json --format json
+  CSV (all data)      --output file.csv --format csv
+  Quick answer        (no --output) - displays top 5 in chat
+
+Examples:
+  # Quick answer - display top 5 in chat
+  node --env-file=.env scripts/run_actor.js \
+    --actor "compass/crawler-google-places" \
+    --input '{"searchStringsArray": ["coffee shops"], "locationQuery": "Seattle, USA"}'
+
+  # Export all data to CSV
+  node --env-file=.env scripts/run_actor.js \
+    --actor "compass/crawler-google-places" \
+    --input '{"searchStringsArray": ["coffee shops"], "locationQuery": "Seattle, USA"}' \
+    --output leads.csv --format csv
+Process Group PGID: 7056

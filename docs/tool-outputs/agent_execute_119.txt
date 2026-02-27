@@ -1,0 +1,3 @@
+{
+  "error": "Tool \"agent_execute\" not found. Did you mean one of: \"get_trace\", \"get_issue\", \"create_issue\"?"
+}

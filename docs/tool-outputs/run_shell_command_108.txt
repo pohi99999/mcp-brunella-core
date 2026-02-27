@@ -1,0 +1,199 @@
+Output: 
+Running 27 tests using 1 worker
+
+  ok  1 …shboard Full UI Audit (Enhanced) › Audit Page: dashboard (6.5s)
+--- Auditing: dashboard ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+
+  ok  2 …hboard Full UI Audit (Enhanced) › Audit Page: neural-map (6.2s)
+
+--- Auditing: neural-map ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok  3 …board Full UI Audit (Enhanced) › Audit Page: system-arch (6.0s)
+
+--- Auditing: system-arch ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok  4 …la Dashboard Full UI Audit (Enhanced) › Audit Page: cean (6.2s)
+
+--- Auditing: cean ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok  5 …hboard Full UI Audit (Enhanced) › Audit Page: cloudflare (6.0s)
+
+--- Auditing: cloudflare ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok  6 …ard Full UI Audit (Enhanced) › Audit Page: fleet_manager (6.1s)
+
+--- Auditing: fleet_manager ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok  7 …la Dashboard Full UI Audit (Enhanced) › Audit Page: chat (6.7s)
+
+--- Auditing: chat ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok  8 …a Dashboard Full UI Audit (Enhanced) › Audit Page: paios (6.1s)
+
+--- Auditing: paios ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok  9 …Dashboard Full UI Audit (Enhanced) › Audit Page: phoenix (6.0s)
+
+--- Auditing: phoenix ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 10 …hboard Full UI Audit (Enhanced) › Audit Page: management (6.0s)
+
+--- Auditing: management ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 11 …hboard Full UI Audit (Enhanced) › Audit Page: decomposer (6.1s)
+
+--- Auditing: decomposer ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 12 … Dashboard Full UI Audit (Enhanced) › Audit Page: tracks (6.1s)
+
+--- Auditing: tracks ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 13 …shboard Full UI Audit (Enhanced) › Audit Page: incubator (6.1s)
+
+--- Auditing: incubator ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 14 …shboard Full UI Audit (Enhanced) › Audit Page: knowledge (6.5s)
+
+--- Auditing: knowledge ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 15 …lla Dashboard Full UI Audit (Enhanced) › Audit Page: mcp (6.4s)
+
+--- Auditing: mcp ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 16 …shboard Full UI Audit (Enhanced) › Audit Page: developer (6.2s)
+
+--- Auditing: developer ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 17 …la Dashboard Full UI Audit (Enhanced) › Audit Page: edge (6.2s)
+
+--- Auditing: edge ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 18 …d Full UI Audit (Enhanced) › Audit Page: suggested-tasks (6.1s)
+
+--- Auditing: suggested-tasks ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 19 …a Dashboard Full UI Audit (Enhanced) › Audit Page: tests (6.1s)
+
+--- Auditing: tests ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 20 …l UI Audit (Enhanced) › Audit Page: enterprise-analytics (6.0s)
+
+--- Auditing: enterprise-analytics ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 21 …ashboard Full UI Audit (Enhanced) › Audit Page: robotkez (6.1s)
+
+--- Auditing: robotkez ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 22 …a Dashboard Full UI Audit (Enhanced) › Audit Page: tasks (6.1s)
+
+--- Auditing: tasks ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 23 …rd Full UI Audit (Enhanced) › Audit Page: python-workers (6.5s)
+
+--- Auditing: python-workers ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 24 …shboard Full UI Audit (Enhanced) › Audit Page: inventory (6.2s)
+
+--- Auditing: inventory ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 25 …a Dashboard Full UI Audit (Enhanced) › Audit Page: files (6.2s)
+
+--- Auditing: files ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 26 …ard Full UI Audit (Enhanced) › Audit Page: marketwatcher (6.2s)
+
+--- Auditing: marketwatcher ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+  ok 27 …ashboard Full UI Audit (Enhanced) › Audit Page: settings (6.1s)
+
+--- Auditing: settings ---
+  Waiting for system initialization (5s)...
+  Found 0 interactive elements.
+  ❌ CONSOLE ERRORS: 1
+  ❌ FAILED REQUESTS: 1
+
+  27 passed (2.8m)
+
+To open last HTML report run:
+
+  npx playwright show-report
+Process Group PGID: 21164

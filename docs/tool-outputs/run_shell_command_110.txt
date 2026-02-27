@@ -1,0 +1,10 @@
+Output: 
+
+    Directory: F:\OneDrive\Desktop\Brunella_es_en\09_SECRETS (1)
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2025. 10. 05.      0:31            405 client_secret_1086791794235-gekmub010ieg3ree7hut50ppu8c
+                                                  lhj43.apps.googleusercontent.com.json
+Process Group PGID: 14772

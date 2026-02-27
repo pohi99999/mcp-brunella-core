@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-02-25T17:24:26.521Z",
+  "lastUpdated": "2026-02-27T02:39:13.764Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -11,6 +11,37 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\apify_deep_scraping_agent_20260223",
+      "_isArchived": false
+    },
+    {
+      "id": "campaign-generator-agent-20260225",
+      "name": "Automata Kampány Generátor Ügynök és UI",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-02-25",
+      "completed": "2026-02-25",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\campaign-generator-agent-20260225",
+      "_isArchived": false
+    },
+    {
+      "id": "cloudflare_workers_migration_20260226",
+      "name": "Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-02-26",
+      "tags": [],
+      "dependencies": [
+        "Cloudflare account dd107933ac970dac857f27cee7a7ff46 (BAS_server) — MEGVAN",
+        "CLOUDFLARE_API_TOKEN — MEGVAN (.env-ben)",
+        "Browser Rendering API token — MEGVAN (siTRHomo1G_...)",
+        "wrangler CLI telepítve — ellenőrizd: npx wrangler --version",
+        "D1 binding: bas-metadata (1c4e7d00-7b09-4ddf-88b4-8df42e1123ab) — MEGVAN"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_workers_migration_20260226",
       "_isArchived": false
     },
     {
@@ -34,6 +65,48 @@
       "_isArchived": false
     },
     {
+      "id": "cserszegtomaj-campaign-20260225",
+      "name": "Cserszegtomaj AI Turizmus Kampány",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-25",
+      "tags": [
+        "marketing",
+        "campaign",
+        "cserszegtomaj"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cserszegtomaj-campaign-20260225",
+      "_isArchived": false
+    },
+    {
+      "id": "dashboard-stabilization-20260225",
+      "name": "Dashboard Teljes Stabilizálása és Auditálása",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-02-25",
+      "completed": "2026-02-25",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard-stabilization-20260225",
+      "_isArchived": false
+    },
+    {
+      "id": "functional-integrity-fix-20260225",
+      "name": "Dashboard Funkcionális Integritás Javítása",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-02-25",
+      "completed": "2026-02-25",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\functional-integrity-fix-20260225",
+      "_isArchived": false
+    },
+    {
       "id": "gemini_git_agent_20260212",
       "name": "Gemini Git Autonomous Agent Architecture",
       "status": "proposed",
@@ -51,6 +124,36 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\gemini_git_agent_20260212",
+      "_isArchived": false
+    },
+    {
+      "id": "hungarian-orchestration-tuning-20260225",
+      "name": "Magyar Nyelvű Orkesztráció és Intelligens Irányítás",
+      "status": "completed",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-02-25",
+      "completed": "2026-02-25",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\hungarian-orchestration-tuning-20260225",
+      "_isArchived": false
+    },
+    {
+      "id": "innovation_bridge_20260225",
+      "name": "Innovation Bridge (8. Pillér) - TRIZ Cross-Industry Swarm",
+      "status": "completed",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-25",
+      "tags": [
+        "TRIZ",
+        "innovation",
+        "cross-industry",
+        "swarm"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\innovation_bridge_20260225",
       "_isArchived": false
     },
     {
@@ -1411,10 +1514,10 @@
     }
   ],
   "stats": {
-    "total": 83,
+    "total": 90,
     "active": 7,
-    "completed": 1,
+    "completed": 7,
     "archived": 68,
-    "proposed": 7
+    "proposed": 8
   }
 }

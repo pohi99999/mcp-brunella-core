@@ -1,0 +1,10 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\src\dashboard\components\dashboard
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 22.      8:26           4739 MissionControlLayout.
+                                                  tsx
+Process Group PGID: 26956

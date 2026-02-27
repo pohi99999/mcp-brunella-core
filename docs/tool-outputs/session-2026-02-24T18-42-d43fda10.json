@@ -1,0 +1,28 @@
+{
+  "sessionId": "d43fda10-c170-4a49-98fa-f901d76ea08c",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-24T18:42:33.358Z",
+  "lastUpdated": "2026-02-24T18:43:16.648Z",
+  "messages": [
+    {
+      "id": "6b317be3-8290-4901-9ef7-ba4bec997616",
+      "timestamp": "2026-02-24T18:42:33.358Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "Your task is to answer the following question about Gemini CLI:\n<question>\nlist available tools\n</question>"
+        }
+      ]
+    },
+    {
+      "id": "febf192d-009c-40a6-ba70-84c15b7fb2b9",
+      "timestamp": "2026-02-24T18:43:16.648Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "You have exceeded the maximum number of turns. You have one final chance to complete the task with a short grace period. You MUST call `complete_task` immediately with your best answer and explain that your investigation was interrupted. Do not call any other tools."
+        }
+      ]
+    }
+  ]
+}

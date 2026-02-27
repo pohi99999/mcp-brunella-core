@@ -1,0 +1,9 @@
+Output: At C:\Users\pohi9\.gemini\tmp\mcp-brunella-core\run_apify_temp.ps1:7 char:18
++ $scriptContent = @"
++                  ~~
+The string is missing the terminator: "@.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : TerminatorExpectedAtEndOfString
+ 
+Exit Code: 1
+Process Group PGID: 27032

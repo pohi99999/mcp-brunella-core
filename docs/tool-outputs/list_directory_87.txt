@@ -1,0 +1,3 @@
+{
+  "error": "Error listing directory: ENOENT: no such file or directory, stat 'F:\\mcp-brunella-core\\myai\\agents\\comet'"
+}

@@ -1,0 +1,12 @@
+Subagent 'cli_help' finished.
+Termination Reason: GOAL
+Result:
+{
+  "answer": "To create a Google Sheet using the `google-workspace` extension in Gemini CLI, you first need to install the extension and then prompt the CLI to perform the action.\n\n### 1. Installation\nYou can install the extension by running the following command in your terminal:\n```bash\ngemini extensions install https://github.com/gemini-cli-extensions/workspace\n```\nNote: Ensure you have followed any authentication requirements (e.g., setting up OAuth or providing necessary API keys as prompted during or after installation).\n\n### 2. Creating a Google Sheet\nOnce the extension is installed and enabled, you can simply ask Gemini CLI to create a sheet using natural language:\n*   \"Create a new Google Sheet named 'Project Tracker'.\"\n*   \"Create a spreadsheet for my expenses.\"\n\n### 3. Exact Tool Name\nThe exact tool name used by the model (via the underlying MCP server in the extension) to create a Google Sheet is:\n**`create_spreadsheet`**\n\nMy investigation was interrupted by the turn limit, so I provided the answer based on the standard installation procedures and common tool naming conventions found in the Gemini CLI extension ecosystem.",
+  "sources": [
+    "extensions/index.md",
+    "extensions/reference.md",
+    "tools/index.md",
+    "cli/cli-reference.md"
+  ]
+}

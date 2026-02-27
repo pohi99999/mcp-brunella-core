@@ -1,0 +1,106 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 131-230 of 509 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 230.
+
+--- FILE CONTENT (truncated) ---
+        selectedGhModel,
+        selectedGeminiModel,
+      });
+    }, 300);
+
+    return () => clearTimeout(timer);
+  }, [messages, mode, selectedModel, selectedGhModel, selectedGeminiModel]);
+
+  useEffect(() => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  const toggleThoughts = (index: number) => {
+    setExpandedThoughts((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
+
+  const send = async () => {
+    const text = input.trim();
+    if (!text || isLoading) return;
+
+    setInput("");
+    const userMsgTimestamp = Date.now();
+    setMessages((prev) => [
+      ...prev,
+      { role: "user", content: text, timestamp: userMsgTimestamp },
+    ]);
+    setIsLoading(true);
+
+    try {
+      const conversationPrompt = buildConversationPrompt(messages, text);
+      const provider = getProvider(mode);
+      const response = await provider.send({
+        text,
+        history: messages,
+        conversationPrompt,
+        selectedModel,
+        selectedGhModel,
+        selectedGeminiModel,
+      });
+
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: response.message,
+          timestamp: Date.now(),
+          thoughts: response.thoughts,
+          contextUsed: response.contextUsed,
+          executedBy: response.executedBy,
+          screenshot: response.screenshot,
+        },
+      ]);
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : "Generálás sikertelen";
+      toast.error(msg);
+      setMessages((prev) => [
+        ...prev,
+        {
+          role: "assistant",
+          content: `⚠️ Hiba: ${msg}`,
+          timestamp: Date.now(),
+        },
+      ]);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <Card className="border-border/50 bg-background/50 backdrop-blur-xl flex flex-col h-full glass-card overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 gap-2 flex-wrap border-b border-border/50">
+        <CardTitle className="flex items-center gap-2 text-base font-medium">
+          <Robot size={18} className="text-primary" />
+          Neural Link
+        </CardTitle>
+        <div className="flex items-center gap-2">
+          <select
+            value={mode}
+            onChange={(e) => setMode(e.target.value as ChatMode)}
+            aria-label="Chat mód"
+            className="rounded-md border border-border bg-background/50 px-2 py-1.5 text-sm"
+          >
+            <option value="master_orchestrator">Master Orchestrator</option>
+            <option value="orchestrator">Local Orchestrator</option>
+            <option value="cloudflare_chat">Cloudflare Chat</option>
+            <option value="cloudflare">Cloudflare (Edge)</option>
+            <option value="ollama">Ollama</option>
+            <option value="github">GitHub Models</option>
+            <option value="gemini">Gemini</option>
+          </select>
+          {(mode === "cloudflare" || mode === "cloudflare_chat") &&
+            edgeStatus && (
+              <div
+                className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium border ${
+                  edgeStatus.enabled && edgeStatus.healthy
+                    ? "bg-green-500/15 text-green-500 border-green-500/30"
+                    : "bg-red-500/15 text-red-500 border-red-500/30"
+                }`}
+                title={
+                  edgeStatus.enabled

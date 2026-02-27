@@ -1,0 +1,39 @@
+Subagent 'codebase_investigator' finished.
+Termination Reason: GOAL
+Result:
+{
+  "SummaryOfFindings": "Az átvilágítás során az alábbi kulcsfontosságú megállapítások születtek a 'mcp-brunella-core' projektről:\n\n1. **Track-ek állapota**: Közel 40 aktív track található a 'conductor/tracks' mappában, ami rendkívül magas párhuzamos fejlesztési intenzitást mutat. A legfrissebbek (2026-02-23) az Apify, Chrome DevTools és PAIOS integrációkra fókuszálnak. Az archivált szálak (pl. 'bas_enterprise_suite') a korábbi alapozó szakaszokat tartalmazzák.\n\n2. **Architektúra**: A rendszer egy eseményvezérelt (PhoenixEventBus), ügynök-alapú architektúra. A 'Bifrost Gateway' biztosítja a kommunikációt, míg a 'SpecWriterAgent' automatizálja a trackek generálását EPP v2 protokoll alapján.\n\n3. **Funkcionális lefedettség**: A 'src/agents' mappában több mint 50 specialized agent fájl található. A 'registry.json' nagy részüket aktívként jelzi. \n   - **Alvó/Félbehagyott**: A 'LocalCSRAgent' és 'LocalCSRBot' közötti redundancia, valamint a 'Robotkez' és 'RobotkezV2' párhuzamos létezése migrációs folyamatra utal. Számos ügynök (pl. 'GrantWatcher', 'DigitalHeadhunter') 'Phase 3/4' megjelöléssel szerepel, ami arra utal, hogy a logika megvan, de a teljes üzemi integráció még zajlik.\n\n4. **Üzleti potenciál (Bevételszerzés)**:\n   - **BAS Enterprise Suite**: A Sales Hunter (LinkedIn scraping), Financial Guard (Invoice OCR) és Logistics Dispatcher modulok azonnal értékesíthető B2B szolgáltatások alapjai.\n   - **RobotkezV2**: A 'Comet-style' agentic browser technológia kiemelkedő értékű az automatizálási piacon.\n   - **Knowledge Base Builder**: Automatikus RAG rendszer építése vállalati kommunikációból (Slack/Email).\n\n5. **Audit alapok**: A 'src/core' tartalmazza a kritikus audit (auditLog.ts) és monitorozási (prometheus.ts) funkciókat, amelyek a 'SYSTEM_AUDIT.md' alapját képezik majd.\n\nA vizsgálat a turn limit miatt megszakadt, de a rendszer magja és a track-funkció párosítások feltérképezésre kerültek.",
+  "ExplorationTrace": [
+    "Listed directory structure of 'conductor/tracks' (active and archive).",
+    "Listed 'src/' directory and its subfolders (agents, tools, core, etc.).",
+    "Read 'src/agents/registry.json' to understand the registered agent ecosystem.",
+    "Used glob to find 'track.md' files to see track definitions.",
+    "Analyzed the core services and tools available in the project."
+  ],
+  "RelevantLocations": [
+    {
+      "FilePath": "src/agents/registry.json",
+      "Reasoning": "Main registry for all agents, defining their capabilities and status.",
+      "KeySymbols": [
+        "orchestrator",
+        "enterprise_orchestrator",
+        "robotkezv2",
+        "sales_hunter"
+      ]
+    },
+    {
+      "FilePath": "conductor/tracks/",
+      "Reasoning": "Contains all active project workstreams (tracks).",
+      "KeySymbols": []
+    },
+    {
+      "FilePath": "src/core/",
+      "Reasoning": "The architectural backbone of the system.",
+      "KeySymbols": [
+        "phoenixEventBus.ts",
+        "bifrost_gateway.ts",
+        "llm_client.ts"
+      ]
+    }
+  ]
+}

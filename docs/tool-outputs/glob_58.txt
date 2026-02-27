@@ -1,0 +1,3 @@
+Found 2 file(s) matching "**/machine_hunter*" across 2 workspace directories, sorted by modification time (newest first):
+F:\mcp-brunella-core\myai\workers\__pycache__\machine_hunter.cpython-312.pyc
+F:\mcp-brunella-core\myai\workers\machine_hunter.py

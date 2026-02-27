@@ -56,7 +56,7 @@ describe('llm_client', () => {
 
             const result = await generateResponse('test prompt', 'gemini');
 
-            expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: 'gemini-3.0-flash' });
+            expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: 'gemini-2.0-flash' });
             const expectedPrompt = "Te vagy a BAS (Brunella Agent System) Specialistája. Beszélj folyékony magyarul. Válaszaid legyenek mérnöki pontosságúak.\n\nKérés: test prompt";
             expect(mockGenerateContent).toHaveBeenCalledWith(expectedPrompt);
             expect(result).toBe('Gemini response');

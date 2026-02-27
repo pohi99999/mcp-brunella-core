@@ -1,0 +1,9 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\build
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 24.      1:46           4363 index.js
+Process Group PGID: 2464

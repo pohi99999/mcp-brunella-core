@@ -1,0 +1,156 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-150 of 364 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 150.
+
+--- FILE CONTENT (truncated) ---
+import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
+import { logInfo, logError } from '../utils/logger.js';
+import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
+import { invoiceStore } from '../utils/lancedb_client.js';
+import { updateBusinessJobStatus } from '../utils/db.js';
+import { socketService } from '../server/SocketService.js';
+import { globalPythonShell } from '../utils/pythonShell.js';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+
+// ... (previous interfaces remain the same) ...
+
+/**
+ * FinanceGuardian - Pénzügyi Őrszem
+ * Responsibility: Invoice OCR, anomaly detection, financial trend analysis
+ */
+export class FinanceGuardian extends BaseAgent {
+  name = 'FinanceGuardian';
+  role = 'Financial Monitoring & Anomaly Detection';
+  description = 'Pénzügyi Őrszem - Processes invoices, detects anomalies, generates financial reports';
+  capabilities = ['invoice_processing', 'ocr_extraction', 'anomaly_detection', 'trend_analysis', 'cost_optimization'];
+  
+  private invoiceHistory: Map<string, InvoiceData[]> = new Map();
+  private priceBaselineByVendor: Map<string, { avgPrice: number; stdDev: number }> = new Map();
+  private anomaliesDetected: PriceAnomaly[] = [];
+
+  /**
+   * Internal execution logic
+   */
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = context.task || '';
+    const jobId = (context as any).jobId;
+    const startTime = Date.now();
+
+    if (jobId) {
+        await updateBusinessJobStatus(jobId, 'running');
+        socketService.emit('business_job:updated', { jobId, status: 'running' });
+    }
+
+    try {
+      // MASTER TRACK 2: Task 1 - Gmail PDF Download
+      if (task.toLowerCase().includes('download pdf invoice from gmail') || (context as any).taskType === 'download_invoice') {
+        const result = await this.handleGmailDownload(context);
+        if (jobId && !result.success) {
+            await updateBusinessJobStatus(jobId, 'failed', JSON.stringify(result));
+            socketService.emit('business_job:updated', { jobId, status: 'failed' });
+        }
+        return result;
+      }
+
+      // MASTER TRACK 2: Task 3 - Process & OCR & Duplicate Detection
+      if (task.toLowerCase().includes('process invoice data') || (context as any).taskType === 'process_invoice') {
+        const result = await this.handleProcessInvoice(context);
+        if (jobId) {
+            const status = result.success ? 'completed' : 'failed';
+            await updateBusinessJobStatus(jobId, status, JSON.stringify(result.data));
+            socketService.emit('business_job:updated', { jobId, status });
+        }
+        return result;
+      }
+
+      // MASTER TRACK 2: Task 4 - Google Sheets Export
+      if (task.toLowerCase().includes('export invoice to google sheets')) {
+        return await this.handleSheetsExport(context);
+      }
+
+      // ... (rest of generic processing) ...
+
+
+  /**
+   * Handle exporting invoice to Google Sheets
+   */
+  private async handleSheetsExport(context: AgentContext): Promise<AgentResult> {
+    const invoiceData = (context.invoiceData || context.context) as any;
+    const spreadsheetId = (context.spreadsheetId as string) || process.env.INVOICE_SPREADSHEET_ID;
+
+    if (!invoiceData || !invoiceData.invoice_number) {
+      return { success: false, message: "Érvénytelen számlaadatok az exporthoz.", data: null };
+    }
+
+    if (!spreadsheetId) {
+      return { success: false, message: "Hiányzó Google Sheets ID.", data: null };
+    }
+
+    const workspace = await getWorkspaceClient();
+    
+    // Prepare row data
+    const row = [
+      invoiceData.invoice_number,
+      invoiceData.vendor_name,
+      invoiceData.amount,
+      invoiceData.currency || 'HUF',
+      invoiceData.invoice_date || invoiceData.date || new Date().toISOString().split('T')[0],
+      invoiceData.due_date || '',
+      new Date().toISOString() // Feldolgozás ideje
+    ];
+
+    await workspace.performSheetOperation({
+      operation: 'append',
+      spreadsheetId,
+      range: 'Sheet1!A:G',
+      values: [row]
+    });
+
+    logInfo(this.name, `Invoice ${invoiceData.invoice_number} exported to Google Sheet.`);
+
+    return {
+      success: true,
+      message: `Számla (${invoiceData.invoice_number}) sikeresen exportálva a Google Sheets táblázatba.`,
+      data: { spreadsheetId, invoiceData }
+    };
+  }
+
+  /**
+   * Extract invoices from PDFs (mock OCR)
+   */
+  private async extractInvoicesFromPDFs(): Promise<InvoiceData[]> {
+    // Mock invoice data
+    const mockInvoices: InvoiceData[] = [
+      {
+        invoiceNumber: 'INV-2024-001',
+        vendor: 'TechSupply Hungary',
+        amount: 125000,
+        currency: 'HUF',
+        date: new Date('2024-02-01'),
+        dueDate: new Date('2024-02-15'),
+        lineItems: [
+          { description: 'Laptop', quantity: 5, unitPrice: 22000, total: 110000 },
+          { description: 'Software licenses', quantity: 1, unitPrice: 15000, total: 15000 }
+        ],
+        confidence: 98
+      },
+      {
+        invoiceNumber: 'INV-2024-002',
+        vendor: 'OfficeWorld',
+        amount: 45000,
+        currency: 'HUF',
+        date: new Date('2024-02-05'),
+        lineItems: [
+          { description: 'Office furniture', quantity: 10, unitPrice: 4500, total: 45000 }
+        ],
+        confidence: 95
+      },
+      {
+        invoiceNumber: 'INV-2024-003',
+        vendor: 'TechSupply Hungary',
+        amount: 135000,
+        currency: 'HUF',
+        date: new Date('2024-02-10'),
+        lineItems: [

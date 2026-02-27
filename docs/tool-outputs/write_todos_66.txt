@@ -1,0 +1,6 @@
+Successfully updated the todo list. The current list is now:
+1. [completed] RobotkezV2 Comet: Mappastruktúra és Pydantic modellek (models.py) létrehozása
+2. [completed] RobotkezV2 Comet: TaskPlanner (GPT-4o tervező) implementálása
+3. [in_progress] RobotkezV2 Comet: BrowserActor (Playwright async motor) implementálása
+4. [pending] Machine Hunter Phase 3: Alert Pipeline és Dashboard Widget létrehozása
+5. [pending] Dashboard V3 Phase 2: useSystemSignal hook és egységesített jelbusz implementálása

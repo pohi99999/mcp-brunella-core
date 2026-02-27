@@ -1,0 +1,24 @@
+Directory listing for F:\mcp-brunella-core\bas-cloudflare-orchestrator:
+[DIR] .wrangler
+[DIR] client
+[DIR] cloudflared
+[DIR] langflow
+[DIR] local
+[DIR] migrations
+[DIR] n8n
+[DIR] node_modules
+[DIR] src
+docker-compose.yml
+GEMINI_CLI_INSTRUCTIONS.md
+GEMINI.md
+INSTALL_AND_TEST_GUIDE.md
+package-lock.json
+package.json
+README.md
+run-tests.ps1
+setup-complete.ps1
+setup.ps1
+TEST_RESULTS.md
+tsconfig.json
+VECTORIZE_POC.md
+wrangler.jsonc

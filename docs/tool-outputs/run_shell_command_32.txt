@@ -1,0 +1,2 @@
+Output: warning: in the working copy of 'conductor/tracks.md', LF will be replaced by CRLF the next time Git touches it
+Process Group PGID: 38776

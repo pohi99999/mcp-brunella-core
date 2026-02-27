@@ -1,0 +1,1 @@
+Plan file does not exist: C:\Users\pohi9\.gemini\tmp\mcp-brunella-core\plans\agent-system-enhancement.md. You must create the plan file before requesting approval.

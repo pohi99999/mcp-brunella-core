@@ -1,0 +1,167 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-161 of 161 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 161.
+
+--- FILE CONTENT (truncated) ---
+# === BAS CORE SERVER ===
+PORT=3000
+NODE_ENV=development
+
+# === OLLAMA (Local AI Engine) ===
+# Javítva: 127.0.0.1 a stabilabb feloldásért
+OLLAMA_BASE_URL=http://127.0.0.1:11434
+OLLAMA_MODEL=llama3.1:8b
+OLLAMA_MODEL_SECONDARY=qwen2.5-coder:7b
+OLLAMA_MODEL_EMBEDDING=nomic-embed-text
+
+# === RAG / VECTOR EMBEDDINGS ===
+RAG_EMBEDDING_MODEL_PRIMARY=nomic-embed-text
+RAG_EMBEDDING_DIM_PRIMARY=768
+RAG_EMBEDDING_MODEL_LEGACY=nomic-embed-text
+RAG_EMBEDDING_DIM_LEGACY=768
+RAG_PRIMARY_TABLE=memory_v3_nomic
+RAG_LEGACY_TABLE=memory_v2_nomic
+RAG_DUAL_INDEX_WRITE=true
+OLLAMA_API_KEY=ae3a02a63fe641168673ea63fb561f26.xug1w_6I-B3JinThJ2O4H4PE
+
+# === ANYTHINGLLM (Knowledge Hub) ===
+ANYTHINGLLM_API_KEY=E4R85PH-2S24YYM-JQTG4RT-6MEH6QZ
+ANYTHINGLLM_EXE_PATH=C:\Program Files\AnythingLLM\AnythingLLM.exe
+ANYTHINGLLM_BASE_URL=http://localhost:3001
+ANYTHINGLLM_WORKSPACE=workspace
+ANYTHINGLLM_DEVELOPER_API_KEY=2GQKGJY-RRK4ESH-JCTWCMJ-CJ9H7M2
+connectionKey=EJNH1V8-GXEMB8M-NRFH3VW-ZCBFNJE
+EXTENSION_CONNECTION_STRING=http://localhost:3001/api|brx-49GEY08-FV6MTRP-QZMM435-WH5AGXA
+
+# === CLOUD SERVICES (Cloudflare R2 & Workers) ===
+CF_ACCOUNT_ID=1bf6118df97f0e12f3592a89d90deb1e
+CF_R2_ACCESS_KEY_ID=b45279e704938a04ccd2701a25354209
+CF_R2_SECRET_ACCESS_KEY=f5dd01860123a025f3c83bf8a8dcf038a2ffae6b79c9c3812e0e5da938511a35
+CF_TOKEN=siTRHomo1G_NxHczgcyljlVj6D5OXeiwpqSLD1m8
+CF_API_TOKEN=siTRHomo1G_NxHczgcyljlVj6D5OXeiwpqSLD1m8  # Workers AI token (Workers AI + Scripts + Account Settings)
+CF_GLOBAL_API_KEY=3d477d3095d6174dd1f904c710c22763f7655  # Global API Key
+CF_EMAIL=peterpohankapersonal@gmail.com  # Account email
+S3_API=https://dd107933ac970dac857f27cee7a7ff46.r2.cloudflarestorage.com
+CF_TOKEN_CORE=SPvtpLQCPhSeD-qVJ5FdrmYxJIOlIPe7UTWBo2Ah
+
+
+# Cloudflare Edge Integration
+EDGE_ENABLED=true
+CLOUDFLARE_ACCOUNT_ID=1bf6118df97f0e12f3592a89d90deb1e
+CLOUDFLARE_API_TOKEN=tnRGkoCj-TOyci5x3sbamMKWFZWM12huGs5bagm7  # NEW TOKEN (2026-02-17) - Full permissions
+CLOUDFLARE_GLOBAL_API_KEY=3d477d3095d6174dd1f904c710c22763f7655
+CLOUDFLARE_EMAIL=peterpohankapersonal@gmail.com
+CLOUDFLARE_WORKER_URL=https://cean-orchestrator.iam-dd1.workers.dev  # UPDATED (Phase 1 - D1 Integration)
+CLOUDFLARE_TUNNEL_ENABLED=true
+EDGE_FALLBACK_TO_LOCAL=true
+EDGE_HEALTH_CHECK_INTERVAL=30000
+CF_TOKEN_CORE=SPvtpLQCPhSeD-qVJ5FdrmYxJIOlIPe7UTWBo2Ah
+
+
+# Cloudflare Tunnel URLs (Update after running cloudflared)
+# These will be assigned when you start the tunnel
+# If using quick start: cloudflared tunnel --url http://localhost:3000
+CLOUDFLARE_TUNNEL_URL=https://api-bas.trycloudflare.com
+CLOUDFLARE_TUNNEL_N8N_URL=https://n8n-bas.trycloudflare.com
+CLOUDFLARE_TUNNEL_BROWSER_URL=https://browser-bas.trycloudflare.com
+CLOUDFLARE_TUNNEL_DASHBOARD_URL=https://dashboard-bas.trycloudflare.com
+CF_TOKEN_CORE=SPvtpLQCPhSeD-qVJ5FdrmYxJIOlIPe7UTWBo2Ah
+
+
+# Cloudflare AI Gateway (OpenAI SDK integration)
+AI_GATEWAY_ENABLED=true  # AI Gateway enabled with OpenAI SDK (v2.0)
+AI_GATEWAY_URL=https://gateway.ai.cloudflare.com/v1/dd107933ac970dac857f27cee7a7ff46/brunella-gateway/compat
+AI_GATEWAY_CACHE_TTL=3600  # Cache duration in seconds (1 hour)
+AI_GATEWAY_WORKERS_AI_MODEL=workers-ai/@cf/meta/llama-3.1-8b-instruct  # Default Workers AI model
+
+CF_TOKEN_CORE=SPvtpLQCPhSeD-qVJ5FdrmYxJIOlIPe7UTWBo2Ah
+
+
+# llm-chat-app-template
+llm-chat-app-template.iam-dd1.workers.dev
+
+
+
+
+# === EXTERNAL AI APIS ===
+GEMINI_MODEL=gemini-2.0-flash
+GEMINI_API_KEY=AIzaSyBXO9bC166pFHMJ0S73WiQxV6KzVwK-cLE
+GOOGLE_API_KEY=AIzaSyBXO9bC166pFHMJ0S73WiQxV6KzVwK-cLE
+OPENAI_API_KEY=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
+CLAUDE_API_KEY=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
+BROWSER_USE_API_KEY=bu_g4faSN9Pz1lqAnA1vJabh0orDcN0tmhgpSt3g4610ts
+
+# === AUTOMATION (n8n & GitHub) ===
+N8N_API_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwNWUwZDg1MC1mNDE4LTRlYTMtOGYzYi00YmQyOWQzOWFjOWUiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzY5OTg2MjQ5LCJleHAiOjE3NzI1MTQwMDB9.IPNSlujwtJ440_2OJw6TR0cQLFAtS7MYmxT3qvCyTa8
+N8N_TEST_URL=https://n8n-latest-fulv.onrender.com
+N8N_TEST_USER=peterpohankapesonal@gmail.com
+N8N_TEST_PASSWORD=Iszapfalo2026
+GITHUB_PAT=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
+COPILOT_PAT=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
+
+# === OBSERVABILITY ===
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_PROJECT=Brunella_Core
+LANGCHAIN_API_KEY=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
+
+# === GITHUB WEBHOOK INTEGRATION (Phase 3: Jules CI/CD) ===
+# GitHub webhook secret for signature verification
+GITHUB_WEBHOOK_SECRET=
+# GitHub App credentials for API access
+GITHUB_TOKEN=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
+# Slack webhook URL for error notifications (optional)
+SLACK_WEBHOOK_URL=
+LANGCHAIN_CALLBACKS_BACKGROUND=true
+
+# Engedélyezze a Web UI-t és az API végpontokat
+WEB_UI_ENABLED=true
+
+# ═══════════════════════════════════════════════════════════
+# N8N (Render.com hosted)
+# ═══════════════════════════════════════════════════════════
+N8N_BASE_URL=https://n8n-latest-fulv.onrender.com
+N8N_OWNER_EMAIL=peterpohankapersonal@gmail.com
+N8N_OWNER_PASSWORD=Iszapfalo2026
+N8N_WEBHOOK_URL=https://n8n-latest-fulv.onrender.com/
+
+# ═══════════════════════════════════════════════════════════
+# INVOICE AUTOMATION (Számlázz.hu & Google Sheets)
+# ═══════════════════════════════════════════════════════════
+# Számlázz.hu API - https://szamlazz.hu/api
+SZAMLAZZ_HU_API_KEY=
+SZAMLAZZ_HU_BASE_URL=https://api.szamlazz.hu
+SZAMLAZZ_HU_ACCOUNT_ID=
+
+# Google Sheets - https://console.cloud.google.com/
+GOOGLE_SHEETS_ID=
+GOOGLE_CLOUD_CREDENTIALS_PATH=./config/google-service-account.json
+GOOGLE_PROJECT_ID=
+
+# Invoice automation feature flags
+INVOICE_AUTO_SYNC_ENABLED=false
+INVOICE_AUTO_SYNC_CRON=0 2 * * *
+
+ROBOTKEZ_HEADLESS=true
+ROBOTKEZ_SAVE_SCREENSHOTS=true
+ROBOTKEZ_VIEWPORT_WIDTH=1280
+ROBOTKEZ_VIEWPORT_HEIGHT=720
+
+E2B_API_KEY=e2b_506338b97040bd4ad1cc14a28d2097cb63516ff5
+
+LLM_PROVIDER=github
+PATH=C:\Program Files (x86)\PowerShell\7-preview;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0\;C:\WINDOWS\System32\OpenSSH\;C:\Program Files (x86)\PowerShell\7-preview\preview;C:\Program Files\PowerShell\7\7-preview\preview;C:\Program Files\nodejs\;C:\Program Files\Go\bin;C:\Program Files\dotnet\;C:\Program Files\Microsoft SQL Server\170\DTS\Binn\;C:\Program Files\Microsoft SQL Server\170\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\ProgramData\chocolatey\bin;D:\Python314;D:\Python314\Scripts;C:\Users\pohi9\.cargo\bin;C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Scripts\;C:\Users\pohi9\AppData\Local\Programs\Python\Python314\;c:\Users\pohi9\AppData\Local\Programs\cursor\resources\app\codeBin;C:\Users\pohi9\AppData\Local\Microsoft\WindowsApps;C:\Users\pohi9\AppData\Local\GitHubDesktop\bin;C:\Users\pohi9\AppData\Loca;C:\Python314;C:\Python314\Scripts;C:\Program Files\PowerToys\DSCModules\;C:\Program Files (x86)\cloudflared\;C:\Program Files (x86)\Google\Cloud SDK\google-cloud-sdk\bin;C:\Program Files\Git\cmd;C:\Program Files\Microsoft VS Code Insiders\bin;C:\Program Files\Docker\Docker\resources\bin;C:\Program Files\GitHub CLI\;C:\Users\pohi9\AppData\Local\com.LangflowDesktop\uv;C:\Users\pohi9\.local\bin;C:\Users\pohi9\AppData\Roaming\npm;C:\Users\pohi9\AppData\Local\Programs\Ollama;C:\Users\pohi9\AppData\Local\Programs\cursor\resources\app\bin;C:\Users\pohi9\AppData\Local\Programs\Zed\bin;C:\Users\pohi9\AppData\Local\Programs\Windsurf\bin;C:\Users\pohi9\.lmstudio\bin;C:\Users\pohi9\go\bin;C:\Users\pohi9\AppData\Local\Microsoft\WinGet\Packages\GitHub.Copilot_Microsoft.Winget.Source_8wekyb3d8bbwe;C:\Users\pohi9\AppData\Local\Microsoft\WinGet\Links;C:\Users\pohi9\.dotnet\tools;C:\Users\pohi9\AppData\Local\Programs\Azure Dev CLI\;C:\Users\pohi9\AppData\Local\Programs\Antigravity\bin;C:\Users\pohi9\AppData\Local\Microsoft\WinGet\Packages\GitHub.Copilot.Prerelease_Micros... [truncated]
+GITHUB_TOKEN=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
+
+.aider.conf.yml
+.aider.input.history
+.aider.chat.history.md
+.env_aider
+.aiderignore
+config.yaml
+
+GITHUB_API_KEY=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
+
+CEAN_API_KEY=cean_9b8c1e5c-9a7d-4f0b-8c3e-2f1a2b3c4d5e
+
+APIFY_TOKEN="apify_api_A44kU0bQjlW4dDKxQIhsmTb6VZSSVk3p96tI"

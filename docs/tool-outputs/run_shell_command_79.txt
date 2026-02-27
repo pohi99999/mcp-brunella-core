@@ -1,0 +1,191 @@
+Output: ╭─────────────────────────╮
+│                         │
+│   Brunella CLI v0.0.0   │
+│                         │
+╰─────────────────────────╯
+⠏ Executing SpecWriter...MCP Brunella Core Server running on stdio
+⠴ Executing SpecWriter...GitHub MCP Server running on stdio
+⠙ Executing SpecWriter...🚀 Starting GitHub Copilot MCP Server...
+🎯 Model preference: claude
+✅ Initial session created: session-1771534100571
+✅ Server running on stdio
+📦 Features enabled:
+   - 9 Tools (ask, explain, suggest, debug, refactor, test, review, session-start, session-history)       
+   - 2 Resources (session history, sessions list)
+Waiting for requests...
+
+⠧ Executing SpecWriter...Windows CLI MCP Server running on stdio
+⠇ Executing SpecWriter...[INFO] [MCP] Skipping disabled server: google-search
+[INFO] [MCP] Skipping disabled server: brave-search
+⠼ Executing SpecWriter...Knowledge Graph MCP Server running on stdio
+⠸ Executing SpecWriter...npm notice Access token expired or revoked. Please try logging in again.
+⠼ Executing SpecWriter...npm notice Access token expired or revoked. Please try logging in again.
+npm error code E404
+npm error 404 Not Found - GET https://registry.npmjs.org/@modelcontextprotocol%2fserver-sqlite - Not found
+npm error 404
+npm error 404  The requested resource '@modelcontextprotocol/server-sqlite@*' could not be found or you do not have permission to access it.
+npm error 404
+npm error 404 Note that you can also install from a
+npm error 404 tarball, folder, http url, or git url.
+npm error A complete log of this run can be found in: C:\Users\pohi9\AppData\Local\npm-cache\_logs\2026-02-19T20_48_25_686Z-debug-0.log
+[ERROR] [MCP] Failed to connect to sqlite: MCP error -32000: Connection closed
+⠼ Executing SpecWriter...npm notice Access token expired or revoked. Please try logging in again.
+⠦ Executing SpecWriter...npm notice Access token expired or revoked. Please try logging in again.
+npm error code E404
+npm error 404 Not Found - GET https://registry.npmjs.org/@modelcontextprotocol%2fserver-n8n - Not found   
+npm error 404
+npm error 404  The requested resource '@modelcontextprotocol/server-n8n@*' could not be found or you do not have permission to access it.
+npm error 404
+npm error 404 Note that you can also install from a
+npm error 404 tarball, folder, http url, or git url.
+npm error A complete log of this run can be found in: C:\Users\pohi9\AppData\Local\npm-cache\_logs\2026-02-19T20_48_26_589Z-debug-0.log
+[ERROR] [MCP] Failed to connect to n8n: MCP error -32000: Connection closed
+⠼ Executing SpecWriter...Secure MCP Filesystem Server running on stdio
+Client does not support MCP Roots, using allowed directories set from server args: [ 'F:\\mcp-brunella-core', 'G:\\Brunella' ]
+⠇ Executing SpecWriter...
+
+            ┌──────────────────────────────────────────────────────────────────────────────┐
+            │                                                                              │
+            │                                                                              │
+            │                         ▄▀▀ ▄▀█ █▀▀ ▀█▀ █▀▄▀█ █▀▀ █▀█                        │
+            │                         █▀  █▀█ ▄▄█  █  █ ▀ █ █▄▄ █▀▀                        │
+            │                                                                              │
+            │                                                                              │
+            │                                FastMCP 2.14.5                                │
+            │                            https://gofastmcp.com                             │
+            │                                                                              │
+            │                    🖥  Server:      brunella-python                           │
+            │                    🚀 Deploy free: https://fastmcp.cloud                     │
+            │                                                                              │
+            └──────────────────────────────────────────────────────────────────────────────┘
+            ┌──────────────────────────────────────────────────────────────────────────────┐
+            │                          ✨ FastMCP 3.0 is coming!                           │
+            │       Pin `fastmcp < 3` in production, then upgrade when you're ready.       │
+            └──────────────────────────────────────────────────────────────────────────────┘
+            ┌──────────────────────────────────────────────────────────────────────────────┐
+            │                          🎉 Update available: 3.0.0                          │
+            │                      Run: pip install --upgrade fastmcp                      │
+            └──────────────────────────────────────────────────────────────────────────────┘
+
+
+⠏ Executing SpecWriter...[02/19/26 21:48:34] INFO     Starting MCP server 'brunella-python' with transport 'stdio'  server.py:2506
+
+✅ SpecWriter Response:
+{
+  "success": true,
+  "status": "success",
+  "message": "🤖 **SpecWriter:**\n\n✅ **Sikeresen végrehajtva!**\n\n✅ Track generated successfully: modu  ular-command-center-dashboard-v3-20260219",
+  "data": {
+    "trackId": "modular-command-center-dashboard-v3-20260219",
+    "trackPath": "F:\\mcp-brunella-core\\conductor\\tracks\\modular-command-center-dashboard-v3-20260219",
+    "trackFile": "F:\\mcp-brunella-core\\conductor\\tracks\\modular-command-center-dashboard-v3-20260219\\track.md",
+    "trackMarkdown": "# Modular Command Center Dashboard V3\n\n**Track ID:** `modular-command-center-dashboard-v3-20260219`\n**Priority:** P1\n**Progress:** 0%\n**Created:** 2026-02-19\n**Estimated Time:** 30 hours\n\n---\n\n## 🎯 Cél\n\nRefactor Mission Control Dashboard to a modular, customizable command center witth deep integrations, real-time process visibility, and intervention capabilities.\n\n## 📋 Feladatok (TODOO)\n\n### Phase 1: Phase 1: Smart Grid Architecture\n- [ ] Implement Context-Aware Layout Engine (240 min)\n- [ ] Refactor MissionControlLayout.tsx (180 min)\n- [ ] Implement React Context API for layout state (120 min)\n\n### Phase 2: Phase 2: Unified Signal Bus\n- [ ] Create useSystemSignal React hook (180 min)\n- [ ] Implement Socket.IO integration (90 min)\n- [ ] Implement REST polling fallback (60 min)\n- [ ] Integrate with Zustand store (60 min)\n\n### Phase 3: Phase 3: Process Governor\n- [ ] Develop ProcessControlWidget component (240 min)\n- [ ] Implement live intervention buttons (PAUSE, RESUME, KILL, RETRY) (120 min)\n- [ ] Implement task queue drag-and-drop (90 min)\n- [ ] Integrate Trace visualization (LangSmith/OpenTelemetry) (120 min)\n\n### Phase 4: Phase 4: Self-Maintenance & Health\n- [ ] Integrate UI Test Suite (180 min)\n- [ ] Create Admin/Self-Check tab (60 min)\n- [ ] Implement client-side diagnostics (120 min)\n\n### Phase 5: Phase 5: Code Refactoring & Type Safety\n- [ ] Restructure src/dashboard/components/dashboard/ (180 min)\n- [ ] Ensure all API calls are type-safe (120 min)\n- [ ] Implement error handling (60 min)\n\n## ✅ Acceptance Criteria\n\n- [ ] Dashboard integráció kész (The new dashboard will allow real-time process  intervention and task re-prioritization.)\n- [ ] CLI integráció kész (A `runella dashboard status` parancs lekérdezi a dashboard állapotát.)\n- [ ] `npm test` - All tests passing (0 errors)\n- [ ] `npm run build` - Clean build (0 TypeScript errors)\n- [ ] EPP v2 compliance: 7 Arany Szabály követve\n- [ ] Documentation updated (.ai/claude.md + FOSZAL.md)\n\n## 🔗 Integrációk\n\n### Dashboard\nThe new dashboard will allow  real-time process intervention and task re-prioritization.\n\n**Component:** `src/dashboard/components/[ComponentName].tsx`\n\n### CLI\nA `runella dashboard status` parancs lekérdezi a dashboard állapotát.\n\n**Command:** `brunella [command-name]`\n**File:** `src/cli/[commandName]Commands.ts`\n\n## 📝 Notes\n\n- **EPPP v2 Protocol:** This track follows the 7 Arany Szabály (Golden Rules)\n- **Testing:** Unit + Integration tests required\n- **Documentation:** Update .ai/claude.md work log after completion\n\n---\n\n**Status:** Ready for Implementation ✅\n**Next Step:** Begin Phase 1\n\n---",
+    "requirements": {
+      "title": "Modular Command Center Dashboard V3",
+      "description": "Refactor Mission Control Dashboard to a modular, customizable command center with deep integrations, real-time process visibility, and intervention capabilities.",
+      "priority": "P1",
+      "estimated_hours": 30,
+      "phases": [
+        {
+          "name": "Phase 1: Smart Grid Architecture",
+          "tasks": [
+            {
+              "task": "Implement Context-Aware Layout Engine",
+              "estimate_minutes": 240
+            },
+            {
+              "task": "Refactor MissionControlLayout.tsx",
+              "estimate_minutes": 180
+            },
+            {
+              "task": "Implement React Context API for layout state",
+              "estimate_minutes": 120
+            }
+          ]
+        },
+        {
+          "name": "Phase 2: Unified Signal Bus",
+          "tasks": [
+            {
+              "task": "Create useSystemSignal React hook",
+              "estimate_minutes": 180
+            },
+            {
+              "task": "Implement Socket.IO integration",
+              "estimate_minutes": 90
+            },
+            {
+              "task": "Implement REST polling fallback",
+              "estimate_minutes": 60
+            },
+            {
+              "task": "Integrate with Zustand store",
+              "estimate_minutes": 60
+            }
+          ]
+        },
+        {
+          "name": "Phase 3: Process Governor",
+          "tasks": [
+            {
+              "task": "Develop ProcessControlWidget component",
+              "estimate_minutes": 240
+            },
+            {
+              "task": "Implement live intervention buttons (PAUSE, RESUME, KILL, RETRY)",
+              "estimate_minutes": 120
+            },
+            {
+              "task": "Implement task queue drag-and-drop",
+              "estimate_minutes": 90
+            },
+            {
+              "task": "Integrate Trace visualization (LangSmith/OpenTelemetry)",
+              "estimate_minutes": 120
+            }
+          ]
+        },
+        {
+          "name": "Phase 4: Self-Maintenance & Health",
+          "tasks": [
+            {
+              "task": "Integrate UI Test Suite",
+              "estimate_minutes": 180
+            },
+            {
+              "task": "Create Admin/Self-Check tab",
+              "estimate_minutes": 60
+            },
+            {
+              "task": "Implement client-side diagnostics",
+              "estimate_minutes": 120
+            }
+          ]
+        },
+        {
+          "name": "Phase 5: Code Refactoring & Type Safety",
+          "tasks": [
+            {
+              "task": "Restructure src/dashboard/components/dashboard/",
+              "estimate_minutes": 180
+            },
+            {
+              "task": "Ensure all API calls are type-safe",
+              "estimate_minutes": 120
+            },
+            {
+              "task": "Implement error handling",
+              "estimate_minutes": 60
+            }
+          ]
+        }
+      ],
+      "integrations": {
+        "dashboard": "The new dashboard will allow real-time process intervention and task re-prioritization.",
+        "cli": "A `runella dashboard status` parancs lekérdezi a dashboard állapotát."
+      }
+    },
+    "preview": "# Modular Command Center Dashboard V3\n\n**Track ID:** `modular-command-center-dashboard-v3-20260219`\n**Priority:** P1\n**Progress:** 0%\n**Created:** 2026-02-19\n**Estimated Time:** 30 hours\n\n---\n\n## 🎯 Cél\n\nRefactor Mission Control Dashboard to a modular, customizable command center with deepp integrations, real-time process visibility, and intervention capabilities.\n\n## 📋 Feladatok (TODO)\n\n#### Phase 1: Phase 1: Smart Grid Architecture\n- [ ] Implement Context-Aware Layout Engine (240 min)\n- [ ] Ref..."
+  }
+}
+Process Group PGID: 20268

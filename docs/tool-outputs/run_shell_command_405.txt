@@ -1,0 +1,13 @@
+Output: 
+> mcp-brunella-core@1.0.0 build
+> tsc && node -e "const fs=require('fs');const src='src/orchestrator/systemPrompt/paios_orchestrator_prompt.md';const dst='build/orchestrator/systemPrompt/paios_orchestrator_prompt.md';fs.mkdirSync('build/orchestrator/systemPrompt',{recursive:true});fs.copyFileSync(src,dst);console.log('✅ PAIOS prompt copied');"
+
+src/tools/googleWorkspace.ts:23:63 - error TS7006: Parameter 'j' implicitly has an 'any' type.
+
+23                 const job = (await getBusinessJobs(100)).find(j => j.id === jobId);
+                                                                 ~
+
+
+Found 1 error in src/tools/googleWorkspace.ts:23
+Exit Code: 1
+Process Group PGID: 27980

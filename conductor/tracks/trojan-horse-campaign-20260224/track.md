@@ -24,15 +24,22 @@ Ingyen "minta" lead lista generálása (50 budapesti fogorvos) és kiküldése 1
 - [x] 12. **Google Sheets sablon** - Unified dashboard (Leads + Outreach + Tracking) ✅
 - [x] 13. **Teszt futtatás** - 30 valódi budapesti kozmetika lead (score 0-61) ✅
 
-### Fázis 4: Email küldés + követés ⏳
-- [ ] 14. Email küldés: 2026-02-26 reggel 10:00h (csúcsidő!) 🕘
-- [ ] 15. Response tracking (7 nap monitoring)
-- [ ] 16. Google Sheet frissítése: +2 új ügynökség
+### Fázis 4: Email küldés + követés
+- [x] 14. Email küldés: 2026-02-26 10:00h — **ELKÜLDVE ✅** (10 marketing ügynökség)
+- [ ] 15. Response tracking (7 nap monitoring) — Határidő: 2026-03-05
+- [ ] 16. Follow-up email ha 5 nap múlva csend: 2026-03-03
+
+### Fázis 5: Wave 2 Bővítés ⏳ (2026-02-27)
+- [ ] 17. Wave 2 email küldés: 2026-02-27 10:00 — 20 új célpont (webdesign + SEO + PR)
+- [ ] 18. Worker bővítés deploy: ügyvéd + ingatlan + könyvelő iparágak ✅ (kód kész)
+- [ ] 19. Worker deploy: vidéki városok (Debrecen, Miskolc, Pécs, Győr) ✅ (kód kész)
+- [ ] 20. Wave 3 tervezés: ügyvéd/ingatlan leadek alapján (2026-03-01)
 
 ## 📊 Állapot
 
-- **Státusz:** ACTIVE — 100% KÜLDÉSRE KÉSZ ✅
-- **Fázis:** Lead Intelligence Worker éles + 10 email piszkozat kész
+- **Státusz:** ACTIVE — Wave 2 tervezés folyamatban
+- **Wave 1:** 10 marketing ügynökség ✅ elküldve 2026-02-26 10:00
+- **Wave 2:** 20 webdesign/SEO/PR cég → küldés: 2026-02-27 10:00
 - **Worker URL:** https://brunella-lead-intelligence.iam-dd1.workers.dev
-- **Következő:** 2026-02-26 10:00 → Gmail → Piszkozatok → Mind kiküld
-- **Auto-kutatás:** Minden nap 02:00 (kozmetika, fitness, fogorvos → D1)
+- **Worker bővítve:** ügyvéd, ingatlan, könyvelő + Debrecen, Miskolc, Pécs, Győr
+- **Auto-kutatás:** Minden nap 02:00 (~250 új lead/nap, 4 város, 6 iparág)

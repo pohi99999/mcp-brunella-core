@@ -1,0 +1,46 @@
+Directory listing for F:\mcp-brunella-core\conductor\tracks:
+[DIR] aider_integration_20260222
+[DIR] apify_deep_scraping_agent_20260223
+[DIR] archive
+[DIR] bas_security_sandbox_20260221
+[DIR] basic-test-task-structure-20260219
+[DIR] cean_operations_center_ui_20260215
+[DIR] cean_phase_2_fleet_management_20260215
+[DIR] cean_phase2_c_prometheus_20250216
+[DIR] chrome_devtools_mcp_agent_20260223
+[DIR] cloudflare_edge_integration_20260202
+[DIR] cloudflare-chat-integration-20260211
+[DIR] cloudflare-iteration-2-20260212
+[DIR] code_quality_improvements_20260210
+[DIR] creative_friction_mediator_20260212
+[DIR] dashboard_v2_robotkez_control_20260208
+[DIR] developer_agent_2_0_20260206
+[DIR] epp-v2-protocol-20260211
+[DIR] gemini_git_agent_20260212
+[DIR] gold_protocol
+[DIR] innovation_bridge_20260212
+[DIR] invoice-e2e-testing-20260217
+[DIR] jules_enterprise_cicd_20260212
+[DIR] jules_pr_integration_20260222
+[DIR] living_documentation_system_20260213
+[DIR] local_test_scheduler_20260215
+[DIR] logistics_vertical_20260222
+[DIR] magyar-cli-menu-system-20260211
+[DIR] master_track_1_lead_mining_20260223
+[DIR] master_track_2_invoice_to_sheets_20260223
+[DIR] master_track_3_market_watcher_20260223
+[DIR] micro_csr_automator_20260212
+[DIR] modular-command-center-dashboard-v3-20260219
+[DIR] onboarding-knowledge-manager-20260214
+[DIR] paios_model_selector_ui_20260223
+[DIR] paios_orchestrator_chat_20260223
+[DIR] paios_phoenix_events_panel_20260223
+[DIR] paios_unified_config_20260223
+[DIR] robotkez_comet_upgrade_20260222
+[DIR] robotkez_n8n_sandbox_edzesterv
+[DIR] test-20260211
+[DIR] test-feature-20260211
+[DIR] test-track-12345678
+[DIR] test-track-20260211
+bongeszo_cloudflare.md
+PHASE_3_COMPLETION_REPORT.md
