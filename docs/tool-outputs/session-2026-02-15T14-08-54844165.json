@@ -1,0 +1,66 @@
+{
+  "sessionId": "54844165-d9c0-4f0d-b71d-2f68b4a3970b",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-15T14:08:47.921Z",
+  "lastUpdated": "2026-02-15T14:08:54.339Z",
+  "messages": [
+    {
+      "id": "a6e34396-09fa-41cb-b336-ef0cb42f71c1",
+      "timestamp": "2026-02-15T14:08:47.921Z",
+      "type": "info",
+      "content": "Waiting for MCP servers to initialize... Slash commands are still available and prompts will be queued."
+    },
+    {
+      "id": "66176178-00c0-4bcf-96b1-f6129a363322",
+      "timestamp": "2026-02-15T14:08:49.383Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'docker': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "fc7168b6-b98d-48a8-ade4-1626ce5126d4",
+      "timestamp": "2026-02-15T14:08:49.432Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'fetch': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "c8b77d87-d498-4026-9b23-b599bd2fea16",
+      "timestamp": "2026-02-15T14:08:49.434Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'sqlite': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "ab6c9e02-dce3-4683-9cc2-500a6a18208c",
+      "timestamp": "2026-02-15T14:08:50.239Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'brunella-python': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "046c477e-814d-4986-b822-5f8f24c3e937",
+      "timestamp": "2026-02-15T14:08:51.820Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'brunella-core': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "b2bda6fd-ca48-43c0-94d5-fbf48af79a20",
+      "timestamp": "2026-02-15T14:08:52.271Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'cloudflare': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "20abf380-21bb-410c-87f1-f21a5c95af45",
+      "timestamp": "2026-02-15T14:08:53.888Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "config set safety_settings none"
+        }
+      ]
+    },
+    {
+      "id": "ce2d7292-180a-4e0d-9221-6720e214de7e",
+      "timestamp": "2026-02-15T14:08:54.339Z",
+      "type": "error",
+      "content": "[API Error: [{\n  \"error\": {\n    \"code\": 400,\n    \"message\": \"Request contains an invalid argument.\",\n    \"errors\": [\n      {\n        \"message\": \"Request contains an invalid argument.\",\n        \"domain\": \"global\",\n        \"reason\": \"badRequest\"\n      }\n    ],\n    \"status\": \"INVALID_ARGUMENT\"\n  }\n}\n]]"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\src\dashboard\components\cean\chat
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 22.      8:26          10947 OrchestratorChat.tsx 
+Process Group PGID: 29676

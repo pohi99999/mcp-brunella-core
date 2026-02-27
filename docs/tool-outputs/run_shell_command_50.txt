@@ -1,0 +1,2 @@
+Output: HTML jelentés elkészült: F:\mcp-brunella-core\conductor\tracks\trojan-horse-campaign-20260224\Brunella_Leads_Fogorvosok.html
+Process Group PGID: 44516

@@ -1,0 +1,32 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\src\dashboard\lib\chat
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 22.      8:26                providers
+-a----     2026. 02. 13.     22:32            690 contextBuilder.ts    
+-a----     2026. 02. 22.      8:26           1097 providerRegistry.ts  
+-a----     2026. 02. 13.     22:32           2182 sessionStore.ts      
+-a----     2026. 02. 22.      8:26            880 types.ts
+
+
+    Directory: F:\mcp-brunella-core\src\dashboard\lib\chat\providers
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 22.      8:26            794 cloudflareChatProvide 
+                                                  r.ts
+-a----     2026. 02. 13.     22:32            718 cloudflareEdgeProvide 
+                                                  r.ts
+-a----     2026. 02. 21.      9:28            400 geminiProvider.ts     
+-a----     2026. 02. 21.      9:28            402 githubProvider.ts     
+-a----     2026. 02. 22.      8:26           1872 masterOrchestratorPro 
+                                                  vider.ts
+-a----     2026. 02. 21.      9:28            394 ollamaProvider.ts     
+-a----     2026. 02. 13.     22:32            557 orchestratorProvider. 
+                                                  ts
+-a----     2026. 02. 13.     22:32           1205 utils.ts
+Process Group PGID: 3160

@@ -1,0 +1,584 @@
+Output: 
+Running 27 tests using 1 worker
+
+      1 …ella Dashboard Full UI Audit (Enhanced) › Audit Page: dashboard
+--- Auditing: dashboard ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  1 …hboard Full UI Audit (Enhanced) › Audit Page: dashboard (19.3s)
+      2 …lla Dashboard Full UI Audit (Enhanced) › Audit Page: neural-map
+
+--- Auditing: neural-map ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  2 …board Full UI Audit (Enhanced) › Audit Page: neural-map (16.1s)
+      3 …la Dashboard Full UI Audit (Enhanced) › Audit Page: system-arch
+
+--- Auditing: system-arch ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  3 …oard Full UI Audit (Enhanced) › Audit Page: system-arch (16.1s)
+      4 … Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: cean
+
+--- Auditing: cean ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  4 …a Dashboard Full UI Audit (Enhanced) › Audit Page: cean (16.2s)
+      5 …lla Dashboard Full UI Audit (Enhanced) › Audit Page: cloudflare
+
+--- Auditing: cloudflare ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  5 …board Full UI Audit (Enhanced) › Audit Page: cloudflare (16.3s)
+      6 … Dashboard Full UI Audit (Enhanced) › Audit Page: fleet_manager
+
+--- Auditing: fleet_manager ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  6 …rd Full UI Audit (Enhanced) › Audit Page: fleet_manager (15.9s)
+      7 … Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: chat
+
+--- Auditing: chat ---
+  Waiting for system initialization (5s)...
+  Found 25 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 1
+     > Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.       
+  ok  7 …a Dashboard Full UI Audit (Enhanced) › Audit Page: chat (17.4s)
+      8 …Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: paios
+
+--- Auditing: paios ---
+  Waiting for system initialization (5s)...
+  Found 28 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  8 … Dashboard Full UI Audit (Enhanced) › Audit Page: paios (17.4s)
+      9 …unella Dashboard Full UI Audit (Enhanced) › Audit Page: phoenix
+
+--- Auditing: phoenix ---
+  Waiting for system initialization (5s)...
+  Found 25 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 1
+     > Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.       
+  ok  9 …ashboard Full UI Audit (Enhanced) › Audit Page: phoenix (17.3s)
+     10 …lla Dashboard Full UI Audit (Enhanced) › Audit Page: management
+
+--- Auditing: management ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 10 …board Full UI Audit (Enhanced) › Audit Page: management (16.1s)
+     11 …lla Dashboard Full UI Audit (Enhanced) › Audit Page: decomposer
+
+--- Auditing: decomposer ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 11 …board Full UI Audit (Enhanced) › Audit Page: decomposer (16.2s)
+     12 …runella Dashboard Full UI Audit (Enhanced) › Audit Page: tracks
+
+--- Auditing: tracks ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 12 …Dashboard Full UI Audit (Enhanced) › Audit Page: tracks (16.2s)
+     13 …ella Dashboard Full UI Audit (Enhanced) › Audit Page: incubator
+
+--- Auditing: incubator ---
+  Waiting for system initialization (5s)...
+  Found 28 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 13 …hboard Full UI Audit (Enhanced) › Audit Page: incubator (17.7s)
+     14 …ella Dashboard Full UI Audit (Enhanced) › Audit Page: knowledge
+
+--- Auditing: knowledge ---
+  Waiting for system initialization (5s)...
+  Found 26 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 14 …hboard Full UI Audit (Enhanced) › Audit Page: knowledge (17.2s)
+     15 … Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: mcp 
+
+--- Auditing: mcp ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 1
+     > Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.       
+  ok 15 …la Dashboard Full UI Audit (Enhanced) › Audit Page: mcp (16.4s)
+     16 …ella Dashboard Full UI Audit (Enhanced) › Audit Page: developer
+
+--- Auditing: developer ---
+  Waiting for system initialization (5s)...
+  Found 37 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 16 …hboard Full UI Audit (Enhanced) › Audit Page: developer (17.3s)
+     17 … Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: edge
+
+--- Auditing: edge ---
+  Waiting for system initialization (5s)...
+  Found 26 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 17 …a Dashboard Full UI Audit (Enhanced) › Audit Page: edge (17.5s)
+     18 …ashboard Full UI Audit (Enhanced) › Audit Page: suggested-tasks
+
+--- Auditing: suggested-tasks ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 18 … Full UI Audit (Enhanced) › Audit Page: suggested-tasks (16.3s)
+     19 …Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: tests
+
+--- Auditing: tests ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 19 … Dashboard Full UI Audit (Enhanced) › Audit Page: tests (16.2s)
+     20 …ard Full UI Audit (Enhanced) › Audit Page: enterprise-analytics
+
+--- Auditing: enterprise-analytics ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 1
+     > Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.       
+  ok 20 … UI Audit (Enhanced) › Audit Page: enterprise-analytics (16.5s)
+     21 …nella Dashboard Full UI Audit (Enhanced) › Audit Page: robotkez
+
+--- Auditing: robotkez ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 21 …shboard Full UI Audit (Enhanced) › Audit Page: robotkez (16.3s)
+     22 …Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: tasks
+
+--- Auditing: tasks ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 22 … Dashboard Full UI Audit (Enhanced) › Audit Page: tasks (22.2s)
+     23 …Dashboard Full UI Audit (Enhanced) › Audit Page: python-workers
+
+--- Auditing: python-workers ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 1
+     > Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.       
+  ok 23 …d Full UI Audit (Enhanced) › Audit Page: python-workers (16.9s)
+     24 …ella Dashboard Full UI Audit (Enhanced) › Audit Page: inventory
+
+--- Auditing: inventory ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 24 …hboard Full UI Audit (Enhanced) › Audit Page: inventory (16.4s)
+     25 …Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: files
+
+--- Auditing: files ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 25 … Dashboard Full UI Audit (Enhanced) › Audit Page: files (16.4s)
+     26 … Dashboard Full UI Audit (Enhanced) › Audit Page: marketwatcher
+
+--- Auditing: marketwatcher ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 26 …rd Full UI Audit (Enhanced) › Audit Page: marketwatcher (16.6s)
+     27 …nella Dashboard Full UI Audit (Enhanced) › Audit Page: settings
+
+--- Auditing: settings ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 27 …shboard Full UI Audit (Enhanced) › Audit Page: settings (16.6s)
+
+  Slow test file: [chromium] › test\e2e\dashboard_audit.spec.ts (7.6m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  27 passed (7.7m)
+Process Group PGID: 33552

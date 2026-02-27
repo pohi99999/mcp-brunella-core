@@ -1,0 +1,16 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-10 of 279 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 10.
+
+--- FILE CONTENT (truncated) ---
+# Logistics Vertical — Specifikáció
+
+**Track:** `logistics_vertical_20260222`
+**Repo:** `F:/PohiAIProt2` → Brunella integráció
+
+---
+
+## Mi ez?
+
+A **PohiAIProt2** egy komplett, production-ready frontend egy nehézanyag-logisztikai B2B platformhoz. Timber (tölgy, akác, fenyő stb.) kereskedők és gyártók között AI-alapú összeillesztés, tehervagonozás, szállítmánykövetés, CMR dokumentumgenerálás.

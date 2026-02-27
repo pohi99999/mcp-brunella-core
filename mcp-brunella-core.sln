@@ -1,0 +1,41 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "myai", "myai", "{D59373BE-0AE9-2590-D27F-FC78E8F5A7DC}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "agents", "agents", "{209EB0C9-0FE6-A70B-D7E3-8CA8B0A1A5F8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "a2a-go", "a2a-go", "{F7D628B9-EB02-2D34-70B1-456332B069CF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "professional-services", "professional-services", "{AA1E8AA5-708A-BFDD-73AA-5661E69CB3A9}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tools", "tools", "{EB28F2AF-B4A0-05D7-0DED-B1385203E8F5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "gsnapshot", "myai\agents\a2a-go\professional-services\tools\gsnapshot\gsnapshot.csproj", "{5DA3E532-6757-F6C3-CC5E-330F684CC114}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5DA3E532-6757-F6C3-CC5E-330F684CC114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DA3E532-6757-F6C3-CC5E-330F684CC114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DA3E532-6757-F6C3-CC5E-330F684CC114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DA3E532-6757-F6C3-CC5E-330F684CC114}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{209EB0C9-0FE6-A70B-D7E3-8CA8B0A1A5F8} = {D59373BE-0AE9-2590-D27F-FC78E8F5A7DC}
+		{F7D628B9-EB02-2D34-70B1-456332B069CF} = {209EB0C9-0FE6-A70B-D7E3-8CA8B0A1A5F8}
+		{AA1E8AA5-708A-BFDD-73AA-5661E69CB3A9} = {F7D628B9-EB02-2D34-70B1-456332B069CF}
+		{EB28F2AF-B4A0-05D7-0DED-B1385203E8F5} = {AA1E8AA5-708A-BFDD-73AA-5661E69CB3A9}
+		{5DA3E532-6757-F6C3-CC5E-330F684CC114} = {EB28F2AF-B4A0-05D7-0DED-B1385203E8F5}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {507F9810-0647-470E-A313-84134DC5DEC3}
+	EndGlobalSection
+EndGlobal

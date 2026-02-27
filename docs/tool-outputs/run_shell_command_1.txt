@@ -1,0 +1,644 @@
+Output too large. Showing first 8000 and last 32 000 characters. For full output see: C:\Users\pohi9\.gemini\tmp\mcp-brunella-core\tool-outputs\session-200e43c6-7665-4bf2-8ba2-b79eb53ced76\run_shell_command_1771982632788_0.txt
+Output: warning: in the working copy of 'BRUNELLA_MASTER_CONTEXT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'conductor/project_state.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'conductor/tracks.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/developer_metrics.json', LF will be replaced by CRLF the next time Git touches it
+
+> mcp-brunella-core@1.0.0 build
+> tsc
+
+
+ RUN  v4.0.18 F:/mcp-brunella-core
+
+stdout | test/salesHunterAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meeta/llama-3.1-8b-instruct)
+
+*
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"IT consulting","targetRole":"CT..."
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"IT consulting","targetRole":"CT...
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: consulting, Budapest, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).     
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771982662695
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [RAG] Document indexed: saleshunter_1771982662695
+····***********                                                         
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON       
+[INFO] [SalesHunter] Memória lekérdezése: "find leads in IT industry..."
+····***********
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON       
+[STATUS] [SalesHunter] working - Lead generálás: find leads in IT industry...
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).     
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON       
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON       
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON       
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771982666163
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON       
+[INFO] [RAG] Document indexed: saleshunter_1771982666163
+·····**********                                                         
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Finance","targetRole":"CFO"}...
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).     
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Technology","targetRole":"VP Sa..."
+······*********
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Technology","targetRole":"VP Sa...
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: tech, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).     
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771982669254
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [RAG] Document indexed: saleshunter_1771982669254
+·······********                                                         
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"SaaS","targetRole":"Product Man..."
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"SaaS","targetRole":"Product Man...
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).     
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771982672129
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores
+[INFO] [RAG] Document indexed: saleshunter_1771982672129
+········*******                                                         
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Manufacturing","targetRole":"Op..."
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Manufacturing","targetRole":"Op...
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: manufacturing, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2)
+
+... [344 249 characters omitted] ...
+
+t" tasks to entity extraction
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should route "extract" tasks to entity extraction
+[INFO] [DataScientist] Task received: extract entities from this        
+[INFO] [DataScientist] Extracting entities...
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should return REJECTED when refiner returns null
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should return REJECTED when refiner returns null
+[INFO] [DataScientist] Task received: analyze empty data
+[INFO] [DataScientist] Running full analysis pipeline...
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should return REJECTED when refiner returns null
+[INFO] [DataScientist] Data rejected by refiner (low relevance)
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should use swarm context artifacts
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should use swarm context artifacts
+[INFO] [DataScientist] Task received: analyze this
+[INFO] [DataScientist] Using swarm searchResults (17 chars)
+[INFO] [DataScientist] Running full analysis pipeline...
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should use swarm context artifacts
+[INFO] [DataScientist] Analysis done: 2 topics, actionable=true
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should have correct capabilities
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should return error on unexpected exception
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should return error on unexpected exception
+[INFO] [DataScientist] Task received: analyze crash test
+[INFO] [DataScientist] Running full analysis pipeline...
+
+stderr | test/data_refiner.test.ts > DataScientist Agent > should return error on unexpected exception
+
+··········--········································*
+··········--····························································
+stdout | test/digitalHeadhunterAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee                                                                        
+··---···*                                                               
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should parse CV data
+[STATUS] [DigitalHeadhunter] working - HR screening: {"cvPath":"/cvs/candidate-123.pdf","position":"Sen...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should parse CV data
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should parse CV data
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for innterview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should extract skills from CV
+[STATUS] [DigitalHeadhunter] working - HR screening: {"cvText":"TypeScript, React, Node.js, 5 years exp...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should extract skills from CV
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should extract skills from CV
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for innterview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should match candidates to positions
+[STATUS] [DigitalHeadhunter] working - HR screening: {"position":"DevOps Engineer","requiredSkills":["D...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: undefined, Skills: Docker, Kubernetes, AWS
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should match candidates to positions
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should match candidates to positions
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for innterview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should prioritize high-match candidates
+[STATUS] [DigitalHeadhunter] working - HR screening: {"position":"Data Scientist","requiredSkills":["Py...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: undefined, Skills: Python, Machine Learning, SQL
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should prioritize high-match candidates
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should prioritize high-match candidates
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 2/3 recommended for innterview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should suggest interview slots
+[STATUS] [DigitalHeadhunter] working - HR screening: {"candidateEmail":"candidate@example.com","positio...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should suggest interview slots
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should suggest interview slots
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for innterview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should generate interview invitation email       
+[STATUS] [DigitalHeadhunter] working - HR screening: {"candidateName":"Jane Doe","position":"UX Designe...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should generate interview invitation email       
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should generate interview invitation email       
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for innterview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > LinkedIn Integration > should search LinkedIn for candidates
+[STATUS] [DigitalHeadhunter] working - HR screening: {"position":"Marketing Manager","location":"Budape...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > LinkedIn Integration > should search LinkedIn for candidates
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > LinkedIn Integration > should search LinkedIn for candidates
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for innterview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Error Handling > should handle missing CV file
+[STATUS] [DigitalHeadhunter] working - HR screening: {"cvPath":"/nonexistent.pdf"}...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Error Handling > should handle missing CV file
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Error Handling > should handle missing CV file
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for innterview
+
+··---···························*
+stdout | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > saveGoldenSample > should save valid sample via Python API
+[INFO] [GoldenBridge] Sample saved to Python backup from test-agent (quality: 0.85)
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > getGoldenStats > should return stats from Python API
+[ERROR] [GoldenBridge] D1 stats failed, trying Python backup: D1 error  
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > getGoldenStats > should return null on API failure
+[ERROR] [GoldenBridge] D1 stats failed, trying Python backup: D1 error  
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > autoSaveGoldenSample > should skip save for very short task+result (quality < 0.5)
+[ERROR] [VectorizeClient] embed failed: Cannot read properties of undefined (reading 'ok')
+
+stdout | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > autoSaveGoldenSample > should attempt save on quality result
+[INFO] [GoldenBridge] Sample saved to Python backup from TestAgent (quality: 0.70)
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > autoSaveGoldenSample > should attempt save on quality result
+[ERROR] [VectorizeClient] embed failed: Cannot read properties of undefi
+
+
+
+················*
+stdout | test/localCSRAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee                                                                        
+·····························*                                          
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Event Tracking > should track community events
+[STATUS] [LocalCSR] working - CSR tracking: {"location":"Budapest","eventType":"charity"}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Event Tracking > should track community events
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projjects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Event Tracking > should filter events by type
+[STATUS] [LocalCSR] working - CSR tracking: {"location":"Szeged","eventType":"education"}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Event Tracking > should filter events by type
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projjects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Sponsorship Management > should suggest sponsorship opportunities
+[STATUS] [LocalCSR] working - CSR tracking: {"budget":500000,"location":"Debrecen"}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Sponsorship Management > should suggest sponsorship opportunities
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projjects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Sponsorship Management > should filter by budget
+[STATUS] [LocalCSR] working - CSR tracking: {"budget":100000,"location":"Pécs"}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Sponsorship Management > should filter by budget
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projjects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > PR Automation > should generate press release for CSR activity
+[STATUS] [LocalCSR] working - CSR tracking: {"activityType":"tree_planting","participants":50,...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > PR Automation > should generate press release for CSR activity
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projjects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > PR Automation > should generate social media posts
+[STATUS] [LocalCSR] working - CSR tracking: {"activityType":"charity_donation","amount":200000...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > PR Automation > should generate social media posts
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projjects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Impact Reporting > should calculate CSR impact metrics
+[STATUS] [LocalCSR] working - CSR tracking: {"activities":[{"type":"donation","amount":100000}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Impact Reporting > should calculate CSR impact metrics
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projjects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Error Handling > should handle missing parameters
+[STATUS] [LocalCSR] working - CSR tracking: {}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Error Handling > should handle missing parameters
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projjects
+
+···············································*
+stdout | test/emailTriageAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee                                                                        
+··························································*             
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify urgent emails
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"URGENT: Server Down","emailBody":...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"URGENT: Server Down","emailBody":"We need immediate assistance!","from":"client@example.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify urgent emails
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify meeting requests
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Meeting invitation for next week"...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Meeting invitation for next week","emailBody":"Let's schedule a call to discuss the project.","from":"partner@company.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify meeting requests
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify invoices
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Invoice #12345","emailBody":"Plea...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Invoice #12345","emailBody":"Please find attached the invoice for this month.","from":"billing@supplier.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify invoices
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign high priority to urgent emails
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Critical: Payment Deadline Tomorr...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Critical: Payment Deadline Tomorrow","from":"finance@company.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign high priority to urgent emails
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign low priority to newsletters
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Weekly Newsletter - Tech Updates"...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Weekly Newsletter - Tech Updates","from":"newsletter@techblog.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign low priority to newsletters
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Auto Response > should generate auto-responses for common queries
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Pricing inquiry","emailBody":"How...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Pricing inquiry","emailBody":"How much does your service cost?","from":"potential@client.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Auto Response > should generate auto-responses for common queries
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Calendar Integration > should suggest calendar events for meeting requests
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Let's meet next Tuesday at 2 PM",...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Let's meet next Tuesday at 2 PM","from":"colleague@company.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Calendar Integration > should suggest calendar events for meeting requests
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Error Handling > should handle empty email body
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Test","emailBody":""}...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Test","emailBody":""}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Error Handling > should handle empty email body
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+
+····································································*   
+stdout | test/deploymentAnalyzer.test.ts > DeploymentAnalyzer > should detect TypeScript build errors
+[INFO] [DeploymentAnalyzer] Analyzing workflow logs
+[INFO] [DeploymentAnalyzer] Detected build error with 90% confidence    
+
+stdout | test/deploymentAnalyzer.test.ts > DeploymentAnalyzer > should detect syntax errors
+[INFO] [DeploymentAnalyzer] Analyzing workflow logs
+[INFO] [DeploymentAnalyzer] Detected build error with 90% confidence    
+
+stdout | test/deploymentAnalyzer.test.ts > DeploymentAnalyzer > should detect test failures
+[INFO] [DeploymentAnalyzer] Analyzing workflow logs
+[INFO] [DeploymentAnalyzer] Detected test error with 80% confidence     
+
+···*
+stdout | test/FinanceGuardian_Gmail.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee                                                                        
+·······*                                                                
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should successfully search and download PDF invoices from Gmail
+[INFO] [FinanceGuardian] Searching Gmail for invoices with query: "from:billing@company.com"
+
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should successfully search and download PDF invoices from Gmail
+[INFO] [FinanceGuardian] Downloaded invoice: invoice.pdf to F:\mcp-brunella-core\_br_temp\invoices\msg123_invoice.pdf
+
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should handle no results from Gmail
+[INFO] [FinanceGuardian] Searching Gmail for invoices with query: "has:a
+
+·················*
+stdout | test/enterpriseOrchestratorAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee                                                                        
+·····················*                                                  
+stdout | test/FinanceGuardian_Duplicates.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+·······························*
+stdout | test/FinanceGuardian_Duplicates.test.ts > FinanceGuardian - Invoice Processing & Duplicate Detection > should detect and skip a duplicate invoice
+
+···············································*
+stdout | test/phase42-costopt.test.ts > Phase 4.2 - Cost Optimization > Summary Report > should print cost optimization summary
+
+📊 PHASE 4.2 COST OPTIMIZATION SUMMARY:
+├─ Baseline: $0.001000 per 100 pipelines
+├─ Optimized: $0.000750 per 100 pipelines
+├─ Total Savings: 25%
+├─ Monthly Impact: $0.75 (3000 tests)
+└─ Status: ✅ Phase 4.2 Complete
+
+··························*
+stdout | test/agents/MarketIntelAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+········································*
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data 
+[STATUS] [MarketIntel] working - Piaci hírszerzés: Monitor product prices...
+[INFO] [MarketIntel] Scraping product data from http://example.com...   
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data 
+[INFO] [MarketIntel] Evaluating product potential...
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data 
+[INFO] [MarketIntel] Triggering alert for: Product X
+[INFO] [MarketIntel] [ALERT] HIGH POTENTIAL: Product X @ 100 HUF. Score: 0.8
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should fail if URL or selectors are missing
+[STATUS] [MarketIntel] working - Piaci hírszerzés: Monitor product price
+
+··········································*
+stdout | test/cloudflareBrowser.test.ts > CloudflareBrowser adapter > should send command and cache screenshot
+[INFO] [CloudflareBrowser] Sending command to CF Browser API: screenshot
+
+stdout | test/cloudflareBrowser.test.ts > CloudflareBrowser adapter > should return error status when worker request fails
+[INFO] [CloudflareBrowser] Sending command to CF Browser API: navigate  
+
+stderr | test/cloudflareBrowser.test.ts > CloudflareBrowser adapter > should return error status when worker request fails
+
+··············································*
+stdout | test/chromeDevToolsAgent.test.ts > ChromeDevToolsAgent > should return error when URL is missing
+[STATUS] [ChromeDevTools] working - Debug the page
+
+······················································--------····*     
+stderr | test/notificationService.test.ts > NotificationService > returns false when SMTP config missing
+[WARN] [NotificationService] SMTP config missing, skipping email        
+
+stdout | test/notificationService.test.ts > NotificationService > sends email when SMTP config present
+[INFO] [NotificationService] Critical TODO email sent to to@test.dev    
+
+stdout | test/FinanceGuardian_Sheets.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee                                                                        
+······················································--------······*   
+stdout | test/FinanceGuardian_Sheets.test.ts > FinanceGuardian - Google Sheets Export > should successfully export invoice data to Google Sheets
+
+······················································--------········* 
+······················································--------··········
+stdout | test/codebaseIndexer.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+··························*
+stdout | test/agents/MachineHunter.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+···························*
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should successfully execute a full machine hunt with outreach  
+[STATUS] [MarketIntel] working - Piaci hírszerzés: machine hunt...      
+[INFO] [MarketIntel] 🚀 Starting Machine Hunt for: CNC machine
+[INFO] [MarketIntel] Scraping machines for: CNC machine...
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should successfully execute a full machine hunt with outreach  
+[INFO] [MarketIntel] Valuing: CNC Pro 3000
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should successfully execute a full machine hunt with outreach  
+[INFO] [MarketIntel] 🔥 High potential found! Triggering outreach for: CCNC Pro 3000
+[INFO] [MarketIntel] Generating outreach for: CNC Pro 3000
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should skip outreach if potential is low
+[STATUS] [MarketIntel] working - Piaci hírszerzés: machine hunt...      
+[INFO] [MarketIntel] 🚀 Starting Machine Hunt for: machine hunt
+[INFO] [MarketIntel] Scraping machines for: machine hunt...
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should skip outreach if potential is low
+
+···············································*
+stdout | test/agents/LeadMiningAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+                                                                        
+ Test Files  139 passed (139)                                           
+      Tests  1300 passed | 45 skipped (1345)
+   Start at  02:24:19
+   Duration  378.79s (transform 3.86s, setup 2.47s, import 26.58s, tests 313.15s, environment 22ms)
+
+[main c5cdfc45] feat: total dashboard stabilization, functional integrity fixes, and hungarian master orchestration tuning (BAS 2.5.0)
+ 58 files changed, 5372 insertions(+), 578 deletions(-)
+ create mode 100644 BOVITMENY.md
+ create mode 100644 cloudflare.md
+ create mode 100644 cloudflare/src/lead-intelligence.ts
+ create mode 100644 cloudflare/wrangler.lead-intelligence.jsonc
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/Brunella_Leads_Fogorvosok.html
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/brunella-sheets.ods
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/email.md
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/fogorvosok_leads_20260224_2036.csv
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/fogorvosok_leads_CLEAN.csv
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/leads_master_sheets.gs
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/outreach_drafts.md
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/target_agencies.md
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/technical_audit.md
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/track.md
+ create mode 100644 conductor/tracks/trojan-horse-campaign-20260224/trojan_horse_upload.gs
+ create mode 100644 credentials/.gitkeep
+ create mode 100644 cypress.config.ts
+ create mode 100644 mcp_servers.json
+ create mode 100644 myai/upload_trojan_to_sheets.py
+ delete mode 100644 playwright-report/data/53a19fc0634178bd3ab8ab37b3722a2f822a276c.webm
+ create mode 100644 scripts/deploy-lead-intelligence.bat
+ delete mode 100644 src/dashboard/components/CommandMenu.tsx
+ create mode 100644 test/e2e/dashboard_audit.spec.ts
+ create mode 100644 test/e2e/functional_integrity.spec.ts
+ create mode 100644 test/e2e/total_system_sync.spec.ts
+ create mode 100644 testing/cypress/support/e2e.ts
+Enumerating objects: 145, done.
+Counting objects: 100% (145/145), done.
+Delta compression using up to 16 threads
+Compressing objects: 100% (83/83), done.
+Writing objects: 100% (87/87), 105.08 KiB | 3.50 MiB/s, done.
+Total 87 (delta 53), reused 0 (delta 0), pack-reused 0 (from 0)
+remote: Resolving deltas: 100% (53/53), completed with 53 local objects 
+remote: Bypassed rule violations for refs/heads/main:
+remote: 
+remote: - Changes must be made through a pull request.
+remote:
+remote: - Required status check "Phoenix   Protocol (CI)" is expected.  
+remote:
+To https://github.com/pohi99999/mcp-brunella-core.git
+   ae721ef0..c5cdfc45  main -> main
+Process Group PGID: 31660

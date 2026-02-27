@@ -1,0 +1,10 @@
+Output: ls : Cannot find path 'F:\mcp-brunella-core\config\google-service-account.json' because it does not exist
+.
+At line:1 char:1
++ ls "config/google-service-account.json"
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (F:\mcp-brunella...ce-account.json:String) [Get-ChildItem]  
+   , ItemNotFoundException
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetChildItemCommand
+Exit Code: 1
+Process Group PGID: 11968

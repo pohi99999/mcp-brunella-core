@@ -1,0 +1,11 @@
+{
+  "id": "r-3755760476868814939",
+  "message": {
+    "id": "19c91e8b49245485",
+    "threadId": "19c91e8b49245485",
+    "labelIds": [
+      "DRAFT"
+    ]
+  },
+  "status": "draft_created"
+}

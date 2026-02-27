@@ -1,0 +1,11 @@
+Found 5 matches for pattern "rateLimit" in path "src/server":
+---
+File: web.ts
+L35:   apiRateLimit,
+L158:   app.use("/api", apiRateLimit);
+---
+File: middleware.ts
+L6: import { rateLimit } from "express-rate-limit";
+L66: const apiRateLimit = rateLimit({
+L74: export { corsWhitelist, requestId, requestLogging, apiRateLimit };
+---

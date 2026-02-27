@@ -1,0 +1,13 @@
+Output: grep_search : The term 'grep_search' is not recognized as the name of a
+ cmdlet, function, script file, or operable program. Check the spelling
+ of the name, or if a path was included, verify that the path is correc
+t and try again.
+At line:1 char:1
++ grep_search -pattern "CommandMenu" -dir_path "src/dashboard"
++ ~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (grep_search:String) [], 
+    CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+Exit Code: 1
+Process Group PGID: 34328

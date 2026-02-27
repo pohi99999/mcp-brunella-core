@@ -15,6 +15,19 @@ const options = {
         description: "Local server",
       },
     ],
+    paths: {
+      "/metrics": {
+        get: {
+          summary: "Prometheus metrics scrape endpoint",
+          description: "Exposes BAS runtime metrics in Prometheus text format.",
+          responses: {
+            200: {
+              description: "Prometheus metrics text payload"
+            }
+          }
+        }
+      }
+    }
   },
   apis: [
     path.join(process.cwd(), "src", "server", "web.ts"),

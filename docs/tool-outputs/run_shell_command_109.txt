@@ -1,0 +1,9 @@
+Output: ls : Cannot find path 'F:\mcp-brunella-core\logs\google_token.json' because it does not exist.
+At line:1 char:1
++ ls "logs/google_token.json"
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : ObjectNotFound: (F:\mcp-brunella...ogle_token.json:String) [Get-ChildItem] 
+   , ItemNotFoundException
+    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetChildItemCommand
+Exit Code: 1
+Process Group PGID: 42764

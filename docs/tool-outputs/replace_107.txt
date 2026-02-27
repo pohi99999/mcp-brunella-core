@@ -1,0 +1,1 @@
+Successfully modified file: F:\mcp-brunella-core\src\agents\FinanceGuardian.ts (1 replacements).

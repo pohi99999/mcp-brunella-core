@@ -72,9 +72,12 @@ const INDUSTRY_KEYWORDS: Record<string, string[]> = {
   fitness:     ['edzőterem', 'fitness', 'gym', 'sportkomplexum'],
   etterem:     ['étterem', 'vendéglő', 'bisztró', 'kávézó'],
   szakiparos:  ['villanyszerelő', 'vízszerelő', 'épületszigetelő', 'festő'],
-  ingatlan:    ['ingatlaniroda', 'ingatlanközvetítő'],
+  ingatlan:    ['ingatlaniroda', 'ingatlanközvetítő', 'ingatlanos'],
   allatorvos:  ['állatorvos', 'állatgyógyászat', 'kisállat rendelő'],
   optika:      ['optika', 'szemüvegkészítő', 'szemészet'],
+  ugyved:      ['ügyvéd', 'ügyvédi iroda', 'jogtanácsos', 'jogi iroda'],
+  szallas:     ['szállás', 'panzió', 'apartman kiadó', 'vendégház'],
+  konyvelo:    ['könyvelő iroda', 'könyvelés', 'adótanácsadó', 'könyvelő'],
 };
 
 // ============================================================================
@@ -148,11 +151,21 @@ export default {
     console.log('[LeadIntel] Scheduled research futás:', new Date().toISOString());
     await initDB(env);
 
-    // Alapértelmezett napi futások
+    // Alapértelmezett napi futások — Budapest + vidéki városok
     const dailyJobs = [
+      // Budapest — eredeti 3
       { industry: 'kozmetika', city: 'Budapest' },
-      { industry: 'fitness', city: 'Budapest' },
-      { industry: 'fogorvos', city: 'Budapest' },
+      { industry: 'fitness',   city: 'Budapest' },
+      { industry: 'fogorvos',  city: 'Budapest' },
+      // Új iparágak — Budapest
+      { industry: 'ugyved',    city: 'Budapest' },
+      { industry: 'ingatlan',  city: 'Budapest' },
+      { industry: 'konyvelo',  city: 'Budapest' },
+      // Vidéki városok (kevesebb verseny!)
+      { industry: 'fogorvos',  city: 'Debrecen' },
+      { industry: 'kozmetika', city: 'Miskolc' },
+      { industry: 'fogorvos',  city: 'Pécs' },
+      { industry: 'kozmetika', city: 'Győr' },
     ];
 
     for (const job of dailyJobs) {

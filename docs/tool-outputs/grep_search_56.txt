@@ -1,0 +1,16 @@
+Found 8 matches for pattern "SalesHunter" in path "F:\mcp-brunella-core\src":
+---
+File: agents\registry.json
+L411:       "class": "SalesHunterAgent",
+L412:       "module": "./agents/SalesHunterAgent.js",
+---
+File: agents\SalesHunterAgent.ts
+L15:  * @module SalesHunterAgent
+L48: interface SalesHunterResult {
+L63: export class SalesHunterAgent extends BaseAgent {
+L64:   name = 'SalesHunter';
+L147:   private async generateLeads(params: LeadGenerationData): Promise<SalesHunterResult> {
+---
+File: agents\EnterpriseOrchestratorAgent.ts
+L52:     SALES: 'SalesHunter', // Or MarketIntel, CampaignAutomation
+---

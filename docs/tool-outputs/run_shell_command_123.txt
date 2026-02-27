@@ -1,0 +1,12 @@
+Output: grep : The term 'grep' is not recognized as the name of
+ a cmdlet, function, script file, or operable program. 
+Check the spelling of the name, or if a path was includ 
+ed, verify that the path is correct and try again.      
+At line:1 char:24
++ cd myai; uv pip list | grep pytest
++                        ~~~~
+    + CategoryInfo          : ObjectNotFound: (grep:St  
+   ring) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException  
+Exit Code: 1
+Process Group PGID: 46152

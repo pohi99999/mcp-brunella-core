@@ -1,0 +1,146 @@
+Found 100 matches for pattern "lancedb" in path "F:\mcp-brunella-core\src" (results limited to 100 matches for performance):
+---
+File: utils\rag.ts
+L2: // PURPOSE: Zone II: Hibrid memória rendszer (LanceDB) valós idejű íráshoz Node.js-ben.
+L3: // Zone IV: Dual Storage (LanceDB + JSONL backup).
+L6: import * as lancedb from "@lancedb/lancedb";
+L12: const DB_PATH = "./data/brunella_lancedb";
+L111:     db: lancedb.Connection,
+L126:     db: lancedb.Connection,
+L177:     const db = await lancedb.connect(this.dbPath);
+L219:       const db = await lancedb.connect(this.dbPath);
+L242:       const db = await lancedb.connect(this.dbPath);
+L298: /** Search RAG using vector similarity (cosine distance via LanceDB). */
+L306: /** Zone IV: Dual Storage – LanceDB + JSONL backup (antifragilitás). */
+L326:     // 2. LanceDB (ha van text mező)
+---
+File: types\enterprise.ts
+L22:   storedInLanceDB: boolean;
+L251: // LanceDB Storage Schemas
+L318:     lancedbPath: string;
+---
+File: types\blueprint.ts
+L16:   | "postgresql" | "mongodb" | "sqlite" | "lancedb"        // DB
+---
+File: tools\getAiRecommendation.ts
+L5:  * Glass Box: Ez az MCP tool a HybridMemory (LanceDB) RAG keresést
+L21:   "RAG Pipeline: LanceDB vektoros keresés + Ollama embedding",
+L55:     "AI-alapú ajánlásokat ad vissza egy lekérdezésre LanceDB RAG keresés segítségével. Ha a vektoros keresés nem elérhető, statikus fallback ajánlásokat ad.",
+---
+File: server\registry.ts
+L130:     description: "AI-alapú ajánlásokat ad vissza LanceDB RAG keresés segítségével",
+---
+File: server\routes\pythonWorkers.ts
+L3:  * API endpoints for OCR, Web Scraper, and LanceDB Batch workers.
+L9:  * - POST /api/python-workers/lancedb-batch
+L44:         { name: 'lancedb-batch', available: true },
+L83:   router.post('/lancedb-batch', async (req: Request, res: Response) => {
+L86:       logInfo('PythonWorkers', 'LanceDB batch request received');
+L88:       const script = `import json\nfrom myai.workers.lancedb_batch import IngestionRequest, ingest_batch\nreq = IngestionRequest(**context)\nres = ingest_batch(req)\nprint(res.model_dump_json())`;
+L95:       logError('PythonWorkers', response.error || 'LanceDB batch failed');
+---
+File: server\routes\recommendation.ts
+L6:  * Glass Box: Ez az endpoint a HybridMemory (LanceDB) RAG keresést használja
+L63:     text: "RAG Pipeline: LanceDB vektoros keresés + Ollama embedding",
+---
+File: server\routes\files.ts
+L75:                 provider: 'LanceDB',
+---
+File: dashboard\components\dashboard\KnowledgeBasePanel.tsx
+L130:                         {stats?.provider || 'LanceDB'} {stats?.status || 'Offline'}
+---
+File: dashboard\components\dashboard\PythonWorkersPanel.tsx
+L27:  * - LanceDB Batch Ingestion
+L47:     const [activeWorker, setActiveWorker] = useState<'ocr' | 'scraper' | 'lancedb'>('ocr');
+L62:     // LanceDB State
+L63:     const [lancedbFile, setLancedbFile] = useState('');
+L64:     const [lancedbTable, setLancedbTable] = useState('');
+L65:     const [lancedbTextField, setLancedbTextField] = useState('text');
+L66:     const [lancedbBatchSize, setLancedbBatchSize] = useState('100');
+L82:                 { name: 'LanceDB Batch', available: true, totalRuns: 0 },
+L171:      * Execute LanceDB Batch Ingestion
+L173:     const executeLanceDB = async () => {
+L174:         if (!lancedbFile.trim() || !lancedbTable.trim()) {
+L183:             const response = await fetch('/api/python-workers/lancedb-batch', {
+L187:                     file_path: lancedbFile,
+L188:                     table_name: lancedbTable,
+L189:                     text_field: lancedbTextField,
+L190:                     batch_size: parseInt(lancedbBatchSize, 10),
+L199:                 error: error.message || 'LanceDB ingestion failed',
+L233:                         Execute OCR, web scraping, or LanceDB batch ingestion tasks
+L247:                             <TabsTrigger value="lancedb">
+L249:                                 LanceDB Batch
+L344:                         {/* LanceDB Batch Tab */}
+L345:                         <TabsContent value="lancedb" className="space-y-4">
+L352:                                     value={lancedbFile}
+L353:                                     onChange={(e) => setLancedbFile(e.target.value)}
+L364:                                         value={lancedbTable}
+L365:                                         onChange={(e) => setLancedbTable(e.target.value)}
+L374:                                         value={lancedbTextField}
+L375:                                         onChange={(e) => setLancedbTextField(e.target.value)}
+L385:                                     value={lancedbBatchSize}
+L386:                                     onChange={(e) => setLancedbBatchSize(e.target.value)}
+L389:                             <Button onClick={executeLanceDB} disabled={loading} className="w-full">
+---
+File: dashboard\assets\documents\workflow.md
+L36: - **Vektoros DB:** LanceDB (RAG)
+L117: │ LanceDB│ │Logger│ │Health   │
+---
+File: core\codebaseIndexer.ts
+L2: // PURPOSE: G4.2 — Proactive codebase indexing into LanceDB via Ollama embeddings
+L225:  * Reads all matching files, chunks them, and sends to Python backend for LanceDB storage.
+L338:  * Send chunks to Python backend for LanceDB indexing.
+---
+File: cli.ts
+L1475:   .description("Run Tech-Harvester pipeline (scrape AI/Tech sources → LanceDB RAG)");
+---
+File: agents\EmailTriageAgent.ts
+L11:  * - LanceDB sender history tracking
+---
+File: agents\EnterpriseOrchestrator.ts
+L44:   storedInLanceDB: boolean;
+---
+File: agents\EnterpriseOrchestratorAgent.ts
+L98:       if (event.storedInLanceDB) {
+L158:       storedInLanceDB: true,
+L423:    * Store execution history in LanceDB for analytics
+L430:       // TODO: Implement LanceDB storage
+L465:     // TODO: Implement real monitoring via LanceDB/SQLite query
+---
+File: agents\FinanceGuardian.ts
+L70:  * - LanceDB price history integration
+L208:    * Store invoice history in memory/LanceDB
+---
+File: agents\FinancialGuardAgent.ts
+L10:  * - Duplicate detection (LanceDB invoice_number check)
+L74:   // In-memory cache (in production, would use LanceDB)
+L168:     // Step 4: Store in LanceDB (simulated)
+L331:    * Check for duplicate invoices in LanceDB
+L341:     // Check in-memory cache (in production, would query LanceDB)
+L392:    * Store invoice in LanceDB
+L411:     // Store in cache (in production, would insert to LanceDB)
+---
+File: agents\GitHubModelsAgent.ts
+L234: - Vector search (LanceDB RAG)
+---
+File: agents\KnowledgeBaseBuilderAgent.ts
+L10:  * - LanceDB embedding storage
+L147:     // Step 4: Store embeddings in LanceDB
+L346:    * Store embeddings in LanceDB for RAG
+L350:    * - Store in LanceDB: { question, answer, category, embedding }
+L354:     logInfo(this.name, 'Storing embeddings in LanceDB...');
+L356:     // TODO: Actual LanceDB insert
+L359:     //   await lancedb.insert({ question: faq.question, answer: faq.answer, embedding });
+---
+File: agents\LogisticsDispatcherAgent.ts
+L177:    * - Cache results in LanceDB for historical analysis
+L228:    * - Use historical delay data (LanceDB)
+---
+File: agents\MarketIntelAgent.ts
+L9:  * - LanceDB storage for historical data
+L77:   description = 'Automated competitor website scraping, price tracking, and trend analysis with LanceDB storage';
+L83:     'lancedb_storage',
+L117:       // Store in LanceDB (simulated)
+L118:       await this.storeInLanceDB(result.pricePoints);
+L337:    * Store price data in LanceDB
+---

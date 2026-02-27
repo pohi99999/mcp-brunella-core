@@ -1,0 +1,9 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\src\agents
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 24.      1:04          55288 AgentManager.ts      
+Process Group PGID: 21308

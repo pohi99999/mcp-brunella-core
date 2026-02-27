@@ -1,0 +1,106 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 131-230 of 364 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 230.
+
+--- FILE CONTENT (truncated) ---
+        confidence: 98
+      },
+      {
+        invoiceNumber: 'INV-2024-002',
+        vendor: 'OfficeWorld',
+        amount: 45000,
+        currency: 'HUF',
+        date: new Date('2024-02-05'),
+        lineItems: [
+          { description: 'Office furniture', quantity: 10, unitPrice: 4500, total: 45000 }
+        ],
+        confidence: 95
+      },
+      {
+        invoiceNumber: 'INV-2024-003',
+        vendor: 'TechSupply Hungary',
+        amount: 135000,
+        currency: 'HUF',
+        date: new Date('2024-02-10'),
+        lineItems: [
+          { description: 'Laptop', quantity: 5, unitPrice: 26000, total: 130000 },
+          { description: 'Warranty', quantity: 1, unitPrice: 5000, total: 5000 }
+        ],
+        confidence: 96
+      },
+      {
+        invoiceNumber: 'INV-2024-004',
+        vendor: 'Utilities Inc',
+        amount: 28000,
+        currency: 'HUF',
+        date: new Date('2024-02-12'),
+        lineItems: [
+          { description: 'Electricity', quantity: 1, unitPrice: 28000, total: 28000 }
+        ],
+        confidence: 99
+      }
+    ];
+
+    return mockInvoices;
+  }
+
+  /**
+   * Store invoice history in memory/LanceDB
+   */
+  private async storeInvoiceHistory(invoices: InvoiceData[]): Promise<void> {
+    invoices.forEach(invoice => {
+      const vendorKey = invoice.vendor;
+      const existing = this.invoiceHistory.get(vendorKey) || [];
+      this.invoiceHistory.set(vendorKey, [...existing, invoice]);
+    });
+
+    logInfo(this.name, `Stored ${invoices.length} invoices in history`);
+  }
+
+  /**
+   * Calculate vendor baselines for anomaly detection
+   */
+  private calculateVendorBaselines(): void {
+    this.invoiceHistory.forEach((invoices, vendorName) => {
+      if (invoices.length === 0) return;
+
+      const amounts = invoices.map(inv => inv.amount);
+      const avgPrice = amounts.reduce((a, b) => a + b, 0) / amounts.length;
+      const variance = amounts.reduce((sum, amount) => sum + Math.pow(amount - avgPrice, 2), 0) / amounts.length;
+      const stdDev = Math.sqrt(variance);
+
+      this.priceBaselineByVendor.set(vendorName, { avgPrice, stdDev });
+    });
+
+    logInfo(this.name, `Calculated baselines for ${this.priceBaselineByVendor.size} vendors`);
+  }
+
+  /**
+   * Detect price anomalies
+   */
+  private detectAnomalies(invoices: InvoiceData[]): PriceAnomaly[] {
+    const anomalies: PriceAnomaly[] = [];
+
+    invoices.forEach(invoice => {
+      const baseline = this.priceBaselineByVendor.get(invoice.vendor);
+      if (!baseline) return;
+
+      const zScore = (invoice.amount - baseline.avgPrice) / (baseline.stdDev || 1);
+      const percentageChange = ((invoice.amount - baseline.avgPrice) / baseline.avgPrice) * 100;
+
+      // Flag if Z-score > 2 (beyond 2 std deviations) or change > 15%
+      if (Math.abs(zScore) > 2 || Math.abs(percentageChange) > 15) {
+        let severity: 'low' | 'medium' | 'high' | 'critical' = 'low';
+        if (Math.abs(zScore) > 3) severity = 'critical';
+        else if (Math.abs(zScore) > 2.5) severity = 'high';
+        else if (Math.abs(zScore) > 2) severity = 'medium';
+
+        const anomaly: PriceAnomaly = {
+          vendorId: invoice.vendor,
+          vendorName: invoice.vendor,
+          productCategory: invoice.lineItems[0]?.description || 'Unknown',
+          historicalAvgPrice: baseline.avgPrice,
+          currentPrice: invoice.amount,
+          percentageChange: Math.round(percentageChange * 100) / 100,
+          anomalyScore: Math.min(Math.abs(zScore) * 20, 100), // Scale to 0-100

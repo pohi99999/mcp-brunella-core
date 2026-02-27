@@ -1,0 +1,16 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-10 of 362 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 10.
+
+--- FILE CONTENT (truncated) ---
+# RobotkezV2 Comet Upgrade — Specifikáció
+
+**Track:** `robotkez_comet_upgrade_20260222`
+
+---
+
+## Mi a Comet-szint?
+
+A Perplexity Comet böngésző asszisztens képes:
+1. **Természetes nyelvet** megérteni (`"Keresd a legolcsóbb RTX 4070-et"`)

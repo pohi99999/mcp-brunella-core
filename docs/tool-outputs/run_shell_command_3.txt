@@ -1,0 +1,656 @@
+Output too large. Showing first 8000 and last 32 000 characters. For full output see: C:\Users\pohi9\.gemini\tmp\mcp-brunella-core\tool-outputs\session-200e43c6-7665-4bf2-8ba2-b79eb53ced76\run_shell_command_1771982058819_0.txt
+Output: warning: in the working copy of 'data/developer_metrics.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'test/SpecWriterAgent.test.ts', LF will be replaced by CRLF the next time Git touches it
+
+> mcp-brunella-core@1.0.0 build
+> tsc
+
+
+ RUN  v4.0.18 F:/mcp-brunella-core
+
+··········
+stdout | test/marketIntelAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+··········*
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorA","CompetitorB"],"prod..."
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorA","CompetitorB"],"prod...
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: SaaS, 2 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771982202453
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [RAG] Document indexed: marketintel_1771982202453
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 6 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771982206254
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [RAG] Document indexed: marketintel_1771982206254
+···········******                                                       
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorC"],"productCategory":"..."
+·············****
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorC"],"productCategory":"...
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: Cloud Hosting, 1 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771982210308
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [RAG] Document indexed: marketintel_1771982210308
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 3 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771982214140
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [RAG] Document indexed: marketintel_1771982214140
+··············***                                                       
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorA","CompetitorB"],"prod..."
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorA","CompetitorB"],"prod...
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: SaaS, 2 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771982218127
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [RAG] Document indexed: marketintel_1771982218127
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 6 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771982221797
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [RAG] Document indexed: marketintel_1771982221797
+···············**                                                       
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorX"],"productCategory":"..."
+···············**
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorX"],"productCategory":"...
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: Enterprise Software, 1 versenytárs        
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771982225756
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [RAG] Document indexed: marketintel_1771982225756
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 3 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771982229281
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [RAG] Document indexed: marketintel_1771982229281
+················*                                                       
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":[],"productCategory":"software lice..."
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":[],"productCategory":"software lice...
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: software licenses, 0 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771982232778
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [RAG] Document indexed: marketintel_1771982232778
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling >
+
+... [340 101 characters omitted] ...
+
+ {"activities":[{"type":"donation","amount":100000}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Impact Reporting > should calculate CSR impact metrics
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projjects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Error Handling > should handle missing parameters
+[STATUS] [LocalCSR] working - CSR tracking: {}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Error Handling > should handle missing parameters
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projjects
+[STATUS] [LocalCSR] idle
+
+·········································*
+stdout | test/logisticsDispatcherAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee                                                                        
+····························································*           
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Shipment Tracking > should track shipment status
+[STATUS] [LogisticsDispatcher] working - Logistics: {"trackingNumber":"SHIP-2026-001","carrier":"GLS"}...
+[INFO] [LogisticsDispatcher] Starting logistics tracking pipeline...    
+[INFO] [LogisticsDispatcher] Fetching shipment status...
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Shipment Tracking > should track shipment status
+[INFO] [LogisticsDispatcher] Predicting delays...
+[INFO] [LogisticsDispatcher] Generating 1 complaint emails...
+[INFO] [LogisticsDispatcher] 📧 Would send 1 complaint emails
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Shipment Tracking > should track shipment status
+[INFO] [LogisticsDispatcher] ✅ Tracking complete: 1/3 delayed, 1 complaaints
+[STATUS] [LogisticsDispatcher] idle
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Shipment Tracking > should handle multiple shipments
+[STATUS] [LogisticsDispatcher] working - Logistics: {"trackingNumbers":["SHIP-001","SHIP-002","SHIP-00...
+[INFO] [LogisticsDispatcher] Starting logistics tracking pipeline...    
+[INFO] [LogisticsDispatcher] Fetching shipment status...
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Shipment Tracking > should handle multiple shipments
+[INFO] [LogisticsDispatcher] Predicting delays...
+[INFO] [LogisticsDispatcher] Generating 1 complaint emails...
+[INFO] [LogisticsDispatcher] 📧 Would send 1 complaint emails
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Shipment Tracking > should handle multiple shipments
+[INFO] [LogisticsDispatcher] ✅ Tracking complete: 1/3 delayed, 1 complaaints
+[STATUS] [LogisticsDispatcher] idle
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Route Optimization > should optimize delivery routes
+[STATUS] [LogisticsDispatcher] working - Logistics: {"destinations":[{"city":"Budapest","address":"Vác...
+[INFO] [LogisticsDispatcher] Starting logistics tracking pipeline...    
+[INFO] [LogisticsDispatcher] Fetching shipment status...
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Route Optimization > should optimize delivery routes
+[INFO] [LogisticsDispatcher] Predicting delays...
+[INFO] [LogisticsDispatcher] Generating 1 complaint emails...
+[INFO] [LogisticsDispatcher] 📧 Would send 1 complaint emails
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Route Optimization > should optimize delivery routes
+[INFO] [LogisticsDispatcher] ✅ Tracking complete: 1/3 delayed, 1 complaaints
+[STATUS] [LogisticsDispatcher] idle
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Route Optimization > should minimize delivery time
+[STATUS] [LogisticsDispatcher] working - Logistics: {"destinations":[{"city":"Pécs"},{"city":"Győr"}],...
+[INFO] [LogisticsDispatcher] Starting logistics tracking pipeline...    
+[INFO] [LogisticsDispatcher] Fetching shipment status...
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Route Optimization > should minimize delivery time
+[INFO] [LogisticsDispatcher] Predicting delays...
+[INFO] [LogisticsDispatcher] Generating 1 complaint emails...
+[INFO] [LogisticsDispatcher] 📧 Would send 1 complaint emails
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Route Optimization > should minimize delivery time
+[INFO] [LogisticsDispatcher] ✅ Tracking complete: 1/3 delayed, 1 complaaints
+[STATUS] [LogisticsDispatcher] idle
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Carrier Coordination > should coordinate with multiple carriers     
+[STATUS] [LogisticsDispatcher] working - Logistics: {"shipmentType":"fragile","weight":50,"destination...
+[INFO] [LogisticsDispatcher] Starting logistics tracking pipeline...    
+[INFO] [LogisticsDispatcher] Fetching shipment status...
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Carrier Coordination > should coordinate with multiple carriers     
+[INFO] [LogisticsDispatcher] Predicting delays...
+[INFO] [LogisticsDispatcher] Generating 1 complaint emails...
+[INFO] [LogisticsDispatcher] 📧 Would send 1 complaint emails
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Carrier Coordination > should coordinate with multiple carriers     
+[INFO] [LogisticsDispatcher] ✅ Tracking complete: 1/3 delayed, 1 complaaints
+[STATUS] [LogisticsDispatcher] idle
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Carrier Coordination > should compare carrier prices
+[STATUS] [LogisticsDispatcher] working - Logistics: {"shipmentType":"standard","weight":20,"destinatio...
+[INFO] [LogisticsDispatcher] Starting logistics tracking pipeline...    
+[INFO] [LogisticsDispatcher] Fetching shipment status...
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Carrier Coordination > should compare carrier prices
+[INFO] [LogisticsDispatcher] Predicting delays...
+[INFO] [LogisticsDispatcher] Generating 1 complaint emails...
+[INFO] [LogisticsDispatcher] 📧 Would send 1 complaint emails
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Carrier Coordination > should compare carrier prices
+[INFO] [LogisticsDispatcher] ✅ Tracking complete: 1/3 delayed, 1 complaaints
+[STATUS] [LogisticsDispatcher] idle
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Delay Prediction > should predict potential delays
+[STATUS] [LogisticsDispatcher] working - Logistics: {"trackingNumber":"SHIP-DELAYED-001","carrier":"MP...
+[INFO] [LogisticsDispatcher] Starting logistics tracking pipeline...    
+[INFO] [LogisticsDispatcher] Fetching shipment status...
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Delay Prediction > should predict potential delays
+[INFO] [LogisticsDispatcher] Predicting delays...
+[INFO] [LogisticsDispatcher] Generating 1 complaint emails...
+[INFO] [LogisticsDispatcher] 📧 Would send 1 complaint emails
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Delay Prediction > should predict potential delays
+[INFO] [LogisticsDispatcher] ✅ Tracking complete: 1/3 delayed, 1 complaaints
+[STATUS] [LogisticsDispatcher] idle
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Error Handling > should handle invalid tracking number
+[STATUS] [LogisticsDispatcher] working - Logistics: {"trackingNumber":"INVALID"}...
+[INFO] [LogisticsDispatcher] Starting logistics tracking pipeline...    
+[INFO] [LogisticsDispatcher] Fetching shipment status...
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Error Handling > should handle invalid tracking number
+[INFO] [LogisticsDispatcher] Predicting delays...
+[INFO] [LogisticsDispatcher] Generating 1 complaint emails...
+[INFO] [LogisticsDispatcher] 📧 Would send 1 complaint emails
+
+stdout | test/logisticsDispatcherAgent.test.ts > LogisticsDispatcherAgent > Error Handling > should handle invalid tracking number
+[INFO] [LogisticsDispatcher] ✅ Tracking complete: 1/3 delayed, 1 complaaints
+
+······································································* 
+stdout | test/data_refiner.test.ts > DataScientist Agent > should analyze data when task contains "analyze"
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should analyze data when task contains "analyze"
+[INFO] [DataScientist] Task received: analyze this data
+[INFO] [DataScientist] Running full analysis pipeline...
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should analyze data when task contains "analyze"
+[INFO] [DataScientist] Analysis done: 2 topics, actionable=true
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should handle any task without error (defaults to analysis)
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should handle any task without error (defaults to analysis)
+[INFO] [DataScientist] Task received: do something else
+[INFO] [DataScientist] Running full analysis pipeline...
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should handle any task without error (defaults to analysis)
+[INFO] [DataScientist] Analysis done: 2 topics, actionable=true
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should accept Hungarian "elemz" keyword
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should accept Hungarian "elemz" keyword
+[INFO] [DataScientist] Task received: elemz az adatokat
+[INFO] [DataScientist] Running full analysis pipeline...
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should accept Hungarian "elemz" keyword
+[INFO] [DataScientist] Analysis done: 2 topics, actionable=true
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should route "clean" tasks to refineData
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should route "clean" tasks to refineData
+[INFO] [DataScientist] Task received: clean this text data
+[INFO] [DataScientist] Running data refinement...
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should route "extract" tasks to entity extraction
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should route "extract" tasks to entity extraction
+[INFO] [DataScientist] Task received: extract entities from this        
+[INFO] [DataScientist] Extracting entities...
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should return REJECTED when refiner returns null
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should return REJECTED when refiner returns null
+[INFO] [DataScientist] Task received: analyze empty data
+[INFO] [DataScientist] Running full analysis pipeline...
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should return REJECTED when refiner returns null
+[INFO] [DataScientist] Data rejected by refiner (low relevance)
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should use swarm context artifacts
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should use swarm context artifacts
+[INFO] [DataScientist] Task received: analyze this
+[INFO] [DataScientist] Using swarm searchResults (17 chars)
+[INFO] [DataScientist] Running full analysis pipeline...
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should use swarm context artifacts
+[INFO] [DataScientist] Analysis done: 2 topics, actionable=true
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should have correct capabilities
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should return error on unexpected exception
+[INFO] [DataScientist] E2B sandbox mode enabled (secure isolation)      
+
+stdout | test/data_refiner.test.ts > DataScientist Agent > should return error on unexpected exception
+[INFO] [DataScientist] Task received: analyze crash test
+[INFO] [DataScientist] Running full analysis pipeline...
+
+stderr | test/data_refiner.test.ts > DataScientist Agent > should return error on unexpected exception
+[ERROR] [DataScientist] Execution failed: test crash
+
+·······*
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Conflict Detection > should detect conflicts in messages
+[STATUS] [ConflictMediator] working - {"message":"This is completely unacceptable! You n
+[INFO] [ConflictMediator] Feladat indítása: {"message":"This is completely unaccepta...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Conflict Detection > should not flag normal communication
+[STATUS] [ConflictMediator] working - {"message":"Thanks for the update, looks good!","f
+[INFO] [ConflictMediator] Feladat indítása: {"message":"Thanks for the update, looks...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Sentiment Analysis > should analyze negative sentiment
+[STATUS] [ConflictMediator] working - {"message":"I am extremely frustrated with this si
+[INFO] [ConflictMediator] Feladat indítása: {"message":"I am extremely frustrated wi...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Sentiment Analysis > should analyze positive sentiment
+[STATUS] [ConflictMediator] working - {"message":"Great work everyone! This is amazing p
+[INFO] [ConflictMediator] Feladat indítása: {"message":"Great work everyone! This is...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Resolution Suggestions > should suggest conflict resolution steps
+[STATUS] [ConflictMediator] working - {"conflictType":"deadline_dispute","parties":["Tea
+[INFO] [ConflictMediator] Feladat indítása: {"conflictType":"deadline_dispute","part...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > HR Notification > should notify HR for severe conflicts
+[STATUS] [ConflictMediator] working - {"conflictSeverity":"high","message":"Serious work
+[INFO] [ConflictMediator] Feladat indítása: {"conflictSeverity":"high","message":"Se...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > HR Notification > should not notify HR for minor issues
+[STATUS] [ConflictMediator] working - {"conflictSeverity":"low","message":"Minor schedul
+[INFO] [ConflictMediator] Feladat indítása: {"conflictSeverity":"low","message":"Min...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Error Handling > should handle empty messages
+[STATUS] [ConflictMediator] working - {"message":""}
+[INFO] [ConflictMediator] Feladat indítása: {"message":""}...
+[INFO] [ConflictMediator] Kommunikáció hangulatelemzése...
+[INFO] [ConflictMediator] Szervezeti hangulat: 6%
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Error Handling > should handle empty messages
+
+··································*
+stderr | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent
+[WARN] [ApifyScraping] APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők
+[WARN] [ApifyScraping] Szerezz API kulcsot: https://console.apify.com/account/integrations
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should return error when APIFY_API_TOKEN is missing
+[STATUS] [ApifyScraping] working - Keress cégeket
+
+stderr | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should return error when APIFY_API_TOKEN is missing
+[WARN] [ApifyScraping] APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők
+[WARN] [ApifyScraping] Szerezz API kulcsot: https://console.apify.com/account/integrations
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should return error when APIFY_API_TOKEN is missing
+[STATUS] [ApifyScraping] idle
+
+stderr | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should handle gracefully when token is placeholder
+[WARN] [ApifyScraping] APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők
+[WARN] [ApifyScraping] Szerezz API kulcsot: https://console.apify.com/account/integrations
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should handle gracefully when token is placeholder
+[STATUS] [ApifyScraping] working - Keress cégeket
+
+stderr | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should handle gracefully when token is placeholder
+[WARN] [ApifyScraping] APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők
+[WARN] [ApifyScraping] Szerezz API kulcsot: https://console.apify.com/account/integrations
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should handle gracefully when token is placeholder
+[STATUS] [ApifyScraping] idle
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should detect google capability from task
+[STATUS] [ApifyScraping] working - Keress rá a google-n: AI startups 2026
+
+stderr | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should detect google capability from task
+[WARN] [ApifyScraping] APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők
+[WARN] [ApifyScraping] Szerezz API kulcsot: https://console.apify.com/account/integrations
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should detect google capability from task
+[STATUS] [ApifyScraping] idle
+
+stdout | test/emailTriageAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee                                                                        
+···········································--*                          
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify urgent emails
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"URGENT: Server Down","emailBody":...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"URGENT: Server Down","emailBody":"We need immediate assistance!","from":"client@example.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify urgent emails
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify meeting requests
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Meeting invitation for next week"...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Meeting invitation for next week","emailBody":"Let's schedule a call to discuss the project.","from":"partner@company.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify meeting requests
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify invoices
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Invoice #12345","emailBody":"Plea...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Invoice #12345","emailBody":"Please find attached the invoice for this month.","from":"billing@supplier.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify invoices
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign high priority to urgent emails
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Critical: Payment Deadline Tomorr...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Critical: Payment Deadline Tomorrow","from":"finance@company.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign high priority to urgent emails
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign low priority to newsletters
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Weekly Newsletter - Tech Updates"...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Weekly Newsletter - Tech Updates","from":"newsletter@techblog.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign low priority to newsletters
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Auto Response > should generate auto-responses for common queries
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Pricing inquiry","emailBody":"How...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Pricing inquiry","emailBody":"How much does your service cost?","from":"potential@client.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Auto Response > should generate auto-responses for common queries
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Calendar Integration > should suggest calendar events for meeting requests
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Let's meet next Tuesday at 2 PM",...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Let's meet next Tuesday at 2 PM","from":"colleague@company.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Calendar Integration > should suggest calendar events for meeting requests
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Error Handling > should handle empty email body
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Test","emailBody":""}...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Test","emailBody":""}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Error Handling > should handle empty email body
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed       
+
+···········································--·······················*   
+···········································--···························
+stdout | test/enterpriseOrchestratorAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+
+············---···*
+stdout | test/agents/MarketIntelAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+············---·················*
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data 
+[STATUS] [MarketIntel] working - Piaci hírszerzés: Monitor product prices...
+[INFO] [MarketIntel] Scraping product data from http://example.com...   
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data 
+[INFO] [MarketIntel] Evaluating product potential...
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data 
+[INFO] [MarketIntel] Triggering alert for: Product X
+[INFO] [MarketIntel] [ALERT] HIGH POTENTIAL: Product X @ 100 HUF. Score: 0.8
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should fail if URL or selectors are missing
+[STATUS] [MarketIntel] working - Piaci hírszerzés: Monitor product prices...
+
+stdout | test/FinanceGuardian_Duplicates.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+············---···················*
+stdout | test/FinanceGuardian_Duplicates.test.ts > FinanceGuardian - Invoice Processing & Duplicate Detection > should detect and skip a duplicate invoice
+
+············---························*
+stdout | test/deploymentAnalyzer.test.ts > DeploymentAnalyzer > should detect TypeScript build errors
+[INFO] [DeploymentAnalyzer] Analyzing workflow logs
+[INFO] [DeploymentAnalyzer] Detected build error with 90% confidence    
+
+stdout | test/deploymentAnalyzer.test.ts > DeploymentAnalyzer > should detect syntax errors
+[INFO] [DeploymentAnalyzer] Analyzing workflow logs
+[INFO] [DeploymentAnalyzer] Detected build error with 90% confidence    
+
+stdout | test/deploymentAnalyzer.test.ts > DeploymentAnalyzer > should detect test failures
+[INFO] [DeploymentAnalyzer] Analyzing workflow logs
+
+············---·······························*
+stdout | test/chromeDevToolsAgent.test.ts > ChromeDevToolsAgent > should return error when URL is missing
+[STATUS] [ChromeDevTools] working - Debug the page
+
+············---·······································--------*
+stdout | test/phase42-costopt.test.ts > Phase 4.2 - Cost Optimization > Summary Report > should print cost optimization summary
+
+📊 PHASE 4.2 COST OPTIMIZATION SUMMARY:
+├─ Baseline: $0.001000 per 100 pipelines
+├─ Optimized: $0.000750 per 100 pipelines
+├─ Total Savings: 25%
+├─ Monthly Impact: $0.75 (3000 tests)
+└─ Status: ✅ Phase 4.2 Complete
+
+·································*
+stdout | test/agents/MachineHunter.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+···············································*
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should successfully execute a full machine hunt with outreach  
+[STATUS] [MarketIntel] working - Piaci hírszerzés: machine hunt...      
+[INFO] [MarketIntel] 🚀 Starting Machine Hunt for: CNC machine
+[INFO] [MarketIntel] Scraping machines for: CNC machine...
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should successfully execute a full machine hunt with outreach  
+[INFO] [MarketIntel] Valuing: CNC Pro 3000
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should successfully execute a full machine hunt with outreach  
+[INFO] [MarketIntel] 🔥 High potential found! Triggering outreach for: CCNC Pro 3000
+[INFO] [MarketIntel] Generating outreach for: CNC Pro 3000
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should skip outreach if potential is low
+[STATUS] [MarketIntel] working - Piaci hírszerzés: machine hunt...      
+[INFO] [MarketIntel] 🚀 Starting Machine Hunt for: machine hunt
+[INFO] [MarketIntel] Scraping machines for: machine hunt...
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should skip outreach if potential is low
+
+······················································*
+stdout | test/cloudflareBrowser.test.ts > CloudflareBrowser adapter > should send command and cache screenshot
+[INFO] [CloudflareBrowser] Sending command to CF Browser API: screenshot
+
+stdout | test/cloudflareBrowser.test.ts > CloudflareBrowser adapter > should return error status when worker request fails
+[INFO] [CloudflareBrowser] Sending command to CF Browser API: navigate  
+
+stderr | test/cloudflareBrowser.test.ts > CloudflareBrowser adapter > should return error status when worker request fails
+
+·······························································*        
+stderr | test/notificationService.test.ts > NotificationService > returns false when SMTP config missing
+[WARN] [NotificationService] SMTP config missing, skipping email        
+
+stdout | test/notificationService.test.ts > NotificationService > sends email when SMTP config present
+[INFO] [NotificationService] Critical TODO email sent to to@test.dev    
+
+stdout | test/FinanceGuardian_Gmail.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee                                                                        
+·································································*      
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should successfully search and download PDF invoices from Gmail
+[INFO] [FinanceGuardian] Searching Gmail for invoices with query: "from:billing@company.com"
+
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should successfully search and download PDF invoices from Gmail
+[INFO] [FinanceGuardian] Downloaded invoice: invoice.pdf to F:\mcp-brunella-core\_br_temp\invoices\msg123_invoice.pdf
+
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should handle no results from Gmail
+[INFO] [FinanceGuardian] Searching Gmail for invoices with query: "has:a
+
+
+····*
+stdout | test/FinanceGuardian_Sheets.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee                                                                        
+············*                                                           
+stdout | test/FinanceGuardian_Sheets.test.ts > FinanceGuardian - Google Sheets Export > should successfully export invoice data to Google Sheets
+[INFO] [FinanceGuardian] Invoice INV-002 exported to Google Sheet.      
+
+stdout | test/codebaseIndexer.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+··············································*
+stdout | test/agents/LeadMiningAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/mee
+
+                                                                        
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ test/salesHunterAgent.test.ts:184:5
+    182|     }, 60000);
+    183|
+    184|     it('should prioritize high-score leads', async () => {     
+       |     ^
+    185|       const task = JSON.stringify({
+    186|         targetIndustry: 'Finance',
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 138 passed (139)
+      Tests  1 failed | 1299 passed | 45 skipped (1345)
+   Start at  02:14:47
+   Duration  490.69s (transform 3.44s, setup 2.08s, import 23.90s, tests 433.60s, environment 19ms)
+
+husky - pre-commit script failed (code 1)
+Everything up-to-date
+Process Group PGID: 12744

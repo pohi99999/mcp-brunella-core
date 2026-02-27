@@ -1,0 +1,153 @@
+Output: warning: could not open directory '.pytest_cache/': Permission denied
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes to be committed:
+  (use "git restore --staged <file>..." to unstage)     
+        modified:   .ai/claude.md
+        new file:   .genkit/traces_idx/genkit.metadata  
+        modified:   conductor/tracks.md
+        modified:   conductor/tracks/bas_security_sandbox_20260221/meta.json
+        modified:   conductor/tracks/paios_model_selector_ui_20260223/meta.json
+        modified:   conductor/tracks/paios_orchestrator_chat_20260223/meta.json
+        modified:   conductor/tracks/paios_phoenix_events_panel_20260223/meta.json
+        modified:   conductor/tracks/paios_unified_config_20260223/meta.json
+        new file:   docs/CEAN_PHASE_2A_MANUAL_SETUP.md  
+        new file:   "docs/Claude-nak/Multi\342\200\221Agent Orchestration Mode (v1.1).md"
+        new file:   "docs/Claude-nak/PAIOS 1.0 \342\200\223 P\303\251ter AI Operating System.md"
+        new file:   docs/Claude-nak/computer.md
+        new file:   docs/Claude-nak/fejlesztes.md       
+        new file:   docs/PAIOS_SUITE_README.md
+        new file:   paios.config.yaml
+        new file:   scripts/cean-phase2a-setup.ps1      
+        new file:   scripts/update_master_context.ts    
+        modified:   src/agents/EvaluatorAgent.ts        
+        new file:   src/config/paiosConfig.ts
+        new file:   src/core/workerThreadPool.ts        
+        new file:   src/core/worker_thread_executor.ts  
+        new file:   src/dashboard/components/dashboard/ModelSelector.tsx
+        new file:   src/dashboard/components/dashboard/PAIOSConfigDisplay.tsx
+        new file:   src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx
+        new file:   src/dashboard/components/dashboard/PhoenixEventsPanel.tsx
+        modified:   src/dashboard/components/dashboard/SettingsPanel.tsx
+        modified:   src/dashboard/lib/navigation.tsx    
+        new file:   src/genkit-flow.ts
+        new file:   src/orchestrator/orchestratorCore.ts
+        new file:   src/orchestrator/systemPrompt/paios_orchestrator_prompt.md
+        new file:   src/server/routes/paiosOrchestrator.ts
+        modified:   src/server/web.ts
+        modified:   src/utils/health.ts
+        new file:   test/paiosConfig.test.ts
+        new file:   test/paiosOrchestrator.test.ts      
+        new file:   test/workerThreadPool.test.ts       
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   .ai/gemini.md
+        modified:   .claude/settings.local.json
+        modified:   .vscode/settings.json
+        modified:   BRUNELLA_MASTER_CONTEXT.md
+        modified:   Toolskeszlet.md
+        modified:   conductor/project_state.json        
+        modified:   conductor/tracks.md
+        modified:   data/developer_metrics.json
+        modified:   konyvtarfa.md
+        modified:   myai/__pycache__/browser_worker.cpython-312.pyc
+        modified:   myai/__pycache__/browser_worker.cpython-314.pyc
+        modified:   myai/__pycache__/server.cpython-312.pyc
+        modified:   myai/__pycache__/server.cpython-314.pyc
+        modified:   myai/server.py
+        modified:   myai/utils/__pycache__/pdfparser.cpython-312.pyc
+        modified:   myai/utils/__pycache__/pdfparser.cpython-314.pyc
+        modified:   package-lock.json
+        modified:   package.json
+        modified:   src/agents/FinanceGuardian.ts       
+        modified:   src/agents/MarketIntelAgent.ts      
+        modified:   src/agents/RobotkezV2Agent.ts       
+        modified:   src/agents/registry.json
+        modified:   src/dashboard/components/dashboard/InvoiceSyncWidget.tsx
+        modified:   src/dashboard/components/dashboard/ModelSelector.tsx
+        modified:   src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx
+        modified:   src/dashboard/components/dashboard/PhoenixEventsPanel.tsx
+        modified:   src/dashboard/lib/layout/LayoutContext.tsx
+        modified:   src/dashboard/lib/navigation.tsx    
+        modified:   src/dashboard/lib/widgetRegistry.tsx
+        modified:   src/tools/googleWorkspace.ts        
+        modified:   src/tools/unifiedWorkspace.ts       
+        modified:   src/utils/googleAuth.ts
+        modified:   src/utils/pythonShell.ts
+        deleted:    start-full.bat parancsikonja.lnk    
+        modified:   test_output.txt
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+        SYSTEM_AUDIT.md
+        conductor/tracks/bas_security_sandbox_20260221/## Chat Customization Diagnostics.md
+        conductor/tracks/bongeszo_cloudflare.md
+        conductor/tracks/master_track_1_lead_mining_20260223/
+        conductor/tracks/master_track_2_invoice_to_sheets_20260223/
+        conductor/tracks/master_track_3_market_watcher_20260223/
+        data/invoice_templates/
+        docs/services/
+        myai/refiners/invoice_parser.py
+        myai/refiners/product_valuation.py
+        myai/workers/google_maps_scraper.py
+        myai/workers/icebreaker_generator.py
+        myai/workers/market_scraper.py
+        n8n/
+        scripts/setup_invoice_automation.ps1
+        src/agents/LeadMiningAgent.ts
+        src/dashboard/components/dashboard/ChatInterface.tsx
+        src/dashboard/components/dashboard/MarketWatcherConfig.tsx
+        src/utils/lancedb_client.ts
+        test/FinanceGuardian_Duplicates.test.ts
+        test/FinanceGuardian_Gmail.test.ts
+        test/FinanceGuardian_Sheets.test.ts
+        test/agents/LeadMiningAgent.test.ts
+        test/agents/MarketIntelAgent.test.ts
+        test/refiners/
+        test/workers/
+        worker/
+
+warning: in the working copy of 'BRUNELLA_MASTER_CONTEXT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'conductor/project_state.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'conductor/tracks.md', LF will be replaced by CRLF the next time Git touches it 
+warning: in the working copy of 'data/developer_metrics.json', LF will be replaced by CRLF the next time Git touches it
+ .ai/gemini.md                                      |    29 +
+ .claude/settings.local.json                        |     3 +-
+ .vscode/settings.json                              |   342 +-
+ BRUNELLA_MASTER_CONTEXT.md                         |   Bin 92416 -> 5994 bytes
+ Toolskeszlet.md                                    |     2 +-
+ conductor/project_state.json                       |   157 +-
+ conductor/tracks.md                                |    34 +-
+ data/developer_metrics.json                        |    51 +-
+ konyvtarfa.md                                      | 25176 +++++--------------
+ myai/__pycache__/browser_worker.cpython-312.pyc    |   Bin 18485 -> 18485 bytes
+ myai/__pycache__/browser_worker.cpython-314.pyc    |   Bin 21345 -> 21345 bytes
+ myai/__pycache__/server.cpython-312.pyc            |   Bin 32358 -> 32358 bytes
+ myai/__pycache__/server.cpython-314.pyc            |   Bin 39210 -> 43613 bytes
+ myai/server.py                                     |    54 +
+ myai/utils/__pycache__/pdfparser.cpython-312.pyc   |   Bin 15420 -> 15420 bytes
+ myai/utils/__pycache__/pdfparser.cpython-314.pyc   |   Bin 17236 -> 17236 bytes
+ package-lock.json                                  | 16869 ++++++++++---
+ package.json                                       |     5 +-
+ src/agents/FinanceGuardian.ts                      |   155 +-
+ src/agents/MarketIntelAgent.ts                     |    88 +
+ src/agents/RobotkezV2Agent.ts                      |    72 +
+ src/agents/registry.json                           |    13 +
+ .../components/dashboard/InvoiceSyncWidget.tsx     |   385 +-
+ .../components/dashboard/ModelSelector.tsx         |   234 +-
+ .../components/dashboard/PAIOSOrchestratorChat.tsx |   523 +-
+ .../components/dashboard/PhoenixEventsPanel.tsx    |   526 +-
+ src/dashboard/lib/layout/LayoutContext.tsx         |    18 +
+ src/dashboard/lib/navigation.tsx                   |     4 +-
+ src/dashboard/lib/widgetRegistry.tsx               |    14 +
+ src/tools/googleWorkspace.ts                       |    58 +
+ src/tools/unifiedWorkspace.ts                      |    80 +-
+ src/utils/googleAuth.ts                            |     7 +-
+ src/utils/pythonShell.ts                           |    47 +
+ start-full.bat parancsikonja.lnk                   |   Bin 1140 -> 0 bytes
+ test_output.txt                                    |  7451 +++---
+ 35 files changed, 24658 insertions(+), 27739 deletions(-)
+Process Group PGID: 50156

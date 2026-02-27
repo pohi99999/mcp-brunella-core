@@ -1,0 +1,21 @@
+Found 11 matches for pattern "CommandMenu" in path "src/dashboard":
+---
+File: components\dashboard\CommandMenu.tsx
+L31: interface CommandMenuProps {
+L36: export function CommandMenu({ setActiveTab, activeTab }: CommandMenuProps) {
+---
+File: components\dashboard\MissionControlLayout.tsx
+L7: import { CommandMenu } from "@/components/dashboard/CommandMenu";
+L26:       <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
+---
+File: components\dashboard\MissionControlLayout.test.tsx
+L31: vi.mock('@/components/dashboard/CommandMenu', () => ({
+L32:   CommandMenu: ({ setActiveTab, activeTab }: any) => (
+L123:       const commandMenu = screen.getByTestId('command-menu');
+L124:       // In a real scenario, CommandMenu would call setActiveTab. Mocking directly for test control.
+L125:       // For this test, we don't have direct access to setActiveTab from MissionControlLayout. Mocking the CommandMenu behavior.
+L126:       // A more robust test might involve rendering CommandMenu fully or using a test helper to trigger context changes.
+---
+File: components\CommandMenu.tsx
+L24: export function CommandMenu() {
+---

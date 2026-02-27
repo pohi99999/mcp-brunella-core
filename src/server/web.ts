@@ -85,6 +85,7 @@ import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
 import { createDashboardRoutes } from "./routes/dashboard.js";
 import { createBusinessJobsRoutes } from "./routes/businessJobs.js";
 import { createStudioRoutes } from "./routes/studio.js";
+import { syncService } from "../utils/syncService.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -154,28 +155,14 @@ export async function startWebServer() {
     logError("Server", `MCP config load failed: ${msg}`);
   }
 
-  // Előzetes ügynök regisztráció (hogy az API végpontok működjenek SSE előtt is)
-  // Megjegyzés: Ez már megtörténik az index.ts-ben a registerAllTools-on keresztül.
-
   const app = express();
   
-  // Parse body (standard)
   app.use(express.json());
   app.use(corsWhitelist);
   app.use(requestId);
   app.use(requestLogging);
   app.use("/api", apiRateLimit);
 
-  /**
-   * @swagger
-   * /metrics:
-   *   get:
-   *     summary: Prometheus metrics scrape endpoint
-   *     description: Exposes BAS runtime metrics in Prometheus text format.
-   *     responses:
-   *       200:
-   *         description: Prometheus metrics text payload
-   */
   app.get("/api/browser/snapshot", (req, res) => {
     const screenshot = persistentBrowser.getLastScreenshot();
     if (screenshot) {
@@ -197,13 +184,9 @@ export async function startWebServer() {
     }
   });
 
-  // Swagger UI
   app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-  // --- API Versioning (Phase 8) ---
   const v1Router = createV1Router();
-
-  // Add Gold Protocol routes to v1
   v1Router.use("/telemetry", createTelemetryRouter());
   v1Router.use("/audit", createAuditRouter());
   v1Router.use("/specs", createSpecRouter());
@@ -211,71 +194,31 @@ export async function startWebServer() {
   v1Router.use("/router", createRouterRouter());
   v1Router.use("/memory", createMemoryRouter());
   v1Router.use("/mcp", mcpRouter);
-
-  // Add Tracks routes (EPP v2)
   v1Router.use("/tracks", createTracksRouter());
-
-  // Add MCP routes (Model Context Protocol)
-  v1Router.use("/mcp", mcpRouter);
-
-  // Add CEAN routes (Cloudflare Edge Agents Network)
   v1Router.use(ceanRouter);
-
-  // Add Wrangler routes (D1 & Worker deployment)
   v1Router.use(createWranglerRouter());
-
-  // Add Fleet Management routes (Phase 2)
   const db = getGlobalDb();
   v1Router.use("/fleet", createFleetRouter(db));
   v1Router.use("/workers", createWorkersRouter(db));
   v1Router.use("/metrics", createMetricsRouter(db));
   v1Router.use("/scaling", createScalingRouter(db));
-
-  // Add Robotkéz routes to v1
   v1Router.use("/robotkez", createRobotkezRoutes());
-
-  // Add missing agent and chat routes
   v1Router.use("/agents", createAgentRoutes());
   v1Router.use("/chat", createChatRoutes());
-
-  // Add Task Queue routes to v1
   v1Router.use("/tasks", createTaskRoutes());
-
-  // Add Test Scheduler routes to v1
   v1Router.use("/tests", testSchedulerRoutes);
-
-  // Add Suggested Tasks routes to v1
   v1Router.use("/suggested-tasks", suggestedTasksRouter);
-
-  // Add Enterprise Suite routes to v1
   v1Router.use("/enterprise", createEnterpriseRouter());
-
-  // Add Python Workers routes to v1
   v1Router.use("/python-workers", createPythonWorkersRouter());
-
-  // Add Scheduled Tasks routes to v1
   v1Router.use("/scheduled-tasks", createScheduledTasksRoutes(db));
-
-  // Add Dashboard routes to v1
   v1Router.use("/dashboard", createDashboardRoutes());
-
-  // Add Business Jobs routes to v1
   v1Router.use("/business-jobs", createBusinessJobsRoutes());
-
-  // Add Studio routes to v1
   v1Router.use("/studio", createStudioRoutes());
-
-  // Add Webhook routes to v1
   v1Router.use("/webhooks", createWebhookRoutes(db));
 
-  // Mount v1 router at /api/v1 and /api (backwards compatibility)
   app.use("/api/v1", v1Router);
   app.use("/api", v1Router);
-
-  // PAIOS Orchestrator Chat Interface
   app.use("/api/paios", paiosOrchestratorRouter);
-
-  // GitHub Webhook Integration (Phase 3: JCAI)
   app.use("/api/github", githubWebhookRouter);
 
   const httpServer = createServer(app);
@@ -289,59 +232,40 @@ export async function startWebServer() {
     },
   });
   socketService.init(io);
-  initializeAgentManager(socketService); // Initialize agentManager here
+  initializeAgentManager(socketService);
 
-  // Register Enterprise Suite Agents
   agentManager.registerAgent(new InnovationBridgeAgent());
   agentManager.registerAgent(new DigitalHeadhunterAgent());
   agentManager.registerAgent(new GrantHunter());
   agentManager.registerAgent(new LawDetectiveAgent());
   agentManager.registerAgent(new PropertyVisionaryAgent());
 
-  // Connect Phoenix Event Bus to Socket.IO for real-time dashboard updates
   const { phoenixEventBus } = await import('../core/phoenixEventBus.js');
   phoenixEventBus.connectSocketBroadcaster((event: string, data: unknown) => {
     socketService.emit(event, data);
   });
 
   io.on("connection", (socket) => {
-    logInfo("WebSocket", `Client connected: ${socket.id}`);
-
-    // Send initial agent statuses to the newly connected client
     const statuses = agentManager.listAgentStatuses();
     socket.emit('agents:snapshot', statuses);
-
     socket.on("robotkez:abort", async () => {
-      logWarn("WebSocket", "User triggered Robotkez Abort");
       await persistentBrowser.close();
       persistentBrowser.forceKill();
       socket.emit("robotkez:aborted", { status: "success", message: "Munkamenet megszakítva." });
     });
-
-    socket.on("disconnect", () => {
-      logInfo("WebSocket", `Client disconnected: ${socket.id}`);
-    });
   });
 
-  // Register Cloudflare Edge WebSocket handlers (Iteration 2)
   registerEdgeWebSocketHandlers(io);
-
-  // Register CEAN Orchestrator Chat WebSocket handlers
   registerCEANWebSocketHandlers(io);
-
-  // Register Fleet Management WebSocket handlers
   registerFleetWebSocketHandlers(io);
 
   const agentLogBuffer = new Map<string, LogEvent[]>();
   const MAX_AGENT_LOGS = 500;
-
-  // Metrics counters
   let requestCount = 0;
   let errorCount = 0;
   let lastMinuteRequests = 0;
   let lastMinuteErrors = 0;
 
-  // Reset per-minute counters every 60s
   setInterval(() => {
     lastMinuteRequests = requestCount;
     lastMinuteErrors = errorCount;
@@ -349,76 +273,52 @@ export async function startWebServer() {
     errorCount = 0;
   }, 60000);
 
-  // Middleware to count requests and errors
   app.use((_req, res, next) => {
     const requestStart = Date.now();
     requestCount++;
-
     res.on("finish", () => {
       if (res.statusCode >= 400) errorCount++;
       const durationMs = Date.now() - requestStart;
       const method = _req.method || "UNKNOWN";
-      const routePath = _req.route?.path
-        ? String(_req.route.path)
-        : _req.path || "unknown";
+      const routePath = _req.route?.path ? String(_req.route.path) : _req.path || "unknown";
       recordHttpRequest(method, routePath, res.statusCode, durationMs);
     });
-
     next();
   });
 
   logEmitter.on("log", (entry: LogEvent) => {
     const source = entry.agent || entry.source;
-    const type =
-      entry.level === "error"
-        ? "error"
-        : entry.level === "success"
-          ? "success"
-          : "info";
+    const type = entry.level === "error" ? "error" : entry.level === "success" ? "success" : "info";
     socketService.broadcastLog(entry.message, type, source);
-
     if (entry.agent) {
       const list = agentLogBuffer.get(entry.agent) || [];
       list.push(entry);
-      if (list.length > MAX_AGENT_LOGS)
-        list.splice(0, list.length - MAX_AGENT_LOGS);
+      if (list.length > MAX_AGENT_LOGS) list.splice(0, list.length - MAX_AGENT_LOGS);
       agentLogBuffer.set(entry.agent, list);
     }
   });
 
   logEmitter.on("agent_status", (entry: AgentStatusEvent) => {
-    socketService.updateAgentStatus(
-      entry.agent,
-      entry.status as any,
-      entry.task,
-    );
+    socketService.updateAgentStatus(entry.agent, entry.status as any, entry.task);
   });
 
-  // Metrics Loop
   setInterval(() => {
     const totalMem = os.totalmem();
     const freeMem = os.freemem();
     const cpus = os.cpus();
-    const cpuUsage =
-      cpus.reduce((acc, cpu) => {
-        const total = Object.values(cpu.times).reduce((a, b) => a + b, 0);
-        return acc + ((total - cpu.times.idle) / total) * 100;
-      }, 0) / cpus.length;
-
+    const cpuUsage = cpus.reduce((acc, cpu) => {
+      const total = Object.values(cpu.times).reduce((a, b) => a + b, 0);
+      return acc + ((total - cpu.times.idle) / total) * 100;
+    }, 0) / cpus.length;
     io.emit("metrics_update", {
       requestsPerMinute: lastMinuteRequests,
       activeConnections: io.sockets.sockets.size,
-      errorRate:
-        lastMinuteRequests > 0
-          ? (lastMinuteErrors / lastMinuteRequests) * 100
-          : 0,
+      errorRate: lastMinuteRequests > 0 ? (lastMinuteErrors / lastMinuteRequests) * 100 : 0,
       averageResponseTime: 0,
       cpuUsage: Math.round(cpuUsage * 100) / 100,
       memoryUsage: ((totalMem - freeMem) / totalMem) * 100,
     });
     io.emit("mcp_servers_status", mcpProcessManager.getServersStatus());
-
-    // Push Agent & Tool status updates
     io.emit("agent_update", agentManager.listAgentDefinitions());
     io.emit("tools_update", toolManager.getToolDefinitions());
     io.emit("tasks_update", agentManager.getAllTasks());
@@ -428,25 +328,11 @@ export async function startWebServer() {
 
   app.get("/sse", async (req, res) => {
     const sessionId = uuidv4();
-    const transport = new SSEServerTransport(
-      `/messages?sessionId=${sessionId}`,
-      res,
-    );
-    const server = new McpServer({
-      name: "mcp-brunella-core-web",
-      version: PACKAGE_VERSION,
-    });
-
+    const transport = new SSEServerTransport(`/messages?sessionId=${sessionId}`, res);
+    const server = new McpServer({ name: "mcp-brunella-core-web", version: PACKAGE_VERSION });
     await registerAllTools(server);
-    logger.info(
-      `Registered Agents after init: ${JSON.stringify(agentManager.listAgentDefinitions())}`,
-    );
     mcpSessions.set(sessionId, { transport, server });
-
-    res.on("close", () => {
-      mcpSessions.delete(sessionId);
-    });
-
+    res.on("close", () => mcpSessions.delete(sessionId));
     await server.connect(transport);
   });
 
@@ -460,34 +346,22 @@ export async function startWebServer() {
     await transport.handlePostMessage(req, res);
   });
 
+  // STATIC ASSETS
   app.use(express.static(path.join(process.cwd(), "build", "public")));
 
-  // Fallback root: fejlesztési módban átirányítás a Vite dev szerverre
+  // ROOT FALLBACK
   app.get("/", (_req, res) => {
-    const isDev = process.env.NODE_ENV !== "production";
     const indexPath = path.join(process.cwd(), "build", "public", "index.html");
-    if (!existsSync(indexPath)) {
-      if (isDev) {
-        res.redirect("http://localhost:5173");
-      } else {
-        res.status(503).send(
-          `<html><head><title>Brunella API Server</title></head>` +
-          `<body style="font-family:monospace;padding:2rem;background:#0a0a0a;color:#e0e0e0">` +
-          `<h2>Brunella Agent System - API Server</h2>` +
-          `<p>Dashboard build hiányzik. Futtasd: <code>npm run build &amp;&amp; npm run dev:ui</code></p>` +
-          `<p>API docs: <a href="/api-docs" style="color:#7c3aed">/api-docs</a> | ` +
-          `Health: <a href="/api/health" style="color:#7c3aed">/api/health</a></p>` +
-          `</body></html>`
-        );
-      }
-      return;
+    if (existsSync(indexPath)) {
+      res.sendFile(indexPath);
+    } else {
+      res.redirect("http://localhost:5173");
     }
-    res.sendFile(indexPath);
   });
 
-  // SPA fallback: minden más route → index.html (ha van build)
-  app.get("*", (req, res, next) => {
-    if (req.path.startsWith("/api") || req.path.startsWith("/socket.io")) {
+  // SPA FALLBACK (SAFE VERSION)
+  app.use((req, res, next) => {
+    if (req.path.startsWith("/api") || req.path.startsWith("/socket.io") || req.path.startsWith("/audio")) {
       return next();
     }
     const indexPath = path.join(process.cwd(), "build", "public", "index.html");
@@ -498,184 +372,20 @@ export async function startWebServer() {
     }
   });
 
-  // Global error handler (MUST be after all routes)
+  // Start Sync
+  syncService.start();
+
   app.use(globalErrorHandler);
 
-  // Initialize test scheduler
-  logInfo("Server", "Starting test scheduler...");
   startScheduler();
-
-  // Initialize cron scheduler (EV Hunter, Track Sync, etc.)
-  logInfo("Server", "Starting cron scheduler (EV Hunter 08:00, Track Sync hourly)...");
   startCronScheduler();
-
-  // Initialize dynamic scheduled tasks runner
-  logInfo("Server", "Starting dynamic scheduled tasks runner...");
   scheduledTasksRunner.start();
-
-  // Initialize Track State Manager (realtime file watcher + initial sync)
-  logInfo("Server", "Starting Track State Manager...");
   const { trackStateManager } = await import("../services/trackStateManager.js");
-  await trackStateManager.fullSync(); // Initial sync on startup
-  trackStateManager.startWatcher(); // Start realtime file watcher
-  logInfo("Server", "Track State Manager active (realtime sync enabled)");
-
-  // Initialize Phoenix Protocol v2 - Heartbeat Monitor
-  logInfo("Server", "Starting Phoenix Heartbeat Monitor...");
+  await trackStateManager.fullSync();
+  trackStateManager.startWatcher();
   heartbeatMonitor.start();
-
-  // Register failure handlers for critical services
-  heartbeatMonitor.onFailure("ollama", async (health) => {
-    logError("Phoenix", `Ollama service failed: ${health.error}`);
-    // TODO: Implement silent restart logic (Phase 2)
-  });
-
-  heartbeatMonitor.onFailure("fastapi", async (health) => {
-    logError("Phoenix", `FastAPI service failed: ${health.error}`);
-    // TODO: Implement silent restart logic (Phase 2)
-  });
-
-  logInfo("Server", "Phoenix Heartbeat Monitor active (5s interval)");
-
-  io.on("connection", (socket) => {
-    const DEFAULT_CHAT_ID = "main-session";
-    logInfo("Server", "Client connected to Dashboard");
-    socket.emit("system:log", {
-      message: "Rendszer indítása... Mission Control csatlakozva.",
-      type: "success",
-      timestamp: Date.now(),
-    });
-
-    socket.emit("tools_update", toolManager.getToolDefinitions());
-    socket.emit("mcp_servers_status", mcpProcessManager.getServersStatus());
-
-    socket.on(
-      "run_tool",
-      async (data: { name: string; args: any; id?: string }) => {
-        logInfo("Server", `Socket Tool Run Request: ${data.name}`);
-        try {
-          // Try local toolManager first
-          let result;
-          try {
-            result = await toolManager.executeTool(data.name, data.args);
-          } catch (e) {
-            // Try MCP Clients if local fails
-            const clientNames = mcpClientManager.getClientNames();
-            let found = false;
-            for (const clientName of clientNames) {
-              const mcpTools = await mcpClientManager.listTools(clientName);
-              if (mcpTools.tools.some((t) => t.name === data.name)) {
-                result = await mcpClientManager.callTool(
-                  clientName,
-                  data.name,
-                  data.args,
-                );
-                found = true;
-                break;
-              }
-            }
-            if (!found) throw e;
-          }
-          socket.emit("tool_result", {
-            name: data.name,
-            result: result,
-            id: data.id,
-          });
-        } catch (e: any) {
-          socket.emit("tool_error", {
-            name: data.name,
-            error: e.message,
-            id: data.id,
-          });
-        }
-      },
-    );
-
-    // Chat Logic
-    socket.on("user_message", async (data) => {
-      const userMsg = data.text;
-      const provider = data.provider || 'github';
-      const model = data.model;
-
-      saveMessage(DEFAULT_CHAT_ID, "user", userMsg);
-      socket.emit("bot_message_start", { isUser: false });
-
-      try {
-        // Cloudflare Workers AI path
-        if (provider === 'cloudflare') {
-          const chatHistory = await getMessages(DEFAULT_CHAT_ID);
-          const recentHistory = chatHistory.slice(-10); // Get last 10 messages
-          const history = recentHistory.map((msg) => ({
-            role: msg.role === 'user' ? 'user' : 'assistant',
-            content: msg.content,
-          }));
-
-          const response = await fetch('http://localhost:3000/api/cloudflare/chat', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              instruction: userMsg,
-              history: history,
-              model: model,
-            }),
-          });
-
-          if (!response.ok) {
-            throw new Error(`Cloudflare chat failed: ${response.status}`);
-          }
-
-          const result = await response.json();
-          const message = result.message || result.response || 'No response';
-
-          socket.emit("bot_message_chunk", { text: message });
-          saveMessage(DEFAULT_CHAT_ID, "bot", message);
-          socket.emit("bot_message_end", {});
-          return;
-        }
-
-        // Default Agent Manager path (GitHub, Gemini, Ollama)
-        const plan = await agentManager.createPlan(userMsg);
-        socket.emit("plan_created", plan);
-
-        const result = await agentManager.executePlan(
-          plan,
-          (event: any, eventData: any) => {
-            socket.emit(event, eventData);
-          },
-        );
-
-        // Neural Link: Extract human-friendly reply if available
-        let replyText = "";
-        if (typeof result === "object" && result !== null && "reply" in result) {
-            replyText = (result as any).reply;
-            // Also log the tasks to the console/dashboard for transparency
-            if ((result as any).tasks) {
-                socket.emit("system:log", {
-                    message: `Tasks generated: ${JSON.stringify((result as any).tasks.length)}`,
-                    type: "info",
-                    timestamp: Date.now()
-                });
-            }
-        } else if (typeof result === "object" && result !== null && "message" in result) {
-             replyText = (result as any).message;
-        } else {
-            replyText = String(result);
-        }
-
-        socket.emit("bot_message_chunk", { text: replyText });
-        saveMessage(DEFAULT_CHAT_ID, "bot", replyText);
-        socket.emit("bot_message_end", {});
-      } catch (e: any) {
-        const errMsg = `⚠️ Hiba: ${e.message}`;
-        socket.emit("bot_message_chunk", { text: errMsg });
-        saveMessage(DEFAULT_CHAT_ID, "bot", errMsg);
-        socket.emit("bot_message_end", {});
-      }
-    });
-  });
 
   httpServer.listen(config.port, () => {
     logInfo("Server", `🌐 Web UI: http://localhost:${config.port}`);
   });
 }
-

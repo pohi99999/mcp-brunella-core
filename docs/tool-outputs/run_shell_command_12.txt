@@ -1,0 +1,524 @@
+Output: 
+ RUN  v4.0.18 F:/mcp-brunella-core
+
+
+ ❯ test/workerThreadPool.test.ts [queued]
+
+ Test Files 0 passed (2)
+      Tests 0 passed (0)
+   Start at 22:52:55
+
+ ❯ test/workerThreadPool.test.ts 0/13
+
+ Test Files 0 passed (2)
+      Tests 0 passed (13)
+   Start at 22:52:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should create minimum number of workers on init
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 501
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should create minimum number of workers on init
+[INFO] [WorkerPool] Worker thread started: 810
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should create minimum number of workers on init
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should create minimum number of workers on init
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 504
+[INFO] [WorkerPool] Worker thread started: 475
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should create minimum number of workers on init
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should report correct initial stats
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 576
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should report correct initial stats
+[INFO] [WorkerPool] Worker thread started: 433
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should report correct initial stats
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should report correct initial stats
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 442
+[INFO] [WorkerPool] Worker thread started: 217
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Initialization > should report correct initial stats
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple Python code  
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 523
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple Python code  
+[INFO] [WorkerPool] Worker thread started: 499
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple Python code  
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+
+ ❯ test/workerThreadPool.test.ts 1/13
+
+ Test Files 0 passed (2)
+      Tests 1 passed (13)
+   Start at 22:52:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple Python code  
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 774
+[INFO] [WorkerPool] Worker thread started: 675
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple Python code  
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple JavaScript code
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 955
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple JavaScript code
+[INFO] [WorkerPool] Worker thread started: 345
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple JavaScript code
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+
+ ❯ test/workerThreadPool.test.ts 3/13
+
+ Test Files 0 passed (2)
+      Tests 3 passed (13)
+   Start at 22:52:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple JavaScript code
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 253
+[INFO] [WorkerPool] Worker thread started: 61
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should execute simple JavaScript code
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should handle code execution errors
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 671
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should handle code execution errors
+[INFO] [WorkerPool] Worker thread started: 695
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should handle code execution errors
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+
+ ❯ test/workerThreadPool.test.ts 4/13
+
+ Test Files 0 passed (2)
+      Tests 4 passed (13)
+   Start at 22:52:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should handle code execution errors
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 805
+[INFO] [WorkerPool] Worker thread started: 77
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should handle code execution errors
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 592
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Worker thread started: 444
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+
+ ❯ test/workerThreadPool.test.ts 5/13
+
+ Test Files 0 passed (2)
+      Tests 5 passed (13)
+   Start at 22:52:55
+
+ ❯ test/workerThreadPool.test.ts 5/13
+
+ Test Files 0 passed (2)
+      Tests 5 passed (13)
+   Start at 22:52:55
+
+ ❯ test/workerThreadPool.test.ts 5/13
+
+ Test Files 0 passed (2)
+      Tests 5 passed (13)
+   Start at 22:52:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Worker thread started: 752
+
+
+ ❯ test/workerThreadPool.test.ts 6/13
+
+ Test Files 0 passed (2)
+      Tests 6 passed (13)
+   Start at 22:52:55
+stderr | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[ERROR] [WorkerPool] Task test-timeout-1 failed: Task test-timeout-1 timed out
+
+
+ ❯ test/workerThreadPool.test.ts 6/13
+
+ Test Files 0 passed (2)
+      Tests 6 passed (13)
+   Start at 22:52:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 767
+[INFO] [WorkerPool] Worker thread started: 323
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Task Execution > should timeout long-running tasks  
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 535
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Worker thread started: 130
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Worker thread started: 749
+[INFO] [WorkerPool] Worker thread started: 81
+[INFO] [WorkerPool] Worker thread started: 521
+[INFO] [WorkerPool] Worker thread started: 30
+[INFO] [WorkerPool] Worker thread started: 296
+[INFO] [WorkerPool] Worker thread started: 769
+
+
+ ❯ test/workerThreadPool.test.ts 6/13
+
+ Test Files 0 passed (2)
+      Tests 6 passed (13)
+   Start at 22:52:55
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 325
+[INFO] [WorkerPool] Worker thread started: 454
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Queue Management > should queue tasks when all workers are busy
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should update stats correctly after task completion
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 943
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should update stats correctly after task completion
+[INFO] [WorkerPool] Worker thread started: 243
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should update stats correctly after task completion
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should update stats correctly after task completion
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 727
+[INFO] [WorkerPool] Worker thread started: 325
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Scaling > should update stats correctly after task completion
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Initializing pool: min=2, max=5     
+[INFO] [WorkerPool] Worker thread started: 542
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Worker thread started: 453
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Pool initialized with 2 workers     
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Shutting down pool...
+[INFO] [WorkerPool] Worker thread started: 235
+[INFO] [WorkerPool] Worker thread started: 901
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Pool shutdown complete
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Shutting down pool...
+
+stdout | test/workerThreadPool.test.ts > WorkerThreadPool > Pool Shutdown > should shutdown gracefully
+[INFO] [WorkerPool] Pool shutdown complete
+
+ ✓ test/workerThreadPool.test.ts (13 tests | 4 skipped) 2463ms
+       ✓ should timeout long-running tasks  2007ms      
+
+ ❯ test/unifiedWorkspace.test.ts [queued]
+
+ Test Files 1 passed (2)
+      Tests 9 passed | 4 skipped (13)
+   Start at 22:52:55
+
+ ❯ test/unifiedWorkspace.test.ts 0/26
+
+ Test Files 1 passed (2)
+      Tests 9 passed | 4 skipped (39)
+   Start at 22:52:55
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should initialize with default scopes
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should initialize with default scopes
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[INFO] [UnifiedWorkspace] Creating email draft to: recipient@example.com
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[INFO] [UnifiedWorkspace] ✅ Draft created: draft_123   
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[INFO] [UnifiedWorkspace] Creating email draft to: recipient@example.com
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[INFO] [UnifiedWorkspace] ✅ Draft created: draft_123   
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should automatically initialize if Gmail client not initialized        
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should automatically initialize if Gmail client not initialized        
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should automatically initialize if Gmail client not initialized        
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should automatically initialize if Gmail client not initialized        
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should automatically initialize if Gmail client not initialized        
+[INFO] [UnifiedWorkspace] Creating email draft to: test@example.com
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should automatically initialize if Gmail client not initialized        
+[INFO] [UnifiedWorkspace] ✅ Draft created: draft_123   
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+[INFO] [UnifiedWorkspace] Searching emails: "is:unread" 
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] Searching emails: "from:nobody@example.com"
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[INFO] [UnifiedWorkspace] Searching emails: "test query"
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[ERROR] [UnifiedWorkspace] Email search failed: Gmail API error
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should retrieve email attachments
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should retrieve email attachments
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should return empty array if no attachments found
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should return empty array if no attachments found
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should return empty array if no attachments found
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should return empty array if no attachments found
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should read data from a spreadsheet
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should read data from a spreadsheet
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should read data from a spreadsheet
+[INFO] [UnifiedWorkspace] Sheet read: sheet_123
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should append data to a spreadsheet
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should append data to a spreadsheet
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should append data to a spreadsheet
+[INFO] [UnifiedWorkspace] Sheet append: sheet_123       
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should update data in a spreadsheet
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should update data in a spreadsheet
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should update data in a spreadsheet
+[INFO] [UnifiedWorkspace] Sheet update: sheet_123       
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should throw error for unknown sheet operation
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should throw error for unknown sheet operation
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should throw error for unknown sheet operation
+[INFO] [UnifiedWorkspace] Sheet delete: sheet_123       
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should throw error for unknown sheet operation
+[ERROR] [UnifiedWorkspace] Sheet operation failed: Unknown sheet operation: delete
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Spreadsheet Creation > should create a new spreadsheet
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Spreadsheet Creation > should create a new spreadsheet
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Spreadsheet Creation > should create a new spreadsheet
+[INFO] [UnifiedWorkspace] ✅ Spreadsheet created: Test SSpreadsheet
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload a file to Google Drive
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload a file to Google Drive
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload a file to Google Drive
+[INFO] [UnifiedWorkspace] Uploading file: test.pdf      
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload a file to Google Drive
+[INFO] [UnifiedWorkspace] ✅ File uploaded: file_123    
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload file to specific folder
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload file to specific folder
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload file to specific folder
+[INFO] [UnifiedWorkspace] Uploading file: test.pdf      
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload file to specific folder
+[INFO] [UnifiedWorkspace] ✅ File uploaded: file_123    
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should throw error if localPath is missing
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should throw error if localPath is missing
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should throw error if localPath is missing
+[ERROR] [UnifiedWorkspace] File upload failed: localPath is required for file upload
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should list files in Drive
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should list files in Drive
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should list files in specific folder
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should list files in specific folder
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should handle Drive API errors gracefully
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should handle Drive API errors gracefully
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should handle Drive API errors gracefully
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should handle Drive API errors gracefully
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should handle Drive API errors gracefully
+[ERROR] [UnifiedWorkspace] Failed to list files: Drive API error
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+[INFO] [UnifiedWorkspace] Creating calendar event: Team Meeting
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+[INFO] [UnifiedWorkspace] ✅ Event created: event_123   
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+[INFO] [UnifiedWorkspace] Creating calendar event: Personal Reminder
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+[INFO] [UnifiedWorkspace] ✅ Event created: event_123   
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should return singleton instance on subsequent calls
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should return singleton instance on subsequent calls
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should reset singleton on resetWorkspaceClient()
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should reset singleton on resetWorkspaceClient()
+[INFO] [UnifiedWorkspace] ✅ Google Workspace initializeed successfully
+
+ ✓ test/unifiedWorkspace.test.ts (26 tests | 2 skipped) 28ms
+
+ Test Files  2 passed (2)
+      Tests  33 passed | 6 skipped (39)
+   Start at  22:52:55
+   Duration  3.14s (transform 143ms, setup 55ms, import 169ms, tests 2.49s, environment 0ms)
+Process Group PGID: 16588

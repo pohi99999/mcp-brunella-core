@@ -1,0 +1,106 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 401-500 of 1629 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 500.
+
+--- FILE CONTENT (truncated) ---
+
+export async function getActiveTasks(): Promise<TaskItem[]> {
+  try {
+    const data = await getTasks(50, 0, "running");
+    return data.tasks || [];
+  } catch {
+    return [];
+  }
+}
+
+export async function getTaskById(taskId: number): Promise<TaskItem> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/${taskId}`);
+  if (!response.ok) throw new Error(`Task: HTTP ${response.status}`);
+  const data = await safeJson<{ task: TaskItem }>(response);
+  return data.task;
+}
+
+export interface TaskStats {
+  total: number;
+  successCount: number;
+  errorCount: number;
+  pendingCount: number;
+  runningCount: number;
+  cancelledCount: number;
+  successRate: number;
+  avgDurationMs: number;
+  failedByAgent: Array<{ agent: string; count: number }>;
+}
+
+export async function getTaskStats(): Promise<TaskStats> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/stats`);
+  if (!response.ok) throw new Error(`Task Stats: HTTP ${response.status}`);
+  const data = await safeJson<{ stats: TaskStats }>(response);
+  return data.stats;
+}
+
+export async function executePendingTask(): Promise<any> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/execute`, {
+    method: "POST",
+  });
+  const data: any = await safeJson<{ result?: any; error?: string }>(
+    response,
+  ).catch(() => ({ error: `HTTP ${response.status}` }));
+  if (!response.ok) throw new Error(data.error || "Task execute failed");
+  return data.result;
+}
+
+export async function cancelTask(taskId: number): Promise<void> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/cancel`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ taskId }),
+  });
+  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Task cancel failed");
+}
+
+export async function retryTask(taskId: number, debugMode = false): Promise<void> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/retry`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ taskId, debugMode }),
+  });
+  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Task retry failed");
+}
+
+export async function pauseTask(taskId: number): Promise<void> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/pause`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ taskId }),
+  });
+  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Task pause failed");
+}
+
+export async function resumeTask(taskId: number): Promise<void> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/resume`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ taskId }),
+  });
+  const data: any = await safeJson<{ error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(data.error || "Task resume failed");
+}
+
+export async function updateTaskOrder(taskIds: number[]): Promise<void> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/tasks/reorder`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ taskIds }),

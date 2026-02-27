@@ -1,0 +1,16 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-10 of 299 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 10.
+
+--- FILE CONTENT (truncated) ---
+# Spec: Developer Agent 3.0 — Unified Development Platform
+
+**Track ID:** `developer_agent_2_0_20260206`
+**Version:** 3.1.0
+**Last Updated:** 2026-02-09
+**Status:** `approved` ✅
+
+---
+
+## 🎯 Vízió

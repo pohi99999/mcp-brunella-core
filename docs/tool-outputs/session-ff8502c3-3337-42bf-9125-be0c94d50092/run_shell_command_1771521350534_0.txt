@@ -1,0 +1,910 @@
+Output: 
+> mcp-brunella-core@1.0.0 test
+> npm run build && vitest run test/SalesHunterAgent.test.ts test/MarketIntelAgent.test.ts
+
+
+> mcp-brunella-core@1.0.0 build
+> tsc
+
+
+ RUN  v4.0.18 F:/mcp-brunella-core
+
+
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+stdout | test/salesHunterAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+
+ ❯ test/marketIntelAgent.test.ts 0/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorA","CompetitorB"],"prod..."
+
+
+ ❯ test/marketIntelAgent.test.ts 1/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/marketIntelAgent.test.ts 1/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorA","CompetitorB"],"prod...  
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: SaaS, 2 versenytárs
+[INFO] [MarketIntel] Scraping real prices for: SaaS via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a következő versenytársak weboldal...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=61a2992d, span=aea25355)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [AuditLog] Database initialized (in-memory test mode)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (14ms)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/marketIntelAgent.test.ts 1/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[ERROR] [MarketIntel] RobotkezV2 price scraping delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/marketIntelAgent.test.ts 1/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771521364373
+
+
+ ❯ test/marketIntelAgent.test.ts 1/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [RAG] Document indexed: marketintel_1771521364373
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 6 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771521364443
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [RAG] Document indexed: marketintel_1771521364443
+
+
+ ❯ test/marketIntelAgent.test.ts 3/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorC"],"productCategory":"..."
+
+
+ ❯ test/marketIntelAgent.test.ts 3/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/marketIntelAgent.test.ts 3/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorC"],"productCategory":"...  
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: Cloud Hosting, 1 versenytárs
+[INFO] [MarketIntel] Scraping real prices for: Cloud Hosting via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a következő versenytársak weboldal...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=c3c8bb76, span=02364bec)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (0ms)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/marketIntelAgent.test.ts 3/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[ERROR] [MarketIntel] RobotkezV2 price scraping delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/marketIntelAgent.test.ts 3/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771521364549
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [RAG] Document indexed: marketintel_1771521364549
+
+
+ ❯ test/marketIntelAgent.test.ts 3/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 3 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771521364616
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [RAG] Document indexed: marketintel_1771521364616
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorA","CompetitorB"],"prod..."
+
+
+ ❯ test/marketIntelAgent.test.ts 4/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/marketIntelAgent.test.ts 4/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorA","CompetitorB"],"prod...  
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: SaaS, 2 versenytárs
+[INFO] [MarketIntel] Scraping real prices for: SaaS via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a következő versenytársak weboldal...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=4aa19415, span=1fa045bf)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (1ms)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/marketIntelAgent.test.ts 4/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[ERROR] [MarketIntel] RobotkezV2 price scraping delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/marketIntelAgent.test.ts 4/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771521364723
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [RAG] Document indexed: marketintel_1771521364723
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 6 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771521364787
+
+
+ ❯ test/marketIntelAgent.test.ts 4/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [RAG] Document indexed: marketintel_1771521364787
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorX"],"productCategory":"..."
+
+
+ ❯ test/marketIntelAgent.test.ts 5/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/marketIntelAgent.test.ts 5/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorX"],"productCategory":"...  
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: Enterprise Software, 1 versenytárs
+[INFO] [MarketIntel] Scraping real prices for: Enterprise Software via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a következő versenytársak weboldal...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=01789cd0, span=532d6a9d)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (0ms)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/marketIntelAgent.test.ts 5/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[ERROR] [MarketIntel] RobotkezV2 price scraping delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/marketIntelAgent.test.ts 5/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771521364883
+
+
+ ❯ test/marketIntelAgent.test.ts 5/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [RAG] Document indexed: marketintel_1771521364883
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 3 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771521364955
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [RAG] Document indexed: marketintel_1771521364955
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":[],"productCategory":"SaaS"}..."
+
+
+ ❯ test/marketIntelAgent.test.ts 6/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/marketIntelAgent.test.ts 6/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":[],"productCategory":"SaaS"}...
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: SaaS, 0 versenytárs
+[INFO] [MarketIntel] Scraping real prices for: SaaS via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a következő versenytársak weboldal...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=eadcb45e, span=60b94fd4)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (0ms)
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/marketIntelAgent.test.ts 6/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[ERROR] [MarketIntel] RobotkezV2 price scraping delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/marketIntelAgent.test.ts 6/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771521365069
+
+
+ ❯ test/marketIntelAgent.test.ts 6/7
+ ❯ test/salesHunterAgent.test.ts [queued]
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [RAG] Document indexed: marketintel_1771521365069
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 0 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771521365143
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"IT consulting","targetRole":"CT..."
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [RAG] Document indexed: marketintel_1771521365143
+
+ ❯ test/marketIntelAgent.test.ts (7 tests | 1 failed) 940ms
+       ✓ should have correct name 1ms
+       ✓ should have correct capabilities 1ms
+       ✓ should track competitor prices 233ms
+       × should detect price changes 179ms
+       ✓ should identify market trends 162ms
+       ✓ should generate alerts for significant changes 174ms
+       ✓ should handle empty competitor list 189ms
+
+ ❯ test/salesHunterAgent.test.ts 1/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 1/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"IT consulting","targetRole":"CT...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: consulting, Budapest, sme
+[INFO] [SalesHunter] Discovering real companies in consulting via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=b41a96a7, span=5606fc8a)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [AuditLog] Database initialized (in-memory test mode)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (13ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 1/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 1/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771521365289
+
+
+ ❯ test/salesHunterAgent.test.ts 1/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [RAG] Document indexed: saleshunter_1771521365289
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [SalesHunter] Memória lekérdezése: "find leads in IT industry..."
+
+
+ ❯ test/salesHunterAgent.test.ts 4/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 4/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[STATUS] [SalesHunter] working - Lead generálás: find leads in IT industry...
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Discovering real companies in general via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=99a2eee7, span=474f8c21)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (1ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 4/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 4/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771521365409
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [RAG] Document indexed: saleshunter_1771521365409
+
+
+ ❯ test/salesHunterAgent.test.ts 4/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Finance","targetRole":"CFO"}...       
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Discovering real companies in general via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=a4d3be8e, span=34dbb1df)
+
+
+ ❯ test/salesHunterAgent.test.ts 6/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 6/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (0ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 6/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 6/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Technology","targetRole":"VP Sa..."
+
+
+ ❯ test/salesHunterAgent.test.ts 6/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 6/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Technology","targetRole":"VP Sa...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: tech, Hungary, sme
+[INFO] [SalesHunter] Discovering real companies in tech via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=a7e19bcc, span=73a3bc31)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (0ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 6/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 6/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771521365513
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [RAG] Document indexed: saleshunter_1771521365513
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"SaaS","targetRole":"Product Man..."
+
+
+ ❯ test/salesHunterAgent.test.ts 6/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 6/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"SaaS","targetRole":"Product Man...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Discovering real companies in general via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=f8588812, span=989d2633)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (1ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771521365616
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [RAG] Document indexed: saleshunter_1771521365616
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Manufacturing","targetRole":"Op..."
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Manufacturing","targetRole":"Op...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: manufacturing, Hungary, sme
+[INFO] [SalesHunter] Discovering real companies in manufacturing via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=84790922, span=ab0df188)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (1ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771521365714
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [RAG] Document indexed: saleshunter_1771521365714
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Healthcare","targetRole":"Medic..."
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Healthcare","targetRole":"Medic...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Discovering real companies in general via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=d78948bf, span=1287eadc)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (0ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771521365839
+
+
+ ❯ test/salesHunterAgent.test.ts 9/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [RAG] Document indexed: saleshunter_1771521365839
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [SalesHunter] Memória lekérdezése: "{ invalid json }..."
+
+
+ ❯ test/salesHunterAgent.test.ts 10/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 10/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[STATUS] [SalesHunter] working - Lead generálás: { invalid json }...
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Discovering real companies in general via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=6bcdaf45, span=cc72ebd0)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (0ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 10/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 10/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771521366018
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [RAG] Document indexed: saleshunter_1771521366018
+
+
+ ❯ test/salesHunterAgent.test.ts 10/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Technology","targetRole":"Devel..."
+
+
+ ❯ test/salesHunterAgent.test.ts 12/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 12/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Technology","targetRole":"Devel...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: tech, Hungary, sme
+[INFO] [SalesHunter] Discovering real companies in tech via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=bf376479, span=563824e6)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (0ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 12/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 12/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771521366118
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [RAG] Document indexed: saleshunter_1771521366118
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Finance","targetRole":"CFO"}..."
+
+
+ ❯ test/salesHunterAgent.test.ts 12/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 12/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Finance","targetRole":"CFO"}...       
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Discovering real companies in general via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=b263a1dc, span=a7d6acfe)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (0ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 12/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 12/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771521366216
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [RAG] Document indexed: saleshunter_1771521366216
+
+
+ ❯ test/salesHunterAgent.test.ts 12/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Retail","targetRole":"Store Man..."
+
+
+ ❯ test/salesHunterAgent.test.ts 15/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[ERROR] [AgentManager] [DELEGATE] Az ügynök ('RobotkezV2') NEM TALÁLHATÓ a map-ben (Még kisbetűsítve sem). Jelenlegi ügynökök: . Fallback to dynamic routing.
+[WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+
+
+ ❯ test/salesHunterAgent.test.ts 15/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Retail","targetRole":"Store Man...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Discovering real companies in general via RobotkezV2...
+[INFO] [AgentManager] [DELEGATE] Kérés érkezett a 'RobotkezV2' ügynökhöz.
+[INFO] [AgentManager] [DELEGATE] Keresés: 'RobotkezV2' (robotkezv2). Regisztrált:
+[INFO] [AgentManager] Task delegálás:
+      Navigálj a LinkedIn Sales Navigator vagy ke...
+[INFO] [AgentTracer] [SPAN START] Orchestrator::execute (trace=3d453aac, span=cd4fb07e)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [AgentTracer] [SPAN END] Orchestrator::execute error (1ms)
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [AgentManager] [DELEGATE] Dynamic routing eredménye: success=false, detail: {"success":false,"message":"Ügynök nem található: Orchestrator","data":null,"executedBy":"Orchestrat
+
+
+ ❯ test/salesHunterAgent.test.ts 15/15
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[ERROR] [SalesHunter] RobotkezV2 delegation failed: Error: Ügynök nem található: Orchestrator
+
+
+ ❯ test/salesHunterAgent.test.ts 15/15
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1771521366398
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [RAG] Document indexed: saleshunter_1771521366398
+
+
+ ❯ test/salesHunterAgent.test.ts 15/15
+ ❯ test/salesHunterAgent.test.ts (15 tests | 1 failed) 1300ms
+       ✓ should have correct name 1ms
+       ✓ should have correct role 0ms
+       ✓ should have correct capabilities 1ms
+       ✓ should execute lead generation with valid JSON input 181ms
+       ✓ should execute with default parameters when task is not JSON 104ms
+       ✓ should handle executeTask interface 1ms
+       ✓ should generate email drafts for leads 105ms
+       ✓ should calculate lead scores 99ms
+       × should provide CRM export URL 109ms
+       ✓ should include statistics in result 190ms
+       ✓ should handle malformed JSON gracefully 103ms
+       ✓ should return error status on exception 1ms
+       ✓ should filter out invalid leads 99ms
+       ✓ should prioritize high-score leads 175ms
+       ✓ should return a descriptive success message 128ms
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes    
+AssertionError: expected undefined to be defined
+ ❯ test/marketIntelAgent.test.ts:51:40
+     49|
+     50|       expect(result.status).toBe('success');
+     51|       expect(result.data.priceChanges).toBeDefined();
+       |                                        ^
+     52|     });
+     53|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL  
+AssertionError: expected undefined to be defined
+ ❯ test/salesHunterAgent.test.ts:113:40
+    111|
+    112|       expect(result.status).toBe('success');
+    113|       expect(result.data.crmExportUrl).toBeDefined();
+       |                                        ^
+    114|       expect(typeof result.data.crmExportUrl).toBe('string');
+    115|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  2 failed | 20 passed (22)
+   Start at  18:16:03
+   Duration  2.88s (transform 394ms, setup 68ms, import 1.81s, tests 2.24s, environment 0ms)
+Exit Code: 1
+Process Group PGID: 24076

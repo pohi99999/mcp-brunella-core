@@ -1,0 +1,334 @@
+Output: 
+
+    Directory: C:\Users\pohi9\.gemini\extensions\chrome-devtools-mcp\scripts
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 19.     18:01            703 count_tokens.ts
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\ComputerUse\servers\computerusemcp\Lib\site-packages\pip 
+    \_vendor\packaging
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 17.     13:46           5273 _tokenizer.py
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\ComputerUse\servers\computerusemcp\Lib\site-packages\pip 
+    \_vendor\packaging\__pycache__
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 17.     13:46           7939 _tokenizer.cpython-312.pyc
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\ComputerUse\servers\computerusemcp\Lib\site-packages\pip 
+    \_vendor\pygments
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 17.     13:46           6226 token.py
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\ComputerUse\servers\computerusemcp\Lib\site-packages\pip 
+    \_vendor\pygments\__pycache__
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 17.     13:46           8214 token.cpython-312.pyc
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\gemini-cli-jules\mcp-server\node_modules
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 15.     16:02                js-tokens
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\gemini-cli-jules\mcp-server\node_modules\@modelcontextpr 
+    otocol\sdk\dist\cjs\server\auth\handlers
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2025. 10. 29.     15:34            578 token.d.ts
+-a----     2025. 10. 29.     15:34            501 token.d.ts.map
+-a----     2025. 10. 29.     15:34           5816 token.js
+-a----     2025. 10. 29.     15:34           4230 token.js.map
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\gemini-cli-jules\mcp-server\node_modules\@modelcontextpr 
+    otocol\sdk\dist\esm\server\auth\handlers
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2025. 10. 29.     15:34            578 token.d.ts
+-a----     2025. 10. 29.     15:34            501 token.d.ts.map
+-a----     2025. 10. 29.     15:34           5284 token.js
+-a----     2025. 10. 29.     15:34           4459 token.js.map
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\gemini-cli-jules\mcp-server\node_modules\postcss\lib     
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2025. 10. 29.     15:34           6538 tokenize.js
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\github\pkg\context
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 19.     16:17           1065 token.go
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\github\pkg\http\middleware
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 19.     16:17           1924 token.go
+-a----     2026. 02. 19.     16:17          11023 token_test.go
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\github\pkg\utils
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 19.     16:17           2705 token.go
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-adk-agent-extension\node_modules\@modelcontextpro 
+    tocol\sdk\dist\cjs\server\auth\handlers
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 15.     16:04            578 token.d.ts
+-a----     2026. 02. 15.     16:04            501 token.d.ts.map
+-a----     2026. 02. 15.     16:04           5816 token.js
+-a----     2026. 02. 15.     16:04           4230 token.js.map
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-adk-agent-extension\node_modules\@modelcontextpro
+    tocol\sdk\dist\esm\server\auth\handlers
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 15.     16:04            578 token.d.ts
+-a----     2026. 02. 15.     16:04            501 token.d.ts.map
+-a----     2026. 02. 15.     16:04           5284 token.js
+-a----     2026. 02. 15.     16:04           4459 token.js.map
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\@csstools
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 15.     16:02                css-tokenizer
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\css-tree\cjs
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 15.     16:02                tokenizer
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\css-tree\cjs\definition-sy 
+    ntax
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           1391 tokenizer.cjs
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\css-tree\cjs\generator     
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           4939 token-before.cjs
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\css-tree\cjs\lexer
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           1144 prepare-tokens.cjs
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\css-tree\cjs\tokenizer     
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           9606 TokenStream.cjs
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\css-tree\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 15.     16:02                tokenizer
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\css-tree\lib\generator     
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           4405 token-before.js
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\css-tree\lib\lexer
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           1093 prepare-tokens.js
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\css-tree\lib\tokenizer     
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           9619 TokenStream.js
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\jsdom\lib\jsdom\living\gen 
+    erated
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52          16795 DOMTokenList.js
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\jsdom\lib\jsdom\living\nod
+    es
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           4340 DOMTokenList-impl.js
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\jsdom\node_modules\parse5\ 
+    dist
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 15.     16:02                tokenizer
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\jsdom\node_modules\parse5\ 
+    dist\common
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           2690 token.d.ts
+-a----     2026. 02. 11.     20:52            834 token.js
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\parse5\dist
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 15.     16:02                tokenizer
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\parse5\dist\cjs
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 15.     16:02                tokenizer
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\parse5\dist\cjs\common     
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           2690 token.d.ts
+-a----     2026. 02. 11.     20:52            982 token.js
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace\node_modules\parse5\dist\common
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 11.     20:52           2690 token.d.ts
+-a----     2026. 02. 11.     20:52            834 token.js
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\run-long-command\node_modules
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 22.     18:26                js-tokens
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\run-long-command\node_modules\@modelcontextprotocol\sdk\ 
+    dist\cjs\server\auth\handlers
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 22.     18:26            590 token.d.ts
+-a----     2026. 02. 22.     18:26            501 token.d.ts.map
+-a----     2026. 02. 22.     18:26           6927 token.js
+-a----     2026. 02. 22.     18:26           4242 token.js.map
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\run-long-command\node_modules\@modelcontextprotocol\sdk\
+    dist\esm\server\auth\handlers
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 22.     18:26            590 token.d.ts
+-a----     2026. 02. 22.     18:26            501 token.d.ts.map
+-a----     2026. 02. 22.     18:26           5396 token.js
+-a----     2026. 02. 22.     18:26           4443 token.js.map
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\run-long-command\node_modules\postcss\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 22.     18:26           6804 tokenize.js
+
+
+    Directory: C:\Users\pohi9\.gemini\extensions\run-long-command\node_modules\typescript\lib
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 22.     18:26           3804 cancellationToken.js
+Process Group PGID: 2064

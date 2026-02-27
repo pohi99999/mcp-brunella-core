@@ -1,0 +1,12 @@
+Subagent 'cli_help' finished.
+Termination Reason: GOAL
+Result:
+{
+  "answer": "Based on the available documentation, there is no specific mention of an MCP server officially named \"workspace-developer\" and its tools. However, the Gemini CLI includes a suite of built-in developer-focused tools that are often managed by its core discovery and execution layer (which handles MCP servers). \n\nThe core tools provided for developers in the workspace (as listed in `tools/file-system.md`) are:\n1. `list_directory`\n2. `read_file`\n3. `write_file`\n4. `glob`\n5. `grep_search`\n6. `replace`\n\nAdditionally, the CLI supports MCP servers which can be added via `gemini mcp add`. An example extension mentioned in the documentation is `workspace` (from `https://github.com/gemini-cli-extensions/workspace`), but the specific tool names for a \"workspace-developer\" server are not explicitly enumerated in the provided internal documentation files. \n\nMy investigation was interrupted by the turn limit, preventing further cross-referencing of experimental or extension-specific documentation that might contain this specific server name.",
+  "sources": [
+    "tools/file-system.md",
+    "tools/mcp-server.md",
+    "extensions/index.md",
+    "cli/commands.md"
+  ]
+}

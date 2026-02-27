@@ -1,0 +1,10 @@
+Output: /mcp : The term '/mcp' is not recognized as the name of a cmdlet, function, script file, or operable prog
+ram. Check the spelling of the name, or if a path was included, verify that the path is correct and try a 
+gain.
+At line:1 char:1
++ /mcp apify desc
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (/mcp:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+Exit Code: 1
+Process Group PGID: 34704

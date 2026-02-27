@@ -1,0 +1,193 @@
+Output: 
+Running 1 test using 1 worker
+
+     1 …nella Dashboard Full UI Audit (Enhanced) › Audit Page: dashboard
+--- Auditing: dashboard ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 31
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+  x  1 …shboard Full UI Audit (Enhanced) › Audit Page: dashboard (18.5s)
+     2 …oard Full UI Audit (Enhanced) › Audit Page: dashboard (retry #1)
+
+--- Auditing: dashboard ---
+  Waiting for system initialization (5s)...
+  Found 34 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 39
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Health check error: Error: Health check failed: 429
+    at Module.checkHealth (http://localhost:5173/lib/apiService.ts:151:29)
+    at async checkHealth (http://localhost:5173/components/dashboard/SystemHealthCard.tsx:50:28)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load Jules sessions: Error: Jules Sessions: HTTP 429   
+    at getJulesSessions (http://localhost:5173/lib/apiService.ts:328:29)
+    at async refreshSessions (http://localhost:5173/components/dashboard/JulesPanel.tsx:28:26)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to fetch agent registry for Neural Map: Error: Registry: HTTP 429
+    at getRegistry (http://localhost:5173/lib/apiService.ts:164:29)     
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+  x  2 …l UI Audit (Enhanced) › Audit Page: dashboard (retry #1) (17.9s)
+
+
+  1) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit (Enhanced) › Audit Page: dashboard
+
+    Error: Konzol hibák a(z) dashboard oldalon
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    31
+
+       96 |       }
+       97 |
+    >  98 |       expect(consoleErrors.length, `Konzol hibák a(z) ${navId} oldalon`).toBeLessThanOrEqual(2); // Megengedünk 2 nem kritikus hibát
+          |                                                             
+             ^
+       99 |     });
+      100 |   }
+      101 | });
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:98:74  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5e2f8-hanced-Audit-Page-dashhboard-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5e2f8-hanced-Audit-Page-dashhboard-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-5e2f8-hanced--Audit-Page-dashboard-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────
+
+    Error: Konzol hibák a(z) dashboard oldalon
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    39
+
+       96 |       }
+       97 |
+    >  98 |       expect(consoleErrors.length, `Konzol hibák a(z) ${navId} oldalon`).toBeLessThanOrEqual(2); // Megengedünk 2 nem kritikus hibát
+          |                                                             
+             ^
+       99 |     });
+      100 |   }
+      101 | });
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:98:74  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5e2f8-hanced-Audit-Page-dashhboard-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5e2f8-hanced-Audit-Page-dashhboard-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-5e2f8-hanced--Audit-Page-dashboard-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5e2f8-hanced-Audit-Page-dashhboard-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\dashboard_audit-🚀-Brunelll-5e2f8-hanced-Audit-Page-dashboard-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit (Enhanced) › Audit Page: dashboard
+Exit Code: 1
+Process Group PGID: 19876

@@ -1,0 +1,90 @@
+{
+  "sessionId": "d57831df-e4a3-49d1-9b82-f4ac3239f7dc",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-15T13:47:46.841Z",
+  "lastUpdated": "2026-02-15T14:00:05.282Z",
+  "messages": [
+    {
+      "id": "c40d60c0-ef2b-45bb-9a49-9218de3877e5",
+      "timestamp": "2026-02-15T13:47:46.841Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'sqlite': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "3deae9ca-2a22-44bd-8167-0957b6e6600d",
+      "timestamp": "2026-02-15T13:47:46.996Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'fetch': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "3fd576c9-a82b-463d-b6ff-e9d0c97e13e4",
+      "timestamp": "2026-02-15T13:47:47.275Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'docker': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "e5b4a30d-30f7-42a8-9fc4-9316570b98db",
+      "timestamp": "2026-02-15T13:47:50.079Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'cloudflare': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "46ecbd6c-700a-4525-8299-114caa38b6f6",
+      "timestamp": "2026-02-15T13:47:50.159Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'brunella-python': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "c945f29a-2be4-4dd6-b252-7e010656018c",
+      "timestamp": "2026-02-15T13:47:51.180Z",
+      "type": "error",
+      "content": "Error during discovery for MCP server 'brunella-core': MCP error -32000: Connection closed"
+    },
+    {
+      "id": "731ea136-c3fd-47cc-a733-5eb5b9664d32",
+      "timestamp": "2026-02-15T13:48:09.660Z",
+      "type": "info",
+      "content": "\n\nCode Assist login required.\nAttempting to open authentication page in your browser.\nOtherwise navigate to:\n\nhttps://accounts.google.com/o/oauth2/v2/auth?redirect_uri=http%3A%2F%2F127.0.0.1%3A62437%2Foauth2callback&access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&state=1403015c40b28595fc919fb8c71f30e3ea10d52a6fe1f2d90773ee6afd94e4bf&response_type=code&client_id=681255809395-oo8ft2oprdrnp9e3aqf6av3hmdib135j.apps.googleusercontent.com\n\n\n"
+    },
+    {
+      "id": "59601747-8a9c-4028-8564-799232400360",
+      "timestamp": "2026-02-15T13:48:09.681Z",
+      "type": "info",
+      "content": "Waiting for authentication...\n"
+    },
+    {
+      "id": "d792d50e-50c2-4406-8f12-b6090a515e88",
+      "timestamp": "2026-02-15T13:53:08.952Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "config set interactive false"
+        }
+      ]
+    },
+    {
+      "id": "fbaaa076-df4d-4d2e-8a68-0698b41c0a51",
+      "timestamp": "2026-02-15T13:53:09.331Z",
+      "type": "error",
+      "content": "[API Error: {\"error\":{\"message\":\"{\\n  \\\"error\\\": {\\n    \\\"code\\\": 400,\\n    \\\"message\\\": \\\"schema at properties.connectionConfig requires unspecified property 'connectionId'\\\",\\n    \\\"status\\\": \\\"INVALID_ARGUMENT\\\"\\n  }\\n}\\n\",\"code\":400,\"status\":\"Bad Request\"}}]"
+    },
+    {
+      "id": "b5b99cb9-3587-4130-8f8d-92785037a8c5",
+      "timestamp": "2026-02-15T13:59:49.659Z",
+      "type": "info",
+      "content": "\n\nCode Assist login required.\nAttempting to open authentication page in your browser.\nOtherwise navigate to:\n\nhttps://accounts.google.com/o/oauth2/v2/auth?redirect_uri=http%3A%2F%2F127.0.0.1%3A56455%2Foauth2callback&access_type=offline&scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fcloud-platform%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email%20https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile&state=a6ef80421d12e1ad595e783e0bf04d93d91b0e5f730fe35e18474f74311e6758&response_type=code&client_id=681255809395-oo8ft2oprdrnp9e3aqf6av3hmdib135j.apps.googleusercontent.com\n\n\n"
+    },
+    {
+      "id": "73131ed8-e590-4c55-9877-3ae79715957a",
+      "timestamp": "2026-02-15T13:59:49.675Z",
+      "type": "info",
+      "content": "Waiting for authentication...\n"
+    },
+    {
+      "id": "4bfda63b-8fdd-401a-8f20-7ad554712644",
+      "timestamp": "2026-02-15T14:00:05.282Z",
+      "type": "info",
+      "content": "Authentication succeeded\n"
+    }
+  ]
+}

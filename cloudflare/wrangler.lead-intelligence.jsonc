@@ -5,20 +5,12 @@
   "compatibility_date": "2024-11-01",
   "compatibility_flags": ["nodejs_compat"],
 
-  // ✅ MEGLÉVŐ D1 adatbázis — bas-metadata
+  // ✅ D1 adatbázis — bas-leads (lead intelligence dedikált DB)
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "bas-metadata",
-      "database_id": "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
-    }
-  ],
-
-  // ✅ MEGLÉVŐ KV namespace (BAS_server account)
-  "kv_namespaces": [
-    {
-      "binding": "BAS_TASKS",
-      "id": "b6718ab359ac401bb24da7c34c24f11b"
+      "database_name": "bas-leads",
+      "database_id": "f6c5e7fd-3719-403d-9bb3-98fd9069c30b"
     }
   ],
 

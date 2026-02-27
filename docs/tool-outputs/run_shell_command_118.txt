@@ -1,0 +1,15 @@
+Output: 
+
+    Directory: C:\Users\pohi9\.gemini\extensions\google-workspace
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 15.     16:02                commands
+d-----     2026. 02. 15.     16:02                dist
+d-----     2026. 02. 15.     16:12                logs
+d-----     2026. 02. 15.     16:02                node_modules
+-a----     2026. 02. 15.     16:02            122 .gemini-extension-install.json
+-a----     2026. 02. 11.     20:52            287 gemini-extension.json
+-a----     2026. 02. 11.     20:52           9702 WORKSPACE-Context.md
+Process Group PGID: 46868

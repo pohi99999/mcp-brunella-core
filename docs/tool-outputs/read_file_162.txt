@@ -1,0 +1,16 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-10 of 106 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 10.
+
+--- FILE CONTENT (truncated) ---
+# Specifikáció: Apify Deep Scraping Agent
+**Track ID:** `apify_deep_scraping_agent_20260223`
+**Státusz:** proposed
+**Prioritás:** LOW
+**Forrás:** `docs/Claude-nak/fejlesztes.md` — "Research & Intelligence Agent (apify-agent-skills)"
+
+---
+
+## 1. Jelenlegi Helyzet
+

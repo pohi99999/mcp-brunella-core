@@ -1,0 +1,4 @@
+Output: Hívás indítása: http://localhost:8000/comet/execute
+HIBA: API hiba: 500 Internal Server Error
+Exit Code: 1
+Process Group PGID: 3100

@@ -197,121 +197,49 @@ export function NeuralLinkChat() {
   };
 
   return (
-    <Card className="border-border/50 bg-background/50 backdrop-blur-xl flex flex-col h-full glass-card overflow-hidden">
-      <CardHeader className="flex flex-row items-center justify-between pb-2 gap-2 flex-wrap border-b border-border/50">
-        <CardTitle className="flex items-center gap-2 text-base font-medium">
+    <Card className="border-border/50 bg-background/50 backdrop-blur-xl flex flex-col h-full glass-card overflow-hidden border-0 md:border">
+      <CardHeader className="flex flex-row items-center justify-between py-2 px-3 md:px-6 gap-2 flex-wrap border-b border-border/50 shrink-0">
+        <CardTitle className="flex items-center gap-2 text-sm md:text-base font-medium">
           <Robot size={18} className="text-primary" />
-          Neural Link
+          <span className="hidden xs:inline">Neural Link</span>
         </CardTitle>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 flex-1 justify-end md:flex-initial">
           <select
             value={mode}
             onChange={(e) => setMode(e.target.value as ChatMode)}
             aria-label="Chat mód"
-            className="rounded-md border border-border bg-background/50 px-2 py-1.5 text-sm"
+            className="rounded-md border border-border bg-background/50 px-1.5 py-1 text-xs md:text-sm max-w-[100px] xs:max-w-none"
           >
-            <option value="master_orchestrator">Master Orchestrator</option>
-            <option value="orchestrator">Local Orchestrator</option>
-            <option value="cloudflare_chat">Cloudflare Chat</option>
-            <option value="cloudflare">Cloudflare (Edge)</option>
+            <option value="master_orchestrator">Master</option>
+            <option value="orchestrator">Local</option>
+            <option value="cloudflare_chat">CF Chat</option>
+            <option value="cloudflare">CF Edge</option>
             <option value="ollama">Ollama</option>
-            <option value="github">GitHub Models</option>
+            <option value="github">GitHub</option>
             <option value="gemini">Gemini</option>
           </select>
           {(mode === "cloudflare" || mode === "cloudflare_chat") &&
             edgeStatus && (
               <div
-                className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium border ${
+                className={`flex items-center gap-1 px-1.5 py-1 rounded-md text-[10px] font-medium border ${
                   edgeStatus.enabled && edgeStatus.healthy
                     ? "bg-green-500/15 text-green-500 border-green-500/30"
                     : "bg-red-500/15 text-red-500 border-red-500/30"
                 }`}
-                title={
-                  edgeStatus.enabled
-                    ? edgeStatus.healthy
-                      ? "Edge Connected"
-                      : "Edge Unhealthy"
-                    : "Edge Disabled (set EDGE_ENABLED=true)"
-                }
               >
                 <Circle
-                  size={8}
+                  size={6}
                   weight="fill"
-                  style={{
-                    color:
-                      edgeStatus.enabled && edgeStatus.healthy
-                        ? "rgb(34, 197, 94)"
-                        : "rgb(239, 68, 68)",
-                  }}
+                  className={edgeStatus.enabled && edgeStatus.healthy ? "text-emerald-500" : "text-red-500"}
                 />
-                <span>
-                  {edgeStatus.enabled
-                    ? edgeStatus.healthy
-                      ? "Connected"
-                      : "Unhealthy"
-                    : "Disabled"}
+                <span className="hidden sm:inline">
+                  {edgeStatus.enabled ? "Connected" : "Disabled"}
                 </span>
               </div>
             )}
-          {mode === "ollama" && (
-            <Select value={selectedModel} onValueChange={setSelectedModel}>
-              <SelectTrigger className="w-[160px] bg-background/50 border-border shadow-none">
-                <SelectValue placeholder="Modell" />
-              </SelectTrigger>
-              <SelectContent>
-                {models.map((m, i) => (
-                  <SelectItem key={`${m.name}-${i}`} value={m.name}>
-                    {m.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-          {mode === "github" && (
-            <Select value={selectedGhModel} onValueChange={setSelectedGhModel}>
-              <SelectTrigger className="w-[200px] bg-background/50 border-border shadow-none">
-                <SelectValue placeholder="GitHub Model" />
-              </SelectTrigger>
-              <SelectContent>
-                {ghModels.map((m, i) => (
-                  <SelectItem key={`${m.name}-${i}`} value={m.name}>
-                    {m.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
-          {mode === "gemini" && (
-            <Select
-              value={selectedGeminiModel}
-              onValueChange={setSelectedGeminiModel}
-            >
-              <SelectTrigger className="w-[200px] bg-background/50 border-border shadow-none">
-                <SelectValue placeholder="Gemini Model" />
-              </SelectTrigger>
-              <SelectContent>
-                {geminiModels.map((m, i) => (
-                  <SelectItem key={`${m.name}-${i}`} value={m.name}>
-                    {m.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          )}
         </div>
         <div className="flex items-center gap-1">
-          {showBrowser && (
-            <Button 
-              variant="ghost" 
-              size="icon" 
-              onClick={() => setBrowserTimestamp(Date.now())} 
-              title="Képernyő frissítése"
-              className="text-zinc-400 hover:text-primary"
-            >
-              <ArrowsClockwise size={16} className={isLoading ? "animate-spin" : ""} />
-            </Button>
-          )}
-          <Button variant="ghost" size="icon" onClick={() => setShowBrowser(!showBrowser)} title={showBrowser ? "Bezár" : "Böngésző"}>
+          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowBrowser(!showBrowser)}>
             {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
           </Button>
         </div>
@@ -337,12 +265,12 @@ export function NeuralLinkChat() {
             <div className="absolute top-2 right-2 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm">LIVE</div>
           </div>
         )}
-        <ScrollArea className="flex-1 px-4">
-          <div className="space-y-6 py-6">
+        <ScrollArea className="flex-1 px-2 md:px-4">
+          <div className="space-y-4 md:space-y-6 py-4 md:py-6">
             <LiveExecutionMonitor />
             
             {messages.length === 0 && !api.getActiveTasks && (
-              <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
+              <div className="flex flex-col items-center justify-center py-8 md:py-12 text-center space-y-4 px-4">
                 <div className="p-4 rounded-full bg-primary/10 border border-primary/20">
                   <Brain size={32} className="text-primary animate-pulse" />
                 </div>
@@ -350,41 +278,28 @@ export function NeuralLinkChat() {
                   <p className="text-sm font-medium text-foreground/80">
                     Neural Connection established
                   </p>
-                  <p className="text-xs text-muted-foreground max-w-xs">
-                    {mode === "orchestrator"
-                      ? "Orchestrator üzemmód: Komplex feladatok delegálása ügynököknek."
-                      : mode === "cloudflare_chat"
-                        ? "Cloudflare Chat üzemmód: közvetlen folyamatos beszélgetés a Cloudflare chat workerrel."
-                        : mode === "cloudflare"
-                          ? "Cloudflare Edge üzemmód: delegálás a Cloudflare Worker felé (EDGE_ENABLED szükséges)."
-                          : mode === "github"
-                            ? "GitHub Models üzemmód: GPT-4.1, DeepSeek-R1, Grok 3 és más felhő modellek."
-                            : mode === "gemini"
-                              ? "Gemini üzemmód: Google Gemini 2.5 Pro, Flash és más modellek."
-                              : "Ollama üzemmód: Közvetlen kommunikáció a lokális modellel."}
-                  </p>
                 </div>
               </div>
             )}
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-300`}
+                className={`flex gap-2 md:gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-300`}
               >
                 {msg.role === "assistant" && (
-                  <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                  <div className="h-7 w-7 md:h-8 md:w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-1">
                     <Robot size={14} className="text-primary" />
                   </div>
                 )}
-                <div className="flex flex-col gap-1.5 max-w-[85%]">
+                <div className={`flex flex-col gap-1.5 ${msg.role === "user" ? "max-w-[90%] md:max-w-[80%]" : "max-w-[90%] md:max-w-[85%]"}`}>
                   <div
-                    className={`rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
+                    className={`rounded-2xl px-3 md:px-4 py-2 md:py-2.5 text-sm shadow-sm ${
                       msg.role === "user"
-                        ? "bg-primary text-primary-foreground font-medium"
-                        : "bg-muted/50 border border-border/50 text-foreground"
+                        ? "bg-primary text-primary-foreground font-medium rounded-tr-none"
+                        : "bg-muted/50 border border-border/50 text-foreground rounded-tl-none"
                     }`}
                   >
-                    <p className="whitespace-pre-wrap leading-relaxed">
+                    <p className="whitespace-pre-wrap leading-relaxed overflow-hidden break-words">
                       {msg.content}
                     </p>
                     {msg.screenshot && (
@@ -397,108 +312,49 @@ export function NeuralLinkChat() {
                       </div>
                     )}
                   </div>
-
-                  {msg.role === "assistant" &&
-                    (msg.thoughts || msg.contextUsed) && (
-                      <div className="flex flex-col gap-1 px-1">
-                        <button
-                          onClick={() => toggleThoughts(i)}
-                          className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors w-fit"
-                        >
-                          <span
-                            className={`w-1.5 h-1.5 rounded-full ${msg.thoughts ? "bg-amber-500 animate-pulse" : "bg-zinc-500"}`}
-                          />
-                          {expandedThoughts[i] ? "Hide Intel" : "Show Intel"}
-                          {msg.executedBy && (
-                            <span className="opacity-50 ml-2">
-                              via {msg.executedBy}
-                            </span>
-                          )}
-                        </button>
-
-                        {expandedThoughts[i] && (
-                          <div className="mt-2 space-y-3 animate-in fade-in duration-200">
-                            {msg.thoughts && (
-                              <div className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
-                                <p className="text-[11px] italic text-amber-500/80 leading-normal">
-                                  {msg.thoughts}
-                                </p>
-                              </div>
-                            )}
-                            {msg.contextUsed && msg.contextUsed.length > 0 && (
-                              <div className="flex flex-wrap gap-1.5">
-                                {msg.contextUsed.map((ctx, ci) => (
-                                  <div
-                                    key={ci}
-                                    className="flex items-center gap-1 px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-mono text-blue-400"
-                                  >
-                                    <FileText size={10} />
-                                    {ctx}
-                                  </div>
-                                ))}
-                              </div>
-                            )}
-                          </div>
-                        )}
-                      </div>
-                    )}
                 </div>
                 {msg.role === "user" && (
-                  <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
+                  <div className="h-7 w-7 md:h-8 md:w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-1">
                     <User size={14} className="text-primary" />
                   </div>
                 )}
               </div>
             ))}
             {isLoading && (
-              <div className="flex gap-3">
-                <div className="h-8 w-8 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+              <div className="flex gap-2">
+                <div className="h-7 w-7 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
                   <Circle
-                    size={14}
+                    size={12}
                     className="text-emerald-400 animate-pulse"
                   />
                 </div>
-                <div className="bg-zinc-800/60 rounded-lg px-3 py-2">
-                  <p className="text-sm text-zinc-500">Válasz generálása...</p>
+                <div className="bg-zinc-800/60 rounded-lg px-3 py-1.5">
+                  <p className="text-xs md:text-sm text-zinc-500 italic">Gondolkodom...</p>
                 </div>
               </div>
             )}
             <div ref={scrollRef} />
           </div>
         </ScrollArea>
-        <div className="p-4 border-t border-zinc-800/80">
-          <div className="flex gap-2">
+        <div className="p-3 md:p-4 border-t border-zinc-800/80 bg-background/80 backdrop-blur-md">
+          <div className="flex gap-2 items-end">
             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) =>
                 e.key === "Enter" && !e.shiftKey && (e.preventDefault(), send())
               }
-              placeholder={
-                mode === "orchestrator"
-                  ? "Üzenet az Orchestratornak..."
-                  : mode === "cloudflare_chat"
-                    ? "Üzenet a Cloudflare Chat-nek..."
-                    : mode === "cloudflare"
-                      ? "Üzenet a Cloudflare Edge-nek..."
-                      : mode === "github"
-                        ? "Üzenet a GitHub Models-nek..."
-                        : mode === "gemini"
-                          ? "Üzenet a Gemini-nek..."
-                          : "Üzenet az AI-nak..."
-              }
-              className="min-h-[60px] bg-zinc-900 border-zinc-800 resize-none"
+              placeholder="Üzenet..."
+              className="min-h-[44px] max-h-[150px] bg-zinc-900/50 border-zinc-800 resize-none text-sm py-3"
               disabled={isLoading}
-              data-testid="neural-chat-input"
             />
             <Button
               onClick={send}
               disabled={!input.trim() || isLoading}
-              className="bg-emerald-600 hover:bg-emerald-500 shrink-0"
-              aria-label="Send message"
-              data-testid="neural-chat-send-button"
+              className="bg-primary hover:bg-primary/90 h-11 w-11 shrink-0 rounded-xl"
+              aria-label="Küldés"
             >
-              <PaperPlaneRight size={18} />
+              <PaperPlaneRight size={20} weight="fill" />
             </Button>
           </div>
         </div>

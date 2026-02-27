@@ -1,0 +1,16 @@
+Web search results for "Apify MCP server tool names list call-actor":
+
+The Apify MCP Server provides a "Call Actor" tool, which is a generic tool to call any Apify Actor by its ID and input.[1]
+
+In addition to the generic "Call Actor" tool, the Apify MCP Server offers several helper tools for managing Actors and accessing Apify resources:
+*   **Actor discovery and management:** Tools to search for Actors in the Apify Store, retrieve detailed information about a specific Actor (e.g., `get-actor-details`), and dynamically add or remove Actors as available tools.[2][3][1]
+*   **Apify documentation:** Tools to search the Apify documentation and fetch the full content of documentation pages.[2][1]
+*   **Actor runs:** Tools to get detailed information about a specific Actor run, list Actor runs (filterable by status), and retrieve logs for a specific Actor run.[2][1]
+*   **Data storage:** Tools to get metadata about a specific dataset, retrieve dataset items with pagination/filtering, list all datasets, get the JSON schema of dataset items, get metadata for a key-value store, list keys in a specific key-value store, get a value by key from a key-value store, and list all key-value stores.[2][1]
+
+Furthermore, any Apify Actor can be used as a tool, with its name being the full Actor name (e.g., `apify/rag-web-browser`).[2][3]
+
+Sources:
+[1] apify.com (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQG7T_OCSaH4oCuSwR8LlJBJDg2Op57ZAHTZDAZt5mA7fBocq3Zap_mYn9AYTVRIqrgM8_2m41HJaY7AjNo35C8KcG3VxxAD9pc8P2NFgAbsqTA=)
+[2] mcpcursor.com (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHoY-dAnIKZHaQFipvJn-Ik4OD6HWeBAfjCFsNBqfQb3wovFA70qVCVz-OOlh5u4erGajFrPLnKX5CGXm-nJH4vluaklMJMZmTAHUc99mgN-szUdc9tA7hWQnAbLV8tUdggSqf73mcy)
+[3] programnotes.cn (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFGWReu4K-gP4Qny5_ByWkBKPr15r8kVw0RrtxI5W1Gvt9itSzFcWhAuz3G0_JOqYt-fooEWs5gAk3KcxnLVZxckzfTu5MODBCyEYAiy70MFRT10_Z1WCCIXQx7FmPv6f5e2eLEAedRhA==)

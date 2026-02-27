@@ -1,0 +1,7 @@
+Successfully updated the todo list. The current list is now:
+1. [completed] Adatbázis séma bővítése: business_jobs tábla létrehozása
+2. [completed] BusinessJobs API router létrehozása és regisztrációja
+3. [in_progress] LeadMiningAgent átalakítása valós Apify/Robotkez logikára
+4. [pending] Dashboard LeadMiningWidget összekötése a backenddel
+5. [pending] Google Sheets export motor implementálása
+6. [pending] E2E tesztelés és verifikáció

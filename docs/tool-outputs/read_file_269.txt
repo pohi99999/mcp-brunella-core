@@ -1,0 +1,106 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 791-890 of 2743 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 890.
+
+--- FILE CONTENT (truncated) ---
+      toast.success(`Switched to ${branchName}`);
+      loadGitStatus();
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error ? err.message : "Failed to switch branch";
+      toast.error(msg);
+    }
+  };
+
+  // Tab-change data loading effects (must be after useCallback definitions)
+  useEffect(() => {
+    if (activeTab === "metrics") {
+      if (!metricsData && !isLoadingMetrics) {
+        loadMetrics();
+      }
+    } else if (activeTab === "approvals") {
+      if (!isLoadingApprovals) {
+        loadApprovals(approvalFilter);
+      }
+    } else if (activeTab === "activity") {
+      if (!isLoadingActivity) {
+        loadActivity(activityLimit);
+      }
+    } else if (activeTab === "git") {
+      if (!isLoadingGit) {
+        loadGitStatus();
+      }
+    }
+  }, [
+    activeTab,
+    activityLimit,
+    approvalFilter,
+    isLoadingActivity,
+    isLoadingApprovals,
+    isLoadingMetrics,
+    isLoadingGit,
+    loadActivity,
+    loadApprovals,
+    loadMetrics,
+    metricsData,
+  ]);
+
+  useEffect(() => {
+    if (activeTab !== "activity") return;
+    const interval = setInterval(() => {
+      loadActivity(activityLimit);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [activeTab, activityLimit, loadActivity]);
+
+  // P4: Submit code review
+  const handleReview = async () => {
+    const path = reviewPath.trim();
+    if (!path) return;
+
+    setIsReviewing(true);
+    setReviewResult(null);
+    try {
+      const result = await reviewFile(path);
+      setReviewResult(result);
+      toast.success(`Review complete: ${result.score}/100`);
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Review failed");
+    } finally {
+      setIsReviewing(false);
+    }
+  };
+
+  // Score color helper
+  const getScoreColor = (score: number): string => {
+    if (score >= 80) return "text-green-500";
+    if (score >= 60) return "text-yellow-500";
+    return "text-red-500";
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <h2 className="flex items-center gap-2 text-lg font-bold">
+          <Code2 size={20} className="text-primary" />
+          Developer Agent
+        </h2>
+        <div className="flex items-center gap-2">
+          {status && (
+            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+              <span className="flex items-center gap-1">
+                <Activity size={12} className="text-blue-500" />
+                {status.activeTasks} active
+              </span>
+              <span className="flex items-center gap-1">
+                <CheckCircle2 size={12} className="text-green-500" />
+                {status.completedTasks} done
+              </span>
+              <span className="flex items-center gap-1">
+                <XCircle size={12} className="text-red-500" />
+                {status.failedTasks} failed
+              </span>
+            </div>
+          )}

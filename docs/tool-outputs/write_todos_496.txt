@@ -1,0 +1,10 @@
+Successfully updated the todo list. The current list is now:
+1. [completed] Adatbázis séma bővítése: business_jobs tábla létrehozása
+2. [completed] BusinessJobs API router létrehozása és regisztrációja
+3. [completed] LeadMiningAgent átalakítása valós Apify/Robotkez logikára
+4. [completed] Dashboard LeadMiningWidget összekötése a backenddel
+5. [completed] Google Sheets export motor implementálása
+6. [completed] E2E tesztelés és verifikáció (MT1)
+7. [in_progress] Invoice Parser fejlesztése: Gemini 2.0 Flash Vision alapú OCR implementálása
+8. [pending] FinanceGuardian ágens integrálása a business_jobs rendszerbe
+9. [pending] Dashboard InvoiceSyncWidget refaktor (perzisztencia & history)

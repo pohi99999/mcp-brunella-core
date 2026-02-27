@@ -1,0 +1,88 @@
+Output: 
+> mcp-brunella-core@1.0.0 build
+> tsc && node -e "const fs=require('fs');const src='src/orchestrator/systemPrompt/paios_orchestrator_prompt.md';const dst='build/orchestrator/systemPrompt/paios_orchestrator_prompt.md';fs.mkdirSync('build/orchestrator/systemPrompt',{recursive:true});fs.copyFileSync(src,dst);console.log('✅ PAIOS prompt copied');"
+
+src/agents/FinanceGuardian.ts:23:39 - error TS2304: Cannot find name 'InvoiceData'.
+
+23   private invoiceHistory: Map<string, InvoiceData[]> = new Map();
+                                         ~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:25:30 - error TS2304: Cannot find name 'PriceAnomaly'.
+
+25   private anomaliesDetected: PriceAnomaly[] = [];
+                                ~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:30:45 - error TS2366: Function lacks ending return statement and return type does not include 'undefined'.
+
+30   async executeTask(context: AgentContext): Promise<AgentResult> {
+                                               ~~~~~~~~~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:73:44 - error TS2339: Property 'downloadedFiles' does not exist on type '{}'.
+
+73         const files = downloadResult.data?.downloadedFiles || [];
+                                              ~~~~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:96:62 - error TS2339: Property 'invoiceData' does not exist on type '{}'.
+
+96             if (processResult.success && processResult.data?.invoiceData && !processResult.data.isDuplicate) {
+                                                                ~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:96:97 - error TS2339: Property 'isDuplicate' does not exist on type '{}'.
+
+96             if (processResult.success && processResult.data?.invoiceData && !processResult.data.isDuplicate) {
+                                                                                                   ~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:99:53 - error TS2339: Property 'invoiceData' does not exist on type '{}'.
+
+99                     invoiceData: processResult.data.invoiceData
+                                                       ~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:274:52 - error TS2304: Cannot find name 'InvoiceData'.
+
+274   private async extractInvoicesFromPDFs(): Promise<InvoiceData[]> {
+                                                       ~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:276:25 - error TS2304: Cannot find name 'InvoiceData'.
+
+276     const mockInvoices: InvoiceData[] = [
+                            ~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:332:47 - error TS2304: Cannot find name 'InvoiceData'.
+
+332   private async storeInvoiceHistory(invoices: InvoiceData[]): Promise<void> {
+                                                  ~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:363:37 - error TS2304: Cannot find name 'InvoiceData'.
+
+363   private detectAnomalies(invoices: InvoiceData[]): PriceAnomaly[] {
+                                        ~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:363:53 - error TS2304: Cannot find name 'PriceAnomaly'.
+
+363   private detectAnomalies(invoices: InvoiceData[]): PriceAnomaly[] {
+                                                        ~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:364:22 - error TS2304: Cannot find name 'PriceAnomaly'.
+
+364     const anomalies: PriceAnomaly[] = [];
+                         ~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:380:24 - error TS2304: Cannot find name 'PriceAnomaly'.
+
+380         const anomaly: PriceAnomaly = {
+                           ~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:437:42 - error TS2304: Cannot find name 'PriceAnomaly'.
+
+437   private identifyCostSavings(anomalies: PriceAnomaly[]): Array<{
+                                             ~~~~~~~~~~~~
+
+src/agents/FinanceGuardian.ts:492:46 - error TS2304: Cannot find name 'PriceAnomaly'.
+
+492   private generateRecommendations(anomalies: PriceAnomaly[]): string[] {
+                                                 ~~~~~~~~~~~~
+
+
+Found 16 errors in the same file, starting at: src/agents/FinanceGuardian.ts:23
+Exit Code: 1
+Process Group PGID: 34908

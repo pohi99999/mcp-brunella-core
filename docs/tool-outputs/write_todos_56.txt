@@ -1,0 +1,8 @@
+Successfully updated the todo list. The current list is now:
+1. [in_progress] Identify and centralize existing scheduled tasks.
+2. [pending] Create a generic scheduled task handler.
+3. [pending] Integrate new scheduled agent tasks (EV Hunter, SalesHunter, Evaluator).
+4. [pending] Expose scheduled tasks via Dashboard UI.
+5. [pending] Cross-Agent "Chatter" Vizualizációja (Hogy lásd a rajt).
+6. [pending] Élesítsd a "Vadászokat" (Remove the Mocks).
+7. [pending] Kognitív Memória "Bekötése" (Connecting Cognitive Memory).

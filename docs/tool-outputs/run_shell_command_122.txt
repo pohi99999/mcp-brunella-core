@@ -1,0 +1,4 @@
+Output: Using Python 3.12.12 environment at: F:\mcp-brunella-core\.venv
+
+pytest                                 9.0.2
+Process Group PGID: 40432

@@ -1,0 +1,671 @@
+Output too large. Showing first 8000 and last 32 000 characters. For full output see: C:\Users\pohi9\.gemini\tmp\mcp-brunella-core\tool-outputs\session-200e43c6-7665-4bf2-8ba2-b79eb53ced76\run_shell_command_1771981043245_0.txt
+Output: warning: in the working copy of 'data/developer_metrics.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'test/SpecWriterAgent.test.ts', LF will be replaced by CRLF the next time Git touches it
+
+> mcp-brunella-core@1.0.0 build
+> tsc
+
+
+ RUN  v4.0.18 F:/mcp-brunella-core
+
+···········***-*
+stdout | test/llm_client.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+stdout | test/llm_client.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: Ollama (llama3.1:8b) 
+··············-·*
+stdout | test/llm_client.test.ts > llm_client > generateResponse > should fallback to Ollama if primary provider fails (except Ollama itself)   
+[INFO] [LLM_CLIENT] Fallback indítása Ollama-ra...
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should fallback to Ollama if primary provider fails (except Ollama itself)   
+[ERROR] [LLM_CLIENT] Hiba a(z) github szolgáltatónál: GitHub API Error  
+
+stdout | test/llm_client.test.ts > llm_client > generateResponse > should fallback to Ollama if Gemini API key is missing
+[INFO] [LLM_CLIENT] Fallback indítása Ollama-ra...
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should fallback to Ollama if Gemini API key is missing
+[ERROR] [LLM_CLIENT] Hiba a(z) gemini szolgáltatónál: GEMINI_API_KEY not configured
+
+stdout | test/llm_client.test.ts > llm_client > generateResponse > should fallback to Ollama if GitHub Token is missing
+[INFO] [LLM_CLIENT] Fallback indítása Ollama-ra...
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should fallback to Ollama if GitHub Token is missing
+[ERROR] [LLM_CLIENT] Hiba a(z) github szolgáltatónál: GITHUB_TOKEN or GITHUB_PAT not configured
+
+stdout | test/llm_client.test.ts > llm_client > generateResponse > should throw error if both primary and fallback fail
+[INFO] [LLM_CLIENT] Fallback indítása Ollama-ra...
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should throw error if both primary and fallback fail
+[ERROR] [LLM_CLIENT] Hiba a(z) gemini szolgáltatónál: GEMINI_API_KEY not configured
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should throw error if both primary and fallback fail
+[ERROR] [LLM_CLIENT] Hiba a(z) ollama szolgáltatónál: Ollama Failed     
+
+stderr | test/llm_client.test.ts > llm_client > generateResponse > should throw error if both primary and fallback fail
+[ERROR] [LLM_CLIENT] Ollama fallback is sikertelen: Ollama Failed       
+
+stdout | test/marketIntelAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meeta/llama-3.1-8b-instruct)
+··············-·x······*
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorA","CompetitorB"],"prod..."
+··············-·x·······******
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorA","CompetitorB"],"prod...
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: SaaS, 2 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771981191899
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [RAG] Document indexed: marketintel_1771981191899
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 6 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771981195807
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [RAG] Document indexed: marketintel_1771981195807
+··············-·x·········****                                          
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorC"],"productCategory":"..."
+··············-·x·········****
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorC"],"productCategory":"...
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: Cloud Hosting, 1 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771981199893
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [RAG] Document indexed: marketintel_1771981199893
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 3 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771981203352
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [RAG] Document indexed: marketintel_1771981203352
+··············-·x··········***                                          
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorA","CompetitorB"],"prod..."
+··············-·x··········***
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorA","CompetitorB"],"prod...
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: SaaS, 2 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771981207224
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [RAG] Document indexed: marketintel_1771981207224
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 6 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1771981210718
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [RAG] Document indexed: marketintel_1771981210718
+··············-·x···········**                                          
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorX"],"productCategory":"..."
+··············-·x···········**
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorX"],"productCategory":"...
+[INFO] 
+
+... [339 644 characters omitted] ...
+
+wledgeBaseBuilderAgent > Vector Search > should search knowledge base
+[INFO] [KnowledgeBaseBuilder] ✅ Knowledge base complete: 0 FAQs, 0 wiki pages
+[STATUS] [KnowledgeBaseBuilder] idle
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Vector Search > should return relevant results
+[STATUS] [KnowledgeBaseBuilder] working - Knowledge base: {"query":"deployment process","topK":3}...      
+[INFO] [KnowledgeBaseBuilder] Starting knowledge base building pipeline...
+[INFO] [KnowledgeBaseBuilder] Collecting messages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Vector Search > should return relevant results
+[INFO] [KnowledgeBaseBuilder] Extracting FAQs...
+[INFO] [KnowledgeBaseBuilder] Generating wiki pages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Vector Search > should return relevant results
+[INFO] [KnowledgeBaseBuilder] Storing embeddings in LanceDB...
+[INFO] [KnowledgeBaseBuilder] ✅ Would store 0 FAQ embeddings
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Vector Search > should return relevant results
+[INFO] [KnowledgeBaseBuilder] ✅ Knowledge base complete: 0 FAQs, 0 wiki pages
+[STATUS] [KnowledgeBaseBuilder] idle
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Auto Categorization > should categorize documents
+[STATUS] [KnowledgeBaseBuilder] working - Knowledge base: {"topic":"Database Migration","content":"Step-by-s...
+[INFO] [KnowledgeBaseBuilder] Starting knowledge base building pipeline...
+[INFO] [KnowledgeBaseBuilder] Collecting messages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Auto Categorization > should categorize documents
+[INFO] [KnowledgeBaseBuilder] Extracting FAQs...
+[INFO] [KnowledgeBaseBuilder] Generating wiki pages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Auto Categorization > should categorize documents
+[INFO] [KnowledgeBaseBuilder] Storing embeddings in LanceDB...
+[INFO] [KnowledgeBaseBuilder] ✅ Would store 0 FAQ embeddings
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Auto Categorization > should categorize documents
+[INFO] [KnowledgeBaseBuilder] ✅ Knowledge base complete: 0 FAQs, 0 wiki pages
+[STATUS] [KnowledgeBaseBuilder] idle
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > LanceDB Integration > should store documents in vector database
+[STATUS] [KnowledgeBaseBuilder] working - Knowledge base: {"topic":"Performance Optimization","sections":["C...
+[INFO] [KnowledgeBaseBuilder] Starting knowledge base building pipeline...
+[INFO] [KnowledgeBaseBuilder] Collecting messages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > LanceDB Integration > should store documents in vector database
+[INFO] [KnowledgeBaseBuilder] Extracting FAQs...
+[INFO] [KnowledgeBaseBuilder] Generating wiki pages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > LanceDB Integration > should store documents in vector database
+[INFO] [KnowledgeBaseBuilder] Storing embeddings in LanceDB...
+[INFO] [KnowledgeBaseBuilder] ✅ Would store 0 FAQ embeddings
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > LanceDB Integration > should store documents in vector database
+[INFO] [KnowledgeBaseBuilder] ✅ Knowledge base complete: 0 FAQs, 0 wiki pages
+[STATUS] [KnowledgeBaseBuilder] idle
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > LanceDB Integration > should support batch operations
+[STATUS] [KnowledgeBaseBuilder] working - Knowledge base: {"documents":[{"topic":"Doc1","content":"Content 1...
+[INFO] [KnowledgeBaseBuilder] Starting knowledge base building pipeline...
+[INFO] [KnowledgeBaseBuilder] Collecting messages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > LanceDB Integration > should support batch operations
+[INFO] [KnowledgeBaseBuilder] Extracting FAQs...
+[INFO] [KnowledgeBaseBuilder] Generating wiki pages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > LanceDB Integration > should support batch operations
+[INFO] [KnowledgeBaseBuilder] Storing embeddings in LanceDB...
+[INFO] [KnowledgeBaseBuilder] ✅ Would store 0 FAQ embeddings
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > LanceDB Integration > should support batch operations
+[INFO] [KnowledgeBaseBuilder] ✅ Knowledge base complete: 0 FAQs, 0 wiki pages
+[STATUS] [KnowledgeBaseBuilder] idle
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Error Handling > should handle empty topic
+[STATUS] [KnowledgeBaseBuilder] working - Knowledge base: {"topic":""}...
+[INFO] [KnowledgeBaseBuilder] Starting knowledge base building pipeline...
+[INFO] [KnowledgeBaseBuilder] Collecting messages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Error Handling > should handle empty topic
+[INFO] [KnowledgeBaseBuilder] Extracting FAQs...
+[INFO] [KnowledgeBaseBuilder] Generating wiki pages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Error Handling > should handle empty topic
+[INFO] [KnowledgeBaseBuilder] Storing embeddings in LanceDB...
+[INFO] [KnowledgeBaseBuilder] ✅ Would store 0 FAQ embeddings
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Error Handling > should handle empty topic
+[INFO] [KnowledgeBaseBuilder] ✅ Knowledge base complete: 0 FAQs, 0 wiki pages
+[STATUS] [KnowledgeBaseBuilder] idle
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Error Handling > should handle search with no results
+[STATUS] [KnowledgeBaseBuilder] working - Knowledge base: {"query":"completely nonexistent topic xyz123"}...
+[INFO] [KnowledgeBaseBuilder] Starting knowledge base building pipeline...
+[INFO] [KnowledgeBaseBuilder] Collecting messages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Error Handling > should handle search with no results
+[INFO] [KnowledgeBaseBuilder] Extracting FAQs...
+[INFO] [KnowledgeBaseBuilder] Generating wiki pages...
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Error Handling > should handle search with no results
+[INFO] [KnowledgeBaseBuilder] Storing embeddings in LanceDB...
+[INFO] [KnowledgeBaseBuilder] ✅ Would store 0 FAQ embeddings
+
+stdout | test/knowledgeBaseBuilderAgent.test.ts > KnowledgeBaseBuilderAgent > Error Handling > should handle search with no results
+[INFO] [KnowledgeBaseBuilder] ✅ Knowledge base complete: 0 FAQs, 0 wiki pages
+
+·····························*
+stdout | test/emailTriageAgent.test.ts
+                                                                                                          
+····································*                                                                     
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify urgent emails
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"URGENT: Server Down","emailBody":...      
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"URGENT: Server Down","emailBody":"We need immediate assistance!","from":"client@example.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify urgent emails
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify meeting requests
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Meeting invitation for next week"...      
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Meeting invitation for next week","emailBody":"Let's schedule a call to discuss the project.","from":"partner@company.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify meeting requests
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify invoices
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Invoice #12345","emailBody":"Plea...      
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Invoice #12345","emailBody":"Please find attached the invoice for this month.","from":"billing@supplier.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Email Classification > should classify invoices
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign high priority to urgent emails
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Critical: Payment Deadline Tomorr...      
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Critical: Payment Deadline Tomorrow","from":"finance@company.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign high priority to urgent emails
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign low priority to newsletters
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Weekly Newsletter - Tech Updates"...      
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Weekly Newsletter - Tech Updates","from":"newsletter@techblog.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Priority Scoring > should assign low priority to newsletters
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Auto Response > should generate auto-responses for common queries
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Pricing inquiry","emailBody":"How...      
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Pricing inquiry","emailBody":"How much does your service cost?","from":"potential@client.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Auto Response > should generate auto-responses for common queries
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Calendar Integration > should suggest calendar events for meeting requests
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Let's meet next Tuesday at 2 PM",...      
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Let's meet next Tuesday at 2 PM","from":"colleague@company.com"}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Calendar Integration > should suggest calendar events for meeting requests
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed
+[STATUS] [EmailTriage] idle
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Error Handling > should handle empty email body
+[STATUS] [EmailTriage] working - Email triage: {"emailSubject":"Test","emailBody":""}...
+[INFO] [EmailTriage] Starting email triage process...
+[INFO] [EmailTriage] Fetching emails with query: "{"emailSubject":"Test","emailBody":""}"
+
+stdout | test/emailTriageAgent.test.ts > EmailTriageAgent > Error Handling > should handle empty email body
+[INFO] [EmailTriage] ✅ Email triage complete: 4 emails processed
+
+
+··········*
+stdout | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > saveGoldenSample > should save valid sample via Python API
+[INFO] [GoldenBridge] Sample saved to Python backup from test-agent (quality: 0.85)
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > getGoldenStats > should return stats from Python API
+[ERROR] [GoldenBridge] D1 stats failed, trying Python backup: D1 error
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > getGoldenStats > should return null on API failure
+[ERROR] [GoldenBridge] D1 stats failed, trying Python backup: D1 error
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > autoSaveGoldenSample > should skip save for very short task+result (quality < 0.5)
+[ERROR] [VectorizeClient] embed failed: Cannot read properties of undefined (reading 'ok')
+
+stdout | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > autoSaveGoldenSample > should attempt save on quality result
+[INFO] [GoldenBridge] Sample saved to Python backup from TestAgent (quality: 0.70)
+
+stderr | test/goldenDatasetBridge.test.ts > goldenDatasetBridge > autoSaveGoldenSample > should attempt save on quality result
+
+··································*
+stderr | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent
+[WARN] [ApifyScraping] APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők
+[WARN] [ApifyScraping] Szerezz API kulcsot: https://console.apify.com/account/integrations
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should return error when APIFY_API_TOKEN is missing
+[STATUS] [ApifyScraping] working - Keress cégeket
+
+stderr | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should return error when APIFY_API_TOKEN is missing
+[WARN] [ApifyScraping] APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők
+[WARN] [ApifyScraping] Szerezz API kulcsot: https://console.apify.com/account/integrations
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should return error when APIFY_API_TOKEN is missing
+[STATUS] [ApifyScraping] idle
+
+stderr | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should handle gracefully when token is placeholder
+[WARN] [ApifyScraping] APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők
+[WARN] [ApifyScraping] Szerezz API kulcsot: https://console.apify.com/account/integrations
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should handle gracefully when token is placeholder
+[STATUS] [ApifyScraping] working - Keress cégeket
+
+stderr | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should handle gracefully when token is placeholder
+[WARN] [ApifyScraping] APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők
+[WARN] [ApifyScraping] Szerezz API kulcsot: https://console.apify.com/account/integrations
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should handle gracefully when token is placeholder
+[STATUS] [ApifyScraping] idle
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should detect google capability from task 
+[STATUS] [ApifyScraping] working - Keress rá a google-n: AI startups 2026
+
+stderr | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should detect google capability from task 
+[WARN] [ApifyScraping] APIFY_API_TOKEN nincs beállítva - Apify funkciók nem elérhetők
+[WARN] [ApifyScraping] Szerezz API kulcsot: https://console.apify.com/account/integrations
+
+stdout | test/apifyScrapingAgent.test.ts > ApifyScrapingAgent > should detect google capability from task 
+
+
+············*
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Conflict Detection > should detect conflicts in messages
+[STATUS] [ConflictMediator] working - {"message":"This is completely unacceptable! You n
+[INFO] [ConflictMediator] Feladat indítása: {"message":"This is completely unaccepta...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Conflict Detection > should not flag normal communication
+[STATUS] [ConflictMediator] working - {"message":"Thanks for the update, looks good!","f
+[INFO] [ConflictMediator] Feladat indítása: {"message":"Thanks for the update, looks...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Sentiment Analysis > should analyze negative sentiment
+[STATUS] [ConflictMediator] working - {"message":"I am extremely frustrated with this si
+[INFO] [ConflictMediator] Feladat indítása: {"message":"I am extremely frustrated wi...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Sentiment Analysis > should analyze positive sentiment
+[STATUS] [ConflictMediator] working - {"message":"Great work everyone! This is amazing p
+[INFO] [ConflictMediator] Feladat indítása: {"message":"Great work everyone! This is...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Resolution Suggestions > should suggest conflict resolution steps
+[STATUS] [ConflictMediator] working - {"conflictType":"deadline_dispute","parties":["Tea
+[INFO] [ConflictMediator] Feladat indítása: {"conflictType":"deadline_dispute","part...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > HR Notification > should notify HR for severe conflicts
+[STATUS] [ConflictMediator] working - {"conflictSeverity":"high","message":"Serious work
+[INFO] [ConflictMediator] Feladat indítása: {"conflictSeverity":"high","message":"Se...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > HR Notification > should not notify HR for minor issues
+[STATUS] [ConflictMediator] working - {"conflictSeverity":"low","message":"Minor schedul
+[INFO] [ConflictMediator] Feladat indítása: {"conflictSeverity":"low","message":"Min...
+[STATUS] [ConflictMediator] idle
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Error Handling > should handle empty messages
+[STATUS] [ConflictMediator] working - {"message":""}
+[INFO] [ConflictMediator] Feladat indítása: {"message":""}...
+[INFO] [ConflictMediator] Kommunikáció hangulatelemzése...
+[INFO] [ConflictMediator] Szervezeti hangulat: 6%
+
+stdout | test/conflictMediatorAgent.test.ts > ConflictMediatorAgent > Error Handling > should handle empty messages
+
+············································---·················*
+stdout | test/localCSRAgent.test.ts
+                                                                                                          
+············································---····················*                                      
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Event Tracking > should track community events      
+[STATUS] [LocalCSR] working - CSR tracking: {"location":"Budapest","eventType":"charity"}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Event Tracking > should track community events      
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Event Tracking > should filter events by type       
+[STATUS] [LocalCSR] working - CSR tracking: {"location":"Szeged","eventType":"education"}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Event Tracking > should filter events by type       
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Sponsorship Management > should suggest sponsorship opportunities
+[STATUS] [LocalCSR] working - CSR tracking: {"budget":500000,"location":"Debrecen"}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Sponsorship Management > should suggest sponsorship opportunities
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Sponsorship Management > should filter by budget    
+[STATUS] [LocalCSR] working - CSR tracking: {"budget":100000,"location":"Pécs"}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Sponsorship Management > should filter by budget    
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > PR Automation > should generate press release for CSR activity
+[STATUS] [LocalCSR] working - CSR tracking: {"activityType":"tree_planting","participants":50,...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > PR Automation > should generate press release for CSR activity
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > PR Automation > should generate social media posts  
+[STATUS] [LocalCSR] working - CSR tracking: {"activityType":"charity_donation","amount":200000...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > PR Automation > should generate social media posts  
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Impact Reporting > should calculate CSR impact metrics
+[STATUS] [LocalCSR] working - CSR tracking: {"activities":[{"type":"donation","amount":100000}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Impact Reporting > should calculate CSR impact metrics
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projects
+[STATUS] [LocalCSR] idle
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Error Handling > should handle missing parameters   
+[STATUS] [LocalCSR] working - CSR tracking: {}...
+[INFO] [LocalCSR] Starting CSR impact tracking...
+[INFO] [LocalCSR] Tracking period: Q1 2026
+[INFO] [LocalCSR] Calculating carbon footprint...
+[INFO] [LocalCSR] Collecting ESG metrics...
+[INFO] [LocalCSR] Discovering local charity projects...
+
+stdout | test/localCSRAgent.test.ts > LocalCSRAgent > Error Handling > should handle missing parameters   
+[INFO] [LocalCSR] ✅ CSR tracking complete: 149.0 kg CO2, 3 charity projects
+[STATUS] [LocalCSR] idle
+
+·············*
+stdout | test/enterpriseOrchestratorAgent.test.ts
+
+·······························*
+stdout | test/FinanceGuardian_Gmail.test.ts
+                                                                                                          
+·············································*                                                            
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should successfully search and download PDF invoices from Gmail
+[INFO] [FinanceGuardian] Searching Gmail for invoices with query: "from:billing@company.com"
+
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should successfully search and download PDF invoices from Gmail
+[INFO] [FinanceGuardian] Downloaded invoice: invoice.pdf to F:\mcp-brunella-core\_br_temp\invoices\msg123_invoice.pdf
+
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should handle no results from Gmail
+[INFO] [FinanceGuardian] Searching Gmail for invoices with query: "has:attachment filename:pdf "számla" OR
+
+································································*
+stdout | test/cloudflareBrowser.test.ts > CloudflareBrowser adapter > should send command and cache screenshot
+[INFO] [CloudflareBrowser] Sending command to CF Browser API: screenshot
+
+stdout | test/cloudflareBrowser.test.ts > CloudflareBrowser adapter > should return error status when worker request fails
+[INFO] [CloudflareBrowser] Sending command to CF Browser API: navigate
+
+stderr | test/cloudflareBrowser.test.ts > CloudflareBrowser adapter > should return error status when worker request fails
+
+
+*
+stdout | test/phase42-costopt.test.ts > Phase 4.2 - Cost Optimization > Summary Report > should print cost optimization summary
+
+📊 PHASE 4.2 COST OPTIMIZATION SUMMARY:
+├─ Baseline: $0.001000 per 100 pipelines
+├─ Optimized: $0.000750 per 100 pipelines
+├─ Total Savings: 25%
+├─ Monthly Impact: $0.75 (3000 tests)
+└─ Status: ✅ Phase 4.2 Complete
+
+stdout | test/agents/MarketIntelAgent.test.ts
+
+····························*
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data
+[STATUS] [MarketIntel] working - Piaci hírszerzés: Monitor product prices...
+[INFO] [MarketIntel] Scraping product data from http://example.com...
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data
+[INFO] [MarketIntel] Evaluating product potential...
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data
+[INFO] [MarketIntel] Triggering alert for: Product X
+[INFO] [MarketIntel] [ALERT] HIGH POTENTIAL: Product X @ 100 HUF. Score: 0.8
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should fail if URL or selectors are missing
+
+······························*
+stdout | test/deploymentAnalyzer.test.ts > DeploymentAnalyzer > should detect TypeScript build errors     
+[INFO] [DeploymentAnalyzer] Analyzing workflow logs
+[INFO] [DeploymentAnalyzer] Detected build error with 90% confidence
+
+stdout | test/deploymentAnalyzer.test.ts > DeploymentAnalyzer > should detect syntax errors
+[INFO] [DeploymentAnalyzer] Analyzing workflow logs
+[INFO] [DeploymentAnalyzer] Detected build error with 90% confidence
+
+stdout | test/deploymentAnalyzer.test.ts > DeploymentAnalyzer > should detect test failures
+[INFO] [DeploymentAnalyzer] Analyzing workflow logs
+
+························································*
+stdout | test/chromeDevToolsAgent.test.ts > ChromeDevToolsAgent > should return error when URL is missing 
+[STATUS] [ChromeDevTools] working - Debug the page
+[STATUS] [ChromeDevTools] idle
+
+*
+stdout | test/FinanceGuardian_Sheets.test.ts
+                                                                                                          
+········*                                                                                                 
+stdout | test/FinanceGuardian_Sheets.test.ts > FinanceGuardian - Google Sheets Export > should successfully export invoice data to Google Sheets
+[INFO] [FinanceGuardian] Invoice INV-002 exported to Google Sheet.
+
+stdout | test/codebaseIndexer.test.ts
+                                                                                                          
+··········*                                                                                               
+stdout | test/FinanceGuardian_Duplicates.test.ts
+
+··················*
+stdout | test/FinanceGuardian_Duplicates.test.ts > FinanceGuardian - Invoice Processing & Duplicate Detection > should detect and skip a duplicate invoice
+
+·····························*
+stderr | test/notificationService.test.ts > NotificationService > returns false when SMTP config missing  
+[WARN] [NotificationService] SMTP config missing, skipping email
+
+stdout | test/notificationService.test.ts > NotificationService > sends email when SMTP config present    
+[INFO] [NotificationService] Critical TODO email sent to to@test.dev
+
+stdout | test/agents/MachineHunter.test.ts
+
+·······························*
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should successfully execute a full machine hunt with outreach
+[STATUS] [MarketIntel] working - Piaci hírszerzés: machine hunt...
+[INFO] [MarketIntel] 🚀 Starting Machine Hunt for: CNC machine
+[INFO] [MarketIntel] Scraping machines for: CNC machine...
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should successfully execute a full machine hunt with outreach
+[INFO] [MarketIntel] Valuing: CNC Pro 3000
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should successfully execute a full machine hunt with outreach
+[INFO] [MarketIntel] 🔥 High potential found! Triggering outreach for: CNC Pro 3000
+[INFO] [MarketIntel] Generating outreach for: CNC Pro 3000
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should skip outreach if potential is low
+[STATUS] [MarketIntel] working - Piaci hírszerzés: machine hunt...
+[INFO] [MarketIntel] 🚀 Starting Machine Hunt for: machine hunt
+[INFO] [MarketIntel] Scraping machines for: machine hunt...
+
+stdout | test/agents/MachineHunter.test.ts > MarketIntelAgent - Machine Hunter > should skip outreach if potential is low
+
+············································*
+stdout | test/agents/LeadMiningAgent.test.ts
+
+                                                                                                          
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯                                  
+
+ FAIL  test/llm_client.test.ts > llm_client > generateResponse > should use Gemini provider when requested
+AssertionError: expected "vi.fn()" to be called with arguments: [ { model: 'gemini-2.0-flash' } ]
+
+Received:
+
+  1st vi.fn() call:
+
+  [
+    {
+-     "model": "gemini-2.0-flash",
++     "model": "gemini-3.0-flash",
+    },
+  ]
+
+
+Number of calls: 1
+
+ ❯ test/llm_client.test.ts:59:44
+     57|             const result = await generateResponse('test prompt…
+     58|
+     59|             expect(mockGetGenerativeModel).toHaveBeenCalledWit…
+       |                                            ^
+     60|             const expectedPrompt = "Te vagy a BAS (Brunella Ag…
+     61|             expect(mockGenerateContent).toHaveBeenCalledWith(e…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed | 138 passed (139)
+      Tests  1 failed | 1299 passed | 45 skipped (1345)
+   Start at  01:57:54
+   Duration  500.48s (transform 4.16s, setup 2.21s, import 25.09s, tests 439.25s, environment 20ms)       
+
+husky - pre-commit script failed (code 1)
+Everything up-to-date
+Process Group PGID: 17568

@@ -1,0 +1,784 @@
+Output too large. Showing first 8000 and last 32 000 characters. For full output see: C:\Users\pohi9\.gemini\tmp\mcp-brunella-core\tool-outputs\run_shell_command_3.txt
+Output too large. Showing first 8000 and last 32 000 characters. For full output see: C:\Users\pohi9\.gemini\tmp\mcp-brunella-core\tool-outputs\session-200e43c6-7665-4bf2-8ba2-b79eb53ced76\run_shell_command_1771975047529_0.txt
+Output: 
+Running 26 tests using 1 worker
+
+      1 … › 🚀 Brunella Dashboard Full UI Audit › Audit Page: neural-map
+--- Auditing: neural-map ---
+Found 51 buttons on neural-map
+  Clicking button: "Keresés...
+⌘
+K"
+  Clicking button: "LAYOUT:
+DEFAULT_DASHBOARD"
+  Failed to click button 1: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(1)
+    - locator resolved to <button type="button" id="radix-_r_5_" data-state="closed" aria-haspopup="menu" aria-expanded="false" data-slot="dropdown-menu-trigger" class="inline-flex items-center justify-center whitespace-nowrap font-medium disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destru…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+
+  Clicking button: "Toggle theme"
+  Failed to click button 2: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(2)
+    - locator resolved to <button type="button" id="radix-_r_7_" data-state="closed" aria-haspopup="menu" aria-expanded="false" data-slot="dropdown-menu-trigger" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-dest…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+    - waiting for element to be visible, enabled and stable
+
+  Clicking button: "CORE SYSTEMS"
+  Failed to click button 3: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(3)
+    - locator resolved to <button type="button" id="radix-_r_9_" data-state="open" aria-expanded="true" aria-controls="radix-_r_a_" data-orientation="vertical" data-slot="accordion-trigger" data-radix-collection-item="" class="focus-visible:border-ring focus-visible:ring-ring/50 flex flex-1 items-start justify-between gap-4 text-left transition-all outline-none focus-visible:ring-[3px] disabled:pointer-events-none disabled:opacity-50 [&[data-state=open]>svg]:rotate-180 text-xs font-bold text-zinc-500 hover:text-zinc-200 upperc…>…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 100ms
+    3 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+      - done scrolling
+      - <div data-state="open" aria-hidden="true" data-aria-hidden="true" data-slot="dialog-overlay" class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/50"></div> intercepts pointer events
+    - retrying click action
+      - waiting 500ms
+
+  Clicking button: "Mission Control"
+  Failed to click button 4: locator.click: Timeout 2000ms exceeded.
+Call log:
+  - waiting for locator('button, [role="button"]').nth(4)
+    - locator resolved to <button class="w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative hover:text-zinc-100 hover:bg-white/5 bg-primary/10 text-white border border-primary/20">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is visible, enabled and stable
+      - scrolling into view if needed
+    
+
+... [267 characters omitted] ...
+
+rror Context: test-results\dashboard_audit-🚀-Brunell-bcd14-Audit-AAudit-Page-cloudflare-chromium\error-context.md
+
+  5) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit › Audit Page: fleet_manager
+
+    Error: Console errors detected on fleet_manager
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-1a6a6-it-Audit-Page-fleet-maanager-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-1a6a6-it-Audit-Page-fleet-maanager-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-1a6a6-it-Audiit-Page-fleet-manager-chromium\error-context.md
+
+  6) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit › Audit Page: chat
+
+    Error: Console errors detected on chat
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-a7d9a-ll-UI-Audit-Audit-Pagee-chat-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-a7d9a-ll-UI-Audit-Audit-Pagee-chat-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-a7d9a-ll-UI-AAudit-Audit-Page-chat-chromium\error-context.md
+
+  7) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit › Audit Page: paios
+
+    Error: Console errors detected on paios
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-09b0e-l-UI-Audit-Audit-Page--paios-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-09b0e-l-UI-Audit-Audit-Page--paios-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-09b0e-l-UI-Auudit-Audit-Page-paios-chromium\error-context.md
+
+  8) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit › Audit Page: phoenix
+
+    Error: Console errors detected on phoenix
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-087c2-UI-Audit-Audit-Page-phhoenix-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-087c2-UI-Audit-Audit-Page-phhoenix-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-087c2-UI-Audiit-Audit-Page-phoenix-chromium\error-context.md
+
+  9) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit › Audit Page: management
+
+    Error: Console errors detected on management
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-cfa0d-Audit-Audit-Page-managgement-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-cfa0d-Audit-Audit-Page-managgement-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-cfa0d-Audit-AAudit-Page-management-chromium\error-context.md
+
+  10) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: decomposer
+
+    Error: Console errors detected on decomposer
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-e6571-Audit-Audit-Page-decommposer-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-e6571-Audit-Audit-Page-decommposer-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-e6571-Audit-AAudit-Page-decomposer-chromium\error-context.md
+
+  11) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: tracks
+
+    Error: Console errors detected on tracks
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-2eb7c--UI-Audit-Audit-Page-ttracks-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-2eb7c--UI-Audit-Audit-Page-ttracks-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-2eb7c--UI-Auddit-Audit-Page-tracks-chromium\error-context.md
+
+  12) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: incubator
+
+    Error: Console errors detected on incubator
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-996a9--Audit-Audit-Page-incuubator-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-996a9--Audit-Audit-Page-incuubator-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-996a9--Audit--Audit-Page-incubator-chromium\error-context.md
+
+  13) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: knowledge
+
+    Error: Console errors detected on knowledge
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5c29e--Audit-Audit-Page-knowwledge-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5c29e--Audit-Audit-Page-knowwledge-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-5c29e--Audit--Audit-Page-knowledge-chromium\error-context.md
+
+  14) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: mcp
+
+    Error: Console errors detected on mcp
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-2cd86-ull-UI-Audit-Audit-Pagge-mcp-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-2cd86-ull-UI-Audit-Audit-Pagge-mcp-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-2cd86-ull-UI--Audit-Audit-Page-mcp-chromium\error-context.md
+
+  15) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: developer
+
+    Error: Console errors detected on developer
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5d79a--Audit-Audit-Page-deveeloper-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5d79a--Audit-Audit-Page-deveeloper-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-5d79a--Audit--Audit-Page-developer-chromium\error-context.md
+
+  16) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: edge
+
+    Error: Console errors detected on edge
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-b0a22-ll-UI-Audit-Audit-Pagee-edge-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-b0a22-ll-UI-Audit-Audit-Pagee-edge-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-b0a22-ll-UI-AAudit-Audit-Page-edge-chromium\error-context.md
+
+  17) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: suggested-tasks
+
+    Error: Console errors detected on suggested-tasks
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-d95a1--Audit-Page-suggested--tasks-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-d95a1--Audit-Page-suggested--tasks-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-d95a1--Audit--Page-suggested-tasks-chromium\error-context.md
+
+  18) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: tests
+
+    Error: Console errors detected on tests
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-1e260-l-UI-Audit-Audit-Page--tests-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-1e260-l-UI-Audit-Audit-Page--tests-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-1e260-l-UI-Auudit-Audit-Page-tests-chromium\error-context.md
+
+  19) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: enterprise-analytics
+
+    Error: Console errors detected on enterprise-analytics
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-759d1-t-Page-enterprise-anallytics-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-759d1-t-Page-enterprise-anallytics-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-759d1-t-Page--enterprise-analytics-chromium\error-context.md
+
+  20) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: robotkez
+
+    Error: Console errors detected on robotkez
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-1a3ae-I-Audit-Audit-Page-robbotkez-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-1a3ae-I-Audit-Audit-Page-robbotkez-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-1a3ae-I-Auditt-Audit-Page-robotkez-chromium\error-context.md
+
+  21) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: tasks
+
+    Error: Console errors detected on tasks
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-73448-l-UI-Audit-Audit-Page--tasks-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-73448-l-UI-Audit-Audit-Page--tasks-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-73448-l-UI-Auudit-Audit-Page-tasks-chromium\error-context.md
+
+  22) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: python-workers
+
+    Error: Console errors detected on python-workers
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-ab1d8-t-Audit-Page-python-woorkers-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-ab1d8-t-Audit-Page-python-woorkers-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-ab1d8-t-Auditt-Page-python-workers-chromium\error-context.md
+
+  23) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: inventory
+
+    Error: Console errors detected on inventory
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-b1a58--Audit-Audit-Page-inveentory-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-b1a58--Audit-Audit-Page-inveentory-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-b1a58--Audit--Audit-Page-inventory-chromium\error-context.md
+
+  24) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: files
+
+    Error: Console errors detected on files
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-17ff9-l-UI-Audit-Audit-Page--files-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-17ff9-l-UI-Audit-Audit-Page--files-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-17ff9-l-UI-Auudit-Audit-Page-files-chromium\error-context.md
+
+  25) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: marketwatcher
+
+    Error: Console errors detected on marketwatcher
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-7251d-it-Audit-Page-marketwaatcher-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-7251d-it-Audit-Page-marketwaatcher-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-7251d-it-Audiit-Page-marketwatcher-chromium\error-context.md
+
+  26) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella DDashboard Full UI Audit › Audit Page: settings
+
+    Error: Console errors detected on settings
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 5
+
+       97 |       }
+       98 |
+    >  99 |       expect(consoleErrors.length, `Console errors detected on ${navId}`).toBe(0);
+          |                                                             
+              ^
+      100 |       expect(failedRequests.length, `Network failures detected on ${navId}`).toBe(0);
+      101 |     });
+      102 |   }
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:99:75  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-e405e-I-Audit-Audit-Page-setttings-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-e405e-I-Audit-Audit-Page-setttings-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-e405e-I-Auditt-Audit-Page-settings-chromium\error-context.md
+
+  26 failed
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: neural-map
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: system-arch
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: cean
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: cloudflare
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: fleet_manager
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: chat
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: paios
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: phoenix
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: management
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: decomposer
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: tracks
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: incubator
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: knowledge
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: mcp
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: developer
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: edge
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: suggested-tasks
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: tests
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: enterprise-analytics
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: robotkez
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: tasks
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: python-workers
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: inventory
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: files
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: marketwatcher
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit › Audit Page: settings
+
+To open last HTML report run:
+
+  npx playwright show-report
+Exit Code: 1
+Process Group PGID: 15100

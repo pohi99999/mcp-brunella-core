@@ -1,0 +1,13 @@
+Subagent 'cli_help' finished.
+Termination Reason: GOAL
+Result:
+{
+  "answer": "Based on the environment context and the documentation reviewed, the 'apify' MCP server is associated with the `apify-agent-skills` extension. My investigation was interrupted before I could find a comprehensive list of tool names in the internal documentation. However, the file system reveals a reference script named `run_actor.js` within the `apify-lead-generation` skill directory, which suggests that `run_actor` is one of the tools provided by the server. Typically, an Apify MCP server would provide tools for running actors and accessing datasets (such as `run_actor`, `get_dataset_items`, etc.), but these were not explicitly listed in the accessed documentation files. My investigation was interrupted.",
+  "sources": [
+    "tools/mcp-server.md",
+    "cli/skills.md",
+    "extensions/index.md",
+    "extensions/reference.md",
+    "core/tools-api.md"
+  ]
+}

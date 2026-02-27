@@ -1,0 +1,12 @@
+Subagent 'cli_help' finished.
+Termination Reason: GOAL
+Result:
+{
+  "answer": "As an agent in Gemini CLI, the discovery and usage of tools from an MCP server like 'mcp-brunella-core' are handled through a standardized protocol integration.\n\n### 1. Discovery Process\nThe Gemini CLI (the platform hosting the agent) discovers tools automatically:\n*   **Initialization**: On startup, the CLI reads the `mcpServers` configuration in `settings.json`.\n*   **Connection**: It establishes a connection to the server (via Stdio, SSE, or Streamable HTTP).\n*   **Registration**: It fetches tool definitions using the MCP protocol and registers them in a global tool registry.\n*   **Name Sanitization**: Names are cleaned for Gemini API compatibility. For example, 'mcp-brunella-core' becomes `mcp_brunella_core`. If there are name collisions across servers, tools are prefixed (e.g., `mcp_brunella_core__tool_name`).\n\n### 2. How to Inspect Available Tools\nYou can see what tools the agent has discovered by using these commands:\n*   `/mcp` or `/mcp ls`: Lists all connected servers and their tools.\n*   `/mcp desc`: Provides detailed descriptions of the tools.\n*   `/mcp schema`: Shows the parameters and JSON schemas for each tool.\n\n### 3. Usage by the Agent\n*   **Main Agent**: The main Gemini agent automatically sees all discovered MCP tools in its toolset and will invoke them (generating a `FunctionCall`) when relevant to the user's request.\n*   **Custom Sub-agents**: To give a custom sub-agent access to MCP tools, you must list their (potentially sanitized/prefixed) names in the `tools` array within the sub-agent's Markdown definition file:\n    ```markdown\n    ---\n    name: brunella-expert\n    tools:\n      - tool_from_brunella\n      - mcp_brunella_core__another_tool\n    ---\n    ```\n\n### 4. Execution and Confirmation\n*   **Confirmation Logic**: When the agent calls a tool, the CLI prompts the user for confirmation (e.g., \"Proceed once\", \"Always allow this tool\").\n*   **Trust**: You can bypass confirmations by adding `\"trust\": true` to the server's configuration in `settings.json`.\n\n### 5. Resources and Prompts\n*   **Resources**: Can be discovered via `/mcp` and used with the `@` syntax (e.g., `@mcp-brunella-core://resource/path`).\n*   **Prompts**: Can be used as slash commands (e.g., `/prompt-name --arg=value`).",
+  "sources": [
+    "tools/mcp-server.md",
+    "core/subagents.md",
+    "cli/commands.md",
+    "get-started/configuration.md"
+  ]
+}

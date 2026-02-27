@@ -1,0 +1,16 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-10 of 110 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 10.
+
+--- FILE CONTENT (truncated) ---
+# Specifikáció: Chrome DevTools MCP Agent
+**Track ID:** `chrome_devtools_mcp_agent_20260223`
+**Státusz:** proposed
+**Prioritás:** LOW
+**Forrás:** `docs/Claude-nak/fejlesztes.md` — "UX & Web Debug Agent (chrome-devtools-mcp)"
+
+---
+
+## 1. Jelenlegi Helyzet
+

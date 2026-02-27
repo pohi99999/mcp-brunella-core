@@ -1,0 +1,15 @@
+Directory listing for F:\mcp-brunella-core\src\dashboard\lib:
+[DIR] chat
+[DIR] layout
+agentResponseFormatter.ts
+apiService.ts
+auth.ts
+externalApiService.ts
+mcpStore.ts
+mockData.ts
+navigation.tsx
+ollamaService.ts
+types.ts
+uiTester.ts
+utils.ts
+widgetRegistry.tsx

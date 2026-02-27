@@ -1,0 +1,3 @@
+{
+  "error": "Tool \"exit_plan_mode\" not found. Did you mean one of: \"enter_plan_mode\", \"replace\", \"write_file\"?"
+}

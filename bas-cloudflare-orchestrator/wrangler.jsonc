@@ -6,53 +6,38 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  // 🧠 AI Binding (Workers AI - Fallback LLM)
   "ai": {
     "binding": "AI"
   },
-  // 🗂️ KV Namespace (Task Status & Cache)
   "kv_namespaces": [
     {
       "binding": "BAS_TASKS",
       "id": "b6718ab359ac401bb24da7c34c24f11b"
     }
   ],
-  // ☁️ R2 Bucket ("Végtelen Memória" - Logs & Snapshots)
   "r2_buckets": [
     {
       "binding": "R2_KNOWLEDGE",
       "bucket_name": "vodor1"
     }
   ],
-  // 🗄️ D1 Database ("Közös Tudat" - Tracks & Metadata)
   "d1_databases": [
     {
       "binding": "D1_METADATA",
       "database_name": "bas-metadata",
-      "database_id": "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
+      "database_id": "8efce5d3-bcfc-4188-ac36-29db5bdf49fb"
     }
   ],
-  // 🌍 Környezeti Változók
+  "assets": {
+    "directory": "../build/public",
+    "binding": "ASSETS"
+  },
   "vars": {
-    // Development Defaults (Localhost)
     "N8N_WEBHOOK_URL": "http://localhost:5678/webhook/bas-task",
     "BROWSER_USE_ENDPOINT": "http://localhost:8000/api/task",
     "DEFAULT_CODE_MODEL": "@cf/meta/llama-3.1-8b-instruct",
-    // FONTOS: Ez legyen összhangban a Python scripttel (Brunella-core)
     "R2_PREFIX": "Brunella-core"
   },
-  // 🚀 Production Overrides (Éles környezet beállításai)
-  "env": {
-    "production": {
-      "vars": {
-        // Ide jönnek majd a Cloudflare Tunnel címeid (pl. https://n8n.bas.peterpohanka.com...)
-        "N8N_WEBHOOK_URL": "CHANGE_ME_TO_TUNNEL_URL",
-        "BROWSER_USE_ENDPOINT": "CHANGE_ME_TO_TUNNEL_URL",
-        "R2_PREFIX": "Brunella-core"
-      }
-    }
-  },
-  // � Durable Objects (Swarm Coordinator — persistent session state)
   "durable_objects": {
     "bindings": [
       {
@@ -69,25 +54,7 @@
       ]
     }
   ],
-  // �📊 Telemetria
   "observability": {
     "enabled": true
-  },
-  // 📬 Queues (Async Task Pipeline)
-  "queues": {
-    "producers": [
-      {
-        "binding": "TASK_QUEUE",
-        "queue": "bas-task-pipeline"
-      }
-    ],
-    "consumers": [
-      {
-        "queue": "bas-task-pipeline",
-        "max_batch_size": 10,
-        "max_retries": 3,
-        "dead_letter_queue": "bas-task-dlq"
-      }
-    ]
   }
 }

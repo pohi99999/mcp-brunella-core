@@ -1,0 +1,16 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-10 of 125 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 10.
+
+--- FILE CONTENT (truncated) ---
+# Technical Specification: Marketing Swarm (Automated Marketing Campaign)
+
+**Track ID:** `marketing_swarm_20260216`  
+**Status:** `in_progress` (Phase 1 Complete ✅)
+**Last Updated:** 2026-02-16T05:15:00Z  
+**Progress:** 33% (Phase 1/3 complete)  
+
+---
+
+## 📖 Context

@@ -1,0 +1,4 @@
+Output: warning: in the working copy of 'BRUNELLA_MASTER_CONTEXT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'conductor/project_state.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'data/developer_metrics.json', LF will be replaced by CRLF the next time Git touches it
+Process Group PGID: 32972

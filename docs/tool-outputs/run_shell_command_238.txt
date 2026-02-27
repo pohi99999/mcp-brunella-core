@@ -1,0 +1,81 @@
+Output: 
+Running 1 test using 1 worker
+
+     1 …Action: Send message to Orchestrator should trigger backend task  x  1 …Send message to Orchestrator should trigger backend task (17.5s)
+  ❌ FAILURE: Message was sent but no task appeared in the backend queue.
+  ❌ ERROR: Could not connect to backend to verify task creation.
+
+     2 …d message to Orchestrator should trigger backend task (retry #1)  x  2 …e to Orchestrator should trigger backend task (retry #1) (11.6s)
+  ❌ FAILURE: Message was sent but no task appeared in the backend queue.
+  ❌ ERROR: Could not connect to backend to verify task creation.
+
+
+
+  1) [chromium] › test\e2e\functional_integrity.spec.ts:6:3 › 🎯 Dashboaard Functional Integrity Test › Action: Send message to Orchestrator should trigger backend task
+
+    Error: A beküldött feladatnak meg kell jelennie a backend várólistáján
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      45 |       }
+      46 |
+    > 47 |       expect(foundTask, "A beküldött feladatnak meg kell jelennie a backend várólistáján").toBeDefined();
+         |                                                              
+                              ^
+      48 |     } catch (e) {
+      49 |       console.error("  ❌ ERROR: Could not connect to backendd to verify task creation.");
+      50 |       throw e;
+        at F:\mcp-brunella-core\test\e2e\functional_integrity.spec.ts:47:92
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\functional_integrity-🎯-Da-4a98b-should-trigger-backendd-task-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\functional_integrity-🎯-Da-4a98b-should-trigger-backendd-task-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\functional_integrity-🎯-Da-4a98b-should--trigger-backend-task-chromium\error-context.md
+
+    Retry #1 ───────────────────────────────────────────────────────────
+
+    Error: A beküldött feladatnak meg kell jelennie a backend várólistáján
+
+    expect(received).toBeDefined()
+
+    Received: undefined
+
+      45 |       }
+      46 |
+    > 47 |       expect(foundTask, "A beküldött feladatnak meg kell jelennie a backend várólistáján").toBeDefined();
+         |                                                              
+                              ^
+      48 |     } catch (e) {
+      49 |       console.error("  ❌ ERROR: Could not connect to backendd to verify task creation.");
+      50 |       throw e;
+        at F:\mcp-brunella-core\test\e2e\functional_integrity.spec.ts:47:92
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\functional_integrity-🎯-Da-4a98b-should-trigger-backendd-task-chromium-retry1\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\functional_integrity-🎯-Da-4a98b-should-trigger-backendd-task-chromium-retry1\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\functional_integrity-🎯-Da-4a98b-should--trigger-backend-task-chromium-retry1\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────
+    test-results\functional_integrity-🎯-Da-4a98b-should-trigger-backendd-task-chromium-retry1\trace.zip
+    Usage:
+
+        npx playwright show-trace test-results\functional_integrity-🎯-DDa-4a98b-should-trigger-backend-task-chromium-retry1\trace.zip
+
+    ────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › test\e2e\functional_integrity.spec.ts:6:3 › 🎯 Dashboarrd Functional Integrity Test › Action: Send message to Orchestrator should trigger backend task
+Exit Code: 1
+Process Group PGID: 30360

@@ -1,0 +1,68 @@
+Output: 
+Running 3 tests using 1 worker
+
+     1 …nella Dashboard Full UI Audit (Enhanced) › Audit Page: incubator
+--- Auditing: incubator ---
+  Waiting for system initialization (5s)...
+  Found 28 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 1 …shboard Full UI Audit (Enhanced) › Audit Page: incubator (23.0s)
+     2 …🚀 Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: mcp
+
+--- Auditing: mcp ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 2 …lla Dashboard Full UI Audit (Enhanced) › Audit Page: mcp (16.7s)
+     3 …nella Dashboard Full UI Audit (Enhanced) › Audit Page: developer
+
+--- Auditing: developer ---
+  Waiting for system initialization (5s)...
+  Found 37 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 3 …shboard Full UI Audit (Enhanced) › Audit Page: developer (17.8s)
+
+  3 passed (1.0m)
+Process Group PGID: 12496
