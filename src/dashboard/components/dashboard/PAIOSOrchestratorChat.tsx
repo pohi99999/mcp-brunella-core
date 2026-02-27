@@ -28,7 +28,9 @@ import {
     Brain,
     Zap,
     Cpu,
-    Cloud
+    Cloud,
+    Mic,
+    Volume2
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSocket } from '@/context/SocketContext';
@@ -71,6 +73,72 @@ export function PAIOSOrchestratorChat() {
     const [selectedModel, setSelectedModel] = useState<ModelProvider>('gemini');
     const scrollRef = useRef<HTMLDivElement>(null);
     const { socket } = useSocket();
+
+    const [isListening, setIsListening] = useState(false);
+    const [isSpeaking, setIsSpeaking] = useState(false);
+    const audioRef = useRef<HTMLAudioElement | null>(null);
+
+    const startListening = () => {
+        const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+        if (!SpeechRecognition) {
+            toast.error("A böngésződ nem támogatja a hangfelismerést.");
+            return;
+        }
+        
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'hu-HU';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onstart = () => {
+            setIsListening(true);
+            toast.info("Figyelek...");
+        };
+
+        recognition.onresult = (event: any) => {
+            const transcript = event.results[0][0].transcript;
+            setInput(transcript);
+            toast.success("Sikeres hangfelismerés.");
+        };
+
+        recognition.onerror = (event: any) => {
+            console.error("Speech recognition error", event.error);
+            setIsListening(false);
+            toast.error("Hiba a hangfelismerés során.");
+        };
+
+        recognition.onend = () => {
+            setIsListening(false);
+        };
+
+        recognition.start();
+    };
+
+    const playTTS = async (text: string) => {
+        try {
+            setIsSpeaking(true);
+            const response = await fetch('/api/v1/voice/tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text })
+            });
+            const data = await response.json();
+            if (data.url) {
+                if (audioRef.current) {
+                    audioRef.current.pause();
+                }
+                const audio = new Audio(data.url);
+                audioRef.current = audio;
+                audio.onended = () => setIsSpeaking(false);
+                audio.play();
+            } else {
+                setIsSpeaking(false);
+            }
+        } catch (e) {
+            console.error('TTS error', e);
+            setIsSpeaking(false);
+        }
+    };
 
     // Auto-scroll to bottom
     useEffect(() => {
@@ -147,6 +215,7 @@ export function PAIOSOrchestratorChat() {
                     },
                 ]);
                 toast.success('✅ Orchestrator válaszolt');
+                playTTS(result.summary);
             } else {
                 throw new Error(result.error || 'Unknown error');
             }
@@ -295,6 +364,15 @@ export function PAIOSOrchestratorChat() {
                             className="resize-none min-h-[60px]"
                             disabled={isLoading}
                         />
+                        <Button
+                            onClick={startListening}
+                            variant="outline"
+                            size="icon"
+                            className={`self-end transition-all duration-300 ${isListening ? 'bg-red-500/20 text-red-500 border-red-500/50 animate-pulse' : ''}`}
+                            title="Hangutasítás (Magyar)"
+                        >
+                            {isSpeaking ? <Volume2 className="w-4 h-4 animate-bounce text-primary" /> : <Mic className={`w-4 h-4 ${isListening ? 'text-red-500' : ''}`} />}
+                        </Button>
                         <Button
                             onClick={sendMessage}
                             disabled={!input.trim() || isLoading}
