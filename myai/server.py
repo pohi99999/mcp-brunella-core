@@ -746,6 +746,49 @@ async def harvest_check(scenario_path: str = "myai/scenarios/n8n_training.json")
     ok = check_setup(scenario_path)
     return {"status": "ok" if ok else "missing_deps", "scenario_path": scenario_path}
 
+# --- Robotkez Pro (BVAB) Endpoints ---
+from myai.robotkez.browser import overlay_browser
+from myai.robotkez.computer_use import computer_use
+import base64
+
+class RobotkezActionRequest(BaseModel):
+    action: str
+    params: dict = {}
+
+@app.post("/api/robotkez/action")
+async def robotkez_action(req: RobotkezActionRequest):
+    await overlay_browser.ensure_active()
+    
+    if req.action == "navigate":
+        await overlay_browser.page.goto(req.params.get("url", "https://google.com"))
+        return {"status": "success", "action": "navigate"}
+    elif req.action == "click":
+        return computer_use.click(req.params.get("x", 0), req.params.get("y", 0))
+    elif req.action == "type":
+        return computer_use.type_text(req.params.get("text", ""), req.params.get("enter", False))
+    elif req.action == "scroll":
+        return computer_use.scroll(req.params.get("amount", -500))
+    else:
+        raise HTTPException(status_code=400, detail=f"Unknown action: {req.action}")
+
+@app.get("/api/robotkez/snapshot")
+async def robotkez_snapshot():
+    await overlay_browser.ensure_active()
+    try:
+        screenshot_bytes = await overlay_browser.page.screenshot(full_page=False)
+        screenshot_b64 = base64.b64encode(screenshot_bytes).decode('utf-8')
+        
+        # Optionally extract DOM tree here, returning placeholder for now
+        dom_tree = "<html><body>Placeholder DOM tree</body></html>"
+        
+        return {
+            "status": "success", 
+            "image": screenshot_b64,
+            "dom": dom_tree
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Snapshot failed: {str(e)}")
+
 def start():
     """Entry point for script execution"""
     uvicorn.run("myai.server:app", host="127.0.0.1", port=8000, reload=False)
