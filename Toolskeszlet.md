@@ -1,7 +1,7 @@
 # 🛠️ MCP Brunella Core - Eszközkészlet (Tool Inventory)
 
 Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikusan generált listája.
-**Generálva:** 2026. 02. 26. 2:12:32
+**Generálva:** 2026. 02. 27. 4:16:29
 
 ---
 
@@ -44,8 +44,6 @@ Ez a dokumentum a szerver által biztosított MCP eszközök (tools) automatikus
 - **github_models_generate**: Generate text using GitHub Models API (GPT-4o, DeepSeek-R1, Grok 3, etc.). Requires GitHub Pro+ subscription.
 
 ## 📦 googleWorkspace
-- **business_export_to_sheets**: Exports a completed business job
-- **calendar_schedule_meeting**: Schedules a meeting in Google Calendar with specific attendees.
 - **gmail_list_messages**: Lists recent emails from Gmail.
 - **calendar_list_events**: Lists upcoming events from Google Calendar.
 - **sheets_append_data**: Appends rows of data to a Google Sheet.

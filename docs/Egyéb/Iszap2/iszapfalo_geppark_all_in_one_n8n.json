@@ -98,9 +98,7 @@
     {
       "parameters": {
         "chatId": "TE_TELEGRAM_CHAT_ID",
-        "text": "=🛠️ *GÉPPARK DIAGNOSZTIKA EREDMÉNY* 🛠️\n\n*Gép azonosító:* {{ $json.adatok.gep_id }}\n*Kategória:* {{ $json.adatok.hiba_kategoria }}\n*Sürgősség:* {{ $json.adatok.surgosseg }}\n\n*Javasolt lépés:*
-{{ $json.adatok.javasolt_lepes }}\n\n*Szükséges alkatrészek:*
-{{ $json.adatok.szukseges_alkatreszek.join(', ')}"",
+        "text": "=GÉPPARK DIAGNOSZTIKA EREDMÉNY \n\nGép azonosító: {{ $json.adatok.gep_id }}\nKategória: {{ $json.adatok.hiba_kategoria }}\nSürgősség: {{ $json.adatok.surgosseg }}\n\nJavasolt lépés:\n{{ $json.adatok.javasolt_lepes }}\n\nSzükséges alkatrészek:\n{{ $json.adatok.szukseges_alkatreszek }}",
         "additionalFields": {
           "parse_mode": "Markdown"
         }

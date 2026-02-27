@@ -1,0 +1,270 @@
+{
+  "name": "Iszapfaló - Munkaidő Nyilvántartó",
+  "description": "AI-alapú munkaidő és költség nyilvántartó rendszer",
+  "nodes": [
+    {
+      "parameters": {},
+      "name": "Start",
+      "type": "n8n-nodes-base.start",
+      "typeVersion": 1,
+      "position": [50, 50]
+    },
+    {
+      "parameters": {
+        "triggerType": "messageCreate"
+      },
+      "name": "Telegram Trigger",
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1,
+      "position": [250, 50],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "jsonData": "{\"message\": \"{{$node[\\\"Telegram Trigger\\\"].json.message}}\", \"chatId\": \"{{$node[\\\"Telegram Trigger\\\"].json.chatId}}\"}"
+      },
+      "name": "Üzenet Feldolgozása",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 1,
+      "position": [450, 50]
+    },
+    {
+      "parameters": {
+        "operation": "query",
+        "baseId": "{{$env.AIRTABLE_BASE_ID}}",
+        "table": "Munkatársak",
+        "filterByFormula": "{Telegram Chat ID} = '{{$node[\"Telegram Trigger\"].json.chatId}}'"
+      },
+      "name": "Munkatárs Lekérdezése",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [650, 50],
+      "credentials": {
+        "airtableApi": "airtable_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "baseId": "{{$env.AIRTABLE_BASE_ID}}",
+        "table": "Munkaidő Nyilvántartás",
+        "columns": {
+          "Munkatárs Neve": "{{$node[\"Munkatárs Lekérdezése\"].json.records[0].fields[\"Munkatárs Neve\"]}}",
+          "Telegram Chat ID": "{{$node[\"Telegram Trigger\"].json.chatId}}",
+          "Dátum": "{{$now.format(\"YYYY-MM-DD\")}}",
+          "Nap Típusa": "Munkanap",
+          "Munkaidő Kezdete": "{{$now.format(\"HH:mm\")}}"
+        }
+      },
+      "name": "Munka Start Rögzítése",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [850, 50],
+      "credentials": {
+        "airtableApi": "airtable_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{$node[\"Telegram Trigger\"].json.chatId}}",
+        "text": "✅ Munkaidő indítva! Kezdés: {{$now.format(\"HH:mm\")}}\\n\\nJó munkát! 💪"
+      },
+      "name": "Telegram Válasz",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [1050, 50],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    },
+    {
+      "parameters": {
+        "triggerType": "cron",
+        "cronExpression": "0 18 * * *"
+      },
+      "name": "Napi Értesítő (18:00)",
+      "type": "n8n-nodes-base.cronTrigger",
+      "typeVersion": 1,
+      "position": [50, 300]
+    },
+    {
+      "parameters": {
+        "operation": "query",
+        "baseId": "{{$env.AIRTABLE_BASE_ID}}",
+        "table": "Munkatársak"
+      },
+      "name": "Munkatársak Lekérdezése",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [250, 300],
+      "credentials": {
+        "airtableApi": "airtable_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{$item.json.fields[\"Telegram Chat ID\"]}}",
+        "text": "📊 Napi Összesítő\\n\\n⏱️ Ledolgozott órák: 8 óra\\n✅ Normál munkanap volt!"
+      },
+      "name": "Napi Értesítő Küldés",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [450, 300],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    },
+    {
+      "parameters": {
+        "triggerType": "cron",
+        "cronExpression": "0 14 * * 5"
+      },
+      "name": "Heti Összesítő (Péntek 14:00)",
+      "type": "n8n-nodes-base.cronTrigger",
+      "typeVersion": 1,
+      "position": [50, 500]
+    },
+    {
+      "parameters": {
+        "operation": "query",
+        "baseId": "{{$env.AIRTABLE_BASE_ID}}",
+        "table": "Munkatársak"
+      },
+      "name": "Munkatársak Heti",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [250, 500],
+      "credentials": {
+        "airtableApi": "airtable_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{$item.json.fields[\"Telegram Chat ID\"]}}",
+        "text": "📊 Heti Összesítő\\n\\n⏱️ Ezen a héten: 38 óra\\n📝 Kérlek, ellenőrizd az adataidat!"
+      },
+      "name": "Heti Összesítő Küldés",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [450, 500],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    },
+    {
+      "parameters": {
+        "triggerType": "cron",
+        "cronExpression": "59 23 * * 5"
+      },
+      "name": "Heti Zárás (Péntek 23:59)",
+      "type": "n8n-nodes-base.cronTrigger",
+      "typeVersion": 1,
+      "position": [50, 700]
+    },
+    {
+      "parameters": {
+        "operation": "query",
+        "baseId": "{{$env.AIRTABLE_BASE_ID}}",
+        "table": "Munkatársak"
+      },
+      "name": "Munkatársak Zárás",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [250, 700],
+      "credentials": {
+        "airtableApi": "airtable_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{$item.json.fields[\"Telegram Chat ID\"]}}",
+        "text": "🔐 Heti Zárás - Az adatbevitel lezárult!\\n\\nJövő héten újra kezdhetsz! 📅"
+      },
+      "name": "Zárás Értesítő Küldés",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [450, 700],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    },
+    {
+      "parameters": {
+        "triggerType": "webhook",
+        "path": "iszapfalo-broadcast"
+      },
+      "name": "Webhook Broadcast",
+      "type": "n8n-nodes-base.webhookTrigger",
+      "typeVersion": 1,
+      "position": [50, 900]
+    },
+    {
+      "parameters": {
+        "operation": "query",
+        "baseId": "{{$env.AIRTABLE_BASE_ID}}",
+        "table": "Munkatársak"
+      },
+      "name": "Munkatársak Broadcast",
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 1,
+      "position": [250, 900],
+      "credentials": {
+        "airtableApi": "airtable_api_key"
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "{{$item.json.fields[\"Telegram Chat ID\"]}}",
+        "text": "📢 Vezetőségi Közlemény:\\n\\n{{$node[\"Webhook Broadcast\"].json.body.uzenet}}"
+      },
+      "name": "Broadcast Küldés",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1,
+      "position": [450, 900],
+      "credentials": {
+        "telegramApi": "telegram_bot_token"
+      }
+    }
+  ],
+  "connections": {
+    "Telegram Trigger": {
+      "main": [[{"node": "Üzenet Feldolgozása", "type": "main", "index": 0}]]
+    },
+    "Üzenet Feldolgozása": {
+      "main": [[{"node": "Munkatárs Lekérdezése", "type": "main", "index": 0}]]
+    },
+    "Munkatárs Lekérdezése": {
+      "main": [[{"node": "Munka Start Rögzítése", "type": "main", "index": 0}]]
+    },
+    "Munka Start Rögzítése": {
+      "main": [[{"node": "Telegram Válasz", "type": "main", "index": 0}]]
+    },
+    "Napi Értesítő (18:00)": {
+      "main": [[{"node": "Munkatársak Lekérdezése", "type": "main", "index": 0}]]
+    },
+    "Munkatársak Lekérdezése": {
+      "main": [[{"node": "Napi Értesítő Küldés", "type": "main", "index": 0}]]
+    },
+    "Heti Összesítő (Péntek 14:00)": {
+      "main": [[{"node": "Munkatársak Heti", "type": "main", "index": 0}]]
+    },
+    "Munkatársak Heti": {
+      "main": [[{"node": "Heti Összesítő Küldés", "type": "main", "index": 0}]]
+    },
+    "Heti Zárás (Péntek 23:59)": {
+      "main": [[{"node": "Munkatársak Zárás", "type": "main", "index": 0}]]
+    },
+    "Munkatársak Zárás": {
+      "main": [[{"node": "Zárás Értesítő Küldés", "type": "main", "index": 0}]]
+    },
+    "Webhook Broadcast": {
+      "main": [[{"node": "Munkatársak Broadcast", "type": "main", "index": 0}]]
+    },
+    "Munkatársak Broadcast": {
+      "main": [[{"node": "Broadcast Küldés", "type": "main", "index": 0}]]
+    }
+  }
+}
