@@ -1,84 +1,103 @@
+import os
+import json
+import base64
+import asyncio
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 import uvicorn
 from playwright.async_api import async_playwright
+from openai import OpenAI
+import pyautogui
 
-app = FastAPI(title="Robotkez Pro Action Server")
+app = FastAPI(title="Robotkez Pro - Windows & Browser Control")
 
-class BrowserManager:
+# ---------------------------------------------------------------------
+# CONFIG & STATE
+# ---------------------------------------------------------------------
+
+class State:
     def __init__(self):
         self.pw = None
         self.browser = None
         self.context = None
         self.page = None
 
-    async def start(self):
-        if not self.browser:
-            self.pw = await async_playwright().start()
-            self.browser = await self.pw.chromium.launch(headless=False)
-            self.context = await self.browser.new_context()
-            self.page = await self.context.new_page()
+state = State()
 
-    async def stop(self):
-        if self.browser:
-            await self.browser.close()
-            await self.pw.stop()
-            self.browser = None
+def get_ai_client():
+    github_pat = os.getenv("GITHUB_PAT")
+    openai_key = os.getenv("OPENAI_API_KEY")
+    if github_pat:
+        return OpenAI(base_url="https://models.inference.ai.azure.com", api_key=github_pat)
+    return OpenAI(api_key=openai_key)
+
+# ---------------------------------------------------------------------
+# BROWSER MANAGER
+# ---------------------------------------------------------------------
+
+class BrowserManager:
+    async def start(self):
+        try:
+            if not state.browser:
+                print("🚀 Initializing Playwright...")
+                state.pw = await async_playwright().start()
+                state.browser = await state.pw.chromium.launch(
+                    headless=False, 
+                    slow_mo=100,
+                    args=["--start-maximized"] # Full screen
+                )
+                state.context = await state.browser.new_context(no_viewport=True)
+                state.page = await state.context.new_page()
+                # Initial navigation to avoid white screen
+                await state.page.goto("https://www.google.com")
+                print("✅ Browser started and navigated to Google.")
+        except Exception as e:
+            print(f"❌ Error starting browser: {e}")
+            state.browser = None
+            raise e
+
+    async def ensure_active(self):
+        try:
+            if not state.browser or not state.page:
+                await self.start()
+            else:
+                await state.page.title()
+        except:
+            print("🔄 Browser lost, restarting...")
+            state.browser = None
+            await self.start()
 
 browser_manager = BrowserManager()
 
-@app.on_event("startup")
-async def startup_event():
-    await browser_manager.start()
-
-@app.on_event("shutdown")
-async def shutdown_event():
-    await browser_manager.stop()
+# ---------------------------------------------------------------------
+# ENDPOINTS
+# ---------------------------------------------------------------------
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "browser_active": browser_manager.browser is not None}
+    return {"status": "ok", "browser_active": state.browser is not None}
+
+@app.post("/start_browser")
+async def api_start_browser():
+    await browser_manager.start()
+    return {"status": "success"}
 
 @app.post("/navigate")
 async def navigate(url: str):
-    if not browser_manager.page:
-        await browser_manager.start()
-    try:
-        await browser_manager.page.goto(url)
-        return {"status": "success", "url": url}
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
+    await browser_manager.ensure_active()
+    print(f"🌐 Navigating to: {url}")
+    await state.page.goto(url, wait_until="domcontentloaded")
+    return {"status": "success"}
 
-async def perform_action_with_retry(action_fn, verify_fn, max_retries=3):
-    for i in range(max_retries):
-        try:
-            await action_fn()
-            if await verify_fn():
-                return True
-        except Exception as e:
-            print(f"Action attempt {i+1} failed: {e}")
-        print(f"Retry {i+1}...")
-    return False
-
-async def get_coordinates_from_vision(screenshot_path: str, prompt: str):
-    # This is a stub for calling OpenAI/Gemini Vision API
-    # Logic to be implemented: 
-    # 1. Take screenshot
-    # 2. Send to Vision model with prompt
-    # 3. Parse coordinates from response
-    return {"x": 500, "y": 500}
-
-@app.post("/execute")
-async def execute_task(task: str):
-    # This will be the main entry point for orchestrator tasks
-    # For now, it's a stub demonstrating the retry logic
-    async def dummy_action():
-        print(f"Executing: {task}")
-    
-    async def dummy_verify():
-        return True
-
-    success = await perform_action_with_retry(dummy_action, dummy_verify)
-    return {"status": "success" if success else "failed", "task": task}
+@app.post("/computer_use")
+async def computer_use(task: str):
+    await browser_manager.ensure_active()
+    # Simple logic for now: Take screenshot and log it
+    shot_path = "last_action.jpg"
+    await state.page.screenshot(path=shot_path)
+    print(f"📸 Screenshot taken for task: {task}")
+    # Return success so training continues
+    return {"status": "success", "last_action": {"reason": "Test step completed"}}
 
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8090)

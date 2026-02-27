@@ -39,12 +39,12 @@ export function GoldStatusWidget() {
     try {
       // Párhuzamosan fetch minden pillar adatot
       const [specs, checkpoints, models, memory, telemetry, audit] = await Promise.all([
-        fetch('/api/specs').then((r) => r.json()),
-        fetch('/api/phoenix/checkpoints').then((r) => r.json()),
-        fetch('/api/router/decisions').then((r) => r.json()),
-        fetch('/api/memory/stats').then((r) => r.json()),
-        fetch('/api/telemetry/usage-summary').then((r) => r.json()),
-        fetch('/api/audit/stats').then((r) => r.json()),
+        fetch('/api/specs').then((r) => r.ok ? r.json() : {}),
+        fetch('/api/phoenix/checkpoints').then((r) => r.ok ? r.json() : {}),
+        fetch('/api/router/decisions').then((r) => r.ok ? r.json() : {}),
+        fetch('/api/memory/stats').then((r) => r.ok ? r.json() : {}),
+        fetch('/api/telemetry/stats').then((r) => r.ok ? r.json() : {}),
+        fetch('/api/audit/stats').then((r) => r.ok ? r.json() : {}),
       ]);
 
       setPillars([
@@ -52,8 +52,8 @@ export function GoldStatusWidget() {
           id: 'spec',
           name: 'Spec Management',
           icon: <FileText className="w-6 h-6" />,
-          status: specs.tracks?.some((t: any) => t.spec_status === 'pending_approval') ? 'warning' : 'active',
-          metric: `${specs.tracks?.filter((t: any) => t.spec_status === 'approved').length || 0} approved`,
+          status: specs.specs?.some((t: { spec_status?: string }) => t.spec_status === 'pending_approval') ? 'warning' : 'active',
+          metric: `${specs.specs?.filter((t: { spec_status?: string }) => t.spec_status === 'approved').length || 0} approved`,
           link: '/gold/specs',
         },
         {

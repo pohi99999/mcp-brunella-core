@@ -382,6 +382,9 @@ export interface TasksResponse {
   status?: string;
 }
 
+// QueuedTask: TaskItem alias used by ProcessControlWidget / TaskDetailsModal / systemSignalStore
+export type QueuedTask = TaskItem;
+
 export async function getTasks(
   limit: number = 20,
   offset: number = 0,
