@@ -31,9 +31,18 @@ Ingyen "minta" lead lista generálása (50 budapesti fogorvos) és kiküldése 1
 
 ### Fázis 5: Wave 2 Bővítés ⏳ (2026-02-27)
 - [ ] 17. Wave 2 email küldés: 2026-02-27 10:00 — 20 új célpont (webdesign + SEO + PR)
-- [ ] 18. Worker bővítés deploy: ügyvéd + ingatlan + könyvelő iparágak ✅ (kód kész)
-- [ ] 19. Worker deploy: vidéki városok (Debrecen, Miskolc, Pécs, Győr) ✅ (kód kész)
+- [x] 18. Worker bővítés deploy: ügyvéd + ingatlan + könyvelő iparágak ✅ (kód kész)
+- [x] 19. Worker deploy: vidéki városok (Debrecen, Miskolc, Pécs, Győr) ✅ (kód kész)
 - [ ] 20. Wave 3 tervezés: ügyvéd/ingatlan leadek alapján (2026-03-01)
+
+### Fázis 6: AI Demo Factory & Személyre Szabott Automatizáció 🚀
+- [x] 21. Infrastruktúra: `myai/demo_factory/` mappa és `templates/` rendszer kialakítása ✅
+- [x] 22. Sablon: Ingatlanos AI API sablon elkészítése (`real_estate_api.py`) ✅
+- [x] 23. Sablon: Könyvelőiroda AI API sablon (Adótanácsadó + Onboarding) ✅
+- [ ] 24. Pilot: Egy konkrét debreceni ingatlanos cég honlapjának elemzése (RobotkezV2)
+- [ ] 25. Pilot: Egy konkrét könyvelőiroda honlapjának elemzése (RobotkezV2)
+- [ ] 26. Gyártás: Személyre szabott demo API-k legenerálása a választott cégeknek
+- [ ] 27. Outreach: "Demo-alapú" email küldése (Wave 3)
 
 ## 📊 Állapot
 
