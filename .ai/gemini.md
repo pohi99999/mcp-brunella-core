@@ -1,3 +1,17 @@
+### 2026-02-27 10:30 - Dashboard UI Kiterjesztés (Projektek és Gyorslinkek)
+
+**Feladat:** Egy új 'Projektek' fájlkezelő menüpont hozzáadása a G:\Brunella\.000_PROJEKTEK mappára fókuszálva, valamint külső gyorslinkek (Gmail, GitHub, Naptár, Gemini, Drive) integrálása a fejlécbe.
+
+**Érintett fájlok:**
+- src/dashboard/components/dashboard/ProjectExplorer.tsx (Létrehozva, FileExplorer alapján)
+- src/dashboard/lib/navigation.tsx (Módosítva: új Projects menü)
+- src/dashboard/components/dashboard/MissionControlLayout.tsx (Módosítva: Gyorslinkek a fejlécben)
+- src/server/routes/files.ts (Módosítva: Engedély a külső meghajtón lévő könyvtár elérésére)
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A backend fájlkezelő API is frissítve lett, hogy biztonságosan engedélyezze a G:\Brunella\.000_PROJEKTEK elérését anélkül, hogy a teljes fájlrendszert megnyitná. Az UI tesztek lefutottak és a build sikeres volt.
+
 ### 2026-02-27 10:00 - Iszapfaló AI Mikroszolgáltatások Tervezése és Implementálása
 
 **Feladat:** Két független AI modul (Géppark Figyelő és Okos Ajánlatadó) megtervezése, dokumentálása és egy teljesen független Python (FastAPI) API formájában történő implementálása az Iszapfaló Kft. számára.
