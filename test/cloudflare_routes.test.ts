@@ -24,7 +24,7 @@ describe("Cloudflare routes", () => {
   let app: express.Express;
 
   beforeEach(() => {
-    vi.restoreAllMocks();
+    vi.clearAllMocks();
     app = express();
     app.use(express.json());
     app.use("/api/cloudflare", createCloudflareRoutes());
