@@ -257,6 +257,18 @@ export async function startWebServer() {
     });
   });
 
+  io.of('/robotkez-overlay').on('connection', (socket) => {
+    socket.on('user_message', async (msg) => {
+      try {
+        const { robotkezBridge } = await import('../orchestrator/robotkez_bridge.js');
+        const response = await robotkezBridge.handleMessage(msg.text);
+        socket.emit('message', { text: response });
+      } catch (e: any) {
+        socket.emit('message', { text: `Hiba történt: ${e.message}` });
+      }
+    });
+  });
+
   registerEdgeWebSocketHandlers(io);
   registerCEANWebSocketHandlers(io);
   registerFleetWebSocketHandlers(io);
