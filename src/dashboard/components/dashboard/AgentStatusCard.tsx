@@ -2,8 +2,9 @@ import { useState } from 'react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { CaretDown, CaretUp, Robot, Lightning, Play, ShareNetwork, PencilSimple, Plus, X } from '@phosphor-icons/react'
+import { CaretDown, CaretUp, Lightning, Play, ShareNetwork, PencilSimple, Plus, X } from '@phosphor-icons/react'
 import { cn } from '@/lib/utils'
+import * as api from '@/lib/apiService'
 import type { RegistryAgent } from '@/lib/apiService'
 import {
   Dialog,
@@ -35,7 +36,17 @@ interface AgentStatusCardProps {
 }
 
 export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExecute, allAgents = [] }: AgentStatusCardProps) {
-  // Early return if no agent provided
+  // All hooks MUST be called unconditionally (Rules of Hooks)
+  const [expanded, setExpanded] = useState(false)
+  const [quickTask, setQuickTask] = useState('')
+  const [delegateOpen, setDelegateOpen] = useState(false)
+  const [selectedDelegate, setSelectedDelegate] = useState<string>('')
+  const [delegateTask, setDelegateTask] = useState('')
+  const [capabilities, setCapabilities] = useState<string[]>([])
+  const [newCapability, setNewCapability] = useState('')
+  const [isEditingCaps, setIsEditingCaps] = useState(false)
+
+  // Early return if no agent provided (after hooks)
   if (!agent) {
     return (
       <Card className="glass-card border-white/5">
@@ -49,23 +60,15 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
     )
   }
 
-  const [expanded, setExpanded] = useState(false)
-  const [quickTask, setQuickTask] = useState('')
-  const [delegateOpen, setDelegateOpen] = useState(false)
-  const [selectedDelegate, setSelectedDelegate] = useState<string>('')
-  const [delegateTask, setDelegateTask] = useState('')
-
   // Hungarian data fallback
-  const huData = (agentCapsHu as any)[agent.name] || {};
+  const huData = (agentCapsHu as Record<string, { title?: string; description?: string; capabilities?: string[] }>)[agent.name] || {};
   const displayTitle = huData.title || agent.name;
   const displayRole = huData.description ? "Specializált Ügynök" : (agent.role || 'Agent');
   const displayDescription = huData.description || agent.description;
   const displayCapabilities = huData.capabilities || agent.capabilities || [];
 
-  // Capability Editing State
-  const [capabilities, setCapabilities] = useState<string[]>(displayCapabilities)
-  const [newCapability, setNewCapability] = useState('')
-  const [isEditingCaps, setIsEditingCaps] = useState(false)
+  // Sync capabilities from agent data if not yet set
+  const effectiveCaps = capabilities.length > 0 ? capabilities : displayCapabilities;
 
   const statusConfig = {
     idle: {
@@ -101,51 +104,32 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
     if (!selectedDelegate || !delegateTask.trim()) return
 
     try {
-      const response = await fetch(`/api/agents/${agent.name}/execute`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          task: `Delegate to ${selectedDelegate}: ${delegateTask}`,
-          context: { delegatedTo: selectedDelegate }
-        })
-      });
-
-      if (!response.ok) throw new Error('Delegation failed')
-
+      await api.executeAgent(
+        agent.name,
+        `Delegate to ${selectedDelegate}: ${delegateTask}`,
+        { delegatedTo: selectedDelegate }
+      )
       toast.success(`Feladat delegálva ${selectedDelegate}-nek!`)
       setDelegateOpen(false)
       setDelegateTask('')
       setSelectedDelegate('')
-    } catch (e) {
-      toast.error('Delegálás sikertelen')
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : 'Delegálás sikertelen'
+      toast.error(msg)
     }
   }
 
-  const handleAddCapability = async () => {
+  const handleAddCapability = () => {
     if (!newCapability.trim()) return
-    const updated = [...capabilities, newCapability.trim()]
+    const updated = [...effectiveCaps, newCapability.trim()]
     setCapabilities(updated)
     setNewCapability('')
-    await saveCapabilities(updated)
+    toast.success('Képesség hozzáadva (session-szintű)')
   }
 
-  const handleRemoveCapability = async (cap: string) => {
-    const updated = capabilities.filter(c => c !== cap)
+  const handleRemoveCapability = (cap: string) => {
+    const updated = effectiveCaps.filter(c => c !== cap)
     setCapabilities(updated)
-    await saveCapabilities(updated)
-  }
-
-  const saveCapabilities = async (caps: string[]) => {
-    try {
-      await fetch(`/api/agents/${agent.name}/capabilities`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ capabilities: caps })
-      })
-      toast.success('Képességek frissítve')
-    } catch {
-      toast.error('Hiba a mentéskor')
-    }
   }
 
   return (
@@ -258,7 +242,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                         <Button size="sm" onClick={handleAddCapability} className="h-8 w-8 p-0"><Plus size={14} /></Button>
                       </div>
                       <div className="flex flex-wrap gap-1 max-h-[200px] overflow-y-auto">
-                        {capabilities.map(cap => (
+                        {effectiveCaps.map(cap => (
                           <Badge key={cap} variant="secondary" className="text-[10px] gap-1 pr-1">
                             {cap}
                             <X
@@ -274,8 +258,8 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                 </Popover>
               </div>
               <div className="flex flex-wrap gap-1.5">
-                {capabilities?.length > 0 ? (
-                  capabilities.map((cap) => (
+                {effectiveCaps.length > 0 ? (
+                  effectiveCaps.map((cap) => (
                     <Badge key={cap} variant="outline" className="text-[10px] font-mono text-cyan-400/90 border-cyan-500/20 bg-cyan-500/5 px-2 py-0.5">
                       {cap}
                     </Badge>

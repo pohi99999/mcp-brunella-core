@@ -14,7 +14,7 @@ export function TaskDetailsModal({ task, isOpen, onClose }: TaskDetailsModalProp
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[800px]">
         <DialogHeader>
-          <DialogTitle>Feladat Részletei: {task.description}</DialogTitle>
+          <DialogTitle>Feladat Részletei: {task.task}</DialogTitle>
           <DialogDescription>
             Task ID: {task.id}
           </DialogDescription>
@@ -23,7 +23,7 @@ export function TaskDetailsModal({ task, isOpen, onClose }: TaskDetailsModalProp
           <p className="text-sm text-zinc-500">Ügynök: <span className="font-semibold text-white">{task.agent}</span></p>
           <p className="text-sm text-zinc-500">Státusz: <span className="font-semibold text-white">{task.status}</span></p>
           <p className="text-sm text-zinc-500">Létrehozva: <span className="font-semibold text-white">{new Date(task.created_at).toLocaleString()}</span></p>
-          {task.startedAt && <p className="text-sm text-zinc-500">Indítva: <span className="font-semibold text-white">{new Date(task.startedAt).toLocaleString()}</span></p>}
+          {task.completed_at && <p className="text-sm text-zinc-500">Indítva: <span className="font-semibold text-white">{new Date(task.completed_at).toLocaleString()}</span></p>}
           {task.completed_at && <p className="text-sm text-zinc-500">Befejezve: <span className="font-semibold text-white">{new Date(task.completed_at).toLocaleString()}</span></p>}
           {task.context && (
             <div>

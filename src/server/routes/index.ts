@@ -10,6 +10,7 @@ import {
   createOllamaRoutes,
   createGeminiRoutes,
   createGithubModelsRoutes,
+  createLLMRoutes,
 } from "./llm.js";
 import { createFileRoutes, createRagRoutes } from "./files.js";
 import { createTaskRoutes } from "./tasks.js";
@@ -26,7 +27,7 @@ import { createTTSRoutes } from "./tts.js";
 import { createRecommendationRoutes } from "./recommendation.js";
 import { createMachinesRouter } from "./machines.js";
 import { createEnterpriseRouter, createEnterpriseAnalyticsRouter } from "./enterprise.js";
-import { createSystemArchitectureRouter } from "./system.js";
+import { createSystemArchitectureRouter, createSystemControlRouter } from "./system.js";
 
 export {
   createHealthRoutes,
@@ -91,6 +92,8 @@ export function createV1Router(): Router {
   router.use("/enterprise", createEnterpriseRouter());
   router.use("/enterprise/analytics", createEnterpriseAnalyticsRouter());
   router.use("/system", createSystemArchitectureRouter());
+  router.use("/system", createSystemControlRouter());
+  router.use("/llm", createLLMRoutes());
 
   return router;
 }

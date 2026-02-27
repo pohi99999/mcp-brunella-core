@@ -133,7 +133,7 @@ export function initializeNavigation() {
     { id: "python-workers", label: "Python Workers", icon: Cpu, component: <PythonWorkersPanel /> },
     { id: "inventory", label: "Assets", icon: Box, component: <InventoryCatalog /> },
     { id: "files", label: "Filesystem", icon: FolderOpen, component: <FileExplorer /> },
-    { id: "projects", label: "Projektek", icon: FolderOpen, component: <ProjectExplorer /> },
+    // { id: "projects", label: "Projektek", icon: FolderOpen, component: <ProjectExplorer /> },
     { id: "enterprise-suite", label: "Enterprise Suite", icon: Briefcase, component: <EnterpriseSuitePanel /> },
     { id: "studio", label: "Brunella Studio", icon: Palette, component: <BrunellaStudio /> },
     { id: "campaign-studio", label: "Kampány Stúdió", icon: DollarSign, component: <CampaignStudio /> },
@@ -162,7 +162,7 @@ export function initializeNavigation() {
   navigationRegistry.registerGroup({ title: "Bevétel", icon: DollarSign, items: ["campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "lead-mining", "marketwatcher", "inventory"] });
   navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "tasks"] });
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] });
-  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "files", "projects", "settings", "n8n", "langflow"] });
+  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "files", "settings", "n8n", "langflow"] });
 
   logInfo("NavigationRegistry", "Navigation Registry Initialized.");
 }
