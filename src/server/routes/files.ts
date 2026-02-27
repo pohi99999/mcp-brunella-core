@@ -60,7 +60,9 @@ export function createFileRoutes(): Router {
             }
 
             const fullPath = path.resolve(process.cwd(), relPath);
-            if (!fullPath.startsWith(process.cwd())) {
+            const isAllowedExternal = fullPath.startsWith('G:\\Brunella\\.000_PROJEKTEK') || fullPath.startsWith('G:/Brunella/.000_PROJEKTEK');
+            
+            if (!fullPath.startsWith(process.cwd()) && !isAllowedExternal) {
                 res.status(403).json({ error: 'Access denied' });
                 return;
             }
@@ -93,7 +95,9 @@ export function createFileRoutes(): Router {
             }
 
             const fullPath = path.resolve(process.cwd(), filePath);
-            if (!fullPath.startsWith(process.cwd())) {
+            const isAllowedExternal = fullPath.startsWith('G:\\Brunella\\.000_PROJEKTEK') || fullPath.startsWith('G:/Brunella/.000_PROJEKTEK');
+            
+            if (!fullPath.startsWith(process.cwd()) && !isAllowedExternal) {
                 res.status(403).json({ error: 'Access denied' });
                 return;
             }

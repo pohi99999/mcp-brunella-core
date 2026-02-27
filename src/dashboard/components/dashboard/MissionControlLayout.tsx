@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Zap, ChevronDown, Menu, X } from "lucide-react";
+import { Zap, ChevronDown, Menu, X, Mail, Github, Calendar, Sparkles, HardDrive } from "lucide-react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
@@ -70,6 +70,23 @@ export function MissionControlLayout() {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            <div className="h-4 w-[1px] bg-white/10 mx-2" />
+            <Button variant="ghost" size="icon" asChild title="Gmail" className="text-zinc-400 hover:text-white h-8 w-8">
+              <a href="https://mail.google.com/mail/u/0/" target="_blank" rel="noreferrer"><Mail size={16} /></a>
+            </Button>
+            <Button variant="ghost" size="icon" asChild title="GitHub" className="text-zinc-400 hover:text-white h-8 w-8">
+              <a href="https://github.com/pohi99999" target="_blank" rel="noreferrer"><Github size={16} /></a>
+            </Button>
+            <Button variant="ghost" size="icon" asChild title="Google Calendar" className="text-zinc-400 hover:text-white h-8 w-8">
+              <a href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noreferrer"><Calendar size={16} /></a>
+            </Button>
+            <Button variant="ghost" size="icon" asChild title="Google Drive" className="text-zinc-400 hover:text-white h-8 w-8">
+              <a href="https://drive.google.com/drive/my-drive" target="_blank" rel="noreferrer"><HardDrive size={16} /></a>
+            </Button>
+            <Button variant="ghost" size="icon" asChild title="Gemini Web" className="text-zinc-400 hover:text-white h-8 w-8">
+              <a href="https://gemini.google.com/u/0/gem/c9db4e33647c" target="_blank" rel="noreferrer"><Sparkles size={16} /></a>
+            </Button>
           </nav>
         </div>
 
