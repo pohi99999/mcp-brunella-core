@@ -4,14 +4,158 @@
  *
  * GET /api/v1/system/architecture-status
  * A 4 réteg (Ingestion, Knowledge, Orchestration, Security) valós idejű metrikái.
+ *
+ * GET /api/system/status → ServiceControlWidget
+ * POST /api/system/start-service → Szolgáltatás indítása
+ * POST /api/system/stop-service → Szolgáltatás leállítása
  */
 
 import { Router } from 'express';
+import { exec } from 'child_process';
 import { agentManager } from '../../agents/AgentManager.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
 import { getGlobalDb } from '../../utils/globalDb.js';
 import { getRAGCount } from '../../utils/rag.js';
 import { logInfo, logError } from '../../utils/logger.js';
+import {
+  checkOllamaHealth,
+  checkAnythingLLMHealth,
+  checkPythonHealth,
+} from '../../utils/health.js';
+
+/**
+ * Segédfüggvény: shell parancs végrehajtása Promise-ként
+ */
+function execAsync(command: string): Promise<{ stdout: string; stderr: string }> {
+  return new Promise((resolve, reject) => {
+    exec(command, { timeout: 15000 }, (error, stdout, stderr) => {
+      if (error) reject(new Error(error.message));
+      else resolve({ stdout, stderr });
+    });
+  });
+}
+
+/**
+ * ServiceControlWidget végpontjai:
+ * GET  /status          → online/offline állapot minden szolgáltatáshoz
+ * POST /start-service   → szolgáltatás indítása
+ * POST /stop-service    → szolgáltatás leállítása
+ */
+export function createSystemControlRouter(): Router {
+  const router = Router();
+
+  // GET /api/system/status
+  router.get(
+    '/status',
+    asyncHandler(async (_req, res) => {
+      const [ollama, python, anythingllm] = await Promise.allSettled([
+        checkOllamaHealth(),
+        checkPythonHealth(),
+        checkAnythingLLMHealth(),
+      ]);
+
+      const toStatus = (r: PromiseSettledResult<{ status: string }>) => {
+        if (r.status === 'rejected') return 'offline';
+        return r.value.status === 'healthy' ? 'online' : 'offline';
+      };
+
+      const services = [
+        {
+          id: 'ollama',
+          status: toStatus(ollama),
+          lastCheck: new Date().toISOString(),
+          error: ollama.status === 'rejected' ? String(ollama.reason) : undefined,
+        },
+        {
+          id: 'python',
+          status: toStatus(python),
+          lastCheck: new Date().toISOString(),
+          error: python.status === 'rejected' ? String(python.reason) : undefined,
+        },
+        {
+          id: 'anythingllm',
+          status: toStatus(anythingllm),
+          lastCheck: new Date().toISOString(),
+          error: anythingllm.status === 'rejected' ? String(anythingllm.reason) : undefined,
+        },
+      ];
+
+      res.json(services);
+    }),
+  );
+
+  // POST /api/system/start-service
+  router.post(
+    '/start-service',
+    asyncHandler(async (req, res) => {
+      const { service } = req.body as { service?: string };
+      if (!service) {
+        res.status(400).json({ success: false, message: 'service mező kötelező' });
+        return;
+      }
+
+      try {
+        if (service === 'ollama') {
+          const cmd = process.platform === 'win32' ? 'start /B ollama serve' : 'ollama serve &';
+          await execAsync(cmd).catch(() => {
+            // background process – hiba várható ha már fut
+          });
+          res.json({ success: true, message: 'Ollama elindult' });
+        } else if (service === 'python') {
+          const cmd = process.platform === 'win32'
+            ? 'start /B uvicorn myai.server:app --port 8000'
+            : 'uvicorn myai.server:app --port 8000 &';
+          await execAsync(cmd).catch(() => {});
+          res.json({ success: true, message: 'Python szerver elindult' });
+        } else if (service === 'anythingllm') {
+          res.json({ success: false, message: 'AnythingLLM Desktop app – indítsd el manuálisan' });
+        } else {
+          res.status(400).json({ success: false, message: `Ismeretlen szolgáltatás: ${service}` });
+        }
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        logError('SystemControl', `Start service hiba (${service}): ${msg}`);
+        res.status(500).json({ success: false, message: msg });
+      }
+    }),
+  );
+
+  // POST /api/system/stop-service
+  router.post(
+    '/stop-service',
+    asyncHandler(async (req, res) => {
+      const { service } = req.body as { service?: string };
+      if (!service) {
+        res.status(400).json({ success: false, message: 'service mező kötelező' });
+        return;
+      }
+
+      try {
+        if (service === 'ollama') {
+          const cmd = process.platform === 'win32'
+            ? 'taskkill /F /IM ollama.exe'
+            : 'pkill -f ollama';
+          await execAsync(cmd);
+          res.json({ success: true, message: 'Ollama leállt' });
+        } else if (service === 'python') {
+          const cmd = process.platform === 'win32'
+            ? 'taskkill /F /FI "WINDOWTITLE eq uvicorn*" /T'
+            : 'pkill -f uvicorn';
+          await execAsync(cmd);
+          res.json({ success: true, message: 'Python szerver leállt' });
+        } else {
+          res.status(400).json({ success: false, message: `Leállítás nem támogatott: ${service}` });
+        }
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        logError('SystemControl', `Stop service hiba (${service}): ${msg}`);
+        res.status(500).json({ success: false, message: `Leállítás sikertelen: ${msg}` });
+      }
+    }),
+  );
+
+  return router;
+}
 
 export function createSystemArchitectureRouter(): Router {
   const router = Router();

@@ -27,7 +27,7 @@ export default defineConfig({
         // Manual chunk splitting for better caching
         manualChunks: {
           // Vendor chunk: React ecosystem
-          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-react': ['react', 'react-dom'],
           // Vendor chunk: UI libraries
           'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tooltip', '@radix-ui/react-slot'],
           // Vendor chunk: Charts & visualization
@@ -41,15 +41,8 @@ export default defineConfig({
         assetFileNames: 'assets/[name]-[hash][extname]',
       },
     },
-    // Compression & minification
-    minify: 'terser',
-    terserOptions: {
-      compress: {
-        drop_console: true, // Remove console.log in production
-        drop_debugger: true,
-        pure_funcs: ['console.log', 'console.debug'], // Remove specific console methods
-      },
-    },
+    // Compression & minification (esbuild is built-in, no extra package needed)
+    minify: 'esbuild',
     // Source maps for debugging (disable in production for smaller size)
     sourcemap: false,
     // Chunk size warning threshold

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Zap, ChevronDown, Menu, X, Mail, Github, Calendar, Sparkles, HardDrive } from "lucide-react";
+import * as api from "@/lib/apiService";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
@@ -17,10 +18,25 @@ export function MissionControlLayout() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [selectedModel, setSelectedModel] = useState("gpt-4o");
   const { currentLayout, setLayoutMode, layouts } = useLayout();
-  
-  // Mock signals for debug
-  const isConnected = true;
-  const healthStatus = { status: 'HEALTHY' };
+  const [isConnected, setIsConnected] = useState(false);
+  const [coreStatus, setCoreStatus] = useState<'HEALTHY' | 'DEGRADED' | 'OFFLINE'>('OFFLINE');
+
+  useEffect(() => {
+    const check = async () => {
+      try {
+        const health = await api.checkHealth();
+        const overallOk = health.status === 'ok';
+        setIsConnected(true);
+        setCoreStatus(overallOk ? 'HEALTHY' : 'DEGRADED');
+      } catch {
+        setIsConnected(false);
+        setCoreStatus('OFFLINE');
+      }
+    };
+    check();
+    const interval = setInterval(check, 30000);
+    return () => clearInterval(interval);
+  }, []);
 
   const activeItem = navigationRegistry.getItem(activeTab);
 
@@ -94,9 +110,13 @@ export function MissionControlLayout() {
           <div className="hidden sm:flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
              <div className={cn(
                "w-2 h-2 rounded-full",
-               isConnected && healthStatus?.status === 'HEALTHY' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+               isConnected && coreStatus === 'HEALTHY' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"
+               : coreStatus === 'DEGRADED' ? "bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.8)]"
+               : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"
              )} />
-             <span className="text-[10px] font-mono font-bold text-zinc-400">{isConnected ? healthStatus?.status === 'HEALTHY' ? "CORE_ONLINE" : "CORE_DEGRADED" : "CORE_OFFLINE"}</span>
+             <span className="text-[10px] font-mono font-bold text-zinc-400">
+               {isConnected ? `CORE_${coreStatus}` : "CORE_OFFLINE"}
+             </span>
           </div>
           <ThemeToggle />
         </div>

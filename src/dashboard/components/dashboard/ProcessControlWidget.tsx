@@ -55,7 +55,7 @@ function SortableItem({ task, onControlAction, onViewDetails, onViewTrace }: Sor
       className="flex items-center justify-between p-3 border border-white/10 rounded-lg bg-black/10 touch-action-none"
     >
       <div className="flex flex-col cursor-pointer" onClick={() => onViewDetails(task)}>
-        <span className="text-sm font-semibold text-white">{task.description}</span>
+        <span className="text-sm font-semibold text-white">{task.task}</span>
         <span className="text-xs text-zinc-500">Ügynök: {task.agent}</span>
         <span className="text-xs text-zinc-600">Státusz: {task.status}</span>
       </div>
