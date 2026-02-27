@@ -2,11 +2,51 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-02-25 03:40
+**Utolsó frissítés:** 2026-02-27 08:00
 
 ---
 
 ## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-02-27 05:00-08:00 - Portfólió oldal fejlesztések (my_websitev2 / Netlify)
+
+**Feladat:** Portfólió bővítés, új oldalak, fotók, navigáció javítás
+
+**Érintett repó:** `pohi99999/my_websitev2` (Netlify: pohankaestarsa.netlify.app)
+
+**Commitok (GitHub, my_websitev2):**
+- `c4830bf` — Pohi AI Pro dedikált oldal (`/portfolio/pohi-ai-pro`) — PDF alapján: 3 szerepkör, Logisztikai Irányítóközpont, kihívások, roadmap, tech stack
+- `4927182` — Portfolio.tsx kártya link javítva `href="#"` → `/portfolio/pohi-ai-pro`
+- `3c70d45` — 12 fotó feltöltve (`p1-p12.jpg` → `public/images/pohi-ai-pro/pro-01..pro-12.jpg`)
+- `054afe7` — Galéria frissítés: `pro-01.jpg` hero képként + 11 kép 4 oszlopos rácsban
+- `bf52fd9` — `/termekek/brunella-agents` → redirect `/portfolio/brunella-bas` (régi gomb új tartalomra mutat)
+- `9126bd9` — Főoldal: új `AIFolyamatok` szekció (`#ai-folyamatok`), Hero "Kapcsolat" gomb → "AI Ügynöki Folyamatok", hu.js + en.js fordítás frissítve
+- `c0eaa29` — Build fix: `app/en/[[...slug]]/page.tsx` — `BrunellaAgentsPage` void JSX hiba javítva, `redirect()` közvetlen hívásra cserélve
+
+**Érintett fájlok (my_websitev2):**
+- `app/portfolio/pohi-ai-pro/page.jsx` (ÚJ)
+- `public/images/pohi-ai-pro/pro-01..pro-12.jpg` (ÚJ — 12 fotó)
+- `app/components/AIFolyamatok.tsx` (ÚJ — főoldali szekció, 6 kártya, számok, CTA)
+- `app/components/Portfolio.tsx` (módosítva — link fix)
+- `app/components/Hero.tsx` (módosítva — ctaSecondary href → `#ai-folyamatok`)
+- `app/locales/hu.js` + `app/locales/en.js` (módosítva — ctaSecondary szöveg)
+- `app/termekek/brunella-agents/page.jsx` (módosítva — redirect-re cserélve)
+- `app/en/[[...slug]]/page.tsx` (módosítva — build fix)
+- `app/page.jsx` (módosítva — `AIFolyamatok` komponens importálva)
+
+**Eredmények:**
+✅ `/portfolio/pohi-ai-pro` — teljes dedikált oldal a PDF dokumentáció alapján
+✅ 12 db Pohi AI Pro képernyőkép feltöltve és beépítve
+✅ `/termekek/brunella-agents` → automatikusan `/portfolio/brunella-bas`-ra dob
+✅ Főoldal "AI Ügynöki Folyamatok" szekció élőben (6 service kártya + CTA)
+✅ Netlify build javítva (TypeScript void JSX hiba megszüntetve)
+
+**Státusz:** 🟢 100% KÉSZ — Production deployed
+**Következő ötlet:** A "Üzleti Folyamatok" portfólió kártya (#3) is kaphatna dedikált oldalt
+
+---
+
+## 📋 ELŐZŐ MUNKAMENET
 
 ### 2026-02-25 01:00-03:40 - Lead Intelligence Worker + Trojan Horse Campaign Deploy
 
