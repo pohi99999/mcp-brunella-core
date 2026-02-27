@@ -9,7 +9,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const router = Router();
 
-const TEMP_AUDIO_DIR = path.join(process.cwd(), "public", "audio");
+const TEMP_AUDIO_DIR = path.join(process.cwd(), "build", "public", "audio");
 if (!fs.existsSync(TEMP_AUDIO_DIR)) {
   fs.mkdirSync(TEMP_AUDIO_DIR, { recursive: true });
 }

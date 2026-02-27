@@ -63,6 +63,71 @@ export function NeuralLinkChat() {
     return restored?.selectedGeminiModel ?? "";
   });
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const startListening = () => {
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      toast.error("A böngésződ nem támogatja a hangfelismerést.");
+      return;
+    }
+    
+    const recognition = new SpeechRecognition();
+    recognition.lang = 'hu-HU';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      setIsListening(true);
+      toast.info("Figyelek...");
+    };
+
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript;
+      setInput(transcript);
+      toast.success("Sikeres hangfelismerés.");
+    };
+
+    recognition.onerror = (event: any) => {
+      console.error("Speech recognition error", event.error);
+      setIsListening(false);
+      toast.error("Hiba a hangfelismerés során.");
+    };
+
+    recognition.onend = () => {
+      setIsListening(false);
+    };
+
+    recognition.start();
+  };
+
+  const playTTS = async (text: string) => {
+    try {
+      setIsSpeaking(true);
+      const response = await fetch('/api/v1/voice/tts', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text })
+      });
+      const data = await response.json();
+      if (data.url) {
+        if (audioRef.current) {
+          audioRef.current.pause();
+        }
+        const audio = new Audio(data.url);
+        audioRef.current = audio;
+        audio.onended = () => setIsSpeaking(false);
+        audio.play();
+      } else {
+        setIsSpeaking(false);
+      }
+    } catch (e) {
+      console.error('TTS error', e);
+      setIsSpeaking(false);
+    }
+  };
   const [activeAgents, setActiveAgents] = useState<{name: string, task: string}[]>([]);
   const [expandedThoughts, setExpandedThoughts] = useState<
     Record<number, boolean>
@@ -180,6 +245,10 @@ export function NeuralLinkChat() {
           screenshot: response.screenshot,
         },
       ]);
+      
+      // Auto-play TTS on assistant response
+      playTTS(response.message);
+
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Generálás sikertelen";
       toast.error(msg);
@@ -348,6 +417,15 @@ export function NeuralLinkChat() {
               className="min-h-[44px] max-h-[150px] bg-zinc-900/50 border-zinc-800 resize-none text-sm py-3"
               disabled={isLoading}
             />
+            <Button
+              onClick={startListening}
+              variant="outline"
+              size="icon"
+              className={`h-11 w-11 shrink-0 rounded-xl transition-all duration-300 ${isListening ? 'bg-red-500/20 text-red-500 border-red-500/50 animate-pulse' : 'bg-zinc-900/50 border-zinc-800'}`}
+              title="Hangutasítás (Magyar)"
+            >
+              {isSpeaking ? <SpeakerHigh size={20} className="animate-bounce text-primary" /> : <Microphone size={20} weight={isListening ? "fill" : "regular"} />}
+            </Button>
             <Button
               onClick={send}
               disabled={!input.trim() || isLoading}
