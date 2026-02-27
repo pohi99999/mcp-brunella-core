@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 26. 2:12:29
+**Generálva:** 2026. 02. 27. 4:16:25
 **Script:** 
 
 ---
@@ -2408,6 +2408,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 Dockerfile.browseruse
       - 📄 requirements.txt
     - 📂 **migrations**
+      - 📄 0001_chat_sync.sql
       - 📄 0001_initial_schema.sql
       - 📄 0002_task_analytics.sql
     - 📂 **n8n**
@@ -2415,6 +2416,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 bas-task-handler.json
     - 📂 **src**
       - 📄 browser.ts
+      - 📄 chat-sync-stub.ts
       - 📄 index.ts
       - 📄 swarmCoordinator.ts
     - 📄 docker-compose.yml
@@ -2851,6 +2853,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 meta.json
         - 📄 plan.md
         - 📄 spec.md
+      - 📂 **cloudflare_workers_migration_20260226**
+        - 📄 meta.json
+        - 📄 spec.md
       - 📂 **creative_friction_mediator_20260212**
         - 📄 meta.json
         - 📄 spec.md
@@ -2923,15 +2928,19 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 email.md
         - 📄 fogorvosok_leads_20260224_2036.csv
         - 📄 fogorvosok_leads_CLEAN.csv
+        - 📄 Leads_Master - Google Táblázatok (József Péter).lnk
         - 📄 leads_master_sheets.gs
         - 📄 Leads_Master.ods
         - 📄 meta.json
         - 📄 outreach_drafts.md
+        - 📄 outreach_wave2.md
         - 📄 target_agencies.md
         - 📄 technical_audit.md
         - 📄 track.md
         - 📄 tracks.md
         - 📄 trojan_horse_upload.gs
+        - 📄 wave2_emails_ready.md
+        - 📄 wave2_sheets_addon.gs
     - 📄 BAS_ARCHITECTURE_v2.md
     - 📄 CHANGELOG.md
     - 📄 epp-v2.md
@@ -3167,55 +3176,509 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 203-3b7495bc-21b5-42b5-91e1-f5ab241114c5.txn
           - 📄 204-35c32847-1b35-4950-93b4-010cf38fd330.txn
           - 📄 205-ee9bb699-c8cd-4660-a254-e9932efc74e0.txn
+          - 📄 206-adf7225c-9db9-4294-9af9-61e73ca281d9.txn
+          - 📄 207-511d5648-dd70-463f-97cd-6692642077ff.txn
+          - 📄 208-46e9c41f-32e1-4cbf-9daf-dcdca5d1990d.txn
+          - 📄 209-5dbd751b-caf9-4a24-966e-18dddcc6dc5b.txn
           - 📄 21-cfd0b29f-3b94-4a68-992d-4207d1dc6623.txn
+          - 📄 210-04c3f72a-6048-444f-83b7-965c51dc6354.txn
+          - 📄 211-1a347fa1-7189-46c6-b8de-0f3e3ed2b33b.txn
+          - 📄 212-7b1e242b-5370-43f4-8b7f-7745fa1dd69c.txn
+          - 📄 213-80424efc-b29c-464a-9dc5-7025a3fe0607.txn
+          - 📄 214-1986f7bd-1916-4786-8c80-188c3cb823c0.txn
+          - 📄 215-633f5ad7-1c50-464e-957c-22aaf12659c3.txn
+          - 📄 216-fdc72ef8-f194-48b1-b580-b10687546698.txn
+          - 📄 217-10fe0e5d-96c5-422a-bef4-005ce63e37e8.txn
+          - 📄 218-c8d4ed45-a987-4d71-b1bf-7ae06ed88cfc.txn
+          - 📄 219-9e588a92-5574-4879-b313-afc93886d4f8.txn
           - 📄 22-5d850808-6af2-40e4-a45b-340ac83d4edd.txn
+          - 📄 220-506197ec-dcfa-4b86-a077-61decede6f3d.txn
+          - 📄 221-66c39fae-15b5-4222-8977-eb1da54fd18e.txn
+          - 📄 222-d2ac29a9-fb0e-4b82-a9d0-a8d1097cf573.txn
+          - 📄 223-a9edf4d8-2c08-4a18-a6d4-2f05453bf735.txn
+          - 📄 224-178eeab3-f995-42a1-870f-478a1473dc0e.txn
+          - 📄 225-924ae7ad-05e7-4414-8be8-681564d753f0.txn
+          - 📄 226-523b7d88-fc30-4a91-8a92-b3b9bff6bb32.txn
+          - 📄 227-9d22e2ab-6cc8-453c-8f19-2b6f772ebdf9.txn
+          - 📄 228-d092aad9-1e2c-4ebd-9297-99b27435efb1.txn
+          - 📄 229-b2e3183d-400a-4730-9af3-1f4e2369191e.txn
           - 📄 23-f7416a62-dc46-40ed-a027-71c62e087da5.txn
+          - 📄 230-24d65a98-0023-460c-8bb0-7a585be2854f.txn
+          - 📄 231-f25e6cd6-883e-4827-8f7f-88d290cf589c.txn
+          - 📄 232-30f1b5d2-7e8d-4814-9def-091ec7cd78d2.txn
+          - 📄 233-168b8f5a-8b51-407d-a139-b32e558228c8.txn
+          - 📄 234-793bb769-3817-4b34-b8cf-ac752b128421.txn
+          - 📄 235-f06f82bd-7813-4b6c-9d6c-9659343c10c5.txn
+          - 📄 236-55da4f44-49bc-431a-ad27-9eeae18aae42.txn
+          - 📄 237-db401cd0-c567-433f-9f71-3515eb690aa7.txn
+          - 📄 238-bd5ac326-e1d6-4f39-8b9e-1c339cfd0d13.txn
+          - 📄 239-211eebbe-525a-4594-a27c-56db15c946bf.txn
           - 📄 24-31a63aae-a7cb-4102-b94e-d42cf6497561.txn
+          - 📄 240-a216165d-175d-45c5-a162-007992b60f5c.txn
+          - 📄 241-be385bec-b404-46c8-920c-0c5bce02c53a.txn
+          - 📄 242-0dc6cd4a-c68b-4f14-af09-e5412bf31ff8.txn
+          - 📄 243-c0f0b306-af84-4f9a-9a29-d4842755c50a.txn
+          - 📄 244-6f7479d0-a088-431c-8443-dda0d5f920be.txn
+          - 📄 245-766f4ff0-11c8-4ac9-97aa-71501fd87221.txn
+          - 📄 246-b66e3478-6bd6-4ea9-ba2a-9066b76e98da.txn
+          - 📄 247-cf4c8b3d-59dd-421a-aa56-83ecbe031e64.txn
+          - 📄 248-5f103e00-f4df-433c-abff-091f782ac04c.txn
+          - 📄 249-647012b2-10ac-4713-a308-05a8abd62efe.txn
           - 📄 25-f706463a-55a0-45f4-af79-3d81ba19f854.txn
+          - 📄 250-18a1506a-a345-4376-82c0-7f05a91d468f.txn
+          - 📄 251-ba2eb777-5dd4-4514-99bf-4fde038ff268.txn
+          - 📄 252-a85fdddf-3c45-4650-88c5-fdad8e4145dd.txn
+          - 📄 253-1170b95b-20b2-447d-9b80-180207581c12.txn
+          - 📄 254-686effc7-372d-4e63-b514-f7247f2604a0.txn
+          - 📄 255-1c4e03a5-1c57-4ff6-bf92-9e7b8bdbd8a0.txn
+          - 📄 256-32addbf1-04a3-4d77-af05-668e236cbc73.txn
+          - 📄 257-6fbd43bc-9082-4f36-8011-01d7e91f2cac.txn
+          - 📄 258-9423324b-b168-4b2c-92b8-7d1c3287e9e3.txn
+          - 📄 259-461b81a1-7c74-4d09-8aa6-add3333ba0c5.txn
           - 📄 26-39d27996-5f68-4ed6-854b-d9fe4aba5dd0.txn
+          - 📄 260-7fc13265-6420-4075-9d49-18d014aa9e23.txn
+          - 📄 261-13a8efa5-56c8-43a6-9313-ba5d0ac4359b.txn
+          - 📄 262-cbc1b8b4-4f7a-4620-98c7-dc9ef1b014f0.txn
+          - 📄 263-7068c516-3cc9-4a01-8f2e-4225b015d74b.txn
+          - 📄 264-20d88d55-2337-44b9-a9a1-5b83b5edde4b.txn
+          - 📄 265-b4ef242b-8144-4a71-af0c-f0f6c06e99e4.txn
+          - 📄 266-06b3b748-db84-43d6-b5a1-282ea472b848.txn
+          - 📄 267-ebf9bcf8-5a6b-4712-8278-41e61b205d74.txn
+          - 📄 268-1672fe01-100f-45a4-88b8-a3a37adfc48b.txn
+          - 📄 269-c970ec6f-1ee2-458f-8d72-62570e712547.txn
           - 📄 27-7db815bc-0b49-49c0-9c85-b2efe8d28b40.txn
+          - 📄 270-0ef8ece5-b9d0-4e55-9a44-84fbeac94872.txn
+          - 📄 271-d60b5148-6cb7-43ef-8c5c-2861e71c9058.txn
+          - 📄 272-363b560f-ab94-44e3-93b6-d5d8cfb24c14.txn
+          - 📄 273-839104fa-5864-42f1-9058-80a7e23f9024.txn
+          - 📄 274-312fb92b-1d15-4144-ad6d-9a7157499cc7.txn
+          - 📄 275-8b67ffef-3920-42ab-98f3-349e474d98f6.txn
+          - 📄 276-e7c90eaa-d85c-438d-83ac-b3e7612e616f.txn
+          - 📄 277-2612f272-e680-4237-b0b0-905f5f927de5.txn
+          - 📄 278-b6f839db-c4c8-44f1-be4a-d963db9c9de7.txn
+          - 📄 279-b6e33943-5dfe-4b3b-8efb-441dbfff68e7.txn
           - 📄 28-c6ec3181-478d-475a-9a83-af7e03eae038.txn
+          - 📄 280-37b3bd0f-31fa-42b4-b68c-f079d2b59b48.txn
+          - 📄 281-582ab3af-5c9d-482c-98b1-cffc2dd16686.txn
+          - 📄 282-867d711c-adf1-4c94-82b8-1159aab0b8bd.txn
+          - 📄 283-49c88622-66f4-48a0-9914-ccc209469bf2.txn
+          - 📄 284-3087127c-ef42-426a-8050-b446ca914ef5.txn
+          - 📄 285-9b393d1f-5d46-4cb7-896e-90d9b88355e1.txn
+          - 📄 286-28bb751c-651b-417b-96a0-a821a5f14df6.txn
+          - 📄 287-ec8be22b-1122-4473-9e09-484566a6f014.txn
+          - 📄 288-d4d41de8-bfab-4724-9cdd-5a7f06a922d5.txn
+          - 📄 289-aba5a8be-63f1-40fe-8c64-15b815a62ab2.txn
           - 📄 29-f32483c0-b95e-4f05-9f04-da08a6c78b15.txn
+          - 📄 290-6564aba4-213b-45e3-ae1a-2d56b9f846ac.txn
+          - 📄 291-62aae472-6839-4ada-a6e7-0651aedca906.txn
+          - 📄 292-10cbb1ff-fd82-4a46-b12b-9bfd04af03df.txn
+          - 📄 293-ac68d5a4-767c-4b29-bbac-2a8abdb8cf69.txn
+          - 📄 294-a460020f-cd28-47e5-9ee8-ca873c1317b9.txn
+          - 📄 295-447cee57-b653-43d4-bad4-6793192f6671.txn
+          - 📄 296-93aa7491-f601-439b-a90c-8e9a90bf3a04.txn
+          - 📄 297-19e7d0b9-2d1e-44d0-b0b1-9ba050dbbeac.txn
+          - 📄 298-9647c428-1ff3-48ba-baa8-d5e8a1f251be.txn
+          - 📄 299-2f46fbfc-8a7a-4edb-8946-3525fbee810b.txn
           - 📄 3-1bce3b50-c178-4b70-a828-f77b67976d1d.txn
           - 📄 30-7fd3ada0-4e92-4de0-a87f-7d537c571801.txn
+          - 📄 300-82ae67c1-0380-4d74-a931-6a3534122828.txn
+          - 📄 301-76c428d1-3f27-441e-bc77-1772e95b63c5.txn
+          - 📄 302-48f15958-1745-494f-85fc-01758e816f52.txn
+          - 📄 303-29d67365-3e82-4122-b5ce-7616546d6b00.txn
+          - 📄 304-9520ca7e-d10a-4857-aa42-fe1864681c25.txn
+          - 📄 305-b9649749-7623-49ed-bbc2-8a76b22bfcfc.txn
+          - 📄 306-86c9c47c-384c-4aa0-a7f4-840f531d936a.txn
+          - 📄 307-57d65f1b-26c0-4ec8-a938-566e81060dd4.txn
+          - 📄 308-ebff6c41-bc67-4b83-9dbe-1d4b947959b1.txn
+          - 📄 309-f51649a1-8002-429a-9d87-b3cedd4e4bbc.txn
           - 📄 31-f9cb239b-21d4-471f-9040-21ba96c59eea.txn
+          - 📄 310-a1694f71-44ac-4ac2-8165-87195ea7153f.txn
+          - 📄 311-3ce8ea09-b4a6-4da2-a07d-478558a854af.txn
+          - 📄 312-76c92215-eae3-4fba-9956-49699df70628.txn
+          - 📄 313-d79ea621-b09d-4230-a946-240c7adea4d6.txn
+          - 📄 314-7f62a9a6-930e-4c68-b70a-f948504e13e0.txn
+          - 📄 315-fb9102c9-cd8c-4ef7-98a4-9677426f0077.txn
+          - 📄 316-4dbd8d6d-c6b8-4c36-838c-9812064810c5.txn
+          - 📄 317-b938cac4-5df2-4241-846b-d13bd327ac98.txn
+          - 📄 318-0e4c2ef8-ba5e-4d4f-9a99-57f227c71523.txn
+          - 📄 319-edfea476-59e1-4f88-80d7-719384dcb512.txn
           - 📄 32-f1bddc6f-7ff7-464f-ade0-42dca38fdf2c.txn
+          - 📄 320-e3db257c-449f-48eb-9703-9f7d295903b8.txn
+          - 📄 321-b0006197-d77e-413d-a699-c083409eab64.txn
+          - 📄 322-cf8a99ac-99b0-41c1-9bab-1723d0546ac0.txn
+          - 📄 323-c3c8effc-53ba-4357-8d8c-14823a272084.txn
+          - 📄 324-922e6953-6d9d-43ab-bee0-9faede96b3dc.txn
+          - 📄 325-02a61a24-6d5f-431f-bc4c-629689025392.txn
+          - 📄 326-b1a305fc-42cb-49b6-b757-f98dc54b67ab.txn
+          - 📄 327-5d6df168-f40e-43b2-8454-8034d99b1c2e.txn
+          - 📄 328-0c97bf1f-800c-4d3f-9dba-e81a020dace1.txn
+          - 📄 329-f94ede16-2550-4e6c-ae16-92fd3332766f.txn
           - 📄 33-35f7483a-be71-46b7-bd88-1e681dac6303.txn
+          - 📄 330-8537e6f3-1853-4179-9cea-8a10c3d28572.txn
+          - 📄 331-2d1f37b7-2ca3-4d56-a693-054ebc2de45a.txn
+          - 📄 332-0d897fc7-fd88-40cc-838f-3620f9838b48.txn
+          - 📄 333-2a7820b7-461d-45b3-b7ab-d1b3e57908df.txn
+          - 📄 334-0198496e-754e-4551-a3c2-f3a9b9ca4d74.txn
+          - 📄 335-00b6507f-6f89-4d86-aa0b-9942b753c619.txn
+          - 📄 336-64881591-c6f9-4fc0-9332-42f48069d1f5.txn
+          - 📄 337-572a708f-f857-4e8b-bc8b-5b72a48f1587.txn
+          - 📄 338-b59c5b5c-5964-4db4-b3e4-879132dbe36b.txn
+          - 📄 339-3d0fee2e-39ce-4b5e-81ae-043ff2d16126.txn
           - 📄 34-f915e2e4-eb16-45e5-b819-2674e242bc57.txn
+          - 📄 340-9a029413-a789-4c7b-a91c-bbdbc6d78790.txn
+          - 📄 341-ff22fe6f-9248-4808-bf22-d9eadbf05f9d.txn
+          - 📄 342-6df093f8-9893-4f28-b7a0-cd145ba9a050.txn
+          - 📄 343-99ceaeb8-bbcb-496b-9651-7b219f476105.txn
+          - 📄 344-db5e367c-d988-4043-a415-43a93fdf6195.txn
+          - 📄 345-57c0c6a4-bc13-4ab1-ab22-27333003e84e.txn
+          - 📄 346-f9fad1c4-f7ad-4a05-a48d-b477f7516334.txn
+          - 📄 347-79c48ce1-a584-4c5b-8dfe-e52d9c5d7f6b.txn
+          - 📄 348-0a614605-0ac2-4917-aa78-414e1b65cb64.txn
+          - 📄 349-79c79ff9-0b57-4485-8fc7-79bde81af57f.txn
           - 📄 35-adf7f9a9-b8dc-432c-b2f6-86c09168b998.txn
+          - 📄 350-f3ed11b0-6579-468d-92d4-9b94eb320bd5.txn
+          - 📄 351-a868489c-4c96-41e0-989c-c255765fbff3.txn
+          - 📄 352-83576afe-965c-4331-b127-cd6d3654f71e.txn
+          - 📄 353-2bd72ce6-6c8d-4fd7-b5e0-5f0e912c10fd.txn
+          - 📄 354-78813f76-0520-48c9-8dbd-4e58e8c9704d.txn
+          - 📄 355-b97bfc04-699f-4151-b6a0-86168ac75e49.txn
+          - 📄 356-40893f45-4ec3-4930-bfa8-38d910fcd775.txn
+          - 📄 357-37b3c326-e5a5-482e-a728-3154d79d8638.txn
+          - 📄 358-f0dbf64a-957f-4167-bdbc-94cc650293be.txn
+          - 📄 359-bcdf17da-335d-4f90-b64f-7ae6583642cb.txn
           - 📄 36-eccf5bff-207d-497f-b68c-e47a62e0e9d1.txn
+          - 📄 360-6c1bf04a-3a1a-4300-bc2b-ad06ba1cff8b.txn
+          - 📄 361-d1918854-fcca-4290-a5b9-ddf95b4bbb22.txn
+          - 📄 362-742b048f-4f3d-421c-973d-1397f215429e.txn
+          - 📄 363-3188aca3-9f8e-4752-8886-142ad240b9a3.txn
+          - 📄 364-9132c59d-a679-456f-98f3-f2d1334c8a48.txn
+          - 📄 365-6d50c857-cb14-4ad4-929c-e100837f0403.txn
+          - 📄 366-103886b6-a012-4673-99df-f7737e6b86e7.txn
+          - 📄 367-998d631f-0059-4dc4-964c-0bf58c325b33.txn
+          - 📄 368-5aee80e8-c7f4-4afd-a101-6ee9bbd8a549.txn
+          - 📄 369-9a8e3e36-1d7d-4a29-96c9-064674cea1fd.txn
           - 📄 37-af234084-5b12-4a68-8546-e4c03e212d8d.txn
+          - 📄 370-bc11ffd6-819c-43df-94ed-e75fb999e47d.txn
+          - 📄 371-1c2af2ca-1ca8-4a4a-bf85-9297fbb441e6.txn
+          - 📄 372-35c54624-bcc5-48d5-affe-6ba1ea413674.txn
+          - 📄 373-0d88d5df-a1d3-424b-b2b8-57ee0d3d1a06.txn
+          - 📄 374-143e750c-0572-438b-90ce-c6125f4895c4.txn
+          - 📄 375-dade0929-60f2-4b99-8d79-62a057c0ff93.txn
+          - 📄 376-1cc2411f-6554-49c3-a260-d32987b7e3b1.txn
+          - 📄 377-d336e58b-6d9c-4e44-a251-2714f7a4b829.txn
+          - 📄 378-66a4763a-6745-4249-9ba1-5ac50a781f51.txn
+          - 📄 379-79d16380-42a3-4780-967d-67f2c928ec3b.txn
           - 📄 38-0460325e-a6e4-41b5-957e-af4275301e79.txn
+          - 📄 380-26e76319-f46b-4587-9ec7-088d6e627e3e.txn
+          - 📄 381-e1a1255b-2009-4688-b753-d09355e3c58b.txn
+          - 📄 382-f30865f0-388e-4281-abfb-23d80a737864.txn
+          - 📄 383-3d4aa0c1-a96f-401f-8f48-1fa6cba0ed5a.txn
+          - 📄 384-f1cde4e2-c9eb-4c7d-9508-621df4c3a7e7.txn
+          - 📄 385-26a1a103-96b9-40d0-9b34-052f88c12cd0.txn
+          - 📄 386-d23ce1f6-68a1-4a12-a9bc-cbda9e4da4b0.txn
+          - 📄 387-52210c6f-ad80-4283-8531-eeda00d641dc.txn
+          - 📄 388-2043f352-8cc8-4edc-802c-75ac0de64b0d.txn
+          - 📄 389-cfcc33ab-ff09-412f-a126-952a1a059ed3.txn
           - 📄 39-817a72ce-e908-4170-8bb9-68b8cff19ffd.txn
+          - 📄 390-cf30cb79-17d4-465c-a7e3-c28ae9d8e5c2.txn
+          - 📄 391-b41f04c0-adc3-43f2-90b3-7f55da5d7a98.txn
+          - 📄 392-b51ff376-c93d-44ff-a894-2a00769191f0.txn
+          - 📄 393-cb24de8d-e080-44e1-8db8-e805e3cef42c.txn
+          - 📄 394-b74a288b-aa6b-4994-a806-7deb9ae9e0db.txn
+          - 📄 395-c2394c57-c5de-46b1-be29-00b6aa79d312.txn
+          - 📄 396-a7f69d39-e066-4b05-a306-63da64d7f580.txn
+          - 📄 397-22dfe77a-b39d-4a56-bc17-3104631c15cc.txn
+          - 📄 398-16009bc4-499a-437a-9bd4-83877f17073b.txn
+          - 📄 399-7f041164-5c56-46ff-af42-e9026a8ca9d5.txn
           - 📄 4-30ce43b7-ff20-403a-88e0-affd8f5822c2.txn
           - 📄 40-e894427b-1534-45eb-b734-152690d5ac76.txn
+          - 📄 400-1cd1004b-5d09-4018-8295-6de0c7f29158.txn
+          - 📄 401-78839b35-f123-46a4-9108-98dd5d4a6c67.txn
+          - 📄 402-98521073-0b9b-455c-9ce1-3a68c452e4c4.txn
+          - 📄 403-0fe6af64-d060-49e5-bd8b-2486c4dea88a.txn
+          - 📄 404-659310a6-e2e7-4bb2-a445-98b810ac31bc.txn
+          - 📄 405-16de6de3-ea6f-4a9d-acf2-a0e05f24de90.txn
+          - 📄 406-650f9af8-5960-48e8-9ccf-c512742d6b93.txn
+          - 📄 407-5ad92c2d-f980-4926-94ef-f63f5601be1f.txn
+          - 📄 408-74b46400-8d6f-449e-9623-206bbc846e65.txn
+          - 📄 409-47a34116-b12e-4cab-97ef-521d17673900.txn
           - 📄 41-58992094-e209-4c5e-ab93-88a3bd986a89.txn
+          - 📄 410-50a6fc0f-959c-4274-a398-4d192252435e.txn
+          - 📄 411-2656b2ee-0500-49c0-a789-719f2a5c6788.txn
+          - 📄 412-00b91aff-1d81-46c2-b87d-3799db27d2ba.txn
+          - 📄 413-2cac6661-a2ec-4724-9f07-2c28e29804b8.txn
+          - 📄 414-e54d73a7-1b76-484a-b9da-6df06831c216.txn
+          - 📄 415-8550af23-a8e3-401d-8e0e-5db98d2a13d9.txn
+          - 📄 416-06d3b3d1-bc45-43ff-9cc2-3923da16e0d9.txn
+          - 📄 417-d414041c-a13f-4205-9e75-1a0d276ba86c.txn
+          - 📄 418-3c270c40-40ea-41f5-85f4-80d9542d2637.txn
+          - 📄 419-2ee09e48-c86e-402d-87a8-f71db1a33f8c.txn
           - 📄 42-1d8b6b17-c728-41c6-abb6-76f7ce1b0d16.txn
+          - 📄 420-6537f4b5-a641-41ca-b718-436d430c36e2.txn
+          - 📄 421-39ea987a-9d86-4511-bde5-b47b34e5c5b9.txn
+          - 📄 422-ce51c8a0-b5c5-4db0-bcfe-77e48bcaf385.txn
+          - 📄 423-94b8a798-c419-4247-9928-ddd289cdc884.txn
+          - 📄 424-6b25ed55-d9be-47ad-8695-1df3a3f290d3.txn
+          - 📄 425-1a7e01ad-dc96-457f-a813-fa5a3978a073.txn
+          - 📄 426-e5752290-b175-4d21-84b9-df5ae5159fb7.txn
+          - 📄 427-2b9e0be6-b30f-40c2-a64a-474cc03fa919.txn
+          - 📄 428-4090d7b4-a8d6-4849-8d73-6ea93e3465fe.txn
+          - 📄 429-5e1825fc-2eae-45a1-8a83-6fbe3ae9a939.txn
           - 📄 43-681f6ec1-6614-4aab-8798-8efa1c41a43c.txn
+          - 📄 430-2ed92ee8-fc98-4f54-9052-5b4ba4639131.txn
+          - 📄 431-8157de07-81c9-4423-bc4a-734413e2227a.txn
+          - 📄 432-5e2e9fa3-1547-47b5-b32a-866cd8a1ec33.txn
+          - 📄 433-a997e29b-525b-4db4-bbe1-daea72381e48.txn
+          - 📄 434-fb2c0011-a5ee-4fa6-bba7-99b7fb2b4875.txn
+          - 📄 435-92560b3f-e3e8-473c-8d96-22d563c6563b.txn
+          - 📄 436-68e0945d-8b82-4113-b2d0-9b7189f78ba5.txn
+          - 📄 437-b69ff450-b050-4fe7-a24a-3424a33a7c2c.txn
+          - 📄 438-5ff69f93-a262-41d8-8003-bd0dc09ecec3.txn
+          - 📄 439-1affffa7-2af9-40ca-a171-271acdea01e3.txn
           - 📄 44-eb81382f-14fa-410e-afa6-152843b85825.txn
+          - 📄 440-28db3baa-c0b1-40f6-801e-1f80959e7550.txn
+          - 📄 441-dfa5b2a7-d2b0-4d8a-81d2-f65656f2f943.txn
+          - 📄 442-c4626e15-011d-4844-82b5-4ee7a48c921b.txn
+          - 📄 443-d5fe96fc-4ace-4f48-9629-1eb086c78e63.txn
+          - 📄 444-18fd35c6-0f50-4175-831a-96601d7c734e.txn
+          - 📄 445-9a6d7d53-d887-45d6-a36f-6bbd2b100b43.txn
+          - 📄 446-068f95eb-0076-425b-92ef-dc86e15c70c3.txn
+          - 📄 447-c4265069-2bab-4f27-add2-63ca1d7586a2.txn
+          - 📄 448-343e6a35-3b87-4a71-8519-f579f4f738df.txn
+          - 📄 449-547034d0-ec0e-4d9c-a99b-492de33c75aa.txn
           - 📄 45-0636bff1-3f51-4d3c-b08e-f79b7ac6acb9.txn
+          - 📄 450-f26de216-717e-4545-9163-fb10509a1480.txn
+          - 📄 451-52fea632-49aa-486c-9e8f-852e33eafc29.txn
+          - 📄 452-b04228b8-bba9-45d7-82dc-42420f13bc1d.txn
+          - 📄 453-49c0d6ed-f13b-4d4a-bc57-0db696268b5c.txn
+          - 📄 454-ae47f78c-c317-4449-ba54-d7b1d508fc54.txn
+          - 📄 455-d90ed695-1e20-4ff9-b78a-126a32f7cbf2.txn
+          - 📄 456-89b6463d-4be7-4e10-afe2-c8e80fc387fa.txn
+          - 📄 457-2aa68ac7-7fe8-4743-a3b5-9b75c9e62767.txn
+          - 📄 458-363f2c66-cf06-48f7-ada2-d5115e626767.txn
+          - 📄 459-6f30cf31-c22e-4f38-b3e7-1805890b27c3.txn
           - 📄 46-d27f44d6-7e1d-4bea-b6b7-9ca837904869.txn
+          - 📄 460-a5b29651-88b1-4da8-851b-e6ddacc5be62.txn
+          - 📄 461-f137ed1e-4073-4583-8463-b55724e85ee1.txn
+          - 📄 462-2c258753-b78c-437f-9338-5d165ef0264b.txn
+          - 📄 463-77c079b8-91a6-405a-bf3d-0a5901c6b05a.txn
+          - 📄 464-fd3686ae-4367-48b9-873f-007807c9cd8e.txn
+          - 📄 465-957d4645-0936-413d-867f-d316124be503.txn
+          - 📄 466-db9e1c02-f027-4dee-b181-2a426c32b413.txn
+          - 📄 467-7a8b4319-9b78-44d9-a273-15818bcc50a6.txn
+          - 📄 468-ca614bfb-110a-46b3-b4c2-fd0c53aff380.txn
+          - 📄 469-d2bf1734-210c-4a5b-8b6e-9f1287ea4269.txn
           - 📄 47-51a1f6d6-c532-4713-a03e-722b63c8c91b.txn
+          - 📄 470-c4ac52bf-c435-47d8-b55c-0af2a9fc3f82.txn
+          - 📄 471-eb05cdf7-5daa-419b-bd56-873c5952c2d5.txn
+          - 📄 472-48a67f98-199b-4709-adf4-275266dde9aa.txn
+          - 📄 473-7afb21d9-8d0a-4bd8-ba84-aaf418ae0346.txn
+          - 📄 474-d38ce992-87ad-4ff4-a1c9-f50693ad2df1.txn
+          - 📄 475-4334842d-5ceb-432f-b793-7c0a823821bd.txn
+          - 📄 476-75856c0a-e3c9-45f9-87be-dfb4a82cb3af.txn
+          - 📄 477-0daf036c-3b1b-468b-8e0c-7e4f8a5d6ed5.txn
+          - 📄 478-ba4cfadf-cf3e-43e2-9f91-0f821128ef1f.txn
+          - 📄 479-f6ca7ce0-483c-4ccc-98cc-19f0dc6814bf.txn
           - 📄 48-e17d0f0c-8d26-4c73-8840-dec0a8ba7a05.txn
+          - 📄 480-5306d543-0e38-4b5f-89a9-d6e6de40ac14.txn
+          - 📄 481-9a736ee2-472f-4a18-ac9f-7792755d83fa.txn
+          - 📄 482-8b83ae72-63db-4115-b1de-a694f32db442.txn
+          - 📄 483-e26eb7b5-b31c-4a71-b1d2-3cb43bcbefdd.txn
+          - 📄 484-6ac0541e-a893-4829-966b-e8988c2ba042.txn
+          - 📄 485-baa7bdf2-85e3-4eb7-aa93-be6079a6bf65.txn
+          - 📄 486-9013ef19-1e9a-40bc-a6d2-46233b7243ff.txn
+          - 📄 487-38890573-2e84-49c8-9f04-607e4c26ccf4.txn
+          - 📄 488-c88df240-92b4-4a49-8cab-3e2cddba44fd.txn
+          - 📄 489-46f950b1-f688-4dd9-b971-a055aa558595.txn
           - 📄 49-36bc8150-cbcf-4d9a-84e0-1987dd29a385.txn
+          - 📄 490-f0861101-5455-4c5a-887f-4f96773af05f.txn
+          - 📄 491-07346821-d7fa-48ae-a18b-2d783564a89b.txn
+          - 📄 492-cb362bcc-d767-4b30-85b3-c1284062b977.txn
+          - 📄 493-a2dbf9a8-bb45-443a-af26-9bfeed639b35.txn
+          - 📄 494-d085d519-ec8d-468b-a47a-1b42129a2c66.txn
+          - 📄 495-07cf0687-d968-469f-8996-65ce8669eac6.txn
+          - 📄 496-8663f4ef-a312-436a-b377-30b8fe2bbf20.txn
+          - 📄 497-856a5c51-4c31-40a7-8c7e-cf21fd1f6bef.txn
+          - 📄 498-9b2ff332-bfa2-4889-be2f-4dcc1773efad.txn
+          - 📄 499-5e70a728-f746-4f73-8806-eec2bcd5884b.txn
           - 📄 5-bbc34f23-f4b1-4a8c-9b7a-c8ecf40006df.txn
           - 📄 50-9f709d0d-e59f-49b3-80c3-35f670f9d33b.txn
+          - 📄 500-e07ed552-f396-4377-881b-a99be0a76a5d.txn
+          - 📄 501-f86cd492-a729-4efd-a597-93a3d8a09f70.txn
+          - 📄 502-abd2dc85-8e70-479a-904b-a3a581c83df6.txn
+          - 📄 503-598ff813-ccf5-4389-b28b-90912e492093.txn
+          - 📄 504-43b762c8-be0d-4a8e-ba7d-104d14470c27.txn
+          - 📄 505-bf3770fc-40b9-428a-96fa-9b51dd0d58cc.txn
+          - 📄 506-07aae1f0-48c5-4e63-b069-a32f8f39f8dd.txn
+          - 📄 507-4d1bfc64-7f5e-43a9-966d-66b3e957d8c6.txn
+          - 📄 508-1deba95c-81fc-40b2-a628-82da2b5a9e0c.txn
+          - 📄 509-1e993da2-ee24-41e9-932e-3ee1f3a75725.txn
           - 📄 51-d0d5e7df-02ff-475c-a09f-bc7bae5aefff.txn
+          - 📄 510-59532066-3ece-493e-9fd0-1811a513b082.txn
+          - 📄 511-4c0b9606-46d6-4bf6-84bd-93098ad73149.txn
+          - 📄 512-fc8bc81e-817a-4a35-aeba-0196bf767edd.txn
+          - 📄 513-23f5ba61-6d43-4100-869f-e98a5b824a91.txn
+          - 📄 514-ee0dfaaa-3995-4061-b358-882ef40fe6f8.txn
+          - 📄 515-77ae637f-0ed6-4090-a7c2-6b6e2914e7fc.txn
+          - 📄 516-dfc60465-c212-4b8c-9408-fbb739d8361d.txn
+          - 📄 517-482eaad5-aae3-4ebe-af5d-df021b1abac3.txn
+          - 📄 518-219308e6-54bf-4f93-ae3d-0f133b514770.txn
+          - 📄 519-30a53028-c48a-48fe-9f6a-98fea9e34a03.txn
           - 📄 52-49a7acb6-6b77-4a53-908f-4cee075c9952.txn
+          - 📄 520-6a85bbea-ff23-4476-974b-f93cb54e5b3f.txn
+          - 📄 521-be3d0216-6887-45fa-a3a4-e1bde458e770.txn
+          - 📄 522-9e44c268-c6a6-4b7b-8597-479b80499331.txn
+          - 📄 523-7ab24930-7ae7-4715-885a-d75d39928bff.txn
+          - 📄 524-d7a9a278-65fd-4dc0-a054-299a6d220cf0.txn
+          - 📄 525-a832cb97-293f-41cf-bccb-04f388accd0e.txn
+          - 📄 526-a3cd66e3-7306-4cd7-9c37-8c50c5c5add5.txn
+          - 📄 527-292ad617-526e-447c-b84a-9ea484247c7d.txn
+          - 📄 528-39e2094c-8c26-40d7-8290-e7e003aa2d48.txn
+          - 📄 529-d7eb6ebf-b7d9-43e2-8ef6-5b942f9df387.txn
           - 📄 53-af7754e4-b67c-4d37-8b9b-c2fd25024308.txn
+          - 📄 530-375a4ec3-16dd-497c-b196-45afdd96392a.txn
+          - 📄 531-c770262e-783f-4815-8b15-7cc98526da46.txn
+          - 📄 532-a4d4fe72-dbbc-40b7-9ec9-31e6c35cd210.txn
+          - 📄 533-094a08e7-cc0f-4811-bb81-d554f7347d2b.txn
+          - 📄 534-753474de-de61-435f-b8e9-280dd72424a3.txn
+          - 📄 535-4fe5cae6-842c-4358-ac12-3ed64cee3c4f.txn
+          - 📄 536-5f9b6189-8918-4932-b64a-5febc7d7f2f6.txn
+          - 📄 537-491b5f87-3949-4106-a4f1-fc1211b68c24.txn
+          - 📄 538-ea25f5b6-a72e-4f56-8bea-ddda772b3d86.txn
+          - 📄 539-da2a8efa-93e0-4b00-8c36-cfb0856b8e81.txn
           - 📄 54-488448c2-14a6-41c1-925c-fab38811f482.txn
+          - 📄 540-76548e7f-5ec9-4ae6-ba42-0e39551f4bd5.txn
+          - 📄 541-6a80175f-994f-47ba-ab27-6b6093c27edd.txn
+          - 📄 542-91d05693-1d7a-4b58-96be-fdff75981fc6.txn
+          - 📄 543-8175960b-1c83-44b4-be53-7d0e4b29eb15.txn
+          - 📄 544-a86853bb-43c3-4352-8c11-fc435052f555.txn
+          - 📄 545-43e38e0c-374f-4160-a33b-ab1bd9d2ab53.txn
+          - 📄 546-bfdad55e-037c-404a-a885-740432fe7c6c.txn
+          - 📄 547-388b5c88-d3f1-423e-bc07-44d4f13e1004.txn
+          - 📄 548-1c9690fa-14b2-43b4-9e6c-0392d98926d5.txn
+          - 📄 549-2d3b2870-a8ab-4f7a-af77-be55acc34ab5.txn
           - 📄 55-59e9264b-1ded-4983-9927-852424c8ab84.txn
+          - 📄 550-74ccef6f-fb6c-46fb-92e5-9d0876397618.txn
+          - 📄 551-fa86eb03-89b6-467b-9675-a25b1e952200.txn
+          - 📄 552-9bdd18f3-c1b5-4d1d-a899-a50307c9f2e1.txn
+          - 📄 553-ca31c5bc-4bde-45c2-8d13-69fde35f11db.txn
+          - 📄 554-8bc1d252-f06c-4c6c-af67-52c7eedd79e1.txn
+          - 📄 555-10db7d45-9775-49ca-aaaa-e8c83e6588dc.txn
+          - 📄 556-f5e641d2-2b40-4a99-9a18-fa8e7fadb766.txn
+          - 📄 557-dece8ad5-3af5-4cfe-b85c-bdc0e2f1fc9e.txn
+          - 📄 558-08671dd3-1fc6-41cb-99e6-dc3ed4e660fd.txn
+          - 📄 559-a9a11e2e-90f8-44a5-ba3a-88bc57d7249a.txn
           - 📄 56-50432808-8d89-4294-b429-6f6a4906f941.txn
+          - 📄 560-8bcedb01-a0cb-4cff-99c3-827ec8288e0d.txn
+          - 📄 561-8f00eaff-1b6c-4429-89ce-d3702cb7c62e.txn
+          - 📄 562-a08892c5-a8a7-48c5-9ca8-d841eb04bbae.txn
+          - 📄 563-a229133b-fb88-4210-a982-73fc861f4286.txn
+          - 📄 564-c04d3d71-ecbd-41c7-b793-174038446cb6.txn
+          - 📄 565-49abf379-9a4b-4afc-be49-524a171034cc.txn
+          - 📄 566-d7a2a87d-fb69-4f9a-b82b-3f6da6cc7420.txn
+          - 📄 567-ffaa9e35-a925-4ba1-b8fd-6ce894595e10.txn
+          - 📄 568-1ec70f36-e0d2-4f87-b817-41c51e438808.txn
+          - 📄 569-11b14e06-af06-4e27-8884-80d812823eb6.txn
           - 📄 57-ae14fdc3-f821-4bda-921d-58ded90f2e39.txn
+          - 📄 570-5dd3e56b-bd7f-4ede-9051-19bffa8769ff.txn
+          - 📄 571-dd422633-3ddf-4fa6-8c7a-3155b2cdf230.txn
+          - 📄 572-c44ae767-9953-4c02-9e23-b6f7422c22b4.txn
+          - 📄 573-7f19709d-0887-4f18-9edf-0a429d146ae3.txn
+          - 📄 574-0a1d2f72-2653-44ee-bcd3-3d69ff1d5163.txn
+          - 📄 575-0e4786a0-d481-4361-8f3a-7f9f72e02961.txn
+          - 📄 576-97b57006-896d-427d-81ad-7bbbd3d404d0.txn
+          - 📄 577-f0bd433a-eafa-4611-b27d-92d96deafbde.txn
+          - 📄 578-93a1a3b9-891a-4790-b87c-70053de239e6.txn
+          - 📄 579-f319f7fc-f840-45b8-90ab-4393f3a30a8e.txn
           - 📄 58-204e4a73-8815-4701-b188-5c8ee9bc066f.txn
+          - 📄 580-7c04b487-5be5-4357-b745-9351ca9fe83a.txn
+          - 📄 581-fffa5827-5f14-4394-829c-6ef132ef5235.txn
+          - 📄 582-f9431f28-945d-4d3f-adca-6331c0635fe5.txn
+          - 📄 583-201793e6-8625-4228-bbdb-11e23e8cad12.txn
+          - 📄 584-d002305e-35ce-4524-be1d-7127770d6e69.txn
+          - 📄 585-5a415b2f-b0f5-47c4-99eb-0f15821d60a5.txn
+          - 📄 586-ff5cab8c-f6fa-4b1b-ad9a-870e1114b201.txn
+          - 📄 587-5ad7bf47-58e8-4fd6-ae8a-dff0b22b7dca.txn
+          - 📄 588-90d7599e-004a-4e21-9b5a-9e4a296a2d21.txn
+          - 📄 589-cd44dcca-23ff-46ef-8130-c6337ebd83b7.txn
           - 📄 59-8db2d592-df69-4b8b-b817-73be094abc8b.txn
+          - 📄 590-f0d8bdec-2f96-44d6-82fb-705f0028c062.txn
+          - 📄 591-ab2222b6-add5-4655-b7df-d6e941a00746.txn
+          - 📄 592-df99951b-68d0-4f29-ba6e-128a14aaa2eb.txn
+          - 📄 593-2f95b7aa-a5c9-456a-b6b7-0c232b11867a.txn
+          - 📄 594-3297dd5f-f487-4814-a926-980a86508483.txn
+          - 📄 595-5bd3cbfa-7697-48b5-9703-e5b2092302d8.txn
+          - 📄 596-41464395-f647-4a88-8a24-6b368dbd4a81.txn
+          - 📄 597-fbd35a15-2af3-4196-857a-8031ef82bd58.txn
+          - 📄 598-34942dd6-897f-4735-adcc-e26da83087ce.txn
+          - 📄 599-4b64c9fb-27ac-4ad4-8a0c-4a2826d03639.txn
           - 📄 6-f1924787-c637-4ddc-b138-bd04700dda57.txn
           - 📄 60-88abb9e6-fc9b-4c01-848c-c2d239ded60a.txn
+          - 📄 600-96bc9233-a154-42c4-bb4c-29d56f3d203c.txn
+          - 📄 601-973f9389-e735-4fec-b0c3-3c1cb32f8e90.txn
+          - 📄 602-a2c50c17-1604-4c60-a1c0-3fe8d304c7a6.txn
+          - 📄 603-6bd2377d-3936-45a8-8397-6fde8e5710d9.txn
+          - 📄 604-bced0cc8-2eeb-4c4a-8808-41c4253c21c8.txn
+          - 📄 605-6d0003a9-6291-42f1-8ba5-2cc8aef944e6.txn
+          - 📄 606-4f14a4c7-7dc0-4c13-923a-9440d4145188.txn
+          - 📄 607-04e855d4-0967-4b60-9af6-0b5a4598416e.txn
+          - 📄 608-bee73eed-3976-4791-be3e-58320ae3f4d2.txn
+          - 📄 609-e1708379-82d9-4f9f-9b8f-6c34bcfcaead.txn
           - 📄 61-7fbaaf74-f34c-4278-9faf-fdd6059359a0.txn
+          - 📄 610-136105a1-79e3-4bbc-b3d0-3611dd118dbc.txn
+          - 📄 611-02bb4ce7-a547-4cb2-8d35-91772251f59e.txn
+          - 📄 612-4d8ee13f-90ed-43cb-94a7-df7200bb2aad.txn
+          - 📄 613-22db1fe8-47a8-4826-ab44-e5083b37f046.txn
+          - 📄 614-5f06c2e9-1927-4858-9057-f28511bfb3b8.txn
+          - 📄 615-8f2384c4-a30d-4bfd-b903-5f8112266d7e.txn
+          - 📄 616-c32b69cc-28b0-45b0-8739-35dc15f0c33d.txn
+          - 📄 617-46e72047-1dc3-4586-89bd-f518b30dd636.txn
+          - 📄 618-6dafd511-6ae4-4f0e-9369-d2c31c71a92b.txn
+          - 📄 619-6f1d4e13-02b2-4a5a-bf0f-45537cdf5553.txn
           - 📄 62-81568275-0ef0-4dfd-8533-ee02609018d2.txn
+          - 📄 620-ed1b167f-4b6d-40e5-930a-f729c178b221.txn
+          - 📄 621-95d4831d-0754-46d5-97b7-3a97e9ac8654.txn
+          - 📄 622-eec3b0a0-9161-4b3f-99bc-de92babef02e.txn
+          - 📄 623-105bff23-bb49-4c04-841e-b3033cebcd9b.txn
+          - 📄 624-e7e60d72-8ec6-496b-b415-0b23113a675d.txn
+          - 📄 625-60c84dc4-c923-4f9b-9a8e-c12975e0f8ca.txn
+          - 📄 626-8d3094a0-d832-4419-a750-8924a8332164.txn
+          - 📄 627-8cc67447-5782-4777-ad39-57609572c390.txn
+          - 📄 628-fed9f892-4c25-422f-b63c-f12b1d2ee1ca.txn
+          - 📄 629-4ca10c84-20b9-401e-b681-55c28716cf44.txn
           - 📄 63-eddf5eb7-de6f-4f58-bd9d-53c872a853fd.txn
+          - 📄 630-4be467c0-8af8-40f8-b47c-29d6a78ce410.txn
+          - 📄 631-7f510226-2ccf-4ace-a4c4-b3dc812e977b.txn
+          - 📄 632-e3b2cab9-16e6-4a68-8fc4-6798c19223a4.txn
+          - 📄 633-099b6ce5-b929-4204-8200-8d4e5c2bcd93.txn
+          - 📄 634-c4983e5e-6624-4bad-a5bf-b81ee088b3b1.txn
+          - 📄 635-cdb8a3a8-c643-45e6-b21a-37a3d58007ee.txn
+          - 📄 636-61d3a01f-6296-4f60-815d-897213e6ca21.txn
+          - 📄 637-b6ed7593-e0c6-4dc1-804b-3cfa1088c313.txn
+          - 📄 638-0bbe4b5e-1fb0-4426-9a2a-74cf2d0a4b3a.txn
+          - 📄 639-76385e8d-f8df-4551-bed0-69903a1c53ef.txn
           - 📄 64-8327a95e-8e6e-4fb5-9c30-68134d7bc718.txn
+          - 📄 640-a3ced019-1321-49c3-bda3-77532a1c0da8.txn
+          - 📄 641-d369631a-11b3-4f8f-be5d-1ca7e96c5caf.txn
+          - 📄 642-f6e49b8f-43a7-48c4-baba-14fad7dcce51.txn
+          - 📄 643-dafae85a-b676-49f4-8e67-c67245add385.txn
+          - 📄 644-38423052-2b1c-4785-80ec-17b8541c6952.txn
+          - 📄 645-bbe770fc-7bec-4930-95ef-d778ffc8219a.txn
+          - 📄 646-9d560010-72d7-4f19-b5ec-13757a7480eb.txn
+          - 📄 647-2e90d0bb-e1a9-4ef7-a70e-05e7d88fabc8.txn
+          - 📄 648-912bb99b-f2de-4a74-ac0c-dc361c3c623a.txn
+          - 📄 649-405a1223-c616-4022-a002-57dff25ada58.txn
           - 📄 65-d9b7f023-41e9-4192-b3d7-90d554aa1d49.txn
+          - 📄 650-86576950-3a0e-4b06-996f-ce0107505434.txn
+          - 📄 651-d712cf84-3313-48e6-8b2e-c787c5534a21.txn
+          - 📄 652-ab03fa54-6f05-40d2-be6b-3d848b6499a5.txn
+          - 📄 653-3ad2c48b-d293-4e3a-9368-d26c1a79d6d5.txn
+          - 📄 654-858b0ed6-a63e-4ed5-8c1a-7f4767afb2a7.txn
+          - 📄 655-061ad48c-15b6-489f-a880-d6f611103952.txn
+          - 📄 656-12756fb8-fe2a-43cc-9424-91de997405bb.txn
+          - 📄 657-a51e0bf6-43fe-4667-ab3e-9f809f9031a8.txn
+          - 📄 658-003fde93-0b5b-4675-8fca-79e5c688d95f.txn
+          - 📄 659-fab6273e-549e-43c5-9278-32604931d255.txn
           - 📄 66-a5699909-a3dd-4398-8730-ac201dba51aa.txn
           - 📄 67-8b37928b-0713-4795-bd85-b67b37d73590.txn
           - 📄 68-8f3a1f10-6759-47d1-a94b-dcf4e3dd0e50.txn
@@ -3374,56 +3837,510 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 204.manifest
           - 📄 205.manifest
           - 📄 206.manifest
+          - 📄 207.manifest
+          - 📄 208.manifest
+          - 📄 209.manifest
           - 📄 21.manifest
+          - 📄 210.manifest
+          - 📄 211.manifest
+          - 📄 212.manifest
+          - 📄 213.manifest
+          - 📄 214.manifest
+          - 📄 215.manifest
+          - 📄 216.manifest
+          - 📄 217.manifest
+          - 📄 218.manifest
+          - 📄 219.manifest
           - 📄 22.manifest
+          - 📄 220.manifest
+          - 📄 221.manifest
+          - 📄 222.manifest
+          - 📄 223.manifest
+          - 📄 224.manifest
+          - 📄 225.manifest
+          - 📄 226.manifest
+          - 📄 227.manifest
+          - 📄 228.manifest
+          - 📄 229.manifest
           - 📄 23.manifest
+          - 📄 230.manifest
+          - 📄 231.manifest
+          - 📄 232.manifest
+          - 📄 233.manifest
+          - 📄 234.manifest
+          - 📄 235.manifest
+          - 📄 236.manifest
+          - 📄 237.manifest
+          - 📄 238.manifest
+          - 📄 239.manifest
           - 📄 24.manifest
+          - 📄 240.manifest
+          - 📄 241.manifest
+          - 📄 242.manifest
+          - 📄 243.manifest
+          - 📄 244.manifest
+          - 📄 245.manifest
+          - 📄 246.manifest
+          - 📄 247.manifest
+          - 📄 248.manifest
+          - 📄 249.manifest
           - 📄 25.manifest
+          - 📄 250.manifest
+          - 📄 251.manifest
+          - 📄 252.manifest
+          - 📄 253.manifest
+          - 📄 254.manifest
+          - 📄 255.manifest
+          - 📄 256.manifest
+          - 📄 257.manifest
+          - 📄 258.manifest
+          - 📄 259.manifest
           - 📄 26.manifest
+          - 📄 260.manifest
+          - 📄 261.manifest
+          - 📄 262.manifest
+          - 📄 263.manifest
+          - 📄 264.manifest
+          - 📄 265.manifest
+          - 📄 266.manifest
+          - 📄 267.manifest
+          - 📄 268.manifest
+          - 📄 269.manifest
           - 📄 27.manifest
+          - 📄 270.manifest
+          - 📄 271.manifest
+          - 📄 272.manifest
+          - 📄 273.manifest
+          - 📄 274.manifest
+          - 📄 275.manifest
+          - 📄 276.manifest
+          - 📄 277.manifest
+          - 📄 278.manifest
+          - 📄 279.manifest
           - 📄 28.manifest
+          - 📄 280.manifest
+          - 📄 281.manifest
+          - 📄 282.manifest
+          - 📄 283.manifest
+          - 📄 284.manifest
+          - 📄 285.manifest
+          - 📄 286.manifest
+          - 📄 287.manifest
+          - 📄 288.manifest
+          - 📄 289.manifest
           - 📄 29.manifest
+          - 📄 290.manifest
+          - 📄 291.manifest
+          - 📄 292.manifest
+          - 📄 293.manifest
+          - 📄 294.manifest
+          - 📄 295.manifest
+          - 📄 296.manifest
+          - 📄 297.manifest
+          - 📄 298.manifest
+          - 📄 299.manifest
           - 📄 3.manifest
           - 📄 30.manifest
+          - 📄 300.manifest
+          - 📄 301.manifest
+          - 📄 302.manifest
+          - 📄 303.manifest
+          - 📄 304.manifest
+          - 📄 305.manifest
+          - 📄 306.manifest
+          - 📄 307.manifest
+          - 📄 308.manifest
+          - 📄 309.manifest
           - 📄 31.manifest
+          - 📄 310.manifest
+          - 📄 311.manifest
+          - 📄 312.manifest
+          - 📄 313.manifest
+          - 📄 314.manifest
+          - 📄 315.manifest
+          - 📄 316.manifest
+          - 📄 317.manifest
+          - 📄 318.manifest
+          - 📄 319.manifest
           - 📄 32.manifest
+          - 📄 320.manifest
+          - 📄 321.manifest
+          - 📄 322.manifest
+          - 📄 323.manifest
+          - 📄 324.manifest
+          - 📄 325.manifest
+          - 📄 326.manifest
+          - 📄 327.manifest
+          - 📄 328.manifest
+          - 📄 329.manifest
           - 📄 33.manifest
+          - 📄 330.manifest
+          - 📄 331.manifest
+          - 📄 332.manifest
+          - 📄 333.manifest
+          - 📄 334.manifest
+          - 📄 335.manifest
+          - 📄 336.manifest
+          - 📄 337.manifest
+          - 📄 338.manifest
+          - 📄 339.manifest
           - 📄 34.manifest
+          - 📄 340.manifest
+          - 📄 341.manifest
+          - 📄 342.manifest
+          - 📄 343.manifest
+          - 📄 344.manifest
+          - 📄 345.manifest
+          - 📄 346.manifest
+          - 📄 347.manifest
+          - 📄 348.manifest
+          - 📄 349.manifest
           - 📄 35.manifest
+          - 📄 350.manifest
+          - 📄 351.manifest
+          - 📄 352.manifest
+          - 📄 353.manifest
+          - 📄 354.manifest
+          - 📄 355.manifest
+          - 📄 356.manifest
+          - 📄 357.manifest
+          - 📄 358.manifest
+          - 📄 359.manifest
           - 📄 36.manifest
+          - 📄 360.manifest
+          - 📄 361.manifest
+          - 📄 362.manifest
+          - 📄 363.manifest
+          - 📄 364.manifest
+          - 📄 365.manifest
+          - 📄 366.manifest
+          - 📄 367.manifest
+          - 📄 368.manifest
+          - 📄 369.manifest
           - 📄 37.manifest
+          - 📄 370.manifest
+          - 📄 371.manifest
+          - 📄 372.manifest
+          - 📄 373.manifest
+          - 📄 374.manifest
+          - 📄 375.manifest
+          - 📄 376.manifest
+          - 📄 377.manifest
+          - 📄 378.manifest
+          - 📄 379.manifest
           - 📄 38.manifest
+          - 📄 380.manifest
+          - 📄 381.manifest
+          - 📄 382.manifest
+          - 📄 383.manifest
+          - 📄 384.manifest
+          - 📄 385.manifest
+          - 📄 386.manifest
+          - 📄 387.manifest
+          - 📄 388.manifest
+          - 📄 389.manifest
           - 📄 39.manifest
+          - 📄 390.manifest
+          - 📄 391.manifest
+          - 📄 392.manifest
+          - 📄 393.manifest
+          - 📄 394.manifest
+          - 📄 395.manifest
+          - 📄 396.manifest
+          - 📄 397.manifest
+          - 📄 398.manifest
+          - 📄 399.manifest
           - 📄 4.manifest
           - 📄 40.manifest
+          - 📄 400.manifest
+          - 📄 401.manifest
+          - 📄 402.manifest
+          - 📄 403.manifest
+          - 📄 404.manifest
+          - 📄 405.manifest
+          - 📄 406.manifest
+          - 📄 407.manifest
+          - 📄 408.manifest
+          - 📄 409.manifest
           - 📄 41.manifest
+          - 📄 410.manifest
+          - 📄 411.manifest
+          - 📄 412.manifest
+          - 📄 413.manifest
+          - 📄 414.manifest
+          - 📄 415.manifest
+          - 📄 416.manifest
+          - 📄 417.manifest
+          - 📄 418.manifest
+          - 📄 419.manifest
           - 📄 42.manifest
+          - 📄 420.manifest
+          - 📄 421.manifest
+          - 📄 422.manifest
+          - 📄 423.manifest
+          - 📄 424.manifest
+          - 📄 425.manifest
+          - 📄 426.manifest
+          - 📄 427.manifest
+          - 📄 428.manifest
+          - 📄 429.manifest
           - 📄 43.manifest
+          - 📄 430.manifest
+          - 📄 431.manifest
+          - 📄 432.manifest
+          - 📄 433.manifest
+          - 📄 434.manifest
+          - 📄 435.manifest
+          - 📄 436.manifest
+          - 📄 437.manifest
+          - 📄 438.manifest
+          - 📄 439.manifest
           - 📄 44.manifest
+          - 📄 440.manifest
+          - 📄 441.manifest
+          - 📄 442.manifest
+          - 📄 443.manifest
+          - 📄 444.manifest
+          - 📄 445.manifest
+          - 📄 446.manifest
+          - 📄 447.manifest
+          - 📄 448.manifest
+          - 📄 449.manifest
           - 📄 45.manifest
+          - 📄 450.manifest
+          - 📄 451.manifest
+          - 📄 452.manifest
+          - 📄 453.manifest
+          - 📄 454.manifest
+          - 📄 455.manifest
+          - 📄 456.manifest
+          - 📄 457.manifest
+          - 📄 458.manifest
+          - 📄 459.manifest
           - 📄 46.manifest
+          - 📄 460.manifest
+          - 📄 461.manifest
+          - 📄 462.manifest
+          - 📄 463.manifest
+          - 📄 464.manifest
+          - 📄 465.manifest
+          - 📄 466.manifest
+          - 📄 467.manifest
+          - 📄 468.manifest
+          - 📄 469.manifest
           - 📄 47.manifest
+          - 📄 470.manifest
+          - 📄 471.manifest
+          - 📄 472.manifest
+          - 📄 473.manifest
+          - 📄 474.manifest
+          - 📄 475.manifest
+          - 📄 476.manifest
+          - 📄 477.manifest
+          - 📄 478.manifest
+          - 📄 479.manifest
           - 📄 48.manifest
+          - 📄 480.manifest
+          - 📄 481.manifest
+          - 📄 482.manifest
+          - 📄 483.manifest
+          - 📄 484.manifest
+          - 📄 485.manifest
+          - 📄 486.manifest
+          - 📄 487.manifest
+          - 📄 488.manifest
+          - 📄 489.manifest
           - 📄 49.manifest
+          - 📄 490.manifest
+          - 📄 491.manifest
+          - 📄 492.manifest
+          - 📄 493.manifest
+          - 📄 494.manifest
+          - 📄 495.manifest
+          - 📄 496.manifest
+          - 📄 497.manifest
+          - 📄 498.manifest
+          - 📄 499.manifest
           - 📄 5.manifest
           - 📄 50.manifest
+          - 📄 500.manifest
+          - 📄 501.manifest
+          - 📄 502.manifest
+          - 📄 503.manifest
+          - 📄 504.manifest
+          - 📄 505.manifest
+          - 📄 506.manifest
+          - 📄 507.manifest
+          - 📄 508.manifest
+          - 📄 509.manifest
           - 📄 51.manifest
+          - 📄 510.manifest
+          - 📄 511.manifest
+          - 📄 512.manifest
+          - 📄 513.manifest
+          - 📄 514.manifest
+          - 📄 515.manifest
+          - 📄 516.manifest
+          - 📄 517.manifest
+          - 📄 518.manifest
+          - 📄 519.manifest
           - 📄 52.manifest
+          - 📄 520.manifest
+          - 📄 521.manifest
+          - 📄 522.manifest
+          - 📄 523.manifest
+          - 📄 524.manifest
+          - 📄 525.manifest
+          - 📄 526.manifest
+          - 📄 527.manifest
+          - 📄 528.manifest
+          - 📄 529.manifest
           - 📄 53.manifest
+          - 📄 530.manifest
+          - 📄 531.manifest
+          - 📄 532.manifest
+          - 📄 533.manifest
+          - 📄 534.manifest
+          - 📄 535.manifest
+          - 📄 536.manifest
+          - 📄 537.manifest
+          - 📄 538.manifest
+          - 📄 539.manifest
           - 📄 54.manifest
+          - 📄 540.manifest
+          - 📄 541.manifest
+          - 📄 542.manifest
+          - 📄 543.manifest
+          - 📄 544.manifest
+          - 📄 545.manifest
+          - 📄 546.manifest
+          - 📄 547.manifest
+          - 📄 548.manifest
+          - 📄 549.manifest
           - 📄 55.manifest
+          - 📄 550.manifest
+          - 📄 551.manifest
+          - 📄 552.manifest
+          - 📄 553.manifest
+          - 📄 554.manifest
+          - 📄 555.manifest
+          - 📄 556.manifest
+          - 📄 557.manifest
+          - 📄 558.manifest
+          - 📄 559.manifest
           - 📄 56.manifest
+          - 📄 560.manifest
+          - 📄 561.manifest
+          - 📄 562.manifest
+          - 📄 563.manifest
+          - 📄 564.manifest
+          - 📄 565.manifest
+          - 📄 566.manifest
+          - 📄 567.manifest
+          - 📄 568.manifest
+          - 📄 569.manifest
           - 📄 57.manifest
+          - 📄 570.manifest
+          - 📄 571.manifest
+          - 📄 572.manifest
+          - 📄 573.manifest
+          - 📄 574.manifest
+          - 📄 575.manifest
+          - 📄 576.manifest
+          - 📄 577.manifest
+          - 📄 578.manifest
+          - 📄 579.manifest
           - 📄 58.manifest
+          - 📄 580.manifest
+          - 📄 581.manifest
+          - 📄 582.manifest
+          - 📄 583.manifest
+          - 📄 584.manifest
+          - 📄 585.manifest
+          - 📄 586.manifest
+          - 📄 587.manifest
+          - 📄 588.manifest
+          - 📄 589.manifest
           - 📄 59.manifest
+          - 📄 590.manifest
+          - 📄 591.manifest
+          - 📄 592.manifest
+          - 📄 593.manifest
+          - 📄 594.manifest
+          - 📄 595.manifest
+          - 📄 596.manifest
+          - 📄 597.manifest
+          - 📄 598.manifest
+          - 📄 599.manifest
           - 📄 6.manifest
           - 📄 60.manifest
+          - 📄 600.manifest
+          - 📄 601.manifest
+          - 📄 602.manifest
+          - 📄 603.manifest
+          - 📄 604.manifest
+          - 📄 605.manifest
+          - 📄 606.manifest
+          - 📄 607.manifest
+          - 📄 608.manifest
+          - 📄 609.manifest
           - 📄 61.manifest
+          - 📄 610.manifest
+          - 📄 611.manifest
+          - 📄 612.manifest
+          - 📄 613.manifest
+          - 📄 614.manifest
+          - 📄 615.manifest
+          - 📄 616.manifest
+          - 📄 617.manifest
+          - 📄 618.manifest
+          - 📄 619.manifest
           - 📄 62.manifest
+          - 📄 620.manifest
+          - 📄 621.manifest
+          - 📄 622.manifest
+          - 📄 623.manifest
+          - 📄 624.manifest
+          - 📄 625.manifest
+          - 📄 626.manifest
+          - 📄 627.manifest
+          - 📄 628.manifest
+          - 📄 629.manifest
           - 📄 63.manifest
+          - 📄 630.manifest
+          - 📄 631.manifest
+          - 📄 632.manifest
+          - 📄 633.manifest
+          - 📄 634.manifest
+          - 📄 635.manifest
+          - 📄 636.manifest
+          - 📄 637.manifest
+          - 📄 638.manifest
+          - 📄 639.manifest
           - 📄 64.manifest
+          - 📄 640.manifest
+          - 📄 641.manifest
+          - 📄 642.manifest
+          - 📄 643.manifest
+          - 📄 644.manifest
+          - 📄 645.manifest
+          - 📄 646.manifest
+          - 📄 647.manifest
+          - 📄 648.manifest
+          - 📄 649.manifest
           - 📄 65.manifest
+          - 📄 650.manifest
+          - 📄 651.manifest
+          - 📄 652.manifest
+          - 📄 653.manifest
+          - 📄 654.manifest
+          - 📄 655.manifest
+          - 📄 656.manifest
+          - 📄 657.manifest
+          - 📄 658.manifest
+          - 📄 659.manifest
           - 📄 66.manifest
+          - 📄 660.manifest
           - 📄 67.manifest
           - 📄 68.manifest
           - 📄 69.manifest
@@ -3461,27 +4378,79 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 98.manifest
           - 📄 99.manifest
         - 📂 **data**
+          - 📄 00000000000111111011011176e30341c28ddd4b56bfc3f890.lance
+          - 📄 00000000011110000000101067ebe84bf7840ad39876a6c048.lance
           - 📄 0000000010100000010010001f9e1b4919bfa29adc18d50d6c.lance
+          - 📄 00000000111011010000000178a7ec48f7bae8419a6fb02a56.lance
+          - 📄 0000001000011000010101017e1a824844b45a6613b7089e63.lance
+          - 📄 0000001001101011111011019d56d0402a8a4a1d41bfa695a5.lance
+          - 📄 000000101100000100000010e028394db39ddff03e34ed3b10.lance
+          - 📄 000000101110010101100010e81a2848c5a29be83da4985a11.lance
           - 📄 000000111000101110111011072d904720a6503b88279b3664.lance
+          - 📄 0000001110001101101100114b00bd4b60961682bcc9e11cd7.lance
+          - 📄 00000011111010000111011034cd8f4b24a1a09a1978b7a5a7.lance
+          - 📄 0000001111111000011000119e886c48f6b1d0976b0764a21b.lance
           - 📄 000001000011001100101011d8aa394cc090841524f80ef3f7.lance
           - 📄 000001000011110000111001300a364c0f9f9d4e880a1c2b1f.lance
+          - 📄 000001001000110101101100b710344ad7a87083b3dc390441.lance
           - 📄 00000100100111010000110021265144c98be3589be6a90100.lance
+          - 📄 000001001110100101101100f3264945208ca4fde157619bea.lance
           - 📄 00000101001011110000000158c6084fa79cc7a63e5fe627a4.lance
+          - 📄 000001010100111100001101c5635b405bae5f13b20dc5ab95.lance
+          - 📄 0000010110100100010111009ec4ef47e8bcf8d476150a2144.lance
+          - 📄 0000010111010011100111015974724587a040785b5b0125b3.lance
+          - 📄 00000110000000011101001007bd5e45a0a35d6dd4d515a7c8.lance
+          - 📄 0000011110101001101101017d86294476b6e7f69387850e81.lance
           - 📄 000010000101010010011010788a154591a66fd330d2c652ce.lance
           - 📄 0000100001110100000011006edb50455b954256e0a2cc3b01.lance
           - 📄 000010001111101010011111c93df6407ab3a816574013e36d.lance
           - 📄 00001000111110110111110170857e442fbe183841f9be6e63.lance
           - 📄 000010010001010010110110a5c50c4d1ba76d724a821b106e.lance
+          - 📄 00001001001001010010011084e557446b812cd082bb8e2ec9.lance
           - 📄 000010011000011110000101cc3096472db68807370a1c2b92.lance
+          - 📄 000010011100010010010110a0e91b419bb40712c992732e2b.lance
+          - 📄 00001010101001101100100094e0ab461488cdc6afb29e03b8.lance
+          - 📄 000010110001110010101110b458b24efaacf5b2094c8293b4.lance
+          - 📄 0000101100111110000011016f3b784f31a43bb82110f8c344.lance
           - 📄 000010110100000010001001ebad1c45f08771858e9f777a73.lance
+          - 📄 000010111110011000110011b5344243c3bc241f5790ffc783.lance
+          - 📄 000010111110100001000111fd8fab4207b874283add4e5703.lance
+          - 📄 00001100010100110011101170716249aea5cc47f601ad973c.lance
           - 📄 000011000110001111110110cd7a094e80b40f434a48981299.lance
+          - 📄 00001100011110001101100162838344d59d17fc781d22f7fa.lance
           - 📄 000011001100010011111100a26dbb4507a3028b7b5bf7dfd5.lance
           - 📄 000011001101111101011110b42374499285728316019b53d2.lance
+          - 📄 0000110011110011101110112c65dd4f47af92462a4d0926f4.lance
+          - 📄 0000110100000101000011113922f34b79b73f5932aec2c576.lance
+          - 📄 0000111000001111000100009848d440178a210e15819dc38b.lance
           - 📄 0000111010010000101101014760444e99a8c2224c36a7c116.lance
+          - 📄 00001110111100101000000120d3834d42b8d3bfe3d5a7475c.lance
+          - 📄 0000111100000111110111110ba2cd4b69b5b4dab6b51c302b.lance
+          - 📄 00001111001111111100101164401b403faafe1d91dd065760.lance
           - 📄 0000111101011101001111102e0fb14522a2058bd356c58477.lance
           - 📄 0001000000110011000101106ff6df4731b63081b04489c6f4.lance
+          - 📄 000100001000011000111100cc9b3641dfb898e0f269013a9b.lance
+          - 📄 0001000011100101011001005ec01043df8778990ea0f0d3c4.lance
+          - 📄 0001000101001110100110002d64b3431996eb893a97a2d5e9.lance
+          - 📄 000100011010110011100010a755744eb48d403d7bcf10a841.lance
+          - 📄 000100011011011100001011e27a814a36a1302955268ea72b.lance
+          - 📄 000100100010001111011101a683fc4fb383b48be09faff27a.lance
+          - 📄 000100100100100111110100c694704c87a2fe79bc19d0be41.lance
           - 📄 0001001001010110010001114b390a41559b69a698bf3926a4.lance
+          - 📄 000100100111001101101000e8e3dd4df5ac89deb29901a356.lance
+          - 📄 000100110010001110101001cc3b3c460993bae37b3366df02.lance
+          - 📄 000100110100110101111100c037a741f3a84455cdbfa11045.lance
+          - 📄 00010011010110101000001189c59b43ad8ae53a2748fef4c0.lance
+          - 📄 00010011101101100010111076370b4cf9a0142d6c2240e20c.lance
+          - 📄 000100111111011000100111eb9ae54627b1667de412c01a3c.lance
+          - 📄 000101000000001101110011dadb484ba68e96f4e7752391c8.lance
+          - 📄 0001010000100011000111010e98ad4070a3ac96c72ec2b7ee.lance
+          - 📄 000101010110011101110100e50a154abda13eed0887ef7693.lance
+          - 📄 000101011000110011100100082f2742c2aad8125f97faf3b3.lance
           - 📄 000101100011111110000111ebad4b445e9cef1c50a19b92db.lance
+          - 📄 000101100101101100111110cf333344918aedbe0da78f422a.lance
+          - 📄 000101101011010101111100f28772420f8a7d0e9b333c5e5b.lance
+          - 📄 00010110101111010101010002978a411391a54f060e1850bd.lance
           - 📄 000101110001011010100100d878854e88863ff0a11e7b4805.lance
           - 📄 0001011100100111011011118f31a2459482661b5f04d98021.lance
           - 📄 00011000101111001110010152b4124f10b812a9cbb79f92fd.lance
@@ -3489,183 +4458,585 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 000110010110101010001010db101247acb1e2336dd76db722.lance
           - 📄 00011001011111101000001112cb0340fd9ce84f7473d95e71.lance
           - 📄 0001100110110101011011110380c34f0d844b262e1271132b.lance
+          - 📄 000110100010111110011110a17f9145198176fa3e3611f7d7.lance
+          - 📄 000110101010101100000011b8719c45c28176fa4c88fa6fc5.lance
           - 📄 000110101111100101001111e0e2f04fcf8012d7ec0ced1a3f.lance
+          - 📄 0001101111011010001011115fa123441ca12a4a57c0c5d1ff.lance
           - 📄 000110111110011101000110f97d464e62bb2e74227c050043.lance
           - 📄 000110111111000000010101f948464a748b47dd26b9efc207.lance
           - 📄 0001110000011101000100007c0ba54b8286f501818c1c851e.lance
+          - 📄 0001110010101110110010119ce01c42aeb6cf0aae432d8ec2.lance
           - 📄 0001110011000101011000015a6d6548428479521ddda03e03.lance
+          - 📄 000111001111111101111001ba97f240b5ba51e4a6388445b2.lance
+          - 📄 0001110100110111011010019297a34ede97dbcfa595da9267.lance
           - 📄 000111011100001011010100808a3544c3846d09b9dbc2366f.lance
+          - 📄 0001110111111010001101102a121b45a888b9055713b4d81f.lance
+          - 📄 000111100001100111000000c6b7a54661b0a25f50bd47f850.lance
           - 📄 00011110001101011101101057d08e45b79d98091e4a8ab66e.lance
           - 📄 000111111101000111001000346f324b919cb7313747c9108a.lance
+          - 📄 001000000010110010111010e4dec644869c82074bc6f23747.lance
+          - 📄 001000000110011011100110d50b764a1abc3ea386eeedda84.lance
+          - 📄 0010000010011101010111109793e04a20852e2b8fca381b79.lance
+          - 📄 0010000101111100100000001c6b5141d7b555203479e01faa.lance
+          - 📄 00100001100111010011100143b5864957b9012bf9ed8c80ef.lance
+          - 📄 0010000110100010110010119db8cb4839a0e9fa6d847af0d4.lance
+          - 📄 001000011010101000100000657de1416592b47cab8c0cdd80.lance
+          - 📄 001000011110110101100000d2642841c69272ffc54c8703f0.lance
+          - 📄 001000100000011101100011db7366475586f2ff0d4ee06e08.lance
+          - 📄 001000100001011110011010bd2e234552a46e9638427bcb06.lance
           - 📄 00100010010110101011110084223643df83011564abf269ec.lance
+          - 📄 001000100110111000100100deed104a269a0ddc6b70c9020d.lance
           - 📄 00100010111011100010110006af25496c942c775b5512e88e.lance
+          - 📄 0010001110000010110110107855014f5e91ee7f239daa2042.lance
+          - 📄 001000111000101000011011c82220450cb79e900658888ec8.lance
+          - 📄 0010001110100001010001009091524f2886363f2195e107b7.lance
+          - 📄 001000111101110111001001eb1c7e4c6a90b96031524b6fdf.lance
+          - 📄 0010010001000111011111006bc7204c599229d57ce7d06793.lance
+          - 📄 001001000101001111001100e6d37d4edcb43e6a31b33e5b78.lance
+          - 📄 00100100011000100111101161147f448898806bb95f2f491a.lance
+          - 📄 001001001010011101101101d564b847b29298d2bcdfff82d0.lance
+          - 📄 00100100101101100101110095061e4658b09fcb579cc84989.lance
           - 📄 001001010100101100111111d2b93a4703b8bf876de860f268.lance
           - 📄 001001010100101110010111dc2f9a4d6183998a843385d287.lance
+          - 📄 0010011010100001110111100c84f140c49ab75e33efd0c124.lance
+          - 📄 001001101100000101011011c67a8e4473a7843fc24a3778ab.lance
+          - 📄 0010011011000100100010114ef71c401e865a371763e328d5.lance
+          - 📄 00100111010111101011011026940a47a19cbc540175a98b10.lance
+          - 📄 0010011110010010000010001eef414270845a4b8cdd836753.lance
           - 📄 001001111100011011010100bcd40044ab81bd440eee5dfa35.lance
+          - 📄 001001111111010110010100bdbc3c45efa775737d3b1afc1f.lance
+          - 📄 0010100000001111010011008144ff481e811cd168c9a15ffc.lance
+          - 📄 001010001001001010010100efb3a54c5799a2a67bd2335da9.lance
+          - 📄 001010001010010001001000093b4d41828f755fb1b324eeee.lance
           - 📄 0010100010110111100010116bb5234c059dff1ff3d3441862.lance
+          - 📄 0010100011000011100100109ebd154d469ae6976f2cfe5dff.lance
+          - 📄 001010011001111010001110f6a2ae4cce8e801670c3772d32.lance
           - 📄 001010011101011011011011bb4be94107a56f58003715c56b.lance
           - 📄 001010011110100011100101db5c6840bb90b10446dc7f45f0.lance
           - 📄 0010101001100000010110002844d94c20824bba9c4e51c55e.lance
+          - 📄 0010101010000110111101015791de47278277baa056192b5c.lance
           - 📄 001010101001000110010110b9a7484ab8a55a24aca7ab521f.lance
+          - 📄 001010110100010110111000ead5674f0892516012a3e1fca4.lance
+          - 📄 0010101110111010101110010104cf404cb98147abf2101824.lance
           - 📄 001011011010010110011101da2166487f95fd1ea41ab1c541.lance
+          - 📄 0010110110100111001111009780ff41a4bab0b3755c14e226.lance
+          - 📄 00101110000011101111011013223f4175b68bad141dac13c9.lance
+          - 📄 0010111000100011111100010241094c8da587bb85490e7907.lance
+          - 📄 001100100111000100110011a0abe141d2bc1f356259942114.lance
+          - 📄 001100101011100110101011f0b76a4018b9f03ffd127a8d33.lance
+          - 📄 0011001011100001000100107a02284ba0872de83b12b990cf.lance
+          - 📄 00110011011111011100100023bb244b59ac7950d3b692b47e.lance
+          - 📄 001100111011100000100100e952a84e85b21ba52582a7f0b0.lance
           - 📄 001101000010110001010100f8784d422daba55a39885e0aca.lance
+          - 📄 00110100010010100011111059c2c94c9c978a3078ab246a73.lance
           - 📄 0011010001101001111001010c27a34400af6c03ab10bfdd86.lance
+          - 📄 0011010100110010011010013b85024e0a86c3a3d8e4048345.lance
+          - 📄 0011010111110110001101013d215b49caa54001db191d09f3.lance
           - 📄 00110110011101000111110027f6a040699308a6cbd2ce6254.lance
           - 📄 0011011010000110111111006fae9c44fba0c944cc9df112e2.lance
+          - 📄 001101101011111011000101815b3449fd830205ed70c79244.lance
+          - 📄 001101101110111110010111bc8ddb41339914b1f874919488.lance
+          - 📄 001101110001000000110010c7ef7449589fb2fba46f873a9f.lance
           - 📄 001101110001101000110000c226e549c59aa2b56516ea0007.lance
           - 📄 0011011100011011101011107b620e4f7d81a5f97593101dc6.lance
+          - 📄 001101111011011100001101e63e51425c858e398d50fec974.lance
+          - 📄 00110111111100011111001161f56a4bc0ac296d708ee4e32b.lance
+          - 📄 00111000010010111000101141e46f4b16911f01efab201763.lance
+          - 📄 001110001000000100111010a3a80e4d1c8aa3c04ba7c756db.lance
+          - 📄 001110001110100011111001b910db4ac89e5cfa224adbb078.lance
+          - 📄 001110001111001101010010e233c6436080f4448e854dd0a0.lance
+          - 📄 00111001000101011111010188f03541deaa1a602b47eda3bb.lance
+          - 📄 001110010001111111111110950b6e45198ebae6e3400a3b5e.lance
           - 📄 0011100100111010111101118bef2444f59e9d82c5702c88ec.lance
+          - 📄 0011100110011010000011114bcebd44079ed56c5f5dcc8ec8.lance
+          - 📄 0011101001110110110001003ac5fc48d8a2e2471665d4d889.lance
+          - 📄 0011110000100110111111008881824bd49f4d9300f3851d1f.lance
+          - 📄 0011110001101111101101012195cf4a43a80360e63652e2f0.lance
           - 📄 00111100101011101011001063f2c140cd93d32a292f41268f.lance
+          - 📄 001111010000100000111001aa62f94539a822c0073384af35.lance
+          - 📄 001111010100101011011101db3a5443cc8fc04252dea78ac2.lance
           - 📄 001111110010001110000111e909ee41eb9c3d1aa07944d40d.lance
+          - 📄 001111110111110011111110c83d5b49108680c288dbcd4654.lance
+          - 📄 0011111110010101101111102cb3454a7584dab9c4252baf8f.lance
+          - 📄 0100000000010010010011117d205942d28b38a4aff19ad8ce.lance
+          - 📄 0100000001111101110010115cb4a046378fd34acc245698d7.lance
+          - 📄 01000000100101000001011042da5349d9b869bdca1f17d34a.lance
+          - 📄 010000010011111100011000669b9b40f7ade0427561cedc93.lance
+          - 📄 010000010100110100110110256c434ba686e0bf5350339e7b.lance
+          - 📄 010000011110100101101111dd748744c4ad77c6c95ea44358.lance
+          - 📄 0100001001011011111011013e3ea1409098231318b1f5ab69.lance
+          - 📄 010000101111011111000000c3b07542b9877ca0da1abe0d34.lance
           - 📄 010001000110100011011011e403ce42e8b2316a799778cbb1.lance
           - 📄 0100010001111111010001005870c844e6af096451714202fd.lance
+          - 📄 010001001010010101100011463abb44f68af78f73e493f0ce.lance
+          - 📄 010001010000010100110111d8b37749449b2f430cac46e226.lance
+          - 📄 0100010101100000111000109120984360be8cd3208e5c9d56.lance
+          - 📄 01000101011100110011001022be744400b23fabfffbc6e0e3.lance
+          - 📄 010001011100111110000011f0ef5a456badb7b6067e0f3fd1.lance
+          - 📄 010001101100010000110001e3d542476eb547156913cfc3b9.lance
+          - 📄 010001101100010001100101d48e954365ae594aeb5cc1340b.lance
+          - 📄 0100011100011000100010112eae574bc8bc0b4a9c5f865e5b.lance
+          - 📄 01000111101010011010001185591f4bbda05090050b0999c5.lance
           - 📄 01000111101110110110111050b2fd4c3d88c17f655e42e217.lance
           - 📄 010010000000100110001100b6e04f4638b1e514a3f76b760b.lance
+          - 📄 010010000101110010011000aa0584421a929d938b8006556e.lance
+          - 📄 0100100011000110101001111fe23e4b8cad93a4bf1e4ebd40.lance
+          - 📄 01001001011010101101110153b0594f33a40685c7eb9e3100.lance
+          - 📄 0100100110101010011001004ef33c4dd5988b832b6a5885af.lance
+          - 📄 010010011010111100010001eb4adc455cba14c495c3bf9792.lance
+          - 📄 010010101111100010110011de4d394641bc6570627ae27b70.lance
           - 📄 0100110000001100100100107df3af41029bcbfb766d7d4d84.lance
+          - 📄 010011000100001010100001d3b94a480b887154f52cd44ea7.lance
           - 📄 010011000100011111101011bf97ca4701ad568e67437ed691.lance
+          - 📄 01001100101001110100000157cb4c4997a30ed07f9d36affa.lance
+          - 📄 01001100101010010011100100365c456a9a5755382bdb091d.lance
           - 📄 010011001010111110110011d9f3754d07818b072b52fca0fb.lance
+          - 📄 01001101000100000001100042c865453ab46b50dfe1a70e3c.lance
+          - 📄 010011011100001110001011e86eb3431cb6e7e0946598af47.lance
           - 📄 01001101110011000010100147d1ff4654beb68359848bbc27.lance
           - 📄 010011100000111011011011d475574622861706e196e4c1a1.lance
+          - 📄 010011100110011100011111660341456e91aeda72821e5545.lance
+          - 📄 01001110100100001101001112b356430fb1fede1319a14f59.lance
+          - 📄 010011101010010100100000cc1be34f1585dba15871d69c25.lance
+          - 📄 0100111011000110101101017399f94760b2e88f79423019ec.lance
+          - 📄 01001111010101101101010019ad8142a2a35aa4d2a608f388.lance
+          - 📄 01001111110011010101110132b961487ba0915f81bb321a36.lance
+          - 📄 01001111111000101011101112397642aabf97316c595c6959.lance
+          - 📄 01010000010110100001011188773a406b8a5ce85367ff9ebd.lance
+          - 📄 010100001101000011000000e6ef984775a519a3e22b214027.lance
           - 📄 0101000011101100010100007ba5e14f34ab417e8031b812bf.lance
+          - 📄 010100010000111010100111f0dcc44685a11711c3d09ae533.lance
           - 📄 010100010010000001100111afde4d4a1eb414ad9e29e324a0.lance
           - 📄 0101000110000111000100011558764199b02139f5f8670475.lance
+          - 📄 01010001110111000101101021f1c246c5820f4f968a2c40d6.lance
+          - 📄 01010010000011010001000079f95041c0b06ee309b6f63f28.lance
+          - 📄 0101001000110010111111111e1f484a48a08f9d317b254391.lance
+          - 📄 0101001001111101100100005a1aa544058dc00e7677abbe5e.lance
+          - 📄 010100101010101101000000704bcc4e92b754b9dd4bc4ba9c.lance
+          - 📄 0101001011000000011100007ae20a4cc584d8698b6dd0adc8.lance
+          - 📄 01010010110011111110011024868249acad15fb0b3fa4703f.lance
           - 📄 0101001011100101110010019250bb4abc8e8154914cd39a71.lance
           - 📄 010100110000010010110110f2dcfb40048646ab9454a3dbc2.lance
+          - 📄 01010100000111000001110014a74e4ba790b16e24bc449362.lance
+          - 📄 01010100001000011101100045be1a4e9c8e4cb82d01ed8b1b.lance
+          - 📄 0101010100000100011001100d87084cbfb5e86dc54aaad711.lance
+          - 📄 01010101011011111010011061f4d44dd584b8584cc6add975.lance
+          - 📄 010101010111101101011011c8b78c4862a6f15caac6eccd86.lance
           - 📄 010101101001100010000110adc8b84fb0a51b308e74523f7b.lance
+          - 📄 01010111000001111110100083234e44b9b5e0370f62186f84.lance
+          - 📄 0101011101110100000000118b45fd4b74a39fb3065783a4be.lance
           - 📄 0101011101111101110010107a6b9843c4a2c6719977d0a6f6.lance
           - 📄 0101100000001010011010002622de4dfeb0d92ca3f0297f91.lance
+          - 📄 0101100010001111011110015e70324d1c954218f0cbb5ac94.lance
+          - 📄 010110001110011100010111a78d79410faaff3670bbc2534f.lance
+          - 📄 0101100101101010110001000b66304a33b91c7a8d18695f74.lance
           - 📄 0101101010100011001110010ad5e74913804966d73c3bb127.lance
+          - 📄 01011010101100010100101183f09140d3a03364da545ce135.lance
+          - 📄 010110101011111110100010f4fa314c33839397ba5ee7cf3a.lance
+          - 📄 0101101100111000101010011e6de4406db037a83f6d4a27b5.lance
+          - 📄 0101101100111011011000015a1d674adf88524aacc53ea2aa.lance
           - 📄 01011011010000111001010078a8694e5fa79fcb962ca66c10.lance
           - 📄 01011011010101100011100091b2284ceb853ef640888c6dfa.lance
+          - 📄 0101101101111100110110017b264f46d5bdf2e17968026db8.lance
+          - 📄 01011100010001100111010122b9994a9c9f31ff67a8288d82.lance
+          - 📄 0101110010110111000100018191154df9a8d49dd61e25d914.lance
           - 📄 0101110011101011101011018c25374d70bf6a7cc5b19ec70e.lance
+          - 📄 0101110101001001100110016b653a46dd996f1a9685eddc89.lance
           - 📄 0101111010111000111100013aff8a4e51aff82159e3d80203.lance
+          - 📄 010111101101111000110011cbf2cf467c90610abb48f2e873.lance
           - 📄 01011111000100011010100108660a4e58b94ddb9e1e67a7e0.lance
+          - 📄 011000000001100011000001f8bd7646b3ba21ad054944f465.lance
+          - 📄 0110000011010000101000016b450f41e8a30d05e528aeed86.lance
+          - 📄 01100001000100010000000134d82f459d8145bfd28fea5d0c.lance
+          - 📄 0110000101001110000101008fa7eb4e07886fbc339253e5cc.lance
+          - 📄 011000011001001001100001c800e44f8a87c001b382f60e32.lance
           - 📄 0110001000101000101110103def75486491fcd29dfaed4bd9.lance
           - 📄 01100010011000001011000007a6954096b10e7f2f45f768d5.lance
+          - 📄 01100010111000011011100025e05942de86d57fb35916cee0.lance
+          - 📄 0110001011111110001011012c19e64c95b0fe0fb2f10fe2c1.lance
           - 📄 011000110010010010100000d9d8f04418b4368eb481354066.lance
           - 📄 0110001110111010000111014bb92b4677bc293eae59c9896e.lance
+          - 📄 0110001111010001011010110d23b4451db676e29e8d3bc463.lance
+          - 📄 0110001111011111011011109cedec4996afafadca918ad61e.lance
           - 📄 011001001001111101011100a9ab27453d868f57ae7bedf67a.lance
+          - 📄 011001001010110110010001048791426cb0ee9f95e29db198.lance
           - 📄 0110010011000100000101105a0ce148608dd855236a614556.lance
+          - 📄 01100100111000100111110051eae546dd964707679b71123c.lance
+          - 📄 0110010101111110101110009fed4c449397f80676a5707725.lance
+          - 📄 011001011001101000010101f13bad4980a6b80f609babc2e2.lance
+          - 📄 01100110001111101111011135c561486b83dc598d4e450aa5.lance
+          - 📄 0110011010011001010000010ed706410fa47293ecf13803a8.lance
+          - 📄 011001101101001111001000295a5447e9b0abd2a746f906dc.lance
           - 📄 0110011011011000111110106042d2452093fa4a47e4d8b505.lance
           - 📄 0110011011110110000001110f8f594a14bf741232c9a493bd.lance
           - 📄 011001110100001100011101c3f79e4421899dcfc1accfef75.lance
+          - 📄 0110100000100110110111108c9df8442ba0161978358bfafa.lance
+          - 📄 0110100010111110000000116efdfa4961a1394cbd0e84ef9c.lance
+          - 📄 01101001001111010010011195ef7b4e8db319e536a944f86d.lance
+          - 📄 011010100011110000010011de9955464e96515a78dcac7620.lance
+          - 📄 01101010010100111010011125801b475fb6d5a978ed349ec7.lance
+          - 📄 011010101001100101101010b371924af3a047f79bc5b43384.lance
+          - 📄 0110101101001001001010001cc2e64a6c8293dc423a13fd43.lance
           - 📄 011011000110011010101011fc6c6f4cb584c02d57b600d117.lance
+          - 📄 01101101111101111010010171c608446fa9848130fa3b0be6.lance
           - 📄 0110111000110001000000017ba1ea45bfb7180a10f8023112.lance
+          - 📄 0110111101100101111100011cb2f348c4a03df961f35413fa.lance
+          - 📄 011011111100001011010010d7968b436180d195eb7cb87381.lance
+          - 📄 01101111110110110110101050fcfa4378b677ef37b5c44a6a.lance
+          - 📄 01101111111110010010111012d85242799763d0797cd68ef7.lance
+          - 📄 01110000000110110001011097f51a4c0289a6448b9b6b9372.lance
           - 📄 011100000010011101000011e2f9da41e1aa9f67ecb83138c9.lance
+          - 📄 011100100111111000101011ff34274568801ccf0b505746e0.lance
+          - 📄 011100110011101101101110bc83b54754a9293bf472c94bd9.lance
+          - 📄 011100111011100110100101a2757f426390099596215ab735.lance
           - 📄 0111001111100101100110017329b5407eabc37ce9eb4347ee.lance
+          - 📄 01110100111000001001001073bccf4b8292ec2b64cc215a1c.lance
+          - 📄 011101010001101110010010fbde7b441eb23e6bc685b62cf5.lance
+          - 📄 011101010100110110011000a2e7ee46c9af04da819735b6be.lance
+          - 📄 011101011001001000111011a0e9514543afa9b1c40b5c7f06.lance
           - 📄 0111011000000011010100010afaa34961ae6467b98f13e045.lance
+          - 📄 011101100001100110011011cd13bb4ce9afa90de0dbae3728.lance
+          - 📄 0111011001110111111101111a0d1b4078962209f8e0e812a4.lance
+          - 📄 0111011010110000101010111e86a84952a4a72d8badbf6676.lance
+          - 📄 01110111001001001000000027ea244396af542ea60e768517.lance
+          - 📄 011101111010011110001100983cd447179997b7301a4c6463.lance
           - 📄 011101111111000011110111ec49194e42aedd0204f8dab34b.lance
+          - 📄 0111011111110101011011005801a04802b2d2485fb90f764f.lance
           - 📄 011110000111000110011000f59d7343a69ea19658e10aaa52.lance
+          - 📄 01111000111011000100000149937b414290d3f720af734bad.lance
           - 📄 011110011000011001101100f4d79e4d46b5d4188cd40e9617.lance
           - 📄 0111100110111101101111112d693f4cd7b91d13c47f8d2c23.lance
+          - 📄 0111100111100110000000118d1c0640969a4d2ce46bb12a54.lance
+          - 📄 01111011001000110110101119e2264b3080ae4607309152ba.lance
           - 📄 011110110101001011101001b8d22b4118851e855d19730abd.lance
+          - 📄 011111000000110111000100c4562e4533acb38077b02b96e9.lance
+          - 📄 011111001010010001110011d9c28a47568f6266683805791b.lance
+          - 📄 0111110010101110001111105fc24d49db92e6edd1064db0c2.lance
+          - 📄 011111010001110011011111b5ca444acc898c728223d58426.lance
+          - 📄 011111010001111101101101146f7246f7ab735263871c9713.lance
+          - 📄 011111010111010110110100fab5c34eeb9549ae03b65fdeb2.lance
           - 📄 011111100001110011001101037fb5489db95a865a81648d43.lance
+          - 📄 011111110110011110011110e39ec646688831fa92baad54b1.lance
+          - 📄 01111111100000110000010111f21a4ecb9e24cab33e123a48.lance
           - 📄 011111111010001010001100af2c0b4cd7b2d76af91dba5db7.lance
           - 📄 01111111111110000001001112996a4db7923e64f0ce8a79b4.lance
           - 📄 100000000010100110101100f4d1a746a28a1b92c8d23091a2.lance
           - 📄 10000000011010011010110089f1734509aac27a682a462c02.lance
           - 📄 10000000101010001111001042d86446f4a88fe530f0fab7fe.lance
+          - 📄 100000010001010100001111dff65b452094cca9c841c880b4.lance
           - 📄 100000010011101110110011cf84704a209c8eafd916ad9554.lance
+          - 📄 100000011000101001011100f6f1b84544bc923b52291bc2b3.lance
           - 📄 100000011110010101111001be5b7c4cd9999c7be061b8728a.lance
+          - 📄 1000001101000111100110111e0a58454ab794684bbc11e55b.lance
+          - 📄 100000111000110000111101981de14045a824dc9dd5fab1d8.lance
+          - 📄 100000111010000110101011962db0473f9da179bc39f954f0.lance
+          - 📄 10000011101101101111011164aca54f83887d4282c6471d38.lance
+          - 📄 100001000110110111000011462b4a4d5eb38c21502f389653.lance
+          - 📄 100001001011100000010010848a4b41d4935d94b8e0cfc460.lance
+          - 📄 100001001110011100101111ff5eaf4e07a8f7819a36ec338d.lance
+          - 📄 1000010100010101110001018be8434d0eaa4fb6dc04020eb1.lance
+          - 📄 100001011010000010111001a602fb4db3a475212571f9df6a.lance
+          - 📄 1000010110101001111000001be7b544c7b43101ded0358f48.lance
           - 📄 1000011100111000000001008930a14f6c8c279ad14721f7ea.lance
+          - 📄 1000011111001100111110002dd7974212994f6a5e65182f70.lance
+          - 📄 100010000010110001000101aa42874599be2b285c507300e1.lance
+          - 📄 10001000100011000111010001a1b14f5189698084458893b5.lance
+          - 📄 100010001101001110011110c0ca594882a9008a43a38d4f44.lance
+          - 📄 1000100011111000100001003229234fd88bd2077609f0da96.lance
+          - 📄 10001001100111110110001027fb8f4479a014193fb3b356a2.lance
           - 📄 100010011110111000111101614392403193b4513edba30d0b.lance
+          - 📄 100010011111000111110110b31c6f4981bdc1c26c2501591d.lance
+          - 📄 100010100001011010101100249ff6466a80a5c12eea163638.lance
+          - 📄 1000101001011010101011112618114fe3aac04b5237f3354c.lance
+          - 📄 100010110000010010100110d12d654fac9b2072dfcdebfc44.lance
+          - 📄 100010110010011110110010002d7543949aaf2948520fd889.lance
+          - 📄 10001011010101011000110021dbc64d73a7d6ad01febc0218.lance
           - 📄 100011000000101100001111af8021491887acde125f6061ea.lance
+          - 📄 100011000111100001010011160e3b47be96ab7b98a0bc6841.lance
+          - 📄 10001100110111111010110076acde499eae19d9cefaf9a4c2.lance
+          - 📄 1000110101000001101111116efbbc491daaae5ac3b84548c0.lance
+          - 📄 100011010100011101001101eb087a4ae0a9b3ad73e84112f1.lance
           - 📄 1000110110101010111100114d4a8e4f7aaa842297c80e9b7e.lance
           - 📄 10001101110101100101010187431f49a1b1c28e46f4dc8a5d.lance
+          - 📄 100011100011101000111101b271174d83bfd30e90f23c3761.lance
+          - 📄 10001111010101011101010156c9dd4c45af2cb66bbdf4dc9c.lance
+          - 📄 1000111101111111111111013cc7304003ae37f93c38ebc140.lance
+          - 📄 1000111110110010011110118349044f8493b1e0c449a34b65.lance
+          - 📄 100100000110000110000011d4dd144ad1959c8ae20bcaf7cb.lance
+          - 📄 1001000001110101100010100122d84699ac91bbe550990c7f.lance
+          - 📄 1001000010110101100010109b419a4db7b98b88e49edbdad8.lance
           - 📄 100100100110100011000011c48c9b40e0a1cb1f3b9364cf2b.lance
+          - 📄 100100100111110011010100f7395a42f494ecc162b2e184af.lance
+          - 📄 1001001101000110000010007eb87b43a88f7c527876f5d4a1.lance
           - 📄 1001001111100000011011106167db4aa9a92e6a817758315a.lance
+          - 📄 100101000011100100011000ee87ef42a9bbf63e3a94cc895e.lance
           - 📄 1001010000111110111000009cb7974d2d93ab34936e6cef6d.lance
           - 📄 100101000110110111001011da1c1f4cf6b33755d812a5de36.lance
+          - 📄 100101000111100001111010a4e6f44488b196546d696571ea.lance
           - 📄 100101001000010000001011d0f41b4b92ba6e32ac568e9206.lance
           - 📄 100101010001010111100110bd79e64e9eaa85ccbb957cf821.lance
+          - 📄 100101010001111011110010c6bcf14533bef578c2ff13439d.lance
+          - 📄 100101011001001001101000a9f9e44f9f96a8a3f2b96ff1b0.lance
+          - 📄 100101100010000010111100128f3c4ca6b6d21f6436792e11.lance
           - 📄 1001011010000010001001016f8c1943fa8a6187f6ea616a62.lance
+          - 📄 100101101111110000111100e8901942f198d587b415f4f9a4.lance
           - 📄 10010111000010000010001065efb349d7b990830c2560215a.lance
           - 📄 1001101001000110011011106fa430474f98fa36cd04ac30c9.lance
+          - 📄 100110101101011100111010cf214c4aec9b0a75158f8a3a1d.lance
+          - 📄 1001101100001000000011004fe9054c8b88d38bebf6e0ebc2.lance
+          - 📄 1001101100011111001001116f4e294622b19ecf656085ef6b.lance
+          - 📄 100110111100100001001000020b084aaa9406da272f6444a1.lance
+          - 📄 1001101111010111010010119fee974442bf75c0f1a9f38919.lance
           - 📄 1001101111101010101110002460f24b5083652e0ad8b3d77d.lance
+          - 📄 100111000100011100100111198e8e47bca9ea100561f790bb.lance
+          - 📄 10011101011000100010010048156a4c4fb057d6dd39fe31a2.lance
           - 📄 10011101100100110000111042c4504776b395b3f62be4ef6c.lance
+          - 📄 100111100000011100101101edd95345c08f8d49a8f66b2500.lance
           - 📄 100111100110111011101111c142a74b8aba9b85c6af4ea44f.lance
           - 📄 10011110100011110111111158885e4b76b883ec6b208482f4.lance
+          - 📄 100111101110111011110101362dae44628cba6b74357b6f70.lance
           - 📄 100111110010111101100111501ad24049864100c6aed7e58e.lance
+          - 📄 1001111110010000111000118a51a24c4597b3584227becca1.lance
+          - 📄 1001111111010011011110000bc68c42bebbad0b44cdf15c38.lance
+          - 📄 10100000000111010111110114294b4784bf2428b06cf44ef2.lance
           - 📄 1010000010001000011010015afd4c4ef4b75c1b3eba4ae203.lance
           - 📄 1010000011010110101111016b3af94e81a9fef18f6898a354.lance
+          - 📄 101000001101110101010101b1e9b44a24b99b10d97d6d021c.lance
           - 📄 101000100000010110011000a36d024d51a2193856ff0879bd.lance
+          - 📄 101000101011100110011111c0b2c047a38f90dc6e55774162.lance
+          - 📄 1010001011010100101001119c71704389a2917d94b4b837b9.lance
+          - 📄 101000110010101010100100d5e6e048a087f3f96cbdecbac3.lance
           - 📄 1010001100110001011101106ca8a54b7f9fbbbbb77503f586.lance
+          - 📄 101000110111101000100000e980504805ae56e285dec7f33f.lance
+          - 📄 10100011111000001111111007769b498e803d71feddf5fe1e.lance
+          - 📄 101000111110111010000010772d594aac9d71664dce8a1d4d.lance
+          - 📄 101000111111100001100110b169564dc082ac7e17f731053f.lance
+          - 📄 1010010000010111100110010cdb5e4806b56c8e65e4160c4e.lance
+          - 📄 101001001000011000001110945d3b44e69827c1186908b76a.lance
+          - 📄 101001001111111100111100b5b4ab4e53b45d290c69046fdd.lance
           - 📄 1010010100010010100010010ddef741f9aedb6af11635df2a.lance
           - 📄 101001010101000110001110efc24944638b30131da2ca9c9f.lance
+          - 📄 10100110010111111001001111e8bc4e2290873bfc42adbc69.lance
           - 📄 1010011010010101100100003a16fb40e08cf586528555ae2a.lance
+          - 📄 101001101010011101100001889b0e4af19bc1e410d15fc752.lance
+          - 📄 101001110101010010101110a7b17f4aa3b46d95ac164bfc07.lance
           - 📄 101001111101000000111110389c174011a05b61b405186c32.lance
+          - 📄 1010011111101000111011103f4cab497683b195d4505710e2.lance
+          - 📄 101010000001100011010100ac92d64035a783563551728ba9.lance
           - 📄 101010000110111010101111914aa9407d9dfa99cf5a8d38ab.lance
+          - 📄 1010100010001100101011107263a44e58b7b3e468805a77c2.lance
+          - 📄 1010100010110001010101016342504547b4c92f7eed8621f6.lance
+          - 📄 101010001111011010000011de2a124191b1aacb412cfc6905.lance
           - 📄 101010001111100001101111db4a484736b86f0a07283ab5f2.lance
           - 📄 101010010000010000010000794de846afb8684b516d00f695.lance
+          - 📄 1010101000001100111000110f12b34df6beff00034e46b69f.lance
           - 📄 101010111000000100111101a51d82468591e2273a9b8abefc.lance
+          - 📄 1010101110001010001001101718f142d4becd1da24354b749.lance
+          - 📄 10101011111101011101011022115342869803546a0e5e8a2d.lance
           - 📄 1010110001110110110110015c3274433c97c654737edeb384.lance
+          - 📄 101011001000000011001000f96639477ebff362ea07c4733c.lance
+          - 📄 1010110010100000111100115ec27941b2809f066a151d3cd6.lance
           - 📄 10101101000111011110001033f5c54b558ed1ad7eea44a356.lance
+          - 📄 101011011000010001001011579bea4350bbf3ab01c1b11cae.lance
           - 📄 1010111011000011111101112bee3043d9a178198df181b636.lance
+          - 📄 101011110001101111110100716c1d4b889a1be3ad0f7cc814.lance
           - 📄 1010111101000011001100118c46cd44748cc694d3b6379b38.lance
           - 📄 101011110110011010010110c057434388970252a9d529f22c.lance
           - 📄 101011111011111101101010ba8e084746a7fdbae03be76964.lance
           - 📄 1010111111000100110100105669134960934adbdc8641cdc9.lance
+          - 📄 101100000010011000101100e6c08a460d96dfa87c49934fb3.lance
+          - 📄 101100010100001110010110f74ce8458f8eced7165d43fdd2.lance
           - 📄 1011000101110011110100013853194fb2ac48996e8e7c22a6.lance
+          - 📄 1011000110010100101011019ad4c442f1a2f6ba0b958015d9.lance
+          - 📄 101100011111011001000011c4446e42c1b45e5e380d6393f0.lance
+          - 📄 1011001001010011001000008f9d694b15a11783eb1b28bec6.lance
+          - 📄 10110010100000001011111115e9514b52b64eba5957c6ae4c.lance
+          - 📄 1011001010100001000110014eb30d4ee187907c4e953a645a.lance
           - 📄 1011001011011101111110104c557946f99d82167552fdfcf8.lance
+          - 📄 1011001100000100001110118923454889a7d31c825cab5b70.lance
           - 📄 10110011010000000010111194cced4d969d81f9de9891b824.lance
+          - 📄 101100110101001000000000e9948c46868dc81c24658df06a.lance
+          - 📄 101100110111110000101001b8c7774aa08fa1a0ad2d71b8b9.lance
           - 📄 101101001011010011110100b98e34418cba23876c057d5a8d.lance
           - 📄 101101010110110101111001766df642829594de981ab57443.lance
+          - 📄 101101010111110010100001080add4cefb616730e4cdde130.lance
+          - 📄 101101011111101000101100df33504d25a90ad705862f7b79.lance
+          - 📄 101101100010111001001100b971fb4f6381589c3e65c2f571.lance
           - 📄 1011011100011101011010115cdeaa4e1ca50915e01e9f9a1b.lance
+          - 📄 1011011111010001100100104fe06f4d0a897a7894b7e52195.lance
+          - 📄 1011011111010100001000011c0a0d4eeea82e3f5a6dbff960.lance
           - 📄 10110111111100010110111189f99f4a1bb1e4065d031f0318.lance
+          - 📄 1011100011110100101001006cb75245a4a0ee46269b2a0f18.lance
+          - 📄 1011100100001000001101111ac253424684fbbc2fc3d2517c.lance
+          - 📄 101110010101001011000101014ad44220b14a3a59b3c2bddd.lance
           - 📄 101110011101000001010100905c4d40e79aa7864baf5d5f2a.lance
+          - 📄 1011101000001001000000103a84924c36bdd5234715b08dd2.lance
+          - 📄 1011101000001101110100108484cb4f2c9e87054f4e3f7b3d.lance
+          - 📄 10111010001000001000100040c3604a7cadafff157135da82.lance
+          - 📄 1011101001101110110000110df1154fa99febc6eb491aa86a.lance
+          - 📄 1011101011111101111101103f70d940d5ace9c87ae1931f32.lance
+          - 📄 1011110001000010000011100b1cc6430abbed89cf8776dd67.lance
+          - 📄 1011110101111010101001007a18e94ec4b93383d5bd641722.lance
+          - 📄 1011110110101001111011008769f348dbb59a33ffbae841f7.lance
+          - 📄 1011111100111010001011005e30fe48ad86728d40cc34e3cf.lance
+          - 📄 1011111101110010110111105ddde346ec923b52ae059e75b9.lance
           - 📄 1011111111000000000010018cc677454b961f244b407541c9.lance
+          - 📄 1011111111101101010011108cef2b475fa91e59c17239694d.lance
           - 📄 110000001011101111010000ff69e34f74b32d1265bdec1e6f.lance
+          - 📄 110000010100111001110011a87cea400bb90be0cdd41378a6.lance
           - 📄 11000001010100100001110095806f45bca7a095ed0d98ae69.lance
+          - 📄 11000001111000110011010108814f4a3aacf568fc9fb753c8.lance
+          - 📄 1100001001100100000101115c6c724ce982c715be5bd04a01.lance
+          - 📄 110000101000111011100010fd85564773af4459eb106c73a7.lance
+          - 📄 110000101100000100000001e1ca08428fb4500cd61dce202b.lance
+          - 📄 110000110001110000110001ef47b34155be00af2737debb8c.lance
+          - 📄 110000111011111001000100b2030145b6995e84f083fda466.lance
           - 📄 110001000010111001110001eabce949408b7285751855ca92.lance
+          - 📄 11000100100000001011101188e0004742ba03e3ad17186e64.lance
+          - 📄 11000100100001101100011115f5474432ae4e2650fc130eb8.lance
+          - 📄 110001001001001111011001f2ce384d94883040f638409133.lance
+          - 📄 11000101010010101001000103f9644760865aeffdc58df75e.lance
+          - 📄 1100011000101110010110114c9ae14672bf8ffd4026a824eb.lance
+          - 📄 110001101011010110011000b6896847718d99aee0bd5a7300.lance
+          - 📄 110001101111101010111011cd6d2043e593ab9c1f90933e0e.lance
           - 📄 1100011100010010010010015a06534e2786e242f17329558f.lance
+          - 📄 1100011101010110001010006e57b4474cbbe6f07ba693632a.lance
           - 📄 110001110101011001000011b5d0894ee6aa58e56d7472f35a.lance
+          - 📄 1100011101110110000101116b223746869b3aa732c27f3cb4.lance
+          - 📄 1100100010100100111001108439f140a6a117031fd7af3655.lance
+          - 📄 110010001100110001100110bde17c4af18129c622e4be8ca8.lance
           - 📄 110010010111100110001011a69047401cad425e066126565f.lance
+          - 📄 1100100111000111010100009d5624406ba6f4cd68bf86cfe1.lance
           - 📄 11001010010001010010110186d3cc4722b5e099a684d8794c.lance
+          - 📄 110010100111010001000111aff5764da7a83587e37cd7d537.lance
           - 📄 110011011000110101100110451b1b4c24b67ec44a3c7ec506.lance
+          - 📄 11001110010010000010111197d0c6431c846d3a9377f58680.lance
+          - 📄 110011110000000101110010b7241840c286d23493c95776e2.lance
           - 📄 1100111100010011000011003c92334d609e3398dacfe717e3.lance
           - 📄 1100111101100100111111100e57f94f2c883dc9bd74cbaef7.lance
+          - 📄 110100000111111010111100254a534562ad6b497208c36adc.lance
+          - 📄 1101000010011110011010101b04b740f8a8fc4612290987f8.lance
+          - 📄 110100010000011110000110404ab74d86bddb2407c8f5f40e.lance
+          - 📄 110100010011000101111100761ff649a983ef25e1277022a9.lance
           - 📄 1101000101010110100110019eefdc44d7bf6f47769edc89bf.lance
           - 📄 110100101001000101000110abde0f4ffcaf34419ecdb746b4.lance
           - 📄 110100101001110110011111df7aef4633972dd291f70f13a2.lance
+          - 📄 11010010110011111001001107dbb64fb781e413aa2c29e27e.lance
+          - 📄 110100101111010000010011f786044e258a465143bfea753f.lance
           - 📄 110100101111010110001110288d5a4c9d985b9fef1187b796.lance
+          - 📄 110100101111110110001000102ad44791af294aebe5c93bd5.lance
+          - 📄 110101000101000000000000875ec44685a6c9f7dba0bd89fa.lance
+          - 📄 110101001111000100111100ad181d4fbca2a6fa5919badff4.lance
+          - 📄 110101010001110001001111593b3a424f92ba34479c150d6e.lance
+          - 📄 11010101111111111101101170d16040d6b877ceb19c4801dd.lance
           - 📄 110101100001000011111000357a354f9ba580a1b301509079.lance
+          - 📄 1101100000101011100011104bed5b4be2b506d4b3f9069fbe.lance
           - 📄 110110001100100110000000ab013145749728df93ae8f2fb6.lance
+          - 📄 11011001001111101111010149371e4c34836fb6ccf7b6006d.lance
           - 📄 1101100101001111011010018dee1849adbe90dd5fa397fb50.lance
           - 📄 110110010101011001101111e6e28c4457a301b15a63b31f08.lance
+          - 📄 110110011001110000111101d6c76646d2a4571d14c33782c5.lance
           - 📄 1101100110100111010111104551c0411abf1cc095490e5d7b.lance
+          - 📄 1101100110111110110011118b655f4b459339617e22f999b9.lance
           - 📄 11011010011110001010100009937349f1afadcc9eebad4da0.lance
+          - 📄 1101101010011010001110104ce04c4711b58414d0e30a977c.lance
+          - 📄 110110101010000001111010d601b6448d833a8e134a801c8c.lance
           - 📄 110110110001011110110100caa4ee489f826afc8b08413a3d.lance
+          - 📄 11011011010111011001001105ced549a2b25033893460b2a4.lance
+          - 📄 11011011100000111100001125d68b4beca9e87b05841a5a4c.lance
           - 📄 110111001101001001011001733093471eb48d68c599e4860e.lance
+          - 📄 1101111000000010111000107721524df0a600b9366c234d68.lance
           - 📄 110111100001111100000101ba53e74390998043b5f7fb710a.lance
+          - 📄 110111100101000100010011d465d947bc8e9dd04d3e79247d.lance
+          - 📄 1101111010110000011101000e11ee4db1b63fa3d75ce6dc1a.lance
           - 📄 110111110000101100011101e32b794514abf38ea4103f5ac1.lance
           - 📄 110111111001010001011100fd73864ec2a644d8a50934a6c3.lance
+          - 📄 1110000000111000001111103d0c9e4282a676dcf5626dc84b.lance
+          - 📄 111000001011100010111000c655244740bb1ce7cd8a776401.lance
           - 📄 111000001101001100010110fac23146a98e1a2eaeba31e5ca.lance
           - 📄 11100001101110010111101077b6f74cb89ba5889dc3cac64b.lance
+          - 📄 111000011101110101100100b5c71a466fa979deef4b44348b.lance
+          - 📄 1110001001110110100010103359464d35991b84d9e2a14fc6.lance
+          - 📄 111000110000100111111110d16cf84576b0fadc63d5de6804.lance
+          - 📄 111000111011111111010101258e77471091c1ca8c6c3760f0.lance
+          - 📄 111000111110111111110001c8f0614071a780f4a5c9813709.lance
           - 📄 111001000001111011010110a136024cd196a0e3ca4594da39.lance
           - 📄 111001000010110011000100052eab43859318aa86e8721bb5.lance
           - 📄 11100100011011101000001197d9934a4d879c6dc360f37151.lance
+          - 📄 11100100101011100001101141427b4aeabe2cbab219c414d1.lance
+          - 📄 1110010011001010010010105fc39d4d0ea75ea1d5fe151d80.lance
+          - 📄 111001010011110101011111cb33bf40c895487b4456af3df4.lance
+          - 📄 111001010101010110100111031b904e2b8c45d3d548cd5cd2.lance
+          - 📄 111001010110101011010100d5925c4576823e49f4c4c72280.lance
+          - 📄 1110010110101000111011108e35844338aa780ee726768887.lance
+          - 📄 111001110000011000110001763d654beead438fd0d9143048.lance
+          - 📄 111001110000111100101010d2b1054c9881abae7b07360438.lance
+          - 📄 11100111001010101111011084521c4e2fb137577b455a58f7.lance
           - 📄 1110011100110110111100001d5a094467bf2979d5f1ebf680.lance
           - 📄 11100111101000001101001060a1534860bfa27b6bd2930f9f.lance
+          - 📄 1110011111101010100000113c5dc14c1e95b1de17000e716d.lance
+          - 📄 1110011111110110011110007c8eb1424da9b4ed5e8d9dfb99.lance
+          - 📄 11101000000000110000111103c90e411abb9d4b54afd29b67.lance
           - 📄 1110100001010010101000105db086423899fd3d2680c8e20b.lance
+          - 📄 111010000110010010000100a5eb444c9faf01c1d186e2c0da.lance
           - 📄 111010010010011110001111a29545458fad4bc9019ca7c447.lance
+          - 📄 111010010110010010111000e7d87840d9b0681680c7924389.lance
+          - 📄 1110100111001000111101001978754709b7b436009ffad595.lance
+          - 📄 1110101000111111101000019b684b4f35b3b9f1516d24e3a5.lance
           - 📄 111010100100011111001101397053415a86760490f9a9c91f.lance
+          - 📄 11101010101110110011010118eadb4611b58ae52598178aec.lance
           - 📄 111010110100010100011011cec3d94b8da9cbcdfcced4f474.lance
+          - 📄 111010110101111101011111e7f2dd4a47a370594f4797eae0.lance
+          - 📄 1110101111010110000110107d3af24c94934fd2d8b1aea25e.lance
+          - 📄 111011001001101100110100eedcf34d07bbddd3d09257e95d.lance
+          - 📄 111011001101110101011100271c8943f4acfbf398deb549f3.lance
+          - 📄 1110110110111011011111105e5e1a4bbfb3ea0c40b6ea20af.lance
+          - 📄 1110111100111010110000007fa6c14e15ae0ac826facc33c4.lance
+          - 📄 111011110101111010000000c4c1db4415b1f3acb9d0a1e2b1.lance
           - 📄 111011111000110100101001dc63994d2786905c6976a747bd.lance
+          - 📄 111100000100111111010010b8944241388c50fe7d7c72dd8b.lance
+          - 📄 1111000011110000001100002bac6247b2a946b723c1675a06.lance
           - 📄 111100010110110110001011e72ae94a42b5a9c63621da4ec8.lance
           - 📄 111100011001110100100000064e474f86a05ac7f19e97ac7d.lance
           - 📄 1111000110011110000000110f601f4bfc9895e20e6e70ce88.lance
           - 📄 111100100101110000101001601e86445a8df000f8ced2fb8e.lance
           - 📄 111100101000000110110111df37164ed6a61745d57d3f05f2.lance
           - 📄 111101000000110101001010a09b4f420eb2b7ee5b99ef8522.lance
+          - 📄 1111010000011011101101119911bb4bdebddb52883375be18.lance
           - 📄 11110100000111001000011066a2ce477082fdcfb8a5ab6d83.lance
+          - 📄 1111010000111110010011118f8dc443d3a85b931d37b4e4c1.lance
+          - 📄 11110100011110010100001004fc734245878a50fa39e5a757.lance
           - 📄 111101001000101111010110d1dbf14d9d8a6b7b3603a5bd62.lance
+          - 📄 111101001010100001011011fe6a32408c8af336ff926b3631.lance
+          - 📄 111101001101001010101000be72bb456a87fd5556e780ce92.lance
+          - 📄 111101010100011110001110184e6d47d4832624dde9731877.lance
+          - 📄 111101011000111100100111746ccc4eb583d7491856d539e2.lance
+          - 📄 1111010110011000001110013833264bd7a6f2875cc39b3af0.lance
           - 📄 111101011011010110011001f8874d4e06a065c1ba24a0051a.lance
+          - 📄 111101011111011111001000dff43c44659ccd424c241e2399.lance
+          - 📄 1111011000000111000101105b58e6421d99413a7cc983356b.lance
+          - 📄 1111011000111010110001017c6dc14d46bfbe42825778f4b2.lance
+          - 📄 111101101011100101101110fc066348d2b95819427605b75c.lance
           - 📄 111110001011101111111110b7919d46a6badf917b635bac9c.lance
           - 📄 111110001100001101011000a4be8c47ada8814bacbadaeef8.lance
           - 📄 111110010110000001111110cf791d4da4955caf0f9ce64092.lance
+          - 📄 1111100101110111100000004419944ba3a58555543549dc7b.lance
           - 📄 1111100110010010001000104eb3c74a868d03978deddc5223.lance
+          - 📄 111110011011101100111110a3fd494d26bd6de4f3d41785bb.lance
+          - 📄 111110100101111001000100842fa34b9d9a62866539a8baa2.lance
           - 📄 1111101100110000001010100a6415492982ee3c802ce1ec5a.lance
+          - 📄 11111011001110100100110193f6784db0a0809bd52745bd4e.lance
+          - 📄 111110110100011111010110d712104577b443da377ad8fe86.lance
           - 📄 111110110111111011001100a861414ce8a637e9488baea8fb.lance
+          - 📄 1111110000010110110001108b007945aaaa7fb854e2080ff7.lance
+          - 📄 111111001001011010010101d6b6724bb7973e5f8c69be7641.lance
+          - 📄 1111110011000100010110004d87534d69866c65ba57dd47f2.lance
+          - 📄 11111101011001100000011080b25342eabd9952fcb8fd1eb4.lance
+          - 📄 111111100110110101101011ac7fc34334b0f562a4b5769915.lance
+          - 📄 111111101011000110101001bc31e348339da8f5972e625ba3.lance
+          - 📄 11111111010001111110000140a7b34eb891da51c45caf885d.lance
+          - 📄 1111111101101101111110106ac8344033b437015ea3ffc2c9.lance
+          - 📄 11111111101011100111111063643f41989f61ae3ee0ece0c6.lance
           - 📄 1111111111110100101111110298384654b4b9bc23b841c6da.lance
       - 📂 **memory_v3_nomic.lance**
         - 📂 **_transactions**
@@ -3789,55 +5160,509 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 203-b6ffa786-1f59-4927-bcc9-358656e24fda.txn
           - 📄 204-e1a418d7-49f7-4e81-bea3-52d10fcf8ac3.txn
           - 📄 205-f9fa0105-0580-4701-ae94-3b07ca9ae5ce.txn
+          - 📄 206-54fb2d85-04dc-484a-a163-f85e4349ee2f.txn
+          - 📄 207-3bb25e92-55e5-4eca-86d4-22860650e168.txn
+          - 📄 208-a5a4b0f4-5942-48bb-9af6-b40d73040a25.txn
+          - 📄 209-55e411bc-57cb-401f-bc14-be06bb22a6a5.txn
           - 📄 21-56865840-782f-4962-800c-9b43be226802.txn
+          - 📄 210-5849dcd9-3d47-467f-a581-60321f55a3bc.txn
+          - 📄 211-a887f83c-40c1-45e5-a798-57495deac998.txn
+          - 📄 212-e27031b2-1272-419f-8079-4c64fc60ec65.txn
+          - 📄 213-2e403cc3-6fc7-4cab-998d-4e82e9ccc976.txn
+          - 📄 214-1019638f-e9bf-4774-89da-6e3bbd4be872.txn
+          - 📄 215-4bc85410-1cd2-4ac8-9c59-eaddc6588c4b.txn
+          - 📄 216-f8bb7e46-ab10-4f08-a564-559ecdc6aec5.txn
+          - 📄 217-27e090ae-3fac-4299-af60-2b3459fd1749.txn
+          - 📄 218-9c875b0b-feaa-4aae-ab85-0d21e15a01cd.txn
+          - 📄 219-699aa8bf-6d88-4fbb-8478-09a745795911.txn
           - 📄 22-99a7041a-e138-490a-9398-2d00944f7949.txn
+          - 📄 220-170eedcd-d7de-40a9-bb18-68955568483b.txn
+          - 📄 221-69e13d67-d40c-44a0-878a-28dc11dad9e5.txn
+          - 📄 222-9a80b3b0-d5a8-4e81-a84c-bd58f14b0ec4.txn
+          - 📄 223-8467754d-603b-4331-958a-da72b09953e0.txn
+          - 📄 224-00349c1e-e65d-4615-a691-6c72bb93c26e.txn
+          - 📄 225-bb057ab6-ca78-495a-8dd4-1cfb6fc1294c.txn
+          - 📄 226-515453b7-860f-43ae-b2a1-208e633fb215.txn
+          - 📄 227-6d273c54-b3cb-4c57-a465-048d77348c7e.txn
+          - 📄 228-aefebd71-fe3e-4611-9d93-c3255364bdd0.txn
+          - 📄 229-62e5aaa8-1ba0-4045-add6-3083edf4fac4.txn
           - 📄 23-5e505675-4232-40ab-8ad7-e19443e6bc50.txn
+          - 📄 230-f6a939b1-80ba-4874-98ec-a2c299e802d0.txn
+          - 📄 231-75b61f0b-55f0-4080-87c5-49fc2af7b63d.txn
+          - 📄 232-3b811244-4c9c-40c4-b0d8-08713a201ee5.txn
+          - 📄 233-338b55f7-c6ad-4169-8c83-94ef9e3fe5bc.txn
+          - 📄 234-404f0560-ef12-4a96-9d53-1f95b1dfd676.txn
+          - 📄 235-be704d83-8d3e-44ee-8b13-427a93b858ec.txn
+          - 📄 236-b9016083-47f2-4e09-b999-6a7ac78f8572.txn
+          - 📄 237-869f2f12-eda8-49b9-a58b-841a7e362005.txn
+          - 📄 238-aa51305d-5390-4105-b6e2-14cc29f5109e.txn
+          - 📄 239-4df69e7c-1c1e-40e2-b482-f042269ee7d4.txn
           - 📄 24-683dd370-3a27-41e0-a38f-b66dcca52311.txn
+          - 📄 240-04e024e4-0161-4c4e-bb52-d65de6722bff.txn
+          - 📄 241-de119cc3-bf17-4cd2-b6c9-c36531fcef02.txn
+          - 📄 242-ac7dc391-5c29-42b5-a469-dffdd8f57a9b.txn
+          - 📄 243-8845e347-71fe-40a5-8bd0-f6dc4ba3c947.txn
+          - 📄 244-4510947b-cd11-4d75-93ab-e33dfdff427c.txn
+          - 📄 245-75d8b7d2-a8e9-41e3-9480-fe14d3acc5d8.txn
+          - 📄 246-7f4b0273-9ca5-417b-a1b1-fba71722af5d.txn
+          - 📄 247-4b7249a5-b763-497d-b89a-9046af33dee6.txn
+          - 📄 248-6b6c7c55-5923-4c05-874f-7e28121359e2.txn
+          - 📄 249-56b96148-640c-430d-aa63-bb3be32d9492.txn
           - 📄 25-d351982a-3e2a-43f3-a707-ba84ec76cbf0.txn
+          - 📄 250-a037c0c3-f49f-4919-a433-568d1d1f9ada.txn
+          - 📄 251-f63fbc7c-db2d-47ce-90fa-c9da1cbf2158.txn
+          - 📄 252-a782fb51-4df8-469d-8fec-f8a5eee6f387.txn
+          - 📄 253-0dc2c4b3-945a-466d-9322-c01d6477bbc7.txn
+          - 📄 254-6b79d223-4d77-47c3-adba-44c6d9e4d284.txn
+          - 📄 255-c61858b4-0a5a-4e1e-80c4-825d0cb992f1.txn
+          - 📄 256-4e2687bf-872a-4013-a76f-0ee81ff3e05c.txn
+          - 📄 257-01ebd325-1765-4170-9995-20fe80b4a7bb.txn
+          - 📄 258-ce6beeb2-23a9-4e1b-a612-9c1b7bb06ab6.txn
+          - 📄 259-b0a47044-f582-4a06-9819-19e16b3ef9ec.txn
           - 📄 26-5e7cff9d-d333-46d9-9b10-083ea1e30578.txn
+          - 📄 260-100304bc-e08b-4fdd-96ee-20cbab135517.txn
+          - 📄 261-dcc5d330-c4fa-4923-9d83-833c355bca9f.txn
+          - 📄 262-d908e602-1537-4ec3-9c75-17a75a2dbeb1.txn
+          - 📄 263-eb006718-6eb4-48ad-9fbd-4a48752a3229.txn
+          - 📄 264-18815a37-0591-4434-9a8f-7c7135b6b55d.txn
+          - 📄 265-46232cbc-b60f-49d2-a825-20f1681d5c99.txn
+          - 📄 266-b5b7cce2-cbb2-478f-a0ed-d37d64fafa29.txn
+          - 📄 267-8ec80315-ddcd-4983-89f9-d6bd63a94afb.txn
+          - 📄 268-e61921d1-62c1-4137-ac7c-6478b1f7d8de.txn
+          - 📄 269-603ecda0-5317-424b-98e6-21e5c94085fc.txn
           - 📄 27-10c1c6ae-332c-48a3-beb9-dcac47aa0c0a.txn
+          - 📄 270-881dd4a8-4732-4b90-b1e3-cdbd6e7a2cb9.txn
+          - 📄 271-57216209-794f-44aa-bd62-8369e3c50510.txn
+          - 📄 272-3c6de0d3-86f2-4e0a-966e-5f205ffcdf63.txn
+          - 📄 273-927b07fa-c3e0-49b7-ba71-bb9465ff2df6.txn
+          - 📄 274-ae7f1ac8-d7cf-4a53-8b68-c94b0e984c92.txn
+          - 📄 275-586da1d3-37c7-41aa-904b-a600f233fd68.txn
+          - 📄 276-ca81a216-c26c-4aee-992b-06044c9e6007.txn
+          - 📄 277-08559114-6aa2-4c74-bcad-c3aab1768668.txn
+          - 📄 278-6cad982c-5482-4d2b-94ff-51c96777c508.txn
+          - 📄 279-ea519706-3f13-448a-b296-21d8c6e3df46.txn
           - 📄 28-91915608-a6e3-46a1-bb33-716530f8944f.txn
+          - 📄 280-77c5cc59-31d2-419a-9623-6f2d8255fd37.txn
+          - 📄 281-6bb5d0c4-ce72-4257-990a-b828752e4c57.txn
+          - 📄 282-af4a080b-da5e-48d2-b086-6089b50bd9ba.txn
+          - 📄 283-149f83b4-5c60-42a5-b153-f5a4fddfba2a.txn
+          - 📄 284-a72d173a-cd7b-48cc-be33-0ce352f9b502.txn
+          - 📄 285-62e8351e-f97d-432f-aaa5-6f04b846b43c.txn
+          - 📄 286-c539287c-e338-402f-9486-68c81628b36f.txn
+          - 📄 287-385826b7-48d0-4f1b-9bfd-a1b84dfd648f.txn
+          - 📄 288-a85c9450-b09a-4efa-88e5-85e6de94bb69.txn
+          - 📄 289-fde71188-0096-456e-9c1e-2261433a4c4b.txn
           - 📄 29-f6395d05-2f77-4e9e-aa21-cd638e78c5f5.txn
+          - 📄 290-979b3718-f4b7-450e-a223-6e63faa43880.txn
+          - 📄 291-f2fd695c-2803-4a77-9268-b2f44b40d537.txn
+          - 📄 292-bd96fabd-052e-4fb0-ab61-130b3d34aeef.txn
+          - 📄 293-4a54c960-54c8-4476-9eaf-296b4ca34c2b.txn
+          - 📄 294-385aa67b-8c5f-43f6-be6b-cfcfc601d509.txn
+          - 📄 295-3d3ba54c-59d6-4019-a5c4-b74a23e607de.txn
+          - 📄 296-900f1971-ffe1-472a-a875-61a43308ab36.txn
+          - 📄 297-ec62bf66-42e5-4d0d-bbce-663fcd8aa5d6.txn
+          - 📄 298-6d526262-e8ad-4ae2-bfba-49e8a865894a.txn
+          - 📄 299-c0ce7d98-7e32-47b1-b723-7d04ea91e0e1.txn
           - 📄 3-f4e783fb-3864-4a5d-abae-0ff3e5fb69d4.txn
           - 📄 30-4bf27210-41d4-4d80-a7fe-04c164d2ed75.txn
+          - 📄 300-e4fc88c5-25cc-4009-a497-18c67a3f1633.txn
+          - 📄 301-8ef355e5-c9a6-4acb-b482-491eb5496e04.txn
+          - 📄 302-cb69fb24-4572-4071-b160-9b355334e14e.txn
+          - 📄 303-a57376ca-91ac-4b3b-915c-08f8e24298cf.txn
+          - 📄 304-73bf7a7a-3fc9-4899-b911-d7a0b2763b8f.txn
+          - 📄 305-df12d535-6e9f-44de-995e-a3638d5f43db.txn
+          - 📄 306-f775c0b1-223d-443b-acf5-6e3026a5c7c2.txn
+          - 📄 307-b656a57b-4f78-4530-b73d-1e4d6f4ccc43.txn
+          - 📄 308-7bc432c8-d868-42e5-95fc-2e38d449caf8.txn
+          - 📄 309-d25e7d4f-05e9-4e66-957e-fe1ff481d80a.txn
           - 📄 31-82c9b4ef-4ed7-47ff-9a18-62d4d1e336cc.txn
+          - 📄 310-08cd5bf1-7580-4960-8c96-7e32163efc40.txn
+          - 📄 311-41031025-4cce-4c8c-896f-b17e99b6ea58.txn
+          - 📄 312-7777a2ef-9efe-47b4-8156-5eaf28bba31d.txn
+          - 📄 313-8c5323c8-1c7c-4998-bc2a-3986f1ad65a8.txn
+          - 📄 314-4da95e82-9d8b-4842-8d87-f149b59e383a.txn
+          - 📄 315-83ec786a-f303-4efd-8208-cdbc7c6dcad6.txn
+          - 📄 316-da889e36-3126-4c41-b947-6709e856892e.txn
+          - 📄 317-9f00f7b8-50a9-4003-8f0d-e7ea727286c0.txn
+          - 📄 318-cbec551c-5631-4986-9b9d-a8358c743429.txn
+          - 📄 319-473d0066-9f46-41f2-b642-71ab41b6ee13.txn
           - 📄 32-b57cd466-ffea-4707-ac46-271d111e8d07.txn
+          - 📄 320-83ee8170-a366-4d75-991a-d76c8473eaa7.txn
+          - 📄 321-6ebcdcda-fed1-4824-81cb-8c87fb80a04f.txn
+          - 📄 322-8dbf61db-6615-48c1-970b-3fdb3f6b3084.txn
+          - 📄 323-af7f8fc5-ec62-4912-88ab-ff56f589cf4f.txn
+          - 📄 324-76102453-d3c8-4696-9bbe-773ddb133975.txn
+          - 📄 325-dfe656b5-4582-4f70-a563-433739d45292.txn
+          - 📄 326-cfd2b009-1e6f-4a70-8c23-fe622bc921cd.txn
+          - 📄 327-c4664409-48eb-45a2-881a-59f177826299.txn
+          - 📄 328-a4ebc946-5b58-49e8-be6b-d073d703d86c.txn
+          - 📄 329-1a814f18-a6df-4f1d-8f11-c9bfa9b20dd2.txn
           - 📄 33-c06f791a-a07f-47b6-9e4d-6e0ea3fd4e7a.txn
+          - 📄 330-c44fa586-3fa4-4652-a5d2-d66d95726c0a.txn
+          - 📄 331-a4242b94-3b08-4fbb-ac10-d0cc3292cab1.txn
+          - 📄 332-553faf97-e284-4a5d-8567-e760abfaf374.txn
+          - 📄 333-99f7052c-4459-423c-985b-deb06e7a2624.txn
+          - 📄 334-998bde4f-447c-4f73-b831-2871db9beb4a.txn
+          - 📄 335-f29a1f52-13e6-49d1-a2ac-669223a9735b.txn
+          - 📄 336-812d2afa-8d39-44cf-bb82-5da3193a9a73.txn
+          - 📄 337-a010a2ec-e875-4f7d-93c7-4fe6b75d51db.txn
+          - 📄 338-fae041d2-ea60-4412-b0a9-7c376be67383.txn
+          - 📄 339-cd02b591-3391-43fe-af62-2b607bb23194.txn
           - 📄 34-7ae8879a-3dfe-40ff-a9a6-94e7936fa65b.txn
+          - 📄 340-43379785-7517-422f-a753-f652da205ce6.txn
+          - 📄 341-eb2fa4d1-6899-4bc1-9310-3afa9af5f165.txn
+          - 📄 342-e6bb8fde-b058-4e83-baea-07d9b779d06a.txn
+          - 📄 343-58912e6d-b2fd-4f36-84bc-21616aaef744.txn
+          - 📄 344-596981da-f476-4dbb-aa4f-2c254cb5f16f.txn
+          - 📄 345-75780579-b820-4010-b245-6946957f4694.txn
+          - 📄 346-7644ec0e-faf2-45d7-b916-14636a70d73e.txn
+          - 📄 347-283ba4a4-a794-424f-98ca-a0417c03b1d1.txn
+          - 📄 348-752cb16f-d160-45be-a703-c31ab0856dd6.txn
+          - 📄 349-ae1556f4-4eca-4e4b-9245-188029dc749c.txn
           - 📄 35-b19f1747-bc4a-4035-81ee-d7e8d3a9215b.txn
+          - 📄 350-843dc35b-5619-417b-ac75-449d16a290d9.txn
+          - 📄 351-f49480f4-cfc3-473d-85a2-c0bf2f6e5e90.txn
+          - 📄 352-e683dc18-e763-4c89-aa9a-df1fff05f768.txn
+          - 📄 353-5676815f-84cd-4685-ba46-1409737ba27d.txn
+          - 📄 354-6c2e1a50-b360-43eb-9ea4-0b1e2aa71d30.txn
+          - 📄 355-ad4f04fc-88b1-4fa0-97fc-a911ade29171.txn
+          - 📄 356-e3768270-c3e1-4bd7-a47c-df23c0191228.txn
+          - 📄 357-5827ead3-8eb4-4cbe-a4b0-fee9c6129f45.txn
+          - 📄 358-ea70048a-570d-4de5-9586-b6a2709dd35b.txn
+          - 📄 359-a472a910-a62d-4b6c-83e0-55988bf6bd7f.txn
           - 📄 36-ac3be9c6-f3a2-4fd4-b231-68c748adcba7.txn
+          - 📄 360-69a607e9-4290-4cdb-b74b-960f793b3a4e.txn
+          - 📄 361-35348a82-5266-4616-8b93-3b3d749562af.txn
+          - 📄 362-662c2dd4-4c1c-4b19-8b6a-9e82551f7813.txn
+          - 📄 363-91ac9828-893d-469d-bbc6-1aa49085c99f.txn
+          - 📄 364-dc85604f-77cb-4c6b-8563-03c9243b34f8.txn
+          - 📄 365-35f4c5d7-9eb8-4608-af5c-78b8c7832ff2.txn
+          - 📄 366-99e4a5e9-6f50-4a1e-be54-f945b778fb4d.txn
+          - 📄 367-36c0adef-45d4-44a3-bf6a-11bb9e01f7d6.txn
+          - 📄 368-aa4550ab-0e1d-4912-bc84-351627b9e1d5.txn
+          - 📄 369-f78dbdf4-06c5-47c3-86bb-b548321622b3.txn
           - 📄 37-6d7664c8-3951-46d7-8148-c2058906aa39.txn
+          - 📄 370-a4c685a8-d8fb-439e-830e-293563bc6cd7.txn
+          - 📄 371-4f3ffaf3-4737-4bf4-a63e-d11e795bc8a6.txn
+          - 📄 372-2640439e-417f-4fc6-8bc5-8a8471bc0f93.txn
+          - 📄 373-23dda3b9-dbe5-4269-857e-bb3017ec8363.txn
+          - 📄 374-2ec3c5d9-8141-45ad-a2d5-6a53e613408b.txn
+          - 📄 375-0250b435-cfcd-4b0d-9e2d-3bfcc045ce08.txn
+          - 📄 376-c28e5c2a-3556-439d-ad3f-e38b54cc83b6.txn
+          - 📄 377-677ac98d-bd09-4574-9382-24fa8f36766d.txn
+          - 📄 378-121095dc-4031-4da2-8a2c-589523d1ceff.txn
+          - 📄 379-e99628d8-9cb7-4721-8c67-f5f77b4346fc.txn
           - 📄 38-9c4916c9-fa99-42fd-b33c-630706246a39.txn
+          - 📄 380-c0dcda4f-5f1c-4ef2-8046-c28f5d342eb8.txn
+          - 📄 381-b5234dc6-fb47-4bc3-b030-d25743b94104.txn
+          - 📄 382-a85d0497-6d74-42d0-bd27-ba8fc9b4051b.txn
+          - 📄 383-ddbfeabd-9628-4ac9-9e41-972d2dcc70b3.txn
+          - 📄 384-757badd7-7f53-4ffb-bda0-582bcaad4f77.txn
+          - 📄 385-50efd98e-2c4f-4309-b293-9d0034b0e1ff.txn
+          - 📄 386-ecd00a83-f957-4d34-b958-1d35b14b3f53.txn
+          - 📄 387-4c23c130-b426-45bc-8ccb-e6f739c5084d.txn
+          - 📄 388-7d88473a-c1de-4e9c-8362-99021b228b21.txn
+          - 📄 389-7fa6da9a-1f7a-42c8-8a78-7768db76e6c6.txn
           - 📄 39-e78f27c5-9736-4125-9d90-6f33ae35e0b3.txn
+          - 📄 390-82ddb7d9-c65c-41ca-a7a2-b0f5d9455d1b.txn
+          - 📄 391-a6a29ddf-c245-4b95-917c-ec5d1555237e.txn
+          - 📄 392-f7f578dd-9dde-4c82-a5f6-6ef07beb1ff8.txn
+          - 📄 393-f47dc7d1-ff68-4102-bb04-4a85feb745d9.txn
+          - 📄 394-047e66f2-11b6-4a96-b89a-a80d216551d4.txn
+          - 📄 395-a4f13e70-a0b9-45df-956c-3bc2a2a7ec87.txn
+          - 📄 396-7264ec15-dddc-4a09-8a40-e8bf95fd5046.txn
+          - 📄 397-559e4b02-bb52-4ba3-b174-144099452341.txn
+          - 📄 398-5d97b317-e5d6-4231-be9e-38478f394e93.txn
+          - 📄 399-cef3b14e-c4d7-40a6-8fb4-5a56deb95133.txn
           - 📄 4-732e469c-51bc-4e4d-ac83-50ae9e81920f.txn
           - 📄 40-d4163c50-ae47-4f6e-a29d-f32805db734e.txn
+          - 📄 400-52cc4253-c0e4-4226-9d77-dddb31ef2e3e.txn
+          - 📄 401-bc359bec-06f5-4772-be25-243781480984.txn
+          - 📄 402-5d8f95e7-3a8d-4cc7-a6b2-18c70fe0de19.txn
+          - 📄 403-55481a1e-a43d-4a1a-96b4-9ff5982ddf6c.txn
+          - 📄 404-0f1e6056-3852-43d3-b241-f2b184926070.txn
+          - 📄 405-1bcf7ed9-76d6-49b8-a1ec-702d4fd3a847.txn
+          - 📄 406-6e75e9b5-b350-496c-a342-ae57e25f1811.txn
+          - 📄 407-eb01a14e-ad81-47c1-bb73-7d334ce2506a.txn
+          - 📄 408-92b32977-8c06-4529-8065-3ff306d22979.txn
+          - 📄 409-fc977616-972c-4f41-a611-fc9360764e82.txn
           - 📄 41-b93cd3a3-bf1e-44e4-b77b-c8a9963c89db.txn
+          - 📄 410-6abbc7db-a807-4399-90b8-834767b291e9.txn
+          - 📄 411-770e2bcf-57a7-4d9d-ba76-b09360c97195.txn
+          - 📄 412-c5a7d6ae-1e80-432d-b26a-79c85124ce81.txn
+          - 📄 413-9e468867-136e-492f-bf76-f286d9f48b97.txn
+          - 📄 414-55a14552-f1b8-4658-b558-fb3e4e34bd87.txn
+          - 📄 415-5ad0e363-d0a7-4f34-bba4-be690a093ee9.txn
+          - 📄 416-9f89161a-44d6-4910-af94-656559af24f6.txn
+          - 📄 417-bb4086ec-f9c9-4577-9acb-43306dcb7ae1.txn
+          - 📄 418-65d74aaa-9295-4dbb-8cd9-4d1f7108a575.txn
+          - 📄 419-0f7995bb-c6fe-4485-b880-601b87cd84bf.txn
           - 📄 42-bc646ac0-9e5c-48d0-8a17-eff07647d3e7.txn
+          - 📄 420-67bad3ab-0914-4cfd-82d1-ac4ccdac8779.txn
+          - 📄 421-313bcaf1-d382-4926-97f1-2cd16e8f52c8.txn
+          - 📄 422-1b11e40b-b3a4-4396-abae-10d605b32074.txn
+          - 📄 423-c11420ba-f928-4093-9800-9bbe44755007.txn
+          - 📄 424-fd6a0b06-0667-4b39-b29c-105cca3323ff.txn
+          - 📄 425-24e5c18f-d9fe-4dca-8d4d-48ed89e043ff.txn
+          - 📄 426-546a5027-643e-4a12-a2e2-e59cdec960e4.txn
+          - 📄 427-c6cab77a-fbc1-43f2-807a-1e8934ccc043.txn
+          - 📄 428-75657f75-c6fc-4d47-b56b-188febad90ec.txn
+          - 📄 429-593e488d-157d-4244-8f7f-ea0bfb5796bb.txn
           - 📄 43-3581abbf-fa0a-46df-90de-ada706a84d15.txn
+          - 📄 430-40b8c93d-573f-429b-a897-308afd62dcba.txn
+          - 📄 431-92756dca-94a1-442b-a041-ab73504436ed.txn
+          - 📄 432-00fa2d09-f046-480b-a499-2cdf73153be3.txn
+          - 📄 433-d7a201f7-5437-470d-9685-ef5f467d0f4e.txn
+          - 📄 434-985bb3c9-4704-4d3d-992d-58ed20a30a97.txn
+          - 📄 435-bab22b5d-ab39-4ac5-8c4d-e59ffe4f2f25.txn
+          - 📄 436-5fa0ed87-6dc0-4702-8acf-1b367e1bf6f6.txn
+          - 📄 437-b62c9796-b297-4439-897b-d4da22eb2f44.txn
+          - 📄 438-98334595-565f-4cad-a2ef-b019b15539b5.txn
+          - 📄 439-2c1fe619-1fd4-4825-8f80-396f319a315d.txn
           - 📄 44-a0ece9e1-903f-48bf-98e2-a118f038e38b.txn
+          - 📄 440-22485cbf-31d0-40c9-ae9a-bd9028babda8.txn
+          - 📄 441-229cb995-25c8-4df4-b6c4-040bcc2f5cfb.txn
+          - 📄 442-de4b1de8-0f3e-434a-92d1-01bca92a3e16.txn
+          - 📄 443-e4bc0043-ef96-4bbd-a180-639a970c75f9.txn
+          - 📄 444-7fb14d11-2a8d-4ca4-afb8-5b158dd6bde3.txn
+          - 📄 445-a9ea7e88-3b28-4ac9-b0c4-6d2e5baa5671.txn
+          - 📄 446-79f23205-5281-47dd-8e3b-084495f97580.txn
+          - 📄 447-73a9788f-8899-48a3-864b-e65912f2e4da.txn
+          - 📄 448-fe33bc8c-dff1-4973-9cc2-9b252b15e644.txn
+          - 📄 449-8f510a20-0644-4425-9563-8a6605d0b485.txn
           - 📄 45-9f3a78f9-7559-43d8-90e0-e0078b9491ac.txn
+          - 📄 450-f392a686-027a-4c6d-bbeb-2752982ed439.txn
+          - 📄 451-ead781e2-d71c-4543-86fb-babd4c7399ad.txn
+          - 📄 452-a0bcf364-b0ae-415b-b9b1-89960534e984.txn
+          - 📄 453-d375bf01-75bc-46cd-a2d7-7d260fccc195.txn
+          - 📄 454-da5ce26c-9227-4467-adc8-0af4a5bf9d91.txn
+          - 📄 455-e0ace904-d2a1-439d-83af-32833c683389.txn
+          - 📄 456-0b81c503-1478-462e-8cb8-66b962ce94d6.txn
+          - 📄 457-d4e5b195-222d-4bdf-975a-9e3486189073.txn
+          - 📄 458-c3c381ed-0fce-462d-b4aa-c19465bd5639.txn
+          - 📄 459-5450805c-55f4-454a-a7df-b3741567a286.txn
           - 📄 46-556612ac-6ab7-436a-ad7e-0c768e1ecc0a.txn
+          - 📄 460-a88b8bc6-ee8a-46f9-80dd-a7639f1c3960.txn
+          - 📄 461-7f539cb2-c93a-40fb-b0d5-e0d704538616.txn
+          - 📄 462-21dfd5e3-5c8f-4d9b-81bc-3d6f77826ba3.txn
+          - 📄 463-f5cbc620-3a38-4ee6-bd4e-850ecd8f9a0f.txn
+          - 📄 464-9a5090eb-96e7-4fb3-9e58-f1166915616c.txn
+          - 📄 465-e257102d-a65a-46ed-9351-29e83de3d0b5.txn
+          - 📄 466-9290048b-a67b-4e3a-a463-6c8c874b676e.txn
+          - 📄 467-95362a32-0ef4-4c51-b39f-dbe860d40e91.txn
+          - 📄 468-69332b39-71ed-4fa2-a44a-06f03dd8ecc2.txn
+          - 📄 469-6d207b35-7dc2-4a79-b5b9-0d1f48514566.txn
           - 📄 47-3621441d-2c44-410e-81ac-f838bd898e28.txn
+          - 📄 470-5ed819b6-000d-47d0-9f98-cd4a59813dd9.txn
+          - 📄 471-347709ad-8316-481e-aa89-65731be72854.txn
+          - 📄 472-8ae7fe6b-7bc2-4218-8be6-97ff57b56365.txn
+          - 📄 473-3cef1cd7-1ec6-480f-8c75-289187e712c3.txn
+          - 📄 474-bcca2684-cdc9-47a7-a0b7-29161efb3a14.txn
+          - 📄 475-7d4dcf64-f003-4db6-b683-5e0d5177b27a.txn
+          - 📄 476-e17fbd2f-0580-44ad-8bdb-62429824e2d6.txn
+          - 📄 477-1a57faa0-50dc-47e0-970d-8d822e8fd4c2.txn
+          - 📄 478-45a664d5-9947-4d34-b9ec-ca8605cc7f04.txn
+          - 📄 479-ad1681e3-38f5-48b9-a06d-146ecb929d7c.txn
           - 📄 48-da3a66c9-754c-492d-98bc-130d42f71a2b.txn
+          - 📄 480-32af0055-6828-4a93-97c2-75ee3c46e248.txn
+          - 📄 481-2a86a012-ba11-4c6d-a0a6-ade6117f66eb.txn
+          - 📄 482-56ffc42b-10dd-4fcc-b6b4-ad3f1f436b27.txn
+          - 📄 483-f0537a7e-a059-42dc-a6d4-ed8f1372c732.txn
+          - 📄 484-1616b735-8376-4598-bfd6-08e9719d8c86.txn
+          - 📄 485-9d684a49-1266-41e3-854c-928170200a02.txn
+          - 📄 486-423770d3-c1b6-4cb9-98a8-b97e57b6f350.txn
+          - 📄 487-0e710f66-9a47-4bdb-a3f0-2f432e2efa08.txn
+          - 📄 488-0bcefb6e-70b2-4fa2-99ac-73c788e68317.txn
+          - 📄 489-82e377de-b0a4-48c7-bb94-63038b9a83e4.txn
           - 📄 49-a7736994-cd71-4720-9465-2ffd01266b8a.txn
+          - 📄 490-bffbea22-b48e-4710-a7ba-a121c537b590.txn
+          - 📄 491-00511f38-9041-4f92-a169-3ecc3638a924.txn
+          - 📄 492-18a3aac0-b6be-4ade-a5f0-e67664613894.txn
+          - 📄 493-47f67f87-c8d7-481d-b0fc-1885756d4cfc.txn
+          - 📄 494-90e62dbd-0f28-4aff-8a40-86121f5082a4.txn
+          - 📄 495-3beda135-7d7b-4a25-91fb-2acddcef6819.txn
+          - 📄 496-8ab9651c-0e9b-4719-8799-3c696a678580.txn
+          - 📄 497-e216adb4-ace9-42d6-a17e-42c12c5c3797.txn
+          - 📄 498-e7872d51-f238-41d2-9049-714a1971e444.txn
+          - 📄 499-13e21e91-e46c-463f-bd88-72160fe251f7.txn
           - 📄 5-f9a7cdf3-37f6-4d9c-bdce-ba3f4f21e3ef.txn
           - 📄 50-53b4dc2d-7811-4ea8-a82a-2257ebedcf77.txn
+          - 📄 500-13beb199-9a81-4505-b685-5fe772858a50.txn
+          - 📄 501-605ba7da-5a31-4815-8180-e35958a01e82.txn
+          - 📄 502-5c4b2f57-6c0b-4575-9898-74e93938747c.txn
+          - 📄 503-fa100c08-2778-4b8a-b0b3-30f48744d1e7.txn
+          - 📄 504-c67ca0ef-6153-4d2e-996d-f56b3bf0fd54.txn
+          - 📄 505-94ee9c92-8b45-4e3d-9869-40d0c3d90104.txn
+          - 📄 506-28e335a5-c632-4011-b97a-7ed8a371e929.txn
+          - 📄 507-8a69dbff-c7f7-4173-809c-0683c6208ae9.txn
+          - 📄 508-b2d34e6d-8d5b-4e4c-a699-8e5b16399efa.txn
+          - 📄 509-c765798d-393b-4c93-b83c-ef720669a4d9.txn
           - 📄 51-b2161ce5-f701-46aa-9a25-97502796abf6.txn
+          - 📄 510-75f14b31-8062-4836-b413-b30237f32dc7.txn
+          - 📄 511-1d89618c-2cad-4da9-bd3e-9bd1eb541a13.txn
+          - 📄 512-662989fd-9161-4fb0-a5fc-0b6ff034fe88.txn
+          - 📄 513-74797ec1-029d-41e5-a73a-1705e77c6588.txn
+          - 📄 514-0208e9f7-8fd7-4517-bdad-96efb982f30b.txn
+          - 📄 515-51340e1e-fae8-431b-9cd4-fbadc151abed.txn
+          - 📄 516-07f4af75-c53e-42a1-954a-c3b6d224659a.txn
+          - 📄 517-510c8ae0-80a9-4a9d-a7f1-926f02f3e10f.txn
+          - 📄 518-85c2e87c-365f-49a5-8da1-467b4bfac76b.txn
+          - 📄 519-977d4b1e-3d78-4e91-b7f4-5d7ac7e2b960.txn
           - 📄 52-5a46f452-8567-48e7-9a0b-21cb096e4a81.txn
+          - 📄 520-72dae39b-36f2-4c25-b0a6-7c6bb5fa51df.txn
+          - 📄 521-a90a0c99-dd76-414d-9fdd-33e2a774cbe5.txn
+          - 📄 522-8c415d00-01c2-41c2-891b-75317190debd.txn
+          - 📄 523-06aac61b-1902-4dae-b6eb-a32559a9f79e.txn
+          - 📄 524-eaff90ba-6068-4b94-a979-dcc1c7669781.txn
+          - 📄 525-ad66a5bc-7630-439b-a5ce-506a09dc2367.txn
+          - 📄 526-619754e3-e34d-400d-9f54-6d507608482e.txn
+          - 📄 527-91760e46-7100-45b3-8bf8-e67e34e655b7.txn
+          - 📄 528-d964f974-23e7-4c6d-8b56-5c8254f94d02.txn
+          - 📄 529-23d3d2a5-3f6c-4269-bb2f-d322e6be41cb.txn
           - 📄 53-9fc216cf-ae99-4542-b7c0-c142970a6b30.txn
+          - 📄 530-4f12c7ee-4742-4197-9871-122dceaaaa33.txn
+          - 📄 531-b943f687-c5b5-405e-8d5f-f35891bee6e8.txn
+          - 📄 532-0deca92f-d7ae-4169-bb47-695d9c72590f.txn
+          - 📄 533-eda69d90-765f-456e-a438-e8e99cf750ea.txn
+          - 📄 534-d95f88a3-16cd-45c0-8c73-961a586162d2.txn
+          - 📄 535-ecb34d3d-7c37-4292-9c08-63895c354eee.txn
+          - 📄 536-51b57a6e-7b2a-4312-9a45-b6223be655f0.txn
+          - 📄 537-5c321226-dd52-4bf5-b324-f0cb6d3af205.txn
+          - 📄 538-bdd91bf7-bcf1-460a-b2fa-ccea180b9406.txn
+          - 📄 539-e05fa2a5-1314-4fd2-a1a2-bae0127a040f.txn
           - 📄 54-6e50c6f3-48eb-4b34-ad6c-7c746866af68.txn
+          - 📄 540-6bb50213-3e5d-4b14-b24a-042ae6a9768b.txn
+          - 📄 541-2ace3909-1381-4ad9-a286-25086e4dc03a.txn
+          - 📄 542-5cd80154-66a0-4d32-a0cf-9e14d0ab3238.txn
+          - 📄 543-2d628304-998c-4eaf-aaab-559fd1f4ba8a.txn
+          - 📄 544-99344aa3-c944-4e5e-8131-3108bf44df30.txn
+          - 📄 545-bf942498-6599-4ff9-80ae-59c47df4f449.txn
+          - 📄 546-fd67bb47-57c0-48d4-bbc1-5ece58f43d4e.txn
+          - 📄 547-c1b37a31-b5d5-4fc5-ae9b-7b985cf024ad.txn
+          - 📄 548-3be58123-ae22-48d3-9ed5-bb3726622829.txn
+          - 📄 549-be797f09-a5ca-4635-a0f5-4e2c16736ce6.txn
           - 📄 55-6d5201fd-161d-4381-b617-736ae0bbae91.txn
+          - 📄 550-5c5c882a-efe4-4c07-afe1-dae8517e144e.txn
+          - 📄 551-a7682921-aa42-4423-aeb9-eaa85c219451.txn
+          - 📄 552-b9e87a92-2469-4fe7-b0fa-79bb76b4d1c7.txn
+          - 📄 553-095c97bd-f43b-40ef-99e3-cafae39983a4.txn
+          - 📄 554-78e92c1e-8500-4f14-b03a-e89c9f6bb5ed.txn
+          - 📄 555-fceb52ab-6650-442d-857e-a59ad2249baa.txn
+          - 📄 556-aec315d6-7417-4dfa-ae8e-75b56be8b406.txn
+          - 📄 557-e5f3294f-ae64-4d2e-9068-45c38f87aa2b.txn
+          - 📄 558-fceabfb2-bd2a-4ca4-975d-48d03957fc09.txn
+          - 📄 559-28a6b170-38e9-4b64-8a72-94c5b7592299.txn
           - 📄 56-8d0319c5-2690-435b-9091-03409ed465cc.txn
+          - 📄 560-04ec39d5-64a9-4dea-8394-881a71efcaf3.txn
+          - 📄 561-488399ad-e524-4850-89db-8e37bf99d352.txn
+          - 📄 562-a10b4bc7-2726-4d32-b2c8-228959dc01a8.txn
+          - 📄 563-c2afc970-9de4-49f1-bd88-264e55e90d8e.txn
+          - 📄 564-6d4a4727-839e-419f-b878-b8e1e456d00d.txn
+          - 📄 565-cb6c0a7f-ca26-4811-94ef-83387e428597.txn
+          - 📄 566-3f5378d7-80e4-4384-9233-870b3e8cb8a5.txn
+          - 📄 567-ac94b8da-b111-4a46-a256-3b94afc94f2d.txn
+          - 📄 568-f6e3607f-a573-4027-b040-09fbd4c0c0e3.txn
+          - 📄 569-3aa7170c-6804-4c01-9ada-953b8465c4ed.txn
           - 📄 57-caf79472-c773-4ec7-a360-8e5df3e26f3f.txn
+          - 📄 570-7c4d2f86-b80e-4842-b55e-454b8a751ecb.txn
+          - 📄 571-388c384a-b14a-40e5-b695-ae0d8444b3af.txn
+          - 📄 572-e92c070c-d82b-4f08-8a28-98890a36816c.txn
+          - 📄 573-880a298c-2462-4077-b34f-e97d5928cac3.txn
+          - 📄 574-44e7a9e7-04b9-442e-b133-97688d639ac6.txn
+          - 📄 575-e363c1b2-6287-485b-8757-ec2f03a0e458.txn
+          - 📄 576-2551f32f-b478-48ac-97bd-af6669c9150f.txn
+          - 📄 577-9d7db73e-ff2e-40ec-b8ff-6fe2efc6a85b.txn
+          - 📄 578-4bf4fbd5-0c5d-479b-a44d-afb2071b154c.txn
+          - 📄 579-6623538f-ce5f-4f03-b0d2-e8e33b10c8ee.txn
           - 📄 58-3148bbc2-1e70-4bbf-b2f4-23cf577e2b73.txn
+          - 📄 580-6fe458f3-7195-448f-8bdd-6ea09591b112.txn
+          - 📄 581-29094882-ffa1-4ec5-83e2-524d5fd835cd.txn
+          - 📄 582-6f66a856-4cf2-44d2-8f0c-f9ef7697f083.txn
+          - 📄 583-90a9586d-da7f-471d-a65f-95df86941516.txn
+          - 📄 584-16a370bf-38b7-4063-aec6-e798b704acad.txn
+          - 📄 585-c238862d-e4b5-4b54-bfec-b44bd74d7cb4.txn
+          - 📄 586-fa3cd137-ef70-425e-a179-d104a62402a6.txn
+          - 📄 587-3e161053-0fa2-4354-b4f7-e3517d2355b5.txn
+          - 📄 588-b8981ec9-b67f-4b14-85cf-fe0f64bd1728.txn
+          - 📄 589-17df42dc-70a9-49c5-a8c7-29591ab448fc.txn
           - 📄 59-125cbf77-80dc-4ebb-b8b6-0d247f9203e4.txn
+          - 📄 590-8d0bda68-0e24-42d9-984d-ef07aab74d10.txn
+          - 📄 591-633fc5c9-d59a-4672-a27d-e904ce1f3110.txn
+          - 📄 592-9cc63e88-3e88-4538-8518-679fb5a5d68b.txn
+          - 📄 593-dddd5553-80aa-42fe-ac55-1384ee832612.txn
+          - 📄 594-43e2779c-6e4c-4357-94c1-2a30bfe59d2a.txn
+          - 📄 595-874ec7c0-e887-4678-aacf-8712df94cb35.txn
+          - 📄 596-56b5213b-6dbf-4dce-899f-1154c3355a4c.txn
+          - 📄 597-a1e9f615-85cd-4b0c-9e19-1c78bf749ae9.txn
+          - 📄 598-8e3d7129-b6c0-4bb3-845d-0aeaf3cd1d31.txn
+          - 📄 599-61126bf7-2615-4bbb-a1c6-e77d330c683b.txn
           - 📄 6-a4ffd54d-a783-4d58-911b-a2af29ca2834.txn
           - 📄 60-d5e86bab-3fff-4467-bba5-746c5afa7dbb.txn
+          - 📄 600-db6aa124-ca08-4e74-b260-ceebb28674c8.txn
+          - 📄 601-6b7074d2-09ea-4128-b142-ece60bedaba9.txn
+          - 📄 602-226fd1e6-b098-4aec-841b-9ac76bde2243.txn
+          - 📄 603-443c0407-0aa5-47df-a1f7-78aa7fc49f8a.txn
+          - 📄 604-f17a8221-5fc8-4eb9-b062-4a183c9baa19.txn
+          - 📄 605-77669623-e9fd-4784-9c6e-18a856dc2af3.txn
+          - 📄 606-450c67dc-cd5b-41ca-ac79-d2b773b7e461.txn
+          - 📄 607-5dd86a4d-950f-4593-ad58-7ee9975c0312.txn
+          - 📄 608-abe69765-4cf6-45cb-bd6e-7074635c28ee.txn
+          - 📄 609-27b195a4-9b92-498b-b1d9-924b10168324.txn
           - 📄 61-6251745f-14ec-4b35-b19b-5a4d79328ae4.txn
+          - 📄 610-758333e5-2d22-4b40-a053-a12116792169.txn
+          - 📄 611-ce67dc68-fab7-469b-a0ec-5f76e25cc401.txn
+          - 📄 612-fba23701-cf9c-4f13-82b5-f50582924e79.txn
+          - 📄 613-3f8f047d-648e-4315-b8d8-af3d87e94a48.txn
+          - 📄 614-34908b83-87a2-4b12-9337-1306e5947cb8.txn
+          - 📄 615-fee8ae22-684c-4dec-b4f1-5d127ae63656.txn
+          - 📄 616-a469ccdd-ccc8-46f3-a36d-1cef2580a852.txn
+          - 📄 617-e4deb0f0-4596-4499-8528-904cf8ae96c3.txn
+          - 📄 618-91e2c175-bcf6-4f77-ab9a-e15ab10ed761.txn
+          - 📄 619-01c0131f-9c0d-4a85-9577-0b55f885a9d2.txn
           - 📄 62-46b945b4-22a2-4384-b0aa-f2e2003918ea.txn
+          - 📄 620-a2b101af-fdd6-4930-b33e-c12b554051d1.txn
+          - 📄 621-6327b062-9982-459c-98c0-1c50b77c341a.txn
+          - 📄 622-565e8082-3e1a-49fa-9ad8-e6d1ed60e23d.txn
+          - 📄 623-ccb10bba-dd67-4979-b6ac-fb43bc697c80.txn
+          - 📄 624-4fdd1a11-0988-421a-889d-9acabbaa39b9.txn
+          - 📄 625-aa1a3ca5-7281-449d-9796-2a6d6e87e724.txn
+          - 📄 626-addac3f4-17f6-45c9-81c7-c584cfc78e46.txn
+          - 📄 627-dbe416d1-3a99-4857-b7af-967fab869f2a.txn
+          - 📄 628-5d7c5655-ec1d-40ea-940a-4ef0b89211f1.txn
+          - 📄 629-73d546f0-112f-4b6c-8f30-361c857edcb9.txn
           - 📄 63-bb5dea62-4857-4b18-a717-e971e8e9c7ed.txn
+          - 📄 630-96fd3c0f-27f2-447e-baac-73d07b1ba68f.txn
+          - 📄 631-96c58349-1748-44eb-98a9-fb01b50466ad.txn
+          - 📄 632-475aeb3a-828f-4063-815a-83c381a2b7e4.txn
+          - 📄 633-91414a48-9060-46c0-998c-e0fb8bbe335e.txn
+          - 📄 634-de6ef95b-211b-4b15-b016-30a0fb7ceb84.txn
+          - 📄 635-8b05ee98-80be-40e7-a464-2148f1aafeed.txn
+          - 📄 636-f35f2df8-abfc-4854-8b60-d47a13cf52c7.txn
+          - 📄 637-96705526-b7bb-41f8-81dd-a08058520972.txn
+          - 📄 638-5b5b454c-a465-4ad8-a832-6bf2f8014626.txn
+          - 📄 639-00227a64-e5f7-4289-a543-dd025fcbe563.txn
           - 📄 64-03fbc467-2154-46c6-87f3-d236be5776fd.txn
+          - 📄 640-fc13c874-2fa2-4804-94f0-05f1d5cfdb1c.txn
+          - 📄 641-887ce4fd-2153-47c7-ad56-e81c70be9be0.txn
+          - 📄 642-0e070ffd-ca0a-4921-a517-d069e1dbc98e.txn
+          - 📄 643-661850cc-624b-4db6-96a9-f9f626f66199.txn
+          - 📄 644-6a636a74-9287-4a04-8fef-55b847ce79f3.txn
+          - 📄 645-a0605e86-0f8b-4a5b-9c9a-7cd8e4ea1b35.txn
+          - 📄 646-4694b290-0376-48a3-8388-477defc94879.txn
+          - 📄 647-b485fd1f-3ddd-4933-a92f-8c5d65dcd15a.txn
+          - 📄 648-f87daf5f-3936-4af2-8ecc-7c9733601a98.txn
+          - 📄 649-9fbdb52f-1108-4926-afc9-1ebc47f8ba09.txn
           - 📄 65-ade98714-b501-464a-87e1-300d4938919a.txn
+          - 📄 650-f2e109b4-bb1f-43fe-ada5-81749471222a.txn
+          - 📄 651-10d96c14-3108-4953-ad74-3d81d57c11b3.txn
+          - 📄 652-f779c36b-b77d-4717-811b-dd06dd0d262a.txn
+          - 📄 653-de3ca1cb-4a48-4494-b90e-6da30fe8ebec.txn
+          - 📄 654-2feba938-2bf9-4797-bc83-0837ea2a5216.txn
+          - 📄 655-27a4d4ee-b5b2-408a-b4c0-a67c9725bd8d.txn
+          - 📄 656-146c3885-4031-4055-bc7d-275609d4bdf1.txn
+          - 📄 657-96d09cc9-14cd-4f08-96ea-488a52705802.txn
+          - 📄 658-86ccfcaf-f0d6-4712-8bc2-138089d97981.txn
+          - 📄 659-5cb18567-c7ed-43b6-93ca-3670e92b2629.txn
           - 📄 66-e83f1eac-3ac1-4d33-a52d-a3d7a05c8ca9.txn
           - 📄 67-b7210e4c-176d-4203-88a2-466856eac9b4.txn
           - 📄 68-1e4f019b-31bc-43f9-8237-f21179754cc6.txn
@@ -3996,56 +5821,510 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 204.manifest
           - 📄 205.manifest
           - 📄 206.manifest
+          - 📄 207.manifest
+          - 📄 208.manifest
+          - 📄 209.manifest
           - 📄 21.manifest
+          - 📄 210.manifest
+          - 📄 211.manifest
+          - 📄 212.manifest
+          - 📄 213.manifest
+          - 📄 214.manifest
+          - 📄 215.manifest
+          - 📄 216.manifest
+          - 📄 217.manifest
+          - 📄 218.manifest
+          - 📄 219.manifest
           - 📄 22.manifest
+          - 📄 220.manifest
+          - 📄 221.manifest
+          - 📄 222.manifest
+          - 📄 223.manifest
+          - 📄 224.manifest
+          - 📄 225.manifest
+          - 📄 226.manifest
+          - 📄 227.manifest
+          - 📄 228.manifest
+          - 📄 229.manifest
           - 📄 23.manifest
+          - 📄 230.manifest
+          - 📄 231.manifest
+          - 📄 232.manifest
+          - 📄 233.manifest
+          - 📄 234.manifest
+          - 📄 235.manifest
+          - 📄 236.manifest
+          - 📄 237.manifest
+          - 📄 238.manifest
+          - 📄 239.manifest
           - 📄 24.manifest
+          - 📄 240.manifest
+          - 📄 241.manifest
+          - 📄 242.manifest
+          - 📄 243.manifest
+          - 📄 244.manifest
+          - 📄 245.manifest
+          - 📄 246.manifest
+          - 📄 247.manifest
+          - 📄 248.manifest
+          - 📄 249.manifest
           - 📄 25.manifest
+          - 📄 250.manifest
+          - 📄 251.manifest
+          - 📄 252.manifest
+          - 📄 253.manifest
+          - 📄 254.manifest
+          - 📄 255.manifest
+          - 📄 256.manifest
+          - 📄 257.manifest
+          - 📄 258.manifest
+          - 📄 259.manifest
           - 📄 26.manifest
+          - 📄 260.manifest
+          - 📄 261.manifest
+          - 📄 262.manifest
+          - 📄 263.manifest
+          - 📄 264.manifest
+          - 📄 265.manifest
+          - 📄 266.manifest
+          - 📄 267.manifest
+          - 📄 268.manifest
+          - 📄 269.manifest
           - 📄 27.manifest
+          - 📄 270.manifest
+          - 📄 271.manifest
+          - 📄 272.manifest
+          - 📄 273.manifest
+          - 📄 274.manifest
+          - 📄 275.manifest
+          - 📄 276.manifest
+          - 📄 277.manifest
+          - 📄 278.manifest
+          - 📄 279.manifest
           - 📄 28.manifest
+          - 📄 280.manifest
+          - 📄 281.manifest
+          - 📄 282.manifest
+          - 📄 283.manifest
+          - 📄 284.manifest
+          - 📄 285.manifest
+          - 📄 286.manifest
+          - 📄 287.manifest
+          - 📄 288.manifest
+          - 📄 289.manifest
           - 📄 29.manifest
+          - 📄 290.manifest
+          - 📄 291.manifest
+          - 📄 292.manifest
+          - 📄 293.manifest
+          - 📄 294.manifest
+          - 📄 295.manifest
+          - 📄 296.manifest
+          - 📄 297.manifest
+          - 📄 298.manifest
+          - 📄 299.manifest
           - 📄 3.manifest
           - 📄 30.manifest
+          - 📄 300.manifest
+          - 📄 301.manifest
+          - 📄 302.manifest
+          - 📄 303.manifest
+          - 📄 304.manifest
+          - 📄 305.manifest
+          - 📄 306.manifest
+          - 📄 307.manifest
+          - 📄 308.manifest
+          - 📄 309.manifest
           - 📄 31.manifest
+          - 📄 310.manifest
+          - 📄 311.manifest
+          - 📄 312.manifest
+          - 📄 313.manifest
+          - 📄 314.manifest
+          - 📄 315.manifest
+          - 📄 316.manifest
+          - 📄 317.manifest
+          - 📄 318.manifest
+          - 📄 319.manifest
           - 📄 32.manifest
+          - 📄 320.manifest
+          - 📄 321.manifest
+          - 📄 322.manifest
+          - 📄 323.manifest
+          - 📄 324.manifest
+          - 📄 325.manifest
+          - 📄 326.manifest
+          - 📄 327.manifest
+          - 📄 328.manifest
+          - 📄 329.manifest
           - 📄 33.manifest
+          - 📄 330.manifest
+          - 📄 331.manifest
+          - 📄 332.manifest
+          - 📄 333.manifest
+          - 📄 334.manifest
+          - 📄 335.manifest
+          - 📄 336.manifest
+          - 📄 337.manifest
+          - 📄 338.manifest
+          - 📄 339.manifest
           - 📄 34.manifest
+          - 📄 340.manifest
+          - 📄 341.manifest
+          - 📄 342.manifest
+          - 📄 343.manifest
+          - 📄 344.manifest
+          - 📄 345.manifest
+          - 📄 346.manifest
+          - 📄 347.manifest
+          - 📄 348.manifest
+          - 📄 349.manifest
           - 📄 35.manifest
+          - 📄 350.manifest
+          - 📄 351.manifest
+          - 📄 352.manifest
+          - 📄 353.manifest
+          - 📄 354.manifest
+          - 📄 355.manifest
+          - 📄 356.manifest
+          - 📄 357.manifest
+          - 📄 358.manifest
+          - 📄 359.manifest
           - 📄 36.manifest
+          - 📄 360.manifest
+          - 📄 361.manifest
+          - 📄 362.manifest
+          - 📄 363.manifest
+          - 📄 364.manifest
+          - 📄 365.manifest
+          - 📄 366.manifest
+          - 📄 367.manifest
+          - 📄 368.manifest
+          - 📄 369.manifest
           - 📄 37.manifest
+          - 📄 370.manifest
+          - 📄 371.manifest
+          - 📄 372.manifest
+          - 📄 373.manifest
+          - 📄 374.manifest
+          - 📄 375.manifest
+          - 📄 376.manifest
+          - 📄 377.manifest
+          - 📄 378.manifest
+          - 📄 379.manifest
           - 📄 38.manifest
+          - 📄 380.manifest
+          - 📄 381.manifest
+          - 📄 382.manifest
+          - 📄 383.manifest
+          - 📄 384.manifest
+          - 📄 385.manifest
+          - 📄 386.manifest
+          - 📄 387.manifest
+          - 📄 388.manifest
+          - 📄 389.manifest
           - 📄 39.manifest
+          - 📄 390.manifest
+          - 📄 391.manifest
+          - 📄 392.manifest
+          - 📄 393.manifest
+          - 📄 394.manifest
+          - 📄 395.manifest
+          - 📄 396.manifest
+          - 📄 397.manifest
+          - 📄 398.manifest
+          - 📄 399.manifest
           - 📄 4.manifest
           - 📄 40.manifest
+          - 📄 400.manifest
+          - 📄 401.manifest
+          - 📄 402.manifest
+          - 📄 403.manifest
+          - 📄 404.manifest
+          - 📄 405.manifest
+          - 📄 406.manifest
+          - 📄 407.manifest
+          - 📄 408.manifest
+          - 📄 409.manifest
           - 📄 41.manifest
+          - 📄 410.manifest
+          - 📄 411.manifest
+          - 📄 412.manifest
+          - 📄 413.manifest
+          - 📄 414.manifest
+          - 📄 415.manifest
+          - 📄 416.manifest
+          - 📄 417.manifest
+          - 📄 418.manifest
+          - 📄 419.manifest
           - 📄 42.manifest
+          - 📄 420.manifest
+          - 📄 421.manifest
+          - 📄 422.manifest
+          - 📄 423.manifest
+          - 📄 424.manifest
+          - 📄 425.manifest
+          - 📄 426.manifest
+          - 📄 427.manifest
+          - 📄 428.manifest
+          - 📄 429.manifest
           - 📄 43.manifest
+          - 📄 430.manifest
+          - 📄 431.manifest
+          - 📄 432.manifest
+          - 📄 433.manifest
+          - 📄 434.manifest
+          - 📄 435.manifest
+          - 📄 436.manifest
+          - 📄 437.manifest
+          - 📄 438.manifest
+          - 📄 439.manifest
           - 📄 44.manifest
+          - 📄 440.manifest
+          - 📄 441.manifest
+          - 📄 442.manifest
+          - 📄 443.manifest
+          - 📄 444.manifest
+          - 📄 445.manifest
+          - 📄 446.manifest
+          - 📄 447.manifest
+          - 📄 448.manifest
+          - 📄 449.manifest
           - 📄 45.manifest
+          - 📄 450.manifest
+          - 📄 451.manifest
+          - 📄 452.manifest
+          - 📄 453.manifest
+          - 📄 454.manifest
+          - 📄 455.manifest
+          - 📄 456.manifest
+          - 📄 457.manifest
+          - 📄 458.manifest
+          - 📄 459.manifest
           - 📄 46.manifest
+          - 📄 460.manifest
+          - 📄 461.manifest
+          - 📄 462.manifest
+          - 📄 463.manifest
+          - 📄 464.manifest
+          - 📄 465.manifest
+          - 📄 466.manifest
+          - 📄 467.manifest
+          - 📄 468.manifest
+          - 📄 469.manifest
           - 📄 47.manifest
+          - 📄 470.manifest
+          - 📄 471.manifest
+          - 📄 472.manifest
+          - 📄 473.manifest
+          - 📄 474.manifest
+          - 📄 475.manifest
+          - 📄 476.manifest
+          - 📄 477.manifest
+          - 📄 478.manifest
+          - 📄 479.manifest
           - 📄 48.manifest
+          - 📄 480.manifest
+          - 📄 481.manifest
+          - 📄 482.manifest
+          - 📄 483.manifest
+          - 📄 484.manifest
+          - 📄 485.manifest
+          - 📄 486.manifest
+          - 📄 487.manifest
+          - 📄 488.manifest
+          - 📄 489.manifest
           - 📄 49.manifest
+          - 📄 490.manifest
+          - 📄 491.manifest
+          - 📄 492.manifest
+          - 📄 493.manifest
+          - 📄 494.manifest
+          - 📄 495.manifest
+          - 📄 496.manifest
+          - 📄 497.manifest
+          - 📄 498.manifest
+          - 📄 499.manifest
           - 📄 5.manifest
           - 📄 50.manifest
+          - 📄 500.manifest
+          - 📄 501.manifest
+          - 📄 502.manifest
+          - 📄 503.manifest
+          - 📄 504.manifest
+          - 📄 505.manifest
+          - 📄 506.manifest
+          - 📄 507.manifest
+          - 📄 508.manifest
+          - 📄 509.manifest
           - 📄 51.manifest
+          - 📄 510.manifest
+          - 📄 511.manifest
+          - 📄 512.manifest
+          - 📄 513.manifest
+          - 📄 514.manifest
+          - 📄 515.manifest
+          - 📄 516.manifest
+          - 📄 517.manifest
+          - 📄 518.manifest
+          - 📄 519.manifest
           - 📄 52.manifest
+          - 📄 520.manifest
+          - 📄 521.manifest
+          - 📄 522.manifest
+          - 📄 523.manifest
+          - 📄 524.manifest
+          - 📄 525.manifest
+          - 📄 526.manifest
+          - 📄 527.manifest
+          - 📄 528.manifest
+          - 📄 529.manifest
           - 📄 53.manifest
+          - 📄 530.manifest
+          - 📄 531.manifest
+          - 📄 532.manifest
+          - 📄 533.manifest
+          - 📄 534.manifest
+          - 📄 535.manifest
+          - 📄 536.manifest
+          - 📄 537.manifest
+          - 📄 538.manifest
+          - 📄 539.manifest
           - 📄 54.manifest
+          - 📄 540.manifest
+          - 📄 541.manifest
+          - 📄 542.manifest
+          - 📄 543.manifest
+          - 📄 544.manifest
+          - 📄 545.manifest
+          - 📄 546.manifest
+          - 📄 547.manifest
+          - 📄 548.manifest
+          - 📄 549.manifest
           - 📄 55.manifest
+          - 📄 550.manifest
+          - 📄 551.manifest
+          - 📄 552.manifest
+          - 📄 553.manifest
+          - 📄 554.manifest
+          - 📄 555.manifest
+          - 📄 556.manifest
+          - 📄 557.manifest
+          - 📄 558.manifest
+          - 📄 559.manifest
           - 📄 56.manifest
+          - 📄 560.manifest
+          - 📄 561.manifest
+          - 📄 562.manifest
+          - 📄 563.manifest
+          - 📄 564.manifest
+          - 📄 565.manifest
+          - 📄 566.manifest
+          - 📄 567.manifest
+          - 📄 568.manifest
+          - 📄 569.manifest
           - 📄 57.manifest
+          - 📄 570.manifest
+          - 📄 571.manifest
+          - 📄 572.manifest
+          - 📄 573.manifest
+          - 📄 574.manifest
+          - 📄 575.manifest
+          - 📄 576.manifest
+          - 📄 577.manifest
+          - 📄 578.manifest
+          - 📄 579.manifest
           - 📄 58.manifest
+          - 📄 580.manifest
+          - 📄 581.manifest
+          - 📄 582.manifest
+          - 📄 583.manifest
+          - 📄 584.manifest
+          - 📄 585.manifest
+          - 📄 586.manifest
+          - 📄 587.manifest
+          - 📄 588.manifest
+          - 📄 589.manifest
           - 📄 59.manifest
+          - 📄 590.manifest
+          - 📄 591.manifest
+          - 📄 592.manifest
+          - 📄 593.manifest
+          - 📄 594.manifest
+          - 📄 595.manifest
+          - 📄 596.manifest
+          - 📄 597.manifest
+          - 📄 598.manifest
+          - 📄 599.manifest
           - 📄 6.manifest
           - 📄 60.manifest
+          - 📄 600.manifest
+          - 📄 601.manifest
+          - 📄 602.manifest
+          - 📄 603.manifest
+          - 📄 604.manifest
+          - 📄 605.manifest
+          - 📄 606.manifest
+          - 📄 607.manifest
+          - 📄 608.manifest
+          - 📄 609.manifest
           - 📄 61.manifest
+          - 📄 610.manifest
+          - 📄 611.manifest
+          - 📄 612.manifest
+          - 📄 613.manifest
+          - 📄 614.manifest
+          - 📄 615.manifest
+          - 📄 616.manifest
+          - 📄 617.manifest
+          - 📄 618.manifest
+          - 📄 619.manifest
           - 📄 62.manifest
+          - 📄 620.manifest
+          - 📄 621.manifest
+          - 📄 622.manifest
+          - 📄 623.manifest
+          - 📄 624.manifest
+          - 📄 625.manifest
+          - 📄 626.manifest
+          - 📄 627.manifest
+          - 📄 628.manifest
+          - 📄 629.manifest
           - 📄 63.manifest
+          - 📄 630.manifest
+          - 📄 631.manifest
+          - 📄 632.manifest
+          - 📄 633.manifest
+          - 📄 634.manifest
+          - 📄 635.manifest
+          - 📄 636.manifest
+          - 📄 637.manifest
+          - 📄 638.manifest
+          - 📄 639.manifest
           - 📄 64.manifest
+          - 📄 640.manifest
+          - 📄 641.manifest
+          - 📄 642.manifest
+          - 📄 643.manifest
+          - 📄 644.manifest
+          - 📄 645.manifest
+          - 📄 646.manifest
+          - 📄 647.manifest
+          - 📄 648.manifest
+          - 📄 649.manifest
           - 📄 65.manifest
+          - 📄 650.manifest
+          - 📄 651.manifest
+          - 📄 652.manifest
+          - 📄 653.manifest
+          - 📄 654.manifest
+          - 📄 655.manifest
+          - 📄 656.manifest
+          - 📄 657.manifest
+          - 📄 658.manifest
+          - 📄 659.manifest
           - 📄 66.manifest
+          - 📄 660.manifest
           - 📄 67.manifest
           - 📄 68.manifest
           - 📄 69.manifest
@@ -4083,212 +6362,666 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 98.manifest
           - 📄 99.manifest
         - 📂 **data**
+          - 📄 0000000000111110010111117d7fdb4ce7bdc9386547c3e97c.lance
+          - 📄 0000000011000111101011104c3f60466394e10081a318329b.lance
           - 📄 00000001000100011000111064d0594607834dadc31ace3e8d.lance
+          - 📄 000000011000110000000110cfd66a4ce298cb411bc4e42cd2.lance
           - 📄 0000000110010011011000019218ce49389c9340b2008aef84.lance
+          - 📄 000000011001010000110010ac2bd64afc9b1e8752822acbe2.lance
           - 📄 00000001101000110100110199871e452599afc22f3e2e3f9e.lance
+          - 📄 00000001101110011100100046fb8144a5ae25e193dfb81af9.lance
+          - 📄 000000100011011000010010f6cfa147a9b3571dd5abf2a32a.lance
+          - 📄 00000010110011111011100020efa84d83a1be5efd47f132f6.lance
+          - 📄 0000001110100010001101107092e248d0a77358fc5d0c3518.lance
           - 📄 000000111010010011100101f48d2e4f8d83fc5f0ebee81828.lance
           - 📄 000000111111000011011000506c1c4a0892210b140eabba54.lance
           - 📄 0000010000000101101011110c0c894eadb9ee80c253135aae.lance
+          - 📄 000001000010010101101001d107124131b5c80f1efd8c0820.lance
           - 📄 00000100100011000011101101ccad4881ab819c79c0eef166.lance
+          - 📄 0000010011101110100111017006bf40e0bd6ab2d375c32fb5.lance
+          - 📄 000001011000000011100000a9fff94537ad72afe3b3b09888.lance
+          - 📄 000001011010011010100111804121491faeda229dc82537db.lance
           - 📄 00000101110010010001111001379e42a993dbc324cf678ed6.lance
+          - 📄 000001011101011110111111b832734ae4b212cac20c8fabc7.lance
           - 📄 000001100000100110010100ccd4fd46b4ab7b0c1eb6324ed8.lance
+          - 📄 000001100001010100000111b3fee4479bab50ef4e4d3e13da.lance
+          - 📄 0000011011100001110011005c589e4471818c3bf3d8cd2101.lance
+          - 📄 00000111111110010101011116f8764caca745dc927c4852ea.lance
+          - 📄 00001000001100011101011090aa8a4cd6aa1e67bb00573aad.lance
+          - 📄 00001000110100100101111138f8a64c5a86e92d4e4ae4c022.lance
           - 📄 000010011011111011001111dc2d624caead883335ae4016a9.lance
+          - 📄 00001010001000101101110081d0d645c788195b00bbb12762.lance
+          - 📄 000010100100011111010000d4c10a471090c24c0cdeb6e5a8.lance
+          - 📄 000010100110000000011001ecebcb4925b9e1983a11f8e4ed.lance
           - 📄 000010101010010100000110d66d514dfdb31a9519775a6729.lance
+          - 📄 00001010101100000011101138343345e5aca4d979be1c381f.lance
+          - 📄 000010110100000100111110d13c264867a659b200ff78b022.lance
           - 📄 0000101101101100111111015442ed4adda0758a3a173d351d.lance
+          - 📄 000010111111010000000011b25ea241efada75079934d7e12.lance
           - 📄 000011000101010011101000c1f8ff489d831a47c1e1e2fca3.lance
+          - 📄 00001100011101111111100187b0f24430b6c4feda476bc8cc.lance
+          - 📄 0000110010001101010100109c377a4a0db09a02530c54ed51.lance
+          - 📄 00001100101001010101111093c61743eeb92fc85bc12e2360.lance
           - 📄 00001100101111101100101185ea4b4caa89b649dc7bbb94a8.lance
+          - 📄 00001100111000000010100137aca44273b989c78458f33bc4.lance
+          - 📄 0000110110111000011100016a6ac34b18801465518b731818.lance
           - 📄 00001110010000111110110031ea6a4a8e8f6f0c570cdd34f4.lance
           - 📄 0000111010100101111011003e438144439957991ea735691f.lance
           - 📄 000011111000110010010011069ef14ddf80f78b7bb9f345e2.lance
+          - 📄 0000111111010000010001107c98764d019a2025cd67891368.lance
+          - 📄 0001000000011001001010107fb91d453284415222ba3abe78.lance
           - 📄 000100000111000111100010f338b94669adb85fbb61d92adc.lance
+          - 📄 0001000111010100000000008ab0e34a15a86dcc81e2e75af7.lance
           - 📄 000100101000101010111011a3129341d6b8607dd801697b15.lance
           - 📄 00010011010111110010110047e1964799a507bb04f6e475eb.lance
+          - 📄 0001001101100000110011105891364df8ab46d40221a852a3.lance
+          - 📄 000101000000010110101101960c474664b97e261ba2fea91e.lance
+          - 📄 000101010010100100011011ba50ef4e2aae9d3aa0411194ec.lance
+          - 📄 000101010110000001111011db4af847cbb1d98362c374f6b5.lance
           - 📄 000101010111000010110010e8e18a49faacc15b3904390e04.lance
           - 📄 0001010101110111011101018cc07e42749651f1be1f932f76.lance
+          - 📄 00010101100010111000110053d1534f52a38c24460761c4dc.lance
+          - 📄 000101011010110101011111d49a0f49a0b23d2c7ca4ceb00f.lance
+          - 📄 0001010110111110101111004846ae4f07a884231f514b968f.lance
+          - 📄 00010110110010000111101164368847cf944dd2d163b030c5.lance
           - 📄 000101110100111101101111841cd6457f8e93837f39e5e08e.lance
+          - 📄 000101111001001001011000c75b64487a93d0a071c5ed683d.lance
+          - 📄 000101111010000000110000d70d644144844a6e22406569f7.lance
           - 📄 000101111100110000100001eb4060465ab0f7da791110cecc.lance
+          - 📄 0001100010001110000101118a4e364b58bea30553f5ef6b9b.lance
+          - 📄 0001100010111001101010016f65f64640ba0b3f4bd5362c89.lance
           - 📄 00011000111000111110000192082f45909c63c4021d0c4125.lance
+          - 📄 000110001111011101111111c0d57a4122a6cb89c41a4e58b6.lance
           - 📄 00011010001111111011000122e1854e6aabb2a03173d9f3ed.lance
+          - 📄 00011010010010010011101174902543ca810cbf54c28a2b3d.lance
+          - 📄 00011010010111100000111139da744e47b51816b1c660e609.lance
+          - 📄 000110101001110101110100c6671c493eb15f2f5613328956.lance
+          - 📄 00011010110011111010011096fb3d4037aa5100b19b78addc.lance
+          - 📄 0001101101011101110011116bc20f42c2a1cfb243dfea5115.lance
+          - 📄 000110111100000111001111376fc74d08a90072fbf6f73dbc.lance
           - 📄 0001110010111111101100002975df4787b918f10d81d517fa.lance
+          - 📄 00011101000111000111101054595e45c6be439f2a172ce471.lance
+          - 📄 000111010110000110010111dc71e04802ba11257510864381.lance
+          - 📄 000111011011101000010000264e724bdd9c22cc63ce48f429.lance
+          - 📄 000111011100110101110010a8e87448ea82b361e76df1a027.lance
+          - 📄 0001111000010110110110012bffd9438aa56adfc9ccaaca14.lance
           - 📄 0001111001000000010110113667e94b3aa88bc1cae65bfb0e.lance
+          - 📄 000111100111100001100100578e964fdd96cdcf380f35f3ea.lance
+          - 📄 000111111111101010010111b396ac4cf6bbb27564c02b96f2.lance
+          - 📄 0010000010011011101010011002f54dee92f2801607ab72a4.lance
           - 📄 001000010111001010001000cad25f46cda080e40374a498c1.lance
           - 📄 001000011000000101101000520e9d419e834841a53e59acf1.lance
+          - 📄 0010000110111011010000106c1f3849ff84be6c781bbb93b8.lance
           - 📄 0010000111111010100101003e25cd414ca56bf432012fe2b9.lance
           - 📄 001000101000000101001110657fdb46cb929c9c608b7ad26d.lance
           - 📄 0010001010010001010111012882544712b961c56e3b2670c7.lance
+          - 📄 001000101101000101011000d2d8e741f4bca7420db3242a4b.lance
           - 📄 001000101101101100000100e99aff4c8cbc915f835b713200.lance
           - 📄 0010001100001001111011014c168f404eb606ed9c048a4213.lance
           - 📄 001000110010010011001010cb4da04303aa5f78fd7258f674.lance
+          - 📄 001000110011111011110110d25c704d0194c53ca5265b81d1.lance
+          - 📄 00100011101001010000110145758f42a0a346163a64c456c2.lance
           - 📄 001001000111100100100100017b0d4ab48ba5ea327b0c8e22.lance
+          - 📄 00100100100111001000111077b4a745269f019726d9ea26c3.lance
+          - 📄 001001001101000001001000380f7040f8af169c1ad7d17e8b.lance
           - 📄 0010010101000111101000103e908544d4bb2c16909babc681.lance
+          - 📄 0010010111000110111111110c6c4e443cb5fafded5b58b9c3.lance
           - 📄 001001100101110110011101730db847658ed14774479064c8.lance
+          - 📄 0010011010010010110010010aaad54451895b4648e4b870be.lance
+          - 📄 0010011110111001011100102245814f2a9737daa35b7edaab.lance
+          - 📄 001010001101101111010111bb7d0c4f698f91fdcf04a22e2c.lance
           - 📄 001010010000111110011111da36a24ecc93be7db8ba7968ed.lance
           - 📄 001010011000010110100100a61cd2400899630d3982b42e6d.lance
+          - 📄 001010011000100101101100cf50e047a2b5ebf97f601dd897.lance
+          - 📄 0010101001001011001011115da9fe45858a38fe8273699315.lance
+          - 📄 0010101001100011110011112d616d4741bb21ae447e1a0afc.lance
           - 📄 0010101001101000110101005a1b504ef9b834d3a86c9f5629.lance
+          - 📄 00101010100011010001001162b4b141ccacee792bf76e0f49.lance
+          - 📄 0010101101111011011010008325bc4237a393230777517b7b.lance
+          - 📄 00101011100000100011111158acf34a3180ae1c436b3cb2e2.lance
           - 📄 001010111101001111000001ab19c941ba89306ceca21b7cdf.lance
           - 📄 0010110000011001101110012b86714d7db0cb4badbc221ab4.lance
+          - 📄 0010110010100001101100014cb0c342549757a6bfeb135208.lance
+          - 📄 00101101000011110011101152e56c477797b7a62cea9d1a90.lance
+          - 📄 001011100010101010110101b2f11c4171b9bb4f5464511a47.lance
+          - 📄 001011111000011000110011fd2a584d3498655e9fb68c8ccc.lance
+          - 📄 001100000101000001011100554fb34552869d3e742197d41e.lance
+          - 📄 0011000001101010101100116713654d9292ff37310fd00aa1.lance
           - 📄 00110000011101110110001130d7b2486c8a690ed9a5e1b85d.lance
           - 📄 0011000011000010110110003a4ede4ebdbb82143e9f7f90ac.lance
           - 📄 001100010011000111000101eda53e4797911d4e6b32e19dfe.lance
+          - 📄 00110001110101011100110080fdf644cca1a82f956ea956b9.lance
+          - 📄 001100100001011111011001e4405848c2b124232f3e74e5d7.lance
           - 📄 001100101110111000111001133a134813a424bf17faf33774.lance
           - 📄 001100110101010000001111007ba8459195ff592026f58f98.lance
+          - 📄 0011001101010101111111113f36574466b9e030dd94347ace.lance
+          - 📄 001100110111100111100010a1c9a042efba41eccd1da3f593.lance
           - 📄 001100110111101101111011184b554406a4e3332ee7277f06.lance
           - 📄 001101000001001111000010ee51634395b37dee50c89ecedf.lance
+          - 📄 0011010001000001000111006013eb453aaa4896fd955b77cd.lance
+          - 📄 0011010010000100101001106d71c04e45971b4dbaf6a6be9d.lance
+          - 📄 00110110000011101011100038a7114b18a0411725a953231e.lance
           - 📄 00110110001001110100100078e86a42a6a2479e14eadffffe.lance
+          - 📄 00110110010101011011001096e8cb45d68528bf5f0a63281b.lance
+          - 📄 001101101010000011111101405de342c68e948223e1ee1af2.lance
           - 📄 0011011011000110001010011284b34f5fbd67c3ef6f372bfb.lance
+          - 📄 001101101110000110001010be4171438789bde0077f6390f5.lance
           - 📄 001101110000011000000111b43394432680046e8c9fd8ec32.lance
+          - 📄 0011011100011001111000011f43ae4fad86579b17fbbd47d9.lance
+          - 📄 001101110110010001111101ab3ffe4be98dd5b42bef3cbb00.lance
           - 📄 0011011101100101000101116541ba48d1bb98e0b94521e0d3.lance
           - 📄 001101111100110001000000732d1c437f91776dff8129639f.lance
+          - 📄 001110001001001010110111f18a0f49cbaa5c104913a8de89.lance
+          - 📄 001110001010101010000101ebad434a09b07dd37a559107e7.lance
+          - 📄 001110001101011100001010788bae496b99c2c78d8fe6801b.lance
+          - 📄 001110011000110100010001a1ee2a4c92807b5bcca196d3f3.lance
           - 📄 001110011011100111000100eba6d948b8b77310ec64fb80f3.lance
+          - 📄 001110100101101011001111cde15f4f6892484dd5475bca6b.lance
+          - 📄 001110110001111000100101e5dea64387b2f710e18fe656b7.lance
           - 📄 001110110101111110011110ad859e43608f001012ee9fd05a.lance
+          - 📄 001110110111100101001110eafe8442959d9d56075fa1fcb3.lance
           - 📄 00111011101110110011100107dd4d464d95725a5c894235d4.lance
           - 📄 001111000010011001110010b0eafe4349ba058bd8bf5b9f0a.lance
+          - 📄 00111101110101100111001029c20946baa1ba2e758595e660.lance
           - 📄 001111011110111011000010996bb14d7b99beeea911502948.lance
+          - 📄 001111100000011011100010962c6847869a68c0fd5fe11131.lance
           - 📄 001111100001111001010000dc94b147e9bd6d17ba2fa5d7f5.lance
+          - 📄 001111100101110101011100d150d942bd9dad209030031931.lance
+          - 📄 0011111011010100101011005960454e48b63bcd3fcc166306.lance
+          - 📄 0011111100100010011010018f83d142a18049c9d9be3492d7.lance
           - 📄 00111111001001100000110194ba5b4a9ea99cb581fda6fa6c.lance
+          - 📄 0011111111011000100011003c28224402bd0cee1f277bb934.lance
+          - 📄 0011111111110001001000009c739a4b649c03b87f6f19aa70.lance
+          - 📄 010000000100000011011101abcb564f6d972f5a8df31b23ad.lance
+          - 📄 010000001000111010101101582e954422b6ac3ab1c01a035d.lance
+          - 📄 010000001010010110011001fe9b504387aec268bcaf10d465.lance
+          - 📄 010000001010111010101111861167418c9dd0bd9bc4b54845.lance
+          - 📄 0100000100011010000001005b587441cd81b0e000e43b446e.lance
           - 📄 0100000110011100100010001145674984b48bf9bca5f04d94.lance
+          - 📄 010000101000001110010110fb543b4807b59cc39369ebfcbe.lance
           - 📄 010000111000101011101110fe52a14d55b53ed6b9e5a49bae.lance
+          - 📄 0100001111010110010100100b0f8645f48e536d18081e5773.lance
+          - 📄 0100010100001001111101001f28104ee8af00bd2fe9822e9b.lance
+          - 📄 010001010000110011110111eaf36f4787b9e72711f0a576bd.lance
+          - 📄 010001010001001100110111f4678b48189cd2fc0313f9b78e.lance
           - 📄 0100010100010110101011007485b0479382fb518411a9d45b.lance
+          - 📄 010001010010101111110110e5e689438799eacec1c156eb7d.lance
           - 📄 010001011011000011101111e1e3d04b59ab4069230de883a8.lance
+          - 📄 010001100100110011011101c9fd034b729d0b571201fe1133.lance
+          - 📄 0100011010100110001011015703474f4e8f3a37d1573f7b1b.lance
+          - 📄 01000111100010110010000004caef4c42951d11c690337be9.lance
           - 📄 010010000000111010000100f039cc4bd998ab2712bd5c5545.lance
           - 📄 01001000000101011111011007cccb43f28a0e0113201c5b2f.lance
           - 📄 0100100011011010000111113aa44c4f358b6fa76647be99e1.lance
           - 📄 01001001000110101000011123c26c4eaab49b9b2cc2590687.lance
+          - 📄 010010010111011011001110dcf40b446592014b441e26949a.lance
           - 📄 010010100000010011001101d00f974e11ada769c38a2f4444.lance
           - 📄 010010101001100111010011b9214c4f13a881bd34f429b7a4.lance
+          - 📄 010010110101101100000000e138894829b22df5336224231a.lance
+          - 📄 010010110111011111001010db33a44b6b98422bfc4697f593.lance
+          - 📄 010010111111001110011001394bad4dd9bb48c41f5676c0b8.lance
+          - 📄 0100101111111111000111003be59445c5a0f885f09e83dd89.lance
+          - 📄 01001100010011011010100007f4b34590be0d73a08e4147f1.lance
+          - 📄 010011001110000111110110e8929344f0b45e4f52abfcfd46.lance
+          - 📄 0100110100011010100011111508d84788acf209000750f54e.lance
           - 📄 0100110100100110010011006fbebd4234b88686b4c5ad440e.lance
+          - 📄 010011101110000001111111355b42449c864cb35e30128891.lance
+          - 📄 010100000000011100101111c831eb4f1c9d4143e5f21e08df.lance
+          - 📄 010100000011100100101000a6d12440f9b7891b706f662490.lance
+          - 📄 010100000100111010001001de5a164cff85ea38c194ea70aa.lance
+          - 📄 01010000011010110101011041b91e4b418ec8331eccefca6f.lance
+          - 📄 010100001110100000101001c927b04039afc2c12a11c16344.lance
+          - 📄 010100010110000101111100a43e2a4c0b8ae1d84d48a73389.lance
+          - 📄 010100010111010000100010b35ac04fc78c8ba6dc40a83201.lance
+          - 📄 01010001100011101101110013c22c4a778b6eb68cb63321e3.lance
+          - 📄 0101000111000110101010015ba2a04a06b17578032be53578.lance
+          - 📄 0101001001000001001011116c5cce407c8d7a4b1f68ea0ab7.lance
+          - 📄 01010010011100100100000114f66841baa2df23706b2b2c03.lance
           - 📄 01010010011111101011010071a7d84ac6839c3fe513a380c0.lance
+          - 📄 010100110101111000110111dab31041b8aecd128480520bce.lance
+          - 📄 01010011101111101001000095eb5641aaa5343ce3b21359af.lance
+          - 📄 0101001111011001110111005b80d24e0ab14a99e1c29df3b7.lance
+          - 📄 01010100010011111010011161c462475ca34857c609fa3026.lance
+          - 📄 01010100100001101000001182eddc4c198fe31ab0f182c074.lance
           - 📄 010101001101101001001000e054c94bbd9e4ac122565716ea.lance
+          - 📄 010101001110111001001011d4773a40c1a139a4ef38c49ba9.lance
+          - 📄 01010101011010011011011013a7f64b89971dcd4a5821b9b6.lance
+          - 📄 010101011000000000101100b0e0174e35b4bb92ff37bf913d.lance
           - 📄 010101011000111000101101c4d8bf4120b52cf589f62002d1.lance
+          - 📄 0101011001111011101011000d80544e07ba04e543b4437c53.lance
+          - 📄 0101011100010101010111009dccfd41c9adaeaea47a3816d7.lance
           - 📄 010101110101101111100001d48ec440f1af05650f0807d0d3.lance
+          - 📄 0101100000010100001111105ccb174b7cbe8392f4cb79fe6c.lance
+          - 📄 0101100010111001101100115e5709407094a6fec841b04734.lance
+          - 📄 010110001110000001111111c4a92d45a98ce8b26f23cfbf02.lance
+          - 📄 010110010011110001010100d37fb7432e9a908bafa3839ef8.lance
+          - 📄 010110010101000001110100297aaa42b6ae79a10799152f92.lance
           - 📄 010110010110110011100000363cc242c79346746116a846b4.lance
+          - 📄 010110010111001101011111d6e45f4f489ba48f48b7075680.lance
+          - 📄 0101100110101001110011118acaf3434fa3d1c0d4400fd10a.lance
           - 📄 010110100010001110010011ec2efb47c9b3e01374c439d448.lance
+          - 📄 0101101001110001111111111892a440ea9560a3886c1dca4d.lance
+          - 📄 0101101010011101100001007367cc47f283dc177913f6f67f.lance
           - 📄 01011010111010010111000008b0414ed5b43f065908e496d7.lance
           - 📄 010110110100001111000100a92c3146b2a6d8f5a78e10375e.lance
+          - 📄 010110111000010111111001d49afb49deb7dca107057c3304.lance
+          - 📄 010110111110111010001010e44f4a4515a7deaefdb2bd1d74.lance
+          - 📄 010111000100000100000111e313844695b4c16c130eea1adf.lance
           - 📄 0101110001111010000011114acd574641a9f0bd4f3dbf23cf.lance
+          - 📄 0101110111011000011011010610ae4969a27f49a99dae503d.lance
+          - 📄 0101111000010011110111111698c945ab90280c47d62dc7d1.lance
+          - 📄 010111110010111011001111ab5eb34e33b50ba0f1253591ee.lance
+          - 📄 011000000010000111100010f7e8534b10b888ecf5cbd07b1f.lance
           - 📄 0110000001110000010100002c9cd4423b97202a4b797f7d2b.lance
+          - 📄 011000001011100011000011b7f76c4f86a3ebed4b2384a186.lance
           - 📄 011000001111100100110011a329ba4f5088f217c9db5fd4e3.lance
+          - 📄 011000010110010111100010b9516949fab2d211e2ef1c3f69.lance
           - 📄 011000010111111000001011a7b7714a028bed5de099c09a0a.lance
           - 📄 011000011111100010001001ec05cc42b7ba142c1a026dc628.lance
+          - 📄 011000100000100101111011ccdad546bf8f136ccaf39e62f4.lance
           - 📄 011000101001000101010111f3ac7241b79a580de3084ddd80.lance
+          - 📄 011000101101010000010010390dba4bfe91d1f9de9dafadde.lance
+          - 📄 0110001100011101011000102768e7453499144f1f9f2d806d.lance
           - 📄 01100011011011110011101041a675463f9818bee866dd08e9.lance
+          - 📄 0110010101010101100110114607364810839b5487ab2d1afd.lance
           - 📄 011001100011000001100110fa22b4475a9833edea0cd9f941.lance
+          - 📄 011001100100010101000100243c994c68b248b817d66155e2.lance
+          - 📄 011001110110011011100110abbcc94e8a839464a731e470f3.lance
+          - 📄 011001111001010111001100b79e7246dabe044a00f998d98a.lance
           - 📄 011001111001111001001110a9f8414141bb466d6fafa66485.lance
+          - 📄 0110011111000000010011100a77cc45abaad10988be2d9d4c.lance
           - 📄 011010001010001010101001e29db64524be0890f8a4436efa.lance
           - 📄 011010011011111000111110d84914439192e965cecbeac9e8.lance
+          - 📄 011010011111001001011001b5123a4f30a1fb17cae5c86457.lance
+          - 📄 011010101101110011101100b87a54406d806d1832a401c4c1.lance
+          - 📄 011010110000000111100110a8dacd4982b83760b1c476c4aa.lance
           - 📄 0110101101011100111111018c28fa4121b257e7402a8491da.lance
           - 📄 01101011101000010111100141558b4527845383edaeee0c75.lance
+          - 📄 011011000000110111000101dfe950416d8b4e9a976416bdbd.lance
+          - 📄 011011000001000001010001261e9c40b0b23986f05ca6f800.lance
+          - 📄 01101100001000011101110191751344cb9386b5d8b04c61c3.lance
+          - 📄 011011000111000010000110b40a25451994494c6a6ac4a8fa.lance
+          - 📄 011011001001100110011010987b484a6aa3a32a68793956b1.lance
+          - 📄 011011010000010100111010a3b74745e1be4e7cb886708747.lance
+          - 📄 01101101100000010000110045b6984a9dbe2c0aca028d1a23.lance
+          - 📄 0110111000011010011101009e8e004081a7cd5dd507e661c7.lance
+          - 📄 01101110000111101101010161166f4119b23cd2c8e2205006.lance
           - 📄 01101110100011100101010012f6214e1f8e6baaae7cc46bfd.lance
+          - 📄 011011111010110100100110c54a7a494e83e58ee8954846fd.lance
+          - 📄 01110000001100111101110190dea746899840e4f97c9a19f5.lance
           - 📄 01110000010100100100100053ba5f4c199609d42c7d5bceb6.lance
+          - 📄 011100001000100101011000c6b12b4910a4cfae4c113e0879.lance
           - 📄 0111000010101111000111115ea3814cea98b63f30a2a09ff6.lance
+          - 📄 011100001110111100110100ab4ddd4e1bb7411a4b18033349.lance
           - 📄 011100010011000111010001ce7f7846a4a4a52ccb7df5f3ea.lance
           - 📄 011100010100001101100100cff9b44e23a65cd82836bad3ce.lance
+          - 📄 011100010111011000110100e6718e4376b5b32c1fe77192be.lance
           - 📄 0111001000000110111101111d01194d32bf63e0ecba1ab167.lance
+          - 📄 011100100010001000011001e38b31406682a9c47b20014ed3.lance
+          - 📄 011100100010010101101001ef40a342aca521abc8314cf3f8.lance
+          - 📄 011100100110100101111000c2ce1d4218bdf89743685c2862.lance
+          - 📄 011100101001010001000110c6aa63484cb9f7e52259fcd886.lance
+          - 📄 0111001101100000000010115a89264d17b2a1cee7c5136053.lance
+          - 📄 011100110110000000100011ee1ef34ae2aa25a2c79b5733f9.lance
+          - 📄 0111001101110001100100117ace8d4dc6b3a653dc1296ab90.lance
           - 📄 0111001110000011101101102502de4e6ea255c965c9e165f0.lance
+          - 📄 0111001110101101110001111b32ec403f8b4b9619bc67c8c0.lance
+          - 📄 011101001000011001010011766c814e9abd99b082256ba05d.lance
+          - 📄 0111010011001111011000017e5f8449bdb0cd76a009f1fc4a.lance
+          - 📄 011101010010010001000100a6a42c48f3976b0d574623a309.lance
           - 📄 011101011111110110111010aa847d42bd83eb5d088205aa34.lance
+          - 📄 011101101011000000011010cbdbfb49abb1bb199a9bd1edf7.lance
+          - 📄 011101101101000010000111a19b55477ea20811ec51f0a36a.lance
+          - 📄 011101111000011111111010d7c1144cfe884880792665f910.lance
           - 📄 011101111101101100101001b683e84e8bae2e71b0279d5836.lance
+          - 📄 0111100000101000000110006b07214dc19fc16dabb99fbad7.lance
+          - 📄 011110000100011111100101f37d4f44008aed9df5724a1476.lance
+          - 📄 011110011000100011101010adbfbb4d13b764592b30177fb5.lance
+          - 📄 011110011111000100011111cd13204ecda0d44526a6795c7e.lance
+          - 📄 011110100011100001001000d8ebf048fe932487e8f8ec64bd.lance
           - 📄 011110100100100000100010c06dff450b9bf8501b8c4de647.lance
+          - 📄 011110101100011000100011556f5340e991fa323d935489ba.lance
+          - 📄 011110111111111011011110458f174f428a4141fd06899b08.lance
           - 📄 01111100000010100010000016cd054f418787288db4fa254e.lance
+          - 📄 0111110001100000001100014fce10400395d0edec0cb98f78.lance
+          - 📄 0111110110010001110100108968b1482281030133ad5109b9.lance
+          - 📄 0111110111101100011011001f9108411f977ef5a0e4667a99.lance
           - 📄 01111110100001011011110002e8b9474aadee3c133c0cbec5.lance
           - 📄 011111101001101000101011e2c867444facad94839e8320f0.lance
+          - 📄 011111101101001001001010716df0430ebb6bca9e909093d8.lance
+          - 📄 011111101110000100100101482c5d427fafb7ccb1c1d38dcb.lance
+          - 📄 011111110000110010000100c74fe24b3a94f1d8f44d752bb9.lance
+          - 📄 0111111100101111000001019ececb46858094630ceaea26da.lance
+          - 📄 100000000110111001111111834e9946ffa2947c4395cd0760.lance
+          - 📄 1000000010111110100001002144dd4fb98accc4f277262265.lance
           - 📄 1000000011011100101001001c89a54e17b08a81b7e2e2bb5e.lance
+          - 📄 1000000101000110000000014d536f4148ad98256268c22035.lance
           - 📄 100000011011010100001101c98ac54320ac95565d29df0bce.lance
+          - 📄 1000000111011001100110114180bf4b4e999f1324ddc9210f.lance
+          - 📄 100000011110011011101000170b464959a6de78750fe90068.lance
+          - 📄 1000000111100111000101115635a749139613076481cc033c.lance
+          - 📄 100000011111101001101110c4e5e74c8fb562e90e0abc7620.lance
+          - 📄 1000001001100110100001111681c8413db96f8164ffb25041.lance
           - 📄 10000011001100110110100022dca44e4dbdd6aa21ee78c517.lance
+          - 📄 100000111100001010110111eaa0ba4737bcb9a2e276b83f16.lance
+          - 📄 1000001111100110110000010d9dfb4eaba6c7a51ac208a633.lance
           - 📄 10000100001010010111110085ba474035baebf90641eb31fe.lance
           - 📄 10000100110100001110000191908e4ac486094f8af04915de.lance
+          - 📄 1000010100010100000101100a878e4b4b99bdca39bfc93e1d.lance
           - 📄 1000010100011010010100114c3e494447acc4cc811c534119.lance
           - 📄 100001010110100011111100542f7c4b368cddd9f1b9a91352.lance
+          - 📄 1000010101101001010001116e21f34ab18108964c1e04ebce.lance
+          - 📄 1000010110100010111010016e0b5242b8a5d899dc61c46e3c.lance
+          - 📄 10000101101010000111001102aae24d2e9f3a55015e15448d.lance
+          - 📄 100001110111011000011100fabdf9463f9752fcdc66ae4291.lance
+          - 📄 1000011111111110100000006f1fbf4103b9e8fcf0bc565434.lance
+          - 📄 100010100010101010011000248c3a4e709001970e1ed5ac7f.lance
           - 📄 1000101100100001010111113de22849338f236f80e9517925.lance
+          - 📄 1000101101011111000011102c18c54604a4db8cc531c54ef7.lance
+          - 📄 100010111100101001111110322553427a8d055a2c5b573a31.lance
           - 📄 100010111101101110000110eade7447d1a499eace8a0df76d.lance
+          - 📄 10001100000011010110101144d1e347709910791fdec04782.lance
           - 📄 1000110010110100001000111cab004be6818f0920e234f56b.lance
+          - 📄 1000110011000011101011010838fa45989f5b0fb91d270a7a.lance
+          - 📄 100011001111101010000110ecc61b43529299b8b3153e5ead.lance
+          - 📄 10001101111110110101011161b12b40c7ae4686d4800825a8.lance
+          - 📄 100011100110011100011000170bae4675abc7b21aac093d4b.lance
+          - 📄 1000111001111000110110107b67734c1a8c6b4bf77f1d84c6.lance
           - 📄 100011100111101111100010c45b144d3d8197358dd5692d88.lance
+          - 📄 100011110100001110001001237c384c43bde2691d887c88ff.lance
           - 📄 100011110100101110100110baa0114a0ca38a4a92743dd1df.lance
+          - 📄 100011111010101010100100bf94f0402ba37b24c28b9971a0.lance
+          - 📄 100011111010110111111001936a4d407885aec2a185ec1e5c.lance
+          - 📄 100100000010000010110110499c1247758cab8079380b4818.lance
           - 📄 100100000011100101111010472c7d448d86b56e2e9c149d7f.lance
           - 📄 1001000011011001000001012cb1cd470cad75627d8937c69b.lance
           - 📄 1001000011011010111001002f0c014a5499548bdfb521637e.lance
+          - 📄 10010000111010000100001050fa9044ee8da5f99f8d3588e2.lance
           - 📄 100100011010110110011101c7fd544fdba6617f01d2fc991c.lance
+          - 📄 100100011011100001000101bf6b0541f7bcafb72ff5664322.lance
+          - 📄 100100100000110111000101e3eaae4dab987c4de9bcbac2be.lance
+          - 📄 10010010011010010100000042c9e3496e8d7d2ce84b0b564c.lance
+          - 📄 100100101010011110001101ec1e6c45b59cc11452325acd2a.lance
+          - 📄 100100110010110000111010b928964e9289bb87f454978b5c.lance
+          - 📄 100100110111000110001011f5d7e84bdca8cb7d0e49e39bac.lance
           - 📄 10010011100110001101000081035e44f1846ef24349ac590b.lance
+          - 📄 100100111100011110101000602e2b4f9db408c718baed483c.lance
           - 📄 1001001111010101011010100a39a047f39ece6eb92ece6648.lance
+          - 📄 100101000001011110111011ea1b0448ecb77ea8969e2c45e5.lance
+          - 📄 10010100110001000100111007e3a64cd38998b6eea8870491.lance
+          - 📄 100101010001000110100101884cf64256a84963dac3596279.lance
           - 📄 100101010001001100010111c1f4a948599ccd0bdca0315902.lance
+          - 📄 10010101001010000001001107b4764e73b5b90573fa217d93.lance
+          - 📄 100101011001001111100111b66ca14f7b931136924b1a4bf0.lance
+          - 📄 10010101101001010110001181df03489bb6f1a029b8a903dd.lance
+          - 📄 100101101000011010110011af002e4f9aa16057f98e12314f.lance
+          - 📄 1001011100100000110111016e87d34488a2c4e1b50aa0b27c.lance
+          - 📄 100101110110001110101010245d604ec885d5e8b32c562356.lance
           - 📄 10010111110011000101011180ba0c477cbeea8dff7625d391.lance
+          - 📄 10011000010100001111011008ed354527b03653c9bc37223a.lance
           - 📄 10011000110010011000001050910944eab144aa416a016d97.lance
           - 📄 10011001001000101000010111155b4edda699fac913e1e8ca.lance
+          - 📄 100110010110000010101010f564924adbbbbb24214188e059.lance
           - 📄 10011001011010011100101026c4e3435eb376c52e41b7073d.lance
+          - 📄 100110011011001101110101122dd9452483641d3599f9d511.lance
+          - 📄 1001100111101100101011010311584fc0ae86087367556d1b.lance
+          - 📄 10011010010000011000011134782847b1a12ff153c9c2ce37.lance
           - 📄 1001101010010101111110003c50fb450a8ea12af3833d0900.lance
           - 📄 100110101011101001111010a40c024faf92dd57a61c643b5b.lance
           - 📄 1001101011011001001110116248e44015bb3dc8fb4586c71f.lance
           - 📄 1001101100100110001010113ca5da437d8e7e692a1494d2bd.lance
+          - 📄 10011100011000100001011165127a49f89d4e99b3886f6fb1.lance
+          - 📄 100111010010101111010011559718436cb6563af0d19cebe7.lance
           - 📄 100111011101110110001011beb29948fcae3944e9c5174b37.lance
+          - 📄 100111101110001110011010f1c9744a9894c546b50be7247e.lance
+          - 📄 100111101110100100100010f5991a43e880282721d718d6a1.lance
+          - 📄 1001111100000101010100113985ab4b7e972230e01c242344.lance
+          - 📄 10011111010000000000101101e03f44cd937a257e81c29c0c.lance
+          - 📄 100111110111010001100100a0115a4d3380143b440dbb5506.lance
+          - 📄 100111111001011000010110063b7b4979a201d8300444ea89.lance
+          - 📄 10011111101110110000010172ccdb4785b2997febbb16b080.lance
+          - 📄 101000000111101011111101b5bb9b4fcda714ac44e6a76bbe.lance
+          - 📄 101000010011010011111111fa47a54843bbd7a3537258321b.lance
+          - 📄 1010000101000101001000118a4ca341a69b97ee5326276e07.lance
           - 📄 101000011001100111001110f8dbfe4365a572edd2f271604d.lance
           - 📄 101000100001001101010100cded7e49a18331a846bbdfe808.lance
+          - 📄 10100010110001000100110125e8f34aadabb63eca8db2728a.lance
+          - 📄 10100010110001110010110168fdec4618a7a86e94c4d1fafd.lance
+          - 📄 101000101111001101100110cee1264c94a97a0229f4d8fa82.lance
+          - 📄 101000110001111011001001783bcd4e2296510ae9c2a6747a.lance
+          - 📄 10100011100101000000111099d12f48ec9da85b36e11b8d5f.lance
+          - 📄 1010010000100000100111106d0d294b69b7cace9acaf8e789.lance
+          - 📄 10100100001100001010100171e3484d59830d21d255b0b919.lance
           - 📄 1010010100100101100101012279fc483ca30c0373af869d6e.lance
+          - 📄 10100101010101011000110066262b46218646ac7aa4f99d16.lance
+          - 📄 10100101011111000110000055a9da4ba69fc2a5d432e91357.lance
+          - 📄 1010010110101100111100001645af464894a3cc27dc267ab8.lance
+          - 📄 1010010111111011010011103ee8fe4e23b5c3aa9866d75b7f.lance
+          - 📄 1010011001101101101100111096cc49ca9e9c525de8072941.lance
+          - 📄 1010011001101101110101017ce988473a8c479a6b801e7544.lance
           - 📄 10100111101101110100111096bc5846b092cf6ceff8289b1a.lance
+          - 📄 1010100010011010111111000e33ff466daeab4ec084a829b9.lance
+          - 📄 101010010101010011000000f7c4ec403ba7642396aa2bcef1.lance
+          - 📄 1010100101101001100101005e1c414f60af6981b0b7a5a845.lance
+          - 📄 101010010110110110010101ee68134cc7ae066df17b79dbab.lance
+          - 📄 1010100101110110011110007c2def4f19bd2948e01227ade6.lance
+          - 📄 10101001111011110111001034cb294ee0bc15bbff222d685e.lance
+          - 📄 101010100100000111101100c66aa04b3f9a17c0aecf3e1caf.lance
           - 📄 101010101001001100000111057bae4af9aa8a7030fc55f2cd.lance
+          - 📄 1010101010100000111111013e0acc4808b7dc2e982e17eed9.lance
+          - 📄 101010101011101011000001efc21344a5aedd039402643267.lance
+          - 📄 101010110001010111001101282a6243218a31c3a52353240d.lance
           - 📄 10101110100111001001110154af9544e48222af36a0516337.lance
           - 📄 101011101011110101100000622303492dbfdb41fec3fc18d6.lance
+          - 📄 1010111100100101000000019d30a143bd938cc762b795bf5f.lance
           - 📄 10101111001111111010000126bf07455b8a256e70dffba6d1.lance
+          - 📄 1010111101000110000100117042134387bb5e039d62308b70.lance
           - 📄 101011111000000000000010893e3f4325af8fb1c7839b7e52.lance
+          - 📄 101011111100010001111011ef9bdc4a1d8de91211ab4e8aa9.lance
           - 📄 101100001010010010101000a271ea49f4953dfaa532fb8740.lance
+          - 📄 10110000101100110110010074cabd45fd96a18e751bd1c818.lance
           - 📄 10110000111110101101100040fee14956b237de8ab4fd1e69.lance
+          - 📄 101100010110011100000110d0d1074891ae1051f53c6f4204.lance
           - 📄 10110001100001000001000006eb3e4c4eaf5d2d68d8cd88d8.lance
+          - 📄 1011000110011000011101105d6ce04873bf30fe9952774ad3.lance
+          - 📄 10110001110011110101101050d8f440acbfb732f5be2c3067.lance
+          - 📄 1011000111100001110100013c583e4f0aa9920e303415783b.lance
+          - 📄 101100101111100010100111dd01d04199acaf84ed59fd559a.lance
           - 📄 101100110010000000000100e1591444d6a229b1def2e7987a.lance
+          - 📄 101100111010010011111101db61684e8c923f8bb0fb5df1b1.lance
+          - 📄 101100111010011011101000fb6fc74c32ada29421aff284ae.lance
+          - 📄 1011010001001110111010018205af4f5abe03172151c2b11d.lance
+          - 📄 1011010001101011110010106ff22a4fd8a322b1c94a11dd41.lance
           - 📄 101101010011110110011101a9661342248c6e19b07abe3db7.lance
+          - 📄 101101011001001110110100caab3d495697c764dfc6370f48.lance
+          - 📄 101101011100011010100001c98c454ff7bdbbe4c7ad75304b.lance
+          - 📄 1011010111011101110100009050b945ab92184a9361fc3276.lance
           - 📄 10110101111100100000010148bb3c41219a8ab2282cb46dd2.lance
           - 📄 1011011000000001010110103f5a2f4cc5b9a5306972cc5831.lance
+          - 📄 10110111000111001011110083f8a843c9a559b5ce11713d40.lance
           - 📄 101101111100111010110100046602448bb869c3e91fe1493c.lance
           - 📄 1011100010000000011001013a3f8c4fe69223d8de08e82bba.lance
+          - 📄 101110010101111110101111627fc7498c87315fb309e0e2da.lance
+          - 📄 101110101000000000101011940b364162a95d096fe9236af7.lance
+          - 📄 1011101100010000101110101cc01a41e689f1376020ae1141.lance
+          - 📄 1011101100011001001000116822684d9bb8f08eeb3a3b7a4f.lance
+          - 📄 1011101101010110011111102197344145b790e97a05e17203.lance
+          - 📄 1011101101110011100011104b5de24b418c4e94512cef419f.lance
+          - 📄 101110111010111100010000d934dd42d997e02835fad6e360.lance
           - 📄 101110111100111000110101386e2240018758da43637d191d.lance
+          - 📄 101111000011100100010011da6d8641eb89262d17f8da7baa.lance
+          - 📄 101111001010010001101000b289264eeeb036e3eb94541da4.lance
+          - 📄 101111001011111000110010078d914c609a6e736fd7df1c5d.lance
+          - 📄 101111010100011011100001710ea54c008259e4443befe314.lance
+          - 📄 101111010101101110111001b17c3f443586d7b00a8cfebebc.lance
+          - 📄 1011110111000000100011019a6973478d91fffd3e58546e7b.lance
           - 📄 10111110001000110110001134ecfc4b10931f6e43abd3a4d8.lance
+          - 📄 1011111000100100110010000e8ff4453da2ec5551acfca796.lance
+          - 📄 101111110101010010001000f6a72b4d6491c4ff4b256e27c5.lance
+          - 📄 101111111010010101010001f8c4f9436ea1a06b1141cfb379.lance
+          - 📄 101111111011101000110000d822994f369da1c1fdca1afebf.lance
+          - 📄 1100000000001000100011000b4e2a4671b891eb21f89b1d77.lance
+          - 📄 110000000101101111111101a343644c8296f6a04f6e53f367.lance
           - 📄 11000000101100101110101028ad474d1c930e566fe35509d9.lance
+          - 📄 110000010000110111101000170cdd4b5e88476209e3fd25cf.lance
           - 📄 11000001001101001100000176ccf444d6a02e82bf4ec1011d.lance
           - 📄 110000010100000001101011e8c76f456c8ff62d016123c584.lance
           - 📄 11000001110001011010011011e0c24bea99c7556e87581277.lance
+          - 📄 110000100000110100101100d04f2e4a37ad0bf9685039d631.lance
+          - 📄 11000010001010101110101004483a4df98bd7d9369933a4a0.lance
+          - 📄 110000100100011010000010743db440e3a06688333859014a.lance
+          - 📄 1100001110110001100100106e0e1945f185559eb7f1747133.lance
           - 📄 11000011110000011000101199d8e442b2a75d5a8288b9df39.lance
           - 📄 1100010000000001111011118bbffc446f80d5d97e114b8d12.lance
           - 📄 110001000011100000001110c758144decb08cc12f8482e444.lance
           - 📄 1100010001011010001100101df16f40189d6406f9bbe672f7.lance
+          - 📄 1100010001110000100101107757de46399c8571ae9b5a5031.lance
+          - 📄 1100010101010001001110015337584889bd8e7933d711a837.lance
+          - 📄 110001011101001001101110cdf3304e919ec066f10def5d44.lance
+          - 📄 110001011111011110111001b476f04f1cb84ca91e4af2e939.lance
+          - 📄 110001100010100111110110119c3a4ad0a41b2f6d54a3a915.lance
+          - 📄 11000110001101101100000020a43745a99b0f9732e180bc63.lance
+          - 📄 110001100110001101001110247e04490fbc9dbeef40ceb654.lance
+          - 📄 110001101010001001110111163f6144348a0762351e7b7ccf.lance
+          - 📄 110001101010011010000110a92c854ebca307fdaee86fe1f8.lance
+          - 📄 1100011100110010101001109b46c74261b05d4719791c0eb2.lance
+          - 📄 110010000010000101010110c4e5b0466a9ec653a63c2b3546.lance
+          - 📄 110010000101001110010010f5830a40e190d6a4624e6bcf1c.lance
+          - 📄 1100100010001001011110014f1b52491e867e3ff326c892a6.lance
+          - 📄 110010010011110100001110af19bf45c28023497c9d062f0e.lance
+          - 📄 110010010111101001011111a46a4146e1b2ca1d0cf042d673.lance
+          - 📄 110010011011110000100001a5eceb40fcac0bbb3aba3d985a.lance
+          - 📄 1100101010101010100100100d7c14444abda8c28c2bec1b5b.lance
+          - 📄 110010110011111001011001fe39a44cf6a68a5e33dc2bfe05.lance
           - 📄 11001011101010100011001079031d40ab9705ac108ff847d1.lance
+          - 📄 1100110001111100100000007331114c91b724b9e309370f38.lance
           - 📄 110011001101000110001110ce253444a78b48da8438853207.lance
+          - 📄 1100111000000001111110012bf8c2449eb5bda8dc49e92ad8.lance
+          - 📄 1100111000000110000001105092834830bb45088301b3c658.lance
           - 📄 110011100010001000010101ce2b76484ba398e8f19835e73f.lance
+          - 📄 110011110100101100010101dafa0345539c033cbacad090ba.lance
+          - 📄 1100111101001111011100112da0e143379da7956a465d4385.lance
+          - 📄 1100111101010000011001108c3f8a464e95f2505c66f0a39d.lance
+          - 📄 110011111001000101000010d64b2e4841a8ebf97758cebb0f.lance
+          - 📄 1100111111001000101101118a2fca4549afc8cad0d1c8caf5.lance
+          - 📄 1101000000010000010100103c36994019908df4f59e00ac70.lance
+          - 📄 110100001101110110011111f7f0694b7da08fb855212c149c.lance
+          - 📄 110100001110101100101001b5aa3d4bceb33f722f0237f9a1.lance
           - 📄 1101000110000111111000013de8294e37805a0a34224ddcf7.lance
+          - 📄 1101000110100110000000003d06e447d4a16c3a350a2b6ef3.lance
           - 📄 1101000111111011100110114f03774d8abea47c1dcf0e222c.lance
+          - 📄 11010010000110101110001128b2544121839c73ca47bd46be.lance
+          - 📄 1101001000011110111110011fa2bc4191a17b36d4bc183cdc.lance
+          - 📄 1101001000101101010101109cf7e84252b2864a37ce9e0708.lance
+          - 📄 11010010010011100110110171170941628b4588fb1ab4357e.lance
           - 📄 110100101001100100100000dab9f14008a20c0b304ae033f8.lance
+          - 📄 110100110010011111000111028b3e4977a1eb28ef0b73b0b9.lance
           - 📄 11010011001100111000000019e1654f23b0a3baaab0c1b636.lance
+          - 📄 110101000110101101111010e36d9f4eeab6fac3847a605b9d.lance
+          - 📄 11010100011100000101101024b3394339bbb3f97aba6bd973.lance
           - 📄 110101001000000101101000658cc0485281c4826cb362e8e1.lance
+          - 📄 110101001100100011101001d1b55f4c3eb9ba533267294f51.lance
+          - 📄 110101010110111011001110171556407ebb447cae36193dab.lance
+          - 📄 1101010111101011100000111a8a8f40299fecac66c29d1a4d.lance
+          - 📄 110101110010100000001101f7d9cb4d3fa4321a5e594dd630.lance
+          - 📄 11010111011111110010000127aeba47dcbd8181123654c62d.lance
+          - 📄 1101011110101010011100003ecec8422c9b2b07ac8506a2d2.lance
+          - 📄 1101011111010100000001117ff86f4cdfa10a9b295f445f06.lance
+          - 📄 110101111111011100010010c1af0a4b028b01d4505aa70158.lance
+          - 📄 11011000001111101000111096a68a4a82a893373807de20a9.lance
           - 📄 11011000110111001110111044d10d4ae88ad1f570ef566745.lance
+          - 📄 1101100110001000101101006467cc46b0974b92c6b3687ccb.lance
           - 📄 110110011110111111110001d196ac43c9b831990990257305.lance
           - 📄 1101101000000110101110012e0de44aa0b5bf4a9d5830d397.lance
           - 📄 110110100010011101001101e8c8194e81b3b4c7310ba8a44f.lance
           - 📄 1101101010000001100011015f187c4a43a54b92a2fd56d062.lance
           - 📄 1101101011011011111111007772df4cefb8af8a2bac110fc4.lance
           - 📄 1101101100010000010101015bdfa4471eacaeeacb8e40a3ff.lance
+          - 📄 11011011111000100001011060899f47499d4df828869a0fdb.lance
+          - 📄 11011100000011011010111081ba5a47e19a38caa1ee5b2169.lance
           - 📄 110111000001111011111000503ca04d529944633358083082.lance
+          - 📄 110111001000111111010100e3ec0740138bd3630d67263e1a.lance
+          - 📄 1101110100001001100000104709ee432c83c6689cbe7afe3f.lance
           - 📄 110111010000101111100111fcff18424da7f47eee6b364edf.lance
+          - 📄 11011101111110001011010015120641a790a2d7fa79bbb39b.lance
+          - 📄 110111100011000000010011c17d504b39907074936244c3bf.lance
           - 📄 110111100110010010100111a0381b49d794d27f4f5477e404.lance
+          - 📄 11011110100010111010010096f5994623939ff9ba77365fba.lance
+          - 📄 110111101011111000010011d978ed4200b558dcb8be875ea4.lance
+          - 📄 1101111011111101010000018d4cc549f9b0ca776c25529489.lance
+          - 📄 11011111100000111110101003eba1401f8e6f91bfb12d90da.lance
+          - 📄 110111111000100010011000359c854b5084203bdc51790084.lance
           - 📄 1110000000001011011001016dbee44be99fae819850edbbdd.lance
           - 📄 1110000010110000100001014230264fb6abfdb79e5db013d9.lance
+          - 📄 11100000110000101100111011677a41a499705310011ca818.lance
           - 📄 111000001111010111110111198779400e8e317155d50f6fa4.lance
+          - 📄 1110000100000001000111017ff9084414886a02d82758e489.lance
+          - 📄 1110000101000001000100001543834a549d37957beea9b3f9.lance
+          - 📄 1110000110001010001001011a16514d7094d2a31c0917136b.lance
           - 📄 1110000111111011111011012ef4ba4ed3b92cb2960bf53853.lance
           - 📄 111000101100000111000011c3b85143818f7a959bd6ee3b86.lance
           - 📄 1110001011001010100111013e2fb94ce5acff114527f02e5d.lance
+          - 📄 111000110011000110011000800e934860b7422846d31d30fd.lance
+          - 📄 111001000111100001101110ab3b8a4000b8e2017c0e9b35b6.lance
+          - 📄 111001001101111000011111c6b62c4c34905530727db4bc86.lance
           - 📄 111001010001100011100001315c0249ed8ce58e34178a5384.lance
+          - 📄 111001010010011000011000f1a9d84e79aee3333edf2a4b6d.lance
           - 📄 111001101001010100011011dee9d947728a4636a2b8382335.lance
+          - 📄 1110011100101001010110119fbd60462092cf71d8b1b8be5b.lance
           - 📄 1110011111000111110101015b035b4159a9f7da7fcce17fae.lance
+          - 📄 1110011111111101011101111975604e80852683dc1e526532.lance
+          - 📄 111010000111101111100100a6f1ba484dabbf4a74ecf836c3.lance
           - 📄 111010010100000101111000fb554e42efb09029d1ba0d1a40.lance
+          - 📄 11101001111010110111010096137a4ef98a4ba94052579094.lance
+          - 📄 111010100011010100000000a9637543ccac268d4e8c439313.lance
+          - 📄 111010101000110111111000caaf464655a27a36cf63001780.lance
+          - 📄 1110101100001010011110019ad3734bf2ad6053e020496823.lance
+          - 📄 1110101100011110001011015c2eb648d7b4daf94d6f1cc930.lance
+          - 📄 111011000001110001000000faa8fc4b04a424e1211002a314.lance
+          - 📄 111011000110010100110011ce90414f55899efbf15ceb5f6a.lance
+          - 📄 111011011010010101010110d2a4f64576a9a29117912e8306.lance
+          - 📄 111011110010111011100110794e8c42abb066dbe227a4485d.lance
+          - 📄 111011110100101010101110e44ae64ae49e38e37ff773ae23.lance
+          - 📄 1110111101110100100000005f6a814de99111263434721569.lance
+          - 📄 111100010111110000000010034a3f43ff8d288bc34eab1562.lance
+          - 📄 1111001001010100101001009cb2a042b787ddabeadcc76108.lance
           - 📄 11110011000111101111100084ea2642c890c693025655e778.lance
+          - 📄 1111001101010111011001108b57384a898238c388b97889e5.lance
+          - 📄 111100111011100001011010eb284048519d9c367700c8b56c.lance
+          - 📄 111100111110100000000000ccc093421bb423b268c9d0f085.lance
+          - 📄 1111010011001011100000016f128a40189e68f483718255a9.lance
+          - 📄 111101001101111011010001e3b9484fd78e7b06f13163ddfe.lance
           - 📄 1111010011111011011100103228074ed1b67bb3cbcf7f3eef.lance
+          - 📄 111101010100011000100011d8e93d4470aa17befa279271b4.lance
+          - 📄 1111010101110110101010113ef71c47eda6a35b55f838fdd4.lance
           - 📄 111101011000001100111001d6f6f2407883aea285a03bdf0f.lance
           - 📄 11110101110010001111011172d0914b438832f6315b509062.lance
+          - 📄 111101100000100000011110b2f70e4cbc8ce1290a14a316ea.lance
+          - 📄 1111011001101010101111018c4368424598ab95f30432dc89.lance
           - 📄 111101110101100011001010c864a64f58ad37f8531f2f2469.lance
           - 📄 111101111010011101011110c330e7494f9447a9b8aaea394b.lance
+          - 📄 111110000000111110110011659ae94810b8de55cf2e317b1e.lance
+          - 📄 111110000110011111001011d279a34f25a8ce543e5177204e.lance
           - 📄 1111100011110101010000003d07134eac86a8d898fe7082a9.lance
           - 📄 111110010000000101001000e6e1d84b0babb997e0890df693.lance
+          - 📄 111110010101011110100010dfc8b9457b9c7be8d3a414d70b.lance
           - 📄 1111100111011011000010013a8fa5478ea32c81d5438b3d64.lance
           - 📄 11111001111101010001010017bf8e47689e74b9a2cc8705ab.lance
+          - 📄 111110011111101010011101ec40a846ab8e2f3f841d0db62a.lance
+          - 📄 111110100111111010111000ddde7d4470ad7faca37c2d6d82.lance
           - 📄 11111011010101000111011104cedc443b8721b1553b677494.lance
+          - 📄 111110111110101100010100f4fd9a4b539823da7e2caab927.lance
           - 📄 1111110001001101000111007bd6e24adea508a8d166dfc68a.lance
+          - 📄 11111100011001000010001118b6834ae9b1ec2b03aef40540.lance
+          - 📄 111111010011101100011011002a76494aae032a007035b335.lance
           - 📄 111111011101011100110110fc5f194751929c3d5a83e4f82e.lance
+          - 📄 1111111001001011011110015f1b5b41b1a1aeb3ac72ede7c6.lance
+          - 📄 1111111001001111000111119e6f544015a708e8cc934cdaa0.lance
+          - 📄 1111111011011111100111113e46884102ad948761e37dbc5c.lance
           - 📄 111111101110011101100110207d1a4e26aef1c0727c127868.lance
+          - 📄 11111111000101110100111134269140f18bd57b45a55959cb.lance
+          - 📄 1111111100100011001001006d9cfd4bd3a938a99f2c56d438.lance
+          - 📄 11111111001110010001100110acd2420eb9cdbc9804273660.lance
       - 📂 **memory.lance**
         - 📂 **_transactions**
           - 📄 0-d2558cf7-a79c-4ece-b386-98d5a394a520.txn
@@ -4399,6 +7132,501 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 cloudflare_bovites.md
         - 📄 Cloudflare_MCP_Server_One_Pager.pdf
         - 📄 developer_cloudflare.md
+      - 📂 **Iszap2**
+        - 📂 **AI Folyamatfigyelés-20260221T151407Z-1-001**
+          - 📂 **AI Folyamatfigyelés**
+            - 📂 **AI aszisztensek anyagai**
+              - 📂 **Balatoni engedélykérés**
+                - 📂 **mellékletek**
+                  - 📄 Balaton-specifikus adatok és környezeti tényezők.md
+                  - 📄 Balatoni Kotrások és Mederkarbantartás Jogszabályi Háttere.md
+                  - 📄 Balatoni Vízügyi Jogszabályok Kutatási Eredményei.md
+                  - 📄 Nádvágási Tevékenység Mederkezelői Hozzájárulás Kérelem - Sablon.md
+                - 📄 Balaton_Engedelykeresi_Prompt.docx
+                - 📄 Balatoni Vízügyi Jogszabályok Kutatási Eredményei.md
+                - 📄 Claude Kezdő Prompt_ Hatósági Engedélykérés a Balatonon.docx
+              - 📂 **Folyamatfigyelő**
+                - 📂 **újraszabás**
+                  - 📄 Email Sablonok - Folyamatfigyelő Rendszer.pdf
+                  - 📄 Gmail Címke Szelektálási Logika (n8n-hez).docx
+                  - 📄 Ideális Gmail Címke Rendszer - Javaslat.pdf
+                  - 📄 Képernyőfotó 2025-11-26 - 10.09.08.png
+                  - 📄 Képernyőfotó 2025-11-26 - 10.09.24.png
+                  - 📄 Kulcsszavak és Kifejezések Szótára - Folyamatfigyelő Rendszer.pdf
+                  - 📄 Projekt Kategóriák és Státuszok - Folyamatfigyelő Rendszer.pdf
+                  - 📄 Szelektalasi_Logika_n8n.pdf
+                  - 📄 Tökéletesített Folyamatfigyelő és Munkamenet Koordinátor Rendszer.docx
+                  - 📄 Tökéletesített Folyamatfigyelő és Munkamenet Koordinátor Rendszer.pdf
+                - 📄 claude_prompt.docx
+                - 📄 claude_prompt.pdf
+                - 📄 Munkamenet Automatizálási Sablonok.docx
+                - 📄 Munkamenet Automatizálási Sablonok.pdf
+              - 📂 **Kiértékels varázsló**
+                - 📄 Prompt_ Jegyzőkönyv Varázsló.docx
+              - 📂 **Kiírásból ajánlat**
+                - 📄 Ajanlat_Struktura_Sablon.docx
+                - 📄 Ajanlat_Struktura_Sablon.pdf
+                - 📄 ártábla2025.xlsx
+                - 📄 Minta_Arajanlat_Pelda.docx
+                - 📄 Minta_Arajanlat_Pelda.pdf
+                - 📄 Teljes_Kiirasbol_Ajanlat_Rendszer.docx
+                - 📄 Teljes_Kiirasbol_Ajanlat_Rendszer.pdf
+                - 📄 Tokeletes_Claude_Instrukció.docx
+              - 📂 **Labor asszisztens**
+                - 📄 Hatarertekek_Tablazat.pdf
+                - 📄 Minta_Szakertoi_Velemeny.pdf
+              - 📂 **Manus projektek**
+                - 📄 Hajozasi_Szakerto_Gyors_Utmutato.pdf
+                - 📄 Manus Projekt Kezdő Prompt_ Hajózási Szakértő és Engedélyezési Asszisztens.md
+                - 📄 Manus_Projekt_Kezdő_Prompt_Hajózási_Szakértő_és_Engedélyezési_Asszisztens.docx
+              - 📂 **QGIS**
+                - 📄 Claude Prompt_ QGIS Manager Asszisztens.docx
+            - 📂 **AI szövetség**
+              - 📄 AI Cégvezetői Szövetség – Indító Stratégiai Dokumentum.docx
+              - 📄 AI Cégvezetői Szövetség – Indító Stratégiai Dokumentum.pdf
+              - 📄 AI Fejlesztői Asszisztens - Projekt Prompt (Claude).docx
+              - 📄 E-mail alapú lead-feldolgozási automatizmus v1.0.pdf
+            - 📂 **Airtable**
+              - 📂 **Manus támogatás**
+                - 📄 77756434-b532-413d-a6a3-f52b72cb1c8d.docx
+                - 📄 Folyamatok_Tabla_Struktura.xlsx
+              - 📄 Iszapfalo_Csapat_Adatok.pdf
+            - 📂 **Balatoni engedélykérés**
+            - 📂 **Claude code** _(🤖 Tender Monitoring System - Iszapfaló Kft.)_
+              - 📂 **agents**
+                - 📄 ekr_agent.py
+              - 📂 **AlkJel**
+                - 📄 Claude.docx
+              - 📂 **Csabi ügynöke**
+                - 📄 alpha_agent_package.tar.gz
+                - 📄 alpha_agent.log
+                - 📄 alpha_agent.py
+                - 📄 Email_Draft_2026-01-22.md
+                - 📄 generate_pdf.py
+                - 📄 INSTALL.md
+                - 📄 install.sh
+                - 📄 Portfolio_1_Jelentes_2026-01-22.md
+                - 📄 Portfolio_1_Jelentes_2026-01-22.pdf
+                - 📄 Portfolio_1_Jelentes_2026-01-22.txt
+                - 📄 Portfolio_1_Jelentes_2026-01-24.md
+                - 📄 Portfolio_1_Jelentes_2026-01-24.pdf
+                - 📄 Portfolio_1_Jelentes_2026-01-24.txt
+                - 📄 Portfolio_1_Jelentes_2026-01-26.md
+                - 📄 Portfolio_1_Jelentes_2026-01-26.pdf
+                - 📄 Portfolio_1_Jelentes_2026-01-26.txt
+                - 📄 Portfolio_1_Jelentes_2026-01-27.md
+                - 📄 Portfolio_1_Jelentes_2026-01-27.pdf
+                - 📄 Portfolio_1_Jelentes_2026-01-27.txt
+                - 📄 portfolio_jelentes_2026-01-22.html
+                - 📄 README_AUTOMATION.md
+                - 📄 send_email_with_pdf.py
+                - 📄 setup_automation.sh
+                - 📄 START_HERE.md
+                - 📄 SUMMARY.md
+              - 📄 DASHBOARD_LATVÁNYTERV.md
+              - 📄 ekr_agent_report_AKTIV.md
+              - 📄 ekr_agent_report.md
+              - 📄 ekr_auto_search.sh
+              - 📄 ekr_autonomous_agent.py
+              - 📄 EKR_Jelentes_Aktiv_2026-01-28.pdf
+              - 📄 ekr_mcp_agent.py
+              - 📄 ekr_riport_aktiv_2026-01-28.md
+              - 📄 ekr_search_log_AKTIV.json
+              - 📄 ekr_search_log.json
+              - 📄 ekr_search_results_aktiv_2026-01-28.json
+              - 📄 generate_ekr_pdf.py
+              - 📄 GYORS_INDITAS.md
+              - 📄 GYORS_UTMUTATO.md
+              - 📄 README.md
+              - 📄 RENDSZERTERV.md
+              - 📄 run_agent.py
+            - 📂 **DATSYSTEMS munkafolyamat**
+              - 📂 **Felkészülés**
+                - 📂 **Airtable**
+                  - 📄 AI Folyamatfigyelő Rendszer Fejlesztési Útmutató.docx
+                  - 📄 AI Folyamatfigyelő Rendszer Fejlesztési Útmutató.pdf
+                  - 📄 Iszapfalo_Csapat_Adatok.pdf
+                  - 📄 promtok.docx
+                - 📂 **Manus**
+                  - 📂 **Arhív mentések**
+                    - 📄 1 AI Folyamatfigyelő Rendszer - Rendszerterv és Gondolatébresztő a NotebookLM számára.pdf
+                    - 📄 Fejlesztett_Workflow_v2.docx
+                    - 📄 Kérdések2-AI Folyamatfigyelő Rendszer - Végső Felkészülési Útmutató (v2.0).docx
+                    - 📄 válaszaim2.docx
+                    - 📄 Vegleges_Rendszerterv_v3.docx
+                    - 📄 Vegleges_Rendszerterv_v3.pdf
+                  - 📄 Nézőke.png
+                  - 📄 Vegleges_Rendszerterv_v4.docx
+                  - 📄 Vegleges_Rendszerterv_v4.pdf
+                - 📄 Folyamatfigyelés2024-Andika_Munka-összesítő táblázat.xlsx
+                - 📄 Isti_Egy szolgáltatási igény kezelésének lehetséges fázisai.docx
+              - 📂 **Folyamatfigyelés felkészülő anyagai**
+                - 📂 **Brief**
+                  - 📄 Fejlesztői_Brief_Detsystems-IszapfalóKft.docx
+                - 📂 **Manus 1**
+                  - 📄 AI Folyamatfigyelő Rendszer - Technikai Architektúra és Adatstruktúra.docx
+                  - 📄 Rendszerkovetelmenyek_Specifikacio.docx
+                - 📄 Levelezésünk_összefoglalója.docx
+                - 📄 Speciális Prompt_ Folyamatfigyelő Rendszer Beállítása Levelezés Elemzéssel.docx
+            - 📂 **Hírfigyelő**
+              - 📄 hírfigyelő api.docx
+              - 📄 Info1.png
+            - 📂 **Iszapfalóról alap tudásbázis**
+              - 📄 Új Tudásbázis-elemek az Üzleti Tanácsadó Projekthez.md
+              - 📄 Új_Tudásbázis-elemek_az_Üzleti_Tanácsadó_Projekthez.docx
+            - 📂 **Iszapfalós ügynök hadsereg**
+              - 📂 **códok**
+                - 📄 jel.docx
+              - 📂 **EKR figyelő**
+                - 📄 AI-vezérelt EKR Keresési Stratégia_ Iszapkotrás és Vízépítés.docx
+                - 📄 AI-vezérelt EKR Keresési Stratégia_ Iszapkotrás és Vízépítés.md
+              - 📂 **Manus koncepció**
+                - 📂 **összesítés**
+                  - 📄 Az Intelligens Ügynöksereg Gyártási Stratégiája és Gyakorlati Útmutatója.docx
+                  - 📄 Az Intelligens Ügynöksereg Gyártási Stratégiája és Gyakorlati Útmutatója.md
+                  - 📄 Az Iszapfaló Kft. Intelligens Ügynöksereg.docx
+                  - 📄 Az Iszapfaló Kft. Intelligens Ügynökserege.pdf
+                - 📄 Az Iszapfaló Kft. _Munka Kutató Ügynök Sereg_ Koncepciója.docx
+                - 📄 Az Iszapfaló Kft. Intelligens Ügynöksereg Stratégiája.docx
+                - 📄 Mélyreható Cégelemzés_ ISZAPFALÓ Kft..docx
+                - 📄 réstletezés_Path4Med_Partner_Summary.pdf
+              - 📂 **Pályázatfigyelő**
+            - 📂 **Manus céges előfizetés**
+              - 📄 Professzionális Jellemzés_ Iszapfaló Kft..docx
+            - 📂 **MUNKAIDŐ nyílvántartó nrendszer**
+              - 📂 **Manus**
+                - 📄 2iszapfalo_workflow.json
+                - 📄 Iszapfaló Kft. - Airtable Adatbázis Struktúra.docx
+                - 📄 Iszapfaló Kft. - Airtable Adatbázis Struktúra.md
+                - 📄 Iszapfaló Kft. - Munkaidő és Költség Nyilvántartó Rendszer.docx
+                - 📄 Iszapfaló Kft. - Munkaidő és Költség Nyilvántartó Rendszer.md
+                - 📄 iszapfalo_n8n_teljes_workflow.json
+              - 📂 **Pohi**
+                - 📄 Iszapfaló Kft. – Rendszerértékelés és Javaslat.md
+            - 📂 **n8n workflow**
+              - 📂 **Claude projekt**
+                - 📄 n8n Node Catalog & Usage Examples.pdf
+                - 📄 n8n Quick Reference Guide.docx
+                - 📄 n8n Quick Reference Guide.pdf
+                - 📄 n8n Workflow Automation Expert - Claude Project Instructions.docx
+              - 📂 **download**
+                - 📄 562347954_122108254629026573_7269499106752789917_n.jpg
+              - 📂 **Kulcsok**
+                - 📄 API cloud.docx
+                - 📄 Képernyőfotó 2025-10-29 - 6.45.28.png
+                - 📄 Képernyőfotó 2025-10-29 - 6.46.45.png
+              - 📂 **Pohi - MUNKAIDŐ**
+                - 📂 **kapott anyagok**
+                  - 📂 **drive-download-20260126T061720Z-3-001**
+                    - 📂 **Archivum**
+                      - 📂 **00_Archive**
+                        - 📂 **00_Management**
+                          - 📄 FONTOS_a_megrendelő_elvárásai.md.docx
+                          - 📄 ISZAPFALO.project.json
+                          - 📄 TEST_CASES.md.docx
+                        - 📂 **01_Documentation**
+                          - 📂 **01_Specifications**
+                          - 📂 **02_Guides**
+                            - 📄 AIR-Table_javasolt.docx
+                            - 📄 API cloud.docx
+                            - 📄 Iszapfalo_Csapat_Adatok.pdf
+                            - 📄 n8n jel.docx
+                          - 📂 **03_Diagrams**
+                            - 📄 Drive_api.png
+                            - 📄 Felepites_map.jpg
+                            - 📄 google_cloud.png
+                            - 📄 nem ide.png
+                            - 📄 telegram.png
+                        - 📂 **02_Development**
+                          - 📂 **01_Workflows**
+                            - 📄 final_master.json
+                            - 📄 Gmail kategorizáló.json
+                            - 📄 iszapfalo_n8n_v10_SIMPLE.json
+                            - 📄 iszapfalo_n8n_v11_FINAL_FIXED.json
+                            - 📄 iszapfalo_n8n_v11_PHASE2.json
+                            - 📄 iszapfalo_n8n_v4_FINAL.json
+                            - 📄 iszapfalo_n8n_v4_REPAIRED.json
+                            - 📄 iszapfalo_n8n_v5_RECOVERY.json
+                            - 📄 iszapfalo_n8n_v6_CLAUDE.json
+                            - 📄 iszapfalo_n8n_v7_FIXED.json
+                            - 📄 iszapfalo_n8n_v8_FINAL.json
+                            - 📄 iszapfalo_n8n_v9_PYTHON.json
+                            - 📄 Kimenő ajánlatok_dokumentumok.json
+                            - 📄 MASTER_VEGLEGES_V2.json
+                            - 📄 MASTER_VEGLEGES.json
+                            - 📄 PHASE_1_CLAUDE_READY.json
+                            - 📄 Telegram-Airtable-Bovitett.json
+                            - 📄 Telegram-Hangvezerlés-Teljes.json
+                            - 📄 test_final.json
+                            - 📄 test_simple.json
+                            - 📄 test_v11.json
+                            - 📄 update_payload.json
+                            - 📄 VEGLEGES_JAVITAS.json
+                          - 📂 **02_Database**
+                            - 📄 Airtable_KOLTSEGEK_Import.xlsx
+                            - 📄 Airtable_MEZO_JAVITAS.md.docx
+                            - 📄 Airtable_MUNKAIDO_Import.xlsx
+                            - 📄 Airtable_MUNKAK_Import.xlsx
+                            - 📄 Airtable_MUNKATARSAK_Import.xlsx
+                            - 📄 Airtable_SZABADSAGOK_Import.xlsx
+                            - 📄 Folyamatok_Tabla_Struktura.xlsx
+                            - 📄 Folyamatok_Tabla_Struktura2.xlsx
+                            - 📄 n8n_Airtable_Mapping.md.docx
+                          - 📂 **03_Docker**
+                            - 📄 docker-compose.yml
+                            - 📄 start_n8n.ps1
+                        - 📂 **03_Archive**
+                          - 📄 1.jpg
+                          - 📄 2.jpg
+                          - 📄 2026_01_18_STATUSZ_historikus_log.docx
+                          - 📄 3.jpg
+                          - 📄 4.jpg
+                          - 📄 cookies.txt.backup
+                          - 📄 development_scripts
+                          - 📄 GEMINI.md.docx
+                          - 📄 itt_tartottunk.md.docx
+                          - 📄 MunkamenetCORE.md.docx
+                          - 📄 old_workflows
+                          - 📄 uj.docx
+                        - 📄 1.jpg
+                        - 📄 2.jpg
+                        - 📄 2026_01_18_STATUSZ_historikus_log.docx
+                        - 📄 3.jpg
+                        - 📄 4.jpg
+                        - 📄 cookies.txt.backup
+                        - 📄 development_scripts
+                        - 📄 fix_json.py
+                        - 📄 fix_server.py
+                        - 📄 GEMINI.md.docx
+                        - 📄 generate_workflow_v11.py
+                        - 📄 generate_workflow.py
+                        - 📄 Iszap_v15.json
+                        - 📄 itt_tartottunk.md.docx
+                        - 📄 MunkamenetCORE.md.docx
+                        - 📄 old_workflows
+                        - 📄 STATUS.md.docx
+                        - 📄 uj.docx
+                        - 📄 Workflow.md.docx
+                      - 📂 **01_alapdokumentáció_Források**
+                        - 📄 2iszapfalo_workflow.json
+                        - 📄 AIR-Table_javasolt.docx
+                        - 📄 API cloud.docx
+                        - 📄 Drive_api.png
+                        - 📄 Felepites_map.jpg
+                        - 📄 google_cloud.png
+                        - 📄 Iszapfalo_Csapat_Adatok.pdf
+                        - 📄 iszapfalo_n8n_teljes_workflow.json
+                        - 📄 migracio.md.docx
+                        - 📄 n8n jel.docx
+                        - 📄 n8n_Automatizacios_Rendszer_v2_Reszletes.pdf
+                        - 📄 nem ide.png
+                        - 📄 telegram.png
+                      - 📂 **03_Development**
+                        - 📂 **01_Workflows**
+                          - 📂 **ok**
+                            - 📄 Gmail kategorizáló.json
+                            - 📄 iszapfalo_AI_Agent_v2_FINAL.json
+                            - 📄 iszapfalo_Error_Monitoring.json
+                            - 📄 iszapfalo_Heti_Emlékeztető.json
+                            - 📄 iszapfalo_n8n_v11_PHASE2.json
+                            - 📄 iszapfalo_n8n_v12_IMPROVED.json
+                            - 📄 iszapfalo_Telegram_Commands.json
+                          - 📄 Feladatok státuszállítás telegram chat.json
+                          - 📄 final_master.json
+                          - 📄 Gmail kategorizáló.json
+                          - 📄 Hang-Asszisztens-Teljes-Rendszer.json
+                          - 📄 iszapfalo_Error_Monitoring.json
+                          - 📄 iszapfalo_Google_Calendar_Webhook_Sync.json
+                          - 📄 iszapfalo_Heti_Emlékeztető.json
+                          - 📄 iszapfalo_n8n_v10_SIMPLE.json
+                          - 📄 iszapfalo_n8n_v11_FINAL_FIXED.json
+                          - 📄 iszapfalo_n8n_v11_PHASE2.json
+                          - 📄 iszapfalo_n8n_v12_IMPROVED.json
+                          - 📄 iszapfalo_n8n_v2_MUNKAK_integracio.json
+                          - 📄 iszapfalo_n8n_v3_FULL_INTEGRATION.json
+                          - 📄 iszapfalo_n8n_v4_FINAL.json
+                          - 📄 iszapfalo_n8n_v4_REPAIRED.json
+                          - 📄 iszapfalo_n8n_v5_RECOVERY.json
+                          - 📄 iszapfalo_n8n_v6_CLAUDE.json
+                          - 📄 iszapfalo_n8n_v7_FIXED.json
+                          - 📄 iszapfalo_n8n_v8_FINAL.json
+                          - 📄 iszapfalo_n8n_v9_PYTHON.json
+                          - 📄 iszapfalo_Telegram_Commands.json
+                          - 📄 Kimenő ajánlatok_dokumentumok.json
+                          - 📄 MASTER_VEGLEGES_V2.json
+                          - 📄 MASTER_VEGLEGES.json
+                          - 📄 PHASE_1_CLAUDE_READY.json
+                          - 📄 Telegram-Airtable-Bovitett.json
+                          - 📄 Telegram-Hangvezerlés-Teljes.json
+                          - 📄 test_final.json
+                          - 📄 test_simple.json
+                          - 📄 test_v11.json
+                          - 📄 update_payload.json
+                          - 📄 VEGLEGES_JAVITAS.json
+                          - 📄 WORKFLOW_DOKUMENTACIO.md.docx
+                        - 📂 **02_Database**
+                          - 📄 Airtable_KOLTSEGEK_Import.xlsx
+                          - 📄 Airtable_MEZO_JAVITAS.md.docx
+                          - 📄 Airtable_MUNKAIDO_Import.xlsx
+                          - 📄 Airtable_MUNKAK_Import.xlsx
+                          - 📄 Airtable_MUNKATARSAK_Import.xlsx
+                          - 📄 Airtable_SZABADSAGOK_Import.xlsx
+                          - 📄 Folyamatok_Tabla_Struktura.xlsx
+                          - 📄 Folyamatok_Tabla_Struktura2.xlsx
+                          - 📄 n8n_Airtable_Mapping.md.docx
+                        - 📂 **03_Docker**
+                          - 📄 docker-compose.yml
+                          - 📄 start_n8n.ps1
+                      - 📂 **04_pic**
+                        - 📄 pic2.jpg
+                        - 📄 pic3.jpg
+                        - 📄 pic4.jpg
+                        - 📄 pic5.jpg
+                        - 📄 pic6.jpg
+                      - 📄 ARCHIVAL_SUMMARY.md.docx
+                      - 📄 BRIEF.md.docx
+                      - 📄 FEJLESZTESI_OSSZEFOGLALO.md.docx
+                      - 📄 FRISSITES_OSSZEFOGLALO.md.docx
+                      - 📄 Iszapfaló.md.docx
+                      - 📄 JAVASLATOK_ES_OPTIMALIZALAS.md.docx
+                      - 📄 megoldas.md.docx
+                      - 📄 PROJECT_ANALYSIS.md.docx
+                      - 📄 Projekt struktúra.docx
+                      - 📄 PROJEKT_KOVETELMENY_ELEMZES.md.docx
+                      - 📄 STATUS_ folyamatos.md.docx
+                    - 📂 **Database**
+                      - 📄 Airtable_KOLTSEGEK_Import.xlsx
+                      - 📄 Airtable_MEZO_JAVITAS.md.docx
+                      - 📄 Airtable_MUNKAIDO_Import.xlsx
+                      - 📄 Airtable_MUNKAIDO_Import(1).xlsx
+                      - 📄 Airtable_MUNKAK_Import.xlsx
+                      - 📄 Airtable_MUNKATARSAK_Import.xlsx
+                      - 📄 Airtable_SZABADSAGOK_Import.xlsx
+                      - 📄 Folyamatok_Tabla_Struktura.xlsx
+                      - 📄 n8n_Airtable_Mapping.md.docx
+                    - 📂 **Documents**
+                      - 📄 AI_AGENT_BEALLITASI_UTMUTATO.md.docx
+                      - 📄 AI_AGENT_OSSZEFOGLALO.md.docx
+                      - 📄 Iszap_nyilv.env
+                      - 📄 MCP.docx
+                      - 📄 PROJECT_ANALYSIS.md.docx
+                      - 📄 render.yaml
+                      - 📄 TEST_CASES.md.docx
+                      - 📄 WORKFLOW_DOKUMENTACIO.md.docx
+                      - 📄 Workflow.docx
+                      - 📄 worklflow_2.docx
+                    - 📂 **JSON**
+                      - 📄 Airtable - Google Calendar feladat készítő.json
+                      - 📄 Feladatok státuszállítás telegram chat.json
+                      - 📄 Gmail kategorizáló.json
+                      - 📄 Iszapfaló - AI Agent Asszisztens (v2 - Javított).json
+                      - 📄 Iszapfaló - Google Calendar → Airtable Szinkron.json
+                      - 📄 Iszapfaló - Heti Emlékeztető (Csütörtök 16_00).json
+                      - 📄 Iszapfaló - Telegram Parancsok (_statusz, _het).json
+                      - 📄 Kimenő ajánlatok_dokumentumok.json
+                      - 📄 Telegram Hangvezérlés - Teljes Rendszer.json
+                    - 📂 **Pic**
+                      - 📄 1.jpg
+                      - 📄 10.png
+                      - 📄 11.png
+                      - 📄 12.png
+                      - 📄 13.png
+                      - 📄 14.png
+                      - 📄 15.png
+                      - 📄 2.jpg
+                      - 📄 3.jpg
+                      - 📄 4.jpg
+                      - 📄 5.jpg
+                      - 📄 6.jpg
+                      - 📄 7.jpg
+                      - 📄 9.jpg
+                      - 📄 letöltés.png
+                    - 📄 Isz_APP_nyilv_II.docx
+                    - 📄 Isz_APP_nyilv_v4.docx
+                  - 📄 drive-download-20260126T061720Z-3-001.zip
+              - 📂 **Üzemelő folyamataink**
+                - 📂 **2025_11_26-kezdés**
+                  - 📄 Airtable - Google Calendar feladat készítő.json
+                  - 📄 Feladatok státuszállítás telegram chat.json
+                  - 📄 Gmail - Airtable kimenő ajánlat összeköttetés.json
+                  - 📄 Gmail kategorizáló.json
+                  - 📄 Kimenő ajánlatok_dokumentumok.json
+                  - 📄 n8n_Automatizacios_Rendszer_v2_Reszletes.docx
+                  - 📄 n8n_Automatizacios_Rendszer_v2_Reszletes.pdf
+                - 📂 **251220-bővítések**
+                  - 📂 **2**
+                    - 📄 Képernyőfotó 2025-12-20 - 11.30.12.png
+                    - 📄 Képernyőfotó 2025-12-20 - 11.30.25.png
+                  - 📂 **Hang alapú aszisztens**
+                    - 📄 Hang-Asszisztens-Teljes-Rendszer.json
+                  - 📂 **Hangvezérlés**
+                    - 📄 Telegram-Hangvezerlés-Teljes.json
+                  - 📄 🎯 N8N Workflow Módosítása - Kezdőknek Szóló Útmutató.docx
+                  - 📄 nem ide.png
+                  - 📄 Telegram-Airtable-Bovitett.json
+                  - 📄 telegram.png
+              - 📄 50-prompt-a-Chat-GPT-hez-DETSYSTEMS.pdf
+              - 📄 AI-uzleti-felhasznalasai-DETSYSTEMS.pdf
+              - 📄 Kiegeszito-anyag-DETSYSTEMS.pdf
+              - 📄 n8n jel.docx
+              - 📄 N8N-kurzus-videos-oktatoanyag.mp4
+              - 📄 Top-20-AI-eszkoz-DETSYSTEMS.pdf
+            - 📂 **Pohi Művek**
+              - 📂 **Briefek**
+                - 📂 **1 brief**
+                  - 📄 Iszapfalo_Fejlesztesi_Brief_Pohi.md
+                  - 📄 Iszapfalo_Fejlesztesi_Brief-1_Pohi.docx
+              - 📂 **Google ökoszisztéma**
+                - 📄 001_Értékelés, Összevetés, Javaslatok_ Iszapfaló_projekt_nyilvántartás_automatizáció.docx
+                - 📄 002_Értékelés, Összevetés, Javaslatok_ Iszapfaló_projekt_nyilvántartás_automatizáció.docx
+                - 📄 003_Értékelés, Összevetés, Javaslatok_ Iszapfaló_projekt_nyilvántartás_automatizáció.odt
+                - 📄 kieg_Értékelés, Összevetés, Javaslatok_ Iszapfaló_projekt_nyilvántartás_automatizáció.pptx
+                - 📄 n8n Telegram Bot - Technikai Dokumentáció.docx
+              - 📂 **GS Autószerviz cuccosai**
+                - 📄 GS automobil Kft. – AI-Rendszerkoncepció Kérdőív.md
+                - 📄 GS_automobil_AI_tanacsado_anyag.pdf
+                - 📄 MD-GS automobil Kft. – Az AI Transzformáció Videó Alapanyaga.md
+              - 📂 **Keretszerződés**
+                - 📂 **aláírt**
+                  - 📄 SKM_4050260106143500.pdf
+                  - 📄 SKM_4050260106143600.pdf
+                - 📄 Keretsz_Informatikai_2026_1.docx
+                - 📄 Keretsz_Informatikai_2026_alairt.pdf
+                - 📄 Keretsz_Informatikai_2026_Oldal_1.png
+                - 📄 Keretsz_Informatikai_2026_Oldal_2.png
+                - 📄 Keretsz_Informatikai_2026_Oldal_3.png
+                - 📄 Keretsz_Informatikai_2026.pdf
+                - 📄 PJ-2026-1 számla.pdf
+                - 📄 TIG_PT-2026-1_alairt.pdf
+                - 📄 TIG_PT-2026-1.docx
+                - 📄 TIG_PT-2026-1.pdf
+                - 📄 TIG_PT-2026-1.png
+              - 📂 **Sólyom daru**
+              - 📄 Iszapfaló Kft_Alapdokumentáció - Google Dokumentumok.mhtml
+            - 📂 **SKILL-ek**
+              - 📂 **Árajánlat skill**
+                - 📂 **új**
+                  - 📄 arajanlat-keszito.skill
+                - 📄 Arajanlat_Skill_Hasznalati_Utmutato.md
+                - 📄 arajanlat-keszito.skill
+                - 📄 files.zip
+              - 📂 **Claude skillek**
+                - 📄 kornyezeti-statisztika.skill
+          - 📂 **drive-download-20260221T151236Z-1-001**
+            - 📄 2iszapfalo_workflow.json
+            - 📄 iszapfalo_n8n_teljes_workflow.json
+        - 📄 2iszapfalo_workflow.json
+        - 📄 Gmail kategorizáló.json
+        - 📄 Iszapfaló - AI Agent Asszisztens (v2 - Javított).json
+        - 📄 Iszapfaló - Error Monitoring és Logging.json
+        - 📄 Iszapfaló - Google Calendar → Airtable Szinkron.json
+        - 📄 Iszapfaló - Heti Emlékeztető (Csütörtök 16_00).json
+        - 📄 Iszapfaló - Telegram Parancsok (_statusz, _het).json
+        - 📄 Iszapfaló Kft. - Airtable Adatbázis Struktúra.docx
+        - 📄 Iszapfaló Kft. - Munkaidő és Költség Nyilvántartó Rendszer.docx
+        - 📄 iszapfalo_n8n_teljes_workflow.json
+        - 📄 Kimenő ajánlatok_dokumentumok.json
+        - 📄 Telegram Hangvezérlés - Teljes Rendszer.json
       - 📂 **Jules** _(Example Workflows)_
         - 📄 enterprise.yml
         - 📄 README.md
@@ -4495,6 +7723,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 README.md
     - 📂 **plans**
       - 📄 2026-02-25-innovation-bridge-design.md
+      - 📄 2026-02-26-unified-chat-design.md
+      - 📄 2026-02-26-windows-automation-bridge-design.md
     - 📂 **services**
       - 📄 green-market-watcher.md
       - 📄 invoice-to-sheets.md
@@ -57101,6 +60331,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 __init__.py
       - 📄 invoice.py
     - 📂 **tasks**
+      - 📂 **__pycache__**
+        - 📄 ev_hunter.cpython-312.pyc
       - 📄 corporate_hunter.py
       - 📄 ev_hunter.py
     - 📂 **tests**
@@ -57175,6 +60407,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 pdfparser.py
       - 📄 phoenix_protocol.py
       - 📄 textsplitter.py
+      - 📄 tts_engine.py
     - 📂 **workers**
       - 📂 **__pycache__**
         - 📄 cma_worker.cpython-314.pyc
@@ -58170,6 +61403,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 KnowledgeBasePanel.tsx
           - 📄 LawDetectiveWidget.tsx
           - 📄 LeadMiningWidget.tsx
+          - 📄 LeadsMasterMonitor.tsx
           - 📄 LiveChatterWidget.tsx
           - 📄 LiveExecutionMonitor.tsx
           - 📄 LiveIndicator.tsx
@@ -58336,6 +61570,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 CloudflareDeployment.tsx
         - 📄 FleetManager.tsx
         - 📄 NeuralMap.tsx
+      - 📂 **public**
+        - 📄 manifest.json
       - 📂 **store**
         - 📄 systemSignalStore.ts
       - 📂 **styles**
@@ -58420,6 +61656,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 tools.ts
         - 📄 tracks.ts
         - 📄 tts.ts
+        - 📄 voice.ts
         - 📄 webhooks.ts
         - 📄 workers.ts
         - 📄 wrangler.ts
@@ -58537,6 +61774,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 serverManager.ts
       - 📄 skillsLoader.ts
       - 📄 StudioRunner.ts
+      - 📄 syncService.ts
       - 📄 systemHealth.ts
       - 📄 tasksDb.ts
       - 📄 telemetry.ts
@@ -58555,6 +61793,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
     - 📄 interactive.ts
     - 📄 metrics.ts
     - 📄 SUMMARY.md
+  - 📂 **src-tauri**
+    - 📂 **src**
+      - 📄 main.rs
+    - 📄 Cargo.toml
+    - 📄 tauri.conf.json
   - 📂 **test**
     - 📂 **__pycache__**
       - 📄 gmail_invoice_client_test.cpython-314-pytest-9.0.1.pyc
@@ -59541,6 +62784,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 csr_automata.json
         - 📄 csr_automata.md
     - 📄 TEST_BOOK.md
+  - 📂 **windows_bridge**
+    - 📂 **tests**
+      - 📄 __init__.py
+      - 📄 test_api.py
+      - 📄 test_core.py
+      - 📄 test_logging.py
+    - 📄 requirements.txt
+    - 📄 run_bridge.bat
+    - 📄 wab_server.py
   - 📂 **worker**
     - 📂 **bas-browser-orchestrator**
       - 📄 index.js
@@ -59564,6 +62816,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 Dockerfile.node
   - 📄 Dockerfile.python
   - 📄 eslint.config.js
+  - 📄 github-sync.bat
+  - 📄 Inditsd_Brunellat_Stabil.bat
+  - 📄 Inditsd_Brunellat.bat
   - 📄 konyvtarfa.md
   - 📄 LICENSE
   - 📄 litellm_config.yaml
@@ -59580,6 +62835,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
   - 📄 requirements.txt
   - 📄 SECURITY.md
   - 📄 start-all.bat
+  - 📄 start-full-robust.bat
   - 📄 start-full.bat
   - 📄 start-vscode-web.bat
   - 📄 start.bat

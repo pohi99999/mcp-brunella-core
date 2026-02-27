@@ -94,7 +94,7 @@ Invoke-RestMethod -Uri "http://localhost:8050/quote" -Method Post -ContentType "
 
 ## 4. Átadás az Iszapfaló Kft-nek (Integráció)
 
-Mivel ez a szolgáltatás tisztán HTTP (REST) API-n keresztül kommunikál, az Iszapfaló számára a beüzemelés gyerekjáték:
+Mivel ez a szolgáltatás tisztán HTTP (REST) API-n keresztül kommunikál, a beüzemelés gyerekjáték:
 
 1. Neked csak fel kell töltened ezt a pici Python szervert egy publikusan elérhető hosztra (pl. Render, Railway, vagy egy olcsó VPS).
 2. Az Iszapfaló munkatársának be kell mennie a saját n8n rendszerébe (pl. a "Telegram Bejövő Üzenetek Feldolgozása" workflow-ba).
