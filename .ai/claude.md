@@ -2,7 +2,7 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-02-27 08:00
+**Utolsó frissítés:** 2026-02-27 23:30
 
 ---
 
@@ -23,11 +23,16 @@
 
 **Érintett fájlok:**
 - `docs/Egyéb/Iszap2/ISZAPFALO_MIGRACIOS_UTMUTATO.md` (ÚJ) — Profi migrációs útmutató az Iszapfaló Kft. számára
+- `scripts/fix_n8n_credentials.mjs` (ÚJ) — Újrafelhasználható n8n credential javító script (cookie-auth, debug mód, 3 workflow)
+- `test/cloudflare_routes.test.ts` — `vi.restoreAllMocks()` → `vi.clearAllMocks()` (3 pre-existing teszt fail javítva)
 
 **Eredmények:**
 ✅ 7/8 n8n workflow javítva/konfigurálva
 ✅ Okos Ajánlató workflow létrehozva (korábban nem létezett)
 ✅ Migrációs útmutató elkészítve (credential lista, Airtable struktúra, tesztelési checklist, curl parancsok)
+✅ `scripts/fix_n8n_credentials.mjs` – újrafelhasználható script (migrációhoz is használható)
+✅ Vitest: 3 pre-existing cloudflare_routes teszt fail javítva (`vi.restoreAllMocks` → `vi.clearAllMocks`)
+✅ Email draft elkészítve az Iszapfaló Kft.-nek (kovasznai.gergely@iszapfalo.hu)
 ⚠️ Google Calendar Szinkron: manuális Google OAuth újracsatlakoztatás szükséges az n8n UI-ban
 
 **Megjegyzés a következő ügynöknek:** Az Iszapfaló n8n az ő fejlesztői instance-uk (n8n-latest-fulv.onrender.com). Mi fejlesztők vagyunk, a cél: kibővíteni a meglévő munkaidő-nyilvántartó rendszert (AI Agent v2, Claude 3.5 Sonnet, Airtable appByeASBkMYnktx8), és a workflow-kat migrálhatóvá tenni az ő saját n8n-jükbe. Gmail kategorizáló NEM konfigurálható (Gmail OAuth credential hiányzik a rendszerből – a fejlesztőnek kézzel kell létrehozni).
