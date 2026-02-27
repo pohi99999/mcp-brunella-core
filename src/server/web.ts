@@ -85,6 +85,7 @@ import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
 import { createDashboardRoutes } from "./routes/dashboard.js";
 import { createBusinessJobsRoutes } from "./routes/businessJobs.js";
 import { createStudioRoutes } from "./routes/studio.js";
+import voiceRouter from "./routes/voice.js";
 import { syncService } from "../utils/syncService.js";
 
 const logger = new Logger("web_ui.log");
@@ -215,6 +216,7 @@ export async function startWebServer() {
   v1Router.use("/business-jobs", createBusinessJobsRoutes());
   v1Router.use("/studio", createStudioRoutes());
   v1Router.use("/webhooks", createWebhookRoutes(db));
+  v1Router.use("/voice", voiceRouter);
 
   app.use("/api/v1", v1Router);
   app.use("/api", v1Router);
