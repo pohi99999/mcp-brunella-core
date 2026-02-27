@@ -1,3 +1,28 @@
+### 2026-02-27 11:30 - Brunella AI Demo Factory & Trójai Faló Stratégia Bővítés
+
+**Feladat:** Az Iszapfaló projekt sikerére alapozva egy "AI Demo Gyár" (Demo Factory) létrehozása, amely debreceni ingatlanos és könyvelő cégek számára generál automatikusan személyre szabott prototípusokat.
+
+**Főbb eredmények:**
+- **Infrastruktúra:** `myai/demo_factory/` mappa és sablonrendszer kialakítása.
+- **Sablonok:** `real_estate_api.py` és `accounting_api.py` FastAPI alapú iparági sablonok létrehozása.
+- **Pilot Projektek:** 
+    - **Aktív-A Könyvelőiroda (Debrecen):** Weboldal elemzés + egyedi API (`active_a_konyvelo_demo.py`) + személyre szabott outreach levél.
+    - **Nagyerdei Ingatlaniroda (Debrecen):** Weboldal elemzés + egyedi API (`nagyerdei_ingatlan_demo.py`) + személyre szabott outreach levél.
+- **Stratégia:** A `trojan-horse-campaign-20260224` track bővítése a Phase 6-tal (Personalized Demos).
+
+**Érintett fájlok:**
+- `myai/demo_factory/main.py` (és sablonok)
+- `myai/demo_factory/README.md` (Útmutató)
+- `conductor/tracks/trojan-horse-campaign-20260224/track.md` (Track frissítés)
+- `conductor/tracks/trojan-horse-campaign-20260224/active_a_outreach.md`
+- `conductor/tracks/trojan-horse-campaign-20260224/nagyerdei_outreach.md`
+
+**Státusz:** ✅ Befejezve (Wave 3 előkészítve)
+
+**Megjegyzés:** A stratégia lényege a magas szintű személyre szabottság: nem csak leadeket kínálunk, hanem egy már róluk szóló, működő AI megoldást mutatunk be a megkeresésben.
+
+---
+
 ### 2026-02-27 10:30 - Dashboard UI Kiterjesztés (Projektek és Gyorslinkek)
 
 **Feladat:** Egy új 'Projektek' fájlkezelő menüpont hozzáadása a G:\Brunella\.000_PROJEKTEK mappára fókuszálva, valamint külső gyorslinkek (Gmail, GitHub, Naptár, Gemini, Drive) integrálása a fejlécbe.

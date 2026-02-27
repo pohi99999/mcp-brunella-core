@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-02-27 07:50
+**Generálva:** 2026-02-27 08:34
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,11 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-02-27
+
+#### 11:30 - [Gemini] Brunella AI Demo Factory & Trójai Faló Stratégia Bővítés
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `myai/demo_factory/main.py` (és sablonok), `myai/demo_factory/README.md` (Útmutató), `conductor/tracks/trojan-horse-campaign-20260224/track.md` (Track frissítés), `conductor/tracks/trojan-horse-campaign-20260224/active_a_outreach.md`, `conductor/tracks/trojan-horse-campaign-20260224/nagyerdei_outreach.md`
 
 #### 10:30 - [Gemini] Dashboard UI Kiterjesztés (Projektek és Gyorslinkek)
 - **Agent:** Gemini
@@ -608,7 +613,7 @@ start-full.bat
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
 | Claude | 58 | 2026-02-27 |
-| Gemini | 5 | 2026-02-27 |
+| Gemini | 6 | 2026-02-27 |
 | Cursor | 0 | N/A |
 | Copilot | 47 | 2026-02-15 |
 
