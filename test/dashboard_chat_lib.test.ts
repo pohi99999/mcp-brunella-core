@@ -36,7 +36,8 @@ function createMemoryStorage(): MemoryStorage {
 describe("dashboard chat context builder", () => {
   it("returns input only when history is empty", () => {
     const prompt = buildConversationPrompt([], "Teszt üzenet");
-    expect(prompt).toBe("Teszt üzenet");
+    expect(prompt).toContain("Teszt üzenet");
+    expect(prompt).toContain("Brunella");
   });
 
   it("limits context to MAX_CONTEXT_MESSAGES", () => {

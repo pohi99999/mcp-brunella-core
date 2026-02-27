@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import type { Browser, Page } from 'playwright';
 import { URL } from 'url';
-import { PythonShell, Options } from 'python-shell';
+import { PythonShell } from 'python-shell';
 import path from 'path';
 import fs from 'fs';
 import { CloudflareBrowserAPI } from '../utils/browserRendering.js';
@@ -234,7 +234,7 @@ export function registerBrowserTools(server: McpServer) {
         };
       }
 
-      const options: Options = {
+      const options = {
         mode: 'text',
         pythonPath: 'python',
         pythonOptions: ['-u'],

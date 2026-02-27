@@ -284,6 +284,35 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       addMachineAlert(data);
     });
 
+    // Developer pipeline progress → rendszernapló + chatter
+    socket.on("developer:progress", (data: {
+      taskId?: string;
+      phaseId?: string;
+      status?: string;
+      progress?: number;
+      message?: string;
+    }) => {
+      if (data.message) {
+        addLog({
+          message: `[Pipeline] ${data.message}`,
+          type: data.status === 'error' ? 'error' : 'info',
+          source: 'DeveloperPipeline',
+        });
+        addChatter({
+          sender: 'DeveloperPipeline',
+          message: data.message,
+          timestamp: Date.now(),
+        });
+      }
+    });
+
+    // Task lista valós idejű frissítése (szerver 5mp-enként küldi)
+    socket.on("tasks_update", (data: any[]) => {
+      if (Array.isArray(data)) {
+        setTasks(data);
+      }
+    });
+
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
@@ -303,10 +332,12 @@ export function SocketProvider({ children }: { children: ReactNode }) {
       socket.off("robotkez:aborted");
       socket.off("agents:snapshot");
       socket.off("machine:alert");
+      socket.off("developer:progress");
+      socket.off("tasks_update");
       socket.disconnect();
       setSocketInstance(null);
     };
-  }, [setConnected, addLog, addChatter, updateAgentStatus, setAllAgentStatuses, setRobotkezPlan, updateRobotkezStep, clearRobotkez]);
+  }, [setConnected, addLog, addChatter, updateAgentStatus, setAllAgentStatuses, setRobotkezPlan, updateRobotkezStep, clearRobotkez, addMachineAlert, setTasks]);
 
   const value: SocketContextValue = {
     socket: socketInstance,

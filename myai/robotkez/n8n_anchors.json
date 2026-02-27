@@ -1,0 +1,20 @@
+{
+    "n8n": {
+        "anchors": [
+            { "label": "Add Node Button", "description": "Round orange button with plus icon in the bottom right or center", "type": "trigger" },
+            { "label": "Execute Workflow", "description": "Play button icon in the bottom bar", "type": "action" },
+            { "label": "Workflow Settings", "description": "Gear icon in the top right menu", "type": "navigation" },
+            { "label": "Node Search Input", "description": "Text input field in the Add Node sidebar", "type": "input" }
+        ],
+        "node_templates": {
+            "http_request": {
+                "fields": ["URL", "Method", "Authentication"],
+                "visual_cues": "Icon with a globe or cloud and arrows"
+            },
+            "set": {
+                "fields": ["Name", "Value"],
+                "visual_cues": "Icon with an equals sign or list"
+            }
+        }
+    }
+}

@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getBusinessJobs, saveBusinessJob, updateBusinessJobStatus } from '../../utils/db.js';
+import { getBusinessJobs, saveBusinessJob, updateBusinessJobStatus, getLeadsByJob, getPipelineStats, updateLeadStatus, getDb } from '../../utils/db.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -7,13 +7,74 @@ export function createBusinessJobsRoutes(): Router {
     const router = Router();
 
     /**
-     * @swagger
-     * /api/v1/business-jobs:
-     *   get:
-     *     summary: List all business jobs
-     *     responses:
-     *       200:
-     *         description: List of jobs
+     * GET /api/v1/business-jobs/pipeline/stats
+     * SalesPipelineWidget uses this to get lead counts per stage
+     */
+    router.get('/pipeline/stats', async (_req, res) => {
+        try {
+            const stats = await getPipelineStats();
+            res.json({ success: true, stats });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ success: false, error: msg });
+        }
+    });
+
+    /**
+     * GET /api/v1/business-jobs/leads/all
+     * Returns all leads across all jobs (recent 100)
+     */
+    router.get('/leads/all', async (_req, res) => {
+        try {
+            const database = await getDb();
+            if (!database) {
+                res.json({ success: true, leads: [] });
+                return;
+            }
+            const leads = database.prepare('SELECT * FROM business_leads ORDER BY created_at DESC LIMIT 100').all();
+            res.json({ success: true, leads });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ success: false, error: msg });
+        }
+    });
+
+    /**
+     * GET /api/v1/business-jobs/leads/:jobId
+     * Returns leads for a specific job
+     */
+    router.get('/leads/:jobId', async (req, res) => {
+        try {
+            const leads = await getLeadsByJob(req.params.jobId);
+            res.json({ success: true, leads });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ success: false, error: msg });
+        }
+    });
+
+    /**
+     * PATCH /api/v1/business-jobs/leads/:leadId/status
+     * Updates a lead's pipeline stage
+     */
+    router.patch('/leads/:leadId/status', async (req, res) => {
+        try {
+            const { status, notes } = req.body;
+            if (!status) {
+                res.status(400).json({ success: false, error: 'Status is required' });
+                return;
+            }
+            await updateLeadStatus(req.params.leadId, status, notes);
+            res.json({ success: true, message: 'Lead status updated' });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ success: false, error: msg });
+        }
+    });
+
+    /**
+     * GET /api/v1/business-jobs
+     * List all business jobs
      */
     router.get('/', async (req, res) => {
         try {
@@ -28,10 +89,8 @@ export function createBusinessJobsRoutes(): Router {
     });
 
     /**
-     * @swagger
-     * /api/v1/business-jobs:
-     *   post:
-     *     summary: Start a new business job (e.g. lead mining)
+     * POST /api/v1/business-jobs
+     * Start a new business job (e.g. lead mining, grant hunting, etc.)
      */
     router.post('/', async (req, res) => {
         try {
@@ -62,7 +121,6 @@ export function createBusinessJobsRoutes(): Router {
             } else if (type === 'grant_hunter') {
                 agentManager.queueTask(`Pályázatfigyelés: ${query}`, 'GrantWatcher', { jobId, taskType: 'scan_grants' });
             } else {
-                // Generic handler
                 agentManager.queueTask(`Üzleti feladat (${type}): ${query}`, 'orchestrator', { jobId });
             }
 

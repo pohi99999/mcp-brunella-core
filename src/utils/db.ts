@@ -110,9 +110,30 @@ function _initTables(database: any) {
             last_interaction_at DATETIME,
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
             updated_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+            email_status TEXT DEFAULT 'unknown', -- unknown, valid, invalid, catch-all
+            demo_url TEXT,
+            outreach_status TEXT DEFAULT 'pending', -- pending, sent, failed
+            icebreaker_text TEXT,
             FOREIGN KEY(job_id) REFERENCES business_jobs(id)
         )
     `);
+
+    // Simple migration: Check if new columns exist, if not add them
+    const tableInfo = database.prepare("PRAGMA table_info(business_leads)").all();
+    const columnNames = tableInfo.map((c: any) => c.name);
+    
+    if (!columnNames.includes('email_status')) {
+        database.exec("ALTER TABLE business_leads ADD COLUMN email_status TEXT DEFAULT 'unknown'");
+    }
+    if (!columnNames.includes('demo_url')) {
+        database.exec("ALTER TABLE business_leads ADD COLUMN demo_url TEXT");
+    }
+    if (!columnNames.includes('outreach_status')) {
+        database.exec("ALTER TABLE business_leads ADD COLUMN outreach_status TEXT DEFAULT 'pending'");
+    }
+    if (!columnNames.includes('icebreaker_text')) {
+        database.exec("ALTER TABLE business_leads ADD COLUMN icebreaker_text TEXT");
+    }
 
     database.exec(`
         CREATE TABLE IF NOT EXISTS studio_projects (
@@ -163,16 +184,34 @@ export async function saveBusinessLead(lead: {
     company_name: string, 
     contact_person?: string, 
     contact_email?: string, 
-    metadata?: string 
+    metadata?: string,
+    email_status?: string,
+    demo_url?: string,
+    outreach_status?: string,
+    icebreaker_text?: string
 }) {
     const database = await getDb();
     if (!database) return null;
 
     const stmt = database.prepare(`
-        INSERT INTO business_leads (id, job_id, company_name, contact_person, contact_email, metadata) 
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO business_leads (
+            id, job_id, company_name, contact_person, contact_email, metadata, 
+            email_status, demo_url, outreach_status, icebreaker_text
+        ) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `);
-    stmt.run(lead.id, lead.job_id, lead.company_name, lead.contact_person || null, lead.contact_email || null, lead.metadata || null);
+    stmt.run(
+        lead.id, 
+        lead.job_id, 
+        lead.company_name, 
+        lead.contact_person || null, 
+        lead.contact_email || null, 
+        lead.metadata || null,
+        lead.email_status || 'unknown',
+        lead.demo_url || null,
+        lead.outreach_status || 'pending',
+        lead.icebreaker_text || null
+    );
     return lead.id;
 }
 

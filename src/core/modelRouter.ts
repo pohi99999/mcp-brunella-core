@@ -11,7 +11,7 @@ import { logInfo, logError } from '../utils/logger.js';
 export type ModelRole = 'brain' | 'muscle';
 export type ModelSpeed = 'fast' | 'medium' | 'slow';
 export type TaskComplexity = 'high' | 'medium' | 'low';
-export type ProviderName = 'ollama' | 'gemini' | 'github';
+export type ProviderName = 'ollama' | 'gemini' | 'github' | 'cloudflare';
 
 export interface ModelProfile {
   name: string;
@@ -88,6 +88,25 @@ export const MODEL_REGISTRY: ModelProfile[] = [
     costPerToken: 0,
     speed: 'fast',
     strengths: ['code_gen', 'refactor', 'debug', 'test_gen']
+  },
+  // Cloudflare Workers AI — free, no local GPU needed
+  {
+    name: '@cf/meta/llama-3.3-70b-instruct',
+    provider: 'cloudflare',
+    role: 'brain',
+    contextWindow: 128000,
+    costPerToken: 0,
+    speed: 'medium',
+    strengths: ['planning', 'analysis', 'reasoning', 'architecture', 'complex_reasoning']
+  },
+  {
+    name: '@cf/meta/llama-3.1-8b-instruct',
+    provider: 'cloudflare',
+    role: 'muscle',
+    contextWindow: 32768,
+    costPerToken: 0,
+    speed: 'fast',
+    strengths: ['code_gen', 'fast_response', 'simple_tasks', 'translation']
   }
 ];
 
@@ -304,6 +323,7 @@ function findBestCloud(task: TaskProfile, cfg: RouterConfig): ModelProfile {
   const available = cloudModels.filter(m => {
     if (m.provider === 'gemini') return !!process.env.GEMINI_API_KEY;
     if (m.provider === 'github') return !!(process.env.GITHUB_TOKEN || process.env.GITHUB_PAT);
+    if (m.provider === 'cloudflare') return !!(process.env.CF_API_TOKEN && process.env.AI_GATEWAY_ENABLED === 'true');
     return true;
   });
 

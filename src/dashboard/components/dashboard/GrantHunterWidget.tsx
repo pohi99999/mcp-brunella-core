@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-    FileText, 
-    Coins, 
-    Calendar, 
-    CheckCircle2, 
-    XCircle, 
-    Loader2, 
+import {
+    FileText,
+    Coins,
+    Calendar,
+    CheckCircle2,
+    XCircle,
+    Loader2,
     Search,
     ExternalLink,
     History,
@@ -78,14 +78,14 @@ export function GrantHunterWidget() {
             </CardHeader>
             <CardContent className="pt-6">
                 <div className="flex gap-2 mb-8">
-                    <Input 
-                        placeholder="Szűrés (pl. digitalizáció, napelem, TEÁOR kód)" 
+                    <Input
+                        placeholder="Szűrés (pl. digitalizáció, napelem, TEÁOR kód)"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
                         className="bg-secondary/20 border-orange-500/10 h-12"
                     />
-                    <Button 
-                        onClick={handleStartScan} 
+                    <Button
+                        onClick={handleStartScan}
                         disabled={isLoading}
                         className="bg-orange-600 hover:bg-orange-700 min-w-[160px] h-12 text-white font-bold"
                     >
@@ -107,14 +107,13 @@ export function GrantHunterWidget() {
                                     <p className="text-xs text-muted-foreground italic">Nincs korábbi adat.</p>
                                 ) : (
                                     grantJobs.map((job) => (
-                                        <div 
+                                        <div
                                             key={job.id}
                                             onClick={() => setSelectedJobId(job.id)}
-                                            className={`p-3 rounded-lg border cursor-pointer transition-all ${
-                                                selectedJobId === job.id || (!selectedJobId && grantJobs[0].id === job.id)
-                                                    ? 'bg-orange-500/10 border-orange-500/30' 
+                                            className={`p-3 rounded-lg border cursor-pointer transition-all ${selectedJobId === job.id || (!selectedJobId && grantJobs[0].id === job.id)
+                                                    ? 'bg-orange-500/10 border-orange-500/30'
                                                     : 'bg-secondary/5 border-transparent hover:border-orange-500/20'
-                                            }`}
+                                                }`}
                                         >
                                             <div className="font-bold text-xs truncate mb-1">{job.query}</div>
                                             <div className="flex justify-between items-center text-[9px] text-zinc-500 font-mono">
@@ -142,7 +141,7 @@ export function GrantHunterWidget() {
                                     ) : (
                                         <div className="space-y-4">
                                             {grants.map((grant: any, i: number) => (
-                                                <div 
+                                                <div
                                                     key={i}
                                                     className="p-4 rounded-xl border border-white/5 bg-white/5 hover:border-orange-500/30 transition-all group"
                                                 >
@@ -152,7 +151,7 @@ export function GrantHunterWidget() {
                                                             {grant.eligible ? 'RELEVÁNS' : 'NEM IGAZOLT'}
                                                         </Badge>
                                                     </div>
-                                                    
+
                                                     <div className="grid grid-cols-2 gap-4 mb-4">
                                                         <div className="flex items-center gap-2 text-xs text-zinc-400">
                                                             <Coins size={14} className="text-yellow-500" />
@@ -169,7 +168,8 @@ export function GrantHunterWidget() {
                                                             <ArrowUpRight size={12} />
                                                             Match: {grant.score}%
                                                         </div>
-                                                        <Button size="xs" variant="ghost" className="h-7 text-[10px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                                        <Button size="xs" variant="ghost" className="h-7 text-[10px] gap-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                            onClick={() => (grant as any).url ? window.open((grant as any).url, '_blank') : toast.info("Részletek nem elérhetők")}>
                                                             Részletek <ExternalLink size={10} />
                                                         </Button>
                                                     </div>

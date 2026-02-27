@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-    Users, 
-    FileText, 
-    Upload, 
-    CheckCircle2, 
-    XCircle, 
-    Loader2, 
+import {
+    Users,
+    FileText,
+    Upload,
+    CheckCircle2,
+    XCircle,
+    Loader2,
     Search,
     Mail,
     UserCheck,
@@ -56,7 +56,7 @@ export function DigitalHRWidget() {
             toast.error("Kérlek add meg a munkaköri leírást!");
             return;
         }
-        
+
         const jobId = await createJob('digital_hr', jobDescription);
         if (jobId) {
             toast.info("HR szűrés elindítva... PDF parsolása Vision MI-vel.");
@@ -85,14 +85,14 @@ export function DigitalHRWidget() {
             <CardContent className="pt-6">
                 <div className="flex flex-col gap-4 mb-8">
                     <div className="flex gap-2">
-                        <Input 
-                            placeholder="Milyen pozícióra keresünk? (pl. Senior React Fejlesztő)" 
+                        <Input
+                            placeholder="Milyen pozícióra keresünk? (pl. Senior React Fejlesztő)"
                             value={jobDescription}
                             onChange={(e) => setJobDescription(e.target.value)}
                             className="bg-secondary/20 border-blue-500/10 h-12"
                         />
-                        <Button 
-                            onClick={handleStartScreening} 
+                        <Button
+                            onClick={handleStartScreening}
                             disabled={isLoading}
                             className="bg-blue-600 hover:bg-blue-700 min-w-[160px] h-12 text-white font-bold"
                         >
@@ -121,14 +121,13 @@ export function DigitalHRWidget() {
                                     hrJobs.map((job) => {
                                         const res = job.results_json ? JSON.parse(job.results_json) : {};
                                         return (
-                                            <div 
+                                            <div
                                                 key={job.id}
                                                 onClick={() => setSelectedJobId(job.id)}
-                                                className={`p-3 rounded-lg border cursor-pointer transition-all ${
-                                                    selectedJobId === job.id || (!selectedJobId && hrJobs[0].id === job.id)
-                                                        ? 'bg-blue-500/10 border-blue-500/30' 
+                                                className={`p-3 rounded-lg border cursor-pointer transition-all ${selectedJobId === job.id || (!selectedJobId && hrJobs[0].id === job.id)
+                                                        ? 'bg-blue-500/10 border-blue-500/30'
                                                         : 'bg-secondary/5 border-transparent hover:border-blue-500/20'
-                                                }`}
+                                                    }`}
                                             >
                                                 <div className="flex justify-between items-start mb-1">
                                                     <span className="font-bold text-xs truncate">{res.name || job.query}</span>
@@ -202,10 +201,12 @@ export function DigitalHRWidget() {
                                         </div>
 
                                         <div className="flex gap-2 pt-4 border-t border-white/5">
-                                            <Button size="sm" className="flex-1 gap-2">
+                                            <Button size="sm" className="flex-1 gap-2"
+                                                onClick={() => toast.info("Email küldés hamarosan elérhető")}>
                                                 <Mail size={14} /> Email küldése
                                             </Button>
-                                            <Button size="sm" variant="outline" className="flex-1 gap-2">
+                                            <Button size="sm" variant="outline" className="flex-1 gap-2"
+                                                onClick={() => toast.info("Interjú ütemezés hamarosan elérhető")}>
                                                 <History size={14} /> Interjú ütemezése
                                             </Button>
                                         </div>

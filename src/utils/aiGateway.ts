@@ -121,7 +121,7 @@ export class AIGatewayClient {
 
       // Try CF Workers AI first
       try {
-        return await this.chatCloudflare(messages, options);
+        return await this.callCFWorkerModel(options?.model || this.config.cfModel, messages, options);
       } catch (cfError) {
         logError("AIGateway", `CF failed, falling back to Ollama: ${cfError}`);
         return await this.chatOllama(messages, options);
@@ -206,14 +206,19 @@ export class AIGatewayClient {
   // CF WORKERS AI
   // ========================================================================
 
-  private async chatCloudflare(
+  /**
+   * Call CF Workers AI with a specific model (public — used by BifrostGateway and ModelRouter).
+   * Falls back to config.cfModel if model is empty.
+   */
+  async callCFWorkerModel(
+    model: string,
     messages: ChatMessage[],
-    options?: any,
+    options?: { temperature?: number; maxTokens?: number },
   ): Promise<string> {
     this.stats.cfRequests++;
 
-    const model = options?.model || this.config.cfModel;
-    const url = `https://gateway.ai.cloudflare.com/v1/${this.config.cfAccountId}/${this.config.cfGatewayId}/workers-ai/${model}`;
+    const resolvedModel = model || this.config.cfModel;
+    const url = `https://gateway.ai.cloudflare.com/v1/${this.config.cfAccountId}/${this.config.cfGatewayId}/workers-ai/${resolvedModel}`;
 
     const response = await fetch(url, {
       method: "POST",
@@ -244,7 +249,7 @@ export class AIGatewayClient {
       throw new Error("Empty response from CF Workers AI");
     }
 
-    logInfo("AIGateway", `CF response received (${model})`);
+    logInfo("AIGateway", `CF response received (${resolvedModel})`);
     return content;
   }
 

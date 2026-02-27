@@ -7,13 +7,13 @@ export function createRobotkezProRoutes(): Router {
 
   router.post("/execute", async (req, res) => {
     const { task } = req.body;
-    const result = await service.sendTask(task);
+    const result = await service.executeAction({ action: 'click', description: String(task) });
     res.json(result);
   });
 
   router.post("/navigate", async (req, res) => {
     const { url } = req.body;
-    const result = await service.navigate(url);
+    const result = await service.executeAction({ action: 'navigate', url: String(url), description: `Navigate to ${url}` });
     res.json(result);
   });
 
