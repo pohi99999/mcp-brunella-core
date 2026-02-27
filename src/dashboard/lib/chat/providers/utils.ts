@@ -32,7 +32,7 @@ export function toChatOutput(
     : undefined;
 
   return {
-    message: safeString(value.message ?? value.data ?? payload),
+    message: safeString(value.message ?? value.data ?? "") || "A kérés feldolgozva.",
     thoughts: typeof value.thoughts === "string" ? value.thoughts : undefined,
     contextUsed,
     executedBy:

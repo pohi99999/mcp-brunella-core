@@ -545,6 +545,32 @@ export async function executeAgent(
   return data.result;
 }
 
+// Szinkron orkesztrátori hívás — megvárja a valódi magyar választ
+export async function orchestrateTask(
+  task: string,
+  context?: Record<string, unknown>,
+): Promise<{ message: string; taskId?: number; steps?: number[]; success: boolean }> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/agents/orchestrate`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ task, context }),
+    },
+    LONG_TIMEOUT_MS,
+  );
+  const data = await safeJson<{ message?: string; taskId?: number; steps?: number[]; success?: boolean; error?: string }>(response)
+    .catch(() => ({ error: `HTTP ${response.status}` }));
+  if (!response.ok) throw new Error((data as any).error || "Orkesztráció sikertelen");
+  return {
+    success: true,
+    message: (data as any).message || "Kész.",
+    taskId: (data as any).taskId,
+    steps: (data as any).steps,
+  };
+}
+
+
 export async function createAgent(config: {
   name: string;
   role: string;
@@ -833,7 +859,7 @@ export async function generateWithOllama(
   const data = await safeJson<{ response?: string; error?: string }>(
     response,
   ).catch((): { response?: string; error?: string } => ({ error: `HTTP ${response.status}` }));
-  if (!response.ok) throw new Error(data.error || "Ollama generation failed");
+  if (!response.ok) throw new Error(data.error || "Ollama generálás sikertelen");
   return typeof data.response === "string"
     ? data.response
     : String(data.response ?? "");
@@ -876,7 +902,7 @@ export async function generateWithGithubModels(
     response,
   ).catch((): { response?: string; error?: string } => ({ error: `HTTP ${response.status}` }));
   if (!response.ok)
-    throw new Error(data.error || "GitHub Models generation failed");
+    throw new Error(data.error || "GitHub Models generálás sikertelen");
   return typeof data.response === "string"
     ? data.response
     : String(data.response ?? "");
@@ -919,7 +945,7 @@ export async function generateWithGemini(
   const data = await safeJson<{ response?: string; error?: string }>(
     response,
   ).catch((): { response?: string; error?: string } => ({ error: `HTTP ${response.status}` }));
-  if (!response.ok) throw new Error(data.error || "Gemini generation failed");
+  if (!response.ok) throw new Error(data.error || "Gemini generálás sikertelen");
   return typeof data.response === "string"
     ? data.response
     : String(data.response ?? "");

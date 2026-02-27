@@ -35,7 +35,7 @@ export function WidgetGrid({}: WidgetGridProps) {
       </div>
 
       <div
-        className="grid flex-1 min-h-0 overflow-y-auto custom-scrollbar p-2"
+        className="hidden md:grid flex-1 min-h-0 overflow-y-auto custom-scrollbar p-2"
         style={{
           gridTemplateAreas: currentLayout.gridTemplateAreas.join(' '),
           gridTemplateColumns: currentLayout.gridTemplateColumns,
@@ -49,11 +49,27 @@ export function WidgetGrid({}: WidgetGridProps) {
           if (!widget) return null;
 
           const Component = widget.component;
-          // extraProps will be handled by unified signal bus (Phase 2)
-          // For now, pass basic props if required by widget, otherwise assume they fetch their own data
 
           return (
             <div key={widgetId} style={{ gridArea }} className="relative overflow-hidden rounded-2xl border border-white/5 bg-black/20 backdrop-blur-md">
+              <div className="h-full w-full overflow-hidden">
+                <Component />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* Mobile Stack View */}
+      <div className="md:hidden flex flex-col gap-4 p-2 pb-20 overflow-y-auto">
+        {Object.keys(currentLayout.widgetAssignments).map((widgetId) => {
+          const widget = WIDGET_REGISTRY[widgetId];
+          if (!widget) return null;
+
+          const Component = widget.component;
+
+          return (
+            <div key={widgetId} className="relative overflow-hidden rounded-xl border border-white/5 bg-black/40 backdrop-blur-md min-h-[200px]">
               <div className="h-full w-full overflow-hidden">
                 <Component />
               </div>

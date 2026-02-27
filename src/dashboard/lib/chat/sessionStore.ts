@@ -17,7 +17,8 @@ function isChatMode(value: unknown): value is ChatMode {
     value === "github" ||
     value === "gemini" ||
     value === "cloudflare" ||
-    value === "cloudflare_chat"
+    value === "cloudflare_chat" ||
+    value === "master_orchestrator"
   );
 }
 

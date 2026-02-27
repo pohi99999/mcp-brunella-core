@@ -3,6 +3,25 @@ import { Logger, logInfo, logError, setAgentStatus } from "../utils/logger.js";
 import { agentManager } from "./AgentManager.js";
 import { chatWithOllama } from "../core/llm_client.js";
 import { phoenixEventBus } from "../core/phoenixEventBus.js";
+import { socketService } from "../server/SocketService.js";
+
+// Magyar gyors-válasz táblázat a keyword routing ághoz
+const QUICK_REPLIES: Record<string, string> = {
+  lint_fixer: "Rendben, átfésülöm a kódot és kijavítom a hibákat.",
+  robotkez: "Elindítom a böngészőügynököt a feladathoz.",
+  developer: "Rendben, elindítom a fejlesztési feladatot!",
+  DeveloperAgent: "Rendben, elindítom a fejlesztési feladatot!",
+  researcher: "Kutatást azonnal megkezdem, hamarosan ered­ménnyel jövök.",
+  ResearcherAgent: "Kutatást azonnal megkezdem, hamarosan eredménnyel jövök.",
+  evaluator: "Elindítom a kód kiértékelési folyamatot.",
+  EvaluatorAgent: "Elindítom a kód kiértékelési folyamatot.",
+  DataScientist: "Adatelemzési feladatot kezdek el.",
+  HeadHunterAgent: "HR feladatot kap a HeadHunter ügynök.",
+  SalesAgent: "Az értékesítési ügynököt aktiválom.",
+  CopywriterAgent: "A szövegírói ügynököt indítom.",
+  EmailTriageAgent: "E-mail rendezési feladatot delegálok.",
+  LogisticsDispatcherAgent: "A logisztikai ügynököt küldöm.",
+};
 
 // ---------------------------------------------------------------------------
 // Keyword pre-routing table (order: more specific → less specific)
@@ -299,6 +318,13 @@ export class OrchestratorAgent implements IAgent {
     this.logger.info(`Orchestrating task: ${task}`);
 
     try {
+      // === STUDIO MODE: route directly to DeveloperAgent with rootDir context ===
+      if (context?.studioMode && context?.rootDir) {
+        this.logger.info(`Studio mode detected — routing to developer agent (rootDir: ${context.rootDir})`);
+        const studioTaskId = await agentManager.queueTask(task, 'developer', context);
+        return { status: 'success', message: 'Studio feladat kiosztva a Fejlesztő ügynöknek.', taskId: studioTaskId };
+      }
+
       // === FAST PATH: keyword pre-routing (no LLM needed) ===
       // Skip for compound tasks that likely need multi-agent planning
       const kwMatch = this.keywordRoute(task);
@@ -315,10 +341,12 @@ export class OrchestratorAgent implements IAgent {
           kwMatch.agent,
           context ?? undefined,
         );
+        const quickReply = QUICK_REPLIES[kwMatch.agent] || `Delegálom a feladatot a(z) ${kwMatch.agent} ügynöknek.`;
+        socketService.broadcastChatter('Brunella', quickReply, 'user');
         return {
           success: true,
           status: "success",
-          message: `Direct route to ${kwMatch.agent} (keyword match, hits=${kwMatch.hits}).`,
+          message: quickReply,
           taskIds: [id],
           routing: "keyword",
         };
@@ -347,8 +375,9 @@ Your goal is to understand the user's intent (written in Hungarian) and orchestr
 **Available Agents:**
 ${agents}
 
-**Specialized Tools (via MCP):**
-- GitHub Copilot, Web Search, n8n, Knowledge Graph.
+**Specialized Knowledge:**
+- **n8n / Langflow:** You are an expert in these automation tools. You know that n8n uses a canvas-alapú UI where nodes are connected. To configure them, you must instruct the 'robotkezv2' agent to find specific visual elements or coordinates.
+- **UI Delegation:** For complex GUI tasks (Windows or Browser), use 'robotkezv2'. Instead of just saying "set up n8n", break it down into: "Navigálj az n8n-re", "Kattints az Add Node gombra", "Keress rá a HTTP Request-re", "Vizuálisan keresd meg a URL mezőt és írd be: [URL]".
 
 **User Request:** "${task}"
 
@@ -406,8 +435,9 @@ Respond ONLY with the valid JSON object. No markdown blocks.
             reply = "A terv elkészült.";
         }
 
-        // Log the human-friendly reply (which should ideally be sent to UI via socket)
+        // Log the human-friendly reply and broadcast to LiveChatter widget
         this.logger.info(`[Brunella]: ${reply}`);
+        socketService.broadcastChatter('Brunella', reply, 'user');
 
         // === COMPOUND TASK: szekvenciális chain pipeline ===
         if (isCompound && tasks.length > 1) {
@@ -438,13 +468,14 @@ Respond ONLY with the valid JSON object. No markdown blocks.
         return {
           success: true,
           status: "success",
-          message: `Plan created with ${taskIds.length} tasks.`,
+          message: reply || `${taskIds.length} feladatot kiosztottam.`,
           taskIds,
+          steps: taskIds,
         };
       } catch (parseErr: unknown) {
         const msg = parseErr instanceof Error ? parseErr.message : String(parseErr);
         this.logger.error(`Plan parsing failed: ${msg}. Raw: ${responseText}`);
-        return { status: "error", error: "Failed to parse LLM plan." };
+        return { status: "error", error: "Nem sikerült értelmezni az LLM tervet." };
       }
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);

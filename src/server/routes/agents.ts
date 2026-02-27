@@ -57,13 +57,41 @@ export function createAgentRoutes(): Router {
         }
     });
 
+    // Szinkron orkesztrátori chat endpoint — megvárja a valódi magyar választ
+    router.post('/orchestrate', async (req, res) => {
+        try {
+            const { task, context } = req.body;
+            if (!task) {
+                res.status(400).json({ error: 'A feladat megadása kötelező' });
+                return;
+            }
+
+            const result = await agentManager.delegate('Orchestrator', task, {
+                ...context,
+                chatMode: 'orchestrator'
+            });
+
+            const message = (result as any)?.message || (result as any)?.data || 'Kész.';
+            res.json({
+                success: true,
+                message,
+                taskId: (result as any)?.taskId,
+                steps: (result as any)?.steps,
+                executedBy: 'Orchestrator'
+            });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
     router.post('/:agentName/execute', async (req, res) => {
         try {
             let { agentName } = req.params;
             const { task, context } = req.body;
 
             if (!task) {
-                res.status(400).json({ error: 'Task is required' });
+                res.status(400).json({ error: 'A feladat megadása kötelező' });
                 return;
             }
 
@@ -83,7 +111,7 @@ export function createAgentRoutes(): Router {
                 console.error(`Execution error for task ${taskId}:`, err);
             });
 
-            res.json({ success: true, taskId, message: `Task #${taskId} started for ${agentName}` });
+            res.json({ success: true, taskId, message: `#${taskId} feladat elindítva (${agentName})` });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });

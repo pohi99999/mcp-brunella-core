@@ -2,6 +2,7 @@ import { Ollama } from 'ollama';
 import { GoogleGenerativeAI } from '@google/generative-ai';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
+import { aiGateway, type ChatMessage as AIChatMessage } from '../utils/aiGateway.js';
 
 /**
  * Bifrost Gateway - Multi-Provider LLM Routing
@@ -22,7 +23,7 @@ import { logInfo, logError, logWarn } from '../utils/logger.js';
  * ```
  */
 
-export type ProviderType = 'ollama' | 'gemini' | 'github' | 'anthropic';
+export type ProviderType = 'ollama' | 'gemini' | 'github' | 'anthropic' | 'cloudflare';
 export type TaskType = 'code' | 'general' | 'reasoning' | 'creative' | 'fast';
 
 export interface GenerateOptions {
@@ -92,7 +93,7 @@ export class BifrostGateway {
     this.healthCheckInterval = 5 * 60 * 1000; // 5 minutes
 
     this.initializeProviders();
-    logInfo('BifrostGateway', 'Initialized with 4 provider adapters');
+    logInfo('BifrostGateway', 'Initialized with 5 provider adapters (Ollama, Gemini, GitHub, Anthropic, Cloudflare)');
   }
 
   /**
@@ -142,6 +143,18 @@ export class BifrostGateway {
       defaultModel: 'claude-3-5-sonnet-20241022',
       priority: 4,
       maxRetries: 3
+    });
+
+    // 5. Cloudflare Workers AI (free inference, no local GPU)
+    const cfToken = process.env.CF_API_TOKEN || process.env.CF_TOKEN;
+    const cfEnabled = !!(cfToken && process.env.AI_GATEWAY_ENABLED === 'true');
+    this.providers.set('cloudflare', {
+      type: 'cloudflare',
+      enabled: cfEnabled,
+      apiKey: cfToken,
+      defaultModel: process.env.CF_AI_SMART_MODEL || '@cf/meta/llama-3.3-70b-instruct',
+      priority: 2,
+      maxRetries: 2
     });
 
     // Initialize clients for enabled providers
@@ -235,11 +248,11 @@ export class BifrostGateway {
   private autoSelectProvider(taskType: TaskType): ProviderType {
     // Task-specific routing logic
     const routing: Record<TaskType, ProviderType[]> = {
-      code: ['ollama', 'github', 'gemini', 'anthropic'],        // Prefer local Qwen2.5-Coder
-      general: ['gemini', 'ollama', 'github', 'anthropic'],     // Prefer fast Gemini
-      reasoning: ['anthropic', 'github', 'gemini', 'ollama'],   // Prefer Claude
-      creative: ['anthropic', 'gemini', 'github', 'ollama'],    // Prefer Claude
-      fast: ['gemini', 'ollama', 'github', 'anthropic']         // Prefer Gemini Flash
+      code: ['ollama', 'github', 'gemini', 'anthropic', 'cloudflare'],     // Prefer local Qwen2.5-Coder
+      general: ['gemini', 'ollama', 'github', 'anthropic', 'cloudflare'],  // Prefer fast Gemini
+      reasoning: ['anthropic', 'github', 'gemini', 'ollama', 'cloudflare'], // Prefer Claude
+      creative: ['anthropic', 'gemini', 'github', 'ollama', 'cloudflare'],  // Prefer Claude
+      fast: ['cloudflare', 'gemini', 'ollama', 'github', 'anthropic']       // CF llama-3.1-8b is very fast
     };
 
     const candidates = routing[taskType] || routing.general;
@@ -291,6 +304,9 @@ export class BifrostGateway {
 
         case 'anthropic':
           return await this.generateAnthropic(model, options, startTime);
+
+        case 'cloudflare':
+          return await this.generateCloudflare(model, options, startTime);
 
         default:
           throw new Error(`Unknown provider: ${provider}`);
@@ -467,6 +483,34 @@ export class BifrostGateway {
         completion: response.usage.output_tokens,
         total: response.usage.input_tokens + response.usage.output_tokens
       }
+    };
+  }
+
+  /**
+   * Generate with Cloudflare Workers AI (via aiGateway singleton)
+   */
+  private async generateCloudflare(
+    model: string,
+    options: GenerateOptions,
+    startTime: number
+  ): Promise<GenerateResponse> {
+    const messages: AIChatMessage[] = [];
+    if (options.systemPrompt) {
+      messages.push({ role: 'system', content: options.systemPrompt });
+    }
+    messages.push({ role: 'user', content: options.prompt });
+
+    const content = await aiGateway.callCFWorkerModel(model, messages, {
+      temperature: options.temperature,
+      maxTokens: options.maxTokens
+    });
+
+    return {
+      success: true,
+      content,
+      provider: 'cloudflare',
+      model,
+      duration_ms: Date.now() - startTime
     };
   }
 

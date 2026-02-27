@@ -85,6 +85,7 @@ import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
 import { createDashboardRoutes } from "./routes/dashboard.js";
 import { createBusinessJobsRoutes } from "./routes/businessJobs.js";
 import { createStudioRoutes } from "./routes/studio.js";
+import salesRouter from "./routes/sales.js";
 import voiceRouter from "./routes/voice.js";
 import { syncService } from "../utils/syncService.js";
 
@@ -215,6 +216,7 @@ export async function startWebServer() {
   v1Router.use("/dashboard", createDashboardRoutes());
   v1Router.use("/business-jobs", createBusinessJobsRoutes());
   v1Router.use("/studio", createStudioRoutes());
+  v1Router.use("/sales", salesRouter);
   v1Router.use("/webhooks", createWebhookRoutes(db));
   v1Router.use("/voice", voiceRouter);
 
@@ -245,6 +247,12 @@ export async function startWebServer() {
   const { phoenixEventBus } = await import('../core/phoenixEventBus.js');
   phoenixEventBus.connectSocketBroadcaster((event: string, data: unknown) => {
     socketService.emit(event, data);
+  });
+
+  // Bridge pipelineRunner progress events to Socket.IO (BrunellaStudio + developer dashboard)
+  const { pipelineRunner } = await import('../agents/developerPipeline.js');
+  pipelineRunner.on('progress', (event: unknown) => {
+    socketService.emit('developer:progress', event);
   });
 
   io.on("connection", (socket) => {
