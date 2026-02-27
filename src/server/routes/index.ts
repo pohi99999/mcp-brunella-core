@@ -18,6 +18,7 @@ import { createChatRoutes, createAnythingLLMRoutes } from "./chat.js";
 import { createIncubatorRoutes, createN8nRoutes } from "./external.js";
 import { createDeveloperRoutes } from "./developer.js";
 import { createRobotkezRoutes } from "./robotkez.js";
+import { createRobotkezProRoutes } from "./robotkez_pro.js";
 import { createJulesRoutes } from "./jules.js";
 import { createCloudflareRoutes } from "./cloudflare.js";
 import { createTracksRoutes } from "./tracks.js";
@@ -80,6 +81,7 @@ export function createV1Router(): Router {
   router.use("/n8n", createN8nRoutes());
   router.use("/developer", createDeveloperRoutes());
   router.use("/robotkez", createRobotkezRoutes());
+  router.use("/robotkez-pro", createRobotkezProRoutes());
   router.use("/jules", createJulesRoutes());
   router.use("/cloudflare", createCloudflareRoutes());
   router.use("/tracks", createTracksRoutes());
