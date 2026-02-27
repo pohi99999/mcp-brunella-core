@@ -1,3 +1,24 @@
+### 2026-02-27 10:00 - Iszapfaló AI Mikroszolgáltatások Tervezése és Implementálása
+
+**Feladat:** Két független AI modul (Géppark Figyelő és Okos Ajánlatadó) megtervezése, dokumentálása és egy teljesen független Python (FastAPI) API formájában történő implementálása az Iszapfaló Kft. számára.
+
+**Érintett fájlok:**
+- `docs/Egyéb/Iszap2/iszapfalo_gepkonyv_mock.md` (Létrehozva)
+- `docs/Egyéb/Iszap2/iszapfalo_arlista_es_normak_mock.md` (Létrehozva)
+- `docs/Egyéb/Iszap2/iszapfalo_geppark_all_in_one_n8n.json` (Létrehozva)
+- `docs/Egyéb/Iszap2/iszapfalo_okos_ajanlatado_all_in_one_n8n.json` (Létrehozva)
+- `docs/plans/2026-02-27-iszapfalo-geppark-figyelo-design.md` (Létrehozva)
+- `docs/plans/2026-02-27-iszapfalo-okos-ajanlatado-design.md` (Létrehozva)
+- `docs/plans/2026-02-27-iszapfalo-geppark-figyelo-guide.md` (Létrehozva)
+- `docs/plans/2026-02-27-iszapfalo-okos-ajanlatado-guide.md` (Létrehozva)
+- `myai/iszapfalo_api/main.py` (Létrehozva)
+- `myai/iszapfalo_api/requirements.txt` (Létrehozva)
+- `myai/iszapfalo_api/README.md` (Létrehozva)
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A Langflow-t végül elvetettük a komplexitása miatt. Elkészült mindkét modul "All-in-One n8n" JSON változata, illetve egy 100%-ban stabil, független Python FastAPI mikroszolgáltatás, ami az OpenAI API-t használja strukturált JSON válaszok (Diagnosztika) és Markdown (Ajánlat) generálására. Az Iszapfaló csapata HTTP Request node-al tud rácsatlakozni.
+
 ### 2026-02-27 02:45 - Unified Chat & Full System Stabilization
 
 **Feladat:** A Brunella Agent System (BAS) kiterjesztése egy szinkronizált mobil/desktop chat felülettel, egy natív Windows automatizációs híddal (WAB), és a teljes tesztcsomag stabilizálása.
