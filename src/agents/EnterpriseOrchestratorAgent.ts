@@ -11,6 +11,7 @@
 
 import { OrchestratorAgent } from './OrchestratorAgent.js';
 import { AgentResponse } from './types.js';
+import { agentManager } from './AgentManager.js';
 import {
   EnterpriseEvent,
   EnterpriseAgentResponse,
@@ -393,23 +394,30 @@ export class EnterpriseOrchestratorAgent extends OrchestratorAgent {
    */
   async routeToModule(event: EnterpriseEvent): Promise<EnterpriseAgentResponse> {
     const targetAgent = this.moduleAgentMap[event.module];
-    
+
     logInfo(this.name, `Routing to agent: ${targetAgent} (module: ${event.module})`);
 
     try {
-      // TODO: Actual agent delegation via AgentManager
-      // For now, return simulated response
+      const taskDescription = typeof event.payload === 'object' && event.payload !== null
+        ? JSON.stringify(event.payload)
+        : String(event.payload);
+
+      const agentResult = await agentManager.executeWithRecovery(
+        targetAgent,
+        taskDescription,
+        { enterpriseEvent: event, priority: event.priority }
+      );
+
       return {
         eventId: event.id,
         module: event.module,
-        status: 'success',
-        data: {
-          message: `Module ${event.module} would handle this via ${targetAgent}`,
-          eventDetails: event
-        }
+        status: agentResult?.success ? 'success' : 'failure',
+        data: agentResult?.data || agentResult,
+        error: agentResult?.success ? undefined : (agentResult?.message || 'Agent execution failed')
       };
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : String(error);
+      logError(this.name, `routeToModule failed for ${targetAgent}: ${errorMessage}`);
       return {
         eventId: event.id,
         module: event.module,

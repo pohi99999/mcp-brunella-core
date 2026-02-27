@@ -34,7 +34,7 @@ export interface ExecutionPlan {
  * Single atomic browser operation
  */
 export interface ExecutionStep {
-    action: 'navigate' | 'click' | 'type' | 'scroll' | 'wait' | 'screenshot' | 'extract' | 'press';
+    action: 'navigate' | 'click' | 'type' | 'scroll' | 'wait' | 'screenshot' | 'extract' | 'press' | 'vision-click';
     selector?: string;
     url?: string;
     text?: string;
@@ -57,6 +57,7 @@ A felhasználó magyar nyelvű utasítást ad, te pedig részletes lépésekre b
 ELÉRHETŐ MŰVELETEK:
 - navigate(url): Navigálás URL-re
 - click(selector): Kattintás CSS selector alapján (pl. ".button", "#submit", "a.link")
+- vision-click(target): Kattintás vizuális leírás alapján (pl. "n8n Add Node button", "Mentés gomb"). Ezt használd ha a selector nem egyértelmű vagy dinamikus felületről (n8n, Langflow) van szó.
 - type(selector, text): Szöveg gépelés input mezőbe
 - press(key): Billentyű megnyomása (pl. "Enter", "Tab", "Escape")
 - scroll(direction, amount): Görgetés (direction: up/down/left/right, amount: pixels)
@@ -68,11 +69,9 @@ SZABÁLYOK:
 1. Minden lépésnek legyen magyar description (pl. "Google megnyitása")
 2. Használj wait()-et oldal betöltés után (selector: tipikusan első interaktív elem)
 3. CSS selectorok legyenek ÁLTALÁNOSAK, NE használj specifikus ID-kat!
-   - ✅ JÓ: "input[type='search']", "textarea[name='q']", "button[type='submit']"
-   - ❌ ROSSZ: "#gbqfq", "#search-box-id", "#specific-unique-id"
-4. Wait timeout legyen HOSSZÚ (min 8000-10000ms), mert oldalak lassan tölthetnek!
-5. Estimated duration legyen reális (ms-ben, átlagosan 3-8s/lépés)
-6. Ha user input kell (cím, jelszó, stb.), add hozzá a requiresUserInput array-hez
+4. Ha bonyolult, canvas-alapú UI-t kezelsz (n8n, Langflow), preferáld a vision-click()-et.
+5. Wait timeout legyen HOSSZÚ (min 8000-10000ms), mert oldalak lassan tölthetnek!
+6. Estimated duration legyen reális (ms-ben, átlagosan 3-8s/lépés)
 7. backgroundEligible: true ha > 30s várható időtartam
 8. Minden navigate után használj wait()-et hogy biztos legyen hogy betöltött az oldal
 
@@ -81,7 +80,7 @@ VÁLASZ FORMÁTUM (CSAK JSON, semmi más):
   "plan": [
     { "action": "navigate", "url": "https://example.com", "description": "Példa oldal megnyitása" },
     { "action": "wait", "selector": "input[type='text']", "timeout": 10000, "description": "Input mező betöltésre vár" },
-    { "action": "click", "selector": "button[type='submit']", "description": "Submit gomb megnyomása" }
+    { "action": "vision-click", "target": "Kék belépés gomb", "description": "Vizuális kattintás a belépéshez" }
   ],
   "estimatedDuration": 15000,
   "requiresUserInput": [],
@@ -89,23 +88,7 @@ VÁLASZ FORMÁTUM (CSAK JSON, semmi más):
   "contextNeeded": []
 }
 
-FONTOS: Csak valid JSON-t adj vissza, semmi más szöveget!
-
-PÉLDA - Google keresés:
-Utasítás: "Keress rá az AI hírekre"
-Válasz:
-{
-  "plan": [
-    { "action": "navigate", "url": "https://www.google.com", "description": "Google megnyitása" },
-    { "action": "wait", "selector": "textarea[name='q']", "timeout": 10000, "description": "Keresőmező betöltése" },
-    { "action": "type", "selector": "textarea[name='q']", "text": "AI hírek", "description": "Keresőszó beírása" },
-    { "action": "press", "key": "Enter", "description": "Keresés indítása Enterrel" }
-  ],
-  "estimatedDuration": 20000,
-  "requiresUserInput": [],
-  "backgroundEligible": false,
-  "contextNeeded": []
-}`;
+FONTOS: Csak valid JSON-t adj vissza, semmi más szöveget!`;
 
 /**
  * Generate Execution Plan from magyar instruction

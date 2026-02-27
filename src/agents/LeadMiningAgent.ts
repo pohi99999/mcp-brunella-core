@@ -2,18 +2,24 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { globalPythonShell } from '../utils/pythonShell.js';
 import { logInfo, logError } from '../utils/logger.js';
+import { validateEmail } from '../services/emailValidator.js';
+import { saveBusinessLead, saveBusinessJob } from '../utils/db.js';
+import crypto from 'crypto';
 
 export class LeadMiningAgent extends BaseAgent {
     name = "lead_mining";
     role = "Lead Mining Service";
-    description = "Generates targeted B2B lead lists with icebreakers.";
-    capabilities = ["lead_generation", "web_scraping", "icebreaker_generation"];
+    description = "Generates targeted B2B lead lists with icebreakers and email validation.";
+    capabilities = ["lead_generation", "web_scraping", "icebreaker_generation", "email_validation"];
 
     async executeTask(context: AgentContext): Promise<AgentResult> {
         const query = context.task || "fogorvos Budapest";
         logInfo(this.name, `Starting lead mining for: ${query}`);
 
         try {
+            const jobId = crypto.randomUUID();
+            await saveBusinessJob({ id: jobId, type: 'lead_mining', query });
+
             // 1. Scrape businesses from Google Maps
             const scrapeCode = `
 from myai.workers.google_maps_scraper import scrape_businesses
@@ -33,9 +39,10 @@ asyncio.run(run())
                 return { success: false, message: "No leads found." };
             }
 
-            // 2. Generate icebreakers for each lead
+            // 2. Process and enrich each lead
             const enrichedLeads = [];
             for (const lead of leads) {
+                // Icebreaker generation
                 const icebreakerCode = `
 from myai.workers.icebreaker_generator import generate_icebreaker
 import asyncio
@@ -50,17 +57,33 @@ asyncio.run(run())
                 `;
                 const ibOutput = await globalPythonShell.run(icebreakerCode);
                 const icebreaker = JSON.parse(ibOutput);
-                enrichedLeads.push({ ...lead, icebreaker });
+
+                // Email validation (if email exists)
+                let emailStatus = 'unknown';
+                if (lead.email) {
+                    emailStatus = await validateEmail(lead.email);
+                }
+
+                const leadData = {
+                    id: crypto.randomUUID(),
+                    job_id: jobId,
+                    company_name: lead.name,
+                    contact_email: lead.email,
+                    email_status: emailStatus,
+                    icebreaker_text: icebreaker,
+                    metadata: JSON.stringify(lead)
+                };
+
+                await saveBusinessLead(leadData);
+                enrichedLeads.push({ ...lead, icebreaker, emailStatus });
             }
 
-            // 3. Export to Google Sheets (Mock/Simulated for now)
-            // In a real scenario, we would call the sheets tool here.
-            logInfo(this.name, `Generated ${enrichedLeads.length} leads with icebreakers.`);
+            logInfo(this.name, `Generated and saved ${enrichedLeads.length} leads.`);
 
             return {
                 success: true,
-                message: `Sikeresen legeneráltam ${enrichedLeads.length} leadet jégtörő mondatokkal.`,
-                data: { leads: enrichedLeads }
+                message: `Sikeresen legeneráltam és validáltam ${enrichedLeads.length} leadet.`,
+                data: { jobId, leads: enrichedLeads }
             };
 
         } catch (error) {

@@ -749,11 +749,55 @@ async def harvest_check(scenario_path: str = "myai/scenarios/n8n_training.json")
 # --- Robotkez Pro (BVAB) Endpoints ---
 from myai.robotkez.browser import overlay_browser
 from myai.robotkez.computer_use import computer_use
+from myai.workers.os_worker import os_worker
+from myai.workers.vision_worker import vision_worker
 import base64
 
 class RobotkezActionRequest(BaseModel):
     action: str
     params: dict = {}
+
+class OSClickRequest(BaseModel):
+    x: int
+    y: int
+    clicks: Optional[int] = 1
+
+class OSTypeRequest(BaseModel):
+    text: str
+    press_enter: Optional[bool] = False
+
+class VisionFindRequest(BaseModel):
+    description: str
+
+@app.get("/os/screenshot")
+async def os_screenshot():
+    """Captures OS screen and returns image."""
+    path = await os_worker.take_screenshot(f"os_shot_{int(datetime.utcnow().timestamp())}.png")
+    return FileResponse(path)
+
+@app.post("/os/click")
+async def os_click(req: OSClickRequest):
+    return await os_worker.click(req.x, req.y, clicks=req.clicks)
+
+@app.post("/os/type")
+async def os_type(req: OSTypeRequest):
+    return await os_worker.type_text(req.text)
+
+@app.post("/os/vision-click")
+async def os_vision_click(req: VisionFindRequest):
+    """Uses Vision to find element and clicks it."""
+    # 1. Take screenshot
+    shot_path = await os_worker.take_screenshot("vision_temp.png")
+    
+    # 2. Get coordinates
+    coords = await vision_worker.get_coordinates(req.description, shot_path)
+    
+    if coords and "x" in coords:
+        # 3. Click
+        await os_worker.click(coords["x"], coords["y"])
+        return {"status": "success", "coords": coords, "description": req.description}
+    else:
+        return {"status": "error", "message": f"Could not find element: {req.description}"}
 
 @app.post("/api/robotkez/action")
 async def robotkez_action(req: RobotkezActionRequest):

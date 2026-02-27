@@ -6,7 +6,7 @@ export const orchestratorProvider: ChatProvider = {
   mode: "orchestrator",
 
   async send(input) {
-    const response = await api.executeAgent("Orchestrator", input.text, {
+    const response = await api.orchestrateTask(input.text, {
       chatMode: "orchestrator",
       history: input.history.map((m) => ({
         role: m.role,
@@ -15,6 +15,7 @@ export const orchestratorProvider: ChatProvider = {
       })),
     });
 
-    return toChatOutput(response, "orchestrator");
+    return toChatOutput(response, "Brunella");
   },
 };
+

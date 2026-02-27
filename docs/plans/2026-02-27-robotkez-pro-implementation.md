@@ -1,152 +1,119 @@
-# Robotkéz Pro Implementation Plan
+# Robotkéz Pro (BVAB) Implementation Plan
 
 > **For Gemini:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-**Goal:** Build an autonomous AI operator capable of controlling Windows and Chrome with high precision using a hybrid Vision and UI Tree approach.
+**Goal:** Építeni egy vizuálisan követhető, kettős kommunikációs interfésszel (Dashboard + Overlay Chat) és progresszív önjavító képességekkel (Self-Training Loop) rendelkező automatizációs hidat a Brunella Agent Systemhez.
 
-**Architecture:** A Python-based "Action Server" (FastAPI) acts as a bridge between the Brunella Orchestrator and the OS. It uses Playwright for browser control and PyAutoGUI/UIA for system actions, supported by a Vision loop for verification and retries.
+**Architecture:** Node.js (Orchestrator + Socket.IO) <-> Python (FastAPI Action Server + Playwright + PyAutoGUI). Kétirányú valós idejű kommunikáció a frontend (React Dashboard + injektált Shadow DOM overlay) és az Orchestrator között. Progresszív hibajavítás (DOM, Kinetic, Computer Use, Vision).
 
-**Tech Stack:** FastAPI, Playwright, PyAutoGUI, OpenAI/Gemini Vision API, Node.js (backend integration).
+**Tech Stack:** Node.js, Socket.IO, Python, FastAPI, Playwright, PyAutoGUI, React (Vite, Shadow DOM), Vitest/Pytest.
 
 ---
 
-### Task 1: Action Server Skeleton
+### Task 1: React Browser Overlay Chat Widget (Shadow DOM)
 
 **Files:**
-- Create: `myai/robotkez_pro/main.py`
-- Create: `myai/robotkez_pro/requirements.txt`
+- Create: `src/dashboard/overlay/index.tsx`
+- Create: `src/dashboard/overlay/OverlayChat.tsx`
+- Create: `vite.overlay.config.ts`
 
-**Step 1: Write requirements.txt**
+**Step 1: Create vite build config for the overlay**
+Create `vite.overlay.config.ts` to build a single standalone JS bundle that can be injected by Playwright.
 
-```text
-fastapi
-uvicorn
-pydantic
-openai
-playwright
-pyautogui
-python-dotenv
-```
+**Step 2: Create the OverlayChat component**
+Write `src/dashboard/overlay/OverlayChat.tsx` using standard React state, connecting to Socket.IO.
 
-**Step 2: Create basic FastAPI app**
+**Step 3: Create the entrypoint with Shadow DOM**
+Write `src/dashboard/overlay/index.tsx` that creates a generic HTML element, attaches a ShadowRoot, and mounts the React app inside it to isolate styles.
 
-```python
-from fastapi import FastAPI
-app = FastAPI(title="Robotkez Pro Action Server")
+**Step 4: Verify build**
+Run: `npx vite build -c vite.overlay.config.ts`
+Expected: Successfully generates `dist/overlay.bundle.js` without errors.
 
-@app.get("/health")
-async def health():
-    return {"status": "ok"}
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8090)
-```
-
-**Step 3: Commit**
-
+**Step 5: Commit**
 ```bash
-git add myai/robotkez_pro/
-git commit -m "feat(robotkez-pro): initialize action server skeleton"
+git add src/dashboard/overlay vite.overlay.config.ts
+git commit -m "feat(robotkez-pro): create shadow DOM react overlay chat widget"
 ```
 
 ---
 
-### Task 2: Playwright Visible Mode Integration
+### Task 2: Python Action Server - Custom Computer Use & Playwright
 
 **Files:**
-- Modify: `myai/robotkez_pro/main.py`
+- Create: `myai/robotkez/computer_use.py`
+- Modify: `myai/robotkez/browser.py`
+- Modify: `myai/server.py`
 
-**Step 1: Implement Browser controller**
+**Step 1: Write Custom Computer Use Module**
+Write `myai/robotkez/computer_use.py` containing a class `NativeComputerUse` with methods for native clicks (`click(x, y)`), typing (`type_text(text)`), using `pyautogui`.
 
-```python
-from playwright.async_api import async_playwright
+**Step 2: Add Overlay Injection to Browser**
+Modify `myai/robotkez/browser.py` to inject `overlay.bundle.js` into every new page using `page.add_init_script()`.
 
-class BrowserManager:
-    def __init__(self):
-        self.browser = None
-        self.context = None
-        self.page = None
+**Step 3: Write tests for NativeComputerUse**
+Create `myai/tests/test_computer_use.py` to mock `pyautogui` and verify coordinate scaling.
+Run: `pytest myai/tests/test_computer_use.py`
+Expected: PASS
 
-    async def start(self):
-        pw = await async_playwright().start()
-        self.browser = await pw.chromium.launch(headless=False)
-        self.context = await self.browser.new_context()
-        self.page = await self.context.new_page()
-```
+**Step 4: Expose FastAPI Endpoints**
+Modify `myai/server.py` to expose `/api/robotkez/action` and `/api/robotkez/snapshot` endpoints.
 
-**Step 2: Add endpoint to navigate**
-
-```python
-@app.post("/navigate")
-async def navigate(url: str):
-    await browser_manager.page.goto(url)
-    return {"status": "success"}
-```
-
-**Step 3: Commit**
-
+**Step 5: Commit**
 ```bash
-git commit -am "feat(robotkez-pro): add visible playwright controller"
+git add myai/robotkez myai/tests/test_computer_use.py myai/server.py
+git commit -m "feat(robotkez-pro): add custom computer use and playwright overlay injection"
 ```
 
 ---
 
-### Task 3: Vision & Retry Loop (3 Retries)
+### Task 3: Node.js Orchestrator & Socket.IO Bridge
 
 **Files:**
-- Modify: `myai/robotkez_pro/main.py`
+- Modify: `src/server/web.ts`
+- Create: `src/orchestrator/robotkez_bridge.ts`
 
-**Step 1: Implement Action with Verification**
+**Step 1: Setup Socket.IO for Overlay**
+In `src/server/web.ts`, setup a specific Socket.IO namespace (e.g., `/robotkez-overlay`) to handle messages from the injected chat widget.
 
-```python
-async def perform_action_with_retry(action_fn, verify_fn, max_retries=3):
-    for i in range(max_retries):
-        await action_fn()
-        if await verify_fn():
-            return True
-        print(f"Retry {i+1}...")
-    return False
-```
+**Step 2: Create Orchestrator Bridge**
+Write `src/orchestrator/robotkez_bridge.ts` that exports a class `RobotkezBridge`. This handles translating user intents from the chat into Python API calls (`/api/robotkez/action`).
 
-**Step 2: Add Vision-based coordinate detection (Mock for now)**
+**Step 3: Add Unit Test for Bridge**
+Create `test/robotkez-pro/bridge.test.ts` mocking the `fetch` calls to the Python API.
+Run: `npx vitest run test/robotkez-pro/bridge.test.ts`
+Expected: PASS
 
-```python
-async def get_coordinates_from_vision(screenshot_path, prompt):
-    # Call OpenAI/Gemini Vision here
-    return {"x": 500, "y": 500}
-```
-
-**Step 3: Commit**
-
+**Step 4: Commit**
 ```bash
-git commit -am "feat(robotkez-pro): implement retry logic and vision stubs"
+git add src/server/web.ts src/orchestrator/robotkez_bridge.ts test/robotkez-pro/bridge.test.ts
+git commit -m "feat(robotkez-pro): integrate socket.io and orchestrator bridge"
 ```
 
 ---
 
-### Task 4: Node.js Backend Bridge
+### Task 4: Self-Training Loop (Progressive Escalation & Memory)
 
 **Files:**
-- Create: `src/services/RobotkezProService.ts`
-- Modify: `src/server/routes/index.ts`
+- Create: `src/orchestrator/self_training_loop.ts`
 
-**Step 1: Create Service to talk to Python**
+**Step 1: Define Memory Storage**
+In `self_training_loop.ts`, implement `loadMemory()` and `saveMemory()` using `fs.promises` to read/write `data/robotkez_memory.json`.
 
-```typescript
-export class RobotkezProService {
-    async sendTask(task: string) {
-        return await fetch('http://localhost:8090/execute', {
-            method: 'POST',
-            body: JSON.stringify({ task })
-        });
-    }
-}
-```
+**Step 2: Implement Progressive Escalation Logic**
+Create `executeWithRetry(task)` that implements the 4-level fallback:
+1. DOM Check
+2. Kinetic (Scroll)
+3. Native Computer Use
+4. Vision API Check (mocked initially)
 
-**Step 2: Commit**
+**Step 3: Test Escalation Logic**
+Modify our existing mock test `test/robotkez-pro/self-training-loop.test.ts` to use the real `executeWithRetry` function (with mocked dependencies).
+Run: `npx vitest run test/robotkez-pro/self-training-loop.test.ts`
+Expected: PASS
 
+**Step 4: Commit**
 ```bash
-git add .
-git commit -m "feat(robotkez-pro): add node.js backend service bridge"
+git add src/orchestrator/self_training_loop.ts test/robotkez-pro/self-training-loop.test.ts
+git commit -m "feat(robotkez-pro): implement self-training loop with progressive escalation"
 ```

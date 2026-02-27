@@ -61,6 +61,25 @@ function splitIntoCandidateTasks(text: string): string[] {
   return (chunks.length > 1 ? chunks : [raw]).slice(0, 8);
 }
 
+/**
+ * LLM fallback: ha a regex csak 1 blokkot adott vissza (= komplex egydarabos utasítás),
+ * az LLM segítségével bontja fel lépésekre (max 6).
+ */
+async function splitWithLLMFallback(text: string): Promise<string[]> {
+  try {
+    const { llmGenerate } = await import('../utils/aiGateway.js');
+    const prompt = `Bontsd fel az alábbi feladatot konkrét, végrehajtható lépésekre (maximum 6 lépés). Minden lépés egy sorban álljon, sorszámozás nélkül:\n\n${text}`;
+    const raw = await llmGenerate(prompt, { maxTokens: 512, temperature: 0.3 });
+    const lines = raw
+      .split('\n')
+      .map((l: string) => normalizeLine(l))
+      .filter((l: string) => l.length > 5);
+    return lines.length > 1 ? lines.slice(0, 6) : [text];
+  } catch {
+    return [text];
+  }
+}
+
 export function buildMicroTasks(
   originalTask: string,
   opts?: {
@@ -97,6 +116,44 @@ export function buildMicroTasks(
     if (!tasks[i].parallel) {
       tasks[i].dependencies.push(tasks[i - 1].id);
     }
+  }
+
+  return tasks;
+}
+
+/**
+ * Async változat: ha a regex csak 1 blokkot ad, LLM-mel bontja fel a feladatot.
+ * Komplex egydarabos magyar utasítások esetén használd ezt.
+ */
+export async function buildMicroTasksAsync(
+  originalTask: string,
+  opts?: {
+    defaultAgent?: string;
+    retries?: number;
+    timeoutMs?: number;
+  },
+): Promise<MicroTask[]> {
+  const agent = String(opts?.defaultAgent || "Developer");
+  const retries = clampInt(opts?.retries ?? 1, 0, 5);
+  const timeoutMs = clampInt(opts?.timeoutMs ?? 60000, 1000, 10 * 60 * 1000);
+
+  const regexParts = splitIntoCandidateTasks(originalTask);
+  // Ha regex csak 1 blokkot ad → LLM fallback
+  const parts = regexParts.length <= 1
+    ? await splitWithLLMFallback(originalTask)
+    : regexParts;
+
+  if (parts.length === 0) return [];
+
+  const tasks: MicroTask[] = parts.map((p, idx) => {
+    const id = `t${idx + 1}`;
+    const lower = p.toLowerCase();
+    const parallel = lower.includes("parallel") || lower.includes("párhuzamos");
+    return { id, agent, task: p, dependencies: [], parallel, retries, timeoutMs };
+  });
+
+  for (let i = 1; i < tasks.length; i++) {
+    if (!tasks[i].parallel) tasks[i].dependencies.push(tasks[i - 1].id);
   }
 
   return tasks;

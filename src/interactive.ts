@@ -341,7 +341,7 @@ async function askInput(message: string): Promise<string> {
 }
 
 /** Show a sub-menu, return the selected value or BACK. */
-async function subMenu(title: string, choices: Array<{ name: string; value: string } | inquirer.Separator>): Promise<string> {
+async function subMenu(title: string, choices: Array<{ name: string; value: string } | object>): Promise<string> {
     const { action } = await inquirer.prompt([{
         type: 'list',
         name: 'action',

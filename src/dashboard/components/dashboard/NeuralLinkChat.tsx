@@ -66,6 +66,8 @@ export function NeuralLinkChat() {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const audioRef = useRef<HTMLAudioElement | null>(null);
+  const sendRef = useRef<(() => void) | null>(null);
+  const voiceTranscriptRef = useRef<string>("");
 
   const startListening = () => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -73,7 +75,7 @@ export function NeuralLinkChat() {
       toast.error("A böngésződ nem támogatja a hangfelismerést.");
       return;
     }
-    
+
     const recognition = new SpeechRecognition();
     recognition.lang = 'hu-HU';
     recognition.interimResults = false;
@@ -86,18 +88,25 @@ export function NeuralLinkChat() {
 
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
+      voiceTranscriptRef.current = transcript;
       setInput(transcript);
       toast.success("Sikeres hangfelismerés.");
     };
 
     recognition.onerror = (event: any) => {
       console.error("Speech recognition error", event.error);
+      voiceTranscriptRef.current = "";
       setIsListening(false);
       toast.error("Hiba a hangfelismerés során.");
     };
 
     recognition.onend = () => {
       setIsListening(false);
+      // Ha volt felismert szöveg → automatikus küldés
+      if (voiceTranscriptRef.current.trim()) {
+        voiceTranscriptRef.current = "";
+        setTimeout(() => sendRef.current?.(), 100);
+      }
     };
 
     recognition.start();
@@ -128,7 +137,7 @@ export function NeuralLinkChat() {
       setIsSpeaking(false);
     }
   };
-  const [activeAgents, setActiveAgents] = useState<{name: string, task: string}[]>([]);
+  const [activeAgents, setActiveAgents] = useState<{ name: string, task: string }[]>([]);
   const [expandedThoughts, setExpandedThoughts] = useState<
     Record<number, boolean>
   >({});
@@ -139,7 +148,7 @@ export function NeuralLinkChat() {
       api.getActiveTasks().then(tasks => {
         const agents = tasks.map((t: any) => ({ name: t.agent, task: t.description }));
         setActiveAgents(agents);
-      }).catch(() => {});
+      }).catch(() => { });
     }, 2000);
     return () => clearInterval(interval);
   }, []);
@@ -245,7 +254,7 @@ export function NeuralLinkChat() {
           screenshot: response.screenshot,
         },
       ]);
-      
+
       // Auto-play TTS on assistant response
       playTTS(response.message);
 
@@ -264,6 +273,9 @@ export function NeuralLinkChat() {
       setIsLoading(false);
     }
   };
+
+  // sendRef frissítése minden renderelés után (voice auto-submit számára)
+  sendRef.current = send;
 
   return (
     <Card className="border-border/50 bg-background/50 backdrop-blur-xl flex flex-col h-full glass-card overflow-hidden border-0 md:border">
@@ -290,11 +302,10 @@ export function NeuralLinkChat() {
           {(mode === "cloudflare" || mode === "cloudflare_chat") &&
             edgeStatus && (
               <div
-                className={`flex items-center gap-1 px-1.5 py-1 rounded-md text-[10px] font-medium border ${
-                  edgeStatus.enabled && edgeStatus.healthy
+                className={`flex items-center gap-1 px-1.5 py-1 rounded-md text-[10px] font-medium border ${edgeStatus.enabled && edgeStatus.healthy
                     ? "bg-green-500/15 text-green-500 border-green-500/30"
                     : "bg-red-500/15 text-red-500 border-red-500/30"
-                }`}
+                  }`}
               >
                 <Circle
                   size={6}
@@ -302,7 +313,7 @@ export function NeuralLinkChat() {
                   className={edgeStatus.enabled && edgeStatus.healthy ? "text-emerald-500" : "text-red-500"}
                 />
                 <span className="hidden sm:inline">
-                  {edgeStatus.enabled ? "Connected" : "Disabled"}
+                  {edgeStatus.enabled ? "Csatlakozva" : "Kikapcsolva"}
                 </span>
               </div>
             )}
@@ -313,7 +324,7 @@ export function NeuralLinkChat() {
           </Button>
         </div>
       </CardHeader>
-      
+
       {activeAgents.length > 0 && (
         <div className="bg-primary/5 border-b border-border/50 px-4 py-2 flex items-center gap-3 overflow-x-auto no-scrollbar">
           <span className="text-[10px] font-bold text-primary uppercase tracking-tighter shrink-0">Aktív raj:</span>
@@ -337,7 +348,7 @@ export function NeuralLinkChat() {
         <ScrollArea className="flex-1 px-2 md:px-4">
           <div className="space-y-4 md:space-y-6 py-4 md:py-6">
             <LiveExecutionMonitor />
-            
+
             {messages.length === 0 && !api.getActiveTasks && (
               <div className="flex flex-col items-center justify-center py-8 md:py-12 text-center space-y-4 px-4">
                 <div className="p-4 rounded-full bg-primary/10 border border-primary/20">
@@ -345,7 +356,7 @@ export function NeuralLinkChat() {
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-foreground/80">
-                    Neural Connection established
+                    Neural Link aktív
                   </p>
                 </div>
               </div>
@@ -362,20 +373,19 @@ export function NeuralLinkChat() {
                 )}
                 <div className={`flex flex-col gap-1.5 ${msg.role === "user" ? "max-w-[90%] md:max-w-[80%]" : "max-w-[90%] md:max-w-[85%]"}`}>
                   <div
-                    className={`rounded-2xl px-3 md:px-4 py-2 md:py-2.5 text-sm shadow-sm ${
-                      msg.role === "user"
+                    className={`rounded-2xl px-3 md:px-4 py-2 md:py-2.5 text-sm shadow-sm ${msg.role === "user"
                         ? "bg-primary text-primary-foreground font-medium rounded-tr-none"
                         : "bg-muted/50 border border-border/50 text-foreground rounded-tl-none"
-                    }`}
+                      }`}
                   >
                     <p className="whitespace-pre-wrap leading-relaxed overflow-hidden break-words">
                       {msg.content}
                     </p>
                     {msg.screenshot && (
                       <div className="mt-2 rounded-lg overflow-hidden border border-border/50">
-                        <img 
-                          src={msg.screenshot.startsWith('data:') ? msg.screenshot : `/api/v1/robotkez/screenshot?t=${Date.now()}`} 
-                          alt="Screenshot" 
+                        <img
+                          src={msg.screenshot.startsWith('data:') ? msg.screenshot : `/api/v1/robotkez/screenshot?t=${Date.now()}`}
+                          alt="Screenshot"
                           className="max-w-full h-auto"
                         />
                       </div>

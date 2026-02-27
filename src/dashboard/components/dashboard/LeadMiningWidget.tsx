@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { 
-    Users, 
-    Zap, 
-    ArrowRight, 
-    Download, 
-    RefreshCw, 
+import {
+    Users,
+    Zap,
+    ArrowRight,
+    Download,
+    RefreshCw,
     Search,
     MessageSquare,
     ExternalLink
@@ -48,7 +48,7 @@ export function LeadMiningWidget() {
     const handleStartMining = async () => {
         setIsMining(true);
         toast.info("Lead bányászat elindítva...");
-        
+
         try {
             // Mocking the call for now
             socket?.emit('agent:execute', {
@@ -76,10 +76,10 @@ export function LeadMiningWidget() {
                         </div>
                     </div>
                     <div className="flex gap-2">
-                        <Button 
-                            variant="default" 
-                            size="sm" 
-                            onClick={handleStartMining} 
+                        <Button
+                            variant="default"
+                            size="sm"
+                            onClick={handleStartMining}
                             disabled={isMining}
                             className="bg-primary hover:bg-primary/90"
                         >
@@ -106,7 +106,7 @@ export function LeadMiningWidget() {
                         Friss Találatok
                         {leads.length > 0 && <Badge className="bg-primary/20 text-primary">{leads.length}</Badge>}
                     </h3>
-                    
+
                     <ScrollArea className="h-[350px] pr-4">
                         {leads.length === 0 ? (
                             <div className="h-full flex flex-col items-center justify-center py-12 text-muted-foreground opacity-40">
@@ -116,7 +116,7 @@ export function LeadMiningWidget() {
                         ) : (
                             <div className="space-y-3">
                                 {leads.map((lead, i) => (
-                                    <div 
+                                    <div
                                         key={i}
                                         className="p-4 rounded-lg border border-primary/10 bg-secondary/5 hover:border-primary/30 transition-all"
                                     >
@@ -131,17 +131,19 @@ export function LeadMiningWidget() {
                                                 </a>
                                             </Button>
                                         </div>
-                                        
+
                                         <div className="mt-3 p-2 rounded bg-primary/5 border-l-2 border-primary italic text-xs flex gap-2">
                                             <MessageSquare className="w-3 h-3 mt-0.5 shrink-0" />
                                             "{lead.icebreaker}"
                                         </div>
 
                                         <div className="flex justify-end gap-2 mt-4">
-                                            <Button size="xs" variant="outline" className="h-7 text-[10px]">
+                                            <Button size="xs" variant="outline" className="h-7 text-[10px]"
+                                                onClick={() => toast.info("CRM integráció hamarosan elérhető")}>
                                                 CRM-be küldés
                                             </Button>
-                                            <Button size="xs" className="h-7 text-[10px]">
+                                            <Button size="xs" className="h-7 text-[10px]"
+                                                onClick={() => toast.info("Email küldés hamarosan elérhető")}>
                                                 Email küldése
                                             </Button>
                                         </div>

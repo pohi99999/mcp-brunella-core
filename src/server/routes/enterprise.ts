@@ -13,6 +13,7 @@
 
 import { Router, Request, Response } from 'express';
 import { agentManager } from '../../agents/AgentManager.js';
+import { EnterpriseOrchestratorAgent } from '../../agents/EnterpriseOrchestratorAgent.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
 interface Module {
@@ -224,15 +225,8 @@ export function createEnterpriseRouter(): Router {
 
       logInfo('EnterpriseAPI', `Executing enterprise task: ${task.substring(0, 100)}...`);
 
-      // Execute task via OrchestratorAgent or direct agent execution
-      const orchestrator = await agentManager.getAgent('Orchestrator');
-
-      if (!orchestrator) {
-        return res.status(503).json({
-          status: 'error',
-          error: 'Orchestrator agent not available',
-        });
-      }
+      // Execute task via EnterpriseOrchestratorAgent
+      const orchestrator = new EnterpriseOrchestratorAgent();
 
       const result = await orchestrator.execute(task, context);
 

@@ -14,14 +14,13 @@
  */
 
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { logInfo, logWarn, logError, setAgentStatus } from '../utils/logger.js';
 import { backgroundTaskManager } from '../utils/backgroundTaskManager.js';
 import { BrowserCommand } from '../utils/persistentBrowser.js';
 import { getRobotkezBrowserEngine } from '../utils/browserEngine.js';
-import { generateExecutionPlan, ExecutionPlan } from '../utils/llmPlanner.js';
+import { generateExecutionPlan, ExecutionPlan, ExecutionStep } from '../utils/llmPlanner.js';
 import { socketService } from '../server/SocketService.js';
-
-// No longer using execAsync here
+import { robotkezPro, UIAction } from '../services/RobotkezProService.js';
 
 export interface RobotkezV2Options {
   mode?: 'auto' | 'playwright' | 'browser-use';
@@ -250,59 +249,84 @@ export class RobotkezV2Agent extends BaseAgent {
         socketService.emit('robotkez:step', { index: i, status: 'working', description: step.description });
 
         try {
-          // DYNAMIC VISION: If selector is missing but description exists, use query
+          // VISION ACTION: If action is explicitly vision-click
+          if (step.action === 'vision-click') {
+            const visionRes = await robotkezPro.executeAction(step as unknown as UIAction);
+            completedSteps.push({ ...step, status: 'completed', result: visionRes });
+            socketService.emit('robotkez:step', { 
+                index: i, 
+                status: 'completed', 
+                description: step.description,
+                coords: (visionRes as any).coords 
+            });
+            continue;
+          }
+
+          // DYNAMIC SELECTOR: If selector is missing but description exists
           if (['click', 'type', 'wait', 'extract'].includes(step.action) && !step.selector && step.description) {
-             logInfo(this.name, `Dynamic vision query for: ${step.description}`);
-             const queryResp = await browserEngine.sendCommand({
+            logInfo(this.name, `Dynamic vision query for: ${step.description}`);
+            const queryResp = await browserEngine.sendCommand({
                 action: 'query',
                 description: step.description
-             });
-             if (queryResp.status === 'success') {
+            } as any);
+            
+            if (queryResp.status === 'success') {
                 const queryData = queryResp.data as Record<string, unknown>;
                 if (queryData.selector) {
-                   step.selector = String(queryData.selector);
-                   logInfo(this.name, `Resolved selector: ${step.selector}`);
+                    step.selector = String(queryData.selector);
+                    logInfo(this.name, `Resolved selector: ${step.selector}`);
                 } else {
-                   throw new Error(`Nem találtam meg a következő elemet: "${step.description}"`);
+                    throw new Error(`Nem találtam meg a következő elemet: "${step.description}"`);
                 }
-             } else {
+            } else {
                 throw new Error(`Nem találtam meg a következő elemet: "${step.description}"`);
-             }
+            }
           }
 
           // Strip description and other non-command properties for browser compatibility
           // eslint-disable-next-line @typescript-eslint/no-unused-vars
           const { description: _desc, ...command } = step as unknown as Record<string, unknown>;
-          // Ensure type safety
           const browserCommand = command as unknown as BrowserCommand;
-          const response = await browserEngine.sendCommand(browserCommand);
+          let response = await browserEngine.sendCommand(browserCommand);
           
+          // SELF-HEALING: If standard action failed, try Vision fallback
+          if (response.status === 'error' && ['click', 'type'].includes(step.action)) {
+            logWarn(this.name, `Step failed, attempting self-healing with Vision for: ${step.description}`);
+            socketService.emit('robotkez:vision_thought', { message: "Hiba történt, megpróbálom vizuálisan azonosítani az elemet..." });
+            
+            const visionStep: UIAction = {
+                action: 'vision-click',
+                target: step.description,
+                description: `Self-healing: ${step.description}`
+            };
+            const visionRes = await robotkezPro.executeAction(visionStep) as Record<string, unknown>;
+            if (visionRes['status'] === 'success') {
+                response = visionRes as any;
+            }
+          }
+
           completedSteps.push({
             ...step,
-            status: 'completed',
+            status: response.status === 'success' ? 'completed' : 'error',
             result: response
           });
 
-          // EMIT STEP SUCCESS
+          // EMIT STEP SUCCESS/RESULT
           socketService.emit('robotkez:step', { 
             index: i, 
-            status: 'completed', 
-            screenshot: response.screenshot // If returned by action
+            status: response.status === 'success' ? 'completed' : 'error', 
+            screenshot: response.screenshot,
+            coords: (response as any).coords
           });
+
+          if (response.status === 'error') {
+            throw new Error(response.message || 'Browser action failed');
+          }
 
         } catch (stepError: unknown) {
           const msg = stepError instanceof Error ? stepError.message : String(stepError);
           const action = step.action;
           logError(this.name, `Step failed: ${step.description} - ${msg}`);
-          
-          completedSteps.push({
-            ...step,
-            status: 'error',
-            error: msg
-          });
-
-          // EMIT STEP ERROR
-          socketService.emit('robotkez:step', { index: i, status: 'error', error: msg });
           
           // Stop on critical error
           if (['navigate', 'click', 'type'].includes(action)) {

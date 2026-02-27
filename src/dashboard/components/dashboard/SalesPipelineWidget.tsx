@@ -1,11 +1,11 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { 
-    Trello, 
-    Zap, 
-    ArrowRight, 
-    CheckCircle2, 
-    XCircle, 
-    Loader2, 
+import {
+    Trello,
+    Zap,
+    ArrowRight,
+    CheckCircle2,
+    XCircle,
+    Loader2,
     Mail,
     MessageSquare,
     Calendar,
@@ -14,7 +14,8 @@ import {
     BarChart3,
     UserPlus,
     Building2,
-    ChevronDown
+    ChevronDown,
+    FileText
 } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
 import { Button } from '../ui/button';
@@ -33,8 +34,6 @@ const STAGES = [
     { id: 'loi', label: 'Szándéknyilatkozat', icon: <FileText className="w-3 h-3" />, color: 'bg-emerald-500' },
     { id: 'closed', label: 'Lezárva', icon: <Handshake className="w-3 h-3" />, color: 'bg-green-600' }
 ];
-
-import { FileText } from 'lucide-react';
 
 export function SalesPipelineWidget() {
     const [leads, setLeads] = useState<any[]>([]);
@@ -59,7 +58,7 @@ export function SalesPipelineWidget() {
             // For now, let's just show leads from the most recent jobs
             const jobsRes = await fetch('/api/v1/business-jobs?limit=5');
             const jobsData = await jobsRes.json();
-            
+
             if (jobsData.success && jobsData.jobs.length > 0) {
                 const allLeads: any[] = [];
                 for (const job of jobsData.jobs) {
@@ -99,7 +98,7 @@ export function SalesPipelineWidget() {
     const groupedLeads = useMemo(() => {
         const groups: any = {};
         STAGES.forEach(s => groups[s.id] = leads.filter(l => l.status === s.id));
-        return groups; group: any
+        return groups;
     }, [leads]);
 
     return (
@@ -179,7 +178,7 @@ export function SalesPipelineWidget() {
 function SelectStatus({ currentStatus, onUpdate }: { currentStatus: string, onUpdate: (s: string) => void }) {
     return (
         <div className="relative inline-block text-left">
-            <select 
+            <select
                 className="text-[10px] bg-black/40 border border-white/10 rounded px-1 py-0.5 outline-none appearance-none cursor-pointer pr-4"
                 value={currentStatus}
                 onChange={(e) => onUpdate(e.target.value)}

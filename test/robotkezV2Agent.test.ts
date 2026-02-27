@@ -311,8 +311,8 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 requiresUserInput: []
             };
 
-            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
-            vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(longPlan);
+            const llmPlanner = await import('../src/utils/llmPlanner.js');
+            (llmPlanner.generateExecutionPlan as any).mockResolvedValueOnce(longPlan);
 
             mockSendCommand.mockResolvedValue({ status: 'success' });
 
@@ -339,8 +339,8 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 requiresUserInput: []
             };
 
-            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
-            vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(backgroundPlan);
+            const llmPlanner = await import('../src/utils/llmPlanner.js');
+            (llmPlanner.generateExecutionPlan as any).mockResolvedValueOnce(backgroundPlan);
 
             mockSendCommand.mockResolvedValue({ status: 'success' });
 
@@ -365,8 +365,8 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 requiresUserInput: []
             };
 
-            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
-            vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(shortPlan);
+            const llmPlanner = await import('../src/utils/llmPlanner.js');
+            (llmPlanner.generateExecutionPlan as any).mockResolvedValueOnce(shortPlan);
 
             mockSendCommand.mockResolvedValue({ status: 'success' });
 
@@ -392,8 +392,8 @@ describe('RobotkezV2Agent (Phase 2 - MVP)', () => {
                 requiresUserInput: []
             };
 
-            const { generateExecutionPlan } = await import('../src/utils/llmPlanner.js');
-            vi.spyOn({ generateExecutionPlan }, 'generateExecutionPlan').mockResolvedValue(plan);
+            const llmPlanner = await import('../src/utils/llmPlanner.js');
+            (llmPlanner.generateExecutionPlan as any).mockResolvedValueOnce(plan);
 
             mockSendCommand.mockResolvedValue({ status: 'success' });
 

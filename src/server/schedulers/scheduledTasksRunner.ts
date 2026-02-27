@@ -192,10 +192,10 @@ export class ScheduledTasksRunner {
 
         result = await new Promise((resolve, reject) => {
           let scriptOutput = '';
-          pythonShell.on('stdout', (message) => {
+          pythonShell.on('stdout', (message: string) => {
             scriptOutput += message;
           });
-          pythonShell.end((err, code, signal) => {
+          pythonShell.end((err: Error | null, code: number | undefined, signal: string | undefined) => {
             if (err) return reject(err);
             resolve({ output: scriptOutput, code, signal });
           });

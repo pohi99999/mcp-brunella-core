@@ -3,6 +3,7 @@
 .env.local
 .env.*.local
 credentials.json
+config/outreach_accounts.json
 
 # Google credentials & tokens (NEVER commit!)
 credentials/google-oauth2-credentials.json

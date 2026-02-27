@@ -886,7 +886,7 @@ export class AgentManager extends EventEmitter {
 
         return {
           success: false,
-          message: `Service degraded after ${MAX_RECOVERY_ATTEMPTS} recovery attempts: ${errorMsg}`,
+          message: `Szolgáltatás korlátozott: ${MAX_RECOVERY_ATTEMPTS} helyreállítási kísérlet után: ${errorMsg}`,
           data: null,
           executedBy: agentName,
           recoveryAttempts,
@@ -939,7 +939,7 @@ export class AgentManager extends EventEmitter {
 
         return {
           success: false,
-          message: `Service degraded after ${MAX_RECOVERY_ATTEMPTS} recovery attempts: ${errorMsg}`,
+          message: `Szolgáltatás korlátozott: ${MAX_RECOVERY_ATTEMPTS} helyreállítási kísérlet után: ${errorMsg}`,
           data: null,
           executedBy: agentName,
           recoveryAttempts,
@@ -951,7 +951,7 @@ export class AgentManager extends EventEmitter {
     logError('AgentManager', `[Phoenix Recovery] Unexpected loop exit for ${agentName}`);
     return {
       success: false,
-      message: 'Unexpected recovery loop exit',
+      message: 'Váratlan helyreállítási hiba',
       data: null,
       executedBy: agentName,
       recoveryAttempts,
@@ -1307,7 +1307,7 @@ export class AgentManager extends EventEmitter {
       if (result.success) {
         return result;
       }
-      throw new Error(result.message || "Delegation failed");
+      throw new Error(result.message || "Delegálás sikertelen");
     }
 
     logInfo(

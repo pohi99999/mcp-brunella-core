@@ -41,28 +41,28 @@ export function MissionControlLayout() {
   const activeItem = navigationRegistry.getItem(activeTab);
 
   return (
-    <div className="min-h-screen max-h-screen flex flex-col overflow-hidden bg-[#020205] bg-grid-pattern">
+    <div className="min-h-screen md:max-h-screen flex flex-col md:overflow-hidden bg-[#020205] bg-grid-pattern">
       <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
 
-      <header className="h-16 shrink-0 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-6 z-30">
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3">
+      <header className="h-16 shrink-0 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 z-30 sticky top-0">
+        <div className="flex items-center gap-2 md:gap-4">
+          <div className="flex items-center gap-2 md:gap-3">
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden">
+                <Button variant="ghost" size="icon" className="md:hidden h-9 w-9">
                   <Menu className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-64 border-r border-white/10 bg-[#0a0a0f]">
+              <SheetContent side="left" className="p-0 w-72 border-r border-white/10 bg-[#0a0a0f]">
                 <DynamicSidebar activeTab={activeTab} onTabChange={(tab) => { setActiveTab(tab); setMobileMenuOpen(false); }} />
               </SheetContent>
             </Sheet>
-            <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center border border-primary/30">
+            <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center border border-primary/30 shrink-0">
               <Zap size={18} className="text-primary animate-pulse" />
             </div>
-            <div className="flex flex-col">
-              <span className="text-sm font-bold tracking-tighter text-white uppercase italic">Brunella Cortex</span>
-              <span className="text-[10px] font-mono text-primary/60 tracking-widest leading-none">NEURAL NETWORK OS v2.3.0</span>
+            <div className="flex flex-col truncate">
+              <span className="text-sm font-bold tracking-tighter text-white uppercase italic truncate">Brunella Cortex</span>
+              <span className="text-[9px] md:text-[10px] font-mono text-primary/60 tracking-widest leading-none">v2.3.0</span>
             </div>
           </div>
           
