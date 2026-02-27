@@ -48,5 +48,37 @@ async def navigate(url: str):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+async def perform_action_with_retry(action_fn, verify_fn, max_retries=3):
+    for i in range(max_retries):
+        try:
+            await action_fn()
+            if await verify_fn():
+                return True
+        except Exception as e:
+            print(f"Action attempt {i+1} failed: {e}")
+        print(f"Retry {i+1}...")
+    return False
+
+async def get_coordinates_from_vision(screenshot_path: str, prompt: str):
+    # This is a stub for calling OpenAI/Gemini Vision API
+    # Logic to be implemented: 
+    # 1. Take screenshot
+    # 2. Send to Vision model with prompt
+    # 3. Parse coordinates from response
+    return {"x": 500, "y": 500}
+
+@app.post("/execute")
+async def execute_task(task: str):
+    # This will be the main entry point for orchestrator tasks
+    # For now, it's a stub demonstrating the retry logic
+    async def dummy_action():
+        print(f"Executing: {task}")
+    
+    async def dummy_verify():
+        return True
+
+    success = await perform_action_with_retry(dummy_action, dummy_verify)
+    return {"status": "success" if success else "failed", "task": task}
+
 if __name__ == "__main__":
     uvicorn.run(app, host="0.0.0.0", port=8090)
