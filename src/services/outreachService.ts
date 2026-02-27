@@ -87,6 +87,30 @@ export class OutreachService {
     }
 
     /**
+     * Generates a grant-aware outreach email.
+     */
+    async generateGrantOutreachEmail(lead: any, grantId: string = 'demjan-sandor-2026'): Promise<string> {
+        const grantsData = await fs.readFile(path.join(process.cwd(), 'config', 'grants_2026.json'), 'utf-8');
+        const { grants } = JSON.parse(grantsData);
+        const grant = grants.find((g: any) => g.id === grantId) || grants[0];
+
+        return `Tisztelt ${lead.company_name}!
+
+${lead.icebreaker_text || 'Érdeklődéssel figyelem az Önök piaci tevékenységét.'}
+
+Szeretném figyelmükbe ajánlani, hogy a Brunella AI Agent System bevezetése most a ${grant.name} keretében akár ${grant.support_rate}-os vissza nem térítendő támogatással is megvalósítható.
+
+Készítettem Önöknek egy rövid, személyre szabott bemutatót, amely az Önök üzleti folyamataira reflektál:
+${lead.demo_url || 'https://demo.brunella.ai/preview/generic'}
+
+Amennyiben érdekli Önöket a technológia és a finanszírozási lehetőség, szívesen állok rendelkezésre egy rövid egyeztetésre.
+
+Üdvözlettel,
+${process.env.OUTREACH_SENDER_NAME || 'Pohánka Péter'}
+Brunella AI Team`;
+    }
+
+    /**
      * Sends an outreach email using rotating SMTP accounts.
      */
     async sendEmail(to: string, subject: string, body: string): Promise<boolean> {
