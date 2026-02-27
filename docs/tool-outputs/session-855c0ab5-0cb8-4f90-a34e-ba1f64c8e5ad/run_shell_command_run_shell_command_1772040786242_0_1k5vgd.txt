@@ -1,0 +1,3 @@
+{
+  "output": "Output: dir : Cannot find path 'F:\\mcp-brunella-core\\.venv' because it does not exist.\nAt line:1 char:1\n+ dir .venv\n+ ~~~~~~~~~\n    + CategoryInfo          : ObjectNotFound: (F:\\mcp-brunella-core\\.venv:String) [Get-ChildItem], ItemN  \n   otFoundException\n    + FullyQualifiedErrorId : PathNotFound,Microsoft.PowerShell.Commands.GetChildItemCommand\nExit Code: 1\nProcess Group PGID: 62756"
+}

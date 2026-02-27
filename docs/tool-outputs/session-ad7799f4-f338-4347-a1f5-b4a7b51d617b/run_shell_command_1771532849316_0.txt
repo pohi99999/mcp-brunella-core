@@ -1,0 +1,1368 @@
+Output: 
+> mcp-brunella-core@1.0.0 build
+> tsc
+
+error TS6059: File 'F:/mcp-brunella-core/test/DeveloperAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/SpecWriterAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/activity_feed.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/agentTracer.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/agent_template.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/aiGateway.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/api_v1.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/approval_manager.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/auditLog.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/backgroundTaskManager.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/bifrost_gateway.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/browser_rendering.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/cean-alerting.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/cean-metrics.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/checkpoint.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/checkpointRetention.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/cli_config.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/cloudflare_integration.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/cloudflare_routes.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/code_review.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/code_scaffold.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/codebaseIndexer.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/configSchema.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/conflictMediatorAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/context_builder.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/core_tools.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/coverage_analysis.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/dashboard/components/ErrorBoundary.test.tsx' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.tsx' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:43
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                                 ~~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/dashboard/components/NeuralLinkChat.test.tsx' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.tsx' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:43
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                                 ~~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/dashboard/mocks/handlers.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/dashboard/setup.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/dashboard_chat_lib.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/data_refiner.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/degradationPolicy.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/delegation_chain.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/deploymentAnalyzer.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/dev_commands.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/developer_pipeline.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/digitalHeadhunterAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/e2b_sandbox_manager.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/e2e/action-triggering.spec.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/e2e/dashboard-comprehensive.spec.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/e2e/error-handling.spec.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/e2e/mission-control.spec.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/e2e/navigation.spec.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/e2e/socket-reconnect.spec.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/e2e/tabs-advanced.spec.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/e2e/tabs-basic.spec.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/edge_health_monitor.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/emailTriageAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/enterpriseOrchestrator.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/enterpriseOrchestratorAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/evHunterTool.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/ev_hunter_research.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/failover_registry.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/financialGuardAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/fleetService.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/git_integration.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/goldenDatasetBridge.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/grantWatcherAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/health_check.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/heartbeatMonitor.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/hooks.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/input_sanitization.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/ironCladBackend.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/jcai-e2e-test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/jcai-phase3-verification.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/jcai-webhook-manual-test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/jules_e2e_pipeline.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/jules_workflow_routes.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/knowledgeBaseBuilderAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/lint_fixer.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/llmPlanner.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/llm_client.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/llm_provider.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/localCSRAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/logisticsDispatcherAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/marketIntelAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/mcp_server.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/memoryRoutes.golden.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/memory_context.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/metricsArchiveService.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/metricsService.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/middleware.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/modelRouter.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/monitor.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/monitor.vitest.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/n8n_automation.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/notificationService.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/persistentBrowser.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phase2_integration.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phase3_integration.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phase42-costopt.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phase43-e2e.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phase4_real_estate.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phase4_software_genesis.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phase4_supply_chain.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phase6-integration.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phoenixRecoveryLogic.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phoenix_event_bus.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/phoenix_recovery.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/procurementAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/project_conductor_living_docs.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/prometheus_metrics.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/python_mcp_server.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/python_shell.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/rag.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/responseFormatter.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/retryStrategy.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/robotkezAPI.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/robotkezV2.e2e.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/robotkezV2Agent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/robotkez_integration.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/robotkez_v2_integration.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/routes_developer.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/safe_zone_validator.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/salesHunterAgent.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/scalingService.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/scheduledTasks.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/setup.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/skills_loader.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/smoke.vitest.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/socketService.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/specStatus.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/state_restoration.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/structured_output.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/suggestedTasks.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/swagger_spec.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/swarm_coordinator.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/taskDecomposerCore.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/task_queue.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/telemetry.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/trackTodoParser.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/tracks_todos_routes.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/unifiedWorkspace.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+error TS6059: File 'F:/mcp-brunella-core/test/webhooks.test.ts' is not under 'rootDir' 'F:/mcp-brunella-core/src'. 'rootDir' is expected to contain all source files.
+  The file is in the program because:
+    Matched by include pattern 'test/**/*.ts' in 'F:/mcp-brunella-core/tsconfig.json'
+  File is ECMAScript module because 'F:/mcp-brunella-core/package.json' has field "type" with value "module"
+
+  tsconfig.json:14:27
+    14   "include": ["src/**/*", "test/**/*.ts", "test/**/*.tsx"],
+                                 ~~~~~~~~~~~~~~
+    File is matched by include pattern specified here.
+
+
+Found 136 errors.
+Exit Code: 1
+Process Group PGID: 30800

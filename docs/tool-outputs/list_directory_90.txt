@@ -1,0 +1,4 @@
+Directory listing for F:\mcp-brunella-core\conductor\tracks\robotkez_comet_upgrade_20260222:
+meta.json
+plan.md
+spec.md

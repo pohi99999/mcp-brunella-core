@@ -1,0 +1,3 @@
+{
+  "error": "The 'prompt' must contain at least one valid URL (starting with http:// or https://)."
+}

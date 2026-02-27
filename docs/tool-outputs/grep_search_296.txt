@@ -1,0 +1,4 @@
+Error during grep search operation: Process exited with code 2: regex parse error:
+    key=[\"']\w+[\"']
+         ^^
+error: unrecognized escape sequence

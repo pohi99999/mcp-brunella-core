@@ -52,7 +52,7 @@ export function MissionControlLayout() {
           
           <div className="h-4 w-[1px] bg-white/10 mx-2" />
           
-          <nav className="flex items-center gap-1">
+          <nav className="hidden xs:flex items-center gap-1">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors px-2 py-1 rounded gap-1">
@@ -73,8 +73,8 @@ export function MissionControlLayout() {
           </nav>
         </div>
 
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
+        <div className="flex items-center gap-2 md:gap-4">
+          <div className="hidden sm:flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
              <div className={cn(
                "w-2 h-2 rounded-full",
                isConnected && healthStatus?.status === 'HEALTHY' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"
@@ -90,7 +90,7 @@ export function MissionControlLayout() {
           <DynamicSidebar activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
-        <main className="flex-1 flex flex-col min-h-0 p-6 relative">
+        <main className="flex-1 flex flex-col min-h-0 p-2 md:p-6 relative">
           {activeTab === 'dashboard' ? (
             <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
               <WidgetGrid />

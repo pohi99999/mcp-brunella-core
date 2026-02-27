@@ -1,0 +1,16 @@
+Subagent 'cli_help' finished.
+Termination Reason: GOAL
+Result:
+{
+  "answer": "Based on the Gemini CLI documentation (version 0.29.7), the following built-in tools are available to the Gemini model to interact with the environment:\n\n1.  **`list_directory`**: Lists files and subdirectories within a specified path.\n2.  **`read_file`**: Reads the content of files (text, images, audio, PDF).\n3.  **`write_file`**: Writes content to a file (creates or overwrites).\n4.  **`glob`**: Finds files matching specific glob patterns.\n5.  **`grep_search`**: Searches for text patterns within files using regex.\n6.  **`replace`**: Performs precise text replacement within a file (also referred to as the Edit tool).\n7.  **`run_shell_command`**: Executes shell commands in the underlying system.\n8.  **`web_fetch`**: Fetches and processes content from URLs.\n9.  **`google_web_search`**: Performs web searches via Google Search.\n10. **`save_memory`**: Saves facts to a persistent memory file (`GEMINI.md`).\n11. **`write_todos`**: Manages a list of subtasks for complex requests.\n12. **`activate_skill`**: Dynamically loads specialized expertise and resources from Agent Skills.\n\nRegarding **MCP (Model Context Protocol) tools**, these are dynamically provided by configured MCP servers. The specific tool names depend on the servers active in the environment (defined in configuration files like `.mcp.json`). Without direct access to the active MCP server state, their individual tool names cannot be listed, but they are seamlessly integrated into the model's toolset.\n\nAdditionally, in the context of this specific help session, the following tools are available to me as an agent:\n13. **`get_internal_docs`**: To retrieve Gemini CLI documentation.\n14. **`complete_task`**: To submit the final answer.\n\n*Please note: My investigation was interrupted due to runtime limits, so I was unable to retrieve a dynamic list of active MCP tools from the environment's configuration files.*",
+  "sources": [
+    "tools/index.md",
+    "tools/file-system.md",
+    "tools/shell.md",
+    "tools/web-fetch.md",
+    "tools/web-search.md",
+    "tools/memory.md",
+    "tools/todos.md",
+    "cli/skills.md"
+  ]
+}

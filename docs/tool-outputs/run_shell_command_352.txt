@@ -1,0 +1,6 @@
+Output: 
+> mcp-brunella-core@1.0.0 build
+> tsc && node -e "const fs=require('fs');const src='src/orchestrator/systemPrompt/paios_orchestrator_prompt.md';const dst='build/orchestrator/systemPrompt/paios_orchestrator_prompt.md';fs.mkdirSync('build/orchestrator/systemPrompt',{recursive:true});fs.copyFileSync(src,dst);console.log('✅ PAIOS prompt copied');"
+
+✅ PAIOS prompt copied
+Process Group PGID: 56648

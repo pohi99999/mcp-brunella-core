@@ -1,0 +1,3 @@
+{
+  "output": "Output: \n\n    Directory: F:\\mcp-brunella-core\\logs\n\n\nMode                 LastWriteTime         Length Name\n----                 -------------         ------ ----\n-a----     2026. 02. 25.     18:07         221184 brunella.db\n-a----     2026. 02. 25.     18:27         296049 health.log\n-a----     2026. 02. 25.     18:27         273860 http.log\n-a----     2026. 02. 25.     18:07            245 mcp_audit.log\nProcess Group PGID: 18364"
+}

@@ -1,0 +1,16 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-10 of 50 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 10.
+
+--- FILE CONTENT (truncated) ---
+Cégnév,Email,Telefon,Weboldal,Értékelés,Cím
+Uniklinik Fogászati és Implantációs Központ Kft.,53,false,+3612229150,false,XIV. kerület
+Örs Klinika Fogászati és Szájsebészeti Kft.,/g/1tf85v_m,false,+36308702393,false,XIV. kerület
+Evidental Fogászati Központ,/g/11dxl4xv2y,false,+36309545616,false,XI. kerület
+Implantix - Szájsebészet és Fogászat,50,false,+36303161029,false,XIII. kerület
+Dr. Fenyő Attila fogorvos,https://lh3.googleusercontent.com/p/AF1QipOp8GbIwCaMmWe7YTiOP9qo1J0cTb32DzxdkHut=w408-h240-k-no,false,+3619105863,false,X. kerület
+Differental Fogorvosi Rendelő,/g/11h3m7l_cf,false,+36309605255,false,I. kerület
+Pintér Kálmán Szakrendelő,/g/11b6tylkx_,true,+3612972060,false,XVIII. kerület
+Kisfaludy Dental Fogászat,https://lh3.googleusercontent.com/p/AF1QipN2fwB6AZ6iaMV0ygY0OlNdB2XIKFkLdfFJEuM2=w408-h272-k-no,false,+36202168638,false,XIX. kerület
+Madárfogtechnika,/g/113fgz0gg,false,+36309620884,false,XIX. kerület

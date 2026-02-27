@@ -1,0 +1,15 @@
+Output: Set-Location : A positional parameter cannot be found that accepts argument 'C:\Users\pohi9\.gemini\exten
+sions\google-workspace'.
+At line:1 char:1
++ cd /d "C:\Users\pohi9\.gemini\extensions\google-workspace"; mcpc --js ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : InvalidArgument: (:) [Set-Location], ParameterBindingException
+    + FullyQualifiedErrorId : PositionalParameterNotFound,Microsoft.PowerShell.Commands.SetLocationComma  
+   nd
+
+{
+  "error": "Failed to connect to MCP server: Failed to connect to MCP server: fetch failed",
+  "code": 3
+}
+Exit Code: 1
+Process Group PGID: 38104

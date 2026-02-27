@@ -1,0 +1,3 @@
+{
+  "output": "Output: tail : The term 'tail' is not recognized as the name of a cmdlet, function, script file, or operable prog\nram. Check the spelling of the name, or if a path was included, verify that the path is correct and try a\ngain.\nAt line:1 char:1\n+ tail -n 100 logs/health.log\n+ ~~~~\n    + CategoryInfo          : ObjectNotFound: (tail:String) [], CommandNotFoundException\n    + FullyQualifiedErrorId : CommandNotFoundException\nExit Code: 1\nProcess Group PGID: 61524"
+}

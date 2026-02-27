@@ -1,0 +1,1122 @@
+Output: warning: in the working copy of 'data/developer_metrics.json', LF will be replaced by CRLF the next time Git touches it
+
+> mcp-brunella-core@1.0.0 build
+> tsc && node -e "const fs=require('fs');const src='src/orchestrator/systemPrompt/paios_orchestrator_prompt.md';const dst='build/orchestrator/systemPrompt/paios_orchestrator_prompt.md';fs.mkdirSync('build/orchestrator/systemPrompt',{recursive:true});fs.copyFileSync(src,dst);console.log('✅ PAIOS prompt copied');"
+
+✅ PAIOS prompt copied
+
+ RUN  v4.0.18 F:/mcp-brunella-core
+
+stdout | test/marketIntelAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+*
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorA","CompetitorB"],"prod..."
+·******
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorA","CompetitorB"],"prod...  
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: SaaS, 2 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1772027593887
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [RAG] Document indexed: marketintel_1772027593887
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 6 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1772027596466
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorC"],"productCategory":"..."
+··x****
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorC"],"productCategory":"...  
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: Cloud Hosting, 1 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1772027653714
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [RAG] Document indexed: marketintel_1772027653714
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 3 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes  
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1772027656542
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should detect price changes
+[INFO] [RAG] Document indexed: marketintel_1772027656542
+··x·***                                                                                                   
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorA","CompetitorB"],"prod..."
+··x·***
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorA","CompetitorB"],"prod...  
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: SaaS, 2 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1772027659579
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [RAG] Document indexed: marketintel_1772027659579
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 6 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1772027662179
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Trend Analysis > should identify market trends
+[INFO] [RAG] Document indexed: marketintel_1772027662179
+··x··**                                                                                                   
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":["CompetitorX"],"productCategory":"..."
+··x··**
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":["CompetitorX"],"productCategory":"...  
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: Enterprise Software, 1 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1772027665216
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [RAG] Document indexed: marketintel_1772027596466
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [RAG] Document indexed: marketintel_1772027665216
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 3 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1772027667724
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Alert System > should generate alerts for significant changes
+[INFO] [RAG] Document indexed: marketintel_1772027667724
+··x···*                                                                                                   
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [MarketIntel] Memória lekérdezése: "{"competitors":[],"productCategory":"software lice..."
+··x···*
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[STATUS] [MarketIntel] working - Piaci hírszerzés: {"competitors":[],"productCategory":"software lice...  
+[INFO] [MarketIntel] Piaci elemzés indítása...
+[INFO] [MarketIntel] Elemzés: software licenses, 0 versenytárs
+[INFO] [MarketIntel] Test mode: using simulated competitor prices (skip RobotkezV2).
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1772027670464
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [RAG] Document indexed: marketintel_1772027670464
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [MarketIntel] ✅ Piaci elemzés kész: 9 ár követve
+[STATUS] [MarketIntel] idle
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [MarketIntel] Tapasztalat mentése a memóriába: marketintel_1772027672817
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/marketIntelAgent.test.ts > MarketIntelAgent > Error Handling > should handle empty competitor list
+[INFO] [RAG] Document indexed: marketintel_1772027672817
+··x····---------------------------------------*
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should return error when problem is too short
+[STATUS] [InnovationBridge] working - Help
+[STATUS] [InnovationBridge] idle
+
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should abstract problem with TRIZ (mocked)
+[INFO] [InnovationBridge] Problem absztrahálása: How to reduce hospital operating room cleaning tim...    
+
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should abstract problem with TRIZ (mocked)
+[INFO] [InnovationBridge] Absztrakt kihívás: Minimize resource transition time under constraints
+
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should handle LLM failure with fallback
+[INFO] [InnovationBridge] Problem absztrahálása: How to improve efficiency?...
+
+stderr | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should handle LLM failure with fallback
+[ERROR] [InnovationBridge] Problem abstraction hiba: LLM timeout
+
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should find cross-industry solutions (mocked)
+[INFO] [InnovationBridge] Cross-industry megoldások keresése...
+
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should find cross-industry solutions (mocked)
+[INFO] [InnovationBridge] 2 cross-industry megoldás találva
+
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should execute full workflow (mocked)
+[STATUS] [InnovationBridge] working - Find innovation for: Reduce hospital cleaning time
+[INFO] [InnovationBridge] Innovation Bridge indítása: Reduce hospital cleaning time...
+[INFO] [InnovationBridge] Problem absztrahálása: Reduce hospital cleaning time...
+
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should execute full workflow (mocked)
+[INFO] [InnovationBridge] Absztrakt kihívás: Minimize transition time
+
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should execute full workflow (mocked)
+[INFO] [InnovationBridge] Cross-industry megoldások keresése...
+
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should execute full workflow (mocked)
+[INFO] [InnovationBridge] 1 cross-industry megoldás találva
+
+stdout | test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should execute full workflow (mocked)
+[INFO] [InnovationBridge] Innovation Bridge riport kész: 1 megoldás
+[STATUS] [InnovationBridge] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+··x····---------------------------------------·x·····x··*                                                 
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should parse CV data
+[STATUS] [DigitalHeadhunter] working - HR screening: {"cvPath":"/cvs/candidate-123.pdf","position":"Sen...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should parse CV data 
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should parse CV data 
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for interview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should extract skills from CV
+[STATUS] [DigitalHeadhunter] working - HR screening: {"cvText":"TypeScript, React, Node.js, 5 years exp...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should extract skills from CV
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > CV Parsing > should extract skills from CV
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for interview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should match candidates to positions
+[STATUS] [DigitalHeadhunter] working - HR screening: {"position":"DevOps Engineer","requiredSkills":["D...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: undefined, Skills: Docker, Kubernetes, AWS
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should match candidates to positions
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should match candidates to positions
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for interview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should prioritize high-match candidates
+[STATUS] [DigitalHeadhunter] working - HR screening: {"position":"Data Scientist","requiredSkills":["Py...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: undefined, Skills: Python, Machine Learning, SQL
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should prioritize high-match candidates
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Candidate Matching > should prioritize high-match candidates
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 2/3 recommended for interview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should suggest interview slots
+[STATUS] [DigitalHeadhunter] working - HR screening: {"candidateEmail":"candidate@example.com","positio...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should suggest interview slots
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should suggest interview slots
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for interview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should generate interview invitation email
+[STATUS] [DigitalHeadhunter] working - HR screening: {"candidateName":"Jane Doe","position":"UX Designe...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should generate interview invitation email
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Interview Scheduling > should generate interview invitation email
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for interview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > LinkedIn Integration > should search LinkedIn for candidates
+[STATUS] [DigitalHeadhunter] working - HR screening: {"position":"Marketing Manager","location":"Budape...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > LinkedIn Integration > should search LinkedIn for candidates
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > LinkedIn Integration > should search LinkedIn for candidates
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for interview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Error Handling > should handle missing CV file
+[STATUS] [DigitalHeadhunter] working - HR screening: {"cvPath":"/nonexistent.pdf"}...
+[INFO] [DigitalHeadhunter] Starting CV screening pipeline...
+[INFO] [DigitalHeadhunter] Screening for: Senior Full-Stack Developer (TypeScript, React, Node.js), Skills: TypeScript, React, Node.js
+[INFO] [DigitalHeadhunter] Parsing CVs...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Error Handling > should handle missing CV file
+[INFO] [DigitalHeadhunter] Enriching with LinkedIn data...
+
+stdout | test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Error Handling > should handle missing CV file
+[INFO] [DigitalHeadhunter] ✅ Screening complete: 1/3 recommended for interview
+[STATUS] [DigitalHeadhunter] idle
+
+stdout | test/agents/MarketIntelAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+··x····---------------------------------------·x·····x···········x*
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data
+[STATUS] [MarketIntel] working - Piaci hírszerzés: Monitor product prices...
+[INFO] [MarketIntel] Scraping product data from http://example.com...
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data
+[INFO] [MarketIntel] Evaluating product potential...
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data
+[INFO] [MarketIntel] Triggering alert for: Product X
+[INFO] [MarketIntel] [ALERT] HIGH POTENTIAL: Product X @ 100 HUF. Score: 0.8
+
+stdout | test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should fail if URL or selectors are missing
+[STATUS] [MarketIntel] working - Piaci hírszerzés: Monitor product prices...
+
+stdout | test/FinanceGuardian_Gmail.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+··x····---------------------------------------·x·····x···········xxx*                                     
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should successfully search and download PDF invoices from Gmail
+[INFO] [FinanceGuardian] Searching Gmail for invoices with query: "from:billing@company.com"
+
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should successfully search and download PDF invoices from Gmail
+[INFO] [FinanceGuardian] Downloaded invoice: invoice.pdf to F:\mcp-brunella-core\_br_temp\invoices\msg123_invoice.pdf
+
+stdout | test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should handle no results from Gmail
+[INFO] [FinanceGuardian] Searching Gmail for invoices with query: "has:attachment filename:pdf "számla" OR "invoice""
+
+stdout | test/FinanceGuardian_Sheets.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+··x····---------------------------------------·x·····x···········xxxxx*                                   
+stdout | test/FinanceGuardian_Sheets.test.ts > FinanceGuardian - Google Sheets Export > should successfully export invoice data to Google Sheets
+[INFO] [FinanceGuardian] Invoice INV-002 exported to Google Sheet.
+
+stdout | test/FinanceGuardian_Duplicates.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+··x····---------------------------------------·x·····x···········xxxxxxx*
+stdout | test/FinanceGuardian_Duplicates.test.ts > FinanceGuardian - Invoice Processing & Duplicate Detection > should detect and skip a duplicate invoice
+[INFO] [FinanceGuardian] Duplicate invoice ignored: INV-001
+
+stdout | test/salesHunterAgent.test.ts
+[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+··x····---------------------------------------·x·····x···········xxxxxxxxx*
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"IT consulting","targetRole":"CT..."
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"IT consulting","targetRole":"CT...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: consulting, Budapest, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1772027683306
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute lead generation with valid JSON input
+[INFO] [RAG] Document indexed: saleshunter_1772027683306
+··x····---------------------------------------·x·····x···········xxxxxxxxx·**************                 
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [SalesHunter] Memória lekérdezése: "find leads in IT industry..."
+··x····---------------------------------------·x·····x···········xxxxxxxxx····***********
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[STATUS] [SalesHunter] working - Lead generálás: find leads in IT industry...
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1772027686343
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should execute with default parameters when task is not JSON
+[INFO] [RAG] Document indexed: saleshunter_1772027686343
+··x····---------------------------------------·x·····x···········xxxxxxxxx·····**********                 
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Finance","targetRole":"CFO"}...       
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should handle executeTask interface
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Technology","targetRole":"VP Sa..."
+··x····---------------------------------------·x·····x···········xxxxxxxxx······*********
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Technology","targetRole":"VP Sa...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: tech, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1772027689409
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should generate email drafts for leads
+[INFO] [RAG] Document indexed: saleshunter_1772027689409
+··x····---------------------------------------·x·····x···········xxxxxxxxx·······********                 
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"SaaS","targetRole":"Product Man..."
+··x····---------------------------------------·x·····x···········xxxxxxxxx·······********
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"SaaS","targetRole":"Product Man...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores 
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1772027692421
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should calculate lead scores
+[INFO] [RAG] Document indexed: saleshunter_1772027692421
+··x····---------------------------------------·x·····x···········xxxxxxxxx········*******                 
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Manufacturing","targetRole":"Op..."
+··x····---------------------------------------·x·····x···········xxxxxxxxx········*******
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Manufacturing","targetRole":"Op...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: manufacturing, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1772027695159
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should provide CRM export URL
+[INFO] [RAG] Document indexed: saleshunter_1772027695159
+··x····---------------------------------------·x·····x···········xxxxxxxxx·········******                 
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Healthcare","targetRole":"Medic..."
+··x····---------------------------------------·x·····x···········xxxxxxxxx·········******
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Healthcare","targetRole":"Medic...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1772027697924
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Task Execution > should include statistics in result
+[INFO] [RAG] Document indexed: saleshunter_1772027697924
+··x····---------------------------------------·x·····x···········xxxxxxxxx··········*****                 
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [SalesHunter] Memória lekérdezése: "{ invalid json }..."
+··x····---------------------------------------·x·····x···········xxxxxxxxx··········*****
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[STATUS] [SalesHunter] working - Lead generálás: { invalid json }...
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1772027701089
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Error Handling > should handle malformed JSON gracefully
+[INFO] [RAG] Document indexed: saleshunter_1772027701089
+··x····---------------------------------------·x·····x···········xxxxxxxxx···········****                 
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Technology","targetRole":"Devel..."
+··x····---------------------------------------·x·····x···········xxxxxxxxx············***
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Technology","targetRole":"Devel...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: tech, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1772027704124
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should filter out invalid leads
+[INFO] [RAG] Document indexed: saleshunter_1772027704124
+··x····---------------------------------------·x·····x···········xxxxxxxxx·············**                 
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Finance","targetRole":"CFO"}..."
+··x····---------------------------------------·x·····x···········xxxxxxxxx·············**
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Finance","targetRole":"CFO"}...       
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1772027707328
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Lead Validation > should prioritize high-score leads
+[INFO] [RAG] Document indexed: saleshunter_1772027707328
+··x····---------------------------------------·x·····x···········xxxxxxxxx··············*                 
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [SalesHunter] Memória lekérdezése: "{"targetIndustry":"Retail","targetRole":"Store Man..."
+··x····---------------------------------------·x·····x···········xxxxxxxxx··············*
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[STATUS] [SalesHunter] working - Lead generálás: {"targetIndustry":"Retail","targetRole":"Store Man...    
+[INFO] [SalesHunter] Lead generálási folyamat indítása...
+[INFO] [SalesHunter] Cél: general, Hungary, sme
+[INFO] [SalesHunter] Test mode: using mock leads (skip RobotkezV2).
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [SalesHunter] Generating email drafts for 20 leads...
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [SalesHunter] ✅ Lead generálás kész: 20 lead találva
+[STATUS] [SalesHunter] idle
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [SalesHunter] Tapasztalat mentése a memóriába: saleshunter_1772027710457
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stderr | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[ERROR] [AIGateway] Embeddings failed: TypeError: fetch failed
+
+stdout | test/salesHunterAgent.test.ts > SalesHunterAgent > Message Generation > should return a descriptive success message
+[INFO] [RAG] Document indexed: saleshunter_1772027710457
+··x····---------------------------------------·x·····x···········xxxxxxxxx···············*
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should run lint check on "check" command
+[STATUS] [LintFixer] working - check src/
+[INFO] [LintFixer] ESLint check indítása...
+··x····---------------------------------------·x·····x···········xxxxxxxxx················******
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should run lint check on "check" command
+[STATUS] [LintFixer] idle
+··x····---------------------------------------·x·····x···········xxxxxxxxx·················*****          
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should run lint check on Hungarian command
+[STATUS] [LintFixer] working - ellenőrizd a kódot
+[INFO] [LintFixer] ESLint check indítása...
+··x····---------------------------------------·x·····x···········xxxxxxxxx·················*****
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should run lint check on Hungarian command
+[STATUS] [LintFixer] idle
+··x····---------------------------------------·x·····x···········xxxxxxxxx··················****          
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should detect file path in task
+[STATUS] [LintFixer] working - check "src/cli.ts"
+[INFO] [LintFixer] ESLint check indítása...
+··x····---------------------------------------·x·····x···········xxxxxxxxx··················****
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should detect file path in task
+[STATUS] [LintFixer] idle
+··x····---------------------------------------·x·····x···········xxxxxxxxx···················***          
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should run TypeScript check on "type" command
+[STATUS] [LintFixer] working - type check
+[INFO] [LintFixer] ESLint check indítása...
+··x····---------------------------------------·x·····x···········xxxxxxxxx···················***
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should run TypeScript check on "type" command
+[STATUS] [LintFixer] idle
+··x····---------------------------------------·x·····x···········xxxxxxxxx····················**          
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should generate fix suggestions
+[STATUS] [LintFixer] working - suggest fix for src/cli.ts
+[INFO] [LintFixer] Fájl javítása: src/cli.ts
+
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should generate fix suggestions
+[INFO] [LintFixer] ESLint check indítása...
+
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should generate fix suggestions
+[STATUS] [LintFixer] idle
+··x····---------------------------------------·x·····x···········xxxxxxxxx·····················*          
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should handle non-existent file gracefully
+[STATUS] [LintFixer] working - fix "nonexistent-file-12345.ts"
+[INFO] [LintFixer] Fájl javítása: nonexistent-file-12345.ts
+
+stdout | test/lint_fixer.test.ts > LintFixerAgent > should handle non-existent file gracefully
+[STATUS] [LintFixer] idle
+··x····---------------------------------------·x·····x···········xxxxxxxxx························x·······
+··x····---------------------------------------·x·····x···········xxxxxxxxx························x·······
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Suites 127 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/activity_feed.test.ts [ test/activity_feed.test.ts ]
+ FAIL  test/agentTracer.test.ts [ test/agentTracer.test.ts ]
+ FAIL  test/agent_template.test.ts [ test/agent_template.test.ts ]
+ FAIL  test/aiGateway.test.ts [ test/aiGateway.test.ts ]
+ FAIL  test/apifyScrapingAgent.test.ts [ test/apifyScrapingAgent.test.ts ]
+ FAIL  test/api_v1.test.ts [ test/api_v1.test.ts ]
+ FAIL  test/approval_manager.test.ts [ test/approval_manager.test.ts ]
+ FAIL  test/auditLog.test.ts [ test/auditLog.test.ts ]
+ FAIL  test/backgroundTaskManager.test.ts [ test/backgroundTaskManager.test.ts ]
+ FAIL  test/browser_rendering.test.ts [ test/browser_rendering.test.ts ]
+ FAIL  test/cean-alerting.test.ts [ test/cean-alerting.test.ts ]
+ FAIL  test/cean-metrics.test.ts [ test/cean-metrics.test.ts ]
+ FAIL  test/checkpoint.test.ts [ test/checkpoint.test.ts ]
+ FAIL  test/checkpointRetention.test.ts [ test/checkpointRetention.test.ts ]
+ FAIL  test/chromeDevToolsAgent.test.ts [ test/chromeDevToolsAgent.test.ts ]
+ FAIL  test/cli_config.test.ts [ test/cli_config.test.ts ]
+ FAIL  test/cloudflareBrowser.test.ts [ test/cloudflareBrowser.test.ts ]
+ FAIL  test/cloudflare_integration.test.ts [ test/cloudflare_integration.test.ts ]
+ FAIL  test/cloudflare_routes.test.ts [ test/cloudflare_routes.test.ts ]
+ FAIL  test/codebaseIndexer.test.ts [ test/codebaseIndexer.test.ts ]
+ FAIL  test/code_review.test.ts [ test/code_review.test.ts ]
+ FAIL  test/code_scaffold.test.ts [ test/code_scaffold.test.ts ]
+ FAIL  test/configSchema.test.ts [ test/configSchema.test.ts ]
+ FAIL  test/conflictMediatorAgent.test.ts [ test/conflictMediatorAgent.test.ts ]
+ FAIL  test/context_builder.test.ts [ test/context_builder.test.ts ]
+ FAIL  test/core_tools.test.ts [ test/core_tools.test.ts ]
+ FAIL  test/coverage_analysis.test.ts [ test/coverage_analysis.test.ts ]
+ FAIL  test/dagSort.test.ts [ test/dagSort.test.ts ]
+ FAIL  test/dashboard_chat_lib.test.ts [ test/dashboard_chat_lib.test.ts ]
+ FAIL  test/data_refiner.test.ts [ test/data_refiner.test.ts ]
+ FAIL  test/degradationPolicy.test.ts [ test/degradationPolicy.test.ts ]
+ FAIL  test/delegation_chain.test.ts [ test/delegation_chain.test.ts ]
+ FAIL  test/deploymentAnalyzer.test.ts [ test/deploymentAnalyzer.test.ts ]
+ FAIL  test/DeveloperAgent.test.ts [ test/DeveloperAgent.test.ts ]
+ FAIL  test/developer_pipeline.test.ts [ test/developer_pipeline.test.ts ]
+ FAIL  test/dev_commands.test.ts [ test/dev_commands.test.ts ]
+ FAIL  test/e2b_sandbox_manager.test.ts [ test/e2b_sandbox_manager.test.ts ]
+ FAIL  test/EdgeProxyAgent.test.ts [ test/EdgeProxyAgent.test.ts ]
+ FAIL  test/edge_health_monitor.test.ts [ test/edge_health_monitor.test.ts ]
+ FAIL  test/emailTriageAgent.test.ts [ test/emailTriageAgent.test.ts ]
+ FAIL  test/enterpriseOrchestrator.test.ts [ test/enterpriseOrchestrator.test.ts ]
+ FAIL  test/enterpriseOrchestratorAgent.test.ts [ test/enterpriseOrchestratorAgent.test.ts ]
+ FAIL  test/evHunterTool.test.ts [ test/evHunterTool.test.ts ]
+ FAIL  test/ev_hunter_research.test.ts [ test/ev_hunter_research.test.ts ]
+ FAIL  test/failover_registry.test.ts [ test/failover_registry.test.ts ]
+ FAIL  test/financialGuardAgent.test.ts [ test/financialGuardAgent.test.ts ]
+ FAIL  test/fleetService.test.ts [ test/fleetService.test.ts ]
+ FAIL  test/git_integration.test.ts [ test/git_integration.test.ts ]
+ FAIL  test/goldenDatasetBridge.test.ts [ test/goldenDatasetBridge.test.ts ]
+ FAIL  test/grantWatcherAgent.test.ts [ test/grantWatcherAgent.test.ts ]
+ FAIL  test/health_check.test.ts [ test/health_check.test.ts ]
+ FAIL  test/heartbeatMonitor.test.ts [ test/heartbeatMonitor.test.ts ]
+ FAIL  test/hooks.test.ts [ test/hooks.test.ts ]
+ FAIL  test/input_sanitization.test.ts [ test/input_sanitization.test.ts ]
+ FAIL  test/ironCladBackend.test.ts [ test/ironCladBackend.test.ts ]
+ FAIL  test/jcai-phase3-verification.test.ts [ test/jcai-phase3-verification.test.ts ]
+ FAIL  test/jules_e2e_pipeline.test.ts [ test/jules_e2e_pipeline.test.ts ]
+ FAIL  test/jules_workflow_routes.test.ts [ test/jules_workflow_routes.test.ts ]
+ FAIL  test/knowledgeBaseBuilderAgent.test.ts [ test/knowledgeBaseBuilderAgent.test.ts ]
+ FAIL  test/llmPlanner.test.ts [ test/llmPlanner.test.ts ]
+ FAIL  test/llm_client.test.ts [ test/llm_client.test.ts ]
+ FAIL  test/llm_provider.test.ts [ test/llm_provider.test.ts ]
+ FAIL  test/localCSRAgent.test.ts [ test/localCSRAgent.test.ts ]
+ FAIL  test/logisticsDispatcherAgent.test.ts [ test/logisticsDispatcherAgent.test.ts ]
+ FAIL  test/mcp_server.test.ts [ test/mcp_server.test.ts ]
+ FAIL  test/memoryRoutes.golden.test.ts [ test/memoryRoutes.golden.test.ts ]
+ FAIL  test/memory_context.test.ts [ test/memory_context.test.ts ]
+ FAIL  test/metricsArchiveService.test.ts [ test/metricsArchiveService.test.ts ]
+ FAIL  test/metricsService.test.ts [ test/metricsService.test.ts ]
+ FAIL  test/middleware.test.ts [ test/middleware.test.ts ]
+ FAIL  test/modelRouter.test.ts [ test/modelRouter.test.ts ]
+ FAIL  test/monitor.test.ts [ test/monitor.test.ts ]
+ FAIL  test/monitor.vitest.ts [ test/monitor.vitest.ts ]
+ FAIL  test/n8n_automation.test.ts [ test/n8n_automation.test.ts ]
+ FAIL  test/notificationService.test.ts [ test/notificationService.test.ts ]
+ FAIL  test/orchestratorChain.test.ts [ test/orchestratorChain.test.ts ]
+ FAIL  test/paiosConfig.test.ts [ test/paiosConfig.test.ts ]
+ FAIL  test/paiosOrchestrator.test.ts [ test/paiosOrchestrator.test.ts ]
+ FAIL  test/persistentBrowser.test.ts [ test/persistentBrowser.test.ts ]
+ FAIL  test/phase2_integration.test.ts [ test/phase2_integration.test.ts ]
+ FAIL  test/phase3_integration.test.ts [ test/phase3_integration.test.ts ]
+ FAIL  test/phase42-costopt.test.ts [ test/phase42-costopt.test.ts ]
+ FAIL  test/phase43-e2e.test.ts [ test/phase43-e2e.test.ts ]
+ FAIL  test/phase4_real_estate.test.ts [ test/phase4_real_estate.test.ts ]
+ FAIL  test/phase4_software_genesis.test.ts [ test/phase4_software_genesis.test.ts ]
+ FAIL  test/phase4_supply_chain.test.ts [ test/phase4_supply_chain.test.ts ]
+ FAIL  test/phase6-integration.test.ts [ test/phase6-integration.test.ts ]
+ FAIL  test/phoenixRecoveryLogic.test.ts [ test/phoenixRecoveryLogic.test.ts ]
+ FAIL  test/phoenix_event_bus.test.ts [ test/phoenix_event_bus.test.ts ]
+ FAIL  test/phoenix_recovery.test.ts [ test/phoenix_recovery.test.ts ]
+ FAIL  test/procurementAgent.test.ts [ test/procurementAgent.test.ts ]
+ FAIL  test/project_conductor_living_docs.test.ts [ test/project_conductor_living_docs.test.ts ]
+ FAIL  test/prometheus_metrics.test.ts [ test/prometheus_metrics.test.ts ]
+ FAIL  test/python_mcp_server.test.ts [ test/python_mcp_server.test.ts ]
+ FAIL  test/python_shell.test.ts [ test/python_shell.test.ts ]
+ FAIL  test/rag.test.ts [ test/rag.test.ts ]
+ FAIL  test/responseFormatter.test.ts [ test/responseFormatter.test.ts ]
+ FAIL  test/retryStrategy.test.ts [ test/retryStrategy.test.ts ]
+ FAIL  test/robotkezAPI.test.ts [ test/robotkezAPI.test.ts ]
+ FAIL  test/robotkezV2Agent.test.ts [ test/robotkezV2Agent.test.ts ]
+ FAIL  test/robotkez_integration.test.ts [ test/robotkez_integration.test.ts ]
+ FAIL  test/robotkez_v2_integration.test.ts [ test/robotkez_v2_integration.test.ts ]
+ FAIL  test/routes_developer.test.ts [ test/routes_developer.test.ts ]
+ FAIL  test/safe_zone_validator.test.ts [ test/safe_zone_validator.test.ts ]
+ FAIL  test/scalingService.test.ts [ test/scalingService.test.ts ]
+ FAIL  test/scheduledTasks.test.ts [ test/scheduledTasks.test.ts ]
+ FAIL  test/security.test.ts [ test/security.test.ts ]
+ FAIL  test/skills_loader.test.ts [ test/skills_loader.test.ts ]
+ FAIL  test/smoke.vitest.ts [ test/smoke.vitest.ts ]
+ FAIL  test/socketService.test.ts [ test/socketService.test.ts ]
+ FAIL  test/specStatus.test.ts [ test/specStatus.test.ts ]
+ FAIL  test/state_restoration.test.ts [ test/state_restoration.test.ts ]
+ FAIL  test/structured_output.test.ts [ test/structured_output.test.ts ]
+ FAIL  test/suggestedTasks.test.ts [ test/suggestedTasks.test.ts ]
+ FAIL  test/swagger_spec.test.ts [ test/swagger_spec.test.ts ]
+ FAIL  test/swarm_coordinator.test.ts [ test/swarm_coordinator.test.ts ]
+ FAIL  test/taskDecomposerCore.test.ts [ test/taskDecomposerCore.test.ts ]
+ FAIL  test/task_queue.test.ts [ test/task_queue.test.ts ]
+ FAIL  test/telemetry.test.ts [ test/telemetry.test.ts ]
+ FAIL  test/tracks_todos_routes.test.ts [ test/tracks_todos_routes.test.ts ]
+ FAIL  test/trackTodoParser.test.ts [ test/trackTodoParser.test.ts ]
+ FAIL  test/unifiedWorkspace.test.ts [ test/unifiedWorkspace.test.ts ]
+ FAIL  test/webhooks.test.ts [ test/webhooks.test.ts ]
+ FAIL  test/workerThreadPool.test.ts [ test/workerThreadPool.test.ts ]
+ FAIL  test/agents/LeadMiningAgent.test.ts [ test/agents/LeadMiningAgent.test.ts ]
+ FAIL  test/agents/MachineHunter.test.ts [ test/agents/MachineHunter.test.ts ]
+ FAIL  test/agents/permissions_audit.test.ts [ test/agents/permissions_audit.test.ts ]
+Error: ENOENT: no such file or directory, open 'C:\Users\pohi9\AppData\Local\Temp\EOrix20uYrYovgIzdPvKb\ssr\f44982209da6b4747d79feea98e5c38035b5ca4b'
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/140]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 13 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/digitalHeadhunterAgent.test.ts > DigitalHeadhunterAgent > Error Handling > should handle missing CV file
+AssertionError: expected 'success' to be 'error' // Object.is equality
+
+Expected: "error"
+Received: "success"
+
+ ❯ test/digitalHeadhunterAgent.test.ts:136:29
+    134|       const result = await agent.execute(task);
+    135|
+    136|       expect(result.status).toBe('error');
+       |                             ^
+    137|     });
+    138|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/140]⎯
+
+ FAIL  test/FinanceGuardian_Duplicates.test.ts > FinanceGuardian - Invoice Processing & Duplicate Detection > should process a new invoice and save it
+AssertionError: expected 'Számla (INV-001) sikeresen feldolgozv…' to contain 'Invoice INV-001 processed successfully'
+
+Expected: "Invoice INV-001 processed successfully"
+Received: "Számla (INV-001) sikeresen feldolgozva és mentve."
+
+ ❯ test/FinanceGuardian_Duplicates.test.ts:34:28
+     32|
+     33|     expect(result.success).toBe(true);
+     34|     expect(result.message).toContain('Invoice INV-001 processed successfully');
+       |                            ^
+     35|     expect(invoiceStore.addInvoice).toHaveBeenCalledWith(invoiceData);
+     36|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/140]⎯
+
+ FAIL  test/FinanceGuardian_Duplicates.test.ts > FinanceGuardian - Invoice Processing & Duplicate Detection > should detect and skip a duplicate invoice
+AssertionError: expected 'A számla (INV-001) már létezik a rend…' to contain 'Duplicate invoice INV-001 detected an…'
+
+Expected: "Duplicate invoice INV-001 detected and skipped."
+Received: "A számla (INV-001) már létezik a rendszerben. Duplikátum kihagyva."
+
+ ❯ test/FinanceGuardian_Duplicates.test.ts:48:28
+     46|
+     47|     expect(result.success).toBe(true);
+     48|     expect(result.message).toContain('Duplicate invoice INV-001 detected and skipped.');
+       |                            ^
+     49|     expect((result.data as any).isDuplicate).toBe(true);
+     50|     expect(invoiceStore.addInvoice).not.toHaveBeenCalled();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/140]⎯
+
+ FAIL  test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should successfully search and download PDF invoices from Gmail
+AssertionError: expected 'Sikeresen letöltöttem 1 db PDF számlá…' to contain 'Downloaded 1 invoice(s)'    
+
+Expected: "Downloaded 1 invoice(s)"
+Received: "Sikeresen letöltöttem 1 db PDF számlát a Gmail fiókból."
+
+ ❯ test/FinanceGuardian_Gmail.test.ts:44:28
+     42|
+     43|     expect(result.success).toBe(true);
+     44|     expect(result.message).toContain('Downloaded 1 invoice(s)');
+       |                            ^
+     45|     expect((result.data as any)).toBeDefined();
+     46|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/140]⎯
+
+ FAIL  test/FinanceGuardian_Gmail.test.ts > FinanceGuardian - Gmail PDF Download > should handle no results from Gmail
+AssertionError: expected 'Nem találtam újabb PDF számlát a mega…' to contain 'No new PDF invoices found'  
+
+Expected: "No new PDF invoices found"
+Received: "Nem találtam újabb PDF számlát a megadott feltételek alapján."
+
+ ❯ test/FinanceGuardian_Gmail.test.ts:65:28
+     63|
+     64|     expect(result.success).toBe(true);
+     65|     expect(result.message).toContain('No new PDF invoices found');
+       |                            ^
+     66|     expect((result.data as any)).toEqual({ downloadedFiles: [] });
+     67|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/140]⎯
+
+ FAIL  test/FinanceGuardian_Sheets.test.ts > FinanceGuardian - Google Sheets Export > should successfully export invoice data to Google Sheets
+AssertionError: expected 'Számla (INV-002) sikeresen exportálva…' to contain 'exported to Google Sheet'   
+
+Expected: "exported to Google Sheet"
+Received: "Számla (INV-002) sikeresen exportálva a Google Sheets táblázatba."
+
+ ❯ test/FinanceGuardian_Sheets.test.ts:39:28
+     37|     }));
+     38|     expect(result.success).toBe(true);
+     39|     expect(result.message).toContain('exported to Google Sheet');
+       |                            ^
+     40|   });
+     41|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/140]⎯
+
+ FAIL  test/FinanceGuardian_Sheets.test.ts > FinanceGuardian - Google Sheets Export > should fail if spreadsheetId is missing
+AssertionError: expected 'Hiányzó Google Sheets ID.' to contain 'Google Sheets ID is missing'
+
+Expected: "Google Sheets ID is missing"
+Received: "Hiányzó Google Sheets ID."
+
+ ❯ test/FinanceGuardian_Sheets.test.ts:55:28
+     53|
+     54|     expect(result.success).toBe(false);
+     55|     expect(result.message).toContain('Google Sheets ID is missing');
+       |                            ^
+     56|
+     57|     // Restore
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/140]⎯
+
+ FAIL  test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should return error when problem is too short
+AssertionError: the given combination of arguments (undefined and string) is invalid for this assertion. You can use an array, a map, an object, a set, a string, or a weakset instead of a string
+ ❯ test/innovationBridgeAgent.test.ts:32:28
+     30|
+     31|     expect(result.status).toBe('error');
+     32|     expect(result.message).toContain('A probléma leírása túl rövid');
+       |                            ^
+     33|   });
+     34|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/140]⎯
+
+ FAIL  test/innovationBridgeAgent.test.ts > InnovationBridgeAgent > should generate markdown report       
+AssertionError: expected '# 🌉 Innovation Bridge Report\n\n**Ge…' to contain 'Stratégiai Jelentés'        
+
+- Expected
++ Received
+
+- Stratégiai Jelentés
++ # 🌉 Innovation Bridge Report
++
++ **Generated:** 2026. 02. 25. 14:54:36
++
++ ---
++
++ ## 📋 Original Problem
++
++ **Industry:** Healthcare
++
++ **Problem Statement:**
++ > How to reduce wait times?
++
++ ## 🎯 Abstract Challenge (TRIZ Analysis)
++
++ **General Engineering Challenge:**
++ > Optimize queue management
++
++ **Applicable TRIZ Principles:**
++ - **#1 Segmentation:** Divide object
++
++ **Search Keywords:** `queue`, `optimization`
++
++ ---
++
++ ## 💡 Cross-Industry Solutions (1 found)
++
++ ### 1. Fast Food Industry
++
++ **Confidence:** 80%
++ **Solution:**
++ Drive-thru parallel serving lanes
++
++ **Application to Your Problem:**
++ Create multiple check-in lanes
++
++ ---
++
++ ## ✅ Next Steps
++
++ 1. **Evaluate** each solution's feasibility in your context
++ 2. **Prototype** the most promising solution(s)
++ 3. **Adapt** the cross-industry innovation to your specific needs
++ 4. **Test** and iterate based on results
++
++ ---
++
++ *Generated by InnovationBridgeAgent | Brunella AI System*
++
+
+ ❯ test/innovationBridgeAgent.test.ts:141:20
+    139|     const report = (agent as any).generateReport(mockProblem, mockSolutions);
+    140|
+    141|     expect(report).toContain('Stratégiai Jelentés');
+       |                    ^
+    142|     expect(report).toContain('Eredeti Probléma');
+    143|     expect(report).toContain('Healthcare');
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/140]⎯
+
+ FAIL  test/marketIntelAgent.test.ts > MarketIntelAgent > Price Tracking > should track competitor prices 
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ test/marketIntelAgent.test.ts:29:5
+     27|
+     28|   describe('Price Tracking', () => {
+     29|     it('should track competitor prices', async () => {
+       |     ^
+     30|       const task = JSON.stringify({
+     31|         competitors: ['CompetitorA', 'CompetitorB'],
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/140]⎯
+
+ FAIL  test/SpecWriterAgent.test.ts > SpecWriterAgent v2.0 > Stage 1: Requirement Extraction > should handle JSON wrapped in markdown code blocks
+Error: Test timed out in 60000ms.
+If this is a long-running test, pass a timeout value as the last argument or configure it globally with "testTimeout".
+ ❯ test/SpecWriterAgent.test.ts:134:5
+    132|     });
+    133|
+    134|     it("should handle JSON wrapped in markdown code blocks", { timeout: 60000 }, async () => {   
+       |     ^
+    135|       const mockResponse =
+    136|         '```json\n{"title":"Test","description":"desc","priority":"P0","estimated_hours":2,"phas…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/140]⎯
+
+ FAIL  test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should successfully scrape, value, and store market data
+AssertionError: expected 'Piaci adatok sikeresen gyűjtve és ért…' to contain 'Market data successfully scraped and …'
+
+Expected: "Market data successfully scraped and evaluated."
+Received: "Piaci adatok sikeresen gyűjtve és értékelve. Ajánlás: BUY"
+
+ ❯ test/agents/MarketIntelAgent.test.ts:48:32
+     46|
+     47|         expect(result.success).toBe(true);
+     48|         expect(result.message).toContain('Market data successfully scraped and evaluated.');     
+       |                                ^
+     49|     });
+     50|
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/140]⎯
+
+ FAIL  test/agents/MarketIntelAgent.test.ts > MarketIntelAgent - Market Monitoring > should fail if URL or selectors are missing
+AssertionError: expected 'URL és selectorok megadása kötelező.' to contain 'URL and selectors are required for sc…'
+
+Expected: "URL and selectors are required for scraping."
+Received: "URL és selectorok megadása kötelező."
+
+ ❯ test/agents/MarketIntelAgent.test.ts:56:32
+     54|
+     55|         expect(result.success).toBe(false);
+     56|         expect(result.message).toContain('URL and selectors are required for scraping.');        
+       |                                ^
+     57|     });
+     58| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/140]⎯
+
+
+ Test Files  135 failed | 2 passed | 2 skipped (139)
+      Tests  13 failed | 54 passed | 39 skipped (106)
+   Start at  14:53:10
+   Duration  259.32s (transform 579ms, setup 207ms, import 7.01s, tests 225.17s, environment 18ms)        
+
+husky - pre-commit script failed (code 1)
+Everything up-to-date
+Process Group PGID: 23656

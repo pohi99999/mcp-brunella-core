@@ -1,0 +1,130 @@
+Output: [ExtensionManager] Error loading agent from apify-agent-skills: Failed to load agent from C:\Users\pohi9\.
+gemini\extensions\apify-agent-skills\agents\AGENTS.md: Invalid agent definition: Missing mandatory YAML fr
+ontmatter. Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., --
+-
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\backend-specialist.md: Invalid agent definition: Missing mandatory YAML frontm
+atter. Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---   
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\brainstormer.md: Invalid agent definition: Missing mandatory YAML frontmatter.
+ Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\coder.md: Invalid agent definition: Missing mandatory YAML frontmatter. Agent 
+Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\copywriter.md: Invalid agent definition: Missing mandatory YAML frontmatter. A
+gent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\database-admin.md: Invalid agent definition: Missing mandatory YAML frontmatte
+r. Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---       
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\debugger.md: Invalid agent definition: Missing mandatory YAML frontmatter. Age
+nt Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\devops-engineer.md: Invalid agent definition: Missing mandatory YAML frontmatt
+er. Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---      
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\docs-manager.md: Invalid agent definition: Missing mandatory YAML frontmatter.
+ Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\frontend-specialist.md: Invalid agent definition: Missing mandatory YAML front
+matter. Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---  
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\fullstack-developer.md: Invalid agent definition: Missing mandatory YAML front
+matter. Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---  
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\git-manager.md: Invalid agent definition: Missing mandatory YAML frontmatter. 
+Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\planner.md: Invalid agent definition: Missing mandatory YAML frontmatter. Agen
+t Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\project-manager.md: Invalid agent definition: Missing mandatory YAML frontmatt
+er. Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---      
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\researcher.md: Invalid agent definition: Missing mandatory YAML frontmatter. A
+gent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\reviewer.md: Invalid agent definition: Missing mandatory YAML frontmatter. Age
+nt Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\scout.md: Invalid agent definition: Missing mandatory YAML frontmatter. Agent 
+Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\security-auditor.md: Invalid agent definition: Missing mandatory YAML frontmat
+ter. Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---     
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\tester.md: Invalid agent definition: Missing mandatory YAML frontmatter. Agent
+ Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ExtensionManager] Error loading agent from gemini-kit: Failed to load agent from C:\Users\pohi9\.gemini\e
+xtensions\gemini-kit\agents\ui-designer.md: Invalid agent definition: Missing mandatory YAML frontmatter. 
+Agent Markdown files MUST start with YAML frontmatter enclosed in triple-dashes "---" (e.g., ---
+name: my-agent
+---).
+[ERROR] [ImportProcessor] Failed to import google/genai,: ENOENT: no such file or directory, access 'f:\mc
+p-brunella-core\_knowledge_base\google\genai,'
+[ERROR] [ImportProcessor] Failed to import modelcontextprotocol/sdk.: ENOENT: no such file or directory, a
+ccess 'f:\mcp-brunella-core\_knowledge_base\modelcontextprotocol\sdk.'
+[ERROR] [ImportProcessor] Failed to import tool: ENOENT: no such file or directory, access 'f:\mcp-brunell
+a-core\_knowledge_base\tool'
+[ERROR] [ImportProcessor] Failed to import tool: ENOENT: no such file or directory, access 'f:\mcp-brunell
+a-core\_knowledge_base\tool'
+[ERROR] [ImportProcessor] Failed to import tool-t,: ENOENT: no such file or directory, access 'f:\mcp-brun
+ella-core\_knowledge_base\tool-t,'
+[ERROR] [ImportProcessor] Failed to import tool: ENOENT: no such file or directory, access 'f:\mcp-brunell
+a-core\_knowledge_base\tool'
+[ERROR] [ImportProcessor] Failed to import path/to/your/file.txt: ENOENT: no such file or directory, acces
+s 'f:\mcp-brunella-core\_knowledge_base\path\to\your\file.txt'
+[ERROR] [ImportProcessor] Failed to import src/my_project/: ENOENT: no such file or directory, access 'f:\
+mcp-brunella-core\_knowledge_base\src\my_project'
+[ERROR] [ImportProcessor] Failed to import My\: ENOENT: no such file or directory, access 'f:\mcp-brunella
+-core\_knowledge_base\My'
+[ERROR] [ImportProcessor] Failed to import szimbólumot,: ENOENT: no such file or directory, access 'f:\mcp
+-brunella-core\_knowledge_base\szimbólumot,'
+[ERROR] [ImportProcessor] Failed to import Parancsok: ENOENT: no such file or directory, access 'f:\mcp-br
+unella-core\_knowledge_base\Parancsok'
+[ERROR] [ImportProcessor] Failed to import nem: ENOENT: no such file or directory, access 'f:\mcp-brunella
+-core\_knowledge_base\nem'
+[ERROR] [ImportProcessor] Failed to import CLI-ben).: ENOENT: no such file or directory, access 'f:\mcp-br
+unella-core\_knowledge_base\CLI-ben).'
+Loaded cached credentials.
+MCP server "apify" added to project settings. (http)
+Process Group PGID: 26588

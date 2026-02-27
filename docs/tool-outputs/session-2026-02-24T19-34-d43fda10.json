@@ -1,0 +1,28 @@
+{
+  "sessionId": "d43fda10-c170-4a49-98fa-f901d76ea08c",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-24T19:34:21.430Z",
+  "lastUpdated": "2026-02-24T19:35:04.664Z",
+  "messages": [
+    {
+      "id": "6e0df92e-c64e-41b2-becd-9bcb8d720f0a",
+      "timestamp": "2026-02-24T19:34:21.430Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "Your task is to answer the following question about Gemini CLI:\n<question>\nList every single tool name currently available to you, including MCP tools. Give me the exact names.\n</question>"
+        }
+      ]
+    },
+    {
+      "id": "8c4f5449-ecd9-45e6-89e8-4a2f075ce115",
+      "timestamp": "2026-02-24T19:35:04.664Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "You have exceeded the maximum number of turns. You have one final chance to complete the task with a short grace period. You MUST call `complete_task` immediately with your best answer and explain that your investigation was interrupted. Do not call any other tools."
+        }
+      ]
+    }
+  ]
+}

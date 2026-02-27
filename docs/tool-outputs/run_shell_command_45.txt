@@ -1,0 +1,15 @@
+Output: [WebServer] [ERROR] [GitHubWebhook] GITHUB_WEBHOOK_SECRET environment variable not set
+[WebServer] [WARN] [MCP] Could not load mcp_servers.json: ENOENT: no such file or directory, open 'F:\mcp-brunella-core\mcp_servers.json'       
+[WebServer] [WARN] [TrackStateManager] No meta.json in trojan-horse-campaign-20260224 (skipping)
+
+Running 1 test using 1 worker
+
+[WebServer] MCP Brunella Core Server running on stdio
+  ok 1 …Send message to Orchestrator should trigger backend task (13.6s)
+  Message sent via UI...
+[WebServer] [WARN] [ToolPermissions] Tool agent_delegate not in permission map - allowing by default
+[WebServer] [ERROR] [AgentManager] Task 2010 failed: Ügynök nem található: Orchestrator
+  ✅ SUCCESS: Task found in DB with ID: 2010, Status: error
+
+  1 passed (21.2s)
+Process Group PGID: 7804

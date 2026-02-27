@@ -1,0 +1,306 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 451-750 of 1680 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 750.
+
+--- FILE CONTENT (truncated) ---
+   */
+  private async executeAgentWithRetry(
+    agentName: string,
+    instruction: string,
+    context?: Record<string, unknown>,
+    retries = 2,
+    parentTraceContext?: TraceContext,
+    isFailover = false,
+  ): Promise<TaskResult> {
+    const executionStart = Date.now();
+    const cb = this.getCircuitBreaker(agentName);
+
+    this.socketService.broadcastChatter("System", `Ügynök indítása: ${agentName}`, agentName);
+
+    // RULE-OB1: Start trace span for this agent execution
+    const trace = traceAgentExecution(
+      agentName,
+      instruction,
+      parentTraceContext,
+    );
+
+    // RULE-AU1: Permission check before execution
+    const permCheck = checkToolPermission("agent_delegate", { agentName });
+    if (!permCheck.allowed) {
+      // RULE-AU2: DENIED → audit log + error return
+      await auditRecord(
+        "DENIED",
+        agentName,
+        "execute",
+        instruction.slice(0, 100),
+        permCheck.reason,
+      );
+      trace.end("error", `PERMISSION_DENIED: ${permCheck.reason}`);
+      return {
+        success: false,
+        message: `PERMISSION_DENIED: ${permCheck.reason}`,
+        data: null,
+        executedBy: agentName,
+      };
+    }
+    await auditRecord(
+      "ALLOWED",
+      agentName,
+      "execute",
+      instruction.slice(0, 100),
+    );
+
+    // Circuit Breaker ellenőrzése
+    if (cb.isOpen) {
+      const remaining = this.RESET_TIMEOUT - (Date.now() - cb.lastFailure);
+      if (remaining > 0) {
+        logError(
+          "AgentManager",
+          `Circuit Breaker NYITVA (${agentName}). Hátralévő idő: ${Math.round(remaining / 1000)}s`,
+        );
+        trace.end("error", `Circuit Breaker OPEN (${agentName})`);
+        return {
+          success: false,
+          message: `Ügynök ideiglenesen letiltva (Circuit Breaker): ${agentName}`,
+          data: null,
+        };
+      } else {
+        // Timeout lejárt, próbálkozunk (Half-open állapot szimulálva)
+        cb.isOpen = false;
+        cb.failures = 0;
+        logInfo("AgentManager", `Circuit Breaker VISSZAÁLLÍTVA (${agentName})`);
+      }
+    }
+
+    const agent = this.agents.get(agentName);
+    if (!agent) {
+      trace.end("error", `Agent not found: ${agentName}`);
+      return {
+        success: false,
+        message: `Ügynök nem található: ${agentName}`,
+        data: null,
+        executedBy: agentName,
+      };
+    }
+
+    const retryConfig: Partial<RetryConfig> = {
+      maxRetries: retries,
+      onRetry: (attempt, delay, error) => {
+        logInfo(
+          "AgentManager",
+          `Újrapróbálkozás (${agentName})... ${attempt}/${retries} — ${delay}ms várakozás`,
+        );
+        this.emit("gold:retry_attempt", {
+          taskId: instruction.slice(0, 50),
+          attempt,
+          delay,
+          agent: agentName,
+        });
+        cb.failures++;
+        cb.lastFailure = Date.now();
+        if (cb.failures >= this.FAILURE_THRESHOLD) {
+          cb.isOpen = true;
+          logError("AgentManager", `Circuit Breaker TRIPPED (${agentName})!`);
+          phoenixEventBus.publish('phoenix:circuit_breaker', {
+            agentName,
+            state: 'open',
+            previousState: 'closed',
+            failures: cb.failures,
+            timestamp: new Date().toISOString(),
+          });
+        }
+      },
+    };
+
+    try {
+      const result = await withRetry(
+        async () => {
+          // Circuit breaker check inside retry loop
+          if (cb.isOpen) {
+            throw new Error(`Circuit Breaker OPEN for ${agentName}`);
+          }
+
+          this.updateAgentRuntime(agentName, {
+            status: "working",
+            lastTask: instruction,
+            lastTaskAt: new Date().toISOString(),
+          });
+          setAgentStatus(agentName, "working", instruction);
+
+          // Task ID keresése a kontextusban vagy a sorban (ha van)
+          const taskId = (context as any)?.taskId || 0;
+          const controller = new AbortController();
+          if (taskId) this.activeExecutions.set(taskId, controller);
+
+          try {
+            const res = await agent.execute(instruction, { ...context, signal: controller.signal });
+
+            // Result normalizálás (status -> success mapping)
+            if (typeof res === "object" && res !== null) {
+              const resObj = res as Record<string, unknown>;
+              if (resObj["success"] === undefined) {
+                resObj["success"] =
+                  resObj["status"] === "success" || resObj["status"] === "ok";
+              }
+
+              // Format response as Hungarian human-readable text (if not already formatted)
+              if (!resObj["message"] || typeof resObj["message"] !== "string") {
+                const formatted = formatResponse(resObj, agentName, { useEmojis: true });
+                resObj["message"] = formatted;
+              }
+
+              return resObj as unknown as TaskResult;
+            } else {
+              // Format simple response
+              const formatted = formatResponse(res, agentName, { useEmojis: true });
+              return {
+                success: true,
+                data: res,
+                message: formatted,
+              } as TaskResult;
+            }
+          } finally {
+            if (taskId) this.activeExecutions.delete(taskId);
+          }
+        },
+        `${agentName}:execute`,
+        retryConfig,
+      );
+
+      // Success — reset circuit breaker & update runtime
+      cb.failures = 0;
+      cb.isOpen = false;
+
+      const runtime = this.ensureAgentRuntime(agentName);
+      this.updateAgentRuntime(agentName, {
+        status: "idle",
+        lastTaskAt: new Date().toISOString(),
+        successCount: runtime.successCount + 1,
+      });
+      setAgentStatus(agentName, "idle", instruction);
+      this.socketService.broadcastChatter(agentName, `Feladat sikeresen elvégezve: ${instruction.slice(0, 50)}...`, "System");
+
+      // RULE-PH1: checkpoint on success
+      await saveCheckpoint(
+        instruction.slice(0, 100),
+        0,
+        `${agentName}:success`,
+        {
+          agent: agentName,
+          resultPreview: JSON.stringify(result).slice(0, 500),
+        },
+      ).catch(() => {
+        /* non-critical */
+      });
+
+      // RULE-GD1: Auto-save golden sample on success
+      await autoSaveGoldenSample(agentName, instruction, result).catch(() => {
+        /* non-critical */
+      });
+
+      // RULE-OB1: End trace span on success
+      trace.end("success");
+      recordAgentExecution(agentName, "success", Date.now() - executionStart);
+
+      return result;
+    } catch (lastError: any) {
+      logError(
+        "AgentManager",
+        `Végrehajtási hiba több próbálkozás után (${agentName}): ${lastError?.message || "Ismeretlen hiba"}`,
+      );
+
+      // RULE-PH4: Git auto-checkpoint after all retries exhausted
+      await gitAutoCheckpoint(
+        agentName,
+        lastError?.message || "Unknown error",
+      ).catch((e: any) =>
+        logError("AgentManager", `Git recovery failed: ${e.message}`),
+      );
+      logRecoveryEvent(
+        "crash",
+        agentName,
+        lastError?.message || "All retries exhausted",
+      );
+
+      // RULE-OB1: End trace span on error
+      trace.end("error", lastError?.message || "All retries exhausted");
+      recordAgentExecution(agentName, "error", Date.now() - executionStart);
+
+      const runtime = this.ensureAgentRuntime(agentName);
+      this.updateAgentRuntime(agentName, {
+        status: "error",
+        lastTaskAt: new Date().toISOString(),
+        errorCount: runtime.errorCount + 1,
+      });
+      setAgentStatus(agentName, "error", instruction);
+      this.socketService.broadcastChatter(agentName, `⚠️ HIBA a végrehajtás során: ${lastError?.message || "Ismeretlen hiba"}`, "System");
+
+      // ================================================================
+      // PHOENIX PROTOCOL SZINT 4: Cross-Agent Failover
+      // ================================================================
+      phoenixEventBus.publish('phoenix:agent_failed', {
+        agentName,
+        taskInstruction: instruction,
+        taskContext: context,
+        error: lastError?.message || 'Unknown error',
+        retriesExhausted: retries,
+        timestamp: new Date().toISOString(),
+      });
+
+      // Attempt cross-agent failover (only if not already a failover attempt)
+      if (!isFailover) {
+        const fallbacks = failoverRegistry.getFallbacks(agentName);
+        for (let i = 0; i < fallbacks.length; i++) {
+          const fallbackAgent = fallbacks[i];
+          if (!this.agents.has(fallbackAgent)) continue;
+
+          const fallbackCb = this.getCircuitBreaker(fallbackAgent);
+          if (fallbackCb.isOpen) continue;
+
+          phoenixEventBus.publish('phoenix:failover_triggered', {
+            originalAgent: agentName,
+            fallbackAgent,
+            taskInstruction: instruction,
+            attempt: i + 1,
+            timestamp: new Date().toISOString(),
+          });
+
+          logInfo('AgentManager', `Phoenix Failover: ${agentName} → ${fallbackAgent} (attempt ${i + 1}/${fallbacks.length})`);
+          this.socketService.broadcastChatter(agentName, `🔄 Phoenix Failover aktiválva: ${agentName} → ${fallbackAgent}`, fallbackAgent);
+          const failoverStart = Date.now();
+
+          try {
+            const failoverResult = await this.executeAgentWithRetry(
+              fallbackAgent, instruction, context, 1, parentTraceContext, true,
+            );
+
+            const foSuccess = failoverResult.success;
+            phoenixEventBus.publish('phoenix:failover_result', {
+              originalAgent: agentName,
+              fallbackAgent,
+              taskInstruction: instruction,
+              success: foSuccess,
+              error: foSuccess ? undefined : failoverResult.message,
+              executionTimeMs: Date.now() - failoverStart,
+              timestamp: new Date().toISOString(),
+            });
+            failoverRegistry.recordAttempt({
+              primaryAgent: agentName,
+              fallbackAgent,
+              taskInstruction: instruction,
+              success: foSuccess,
+              error: foSuccess ? undefined : failoverResult.message,
+              attemptIndex: i,
+              timestamp: new Date().toISOString(),
+            });
+
+            if (foSuccess) {
+              logInfo('AgentManager', `Phoenix Failover SUCCEEDED: ${agentName} → ${fallbackAgent}`);
+              logRecoveryEvent('failover', agentName, `Failover to ${fallbackAgent} succeeded`);
+              return { ...failoverResult, executedBy: `${fallbackAgent} (failover from ${agentName})` };
+            }
+          } catch (foErr: any) {
+            phoenixEventBus.publish('phoenix:failover_result', {
+              originalAgent: agentName,
+              fallbackAgent,

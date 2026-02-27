@@ -1,0 +1,14 @@
+Output: (node:36480) [MODULE_TYPELESS_PACKAGE_JSON] Warning: Module type of file:///C:/Users/pohi9/.gemini/extensi
+ons/apify-agent-skills/skills/apify-lead-generation/reference/scripts/run_actor.js is not specified and it
+ doesn't parse as CommonJS.
+Reparsing as ES module because module syntax was detected. This incurs a performance overhead.
+To eliminate this warning, add "type": "module" to C:\Users\pohi9\package.json.
+(Use `node --trace-warnings ...` to show where the warning was created)
+Starting actor: compass/crawler-google-places
+Run ID: BG7SgfpKNo4LKinJx
+Dataset ID: YVRr0zsTNRidKMZdN
+Status: RUNNING
+Status: FAILED
+Error: Actor run FAILED
+Details: https://console.apify.com/actors/runs/BG7SgfpKNo4LKinJx
+Process Group PGID: 34452

@@ -1,0 +1,9 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\conductor\tracks
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 24.     19:40                trojan-horse-campaign-20260224
+Process Group PGID: 2264

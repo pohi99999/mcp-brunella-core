@@ -1,0 +1,27 @@
+Web search results for "marketing ügynökség Budapest kisvállalati fókusz":
+
+A felhasználó marketing ügynökségeket keres Budapesten, kisvállalati fókusszal. Ehhez a `google_search.search` eszközt fogom használni.
+
+A keresési eredmények alapján több budapesti marketing ügynökség is foglalkozik kisvállalatokkal (KKV-kkal):
+
+*   **Online Ügynökség**: Rendszerszintű online marketingstratégiát kínálnak KKV-k és középvállalatok számára, 2016 óta dolgoznak a digitális jelenlétük építésén. Tapasztalatuk van magyar cégekkel, kereskedőkkel és szolgáltatókkal, és Google Partner minősítéssel rendelkeznek.[1]
+*   **SOLID Agency**: Stratégiai partnerként támogatják a hazai KKV-kat az összetett márka- és üzleti kihívások megoldásában. Budapesti stratégiai és kreatív full-service marketing ügynökségként adat- és tényalapú megközelítéssel dolgoznak.[2]
+*   **BDA**: Kifejezetten kisvállalatokra specializálódott digitális ügynökség, amely képes összefogni a vállalkozások online jelenlétének minden elemét. Többéves ügynökségi tapasztalatuk során világossá vált számukra, hogy a kisvállalatokkal szeretnek a leginkább együttműködni.[3]
+*   **WOIMS Marketing Ügynökség**: Megtervezik és felépítik a vállalat marketing rendszerét, megvizsgálják a termékeket és szolgáltatásokat, és kidolgozzák a hatékony marketing eszközöket a vállalati célok eléréséhez.[4]
+*   **Marketing21 Online Marketing Ügynökség**: Székhelyük Budapesten található, és full-service marketing ügynökségként lefedik az online marketing minden igényét, beleértve a PPC, SEO, AIO, webfejlesztés és social média területeket.[5]
+*   **DLX MEDIA**: KKV vezetőknek kínálnak szolgáltatásokat, mint például szövegírás, hírlevél, videó- és podcast készítés, közösségi média kezelés és e-mail marketing.[6][7]
+*   **Chiro Marketing**: Adatvezérelt és hatékony online marketing megoldásokat kínálnak, és ügyfélvélemények alapján rugalmasan és profin reagálnak a kérésekre.[8]
+*   **Meraki Marketing**: Digitális marketing ügynökség, amelynek szolgáltatásai között szerepel a weboldalkészítés, keresőoptimalizálás, videomarketing és arculattervezés.[9]
+
+Ezek az ügynökségek különböző szolgáltatásokat kínálnak, de mindegyik hangsúlyozza a kis- és középvállalkozásokkal való együttműködést.
+
+Sources:
+[1] onlineugynokseg.hu (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFY6HTGOKAckXbkJWKE31yGcNWtlIHuR1hc51yTCxwKFJbM9J5E2XUrLLAPkBcs-hjP_kJH5u6YpSFRm85kbD-YJw2Pkhdkxzw9ZeKRd0clmApmMqwi-g==)
+[2] solidagency.hu (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH3pHZ9im7qo5uzTyII8iJevRWF-qAIK1f1rGJtswNuWJi3B5iMm2RfF8FTXQRCQ-3aKShkrPKoc6D--0aYmZYLiZjQMX4MnxDr5zSHIiDHDLyh)
+[3] bda.hu (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQHka5ugID9wGQjeWk9uUcIVlqtJY9ZSLhj8QURQ6m_TdgPyjc96Gza2wirQtuJhmgllO9y8_SE9r9nqVzmPNPKL2qCcFL2xPwXWp5ID_Q0=)
+[4] ertekesitesfejlesztes.hu (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQGoXsc2j2lAvjtYxFUKk-FLnFja4BJ7IFpv6x-rbBoMWx4iY_1crmj7Un2-OSpiHb1IhTe1FzvzZJ8oBAyAhYy-Gm-B59ufS7c5qK1lRKqtGswn7Ox-ueb4Mf96urnzviICextSTlXdehvKLfDajrmLMpXyJvsM)
+[5] marketing21.hu (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQH-ZGe8Id5HKBVt_4AHtT4XhMEEaCMfWRp-W0Lry6C-kMKbqf1RzZH5dCn1_PvdwAxgQ8JPV7YMMW8sVEjP9BRwOcGLLILgu_X5bIipK6U5QYh3)
+[6] dlxmedia.hu (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF4jPf6P8ui5aea2sL7XbWTzuLAWR8q_HVFZjWaqTXWgke3Sh6J0ZfAaR3U8mOD0Bpy6jml72zJ1sg2Cq0mN3YbajYP6sp-Fz_Wkt_SHZWNE_Ya2NIUw8Fh1-g777qyhYQ7rHSNyO8xr9EOF1I=)
+[7] dlxmedia.hu (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQEfKCZgAl2lZisW1Z_liahrBO49ME_-cAVAnGpEt9IpZjyK3neTliKN7vhXImIjWU0_BsRgG2ZL1OinwYGAlN--oJ88lGY5fgYkkAJXQdBI)
+[8] chiro.hu (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQF66eL6RFN0hwyO091fqySM2ApYRBYdiW1suc4FvP5IEQXv8RQSxydXihzUAi3pqX6dOLVlwPLXnpCHeCbb04Nr4GeTuUUdXsTq9Iz2)
+[9] meraki.hu (https://vertexaisearch.cloud.google.com/grounding-api-redirect/AUZIYQFghKFUaecqmI93FRi1PLFbzmyyADqzKNIXE2Bl74beIITqghzctCAySB_z8yXO1Y5fCFy3y5Z5iqm70MFwQ0KEV-uarN-Y-D6D7Nt_NQ==)

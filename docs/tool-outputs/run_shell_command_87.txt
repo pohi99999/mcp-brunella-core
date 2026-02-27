@@ -1,0 +1,14 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 22.      8:26            317 .eslintrc.json
+-a----     2026. 02. 22.      8:26            423 .mcp.json
+-a----     2026. 02. 24.      0:39        1053219 package-lock.json
+-a----     2026. 02. 24.      0:39           7741 package.json
+-a----     2026. 02. 22.      8:26            451 tsconfig.json
+-a----     2026. 01. 22.     17:04            761 tsconfig.ui.json
+Process Group PGID: 44196

@@ -1,0 +1,267 @@
+Output: 
+ RUN  v4.0.18 F:/mcp-brunella-core
+
+
+ ❯ test/workerThreadPool.test.ts [queued]
+
+ Test Files 0 passed (2)
+      Tests 0 passed (0)
+   Start at 22:51:15
+ ❯ test/workerThreadPool.test.ts (0 test)
+
+ ❯ test/unifiedWorkspace.test.ts [queued]
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 0 passed (0)
+   Start at 22:51:15
+
+ ❯ test/unifiedWorkspace.test.ts 0/26
+
+ Test Files 1 failed | 0 passed (2)
+      Tests 0 passed (26)
+   Start at 22:51:15
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should initialize with default scopes
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should initialize with default scopes
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should load credentials from config directory
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should load credentials from config directory
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should throw error if credentials file is missing
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should throw error if credentials file is missing
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should retrieve email attachments
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should retrieve email attachments
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should return empty array if no attachments found
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should return empty array if no attachments found
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should read data from a spreadsheet
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should read data from a spreadsheet
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should append data to a spreadsheet
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should append data to a spreadsheet
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should update data in a spreadsheet
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should update data in a spreadsheet
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should throw error for unknown sheet operation
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should throw error for unknown sheet operation
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Spreadsheet Creation > should create a new spreadsheet
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Spreadsheet Creation > should create a new spreadsheet
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload a file to Google Drive
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload a file to Google Drive
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload file to specific folder
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload file to specific folder
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should throw error if localPath is missing
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should throw error if localPath is missing
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should list files in Drive
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should list files in Drive
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should list files in specific folder
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should list files in specific folder
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should handle Drive API errors gracefully
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should handle Drive API errors gracefully
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should return singleton instance on subsequent calls
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should return singleton instance on subsequent calls
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+stdout | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should reset singleton on resetWorkspaceClient()
+[INFO] [UnifiedWorkspace] Initializing Google Workspace authentication via utility...
+
+stderr | test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should reset singleton on resetWorkspaceClient()
+[ERROR] [UnifiedWorkspace] Failed to initialize: Cannot read properties of undefined (reading '0')
+
+ ❯ test/unifiedWorkspace.test.ts (26 tests | 26 failed) 34ms
+       × should initialize with default scopes 9ms      
+       × should load credentials from config directory 1ms
+       × should throw error if credentials file is missing 1ms
+       × should create an email draft with required fields 1ms
+       × should create an email draft with attachments (placeholder) 2ms
+       × should throw error if Gmail client not initialized 1ms
+       × should search emails by query 1ms
+       × should return empty array if no emails match query 1ms
+       × should handle Gmail API errors gracefully 1ms  
+       × should retrieve email attachments 1ms
+       × should return empty array if no attachments found 1ms
+       × should read data from a spreadsheet 1ms        
+       × should append data to a spreadsheet 1ms        
+       × should update data in a spreadsheet 1ms        
+       × should throw error for unknown sheet operation 1ms
+       × should create a new spreadsheet 1ms
+       × should upload a file to Google Drive 1ms       
+       × should upload file to specific folder 1ms      
+       × should throw error if localPath is missing 1ms 
+       × should list files in Drive 1ms
+       × should list files in specific folder 1ms       
+       × should handle Drive API errors gracefully 1ms  
+       × should create a calendar event 1ms
+       × should create event in specific calendar 1ms   
+       × should return singleton instance on subsequent calls 1ms
+       × should reset singleton on resetWorkspaceClient() 1ms
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/workerThreadPool.test.ts [ test/workerThreadPool.test.ts ]
+ReferenceError: Cannot access '__vi_import_2__' before initialization
+ ❯ test/workerThreadPool.test.ts:2:22
+      1| /**
+      2|  * workerThreadPool.test.ts - Unit tests for W…
+       |                      ^
+      3|  *
+      4|  * Tests pool initialization, task execution, …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/27]⎯
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯ Failed Tests 26 ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should initialize with default scopes
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should load credentials from config directory
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Initialization > should throw error if credentials file is missing
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with required fields
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should create an email draft with attachments (placeholder)
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Draft Creation > should throw error if Gmail client not initialized
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should search emails by query
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should return empty array if no emails match query
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Search > should handle Gmail API errors gracefully
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should retrieve email attachments
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Gmail - Email Attachments > should return empty array if no attachments found
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should read data from a spreadsheet
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should append data to a spreadsheet
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should update data in a spreadsheet
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Sheet Operations > should throw error for unknown sheet operation
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Sheets - Spreadsheet Creation > should create a new spreadsheet
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload a file to Google Drive
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should upload file to specific folder
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Upload > should throw error if localPath is missing
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should list files in Drive
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should list files in specific folder
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Drive - File Listing > should handle Drive API errors gracefully
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create a calendar event
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Google Calendar - Event Creation > should create event in specific calendar
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should return singleton instance on subsequent calls
+ FAIL  test/unifiedWorkspace.test.ts > UnifiedWorkspaceClient > Factory Function > should reset singleton on resetWorkspaceClient()
+Error: Google Workspace init failed: Cannot read properties of undefined (reading '0')
+ ❯ UnifiedWorkspaceClient.initialize src/tools/unifiedWorkspace.ts:89:13
+     87|       const errorMsg = error instanceof Error …
+     88|       logError('UnifiedWorkspace', `Failed to …
+     89|       throw new Error(`Google Workspace init f…
+       |             ^
+     90|     }
+     91|   }
+ ❯ test/unifiedWorkspace.test.ts:181:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/27]⎯
+
+
+ Test Files  2 failed (2)
+      Tests  26 failed (26)
+   Start at  22:51:15
+   Duration  643ms (transform 128ms, setup 56ms, import 103ms, tests 34ms, environment 0ms)
+Exit Code: 1
+Process Group PGID: 45060

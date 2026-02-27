@@ -1,0 +1,2 @@
+Found 1 file(s) matching "src/agents/MarketIntel*" across 2 workspace directories, sorted by modification time (newest first):
+F:\mcp-brunella-core\src\agents\MarketIntelAgent.ts

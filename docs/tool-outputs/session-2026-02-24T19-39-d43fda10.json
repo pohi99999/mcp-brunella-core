@@ -1,0 +1,28 @@
+{
+  "sessionId": "d43fda10-c170-4a49-98fa-f901d76ea08c",
+  "projectHash": "23574e1e7692630f183345a01b778c04282066fea95691f8e931bed6ceca618f",
+  "startTime": "2026-02-24T19:39:48.859Z",
+  "lastUpdated": "2026-02-24T19:40:50.209Z",
+  "messages": [
+    {
+      "id": "3baeeb5d-ca95-4bca-91d4-90e9d7f6d43e",
+      "timestamp": "2026-02-24T19:39:48.859Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "Your task is to answer the following question about Gemini CLI:\n<question>\nHow to create a Google Sheet using the google-workspace extension? What is the exact tool name?\n</question>"
+        }
+      ]
+    },
+    {
+      "id": "c2805cae-87f3-4668-b25d-69e4f8b140f7",
+      "timestamp": "2026-02-24T19:40:50.209Z",
+      "type": "user",
+      "content": [
+        {
+          "text": "You have exceeded the maximum number of turns. You have one final chance to complete the task with a short grace period. You MUST call `complete_task` immediately with your best answer and explain that your investigation was interrupted. Do not call any other tools."
+        }
+      ]
+    }
+  ]
+}

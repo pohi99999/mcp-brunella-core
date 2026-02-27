@@ -1,0 +1,10 @@
+Output: At C:\Users\pohi9\.gemini\tmp\mcp-brunella-core\run_apify_temp.ps1:2 char:19
++ ... Json = "{ \"searchTerms\": [\"fogorvos\"], \"locationQuery\": \"Budap ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Unexpected token 'searchTerms\": [\"fogorvos\"], \"locationQuery\": \"Budapest\", \"maxCrawledPlacesPerSe 
+arch\": 50, \"language\": \"hu\", \"scrapeContacts\": true, \"website\": \"withWebsite\" }"' in expressio 
+n or statement.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : UnexpectedToken
+Exit Code: 1
+Process Group PGID: 31776

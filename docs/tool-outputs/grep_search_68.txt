@@ -1,0 +1,128 @@
+Found 100 matches for pattern "Scheduler" in path "F:\mcp-brunella-core" (results limited to 100 matches for performance):
+---
+File: _KNOWLEDGE_BASE\packages\a2a-server\src\agent\task.ts
+L8:   CoreToolScheduler,
+L60:   scheduler: CoreToolScheduler;
+L86:     this.scheduler = this.createScheduler();
+L287:   private _schedulerOutputUpdate(
+L301:       '[Task] Scheduler output update for tool call ' +
+L326:   private async _schedulerAllToolCallsComplete(
+L330:       '[Task] All tool calls completed by scheduler (batch):',
+L339:   private _schedulerToolCallsUpdate(toolCalls: ToolCall[]): void {
+L341:       '[Task] Scheduler tool calls updated:',
+L427:   private createScheduler(): CoreToolScheduler {
+L428:     const scheduler = new CoreToolScheduler({
+L429:       outputUpdateHandler: this._schedulerOutputUpdate.bind(this),
+L430:       onAllToolCallsComplete: this._schedulerAllToolCallsComplete.bind(this),
+L431:       onToolCallsUpdate: this._schedulerToolCallsUpdate.bind(this),
+L436:     return scheduler;
+L564:     await this.scheduler.schedule(updatedRequests, abortSignal);
+L601:         // This will be handled by the scheduler and _schedulerToolCallsUpdate will set InputRequired if needed.
+L602:         // No direct state change here, scheduler drives it.
+L707:         // This will trigger the scheduler to continue or cancel the specific tool.
+L708:         // The scheduler's onToolCallsUpdate will then reflect the new state (e.g., executing or cancelled).
+L738:       // If outcome is Cancel, scheduler should update status to 'cancelled', which then resolves the tool.
+L739:       // If ProceedOnce, scheduler updates to 'executing', then eventually 'success'/'error', which resolves.
+L849:         // If a confirmation was handled, the scheduler will now run the tool (or cancel it).
+L876:         '[Task] User message only contained tool confirmations. Scheduler is active. No new input for LLM this turn.',
+L878:       // Ensure task state reflects that scheduler might be working due to confirmation.
+L879:       // If scheduler is active, it will emit its own status updates.
+L881:       // If some tools are still pending approval, scheduler would have set InputRequired.
+---
+File: _KNOWLEDGE_BASE\packages\core\src\tools\mcp-tool.test.ts
+L291:       // 1. Assert that the llmContent sent to the scheduler is a clean Part array.
+---
+File: _KNOWLEDGE_BASE\packages\core\src\telemetry\uiTelemetry.test.ts
+L21: } from '../core/coreToolScheduler.js';
+---
+File: _KNOWLEDGE_BASE\packages\core\src\telemetry\types.ts
+L10: import type { CompletedToolCall } from '../core/coreToolScheduler.js';
+---
+File: _KNOWLEDGE_BASE\packages\core\src\telemetry\loggers.test.circular.ts
+L15: import type { CompletedToolCall } from '../core/coreToolScheduler.js';
+---
+File: _KNOWLEDGE_BASE\packages\core\src\tools\mcp-tool.ts
+L285:  * @returns A clean Part[] array ready for the scheduler.
+---
+File: _KNOWLEDGE_BASE\packages\core\src\services\chatRecordingService.ts
+L8: import { type Status } from '../core/coreToolScheduler.js';
+---
+File: _KNOWLEDGE_BASE\packages\core\src\index.ts
+L24: export * from './core/coreToolScheduler.js';
+---
+File: _KNOWLEDGE_BASE\packages\core\src\core\coreToolScheduler.ts
+L320: interface CoreToolSchedulerOptions {
+L329: export class CoreToolScheduler {
+L347:   constructor(options: CoreToolSchedulerOptions) {
+L975:         // things like `onPid` and `onLiveOutput`. This will make the scheduler
+---
+File: _KNOWLEDGE_BASE\packages\core\src\core\coreToolScheduler.test.ts
+L9: import type { ToolCall, WaitingToolCall } from './coreToolScheduler.js';
+L11:   CoreToolScheduler,
+L14: } from './coreToolScheduler.js';
+L147: describe('CoreToolScheduler', () => {
+L195:     const scheduler = new CoreToolScheduler({
+L213:     await scheduler.schedule([request], abortController.signal);
+L234:       // Create scheduler
+L235:       const scheduler = new CoreToolScheduler({
+L243:       const misspelledTool = scheduler.getToolSuggestion('list_fils', 1);
+L248:       const prefixedTool = scheduler.getToolSuggestion('github.list_files', 1);
+L253:       const suggestionMultiple = scheduler.getToolSuggestion('list_fils');
+L261: describe('CoreToolScheduler with payload', () => {
+L308:     const scheduler = new CoreToolScheduler({
+L325:     await scheduler.schedule([request], abortController.signal);
+L585: describe('CoreToolScheduler edit cancellation', () => {
+L628:     const scheduler = new CoreToolScheduler({
+L645:     await scheduler.schedule([request], abortController.signal);
+L675: describe('CoreToolScheduler YOLO mode', () => {
+L705:     // Configure the scheduler for YOLO mode.
+L732:     const scheduler = new CoreToolScheduler({
+L750:     await scheduler.schedule([request], abortController.signal);
+L785: describe('CoreToolScheduler request queueing', () => {
+L839:     const scheduler = new CoreToolScheduler({
+L864:     scheduler.schedule([request1], abortController.signal);
+L870:     const schedulePromise2 = scheduler.schedule(
+L941:     // Configure the scheduler to auto-approve the specific tool call.
+L970:     const scheduler = new CoreToolScheduler({
+L988:     await scheduler.schedule([request], abortController.signal);
+L1068:     const scheduler = new CoreToolScheduler({
+L1093:     const schedulePromise1 = scheduler.schedule(
+L1097:     const schedulePromise2 = scheduler.schedule(
+L1170:     const scheduler = new CoreToolScheduler({
+L1223:     await scheduler.schedule(requests, abortController.signal);
+---
+File: _KNOWLEDGE_BASE\packages\core\src\core\nonInteractiveToolExecutor.ts
+L12: import { CoreToolScheduler } from './coreToolScheduler.js';
+L15:  * Executes a single tool call non-interactively by leveraging the CoreToolScheduler.
+L23:     new CoreToolScheduler({
+---
+File: _KNOWLEDGE_BASE\packages\cli\src\ui\hooks\useGeminiStream.test.tsx
+L20: } from './useReactToolScheduler.js';
+L21: import { useReactToolScheduler } from './useReactToolScheduler.js';
+L80: const mockUseReactToolScheduler = useReactToolScheduler as Mock;
+L81: vi.mock('./useReactToolScheduler.js', async (importOriginal) => {
+L82:   const actualSchedulerModule = (await importOriginal()) as any;
+L84:     ...(actualSchedulerModule || {}),
+L85:     useReactToolScheduler: vi.fn(),
+L218:     // Mock return value for useReactToolScheduler
+L223:     // Default mock for useReactToolScheduler to prevent toolCalls being undefined initially
+L224:     mockUseReactToolScheduler.mockReturnValue([
+L260:     mockUseReactToolScheduler.mockImplementation(() => [
+L446:     mockUseReactToolScheduler.mockImplementation((onComplete) => {
+L529:     mockUseReactToolScheduler.mockImplementation((onComplete) => {
+L641:     mockUseReactToolScheduler.mockImplementation((onComplete) => {
+L750:     mockUseReactToolScheduler.mockImplementation((onComplete) => {
+L787:     mockUseReactToolScheduler.mockImplementation((onComplete) => {
+L1243:       mockUseReactToolScheduler.mockImplementation((onComplete) => {
+L2220:       mockUseReactToolScheduler.mockReturnValue([
+L2272:       mockUseReactToolScheduler.mockReturnValue([
+---
+File: _KNOWLEDGE_BASE\packages\cli\src\ui\hooks\useGeminiStream.ts
+L53:   useReactToolScheduler,
+L59: } from './useReactToolScheduler.js';
+L128:     useReactToolScheduler(
+L129:       async (completedToolCallsFromScheduler) => {
+L131:         if (completedToolCallsFromScheduler.length > 0) {
+L135:               completedToolCallsFromScheduler as TrackedToolCall[],
+L142:             completedToolCallsFromScheduler as TrackedToolCall[],
+---

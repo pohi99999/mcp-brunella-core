@@ -1,0 +1,178 @@
+Output: 
+> mcp-brunella-core@1.0.0 build
+> tsc
+
+src/cli/dashboardCommands.test.ts:6:1 - error TS2593: Cannot find name 'describe'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+
+6 describe('dashboardCommand', () => {
+  ~~~~~~~~
+
+src/cli/dashboardCommands.test.ts:8:19 - error TS2503: Cannot find namespace 'vi'.
+
+8   let logInfoSpy: vi.SpiedFunction<typeof logger.logInfo>;
+                    ~~
+
+src/cli/dashboardCommands.test.ts:9:20 - error TS2503: Cannot find namespace 'vi'.
+
+9   let logErrorSpy: vi.SpiedFunction<typeof logger.logError>;
+                     ~~
+
+src/cli/dashboardCommands.test.ts:10:19 - error TS2503: Cannot find namespace 'vi'.
+
+10   let consoleSpy: vi.SpiedFunction<typeof console.log>;
+                     ~~
+
+src/cli/dashboardCommands.test.ts:12:3 - error TS2304: Cannot find name 'beforeEach'.
+
+12   beforeEach(() => {
+     ~~~~~~~~~~
+
+src/cli/dashboardCommands.test.ts:15:18 - error TS2304: Cannot find name 'vi'.
+
+15     logInfoSpy = vi.spyOn(logger, 'logInfo').mockImplementation(() => {});
+                    ~~
+
+src/cli/dashboardCommands.test.ts:16:19 - error TS2304: Cannot find name 'vi'.
+
+16     logErrorSpy = vi.spyOn(logger, 'logError').mockImplementation(() => {});
+                     ~~
+
+src/cli/dashboardCommands.test.ts:17:18 - error TS2304: Cannot find name 'vi'.
+
+17     consoleSpy = vi.spyOn(console, 'log').mockImplementation(() => {});
+                    ~~
+
+src/cli/dashboardCommands.test.ts:18:5 - error TS2304: Cannot find name 'vi'.
+
+18     vi.spyOn(process, 'exit').mockImplementation(() => { throw new Error('process.exit'); });
+       ~~
+
+src/cli/dashboardCommands.test.ts:21:3 - error TS2304: Cannot find name 'afterEach'.
+
+21   afterEach(() => {
+     ~~~~~~~~~
+
+src/cli/dashboardCommands.test.ts:22:5 - error TS2304: Cannot find name 'vi'.
+
+22     vi.restoreAllMocks();
+       ~~
+
+src/cli/dashboardCommands.test.ts:25:3 - error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+
+25   it('should display dashboard status successfully', async () => {
+     ~~
+
+src/cli/dashboardCommands.test.ts:39:5 - error TS2304: Cannot find name 'vi'.
+
+39     vi.spyOn(apiService, 'fetchWithTimeout').mockResolvedValueOnce({
+       ~~
+
+src/cli/dashboardCommands.test.ts:46:5 - error TS2304: Cannot find name 'expect'.
+
+46     expect(logInfoSpy).toHaveBeenCalledWith('CLI', 'Lekérdezem a Dashboard állapotát...');
+       ~~~~~~
+
+src/cli/dashboardCommands.test.ts:47:5 - error TS2304: Cannot find name 'expect'.
+
+47     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Összesített állapot: HEALTHY'));  
+       ~~~~~~
+
+src/cli/dashboardCommands.test.ts:47:45 - error TS2304: Cannot find name 'expect'.
+
+47     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Összesített állapot: HEALTHY'));  
+                                               ~~~~~~
+
+src/cli/dashboardCommands.test.ts:48:5 - error TS2304: Cannot find name 'expect'.
+
+48     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Backend Health: HEALTHY'));       
+       ~~~~~~
+
+src/cli/dashboardCommands.test.ts:48:45 - error TS2304: Cannot find name 'expect'.
+
+48     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Backend Health: HEALTHY'));       
+                                               ~~~~~~
+
+src/cli/dashboardCommands.test.ts:49:5 - error TS2304: Cannot find name 'expect'.
+
+49     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('AgentA: idle'));
+       ~~~~~~
+
+src/cli/dashboardCommands.test.ts:49:45 - error TS2304: Cannot find name 'expect'.
+
+49     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('AgentA: idle'));
+                                               ~~~~~~
+
+src/cli/dashboardCommands.test.ts:50:5 - error TS2304: Cannot find name 'expect'.
+
+50     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('MCP1: CONNECTED'));
+       ~~~~~~
+
+src/cli/dashboardCommands.test.ts:50:45 - error TS2304: Cannot find name 'expect'.
+
+50     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('MCP1: CONNECTED'));
+                                               ~~~~~~
+
+src/cli/dashboardCommands.test.ts:51:5 - error TS2304: Cannot find name 'expect'.
+
+51     expect(logErrorSpy).not.toHaveBeenCalled();
+       ~~~~~~
+
+src/cli/dashboardCommands.test.ts:54:3 - error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+
+54   it('should handle API errors gracefully', async () => {
+     ~~
+
+src/cli/dashboardCommands.test.ts:55:5 - error TS2304: Cannot find name 'vi'.
+
+55     vi.spyOn(apiService, 'fetchWithTimeout').mockRejectedValueOnce(new Error('Network error'));        
+       ~~
+
+src/cli/dashboardCommands.test.ts:59:5 - error TS2304: Cannot find name 'expect'.
+
+59     expect(logInfoSpy).toHaveBeenCalledWith('CLI', 'Lekérdezem a Dashboard állapotát...');
+       ~~~~~~
+
+src/cli/dashboardCommands.test.ts:60:5 - error TS2304: Cannot find name 'expect'.
+
+60     expect(logErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Hiba a Dashboard állapotának lekérdezésekor: Network error'));
+       ~~~~~~
+
+src/cli/dashboardCommands.test.ts:60:46 - error TS2304: Cannot find name 'expect'.
+
+60     expect(logErrorSpy).toHaveBeenCalledWith(expect.stringContaining('Hiba a Dashboard állapotának lekérdezésekor: Network error'));
+                                                ~~~~~~
+
+src/cli/dashboardCommands.test.ts:61:5 - error TS2304: Cannot find name 'expect'.
+
+61     expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining('Összesített állapot'));       
+       ~~~~~~
+
+src/cli/dashboardCommands.test.ts:61:49 - error TS2304: Cannot find name 'expect'.
+
+61     expect(consoleSpy).not.toHaveBeenCalledWith(expect.stringContaining('Összesített állapot'));       
+                                                   ~~~~~~
+
+src/cli/dashboardCommands.test.ts:64:3 - error TS2593: Cannot find name 'it'. Do you need to install type definitions for a test runner? Try `npm i --save-dev @types/jest` or `npm i --save-dev @types/mocha` and then add 'jest' or 'mocha' to the types field in your tsconfig.
+
+64   it('should show help if no subcommand is provided', async () => {
+     ~~
+
+src/cli/dashboardCommands.test.ts:65:21 - error TS2304: Cannot find name 'vi'.
+
+65     const helpSpy = vi.spyOn(program, 'help').mockImplementation(() => { throw new Error('help called'); });
+                       ~~
+
+src/cli/dashboardCommands.test.ts:68:11 - error TS2304: Cannot find name 'expect'.
+
+68     await expect(program.parseAsync(['node', 'test', 'dashboard'])).rejects.toThrow('help called');    
+             ~~~~~~
+
+src/cli/dashboardCommands.test.ts:69:5 - error TS2304: Cannot find name 'expect'.
+
+69     expect(helpSpy).toHaveBeenCalled();
+       ~~~~~~
+
+
+Found 34 errors in the same file, starting at: src/cli/dashboardCommands.test.ts:6
+Exit Code: 1
+Process Group PGID: 26896

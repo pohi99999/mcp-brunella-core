@@ -1,0 +1,3 @@
+{
+  "error": "Tool execution denied by policy. You are in Plan Mode - adjust your prompt to only use read and search tools."
+}

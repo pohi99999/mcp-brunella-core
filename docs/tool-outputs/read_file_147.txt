@@ -1,0 +1,16 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-10 of 620 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 10.
+
+--- FILE CONTENT (truncated) ---
+# BAS Enterprise Suite - Technical Specification
+
+## System Architecture
+
+### Core Components
+
+#### 1. Unified Event System
+
+**TypeScript Interface:**
+```typescript

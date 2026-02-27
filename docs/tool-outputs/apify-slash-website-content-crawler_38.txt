@@ -1,0 +1,3 @@
+{
+  "error": "MCP tool 'apify-slash-website-content-crawler' reported tool error for function call: {\"name\":\"apify-slash-website-content-crawler\",\"args\":{\"startUrls\":[{\"url\":\"https://solidagency.hu/\"}],\"proxyConfiguration\":{\"useApifyProxy\":true}}} with response: [{\"functionResponse\":{\"name\":\"apify-slash-website-content-crawler\",\"response\":{\"error\":{\"message\":\"MCP error -32001: Request timed out\",\"isError\":true}}}}]"
+}

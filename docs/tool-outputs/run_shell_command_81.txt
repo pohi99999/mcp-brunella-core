@@ -1,0 +1,9 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\src\dashboard\components\dashboard
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+-a----     2026. 02. 09.     17:31           2913 DeveloperPipeline.tsx
+Process Group PGID: 45616

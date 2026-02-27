@@ -1,0 +1,132 @@
+Found 100 matches for pattern "gmail" in path "." (results limited to 100 matches for performance):
+---
+File: test_v3.txt
+L131: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L136: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L144: [INFO] [GmailClient] ­čôŁ Creating draft for 1 recipients
+L145: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454246696
+L156: [INFO] [GmailClient] ­čôŁ Creating draft for 1 recipients
+L157: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454246698
+L378: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L381: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L384: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L387: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L390: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L398: [INFO] [GmailClient] ­čôŁ Creating draft for 2 recipients
+L399: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247575
+L401: [INFO] [GmailClient] ­čôŁ Creating draft for 1 recipients
+L402: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247575
+L404: [INFO] [GmailClient] ­čôŁ Creating draft for 2 recipients
+L405: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247575
+L407: [INFO] [GmailClient] ­čôŁ Creating draft for 1 recipients
+L408: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247576
+L410: [INFO] [GmailClient] ­čôŁ Creating draft for 1 recipients
+L411: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247576
+L422: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L429: [INFO] [GmailClient] ­čôŁ Creating draft for 1 recipients
+L430: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247577
+L440: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L453: [INFO] [GmailClient] ­čôŁ Creating draft for 1 recipients
+L454: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247579
+L458: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L532: [INFO] [GmailClient] ­čôŁ Creating draft for 2 recipients
+L533: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247948
+L537: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L555: [INFO] [GmailClient] ­čôŁ Creating draft for 1 recipients
+L556: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247952
+L558: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L580: [INFO] [GmailClient] ­čôŁ Creating draft for 1 recipients
+L581: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247954
+L585: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L606: [INFO] [GmailClient] ­čôž Sending email to 1 recipients
+L610: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L624: [INFO] [GmailClient] ­čôŁ Creating draft for 1 recipients
+L625: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454247957
+L629: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L645: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L655: [INFO] [GmailClient] ­čôž Sending email to 1 recipients
+L825: [WARN] [GmailClient] ÔÜá´ŞĆ No API key provided. Using mock mode.
+L833: [INFO] [GmailClient] ­čôŁ Creating draft for 2 recipients
+L834: [INFO] [GmailClient] ­čôŁ Mock: Draft created draft_mock_1771454249105
+---
+File: _archive\root-cleanup-2026-02-18\COMPLETED_PROJECTS.md
+L33: - **Stack:** Playwright + Ollama + BeautifulSoup + Gmail SMTP
+---
+File: _archive\root-cleanup-2026-02-18\_ARCHIVE_SESSION_COMPLETION_REPORT.md
+L31: 2. `PHASE_2_SUMMARY.md` - Számlázz.hu API + Gmail fallback details
+---
+File: _KNOWLEDGE_BASE\eszkozeim_core.md
+L6241: like Google Gmail or Google Workspace, respectively). This is because the Gemini
+---
+File: _KNOWLEDGE_BASE\iam@peterpohanka.com.ics
+L4009:  ntmas.alapitvany@gmail.com;X-NUM-GUESTS=0:mailto:pontmas.alapitvany@gmail.c
+L4157: UID:bddb320a-b5a9-4065-bbe3-f2613485ac91-pohi99999@gmail.com
+L4183: UID:c42128eb-c59d-46f7-b3cd-ad2cf5fb1fab-pohi99999@gmail.com
+L4459:  /pohi99999@gmail.com/XK4uTDaZWcA?eventID=68eeea73-988a-4ad4-a87a-84d86dc0db
+L4462: LOCATION:https://webcasts.gitlab.com/auth/link/pohi99999@gmail.com/XK4uTDaZ
+L4499: LOCATION:https://events.goldcast.io/auth/link/pohi99999@gmail.com/QMMme3RWB
+L4519: LOCATION:https://events.goldcast.io/auth/link/pohi99999@gmail.com/QMMme3RWB
+L4535: UID:7e9b6db4-50db-4cb1-b4c7-dadd87d6980f-pohi99999@gmail.com
+L4585: LOCATION:https://events.goldcast.io/auth/link/pohi99999@gmail.com/XVmSMuhT1
+L7207:  kra fókuszálva.\n\n1. Fontos olvasatlan email üzenetek (@Gmail\, @Workspace
+L7212:  ource=gmail&q=peterpohanka.com) rendelt egy beszélgetést az adminpp Google
+L7317:  tps://multisend-unsubscribe.gmail.com/$placeholder\n\n-::~:~::~:~:~:~:~:~:~
+L7482:  tps://multisend-unsubscribe.gmail.com/$placeholder\n\n-::~:~::~:~:~:~:~:~:~
+L7510:  tps://multisend-unsubscribe.gmail.com/$placeholder\n\n-::~:~::~:~:~:~:~:~:~
+L7538:  tps://multisend-unsubscribe.gmail.com/$placeholder\n\n-::~:~::~:~:~:~:~:~:~
+L7569:  tps://multisend-unsubscribe.gmail.com/$placeholder\n\n-::~:~::~:~:~:~:~:~:~
+L7600:  tps://multisend-unsubscribe.gmail.com/$placeholder\n\n-::~:~::~:~:~:~:~:~:~
+L7631:  tps://multisend-unsubscribe.gmail.com/$placeholder\n\n-::~:~::~:~:~:~:~:~:~
+---
+File: _KNOWLEDGE_BASE\research_findings.md
+L9: 2.  **API-k engedélyezése:** A projektben engedélyezni kell a Gemini CLI által használni kívánt Google API-kat (pl. Gmail API, Google Drive API, Google Chrome API, Google AppSheet API).
+L20: *   **Gmail:** Gmail API
+---
+File: _KNOWLEDGE_BASE\swarm_ingested\1769641845751.md
+L5: Skip to content TechCrunch Desktop Logo Latest Startups Venture Apple Security AI Apps Events Podcasts Newsletters Site Search Toggle Mega Menu Toggle Topics Latest AI Amazon Apps Biotech & Health Climate Cloud Computing Commerce Crypto Enterprise EVs Fintech Fundraising Gadgets Gaming Google Government & Policy Hardware Instagram Layoffs Media & Entertainment Meta Microsoft Privacy Robotics Security Social Space Startups TikTok Transportation Venture More from TechCrunch Staff Events Startup Battlefield StrictlyVC Newsletters Podcasts Videos Partner Content TechCrunch Brand Studio Crunchboard Contact Us : GOOGLE APPS Chrome takes on AI browsers with tighter Gemini integration, agentic features for autonomous tasks Ivan Mehta 10:00 AM PST · January 28, 2026 Last year, a swarm of AI browsers from companies like OpenAI, Perplexity, Opera, and The Browser Company launched with the aim to replace Chrome with features like sidebar assistants and automated tasks. Now Google is flexing its own AI muscle by adding similar features to Chrome, the world’s largest browser by market share. While Google had introduced Gemini to Chrome last September, the assistant lived in a floating window. With this update, the company will put its AI helper into a persistent sidebar, so you can ask questions about the current website or other open tabs. One interesting feature Google demoed to press ahead of today’s launch involved multiple tabs. When you open different tabs from a single web page, the Gemini sidebar understands them as a context group. This is helpful when you are comparing prices or different products you’re considering purchasing. :GOOGLE Before today, the Gemini in Chrome feature was available only to Windows and macOS users. With this rollout, the sidebar will be available to Chromebook Plus users as well. Google is also taking advantage of its newly launched personal intelligence feature, which connects to your Gmail, Search, YouTube, and Google Photos accounts, allowing you to ask questions based on your own data. This feature will roll out in Chrome in the coming months, meaning that you can ask Gemini in the sidebar about things like your family’s schedule, or ask it to draft an email and send it without switching to Gmail. There’s a new Nano Banana integration coming to Chrome, too, that allows you to modify an existing image with another image or product that you find while browsing. However, the most ambitious feature is called auto-browse, which aims to handle tasks for you by using your personal information and traversing websites on your behalf. For instance, you can ask the agentic feature to go to a particular website and buy an item for you, and find a discount coupon. The agent will ask for your intervention when performing data-sensitive tasks, such as logging into a website or making a final purchase. Disrupt 2026 Tickets: One-time offer ! Save up to $680 while these rates last, and be among the first 500 registrants to get 50% off your +1 pass. TechCrunch Disrupt brings top leaders from Google Cloud, Netflix, Microsoft, Box, a16z, Hugging Face, and more to 250+ sessions designed to fuel growth and sharpen your edge. Connect with hundreds of innovative startups and join curated networking that drives deals, insights, and inspiration. San Francisco | October 13-15, 2026 Last year, the company explained that these features would use Chrome’s password manager or saved card details, but said its AI models wouldn’t be exposed to any of these details. This feature is rolling out initially to AI Pro and Ultra subscribers in the U.S. Loading the player… Browser-based agents are finicky and often fail to complete tasks. Google’s demo, just like tons of other AI demos, involved shopping and travel planning. In real-world use cases, agents often don’t get the intent or break during traversing different sites, and that would be a challenge for wider adoption. The company said that in its early testing, users have used the feature for tasks such as scheduling appointments, filling out tedious online forms, collecting their tax documents, getting quotes for plumbers and electricians, and filing expense reports. The company said that the Gemini sidebar support and Nano Banana integration are arriving starting today, while the personal intelligence feature will be available in the “coming months.” Topics AI Apps gemini Google Google Chrome nano banana Ivan Mehta Ivan covers global consumer tech developments at TechCrunch. He is based out of India and has previously worked at publications including Huffington Post and The Next Web. You can contact or verify outreach from Ivan by emailing im@ivanmehta.com or via encrypted message at ivan.42 on Signal. October 13-15 San Francisco, CA at the lowest rates of the year. Save up to $680 on your pass — and if you’re among the first 500 registrants, score a +1 pass at 50% off. Meet investors. Discover your next portfolio company. Hear from 250+ tech leaders, dive into 200+ sessions, and explore 300+ startups building what’s next. Don’t miss these one-time savings. Meta to test premium subscriptions on Instagram, Facebook, and WhatsApp Anthropic launches interactive Claude apps, including Slack and other workplace tools This founder cracked firefighting — now he’s creating an AI gold mine TikTok users freak out over app’s ‘immigration status’ collection — here’s what it means Researchers say Russian government hackers were behind attempted Poland power outage Microsoft gave FBI a set of BitLocker encryption keys to unlock suspects’ laptops: Reports Capital One acquires Brex for a steep discount to its peak valuation, but early believers are laughing all the way to the bank ✕ X LinkedIn Facebook Instagram youTube Mastodon Threads Bluesky TechCrunch Staff Contact Us Advertise Crunchboard Jobs Site Map Terms of Service Privacy Policy RSS Terms of Use Tesla Earnings Zoox Moltbot Snap Specs Amazon Go Tech Layoffs ChatGPT © 2025 TechCrunch Media LLC. Some areas of this page may shift around if you resize the browser window. Be sure to check heading and document order.
+---
+File: _KNOWLEDGE_BASE\user_data.json
+L1: {"first_name":"József Péter","last_name":"Pohánka","email":"pohi99999@gmail.com","company_name":"Pohánka És Társa Kft, Google","email_history":"pohi99999@gmail.com : 2025-05-16 17:21:40 -0400 through now\n"}
+---
+File: _KNOWLEDGE_BASE\webhook_server.py
+L42:     'https://www.googleapis.com/auth/gmail.modify'
+---
+File: _KNOWLEDGE_BASE\uj.md
+L1917: \* A `Brunella` generáljon egy \*\*személyre szabott emailt\*\* (amit tegnap írtunk), és mentse le piszkozatként a Gmailbe (`gmail\_list\_messages` tool helyett kellene egy `gmail\_create\_draft` tool).
+---
+File: _KNOWLEDGE_BASE\troubleshooting.md
+L14:     associated with their Gmail accounts may not be able to activate the free
+L40:   - A: Cached token information is only displayed when cached tokens are being used. This feature is available for API key users (Gemini API key or Google Cloud Vertex AI) but not for OAuth users (such as Google Personal/Enterprise accounts like Google Gmail or Google Workspace, respectively). This is because the Gemini Code Assist API does not support cached content creation. You can still view your total token usage using the `/stats` command in Gemini CLI.
+---
+File: _KNOWLEDGE_BASE\scripts\agent_backend.py
+L10:   'https://www.googleapis.com/auth/gmail.modify',
+L30: @app.route('/pubsub/gmail', methods=['POST'])
+L31: def gmail_push():
+L32:     """Fogadja a Pub/Sub üzeneteket a Gmail változásokról."""
+L33:     print("Received push notification from Gmail.")
+L44:         gmail = as_user('gmail', 'v1')
+L46:         print("Attempting to call Gmail API...")
+---
+File: _KNOWLEDGE_BASE\scripts\authenticate_google.py
+L10:     "https://www.googleapis.com/auth/gmail.modify",
+L46:     # Teszteljük a kapcsolatot a Gmail és Drive API-kkal
+L48:         gmail_service = build('gmail', 'v1', credentials=creds)
+L49:         profile = gmail_service.users().getProfile(userId='me').execute()
+L50:         print(f"\nSikeresen kapcsolódva a Gmailhez. Felhasználó: {profile['emailAddress']}")
+---
+File: _KNOWLEDGE_BASE\packages\vscode-ide-companion\NOTICES.txt
+L216: Copyright (c) 2013 Troy Goode <troygoode@gmail.com>
+L244: Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
+L326: Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
+L341: Copyright (c) Kevin Mårtensson <kevinmartensson@gmail.com> (github.com/kevva)
+L356: Copyright (c) Sindre Sorhus <sindresorhus@gmail.com> (sindresorhus.com)
+L469: Copyright (c) 2013-2014 Roman Shtylman <shtylman+expressjs@gmail.com>
+L963: Copyright (c) 2018 Nikita Skovoroda <chalkerx@gmail.com>
+L1735: Copyright (c) 2012-2014 Roman Shtylman <shtylman@gmail.com>
+---
+File: _KNOWLEDGE_BASE\packages\core\src\code_assist\oauth2.test.ts
+L116:           .mockResolvedValue({ email: 'test-google-account@gmail.com' }),
+L191:         active: 'test-google-account@gmail.com',
+L198:         'test-google-account@gmail.com',
+L439:             .mockResolvedValue({ email: 'test-gcp-account@gmail.com' }),
+---

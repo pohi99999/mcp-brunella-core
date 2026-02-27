@@ -1,0 +1,3 @@
+Found 2 file(s) matching "src/dashboard/**/MissionControlLayout*" across 3 workspace directories, sorted by modification time (newest first):
+F:\mcp-brunella-core\src\dashboard\components\dashboard\MissionControlLayout.test.tsx
+F:\mcp-brunella-core\src\dashboard\components\dashboard\MissionControlLayout.tsx

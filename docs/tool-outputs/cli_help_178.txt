@@ -1,0 +1,16 @@
+Subagent 'cli_help' finished.
+Termination Reason: GOAL
+Result:
+{
+  "answer": "Gemini CLI (version 0.29.7) features a variety of built-in tools categorized by their function. Note that my investigation was interrupted due to turn limits, but the following tools are documented as available:\n\n### 1. File System Tools\nThese tools allow the model to interact with the local file system within a specified root directory.\n- **`list_directory`**: Lists files and subdirectories in a given path.\n- **`read_file`**: Reads the content of text or binary files (images, audio, PDFs).\n- **`write_file`**: Writes or overwrites a file with specific content (requires user confirmation).\n- **`glob`**: Finds files matching specific patterns (e.g., `*.ts`).\n- **`grep_search`**: Searches for regex patterns within file contents.\n- **`replace`**: Performs precise text replacements within a file (requires user confirmation).\n\n### 2. Shell Tool\n- **`run_shell_command`**: Executes shell commands in the local environment. It supports interactive commands (like `vim` or `git rebase`) if enabled in settings and requires user confirmation for execution.\n\n### 3. Web & Information Tools\n- **`web_fetch`**: Fetches and processes content from up to 20 URLs to summarize or extract data.\n- **`google_web_search`**: Performs a Google search and returns a summarized response with citations.\n\n### 4. Productivity & Context Tools\n- **`save_memory`**: Saves specific facts to a persistent memory file (`~/.gemini/GEMINI.md`) for recall in future sessions.\n- **`write_todos`**: Manages a list of subtasks for complex requests, allowing the user to track the agent's progress.\n- **`activate_skill`**: Activates specialized \"Agent Skills\" (on-demand expertise packages).\n\n### 5. Extensibility via MCP\nGemini CLI supports the **Model Context Protocol (MCP)**, allowing it to connect to external MCP servers. These servers can expose additional custom tools, resources, and prompts to the CLI.\n\nUsers can see the status and available tools of connected MCP servers by using the `/mcp` slash command within the CLI.",
+  "sources": [
+    "tools/index.md",
+    "tools/file-system.md",
+    "tools/shell.md",
+    "tools/web-fetch.md",
+    "tools/web-search.md",
+    "tools/memory.md",
+    "tools/todos.md",
+    "tools/mcp-server.md"
+  ]
+}

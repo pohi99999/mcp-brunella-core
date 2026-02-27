@@ -1,0 +1,8 @@
+Output: 
+Running 1 test using 1 worker
+
+  ok 1 …Send message to Orchestrator should trigger backend task (15.2s)  Message sent via UI...
+  ✅ SUCCESS: Task found in DB with ID: 2011, Status: done
+
+  1 passed (19.9s)
+Process Group PGID: 48864

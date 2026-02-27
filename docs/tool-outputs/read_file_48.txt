@@ -1,0 +1,106 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 251-350 of 1680 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 350.
+
+--- FILE CONTENT (truncated) ---
+          `❌ Fix Failed: ${fix.id} - ${(e as Error).message}`,
+        );
+      }
+    }
+  }
+
+  private async loadAgent(config: AgentConfig): Promise<void> {
+    // Dynamic imports for Node.js-specific modules (Worker compatibility)
+    if (typeof process === "undefined" || !process.versions?.node) {
+      logError("AgentManager", "loadAgent() requires Node.js environment");
+      return;
+    }
+
+    // Skip if module is not defined (e.g. planned agents)
+    if (!config.module) {
+      logInfo(
+        "AgentManager",
+        `Skipping agent '${config.name}' (no module path defined)`,
+      );
+      return;
+    }
+
+    const path = await import("path");
+    const fs = await import("fs");
+    const url = await import("url");
+
+    const modulePath = path.default.resolve(
+      process.cwd(),
+      "build",
+      config.module.replace("./", ""),
+    );
+
+    if (!fs.default.existsSync(modulePath)) {
+      logError("AgentManager", `Modul nem található: ${modulePath}`);
+      return;
+    }
+
+    // Convert Windows path to file:// URL for ESM import
+    const moduleUrl = url.pathToFileURL(modulePath).href;
+
+    // Use moduleUrl instead of modulePath for import
+    const AgentClass = (await import(moduleUrl)).default;
+    const agent = new AgentClass(config.config);
+
+    agent.name = config.name;
+    agent.description = config.description;
+    agent.systemPrompt = config.systemPrompt;
+
+    this.agents.set(config.name, agent);
+    this.ensureAgentRuntime(config.name);
+    logInfo(
+      "AgentManager",
+      `Ügynök betöltve: ${config.name}. Jelenlegi kulcsok: ${[...this.agents.keys()].join(", ")}`,
+    );
+  }
+
+  private ensureAgentRuntime(agentName: string): AgentRuntimeInfo {
+    if (!this.agentRuntime.has(agentName)) {
+      this.agentRuntime.set(agentName, {
+        status: "idle",
+        successCount: 0,
+        errorCount: 0,
+      });
+    }
+    return this.agentRuntime.get(agentName)!;
+  }
+
+  private updateAgentRuntime(
+    agentName: string,
+    updates: Partial<AgentRuntimeInfo>,
+  ) {
+    const current = this.ensureAgentRuntime(agentName);
+    this.agentRuntime.set(agentName, { ...current, ...updates });
+  }
+
+  private async initializeEdgeProxy(): Promise<void> {
+    const edgeProxyConfig = this.registry.agents.find(
+      (a) => a.name === "EdgeProxy",
+    );
+    if (edgeProxyConfig) {
+      this.edgeProxy = this.agents.get("EdgeProxy");
+      if (this.edgeProxy?.initialize) {
+        await this.edgeProxy.initialize();
+        logInfo("AgentManager", "EdgeProxy inicializálva");
+      }
+    }
+  }
+
+  // --------------------------------------------------------------------------
+  // TASK DELEGATION
+  // --------------------------------------------------------------------------
+
+  /**
+   * Feladat delegálása - Edge-first stratégia
+   */
+  async delegateTask(task: Task): Promise<TaskResult> {
+    const startTime = Date.now();
+
+    logInfo(
+      "AgentManager",

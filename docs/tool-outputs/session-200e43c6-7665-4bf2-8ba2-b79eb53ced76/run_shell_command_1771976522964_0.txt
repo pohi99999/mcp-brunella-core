@@ -1,0 +1,993 @@
+Output: 
+Running 27 tests using 1 worker
+
+      1 …ella Dashboard Full UI Audit (Enhanced) › Audit Page: dashboard
+--- Auditing: dashboard ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  1 …hboard Full UI Audit (Enhanced) › Audit Page: dashboard (19.9s)
+      2 …lla Dashboard Full UI Audit (Enhanced) › Audit Page: neural-map
+
+--- Auditing: neural-map ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  2 …board Full UI Audit (Enhanced) › Audit Page: neural-map (16.0s)
+      3 …la Dashboard Full UI Audit (Enhanced) › Audit Page: system-arch
+
+--- Auditing: system-arch ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  3 …oard Full UI Audit (Enhanced) › Audit Page: system-arch (16.0s)
+      4 … Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: cean
+
+--- Auditing: cean ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 20
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+  x   4 …a Dashboard Full UI Audit (Enhanced) › Audit Page: cean (16.1s)
+      5 …ashboard Full UI Audit (Enhanced) › Audit Page: cean (retry #1)
+
+--- Auditing: cean ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  5 … Full UI Audit (Enhanced) › Audit Page: cean (retry #1) (17.8s)
+      6 …lla Dashboard Full UI Audit (Enhanced) › Audit Page: cloudflare
+
+--- Auditing: cloudflare ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  6 …board Full UI Audit (Enhanced) › Audit Page: cloudflare (16.0s)
+      7 … Dashboard Full UI Audit (Enhanced) › Audit Page: fleet_manager
+
+--- Auditing: fleet_manager ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  7 …rd Full UI Audit (Enhanced) › Audit Page: fleet_manager (15.9s)
+      8 … Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: chat
+
+--- Auditing: chat ---
+  Waiting for system initialization (5s)...
+  Found 25 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok  8 …a Dashboard Full UI Audit (Enhanced) › Audit Page: chat (17.4s)
+      9 …Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: paios
+
+--- Auditing: paios ---
+  Waiting for system initialization (5s)...
+  Found 28 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 1
+     > Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.       
+  ok  9 … Dashboard Full UI Audit (Enhanced) › Audit Page: paios (17.4s)
+     10 …unella Dashboard Full UI Audit (Enhanced) › Audit Page: phoenix
+
+--- Auditing: phoenix ---
+  Waiting for system initialization (5s)...
+  Found 25 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 10 …ashboard Full UI Audit (Enhanced) › Audit Page: phoenix (17.7s)
+     11 …lla Dashboard Full UI Audit (Enhanced) › Audit Page: management
+
+--- Auditing: management ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 24
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+  x  11 …board Full UI Audit (Enhanced) › Audit Page: management (16.1s)
+     12 …rd Full UI Audit (Enhanced) › Audit Page: management (retry #1)
+
+--- Auditing: management ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 12 …UI Audit (Enhanced) › Audit Page: management (retry #1) (18.0s)
+     13 …lla Dashboard Full UI Audit (Enhanced) › Audit Page: decomposer
+
+--- Auditing: decomposer ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 13 …board Full UI Audit (Enhanced) › Audit Page: decomposer (16.2s)
+     14 …runella Dashboard Full UI Audit (Enhanced) › Audit Page: tracks
+
+--- Auditing: tracks ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 14 …Dashboard Full UI Audit (Enhanced) › Audit Page: tracks (16.1s)
+     15 …ella Dashboard Full UI Audit (Enhanced) › Audit Page: incubator
+
+--- Auditing: incubator ---
+  Waiting for system initialization (5s)...
+  Found 28 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 5
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to fetch stats: Error: Incubator Stats: HTTP 429
+    at getIncubatorStats (http://localhost:5173/lib/apiService.ts:770:29)
+    at async fetchStats (http://localhost:5173/components/dashboard/IncubatorPanel.tsx:24:26)
+  x  15 …hboard Full UI Audit (Enhanced) › Audit Page: incubator (17.3s)
+     16 …ard Full UI Audit (Enhanced) › Audit Page: incubator (retry #1)
+
+--- Auditing: incubator ---
+  Waiting for system initialization (5s)...
+  Found 28 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 16 … UI Audit (Enhanced) › Audit Page: incubator (retry #1) (19.0s)
+     17 …ella Dashboard Full UI Audit (Enhanced) › Audit Page: knowledge
+
+--- Auditing: knowledge ---
+  Waiting for system initialization (5s)...
+  Found 26 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 17 …hboard Full UI Audit (Enhanced) › Audit Page: knowledge (17.1s)
+     18 … Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: mcp 
+
+--- Auditing: mcp ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 11
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to fetch agent registry for Neural Map: Error: Registry: HTTP 429
+    at getRegistry (http://localhost:5173/lib/apiService.ts:164:29)     
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+  x  18 …la Dashboard Full UI Audit (Enhanced) › Audit Page: mcp (16.1s)
+     19 …Dashboard Full UI Audit (Enhanced) › Audit Page: mcp (retry #1)
+
+--- Auditing: mcp ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 1
+     > Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.       
+  ok 19 …d Full UI Audit (Enhanced) › Audit Page: mcp (retry #1) (18.0s)
+     20 …ella Dashboard Full UI Audit (Enhanced) › Audit Page: developer
+
+--- Auditing: developer ---
+  Waiting for system initialization (5s)...
+  Found 37 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 1
+     > Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.       
+  ok 20 …hboard Full UI Audit (Enhanced) › Audit Page: developer (17.3s)
+     21 … Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: edge
+
+--- Auditing: edge ---
+  Waiting for system initialization (5s)...
+  Found 26 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 20
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+  x  21 …a Dashboard Full UI Audit (Enhanced) › Audit Page: edge (17.4s)
+     22 …ashboard Full UI Audit (Enhanced) › Audit Page: edge (retry #1)
+
+--- Auditing: edge ---
+  Waiting for system initialization (5s)...
+  Found 26 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 22 … Full UI Audit (Enhanced) › Audit Page: edge (retry #1) (19.5s)
+     23 …ashboard Full UI Audit (Enhanced) › Audit Page: suggested-tasks
+
+--- Auditing: suggested-tasks ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 23 … Full UI Audit (Enhanced) › Audit Page: suggested-tasks (16.1s)
+     24 …Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: tests
+
+--- Auditing: tests ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 1
+     > Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.       
+  ok 24 … Dashboard Full UI Audit (Enhanced) › Audit Page: tests (16.1s)
+     25 …ard Full UI Audit (Enhanced) › Audit Page: enterprise-analytics
+
+--- Auditing: enterprise-analytics ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 25 … UI Audit (Enhanced) › Audit Page: enterprise-analytics (16.0s)
+     26 …nella Dashboard Full UI Audit (Enhanced) › Audit Page: robotkez
+
+--- Auditing: robotkez ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 26 …shboard Full UI Audit (Enhanced) › Audit Page: robotkez (15.9s)
+     27 …Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: tasks
+
+--- Auditing: tasks ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 1
+     > Maximum update depth exceeded. This can happen when a component calls setState inside useEffect, but useEffect either doesn't have a dependency array, or one of the dependencies changes on every render.       
+  ok 27 … Dashboard Full UI Audit (Enhanced) › Audit Page: tasks (16.2s)
+     28 …Dashboard Full UI Audit (Enhanced) › Audit Page: python-workers
+
+--- Auditing: python-workers ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ❌ CONSOLE ERRORS: 14
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+     > Failed to load resource: the server responded with a status of 429 (Too Many Requests)
+  x  28 …d Full UI Audit (Enhanced) › Audit Page: python-workers (16.1s)
+     29 …ull UI Audit (Enhanced) › Audit Page: python-workers (retry #1)
+
+--- Auditing: python-workers ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 29 …udit (Enhanced) › Audit Page: python-workers (retry #1) (17.9s)
+     30 …ella Dashboard Full UI Audit (Enhanced) › Audit Page: inventory
+
+--- Auditing: inventory ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 30 …hboard Full UI Audit (Enhanced) › Audit Page: inventory (16.0s)
+     31 …Brunella Dashboard Full UI Audit (Enhanced) › Audit Page: files
+
+--- Auditing: files ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 31 … Dashboard Full UI Audit (Enhanced) › Audit Page: files (16.2s)
+     32 … Dashboard Full UI Audit (Enhanced) › Audit Page: marketwatcher
+
+--- Auditing: marketwatcher ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 32 …rd Full UI Audit (Enhanced) › Audit Page: marketwatcher (16.3s)
+     33 …nella Dashboard Full UI Audit (Enhanced) › Audit Page: settings
+
+--- Auditing: settings ---
+  Waiting for system initialization (5s)...
+  Found 51 interactive elements.
+    Testing button: "Keresés..."
+    Testing button: "LAYOUT:"
+    Testing button: "Toggle theme"
+    Testing button: "CORE SYSTEMS"
+    Testing button: "Mission Control"
+    Testing button: "Neural Map"
+    Testing button: "Architecture"
+    Testing button: "AI & AGENTS"
+    Testing button: "ORCHESTRATION"
+    Testing button: "CEAN Orchestrator"
+    Testing button: "Cloudflare Deploy"
+    Testing button: "Fleet Manager"
+    Testing button: "Task Queue"
+    Testing button: "PROJECT MGMT"
+    Testing button: "Tracks"
+  ok 33 …shboard Full UI Audit (Enhanced) › Audit Page: settings (16.4s)
+
+
+  1) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit (Enhanced) › Audit Page: cean
+
+    Error: Konzol hibák a(z) cean oldalon
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    20
+
+       96 |       }
+       97 |
+    >  98 |       expect(consoleErrors.length, `Konzol hibák a(z) ${navId} oldalon`).toBeLessThanOrEqual(2); // Megengedünk 2 nem kritikus hibát
+          |                                                             
+             ^
+       99 |     });
+      100 |   }
+      101 | });
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:98:74  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-24cfe-it-Enhanced-Audit-Pagee-cean-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-24cfe-it-Enhanced-Audit-Pagee-cean-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-24cfe-it-Enhaanced-Audit-Page-cean-chromium\error-context.md
+
+  2) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit (Enhanced) › Audit Page: management
+
+    Error: Konzol hibák a(z) management oldalon
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    24
+
+       96 |       }
+       97 |
+    >  98 |       expect(consoleErrors.length, `Konzol hibák a(z) ${navId} oldalon`).toBeLessThanOrEqual(2); // Megengedünk 2 nem kritikus hibát
+          |                                                             
+             ^
+       99 |     });
+      100 |   }
+      101 | });
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:98:74  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-c4803-anced-Audit-Page-managgement-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-c4803-anced-Audit-Page-managgement-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-c4803-anced-AAudit-Page-management-chromium\error-context.md
+
+  3) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit (Enhanced) › Audit Page: incubator
+
+    Error: Konzol hibák a(z) incubator oldalon
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    5
+
+       96 |       }
+       97 |
+    >  98 |       expect(consoleErrors.length, `Konzol hibák a(z) ${navId} oldalon`).toBeLessThanOrEqual(2); // Megengedünk 2 nem kritikus hibát
+          |                                                             
+             ^
+       99 |     });
+      100 |   }
+      101 | });
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:98:74  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5dc8e-hanced-Audit-Page-incuubator-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-5dc8e-hanced-Audit-Page-incuubator-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-5dc8e-hanced--Audit-Page-incubator-chromium\error-context.md
+
+  4) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit (Enhanced) › Audit Page: mcp
+
+    Error: Konzol hibák a(z) mcp oldalon
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    11
+
+       96 |       }
+       97 |
+    >  98 |       expect(consoleErrors.length, `Konzol hibák a(z) ${navId} oldalon`).toBeLessThanOrEqual(2); // Megengedünk 2 nem kritikus hibát
+          |                                                             
+             ^
+       99 |     });
+      100 |   }
+      101 | });
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:98:74  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-ebf2a-dit-Enhanced-Audit-Pagge-mcp-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-ebf2a-dit-Enhanced-Audit-Pagge-mcp-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-ebf2a-dit-Enhhanced-Audit-Page-mcp-chromium\error-context.md
+
+  5) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit (Enhanced) › Audit Page: edge
+
+    Error: Konzol hibák a(z) edge oldalon
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    20
+
+       96 |       }
+       97 |
+    >  98 |       expect(consoleErrors.length, `Konzol hibák a(z) ${navId} oldalon`).toBeLessThanOrEqual(2); // Megengedünk 2 nem kritikus hibát
+          |                                                             
+             ^
+       99 |     });
+      100 |   }
+      101 | });
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:98:74  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-e14bb-it-Enhanced-Audit-Pagee-edge-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-e14bb-it-Enhanced-Audit-Pagee-edge-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-e14bb-it-Enhaanced-Audit-Page-edge-chromium\error-context.md
+
+  6) [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Daashboard Full UI Audit (Enhanced) › Audit Page: python-workers
+
+    Error: Konzol hibák a(z) python-workers oldalon
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 2
+    Received:    14
+
+       96 |       }
+       97 |
+    >  98 |       expect(consoleErrors.length, `Konzol hibák a(z) ${navId} oldalon`).toBeLessThanOrEqual(2); // Megengedünk 2 nem kritikus hibát
+          |                                                             
+             ^
+       99 |     });
+      100 |   }
+      101 | });
+        at F:\mcp-brunella-core\test\e2e\dashboard_audit.spec.ts:98:74  
+
+    attachment #1: screenshot (image/png) ──────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-2cef9-d-Audit-Page-python-woorkers-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────
+
+    attachment #2: video (video/webm) ──────────────────────────────────
+    test-results\dashboard_audit-🚀-Brunell-2cef9-d-Audit-Page-python-woorkers-chromium\video.webm
+    ────────────────────────────────────────────────────────────────────
+
+    Error Context: test-results\dashboard_audit-🚀-Brunell-2cef9-d-Auditt-Page-python-workers-chromium\error-context.md
+
+  6 flaky
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit (Enhanced) › Audit Page: cean
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit (Enhanced) › Audit Page: management
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit (Enhanced) › Audit Page: incubator
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit (Enhanced) › Audit Page: mcp
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit (Enhanced) › Audit Page: edge
+    [chromium] › test\e2e\dashboard_audit.spec.ts:27:5 › 🚀 Brunella Dasshboard Full UI Audit (Enhanced) › Audit Page: python-workers
+  21 passed (9.6m)
+Process Group PGID: 49284

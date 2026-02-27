@@ -1,0 +1,3 @@
+{
+  "output": "Directory listing for F:\\mcp-brunella-core\\myai:\n[DIR] __pycache__\n[DIR] agents\n[DIR] backend\n[DIR] clients\n[DIR] config\n[DIR] core\n[DIR] data\n[DIR] examples\n[DIR] incubator\n[DIR] prompts\n[DIR] refiner\n[DIR] refiners\n[DIR] sandbox_env\n[DIR] scenarios\n[DIR] schemas\n[DIR] tasks\n[DIR] tests\n[DIR] tools\n[DIR] utils\n[DIR] workers\n[DIR] workflows\n__init__.py\nbrowser_task_runner.py\nbrowser_worker.py\nchromadb_adapter.py\ncli.py\nconfig.py\ninteractive_browser.py\ninteractive.py\nmcp_server.py\npydantic_models.py\nrag.py\nrefiner_logic.py\nrequirements.txt\nschemas.py\nscreenshot.png\nserver.log\nserver.py\nSUMMARY.md\nsync_to_r2.py\nupload_trojan_to_sheets.py\nvector_db_interface.py"
+}

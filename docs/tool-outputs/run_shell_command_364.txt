@@ -1,0 +1,68 @@
+Output: 
+> mcp-brunella-core@1.0.0 build
+> tsc && node -e "const fs=require('fs');const src='src/orchestrator/systemPrompt/paios_orchestrator_prompt.md';const dst='build/orchestrator/systemPrompt/paios_orchestrator_prompt.md';fs.mkdirSync('build/orchestrator/systemPrompt',{recursive:true});fs.copyFileSync(src,dst);console.log('✅ PAIOS prompt copied');"
+
+src/agents/FinanceGuardian.ts:201:69 - error TS1005: ',' expected.
+
+201     result = await process_invoice_file("${filePath.replace(/\/g, '/')}")
+                                                                        ~~~~~
+
+src/agents/FinanceGuardian.ts:201:74 - error TS1002: Unterminated string literal.
+
+201     result = await process_invoice_file("${filePath.replace(/\/g, '/')}")
+   
+
+src/agents/FinanceGuardian.ts:202:5 - error TS1005: ',' expected.
+
+202     print(json.dumps(result, default=str))
+        ~~~~~
+
+src/agents/FinanceGuardian.ts:202:30 - error TS1135: Argument expression expected.
+
+202     print(json.dumps(result, default=str))
+                                 ~~~~~~~
+
+src/agents/FinanceGuardian.ts:202:41 - error TS1005: ';' expected.
+
+202     print(json.dumps(result, default=str))
+                                            ~
+
+src/agents/FinanceGuardian.ts:202:42 - error TS1068: Unexpected token. A constructor, method, accessor, or property was expected.
+
+202     print(json.dumps(result, default=str))
+                                             ~
+
+src/agents/FinanceGuardian.ts:204:1 - error TS1435: Unknown keyword or identifier. Did you mean 'async'?
+
+204 asyncio.run(run())
+    ~~~~~~~
+
+src/agents/FinanceGuardian.ts:204:8 - error TS1068: Unexpected token. A constructor, method, accessor, or property was expected.
+
+204 asyncio.run(run())
+           ~
+
+src/agents/FinanceGuardian.ts:204:16 - error TS1005: ',' expected.
+
+204 asyncio.run(run())
+                   ~
+
+src/agents/FinanceGuardian.ts:204:17 - error TS1109: Expression expected.
+
+204 asyncio.run(run())
+                    ~
+
+src/agents/FinanceGuardian.ts:204:18 - error TS1005: ';' expected.
+
+204 asyncio.run(run())
+                     ~
+
+src/agents/FinanceGuardian.ts:261:1 - error TS1160: Unterminated template literal.
+
+261
+   
+
+
+Found 12 errors in the same file, starting at: src/agents/FinanceGuardian.ts:201
+Exit Code: 1
+Process Group PGID: 55492

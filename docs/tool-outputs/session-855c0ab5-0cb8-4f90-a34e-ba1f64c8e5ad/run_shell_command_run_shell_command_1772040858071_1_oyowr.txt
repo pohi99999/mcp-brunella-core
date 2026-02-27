@@ -1,0 +1,3 @@
+{
+  "output": "Output: uv 0.9.27 (b5797b2ab 2026-01-26)\nProcess Group PGID: 44724"
+}

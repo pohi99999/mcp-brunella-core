@@ -1,0 +1,9 @@
+Output: At line:1 char:3
++ if not exist "conductor\tracks\trojan-horse-campaign-20260224" mkdir  ...
++   ~
+Missing '(' after 'if' in if statement.
+    + CategoryInfo          : ParserError: (:) [], ParentContainsErrorRecordException
+    + FullyQualifiedErrorId : MissingOpenParenthesisInIfStatement
+ 
+Exit Code: 1
+Process Group PGID: 2060

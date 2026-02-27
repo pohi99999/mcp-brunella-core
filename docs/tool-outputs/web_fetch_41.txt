@@ -1,0 +1,9 @@
+I will browse each of the provided websites to find the contact email addresses.Here are the contact email addresses found on the websites:
+
+*   **https://ertekesitesfejlesztes.hu/**: `office@woims.de`
+[1]*   **https://solidagency.hu/**: No email address was explicitly found on the main page.
+*   **https://bda.hu/**: `info@bda.hu`[2]
+
+Sources:
+[1] Marketing ügynökség - Teljes (https://ertekesitesfejlesztes.hu/)
+[2] BDA: kisvállalati digitális ügynökség (https://bda.hu/)

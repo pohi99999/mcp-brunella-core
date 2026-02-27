@@ -1,0 +1,10 @@
+Output: mcpc : The term 'mcpc' is not recognized as the name of a cmdlet, function, script file, or operable program. Check t
+he spelling of the name, or if a path was included, verify that the path is correct and try again.
+At line:1 char:1
++ mcpc --version
++ ~~~~
+    + CategoryInfo          : ObjectNotFound: (mcpc:String) [], CommandNotFoundException
+    + FullyQualifiedErrorId : CommandNotFoundException
+ 
+Exit Code: 1
+Process Group PGID: 26988

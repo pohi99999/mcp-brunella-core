@@ -1,0 +1,2 @@
+Found 1 file(s) matching "src/utils/lancedb_client.ts" across 3 workspace directories, sorted by modification time (newest first):
+F:\mcp-brunella-core\src\utils\lancedb_client.ts

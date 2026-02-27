@@ -1,0 +1,12 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\data
+
+
+Mode                 LastWriteTime         Length Name  
+----                 -------------         ------ ---- 
+d-----     2026. 02. 23.     21:20                invoi 
+                                                  ce_te 
+                                                  mplat 
+                                                  es    
+Process Group PGID: 29848

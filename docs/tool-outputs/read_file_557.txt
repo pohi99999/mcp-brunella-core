@@ -1,0 +1,91 @@
+**Implementation Plan: Data Flywheel Automation & Dashboard V3 Track Creation**
+
+**Goal:** Automate the BAS "Data Flywheel" daily cycle and initiate the development track for "Dashboard V3 - The Ultimate Command Center" based on the provided `aranyfolyam.md`.
+
+---
+
+### **Phase 1: Implement `data_flywheel_daily_cycle_20260219`**
+
+**Objective:** Create a unsupervised daily cycle for data harvesting, refining, indexing, and validation of the "Golden Dataset".
+
+**Iterative Development Steps:**
+
+1.  **Scheduled Trigger for Harvest (Aratás) - Tech Harvester:**
+    *   **Action:** Add a new default scheduled task to the `scheduled_tasks` database table.
+    *   **Details:**
+        *   `id`: `data-flywheel-harvester`
+        *   `title`: "Tech Harvester - Daily Harvest"
+        *   `prompt`: "Run myai/agents/tech_harvester.py with --mode auto to collect new tech trends and competitor info."
+        *   `cron_expression`: `0 3 * * *` (Daily at 03:00 AM UTC)
+        *   `handler`: `python_script` (This requires extending `ScheduledTasksRunner` to execute Python scripts, or to delegate to an agent capable of running Python scripts, like a `PythonAgent` if available).
+    *   **Modification to `src/server/schedulers/scheduledTasksRunner.ts`:**
+        *   Add a new case for `handler === 'python_script'` in `executeTask` to run Python scripts using `python-shell` or by delegating to a dedicated `PythonAgent`.
+    *   **Verification:**
+        *   Verify the task appears in the Dashboard's "Scheduled AI Tasks" panel.
+        *   Observe logs to confirm `myai/agents/tech_harvester.py` is invoked at the scheduled time (initially check for script execution, then for actual data collection).
+
+2.  **Refine & Index (Finomítás) - Knowledge Integrator:**
+    *   **Action:** Create a new default scheduled task for `myai/tools/knowledge_integrator.py`.
+    *   **Details:** This script performs Pydantic validation, embedding generation, and LanceDB saving, and appends to `data/training/golden_dataset.jsonl`.
+    *   **Consideration:** This task should ideally run *after* the `Tech Harvester`. A simple approach is to schedule it shortly after the harvester. A more robust solution would involve event-driven chaining (e.g., `Tech Harvester` completing triggers `Knowledge Integrator`). For simplicity in this plan, it will be a separate scheduled task.
+        *   `id`: `data-flywheel-integrator`
+        *   `title`: "Knowledge Integrator - Daily Refine & Index"
+        *   `prompt`: "Run myai/tools/knowledge_integrator.py to refine collected data, generate embeddings, and save to LanceDB and golden_dataset.jsonl."
+        *   `cron_expression`: `30 3 * * *` (Daily at 03:30 AM UTC, after harvester)
+        *   `handler`: `python_script`
+    *   **Verification:** Monitor `data/training/golden_dataset.jsonl` and LanceDB for new entries.
+
+3.  **Verify (Ellenőrzés - Az "Esti Őrjárat") with `EvaluatorAgent`:**
+    *   **Action:** Create a new default scheduled task for `EvaluatorAgent` to check `golden_dataset.jsonl` growth.
+    *   **Details:**
+        *   `id`: `golden-dataset-verification`
+        *   `title`: "Golden Dataset Growth Verification"
+        *   `prompt`: "Verify if data/training/golden_dataset.jsonl has increased in size in the last 24 hours. Report status to dashboard/logs."
+        *   `cron_expression`: `0 4 * * *` (Daily at 04:00 AM UTC, after integration)
+        *   `handler`: `agent`
+    *   **Modification to `src/agents/EvaluatorAgent.ts`:**
+        *   Implement a new method `verifyDatasetGrowth(filePath: string)` that:
+            *   Reads the current size/line count of `filePath`.
+            *   Compares it with a previously stored baseline (e.g., in a simple local JSON file or its own memory).
+            *   Logs success/failure and emits an alert via `phoenixEventBus` or `socketService` (for Slack/Dashboard notification).
+    *   **Verification:**
+        *   Observe logs and dashboard for reports from `EvaluatorAgent` about dataset growth.
+        *   Simulate a scenario where no growth occurs to test alert mechanism.
+
+**Affected Files & Modifications for Phase 1:**
+
+*   `src/server/schedulers/scheduledTasksRunner.ts`:
+    *   Extend `seedDefaults` method to include the new `Tech Harvester` and `Knowledge Integrator` tasks.
+    *   Modify `executeTask` to handle `handler === 'python_script'`. This will involve using `PythonShell` (from `python-shell` dependency) to execute the Python script.
+*   `src/agents/EvaluatorAgent.ts`: Implement the `verifyDatasetGrowth` method and integrate its call in `executeTask` when the prompt matches.
+
+---
+
+### **Phase 2: Trigger Creation of `dashboard_v3_command_center_20260219` Track**
+
+**Objective:** Use the provided "Master Prompt" to instruct the system to create a new development track for Dashboard V3.
+
+**Iterative Development Steps:**
+
+1.  **Delegate Track Creation to `SpecWriterAgent`:**
+    *   **Action:** Programmatically call `agentManager.delegate` with the full "Master Prompt" for the `SpecWriterAgent`.
+    *   **Target Agent:** `SpecWriterAgent`
+    *   **Prompt:**
+        ```markdown
+        # KÉRÉS: Új Track Generálása - Dashboard V3 "Command Center"
+        ... (full content from aranyfolyam.md under "A Prompt (Másold be ezt)") ...
+        ```
+    *   **Verification:**
+        *   Confirm the creation of the new track directory (`conductor/tracks/dashboard_v3_command_center_20260219/`).
+        *   Verify `spec.md`, `plan.md`, and `meta.json` are generated within the new track directory.
+        *   Check the content of `spec.md` and `plan.md` to ensure they reflect the details of the "Master Prompt".
+
+---
+
+**Prioritization and Iteration:**
+
+The plan will be executed sequentially:
+1.  **Implement Data Flywheel daily cycle.**
+2.  **Trigger Dashboard V3 track creation.**
+
+**Verification throughout:** Each step includes explicit verification to ensure correctness and maintainability.

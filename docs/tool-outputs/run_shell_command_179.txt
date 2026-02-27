@@ -1,0 +1,9 @@
+Output: 
+
+    Directory: F:\mcp-brunella-core\conductor\tracks
+
+
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d-----     2026. 02. 23.     20:30                master_track_1_lead_mining_20260223
+Process Group PGID: 16796

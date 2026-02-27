@@ -1,0 +1,106 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 541-640 of 2728 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 640.
+
+--- FILE CONTENT (truncated) ---
+  const [activityLimit, setActivityLimit] = useState(30);
+
+  // P8: Git state
+  const [gitStatus, setGitStatus] = useState<GitStatusData | null>(null);
+  const [gitBranches, setGitBranches] = useState<GitBranchData[]>([]);
+  const [isLoadingGit, setIsLoadingGit] = useState(false);
+  const [selectedFiles, setSelectedFiles] = useState<Set<string>>(new Set());
+  const [commitMessage, setCommitMessage] = useState("");
+  const [isCommitting, setIsCommitting] = useState(false);
+  const [isPushing, setIsPushing] = useState(false);
+
+  // Fetch status and history on mount
+  const refreshData = useCallback(async () => {
+    try {
+      const [statusResult, historyResult] = await Promise.all([
+        devApiFetch<DevStatus>("/status").catch(() => null),
+        devApiFetch<{ history: HistoryEntry[] }>("/history?limit=15").catch(
+          () => ({ history: [] }),
+        ),
+      ]);
+      if (statusResult) setStatus(statusResult);
+      setHistory(historyResult.history);
+    } catch {
+      // ignore
+    }
+  }, []);
+
+  useEffect(() => {
+    refreshData();
+    const interval = setInterval(refreshData, 5000);
+    return () => clearInterval(interval);
+  }, [refreshData]);
+
+  // Poll active pipeline
+  useEffect(() => {
+    const taskId = activePipeline?.taskId;
+    const status = activePipeline?.status;
+
+    if (!taskId || status === "done" || status === "error") return;
+
+    const interval = setInterval(async () => {
+      try {
+        const result = await devApiFetch<{ pipeline: PipelineData }>(
+          `/pipeline/${taskId}`,
+        );
+        
+        // Csak akkor frissítsünk, ha változott az állapot vagy a fázisok száma
+        if (JSON.stringify(result.pipeline) !== JSON.stringify(activePipeline)) {
+          setActivePipeline(result.pipeline);
+
+          if (result.pipeline.status === "done") {
+            toast.success("Task completed!");
+            refreshData();
+          } else if (result.pipeline.status === "error") {
+            toast.error(`Task failed: ${result.pipeline.error || "Unknown error"}`);
+            refreshData();
+          }
+        }
+      } catch {
+        // ignore polling errors
+      }
+    }, 2000); // 2mp-re emelve a stabilitásért
+
+    return () => clearInterval(interval);
+  }, [activePipeline?.taskId, activePipeline?.status, refreshData]);
+
+  const handleSubmit = async (taskOverride?: string) => {
+    const task = taskOverride || prompt.trim();
+    if (!task) return;
+
+    setIsLoading(true);
+    try {
+      const { taskId } = await executeDeveloperTask(task);
+      toast.info(`Pipeline started: ${taskId.slice(0, 15)}...`);
+
+      // Fetch initial pipeline state
+      const result = await devApiFetch<{ pipeline: PipelineData }>(
+        `/pipeline/${taskId}`,
+      );
+      setActivePipeline(result.pipeline);
+      setPrompt("");
+    } catch (e: unknown) {
+      toast.error(e instanceof Error ? e.message : "Failed to start task");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const handleQuickAction = (action: string) => {
+    handleSubmit(action);
+  };
+
+  const calculateProgress = (pipeline: PipelineData): number => {
+    const total = pipeline.phases.length;
+    const done = pipeline.phases.filter(
+      (p) => p.status === "done" || p.status === "skipped",
+    ).length;
+    const running = pipeline.phases.filter(
+      (p) => p.status === "running",
+    ).length;

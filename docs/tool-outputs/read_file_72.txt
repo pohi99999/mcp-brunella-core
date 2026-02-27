@@ -1,0 +1,145 @@
+import { useState, useEffect } from "react";
+import { Zap, ChevronDown } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
+import { cn } from "@/lib/utils";
+import { useSystemSignal } from "@/hooks/useSystemSignal";
+import {
+  getRegistry,
+  executeAgent,
+  type RegistryAgent,
+} from "@/lib/apiService";
+import { toast } from "sonner";
+import { ThemeToggle } from "@/components/ThemeToggle";
+import { CommandMenu } from "@/components/dashboard/CommandMenu";
+import { SystemBootSequence } from "@/components/SystemBootSequence";
+
+import { navigationRegistry } from "@/lib/navigation";
+import { DynamicSidebar } from "@/components/dashboard/DynamicSidebar";
+import { WidgetGrid } from "@/components/dashboard/WidgetGrid";
+import { useExperiments } from "@/context/ExperimentContext";
+import { LayoutProvider, useLayout } from "@/lib/layout/LayoutContext";
+
+export function MissionControlLayout() {
+  const [activeTab, setActiveTab] = useState<string>("dashboard");
+  const { layoutDensity } = useExperiments();
+  const { currentLayout, setLayoutMode } = useLayout();
+  // registryAgents and its loading logic are now managed by useSystemSignal or individual widgets
+  // const [registryAgents, setRegistryAgents] = useState<RegistryAgent[]>([]);
+  // const [isLoadingAgents, setIsLoadingAgents] = useState(true);
+  const [isBooting, setIsBooting] = useState(true);
+  const { logs, agents, isConnected, healthStatus } = useSystemSignal();
+
+  useEffect(() => {
+    setIsLoadingAgents(true);
+    getRegistry()
+      .then((r) => setRegistryAgents(r.agents || []))
+      .catch(() => setRegistryAgents([]))
+      .finally(() => setIsLoadingAgents(false));
+  }, []);
+
+  // const { logs, agents } = useSocket(); // Replaced by useSystemSignal
+
+  // useEffect(() => {
+  //   setIsLoadingAgents(true);
+  //   getRegistry()
+  //     .then((r) => setRegistryAgents(r.agents || []))
+  //     .catch(() => setRegistryAgents([]))
+  //     .finally(() => setIsLoadingAgents(false));
+  // }, []);
+
+  // const socketStatusMap = agents;
+
+  const handleExecuteAgent = async (agentName: string, task: string) => {
+
+  return (
+    <>
+      {isBooting && <SystemBootSequence onComplete={() => setIsBooting(false)} />}
+      <LayoutProvider>
+        <div className={cn("min-h-screen max-h-screen flex flex-col overflow-hidden transition-opacity duration-1000 bg-[#020205] bg-grid-pattern", isBooting ? "opacity-0" : "opacity-100")}>
+          <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
+
+        <header className="h-16 shrink-0 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-6 z-30">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center border border-primary/30">
+                <Zap size={18} className="text-primary animate-pulse" />
+              </div>
+              <div className="flex flex-col">
+                <span className="text-sm font-bold tracking-tighter text-white uppercase italic">Brunella Cortex</span>
+                <span className="text-[10px] font-mono text-primary/60 tracking-widest leading-none">NEURAL NETWORK OS v2.3.0</span>
+              </div>
+            </div>
+            
+            <div className="h-4 w-[1px] bg-white/10 mx-2" />
+            
+            <nav className="hidden md:flex items-center gap-1">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="sm" className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors cursor-pointer px-2 py-1 rounded gap-1">
+                    LAYOUT: <span className="font-bold text-white">{currentLayout.name.toUpperCase().replace(' ', '_')}</span> <ChevronDown size={14} />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="start">
+                  <DropdownMenuLabel>Válasszon Elrendezést</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {layouts.modes.map((mode) => (
+                    <DropdownMenuItem key={mode.id} onClick={() => setLayoutMode(mode.id)} className="cursor-pointer">
+                      <span className="font-bold">{mode.name}</span>
+                      <span className="ml-auto text-xs text-zinc-500">{mode.id}</span>
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </nav>
+          </div>
+
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
+               <div className={cn(
+                 "w-2 h-2 rounded-full",
+                 isConnected && healthStatus?.status === 'HEALTHY' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]" : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+               )} />
+               <span className="text-[10px] font-mono font-bold text-zinc-400">{isConnected ? healthStatus?.status === 'HEALTHY' ? "CORE_ONLINE" : "CORE_DEGRADED" : "CORE_OFFLINE"}</span>
+            </div>
+            <ThemeToggle />
+          </div>
+        </header>
+
+        <div
+          className="flex-1 grid px-6 pb-4 pt-2 relative z-0 min-h-0"
+          style={{
+            gridTemplateAreas: currentLayout.gridTemplateAreas.map(area => `'${area}'`).join(' '),
+            gridTemplateColumns: currentLayout.gridTemplateColumns || '1fr',
+            gridTemplateRows: currentLayout.gridTemplateRows || 'auto 1fr auto',
+            gap: '1.5rem' // Equivalent to gap-6
+          }}
+        >
+          <DynamicSidebar activeTab={activeTab} onTabChange={setActiveTab} style={{ gridArea: 'sidebar' }} />
+
+          <main className="glass-panel rounded-2xl border-white/5 relative z-10 flex flex-col overflow-hidden bg-black/20" style={{ gridArea: 'main-top' }}>
+            <div 
+              key={activeTab} 
+              className={cn(
+                "flex-1 min-h-0 overflow-y-auto custom-scrollbar scroll-smooth",
+                (activeTab === "chat" || activeTab === "neural-map") && "overflow-hidden"
+              )}
+            >
+              <div className={cn(
+                "mx-auto w-full max-w-[1800px]",
+                (activeTab === "chat" || activeTab === "neural-map") ? "h-full p-0" : layoutDensity === "A" ? "p-6 md:p-8" : "p-2 md:p-4"
+              )}>
+                {activeTab === "dashboard" && (
+                  <WidgetGrid />
+                )}
+
+                {activeItem?.component}
+              </div>
+            </div>
+          </main>
+        </div>
+      </div>
+      </LayoutProvider>
+    </>
+  );
+}

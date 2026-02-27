@@ -1,0 +1,174 @@
+Found 100 matches for pattern "dashboard" in path "F:\mcp-brunella-core\src" (results limited to 100 matches for performance):
+---
+File: utils\systemHealth.ts
+L264:  * Check Dashboard (Vite dev server)
+L266: async function checkDashboard(timeoutMs: number): Promise<ServiceHealth> {
+L267:     const name = 'Dashboard';
+L269:     const baseUrl = process.env.DASHBOARD_URL || 'http://localhost:5173';
+L363:         checkDashboard(timeoutMs)
+L506:         case 'dashboard':
+L508:             return checkDashboard(timeoutMs);
+---
+File: utils\heartbeatMonitor.ts
+L4:  * Continuously monitors critical services (Ollama, FastAPI, Dashboard, Python Shell)
+L61:     name: 'dashboard',
+---
+File: utils\degradationPolicy.ts
+L41:     availableServices: ['ollama', 'fastapi', 'dashboard', 'agents', 'tools', 'mcp'],
+L49:     availableServices: ['fastapi', 'dashboard', 'agents', 'tools', 'file_ops', 'mcp'],
+L57:     availableServices: ['ollama', 'dashboard', 'agents', 'tools', 'mcp'],
+L63:   dashboard_down: {
+L66:     unavailableServices: ['dashboard', 'ui'],
+L67:     message: 'Dashboard unavailable - CLI and MCP access working',
+L73:     availableServices: ['dashboard', 'health_check'],
+L103:     service: 'dashboard',
+L139:     } else if (failed.includes('dashboard')) {
+L140:       newState = { ...DEGRADATION_LEVELS.dashboard_down };
+L145:         availableServices: ['dashboard', 'health_check'],
+---
+File: utils\agentTracer.ts
+L309:  * Get recent completed spans (for dashboard list).
+---
+File: types\blueprint.ts
+L172:   path: string;             // pl. "src/components/Dashboard.tsx"
+---
+File: tools\persistentBrowserTools.ts
+L78:         "Take a screenshot of the current page. This updates the 'Live View' in the dashboard.",
+---
+File: SUMMARY.md
+L12: - **`dashboard/`**: A React alapú felhasználói felület forráskódja.
+---
+File: services\trackStateManager.ts
+L404:    * Get active tracks only (filter for Dashboard)
+---
+File: server\telemetryRoutes.ts
+L2: // PURPOSE: G5.2 — Token Cost Dashboard API (RULE-OB1→OB4)
+---
+File: server\tracksRoutes.ts
+L5:  * RULE-UI3: CLI és Dashboard ugyanazon API-t használja
+---
+File: server\websocket.ts
+L10:  * the Dashboard and Cloudflare Workers AI.
+---
+File: server\web.ts
+L456:     logInfo("Server", "Client connected to Dashboard");
+---
+File: server\specRoutes.ts
+L4:  * RULE-UI3: CLI és Dashboard ugyanazon API-t használja
+---
+File: server\SocketService.ts
+L3:  * Provides broadcastLog and updateAgentStatus for Mission Control dashboard.
+---
+File: server\registry.ts
+L19: // Tool list for dashboard display
+---
+File: server\routes\machines.ts
+L10:  * broadcasts `machine_alert` event-ként a dashboardnak.
+L149:       // 🔔 BUY ajánlások broadcast a dashboardnak (machine_alert event)
+---
+File: interactive.ts
+L103:         'menu.system.dashboard': '🖥️  Dashboard indítása',
+L245:         'menu.system.dashboard': '🖥️  Launch dashboard',
+L608:         { name: t('menu.system.dashboard'), value: 'dashboard' },
+L652:     else if (action === 'dashboard') { runCli('dashboard'); }
+---
+File: dashboard\utils\logger.ts
+L3:  * Provides console-based logging for dashboard components
+---
+File: dashboard\lib\apiService.ts
+L2:  * API Service for Dashboard - Backend Communication
+L580:  * Tracks TODO / Progress API (Dashboard TODO Widget)
+---
+File: dashboard\lib\widgetRegistry.tsx
+L2: import { SystemHealthCard } from "@/components/dashboard/SystemHealthCard";
+L3: import { AgentStatusCard } from "@/components/dashboard/AgentStatusCard";
+L4: import { JulesPanel } from "@/components/dashboard/JulesPanel";
+L5: import { TerminalLog } from "@/components/dashboard/TerminalLog";
+L6: import { TrackProgressWidget } from "@/components/dashboard/TrackProgress";
+L7: import { TestResultsWidget } from "@/components/dashboard/TestResultsWidget";
+L8: import { SuggestedTasksWidget } from "@/components/dashboard/SuggestedTasksWidget";
+L9: import { TaskQueueMonitor } from "@/components/dashboard/TaskQueueMonitor";
+L10: import { FileExplorer } from "@/components/dashboard/FileExplorer";
+L11: import { QuickActionsPanel } from "@/components/dashboard/QuickActionsPanel";
+---
+File: dashboard\lib\navigation.tsx
+L3:   LayoutDashboard, Network, Rocket, Cloud, Cpu, MessageSquare,
+L9: import { NeuralLinkChat } from "@/components/dashboard/NeuralLinkChat";
+L10: import { SettingsPanel } from "@/components/dashboard/SettingsPanel";
+L11: import { FileExplorer } from "@/components/dashboard/FileExplorer";
+L12: import { RobotkezV2Chat } from "@/components/dashboard/RobotkezV2Chat";
+L13: import { AgentManagementPanel } from "@/components/dashboard/AgentManagementPanel";
+L14: import { TaskQueueMonitor } from "@/components/dashboard/TaskQueueMonitor";
+L15: import { KnowledgeBasePanel } from "@/components/dashboard/KnowledgeBasePanel";
+L16: import { IncubatorPanel } from "@/components/dashboard/IncubatorPanel";
+L17: import { DeveloperPanel } from "@/components/dashboard/DeveloperPanel";
+L18: import { EdgePanel } from "@/components/dashboard/EdgePanel";
+L19: import { JulesPanel } from "@/components/dashboard/JulesPanel";
+L20: import { TrackGenerator } from "@/components/dashboard/TrackGenerator";
+L21: import { TaskDecomposerPanel } from "@/components/dashboard/TaskDecomposerPanel";
+L22: import { SuggestedTasksWidget } from "@/components/dashboard/SuggestedTasksWidget";
+L27: import { MCPCommandCenter } from "@/components/dashboard/MCPCommandCenter";
+L28: import { InventoryCatalog } from "@/components/dashboard/InventoryCatalog";
+L29: import { TestResultsWidget } from "@/components/dashboard/TestResultsWidget";
+L30: import { EmbeddedWorkflow } from "@/components/dashboard/EmbeddedWorkflow";
+L31: import { PythonWorkersPanel } from "@/components/dashboard/PythonWorkersPanel";
+L79:     { id: "dashboard", label: "Mission Control", icon: LayoutDashboard, component: null },
+L108:   navigationRegistry.registerGroup({ title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map"] });
+---
+File: dashboard\pages\FleetManager.tsx
+L3:  * Path: src/dashboard/pages/FleetManager.tsx
+L9: import { MetricsDashboard } from '../components/fleet/MetricsDashboard.js';
+L62:             <MetricsDashboard fleetId={selectedFleetId} />
+---
+File: dashboard\pages\CloudflareDeployment.tsx
+L391:             💡 <strong>Tipp:</strong> Az Account ID és API Token a Cloudflare Dashboard-ból szerzéshez szükséges. Alapértelmezett D1 adatbázis neve: "brunella-cean-db"
+---
+File: dashboard\hooks\useMCP.ts
+L34:           source: 'dashboard'
+---
+File: dashboard\hooks\useDashboardData.ts
+L2:  * Custom hook to initialize Dashboard data from backend API
+L10: export function useDashboardData() {
+L74:                 console.error('Failed to initialize dashboard data:', error);
+---
+File: dashboard\App.tsx
+L2: import { MissionControlLayout } from '@/components/dashboard/MissionControlLayout'
+---
+File: dashboard\components\cean\utils\constants.ts
+L6:   DASHBOARD: 'dashboard',
+---
+File: dashboard\components\dashboard\GoldStatusWidget.tsx
+L4:  * Main dashboard összefoglaló widget — 6 pillér státusza
+---
+File: dashboard\components\dashboard\MissionControlLayout.tsx
+L12: import { CommandMenu } from "@/components/dashboard/CommandMenu";
+L16: import { DynamicSidebar } from "@/components/dashboard/DynamicSidebar";
+L17: import { WidgetGrid } from "@/components/dashboard/WidgetGrid";
+L21:   const [activeTab, setActiveTab] = useState<string>("dashboard");
+L103:                 {activeTab === "dashboard" && (
+---
+File: dashboard\components\dashboard\NeuralLinkChat.tsx
+L27: import { LiveExecutionMonitor } from "@/components/dashboard/LiveExecutionMonitor";
+---
+File: dashboard\components\dashboard\TestResultsWidget.tsx
+L101:         body: JSON.stringify({ triggerReason: "Manual trigger from dashboard" }),
+---
+File: dashboard\components\dashboard\TokenUsageChart.tsx
+L1: // FILE: src/dashboard/components/dashboard/TokenUsageChart.tsx
+---
+File: dashboard\components\dashboard\TraceViewer.tsx
+L1: // FILE: src/dashboard/components/dashboard/TraceViewer.tsx
+---
+File: dashboard\components\dashboard\TrackGenerator.tsx
+L2:  * TrackGenerator.tsx — SpecWriterAgent Dashboard Integration
+L4:  * EPP v2 Protocol: Dashboard + CLI integration KÖTELEZŐ (Rule #6)
+L225:             placeholder="Példa: Dashboard TODO widget real-time sync-kal. WebSocket frissítés, checkbox toggle, track progress megjelenítés. Használjuk a Socket.IO-t és egy új React komponenst."
+L362:               EPP v2 Rule #6: Dashboard + CLI Integration
+L365:               Minden generált track tartalmaz Dashboard komponens és CLI parancs
+---
+File: dashboard\components\dashboard\TaskDecomposerPanel.tsx
+L211:             placeholder="Írd be a komplex feladatot (pl. 'Adj hozzá új API route-ot, írj teszteket, frissítsd a dashboardot')..."
+---
+File: dashboard\components\dashboard\SpecManagerPanel.tsx
+L4:  * Dashboard komponens az összes track spec státuszának kezelésére.
+---

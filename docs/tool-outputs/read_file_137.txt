@@ -1,0 +1,490 @@
+/**
+ * Unified Workspace Tool - Google Workspace API Integration
+ * 
+ * Consolidated Google API operations for BAS Enterprise Suite modules.
+ * Handles: Gmail, Google Sheets, Google Drive, Calendar
+ * 
+ * @module tools/unifiedWorkspace
+ * @version 1.0.0
+ */
+
+import { google, Auth } from 'googleapis';
+import { logInfo, logError } from '../utils/logger.js';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+
+// ============================================================================
+// Types & Interfaces
+// ============================================================================
+
+export interface WorkspaceConfig {
+  credentialsPath?: string;
+  tokenPath?: string;
+  scopes: string[];
+}
+
+export interface EmailDraft {
+  to: string;
+  subject: string;
+  body: string;
+  attachments?: string[];
+}
+
+export interface SheetOperation {
+  spreadsheetId: string;
+  range: string;
+  values: any[][];
+  operation: 'append' | 'update' | 'read';
+}
+
+export interface DriveFileInfo {
+  name: string;
+  mimeType: string;
+  parents?: string[];
+  localPath?: string; // For upload
+}
+
+export interface CalendarEvent {
+  summary: string;
+  description?: string;
+  start: { dateTime: string; timeZone: string };
+  end: { dateTime: string; timeZone: string };
+  attendees?: { email: string }[];
+}
+
+// ============================================================================
+// Unified Workspace Client
+// ============================================================================
+
+export class UnifiedWorkspaceClient {
+  private auth: Auth.OAuth2Client | undefined;
+  private gmail: any;
+  private sheets: any;
+  private drive: any;
+  private calendar: any;
+
+  private readonly SCOPES = [
+    'https://www.googleapis.com/auth/gmail.modify',
+    'https://www.googleapis.com/auth/spreadsheets',
+    'https://www.googleapis.com/auth/drive',
+    'https://www.googleapis.com/auth/calendar'
+  ];
+
+  constructor(private config: WorkspaceConfig) {
+    this.config.scopes = this.config.scopes || this.SCOPES;
+  }
+
+  /**
+   * Initialize authentication with Google Workspace
+   */
+  async initialize(): Promise<void> {
+    try {
+      logInfo('UnifiedWorkspace', 'Initializing Google Workspace authentication...');
+
+      // Load credentials
+      const credentials = await this.loadCredentials();
+      
+      const { client_secret, client_id, redirect_uris } = credentials.installed || credentials.web;
+      this.auth = new google.auth.OAuth2(client_id, client_secret, redirect_uris[0]);
+
+      // Load or create token
+      const token = await this.getTokenOrAuthorize();
+      this.auth.setCredentials(token);
+
+      // Initialize service clients
+      this.gmail = google.gmail({ version: 'v1', auth: this.auth });
+      this.sheets = google.sheets({ version: 'v4', auth: this.auth });
+      this.drive = google.drive({ version: 'v3', auth: this.auth });
+      this.calendar = google.calendar({ version: 'v3', auth: this.auth });
+
+      logInfo('UnifiedWorkspace', '✅ Google Workspace initialized successfully');
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to initialize: ${errorMsg}`);
+      throw new Error(`Google Workspace init failed: ${errorMsg}`);
+    }
+  }
+
+  // ========================================================================
+  // Gmail Operations
+  // ========================================================================
+
+  /**
+   * Create email draft (requires human approval before sending)
+   */
+  async createEmailDraft(draft: EmailDraft): Promise<{ draftId: string; url: string }> {
+    if (!this.gmail) {
+      throw new Error('Gmail client not initialized');
+    }
+
+    try {
+      logInfo('UnifiedWorkspace', `Creating email draft to: ${draft.to}`);
+
+      const message = this.createEmailMessage(draft);
+      const response = await this.gmail.users.drafts.create({
+        userId: 'me',
+        requestBody: {
+          message: {
+            raw: Buffer.from(message).toString('base64url'),
+          },
+        },
+      });
+
+      const draftId = response.data.id;
+      const url = `https://mail.google.com/mail/u/0/#drafts/${draftId}`;
+
+      logInfo('UnifiedWorkspace', `✅ Draft created: ${draftId}`);
+      return { draftId, url };
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to create email draft: ${errorMsg}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Search emails by query
+   */
+  async searchEmails(query: string, maxResults: number = 10): Promise<any[]> {
+    if (!this.gmail) {
+      throw new Error('Gmail client not initialized');
+    }
+
+    try {
+      logInfo('UnifiedWorkspace', `Searching emails: "${query}"`);
+
+      const response = await this.gmail.users.messages.list({
+        userId: 'me',
+        q: query,
+        maxResults,
+      });
+
+      return response.data.messages || [];
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Email search failed: ${errorMsg}`);
+      return [];
+    }
+  }
+
+  /**
+   * Get email attachments (for invoice processing, etc.)
+   */
+  async getEmailAttachments(messageId: string): Promise<{ filename: string; data: Buffer }[]> {
+    if (!this.gmail) {
+      throw new Error('Gmail client not initialized');
+    }
+
+    try {
+      const message = await this.gmail.users.messages.get({
+        userId: 'me',
+        id: messageId,
+      });
+
+      const attachments: { filename: string; data: Buffer }[] = [];
+
+      if (message.data.payload?.parts) {
+        for (const part of message.data.payload.parts) {
+          if (part.filename && part.body?.attachmentId) {
+            const attachment = await this.gmail.users.messages.attachments.get({
+              userId: 'me',
+              messageId: messageId,
+              id: part.body.attachmentId,
+            });
+
+            attachments.push({
+              filename: part.filename,
+              data: Buffer.from(attachment.data.data, 'base64'),
+            });
+          }
+        }
+      }
+
+      return attachments;
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to get attachments: ${errorMsg}`);
+      return [];
+    }
+  }
+
+  // ========================================================================
+  // Google Sheets Operations
+  // ========================================================================
+
+  /**
+   * Batch operations on Google Sheets (read/write/append)
+   */
+  async performSheetOperation(operation: SheetOperation): Promise<any> {
+    if (!this.sheets) {
+      throw new Error('Sheets client not initialized');
+    }
+
+    try {
+      logInfo('UnifiedWorkspace', `Sheet ${operation.operation}: ${operation.spreadsheetId}`);
+
+      switch (operation.operation) {
+        case 'read':
+          const readResponse = await this.sheets.spreadsheets.values.get({
+            spreadsheetId: operation.spreadsheetId,
+            range: operation.range,
+          });
+          return readResponse.data.values || [];
+
+        case 'append':
+          const appendResponse = await this.sheets.spreadsheets.values.append({
+            spreadsheetId: operation.spreadsheetId,
+            range: operation.range,
+            valueInputOption: 'USER_ENTERED',
+            resource: {
+              values: operation.values,
+            },
+          });
+          return appendResponse.data;
+
+        case 'update':
+          const updateResponse = await this.sheets.spreadsheets.values.update({
+            spreadsheetId: operation.spreadsheetId,
+            range: operation.range,
+            valueInputOption: 'USER_ENTERED',
+            resource: {
+              values: operation.values,
+            },
+          });
+          return updateResponse.data;
+
+        default:
+          throw new Error(`Unknown sheet operation: ${operation.operation}`);
+      }
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Sheet operation failed: ${errorMsg}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Create new spreadsheet
+   */
+  async createSpreadsheet(title: string): Promise<{ spreadsheetId: string; url: string }> {
+    if (!this.sheets) {
+      throw new Error('Sheets client not initialized');
+    }
+
+    try {
+      const response = await this.sheets.spreadsheets.create({
+        resource: {
+          properties: {
+            title,
+          },
+        },
+      });
+
+      const spreadsheetId = response.data.spreadsheetId!;
+      const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}`;
+
+      logInfo('UnifiedWorkspace', `✅ Spreadsheet created: ${title}`);
+      return { spreadsheetId, url };
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to create spreadsheet: ${errorMsg}`);
+      throw error;
+    }
+  }
+
+  // ========================================================================
+  // Google Drive Operations
+  // ========================================================================
+
+  /**
+   * Upload file to Google Drive
+   */
+  async uploadFile(fileInfo: DriveFileInfo): Promise<{ fileId: string; webViewLink: string }> {
+    if (!this.drive) {
+      throw new Error('Drive client not initialized');
+    }
+
+    try {
+      if (!fileInfo.localPath) {
+        throw new Error('localPath is required for file upload');
+      }
+
+      logInfo('UnifiedWorkspace', `Uploading file: ${fileInfo.name}`);
+
+      const fileMetadata: any = {
+        name: fileInfo.name,
+        mimeType: fileInfo.mimeType,
+      };
+
+      if (fileInfo.parents) {
+        fileMetadata.parents = fileInfo.parents;
+      }
+
+      const media = {
+        mimeType: fileInfo.mimeType,
+        body: await fs.readFile(fileInfo.localPath),
+      };
+
+      const response = await this.drive.files.create({
+        requestBody: fileMetadata,
+        media: media,
+        fields: 'id,webViewLink',
+      });
+
+      logInfo('UnifiedWorkspace', `✅ File uploaded: ${response.data.id}`);
+      return {
+        fileId: response.data.id,
+        webViewLink: response.data.webViewLink,
+      };
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `File upload failed: ${errorMsg}`);
+      throw error;
+    }
+  }
+
+  /**
+   * List files in a Drive folder
+   */
+  async listFiles(folderId?: string, query?: string): Promise<any[]> {
+    if (!this.drive) {
+      throw new Error('Drive client not initialized');
+    }
+
+    try {
+      let q = query || '';
+      if (folderId) {
+        q += (q ? ' and ' : '') + `'${folderId}' in parents`;
+      }
+
+      const response = await this.drive.files.list({
+        q,
+        fields: 'files(id, name, mimeType, createdTime, modifiedTime)',
+        pageSize: 100,
+      });
+
+      return response.data.files || [];
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to list files: ${errorMsg}`);
+      return [];
+    }
+  }
+
+  // ========================================================================
+  // Google Calendar Operations
+  // ========================================================================
+
+  /**
+   * Create calendar event
+   */
+  async createCalendarEvent(event: CalendarEvent, calendarId: string = 'primary'): Promise<{ eventId: string; htmlLink: string }> {
+    if (!this.calendar) {
+      throw new Error('Calendar client not initialized');
+    }
+
+    try {
+      logInfo('UnifiedWorkspace', `Creating calendar event: ${event.summary}`);
+
+      const response = await this.calendar.events.insert({
+        calendarId,
+        requestBody: event,
+      });
+
+      logInfo('UnifiedWorkspace', `✅ Event created: ${response.data.id}`);
+      return {
+        eventId: response.data.id,
+        htmlLink: response.data.htmlLink,
+      };
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to create event: ${errorMsg}`);
+      throw error;
+    }
+  }
+
+  // ========================================================================
+  // Helper Methods
+  // ========================================================================
+
+  /**
+   * Create RFC 2822 email message
+   */
+  private createEmailMessage(draft: EmailDraft): string {
+    const boundary = '===============boundary==';
+    let message = '';
+
+    message += `To: ${draft.to}\r\n`;
+    message += `Subject: ${draft.subject}\r\n`;
+    message += `MIME-Version: 1.0\r\n`;
+    message += `Content-Type: multipart/mixed; boundary="${boundary}"\r\n\r\n`;
+    message += `--${boundary}\r\n`;
+    message += `Content-Type: text/plain; charset=UTF-8\r\n\r\n`;
+    message += `${draft.body}\r\n\r\n`;
+    message += `--${boundary}--`;
+
+    return message;
+  }
+
+  /**
+   * Load Google OAuth credentials
+   */
+  private async loadCredentials(): Promise<any> {
+    const credPath = this.config.credentialsPath || 
+      path.join(process.cwd(), 'config', 'google_credentials.json');
+
+    try {
+      const content = await fs.readFile(credPath, 'utf-8');
+      return JSON.parse(content);
+    } catch (error) {
+      throw new Error(
+        `Failed to load Google credentials from ${credPath}. ` +
+        `See docs/GOOGLE_WORKSPACE_SETUP.md for setup instructions.`
+      );
+    }
+  }
+
+  /**
+   * Get existing token or prompt for authorization
+   */
+  private async getTokenOrAuthorize(): Promise<any> {
+    const tokenPath = this.config.tokenPath || 
+      path.join(process.cwd(), 'config', 'google_token.json');
+
+    try {
+      const content = await fs.readFile(tokenPath, 'utf-8');
+      return JSON.parse(content);
+    } catch {
+      // Token doesn't exist - would need user authorization flow
+      throw new Error(
+        'Google token not found. Run `brunella workspace auth` to authorize.'
+      );
+    }
+  }
+}
+
+// ============================================================================
+// Factory Function for Easy Initialization
+// ============================================================================
+
+let _workspaceClient: UnifiedWorkspaceClient | null = null;
+
+export async function getWorkspaceClient(config?: Partial<WorkspaceConfig>): Promise<UnifiedWorkspaceClient> {
+  if (_workspaceClient) {
+    return _workspaceClient;
+  }
+
+  const fullConfig: WorkspaceConfig = {
+    scopes: [],
+    ...config,
+  };
+
+  _workspaceClient = new UnifiedWorkspaceClient(fullConfig);
+  await _workspaceClient.initialize();
+
+  return _workspaceClient;
+}
+
+export function resetWorkspaceClient(): void {
+  _workspaceClient = null;
+}

@@ -1,0 +1,1 @@
+Successfully created and wrote to new file: F:\mcp-brunella-core\data\invoice_templates\invoice_schema.py.

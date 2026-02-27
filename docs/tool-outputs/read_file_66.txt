@@ -1,0 +1,306 @@
+
+IMPORTANT: The file content has been truncated.
+Status: Showing lines 1-300 of 619 total lines.
+Action: To read more of the file, you can use the 'offset' and 'limit' parameters in a subsequent 'read_file' call. For example, to read the next section of the file, use offset: 300.
+
+--- FILE CONTENT (truncated) ---
+import "dotenv/config"; // CRITICAL: Load .env before anything else
+import express from "express";
+import { createServer } from "http";
+import { Server } from "socket.io";
+import path from "path";
+import { readFileSync } from "fs";
+import os from "os";
+import swaggerUi from "swagger-ui-express";
+import { config } from "../config/schema.js";
+import {
+  Logger,
+  logEmitter,
+  type LogEvent,
+  type AgentStatusEvent,
+  logInfo,
+  logError,
+  logWarn,
+} from "../utils/logger.js";
+import { initDb, saveMessage, getMessages } from "../utils/db.js";
+import { initTasksDb } from "../utils/tasksDb.js";
+import { getGlobalDb, closeGlobalDb } from "../utils/globalDb.js";
+import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
+import { SSEServerTransport } from "@modelcontextprotocol/sdk/server/sse.js";
+import { registerAllTools } from "./registry.js";
+import { v4 as uuidv4 } from "uuid";
+import { toolManager } from "./ToolManager.js";
+import { mcpProcessManager } from "./McpProcessManager.js";
+import { mcpClientManager } from "../utils/mcpClientManager.js";
+import { AgentManager, agentManager, initializeAgentManager } from "../agents/AgentManager.js"; // Import class and init function, and the exported singleton variable
+import { persistentBrowser } from "../utils/persistentBrowser.js";
+import {
+  corsWhitelist,
+  requestId,
+  requestLogging,
+  apiRateLimit,
+} from "./middleware.js";
+import { swaggerSpec } from "./swagger.js";
+import { socketService } from "./SocketService.js";
+import { globalErrorHandler } from "./middleware/errorHandler.js";
+import {
+  getPrometheusContentType,
+  getPrometheusMetrics,
+  initMetrics,
+  recordHttpRequest,
+} from "../utils/metrics.js";
+import { createTelemetryRouter } from "./telemetryRoutes.js";
+import { createAuditRouter } from "./auditRoutes.js";
+import { createSpecRouter } from "./specRoutes.js";
+import { createPhoenixRouter } from "./phoenixRoutes.js";
+import { createRouterRouter } from "./routerRoutes.js";
+import { createMemoryRouter } from "./memoryRoutes.js";
+import { createTracksRouter } from "./tracksRoutes.js";
+import ceanRouter from "./routes/cean.js";
+import { createWranglerRouter } from "./routes/wrangler.js";
+import mcpRouter from "./routes/mcp.js";
+import { createV1Router } from "./routes/index.js";
+import { createRobotkezRoutes } from "./routes/robotkez.js";
+import { createTaskRoutes } from "./routes/tasks.js";
+import { suggestedTasksRouter } from "./routes/suggestedTasks.js";
+import { createFleetRouter } from "./routes/fleet.js";
+import { createWorkersRouter } from "./routes/workers.js";
+import { createMetricsRouter } from "./routes/metrics.js";
+import { createScalingRouter } from "./routes/scaling.js";
+import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers, registerFleetWebSocketHandlers } from "./websocket.js";
+import testSchedulerRoutes from "./routes/testScheduler.js";
+import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
+import { startScheduler as startCronScheduler } from "./cron.js";
+import { scheduledTasksRunner } from "./schedulers/scheduledTasksRunner.js";
+import { initTestResultsDb } from "../core/testResultsService.js";
+import { initSuggestedTasksDb } from "../core/suggestedTasksScanner.js";
+import { createScheduledTasksRoutes } from "./routes/scheduledTasks.js";
+import createWebhookRoutes from "./routes/webhooks.js";
+import githubWebhookRouter from "./routes/githubWebhook.js";
+import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
+import { createEnterpriseRouter } from "./routes/enterprise.js";
+import paiosOrchestratorRouter from "./routes/paiosOrchestrator.js";
+import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
+import { createDashboardRoutes } from "./routes/dashboard.js";
+
+const logger = new Logger("web_ui.log");
+
+const corsOriginList = (process.env.CORS_ORIGINS || "")
+  .split(",")
+  .map((s) => s.trim())
+  .filter(Boolean);
+
+interface ActiveTransport {
+  transport: SSEServerTransport;
+  server: McpServer;
+}
+
+const PACKAGE_VERSION = (() => {
+  try {
+    const pkg = JSON.parse(
+      readFileSync(path.resolve(process.cwd(), "package.json"), "utf-8"),
+    );
+    return typeof pkg.version === "string" ? pkg.version : "0.0.0";
+  } catch {
+    return "0.0.0";
+  }
+})();
+
+export async function startWebServer() {
+  const webUiEnabled =
+    process.env.WEB_UI_ENABLED !== "0" &&
+    process.env.WEB_UI_ENABLED !== "false";
+  if (!webUiEnabled) {
+    logError("Server", "WEB_UI_ENABLED=0 -> Web UI disabled");
+    return;
+  }
+
+  try {
+    initDb();
+  } catch (e: any) {
+    logError("Server", `DB Init failed: ${e.message}`);
+  }
+
+  try {
+    initTasksDb();
+  } catch (e: any) {
+    logError("Server", `Tasks DB Init failed: ${e.message}`);
+  }
+
+  try {
+    await initTestResultsDb("data/brunella.db");
+  } catch (e: any) {
+    logError("Server", `Test Results DB Init failed: ${e.message}`);
+  }
+
+  try {
+    await initSuggestedTasksDb("data/brunella.db");
+  } catch (e: any) {
+    logError("Server", `Suggested Tasks DB Init failed: ${e.message}`);
+  }
+
+  initMetrics();
+
+  logInfo("Server", "🔄 Starting MCP Bridge...");
+  try {
+    await mcpProcessManager.loadConfig();
+    const configured = mcpProcessManager.getServersStatus();
+    logInfo("Server", `📋 ${configured.length} MCP server(s) configured`);
+  } catch (e: unknown) {
+    const msg = e instanceof Error ? e.message : String(e);
+    logError("Server", `MCP config load failed: ${msg}`);
+  }
+
+  // Előzetes ügynök regisztráció (hogy az API végpontok működjenek SSE előtt is)
+  // Megjegyzés: Ez már megtörténik az index.ts-ben a registerAllTools-on keresztül.
+
+  const app = express();
+  
+  // Parse body (standard)
+  app.use(express.json());
+  app.use(corsWhitelist);
+  app.use(requestId);
+  app.use(requestLogging);
+  app.use("/api", apiRateLimit);
+
+  /**
+   * @swagger
+   * /metrics:
+   *   get:
+   *     summary: Prometheus metrics scrape endpoint
+   *     description: Exposes BAS runtime metrics in Prometheus text format.
+   *     responses:
+   *       200:
+   *         description: Prometheus metrics text payload
+   */
+  app.get("/api/browser/snapshot", (req, res) => {
+    const screenshot = persistentBrowser.getLastScreenshot();
+    if (screenshot) {
+      res.setHeader("Content-Type", "image/png");
+      res.send(screenshot);
+    } else {
+      res.status(404).send("No active browser session or screenshot available.");
+    }
+  });
+
+  app.get("/metrics", async (_req, res) => {
+    try {
+      res.set("Content-Type", getPrometheusContentType());
+      const metrics = await getPrometheusMetrics();
+      res.end(metrics);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ error: message });
+    }
+  });
+
+  // Swagger UI
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+
+  // --- API Versioning (Phase 8) ---
+  const v1Router = createV1Router();
+
+  // Add Gold Protocol routes to v1
+  v1Router.use("/telemetry", createTelemetryRouter());
+  v1Router.use("/audit", createAuditRouter());
+  v1Router.use("/specs", createSpecRouter());
+  v1Router.use("/phoenix", createPhoenixRouter());
+  v1Router.use("/router", createRouterRouter());
+  v1Router.use("/memory", createMemoryRouter());
+  v1Router.use("/mcp", mcpRouter);
+
+  // Add Tracks routes (EPP v2)
+  v1Router.use("/tracks", createTracksRouter());
+
+  // Add MCP routes (Model Context Protocol)
+  v1Router.use("/mcp", mcpRouter);
+
+  // Add CEAN routes (Cloudflare Edge Agents Network)
+  v1Router.use(ceanRouter);
+
+  // Add Wrangler routes (D1 & Worker deployment)
+  v1Router.use(createWranglerRouter());
+
+  // Add Fleet Management routes (Phase 2)
+  const db = getGlobalDb();
+  v1Router.use("/fleet", createFleetRouter(db));
+  v1Router.use("/workers", createWorkersRouter(db));
+  v1Router.use("/metrics", createMetricsRouter(db));
+  v1Router.use("/scaling", createScalingRouter(db));
+
+  // Add Robotkéz routes to v1
+  v1Router.use("/robotkez", createRobotkezRoutes());
+
+  // Add Task Queue routes to v1
+  v1Router.use("/tasks", createTaskRoutes());
+
+  // Add Test Scheduler routes to v1
+  v1Router.use("/tests", testSchedulerRoutes);
+
+  // Add Suggested Tasks routes to v1
+  v1Router.use("/suggested-tasks", suggestedTasksRouter);
+
+  // Add Enterprise Suite routes to v1
+  v1Router.use("/enterprise", createEnterpriseRouter());
+
+  // Add Python Workers routes to v1
+  v1Router.use("/python-workers", createPythonWorkersRouter());
+
+  // Add Scheduled Tasks routes to v1
+  v1Router.use("/scheduled-tasks", createScheduledTasksRoutes(db));
+
+  // Add Dashboard routes to v1
+  v1Router.use("/dashboard", createDashboardRoutes());
+
+  // Add Webhook routes to v1
+  v1Router.use("/webhooks", createWebhookRoutes(db));
+
+  // Mount v1 router at /api/v1 and /api (backwards compatibility)
+  app.use("/api/v1", v1Router);
+  app.use("/api", v1Router);
+
+  // PAIOS Orchestrator Chat Interface
+  app.use("/api/paios", paiosOrchestratorRouter);
+
+  // GitHub Webhook Integration (Phase 3: JCAI)
+  app.use("/api/github", githubWebhookRouter);
+
+  const httpServer = createServer(app);
+  const io = new Server(httpServer, {
+    cors: {
+      origin:
+        corsOriginList.length > 0
+          ? corsOriginList
+          : ["http://localhost:5173", "http://localhost:3000", "*"],
+      methods: ["GET", "POST"],
+    },
+  });
+  socketService.init(io);
+  initializeAgentManager(socketService); // Initialize agentManager here
+
+  // Connect Phoenix Event Bus to Socket.IO for real-time dashboard updates
+  const { phoenixEventBus } = await import('../core/phoenixEventBus.js');
+  phoenixEventBus.connectSocketBroadcaster((event: string, data: unknown) => {
+    socketService.emit(event, data);
+  });
+
+  io.on("connection", (socket) => {
+    logInfo("WebSocket", `Client connected: ${socket.id}`);
+
+    // Send initial agent statuses to the newly connected client
+    const statuses = agentManager.listAgentStatuses();
+    socket.emit('agents:snapshot', statuses);
+
+    socket.on("robotkez:abort", async () => {
+      logWarn("WebSocket", "User triggered Robotkez Abort");
+      await persistentBrowser.close();
+      persistentBrowser.forceKill();
+      socket.emit("robotkez:aborted", { status: "success", message: "Munkamenet megszakítva." });
+    });
+
+    socket.on("disconnect", () => {
+      logInfo("WebSocket", `Client disconnected: ${socket.id}`);
+    });
+  });
+
+  // Register Cloudflare Edge WebSocket handlers (Iteration 2)

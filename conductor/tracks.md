@@ -1,14 +1,19 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-25T20:30:15.328Z
+**Utolso frissites:** 2026-02-27T02:39:13.764Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 88 total | 7 active | 6 completed | 68 archived
+**Stats:** 90 total | 7 active | 7 completed | 68 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (7)
+## Tervezett Szalak (Proposed) (8)
+
+- [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
+  - **ID:** `cloudflare_workers_migration_20260226`
+  - **Progress:** 0%
+  - Mappa: ./tracks/cloudflare_workers_migration_20260226/
 
 - [ ] **Creative Friction Mediator (The Vibe-Check)** [LOW]
   - **ID:** `creative_friction_mediator_20260212`
@@ -97,12 +102,16 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (6)
+## Befejezett (Completed - Not Archived) (7)
 
 - [x] **Automata Kampány Generátor Ügynök és UI**
   - **ID:** `campaign-generator-agent-20260225`
   - **Completed:** 2026-02-25
   - Mappa: ./tracks/campaign-generator-agent-20260225/
+
+- [x] **Cserszegtomaj AI Turizmus Kampány**
+  - **ID:** `cserszegtomaj-campaign-20260225`
+  - Mappa: ./tracks/cserszegtomaj-campaign-20260225/
 
 - [x] **Dashboard Teljes Stabilizálása és Auditálása**
   - **ID:** `dashboard-stabilization-20260225`

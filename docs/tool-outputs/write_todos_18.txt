@@ -1,0 +1,5 @@
+Successfully updated the todo list. The current list is now:
+1. [in_progress] RobotkezV2 Comet: CriticAgent (Gemini Flash Vision) implementálása
+2. [pending] RobotkezV2 Comet: Vision Selector (GPT-4o) és önjavító loop bekötése
+3. [pending] Dashboard V3: ProcessControlWidget beavatkozási gombok (STOP, RESTART) implementálása
+4. [pending] Backend: Intervenciós API végpontok és ügynök-megszakítás logika kidolgozása

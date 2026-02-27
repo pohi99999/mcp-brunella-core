@@ -1,0 +1,80 @@
+Output: On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+        modified:   .ai/FOSZAL.md
+        modified:   .ai/claude.md
+        modified:   .ai/gemini.md
+        modified:   .gitignore
+        modified:   .vscode/settings.json
+        modified:   BRUNELLA_MASTER_CONTEXT.md
+        modified:   conductor/project_state.json
+        modified:   conductor/tracks.md
+        modified:   docs/cloudflare/INFRASTRUCTURE.md
+        modified:   myai/agents/comet/critic.py
+        modified:   myai/core/vision_worker.py
+        modified:   myai/requirements.txt
+        modified:   package.json
+        deleted:    playwright-report/data/53a19fc0634178bd3ab8ab37b3722a2f822a276c.webm
+        modified:   playwright-report/index.html
+        modified:   playwright.config.ts
+        modified:   src/core/intentAnalyzer.ts
+        modified:   src/core/llm_client.ts
+        deleted:    src/dashboard/components/CommandMenu.tsx
+        modified:   src/dashboard/components/dashboard/DeveloperPanel.tsx
+        modified:   src/dashboard/components/dashboard/JulesPanel.tsx   
+        modified:   src/dashboard/components/dashboard/MissionControlLayout.test.tsx
+        modified:   src/dashboard/lib/navigation.tsx
+        modified:   src/server/middleware.ts
+        modified:   src/server/routes/agents.ts
+        modified:   src/server/web.ts
+        modified:   src/server/websocket.ts
+        modified:   vitest.dashboard.config.ts
+        modified:   vitest.ui.config.ts
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)        
+        BOVITMENY.md
+        cloudflare.md
+        cloudflare/src/lead-intelligence.ts
+        cloudflare/wrangler.lead-intelligence.jsonc
+        conductor/tracks/trojan-horse-campaign-20260224/
+        credentials/
+        cypress.config.ts
+        myai/upload_trojan_to_sheets.py
+        scripts/deploy-lead-intelligence.bat
+        test/e2e/dashboard_audit.spec.ts
+        test/e2e/functional_integrity.spec.ts
+        test/e2e/total_system_sync.spec.ts
+        testing/cypress/
+
+no changes added to commit (use "git add" and/or "git commit -a")       
+warning: in the working copy of 'BRUNELLA_MASTER_CONTEXT.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'conductor/project_state.json', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'conductor/tracks.md', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'playwright-report/index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'conductor/tracks/trojan-horse-campaign-20260224/fogorvosok_leads_20260224_2036.csv', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'conductor/tracks/trojan-horse-campaign-20260224/fogorvosok_leads_CLEAN.csv', LF will be replaced by CRLF the next time Git touches it
+
+> mcp-brunella-core@1.0.0 build
+> tsc
+
+src/server/routes/agents.ts:82:26 - error TS2339: Property 'executeAgent' does not exist on type 'AgentManager'.
+
+82             agentManager.executeAgent(agentName, task, { ...context, taskId }).catch(err => {
+                            ~~~~~~~~~~~~
+
+src/server/routes/agents.ts:82:86 - error TS7006: Parameter 'err' implicitly has an 'any' type.
+
+82             agentManager.executeAgent(agentName, task, { ...context, taskId }).catch(err => {
+                                                                        
+                ~~~
+
+
+Found 2 errors in the same file, starting at: src/server/routes/agents.ts:82
+
+husky - pre-commit script failed (code 1)
+Everything up-to-date
+Process Group PGID: 43456

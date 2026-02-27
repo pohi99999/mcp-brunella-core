@@ -1,0 +1,4 @@
+Output: logs\http.log:{"level":"info","timestamp":"2026-02-24T00:03:50.987Z","message":"POST /CometBrowser/execute","requestId":"58d72c60-d9c7-482b-ae58-ae95cb8f924e","method":"POST","url":"/CometBrowser/execute","status":500,"durationMs":6}
+logs\http.log:{"level":"info","timestamp":"2026-02-24T00:04:42.680Z","message":"POST /CometBrowser/execute","requestId":"81b9ca9c-291c-414a-8174-ca86d5629f20","method":"POST","url":"/CometBrowser/execute","status":500,"durationMs":3}
+logs\http.log:{"level":"info","timestamp":"2026-02-24T00:05:28.296Z","message":"POST /CometBrowser/execute","requestId":"5fccb6fd-2e0c-4ebd-b6bb-8eba974540eb","method":"POST","url":"/CometBrowser/execute","status":500,"durationMs":6643}
+Process Group PGID: 21464

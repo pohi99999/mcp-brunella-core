@@ -1,0 +1,9 @@
+Found 5 matches for pattern "useEffect" in path "src/dashboard/components/dashboard" (filter: "DeveloperPanel.tsx"):
+---
+File: DeveloperPanel.tsx
+L11: import { useState, useEffect, useCallback } from "react";
+L568:   useEffect(() => {
+L575:   useEffect(() => {
+L801:   useEffect(() => {
+L833:   useEffect(() => {
+---

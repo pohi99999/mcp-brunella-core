@@ -1,0 +1,3 @@
+{
+  "error": "Path not in workspace: Attempted path \"C:\\Users\\pohi9\\.gemini\\settings.json\" resolves outside the allowed workspace directories: F:\\mcp-brunella-core, C:\\Users\\pohi9\\.gemini\\tmp\\mcp-brunella-core\\plans or the project temp directory: C:\\Users\\pohi9\\.gemini\\tmp\\mcp-brunella-core"
+}

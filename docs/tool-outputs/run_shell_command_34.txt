@@ -1,0 +1,10 @@
+Output: At line:1 char:12
++ git status && git diff --stat
++            ~~
+The token '&&' is not a valid statement separator in th 
+is version.
+    + CategoryInfo          : ParserError: (:) [], Par  
+   entContainsErrorRecordException
+    + FullyQualifiedErrorId : InvalidEndOfLine
+Exit Code: 1
+Process Group PGID: 37968

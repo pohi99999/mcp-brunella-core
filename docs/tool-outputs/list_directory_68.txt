@@ -1,0 +1,26 @@
+Directory listing for F:\mcp-brunella-core\src\dashboard:
+[DIR] .vite
+[DIR] assets
+[DIR] components
+[DIR] context
+[DIR] data
+[DIR] hooks
+[DIR] lib
+[DIR] pages
+[DIR] store
+[DIR] styles
+[DIR] ui
+[DIR] utils
+App.tsx
+build_result.txt
+components.json
+ErrorFallback.tsx
+index.css
+index.html
+main.css
+main.tsx
+tailwind.config.js
+theme.json
+tsconfig.json
+vite-end.d.ts
+vite.config.ts
