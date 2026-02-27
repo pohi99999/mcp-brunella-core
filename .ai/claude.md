@@ -8,6 +8,32 @@
 
 ## 📋 LEGUTÓBBI MUNKAMENET
 
+### 2026-02-27 22:00-23:30 - Iszapfaló n8n rendszer teljes felülvizsgálata + 8 workflow javítás
+
+**Feladat:** Az Iszap2 dokumentációban lévő összes workflow elemzése, összehasonlítása az éles n8n instance-szal, hiányzó/hibás beállítások pótlása, és migrációs útmutató elkészítése.
+
+**Elvégzett n8n változtatások (https://n8n-latest-fulv.onrender.com):**
+- **AI Agent v2** (`8p6vZo4envfPie6S1IC8A`): Régi, hibás verziót cseréltük az újra – most a 4 Airtable Tool (`Munkaidő`, `MUNKAK`, `KOLTSEGEK`, `SZABADSAGOK`) mind `ai_tool` kapcsolattal be van kötve az agentbe
+- **Telegram Parancsok** (`azFT1wXGadC9BMG4lmLGD`): Aktiválva (`active: true`)
+- **Okos Ajánlató** (`2OD30EyzBAdbMmLa`): Létrehozva – 6 node: Webhook, AI Agent, OpenAI gpt-4o-mini, Buffer Memory, Árlista Tudásbázis (JS), Telegram
+- **Heti Emlékeztető** (`BqeIu4mBQAjbSVUxMiwdN`): Cron csütörtök 16:00 beállítva, Airtable base ID + credential bekötve
+- **Error Monitoring** (`EtFz9Kg-BmAJ1gRPibY5_`): 5 node-ban Telegram credential cserélve (törölt account 2/account → Telegram account 4), admin chat ID hardcodeolva
+- **Google Calendar Szinkron** (`jvlzg6daJWKA-YMmClZ8a`): Airtable base IDs + táblák + Telegram credential beállítva (aktiváláshoz Google OAuth újracsatlakoztatás szükséges manuálisan)
+- **Hangvezérlés** (`a1F4hiiermPcSL0PE_t_P`): OpenAI credential (Whisper + TTS) + Telegram credential bekötve
+
+**Érintett fájlok:**
+- `docs/Egyéb/Iszap2/ISZAPFALO_MIGRACIOS_UTMUTATO.md` (ÚJ) — Profi migrációs útmutató az Iszapfaló Kft. számára
+
+**Eredmények:**
+✅ 7/8 n8n workflow javítva/konfigurálva
+✅ Okos Ajánlató workflow létrehozva (korábban nem létezett)
+✅ Migrációs útmutató elkészítve (credential lista, Airtable struktúra, tesztelési checklist, curl parancsok)
+⚠️ Google Calendar Szinkron: manuális Google OAuth újracsatlakoztatás szükséges az n8n UI-ban
+
+**Megjegyzés a következő ügynöknek:** Az Iszapfaló n8n az ő fejlesztői instance-uk (n8n-latest-fulv.onrender.com). Mi fejlesztők vagyunk, a cél: kibővíteni a meglévő munkaidő-nyilvántartó rendszert (AI Agent v2, Claude 3.5 Sonnet, Airtable appByeASBkMYnktx8), és a workflow-kat migrálhatóvá tenni az ő saját n8n-jükbe. Gmail kategorizáló NEM konfigurálható (Gmail OAuth credential hiányzik a rendszerből – a fejlesztőnek kézzel kell létrehozni).
+
+---
+
 ### 2026-02-27 21:00-22:00 - TypeScript 0-hiba build + n8n Iszapfaló workflow élesítés
 
 **Feladat:** (1) TypeScript build 0 hibára hozása (vendor.d.ts, implicit any, RobotkezPro mapping, scheduler param types, Browser.ts Options namespace); (2) n8n Iszapfaló Kft. prediktív karbantartás workflow hiányzó beállításainak javítása és élesítése.
