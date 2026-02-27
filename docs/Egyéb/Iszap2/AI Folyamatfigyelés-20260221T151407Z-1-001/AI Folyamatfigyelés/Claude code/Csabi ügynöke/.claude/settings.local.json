@@ -1,0 +1,18 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(open \"https://seekingalpha.com/account/login\")",
+      "Bash(open \"https://mail.google.com/mail/?view=cm&fs=1&to=kovasznaim@gmail.com&su=📊%20Portfolio%201%20-%20Napi%20Jelentés%20%7C%202026-01-22\")",
+      "Bash(brew install:*)",
+      "Bash(pip3 install:*)",
+      "Bash(python3:*)",
+      "Bash(osascript:*)",
+      "Bash(open:*)",
+      "Bash(chmod:*)",
+      "Bash(crontab:*)",
+      "Bash(./install.sh)",
+      "Bash(ls:*)",
+      "Bash(tar:*)"
+    ]
+  }
+}

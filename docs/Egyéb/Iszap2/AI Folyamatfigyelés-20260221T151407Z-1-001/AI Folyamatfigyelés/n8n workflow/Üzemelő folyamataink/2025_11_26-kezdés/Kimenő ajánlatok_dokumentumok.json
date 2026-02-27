@@ -1,0 +1,224 @@
+{
+  "name": "Kimenő ajánlatok/dokumentumok",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -208,
+        -48
+      ],
+      "id": "25404fd6-2a6a-4e75-bf64-3ea784d7f31f",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rvmMqY8aMOU4tgNq",
+          "name": "iszapfalo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "attachment_0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1.1,
+      "position": [
+        16,
+        272
+      ],
+      "id": "8cac5a0d-4504-430d-a7ca-9df49a3c586a",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1056,
+        544
+      ],
+      "id": "71b0abd1-2294-4206-a156-fba85cec2ef9",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 10,
+        "simple": false,
+        "filters": {
+          "labelIds": [
+            "SENT"
+          ]
+        },
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        -832,
+        544
+      ],
+      "id": "5dde8b7d-649a-4678-b3fa-0130572ca05d",
+      "name": "Get many messages",
+      "webhookId": "de052133-7a56-4de3-9f2b-77acecb2cbbe",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rvmMqY8aMOU4tgNq",
+          "name": "iszapfalo"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "// Csak azokat az emaileket engedi tovább, amiknek van csatolmánya\nconst itemsWithAttachments = [];\n\nfor (const item of $input.all()) {\n  // Debug: nézzük meg mi van a binary-ban\n  console.log('Item binary keys:', item.binary ? Object.keys(item.binary) : 'NO BINARY');\n  \n  // Ellenőrizzük, hogy van-e binary adat (attachment)\n  if (item.binary && Object.keys(item.binary).length > 0) {\n    itemsWithAttachments.push(item);\n  }\n}\n\nreturn itemsWithAttachments;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        272
+      ],
+      "id": "05f4536c-f750-4585-bb23-9dacdf37aa41",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "jsCode": "const items = $input.all();\nconst emailsWithoutAttachment = items.filter(\n  (item) => !item?.json?.headers[\"content-type\"].includes(\"multipart/mixed\"),\n);\nreturn emailsWithoutAttachment;\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -448,
+        784
+      ],
+      "id": "92f6df2f-cb77-4713-9b99-3b5dd4385db5",
+      "name": "Code in JavaScript2"
+    },
+    {
+      "parameters": {
+        "content": "### Emailek listázása",
+        "height": 240,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        -912,
+        480
+      ],
+      "typeVersion": 1,
+      "id": "a0d96269-4f0c-4db1-a3b4-eabc0eb8645e",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "jsCode": "// Biztosítjuk, hogy a binary adat megfelelő formátumú legyen\nconst items = [];\n\nfor (const item of $input.all()) {\n  const newItem = {\n    json: item.json,\n    binary: {}\n  };\n  \n  // Végigmegyünk az összes binary adaton\n  for (const binaryKey in item.binary) {\n    const binaryData = item.binary[binaryKey];\n    \n    // Biztosítjuk, hogy a mimeType helyes legyen\n    newItem.binary[binaryKey] = {\n      ...binaryData,\n      mimeType: 'application/pdf', // Explicit beállítjuk\n      fileName: binaryData.fileName || 'document.pdf'\n    };\n  }\n  \n  items.push(newItem);\n}\n\nreturn items;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -240,
+        272
+      ],
+      "id": "352c72f9-0c5d-4cd2-9172-e8293cf72294",
+      "name": "Code in JavaScript"
+    }
+  ],
+  "pinData": {
+    "When clicking ‘Execute workflow’": [
+      {
+        "json": {}
+      }
+    ]
+  },
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        []
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        []
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get many messages",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get many messages": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "badc2071-35c4-42db-83a8-3267e45e158b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a7576b16e98cbf37006c19c85fae86e69da0274709522b26bcd2189c72eaf05f"
+  },
+  "id": "JnNLmF4E9r32UbPo",
+  "tags": []
+}
