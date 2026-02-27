@@ -25,16 +25,28 @@
     {
       "type": "task",
       "status": "success",
+<<<<<<< Updated upstream
       "details": "dev-1772191818433-1",
       "durationMs": 0,
       "timestamp": 1772191818436
+=======
+      "details": "dev-1772192772192-1",
+      "durationMs": 0,
+      "timestamp": 1772192772197
+>>>>>>> Stashed changes
     },
     {
       "type": "task",
       "status": "success",
+<<<<<<< Updated upstream
       "details": "dev-1772191473996-1",
       "durationMs": 0,
       "timestamp": 1772191473999
+=======
+      "details": "dev-1772179464284-1",
+      "durationMs": 0,
+      "timestamp": 1772179464287
+>>>>>>> Stashed changes
     },
     {
       "type": "task",

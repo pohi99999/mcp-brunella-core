@@ -1,7 +1,7 @@
 # 🌳 MCP Brunella Core - Könyvtárfa (File Tree)
 
 Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalmának rövid leírását tartalmazza.
-**Generálva:** 2026. 02. 27. 4:16:25
+**Generálva:** 2026. 02. 27. 10:35:43
 **Script:** 
 
 ---
@@ -2922,6 +2922,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 plan.md
         - 📄 spec.md
       - 📂 **trojan-horse-campaign-20260224**
+        - 📄 active_a_outreach.md
         - 📄 Brunella_Leads_Fogorvosok.html
         - 📄 brunella-sheets.ods
         - 📄 DEPLOYMENT_SUMMARY.md
@@ -2932,6 +2933,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 leads_master_sheets.gs
         - 📄 Leads_Master.ods
         - 📄 meta.json
+        - 📄 nagyerdei_outreach.md
         - 📄 outreach_drafts.md
         - 📄 outreach_wave2.md
         - 📄 target_agencies.md
@@ -3680,17 +3682,120 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 658-003fde93-0b5b-4675-8fca-79e5c688d95f.txn
           - 📄 659-fab6273e-549e-43c5-9278-32604931d255.txn
           - 📄 66-a5699909-a3dd-4398-8730-ac201dba51aa.txn
+          - 📄 660-95e0603c-3051-4101-9033-bdaf20c2c39c.txn
+          - 📄 661-c1de259e-bf3f-4781-9b4b-a159ec5a2b62.txn
+          - 📄 662-24c2e676-8063-4b21-80ac-8d52d12d893c.txn
+          - 📄 663-c558d5d3-b826-4fa4-a4af-bc110c4bbee0.txn
+          - 📄 664-a4ef2994-150b-4b83-8aa3-c4043721cf1d.txn
+          - 📄 665-c6b4ac8d-0857-466b-b3cc-d5cf908ea905.txn
+          - 📄 666-cd64c02a-d0f1-4eaf-8e64-11ed3cc8a7e6.txn
+          - 📄 667-6acc7d5c-3bb1-4d8e-86af-236103214f76.txn
+          - 📄 668-7d1f7f08-ba42-4429-a1c7-218f8ef92fee.txn
+          - 📄 669-235cf7a3-0563-43b0-902b-275e505e9423.txn
           - 📄 67-8b37928b-0713-4795-bd85-b67b37d73590.txn
+          - 📄 670-d2be1465-c543-429b-8447-7f5c71b66a0d.txn
+          - 📄 671-b23304ca-264a-4890-8eae-9469520abf1d.txn
+          - 📄 672-34d38d6b-d666-49e5-8165-c7b0c0ed092f.txn
+          - 📄 673-7c3c54dd-98dc-4f06-b4b7-d3dda80dd69a.txn
+          - 📄 674-74d46dea-bf8b-4064-9ee4-d57f08db3dbd.txn
+          - 📄 675-a0e2f716-a28e-4b52-8eb0-84506747c5d3.txn
+          - 📄 676-2ff776d7-a565-431d-b789-6e23a5a38dd7.txn
+          - 📄 677-a5d345f8-a94c-4ba8-a336-b573979b3b3e.txn
+          - 📄 678-f4bb9572-e0a0-44a9-b4e1-c442ad6dad4b.txn
+          - 📄 679-e4c05835-7327-47d7-abf0-811d03cff046.txn
           - 📄 68-8f3a1f10-6759-47d1-a94b-dcf4e3dd0e50.txn
+          - 📄 680-50851e09-471a-4ba9-b07e-a9c102178e6c.txn
+          - 📄 681-1052966b-b0c1-4539-9bcf-83d008446226.txn
+          - 📄 682-44ed4616-9e72-4dc2-8d35-d02278913fc9.txn
+          - 📄 683-9e88f297-b9ba-4059-8bdb-feb1e006d0bf.txn
+          - 📄 684-3c002872-b56d-45dd-932f-cb89259c6f6a.txn
+          - 📄 685-36741225-1849-4077-afea-cdaa5d21ca02.txn
+          - 📄 686-fbf9f692-23e8-40f0-9c41-73b4d02b4f94.txn
+          - 📄 687-a766e6f1-e9b8-4a8d-b09a-090bb23fa1c1.txn
+          - 📄 688-6aabf709-033b-4abb-840e-bfe957afe9a5.txn
+          - 📄 689-d24e9a25-b0ee-447b-84d3-c4643dc8886d.txn
           - 📄 69-eb5e9f88-c003-43df-bebe-aef0e9b65a72.txn
+          - 📄 690-fa07ffd6-33f0-4e7d-9adc-520eb4f5757d.txn
+          - 📄 691-f4d10952-c75b-42e3-8b43-e058fc5670ef.txn
+          - 📄 692-8ce4386e-7695-45d7-91e7-e786f0c893a4.txn
+          - 📄 693-71750b2b-1543-4a1c-abce-b3a82afcb580.txn
+          - 📄 694-f4381c32-c619-42f2-9743-3b9d42f51aa6.txn
+          - 📄 695-d08eb78a-22d0-49c9-90ee-b07fab8d8a0d.txn
+          - 📄 696-bade5fb0-0831-4e37-bca8-da5f365bf504.txn
+          - 📄 697-15d2ad37-52ed-4c1c-b6db-470ed210ccf7.txn
+          - 📄 698-43ac8950-2b62-4a42-82ce-c66704a06140.txn
+          - 📄 699-991acae6-7926-4698-8a7e-c87a73016287.txn
           - 📄 7-c12f897a-2491-4bbe-a72b-4bdf89768f35.txn
           - 📄 70-549b57c4-d020-44b2-a0e8-6df5cdd13949.txn
+          - 📄 700-5f49977f-1b73-451c-94ac-30ba1729c02b.txn
+          - 📄 701-f22eba8c-90ee-4f86-9aaf-d12af950e20a.txn
+          - 📄 702-158e9318-3c08-46f1-a98f-54d985d33275.txn
+          - 📄 703-b8206213-d854-478e-9c06-643dbe559023.txn
+          - 📄 704-0178af55-57ac-4aec-a13b-ee9de868f137.txn
+          - 📄 705-731f5d51-18ab-4cfb-a135-f3675526c64e.txn
+          - 📄 706-1ca71723-f301-4493-a4b3-194bcce92907.txn
+          - 📄 707-4e416e11-06f2-4614-b81e-4b072546a036.txn
+          - 📄 708-2db97b61-0b46-4a55-8b75-af9c5ba8fa30.txn
+          - 📄 709-2c486720-e7df-4d30-ac28-0b2b8b2ce39f.txn
           - 📄 71-0ae82528-70e6-47f1-9423-0b55dd10ddcc.txn
+          - 📄 710-4aa269e3-dd3d-498b-b89a-9060b2550e5e.txn
+          - 📄 711-efea7c09-d068-474d-ac3c-9f84d8764b98.txn
+          - 📄 712-d3e4eb85-9082-4f3a-88c8-228171c157b6.txn
+          - 📄 713-396dabf6-0ca1-42cc-bd8c-90d19165e5ae.txn
+          - 📄 714-1306a33b-f291-40fa-baa2-9ee244597cd2.txn
+          - 📄 715-f2bf7103-afc1-4fe6-b633-5e1dcf828db3.txn
+          - 📄 716-07a03b04-184a-4a71-98ff-1ee6faed22ca.txn
+          - 📄 717-b0d36b1b-baba-4cee-9801-d7913ebe7fcd.txn
+          - 📄 718-4cb4f0fe-2633-4dc5-ac84-ae06dbee43ab.txn
+          - 📄 719-c39242df-1af2-41ea-b12c-603556d10d82.txn
           - 📄 72-7344ce0e-582b-4f32-937e-97179437c44d.txn
+          - 📄 720-9b2c06e9-e159-4b21-a306-8b91eeb56435.txn
+          - 📄 721-0fdaf514-5fae-41dd-a1f7-523c2863f81e.txn
+          - 📄 722-1df5ff31-5146-48dd-8dc6-3fe96f10c5be.txn
+          - 📄 723-75807776-d7fe-4dc2-bbfe-7061e58084f7.txn
+          - 📄 724-42a0dd7d-2e6d-4462-a084-e095b492c6e3.txn
+          - 📄 725-8e341869-25ec-45c0-af02-a88db7f0f07e.txn
+          - 📄 726-b94ab3a1-ee31-41ff-a6bb-0022339ff467.txn
+          - 📄 727-e531bcb2-5fbd-484f-819c-fcae1eebe2b2.txn
+          - 📄 728-baff2be5-da9a-40a1-97d0-44612ce8b67f.txn
+          - 📄 729-9879c7d5-09e1-45d3-9edb-81af1e896776.txn
           - 📄 73-f9ac8059-a799-4ffd-97aa-132d5687bf59.txn
+          - 📄 730-d2d1c827-e909-499f-a1df-19159f47e991.txn
+          - 📄 731-b1516e22-a64d-4407-8263-1819e1c7683f.txn
+          - 📄 732-f9d95342-73bd-47cb-8dbf-029fa0b613e6.txn
+          - 📄 733-8f0426a1-1b82-4577-aaea-e8fb4bdf295b.txn
+          - 📄 734-ae2d7316-9fc7-4909-a295-5e452c9ccc8f.txn
+          - 📄 735-a7658770-92af-4a52-85f3-cc457f6cd274.txn
+          - 📄 736-67229d3a-7363-4b30-ab11-0366b1c1b21a.txn
+          - 📄 737-e3821165-441f-46f9-a313-384479b050b8.txn
+          - 📄 738-4b2fd1ae-2229-467e-873e-82ae8b7c29ab.txn
+          - 📄 739-e3f89409-4e88-4af8-9be5-7a09cc298640.txn
           - 📄 74-ec223caf-35fb-4398-857e-1de90328e6c7.txn
+          - 📄 740-a19e0159-8846-4925-8708-db22d6a0b562.txn
+          - 📄 741-06e65051-73a4-4342-9e6f-c2594f1a5fc5.txn
+          - 📄 742-b250965f-4ee1-4f41-9010-3dcf1ea4c09d.txn
+          - 📄 743-62f0560d-aa72-4987-88c9-9a833503e9ae.txn
+          - 📄 744-5a8160ab-af2e-42da-953a-cf3383a00f27.txn
+          - 📄 745-2617e63b-6cee-4502-8bbb-a43b57b400c1.txn
+          - 📄 746-28855945-f3cb-47ec-941c-43c5a796cd49.txn
+          - 📄 747-02dd1f25-cb5d-44d9-a541-ebe20122a9d2.txn
+          - 📄 748-d2b7462e-c920-4232-be89-33bdb3231ba3.txn
+          - 📄 749-51b32b22-b667-4eea-a434-bbe6b950aab2.txn
           - 📄 75-1961f0c0-2963-4c0c-a982-9c64b028dba2.txn
+          - 📄 750-737b949d-dbde-47a9-8246-1e7016e60a68.txn
+          - 📄 751-08115419-f5af-4bef-a913-91fac3bab0ee.txn
+          - 📄 752-4664484f-ba33-4f42-8e8a-8b7e57f7800e.txn
+          - 📄 753-d625e884-fff4-415c-9023-c5e5c0e2aabe.txn
+          - 📄 754-49979ece-c5ad-4525-8ae6-deeadb26044d.txn
+          - 📄 755-f61486e7-fcf4-42e8-951f-fc0b89111e3c.txn
+          - 📄 756-c0f57154-db29-49d0-8543-a6a076c4574b.txn
+          - 📄 757-9f9f2e81-7b72-46fc-a8cf-0afed84dff5a.txn
+          - 📄 758-f40c1f3d-fcc2-4087-ae67-831d1bddd47f.txn
+          - 📄 759-7a7ec0a1-2cfa-4c9a-8618-5a19855d4979.txn
           - 📄 76-ff070055-0570-48a1-baa5-f017b0a6361f.txn
+          - 📄 760-bfaa5cd3-312e-4ef9-b88d-3296a1bf717a.txn
+          - 📄 761-f0679e14-e94c-4324-b690-eab5b5e82836.txn
+          - 📄 762-a1a23615-8262-4b14-b9a6-bfcbf2a286d4.txn
           - 📄 77-6c96a99c-5e06-470a-9634-15d5cdca1147.txn
           - 📄 78-50a14ba1-e34a-4f42-b0d8-1541bfad4bac.txn
           - 📄 79-d9fdc6f5-541e-4097-8711-ab795238209a.txn
@@ -4341,17 +4446,120 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 659.manifest
           - 📄 66.manifest
           - 📄 660.manifest
+          - 📄 661.manifest
+          - 📄 662.manifest
+          - 📄 663.manifest
+          - 📄 664.manifest
+          - 📄 665.manifest
+          - 📄 666.manifest
+          - 📄 667.manifest
+          - 📄 668.manifest
+          - 📄 669.manifest
           - 📄 67.manifest
+          - 📄 670.manifest
+          - 📄 671.manifest
+          - 📄 672.manifest
+          - 📄 673.manifest
+          - 📄 674.manifest
+          - 📄 675.manifest
+          - 📄 676.manifest
+          - 📄 677.manifest
+          - 📄 678.manifest
+          - 📄 679.manifest
           - 📄 68.manifest
+          - 📄 680.manifest
+          - 📄 681.manifest
+          - 📄 682.manifest
+          - 📄 683.manifest
+          - 📄 684.manifest
+          - 📄 685.manifest
+          - 📄 686.manifest
+          - 📄 687.manifest
+          - 📄 688.manifest
+          - 📄 689.manifest
           - 📄 69.manifest
+          - 📄 690.manifest
+          - 📄 691.manifest
+          - 📄 692.manifest
+          - 📄 693.manifest
+          - 📄 694.manifest
+          - 📄 695.manifest
+          - 📄 696.manifest
+          - 📄 697.manifest
+          - 📄 698.manifest
+          - 📄 699.manifest
           - 📄 7.manifest
           - 📄 70.manifest
+          - 📄 700.manifest
+          - 📄 701.manifest
+          - 📄 702.manifest
+          - 📄 703.manifest
+          - 📄 704.manifest
+          - 📄 705.manifest
+          - 📄 706.manifest
+          - 📄 707.manifest
+          - 📄 708.manifest
+          - 📄 709.manifest
           - 📄 71.manifest
+          - 📄 710.manifest
+          - 📄 711.manifest
+          - 📄 712.manifest
+          - 📄 713.manifest
+          - 📄 714.manifest
+          - 📄 715.manifest
+          - 📄 716.manifest
+          - 📄 717.manifest
+          - 📄 718.manifest
+          - 📄 719.manifest
           - 📄 72.manifest
+          - 📄 720.manifest
+          - 📄 721.manifest
+          - 📄 722.manifest
+          - 📄 723.manifest
+          - 📄 724.manifest
+          - 📄 725.manifest
+          - 📄 726.manifest
+          - 📄 727.manifest
+          - 📄 728.manifest
+          - 📄 729.manifest
           - 📄 73.manifest
+          - 📄 730.manifest
+          - 📄 731.manifest
+          - 📄 732.manifest
+          - 📄 733.manifest
+          - 📄 734.manifest
+          - 📄 735.manifest
+          - 📄 736.manifest
+          - 📄 737.manifest
+          - 📄 738.manifest
+          - 📄 739.manifest
           - 📄 74.manifest
+          - 📄 740.manifest
+          - 📄 741.manifest
+          - 📄 742.manifest
+          - 📄 743.manifest
+          - 📄 744.manifest
+          - 📄 745.manifest
+          - 📄 746.manifest
+          - 📄 747.manifest
+          - 📄 748.manifest
+          - 📄 749.manifest
           - 📄 75.manifest
+          - 📄 750.manifest
+          - 📄 751.manifest
+          - 📄 752.manifest
+          - 📄 753.manifest
+          - 📄 754.manifest
+          - 📄 755.manifest
+          - 📄 756.manifest
+          - 📄 757.manifest
+          - 📄 758.manifest
+          - 📄 759.manifest
           - 📄 76.manifest
+          - 📄 760.manifest
+          - 📄 761.manifest
+          - 📄 762.manifest
+          - 📄 763.manifest
           - 📄 77.manifest
           - 📄 78.manifest
           - 📄 79.manifest
@@ -4382,12 +4590,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 00000000011110000000101067ebe84bf7840ad39876a6c048.lance
           - 📄 0000000010100000010010001f9e1b4919bfa29adc18d50d6c.lance
           - 📄 00000000111011010000000178a7ec48f7bae8419a6fb02a56.lance
+          - 📄 000000010010111010101011c9d02a4cfd8598f3be4b37adb7.lance
           - 📄 0000001000011000010101017e1a824844b45a6613b7089e63.lance
           - 📄 0000001001101011111011019d56d0402a8a4a1d41bfa695a5.lance
           - 📄 000000101100000100000010e028394db39ddff03e34ed3b10.lance
+          - 📄 00000010110100101010011148db214345b66da16b03813b39.lance
           - 📄 000000101110010101100010e81a2848c5a29be83da4985a11.lance
           - 📄 000000111000101110111011072d904720a6503b88279b3664.lance
           - 📄 0000001110001101101100114b00bd4b60961682bcc9e11cd7.lance
+          - 📄 0000001110100100111110010aba78433b967d20849537bbc4.lance
           - 📄 00000011111010000111011034cd8f4b24a1a09a1978b7a5a7.lance
           - 📄 0000001111111000011000119e886c48f6b1d0976b0764a21b.lance
           - 📄 000001000011001100101011d8aa394cc090841524f80ef3f7.lance
@@ -4400,6 +4611,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 0000010110100100010111009ec4ef47e8bcf8d476150a2144.lance
           - 📄 0000010111010011100111015974724587a040785b5b0125b3.lance
           - 📄 00000110000000011101001007bd5e45a0a35d6dd4d515a7c8.lance
+          - 📄 000001101100110111111010b8ff9f4f4eb3a9d8ebd53ade7d.lance
           - 📄 0000011110101001101101017d86294476b6e7f69387850e81.lance
           - 📄 000010000101010010011010788a154591a66fd330d2c652ce.lance
           - 📄 0000100001110100000011006edb50455b954256e0a2cc3b01.lance
@@ -4409,7 +4621,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 00001001001001010010011084e557446b812cd082bb8e2ec9.lance
           - 📄 000010011000011110000101cc3096472db68807370a1c2b92.lance
           - 📄 000010011100010010010110a0e91b419bb40712c992732e2b.lance
+          - 📄 00001010010110010100010076a88f4c2daede27a28a6517d3.lance
           - 📄 00001010101001101100100094e0ab461488cdc6afb29e03b8.lance
+          - 📄 000010101011111110000100fc90c642e98d37b78045093ce1.lance
+          - 📄 0000101011000101100010000450ae4c58bc4cd15c37130adc.lance
           - 📄 000010110001110010101110b458b24efaacf5b2094c8293b4.lance
           - 📄 0000101100111110000011016f3b784f31a43bb82110f8c344.lance
           - 📄 000010110100000010001001ebad1c45f08771858e9f777a73.lance
@@ -4418,10 +4633,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 00001100010100110011101170716249aea5cc47f601ad973c.lance
           - 📄 000011000110001111110110cd7a094e80b40f434a48981299.lance
           - 📄 00001100011110001101100162838344d59d17fc781d22f7fa.lance
+          - 📄 0000110010011110010011018390ce49fcb984bc4ad30a0973.lance
           - 📄 000011001100010011111100a26dbb4507a3028b7b5bf7dfd5.lance
           - 📄 000011001101111101011110b42374499285728316019b53d2.lance
           - 📄 0000110011110011101110112c65dd4f47af92462a4d0926f4.lance
           - 📄 0000110100000101000011113922f34b79b73f5932aec2c576.lance
+          - 📄 000011011101100111010011977a6e45248323e504568111e6.lance
           - 📄 0000111000001111000100009848d440178a210e15819dc38b.lance
           - 📄 0000111010010000101101014760444e99a8c2224c36a7c116.lance
           - 📄 00001110111100101000000120d3834d42b8d3bfe3d5a7475c.lance
@@ -4430,6 +4647,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 0000111101011101001111102e0fb14522a2058bd356c58477.lance
           - 📄 0001000000110011000101106ff6df4731b63081b04489c6f4.lance
           - 📄 000100001000011000111100cc9b3641dfb898e0f269013a9b.lance
+          - 📄 00010000111000011100010028070b4abca9a00050ddc363df.lance
           - 📄 0001000011100101011001005ec01043df8778990ea0f0d3c4.lance
           - 📄 0001000101001110100110002d64b3431996eb893a97a2d5e9.lance
           - 📄 000100011010110011100010a755744eb48d403d7bcf10a841.lance
@@ -4441,6 +4659,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 000100110010001110101001cc3b3c460993bae37b3366df02.lance
           - 📄 000100110100110101111100c037a741f3a84455cdbfa11045.lance
           - 📄 00010011010110101000001189c59b43ad8ae53a2748fef4c0.lance
+          - 📄 0001001110101100111110014ad99b41a1803c4197c0505fa5.lance
           - 📄 00010011101101100010111076370b4cf9a0142d6c2240e20c.lance
           - 📄 000100111111011000100111eb9ae54627b1667de412c01a3c.lance
           - 📄 000101000000001101110011dadb484ba68e96f4e7752391c8.lance
@@ -4454,12 +4673,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 000101110001011010100100d878854e88863ff0a11e7b4805.lance
           - 📄 0001011100100111011011118f31a2459482661b5f04d98021.lance
           - 📄 00011000101111001110010152b4124f10b812a9cbb79f92fd.lance
+          - 📄 00011000110100010100010014f2d74317b43883637ff8b310.lance
           - 📄 0001100011110101010011117bd68c4996b48a11df9edee3be.lance
           - 📄 000110010110101010001010db101247acb1e2336dd76db722.lance
           - 📄 00011001011111101000001112cb0340fd9ce84f7473d95e71.lance
           - 📄 0001100110110101011011110380c34f0d844b262e1271132b.lance
+          - 📄 000110011101000101111100a762cb48ac876fce7aa66eaf0e.lance
           - 📄 000110100010111110011110a17f9145198176fa3e3611f7d7.lance
           - 📄 000110101010101100000011b8719c45c28176fa4c88fa6fc5.lance
+          - 📄 00011010110110001000000019e2e9470c96cfc7607e2e3227.lance
           - 📄 000110101111100101001111e0e2f04fcf8012d7ec0ced1a3f.lance
           - 📄 0001101111011010001011115fa123441ca12a4a57c0c5d1ff.lance
           - 📄 000110111110011101000110f97d464e62bb2e74227c050043.lance
@@ -4467,13 +4689,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 0001110000011101000100007c0ba54b8286f501818c1c851e.lance
           - 📄 0001110010101110110010119ce01c42aeb6cf0aae432d8ec2.lance
           - 📄 0001110011000101011000015a6d6548428479521ddda03e03.lance
+          - 📄 0001110011101000101111009a8ccb450483150e3d47276df3.lance
           - 📄 000111001111111101111001ba97f240b5ba51e4a6388445b2.lance
           - 📄 0001110100110111011010019297a34ede97dbcfa595da9267.lance
           - 📄 000111011100001011010100808a3544c3846d09b9dbc2366f.lance
           - 📄 0001110111111010001101102a121b45a888b9055713b4d81f.lance
           - 📄 000111100001100111000000c6b7a54661b0a25f50bd47f850.lance
           - 📄 00011110001101011101101057d08e45b79d98091e4a8ab66e.lance
+          - 📄 0001111001101001000000112cfb3049beb204bb6abe28d8d1.lance
           - 📄 000111111101000111001000346f324b919cb7313747c9108a.lance
+          - 📄 0010000000000101111101014f22b5479c98f3655d4d2eb164.lance
           - 📄 001000000010110010111010e4dec644869c82074bc6f23747.lance
           - 📄 001000000110011011100110d50b764a1abc3ea386eeedda84.lance
           - 📄 0010000010011101010111109793e04a20852e2b8fca381b79.lance
@@ -4499,6 +4724,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 001001010100101100111111d2b93a4703b8bf876de860f268.lance
           - 📄 001001010100101110010111dc2f9a4d6183998a843385d287.lance
           - 📄 0010011010100001110111100c84f140c49ab75e33efd0c124.lance
+          - 📄 001001101011011101101100d401ef44af8ee39c3ec1ef9405.lance
           - 📄 001001101100000101011011c67a8e4473a7843fc24a3778ab.lance
           - 📄 0010011011000100100010114ef71c401e865a371763e328d5.lance
           - 📄 00100111010111101011011026940a47a19cbc540175a98b10.lance
@@ -4513,22 +4739,29 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 001010011001111010001110f6a2ae4cce8e801670c3772d32.lance
           - 📄 001010011101011011011011bb4be94107a56f58003715c56b.lance
           - 📄 001010011110100011100101db5c6840bb90b10446dc7f45f0.lance
+          - 📄 0010100111111000100110104cdffe4a2e8abf9f31cdd3e4c1.lance
           - 📄 0010101001100000010110002844d94c20824bba9c4e51c55e.lance
           - 📄 0010101010000110111101015791de47278277baa056192b5c.lance
           - 📄 001010101001000110010110b9a7484ab8a55a24aca7ab521f.lance
+          - 📄 00101011000100010111001013daef4d2ca7e5f978dc81ec4e.lance
           - 📄 001010110100010110111000ead5674f0892516012a3e1fca4.lance
           - 📄 0010101110111010101110010104cf404cb98147abf2101824.lance
+          - 📄 001011010001000011011100f19bb1403f8cff89a85e80510f.lance
           - 📄 001011011010010110011101da2166487f95fd1ea41ab1c541.lance
           - 📄 0010110110100111001111009780ff41a4bab0b3755c14e226.lance
           - 📄 00101110000011101111011013223f4175b68bad141dac13c9.lance
           - 📄 0010111000100011111100010241094c8da587bb85490e7907.lance
+          - 📄 001011101011111100101111c936a64eed9123840f036b33d6.lance
+          - 📄 001100100010110000000100c2fd7144c99f536d5578f81ca5.lance
           - 📄 001100100111000100110011a0abe141d2bc1f356259942114.lance
           - 📄 001100101011100110101011f0b76a4018b9f03ffd127a8d33.lance
           - 📄 0011001011100001000100107a02284ba0872de83b12b990cf.lance
           - 📄 00110011011111011100100023bb244b59ac7950d3b692b47e.lance
           - 📄 001100111011100000100100e952a84e85b21ba52582a7f0b0.lance
+          - 📄 0011001111111000101110002c06994e61828db3ecf7f337c8.lance
           - 📄 001101000010110001010100f8784d422daba55a39885e0aca.lance
           - 📄 00110100010010100011111059c2c94c9c978a3078ab246a73.lance
+          - 📄 00110100011000110100100036b0fc45e6804933f64af08725.lance
           - 📄 0011010001101001111001010c27a34400af6c03ab10bfdd86.lance
           - 📄 0011010100110010011010013b85024e0a86c3a3d8e4048345.lance
           - 📄 0011010111110110001101013d215b49caa54001db191d09f3.lance
@@ -4544,6 +4777,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 00111000010010111000101141e46f4b16911f01efab201763.lance
           - 📄 001110001000000100111010a3a80e4d1c8aa3c04ba7c756db.lance
           - 📄 001110001110100011111001b910db4ac89e5cfa224adbb078.lance
+          - 📄 001110001110101110111010f1d4cb46ab8aab8d85eea20c10.lance
           - 📄 001110001111001101010010e233c6436080f4448e854dd0a0.lance
           - 📄 00111001000101011111010188f03541deaa1a602b47eda3bb.lance
           - 📄 001110010001111111111110950b6e45198ebae6e3400a3b5e.lance
@@ -4553,11 +4787,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 0011110000100110111111008881824bd49f4d9300f3851d1f.lance
           - 📄 0011110001101111101101012195cf4a43a80360e63652e2f0.lance
           - 📄 00111100101011101011001063f2c140cd93d32a292f41268f.lance
+          - 📄 0011110010111001011111107c8e304e89b8f5e73dbb90be64.lance
           - 📄 001111010000100000111001aa62f94539a822c0073384af35.lance
           - 📄 001111010100101011011101db3a5443cc8fc04252dea78ac2.lance
           - 📄 001111110010001110000111e909ee41eb9c3d1aa07944d40d.lance
           - 📄 001111110111110011111110c83d5b49108680c288dbcd4654.lance
           - 📄 0011111110010101101111102cb3454a7584dab9c4252baf8f.lance
+          - 📄 001111111101100111110111a180614699ac7ac43311f53f3a.lance
           - 📄 0100000000010010010011117d205942d28b38a4aff19ad8ce.lance
           - 📄 0100000001111101110010115cb4a046378fd34acc245698d7.lance
           - 📄 01000000100101000001011042da5349d9b869bdca1f17d34a.lance
@@ -4575,12 +4811,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 010001011100111110000011f0ef5a456badb7b6067e0f3fd1.lance
           - 📄 010001101100010000110001e3d542476eb547156913cfc3b9.lance
           - 📄 010001101100010001100101d48e954365ae594aeb5cc1340b.lance
+          - 📄 010001110001011011100111c66256438d85e20df9a3f90f95.lance
           - 📄 0100011100011000100010112eae574bc8bc0b4a9c5f865e5b.lance
           - 📄 01000111101010011010001185591f4bbda05090050b0999c5.lance
           - 📄 01000111101110110110111050b2fd4c3d88c17f655e42e217.lance
           - 📄 010010000000100110001100b6e04f4638b1e514a3f76b760b.lance
           - 📄 010010000101110010011000aa0584421a929d938b8006556e.lance
+          - 📄 01001000011001001101101061407c47dc8b1e51b795c66930.lance
           - 📄 0100100011000110101001111fe23e4b8cad93a4bf1e4ebd40.lance
+          - 📄 010010001100101001010010d26c55497fbca0bcb8ce83280b.lance
+          - 📄 01001001010101011101001036f48d49deaf4cd6e46122f6f4.lance
           - 📄 01001001011010101101110153b0594f33a40685c7eb9e3100.lance
           - 📄 0100100110101010011001004ef33c4dd5988b832b6a5885af.lance
           - 📄 010010011010111100010001eb4adc455cba14c495c3bf9792.lance
@@ -4592,6 +4832,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 01001100101010010011100100365c456a9a5755382bdb091d.lance
           - 📄 010011001010111110110011d9f3754d07818b072b52fca0fb.lance
           - 📄 01001101000100000001100042c865453ab46b50dfe1a70e3c.lance
+          - 📄 010011010010110111101101c2406c4e9da065e7679fe6ee24.lance
+          - 📄 010011011010001011000100ca3056434bbefa3de809aa3265.lance
           - 📄 010011011100001110001011e86eb3431cb6e7e0946598af47.lance
           - 📄 01001101110011000010100147d1ff4654beb68359848bbc27.lance
           - 📄 010011100000111011011011d475574622861706e196e4c1a1.lance
@@ -4599,16 +4841,19 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 01001110100100001101001112b356430fb1fede1319a14f59.lance
           - 📄 010011101010010100100000cc1be34f1585dba15871d69c25.lance
           - 📄 0100111011000110101101017399f94760b2e88f79423019ec.lance
+          - 📄 010011110001010010110100c31a854b2c85c1fd616fc0952a.lance
           - 📄 01001111010101101101010019ad8142a2a35aa4d2a608f388.lance
           - 📄 01001111110011010101110132b961487ba0915f81bb321a36.lance
           - 📄 01001111111000101011101112397642aabf97316c595c6959.lance
           - 📄 01010000010110100001011188773a406b8a5ce85367ff9ebd.lance
+          - 📄 01010000100000111110110109f18f45e38b348aae88b096d9.lance
           - 📄 010100001101000011000000e6ef984775a519a3e22b214027.lance
           - 📄 0101000011101100010100007ba5e14f34ab417e8031b812bf.lance
           - 📄 010100010000111010100111f0dcc44685a11711c3d09ae533.lance
           - 📄 010100010010000001100111afde4d4a1eb414ad9e29e324a0.lance
           - 📄 0101000110000111000100011558764199b02139f5f8670475.lance
           - 📄 01010001110111000101101021f1c246c5820f4f968a2c40d6.lance
+          - 📄 01010001111010100010101187d88d45458290bc16bf8a9e2f.lance
           - 📄 01010010000011010001000079f95041c0b06ee309b6f63f28.lance
           - 📄 0101001000110010111111111e1f484a48a08f9d317b254391.lance
           - 📄 0101001001111101100100005a1aa544058dc00e7677abbe5e.lance
@@ -4618,10 +4863,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 0101001011100101110010019250bb4abc8e8154914cd39a71.lance
           - 📄 010100110000010010110110f2dcfb40048646ab9454a3dbc2.lance
           - 📄 01010100000111000001110014a74e4ba790b16e24bc449362.lance
+          - 📄 010101000010000100110010fd1844424295a44256a54ec92a.lance
           - 📄 01010100001000011101100045be1a4e9c8e4cb82d01ed8b1b.lance
           - 📄 0101010100000100011001100d87084cbfb5e86dc54aaad711.lance
           - 📄 01010101011011111010011061f4d44dd584b8584cc6add975.lance
           - 📄 010101010111101101011011c8b78c4862a6f15caac6eccd86.lance
+          - 📄 01010101101110001100111035290b4803bedd2fb8ccdfd223.lance
+          - 📄 01010101110010101000100184f9464478a1122ffadfd7abcd.lance
           - 📄 010101101001100010000110adc8b84fb0a51b308e74523f7b.lance
           - 📄 01010111000001111110100083234e44b9b5e0370f62186f84.lance
           - 📄 0101011101110100000000118b45fd4b74a39fb3065783a4be.lance
@@ -4630,8 +4878,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 0101100010001111011110015e70324d1c954218f0cbb5ac94.lance
           - 📄 010110001110011100010111a78d79410faaff3670bbc2534f.lance
           - 📄 0101100101101010110001000b66304a33b91c7a8d18695f74.lance
+          - 📄 010110100111100011010011a42a844bd69df5f51fecc59fe4.lance
           - 📄 0101101010100011001110010ad5e74913804966d73c3bb127.lance
           - 📄 01011010101100010100101183f09140d3a03364da545ce135.lance
+          - 📄 01011010101101111100110017bf93405f8ef1cac2664371c0.lance
           - 📄 010110101011111110100010f4fa314c33839397ba5ee7cf3a.lance
           - 📄 0101101100111000101010011e6de4406db037a83f6d4a27b5.lance
           - 📄 0101101100111011011000015a1d674adf88524aacc53ea2aa.lance
@@ -4641,10 +4891,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 01011100010001100111010122b9994a9c9f31ff67a8288d82.lance
           - 📄 0101110010110111000100018191154df9a8d49dd61e25d914.lance
           - 📄 0101110011101011101011018c25374d70bf6a7cc5b19ec70e.lance
+          - 📄 010111010010011011001111ad52b4461aba92a19be3d5039d.lance
           - 📄 0101110101001001100110016b653a46dd996f1a9685eddc89.lance
+          - 📄 010111011000010011010011a12a324b07b5c3333bae4c4777.lance
+          - 📄 010111011100001100110011b4ab6545ca9b0b46380273a4b5.lance
           - 📄 0101111010111000111100013aff8a4e51aff82159e3d80203.lance
           - 📄 010111101101111000110011cbf2cf467c90610abb48f2e873.lance
           - 📄 01011111000100011010100108660a4e58b94ddb9e1e67a7e0.lance
+          - 📄 01011111011111110000101033dc3e49b7893ee8b31651d3ee.lance
           - 📄 011000000001100011000001f8bd7646b3ba21ad054944f465.lance
           - 📄 0110000011010000101000016b450f41e8a30d05e528aeed86.lance
           - 📄 01100001000100010000000134d82f459d8145bfd28fea5d0c.lance
@@ -4678,6 +4932,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 011010101001100101101010b371924af3a047f79bc5b43384.lance
           - 📄 0110101101001001001010001cc2e64a6c8293dc423a13fd43.lance
           - 📄 011011000110011010101011fc6c6f4cb584c02d57b600d117.lance
+          - 📄 01101101110110111010000162f2504b72917bf4f4895cade7.lance
           - 📄 01101101111101111010010171c608446fa9848130fa3b0be6.lance
           - 📄 0110111000110001000000017ba1ea45bfb7180a10f8023112.lance
           - 📄 0110111101100101111100011cb2f348c4a03df961f35413fa.lance
@@ -4686,6 +4941,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 01101111111110010010111012d85242799763d0797cd68ef7.lance
           - 📄 01110000000110110001011097f51a4c0289a6448b9b6b9372.lance
           - 📄 011100000010011101000011e2f9da41e1aa9f67ecb83138c9.lance
+          - 📄 011100001111000111010101d566984fdd9a416e6c71d28cb1.lance
           - 📄 011100100111111000101011ff34274568801ccf0b505746e0.lance
           - 📄 011100110011101101101110bc83b54754a9293bf472c94bd9.lance
           - 📄 011100111011100110100101a2757f426390099596215ab735.lance
@@ -4706,7 +4962,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 01111000111011000100000149937b414290d3f720af734bad.lance
           - 📄 011110011000011001101100f4d79e4d46b5d4188cd40e9617.lance
           - 📄 0111100110111101101111112d693f4cd7b91d13c47f8d2c23.lance
+          - 📄 01111001110000100100001183144844038d5e1c601ab1b250.lance
           - 📄 0111100111100110000000118d1c0640969a4d2ce46bb12a54.lance
+          - 📄 0111101010000000000111003141b747f7bd47c32fd376a5db.lance
           - 📄 01111011001000110110101119e2264b3080ae4607309152ba.lance
           - 📄 011110110101001011101001b8d22b4118851e855d19730abd.lance
           - 📄 011111000000110111000100c4562e4533acb38077b02b96e9.lance
@@ -4715,6 +4973,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 011111010001110011011111b5ca444acc898c728223d58426.lance
           - 📄 011111010001111101101101146f7246f7ab735263871c9713.lance
           - 📄 011111010111010110110100fab5c34eeb9549ae03b65fdeb2.lance
+          - 📄 011111011110111100111001ed10fc42a9b5360260b58e8fcf.lance
           - 📄 011111100001110011001101037fb5489db95a865a81648d43.lance
           - 📄 011111110110011110011110e39ec646688831fa92baad54b1.lance
           - 📄 01111111100000110000010111f21a4ecb9e24cab33e123a48.lance
@@ -4722,11 +4981,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 01111111111110000001001112996a4db7923e64f0ce8a79b4.lance
           - 📄 100000000010100110101100f4d1a746a28a1b92c8d23091a2.lance
           - 📄 10000000011010011010110089f1734509aac27a682a462c02.lance
+          - 📄 1000000001111100001110012b2b844a4f9ec41a95b5be8f37.lance
           - 📄 10000000101010001111001042d86446f4a88fe530f0fab7fe.lance
           - 📄 100000010001010100001111dff65b452094cca9c841c880b4.lance
           - 📄 100000010011101110110011cf84704a209c8eafd916ad9554.lance
           - 📄 100000011000101001011100f6f1b84544bc923b52291bc2b3.lance
           - 📄 100000011110010101111001be5b7c4cd9999c7be061b8728a.lance
+          - 📄 100000100100101001000101376394469cae52abd7b493aa32.lance
           - 📄 1000001101000111100110111e0a58454ab794684bbc11e55b.lance
           - 📄 100000111000110000111101981de14045a824dc9dd5fab1d8.lance
           - 📄 100000111010000110101011962db0473f9da179bc39f954f0.lance
@@ -4739,7 +5000,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1000010110101001111000001be7b544c7b43101ded0358f48.lance
           - 📄 1000011100111000000001008930a14f6c8c279ad14721f7ea.lance
           - 📄 1000011111001100111110002dd7974212994f6a5e65182f70.lance
+          - 📄 100001111101111110100100978a55433baa5757166e24e4c0.lance
           - 📄 100010000010110001000101aa42874599be2b285c507300e1.lance
+          - 📄 10001000011000011110011070d69b4de6b9661f355b89015f.lance
           - 📄 10001000100011000111010001a1b14f5189698084458893b5.lance
           - 📄 100010001101001110011110c0ca594882a9008a43a38d4f44.lance
           - 📄 1000100011111000100001003229234fd88bd2077609f0da96.lance
@@ -4752,7 +5015,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 100010110010011110110010002d7543949aaf2948520fd889.lance
           - 📄 10001011010101011000110021dbc64d73a7d6ad01febc0218.lance
           - 📄 100011000000101100001111af8021491887acde125f6061ea.lance
+          - 📄 10001100010101111000110114454e4e52925b68600a1ad46e.lance
           - 📄 100011000111100001010011160e3b47be96ab7b98a0bc6841.lance
+          - 📄 100011001101111110001001c7320046bb8a2405fe1cdec206.lance
           - 📄 10001100110111111010110076acde499eae19d9cefaf9a4c2.lance
           - 📄 1000110101000001101111116efbbc491daaae5ac3b84548c0.lance
           - 📄 100011010100011101001101eb087a4ae0a9b3ad73e84112f1.lance
@@ -4760,6 +5025,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 10001101110101100101010187431f49a1b1c28e46f4dc8a5d.lance
           - 📄 100011100011101000111101b271174d83bfd30e90f23c3761.lance
           - 📄 10001111010101011101010156c9dd4c45af2cb66bbdf4dc9c.lance
+          - 📄 100011110101110011011100e3c97c4df7bd7612e134664ba0.lance
           - 📄 1000111101111111111111013cc7304003ae37f93c38ebc140.lance
           - 📄 1000111110110010011110118349044f8493b1e0c449a34b65.lance
           - 📄 100100000110000110000011d4dd144ad1959c8ae20bcaf7cb.lance
@@ -4771,6 +5037,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1001001111100000011011106167db4aa9a92e6a817758315a.lance
           - 📄 100101000011100100011000ee87ef42a9bbf63e3a94cc895e.lance
           - 📄 1001010000111110111000009cb7974d2d93ab34936e6cef6d.lance
+          - 📄 100101000100100111010100ea5f2a4f4bb6b0e1c66dda1e21.lance
+          - 📄 1001010001011000111001111c6b2f4d2d9c4af7ed781c12aa.lance
           - 📄 100101000110110111001011da1c1f4cf6b33755d812a5de36.lance
           - 📄 100101000111100001111010a4e6f44488b196546d696571ea.lance
           - 📄 100101001000010000001011d0f41b4b92ba6e32ac568e9206.lance
@@ -4781,16 +5049,23 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1001011010000010001001016f8c1943fa8a6187f6ea616a62.lance
           - 📄 100101101111110000111100e8901942f198d587b415f4f9a4.lance
           - 📄 10010111000010000010001065efb349d7b990830c2560215a.lance
+          - 📄 100101110100100010100111f52e134bc8a7c277b44dc17c12.lance
+          - 📄 10010111010101010100101168f41e47ca99fb242453a5ec6c.lance
+          - 📄 1001011111101000100100111888c649b6b724d78b0edad349.lance
+          - 📄 100110010111001010111100eb46e84e2693e7543f1394d89f.lance
           - 📄 1001101001000110011011106fa430474f98fa36cd04ac30c9.lance
           - 📄 100110101101011100111010cf214c4aec9b0a75158f8a3a1d.lance
+          - 📄 100110110000010000000111ea110646909b467379f61a8eeb.lance
           - 📄 1001101100001000000011004fe9054c8b88d38bebf6e0ebc2.lance
           - 📄 1001101100011111001001116f4e294622b19ecf656085ef6b.lance
           - 📄 100110111100100001001000020b084aaa9406da272f6444a1.lance
           - 📄 1001101111010111010010119fee974442bf75c0f1a9f38919.lance
           - 📄 1001101111101010101110002460f24b5083652e0ad8b3d77d.lance
           - 📄 100111000100011100100111198e8e47bca9ea100561f790bb.lance
+          - 📄 100111010101000010000101f03b1d4a85b8d62251a9fc815c.lance
           - 📄 10011101011000100010010048156a4c4fb057d6dd39fe31a2.lance
           - 📄 10011101100100110000111042c4504776b395b3f62be4ef6c.lance
+          - 📄 1001110111010110001100004a996d4727bb1115f13c50c4ec.lance
           - 📄 100111100000011100101101edd95345c08f8d49a8f66b2500.lance
           - 📄 100111100110111011101111c142a74b8aba9b85c6af4ea44f.lance
           - 📄 10011110100011110111111158885e4b76b883ec6b208482f4.lance
@@ -4798,11 +5073,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 100111110010111101100111501ad24049864100c6aed7e58e.lance
           - 📄 1001111110010000111000118a51a24c4597b3584227becca1.lance
           - 📄 1001111111010011011110000bc68c42bebbad0b44cdf15c38.lance
+          - 📄 101000000001000101100110c8b3504db0880603cb528a940b.lance
           - 📄 10100000000111010111110114294b4784bf2428b06cf44ef2.lance
           - 📄 1010000010001000011010015afd4c4ef4b75c1b3eba4ae203.lance
           - 📄 1010000011010110101111016b3af94e81a9fef18f6898a354.lance
           - 📄 101000001101110101010101b1e9b44a24b99b10d97d6d021c.lance
           - 📄 101000100000010110011000a36d024d51a2193856ff0879bd.lance
+          - 📄 10100010001110111010100165b8284da699f61c2a18cf6492.lance
           - 📄 101000101011100110011111c0b2c047a38f90dc6e55774162.lance
           - 📄 1010001011010100101001119c71704389a2917d94b4b837b9.lance
           - 📄 101000110010101010100100d5e6e048a087f3f96cbdecbac3.lance
@@ -4813,6 +5090,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 101000111111100001100110b169564dc082ac7e17f731053f.lance
           - 📄 1010010000010111100110010cdb5e4806b56c8e65e4160c4e.lance
           - 📄 101001001000011000001110945d3b44e69827c1186908b76a.lance
+          - 📄 1010010010101101110000005977ad4a46bbc996ebb5360ccc.lance
           - 📄 101001001111111100111100b5b4ab4e53b45d290c69046fdd.lance
           - 📄 1010010100010010100010010ddef741f9aedb6af11635df2a.lance
           - 📄 101001010101000110001110efc24944638b30131da2ca9c9f.lance
@@ -4820,22 +5098,28 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1010011010010101100100003a16fb40e08cf586528555ae2a.lance
           - 📄 101001101010011101100001889b0e4af19bc1e410d15fc752.lance
           - 📄 101001110101010010101110a7b17f4aa3b46d95ac164bfc07.lance
+          - 📄 1010011111000111011011101a52eb47c7b7c0f7761bae857f.lance
           - 📄 101001111101000000111110389c174011a05b61b405186c32.lance
           - 📄 1010011111101000111011103f4cab497683b195d4505710e2.lance
           - 📄 101010000001100011010100ac92d64035a783563551728ba9.lance
+          - 📄 10101000000111101110000190b35b4a76bd81fdccc2df05df.lance
           - 📄 101010000110111010101111914aa9407d9dfa99cf5a8d38ab.lance
           - 📄 1010100010001100101011107263a44e58b7b3e468805a77c2.lance
           - 📄 1010100010110001010101016342504547b4c92f7eed8621f6.lance
           - 📄 101010001111011010000011de2a124191b1aacb412cfc6905.lance
           - 📄 101010001111100001101111db4a484736b86f0a07283ab5f2.lance
           - 📄 101010010000010000010000794de846afb8684b516d00f695.lance
+          - 📄 10101001011010111010001166eb9a4ac584458ac8009a0475.lance
           - 📄 1010101000001100111000110f12b34df6beff00034e46b69f.lance
+          - 📄 101010101110011011010000bc384047a6b60280b803e216f6.lance
           - 📄 101010111000000100111101a51d82468591e2273a9b8abefc.lance
           - 📄 1010101110001010001001101718f142d4becd1da24354b749.lance
           - 📄 10101011111101011101011022115342869803546a0e5e8a2d.lance
           - 📄 1010110001110110110110015c3274433c97c654737edeb384.lance
           - 📄 101011001000000011001000f96639477ebff362ea07c4733c.lance
           - 📄 1010110010100000111100115ec27941b2809f066a151d3cd6.lance
+          - 📄 1010110011010001010011115fd9a54d7991c6c663ac7e4901.lance
+          - 📄 101011010001001110111001f21ca24962a81f89bdf0fd3dba.lance
           - 📄 10101101000111011110001033f5c54b558ed1ad7eea44a356.lance
           - 📄 101011011000010001001011579bea4350bbf3ab01c1b11cae.lance
           - 📄 1010111011000011111101112bee3043d9a178198df181b636.lance
@@ -4849,6 +5133,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1011000101110011110100013853194fb2ac48996e8e7c22a6.lance
           - 📄 1011000110010100101011019ad4c442f1a2f6ba0b958015d9.lance
           - 📄 101100011111011001000011c4446e42c1b45e5e380d6393f0.lance
+          - 📄 1011001000101000101100114ffb6b481c8381d02b03f94771.lance
           - 📄 1011001001010011001000008f9d694b15a11783eb1b28bec6.lance
           - 📄 10110010100000001011111115e9514b52b64eba5957c6ae4c.lance
           - 📄 1011001010100001000110014eb30d4ee187907c4e953a645a.lance
@@ -4869,6 +5154,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1011100011110100101001006cb75245a4a0ee46269b2a0f18.lance
           - 📄 1011100100001000001101111ac253424684fbbc2fc3d2517c.lance
           - 📄 101110010101001011000101014ad44220b14a3a59b3c2bddd.lance
+          - 📄 1011100110110100100011001b6ce547a0b1a6784ae244850a.lance
           - 📄 101110011101000001010100905c4d40e79aa7864baf5d5f2a.lance
           - 📄 1011101000001001000000103a84924c36bdd5234715b08dd2.lance
           - 📄 1011101000001101110100108484cb4f2c9e87054f4e3f7b3d.lance
@@ -4878,16 +5164,19 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1011110001000010000011100b1cc6430abbed89cf8776dd67.lance
           - 📄 1011110101111010101001007a18e94ec4b93383d5bd641722.lance
           - 📄 1011110110101001111011008769f348dbb59a33ffbae841f7.lance
+          - 📄 101111110011100011100000c6f3e9468bba92d6f725559fdd.lance
           - 📄 1011111100111010001011005e30fe48ad86728d40cc34e3cf.lance
           - 📄 1011111101110010110111105ddde346ec923b52ae059e75b9.lance
           - 📄 1011111111000000000010018cc677454b961f244b407541c9.lance
           - 📄 1011111111101101010011108cef2b475fa91e59c17239694d.lance
+          - 📄 11000000000011101101110127678a4ec998dfc05e58ffb842.lance
           - 📄 110000001011101111010000ff69e34f74b32d1265bdec1e6f.lance
           - 📄 110000010100111001110011a87cea400bb90be0cdd41378a6.lance
           - 📄 11000001010100100001110095806f45bca7a095ed0d98ae69.lance
           - 📄 11000001111000110011010108814f4a3aacf568fc9fb753c8.lance
           - 📄 1100001001100100000101115c6c724ce982c715be5bd04a01.lance
           - 📄 110000101000111011100010fd85564773af4459eb106c73a7.lance
+          - 📄 110000101011010010101110107eb6425793968c1bf7262ab9.lance
           - 📄 110000101100000100000001e1ca08428fb4500cd61dce202b.lance
           - 📄 110000110001110000110001ef47b34155be00af2737debb8c.lance
           - 📄 110000111011111001000100b2030145b6995e84f083fda466.lance
@@ -4909,8 +5198,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1100100111000111010100009d5624406ba6f4cd68bf86cfe1.lance
           - 📄 11001010010001010010110186d3cc4722b5e099a684d8794c.lance
           - 📄 110010100111010001000111aff5764da7a83587e37cd7d537.lance
+          - 📄 110010110010000100101000408ae44997810aebd28e8f71e8.lance
           - 📄 110011011000110101100110451b1b4c24b67ec44a3c7ec506.lance
+          - 📄 110011100011101001001011d47b7746d2b40fa4c9a6a7ca55.lance
           - 📄 11001110010010000010111197d0c6431c846d3a9377f58680.lance
+          - 📄 1100111001011101001011101b55f04f23973aab1ee6ebce8e.lance
+          - 📄 1100111001100101100011116b13f74b1a91cdc5702754eb16.lance
           - 📄 110011110000000101110010b7241840c286d23493c95776e2.lance
           - 📄 1100111100010011000011003c92334d609e3398dacfe717e3.lance
           - 📄 1100111101100100111111100e57f94f2c883dc9bd74cbaef7.lance
@@ -4931,6 +5224,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 11010101111111111101101170d16040d6b877ceb19c4801dd.lance
           - 📄 110101100001000011111000357a354f9ba580a1b301509079.lance
           - 📄 1101100000101011100011104bed5b4be2b506d4b3f9069fbe.lance
+          - 📄 11011000001100000111010035d9ed4cf2b3716ec037fd5c8c.lance
           - 📄 110110001100100110000000ab013145749728df93ae8f2fb6.lance
           - 📄 11011001001111101111010149371e4c34836fb6ccf7b6006d.lance
           - 📄 1101100101001111011010018dee1849adbe90dd5fa397fb50.lance
@@ -4944,27 +5238,35 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 110110110001011110110100caa4ee489f826afc8b08413a3d.lance
           - 📄 11011011010111011001001105ced549a2b25033893460b2a4.lance
           - 📄 11011011100000111100001125d68b4beca9e87b05841a5a4c.lance
+          - 📄 1101110001111001110111116114bd40c3b8a47dcd7f5c6cea.lance
           - 📄 110111001101001001011001733093471eb48d68c599e4860e.lance
+          - 📄 110111010001000000010101cbbe094741b9f4290d99b91d41.lance
           - 📄 1101111000000010111000107721524df0a600b9366c234d68.lance
           - 📄 110111100001111100000101ba53e74390998043b5f7fb710a.lance
           - 📄 110111100101000100010011d465d947bc8e9dd04d3e79247d.lance
           - 📄 1101111010110000011101000e11ee4db1b63fa3d75ce6dc1a.lance
           - 📄 110111110000101100011101e32b794514abf38ea4103f5ac1.lance
+          - 📄 110111110011100110001010bcea0b47a4bcab2a8c6565c30a.lance
           - 📄 110111111001010001011100fd73864ec2a644d8a50934a6c3.lance
+          - 📄 1101111110110001001110100325604b1cb447da9ea3b25f48.lance
+          - 📄 1110000000001001100111107145e342579b3845043904ec0a.lance
           - 📄 1110000000111000001111103d0c9e4282a676dcf5626dc84b.lance
           - 📄 111000001011100010111000c655244740bb1ce7cd8a776401.lance
           - 📄 111000001101001100010110fac23146a98e1a2eaeba31e5ca.lance
           - 📄 11100001101110010111101077b6f74cb89ba5889dc3cac64b.lance
           - 📄 111000011101110101100100b5c71a466fa979deef4b44348b.lance
+          - 📄 1110001001000010001101119c06d044c6b1b9e6511ecf5366.lance
           - 📄 1110001001110110100010103359464d35991b84d9e2a14fc6.lance
           - 📄 111000110000100111111110d16cf84576b0fadc63d5de6804.lance
           - 📄 111000111011111111010101258e77471091c1ca8c6c3760f0.lance
           - 📄 111000111110111111110001c8f0614071a780f4a5c9813709.lance
           - 📄 111001000001111011010110a136024cd196a0e3ca4594da39.lance
           - 📄 111001000010110011000100052eab43859318aa86e8721bb5.lance
+          - 📄 111001000010111111001100b97bcf4576adf0e895124e716d.lance
           - 📄 11100100011011101000001197d9934a4d879c6dc360f37151.lance
           - 📄 11100100101011100001101141427b4aeabe2cbab219c414d1.lance
           - 📄 1110010011001010010010105fc39d4d0ea75ea1d5fe151d80.lance
+          - 📄 11100100110010111001010089f95a4d4a85ec833f33932ef1.lance
           - 📄 111001010011110101011111cb33bf40c895487b4456af3df4.lance
           - 📄 111001010101010110100111031b904e2b8c45d3d548cd5cd2.lance
           - 📄 111001010110101011010100d5925c4576823e49f4c4c72280.lance
@@ -4980,8 +5282,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1110100001010010101000105db086423899fd3d2680c8e20b.lance
           - 📄 111010000110010010000100a5eb444c9faf01c1d186e2c0da.lance
           - 📄 111010010010011110001111a29545458fad4bc9019ca7c447.lance
+          - 📄 111010010010111110011001dd7899476a9d6a78d108580a85.lance
           - 📄 111010010110010010111000e7d87840d9b0681680c7924389.lance
           - 📄 1110100111001000111101001978754709b7b436009ffad595.lance
+          - 📄 111010011101011010000001eaf2874ac0b3f981c14a63a608.lance
           - 📄 1110101000111111101000019b684b4f35b3b9f1516d24e3a5.lance
           - 📄 111010100100011111001101397053415a86760490f9a9c91f.lance
           - 📄 11101010101110110011010118eadb4611b58ae52598178aec.lance
@@ -4990,6 +5294,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1110101111010110000110107d3af24c94934fd2d8b1aea25e.lance
           - 📄 111011001001101100110100eedcf34d07bbddd3d09257e95d.lance
           - 📄 111011001101110101011100271c8943f4acfbf398deb549f3.lance
+          - 📄 111011010101011111000101b599b44d9a9823e4114475ebc1.lance
           - 📄 1110110110111011011111105e5e1a4bbfb3ea0c40b6ea20af.lance
           - 📄 1110111100111010110000007fa6c14e15ae0ac826facc33c4.lance
           - 📄 111011110101111010000000c4c1db4415b1f3acb9d0a1e2b1.lance
@@ -5005,9 +5310,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1111010000011011101101119911bb4bdebddb52883375be18.lance
           - 📄 11110100000111001000011066a2ce477082fdcfb8a5ab6d83.lance
           - 📄 1111010000111110010011118f8dc443d3a85b931d37b4e4c1.lance
+          - 📄 111101000100110010001100f53a234e2b92e2b36b91bb4b68.lance
           - 📄 11110100011110010100001004fc734245878a50fa39e5a757.lance
           - 📄 111101001000101111010110d1dbf14d9d8a6b7b3603a5bd62.lance
           - 📄 111101001010100001011011fe6a32408c8af336ff926b3631.lance
+          - 📄 11110100110010111001110113e366403f8e7139acecbc1b27.lance
           - 📄 111101001101001010101000be72bb456a87fd5556e780ce92.lance
           - 📄 111101010100011110001110184e6d47d4832624dde9731877.lance
           - 📄 111101011000111100100111746ccc4eb583d7491856d539e2.lance
@@ -5023,16 +5330,20 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1111100101110111100000004419944ba3a58555543549dc7b.lance
           - 📄 1111100110010010001000104eb3c74a868d03978deddc5223.lance
           - 📄 111110011011101100111110a3fd494d26bd6de4f3d41785bb.lance
+          - 📄 111110100100111011110100a22eeb43008fcd99ab91fc5085.lance
           - 📄 111110100101111001000100842fa34b9d9a62866539a8baa2.lance
           - 📄 1111101100110000001010100a6415492982ee3c802ce1ec5a.lance
           - 📄 11111011001110100100110193f6784db0a0809bd52745bd4e.lance
           - 📄 111110110100011111010110d712104577b443da377ad8fe86.lance
           - 📄 111110110111111011001100a861414ce8a637e9488baea8fb.lance
+          - 📄 111110111101011001100011fbe21248de8e10577a1fa50b5e.lance
           - 📄 1111110000010110110001108b007945aaaa7fb854e2080ff7.lance
           - 📄 111111001001011010010101d6b6724bb7973e5f8c69be7641.lance
           - 📄 1111110011000100010110004d87534d69866c65ba57dd47f2.lance
           - 📄 11111101011001100000011080b25342eabd9952fcb8fd1eb4.lance
+          - 📄 11111110000010100011000157f154456d87d2994d26b1199e.lance
           - 📄 111111100110110101101011ac7fc34334b0f562a4b5769915.lance
+          - 📄 111111101000101011011111a76fcc45e990cd0e7bb2b93b2d.lance
           - 📄 111111101011000110101001bc31e348339da8f5972e625ba3.lance
           - 📄 11111111010001111110000140a7b34eb891da51c45caf885d.lance
           - 📄 1111111101101101111110106ac8344033b437015ea3ffc2c9.lance
@@ -5664,17 +5975,120 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 658-86ccfcaf-f0d6-4712-8bc2-138089d97981.txn
           - 📄 659-5cb18567-c7ed-43b6-93ca-3670e92b2629.txn
           - 📄 66-e83f1eac-3ac1-4d33-a52d-a3d7a05c8ca9.txn
+          - 📄 660-53ca8abc-d366-4388-b104-ad1f0773cf8a.txn
+          - 📄 661-6b603b70-1744-483d-acf1-9ac9d9851534.txn
+          - 📄 662-d9fb373e-ed0f-4cc8-85e3-4114ef4a5c4c.txn
+          - 📄 663-e3944bdc-0803-4df6-8643-3734b9ab15dc.txn
+          - 📄 664-af6732a0-c9e4-404c-b9e7-441eae0f6a0d.txn
+          - 📄 665-89d27050-165f-4bf9-a226-3496f64f717d.txn
+          - 📄 666-19eb2297-6622-4d05-a2e4-9b2f1c566840.txn
+          - 📄 667-e77421ae-bddb-4672-9342-fe596da2a856.txn
+          - 📄 668-3d3e5670-da70-43b7-a2b2-be20443dd992.txn
+          - 📄 669-ad732467-7b20-4e6a-b979-e08b31e04fc2.txn
           - 📄 67-b7210e4c-176d-4203-88a2-466856eac9b4.txn
+          - 📄 670-cdddcd47-7e62-43e4-85f6-69e3c35dcdc1.txn
+          - 📄 671-c9d88d59-5912-4257-b43f-f4c750d0ac79.txn
+          - 📄 672-46f4b999-1b1e-4c30-9514-5f614eebcfed.txn
+          - 📄 673-1f55035f-be43-4a3d-a8b5-f402a8cd913c.txn
+          - 📄 674-73cf7c95-15b0-49ff-a87b-64ad87e820c4.txn
+          - 📄 675-f90dcade-1fbb-43e4-b369-a86395c48370.txn
+          - 📄 676-3c493218-2be5-49a4-ac8e-b611fce156e0.txn
+          - 📄 677-35ad52c3-31d3-438e-a2b4-a03861807b37.txn
+          - 📄 678-13bf3e9f-c57f-460c-aea3-524c95a46baa.txn
+          - 📄 679-1aa398c4-aaf7-46b5-a2a1-3c5046803400.txn
           - 📄 68-1e4f019b-31bc-43f9-8237-f21179754cc6.txn
+          - 📄 680-c74f1e2d-a402-4e06-aa25-1ac0ab573604.txn
+          - 📄 681-a58e02b8-c43e-4518-a8c4-eed33175e55c.txn
+          - 📄 682-7229a320-ff13-4ffe-a572-4a121cbbc743.txn
+          - 📄 683-5e5aad11-741d-4e45-a07d-11daea93c199.txn
+          - 📄 684-0214d993-8bb0-417d-99e2-9d07a2bace1d.txn
+          - 📄 685-ca5f6426-c616-45aa-a573-2b24e5c039da.txn
+          - 📄 686-9b7ccfa4-1564-4e61-9e51-18a381ac55a3.txn
+          - 📄 687-671f42a7-2d52-4f2a-b9fe-a7b00da08b15.txn
+          - 📄 688-010a2073-5ded-4fc2-9a7c-c27633d5b370.txn
+          - 📄 689-24339723-e542-4f72-8ecf-f1d4127a2db7.txn
           - 📄 69-6ca31c05-091f-4669-af95-a26bd9485fb4.txn
+          - 📄 690-e171db7c-6bbc-42e4-860d-f5027a6bf47d.txn
+          - 📄 691-a56ee73e-8913-4660-a537-337e9b30cf3e.txn
+          - 📄 692-a9056245-799f-4617-86b9-95ea6b47ff4a.txn
+          - 📄 693-91479a67-9ad4-4a44-b90a-e4538ee7ca5e.txn
+          - 📄 694-9cfae8bc-ab45-47e3-bc74-370b51ebef00.txn
+          - 📄 695-9f2a94ec-d98f-41bc-b887-e2aa0af208a1.txn
+          - 📄 696-c57098a3-1638-4649-8829-d74d569f6043.txn
+          - 📄 697-3dae9586-9180-4b76-99a2-d23c6b4b0a64.txn
+          - 📄 698-a31ad2fc-6f57-4a46-b4af-c91b517b04f9.txn
+          - 📄 699-82f69fb8-bd21-4025-b130-3029e7417007.txn
           - 📄 7-2d16c23f-ea2a-455d-80ee-c6a9743565a9.txn
           - 📄 70-ec2bc868-a3b9-41ab-9814-d0e94d8d1d45.txn
+          - 📄 700-bf8ca571-0474-4263-9f12-f6ff6f8749a7.txn
+          - 📄 701-375f7328-c915-4978-a49e-bb73dadfcf85.txn
+          - 📄 702-363b8523-95a7-4ddc-a960-9bcd98f6f99f.txn
+          - 📄 703-aea2f685-f240-4ba2-8d00-dd077734745d.txn
+          - 📄 704-d39a0699-fde7-4a12-96a0-fd6fc798cb15.txn
+          - 📄 705-735de11c-7043-45f2-83be-4ecaa57a6695.txn
+          - 📄 706-873cb581-d991-4a6d-990a-d61fce4d13d3.txn
+          - 📄 707-1f69a0df-a0d5-4dfe-a9d0-fc659d180a0a.txn
+          - 📄 708-bdfda82a-9f9c-4c33-9eb9-df3f8c51a069.txn
+          - 📄 709-fa215620-2710-4c62-b668-8fcadca230d4.txn
           - 📄 71-c190f82e-b5a5-4092-8684-07398e6e94f9.txn
+          - 📄 710-ff2a8906-8770-436e-a383-094b966a6d1b.txn
+          - 📄 711-d80b5a57-e312-41df-b021-68d6d01fa279.txn
+          - 📄 712-f158e436-8f35-4db8-9a79-1867b1ebd92b.txn
+          - 📄 713-5ef94790-4d07-43e5-8419-9ebeab9c29b9.txn
+          - 📄 714-cdff4295-2a07-405b-92e1-5c6e37ec2efc.txn
+          - 📄 715-4612b95a-896e-4dbd-afce-0b1e3d5ce37b.txn
+          - 📄 716-560f7af8-af32-47a9-9c3b-58ee5df218a7.txn
+          - 📄 717-1175da94-cc0c-4f5d-bdfb-2a9ca2aab29f.txn
+          - 📄 718-a98baf63-077d-4cb7-8409-9275e7314aa9.txn
+          - 📄 719-baa2e429-79ca-46be-8baf-c41ee7e70f02.txn
           - 📄 72-72975524-6109-4002-93d3-42144a9e1f0d.txn
+          - 📄 720-dfca12ee-d0ea-4ed9-bf43-f230c17dd2ba.txn
+          - 📄 721-397eca61-aba5-418b-918d-b0ae0507750a.txn
+          - 📄 722-e7c6a8dd-7f6a-41a8-a9fe-40cee2d216da.txn
+          - 📄 723-04864706-de40-4f4c-8e5b-8a17824295c7.txn
+          - 📄 724-30bf8560-9f9c-4314-a17c-36fcb2db4d66.txn
+          - 📄 725-e784dce5-7eea-44bf-b1a7-70fbb9fd5550.txn
+          - 📄 726-42f7186b-f151-4f4b-ac6b-a0c96d726dfa.txn
+          - 📄 727-d80ca146-7bc3-4925-8967-1326eaba5f69.txn
+          - 📄 728-2a05a9a8-d0f5-4543-81b3-f8d203e5ccdf.txn
+          - 📄 729-150c74c5-b9f5-4e37-b15f-d0bcaa9644a6.txn
           - 📄 73-19061a30-1716-4dfb-a8a2-15148f8e7eea.txn
+          - 📄 730-e7a08913-d286-420e-b038-f27a085fe6b4.txn
+          - 📄 731-be6c6d21-42e3-425f-a7fd-5d3c18232975.txn
+          - 📄 732-5bb93a90-d482-40df-a88d-482f2ef88aed.txn
+          - 📄 733-acf07cf1-af2d-4a58-aa53-b2aaa2bf4e80.txn
+          - 📄 734-ef16bede-ecd2-481a-8527-b7c3fc3c3259.txn
+          - 📄 735-464e395b-0e65-438d-8a1b-753509fa00b0.txn
+          - 📄 736-6ad86d43-57e6-47e5-a8e1-09cc1ba87ed3.txn
+          - 📄 737-617e038d-1a52-4ea4-a47e-2ba361be16ae.txn
+          - 📄 738-5427ce50-82ca-4293-8a0c-0b19a90157ca.txn
+          - 📄 739-3b5652e8-c0e7-4c2b-ad08-ce61bfd75d35.txn
           - 📄 74-d6f8b10f-0528-4ec8-9520-214b75a89069.txn
+          - 📄 740-1916ad56-630b-436e-bda8-35f20390ffbe.txn
+          - 📄 741-73cbd108-0f95-4c81-b6cb-5acf02e38be7.txn
+          - 📄 742-443943b0-3e95-4c12-9de5-204987c7fd44.txn
+          - 📄 743-be8eb86d-22b6-4790-af82-5189bc859703.txn
+          - 📄 744-a3edb08f-7e69-48b5-86a2-a3df0dfb4377.txn
+          - 📄 745-ade3e078-da30-43c9-8714-80c2d123691c.txn
+          - 📄 746-4bd30a3e-0040-4446-8795-e710afc3ea84.txn
+          - 📄 747-7db15621-66c4-4e60-be2a-b1404e02ab64.txn
+          - 📄 748-a9ce1f63-2d02-46ab-8959-65adcd9ccbd9.txn
+          - 📄 749-8ea8b7e4-c6a0-4b11-a73f-d52903c16a33.txn
           - 📄 75-0d14c3d2-8af3-42c5-956c-8c35f0657f46.txn
+          - 📄 750-cd1c8eaa-c739-4ae9-b74d-636fc2cf6e3c.txn
+          - 📄 751-863e6e50-4a5d-4488-872d-15ec6ba2f36e.txn
+          - 📄 752-c902d3a7-6a06-4a67-a79d-fbd42d86b2e7.txn
+          - 📄 753-601662e1-9248-4d36-b9d7-a926552b9143.txn
+          - 📄 754-cb29b631-cf99-43aa-b023-edf4347398f4.txn
+          - 📄 755-726509a5-e091-486e-a2cf-b6e966f0fb92.txn
+          - 📄 756-9231811f-25f1-4409-8abe-10ba65804565.txn
+          - 📄 757-faeec2a8-47d4-4575-bfc9-42f84bafc5fc.txn
+          - 📄 758-3e0914e1-a788-4331-9e26-368fe8ac6200.txn
+          - 📄 759-841beb00-1121-4fd4-8930-c12a17364eb3.txn
           - 📄 76-0b73a54a-f2cb-4103-9997-c9f276feccae.txn
+          - 📄 760-9b38e1f5-186f-41f3-a318-ef355ab1c3c5.txn
+          - 📄 761-5baf8189-def9-4b3f-92be-e7aeecfdeb48.txn
+          - 📄 762-6e72d654-3f96-419b-9420-22f35935762b.txn
           - 📄 77-ca154df2-d956-4a79-a239-85dc99b32ddb.txn
           - 📄 78-e3630686-3393-40cd-8f2f-07f1d5480f4e.txn
           - 📄 79-41835843-3929-4acb-8c78-683514f84740.txn
@@ -6325,17 +6739,120 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 659.manifest
           - 📄 66.manifest
           - 📄 660.manifest
+          - 📄 661.manifest
+          - 📄 662.manifest
+          - 📄 663.manifest
+          - 📄 664.manifest
+          - 📄 665.manifest
+          - 📄 666.manifest
+          - 📄 667.manifest
+          - 📄 668.manifest
+          - 📄 669.manifest
           - 📄 67.manifest
+          - 📄 670.manifest
+          - 📄 671.manifest
+          - 📄 672.manifest
+          - 📄 673.manifest
+          - 📄 674.manifest
+          - 📄 675.manifest
+          - 📄 676.manifest
+          - 📄 677.manifest
+          - 📄 678.manifest
+          - 📄 679.manifest
           - 📄 68.manifest
+          - 📄 680.manifest
+          - 📄 681.manifest
+          - 📄 682.manifest
+          - 📄 683.manifest
+          - 📄 684.manifest
+          - 📄 685.manifest
+          - 📄 686.manifest
+          - 📄 687.manifest
+          - 📄 688.manifest
+          - 📄 689.manifest
           - 📄 69.manifest
+          - 📄 690.manifest
+          - 📄 691.manifest
+          - 📄 692.manifest
+          - 📄 693.manifest
+          - 📄 694.manifest
+          - 📄 695.manifest
+          - 📄 696.manifest
+          - 📄 697.manifest
+          - 📄 698.manifest
+          - 📄 699.manifest
           - 📄 7.manifest
           - 📄 70.manifest
+          - 📄 700.manifest
+          - 📄 701.manifest
+          - 📄 702.manifest
+          - 📄 703.manifest
+          - 📄 704.manifest
+          - 📄 705.manifest
+          - 📄 706.manifest
+          - 📄 707.manifest
+          - 📄 708.manifest
+          - 📄 709.manifest
           - 📄 71.manifest
+          - 📄 710.manifest
+          - 📄 711.manifest
+          - 📄 712.manifest
+          - 📄 713.manifest
+          - 📄 714.manifest
+          - 📄 715.manifest
+          - 📄 716.manifest
+          - 📄 717.manifest
+          - 📄 718.manifest
+          - 📄 719.manifest
           - 📄 72.manifest
+          - 📄 720.manifest
+          - 📄 721.manifest
+          - 📄 722.manifest
+          - 📄 723.manifest
+          - 📄 724.manifest
+          - 📄 725.manifest
+          - 📄 726.manifest
+          - 📄 727.manifest
+          - 📄 728.manifest
+          - 📄 729.manifest
           - 📄 73.manifest
+          - 📄 730.manifest
+          - 📄 731.manifest
+          - 📄 732.manifest
+          - 📄 733.manifest
+          - 📄 734.manifest
+          - 📄 735.manifest
+          - 📄 736.manifest
+          - 📄 737.manifest
+          - 📄 738.manifest
+          - 📄 739.manifest
           - 📄 74.manifest
+          - 📄 740.manifest
+          - 📄 741.manifest
+          - 📄 742.manifest
+          - 📄 743.manifest
+          - 📄 744.manifest
+          - 📄 745.manifest
+          - 📄 746.manifest
+          - 📄 747.manifest
+          - 📄 748.manifest
+          - 📄 749.manifest
           - 📄 75.manifest
+          - 📄 750.manifest
+          - 📄 751.manifest
+          - 📄 752.manifest
+          - 📄 753.manifest
+          - 📄 754.manifest
+          - 📄 755.manifest
+          - 📄 756.manifest
+          - 📄 757.manifest
+          - 📄 758.manifest
+          - 📄 759.manifest
           - 📄 76.manifest
+          - 📄 760.manifest
+          - 📄 761.manifest
+          - 📄 762.manifest
+          - 📄 763.manifest
           - 📄 77.manifest
           - 📄 78.manifest
           - 📄 79.manifest
@@ -6372,12 +6889,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 00000001101110011100100046fb8144a5ae25e193dfb81af9.lance
           - 📄 000000100011011000010010f6cfa147a9b3571dd5abf2a32a.lance
           - 📄 00000010110011111011100020efa84d83a1be5efd47f132f6.lance
+          - 📄 0000001100110110100011019b75e7467f8adbddf60451ae01.lance
           - 📄 0000001110100010001101107092e248d0a77358fc5d0c3518.lance
           - 📄 000000111010010011100101f48d2e4f8d83fc5f0ebee81828.lance
           - 📄 000000111111000011011000506c1c4a0892210b140eabba54.lance
           - 📄 0000010000000101101011110c0c894eadb9ee80c253135aae.lance
           - 📄 000001000010010101101001d107124131b5c80f1efd8c0820.lance
           - 📄 00000100100011000011101101ccad4881ab819c79c0eef166.lance
+          - 📄 0000010011010011000100109d50944e1fb45178981e6389f5.lance
           - 📄 0000010011101110100111017006bf40e0bd6ab2d375c32fb5.lance
           - 📄 000001011000000011100000a9fff94537ad72afe3b3b09888.lance
           - 📄 000001011010011010100111804121491faeda229dc82537db.lance
@@ -6385,6 +6904,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 000001011101011110111111b832734ae4b212cac20c8fabc7.lance
           - 📄 000001100000100110010100ccd4fd46b4ab7b0c1eb6324ed8.lance
           - 📄 000001100001010100000111b3fee4479bab50ef4e4d3e13da.lance
+          - 📄 0000011001111000000100100501ee4b5ca571e12a8201ab5e.lance
           - 📄 0000011011100001110011005c589e4471818c3bf3d8cd2101.lance
           - 📄 00000111111110010101011116f8764caca745dc927c4852ea.lance
           - 📄 00001000001100011101011090aa8a4cd6aa1e67bb00573aad.lance
@@ -6398,6 +6918,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 000010110100000100111110d13c264867a659b200ff78b022.lance
           - 📄 0000101101101100111111015442ed4adda0758a3a173d351d.lance
           - 📄 000010111111010000000011b25ea241efada75079934d7e12.lance
+          - 📄 000011000010111100100111fe149543288fd0bbbefa3843ab.lance
           - 📄 000011000101010011101000c1f8ff489d831a47c1e1e2fca3.lance
           - 📄 00001100011101111111100187b0f24430b6c4feda476bc8cc.lance
           - 📄 0000110010001101010100109c377a4a0db09a02530c54ed51.lance
@@ -6405,24 +6926,31 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 00001100101111101100101185ea4b4caa89b649dc7bbb94a8.lance
           - 📄 00001100111000000010100137aca44273b989c78458f33bc4.lance
           - 📄 0000110110111000011100016a6ac34b18801465518b731818.lance
+          - 📄 00001101110100001110100088f56545be8defd8a2647ce669.lance
           - 📄 00001110010000111110110031ea6a4a8e8f6f0c570cdd34f4.lance
           - 📄 0000111010100101111011003e438144439957991ea735691f.lance
+          - 📄 000011101111001001111110b2cb404d1aa434a005cd7ddd07.lance
+          - 📄 00001111100001011010101089578744af9736a4210a0f03fa.lance
           - 📄 000011111000110010010011069ef14ddf80f78b7bb9f345e2.lance
           - 📄 0000111111010000010001107c98764d019a2025cd67891368.lance
           - 📄 0001000000011001001010107fb91d453284415222ba3abe78.lance
           - 📄 000100000111000111100010f338b94669adb85fbb61d92adc.lance
           - 📄 0001000111010100000000008ab0e34a15a86dcc81e2e75af7.lance
           - 📄 000100101000101010111011a3129341d6b8607dd801697b15.lance
+          - 📄 00010010110010010000000087455243ba8e275854e17deff0.lance
           - 📄 00010011010111110010110047e1964799a507bb04f6e475eb.lance
           - 📄 0001001101100000110011105891364df8ab46d40221a852a3.lance
           - 📄 000101000000010110101101960c474664b97e261ba2fea91e.lance
           - 📄 000101010010100100011011ba50ef4e2aae9d3aa0411194ec.lance
           - 📄 000101010110000001111011db4af847cbb1d98362c374f6b5.lance
+          - 📄 0001010101101011011111016c40bb4e5bb38dc30ee448a72a.lance
           - 📄 000101010111000010110010e8e18a49faacc15b3904390e04.lance
           - 📄 0001010101110111011101018cc07e42749651f1be1f932f76.lance
           - 📄 00010101100010111000110053d1534f52a38c24460761c4dc.lance
           - 📄 000101011010110101011111d49a0f49a0b23d2c7ca4ceb00f.lance
+          - 📄 000101011011110100000110782477468684a7fd7907253bf0.lance
           - 📄 0001010110111110101111004846ae4f07a884231f514b968f.lance
+          - 📄 0001011011000011110101103965cf42dc8ed88306e0cf2aa0.lance
           - 📄 00010110110010000111101164368847cf944dd2d163b030c5.lance
           - 📄 000101110100111101101111841cd6457f8e93837f39e5e08e.lance
           - 📄 000101111001001001011000c75b64487a93d0a071c5ed683d.lance
@@ -6430,12 +6958,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 000101111100110000100001eb4060465ab0f7da791110cecc.lance
           - 📄 0001100010001110000101118a4e364b58bea30553f5ef6b9b.lance
           - 📄 0001100010111001101010016f65f64640ba0b3f4bd5362c89.lance
+          - 📄 0001100011010100100010117737264dc1ae8bc0bc64ace6fc.lance
           - 📄 00011000111000111110000192082f45909c63c4021d0c4125.lance
           - 📄 000110001111011101111111c0d57a4122a6cb89c41a4e58b6.lance
+          - 📄 000110010011011011110111a4332744fd85aa575e545433ec.lance
           - 📄 00011010001111111011000122e1854e6aabb2a03173d9f3ed.lance
           - 📄 00011010010010010011101174902543ca810cbf54c28a2b3d.lance
           - 📄 00011010010111100000111139da744e47b51816b1c660e609.lance
           - 📄 000110101001110101110100c6671c493eb15f2f5613328956.lance
+          - 📄 00011010101010000111110189eb08493f9b78a1503203640e.lance
           - 📄 00011010110011111010011096fb3d4037aa5100b19b78addc.lance
           - 📄 0001101101011101110011116bc20f42c2a1cfb243dfea5115.lance
           - 📄 000110111100000111001111376fc74d08a90072fbf6f73dbc.lance
@@ -6447,6 +6978,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 0001111000010110110110012bffd9438aa56adfc9ccaaca14.lance
           - 📄 0001111001000000010110113667e94b3aa88bc1cae65bfb0e.lance
           - 📄 000111100111100001100100578e964fdd96cdcf380f35f3ea.lance
+          - 📄 000111101000001011011111d9b180416ea4731fef7c39235a.lance
+          - 📄 000111101101011100110001269cf14183bfbc6114b5cd5fc2.lance
+          - 📄 00011111000101100000110009f46a48adae272ee9f81783b6.lance
+          - 📄 00011111001001111011000003aa4140d8b4c13871a1aa702c.lance
           - 📄 000111111111101010010111b396ac4cf6bbb27564c02b96f2.lance
           - 📄 0010000010011011101010011002f54dee92f2801607ab72a4.lance
           - 📄 001000010111001010001000cad25f46cda080e40374a498c1.lance
@@ -6483,6 +7018,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 0010110000011001101110012b86714d7db0cb4badbc221ab4.lance
           - 📄 0010110010100001101100014cb0c342549757a6bfeb135208.lance
           - 📄 00101101000011110011101152e56c477797b7a62cea9d1a90.lance
+          - 📄 0010110101100001101101008415984014b1a65ad808ca2396.lance
           - 📄 001011100010101010110101b2f11c4171b9bb4f5464511a47.lance
           - 📄 001011111000011000110011fd2a584d3498655e9fb68c8ccc.lance
           - 📄 001100000101000001011100554fb34552869d3e742197d41e.lance
@@ -6492,14 +7028,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 001100010011000111000101eda53e4797911d4e6b32e19dfe.lance
           - 📄 00110001110101011100110080fdf644cca1a82f956ea956b9.lance
           - 📄 001100100001011111011001e4405848c2b124232f3e74e5d7.lance
+          - 📄 00110010010000101101010027a7e5483d84b4f723d69a17a0.lance
+          - 📄 001100100111111001101110556a8a495397d3a838e7965114.lance
           - 📄 001100101110111000111001133a134813a424bf17faf33774.lance
           - 📄 001100110101010000001111007ba8459195ff592026f58f98.lance
           - 📄 0011001101010101111111113f36574466b9e030dd94347ace.lance
           - 📄 001100110111100111100010a1c9a042efba41eccd1da3f593.lance
           - 📄 001100110111101101111011184b554406a4e3332ee7277f06.lance
+          - 📄 001100111110011111001110bfbcaf49179296d99072631583.lance
           - 📄 001101000001001111000010ee51634395b37dee50c89ecedf.lance
           - 📄 0011010001000001000111006013eb453aaa4896fd955b77cd.lance
           - 📄 0011010010000100101001106d71c04e45971b4dbaf6a6be9d.lance
+          - 📄 001101011010000100101111bafeae474981983c2f8a654a54.lance
           - 📄 00110110000011101011100038a7114b18a0411725a953231e.lance
           - 📄 00110110001001110100100078e86a42a6a2479e14eadffffe.lance
           - 📄 00110110010101011011001096e8cb45d68528bf5f0a63281b.lance
@@ -6510,12 +7050,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 0011011100011001111000011f43ae4fad86579b17fbbd47d9.lance
           - 📄 001101110110010001111101ab3ffe4be98dd5b42bef3cbb00.lance
           - 📄 0011011101100101000101116541ba48d1bb98e0b94521e0d3.lance
+          - 📄 00110111011110010010110062feb5473799eeb45d75a36005.lance
           - 📄 001101111100110001000000732d1c437f91776dff8129639f.lance
           - 📄 001110001001001010110111f18a0f49cbaa5c104913a8de89.lance
           - 📄 001110001010101010000101ebad434a09b07dd37a559107e7.lance
           - 📄 001110001101011100001010788bae496b99c2c78d8fe6801b.lance
           - 📄 001110011000110100010001a1ee2a4c92807b5bcca196d3f3.lance
           - 📄 001110011011100111000100eba6d948b8b77310ec64fb80f3.lance
+          - 📄 001110011100100111001010a55195480caaee58c75a8cc6c5.lance
           - 📄 001110100101101011001111cde15f4f6892484dd5475bca6b.lance
           - 📄 001110110001111000100101e5dea64387b2f710e18fe656b7.lance
           - 📄 001110110101111110011110ad859e43608f001012ee9fd05a.lance
@@ -6525,6 +7067,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 00111101110101100111001029c20946baa1ba2e758595e660.lance
           - 📄 001111011110111011000010996bb14d7b99beeea911502948.lance
           - 📄 001111100000011011100010962c6847869a68c0fd5fe11131.lance
+          - 📄 001111100000111010100100d380c7438fb1a306d64f0d6895.lance
           - 📄 001111100001111001010000dc94b147e9bd6d17ba2fa5d7f5.lance
           - 📄 001111100101110101011100d150d942bd9dad209030031931.lance
           - 📄 0011111011010100101011005960454e48b63bcd3fcc166306.lance
@@ -6538,39 +7081,54 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 010000001010111010101111861167418c9dd0bd9bc4b54845.lance
           - 📄 0100000100011010000001005b587441cd81b0e000e43b446e.lance
           - 📄 0100000110011100100010001145674984b48bf9bca5f04d94.lance
+          - 📄 010000100010100101111001af852244eba900eba75830efe0.lance
+          - 📄 010000100100010110010010688a4f42fab8387fba2fe94df0.lance
+          - 📄 010000100101011010100011e50e0c43dba6f7d28dff2b7682.lance
           - 📄 010000101000001110010110fb543b4807b59cc39369ebfcbe.lance
+          - 📄 010000111000001110111000fe10f246e4a77ec0e6e83dbe7e.lance
           - 📄 010000111000101011101110fe52a14d55b53ed6b9e5a49bae.lance
+          - 📄 0100001110101100100001110dd52f4d44869b726f07bc3c2c.lance
           - 📄 0100001111010110010100100b0f8645f48e536d18081e5773.lance
+          - 📄 0100010011011010110000002e171f41119dfa2487ac07e77d.lance
           - 📄 0100010100001001111101001f28104ee8af00bd2fe9822e9b.lance
           - 📄 010001010000110011110111eaf36f4787b9e72711f0a576bd.lance
           - 📄 010001010001001100110111f4678b48189cd2fc0313f9b78e.lance
           - 📄 0100010100010110101011007485b0479382fb518411a9d45b.lance
           - 📄 010001010010101111110110e5e689438799eacec1c156eb7d.lance
+          - 📄 01000101010011111111101111b5374e2a8884c9f1928518e5.lance
+          - 📄 010001010101111000101001051d5f4afabc6ba56aaf2320c2.lance
           - 📄 010001011011000011101111e1e3d04b59ab4069230de883a8.lance
           - 📄 010001100100110011011101c9fd034b729d0b571201fe1133.lance
+          - 📄 0100011010010001110010112e689b496ba1c492f300727352.lance
           - 📄 0100011010100110001011015703474f4e8f3a37d1573f7b1b.lance
           - 📄 01000111100010110010000004caef4c42951d11c690337be9.lance
           - 📄 010010000000111010000100f039cc4bd998ab2712bd5c5545.lance
           - 📄 01001000000101011111011007cccb43f28a0e0113201c5b2f.lance
           - 📄 0100100011011010000111113aa44c4f358b6fa76647be99e1.lance
           - 📄 01001001000110101000011123c26c4eaab49b9b2cc2590687.lance
+          - 📄 010010010100110000011101e744ad419cb0da43c78aa7a6ed.lance
           - 📄 010010010111011011001110dcf40b446592014b441e26949a.lance
+          - 📄 0100100111011010101110015bb6b246ceb768932e40dfdfd2.lance
           - 📄 010010100000010011001101d00f974e11ada769c38a2f4444.lance
           - 📄 010010101001100111010011b9214c4f13a881bd34f429b7a4.lance
           - 📄 010010110101101100000000e138894829b22df5336224231a.lance
           - 📄 010010110111011111001010db33a44b6b98422bfc4697f593.lance
+          - 📄 01001011110101101001100000df6c44d6b3c9a740fd858a76.lance
           - 📄 010010111111001110011001394bad4dd9bb48c41f5676c0b8.lance
           - 📄 0100101111111111000111003be59445c5a0f885f09e83dd89.lance
           - 📄 01001100010011011010100007f4b34590be0d73a08e4147f1.lance
           - 📄 010011001110000111110110e8929344f0b45e4f52abfcfd46.lance
           - 📄 0100110100011010100011111508d84788acf209000750f54e.lance
           - 📄 0100110100100110010011006fbebd4234b88686b4c5ad440e.lance
+          - 📄 010011010100010000000001af846f4a60a9bd647a413724a3.lance
           - 📄 010011101110000001111111355b42449c864cb35e30128891.lance
           - 📄 010100000000011100101111c831eb4f1c9d4143e5f21e08df.lance
           - 📄 010100000011100100101000a6d12440f9b7891b706f662490.lance
           - 📄 010100000100111010001001de5a164cff85ea38c194ea70aa.lance
           - 📄 01010000011010110101011041b91e4b418ec8331eccefca6f.lance
+          - 📄 010100000111110011111011c467864625baf4f3f2a7af6165.lance
           - 📄 010100001110100000101001c927b04039afc2c12a11c16344.lance
+          - 📄 010100010001110101011010b36dcc44738006f02425b17564.lance
           - 📄 010100010110000101111100a43e2a4c0b8ae1d84d48a73389.lance
           - 📄 010100010111010000100010b35ac04fc78c8ba6dc40a83201.lance
           - 📄 01010001100011101101110013c22c4a778b6eb68cb63321e3.lance
@@ -6579,6 +7137,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 01010010011100100100000114f66841baa2df23706b2b2c03.lance
           - 📄 01010010011111101011010071a7d84ac6839c3fe513a380c0.lance
           - 📄 010100110101111000110111dab31041b8aecd128480520bce.lance
+          - 📄 0101001110001001100101116e39eb449697ba6a374f7d91c1.lance
           - 📄 01010011101111101001000095eb5641aaa5343ce3b21359af.lance
           - 📄 0101001111011001110111005b80d24e0ab14a99e1c29df3b7.lance
           - 📄 01010100010011111010011161c462475ca34857c609fa3026.lance
@@ -6586,6 +7145,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 010101001101101001001000e054c94bbd9e4ac122565716ea.lance
           - 📄 010101001110111001001011d4773a40c1a139a4ef38c49ba9.lance
           - 📄 01010101011010011011011013a7f64b89971dcd4a5821b9b6.lance
+          - 📄 0101010101111011110000016b649f4f96b11019779e03df72.lance
           - 📄 010101011000000000101100b0e0174e35b4bb92ff37bf913d.lance
           - 📄 010101011000111000101101c4d8bf4120b52cf589f62002d1.lance
           - 📄 0101011001111011101011000d80544e07ba04e543b4437c53.lance
@@ -6614,6 +7174,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 011000000010000111100010f7e8534b10b888ecf5cbd07b1f.lance
           - 📄 0110000001110000010100002c9cd4423b97202a4b797f7d2b.lance
           - 📄 011000001011100011000011b7f76c4f86a3ebed4b2384a186.lance
+          - 📄 0110000011010101100010003388b0421c920fc5e5a8003f8c.lance
           - 📄 011000001111100100110011a329ba4f5088f217c9db5fd4e3.lance
           - 📄 011000010110010111100010b9516949fab2d211e2ef1c3f69.lance
           - 📄 011000010111111000001011a7b7714a028bed5de099c09a0a.lance
@@ -6630,6 +7191,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 011001111001010111001100b79e7246dabe044a00f998d98a.lance
           - 📄 011001111001111001001110a9f8414141bb466d6fafa66485.lance
           - 📄 0110011111000000010011100a77cc45abaad10988be2d9d4c.lance
+          - 📄 0110100001111101111110105f0c1046e7872e5c27d949a455.lance
           - 📄 011010001010001010101001e29db64524be0890f8a4436efa.lance
           - 📄 011010011011111000111110d84914439192e965cecbeac9e8.lance
           - 📄 011010011111001001011001b5123a4f30a1fb17cae5c86457.lance
@@ -6646,9 +7208,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 01101101100000010000110045b6984a9dbe2c0aca028d1a23.lance
           - 📄 0110111000011010011101009e8e004081a7cd5dd507e661c7.lance
           - 📄 01101110000111101101010161166f4119b23cd2c8e2205006.lance
+          - 📄 011011101000011111101000cb31fb48b6ab95699b41394bea.lance
           - 📄 01101110100011100101010012f6214e1f8e6baaae7cc46bfd.lance
           - 📄 011011111010110100100110c54a7a494e83e58ee8954846fd.lance
           - 📄 01110000001100111101110190dea746899840e4f97c9a19f5.lance
+          - 📄 011100000011011000000111b2992b4dee9b576447a2ecd087.lance
           - 📄 01110000010100100100100053ba5f4c199609d42c7d5bceb6.lance
           - 📄 011100001000100101011000c6b12b4910a4cfae4c113e0879.lance
           - 📄 0111000010101111000111115ea3814cea98b63f30a2a09ff6.lance
@@ -6669,6 +7233,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 011101001000011001010011766c814e9abd99b082256ba05d.lance
           - 📄 0111010011001111011000017e5f8449bdb0cd76a009f1fc4a.lance
           - 📄 011101010010010001000100a6a42c48f3976b0d574623a309.lance
+          - 📄 01110101011100100001100043edff47e8b2fafa66fe03194c.lance
           - 📄 011101011111110110111010aa847d42bd83eb5d088205aa34.lance
           - 📄 011101101011000000011010cbdbfb49abb1bb199a9bd1edf7.lance
           - 📄 011101101101000010000111a19b55477ea20811ec51f0a36a.lance
@@ -6676,6 +7241,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 011101111101101100101001b683e84e8bae2e71b0279d5836.lance
           - 📄 0111100000101000000110006b07214dc19fc16dabb99fbad7.lance
           - 📄 011110000100011111100101f37d4f44008aed9df5724a1476.lance
+          - 📄 011110000111011011011110f5ad944e639ba43860a8652dde.lance
           - 📄 011110011000100011101010adbfbb4d13b764592b30177fb5.lance
           - 📄 011110011111000100011111cd13204ecda0d44526a6795c7e.lance
           - 📄 011110100011100001001000d8ebf048fe932487e8f8ec64bd.lance
@@ -6693,6 +7259,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 011111110000110010000100c74fe24b3a94f1d8f44d752bb9.lance
           - 📄 0111111100101111000001019ececb46858094630ceaea26da.lance
           - 📄 100000000110111001111111834e9946ffa2947c4395cd0760.lance
+          - 📄 100000001001001111010111d884de49e08fcd4422773499d6.lance
+          - 📄 1000000010010110001111108cbf8a4ff2a48b911d7ceeee16.lance
           - 📄 1000000010111110100001002144dd4fb98accc4f277262265.lance
           - 📄 1000000011011100101001001c89a54e17b08a81b7e2e2bb5e.lance
           - 📄 1000000101000110000000014d536f4148ad98256268c22035.lance
@@ -6713,14 +7281,21 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1000010101101001010001116e21f34ab18108964c1e04ebce.lance
           - 📄 1000010110100010111010016e0b5242b8a5d899dc61c46e3c.lance
           - 📄 10000101101010000111001102aae24d2e9f3a55015e15448d.lance
+          - 📄 1000010110101010000111118f3dd84af099b91586da3e48c1.lance
+          - 📄 100001011110000011100101e102374dbb9dfc7045c59b2b3e.lance
           - 📄 100001110111011000011100fabdf9463f9752fcdc66ae4291.lance
+          - 📄 100001111101010010111001a576bf4c5aafc4bf8eca84dd9a.lance
           - 📄 1000011111111110100000006f1fbf4103b9e8fcf0bc565434.lance
+          - 📄 1000100100000101010100109a951e461e85b4836fc52049e3.lance
+          - 📄 10001001110001100111111020c3264ee4a131d12d0ba0ec9c.lance
           - 📄 100010100010101010011000248c3a4e709001970e1ed5ac7f.lance
           - 📄 1000101100100001010111113de22849338f236f80e9517925.lance
           - 📄 1000101101011111000011102c18c54604a4db8cc531c54ef7.lance
           - 📄 100010111100101001111110322553427a8d055a2c5b573a31.lance
           - 📄 100010111101101110000110eade7447d1a499eace8a0df76d.lance
           - 📄 10001100000011010110101144d1e347709910791fdec04782.lance
+          - 📄 100011000001101111111010ecfdf94234afc33aae2cb8c907.lance
+          - 📄 1000110010010001100101111eca504f6da663b5d1c1b8761b.lance
           - 📄 1000110010110100001000111cab004be6818f0920e234f56b.lance
           - 📄 1000110011000011101011010838fa45989f5b0fb91d270a7a.lance
           - 📄 100011001111101010000110ecc61b43529299b8b3153e5ead.lance
@@ -6729,9 +7304,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1000111001111000110110107b67734c1a8c6b4bf77f1d84c6.lance
           - 📄 100011100111101111100010c45b144d3d8197358dd5692d88.lance
           - 📄 100011110100001110001001237c384c43bde2691d887c88ff.lance
+          - 📄 10001111010010010010000013f89147bfb92e0e0fe52aed40.lance
           - 📄 100011110100101110100110baa0114a0ca38a4a92743dd1df.lance
           - 📄 100011111010101010100100bf94f0402ba37b24c28b9971a0.lance
           - 📄 100011111010110111111001936a4d407885aec2a185ec1e5c.lance
+          - 📄 1000111110110010000100108a0bfd42ec8823653c43228276.lance
           - 📄 100100000010000010110110499c1247758cab8079380b4818.lance
           - 📄 100100000011100101111010472c7d448d86b56e2e9c149d7f.lance
           - 📄 1001000011011001000001012cb1cd470cad75627d8937c69b.lance
@@ -6741,6 +7318,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 100100011011100001000101bf6b0541f7bcafb72ff5664322.lance
           - 📄 100100100000110111000101e3eaae4dab987c4de9bcbac2be.lance
           - 📄 10010010011010010100000042c9e3496e8d7d2ce84b0b564c.lance
+          - 📄 100100100111001101000111c75562405ea49ec79b8b40e9c1.lance
           - 📄 100100101010011110001101ec1e6c45b59cc11452325acd2a.lance
           - 📄 100100110010110000111010b928964e9289bb87f454978b5c.lance
           - 📄 100100110111000110001011f5d7e84bdca8cb7d0e49e39bac.lance
@@ -6749,15 +7327,19 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1001001111010101011010100a39a047f39ece6eb92ece6648.lance
           - 📄 100101000001011110111011ea1b0448ecb77ea8969e2c45e5.lance
           - 📄 10010100110001000100111007e3a64cd38998b6eea8870491.lance
+          - 📄 10010100111100000001000013804b402995576a02451f62d3.lance
           - 📄 100101010001000110100101884cf64256a84963dac3596279.lance
           - 📄 100101010001001100010111c1f4a948599ccd0bdca0315902.lance
           - 📄 10010101001010000001001107b4764e73b5b90573fa217d93.lance
           - 📄 100101011001001111100111b66ca14f7b931136924b1a4bf0.lance
           - 📄 10010101101001010110001181df03489bb6f1a029b8a903dd.lance
+          - 📄 100101100011111110110110e20e2b436187f1fce2c9badada.lance
           - 📄 100101101000011010110011af002e4f9aa16057f98e12314f.lance
+          - 📄 100101110001111100010010e3c6aa41be9ad25a5c3fb714aa.lance
           - 📄 1001011100100000110111016e87d34488a2c4e1b50aa0b27c.lance
           - 📄 100101110110001110101010245d604ec885d5e8b32c562356.lance
           - 📄 10010111110011000101011180ba0c477cbeea8dff7625d391.lance
+          - 📄 100101111111111111111011726f484e2cac9a89e54608199d.lance
           - 📄 10011000010100001111011008ed354527b03653c9bc37223a.lance
           - 📄 10011000110010011000001050910944eab144aa416a016d97.lance
           - 📄 10011001001000101000010111155b4edda699fac913e1e8ca.lance
@@ -6770,9 +7352,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 100110101011101001111010a40c024faf92dd57a61c643b5b.lance
           - 📄 1001101011011001001110116248e44015bb3dc8fb4586c71f.lance
           - 📄 1001101100100110001010113ca5da437d8e7e692a1494d2bd.lance
+          - 📄 100111000101001100101101ae98ed48d5bf5f32ea71aec3be.lance
           - 📄 10011100011000100001011165127a49f89d4e99b3886f6fb1.lance
+          - 📄 100111010001110110001101b7709a48bb9275c816e0a8af9a.lance
           - 📄 100111010010101111010011559718436cb6563af0d19cebe7.lance
+          - 📄 100111010110000111010001b7e4bb4a2081db468e8bd596e5.lance
           - 📄 100111011101110110001011beb29948fcae3944e9c5174b37.lance
+          - 📄 100111100010011011001111f0fd30419299c4dcf82b5bef9e.lance
           - 📄 100111101110001110011010f1c9744a9894c546b50be7247e.lance
           - 📄 100111101110100100100010f5991a43e880282721d718d6a1.lance
           - 📄 1001111100000101010100113985ab4b7e972230e01c242344.lance
@@ -6780,6 +7366,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 100111110111010001100100a0115a4d3380143b440dbb5506.lance
           - 📄 100111111001011000010110063b7b4979a201d8300444ea89.lance
           - 📄 10011111101110110000010172ccdb4785b2997febbb16b080.lance
+          - 📄 1010000001010010101011010824064eaab31552bb161fef45.lance
           - 📄 101000000111101011111101b5bb9b4fcda714ac44e6a76bbe.lance
           - 📄 101000010011010011111111fa47a54843bbd7a3537258321b.lance
           - 📄 1010000101000101001000118a4ca341a69b97ee5326276e07.lance
@@ -6793,12 +7380,14 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1010010000100000100111106d0d294b69b7cace9acaf8e789.lance
           - 📄 10100100001100001010100171e3484d59830d21d255b0b919.lance
           - 📄 1010010100100101100101012279fc483ca30c0373af869d6e.lance
+          - 📄 10100101010010111101101156a6034095bc94091431eb7d1d.lance
           - 📄 10100101010101011000110066262b46218646ac7aa4f99d16.lance
           - 📄 10100101011111000110000055a9da4ba69fc2a5d432e91357.lance
           - 📄 1010010110101100111100001645af464894a3cc27dc267ab8.lance
           - 📄 1010010111111011010011103ee8fe4e23b5c3aa9866d75b7f.lance
           - 📄 1010011001101101101100111096cc49ca9e9c525de8072941.lance
           - 📄 1010011001101101110101017ce988473a8c479a6b801e7544.lance
+          - 📄 101001101001101100101111be1c77450eacf66dc1484a5c67.lance
           - 📄 10100111101101110100111096bc5846b092cf6ceff8289b1a.lance
           - 📄 1010100010011010111111000e33ff466daeab4ec084a829b9.lance
           - 📄 101010010101010011000000f7c4ec403ba7642396aa2bcef1.lance
@@ -6807,15 +7396,18 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1010100101110110011110007c2def4f19bd2948e01227ade6.lance
           - 📄 10101001111011110111001034cb294ee0bc15bbff222d685e.lance
           - 📄 101010100100000111101100c66aa04b3f9a17c0aecf3e1caf.lance
+          - 📄 101010100111011001100000f8f3b6419e8ed1443e7253638d.lance
           - 📄 101010101001001100000111057bae4af9aa8a7030fc55f2cd.lance
           - 📄 1010101010100000111111013e0acc4808b7dc2e982e17eed9.lance
           - 📄 101010101011101011000001efc21344a5aedd039402643267.lance
           - 📄 101010110001010111001101282a6243218a31c3a52353240d.lance
+          - 📄 101010111111101101010111db029f458383596f223f0d2f7b.lance
           - 📄 10101110100111001001110154af9544e48222af36a0516337.lance
           - 📄 101011101011110101100000622303492dbfdb41fec3fc18d6.lance
           - 📄 1010111100100101000000019d30a143bd938cc762b795bf5f.lance
           - 📄 10101111001111111010000126bf07455b8a256e70dffba6d1.lance
           - 📄 1010111101000110000100117042134387bb5e039d62308b70.lance
+          - 📄 1010111101011100000101007be3b24a27a8d8c237e8401906.lance
           - 📄 101011111000000000000010893e3f4325af8fb1c7839b7e52.lance
           - 📄 101011111100010001111011ef9bdc4a1d8de91211ab4e8aa9.lance
           - 📄 101100001010010010101000a271ea49f4953dfaa532fb8740.lance
@@ -6823,9 +7415,11 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 10110000111110101101100040fee14956b237de8ab4fd1e69.lance
           - 📄 101100010110011100000110d0d1074891ae1051f53c6f4204.lance
           - 📄 10110001100001000001000006eb3e4c4eaf5d2d68d8cd88d8.lance
+          - 📄 1011000110010111001101001cc9084274863c23f7130bfbfd.lance
           - 📄 1011000110011000011101105d6ce04873bf30fe9952774ad3.lance
           - 📄 10110001110011110101101050d8f440acbfb732f5be2c3067.lance
           - 📄 1011000111100001110100013c583e4f0aa9920e303415783b.lance
+          - 📄 101100100001001111001101bb2a1348689ada10083fc09577.lance
           - 📄 101100101111100010100111dd01d04199acaf84ed59fd559a.lance
           - 📄 101100110010000000000100e1591444d6a229b1def2e7987a.lance
           - 📄 101100111010010011111101db61684e8c923f8bb0fb5df1b1.lance
@@ -6840,11 +7434,15 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1011011000000001010110103f5a2f4cc5b9a5306972cc5831.lance
           - 📄 10110111000111001011110083f8a843c9a559b5ce11713d40.lance
           - 📄 101101111100111010110100046602448bb869c3e91fe1493c.lance
+          - 📄 1011100000101001010110018a4e6e44e0ad5df5e73e80a40a.lance
           - 📄 1011100010000000011001013a3f8c4fe69223d8de08e82bba.lance
           - 📄 101110010101111110101111627fc7498c87315fb309e0e2da.lance
+          - 📄 101110011001110001001110f6d7a74584b1519449e14e11a5.lance
           - 📄 101110101000000000101011940b364162a95d096fe9236af7.lance
+          - 📄 10111010110001011100001081f7c3499795497cb2ae58c9ed.lance
           - 📄 1011101100010000101110101cc01a41e689f1376020ae1141.lance
           - 📄 1011101100011001001000116822684d9bb8f08eeb3a3b7a4f.lance
+          - 📄 101110110001110001110110c796f942a4af37fe89336541ac.lance
           - 📄 1011101101010110011111102197344145b790e97a05e17203.lance
           - 📄 1011101101110011100011104b5de24b418c4e94512cef419f.lance
           - 📄 101110111010111100010000d934dd42d997e02835fad6e360.lance
@@ -6854,13 +7452,16 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 101111001011111000110010078d914c609a6e736fd7df1c5d.lance
           - 📄 101111010100011011100001710ea54c008259e4443befe314.lance
           - 📄 101111010101101110111001b17c3f443586d7b00a8cfebebc.lance
+          - 📄 10111101011110110000000063b5f949819bca7438e321ab20.lance
           - 📄 1011110111000000100011019a6973478d91fffd3e58546e7b.lance
           - 📄 10111110001000110110001134ecfc4b10931f6e43abd3a4d8.lance
           - 📄 1011111000100100110010000e8ff4453da2ec5551acfca796.lance
+          - 📄 101111100110100011010101025e6045f49f813551f40a3e98.lance
           - 📄 101111110101010010001000f6a72b4d6491c4ff4b256e27c5.lance
           - 📄 101111111010010101010001f8c4f9436ea1a06b1141cfb379.lance
           - 📄 101111111011101000110000d822994f369da1c1fdca1afebf.lance
           - 📄 1100000000001000100011000b4e2a4671b891eb21f89b1d77.lance
+          - 📄 1100000001000011110001019b10f640f3bf3cfd8154c36159.lance
           - 📄 110000000101101111111101a343644c8296f6a04f6e53f367.lance
           - 📄 11000000101100101110101028ad474d1c930e566fe35509d9.lance
           - 📄 110000010000110111101000170cdd4b5e88476209e3fd25cf.lance
@@ -6892,6 +7493,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 110010010111101001011111a46a4146e1b2ca1d0cf042d673.lance
           - 📄 110010011011110000100001a5eceb40fcac0bbb3aba3d985a.lance
           - 📄 1100101010101010100100100d7c14444abda8c28c2bec1b5b.lance
+          - 📄 110010101100011100111010a0df8f4423830b4b04c870d406.lance
           - 📄 110010110011111001011001fe39a44cf6a68a5e33dc2bfe05.lance
           - 📄 11001011101010100011001079031d40ab9705ac108ff847d1.lance
           - 📄 1100110001111100100000007331114c91b724b9e309370f38.lance
@@ -6899,14 +7501,19 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1100111000000001111110012bf8c2449eb5bda8dc49e92ad8.lance
           - 📄 1100111000000110000001105092834830bb45088301b3c658.lance
           - 📄 110011100010001000010101ce2b76484ba398e8f19835e73f.lance
+          - 📄 1100111010011101000001113ed43f40d38dfdd00316f495d9.lance
+          - 📄 110011101100011011101100640dde485ea4379bb3464af823.lance
+          - 📄 11001110111111100011110106207a46b68c1554e8054b5ef4.lance
           - 📄 110011110100101100010101dafa0345539c033cbacad090ba.lance
           - 📄 1100111101001111011100112da0e143379da7956a465d4385.lance
           - 📄 1100111101010000011001108c3f8a464e95f2505c66f0a39d.lance
+          - 📄 1100111101111001100111003348944df3a2376f9a15d9aed3.lance
           - 📄 110011111001000101000010d64b2e4841a8ebf97758cebb0f.lance
           - 📄 1100111111001000101101118a2fca4549afc8cad0d1c8caf5.lance
           - 📄 1101000000010000010100103c36994019908df4f59e00ac70.lance
           - 📄 110100001101110110011111f7f0694b7da08fb855212c149c.lance
           - 📄 110100001110101100101001b5aa3d4bceb33f722f0237f9a1.lance
+          - 📄 110100010011011011110011ea4b2a4e7f86f48b42a7762ae5.lance
           - 📄 1101000110000111111000013de8294e37805a0a34224ddcf7.lance
           - 📄 1101000110100110000000003d06e447d4a16c3a350a2b6ef3.lance
           - 📄 1101000111111011100110114f03774d8abea47c1dcf0e222c.lance
@@ -6917,6 +7524,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 110100101001100100100000dab9f14008a20c0b304ae033f8.lance
           - 📄 110100110010011111000111028b3e4977a1eb28ef0b73b0b9.lance
           - 📄 11010011001100111000000019e1654f23b0a3baaab0c1b636.lance
+          - 📄 11010011010011000011101130273441a2923d2813aece168d.lance
           - 📄 110101000110101101111010e36d9f4eeab6fac3847a605b9d.lance
           - 📄 11010100011100000101101024b3394339bbb3f97aba6bd973.lance
           - 📄 110101001000000101101000658cc0485281c4826cb362e8e1.lance
@@ -6931,6 +7539,8 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 11011000001111101000111096a68a4a82a893373807de20a9.lance
           - 📄 11011000110111001110111044d10d4ae88ad1f570ef566745.lance
           - 📄 1101100110001000101101006467cc46b0974b92c6b3687ccb.lance
+          - 📄 1101100110110111010000109d47c949a9a32b06045824dc93.lance
+          - 📄 110110011101101111001101ec88ef4e14b4dfe21acddcfb1e.lance
           - 📄 110110011110111111110001d196ac43c9b831990990257305.lance
           - 📄 1101101000000110101110012e0de44aa0b5bf4a9d5830d397.lance
           - 📄 110110100010011101001101e8c8194e81b3b4c7310ba8a44f.lance
@@ -6938,26 +7548,31 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1101101011011011111111007772df4cefb8af8a2bac110fc4.lance
           - 📄 1101101100010000010101015bdfa4471eacaeeacb8e40a3ff.lance
           - 📄 11011011111000100001011060899f47499d4df828869a0fdb.lance
+          - 📄 110110111111001011001000b241454d4c9840d8046fce970b.lance
           - 📄 11011100000011011010111081ba5a47e19a38caa1ee5b2169.lance
           - 📄 110111000001111011111000503ca04d529944633358083082.lance
           - 📄 110111001000111111010100e3ec0740138bd3630d67263e1a.lance
           - 📄 1101110100001001100000104709ee432c83c6689cbe7afe3f.lance
           - 📄 110111010000101111100111fcff18424da7f47eee6b364edf.lance
+          - 📄 1101110100100010101000116b80a64b8fb73a0d1924d9bad5.lance
           - 📄 11011101111110001011010015120641a790a2d7fa79bbb39b.lance
           - 📄 110111100011000000010011c17d504b39907074936244c3bf.lance
           - 📄 110111100110010010100111a0381b49d794d27f4f5477e404.lance
           - 📄 11011110100010111010010096f5994623939ff9ba77365fba.lance
+          - 📄 110111101000111100101001ba0ba344358d8df93c8ac82787.lance
           - 📄 110111101011111000010011d978ed4200b558dcb8be875ea4.lance
           - 📄 1101111011111101010000018d4cc549f9b0ca776c25529489.lance
           - 📄 11011111100000111110101003eba1401f8e6f91bfb12d90da.lance
           - 📄 110111111000100010011000359c854b5084203bdc51790084.lance
           - 📄 1110000000001011011001016dbee44be99fae819850edbbdd.lance
+          - 📄 111000000111110110101110cdc2d842e3a8a01501fd4045aa.lance
           - 📄 1110000010110000100001014230264fb6abfdb79e5db013d9.lance
           - 📄 11100000110000101100111011677a41a499705310011ca818.lance
           - 📄 111000001111010111110111198779400e8e317155d50f6fa4.lance
           - 📄 1110000100000001000111017ff9084414886a02d82758e489.lance
           - 📄 1110000101000001000100001543834a549d37957beea9b3f9.lance
           - 📄 1110000110001010001001011a16514d7094d2a31c0917136b.lance
+          - 📄 11100001100100111100111097f9b44b569038d1c5c451046e.lance
           - 📄 1110000111111011111011012ef4ba4ed3b92cb2960bf53853.lance
           - 📄 111000101100000111000011c3b85143818f7a959bd6ee3b86.lance
           - 📄 1110001011001010100111013e2fb94ce5acff114527f02e5d.lance
@@ -6972,8 +7587,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1110011111111101011101111975604e80852683dc1e526532.lance
           - 📄 111010000111101111100100a6f1ba484dabbf4a74ecf836c3.lance
           - 📄 111010010100000101111000fb554e42efb09029d1ba0d1a40.lance
+          - 📄 111010010101011100111001cb230a49728fddb75ef14a12a8.lance
           - 📄 11101001111010110111010096137a4ef98a4ba94052579094.lance
           - 📄 111010100011010100000000a9637543ccac268d4e8c439313.lance
+          - 📄 111010100111010101101101ef03b149989eaa332e552c65ad.lance
           - 📄 111010101000110111111000caaf464655a27a36cf63001780.lance
           - 📄 1110101100001010011110019ad3734bf2ad6053e020496823.lance
           - 📄 1110101100011110001011015c2eb648d7b4daf94d6f1cc930.lance
@@ -6983,6 +7600,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 111011110010111011100110794e8c42abb066dbe227a4485d.lance
           - 📄 111011110100101010101110e44ae64ae49e38e37ff773ae23.lance
           - 📄 1110111101110100100000005f6a814de99111263434721569.lance
+          - 📄 111100001010010000000001ec999541718bfb5c4b87f12ae6.lance
           - 📄 111100010111110000000010034a3f43ff8d288bc34eab1562.lance
           - 📄 1111001001010100101001009cb2a042b787ddabeadcc76108.lance
           - 📄 11110011000111101111100084ea2642c890c693025655e778.lance
@@ -7008,7 +7626,9 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 1111100111011011000010013a8fa5478ea32c81d5438b3d64.lance
           - 📄 11111001111101010001010017bf8e47689e74b9a2cc8705ab.lance
           - 📄 111110011111101010011101ec40a846ab8e2f3f841d0db62a.lance
+          - 📄 111110100110100111011011404c794813a487eb340dee5841.lance
           - 📄 111110100111111010111000ddde7d4470ad7faca37c2d6d82.lance
+          - 📄 111110110010000101010011cab7ae4d89aa638d67ca02c3fc.lance
           - 📄 11111011010101000111011104cedc443b8721b1553b677494.lance
           - 📄 111110111110101100010100f4fd9a4b539823da7e2caab927.lance
           - 📄 1111110001001101000111007bd6e24adea508a8d166dfc68a.lance
@@ -7119,7 +7739,6 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 README.md
     - 📂 **copilot**
       - 📄 COPILOT_PRO_GUIDE.md
-    - 📂 **Cserszegtomaj látványtervek és alaprajz Vevó_vagy_finanszirozás**
     - 📂 **Egyéb**
       - 📂 **cloudflare llm prompt**
         - 📂 **llm**
@@ -7133,500 +7752,13 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
         - 📄 Cloudflare_MCP_Server_One_Pager.pdf
         - 📄 developer_cloudflare.md
       - 📂 **Iszap2**
-        - 📂 **AI Folyamatfigyelés-20260221T151407Z-1-001**
-          - 📂 **AI Folyamatfigyelés**
-            - 📂 **AI aszisztensek anyagai**
-              - 📂 **Balatoni engedélykérés**
-                - 📂 **mellékletek**
-                  - 📄 Balaton-specifikus adatok és környezeti tényezők.md
-                  - 📄 Balatoni Kotrások és Mederkarbantartás Jogszabályi Háttere.md
-                  - 📄 Balatoni Vízügyi Jogszabályok Kutatási Eredményei.md
-                  - 📄 Nádvágási Tevékenység Mederkezelői Hozzájárulás Kérelem - Sablon.md
-                - 📄 Balaton_Engedelykeresi_Prompt.docx
-                - 📄 Balatoni Vízügyi Jogszabályok Kutatási Eredményei.md
-                - 📄 Claude Kezdő Prompt_ Hatósági Engedélykérés a Balatonon.docx
-              - 📂 **Folyamatfigyelő**
-                - 📂 **újraszabás**
-                  - 📄 Email Sablonok - Folyamatfigyelő Rendszer.pdf
-                  - 📄 Gmail Címke Szelektálási Logika (n8n-hez).docx
-                  - 📄 Ideális Gmail Címke Rendszer - Javaslat.pdf
-                  - 📄 Képernyőfotó 2025-11-26 - 10.09.08.png
-                  - 📄 Képernyőfotó 2025-11-26 - 10.09.24.png
-                  - 📄 Kulcsszavak és Kifejezések Szótára - Folyamatfigyelő Rendszer.pdf
-                  - 📄 Projekt Kategóriák és Státuszok - Folyamatfigyelő Rendszer.pdf
-                  - 📄 Szelektalasi_Logika_n8n.pdf
-                  - 📄 Tökéletesített Folyamatfigyelő és Munkamenet Koordinátor Rendszer.docx
-                  - 📄 Tökéletesített Folyamatfigyelő és Munkamenet Koordinátor Rendszer.pdf
-                - 📄 claude_prompt.docx
-                - 📄 claude_prompt.pdf
-                - 📄 Munkamenet Automatizálási Sablonok.docx
-                - 📄 Munkamenet Automatizálási Sablonok.pdf
-              - 📂 **Kiértékels varázsló**
-                - 📄 Prompt_ Jegyzőkönyv Varázsló.docx
-              - 📂 **Kiírásból ajánlat**
-                - 📄 Ajanlat_Struktura_Sablon.docx
-                - 📄 Ajanlat_Struktura_Sablon.pdf
-                - 📄 ártábla2025.xlsx
-                - 📄 Minta_Arajanlat_Pelda.docx
-                - 📄 Minta_Arajanlat_Pelda.pdf
-                - 📄 Teljes_Kiirasbol_Ajanlat_Rendszer.docx
-                - 📄 Teljes_Kiirasbol_Ajanlat_Rendszer.pdf
-                - 📄 Tokeletes_Claude_Instrukció.docx
-              - 📂 **Labor asszisztens**
-                - 📄 Hatarertekek_Tablazat.pdf
-                - 📄 Minta_Szakertoi_Velemeny.pdf
-              - 📂 **Manus projektek**
-                - 📄 Hajozasi_Szakerto_Gyors_Utmutato.pdf
-                - 📄 Manus Projekt Kezdő Prompt_ Hajózási Szakértő és Engedélyezési Asszisztens.md
-                - 📄 Manus_Projekt_Kezdő_Prompt_Hajózási_Szakértő_és_Engedélyezési_Asszisztens.docx
-              - 📂 **QGIS**
-                - 📄 Claude Prompt_ QGIS Manager Asszisztens.docx
-            - 📂 **AI szövetség**
-              - 📄 AI Cégvezetői Szövetség – Indító Stratégiai Dokumentum.docx
-              - 📄 AI Cégvezetői Szövetség – Indító Stratégiai Dokumentum.pdf
-              - 📄 AI Fejlesztői Asszisztens - Projekt Prompt (Claude).docx
-              - 📄 E-mail alapú lead-feldolgozási automatizmus v1.0.pdf
-            - 📂 **Airtable**
-              - 📂 **Manus támogatás**
-                - 📄 77756434-b532-413d-a6a3-f52b72cb1c8d.docx
-                - 📄 Folyamatok_Tabla_Struktura.xlsx
-              - 📄 Iszapfalo_Csapat_Adatok.pdf
-            - 📂 **Balatoni engedélykérés**
-            - 📂 **Claude code** _(🤖 Tender Monitoring System - Iszapfaló Kft.)_
-              - 📂 **agents**
-                - 📄 ekr_agent.py
-              - 📂 **AlkJel**
-                - 📄 Claude.docx
-              - 📂 **Csabi ügynöke**
-                - 📄 alpha_agent_package.tar.gz
-                - 📄 alpha_agent.log
-                - 📄 alpha_agent.py
-                - 📄 Email_Draft_2026-01-22.md
-                - 📄 generate_pdf.py
-                - 📄 INSTALL.md
-                - 📄 install.sh
-                - 📄 Portfolio_1_Jelentes_2026-01-22.md
-                - 📄 Portfolio_1_Jelentes_2026-01-22.pdf
-                - 📄 Portfolio_1_Jelentes_2026-01-22.txt
-                - 📄 Portfolio_1_Jelentes_2026-01-24.md
-                - 📄 Portfolio_1_Jelentes_2026-01-24.pdf
-                - 📄 Portfolio_1_Jelentes_2026-01-24.txt
-                - 📄 Portfolio_1_Jelentes_2026-01-26.md
-                - 📄 Portfolio_1_Jelentes_2026-01-26.pdf
-                - 📄 Portfolio_1_Jelentes_2026-01-26.txt
-                - 📄 Portfolio_1_Jelentes_2026-01-27.md
-                - 📄 Portfolio_1_Jelentes_2026-01-27.pdf
-                - 📄 Portfolio_1_Jelentes_2026-01-27.txt
-                - 📄 portfolio_jelentes_2026-01-22.html
-                - 📄 README_AUTOMATION.md
-                - 📄 send_email_with_pdf.py
-                - 📄 setup_automation.sh
-                - 📄 START_HERE.md
-                - 📄 SUMMARY.md
-              - 📄 DASHBOARD_LATVÁNYTERV.md
-              - 📄 ekr_agent_report_AKTIV.md
-              - 📄 ekr_agent_report.md
-              - 📄 ekr_auto_search.sh
-              - 📄 ekr_autonomous_agent.py
-              - 📄 EKR_Jelentes_Aktiv_2026-01-28.pdf
-              - 📄 ekr_mcp_agent.py
-              - 📄 ekr_riport_aktiv_2026-01-28.md
-              - 📄 ekr_search_log_AKTIV.json
-              - 📄 ekr_search_log.json
-              - 📄 ekr_search_results_aktiv_2026-01-28.json
-              - 📄 generate_ekr_pdf.py
-              - 📄 GYORS_INDITAS.md
-              - 📄 GYORS_UTMUTATO.md
-              - 📄 README.md
-              - 📄 RENDSZERTERV.md
-              - 📄 run_agent.py
-            - 📂 **DATSYSTEMS munkafolyamat**
-              - 📂 **Felkészülés**
-                - 📂 **Airtable**
-                  - 📄 AI Folyamatfigyelő Rendszer Fejlesztési Útmutató.docx
-                  - 📄 AI Folyamatfigyelő Rendszer Fejlesztési Útmutató.pdf
-                  - 📄 Iszapfalo_Csapat_Adatok.pdf
-                  - 📄 promtok.docx
-                - 📂 **Manus**
-                  - 📂 **Arhív mentések**
-                    - 📄 1 AI Folyamatfigyelő Rendszer - Rendszerterv és Gondolatébresztő a NotebookLM számára.pdf
-                    - 📄 Fejlesztett_Workflow_v2.docx
-                    - 📄 Kérdések2-AI Folyamatfigyelő Rendszer - Végső Felkészülési Útmutató (v2.0).docx
-                    - 📄 válaszaim2.docx
-                    - 📄 Vegleges_Rendszerterv_v3.docx
-                    - 📄 Vegleges_Rendszerterv_v3.pdf
-                  - 📄 Nézőke.png
-                  - 📄 Vegleges_Rendszerterv_v4.docx
-                  - 📄 Vegleges_Rendszerterv_v4.pdf
-                - 📄 Folyamatfigyelés2024-Andika_Munka-összesítő táblázat.xlsx
-                - 📄 Isti_Egy szolgáltatási igény kezelésének lehetséges fázisai.docx
-              - 📂 **Folyamatfigyelés felkészülő anyagai**
-                - 📂 **Brief**
-                  - 📄 Fejlesztői_Brief_Detsystems-IszapfalóKft.docx
-                - 📂 **Manus 1**
-                  - 📄 AI Folyamatfigyelő Rendszer - Technikai Architektúra és Adatstruktúra.docx
-                  - 📄 Rendszerkovetelmenyek_Specifikacio.docx
-                - 📄 Levelezésünk_összefoglalója.docx
-                - 📄 Speciális Prompt_ Folyamatfigyelő Rendszer Beállítása Levelezés Elemzéssel.docx
-            - 📂 **Hírfigyelő**
-              - 📄 hírfigyelő api.docx
-              - 📄 Info1.png
-            - 📂 **Iszapfalóról alap tudásbázis**
-              - 📄 Új Tudásbázis-elemek az Üzleti Tanácsadó Projekthez.md
-              - 📄 Új_Tudásbázis-elemek_az_Üzleti_Tanácsadó_Projekthez.docx
-            - 📂 **Iszapfalós ügynök hadsereg**
-              - 📂 **códok**
-                - 📄 jel.docx
-              - 📂 **EKR figyelő**
-                - 📄 AI-vezérelt EKR Keresési Stratégia_ Iszapkotrás és Vízépítés.docx
-                - 📄 AI-vezérelt EKR Keresési Stratégia_ Iszapkotrás és Vízépítés.md
-              - 📂 **Manus koncepció**
-                - 📂 **összesítés**
-                  - 📄 Az Intelligens Ügynöksereg Gyártási Stratégiája és Gyakorlati Útmutatója.docx
-                  - 📄 Az Intelligens Ügynöksereg Gyártási Stratégiája és Gyakorlati Útmutatója.md
-                  - 📄 Az Iszapfaló Kft. Intelligens Ügynöksereg.docx
-                  - 📄 Az Iszapfaló Kft. Intelligens Ügynökserege.pdf
-                - 📄 Az Iszapfaló Kft. _Munka Kutató Ügynök Sereg_ Koncepciója.docx
-                - 📄 Az Iszapfaló Kft. Intelligens Ügynöksereg Stratégiája.docx
-                - 📄 Mélyreható Cégelemzés_ ISZAPFALÓ Kft..docx
-                - 📄 réstletezés_Path4Med_Partner_Summary.pdf
-              - 📂 **Pályázatfigyelő**
-            - 📂 **Manus céges előfizetés**
-              - 📄 Professzionális Jellemzés_ Iszapfaló Kft..docx
-            - 📂 **MUNKAIDŐ nyílvántartó nrendszer**
-              - 📂 **Manus**
-                - 📄 2iszapfalo_workflow.json
-                - 📄 Iszapfaló Kft. - Airtable Adatbázis Struktúra.docx
-                - 📄 Iszapfaló Kft. - Airtable Adatbázis Struktúra.md
-                - 📄 Iszapfaló Kft. - Munkaidő és Költség Nyilvántartó Rendszer.docx
-                - 📄 Iszapfaló Kft. - Munkaidő és Költség Nyilvántartó Rendszer.md
-                - 📄 iszapfalo_n8n_teljes_workflow.json
-              - 📂 **Pohi**
-                - 📄 Iszapfaló Kft. – Rendszerértékelés és Javaslat.md
-            - 📂 **n8n workflow**
-              - 📂 **Claude projekt**
-                - 📄 n8n Node Catalog & Usage Examples.pdf
-                - 📄 n8n Quick Reference Guide.docx
-                - 📄 n8n Quick Reference Guide.pdf
-                - 📄 n8n Workflow Automation Expert - Claude Project Instructions.docx
-              - 📂 **download**
-                - 📄 562347954_122108254629026573_7269499106752789917_n.jpg
-              - 📂 **Kulcsok**
-                - 📄 API cloud.docx
-                - 📄 Képernyőfotó 2025-10-29 - 6.45.28.png
-                - 📄 Képernyőfotó 2025-10-29 - 6.46.45.png
-              - 📂 **Pohi - MUNKAIDŐ**
-                - 📂 **kapott anyagok**
-                  - 📂 **drive-download-20260126T061720Z-3-001**
-                    - 📂 **Archivum**
-                      - 📂 **00_Archive**
-                        - 📂 **00_Management**
-                          - 📄 FONTOS_a_megrendelő_elvárásai.md.docx
-                          - 📄 ISZAPFALO.project.json
-                          - 📄 TEST_CASES.md.docx
-                        - 📂 **01_Documentation**
-                          - 📂 **01_Specifications**
-                          - 📂 **02_Guides**
-                            - 📄 AIR-Table_javasolt.docx
-                            - 📄 API cloud.docx
-                            - 📄 Iszapfalo_Csapat_Adatok.pdf
-                            - 📄 n8n jel.docx
-                          - 📂 **03_Diagrams**
-                            - 📄 Drive_api.png
-                            - 📄 Felepites_map.jpg
-                            - 📄 google_cloud.png
-                            - 📄 nem ide.png
-                            - 📄 telegram.png
-                        - 📂 **02_Development**
-                          - 📂 **01_Workflows**
-                            - 📄 final_master.json
-                            - 📄 Gmail kategorizáló.json
-                            - 📄 iszapfalo_n8n_v10_SIMPLE.json
-                            - 📄 iszapfalo_n8n_v11_FINAL_FIXED.json
-                            - 📄 iszapfalo_n8n_v11_PHASE2.json
-                            - 📄 iszapfalo_n8n_v4_FINAL.json
-                            - 📄 iszapfalo_n8n_v4_REPAIRED.json
-                            - 📄 iszapfalo_n8n_v5_RECOVERY.json
-                            - 📄 iszapfalo_n8n_v6_CLAUDE.json
-                            - 📄 iszapfalo_n8n_v7_FIXED.json
-                            - 📄 iszapfalo_n8n_v8_FINAL.json
-                            - 📄 iszapfalo_n8n_v9_PYTHON.json
-                            - 📄 Kimenő ajánlatok_dokumentumok.json
-                            - 📄 MASTER_VEGLEGES_V2.json
-                            - 📄 MASTER_VEGLEGES.json
-                            - 📄 PHASE_1_CLAUDE_READY.json
-                            - 📄 Telegram-Airtable-Bovitett.json
-                            - 📄 Telegram-Hangvezerlés-Teljes.json
-                            - 📄 test_final.json
-                            - 📄 test_simple.json
-                            - 📄 test_v11.json
-                            - 📄 update_payload.json
-                            - 📄 VEGLEGES_JAVITAS.json
-                          - 📂 **02_Database**
-                            - 📄 Airtable_KOLTSEGEK_Import.xlsx
-                            - 📄 Airtable_MEZO_JAVITAS.md.docx
-                            - 📄 Airtable_MUNKAIDO_Import.xlsx
-                            - 📄 Airtable_MUNKAK_Import.xlsx
-                            - 📄 Airtable_MUNKATARSAK_Import.xlsx
-                            - 📄 Airtable_SZABADSAGOK_Import.xlsx
-                            - 📄 Folyamatok_Tabla_Struktura.xlsx
-                            - 📄 Folyamatok_Tabla_Struktura2.xlsx
-                            - 📄 n8n_Airtable_Mapping.md.docx
-                          - 📂 **03_Docker**
-                            - 📄 docker-compose.yml
-                            - 📄 start_n8n.ps1
-                        - 📂 **03_Archive**
-                          - 📄 1.jpg
-                          - 📄 2.jpg
-                          - 📄 2026_01_18_STATUSZ_historikus_log.docx
-                          - 📄 3.jpg
-                          - 📄 4.jpg
-                          - 📄 cookies.txt.backup
-                          - 📄 development_scripts
-                          - 📄 GEMINI.md.docx
-                          - 📄 itt_tartottunk.md.docx
-                          - 📄 MunkamenetCORE.md.docx
-                          - 📄 old_workflows
-                          - 📄 uj.docx
-                        - 📄 1.jpg
-                        - 📄 2.jpg
-                        - 📄 2026_01_18_STATUSZ_historikus_log.docx
-                        - 📄 3.jpg
-                        - 📄 4.jpg
-                        - 📄 cookies.txt.backup
-                        - 📄 development_scripts
-                        - 📄 fix_json.py
-                        - 📄 fix_server.py
-                        - 📄 GEMINI.md.docx
-                        - 📄 generate_workflow_v11.py
-                        - 📄 generate_workflow.py
-                        - 📄 Iszap_v15.json
-                        - 📄 itt_tartottunk.md.docx
-                        - 📄 MunkamenetCORE.md.docx
-                        - 📄 old_workflows
-                        - 📄 STATUS.md.docx
-                        - 📄 uj.docx
-                        - 📄 Workflow.md.docx
-                      - 📂 **01_alapdokumentáció_Források**
-                        - 📄 2iszapfalo_workflow.json
-                        - 📄 AIR-Table_javasolt.docx
-                        - 📄 API cloud.docx
-                        - 📄 Drive_api.png
-                        - 📄 Felepites_map.jpg
-                        - 📄 google_cloud.png
-                        - 📄 Iszapfalo_Csapat_Adatok.pdf
-                        - 📄 iszapfalo_n8n_teljes_workflow.json
-                        - 📄 migracio.md.docx
-                        - 📄 n8n jel.docx
-                        - 📄 n8n_Automatizacios_Rendszer_v2_Reszletes.pdf
-                        - 📄 nem ide.png
-                        - 📄 telegram.png
-                      - 📂 **03_Development**
-                        - 📂 **01_Workflows**
-                          - 📂 **ok**
-                            - 📄 Gmail kategorizáló.json
-                            - 📄 iszapfalo_AI_Agent_v2_FINAL.json
-                            - 📄 iszapfalo_Error_Monitoring.json
-                            - 📄 iszapfalo_Heti_Emlékeztető.json
-                            - 📄 iszapfalo_n8n_v11_PHASE2.json
-                            - 📄 iszapfalo_n8n_v12_IMPROVED.json
-                            - 📄 iszapfalo_Telegram_Commands.json
-                          - 📄 Feladatok státuszállítás telegram chat.json
-                          - 📄 final_master.json
-                          - 📄 Gmail kategorizáló.json
-                          - 📄 Hang-Asszisztens-Teljes-Rendszer.json
-                          - 📄 iszapfalo_Error_Monitoring.json
-                          - 📄 iszapfalo_Google_Calendar_Webhook_Sync.json
-                          - 📄 iszapfalo_Heti_Emlékeztető.json
-                          - 📄 iszapfalo_n8n_v10_SIMPLE.json
-                          - 📄 iszapfalo_n8n_v11_FINAL_FIXED.json
-                          - 📄 iszapfalo_n8n_v11_PHASE2.json
-                          - 📄 iszapfalo_n8n_v12_IMPROVED.json
-                          - 📄 iszapfalo_n8n_v2_MUNKAK_integracio.json
-                          - 📄 iszapfalo_n8n_v3_FULL_INTEGRATION.json
-                          - 📄 iszapfalo_n8n_v4_FINAL.json
-                          - 📄 iszapfalo_n8n_v4_REPAIRED.json
-                          - 📄 iszapfalo_n8n_v5_RECOVERY.json
-                          - 📄 iszapfalo_n8n_v6_CLAUDE.json
-                          - 📄 iszapfalo_n8n_v7_FIXED.json
-                          - 📄 iszapfalo_n8n_v8_FINAL.json
-                          - 📄 iszapfalo_n8n_v9_PYTHON.json
-                          - 📄 iszapfalo_Telegram_Commands.json
-                          - 📄 Kimenő ajánlatok_dokumentumok.json
-                          - 📄 MASTER_VEGLEGES_V2.json
-                          - 📄 MASTER_VEGLEGES.json
-                          - 📄 PHASE_1_CLAUDE_READY.json
-                          - 📄 Telegram-Airtable-Bovitett.json
-                          - 📄 Telegram-Hangvezerlés-Teljes.json
-                          - 📄 test_final.json
-                          - 📄 test_simple.json
-                          - 📄 test_v11.json
-                          - 📄 update_payload.json
-                          - 📄 VEGLEGES_JAVITAS.json
-                          - 📄 WORKFLOW_DOKUMENTACIO.md.docx
-                        - 📂 **02_Database**
-                          - 📄 Airtable_KOLTSEGEK_Import.xlsx
-                          - 📄 Airtable_MEZO_JAVITAS.md.docx
-                          - 📄 Airtable_MUNKAIDO_Import.xlsx
-                          - 📄 Airtable_MUNKAK_Import.xlsx
-                          - 📄 Airtable_MUNKATARSAK_Import.xlsx
-                          - 📄 Airtable_SZABADSAGOK_Import.xlsx
-                          - 📄 Folyamatok_Tabla_Struktura.xlsx
-                          - 📄 Folyamatok_Tabla_Struktura2.xlsx
-                          - 📄 n8n_Airtable_Mapping.md.docx
-                        - 📂 **03_Docker**
-                          - 📄 docker-compose.yml
-                          - 📄 start_n8n.ps1
-                      - 📂 **04_pic**
-                        - 📄 pic2.jpg
-                        - 📄 pic3.jpg
-                        - 📄 pic4.jpg
-                        - 📄 pic5.jpg
-                        - 📄 pic6.jpg
-                      - 📄 ARCHIVAL_SUMMARY.md.docx
-                      - 📄 BRIEF.md.docx
-                      - 📄 FEJLESZTESI_OSSZEFOGLALO.md.docx
-                      - 📄 FRISSITES_OSSZEFOGLALO.md.docx
-                      - 📄 Iszapfaló.md.docx
-                      - 📄 JAVASLATOK_ES_OPTIMALIZALAS.md.docx
-                      - 📄 megoldas.md.docx
-                      - 📄 PROJECT_ANALYSIS.md.docx
-                      - 📄 Projekt struktúra.docx
-                      - 📄 PROJEKT_KOVETELMENY_ELEMZES.md.docx
-                      - 📄 STATUS_ folyamatos.md.docx
-                    - 📂 **Database**
-                      - 📄 Airtable_KOLTSEGEK_Import.xlsx
-                      - 📄 Airtable_MEZO_JAVITAS.md.docx
-                      - 📄 Airtable_MUNKAIDO_Import.xlsx
-                      - 📄 Airtable_MUNKAIDO_Import(1).xlsx
-                      - 📄 Airtable_MUNKAK_Import.xlsx
-                      - 📄 Airtable_MUNKATARSAK_Import.xlsx
-                      - 📄 Airtable_SZABADSAGOK_Import.xlsx
-                      - 📄 Folyamatok_Tabla_Struktura.xlsx
-                      - 📄 n8n_Airtable_Mapping.md.docx
-                    - 📂 **Documents**
-                      - 📄 AI_AGENT_BEALLITASI_UTMUTATO.md.docx
-                      - 📄 AI_AGENT_OSSZEFOGLALO.md.docx
-                      - 📄 Iszap_nyilv.env
-                      - 📄 MCP.docx
-                      - 📄 PROJECT_ANALYSIS.md.docx
-                      - 📄 render.yaml
-                      - 📄 TEST_CASES.md.docx
-                      - 📄 WORKFLOW_DOKUMENTACIO.md.docx
-                      - 📄 Workflow.docx
-                      - 📄 worklflow_2.docx
-                    - 📂 **JSON**
-                      - 📄 Airtable - Google Calendar feladat készítő.json
-                      - 📄 Feladatok státuszállítás telegram chat.json
-                      - 📄 Gmail kategorizáló.json
-                      - 📄 Iszapfaló - AI Agent Asszisztens (v2 - Javított).json
-                      - 📄 Iszapfaló - Google Calendar → Airtable Szinkron.json
-                      - 📄 Iszapfaló - Heti Emlékeztető (Csütörtök 16_00).json
-                      - 📄 Iszapfaló - Telegram Parancsok (_statusz, _het).json
-                      - 📄 Kimenő ajánlatok_dokumentumok.json
-                      - 📄 Telegram Hangvezérlés - Teljes Rendszer.json
-                    - 📂 **Pic**
-                      - 📄 1.jpg
-                      - 📄 10.png
-                      - 📄 11.png
-                      - 📄 12.png
-                      - 📄 13.png
-                      - 📄 14.png
-                      - 📄 15.png
-                      - 📄 2.jpg
-                      - 📄 3.jpg
-                      - 📄 4.jpg
-                      - 📄 5.jpg
-                      - 📄 6.jpg
-                      - 📄 7.jpg
-                      - 📄 9.jpg
-                      - 📄 letöltés.png
-                    - 📄 Isz_APP_nyilv_II.docx
-                    - 📄 Isz_APP_nyilv_v4.docx
-                  - 📄 drive-download-20260126T061720Z-3-001.zip
-              - 📂 **Üzemelő folyamataink**
-                - 📂 **2025_11_26-kezdés**
-                  - 📄 Airtable - Google Calendar feladat készítő.json
-                  - 📄 Feladatok státuszállítás telegram chat.json
-                  - 📄 Gmail - Airtable kimenő ajánlat összeköttetés.json
-                  - 📄 Gmail kategorizáló.json
-                  - 📄 Kimenő ajánlatok_dokumentumok.json
-                  - 📄 n8n_Automatizacios_Rendszer_v2_Reszletes.docx
-                  - 📄 n8n_Automatizacios_Rendszer_v2_Reszletes.pdf
-                - 📂 **251220-bővítések**
-                  - 📂 **2**
-                    - 📄 Képernyőfotó 2025-12-20 - 11.30.12.png
-                    - 📄 Képernyőfotó 2025-12-20 - 11.30.25.png
-                  - 📂 **Hang alapú aszisztens**
-                    - 📄 Hang-Asszisztens-Teljes-Rendszer.json
-                  - 📂 **Hangvezérlés**
-                    - 📄 Telegram-Hangvezerlés-Teljes.json
-                  - 📄 🎯 N8N Workflow Módosítása - Kezdőknek Szóló Útmutató.docx
-                  - 📄 nem ide.png
-                  - 📄 Telegram-Airtable-Bovitett.json
-                  - 📄 telegram.png
-              - 📄 50-prompt-a-Chat-GPT-hez-DETSYSTEMS.pdf
-              - 📄 AI-uzleti-felhasznalasai-DETSYSTEMS.pdf
-              - 📄 Kiegeszito-anyag-DETSYSTEMS.pdf
-              - 📄 n8n jel.docx
-              - 📄 N8N-kurzus-videos-oktatoanyag.mp4
-              - 📄 Top-20-AI-eszkoz-DETSYSTEMS.pdf
-            - 📂 **Pohi Művek**
-              - 📂 **Briefek**
-                - 📂 **1 brief**
-                  - 📄 Iszapfalo_Fejlesztesi_Brief_Pohi.md
-                  - 📄 Iszapfalo_Fejlesztesi_Brief-1_Pohi.docx
-              - 📂 **Google ökoszisztéma**
-                - 📄 001_Értékelés, Összevetés, Javaslatok_ Iszapfaló_projekt_nyilvántartás_automatizáció.docx
-                - 📄 002_Értékelés, Összevetés, Javaslatok_ Iszapfaló_projekt_nyilvántartás_automatizáció.docx
-                - 📄 003_Értékelés, Összevetés, Javaslatok_ Iszapfaló_projekt_nyilvántartás_automatizáció.odt
-                - 📄 kieg_Értékelés, Összevetés, Javaslatok_ Iszapfaló_projekt_nyilvántartás_automatizáció.pptx
-                - 📄 n8n Telegram Bot - Technikai Dokumentáció.docx
-              - 📂 **GS Autószerviz cuccosai**
-                - 📄 GS automobil Kft. – AI-Rendszerkoncepció Kérdőív.md
-                - 📄 GS_automobil_AI_tanacsado_anyag.pdf
-                - 📄 MD-GS automobil Kft. – Az AI Transzformáció Videó Alapanyaga.md
-              - 📂 **Keretszerződés**
-                - 📂 **aláírt**
-                  - 📄 SKM_4050260106143500.pdf
-                  - 📄 SKM_4050260106143600.pdf
-                - 📄 Keretsz_Informatikai_2026_1.docx
-                - 📄 Keretsz_Informatikai_2026_alairt.pdf
-                - 📄 Keretsz_Informatikai_2026_Oldal_1.png
-                - 📄 Keretsz_Informatikai_2026_Oldal_2.png
-                - 📄 Keretsz_Informatikai_2026_Oldal_3.png
-                - 📄 Keretsz_Informatikai_2026.pdf
-                - 📄 PJ-2026-1 számla.pdf
-                - 📄 TIG_PT-2026-1_alairt.pdf
-                - 📄 TIG_PT-2026-1.docx
-                - 📄 TIG_PT-2026-1.pdf
-                - 📄 TIG_PT-2026-1.png
-              - 📂 **Sólyom daru**
-              - 📄 Iszapfaló Kft_Alapdokumentáció - Google Dokumentumok.mhtml
-            - 📂 **SKILL-ek**
-              - 📂 **Árajánlat skill**
-                - 📂 **új**
-                  - 📄 arajanlat-keszito.skill
-                - 📄 Arajanlat_Skill_Hasznalati_Utmutato.md
-                - 📄 arajanlat-keszito.skill
-                - 📄 files.zip
-              - 📂 **Claude skillek**
-                - 📄 kornyezeti-statisztika.skill
-          - 📂 **drive-download-20260221T151236Z-1-001**
-            - 📄 2iszapfalo_workflow.json
-            - 📄 iszapfalo_n8n_teljes_workflow.json
-        - 📄 2iszapfalo_workflow.json
-        - 📄 Gmail kategorizáló.json
-        - 📄 Iszapfaló - AI Agent Asszisztens (v2 - Javított).json
-        - 📄 Iszapfaló - Error Monitoring és Logging.json
-        - 📄 Iszapfaló - Google Calendar → Airtable Szinkron.json
-        - 📄 Iszapfaló - Heti Emlékeztető (Csütörtök 16_00).json
-        - 📄 Iszapfaló - Telegram Parancsok (_statusz, _het).json
-        - 📄 Iszapfaló Kft. - Airtable Adatbázis Struktúra.docx
-        - 📄 Iszapfaló Kft. - Munkaidő és Költség Nyilvántartó Rendszer.docx
-        - 📄 iszapfalo_n8n_teljes_workflow.json
+        - 📄 iszapfalo_arlista_es_normak_mock.md
+        - 📄 iszapfalo_gepkonyv_mock.md
+        - 📄 iszapfalo_geppark_all_in_one_n8n.json
+        - 📄 iszapfalo_geppark_modul_n8n_workflow.json
+        - 📄 iszapfalo_okos_ajanlatado_all_in_one_n8n.json
+        - 📄 iszapfalo_okos_ajanlatado_n8n_workflow.json
         - 📄 Kimenő ajánlatok_dokumentumok.json
-        - 📄 Telegram Hangvezérlés - Teljes Rendszer.json
       - 📂 **Jules** _(Example Workflows)_
         - 📄 enterprise.yml
         - 📄 README.md
@@ -7725,6 +7857,12 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📄 2026-02-25-innovation-bridge-design.md
       - 📄 2026-02-26-unified-chat-design.md
       - 📄 2026-02-26-windows-automation-bridge-design.md
+      - 📄 2026-02-27-iszapfalo-geppark-figyelo-design.md
+      - 📄 2026-02-27-iszapfalo-geppark-figyelo-guide.md
+      - 📄 2026-02-27-iszapfalo-okos-ajanlatado-design.md
+      - 📄 2026-02-27-iszapfalo-okos-ajanlatado-guide.md
+      - 📄 langflow_ajanlatado_prompt_template.md
+      - 📄 langflow_prompt_template.md
     - 📂 **services**
       - 📄 green-market-watcher.md
       - 📄 invoice-to-sheets.md
@@ -8844,22 +8982,10 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **Képek**
     - 📄 _ARCHIVE_SESSION_COMPLETION_REPORT.md
     - 📄 ## Chat Customization Diagnostics.md
-    - 📄 1.jpg
-    - 📄 10.jpg
-    - 📄 11.jpg
-    - 📄 12.jpg
-    - 📄 2.jpg
     - 📄 2026-02-06-.txt
     - 📄 2026-02-06-this-session-is-being-continued-from-a-previous-co.txt
     - 📄 2026-02-07-this-session-is-being-continued-from-a-previous-co.txt
     - 📄 2026-02-11-this-session-is-being-continued-from-a-previous-co.txt
-    - 📄 3.jpg
-    - 📄 4.jpg
-    - 📄 5.jpg
-    - 📄 6.jpg
-    - 📄 7.jpg
-    - 📄 8.jpg
-    - 📄 9.jpg
     - 📄 AGENT_PERMISSIONS_GUIDE.md
     - 📄 BEFORE_AFTER_COMPARISON.md
     - 📄 CEAN_ALERTING_RUNBOOK.md
@@ -60292,12 +60418,23 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
       - 📂 **training**
         - 📄 golden_dataset.jsonl
       - 📄 comet_session.json
+    - 📂 **demo_factory** _(Brunella AI Demo Factory)_
+      - 📂 **templates**
+        - 📄 accounting_api.py
+        - 📄 real_estate_api.py
+      - 📄 active_a_konyvelo_demo.py
+      - 📄 nagyerdei_ingatlan_demo.py
+      - 📄 README.md
     - 📂 **examples** _(myai/examples)_
       - 📄 rag_golden_dataset_walkthrough.ipynb
       - 📄 README.md
     - 📂 **incubator**
       - 📄 Modelfile.template
       - 📄 train.py
+    - 📂 **iszapfalo_api** _(Iszapfaló Kft. - AI Mikroszolgáltatások (API))_
+      - 📄 main.py
+      - 📄 README.md
+      - 📄 requirements.txt
     - 📂 **prompts**
       - 📄 ev_hunter_prompt.md
     - 📂 **refiner**
@@ -61426,6 +61563,7 @@ Ez a dokumentum a projekt aktuális fájlszerkezetét és a könyvtárak tartalm
           - 📄 PhoenixPanel.tsx
           - 📄 ProcessControlWidget.test.tsx
           - 📄 ProcessControlWidget.tsx
+          - 📄 ProjectExplorer.tsx
           - 📄 PropertyVisionaryWidget.tsx
           - 📄 PythonWorkersPanel.tsx
           - 📄 QuickActionsPanel.tsx
