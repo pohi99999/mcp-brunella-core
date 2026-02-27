@@ -86,6 +86,7 @@ import { createDashboardRoutes } from "./routes/dashboard.js";
 import { createBusinessJobsRoutes } from "./routes/businessJobs.js";
 import { createStudioRoutes } from "./routes/studio.js";
 import salesRouter from "./routes/sales.js";
+import grantsRouter from "./routes/grants.js";
 import voiceRouter from "./routes/voice.js";
 import { syncService } from "../utils/syncService.js";
 
@@ -217,6 +218,7 @@ export async function startWebServer() {
   v1Router.use("/business-jobs", createBusinessJobsRoutes());
   v1Router.use("/studio", createStudioRoutes());
   v1Router.use("/sales", salesRouter);
+  v1Router.use("/grants", grantsRouter);
   v1Router.use("/webhooks", createWebhookRoutes(db));
   v1Router.use("/voice", voiceRouter);
 

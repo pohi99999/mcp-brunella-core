@@ -1,3 +1,38 @@
+### 2026-02-27 22:30 - 🚀 National AI Revenue Campaign (2026) & Showcase Implementation
+
+**Feladat:** Az országos szintű MI bevétel-gyorsítási stratégia technikai és üzleti elemeinek kiépítése, beleértve a szektorspecifikus demókat és a pályázati tanácsadó rendszert.
+
+**Főbb eredmények:**
+- **Demo Arzenál:**
+    - `myai/demo_factory/manufacturing.py`: Vision AI alapú minőségellenőrzés szimuláció.
+    - `myai/demo_factory/finance.py`: Intelligens számlafeldolgozás és anomália-detektálás.
+    - `src/dashboard/components/widgets/LogisticsDemo.tsx`: Interaktív útvonal-optimalizáló widget.
+- **Pályázati Rendszer:**
+    - `config/grants_2026.json`: Állami támogatások (Demján Sándor, DIMOP Plusz) adatbázisa.
+    - `outreachService.ts`: Pályázati információkkal bővített, 90%-os támogatást hangsúlyozó email generátor.
+- **Showcase & Advisor:**
+    - `src/dashboard/pages/ShowcasePage.tsx`: Központi oldal az iparági demók bemutatására.
+    - `src/dashboard/components/widgets/GrantAdvisorWidget.tsx`: Pályázati tanácsadó chatbot widget.
+    - `src/server/routes/grants.ts`: Backend router a pályázati kérdések megválaszolásához.
+- **Kampányvezérlés:**
+    - `scripts/run_2026_campaign.ts`: Regionalizált lead-bányászat és demo-generáló script (Budapest, Debrecen, Győr, Kecskemét).
+
+**Érintett fájlok:**
+- `src/dashboard/lib/navigation.tsx` (Új "AI Showcase" menüpont)
+- `src/dashboard/pages/ShowcasePage.tsx`
+- `src/dashboard/components/widgets/LogisticsDemo.tsx`, `GrantAdvisorWidget.tsx`
+- `src/services/outreachService.ts`
+- `src/server/routes/grants.ts`, `web.ts`
+- `myai/demo_factory/manufacturing.py`, `finance.py`
+- `config/grants_2026.json`
+- `scripts/run_2026_campaign.ts`
+
+**Státusz:** ✅ Befejezve & Tesztelve (test/grant_outreach.test.ts PASS)
+
+**Megjegyzés:** A rendszer készen áll az országos szintű, pályázati finanszírozással támogatott MI-megoldások értékesítésére. A "Trójai Faló" stratégia most már technikai és pénzügyi érvekkel is alá van támasztva.
+
+---
+
 ### 2026-02-27 20:00 - 🚀 Revenue Acceleration & Robotkéz Pro (BVAB) Implementation
 
 **Feladat:** A Brunella Agent System monetizációs képességeinek és autonóm vezérlésének (Robotkéz Pro) teljes körű kiépítése, valamint a Dashboard mobil reszponzivitásának javítása.
