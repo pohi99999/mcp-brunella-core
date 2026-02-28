@@ -235,7 +235,7 @@ export function registerBrowserTools(server: McpServer) {
       }
 
       const options = {
-        mode: 'text',
+        mode: 'text' as const,
         pythonPath: 'python',
         pythonOptions: ['-u'],
         scriptPath: path.dirname(scriptPath),
@@ -247,7 +247,7 @@ export function registerBrowserTools(server: McpServer) {
       };
 
       try {
-        const messages = await PythonShell.run(path.basename(scriptPath), options);
+        const messages = await PythonShell.run(path.basename(scriptPath), options as any);
         const lastMessage = messages[messages.length - 1];
         const result = JSON.parse(lastMessage);
 

@@ -1,5 +1,5 @@
 # BRUNELLA AGENT SYSTEM — Teljes Rendszer Diagram
-> **Verzió:** 5.4.0 | **Készült:** 2026-02-28 | **Forrás:** registry.json + navigation.tsx + cli.ts
+> **Verzió:** 3.9.2 | **Készült:** 2026-02-28 | **Forrás:** registry.json + navigation.tsx + cli.ts
 
 ---
 
@@ -7,8 +7,8 @@
 
 ```
 ┌─────────────────────────────────────────────────────────────────────────────┐
-│                     BRUNELLA AGENT SYSTEM (BAS) v2.4.0                      │
-│            AI multi-agent rendszer lokális LLM-ekkel és MCP protokollal      │
+│                     BRUNELLA AGENT SYSTEM (BAS) v3.2.2                      │
+│            AI multi-agent rendszer LLM-ekkel és MCP protokollal      │
 ├────────────────┬────────────────┬──────────────────┬────────────────────────┤
 │  FELHASZNÁLÓ   │   DASHBOARD    │      CLI         │   MCP PROTOKOLL        │
 │  (Pohánka P.)  │  React/Vite    │  Commander.js    │   stdio/HTTP           │
@@ -506,4 +506,4 @@ Az architektúra gyönyörű — de az utolsó naplókban nem láttam tényleges
 
 ---
 
-*Diagram generálva: 2026-02-28 | Claude Code (Anthropic) | Brunella Agent System v2.4.0*
+*Diagram generálva: 2026-02-28 | Claude Code (Anthropic) | Brunella Agent System v3.9.2*
