@@ -86,29 +86,38 @@ async function main() {
 }
 
 main().catch((error: unknown) => {
-  let errorMessage = "Unknown error";
+  console.error("\n[FATAL ERROR] Server failed to start!");
+  console.error("================================================");
+  
   if (error instanceof Error) {
-    errorMessage = error.message;
+    console.error("Error Type: Error");
+    console.error("Message:", error.message);
+    console.error("Stack:", error.stack);
+    console.error("Cause:", error.cause);
   } else if (typeof error === "string") {
-    errorMessage = error;
+    console.error("Error Type: String");
+    console.error("Message:", error);
+  } else if (typeof error === "object" && error !== null) {
+    console.error("Error Type: Object");
+    console.error("Keys:", Object.keys(error));
+    console.error("Full object:", error);
+    try {
+      console.error("JSON:", JSON.stringify(error, null, 2));
+    } catch (stringifyErr) {
+      console.error("Could not stringify error:", stringifyErr instanceof Error ? stringifyErr.message : stringifyErr);
+    }
   } else {
-    try {
-      errorMessage = JSON.stringify(error);
-    } catch {
-      errorMessage = Object.prototype.toString.call(error);
-    }
+    console.error("Error Type: Other");
+    console.error("Value:", error);
+    console.error("Type:", typeof error);
   }
-
-  console.error("Server error:", errorMessage);
-  if (error instanceof Error && error.stack) console.error(error.stack);
-
-  if (error && typeof error === "object" && !(error instanceof Error)) {
-    try {
-      console.error("Raw error:", JSON.stringify(error, null, 2));
-    } catch {
-      /* non-serializable */
-    }
-  }
+  
+  console.error("================================================");
+  console.error("\nTip: Check logs/ directory for more details");
+  console.error("  - logs/error.log");
+  console.error("  - logs/server.log");
+  console.error("  - logs/health.log");
+  
   if (typeof process !== "undefined" && process.exit) {
     process.exit(1);
   }

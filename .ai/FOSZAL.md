@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-02-27 23:01
+**Generálva:** 2026-02-28 19:54
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,24 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-02-28
+
+#### 05:10 - [Claude] Robotkéz Pro: 4 szintű fejlesztés + Chrome DevTools integráció
+- **Agent:** Claude
+- **Státusz:** ⏳ Folyamatban
+
+#### 03:30 - [Claude] 03:45 - Robotkéz Pro Computer Use teljes integráció
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/orchestrator/self_training_loop.ts` — loadMemory() javítás: TS array + Python objektum formátum egyidejű kezelése (`_ts_entries` kulcs + solutions konverzió), `src/server/routes/robotkez.ts` — 6 új Computer Use proxy route: `/computer/screenshot`, `/computer/screen-size`, `/computer/click`, `/computer/click-pct`, `/computer/type`, `/computer/vision-click`, `src/dashboard/lib/apiService.ts` — 6 új Computer Use API függvény: `computerScreenshot()`, `computerScreenSize()`, `computerClick()`, `computerClickPct()`, `computerType()`, `computerVisionClick()`, `src/dashboard/components/dashboard/RobotkezV2Chat.tsx` — "Gépi Vezérlés" tab hozzáadása: mode switcher, kattintható OS képernyő (3s auto-refresh), szöveg begépelés, vision kattintás, eseménynapló
+
+#### 00:00 - [Claude] 00:30 - Harvest Pipeline Widget + Backend API végpontok
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/dashboard/components/dashboard/HarvestPipelineWidget.tsx` (ÚJ) — Harvest pipeline státusz widget (LanceDB rekordok, Golden Dataset méret, pipeline indítás gomb), `src/dashboard/lib/widgetRegistry.tsx` (módosítva) — `harvest_pipeline` widget regisztrálva, `src/dashboard/lib/layout/LayoutContext.tsx` (módosítva) — `"tasks harvest scheduled"` layout sor, `harvest_pipeline: 'harvest'` mapping, `src/server/routes/pythonWorkers.ts` (módosítva) — `GET /harvest-status` + `POST /harvest-run` végpontok hozzáadva
+
+---
 
 ### 2026-02-27
 
@@ -651,7 +669,7 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 64 | 2026-02-27 |
+| Claude | 67 | 2026-02-28 |
 | Gemini | 8 | 2026-02-27 |
 | Cursor | 0 | N/A |
 | Copilot | 47 | 2026-02-15 |
