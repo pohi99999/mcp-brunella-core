@@ -26,6 +26,19 @@ class OSWorker:
         pyautogui.click(x=x, y=y, clicks=clicks, button=button)
         return {"status": "success", "action": "click", "x": x, "y": y}
 
+    async def click_pct(self, x_pct: float, y_pct: float, clicks: int = 1):
+        """Clicks at percentage-based coordinates (0.0-1.0), screen-resolution independent."""
+        screen_w, screen_h = pyautogui.size()
+        x = int(x_pct * screen_w)
+        y = int(y_pct * screen_h)
+        pyautogui.click(x=x, y=y, clicks=clicks)
+        return {"status": "success", "action": "click_pct", "x": x, "y": y, "x_pct": x_pct, "y_pct": y_pct}
+
+    def get_screen_size(self):
+        """Returns screen resolution."""
+        w, h = pyautogui.size()
+        return {"width": w, "height": h}
+
     async def type_text(self, text: str, interval: float = 0.05):
         """Types text using the keyboard."""
         pyautogui.write(text, interval=interval)

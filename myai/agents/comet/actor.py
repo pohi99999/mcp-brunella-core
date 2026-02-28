@@ -9,6 +9,12 @@ from .models import BrowserStep, ActorResult
 
 logger = logging.getLogger(__name__)
 
+try:
+    import pyautogui
+    _HAS_PYAUTOGUI = True
+except ImportError:
+    _HAS_PYAUTOGUI = False
+
 class BrowserActor:
     """Playwright async — lépések végrehajtója"""
 
@@ -162,6 +168,33 @@ class BrowserActor:
                 except:
                     sec = 2.0
                 await asyncio.sleep(sec)
+                return ActorResult(success=True)
+
+            elif action == "click_os":
+                # OS-szintű kattintás pyautogui-val (pixel koordináták)
+                if not _HAS_PYAUTOGUI:
+                    return ActorResult(success=False, error="pyautogui nem elérhető")
+                x = step.x or 0
+                y = step.y or 0
+                if x == 0 and y == 0:
+                    return ActorResult(success=False, error="click_os: x és y koordináta szükséges")
+                pyautogui.click(x=x, y=y)
+                await asyncio.sleep(0.3)
+                return ActorResult(success=True)
+
+            elif action == "type_os":
+                # OS-szintű gépelés pyautogui-val
+                if not _HAS_PYAUTOGUI:
+                    return ActorResult(success=False, error="pyautogui nem elérhető")
+                text = step.text or ""
+                if not text:
+                    return ActorResult(success=False, error="type_os: szöveg szükséges")
+                pyautogui.typewrite(text, interval=0.05)
+                return ActorResult(success=True)
+
+            elif action == "press_key":
+                key = step.key or step.text or "Enter"
+                await page.keyboard.press(key)
                 return ActorResult(success=True)
 
             else:

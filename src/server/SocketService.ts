@@ -49,6 +49,22 @@ export class SocketServiceClass {
     this.io.emit(event, data);
   }
 
+  /**
+   * Robotkéz Pro step event broadcast — autonóm feladat lépésenkénti visszajelzés
+   */
+  broadcastRobotkezStep(stepInfo: Record<string, unknown>): void {
+    if (!this.io) return;
+    this.io.of('/robotkez-overlay').emit('robotkez:step', {
+      ...stepInfo,
+      timestamp: Date.now()
+    });
+    // Fő namespace-re is (Mission Control napló)
+    this.io.emit('robotkez:step', {
+      ...stepInfo,
+      timestamp: Date.now()
+    });
+  }
+
   get connectedClientsCount(): number {
     return this.io?.engine.clientsCount || 0;
   }

@@ -1346,9 +1346,249 @@ export async function robotkezCancelTask(id: string): Promise<{ success: boolean
   return safeJson<{ success: boolean; cancelled: boolean }>(response);
 }
 
-/**
- * Incubator (Training) API
- */
+// -----------------------------------------------------------------------
+// COMPUTER USE — OS szintű vezérlés (pyautogui proxy)
+// -----------------------------------------------------------------------
+
+export interface ComputerScreenshot {
+  status: string;
+  screenshot_b64: string;
+}
+
+export interface ComputerScreenSize {
+  width: number;
+  height: number;
+}
+
+export interface ComputerClickResult {
+  status: string;
+  action: string;
+  x: number;
+  y: number;
+}
+
+/** Képernyőfotó készítése pyautogui-val — base64 PNG */
+export async function computerScreenshot(): Promise<ComputerScreenshot> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/computer/screenshot`);
+  if (!r.ok) throw new Error(`computer/screenshot: HTTP ${r.status}`);
+  return safeJson<ComputerScreenshot>(r);
+}
+
+/** Képernyő felbontás lekérdezése */
+export async function computerScreenSize(): Promise<ComputerScreenSize> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/computer/screen-size`);
+  if (!r.ok) throw new Error(`computer/screen-size: HTTP ${r.status}`);
+  return safeJson<ComputerScreenSize>(r);
+}
+
+/** Kattintás abszolút koordinátára */
+export async function computerClick(x: number, y: number, clicks = 1): Promise<ComputerClickResult> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/computer/click`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ x, y, clicks })
+  });
+  if (!r.ok) throw new Error(`computer/click: HTTP ${r.status}`);
+  return safeJson<ComputerClickResult>(r);
+}
+
+/** Kattintás százalékos koordinátára (0.0–1.0, felbontás-független) */
+export async function computerClickPct(x_pct: number, y_pct: number, clicks = 1): Promise<ComputerClickResult> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/computer/click-pct`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ x_pct, y_pct, clicks })
+  });
+  if (!r.ok) throw new Error(`computer/click-pct: HTTP ${r.status}`);
+  return safeJson<ComputerClickResult>(r);
+}
+
+/** Szöveg begépelése az aktív ablakba */
+export async function computerType(text: string, interval?: number): Promise<{ status: string }> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/computer/type`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text, ...(interval !== undefined ? { interval } : {}) })
+  });
+  if (!r.ok) throw new Error(`computer/type: HTTP ${r.status}`);
+  return safeJson<{ status: string }>(r);
+}
+
+/** Vision alapú kattintás — leírás alapján megkeresi az elemet */
+export async function computerVisionClick(description: string): Promise<{ status: string; action: string }> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/computer/vision-click`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ description })
+  });
+  if (!r.ok) throw new Error(`computer/vision-click: HTTP ${r.status}`);
+  return safeJson<{ status: string; action: string }>(r);
+}
+
+/** Comet Auto: autonóm multi-step feladat-végrehajtás (Planner → Actor → Critic) */
+export interface CometAutoResult {
+  status: string;
+  comet_result: {
+    success: boolean;
+    attempts: number;
+    steps_completed: number;
+    error: string | null;
+  };
+  step_log: Array<Record<string, unknown>>;
+}
+
+export async function computerAutoTask(task: string, maxRetries = 3): Promise<CometAutoResult> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/computer/auto`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ task, max_retries: maxRetries })
+  });
+  if (!r.ok) throw new Error(`computer/auto: HTTP ${r.status}`);
+  return safeJson<CometAutoResult>(r);
+}
+
+// -----------------------------------------------------------------------
+// ROBOTKÉZ TRAINING — háttér tréning vezérlés
+// -----------------------------------------------------------------------
+
+export interface TrainingStatusResponse {
+  running: boolean;
+  mode: string;
+  started_at: string | null;
+  pid: number | null;
+  exit_code: number | null;
+}
+
+/** Tréning indítása háttérben */
+export async function robotkezTrainingStart(
+  mode: 'basic' | 'workflows' = 'basic',
+  hours = 4,
+  retries = 3
+): Promise<{ status: string; mode: string; pid: number | null }> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/training/start`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ mode, hours, retries })
+  });
+  if (!r.ok) {
+    const data = await r.json() as { detail?: string };
+    throw new Error(data.detail || `training/start: HTTP ${r.status}`);
+  }
+  return safeJson<{ status: string; mode: string; pid: number | null }>(r);
+}
+
+/** Tréning állapot lekérdezése */
+export async function robotkezTrainingStatus(): Promise<TrainingStatusResponse> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/training/status`);
+  return safeJson<TrainingStatusResponse>(r);
+}
+
+/** Tréning leállítása */
+export async function robotkezTrainingStop(): Promise<{ status: string }> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/training/stop`, {
+    method: 'POST'
+  });
+  return safeJson<{ status: string }>(r);
+}
+
+// -----------------------------------------------------------------------
+// CHROME DEVTOOLS — debug, network, konzol, performance
+// -----------------------------------------------------------------------
+
+export interface DevToolsNetworkRequest {
+  url: string;
+  method: string;
+  status: number;
+  duration: number;
+  resourceType?: string;
+}
+
+export interface DevToolsConsoleMessage {
+  type: 'error' | 'warning' | 'info';
+  message: string;
+  source?: string;
+  line?: number;
+}
+
+export interface DevToolsPerformanceMetrics {
+  domLoadTime: number;
+  firstContentfulPaint: number;
+  totalBlockingTime: number;
+  resourceCount: number;
+  pageLoadTime: number;
+}
+
+export interface DevToolsDebugReport {
+  url: string;
+  timestamp: string;
+  network: {
+    totalRequests: number;
+    failedRequests: number;
+    requests: DevToolsNetworkRequest[];
+    failedRequestsList: Array<{ url: string; error: string }>;
+  };
+  console: {
+    errors: DevToolsConsoleMessage[];
+    warnings: DevToolsConsoleMessage[];
+  };
+  performance: DevToolsPerformanceMetrics;
+  summary: string;
+}
+
+/** Teljes debug riport (network + console + performance) */
+export async function robotkezDevToolsReport(url: string): Promise<{
+  success: boolean;
+  report: DevToolsDebugReport;
+  markdown: string;
+}> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/devtools/report`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url }),
+  }, LONG_TIMEOUT_MS);
+  return safeJson(r);
+}
+
+/** Hálózati kérések rögzítése */
+export async function robotkezDevToolsNetwork(url: string, duration?: number): Promise<{
+  success: boolean;
+  requests: DevToolsNetworkRequest[];
+  failedRequests: Array<{ url: string; error: string }>;
+}> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/devtools/network`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url, duration }),
+  }, LONG_TIMEOUT_MS);
+  return safeJson(r);
+}
+
+/** Konzol hibák és figyelmeztetések */
+export async function robotkezDevToolsConsole(url: string, duration?: number): Promise<{
+  success: boolean;
+  errors: DevToolsConsoleMessage[];
+  warnings: DevToolsConsoleMessage[];
+}> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/devtools/console`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url, duration }),
+  }, LONG_TIMEOUT_MS);
+  return safeJson(r);
+}
+
+/** Performance metrikák */
+export async function robotkezDevToolsPerformance(url: string): Promise<{
+  success: boolean;
+  metrics: DevToolsPerformanceMetrics;
+}> {
+  const r = await fetchWithTimeout(`${API_BASE}/api/v1/robotkez/devtools/performance`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ url }),
+  }, LONG_TIMEOUT_MS);
+  return safeJson(r);
+}
 export interface DatasetStats {
   total_samples: number;
   sources: Record<string, number>;

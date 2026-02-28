@@ -2,11 +2,63 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-02-27 23:30
+**Utolsó frissítés:** 2026-02-28 03:45
 
 ---
 
 ## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-02-28 03:30-03:45 - Robotkéz Pro Computer Use teljes integráció
+
+**Feladat:** Gépi Vezérlés (Computer Use) teljes TS+React lánc kiépítése
+
+**Érintett fájlok:**
+- `src/orchestrator/self_training_loop.ts` — loadMemory() javítás: TS array + Python objektum formátum egyidejű kezelése (`_ts_entries` kulcs + solutions konverzió)
+- `src/server/routes/robotkez.ts` — 6 új Computer Use proxy route: `/computer/screenshot`, `/computer/screen-size`, `/computer/click`, `/computer/click-pct`, `/computer/type`, `/computer/vision-click`
+- `src/dashboard/lib/apiService.ts` — 6 új Computer Use API függvény: `computerScreenshot()`, `computerScreenSize()`, `computerClick()`, `computerClickPct()`, `computerType()`, `computerVisionClick()`
+- `src/dashboard/components/dashboard/RobotkezV2Chat.tsx` — "Gépi Vezérlés" tab hozzáadása: mode switcher, kattintható OS képernyő (3s auto-refresh), szöveg begépelés, vision kattintás, eseménynapló
+
+**Státusz:** ✅ Befejezve — Build: 0 hiba, Tesztek: 1306/1347 (41 skip)
+
+**Megjegyzés a következő ügynöknek:**
+- A Robotkéz Pro rendszer teljes: Python (port 8090) + Node.js proxy (port 3000) + React UI
+- Computer Use koordináta-kattintás százalékos (x_pct, y_pct) formátumban van — felbontás-független
+- training_suite.py futtatáshoz: `cd myai/robotkez_pro && python training_suite.py --hours 2`
+- main.py futtatáshoz: `cd myai/robotkez_pro && uvicorn main:app --port 8090`
+- Python szerver (port 8000) szükséges a Computer Use proxykhoz: `cd myai && uvicorn server:app --port 8000`
+
+
+
+**Feladat:** Vite dev szerver import hiba javítása (`ShowcasePage.tsx`)
+
+**Érintett fájlok:**
+- `src/dashboard/pages/ShowcasePage.tsx` — `'../ui/card'` → `'../components/ui/card'`, `'../ui/button'` → `'../components/ui/button'`
+- `vite.config.ts` — `react-grid-layout` eltávolítva (nem volt telepítve/használva)
+
+**Státusz:** ✅ Befejezve — commit: `b08e758f`
+**Tesztek:** 1306 pass, 41 skipped
+
+---
+
+### 2026-02-28 00:00-00:30 - Harvest Pipeline Widget + Backend API végpontok
+
+**Feladat:** HarvestPipelineWidget létrehozása a Mission Control dashboardon (kontextus-limit utáni folytatás)
+
+**Érintett fájlok:**
+- `src/dashboard/components/dashboard/HarvestPipelineWidget.tsx` (ÚJ) — Harvest pipeline státusz widget (LanceDB rekordok, Golden Dataset méret, pipeline indítás gomb)
+- `src/dashboard/lib/widgetRegistry.tsx` (módosítva) — `harvest_pipeline` widget regisztrálva
+- `src/dashboard/lib/layout/LayoutContext.tsx` (módosítva) — `"tasks harvest scheduled"` layout sor, `harvest_pipeline: 'harvest'` mapping
+- `src/server/routes/pythonWorkers.ts` (módosítva) — `GET /harvest-status` + `POST /harvest-run` végpontok hozzáadva
+
+**Eredmények:**
+✅ Build: 0 hiba
+✅ HarvestPipelineWidget: emerald zöld téma, LanceDB/GoldenDS stat kártyák, indítás gomb
+✅ Backend: harvest-status olvassa a logs/harvest_pipeline.log-ot + számol JSONL sorokat
+✅ Backend: harvest-run spawnolja a myai/tools/harvest_pipeline.py-t detached folyamatként
+
+**Státusz:** ✅ Befejezve
+
+## 📋 ELŐZŐ MUNKAMENET
 
 ### 2026-02-27 22:00-23:30 - Iszapfaló n8n rendszer teljes felülvizsgálata + 8 workflow javítás
 
@@ -6050,5 +6102,63 @@ node scripts/spec-freeze-check.cjs --freeze <id>  # Spec "frozen"-ra
 
 **Build:** ✅ 0 hiba (tsc + Vite)
 **Tesztek:** ✅ 1294 PASS, 145 test file (1 új)
+**Státusz:** ✅ Befejezve
+
+---
+
+### 2026-02-28 05:10 - Robotkéz Pro: 4 szintű fejlesztés + Chrome DevTools integráció
+
+**Feladat:** Robotkéz Pro teljes autonóm pipeline kiépítése 4 szinten + ChromeDevToolsAgent bekapcsolása a Robotkéz Dashboard-ba.
+
+#### 1. SZINT: Comet Orchestrator bekapcsolása
+- `myai/agents/comet/models.py` — `x`, `y` mezők hozzáadása BrowserStep-hez
+- `myai/agents/comet/actor.py` — `click_os`, `type_os`, `press_key` akciók (pyautogui)
+- `myai/agents/comet/orchestrator.py` — `on_step()` callback, `execute_with_page()` metódus (külső Playwright page-en fut)
+- `myai/robotkez_pro/main.py` — CometOrchestrator singleton, `POST /computer_use_auto` endpoint
+- `src/server/routes/robotkez.ts` — `POST /computer/auto` proxy route
+- `src/dashboard/lib/apiService.ts` — `computerAutoTask()`, `CometAutoResult` interface
+
+#### 2. SZINT: Socket.IO valós idejű stream
+- `src/server/SocketService.ts` — `broadcastRobotkezStep()` metódus (`/robotkez-overlay` + fő namespace)
+- `src/server/routes/robotkez.ts` — `POST /step-event` végpont (Python → Node.js relay)
+- `myai/robotkez_pro/main.py` — httpx POST step események küldése Node.js-nek
+- `src/dashboard/components/dashboard/RobotkezV2Chat.tsx` — `socket.on('robotkez:step')` élő napló
+
+#### 3. SZINT: n8n Workflow Auto-Builder
+- `myai/robotkez_pro/training_suite.py` — `N8N_WORKFLOW_TASKS` (Lead Mining, Invoice, Market Watcher)
+- `call_computer_use_auto()` + `run_workflow_builder()` függvények
+- `--workflows` argparse flag
+
+#### 4. SZINT: Dashboard Training Pipeline
+- `myai/robotkez_pro/main.py` — `TrainingProcess` osztály, `/training/start`, `/training/status`, `/training/stop`
+- `src/server/routes/robotkez.ts` — training proxy route-ok
+- `src/dashboard/lib/apiService.ts` — `robotkezTrainingStart/Status/Stop()`
+- `src/dashboard/components/dashboard/RobotkezV2Chat.tsx` — tréning vezérlő UI sor
+
+#### 5. Chrome DevTools integráció Robotkézbe
+- `src/server/routes/robotkez.ts` — 4 új endpoint:
+  - `POST /devtools/report` — teljes debug riport
+  - `POST /devtools/network` — hálózati kérések
+  - `POST /devtools/console` — JS hibák + warningok
+  - `POST /devtools/performance` — teljesítmény metrikák
+- `src/dashboard/lib/apiService.ts` — `robotkezDevToolsReport/Network/Console/Performance()` + interface-ek
+- `src/dashboard/components/dashboard/RobotkezV2Chat.tsx` — 3. fül: **DevTools**
+  - URL bevitel + Elemzés gomb
+  - 4 összefoglaló kártya (Page Load, FCP, JS Hibák, Hálózati Hibák)
+  - JS hibák, figyelmeztetések, sikertelen kérések, top 5 leglassabb kérés
+
+**self_training_loop.ts fix:** `loadMemory()` / `saveMemory()` — kevert Python object + TS array formátum kezelés (`_ts_entries` kulcs)
+
+**Érintett fájlok:**
+- `myai/agents/comet/models.py`, `actor.py`, `orchestrator.py`
+- `myai/robotkez_pro/main.py`, `training_suite.py`
+- `src/server/SocketService.ts`
+- `src/server/routes/robotkez.ts`
+- `src/dashboard/lib/apiService.ts`
+- `src/dashboard/components/dashboard/RobotkezV2Chat.tsx`
+- `src/orchestrator/self_training_loop.ts`
+
+**Build:** ✅ 0 hiba
+**Tesztek:** ✅ 149 test file, 1306 passed, 0 failed, 41 skipped
 **Státusz:** ✅ Befejezve
 

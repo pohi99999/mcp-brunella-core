@@ -24,6 +24,10 @@ import { getRobotkezBrowserEngine, getRobotkezEngineName } from '../../utils/bro
 import { backgroundTaskManager } from '../../utils/backgroundTaskManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
 import { getMessages, saveMessage } from '../../utils/db.js';
+import { socketService } from '../SocketService.js';
+import { ChromeDevToolsAgent } from '../../agents/ChromeDevToolsAgent.js';
+
+const PYTHON_API = process.env.PYTHON_API_URL || 'http://localhost:8000';
 
 export function createRobotkezRoutes(): Router {
     const router = Router();
@@ -353,6 +357,368 @@ export function createRobotkezRoutes(): Router {
                 success: false,
                 error: msg
             });
+        }
+    });
+
+    // -----------------------------------------------------------------------
+    // COMPUTER USE — OS szintű vezérlés proxy-k (Python myai/server.py → port 8000)
+    // -----------------------------------------------------------------------
+
+    /**
+     * GET /api/v1/robotkez/computer/screenshot
+     * Képernyőfotó készítése pyautogui segítségével (base64 PNG)
+     *
+     * Response: { status, screenshot_b64 }
+     */
+    router.get('/computer/screenshot', async (_req: Request, res: Response) => {
+        try {
+            const r = await fetch(`${PYTHON_API}/os/screenshot`);
+            const data = await r.json() as Record<string, unknown>;
+            res.json(data);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `computer/screenshot error: ${msg}`);
+            res.status(502).json({ success: false, error: `Python API nem elérhető: ${msg}` });
+        }
+    });
+
+    /**
+     * GET /api/v1/robotkez/computer/screen-size
+     * Képernyő felbontás lekérdezése
+     *
+     * Response: { width, height }
+     */
+    router.get('/computer/screen-size', async (_req: Request, res: Response) => {
+        try {
+            const r = await fetch(`${PYTHON_API}/os/screen-size`);
+            const data = await r.json() as Record<string, unknown>;
+            res.json(data);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `computer/screen-size error: ${msg}`);
+            res.status(502).json({ success: false, error: `Python API nem elérhető: ${msg}` });
+        }
+    });
+
+    /**
+     * POST /api/v1/robotkez/computer/click
+     * Kattintás abszolút koordinátákra
+     *
+     * Body: { x: number, y: number, clicks?: number }
+     */
+    router.post('/computer/click', async (req: Request, res: Response) => {
+        try {
+            const { x, y, clicks = 1 } = req.body as { x: number; y: number; clicks?: number };
+            if (x === undefined || y === undefined) {
+                return res.status(400).json({ success: false, error: 'x és y megadása kötelező' });
+            }
+            const r = await fetch(`${PYTHON_API}/os/click`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ x, y, clicks })
+            });
+            const data = await r.json() as Record<string, unknown>;
+            res.json(data);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `computer/click error: ${msg}`);
+            res.status(502).json({ success: false, error: `Python API nem elérhető: ${msg}` });
+        }
+    });
+
+    /**
+     * POST /api/v1/robotkez/computer/click-pct
+     * Kattintás százalékos koordinátákra (felbontás-független)
+     *
+     * Body: { x_pct: number, y_pct: number, clicks?: number }  — értékek: 0.0–1.0
+     */
+    router.post('/computer/click-pct', async (req: Request, res: Response) => {
+        try {
+            const { x_pct, y_pct, clicks = 1 } = req.body as { x_pct: number; y_pct: number; clicks?: number };
+            if (x_pct === undefined || y_pct === undefined) {
+                return res.status(400).json({ success: false, error: 'x_pct és y_pct megadása kötelező (0.0-1.0)' });
+            }
+            const r = await fetch(`${PYTHON_API}/os/click-pct`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ x_pct, y_pct, clicks })
+            });
+            const data = await r.json() as Record<string, unknown>;
+            res.json(data);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `computer/click-pct error: ${msg}`);
+            res.status(502).json({ success: false, error: `Python API nem elérhető: ${msg}` });
+        }
+    });
+
+    /**
+     * POST /api/v1/robotkez/computer/type
+     * Szöveg begépelése (aktív ablakba)
+     *
+     * Body: { text: string, interval?: number }
+     */
+    router.post('/computer/type', async (req: Request, res: Response) => {
+        try {
+            const { text, interval } = req.body as { text: string; interval?: number };
+            if (!text || typeof text !== 'string') {
+                return res.status(400).json({ success: false, error: 'text megadása kötelező' });
+            }
+            const body: Record<string, unknown> = { text };
+            if (interval !== undefined) body['interval'] = interval;
+            const r = await fetch(`${PYTHON_API}/os/type`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(body)
+            });
+            const data = await r.json() as Record<string, unknown>;
+            res.json(data);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `computer/type error: ${msg}`);
+            res.status(502).json({ success: false, error: `Python API nem elérhető: ${msg}` });
+        }
+    });
+
+    /**
+     * POST /api/v1/robotkez/computer/vision-click
+     * Vision alapú kattintás: leírás alapján megkeresi és rákattint az elemre
+     *
+     * Body: { description: string }
+     */
+    router.post('/computer/vision-click', async (req: Request, res: Response) => {
+        try {
+            const { description } = req.body as { description: string };
+            if (!description || typeof description !== 'string') {
+                return res.status(400).json({ success: false, error: 'description megadása kötelező' });
+            }
+            const r = await fetch(`${PYTHON_API}/os/vision-click`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ description })
+            });
+            const data = await r.json() as Record<string, unknown>;
+            res.json(data);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `computer/vision-click error: ${msg}`);
+            res.status(502).json({ success: false, error: `Python API nem elérhető: ${msg}` });
+        }
+    });
+
+    // -----------------------------------------------------------------------
+    // COMET AUTO — Autonóm multi-step loop (Planner → Actor → Critic)
+    // -----------------------------------------------------------------------
+
+    const ROBOTKEZ_PRO_API = process.env.ROBOTKEZ_PRO_URL || 'http://localhost:8090';
+
+    /**
+     * POST /api/v1/robotkez/step-event
+     * Fogadja a Python Comet Orchestrator step eseményeit és továbbítja Socket.IO-n
+     *
+     * Body: { type, attempt, step_index, action, success, error, ... }
+     */
+    router.post('/step-event', async (req: Request, res: Response) => {
+        try {
+            const stepInfo = req.body as Record<string, unknown>;
+            socketService.broadcastRobotkezStep(stepInfo);
+            res.json({ ok: true });
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `step-event error: ${msg}`);
+            res.status(500).json({ ok: false, error: msg });
+        }
+    });
+
+    /**
+     * POST /api/v1/robotkez/computer/auto
+     * Autonóm feladat-végrehajtás Comet Orchestrator-ral
+     *
+     * Body: { task: string, max_retries?: number }
+     * Response: { status, comet_result: { success, attempts, steps_completed, error }, step_log }
+     */
+    router.post('/computer/auto', async (req: Request, res: Response) => {
+        try {
+            const { task, max_retries = 3 } = req.body as { task: string; max_retries?: number };
+            if (!task || typeof task !== 'string') {
+                return res.status(400).json({ success: false, error: 'task megadása kötelező' });
+            }
+            logInfo('RobotkezAPI', `Comet Auto indítás: "${task.slice(0, 60)}"`);
+            const r = await fetch(
+                `${ROBOTKEZ_PRO_API}/computer_use_auto?task=${encodeURIComponent(task)}&max_retries=${max_retries}`,
+                { method: 'POST' }
+            );
+            const data = await r.json() as Record<string, unknown>;
+            res.json(data);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `computer/auto error: ${msg}`);
+            res.status(502).json({ success: false, error: `Robotkéz Pro API nem elérhető: ${msg}` });
+        }
+    });
+
+    // -----------------------------------------------------------------------
+    // TRAINING MANAGEMENT — háttér tréning vezérlés
+    // -----------------------------------------------------------------------
+
+    /**
+     * POST /api/v1/robotkez/training/start
+     * Háttérben elindítja a training suite-ot
+     *
+     * Body: { mode?: 'basic' | 'workflows', hours?: number, retries?: number }
+     */
+    router.post('/training/start', async (req: Request, res: Response) => {
+        try {
+            const { mode = 'basic', hours = 4, retries = 3 } = req.body as {
+                mode?: string; hours?: number; retries?: number;
+            };
+            logInfo('RobotkezAPI', `Training start: mode=${mode}`);
+            const r = await fetch(`${ROBOTKEZ_PRO_API}/training/start`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ mode, hours, retries })
+            });
+            const data = await r.json() as Record<string, unknown>;
+            if (!r.ok) {
+                return res.status(r.status).json(data);
+            }
+            res.json(data);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `training/start error: ${msg}`);
+            res.status(502).json({ success: false, error: `Robotkéz Pro nem elérhető: ${msg}` });
+        }
+    });
+
+    /**
+     * GET /api/v1/robotkez/training/status
+     * Visszaadja a futó tréning állapotát
+     */
+    router.get('/training/status', async (_req: Request, res: Response) => {
+        try {
+            const r = await fetch(`${ROBOTKEZ_PRO_API}/training/status`);
+            const data = await r.json() as Record<string, unknown>;
+            res.json(data);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            res.status(502).json({ running: false, error: `Robotkéz Pro nem elérhető: ${msg}` });
+        }
+    });
+
+    /**
+     * POST /api/v1/robotkez/training/stop
+     * Leállítja a futó tréninget
+     */
+    router.post('/training/stop', async (_req: Request, res: Response) => {
+        try {
+            const r = await fetch(`${ROBOTKEZ_PRO_API}/training/stop`, { method: 'POST' });
+            const data = await r.json() as Record<string, unknown>;
+            res.json(data);
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            res.status(502).json({ success: false, error: `Robotkéz Pro nem elérhető: ${msg}` });
+        }
+    });
+
+    // -----------------------------------------------------------------------
+    // CHROME DEVTOOLS — hálózati, konzol, performance debug (Playwright CDP)
+    // -----------------------------------------------------------------------
+
+    const devToolsAgent = new ChromeDevToolsAgent();
+
+    /**
+     * POST /api/v1/robotkez/devtools/report
+     * Teljes debug riport (hálózat + konzol + performance) egy URL-ről
+     *
+     * Body: { url: string }
+     * Response: { success, report: DebugReport, markdown: string }
+     */
+    router.post('/devtools/report', async (req: Request, res: Response) => {
+        try {
+            const { url } = req.body as { url?: string };
+            if (!url || typeof url !== 'string') {
+                return res.status(400).json({ success: false, error: 'url megadása kötelező' });
+            }
+            logInfo('RobotkezAPI', `DevTools report: ${url}`);
+            const result = await devToolsAgent.execute(`Debug report for ${url}`, { url, capability: 'report' });
+            if (result.status === 'error') {
+                return res.status(500).json({ success: false, error: result.error });
+            }
+            const data = result.data as { report: unknown; markdown: string };
+            res.json({ success: true, report: data.report, markdown: data.markdown });
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `devtools/report error: ${msg}`);
+            res.status(500).json({ success: false, error: msg });
+        }
+    });
+
+    /**
+     * POST /api/v1/robotkez/devtools/network
+     * Hálózati kérések rögzítése egy URL-ről
+     *
+     * Body: { url: string, duration?: number }
+     * Response: { success, requests, failedRequests }
+     */
+    router.post('/devtools/network', async (req: Request, res: Response) => {
+        try {
+            const { url, duration } = req.body as { url?: string; duration?: number };
+            if (!url || typeof url !== 'string') {
+                return res.status(400).json({ success: false, error: 'url megadása kötelező' });
+            }
+            logInfo('RobotkezAPI', `DevTools network: ${url}`);
+            const data = await devToolsAgent.captureNetworkRequests(url, duration || 8000);
+            res.json({ success: true, ...data });
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `devtools/network error: ${msg}`);
+            res.status(500).json({ success: false, error: msg });
+        }
+    });
+
+    /**
+     * POST /api/v1/robotkez/devtools/console
+     * Konzol hibák és figyelmeztetések rögzítése
+     *
+     * Body: { url: string, duration?: number }
+     * Response: { success, errors, warnings }
+     */
+    router.post('/devtools/console', async (req: Request, res: Response) => {
+        try {
+            const { url, duration } = req.body as { url?: string; duration?: number };
+            if (!url || typeof url !== 'string') {
+                return res.status(400).json({ success: false, error: 'url megadása kötelező' });
+            }
+            logInfo('RobotkezAPI', `DevTools console: ${url}`);
+            const data = await devToolsAgent.captureConsoleErrors(url, duration || 8000);
+            res.json({ success: true, ...data });
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `devtools/console error: ${msg}`);
+            res.status(500).json({ success: false, error: msg });
+        }
+    });
+
+    /**
+     * POST /api/v1/robotkez/devtools/performance
+     * Teljesítmény metrikák gyűjtése
+     *
+     * Body: { url: string }
+     * Response: { success, metrics: PerformanceMetrics }
+     */
+    router.post('/devtools/performance', async (req: Request, res: Response) => {
+        try {
+            const { url } = req.body as { url?: string };
+            if (!url || typeof url !== 'string') {
+                return res.status(400).json({ success: false, error: 'url megadása kötelező' });
+            }
+            logInfo('RobotkezAPI', `DevTools performance: ${url}`);
+            const metrics = await devToolsAgent.getPerformanceMetrics(url);
+            res.json({ success: true, metrics });
+        } catch (error: unknown) {
+            const msg = error instanceof Error ? error.message : String(error);
+            logError('RobotkezAPI', `devtools/performance error: ${msg}`);
+            res.status(500).json({ success: false, error: msg });
         }
     });
 

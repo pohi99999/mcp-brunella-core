@@ -33,6 +33,8 @@ import { registerSuggestedTasksCommands } from "./cli/suggestedTasksCommands.js"
 import { registerRobotkezCommands } from "./cli/robotkezCommands.js";
 import { registerConductorCommands } from "./cli/conductorCommands.js";
 import { registerInvoiceCommands } from "./cli/invoiceCommands.js";
+import { registerLeadCommands } from "./cli/leadCommands.js";
+import { registerMarketCommands } from "./cli/marketCommands.js";
 import { registerWorkspaceCommands } from "./cli/workspaceCommands.js";
 import { dashboardCommand } from "./cli/dashboardCommands.js";
 import { registerTaskCommands } from "./cli/taskCommands.js";
@@ -1265,8 +1267,14 @@ registerRobotkezCommands(program);
 // Register Task commands (Natural Language Task Routing)
 registerTaskCommands(program);
 
-// Register Invoice Automation commands (Phase 5)
+// Register Invoice Automation commands (Master Track 2)
 registerInvoiceCommands(program);
+
+// Register Lead Mining commands (Master Track 1)
+registerLeadCommands(program);
+
+// Register Market Watcher commands (Master Track 3)
+registerMarketCommands(program);
 
 // Register Workspace commands (Google Workspace API)
 registerWorkspaceCommands(program);
