@@ -10,6 +10,9 @@
  */
 
 import { Router, Request, Response } from 'express';
+import { spawn } from 'child_process';
+import fs from 'fs';
+import path from 'path';
 import { globalPythonShell } from '../../utils/pythonShell.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
@@ -94,6 +97,69 @@ export function createPythonWorkersRouter(): Router {
       const response = wrapError(error);
       logError('PythonWorkers', response.error || 'LanceDB batch failed');
       res.status(500).json(response);
+    }
+  });
+
+  // --- Harvest Pipeline endpoints ---
+
+  router.get('/harvest-status', async (_req: Request, res: Response) => {
+    try {
+      const root = process.cwd();
+      const logFile = path.join(root, 'logs', 'harvest_pipeline.log');
+      const goldenDataset = path.join(root, 'myai', 'data', 'training', 'golden_dataset.jsonl');
+
+      let lastRun: string | undefined;
+      let status: 'idle' | 'running' | 'success' | 'error' = 'idle';
+      let lastError: string | undefined;
+
+      // Log fájlból kiolvasunk: utolsó futás ideje és státusz
+      if (fs.existsSync(logFile)) {
+        const lines = fs.readFileSync(logFile, 'utf-8').split('\n').filter(Boolean);
+        for (let i = lines.length - 1; i >= 0; i--) {
+          const line = lines[i];
+          if (!lastRun && /\d{4}-\d{2}-\d{2}/.test(line)) {
+            const m = line.match(/(\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2})/);
+            if (m) lastRun = m[1];
+          }
+          if (/SUCCESS|sikeres|complete|COMPLETE/i.test(line)) { status = 'success'; break; }
+          if (/ERROR|hiba|failed|FAILED/i.test(line)) {
+            status = 'error';
+            lastError = line.slice(0, 120);
+            break;
+          }
+        }
+      }
+
+      // Golden Dataset méret
+      let goldenDatasetSize = 0;
+      if (fs.existsSync(goldenDataset)) {
+        const content = fs.readFileSync(goldenDataset, 'utf-8');
+        goldenDatasetSize = content.split('\n').filter(Boolean).length;
+      }
+
+      res.json({ status, lastRun, goldenDatasetSize, recordsIndexed: goldenDatasetSize, lastError });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('PythonWorkers', `harvest-status error: ${msg}`);
+      res.json({ status: 'idle' });
+    }
+  });
+
+  router.post('/harvest-run', (_req: Request, res: Response) => {
+    try {
+      logInfo('PythonWorkers', 'Harvest pipeline triggered via API');
+      const root = process.cwd();
+      const child = spawn('python', [path.join(root, 'myai', 'tools', 'harvest_pipeline.py')], {
+        cwd: root,
+        detached: true,
+        stdio: 'ignore',
+      });
+      child.unref();
+      res.json({ started: true, pid: child.pid });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      logError('PythonWorkers', `harvest-run error: ${msg}`);
+      res.status(500).json({ started: false, error: msg });
     }
   });
 

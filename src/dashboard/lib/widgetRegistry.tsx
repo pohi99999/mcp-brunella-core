@@ -30,6 +30,7 @@ import { SystemGuideWidget } from "@/components/dashboard/SystemGuideWidget";
 import { BrunellaStudio } from "@/components/dashboard/BrunellaStudio";
 import { CampaignGeneratorWidget } from "@/components/dashboard/CampaignGeneratorWidget";
 import { SalesPipelineWidget } from "@/components/dashboard/SalesPipelineWidget";
+import { HarvestPipelineWidget } from "@/components/dashboard/HarvestPipelineWidget";
 
 export interface WidgetDefinition {
   id: string;
@@ -224,5 +225,11 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
     label: "Brunella Studio",
     component: BrunellaStudio,
     defaultSize: { w: 12, h: 12 }
+  },
+  harvest_pipeline: {
+    id: "harvest_pipeline",
+    label: "Harvest Pipeline",
+    component: HarvestPipelineWidget,
+    defaultSize: { w: 4, h: 6 }
   }
 };

@@ -12,7 +12,7 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
       gridTemplateAreas: [
         '"health health jules"',
         '"agent-status chatter jules"',
-        '"tasks scheduled scheduled"'
+        '"tasks harvest scheduled"'
       ],
       gridTemplateColumns: '1fr 1fr 1.2fr',
       gridTemplateRows: '140px 1.5fr 1fr',
@@ -22,6 +22,7 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
         agent_chatter: 'chatter',
         jules: 'jules',
         task_queue: 'tasks',
+        harvest_pipeline: 'harvest',
         scheduled_tasks: 'scheduled'
       },
     },
