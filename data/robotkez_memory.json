@@ -1,0 +1,262 @@
+{
+  "_meta": {
+    "version": "1.0",
+    "created": "2026-02-28",
+    "description": "Robotkéz Pro seed memória — előre betöltött stratégiák n8n, Langflow és Windows feladatokhoz.",
+    "format": "solutions[task[:80]] = [{action, params, reason, success}]"
+  },
+  "solutions": {
+    "Navigálj az n8n felületére: http://localhost:5678 és kattints az 'Add Workflow' go": [
+      {
+        "action": "navigate",
+        "params": { "url": "http://localhost:5678" },
+        "reason": "Navigálj az n8n kezdőoldalára. Az n8n alapból a 5678-as porton fut.",
+        "success": true
+      },
+      {
+        "action": "wait",
+        "params": { "seconds": 2 },
+        "reason": "Megvárom, amíg az n8n felülete teljesen betölt. Az n8n-nek néha kell pár másodperc.",
+        "success": true
+      },
+      {
+        "action": "click",
+        "params": { "x": 50, "y": 50 },
+        "reason": "Az 'Add Workflow' gomb általában a bal felső sarokban vagy a + ikonnal jelölt helyen található. Ha nem látom, görgetek le.",
+        "success": false
+      },
+      {
+        "action": "navigate",
+        "params": { "url": "http://localhost:5678/workflow/new" },
+        "reason": "Ha nem találom a gombot klikkeléssel, közvetlen URL-lel megnyitom az új workflow oldalt — ez mindig működik.",
+        "success": true
+      }
+    ],
+    "Keress egy 'HTTP Request' node-ot az n8n-ben és húzd be a vászonra.": [
+      {
+        "action": "click",
+        "params": { "x": 50, "y": 400 },
+        "reason": "Az n8n bal oldalán van a node panel. Rákattintok a '+' gombra a vásznon, hogy megnyíljon a node kereső.",
+        "success": true
+      },
+      {
+        "action": "type",
+        "params": { "text": "HTTP Request", "press_enter": false },
+        "reason": "Begépelem a keresett node nevét. Az n8n real-time szűri a találatokat.",
+        "success": true
+      },
+      {
+        "action": "wait",
+        "params": { "seconds": 1 },
+        "reason": "Megvárom, amíg a keresési találatok megjelennek.",
+        "success": true
+      },
+      {
+        "action": "click",
+        "params": { "x": 200, "y": 300 },
+        "reason": "Az első találatra (HTTP Request node) kattintok, hogy hozzáadjam a vászonhoz.",
+        "success": true
+      }
+    ],
+    "Nyisd meg a HTTP Request node-ot és írd be az URL mezőbe: https://api.google.com": [
+      {
+        "action": "click",
+        "params": { "x": 640, "y": 400 },
+        "reason": "A vászon közepén elhelyezett HTTP Request node-ra duplán kattintok, hogy megnyíljanak a beállításai.",
+        "success": true
+      },
+      {
+        "action": "wait",
+        "params": { "seconds": 1 },
+        "reason": "Megvárom, amíg a node szerkesztő panel megjelenik a jobb oldalon.",
+        "success": true
+      },
+      {
+        "action": "click",
+        "params": { "x": 900, "y": 250 },
+        "reason": "Az URL mezőre kattintok a jobb oldali panel tetején. Az URL mező általában az első beviteli mező.",
+        "success": true
+      },
+      {
+        "action": "type",
+        "params": { "text": "https://api.google.com", "press_enter": false },
+        "reason": "Begépelem az URL-t. Nem nyomok Entert, mert az néha bezárja a panelt.",
+        "success": true
+      }
+    ],
+    "Menj a Langflow-ra: http://localhost:7860 és próbálj meg elhelyezni egy 'OpenAI'": [
+      {
+        "action": "navigate",
+        "params": { "url": "http://localhost:7860" },
+        "reason": "Navigálok a Langflow felületére. Alapból a 7860-as porton fut.",
+        "success": true
+      },
+      {
+        "action": "wait",
+        "params": { "seconds": 3 },
+        "reason": "A Langflow egy React app, kicsit lassabban tölt be. Megvárom a teljes betöltést.",
+        "success": true
+      },
+      {
+        "action": "click",
+        "params": { "x": 100, "y": 100 },
+        "reason": "A 'New Flow' vagy '+' gombra kattintok, hogy új flow-t hozzak létre. Általában a bal felső sarokban van.",
+        "success": true
+      },
+      {
+        "action": "type",
+        "params": { "text": "OpenAI", "press_enter": false },
+        "reason": "A komponens keresőbe begépelem az 'OpenAI' szót. A Langflow sidebar-ján van egy Components keresőmező.",
+        "success": true
+      },
+      {
+        "action": "wait",
+        "params": { "seconds": 1 },
+        "reason": "Megvárom a szűrt találatokat.",
+        "success": true
+      }
+    ],
+    "Köss össze két tetszőleges dobozt a Langflow vásznán.": [
+      {
+        "action": "wait",
+        "params": { "seconds": 1 },
+        "reason": "Megvizsgálom a jelenlegi vászon állapotát. Látnom kell legalább két node-ot, mielőtt összekötöm őket.",
+        "success": true
+      },
+      {
+        "action": "click",
+        "params": { "x": 400, "y": 350 },
+        "reason": "Az első node jobb oldalán lévő kimeneti konnektorra (kis kör) kattintok. Langflow-ban a csatlakozók a node szélein vannak.",
+        "success": false
+      },
+      {
+        "action": "click",
+        "params": { "x": 700, "y": 350 },
+        "reason": "STRATÉGIA: Húzás helyett kattints az első node output konnektorára, majd a második node input konnektorára. Ez megbízhatóbb a drag-n-drop-nál.",
+        "success": true
+      }
+    ],
+    "Kattints a Windows tálcán a Start menüre (Computer Use teszt).": [
+      {
+        "action": "click_os",
+        "params": { "x": 15, "y": 1065 },
+        "reason": "A Windows Start gomb a képernyő bal alsó sarkában van. 1080p felbontásnál kb. (15, 1065) koordinátán.",
+        "success": false
+      },
+      {
+        "action": "click_os",
+        "params": { "x": 30, "y": 1070 },
+        "reason": "FALLBACK: Ha az első próbálkozás nem nyitotta meg a Start menüt, kicsit jobbra-feljebb próbálom. A Windows logó ikon körülbelül itt van.",
+        "success": true
+      },
+      {
+        "action": "wait",
+        "params": { "seconds": 0.5 },
+        "reason": "Megvárom, amíg a Start menü animációja befejezi a nyílást.",
+        "success": true
+      }
+    ],
+    "Nyiss meg egy Jegyzettömböt (Notepad) és írd bele: 'Brunella Robotkez Pro Teszt SI": [
+      {
+        "action": "click_os",
+        "params": { "x": 30, "y": 1070 },
+        "reason": "Megnyitom a Start menüt a Windows tálcáról.",
+        "success": true
+      },
+      {
+        "action": "wait",
+        "params": { "seconds": 0.5 },
+        "reason": "Várom a Start menü megnyílását.",
+        "success": true
+      },
+      {
+        "action": "type",
+        "params": { "text": "notepad", "press_enter": true },
+        "reason": "A Start menü keresőjébe gépelem a 'notepad'-et, majd Enterrel megnyitom. Ez a legmegbízhatóbb módszer bármilyen app megnyitásához Windows-on.",
+        "success": true
+      },
+      {
+        "action": "wait",
+        "params": { "seconds": 1.5 },
+        "reason": "Megvárom, amíg a Notepad ablak megjelenik.",
+        "success": true
+      },
+      {
+        "action": "type",
+        "params": { "text": "Brunella Robotkez Pro Teszt SIKERES", "press_enter": false },
+        "reason": "Begépelem a szöveget a Notepadba. A Windows Notepad fókusza automatikusan a szövegmezőn van megnyitás után.",
+        "success": true
+      }
+    ]
+  },
+  "errors": {
+    "n8n_node_search_timeout": [
+      {
+        "error": "A node keresési panel nem jelent meg kattintás után.",
+        "recovery": "Próbálkozz a Ctrl+K billentyűkombinációval, ami általában megnyitja a globális keresőt n8n-ben.",
+        "action": "press_key",
+        "params": { "key": "Control+k" }
+      }
+    ],
+    "langflow_connection_failed": [
+      {
+        "error": "Drag-and-drop összekötés nem sikerült a Langflow vásznán.",
+        "recovery": "Kattints az output konnektorra (kis szürke/zöld pont a node jobb szélén), majd kattints a célobjektum input konnektorára. Ne húzd — kattints.",
+        "action": "click",
+        "params": {}
+      }
+    ],
+    "browser_page_not_loaded": [
+      {
+        "error": "Az oldal fehér vagy nem töltött be teljesen.",
+        "recovery": "Várj 3 másodpercet, majd navigálj újra az URL-re. Ha újra fehér marad, töltsd újra az oldalt az F5 gombbal.",
+        "action": "press_key",
+        "params": { "key": "F5" }
+      }
+    ],
+    "click_missed_target": [
+      {
+        "error": "A kattintás nem érte el a célelemet.",
+        "recovery": "Vision API segítségével azonosítsd pontosabban az elem koordinátáit a képernyőképből. Próbálj más koordinátát.",
+        "strategy": "Inkább a képernyőkép közepéből indulj, és kis lépésekkel keresd a gombot."
+      }
+    ]
+  },
+  "general_knowledge": {
+    "n8n": {
+      "base_url": "http://localhost:5678",
+      "new_workflow_url": "http://localhost:5678/workflow/new",
+      "shortcuts": {
+        "open_node_search": "Ctrl+K vagy a vászonon a '+' gombra kattintás",
+        "execute_workflow": "Ctrl+Enter vagy a 'Test workflow' gomb",
+        "save_workflow": "Ctrl+S"
+      },
+      "ui_hints": {
+        "node_search_panel": "Jobb oldalon jelenik meg kattintásra, vagy Ctrl+K után középen",
+        "canvas": "A középső nagy fehér/szürke terület",
+        "add_node_button": "'+' jel a vászon közepén, vagy bal oldali panel tetején"
+      }
+    },
+    "langflow": {
+      "base_url": "http://localhost:7860",
+      "shortcuts": {
+        "search_components": "Ctrl+K vagy bal oldali panel keresőmező"
+      },
+      "ui_hints": {
+        "component_panel": "Bal oldali szürke panel — ide vannak a ledobható komponensek",
+        "canvas": "Középső fehér terület",
+        "connection_ports": "Kis körök a node-ok bal/jobb szélén. Kattints az egyikre, majd a másikra."
+      }
+    },
+    "windows_11": {
+      "start_button_coords_1080p": { "x": 30, "y": 1070 },
+      "start_button_coords_1440p": { "x": 30, "y": 1430 },
+      "taskbar_height_px": 48,
+      "tips": [
+        "Start menü megnyitás után azonnal lehet gépelni — a keresőmező automatikusan aktív",
+        "Win+R megnyitja a 'Futtatás' párbeszédet — gyorsan indíthatsz programokat",
+        "A pyautogui FAILSAFE aktív: ha az egér a bal felső sarokba kerül, a script megáll"
+      ]
+    }
+  }
+}

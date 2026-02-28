@@ -762,6 +762,11 @@ class OSClickRequest(BaseModel):
     y: int
     clicks: Optional[int] = 1
 
+class OSClickPctRequest(BaseModel):
+    x_pct: float  # 0.0 - 1.0
+    y_pct: float  # 0.0 - 1.0
+    clicks: Optional[int] = 1
+
 class OSTypeRequest(BaseModel):
     text: str
     press_enter: Optional[bool] = False
@@ -778,6 +783,16 @@ async def os_screenshot():
 @app.post("/os/click")
 async def os_click(req: OSClickRequest):
     return await os_worker.click(req.x, req.y, clicks=req.clicks)
+
+@app.post("/os/click-pct")
+async def os_click_pct(req: OSClickPctRequest):
+    """Click at percentage-based coordinates (0.0-1.0), screen-resolution independent."""
+    return await os_worker.click_pct(req.x_pct, req.y_pct, clicks=req.clicks)
+
+@app.get("/os/screen-size")
+async def os_screen_size():
+    """Returns current screen resolution."""
+    return os_worker.get_screen_size()
 
 @app.post("/os/type")
 async def os_type(req: OSTypeRequest):

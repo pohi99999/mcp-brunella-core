@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-02-27T19:00:00.043Z
+**Utolso frissites:** 2026-02-28T04:00:00.430Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 90 total | 7 active | 7 completed | 68 archived
+**Stats:** 93 total | 4 active | 10 completed | 71 archived
 
 ---
 
@@ -56,7 +56,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (7)
+## Aktiv Szalak (Active) (4)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -82,27 +82,9 @@
   - **Assignee:** System
   - Mappa: ./tracks/local_test_scheduler_20260215/
 
-- [ ] **master_track_1_lead_mining_20260223** [HIGH]
-  - **ID:** `master_track_1_lead_mining_20260223`
-  - **Progress:** 80%
-  - **Assignee:** Gemini (Phase 1-3 Complete)
-  - Mappa: ./tracks/master_track_1_lead_mining_20260223/
-
-- [ ] **master_track_2_invoice_to_sheets_20260223** [HIGH]
-  - **ID:** `master_track_2_invoice_to_sheets_20260223`
-  - **Progress:** 80%
-  - **Assignee:** Gemini (Phase 1-3 Complete)
-  - Mappa: ./tracks/master_track_2_invoice_to_sheets_20260223/
-
-- [ ] **master_track_3_market_watcher_20260223** [HIGH]
-  - **ID:** `master_track_3_market_watcher_20260223`
-  - **Progress:** 80%
-  - **Assignee:** Gemini (Phase 1-3 Complete)
-  - Mappa: ./tracks/master_track_3_market_watcher_20260223/
-
 ---
 
-## Befejezett (Completed - Not Archived) (7)
+## Befejezett (Completed - Not Archived) (10)
 
 - [x] **Automata Kampány Generátor Ügynök és UI**
   - **ID:** `campaign-generator-agent-20260225`
@@ -132,13 +114,25 @@
   - **ID:** `innovation_bridge_20260225`
   - Mappa: ./tracks/innovation_bridge_20260225/
 
+- [x] **master_track_1_lead_mining_20260223**
+  - **ID:** `master_track_1_lead_mining_20260223`
+  - Mappa: ./tracks/master_track_1_lead_mining_20260223/
+
+- [x] **master_track_2_invoice_to_sheets_20260223**
+  - **ID:** `master_track_2_invoice_to_sheets_20260223`
+  - Mappa: ./tracks/master_track_2_invoice_to_sheets_20260223/
+
+- [x] **master_track_3_market_watcher_20260223**
+  - **ID:** `master_track_3_market_watcher_20260223`
+  - Mappa: ./tracks/master_track_3_market_watcher_20260223/
+
 - [x] **trojan-horse-campaign-20260224**
   - **ID:** `trojan-horse-campaign-20260224`
   - Mappa: ./tracks/trojan-horse-campaign-20260224/
 
 ---
 
-## Archivalt (Archived) (68)
+## Archivalt (Archived) (71)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -153,7 +147,7 @@
 - [x] **Browser-Use Harvester with Structured JSON Output** (N/A)
 - [x] **cean_operations_center_ui_20260215** (N/A)
 
-... and 58 more archived tracks
+... and 61 more archived tracks
 
 ---
 

@@ -21,6 +21,114 @@ class CometOrchestrator:
         self.critic = CriticAgent()
         self.memory = ActionMemory()
         self.max_retries = int(os.getenv("COMET_MAX_RETRIES", "3"))
+        self._step_callback = None  # opcionális callback lépésenként
+
+    def on_step(self, callback):
+        """Regisztrál egy callback-et, ami minden lépésnél meghívódik.
+        callback(step_info: dict) — {"attempt", "step_index", "action", "success", "error"}
+        """
+        self._step_callback = callback
+
+    async def _notify_step(self, info: dict):
+        if self._step_callback:
+            try:
+                result = self._step_callback(info)
+                if asyncio.iscoroutine(result):
+                    await result
+            except Exception as e:
+                logger.warning(f"[CometOrchestrator] Step callback hiba: {e}")
+
+    async def execute_with_page(self, task: str, page, context=None,
+                                 extra_hints: Optional[List[str]] = None) -> CometResult:
+        """Feladat végrehajtása KÜLSŐ Playwright page-en (nem indít saját böngészőt).
+
+        Args:
+            task: Szöveges feladat
+            page: Meglévő Playwright Page objektum
+            context: Opcionális BrowserContext (session mentéshez)
+            extra_hints: Plusz memória tippek (pl. n8n anchors, general_knowledge)
+        """
+        logger.info(f"[CometOrchestrator] execute_with_page: {task}")
+        memory_hints = list(extra_hints or [])
+        all_results: List[ActorResult] = []
+
+        for attempt in range(self.max_retries):
+            logger.info(f"[CometOrchestrator] Próbálkozás {attempt + 1}/{self.max_retries}")
+            await self._notify_step({
+                "type": "attempt_start", "attempt": attempt + 1,
+                "max_retries": self.max_retries, "task": task
+            })
+
+            try:
+                current_url = page.url
+                domain = urlparse(current_url).netloc
+                hints = await self.memory.get_hints(domain, task) if domain else []
+
+                steps = await self.planner.plan(
+                    task, current_url=current_url,
+                    memory_hints=memory_hints + hints
+                )
+
+                failed = False
+                current_attempt_results: List[ActorResult] = []
+
+                for step_idx, step in enumerate(steps):
+                    await self._notify_step({
+                        "type": "step_start", "attempt": attempt + 1,
+                        "step_index": step_idx, "total_steps": len(steps),
+                        "action": step.action,
+                        "description": step.description or step.action
+                    })
+
+                    result = await self.actor.execute_step(step, page)
+
+                    await self._notify_step({
+                        "type": "step_done", "attempt": attempt + 1,
+                        "step_index": step_idx, "action": step.action,
+                        "success": result.success,
+                        "error": result.error
+                    })
+
+                    if not result.success or step.critical:
+                        screenshot_bytes = await page.screenshot()
+                        critic_result = await self.critic.evaluate(
+                            screenshot_bytes, task, step.model_dump()
+                        )
+                        if not critic_result.success:
+                            logger.warning(f"[CometOrchestrator] Critic hiba: {critic_result.error}")
+                            memory_hints.append(
+                                f"Hiba a(z) {step.action} lépésnél: {critic_result.error}. "
+                                f"Javaslat: {critic_result.suggestion}"
+                            )
+                            failed = True
+                            break
+
+                    if result.success and step.selector and domain:
+                        await self.memory.record_success(
+                            domain, step.description or step.action, step.selector
+                        )
+
+                    current_attempt_results.append(result)
+
+                if not failed:
+                    if context:
+                        try:
+                            await context.storage_state(path="data/comet_session.json")
+                        except Exception:
+                            pass
+                    return CometResult(
+                        success=True, data=current_attempt_results,
+                        attempts=attempt + 1
+                    )
+
+            except Exception as e:
+                logger.error(f"[CometOrchestrator] Hiba #{attempt + 1}: {e}")
+                memory_hints.append(f"Rendszerhiba: {str(e)}")
+
+        return CometResult(
+            success=False, error="Max retries reached",
+            attempts=self.max_retries
+        )
 
     async def execute(self, task: str, context: Optional[Dict[str, Any]] = None) -> CometResult:
         """Feladat végrehajtása fázisokra bontva, önjavító mechanizmussal és memóriával"""
