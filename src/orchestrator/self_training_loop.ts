@@ -19,13 +19,44 @@ export class SelfTrainingLoop {
   async loadMemory(): Promise<void> {
     try {
       const data = await fs.readFile(this.memoryPath, 'utf-8');
-      this.memory = JSON.parse(data);
-    } catch (e: any) {
-      if (e.code === 'ENOENT') {
-        // File doesn't exist yet, that's fine
+      const parsed: unknown = JSON.parse(data);
+      if (Array.isArray(parsed)) {
+        // Régi TS formátum: MemoryEntry[]
+        this.memory = parsed as MemoryEntry[];
+      } else if (parsed && typeof parsed === 'object') {
+        // Új Python-kompatibilis formátum: { solutions: {taskKey: [{action, success, ...}]} }
+        this.memory = [];
+        const obj = parsed as Record<string, unknown>;
+        const solutions = obj['solutions'];
+        if (solutions && typeof solutions === 'object' && !Array.isArray(solutions)) {
+          for (const [taskId, entries] of Object.entries(solutions as Record<string, unknown>)) {
+            if (!Array.isArray(entries)) continue;
+            const successful = (entries as Record<string, unknown>[]).find(e => e['success'] === true);
+            if (successful) {
+              this.memory.push({
+                taskId,
+                successfulStrategy: String(successful['action'] ?? 'click'),
+                timestamp: new Date().toISOString()
+              });
+            }
+          }
+        }
+        // Saját TS bejegyzések megőrzése (ha vannak)
+        const tsEntries = obj['_ts_entries'];
+        if (Array.isArray(tsEntries)) {
+          this.memory.push(...(tsEntries as MemoryEntry[]));
+        }
+      } else {
+        this.memory = [];
+      }
+    } catch (e: unknown) {
+      const err = e as NodeJS.ErrnoException;
+      if (err.code === 'ENOENT') {
+        // Még nem létezik a fájl
         this.memory = [];
       } else {
-        logError('SelfTrainingLoop', `Failed to load memory: ${e.message}`);
+        logError('SelfTrainingLoop', `Failed to load memory: ${err.message}`);
+        this.memory = [];
       }
     }
   }
@@ -33,9 +64,27 @@ export class SelfTrainingLoop {
   async saveMemory(): Promise<void> {
     try {
       await fs.mkdir(path.dirname(this.memoryPath), { recursive: true });
-      await fs.writeFile(this.memoryPath, JSON.stringify(this.memory, null, 2), 'utf-8');
-    } catch (e: any) {
-      logError('SelfTrainingLoop', `Failed to save memory: ${e.message}`);
+      // Meglévő fájl formátumának megőrzése (Python-kompatibilis objektum)
+      let existing: Record<string, unknown> | null = null;
+      try {
+        const raw = await fs.readFile(this.memoryPath, 'utf-8');
+        const parsed: unknown = JSON.parse(raw);
+        if (parsed && typeof parsed === 'object' && !Array.isArray(parsed)) {
+          existing = parsed as Record<string, unknown>;
+        }
+      } catch {
+        // Nem létezik vagy sérült — új fájlt írunk
+      }
+
+      if (existing) {
+        // Objektum formátumba menti az TS bejegyzéseket külön kulcs alá
+        existing['_ts_entries'] = this.memory;
+        await fs.writeFile(this.memoryPath, JSON.stringify(existing, null, 2), 'utf-8');
+      } else {
+        await fs.writeFile(this.memoryPath, JSON.stringify(this.memory, null, 2), 'utf-8');
+      }
+    } catch (e: unknown) {
+      logError('SelfTrainingLoop', `Failed to save memory: ${(e as Error).message}`);
     }
   }
 
@@ -49,14 +98,14 @@ export class SelfTrainingLoop {
   }
 
   getMemoryForTask(taskId: string): string | null {
-    const entry = this.memory.find(m => m.taskId === taskId);
+    const entry = this.memory.find((m: MemoryEntry) => m.taskId === taskId);
     return entry ? entry.successfulStrategy : null;
   }
 
-  // A mockup of the progressive escalation execution
+  // Progresszív eszkaláció: DOM → Kinetic → Computer Use → Vision API
   async executeWithRetry(
-    taskId: string, 
-    taskDescription: string, 
+    taskId: string,
+    taskDescription: string,
     actionFn: (strategy: string) => Promise<boolean>,
     maxDurationHours: number = 4
   ): Promise<boolean> {

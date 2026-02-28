@@ -65,10 +65,10 @@ export function MissionControlLayout() {
               <span className="text-[9px] md:text-[10px] font-mono text-primary/60 tracking-widest leading-none">v2.3.0</span>
             </div>
           </div>
-          
+
           <div className="h-4 w-[1px] bg-white/10 mx-2" />
-          
-          <nav className="hidden xs:flex items-center gap-1">
+
+          <nav className="hidden sm:flex items-center gap-1">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors px-2 py-1 rounded gap-1">
@@ -108,15 +108,15 @@ export function MissionControlLayout() {
 
         <div className="flex items-center gap-2 md:gap-4">
           <div className="hidden sm:flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
-             <div className={cn(
-               "w-2 h-2 rounded-full",
-               isConnected && coreStatus === 'HEALTHY' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"
-               : coreStatus === 'DEGRADED' ? "bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.8)]"
-               : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"
-             )} />
-             <span className="text-[10px] font-mono font-bold text-zinc-400">
-               {isConnected ? `CORE_${coreStatus}` : "CORE_OFFLINE"}
-             </span>
+            <div className={cn(
+              "w-2 h-2 rounded-full",
+              isConnected && coreStatus === 'HEALTHY' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"
+                : coreStatus === 'DEGRADED' ? "bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.8)]"
+                  : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+            )} />
+            <span className="text-[10px] font-mono font-bold text-zinc-400">
+              {isConnected ? `CORE_${coreStatus}` : "CORE_OFFLINE"}
+            </span>
           </div>
           <ThemeToggle />
         </div>

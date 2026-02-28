@@ -392,18 +392,6 @@
       "priority": 7
     },
     {
-      "name": "HeadHunter",
-      "module": "./agents/HeadHunterAgent.js",
-      "class": "HeadHunterAgent",
-      "role": "HR Talent Acquisition",
-      "description": "Digitális Fejvadász - CV feldolgozás, jelölt szűrés, interjúkérdések generálása",
-      "triggers": [
-        "headhunter",
-        "headhunteragent"
-      ],
-      "priority": 1
-    },
-    {
       "name": "innovation_bridge",
       "title": "Innovation Bridge Agent",
       "description": "TRIZ-based cross-industry knowledge transfer: solve industry problems with innovations from completely different industries",
@@ -435,28 +423,6 @@
         "knowledge-transfer"
       ],
       "priority": 5
-    },
-    {
-      "name": "integrator",
-      "title": "Integration Agent",
-      "description": "Kulso rendszerek, AnythingLLM es tudaskeszlet osszekotese.",
-      "class": "OrchestratorAgent",
-      "module": "./agents/OrchestratorAgent.js",
-      "capabilities": [
-        "integration",
-        "knowledge_sync"
-      ],
-      "tools": [
-        "anythingllm_list_workspaces",
-        "anythingllm_chat",
-        "knowledge_index_file"
-      ],
-      "category": "integration",
-      "status": "active",
-      "tags": [
-        "anythingllm",
-        "sync"
-      ]
     },
     {
       "name": "knowledge_base_builder",
@@ -668,17 +634,6 @@
         "orchestration"
       ],
       "priority": 4
-    },
-    {
-      "name": "MarketingAgent",
-      "module": "./agents/MarketingAgent.js",
-      "class": "MarketingAgent",
-      "role": "Lead Outreach & Email Marketing",
-      "description": "Teaser email generátor céges leadek számára - Személyre szabott outreach kampányok",
-      "triggers": [
-        "marketingagent"
-      ],
-      "priority": 1
     },
     {
       "name": "NurturerAgent",
@@ -899,18 +854,6 @@
         "rag",
         "summaries"
       ]
-    },
-    {
-      "name": "Robotkez",
-      "module": "./agents/RobotkezAgent.js",
-      "class": "RobotkezAgent",
-      "role": "Böngésző Operátor",
-      "description": "Böngésző alapú feladatokat hajt végre (kattintás, keresés, form kitöltés)",
-      "triggers": [
-        "robotkez",
-        "robotkezagent"
-      ],
-      "priority": 1
     },
     {
       "name": "robotkezv2",

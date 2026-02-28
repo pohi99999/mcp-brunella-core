@@ -3,7 +3,7 @@ from typing import Optional, List, Dict, Any
 
 class BrowserStep(BaseModel):
     """Egyetlen böngésző akció definíciója"""
-    action: str = Field(..., description="Az elvégzendő művelet (navigate, click, type, stb.)")
+    action: str = Field(..., description="Az elvégzendő művelet (navigate, click, click_os, type, type_os, press_key, scroll, fill, search, extract, screenshot, wait)")
     selector: Optional[str] = Field(None, description="CSS selector az elemhez")
     url: Optional[str] = Field(None, description="Cél URL navigáció esetén")
     text: Optional[str] = Field(None, description="Beírandó szöveg")
@@ -11,6 +11,8 @@ class BrowserStep(BaseModel):
     description: Optional[str] = Field(None, description="A lépés emberi nyelvű leírása a vision agent számára")
     critical: bool = Field(False, description="Ha igaz, a hiba esetén azonnali megállás és újratervezés történik")
     tab_index: int = Field(0, description="Melyik fülön hajtódjon végre a művelet")
+    x: Optional[int] = Field(None, description="Pixel X koordináta (click_os, click esetén)")
+    y: Optional[int] = Field(None, description="Pixel Y koordináta (click_os, click esetén)")
 
 class ActorResult(BaseModel):
     """Egy BrowserStep végrehajtásának eredménye"""
