@@ -31,7 +31,7 @@ export default defineConfig({
           // Vendor chunk: UI libraries
           'vendor-ui': ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-tooltip', '@radix-ui/react-slot'],
           // Vendor chunk: Charts & visualization
-          'vendor-charts': ['recharts', 'react-grid-layout'],
+          'vendor-charts': ['recharts'],
           // Vendor chunk: Icons
           'vendor-icons': ['lucide-react'],
         },
@@ -55,7 +55,7 @@ export default defineConfig({
     // sparkPlugin() as PluginOption,
   ],
   optimizeDeps: {
-    include: ['react-grid-layout', 'react-grid-layout/legacy'],
+    include: [],
   },
   resolve: {
     alias: {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Play, Eye, Download, Star, ShieldCheck, Cpu } from 'lucide-react';
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../ui/card';
-import { Button } from '../ui/button';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
+import { Button } from '../components/ui/button';
 import { LogisticsDemo } from '../components/widgets/LogisticsDemo';
 import { GrantAdvisorWidget } from '../components/widgets/GrantAdvisorWidget';
 
