@@ -1,7 +1,7 @@
 # 🌌 BRUNELLA MASTER CONTEXT (Élő Rendszertérkép)
 
 **Verzió:** 1.0.0
-**Frissítve:** 2026-02-27
+**Frissítve:** 2026-02-28
 **Státusz:** ACTIVE (Élő rendszer)
 
 ---
@@ -20,7 +20,7 @@ A **Brunella Agent System (BAS)** egy hibrid, multi-agent AI ökoszisztéma, ame
 
 ## 2. 🤖 Az Ügynök Sereg (The Legion)
 
-A rendszer **57** regisztrált ügynökkel rendelkezik.
+A rendszer **53** regisztrált ügynökkel rendelkezik.
 
 ### 👑 Vezérkar (Core Leadership)
 | Ügynök | Szerep | Képességek |
@@ -61,9 +61,7 @@ A rendszer **57** regisztrált ügynökkel rendelkezik.
 | **FinancialGuard** | Automated Invoice Processing & Anomaly Detection |  |
 | **github_models** | undefined | code_generation, code_review, architecture_design |
 | **grant_watcher** | undefined | grant_scraping, eligibility_matching |
-| **HeadHunter** | HR Talent Acquisition |  |
 | **innovation_bridge** | undefined | problem_abstraction, triz_analysis, cross_industry_search |
-| **integrator** | undefined | integration, knowledge_sync |
 | **knowledge_base_builder** | undefined | message_analysis, wiki_generation |
 | **law_detective** | undefined | law_monitoring, legal_intelligence, compliance_analysis |
 | **lead_mining** | undefined | lead_generation, web_scraping, icebreaker_generation |
@@ -73,7 +71,6 @@ A rendszer **57** regisztrált ügynökkel rendelkezik.
 | **LogisticsDispatcher** | Automated Shipment Tracking & Complaint Management |  |
 | **market_intel** | undefined | competitor_scraping, price_extraction, trend_analysis |
 | **marketing_director** | undefined | campaign_orchestration, content_assembly, trend_analysis_coordination |
-| **MarketingAgent** | Lead Outreach & Email Marketing |  |
 | **ops** | undefined | monitoring, diagnostics |
 | **PricingAgent** | Market Intelligence & Dynamic Pricing |  |
 | **ProactiveClaimsAgent** | Insurance & Risk Management |  |
@@ -84,7 +81,6 @@ A rendszer **57** regisztrált ügynökkel rendelkezik.
 | **Python** | Python Subsystem Guardian |  |
 | **qa** | undefined | test_execution, validation |
 | **researcher** | undefined | rag_search, summarization |
-| **Robotkez** | Böngésző Operátor |  |
 | **robotkezv2** | undefined | web_search, data_extract, form_fill |
 | **sales** | undefined | lead_generation, crm_integration, email_drafting |
 | **sales_hunter** | undefined | linkedin_scraping, lead_scoring, email_draft_generation |

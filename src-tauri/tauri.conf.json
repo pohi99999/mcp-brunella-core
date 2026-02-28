@@ -37,14 +37,13 @@
       "targets": "all",
       "windows": {
         "certificateThumbprint": null,
-        "digestAlgorithm": "sha256",
-        "timestampServer": ""
+        "digestAlgorithm": "sha256"
       }
     },
     "security": {
       "csp": null
     },
-    "window": [
+    "windows": [
       {
         "fullscreen": false,
         "height": 800,

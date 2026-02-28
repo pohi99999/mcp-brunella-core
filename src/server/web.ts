@@ -89,6 +89,7 @@ import salesRouter from "./routes/sales.js";
 import grantsRouter from "./routes/grants.js";
 import voiceRouter from "./routes/voice.js";
 import { syncService } from "../utils/syncService.js";
+import contactRouter from "./routes/contact.js";
 
 const logger = new Logger("web_ui.log");
 
@@ -221,6 +222,7 @@ export async function startWebServer() {
   v1Router.use("/grants", grantsRouter);
   v1Router.use("/webhooks", createWebhookRoutes(db));
   v1Router.use("/voice", voiceRouter);
+  v1Router.use("/contact", contactRouter);
 
   app.use("/api/v1", v1Router);
   app.use("/api", v1Router);
