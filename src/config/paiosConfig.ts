@@ -78,7 +78,6 @@ export function loadPaiosConfig(configPath = 'paios.config.yaml'): PAIOSConfig {
     const fallbackConfig = {
       orchestrator: {
         default_model: (process.env.PAIOS_DEFAULT_MODEL as ModelProvider) ?? 'gemini',
-        system_prompt_path: 'src/orchestrator/systemPrompt/paios_orchestrator_prompt.md',
         max_tasks_per_request: 5,
       },
       providers: {

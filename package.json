@@ -10,7 +10,7 @@
     "brunella-hu": "build/cli-hu.js"
   },
   "scripts": {
-    "build": "tsc && node -e \"const fs=require('fs');const src='src/orchestrator/systemPrompt/paios_orchestrator_prompt.md';const dst='build/orchestrator/systemPrompt/paios_orchestrator_prompt.md';fs.mkdirSync('build/orchestrator/systemPrompt',{recursive:true});fs.copyFileSync(src,dst);console.log('PAIOS prompt copied');fs.mkdirSync('build/agents',{recursive:true});fs.copyFileSync('src/agents/registry.json','build/agents/registry.json');console.log('registry.json copied to build/agents/');fs.mkdirSync('build/data',{recursive:true});fs.copyFileSync('src/data/triz_matrix.json','build/data/triz_matrix.json');fs.copyFileSync('src/data/triz_principles.json','build/data/triz_principles.json');console.log('TRIZ data copied');\"",
+    "build": "tsc && node -e \"const fs=require('fs');fs.mkdirSync('build/agents',{recursive:true});fs.copyFileSync('src/agents/registry.json','build/agents/registry.json');console.log('registry.json copied to build/agents/');fs.mkdirSync('build/data',{recursive:true});fs.copyFileSync('src/data/triz_matrix.json','build/data/triz_matrix.json');fs.copyFileSync('src/data/triz_principles.json','build/data/triz_principles.json');console.log('TRIZ data copied');\"",
     "start": "node build/index.js",
     "dev": "node --loader ts-node/esm src/index.ts",
     "watch": "tsc -w",
