@@ -1240,38 +1240,6 @@ export class AgentManager extends EventEmitter {
       `[DELEGATE] Kérés érkezett a '${agentName}' ügynökhöz.`,
     );
 
-    // HOTFIX: If the agent is Orchestrator, we must create AND execute the plan.
-    if (agentName.toLowerCase() === "orchestrator") {
-      logInfo(
-        "AgentManager",
-        "Orchestrator delegation detected. Running full plan-and-execute cycle.",
-      );
-      try {
-        const plan = await this.createPlan(task);
-        if (!plan || plan.taskIds.length === 0) {
-          return {
-            success: true,
-            message: "A terv nem tartalmazott végrehajtható lépéseket.",
-          };
-        }
-
-        const noOpEmit = (event: string, data: any) => {};
-        const finalResult = await this.executePlan(plan, noOpEmit);
-
-        return {
-          success: true,
-          message: "A terv végrehajtása befejeződött.",
-          data: finalResult,
-        };
-      } catch (e: any) {
-        logError(
-          "AgentManager",
-          `Orchestrator plan/execute hiba: ${e.message}`,
-        );
-        throw e;
-      }
-    }
-
     const lowerAgentName = agentName.toLowerCase();
     logInfo(
       "AgentManager",
