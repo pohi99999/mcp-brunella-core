@@ -1,13 +1,19 @@
-
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { DeveloperAgent } from '../src/agents/DeveloperAgent.js';
-import * as llmClient from '../src/core/llm_client.js';
+import * as bifrostGateway from '../src/core/bifrost_gateway.js';
 import * as pythonShell from '../src/utils/pythonShell.js';
 import fs from 'fs/promises';
 import { execSync } from 'child_process';
 
 // Mock dependencies
-vi.mock('../src/core/llm_client.js');
+vi.mock('../src/core/bifrost_gateway.js', () => {
+    const mockGenerate = vi.fn();
+    return {
+        getBifrostGateway: () => ({
+            generate: mockGenerate
+        })
+    };
+});
 vi.mock('../src/utils/pythonShell.js');
 vi.mock('fs/promises');
 vi.mock('child_process');
@@ -16,54 +22,92 @@ vi.mock('../src/utils/logger.js', () => ({
     logError: vi.fn(),
     setAgentStatus: vi.fn()
 }));
+vi.mock('../src/server/SocketService.js', () => ({
+    socketService: {
+        broadcastChatter: vi.fn()
+    }
+}));
+vi.mock('../src/agents/specStatus.js', () => ({
+    getSpecStatus: vi.fn().mockResolvedValue('approved'),
+    requiresSpec: vi.fn().mockReturnValue(false)
+}));
 
 describe('DeveloperAgent', () => {
     let agent: DeveloperAgent;
+    let mockGenerate: any;
 
     beforeEach(() => {
         vi.clearAllMocks();
         agent = new DeveloperAgent();
-        (llmClient.generateResponse as any).mockResolvedValue('// Generated Code');
+        mockGenerate = bifrostGateway.getBifrostGateway().generate;
         (pythonShell.globalPythonShell.run as any).mockResolvedValue('Python Output');
         (fs.mkdir as any).mockResolvedValue(undefined);
         (fs.writeFile as any).mockResolvedValue(undefined);
         (execSync as any).mockReturnValue('Command Output');
     });
 
-    it('should route to code generation handler', async () => {
-        const result = await agent.execute('Create a TypeScript function to calculate fibonacci');
-
-        expect(llmClient.generateResponse).toHaveBeenCalledWith(
-            expect.stringContaining('System Prompt:'),
-            'github',
-            'gpt-4o'
-        );
-        expect(result.status).toBe('success');
-        expect(result.data.code).toBe('// Generated Code');
-    });
-
-    it('should route to test generation handler', async () => {
-        const result = await agent.execute('Write vitest tests for the fibonacci function');
-
-        expect(llmClient.generateResponse).toHaveBeenCalledWith(
-            expect.stringContaining('System Prompt:'),
-            'github',
-            'gpt-4o'
-        );
-        expect(result.status).toBe('success');
-    });
-
-    it('should route to error handler', async () => {
-        const result = await agent.execute('Fix this error: TypeError: undefined is not a function', {
-            error: 'TypeError: undefined is not a function'
+    it('should route to ReAct loop for generic tasks', async () => {
+        mockGenerate.mockResolvedValueOnce({
+            success: true,
+            content: "Kész a feladat",
+            toolCalls: undefined
         });
 
-        expect(llmClient.generateResponse).toHaveBeenCalledWith(
-            expect.stringContaining('Fix this error'),
-            'github',
-            'gpt-4o'
-        );
+        const result = await agent.execute('Create a TypeScript function to calculate fibonacci');
+
+        expect(mockGenerate).toHaveBeenCalled();
         expect(result.status).toBe('success');
+        expect((result as any).message).toBe('Kész a feladat');
+    });
+
+    it('should use tool calling for write_file', async () => {
+        mockGenerate.mockResolvedValueOnce({
+            success: true,
+            content: "",
+            toolCalls: [{
+                id: "call_1",
+                function: {
+                    name: "write_file",
+                    arguments: JSON.stringify({ path: "src/test.ts", content: "// Code" })
+                }
+            }]
+        });
+
+        mockGenerate.mockResolvedValueOnce({
+            success: true,
+            content: "Fájl sikeresen létrehozva.",
+            toolCalls: undefined
+        });
+
+        const result = await agent.execute('Write test code');
+
+        expect(fs.writeFile).toHaveBeenCalledWith('src/test.ts', '// Code', 'utf-8');
+        expect(result.status).toBe('success');
+        expect((result as any).message).toBe('Fájl sikeresen létrehozva.');
+    });
+
+    it('should use tool calling for run_shell_command', async () => {
+        mockGenerate.mockResolvedValueOnce({
+            success: true,
+            content: "",
+            toolCalls: [{
+                id: "call_1",
+                function: {
+                    name: "run_shell_command",
+                    arguments: JSON.stringify({ command: "npm test" })
+                }
+            }]
+        });
+
+        mockGenerate.mockResolvedValueOnce({
+            success: true,
+            content: "Teszt lefutott.",
+            toolCalls: undefined
+        });
+
+        await agent.execute('Futtasd a teszteket');
+
+        expect(execSync).toHaveBeenCalledWith('npm test', expect.anything());
     });
 
     it('should route to python execution handler', async () => {
@@ -73,34 +117,13 @@ describe('DeveloperAgent', () => {
 
         expect(pythonShell.globalPythonShell.run).toHaveBeenCalledWith('import math; print(math.factorial(50))');
         expect(result.status).toBe('success');
-        expect(result.data.output).toBe('Python Output');
+        expect((result as any).data.output).toBe('Python Output');
     });
 
-    it('should auto-save and try build when filePath provided in code gen', async () => {
-        (execSync as any).mockReturnValue(''); // Build success
-
-        await agent.execute('Create a component', { filePath: 'src/components/Test.tsx' });
-
-        expect(fs.writeFile).toHaveBeenCalledWith('src/components/Test.tsx', '// Generated Code', 'utf-8');
-        expect(execSync).toHaveBeenCalledWith('npm run build', expect.anything());
-    });
-
-    it('should attempt self-healing if build fails', async () => {
-        const buildError = new Error('Build Failed');
-        (buildError as any).stdout = 'TS2304: Cannot find name "foo"';
-
-        (execSync as any)
-            .mockImplementationOnce(() => { throw buildError; }) // First build fails
-            .mockReturnValue(''); // Second build (after fix) succeeds
-
-        (llmClient.generateResponse as any)
-            .mockResolvedValueOnce('// Bad Code') // Initial gen
-            .mockResolvedValueOnce('// Fixed Code'); // Fix gen
-
-        const result = await agent.execute('Create a broken component', { filePath: 'src/broken.ts' });
-
-        expect(llmClient.generateResponse).toHaveBeenCalledTimes(2); // 1 gen + 1 fix
-        expect(fs.writeFile).toHaveBeenCalledTimes(2); // 1 save bad + 1 save fixed
-        expect(result.message).toContain('Build auto-fixed');
+    it('should execute git branch operations', async () => {
+        const result = await agent.execute('Create branch', { branchName: 'test-branch' });
+        
+        expect(execSync).toHaveBeenCalledWith('git checkout -b test-branch', expect.anything());
+        expect(result.status).toBe('success');
     });
 });
