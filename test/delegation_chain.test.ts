@@ -1,10 +1,17 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { agentManager } from "../src/agents/AgentManager.js";
 import { OrchestratorAgent } from "../src/agents/OrchestratorAgent.js";
-import * as llmClient from "../src/core/llm_client.js";
+import * as bifrostGateway from '../src/core/bifrost_gateway.js';
 
-// Mock all agent dependencies before import
-vi.mock("../src/core/llm_client.js");
+// Mock the gateway
+vi.mock('../src/core/bifrost_gateway.js', () => {
+    const mockGenerate = vi.fn();
+    return {
+        getBifrostGateway: () => ({
+            generate: mockGenerate
+        })
+    };
+});
 vi.mock("../src/utils/logger.js", () => {
   return {
     Logger: class {
@@ -25,21 +32,25 @@ vi.mock("../src/utils/tasksDb.js", () => ({
 
 describe("Delegation Chain Integration", () => {
   let orchestrator: OrchestratorAgent;
+  let mockGenerate: any;
 
   beforeEach(async () => {
     vi.clearAllMocks();
     orchestrator = new OrchestratorAgent();
+    mockGenerate = bifrostGateway.getBifrostGateway().generate;
 
-    // Mock Orchestrator's LLM response to return a valid JSON plan
-    (llmClient.chatWithOllama as any).mockResolvedValue(
-      JSON.stringify([
-        {
-          agent: "Developer",
-          description: "Write a unit test for delegation",
-          context: { target: "test" },
-        },
-      ]),
-    );
+    // Mock Orchestrator's LLM response
+    mockGenerate.mockResolvedValue({
+        success: true,
+        content: "Feladatok delegálva",
+        toolCalls: [{
+            id: "call_1",
+            function: {
+                name: "delegate_task",
+                arguments: JSON.stringify({ agent_name: "Developer", instruction: "Write a unit test for delegation" })
+            }
+        }]
+    });
 
     // Manually register Orchestrator
     agentManager.registerAgent(orchestrator as any);
@@ -48,13 +59,20 @@ describe("Delegation Chain Integration", () => {
   it("Orchestrator should successfully generate a multi-step plan", async () => {
     const task = "Fix the build and report status";
 
-    // Mock a 2-step plan
-    (llmClient.chatWithOllama as any).mockResolvedValue(
-      JSON.stringify([
-        { agent: "Developer", description: "Fix build errors" },
-        { agent: "Evaluator", description: "Verify build status" },
-      ]),
-    );
+    // Mock a 2-step plan via tool calls
+    mockGenerate.mockResolvedValueOnce({
+        success: true,
+        content: "",
+        toolCalls: [
+            { id: "call_1", function: { name: "delegate_task", arguments: JSON.stringify({ agent_name: "Developer", instruction: "Fix build errors" }) } },
+            { id: "call_2", function: { name: "delegate_task", arguments: JSON.stringify({ agent_name: "Evaluator", instruction: "Verify build status" }) } }
+        ]
+    });
+    mockGenerate.mockResolvedValueOnce({
+        success: true,
+        content: "2 feladat kiosztva.",
+        toolCalls: undefined
+    });
 
     const result = await orchestrator.execute(task);
 
@@ -78,6 +96,19 @@ describe("Delegation Chain Integration", () => {
       execute: devExecute,
     } as any);
 
+    mockGenerate.mockResolvedValueOnce({
+        success: true,
+        content: "",
+        toolCalls: [
+            { id: "call_1", function: { name: "delegate_task", arguments: JSON.stringify({ agent_name: "Developer", instruction: "help" }) } }
+        ]
+    });
+    mockGenerate.mockResolvedValueOnce({
+        success: true,
+        content: "Delegálva.",
+        toolCalls: undefined
+    });
+
     // 1. Trigger delegation through manager
     // This will call Orchestrator.execute, which returns taskIds
     const plan = await agentManager.createPlan("I need a developer help");
@@ -100,6 +131,19 @@ describe("Delegation Chain Integration", () => {
       name: "Developer",
       execute: failExecute,
     } as any);
+
+    mockGenerate.mockResolvedValueOnce({
+        success: true,
+        content: "",
+        toolCalls: [
+            { id: "call_1", function: { name: "delegate_task", arguments: JSON.stringify({ agent_name: "Developer", instruction: "fail" }) } }
+        ]
+    });
+    mockGenerate.mockResolvedValueOnce({
+        success: true,
+        content: "Delegálva.",
+        toolCalls: undefined
+    });
 
     const plan = await agentManager.createPlan("Do something that fails");
     const resultText = await agentManager.executePlan(plan, () => {});
