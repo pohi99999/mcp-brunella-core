@@ -27,7 +27,6 @@ const ProviderSchema = z.object({
 export const PAIOSConfigSchema = z.object({
   orchestrator: z.object({
     default_model: z.enum(['gpt4o', 'gemini', 'local', 'anthropic']).default('gemini'),
-    system_prompt_path: z.string(),
     max_tasks_per_request: z.number().int().min(1).max(20).default(5),
   }),
   providers: z.object({
