@@ -1,7 +1,7 @@
 import { IAgent, AgentResponse, ChainStep, ChainContext } from "./types.js";
 import { Logger, logInfo, logError, setAgentStatus } from "../utils/logger.js";
 import { agentManager } from "./AgentManager.js";
-import { chatWithOllama } from "../core/llm_client.js";
+import { getBifrostGateway } from "../core/bifrost_gateway.js";
 import { phoenixEventBus } from "../core/phoenixEventBus.js";
 import { socketService } from "../server/SocketService.js";
 
@@ -142,6 +142,52 @@ const KEYWORD_ROUTES: ReadonlyArray<{
     agent: "ProjectConductor",
   },
   { keywords: ["voice", "hang", "audio", "hangutasítás", "beszélj"], agent: "voice" },
+];
+
+const ORCHESTRATOR_TOOLS = [
+  {
+    type: "function",
+    function: {
+      name: "delegate_task",
+      description: "Feladat kiosztása egy adott ügynöknek. A feladat a háttérben indul el.",
+      parameters: {
+        type: "object",
+        properties: {
+          agent_name: { type: "string", description: "Az ügynök neve (pl. 'robotkezv2', 'developer')." },
+          instruction: { type: "string", description: "A feladat pontos leírása." }
+        },
+        required: ["agent_name", "instruction"]
+      }
+    }
+  },
+  {
+    type: "function",
+    function: {
+      name: "get_agent_status",
+      description: "Egy adott ügynök státuszának lekérdezése.",
+      parameters: {
+        type: "object",
+        properties: {
+          agent_name: { type: "string", description: "Az ügynök neve." }
+        },
+        required: ["agent_name"]
+      }
+    }
+  },
+  {
+    type: "function",
+    function: {
+      name: "send_message_to_user",
+      description: "Közvetlen üzenet küldése a felhasználónak a Dashboard chaten.",
+      parameters: {
+        type: "object",
+        properties: {
+          message: { type: "string", description: "A felhasználónak szánt üzenet." }
+        },
+        required: ["message"]
+      }
+    }
+  }
 ];
 
 export class OrchestratorAgent implements IAgent {
@@ -326,7 +372,6 @@ export class OrchestratorAgent implements IAgent {
       }
 
       // === FAST PATH: keyword pre-routing (no LLM needed) ===
-      // Skip for compound tasks that likely need multi-agent planning
       const kwMatch = this.keywordRoute(task);
       const isCompound =
         /\b(?:and|then|after that|also|plus|meg |aztán|majd|valamint|utána)\b/i.test(
@@ -352,131 +397,130 @@ export class OrchestratorAgent implements IAgent {
         };
       }
 
-      // === SLOW PATH: LLM-based planning for complex/ambiguous tasks ===
-      this.logger.info("No keyword match — falling back to LLM planning");
+      // === REACT PATH: LLM-based Tool Calling Loop ===
+      this.logger.info("Starting ReAct Execution Loop");
 
-      // Dynamically list available agents
       const agents = agentManager
         .listAgentDefinitions()
-        .filter((a) => a.name !== "Orchestrator") // Don't delegate to self recursively
+        .filter((a) => a.name !== "Orchestrator")
         .map((a) => `- ${a.name}: ${a.description} (Role: ${a.role})`)
         .join("\n");
 
-      const prompt = `
-You are Brunella, the intelligent Project Manager of the Brunella Agent System.
-Your goal is to understand the user's intent (written in Hungarian) and orchestrate the right agents to fulfill it.
+      const systemPrompt = `
+Te vagy Brunella, a Brunella Agent System (BAS) intelligens, proaktív Orchestrator ügynöke.
+A feladatod a felhasználói kérések (magyar nyelven történő) megértése, és a megfelelő ügynökök mozgósítása a rendelkezésedre álló eszközök (tools) segítségével.
 
-**Persona:**
-- Name: Brunella
-- Language: Hungarian (Magyar)
-- Tone: Professional, helpful, concise, and proactive.
-- Role: You are the bridge between the human creative director and the specialized AI agents.
+**Személyiség és Stílus:**
+- Professzionális, udvarias, de határozott mérnöki vezető (Senior Systems Architect / Dispatcher).
+- Nem csak "tervezel", hanem azonnal **cselekedsz** is az eszközök meghívásával.
+- Ha egy feladatot háttérbe küldesz, azonnal tájékoztasd a felhasználót a 'send_message_to_user' eszközzel, vagy a végső válaszodban (pl. "Értettem. Elindítottam a RobotkezV2-t a háttérben. Szólok, ha végzett.").
+- **SOHA** ne adj vissza nyers JSON feladatlistát vagy markdown formázott JSON-t válaszként. Csak természetes nyelven kommunikálj!
 
-**Available Agents:**
+**Elérhető Ügynökök:**
 ${agents}
 
-**Specialized Knowledge:**
-- **n8n / Langflow:** You are an expert in these automation tools. You know that n8n uses a canvas-alapú UI where nodes are connected. To configure them, you must instruct the 'robotkezv2' agent to find specific visual elements or coordinates.
-- **UI Delegation:** For complex GUI tasks (Windows or Browser), use 'robotkezv2'. Instead of just saying "set up n8n", break it down into: "Navigálj az n8n-re", "Kattints az Add Node gombra", "Keress rá a HTTP Request-re", "Vizuálisan keresd meg a URL mezőt és írd be: [URL]".
+**Specifikus Tudásbázis:**
+- **n8n / Langflow:** Canvas-alapú UI rendszerek. Az összetett feladatokat a 'robotkezv2' ügynöknek kell kiadnod. Bontsd le a kérést kis lépésekre a 'delegate_task' használatakor.
 
-**User Request:** "${task}"
-
-**Instructions:**
-1. Analyze the request.
-2. Select the best agent(s).
-3. Generate a plan.
-
-**Output Format:**
-You must provide a JSON object with two fields:
-1. "reply": A short, friendly Hungarian message to the user confirming what you are about to do (e.g., "Rendben, elindítom a kutatást...").
-2. "tasks": The JSON array of tasks for the agents.
-
-Example JSON:
-{
-  "reply": "Értettem, ráállítom a Fejlesztőt a hiba javítására.",
-  "tasks": [
-    { "agent": "developer", "description": "Fix the bug in app.ts", "context": { "file": "app.ts" } }
-  ]
-}
-
-Respond ONLY with the valid JSON object. No markdown blocks.
+**ReAct Működés:**
+1. Kapod a kérést.
+2. Ha feladatot kell kiosztani, használd a 'delegate_task' eszközt. Ezt többször is megteheted különböző ügynökök felé.
+3. Ha állapotra van szükséged, használd a 'get_agent_status' eszközt.
+4. Ha üzenetet akarsz küldeni a Dashboardra folyamat közben, használd a 'send_message_to_user'-t.
+5. Ha minden szükséges eszközt meghívtál, adj egy végső, emberi választ.
 `;
 
-      const responseText = await chatWithOllama(
-        prompt,
-        process.env.OLLAMA_MODEL || "gemma2:9b",
-      );
-      this.logger.info(`Raw Plan: ${responseText}`);
+      const messages: any[] = [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: task }
+      ];
 
-      // 2. Parse and Queue tasks
-      try {
-        // Remove markdown blocks if present
-        const cleanJson = responseText
-          .replace(/```json/g, "")
-          .replace(/```/g, "")
-          .trim();
+      const gateway = getBifrostGateway();
+      const MAX_ITERATIONS = 5;
+      let finalMessage = "A feladatot feldolgoztam.";
+      let taskIds: number[] = [];
+
+      for (let i = 0; i < MAX_ITERATIONS; i++) {
+        this.logger.info(`ReAct iteráció ${i + 1}/${MAX_ITERATIONS}`);
         
-        let tasks = [];
-        let reply = "";
+        const response = await gateway.generate({
+            prompt: task,
+            taskType: 'general',
+            model: 'gpt-4o', // Prefer tool-capable models
+            tools: ORCHESTRATOR_TOOLS,
+            messages: messages
+        });
 
-        try {
-            const parsed = JSON.parse(cleanJson);
-            if (Array.isArray(parsed)) {
-                tasks = parsed;
-                reply = `Feldolgozva: ${tasks.length} feladat generálva.`;
-            } else if (parsed.tasks && Array.isArray(parsed.tasks)) {
-                tasks = parsed.tasks;
-                reply = parsed.reply || "A feladatokat kiosztottam.";
+        if (!response.success) {
+            this.logger.error(`LLM Gateway hiba: ${response.error}`);
+            return { status: "error", error: "Hiba az LLM kommunikációban." };
+        }
+
+        const replyContent = response.content || "";
+        const toolCalls = response.toolCalls;
+
+        // Adjuk hozzá az asszisztens válaszát a history-hoz
+        const assistantMessage: any = { role: 'assistant', content: replyContent };
+        if (toolCalls && toolCalls.length > 0) {
+            assistantMessage.tool_calls = toolCalls;
+        }
+        messages.push(assistantMessage);
+
+        if (replyContent && !toolCalls) {
+            finalMessage = replyContent;
+            socketService.broadcastChatter('Brunella', finalMessage, 'user');
+            break;
+        }
+
+        if (toolCalls && toolCalls.length > 0) {
+            for (const toolCall of toolCalls) {
+                const name = toolCall.function.name;
+                const args = JSON.parse(toolCall.function.arguments);
+                let toolResult = "";
+
+                this.logger.info(`Tool meghívva: ${name} paraméterekkel: ${JSON.stringify(args)}`);
+
+                try {
+                    if (name === 'delegate_task') {
+                        const id = await agentManager.queueTask(args.instruction, args.agent_name, context ?? undefined);
+                        taskIds.push(id);
+                        toolResult = `Feladat sikeresen delegálva. Task ID: ${id}`;
+                    } else if (name === 'get_agent_status') {
+                        const statuses = agentManager.listAgentStatuses();
+                        const status = statuses.find(s => s.name.toLowerCase() === args.agent_name.toLowerCase());
+                        toolResult = status ? JSON.stringify(status) : `Ügynök nem található: ${args.agent_name}`;
+                    } else if (name === 'send_message_to_user') {
+                        socketService.broadcastChatter('Brunella', args.message, 'user');
+                        toolResult = "Üzenet sikeresen elküldve.";
+                    } else {
+                        toolResult = `Ismeretlen eszköz: ${name}`;
+                    }
+                } catch (toolErr: any) {
+                    this.logger.error(`Tool error (${name}): ${toolErr.message}`);
+                    toolResult = `Hiba az eszköz futtatása közben: ${toolErr.message}`;
+                }
+
+                messages.push({
+                    role: 'tool',
+                    tool_call_id: toolCall.id,
+                    name: name,
+                    content: toolResult
+                });
             }
-        } catch (e) {
-            // Fallback: try to find array in string
-            const match = cleanJson.match(/\[.*\]/s);
-            tasks = JSON.parse(match ? match[0] : "[]");
-            reply = "A terv elkészült.";
+        } else {
+            // No tool calls and no content (should be rare)
+            break;
         }
-
-        // Log the human-friendly reply and broadcast to LiveChatter widget
-        this.logger.info(`[Brunella]: ${reply}`);
-        socketService.broadcastChatter('Brunella', reply, 'user');
-
-        // === COMPOUND TASK: szekvenciális chain pipeline ===
-        if (isCompound && tasks.length > 1) {
-          this.logger.info(
-            `[Chain] Compound feladat → chain pipeline (${tasks.length} lépés)`,
-          );
-          const chainSteps: ChainStep[] = tasks.map(
-            (t: { agent: string; description: string }) => ({
-              agentName: t.agent,
-              task: t.description,
-            }),
-          );
-          return await this.executeChain(chainSteps, context ?? {});
-        }
-
-        // === SIMPLE TASKS: párhuzamos queue (nem-compound) ===
-        const taskIds: number[] = [];
-
-        for (const t of tasks) {
-          const id = await agentManager.queueTask(
-            t.description,
-            t.agent,
-            t.context,
-          );
-          taskIds.push(id);
-        }
-
-        return {
-          success: true,
-          status: "success",
-          message: reply || `${taskIds.length} feladatot kiosztottam.`,
-          taskIds,
-          steps: taskIds,
-        };
-      } catch (parseErr: unknown) {
-        const msg = parseErr instanceof Error ? parseErr.message : String(parseErr);
-        this.logger.error(`Plan parsing failed: ${msg}. Raw: ${responseText}`);
-        return { status: "error", error: "Nem sikerült értelmezni az LLM tervet." };
       }
+
+      return {
+        success: true,
+        status: "success",
+        message: finalMessage,
+        taskIds,
+        steps: taskIds,
+      };
+
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
       return { status: "error", error: msg };

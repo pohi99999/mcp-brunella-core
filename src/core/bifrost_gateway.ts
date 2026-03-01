@@ -34,11 +34,14 @@ export interface GenerateOptions {
   maxTokens?: number;
   systemPrompt?: string;
   model?: string;  // Override default model
+  tools?: any[];   // Added support for tools
+  messages?: any[]; // Added support for message history
 }
 
 export interface GenerateResponse {
   success: boolean;
   content?: string;
+  toolCalls?: any[]; // Added support for returning tool calls
   provider: ProviderType;
   model: string;
   duration_ms: number;
@@ -419,14 +422,15 @@ export class BifrostGateway {
       host: config.baseUrl
     });
 
-    const messages = [];
-    if (options.systemPrompt) {
-      messages.push({ role: 'system', content: options.systemPrompt });
+    let messages = options.messages || [];
+    if (messages.length === 0) {
+      if (options.systemPrompt) {
+        messages.push({ role: 'system', content: options.systemPrompt });
+      }
+      messages.push({ role: 'user', content: options.prompt });
     }
-    messages.push({ role: 'user', content: options.prompt });
 
-    // GitHub Models uses chat endpoint (OpenAI-compatible)
-    const response = await githubClient.chat({
+    const chatOptions: any = {
       model,
       messages: messages as any,
       stream: false,
@@ -434,11 +438,21 @@ export class BifrostGateway {
         temperature: options.temperature ?? 0.7,
         num_predict: options.maxTokens ?? 2048
       }
-    });
+    };
+
+    if (options.tools && options.tools.length > 0) {
+      chatOptions.tools = options.tools;
+    }
+
+    // GitHub Models uses chat endpoint (OpenAI-compatible)
+    const response = await githubClient.chat(chatOptions) as any;
+
+    const toolCalls = response.message?.tool_calls || undefined;
 
     return {
       success: true,
-      content: response.message.content,
+      content: response.message?.content || "",
+      toolCalls: toolCalls,
       provider: 'github',
       model,
       duration_ms: Date.now() - startTime
