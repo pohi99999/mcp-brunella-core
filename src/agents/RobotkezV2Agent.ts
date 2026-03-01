@@ -133,7 +133,14 @@ export class RobotkezV2Agent extends BaseAgent {
       let plan: ExecutionPlan | null = null;
       
       const taskLower = task.toLowerCase();
-      if (taskLower.includes('navigálj') || taskLower.includes('frissíts')) {
+      
+      if (taskLower.includes('nyisd meg a böngészőt') || taskLower.includes('indítsd el a böngészőt')) {
+        plan = {
+          plan: [{ action: 'navigate', url: 'about:blank', description: 'Böngésző megnyitása üres lappal' }],
+          estimatedDuration: 3000,
+          backgroundEligible: false
+        };
+      } else if (taskLower.includes('navigálj') || taskLower.includes('frissíts')) {
         let url = task.match(/https?:\/\/[^\s]+/)?.[0];
         if (!url && !taskLower.includes('frissíts')) {
            const domainMatch = task.match(/([a-z0-9]+\.)+[a-z]{2,}/i);

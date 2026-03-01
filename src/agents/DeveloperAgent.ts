@@ -5,11 +5,88 @@
 import { IAgent, AgentResponse } from "./types.js";
 import { logInfo, logError, setAgentStatus } from "../utils/logger.js";
 import { globalPythonShell } from "../utils/pythonShell.js";
-import { generateResponse } from "../core/llm_client.js";
+import { getBifrostGateway } from "../core/bifrost_gateway.js";
 import { getSpecStatus, requiresSpec } from "./specStatus.js";
+import { socketService } from "../server/SocketService.js";
 import { execSync } from "child_process";
 import fs from "fs/promises";
 import path from "path";
+
+const DEVELOPER_TOOLS = [
+  {
+    type: "function",
+    function: {
+      name: "read_file",
+      description: "Beolvassa egy adott fájl tartalmát.",
+      parameters: {
+        type: "object",
+        properties: {
+          path: { type: "string", description: "A fájl relatív elérési útja (pl. src/app.ts)." }
+        },
+        required: ["path"]
+      }
+    }
+  },
+  {
+    type: "function",
+    function: {
+      name: "write_file",
+      description: "Létrehoz egy új fájlt, vagy felülír egy meglévőt a megadott tartalommal.",
+      parameters: {
+        type: "object",
+        properties: {
+          path: { type: "string", description: "A fájl relatív elérési útja." },
+          content: { type: "string", description: "A fájl teljes új tartalma." }
+        },
+        required: ["path", "content"]
+      }
+    }
+  },
+  {
+    type: "function",
+    function: {
+      name: "replace_in_file",
+      description: "Kicserél egy szövegrészt egy létező fájlban.",
+      parameters: {
+        type: "object",
+        properties: {
+          path: { type: "string", description: "A fájl relatív elérési útja." },
+          old_string: { type: "string", description: "A cserélendő szöveg pontos mása." },
+          new_string: { type: "string", description: "Az új szöveg." }
+        },
+        required: ["path", "old_string", "new_string"]
+      }
+    }
+  },
+  {
+    type: "function",
+    function: {
+      name: "run_shell_command",
+      description: "Futtat egy shell parancsot (pl. 'npm run test', 'npm run lint', 'npx tsc').",
+      parameters: {
+        type: "object",
+        properties: {
+          command: { type: "string", description: "A futtatandó shell parancs." }
+        },
+        required: ["command"]
+      }
+    }
+  },
+  {
+    type: "function",
+    function: {
+      name: "send_status_message",
+      description: "Élő státuszüzenet küldése a felhasználónak a Dashboard chaten (pl. 'Fájl mentve...').",
+      parameters: {
+        type: "object",
+        properties: {
+          message: { type: "string", description: "Az üzenet szövege." }
+        },
+        required: ["message"]
+      }
+    }
+  }
+];
 
 /**
  * DeveloperAgent 2.0 - Self-Healing AI Developer
@@ -38,8 +115,6 @@ export class DeveloperAgent implements IAgent {
   ];
 
   private llmProvider = process.env.LLM_PROVIDER || "github"; // GPT-4o default
-  private maxRetries = 3;
-  private buildTimeout = 120000; // 2 minutes
 
   async execute(task: string, context?: any): Promise<AgentResponse> {
     const taskDesc = task.length > 80 ? task.slice(0, 77) + "..." : task;
@@ -48,8 +123,6 @@ export class DeveloperAgent implements IAgent {
 
     try {
       // ── SPEC GATE (RULE-SF1) ────────────────────────────────────
-      // Block execution if a trackId is present and spec is not approved.
-      // Skip check for SKIP_SPEC_CHECK env var (test environments).
       const trackId = context?.trackId as string | undefined;
       if (
         trackId &&
@@ -72,25 +145,21 @@ export class DeveloperAgent implements IAgent {
       }
       // ── END SPEC GATE ───────────────────────────────────────────
 
-      // Route to appropriate handler
       if (context?.mode === 'interpreter') {
         return await this.handleInterpreterTask(task, context);
       }
 
-      if (this.isCodeGenerationTask(task)) {
-        return await this.handleCodeGeneration(task, context);
-      } else if (this.isTestGenerationTask(task)) {
-        return await this.handleTestGeneration(task, context);
-      } else if (this.isFixTask(task)) {
-        return await this.handleErrorFix(task, context);
-      } else if (this.isPythonTask(task, context)) {
+      if (this.isPythonTask(task, context)) {
         return await this.handlePythonExecution(task, context);
-      } else if (this.isGitTask(task)) {
-        return await this.handleGitOperation(task, context);
-      } else {
-        // Generic: let LLM decide what to do
-        return await this.handleGenericTask(task, context);
       }
+
+      if (this.isGitTask(task)) {
+        return await this.handleGitOperation(task, context);
+      }
+
+      // ReAct Loop for Developer (Replaces generic, code, test, and fix tasks)
+      return await this.runDeveloperReActLoop(task, context);
+
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError(this.name, `Task failed: ${error}`);
@@ -100,39 +169,133 @@ export class DeveloperAgent implements IAgent {
     }
   }
 
+  private async runDeveloperReActLoop(task: string, context?: any): Promise<AgentResponse> {
+    logInfo(this.name, "Starting Developer ReAct Execution Loop");
+
+    const systemPrompt = `Te vagy a Brunella Agent System "Developer" ügynöke (Senior Szoftvermérnök).
+A feladatod a fejlesztési kérések (kódolás, tesztelés, hibajavítás) VÉGREHAJTÁSA a fájlrendszerben, nem csupán tervek vagy kódrészletek generálása a chatben.
+
+**Szabályok (Zero-Mock Protocol):**
+1. **NINCS MOCK KÓD:** Soha ne adj vissza kódot csak szövegként (Markdown blokkban) válaszként. MINDIG használd a 'write_file' vagy 'replace_in_file' eszközöket a valós módosításhoz.
+2. **Élő Kódolás:** Használd a 'send_status_message' eszközt, hogy értesítsd a felhasználót, éppen melyik fájlt írod vagy teszteled.
+3. **Azonnali Tesztelés:** A kódmódosítások után hívd meg a 'run_shell_command'-ot a tesztek futtatására (pl. 'npm run build', 'npx vitest run ...').
+4. **Öngyógyítás:** Ha a shell parancs (teszt/build) hibát ad vissza, ne állj meg! Olvasd el a hibát, javítsd a fájlt a 'replace_in_file' vagy 'write_file' eszközzel, és próbáld újra (maximum 3 iteráción át).
+5. Csak akkor fejezd be a munkát és térj vissza emberi nyelven ("Kész vagyok..."), ha a fájlok lemezre kerültek és a tesztek/buildek is lefutottak.
+
+Kontextus a projektről: ESM modulokat használunk (imports with .js extensions), logger.ts a konzol logok helyett.
+`;
+
+    const messages: any[] = [
+      { role: 'system', content: systemPrompt },
+      { role: 'user', content: task }
+    ];
+    if (context) {
+      messages.push({ role: 'user', content: `Kontextus: ${JSON.stringify(context)}` });
+    }
+
+    const gateway = getBifrostGateway();
+    const MAX_ITERATIONS = 10;
+    let finalMessage = "A feladatot feldolgoztam.";
+
+    for (let i = 0; i < MAX_ITERATIONS; i++) {
+      logInfo(this.name, `ReAct iteráció ${i + 1}/${MAX_ITERATIONS}`);
+      
+      const response = await gateway.generate({
+          prompt: task,
+          taskType: 'code',
+          model: this.llmProvider === 'github' ? 'gpt-4o' : undefined,
+          tools: DEVELOPER_TOOLS,
+          messages: messages
+      });
+
+      if (!response.success) {
+          logError(this.name, `LLM Gateway hiba: ${response.error}`);
+          return { status: "error", error: "Hiba az LLM kommunikációban." };
+      }
+
+      const replyContent = response.content || "";
+      const toolCalls = response.toolCalls;
+
+      const assistantMessage: any = { role: 'assistant', content: replyContent };
+      if (toolCalls && toolCalls.length > 0) {
+          assistantMessage.tool_calls = toolCalls;
+      }
+      messages.push(assistantMessage);
+
+      if (replyContent && (!toolCalls || toolCalls.length === 0)) {
+          finalMessage = replyContent;
+          socketService.broadcastChatter(this.name, finalMessage, 'assistant');
+          break;
+      }
+
+      if (toolCalls && toolCalls.length > 0) {
+          for (const toolCall of toolCalls) {
+              const name = toolCall.function.name;
+              const args = JSON.parse(toolCall.function.arguments);
+              let toolResult = "";
+
+              logInfo(this.name, `Tool meghívva: ${name}`);
+
+              try {
+                  if (name === 'read_file') {
+                      const content = await fs.readFile(args.path, 'utf-8');
+                      toolResult = content;
+                  } else if (name === 'write_file') {
+                      await this.saveCode(args.path, args.content);
+                      toolResult = "File written successfully.";
+                      socketService.broadcastChatter(this.name, `Fájl mentve: ${args.path}`, 'system');
+                  } else if (name === 'replace_in_file') {
+                      let content = await fs.readFile(args.path, 'utf-8');
+                      if (content.includes(args.old_string)) {
+                          content = content.replace(args.old_string, args.new_string);
+                          await this.saveCode(args.path, content);
+                          toolResult = "File modified successfully.";
+                          socketService.broadcastChatter(this.name, `Fájl módosítva: ${args.path}`, 'system');
+                      } else {
+                          toolResult = "Error: old_string not found in file.";
+                      }
+                  } else if (name === 'run_shell_command') {
+                      if (args.command.includes('rm -rf /') || args.command.includes('mkfs')) {
+                          toolResult = "Error: Command blocked for safety reasons.";
+                      } else {
+                          socketService.broadcastChatter(this.name, `Parancs futtatása: ${args.command}`, 'system');
+                          try {
+                              const out = execSync(args.command, { encoding: 'utf-8', stdio: 'pipe' });
+                              toolResult = out || "Command succeeded with no output.";
+                          } catch (err: any) {
+                              toolResult = `Command failed. Exit code: ${err.status}. Output: ${err.stdout} ${err.stderr}`;
+                          }
+                      }
+                  } else if (name === 'send_status_message') {
+                      socketService.broadcastChatter(this.name, args.message, 'assistant');
+                      toolResult = "Status sent.";
+                  } else {
+                      toolResult = `Ismeretlen eszköz: ${name}`;
+                  }
+              } catch (toolErr: any) {
+                  logError(this.name, `Tool error (${name}): ${toolErr.message}`);
+                  toolResult = `Hiba az eszköz futtatása közben: ${toolErr.message}`;
+              }
+
+              messages.push({
+                  role: 'tool',
+                  tool_call_id: toolCall.id,
+                  name: name,
+                  content: toolResult
+              });
+          }
+      } else {
+          break;
+      }
+    }
+
+    return {
+      status: "success",
+      message: finalMessage
+    };
+  }
+
   // ==================== Task Type Detection ====================
-
-  private isCodeGenerationTask(task: string): boolean {
-    const keywords = [
-      "generate",
-      "create",
-      "write",
-      "implement",
-      "add",
-      "build",
-      "make",
-    ];
-    const codeKeywords = [
-      "function",
-      "class",
-      "component",
-      "module",
-      "api",
-      "endpoint",
-    ];
-    return (
-      keywords.some((k) => task.toLowerCase().includes(k)) &&
-      codeKeywords.some((k) => task.toLowerCase().includes(k))
-    );
-  }
-
-  private isTestGenerationTask(task: string): boolean {
-    return /test|spec|vitest|jest/i.test(task);
-  }
-
-  private isFixTask(task: string): boolean {
-    return /fix|repair|debug|error|bug|issue/i.test(task);
-  }
 
   private isPythonTask(task: string, context?: any): boolean {
     return !!(
@@ -144,199 +307,6 @@ export class DeveloperAgent implements IAgent {
 
   private isGitTask(task: string): boolean {
     return /git|commit|push|branch|merge/i.test(task);
-  }
-
-  private formatPromptWithSystem(prompt: string, systemPrompt: string): string {
-    return `System Prompt: ${systemPrompt}\n\nUser Prompt: ${prompt}`;
-  }
-
-  // ==================== Code Generation ====================
-
-  private async handleCodeGeneration(
-    task: string,
-    context?: any,
-  ): Promise<AgentResponse> {
-    logInfo(this.name, "🔨 Code generation mode");
-
-    const systemPrompt = `You are an expert TypeScript/JavaScript developer for the Brunella Agent System.
-- Generate clean, production-ready code with proper types
-- Follow ESM module syntax (use .js extensions in imports)
-- Include JSDoc comments
-- Handle errors properly
-- Return ONLY the code, no explanations`;
-
-    const prompt = `${task}
-
-Context: ${JSON.stringify(context || {}, null, 2)}
-
-Requirements:
-1. ESM imports with .js extensions
-2. Proper TypeScript types (no 'any')
-3. Error handling with try/catch
-4. Use logger.ts instead of console.log
-
-Generate the code:`;
-
-    try {
-      const code = await generateResponse(
-        this.formatPromptWithSystem(prompt, systemPrompt),
-        this.llmProvider,
-        "gpt-4o",
-      );
-
-      logInfo(this.name, `✅ Code generated (${code.length} chars)`);
-
-      // Auto-save if file path provided
-      if (context?.filePath) {
-        const filePath = context.filePath as string;
-        await this.saveCode(filePath, code);
-        logInfo(this.name, `💾 Saved to: ${filePath}`);
-
-        // Auto-test build
-        const buildResult = await this.tryBuild();
-        if (!buildResult.success) {
-          logInfo(this.name, "⚠️ Build failed, attempting auto-fix...");
-          return await this.selfHealBuild(
-            code,
-            buildResult.error || "Unknown error",
-            filePath,
-          );
-        }
-      }
-
-      return {
-        status: "success",
-        data: { code, provider: this.llmProvider },
-        message: "Code generated successfully",
-      };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, `Code generation failed: ${error}`);
-      return { status: "error", error };
-    }
-  }
-
-  // ==================== Test Generation ====================
-
-  private async handleTestGeneration(
-    task: string,
-    context?: any,
-  ): Promise<AgentResponse> {
-    logInfo(this.name, "🧪 Test generation mode");
-
-    const systemPrompt = `You are an expert test engineer using Vitest.
-- Generate comprehensive test suites
-- Include edge cases and error scenarios
-- Use describe/it/expect syntax
-- Mock external dependencies
-- Return ONLY the test code`;
-
-    const prompt = `${task}
-
-${context?.sourceCode ? `Source code to test:\n\`\`\`typescript\n${context.sourceCode}\n\`\`\`` : ""}
-
-Generate Vitest test suite:`;
-
-    try {
-      const testCode = await generateResponse(
-        this.formatPromptWithSystem(prompt, systemPrompt),
-        this.llmProvider,
-        "gpt-4o",
-      );
-
-      if (context?.testFilePath) {
-        await this.saveCode(context.testFilePath, testCode);
-        logInfo(this.name, `💾 Test saved to: ${context.testFilePath}`);
-
-        // Run tests
-        const testResult = await this.runTests(context.testFilePath);
-        return {
-          status: testResult.success ? "success" : "error",
-          data: { testCode, testResult },
-          message: testResult.success
-            ? "Tests generated and passing"
-            : "Tests generated but failing",
-        };
-      }
-
-      return {
-        status: "success",
-        data: { testCode },
-        message: "Test code generated",
-      };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      return { status: "error", error };
-    }
-  }
-
-  // ==================== Error Fixing ====================
-
-  private async handleErrorFix(
-    task: string,
-    context?: any,
-  ): Promise<AgentResponse> {
-    logInfo(this.name, "🔧 Error fix mode");
-
-    if (!context?.error && !context?.filePath) {
-      return {
-        status: "error",
-        error: "Fix task requires 'error' or 'filePath' in context",
-      };
-    }
-
-    const errorMessage = context.error || "Unknown error";
-    const filePath = context.filePath;
-
-    try {
-      let sourceCode = "";
-      if (filePath) {
-        sourceCode = await fs.readFile(filePath, "utf-8");
-      }
-
-      const systemPrompt = `You are an expert debugger.
-- Analyze the error and provide a fix
-- Return ONLY the fixed code, no explanations
-- Maintain the original structure and style`;
-
-      const prompt = `Fix this error:
-
-Error: ${errorMessage}
-
-${sourceCode ? `Current code:\n\`\`\`typescript\n${sourceCode}\n\`\`\`` : ""}
-
-${task}
-
-Provide the fixed code:`;
-
-      const fixedCode = await generateResponse(
-        this.formatPromptWithSystem(prompt, systemPrompt),
-        this.llmProvider,
-        "gpt-4o",
-      );
-
-      if (filePath) {
-        await this.saveCode(filePath, fixedCode);
-        const buildResult = await this.tryBuild();
-
-        return {
-          status: buildResult.success ? "success" : "error",
-          data: { fixedCode, buildSuccess: buildResult.success },
-          message: buildResult.success
-            ? "Fix applied and build successful"
-            : "Fix applied but build still fails",
-        };
-      }
-
-      return {
-        status: "success",
-        data: { fixedCode },
-        message: "Fix generated",
-      };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      return { status: "error", error };
-    }
   }
 
   // ==================== Python Execution ====================
@@ -363,11 +333,13 @@ Provide the fixed code:`;
     const provider = context?.model === 'qwen2.5-coder' ? 'ollama' : this.llmProvider;
     const model = context?.model || (provider === 'ollama' ? 'qwen2.5-coder:7b' : 'gpt-4o');
 
-    const prompt = `${historyText}\nAKTUÁLIS UTASÍTÁS: ${task}\n\nGeneráld a Python kódot:`;
+    const prompt = `${historyText}\nAKTUÁLIS UTASÍTÁS: ${task}\n\nGeneráld a Python kódot:`
+
+    const { generateResponse } = await import("../core/llm_client.js");
 
     try {
       const code = await generateResponse(
-        this.formatPromptWithSystem(prompt, systemPrompt),
+        `System Prompt: ${systemPrompt}\n\nUser Prompt: ${prompt}`,
         provider,
         model,
       );
@@ -444,143 +416,12 @@ Provide the fixed code:`;
     }
   }
 
-  // ==================== Generic Task ====================
-
-  private async handleGenericTask(
-    task: string,
-    context?: any,
-  ): Promise<AgentResponse> {
-    logInfo(this.name, "🤖 Generic task mode - delegating to LLM");
-
-    const systemPrompt = `You are the DeveloperAgent for the Brunella Agent System.
-Analyze the task and provide a helpful response.
-If code is needed, generate it. If explanation is needed, explain.`;
-
-    try {
-      const response = await generateResponse(
-        this.formatPromptWithSystem(task, systemPrompt),
-        this.llmProvider,
-        "gpt-4o",
-      );
-
-      return {
-        status: "success",
-        data: { response },
-        message: "Task processed",
-      };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      return { status: "error", error };
-    }
-  }
-
   // ==================== Utilities ====================
 
   private async saveCode(filePath: string, code: string): Promise<void> {
     const dir = path.dirname(filePath);
     await fs.mkdir(dir, { recursive: true });
     await fs.writeFile(filePath, code, "utf-8");
-  }
-
-  private async tryBuild(): Promise<{ success: boolean; error?: string }> {
-    try {
-      execSync("npm run build", {
-        encoding: "utf-8",
-        timeout: this.buildTimeout,
-        stdio: "pipe",
-      });
-      return { success: true };
-    } catch (e: any) {
-      return {
-        success: false,
-        error: e.stdout || e.stderr || e.message,
-      };
-    }
-  }
-
-  private async runTests(
-    testFile: string | undefined,
-  ): Promise<{ success: boolean; output?: string }> {
-    try {
-      const cmd = testFile ? `npx vitest run ${testFile}` : "npm test";
-
-      const output = execSync(cmd, {
-        encoding: "utf-8",
-        timeout: this.buildTimeout,
-        stdio: "pipe",
-      });
-
-      return { success: true, output };
-    } catch (e: any) {
-      return {
-        success: false,
-        output: e.stdout || e.stderr || e.message,
-      };
-    }
-  }
-
-  // ==================== Self-Healing ====================
-
-  private async selfHealBuild(
-    originalCode: string,
-    buildError: string,
-    filePath: string,
-  ): Promise<AgentResponse> {
-    logInfo(this.name, "🔄 Self-healing build errors...");
-
-    for (let attempt = 1; attempt <= this.maxRetries; attempt++) {
-      logInfo(this.name, `Attempt ${attempt}/${this.maxRetries}`);
-
-      const systemPrompt = `You are a TypeScript expert debugger.
-Fix the build error. Return ONLY the corrected code.`;
-
-      const prompt = `This code has a build error:
-
-\`\`\`typescript
-${originalCode}
-\`\`\`
-
-Build error:
-${buildError}
-
-Fix the code:`;
-
-      try {
-        const fixedCode = await generateResponse(
-          this.formatPromptWithSystem(prompt, systemPrompt),
-          this.llmProvider,
-          "gpt-4o",
-        );
-
-        await this.saveCode(filePath, fixedCode);
-        const buildResult = await this.tryBuild();
-
-        if (buildResult.success) {
-          logInfo(this.name, `✅ Build fixed on attempt ${attempt}`);
-          return {
-            status: "success",
-            data: { code: fixedCode, fixAttempts: attempt },
-            message: `Build auto-fixed after ${attempt} attempt(s)`,
-          };
-        }
-
-        buildError = buildResult.error || "Unknown build error";
-        originalCode = fixedCode;
-      } catch (e: unknown) {
-        const error = e instanceof Error ? e.message : String(e);
-        logError(this.name, `Attempt ${attempt} failed: ${error}`);
-      }
-    }
-
-    logError(
-      this.name,
-      `❌ Self-healing failed after ${this.maxRetries} attempts`,
-    );
-    return {
-      status: "error",
-      error: `Could not fix build after ${this.maxRetries} attempts. Last error: ${buildError}`,
-      data: { lastCode: originalCode },
-    };
   }
 }
 

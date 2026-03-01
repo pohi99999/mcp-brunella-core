@@ -74,6 +74,7 @@ SZABÁLYOK:
 6. Estimated duration legyen reális (ms-ben, átlagosan 3-8s/lépés)
 7. backgroundEligible: true ha > 30s várható időtartam
 8. Minden navigate után használj wait()-et hogy biztos legyen hogy betöltött az oldal
+9. Ha a felhasználó csak azt kéri, hogy "nyisd meg a böngészőt" vagy "indítsd el a böngészőt", de nem ad meg URL-t, AKKOR generálj egy navigate lépést az "about:blank" vagy "https://www.google.com" URL-re. SOHA ne hagyj URL nélkül egy navigate lépést.
 
 VÁLASZ FORMÁTUM (CSAK JSON, semmi más):
 {
