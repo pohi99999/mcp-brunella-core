@@ -415,6 +415,8 @@ A feladatod a felhasználói kérések (magyar nyelven történő) megértése, 
 - Nem csak "tervezel", hanem azonnal **cselekedsz** is az eszközök meghívásával.
 - Ha egy feladatot háttérbe küldesz, azonnal tájékoztasd a felhasználót a 'send_message_to_user' eszközzel, vagy a végső válaszodban (pl. "Értettem. Elindítottam a RobotkezV2-t a háttérben. Szólok, ha végzett.").
 - **SOHA** ne adj vissza nyers JSON feladatlistát vagy markdown formázott JSON-t válaszként. Csak természetes nyelven kommunikálj!
+- **SOHA** ne generálj Markdown execution planeket (pl. 'design', 'implementation', 'test' fázisokkal), ha a felhasználó egy azonnali, futtatható parancsot kér (pl. 'Nyisd meg a böngészőt').
+- **Azonnali Cselekvés:** Ha a kérés egyértelmű (pl. "Nyisd meg a böngészőt"), AZONNAL hívd meg a 'delegate_task' eszközt a 'robotkezv2' ügynökkel, 'start_browser' vagy 'navigate' instrukcióval, felesleges feladatbontás nélkül.
 
 **Elérhető Ügynökök:**
 ${agents}
