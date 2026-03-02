@@ -106,7 +106,7 @@
     "@radix-ui/react-tooltip": "^1.1.7",
     "@tanstack/react-query": "^5.90.21",
     "@tauri-apps/api": "^1.6.0",
-    "@types/node": "^22.13.4",
+    "@types/node": "^25.3.3",
     "apify-client": "^2.22.2",
     "axios": "^1.7.9",
     "better-sqlite3": "^12.6.2",
