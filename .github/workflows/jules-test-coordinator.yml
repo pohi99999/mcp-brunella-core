@@ -31,7 +31,7 @@ jobs:
 
       - name: Fetch last 24h workflow runs
         id: fetch_runs
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const owner = context.repo.owner;
@@ -100,7 +100,7 @@ jobs:
             core.setOutput('total_runs', total);
 
       - name: Post summary to GitHub
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const summary = `${{ steps.fetch_runs.outputs.summary }}`;
@@ -114,7 +114,7 @@ jobs:
 
       - name: Create issue if pass rate < 70%
         if: steps.fetch_runs.outputs.pass_rate < 70
-        uses: actions/github-script@v7
+        uses: actions/github-script@v8
         with:
           script: |
             const passRate = ${{ steps.fetch_runs.outputs.pass_rate }};

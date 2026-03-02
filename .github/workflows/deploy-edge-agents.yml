@@ -113,7 +113,7 @@ jobs:
 
       - name: 🔄 Create deployment comment
         if: always()
-        uses: actions/github-script@v6
+        uses: actions/github-script@v8
         with:
           script: |
             const deploymentUrl = `https://cean-test.${process.env.CLOUDFLARE_ACCOUNT_ID}.workers.dev`;
