@@ -2,11 +2,42 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-02-28 03:45
+**Utolsó frissítés:** 2026-03-04 00:50
 
 ---
 
 ## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-03-04 00:00-00:50 - Teljes rendszer ellenőrzés + Python környezet javítás + start.bat
+
+**Feladat:** (1) Teljes rendszer audit (build + tesztek); (2) Python .venv újrateremtése — a uv-managed Python 3.12.12 `_socket` DLL-jét Windows AppLocker blokkolta; (3) start.bat átalakítása teljes rendszerindító scriptté.
+
+**Érintett fájlok:**
+- `.python-version` — `3.12.12` → `3.13` (működő Python verzió, socket DLL nem blokkolt)
+- `pyproject.toml` — `tiktoken>=0.7.0` → `>=0.12.0` (cp313 wheels), `open-interpreter` extra eltávolítva (pin-elte tiktoken<0.8.0)
+- `uv.lock` — Teljesen újragenerálva Python 3.13 + tiktoken 0.12.0 kompatibilitásra
+- `.venv/` — Újrateremtve Python 3.13.11-gyel (uv venv --python 3.13)
+- `start.bat` — Teljes átalakítás: 6 lépéses rendszerindító (Ollama, AnythingLLM, Build, Python :8000, Node.js :3000, Dashboard :5173), health-check minden szolgáltatásnál
+
+**Részletek:**
+1. **Rendszer audit eredmény:** Build 0 hiba, 1349 teszt → 1298 PASS, 50 SKIP, 1 FAIL (Python env)
+2. **Python probléma:** `.venv` a uv-managed cpython-3.12.12-re mutatott, aminek a `_socket` DLL-jét Windows alkalmazásvezérlési házirend blokkolta → `import socket` crash
+3. **Megoldás:** `.python-version` → 3.13, `.venv` újrateremtés, `tiktoken>=0.12.0` (wheel cp313), `open-interpreter` extra eltávolítás (inkompatibilis tiktoken pin)
+4. **Extra csomagok:** `pyautogui`, `mss` telepítése (`uv pip install`) — az `os_worker.py` igényelte
+5. **Végeredmény:** 149/150 test file PASS, 1307/1349 teszt PASS (az 1 maradó fail: n8n API 401 — külső szerver auth, nem kódhiba)
+6. **Szolgáltatások verifikálva:** Express :3000 OK, Python FastAPI :8000 OK, Vite Dashboard :5173 OK, Ollama healthy, Cloudflare healthy
+
+**Státusz:** ✅ Befejezve — Build: 0 hiba, Tesztek: 1307/1349 (41 skip, 1 ext. fail)
+
+**Megjegyzés a következő ügynöknek:**
+- Python 3.13-ra migrálva — a `.python-version` fájl most `3.13`-ra mutat
+- Ha `uv sync` hibát dob tiktoken-nel, ellenőrizd hogy `PYO3_USE_ABI3_FORWARD_COMPATIBILITY=1` be van-e állítva
+- `pyautogui` és `mss` csomagok `uv pip install`-lal lettek telepítve (nem a pyproject.toml-ben!), mert azok az `os_worker.py` extra függőségei
+- `start.bat` most teljes rendszerindító: Ollama + AnythingLLM + Build + Python + Node.js + Dashboard
+
+---
+
+## 📋 ELŐZŐ MUNKAMENET
 
 ### 2026-02-28 03:30-03:45 - Robotkéz Pro Computer Use teljes integráció
 
