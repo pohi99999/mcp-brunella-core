@@ -28,7 +28,7 @@ dependencies = [
     "requests>=2.32.0",
     "aiofiles>=24.0.0",
     # Tokenization
-    "tiktoken>=0.7.0",
+    "tiktoken>=0.12.0",
     "gspread>=6.2.1",
     "google-auth>=2.48.0",
     "google-auth-oauthlib>=1.2.4",
@@ -41,9 +41,7 @@ dev = [
     "pytest>=8.0.0",
     "pytest-asyncio>=0.24.0",
 ]
-interpreter = [
-    "open-interpreter>=0.2.0",
-]
+# interpreter extra removed: open-interpreter pins tiktoken<0.8.0, incompatible with Python 3.13+
 
 [tool.pytest.ini_options]
 markers = [
