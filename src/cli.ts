@@ -1300,6 +1300,9 @@ testsCmd
     const spinner = ora("Fetching test scheduler status...").start();
     try {
       await client.connect();
+      const result = await client.callTool("test-scheduler-status", {
+        includeDetails: true,
+      });
       spinner.stop();
       // @ts-expect-error The result from test-scheduler-status tool might not have 'content[0].text'.
       const text = result.content?.[0]?.text || JSON.stringify(result);
@@ -1375,23 +1378,28 @@ testsCmd
   .action(async (count: string) => {
     const client = new BrunellaClient();
     const limit = parseInt(count || "10");
+    const baseUrl = String(
+      configManager.get("serverUrl") || "http://localhost:3000",
+    ).replace(/\/$/, "");
     const spinner = ora("Fetching test results...").start();
     try {
       await client.connect();
       
       // Fetch results via HTTP (CLI-friendly)
-      const response = await fetch("http://localhost:3000/api/tests/results?limit=" + limit);
+      const response = await fetch(`${baseUrl}/api/tests/results?limit=${limit}`);
       spinner.stop();
       
       if (!response.ok) throw new Error("Failed to fetch results");
       
-      const data = (await response.json()) as { runs: any[] };
+      const data = (await response.json()) as { data?: any[] };
       console.log(chalk.bold(`\n🧪 Recent Test Runs (Last ${limit})\n`));
 
-      if (data.runs.length === 0) {
+      const runs = data.data || [];
+
+      if (runs.length === 0) {
         console.log(chalk.dim("No test runs found"));
       } else {
-        data.runs.forEach((run: any, i: number) => {
+        runs.forEach((run: any, i: number) => {
           const status = run.status === "passed" ? chalk.green("✓") : chalk.red("✗");
           const duration = run.duration || "N/A";
           console.log(`${i + 1}. ${status} ID: ${chalk.cyan(run.id)} | ${run.passed}✓ ${run.failed}✗ | ${duration}`);
