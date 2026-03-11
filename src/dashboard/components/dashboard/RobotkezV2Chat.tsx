@@ -420,7 +420,7 @@ export function RobotkezV2Chat() {
                   {status.browser.engine.toLowerCase().includes('cloudflare') ? '☁ CF Browser' : '🖥 Local'}
                 </Badge>
               )}
-              <Button variant="ghost" size="icon" onClick={refreshData} title="Frissítés">
+              <Button variant="ghost" size="icon" onClick={refreshData} title="Frissítés" aria-label="Adatok frissítése">
                 <RefreshCw className="w-4 h-4" />
               </Button>
             </div>
@@ -913,6 +913,7 @@ export function RobotkezV2Chat() {
               size="icon"
               onClick={() => setShowBrowserView(!showBrowserView)}
               title={showBrowserView ? 'Elrejtés' : 'Megjelenítés'}
+              aria-label={showBrowserView ? 'Élő nézet elrejtése' : 'Élő nézet megjelenítése'}
             >
               {showBrowserView ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </Button>
@@ -975,6 +976,8 @@ export function RobotkezV2Chat() {
                             variant="ghost"
                             size="icon"
                             className="h-6 w-6"
+                            title="Folyamat leállítása"
+                            aria-label="Folyamat leállítása"
                             onClick={(e) => {
                               e.stopPropagation();
                               cancelTask(task.id);

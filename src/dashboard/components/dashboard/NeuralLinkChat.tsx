@@ -17,6 +17,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { PaperPlaneRight, Robot, User, Circle, Eye, EyeSlash, ArrowsClockwise, Microphone, SpeakerHigh } from "@phosphor-icons/react";
 import { Brain, FileText } from "lucide-react";
 import * as api from "@/lib/apiService";
@@ -63,81 +64,7 @@ export function NeuralLinkChat() {
     return restored?.selectedGeminiModel ?? "";
   });
   const [isLoading, setIsLoading] = useState(false);
-  const [isListening, setIsListening] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const sendRef = useRef<(() => void) | null>(null);
-  const voiceTranscriptRef = useRef<string>("");
-
-  const startListening = () => {
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    if (!SpeechRecognition) {
-      toast.error("A böngésződ nem támogatja a hangfelismerést.");
-      return;
-    }
-
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'hu-HU';
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = () => {
-      setIsListening(true);
-      toast.info("Figyelek...");
-    };
-
-    recognition.onresult = (event: any) => {
-      const transcript = event.results[0][0].transcript;
-      voiceTranscriptRef.current = transcript;
-      setInput(transcript);
-      toast.success("Sikeres hangfelismerés.");
-    };
-
-    recognition.onerror = (event: any) => {
-      console.error("Speech recognition error", event.error);
-      voiceTranscriptRef.current = "";
-      setIsListening(false);
-      toast.error("Hiba a hangfelismerés során.");
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-      // Ha volt felismert szöveg → automatikus küldés
-      if (voiceTranscriptRef.current.trim()) {
-        voiceTranscriptRef.current = "";
-        setTimeout(() => sendRef.current?.(), 100);
-      }
-    };
-
-    recognition.start();
-  };
-
-  const playTTS = async (text: string) => {
-    try {
-      setIsSpeaking(true);
-      const response = await fetch('/api/v1/voice/tts', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ text })
-      });
-      const data = await response.json();
-      if (data.url) {
-        if (audioRef.current) {
-          audioRef.current.pause();
-        }
-        const audio = new Audio(data.url);
-        audioRef.current = audio;
-        audio.onended = () => setIsSpeaking(false);
-        audio.play();
-      } else {
-        setIsSpeaking(false);
-      }
-    } catch (e) {
-      console.error('TTS error', e);
-      setIsSpeaking(false);
-    }
-  };
-  const [activeAgents, setActiveAgents] = useState<{ name: string, task: string }[]>([]);
+  const [activeAgents, setActiveAgents] = useState<{name: string, task: string}[]>([]);
   const [expandedThoughts, setExpandedThoughts] = useState<
     Record<number, boolean>
   >({});
@@ -148,7 +75,7 @@ export function NeuralLinkChat() {
       api.getActiveTasks().then(tasks => {
         const agents = tasks.map((t: any) => ({ name: t.agent, task: t.description }));
         setActiveAgents(agents);
-      }).catch(() => { });
+      }).catch(() => {});
     }, 2000);
     return () => clearInterval(interval);
   }, []);
@@ -254,10 +181,6 @@ export function NeuralLinkChat() {
           screenshot: response.screenshot,
         },
       ]);
-
-      // Auto-play TTS on assistant response
-      playTTS(response.message);
-
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Generálás sikertelen";
       toast.error(msg);
@@ -274,57 +197,142 @@ export function NeuralLinkChat() {
     }
   };
 
-  // sendRef frissítése minden renderelés után (voice auto-submit számára)
-  sendRef.current = send;
-
   return (
-    <Card className="border-border/50 bg-background/50 backdrop-blur-xl flex flex-col h-full glass-card overflow-hidden border-0 md:border">
-      <CardHeader className="flex flex-row items-center justify-between py-2 px-3 md:px-6 gap-2 flex-wrap border-b border-border/50 shrink-0">
-        <CardTitle className="flex items-center gap-2 text-sm md:text-base font-medium">
+    <Card className="border-border/50 bg-background/50 backdrop-blur-xl flex flex-col h-full glass-card overflow-hidden">
+      <CardHeader className="flex flex-row items-center justify-between pb-2 gap-2 flex-wrap border-b border-border/50">
+        <CardTitle className="flex items-center gap-2 text-base font-medium">
           <Robot size={18} className="text-primary" />
-          <span className="hidden xs:inline">Neural Link</span>
+          Neural Link
         </CardTitle>
-        <div className="flex items-center gap-1.5 flex-1 justify-end md:flex-initial">
+        <div className="flex items-center gap-2">
           <select
             value={mode}
             onChange={(e) => setMode(e.target.value as ChatMode)}
             aria-label="Chat mód"
-            className="rounded-md border border-border bg-background/50 px-1.5 py-1 text-xs md:text-sm max-w-[100px] xs:max-w-none"
+            className="rounded-md border border-border bg-background/50 px-2 py-1.5 text-sm"
           >
-            <option value="master_orchestrator">Master</option>
-            <option value="orchestrator">Local</option>
-            <option value="cloudflare_chat">CF Chat</option>
-            <option value="cloudflare">CF Edge</option>
+            <option value="master_orchestrator">Master Orchestrator</option>
+            <option value="orchestrator">Local Orchestrator</option>
+            <option value="cloudflare_chat">Cloudflare Chat</option>
+            <option value="cloudflare">Cloudflare (Edge)</option>
             <option value="ollama">Ollama</option>
-            <option value="github">GitHub</option>
+            <option value="github">GitHub Models</option>
             <option value="gemini">Gemini</option>
           </select>
           {(mode === "cloudflare" || mode === "cloudflare_chat") &&
             edgeStatus && (
               <div
-                className={`flex items-center gap-1 px-1.5 py-1 rounded-md text-[10px] font-medium border ${edgeStatus.enabled && edgeStatus.healthy
+                className={`flex items-center gap-1.5 px-2 py-1 rounded-md text-xs font-medium border ${
+                  edgeStatus.enabled && edgeStatus.healthy
                     ? "bg-green-500/15 text-green-500 border-green-500/30"
                     : "bg-red-500/15 text-red-500 border-red-500/30"
-                  }`}
+                }`}
+                title={
+                  edgeStatus.enabled
+                    ? edgeStatus.healthy
+                      ? "Edge Connected"
+                      : "Edge Unhealthy"
+                    : "Edge Disabled (set EDGE_ENABLED=true)"
+                }
               >
                 <Circle
-                  size={6}
+                  size={8}
                   weight="fill"
-                  className={edgeStatus.enabled && edgeStatus.healthy ? "text-emerald-500" : "text-red-500"}
+                  style={{
+                    color:
+                      edgeStatus.enabled && edgeStatus.healthy
+                        ? "rgb(34, 197, 94)"
+                        : "rgb(239, 68, 68)",
+                  }}
                 />
-                <span className="hidden sm:inline">
-                  {edgeStatus.enabled ? "Csatlakozva" : "Kikapcsolva"}
+                <span>
+                  {edgeStatus.enabled
+                    ? edgeStatus.healthy
+                      ? "Connected"
+                      : "Unhealthy"
+                    : "Disabled"}
                 </span>
               </div>
             )}
+          {mode === "ollama" && (
+            <Select value={selectedModel} onValueChange={setSelectedModel}>
+              <SelectTrigger className="w-[160px] bg-background/50 border-border shadow-none">
+                <SelectValue placeholder="Modell" />
+              </SelectTrigger>
+              <SelectContent>
+                {models.map((m, i) => (
+                  <SelectItem key={`${m.name}-${i}`} value={m.name}>
+                    {m.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          {mode === "github" && (
+            <Select value={selectedGhModel} onValueChange={setSelectedGhModel}>
+              <SelectTrigger className="w-[200px] bg-background/50 border-border shadow-none">
+                <SelectValue placeholder="GitHub Model" />
+              </SelectTrigger>
+              <SelectContent>
+                {ghModels.map((m, i) => (
+                  <SelectItem key={`${m.name}-${i}`} value={m.name}>
+                    {m.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
+          {mode === "gemini" && (
+            <Select
+              value={selectedGeminiModel}
+              onValueChange={setSelectedGeminiModel}
+            >
+              <SelectTrigger className="w-[200px] bg-background/50 border-border shadow-none">
+                <SelectValue placeholder="Gemini Model" />
+              </SelectTrigger>
+              <SelectContent>
+                {geminiModels.map((m, i) => (
+                  <SelectItem key={`${m.name}-${i}`} value={m.name}>
+                    {m.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          )}
         </div>
         <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => setShowBrowser(!showBrowser)}>
-            {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
-          </Button>
+          {showBrowser && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setBrowserTimestamp(Date.now())}
+                  aria-label="Képernyő frissítése"
+                  className="text-zinc-400 hover:text-primary"
+                >
+                  <ArrowsClockwise size={16} className={isLoading ? "animate-spin" : ""} />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>Képernyő frissítése</TooltipContent>
+            </Tooltip>
+          )}
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowBrowser(!showBrowser)}
+                aria-label={showBrowser ? "Bezár" : "Böngésző"}
+              >
+                {showBrowser ? <EyeSlash size={16} /> : <Eye size={16} />}
+              </Button>
+            </TooltipTrigger>
+            <TooltipContent>{showBrowser ? "Bezár" : "Böngésző"}</TooltipContent>
+          </Tooltip>
         </div>
       </CardHeader>
-
+      
       {activeAgents.length > 0 && (
         <div className="bg-primary/5 border-b border-border/50 px-4 py-2 flex items-center gap-3 overflow-x-auto no-scrollbar">
           <span className="text-[10px] font-bold text-primary uppercase tracking-tighter shrink-0">Aktív raj:</span>
@@ -345,18 +353,31 @@ export function NeuralLinkChat() {
             <div className="absolute top-2 right-2 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm">LIVE</div>
           </div>
         )}
-        <ScrollArea className="flex-1 px-2 md:px-4">
-          <div className="space-y-4 md:space-y-6 py-4 md:py-6">
+        <ScrollArea className="flex-1 px-4">
+          <div className="space-y-6 py-6">
             <LiveExecutionMonitor />
-
+            
             {messages.length === 0 && !api.getActiveTasks && (
-              <div className="flex flex-col items-center justify-center py-8 md:py-12 text-center space-y-4 px-4">
+              <div className="flex flex-col items-center justify-center py-12 text-center space-y-4">
                 <div className="p-4 rounded-full bg-primary/10 border border-primary/20">
                   <Brain size={32} className="text-primary animate-pulse" />
                 </div>
                 <div className="space-y-1">
                   <p className="text-sm font-medium text-foreground/80">
-                    Neural Link aktív
+                    Neural Connection established
+                  </p>
+                  <p className="text-xs text-muted-foreground max-w-xs">
+                    {mode === "orchestrator"
+                      ? "Orchestrator üzemmód: Komplex feladatok delegálása ügynököknek."
+                      : mode === "cloudflare_chat"
+                        ? "Cloudflare Chat üzemmód: közvetlen folyamatos beszélgetés a Cloudflare chat workerrel."
+                        : mode === "cloudflare"
+                          ? "Cloudflare Edge üzemmód: delegálás a Cloudflare Worker felé (EDGE_ENABLED szükséges)."
+                          : mode === "github"
+                            ? "GitHub Models üzemmód: GPT-4.1, DeepSeek-R1, Grok 3 és más felhő modellek."
+                            : mode === "gemini"
+                              ? "Gemini üzemmód: Google Gemini 2.5 Pro, Flash és más modellek."
+                              : "Ollama üzemmód: Közvetlen kommunikáció a lokális modellel."}
                   </p>
                 </div>
               </div>
@@ -364,85 +385,136 @@ export function NeuralLinkChat() {
             {messages.map((msg, i) => (
               <div
                 key={i}
-                className={`flex gap-2 md:gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-300`}
+                className={`flex gap-3 ${msg.role === "user" ? "justify-end" : "justify-start"} animate-in fade-in slide-in-from-bottom-2 duration-300`}
               >
                 {msg.role === "assistant" && (
-                  <div className="h-7 w-7 md:h-8 md:w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-1">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                     <Robot size={14} className="text-primary" />
                   </div>
                 )}
-                <div className={`flex flex-col gap-1.5 ${msg.role === "user" ? "max-w-[90%] md:max-w-[80%]" : "max-w-[90%] md:max-w-[85%]"}`}>
+                <div className="flex flex-col gap-1.5 max-w-[85%]">
                   <div
-                    className={`rounded-2xl px-3 md:px-4 py-2 md:py-2.5 text-sm shadow-sm ${msg.role === "user"
-                        ? "bg-primary text-primary-foreground font-medium rounded-tr-none"
-                        : "bg-muted/50 border border-border/50 text-foreground rounded-tl-none"
-                      }`}
+                    className={`rounded-2xl px-4 py-2.5 text-sm shadow-sm ${
+                      msg.role === "user"
+                        ? "bg-primary text-primary-foreground font-medium"
+                        : "bg-muted/50 border border-border/50 text-foreground"
+                    }`}
                   >
-                    <p className="whitespace-pre-wrap leading-relaxed overflow-hidden break-words">
+                    <p className="whitespace-pre-wrap leading-relaxed">
                       {msg.content}
                     </p>
                     {msg.screenshot && (
                       <div className="mt-2 rounded-lg overflow-hidden border border-border/50">
-                        <img
-                          src={msg.screenshot.startsWith('data:') ? msg.screenshot : `/api/v1/robotkez/screenshot?t=${Date.now()}`}
-                          alt="Screenshot"
+                        <img 
+                          src={msg.screenshot.startsWith('data:') ? msg.screenshot : `/api/v1/robotkez/screenshot?t=${Date.now()}`} 
+                          alt="Screenshot" 
                           className="max-w-full h-auto"
                         />
                       </div>
                     )}
                   </div>
+
+                  {msg.role === "assistant" &&
+                    (msg.thoughts || msg.contextUsed) && (
+                      <div className="flex flex-col gap-1 px-1">
+                        <button
+                          onClick={() => toggleThoughts(i)}
+                          className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors w-fit"
+                        >
+                          <span
+                            className={`w-1.5 h-1.5 rounded-full ${msg.thoughts ? "bg-amber-500 animate-pulse" : "bg-zinc-500"}`}
+                          />
+                          {expandedThoughts[i] ? "Hide Intel" : "Show Intel"}
+                          {msg.executedBy && (
+                            <span className="opacity-50 ml-2">
+                              via {msg.executedBy}
+                            </span>
+                          )}
+                        </button>
+
+                        {expandedThoughts[i] && (
+                          <div className="mt-2 space-y-3 animate-in fade-in duration-200">
+                            {msg.thoughts && (
+                              <div className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
+                                <p className="text-[11px] italic text-amber-500/80 leading-normal">
+                                  {msg.thoughts}
+                                </p>
+                              </div>
+                            )}
+                            {msg.contextUsed && msg.contextUsed.length > 0 && (
+                              <div className="flex flex-wrap gap-1.5">
+                                {msg.contextUsed.map((ctx, ci) => (
+                                  <div
+                                    key={ci}
+                                    className="flex items-center gap-1 px-2 py-0.5 rounded bg-blue-500/10 border border-blue-500/20 text-[9px] font-mono text-blue-400"
+                                  >
+                                    <FileText size={10} />
+                                    {ctx}
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    )}
                 </div>
                 {msg.role === "user" && (
-                  <div className="h-7 w-7 md:h-8 md:w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0 mt-1">
+                  <div className="h-8 w-8 rounded-full bg-primary/10 border border-primary/20 flex items-center justify-center shrink-0">
                     <User size={14} className="text-primary" />
                   </div>
                 )}
               </div>
             ))}
             {isLoading && (
-              <div className="flex gap-2">
-                <div className="h-7 w-7 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
+              <div className="flex gap-3">
+                <div className="h-8 w-8 rounded-full bg-emerald-500/20 flex items-center justify-center shrink-0">
                   <Circle
-                    size={12}
+                    size={14}
                     className="text-emerald-400 animate-pulse"
                   />
                 </div>
-                <div className="bg-zinc-800/60 rounded-lg px-3 py-1.5">
-                  <p className="text-xs md:text-sm text-zinc-500 italic">Gondolkodom...</p>
+                <div className="bg-zinc-800/60 rounded-lg px-3 py-2">
+                  <p className="text-sm text-zinc-500">Válasz generálása...</p>
                 </div>
               </div>
             )}
             <div ref={scrollRef} />
           </div>
         </ScrollArea>
-        <div className="p-3 md:p-4 border-t border-zinc-800/80 bg-background/80 backdrop-blur-md">
-          <div className="flex gap-2 items-end">
+        <div className="p-4 border-t border-zinc-800/80">
+          <div className="flex gap-2">
             <Textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) =>
                 e.key === "Enter" && !e.shiftKey && (e.preventDefault(), send())
               }
-              placeholder="Üzenet..."
-              className="min-h-[44px] max-h-[150px] bg-zinc-900/50 border-zinc-800 resize-none text-sm py-3"
+              placeholder={
+                mode === "orchestrator"
+                  ? "Üzenet az Orchestratornak..."
+                  : mode === "cloudflare_chat"
+                    ? "Üzenet a Cloudflare Chat-nek..."
+                    : mode === "cloudflare"
+                      ? "Üzenet a Cloudflare Edge-nek..."
+                      : mode === "github"
+                        ? "Üzenet a GitHub Models-nek..."
+                        : mode === "gemini"
+                          ? "Üzenet a Gemini-nek..."
+                          : "Üzenet az AI-nak..."
+              }
+              className="min-h-[60px] bg-zinc-900 border-zinc-800 resize-none"
               disabled={isLoading}
+              data-testid="neural-chat-input"
             />
-            <Button
-              onClick={startListening}
-              variant="outline"
-              size="icon"
-              className={`h-11 w-11 shrink-0 rounded-xl transition-all duration-300 ${isListening ? 'bg-red-500/20 text-red-500 border-red-500/50 animate-pulse' : 'bg-zinc-900/50 border-zinc-800'}`}
-              title="Hangutasítás (Magyar)"
-            >
-              {isSpeaking ? <SpeakerHigh size={20} className="animate-bounce text-primary" /> : <Microphone size={20} weight={isListening ? "fill" : "regular"} />}
-            </Button>
             <Button
               onClick={send}
               disabled={!input.trim() || isLoading}
-              className="bg-primary hover:bg-primary/90 h-11 w-11 shrink-0 rounded-xl"
-              aria-label="Küldés"
+              className="bg-emerald-600 hover:bg-emerald-500 shrink-0"
+              aria-label="Send message"
+              data-testid="neural-chat-send-button"
             >
-              <PaperPlaneRight size={20} weight="fill" />
+              <PaperPlaneRight size={18} />
             </Button>
           </div>
         </div>
@@ -450,6 +522,3 @@ export function NeuralLinkChat() {
     </Card>
   );
 }
-
-
-
