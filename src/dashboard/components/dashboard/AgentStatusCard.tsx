@@ -159,7 +159,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
           <div className="flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
             <Dialog open={delegateOpen} onOpenChange={setDelegateOpen}>
               <DialogTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-accent hover:bg-accent/10 rounded-full" title="Delegálás">
+                <Button variant="ghost" size="icon" className="h-7 w-7 text-zinc-400 hover:text-accent hover:bg-accent/10 rounded-full" title="Delegálás" aria-label="Feladat delegálása">
                   <ShareNetwork size={16} />
                 </Button>
               </DialogTrigger>
@@ -225,7 +225,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                 </span>
                 <Popover open={isEditingCaps} onOpenChange={setIsEditingCaps}>
                   <PopoverTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300">
+                    <Button variant="ghost" size="icon" className="h-5 w-5 text-zinc-500 hover:text-zinc-300" title="Képességek szerkesztése" aria-label="Képességek szerkesztése">
                       <PencilSimple size={12} />
                     </Button>
                   </PopoverTrigger>
