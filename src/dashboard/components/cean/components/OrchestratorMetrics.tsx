@@ -143,7 +143,7 @@ export const OrchestratorMetrics = () => {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setAutoRefresh(!autoRefresh)}
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition ${
+            className={`px-3 py-2 rounded-lg text-sm font-medium transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 ${
               autoRefresh
                 ? 'bg-green-500/20 text-green-700 dark:text-green-300'
                 : 'bg-gray-500/20 text-gray-700 dark:text-gray-300'
@@ -155,7 +155,9 @@ export const OrchestratorMetrics = () => {
           <button
             onClick={fetchMetrics}
             disabled={isLoading}
-            className="px-3 py-2 rounded-lg bg-blue-500/20 text-blue-700 dark:text-blue-300 hover:bg-blue-500/30 transition disabled:opacity-50"
+            aria-label="Refresh metrics"
+            title="Refresh metrics"
+            className="px-3 py-2 rounded-lg bg-blue-500/20 text-blue-700 dark:text-blue-300 hover:bg-blue-500/30 transition disabled:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-500"
           >
             <RefreshCw className="w-4 h-4" />
           </button>

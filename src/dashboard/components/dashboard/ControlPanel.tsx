@@ -14,6 +14,7 @@ import { ServerStatus, User } from '@/lib/types'
 import { Play, Stop, ArrowClockwise } from '@phosphor-icons/react'
 import { useState } from 'react'
 import { PermissionGuard } from '@/components/auth/PermissionGuard'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 
 interface ControlPanelProps {
   status: ServerStatus
@@ -49,84 +50,111 @@ export function ControlPanel({ status, user, onStart, onStop, onRestart }: Contr
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-3">
-            <PermissionGuard
-              user={user}
-              action="startServer"
-              fallback={
-                <Button
-                  disabled
-                  className="flex items-center gap-2"
-                  size="lg"
-                >
-                  <Play size={20} weight="fill" />
-                  Indítás
-                </Button>
-              }
-            >
-              <Button
-                onClick={onStart}
-                disabled={isRunning || isLoading}
-                className="flex items-center gap-2"
-                size="lg"
-              >
-                <Play size={20} weight="fill" />
-                Indítás
-              </Button>
-            </PermissionGuard>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <PermissionGuard
+                    user={user}
+                    action="startServer"
+                    fallback={
+                      <Button
+                        disabled
+                        className="flex items-center gap-2"
+                        size="lg"
+                      >
+                        <Play size={20} weight="fill" />
+                        Indítás
+                      </Button>
+                    }
+                  >
+                    <Button
+                      onClick={onStart}
+                      disabled={isRunning || isLoading}
+                      className="flex items-center gap-2 w-full"
+                      size="lg"
+                    >
+                      <Play size={20} weight="fill" />
+                      Indítás
+                    </Button>
+                  </PermissionGuard>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Szerver elindítása</p>
+              </TooltipContent>
+            </Tooltip>
 
-            <PermissionGuard
-              user={user}
-              action="stopServer"
-              fallback={
-                <Button
-                  disabled
-                  variant="destructive"
-                  className="flex items-center gap-2"
-                  size="lg"
-                >
-                  <Stop size={20} weight="fill" />
-                  Leállítás
-                </Button>
-              }
-            >
-              <Button
-                onClick={() => setShowStopDialog(true)}
-                disabled={isStopped || isLoading}
-                variant="destructive"
-                className="flex items-center gap-2"
-                size="lg"
-              >
-                <Stop size={20} weight="fill" />
-                Leállítás
-              </Button>
-            </PermissionGuard>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <PermissionGuard
+                    user={user}
+                    action="stopServer"
+                    fallback={
+                      <Button
+                        disabled
+                        variant="destructive"
+                        className="flex items-center gap-2"
+                        size="lg"
+                      >
+                        <Stop size={20} weight="fill" />
+                        Leállítás
+                      </Button>
+                    }
+                  >
+                    <Button
+                      onClick={() => setShowStopDialog(true)}
+                      disabled={isStopped || isLoading}
+                      variant="destructive"
+                      className="flex items-center gap-2 w-full"
+                      size="lg"
+                    >
+                      <Stop size={20} weight="fill" />
+                      Leállítás
+                    </Button>
+                  </PermissionGuard>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Szerver leállítása és aktív kapcsolatok megszakítása</p>
+              </TooltipContent>
+            </Tooltip>
 
-            <PermissionGuard
-              user={user}
-              action="restartServer"
-              fallback={
-                <Button
-                  disabled
-                  variant="secondary"
-                  className="flex items-center gap-2"
-                  size="lg"
-                >
-                  <ArrowClockwise size={20} />
-                  Újraindítás
-                </Button>
-              }
-            >
-              <Button
-                onClick={() => setShowRestartDialog(true)}
-                disabled={isStopped || isLoading}
-                variant="secondary"
-                className="flex items-center gap-2"
-                size="lg"
-              >
-                <ArrowClockwise size={20} />
-                Újraindítás
-              </Button>
-            </PermissionGuard>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span>
+                  <PermissionGuard
+                    user={user}
+                    action="restartServer"
+                    fallback={
+                      <Button
+                        disabled
+                        variant="secondary"
+                        className="flex items-center gap-2"
+                        size="lg"
+                      >
+                        <ArrowClockwise size={20} />
+                        Újraindítás
+                      </Button>
+                    }
+                  >
+                    <Button
+                      onClick={() => setShowRestartDialog(true)}
+                      disabled={isStopped || isLoading}
+                      variant="secondary"
+                      className="flex items-center gap-2 w-full"
+                      size="lg"
+                    >
+                      <ArrowClockwise size={20} />
+                      Újraindítás
+                    </Button>
+                  </PermissionGuard>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Szerver újraindítása (megszakítja a kapcsolatokat)</p>
+              </TooltipContent>
+            </Tooltip>
           </div>
         </CardContent>
       </Card>
