@@ -14,8 +14,9 @@ export class CloudflareClient {
   constructor(url?: string) {
     this.baseUrl =
       url ||
+      process.env.CLOUDFLARE_D1_WORKER_URL ||
       process.env.CLOUDFLARE_WORKER_URL ||
-      "https://bas-orchestrator.iam-dd1.workers.dev";
+      "https://cean-orchestrator.iam-dd1.workers.dev";
   }
 
   async submitTask(
