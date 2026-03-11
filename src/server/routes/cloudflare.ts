@@ -54,14 +54,21 @@ function normalizeBaseUrl(url: string): string {
 }
 
 function getCloudflareWorkersInventory(): WorkerDefinition[] {
-  const orchestratorUrl = process.env.CLOUDFLARE_WORKER_URL;
+  const orchestratorUrl = process.env.CLOUDFLARE_D1_WORKER_URL || process.env.CLOUDFLARE_WORKER_URL;
   const chatUrl = process.env.CLOUDFLARE_CHAT_URL;
+  const chatSyncUrl = process.env.CLOUDFLARE_CHAT_SYNC_URL;
 
   return [
     {
-      id: "bas-orchestrator",
-      name: "bas-orchestrator",
-      url: orchestratorUrl || "https://bas-orchestrator.iam-dd1.workers.dev",
+      id: "cean-orchestrator",
+      name: "cean-orchestrator",
+      url: orchestratorUrl || "https://cean-orchestrator.iam-dd1.workers.dev",
+      kind: "public",
+    },
+    {
+      id: "chat-sync",
+      name: "chat-sync",
+      url: chatSyncUrl || "https://bas-orchestrator.peterpohankapersonal.workers.dev",
       kind: "public",
     },
     {

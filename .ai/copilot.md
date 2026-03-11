@@ -1,5 +1,55 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-11 - ✅ D1 / Cloudflare Access lezárás + CLI audit + rendszerértékelés
+
+**Feladat:**
+- D1 / Cloudflare Access probléma gyökérokának lezárása
+- CLI és API route-ok második, szigorúbb auditja
+- maradék gubancok javítása
+- átfogó auditjegyzet készítése a `docs/_AUDIT/2026.03.11.md` fájlba
+
+**Fő megállapítások:**
+- A D1 adatbázis működött, a hiba a rossz worker-címzésből jött
+- A helyes D1/orchestrator endpoint: `cean-orchestrator.iam-dd1.workers.dev`
+- A chat sync külön workerre mutat: `bas-orchestrator.peterpohankapersonal.workers.dev`
+- A `bas-orchestrator.iam-dd1.workers.dev` Access mögött van, ezért HTML login oldalt adott JSON helyett
+- A `brunella tests status` és `brunella tests results` CLI ágak hibás/instabil útvonalon mentek
+
+**Javítások:**
+- `src/utils/syncService.ts`
+  - külön `CLOUDFLARE_CHAT_SYNC_URL` logika
+  - chat sync és D1 worker szerepek szétválasztása
+- `src/cli.ts`
+  - `tests status` HTTP API alapra átírva
+  - `tests run` HTTP API alapra átírva
+  - `tests results` HTTP válaszformátum javítva
+  - Windows alatti kényszerített `process.exit()` leállási gubanc kiszedve ezekből az ágakból
+- `src/utils/cloudflareClient.ts`
+  - edge orchestrationnél `CLOUDFLARE_D1_WORKER_URL` preferálása
+- `src/server/routes/cloudflare.ts`
+  - worker inventory a valós topológiára igazítva (`cean-orchestrator`, `chat-sync`)
+
+**Validálás:**
+- `npm run build` ✅
+- `node build/cli.js tests status` ✅
+- `node build/cli.js tests results 2` ✅
+- D1 health probe: `cean-orchestrator.iam-dd1.workers.dev/health` → 200 JSON ✅
+- D1 query probe: `cean-orchestrator.iam-dd1.workers.dev/d1/query` → 200 JSON ✅
+- Git push: ✅
+
+**Dokumentáció:**
+- Létrehozva: `docs/_AUDIT/2026.03.11.md`
+  - teljes rendszerértékelés
+  - optimalizálási és fejlesztési javaslatok
+  - architekturális és működtetési ajánlások
+
+**Commitok:**
+- `fix(edge): separate D1 and chat sync workers; repair test CLI routes`
+- `fix(cli): use HTTP for tests commands and align edge worker topology` *(ha külön commitban ment)*
+
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A rendszer jelenleg stabilabb és tisztább topológiával működik. A következő érdemi lépés már nem hibajavítás, hanem konfiguráció-konszolidáció és route/config inventory automatizálás.
+
 
 
 # GitHub Copilot - Agent Napló
