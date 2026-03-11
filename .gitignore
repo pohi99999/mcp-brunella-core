@@ -145,3 +145,9 @@ myai/agents/tools/gemini-cli/
 .aider*
 
 .worktrees/
+
+# Ügyfél bizalmas dokumentumok (NE commitold!)
+docs/Cégfejlesztés_Iszapafló/
+
+# Rust build artifacts (Tauri)
+src-tauri/target/
