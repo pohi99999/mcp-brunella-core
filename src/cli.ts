@@ -1296,17 +1296,52 @@ testsCmd
   .command("status")
   .description("Show test scheduler status and statistics")
   .action(async () => {
-    const client = new BrunellaClient();
+    const baseUrl = String(
+      configManager.get("serverUrl") || "http://localhost:3000",
+    ).replace(/\/$/, "");
     const spinner = ora("Fetching test scheduler status...").start();
     try {
-      await client.connect();
-      const result = await client.callTool("test-scheduler-status", {
-        includeDetails: true,
-      });
+      const [scheduleRes, statsRes, resultsRes] = await Promise.all([
+        fetch(`${baseUrl}/api/tests/schedule`),
+        fetch(`${baseUrl}/api/tests/stats`),
+        fetch(`${baseUrl}/api/tests/results?limit=5`),
+      ]);
       spinner.stop();
-      // @ts-expect-error The result from test-scheduler-status tool might not have 'content[0].text'.
-      const text = result.content?.[0]?.text || JSON.stringify(result);
-      const data = JSON.parse(typeof text === "string" ? text : JSON.stringify(text));
+
+      if (!scheduleRes.ok) throw new Error(`Schedule API failed: HTTP ${scheduleRes.status}`);
+      if (!statsRes.ok) throw new Error(`Stats API failed: HTTP ${statsRes.status}`);
+      if (!resultsRes.ok) throw new Error(`Results API failed: HTTP ${resultsRes.status}`);
+
+      const schedulePayload = (await scheduleRes.json()) as {
+        schedule?: string;
+        enabled?: boolean;
+        active?: boolean;
+      };
+      const statsPayload = (await statsRes.json()) as {
+        data?: {
+          totalRuns?: number;
+          passRate?: number;
+          averageDuration?: number;
+          lastRunStatus?: string;
+          lastRunTime?: string;
+          sevenDayStats?: { passRate?: number };
+        };
+      };
+      const resultsPayload = (await resultsRes.json()) as { data?: any[] };
+      const stats = statsPayload.data || {};
+      const data = {
+        schedule: schedulePayload.schedule,
+        enabled: schedulePayload.enabled,
+        active: schedulePayload.active,
+        stats: {
+          sevenDayPassRate: `${(((stats.sevenDayStats?.passRate ?? 0) as number) * 100).toFixed(2)}%`,
+          totalRuns: stats.totalRuns ?? 0,
+          averageDuration: `${Math.round(stats.averageDuration ?? 0)}ms`,
+          lastRunStatus: stats.lastRunStatus ?? "unknown",
+          lastRunTime: stats.lastRunTime ?? "n/a",
+        },
+        recentRuns: resultsPayload.data || [],
+      };
 
       console.log(chalk.bold("\n📊 Test Scheduler Status\n"));
       console.log(`Schedule: ${chalk.cyan(data.schedule)}`);
@@ -1332,9 +1367,6 @@ testsCmd
     } catch (e: any) {
       spinner.stop();
       console.error(chalk.red("Error:"), e.message);
-    } finally {
-      await client.close();
-      process.exit(0);
     }
   });
 
@@ -1343,17 +1375,25 @@ testsCmd
   .description("Trigger a manual test run immediately")
   .option("--reason <reason>", "Reason for triggering", "Manual CLI trigger")
   .action(async (options) => {
-    const client = new BrunellaClient();
+    const baseUrl = String(
+      configManager.get("serverUrl") || "http://localhost:3000",
+    ).replace(/\/$/, "");
     const spinner = ora("Triggering test run...").start();
     try {
-      await client.connect();
-      const result = await client.callTool("test-scheduler-run", {
-        triggerReason: options.reason,
+      const response = await fetch(`${baseUrl}/api/tests/run`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ triggerReason: options.reason }),
       });
+      const data = (await response.json()) as {
+        success?: boolean;
+        runId?: string;
+        status?: string;
+        error?: string;
+      };
       spinner.stop();
-      // @ts-expect-error The result from test-scheduler-run tool might not have 'content[0].text'.
-      const text = result.content?.[0]?.text || JSON.stringify(result);
-      const data = JSON.parse(typeof text === "string" ? text : JSON.stringify(text));
+
+      if (!response.ok) throw new Error(data.error || `HTTP ${response.status}`);
 
       if (data.success) {
         console.log(chalk.bold("\n✅ Test Run Triggered\n"));
@@ -1366,9 +1406,6 @@ testsCmd
     } catch (e: any) {
       spinner.stop();
       console.error(chalk.red("Error:"), e.message);
-    } finally {
-      await client.close();
-      process.exit(0);
     }
   });
 
@@ -1376,15 +1413,12 @@ testsCmd
   .command("results [count]")
   .description("Show recent test run results")
   .action(async (count: string) => {
-    const client = new BrunellaClient();
     const limit = parseInt(count || "10");
     const baseUrl = String(
       configManager.get("serverUrl") || "http://localhost:3000",
     ).replace(/\/$/, "");
     const spinner = ora("Fetching test results...").start();
     try {
-      await client.connect();
-      
       // Fetch results via HTTP (CLI-friendly)
       const response = await fetch(`${baseUrl}/api/tests/results?limit=${limit}`);
       spinner.stop();
@@ -1409,9 +1443,6 @@ testsCmd
     } catch (e: any) {
       spinner.stop();
       console.error(chalk.red("Error:"), e.message);
-    } finally {
-      await client.close();
-      process.exit(0);
     }
   });
 
