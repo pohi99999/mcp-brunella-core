@@ -498,7 +498,15 @@ class DebugIssueTool(WorkflowTool):
             "hypotheses, and exact recommended fixes. Clearly identify the most likely root cause and "
             "provide concrete, actionable implementation guidance. Highlight affected code paths and display "
             "reasoning that led to this conclusion—make it easy for a developer to understand exactly where "
-            "the problem lies. Where necessary, show cause-and-effect / bug-trace call graph."
+            "the problem lies. Where necessary, show cause-and-effect / bug-trace call graph.\n\n"
+            "If showing a call graph, YOU MUST format it using the Vertical Indented Flow Style:\n\n"
+            "```\n"
+            "[ClassName::MethodName] (file: /complete/file/path.ext, line: ##)\n"
+            "↓\n"
+            "[AnotherClass::calledMethod] (file: /path/to/file.ext, line: ##)\n"
+            "  ↓\n"
+            "  [DeeperClass::innerCall] (file: /path/inner.ext, line: ##) ? if some_condition\n"
+            "```"
         )
 
         # Add expert analysis guidance only when expert analysis was actually used
