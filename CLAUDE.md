@@ -22,14 +22,19 @@ bash scripts/sync.sh          # Git Bash / WSL
 
 ### 2. Kritikus Fájlok Beolvasása
 ```
-KÖTELEZŐ:
-- package.json                    # Függőségek, scriptek, verzió
-- tsconfig.json                   # TypeScript konfiguráció
-- src/agents/registry.json        # Ügynök regisztráció
-- PROJEKT_DIAGRAM.md              # Rendszer architektúra
-- conductor/tracks.md             # Aktív track-ek
-- .ai/FOSZAL.md                   # Mi történt legutóbb?
+KÖTELEZŐ (minden munkamenet elején!):
+- .ai/BOOTSTRAP.md                # Projekt gyors összefoglaló (ELŐSZÖR!)
+- conductor/tracks.md             # Aktív track-ek (mit csinálunk MOST)
+- .ai/FOSZAL.md                   # Mi történt legutóbb? (auto-generált napló)
+- .ai/claude.md                   # Claude saját naplója (te mit csináltál)
 - TEST_RESULTS.md                 # Legutóbbi teszt eredmények
+- PROJEKT_DIAGRAM.md              # Rendszer architektúra (KÖTELEZŐ!)
+- package.json                    # Függőségek, scriptek, verzió
+- src/agents/registry.json        # Ügynök regisztráció (56 agent)
+
+OPCIONÁLIS (szükség szerint):
+- tsconfig.json                   # TypeScript konfiguráció
+- conductor/tracks/<id>/plan.md   # Ha egy konkrét track-en dolgozol
 ```
 
 ### 3. Rendszer Validáció
@@ -48,7 +53,7 @@ tail -n 50 logs/phoenix.log   # Phoenix Protocol hibák ellenőrzése
 ```bash
 # Build & Run
 npm run build        # TypeScript fordítás (kötelező deploy előtt)
-npm run dev          # Dual-mode szerver: MCP stdio + Express HTTP (:3000)
+npm run dev          # Dual-mode szerver: MCP stdio + Express HTTP (:3000) — node --loader ts-node/esm
 npm run dev:ui       # Vite Dashboard (:5173)
 npm run lint         # ESLint (max-warnings=0)
 npm run lint:fix     # ESLint auto-fix
@@ -56,6 +61,7 @@ npm run smoke        # Gyors health check (Ollama, Express, FastAPI)
 
 # Tesztelés
 npm test                              # Build + Vitest run (KÖTELEZŐ munka előtt/után!)
+npm run test:full                     # Build + Vitest + health check (teljes ellenőrzés)
 npm run test:watch                    # Vitest watch mód
 npx vitest run test/foo.test.ts       # Egy teszt fájl
 npm run test:coverage                 # Coverage riport
@@ -63,8 +69,15 @@ npm run test:e2e                      # Playwright e2e tesztek
 npm run test:phoenix                  # Phoenix Protocol state restoration tesztek
 npm run health                        # Health check (scripts/health_check.ts)
 
+# LanceDB migráció (embedding verzióváltáskor)
+npm run migrate:dry      # Dry-run (nem ír)
+npm run migrate:backup   # Backup + migráció
+npm run migrate          # Éles migráció
+
 # CLI
 brunella                        # Interaktív menü (nyilak + Enter)
+brunella-hu                     # Magyar CLI (brunella-hu bin)
+brunella-jules                  # Jules interaktív CLI
 brunella chat                   # Interaktív chat
 brunella agents                 # Ügynökök listázása
 brunella conductor status       # Projekt státusz
@@ -303,6 +316,10 @@ PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 Minden nagyobb fejlesztés = Track a `conductor/tracks/` mappában. Track archiválásnál: mozgasd `conductor/archive/<track-id>/`-ba.
 
 **Aktuális állapot:** `conductor/tracks.md` — 14 aktív track, 74 archivált.
+
+### Glass Box Filozofia
+
+**Magyarázd el MIÉRT** csinálsz valamit, mielőtt megteszed. Ha kódot módosítasz, először mondd el a szándékodat. Ha hibát találsz, mondd el a gyökér okát — ne csak tünetkezeld.
 
 ### Engineering Precision Protocol v2 (EPP v2) — 7 Arany Szabály
 
