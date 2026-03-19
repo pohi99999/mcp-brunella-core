@@ -1,8 +1,9 @@
 import { Ollama } from 'ollama';
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import { GoogleGenerativeAI, type FunctionDeclarationsTool } from '@google/generative-ai';
 import { Anthropic } from '@anthropic-ai/sdk';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { aiGateway, type ChatMessage as AIChatMessage } from '../utils/aiGateway.js';
+import { type UniversalToolDefinition } from './toolRegistry.js';
 
 /**
  * Bifrost Gateway - Multi-Provider LLM Routing
@@ -126,24 +127,24 @@ export class BifrostGateway {
     });
 
     // 3. GitHub Models (Microsoft-hosted, GPT-4o)
-    const githubPat = process.env.GITHUB_PAT;
+    const githubToken = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
     this.providers.set('github', {
       type: 'github',
-      enabled: !!(githubPat && githubPat !== ''),
-      apiKey: githubPat,
+      enabled: !!(githubToken && githubToken !== ''),
+      apiKey: githubToken,
       baseUrl: 'https://models.inference.ai.azure.com',
-      defaultModel: 'gpt-4o',
+      defaultModel: process.env.GITHUB_MODELS_DEFAULT_MODEL || process.env.GITHUB_MODEL || 'gpt-4o',
       priority: 3,
       maxRetries: 3
     });
 
     // 4. Anthropic (Claude, most capable)
-    const anthropicKey = process.env.ANTHROPIC_API_KEY;
+    const anthropicKey = process.env.ANTHROPIC_API_KEY || process.env.CLAUDE_API_KEY;
     this.providers.set('anthropic', {
       type: 'anthropic',
       enabled: !!(anthropicKey && anthropicKey !== ''),
       apiKey: anthropicKey,
-      defaultModel: 'claude-3-5-sonnet-20241022',
+      defaultModel: process.env.ANTHROPIC_MODEL || process.env.CLAUDE_MODEL || 'claude-3-5-sonnet-20241022',
       priority: 4,
       maxRetries: 3
     });
@@ -215,10 +216,28 @@ export class BifrostGateway {
         return result;
       }
 
-      // 3. Fallback to Ollama if cloud provider failed
+      // 3. Fallback preference: cloud premium/provider -> GitHub Models -> Ollama
       if (selectedProvider !== 'ollama') {
+        const githubCfg = this.providers.get('github');
+        if (selectedProvider !== 'github' && githubCfg?.enabled) {
+          logWarn('BifrostGateway', `${selectedProvider} failed, falling back to GitHub Models...`);
+          const githubFallback = await this.generateWithProvider('github', {
+            ...options,
+            model: options.model || githubCfg.defaultModel,
+          });
+          if (githubFallback.success) {
+            githubFallback.fallback_used = true;
+            this.recordRequest('github');
+            return githubFallback;
+          }
+        }
+
         logWarn('BifrostGateway', `${selectedProvider} failed, falling back to Ollama...`);
-        const fallbackResult = await this.generateWithProvider('ollama', options);
+        // Use a copy of options but WITHOUT the model override, so Ollama uses its own default
+        const fallbackOptions = { ...options };
+        delete fallbackOptions.model;
+
+        const fallbackResult = await this.generateWithProvider('ollama', fallbackOptions);
         fallbackResult.fallback_used = true;
         this.recordRequest('ollama');
         return fallbackResult;
@@ -252,7 +271,7 @@ export class BifrostGateway {
     // Task-specific routing logic
     const routing: Record<TaskType, ProviderType[]> = {
       code: ['ollama', 'github', 'gemini', 'anthropic', 'cloudflare'],     // Prefer local Qwen2.5-Coder
-      general: ['gemini', 'ollama', 'github', 'anthropic', 'cloudflare'],  // Prefer fast Gemini
+      general: ['gemini', 'anthropic', 'github', 'cloudflare', 'ollama'],  // Prefer premium cloud, then GitHub, then local
       reasoning: ['anthropic', 'github', 'gemini', 'ollama', 'cloudflare'], // Prefer Claude
       creative: ['anthropic', 'gemini', 'github', 'ollama', 'cloudflare'],  // Prefer Claude
       fast: ['cloudflare', 'gemini', 'ollama', 'github', 'anthropic']       // CF llama-3.1-8b is very fast
@@ -379,20 +398,45 @@ export class BifrostGateway {
 
     const geminiModel = this.geminiClient.getGenerativeModel({ model });
 
+    const geminiTools: FunctionDeclarationsTool[] | undefined = options.tools && options.tools.length > 0
+      ? [{ functionDeclarations: options.tools.map((t: UniversalToolDefinition) => ({
+          name: t.name,
+          description: t.description,
+          parameters: t.parameters as unknown as import('@google/generative-ai').FunctionDeclarationSchema
+        })) }]
+      : undefined;
+
     const result = await geminiModel.generateContent({
       contents: [{ role: 'user', parts: [{ text: options.prompt }] }],
       generationConfig: {
         temperature: options.temperature ?? 0.7,
         maxOutputTokens: options.maxTokens ?? 2048
       },
-      systemInstruction: options.systemPrompt
+      systemInstruction: options.systemPrompt,
+      ...(geminiTools && { tools: geminiTools })
     });
+
+    const candidate = result.response.candidates?.[0];
+    const functionCallPart = candidate?.content?.parts?.find(
+      (p: unknown) => (p as { functionCall?: unknown }).functionCall
+    ) as { functionCall?: { name: string; args?: Record<string, unknown> } } | undefined;
+    const toolCalls = functionCallPart?.functionCall
+      ? [{
+          id: `gemini_${Date.now()}`,
+          type: 'function' as const,
+          function: {
+            name: functionCallPart.functionCall.name,
+            arguments: JSON.stringify(functionCallPart.functionCall.args || {})
+          }
+        }]
+      : undefined;
 
     const content = result.response.text();
 
     return {
       success: true,
       content,
+      toolCalls,
       provider: 'gemini',
       model,
       duration_ms: Date.now() - startTime,
@@ -417,11 +461,6 @@ export class BifrostGateway {
       throw new Error('GitHub Models not configured');
     }
 
-    // Use Ollama client with custom baseUrl (OpenAI-compatible API)
-    const githubClient = new Ollama({
-      host: config.baseUrl
-    });
-
     let messages = options.messages || [];
     if (messages.length === 0) {
       if (options.systemPrompt) {
@@ -430,32 +469,49 @@ export class BifrostGateway {
       messages.push({ role: 'user', content: options.prompt });
     }
 
-    const chatOptions: any = {
+    const payload: any = {
       model,
-      messages: messages as any,
-      stream: false,
-      options: {
-        temperature: options.temperature ?? 0.7,
-        num_predict: options.maxTokens ?? 2048
-      }
+      messages,
+      temperature: options.temperature ?? 0.7,
+      max_tokens: options.maxTokens ?? 2048,
     };
 
     if (options.tools && options.tools.length > 0) {
-      chatOptions.tools = options.tools;
+      payload.tools = options.tools;
     }
 
-    // GitHub Models uses chat endpoint (OpenAI-compatible)
-    const response = await githubClient.chat(chatOptions) as any;
+    // GitHub Models API is OpenAI-compatible but requires specific headers
+    const response = await fetch(`${config.baseUrl}/chat/completions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${config.apiKey}`
+      },
+      body: JSON.stringify(payload)
+    });
 
-    const toolCalls = response.message?.tool_calls || undefined;
+    if (!response.ok) {
+      const errorText = await response.text();
+      throw new Error(`GitHub API error (${response.status}): ${errorText}`);
+    }
+
+    const data = await response.json() as any;
+    const choice = data.choices?.[0];
+    const content = choice?.message?.content || "";
+    const toolCalls = choice?.message?.tool_calls || undefined;
 
     return {
       success: true,
-      content: response.message?.content || "",
-      toolCalls: toolCalls,
+      content,
+      toolCalls,
       provider: 'github',
       model,
-      duration_ms: Date.now() - startTime
+      duration_ms: Date.now() - startTime,
+      tokens: {
+        prompt: data.usage?.prompt_tokens || 0,
+        completion: data.usage?.completion_tokens || 0,
+        total: data.usage?.total_tokens || 0
+      }
     };
   }
 
