@@ -132,7 +132,7 @@ export function AgentFactory() {
                                     placeholder="pl. send_email"
                                     className="bg-white/5 border-white/10"
                                 />
-                                <Button type="button" size="icon" onClick={handleAddCap} variant="secondary" aria-label="Képesség hozzáadása">
+                                <Button type="button" size="icon" onClick={handleAddCap} variant="secondary">
                                     <Plus />
                                 </Button>
                             </div>
@@ -140,7 +140,7 @@ export function AgentFactory() {
                                 {capabilities.map(cap => (
                                     <Badge key={cap} variant="secondary" className="gap-1 pr-1">
                                         {cap}
-                                        <button type="button" onClick={() => setCapabilities(capabilities.filter(c => c !== cap))} aria-label={`${cap} képesség törlése`} title={`${cap} képesség törlése`}>
+                                        <button type="button" aria-label={`Remove capability ${cap}`} title="Remove capability" onClick={() => setCapabilities(capabilities.filter(c => c !== cap))}>
                                             <X size={12} />
                                         </button>
                                     </Badge>
@@ -165,7 +165,7 @@ export function AgentFactory() {
                                     placeholder="pl. levél, üzenet"
                                     className="bg-white/5 border-white/10"
                                 />
-                                <Button type="button" size="icon" onClick={handleAddTrigger} variant="secondary" aria-label="Trigger hozzáadása">
+                                <Button type="button" size="icon" onClick={handleAddTrigger} variant="secondary">
                                     <Plus />
                                 </Button>
                             </div>
@@ -173,7 +173,7 @@ export function AgentFactory() {
                                 {triggers.map(t => (
                                     <Badge key={t} variant="outline" className="gap-1 pr-1 bg-primary/5">
                                         {t}
-                                        <button type="button" onClick={() => setTriggers(triggers.filter(tr => tr !== t))} aria-label={`${t} trigger törlése`} title={`${t} trigger törlése`}>
+                                        <button type="button" aria-label={`Remove trigger ${t}`} title="Remove trigger" onClick={() => setTriggers(triggers.filter(tr => tr !== t))}>
                                             <X size={12} />
                                         </button>
                                     </Badge>

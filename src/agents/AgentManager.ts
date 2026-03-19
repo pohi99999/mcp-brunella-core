@@ -162,16 +162,18 @@ export class AgentManager extends EventEmitter {
     }
 
     // Ügynökök betöltése
-    for (const agentConfig of this.registry.agents) {
-      try {
-        await this.loadAgent(agentConfig);
-      } catch (error) {
-        logError(
-          "AgentManager",
-          `Ügynök betöltési hiba (${agentConfig.name}): ${error}`,
-        );
-      }
-    }
+    await Promise.all(
+      this.registry.agents.map(async (agentConfig) => {
+        try {
+          await this.loadAgent(agentConfig);
+        } catch (error) {
+          logError(
+            "AgentManager",
+            `Ügynök betöltési hiba (${agentConfig.name}): ${error}`,
+          );
+        }
+      }),
+    );
 
     // Edge proxy inicializálása (ha engedélyezve)
     if (this.edgeConfig.enabled) {

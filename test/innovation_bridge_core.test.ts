@@ -6,6 +6,12 @@ vi.mock('../src/core/llm_client.js', () => ({
   generateResponse: vi.fn()
 }));
 
+// Mock RAG utilities (LanceDB not available in test env)
+vi.mock('../src/utils/rag.js', () => ({
+  searchRAG: vi.fn().mockResolvedValue([]),
+  addToIndex: vi.fn().mockResolvedValue(undefined),
+}));
+
 describe('InnovationBridgeAgent - Core Logic', () => {
   let agent: InnovationBridgeAgent;
 

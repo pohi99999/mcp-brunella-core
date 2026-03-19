@@ -221,8 +221,6 @@ async function checkDependencies(env: PythonEnvironment): Promise<PythonDependen
  */
 async function checkModules(env: PythonEnvironment): Promise<ModuleStatus[]> {
     const myaiPath = path.join(config.workspaceRoot, 'myai');
-    const modules: ModuleStatus[] = [];
-
     const coreModules = [
         'server.py',
         'browser_worker.py',
@@ -231,14 +229,14 @@ async function checkModules(env: PythonEnvironment): Promise<ModuleStatus[]> {
         'sync_to_r2.py'
     ];
 
-    for (const moduleName of coreModules) {
+    const modules: ModuleStatus[] = await Promise.all(coreModules.map(async (moduleName) => {
         const modulePath = path.join(myaiPath, moduleName);
+        const moduleNameWithoutPy = moduleName.replace('.py', '');
 
         try {
             await fs.access(modulePath);
 
             // Try to syntax-check the module
-            const moduleNameWithoutPy = moduleName.replace('.py', '');
             let importable = false;
             let error: string | undefined;
 
@@ -253,21 +251,21 @@ async function checkModules(env: PythonEnvironment): Promise<ModuleStatus[]> {
                 error = err.split('\n')[0]; // First line of error
             }
 
-            modules.push({
+            return {
                 module: moduleNameWithoutPy,
                 path: modulePath,
                 importable,
                 error
-            });
+            };
         } catch {
-            modules.push({
-                module: moduleName.replace('.py', ''),
+            return {
+                module: moduleNameWithoutPy,
                 path: modulePath,
                 importable: false,
                 error: 'Module file not found'
-            });
+            };
         }
-    }
+    }));
 
     return modules;
 }

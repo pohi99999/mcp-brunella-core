@@ -21,6 +21,12 @@ import { createRobotkezRoutes } from '../src/server/routes/robotkez.js';
 export const mockExecute = vi.fn().mockResolvedValue({ success: true, message: 'Task executed' });
 export const mockExecuteTask = vi.fn().mockResolvedValue({ success: true, message: 'Task executed' });
 
+// Mock RAG utilities
+vi.mock('../src/utils/rag.js', () => ({
+    searchRAG: vi.fn().mockResolvedValue([]),
+    addToIndex: vi.fn().mockResolvedValue(undefined),
+}));
+
 // Mock dependencies
 vi.mock('../src/agents/RobotkezV2Agent.js', () => ({
     RobotkezV2Agent: class {
