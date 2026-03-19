@@ -17,7 +17,8 @@ export type ChatMode =
   | "gemini"
   | "cloudflare"
   | "cloudflare_chat"
-  | "master_orchestrator";
+  | "master_orchestrator"
+  | "universal";
 
 export interface ChatSendInput {
   text: string;
@@ -28,12 +29,22 @@ export interface ChatSendInput {
   selectedGeminiModel?: string;
 }
 
+export interface ActionTriggered {
+  agent: string;
+  task: string;
+  taskId: number;
+  status: 'started' | 'completed' | 'error';
+}
+
 export interface ChatSendOutput {
   message: string;
   thoughts?: string;
   contextUsed?: string[];
   executedBy?: string;
   screenshot?: string;
+  // Universal orchestrator mezők
+  actionsTriggered?: ActionTriggered[];
+  thinkingMs?: number;
 }
 
 export interface ChatProvider {

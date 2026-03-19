@@ -27,6 +27,20 @@ import { type UniversalToolDefinition } from './toolRegistry.js';
 export type ProviderType = 'ollama' | 'gemini' | 'github' | 'anthropic' | 'cloudflare';
 export type TaskType = 'code' | 'general' | 'reasoning' | 'creative' | 'fast';
 
+/** OpenAI-style tool definition (used by DeveloperAgent, EvaluatorAgent, OrchestratorAgent) */
+export interface OpenAIToolDefinition {
+  type: string;  // 'function' in practice, kept as string for caller compatibility
+  function: {
+    name: string;
+    description: string;
+    parameters: {
+      type: string;
+      properties: Record<string, { type: string; description?: string } | undefined>;
+      required?: string[];
+    };
+  };
+}
+
 export interface GenerateOptions {
   prompt: string;
   taskType?: TaskType;
@@ -35,14 +49,14 @@ export interface GenerateOptions {
   maxTokens?: number;
   systemPrompt?: string;
   model?: string;  // Override default model
-  tools?: any[];   // Added support for tools
+  tools?: Array<UniversalToolDefinition | OpenAIToolDefinition>;   // Added support for tools
   messages?: any[]; // Added support for message history
 }
 
 export interface GenerateResponse {
   success: boolean;
   content?: string;
-  toolCalls?: any[]; // Added support for returning tool calls
+  toolCalls?: Array<{ id: string; type: 'function'; function: { name: string; arguments: string } }>; // Added support for returning tool calls
   provider: ProviderType;
   model: string;
   duration_ms: number;
@@ -399,11 +413,16 @@ export class BifrostGateway {
     const geminiModel = this.geminiClient.getGenerativeModel({ model });
 
     const geminiTools: FunctionDeclarationsTool[] | undefined = options.tools && options.tools.length > 0
-      ? [{ functionDeclarations: options.tools.map((t: UniversalToolDefinition) => ({
-          name: t.name,
-          description: t.description,
-          parameters: t.parameters as unknown as import('@google/generative-ai').FunctionDeclarationSchema
-        })) }]
+      ? [{ functionDeclarations: options.tools.map((t: UniversalToolDefinition | OpenAIToolDefinition) => {
+          // Support both UniversalToolDefinition {name, description, parameters}
+          // and OpenAI-style {type:'function', function:{name, description, parameters}}
+          const isOpenAI = 'function' in t;
+          return {
+            name: isOpenAI ? (t as OpenAIToolDefinition).function.name : (t as UniversalToolDefinition).name,
+            description: isOpenAI ? (t as OpenAIToolDefinition).function.description : (t as UniversalToolDefinition).description,
+            parameters: (isOpenAI ? (t as OpenAIToolDefinition).function.parameters : (t as UniversalToolDefinition).parameters) as unknown as import('@google/generative-ai').FunctionDeclarationSchema
+          };
+        }) }]
       : undefined;
 
     const result = await geminiModel.generateContent({
@@ -431,7 +450,8 @@ export class BifrostGateway {
         }]
       : undefined;
 
-    const content = result.response.text();
+    let content = '';
+    try { content = result.response.text(); } catch { /* tool call only response, no text part */ }
 
     return {
       success: true,
@@ -477,7 +497,13 @@ export class BifrostGateway {
     };
 
     if (options.tools && options.tools.length > 0) {
-      payload.tools = options.tools;
+      // Transform UniversalToolDefinition → OpenAI function tool format
+      payload.tools = options.tools.map((t: UniversalToolDefinition | OpenAIToolDefinition) => {
+        if ('function' in t) return t; // already OpenAI format
+        const u = t as UniversalToolDefinition;
+        return { type: 'function', function: { name: u.name, description: u.description, parameters: u.parameters } };
+      });
+      payload.tool_choice = 'auto';
     }
 
     // GitHub Models API is OpenAI-compatible but requires specific headers
@@ -527,6 +553,17 @@ export class BifrostGateway {
       throw new Error('Anthropic client not initialized');
     }
 
+    // Build Anthropic tool definitions if provided
+    const anthropicTools = options.tools && options.tools.length > 0
+      ? options.tools.map((t: UniversalToolDefinition | OpenAIToolDefinition) => {
+          const isOpenAI = 'function' in t;
+          const name = isOpenAI ? (t as OpenAIToolDefinition).function.name : (t as UniversalToolDefinition).name;
+          const description = isOpenAI ? (t as OpenAIToolDefinition).function.description : (t as UniversalToolDefinition).description;
+          const inputSchema = isOpenAI ? (t as OpenAIToolDefinition).function.parameters : (t as UniversalToolDefinition).parameters;
+          return { name, description, input_schema: inputSchema as Record<string, unknown> };
+        })
+      : undefined;
+
     const response = await this.anthropicClient.messages.create({
       model,
       max_tokens: options.maxTokens ?? 2048,
@@ -534,17 +571,31 @@ export class BifrostGateway {
       system: options.systemPrompt,
       messages: [
         { role: 'user', content: options.prompt }
-      ]
+      ],
+      ...(anthropicTools && { tools: anthropicTools as Parameters<typeof this.anthropicClient.messages.create>[0]['tools'] })
     });
 
-    const content = response.content
+    const textContent = response.content
       .filter((block: { type: string }) => block.type === 'text')
       .map((block: { type: string; text?: string }) => block.text || '')
       .join('\n');
 
+    // Extract tool_use blocks
+    const toolCalls = response.content
+      .filter((block: { type: string }) => block.type === 'tool_use')
+      .map((block: { type: string; id?: string; name?: string; input?: unknown }) => ({
+        id: block.id ?? `anthropic_${Date.now()}`,
+        type: 'function' as const,
+        function: {
+          name: block.name ?? '',
+          arguments: JSON.stringify(block.input ?? {})
+        }
+      }));
+
     return {
       success: true,
-      content,
+      content: textContent,
+      toolCalls: toolCalls.length > 0 ? toolCalls : undefined,
       provider: 'anthropic',
       model,
       duration_ms: Date.now() - startTime,
