@@ -46,9 +46,12 @@ export function DynamicSidebar({ activeTab, onTabChange }: DynamicSidebarProps) 
                       <button
                         key={item.id}
                         onClick={() => onTabChange(item.id)}
+                        aria-label={item.label}
+                        title={item.label}
                         className={cn(
                           "w-full flex items-center gap-3 rounded-xl px-3 py-2.5 transition-all duration-200 group relative",
                           "text-zinc-400 hover:text-zinc-100 hover:bg-white/5",
+                          "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary",
                           activeTab === item.id && "bg-primary/10 text-white border border-primary/20",
                         )}
                       >
@@ -78,7 +81,11 @@ export function DynamicSidebar({ activeTab, onTabChange }: DynamicSidebarProps) 
               <span className="text-[9px] font-mono text-emerald-500/80">AUTHORIZED</span>
             </div>
           </div>
-          <button className="w-full text-[10px] font-bold text-zinc-500 hover:text-white transition-colors flex items-center justify-between py-1 border-t border-white/5 pt-3">
+          <button
+            aria-label="Disconnect Master Admin"
+            title="Disconnect Master Admin"
+            className="w-full text-[10px] font-bold text-zinc-500 hover:text-white transition-colors flex items-center justify-between py-1 border-t border-white/5 pt-3 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-md px-2"
+          >
             <span>DISCONNECT</span>
             <Ghost size={12} />
           </button>

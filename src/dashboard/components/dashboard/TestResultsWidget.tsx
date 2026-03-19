@@ -159,16 +159,20 @@ export function TestResultsWidget() {
               fetchRecentRuns();
             }}
             disabled={loading}
+            aria-label="Tesztek frissítése"
+            title="Tesztek frissítése"
           >
-            <RefreshCw className="h-4 w-4 mr-2" />
+            <RefreshCw className={`h-4 w-4 mr-2 ${loading ? "animate-spin" : ""}`} />
             Frissítés
           </Button>
           <Button
             onClick={handleTriggerRun}
             disabled={triggering}
             className="bg-blue-600 hover:bg-blue-700"
+            aria-label="Tesztek futtatása"
+            title="Tesztek futtatása"
           >
-            <Play className="h-4 w-4 mr-2" />
+            <Play className={`h-4 w-4 mr-2 ${triggering ? "animate-pulse" : ""}`} />
             {triggering ? "Futtatás..." : "Tesztek Futtatása"}
           </Button>
         </div>

@@ -49,8 +49,8 @@ export function GrantAdvisorWidget() {
 
                 {step === 2 && (
                     <div className="space-y-3">
-                        <Input placeholder="Alkalmazottak száma" type="number" className="h-8 text-xs" />
-                        <Input placeholder="Éves nettó árbevétel (M Ft)" type="number" className="h-8 text-xs" />
+                        <Input aria-label="Alkalmazottak száma" placeholder="Alkalmazottak száma" type="number" className="h-8 text-xs" />
+                        <Input aria-label="Éves nettó árbevétel (M Ft)" placeholder="Éves nettó árbevétel (M Ft)" type="number" className="h-8 text-xs" />
                         <Button className="w-full h-9" onClick={checkEligibility} disabled={loading}>
                             {loading ? "Elemzés..." : "Eredmény Megtekintése"}
                         </Button>

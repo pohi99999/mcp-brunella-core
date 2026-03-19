@@ -3,17 +3,15 @@ import path from 'path';
 
 export default defineConfig({
   test: {
-    environment: 'jsdom',
-    include: ['src/dashboard/**/*.test.{ts,tsx}'],
+    environment: 'jsdom', // Use JSDOM for UI component testing
+    include: ['src/dashboard/**/*.test.{ts,tsx}'], // Include tests within the dashboard directory
     exclude: ['**/node_modules/**', '**/build/**'],
     globals: true,
-    setupFiles: ['./test/dashboard/setup.ts'], // dashboard-specific setup (matchMedia, ResizeObserver, jest-dom)
-    css: false,
+    setupFiles: ['./test/setup-ui.ts'], // Re-use existing setup if compatible
   },
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src/dashboard'), // dashboard imports use @/store, @/lib, @/components
+      '@': path.resolve(__dirname, './src/dashboard'),
     },
   },
 });
-
