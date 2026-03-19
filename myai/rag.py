@@ -3,6 +3,7 @@ import logging
 import json
 import asyncio
 import io
+import requests
 from typing import List, Optional, Dict, Any
 
 try:
@@ -28,7 +29,9 @@ class RAGService:
         self.table_name = "knowledge_base"
         self.pdf_parser = LocalPdfParser()
         self.text_splitter = SentenceTextSplitter(max_tokens_per_section=500)
-        self.embedding_dim = 1536 # Default to OpenAI text-embedding-ada-002 size
+        self.embedding_provider = os.environ.get("EMBEDDING_PROVIDER", "openai").lower()
+        self.embedding_model = os.environ.get("EMBEDDING_MODEL", "text-embedding-ada-002")
+        self.embedding_dim = int(os.environ.get("EMBEDDING_DIM", 1536))
 
     async def _get_db(self):
         if not lancedb:
@@ -51,10 +54,59 @@ class RAGService:
         return await db.open_table(self.table_name)
 
     async def _generate_embedding(self, text: str) -> List[float]:
-        # TODO: Integrate with OpenAI or Ollama for real embeddings
-        # For now, return a random or zero vector to allow the pipeline to run
-        # Ideally check os.environ.get("OPENAI_API_KEY") and use it
-        return [0.0] * self.embedding_dim
+        # Execute synchronous requests in a thread to prevent blocking the async event loop
+        vector = await asyncio.to_thread(self._generate_embedding_sync, text)
+
+        # Dimension correction: pad or truncate to match self.embedding_dim
+        if len(vector) > self.embedding_dim:
+            vector = vector[:self.embedding_dim]
+        elif len(vector) < self.embedding_dim:
+            vector = vector + [0.0] * (self.embedding_dim - len(vector))
+
+        return vector
+
+    def _generate_embedding_sync(self, text: str) -> List[float]:
+        if self.embedding_provider == "openai":
+            api_key = os.environ.get("OPENAI_API_KEY")
+            if not api_key:
+                logger.warning("OPENAI_API_KEY not found. Using zero vector fallback.")
+                return [0.0] * self.embedding_dim
+
+            url = "https://api.openai.com/v1/embeddings"
+            headers = {
+                "Authorization": f"Bearer {api_key}",
+                "Content-Type": "application/json"
+            }
+            data = {
+                "input": text,
+                "model": self.embedding_model
+            }
+            try:
+                response = requests.post(url, headers=headers, json=data, timeout=10)
+                response.raise_for_status()
+                return response.json()["data"][0]["embedding"]
+            except Exception as e:
+                logger.error(f"OpenAI embedding failed: {e}")
+                return [0.0] * self.embedding_dim
+
+        elif self.embedding_provider == "ollama":
+            ollama_url = os.environ.get("OLLAMA_API_BASE", "http://localhost:11434")
+            url = f"{ollama_url}/api/embeddings"
+            data = {
+                "model": self.embedding_model,
+                "prompt": text
+            }
+            try:
+                response = requests.post(url, json=data, timeout=30)
+                response.raise_for_status()
+                return response.json()["embedding"]
+            except Exception as e:
+                logger.error(f"Ollama embedding failed: {e}")
+                return [0.0] * self.embedding_dim
+
+        else:
+            logger.warning(f"Unknown provider '{self.embedding_provider}'. Using zero vector fallback.")
+            return [0.0] * self.embedding_dim
 
     async def ingest_document(self, file_content: bytes, filename: str) -> Dict[str, Any]:
         """
