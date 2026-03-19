@@ -7,6 +7,11 @@ vi.mock('../src/core/llm_client.js', () => ({
   generateResponse: vi.fn()
 }));
 
+vi.mock('../src/utils/rag.js', () => ({
+  searchRAG: vi.fn().mockResolvedValue([]),
+  addToIndex: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('../src/agents/AgentManager.js', () => ({
   agentManager: {
     delegate: vi.fn()
