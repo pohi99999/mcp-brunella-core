@@ -165,13 +165,12 @@ class ModelContext:
     def estimate_tokens(self, text: str) -> int:
         """
         Estimate token count for text using model-specific tokenizer.
-
-        For now, uses simple estimation. Can be enhanced with model-specific
-        tokenizers (tiktoken for OpenAI, etc.) in the future.
         """
-        # TODO: Integrate model-specific tokenizers
-        # For now, use conservative estimation
-        return len(text) // 3  # Conservative estimate
+        try:
+            return self.provider.count_tokens(text, self.model_name)
+        except Exception as e:
+            logger.debug(f"Fallback token estimation for {self.model_name}: {e}")
+            return len(text) // 4  # Conservative estimate matching token_utils
 
     @classmethod
     def from_arguments(cls, arguments: dict[str, Any]) -> "ModelContext":
