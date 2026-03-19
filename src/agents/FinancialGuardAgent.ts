@@ -23,6 +23,7 @@ import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import type { InvoiceData, InvoiceRecord } from '../types/enterprise.js';
 import * as fs from 'fs/promises';
 import * as path from 'path';
+import { globalPythonShell } from '../utils/pythonShell.js';
 
 // ============================================================================
 // Types
@@ -299,11 +300,8 @@ export class FinancialGuardAgent extends BaseAgent {
       // Check if file exists
       await fs.access(pdfPath);
 
-      // TODO: Call Python OCR worker
-      // const ocrResult = await this.callPythonOCR(pdfPath);
-      
-      // Simulated OCR extraction for development
-      const extractedText = await this.simulateOCR(pdfPath);
+      // Call Python OCR worker
+      const extractedText = await this.callPythonOCR(pdfPath);
 
       // Parse extracted text into structured data
       const invoiceData = this.parseOCRText(extractedText);
@@ -315,6 +313,45 @@ export class FinancialGuardAgent extends BaseAgent {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError(this.name, `PDF extraction failed: ${errorMsg}`);
       throw new Error(`Failed to extract invoice from PDF: ${errorMsg}`);
+    }
+  }
+
+  /**
+   * Call Python OCR worker
+   */
+  private async callPythonOCR(pdfPath: string): Promise<string> {
+    const pythonCode = `
+import json
+from myai.workers.ocr_worker import process_ocr, OCRRequest
+
+try:
+    file_path = context.get("pdfPath")
+    req = OCRRequest(file_path=file_path, engine="auto", language="eng")
+    resp = process_ocr(req)
+
+    result = {
+        "success": resp.success,
+        "text": resp.text,
+        "error": resp.error
+    }
+    print(json.dumps(result))
+except Exception as e:
+    print(json.dumps({"success": False, "error": str(e)}))
+`;
+
+    try {
+      const output = await globalPythonShell.run(pythonCode, { pdfPath });
+      const result = JSON.parse(output);
+
+      if (!result.success) {
+        throw new Error(result.error || "Unknown OCR error");
+      }
+
+      return result.text || "";
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError(this.name, `Python OCR worker failed: ${errorMsg}`);
+      throw new Error(`OCR processing failed: ${errorMsg}`);
     }
   }
 
