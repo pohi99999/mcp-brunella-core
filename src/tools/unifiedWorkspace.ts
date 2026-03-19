@@ -329,6 +329,38 @@ export class UnifiedWorkspaceClient {
   }
 
   /**
+   * Create a new Google Doc
+   */
+  async createDocument(content: string, title?: string): Promise<string> {
+    if (!this.drive) {
+      await this.initialize();
+    }
+
+    try {
+      logInfo('UnifiedWorkspace', `Creating Google Doc: ${title || 'Untitled Document'}`);
+
+      const response = await this.drive.files.create({
+        requestBody: {
+          name: title || 'Untitled Document',
+          mimeType: 'application/vnd.google-apps.document',
+        },
+        media: {
+          mimeType: 'text/plain',
+          body: content,
+        },
+        fields: 'webViewLink',
+      });
+
+      logInfo('UnifiedWorkspace', `✅ Google Doc created: ${response.data.webViewLink}`);
+      return response.data.webViewLink;
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to create Google Doc: ${errorMsg}`);
+      throw error;
+    }
+  }
+
+  /**
    * List files in a Drive folder
    */
   async listFiles(folderId?: string, query?: string): Promise<any[]> {

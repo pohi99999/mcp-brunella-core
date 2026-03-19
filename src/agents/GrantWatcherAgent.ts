@@ -381,14 +381,14 @@ export class GrantWatcherAgent extends BaseAgent {
       summary += `\n\n**Automatikusan generálva:** Grant Watcher Agent\n`;
       summary += `**Jogi nyilatkozat:** Ez egy automatikusan generált összefoglaló. Kérjük, konzultáljon szakértővel a pályázat benyújtása előtt!\n`;
 
-      // TODO: Upload to Google Docs
-      // const workspace = await getWorkspaceClient();
-      // const docUrl = await workspace.createDocument(summary);
+      // Upload to Google Docs
+      const title = `Grant Summary - ${new Date().toISOString().split('T')[0]}`;
+      const workspace = await getWorkspaceClient();
+      const docUrl = await workspace.createDocument(summary, title);
 
-      const mockDocUrl = 'https://docs.google.com/document/d/mock-grant-summary-2026-02-19';
-      logInfo(this.name, `✅ Summary document: ${mockDocUrl}`);
+      logInfo(this.name, `✅ Summary document: ${docUrl}`);
 
-      return mockDocUrl;
+      return docUrl;
 
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
