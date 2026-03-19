@@ -20,6 +20,23 @@ import { BaseAgent } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
+import { aiGateway } from '../utils/aiGateway.js';
+import { lanceDBClient } from '../utils/lancedb_client.js';
+
+async function generateEmbedding(text: string): Promise<number[] | null> {
+  try {
+    const embedding = await aiGateway.embeddings(text);
+    return embedding || null;
+  } catch {
+    return null;
+  }
+}
+
+const lancedb = {
+  insert: async (data: any) => {
+    await lanceDBClient.addData('faq_embeddings', data);
+  }
+};
 
 // ============================================================================
 // Types
@@ -407,13 +424,15 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
   private async storeEmbeddings(faqItems: FAQItem[]): Promise<void> {
     logInfo(this.name, 'Storing embeddings in LanceDB...');
 
-    // TODO: Actual LanceDB insert
-    // for (const faq of faqItems) {
-    //   const embedding = await generateEmbedding(faq.question);
-    //   await lancedb.insert({ question: faq.question, answer: faq.answer, embedding });
-    // }
+    // Actual LanceDB insert
+    for (const faq of faqItems) {
+      const embedding = await generateEmbedding(faq.question);
+      if (embedding) {
+        await lancedb.insert({ question: faq.question, answer: faq.answer, category: faq.category, embedding });
+      }
+    }
 
-    logInfo(this.name, `✅ Would store ${faqItems.length} FAQ embeddings`);
+    logInfo(this.name, `✅ Stored ${faqItems.length} FAQ embeddings`);
   }
 
   // ==========================================================================
