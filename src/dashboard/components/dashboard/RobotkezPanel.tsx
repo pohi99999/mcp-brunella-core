@@ -33,10 +33,12 @@ export function RobotkezPanel() {
     const [lastAction, setLastAction] = useState<any>(null);
     const [n8nWorkflows, setN8nWorkflows] = useState<N8nWorkflow[]>([]);
     const [n8nLoading, setN8nLoading] = useState(false);
+    const [isRefreshing, setIsRefreshing] = useState(false);
     const { socket } = useSocket();
 
     // Refresh status and screenshot
     const refreshData = async () => {
+        setIsRefreshing(true);
         try {
             // Get Browser Status
             const browserData = await getBrowserStatus();
@@ -50,6 +52,8 @@ export function RobotkezPanel() {
             }
         } catch (err: any) {
             console.error(err);
+        } finally {
+            setIsRefreshing(false);
         }
     };
 
@@ -244,8 +248,8 @@ export function RobotkezPanel() {
                         <Camera className="w-4 h-4 text-primary" />
                         Élő Nézet (5mp frissítés)
                     </CardTitle>
-                    <Button variant="ghost" size="icon" onClick={refreshData} className="h-8 w-8">
-                        <RefreshCw className="w-4 h-4" />
+                    <Button variant="ghost" size="icon" onClick={refreshData} className="h-8 w-8" disabled={isRefreshing}>
+                        <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
                     </Button>
                 </CardHeader>
                 <CardContent className="p-0 border-t border-primary/10 bg-black min-h-[250px] md:min-h-[300px] flex items-center justify-center relative group">
