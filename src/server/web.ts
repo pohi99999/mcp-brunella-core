@@ -61,6 +61,7 @@ import mcpRouter from "./routes/mcp.js";
 import { createV1Router } from "./routes/index.js";
 import { createAgentRoutes } from "./routes/agents.js";
 import { createChatRoutes } from "./routes/chat.js";
+import { createUniversalOrchestratorRouter } from "./routes/universalOrchestrator.js";
 import { createRobotkezRoutes } from "./routes/robotkez.js";
 import { createTaskRoutes } from "./routes/tasks.js";
 import { suggestedTasksRouter } from "./routes/suggestedTasks.js";
@@ -226,6 +227,7 @@ export async function startWebServer() {
 
   app.use("/api/v1", v1Router);
   app.use("/api", v1Router);
+  app.use("/api/orchestrator", createUniversalOrchestratorRouter());
   app.use("/api/paios", paiosOrchestratorRouter);
   app.use("/api/github", githubWebhookRouter);
 

@@ -41,36 +41,46 @@ interface PlanStep {
     task: string;
 }
 
+interface ActionTriggered {
+    agent: string;
+    task: string;
+    taskId: number;
+    status: 'started' | 'completed' | 'error';
+}
+
 interface ChatMessage {
     role: 'user' | 'assistant';
     content: string;
     timestamp: number;
     plan?: PlanStep[];
     taskIds?: number[];
+    actionsTriggered?: ActionTriggered[];
+    thinkingMs?: number;
     error?: boolean;
 }
 
-type ModelProvider = 'gemini' | 'github' | 'ollama' | 'anthropic';
+type UniversalProvider = 'gemini' | 'github' | 'claude' | 'cloudflare' | 'ollama';
 
 interface ModelOption {
-    value: ModelProvider;
+    value: UniversalProvider;
     label: string;
     icon: typeof Brain;
     color: string;
 }
 
 const MODEL_OPTIONS: ModelOption[] = [
-    { value: 'gemini', label: 'Gemini 2.0 Flash', icon: Brain, color: 'text-blue-500' },
-    { value: 'github', label: 'GPT-4o (GitHub)', icon: Cloud, color: 'text-purple-500' },
-    { value: 'ollama', label: 'Qwen 2.5 Coder (Local)', icon: Cpu, color: 'text-green-500' },
-    { value: 'anthropic', label: 'Claude Sonnet', icon: Zap, color: 'text-orange-500' },
+    { value: 'gemini', label: 'Gemini ★', icon: Brain, color: 'text-blue-500' },
+    { value: 'github', label: 'GitHub Models ★', icon: Cloud, color: 'text-purple-500' },
+    { value: 'claude', label: 'Claude ★', icon: Zap, color: 'text-orange-500' },
+    { value: 'cloudflare', label: 'Cloudflare Edge ★', icon: Cpu, color: 'text-yellow-500' },
+    { value: 'ollama', label: 'Qwen (helyi)', icon: Cpu, color: 'text-green-500' },
 ];
 
 export function PAIOSOrchestratorChat() {
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const [selectedModel, setSelectedModel] = useState<ModelProvider>('gemini');
+    const [selectedModel, setSelectedModel] = useState<UniversalProvider>('gemini');
     const scrollRef = useRef<HTMLDivElement>(null);
     const { socket } = useSocket();
 
@@ -188,12 +198,14 @@ export function PAIOSOrchestratorChat() {
         setIsLoading(true);
 
         try {
-            const response = await fetch('/api/paios/chat', {
+            const history = messages.map(m => ({ role: m.role, content: m.content }));
+            const response = await fetch('/api/orchestrator/universal', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     message: text,
-                    model: selectedModel,
+                    provider: selectedModel,
+                    conversationHistory: history,
                 }),
             });
 
@@ -201,24 +213,28 @@ export function PAIOSOrchestratorChat() {
                 throw new Error(`HTTP ${response.status}`);
             }
 
-            const result = await response.json();
+            const result = await response.json() as {
+                reply: string;
+                actionsTriggered: ActionTriggered[];
+                provider: string;
+                thinkingMs: number;
+            };
 
-            if (result.success) {
-                setMessages(prev => [
-                    ...prev,
-                    {
-                        role: 'assistant',
-                        content: result.summary,
-                        timestamp: Date.now(),
-                        plan: result.plan,
-                        taskIds: result.taskIds,
-                    },
-                ]);
-                toast.success('✅ Orchestrator válaszolt');
-                playTTS(result.summary);
+            const assistantMsg: ChatMessage = {
+                role: 'assistant',
+                content: result.reply,
+                timestamp: Date.now(),
+                actionsTriggered: result.actionsTriggered,
+                thinkingMs: result.thinkingMs,
+            };
+            setMessages(prev => [...prev, assistantMsg]);
+
+            if (result.actionsTriggered?.length > 0) {
+                toast.success(`🔧 ${result.actionsTriggered.length} feladat delegálva`);
             } else {
-                throw new Error(result.error || 'Unknown error');
+                toast.success('✅ Brunella válaszolt');
             }
+            playTTS(result.reply);
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : 'Hiba történt';
             toast.error(`❌ ${msg}`);
@@ -266,7 +282,7 @@ export function PAIOSOrchestratorChat() {
                     </div>
                 </div>
                 <p className="text-xs text-muted-foreground mt-1">
-                    Magyar nyelvű feladat → LLM dekompozíció → AgentManager végrehajtás
+                    Magyar természetes nyelv → {selectedModel.toUpperCase()} dönt → 47 agent vagy Cloudflare Worker
                 </p>
             </CardHeader>
 
@@ -333,6 +349,27 @@ export function PAIOSOrchestratorChat() {
                                         </div>
                                     )}
 
+                                    {/* Action Bubbles — universal orchestrator delegations */}
+                                    {msg.actionsTriggered && msg.actionsTriggered.length > 0 && (
+                                        <div className="mt-3 space-y-2 border-t pt-2">
+                                            {msg.actionsTriggered.map((action, i) => (
+                                                <div key={i} className="flex items-start gap-2 rounded-md border border-blue-500/30 bg-blue-500/10 p-2 text-xs">
+                                                    <CheckCircle2 className="mt-0.5 h-3 w-3 shrink-0 text-blue-400" />
+                                                    <div className="flex-1 min-w-0">
+                                                        <span className="font-semibold text-blue-300">Delegálva → {action.agent}</span>
+                                                        <p className="opacity-80 truncate mt-0.5">{action.task}</p>
+                                                        <div className="flex items-center gap-1 mt-1">
+                                                            <Badge variant="outline" className="text-[10px] px-1 py-0 border-blue-500/40 text-blue-300">
+                                                                #{action.taskId}
+                                                            </Badge>
+                                                            <span className="opacity-60">{action.status}</span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
                                     <p className="text-xs opacity-50 mt-2">
                                         {new Date(msg.timestamp).toLocaleTimeString('hu-HU')}
                                     </p>
@@ -387,7 +424,7 @@ export function PAIOSOrchestratorChat() {
                     </div>
                     {isLoading && (
                         <p className="text-xs text-muted-foreground mt-2 animate-pulse">
-                            ⏳ Orchestrator gondolkodik...
+                            ⟳ {selectedModel.toUpperCase()} gondolkodik...
                         </p>
                     )}
                 </div>
