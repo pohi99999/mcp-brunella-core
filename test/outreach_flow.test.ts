@@ -10,6 +10,12 @@ vi.mock('../src/utils/pythonShell.js', () => ({
     }
 }));
 
+// Mock RAG utilities (LanceDB not available in test env)
+vi.mock('../src/utils/rag.js', () => ({
+    searchRAG: vi.fn().mockResolvedValue([]),
+    addToIndex: vi.fn().mockResolvedValue(undefined),
+}));
+
 vi.mock('../src/utils/db.js', () => ({
     saveBusinessJob: vi.fn().mockResolvedValue('job-123'),
     saveBusinessLead: vi.fn().mockResolvedValue('lead-123')

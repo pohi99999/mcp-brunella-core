@@ -14,6 +14,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { RobotkezV2Agent } from '../src/agents/RobotkezV2Agent.js';
 import { AgentContext } from '../src/agents/BaseAgent.js';
 
+// Mock RAG utilities
+vi.mock('../src/utils/rag.js', () => ({
+    searchRAG: vi.fn().mockResolvedValue([]),
+    addToIndex: vi.fn().mockResolvedValue(undefined),
+}));
+
 // Mock persistentBrowser
 const mockSendCommand = vi.fn();
 vi.mock('../src/utils/persistentBrowser.js', () => ({

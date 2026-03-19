@@ -2,6 +2,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { RobotkezV2Agent } from '../src/agents/RobotkezV2Agent';
 import { persistentBrowser } from '../src/utils/persistentBrowser';
 
+// Mock RAG utilities
+vi.mock('../src/utils/rag.js', () => ({
+  searchRAG: vi.fn().mockResolvedValue([]),
+  addToIndex: vi.fn().mockResolvedValue(undefined),
+}));
+
 // Mock persistentBrowser
 vi.mock('../src/utils/persistentBrowser', () => ({
   persistentBrowser: {

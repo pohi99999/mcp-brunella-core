@@ -282,9 +282,6 @@ export class JulesAICoreClient {
    * Call real Jules AI API (Phase 3.3.2)
    */
   private async callRemoteJulesAPI(analysis: DeploymentAnalysis): Promise<JulesFixResponse> {
-    // TODO: Implement actual Jules API call in Phase 3.3.2
-    // This would use fetch with proper authentication and error handling
-
     const response = await fetch(`${this.apiUrl}/v1/generate-fix`, {
       method: 'POST',
       headers: {

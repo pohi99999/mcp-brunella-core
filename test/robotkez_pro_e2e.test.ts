@@ -17,6 +17,11 @@ vi.mock('../src/utils/browserEngine.js', () => ({
     getRobotkezEngineName: () => 'local'
 }));
 
+vi.mock('../src/utils/rag.js', () => ({
+    searchRAG: vi.fn().mockResolvedValue([]),
+    addToIndex: vi.fn().mockResolvedValue(undefined),
+}));
+
 // Mock the whole module to ensure robotkezPro is a mock
 vi.mock('../src/services/RobotkezProService.js', () => {
     const mock = {
