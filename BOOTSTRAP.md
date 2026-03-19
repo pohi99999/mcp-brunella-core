@@ -265,6 +265,7 @@ import { foo } from './bar.js';
 
 **Workflow:**
 1. Induláskor: Olvasd be BOOTSTRAP.md (ezt a fájlt!)
+2. Minden AI ügynök (Gemini, Claude, Copilot, Cursor, Jules) köteles a `.ai/FOSZAL.md` fájlt közös, megosztott memóriaként használni. Induláskor mindig olvasd be, és minden jelentős lépés után frissítsd a saját naplódat, amit a sync script beolvas a FOSZAL-ba.
 2. Tájékozódj: README.md + FOSZAL.md + tracks.md
 3. Dolgozz: Implementálj, tesztelj, dokumentálj
 4. Munkamenet vége: Frissítsd a naplót, sync FOSZAL, git commit

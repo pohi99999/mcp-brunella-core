@@ -115,6 +115,10 @@ export class CloudflareBrowser {
     await this.sendCommand({ action: 'close' });
   }
 
+  isConnected(): boolean {
+    return true;
+  }
+
   forceKill(): void {
     // No local process to kill in Cloudflare mode.
   }

@@ -40,6 +40,14 @@ vi.mock('../src/utils/llmPlanner.js', () => ({
     })
 }));
 
+vi.mock('../src/utils/browserEngine.js', () => ({
+    getRobotkezBrowserEngine: vi.fn().mockReturnValue({
+        isConnected: vi.fn().mockReturnValue(true),
+        sendCommand: vi.fn().mockResolvedValue({ status: 'success' })
+    }),
+    getRobotkezEngineName: vi.fn().mockReturnValue('local')
+}));
+
 vi.mock('../src/utils/persistentBrowser.js', () => ({
     persistentBrowser: {
         sendCommand: vi.fn().mockResolvedValue({ status: 'success' })

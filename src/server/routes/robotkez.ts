@@ -193,7 +193,7 @@ export function createRobotkezRoutes(): Router {
                     capabilities: agent.capabilities
                 },
                 browser: {
-                    active: true, // TODO: Check actual browser status
+                    active: getRobotkezBrowserEngine().isConnected(),
                     type: 'persistent',
                     engine: getRobotkezEngineName() === 'cloudflare' ? 'Cloudflare Browser Rendering' : 'Playwright + Python'
                 },

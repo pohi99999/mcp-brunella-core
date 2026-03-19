@@ -158,6 +158,10 @@ export class PersistentBrowser {
         }
     }
 
+    public isConnected(): boolean {
+        return this.process !== null;
+    }
+
     public forceKill() {
         if (this.process) {
             this.process.kill('SIGKILL');

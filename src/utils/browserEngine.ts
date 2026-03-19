@@ -7,6 +7,7 @@ export interface BrowserEngine {
   getLastScreenshot(): Uint8Array | null;
   close(): Promise<void>;
   forceKill(): void;
+  isConnected(): boolean;
 }
 
 export function getRobotkezEngineName(): 'cloudflare' | 'local' {
