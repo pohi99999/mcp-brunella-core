@@ -190,14 +190,7 @@ export function AgentManagementPanel() {
                                         <Terminal className="w-4 h-4" />
                                         Agent Logs: {selectedAgent}
                                     </CardTitle>
-                                    <Button
-                                        variant="ghost"
-                                        size="icon"
-                                        onClick={clearLogs}
-                                        className="h-8 w-8 text-muted-foreground hover:text-destructive"
-                                        title="Naplók törlése"
-                                        aria-label="Naplók törlése"
-                                    >
+                                    <Button variant="ghost" size="icon" onClick={clearLogs} className="h-8 w-8 text-muted-foreground hover:text-destructive" aria-label="Clear logs" title="Clear logs">
                                         <Trash2 className="w-4 h-4" />
                                     </Button>
                                 </CardHeader>
