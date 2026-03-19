@@ -314,7 +314,7 @@ if __name__ == "__main__":
     if sys.platform == 'win32':
         # For Python 3.8+, ProactorEventLoop is default - no need to set
         # WindowsSelectorEventLoopPolicy causes issues with Playwright subprocess
-        pass
+        asyncio.set_event_loop_policy(asyncio.WindowsProactorEventLoopPolicy())
 
     try:
         asyncio.run(main())
