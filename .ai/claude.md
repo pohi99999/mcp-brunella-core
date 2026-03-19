@@ -2,11 +2,279 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-03-04 00:50
+**Utolsó frissítés:** 2026-03-19
 
 ---
 
 ## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-03-19 - CF Workers AI Aktiválás — Track Phase 3 (Dashboard + CLI) ✅ TRACK 100% KÉSZ
+
+**Feladat:** `cf_workers_ai_activate_20260319` track Phase 3 végrehajtása — Dashboard + backend endpoint cloudflare providerrel
+
+**Amit csináltunk:**
+1. **`/api/providers/status` cloudflare-rel bővítve** (`src/server/routes/llm.ts` `createProvidersRoutes()`):
+   - `getBifrostGateway().getEnabledProviders()` alapján dinamikusan adja hozzá CF providert
+   - Ha `AI_GATEWAY_ENABLED=true`: teszteli `bifrost.generate({ prompt: 'hi', provider: 'cloudflare' })`
+   - Ha disabled: `{ status: 'offline', error: 'Provider disabled (AI_GATEWAY_ENABLED=false)' }` visszaadva
+   - `null` test graceful kezelés (early return)
+2. **Dashboard cloudflare icon hozzáadva** (`src/dashboard/components/dashboard/LLMProvidersPanel.tsx`):
+   - `case 'cloudflare': return <Zap className="text-orange-400" size={20} />` hozzáadva `getProviderIcon()`-ba
+3. **`meta.json` lezárva**: `status: "completed"`, `progress: 100`, mind 3 fázis `"status": "completed"`
+4. **Build: 0 hiba** ✅, **Tesztek: 5/5 PASS** (test/bifrost_cloudflare.test.ts) ✅
+
+**Érintett fájlok:**
+- `src/server/routes/llm.ts` — `createProvidersRoutes()` cloudflare provider hozzáadva
+- `src/dashboard/components/dashboard/LLMProvidersPanel.tsx` — cloudflare ikon hozzáadva
+- `conductor/tracks/cf_workers_ai_activate_20260319/meta.json` — 100%, completed
+- `test/bifrost_cloudflare.test.ts` (KORÁBBI session, 5 teszt)
+- `.env.example` (KORÁBBI session, `AI_GATEWAY_ENABLED` dokumentálva)
+
+**Státusz:** ✅ Track 100% BEFEJEZVE
+
+**Megjegyzés a következő ügynöknek:**
+- A felhasználónak saját `.env`-jébe kell: `AI_GATEWAY_ENABLED=true` (és `CF_API_TOKEN` ha nincs), majd **Node.js restart** (`CTRL+C` → `npm run dev`)
+- `CF_GATEWAY_ID` default: `brunella-gateway` — ellenőrizd hogy létezik a CF AI Gateway dashboardon
+- Miután ezek megvannak: `curl http://localhost:3000/api/providers/status` → cloudflare "online" lesz
+- Dashboard LLM Providers panel mutatja a 4. provider kártyát (narancs villám ikon)
+- A `test/bifrost_cloudflare.test.ts` 5 teszt PASS — ne töröld!
+
+---
+
+### 2026-03-19 - CF Workers AI Aktiválás — Track Phase 1-2 ✅
+
+**Feladat:** `cf_workers_ai_activate_20260319` track végrehajtása — Bifrost 5. CF provider aktiválás
+
+**Amit csináltunk:**
+1. **`aiGateway.ts` endpoint megértve** — Közvetlen CF AI Gateway REST API: `https://gateway.ai.cloudflare.com/v1/{cfAccountId}/{cfGatewayId}/workers-ai/{model}` — NEM proxyn keresztül
+2. **Kritikus felismerés:** `AI_GATEWAY_ENABLED` nincs dokumentálva a `.env.example`-ban; `aiGateway.ts` `CF_API_TOKEN || CF_TOKEN`-t olvas (NEM `CF_AI_API_TOKEN`-t!)
+3. **`.env.example` frissítve** — `AI_GATEWAY_ENABLED=true`, `CF_GATEWAY_ID=brunella-gateway`, token dokumentáció egyértelműsítve
+4. **`test/bifrost_cloudflare.test.ts` létrehozva** (5 teszt): CF provider disabled/enabled tesztek, URL helyességi teszt, hiba kezelés teszt, `enabled_providers` ellenőrzés
+5. **5/5 teszt PASS**, build 0 hiba
+6. **Track státusz:** proposed → active, progress: 0 → 60%
+
+**Érintett fájlok:**
+- `.env.example` — AI Gateway szekció javítva + `AI_GATEWAY_ENABLED` hozzáadva
+- `test/bifrost_cloudflare.test.ts` (ÚJ — 5 teszt)
+- `conductor/tracks/cf_workers_ai_activate_20260319/meta.json` (active, 60%)
+
+**Státusz:** ⏳ Phase 1-2 kész — Hátralevő: `.env`-ben `AI_GATEWAY_ENABLED=true` beállítása (felhasználó feladata), health check, dashboard widget (Phase 3)
+
+**Megjegyzés a következő ügynöknek:**
+- A felhasználónak saját `.env`-jébe kell: `AI_GATEWAY_ENABLED=true` (és `CF_API_TOKEN` ha nincs)
+- `CF_GATEWAY_ID` default: `brunella-gateway` — ez kell létezzen a CF AI Gateway dashboardon
+- A test suite már kész: `npx vitest run test/bifrost_cloudflare.test.ts` → 5/5 PASS
+- Phase 3 (Dashboard widget): Ellenőrizni kell létezik-e már BifrostStatus.tsx vagy SystemHealth widget CF sort megjeleníteni
+
+---
+
+### 2026-03-19 - /init Bootstrap + CLAUDE.md Pontosítás ✅
+
+**Feladat:** `/init` parancs végrehajtása — README.md beolvasása, CLAUDE.md fejlesztése
+
+**Amit csináltunk:**
+1. **README.md bootstrap protokoll beolvasva** — kötelező fájlok listájának ellenőrzése
+2. **FOSZAL.md + tracks.md beolvasva** — projekt állapot megismerése
+3. **CLAUDE.md 1 javítása** — Bootstrap fájl lista szinkronizálva README.md-del:
+   - `PROJEKT_DIAGRAM.md` → KÖTELEZŐ-be áthelyezve (README.md ezt mondja!)
+   - `package.json` + `src/agents/registry.json` → KÖTELEZŐ-be áthelyezve
+   - `tsconfig.json` + track plan.md → OPCIONÁLIS-ba kerültek
+
+**Aktív trackek (tracks.md szerint):**
+- `apify_deep_scraping_agent_20260223` [LOW] 60% — Claude felelős
+- `jules_pr_integration_20260222` [HIGH] 0% — Legfontosabb nyitott track!
+- `living_documentation_system_20260213` [MEDIUM] 0%
+- `local_test_scheduler_20260215` [MEDIUM] 0%
+
+**Érintett fájlok:**
+- `CLAUDE.md` — bootstrap lista pontosítva (PROJEKT_DIAGRAM.md KÖTELEZŐ lett)
+- `.ai/claude.md` — ez a bejegyzés
+
+**Státusz:** ✅ Bootstrap protokoll befejezve
+
+**Megjegyzés a következő ügynöknek:**
+- `jules_pr_integration_20260222` [HIGH, 0%] — azonnal vizsgáld meg!
+- Build + tesztek mind zöldek voltak az előző session végén: 1310 PASS, 0 FAIL
+- CLAUDE.md most pontosan tükrözi a README.md kötelező fájl listáját
+
+### 2026-03-19 - Tesztverifikáció + 404 diagnózis és javítás ✅
+
+**Feladat:** Teljes tesztcsomag futtatása, 404-es hiba diagnosztizálása a PAIOS Orchestrator Chat-ben.
+
+**Amit csináltunk:**
+1. **Teljes Vitest futtatás** — 150 tesztfájl, 1310 teszt PASS (43 skip), 0 FAIL, exit code 0
+2. **404 hiba diagnosztika** — Felhasználó jelentette: `❌ Hiba: HTTP 404` a PAIOS chat-ben
+3. **Gyökér ok azonosítva:** A backend szerver még a régi buildet futtatta (az Universal Orchestrator implementáció előtti állapotot) — a route regisztráció helyes volt, csak restart kellett
+4. **Megoldás:** `npm run build && npm run dev` → szerver újraindítás → azonnal működött
+
+**Teszt eredmények:**
+```
+Test Files: 150 passed (150)
+Tests:      1310 passed | 43 skipped (1353)
+Duration:   ~290s (Vitest v3.2.4)
+Build:      0 TypeScript hiba
+```
+
+**Érintett fájlok:** Nincs kódváltozás — csak szerver restart szükséges volt.
+
+**Státusz:** ✅ Minden működik — felhasználó megerősítette: "megvan minden tökéletes"
+
+**Megjegyzés a következő ügynöknek:**
+- Ha HTTP 404-et látsz egy új endpoint-nál, ELŐSZÖR ellenőrizd a szerver nem régi buildet fut-e
+- Universal Orchestrator Chat (`/api/orchestrator/universal`) 100% production-ready
+- Tesztek: 1310 PASS (1 több mint az előző 1309-es futásnál)
+
+---
+
+### 2026-03-19 - Universal Orchestrator Chat teljes implementáció ✅
+
+**Feladat:** Universal Orchestrator Chat rendszer befejezése — egyetlen chat felület, ami bármely LLM providerrel (Gemini, GitHub Models, Claude, Cloudflare, Qwen/Ollama) képes kommunikálni és 47 agentet + 12 CF Worker-t irányítani.
+
+**Amit csináltunk:**
+1. **`src/core/toolRegistry.ts`** (előző session) — ToolRegistry: auto-generálja a tool définíciókat registry.json-ból (53 agent + 4 system + 12 CF Worker = 69 tool)
+2. **`src/core/bifrost_gateway.ts`** bővítve — Anthropic `tool_use` blokk kinyerés + GitHub Models OpenAI format transform
+3. **`src/core/universalOrchestratorService.ts`** (ÚJ) — Fő orchestration service, Magyar system prompt, tool call végrehajtás, `[DELEGÁLÁS:]` regex fallback Qwen-hez
+4. **`src/server/routes/universalOrchestrator.ts`** (ÚJ) — `POST /api/orchestrator/universal` endpoint
+5. **`src/server/web.ts`** — route mount hozzáadva
+6. **`src/dashboard/lib/chat/types.ts`** — `"universal"` ChatMode + `ActionTriggered` interface + `actionsTriggered?/thinkingMs?` a ChatSendOutput-ban
+7. **`src/dashboard/lib/chat/providers/universalProvider.ts`** (ÚJ) — Frontend ChatProvider
+8. **`src/dashboard/lib/chat/providerRegistry.ts`** — `universal` provider regisztrálva
+9. **`src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`** — 5 provider selector (Gemini★, GitHub★, Claude★, Cloudflare Edge★, Qwen), fetch URL → `/api/orchestrator/universal`, Action Bubble UI
+10. **`src/agents/OrchestratorAgent.ts`** — `provider: 'github'` hard-code eltávolítva, `context.provider` + `context.model` fogadása
+11. **`src/cli.ts`** — `brunella chat` → universal endpoint (`/api/orchestrator/universal`) integráció, provider/model HTTP hívás, delegált task-ok megjelenítése
+
+**Érintett fájlok:**
+- `src/core/toolRegistry.ts` (ÚJ)
+- `src/core/universalOrchestratorService.ts` (ÚJ)
+- `src/server/routes/universalOrchestrator.ts` (ÚJ)
+- `src/dashboard/lib/chat/providers/universalProvider.ts` (ÚJ)
+- `src/core/bifrost_gateway.ts`, `src/server/web.ts`, `src/dashboard/lib/chat/types.ts`, `src/dashboard/lib/chat/providerRegistry.ts`, `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`, `src/agents/OrchestratorAgent.ts`, `src/cli.ts`
+
+**Státusz:** ✅ Build: 0 TypeScript hiba — commit `7b02625d` + folytatás ezen sessionben
+
+**Megjegyzés a következő ügynöknek:**
+- Universal Orchestrator Chat teljes és production-ready
+- `brunella chat` most az `/api/orchestrator/universal` endpointot hívja (nem a régi per-provider MCP tool-okat)
+- `OrchestratorAgent.execute()` elfogad `context.provider` + `context.model` paramétereket
+- toolRegistry.test.ts: 3/3 PASS (69 tool generálva)
+
+---
+
+### 2026-03-19 - Bootstrap Protokoll + CLAUDE.md Javítás + Vitest Tesztek ✅
+
+**Feladat:** (1) /init futtatása: CLAUDE.md fejlesztése; (2) README.md bootstrap protokoll teljes végigfutása
+
+**Amit csináltunk:**
+1. **CLAUDE.md 5 javítása** — Bootstrap fájl sorrend javítva (`.ai/BOOTSTRAP.md` + `.ai/claude.md` hozzáadva), `npm run dev` loader magyarázata, 3 új script (`test:full`, `migrate:dry`, `migrate:backup`), `brunella-hu`/`brunella-jules` binárisok, Glass Box filozofia paragrafus
+2. **Bootstrap Step 1** — `bash scripts/sync.sh` lefutott (git szinkron OK, uncommitted changes normálisak)
+3. **Bootstrap Step 2** — Kritikus fájlok beolvasva: `conductor/tracks.md`, `.ai/FOSZAL.md`, `TEST_RESULTS.md`, phoenix.log (nem létezik = nincs hiba)
+4. **Bootstrap Step 3** — `npm run build` ✅ 0 hiba; `npm test` ✅ 149 fájl 1307 teszt PASS (43 skip)
+5. **TEST_RESULTS.md frissítve** — új futás dokumentálva
+
+**Eredmény:**
+```
+Test Files: 149 passed | 1 skipped (150)
+Tests:      1307 passed | 43 skipped (1350)
+Duration:   290.04s (Vitest v3.2.4)
+Build:      0 TypeScript errors
+```
+
+**Aktív trackek** (conductor/tracks.md szerint):
+- `apify_deep_scraping_agent_20260223` [LOW] 60% — Claude felelős
+- `jules_pr_integration_20260222` [HIGH] 0% — Azonnali figyelmet igényel!
+- `living_documentation_system_20260213` [MEDIUM] 0%
+- `local_test_scheduler_20260215` [MEDIUM] 0%
+
+**Érintett fájlok:**
+- `CLAUDE.md` — 5 célzott javítás
+- `TEST_RESULTS.md` — új teszt futás dokumentálva
+- `.ai/claude.md` — ez a bejegyzés
+
+**Státusz:** ✅ Bootstrap protokoll befejezve — 0 hiba, minden zöld
+
+**Megjegyzés a következő ügynöknek:**
+- `jules_pr_integration_20260222` [HIGH, 0%] — ez a legfontosabb nyitott track, azonnal vizsgáld meg!
+- Build + tesztek mind zöldek: 1307 PASS, 0 FAIL
+- +1 teszt az előző futáshoz képest (1306 → 1307)
+
+---
+
+### 2026-03-13 - Bootstrap Protokoll + Vitest Tesztek ✅
+
+**Feladat:** Induló protokoll végrehajtása (3 lépés) - rendszer validáció, kritikus fájlok beolvasása, tesztek futtatása.
+
+**Amit csináltunk:**
+1. **Rendszer egészség validálása** — Ollama (18 modell), FastAPI (:8000), Cloudflare, AnythingLLM mind HEALTHY
+2. **TypeScript build** — 0 hiba, szerver fut (:3000, 56 ügynök)
+3. **Kritikus fájlok beolvasva** — vitest.config.ts, FOSZAL.md, claude.md, tracks.md, TEST_RESULTS.md
+4. **Vitest unit tesztek** — 149 fájl, 1306 teszt PASS (javulás: +28 fájl, +147 teszt vs. 2026-02-20 baseline)
+5. **TEST_RESULTS.md frissítve** — új baseline dokumentálva
+
+**Eredmény:**
+```
+Test Files: 149 passed | 1 skipped (150)
+Tests:      1306 passed | 43 skipped (1349)
+Duration:   325.13s (Vitest v3.2.4)
+```
+
+**Aktív trackek** (conductor/tracks.md szerint):
+- `apify_deep_scraping_agent_20260223` [LOW] 60% — Phase 1-2 done, claude felelős
+- `jules_pr_integration_20260222` [HIGH] 0% — Azonnali figyelmet igényel
+- `living_documentation_system_20260213` [MEDIUM] 0% — Rendszer felelős
+- `local_test_scheduler_20260215` [MEDIUM] — státusz nem teljesen ismert
+
+**Érintett fájlok:**
+- `TEST_RESULTS.md` — frissítve új baseline-nal
+- `.ai/claude.md` — ez a feljegyzés
+
+**Státusz:** ✅ Bootstrap protokoll befejezve
+
+**Megjegyzés a következő ügynöknek:**
+- Tesztek mind zöldek! 0 FAIL, 1306 PASS
+- `jules_pr_integration` track 0%-on van és HIGH prioritású — érdemes megvizsgálni
+- `vitest_results.txt` generálva a projekt gyökerében (temporális fájl, törölhető)
+- PowerShell vitest output capture trükk: `npx vitest run > vitest_results.txt 2>&1` background-ban
+
+### 2026-03-07 - Teljes rendszer audit + Bevételi stratégia + LinkedIn DM kampány + Számla OCR Demo
+
+**Feladat:** Teljes rendszer átvizsgálás, bevételi stratégia összeállítása, email bounce diagnózis, LinkedIn DM kampány felépítése, Számla OCR demo elkészítése.
+
+**Amit csináltunk:**
+1. **Teljes rendszer audit** — README, package.json, tracks.md, registry.json, FOSZAL.md, navigation.tsx, apiService.ts, REVENUE_STRATEGY.md mind beolvasva és összefoglalva
+2. **Bevételi stratégia frissítve** — 6 pillér: Lead Engine, Robotpilóta, Pályázat Radar, Tartalom csomag, B2B Lead előfizetés, AI Irodavezető
+3. **MASTER_SEND_LIST.md** létrehozva — 30 email (Wave 1 resend 10 db + Wave 2 new 20 db), másolásra kész, minden szöveg benne, checklist formátumban
+4. **Email bounce diagnózis** — 550 User Unknown = célcím nem létezik (info@ postaládák inaktívak), Google Sheets link is blokkolhatott — teszt elküldve link nélkül (eredmény holnap)
+5. **LinkedIn DM kampány** (`linkedin_dm_wave1.md`) — 7 cégvezető neve megtalálva (Matykó Noémi, Mészáros-Karetka Ildikó, Nótin Szabolcs, Bertalan Kovács, Török Mónika Nagy, Küri Attila, Dallos Zoltán), minden cégre 2 személyre szabott sablon (connection request + follow-up DM)
+6. **Számla OCR Demo** elkészítve:
+   - `myai/invoice_ocr_demo.py` — Gemini Vision alapú standalone FastAPI szerver + drag&drop HTML UI (port 8001)
+   - `myai/START_DEMO.bat` — dupla kattintás → elindul minden
+   - `myai/DEMO_VIDEOZASI_UTMUTATO.md` — 90mp videó forgatókönyv + LinkedIn poszt szöveg
+
+**Érintett fájlok:**
+- `conductor/tracks/trojan-horse-campaign-20260224/MASTER_SEND_LIST.md` — ÚJ
+- `conductor/tracks/trojan-horse-campaign-20260224/linkedin_dm_wave1.md` — ÚJ
+- `myai/invoice_ocr_demo.py` — ÚJ (Gemini Vision OCR demo)
+- `myai/START_DEMO.bat` — ÚJ
+- `myai/DEMO_VIDEOZASI_UTMUTATO.md` — ÚJ
+
+**Státusz:** ✅ Befejezve
+
+**Következő lépés (innen folytatjuk):**
+- LinkedIn DM-ek kiküldése (napi 3-5 connection request)
+- `myai/START_DEMO.bat` futtatása → Számla OCR demo tesztelése + videó felvétel
+- Promóciós anyag összeállítása a 6 szolgáltatáshoz (videó + szöveg)
+- A teszt email eredményének figyelése (info@chiro.hu — link nélküli teszt)
+
+**Megjegyzés a következő ügynöknek:**
+- A Wave 2 emailek (20 cég) sosem lettek kiküldve — sablonok: `wave2_emails_ready.md` és `MASTER_SEND_LIST.md`
+- Az email bounce valószínűleg a Google Sheets link miatt van, nem a cím hibás (6 Playwright-tal verifikált cím is bouncel)
+- LinkedIn az elsődleges csatorna most — a `linkedin_dm_wave1.md`-ben minden sablon kész
+- A Számla OCR demo `GEMINI_API_KEY`-t igényel a `.env`-ből — már benne van
+- Bevételi stratégia részletesen: `conductor/REVENUE_STRATEGY.md` és `conductor/tracks/revenue-triple-launch/akcioterv.md`
+
+---
+
+## 📋 ELŐZŐ MUNKAMENET
 
 ### 2026-03-04 00:00-00:50 - Teljes rendszer ellenőrzés + Python környezet javítás + start.bat
 
