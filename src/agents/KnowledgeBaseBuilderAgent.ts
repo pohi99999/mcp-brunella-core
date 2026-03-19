@@ -370,21 +370,20 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
     const wikiPages: WikiPage[] = [];
 
     for (const [category, faqs] of categorizedFAQs.entries()) {
+      const title = `${category.toUpperCase()} - Frequently Asked Questions`;
       const content = this.generateWikiContent(category, faqs);
       
-      // TODO: Upload to Google Docs
-      // const workspace = await getWorkspaceClient();
-      // const docUrl = await workspace.createDocument(content);
-
-      const mockDocUrl = `https://docs.google.com/document/d/mock-wiki-${category}`;
+      // Upload to Google Docs
+      const workspace = await getWorkspaceClient();
+      const docUrl = await workspace.createDocument(content, title);
 
       wikiPages.push({
-        title: `${category.toUpperCase()} - Frequently Asked Questions`,
+        title,
         content,
         category,
         lastUpdated: new Date().toISOString(),
         version: 1,
-        docUrl: mockDocUrl,
+        docUrl: docUrl,
       });
 
       logInfo(this.name, `✅ Created wiki page: ${category} (${faqs.length} FAQs)`);

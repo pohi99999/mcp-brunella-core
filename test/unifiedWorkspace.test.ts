@@ -451,6 +451,12 @@ describe('UnifiedWorkspaceClient', () => {
         })
       ).rejects.toThrow('localPath is required');
     });
+
+    it('should create a new Google Doc', async () => {
+      const result = await client.createDocument('Mock content', 'Mock Title');
+
+      expect(result).toBe('https://drive.google.com/file/d/file_123/view');
+    });
   });
 
   describe('Google Drive - File Listing', () => {
