@@ -1,2 +1,2 @@
 npm run build || exit 1
-npx vitest run --reporter=dot || exit 1
+npx vitest run --reporter=dot < /dev/null || exit 1

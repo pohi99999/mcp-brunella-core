@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-02-28 19:54
+**Generálva:** 2026-03-15 02:43
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,55 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-03-13
+
+#### 00:00 - [Claude] Bootstrap Protokoll + Vitest Tesztek ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `TEST_RESULTS.md` — frissítve új baseline-nal, `.ai/claude.md` — ez a feljegyzés
+
+---
+
+### 2026-03-09
+
+#### 20:09 - [Gemini] Rendszer Inicializalas es Teszteles
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+
+---
+
+### 2026-03-07
+
+#### 00:00 - [Claude] Teljes rendszer audit + Bevételi stratégia + LinkedIn DM kampány + Számla OCR Demo
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks/trojan-horse-campaign-20260224/MASTER_SEND_LIST.md` — ÚJ, `conductor/tracks/trojan-horse-campaign-20260224/linkedin_dm_wave1.md` — ÚJ, `myai/invoice_ocr_demo.py` — ÚJ (Gemini Vision OCR demo), `myai/START_DEMO.bat` — ÚJ, `myai/DEMO_VIDEOZASI_UTMUTATO.md` — ÚJ
+
+---
+
+### 2026-03-04
+
+#### 00:00 - [Claude] 00:50 - Teljes rendszer ellenőrzés + Python környezet javítás + start.bat
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `.python-version` — `3.12.12` → `3.13` (működő Python verzió, socket DLL nem blokkolt), `pyproject.toml` — `tiktoken>=0.7.0` → `>=0.12.0` (cp313 wheels), `open-interpreter` extra eltávolítva (pin-elte tiktoken<0.8.0), `uv.lock` — Teljesen újragenerálva Python 3.13 + tiktoken 0.12.0 kompatibilitásra, `.venv/` — Újrateremtve Python 3.13.11-gyel (uv venv --python 3.13), `start.bat` — Teljes átalakítás: 6 lépéses rendszerindító (Ollama, AnythingLLM, Build, Python :8000, Node.js :3000, Dashboard :5173), health-check minden szolgáltatásnál
+
+---
+
+### 2026-03-01
+
+#### 00:00 - [Gemini] 🚀 PAIOS Orchestrator "Zero-Mock" Chat Integration
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/orchestrator/orchestratorCore.ts`, `src/config/paiosConfig.ts`, `src/orchestrator/systemPrompt/paios_orchestrator_prompt.md` (Törölve), `tasks/robotkez-browser-chat-impl/RESEARCH_PAIOS.md` (Kutatási jelentés)
+
+#### 00:00 - [Gemini] 🚀 PAIOS Orchestrator "Zero-Mock" Chat Integration
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/orchestrator/orchestratorCore.ts`, `src/config/paiosConfig.ts`, `src/orchestrator/systemPrompt/paios_orchestrator_prompt.md` (Törölve), `tasks/robotkez-browser-chat-impl/RESEARCH_PAIOS.md` (Kutatási jelentés)
+
+---
 
 ### 2026-02-28
 
@@ -669,8 +718,8 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 67 | 2026-02-28 |
-| Gemini | 8 | 2026-02-27 |
+| Claude | 70 | 2026-03-13 |
+| Gemini | 11 | 2026-03-01 |
 | Cursor | 0 | N/A |
 | Copilot | 47 | 2026-02-15 |
 
