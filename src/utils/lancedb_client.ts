@@ -44,6 +44,11 @@ export class LanceDBClient {
     logInfo('LanceDB', `Data added to ${tableName}.`);
   }
 
+  // Alias for addData to support existing codebase usage
+  async insert(tableName: string, data: any): Promise<void> {
+    return this.addData(tableName, data);
+  }
+
   async query(tableName: string, filter?: string, limit: number = 10): Promise<any[]> {
     await this.connect();
     const tableNames = await this.db!.tableNames();

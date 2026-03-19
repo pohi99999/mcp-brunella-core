@@ -584,8 +584,8 @@ export class MarketIntelAgent extends BaseAgent {
         // embedding would be generated here
       };
 
-      // TODO: Actual LanceDB insert
-      // await lanceDBClient.insert('market_intel', record);
+      // Actual LanceDB insert
+      await lanceDBClient.insert('market_intel', record);
     }
 
     logInfo(this.name, '✅ Price data stored in LanceDB');
