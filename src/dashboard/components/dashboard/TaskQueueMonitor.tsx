@@ -245,6 +245,7 @@ export function TaskQueueMonitor() {
                                                             className="h-8 w-8 text-muted-foreground hover:text-destructive"
                                                             onClick={() => handleCancel(task.id)}
                                                             title="Cancel task"
+                                                            aria-label="Cancel task"
                                                         >
                                                             <XCircle size={14} />
                                                         </Button>
@@ -255,6 +256,7 @@ export function TaskQueueMonitor() {
                                                             className="h-8 w-8 text-muted-foreground hover:text-primary"
                                                             onClick={() => handleRetry(task.id)}
                                                             title="Retry task"
+                                                            aria-label="Retry task"
                                                         >
                                                             <RotateCw size={14} />
                                                         </Button>
@@ -263,6 +265,8 @@ export function TaskQueueMonitor() {
                                                         variant="ghost" size="icon" 
                                                         className="h-8 w-8 text-muted-foreground hover:text-foreground"
                                                         onClick={() => setSelectedTask(task)}
+                                                        title="View task details"
+                                                        aria-label="View task details"
                                                     >
                                                         <Eye size={14} />
                                                     </Button>

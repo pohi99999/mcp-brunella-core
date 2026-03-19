@@ -101,7 +101,13 @@ export const MarketWatcherConfig: React.FC = () => {
                   <Badge variant={target.status === 'active' ? 'default' : 'secondary'}>
                     {target.status === 'active' ? 'Aktív' : 'Szüneteltetve'}
                   </Badge>
-                  <Button variant="ghost" size="icon" onClick={() => removeTarget(target.id)}>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeTarget(target.id)}
+                    aria-label="Célpont törlése"
+                    title="Célpont törlése"
+                  >
                     <Trash2 className="w-4 h-4 text-red-500" />
                   </Button>
                 </div>
