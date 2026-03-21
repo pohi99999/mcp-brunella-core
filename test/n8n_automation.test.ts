@@ -13,7 +13,8 @@ describe("Robotkéz n8n Integration Test", () => {
     // Skip tests in CI/Linux environments where Windows paths and specific setup are unavailable
     const isCI = process.env.CI === 'true';
     const isLinux = process.platform === 'linux';
-    const shouldSkip = isCI || isLinux;
+    const runIntegration = process.env.RUN_N8N_INTEGRATION === 'true';
+    const shouldSkip = isCI || isLinux || !runIntegration;
 
     it.skipIf(shouldSkip)("should verify environment variables are present", () => {
         expect(process.env.N8N_TEST_USER).toBeDefined();

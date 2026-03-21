@@ -3,12 +3,17 @@
  *
  * Tests the unified Python backend (FastAPI + LiteLLM Gateway + vLLM)
  * Port: 8010
+ *
+ * Run with: RUN_IRONCLAD_INTEGRATION=1 npm test
  */
 
 import { describe, it, expect, beforeAll } from 'vitest';
 
 const BACKEND_URL = 'http://127.0.0.1:8010';
 const BACKEND_TIMEOUT = 5000; // 5s
+
+// Skip entire suite unless explicitly opted-in via env variable
+const RUN_IRONCLAD_INTEGRATION = process.env.RUN_IRONCLAD_INTEGRATION === '1';
 
 /**
  * Check if the Iron Clad backend is running
@@ -34,6 +39,10 @@ describe('Iron Clad Backend - Integration Tests', () => {
   let testModel = 'qwen2.5-coder:7b'; // Default fallback
 
   beforeAll(async () => {
+    if (!RUN_IRONCLAD_INTEGRATION) {
+      console.info('[SKIP] Iron Clad integration tests disabled. Enable with: RUN_IRONCLAD_INTEGRATION=1 npm test');
+      return;
+    }
     backendAvailable = await isBackendRunning();
     if (!backendAvailable) {
       console.warn('[SKIP] Iron Clad backend not running on port 8010. Start with: python -m myai.backend.app');

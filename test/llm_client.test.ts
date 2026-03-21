@@ -56,7 +56,7 @@ describe('llm_client', () => {
 
             const result = await generateResponse('test prompt', 'gemini');
 
-            expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: 'gemini-2.0-flash' });
+            expect(mockGetGenerativeModel).toHaveBeenCalledWith({ model: process.env.GEMINI_MODEL || 'gemini-2.0-flash' });
             const expectedPrompt = "Te vagy a BAS (Brunella Agent System) Specialistája. Beszélj folyékony magyarul. Válaszaid legyenek mérnöki pontosságúak.\n\nKérés: test prompt";
             expect(mockGenerateContent).toHaveBeenCalledWith(expectedPrompt);
             expect(result).toBe('Gemini response');
@@ -73,13 +73,13 @@ describe('llm_client', () => {
             const result = await generateResponse('test prompt', 'github');
 
             expect(global.fetch).toHaveBeenCalledWith(
-                'https://models.inference.ai.azure.com/chat/completions',
+                'https://models.github.ai/inference/chat/completions',
                 expect.objectContaining({
                     method: 'POST',
                     headers: expect.objectContaining({
                         'Authorization': 'Bearer test-github-token'
                     }),
-                    body: expect.stringContaining('"model":"gpt-4o"')
+                    body: expect.stringContaining('"model":"openai/gpt-4.1"')
                 })
             );
             expect(result).toBe('GitHub response');
