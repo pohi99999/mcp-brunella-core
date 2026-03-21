@@ -1,11 +1,11 @@
 {
   "id": "orchestrator_state_machine_20260321",
   "name": "OrchestratorAgent LangGraph-inspirált State Machine (házi implementáció)",
-  "status": "proposed",
+  "status": "completed",
   "priority": "HIGH",
   "created": "2026-03-21",
   "owner": "Pohánka Péter",
-  "progress": 0,
+  "progress": 100,
   "description": "A LangGraph state machine mintáját implementáljuk az OrchestratorAgent-be pure TypeScript-ben, külső dependency nélkül. Explicit állapotok (IDLE→ANALYZING→ROUTING→EXECUTING→REVIEWING→DONE), guard transition-ök, és Phoenix Protocol checkpoint integráció. Visszafelé kompatibilis — az IAgent interfész nem változik.",
   "inspiration": "LangGraph (LangChain ökoszisztéma) — determinisztikus agent flow, explicit state-kezelés",
   "new_components": {
@@ -22,7 +22,7 @@
     {
       "phase": 1,
       "name": "AgentStateMachine engine",
-      "status": "pending",
+      "status": "completed",
       "duration": "~2 óra",
       "tasks": [
         "src/core/agentStateMachine.ts: StateNode, Transition, MachineContext interfészek",
@@ -35,7 +35,7 @@
     {
       "phase": 2,
       "name": "OrchestratorAgent refaktorálás",
-      "status": "pending",
+      "status": "completed",
       "duration": "~2 óra",
       "tasks": [
         "ORCHESTRATOR_STATES és ORCHESTRATOR_TRANSITIONS konstansok definiálása",
