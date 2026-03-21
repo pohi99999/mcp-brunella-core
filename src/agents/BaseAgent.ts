@@ -37,6 +37,14 @@ export abstract class BaseAgent implements IAgent {
   // Opcionális Swarm Context (ha az AgentManager/SwarmManager átadja)
   protected swarmContext?: ISwarmContext;
 
+  protected isTestMode(): boolean {
+    return (
+      process.env.NODE_ENV === 'test' ||
+      process.env.VITEST === 'true' ||
+      process.env.VITEST_WORKER_ID !== undefined
+    );
+  }
+
   /**
    * Belső végrehajtás – a leszármazottak ezt implementálják.
    */
@@ -50,8 +58,10 @@ export abstract class BaseAgent implements IAgent {
    * Magyar nyelvű válaszokat ad vissza az AgentResult formázásával.
    */
   async execute(task: string, context?: any): Promise<AgentResponse> {
+    const testMode = this.isTestMode();
+
     // 1. Kognitív memória lekérdezése végrehajtás előtt
-    const pastExperiences = await this.queryMemory(task, 3);
+    const pastExperiences = testMode ? [] : await this.queryMemory(task, 3);
     
     const agentContext: AgentContext = {
       task,
@@ -62,12 +72,15 @@ export abstract class BaseAgent implements IAgent {
     const result = await this.executeTask(agentContext);
 
     // 2. Tapasztalat mentése a memóriába (siker és hiba is)
-    const outcome = result.success ? 'SIKER' : 'HIBA';
-    const experienceContent = `Feladat: "${task}" | Eredmény: ${outcome} | Üzenet: ${result.message}`;
-    await this.saveToMemory(experienceContent, { 
-      status: result.success ? 'success' : 'error',
-      taskId: context?.taskId 
-    });
+    // Teszt módban kihagyjuk a perzisztens RAG IO-t a stabilitás/gyorsaság miatt.
+    if (!testMode) {
+      const outcome = result.success ? 'SIKER' : 'HIBA';
+      const experienceContent = `Feladat: "${task}" | Eredmény: ${outcome} | Üzenet: ${result.message}`;
+      await this.saveToMemory(experienceContent, {
+        status: result.success ? 'success' : 'error',
+        taskId: context?.taskId
+      });
+    }
 
     // Format result as Hungarian human-readable text
     const formattedMessage = formatAgentResult(result, this.name, { useEmojis: true });

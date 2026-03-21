@@ -101,7 +101,10 @@ export function saveTestRun(run: Omit<TestRun, 'id'> & { id?: string }): TestRun
 }
 
 export function getTestRuns(limit: number = 10, offset: number = 0): TestRun[] {
-  if (!db) throw new Error('Database not initialized');
+  if (!db) {
+    logInfo('TestResultsService', 'Database not initialized, returning empty test runs');
+    return [];
+  }
   
   try {
     const stmt = db.prepare(`
@@ -120,7 +123,10 @@ export function getTestRuns(limit: number = 10, offset: number = 0): TestRun[] {
 }
 
 export function getTestRunById(id: string): TestRun | null {
-  if (!db) throw new Error('Database not initialized');
+  if (!db) {
+    logInfo('TestResultsService', `Database not initialized, cannot fetch test run: ${id}`);
+    return null;
+  }
   
   try {
     const stmt = db.prepare('SELECT * FROM testRuns WHERE id = ?');
@@ -146,8 +152,26 @@ export interface TestStats {
   };
 }
 
+function createEmptyStats(): TestStats {
+  return {
+    totalRuns: 0,
+    passRate: 0,
+    averageDuration: 0,
+    lastRunStatus: 'unknown',
+    lastRunTime: 'Never',
+    sevenDayStats: {
+      passRate: 0,
+      passCount: 0,
+      failCount: 0,
+    },
+  };
+}
+
 export function getTestStats(): TestStats {
-  if (!db) throw new Error('Database not initialized');
+  if (!db) {
+    logInfo('TestResultsService', 'Database not initialized, returning empty test stats');
+    return createEmptyStats();
+  }
   
   try {
     // Get total runs
@@ -211,7 +235,10 @@ export function getTestStats(): TestStats {
 }
 
 export function getTestRunsByDateRange(startDate: string, endDate: string): TestRun[] {
-  if (!db) throw new Error('Database not initialized');
+  if (!db) {
+    logInfo('TestResultsService', 'Database not initialized, returning empty date-range test runs');
+    return [];
+  }
   
   try {
     const stmt = db.prepare(`

@@ -103,7 +103,7 @@ export class CodeReviewEngine {
 
     constructor(
         provider = process.env.LLM_PROVIDER || 'github',
-        model = 'gpt-4o'
+        model = 'gpt-4.1'
     ) {
         this.llmProvider = provider;
         this.llmModel = model;

@@ -13,6 +13,8 @@
     // --- CLOUD & DEVOPS ---
     "ms-azuretools.vscode-docker",
     "cloudflare.cloudflare-workers-bindings-extension",
-    "semanticworkbenchteam.mcp-server-vscode"
+    "semanticworkbenchteam.mcp-server-vscode",
+    "alessandrobenassi.cloudflare-devtools",
+    "ms-azuretools.vscode-azure-github-copilot"
   ]
 }

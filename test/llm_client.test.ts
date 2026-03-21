@@ -73,13 +73,13 @@ describe('llm_client', () => {
             const result = await generateResponse('test prompt', 'github');
 
             expect(global.fetch).toHaveBeenCalledWith(
-                'https://models.inference.ai.azure.com/chat/completions',
+                'https://models.github.ai/inference/chat/completions',
                 expect.objectContaining({
                     method: 'POST',
                     headers: expect.objectContaining({
                         'Authorization': 'Bearer test-github-token'
                     }),
-                    body: expect.stringContaining('"model":"gpt-4o"')
+                    body: expect.stringContaining('"model":"openai/gpt-4.1"')
                 })
             );
             expect(result).toBe('GitHub response');

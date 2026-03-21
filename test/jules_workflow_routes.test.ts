@@ -98,4 +98,26 @@ describe("Jules workflow routes", () => {
 
     fetchSpy.mockRestore();
   });
+
+  it("POST /api/jules/automations/import imports rules from .jules.yml", async () => {
+    const res = await request(app).post("/api/jules/automations/import").send({
+      skipIfExists: true,
+      enableImmediately: true,
+    });
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(res.body.result).toBeDefined();
+    expect(res.body.result).toHaveProperty("imported");
+    expect(res.body.result).toHaveProperty("skipped");
+    expect(res.body.result).toHaveProperty("errors");
+  });
+
+  it("GET /api/jules/automations/tasks returns imported Jules tasks", async () => {
+    const res = await request(app).get("/api/jules/automations/tasks");
+
+    expect(res.status).toBe(200);
+    expect(res.body.success).toBe(true);
+    expect(Array.isArray(res.body.tasks)).toBe(true);
+  });
 });

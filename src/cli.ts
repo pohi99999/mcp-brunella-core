@@ -4,7 +4,8 @@ import { Command } from "commander";
 import chalk from "chalk";
 import boxen from "boxen";
 import { readFileSync, existsSync, writeFileSync } from "fs";
-import { join } from "path";
+import { join, dirname } from "path";
+import { fileURLToPath } from "url";
 import { configManager } from "./utils/cliConfig.js";
 import { BrunellaClient } from "./utils/mcpClient.js";
 import { marked } from "marked";
@@ -42,6 +43,8 @@ import { registerTaskCommands } from "./cli/taskCommands.js";
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
 const program = new Command();
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 // Try to read package.json version
 let version = "0.0.0";
@@ -149,7 +152,7 @@ program
     // Check Server Connection
     const client = new BrunellaClient();
     try {
-      await client.connect();
+      await client.connect({ coreOnly: true });
       console.log(chalk.green("✔ Server: Connected"));
 
       // Check Agents
@@ -162,6 +165,7 @@ program
       console.log(chalk.red(`✖ Server: Connection failed (${e.message})`));
     } finally {
       await client.close();
+      process.exit(0);
     }
   });
 
@@ -186,7 +190,7 @@ program
   .action(async () => {
     const client = new BrunellaClient();
     try {
-      await client.connect();
+      await client.connect({ coreOnly: true });
       const result = await client.listTools();
       const tools = result.tools;
 
@@ -212,7 +216,7 @@ program
   .action(async () => {
     const client = new BrunellaClient();
     try {
-      await client.connect();
+      await client.connect({ coreOnly: true });
       // Use the agent_list tool
       const result = await client.callTool("agent_list", {});
       // @ts-expect-error The result from agent_list tool might not have 'content[0].text'.
@@ -365,7 +369,9 @@ program
 program
   .command("chat")
   .description("Interactive chat with Brunella")
-  .action(async () => {
+  .option("-v, --verbose", "Show model/provider trace details")
+  .option("--debug", "Show extended orchestration trace (includes Phoenix/fallback)")
+  .action(async (cmd?: { opts: () => { verbose?: boolean; debug?: boolean } }) => {
     marked.setOptions({ renderer: new TerminalRenderer() as any });
 
     console.log(chalk.cyan("Starting chat..."));
@@ -381,6 +387,14 @@ program
         "  /conductor <action> - Run Conductor tasks (status, sync, track)",
       ),
     );
+    console.log(
+      chalk.dim(
+        "  /mode [orchestrator|direct] - Chat motor váltás (agent delegálás / nyers LLM)",
+      ),
+    );
+    console.log(chalk.dim("  /progress - Session feladatok aktuális állapota"));
+    console.log(chalk.dim("  /newsession - Új operátori session indítása"));
+    console.log(chalk.dim("  /approve <id> - High-risk checkpoint jóváhagyása"));
     console.log(chalk.dim("  /tools   - List available tools"));
     console.log(chalk.dim("  /ls [path] - List files (Coding Agent)"));
     console.log(chalk.dim("  /read <path> - Read file (Coding Agent)"));
@@ -390,19 +404,107 @@ program
     const client = new BrunellaClient();
     try {
       await client.connect();
+      const traceOptions = cmd?.opts?.() ?? {};
+      const traceEnabled = Boolean(traceOptions.verbose || traceOptions.debug);
+
+      type ChatProvider = "ollama" | "gemini" | "github" | "cloudflare" | "anthropic";
+      type CatalogProvider = {
+        id: ChatProvider;
+        label: string;
+        enabled: boolean;
+        defaultModel: string;
+        models: Array<{ id: string; name: string }>;
+      };
+
+      const serverUrl =
+        (configManager.get("serverUrl") as string) || "http://localhost:3000";
+      const fallbackCatalog: CatalogProvider[] = [
+        {
+          id: "github",
+          label: "GitHub Models",
+          enabled: true,
+          defaultModel: "gpt-4.1",
+          models: ["gpt-4.1", "gpt-4.1-mini", "gpt-4o", "o3-mini", "o1-mini"].map((name) => ({ id: name, name })),
+        },
+        {
+          id: "gemini",
+          label: "Google Gemini",
+          enabled: true,
+          defaultModel: "gemini-2.5-flash",
+          models: ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"].map((name) => ({ id: name, name })),
+        },
+        {
+          id: "anthropic",
+          label: "Anthropic Claude",
+          enabled: true,
+          defaultModel: "claude-3-5-sonnet-20241022",
+          models: ["claude-3-5-sonnet-20241022", "claude-3-5-haiku-20241022"].map((name) => ({ id: name, name })),
+        },
+        {
+          id: "cloudflare",
+          label: "Cloudflare AI",
+          enabled: true,
+          defaultModel: "@cf/meta/llama-3.3-70b-instruct",
+          models: ["@cf/meta/llama-3.3-70b-instruct", "@cf/meta/llama-3.1-8b-instruct"].map((name) => ({ id: name, name })),
+        },
+        {
+          id: "ollama",
+          label: "Ollama Local",
+          enabled: true,
+          defaultModel: "qwen2.5-coder:7b",
+          models: ["qwen2.5-coder:7b", "llama3.1:8b", "deepseek-r1:8b"].map((name) => ({ id: name, name })),
+        },
+      ];
+
+      const getModelCatalog = async (): Promise<CatalogProvider[]> => {
+        try {
+          const response = await fetch(`${serverUrl}/api/llm/catalog`, {
+            signal: AbortSignal.timeout(10000),
+          });
+          if (!response.ok) {
+            return fallbackCatalog;
+          }
+
+          const data = (await response.json()) as {
+            providers?: Array<{
+              id: string;
+              label: string;
+              enabled: boolean;
+              defaultModel: string;
+              models: Array<{ id: string; name: string }>;
+            }>;
+          };
+
+          const providers = (data.providers || []).filter(
+            (provider): provider is CatalogProvider =>
+              ["github", "gemini", "anthropic", "cloudflare", "ollama"].includes(provider.id) &&
+              (provider.enabled || provider.id === "ollama"),
+          );
+
+          return providers.length > 0 ? providers : fallbackCatalog;
+        } catch {
+          return fallbackCatalog;
+        }
+      };
 
       // Session State
       let history: Array<{ role: "user" | "assistant"; content: string }> = [];
-      let activeProvider: "ollama" | "gemini" | "github" | "cloudflare" = "github";
-      let activeModel: string = "gpt-4o"; // Updated to valid model
+      let activeProvider: ChatProvider = "github";
+      let activeModel: string = "gpt-4.1";
+      const createSessionId = () => `cli-${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
+      let orchestratorSessionId = createSessionId();
 
       let edgeMode = false;
+      let orchestrationMode = true;
 
       console.log(
         chalk.green(
           `\n✔ Active Model: ${chalk.bold(activeModel)} (${activeProvider})\n`,
         ),
       );
+      if (traceEnabled) {
+        console.log(chalk.dim(`TRACE: role=orchestrator provider=${activeProvider} model=${activeModel}`));
+      }
 
       while (true) {
         const { prompt } = await inquirer.prompt([
@@ -424,6 +526,119 @@ program
         if (trimmed === "/clear") {
           history = [];
           console.log(chalk.yellow("Conversation history cleared."));
+          continue;
+        }
+
+        if (trimmed.toLowerCase() === "/newsession") {
+          orchestratorSessionId = createSessionId();
+          history = [];
+          console.log(chalk.green(`✔ Új operátori session: ${chalk.bold(orchestratorSessionId)}`));
+          continue;
+        }
+
+        if (trimmed.toLowerCase().startsWith("/approve")) {
+          const parts = trimmed.split(" ").filter(Boolean);
+          if (parts.length < 2) {
+            console.log(chalk.yellow("Használat: /approve <approval-id>"));
+            continue;
+          }
+
+          const approvalId = parts[1];
+          history.push({ role: "user", content: `jóváhagyom ${approvalId}` });
+          const spinner = ora("Approval végrehajtás...").start();
+          try {
+            const approveRes = await fetch(`${serverUrl}/api/orchestrator/universal`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                message: `jóváhagyom ${approvalId}`,
+                provider: activeProvider,
+                model: activeModel,
+                conversationHistory: history.slice(0, -1),
+                sessionId: orchestratorSessionId,
+              }),
+            });
+
+            if (!approveRes.ok) {
+              throw new Error(`Approval API hiba: ${approveRes.status} ${approveRes.statusText}`);
+            }
+
+            const approveData = (await approveRes.json()) as {
+              reply?: string;
+              sessionId?: string;
+              missionTimeline?: Array<{ phase: string; status: string; detail: string }>;
+            };
+            spinner.stop();
+
+            if (approveData.sessionId) {
+              orchestratorSessionId = approveData.sessionId;
+            }
+
+            const approveText = approveData.reply || "A jóváhagyás feldolgozva.";
+            console.log(marked(approveText));
+
+            if (Array.isArray(approveData.missionTimeline) && approveData.missionTimeline.length > 0) {
+              const compactTimeline = approveData.missionTimeline
+                .slice(-5)
+                .map((entry) => `${entry.phase}[${entry.status}]`)
+                .join(" -> ");
+              console.log(chalk.dim(`Timeline: ${compactTimeline}`));
+            }
+
+            history.push({ role: "assistant", content: approveText });
+          } catch (err: any) {
+            spinner.stop();
+            console.error(chalk.red("Approval hiba:"), err.message);
+          }
+          continue;
+        }
+
+        if (trimmed.toLowerCase() === "/progress") {
+          if (!orchestrationMode) {
+            console.log(chalk.yellow("A /progress az orchestrator módban működik. Használd: /mode orchestrator"));
+            continue;
+          }
+
+          const spinner = ora("Progress lekérése...").start();
+          try {
+            const progressRes = await fetch(
+              `${serverUrl}/api/orchestrator/universal`,
+              {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  message: "Mutasd a session aktuális progresszét és a futó taskokat.",
+                  provider: activeProvider,
+                  model: activeModel,
+                  conversationHistory: history,
+                  sessionId: orchestratorSessionId,
+                }),
+              },
+            );
+
+            if (!progressRes.ok) {
+              throw new Error(`Progress API hiba: ${progressRes.status} ${progressRes.statusText}`);
+            }
+
+            const progressData = (await progressRes.json()) as {
+              reply?: string;
+              sessionId?: string;
+              suggestions?: string[];
+            };
+
+            spinner.stop();
+            if (progressData.sessionId) {
+              orchestratorSessionId = progressData.sessionId;
+            }
+            const progressText = progressData.reply || "Nincs elérhető progressz riport.";
+            console.log(marked(progressText));
+            if (Array.isArray(progressData.suggestions) && progressData.suggestions.length > 0) {
+              console.log(chalk.dim(`Javaslatok: ${progressData.suggestions.join(" | ")}`));
+            }
+          } catch (err: any) {
+            spinner.stop();
+            console.error(chalk.red("Progress lekérdezési hiba:"), err.message);
+          }
           continue;
         }
 
@@ -538,8 +753,34 @@ program
           continue;
         }
 
+        if (trimmed.toLowerCase().startsWith("/mode")) {
+          const parts = trimmed
+            .split(" ")
+            .map((part: string) => part.trim().toLowerCase())
+            .filter(Boolean);
+
+          if (parts.length === 1) {
+            orchestrationMode = !orchestrationMode;
+          } else if (parts[1] === "orchestrator" || parts[1] === "agent") {
+            orchestrationMode = true;
+          } else if (parts[1] === "direct" || parts[1] === "llm") {
+            orchestrationMode = false;
+          } else {
+            console.log(chalk.red("Unknown mode. Use /mode orchestrator vagy /mode direct"));
+            continue;
+          }
+
+          console.log(
+            orchestrationMode
+              ? chalk.green("✔ Chat mode: Orchestrator (tool calling + agent delegálás)")
+              : chalk.yellow("✔ Chat mode: Direct LLM (nyers provider válasz)"),
+          );
+          continue;
+        }
+
         if (trimmed.toLowerCase().startsWith("/switch")) {
           const parts = trimmed.split(" ");
+          const catalog = await getModelCatalog();
           // Interactive selection if just '/switch'
           if (parts.length === 1) {
             const { provider } = await inquirer.prompt([
@@ -547,35 +788,18 @@ program
                 type: "list",
                 name: "provider",
                 message: "Select AI Provider:",
-                choices: ["github", "gemini", "cloudflare", "ollama"],
+                choices: catalog.map((entry) => ({ name: entry.label, value: entry.id })),
               },
             ]);
 
-            let modelChoices: string[] = [];
-            if (provider === "github")
-              modelChoices = ["gpt-4o", "gpt-4o-mini", "o1-preview", "o1-mini"];
-
-            if (provider === "gemini")
-              modelChoices = [
-                "gemini-2.5-flash",
-                "gemini-2.0-flash",
-                "gemini-flash-latest",
-                "gemini-2.5-pro",
-              ];
-            if (provider === "cloudflare")
-              modelChoices = [
-                "@cf/meta/llama-3.3-70b-instruct",
-                "@cf/meta/llama-3.1-8b-instruct",
-              ];
-            if (provider === "ollama")
-              modelChoices = ["llama3.1:8b", "deepseek-r1:8b", "qwen2.5-coder"];
+            const providerEntry = catalog.find((entry) => entry.id === provider) || catalog[0];
 
             const { model } = await inquirer.prompt([
               {
                 type: "list",
                 name: "model",
                 message: "Select Model:",
-                choices: modelChoices,
+                choices: providerEntry.models.map((entry) => entry.name),
               },
             ]);
 
@@ -584,26 +808,25 @@ program
           } else {
             // Quick switch: /switch gemini
             const target = parts[1].toLowerCase();
-            if (target === "github") {
-              activeProvider = "github";
-              activeModel = "gpt-4o";
-            } else if (target === "gemini") {
-              activeProvider = "gemini";
-              activeModel = "gemini-2.5-flash";
-            } else if (target === "cloudflare" || target === "cf") {
-              activeProvider = "cloudflare";
-              activeModel = "@cf/meta/llama-3.3-70b-instruct";
-            } else if (target === "ollama") {
-              activeProvider = "ollama";
-              activeModel = "llama3.1:8b";
-            } else {
+            const normalizedTarget = target === "claude"
+              ? "anthropic"
+              : target === "cf"
+                ? "cloudflare"
+                : target;
+
+            const providerEntry = catalog.find((entry) => entry.id === normalizedTarget);
+
+            if (!providerEntry) {
               console.log(
                 chalk.red(
-                  "Unknown provider. Use interactive mode (just /switch) or github/gemini/cloudflare/ollama.",
+                  "Unknown provider. Use interactive mode (just /switch) or github/gemini/anthropic/cloudflare/ollama.",
                 ),
               );
               continue;
             }
+
+            activeProvider = providerEntry.id;
+            activeModel = providerEntry.defaultModel || providerEntry.models[0]?.name || activeModel;
           }
 
           console.log(chalk.green(`✔ Switched to: ${chalk.bold(activeModel)}`));
@@ -631,57 +854,134 @@ program
                   edgeResult.message ||
                   JSON.stringify(edgeResult);
           } else {
-            // Local / API Providers via Tools
-            let result: any;
+            if (orchestrationMode) {
+              const conversationHistory = history.slice(0, -1);
+              const orchestratorRes = await fetch(
+                `${serverUrl}/api/orchestrator/universal`,
+                {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    message: prompt,
+                    provider: activeProvider,
+                    model: activeModel,
+                    conversationHistory,
+                    sessionId: orchestratorSessionId,
+                  }),
+                },
+              );
 
-            if (activeProvider === "cloudflare") {
-              const serverUrl = (configManager.get("serverUrl") as string) || "http://localhost:3000";
-              const cfRes = await fetch(`${serverUrl}/api/llm/generate`, {
+              if (!orchestratorRes.ok) {
+                throw new Error(
+                  `Orchestrator API hiba: ${orchestratorRes.status} ${orchestratorRes.statusText}`,
+                );
+              }
+
+              const orchestratorData = (await orchestratorRes.json()) as {
+                reply?: string;
+                actionsTriggered?: Array<{ agent: string; taskId: number }>;
+                provider?: string;
+                model?: string;
+                role?: string;
+                thinkingMs?: number;
+                sessionId?: string;
+                suggestions?: string[];
+                missionTimeline?: Array<{ phase: string; status: string; detail: string }>;
+                approvalRequired?: boolean;
+                approvalId?: string;
+                riskLevel?: "low" | "high";
+                runbookHint?: string;
+                fallbackUsed?: boolean;
+                fallbackReason?: string;
+                phoenixTriggered?: boolean;
+              };
+
+              if (orchestratorData.sessionId) {
+                orchestratorSessionId = orchestratorData.sessionId;
+              }
+
+              responseText =
+                orchestratorData.reply ||
+                "A kérés feldolgozva, de nem érkezett részletes válasz.";
+
+              if (
+                Array.isArray(orchestratorData.actionsTriggered) &&
+                orchestratorData.actionsTriggered.length > 0
+              ) {
+                const actionSummary = orchestratorData.actionsTriggered
+                  .map((a) => `#${a.taskId} ${a.agent}`)
+                  .join(", ");
+                responseText += `\n\n🔧 Delegált feladatok: ${actionSummary}`;
+              }
+
+              if (orchestratorData.provider || typeof orchestratorData.thinkingMs === "number") {
+                responseText += `\n\n_${orchestratorData.provider || activeProvider}${
+                  typeof orchestratorData.thinkingMs === "number"
+                    ? ` • ${orchestratorData.thinkingMs} ms`
+                    : ""
+                }_`;
+              }
+
+              if (traceEnabled) {
+                const traceParts = [
+                  `role=${orchestratorData.role || 'orchestrator'}`,
+                  `provider=${orchestratorData.provider || activeProvider}`,
+                  `model=${orchestratorData.model || activeModel}`,
+                ];
+                if (orchestratorData.fallbackUsed) {
+                  traceParts.push(`fallback=${orchestratorData.fallbackReason || 'yes'}`);
+                }
+                if (orchestratorData.phoenixTriggered) {
+                  traceParts.push('phoenix=triggered');
+                }
+                responseText += `\n\n🔍 TRACE: ${traceParts.join(' | ')}`;
+              }
+
+              if (Array.isArray(orchestratorData.suggestions) && orchestratorData.suggestions.length > 0) {
+                responseText += `\n\n💡 Javaslatok: ${orchestratorData.suggestions.join(" | ")}`;
+              }
+
+              if (orchestratorData.runbookHint) {
+                responseText += `\n\n📚 ${orchestratorData.runbookHint}`;
+              }
+
+              if (orchestratorData.approvalRequired && orchestratorData.approvalId) {
+                responseText += `\n\n🛡️ Approval kell: /approve ${orchestratorData.approvalId}`;
+              }
+
+              if (Array.isArray(orchestratorData.missionTimeline) && orchestratorData.missionTimeline.length > 0) {
+                const compactTimeline = orchestratorData.missionTimeline
+                  .slice(-6)
+                  .map((entry) => `${entry.phase}[${entry.status}]`)
+                  .join(" -> ");
+                responseText += `\n\n🧭 Timeline: ${compactTimeline}`;
+              }
+            } else {
+              const llmRes = await fetch(`${serverUrl}/api/llm/generate`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ prompt, provider: "cloudflare", model: activeModel }),
+                body: JSON.stringify({
+                  prompt,
+                  provider: activeProvider,
+                  model: activeModel,
+                }),
               });
-              if (!cfRes.ok) throw new Error(`Workers AI hiba: ${cfRes.status} ${cfRes.statusText}`);
-              const cfData = await cfRes.json() as { text?: string; error?: string };
-              responseText = cfData.text || cfData.error || JSON.stringify(cfData);
-            } else if (activeProvider === "github") {
-              result = await client.callTool("github_models_generate", {
-                prompt,
-                model: activeModel,
-                system: "Te Brunella vagy, a Brunella Agent System AI asszisztense. Folyékonyan, természetesen és barátságosan kommunikálsz magyarul. Szakszerű és tömör válaszokat adsz. Ha kódot generálsz, magyarázod és kommentálod magyarul.",
-              });
-            } else if (activeProvider === "gemini") {
-              result = await client.callTool("gemini_generate", {
-                prompt,
-                model: activeModel,
-              });
-            } else if (activeProvider === "ollama") {
-              result = await client.callTool("ollama_generate", {
-                prompt,
-                model: activeModel,
-              });
-            } else {
-              // Fallback Agent
-              result = await client.callTool("agent_delegate", {
-                agent_name: "Orchestrator",
-                task: prompt,
-                context: { history, provider: activeProvider },
-              });
-            }
 
-            // Parse Tool Result safely (cloudflare ág már responseText-et állít)
-            if (!responseText) {
-              if (
-                result &&
-                result.content &&
-                Array.isArray(result.content) &&
-                result.content.length > 0
-              ) {
-                responseText = result.content[0].text;
-              } else if (result && result.message) {
-                responseText = result.message;
-              } else {
-                responseText = JSON.stringify(result, null, 2);
+              if (!llmRes.ok) {
+                throw new Error(`LLM API hiba: ${llmRes.status} ${llmRes.statusText}`);
+              }
+
+              const llmData = (await llmRes.json()) as {
+                text?: string;
+                error?: string;
+                provider?: string;
+                model?: string;
+              };
+              responseText =
+                llmData.text || llmData.error || "A modell nem adott vissza választ.";
+
+              if (traceEnabled) {
+                responseText += `\n\n🔍 TRACE: role=direct_llm | provider=${llmData.provider || activeProvider} | model=${llmData.model || activeModel}`;
               }
             }
           }

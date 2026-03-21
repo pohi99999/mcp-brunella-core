@@ -3,7 +3,7 @@
  */
 
 import { Router } from 'express';
-import { processChat } from '../../orchestrator/orchestratorCore.js';
+import { getUniversalOrchestratorService, type UniversalChatMessage } from '../../core/universalOrchestratorService.js';
 import { socketService } from '../SocketService.js';
 import { logInfo, logError } from '../../utils/logger.js';
 
@@ -14,7 +14,13 @@ const router = Router();
  * Body: { message: string, model?: string }
  */
 router.post('/chat', async (req, res) => {
-  const { message, model } = req.body as { message: string; model?: string };
+  const { message, model, provider, conversationHistory } = req.body as {
+    message: string;
+    model?: string;
+    provider?: string;
+    conversationHistory?: UniversalChatMessage[];
+    sessionId?: string;
+  };
 
   if (!message?.trim()) {
     return res.status(400).json({
@@ -24,21 +30,63 @@ router.post('/chat', async (req, res) => {
   }
 
   try {
-    logInfo('PAIOSOrchestrator', `Chat request: "${message.slice(0, 80)}..."`);
+    const providerFromModel = model && ['gemini', 'github', 'ollama', 'anthropic', 'claude', 'cloudflare'].includes(model)
+      ? model
+      : undefined;
+    const effectiveProvider = provider ?? providerFromModel ?? 'github';
+    const effectiveModel = providerFromModel
+      ? undefined
+      : model ?? (effectiveProvider === 'github' ? 'gpt-4.1' : undefined);
 
-    const result = await processChat(message, model);
+    logInfo(
+      'PAIOSOrchestrator',
+      `Chat request (${effectiveProvider}${effectiveModel ? `/${effectiveModel}` : ''}): "${message.slice(0, 80)}..."`
+    );
 
-    // Socket.IO broadcast (ha vannak taskek)
-    if (result.taskIds && result.taskIds.length > 0) {
+    const service = getUniversalOrchestratorService();
+    const universalResult = await service.process({
+      message,
+      provider: effectiveProvider,
+      model: effectiveModel,
+      conversationHistory: conversationHistory ?? [],
+      sessionId: typeof req.body?.sessionId === 'string' ? req.body.sessionId : undefined,
+    });
+
+    const taskIds = universalResult.actionsTriggered.map((action) => action.taskId);
+
+    // Socket.IO broadcast (ha vannak taskok)
+    if (taskIds.length > 0) {
       socketService.emit('paios:tasks_created', {
-        summary: result.summary,
-        taskIds: result.taskIds,
-        plan: result.plan,
+        summary: universalResult.reply,
+        taskIds,
+        plan: [],
+        actionsTriggered: universalResult.actionsTriggered,
         timestamp: new Date().toISOString(),
       });
     }
 
-    return res.json(result);
+    return res.json({
+      success: true,
+      summary: universalResult.reply,
+      reply: universalResult.reply,
+      plan: [],
+      taskIds,
+      actionsTriggered: universalResult.actionsTriggered,
+      provider: universalResult.provider,
+      model: universalResult.model,
+      role: universalResult.role,
+      thinkingMs: universalResult.thinkingMs,
+      sessionId: universalResult.sessionId,
+      suggestions: universalResult.suggestions,
+      missionTimeline: universalResult.missionTimeline,
+      approvalRequired: universalResult.approvalRequired,
+      approvalId: universalResult.approvalId,
+      riskLevel: universalResult.riskLevel,
+      runbookHint: universalResult.runbookHint,
+      fallbackUsed: universalResult.fallbackUsed,
+      fallbackReason: universalResult.fallbackReason,
+      phoenixTriggered: universalResult.phoenixTriggered,
+    });
   } catch (err: unknown) {
     const error = err instanceof Error ? err.message : String(err);
     logError('PAIOSOrchestrator', `Chat endpoint error: ${error}`);
