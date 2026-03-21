@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 // IMPORTANT: vi.mock() MUST be at module scope (Vitest hoisting!)
 vi.mock('../src/core/checkpoint.js', () => ({
@@ -8,7 +8,7 @@ vi.mock('../src/core/checkpoint.js', () => ({
 
 vi.mock('../src/core/phoenixEventBus.js', () => ({
   phoenixEventBus: {
-    emit: vi.fn(),
+    publish: vi.fn(),
     subscribe: vi.fn(),
   },
 }));
@@ -19,7 +19,7 @@ vi.mock('../src/utils/logger.js', () => ({
   logWarn: vi.fn(),
 }));
 
-import { AgentStateMachine, type StateNode, type Transition, type MachineContext } from '../src/core/agentStateMachine.js';
+import { AgentStateMachine, type StateNode, type Transition } from '../src/core/agentStateMachine.js';
 
 type TestState = 'IDLE' | 'WORKING' | 'DONE' | 'ERROR';
 
