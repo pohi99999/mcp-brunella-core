@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 // IMPORTANT: vi.mock() MUST be at module scope (Vitest hoisting!)
 vi.mock('../src/core/checkpoint.js', () => ({
@@ -39,6 +39,10 @@ function makeSimpleMachine(taskId = 'test-1') {
 }
 
 describe('AgentStateMachine', () => {
+  beforeEach(() => {
+    vi.clearAllMocks();
+  });
+
   it('starts in the initial state', () => {
     const m = makeSimpleMachine();
     expect(m.getState()).toBe('IDLE');
@@ -101,6 +105,24 @@ describe('AgentStateMachine', () => {
     const m = new AgentStateMachine<TestState>(states, transitions, 'IDLE', 'test-hook');
     await m.transition('start');
     expect(onEnter).toHaveBeenCalledOnce();
+  });
+
+  it('guard allows transition when condition passes', async () => {
+    const states: StateNode<TestState>[] = [
+      { name: 'IDLE' }, { name: 'WORKING' }, { name: 'DONE' }, { name: 'ERROR' },
+    ];
+    const transitions: Transition<TestState>[] = [
+      {
+        from: 'IDLE',
+        to: 'WORKING',
+        event: 'start',
+        guard: (ctx) => ctx.retryCount < 3,
+      },
+    ];
+    const m = new AgentStateMachine<TestState>(states, transitions, 'IDLE', 'test-guard-pass');
+    m.updateContext({ task: 'test', retryCount: 0 }); // retryCount < 3 → guard passes
+    const next = await m.transition('start');
+    expect(next).toBe('WORKING');
   });
 
   it('updateContext merges partial patch without losing other fields', () => {
