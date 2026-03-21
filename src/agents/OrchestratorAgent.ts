@@ -5,6 +5,7 @@ import { getBifrostGateway } from "../core/bifrost_gateway.js";
 import { phoenixEventBus } from "../core/phoenixEventBus.js";
 import { socketService } from "../server/SocketService.js";
 import { AgentStateMachine, type StateNode, type Transition } from '../core/agentStateMachine.js';
+import { clearCheckpoints } from '../core/checkpoint.js';
 
 // Magyar gyors-válasz táblázat a keyword routing ághoz
 const QUICK_REPLIES: Record<string, string> = {
@@ -405,6 +406,7 @@ export class OrchestratorAgent implements IAgent {
     );
     this.currentMachine = machine;
     machine.updateContext({ task, retryCount: 0 });
+    setAgentStatus('OrchestratorAgent', 'working', task.slice(0, 50));
 
     try {
       await machine.transition('taskReceived');  // IDLE → ANALYZING
@@ -591,10 +593,11 @@ ${agents}
       } catch {
         // ignore — machine might already be in an invalid state
       }
-      setAgentStatus('OrchestratorAgent', 'idle');
       return { status: 'error', error: msg };
     } finally {
+      setAgentStatus('OrchestratorAgent', 'idle');
       this.currentMachine = null;
+      clearCheckpoints(taskId).catch(() => {/* ignore cleanup errors */});
     }
   }
 }
