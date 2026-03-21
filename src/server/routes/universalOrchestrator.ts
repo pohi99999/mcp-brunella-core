@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import { getUniversalOrchestratorService, type UniversalChatMessage } from '../../core/universalOrchestratorService.js';
 import { logInfo, logError } from '../../utils/logger.js';
+import type { OrchestratorAgent, OrchestratorState } from '../../agents/OrchestratorAgent.js';
+import { agentManager } from '../../agents/AgentManager.js';
 
 export function createUniversalOrchestratorRouter(): Router {
   const router = Router();
@@ -56,6 +58,12 @@ export function createUniversalOrchestratorRouter(): Router {
         }],
       });
     }
+  });
+
+  router.get('/state', (_req, res) => {
+    const agent = agentManager.getAgent?.('Orchestrator') as OrchestratorAgent | undefined;
+    const state: OrchestratorState = agent?.getCurrentState?.() ?? 'IDLE';
+    res.json({ state, timestamp: new Date().toISOString() });
   });
 
   return router;
