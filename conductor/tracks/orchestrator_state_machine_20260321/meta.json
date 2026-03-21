@@ -6,7 +6,7 @@
   "created": "2026-03-21",
   "owner": "Pohánka Péter",
   "progress": 100,
-  "description": "A LangGraph state machine mintáját implementáljuk az OrchestratorAgent-be pure TypeScript-ben, külső dependency nélkül. Explicit állapotok (IDLE→ANALYZING→ROUTING→EXECUTING→REVIEWING→DONE), guard transition-ök, és Phoenix Protocol checkpoint integráció. Visszafelé kompatibilis — az IAgent interfész nem változik.",
+  "description": "A LangGraph state machine mintáját implementáljuk az OrchestratorAgent-be pure TypeScript-ben, külső dependency nélkül. Explicit állapotok (IDLE→ANALYZING→ROUTING→EXECUTING→DONE), guard transition-ök, és Phoenix Protocol checkpoint integráció. Visszafelé kompatibilis — az IAgent interfész nem változik.",
   "inspiration": "LangGraph (LangChain ökoszisztéma) — determinisztikus agent flow, explicit state-kezelés",
   "new_components": {
     "typescript": [
@@ -17,7 +17,7 @@
       "src/agents/OrchestratorAgent.ts — state machine integráció (visszafelé kompatibilis)"
     ]
   },
-  "states": ["IDLE", "ANALYZING", "ROUTING", "EXECUTING", "REVIEWING", "DONE", "ERROR", "FAILED"],
+  "states": ["IDLE", "ANALYZING", "ROUTING", "EXECUTING", "DONE", "ERROR", "FAILED"],
   "phases": [
     {
       "phase": 1,
