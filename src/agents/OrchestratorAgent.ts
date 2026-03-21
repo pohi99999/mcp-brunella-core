@@ -509,6 +509,11 @@ ${agents}
 
         if (!response.success) {
           this.logger.error(`LLM Gateway hiba: ${response.error}`);
+          try {
+            await machine.transition('errorOccurred');
+          } catch {
+            // ignore if transition not valid from current state
+          }
           return { status: 'error', error: 'Hiba az LLM kommunikációban.' };
         }
 
@@ -580,8 +585,16 @@ ${agents}
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
       logError('OrchestratorAgent', `State machine error: ${msg}`);
+      // Attempt to move machine to ERROR state for observability
+      try {
+        await machine.transition('errorOccurred');
+      } catch {
+        // ignore — machine might already be in an invalid state
+      }
       setAgentStatus('OrchestratorAgent', 'idle');
       return { status: 'error', error: msg };
+    } finally {
+      this.currentMachine = null;
     }
   }
 }
