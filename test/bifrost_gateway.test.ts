@@ -5,11 +5,19 @@ import { BifrostGateway } from '../src/core/bifrost_gateway.js';
 vi.mock('ollama', () => ({
     Ollama: class {
         constructor() { /* ... */ }
-        generate = vi.fn().mockResolvedValue({ response: 'Ollama mock response' });
+        chat = vi.fn().mockResolvedValue({
+          message: { content: 'Ollama mock response' },
+          prompt_eval_count: 10,
+          eval_count: 5,
+        });
     },
     default: class {
         constructor() { /* ... */ }
-        generate = vi.fn().mockResolvedValue({ response: 'Ollama mock response' });
+        chat = vi.fn().mockResolvedValue({
+          message: { content: 'Ollama mock response' },
+          prompt_eval_count: 10,
+          eval_count: 5,
+        });
     }
 }));
 
@@ -47,14 +55,22 @@ describe('Bifrost Gateway', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
+    process.env.GEMINI_API_KEY = 'test-gemini-key';
+    process.env.GITHUB_TOKEN = 'test-github-token';
+    global.fetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        choices: [{ message: { content: 'GitHub mock response' } }],
+      }),
+    }) as any;
     gateway = new BifrostGateway();
   });
 
-  it('should generate content using Ollama by default', async () => {
+  it('should generate content using GitHub GPT-4.1 as default system brain', async () => {
     const result = await gateway.generate({ prompt: 'test prompt', taskType: 'general' });
     expect(result.success).toBe(true);
-    expect(result.provider).toBe('gemini'); // Changed from 'ollama' to 'gemini' as it's the actual default when available
-    expect(result.content).toBe('Gemini mock response');
+    expect(result.provider).toBe('github');
+    expect(result.content).toBe('GitHub mock response');
   });
 
   it('should route to a capable model for "code" tasks', async () => {
@@ -69,15 +85,16 @@ describe('Bifrost Gateway', () => {
     expect(['gemini', 'github', 'ollama']).toContain(result.provider);
   });
 
-  it('should handle unavailable providers gracefully', async () => {
-      const { Octokit } = await import('@octokit/rest');
-      const mockOctokitInstance = new Octokit();
-      (mockOctokitInstance.request as any).mockRejectedValueOnce(new Error("API Down"));
+    it('should fallback deterministically when provider failure is fallback-eligible', async () => {
+      (global.fetch as any).mockRejectedValueOnce(new Error('network error'));
 
       const result = await gateway.generate({ prompt: "test", provider: "github" });
       
       expect(result.success).toBe(true);
-      expect(result.provider).toBe('ollama'); 
-      expect(result.content).toBe('Ollama mock response');
+      expect(result.provider).toBe('gemini');
+      expect(result.content).toBe('Gemini mock response');
+      expect(result.fallback_used).toBe(true);
+      expect(result.fallback_reason).toBe('api_error');
+      expect(result.phoenix_triggered).toBe(true);
   });
 });

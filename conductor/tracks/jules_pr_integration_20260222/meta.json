@@ -3,11 +3,11 @@
   "type": "AI Collaboration / PR Integration",
   "priority": "HIGH",
   "status": "active",
-  "progress": 0,
+  "progress": 18,
   "goal": "Jules (Google Labs AI) által beküldött 30 nyitott GitHub PR átnézése, tesztelése és beépítése. 4 fázisban: Reliability → Features → Performance → UX. Minden merge előtt: npm run build && npm test PASS kötelező.",
   "assignee": "Claude + Pohánka Péter",
   "createdAt": "2026-02-22T00:00:00Z",
-  "updatedAt": "2026-02-22T00:00:00Z",
+  "updatedAt": "2026-03-20T21:40:00Z",
   "context": "Jules (app/google-labs-jules) autonóm AI fejlesztő, aki folyamatosan küldi a PR-okat. Összegyűlt 30 db nyitott PR. Fázisokra bontva integráljuk: először a reliability-kritikus változások, aztán az új feature-ök, majd performance, végül UX/a11y batch.",
   "phases": [
     {
@@ -103,5 +103,5 @@
     "Conflict PR-ok (#101, #81) kezelt és dokumentált.",
     "Copilot WIP PR-ok (#87, #76, #75) lezárva."
   ],
-  "nextStep": "Phase 1: PR #94 (Ollama silent restart) merge — gh pr merge 94 --squash"
+  "nextStep": "Review remaining high-risk local .Jules diffs (prompt-style and model-ordering changes) and cherry-pick only measurable improvements"
 }

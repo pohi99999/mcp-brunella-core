@@ -77,8 +77,12 @@ export class SalesHunterAgent extends BaseAgent {
   private readonly RATE_LIMIT_WINDOW_MS = 60 * 60 * 1000; // 1 hour
   private rateLimitTracker: Map<string, number[]> = new Map();
 
-  private isTestMode(): boolean {
-    return process.env.NODE_ENV === 'test' || process.env.VITEST === 'true';
+  protected override isTestMode(): boolean {
+    return (
+      process.env.NODE_ENV === 'test' ||
+      process.env.VITEST === 'true' ||
+      process.env.VITEST_WORKER_ID !== undefined
+    );
   }
 
   /**

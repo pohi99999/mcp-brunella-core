@@ -3,6 +3,8 @@ import { exec } from "child_process";
 import path from "path";
 import { fileURLToPath } from "url";
 import { logError, logInfo, logWarn } from "../../utils/logger.js";
+import { getGlobalDb } from "../../utils/globalDb.js";
+import { JulesAutomationService } from "../../core/julesAutomationService.js";
 
 // Helper to run shell commands
 const runCommand = (command: string): Promise<string> => {
@@ -238,6 +240,47 @@ export function createJulesRoutes(): Router {
       res.json({ success: true, output: stdout });
     } catch (error) {
       res.status(500).json({ error: String(error) });
+    }
+  });
+
+  // ------------------------------------------------------------------------
+  // Jules automation rules (.jules.yml) -> scheduled_tasks
+  // ------------------------------------------------------------------------
+
+  // GET /automations/tasks - list imported Jules tasks
+  router.get("/automations/tasks", async (_req, res) => {
+    try {
+      const db = getGlobalDb();
+      const julesService = new JulesAutomationService(db);
+      const tasks = julesService.getImportedTasks();
+      res.json({ success: true, count: tasks.length, tasks });
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ success: false, error: msg });
+    }
+  });
+
+  // POST /automations/import - manually trigger import from .jules.yml
+  router.post("/automations/import", async (req, res) => {
+    try {
+      const skipIfExists =
+        typeof req.body?.skipIfExists === "boolean" ? req.body.skipIfExists : true;
+      const enableImmediately =
+        typeof req.body?.enableImmediately === "boolean"
+          ? req.body.enableImmediately
+          : true;
+
+      const db = getGlobalDb();
+      const julesService = new JulesAutomationService(db);
+      const result = await julesService.importJulesAutomations({
+        skipIfExists,
+        enableImmediately,
+      });
+
+      res.json({ success: true, result });
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ success: false, error: msg });
     }
   });
 

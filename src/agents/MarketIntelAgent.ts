@@ -90,8 +90,12 @@ export class MarketIntelAgent extends BaseAgent {
   private readonly PRICE_DROP_THRESHOLD = 10; // Alert if price drops >10%
   private priceHistory: Map<string, PricePoint[]> = new Map();
 
-  private isTestMode(): boolean {
-    return process.env.NODE_ENV === 'test' || process.env.VITEST === 'true';
+  protected override isTestMode(): boolean {
+    return (
+      process.env.NODE_ENV === 'test' ||
+      process.env.VITEST === 'true' ||
+      process.env.VITEST_WORKER_ID !== undefined
+    );
   }
 
   /**
@@ -131,8 +135,11 @@ export class MarketIntelAgent extends BaseAgent {
 
       // Store in LanceDB (now using real addToIndex via saveToMemory in BaseAgent)
       // BaseAgent already saves the outcome, but here we can save detailed price points
-      const priceSummary = result.priceSnapshots.map((p: any) => `${p.productName}: ${p.price} ${p.currency}`).join(', ');
-      await this.saveToMemory(`Részletes árak: ${priceSummary}`, { category: params.productCategory });
+      // Skip RAG IO in test mode for stability
+      if (!this.isTestMode()) {
+        const priceSummary = result.priceSnapshots.map((p: any) => `${p.productName}: ${p.price} ${p.currency}`).join(', ');
+        await this.saveToMemory(`Részletes árak: ${priceSummary}`, { category: params.productCategory });
+      }
 
       logInfo(this.name, `✅ Piaci elemzés kész: ${result.priceSnapshots.length} ár követve`);
 

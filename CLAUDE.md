@@ -16,8 +16,10 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ### 1. GitHub Szinkronizálás (MINDIG ELŐSZÖR!)
 ```bash
-bash scripts/sync.sh          # Git Bash / WSL
-# VAGY: scripts\sync.bat (Windows CMD)
+bash scripts/sync.sh                     # Git Bash / WSL
+bash scripts/sync.sh --build             # Sync + build check
+bash scripts/sync.sh --build --test      # Sync + build + teszt (teljes)
+# VAGY: scripts\sync.bat (Windows CMD) / .\scripts\sync.ps1 (PowerShell)
 ```
 
 ### 2. Kritikus Fájlok Beolvasása
@@ -51,6 +53,9 @@ tail -n 50 logs/phoenix.log   # Phoenix Protocol hibák ellenőrzése
 ## Parancsok
 
 ```bash
+# Teljes rendszer indítás (Windows)
+start-full.bat       # Egylépéses indítás (Ollama + backend + dashboard)
+
 # Build & Run
 npm run build        # TypeScript fordítás (kötelező deploy előtt)
 npm run dev          # Dual-mode szerver: MCP stdio + Express HTTP (:3000) — node --loader ts-node/esm
@@ -440,6 +445,22 @@ EDGE_ENABLED=true
 
 ---
 
+## Védett Fájlok (SOHA NE TÖRÖLD!)
+
+| Fájl | Miért kritikus |
+|------|----------------|
+| `src/agents/types.ts` | IAgent interfész definíció |
+| `src/agents/registry.json` | Ügynök regisztráció |
+| `src/server/web.ts` | Web szerver |
+| `src/server/registry.ts` | MCP tool regisztráció |
+| `src/cli.ts` | CLI belépési pont |
+| `src/core/llm_client.ts` | LLM kommunikáció |
+| `src/index.ts` | Fő belépési pont |
+
+**Ha "takarítani" akarsz — KÉRDEZZ ELŐSZÖR!**
+
+---
+
 ## Hibaelhárítás
 
 | Probléma | Megoldás |
@@ -455,6 +476,8 @@ EDGE_ENABLED=true
 | Dashboard fehér képernyő | Console import hiba, ellenőrizd a props-okat |
 | LanceDB ImportError | `cd myai && uv pip install lancedb pyarrow` |
 | uv sync lock hiba | `Remove-Item -Recurse -Force .venv && uv venv && uv sync` |
+| Phoenix Protocol hiba | `tail -n 50 logs/phoenix.log` — öngyógyító, de ellenőrizd! |
+| Agent specifikus hiba | `logs/agent_<name>.log` és `logs/developer.log` átnézése |
 
 ---
 

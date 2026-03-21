@@ -16,7 +16,7 @@ import { WIDGET_REGISTRY } from "@/lib/widgetRegistry";
 export function MissionControlLayout() {
   const [activeTab, setActiveTab] = useState<string>("dashboard");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [selectedModel, setSelectedModel] = useState("gpt-4o");
+  const [selectedModel, setSelectedModel] = useState("gpt-4.1");
   const { currentLayout, setLayoutMode, layouts } = useLayout();
   const [isConnected, setIsConnected] = useState(false);
   const [coreStatus, setCoreStatus] = useState<'HEALTHY' | 'DEGRADED' | 'OFFLINE'>('OFFLINE');

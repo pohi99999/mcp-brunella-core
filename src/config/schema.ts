@@ -29,7 +29,7 @@ export const ConfigSchema = z.object({
 
   githubToken: z.string().optional(),
   githubPat: z.string().optional(), // Alternative to githubToken
-  githubModel: z.string().default('gpt-4o'),
+  githubModel: z.string().default('gpt-4.1'),
   githubWebhookSecret: z.string().optional(),
 
   // Python Backend

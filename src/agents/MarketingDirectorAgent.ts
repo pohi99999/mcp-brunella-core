@@ -26,7 +26,7 @@ export class MarketingDirectorAgent extends BaseAgent {
             // 1. Generate Action Plan
             socketService.emit('business_job:updated', { jobId, status: 'running', message: 'Marketing Akcióterv készítése...' });
             const actionPlanPrompt = `Te egy profi Marketing Igazgató vagy. A felhasználó a következő terméket/szolgáltatást akarja promótálni:\n\n"${task}"\n\nKészíts egy lépésről-lépésre szóló marketing akciótervet a piacra lépéshez (Célközönség, USP, Csatornák, Hirdetési javaslatok).`;
-            const actionPlan = await generateResponse(actionPlanPrompt, this.llmProvider, "gpt-4o");
+            const actionPlan = await generateResponse(actionPlanPrompt, this.llmProvider, "gpt-4.1");
 
             // 2. Generate Social Media Posts
             socketService.emit('business_job:updated', { jobId, status: 'running', message: 'Közösségi média tartalmak írása...' });
