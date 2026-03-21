@@ -4,6 +4,7 @@ import { agentManager } from "./AgentManager.js";
 import { getBifrostGateway } from "../core/bifrost_gateway.js";
 import { phoenixEventBus } from "../core/phoenixEventBus.js";
 import { socketService } from "../server/SocketService.js";
+import { AgentStateMachine, type StateNode, type Transition } from '../core/agentStateMachine.js';
 
 // Magyar gyors-válasz táblázat a keyword routing ághoz
 const QUICK_REPLIES: Record<string, string> = {
@@ -144,6 +145,33 @@ const KEYWORD_ROUTES: ReadonlyArray<{
   { keywords: ["voice", "hang", "audio", "hangutasítás", "beszélj"], agent: "voice" },
 ];
 
+export type OrchestratorState =
+  | 'IDLE' | 'ANALYZING' | 'ROUTING' | 'EXECUTING' | 'DONE' | 'ERROR' | 'FAILED';
+
+const ORCH_STATES: StateNode<OrchestratorState>[] = [
+  { name: 'IDLE' },
+  { name: 'ANALYZING' },
+  { name: 'ROUTING' },
+  { name: 'EXECUTING' },
+  { name: 'DONE' },
+  { name: 'ERROR' },
+  { name: 'FAILED' },
+];
+
+const ORCH_TRANSITIONS: Transition<OrchestratorState>[] = [
+  { from: 'IDLE',      to: 'ANALYZING', event: 'taskReceived' },
+  { from: 'ANALYZING', to: 'ROUTING',   event: 'analysisComplete' },
+  { from: 'ROUTING',   to: 'EXECUTING', event: 'agentSelected' },
+  { from: 'EXECUTING', to: 'DONE',      event: 'executionComplete' },
+  { from: 'ANALYZING', to: 'ERROR',     event: 'errorOccurred' },
+  { from: 'ROUTING',   to: 'ERROR',     event: 'errorOccurred' },
+  { from: 'EXECUTING', to: 'ERROR',     event: 'errorOccurred' },
+  { from: 'ERROR',     to: 'ANALYZING', event: 'retry',
+    guard: (ctx) => ctx.retryCount < 3 },
+  { from: 'ERROR',     to: 'FAILED',    event: 'giveUp',
+    guard: (ctx) => ctx.retryCount >= 3 },
+];
+
 const ORCHESTRATOR_TOOLS = [
   {
     type: "function",
@@ -199,6 +227,11 @@ export class OrchestratorAgent implements IAgent {
 
   private logger: Logger;
   private failedDuringSession: Set<string> = new Set();
+  private currentMachine: AgentStateMachine<OrchestratorState> | null = null;
+
+  getCurrentState(): OrchestratorState {
+    return this.currentMachine?.getState() ?? 'IDLE';
+  }
 
   constructor() {
     this.logger = new Logger("orchestrator.log");
@@ -363,162 +396,182 @@ export class OrchestratorAgent implements IAgent {
   ): Promise<unknown> {
     this.logger.info(`Orchestrating task: ${task}`);
 
+    const taskId = `orch-${Date.now()}`;
+    const machine = new AgentStateMachine<OrchestratorState>(
+      ORCH_STATES,
+      ORCH_TRANSITIONS,
+      'IDLE',
+      taskId,
+    );
+    this.currentMachine = machine;
+    machine.updateContext({ task, retryCount: 0 });
+
     try {
-      // === STUDIO MODE: route directly to DeveloperAgent with rootDir context ===
+      await machine.transition('taskReceived');  // IDLE → ANALYZING
+
+      // === STUDIO MODE ===
       if (context?.studioMode && context?.rootDir) {
         this.logger.info(`Studio mode detected — routing to developer agent (rootDir: ${context.rootDir})`);
+        machine.updateContext({ agentName: 'developer' });
+        await machine.transition('analysisComplete'); // ANALYZING → ROUTING
+        await machine.transition('agentSelected');    // ROUTING → EXECUTING
         const studioTaskId = await agentManager.queueTask(task, 'developer', context);
+        await machine.transition('executionComplete'); // EXECUTING → DONE
         return { status: 'success', message: 'Studio feladat kiosztva a Fejlesztő ügynöknek.', taskId: studioTaskId };
       }
 
       // === FAST PATH: keyword pre-routing (no LLM needed) ===
       const kwMatch = this.keywordRoute(task);
       const isCompound =
-        /\b(?:and|then|after that|also|plus|meg |aztán|majd|valamint|utána)\b/i.test(
-          task,
-        );
+        /\b(?:and|then|after that|also|plus|meg |aztán|majd|valamint|utána)\b/i.test(task);
+
+      await machine.transition('analysisComplete'); // ANALYZING → ROUTING
+
       if (kwMatch && (kwMatch.hits >= 99 || !isCompound)) {
-        this.logger.info(
-          `Keyword pre-route → ${kwMatch.agent} (hits: ${kwMatch.hits})`,
-        );
-        const id = await agentManager.queueTask(
-          task,
-          kwMatch.agent,
-          context ?? undefined,
-        );
+        this.logger.info(`Keyword pre-route → ${kwMatch.agent} (hits: ${kwMatch.hits})`);
+        machine.updateContext({ agentName: kwMatch.agent });
+        await machine.transition('agentSelected');   // ROUTING → EXECUTING
+        const id = await agentManager.queueTask(task, kwMatch.agent, context ?? undefined);
         const quickReply = QUICK_REPLIES[kwMatch.agent] || `Delegálom a feladatot a(z) ${kwMatch.agent} ügynöknek.`;
         socketService.broadcastChatter('Brunella', quickReply, 'user');
+        await machine.transition('executionComplete'); // EXECUTING → DONE
         return {
           success: true,
-          status: "success",
+          status: 'success',
           message: quickReply,
           taskIds: [id],
-          routing: "keyword",
+          routing: 'keyword',
         };
       }
 
       // === REACT PATH: LLM-based Tool Calling Loop ===
-      this.logger.info("Starting ReAct Execution Loop");
+      this.logger.info('Starting ReAct Execution Loop');
+      machine.updateContext({ agentName: 'llm-react' });
+      await machine.transition('agentSelected');   // ROUTING → EXECUTING
 
       const agents = agentManager
         .listAgentDefinitions()
-        .filter((a) => a.name !== "Orchestrator")
+        .filter((a) => a.name !== 'Orchestrator')
         .map((a) => `- ${a.name}: ${a.description} (Role: ${a.role})`)
-        .join("\n");
+        .join('\n');
 
       const systemPrompt = `
-    Te a BAS OrchestratorAgent vagy.
+Te vagy Brunella, a Brunella Agent System (BAS) intelligens, proaktív központi "agya" és Orchestrator ügynöke. Te vagy a rendszer elsődleges kapcsolattartója a Mesterrel (a felhasználóval).
 
-    KÖTELEZŐ SZEREP:
-    - Nem hajtasz végre feladatot közvetlenül.
-    - Nem generálsz végső szakmai outputot.
-    - Kizárólag döntesz, delegálsz, és felügyeled a végrehajtást.
+A feladatod kettős:
+1. **Intelligens Társalgópartner:** Bármiről cseveghetsz a felhasználóval (időjárás, tech hírek, filozófia, stb.) teljesen természetes, emberi módon. Te egy okos, segítőkész és barátságos entitás vagy.
+2. **Központi Diszpécser:** Ha a felhasználó egy technikai vagy végrehajtandó feladatot kér (pl. "keress rá erre a neten", "írj egy kódot", "nyisd meg a böngészőt"), a feladatod, hogy a megfelelő ügynökök mozgósításával ELVÉGEZD a feladatot a rendelkezésedre álló eszközök (tools) segítségével.
 
-    OPERÁCIÓS SZABÁLYOK:
-    1) Kérés-osztályozás: állapot / delegálás / tisztázás.
-    2) Delegálás: kizárólag eszközhívással (delegate_task).
-    3) Státusz: rövid operátori visszajelzés (mi indult, mi blokkolt, next step).
+**Személyiség és Stílus:**
+- Professzionális, udvarias, de határozott mérnöki vezető (Senior Systems Architect / Dispatcher).
+- Csevegés esetén légy közvetlen és érdeklődő.
+- Nem csak "tervezel", hanem azonnal **cselekedsz** is az eszközök meghívásával.
+- Ha egy feladatot háttérbe küldesz, azonnal tájékoztasd a felhasználót a 'send_message_to_user' eszközzel, vagy a végső válaszodban (pl. "Értettem. Elindítottam a RobotkezV2-t a háttérben. Szólok, ha végzett.").
+- **SOHA** ne adj vissza nyers JSON feladatlistát vagy markdown formázott JSON-t válaszként. Csak természetes nyelven kommunikálj!
+- **SOHA** ne generálj Markdown execution planeket (pl. 'design', 'implementation', 'test' fázisokkal), ha a felhasználó egy azonnali, futtatható parancsot kér (pl. 'Nyisd meg a böngészőt').
+- **Azonnali Cselekvés:** Ha a kérés egyértelmű (pl. "Nyisd meg a böngészőt"), AZONNAL hívd meg a 'delegate_task' eszközt a 'robotkezv2' ügynökkel, 'start_browser' vagy 'navigate' instrukcióval, felesleges feladatbontás nélkül.
 
-    TILOS:
-    - Kreatív vagy végrehajtó narratíva.
-    - Nyers JSON dump válaszként.
-    - Végrehajtás szimulálása tényleges delegálás nélkül.
+**Elérhető Ügynökök (akiknek delegálhatsz a 'delegate_task' eszközzel ha kell):**
+${agents}
 
-    Elérhető ügynökök:
-    ${agents}
+**Specifikus Tudásbázis:**
+- **Böngészés / Web Interakciók:** Ha a felhasználó böngészni akar vagy információt letölteni, mindig a 'robotkezv2' ügynöknek delegálj.
+- **n8n / Langflow:** Canvas-alapú UI rendszerek. Az összetett feladatokat a 'robotkezv2' ügynöknek kell kiadnod. Bontsd le a kérést kis lépésekre a 'delegate_task' használatakor.
 
-    ReAct használat:
-    - delegate_task(agent_name, instruction)
-    - get_agent_status(agent_name)
-    - send_message_to_user(message)
-    `;
+**ReAct Működés (Hogyan használd az eszközeidet):**
+1. Kapod a kérést. Döntsd el, hogy ez egy egyszerű kérdés/csevegés, vagy egy feladat, amit delegálni kell.
+2. Ha feladatot kell kiosztani, használd a 'delegate_task' eszközt. Ezt többször is megteheted különböző ügynökök felé.
+3. Ha állapotra van szükséged a rendszerben futó ügynökökről, használd a 'get_agent_status' eszközt.
+4. Ha üzenetet akarsz küldeni a Dashboardra folyamat közben, használd a 'send_message_to_user'-t.
+5. Ha minden szükséges eszközt meghívtál, vagy ha a feladat csak egy kérdés volt, adj egy végső, emberi választ.
+`;
 
-      const messages: any[] = [
+      const messages: unknown[] = [
         { role: 'system', content: systemPrompt },
         { role: 'user', content: task }
       ];
 
       const gateway = getBifrostGateway();
       const MAX_ITERATIONS = 5;
-      let finalMessage = "A feladatot feldolgoztam.";
+      let finalMessage = 'A feladatot feldolgoztam.';
       let taskIds: number[] = [];
 
       for (let i = 0; i < MAX_ITERATIONS; i++) {
         this.logger.info(`ReAct iteráció ${i + 1}/${MAX_ITERATIONS}`);
-        
+
         const response = await gateway.generate({
-            prompt: task,
-            taskType: 'general',
-            model: 'gpt-4.1', // Prefer tool-capable models
-            tools: ORCHESTRATOR_TOOLS,
-            messages: messages
+          prompt: task,
+          taskType: 'general',
+          model: 'gpt-4.1',
+          tools: ORCHESTRATOR_TOOLS,
+          messages: messages as any
         });
 
         if (!response.success) {
-            this.logger.error(`LLM Gateway hiba: ${response.error}`);
-            return { status: "error", error: "Hiba az LLM kommunikációban." };
+          this.logger.error(`LLM Gateway hiba: ${response.error}`);
+          return { status: 'error', error: 'Hiba az LLM kommunikációban.' };
         }
 
-        const replyContent = response.content || "";
+        const replyContent = response.content || '';
         const toolCalls = response.toolCalls;
 
-        // Adjuk hozzá az asszisztens válaszát a history-hoz
         const assistantMessage: any = { role: 'assistant', content: replyContent };
         if (toolCalls && toolCalls.length > 0) {
-            assistantMessage.tool_calls = toolCalls;
+          assistantMessage.tool_calls = toolCalls;
         }
         messages.push(assistantMessage);
 
         if (replyContent && !toolCalls) {
-            finalMessage = replyContent;
-            socketService.broadcastChatter('Brunella', finalMessage, 'user');
-            break;
+          finalMessage = replyContent;
+          socketService.broadcastChatter('Brunella', finalMessage, 'user');
+          break;
         }
 
         if (toolCalls && toolCalls.length > 0) {
-            for (const toolCall of toolCalls) {
-                const name = toolCall.function.name;
-                const args = JSON.parse(toolCall.function.arguments);
-                let toolResult = "";
+          for (const toolCall of toolCalls) {
+            const name = toolCall.function.name;
+            const args = JSON.parse(toolCall.function.arguments);
+            let toolResult = '';
 
-                this.logger.info(`Tool meghívva: ${name} paraméterekkel: ${JSON.stringify(args)}`);
+            this.logger.info(`Tool meghívva: ${name} paraméterekkel: ${JSON.stringify(args)}`);
 
-                try {
-                    if (name === 'delegate_task') {
-                        const id = await agentManager.queueTask(args.instruction, args.agent_name, context ?? undefined);
-                        taskIds.push(id);
-                        toolResult = `Feladat sikeresen delegálva. Task ID: ${id}`;
-                    } else if (name === 'get_agent_status') {
-                        const statuses = agentManager.listAgentStatuses();
-                        const status = statuses.find(s => s.name.toLowerCase() === args.agent_name.toLowerCase());
-                        toolResult = status ? JSON.stringify(status) : `Ügynök nem található: ${args.agent_name}`;
-                    } else if (name === 'send_message_to_user') {
-                        socketService.broadcastChatter('Brunella', args.message, 'user');
-                        toolResult = "Üzenet sikeresen elküldve.";
-                    } else {
-                        toolResult = `Ismeretlen eszköz: ${name}`;
-                    }
-                } catch (toolErr: any) {
-                    this.logger.error(`Tool error (${name}): ${toolErr.message}`);
-                    toolResult = `Hiba az eszköz futtatása közben: ${toolErr.message}`;
-                }
-
-                messages.push({
-                    role: 'tool',
-                    tool_call_id: toolCall.id,
-                    name: name,
-                    content: toolResult
-                });
+            try {
+              if (name === 'delegate_task') {
+                const id = await agentManager.queueTask(args.instruction, args.agent_name, context ?? undefined);
+                taskIds.push(id);
+                toolResult = `Feladat sikeresen delegálva. Task ID: ${id}`;
+              } else if (name === 'get_agent_status') {
+                const statuses = agentManager.listAgentStatuses();
+                const status = statuses.find(s => s.name.toLowerCase() === args.agent_name.toLowerCase());
+                toolResult = status ? JSON.stringify(status) : `Ügynök nem található: ${args.agent_name}`;
+              } else if (name === 'send_message_to_user') {
+                socketService.broadcastChatter('Brunella', args.message, 'user');
+                toolResult = 'Üzenet sikeresen elküldve.';
+              } else {
+                toolResult = `Ismeretlen eszköz: ${name}`;
+              }
+            } catch (toolErr: unknown) {
+              const errMsg = toolErr instanceof Error ? toolErr.message : String(toolErr);
+              this.logger.error(`Tool error (${name}): ${errMsg}`);
+              toolResult = `Hiba az eszköz futtatása közben: ${errMsg}`;
             }
+
+            messages.push({
+              role: 'tool',
+              tool_call_id: toolCall.id,
+              name: name,
+              content: toolResult
+            });
+          }
         } else {
-            // No tool calls and no content (should be rare)
-            break;
+          break;
         }
       }
 
+      await machine.transition('executionComplete'); // EXECUTING → DONE
       return {
         success: true,
-        status: "success",
+        status: 'success',
         message: finalMessage,
         taskIds,
         steps: taskIds,
@@ -526,7 +579,9 @@ export class OrchestratorAgent implements IAgent {
 
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
-      return { status: "error", error: msg };
+      logError('OrchestratorAgent', `State machine error: ${msg}`);
+      setAgentStatus('OrchestratorAgent', 'idle');
+      return { status: 'error', error: msg };
     }
   }
 }
