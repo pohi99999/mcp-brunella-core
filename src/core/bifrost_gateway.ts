@@ -4,6 +4,7 @@ import { Anthropic } from '@anthropic-ai/sdk';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { aiGateway, type ChatMessage as AIChatMessage } from '../utils/aiGateway.js';
 import { type UniversalToolDefinition } from './toolRegistry.js';
+import { phoenixEventBus } from './phoenixEventBus.js';
 
 /**
  * Bifrost Gateway - Multi-Provider LLM Routing
@@ -26,6 +27,7 @@ import { type UniversalToolDefinition } from './toolRegistry.js';
 
 export type ProviderType = 'ollama' | 'gemini' | 'github' | 'anthropic' | 'cloudflare';
 export type TaskType = 'code' | 'general' | 'reasoning' | 'creative' | 'fast';
+export type FallbackReason = 'api_error' | 'timeout' | 'rate_limit' | 'invalid_tool_response' | 'phoenix_recovery';
 
 /** OpenAI-style tool definition (used by DeveloperAgent, EvaluatorAgent, OrchestratorAgent) */
 export interface OpenAIToolDefinition {
@@ -51,6 +53,7 @@ export interface GenerateOptions {
   model?: string;  // Override default model
   tools?: Array<UniversalToolDefinition | OpenAIToolDefinition>;   // Added support for tools
   messages?: any[]; // Added support for message history
+  phoenixRecoveryTrigger?: boolean;
 }
 
 export interface GenerateResponse {
@@ -67,6 +70,9 @@ export interface GenerateResponse {
   };
   error?: string;
   fallback_used?: boolean;
+  fallback_reason?: FallbackReason;
+  fallback_from?: ProviderType;
+  phoenix_triggered?: boolean;
 }
 
 export interface ProviderHealth {
@@ -123,7 +129,7 @@ export class BifrostGateway {
       type: 'ollama',
       enabled: true,
       baseUrl: process.env.OLLAMA_BASE_URL || 'http://localhost:11434',
-      defaultModel: 'qwen2.5-coder:7b',
+      defaultModel: process.env.OLLAMA_DEFAULT_MODEL || 'mistral:latest',
       priority: 1,
       maxRetries: 2
     });
@@ -141,13 +147,13 @@ export class BifrostGateway {
     });
 
     // 3. GitHub Models (Microsoft-hosted, GPT-4o)
-    const githubToken = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
+    const githubToken = process.env.GITHUB_PAT || process.env.GITHUB_TOKEN;
     this.providers.set('github', {
       type: 'github',
       enabled: !!(githubToken && githubToken !== ''),
       apiKey: githubToken,
-      baseUrl: 'https://models.inference.ai.azure.com',
-      defaultModel: process.env.GITHUB_MODELS_DEFAULT_MODEL || process.env.GITHUB_MODEL || 'gpt-4o',
+      baseUrl: 'https://models.github.ai/inference',
+      defaultModel: process.env.GITHUB_MODELS_DEFAULT_MODEL || process.env.GITHUB_MODEL || 'gpt-4.1',
       priority: 3,
       maxRetries: 3
     });
@@ -230,31 +236,73 @@ export class BifrostGateway {
         return result;
       }
 
-      // 3. Fallback preference: cloud premium/provider -> GitHub Models -> Ollama
-      if (selectedProvider !== 'ollama') {
-        const githubCfg = this.providers.get('github');
-        if (selectedProvider !== 'github' && githubCfg?.enabled) {
-          logWarn('BifrostGateway', `${selectedProvider} failed, falling back to GitHub Models...`);
-          const githubFallback = await this.generateWithProvider('github', {
-            ...options,
-            model: options.model || githubCfg.defaultModel,
-          });
-          if (githubFallback.success) {
-            githubFallback.fallback_used = true;
-            this.recordRequest('github');
-            return githubFallback;
-          }
+      // 3. Deterministic fallback only for explicit failure categories
+      const fallbackReason: FallbackReason | null = options.phoenixRecoveryTrigger
+        ? 'phoenix_recovery'
+        : this.classifyFallbackReason(result.error);
+
+      if (!fallbackReason) {
+        logWarn('BifrostGateway', `${selectedProvider} failed without fallback-eligible reason: ${result.error ?? 'unknown error'}`);
+        return {
+          ...result,
+          success: false,
+          fallback_used: false,
+          duration_ms: Date.now() - startTime,
+        };
+      }
+
+      const fallbackCandidates = this.getFallbackCandidates(selectedProvider);
+      for (let i = 0; i < fallbackCandidates.length; i += 1) {
+        const fallbackProvider = fallbackCandidates[i];
+        const fallbackCfg = this.providers.get(fallbackProvider);
+        if (!fallbackCfg?.enabled) {
+          continue;
         }
 
-        logWarn('BifrostGateway', `${selectedProvider} failed, falling back to Ollama...`);
-        // Use a copy of options but WITHOUT the model override, so Ollama uses its own default
-        const fallbackOptions = { ...options };
-        delete fallbackOptions.model;
+        phoenixEventBus.publish('phoenix:failover_triggered', {
+          originalAgent: selectedProvider,
+          fallbackAgent: fallbackProvider,
+          taskInstruction: options.prompt.slice(0, 200),
+          attempt: i + 1,
+          timestamp: new Date().toISOString(),
+        });
 
-        const fallbackResult = await this.generateWithProvider('ollama', fallbackOptions);
-        fallbackResult.fallback_used = true;
-        this.recordRequest('ollama');
-        return fallbackResult;
+        logWarn('BifrostGateway', `${selectedProvider} failed (${fallbackReason}), fallback -> ${fallbackProvider}`);
+
+        const fallbackOptions: GenerateOptions = { ...options };
+        if (!options.model || fallbackProvider !== selectedProvider) {
+          delete fallbackOptions.model;
+        }
+
+        const fallbackStart = Date.now();
+        const fallbackResult = await this.generateWithProvider(fallbackProvider, fallbackOptions);
+        const executionTimeMs = Date.now() - fallbackStart;
+
+        phoenixEventBus.publish('phoenix:failover_result', {
+          originalAgent: selectedProvider,
+          fallbackAgent: fallbackProvider,
+          taskInstruction: options.prompt.slice(0, 200),
+          success: fallbackResult.success,
+          error: fallbackResult.error,
+          executionTimeMs,
+          timestamp: new Date().toISOString(),
+        });
+
+        if (fallbackResult.success) {
+          phoenixEventBus.publish('phoenix:recovery', {
+            type: 'failover',
+            agent: fallbackProvider,
+            details: `reason=${fallbackReason}; from=${selectedProvider}; to=${fallbackProvider}`,
+            timestamp: new Date().toISOString(),
+          });
+
+          fallbackResult.fallback_used = true;
+          fallbackResult.fallback_reason = fallbackReason;
+          fallbackResult.fallback_from = selectedProvider;
+          fallbackResult.phoenix_triggered = true;
+          this.recordRequest(fallbackProvider);
+          return fallbackResult;
+        }
       }
 
       // 4. All providers failed
@@ -263,7 +311,11 @@ export class BifrostGateway {
         provider: selectedProvider,
         model: 'unknown',
         duration_ms: Date.now() - startTime,
-        error: result.error || 'All providers failed'
+        error: result.error || 'All providers failed',
+        fallback_used: false,
+        fallback_reason: fallbackReason,
+        fallback_from: selectedProvider,
+        phoenix_triggered: fallbackReason === 'phoenix_recovery',
       };
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
@@ -282,16 +334,8 @@ export class BifrostGateway {
    * Auto-select best provider based on task type
    */
   private autoSelectProvider(taskType: TaskType): ProviderType {
-    // Task-specific routing logic
-    const routing: Record<TaskType, ProviderType[]> = {
-      code: ['ollama', 'github', 'gemini', 'anthropic', 'cloudflare'],     // Prefer local Qwen2.5-Coder
-      general: ['gemini', 'anthropic', 'github', 'cloudflare', 'ollama'],  // Prefer premium cloud, then GitHub, then local
-      reasoning: ['anthropic', 'github', 'gemini', 'ollama', 'cloudflare'], // Prefer Claude
-      creative: ['anthropic', 'gemini', 'github', 'ollama', 'cloudflare'],  // Prefer Claude
-      fast: ['cloudflare', 'gemini', 'ollama', 'github', 'anthropic']       // CF llama-3.1-8b is very fast
-    };
-
-    const candidates = routing[taskType] || routing.general;
+    // Deterministic System Brain policy: GitHub GPT-4.1 -> Gemini -> Ollama
+    const candidates: ProviderType[] = ['github', 'gemini', 'ollama'];
 
     // Select first available provider from candidates
     for (const providerType of candidates) {
@@ -303,6 +347,40 @@ export class BifrostGateway {
 
     // Fallback to Ollama (always available)
     return 'ollama';
+  }
+
+  private classifyFallbackReason(error?: string): FallbackReason | null {
+    const normalized = (error || '').toLowerCase();
+    if (!normalized) {
+      return null;
+    }
+
+    if (/(timeout|timed out|etimedout|aborterror|aborted)/i.test(normalized)) {
+      return 'timeout';
+    }
+    if (/(rate limit|429|quota exceeded|too many requests)/i.test(normalized)) {
+      return 'rate_limit';
+    }
+    if (/(invalid tool|tool.*invalid|tool.*malformed|tool.*schema|tool.*parse)/i.test(normalized)) {
+      return 'invalid_tool_response';
+    }
+    if (/(api error|http|network|fetch failed|socket|service unavailable|bad gateway|provider .* not enabled)/i.test(normalized)) {
+      return 'api_error';
+    }
+
+    return null;
+  }
+
+  private getFallbackCandidates(selectedProvider: ProviderType): ProviderType[] {
+    const deterministicChain: ProviderType[] = ['github', 'gemini', 'ollama'];
+
+    const inChainIndex = deterministicChain.indexOf(selectedProvider);
+    if (inChainIndex >= 0) {
+      return deterministicChain.slice(inChainIndex + 1);
+    }
+
+    // Non-core providers (anthropic/cloudflare) always fall back to System Brain chain
+    return deterministicChain;
   }
 
   /**
@@ -372,11 +450,21 @@ export class BifrostGateway {
       throw new Error('Ollama client not initialized');
     }
 
-    const response = await this.ollamaClient.generate({
+    const messages: Array<{ role: 'system' | 'user' | 'assistant'; content: string }> = [];
+    if (options.messages && options.messages.length > 0) {
+      for (const m of options.messages) {
+        messages.push({ role: m.role as 'system' | 'user' | 'assistant', content: m.content });
+      }
+    } else {
+      if (options.systemPrompt) {
+        messages.push({ role: 'system', content: options.systemPrompt });
+      }
+      messages.push({ role: 'user', content: options.prompt });
+    }
+
+    const response = await this.ollamaClient.chat({
       model,
-      prompt: options.systemPrompt
-        ? `${options.systemPrompt}\n\n${options.prompt}`
-        : options.prompt,
+      messages,
       stream: false,
       options: {
         temperature: options.temperature ?? 0.7,
@@ -386,7 +474,7 @@ export class BifrostGateway {
 
     return {
       success: true,
-      content: response.response,
+      content: response.message.content,
       provider: 'ollama',
       model,
       duration_ms: Date.now() - startTime,
@@ -489,8 +577,11 @@ export class BifrostGateway {
       messages.push({ role: 'user', content: options.prompt });
     }
 
+    // GitHub Models API requires openai/ prefix for model names
+    const resolvedModel = model.includes('/') ? model : `openai/${model}`;
+
     const payload: any = {
-      model,
+      model: resolvedModel,
       messages,
       temperature: options.temperature ?? 0.7,
       max_tokens: options.maxTokens ?? 2048,
@@ -506,7 +597,7 @@ export class BifrostGateway {
       payload.tool_choice = 'auto';
     }
 
-    // GitHub Models API is OpenAI-compatible but requires specific headers
+    // GitHub Models API is OpenAI-compatible
     const response = await fetch(`${config.baseUrl}/chat/completions`, {
       method: 'POST',
       headers: {

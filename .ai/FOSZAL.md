@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-21 01:20
+**Generálva:** 2026-03-21 18:45
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,20 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-03-21
+
+#### 05:00 - [Claude] GitHub Models gpt-4.1 + Ollama fallback javítás ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/core/bifrost_gateway.ts` — GITHUB_PAT/TOKEN sorrend, Ollama default, GitHub URL+model ID
+
+#### 02:30 - [Claude] RobotkezV2 Mission Control Worktree E2E Audit ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `CLAUDE.md` — 4 javítás, `.worktrees/robotkez-mission-control/vitest.e2e.config.ts` — e2e config létrehozva
+
+---
 
 ### 2026-03-19
 
@@ -744,7 +758,7 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 76 | 2026-03-19 |
+| Claude | 78 | 2026-03-21 |
 | Gemini | 10 | 2026-03-01 |
 | Cursor | 0 | N/A |
 | Copilot | 47 | 2026-02-15 |

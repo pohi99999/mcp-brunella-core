@@ -300,18 +300,21 @@ export function createEnterpriseAnalyticsRouter(): Router {
       const { getD1Adapter } = await import('../../utils/globalDb.js');
       const d1Adapter = getD1Adapter();
 
+      // Parse input early for consistent fallback response
+      const limitNum = parseInt(limit as string) || 100;
+      const daysNum = parseInt(days as string) || 7;
+
       if (!d1Adapter) {
-        return res.status(503).json({
-          status: 'error',
-          error: 'D1 adapter not available',
-          fallback: 'SQLite',
+        return res.json({
+          status: 'success',
+          source: 'local-fallback',
+          events: [],
+          total: 0,
+          query: { type: type || 'all', limit: limitNum, days: daysNum },
         });
       }
 
       // Fetch from D1
-      const limitNum = parseInt(limit as string) || 100;
-      const daysNum = parseInt(days as string) || 7;
-
       const eventsResult = typeof type === 'string' && type.length > 0
         ? await d1Adapter.getEnterpriseEventsByType(type, limitNum * 2)
         : await d1Adapter.getEnterpriseEvents(limitNum * 2);
@@ -320,7 +323,14 @@ export function createEnterpriseAnalyticsRouter(): Router {
       
       // Filter by days
       const cutoffTime = Date.now() - (daysNum * 24 * 60 * 60 * 1000);
-      const filteredEvents = events.filter(e => e.created_at >= cutoffTime).slice(0, limitNum);
+      const filteredEvents = events
+        .filter((e: any) => {
+          const createdAt = typeof e.created_at === 'number'
+            ? e.created_at
+            : new Date(e.created_at).getTime();
+          return Number.isFinite(createdAt) && createdAt >= cutoffTime;
+        })
+        .slice(0, limitNum);
 
       res.json({
         status: 'success',
@@ -351,9 +361,17 @@ export function createEnterpriseAnalyticsRouter(): Router {
       const d1Adapter = getD1Adapter();
 
       if (!d1Adapter) {
-        return res.status(503).json({
-          status: 'error',
-          error: 'D1 adapter not available',
+        return res.json({
+          status: 'success',
+          source: 'local-fallback',
+          stats: {
+            totalEvents: 0,
+            byType: {},
+            byPriority: {},
+            byStatus: {},
+            last24h: 0,
+            last7d: 0,
+          },
         });
       }
 

@@ -89,6 +89,7 @@ function initSchema(): void {
         next_run_at TEXT,
         last_status TEXT DEFAULT 'pending' CHECK(last_status IN ('pending', 'success', 'failed')),
         last_result TEXT,
+        metadata TEXT DEFAULT '{}',
         created_at TEXT DEFAULT (datetime('now')),
         updated_at TEXT DEFAULT (datetime('now'))
       );
@@ -176,6 +177,21 @@ function initSchema(): void {
     `);
 
     logInfo('GlobalDb', 'Schema initialized');
+
+    // Backward-compatible migration: ensure scheduled_tasks.metadata exists.
+    try {
+      const taskColumns = globalDb
+        .prepare("PRAGMA table_info(scheduled_tasks)")
+        .all() as Array<{ name: string }>;
+      const hasMetadata = taskColumns.some((c) => c.name === 'metadata');
+
+      if (!hasMetadata) {
+        globalDb.exec("ALTER TABLE scheduled_tasks ADD COLUMN metadata TEXT DEFAULT '{}'");
+        logInfo('GlobalDb', 'Migration applied: added scheduled_tasks.metadata column');
+      }
+    } catch (migrationError) {
+      logError('GlobalDb', `scheduled_tasks metadata migration failed: ${migrationError}`);
+    }
 
     // Create default "Brunella Agents" fleet if it doesn't exist
     const fleetCheck = globalDb.prepare('SELECT COUNT(*) as count FROM cean_fleets WHERE id = ?').get('fleet-brunella-agents') as { count: number };

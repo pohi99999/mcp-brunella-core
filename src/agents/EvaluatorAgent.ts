@@ -108,7 +108,7 @@ A feladatod a rendszerek auditálása, egészségügyi ellenőrzések és TESZTE
       const response = await gateway.generate({
           prompt: task,
           taskType: 'reasoning',
-          model: this.llmProvider === 'github' ? 'gpt-4o' : undefined,
+          model: this.llmProvider === 'github' ? 'gpt-4.1' : undefined,
           tools: EVALUATOR_TOOLS,
           messages: messages
       });
