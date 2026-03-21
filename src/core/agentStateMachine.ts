@@ -97,13 +97,13 @@ export class AgentStateMachine<S extends string> {
     logInfo('StateMachine', `${prev} --[${event}]--> ${this.current}`);
 
     // Checkpoint save on every transition (Phoenix Protocol RULE-PH1)
-    await saveCheckpoint(this.taskId, this.stepIndex, `${prev}->${this.current}`, {
+    await saveCheckpoint(this.taskId, this.stepIndex, this.current, {
       machineState: this.current,
       context: this.context,
     });
 
     // Phoenix Protocol observability event
-    phoenixEventBus.emit('phoenix:state_restored', {
+    phoenixEventBus.publish('phoenix:state_restored', {
       agentName: this.context.agentName ?? 'OrchestratorAgent',
       taskId: this.taskId,
       stepIndex: this.stepIndex,
