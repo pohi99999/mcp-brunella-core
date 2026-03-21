@@ -1,14 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-19T18:00:00.948Z
+**Utolso frissites:** 2026-03-21T18:00:00.246Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 93 total | 4 active | 10 completed | 71 archived
+**Stats:** 99 total | 8 active | 10 completed | 71 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (8)
+## Tervezett Szalak (Proposed) (10)
 
 - [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
   - **ID:** `cloudflare_workers_migration_20260226`
@@ -49,6 +49,16 @@
   - **Assignee:** RobotkezAgent + n8n
   - Mappa: ./tracks/micro_csr_automator_20260212/
 
+- [ ] **OrchestratorAgent LangGraph-inspirált State Machine (házi implementáció)** [HIGH]
+  - **ID:** `orchestrator_state_machine_20260321`
+  - **Progress:** 0%
+  - Mappa: ./tracks/orchestrator_state_machine_20260321/
+
+- [ ] **OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)** [HIGH]
+  - **ID:** `owl_agent_coordinator_20260321`
+  - **Progress:** 0%
+  - Mappa: ./tracks/owl_agent_coordinator_20260321/
+
 - [ ] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser** [HIGH]
   - **ID:** `robotkez_comet_upgrade_20260222`
   - **Progress:** 10%
@@ -56,7 +66,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (4)
+## Aktiv Szalak (Active) (8)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -64,9 +74,14 @@
   - **Assignee:** Claude (Phase 1-2 Complete)
   - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
 
+- [ ] **Dashboard 500 és teszt timeout hibák javítása** [MEDIUM]
+  - **ID:** `dashboard-500-and-test-timeouts-20260320`
+  - **Progress:** 0%
+  - Mappa: ./tracks/dashboard-500-and-test-timeouts-20260320/
+
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
-  - **Progress:** 0%
+  - **Progress:** 18%
   - **Assignee:** Claude + Pohánka Péter
   - Mappa: ./tracks/jules_pr_integration_20260222/
 
@@ -81,6 +96,21 @@
   - **Progress:** 0%
   - **Assignee:** System
   - Mappa: ./tracks/local_test_scheduler_20260215/
+
+- [ ] **Universal Orchestrator Chat Upgrade (Dashboard + CLI)** [MEDIUM]
+  - **ID:** `orchestrator_chat_upgrade_20260320`
+  - **Progress:** 0%
+  - Mappa: ./tracks/orchestrator_chat_upgrade_20260320/
+
+- [ ] **Orchestrator Cognition Upgrade — Magyar társalgó + rendszerérzékelés** [MEDIUM]
+  - **ID:** `orchestrator_cognition_upgrade_20260320`
+  - **Progress:** 0%
+  - Mappa: ./tracks/orchestrator_cognition_upgrade_20260320/
+
+- [ ] **Safe Autopilot Orchestrator** [HIGH]
+  - **ID:** `orchestrator_safe_autopilot_20260320`
+  - **Progress:** 0%
+  - Mappa: ./tracks/orchestrator_safe_autopilot_20260320/
 
 ---
 

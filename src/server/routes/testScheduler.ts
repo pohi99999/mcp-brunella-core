@@ -11,6 +11,16 @@ import cron from 'node-cron';
 
 const router = Router();
 
+function formatPassRate(ratio: number): string {
+  return `${Math.round((ratio || 0) * 100)}%`;
+}
+
+function formatDuration(ms: number): string {
+  if (!ms || ms <= 0) return '0s';
+  if (ms < 1000) return `${Math.round(ms)}ms`;
+  return `${(ms / 1000).toFixed(1)}s`;
+}
+
 /**
  * GET /api/tests/schedule
  * Get current test scheduler configuration
@@ -87,6 +97,7 @@ router.get('/results', async (req: Request, res: Response) => {
     return res.json({
       success: true,
       data: runs,
+      runs,
       pagination: { limit, offset, total: runs.length }
     });
   } catch (err: unknown) {
@@ -147,9 +158,20 @@ router.get('/stats', async (req: Request, res: Response) => {
   try {
     const stats = getTestStats();
 
+    const compatPayload = {
+      totalRuns: stats.totalRuns,
+      passRate: formatPassRate(stats.passRate),
+      averageDuration: formatDuration(stats.averageDuration),
+      lastRunStatus: stats.lastRunStatus,
+      lastRunTime: stats.lastRunTime,
+      sevenDayPassRate: formatPassRate(stats.sevenDayStats.passRate),
+      sevenDayStats: stats.sevenDayStats,
+    };
+
     return res.json({
       success: true,
-      data: stats
+      data: stats,
+      ...compatPayload,
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);

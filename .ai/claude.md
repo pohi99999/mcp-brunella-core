@@ -2,7 +2,82 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-03-19
+**Utolsó frissítés:** 2026-03-21
+
+---
+
+## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-03-21 05:00 - GitHub Models gpt-4.1 + Ollama fallback javítás ✅
+
+**Feladat:** PAIOS Orchestrator Chat dashboardon megjelenő hibák diagnosztizálása és javítása — "does not support generate/chat" hibaüzenetek, 401 Unauthorized GitHub API
+
+**Diagnosztika eredménye:**
+- `GITHUB_TOKEN` lejárt → **401 Unauthorized** a GitHub Models API-n
+- `GITHUB_PAT` működik → **200 OK**
+- A kód `GITHUB_TOKEN || GITHUB_PAT` sorrendben próbált, így az érvénytelen token "nyert"
+- Ollama `llama3.1:8b`, `qwen2.5-coder:7b`, `gemma3:4b` → **"does not support chat"** (Ollama 0.17.1 bug)
+- `mistral:latest` → **működik** mind chat, mind generate API-val
+
+**Javítások (`src/core/bifrost_gateway.ts`):**
+1. `GITHUB_TOKEN || GITHUB_PAT` → **`GITHUB_PAT || GITHUB_TOKEN`** (PAT előre)
+2. Ollama default model: `llama3.1:8b` → **`mistral:latest`**
+3. Ollama `generate()` → **`chat()`** API (korábbi session változtatása)
+4. GitHub baseUrl: `models.inference.ai.azure.com` → **`models.github.ai/inference`**
+5. Model ID: automatikus `openai/` prefix hozzáadás (ha nincs `/` a névben)
+
+**GitHub Marketplace URL vs API model ID (fontos!):**
+- Marketplace URL slug: `azure-openai/gpt-4-1` (kötőjel) → **NEM** az API model ID
+- Helyes API model ID: `gpt-4.1` vagy `openai/gpt-4.1` → **HTTP 200** ✅
+- Rossz API model ID: `azure-openai/gpt-4-1`, `gpt-4-1` → **HTTP 404** ❌
+
+**Érintett fájlok:**
+- `src/core/bifrost_gateway.ts` — GITHUB_PAT/TOKEN sorrend, Ollama default, GitHub URL+model ID
+
+**Build:** ✅ 0 hiba
+**Státusz:** ✅ Befejezve — backend újraindítás után működik a dashboard
+
+**Megjegyzés a következő ügynöknek:**
+- Backend restart kell (`CTRL+C` → `npm run dev`) hogy a változások érvénybe lépjenek
+- `mistral:latest` az egyetlen Ollama modell ami jelenleg működik (chat + generate is)
+- `gpt-4.1` a helyes model neve a CLI-ben és bifrost-ban is — ez kerül `openai/gpt-4.1`-re konvertálásra automatikusan
+- Ha a GitHub API újra 401-et dob → ellenőrizd a `GITHUB_PAT` lejáratát
+
+---
+
+### 2026-03-21 02:30 - RobotkezV2 Mission Control Worktree E2E Audit ✅
+
+**Feladat:** (1) `.worktrees/robotkez-mission-control` worktree státusz ellenőrzése; (2) Teljes e2e tesztelés az új RobotkezV2 fejlesztéseken; (3) CLAUDE.md fejlesztése README.md alapján
+
+**Worktree státusz: LEGITIM — nem ideiglenes szemét**
+A `feature/robotkez-mission-control` branch 5 valódi committal rendelkezik a `robot` branch fölött:
+- `1d3ea22` — Screenshot API → JSON/base64 egységesítés
+- `735213f` — `CollaborationManager` (session/plan/step tracking, WebSocket emit)
+- `31dcaceb` — `RobotkezMissionControl.tsx` (interaktív canvas, manuális kattintás)
+- `7df1426a` — `PlanTracker.tsx` (3 oszlopos dashboard)
+- `ea16478f` — DevTools monitoring + proaktív hibakezelés
+
+**E2E teszt eredmények (7/7 PASS, 3 szándékosan skip):**
+- S1 Google search ✅, S2 Form fill ✅, S4 Background task ✅
+- S7 Phoenix recovery ✅, S8 Screenshot ✅, S9 Data extraction ✅, S10 Parallel tasks ✅
+- Unit tesztek: 18/19 ✅, Integration: 14/14 ✅, E2E (live): 7/7 ✅
+
+**CLAUDE.md fejlesztések (README.md alapján):**
+- Sync script opciók: `--build`, `--build --test` kapcsolók hozzáadva
+- `start-full.bat` egylépéses Windows indítás dokumentálva
+- Védett fájlok táblázat hozzáadva
+- Phoenix + Agent log fájlok a hibaelhárításban
+
+**Érintett fájlok:**
+- `CLAUDE.md` — 4 javítás
+- `.worktrees/robotkez-mission-control/vitest.e2e.config.ts` — e2e config létrehozva
+
+**Státusz:** ✅ Befejezve — branch mergelhető
+
+**Megjegyzés a következő ügynöknek:**
+- A `feature/robotkez-mission-control` branch kész a merge-re → `robot` ágba
+- 5 új fájl: `CollaborationManager.ts`, `RobotkezMissionControl.tsx`, `PlanTracker.tsx` + módosított `RobotkezV2Agent.ts`, `myai/server.py`, `persistentBrowser.ts`
+- `vitest.e2e.config.ts` a worktree gyökerében — jövőbeli e2e futtatáshoz kell
 
 ---
 

@@ -16,27 +16,45 @@ interface McpServerConfig {
   disabled?: boolean;
 }
 
+interface ConnectOptions {
+  coreOnly?: boolean;
+  timeoutMs?: number;
+}
+
 export class BrunellaClient {
   private clients: Map<string, Client> = new Map();
   private transports: Map<string, any> = new Map();
   private toolCache: Map<string, string> = new Map(); // tool name -> server name
 
-  async connect() {
+  async connect(options: ConnectOptions = {}) {
+    if (process.env.BRUNELLA_MCP_DISABLED === '1') {
+      throw new Error('MCP connections disabled (BRUNELLA_MCP_DISABLED=1)');
+    }
     // Load config from mcp_servers.json
     const configPath = path.resolve(process.cwd(), "mcp_servers.json");
     if (!fs.existsSync(configPath)) {
       throw new Error(`MCP config not found at ${configPath}`);
     }
 
-    const servers: McpServerConfig[] = JSON.parse(
+    const allServers: McpServerConfig[] = JSON.parse(
       fs.readFileSync(configPath, "utf-8"),
     );
+
+    const servers = options.coreOnly
+      ? allServers.filter((server) => server.name === "brunella-core")
+      : allServers;
+
+    const defaultTimeout = Number(process.env.BRUNELLA_MCP_CONNECT_TIMEOUT_MS || "3000");
+    const timeoutMs = options.timeoutMs ?? defaultTimeout;
 
     for (const server of servers) {
       if (server.disabled) {
         logInfo("MCP", `Skipping disabled server: ${server.name}`);
         continue;
       }
+
+      let transport: StdioClientTransport | undefined;
+
       try {
         // For 'brunella-core', we use the build path directly if it's relative
         const command = server.command;
@@ -54,7 +72,7 @@ export class BrunellaClient {
           }
         }
 
-        const transport = new StdioClientTransport({
+        transport = new StdioClientTransport({
           command: command,
           args: args,
           env: {
@@ -71,11 +89,25 @@ export class BrunellaClient {
           { capabilities: {} },
         );
 
-        await client.connect(transport);
+        await Promise.race([
+          client.connect(transport),
+          new Promise<never>((_, reject) => {
+            setTimeout(() => {
+              reject(new Error(`Connect timeout (${timeoutMs}ms)`));
+            }, timeoutMs);
+          }),
+        ]);
         this.clients.set(server.name, client);
         this.transports.set(server.name, transport);
         // logInfo('MCP', `Connected to MCP server: ${server.name}`);
       } catch (e: any) {
+        if (transport && transport.close) {
+          try {
+            await transport.close();
+          } catch {
+            // no-op cleanup best effort
+          }
+        }
         logError("MCP", `Failed to connect to ${server.name}: ${e.message}`);
       }
     }

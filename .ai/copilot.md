@@ -1,6 +1,368 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
-## 2026-03-11 - ✅ D1 / Cloudflare Access lezárás + CLI audit + rendszerértékelés
+## 2026-03-21 - ✅ Teljes változásnapló + commit/push előkészítés
+
+**Track:** `orchestrator_chat_upgrade_20260320`, `orchestrator_cognition_upgrade_20260320`, `orchestrator_safe_autopilot_20260320`, `jules_pr_integration_20260222`, `orchestrator_state_machine_20260321`, `owl_agent_coordinator_20260321`
+
+**Cél:** A kérés szerint **minden aktuális workspace-változás** tételes feljegyzése a Copilot naplóban commit + GitHub push előtt.
+
+**Teljes állapot snapshot (`git status --short`):**
+```text
+ M .ai/FOSZAL.md
+ M .ai/claude.md
+ M .ai/copilot.md
+ M .claude/settings.local.json
+ M .mcp.json
+ M .vscode/extensions.json
+ M .vscode/settings.json
+ M BRUNELLA_MASTER_CONTEXT.md
+ M conductor/project_state.json
+ M conductor/tracks.md
+ M conductor/tracks/cloudflare_workers_migration_20260226/meta.json
+ M conductor/tracks/jules_pr_integration_20260222/meta.json
+ D data/brunella_lancedb/memory_v2_nomic.lance/_versions/1.manifest
+ D data/brunella_lancedb/memory_v2_nomic.lance/_versions/2.manifest
+ D data/brunella_lancedb/memory_v3_nomic.lance/_versions/1.manifest
+ D data/brunella_lancedb/memory_v3_nomic.lance/_versions/2.manifest
+ M data/training/golden_dataset.jsonl
+ M myai/__pycache__/rag.cpython-314.pyc
+ M myai/agents/a2a-go/professional-services/tools/gsnapshot/obj/Debug/netcoreapp5.0/gsnapshot.AssemblyInfo.cs
+ M myai/agents/a2a-go/professional-services/tools/gsnapshot/obj/Debug/netcoreapp5.0/gsnapshot.AssemblyInfoInputs.cache
+ M myai/agents/a2a-go/professional-services/tools/gsnapshot/obj/gsnapshot.csproj.nuget.dgspec.json
+ M myai/agents/a2a-go/professional-services/tools/gsnapshot/obj/project.assets.json
+ M myai/agents/a2a-go/professional-services/tools/gsnapshot/obj/project.nuget.cache
+ M myai/data/training/golden_dataset.jsonl
+ M scripts/migrate_lancedb_to_vectorize.ts
+ M src-tauri/Cargo.toml
+ M src/agents/BaseAgent.ts
+ M src/agents/DeveloperAgent.ts
+ M src/agents/EvaluatorAgent.ts
+ M src/agents/GitHubModelsAgent.ts
+ M src/agents/MarketIntelAgent.ts
+ M src/agents/MarketingDirectorAgent.ts
+ M src/agents/OrchestratorAgent.ts
+ M src/agents/SalesHunterAgent.ts
+ M src/agents/codeReview.ts
+ M src/cli.ts
+ M src/config/schema.ts
+M  src/core/agentStateMachine.ts
+ M src/core/bifrost_gateway.ts
+ M src/core/llm_client.ts
+ M src/core/testResultsService.ts
+ M src/core/universalOrchestratorService.ts
+ M src/dashboard/components/dashboard/MissionControlLayout.tsx
+ M src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx
+ M src/dashboard/components/dashboard/RobotkezV2Chat.tsx
+ M src/dashboard/lib/apiService.ts
+ M src/server/routes/enterprise.ts
+ M src/server/routes/jules.ts
+ M src/server/routes/llm.ts
+ M src/server/routes/paiosOrchestrator.ts
+ M src/server/routes/testScheduler.ts
+ M src/server/routes/universalOrchestrator.ts
+ M src/server/schedulers/scheduledTasksRunner.ts
+ M src/utils/globalDb.ts
+ M src/utils/mcpClient.ts
+M  test/agentStateMachine.test.ts
+ M test/bifrost_gateway.test.ts
+ M test/configSchema.test.ts
+ M test/ironCladBackend.test.ts
+ M test/jules_workflow_routes.test.ts
+ M test/llm_client.test.ts
+ M test/n8n_automation.test.ts
+ M test/paiosOrchestrator.test.ts
+ M test/smoke.vitest.ts
+?? .jules_audit_tmp/
+?? .snapshots/
+?? .tmp_jules_extract/
+?? conductor/tracks/dashboard-500-and-test-timeouts-20260320/
+?? conductor/tracks/orchestrator_chat_upgrade_20260320/
+?? conductor/tracks/orchestrator_cognition_upgrade_20260320/
+?? conductor/tracks/orchestrator_safe_autopilot_20260320/
+?? conductor/tracks/orchestrator_state_machine_20260321/
+?? conductor/tracks/owl_agent_coordinator_20260321/
+?? data/developer_metrics.json.corrupt.1773943625230
+?? data/developer_metrics.json.corrupt.1773943625231
+?? data/developer_metrics.json.corrupt.1773944374601
+?? data/developer_metrics.json.corrupt.1773951532107
+?? data/developer_metrics.json.corrupt.1773952005906
+?? docs/plans/2026-03-20-robotkez-mission-control-plan.md
+?? docs/plans/2026-03-20-robotkez-mission-control-prd.md
+?? docs/superpowers/plans/
+?? docs/superpowers/specs/2026-03-21-openapi-workers-design.md
+?? docs/superpowers/specs/2026-03-21-orchestrator-state-machine-design.md
+?? docs/superpowers/specs/2026-03-21-owl-multi-agent-conflict-resolution-design.md
+?? extract_cookies.py
+?? mcp-brunella-core.code-workspace
+?? myai/data/screenshots/
+?? src-tauri/Cargo.lock
+?? temp/
+?? test/cli-e2e.vitest.ts
+?? test/cli.e2e.test.ts
+?? test/paiosOrchestrator.integration.test.ts
+?? vitest-rerun-output.txt
+?? website_sources/
+```
+
+## 2026-03-21 - ✅ PAIOS/CLI/Dashboard LLM policy audit + determinisztikus fallback/trace javítás
+
+**Track:** `orchestrator_chat_upgrade_20260320`, `orchestrator_cognition_upgrade_20260320`, `orchestrator_safe_autopilot_20260320`
+
+**Cél:** GitHub GPT-4.1 System Brain policy szigorítása, fallback csak explicit kategóriára + Phoenix esemény, és dashboard/CLI trace átláthatóság biztosítása.
+
+**Elvégzett módosítások (fő):**
+- `src/core/bifrost_gateway.ts`
+  - determinisztikus auto-select és fallback chain: `github -> gemini -> ollama`
+  - fallback csak explicit okra (`timeout|rate_limit|api_error|invalid_tool_response|phoenix_recovery`)
+  - Phoenix failover események publikálása (`phoenix:failover_triggered`, `phoenix:failover_result`, `phoenix:recovery`)
+  - válasz meta bővítés: `fallback_used`, `fallback_reason`, `fallback_from`, `phoenix_triggered`
+- `src/core/universalOrchestratorService.ts`
+  - PAIOS system prompt determinisztikus orkesztrátor szerepre szűkítve
+  - route és response meta: `provider`, `model`, `role`, fallback + phoenix flag-ek
+- `src/server/routes/paiosOrchestrator.ts`
+  - response payload továbbadja a model/role/fallback/phoenix mezőket
+- `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`
+  - trace badge-ek: provider + model + role + fallback + phoenix
+  - fallback ok explicit megjelenítése asszisztens válasznál
+- `src/cli.ts`
+  - `chat` parancs: `--verbose` / `--debug`
+  - trace kimenet: role/provider/model + fallback reason + phoenix trigger
+- `src/agents/OrchestratorAgent.ts`
+  - system prompt diszpécser szerepre szigorítva (no direct execution / no final content generation)
+- `test/bifrost_gateway.test.ts`
+  - elvárások frissítve az új policy szerint (default github; fallback github->gemini)
+
+**Validáció:**
+- `npm run build` ✅
+- `npm test` ✅
+  - **Test Files:** 153 passed | 1 skipped
+  - **Tests:** 1370 passed | 43 skipped
+  - **Failed:** 0
+
+## 2026-03-21 - ✅ Piros tesztek javítása + Jules-integráció verifikáció
+
+**Track:** `dashboard-500-and-test-timeouts-20260320`, `jules_pr_integration_20260222`
+
+**Cél:** A regressziós piros tesztek megszüntetése a jelenlegi GitHub Models / Bifrost viselkedéshez igazítva, és a Jules-vonal releváns integrációinak stabilizálása.
+
+**Elvégzett módosítások (fő):**
+- `src/config/schema.ts`
+  - `githubModel` default: `gpt-4.1` (összhangban a runtime route-tal)
+- `src/core/llm_client.ts`
+  - GitHub Models endpoint frissítve: `https://models.github.ai/inference/chat/completions`
+  - modellnév normalizálás: `openai/<model>` prefix
+- `src/core/bifrost_gateway.ts`
+  - GitHub token prioritás: `GITHUB_PAT` → `GITHUB_TOKEN`
+  - GitHub base URL és default model frissítve (`gpt-4.1`)
+  - Ollama hívás `generate` → `chat` (üzenet-alapú payload)
+  - Ollama default model env-fallback: `OLLAMA_DEFAULT_MODEL || mistral:latest`
+- `src/cli.ts`
+  - diagnosztikai parancsok `coreOnly` kapcsolódásra állítva
+  - `doctor` befejezésnél explicit `process.exit(0)` a timeout-érzékeny teszt stabilitásért
+- Tesztfrissítések:
+  - `test/configSchema.test.ts`
+  - `test/llm_client.test.ts`
+  - `test/bifrost_gateway.test.ts`
+  - `test/cli-e2e.vitest.ts`
+
+**Validáció:**
+- `npm run build` ✅
+- `npm test` ✅
+  - **Test Files:** 149 passed | 2 skipped
+  - **Tests:** 1309 passed | 46 skipped
+  - **Failed:** 0
+
+## 2026-03-20 - ✅ Orchestrator Cognition Upgrade Alapok (Dinamikus modellkatalógus + rendszerérzékelés)
+
+**Track:** `orchestrator_cognition_upgrade_20260320`
+
+**Cél:** A dashboard és CLI chat ne hardcoded modelllistára támaszkodjon, az orchestrator pedig jobban „érezze” a rendszer valós állapotát, hogy magyarul, asszisztens-szerűen tudjon tisztázni, diagnosztizálni és delegálni.
+
+**Megvalósított fejlesztések:**
+- `src/server/routes/llm.ts`
+  - új egységes `GET /api/llm/catalog` endpoint
+  - providerenként `enabled/defaultModel/models/source` katalógus visszaadás
+  - Ollama runtime model discovery + env/default fallback
+  - Anthropic támogatás az egységes `POST /api/llm/generate` útvonalon
+- `src/dashboard/lib/apiService.ts`
+  - új `LLMModelCatalog`, `LLMCatalogProvider`, `LLMCatalogModel` típusok
+  - új `getLLMModelCatalog()` helper
+- `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`
+  - a provider/model választó most backend katalógusból töltődik
+  - lokális vizuális fallback katalógus megőrizve offline/hiba esetére
+  - csak támogatott/engedélyezett providerek jelennek meg
+  - speech recognition típusok tisztázva (`any` nélküli böngészős típusok)
+- `src/cli.ts`
+  - `/switch` interaktív és gyors módja is dinamikus backend katalógust használ
+  - direct mód egységesen az `/api/llm/generate` útvonalat használja
+- `src/core/universalOrchestratorService.ts`
+  - erősebb magyar rendszerprompt: tisztázás, diagnózis, proaktív operátori viselkedés
+  - belső runtime context injektálása (agent/task összkép)
+  - `get_system_status` és `list_active_tasks` már közvetlenül az `AgentManager` állapotából dolgozik, nem localhost HTTP fetchből
+
+**Validáció:**
+- `npm run build` ✅
+- `npm test` ✅
+  - **Test Files:** 150 passed | 1 skipped
+  - **Tests:** 1312 passed | 43 skipped
+  - **Failed:** 0
+
+## 2026-03-20 - ✅ Safe Autopilot Orchestrator (Level 3)
+
+**Track:** `orchestrator_safe_autopilot_20260320`
+
+**Cél:** Az orchestrator proaktív, biztonságos végrehajtása approval checkpointtal, incident/monitor/autopilot routinggal és teljes mission timeline átláthatósággal.
+
+**Megvalósított fejlesztések:**
+- `src/core/universalOrchestratorService.ts`
+  - mission timeline struktúra (`missionTimeline`) minden válaszban
+  - high-risk intent detektálás + approval checkpoint (`approvalRequired`, `approvalId`, `riskLevel`)
+  - approval response flow (`jóváhagyom <id>` / elutasítás) és jóváhagyott végrehajtási lánc
+  - stabilization autopilot workflow (diagnózis → fix → verifikáció → koordináció)
+  - monitor + auto-heal ciklus (stalled/error spike detektálás, fallback delegálás)
+  - incident commander workflow (diagnózis + recovery chain + ETA/blocker/next step)
+  - runbook memory (`runbookHint`) a bevált agent-kombók és futási minták visszajelzésére
+- `src/server/routes/paiosOrchestrator.ts`
+  - kimenet bővítve: `missionTimeline`, `approvalRequired`, `approvalId`, `riskLevel`, `runbookHint`
+- `src/server/routes/universalOrchestrator.ts`
+  - error fallback válasz bővítve `sessionId` + timeline bejegyzéssel
+- `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`
+  - mission timeline vizuális megjelenítés
+  - approval UI gombok (`Jóváhagyom` / `Elutasítom`)
+  - runbook hint + risk badge megjelenítés
+- `src/cli.ts`
+  - új parancs: `/approve <id>`
+  - mission timeline, approval és runbook információk megjelenítése orchestrator válaszokban
+- `test/paiosOrchestrator.test.ts`
+  - response minta bővítve `missionTimeline` és `runbookHint` mezőkkel
+
+**Validáció:**
+- `npm run build` ✅
+- `npm test` ✅
+  - **Test Files:** 150 passed | 1 skipped
+  - **Tests:** 1312 passed | 43 skipped
+  - **Failed:** 0
+- `npm run build:ui` ✅
+
+## 2026-03-20 - ✅ Orchestrator Cognition Upgrade Level 2 (Gemini CLI-szerű operátori élmény)
+
+**Track:** `orchestrator_cognition_upgrade_20260320`
+
+**Cél:** Többkörös tisztázó dialógus, háttér-progressz lekérdezés, összetett rendszerellenőrzés intent routing, automatikus hibahelyreállító delegálási lánc, session-szintű memória a dashboard/CLI csatornákon.
+
+**Megvalósított fejlesztések:**
+- `src/core/universalOrchestratorService.ts`
+  - session memória bevezetése (`sessionId`, intent history, delegált task referenciák)
+  - intent router: `progress_query`, `system_check` (quick/deep clarifying), `error_recovery_chain`
+  - többkörös tisztázás: rendszerellenőrzés esetén automatikus visszakérdezés gyors/teljes módra
+  - mély rendszerellenőrzés esetén háttérdelegálás QA/Developer/ProjectConductor ügynököknek (ha elérhetők)
+  - automatikus hibahelyreállítási lánc indítása hiba/fix intentre
+  - válaszban `sessionId` + opcionális `suggestions`
+- `src/server/routes/universalOrchestrator.ts`
+  - `sessionId` átvétele és továbbítása a service felé
+- `src/server/routes/paiosOrchestrator.ts`
+  - `sessionId` átvétele és továbbítása
+  - válaszban `sessionId` + `suggestions` visszaadása
+- `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`
+  - session-szintű memória bekötése `sessionStorage`-on keresztül
+  - „Új session” gomb
+  - orchestrator javaslat-chipek (egy kattintásos follow-up prompt)
+- `src/cli.ts`
+  - sessionId kezelés orchestrator chathez
+  - új parancsok: `/progress`, `/newsession`
+  - orchestrator `suggestions` megjelenítése
+- `test/paiosOrchestrator.test.ts`
+  - minta response struktúra bővítése: `sessionId`, `suggestions`
+
+**Validáció:**
+- `npm run build` ✅
+- `npm test` ✅
+  - **Test Files:** 150 passed | 1 skipped
+  - **Tests:** 1312 passed | 43 skipped
+  - **Failed:** 0
+
+## 2026-03-20 - ✅ Universal Orchestrator Chat Upgrade (Dashboard + CLI)
+
+**Track:** `orchestrator_chat_upgrade_20260320`
+
+**Cél:** Dashboard és CLI chat minőségi emelés modern universal orchestrator útvonalra, GitHub-first model routinggal és delegált task visszajelzésekkel.
+
+**Megvalósított fejlesztések:**
+- `src/server/routes/paiosOrchestrator.ts`
+  - `/api/paios/chat` átállítva Universal Orchestrator Service-re
+  - provider/model/conversationHistory támogatás
+  - visszafelé kompatibilis response (`success`, `summary`, `plan`, `taskIds`) + új mezők (`reply`, `actionsTriggered`, `provider`, `thinkingMs`)
+- `src/server/routes/universalOrchestrator.ts`
+  - default provider: `github`
+- `src/core/universalOrchestratorService.ts`
+  - provider map bővítés: `anthropic` alias
+  - default fallback provider: `github`
+- `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`
+  - teljes komponens újraírás universal payloadra
+  - külön provider + model választó
+  - conversation history küldése
+  - delegált task és model/provider/thinking time visszajelzés megjelenítése
+- `src/cli.ts`
+  - új `/mode [orchestrator|direct]` parancs
+  - orchestrator módban `/api/orchestrator/universal` hívás
+  - delegált task összefoglaló + provider/thinking metadata megjelenítés
+- `test/paiosOrchestrator.test.ts`
+  - default provider elvárás `github`
+  - success response struktúra bővítése új mezőkre
+
+**Validáció:**
+- `npm run build` ✅
+- `npm test` ✅
+  - **Test Files:** 150 passed | 1 skipped
+  - **Tests:** 1312 passed | 43 skipped
+  - **Failed:** 0
+
+## 2026-03-20 - ✅ .Jules csomag audit + célzott integráció
+
+**Track:** `jules_pr_integration_20260222`
+
+**Átvizsgálva:** `F:\mcp-brunella-core\.Jules` (5 session ZIP + palette.md)
+
+**Beemelt hasznos fejlesztések:**
+- `scripts/migrate_lancedb_to_vectorize.ts`
+  - batch feldolgozás `Promise.allSettled`-re váltva (gyorsabb/robusztusabb migráció)
+- `src/dashboard/components/dashboard/RobotkezV2Chat.tsx`
+  - refresh lock (`isRefreshing`) + gomb disable + spinner animáció
+- `src/server/schedulers/scheduledTasksRunner.ts`
+  - automatikus Jules szabály import `.jules.yml`-ből indításkor
+- `src/server/routes/jules.ts`
+  - új endpointok: `POST /api/v1/jules/automations/import`, `GET /api/v1/jules/automations/tasks`
+- `src/utils/globalDb.ts`
+  - `scheduled_tasks.metadata` oszlop + visszafelé kompatibilis migráció
+- `test/jules_workflow_routes.test.ts`
+  - új route tesztek az automations import/list endpointokra
+
+**Validáció:**
+- `npm run build` ✅
+- `npx vitest run test/jules_workflow_routes.test.ts` ✅ (5/5)
+- `npm test` ✅ (1312 passed | 43 skipped | 0 failed)
+
+## 2026-06-XX - ✅ Test Suite Teljes Stabilizálás (0 FAIL → 150/150 Pass)
+
+**Track:** STAB-20260609 (Dashboard 500 + Test Suite Stabilizálás)
+
+**Elvégzett javítások:**
+1. **BaseAgent** (`src/agents/BaseAgent.ts`) — RAG IO kihagyása test módban (`queryMemory`, `saveToMemory`)
+2. **MarketIntelAgent** (`src/agents/MarketIntelAgent.ts`) — `isTestMode()` override + LanceDB `saveToMemory` testMode guard a fő pipeline-ban
+3. **SalesHunterAgent** (`src/agents/SalesHunterAgent.ts`) — `isTestMode()` override + robust Vitest detektálás
+4. **n8n_automation.test.ts** — opt-in flag: `RUN_N8N_INTEGRATION=1` szükséges
+5. **ironCladBackend.test.ts** — opt-in flag: `RUN_IRONCLAD_INTEGRATION=1` szükséges
+6. **testResultsService.ts** — DB nem inicializált fallback, biztonságos üres stats/runs
+7. **testScheduler.ts** — API response formátum kompatibilitás
+8. **enterprise.ts** — analytics végpontok 200+üres fallback ha D1 nem elérhető
+9. **TypeScript TS2415 fix** — `private` → `protected override` az `isTestMode()` metódusokon
+
+**Eredmény:**
+- Build: ✅ 0 hiba
+- Teszt: ✅ **1310 passed | 43 skipped | 0 failed** (151 fájl)
+
+
+
 
 **Feladat:**
 - D1 / Cloudflare Access probléma gyökérokának lezárása

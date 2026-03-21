@@ -66,9 +66,10 @@ export const generateResponse: (
           throw new Error("GITHUB_TOKEN or GITHUB_PAT not configured");
         }
 
-        const model = modelName || "gpt-4o";
+        const modelRaw = modelName || "gpt-4.1";
+        const model = modelRaw.includes('/') ? modelRaw : `openai/${modelRaw}`;
         const response = await fetch(
-          "https://models.inference.ai.azure.com/chat/completions",
+          "https://models.github.ai/inference/chat/completions",
           {
             method: "POST",
             headers: {
