@@ -54,7 +54,7 @@ export class GitHubModelsAgent implements IAgent {
 
   constructor(config: GitHubModelsConfig = {}) {
     this.config = {
-      model: config.model || 'gpt-4o',
+      model: config.model || 'gpt-4.1',
       temperature: config.temperature ?? 0.1,
       maxTokens: config.maxTokens || 8192,
       mcpTools: config.mcpTools || [],
@@ -146,7 +146,9 @@ export class GitHubModelsAgent implements IAgent {
       requestBody.tool_choice = 'auto'; // Let GPT decide when to use tools
     }
 
-    const response = await fetch('https://models.inference.ai.azure.com/chat/completions', {
+    const resolvedModel = this.config.model.includes('/') ? this.config.model : `openai/${this.config.model}`;
+    requestBody.model = resolvedModel;
+    const response = await fetch('https://models.github.ai/inference/chat/completions', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

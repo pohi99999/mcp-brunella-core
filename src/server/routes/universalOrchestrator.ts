@@ -17,6 +17,7 @@ export function createUniversalOrchestratorRouter(): Router {
       provider?: string;
       model?: string;
       conversationHistory?: UniversalChatMessage[];
+      sessionId?: string;
     };
 
     if (!message || typeof message !== 'string' || message.trim() === '') {
@@ -24,7 +25,7 @@ export function createUniversalOrchestratorRouter(): Router {
       return;
     }
 
-    const effectiveProvider = provider ?? 'gemini';
+    const effectiveProvider = provider ?? 'github';
     logInfo('UniversalOrchestratorRoute', `POST /universal — provider: ${effectiveProvider}, msg: "${message.slice(0, 60)}..."`);
 
     try {
@@ -33,7 +34,8 @@ export function createUniversalOrchestratorRouter(): Router {
         message: message.trim(),
         provider: effectiveProvider,
         model,
-        conversationHistory: conversationHistory ?? []
+        conversationHistory: conversationHistory ?? [],
+        sessionId: typeof req.body?.sessionId === 'string' ? req.body.sessionId : undefined,
       });
 
       res.json(result);
@@ -44,7 +46,14 @@ export function createUniversalOrchestratorRouter(): Router {
         reply: `Belső hiba történt: ${error}`,
         actionsTriggered: [],
         provider: effectiveProvider,
-        thinkingMs: 0
+        thinkingMs: 0,
+        sessionId: typeof req.body?.sessionId === 'string' ? req.body.sessionId : 'legacy-anonymous',
+        missionTimeline: [{
+          phase: 'error',
+          status: 'blocked',
+          detail: `Route hiba: ${error}`,
+          timestamp: new Date().toISOString(),
+        }],
       });
     }
   });

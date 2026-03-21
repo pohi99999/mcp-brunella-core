@@ -44,9 +44,9 @@ describe('PAIOS Orchestrator API', () => {
 
     it('should use default provider when not specified', () => {
       const request: { message: string; model?: string } = { message: 'Test' };
-      const defaultProvider = 'gemini';
+      const defaultProvider = 'github';
       const selectedProvider = request.model || defaultProvider;
-      expect(selectedProvider).toBe('gemini');
+      expect(selectedProvider).toBe('github');
     });
   });
 
@@ -132,17 +132,34 @@ describe('PAIOS Orchestrator API', () => {
       const response = {
         success: true,
         summary: 'Feladat dekompozíció sikeres.',
+        reply: 'Feladat dekompozíció sikeres.',
         plan: [{ phase: 'design', agent: 'SpecWriterAgent', task: 'Spec' }],
-        taskIds: [3001, 3002]
+        taskIds: [3001, 3002],
+        actionsTriggered: [{ agent: 'SpecWriterAgent', task: 'Spec', taskId: 3001, status: 'started' }],
+        provider: 'github',
+        thinkingMs: 120,
+        sessionId: 'test-session-1',
+        suggestions: ['Mutasd a progresszt'],
+        missionTimeline: [{ phase: 'intake', status: 'started', detail: 'Kérés fogadva', timestamp: new Date().toISOString() }],
+        runbookHint: 'Runbook: 3 futás',
       };
 
       expect(response).toHaveProperty('success');
       expect(response).toHaveProperty('summary');
+      expect(response).toHaveProperty('reply');
       expect(response).toHaveProperty('plan');
       expect(response).toHaveProperty('taskIds');
+      expect(response).toHaveProperty('actionsTriggered');
+      expect(response).toHaveProperty('provider');
+      expect(response).toHaveProperty('sessionId');
+      expect(response).toHaveProperty('missionTimeline');
       expect(response.success).toBe(true);
       expect(Array.isArray(response.plan)).toBe(true);
       expect(Array.isArray(response.taskIds)).toBe(true);
+      expect(Array.isArray(response.actionsTriggered)).toBe(true);
+      expect(Array.isArray(response.suggestions)).toBe(true);
+      expect(Array.isArray(response.missionTimeline)).toBe(true);
+      expect(response.provider).toBe('github');
     });
 
     it('should return error response structure', () => {

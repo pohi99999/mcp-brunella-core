@@ -124,15 +124,20 @@
     },
     {
       "phase": 5,
-      "name": "Dashboard + CLI integráció",
+      "name": "Dashboard + CLI + OpenAPI integráció",
       "status": "pending",
-      "duration": "~3 óra",
+      "duration": "~4 óra",
       "tasks": [
         "CloudflareOrchestrator.tsx Dashboard panel: 16 worker live status + last task",
         "NavigationRegistry: 'cloudflare-edge' bejegyzés (Bevétel csoportba)",
         "CLI: 'brunella edge status' → összes Worker health",
         "CLI: 'brunella edge dispatch <agent> <task>' → közvetlen Worker hívás",
-        "deploy-edge-agents.yml CI/CD: push main → wrangler deploy (összes Worker)"
+        "deploy-edge-agents.yml CI/CD: push main → wrangler deploy (összes Worker)",
+        "OpenAPI: src/utils/openapiGenerator.ts — MCP tool def → OpenAPI 3.1 konverter",
+        "OpenAPI: src/server/routes/openapi.ts — GET /api/openapi.json endpoint",
+        "OpenAPI: minden Worker kap GET /openapi.json endpointot (worker-specifikus spec)",
+        "CI/CD: wrangler deploy után openapi-parser validáció",
+        "Swagger UI frissítés: /api-docs az új generált spec-et használja"
       ]
     }
   ],

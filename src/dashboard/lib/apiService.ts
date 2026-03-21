@@ -310,6 +310,25 @@ export interface LLMProviderStatus {
   }>;
 }
 
+export interface LLMCatalogModel {
+  id: string;
+  name: string;
+  provider: string;
+  source: "runtime" | "env" | "default";
+}
+
+export interface LLMCatalogProvider {
+  id: string;
+  label: string;
+  enabled: boolean;
+  defaultModel: string;
+  models: LLMCatalogModel[];
+}
+
+export interface LLMModelCatalog {
+  providers: LLMCatalogProvider[];
+}
+
 export async function getLLMProviderStatus(): Promise<LLMProviderStatus> {
   const response = await fetchWithTimeout(
     `${API_BASE}/api/llm/status`,
@@ -319,6 +338,18 @@ export async function getLLMProviderStatus(): Promise<LLMProviderStatus> {
   if (!response.ok)
     throw new Error(`LLM provider status: HTTP ${response.status}`);
   return safeJson<LLMProviderStatus>(response);
+}
+
+export async function getLLMModelCatalog(): Promise<LLMModelCatalog> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/llm/catalog`,
+    {},
+    15000,
+  );
+  if (!response.ok) {
+    throw new Error(`LLM model catalog: HTTP ${response.status}`);
+  }
+  return safeJson<LLMModelCatalog>(response);
 }
 
 /**

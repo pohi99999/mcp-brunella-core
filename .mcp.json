@@ -12,7 +12,10 @@
     },
     "github-chat": {
       "command": "uvx",
-      "args": ["github-chat-mcp"]
+      "args": ["github-chat-mcp"],
+      "env": {
+        "GITHUB_TOKEN": "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"
+      }
     }
   }
 }

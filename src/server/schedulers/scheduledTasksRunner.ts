@@ -1,8 +1,9 @@
 import cron from 'node-cron';
 import { getGlobalDb } from '../../utils/globalDb.js';
-import { logInfo, logError } from '../../utils/logger.js';
+import { logInfo, logError, logWarn } from '../../utils/logger.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { PythonShell } from 'python-shell';
+import { JulesAutomationService } from '../../core/julesAutomationService.js';
 
 interface ScheduledTask {
   id: string;
@@ -11,6 +12,13 @@ interface ScheduledTask {
   cron_expression: string;
   handler: string;
   enabled: boolean;
+  metadata?: string | null;
+}
+
+interface JulesAutomationAction {
+  type: string;
+  target: string;
+  params?: Record<string, unknown>;
 }
 
 /**
@@ -25,7 +33,37 @@ export class ScheduledTasksRunner {
   public async start() {
     logInfo('ScheduledTasksRunner', 'Initializing dynamic task scheduler...');
     await this.seedDefaults();
+    await this.importJulesAutomations();
     await this.refreshSchedule();
+  }
+
+  /**
+   * Import enabled Jules automation rules from .jules.yml into scheduled_tasks.
+   * Safe and idempotent: existing tasks are skipped by title.
+   */
+  private async importJulesAutomations() {
+    try {
+      const db = getGlobalDb();
+      const julesService = new JulesAutomationService(db);
+
+      const result = await julesService.importJulesAutomations({
+        skipIfExists: true,
+        enableImmediately: true,
+      });
+
+      logInfo(
+        'ScheduledTasksRunner',
+        `Jules automations import complete: ${result.imported} imported, ${result.skipped} skipped, ${result.errors.length} errors`,
+      );
+
+      if (result.errors.length > 0) {
+        for (const err of result.errors) {
+          logError('ScheduledTasksRunner', `Jules automation import error: ${err}`);
+        }
+      }
+    } catch (error) {
+      logError('ScheduledTasksRunner', `Failed to import Jules automations: ${error}`);
+    }
   }
 
   /**
@@ -200,6 +238,8 @@ export class ScheduledTasksRunner {
             resolve({ output: scriptOutput, code, signal });
           });
         });
+      } else if (task.handler === 'jules_automation') {
+        result = await this.executeJulesAutomation(task);
       } else {
         throw new Error(`Unknown handler: ${task.handler}`);
       }
@@ -213,6 +253,85 @@ export class ScheduledTasksRunner {
       logError('ScheduledTasksRunner', `Task execution failed (${task.title}): ${errorMsg}`);
       this.updateTaskStatus(task.id, 'failed', { error: errorMsg });
     }
+  }
+
+  private parseTaskMetadata(task: ScheduledTask): Record<string, unknown> {
+    if (!task.metadata) {
+      return {};
+    }
+
+    try {
+      return JSON.parse(task.metadata) as Record<string, unknown>;
+    } catch (error) {
+      logWarn('ScheduledTasksRunner', `Invalid metadata JSON for task ${task.id}: ${error}`);
+      return {};
+    }
+  }
+
+  private async executeJulesAutomation(task: ScheduledTask): Promise<Record<string, unknown>> {
+    const metadata = this.parseTaskMetadata(task);
+    const actions = Array.isArray(metadata.actions)
+      ? (metadata.actions as JulesAutomationAction[])
+      : [];
+
+    if (actions.length === 0) {
+      logWarn('ScheduledTasksRunner', `Jules task ${task.id} has no actions, skipping.`);
+      return {
+        handler: 'jules_automation',
+        executed: 0,
+        skipped: 0,
+        failed: 0,
+        details: ['No actions found in task metadata'],
+      };
+    }
+
+    const details: string[] = [];
+    let executed = 0;
+    let skipped = 0;
+    let failed = 0;
+
+    for (const action of actions) {
+      const label = `${action.type}:${action.target}`;
+
+      // First useful integration: wire Jules "scan/suggested-tasks" to existing scanner endpoint.
+      if (action.type === 'scan' && action.target === 'suggested-tasks') {
+        try {
+          const response = await fetch('http://localhost:3000/api/v1/suggested-tasks/scan', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              source: 'jules_automation',
+              taskId: task.id,
+              ruleId: metadata.ruleId,
+              params: action.params || {},
+            }),
+            signal: AbortSignal.timeout(30_000),
+          });
+
+          const payload = await response.json();
+          executed++;
+          details.push(`${label} -> ok (${response.status})`);
+          details.push(`scan result: ${JSON.stringify(payload).slice(0, 400)}`);
+        } catch (error) {
+          failed++;
+          details.push(`${label} -> failed (${error})`);
+        }
+        continue;
+      }
+
+      skipped++;
+      details.push(`${label} -> skipped (no native executor yet)`);
+      logWarn('ScheduledTasksRunner', `Jules action skipped for task ${task.id}: ${label}`);
+    }
+
+    return {
+      handler: 'jules_automation',
+      ruleId: metadata.ruleId,
+      executed,
+      skipped,
+      failed,
+      details,
+    };
   }
 
   /**

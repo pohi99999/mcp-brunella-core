@@ -126,7 +126,7 @@ describe('Config Validation (P5)', () => {
 
     it('should use default githubModel if not provided', () => {
       const config = ConfigSchema.parse({});
-      expect(config.githubModel).toBe('gpt-4o');
+      expect(config.githubModel).toBe('gpt-4.1');
     });
 
     it('should use process.cwd() as default workspaceRoot', () => {

@@ -203,7 +203,7 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
       const response = await gateway.generate({
           prompt: task,
           taskType: 'code',
-          model: this.llmProvider === 'github' ? 'gpt-4o' : undefined,
+          model: this.llmProvider === 'github' ? 'gpt-4.1' : undefined,
           tools: DEVELOPER_TOOLS,
           messages: messages
       });
@@ -331,7 +331,7 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
 - VÁLASZ: CSAK a tiszta Python kódot add vissza, markdown és magyarázat nélkül.`;
 
     const provider = context?.model === 'qwen2.5-coder' ? 'ollama' : this.llmProvider;
-    const model = context?.model || (provider === 'ollama' ? 'qwen2.5-coder:7b' : 'gpt-4o');
+    const model = context?.model || (provider === 'ollama' ? 'qwen2.5-coder:7b' : 'gpt-4.1');
 
     const prompt = `${historyText}\nAKTUÁLIS UTASÍTÁS: ${task}\n\nGeneráld a Python kódot:`
 
