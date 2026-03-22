@@ -4,6 +4,7 @@
  */
 
 import type { Server } from 'socket.io';
+import { eventBus } from '../core/eventBus.js';
 
 export type LogType = 'info' | 'error' | 'success';
 
@@ -14,6 +15,11 @@ export class SocketServiceClass {
 
   init(io: Server): void {
     this.io = io;
+
+    // EventBus → WebSocket bridge: forward all bus events to connected Dashboard clients
+    eventBus.on('*', (event) => {
+      io.emit('brunella:event', event);
+    });
   }
 
   broadcastLog(message: string, type: LogType = 'info', source?: string): void {
