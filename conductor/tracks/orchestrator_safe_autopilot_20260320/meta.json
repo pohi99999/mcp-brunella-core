@@ -1,10 +1,11 @@
 {
   "id": "orchestrator_safe_autopilot_20260320",
   "title": "Safe Autopilot Orchestrator",
-  "status": "active",
+  "status": "completed",
   "priority": "high",
   "createdAt": "2026-03-20",
   "owner": "Copilot",
-  "progress": 0,
-  "tags": ["orchestrator", "autopilot", "approval", "incident", "timeline"]
+  "progress": 100,
+  "tags": ["orchestrator", "autopilot", "approval", "incident", "timeline"],
+  "completedAt": "2026-03-20"
 }
