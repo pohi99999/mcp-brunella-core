@@ -86,17 +86,17 @@ export function registerSwarmTools(server: McpServer) {
     'Triád swarm kolónia indítása feladattal. Competitive bidding alapján a legalkalmasabb agent veszi át a feladatot.',
     {
       task: z.string().describe('A végrehajtandó feladat leírása'),
-      swarmId: z.string().optional().describe('Kolónia azonosítója (alapértelmezett: triad-default)'),
+      colonyId: z.string().optional().describe('Kolónia azonosítója (alapértelmezett: triad-default)'),
       requiredCapabilities: z.array(z.string()).optional().describe('Szükséges képességek szűréséhez'),
     },
-    async ({ task, swarmId = 'triad-default', requiredCapabilities = [] }) => {
+    async ({ task, colonyId = 'triad-default', requiredCapabilities = [] }) => {
       try {
-        const colony = swarmManager.getColony(swarmId);
+        const colony = swarmManager.getColony(colonyId);
         if (!colony) {
-          return { isError: true, content: [{ type: 'text' as const, text: `Colony not found: ${swarmId}` }] };
+          return { isError: true, content: [{ type: 'text' as const, text: `Colony not found: ${colonyId}` }] };
         }
         if (colony.status === 'paused') {
-          return { isError: true, content: [{ type: 'text' as const, text: `Colony ${swarmId} is paused (Phoenix failover active)` }] };
+          return { isError: true, content: [{ type: 'text' as const, text: `Colony ${colonyId} is paused (Phoenix failover active)` }] };
         }
 
         const swarmTask = {
@@ -106,7 +106,7 @@ export function registerSwarmTools(server: McpServer) {
           priority: 1,
         };
 
-        const result = await swarmManager.submitTask(swarmId, swarmTask);
+        const result = await swarmManager.submitTask(colonyId, swarmTask);
         if (!result) {
           return { isError: true, content: [{ type: 'text' as const, text: 'No bids received — no available agents in colony' }] };
         }
@@ -131,7 +131,7 @@ export function registerSwarmTools(server: McpServer) {
     {},
     async () => {
       const colonies = swarmManager.listColonies().map(c => ({
-        swarmId: c.swarmId,
+        colonyId: c.swarmId,
         name: c.name,
         status: c.status,
         agentCount: c.agents.size,
