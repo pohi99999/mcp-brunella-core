@@ -12,6 +12,7 @@
 import { EventEmitter } from 'events';
 import { logInfo, logWarn } from '../../utils/logger.js';
 import { SwarmAgent, type TaskBid, type SwarmTaskResult } from './SwarmAgent.js';
+import { eventBus } from '../../core/eventBus.js';
 
 export interface SwarmColony {
   swarmId: string;
@@ -66,6 +67,11 @@ export class SwarmManager extends EventEmitter {
     this.colonies.set(config.swarmId, colony);
     logInfo('SwarmManager', `Colony created: ${config.name} (${config.swarmId})`);
     this.emit('colony:created', colony);
+    eventBus.emit({
+      source: 'SwarmManager',
+      type: 'swarm.spawned',
+      payload: { swarmId: colony.swarmId, name: colony.name },
+    });
     return colony;
   }
 
@@ -214,6 +220,11 @@ export class SwarmManager extends EventEmitter {
 
     logInfo('SwarmManager', `Colony ${swarmId} dissolved`);
     this.emit('colony:dissolved', colony);
+    eventBus.emit({
+      source: 'SwarmManager',
+      type: 'swarm.dissolved',
+      payload: { swarmId },
+    });
   }
 
   /** Pause all active colonies (Phoenix Protocol failover) */
