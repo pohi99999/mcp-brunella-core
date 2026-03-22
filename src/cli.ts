@@ -152,15 +152,9 @@ program
     // Check Server Connection
     const client = new BrunellaClient();
     try {
-      await client.connect({ coreOnly: true });
+      await client.connect({ coreOnly: true, timeoutMs: 1200 });
       console.log(chalk.green("✔ Server: Connected"));
-
-      // Check Agents
-      const agents = await client.callTool("agent_list", {});
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      if ((agents as any)?.content?.[0]?.text) {
-        console.log(chalk.green("✔ Agents: Active"));
-      }
+      console.log(chalk.green("✔ MCP: Core transport reachable"));
     } catch (e: any) {
       console.log(chalk.red(`✖ Server: Connection failed (${e.message})`));
     } finally {
@@ -1959,6 +1953,57 @@ harvestCmd
 
     } catch (error: any) {
       console.error(chalk.red(`Error reading harvest log: ${error.message}`));
+    }
+  });
+
+// --- swarm
+const swarmCmd = program.command('swarm').description('Swarm Colony management');
+
+swarmCmd
+  .command('status')
+  .description('List all swarm colonies and their status')
+  .action(async () => {
+    try {
+      const res = await fetch('http://localhost:3000/api/v1/swarm/status');
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json() as { colonies?: Array<{ colonyId: string; name: string; status: string; agentCount: number }>; total?: number };
+      if (!Array.isArray(data.colonies)) {
+        console.error('Unexpected response:', JSON.stringify(data));
+        process.exit(1);
+      }
+      console.log(`\nSwarm Colonies (${data.total ?? data.colonies.length} total):`);
+      for (const c of data.colonies) {
+        console.log(`  [${c.status.toUpperCase()}] ${c.name} (${c.colonyId}) — ${c.agentCount} agents`);
+      }
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.error(`Error: ${msg}`);
+      process.exit(1);
+    }
+  });
+
+swarmCmd
+  .command('dispatch <task>')
+  .description('Dispatch a task to the Triad swarm colony')
+  .option('-c, --colony <colonyId>', 'Target colony ID', 'triad-default')
+  .action(async (task: string, opts: { colony: string }) => {
+    try {
+      const res = await fetch('http://localhost:3000/api/v1/swarm/dispatch', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task, colonyId: opts.colony }),
+      });
+      if (!res.ok) {
+        const err = await res.json() as { error?: string };
+        throw new Error(err.error ?? `HTTP ${res.status}`);
+      }
+      const data = await res.json() as { success: boolean; result: unknown };
+      console.log('\nTask dispatched successfully:');
+      console.log(JSON.stringify(data.result, null, 2));
+    } catch (e: unknown) {
+      const msg = e instanceof Error ? e.message : String(e);
+      console.error(`Error: ${msg}`);
+      process.exit(1);
     }
   });
 
