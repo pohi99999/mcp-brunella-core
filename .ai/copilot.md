@@ -1,5 +1,41 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-22 - ✅ Phase 4: Distributed Mesh & Edge Routing — COMPLETE (100%)
+
+**Track:** `remote_layer_phase4_distributed_mesh_20260322`
+
+**Cél:** Brunella elosztott mesh hálózat, edge routing, multi-device session sync, offline delta replay, agent federation, Phoenix replikáció és auto-join implementálása.
+
+**Létrehozott modulok (8 db):**
+- `src/mesh/meshNode.ts` — Mesh node lifecycle, heartbeat, capability advertise, peer messaging
+- `src/mesh/meshManager.ts` — Peer discovery, registration, stale pruning, broadcast, topology API
+- `src/core/edgeRouter.ts` — Local→region peer→any peer→CF edge fallback routing, cache, retry logic
+- `src/core/deviceOrchestrator.ts` — Multi-device session linking, state versioning, delta propagation
+- `src/core/offlineSync.ts` — Offline delta queue, replay engine, purge, sync state management
+- `src/core/phoenixReplication.ts` — Global state replication log, checksum validation, cross-node sync
+- `src/agents/federation/FederatedAgentManager.ts` — Federated agent registry, remote execution, auto-sync
+- `src/mesh/autoJoin.ts` — Seed node join, CF registry join, auto-rejoin timer
+
+**Tesztek:**
+- `test/phase4_mesh.test.ts` — 40 teszt (7 describe blokk: MeshNode, MeshManager, EdgeRouter, DeviceOrchestrator, OfflineSync, PhoenixReplication, FederatedAgentManager, AutoJoin)
+
+**Javítás:**
+- `src/core/offlineSync.ts` — `purgeApplied()` cutoff logika: `<` → `<=`
+
+**Track admin:**
+- Phase 4 track → 100% completed
+- 11 befejezett track archiválva (Stats: 82 archived)
+- `conductor/tracks.md` frissítve
+
+**Validáció:**
+- `npm run build` ✅ (0 errors)
+- `npm test` ✅
+  - **Test Files:** 154 passed | 1 skipped
+  - **Tests:** 1417 passed | 43 skipped
+  - **Failed:** 0
+
+---
+
 ## 2026-03-21 - ✅ Teljes változásnapló + commit/push előkészítés
 
 **Track:** `orchestrator_chat_upgrade_20260320`, `orchestrator_cognition_upgrade_20260320`, `orchestrator_safe_autopilot_20260320`, `jules_pr_integration_20260222`, `orchestrator_state_machine_20260321`, `owl_agent_coordinator_20260321`
