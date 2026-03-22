@@ -169,9 +169,9 @@ export function SystemHealthCard() {
   const totalCount = services.length;
 
   return (
-    <Card className="glass-card border-white/10">
+    <Card className="bg-zinc-950/40 border-zinc-800/50 rounded-lg">
       <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-white/5">
-        <CardTitle className="text-sm font-space font-bold tracking-tight uppercase text-muted-foreground flex items-center gap-2">
+        <CardTitle className="text-[11px] font-medium tracking-wider uppercase text-zinc-500 flex items-center gap-2">
           <ArrowsClockwise
             size={16}
             className={isChecking ? "animate-spin" : ""}
