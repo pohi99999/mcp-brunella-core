@@ -92,6 +92,7 @@ import voiceRouter from "./routes/voice.js";
 import { syncService } from "../utils/syncService.js";
 import contactRouter from "./routes/contact.js";
 import { swarmRouter } from "./routes/swarm.js";
+import "../core/ceanFallback.js"; // Side-effect: registers Phoenix CEAN fallback handlers
 
 const logger = new Logger("web_ui.log");
 

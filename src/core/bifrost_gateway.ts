@@ -96,12 +96,15 @@ interface ProviderConfig {
 /**
  * Bifrost Gateway - Unified multi-provider LLM interface
  */
+export type GatewayMode = 'local-preferred' | 'edge-only' | 'balanced';
+
 export class BifrostGateway {
   private providers: Map<ProviderType, ProviderConfig>;
   private healthStatus: Map<ProviderType, ProviderHealth>;
   private requestCount: Map<ProviderType, number>;
   private lastHealthCheck: number;
   private healthCheckInterval: number;
+  private mode: GatewayMode = 'local-preferred';
 
   // Provider clients
   private ollamaClient?: Ollama;
@@ -824,6 +827,24 @@ export class BifrostGateway {
   }
 
   /**
+   * Set the gateway routing mode.
+   * - 'local-preferred': Use Ollama first, fall back to cloud providers
+   * - 'edge-only': Route all requests to cloud/edge providers (Gemini, GitHub, Cloudflare)
+   * - 'balanced': Distribute load across all enabled providers
+   */
+  setMode(mode: GatewayMode): void {
+    this.mode = mode;
+    logInfo('BifrostGateway', `Mode changed to: ${mode}`);
+  }
+
+  /**
+   * Get the current gateway routing mode.
+   */
+  getMode(): GatewayMode {
+    return this.mode;
+  }
+
+  /**
    * Get list of enabled providers
    */
   getEnabledProviders(): ProviderType[] {
@@ -845,3 +866,9 @@ export function getBifrostGateway(): BifrostGateway {
   }
   return gatewayInstance;
 }
+
+/**
+ * Named singleton export for direct import convenience.
+ * Usage: import { bifrostGateway } from './bifrost_gateway.js'
+ */
+export const bifrostGateway: BifrostGateway = getBifrostGateway();
