@@ -40,6 +40,7 @@ import { getPendingFixes, updateFixStatus } from "../utils/fixQueue.js";
 import { SocketServiceClass } from "../server/SocketService.js"; // Import SocketServiceClass type
 import type { IAgent } from "./types.js";
 import { formatResponse } from "../utils/responseFormatter.js";
+import { SwarmManager } from './swarm/SwarmManager.js';
 
 // ============================================================================
 // INTERFACES
@@ -1645,5 +1646,15 @@ export function initializeAgentManager(socketService: SocketServiceClass): Agent
   agentManager.socketService = socketService; // Set the socketService
   return agentManager;
 }
+
+export const swarmManager = new SwarmManager();
+// Initialize Triad colony (default colony for swarm_dispatch MCP tool)
+const triadConfig = SwarmManager.getTriadConfig();
+swarmManager.createColony({
+  swarmId: 'triad-default',
+  name: triadConfig.name,
+  objective: 'General purpose: research, data analysis, development',
+});
+logInfo('System', `Triad colony initialized: ${triadConfig.agentIds.join(', ')}`);
 
 export default AgentManager;

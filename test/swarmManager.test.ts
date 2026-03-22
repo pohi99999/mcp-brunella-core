@@ -50,3 +50,10 @@ describe('SwarmManager', () => {
     expect(config.agentIds).toContain('Developer');
   });
 });
+
+import { swarmManager } from '../src/agents/AgentManager.js';
+
+it('AgentManager exports swarmManager singleton', () => {
+  expect(swarmManager).toBeDefined();
+  expect(typeof swarmManager.listColonies).toBe('function');
+});
