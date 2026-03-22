@@ -1,8 +1,10 @@
 {
   "id": "dashboard-500-and-test-timeouts-20260320",
   "title": "Dashboard 500 és teszt timeout hibák javítása",
-  "status": "in_progress",
+  "status": "completed",
   "created": "2026-03-20",
   "owner": "Copilot",
-  "summary": "Dashboard Tasks/Stats 500 hibák és 5 bukó teszt (timeout/auth) gyökérok-feltárása és javítása."
+  "summary": "Dashboard Tasks/Stats 500 hibák és 5 bukó teszt (timeout/auth) gyökérok-feltárása és javítása.",
+  "progress": 100,
+  "completedAt": "2026-03-21"
 }
