@@ -1,5 +1,58 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-22 - ✅ Phase 6: Evolutionary Collective Intelligence — COMPLETE (100%)
+
+**Track:** `remote_layer_phase6_collective_evolution_20260322`
+
+**Cél:** Brunella önfejlesztő kollektív intelligencia réteg: evolutionary agent framework, genetic workflow optimization, topology AI, collective reasoning, meta-reasoning, és PAIOS+Brunella unified runtime.
+
+**Létrehozott modulok (7 db):**
+- `src/agents/evolution/EvolutionaryAgent.ts` — Sandboxolt genom mutáció (prompt_tweak, tool_add/remove, param_adjust, crossover)
+- `src/agents/evolution/EvolutionManager.ts` — Populáció-kezelés, szelekció, generáció-evolúció, fitness küszöb
+- `src/core/geneticFlow.ts` — Genetikus algoritmus workflow variánsokra, crossover, mutáció, fitness értékelés
+- `src/mesh/topologyAI.ts` — Mesh topológia analízis, bottleneck/isolated node detektálás, add_link/rebalance javaslatok
+- `src/core/collectiveMind.ts` — Kollektív reasoning, perspektíva gyűjtés, konszenzus építés, konfliktus detekció
+- `src/core/metaReasoner.ts` — Meta-szintű döntéselemzés, failure pattern felismerés, quality anomaly, recommendation
+- `src/core/unifiedRuntime.ts` — PAIOS+Brunella közös runtime context, shared workflow, sync request/response
+
+**Tesztek:**
+- `test/phase6_evolution.test.ts` — 51 teszt (7 describe blokk: EvolutionaryAgent, EvolutionManager, GeneticFlow, TopologyAI, CollectiveMind, MetaReasoner, UnifiedRuntime)
+
+**Track admin:**
+- Phase 5 track → 100% completed
+- Phase 6 track → 100% completed
+- `conductor/tracks.md` frissítve
+
+**Validáció:**
+- `npm run build` ✅ (0 errors)
+- `npm test` ✅
+  - **Test Files:** 156 passed | 1 skipped
+  - **Tests:** 1513 passed | 43 skipped
+  - **Failed:** 0
+
+---
+
+## 2026-03-22 - ✅ Phase 5: Adaptive Swarms & Workflow Intelligence — COMPLETE (100%)
+
+**Track:** `remote_layer_phase5_adaptive_swarms_20260322`
+
+**Cél:** Önszerveződő agent kolóniák, adaptív workflow engine, prediktív routing, mesh healing, közös tudásréteg és kernel meta-irányítás.
+
+**Létrehozott modulok (8 db):**
+- `src/agents/swarm/SwarmManager.ts` — Kolónia életciklus, leader election, task bidding
+- `src/agents/swarm/SwarmAgent.ts` — Swarm részvétel, role management, capability-based bidding
+- `src/core/adaptiveFlow.ts` — Metrika-vezérelt workflow lépés-átsorrend, futásidejű optimalizálás
+- `src/core/predictiveRouter.ts` — Történet-alapú routing, load prediction, score-based node selection
+- `src/mesh/meshHealing.ts` — Automatikus mesh self-healing, failure detection, reroute/isolate akciók
+- `src/core/knowledgeGraph.ts` — In-memory knowledge graph, BFS pathfinding, relation query
+- `src/core/sharedCognition.ts` — PAIOS+Brunella közös kogníció, relevancia-keresés, expiry management
+- `src/kernel/BrunellaKernel.ts` — Meta-orchestration, snapshot loop, directive rendszer
+
+**Tesztek:**
+- `test/phase5_swarms.test.ts` — 45 teszt (8 describe blokk)
+
+---
+
 ## 2026-03-22 - ✅ Phase 4: Distributed Mesh & Edge Routing — COMPLETE (100%)
 
 **Track:** `remote_layer_phase4_distributed_mesh_20260322`

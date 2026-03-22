@@ -4,7 +4,7 @@
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 108 total | 9 active | 0 completed | 82 archived
+**Stats:** 108 total | 9 active | 2 completed | 82 archived
 
 ---
 
@@ -70,14 +70,16 @@
   - **Completed:** 2026-03-22
   - Mappa: ./tracks/remote_layer_phase4_distributed_mesh_20260322/
 
-- [ ] **Brunella Remote Layer — Fázis 5: Adaptive Swarms & Workflow Intelligence** [HIGH]
+- [x] **Brunella Remote Layer — Fázis 5: Adaptive Swarms & Workflow Intelligence** [HIGH] ✅
   - **ID:** `remote_layer_phase5_adaptive_swarms_20260322`
-  - **Progress:** 0%
+  - **Progress:** 100%
+  - **Completed:** 2026-03-22
   - Mappa: ./tracks/remote_layer_phase5_adaptive_swarms_20260322/
 
-- [ ] **Brunella Remote Layer — Fázis 6: Evolutionary Collective Intelligence** [CRITICAL]
+- [x] **Brunella Remote Layer — Fázis 6: Evolutionary Collective Intelligence** [CRITICAL] ✅
   - **ID:** `remote_layer_phase6_collective_evolution_20260322`
-  - **Progress:** 0%
+  - **Progress:** 100%
+  - **Completed:** 2026-03-22
   - Mappa: ./tracks/remote_layer_phase6_collective_evolution_20260322/
 
 - [ ] **Brunella Remote Layer — Fázis 7: Autonomous Superintelligent Infrastructure** [CRITICAL]
