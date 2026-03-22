@@ -35,6 +35,24 @@ describe('swarmTools MCP registration', () => {
     expect(registeredTools).toContain('swarm_status');
   });
 
+  it('swarm_dispatch invokes submitTask and returns success', async () => {
+    let dispatchHandler: ((params: Record<string, unknown>) => Promise<unknown>) | null = null;
+    const mockServer = {
+      tool: vi.fn((name: string, _desc: string, _schema: unknown, handler: (p: Record<string, unknown>) => Promise<unknown>) => {
+        if (name === 'swarm_dispatch') dispatchHandler = handler;
+        return mockServer;
+      })
+    };
+
+    const { registerSwarmTools } = await import('../src/tools/swarmTools.js');
+    registerSwarmTools(mockServer as any);
+
+    expect(dispatchHandler).not.toBeNull();
+    const result = await dispatchHandler!({ task: 'analyse data', colonyId: 'triad-default' }) as { content: Array<{ text: string }> };
+    const parsed = JSON.parse(result.content[0].text);
+    expect(parsed.status).toBe('success');
+  });
+
   it('swarm_status returns colony list via handler', async () => {
     let statusHandler: (() => Promise<unknown>) | null = null;
     const mockServer = {
