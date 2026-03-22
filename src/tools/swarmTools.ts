@@ -1,5 +1,6 @@
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
+import { swarmManager } from '../agents/AgentManager.js';
 import { chromium } from 'playwright';
 import { exec } from 'child_process';
 import fs from 'fs/promises';
@@ -78,4 +79,68 @@ export function registerSwarmTools(server: McpServer) {
         return { isError: true, content: [{ type: "text", text: `Failed: ${error.message}` }] };
       }
   });
+
+  // swarm_dispatch: kolónia indítása feladattal
+  server.tool(
+    'swarm_dispatch',
+    'Triád swarm kolónia indítása feladattal. Competitive bidding alapján a legalkalmasabb agent veszi át a feladatot.',
+    {
+      task: z.string().describe('A végrehajtandó feladat leírása'),
+      swarmId: z.string().optional().describe('Kolónia azonosítója (alapértelmezett: triad-default)'),
+      requiredCapabilities: z.array(z.string()).optional().describe('Szükséges képességek szűréséhez'),
+    },
+    async ({ task, swarmId = 'triad-default', requiredCapabilities = [] }) => {
+      try {
+        const colony = swarmManager.getColony(swarmId);
+        if (!colony) {
+          return { isError: true, content: [{ type: 'text' as const, text: `Colony not found: ${swarmId}` }] };
+        }
+        if (colony.status === 'paused') {
+          return { isError: true, content: [{ type: 'text' as const, text: `Colony ${swarmId} is paused (Phoenix failover active)` }] };
+        }
+
+        const swarmTask = {
+          taskId: swarmManager.nextTaskId(),
+          task,
+          requiredCapabilities,
+          priority: 1,
+        };
+
+        const result = await swarmManager.submitTask(swarmId, swarmTask);
+        if (!result) {
+          return { isError: true, content: [{ type: 'text' as const, text: 'No bids received — no available agents in colony' }] };
+        }
+
+        return {
+          content: [{
+            type: 'text' as const,
+            text: JSON.stringify({ status: result.status, result: result.result, durationMs: result.durationMs }, null, 2)
+          }]
+        };
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        return { isError: true, content: [{ type: 'text' as const, text: `swarm_dispatch error: ${msg}` }] };
+      }
+    }
+  );
+
+  // swarm_status: aktív kolóniák listázása
+  server.tool(
+    'swarm_status',
+    'Összes swarm kolónia és azok állapotának lekérdezése.',
+    {},
+    async () => {
+      const colonies = swarmManager.listColonies().map(c => ({
+        swarmId: c.swarmId,
+        name: c.name,
+        status: c.status,
+        agentCount: c.agents.size,
+        leaderId: c.leaderId,
+        metrics: c.metrics,
+      }));
+      return {
+        content: [{ type: 'text' as const, text: JSON.stringify({ colonies, total: colonies.length }, null, 2) }]
+      };
+    }
+  );
 }
