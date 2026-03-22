@@ -89,7 +89,11 @@ const defaultTheme = {
         DEFAULT: "var(--color-bg)",
         inset: "var(--color-bg-inset)",
         overlay: "var(--color-bg-overlay)",
+        base: "var(--color-bg-base)",
+        card: "var(--color-bg-card)",
       },
+      "border-subtle": "var(--color-border-subtle)",
+      "text-muted": "var(--color-text-muted)",
       "focus-ring": "var(--color-focus-ring)",
     },
     borderRadius: {
