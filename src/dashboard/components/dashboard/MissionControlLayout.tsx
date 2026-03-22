@@ -9,6 +9,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { CommandMenu } from "@/components/dashboard/CommandMenu";
 import { DynamicSidebar } from "@/components/dashboard/DynamicSidebar";
 import { WidgetGrid } from "@/components/dashboard/WidgetGrid";
+import { TerminalLog } from "@/components/dashboard/TerminalLog";
 import { useLayout } from "@/lib/layout/LayoutContext";
 import { navigationRegistry } from "@/lib/navigation";
 import { WIDGET_REGISTRY } from "@/lib/widgetRegistry";
@@ -127,17 +128,22 @@ export function MissionControlLayout() {
           <DynamicSidebar activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
-        <main className="flex-1 flex flex-col min-h-0 p-2 md:p-6 relative">
-          {activeTab === 'dashboard' ? (
-            <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
-              <WidgetGrid />
-            </div>
-          ) : (
-            <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
-              {activeItem?.component || <div className="text-zinc-500 font-mono">CONTENT_MISSING: {activeTab}</div>}
-            </div>
-          )}
-        </main>
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+          <main className="flex-1 flex flex-col min-h-0 p-2 md:p-6 relative">
+            {activeTab === 'dashboard' ? (
+              <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
+                <WidgetGrid />
+              </div>
+            ) : (
+              <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
+                {activeItem?.component || <div className="text-zinc-500 font-mono">CONTENT_MISSING: {activeTab}</div>}
+              </div>
+            )}
+          </main>
+          <footer className="h-[250px] max-h-[400px] border-t border-zinc-800 bg-black/80 backdrop-blur-xl shrink-0 z-40 overflow-hidden">
+            <TerminalLog className="h-full border-none rounded-none bg-transparent" />
+          </footer>
+        </div>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Terminal } from 'lucide-react'
 import { cn } from '@/lib/utils'
@@ -30,6 +31,13 @@ function logTypeToTerminalType(type: LogType): 'output' | 'command' | 'error' | 
 export function TerminalLog({ logs: propLogs, className }: TerminalLogProps) {
   const { logs: signalLogs } = useSystemSignal();
   const logs = propLogs || signalLogs || [];
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [logs]);
 
   const displayLines =
     logs.length > 0
@@ -64,7 +72,7 @@ export function TerminalLog({ logs: propLogs, className }: TerminalLogProps) {
         <Terminal size={14} className="text-emerald-500" />
         <span className="text-xs font-mono text-zinc-500">terminal — mission-control</span>
       </div>
-      <ScrollArea className="h-[280px] flex-1 font-mono text-sm">
+      <ScrollArea className="h-[280px] flex-1 font-mono text-[12px] leading-relaxed">
         <div className="space-y-0.5 p-3">
           {displayLines.map((line) => (
             <div
@@ -77,6 +85,7 @@ export function TerminalLog({ logs: propLogs, className }: TerminalLogProps) {
               {line.text || ' '}
             </div>
           ))}
+          <div ref={scrollRef} />
         </div>
       </ScrollArea>
     </div>
