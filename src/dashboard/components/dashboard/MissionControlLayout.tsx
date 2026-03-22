@@ -44,7 +44,7 @@ export function MissionControlLayout() {
     <div className="min-h-screen md:max-h-screen flex flex-col md:overflow-hidden bg-[#020205] bg-grid-pattern">
       <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
 
-      <header className="h-16 shrink-0 border-b border-white/5 bg-black/40 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 z-30 sticky top-0">
+      <header className="h-16 shrink-0 border-b border-zinc-800 bg-black/40 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 z-30 sticky top-0">
         <div className="flex items-center gap-2 md:gap-4">
           <div className="flex items-center gap-2 md:gap-3">
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -109,12 +109,12 @@ export function MissionControlLayout() {
         <div className="flex items-center gap-2 md:gap-4">
           <div className="hidden sm:flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
             <div className={cn(
-              "w-2 h-2 rounded-full",
-              isConnected && coreStatus === 'HEALTHY' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.8)]"
-                : coreStatus === 'DEGRADED' ? "bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.8)]"
-                  : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.8)]"
+              "w-1.5 h-1.5 rounded-full",
+              isConnected && coreStatus === 'HEALTHY' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+                : coreStatus === 'DEGRADED' ? "bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.4)]"
+                  : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]"
             )} />
-            <span className="text-[10px] font-mono font-bold text-zinc-400">
+            <span className="text-[10px] font-bold tracking-widest uppercase text-zinc-400">
               {isConnected ? `CORE_${coreStatus}` : "CORE_OFFLINE"}
             </span>
           </div>
