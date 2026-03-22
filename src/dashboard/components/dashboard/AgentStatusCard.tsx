@@ -49,9 +49,9 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
   // Early return if no agent provided (after hooks)
   if (!agent) {
     return (
-      <Card className="glass-card border-white/5">
+      <Card className="bg-zinc-950/40 border-zinc-800/50 rounded-lg">
         <CardHeader>
-          <CardTitle className="text-sm font-mono text-zinc-400">No Agent Loaded</CardTitle>
+          <CardTitle className="text-[11px] font-medium tracking-wider uppercase text-zinc-500">No Agent Loaded</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-xs text-zinc-500">Agent data is not available</p>
@@ -135,8 +135,8 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
   return (
     <Card
       className={cn(
-        'glass-card group h-full flex flex-col',
-        status === 'working' ? 'border-primary/30 shadow-[0_0_15px_rgba(139,92,246,0.1)]' : 'border-white/5'
+        'bg-zinc-950/40 border-zinc-800/50 rounded-lg group h-full flex flex-col',
+        status === 'working' ? 'border-primary/30 shadow-[0_0_15px_rgba(139,92,246,0.1)]' : ''
       )}
       onClick={() => setExpanded(!expanded)}
     >
@@ -152,7 +152,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
               aria-hidden
             />
             <div className="flex flex-col">
-              <span className="font-space font-bold tracking-wide text-zinc-100 group-hover:text-primary transition-colors">{displayTitle}</span>
+              <span className="text-[11px] font-medium tracking-wider uppercase text-zinc-500 group-hover:text-primary transition-colors">{displayTitle}</span>
               <span className="text-[10px] font-mono text-zinc-500 uppercase">{displayRole}</span>
             </div>
           </div>
