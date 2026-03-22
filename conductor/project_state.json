@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-21T18:00:00.246Z",
+  "lastUpdated": "2026-03-22T21:00:00.837Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -83,9 +83,9 @@
     {
       "id": "dashboard-500-and-test-timeouts-20260320",
       "name": "Dashboard 500 és teszt timeout hibák javítása",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-20",
       "tags": [],
       "dependencies": [],
@@ -224,9 +224,9 @@
     {
       "id": "living_documentation_system_20260213",
       "name": "living_documentation_system_20260213",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 0,
+      "progress": 100,
       "assignee": "System",
       "tags": [],
       "dependencies": [],
@@ -322,9 +322,9 @@
     {
       "id": "orchestrator_chat_upgrade_20260320",
       "name": "Universal Orchestrator Chat Upgrade (Dashboard + CLI)",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-20",
       "tags": [],
       "dependencies": [],
@@ -334,9 +334,9 @@
     {
       "id": "orchestrator_cognition_upgrade_20260320",
       "name": "Orchestrator Cognition Upgrade — Magyar társalgó + rendszerérzékelés",
-      "status": "active",
+      "status": "completed",
       "priority": "medium",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-20",
       "tags": [],
       "dependencies": [],
@@ -346,9 +346,9 @@
     {
       "id": "orchestrator_safe_autopilot_20260320",
       "name": "Safe Autopilot Orchestrator",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "tags": [
         "orchestrator",
         "autopilot",
@@ -363,9 +363,9 @@
     {
       "id": "orchestrator_state_machine_20260321",
       "name": "OrchestratorAgent LangGraph-inspirált State Machine (házi implementáció)",
-      "status": "proposed",
+      "status": "completed",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-21",
       "tags": [],
       "dependencies": [],
@@ -382,6 +382,168 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\owl_agent_coordinator_20260321",
+      "_isArchived": false
+    },
+    {
+      "id": "remote_layer_phase1_foundation_20260322",
+      "name": "Brunella Remote Layer — Fázis 1: Remote Foundation",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "tags": [
+        "remote-layer",
+        "api",
+        "websocket",
+        "mcp-router",
+        "dashboard",
+        "paios"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase1_foundation_20260322",
+      "_isArchived": false
+    },
+    {
+      "id": "remote_layer_phase2_discovery_auth_20260322",
+      "name": "Brunella Remote Layer — Fázis 2: Discovery, Capability & Auth",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "tags": [
+        "remote-layer",
+        "mcp-discovery",
+        "capability-mapping",
+        "auth",
+        "sqlite",
+        "dashboard"
+      ],
+      "dependencies": [
+        "remote_layer_phase1_foundation_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase2_discovery_auth_20260322",
+      "_isArchived": false
+    },
+    {
+      "id": "remote_layer_phase3_mobile_voice_20260322",
+      "name": "Brunella Remote Layer — Fázis 3: Mobile, Voice & Deep PAIOS Integration",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "tags": [
+        "remote-layer",
+        "mobile",
+        "voice",
+        "event-bridge",
+        "paios",
+        "flows"
+      ],
+      "dependencies": [
+        "remote_layer_phase1_foundation_20260322",
+        "remote_layer_phase2_discovery_auth_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase3_mobile_voice_20260322",
+      "_isArchived": false
+    },
+    {
+      "id": "remote_layer_phase4_distributed_mesh_20260322",
+      "name": "Brunella Remote Layer — Fázis 4: Distributed Mesh & Edge Routing",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "tags": [
+        "remote-layer",
+        "mesh",
+        "edge",
+        "offline-sync",
+        "federation",
+        "phoenix"
+      ],
+      "dependencies": [
+        "remote_layer_phase1_foundation_20260322",
+        "remote_layer_phase2_discovery_auth_20260322",
+        "remote_layer_phase3_mobile_voice_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase4_distributed_mesh_20260322",
+      "_isArchived": false
+    },
+    {
+      "id": "remote_layer_phase5_adaptive_swarms_20260322",
+      "name": "Brunella Remote Layer — Fázis 5: Adaptive Swarms & Workflow Intelligence",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "tags": [
+        "swarm",
+        "adaptive-flow",
+        "predictive-routing",
+        "mesh-healing",
+        "knowledge-graph",
+        "kernel"
+      ],
+      "dependencies": [
+        "remote_layer_phase4_distributed_mesh_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase5_adaptive_swarms_20260322",
+      "_isArchived": false
+    },
+    {
+      "id": "remote_layer_phase6_collective_evolution_20260322",
+      "name": "Brunella Remote Layer — Fázis 6: Evolutionary Collective Intelligence",
+      "status": "proposed",
+      "priority": "critical",
+      "progress": 0,
+      "tags": [
+        "evolutionary-agents",
+        "genetic-flow",
+        "topology-ai",
+        "collective-mind",
+        "meta-reasoner",
+        "unified-runtime"
+      ],
+      "dependencies": [
+        "remote_layer_phase5_adaptive_swarms_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase6_collective_evolution_20260322",
+      "_isArchived": false
+    },
+    {
+      "id": "remote_layer_phase8_planetary_supersystem_20260322",
+      "name": "Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem",
+      "status": "proposed",
+      "priority": "critical",
+      "progress": 0,
+      "tags": [
+        "planet-mesh",
+        "emergent-intelligence",
+        "meta-evolution",
+        "knowledge-superstructure",
+        "planetary-orchestrator",
+        "singularity"
+      ],
+      "dependencies": [
+        "remote_layer_phase7_superintelligent_infra_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase8_planetary_supersystem_20260322",
+      "_isArchived": false
+    },
+    {
+      "id": "remote_layer_phase9_emergent_superintelligence_20260322",
+      "name": "Brunella Remote Layer — Fázis 9: Emergent Superintelligence",
+      "status": "proposed",
+      "priority": "critical",
+      "progress": 0,
+      "tags": [
+        "superintelligence",
+        "meta-cognition",
+        "goal-evolution",
+        "consciousness",
+        "knowledge-fabric",
+        "meta-mesh",
+        "conscious-kernel"
+      ],
+      "dependencies": [
+        "remote_layer_phase8_planetary_supersystem_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase9_emergent_superintelligence_20260322",
       "_isArchived": false
     },
     {
@@ -1396,6 +1558,26 @@
       "_isArchived": true
     },
     {
+      "id": "remote_layer_phase7_superintelligent_infra_20260322",
+      "name": "Brunella Remote Layer — Fázis 7: Autonomous Superintelligent Infrastructure",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "tags": [
+        "self-replication",
+        "infra-ai",
+        "global-optimizer",
+        "evo-ecosystem",
+        "self-model",
+        "hyperkernel"
+      ],
+      "dependencies": [
+        "remote_layer_phase6_collective_evolution_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase7_superintelligent_infra_20260322",
+      "_isArchived": true
+    },
+    {
       "id": "robotkezv2-full-comet-20260215",
       "name": "RobotkezV2 - Full Comet (Magyar Agentic Browser)",
       "status": "archived",
@@ -1627,10 +1809,10 @@
     }
   ],
   "stats": {
-    "total": 99,
-    "active": 8,
-    "completed": 10,
-    "archived": 71,
-    "proposed": 10
+    "total": 108,
+    "active": 4,
+    "completed": 16,
+    "archived": 72,
+    "proposed": 16
   }
 }
