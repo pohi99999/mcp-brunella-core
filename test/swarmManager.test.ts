@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeEach } from 'vitest';
 import { SwarmManager } from '../src/agents/swarm/SwarmManager.js';
 import { SwarmAgent } from '../src/agents/swarm/SwarmAgent.js';
+import { swarmManager } from '../src/agents/AgentManager.js';
 
 describe('SwarmManager', () => {
   let manager: SwarmManager;
@@ -49,11 +50,9 @@ describe('SwarmManager', () => {
     expect(config.agentIds).toContain('DataScientist');
     expect(config.agentIds).toContain('Developer');
   });
-});
 
-import { swarmManager } from '../src/agents/AgentManager.js';
-
-it('AgentManager exports swarmManager singleton', () => {
-  expect(swarmManager).toBeDefined();
-  expect(typeof swarmManager.listColonies).toBe('function');
+  it('AgentManager exports swarmManager singleton', () => {
+    expect(swarmManager).toBeDefined();
+    expect(typeof swarmManager.listColonies).toBe('function');
+  });
 });
