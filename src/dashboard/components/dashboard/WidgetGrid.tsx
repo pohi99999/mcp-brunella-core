@@ -35,23 +35,16 @@ export function WidgetGrid({}: WidgetGridProps) {
       </div>
 
       <div
-        className="hidden md:grid flex-1 min-h-0 overflow-y-auto custom-scrollbar p-2"
-        style={{
-          gridTemplateAreas: currentLayout.gridTemplateAreas.join(' '),
-          gridTemplateColumns: currentLayout.gridTemplateColumns,
-          gridTemplateRows: currentLayout.gridTemplateRows,
-          gap: '1.25rem',
-          minHeight: '650px'
-        }}
+        className="hidden md:block columns-1 md:columns-2 lg:columns-3 xl:columns-4 gap-4 space-y-4 p-2 flex-1 min-h-0 overflow-y-auto custom-scrollbar"
       >
-        {Object.entries(currentLayout.widgetAssignments).map(([widgetId, gridArea]) => {
+        {Object.entries(currentLayout.widgetAssignments).map(([widgetId]) => {
           const widget = WIDGET_REGISTRY[widgetId];
           if (!widget) return null;
 
           const Component = widget.component;
 
           return (
-            <div key={widgetId} style={{ gridArea }} className="relative overflow-hidden rounded-2xl border border-white/5 bg-black/20 backdrop-blur-md">
+            <div key={widgetId} className="break-inside-avoid mb-4 relative overflow-hidden rounded-2xl border border-white/5 bg-black/20 backdrop-blur-md">
               <div className="h-full w-full overflow-hidden">
                 <Component />
               </div>
