@@ -1035,6 +1035,29 @@
       ],
       "autoStart": true,
       "priority": 1
+    },
+    {
+      "name": "critic_agent",
+      "title": "Critic Agent",
+      "description": "Minőségellenőrző ágens: megvizsgálja az ügynökök válaszait, kimutatja a hallucináció jeleit, titkos adatok szivárgását, hiányzó tartalmat.",
+      "class": "CriticAgent",
+      "module": "./agents/CriticAgent.js",
+      "config": {},
+      "capabilities": [
+        "quality_review",
+        "hallucination_detection",
+        "secret_leak_detection",
+        "output_validation"
+      ],
+      "tools": [],
+      "tags": [
+        "QA",
+        "critic",
+        "quality",
+        "security"
+      ],
+      "autoStart": false,
+      "priority": 2
     }
   ]
 }
