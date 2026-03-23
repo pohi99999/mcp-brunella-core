@@ -1,27 +1,73 @@
 {
   "$schema": "https://json.schemastore.org/wrangler.json",
-  "name": "bas-orchestrator",
+  "name": "cean-orchestrator",
   "main": "src/index.ts",
-  "compatibility_date": "2024-01-01",
+  "compatibility_date": "2025-01-01",
   "compatibility_flags": [
     "nodejs_compat"
   ],
-  // KV Namespaces
+
+  // --- Workers AI ---
+  "ai": {
+    "binding": "AI"
+  },
+
+  // --- KV Namespaces ---
   "kv_namespaces": [
     {
       "binding": "BAS_TASKS",
-      "id": "YOUR_KV_ID_HERE"
+      "id": "b6718ab359ac401bb24da7c34c24f11b"
     }
   ],
-  // D1 Database (Phase 3)
+
+  // --- D1 Database ---
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "brunella-edge-tasks",
-      "database_id": "YOUR_D1_DATABASE_ID"
+      "database_name": "bas-metadata",
+      "database_id": "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
     }
   ],
-  // Durable Objects (Phase 2)
+
+  // --- R2 Buckets ---
+  "r2_buckets": [
+    {
+      "binding": "R2_ARTIFACTS",
+      "bucket_name": "vodor1"
+    }
+  ],
+
+  // --- Vectorize ---
+  "vectorize": [
+    {
+      "binding": "VECTORIZE_MEMORY",
+      "index_name": "brunella-agent-memory"
+    }
+  ],
+
+  // --- Queues ---
+  "queues": {
+    "producers": [
+      {
+        "queue": "bas-task-queue",
+        "binding": "TASK_QUEUE"
+      },
+      {
+        "queue": "bas-result-queue",
+        "binding": "RESULT_QUEUE"
+      }
+    ]
+  },
+
+  // --- Analytics Engine ---
+  "analytics_engine_datasets": [
+    {
+      "binding": "BAS_ANALYTICS",
+      "dataset": "bas_agent_telemetry"
+    }
+  ],
+
+  // --- Durable Objects ---
   "durable_objects": {
     "bindings": [
       {
@@ -30,14 +76,30 @@
       }
     ]
   },
-  // Workers AI binding
-  "ai": {
-    "binding": "AI"
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_classes": [
+        "EdgeCoordinator"
+      ]
+    }
+  ],
+
+  // --- Vars ---
+  "vars": {
+    "DEFAULT_CODE_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "FALLBACK_CODE_MODEL": "@cf/meta/llama-3.1-8b-instruct",
+    "REASONING_MODEL": "@cf/deepseek/deepseek-r1-distill-qwen-32b",
+    "FAST_MODEL": "@cf/microsoft/phi-4",
+    "R2_PREFIX": "Brunella-core"
   },
-  // Environment variables (set via wrangler secret)
-  // BAS_LOCAL_URL - Your local tunnel URL
-  // BAS_API_KEY - API key for authentication
-  // Development settings
+
+  // --- Observability ---
+  "observability": {
+    "enabled": true
+  },
+
+  // --- Dev ---
   "dev": {
     "port": 8787,
     "local_protocol": "http"

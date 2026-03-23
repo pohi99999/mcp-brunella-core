@@ -6,38 +6,102 @@
   "compatibility_flags": [
     "nodejs_compat"
   ],
+
+  // --- Workers AI ---
   "ai": {
     "binding": "AI"
   },
+
+  // --- KV Namespaces ---
   "kv_namespaces": [
     {
       "binding": "BAS_TASKS",
       "id": "b6718ab359ac401bb24da7c34c24f11b"
     }
   ],
+
+  // --- R2 Buckets (artifact storage) ---
   "r2_buckets": [
     {
       "binding": "R2_KNOWLEDGE",
       "bucket_name": "vodor1"
     }
   ],
+
+  // --- D1 Database ---
   "d1_databases": [
     {
       "binding": "D1_METADATA",
       "database_name": "bas-metadata",
-      "database_id": "8efce5d3-bcfc-4188-ac36-29db5bdf49fb"
+      "database_id": "1c4e7d00-7b09-4ddf-88b4-8df42e1123ab"
     }
   ],
+
+  // --- Vectorize (agent memory embeddings) ---
+  "vectorize": [
+    {
+      "binding": "VECTORIZE_MEMORY",
+      "index_name": "brunella-agent-memory"
+    },
+    {
+      "binding": "VECTORIZE_CEAN",
+      "index_name": "cean-vector"
+    }
+  ],
+
+  // --- Queues (async task distribution) ---
+  "queues": {
+    "producers": [
+      {
+        "queue": "bas-task-queue",
+        "binding": "TASK_QUEUE"
+      },
+      {
+        "queue": "bas-result-queue",
+        "binding": "RESULT_QUEUE"
+      },
+      {
+        "queue": "bas-dlq",
+        "binding": "DLQ"
+      }
+    ],
+    "consumers": [
+      {
+        "queue": "bas-task-queue",
+        "max_batch_size": 10,
+        "max_batch_timeout": 5,
+        "max_retries": 3,
+        "dead_letter_queue": "bas-dlq"
+      }
+    ]
+  },
+
+  // --- Analytics Engine (agent telemetry) ---
+  "analytics_engine_datasets": [
+    {
+      "binding": "BAS_ANALYTICS",
+      "dataset": "bas_agent_telemetry"
+    }
+  ],
+
+  // --- Static Assets ---
   "assets": {
     "directory": "../build/public",
     "binding": "ASSETS"
   },
+
+  // --- Environment Variables ---
   "vars": {
     "N8N_WEBHOOK_URL": "http://localhost:5678/webhook/bas-task",
     "BROWSER_USE_ENDPOINT": "http://localhost:8000/api/task",
-    "DEFAULT_CODE_MODEL": "@cf/meta/llama-3.1-8b-instruct",
+    "DEFAULT_CODE_MODEL": "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+    "FALLBACK_CODE_MODEL": "@cf/meta/llama-3.1-8b-instruct",
+    "REASONING_MODEL": "@cf/deepseek/deepseek-r1-distill-qwen-32b",
+    "FAST_MODEL": "@cf/microsoft/phi-4",
     "R2_PREFIX": "Brunella-core"
   },
+
+  // --- Durable Objects ---
   "durable_objects": {
     "bindings": [
       {
@@ -54,6 +118,8 @@
       ]
     }
   ],
+
+  // --- Observability ---
   "observability": {
     "enabled": true
   }
