@@ -9,7 +9,7 @@
 
 import { describe, it, expect, beforeAll, afterAll, vi } from 'vitest';
 import { agentManager } from '../src/agents/AgentManager.js';
-import { saveCheckpoint, clearCheckpoints, closeCheckpointDb } from '../src/core/checkpoint.js';
+import { saveCheckpoint, clearCheckpoints } from '../src/core/checkpoint.js';
 import type { IAgent } from '../src/agents/types.js';
 
 describe('Phoenix Protocol v2 - AgentManager Recovery Logic', () => {
@@ -49,9 +49,8 @@ describe('Phoenix Protocol v2 - AgentManager Recovery Logic', () => {
   });
 
   afterAll(async () => {
-    // Cleanup
+    // Cleanup checkpoint data — db connection marad nyitva, más tesztek is használhatják
     await clearCheckpoints('TestRecoveryAgent:test_task');
-    await closeCheckpointDb();
   });
 
   describe('executeWithRecovery()', () => {
