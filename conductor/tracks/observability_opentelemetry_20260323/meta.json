@@ -1,0 +1,67 @@
+{
+  "trackName": "observability_opentelemetry_20260323",
+  "type": "Infrastructure",
+  "priority": "HIGH",
+  "status": "active",
+  "progress": 0,
+  "goal": "OpenTelemetry traces integrálása: minden agent hívás legyen trace span, latency + token usage + cost tracking. Bifrost Gateway provider-szintű metrikák. Dashboard telemetria panel.",
+  "assignee": "Copilot + Pohánka Péter",
+  "createdAt": "2026-03-23T01:30:00Z",
+  "updatedAt": "2026-03-23T01:30:00Z",
+  "phases": [
+    {
+      "name": "Phase 1: OpenTelemetry SDK Integráció",
+      "status": "pending",
+      "description": "@opentelemetry/sdk-node setup, TracerProvider, SpanExporter",
+      "tasks": [
+        "[ ] npm install @opentelemetry/sdk-node @opentelemetry/api @opentelemetry/exporter-trace-otlp-http",
+        "[ ] src/core/telemetry.ts: TracerProvider init, getTracer(), wrapWithSpan() helper",
+        "[ ] src/index.ts: telemetry init a szerver induláskor",
+        "[ ] OTLP exporter konfiguráció (lokális collector vagy Grafana Cloud)"
+      ]
+    },
+    {
+      "name": "Phase 2: Agent Trace Instrumentation",
+      "status": "pending",
+      "description": "Minden agent.execute() hívás = trace span",
+      "tasks": [
+        "[ ] AgentManager.execute(): span creation (agent name, task, status)",
+        "[ ] BaseAgent.execute(): child span (executeTask + RAG query)",
+        "[ ] Span attributes: agentName, taskType, confidence, tokenUsage, durationMs",
+        "[ ] Error recording: span.recordException() hiba esetén"
+      ]
+    },
+    {
+      "name": "Phase 3: LLM Provider Metrikák",
+      "status": "pending",
+      "description": "Bifrost Gateway + modelRouter provider-szintű tracking",
+      "tasks": [
+        "[ ] bifrost_gateway.ts: span per LLM hívás (provider, model, tokens, cost)",
+        "[ ] Token counting: prompt + completion tokének pontos számlálás",
+        "[ ] Cost tracking: provider-szintű ár × token → USD",
+        "[ ] Fallback tracking: melyik provider-ről melyikre váltott"
+      ]
+    },
+    {
+      "name": "Phase 4: Dashboard + CLI + Export",
+      "status": "pending",
+      "description": "Telemetria panel és CLI parancsok",
+      "tasks": [
+        "[ ] src/dashboard/components/dashboard/TelemetryPanel.tsx",
+        "[ ] Agent execution timeline (trace waterfall view)",
+        "[ ] Provider cost breakdown chart (daily/weekly)",
+        "[ ] CLI: brunella telemetry (menüvezérelt: traces, costs, agents)",
+        "[ ] Prometheus endpoint bővítés OTel metrikákkal"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "OpenTelemetry traces minden agent hívásra",
+    "Token usage + cost tracking per provider",
+    "Dashboard TelemetryPanel: timeline, costs, agents",
+    "CLI: brunella telemetry parancs",
+    "Prometheus /metrics endpoint bővítve",
+    "npm run build && npm test → 0 hiba"
+  ],
+  "dependencies": []
+}

@@ -1,0 +1,68 @@
+{
+  "trackName": "mcp_tool_discovery_20260323",
+  "type": "Core Enhancement",
+  "priority": "MEDIUM",
+  "status": "active",
+  "progress": 0,
+  "goal": "Dinamikus MCP tool discovery: agent-ek runtime-ban publikálnak tool-okat, tool versioning (semver), composable tool chain-ek, per-tool metrikák + timeout/retry.",
+  "assignee": "Copilot + Pohánka Péter",
+  "createdAt": "2026-03-23T01:30:00Z",
+  "updatedAt": "2026-03-23T01:30:00Z",
+  "phases": [
+    {
+      "name": "Phase 1: Dynamic Tool Registry",
+      "status": "pending",
+      "description": "Runtime tool regisztráció és deregisztráció",
+      "tasks": [
+        "[ ] src/core/dynamicToolRegistry.ts: ToolManifest interfész",
+        "[ ] registerTool(manifest): runtime regisztráció validációval",
+        "[ ] deregisterTool(toolId): eltávolítás + cleanup",
+        "[ ] discoverTools(filter?): aktív tool-ok lekérdezése",
+        "[ ] MCP server auto-publish: registerAllTools() → dynamic migrálás"
+      ]
+    },
+    {
+      "name": "Phase 2: Versioning & Compatibility",
+      "status": "pending",
+      "description": "Tool versioning semver-rel, kompatibilitás kezelés",
+      "tasks": [
+        "[ ] ToolManifest.version: semver (major.minor.patch)",
+        "[ ] Version resolution: agent kér tool@^1.0.0 → legújabb kompatibilis",
+        "[ ] Deprecation support: tool deprecated → warning + fallback",
+        "[ ] Tool changelog: verzió változások nyilvántartása"
+      ]
+    },
+    {
+      "name": "Phase 3: Tool Composition",
+      "status": "pending",
+      "description": "Tool chain-ek: output → input láncolás",
+      "tasks": [
+        "[ ] ComposableTool: chain definíció (tool1 output → tool2 input)",
+        "[ ] Schema kompatibilitás check: output schema ⊆ input schema",
+        "[ ] Macro tool-ok: több tool → egy composit tool",
+        "[ ] Tool recommendation: feladat alapján javasolt tool-ok"
+      ]
+    },
+    {
+      "name": "Phase 4: Metrics + Dashboard + CLI",
+      "status": "pending",
+      "description": "Per-tool metrikák és kezelés",
+      "tasks": [
+        "[ ] Per-tool metrikák: call count, avg latency, error rate, last used",
+        "[ ] Timeout/retry: tool-szintű timeout + configurable retry",
+        "[ ] Dashboard: ToolDiscoveryPanel (tool lista, metrikák, chain-ek)",
+        "[ ] CLI: brunella tools (list, info, chain, metrics)"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "Dynamic tool regisztráció runtime-ban",
+    "Tool versioning (semver) + deprecation",
+    "Composable tool chain-ek",
+    "Per-tool metrikák (latency, error rate)",
+    "Dashboard ToolDiscoveryPanel",
+    "CLI: brunella tools",
+    "npm run build && npm test → 0 hiba"
+  ],
+  "dependencies": ["observability_opentelemetry_20260323"]
+}

@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-22T23:29:53.708Z
+**Utolso frissites:** 2026-03-23T01:00:00.414Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 105 total | 5 active | 0 completed | 90 archived
+**Stats:** 112 total | 12 active | 0 completed | 90 archived
 
 ---
 
@@ -66,7 +66,54 @@
 
 ---
 
-## Aktiv Szalak (Active) (5)
+## Aktiv Szalak (Active) (12)
+
+- [ ] **Guardrails & Evaluáció — Agent Output Validáció** [CRITICAL]
+  - **ID:** `guardrails_evaluation_20260323`
+  - **Progress:** 0%
+  - **Assignee:** Copilot + Pohánka Péter
+  - Mappa: ./tracks/guardrails_evaluation_20260323/
+
+- [ ] **Observability & OpenTelemetry — Distributed Tracing** [HIGH]
+  - **ID:** `observability_opentelemetry_20260323`
+  - **Progress:** 0%
+  - **Assignee:** Copilot + Pohánka Péter
+  - Mappa: ./tracks/observability_opentelemetry_20260323/
+
+- [ ] **Agent Memória & Tanulás — Strukturált SQLite Memória** [HIGH]
+  - **ID:** `agent_memory_structured_20260323`
+  - **Progress:** 0%
+  - **Assignee:** Copilot + Pohánka Péter
+  - **Függőség:** guardrails_evaluation_20260323
+  - Mappa: ./tracks/agent_memory_structured_20260323/
+
+- [ ] **DAG Orchestráció — Párhuzamos Agent Workflow** [HIGH]
+  - **ID:** `agent_orchestration_dag_20260323`
+  - **Progress:** 0%
+  - **Assignee:** Copilot + Pohánka Péter
+  - **Függőség:** observability_opentelemetry_20260323
+  - Mappa: ./tracks/agent_orchestration_dag_20260323/
+
+- [ ] **Swarm Intelligence v2 — Colony Persistence & Voting** [MEDIUM]
+  - **ID:** `swarm_intelligence_v2_20260323`
+  - **Progress:** 0%
+  - **Assignee:** Copilot + Pohánka Péter
+  - **Függőség:** agent_memory + orchestration_dag
+  - Mappa: ./tracks/swarm_intelligence_v2_20260323/
+
+- [ ] **MCP Tool Discovery — Dynamic Registration & Composition** [MEDIUM]
+  - **ID:** `mcp_tool_discovery_20260323`
+  - **Progress:** 0%
+  - **Assignee:** Copilot + Pohánka Péter
+  - **Függőség:** observability_opentelemetry_20260323
+  - Mappa: ./tracks/mcp_tool_discovery_20260323/
+
+- [ ] **Sandbox & Security Hardening — WASM + RBAC** [LOW]
+  - **ID:** `sandbox_security_hardening_20260323`
+  - **Progress:** 0%
+  - **Assignee:** Copilot + Pohánka Péter
+  - **Függőség:** guardrails_evaluation_20260323
+  - Mappa: ./tracks/sandbox_security_hardening_20260323/
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
