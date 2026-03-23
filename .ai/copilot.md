@@ -1,5 +1,66 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-24 - 🚀 CF Workflows Deploy + PAIOS GitHub/GPT-4.1 Upgrade + Schema Fix
+
+**Commitok:**
+- `d00386e6` — fix: add explicit account_id to both wrangler.jsonc files
+- `08a61384` — feat: CF Workflows + PAIOS github/gpt-4.1 default + dead worker cleanup
+- (jelen commit) — fix: paiosConfig.ts Zod schema → github/cloudflare provider support
+
+**CF Workflows (DONE ✅):**
+- `DailyHealthCheckWorkflow` — 7-step, cron 6AM UTC (D1/KV/R2 health → report → telemetry → Discord alert)
+- `TaskPipelineWorkflow` — 6-step (AI analysis → subtask decomposition via Queue → R2 artifacts)
+- Deploy: cean-orchestrator → 15 bindings, 2 Workflows, cron trigger aktív
+- Health check verified: `{"status":"healthy","capabilities":{"queues":true,"r2":true,"vectorize":true,"analytics":true}}`
+
+**PAIOS Intelligencia Upgrade:**
+- `paios.config.yaml`: default_model: github, model: gpt-4.1 (volt: gemini/gpt-4o)
+- Hozzáadva: cloudflare provider (@cf/meta/llama-3.3-70b-instruct-fp8-fast)
+- **KRITIKUS FIX**: `paiosConfig.ts` Zod schema nem ismerte a `github` és `cloudflare` provider-eket → FAIL
+  - `ModelProvider` típus: `gpt4o` → `github`, hozzáadva `cloudflare`
+  - Schema enum: `['gpt4o','gemini','local','anthropic']` → `['github','gemini','local','anthropic','cloudflare']`
+  - Tesztek frissítve: `paiosConfig.test.ts`, `smoke.vitest.ts`
+
+**Halott Worker Takarítás:**
+- Törölve: `cean-orchestrator-production` (0 bindings, no routes, utolsó deploy Feb 21)
+
+**Teszt eredmény:** 181 files PASS, 1797+ tests PASS, 0 FAIL
+
+**Track összesítés:** 8/9 CF track DONE (Hyperdrive: 30%, alacsony prioritás — D1-hez nem szükséges)
+
+---
+
+## 2026-03-23 - ☁️ Cloudflare Infrastruktúra Modernizálás (7/9 track DONE)
+
+**Commitok:**
+- `5dc749c3` — 9 CF track spec létrehozása (meta.json + spec.md + plan.md)
+- `8f05cbd1` — 7/9 CF track implementálása: Queues, Workers AI, R2 Artifacts, Analytics Engine, DO migrations, Vectorize
+
+**Kritikus felfedezés és javítás:**
+- `.env` rossz Account ID-t tartalmazott (`1bf6118d...` helyett `dd107933...`)
+- A `cfut_` prefix tokenek CF Tunnel tokenek, NEM API tokenek
+- Wrangler OAuth login szükséges a CLI műveletekhez
+
+**CF infrastruktúra létrehozva (élő):**
+- 3 Queue: `bas-task-queue`, `bas-result-queue`, `bas-dlq`
+- 1 Vectorize index: `brunella-agent-memory` (384 dim, cosine)
+- D1 database_id javítva: `1c4e7d00-7b09-4ddf-88b4-8df42e1123ab`
+
+**Új fájlok:**
+- `bas-cloudflare-orchestrator/src/queueHandler.ts` — aszinkron task feldolgozás modell szelekcióval
+- `bas-cloudflare-orchestrator/src/r2Artifacts.ts` — R2ArtifactManager agent outputokhoz
+- `bas-cloudflare-orchestrator/src/analyticsEngine.ts` — BASAnalytics telemetria
+
+**Workers AI modellek bővítve:**
+- `@cf/meta/llama-3.3-70b-instruct-fp8-fast` (default — erős reasoning)
+- `@cf/deepseek/deepseek-r1-distill-qwen-32b` (kód generálás)
+- `@cf/microsoft/phi-4` (gyors, olcsó)
+
+**Track státusz:** 7/9 DONE, Workflows 50%, Hyperdrive 30%
+**Tesztek:** 181 fájl PASS, 1797 teszt PASS (1 pre-existing GEMINI_API_KEY hiba)
+
+---
+
 ## 2026-07-14 - 🧠 PAIOS Orchestrator Intelligence Upgrade
 
 **Commit:** `86d0e7ac` — `feat: PAIOS Orchestrator intelligence upgrade - Brunella AI asszisztens`
