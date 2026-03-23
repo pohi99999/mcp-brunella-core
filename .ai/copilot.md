@@ -1,5 +1,64 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-07-14 - 🧠 PAIOS Orchestrator Intelligence Upgrade
+
+**Commit:** `86d0e7ac` — `feat: PAIOS Orchestrator intelligence upgrade - Brunella AI asszisztens`
+
+**Cél:** A PAIOS Chat-et robotikus diszpécserből intelligens, folyékonyan magyarul kommunikáló Brunella AI asszisztenssé alakítani.
+
+**Probléma azonosítva:**
+1. System prompt megbénította az LLM-et ("Nem hajtasz végre feladatot közvetlenül", "Rövid, operációs jellegű")
+2. maxTokens=1024 túl alacsony volt minőségi magyar válaszokhoz
+3. temperature=0.3 túl determinisztikus természetes párbeszédhez
+4. Tool execution loop hiányzott: LLM hívott tool-okat, de soha nem látta az eredményeket
+5. Nincs agent képesség kontextus — nem tudta mire jó melyik ügynök
+6. Conversation history korlát nélkül → kontextus túlcsordulás
+
+**Javítások (`src/core/universalOrchestratorService.ts`):**
+- System prompt teljes átírás: Brunella személyiség, proaktív, intelligens delegálás
+- `buildAgentCapabilities()` függvény: ügynökök kategorizálása (Fejlesztés, Kutatás, Tesztelés, DevOps, Üzlet, Kommunikáció, Automatizálás)
+- maxTokens 1024→4096, temperature 0.3→0.5
+- Multi-turn tool execution loop: tool eredmények → LLM szintézis → természetes nyelvi válasz
+- Conversation windowing: max 20 üzenet
+- Graceful fallback ha a szintézis LLM hívás sikertelen
+
+**Tesztek:** 182 fájl PASS, 1798 teszt PASS (0 hiba)
+
+---
+
+## 2026-03-23 - 🌐 Browser Copilot MVP a Robotkéz + Chrome ACP stackre
+
+**Track:** `robotkez_comet_upgrade_20260222`
+
+**Cél:** A user által kért Comet-szerű élő browser agent élmény MVP-jének felépítése a meglévő Chrome ACP + Robotkéz alapokra közös session coordinatorral, dashboard chat overlay-jel és CLI/API vezérléssel.
+
+**Elkészült ebben a lépésben:**
+
+- új backend session service: `src/services/BrowserCopilotSessionService.ts`
+  - közös session state
+  - módok: `observe | guide | auto`
+  - viewport preference: `auto | chrome-acp | robotkez`
+  - guide megerősítés / pause / resume / reset
+  - socket event: `browser-copilot:update`
+- új REST API: `src/server/routes/browserCopilot.ts`
+  - `GET /api/v1/browser-copilot/session`
+  - `POST /api/v1/browser-copilot/session/configure`
+  - `POST /api/v1/browser-copilot/message`
+  - `POST /api/v1/browser-copilot/confirm`
+  - `POST /api/v1/browser-copilot/pause`
+  - `POST /api/v1/browser-copilot/resume`
+  - `POST /api/v1/browser-copilot/reset`
+- új dashboard panel: `BrowserCopilotPanel.tsx`
+  - ACP iframe live viewport + Robotkéz screenshot fallback
+  - lebegő magyar chat overlay
+  - session state panel + `LiveExecutionMonitor` beágyazás
+- új dashboard API client függvények a `src/dashboard/lib/apiService.ts` fájlban
+- új CLI parancsok: `src/cli/browserCopilotCommands.ts`
+  - `brunella browser-copilot status|send|configure|confirm|pause|resume|reset`
+- új unit teszt: `test/browserCopilotSessionService.test.ts`
+
+**Megjegyzés:** ez MVP szint, de már közös koordinációs réteget ad a Chrome ACP látható browser és a Robotkéz végrehajtó agent közé.
+
 ## 2026-03-23 (esti session) - 🏆 7/7 Modernizációs Track KÉSZ — Sandbox & Security + Teljes Archiválás
 
 **Trackek befejezve ebben a sessionben:**
