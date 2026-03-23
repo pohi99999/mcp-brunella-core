@@ -27,6 +27,7 @@ import {
 } from "../core/checkpoint.js";
 import { gitAutoCheckpoint, logRecoveryEvent } from "../core/gitRecovery.js";
 import { autoSaveGoldenSample } from "../core/goldenDatasetBridge.js";
+import { executeDAG, type DAGContext, type DAGExecutionResult, type DAGNode, type DAGWorkflow } from "../core/dagEngine.js";
 import { phoenixEventBus } from "../core/phoenixEventBus.js";
 import { failoverRegistry } from "../core/failoverRegistry.js";
 import {
@@ -119,6 +120,17 @@ interface QueuedTask {
   status: "pending" | "running" | "done" | "error" | "cancelled" | "paused";
 }
 
+interface WorkflowExecutionSummary {
+  id: string;
+  name: string;
+  status: DAGExecutionResult["status"] | "running";
+  nodeCount: number;
+  startedAt: string;
+  finishedAt?: string;
+  durationMs?: number;
+  warnings: number;
+}
+
 export class AgentManager extends EventEmitter {
   private agents: Map<string, IAgent> = new Map();
   private registry: RegistryConfig;
@@ -133,6 +145,7 @@ export class AgentManager extends EventEmitter {
     { failures: number; lastFailure: number; isOpen: boolean }
   > = new Map();
   private activeExecutions: Map<number, AbortController> = new Map(); // Új: futó feladatok megszakíthatósága
+  private recentWorkflowExecutions: WorkflowExecutionSummary[] = [];
   private readonly FAILURE_THRESHOLD = 3;
   private readonly RESET_TIMEOUT = 5 * 60 * 1000; // 5 perc
 
@@ -1343,6 +1356,74 @@ export class AgentManager extends EventEmitter {
   /** Összes feladat a sorból */
   getAllTasks(): QueuedTask[] {
     return [...this.taskQueue];
+  }
+
+  async executeWorkflow(
+    workflow: DAGWorkflow,
+    initialContext?: Record<string, unknown>,
+  ): Promise<DAGExecutionResult> {
+    const summary: WorkflowExecutionSummary = {
+      id: workflow.id,
+      name: workflow.name,
+      status: "running",
+      nodeCount: workflow.nodes.length,
+      startedAt: new Date().toISOString(),
+      warnings: 0,
+    };
+
+    this.recentWorkflowExecutions.unshift(summary);
+    this.recentWorkflowExecutions = this.recentWorkflowExecutions.slice(0, 25);
+
+    const executionContext: Partial<DAGContext> = {
+      input: initialContext,
+      values: { ...(initialContext ?? {}) },
+    };
+
+    try {
+      const result = await executeDAG(workflow, executionContext, {
+        executeAgent: async (node: DAGNode, context: DAGContext) => {
+          const instruction = node.instruction ?? node.label;
+          const routedAgent = node.agentName ?? this.routeTask(instruction);
+          if (!routedAgent) {
+            throw new Error(`No target agent resolved for workflow node '${node.id}'`);
+          }
+
+          const metadata = typeof node.metadata === "object" && node.metadata !== null
+            ? node.metadata as Record<string, unknown>
+            : {};
+          const retries = typeof metadata.retries === "number" ? metadata.retries : 2;
+
+          return this.executeAgentWithRetry(
+            routedAgent,
+            instruction,
+            {
+              ...(initialContext ?? {}),
+              workflowId: workflow.id,
+              workflowNodeId: node.id,
+              dagValues: context.values,
+              dagNodeResults: context.nodeResults,
+            },
+            retries,
+          );
+        },
+      });
+
+      summary.status = result.status;
+      summary.finishedAt = new Date().toISOString();
+      summary.durationMs = result.durationMs;
+      summary.warnings = result.warnings.length;
+
+      return result;
+    } catch (error) {
+      summary.status = "error";
+      summary.finishedAt = new Date().toISOString();
+      summary.durationMs = Date.now() - new Date(summary.startedAt).getTime();
+      throw error;
+    }
+  }
+
+  listWorkflowExecutions(): WorkflowExecutionSummary[] {
+    return [...this.recentWorkflowExecutions];
   }
 
   /** Egy pending feladat azonnali feldolgozása */

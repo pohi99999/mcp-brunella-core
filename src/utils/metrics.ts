@@ -60,6 +60,23 @@ export const llmCostUsdTotal = new Counter({
   registers: [registry],
 });
 
+export const memoryCacheHitsTotal = new Counter({
+  name: "bas_memory_cache_hits_total",
+  help: "Structured memory cache hits by agent",
+  labelNames: ["agent_name"] as const,
+  registers: [registry],
+});
+
+export const memoryCacheMissesTotal = new Counter({
+  name: "bas_memory_cache_misses_total",
+  help: "Structured memory cache misses by agent",
+  labelNames: ["agent_name"] as const,
+  registers: [registry],
+});
+
+const memoryCacheHitSnapshot = new Map<string, number>();
+const memoryCacheMissSnapshot = new Map<string, number>();
+
 function normalizePath(path: string): string {
   if (!path) return "unknown";
   return path
@@ -125,6 +142,39 @@ export function recordLlmUsageAndCost(params: {
   }
 }
 
+export function recordMemoryCacheHit(agentName: string): void {
+  memoryCacheHitsTotal.inc({ agent_name: agentName });
+  memoryCacheHitSnapshot.set(agentName, (memoryCacheHitSnapshot.get(agentName) ?? 0) + 1);
+}
+
+export function recordMemoryCacheMiss(agentName: string): void {
+  memoryCacheMissesTotal.inc({ agent_name: agentName });
+  memoryCacheMissSnapshot.set(agentName, (memoryCacheMissSnapshot.get(agentName) ?? 0) + 1);
+}
+
+export function getMemoryCacheMetricsSnapshot(): Record<string, { hits: number; misses: number; hitRate: number }> {
+  const agents = new Set<string>([
+    ...memoryCacheHitSnapshot.keys(),
+    ...memoryCacheMissSnapshot.keys(),
+  ]);
+
+  return Object.fromEntries(
+    [...agents].map((agentName) => {
+      const hits = memoryCacheHitSnapshot.get(agentName) ?? 0;
+      const misses = memoryCacheMissSnapshot.get(agentName) ?? 0;
+      const total = hits + misses;
+      return [
+        agentName,
+        {
+          hits,
+          misses,
+          hitRate: total > 0 ? hits / total : 0,
+        },
+      ];
+    }),
+  );
+}
+
 export function getPrometheusMetrics(): Promise<string> {
   return registry.metrics();
 }
@@ -135,4 +185,6 @@ export function getPrometheusContentType(): string {
 
 export async function resetPrometheusMetricsForTests(): Promise<void> {
   registry.resetMetrics();
+  memoryCacheHitSnapshot.clear();
+  memoryCacheMissSnapshot.clear();
 }

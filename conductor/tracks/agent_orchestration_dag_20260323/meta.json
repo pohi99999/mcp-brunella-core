@@ -2,16 +2,16 @@
   "trackName": "agent_orchestration_dag_20260323",
   "type": "Core Enhancement",
   "priority": "HIGH",
-  "status": "active",
-  "progress": 0,
+  "status": "done",
+  "progress": 100,
   "goal": "DAG-alapú workflow engine: párhuzamos agent végrehajtás, conditional branching, loop support, token/cost budget per flow, per-step timeout graceful degradation-nel.",
   "assignee": "Copilot + Pohánka Péter",
   "createdAt": "2026-03-23T01:30:00Z",
-  "updatedAt": "2026-03-23T01:30:00Z",
+  "updatedAt": "2026-03-23T12:00:00Z",
   "phases": [
     {
       "name": "Phase 1: DAG Engine Core",
-      "status": "pending",
+      "status": "done",
       "description": "Lightweight DAG definiálás és végrehajtó motor",
       "tasks": [
         "[ ] src/core/dagEngine.ts: DAGNode, DAGEdge, DAGWorkflow interfészek",
@@ -22,7 +22,7 @@
     },
     {
       "name": "Phase 2: Conditional & Loop Support",
-      "status": "pending",
+      "status": "done",
       "description": "If/else branching és while loop-ok a DAG-ban",
       "tasks": [
         "[ ] ConditionalNode: predicate(context) → branch selection",
@@ -33,7 +33,7 @@
     },
     {
       "name": "Phase 3: Budget & Timeout",
-      "status": "pending",
+      "status": "done",
       "description": "Token/cost budget és per-step timeout",
       "tasks": [
         "[ ] Flow budget: maxTokens, maxCostUSD, maxDurationMs",
@@ -44,7 +44,7 @@
     },
     {
       "name": "Phase 4: Integration + Dashboard + CLI",
-      "status": "pending",
+      "status": "done",
       "description": "Meglévő rendszerrel integráció",
       "tasks": [
         "[ ] TaskDecomposerAgent → DAG generálás (task bontás → DAG node-ok)",
