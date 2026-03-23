@@ -1,0 +1,14 @@
+{
+  "id": "cf_r2_activation_20260323",
+  "title": "Cloudflare R2 Aktiválás",
+  "priority": "CRITICAL",
+  "status": "proposed",
+  "progress": 0,
+  "category": "cloudflare-infrastructure",
+  "created": "2026-03-23",
+  "dependencies": [],
+  "tags": ["cloudflare", "r2", "storage", "object-storage"],
+  "owner": "brunella-core",
+  "estimated_effort": "S",
+  "description": "R2 Object Storage aktiválása a CF fiókon. A wrangler.jsonc-ben már konfigurálva van (vodor1 bucket), de a fiók szinten nincs bekapcsolva. Ingyenes: 10GB/hó."
+}

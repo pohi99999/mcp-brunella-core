@@ -1,0 +1,12 @@
+{
+  "id": "cf_workflows_orchestration_20260323",
+  "name": "Cloudflare Workflows Orkesztráció",
+  "status": "proposed",
+  "priority": "MEDIUM",
+  "created": "2026-03-23",
+  "owner": "Pohánka Péter",
+  "progress": 0,
+  "description": "Cloudflare Workflows bevezetése N8N részleges kiváltására. Edge-natív workflow engine a conductor track rendszerhez.",
+  "dependencies": [],
+  "phase": "feature"
+}
