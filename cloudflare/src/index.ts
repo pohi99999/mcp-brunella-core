@@ -9,14 +9,15 @@
  * 5. Workers AI - Fallback LLM
  */
 
-import { Env, TaskPayload, TaskRecord } from "./types.js";
+import { Env, TaskPayload, TaskRecord, TaskResult } from "./types.js";
 export { EdgeCoordinator } from "./edge-coordinator.js";
 
-// Task típus osztályozás Workers AI-val
+// Task típus osztályozás Workers AI-val (upgraded model)
 async function classifyTask(env: Env, instruction: string): Promise<string> {
+  const model = env.DEFAULT_CODE_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
   try {
     const response = (await env.AI.run(
-      "@cf/meta/llama-3.1-8b-instruct" as any,
+      model as any,
       {
         messages: [
           {
@@ -127,7 +128,18 @@ export default {
             edge: "cloudflare",
             tunnel: tunnelStatus,
             timestamp: new Date().toISOString(),
-            version: "1.0.0",
+            version: "2.0.0",
+            capabilities: {
+              queues: Boolean(env.TASK_QUEUE),
+              r2: Boolean(env.R2_ARTIFACTS),
+              vectorize: Boolean(env.VECTORIZE_MEMORY),
+              analytics: Boolean(env.BAS_ANALYTICS),
+              models: {
+                default: env.DEFAULT_CODE_MODEL,
+                reasoning: env.REASONING_MODEL,
+                fast: env.FAST_MODEL,
+              },
+            },
           }),
           {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -179,7 +191,31 @@ export default {
           );
         }
 
-        // Notify local system via tunnel (optional, keeping original logic pattern)
+        // Send to Queue for async processing (if Queue binding available)
+        if (env.TASK_QUEUE) {
+          try {
+            await env.TASK_QUEUE.send({
+              taskId,
+              instruction: payload.instruction,
+              type: taskType,
+              priority: "normal",
+              createdAt: new Date().toISOString(),
+            } as TaskPayload);
+          } catch {
+            // Queue send failed — fallback to direct local dispatch
+          }
+        }
+
+        // Record telemetry
+        if (env.BAS_ANALYTICS) {
+          env.BAS_ANALYTICS.writeDataPoint({
+            blobs: [taskId, taskType, "edge", "submitted"],
+            doubles: [0, 0],
+            indexes: ["task_submit"],
+          });
+        }
+
+        // Notify local system via tunnel
         const task: TaskRecord = {
           taskId,
           type: taskType,
@@ -188,7 +224,6 @@ export default {
           createdAt: new Date().toISOString(),
         };
 
-        // Próbáljuk továbbítani a lokális rendszernek
         const localResponse = await forwardToLocal(env, "/api/tasks", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -196,7 +231,6 @@ export default {
         });
 
         if (localResponse.ok) {
-          // Update status to dispatched
           await env.DB.prepare(`UPDATE tasks SET status = ? WHERE id = ?`)
             .bind("dispatched", taskId)
             .run();
