@@ -21,7 +21,7 @@ export function MissionControlLayout() {
   const { currentLayout, setLayoutMode, layouts } = useLayout();
   const [isConnected, setIsConnected] = useState(false);
   const [coreStatus, setCoreStatus] = useState<'HEALTHY' | 'DEGRADED' | 'OFFLINE'>('OFFLINE');
-  const [terminalCollapsed, setTerminalCollapsed] = useState(false);
+  const [terminalCollapsed, setTerminalCollapsed] = useState(true);
 
   useEffect(() => {
     const check = async () => {
@@ -137,7 +137,7 @@ export function MissionControlLayout() {
 
         {/* Main area */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-          <main className="flex-1 flex flex-col min-h-0 p-3 md:p-5 relative">
+          <main className="flex-1 flex flex-col min-h-0 p-2 md:p-3 relative">
             {activeTab === 'dashboard' ? (
               <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
                 <WidgetGrid />
@@ -153,7 +153,7 @@ export function MissionControlLayout() {
           <footer
             className={cn(
               "border-t border-white/[0.06] bg-black/60 backdrop-blur-2xl shrink-0 z-40 overflow-hidden transition-[height] duration-300 ease-out",
-              terminalCollapsed ? "h-8" : "h-48"
+              terminalCollapsed ? "h-8" : "h-36"
             )}
           >
             {/* Collapse handle */}
