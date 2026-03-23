@@ -696,6 +696,9 @@ CLOUDFLARE_ACCOUNT_ID=...
 N8N_HOST=...                       # n8n automatizálás
 N8N_API_KEY=...
 
+# MCP kapcsolat timeout (ms) — növeld lassú gépen
+BRUNELLA_MCP_CONNECT_TIMEOUT_MS=8000
+
 # Cloudflare Chat Integration (Edge)
 EDGE_ENABLED=true                  # Cloudflare Edge proxy engedélyezése
 CLOUDFLARE_WORKER_URL=https://bas-orchestrator.iam-dd1.workers.dev
@@ -825,6 +828,8 @@ EDGE_ENABLED=true npm run dev
 | **Dashboard fehér képernyő** | Ellenőrizd a konzolt, gyakran import hiba vagy props error                 |
 | **FastAPI nem indul**        | Ellenőrizd: `cd myai && uvicorn server:app --reload --port 8000`           |
 | **LanceDB ImportError**      | Opcionális függőség: `cd myai && uv pip install lancedb pyarrow`           |
+| **`brunella chat` — "fetch failed"** | A chat backend szükséges: indítsd el `npm run dev` (port 3000)   |
+| **MCP connect timeout**      | Növeld: `BRUNELLA_MCP_CONNECT_TIMEOUT_MS=10000` (alapértelmezett: 8000ms)  |
 
 ### Gyakori Hibák
 
