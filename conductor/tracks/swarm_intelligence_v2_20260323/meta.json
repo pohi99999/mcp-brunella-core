@@ -1,0 +1,66 @@
+{
+  "trackName": "swarm_intelligence_v2_20260323",
+  "type": "Core Enhancement",
+  "priority": "MEDIUM",
+  "status": "active",
+  "progress": 0,
+  "goal": "Swarm Intelligence v2: colony perzisztencia SQLite checkpoint-okkal, weighted voting + negotiation protocol, dynamic swarm resizing, failure recovery + agent respawn.",
+  "assignee": "Copilot + Pohánka Péter",
+  "createdAt": "2026-03-23T01:30:00Z",
+  "updatedAt": "2026-03-23T01:30:00Z",
+  "phases": [
+    {
+      "name": "Phase 1: Colony Persistence",
+      "status": "pending",
+      "description": "Colony állapot SQLite checkpoint mentés és visszaállítás",
+      "tasks": [
+        "[ ] src/core/swarm/colonyPersistence.ts: SQLite checkpoint tábla",
+        "[ ] saveCheckpoint(colony): állapot snapshot mentés",
+        "[ ] restoreCheckpoint(colonyId): visszaállítás crash után",
+        "[ ] Auto-checkpoint: N feladat/perc után automatikus mentés"
+      ]
+    },
+    {
+      "name": "Phase 2: Weighted Voting & Negotiation",
+      "status": "pending",
+      "description": "Agent-ek súlyozott szavazással döntsenek, negotiation protocol",
+      "tasks": [
+        "[ ] VotingProtocol: weighted vote agent tapasztalat/confidence alapján",
+        "[ ] NegotiationRound: agent-ek érveket cserélnek (max 3 kör)",
+        "[ ] Consensus algorithm: Raft-inspired egyszerűsítés",
+        "[ ] Deadlock detection + tiebreaker (leader dönt)"
+      ]
+    },
+    {
+      "name": "Phase 3: Dynamic Resizing & Recovery",
+      "status": "pending",
+      "description": "Swarm auto-scale és failure recovery",
+      "tasks": [
+        "[ ] Auto-scale: terhelés alapján agent hozzáadás/eltávolítás",
+        "[ ] Failure detection: heartbeat + timeout → agent halott",
+        "[ ] Agent respawn: halott agent újraindítás utolsó checkpoint-ból",
+        "[ ] Graceful shutdown: colony bezárás + végső checkpoint"
+      ]
+    },
+    {
+      "name": "Phase 4: Dashboard + CLI",
+      "status": "pending",
+      "description": "Swarm monitoring és kezelés",
+      "tasks": [
+        "[ ] Dashboard: SwarmPanel (colony map, voting log, health)",
+        "[ ] CLI: brunella swarm (create, status, scale, destroy)",
+        "[ ] Tesztek + dokumentáció"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "Colony SQLite checkpoint/restore",
+    "Weighted voting + negotiation protocol",
+    "Dynamic auto-scale (terhelés alapú)",
+    "Failure recovery + agent respawn",
+    "Dashboard SwarmPanel",
+    "CLI: brunella swarm",
+    "npm run build && npm test → 0 hiba"
+  ],
+  "dependencies": ["agent_memory_structured_20260323", "agent_orchestration_dag_20260323"]
+}
