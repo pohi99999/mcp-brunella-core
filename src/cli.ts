@@ -1052,7 +1052,7 @@ conductorCmd
     const client = new BrunellaClient();
     const spinner = ora("Fetching project status...").start();
     try {
-      await client.connect();
+      await client.connect({ coreOnly: true, timeoutMs: 10_000 });
       const result = await client.callTool("agent_delegate", {
         agent_name: "ProjectConductor",
         task: "status",

@@ -96,7 +96,8 @@
       "Bash(sort:*)",
       "Bash(wc:*)",
       "Bash(cd:*)",
-      "Bash(ollama list: ollama most úgy van az Anything llm-be hogy gpt 4o az agent modell, gemini 2.0 flash a llm, de van llama 3.1 8b is de nem az kezd)"
+      "Bash(ollama list: ollama most úgy van az Anything llm-be hogy gpt 4o az agent modell, gemini 2.0 flash a llm, de van llama 3.1 8b is de nem az kezd)",
+      "Bash(grep -n \"export const phoenixEventBus\\\\|export const failoverRegistry\" /f/mcp-brunella-core/src/core/*.ts)"
     ]
   },
   "enableAllProjectMcpServers": true,

@@ -164,6 +164,7 @@ export class AIGatewayClient {
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(5000),
         body: JSON.stringify({
           model: options?.model || "nomic-embed-text",
           prompt: text.slice(0, 8000),

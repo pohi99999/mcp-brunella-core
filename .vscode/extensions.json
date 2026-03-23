@@ -15,6 +15,7 @@
     "cloudflare.cloudflare-workers-bindings-extension",
     "semanticworkbenchteam.mcp-server-vscode",
     "alessandrobenassi.cloudflare-devtools",
-    "ms-azuretools.vscode-azure-github-copilot"
+    "ms-azuretools.vscode-azure-github-copilot",
+    "shaneyang.api-key-aggregetor"
   ]
 }

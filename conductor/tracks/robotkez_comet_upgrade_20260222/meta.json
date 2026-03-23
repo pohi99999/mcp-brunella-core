@@ -1,11 +1,11 @@
 {
   "id": "robotkez_comet_upgrade_20260222",
   "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
-  "status": "proposed",
+  "status": "active",
   "priority": "HIGH",
   "created": "2026-02-22",
   "owner": "Pohánka Péter",
-  "progress": 10,
+  "progress": 65,
   "description": "A meglévő RobotkezV2Agent-et Perplexity Comet-szintűre fejlesztjük: Planner→Actor→Critic háromrétegű multi-agent architektúrával, önjavítással, vision-alapú selector generálással, memóriával és cross-tab kezeléssel. Az alap (Playwright + Browser-Use) már megvan — csak a magasabb szintű intelligencia hiányzik.",
   "existing_assets": {
     "python": [
@@ -47,7 +47,7 @@
     {
       "phase": 1,
       "name": "Foundation — Planner + Actor",
-      "status": "PENDING",
+      "status": "COMPLETE",
       "duration": "~4 óra",
       "tasks": [
         "CometOrchestrator alap struktúra (fájlok, import-ok)",
@@ -59,7 +59,7 @@
     {
       "phase": 2,
       "name": "Self-Correction — Critic + Retry",
-      "status": "PENDING",
+      "status": "COMPLETE",
       "duration": "~3 óra",
       "tasks": [
         "CriticAgent: screenshot → 'sikeres?' értékelés (Gemini vision)",
@@ -71,7 +71,7 @@
     {
       "phase": 3,
       "name": "Memory + Cross-Tab",
-      "status": "PENDING",
+      "status": "IN_PROGRESS",
       "duration": "~3 óra",
       "tasks": [
         "ActionMemory SQLite: korábban sikeres lépések tárolása",
@@ -83,7 +83,7 @@
     {
       "phase": 4,
       "name": "Brunella integráció + Demo",
-      "status": "PENDING",
+      "status": "PARTIAL",
       "duration": "~2 óra",
       "tasks": [
         "CometBrowserAgent.ts: Brunella IAgent interfész",
@@ -103,5 +103,7 @@
   "comparison": {
     "before": "RobotkezV2: 1 lépés, nincs önjavítás, fix selector, CAPTCHA-nál megáll",
     "after": "Comet-szint: multi-lépés plan, önjavító critic, vision selector, 3x retry, memória"
-  }
+  },
+  "updated": "2026-03-22",
+  "auditNote": "Track reclassified to active after conductor audit: CometBrowserAgent, myai/agents/comet modules, FastAPI /comet/execute endpoint, registry activation, and prior implementation logs confirm ongoing real work."
 }

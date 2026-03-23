@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-22T21:00:00.837Z",
+  "lastUpdated": "2026-03-22T23:29:53.708Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -11,19 +11,6 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\apify_deep_scraping_agent_20260223",
-      "_isArchived": false
-    },
-    {
-      "id": "campaign-generator-agent-20260225",
-      "name": "Automata Kampány Generátor Ügynök és UI",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-02-25",
-      "completed": "2026-02-25",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\campaign-generator-agent-20260225",
       "_isArchived": false
     },
     {
@@ -65,60 +52,6 @@
       "_isArchived": false
     },
     {
-      "id": "cserszegtomaj-campaign-20260225",
-      "name": "Cserszegtomaj AI Turizmus Kampány",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-02-25",
-      "tags": [
-        "marketing",
-        "campaign",
-        "cserszegtomaj"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cserszegtomaj-campaign-20260225",
-      "_isArchived": false
-    },
-    {
-      "id": "dashboard-500-and-test-timeouts-20260320",
-      "name": "Dashboard 500 és teszt timeout hibák javítása",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-03-20",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard-500-and-test-timeouts-20260320",
-      "_isArchived": false
-    },
-    {
-      "id": "dashboard-stabilization-20260225",
-      "name": "Dashboard Teljes Stabilizálása és Auditálása",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-02-25",
-      "completed": "2026-02-25",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\dashboard-stabilization-20260225",
-      "_isArchived": false
-    },
-    {
-      "id": "functional-integrity-fix-20260225",
-      "name": "Dashboard Funkcionális Integritás Javítása",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-02-25",
-      "completed": "2026-02-25",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\functional-integrity-fix-20260225",
-      "_isArchived": false
-    },
-    {
       "id": "gemini_git_agent_20260212",
       "name": "Gemini Git Autonomous Agent Architecture",
       "status": "proposed",
@@ -136,36 +69,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\gemini_git_agent_20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "hungarian-orchestration-tuning-20260225",
-      "name": "Magyar Nyelvű Orkesztráció és Intelligens Irányítás",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-02-25",
-      "completed": "2026-02-25",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\hungarian-orchestration-tuning-20260225",
-      "_isArchived": false
-    },
-    {
-      "id": "innovation_bridge_20260225",
-      "name": "Innovation Bridge (8. Pillér) - TRIZ Cross-Industry Swarm",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-25",
-      "tags": [
-        "TRIZ",
-        "innovation",
-        "cross-industry",
-        "swarm"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\innovation_bridge_20260225",
       "_isArchived": false
     },
     {
@@ -222,18 +125,6 @@
       "_isArchived": false
     },
     {
-      "id": "living_documentation_system_20260213",
-      "name": "living_documentation_system_20260213",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 100,
-      "assignee": "System",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\living_documentation_system_20260213",
-      "_isArchived": false
-    },
-    {
       "id": "local_test_scheduler_20260215",
       "name": "local_test_scheduler_20260215",
       "status": "active",
@@ -264,42 +155,6 @@
       "_isArchived": false
     },
     {
-      "id": "master_track_1_lead_mining_20260223",
-      "name": "master_track_1_lead_mining_20260223",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "assignee": "Gemini (Phase 1-3) + Claude (Phase 4 CLI)",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\master_track_1_lead_mining_20260223",
-      "_isArchived": false
-    },
-    {
-      "id": "master_track_2_invoice_to_sheets_20260223",
-      "name": "master_track_2_invoice_to_sheets_20260223",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "assignee": "Gemini (Phase 1-3) + Claude (invoiceCommands.ts CLI)",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\master_track_2_invoice_to_sheets_20260223",
-      "_isArchived": false
-    },
-    {
-      "id": "master_track_3_market_watcher_20260223",
-      "name": "master_track_3_market_watcher_20260223",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "assignee": "Gemini (Phase 1-3) + Claude (Phase 4 CLI)",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\master_track_3_market_watcher_20260223",
-      "_isArchived": false
-    },
-    {
       "id": "micro_csr_automator_20260212",
       "name": "Micro-Local CSR Automator (Neighborhood Watchman)",
       "status": "proposed",
@@ -317,59 +172,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\micro_csr_automator_20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "orchestrator_chat_upgrade_20260320",
-      "name": "Universal Orchestrator Chat Upgrade (Dashboard + CLI)",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-03-20",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\orchestrator_chat_upgrade_20260320",
-      "_isArchived": false
-    },
-    {
-      "id": "orchestrator_cognition_upgrade_20260320",
-      "name": "Orchestrator Cognition Upgrade — Magyar társalgó + rendszerérzékelés",
-      "status": "completed",
-      "priority": "medium",
-      "progress": 100,
-      "created": "2026-03-20",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\orchestrator_cognition_upgrade_20260320",
-      "_isArchived": false
-    },
-    {
-      "id": "orchestrator_safe_autopilot_20260320",
-      "name": "Safe Autopilot Orchestrator",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "orchestrator",
-        "autopilot",
-        "approval",
-        "incident",
-        "timeline"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\orchestrator_safe_autopilot_20260320",
-      "_isArchived": false
-    },
-    {
-      "id": "orchestrator_state_machine_20260321",
-      "name": "OrchestratorAgent LangGraph-inspirált State Machine (házi implementáció)",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-03-21",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\orchestrator_state_machine_20260321",
       "_isArchived": false
     },
     {
@@ -400,109 +202,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase1_foundation_20260322",
-      "_isArchived": false
-    },
-    {
-      "id": "remote_layer_phase2_discovery_auth_20260322",
-      "name": "Brunella Remote Layer — Fázis 2: Discovery, Capability & Auth",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "tags": [
-        "remote-layer",
-        "mcp-discovery",
-        "capability-mapping",
-        "auth",
-        "sqlite",
-        "dashboard"
-      ],
-      "dependencies": [
-        "remote_layer_phase1_foundation_20260322"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase2_discovery_auth_20260322",
-      "_isArchived": false
-    },
-    {
-      "id": "remote_layer_phase3_mobile_voice_20260322",
-      "name": "Brunella Remote Layer — Fázis 3: Mobile, Voice & Deep PAIOS Integration",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "tags": [
-        "remote-layer",
-        "mobile",
-        "voice",
-        "event-bridge",
-        "paios",
-        "flows"
-      ],
-      "dependencies": [
-        "remote_layer_phase1_foundation_20260322",
-        "remote_layer_phase2_discovery_auth_20260322"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase3_mobile_voice_20260322",
-      "_isArchived": false
-    },
-    {
-      "id": "remote_layer_phase4_distributed_mesh_20260322",
-      "name": "Brunella Remote Layer — Fázis 4: Distributed Mesh & Edge Routing",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "tags": [
-        "remote-layer",
-        "mesh",
-        "edge",
-        "offline-sync",
-        "federation",
-        "phoenix"
-      ],
-      "dependencies": [
-        "remote_layer_phase1_foundation_20260322",
-        "remote_layer_phase2_discovery_auth_20260322",
-        "remote_layer_phase3_mobile_voice_20260322"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase4_distributed_mesh_20260322",
-      "_isArchived": false
-    },
-    {
-      "id": "remote_layer_phase5_adaptive_swarms_20260322",
-      "name": "Brunella Remote Layer — Fázis 5: Adaptive Swarms & Workflow Intelligence",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "tags": [
-        "swarm",
-        "adaptive-flow",
-        "predictive-routing",
-        "mesh-healing",
-        "knowledge-graph",
-        "kernel"
-      ],
-      "dependencies": [
-        "remote_layer_phase4_distributed_mesh_20260322"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase5_adaptive_swarms_20260322",
-      "_isArchived": false
-    },
-    {
-      "id": "remote_layer_phase6_collective_evolution_20260322",
-      "name": "Brunella Remote Layer — Fázis 6: Evolutionary Collective Intelligence",
-      "status": "proposed",
-      "priority": "critical",
-      "progress": 0,
-      "tags": [
-        "evolutionary-agents",
-        "genetic-flow",
-        "topology-ai",
-        "collective-mind",
-        "meta-reasoner",
-        "unified-runtime"
-      ],
-      "dependencies": [
-        "remote_layer_phase5_adaptive_swarms_20260322"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase6_collective_evolution_20260322",
       "_isArchived": false
     },
     {
@@ -549,25 +248,14 @@
     {
       "id": "robotkez_comet_upgrade_20260222",
       "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
-      "status": "proposed",
+      "status": "active",
       "priority": "high",
-      "progress": 10,
+      "progress": 65,
       "created": "2026-02-22",
+      "updated": "2026-03-22",
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_comet_upgrade_20260222",
-      "_isArchived": false
-    },
-    {
-      "id": "trojan-horse-campaign-20260224",
-      "name": "trojan-horse-campaign-20260224",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "assignee": "Gemini + Pohánka Péter",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\trojan-horse-campaign-20260224",
       "_isArchived": false
     },
     {
@@ -715,6 +403,20 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\browser_use_harvester_20260131",
+      "_isArchived": true
+    },
+    {
+      "id": "campaign-generator-agent-20260225",
+      "name": "Automata Kampány Generátor Ügynök és UI",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-25",
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-02-25",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\campaign-generator-agent-20260225",
       "_isArchived": true
     },
     {
@@ -944,6 +646,52 @@
       "_isArchived": true
     },
     {
+      "id": "cserszegtomaj-campaign-20260225",
+      "name": "Cserszegtomaj AI Turizmus Kampány",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-25",
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-03-22T22:47:34Z",
+      "tags": [
+        "marketing",
+        "campaign",
+        "cserszegtomaj"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cserszegtomaj-campaign-20260225",
+      "_isArchived": true
+    },
+    {
+      "id": "dashboard-500-and-test-timeouts-20260320",
+      "name": "Dashboard 500 és teszt timeout hibák javítása",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-20",
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-03-21",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard-500-and-test-timeouts-20260320",
+      "_isArchived": true
+    },
+    {
+      "id": "dashboard-stabilization-20260225",
+      "name": "Dashboard Teljes Stabilizálása és Auditálása",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-25",
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-02-25",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\dashboard-stabilization-20260225",
+      "_isArchived": true
+    },
+    {
       "id": "dashboard-todo-widget-20260211",
       "name": "Dashboard TODO Widget",
       "status": "archived",
@@ -1118,6 +866,20 @@
       "_isArchived": true
     },
     {
+      "id": "functional-integrity-fix-20260225",
+      "name": "Dashboard Funkcionális Integritás Javítása",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-25",
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-02-25",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\functional-integrity-fix-20260225",
+      "_isArchived": true
+    },
+    {
       "id": "gold_protocol",
       "name": "Gold Protocol - BAS Observability & Governance",
       "status": "archived",
@@ -1154,6 +916,20 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\green_lightning_20260212",
+      "_isArchived": true
+    },
+    {
+      "id": "hungarian-orchestration-tuning-20260225",
+      "name": "Magyar Nyelvű Orkesztráció és Intelligens Irányítás",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-02-25",
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-02-25",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\hungarian-orchestration-tuning-20260225",
       "_isArchived": true
     },
     {
@@ -1213,6 +989,25 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\innovation_bridge_20260212",
+      "_isArchived": true
+    },
+    {
+      "id": "innovation_bridge_20260225",
+      "name": "Innovation Bridge (8. Pillér) - TRIZ Cross-Industry Swarm",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-25",
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-03-22T22:47:34Z",
+      "tags": [
+        "TRIZ",
+        "innovation",
+        "cross-industry",
+        "swarm"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\innovation_bridge_20260225",
       "_isArchived": true
     },
     {
@@ -1313,6 +1108,20 @@
       "_isArchived": true
     },
     {
+      "id": "living_documentation_system_20260213",
+      "name": "living_documentation_system_20260213",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-02-13",
+      "assignee": "System",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\living_documentation_system_20260213",
+      "_isArchived": true
+    },
+    {
       "id": "magyar-cli-menu-system-20260211",
       "name": "Magyar CLI Menürendszer (Teljes Átírás)",
       "status": "archived",
@@ -1360,6 +1169,8 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-02-28T00:00:00Z",
       "assignee": "Gemini (Phase 1-3) + Claude (Phase 4 CLI)",
       "tags": [],
       "dependencies": [],
@@ -1372,6 +1183,8 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-02-28T00:00:00Z",
       "assignee": "Gemini (Phase 1-3) + Claude (invoiceCommands.ts CLI)",
       "tags": [],
       "dependencies": [],
@@ -1384,6 +1197,8 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-02-28T00:00:00Z",
       "assignee": "Gemini (Phase 1-3) + Claude (Phase 4 CLI)",
       "tags": [],
       "dependencies": [],
@@ -1445,6 +1260,67 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\onboarding-knowledge-manager-20260214",
+      "_isArchived": true
+    },
+    {
+      "id": "orchestrator_chat_upgrade_20260320",
+      "name": "Universal Orchestrator Chat Upgrade (Dashboard + CLI)",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-20",
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-03-20",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\orchestrator_chat_upgrade_20260320",
+      "_isArchived": true
+    },
+    {
+      "id": "orchestrator_cognition_upgrade_20260320",
+      "name": "Orchestrator Cognition Upgrade — Magyar társalgó + rendszerérzékelés",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-20",
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-03-20",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\orchestrator_cognition_upgrade_20260320",
+      "_isArchived": true
+    },
+    {
+      "id": "orchestrator_safe_autopilot_20260320",
+      "name": "Safe Autopilot Orchestrator",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-03-20",
+      "tags": [
+        "orchestrator",
+        "autopilot",
+        "approval",
+        "incident",
+        "timeline"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\orchestrator_safe_autopilot_20260320",
+      "_isArchived": true
+    },
+    {
+      "id": "orchestrator_state_machine_20260321",
+      "name": "OrchestratorAgent LangGraph-inspirált State Machine (házi implementáció)",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-21",
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-03-22T22:47:34Z",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\orchestrator_state_machine_20260321",
       "_isArchived": true
     },
     {
@@ -1555,6 +1431,109 @@
         "google_workspace_api"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\real_estate_sales_campaign_20260216",
+      "_isArchived": true
+    },
+    {
+      "id": "remote_layer_phase2_discovery_auth_20260322",
+      "name": "Brunella Remote Layer — Fázis 2: Discovery, Capability & Auth",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "tags": [
+        "remote-layer",
+        "mcp-discovery",
+        "capability-mapping",
+        "auth",
+        "sqlite",
+        "dashboard"
+      ],
+      "dependencies": [
+        "remote_layer_phase1_foundation_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase2_discovery_auth_20260322",
+      "_isArchived": true
+    },
+    {
+      "id": "remote_layer_phase3_mobile_voice_20260322",
+      "name": "Brunella Remote Layer — Fázis 3: Mobile, Voice & Deep PAIOS Integration",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "tags": [
+        "remote-layer",
+        "mobile",
+        "voice",
+        "event-bridge",
+        "paios",
+        "flows"
+      ],
+      "dependencies": [
+        "remote_layer_phase1_foundation_20260322",
+        "remote_layer_phase2_discovery_auth_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase3_mobile_voice_20260322",
+      "_isArchived": true
+    },
+    {
+      "id": "remote_layer_phase4_distributed_mesh_20260322",
+      "name": "Brunella Remote Layer — Fázis 4: Distributed Mesh & Edge Routing",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "tags": [
+        "remote-layer",
+        "mesh",
+        "edge",
+        "offline-sync",
+        "federation",
+        "phoenix"
+      ],
+      "dependencies": [
+        "remote_layer_phase1_foundation_20260322",
+        "remote_layer_phase2_discovery_auth_20260322",
+        "remote_layer_phase3_mobile_voice_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase4_distributed_mesh_20260322",
+      "_isArchived": true
+    },
+    {
+      "id": "remote_layer_phase5_adaptive_swarms_20260322",
+      "name": "Brunella Remote Layer — Fázis 5: Adaptive Swarms & Workflow Intelligence",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "tags": [
+        "swarm",
+        "adaptive-flow",
+        "predictive-routing",
+        "mesh-healing",
+        "knowledge-graph",
+        "kernel"
+      ],
+      "dependencies": [
+        "remote_layer_phase4_distributed_mesh_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase5_adaptive_swarms_20260322",
+      "_isArchived": true
+    },
+    {
+      "id": "remote_layer_phase6_collective_evolution_20260322",
+      "name": "Brunella Remote Layer — Fázis 6: Evolutionary Collective Intelligence",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "tags": [
+        "evolutionary-agents",
+        "genetic-flow",
+        "topology-ai",
+        "collective-mind",
+        "meta-reasoner",
+        "unified-runtime"
+      ],
+      "dependencies": [
+        "remote_layer_phase5_adaptive_swarms_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\remote_layer_phase6_collective_evolution_20260322",
       "_isArchived": true
     },
     {
@@ -1806,13 +1785,27 @@
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\TR-20260212-TECH-HAR",
       "_isArchived": true
+    },
+    {
+      "id": "trojan-horse-campaign-20260224",
+      "name": "trojan-horse-campaign-20260224",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-03-22T22:47:34Z",
+      "assignee": "Gemini + Pohánka Péter",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\trojan-horse-campaign-20260224",
+      "_isArchived": true
     }
   ],
   "stats": {
-    "total": 108,
-    "active": 4,
-    "completed": 16,
-    "archived": 72,
-    "proposed": 16
+    "total": 105,
+    "active": 5,
+    "completed": 0,
+    "archived": 90,
+    "proposed": 10
   }
 }

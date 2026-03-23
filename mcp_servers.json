@@ -14,8 +14,8 @@
       "@modelcontextprotocol/server-sqlite",
       "./data/brunella.db"
     ],
-    "description": "SQLite MCP server — adatbázis lekérdezések",
-    "disabled": false
+    "description": "SQLite MCP server — adatbázis lekérdezések (disabled: csomag nem elérhető npm-en)",
+    "disabled": true
   },
   {
     "name": "filesystem",
