@@ -1,0 +1,67 @@
+{
+  "trackName": "chrome_acp_integration_20260323",
+  "type": "Platform Integration",
+  "priority": "HIGH",
+  "status": "archived",
+  "progress": 100,
+  "created": "2026-03-23T12:30:00Z",
+  "updated": "2026-03-23T13:05:00Z",
+  "goal": "Chrome ACP integráció a Brunella rendszerbe: dashboard elérés, CLI doctor/start/install flow, Windows indítóscript, és dokumentált manuális extension/proxy setup.",
+  "assignee": "Copilot + Pohánka Péter",
+  "createdAt": "2026-03-23T12:30:00Z",
+  "updatedAt": "2026-03-23T13:05:00Z",
+  "completed": "2026-03-23T12:55:00Z",
+  "archivedAt": "2026-03-23T13:05:00Z",
+  "archiveReason": "Chrome ACP integration completed, runtime-validated, then archived after conductor cleanup.",
+  "phases": [
+    {
+      "name": "Phase 1: Track + Setup Blueprint",
+      "status": "done",
+      "description": "Track létrehozása és a kívánt Chrome ACP integrációs scope rögzítése",
+      "tasks": [
+        "[x] conductor track létrehozása",
+        "[x] quickstart parancsok és manuális lépések rögzítése",
+        "[x] dashboard + CLI + script + docs scope definiálása"
+      ]
+    },
+    {
+      "name": "Phase 2: Dashboard + Scripts",
+      "status": "done",
+      "description": "Dashboard panel és Windows indítóscript készítése",
+      "tasks": [
+        "[x] Dashboard navigation: Chrome ACP panel bejegyzés",
+        "[x] Embedded workflow panel: http://localhost:9315",
+        "[x] scripts/start-chrome-acp.bat",
+        "[x] scripts/start-chrome-acp.ps1"
+      ]
+    },
+    {
+      "name": "Phase 3: CLI Integration",
+      "status": "done",
+      "description": "Interaktív CLI parancsok: doctor / start / install",
+      "tasks": [
+        "[x] src/cli/chromeAcpCommands.ts",
+        "[x] brunella chrome-acp interaktív menü",
+        "[x] bináris és localhost health check"
+      ]
+    },
+    {
+      "name": "Phase 4: Docs + Validation",
+      "status": "done",
+      "description": "Setup guide és futtatható validáció",
+      "tasks": [
+        "[x] docs/CHROME_ACP_SETUP.md",
+        "[x] build + ui build validáció",
+        "[x] opcionális globális install/start ellenőrzés"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "Dashboard Chrome ACP panel",
+    "CLI: brunella chrome-acp",
+    "Windows start script a proxyhoz",
+    "Dokumentált Chrome ACP setup",
+    "Build validáció"
+  ],
+  "dependencies": ["agent_orchestration_dag_20260323"]
+}
