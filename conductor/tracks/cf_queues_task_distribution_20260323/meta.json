@@ -1,0 +1,12 @@
+{
+  "id": "cf_queues_task_distribution_20260323",
+  "name": "Cloudflare Queues Aszinkron Task Elosztás",
+  "status": "proposed",
+  "priority": "HIGH",
+  "created": "2026-03-23",
+  "owner": "Pohánka Péter",
+  "progress": 0,
+  "description": "Cloudflare Queues bevezetése aszinkron task distribution-höz. TaskDecomposerAgent párhuzamos feladatkiosztás.",
+  "dependencies": [],
+  "phase": "feature"
+}

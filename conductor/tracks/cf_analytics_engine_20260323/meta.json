@@ -1,0 +1,12 @@
+{
+  "id": "cf_analytics_engine_20260323",
+  "name": "Cloudflare Analytics Engine Egyedi Metrikák",
+  "status": "proposed",
+  "priority": "LOW",
+  "created": "2026-03-23",
+  "owner": "Pohánka Péter",
+  "progress": 0,
+  "description": "Cloudflare Analytics Engine egyedi metrikák az ügynök teljesítményről. Kiegészíti a meglévő OpenTelemetry observability track-et.",
+  "dependencies": [],
+  "phase": "observability"
+}

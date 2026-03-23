@@ -1,14 +1,74 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-23T04:00:00.790Z
+**Utolso frissites:** 2026-03-23T05:00:00.106Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 113 total | 5 active | 0 completed | 98 archived
+**Stats:** 122 total | 5 active | 0 completed | 98 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (10)
+## Tervezett Szalak (Proposed) (19)
+
+### Cloudflare Infrastruktúra Modernizálás (9 track)
+
+- [ ] **CF API Token Jogosultság Bővítés** [CRITICAL]
+  - **ID:** `cf_token_permissions_fix_20260323`
+  - **Progress:** 0%
+  - **Kategória:** cloudflare-infrastructure
+  - Mappa: ./tracks/cf_token_permissions_fix_20260323/
+
+- [ ] **CF R2 Object Storage Aktiválás** [CRITICAL]
+  - **ID:** `cf_r2_activation_20260323`
+  - **Progress:** 0%
+  - **Kategória:** cloudflare-infrastructure
+  - Mappa: ./tracks/cf_r2_activation_20260323/
+
+- [ ] **CF Durable Object Migrációk** [CRITICAL]
+  - **ID:** `cf_durable_object_migrations_20260323`
+  - **Progress:** 0%
+  - **Kategória:** cloudflare-infrastructure
+  - Mappa: ./tracks/cf_durable_object_migrations_20260323/
+
+- [ ] **CF Queues — Aszinkron Task Distribution** [HIGH]
+  - **ID:** `cf_queues_task_distribution_20260323`
+  - **Progress:** 0%
+  - **Kategória:** cloudflare-infrastructure
+  - **Függőség:** cf_token_permissions_fix_20260323
+  - Mappa: ./tracks/cf_queues_task_distribution_20260323/
+
+- [ ] **CF R2 Artifact Storage** [HIGH]
+  - **ID:** `cf_r2_artifact_storage_20260323`
+  - **Progress:** 0%
+  - **Kategória:** cloudflare-infrastructure
+  - **Függőség:** cf_r2_activation_20260323
+  - Mappa: ./tracks/cf_r2_artifact_storage_20260323/
+
+- [ ] **CF Workers AI Modell Bővítés** [HIGH]
+  - **ID:** `cf_workers_ai_models_20260323`
+  - **Progress:** 0%
+  - **Kategória:** cloudflare-infrastructure
+  - Mappa: ./tracks/cf_workers_ai_models_20260323/
+
+- [ ] **CF Workflows Orkesztráció** [MEDIUM]
+  - **ID:** `cf_workflows_orchestration_20260323`
+  - **Progress:** 0%
+  - **Kategória:** cloudflare-infrastructure
+  - Mappa: ./tracks/cf_workflows_orchestration_20260323/
+
+- [ ] **CF Hyperdrive — D1 Connection Pooling** [LOW]
+  - **ID:** `cf_hyperdrive_d1_20260323`
+  - **Progress:** 0%
+  - **Kategória:** cloudflare-infrastructure
+  - Mappa: ./tracks/cf_hyperdrive_d1_20260323/
+
+- [ ] **CF Analytics Engine — Egyedi Metrikák** [LOW]
+  - **ID:** `cf_analytics_engine_20260323`
+  - **Progress:** 0%
+  - **Kategória:** cloudflare-infrastructure
+  - Mappa: ./tracks/cf_analytics_engine_20260323/
+
+### Egyéb tervezett trackek
 
 - [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
   - **ID:** `cloudflare_workers_migration_20260226`
@@ -93,8 +153,8 @@
 
 - [ ] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser** [HIGH]
   - **ID:** `robotkez_comet_upgrade_20260222`
-  - **Progress:** 65%
-  - **Updated:** 2026-03-22
+  - **Progress:** 75%
+  - **Updated:** 2026-03-23
   - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
 
 ---
