@@ -120,7 +120,7 @@ export function TaskQueueMonitor() {
             case 'error':
                 return <Badge variant="destructive" className="gap-1"><AlertCircle size={12} /> Error</Badge>
             case 'cancelled':
-                return <Badge variant="secondary" className="gap-1 text-muted-foreground"><XCircle size={12} /> Cancelled</Badge>
+                return <Badge variant="secondary" className="gap-1 text-zinc-500"><XCircle size={12} /> Cancelled</Badge>
             default:
                 return <Badge variant="secondary" className="gap-1"><Clock size={12} /> Pending</Badge>
         }
@@ -132,52 +132,52 @@ export function TaskQueueMonitor() {
         <div className="space-y-6">
             {/* Stats Overview */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                <Card className="glass-card border-white/10">
+                <Card className="bg-transparent border-none shadow-none">
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Total Tasks</CardTitle>
+                        <CardTitle className="text-xs font-medium text-zinc-500">Total Tasks</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold font-mono">{stats?.total || 0}</div>
-                        <p className="text-xs text-muted-foreground mt-1">SUCCESS RATE: {stats?.successRate || 0}%</p>
+                        <p className="text-xs text-zinc-500 mt-1">SUCCESS RATE: {stats?.successRate || 0}%</p>
                     </CardContent>
                 </Card>
-                <Card className="glass-card border-white/10">
+                <Card className="bg-transparent border-none shadow-none">
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Pending / Running</CardTitle>
+                        <CardTitle className="text-xs font-medium text-zinc-500">Pending / Running</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold font-mono text-blue-400">
-                            {stats?.pendingCount || 0} <span className="text-muted-foreground text-sm">/ {stats?.runningCount || 0}</span>
+                            {stats?.pendingCount || 0} <span className="text-zinc-500 text-sm">/ {stats?.runningCount || 0}</span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">QUEUE DEPTH</p>
+                        <p className="text-xs text-zinc-500 mt-1">QUEUE DEPTH</p>
                     </CardContent>
                 </Card>
-                <Card className="glass-card border-white/10">
+                <Card className="bg-transparent border-none shadow-none">
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Success / Error</CardTitle>
+                        <CardTitle className="text-xs font-medium text-zinc-500">Success / Error</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold font-mono">
                             <span className="text-green-500">{stats?.successCount || 0}</span> / <span className="text-red-500">{stats?.errorCount || 0}</span>
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">COMPLETION STATUS</p>
+                        <p className="text-xs text-zinc-500 mt-1">COMPLETION STATUS</p>
                     </CardContent>
                 </Card>
-                <Card className="glass-card border-white/10">
+                <Card className="bg-transparent border-none shadow-none">
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-xs font-medium text-muted-foreground uppercase">Avg Duration</CardTitle>
+                        <CardTitle className="text-xs font-medium text-zinc-500">Avg Duration</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold font-mono">{stats?.avgDurationMs || 0}ms</div>
-                        <p className="text-xs text-muted-foreground mt-1">PER TASK</p>
+                        <p className="text-xs text-zinc-500 mt-1">PER TASK</p>
                     </CardContent>
                 </Card>
             </div>
 
-            <Card className="glass-card border-white/10">
-                <CardHeader className="flex flex-row items-center justify-between border-b border-white/5 pb-4">
+            <Card className="bg-transparent border-none shadow-none">
+                <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4">
                     <div className="space-y-1">
-                        <CardTitle className="flex items-center gap-2 text-lg font-space font-bold">
+                        <CardTitle className="text-xs font-medium tracking-wide text-zinc-400 flex items-center gap-2">
                             <ListTodo className="text-primary" />
                             Task Queue Explorer
                         </CardTitle>
@@ -211,7 +211,7 @@ export function TaskQueueMonitor() {
                             <TableBody>
                                 {loading && tasks.length === 0 ? (
                                     <TableRow>
-                                        <TableCell colSpan={6} className="h-32 text-center text-muted-foreground">
+                                        <TableCell colSpan={6} className="h-32 text-center text-zinc-500">
                                             <div className="flex items-center justify-center gap-2">
                                                 <Loader2 className="w-4 h-4 animate-spin" /> Betöltés...
                                             </div>
@@ -219,14 +219,14 @@ export function TaskQueueMonitor() {
                                     </TableRow>
                                 ) : tasks.length === 0 ? (
                                     <TableRow>
-                                        <TableCell colSpan={6} className="h-32 text-center text-muted-foreground italic">
+                                        <TableCell colSpan={6} className="h-32 text-center text-zinc-500 italic">
                                             Nincsenek feladatok a várólistán.
                                         </TableCell>
                                     </TableRow>
                                 ) : (
                                     tasks.map((task) => (
-                                        <TableRow key={task.id} className="hover:bg-white/5 transition-colors">
-                                            <TableCell className="font-mono text-xs text-muted-foreground">#{task.id}</TableCell>
+                                        <TableRow key={task.id} className="hover:bg-white/[0.03] transition-colors">
+                                            <TableCell className="font-mono text-xs text-zinc-500">#{task.id}</TableCell>
                                             <TableCell>
                                                 <Badge variant="outline" className="font-mono text-[10px]">{task.agent}</Badge>
                                             </TableCell>
@@ -234,7 +234,7 @@ export function TaskQueueMonitor() {
                                                 <span className="text-sm font-medium" title={task.task}>{task.task}</span>
                                             </TableCell>
                                             <TableCell>{getStatusBadge(task.status)}</TableCell>
-                                            <TableCell className="text-xs text-muted-foreground font-mono">
+                                            <TableCell className="text-xs text-zinc-500 font-mono">
                                                 {format(new Date(task.created_at), 'HH:mm:ss')}
                                             </TableCell>
                                             <TableCell className="text-right">
@@ -242,7 +242,7 @@ export function TaskQueueMonitor() {
                                                     {(task.status === 'pending' || task.status === 'running') && (
                                                         <Button 
                                                             variant="ghost" size="icon" 
-                                                            className="h-8 w-8 text-muted-foreground hover:text-destructive"
+                                                            className="h-8 w-8 text-zinc-500 hover:text-destructive"
                                                             onClick={() => handleCancel(task.id)}
                                                             title="Cancel task"
                                                             aria-label="Cancel task"
@@ -253,7 +253,7 @@ export function TaskQueueMonitor() {
                                                     {(task.status === 'error' || task.status === 'cancelled') && (
                                                         <Button 
                                                             variant="ghost" size="icon" 
-                                                            className="h-8 w-8 text-muted-foreground hover:text-primary"
+                                                            className="h-8 w-8 text-zinc-500 hover:text-primary"
                                                             onClick={() => handleRetry(task.id)}
                                                             title="Retry task"
                                                             aria-label="Retry task"
@@ -263,7 +263,7 @@ export function TaskQueueMonitor() {
                                                     )}
                                                     <Button 
                                                         variant="ghost" size="icon" 
-                                                        className="h-8 w-8 text-muted-foreground hover:text-foreground"
+                                                        className="h-8 w-8 text-zinc-500 hover:text-foreground"
                                                         onClick={() => setSelectedTask(task)}
                                                         title="View task details"
                                                         aria-label="View task details"
@@ -280,8 +280,8 @@ export function TaskQueueMonitor() {
                     </div>
 
                     {totalPages > 1 && (
-                        <div className="flex items-center justify-between px-4 py-4 border-t border-white/5">
-                            <p className="text-xs text-muted-foreground">
+                        <div className="flex items-center justify-between px-4 py-4 border-t border-white/[0.04]">
+                            <p className="text-xs text-zinc-500">
                                 Page {page} of {totalPages}
                             </p>
                             <div className="flex gap-2">
@@ -313,13 +313,13 @@ export function TaskQueueMonitor() {
                 <DialogContent className="max-w-2xl">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
-                            <span className="text-muted-foreground">#{selectedTask?.id}</span>
+                            <span className="text-zinc-500">#{selectedTask?.id}</span>
                             {selectedTask?.task}
                         </DialogTitle>
                         <DialogDescription className="flex items-center gap-4 pt-2">
                             <Badge variant="outline">{selectedTask?.agent}</Badge>
                             {selectedTask && getStatusBadge(selectedTask.status)}
-                            <span className="text-xs text-muted-foreground font-mono">
+                            <span className="text-xs text-zinc-500 font-mono">
                                 Created: {selectedTask?.created_at && format(new Date(selectedTask.created_at), 'yyyy-MM-dd HH:mm:ss')}
                             </span>
                         </DialogDescription>
@@ -332,7 +332,7 @@ export function TaskQueueMonitor() {
                                 {selectedTask?.context ? (
                                     <pre className="whitespace-pre-wrap">{selectedTask.context}</pre>
                                 ) : (
-                                    <span className="text-muted-foreground italic">No context provided</span>
+                                    <span className="text-zinc-500 italic">No context provided</span>
                                 )}
                             </ScrollArea>
                         </div>
@@ -343,7 +343,7 @@ export function TaskQueueMonitor() {
                                 {selectedTask?.result ? (
                                     <pre className="whitespace-pre-wrap">{selectedTask.result}</pre>
                                 ) : (
-                                    <span className="text-muted-foreground italic">No result available</span>
+                                    <span className="text-zinc-500 italic">No result available</span>
                                 )}
                             </ScrollArea>
                         </div>

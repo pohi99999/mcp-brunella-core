@@ -189,7 +189,7 @@ export function IncubatorPanel() {
                             <CardDescription>A legutóbbi finomhangolási ciklusok eredményei.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <div className="flex flex-col items-center justify-center p-12 bg-black/20 rounded-xl border border-dashed border-white/10">
+                            <div className="flex flex-col items-center justify-center p-12 bg-white/[0.02] rounded-xl border border-dashed border-white/10">
                                 <ClockCounterClockwise size={48} className="text-muted-foreground opacity-20 mb-4" />
                                 <p className="text-muted-foreground italic">Még nem történt finomhangolás ezzel az „Arany Adatkészlettel”.</p>
                             </div>
@@ -209,7 +209,7 @@ export function IncubatorPanel() {
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Prompt (Felhasználói kérés)</label>
                                 <textarea
-                                    className="w-full min-h-[100px] bg-black/40 border border-white/10 rounded-lg p-3 text-sm font-mono focus:ring-1 focus:ring-primary outline-none"
+                                    className="w-full min-h-[100px] bg-white/[0.03] border border-white/10 rounded-lg p-3 text-sm font-mono focus:ring-1 focus:ring-primary outline-none"
                                     placeholder="Írd be a mintát..."
                                     value={prompt}
                                     onChange={(e) => setPrompt(e.target.value)}
@@ -218,7 +218,7 @@ export function IncubatorPanel() {
                             <div className="space-y-2">
                                 <label className="text-sm font-medium">Kívánt Válasz (AI válasz)</label>
                                 <textarea
-                                    className="w-full min-h-[150px] bg-black/40 border border-white/10 rounded-lg p-3 text-sm font-mono focus:ring-1 focus:ring-primary outline-none"
+                                    className="w-full min-h-[150px] bg-white/[0.03] border border-white/10 rounded-lg p-3 text-sm font-mono focus:ring-1 focus:ring-primary outline-none"
                                     placeholder="Írd be a helyes AI választ..."
                                     value={completion}
                                     onChange={(e) => setCompletion(e.target.value)}
@@ -243,7 +243,7 @@ export function IncubatorPanel() {
                             <CardDescription>A tanítás után generált modell alapértelmezett konfigurációja.</CardDescription>
                         </CardHeader>
                         <CardContent>
-                            <pre className="p-4 bg-black/60 rounded-lg overflow-x-auto text-xs font-mono text-cyan-400 border border-white/5">
+                            <pre className="p-4 bg-black/60 rounded-lg overflow-x-auto text-xs font-mono text-cyan-400 border border-white/[0.04]">
                                 {`FROM lora_output.gguf
 TEMPLATE """{{ if .System }}<|im_start|>system
 {{ .System }}<|im_end|>

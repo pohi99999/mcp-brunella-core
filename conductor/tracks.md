@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-23T06:29:42.068Z
+**Utolso frissites:** 2026-03-23T07:18:40.732Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 122 total | 14 active | 0 completed | 98 archived
+**Stats:** 124 total | 6 active | 0 completed | 108 archived
 
 ---
 
@@ -66,7 +66,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (14)
+## Aktiv Szalak (Active) (6)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -74,50 +74,10 @@
   - **Assignee:** Claude (Phase 1-2 Complete)
   - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
 
-- [x] **Cloudflare Analytics Engine Egyedi Metrikák** [LOW]
-  - **ID:** `cf_analytics_engine_20260323`
-  - **Progress:** 100%
-  - Mappa: ./tracks/cf_analytics_engine_20260323/
-
-- [x] **Durable Object Migrations Konfiguráció** [HIGH]
-  - **ID:** `cf_durable_object_migrations_20260323`
-  - **Progress:** 100%
-  - Mappa: ./tracks/cf_durable_object_migrations_20260323/
-
 - [ ] **Hyperdrive Connection Pooling D1 Teljesítményhez** [LOW]
   - **ID:** `cf_hyperdrive_d1_20260323`
   - **Progress:** 30%
   - Mappa: ./tracks/cf_hyperdrive_d1_20260323/
-
-- [x] **Cloudflare Queues Aszinkron Task Elosztás** [HIGH]
-  - **ID:** `cf_queues_task_distribution_20260323`
-  - **Progress:** 100%
-  - Mappa: ./tracks/cf_queues_task_distribution_20260323/
-
-- [x] **Cloudflare R2 Object Storage Aktiválás** [CRITICAL]
-  - **ID:** `cf_r2_activation_20260323`
-  - **Progress:** 100%
-  - Mappa: ./tracks/cf_r2_activation_20260323/
-
-- [x] **R2 Alapú Agent Artifact Tárolás** [HIGH]
-  - **ID:** `cf_r2_artifact_storage_20260323`
-  - **Progress:** 100%
-  - Mappa: ./tracks/cf_r2_artifact_storage_20260323/
-
-- [x] **Cloudflare API Token Jogosultság Bővítés** [CRITICAL]
-  - **ID:** `cf_token_permissions_fix_20260323`
-  - **Progress:** 100%
-  - Mappa: ./tracks/cf_token_permissions_fix_20260323/
-
-- [x] **Workers AI Modell Paletta Bővítés** [MEDIUM]
-  - **ID:** `cf_workers_ai_models_20260323`
-  - **Progress:** 100%
-  - Mappa: ./tracks/cf_workers_ai_models_20260323/
-
-- [x] **Cloudflare Workflows Orkesztráció** [MEDIUM] ✅
-  - **ID:** `cf_workflows_orchestration_20260323`
-  - **Progress:** 100%
-  - Mappa: ./tracks/cf_workflows_orchestration_20260323/
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
@@ -144,11 +104,13 @@
 
 ---
 
-## Archivalt (Archived) (98)
+## Archivalt (Archived) (108)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
+- [x] **Agent diagnostics and routing modernization** (2026-03-23T08:15:00Z)
+- [x] **Agent Loader Modernization** (2026-03-23T08:00:00Z)
 - [x] **agent_memory_structured_20260323** (2026-03-23T12:00:00Z)
 - [x] **agent_orchestration_dag_20260323** (2026-03-23T12:00:00Z)
 - [x] **aider_integration_20260222** (N/A)
@@ -156,10 +118,8 @@
 - [x] **basic-test-task-structure-20260219** (N/A)
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **BAS Enterprise Suite - 18 Module Business Automation** (N/A)
-- [x] **bas_orchestration_chain_20260221** (N/A)
-- [x] **bas_security_sandbox_20260221** (N/A)
 
-... and 88 more archived tracks
+... and 98 more archived tracks
 
 ---
 

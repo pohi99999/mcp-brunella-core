@@ -102,13 +102,13 @@ export function InventoryCatalog() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Keresés ügynök vagy eszköz..."
-            className="pl-8 bg-zinc-900/60 border-zinc-800"
+            className="pl-8 bg-zinc-900/60 border-white/[0.04]"
           />
         </div>
       </div>
 
       <Tabs defaultValue="agents" className="w-full">
-        <TabsList className="bg-zinc-900/60 border border-zinc-800">
+        <TabsList className="bg-zinc-900/60 border border-white/[0.04]">
           <TabsTrigger value="agents" className="gap-2">
             <Robot size={16} />
             Ügynökök ({agents.length})
@@ -122,7 +122,7 @@ export function InventoryCatalog() {
         <TabsContent value="agents" className="mt-4">
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {filteredAgents.map((agent) => (
-              <Card key={agent.name} className="border-zinc-800/80 bg-zinc-950/60">
+              <Card key={agent.name} className="bg-transparent border-none shadow-none">
                 <CardHeader className="pb-2">
                   <div className="flex items-center gap-2">
                     <div className="h-8 w-8 rounded-full bg-emerald-500/20 flex items-center justify-center">
@@ -146,7 +146,7 @@ export function InventoryCatalog() {
         <TabsContent value="tools" className="mt-4">
           <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
             {filteredTools.map((tool) => (
-              <Card key={tool.id || tool.name} className="border-zinc-800/80 bg-zinc-950/60">
+              <Card key={tool.id || tool.name} className="bg-transparent border-none shadow-none">
                 <CardHeader className="pb-2">
                   <div className="flex items-start justify-between gap-2">
                     <div>
@@ -186,7 +186,7 @@ export function InventoryCatalog() {
       </Tabs>
 
       <Dialog open={!!activeTool} onOpenChange={(o) => !o && setActiveTool(null)}>
-        <DialogContent className="border-zinc-800 bg-zinc-950">
+        <DialogContent className="border-white/[0.04] bg-zinc-950">
           <DialogHeader>
             <DialogTitle>{activeTool?.name}</DialogTitle>
             <DialogDescription>{activeTool?.description}</DialogDescription>
@@ -201,7 +201,7 @@ export function InventoryCatalog() {
                   value={toolArgs[p.name] ?? ''}
                   onChange={(e) => setToolArgs((prev) => ({ ...prev, [p.name]: e.target.value }))}
                   placeholder={`${p.type}`}
-                  className="bg-zinc-900 border-zinc-800"
+                  className="bg-white/[0.03] border-white/[0.04] rounded-lg"
                 />
               </div>
             ))}

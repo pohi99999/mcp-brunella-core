@@ -383,6 +383,23 @@ export interface RegistryAgent {
   systemPrompt?: string;
   triggers?: string[];
   config?: Record<string, unknown>;
+  category?: string;
+  status?: "active" | "disabled" | "experimental";
+  tags?: string[];
+  tools?: string[];
+  metadataStandard?: {
+    category: string;
+    status: "active" | "disabled" | "experimental";
+    tags: string[];
+    tools: string[];
+    triggers: string[];
+    capabilities: string[];
+    priority: number;
+    autoStart: boolean;
+    executionMode: "local" | "cloud" | "hybrid";
+    costTier: "low" | "medium" | "high";
+    runtimeCompatibility: "node" | "python" | "hybrid";
+  };
 }
 
 export interface Registry {
@@ -403,6 +420,57 @@ export async function getAgentStatuses(): Promise<AgentStatus[]> {
   if (!response.ok) throw new Error(`Agent Status: HTTP ${response.status}`);
   const data = await safeJson<{ agents?: AgentStatus[] }>(response);
   return data.agents || [];
+}
+
+export interface AgentDiagnosticsResponse {
+  validation: {
+    valid: boolean;
+    errors: string[];
+    warnings: string[];
+    checkedAt: string;
+    summary: {
+      totalAgents: number;
+      activeAgents: number;
+      invalidAgents: number;
+      defaultAgent: string;
+    };
+  };
+  agents: Array<{
+    name: string;
+    module: string;
+    configuredClass: string;
+    loadStatus: "pending" | "loaded" | "error" | "skipped";
+    resolvedExportName?: string;
+    resolutionStrategy?: string;
+    availableExports: string[];
+    error?: string;
+    metadata: {
+      category: string;
+      status: "active" | "disabled" | "experimental";
+      tags: string[];
+      tools: string[];
+      triggers: string[];
+      capabilities: string[];
+      priority: number;
+      autoStart: boolean;
+      executionMode: "local" | "cloud" | "hybrid";
+      costTier: "low" | "medium" | "high";
+      runtimeCompatibility: "node" | "python" | "hybrid";
+    };
+    runtime: {
+      status: "idle" | "working" | "error" | "unloaded";
+      lastTaskAt?: string;
+      lastTask?: string;
+      successCount: number;
+      errorCount: number;
+    };
+  }>;
+}
+
+export async function getAgentDiagnostics(): Promise<AgentDiagnosticsResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/agents/diagnostics`);
+  if (!response.ok) throw new Error(`Agent Diagnostics: HTTP ${response.status}`);
+  return safeJson<AgentDiagnosticsResponse>(response);
 }
 
 export interface TasksResponse {

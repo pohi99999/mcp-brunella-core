@@ -48,7 +48,7 @@ export function LiveExecutionMonitor() {
   return (
     <div className="space-y-4 animate-in fade-in slide-in-from-top-4 duration-500">
       <Card className="glass-panel border-primary/20 bg-primary/5">
-        <CardHeader className="p-4 border-b border-white/5 flex flex-row items-center justify-between">
+        <CardHeader className="p-4 border-b border-white/[0.04] flex flex-row items-center justify-between">
           <div className="space-y-1">
             <CardTitle className="text-sm font-bold tracking-widest uppercase flex items-center gap-2">
               <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
@@ -77,7 +77,7 @@ export function LiveExecutionMonitor() {
               <span>Progress</span>
               <span>{Math.round(progress)}% ({completedSteps}/{totalSteps})</span>
             </div>
-            <Progress value={progress} className="h-1.5 bg-white/5" />
+            <Progress value={progress} className="h-1.5 bg-white/[0.04]" />
           </div>
 
           {/* Steps List */}
@@ -89,8 +89,8 @@ export function LiveExecutionMonitor() {
                   className={cn(
                     "flex items-start gap-3 p-3 rounded-xl border transition-all duration-300",
                     step.status === 'working' ? "bg-primary/10 border-primary/30" :
-                      step.status === 'completed' ? "bg-white/5 border-emerald-500/20" :
-                        "bg-black/20 border-white/5 opacity-60"
+                      step.status === 'completed' ? "bg-white/[0.04] border-emerald-500/20" :
+                        "bg-white/[0.02] border-white/[0.04] opacity-60"
                   )}
                 >
                   <div className="mt-0.5 shrink-0">
@@ -123,7 +123,7 @@ export function LiveExecutionMonitor() {
           </ScrollArea>
 
           {/* Estimated Time */}
-          <div className="pt-2 border-t border-white/5 flex items-center justify-between text-[10px] font-mono text-zinc-500 uppercase">
+          <div className="pt-2 border-t border-white/[0.04] flex items-center justify-between text-[10px] font-mono text-zinc-500 uppercase">
             <div className="flex items-center gap-1.5">
               <Clock size={12} />
               <span>Est. Remaining: {Math.round((robotkezPlan.plan.estimatedDuration * (1 - progress / 100)) / 1000)}s</span>
@@ -154,7 +154,7 @@ export function LiveExecutionMonitor() {
               alt="Step Screenshot"
               className="max-w-full max-h-[85vh] rounded-lg border border-white/10 shadow-2xl"
             />
-            <Button variant="outline" className="bg-white/5 border-white/10 text-white hover:bg-white/10">
+            <Button variant="outline" className="bg-white/[0.04] border-white/10 text-white hover:bg-white/10">
               CLOSE PREVIEW
             </Button>
           </div>

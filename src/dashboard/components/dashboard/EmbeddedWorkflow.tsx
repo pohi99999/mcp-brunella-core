@@ -34,7 +34,7 @@ export function EmbeddedWorkflow({ title, url, icon, allowSameOrigin = false }: 
   ].join(' ')
 
   return (
-    <Card className="border-zinc-800/80 bg-zinc-950/60 flex flex-col h-[calc(100vh-8rem)]">
+    <Card className="bg-transparent border-none shadow-none flex flex-col h-full">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2 text-base font-medium text-zinc-200">
           {icon}

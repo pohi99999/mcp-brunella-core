@@ -69,7 +69,7 @@ export function CampaignGeneratorWidget() {
 
     return (
         <Card className="w-full shadow-xl border-primary/20 bg-card/50 backdrop-blur-md min-h-[600px]">
-            <CardHeader className="pb-3 border-b border-white/5 bg-secondary/10">
+            <CardHeader className="pb-3 border-b border-white/[0.04] bg-secondary/10">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-primary/10 rounded-full">
@@ -102,7 +102,7 @@ export function CampaignGeneratorWidget() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     {/* Előzmények */}
-                    <div className="lg:col-span-1 border-r border-white/5 pr-4 flex flex-col gap-4">
+                    <div className="lg:col-span-1 border-r border-white/[0.04] pr-4 flex flex-col gap-4">
                         <h3 className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-2">
                             <History size={12} />
                             Korábbi Kampányok
@@ -149,7 +149,7 @@ export function CampaignGeneratorWidget() {
                                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 h-full animate-in fade-in duration-500">
                                         
                                         {/* Akcióterv */}
-                                        <div className="p-4 rounded-xl border border-white/5 bg-black/20 flex flex-col">
+                                        <div className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.02] flex flex-col">
                                             <h4 className="text-[10px] font-bold text-primary uppercase tracking-widest mb-3 flex items-center gap-2">
                                                 <Target size={12} /> Akcióterv (GTM)
                                             </h4>
@@ -161,7 +161,7 @@ export function CampaignGeneratorWidget() {
                                         </div>
 
                                         {/* Közösségi Média */}
-                                        <div className="p-4 rounded-xl border border-white/5 bg-black/20 flex flex-col">
+                                        <div className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.02] flex flex-col">
                                             <h4 className="text-[10px] font-bold text-blue-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                                                 <MessageCircle size={12} /> Közösségi Média
                                             </h4>
@@ -173,7 +173,7 @@ export function CampaignGeneratorWidget() {
                                         </div>
 
                                         {/* Videó Script */}
-                                        <div className="p-4 rounded-xl border border-white/5 bg-black/20 flex flex-col">
+                                        <div className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.02] flex flex-col">
                                             <h4 className="text-[10px] font-bold text-purple-500 uppercase tracking-widest mb-3 flex items-center gap-2">
                                                 <Video size={12} /> Videó Forgatókönyv
                                             </h4>

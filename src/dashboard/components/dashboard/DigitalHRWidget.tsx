@@ -69,7 +69,7 @@ export function DigitalHRWidget() {
 
     return (
         <Card className="w-full shadow-xl border-blue-500/20 bg-card/50 backdrop-blur-md">
-            <CardHeader className="pb-3 border-b border-white/5">
+            <CardHeader className="pb-3 border-b border-white/[0.04]">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-blue-500/10 rounded-full">
@@ -108,7 +108,7 @@ export function DigitalHRWidget() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Előzmények */}
-                    <div className="lg:col-span-1 border-r border-white/5 pr-4">
+                    <div className="lg:col-span-1 border-r border-white/[0.04] pr-4">
                         <h3 className="text-xs font-semibold uppercase text-muted-foreground mb-3 flex items-center gap-2">
                             <History className="w-3 h-3" />
                             Korábbi Jelöltek
@@ -173,13 +173,13 @@ export function DigitalHRWidget() {
                                         </div>
 
                                         <div className="grid grid-cols-2 gap-4">
-                                            <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                                            <div className="p-4 rounded-xl bg-white/[0.04] border border-white/[0.04]">
                                                 <div className="text-[10px] font-bold text-zinc-500 uppercase mb-2 flex items-center gap-2">
                                                     <BarChart3 size={12} /> Tapasztalat
                                                 </div>
                                                 <div className="text-lg font-bold text-white">{candidate.experience} év</div>
                                             </div>
-                                            <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                                            <div className="p-4 rounded-xl bg-white/[0.04] border border-white/[0.04]">
                                                 <div className="text-[10px] font-bold text-zinc-500 uppercase mb-2 flex items-center gap-2">
                                                     <UserCheck size={12} /> Státusz
                                                 </div>
@@ -200,7 +200,7 @@ export function DigitalHRWidget() {
                                             </div>
                                         </div>
 
-                                        <div className="flex gap-2 pt-4 border-t border-white/5">
+                                        <div className="flex gap-2 pt-4 border-t border-white/[0.04]">
                                             <Button size="sm" className="flex-1 gap-2"
                                                 onClick={() => toast.info("Email küldés hamarosan elérhető")}>
                                                 <Mail size={14} /> Email küldése

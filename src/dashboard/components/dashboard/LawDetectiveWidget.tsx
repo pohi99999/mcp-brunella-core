@@ -66,7 +66,7 @@ export function LawDetectiveWidget() {
 
     return (
         <Card className="w-full shadow-xl border-blue-500/20 bg-card/50 backdrop-blur-md">
-            <CardHeader className="pb-3 border-b border-white/5">
+            <CardHeader className="pb-3 border-b border-white/[0.04]">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-blue-500/10 rounded-full">
@@ -99,7 +99,7 @@ export function LawDetectiveWidget() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Előzmények */}
-                    <div className="lg:col-span-1 border-r border-white/5 pr-4 flex flex-col gap-4">
+                    <div className="lg:col-span-1 border-r border-white/[0.04] pr-4 flex flex-col gap-4">
                         <h3 className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-2">
                             <History size={12} />
                             Utolsó Vizsgálatok

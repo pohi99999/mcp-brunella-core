@@ -348,7 +348,7 @@ export function NeuralLinkChat() {
 
       <CardContent className="flex-1 flex flex-col min-h-0 p-0">
         {showBrowser && (
-          <div className="border-b border-border bg-black/20 p-2 flex flex-col items-center justify-center relative min-h-[200px] max-h-[400px] overflow-hidden">
+          <div className="border-b border-border bg-white/[0.02] p-2 flex flex-col items-center justify-center relative min-h-[200px] max-h-[400px] overflow-hidden">
             <img src={`/api/browser/snapshot?t=${browserTimestamp}`} alt="Browser Live View" className="max-w-full h-auto max-h-[380px] object-contain border border-zinc-700 shadow-lg rounded" onError={(e) => { (e.target as HTMLImageElement).style.display = "none"; }} onLoad={(e) => { (e.target as HTMLImageElement).style.display = "block"; }} />
             <div className="absolute top-2 right-2 bg-black/50 text-white text-[10px] px-1.5 py-0.5 rounded backdrop-blur-sm">LIVE</div>
           </div>
@@ -482,7 +482,7 @@ export function NeuralLinkChat() {
             <div ref={scrollRef} />
           </div>
         </ScrollArea>
-        <div className="p-4 border-t border-zinc-800/80">
+        <div className="p-4 border-t border-white/[0.04]/80">
           <div className="flex gap-2">
             <Textarea
               value={input}
@@ -503,7 +503,7 @@ export function NeuralLinkChat() {
                           ? "Üzenet a Gemini-nek..."
                           : "Üzenet az AI-nak..."
               }
-              className="min-h-[60px] bg-zinc-900 border-zinc-800 resize-none"
+              className="min-h-[60px] bg-zinc-900 border-white/[0.04] resize-none"
               disabled={isLoading}
               data-testid="neural-chat-input"
             />

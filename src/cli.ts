@@ -47,6 +47,7 @@ import { registerToolDiscoveryCommands } from "./cli/toolDiscoveryCommands.js";
 import { registerSecurityCommands } from "./cli/securityCommands.js";
 import { registerChromeAcpCommands } from "./cli/chromeAcpCommands.js";
 import { registerBrowserCopilotCommands } from "./cli/browserCopilotCommands.js";
+import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -237,6 +238,83 @@ program
       await client.close();
       process.exit(0);
     }
+  });
+
+program
+  .command("agent-diagnostics")
+  .description("Registry validáció és agent loader diagnosztika")
+  .option("--json", "Nyers JSON kimenet")
+  .action(async (cmd?: { json?: boolean }) => {
+    const registryCandidates = [
+      join(process.cwd(), "build", "agents", "registry.json"),
+      join(process.cwd(), "src", "agents", "registry.json"),
+    ];
+
+    const registryPath = registryCandidates.find((candidate) => existsSync(candidate));
+    if (!registryPath) {
+      console.error(chalk.red("Nem található registry.json sem a build, sem a src mappában."));
+      process.exit(1);
+    }
+
+    const rawRegistry = JSON.parse(readFileSync(registryPath, "utf-8")) as unknown;
+    const localValidation = validateAndNormalizeRegistry(rawRegistry);
+
+    let runtimeDiagnostics: unknown = null;
+    try {
+      const response = await fetch("http://localhost:3000/api/agents/diagnostics");
+      if (response.ok) {
+        runtimeDiagnostics = await response.json();
+      }
+    } catch {
+      runtimeDiagnostics = null;
+    }
+
+    if (cmd?.json) {
+      console.log(JSON.stringify({ localValidation, runtimeDiagnostics }, null, 2));
+      process.exit(0);
+    }
+
+    console.log(boxen(chalk.blue("Agent diagnosztika"), {
+      padding: 1,
+      borderStyle: "round",
+      borderColor: localValidation.report.valid ? "green" : "yellow",
+    }));
+
+    console.log(chalk.bold("Registry forrás:"), registryPath);
+    console.log(chalk.bold("Agentek száma:"), localValidation.report.summary.totalAgents);
+    console.log(chalk.bold("Default agent:"), localValidation.report.summary.defaultAgent);
+    console.log(chalk.bold("Schema állapot:"), localValidation.report.valid ? chalk.green("VALID") : chalk.yellow("FIGYELMET KÉR"));
+
+    if (localValidation.report.errors.length > 0) {
+      console.log(chalk.red("\nHibák:"));
+      localValidation.report.errors.forEach((error) => console.log(`  - ${error}`));
+    }
+
+    if (localValidation.report.warnings.length > 0) {
+      console.log(chalk.yellow("\nFigyelmeztetések:"));
+      localValidation.report.warnings.forEach((warning) => console.log(`  - ${warning}`));
+    }
+
+    if (runtimeDiagnostics && typeof runtimeDiagnostics === "object") {
+      const diagnosticsRecord = runtimeDiagnostics as {
+        agents?: Array<{
+          name: string;
+          loadStatus: string;
+          runtime: { status: string };
+          resolutionStrategy?: string;
+        }>;
+      };
+      console.log(chalk.cyan("\nÉlő loader állapot (http://localhost:3000):"));
+      for (const agent of diagnosticsRecord.agents ?? []) {
+        console.log(
+          `  - ${chalk.bold(agent.name)} :: load=${agent.loadStatus}, runtime=${agent.runtime.status}, strategy=${agent.resolutionStrategy ?? "-"}`,
+        );
+      }
+    } else {
+      console.log(chalk.dim("\nÉlő backend diagnosztika nem volt elérhető a 3000-es porton."));
+    }
+
+    process.exit(0);
   });
 
 // --- agent (execute specific agent)

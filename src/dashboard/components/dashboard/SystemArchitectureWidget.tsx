@@ -111,7 +111,7 @@ export function SystemArchitectureWidget() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         {/* 1. Ingestion Layer */}
-        <Card className="bg-zinc-900 border-zinc-700">
+        <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
           <CardHeader className="pb-2 pt-3 px-4">
             <CardTitle className="flex items-center justify-between text-sm font-semibold text-zinc-200">
               <span className="flex items-center gap-1.5">
@@ -137,7 +137,7 @@ export function SystemArchitectureWidget() {
         </Card>
 
         {/* 2. Knowledge Layer */}
-        <Card className="bg-zinc-900 border-zinc-700">
+        <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
           <CardHeader className="pb-2 pt-3 px-4">
             <CardTitle className="flex items-center justify-between text-sm font-semibold text-zinc-200">
               <span className="flex items-center gap-1.5">
@@ -165,7 +165,7 @@ export function SystemArchitectureWidget() {
         </Card>
 
         {/* 3. Orchestration Layer */}
-        <Card className="bg-zinc-900 border-zinc-700">
+        <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
           <CardHeader className="pb-2 pt-3 px-4">
             <CardTitle className="flex items-center justify-between text-sm font-semibold text-zinc-200">
               <span className="flex items-center gap-1.5">
@@ -197,7 +197,7 @@ export function SystemArchitectureWidget() {
         </Card>
 
         {/* 4. Security Layer */}
-        <Card className="bg-zinc-900 border-zinc-700">
+        <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
           <CardHeader className="pb-2 pt-3 px-4">
             <CardTitle className="flex items-center justify-between text-sm font-semibold text-zinc-200">
               <span className="flex items-center gap-1.5">

@@ -1,7 +1,7 @@
 {
   "id": "cf_workflows_orchestration_20260323",
   "name": "Cloudflare Workflows Orkesztráció",
-  "status": "DONE",
+  "status": "archived",
   "priority": "MEDIUM",
   "created": "2026-03-23",
   "completed": "2026-03-24",
@@ -9,5 +9,7 @@
   "progress": 100,
   "description": "Cloudflare Workflows bevezetése N8N részleges kiváltására. Edge-natív workflow engine a conductor track rendszerhez. DailyHealthCheckWorkflow + TaskPipelineWorkflow implementálva, cron trigger aktív.",
   "dependencies": [],
-  "phase": "feature"
+  "phase": "feature",
+  "archivedAt": "2026-03-23T23:30:00Z",
+  "archiveReason": "Completed 100 percent track archived on user request."
 }

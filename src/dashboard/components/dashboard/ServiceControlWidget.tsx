@@ -86,7 +86,7 @@ export function ServiceControlWidget() {
   };
 
   return (
-    <Card className="border-zinc-800/80 bg-zinc-950/60 backdrop-blur-sm">
+    <Card className="bg-transparent border-none shadow-none">
       <CardHeader className="flex flex-row items-center justify-between pb-2">
         <CardTitle className="flex items-center gap-2 text-base font-medium text-zinc-200">
           Rendszervezérlő
@@ -114,7 +114,7 @@ export function ServiceControlWidget() {
           return (
             <div
               key={`${svc.id}-${i}`}
-              className="flex items-center justify-between rounded-lg border border-zinc-800/60 bg-zinc-900/40 px-3 py-2"
+              className="flex items-center justify-between rounded-lg border border-white/[0.04]/60 bg-zinc-900/40 px-3 py-2"
             >
               <div className="flex items-center gap-2">
                 <span className="text-sm">

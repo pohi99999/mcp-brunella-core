@@ -1,8 +1,8 @@
 {
   "build": {
-    "beforeDevCommand": "npm run dev:ui",
+    "beforeDevCommand": "npm run dev:ui -- --port 5174 --strictPort",
     "beforeBuildCommand": "npm run build",
-    "devPath": "http://localhost:5173",
+    "devPath": "http://localhost:5174",
     "distDir": "../dist"
   },
   "package": {

@@ -123,7 +123,7 @@ export function SystemGuideWidget() {
 
     return (
         <Card className="w-full shadow-2xl border-primary/20 bg-card/50 backdrop-blur-md overflow-hidden min-h-[650px] flex flex-col">
-            <CardHeader className="pb-4 border-b border-white/5 bg-secondary/10">
+            <CardHeader className="pb-4 border-b border-white/[0.04] bg-secondary/10">
                 <div className="flex justify-between items-center gap-4">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-primary/10 rounded-full">
@@ -138,7 +138,7 @@ export function SystemGuideWidget() {
                         <Search className="absolute left-2 top-2.5 w-4 h-4 text-zinc-500" />
                         <Input 
                             placeholder="Keresés a funkciók között..." 
-                            className="pl-8 bg-black/20 border-white/10 h-9 text-xs"
+                            className="pl-8 bg-white/[0.02] border-white/10 h-9 text-xs"
                             value={search}
                             onChange={(e) => setSearch(e.target.value)}
                         />
@@ -147,7 +147,7 @@ export function SystemGuideWidget() {
             </CardHeader>
             <CardContent className="p-0 flex flex-1 overflow-hidden">
                 {/* Bal oldali menü */}
-                <div className="w-1/3 border-r border-white/5 bg-black/10 flex flex-col">
+                <div className="w-1/3 border-r border-white/[0.04] bg-black/10 flex flex-col">
                     <ScrollArea className="flex-1">
                         <div className="p-2 space-y-1">
                             {filteredData.map((item) => (
@@ -157,7 +157,7 @@ export function SystemGuideWidget() {
                                     className={`w-full flex items-center gap-3 p-3 rounded-xl transition-all text-left group ${
                                         selectedId === item.id 
                                             ? 'bg-primary/20 border-primary/20 border' 
-                                            : 'hover:bg-white/5 border border-transparent'
+                                            : 'hover:bg-white/[0.03] border border-transparent'
                                     }`}
                                 >
                                     <div className={`${selectedId === item.id ? 'scale-110' : 'opacity-50 group-hover:opacity-100'} transition-all`}>
@@ -212,7 +212,7 @@ export function SystemGuideWidget() {
                                 </p>
                             </section>
 
-                            <section className="p-5 rounded-2xl bg-white/5 border border-white/10 space-y-3">
+                            <section className="p-5 rounded-2xl bg-white/[0.04] border border-white/10 space-y-3">
                                 <h4 className="text-[10px] font-black text-zinc-400 uppercase tracking-[0.2em] flex items-center gap-2">
                                     <Cpu className="w-3 h-3" /> Hogyan működik és hogyan kezeld?
                                 </h4>
