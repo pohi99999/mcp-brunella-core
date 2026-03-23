@@ -1,5 +1,95 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-23 (esti session) - 🏆 7/7 Modernizációs Track KÉSZ — Sandbox & Security + Teljes Archiválás
+
+**Trackek befejezve ebben a sessionben:**
+- Track #5: Swarm Intelligence v2 → commit `78eb5797`
+- Track #6: MCP Tool Discovery → commit `78eb5797`
+- Track #7: Sandbox & Security Hardening → commit `8fdaadc0`
+
+**Track #7 Sandbox & Security — Részletek:**
+- **Phase 1: VM Sandbox** — `src/core/sandbox/wasmSandbox.ts`: SandboxPool Node.js vm izolációval, resource limits (CPU timeout, memory, output size), dangerous pattern blocking, instance pooling
+- **Phase 2: Network Policy** — `src/core/sandbox/networkPolicy.ts`: URL/domain whitelist/blacklist, metadata endpoint blocking (169.254.*), private network blocking, rate limiting
+- **Phase 3: RBAC** — `src/core/rbac/agentPermissions.ts`: 6 profil (ADMIN, DEVELOPER, RESEARCHER, EVALUATOR, ROBOTKEZ, READONLY), per-agent tool/network access, cost tracking, violation logging
+- **Phase 4: Dashboard+CLI+API** — SecurityPanel.tsx (3 tab), securityCommands.ts (4 CLI parancs), security.ts (7 REST endpoint)
+- **Tesztek:** 51 új unit teszt (15 sandbox + 15 network + 21 RBAC) — mind PASS
+
+**Archivált track-ek (mind 7 modernizációs):**
+1. guardrails_evaluation_20260323
+2. observability_opentelemetry_20260323
+3. agent_memory_structured_20260323
+4. agent_orchestration_dag_20260323
+5. swarm_intelligence_v2_20260323
+6. mcp_tool_discovery_20260323
+7. sandbox_security_hardening_20260323
+
+**Összesítés:** A BAS rendszer most teljes modernizáción esett át — guardrails, observability, structured memory, DAG orchestration, swarm v2, dynamic tool discovery, és sandbox security mind beépült.
+
+---
+
+## 2026-03-23 - 🧠 Agent Memory + DAG track lezárás, archiválás előkészítés és Chrome ACP rendszerintegráció
+
+**Trackek:** `agent_memory_structured_20260323`, `agent_orchestration_dag_20260323`, `guardrails_evaluation_20260323`, `observability_opentelemetry_20260323`, valamint új integrációs szál: `chrome_acp_integration_20260323`
+
+**Cél:**
+
+- A frissen elkészült structured memory és DAG orchestration fejlesztések munkanaplózása
+- A 100%-os live conductor trackek fizikai archiválása és meta-normalizálása
+- Chrome ACP beépítése a BAS rendszerfelületébe dashboard + CLI + indítóscript + dokumentáció szinten
+
+**Ebben a sessionben validált és lezárt fejlesztések:**
+
+- **Structured Agent Memory / Pattern Reuse**
+  - új core modulok: `src/core/hashUtils.ts`, `src/core/structuredMemory.ts`, `src/core/patternReuse.ts`
+  - `BaseAgent` pattern reuse shortcut + structured memory mentés
+  - `goldenDatasetBridge` lokális mirror és sync/export támogatás
+  - új backend route-ok: memória statisztika / purge / export / sync
+  - új dashboard panel: `MemoryPanel.tsx`
+  - új CLI parancs: `brunella memory`
+
+- **DAG Workflow Orchestration**
+  - új core motor: `src/core/dagEngine.ts`
+  - `TaskDecomposerAgent` és `AgentManager` workflow/DAG futtatási integráció
+  - workflow preview / run / status backend végpontok
+  - új dashboard panel: `WorkflowPanel.tsx`
+  - új CLI parancs: `brunella workflow`
+
+- **Korábban elkészült, de live backlogban maradt 100%-os trackek admin lezárása**
+  - `guardrails_evaluation_20260323`
+  - `observability_opentelemetry_20260323`
+
+**Teszt és build állapot a lezárás előtt:**
+
+- `npm run build` ✅
+- `npm run build:ui` ✅
+- `npm test` ✅
+  - `177 passed, 1 skipped` test file
+  - `1733 passed, 43 skipped` test
+
+**Archiválási admin döntés:**
+
+- A négy 100%-os live track fizikailag átmozgatva a `conductor/archive/` alá
+- Következő lépésként a meta-fájlok `archived` státuszra és archive mezőkre normalizálandók, majd `conductor rescan`
+
+**Chrome ACP integráció scope:**
+
+- új conductor track: `chrome_acp_integration_20260323`
+- dashboard beágyazott panel `http://localhost:9315` végponttal
+- CLI: `brunella chrome-acp` doctor / start / install segítséggel
+- Windows indítóscript a `acp-proxy --no-auth claude-code-acp` folyamathoz
+- setup dokumentáció a manuális Chrome extension lépésekkel
+
+**Utólagos runtime fix (ugyanezen sessionben):**
+
+- A `claude-code-acp ENOENT` hibát nem a hiányzó csomag, hanem a proxy child-process spawn PATH-függése okozta Windows alatt.
+- Javítás: a start flow immár nem a nyers `claude-code-acp` binárisnévre támaszkodik, hanem az npm globális prefix alatti abszolút adapter entrypointot indítja: `acp-proxy --no-auth node <...\@zed-industries\claude-code-acp\dist\index.js>`
+- Validáció:
+  - `node build/cli.js chrome-acp doctor` ✅
+  - `node build/cli.js chrome-acp start` ✅
+  - `node build/cli.js chrome-acp status` → `Chrome ACP elérhető: http://localhost:9315` ✅
+
+---
+
 ## 2026-03-22 - 🗄️ Completed conductor cleanup: 16 kész track archiválva, CLI lista auditálva
 
 **Track:** conductor admin cleanup / completed track archival audit
