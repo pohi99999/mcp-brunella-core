@@ -5,7 +5,7 @@
   "priority": "HIGH",
   "created": "2026-02-22",
   "owner": "Pohánka Péter",
-  "progress": 65,
+  "progress": 75,
   "description": "A meglévő RobotkezV2Agent-et Perplexity Comet-szintűre fejlesztjük: Planner→Actor→Critic háromrétegű multi-agent architektúrával, önjavítással, vision-alapú selector generálással, memóriával és cross-tab kezeléssel. Az alap (Playwright + Browser-Use) már megvan — csak a magasabb szintű intelligencia hiányzik.",
   "existing_assets": {
     "python": [
@@ -104,6 +104,6 @@
     "before": "RobotkezV2: 1 lépés, nincs önjavítás, fix selector, CAPTCHA-nál megáll",
     "after": "Comet-szint: multi-lépés plan, önjavító critic, vision selector, 3x retry, memória"
   },
-  "updated": "2026-03-22",
-  "auditNote": "Track reclassified to active after conductor audit: CometBrowserAgent, myai/agents/comet modules, FastAPI /comet/execute endpoint, registry activation, and prior implementation logs confirm ongoing real work."
+  "updated": "2026-03-23",
+  "auditNote": "Track reclassified to active after conductor audit: CometBrowserAgent, myai/agents/comet modules, FastAPI /comet/execute endpoint, registry activation, and prior implementation logs confirm ongoing real work. 2026-03-23: Browser Copilot MVP került ráépítésre a Robotkéz + Chrome ACP stackre közös session coordinator, dashboard overlay és CLI/API vezérléssel. Archiválás most még NEM indokolt: a track teljes success criteria készlete (CAPTCHA graceful fallback validáció, 80%+ 10-run sikerarány, critic self-heal bizonyítás, teljes npm test + FastAPI health evidence) nincs lezárva."
 }
