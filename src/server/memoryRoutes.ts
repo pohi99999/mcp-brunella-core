@@ -12,9 +12,11 @@
  */
 
 import { Router } from "express";
-import { getGoldenStats } from "../core/goldenDatasetBridge.js";
+import { exportGoldenDataset, getGoldenStats, syncLocalToD1 } from "../core/goldenDatasetBridge.js";
 import { getIndexStatus, scheduleReindex } from "../core/codebaseIndexer.js";
+import { exportStructuredMemories, getMemoryStats, getRecentPatternReuses, purgeExpired, queryMemory } from "../core/structuredMemory.js";
 import { socketService } from "./SocketService.js";
+import { getMemoryCacheMetricsSnapshot } from "../utils/metrics.js";
 
 export function createMemoryRouter(): Router {
   const router = Router();
@@ -31,6 +33,83 @@ export function createMemoryRouter(): Router {
       res.json({ golden, index });
     } catch (e: any) {
       res.status(500).json({ error: e.message });
+    }
+  });
+
+  router.get("/structured/stats", async (_req, res) => {
+    try {
+      const memory = getMemoryStats();
+      const cache = getMemoryCacheMetricsSnapshot();
+      const recentReuses = getRecentPatternReuses(12);
+      const agents = memory.agents.map((agent) => ({
+        ...agent,
+        cache: cache[agent.agentName] ?? { hits: 0, misses: 0, hitRate: 0 },
+      }));
+
+      res.json({
+        summary: memory.summary,
+        agents,
+        recentReuses,
+      });
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ error: message });
+    }
+  });
+
+  router.get("/structured/query", async (req, res) => {
+    try {
+      const task = typeof req.query.task === "string" ? req.query.task : undefined;
+      const agentName = typeof req.query.agentName === "string" ? req.query.agentName : undefined;
+      const limit = typeof req.query.limit === "string" ? Number(req.query.limit) : 10;
+      const results = queryMemory({ agentName, task, limit });
+      res.json({ results, total: results.length });
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ error: message });
+    }
+  });
+
+  router.post("/structured/purge", async (req, res) => {
+    try {
+      const minConfidence = typeof req.body?.minConfidence === "number" ? req.body.minConfidence : undefined;
+      const removed = purgeExpired(minConfidence);
+      res.json({ success: true, removed });
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ error: message });
+    }
+  });
+
+  router.get("/structured/export", async (req, res) => {
+    try {
+      const format = req.query.format === "json" ? "json" : "jsonl";
+      const content = exportStructuredMemories(format);
+      res.type(format === "json" ? "application/json" : "text/plain").send(content);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ error: message });
+    }
+  });
+
+  router.post("/structured/golden/sync", async (_req, res) => {
+    try {
+      const result = await syncLocalToD1();
+      res.json({ success: true, ...result });
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ error: message });
+    }
+  });
+
+  router.get("/structured/golden/export", async (req, res) => {
+    try {
+      const format = req.query.format === "json" ? "json" : "jsonl";
+      const content = exportGoldenDataset(format);
+      res.type(format === "json" ? "application/json" : "text/plain").send(content);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      res.status(500).json({ error: message });
     }
   });
 

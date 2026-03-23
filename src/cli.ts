@@ -40,6 +40,10 @@ import { registerWorkspaceCommands } from "./cli/workspaceCommands.js";
 import { dashboardCommand } from "./cli/dashboardCommands.js";
 import { registerTaskCommands } from "./cli/taskCommands.js";
 import { registerGuardrailsCommands, registerTelemetryCommands } from "./cli/guardrailsCommands.js";
+import { registerMemoryCommands } from "./cli/memoryCommands.js";
+import { registerWorkflowCommands } from "./cli/workflowCommands.js";
+import { registerSwarmCommands } from "./cli/swarmCommands.js";
+import { registerToolDiscoveryCommands } from "./cli/toolDiscoveryCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -1578,8 +1582,14 @@ dashboardCommand(program);
 // Register Guardrails & Telemetry commands (Track #1 + #2)
 registerGuardrailsCommands(program);
 registerTelemetryCommands(program);
+registerMemoryCommands(program);
+registerWorkflowCommands(program);
 
-// Register Conductor commands (Track State Management) - MOVED AFTER conductorCmd definition
+// Register Swarm & Tool Discovery commands (Track #5 + #6)
+registerSwarmCommands(program);
+registerToolDiscoveryCommands(program);
+
+// Register Conductor commands(Track State Management) - MOVED AFTER conductorCmd definition
 
 // ════════════════════════════════════════════════════════════════════════════
 // TESTS COMMAND (Test Scheduler)

@@ -461,11 +461,153 @@ export interface TaskStats {
   failedByAgent: Array<{ agent: string; count: number }>;
 }
 
+export interface StructuredMemoryAgentStats {
+  agentName: string;
+  totalEntries: number;
+  avgConfidence: number;
+  totalReuses: number;
+  lastUpdatedAt: string | null;
+  cache: {
+    hits: number;
+    misses: number;
+    hitRate: number;
+  };
+}
+
+export interface StructuredMemoryStatsResponse {
+  summary: {
+    totalEntries: number;
+    avgConfidence: number;
+    totalReuses: number;
+  };
+  agents: StructuredMemoryAgentStats[];
+  recentReuses: Array<{
+    id: number;
+    agentName: string;
+    rawTask: string;
+    confidence: number;
+    reuseCount: number;
+    lastReusedAt: string | null;
+  }>;
+}
+
+export interface WorkflowStatusItem {
+  id: string;
+  name: string;
+  status: string;
+  nodeCount: number;
+  startedAt: string;
+  finishedAt?: string;
+  durationMs?: number;
+  warnings: number;
+}
+
+export interface WorkflowNodeResult {
+  nodeId: string;
+  status: string;
+  output?: unknown;
+  error?: string;
+  durationMs: number;
+  condition?: boolean;
+}
+
+export interface WorkflowExecutionResult {
+  workflowId: string;
+  status: string;
+  nodeResults: Record<string, WorkflowNodeResult>;
+  totalTokens: number;
+  totalCostUSD: number;
+  durationMs: number;
+  warnings: string[];
+  completedNodeIds: string[];
+}
+
+export interface WorkflowPreviewResponse {
+  success: boolean;
+  workflow: {
+    id: string;
+    name: string;
+    nodes: Array<{
+      id: string;
+      label: string;
+      type: string;
+      agentName?: string;
+      instruction?: string;
+      dependsOn?: string[];
+      timeoutMs?: number;
+      metadata?: Record<string, unknown>;
+    }>;
+    edges?: Array<{ from: string; to: string }>;
+  };
+}
+
 export async function getTaskStats(): Promise<TaskStats> {
   const response = await fetchWithTimeout(`${API_BASE}/api/tasks/stats`);
   if (!response.ok) throw new Error(`Task Stats: HTTP ${response.status}`);
   const data = await safeJson<{ stats: TaskStats }>(response);
   return data.stats;
+}
+
+export async function getStructuredMemoryStats(): Promise<StructuredMemoryStatsResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/memory/structured/stats`);
+  if (!response.ok) throw new Error(`Structured Memory Stats: HTTP ${response.status}`);
+  return safeJson<StructuredMemoryStatsResponse>(response);
+}
+
+export async function purgeStructuredMemory(minConfidence?: number): Promise<{ success: boolean; removed: number }> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/memory/structured/purge`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(minConfidence !== undefined ? { minConfidence } : {}),
+  });
+  if (!response.ok) throw new Error(`Structured Memory Purge: HTTP ${response.status}`);
+  return safeJson<{ success: boolean; removed: number }>(response);
+}
+
+export async function exportStructuredMemory(format: 'jsonl' | 'json' = 'jsonl'): Promise<string> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/memory/structured/export?format=${format}`);
+  if (!response.ok) throw new Error(`Structured Memory Export: HTTP ${response.status}`);
+  return response.text();
+}
+
+export async function syncGoldenMirror(): Promise<{ success: boolean; synced: number; failed: number; skipped: number }> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/memory/structured/golden/sync`, {
+    method: 'POST',
+  });
+  if (!response.ok) throw new Error(`Golden Mirror Sync: HTTP ${response.status}`);
+  return safeJson<{ success: boolean; synced: number; failed: number; skipped: number }>(response);
+}
+
+export async function previewWorkflow(task: string, defaultAgent?: string): Promise<WorkflowPreviewResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/tasks/workflow/preview`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ task, defaultAgent }),
+  }, LONG_TIMEOUT_MS);
+  if (!response.ok) throw new Error(`Workflow Preview: HTTP ${response.status}`);
+  return safeJson<WorkflowPreviewResponse>(response);
+}
+
+export async function runWorkflow(params: {
+  task?: string;
+  workflow?: WorkflowPreviewResponse['workflow'];
+  defaultAgent?: string;
+  initialContext?: Record<string, unknown>;
+}): Promise<{ success: boolean; workflow: WorkflowPreviewResponse['workflow']; result: WorkflowExecutionResult }> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/tasks/workflow/run`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params),
+  }, LONG_TIMEOUT_MS);
+  if (!response.ok) throw new Error(`Workflow Run: HTTP ${response.status}`);
+  return safeJson<{ success: boolean; workflow: WorkflowPreviewResponse['workflow']; result: WorkflowExecutionResult }>(response);
+}
+
+export async function getWorkflowStatuses(): Promise<WorkflowStatusItem[]> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/tasks/workflow/status`);
+  if (!response.ok) throw new Error(`Workflow Status: HTTP ${response.status}`);
+  const data = await safeJson<{ workflows?: WorkflowStatusItem[] }>(response);
+  return data.workflows || [];
 }
 
 export async function executePendingTask(): Promise<any> {

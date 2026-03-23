@@ -2,16 +2,16 @@
   "trackName": "agent_memory_structured_20260323",
   "type": "Core Enhancement",
   "priority": "HIGH",
-  "status": "active",
-  "progress": 0,
+  "status": "done",
+  "progress": 100,
   "goal": "Strukturált agent memória: SQLite tábla sikeres/sikertelen futásoknak, automatikus minta-újrafelhasználás, memória TTL/expiration, relevancia scoring. Golden Dataset Bridge lokális kiterjesztés.",
   "assignee": "Copilot + Pohánka Péter",
   "createdAt": "2026-03-23T01:30:00Z",
-  "updatedAt": "2026-03-23T01:30:00Z",
+  "updatedAt": "2026-03-23T12:00:00Z",
   "phases": [
     {
       "name": "Phase 1: Structured Memory Store",
-      "status": "pending",
+      "status": "done",
       "description": "SQLite agent_memories tábla, CRUD műveletek",
       "tasks": [
         "[ ] src/core/structuredMemory.ts: SQLite tábla (agent, task_type, input_hash, result, confidence, created_at, expires_at)",
@@ -22,7 +22,7 @@
     },
     {
       "name": "Phase 2: Pattern Reuse Engine",
-      "status": "pending",
+      "status": "done",
       "description": "Sikeres minták automatikus felismerése és újrafelhasználása",
       "tasks": [
         "[ ] Pattern matcher: hasonló task → korábbi sikeres result shortcut",
@@ -33,7 +33,7 @@
     },
     {
       "name": "Phase 3: Golden Dataset Local Extension",
-      "status": "pending",
+      "status": "done",
       "description": "Golden Dataset Bridge lokális mentés (nem csak D1)",
       "tasks": [
         "[ ] goldenDatasetBridge.ts bővítés: lokális SQLite mentés D1 mellett",
@@ -44,7 +44,7 @@
     },
     {
       "name": "Phase 4: Dashboard + CLI",
-      "status": "pending",
+      "status": "done",
       "description": "Memória kezelés UI és CLI felületen",
       "tasks": [
         "[ ] Dashboard: MemoryPanel (per-agent memória stats, pattern reuse rate)",

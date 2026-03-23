@@ -4,7 +4,8 @@
 
 import { logInfo, logError } from '../utils/logger.js';
 import { vectorizeClient } from '../utils/vectorize.js';
-import { getD1Adapter } from '../utils/globalDb.js';
+import { getD1Adapter, getGlobalDb } from '../utils/globalDb.js';
+import { fnvHash } from './hashUtils.js';
 
 // ============================================================================
 // TYPES
@@ -50,12 +51,135 @@ const MAX_HASH_CACHE = 500;
  * so we use a FNV-1a-like fast hash.
  */
 function quickHash(str: string): string {
-  let hash = 0x811c9dc5;
-  for (let i = 0; i < str.length; i++) {
-    hash ^= str.charCodeAt(i);
-    hash = (hash * 0x01000193) >>> 0;
+  return fnvHash(str);
+}
+
+function ensureGoldenLocalTable(): void {
+  const db = getGlobalDb();
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS golden_samples (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      sample_hash TEXT NOT NULL UNIQUE,
+      prompt TEXT NOT NULL,
+      completion TEXT NOT NULL,
+      source TEXT NOT NULL,
+      quality REAL NOT NULL,
+      remote_status TEXT NOT NULL DEFAULT 'pending',
+      remote_synced_at TEXT,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_golden_samples_remote_status ON golden_samples(remote_status);
+    CREATE INDEX IF NOT EXISTS idx_golden_samples_created_at ON golden_samples(created_at);
+  `);
+}
+
+export function saveGoldenSampleLocal(sample: GoldenSample): GoldenSaveResult {
+  if (sample.quality < MIN_QUALITY_SCORE) {
+    return {
+      success: false,
+      message: `Quality ${sample.quality} below threshold ${MIN_QUALITY_SCORE} (RULE-GD2)`,
+    };
   }
-  return hash.toString(36);
+
+  ensureGoldenLocalTable();
+  const db = getGlobalDb();
+  const sampleHash = quickHash(`${sample.prompt}|||${sample.completion}`);
+  const nowIso = new Date().toISOString();
+
+  db.prepare(`
+    INSERT INTO golden_samples (
+      sample_hash, prompt, completion, source, quality, remote_status, created_at, updated_at
+    ) VALUES (
+      @sample_hash, @prompt, @completion, @source, @quality, 'pending', @created_at, @updated_at
+    )
+    ON CONFLICT(sample_hash) DO UPDATE SET
+      quality = excluded.quality,
+      source = excluded.source,
+      updated_at = excluded.updated_at
+  `).run({
+    sample_hash: sampleHash,
+    prompt: sample.prompt,
+    completion: sample.completion,
+    source: sample.source,
+    quality: sample.quality,
+    created_at: nowIso,
+    updated_at: nowIso,
+  });
+
+  return {
+    success: true,
+    message: 'Saved to local golden mirror',
+    stats: { storage: 'sqlite', sampleHash },
+  };
+}
+
+export async function syncLocalToD1(): Promise<{ synced: number; failed: number; skipped: number }> {
+  ensureGoldenLocalTable();
+  const d1Adapter = getD1Adapter();
+  if (!d1Adapter) {
+    return { synced: 0, failed: 0, skipped: 0 };
+  }
+
+  const db = getGlobalDb();
+  const rows = db.prepare(`
+    SELECT *
+    FROM golden_samples
+    WHERE remote_status != 'synced'
+    ORDER BY created_at ASC
+  `).all() as Array<Record<string, unknown>>;
+
+  let synced = 0;
+  let failed = 0;
+
+  for (const row of rows) {
+    try {
+      const result = await d1Adapter.insertGoldenSample({
+        id: `golden_${String(row.sample_hash)}`,
+        instruction: String(row.prompt),
+        output: String(row.completion),
+        source: String(row.source),
+      });
+
+      if (result.status === 'error') {
+        throw new Error(result.error || 'Unknown D1 sync error');
+      }
+
+      db.prepare(`
+        UPDATE golden_samples
+        SET remote_status = 'synced', remote_synced_at = ?, updated_at = ?
+        WHERE sample_hash = ?
+      `).run(new Date().toISOString(), new Date().toISOString(), String(row.sample_hash));
+      synced += 1;
+    } catch (error) {
+      failed += 1;
+      db.prepare(`
+        UPDATE golden_samples
+        SET remote_status = 'failed', updated_at = ?
+        WHERE sample_hash = ?
+      `).run(new Date().toISOString(), String(row.sample_hash));
+      logError('GoldenBridge', `Local->D1 sync failed for ${String(row.sample_hash)}: ${error instanceof Error ? error.message : String(error)}`);
+    }
+  }
+
+  return { synced, failed, skipped: 0 };
+}
+
+export function exportGoldenDataset(format: 'jsonl' | 'json' = 'jsonl'): string {
+  ensureGoldenLocalTable();
+  const db = getGlobalDb();
+  const rows = db.prepare(`
+    SELECT prompt, completion, source, quality, created_at, remote_status
+    FROM golden_samples
+    ORDER BY created_at DESC
+  `).all() as Array<Record<string, unknown>>;
+
+  if (format === 'json') {
+    return JSON.stringify(rows, null, 2);
+  }
+
+  return rows.map((row) => JSON.stringify(row)).join('\n');
 }
 
 function isDuplicate(prompt: string, completion: string): boolean {
@@ -131,6 +255,11 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
       return { success: false, message: 'Duplicate sample (RULE-GD3)' };
     }
 
+    const localResult = saveGoldenSampleLocal(sample);
+    if (!localResult.success) {
+      return localResult;
+    }
+
     // Save to D1 (cloud-first strategy)
     const d1Adapter = getD1Adapter();
     if (d1Adapter) {
@@ -147,10 +276,16 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
         }
         
         logInfo('GoldenBridge', `Sample saved to D1 from ${sample.source} (quality: ${sample.quality.toFixed(2)})`);
+        ensureGoldenLocalTable();
+        getGlobalDb().prepare(`
+          UPDATE golden_samples
+          SET remote_status = 'synced', remote_synced_at = ?, updated_at = ?
+          WHERE sample_hash = ?
+        `).run(new Date().toISOString(), new Date().toISOString(), quickHash(`${sample.prompt}|||${sample.completion}`));
         return { 
           success: true, 
           message: 'Saved to D1 cloud storage',
-          stats: { storage: 'd1', quality: sample.quality }
+          stats: { storage: 'd1', mirror: 'sqlite', quality: sample.quality }
         };
       } catch (d1Error: unknown) {
         const msg = d1Error instanceof Error ? d1Error.message : String(d1Error);
@@ -189,8 +324,14 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
       }
 
       const data = await response.json();
+      ensureGoldenLocalTable();
+      getGlobalDb().prepare(`
+        UPDATE golden_samples
+        SET remote_status = 'synced', remote_synced_at = ?, updated_at = ?
+        WHERE sample_hash = ?
+      `).run(new Date().toISOString(), new Date().toISOString(), quickHash(`${sample.prompt}|||${sample.completion}`));
       logInfo('GoldenBridge', `Sample saved to Python backup from ${sample.source} (quality: ${sample.quality.toFixed(2)})`);
-      return { success: true, message: data.message, stats: data.stats };
+      return { success: true, message: data.message, stats: { ...data.stats, mirror: 'sqlite' } };
     } catch (fetchError: unknown) {
       clearTimeout(timeoutId);
       const msg = fetchError instanceof Error ? fetchError.message : String(fetchError);
@@ -208,6 +349,12 @@ export async function saveGoldenSample(sample: GoldenSample): Promise<GoldenSave
  */
 export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
   try {
+    ensureGoldenLocalTable();
+    const localRow = getGlobalDb().prepare(`
+      SELECT COUNT(*) AS total_samples
+      FROM golden_samples
+    `).get() as Record<string, unknown>;
+
     // Try D1 first
     const d1Adapter = getD1Adapter();
     if (d1Adapter) {
@@ -216,7 +363,7 @@ export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
         if (samplesResult.status === 'success' && samplesResult.results) {
           const samples = samplesResult.results;
           return {
-            totalSamples: samples.length,
+            totalSamples: Math.max(samples.length, Number(localRow.total_samples ?? 0)),
             newSinceLastTraining: samples.filter(s => {
               const created = new Date(s.created_at);
               const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
@@ -245,10 +392,16 @@ export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
       if (!response.ok) return null;
 
       const data = await response.json();
-      return data.stats as GoldenDatasetStats;
+      return {
+        ...(data.stats as GoldenDatasetStats),
+        totalSamples: Math.max(Number(localRow.total_samples ?? 0), Number((data.stats as GoldenDatasetStats).totalSamples ?? 0)),
+      };
     } catch (fetchError) {
       clearTimeout(timeoutId);
-      return null;
+      return {
+        totalSamples: Number(localRow.total_samples ?? 0),
+        newSinceLastTraining: 0,
+      };
     }
   } catch {
     logError('GoldenBridge', 'Failed to get golden dataset stats from both D1 and Python');
