@@ -2,6 +2,9 @@ import { getBifrostGateway, type ProviderType } from './bifrost_gateway.js';
 import { getToolRegistry } from './toolRegistry.js';
 import { agentManager } from '../agents/AgentManager.js';
 import { logInfo, logError, logWarn } from '../utils/logger.js';
+import { GraphRagEngine } from './graphRagEngine.js';
+import { ReflectionEngine } from './reflectionEngine.js';
+import { PredictiveIntelligence } from './predictiveIntelligence.js';
 
 export interface ActionTriggered {
   agent: string;
@@ -318,7 +321,14 @@ export class UniversalOrchestratorService {
 
     const runtimeContext = buildRuntimeContext();
     const agentCapabilities = buildAgentCapabilities();
-    const systemPrompt = `${MAGYAR_SYSTEM_PROMPT(toolList, agentCapabilities)}\n\n${runtimeContext}\n\n${this.buildSessionContext(session)}`;
+
+    // Enrich context with advanced intelligence modules
+    const graphContext = this.getGraphRagContext(lastUserMsg);
+    const reflectionContext = this.getReflectionContext();
+    const predictiveContext = this.getPredictiveContext();
+    const advancedContext = [graphContext, reflectionContext, predictiveContext].filter(Boolean).join('\n');
+
+    const systemPrompt = `${MAGYAR_SYSTEM_PROMPT(toolList, agentCapabilities)}\n\n${runtimeContext}\n\n${this.buildSessionContext(session)}${advancedContext ? `\n\n${advancedContext}` : ''}`;
 
     // Build conversation messages — window to last 20 messages to avoid context overflow
     const recentHistory = request.conversationHistory.slice(-20);
@@ -536,6 +546,10 @@ export class UniversalOrchestratorService {
       this.rememberActions(session, actionsTriggered);
       this.rememberAssistantMessage(session, reply);
       this.updateRunbook('general_orchestration', actionsTriggered, reply);
+
+      // ─── Post-response intelligence hooks (async, non-blocking) ───
+      this.postResponseHooks(session.sessionId, lastUserMsg, reply, actionsTriggered, Date.now() - startTime);
+
       this.pushTimeline(missionTimeline, {
         phase: 'response',
         status: 'completed',
@@ -1508,6 +1522,90 @@ export class UniversalOrchestratorService {
     }
 
     return { actions, resultText };
+  }
+
+  // ─── Advanced Intelligence Helpers ─────────────────────────────────────────
+
+  /** Get GraphRAG context for system prompt enrichment (safe, never throws) */
+  private getGraphRagContext(userMessage: string): string {
+    try {
+      const graphRag = GraphRagEngine.getInstance();
+      const result = graphRag.queryContext(userMessage, 3);
+      return result.summary || '';
+    } catch {
+      return '';
+    }
+  }
+
+  /** Get reflection engine context (safe, never throws) */
+  private getReflectionContext(): string {
+    try {
+      const reflection = ReflectionEngine.getInstance();
+      return reflection.getReflectionContext();
+    } catch {
+      return '';
+    }
+  }
+
+  /** Get predictive intelligence context (safe, never throws) */
+  private getPredictiveContext(): string {
+    try {
+      const pi = PredictiveIntelligence.getInstance();
+      return pi.getPredictiveContext();
+    } catch {
+      return '';
+    }
+  }
+
+  /** Post-response intelligence hooks — runs async, non-blocking */
+  private postResponseHooks(
+    sessionId: string,
+    userMessage: string,
+    reply: string,
+    actionsTriggered: ActionTriggered[],
+    durationMs: number,
+  ): void {
+    // Fire-and-forget — errors logged but never block the response
+    (async () => {
+      try {
+        // 1. GraphRAG: ingest the conversation pair
+        const graphRag = GraphRagEngine.getInstance();
+        await graphRag.init();
+        await graphRag.ingestConversation(sessionId, userMessage, reply);
+
+        // 2. Reflection: reflect on task outcomes
+        const reflection = ReflectionEngine.getInstance();
+        for (const action of actionsTriggered) {
+          await reflection.reflect({
+            taskId: `${sessionId}-${action.taskId}`,
+            agent: action.agent,
+            task: action.task,
+            result: action.status === 'completed' ? 'success' : action.status === 'error' ? 'failure' : 'partial',
+            output: reply.slice(0, 200),
+            durationMs,
+            errorMessage: action.status === 'error' ? `Task ${action.task} failed` : undefined,
+          });
+        }
+
+        // 3. Predictive: record signals
+        const pi = PredictiveIntelligence.getInstance();
+        await pi.init();
+        await pi.recordSignal({
+          source: 'orchestrator',
+          action: actionsTriggered.length > 0 ? 'task_completed' : 'interaction',
+          value: durationMs,
+          tags: actionsTriggered.map(a => a.agent),
+        });
+
+        // Run analysis periodically (every 20th interaction)
+        const stats = pi.getStats();
+        if (stats.signals % 20 === 0) {
+          await pi.analyze();
+        }
+      } catch (err) {
+        logWarn('UniversalOrchestratorService', `Post-response hooks error: ${err instanceof Error ? err.message : String(err)}`);
+      }
+    })();
   }
 }
 
