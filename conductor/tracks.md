@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-23T03:28:48.785Z
+**Utolso frissites:** 2026-03-23T04:00:00.790Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 118 total | 5 active | 0 completed | 103 archived
+**Stats:** 113 total | 5 active | 0 completed | 98 archived
 
 ---
 
