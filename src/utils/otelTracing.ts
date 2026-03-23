@@ -11,6 +11,7 @@ import {
   ATTR_SERVICE_VERSION,
 } from "@opentelemetry/semantic-conventions";
 import { BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
+import { trace, SpanStatusCode, type Tracer, type Span } from "@opentelemetry/api";
 
 let sdk: NodeSDK | undefined;
 
@@ -47,4 +48,41 @@ export async function shutdownOtelTracing(): Promise<void> {
     await sdk.shutdown();
     sdk = undefined;
   }
+}
+
+/**
+ * Get a named tracer for creating spans.
+ * Usage: const tracer = getTracer('agent-manager');
+ */
+export function getTracer(name: string): Tracer {
+  return trace.getTracer(name, '1.0.0');
+}
+
+/**
+ * Wrap an async function in an OpenTelemetry span.
+ * Automatically records exceptions and sets status.
+ */
+export async function wrapWithSpan<T>(
+  tracerName: string,
+  spanName: string,
+  attributes: Record<string, string | number | boolean>,
+  fn: (span: Span) => Promise<T>,
+): Promise<T> {
+  const tracer = getTracer(tracerName);
+  return tracer.startActiveSpan(spanName, { attributes }, async (span) => {
+    try {
+      const result = await fn(span);
+      span.setStatus({ code: SpanStatusCode.OK });
+      return result;
+    } catch (error) {
+      span.recordException(error as Error);
+      span.setStatus({
+        code: SpanStatusCode.ERROR,
+        message: (error as Error).message,
+      });
+      throw error;
+    } finally {
+      span.end();
+    }
+  });
 }

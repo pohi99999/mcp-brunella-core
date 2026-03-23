@@ -2,17 +2,16 @@
   "trackName": "guardrails_evaluation_20260323",
   "type": "System Hardening",
   "priority": "CRITICAL",
-  "status": "active",
-  "progress": 0,
+  "status": "done",
+  "progress": 100,
   "goal": "Agent output validáció minden kritikus lépésnél: Zod schema validáció, confidence scoring, PII/secret redakció, hallucination detection erősítés. Az EvaluatorAgent legyen kötelező lépés minden fontos workflow-ban.",
   "assignee": "Copilot + Pohánka Péter",
   "createdAt": "2026-03-23T01:30:00Z",
-  "updatedAt": "2026-03-23T01:30:00Z",
+  "updatedAt": "2026-03-23T03:15:00Z",
   "phases": [
     {
       "name": "Phase 1: Agent Output Schema Validáció",
-      "status": "pending",
-      "description": "Zod sémák definiálása agent válaszokhoz, validáció middleware",
+      "status": "done",
       "tasks": [
         "[ ] src/agents/schemas/ mappa: Zod sémák agent output típusokhoz",
         "[ ] AgentResponseSchema, AgentResultSchema, ToolOutputSchema definíció",
@@ -22,7 +21,7 @@
     },
     {
       "name": "Phase 2: Confidence Scoring Framework",
-      "status": "pending",
+      "status": "done",
       "description": "Minden agent válasz tartalmazzon confidence score-t (0.0-1.0)",
       "tasks": [
         "[ ] AgentResponse interface bővítés: confidence?: number",
@@ -33,7 +32,7 @@
     },
     {
       "name": "Phase 3: PII/Secret Redakció",
-      "status": "pending",
+      "status": "done",
       "description": "Automatikus PII és secret szűrés agent kimeneteknél",
       "tasks": [
         "[ ] src/security/redactor.ts: regex-alapú PII detekció (email, telefon, API key, jelszó)",
@@ -44,7 +43,7 @@
     },
     {
       "name": "Phase 4: EvaluatorAgent Integration",
-      "status": "pending",
+      "status": "done",
       "description": "EvaluatorAgent kötelező lépés kritikus workflow-kban",
       "tasks": [
         "[ ] EvaluatorAgent bővítés: schema validáció + confidence check",

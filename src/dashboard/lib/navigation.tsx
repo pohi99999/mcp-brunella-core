@@ -50,6 +50,8 @@ import { LeadsMasterMonitor } from "@/components/dashboard/LeadsMasterMonitor";
 import { TrojanHorseCommandCenter } from "@/components/dashboard/TrojanHorseCommandCenter";
 import { AutonomousInfraPanel } from "@/components/dashboard/AutonomousInfraPanel";
 import { ShowcasePage } from "@/pages/ShowcasePage";
+import { GuardrailsPanel } from "@/components/dashboard/GuardrailsPanel";
+import { TelemetryPanel } from "@/components/dashboard/TelemetryPanel";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy(async () => {
@@ -156,6 +158,8 @@ export function initializeNavigation() {
     { id: "property-visionary", label: "Property Visionary", icon: Box, component: <PropertyVisionaryWidget /> },
     { id: "marketwatcher", label: "Market Watcher", icon: Activity, component: <MarketWatcherConfig /> },
     { id: "settings", label: "System Config", icon: Settings, component: <SettingsPanel /> },
+    { id: "guardrails", label: "Guardrails", icon: ShieldAlert, component: <GuardrailsPanel /> },
+    { id: "telemetry", label: "Telemetria", icon: Gauge, component: <TelemetryPanel /> },
     { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={<Workflow size={20} />} /> },
     { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={<Sparkles size={20} />} /> },
     { id: "vscode", label: "VSCode Stream", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={<Code2 size={20} />} allowSameOrigin={true} /> },
@@ -170,7 +174,7 @@ export function initializeNavigation() {
   navigationRegistry.registerGroup({ title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "lead-mining", "marketwatcher", "inventory"] });
   navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks"] });
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] });
-  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "files", "settings", "n8n", "langflow"] });
+  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "settings", "n8n", "langflow"] });
 
   logInfo("NavigationRegistry", "Navigation Registry Initialized.");
 }

@@ -5,6 +5,7 @@ import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { aiGateway, type ChatMessage as AIChatMessage } from '../utils/aiGateway.js';
 import { type UniversalToolDefinition } from './toolRegistry.js';
 import { phoenixEventBus } from './phoenixEventBus.js';
+import { wrapWithSpan } from '../utils/otelTracing.js';
 
 /**
  * Bifrost Gateway - Multi-Provider LLM Routing
@@ -390,6 +391,26 @@ export class BifrostGateway {
    * Generate with specific provider
    */
   private async generateWithProvider(
+    provider: ProviderType,
+    options: GenerateOptions
+  ): Promise<GenerateResponse> {
+    const model = options.model || this.providers.get(provider)?.defaultModel || 'unknown';
+
+    return wrapWithSpan(
+      'bas-bifrost-gateway',
+      `bifrost::${provider}`,
+      {
+        'bas.llm.provider': provider,
+        'bas.llm.model': model,
+        'bas.llm.task_type': options.taskType || 'general',
+      },
+      async () => {
+        return this._generateWithProviderInner(provider, options);
+      },
+    );
+  }
+
+  private async _generateWithProviderInner(
     provider: ProviderType,
     options: GenerateOptions
   ): Promise<GenerateResponse> {
