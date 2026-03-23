@@ -1,48 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-23T06:00:00.000Z
+**Utolso frissites:** 2026-03-23T06:29:42.068Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 122 total | 5 active | 7 completed | 98 archived
+**Stats:** 122 total | 14 active | 0 completed | 98 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (12)
-
-### Cloudflare Infrastruktúra Modernizálás (2 track folyamatban)
-
-- [ ] **CF Workflows Orkesztráció** [MEDIUM]
-  - **ID:** `cf_workflows_orchestration_20260323`
-  - **Progress:** 50%
-  - **Kategória:** cloudflare-infrastructure
-  - Mappa: ./tracks/cf_workflows_orchestration_20260323/
-
-- [ ] **CF Hyperdrive — D1 Connection Pooling** [LOW]
-  - **ID:** `cf_hyperdrive_d1_20260323`
-  - **Progress:** 30%
-  - **Kategória:** cloudflare-infrastructure
-  - **Megjegyzés:** Hyperdrive external Postgres-hoz való, BAS D1-et használ natívan
-  - Mappa: ./tracks/cf_hyperdrive_d1_20260323/
-
-### Cloudflare Infrastruktúra — KÉSZ ✅ (7 track)
-
-- [x] **CF API Token Jogosultság Bővítés** ✅ 100%
-  - **ID:** `cf_token_permissions_fix_20260323` — Account ID javítva, OAuth működik
-- [x] **CF R2 Object Storage Aktiválás** ✅ 100%
-  - **ID:** `cf_r2_activation_20260323` — R2 már aktív volt (vodor1 + r2-explorer-bucket-drive)
-- [x] **CF Durable Object Migrációk** ✅ 100%
-  - **ID:** `cf_durable_object_migrations_20260323` — Migrations hozzáadva mindkét wrangler.jsonc-hez
-- [x] **CF Queues — Aszinkron Task Distribution** ✅ 100%
-  - **ID:** `cf_queues_task_distribution_20260323` — 3 queue létrehozva, producer/consumer implementálva
-- [x] **CF R2 Artifact Storage** ✅ 100%
-  - **ID:** `cf_r2_artifact_storage_20260323` — R2ArtifactManager, API endpointok
-- [x] **CF Workers AI Modell Bővítés** ✅ 100%
-  - **ID:** `cf_workers_ai_models_20260323` — llama-3.3-70b, deepseek-r1, phi-4 hozzáadva
-- [x] **CF Analytics Engine — Egyedi Metrikák** ✅ 100%
-  - **ID:** `cf_analytics_engine_20260323` — BASAnalytics class, agent telemetria integráció
-
-### Egyéb tervezett trackek
+## Tervezett Szalak (Proposed) (10)
 
 - [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
   - **ID:** `cloudflare_workers_migration_20260226`
@@ -100,13 +66,58 @@
 
 ---
 
-## Aktiv Szalak (Active) (5)
+## Aktiv Szalak (Active) (14)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
   - **Progress:** 60%
   - **Assignee:** Claude (Phase 1-2 Complete)
   - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
+
+- [x] **Cloudflare Analytics Engine Egyedi Metrikák** [LOW]
+  - **ID:** `cf_analytics_engine_20260323`
+  - **Progress:** 100%
+  - Mappa: ./tracks/cf_analytics_engine_20260323/
+
+- [x] **Durable Object Migrations Konfiguráció** [HIGH]
+  - **ID:** `cf_durable_object_migrations_20260323`
+  - **Progress:** 100%
+  - Mappa: ./tracks/cf_durable_object_migrations_20260323/
+
+- [ ] **Hyperdrive Connection Pooling D1 Teljesítményhez** [LOW]
+  - **ID:** `cf_hyperdrive_d1_20260323`
+  - **Progress:** 30%
+  - Mappa: ./tracks/cf_hyperdrive_d1_20260323/
+
+- [x] **Cloudflare Queues Aszinkron Task Elosztás** [HIGH]
+  - **ID:** `cf_queues_task_distribution_20260323`
+  - **Progress:** 100%
+  - Mappa: ./tracks/cf_queues_task_distribution_20260323/
+
+- [x] **Cloudflare R2 Object Storage Aktiválás** [CRITICAL]
+  - **ID:** `cf_r2_activation_20260323`
+  - **Progress:** 100%
+  - Mappa: ./tracks/cf_r2_activation_20260323/
+
+- [x] **R2 Alapú Agent Artifact Tárolás** [HIGH]
+  - **ID:** `cf_r2_artifact_storage_20260323`
+  - **Progress:** 100%
+  - Mappa: ./tracks/cf_r2_artifact_storage_20260323/
+
+- [x] **Cloudflare API Token Jogosultság Bővítés** [CRITICAL]
+  - **ID:** `cf_token_permissions_fix_20260323`
+  - **Progress:** 100%
+  - Mappa: ./tracks/cf_token_permissions_fix_20260323/
+
+- [x] **Workers AI Modell Paletta Bővítés** [MEDIUM]
+  - **ID:** `cf_workers_ai_models_20260323`
+  - **Progress:** 100%
+  - Mappa: ./tracks/cf_workers_ai_models_20260323/
+
+- [x] **Cloudflare Workflows Orkesztráció** [MEDIUM] ✅
+  - **ID:** `cf_workflows_orchestration_20260323`
+  - **Progress:** 100%
+  - Mappa: ./tracks/cf_workflows_orchestration_20260323/
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`

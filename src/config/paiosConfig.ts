@@ -26,14 +26,15 @@ const ProviderSchema = z.object({
 
 export const PAIOSConfigSchema = z.object({
   orchestrator: z.object({
-    default_model: z.enum(['gpt4o', 'gemini', 'local', 'anthropic']).default('gemini'),
+    default_model: z.enum(['github', 'gemini', 'local', 'anthropic', 'cloudflare']).default('github'),
     max_tasks_per_request: z.number().int().min(1).max(20).default(5),
   }),
   providers: z.object({
-    gpt4o: ProviderSchema.optional(),
+    github: ProviderSchema.optional(),
     gemini: ProviderSchema.optional(),
     local: ProviderSchema.optional(),
     anthropic: ProviderSchema.optional(),
+    cloudflare: ProviderSchema.optional(),
   }),
   phoenix: z.object({
     retry_max_attempts: z.number().int().min(1).max(10).default(3),
@@ -51,7 +52,7 @@ export const PAIOSConfigSchema = z.object({
 
 export type PAIOSConfig = z.infer<typeof PAIOSConfigSchema>;
 export type ProviderConfig = z.infer<typeof ProviderSchema>;
-export type ModelProvider = 'gpt4o' | 'gemini' | 'local' | 'anthropic';
+export type ModelProvider = 'github' | 'gemini' | 'local' | 'anthropic' | 'cloudflare';
 
 // ============================================================================
 // CONFIG LOADER
@@ -77,7 +78,7 @@ export function loadPaiosConfig(configPath = 'paios.config.yaml'): PAIOSConfig {
     
     const fallbackConfig = {
       orchestrator: {
-        default_model: (process.env.PAIOS_DEFAULT_MODEL as ModelProvider) ?? 'gemini',
+        default_model: (process.env.PAIOS_DEFAULT_MODEL as ModelProvider) ?? 'github',
         max_tasks_per_request: 5,
       },
       providers: {

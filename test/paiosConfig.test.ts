@@ -162,9 +162,9 @@ describe('paiosConfig', () => {
             model: 'gemini-2.0-flash-exp',
             api_key_env: 'GEMINI_API_KEY'
           },
-          gpt4o: {
+          github: {
             enabled: false,
-            model: 'gpt-4o',
+            model: 'gpt-4.1',
             api_key_env: 'GITHUB_PAT'
           },
           local: {
@@ -188,9 +188,9 @@ describe('paiosConfig', () => {
     });
 
     it('should return undefined for disabled provider', () => {
-      const gpt4oConfig = getProviderConfig('gpt4o');
+      const githubConfig = getProviderConfig('github');
       
-      expect(gpt4oConfig).toBeUndefined();
+      expect(githubConfig).toBeUndefined();
     });
 
     it('should return undefined for non-existent provider', () => {
@@ -293,7 +293,7 @@ describe('paiosConfig', () => {
         },
         providers: {
           gemini: { enabled: true, model: 'gemini-2.0-flash-exp', api_key_env: 'GEMINI_API_KEY' },
-          gpt4o: { enabled: false, model: 'gpt-4o', api_key_env: 'GITHUB_PAT' },
+          github: { enabled: false, model: 'gpt-4.1', api_key_env: 'GITHUB_PAT' },
           local: { enabled: true, model: 'qwen2.5-coder:7b', base_url_env: 'OLLAMA_BASE_URL' },
           anthropic: { enabled: true, model: 'claude-sonnet-3-5', api_key_env: 'ANTHROPIC_API_KEY' }
         }
@@ -305,7 +305,7 @@ describe('paiosConfig', () => {
       const enabledProviders = getEnabledProviders();
 
       expect(enabledProviders).toEqual(['gemini', 'local', 'anthropic']);
-      expect(enabledProviders).not.toContain('gpt4o');
+      expect(enabledProviders).not.toContain('github');
     });
 
     it('should return empty array if no providers enabled', () => {
@@ -317,7 +317,7 @@ describe('paiosConfig', () => {
         },
         providers: {
           gemini: { enabled: false, model: 'gemini-2.0-flash-exp', api_key_env: 'GEMINI_API_KEY' },
-          gpt4o: { enabled: false, model: 'gpt-4o', api_key_env: 'GITHUB_PAT' }
+          github: { enabled: false, model: 'gpt-4.1', api_key_env: 'GITHUB_PAT' }
         }
       };
 

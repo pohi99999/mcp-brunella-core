@@ -46,11 +46,11 @@ describe('PAIOS Config — Smoke', () => {
     expect(typeof config).toBe('object');
   });
 
-  it('orchestrator.default_model alapértéke "gemini"', async () => {
+  it('orchestrator.default_model alapértéke "github"', async () => {
     vi.spyOn(fs, 'existsSync').mockReturnValue(false);
     const { loadPaiosConfig } = await import('../src/config/paiosConfig.js');
     const config = loadPaiosConfig();
-    expect(config.orchestrator.default_model).toBe('gemini');
+    expect(config.orchestrator.default_model).toBe('github');
   });
 
   it('orchestrator.max_tasks_per_request alapértéke 5', async () => {
