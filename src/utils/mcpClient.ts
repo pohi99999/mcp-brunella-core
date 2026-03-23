@@ -47,16 +47,14 @@ export class BrunellaClient {
     const defaultTimeout = Number(process.env.BRUNELLA_MCP_CONNECT_TIMEOUT_MS || "8000");
     const timeoutMs = options.timeoutMs ?? defaultTimeout;
 
-    for (const server of servers) {
-      if (server.disabled) {
-        logInfo("MCP", `Skipping disabled server: ${server.name}`);
-        continue;
-      }
+    const activeServers = servers.filter((s) => !s.disabled);
+    for (const s of servers.filter((s) => s.disabled)) {
+      logInfo("MCP", `Skipping disabled server: ${s.name}`);
+    }
 
+    const connectOne = async (server: McpServerConfig): Promise<void> => {
       let transport: StdioClientTransport | undefined;
-
       try {
-        // For 'brunella-core', we use the build path directly if it's relative
         const command = server.command;
         const args = [...server.args];
 
@@ -64,7 +62,6 @@ export class BrunellaClient {
           args[0] = path.resolve(process.cwd(), "build", "index.js");
         }
 
-        // Resolve env values: replace "xxxxx" placeholders with process.env equivalents
         const resolvedEnv: Record<string, string> = {};
         if (server.env) {
           for (const [key, val] of Object.entries(server.env)) {
@@ -73,12 +70,11 @@ export class BrunellaClient {
         }
 
         transport = new StdioClientTransport({
-          command: command,
-          args: args,
+          command,
+          args,
           env: {
             ...process.env,
             ...resolvedEnv,
-            // Force Web UI disabled for MCP CLI sub-processes to avoid port conflicts
             WEB_UI_ENABLED: "false",
             BRUNELLA_QUIET_LOGS: "true",
           },
@@ -99,18 +95,15 @@ export class BrunellaClient {
         ]);
         this.clients.set(server.name, client);
         this.transports.set(server.name, transport);
-        // logInfo('MCP', `Connected to MCP server: ${server.name}`);
       } catch (e: any) {
         if (transport && transport.close) {
-          try {
-            await transport.close();
-          } catch {
-            // no-op cleanup best effort
-          }
+          try { await transport.close(); } catch { /* best effort */ }
         }
         logError("MCP", `Failed to connect to ${server.name}: ${e.message}`);
       }
-    }
+    };
+
+    await Promise.allSettled(activeServers.map(connectOne));
   }
 
   async listTools() {

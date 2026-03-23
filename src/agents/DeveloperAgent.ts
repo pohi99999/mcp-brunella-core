@@ -390,6 +390,7 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
     try {
       if (/commit/i.test(task)) {
         const message = context?.commitMessage || task;
+        logInfo(this.name, `[AUTO-COMMIT] ${new Date().toISOString()} — "${message.slice(0, 80)}"`);
         execSync(`git add -A && git commit -m "${message}"`, {
           encoding: "utf-8",
         });

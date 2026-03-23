@@ -20,6 +20,8 @@
     "cli": "node build/cli.js",
     "cli:hu": "node build/cli-hu.js",
     "test": "npm run build && vitest run",
+    "test:fast": "npm run build && vitest run --reporter=dot --exclude 'test/cli-e2e*' --exclude 'test/phase*' --exclude 'test/swarm_smoke*'",
+    "test:nightly": "npm run build && vitest run",
     "lint": "eslint src/ test/ --max-warnings=0",
     "lint:fix": "eslint src/ test/ --fix",
     "test:watch": "vitest",

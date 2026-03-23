@@ -1,2 +1,2 @@
 npm run build || exit 1
-npx vitest run --reporter=dot < /dev/null || exit 1
+npx vitest run --reporter=dot --exclude "test/cli-e2e*" --exclude "test/phase*" --exclude "test/swarm_smoke*" < /dev/null || exit 1
