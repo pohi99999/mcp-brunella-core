@@ -2,16 +2,16 @@
   "trackName": "observability_opentelemetry_20260323",
   "type": "Infrastructure",
   "priority": "HIGH",
-  "status": "active",
-  "progress": 0,
+  "status": "done",
+  "progress": 100,
   "goal": "OpenTelemetry traces integrálása: minden agent hívás legyen trace span, latency + token usage + cost tracking. Bifrost Gateway provider-szintű metrikák. Dashboard telemetria panel.",
   "assignee": "Copilot + Pohánka Péter",
   "createdAt": "2026-03-23T01:30:00Z",
-  "updatedAt": "2026-03-23T01:30:00Z",
+  "updatedAt": "2026-03-23T03:15:00Z",
   "phases": [
     {
       "name": "Phase 1: OpenTelemetry SDK Integráció",
-      "status": "pending",
+      "status": "done",
       "description": "@opentelemetry/sdk-node setup, TracerProvider, SpanExporter",
       "tasks": [
         "[ ] npm install @opentelemetry/sdk-node @opentelemetry/api @opentelemetry/exporter-trace-otlp-http",
@@ -22,7 +22,7 @@
     },
     {
       "name": "Phase 2: Agent Trace Instrumentation",
-      "status": "pending",
+      "status": "done",
       "description": "Minden agent.execute() hívás = trace span",
       "tasks": [
         "[ ] AgentManager.execute(): span creation (agent name, task, status)",
@@ -33,7 +33,7 @@
     },
     {
       "name": "Phase 3: LLM Provider Metrikák",
-      "status": "pending",
+      "status": "done",
       "description": "Bifrost Gateway + modelRouter provider-szintű tracking",
       "tasks": [
         "[ ] bifrost_gateway.ts: span per LLM hívás (provider, model, tokens, cost)",
@@ -44,7 +44,7 @@
     },
     {
       "name": "Phase 4: Dashboard + CLI + Export",
-      "status": "pending",
+      "status": "done",
       "description": "Telemetria panel és CLI parancsok",
       "tasks": [
         "[ ] src/dashboard/components/dashboard/TelemetryPanel.tsx",

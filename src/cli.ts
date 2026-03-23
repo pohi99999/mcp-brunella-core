@@ -39,6 +39,7 @@ import { registerMarketCommands } from "./cli/marketCommands.js";
 import { registerWorkspaceCommands } from "./cli/workspaceCommands.js";
 import { dashboardCommand } from "./cli/dashboardCommands.js";
 import { registerTaskCommands } from "./cli/taskCommands.js";
+import { registerGuardrailsCommands, registerTelemetryCommands } from "./cli/guardrailsCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -1573,6 +1574,10 @@ registerMarketCommands(program);
 // Register Workspace commands (Google Workspace API)
 registerWorkspaceCommands(program);
 dashboardCommand(program);
+
+// Register Guardrails & Telemetry commands (Track #1 + #2)
+registerGuardrailsCommands(program);
+registerTelemetryCommands(program);
 
 // Register Conductor commands (Track State Management) - MOVED AFTER conductorCmd definition
 

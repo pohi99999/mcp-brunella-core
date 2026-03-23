@@ -49,6 +49,7 @@ import {
   recordHttpRequest,
 } from "../utils/metrics.js";
 import { createTelemetryRouter } from "./telemetryRoutes.js";
+import { createGuardrailsRouter } from "./guardrailsRoutes.js";
 import { createAuditRouter } from "./auditRoutes.js";
 import { createSpecRouter } from "./specRoutes.js";
 import { createPhoenixRouter } from "./phoenixRoutes.js";
@@ -196,6 +197,7 @@ export async function startWebServer() {
 
   const v1Router = createV1Router();
   v1Router.use("/telemetry", createTelemetryRouter());
+  v1Router.use("/guardrails", createGuardrailsRouter());
   v1Router.use("/audit", createAuditRouter());
   v1Router.use("/specs", createSpecRouter());
   v1Router.use("/phoenix", createPhoenixRouter());

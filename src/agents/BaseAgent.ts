@@ -10,6 +10,10 @@ import { IAgent, ISwarmContext, AgentHandoff, AgentResponse } from './types.js';
 import { formatAgentResult } from '../utils/responseFormatter.js';
 import { searchRAG, addToIndex } from '../utils/rag.js';
 import { logInfo, logError } from '../utils/logger.js';
+import { validateAgentResult } from './middleware/validateOutput.js';
+import { calculateConfidence } from './scoring/confidenceCalculator.js';
+import { wrapWithSpan } from '../utils/otelTracing.js';
+import { safeRedactAgentOutput } from '../security/redactor.js';
 
 export interface AgentContext {
   task?: string;
@@ -60,8 +64,12 @@ export abstract class BaseAgent implements IAgent {
   async execute(task: string, context?: any): Promise<AgentResponse> {
     const testMode = this.isTestMode();
 
-    // 1. Kognitív memória lekérdezése végrehajtás előtt
-    const pastExperiences = testMode ? [] : await this.queryMemory(task, 3);
+    // 1. Kognitív memória lekérdezése végrehajtás előtt (OTel sub-span)
+    const pastExperiences = testMode ? [] : await wrapWithSpan(
+      'bas-base-agent', `${this.name}::rag-query`,
+      { 'bas.agent.name': this.name, 'bas.operation': 'rag_query' },
+      () => this.queryMemory(task, 3),
+    );
     
     const agentContext: AgentContext = {
       task,
@@ -71,28 +79,44 @@ export abstract class BaseAgent implements IAgent {
 
     const result = await this.executeTask(agentContext);
 
-    // 2. Tapasztalat mentése a memóriába (siker és hiba is)
+    // 2. Guardrails: AgentResult validáció
+    validateAgentResult(result, this.name);
+
+    // 3. Confidence scoring
+    const confidence = calculateConfidence(result);
+    if (!result.metadata) result.metadata = {};
+    result.metadata.confidence = confidence.score;
+    result.metadata.confidenceFactors = confidence.factors;
+
+    // 4. Tapasztalat mentése a memóriába (OTel sub-span)
     // Teszt módban kihagyjuk a perzisztens RAG IO-t a stabilitás/gyorsaság miatt.
     if (!testMode) {
       const outcome = result.success ? 'SIKER' : 'HIBA';
       const experienceContent = `Feladat: "${task}" | Eredmény: ${outcome} | Üzenet: ${result.message}`;
-      await this.saveToMemory(experienceContent, {
-        status: result.success ? 'success' : 'error',
-        taskId: context?.taskId
-      });
+      await wrapWithSpan(
+        'bas-base-agent', `${this.name}::memory-save`,
+        { 'bas.agent.name': this.name, 'bas.operation': 'memory_save', 'bas.confidence': confidence.score },
+        () => this.saveToMemory(experienceContent, {
+          status: result.success ? 'success' : 'error',
+          taskId: context?.taskId
+        }),
+      );
     }
 
     // Format result as Hungarian human-readable text
     const formattedMessage = formatAgentResult(result, this.name, { useEmojis: true });
 
-    return {
+    // 5. PII/Secret redakció az output-on
+    const response: AgentResponse = {
       success: result.success,
       status: result.success ? 'success' : 'error',
-      message: formattedMessage, // Magyar nyelvű szöveg
+      message: formattedMessage,
       data: result.data,
       error: result.success ? undefined : result.message,
       handoff: result.handoff,
     };
+
+    return safeRedactAgentOutput(response, this.name);
   }
 
   /**
