@@ -859,6 +859,160 @@ export async function toggleTrackTodo(params: {
   return data as TrackTodosResponse;
 }
 
+export interface AutonomousReplicationNode {
+  nodeId: string;
+  region: string;
+  status: 'active' | 'bootstrapping' | 'failed' | 'retired';
+  load: number;
+  parentNodeId?: string;
+  capabilities: string[];
+}
+
+export interface AutonomousReplicationPlan {
+  planId: string;
+  sourceNodeId: string;
+  targetNodeId: string;
+  targetRegion: string;
+  risk: 'low' | 'medium' | 'high';
+  status: 'planned' | 'approved' | 'bootstrapping' | 'active' | 'failed' | 'cancelled';
+  reason: string;
+}
+
+export interface AutonomousRecommendation {
+  recommendationId: string;
+  type: 'scale_up' | 'scale_down' | 'heal' | 'rebalance' | 'replicate' | 'protect';
+  targetResourceId: string;
+  reason: string;
+  priority: 'low' | 'medium' | 'high' | 'critical';
+}
+
+export interface AutonomousGoalItem {
+  goalId: string;
+  title: string;
+  category: 'resilience' | 'efficiency' | 'autonomy' | 'alignment' | 'growth';
+  status: 'proposed' | 'active' | 'blocked' | 'completed' | 'abandoned';
+  priority: number;
+}
+
+export interface AutonomousInfraState {
+  hyperKernel: {
+    latestCycle: {
+      cycleId: string;
+      snapshotHealth: string;
+    } | null;
+    stats: {
+      kernel: { directives: number };
+      optimizer: { pending: number };
+      goals: { active: number };
+    };
+  };
+  replication: {
+    analysis: {
+      activeNodes: number;
+      bootstrappingNodes: number;
+      plansPendingApproval: number;
+      replicasByRegion: Record<string, number>;
+    };
+    nodes: AutonomousReplicationNode[];
+    plans: AutonomousReplicationPlan[];
+  };
+  infra: {
+    incidents: Array<{ incidentId: string; status: string }>;
+    recommendations: AutonomousRecommendation[];
+  };
+  optimizer: {
+    forecast: {
+      latencyMs: number;
+      resilienceScore: number;
+      trend: 'improving' | 'stable' | 'degrading';
+    };
+  };
+  selfModel: {
+    state: {
+      health: string;
+      coherence: number;
+      blindSpots: Array<{ area: string; severity: string; description: string }>;
+    };
+  };
+  goals: {
+    items: AutonomousGoalItem[];
+  };
+}
+
+export async function getAutonomousInfraState(): Promise<AutonomousInfraState> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/autonomous-infra/state`,
+    {},
+    DEFAULT_TIMEOUT_MS,
+  );
+  if (!response.ok) throw new Error(`Autonomous Infra state: HTTP ${response.status}`);
+  return safeJson<AutonomousInfraState>(response);
+}
+
+export async function runAutonomousInfraCycle(reason: string): Promise<unknown> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/autonomous-infra/hyperkernel/cycle`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ reason }),
+    },
+    DEFAULT_TIMEOUT_MS,
+  );
+  const data = await safeJson<unknown | { error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(getErrorMessage(data) || 'Autonomous cycle failed');
+  return data;
+}
+
+export async function planAutonomousReplica(
+  sourceNodeId: string,
+  targetRegion: string,
+  reason: string,
+): Promise<AutonomousReplicationPlan> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/autonomous-infra/self-replication/plan`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ sourceNodeId, targetRegion, reason }),
+    },
+    DEFAULT_TIMEOUT_MS,
+  );
+  const data = await safeJson<AutonomousReplicationPlan | { error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(getErrorMessage(data) || 'Replication plan failed');
+  return data as AutonomousReplicationPlan;
+}
+
+export async function createAutonomousGoal(goal: {
+  title: string;
+  category: 'resilience' | 'efficiency' | 'autonomy' | 'alignment' | 'growth';
+  metric: string;
+  direction: 'increase' | 'decrease';
+  targetValue: number;
+  currentValue: number;
+  priority: number;
+  rationale: string;
+}): Promise<AutonomousGoalItem> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/autonomous-infra/goals`,
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(goal),
+    },
+    DEFAULT_TIMEOUT_MS,
+  );
+  const data = await safeJson<AutonomousGoalItem | { error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(getErrorMessage(data) || 'Goal creation failed');
+  return data as AutonomousGoalItem;
+}
+
 /**
  * Ollama API
  */

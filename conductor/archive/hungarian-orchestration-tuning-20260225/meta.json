@@ -1,0 +1,14 @@
+{
+  "id": "hungarian-orchestration-tuning-20260225",
+  "title": "Magyar Nyelvű Orkesztráció és Intelligens Irányítás",
+  "created": "2026-02-25",
+  "completed": "2026-02-25",
+  "owner": "Gemini",
+  "summary": "A BAS rendszer MI modelljeinek (GPT-4o, Gemini) finomhangolása a folyékony, professzionális magyar nyelvű kommunikációra és a szándék-alapú feladatirányításra.",
+  "status": "archived",
+  "progress": 100,
+  "archivedAt": "2026-03-22T22:47:34Z",
+  "archiveReason": "Archived after completed-track audit and conductor cleanup (2026-03-22).",
+  "updated": "2026-03-22T22:47:34Z",
+  "updatedAt": "2026-03-22T22:47:34Z"
+}

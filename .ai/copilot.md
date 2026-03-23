@@ -1,5 +1,162 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-22 - 🗄️ Completed conductor cleanup: 16 kész track archiválva, CLI lista auditálva
+
+**Track:** conductor admin cleanup / completed track archival audit
+
+**Cél:** Ellenőrizni, hogy a `node build/cli.js tracks list` kimenete mennyiben tükrözi a valós conductor állapotot, majd az összes ténylegesen 100%-os / completed szálat archiválni és a conductor dokumentációt a valós fájlrendszerállapotra szinkronizálni.
+
+**Audit eredmény:**
+
+- A CLI-ben felsorolt **nem-archivált trackhalmaz** alapvetően a live `conductor/tracks/` tartalmát követte.
+- Ugyanakkor a kimenet **nem volt teljesen megbízható megjelenítés szempontjából**:
+  - `Title: N/A` minden sornál, mert a CLI `t.title`-t vár, miközben a `GET /api/v1/tracks` route `name` mezőt ad vissza.
+  - `Összesen: undefined track`, mert a CLI `result.count` mezőt vár, miközben a route csak `{ tracks }` payloadot ad, külön `count` nélkül.
+  - Több korábbi completed track 0%-nak látszott, mert a meta-fájlok egy részében a `status: completed` megvolt, de a `progress` mező hiányzott (`null` → CLI oldalon `0%`).
+
+**Elvégzett admin műveletek:**
+
+- 13 completed track fizikailag átmozgatva `conductor/archive/` alá:
+  - `campaign-generator-agent-20260225`
+  - `cserszegtomaj-campaign-20260225`
+  - `dashboard-500-and-test-timeouts-20260320`
+  - `dashboard-stabilization-20260225`
+  - `functional-integrity-fix-20260225`
+  - `hungarian-orchestration-tuning-20260225`
+  - `innovation_bridge_20260225`
+  - `living_documentation_system_20260213`
+  - `orchestrator_chat_upgrade_20260320`
+  - `orchestrator_cognition_upgrade_20260320`
+  - `orchestrator_safe_autopilot_20260320`
+  - `orchestrator_state_machine_20260321`
+  - `trojan-horse-campaign-20260224`
+
+- 3 duplikált completed/live példány kivezetve a `conductor/tracks/` alól, mert már létezett velük byte-azonos archív másolat:
+  - `master_track_1_lead_mining_20260223`
+  - `master_track_2_invoice_to_sheets_20260223`
+  - `master_track_3_market_watcher_20260223`
+
+- Az érintett archive meta-fájlok normalizálva:
+  - `status: archived`
+  - `progress: 100`
+  - `archivedAt`
+  - `archiveReason`
+  - hiányzó `completed` mező visszatöltve, ahol csak `completedAt` állt rendelkezésre
+
+- `node build/cli.js conductor rescan` lefuttatva
+  - `conductor/project_state.json` újragenerálva
+  - `conductor/tracks.md` újragenerálva
+
+**Új conductor truth:**
+
+- `conductor/tracks.md`
+  - **Stats:** `105 total | 5 active | 0 completed | 90 archived`
+- A live backlog immár csak a ténylegesen nem-archivált 15 tracket tartalmazza (`5 active + 10 proposed`).
+
+**Megjegyzés:**
+
+- A conductor állapot most konzisztens.
+- A `tracks list` parancs viszont továbbra is külön CLI/API szerződési hibát hordoz (`name/title`, `count` hiány), ezért a címek és az összesítő darabszám még külön javítást igényelnek, ha azt is el akarjuk varrni.
+
+---
+
+## 2026-03-22 - 🔎 Track audit: Robotkez aktiválás, OWL + Invoice visszatartva
+
+**Track:** `robotkez_comet_upgrade_20260222`, `owl_agent_coordinator_20260321`, `invoice-e2e-testing-20260217`
+
+**Cél:** A felhasználó által megjelölt három szál tényleges állapotának ellenőrzése, és csak a valósan folyó / megkezdett szál conductor-aktiválása.
+
+**Eredmény:**
+
+- **RobotkezV2 Comet (`robotkez_comet_upgrade_20260222`) → ACTIVE / 65%**
+  - bizonyítékok:
+    - `src/agents/CometBrowserAgent.ts` létezik és regisztrált az `src/agents/registry.json`-ban active agentként
+    - `myai/agents/comet/` alatt megvan a planner / actor / critic / memory / orchestrator implementáció
+    - `myai/server.py` tartalmazza a `POST /comet/execute` végpontot
+    - korábbi naplók szerint: Phase 2 kész, Phase 3 folyamatban, dashboard integráció részben kész
+  - conductor sync:
+    - `conductor/tracks/robotkez_comet_upgrade_20260222/meta.json` → `active`, `progress: 65`
+    - phase státuszok átvezetve: 1-2 complete, 3 in_progress, 4 partial
+    - `conductor/project_state.json` és `conductor/tracks.md` szinkronizálva
+
+- **OWL Agent Coordinator (`owl_agent_coordinator_20260321`) → marad PROPOSED**
+  - csak approved design spec található: `docs/superpowers/specs/2026-03-21-owl-multi-agent-conflict-resolution-design.md`
+  - nincs implementációs nyom a `src/**` alatt (`AgentCoordinator`, `DeadlockDetector` nem található)
+
+- **Invoice E2E (`invoice-e2e-testing-20260217`) → marad PROPOSED**
+  - van Phase 0 jellegű fájl: `test/invoice_automation_e2e_test.py`
+  - de a saját meta explicit módon jelzi: `implementation_allowed: false`
+  - hiányzik a későbbi fázisokból a guide/workflow (`docs/INVOICE_E2E_GUIDE.md`, `.github/workflows/invoice-e2e-tests.yml` nincs meg)
+
+**Döntés:**
+
+- A három közül jelenleg **csak a Robotkez track tekinthető ténylegesen aktív fejlesztési szálnak**.
+- Az OWL és Invoice nem indult el implementációs szinten olyan mértékben, hogy most helyesen active-nek lehessen tekinteni.
+
+---
+
+## 2026-03-22 - 🗄️ Remote Layer Phase 2-6 archiválás + globális nyitott-track audit
+
+**Track:** `remote_layer_phase2_discovery_auth_20260322`, `remote_layer_phase3_mobile_voice_20260322`, `remote_layer_phase4_distributed_mesh_20260322`, `remote_layer_phase5_adaptive_swarms_20260322`, `remote_layer_phase6_collective_evolution_20260322`
+
+**Cél:** Ellenőrizni, hogy a Remote Layer Phase 2–6 szálak ténylegesen elkészültek-e, majd a conductor adminban is 100%/archived állapotba hozni őket. Emellett globális audit a szétszórt, archivált helyen ragadt „nyitott” meta státuszokra.
+
+**Verifikációs bizonyítékok:**
+
+- **Phase 2**
+  - dedikált teszt: `test/phase2_discovery_auth.test.ts`
+  - létező modulok: `src/core/MCPRouter.ts`, `src/core/mcpDiscovery.ts`, `src/security/remoteAuth.ts`, `src/server/middleware/authRemote.ts`, `src/core/remoteSessionStore.ts`, `src/server/routes/remote.ts`
+  - a Phase 2 scope a `remote.ts` route-on keresztül él, nem külön `remote_actions.ts` fájlnév alatt
+
+- **Phase 3**
+  - dedikált teszt: `test/phase3_mobile_voice_paios.test.ts`
+  - létező modulok: `src/core/voicePipeline.ts`, `src/core/mobileClientBootstrap.ts`, `src/core/remoteEventBridge.ts`, `src/core/remoteFileAccess.ts`, `src/core/paiosRemoteIntegration.ts`, `src/server/routes/remote.ts`
+
+- **Phase 4**
+  - Copilot implementációs napló: `✅ Phase 4: Distributed Mesh & Edge Routing — COMPLETE (100%)`
+  - dedikált teszt: `test/phase4_mesh.test.ts`
+
+- **Phase 5**
+  - Copilot implementációs napló: `✅ Phase 5: Adaptive Swarms & Workflow Intelligence — COMPLETE (100%)`
+  - dedikált teszt: `test/phase5_swarms.test.ts`
+
+- **Phase 6**
+  - Copilot implementációs napló: `✅ Phase 6: Evolutionary Collective Intelligence — COMPLETE (100%)`
+  - dedikált teszt: `test/phase6_evolution.test.ts`
+
+**Elvégzett conductor admin műveletek:**
+
+- `conductor/archive/remote_layer_phase2_discovery_auth_20260322/`
+- `conductor/archive/remote_layer_phase3_mobile_voice_20260322/`
+- `conductor/archive/remote_layer_phase4_distributed_mesh_20260322/`
+- `conductor/archive/remote_layer_phase5_adaptive_swarms_20260322/`
+- `conductor/archive/remote_layer_phase6_collective_evolution_20260322/`
+  - a track mappák fizikailag átmozgatva az archívumba
+  - `meta.json` státusz mindegyiknél `archived`, `progress: 100`, `completedAt`, `archivedAt`, `archiveReason`
+
+- `conductor/project_state.json`
+  - Phase 2–6 bejegyzések `archived` státuszra állítva
+  - `progress: 100`
+  - `_sourcePath` átvezetve `conductor/archive/...` helyre
+  - `_isArchived: true`
+
+- `conductor/tracks.md`
+  - Phase 2–6 kikerült a proposed listából
+  - archived számláló 72 → 77
+
+**Globális audit megállapítás:**
+
+- A **live backlog** szempontjából a mérvadó hely továbbra is: `conductor/tracks/` + `conductor/project_state.json`.
+- Ugyanakkor a repóban **találhatók archív mappákban bent ragadt `active` / `in_progress` meta státuszok**, pl.:
+  - `conductor/archive/data_flywheel_incubator_20260205/meta.json`
+  - `conductor/archive/cean_phase_2_fleet_management_20260215/meta.json`
+  - `conductor/archive/cean_phase2_c_prometheus_20250216/meta.json`
+  - `conductor/archive/bas_comprehensive_test_protocol_20260210/meta.json`
+  - valamint további történeti példányok az `archive/legacy-archive/` alatt
+- Ezek jelenleg **nem a live conductor indexet hajtják**, inkább történeti inkonzisztenciák / backup-maradványok. A mostani módosítás ezeket nem masszívta át automatikusan, csak a live Remote Layer Phase 2–6 állapotát tette konzisztenssé.
+
+---
+
 ## 2026-03-22 - 🗄️ Track admin szinkron + Phase 7 archiválás
 
 **Track:** `remote_layer_phase7_superintelligent_infra_20260322`, `dashboard-500-and-test-timeouts-20260320`, `living_documentation_system_20260213`, `orchestrator_chat_upgrade_20260320`, `orchestrator_cognition_upgrade_20260320`, `orchestrator_safe_autopilot_20260320`

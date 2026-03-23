@@ -44,7 +44,7 @@ export class BrunellaClient {
       ? allServers.filter((server) => server.name === "brunella-core")
       : allServers;
 
-    const defaultTimeout = Number(process.env.BRUNELLA_MCP_CONNECT_TIMEOUT_MS || "3000");
+    const defaultTimeout = Number(process.env.BRUNELLA_MCP_CONNECT_TIMEOUT_MS || "8000");
     const timeoutMs = options.timeoutMs ?? defaultTimeout;
 
     for (const server of servers) {

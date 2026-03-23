@@ -1,0 +1,13 @@
+{
+  "id": "remote_layer_phase1_foundation_20260322",
+  "title": "Brunella Remote Layer — Fázis 1: Remote Foundation",
+  "status": "active",
+  "priority": "high",
+  "createdAt": "2026-03-22",
+  "owner": "GitHub Copilot",
+  "progress": 0,
+  "tags": ["remote-layer", "api", "websocket", "mcp-router", "dashboard", "paios"],
+  "sourceDocument": ".worktrees/Brunella_superinnteligencia.md",
+  "phase": 1,
+  "dependencies": []
+}

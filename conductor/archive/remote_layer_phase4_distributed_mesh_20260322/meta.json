@@ -1,0 +1,20 @@
+{
+  "id": "remote_layer_phase4_distributed_mesh_20260322",
+  "title": "Brunella Remote Layer — Fázis 4: Distributed Mesh & Edge Routing",
+  "status": "archived",
+  "priority": "high",
+  "createdAt": "2026-03-22",
+  "owner": "GitHub Copilot",
+  "progress": 100,
+  "tags": ["remote-layer", "mesh", "edge", "offline-sync", "federation", "phoenix"],
+  "sourceDocument": ".worktrees/Brunella_superinnteligencia.md",
+  "phase": 4,
+  "dependencies": [
+    "remote_layer_phase1_foundation_20260322",
+    "remote_layer_phase2_discovery_auth_20260322",
+    "remote_layer_phase3_mobile_voice_20260322"
+  ],
+  "completedAt": "2026-03-22",
+  "archivedAt": "2026-03-22",
+  "archiveReason": "Verified complete via Copilot implementation log, dedicated tests, and live conductor audit."
+}

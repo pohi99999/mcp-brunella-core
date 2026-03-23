@@ -48,6 +48,7 @@ import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
 import { PropertyVisionaryWidget } from "@/components/dashboard/PropertyVisionaryWidget";
 import { LeadsMasterMonitor } from "@/components/dashboard/LeadsMasterMonitor";
 import { TrojanHorseCommandCenter } from "@/components/dashboard/TrojanHorseCommandCenter";
+import { AutonomousInfraPanel } from "@/components/dashboard/AutonomousInfraPanel";
 import { ShowcasePage } from "@/pages/ShowcasePage";
 import { logInfo } from "@/utils/logger";
 
@@ -107,6 +108,7 @@ export function initializeNavigation() {
     { id: "cean", label: "CEAN Orchestrator", icon: Rocket, component: <CEANLayout /> },
     { id: "cloudflare", label: "Cloudflare Deploy", icon: Cloud, component: <CloudflareDeployment /> },
     { id: "fleet_manager", label: "Fleet Manager", icon: Cpu, component: <FleetManager /> },
+    { id: "autonomy", label: "Autonomous Infra", icon: Rocket, component: <AutonomousInfraPanel /> },
     { id: "chat", label: "Neural Chat", icon: MessageSquare, component: <NeuralLinkChat /> },
     { id: "paios", label: "PAIOS Orchestrator", icon: Brain, component: <PAIOSOrchestratorChat /> },
     { id: "phoenix", label: "Phoenix Events", icon: Flame, component: <PhoenixEventsPanel /> },
@@ -166,7 +168,7 @@ export function initializeNavigation() {
   navigationRegistry.registerGroup({ title: "AI & Agents", icon: Brain, items: ["chat", "paios", "phoenix", "management", "decomposer", "incubator", "knowledge", "developer", "edge", "robotkez", "jules"] });
   navigationRegistry.registerGroup({ title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "enterprise-analytics"] });
   navigationRegistry.registerGroup({ title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "lead-mining", "marketwatcher", "inventory"] });
-  navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "tasks"] });
+  navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks"] });
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] });
   navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "files", "settings", "n8n", "langflow"] });
 

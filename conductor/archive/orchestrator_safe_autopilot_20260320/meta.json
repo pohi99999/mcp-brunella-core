@@ -1,0 +1,22 @@
+{
+  "id": "orchestrator_safe_autopilot_20260320",
+  "title": "Safe Autopilot Orchestrator",
+  "priority": "high",
+  "createdAt": "2026-03-20",
+  "owner": "Copilot",
+  "tags": [
+    "orchestrator",
+    "autopilot",
+    "approval",
+    "incident",
+    "timeline"
+  ],
+  "completedAt": "2026-03-20",
+  "status": "archived",
+  "progress": 100,
+  "completed": "2026-03-20",
+  "archivedAt": "2026-03-22T22:47:34Z",
+  "archiveReason": "Archived after completed-track audit and conductor cleanup (2026-03-22).",
+  "updated": "2026-03-22T22:47:34Z",
+  "updatedAt": "2026-03-22T22:47:34Z"
+}
