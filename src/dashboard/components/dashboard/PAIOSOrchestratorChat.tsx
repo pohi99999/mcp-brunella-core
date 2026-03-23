@@ -455,17 +455,17 @@ export function PAIOSOrchestratorChat() {
 
     return (
         <Card className="h-full flex flex-col">
-            <CardHeader className="border-b">
+            <CardHeader className="border-b py-3 px-4">
                 <div className="flex items-center justify-between gap-2">
-                    <CardTitle className="flex items-center gap-2">
-                        <Brain className="w-5 h-5 text-blue-500" />
-                        PAIOS Orchestrator Chat
+                    <CardTitle className="flex items-center gap-2 text-base">
+                        <Brain className="w-4 h-4 text-blue-500" />
+                        PAIOS Chat
                     </CardTitle>
                     <div className="flex flex-wrap items-center gap-1 justify-end">
                         <Button
                             variant="outline"
                             size="sm"
-                            className="gap-1"
+                            className="gap-1 h-7"
                             title="Új session"
                             onClick={ startNewSession }
                         >
@@ -482,7 +482,7 @@ export function PAIOSOrchestratorChat() {
                                     variant={ isActive ? 'default' : 'outline' }
                                     size="sm"
                                     onClick={ () => setSelectedProvider(provider.id as ModelProvider) }
-                                    className="gap-1"
+                                    className="gap-1 h-7"
                                     title={ provider.label }
                                 >
                                     <Icon className={ `w-3 h-3 ${isActive ? 'text-white' : visual.color}` } />
@@ -493,7 +493,7 @@ export function PAIOSOrchestratorChat() {
                         <select
                             value={ selectedModel }
                             onChange={ (e) => setSelectedModel(e.target.value) }
-                            className="h-8 rounded-md border bg-background px-2 text-xs"
+                            className="h-7 rounded-md border bg-background px-2 text-xs"
                             title="Model választás"
                         >
                             { activeProviderCatalog.models.map((model) => (
@@ -504,22 +504,24 @@ export function PAIOSOrchestratorChat() {
                         </select>
                     </div>
                 </div>
-                <p className="text-xs text-zinc-500 mt-1">
-                    Universal Orchestrator Chat: magyar kérés → tool calling → agent delegálás
-                </p>
-                <p className="text-[10px] text-zinc-500 mt-1">
-                    Session: { sessionId }
-                </p>
+                <div className="flex items-center gap-3 mt-1">
+                    <p className="text-[10px] text-zinc-500">
+                        magyar kérés → tool calling → agent delegálás
+                    </p>
+                    <p className="text-[10px] text-zinc-600">
+                        Session: <span className="font-mono">{ sessionId.slice(-12) }</span>
+                    </p>
+                </div>
             </CardHeader>
 
-            <CardContent className="flex-1 flex flex-col p-0 overflow-hidden">
-                <ScrollArea className="flex-1 p-4">
-                    <div className="space-y-4">
+            <CardContent className="flex-1 flex flex-col p-0 overflow-hidden min-h-0">
+                <ScrollArea className="flex-1 p-3">
+                    <div className="space-y-3">
                         { messages.length === 0 && (
-                            <div className="text-center text-zinc-500 py-8">
-                                <Brain className="w-12 h-12 mx-auto mb-2 opacity-50" />
-                                <p className="text-sm">Adj egy feladatot magyarul...</p>
-                                <p className="text-xs mt-2 opacity-70">Példa: "Készíts egy új API endpointot TDD-vel"</p>
+                            <div className="text-center text-zinc-500 py-16">
+                                <Brain className="w-10 h-10 mx-auto mb-3 opacity-30" />
+                                <p className="text-sm font-medium">Adj egy feladatot magyarul...</p>
+                                <p className="text-xs mt-1 opacity-60">Példa: "Készíts egy új API endpointot TDD-vel"</p>
                             </div>
                         ) }
 
@@ -672,8 +674,8 @@ export function PAIOSOrchestratorChat() {
                     </div>
                 </ScrollArea>
 
-                <div className="border-t p-4 bg-background">
-                    <div className="flex gap-2">
+                <div className="border-t p-3 bg-background shrink-0">
+                    <div className="flex gap-2 items-end">
                         <Textarea
                             value={ input }
                             onChange={ (e) => setInput(e.target.value) }
@@ -683,15 +685,15 @@ export function PAIOSOrchestratorChat() {
                                     void sendMessage();
                                 }
                             } }
-                            placeholder="Írd be a feladatot magyarul... (Enter = küldés, Shift+Enter = új sor)"
-                            className="resize-none min-h-[60px]"
+                            placeholder="Írd be a feladatot magyarul... (Enter = küldés)"
+                            className="resize-none min-h-[44px] max-h-[120px] text-sm"
                             disabled={ isLoading }
                         />
                         <Button
                             onClick={ startListening }
                             variant="outline"
                             size="icon"
-                            className={ `self-end transition-all duration-300 ${isListening ? 'bg-red-500/20 text-red-500 border-red-500/50 animate-pulse' : ''}` }
+                            className={ `shrink-0 h-9 w-9 transition-all duration-300 ${isListening ? 'bg-red-500/20 text-red-500 border-red-500/50 animate-pulse' : ''}` }
                             title="Hangutasítás (Magyar)"
                         >
                             { isSpeaking ? (
@@ -700,12 +702,12 @@ export function PAIOSOrchestratorChat() {
                                 <Mic className={ `w-4 h-4 ${isListening ? 'text-red-500' : ''}` } />
                             ) }
                         </Button>
-                        <Button onClick={ () => void sendMessage() } disabled={ !input.trim() || isLoading } className="self-end">
+                        <Button onClick={ () => void sendMessage() } disabled={ !input.trim() || isLoading } className="shrink-0 h-9 w-9" size="icon">
                             { isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" /> }
                         </Button>
                     </div>
                     { isLoading && (
-                        <p className="text-xs text-zinc-500 mt-2 animate-pulse">⏳ Orchestrator gondolkodik...</p>
+                        <p className="text-xs text-zinc-500 mt-1 animate-pulse">⏳ Orchestrator gondolkodik...</p>
                     ) }
                 </div>
             </CardContent>
