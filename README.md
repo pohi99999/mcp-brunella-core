@@ -442,7 +442,9 @@ Minden feladatnak nyoma kell legyen. Ami nincs írásban, az nem létezik.
 ### Teszt Parancsok
 
 ```bash
-npm test                      # Build + összes teszt
+npm run test:fast             # Gyors unit tesztek (~1-2 perc) — commit előtt
+npm test                      # Build + összes teszt (~10 perc) — track lezáráskor / push előtt
+npm run test:nightly          # Azonos mint npm test — éjszakai / CI futtatásra
 npm run test:watch            # Watch mód (fejlesztés közben)
 npx vitest run test/foo.test.ts  # Egy teszt fájl
 npm run test:coverage         # Lefedettségi jelentés
@@ -452,16 +454,32 @@ cd myai
 pytest tests/
 ```
 
+### 📋 Tesztelési Protokoll — Mikor Mit Kell Futtatni
+
+| Esemény | Parancs | Kötelező? |
+|---------|---------|-----------|
+| Commit előtt | `npm run test:fast` (auto, pre-commit hook) | ✅ IGEN |
+| Track lezárása | `npm test` (teljes suite) + `npm run smoke` | ✅ IGEN |
+| Push előtt | `npm test` (auto, pre-push hook) | ✅ IGEN |
+| Nagyobb refaktor | `npm test` + E2E smoke manuálisan | ✅ IGEN |
+| Éjszakai / CI | `npm run test:nightly` | ajánlott |
+| Napi fejlesztés | csak `test:fast` | elegendő |
+
+> **Szabály:** E2E és smoke tesztek (`test/cli-e2e*`, `test/phase*`, `test/swarm_smoke*`) **NEM futnak** minden commitnál.
+> Ezeket **track lezárásakor** vagy **push előtt** kell futtatni (`npm test`).
+> A pre-push hook automatikusan lefuttatja a teljes suite-ot.
+
 ### Mit Ellenőrizz Munka Előtt
 
 - [ ] `npm run build` - TypeScript fordítás OK
-- [ ] `npm test` - Tesztek PASS
+- [ ] `npm run test:fast` - Gyors tesztek PASS
 - [ ] `git status` - Nincs váratlan változás
 
 ### Mit Ellenőrizz Munka Után
 
 - [ ] `npm run build` - Még mindig OK
-- [ ] `npm test` - Még mindig PASS
+- [ ] `npm run test:fast` - Még mindig PASS
+- [ ] Track lezárásnál: `npm test` + `npm run smoke` — KÖTELEZŐ
 - [ ] `.ai/<te_neved>.md` - Napló frissítve
 - [ ] `python scripts/sync_foszal.py` - FOSZAL szinkronizálva
 
