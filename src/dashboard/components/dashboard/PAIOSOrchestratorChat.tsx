@@ -4,11 +4,10 @@
  * @track orchestrator_chat_upgrade_20260320
  */
 
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
 import {
     Send,
@@ -22,10 +21,26 @@ import {
     Mic,
     Volume2,
     RefreshCw,
+    ChevronDown,
+    ChevronUp,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { useSocket } from '@/context/SocketContext';
 import { getLLMModelCatalog, type LLMCatalogProvider } from '@/lib/apiService';
+import { Marked } from 'marked';
+
+const markedInstance = new Marked({
+    breaks: true,
+    gfm: true,
+});
+
+function renderMarkdown(text: string): string {
+    try {
+        return markedInstance.parse(text) as string;
+    } catch {
+        return text;
+    }
+}
 
 interface PlanStep {
     phase: string;
@@ -210,10 +225,12 @@ export function PAIOSOrchestratorChat() {
         return generated;
     });
     const scrollRef = useRef<HTMLDivElement>(null);
+    const chatContainerRef = useRef<HTMLDivElement>(null);
     const { socket } = useSocket();
 
     const [isListening, setIsListening] = useState(false);
     const [isSpeaking, setIsSpeaking] = useState(false);
+    const [expandedMeta, setExpandedMeta] = useState<Record<number, boolean>>({});
     const audioRef = useRef<HTMLAudioElement | null>(null);
 
     useEffect(() => {
@@ -293,32 +310,61 @@ export function PAIOSOrchestratorChat() {
     };
 
     const playTTS = async (text: string) => {
+        const plainText = text.replace(/[#*_`~\[\]()>|-]/g, '').replace(/\n{2,}/g, '. ').trim();
+        if (!plainText) return;
+
         try {
             setIsSpeaking(true);
-            const response = await fetch('/api/v1/voice/tts', {
+            // OpenAI Nova TTS via backend /api/tts (returns audio/mpeg blob)
+            const response = await fetch('/api/tts', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ text }),
+                body: JSON.stringify({
+                    text: plainText.slice(0, 4000),
+                    voice: 'nova',
+                    model: 'tts-1',
+                    speed: 1.0,
+                }),
             });
-            const data = await response.json();
-            if (data.url) {
-                if (audioRef.current) {
-                    audioRef.current.pause();
-                }
-                const audio = new Audio(data.url);
+
+            if (response.ok && response.headers.get('content-type')?.includes('audio')) {
+                if (audioRef.current) audioRef.current.pause();
+                const audioBlob = await response.blob();
+                const audioUrl = URL.createObjectURL(audioBlob);
+                const audio = new Audio(audioUrl);
                 audioRef.current = audio;
-                audio.onended = () => setIsSpeaking(false);
-                audio.play();
-            } else {
-                setIsSpeaking(false);
+                audio.onended = () => { setIsSpeaking(false); URL.revokeObjectURL(audioUrl); };
+                audio.onerror = () => { setIsSpeaking(false); URL.revokeObjectURL(audioUrl); };
+                await audio.play();
+                toast.success('🎙️ Brunella beszél... (Nova)');
+                return;
             }
         } catch {
+            // Backend TTS nem elérhető, fallback a böngésző speechSynthesis-re
+        }
+
+        // Fallback: böngésző beépített speechSynthesis
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(plainText.slice(0, 500));
+            utterance.lang = 'hu-HU';
+            utterance.rate = 1.05;
+            utterance.onend = () => setIsSpeaking(false);
+            utterance.onerror = () => setIsSpeaking(false);
+            window.speechSynthesis.speak(utterance);
+        } else {
             setIsSpeaking(false);
         }
     };
 
     useEffect(() => {
-        scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+        const container = chatContainerRef.current;
+        if (!container) return;
+        // Auto-scroll csak ha a user a chat alján van (±80px)
+        const isNearBottom = container.scrollHeight - container.scrollTop - container.clientHeight < 80;
+        if (isNearBottom) {
+            scrollRef.current?.scrollIntoView({ behavior: 'smooth' });
+        }
     }, [messages]);
 
     useEffect(() => {
@@ -515,7 +561,7 @@ export function PAIOSOrchestratorChat() {
             </CardHeader>
 
             <CardContent className="flex-1 flex flex-col p-0 overflow-hidden min-h-0">
-                <ScrollArea className="flex-1 p-3">
+                <div ref={ chatContainerRef } className="flex-1 overflow-y-auto p-3 scroll-smooth">
                     <div className="space-y-3">
                         { messages.length === 0 && (
                             <div className="text-center text-zinc-500 py-16">
@@ -541,28 +587,21 @@ export function PAIOSOrchestratorChat() {
                                             : 'bg-muted'
                                         }` }
                                 >
-                                    <p className="text-sm whitespace-pre-wrap">{ msg.content }</p>
+                                    { msg.role === 'user' ? (
+                                        <p className="text-sm whitespace-pre-wrap">{ msg.content }</p>
+                                    ) : (
+                                        <div
+                                            className="text-sm prose prose-sm dark:prose-invert prose-p:my-1 prose-headings:my-2 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5 max-w-none [&_hr]:my-2"
+                                            dangerouslySetInnerHTML={ { __html: renderMarkdown(msg.content) } }
+                                        />
+                                    ) }
 
                                     { msg.role === 'assistant' && (
                                         <div className="mt-2 flex flex-wrap items-center gap-1 text-xs opacity-75">
                                             { msg.provider && <Badge variant="outline" className="text-[10px]">{ msg.provider }</Badge> }
                                             { msg.model && <Badge variant="outline" className="text-[10px]">{ msg.model }</Badge> }
-                                            { msg.roleLabel && <Badge variant="outline" className="text-[10px]">{ msg.roleLabel }</Badge> }
-                                            { msg.fallbackUsed && <Badge variant="outline" className="text-[10px]">fallback</Badge> }
-                                            { msg.phoenixTriggered && <Badge variant="outline" className="text-[10px]">phoenix</Badge> }
                                             { typeof msg.thinkingMs === 'number' && <span>⏱️ { msg.thinkingMs } ms</span> }
-                                            { msg.riskLevel && <Badge variant="outline" className="text-[10px]">risk: { msg.riskLevel }</Badge> }
                                         </div>
-                                    ) }
-
-                                    { msg.role === 'assistant' && msg.fallbackUsed && (
-                                        <p className="text-xs mt-2 opacity-80">
-                                            ♻️ Fallback aktiválva{ msg.fallbackReason ? ` (${msg.fallbackReason})` : '' }
-                                        </p>
-                                    ) }
-
-                                    { msg.role === 'assistant' && msg.runbookHint && (
-                                        <p className="text-xs mt-2 opacity-80">📚 { msg.runbookHint }</p>
                                     ) }
 
                                     { msg.role === 'assistant' && msg.approvalRequired && msg.approvalId && (
@@ -602,59 +641,77 @@ export function PAIOSOrchestratorChat() {
                                         </div>
                                     ) }
 
-                                    { msg.role === 'assistant' && msg.missionTimeline && msg.missionTimeline.length > 0 && (
-                                        <div className="mt-3 border-t pt-2 space-y-1">
-                                            <p className="text-xs font-semibold opacity-75">🧭 Mission Timeline</p>
-                                            { msg.missionTimeline.slice(-8).map((entry, timelineIndex) => (
-                                                <div key={ `${idx}-timeline-${timelineIndex}` } className="text-xs flex items-start gap-2">
-                                                    <Badge variant="outline" className="text-[10px] shrink-0">{ entry.phase }</Badge>
-                                                    <span className="opacity-80">[{ entry.status }] { entry.detail }</span>
-                                                </div>
-                                            )) }
-                                        </div>
-                                    ) }
+                                    { /* Összecsukható részletek (timeline, plan, tasks) */ }
+                                    { msg.role === 'assistant' && (msg.missionTimeline?.length || msg.plan?.length || msg.taskIds?.length || msg.runbookHint || msg.actionsTriggered?.length) && (
+                                        <div className="mt-2 border-t pt-1">
+                                            <button
+                                                onClick={ () => setExpandedMeta((prev) => ({ ...prev, [idx]: !prev[idx] })) }
+                                                className="flex items-center gap-1 text-[10px] text-zinc-400 hover:text-zinc-200 transition-colors"
+                                            >
+                                                { expandedMeta[idx] ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" /> }
+                                                Részletek
+                                                { msg.runbookHint && <span className="opacity-60 ml-1">| 📚 { msg.runbookHint }</span> }
+                                            </button>
 
-                                    { msg.plan && msg.plan.length > 0 && (
-                                        <div className="mt-3 space-y-2 border-t pt-2">
-                                            <p className="text-xs font-semibold opacity-70">📋 Execution Plan:</p>
-                                            { msg.plan.map((step, i) => (
-                                                <div key={ i } className="flex items-start gap-2 text-xs">
-                                                    <Badge variant="outline" className="shrink-0">
-                                                        { step.phase }
-                                                    </Badge>
-                                                    <div className="flex-1">
-                                                        <span className="font-medium">{ step.agent }</span>
-                                                        <span className="opacity-70"> → { step.task }</span>
-                                                    </div>
-                                                </div>
-                                            )) }
-                                        </div>
-                                    ) }
+                                            { expandedMeta[idx] && (
+                                                <div className="mt-1 space-y-1 text-xs animate-in slide-in-from-top-1 duration-200">
+                                                    { msg.fallbackUsed && (
+                                                        <p className="opacity-80">
+                                                            ♻️ Fallback{ msg.fallbackReason ? ` (${msg.fallbackReason})` : '' }
+                                                        </p>
+                                                    ) }
 
-                                    { msg.taskIds && msg.taskIds.length > 0 && (
-                                        <div className="mt-2 flex flex-wrap gap-1">
-                                            <span className="text-xs opacity-70">🎯 Tasks:</span>
-                                            { msg.taskIds.map((id) => (
-                                                <Badge key={ id } variant="secondary" className="text-xs">
-                                                    #{ id }
-                                                </Badge>
-                                            )) }
-                                        </div>
-                                    ) }
+                                                    { msg.missionTimeline && msg.missionTimeline.length > 0 && (
+                                                        <div className="space-y-0.5">
+                                                            <p className="font-semibold opacity-75">🧭 Mission Timeline</p>
+                                                            { msg.missionTimeline.slice(-8).map((entry, timelineIndex) => (
+                                                                <div key={ `${idx}-timeline-${timelineIndex}` } className="flex items-start gap-2">
+                                                                    <Badge variant="outline" className="text-[10px] shrink-0">{ entry.phase }</Badge>
+                                                                    <span className="opacity-80">[{ entry.status }] { entry.detail }</span>
+                                                                </div>
+                                                            )) }
+                                                        </div>
+                                                    ) }
 
-                                    { msg.actionsTriggered && msg.actionsTriggered.length > 0 && (
-                                        <div className="mt-2 border-t pt-2 text-xs space-y-1">
-                                            <p className="opacity-70">🤖 Delegált műveletek:</p>
-                                            { msg.actionsTriggered.map((action) => (
-                                                <div key={ `${action.agent}-${action.taskId}` } className="flex items-center justify-between gap-2">
-                                                    <span className="truncate">
-                                                        <strong>{ action.agent }</strong>: { action.task }
-                                                    </span>
-                                                    <Badge variant="secondary" className="text-[10px]">
-                                                        #{ action.taskId }
-                                                    </Badge>
+                                                    { msg.plan && msg.plan.length > 0 && (
+                                                        <div className="space-y-1">
+                                                            <p className="font-semibold opacity-70">📋 Execution Plan</p>
+                                                            { msg.plan.map((step, i) => (
+                                                                <div key={ i } className="flex items-start gap-2">
+                                                                    <Badge variant="outline" className="shrink-0">{ step.phase }</Badge>
+                                                                    <div className="flex-1">
+                                                                        <span className="font-medium">{ step.agent }</span>
+                                                                        <span className="opacity-70"> → { step.task }</span>
+                                                                    </div>
+                                                                </div>
+                                                            )) }
+                                                        </div>
+                                                    ) }
+
+                                                    { msg.taskIds && msg.taskIds.length > 0 && (
+                                                        <div className="flex flex-wrap gap-1">
+                                                            <span className="opacity-70">🎯 Tasks:</span>
+                                                            { msg.taskIds.map((id) => (
+                                                                <Badge key={ id } variant="secondary" className="text-xs">#{ id }</Badge>
+                                                            )) }
+                                                        </div>
+                                                    ) }
+
+                                                    { msg.actionsTriggered && msg.actionsTriggered.length > 0 && (
+                                                        <div className="space-y-0.5">
+                                                            <p className="opacity-70">🤖 Delegált műveletek:</p>
+                                                            { msg.actionsTriggered.map((action) => (
+                                                                <div key={ `${action.agent}-${action.taskId}` } className="flex items-center justify-between gap-2">
+                                                                    <span className="truncate">
+                                                                        <strong>{ action.agent }</strong>: { action.task }
+                                                                    </span>
+                                                                    <Badge variant="secondary" className="text-[10px]">#{ action.taskId }</Badge>
+                                                                </div>
+                                                            )) }
+                                                        </div>
+                                                    ) }
                                                 </div>
-                                            )) }
+                                            ) }
                                         </div>
                                     ) }
 
@@ -672,7 +729,7 @@ export function PAIOSOrchestratorChat() {
                         )) }
                         <div ref={ scrollRef } />
                     </div>
-                </ScrollArea>
+                </div>
 
                 <div className="border-t p-3 bg-background shrink-0">
                     <div className="flex gap-2 items-end">
