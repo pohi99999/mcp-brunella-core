@@ -33,9 +33,14 @@ export interface Env {
   FAST_MODEL: string;
   R2_PREFIX: string;
 
+  // Workflows
+  HEALTH_CHECK_WORKFLOW: Workflow;
+  TASK_PIPELINE_WORKFLOW: Workflow;
+
   // Configuration
   BAS_LOCAL_URL?: string;
   BAS_API_KEY?: string;
+  DISCORD_WEBHOOK_URL?: string;
 }
 
 export interface TaskResult {
