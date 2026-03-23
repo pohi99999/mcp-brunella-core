@@ -1,0 +1,28 @@
+{
+  "mode": "blacklist",
+  "whitelist": [
+    "api.openai.com",
+    "api.anthropic.com",
+    "generativelanguage.googleapis.com",
+    "models.inference.ai.azure.com",
+    "api.github.com",
+    "*.githubusercontent.com",
+    "registry.npmjs.org",
+    "pypi.org",
+    "*.cloudflare.com",
+    "*.workers.dev"
+  ],
+  "blacklist": [
+    "*.onion",
+    "*.i2p",
+    "*.local",
+    "*.internal",
+    "*.corp",
+    "*.intranet"
+  ],
+  "blockMetadataEndpoints": true,
+  "blockPrivateNetworks": true,
+  "blockLocalhost": true,
+  "maxRequestsPerMinute": 100,
+  "logDenials": true
+}

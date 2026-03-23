@@ -44,6 +44,8 @@ import { registerMemoryCommands } from "./cli/memoryCommands.js";
 import { registerWorkflowCommands } from "./cli/workflowCommands.js";
 import { registerSwarmCommands } from "./cli/swarmCommands.js";
 import { registerToolDiscoveryCommands } from "./cli/toolDiscoveryCommands.js";
+import { registerSecurityCommands } from "./cli/securityCommands.js";
+import { registerChromeAcpCommands } from "./cli/chromeAcpCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -1588,6 +1590,8 @@ registerWorkflowCommands(program);
 // Register Swarm & Tool Discovery commands (Track #5 + #6)
 registerSwarmCommands(program);
 registerToolDiscoveryCommands(program);
+registerSecurityCommands(program);
+registerChromeAcpCommands(program);
 
 // Register Conductor commands(Track State Management) - MOVED AFTER conductorCmd definition
 

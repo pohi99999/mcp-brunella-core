@@ -56,6 +56,7 @@ import { MemoryPanel } from "@/components/dashboard/MemoryPanel";
 import { WorkflowPanel } from "@/components/dashboard/WorkflowPanel";
 import SwarmPanel from "@/components/dashboard/SwarmPanel";
 import ToolDiscoveryPanel from "@/components/dashboard/ToolDiscoveryPanel";
+import SecurityPanel from "@/components/dashboard/SecurityPanel";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy(async () => {
@@ -166,11 +167,13 @@ export function initializeNavigation() {
     { id: "settings", label: "System Config", icon: Settings, component: <SettingsPanel /> },
     { id: "guardrails", label: "Guardrails", icon: ShieldAlert, component: <GuardrailsPanel /> },
     { id: "telemetry", label: "Telemetria", icon: Gauge, component: <TelemetryPanel /> },
+    { id: "chrome-acp", label: "Chrome ACP", icon: Code2, component: <EmbeddedWorkflow title="Chrome ACP Browser" url="http://localhost:9315" icon={ <Code2 size={ 20 } /> } allowSameOrigin={ true } /> },
     { id: "n8n", label: "n8n Automation", icon: Workflow, component: <EmbeddedWorkflow title="n8n Automation" url="http://localhost:5678" icon={ <Workflow size={ 20 } /> } /> },
     { id: "langflow", label: "Langflow Orchestration", icon: Sparkles, component: <EmbeddedWorkflow title="Langflow Orchestration" url="http://localhost:3000" icon={ <Sparkles size={ 20 } /> } /> },
     { id: "vscode", label: "VSCode Stream", icon: Code2, component: <EmbeddedWorkflow title="VSCode — Brunella Workspace" url="http://localhost:8080" icon={ <Code2 size={ 20 } /> } allowSameOrigin={ true } /> },
     { id: "swarm-panel", label: "Swarm Intelligence", icon: Users, component: <SwarmPanel /> },
     { id: "tool-discovery", label: "Tool Discovery", icon: Wrench, component: <ToolDiscoveryPanel /> },
+    { id: "security-panel", label: "Security Monitor", icon: Shield, component: <SecurityPanel /> },
   ];
 
   items.forEach(item => navigationRegistry.registerItem(item));
@@ -182,7 +185,7 @@ export function initializeNavigation() {
   navigationRegistry.registerGroup({ title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "lead-mining", "marketwatcher", "inventory"] });
   navigationRegistry.registerGroup({ title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery"] });
   navigationRegistry.registerGroup({ title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] });
-  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "settings", "n8n", "langflow"] });
+  navigationRegistry.registerGroup({ title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "security-panel", "chrome-acp", "settings", "n8n", "langflow"] });
 
   logInfo("NavigationRegistry", "Navigation Registry Initialized.");
 }
