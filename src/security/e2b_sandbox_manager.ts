@@ -240,7 +240,7 @@ print(f"Installed {len(packages)} packages")
           const filepath = path.join(targetPath, filename);
 
           if (this.validator.validate(filepath, 'write')) {
-            await fs.writeFile(filepath, stdoutText.trim(), 'utf-8');
+            await this.writeArtifactFile(filepath, stdoutText.trim(), 'utf-8');
             exported.push(filepath);
             logInfo('E2BSandboxManager', `Exported JSON: ${filepath}`);
           }
@@ -260,7 +260,7 @@ print(f"Installed {len(packages)} packages")
           if (this.validator.validate(filepath, 'write')) {
             // Decode base64 PNG
             const buffer = Buffer.from(result.png, 'base64');
-            await fs.writeFile(filepath, buffer);
+            await this.writeArtifactFile(filepath, buffer);
             exported.push(filepath);
             logInfo('E2BSandboxManager', `Exported PNG: ${filepath}`);
           }
@@ -272,7 +272,7 @@ print(f"Installed {len(packages)} packages")
           const filepath = path.join(targetPath, filename);
 
           if (this.validator.validate(filepath, 'write')) {
-            await fs.writeFile(filepath, result.html, 'utf-8');
+            await this.writeArtifactFile(filepath, result.html, 'utf-8');
             exported.push(filepath);
             logInfo('E2BSandboxManager', `Exported HTML: ${filepath}`);
           }
@@ -286,7 +286,7 @@ print(f"Installed {len(packages)} packages")
             const filepath = path.join(targetPath, filename);
 
             if (this.validator.validate(filepath, 'write')) {
-              await fs.writeFile(filepath, result.text, 'utf-8');
+              await this.writeArtifactFile(filepath, result.text, 'utf-8');
               exported.push(filepath);
               logInfo('E2BSandboxManager', `Exported JSON: ${filepath}`);
             }
@@ -302,6 +302,24 @@ print(f"Installed {len(packages)} packages")
       logError('E2BSandboxManager', `Artifact export failed: ${error}`);
       return exported;
     }
+  }
+
+  private async writeArtifactFile(
+    filepath: string,
+    content: string | Buffer,
+    encoding?: BufferEncoding
+  ): Promise<void> {
+    await fs.mkdir(path.dirname(filepath), { recursive: true });
+
+    const tempPath = `${filepath}.tmp-${process.pid}-${Date.now()}`;
+    if (typeof content === 'string') {
+      await fs.writeFile(tempPath, content, encoding ?? 'utf-8');
+    } else {
+      await fs.writeFile(tempPath, content);
+    }
+
+    await fs.rename(tempPath, filepath);
+    await fs.access(filepath);
   }
 
   /**

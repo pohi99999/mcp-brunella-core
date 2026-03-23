@@ -1,34 +1,6 @@
 {
-  "lastUpdated": "2026-03-23T03:00:00.898Z",
+  "lastUpdated": "2026-03-23T03:28:48.785Z",
   "tracks": [
-    {
-      "id": "agent_memory_structured_20260323",
-      "name": "agent_memory_structured_20260323",
-      "status": "active",
-      "priority": "high",
-      "progress": 100,
-      "assignee": "Copilot + Pohánka Péter",
-      "tags": [],
-      "dependencies": [
-        "guardrails_evaluation_20260323"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\agent_memory_structured_20260323",
-      "_isArchived": false
-    },
-    {
-      "id": "agent_orchestration_dag_20260323",
-      "name": "agent_orchestration_dag_20260323",
-      "status": "active",
-      "priority": "high",
-      "progress": 100,
-      "assignee": "Copilot + Pohánka Péter",
-      "tags": [],
-      "dependencies": [
-        "observability_opentelemetry_20260323"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\agent_orchestration_dag_20260323",
-      "_isArchived": false
-    },
     {
       "id": "apify_deep_scraping_agent_20260223",
       "name": "apify_deep_scraping_agent_20260223",
@@ -97,18 +69,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\gemini_git_agent_20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "guardrails_evaluation_20260323",
-      "name": "guardrails_evaluation_20260323",
-      "status": "active",
-      "priority": "critical",
-      "progress": 100,
-      "assignee": "Copilot + Pohánka Péter",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\guardrails_evaluation_20260323",
       "_isArchived": false
     },
     {
@@ -195,20 +155,6 @@
       "_isArchived": false
     },
     {
-      "id": "mcp_tool_discovery_20260323",
-      "name": "mcp_tool_discovery_20260323",
-      "status": "active",
-      "priority": "medium",
-      "progress": 0,
-      "assignee": "Copilot + Pohánka Péter",
-      "tags": [],
-      "dependencies": [
-        "observability_opentelemetry_20260323"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\mcp_tool_discovery_20260323",
-      "_isArchived": false
-    },
-    {
       "id": "micro_csr_automator_20260212",
       "name": "Micro-Local CSR Automator (Neighborhood Watchman)",
       "status": "proposed",
@@ -226,18 +172,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\micro_csr_automator_20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "observability_opentelemetry_20260323",
-      "name": "observability_opentelemetry_20260323",
-      "status": "active",
-      "priority": "high",
-      "progress": 100,
-      "assignee": "Copilot + Pohánka Péter",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\observability_opentelemetry_20260323",
       "_isArchived": false
     },
     {
@@ -325,35 +259,6 @@
       "_isArchived": false
     },
     {
-      "id": "sandbox_security_hardening_20260323",
-      "name": "sandbox_security_hardening_20260323",
-      "status": "active",
-      "priority": "low",
-      "progress": 0,
-      "assignee": "Copilot + Pohánka Péter",
-      "tags": [],
-      "dependencies": [
-        "guardrails_evaluation_20260323"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\sandbox_security_hardening_20260323",
-      "_isArchived": false
-    },
-    {
-      "id": "swarm_intelligence_v2_20260323",
-      "name": "swarm_intelligence_v2_20260323",
-      "status": "active",
-      "priority": "medium",
-      "progress": 0,
-      "assignee": "Copilot + Pohánka Péter",
-      "tags": [],
-      "dependencies": [
-        "agent_memory_structured_20260323",
-        "agent_orchestration_dag_20260323"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\swarm_intelligence_v2_20260323",
-      "_isArchived": false
-    },
-    {
       "id": "agent_architect_upgrade_20260205",
       "name": "Agent Architect 2.0 Meta-Ügynök",
       "status": "archived",
@@ -370,6 +275,40 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_architect_upgrade_20260205",
+      "_isArchived": true
+    },
+    {
+      "id": "agent_memory_structured_20260323",
+      "name": "agent_memory_structured_20260323",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-23T01:30:00Z",
+      "updated": "2026-03-23T12:45:00Z",
+      "completed": "2026-03-23T12:00:00Z",
+      "assignee": "Copilot + Pohánka Péter",
+      "tags": [],
+      "dependencies": [
+        "guardrails_evaluation_20260323"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_memory_structured_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "agent_orchestration_dag_20260323",
+      "name": "agent_orchestration_dag_20260323",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-23T01:30:00Z",
+      "updated": "2026-03-23T12:45:00Z",
+      "completed": "2026-03-23T12:00:00Z",
+      "assignee": "Copilot + Pohánka Péter",
+      "tags": [],
+      "dependencies": [
+        "observability_opentelemetry_20260323"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_orchestration_dag_20260323",
       "_isArchived": true
     },
     {
@@ -548,6 +487,23 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cean_phase_2_fleet_management_20260215",
+      "_isArchived": true
+    },
+    {
+      "id": "chrome_acp_integration_20260323",
+      "name": "chrome_acp_integration_20260323",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-23T12:30:00Z",
+      "updated": "2026-03-23T13:05:00Z",
+      "completed": "2026-03-23T12:55:00Z",
+      "assignee": "Copilot + Pohánka Péter",
+      "tags": [],
+      "dependencies": [
+        "agent_orchestration_dag_20260323"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\chrome_acp_integration_20260323",
       "_isArchived": true
     },
     {
@@ -1014,6 +970,21 @@
       "_isArchived": true
     },
     {
+      "id": "guardrails_evaluation_20260323",
+      "name": "guardrails_evaluation_20260323",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "created": "2026-03-23T01:30:00Z",
+      "updated": "2026-03-23T12:45:00Z",
+      "completed": "2026-03-23T03:15:00Z",
+      "assignee": "Copilot + Pohánka Péter",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\guardrails_evaluation_20260323",
+      "_isArchived": true
+    },
+    {
       "id": "hungarian-orchestration-tuning-20260225",
       "name": "Magyar Nyelvű Orkesztráció és Intelligens Irányítás",
       "status": "archived",
@@ -1329,6 +1300,23 @@
       "_isArchived": true
     },
     {
+      "id": "mcp_tool_discovery_20260323",
+      "name": "mcp_tool_discovery_20260323",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-23T01:30:00Z",
+      "updated": "2026-03-23T13:05:00Z",
+      "completed": "2026-03-23T04:00:00Z",
+      "assignee": "Copilot + Pohánka Péter",
+      "tags": [],
+      "dependencies": [
+        "observability_opentelemetry_20260323"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\mcp_tool_discovery_20260323",
+      "_isArchived": true
+    },
+    {
       "id": "modular-command-center-dashboard-v3-20260219",
       "name": "modular-command-center-dashboard-v3-20260219",
       "status": "archived",
@@ -1338,6 +1326,21 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\modular-command-center-dashboard-v3-20260219",
+      "_isArchived": true
+    },
+    {
+      "id": "observability_opentelemetry_20260323",
+      "name": "observability_opentelemetry_20260323",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-23T01:30:00Z",
+      "updated": "2026-03-23T12:45:00Z",
+      "completed": "2026-03-23T03:15:00Z",
+      "assignee": "Copilot + Pohánka Péter",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\observability_opentelemetry_20260323",
       "_isArchived": true
     },
     {
@@ -1723,6 +1726,23 @@
       "_isArchived": true
     },
     {
+      "id": "sandbox_security_hardening_20260323",
+      "name": "sandbox_security_hardening_20260323",
+      "status": "archived",
+      "priority": "low",
+      "progress": 100,
+      "created": "2026-03-23T01:30:00Z",
+      "updated": "2026-03-23T13:10:00Z",
+      "completed": "2026-03-23T04:30:00Z",
+      "assignee": "Copilot + Pohánka Péter",
+      "tags": [],
+      "dependencies": [
+        "guardrails_evaluation_20260323"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\sandbox_security_hardening_20260323",
+      "_isArchived": true
+    },
+    {
       "id": "self_healing_core_20260213",
       "name": "Self-Healing & Auto-Fix Protocol",
       "status": "archived",
@@ -1777,6 +1797,24 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\spec-writer-agent-20260211",
+      "_isArchived": true
+    },
+    {
+      "id": "swarm_intelligence_v2_20260323",
+      "name": "swarm_intelligence_v2_20260323",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-23T01:30:00Z",
+      "updated": "2026-03-23T13:05:00Z",
+      "completed": "2026-03-23T04:00:00Z",
+      "assignee": "Copilot + Pohánka Péter",
+      "tags": [],
+      "dependencies": [
+        "agent_memory_structured_20260323",
+        "agent_orchestration_dag_20260323"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\swarm_intelligence_v2_20260323",
       "_isArchived": true
     },
     {
@@ -1897,10 +1935,10 @@
     }
   ],
   "stats": {
-    "total": 112,
-    "active": 12,
+    "total": 113,
+    "active": 5,
     "completed": 0,
-    "archived": 90,
+    "archived": 98,
     "proposed": 10
   }
 }
