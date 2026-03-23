@@ -61,7 +61,7 @@ export function QuickActionsPanel() {
   };
 
   return (
-    <Card className="glass-panel border-white/5 h-full">
+    <Card className="glass-panel border-white/[0.04] h-full">
       <CardHeader className="pb-3 flex flex-row items-center justify-between">
         <CardTitle className="text-sm font-bold text-zinc-400 uppercase tracking-widest flex items-center gap-2">
           <Zap size={14} className="text-primary" />
@@ -74,7 +74,7 @@ export function QuickActionsPanel() {
           size="sm"
           onClick={handleEVHunter}
           disabled={loading !== null}
-          className="border-white/5 bg-white/5 hover:bg-primary/10 hover:text-white flex flex-col gap-2 h-auto py-4"
+          className="border-white/[0.04] bg-white/[0.04] hover:bg-primary/10 hover:text-white flex flex-col gap-2 h-auto py-4"
         >
           {loading === "ev" ? <Loader2 size={20} className="animate-spin text-emerald-500" /> : <Car size={20} className="text-emerald-500" />}
           <span className="text-[10px] font-bold">EV Hunter</span>
@@ -84,7 +84,7 @@ export function QuickActionsPanel() {
           size="sm"
           onClick={handleRAGReindex}
           disabled={loading !== null}
-          className="border-white/5 bg-white/5 hover:bg-primary/10 hover:text-white flex flex-col gap-2 h-auto py-4"
+          className="border-white/[0.04] bg-white/[0.04] hover:bg-primary/10 hover:text-white flex flex-col gap-2 h-auto py-4"
         >
           {loading === "rag" ? <Loader2 size={20} className="animate-spin text-blue-500" /> : <Database size={20} className="text-blue-500" />}
           <span className="text-[10px] font-bold">RAG Index</span>
@@ -94,7 +94,7 @@ export function QuickActionsPanel() {
           size="sm"
           onClick={handleNewCampaign}
           disabled={loading !== null}
-          className="border-white/5 bg-white/5 hover:bg-primary/10 hover:text-white flex flex-col gap-2 h-auto py-4"
+          className="border-white/[0.04] bg-white/[0.04] hover:bg-primary/10 hover:text-white flex flex-col gap-2 h-auto py-4"
         >
           {loading === "campaign" ? <Loader2 size={20} className="animate-spin text-amber-500" /> : <Megaphone size={20} className="text-amber-500" />}
           <span className="text-[10px] font-bold">Marketing Swarm</span>
@@ -104,7 +104,7 @@ export function QuickActionsPanel() {
           size="sm"
           onClick={handleSystemAudit}
           disabled={loading !== null}
-          className="border-white/5 bg-white/5 hover:bg-primary/10 hover:text-white flex flex-col gap-2 h-auto py-4"
+          className="border-white/[0.04] bg-white/[0.04] hover:bg-primary/10 hover:text-white flex flex-col gap-2 h-auto py-4"
         >
           {loading === "audit" ? <Loader2 size={20} className="animate-spin text-zinc-500" /> : <FileCheck size={20} className="text-zinc-500" />}
           <span className="text-[10px] font-bold">System Audit</span>

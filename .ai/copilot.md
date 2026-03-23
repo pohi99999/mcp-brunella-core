@@ -1,5 +1,101 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-23 - 🚀 Startup protokoll + Tauri fix + Agent platform modernizáció + track archiválás
+
+**Feladat:**
+- `README.md` és bootstrap/startup protokoll végrehajtása
+- build + teljes tesztállapot ellenőrzése
+- futó backend/dashboard állapot diagnosztikája
+- Tauri desktop dev hiba javítása (`OUT_DIR`, ikonok, külön UI port)
+- agent loader robusztusabbá tétele
+- új agent diagnosztikai és routing modernizációs kör megvalósítása
+- 100%-os live trackek archiválása és conductor rescan
+
+**Elvégzett fejlesztések:**
+
+1. **Startup / rendszerállapot**
+   - kötelező dokumentumok beolvasva (`README.md`, `.ai/BOOTSTRAP.md`, `conductor/tracks.md`, `.ai/FOSZAL.md`, `TEST_RESULTS.md`, `PROJEKT_DIAGRAM.md`, stb.)
+   - `npm run build` ✅
+   - `npm test` ✅
+   - port- és health-diagnosztika: a backend és dashboard valójában futott, a fő hibák nagy része duplán indított folyamatból jött
+
+2. **Tauri desktop javítás**
+   - új `src-tauri/build.rs`
+   - `src-tauri/tauri.conf.json` desktop dev port különválasztása (`5174`)
+   - hiányzó `src-tauri/icons/*` assetek pótlása
+   - az `OUT_DIR env var is not set` hiba megszűnt, a Tauri build eljutott a dev profile-ig
+
+3. **Agent Loader modernizáció**
+   - új `src/agents/agentLoader.ts`
+   - `AgentManager` már kezeli:
+     - a registryben megadott explicit named exportot
+     - a `default` exportot
+     - fallbackként az első konstruktálható exportot
+   - regressziós teszt: `test/agentLoader.test.ts`
+   - külön track: `agent_loader_modernization_20260323`
+
+4. **Agent diagnostics + routing modernizáció**
+   - új fájlok:
+     - `src/agents/registryStandard.ts`
+     - `src/agents/registryValidation.ts`
+     - `src/agents/agentRouting.ts`
+     - `src/dashboard/components/dashboard/AgentDiagnosticsPanel.tsx`
+     - `test/registryValidation.test.ts`
+     - `test/agentRouting.test.ts`
+   - bővítések:
+     - `src/agents/AgentManager.ts`
+     - `src/server/routes/agents.ts`
+     - `src/dashboard/lib/apiService.ts`
+     - `src/dashboard/lib/navigation.tsx`
+     - `src/cli.ts`
+   - új képességek:
+     - registry schema validation + metadata normalizálás
+     - agent load/export diagnosztika
+     - új endpoint: `GET /api/agents/diagnostics`
+     - új dashboard panel: **Agent Diagnostics**
+     - új CLI parancs: `brunella agent-diagnostics`
+     - runtime-aware, capability-alapú routing scorer
+   - validáció:
+     - `npm run build` ✅
+     - `npm run build:ui` ✅
+     - `npx vitest run test/agentRouting.test.ts test/registryValidation.test.ts test/agentLoader.test.ts` ✅
+     - `npx vitest run test/phoenixRecoveryLogic.test.ts` ✅
+
+5. **Archivált 100%-os live trackek (2026-03-23 kérésre)**
+   - `agent_diagnostics_routing_modernization_20260323`
+   - `agent_loader_modernization_20260323`
+   - `cf_analytics_engine_20260323`
+   - `cf_durable_object_migrations_20260323`
+   - `cf_queues_task_distribution_20260323`
+   - `cf_r2_activation_20260323`
+   - `cf_r2_artifact_storage_20260323`
+   - `cf_token_permissions_fix_20260323`
+   - `cf_workers_ai_models_20260323`
+   - `cf_workflows_orchestration_20260323`
+   - `node build/cli.js conductor rescan` lefuttatva → `124 total / 6 active / 108 archived`
+
+**Érintett fő fájlok:**
+- `src-tauri/build.rs`
+- `src-tauri/tauri.conf.json`
+- `src-tauri/icons/*`
+- `src/agents/AgentManager.ts`
+- `src/agents/agentLoader.ts`
+- `src/agents/registryStandard.ts`
+- `src/agents/registryValidation.ts`
+- `src/agents/agentRouting.ts`
+- `src/server/routes/agents.ts`
+- `src/dashboard/lib/apiService.ts`
+- `src/dashboard/lib/navigation.tsx`
+- `src/dashboard/components/dashboard/AgentDiagnosticsPanel.tsx`
+- `src/cli.ts`
+- `test/agentLoader.test.ts`
+- `test/registryValidation.test.ts`
+- `test/agentRouting.test.ts`
+- `conductor/project_state.json`
+- `conductor/tracks.md`
+
+**Státusz:** ✅ NAPLÓZVA / ✅ ARCHIVÁLVA / ✅ COMMIT-PUSH ELŐKÉSZÍTVE
+
 ## 2026-03-24 - 🚀 CF Workflows Deploy + PAIOS GitHub/GPT-4.1 Upgrade + Schema Fix
 
 **Commitok:**

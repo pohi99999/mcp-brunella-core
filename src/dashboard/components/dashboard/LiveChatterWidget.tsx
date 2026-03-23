@@ -15,9 +15,9 @@ export function LiveChatterWidget() {
   };
 
   return (
-    <Card className="h-full flex flex-col glass-panel">
-      <CardHeader className="p-4 border-b border-white/5 flex flex-row items-center justify-between">
-        <CardTitle className="text-sm font-bold tracking-widest uppercase flex items-center gap-2">
+    <Card className="h-full flex flex-col bg-transparent border-none shadow-none">
+      <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4">
+        <CardTitle className="text-xs font-medium tracking-wide text-zinc-400 flex items-center gap-2">
           <MessageSquare className="w-4 h-4 text-primary" />
           Ügynökök Közötti Csevegés
         </CardTitle>
@@ -42,7 +42,7 @@ export function LiveChatterWidget() {
                   className="group flex flex-col space-y-1 animate-in fade-in slide-in-from-left-2 duration-300"
                 >
                   <div className="flex items-center gap-2">
-                    <div className="flex items-center gap-1 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+                    <div className="flex items-center gap-1 bg-white/[0.04] px-2 py-0.5 rounded-full border border-white/10">
                       {getAgentIcon(entry.sender)}
                       <span className="text-[10px] font-bold text-zinc-300">{entry.sender}</span>
                     </div>
@@ -50,14 +50,14 @@ export function LiveChatterWidget() {
                     {entry.receiver && (
                       <>
                         <ArrowRight className="w-3 h-3 text-zinc-600" />
-                        <div className="flex items-center gap-1 bg-white/5 px-2 py-0.5 rounded-full border border-white/10">
+                        <div className="flex items-center gap-1 bg-white/[0.04] px-2 py-0.5 rounded-full border border-white/10">
                           {getAgentIcon(entry.receiver)}
                           <span className="text-[10px] font-bold text-zinc-300">{entry.receiver}</span>
                         </div>
                       </>
                     )}
 
-                    <span className="text-[9px] text-zinc-600 font-mono ml-auto">
+                    <span className="text-[10px] text-zinc-600 font-mono ml-auto">
                       {new Date(entry.timestamp).toLocaleTimeString('hu-HU')}
                     </span>
                   </div>

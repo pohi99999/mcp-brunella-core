@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-23T04:00:00.790Z",
+  "lastUpdated": "2026-03-23T07:18:40.732Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -11,6 +11,18 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\apify_deep_scraping_agent_20260223",
+      "_isArchived": false
+    },
+    {
+      "id": "cf_hyperdrive_d1_20260323",
+      "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
+      "status": "active",
+      "priority": "low",
+      "progress": 30,
+      "created": "2026-03-23",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cf_hyperdrive_d1_20260323",
       "_isArchived": false
     },
     {
@@ -250,9 +262,9 @@
       "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
       "status": "active",
       "priority": "high",
-      "progress": 65,
+      "progress": 75,
       "created": "2026-02-22",
-      "updated": "2026-03-22",
+      "updated": "2026-03-23",
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_comet_upgrade_20260222",
@@ -275,6 +287,30 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_architect_upgrade_20260205",
+      "_isArchived": true
+    },
+    {
+      "id": "agent_diagnostics_routing_modernization_20260323",
+      "name": "Agent diagnostics and routing modernization",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "completed": "2026-03-23T08:15:00Z",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_diagnostics_routing_modernization_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "agent_loader_modernization_20260323",
+      "name": "Agent Loader Modernization",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "completed": "2026-03-23T08:00:00Z",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\agent_loader_modernization_20260323",
       "_isArchived": true
     },
     {
@@ -487,6 +523,105 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cean_phase_2_fleet_management_20260215",
+      "_isArchived": true
+    },
+    {
+      "id": "cf_analytics_engine_20260323",
+      "name": "Cloudflare Analytics Engine Egyedi Metrikák",
+      "status": "archived",
+      "priority": "low",
+      "progress": 100,
+      "created": "2026-03-23",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_analytics_engine_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "cf_durable_object_migrations_20260323",
+      "name": "Durable Object Migrations Konfiguráció",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-23",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_durable_object_migrations_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "cf_queues_task_distribution_20260323",
+      "name": "Cloudflare Queues Aszinkron Task Elosztás",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-23",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_queues_task_distribution_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "cf_r2_activation_20260323",
+      "name": "Cloudflare R2 Object Storage Aktiválás",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "created": "2026-03-23",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_r2_activation_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "cf_r2_artifact_storage_20260323",
+      "name": "R2 Alapú Agent Artifact Tárolás",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-23",
+      "tags": [],
+      "dependencies": [
+        "cf_r2_activation_20260323"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_r2_artifact_storage_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "cf_token_permissions_fix_20260323",
+      "name": "Cloudflare API Token Jogosultság Bővítés",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "created": "2026-03-23",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_token_permissions_fix_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "cf_workers_ai_models_20260323",
+      "name": "Workers AI Modell Paletta Bővítés",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-23",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_workers_ai_models_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "cf_workflows_orchestration_20260323",
+      "name": "Cloudflare Workflows Orkesztráció",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-23",
+      "completed": "2026-03-24",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_workflows_orchestration_20260323",
       "_isArchived": true
     },
     {
@@ -1935,10 +2070,10 @@
     }
   ],
   "stats": {
-    "total": 113,
-    "active": 5,
+    "total": 124,
+    "active": 6,
     "completed": 0,
-    "archived": 98,
+    "archived": 108,
     "proposed": 10
   }
 }

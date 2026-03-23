@@ -106,7 +106,7 @@ export function HarvestPipelineWidget() {
             <Database size={14} className="text-emerald-400" />
           </div>
           <div>
-            <p className="text-xs font-bold text-white uppercase tracking-wider">Harvest Pipeline</p>
+            <p className="text-xs font-medium tracking-wide text-zinc-400 flex items-center gap-2">Harvest Pipeline</p>
             <p className="text-[10px] text-zinc-500 font-mono">DATA_FLYWHEEL</p>
           </div>
         </div>
@@ -121,7 +121,7 @@ export function HarvestPipelineWidget() {
       </div>
 
       {/* Status badge */}
-      <div className="flex items-center gap-2 bg-white/3 border border-white/5 rounded-lg px-3 py-2 shrink-0">
+      <div className="flex items-center gap-2 bg-white/3 border border-white/[0.04] rounded-lg px-3 py-2 shrink-0">
         {statusIcon}
         <span className={cn("text-xs font-mono font-bold", statusColor)}>{statusLabel}</span>
         {status.lastRun && (
@@ -133,7 +133,7 @@ export function HarvestPipelineWidget() {
 
       {/* Stats */}
       <div className="grid grid-cols-2 gap-2 flex-1 min-h-0">
-        <div className="bg-white/3 border border-white/5 rounded-lg p-3 flex flex-col justify-between">
+        <div className="bg-white/3 border border-white/[0.04] rounded-lg p-3 flex flex-col justify-between">
           <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider">LanceDB</p>
           <div>
             <p className="text-xl font-bold text-white tabular-nums">
@@ -143,7 +143,7 @@ export function HarvestPipelineWidget() {
           </div>
         </div>
 
-        <div className="bg-white/3 border border-white/5 rounded-lg p-3 flex flex-col justify-between">
+        <div className="bg-white/3 border border-white/[0.04] rounded-lg p-3 flex flex-col justify-between">
           <p className="text-[10px] text-zinc-500 font-mono uppercase tracking-wider">Golden DS</p>
           <div>
             <p className="text-xl font-bold text-white tabular-nums">

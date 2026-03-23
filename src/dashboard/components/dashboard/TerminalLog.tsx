@@ -64,11 +64,11 @@ export function TerminalLog({ logs: propLogs, className }: TerminalLogProps) {
   return (
     <div
       className={cn(
-        'flex flex-col rounded-lg border border-zinc-800 bg-black/90 overflow-hidden',
+        'flex flex-col rounded-lg border border-white/[0.04] bg-black/90 overflow-hidden',
         className,
       )}
     >
-      <div className="flex items-center gap-2 border-b border-zinc-800 bg-zinc-900/80 px-3 py-2">
+      <div className="flex items-center gap-2 border-b border-white/[0.04] bg-zinc-900/80 px-3 py-2">
         <Terminal size={14} className="text-emerald-500" />
         <span className="text-xs font-mono text-zinc-500">terminal — mission-control</span>
       </div>

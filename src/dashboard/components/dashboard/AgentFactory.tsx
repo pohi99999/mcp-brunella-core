@@ -91,7 +91,7 @@ export function AgentFactory() {
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Csak betűk, szóköz nélkül"
-                                className="bg-white/5 border-white/10 focus:border-primary"
+                                className="bg-white/[0.04] border-white/10 focus:border-primary"
                             />
                         </div>
                         <div className="space-y-2">
@@ -100,7 +100,7 @@ export function AgentFactory() {
                                 value={role}
                                 onChange={(e) => setRole(e.target.value)}
                                 placeholder="Mit csinál ez az ügynök?"
-                                className="bg-white/5 border-white/10 focus:border-primary"
+                                className="bg-white/[0.04] border-white/10 focus:border-primary"
                             />
                         </div>
                         <div className="space-y-2">
@@ -109,7 +109,7 @@ export function AgentFactory() {
                                 value={description}
                                 onChange={(e) => setDescription(e.target.value)}
                                 placeholder="Mire használható ez az ügynök?"
-                                className="bg-white/5 border-white/10 min-h-[100px] focus:border-primary"
+                                className="bg-white/[0.04] border-white/10 min-h-[100px] focus:border-primary"
                             />
                         </div>
                     </CardContent>
@@ -130,7 +130,7 @@ export function AgentFactory() {
                                     onChange={(e) => setNewCap(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddCap())}
                                     placeholder="pl. send_email"
-                                    className="bg-white/5 border-white/10"
+                                    className="bg-white/[0.04] border-white/10"
                                 />
                                 <Button type="button" size="icon" onClick={handleAddCap} variant="secondary">
                                     <Plus />
@@ -163,7 +163,7 @@ export function AgentFactory() {
                                     onChange={(e) => setNewTrigger(e.target.value)}
                                     onKeyDown={(e) => e.key === 'Enter' && (e.preventDefault(), handleAddTrigger())}
                                     placeholder="pl. levél, üzenet"
-                                    className="bg-white/5 border-white/10"
+                                    className="bg-white/[0.04] border-white/10"
                                 />
                                 <Button type="button" size="icon" onClick={handleAddTrigger} variant="secondary">
                                     <Plus />

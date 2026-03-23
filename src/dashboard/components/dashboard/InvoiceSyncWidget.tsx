@@ -89,8 +89,8 @@ export function InvoiceSyncWidget() {
   };
 
   return (
-    <Card className="glass-card border-white/5 bg-black/40 backdrop-blur-xl">
-      <CardHeader className="p-4 border-b border-white/5">
+    <Card className="glass-card border-white/[0.04] bg-white/[0.03] backdrop-blur-xl">
+      <CardHeader className="p-4 border-b border-white/[0.04]">
         <CardTitle className="flex items-center justify-between text-xs font-bold tracking-widest uppercase text-white">
           <span className="flex items-center gap-2">
             <FileSpreadsheet size={16} className="text-emerald-400" />
@@ -118,19 +118,19 @@ export function InvoiceSyncWidget() {
             <span>Progress</span>
             <span>{Math.round(progress)}%</span>
           </div>
-          <Progress value={progress} className="h-1 bg-white/5" />
+          <Progress value={progress} className="h-1 bg-white/[0.04]" />
         </div>
 
         <div className="grid grid-cols-3 gap-2">
-          <div className="p-2 rounded-lg bg-white/5 border border-white/5 flex flex-col items-center gap-1">
+          <div className="p-2 rounded-lg bg-white/[0.04] border border-white/[0.04] flex flex-col items-center gap-1">
             <Mail size={14} className={status === "searching" ? "text-blue-400 animate-pulse" : "text-zinc-500"} />
             <span className="text-[9px] uppercase text-zinc-500">Gmail</span>
           </div>
-          <div className="p-2 rounded-lg bg-white/5 border border-white/5 flex flex-col items-center gap-1">
+          <div className="p-2 rounded-lg bg-white/[0.04] border border-white/[0.04] flex flex-col items-center gap-1">
             <Search size={14} className={status === "processing" ? "text-purple-400 animate-pulse" : "text-zinc-500"} />
             <span className="text-[9px] uppercase text-zinc-500">OCR</span>
           </div>
-          <div className="p-2 rounded-lg bg-white/5 border border-white/5 flex flex-col items-center gap-1">
+          <div className="p-2 rounded-lg bg-white/[0.04] border border-white/[0.04] flex flex-col items-center gap-1">
             <FileCheck size={14} className={status === "exporting" ? "text-emerald-400 animate-pulse" : "text-zinc-500"} />
             <span className="text-[9px] uppercase text-zinc-500">Sheets</span>
           </div>

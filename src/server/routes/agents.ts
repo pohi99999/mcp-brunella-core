@@ -36,6 +36,16 @@ export function createAgentRoutes(): Router {
         }
     });
 
+    router.get('/diagnostics', (req, res) => {
+        try {
+            const diagnostics = agentManager.getAgentDiagnostics();
+            res.json(diagnostics);
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
     /**
      * @swagger
      * /api/agents/create:

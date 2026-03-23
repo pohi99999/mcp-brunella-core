@@ -147,7 +147,7 @@ export function MCPCommandCenter() {
 
   if (loading) {
     return (
-      <Card className="glass-card border-white/5">
+      <Card className="glass-card border-white/[0.04]">
         <CardContent className="py-8 flex items-center justify-center">
           <div className="flex items-center gap-2 text-zinc-400">
             <Activity className="w-4 h-4 animate-spin" />
@@ -159,7 +159,7 @@ export function MCPCommandCenter() {
   }
 
   return (
-    <Card className="glass-card border-white/5">
+    <Card className="glass-card border-white/[0.04]">
       <CardHeader>
         <div className="flex items-center justify-between">
           <div>
@@ -196,7 +196,7 @@ export function MCPCommandCenter() {
           <TabsContent value="providers" className="space-y-3">
             <div className="grid gap-3">
               {providers.map((provider) => (
-                <Card key={provider.provider} className="bg-zinc-900/30 border-zinc-800/50">
+                <Card key={provider.provider} className="bg-white/[0.02] border-white/[0.04] rounded-lg">
                   <CardContent className="py-3 px-4">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-3">
@@ -249,7 +249,7 @@ export function MCPCommandCenter() {
                 {tools.map((tool) => (
                   <Card
                     key={tool.name}
-                    className={`bg-zinc-900/30 border-zinc-800/50 cursor-pointer hover:border-blue-500/50 transition-colors ${
+                    className={`bg-zinc-900/30 border-white/[0.04]/50 cursor-pointer hover:border-blue-500/50 transition-colors ${
                       selectedTool?.name === tool.name ? 'border-blue-500/50 bg-blue-900/10' : ''
                     }`}
                     onClick={() => {
@@ -287,7 +287,7 @@ export function MCPCommandCenter() {
                       Execute: {selectedTool.name}
                     </div>
                     <textarea
-                      className="w-full h-32 bg-zinc-900/50 border border-zinc-800 rounded-md p-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-blue-500/50"
+                      className="w-full h-32 bg-zinc-900/50 border border-white/[0.04] rounded-md p-2 text-xs font-mono text-zinc-300 focus:outline-none focus:border-blue-500/50"
                       placeholder="Tool arguments (JSON)"
                       value={toolArgs}
                       onChange={(e) => setToolArgs(e.target.value)}
@@ -312,7 +312,7 @@ export function MCPCommandCenter() {
                     </Button>
 
                     {toolResult && (
-                      <Card className="bg-zinc-900/50 border-zinc-800/50 mt-2">
+                      <Card className="bg-zinc-900/50 border-white/[0.04]/50 mt-2">
                         <CardContent className="py-2 px-3">
                           <div className="text-xs font-mono text-zinc-400 mb-1">Result:</div>
                           <pre className="text-xs text-zinc-300 overflow-auto max-h-48">
@@ -388,7 +388,7 @@ export function MCPCommandCenter() {
             {stats && (
               <>
                 {/* Bifrost Stats */}
-                <Card className="bg-zinc-900/30 border-zinc-800/50">
+                <Card className="bg-white/[0.02] border-white/[0.04] rounded-lg">
                   <CardHeader className="py-3 px-4">
                     <CardTitle className="text-sm font-mono flex items-center gap-2">
                       <Zap className="w-4 h-4 text-yellow-400" />
@@ -415,7 +415,7 @@ export function MCPCommandCenter() {
                 </Card>
 
                 {/* E2B Stats */}
-                <Card className="bg-zinc-900/30 border-zinc-800/50">
+                <Card className="bg-white/[0.02] border-white/[0.04] rounded-lg">
                   <CardHeader className="py-3 px-4">
                     <CardTitle className="text-sm font-mono flex items-center gap-2">
                       <Database className="w-4 h-4 text-purple-400" />

@@ -153,7 +153,7 @@ export function BrunellaStudio() {
             <div className="grid grid-cols-12 gap-6 flex-1 overflow-hidden">
                 {/* Bal szekció: Projektek & Chat */}
                 <div className="col-span-12 lg:col-span-4 flex flex-col gap-6 overflow-hidden">
-                    <Card className="bg-card/50 backdrop-blur-xl border-white/5">
+                    <Card className="bg-card/50 backdrop-blur-xl border-white/[0.04]">
                         <CardHeader className="pb-3">
                             <CardTitle className="text-sm flex items-center gap-2 font-mono uppercase tracking-widest">
                                 <Plus className="w-4 h-4" /> Új Alkalmazás
@@ -164,13 +164,13 @@ export function BrunellaStudio() {
                                 placeholder="App neve (pl. DreamFisher Webshop)" 
                                 value={projectName}
                                 onChange={(e) => setProjectName(e.target.value)}
-                                className="bg-black/20 border-white/10"
+                                className="bg-white/[0.02] border-white/10"
                             />
                             <Textarea 
                                 placeholder="Írd le pontosan, mit szeretnél fejleszteni..." 
                                 value={projectDesc}
                                 onChange={(e) => setProjectDescription(e.target.value)}
-                                className="bg-black/20 border-white/10 min-h-[100px]"
+                                className="bg-white/[0.02] border-white/10 min-h-[100px]"
                             />
                             <div className="grid grid-cols-2 gap-2">
                                 <Button 
@@ -199,7 +199,7 @@ export function BrunellaStudio() {
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-card/50 backdrop-blur-xl border-white/5 flex-1 overflow-hidden">
+                    <Card className="bg-card/50 backdrop-blur-xl border-white/[0.04] flex-1 overflow-hidden">
                         <CardHeader className="pb-2">
                             <CardTitle className="text-xs font-mono uppercase text-zinc-500">Korábbi Projektek</CardTitle>
                         </CardHeader>
@@ -213,7 +213,7 @@ export function BrunellaStudio() {
                                             className={`p-3 rounded-xl border cursor-pointer transition-all ${
                                                 selectedProjectId === p.id 
                                                     ? 'bg-emerald-500/10 border-emerald-500/30 shadow-[0_0_15px_rgba(16,185,129,0.1)]' 
-                                                    : 'bg-white/5 border-transparent hover:border-white/10'
+                                                    : 'bg-white/[0.04] border-transparent hover:border-white/10'
                                             }`}
                                         >
                                             <div className="flex justify-between items-center mb-1">
@@ -233,7 +233,7 @@ export function BrunellaStudio() {
                 <div className="col-span-12 lg:col-span-8 flex flex-col gap-6 overflow-hidden">
                     <Tabs defaultValue="preview" className="h-full flex flex-col">
                         <div className="flex justify-between items-center mb-4">
-                            <TabsList className="bg-black/20 border border-white/5 p-1 h-10">
+                            <TabsList className="bg-white/[0.02] border border-white/[0.04] p-1 h-10">
                                 <TabsTrigger value="preview" className="data-[state=active]:bg-emerald-600 flex items-center gap-2 text-xs font-bold uppercase tracking-wider">
                                     <MonitorPlay className="w-4 h-4" /> Live Preview
                                 </TabsTrigger>
@@ -255,7 +255,7 @@ export function BrunellaStudio() {
                             )}
                         </div>
 
-                        <TabsContent value="preview" className="flex-1 mt-0 bg-black/40 rounded-3xl border border-white/10 overflow-hidden relative group">
+                        <TabsContent value="preview" className="flex-1 mt-0 bg-white/[0.03] rounded-3xl border border-white/10 overflow-hidden relative group">
                             {activeProject?.preview_url ? (
                                 <iframe 
                                     src={activeProject.preview_url} 
@@ -264,7 +264,7 @@ export function BrunellaStudio() {
                                 />
                             ) : (
                                 <div className="w-full h-full flex flex-col items-center justify-center text-zinc-600 gap-4">
-                                    <div className="p-6 rounded-full bg-white/5 border border-white/5">
+                                    <div className="p-6 rounded-full bg-white/[0.04] border border-white/[0.04]">
                                         <Globe className="w-12 h-12 opacity-20" />
                                     </div>
                                     <p className="text-sm font-mono uppercase tracking-widest opacity-40">Preview Engine Offline</p>
@@ -278,7 +278,7 @@ export function BrunellaStudio() {
                         </TabsContent>
 
                         <TabsContent value="code" className="flex-1 mt-0 bg-zinc-950 rounded-3xl border border-white/10 overflow-hidden p-6 font-mono text-xs">
-                            <div className="flex justify-between items-center mb-4 border-b border-white/5 pb-2">
+                            <div className="flex justify-between items-center mb-4 border-b border-white/[0.04] pb-2">
                                 <span className="text-zinc-500 uppercase tracking-widest">Build & Execution Stream</span>
                                 <span className="text-emerald-500/50">Live</span>
                             </div>
@@ -295,7 +295,7 @@ export function BrunellaStudio() {
                         </TabsContent>
 
                         <TabsContent value="architecture" className="flex-1 mt-0">
-                            <Card className="h-full bg-black/20 border-white/5">
+                            <Card className="h-full bg-white/[0.02] border-white/[0.04]">
                                 <CardContent className="pt-6">
                                     <div className="space-y-6">
                                         <div className="flex items-center gap-4">

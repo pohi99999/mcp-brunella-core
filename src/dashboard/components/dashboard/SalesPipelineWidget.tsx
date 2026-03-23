@@ -103,7 +103,7 @@ export function SalesPipelineWidget() {
 
     return (
         <Card className="w-full shadow-2xl border-primary/20 bg-card/50 backdrop-blur-md overflow-hidden">
-            <CardHeader className="pb-3 border-b border-white/5 bg-secondary/10">
+            <CardHeader className="pb-3 border-b border-white/[0.04] bg-secondary/10">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-primary/10 rounded-full">
@@ -120,7 +120,7 @@ export function SalesPipelineWidget() {
                 </div>
             </CardHeader>
             <CardContent className="p-0">
-                <div className="flex overflow-x-auto no-scrollbar p-4 gap-4 min-h-[600px] bg-black/20">
+                <div className="flex overflow-x-auto no-scrollbar p-4 gap-4 min-h-[600px] bg-white/[0.02]">
                     {STAGES.map((stage) => (
                         <div key={stage.id} className="min-w-[280px] flex flex-col gap-4">
                             <div className="flex items-center justify-between px-2">
@@ -128,13 +128,13 @@ export function SalesPipelineWidget() {
                                     <div className={`w-2 h-2 rounded-full ${stage.color}`} />
                                     <span className="text-[10px] font-black uppercase tracking-widest text-zinc-400">{stage.label}</span>
                                 </div>
-                                <Badge variant="secondary" className="text-[10px] bg-white/5">{groupedLeads[stage.id]?.length || 0}</Badge>
+                                <Badge variant="secondary" className="text-[10px] bg-white/[0.04]">{groupedLeads[stage.id]?.length || 0}</Badge>
                             </div>
 
                             <ScrollArea className="flex-1">
                                 <div className="space-y-3 pb-4">
                                     {groupedLeads[stage.id]?.map((lead: any) => (
-                                        <div key={lead.id} className="p-4 rounded-xl border border-white/5 bg-secondary/5 hover:border-primary/30 transition-all group relative">
+                                        <div key={lead.id} className="p-4 rounded-xl border border-white/[0.04] bg-secondary/5 hover:border-primary/30 transition-all group relative">
                                             <div className="flex justify-between items-start mb-2">
                                                 <div className="flex-1 min-w-0">
                                                     <h4 className="font-bold text-xs text-white truncate">{lead.company_name}</h4>
@@ -153,7 +153,7 @@ export function SalesPipelineWidget() {
                                             )}
 
                                             <div className="mt-4 flex gap-2">
-                                                <Button size="xs" variant="ghost" className="h-6 text-[8px] flex-1 bg-white/5">Adatlap</Button>
+                                                <Button size="xs" variant="ghost" className="h-6 text-[8px] flex-1 bg-white/[0.04]">Adatlap</Button>
                                                 {stage.id === 'outreach' && (
                                                     <Button size="xs" className="h-6 text-[8px] flex-1 bg-primary/20 text-primary">Email küldve?</Button>
                                                 )}
@@ -161,7 +161,7 @@ export function SalesPipelineWidget() {
                                         </div>
                                     ))}
                                     {groupedLeads[stage.id]?.length === 0 && (
-                                        <div className="py-10 border-2 border-dashed border-white/5 rounded-xl flex flex-col items-center justify-center opacity-20">
+                                        <div className="py-10 border-2 border-dashed border-white/[0.04] rounded-xl flex flex-col items-center justify-center opacity-20">
                                             <Filter size={24} />
                                         </div>
                                     )}
@@ -179,7 +179,7 @@ function SelectStatus({ currentStatus, onUpdate }: { currentStatus: string, onUp
     return (
         <div className="relative inline-block text-left">
             <select
-                className="text-[10px] bg-black/40 border border-white/10 rounded px-1 py-0.5 outline-none appearance-none cursor-pointer pr-4"
+                className="text-[10px] bg-white/[0.03] border border-white/10 rounded px-1 py-0.5 outline-none appearance-none cursor-pointer pr-4"
                 value={currentStatus}
                 onChange={(e) => onUpdate(e.target.value)}
             >

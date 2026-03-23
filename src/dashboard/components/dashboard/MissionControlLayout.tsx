@@ -21,6 +21,7 @@ export function MissionControlLayout() {
   const { currentLayout, setLayoutMode, layouts } = useLayout();
   const [isConnected, setIsConnected] = useState(false);
   const [coreStatus, setCoreStatus] = useState<'HEALTHY' | 'DEGRADED' | 'OFFLINE'>('OFFLINE');
+  const [terminalCollapsed, setTerminalCollapsed] = useState(false);
 
   useEffect(() => {
     const check = async () => {
@@ -41,107 +42,133 @@ export function MissionControlLayout() {
 
   const activeItem = navigationRegistry.getItem(activeTab);
 
+  const statusColor = isConnected && coreStatus === 'HEALTHY'
+    ? "bg-emerald-400"
+    : coreStatus === 'DEGRADED' ? "bg-amber-400" : "bg-red-400";
+
+  const statusLabel = isConnected ? coreStatus : "OFFLINE";
+
   return (
-    <div className="min-h-screen md:max-h-screen flex flex-col md:overflow-hidden bg-[#020205] bg-grid-pattern">
+    <div className="min-h-screen md:max-h-screen flex flex-col md:overflow-hidden bg-[#030308] bg-grid-pattern">
       <CommandMenu setActiveTab={setActiveTab} activeTab={activeTab} />
 
-      <header className="h-16 shrink-0 border-b border-zinc-800 bg-black/40 backdrop-blur-xl flex items-center justify-between px-4 md:px-6 z-30 sticky top-0">
-        <div className="flex items-center gap-2 md:gap-4">
-          <div className="flex items-center gap-2 md:gap-3">
-            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
-              <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" className="md:hidden h-9 w-9">
-                  <Menu className="h-5 w-5" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="left" className="p-0 w-72 border-r border-white/10 bg-[#0a0a0f]">
-                <DynamicSidebar activeTab={activeTab} onTabChange={(tab) => { setActiveTab(tab); setMobileMenuOpen(false); }} />
-              </SheetContent>
-            </Sheet>
-            <div className="w-8 h-8 rounded bg-primary/20 flex items-center justify-center border border-primary/30 shrink-0">
-              <Zap size={18} className="text-primary animate-pulse" />
+      {/* ─── Header ─── */}
+      <header className="h-14 shrink-0 border-b border-white/[0.06] bg-black/50 backdrop-blur-2xl flex items-center justify-between px-4 md:px-5 z-30 sticky top-0">
+        {/* Left cluster */}
+        <div className="flex items-center gap-3">
+          {/* Mobile menu */}
+          <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+            <SheetTrigger asChild>
+              <Button variant="ghost" size="icon" className="md:hidden h-8 w-8 text-zinc-400">
+                <Menu className="h-4 w-4" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="p-0 w-64 border-r border-white/[0.06] bg-[#080810]">
+              <DynamicSidebar activeTab={activeTab} onTabChange={(tab) => { setActiveTab(tab); setMobileMenuOpen(false); }} />
+            </SheetContent>
+          </Sheet>
+
+          {/* Brand */}
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-primary/15 flex items-center justify-center border border-primary/20">
+              <Zap size={14} className="text-primary" />
             </div>
-            <div className="flex flex-col truncate">
-              <span className="text-sm font-bold tracking-tighter text-white uppercase italic truncate">Brunella Cortex</span>
-              <span className="text-[9px] md:text-[10px] font-mono text-primary/60 tracking-widest leading-none">v2.3.0</span>
+            <div className="flex flex-col leading-none">
+              <span className="text-sm font-semibold tracking-tight text-white">Brunella</span>
+              <span className="text-[10px] font-mono text-zinc-500 tracking-wide">CORTEX v2.3</span>
             </div>
           </div>
 
-          <div className="h-4 w-[1px] bg-white/10 mx-2" />
+          <div className="h-4 w-px bg-white/[0.06] mx-1 hidden sm:block" />
 
-          <nav className="hidden sm:flex items-center gap-1">
+          {/* Navigation cluster */}
+          <nav className="hidden sm:flex items-center gap-0.5">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-xs font-mono text-zinc-500 hover:text-zinc-300 transition-colors px-2 py-1 rounded gap-1">
-                  LAYOUT: <span className="font-bold text-white">{currentLayout.name.toUpperCase().replace(' ', '_')}</span> <ChevronDown size={14} />
+                <Button variant="ghost" size="sm" className="text-[11px] font-mono text-zinc-500 hover:text-zinc-300 px-2 h-7 gap-1">
+                  <span className="text-zinc-600">LAYOUT</span>
+                  <span className="text-zinc-300 font-medium">{currentLayout.name.toUpperCase().replace(' ', '_')}</span>
+                  <ChevronDown size={12} className="text-zinc-600" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56" align="start">
-                <DropdownMenuLabel>Válasszon Elrendezést</DropdownMenuLabel>
+              <DropdownMenuContent className="w-48" align="start">
+                <DropdownMenuLabel className="text-[10px] tracking-wider text-zinc-500">ELRENDEZÉS</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 {layouts.modes.map((mode) => (
-                  <DropdownMenuItem key={mode.id} onClick={() => setLayoutMode(mode.id)} className="cursor-pointer">
-                    <span className="font-bold">{mode.name}</span>
-                    <span className="ml-auto text-xs text-zinc-500">{mode.id}</span>
+                  <DropdownMenuItem key={mode.id} onClick={() => setLayoutMode(mode.id)} className="cursor-pointer text-xs">
+                    <span className="font-medium">{mode.name}</span>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <div className="h-4 w-[1px] bg-white/10 mx-2" />
-            <Button variant="ghost" size="icon" asChild title="Gmail" className="text-zinc-400 hover:text-white h-8 w-8">
-              <a href="https://mail.google.com/mail/u/0/" target="_blank" rel="noreferrer"><Mail size={16} /></a>
-            </Button>
-            <Button variant="ghost" size="icon" asChild title="GitHub" className="text-zinc-400 hover:text-white h-8 w-8">
-              <a href="https://github.com/pohi99999" target="_blank" rel="noreferrer"><Github size={16} /></a>
-            </Button>
-            <Button variant="ghost" size="icon" asChild title="Google Calendar" className="text-zinc-400 hover:text-white h-8 w-8">
-              <a href="https://calendar.google.com/calendar/u/0/r" target="_blank" rel="noreferrer"><Calendar size={16} /></a>
-            </Button>
-            <Button variant="ghost" size="icon" asChild title="Google Drive" className="text-zinc-400 hover:text-white h-8 w-8">
-              <a href="https://drive.google.com/drive/my-drive" target="_blank" rel="noreferrer"><HardDrive size={16} /></a>
-            </Button>
-            <Button variant="ghost" size="icon" asChild title="Gemini Web" className="text-zinc-400 hover:text-white h-8 w-8">
-              <a href="https://gemini.google.com/u/0/gem/c9db4e33647c" target="_blank" rel="noreferrer"><Sparkles size={16} /></a>
-            </Button>
+            <div className="h-4 w-px bg-white/[0.06] mx-1" />
+
+            {[
+              { href: "https://mail.google.com/mail/u/0/", icon: Mail, label: "Gmail" },
+              { href: "https://github.com/pohi99999", icon: Github, label: "GitHub" },
+              { href: "https://calendar.google.com/calendar/u/0/r", icon: Calendar, label: "Calendar" },
+              { href: "https://drive.google.com/drive/my-drive", icon: HardDrive, label: "Drive" },
+              { href: "https://gemini.google.com/u/0/gem/c9db4e33647c", icon: Sparkles, label: "Gemini" },
+            ].map(({ href, icon: Icon, label }) => (
+              <Button key={label} variant="ghost" size="icon" asChild title={label} className="text-zinc-500 hover:text-zinc-200 h-7 w-7">
+                <a href={href} target="_blank" rel="noreferrer"><Icon size={14} /></a>
+              </Button>
+            ))}
           </nav>
         </div>
 
-        <div className="flex items-center gap-2 md:gap-4">
-          <div className="hidden sm:flex items-center gap-3 bg-white/5 border border-white/10 px-3 py-1.5 rounded-full">
-            <div className={cn(
-              "w-1.5 h-1.5 rounded-full",
-              isConnected && coreStatus === 'HEALTHY' ? "bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.4)]"
-                : coreStatus === 'DEGRADED' ? "bg-yellow-500 shadow-[0_0_8px_rgba(234,179,8,0.4)]"
-                  : "bg-red-500 shadow-[0_0_8px_rgba(239,68,68,0.4)]"
-            )} />
-            <span className="text-[10px] font-bold tracking-widest uppercase text-zinc-400">
-              {isConnected ? `CORE_${coreStatus}` : "CORE_OFFLINE"}
-            </span>
+        {/* Right cluster */}
+        <div className="flex items-center gap-3">
+          <div className="hidden sm:flex items-center gap-2 bg-white/[0.04] border border-white/[0.06] px-2.5 py-1 rounded-full">
+            <div className={cn("w-1.5 h-1.5 rounded-full", statusColor)} />
+            <span className="text-[10px] font-medium tracking-wider text-zinc-400">{statusLabel}</span>
           </div>
           <ThemeToggle />
         </div>
       </header>
 
+      {/* ─── Body ─── */}
       <div className="flex-1 flex overflow-hidden min-h-0">
+        {/* Sidebar */}
         <div className="hidden md:flex">
           <DynamicSidebar activeTab={activeTab} onTabChange={setActiveTab} />
         </div>
 
+        {/* Main area */}
         <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
-          <main className="flex-1 flex flex-col min-h-0 p-2 md:p-6 relative">
+          <main className="flex-1 flex flex-col min-h-0 p-3 md:p-5 relative">
             {activeTab === 'dashboard' ? (
               <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
                 <WidgetGrid />
               </div>
             ) : (
               <div className="flex-1 min-h-0 overflow-y-auto custom-scrollbar">
-                {activeItem?.component || <div className="text-zinc-500 font-mono">CONTENT_MISSING: {activeTab}</div>}
+                {activeItem?.component || <div className="text-zinc-500 font-mono text-sm">CONTENT_MISSING: {activeTab}</div>}
               </div>
             )}
           </main>
-          <footer className="h-[250px] max-h-[400px] border-t border-zinc-800 bg-black/80 backdrop-blur-xl shrink-0 z-40 overflow-hidden">
-            <TerminalLog className="h-full border-none rounded-none bg-transparent" />
+
+          {/* Terminal footer — collapsible */}
+          <footer
+            className={cn(
+              "border-t border-white/[0.06] bg-black/60 backdrop-blur-2xl shrink-0 z-40 overflow-hidden transition-[height] duration-300 ease-out",
+              terminalCollapsed ? "h-8" : "h-48"
+            )}
+          >
+            {/* Collapse handle */}
+            <button
+              onClick={() => setTerminalCollapsed(!terminalCollapsed)}
+              className="w-full h-8 flex items-center justify-center gap-2 text-[10px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors border-b border-white/[0.04] cursor-row-resize"
+              aria-label={terminalCollapsed ? "Expand terminal" : "Collapse terminal"}
+            >
+              <div className="w-8 h-0.5 rounded-full bg-zinc-700" />
+              <span>{terminalCollapsed ? "SHOW LOG" : "TERMINAL"}</span>
+              <div className="w-8 h-0.5 rounded-full bg-zinc-700" />
+            </button>
+            {!terminalCollapsed && (
+              <TerminalLog className="h-[calc(100%-2rem)] border-none rounded-none bg-transparent" />
+            )}
           </footer>
         </div>
       </div>

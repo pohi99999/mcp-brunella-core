@@ -118,9 +118,9 @@ export function ScheduledTasksPanel() {
   };
 
   return (
-    <Card className="h-full flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between pb-2">
-        <CardTitle className="text-sm font-medium flex items-center gap-2">
+    <Card className="h-full flex flex-col bg-transparent border-none shadow-none">
+      <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4">
+        <CardTitle className="text-xs font-medium tracking-wide text-zinc-400 flex items-center gap-2">
           <CalendarClock className="h-4 w-4 text-purple-500" />
           Ütemezett MI Feladatok
         </CardTitle>
@@ -155,7 +155,7 @@ export function ScheduledTasksPanel() {
                     onChange={(e) => setNewTask({ ...newTask, cron_expression: e.target.value })}
                     placeholder="0 9 * * *"
                   />
-                  <p className="text-xs text-muted-foreground">Standard cron szintaxis (perc óra nap hó nap_hete)</p>
+                  <p className="text-xs text-zinc-500">Standard cron szintaxis (perc óra nap hó nap_hete)</p>
                 </div>
                 <div className="grid gap-2">
                   <Label>Prompt / Utasítás</Label>
@@ -192,7 +192,7 @@ export function ScheduledTasksPanel() {
           <TableBody>
             {tasks.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={4} className="text-center text-muted-foreground h-24">
+                <TableCell colSpan={4} className="text-center text-zinc-500 h-24">
                   Nincs ütemezett feladat.
                 </TableCell>
               </TableRow>
@@ -201,7 +201,7 @@ export function ScheduledTasksPanel() {
                 <TableRow key={task.id}>
                   <TableCell>
                     <div className="font-medium">{task.title}</div>
-                    <div className="text-xs text-muted-foreground truncate max-w-[200px]">
+                    <div className="text-xs text-zinc-500 truncate max-w-[200px]">
                       {task.prompt}
                     </div>
                   </TableCell>
@@ -216,7 +216,7 @@ export function ScheduledTasksPanel() {
                         {task.last_run_at ? new Date(task.last_run_at).toLocaleString('hu-HU') : 'Soha'}
                       </span>
                       {task.next_run_at && (
-                        <span className="text-muted-foreground flex items-center gap-1">
+                        <span className="text-zinc-500 flex items-center gap-1">
                           <Clock className="h-3 w-3" />
                           {new Date(task.next_run_at).toLocaleTimeString('hu-HU')}
                         </span>

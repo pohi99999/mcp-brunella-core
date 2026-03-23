@@ -169,26 +169,24 @@ export function SystemHealthCard() {
   const totalCount = services.length;
 
   return (
-    <Card className="bg-zinc-950/40 border-zinc-800/50 rounded-lg">
-      <CardHeader className="flex flex-row items-center justify-between pb-2 border-b border-white/5">
-        <CardTitle className="text-[11px] font-medium tracking-wider uppercase text-zinc-500 flex items-center gap-2">
+    <Card className="bg-transparent border-none shadow-none">
+      <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4">
+        <CardTitle className="text-xs font-medium tracking-wide text-zinc-400 flex items-center gap-2">
           <ArrowsClockwise
-            size={16}
-            className={isChecking ? "animate-spin" : ""}
+            size={14}
+            className={isChecking ? "animate-spin text-primary" : "text-zinc-500"}
           />
-          System Engine Health
+          System Health
         </CardTitle>
-        <div className="flex items-center gap-2">
-          <Badge
-            variant={healthyCount === totalCount ? "default" : "destructive"}
-            className="text-[10px]"
-          >
-            {healthyCount}/{totalCount} OK
-          </Badge>
-        </div>
+        <Badge
+          variant={healthyCount === totalCount ? "default" : "destructive"}
+          className="text-[10px] font-mono px-1.5 py-0"
+        >
+          {healthyCount}/{totalCount}
+        </Badge>
       </CardHeader>
       <CardContent className="p-0">
-        <div className="divide-y divide-white/5">
+        <div className="divide-y divide-white/[0.04]">
           {services.map((service) => {
             const isHealthy = service.status === "healthy";
             const canToggle =
@@ -199,20 +197,20 @@ export function SystemHealthCard() {
             return (
               <div
                 key={service.id}
-                className="flex items-center justify-between p-3 hover:bg-white/5 transition-colors"
+                className="flex items-center justify-between px-4 py-2.5 hover:bg-white/[0.03] transition-colors"
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   {getStatusIcon(service.status)}
-                  <div>
-                    <p className="font-medium text-xs font-mono">
+                  <div className="min-w-0">
+                    <p className="font-medium text-xs text-zinc-200">
                       {service.name}
                     </p>
-                    <p className="text-[10px] text-muted-foreground truncate max-w-[120px]">
+                    <p className="text-[10px] text-zinc-500 truncate max-w-[140px]">
                       {service.message || "System online"}
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 shrink-0">
                   {canToggle && (
                     <Switch
                       checked={isHealthy}
@@ -226,7 +224,7 @@ export function SystemHealthCard() {
                   {!canToggle && (
                     <Badge
                       variant="outline"
-                      className="text-[9px] h-5 opacity-50"
+                      className="text-[9px] h-5 opacity-40 border-zinc-700"
                     >
                       AUTO
                     </Badge>
@@ -237,9 +235,9 @@ export function SystemHealthCard() {
           })}
         </div>
 
-        <div className="p-3 bg-muted/20 border-t border-white/5">
-          <p className="text-[9px] text-muted-foreground font-mono uppercase text-center">
-            Last Check: {lastCheck || "Initializing..."}
+        <div className="px-4 py-2 border-t border-white/[0.04]">
+          <p className="text-[9px] text-zinc-600 font-mono text-center">
+            {lastCheck || "Initializing..."}
           </p>
         </div>
       </CardContent>

@@ -24,7 +24,7 @@ export function SettingsPanel() {
 
   return (
     <div className="space-y-6">
-      <Card className="border-zinc-800/80 bg-zinc-950/60">
+      <Card className="bg-transparent border-none shadow-none">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base font-medium text-zinc-200">
             <Settings size={18} className="text-emerald-500" />

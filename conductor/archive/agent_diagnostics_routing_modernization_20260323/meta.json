@@ -1,0 +1,18 @@
+{
+  "id": "agent_diagnostics_routing_modernization_20260323",
+  "title": "Agent diagnostics and routing modernization",
+  "status": "archived",
+  "progress": 100,
+  "createdAt": "2026-03-23",
+  "updatedAt": "2026-03-23",
+  "completed": "2026-03-23T08:15:00Z",
+  "owner": "copilot",
+  "scope": [
+    "agents",
+    "api",
+    "dashboard",
+    "cli"
+  ],
+  "archivedAt": "2026-03-23T23:30:00Z",
+  "archiveReason": "Completed 100 percent track archived on user request."
+}

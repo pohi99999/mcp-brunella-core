@@ -195,7 +195,7 @@ export function AgentManagementPanel() {
                                     </Button>
                                 </CardHeader>
                                 <CardContent className="p-0 flex-1 relative">
-                                    <ScrollArea className="h-[350px] w-full bg-black/40 p-4 font-mono text-[12px]">
+                                    <ScrollArea className="h-[350px] w-full bg-white/[0.03] p-4 font-mono text-[12px]">
                                         <div className="space-y-1">
                                             {logs.map((log, i) => (
                                                 <div key={i} className={`whitespace-pre-wrap ${log.includes('HIBA') || log.includes('error') ? 'text-red-400' :
