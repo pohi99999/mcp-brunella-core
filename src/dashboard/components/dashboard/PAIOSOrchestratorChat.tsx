@@ -504,10 +504,10 @@ export function PAIOSOrchestratorChat() {
                         </select>
                     </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-zinc-500 mt-1">
                     Universal Orchestrator Chat: magyar kérés → tool calling → agent delegálás
                 </p>
-                <p className="text-[10px] text-muted-foreground mt-1">
+                <p className="text-[10px] text-zinc-500 mt-1">
                     Session: { sessionId }
                 </p>
             </CardHeader>
@@ -516,7 +516,7 @@ export function PAIOSOrchestratorChat() {
                 <ScrollArea className="flex-1 p-4">
                     <div className="space-y-4">
                         { messages.length === 0 && (
-                            <div className="text-center text-muted-foreground py-8">
+                            <div className="text-center text-zinc-500 py-8">
                                 <Brain className="w-12 h-12 mx-auto mb-2 opacity-50" />
                                 <p className="text-sm">Adj egy feladatot magyarul...</p>
                                 <p className="text-xs mt-2 opacity-70">Példa: "Készíts egy új API endpointot TDD-vel"</p>
@@ -554,13 +554,13 @@ export function PAIOSOrchestratorChat() {
                                     ) }
 
                                     { msg.role === 'assistant' && msg.fallbackUsed && (
-                                        <p className="text-[11px] mt-2 opacity-80">
+                                        <p className="text-xs mt-2 opacity-80">
                                             ♻️ Fallback aktiválva{ msg.fallbackReason ? ` (${msg.fallbackReason})` : '' }
                                         </p>
                                     ) }
 
                                     { msg.role === 'assistant' && msg.runbookHint && (
-                                        <p className="text-[11px] mt-2 opacity-80">📚 { msg.runbookHint }</p>
+                                        <p className="text-xs mt-2 opacity-80">📚 { msg.runbookHint }</p>
                                     ) }
 
                                     { msg.role === 'assistant' && msg.approvalRequired && msg.approvalId && (
@@ -604,7 +604,7 @@ export function PAIOSOrchestratorChat() {
                                         <div className="mt-3 border-t pt-2 space-y-1">
                                             <p className="text-xs font-semibold opacity-75">🧭 Mission Timeline</p>
                                             { msg.missionTimeline.slice(-8).map((entry, timelineIndex) => (
-                                                <div key={ `${idx}-timeline-${timelineIndex}` } className="text-[11px] flex items-start gap-2">
+                                                <div key={ `${idx}-timeline-${timelineIndex}` } className="text-xs flex items-start gap-2">
                                                     <Badge variant="outline" className="text-[10px] shrink-0">{ entry.phase }</Badge>
                                                     <span className="opacity-80">[{ entry.status }] { entry.detail }</span>
                                                 </div>
@@ -705,7 +705,7 @@ export function PAIOSOrchestratorChat() {
                         </Button>
                     </div>
                     { isLoading && (
-                        <p className="text-xs text-muted-foreground mt-2 animate-pulse">⏳ Orchestrator gondolkodik...</p>
+                        <p className="text-xs text-zinc-500 mt-2 animate-pulse">⏳ Orchestrator gondolkodik...</p>
                     ) }
                 </div>
             </CardContent>

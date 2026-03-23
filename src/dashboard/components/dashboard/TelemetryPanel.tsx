@@ -54,7 +54,7 @@ export function TelemetryPanel() {
 
   useEffect(() => { fetchStats(); }, [fetchStats]);
 
-  if (loading) return <div className="p-4 text-muted-foreground">Telemetria betöltése...</div>;
+  if (loading) return <div className="p-4 text-zinc-500">Telemetria betöltése...</div>;
 
   const formatTokens = (n: number) => n > 1000 ? `${(n / 1000).toFixed(1)}k` : String(n);
   const formatMs = (ms: number) => ms > 1000 ? `${(ms / 1000).toFixed(1)}s` : `${ms}ms`;
@@ -74,7 +74,7 @@ export function TelemetryPanel() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
               <Layers className="h-4 w-4 text-orange-500" /> Aktív Spanek
             </CardTitle>
           </CardHeader>
@@ -85,7 +85,7 @@ export function TelemetryPanel() {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
               <Timer className="h-4 w-4 text-green-500" /> Befejezett
             </CardTitle>
           </CardHeader>
@@ -96,7 +96,7 @@ export function TelemetryPanel() {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
               <Cpu className="h-4 w-4 text-purple-500" /> Input Tokenek
             </CardTitle>
           </CardHeader>
@@ -107,7 +107,7 @@ export function TelemetryPanel() {
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
               <DollarSign className="h-4 w-4 text-yellow-500" /> Output Tokenek
             </CardTitle>
           </CardHeader>
@@ -130,14 +130,14 @@ export function TelemetryPanel() {
                   <div className="flex items-center gap-2">
                     <span className={`w-2 h-2 rounded-full ${t.status === 'success' ? 'bg-green-500' : t.status === 'error' ? 'bg-red-500' : 'bg-yellow-500'}`} />
                     <span className="font-medium">{t.agentName}</span>
-                    <span className="text-muted-foreground">{t.operation}</span>
+                    <span className="text-zinc-500">{t.operation}</span>
                   </div>
-                  <span className="text-muted-foreground">{formatMs(t.duration)}</span>
+                  <span className="text-zinc-500">{formatMs(t.duration)}</span>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-muted-foreground">Még nincs trace adat.</p>
+            <p className="text-sm text-zinc-500">Még nincs trace adat.</p>
           )}
         </CardContent>
       </Card>
@@ -153,7 +153,7 @@ export function TelemetryPanel() {
               {Object.entries(stats.tokensByModel).map(([model, usage]) => (
                 <div key={model} className="flex items-center justify-between text-sm">
                   <span className="font-medium">{model}</span>
-                  <span className="text-muted-foreground">
+                  <span className="text-zinc-500">
                     ↑{formatTokens(usage.input)} / ↓{formatTokens(usage.output)}
                   </span>
                 </div>

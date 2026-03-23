@@ -120,17 +120,17 @@ export function MachineHunterWidget() {
                     <div className="p-4 rounded-xl bg-secondary/20 border border-primary/5 flex flex-col items-center justify-center text-center">
                         <TrendingUp className="w-6 h-6 text-green-500 mb-2" />
                         <div className="text-2xl font-bold">{alerts.length}</div>
-                        <div className="text-xs text-muted-foreground uppercase tracking-tighter">Aktív Találatok</div>
+                        <div className="text-xs text-zinc-500 uppercase tracking-tighter">Aktív Találatok</div>
                     </div>
                     <div className="p-4 rounded-xl bg-secondary/20 border border-primary/5 flex flex-col items-center justify-center text-center">
                         <ShieldCheck className="w-6 h-6 text-blue-500 mb-2" />
                         <div className="text-2xl font-bold">84%</div>
-                        <div className="text-xs text-muted-foreground uppercase tracking-tighter">Átlagos Bizalom</div>
+                        <div className="text-xs text-zinc-500 uppercase tracking-tighter">Átlagos Bizalom</div>
                     </div>
                     <div className="p-4 rounded-xl bg-secondary/20 border border-primary/5 flex flex-col items-center justify-center text-center">
                         <AlertCircle className="w-6 h-6 text-yellow-500 mb-2" />
                         <div className="text-2xl font-bold">3</div>
-                        <div className="text-xs text-muted-foreground uppercase tracking-tighter">Kritikus (BUY)</div>
+                        <div className="text-xs text-zinc-500 uppercase tracking-tighter">Kritikus (BUY)</div>
                     </div>
                 </div>
 
@@ -142,7 +142,7 @@ export function MachineHunterWidget() {
                     
                     <ScrollArea className="h-[350px] pr-4">
                         {alerts.length === 0 ? (
-                            <div className="h-full flex flex-col items-center justify-center py-12 text-muted-foreground opacity-40">
+                            <div className="h-full flex flex-col items-center justify-center py-12 text-zinc-500 opacity-40">
                                 <Search className="w-12 h-12 mb-4" />
                                 <p>Nincs aktív találat. Indíts egy új vadászatot!</p>
                             </div>
@@ -171,12 +171,12 @@ export function MachineHunterWidget() {
                                             </div>
                                             <div className="text-right">
                                                 <div className="text-sm font-bold text-green-500">{formatCurrency(alert.priceEur)}</div>
-                                                <div className="text-[10px] text-muted-foreground line-through opacity-50">{formatCurrency(alert.estimatedValueEur)}</div>
+                                                <div className="text-[10px] text-zinc-500 line-through opacity-50">{formatCurrency(alert.estimatedValueEur)}</div>
                                             </div>
                                         </div>
                                         
                                         <div className="flex justify-between items-center mt-4 pt-3 border-t border-primary/5">
-                                            <div className="text-[10px] text-muted-foreground font-mono">
+                                            <div className="text-[10px] text-zinc-500 font-mono">
                                                 ID: {alert.id} | {new Date(alert.timestamp).toLocaleTimeString()}
                                             </div>
                                             <div className="flex gap-2">

@@ -138,10 +138,10 @@ export function TaskDecomposerPanel() {
                 {t.parallel ? "parallel" : "seq"}
               </Badge>
             </div>
-            <div className="text-[11px] leading-snug opacity-90 max-w-[220px]">
+            <div className="text-xs leading-snug opacity-90 max-w-[220px]">
               {t.task}
             </div>
-            <div className="text-[10px] text-muted-foreground font-mono">
+            <div className="text-[10px] text-zinc-500 font-mono">
               agent: {t.agent}
             </div>
           </div>
@@ -226,10 +226,10 @@ export function TaskDecomposerPanel() {
 
         <div className="rounded-xl overflow-hidden border border-white/10 bg-black/10">
           <div className="flex items-center justify-between px-3 py-2 bg-white/[0.04]">
-            <div className="text-sm font-medium text-muted-foreground">
+            <div className="text-sm font-medium text-zinc-500">
               DAG vizualizáció
             </div>
-            <div className="text-xs text-muted-foreground font-mono">
+            <div className="text-xs text-zinc-500 font-mono">
               {result?.tasks?.length ? `${result.tasks.length} node` : "-"}
             </div>
           </div>
@@ -246,7 +246,7 @@ export function TaskDecomposerPanel() {
         </div>
 
         {result?.tasks?.length ? (
-          <div className="text-xs text-muted-foreground">
+          <div className="text-xs text-zinc-500">
             Tipp: ez még csak <span className="font-semibold">preview</span> —
             nem futtatja a mikro-taskokat.
           </div>

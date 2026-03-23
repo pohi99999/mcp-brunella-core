@@ -35,7 +35,7 @@ export function EnterpriseSuitePanel() {
                     <Briefcase className="w-8 h-8 text-primary" />
                     Brunella Enterprise Suite
                 </h1>
-                <p className="text-muted-foreground max-w-2xl">
+                <p className="text-zinc-500 max-w-2xl">
                     Professzionális üzleti modulok KKV-k számára. Adatvezérelt döntéstámogatás, automatizált adminisztráció és keresztiparágú innováció.
                 </p>
             </div>

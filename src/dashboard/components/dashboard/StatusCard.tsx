@@ -41,7 +41,7 @@ export function StatusCard({ serverState }: StatusCardProps) {
       <CardContent className="space-y-4">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <div className="flex items-center gap-2 text-zinc-500 text-sm">
               <Timer size={18} />
               <span>Üzemidő</span>
             </div>
@@ -51,7 +51,7 @@ export function StatusCard({ serverState }: StatusCardProps) {
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <div className="flex items-center gap-2 text-zinc-500 text-sm">
               <Cpu size={18} />
               <span>CPU Használat</span>
             </div>
@@ -65,7 +65,7 @@ export function StatusCard({ serverState }: StatusCardProps) {
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-muted-foreground text-sm">
+            <div className="flex items-center gap-2 text-zinc-500 text-sm">
               <HardDrive size={18} />
               <span>Memória Használat</span>
             </div>

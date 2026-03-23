@@ -62,7 +62,7 @@ export function AgentDiagnosticsPanel ()
             <div className="flex items-center justify-between gap-4">
                 <div>
                     <h2 className="text-3xl font-space font-bold text-foreground">Agent Diagnostics</h2>
-                    <p className="text-muted-foreground mt-1">Registry validáció, export loader állapot és routing metadata egy helyen.</p>
+                    <p className="text-zinc-500 mt-1">Registry validáció, export loader állapot és routing metadata egy helyen.</p>
                 </div>
                 <Button onClick={ () => void loadDiagnostics() } variant="outline" size="sm" className="gap-2">
                     <RefreshCcw className="w-4 h-4" /> Frissítés
@@ -79,7 +79,7 @@ export function AgentDiagnosticsPanel ()
                         </CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-xs text-muted-foreground">Ellenőrizve: { data?.validation.checkedAt ?? "-" }</p>
+                        <p className="text-xs text-zinc-500">Ellenőrizve: { data?.validation.checkedAt ?? "-" }</p>
                     </CardContent>
                 </Card>
 
@@ -89,7 +89,7 @@ export function AgentDiagnosticsPanel ()
                         <CardTitle className="text-2xl">{ summary?.totalAgents ?? 0 }</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-xs text-muted-foreground">Aktív: { summary?.activeAgents ?? 0 }</p>
+                        <p className="text-xs text-zinc-500">Aktív: { summary?.activeAgents ?? 0 }</p>
                     </CardContent>
                 </Card>
 
@@ -99,7 +99,7 @@ export function AgentDiagnosticsPanel ()
                         <CardTitle className="text-2xl">{ data?.validation.errors.length ?? 0 }</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-xs text-muted-foreground">Warningok: { data?.validation.warnings.length ?? 0 }</p>
+                        <p className="text-xs text-zinc-500">Warningok: { data?.validation.warnings.length ?? 0 }</p>
                     </CardContent>
                 </Card>
 
@@ -109,7 +109,7 @@ export function AgentDiagnosticsPanel ()
                         <CardTitle className="text-lg">{ summary?.defaultAgent ?? "-" }</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p className="text-xs text-muted-foreground">Routing fallback cél</p>
+                        <p className="text-xs text-zinc-500">Routing fallback cél</p>
                     </CardContent>
                 </Card>
             </div>
@@ -122,7 +122,7 @@ export function AgentDiagnosticsPanel ()
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div>
-                            <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Errors</div>
+                            <div className="text-xs uppercase tracking-wide text-zinc-500 mb-2">Errors</div>
                             <div className="space-y-2">
                                 { ( data?.validation.errors.length ?? 0 ) === 0 ? (
                                     <div className="text-sm text-emerald-400">Nincs blokkoló schema hiba.</div>
@@ -134,10 +134,10 @@ export function AgentDiagnosticsPanel ()
                             </div>
                         </div>
                         <div>
-                            <div className="text-xs uppercase tracking-wide text-muted-foreground mb-2">Warnings</div>
+                            <div className="text-xs uppercase tracking-wide text-zinc-500 mb-2">Warnings</div>
                             <div className="space-y-2">
                                 { ( data?.validation.warnings.length ?? 0 ) === 0 ? (
-                                    <div className="text-sm text-muted-foreground">Nincs aktív figyelmeztetés.</div>
+                                    <div className="text-sm text-zinc-500">Nincs aktív figyelmeztetés.</div>
                                 ) : (
                                     data?.validation.warnings.map( ( warning ) => (
                                         <div key={ warning } className="rounded-md border border-amber-500/30 bg-amber-500/10 p-2 text-sm text-amber-100">{ warning }</div>
@@ -157,13 +157,13 @@ export function AgentDiagnosticsPanel ()
                         <ScrollArea className="h-[640px]">
                             <div className="divide-y divide-border/50">
                                 { loading && !data ? (
-                                    <div className="p-4 text-muted-foreground">Betöltés...</div>
+                                    <div className="p-4 text-zinc-500">Betöltés...</div>
                                 ) : data?.agents.map( ( agent ) => (
                                     <div key={ agent.name } className="p-4 space-y-3">
                                         <div className="flex flex-col gap-2 md:flex-row md:items-start md:justify-between">
                                             <div>
                                                 <div className="text-base font-semibold">{ agent.name }</div>
-                                                <div className="text-xs text-muted-foreground">{ agent.module } → { agent.configuredClass }</div>
+                                                <div className="text-xs text-zinc-500">{ agent.module } → { agent.configuredClass }</div>
                                             </div>
                                             <div className="flex flex-wrap gap-2">
                                                 <Badge variant={ badgeVariantForLoadStatus( agent.loadStatus ) }>{ agent.loadStatus }</Badge>
@@ -176,17 +176,17 @@ export function AgentDiagnosticsPanel ()
                                         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
                                             <div className="rounded-md border border-border/50 bg-background/40 p-3 space-y-2">
                                                 <div className="font-medium flex items-center gap-2"><Cpu className="w-4 h-4 text-cyan-400" /> Loader</div>
-                                                <div><span className="text-muted-foreground">Resolved export:</span> { agent.resolvedExportName ?? "-" }</div>
-                                                <div><span className="text-muted-foreground">Strategy:</span> { agent.resolutionStrategy ?? "-" }</div>
-                                                <div><span className="text-muted-foreground">Exports:</span> { agent.availableExports.join( ", " ) || "-" }</div>
+                                                <div><span className="text-zinc-500">Resolved export:</span> { agent.resolvedExportName ?? "-" }</div>
+                                                <div><span className="text-zinc-500">Strategy:</span> { agent.resolutionStrategy ?? "-" }</div>
+                                                <div><span className="text-zinc-500">Exports:</span> { agent.availableExports.join( ", " ) || "-" }</div>
                                                 { agent.error ? <div className="text-red-300">{ agent.error }</div> : null }
                                             </div>
                                             <div className="rounded-md border border-border/50 bg-background/40 p-3 space-y-2">
                                                 <div className="font-medium">Metadata standard</div>
-                                                <div><span className="text-muted-foreground">Category:</span> { agent.metadata.category }</div>
-                                                <div><span className="text-muted-foreground">Lifecycle:</span> { agent.metadata.status }</div>
-                                                <div><span className="text-muted-foreground">Runtime:</span> { agent.metadata.runtimeCompatibility }</div>
-                                                <div><span className="text-muted-foreground">Priority:</span> { agent.metadata.priority }</div>
+                                                <div><span className="text-zinc-500">Category:</span> { agent.metadata.category }</div>
+                                                <div><span className="text-zinc-500">Lifecycle:</span> { agent.metadata.status }</div>
+                                                <div><span className="text-zinc-500">Runtime:</span> { agent.metadata.runtimeCompatibility }</div>
+                                                <div><span className="text-zinc-500">Priority:</span> { agent.metadata.priority }</div>
                                             </div>
                                         </div>
 
@@ -199,7 +199,7 @@ export function AgentDiagnosticsPanel ()
                                             ) ) }
                                         </div>
 
-                                        <div className="text-xs text-muted-foreground">
+                                        <div className="text-xs text-zinc-500">
                                             Success: { agent.runtime.successCount } · Error: { agent.runtime.errorCount } · Last task: { agent.runtime.lastTask ?? "-" }
                                         </div>
                                     </div>

@@ -27,9 +27,9 @@ function formatNumber(n: number): string {
 function StatCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
     <div className="space-y-1">
-      <p className="text-xs text-muted-foreground">{label}</p>
+      <p className="text-xs text-zinc-500">{label}</p>
       <p className="text-xl font-mono font-medium text-accent">{value}</p>
-      {sub && <p className="text-xs text-muted-foreground">{sub}</p>}
+      {sub && <p className="text-xs text-zinc-500">{sub}</p>}
     </div>
   )
 }
@@ -69,7 +69,7 @@ export function TokenUsageChart() {
       </CardHeader>
       <CardContent>
         {!usage ? (
-          <p className="text-muted-foreground text-sm">Loading token data…</p>
+          <p className="text-zinc-500 text-sm">Loading token data…</p>
         ) : (
           <div className="space-y-6">
             {/* Summary row */}
@@ -94,12 +94,12 @@ export function TokenUsageChart() {
             {/* By Agent */}
             {agentEntries.length > 0 && (
               <div>
-                <p className="text-xs text-muted-foreground mb-2 font-medium">By Agent</p>
+                <p className="text-xs text-zinc-500 mb-2 font-medium">By Agent</p>
                 <div className="space-y-1">
                   {agentEntries.map(([agent, tokens]) => (
                     <div key={agent} className="flex items-center justify-between text-sm">
                       <span className="font-mono">{agent}</span>
-                      <span className="text-muted-foreground">
+                      <span className="text-zinc-500">
                         {formatNumber(tokens.input + tokens.output)} tokens
                       </span>
                     </div>
@@ -111,13 +111,13 @@ export function TokenUsageChart() {
             {/* By Model */}
             {modelEntries.length > 0 && (
               <div>
-                <p className="text-xs text-muted-foreground mb-2 font-medium">By Model</p>
+                <p className="text-xs text-zinc-500 mb-2 font-medium">By Model</p>
                 <div className="space-y-1">
                   {modelEntries.map(([model, tokens]) => (
                     <div key={model} className="flex items-center justify-between text-sm">
                       <span className="font-mono">{model}</span>
                       <div className="flex items-center gap-2">
-                        <span className="text-muted-foreground">
+                        <span className="text-zinc-500">
                           {formatNumber(tokens.input + tokens.output)}
                         </span>
                         {costEntries.find(([m]) => m === model) && (

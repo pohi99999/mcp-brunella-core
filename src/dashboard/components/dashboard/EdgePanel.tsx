@@ -283,32 +283,32 @@ export function EdgePanel() {
         {/* Connection Info */}
         <div className="space-y-2 rounded-md border bg-muted/50 p-3 text-xs">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">WebSocket URL:</span>
+            <span className="text-zinc-500">WebSocket URL:</span>
             <span className="font-mono">{wsUrl}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Socket ID:</span>
+            <span className="text-zinc-500">Socket ID:</span>
             <span className="font-mono">{socketId}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Transport:</span>
+            <span className="text-zinc-500">Transport:</span>
             <span className="font-mono">{transport}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Reconnect Attempts:</span>
+            <span className="text-zinc-500">Reconnect Attempts:</span>
             <span>{reconnectAttempts}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Last Disconnect:</span>
+            <span className="text-zinc-500">Last Disconnect:</span>
             <span className="font-mono">{lastDisconnectReason}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Messages Received:</span>
+            <span className="text-zinc-500">Messages Received:</span>
             <span>{messages.length}</span>
           </div>
           {lastMessage && (
             <div className="flex justify-between">
-              <span className="text-muted-foreground">Last Message:</span>
+              <span className="text-zinc-500">Last Message:</span>
               <span>
                 {new Date(lastMessage.timestamp).toLocaleTimeString()} -{" "}
                 {lastMessage.type}
@@ -328,7 +328,7 @@ export function EdgePanel() {
                     key={`${msg.id}-${idx}`}
                     className="rounded-md border bg-card p-2 text-xs"
                   >
-                    <div className="flex items-center justify-between text-muted-foreground">
+                    <div className="flex items-center justify-between text-zinc-500">
                       <Badge variant="outline" className="text-[10px]">
                         {msg.type}
                       </Badge>
@@ -349,7 +349,7 @@ export function EdgePanel() {
         {/* Empty State */}
         {messages.length === 0 && isConnected && (
           <div className="flex items-center justify-center rounded-md border border-dashed py-8 text-center">
-            <div className="text-sm text-muted-foreground">
+            <div className="text-sm text-zinc-500">
               No messages yet. Send a test message to see it here.
             </div>
           </div>

@@ -143,7 +143,7 @@ export function NeuralCommandWidget() {
                         className="min-h-[80px] resize-none"
                         disabled={executing}
                     />
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <div className="flex items-center justify-between text-sm text-zinc-500">
                         <span>Ctrl + Enter küldés</span>
                         <span>{command.length} karakter</span>
                     </div>
@@ -151,7 +151,7 @@ export function NeuralCommandWidget() {
 
                 {/* Predefined Tasks */}
                 <div className="space-y-2">
-                    <p className="text-sm text-muted-foreground">Gyors parancsok:</p>
+                    <p className="text-sm text-zinc-500">Gyors parancsok:</p>
                     <div className="flex flex-wrap gap-2">
                         {predefinedTasks.map((task, index) => (
                             <Button
@@ -207,7 +207,7 @@ export function NeuralCommandWidget() {
                                     </span>
                                 </>
                             )}
-                            <span className="ml-auto text-xs text-muted-foreground">
+                            <span className="ml-auto text-xs text-zinc-500">
                                 {formatTimestamp(lastResult.executedAt)}
                             </span>
                         </div>

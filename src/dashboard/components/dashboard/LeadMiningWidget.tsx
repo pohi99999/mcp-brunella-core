@@ -92,11 +92,11 @@ export function LeadMiningWidget() {
             <CardContent>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div className="p-4 rounded-xl bg-secondary/20 border border-primary/5">
-                        <div className="text-xs text-muted-foreground uppercase tracking-tighter mb-1">Összes Lead</div>
+                        <div className="text-xs text-zinc-500 uppercase tracking-tighter mb-1">Összes Lead</div>
                         <div className="text-2xl font-bold">{leads.length}</div>
                     </div>
                     <div className="p-4 rounded-xl bg-secondary/20 border border-primary/5">
-                        <div className="text-xs text-muted-foreground uppercase tracking-tighter mb-1">Átlagos Érdeklődés</div>
+                        <div className="text-xs text-zinc-500 uppercase tracking-tighter mb-1">Átlagos Érdeklődés</div>
                         <div className="text-2xl font-bold text-green-500">Magas</div>
                     </div>
                 </div>
@@ -109,7 +109,7 @@ export function LeadMiningWidget() {
 
                     <ScrollArea className="h-[350px] pr-4">
                         {leads.length === 0 ? (
-                            <div className="h-full flex flex-col items-center justify-center py-12 text-muted-foreground opacity-40">
+                            <div className="h-full flex flex-col items-center justify-center py-12 text-zinc-500 opacity-40">
                                 <Users className="w-12 h-12 mb-4" />
                                 <p>Nincsenek lead-ek. Indíts egy keresést!</p>
                             </div>
@@ -123,7 +123,7 @@ export function LeadMiningWidget() {
                                         <div className="flex justify-between items-start mb-2">
                                             <div>
                                                 <h4 className="font-bold text-sm">{lead.name}</h4>
-                                                <div className="text-[10px] text-muted-foreground font-mono">{lead.industry}</div>
+                                                <div className="text-[10px] text-zinc-500 font-mono">{lead.industry}</div>
                                             </div>
                                             <Button variant="ghost" size="xs" asChild>
                                                 <a href={lead.website} target="_blank" rel="noopener noreferrer">

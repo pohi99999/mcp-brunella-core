@@ -171,7 +171,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
       server: 'bg-destructive/20 text-destructive',
       monitoring: 'bg-accent/20 text-accent',
       configuration: 'bg-warning/20 text-warning',
-      custom: 'bg-muted text-muted-foreground',
+      custom: 'bg-muted text-zinc-500',
     }
     return colors[category]
   }
@@ -283,7 +283,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                         onChange={(e) => setApiConfig({ ...apiConfig, url: e.target.value })}
                         placeholder="https://api.example.com/endpoint"
                       />
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-zinc-500">
                         Használd a {`{{parameterName}}`} szintaxist paraméterek behelyettesítéséhez
                       </p>
                     </div>
@@ -386,7 +386,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                         onChange={(e) => setApiConfig({ ...apiConfig, responseMapping: e.target.value })}
                         placeholder="data.result"
                       />
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-zinc-500">
                         Pont-notációval válaszd ki a kívánt mezőt a válaszból
                       </p>
                     </div>
@@ -427,9 +427,9 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
           <div className="space-y-3">
             {tools.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <Toolbox size={64} weight="duotone" className="text-muted-foreground mb-4" />
+                <Toolbox size={64} weight="duotone" className="text-zinc-500 mb-4" />
                 <h3 className="text-lg font-medium mb-2">Még nincsenek tool-ok</h3>
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-500">
                   {canConfigure
                     ? 'Adj hozzá új agent tool-okat az AI képességeinek bővítéséhez'
                     : 'Az adminisztrátor még nem adott hozzá agent tool-okat'}
@@ -459,11 +459,11 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                             </Badge>
                           )}
                         </div>
-                        <p className="text-sm text-muted-foreground">{tool.description}</p>
+                        <p className="text-sm text-zinc-500">{tool.description}</p>
 
                         {tool.externalApi && (
                           <div className="space-y-1">
-                            <p className="text-xs font-medium text-muted-foreground">API Konfiguráció:</p>
+                            <p className="text-xs font-medium text-zinc-500">API Konfiguráció:</p>
                             <div className="text-xs space-y-0.5">
                               <div className="flex items-center gap-2">
                                 <Badge variant="secondary" className="text-xs">
@@ -476,7 +476,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
                                 </code>
                               </div>
                               {tool.externalApi.authType && tool.externalApi.authType !== 'none' && (
-                                <div className="flex items-center gap-1 text-muted-foreground">
+                                <div className="flex items-center gap-1 text-zinc-500">
                                   <Key size={12} />
                                   <span>
                                     {tool.externalApi.authType === 'bearer' && 'Bearer Token'}
@@ -491,14 +491,14 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
 
                         {tool.parameters.length > 0 && (
                           <div className="space-y-1">
-                            <p className="text-xs font-medium text-muted-foreground">Paraméterek:</p>
+                            <p className="text-xs font-medium text-zinc-500">Paraméterek:</p>
                             <div className="space-y-1">
                               {tool.parameters.map((param, idx) => (
                                 <div key={idx} className="flex items-start gap-2 text-xs">
                                   <code className="font-mono bg-muted px-1.5 py-0.5 rounded">
                                     {param.name}
                                   </code>
-                                  <span className="text-muted-foreground">
+                                  <span className="text-zinc-500">
                                     ({param.type})
                                     {param.required && <span className="text-destructive"> *</span>}
                                     {param.defaultValue !== undefined && (
@@ -538,7 +538,7 @@ export function AgentToolsManager({ tools, user, onUpdateTools }: AgentToolsMana
 
         <Separator className="my-4" />
 
-        <div className="flex items-start gap-2 text-sm text-muted-foreground">
+        <div className="flex items-start gap-2 text-sm text-zinc-500">
           <Info size={18} className="flex-shrink-0 mt-0.5" />
           <div>
             <p>

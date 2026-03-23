@@ -120,7 +120,7 @@ export function WorkflowPanel() {
                     <CardHeader><CardTitle className="text-sm">DAG vizualizáció</CardTitle></CardHeader>
                     <CardContent>
                         { workflowNodes.length === 0 ? (
-                            <p className="text-sm text-muted-foreground">Előbb generálj preview workflow-t.</p>
+                            <p className="text-sm text-zinc-500">Előbb generálj preview workflow-t.</p>
                         ) : (
                             <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
                                 { workflowNodes.map((node) => {
@@ -134,8 +134,8 @@ export function WorkflowPanel() {
                                                 </div>
                                             </div>
                                             <div className="mt-2 text-sm">{ node.label }</div>
-                                            <div className="mt-2 text-xs text-muted-foreground">Agent: { node.agentName ?? "auto" }</div>
-                                            <div className="mt-2 text-xs text-muted-foreground">Depends on: { (node.dependsOn ?? []).length > 0 ? (node.dependsOn ?? []).join(", ") : "—" }</div>
+                                            <div className="mt-2 text-xs text-zinc-500">Agent: { node.agentName ?? "auto" }</div>
+                                            <div className="mt-2 text-xs text-zinc-500">Depends on: { (node.dependsOn ?? []).length > 0 ? (node.dependsOn ?? []).join(", ") : "—" }</div>
                                             { nodeResult?.error ? <div className="mt-2 text-xs text-red-500">{ nodeResult.error }</div> : null }
                                         </div>
                                     );
@@ -150,7 +150,7 @@ export function WorkflowPanel() {
                         <CardHeader><CardTitle className="text-sm">Legutóbbi workflow futások</CardTitle></CardHeader>
                         <CardContent>
                             { statuses.length === 0 ? (
-                                <p className="text-sm text-muted-foreground">Még nincs workflow futás.</p>
+                                <p className="text-sm text-zinc-500">Még nincs workflow futás.</p>
                             ) : (
                                 <div className="space-y-2">
                                     { statuses.map((status) => (
@@ -159,8 +159,8 @@ export function WorkflowPanel() {
                                                 <span className="font-medium">{ status.name }</span>
                                                 <span className={ statusColor(status.status) }>{ status.status }</span>
                                             </div>
-                                            <div className="mt-1 text-xs text-muted-foreground">{ status.nodeCount } node · { status.durationMs ?? 0 } ms</div>
-                                            <div className="mt-1 text-xs text-muted-foreground">{ new Date(status.startedAt).toLocaleString() }</div>
+                                            <div className="mt-1 text-xs text-zinc-500">{ status.nodeCount } node · { status.durationMs ?? 0 } ms</div>
+                                            <div className="mt-1 text-xs text-zinc-500">{ new Date(status.startedAt).toLocaleString() }</div>
                                         </div>
                                     )) }
                                 </div>
@@ -173,14 +173,14 @@ export function WorkflowPanel() {
                         <CardContent className="space-y-2 text-sm">
                             { result ? (
                                 <>
-                                    <div className="flex justify-between"><span className="text-muted-foreground">Status</span><span className={ statusColor(result.status) }>{ result.status }</span></div>
-                                    <div className="flex justify-between"><span className="text-muted-foreground">Duration</span><span>{ result.durationMs } ms</span></div>
-                                    <div className="flex justify-between"><span className="text-muted-foreground">Tokens</span><span>{ result.totalTokens }</span></div>
-                                    <div className="flex justify-between"><span className="text-muted-foreground">Cost</span><span>${ result.totalCostUSD.toFixed(4) }</span></div>
-                                    <div className="text-xs text-muted-foreground">Warnings: { result.warnings.length > 0 ? result.warnings.join(" | ") : "nincs" }</div>
+                                    <div className="flex justify-between"><span className="text-zinc-500">Status</span><span className={ statusColor(result.status) }>{ result.status }</span></div>
+                                    <div className="flex justify-between"><span className="text-zinc-500">Duration</span><span>{ result.durationMs } ms</span></div>
+                                    <div className="flex justify-between"><span className="text-zinc-500">Tokens</span><span>{ result.totalTokens }</span></div>
+                                    <div className="flex justify-between"><span className="text-zinc-500">Cost</span><span>${ result.totalCostUSD.toFixed(4) }</span></div>
+                                    <div className="text-xs text-zinc-500">Warnings: { result.warnings.length > 0 ? result.warnings.join(" | ") : "nincs" }</div>
                                 </>
                             ) : (
-                                <p className="text-sm text-muted-foreground">Még nincs futtatási eredmény.</p>
+                                <p className="text-sm text-zinc-500">Még nincs futtatási eredmény.</p>
                             ) }
                         </CardContent>
                     </Card>

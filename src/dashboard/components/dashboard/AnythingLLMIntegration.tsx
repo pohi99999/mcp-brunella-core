@@ -141,7 +141,7 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
                                     ))}
                                 </SelectContent>
                             </Select>
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-zinc-500">
                                 {workspaces.length} workspace elérhető
                             </p>
                         </div>
@@ -157,7 +157,7 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
                                 className="min-h-[100px]"
                                 disabled={isProcessing}
                             />
-                            <p className="text-xs text-muted-foreground">
+                            <p className="text-xs text-zinc-500">
                                 Ctrl+Enter a küldéshez
                             </p>
                         </div>

@@ -71,7 +71,7 @@ export function AgentFactory() {
                 </div>
                 <div>
                     <h2 className="text-2xl font-bold tracking-tight">Agent Factory</h2>
-                    <p className="text-muted-foreground">Hozz létre új, specializált ügynököket kódolás nélkül.</p>
+                    <p className="text-zinc-500">Hozz létre új, specializált ügynököket kódolás nélkül.</p>
                 </div>
             </div>
 
