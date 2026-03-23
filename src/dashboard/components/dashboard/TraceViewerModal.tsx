@@ -149,7 +149,7 @@ export function TraceViewerModal({ isOpen, onClose, taskId }: TraceViewerModalPr
                 <ScrollArea className="h-[60vh] w-full">
                     {loading && (
                         <div className="flex items-center justify-center h-full">
-                            <div className="text-muted-foreground">Loading trace...</div>
+                            <div className="text-zinc-500">Loading trace...</div>
                         </div>
                     )}
 
@@ -166,46 +166,46 @@ export function TraceViewerModal({ isOpen, onClose, taskId }: TraceViewerModalPr
                                 <h3 className="font-semibold mb-2">Task Overview</h3>
                                 <div className="grid grid-cols-2 gap-2 text-sm">
                                     <div>
-                                        <span className="text-muted-foreground">Agent:</span>{' '}
+                                        <span className="text-zinc-500">Agent:</span>{' '}
                                         <span className="font-mono">{trace.agentName}</span>
                                     </div>
                                     <div>
-                                        <span className="text-muted-foreground">Status:</span>{' '}
+                                        <span className="text-zinc-500">Status:</span>{' '}
                                         <span className={`font-semibold ${trace.status === 'completed' ? 'text-green-500' :
                                             trace.status === 'failed' ? 'text-red-500' :
                                                 trace.status === 'running' ? 'text-yellow-500' :
-                                                    'text-muted-foreground'
+                                                    'text-zinc-500'
                                             }`}>
                                             {trace.status}
                                         </span>
                                     </div>
                                     {trace.startedAt && (
                                         <div>
-                                            <span className="text-muted-foreground">Started:</span>{' '}
+                                            <span className="text-zinc-500">Started:</span>{' '}
                                             {new Date(trace.startedAt).toLocaleString()}
                                         </div>
                                     )}
                                     {trace.completedAt && (
                                         <div>
-                                            <span className="text-muted-foreground">Completed:</span>{' '}
+                                            <span className="text-zinc-500">Completed:</span>{' '}
                                             {new Date(trace.completedAt).toLocaleString()}
                                         </div>
                                     )}
                                     {trace.priority !== undefined && (
                                         <div>
-                                            <span className="text-muted-foreground">Priority:</span>{' '}
+                                            <span className="text-zinc-500">Priority:</span>{' '}
                                             <span className="font-semibold">{trace.priority}</span>
                                         </div>
                                     )}
                                     {trace.retryCount !== undefined && trace.retryCount > 0 && (
                                         <div>
-                                            <span className="text-muted-foreground">Retries:</span>{' '}
+                                            <span className="text-zinc-500">Retries:</span>{' '}
                                             <span className="font-semibold text-orange-500">{trace.retryCount}</span>
                                         </div>
                                     )}
                                 </div>
                                 <div className="mt-2">
-                                    <span className="text-muted-foreground">Description:</span>
+                                    <span className="text-zinc-500">Description:</span>
                                     <p className="mt-1">{trace.description}</p>
                                 </div>
                             </div>
@@ -217,17 +217,17 @@ export function TraceViewerModal({ isOpen, onClose, taskId }: TraceViewerModalPr
                                     <div className="grid grid-cols-3 gap-4 text-sm">
                                         <div className="text-center">
                                             <div className="text-2xl font-bold text-blue-500">{metrics.duration}</div>
-                                            <div className="text-xs text-muted-foreground">Duration</div>
+                                            <div className="text-xs text-zinc-500">Duration</div>
                                         </div>
                                         <div className="text-center">
                                             <div className="text-2xl font-bold text-green-500">{metrics.avgLogInterval}</div>
-                                            <div className="text-xs text-muted-foreground">Avg Log Interval</div>
+                                            <div className="text-xs text-zinc-500">Avg Log Interval</div>
                                         </div>
                                         <div className="text-center">
                                             <div className={`text-2xl font-bold ${metrics.errorRate > 30 ? 'text-red-500' : metrics.errorRate > 10 ? 'text-yellow-500' : 'text-green-500'}`}>
                                                 {metrics.errorRate.toFixed(1)}%
                                             </div>
-                                            <div className="text-xs text-muted-foreground">Error Rate</div>
+                                            <div className="text-xs text-zinc-500">Error Rate</div>
                                         </div>
                                     </div>
                                 </div>
@@ -274,7 +274,7 @@ export function TraceViewerModal({ isOpen, onClose, taskId }: TraceViewerModalPr
                                                         'bg-muted'
                                                     }`}
                                             >
-                                                <span className="text-muted-foreground">
+                                                <span className="text-zinc-500">
                                                     [{new Date(log.timestamp).toLocaleTimeString()}]
                                                 </span>{' '}
                                                 {log.agent && <span className="font-semibold">[{log.agent}]</span>}{' '}

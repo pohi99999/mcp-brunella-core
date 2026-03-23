@@ -76,7 +76,7 @@ export function ConfigEditor({ config, user, onSave }: ConfigEditorProps) {
                   <Label htmlFor={item.key} className="text-sm">
                     {item.key}
                   </Label>
-                  <p className="text-xs text-muted-foreground">{item.description}</p>
+                  <p className="text-xs text-zinc-500">{item.description}</p>
                   {item.type === 'boolean' ? (
                     <div className="flex items-center gap-2">
                       <Switch
@@ -85,7 +85,7 @@ export function ConfigEditor({ config, user, onSave }: ConfigEditorProps) {
                         onCheckedChange={(checked) => handleValueChange(item.key, checked)}
                         disabled={!canEdit}
                       />
-                      <span className="text-sm text-muted-foreground">
+                      <span className="text-sm text-zinc-500">
                         {item.value ? 'Engedélyezve' : 'Letiltva'}
                       </span>
                     </div>

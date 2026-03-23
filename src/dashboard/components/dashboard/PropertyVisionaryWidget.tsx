@@ -130,14 +130,14 @@ export function PropertyVisionaryWidget() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Előzmények */}
                     <div className="lg:col-span-1 border-r border-white/[0.04] pr-4 flex flex-col gap-4">
-                        <h3 className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-2">
+                        <h3 className="text-xs font-semibold uppercase text-zinc-500 flex items-center gap-2">
                             <History size={12} />
                             Ingatlan Portfólió
                         </h3>
                         <ScrollArea className="h-[450px]">
                             <div className="space-y-2">
                                 {propertyJobs.length === 0 ? (
-                                    <p className="text-xs text-muted-foreground italic">Nincsenek korábbi projektek.</p>
+                                    <p className="text-xs text-zinc-500 italic">Nincsenek korábbi projektek.</p>
                                 ) : (
                                     propertyJobs.map((job) => (
                                         <div 
@@ -166,7 +166,7 @@ export function PropertyVisionaryWidget() {
                         {activeJob ? (
                             <div className="space-y-6">
                                 {activeJob.status === 'running' ? (
-                                    <div className="h-full flex flex-col items-center justify-center py-20 text-muted-foreground">
+                                    <div className="h-full flex flex-col items-center justify-center py-20 text-zinc-500">
                                         <Loader2 className="w-10 h-10 mb-4 animate-spin text-primary" />
                                         <p className="animate-pulse text-xs text-center max-w-[200px]">Ideális vevők felkutatása és megkeresési stratégia alkotása...</p>
                                     </div>
@@ -212,19 +212,19 @@ export function PropertyVisionaryWidget() {
                                                                 </div>
                                                                 <div className="flex flex-col items-end gap-1">
                                                                     <Badge className="bg-green-500/10 text-green-500 text-[9px]">{lead.outreachChannel || 'EMAIL'}</Badge>
-                                                                    <span className="text-[8px] font-mono text-zinc-600">{lead.linkedinHint || ''}</span>
+                                                                    <span className="text-[9px] font-mono text-zinc-600">{lead.linkedinHint || ''}</span>
                                                                 </div>
                                                             </div>
                                                             
-                                                            <p className="text-[11px] text-zinc-400 mb-3 leading-snug">{lead.reason}</p>
+                                                            <p className="text-xs text-zinc-400 mb-3 leading-snug">{lead.reason}</p>
                                                             
                                                             <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04] space-y-2">
                                                                 <div className="text-[9px] font-bold text-primary uppercase flex items-center gap-1">
                                                                     <MessageSquare size={10} /> Nyitó stratégia
                                                                 </div>
-                                                                <p className="text-[11px] text-zinc-200 italic leading-relaxed">"{lead.openingLine}"</p>
+                                                                <p className="text-xs text-zinc-200 italic leading-relaxed">"{lead.openingLine}"</p>
                                                                 <div className="pt-2 mt-2 border-t border-white/[0.04]">
-                                                                    <div className="text-[8px] font-bold text-zinc-500 uppercase mb-1">Értékajánlat (Proposition)</div>
+                                                                    <div className="text-[9px] font-bold text-zinc-500 uppercase mb-1">Értékajánlat (Proposition)</div>
                                                                     <p className="text-[10px] text-zinc-400">{lead.valueProposition}</p>
                                                                 </div>
                                                             </div>
@@ -242,7 +242,7 @@ export function PropertyVisionaryWidget() {
                                 ) : null}
                             </div>
                         ) : (
-                            <div className="h-full flex flex-col items-center justify-center py-20 text-muted-foreground opacity-40">
+                            <div className="h-full flex flex-col items-center justify-center py-20 text-zinc-500 opacity-40">
                                 <Building2 className="w-16 h-16 mb-4" />
                                 <p className="text-center">Adj meg egy ingatlant az induláshoz.<br/><span className="text-[10px]">Példa: "Ipari csarnok engedéllyel Győr mellett"</span></p>
                             </div>

@@ -109,14 +109,14 @@ export function DigitalHRWidget() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Előzmények */}
                     <div className="lg:col-span-1 border-r border-white/[0.04] pr-4">
-                        <h3 className="text-xs font-semibold uppercase text-muted-foreground mb-3 flex items-center gap-2">
+                        <h3 className="text-xs font-semibold uppercase text-zinc-500 mb-3 flex items-center gap-2">
                             <History className="w-3 h-3" />
                             Korábbi Jelöltek
                         </h3>
                         <ScrollArea className="h-[400px]">
                             <div className="space-y-2">
                                 {hrJobs.length === 0 ? (
-                                    <p className="text-xs text-muted-foreground italic">Nincsenek korábbi szűrések.</p>
+                                    <p className="text-xs text-zinc-500 italic">Nincsenek korábbi szűrések.</p>
                                 ) : (
                                     hrJobs.map((job) => {
                                         const res = job.results_json ? JSON.parse(job.results_json) : {};
@@ -153,7 +153,7 @@ export function DigitalHRWidget() {
                         {activeJob ? (
                             <div className="space-y-6">
                                 {activeJob.status === 'running' ? (
-                                    <div className="h-full flex flex-col items-center justify-center py-20 text-muted-foreground">
+                                    <div className="h-full flex flex-col items-center justify-center py-20 text-zinc-500">
                                         <Loader2 className="w-10 h-10 mb-4 animate-spin text-blue-500" />
                                         <p className="animate-pulse">CV elemzése Vision MI-vel...</p>
                                     </div>
@@ -214,7 +214,7 @@ export function DigitalHRWidget() {
                                 ) : null}
                             </div>
                         ) : (
-                            <div className="h-full flex flex-col items-center justify-center py-20 text-muted-foreground opacity-40">
+                            <div className="h-full flex flex-col items-center justify-center py-20 text-zinc-500 opacity-40">
                                 <UserCheck className="w-16 h-16 mb-4" />
                                 <p>Válassz ki egy jelöltet az elemzéshez.</p>
                             </div>

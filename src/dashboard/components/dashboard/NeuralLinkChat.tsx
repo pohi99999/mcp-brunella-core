@@ -340,7 +340,7 @@ export function NeuralLinkChat() {
             <div key={idx} className="flex items-center gap-1.5 bg-background/80 border border-primary/20 rounded-full px-2 py-0.5 animate-pulse shrink-0">
               <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
               <span className="text-[10px] font-medium">{agent.name}</span>
-              <span className="text-[9px] text-muted-foreground truncate max-w-[100px] italic"> - {agent.task}</span>
+              <span className="text-[9px] text-zinc-500 truncate max-w-[100px] italic"> - {agent.task}</span>
             </div>
           ))}
         </div>
@@ -366,7 +366,7 @@ export function NeuralLinkChat() {
                   <p className="text-sm font-medium text-foreground/80">
                     Neural Connection established
                   </p>
-                  <p className="text-xs text-muted-foreground max-w-xs">
+                  <p className="text-xs text-zinc-500 max-w-xs">
                     {mode === "orchestrator"
                       ? "Orchestrator üzemmód: Komplex feladatok delegálása ügynököknek."
                       : mode === "cloudflare_chat"
@@ -419,7 +419,7 @@ export function NeuralLinkChat() {
                       <div className="flex flex-col gap-1 px-1">
                         <button
                           onClick={() => toggleThoughts(i)}
-                          className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors w-fit"
+                          className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-zinc-500 hover:text-primary transition-colors w-fit"
                         >
                           <span
                             className={`w-1.5 h-1.5 rounded-full ${msg.thoughts ? "bg-amber-500 animate-pulse" : "bg-zinc-500"}`}
@@ -436,7 +436,7 @@ export function NeuralLinkChat() {
                           <div className="mt-2 space-y-3 animate-in fade-in duration-200">
                             {msg.thoughts && (
                               <div className="p-3 rounded-lg bg-amber-500/5 border border-amber-500/10">
-                                <p className="text-[11px] italic text-amber-500/80 leading-normal">
+                                <p className="text-xs italic text-amber-500/80 leading-normal">
                                   {msg.thoughts}
                                 </p>
                               </div>

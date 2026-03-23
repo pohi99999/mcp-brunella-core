@@ -209,7 +209,7 @@ export function TrackProgressWidget() {
   return (
     <Card className="glass-card border-white/10 overflow-hidden">
       <CardHeader className="pb-3 border-b border-border/50 bg-muted/20">
-        <CardTitle className="flex items-center justify-between text-sm font-bold tracking-wider uppercase text-muted-foreground">
+        <CardTitle className="flex items-center justify-between text-sm font-bold tracking-wider uppercase text-zinc-500">
           <span className="flex items-center gap-2">
             <ListChecks size={16} className="text-emerald-400" />
             Track Haladás
@@ -245,7 +245,7 @@ export function TrackProgressWidget() {
           <div className="space-y-2">
             <button
               onClick={() => setShowWaitingTracks(!showWaitingTracks)}
-              className="flex items-center gap-2 text-xs font-semibold text-muted-foreground w-full hover:text-foreground transition-colors"
+              className="flex items-center gap-2 text-xs font-semibold text-zinc-500 w-full hover:text-foreground transition-colors"
             >
               <ClockCountdown size={14} className="text-blue-400" />
               Várakozó fejlesztésre
@@ -268,7 +268,7 @@ export function TrackProgressWidget() {
                           <p className="truncate text-xs font-medium">
                             {track.title}
                           </p>
-                          <p className="text-[10px] text-muted-foreground">
+                          <p className="text-[10px] text-zinc-500">
                             0% • NAP
                           </p>
                         </div>
@@ -289,7 +289,7 @@ export function TrackProgressWidget() {
         )}
 
         <div className="space-y-2">
-          <div className="flex items-center gap-2 text-xs font-semibold text-muted-foreground">
+          <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500">
             <HardDrives size={14} className="text-amber-400" />
             Fejlesztés alatt
             <Badge variant="outline" className="ml-auto">
@@ -297,7 +297,7 @@ export function TrackProgressWidget() {
             </Badge>
           </div>
           {activeTracks.length === 0 ? (
-            <div className="text-xs text-muted-foreground pl-5">
+            <div className="text-xs text-zinc-500 pl-5">
               Nincs aktív fejlesztés
             </div>
           ) : (
@@ -323,7 +323,7 @@ export function TrackProgressWidget() {
                         <p className="truncate text-xs font-medium">
                           {track.title}
                         </p>
-                        <p className="text-[10px] text-muted-foreground">
+                        <p className="text-[10px] text-zinc-500">
                           {progress}%
                           {remaining !== null ? ` • ${remaining} hátra` : ""}
                         </p>
@@ -356,7 +356,7 @@ export function TrackProgressWidget() {
                               <span
                                 className={
                                   todo.completed
-                                    ? "line-through text-muted-foreground"
+                                    ? "line-through text-zinc-500"
                                     : "text-foreground"
                                 }
                               >
@@ -365,13 +365,13 @@ export function TrackProgressWidget() {
                             </li>
                           ))}
                           {todoState.todos.length > 4 && (
-                            <li className="text-muted-foreground">
+                            <li className="text-zinc-500">
                               +{todoState.todos.length - 4} további feladat
                             </li>
                           )}
                         </ul>
                       ) : (
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-xs text-zinc-500">
                           {isLoadingTodos
                             ? "TODO betöltése..."
                             : "Nincs TODO elem"}

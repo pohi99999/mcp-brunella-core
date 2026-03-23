@@ -47,7 +47,7 @@ export function GuardrailsPanel() {
 
   useEffect(() => { fetchStats(); }, [fetchStats]);
 
-  if (loading) return <div className="p-4 text-muted-foreground">Guardrails statisztikák betöltése...</div>;
+  if (loading) return <div className="p-4 text-zinc-500">Guardrails statisztikák betöltése...</div>;
 
   const total = (stats?.validationsPassed ?? 0) + (stats?.validationsFailed ?? 0);
   const passRate = total > 0 ? ((stats?.validationsPassed ?? 0) / total * 100).toFixed(1) : '—';
@@ -67,49 +67,49 @@ export function GuardrailsPanel() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
               <CheckCircle className="h-4 w-4 text-green-500" /> Validáció OK
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.validationsPassed ?? 0}</div>
-            <p className="text-xs text-muted-foreground">Átment: {passRate}%</p>
+            <p className="text-xs text-zinc-500">Átment: {passRate}%</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
               <AlertTriangle className="h-4 w-4 text-yellow-500" /> Validáció Hiba
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.validationsFailed ?? 0}</div>
-            <p className="text-xs text-muted-foreground">Schema eltérés</p>
+            <p className="text-xs text-zinc-500">Schema eltérés</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
               <BarChart3 className="h-4 w-4 text-blue-500" /> Átl. Confidence
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{(stats?.avgConfidence ?? 0).toFixed(2)}</div>
-            <p className="text-xs text-muted-foreground">Küszöb: {stats?.confidenceThreshold ?? 0.6}</p>
+            <p className="text-xs text-zinc-500">Küszöb: {stats?.confidenceThreshold ?? 0.6}</p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground flex items-center gap-1">
+            <CardTitle className="text-sm font-medium text-zinc-500 flex items-center gap-1">
               <Lock className="h-4 w-4 text-red-500" /> PII Redakció
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{stats?.redactionsTriggered ?? 0}</div>
-            <p className="text-xs text-muted-foreground">Automatikus törlés</p>
+            <p className="text-xs text-zinc-500">Automatikus törlés</p>
           </CardContent>
         </Card>
       </div>
@@ -120,17 +120,17 @@ export function GuardrailsPanel() {
         </CardHeader>
         <CardContent className="text-sm space-y-1">
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Strict Mode:</span>
+            <span className="text-zinc-500">Strict Mode:</span>
             <span className={stats?.strictMode ? 'text-red-500 font-bold' : 'text-green-500'}>
               {stats?.strictMode ? 'BE (hard-fail)' : 'KI (soft-fail)'}
             </span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">Confidence Küszöb:</span>
+            <span className="text-zinc-500">Confidence Küszöb:</span>
             <span>{stats?.confidenceThreshold ?? 0.6}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-muted-foreground">PII Redakció:</span>
+            <span className="text-zinc-500">PII Redakció:</span>
             <span className="text-green-500">Aktív</span>
           </div>
         </CardContent>

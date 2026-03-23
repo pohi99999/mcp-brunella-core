@@ -112,7 +112,7 @@ export function AdminSelfCheckWidget() {
         <div className="p-2 bg-background rounded-md">{icon}</div>
         <div>
           <div className="text-sm font-medium capitalize">{name}</div>
-          <div className="text-[10px] text-muted-foreground font-mono">
+          <div className="text-[10px] text-zinc-500 font-mono">
             {data?.latencyMs ? `${data.latencyMs}ms` : 'N/A'} | {data?.error || 'Nincs hiba'}
           </div>
         </div>
@@ -148,11 +148,11 @@ export function AdminSelfCheckWidget() {
         {!isAuthenticated ? (
           <div className="flex flex-col gap-6 p-8 items-center justify-center h-full text-center">
             <div className="p-4 bg-secondary/30 rounded-full">
-              <Lock size={48} className="text-muted-foreground opacity-20" />
+              <Lock size={48} className="text-zinc-500 opacity-20" />
             </div>
             <div className="space-y-2">
               <h3 className="font-bold text-lg">Zárt terület</h3>
-              <p className="text-sm text-muted-foreground">Kérjük, adja meg az adminisztrációs jelszót a diagnosztikai eszközök eléréséhez.</p>
+              <p className="text-sm text-zinc-500">Kérjük, adja meg az adminisztrációs jelszót a diagnosztikai eszközök eléréséhez.</p>
             </div>
             <div className="w-full max-w-xs space-y-3">
               <Input
@@ -191,7 +191,7 @@ export function AdminSelfCheckWidget() {
                   {renderServiceRow('Ügynökök állapota', healthData.services.agents, <Activity className="w-4 h-4 text-green-400" />)}
                 </>
               ) : (
-                <div className="flex flex-col items-center justify-center py-12 text-muted-foreground border-2 border-dashed border-primary/10 rounded-xl">
+                <div className="flex flex-col items-center justify-center py-12 text-zinc-500 border-2 border-dashed border-primary/10 rounded-xl">
                   <Search size={32} className="opacity-20 mb-2" />
                   <p className="text-xs uppercase tracking-widest opacity-50">Nincs friss diagnosztikai adat</p>
                 </div>
@@ -205,7 +205,7 @@ export function AdminSelfCheckWidget() {
                   {getStatusIcon(healthData.status)}
                   <span className="text-sm font-medium">Rendszer státusz: {healthData.status.toUpperCase()}</span>
                 </div>
-                <p className="text-[10px] text-muted-foreground mt-2">
+                <p className="text-[10px] text-zinc-500 mt-2">
                   Utolsó frissítés: {new Date(healthData.timestamp).toLocaleString()}
                 </p>
               </div>

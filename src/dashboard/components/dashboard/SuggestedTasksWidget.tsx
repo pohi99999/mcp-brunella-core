@@ -268,7 +268,7 @@ export function SuggestedTasksWidget() {
               <Zap className="h-5 w-5 text-yellow-600" />
               Suggested Tasks
             </CardTitle>
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="text-sm text-zinc-500 mt-1">
               {stats.total} TODOs/FIXMEs detected
             </p>
           </div>
@@ -285,7 +285,7 @@ export function SuggestedTasksWidget() {
 
         {/* Filters */}
         <div className="flex gap-2 flex-wrap items-center">
-          <Filter className="h-4 w-4 text-muted-foreground" />
+          <Filter className="h-4 w-4 text-zinc-500" />
           <Select value={confidenceFilter} onValueChange={handleConfidenceFilterChange}>
             <SelectTrigger className="w-40">
               <SelectValue />
@@ -330,19 +330,19 @@ export function SuggestedTasksWidget() {
         {/* Stats Grid */}
         <div className="grid grid-cols-4 gap-4">
           <div className="p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950">
-            <p className="text-xs text-muted-foreground">Pending</p>
+            <p className="text-xs text-zinc-500">Pending</p>
             <p className="text-xl font-bold text-yellow-700">{stats.pending}</p>
           </div>
           <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950">
-            <p className="text-xs text-muted-foreground">In Progress</p>
+            <p className="text-xs text-zinc-500">In Progress</p>
             <p className="text-xl font-bold text-blue-700">{stats.in_progress}</p>
           </div>
           <div className="p-3 rounded-lg bg-green-50 dark:bg-green-950">
-            <p className="text-xs text-muted-foreground">Completed</p>
+            <p className="text-xs text-zinc-500">Completed</p>
             <p className="text-xl font-bold text-green-700">{stats.completed}</p>
           </div>
           <div className="p-3 rounded-lg bg-red-50 dark:bg-red-950">
-            <p className="text-xs text-muted-foreground">Critical (≥80%)</p>
+            <p className="text-xs text-zinc-500">Critical (≥80%)</p>
             <p className="text-xl font-bold text-red-700">{stats.critical}</p>
           </div>
         </div>
@@ -394,13 +394,13 @@ export function SuggestedTasksWidget() {
             <h3 className="text-sm font-semibold">
               Tasks ({filteredTasks.length})
             </h3>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-zinc-500">
               Avg Confidence: {(stats.avg_confidence * 100).toFixed(1)}%
             </span>
           </div>
           <div className="space-y-2 max-h-96 overflow-y-auto">
             {filteredTasks.length === 0 ? (
-              <p className="text-xs text-muted-foreground">No tasks match filters</p>
+              <p className="text-xs text-zinc-500">No tasks match filters</p>
             ) : (
               filteredTasks.map((task) => (
                 <div
@@ -408,7 +408,7 @@ export function SuggestedTasksWidget() {
                   className="flex items-start gap-2 p-2 rounded border border-border/50 hover:bg-muted/50 transition-colors"
                 >
                   <div className="flex-1 min-w-0">
-                    <p className="text-xs font-mono text-muted-foreground truncate">
+                    <p className="text-xs font-mono text-zinc-500 truncate">
                       {task.file_path}:{task.line_number}
                     </p>
                     <p className="text-sm truncate">{task.todo_text}</p>

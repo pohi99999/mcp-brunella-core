@@ -286,7 +286,7 @@ export function RobotkezPanel() {
                             )}
                         </>
                     ) : (
-                        <div className="text-muted-foreground flex flex-col items-center gap-2">
+                        <div className="text-zinc-500 flex flex-col items-center gap-2">
                             <Activity className="w-8 h-8 opacity-20" />
                             <span className="text-xs uppercase tracking-widest opacity-50 font-mono">IDLE_NO_STREAM</span>
                         </div>
@@ -333,7 +333,7 @@ export function RobotkezPanel() {
                     <div className="flex justify-between items-end">
                         <div>
                             <div className="text-xl md:text-2xl font-bold">{n8nWorkflows.length}</div>
-                            <div className="text-[10px] text-muted-foreground uppercase">Aktív Workflow</div>
+                            <div className="text-[10px] text-zinc-500 uppercase">Aktív Workflow</div>
                         </div>
                         <Progress value={Math.min(n8nWorkflows.length * 10, 100)} className="h-1 w-16 md:w-20" />
                     </div>
@@ -348,7 +348,7 @@ export function RobotkezPanel() {
                             </div>
                         ))}
                         {n8nWorkflows.length === 0 && (
-                            <div className="text-[10px] text-muted-foreground p-2 italic">Nincsenek elérhető workflow-k</div>
+                            <div className="text-[10px] text-zinc-500 p-2 italic">Nincsenek elérhető workflow-k</div>
                         )}
                     </div>
                 </CardContent>

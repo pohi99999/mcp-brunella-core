@@ -82,7 +82,7 @@ export function CloudflareAgentsCard() {
         return (
             <Card className="glass-card border-white/[0.04] overflow-hidden mt-4">
                 <CardHeader className="pb-3 border-b border-white/[0.04] bg-white/[0.04] flex flex-row items-center justify-between">
-                    <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-muted-foreground">
+                    <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-zinc-500">
                         <Skeleton className="h-4 w-4 rounded-full" />
                         <Skeleton className="h-4 w-32" />
                     </CardTitle>
@@ -120,7 +120,7 @@ export function CloudflareAgentsCard() {
     return (
         <Card className="glass-card border-white/[0.04] overflow-hidden mt-4">
             <CardHeader className="pb-3 border-b border-white/[0.04] bg-white/[0.04] flex flex-row items-center justify-between">
-                <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-muted-foreground">
+                <CardTitle className="flex items-center gap-2 text-sm font-bold tracking-wider uppercase text-zinc-500">
                     <Cloud size={16} className="text-orange-400" />
                     Cloudflare Edge Agents
                 </CardTitle>
@@ -135,7 +135,7 @@ export function CloudflareAgentsCard() {
             </CardHeader>
             <CardContent className="p-0">
                 <div className="px-4 py-3 border-b border-white/[0.04] bg-white/[0.02] flex flex-col gap-2">
-                    <span className="text-[11px] text-zinc-400">Direkt worker task</span>
+                    <span className="text-xs text-zinc-400">Direkt worker task</span>
                     <div className="flex gap-2">
                         <Input
                             value={instruction}
@@ -145,14 +145,14 @@ export function CloudflareAgentsCard() {
                         />
                     </div>
                 </div>
-                <div className="px-4 py-2 text-[11px] text-zinc-400 border-b border-white/[0.04] bg-white/[0.02]">
+                <div className="px-4 py-2 text-xs text-zinc-400 border-b border-white/[0.04] bg-white/[0.02]">
                     total: {data.summary.total} • online: {data.summary.online} • offline: {data.summary.offline} • unknown: {data.summary.unknown}
                 </div>
                 <div className="divide-y divide-white/5">
                     {data.workers.map(agent => (
                         <div key={agent.id} className="flex items-center justify-between px-4 py-3 hover:bg-white/[0.03] transition-colors">
                             <div className="flex items-center gap-3">
-                                <Globe size={16} className="text-muted-foreground" />
+                                <Globe size={16} className="text-zinc-500" />
                                 <div className="flex flex-col">
                                     <span className="text-sm font-mono text-zinc-200">{agent.name}</span>
                                     <span className="text-[10px] text-zinc-500">

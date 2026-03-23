@@ -38,7 +38,7 @@ export function VectorizeAnalyticsWidget() {
   if (loading) {
     return (
       <Card className="h-full flex items-center justify-center">
-        <p className="text-muted-foreground">Statisztikák betöltése...</p>
+        <p className="text-zinc-500">Statisztikák betöltése...</p>
       </Card>
     );
   }
@@ -46,7 +46,7 @@ export function VectorizeAnalyticsWidget() {
   if (!analytics) {
     return (
       <Card className="h-full flex items-center justify-center">
-        <p className="text-muted-foreground">Nincs elérhető adat</p>
+        <p className="text-zinc-500">Nincs elérhető adat</p>
       </Card>
     );
   }
@@ -70,7 +70,7 @@ export function VectorizeAnalyticsWidget() {
         {/* Key Metrics */}
         <div className="grid grid-cols-2 gap-3">
           <div className="p-3 border rounded-lg bg-card">
-            <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
+            <div className="flex items-center gap-2 text-zinc-500 text-xs mb-1">
               <Search className="w-3 h-3" />
               Összes keresés
             </div>
@@ -78,7 +78,7 @@ export function VectorizeAnalyticsWidget() {
           </div>
 
           <div className="p-3 border rounded-lg bg-card">
-            <div className="flex items-center gap-2 text-muted-foreground text-xs mb-1">
+            <div className="flex items-center gap-2 text-zinc-500 text-xs mb-1">
               <TrendingUp className="w-3 h-3" />
               Átlag találat
             </div>
@@ -90,7 +90,7 @@ export function VectorizeAnalyticsWidget() {
         <div className="flex-1 overflow-y-auto">
           <h3 className="text-sm font-semibold mb-2">Top keresések</h3>
           {analytics.topQueries.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Még nincs keresés</p>
+            <p className="text-sm text-zinc-500">Még nincs keresés</p>
           ) : (
             <div className="space-y-2">
               {analytics.topQueries.slice(0, 5).map((item, idx) => (
@@ -99,7 +99,7 @@ export function VectorizeAnalyticsWidget() {
                   className="flex items-center justify-between p-2 border rounded bg-card/50"
                 >
                   <span className="text-sm truncate flex-1">{item.query}</span>
-                  <span className="text-xs text-muted-foreground ml-2">
+                  <span className="text-xs text-zinc-500 ml-2">
                     {item.count}x
                   </span>
                 </div>
@@ -112,7 +112,7 @@ export function VectorizeAnalyticsWidget() {
         <div className="flex-1 overflow-y-auto border-t pt-3">
           <h3 className="text-sm font-semibold mb-2">Legutóbbi keresések</h3>
           {analytics.lastSearches.length === 0 ? (
-            <p className="text-sm text-muted-foreground">Még nincs keresés</p>
+            <p className="text-sm text-zinc-500">Még nincs keresés</p>
           ) : (
             <div className="space-y-1">
               {analytics.lastSearches.slice(0, 5).map((item, idx) => (
@@ -123,7 +123,7 @@ export function VectorizeAnalyticsWidget() {
                   <span className="truncate flex-1">{item.query}</span>
                   <div className="flex items-center gap-2 ml-2">
                     <span className="text-green-600">{item.results}</span>
-                    <span className="text-muted-foreground">
+                    <span className="text-zinc-500">
                       {new Date(item.timestamp).toLocaleTimeString()}
                     </span>
                   </div>

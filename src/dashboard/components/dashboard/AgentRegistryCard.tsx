@@ -45,7 +45,7 @@ export function AgentRegistryCard() {
       <CardContent className="space-y-4">
         <div className="flex flex-col md:flex-row gap-3">
           <div className="flex-1 relative">
-            <MagnifyingGlass size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <MagnifyingGlass size={16} className="absolute left-2 top-1/2 -translate-y-1/2 text-zinc-500" />
             <Input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
@@ -86,9 +86,9 @@ export function AgentRegistryCard() {
                 <div className="flex justify-between items-start gap-2">
                   <div>
                     <p className="font-semibold">{agent.title ?? agent.name}</p>
-                    <p className="text-xs text-muted-foreground">{agent.description ?? ''}</p>
+                    <p className="text-xs text-zinc-500">{agent.description ?? ''}</p>
                   </div>
-                  <Badge variant="outline" className={isDisabled ? 'text-muted-foreground border-muted-foreground/30' : 'text-green-500 border-green-500/30'}>
+                  <Badge variant="outline" className={isDisabled ? 'text-zinc-500 border-muted-foreground/30' : 'text-green-500 border-green-500/30'}>
                     {isDisabled ? 'Inaktív' : 'Aktív'}
                   </Badge>
                 </div>
@@ -113,7 +113,7 @@ export function AgentRegistryCard() {
             );
           })}
           {filtered.length === 0 && (
-            <div className="col-span-full text-muted-foreground text-sm border border-dashed rounded-md p-6">
+            <div className="col-span-full text-zinc-500 text-sm border border-dashed rounded-md p-6">
               Nincs találat a megadott szűrőkkel.
             </div>
           )}

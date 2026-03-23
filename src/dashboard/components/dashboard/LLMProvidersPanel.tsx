@@ -52,7 +52,7 @@ export function LLMProvidersPanel() {
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-2xl font-space font-bold text-foreground">LLM Providers</h2>
-                    <p className="text-muted-foreground text-sm">Monitor connectivity and latency for neural engines.</p>
+                    <p className="text-zinc-500 text-sm">Monitor connectivity and latency for neural engines.</p>
                 </div>
                 <Button
                     variant="outline"
@@ -87,10 +87,10 @@ export function LLMProvidersPanel() {
                         <CardContent>
                             <div className="mt-4 space-y-3">
                                 <div className="flex justify-between items-end">
-                                    <span className="text-xs text-muted-foreground flex items-center gap-1">
+                                    <span className="text-xs text-zinc-500 flex items-center gap-1">
                                         <Activity size={10} /> Latency
                                     </span>
-                                    <span className={p.status === 'online' ? "text-sm font-mono text-green-400" : "text-sm font-mono text-muted-foreground"}>
+                                    <span className={p.status === 'online' ? "text-sm font-mono text-green-400" : "text-sm font-mono text-zinc-500"}>
                                         {p.status === 'online' ? `${p.latency}ms` : 'N/A'}
                                     </span>
                                 </div>

@@ -182,7 +182,7 @@ export function ToolsCard() {
             <div className="flex-1 relative">
               <MagnifyingGlass
                 size={16}
-                className="absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground"
+                className="absolute left-2 top-1/2 -translate-y-1/2 text-zinc-500"
               />
               <Input
                 value={query}
@@ -240,18 +240,18 @@ export function ToolsCard() {
                 <div className="flex items-start justify-between gap-2">
                   <div>
                     <p className="font-semibold">{tool.name}</p>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs text-zinc-500">
                       {tool.description ?? ""}
                     </p>
                   </div>
                   <Badge variant="secondary">{tagLabel(tool)}</Badge>
                 </div>
                 {tool.parameters && tool.parameters.length > 0 ? (
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-xs text-zinc-500">
                     Paraméterek: {tool.parameters.map((p) => p.name).join(", ")}
                   </p>
                 ) : (
-                  <p className="text-[11px] text-muted-foreground">
+                  <p className="text-xs text-zinc-500">
                     Nincs paraméter
                   </p>
                 )}
@@ -266,7 +266,7 @@ export function ToolsCard() {
               </div>
             ))}
             {filtered.length === 0 && (
-              <div className="col-span-full text-muted-foreground text-sm border border-dashed rounded-md p-6">
+              <div className="col-span-full text-zinc-500 text-sm border border-dashed rounded-md p-6">
                 Nincs találat a megadott szűrőkkel.
               </div>
             )}
@@ -289,7 +289,7 @@ export function ToolsCard() {
               <div key={p.name} className="space-y-1">
                 <Label htmlFor={`param-${p.name}`}>
                   {p.name} {p.required ? "*" : ""}{" "}
-                  <span className="text-xs text-muted-foreground">
+                  <span className="text-xs text-zinc-500">
                     ({p.type})
                   </span>
                 </Label>
@@ -305,7 +305,7 @@ export function ToolsCard() {
                         }))
                       }
                     />
-                    <span className="text-sm text-muted-foreground">
+                    <span className="text-sm text-zinc-500">
                       {(formValue[p.name] ?? "false") === "true"
                         ? "true"
                         : "false"}
@@ -347,7 +347,7 @@ export function ToolsCard() {
             {activeTool &&
               (!activeTool.parameters ||
                 activeTool.parameters.length === 0) && (
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-500">
                   Nincs paraméter ehhez a toolhoz.
                 </p>
               )}

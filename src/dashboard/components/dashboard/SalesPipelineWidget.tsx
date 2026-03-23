@@ -146,16 +146,16 @@ export function SalesPipelineWidget() {
                                             </div>
 
                                             {lead.last_interaction_at && (
-                                                <div className="flex items-center gap-1.5 text-[8px] text-zinc-600 font-mono uppercase mt-2">
+                                                <div className="flex items-center gap-1.5 text-[9px] text-zinc-600 font-mono uppercase mt-2">
                                                     <Zap size={10} className="text-yellow-500" />
                                                     {format(new Date(lead.last_interaction_at), 'MMM d. HH:mm')}
                                                 </div>
                                             )}
 
                                             <div className="mt-4 flex gap-2">
-                                                <Button size="xs" variant="ghost" className="h-6 text-[8px] flex-1 bg-white/[0.04]">Adatlap</Button>
+                                                <Button size="xs" variant="ghost" className="h-6 text-[9px] flex-1 bg-white/[0.04]">Adatlap</Button>
                                                 {stage.id === 'outreach' && (
-                                                    <Button size="xs" className="h-6 text-[8px] flex-1 bg-primary/20 text-primary">Email küldve?</Button>
+                                                    <Button size="xs" className="h-6 text-[9px] flex-1 bg-primary/20 text-primary">Email küldve?</Button>
                                                 )}
                                             </div>
                                         </div>

@@ -33,7 +33,7 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
       case 'debug':
         return 'bg-accent/20 text-accent border-accent/30'
       default:
-        return 'bg-muted text-muted-foreground'
+        return 'bg-muted text-zinc-500'
     }
   }
 
@@ -120,7 +120,7 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
       <CardContent>
         <ScrollArea className="h-[500px] w-full rounded-md border border-border/50 p-4">
           {filteredLogs.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-12">
+            <div className="flex flex-col items-center justify-center h-full text-zinc-500 py-12">
               <Terminal size={48} className="mb-4 opacity-50" />
               <p>Még nincsenek naplóbejegyzések</p>
             </div>
@@ -143,7 +143,7 @@ export function LogViewer({ logs, user, onClearLogs }: LogViewerProps) {
                     </Badge>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm break-words">{log.message}</p>
-                      <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-2 mt-1 text-xs text-zinc-500">
                         <span className="font-mono">{formatTimestamp(log.timestamp)}</span>
                         {log.source && (
                           <>

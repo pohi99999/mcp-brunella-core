@@ -142,7 +142,7 @@ export function BrunellaStudio() {
                         <Code2 className="w-8 h-8 text-emerald-500" />
                         BRUNELLA STUDIO
                     </h1>
-                    <p className="text-muted-foreground">Full-stack alkalmazásfejlesztés & Marketing Preview</p>
+                    <p className="text-zinc-500">Full-stack alkalmazásfejlesztés & Marketing Preview</p>
                 </div>
                 <div className="flex gap-2">
                     <Badge variant="outline" className="bg-emerald-500/10 text-emerald-500 border-emerald-500/20 font-mono">AGENT_MODE: ACTIVE</Badge>
@@ -218,7 +218,7 @@ export function BrunellaStudio() {
                                         >
                                             <div className="flex justify-between items-center mb-1">
                                                 <span className="font-bold text-xs text-white">{p.name}</span>
-                                                <Badge className="text-[8px] h-4">{p.status.toUpperCase()}</Badge>
+                                                <Badge className="text-[9px] h-4">{p.status.toUpperCase()}</Badge>
                                             </div>
                                             <div className="text-[10px] text-zinc-500 font-mono italic truncate">{p.tech_stack}</div>
                                         </div>

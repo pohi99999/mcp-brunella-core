@@ -20,7 +20,7 @@ interface DeveloperPipelineProps {
 }
 
 const STATUS_CONFIG: Record<string, { icon: typeof CheckCircle2; color: string; bgColor: string }> = {
-  pending: { icon: Clock, color: 'text-muted-foreground', bgColor: 'bg-muted' },
+  pending: { icon: Clock, color: 'text-zinc-500', bgColor: 'bg-muted' },
   running: { icon: Loader2, color: 'text-blue-500', bgColor: 'bg-blue-500/10' },
   done: { icon: CheckCircle2, color: 'text-green-500', bgColor: 'bg-green-500/10' },
   error: { icon: XCircle, color: 'text-red-500', bgColor: 'bg-red-500/10' },
@@ -41,7 +41,7 @@ export function DeveloperPipeline({ phases, progress, className }: DeveloperPipe
             style={{ width: `${progress}%` }}
           />
         </div>
-        <span className="text-xs font-mono text-muted-foreground w-10 text-right">
+        <span className="text-xs font-mono text-zinc-500 w-10 text-right">
           {progress}%
         </span>
       </div>

@@ -209,7 +209,7 @@ export function EnterpriseAnalyticsWidget() {
                     <CardDescription>Loading...</CardDescription>
                 </CardHeader>
                 <CardContent>
-                    <div className="text-center text-muted-foreground">Loading analytics...</div>
+                    <div className="text-center text-zinc-500">Loading analytics...</div>
                 </CardContent>
             </Card>
         );
@@ -274,15 +274,15 @@ export function EnterpriseAnalyticsWidget() {
                     <div className="grid grid-cols-3 gap-4">
                         <div className="text-center">
                             <div className="text-2xl font-bold">{stats.totalEvents}</div>
-                            <div className="text-xs text-muted-foreground">Total Events</div>
+                            <div className="text-xs text-zinc-500">Total Events</div>
                         </div>
                         <div className="text-center">
                             <div className="text-2xl font-bold">{stats.last24h}</div>
-                            <div className="text-xs text-muted-foreground">Last 24h</div>
+                            <div className="text-xs text-zinc-500">Last 24h</div>
                         </div>
                         <div className="text-center">
                             <div className="text-2xl font-bold">{stats.last7d}</div>
-                            <div className="text-xs text-muted-foreground">Last 7 days</div>
+                            <div className="text-xs text-zinc-500">Last 7 days</div>
                         </div>
                     </div>
 
@@ -315,7 +315,7 @@ export function EnterpriseAnalyticsWidget() {
                         <div className="text-sm font-medium mb-2">Recent Events</div>
                         <div className="space-y-2 max-h-64 overflow-y-auto">
                             {recentEvents.length === 0 ? (
-                                <div className="text-xs text-muted-foreground text-center py-4">
+                                <div className="text-xs text-zinc-500 text-center py-4">
                                     No events in the last 7 days
                                 </div>
                             ) : (
@@ -326,13 +326,13 @@ export function EnterpriseAnalyticsWidget() {
                                     >
                                         <div className="flex-1">
                                             <div className="font-medium">{event.type}</div>
-                                            <div className="text-muted-foreground">{event.source_module}</div>
+                                            <div className="text-zinc-500">{event.source_module}</div>
                                         </div>
                                         <div className="flex items-center gap-2">
                                             <Badge className={getPriorityColor(event.priority)} variant="outline">
                                                 {event.priority}
                                             </Badge>
-                                            <span className="text-muted-foreground">
+                                            <span className="text-zinc-500">
                                                 {formatTimestamp(event.created_at)}
                                             </span>
                                         </div>

@@ -15,7 +15,7 @@ export function MetricsCard({ metrics }: MetricsCardProps) {
       <CardContent>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-muted-foreground text-xs">
+            <div className="flex items-center gap-2 text-zinc-500 text-xs">
               <ChartLine size={16} />
               <span>Kérések/perc</span>
             </div>
@@ -25,7 +25,7 @@ export function MetricsCard({ metrics }: MetricsCardProps) {
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-muted-foreground text-xs">
+            <div className="flex items-center gap-2 text-zinc-500 text-xs">
               <Plugs size={16} />
               <span>Aktív kapcsolatok</span>
             </div>
@@ -35,7 +35,7 @@ export function MetricsCard({ metrics }: MetricsCardProps) {
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-muted-foreground text-xs">
+            <div className="flex items-center gap-2 text-zinc-500 text-xs">
               <Warning size={16} />
               <span>Hibaarány</span>
             </div>
@@ -45,7 +45,7 @@ export function MetricsCard({ metrics }: MetricsCardProps) {
           </div>
 
           <div className="space-y-2">
-            <div className="flex items-center gap-2 text-muted-foreground text-xs">
+            <div className="flex items-center gap-2 text-zinc-500 text-xs">
               <Lightning size={16} />
               <span>Átl. válaszidő</span>
             </div>

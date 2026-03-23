@@ -64,7 +64,7 @@ export function RAGMemoryWidget() {
           </Button>
         </CardTitle>
         {stats && (
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm text-zinc-500">
             {stats.rowCount.toLocaleString()} dokumentum ({stats.provider})
           </p>
         )}
@@ -86,19 +86,19 @@ export function RAGMemoryWidget() {
 
         <div className="flex-1 overflow-y-auto space-y-3">
           {loading && (
-            <div className="text-center text-muted-foreground py-8">
+            <div className="text-center text-zinc-500 py-8">
               Keresés folyamatban...
             </div>
           )}
 
           {!loading && results.length === 0 && query && (
-            <div className="text-center text-muted-foreground py-8">
+            <div className="text-center text-zinc-500 py-8">
               Nincs találat a keresésre: "{query}"
             </div>
           )}
 
           {!loading && results.length === 0 && !query && (
-            <div className="text-center text-muted-foreground py-8">
+            <div className="text-center text-zinc-500 py-8">
               Írj be egy keresési kifejezést
             </div>
           )}
@@ -109,7 +109,7 @@ export function RAGMemoryWidget() {
               className="p-3 border rounded-lg bg-card hover:bg-accent/50 transition-colors"
             >
               <p className="text-sm line-clamp-3">{result.text}</p>
-              <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+              <div className="flex items-center gap-2 mt-2 text-xs text-zinc-500">
                 {result.path && <span>📄 {result.path}</span>}
                 {result.score !== undefined && (
                   <span className="ml-auto">

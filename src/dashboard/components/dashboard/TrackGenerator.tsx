@@ -176,7 +176,7 @@ export function TrackGenerator() {
         <Card className="glass-card">
           <CardHeader className="pb-3 border-b border-border/50">
             <CardTitle className="flex items-center gap-2 text-sm">
-              <FileText size={14} className="text-muted-foreground" />
+              <FileText size={14} className="text-zinc-500" />
               Legutóbbi Tracks ({recentTracks.length})
             </CardTitle>
           </CardHeader>
@@ -192,14 +192,14 @@ export function TrackGenerator() {
                       <p className="text-sm font-medium truncate">
                         {track.title}
                       </p>
-                      <p className="text-xs text-muted-foreground">
+                      <p className="text-xs text-zinc-500">
                         ID: {track.id} • {track.created}
                       </p>
                     </div>
                     <Badge variant="outline" className="text-xs">
                       {track.priority}
                     </Badge>
-                    <span className="text-xs text-muted-foreground">
+                    <span className="text-xs text-zinc-500">
                       {track.progress}%
                     </span>
                   </div>
@@ -228,7 +228,7 @@ export function TrackGenerator() {
             className="resize-none"
           />
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-zinc-500">
               {idea.length} karakter •{" "}
               {idea.trim().length < 10
                 ? "Írj még legalább " + (10 - idea.trim().length) + " karaktert"
@@ -281,7 +281,7 @@ export function TrackGenerator() {
                       currentStage === item.stage &&
                         "text-blue-500 font-medium",
                       currentStage > item.stage && "text-green-500",
-                      currentStage < item.stage && "text-muted-foreground",
+                      currentStage < item.stage && "text-zinc-500",
                     )}
                   >
                     {currentStage > item.stage ? (
@@ -336,13 +336,13 @@ export function TrackGenerator() {
           <CardContent className="p-8 text-center">
             <Sparkles
               size={32}
-              className="text-muted-foreground/50 mx-auto mb-3"
+              className="text-zinc-500/50 mx-auto mb-3"
             />
-            <p className="text-sm text-muted-foreground">
+            <p className="text-sm text-zinc-500">
               Írj be egy kreatív ötletet (2-5 mondat), majd kattints a
               &quot;Track Generálása&quot; gombra.
             </p>
-            <p className="text-xs text-muted-foreground/70 mt-1">
+            <p className="text-xs text-zinc-500/70 mt-1">
               A SpecWriterAgent automatikusan létrehoz egy professzionális EPP
               v2 compliant track.md fájlt.
             </p>
@@ -361,7 +361,7 @@ export function TrackGenerator() {
             <p className="text-sm font-medium">
               EPP v2 Rule #6: Dashboard + CLI Integration
             </p>
-            <p className="text-xs text-muted-foreground">
+            <p className="text-xs text-zinc-500">
               Minden generált track tartalmaz Dashboard komponens és CLI parancs
               leírást. A CLI-ből használd:{" "}
               <code className="bg-muted px-1 py-0.5 rounded text-[10px]">

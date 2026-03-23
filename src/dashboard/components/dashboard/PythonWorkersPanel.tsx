@@ -219,7 +219,7 @@ export const PythonWorkersPanel: React.FC = () => {
                         </CardHeader>
                         <CardContent>
                             <div className="text-2xl font-bold">{worker.totalRuns || 0}</div>
-                            <p className="text-xs text-muted-foreground">Total runs</p>
+                            <p className="text-xs text-zinc-500">Total runs</p>
                         </CardContent>
                     </Card>
                 ))}
@@ -352,7 +352,7 @@ export const PythonWorkersPanel: React.FC = () => {
                                     value={lancedbFile}
                                     onChange={(e) => setLancedbFile(e.target.value)}
                                 />
-                                <p className="text-xs text-muted-foreground">Supports: CSV, JSON, JSONL, Parquet</p>
+                                <p className="text-xs text-zinc-500">Supports: CSV, JSON, JSONL, Parquet</p>
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div className="space-y-2">

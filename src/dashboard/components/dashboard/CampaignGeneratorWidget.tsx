@@ -103,14 +103,14 @@ export function CampaignGeneratorWidget() {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
                     {/* Előzmények */}
                     <div className="lg:col-span-1 border-r border-white/[0.04] pr-4 flex flex-col gap-4">
-                        <h3 className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-2">
+                        <h3 className="text-xs font-semibold uppercase text-zinc-500 flex items-center gap-2">
                             <History size={12} />
                             Korábbi Kampányok
                         </h3>
                         <ScrollArea className="h-[450px]">
                             <div className="space-y-2">
                                 {campaignJobs.length === 0 ? (
-                                    <p className="text-xs text-muted-foreground italic">Nincsenek korábbi kampányok.</p>
+                                    <p className="text-xs text-zinc-500 italic">Nincsenek korábbi kampányok.</p>
                                 ) : (
                                     campaignJobs.map((job) => (
                                         <div 
@@ -139,7 +139,7 @@ export function CampaignGeneratorWidget() {
                         {activeJob ? (
                             <div className="space-y-6 h-full">
                                 {activeJob.status === 'running' ? (
-                                    <div className="h-full flex flex-col items-center justify-center py-20 text-muted-foreground">
+                                    <div className="h-full flex flex-col items-center justify-center py-20 text-zinc-500">
                                         <Loader2 className="w-10 h-10 mb-4 animate-spin text-primary" />
                                         <p className="animate-pulse text-xs text-center font-mono text-zinc-400 max-w-[250px]">
                                             {activeJob.metadata || "Marketing anyagok és stúdió projekt generálása..."}
@@ -209,7 +209,7 @@ export function CampaignGeneratorWidget() {
                                 ) : null}
                             </div>
                         ) : (
-                            <div className="h-full flex flex-col items-center justify-center py-20 text-muted-foreground opacity-40">
+                            <div className="h-full flex flex-col items-center justify-center py-20 text-zinc-500 opacity-40">
                                 <Megaphone className="w-16 h-16 mb-4" />
                                 <p className="text-center">Írd le a terméket az első kampány indításához.</p>
                             </div>

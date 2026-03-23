@@ -176,7 +176,7 @@ export function TrackTodoWidget() {
                   {todoView.status}
                 </Badge>
               </div>
-              <div className="text-sm text-muted-foreground">
+              <div className="text-sm text-zinc-500">
                 {todoView.todos.filter(t => t.completed).length} / {todoView.todos.length} done
               </div>
             </div>
@@ -184,7 +184,7 @@ export function TrackTodoWidget() {
             {/* Progress Bar */}
             <div className="space-y-1">
               <Progress value={todoView.progress} className="h-2" />
-              <div className="text-xs text-muted-foreground text-right">
+              <div className="text-xs text-zinc-500 text-right">
                 {todoView.progress}% complete
               </div>
             </div>
@@ -192,7 +192,7 @@ export function TrackTodoWidget() {
             {/* TODO Checklist */}
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {todoView.todos.length === 0 ? (
-                <p className="text-sm text-muted-foreground text-center py-4">
+                <p className="text-sm text-zinc-500 text-center py-4">
                   No TODO items found
                 </p>
               ) : (
@@ -210,7 +210,7 @@ export function TrackTodoWidget() {
                     <label
                       htmlFor={todo.id}
                       className={`text-sm flex-1 cursor-pointer ${
-                        todo.completed ? 'line-through text-muted-foreground' : ''
+                        todo.completed ? 'line-through text-zinc-500' : ''
                       }`}
                     >
                       {todo.text}
@@ -229,7 +229,7 @@ export function TrackTodoWidget() {
 
         {/* Empty State */}
         {!loading && !todoView && !error && selectedTrackId && (
-          <div className="text-center py-8 text-muted-foreground">
+          <div className="text-center py-8 text-zinc-500">
             <p className="text-sm">No track.md file found</p>
           </div>
         )}

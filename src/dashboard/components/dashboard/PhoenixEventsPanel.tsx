@@ -223,7 +223,7 @@ export function PhoenixEventsPanel() {
                         </Button>
                     </div>
                 </div>
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-xs text-zinc-500 mt-1">
                     Real-time Phoenix Protocol recovery events • {filteredEvents.length}/100 events
                 </p>
             </CardHeader>
@@ -233,7 +233,7 @@ export function PhoenixEventsPanel() {
                     <div className="space-y-2">
                         <div ref={scrollRef} />
                         {filteredEvents.length === 0 ? (
-                            <div className="text-center text-muted-foreground py-12">
+                            <div className="text-center text-zinc-500 py-12">
                                 <Flame className="w-12 h-12 mx-auto mb-2 opacity-30" />
                                 <p className="text-sm">No Phoenix events yet</p>
                                 <p className="text-xs mt-1 opacity-70">Events will appear here in real-time</p>
@@ -275,7 +275,7 @@ function EventCard({ event }: { event: PhoenixEvent }) {
                         <Badge variant="outline" className="text-xs">
                             {config.label}
                         </Badge>
-                        <span className="text-xs text-muted-foreground">{formatTime(event.timestamp)}</span>
+                        <span className="text-xs text-zinc-500">{formatTime(event.timestamp)}</span>
                         {event.success !== undefined && (
                             <Badge variant={event.success ? 'default' : 'destructive'} className="text-xs">
                                 {event.success ? '✓' : '✗'}
@@ -290,11 +290,11 @@ function EventCard({ event }: { event: PhoenixEvent }) {
                     )}
 
                     {event.taskId && (
-                        <p className="text-xs text-muted-foreground">Task: {event.taskId}</p>
+                        <p className="text-xs text-zinc-500">Task: {event.taskId}</p>
                     )}
 
                     {event.serviceName && (
-                        <p className="text-xs text-muted-foreground">Service: {event.serviceName}</p>
+                        <p className="text-xs text-zinc-500">Service: {event.serviceName}</p>
                     )}
 
                     {event.stepName && (
@@ -304,7 +304,7 @@ function EventCard({ event }: { event: PhoenixEvent }) {
                     )}
 
                     {event.details && (
-                        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{event.details}</p>
+                        <p className="text-xs text-zinc-500 mt-1 line-clamp-2">{event.details}</p>
                     )}
 
                     {event.error && (
