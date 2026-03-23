@@ -18,6 +18,7 @@ import { createToolRoutes, createDebugRoutes } from "./tools.js";
 import { createChatRoutes, createAnythingLLMRoutes } from "./chat.js";
 import { createIncubatorRoutes, createN8nRoutes } from "./external.js";
 import { createDeveloperRoutes } from "./developer.js";
+import { createBrowserCopilotRoutes } from "./browserCopilot.js";
 import { createRobotkezRoutes } from "./robotkez.js";
 import { createRobotkezProRoutes } from "./robotkez_pro.js";
 import { createJulesRoutes } from "./jules.js";
@@ -50,6 +51,7 @@ export {
   createIncubatorRoutes,
   createN8nRoutes,
   createDeveloperRoutes,
+  createBrowserCopilotRoutes,
   createRobotkezRoutes,
   createCloudflareRoutes,
   createTracksRoutes,
@@ -83,6 +85,7 @@ export function createV1Router(): Router {
   router.use("/incubator", createIncubatorRoutes());
   router.use("/n8n", createN8nRoutes());
   router.use("/developer", createDeveloperRoutes());
+  router.use("/browser-copilot", createBrowserCopilotRoutes());
   router.use("/robotkez", createRobotkezRoutes());
   router.use("/robotkez-pro", createRobotkezProRoutes());
   router.use("/jules", createJulesRoutes());

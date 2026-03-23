@@ -1916,6 +1916,121 @@ export async function robotkezDevToolsPerformance(url: string): Promise<{
   }, LONG_TIMEOUT_MS);
   return safeJson(r);
 }
+
+export type BrowserCopilotMode = 'observe' | 'guide' | 'auto';
+export type BrowserCopilotEnginePreference = 'auto' | 'chrome-acp' | 'robotkez';
+export type BrowserCopilotStatus = 'idle' | 'planning' | 'waiting-confirmation' | 'executing' | 'paused' | 'completed' | 'error';
+
+export interface BrowserCopilotMessage {
+  id: string;
+  role: 'user' | 'assistant' | 'system';
+  content: string;
+  createdAt: number;
+}
+
+export interface BrowserCopilotExecutionStep {
+  action: string;
+  description: string;
+  selector?: string;
+  url?: string;
+  text?: string;
+  timeout?: number;
+}
+
+export interface BrowserCopilotExecutionPlan {
+  plan: BrowserCopilotExecutionStep[];
+  estimatedDuration: number;
+  requiresUserInput?: string[];
+  backgroundEligible: boolean;
+  contextNeeded?: string[];
+}
+
+export interface BrowserCopilotSessionState {
+  sessionId: string;
+  status: BrowserCopilotStatus;
+  mode: BrowserCopilotMode;
+  enginePreference: BrowserCopilotEnginePreference;
+  viewportEngine: 'chrome-acp' | 'robotkez';
+  actionEngine: 'robotkez';
+  chromeAcpReachable: boolean;
+  overlayEnabled: boolean;
+  paused: boolean;
+  currentInstruction?: string;
+  pendingInstruction?: string;
+  plan?: BrowserCopilotExecutionPlan;
+  lastTaskId?: string;
+  lastScreenshotUrl?: string;
+  lastUpdatedAt: number;
+  messages: BrowserCopilotMessage[];
+}
+
+export interface BrowserCopilotSessionResponse {
+  success: boolean;
+  session: BrowserCopilotSessionState;
+}
+
+export async function browserCopilotGetSession(): Promise<BrowserCopilotSessionResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/browser-copilot/session`);
+  if (!response.ok) throw new Error(`Browser Copilot session: HTTP ${response.status}`);
+  return safeJson<BrowserCopilotSessionResponse>(response);
+}
+
+export async function browserCopilotConfigure(config: {
+  mode?: BrowserCopilotMode;
+  enginePreference?: BrowserCopilotEnginePreference;
+  overlayEnabled?: boolean;
+}): Promise<BrowserCopilotSessionResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/browser-copilot/session/configure`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(config),
+  });
+  if (!response.ok) throw new Error(`Browser Copilot configure: HTTP ${response.status}`);
+  return safeJson<BrowserCopilotSessionResponse>(response);
+}
+
+export async function browserCopilotSendMessage(instruction: string): Promise<BrowserCopilotSessionResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/browser-copilot/message`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ instruction }),
+  }, LONG_TIMEOUT_MS);
+  if (!response.ok) throw new Error(`Browser Copilot message: HTTP ${response.status}`);
+  return safeJson<BrowserCopilotSessionResponse>(response);
+}
+
+export async function browserCopilotConfirm(): Promise<BrowserCopilotSessionResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/browser-copilot/confirm`, {
+    method: 'POST',
+  }, LONG_TIMEOUT_MS);
+  if (!response.ok) throw new Error(`Browser Copilot confirm: HTTP ${response.status}`);
+  return safeJson<BrowserCopilotSessionResponse>(response);
+}
+
+export async function browserCopilotPause(): Promise<BrowserCopilotSessionResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/browser-copilot/pause`, {
+    method: 'POST',
+  });
+  if (!response.ok) throw new Error(`Browser Copilot pause: HTTP ${response.status}`);
+  return safeJson<BrowserCopilotSessionResponse>(response);
+}
+
+export async function browserCopilotResume(): Promise<BrowserCopilotSessionResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/browser-copilot/resume`, {
+    method: 'POST',
+  });
+  if (!response.ok) throw new Error(`Browser Copilot resume: HTTP ${response.status}`);
+  return safeJson<BrowserCopilotSessionResponse>(response);
+}
+
+export async function browserCopilotReset(): Promise<BrowserCopilotSessionResponse> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/browser-copilot/reset`, {
+    method: 'POST',
+  });
+  if (!response.ok) throw new Error(`Browser Copilot reset: HTTP ${response.status}`);
+  return safeJson<BrowserCopilotSessionResponse>(response);
+}
+
 export interface DatasetStats {
   total_samples: number;
   sources: Record<string, number>;
