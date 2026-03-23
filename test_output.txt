@@ -1,0 +1,5 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mF:/mcp-brunella-core[39m
+
+ [32mÔťô[39m test/cli-e2e.vitest.ts[2m > [22mCLI E2E ÔÇö El┼Ĺfelt├ętelek[2m > [22mbuild/cli.js l├ętezik (npm run build lefutott)[32m 2[2mms[22m[39m
+ [32mÔťô[39m test/cli-e2e.vitest.ts[2m > [22mCLI E2E ÔÇö Help & Version[2m > [22m--help 0-val t├ęr vissza[33m 2396[2mms[22m[39m

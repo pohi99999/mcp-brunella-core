@@ -1,7 +1,7 @@
 import { getBifrostGateway, type ProviderType } from './bifrost_gateway.js';
 import { getToolRegistry } from './toolRegistry.js';
 import { agentManager } from '../agents/AgentManager.js';
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logWarn } from '../utils/logger.js';
 
 export interface ActionTriggered {
   agent: string;
@@ -99,29 +99,40 @@ const PROVIDER_MAP: Record<string, ProviderType> = {
   ollama: 'ollama',
 };
 
-const MAGYAR_SYSTEM_PROMPT = (toolList: string): string => `\
-Te a BAS PAIOS Orchestrator vagy.
+const MAGYAR_SYSTEM_PROMPT = (toolList: string, agentCapabilities: string): string => `\
+Te vagy **Brunella**, a BAS (Brunella Agent System) mesterséges intelligencia asszisztense és orkesztrátora.
 
-SZEREP ÉS KORLÁT:
-- Nem hajtasz végre feladatot közvetlenül.
-- Nem generálsz végső üzleti/fejlesztői outputot.
-- Kizárólag döntesz, delegálsz, és felügyeled a végrehajtást.
+SZEMÉLYISÉG:
+- Folyékonyan, természetesen és professzionálisan kommunikálsz magyarul.
+- Intelligens, proaktív és segítőkész vagy — mint egy tapasztalt fejlesztő kolléga.
+- Képes vagy gondolkodni, elemezni, magyarázni, tanácsot adni, ÉS feladatokat delegálni.
+- Válaszaid informatívak, strukturáltak és közvetlenek — nem robotikusak.
 
-MŰKÖDÉS (determinista, operatív):
-1) Osztályozd a kérést (állapotkérés / delegálás / tisztázás / recovery).
-2) Szükség esetén válassz eszközt és delegálj.
-3) Adj rövid operátori státuszt: mi indult, mi blokkolt, mi a következő lépés.
+KÉPESSÉGEID:
+1) **Beszélgetés**: Válaszolhatsz kérdésekre, elmagyarázhatsz koncepciókat, tanácsot adhatsz.
+2) **Rendszer felügyelet**: Lekérdezheted a rendszer állapotát, futó feladatokat, agent státuszokat.
+3) **Feladat delegálás**: Ügynököknek delegálhatsz feladatokat a rendelkezésre álló eszközökkel.
+4) **Probléma megoldás**: Diagnosztizálhatsz hibákat, javasolhatsz megoldásokat, elindíthatsz javításokat.
+5) **Tervezés**: Segíthetsz feladatok megtervezésében, lebontásában és priorizálásában.
 
-TILOS:
-- Kreatív történetmesélés, spekuláció, vagy végső szakmai deliverable előállítása.
-- Olyan válasz, ami végrehajtást szimulál valódi delegálás nélkül.
+MŰKÖDÉS:
+- Ha a felhasználó kérdést tesz fel → válaszolj közvetlenül és értelmesen.
+- Ha a felhasználó feladatot ad → elemezd, szükség esetén delegáld a megfelelő ügynöknek.
+- Ha rendszerinformációra van szükség → használd az eszközöket (get_system_status, list_active_tasks, stb.).
+- Ha bizonytalan vagy → kérdezz vissza, ne találj ki dolgokat.
+- Komplex feladatoknál bontsd le lépésekre és delegáld a megfelelő ügynököknek.
 
-Eszközök:
+RENDELKEZÉSRE ÁLLÓ ESZKÖZÖK:
 ${toolList}
 
-Kimeneti stílus:
-- Mindig magyarul.
-- Rövid, operációs jellegű, auditálható.
+ÜGYNÖK KÉPESSÉGEK (delegáláshoz):
+${agentCapabilities}
+
+SZABÁLYOK:
+- Mindig magyarul válaszolj.
+- Ne szimulálj végrehajtást — ha delegálsz, az valódi feladat indítás.
+- High-risk műveleteknél (deploy, törlés, config módosítás) kérj megerősítést.
+- Ha egy ügynök nem elérhető, ajánlj alternatívát vagy kézi megoldást.
 `;
 
 function buildRuntimeContext(): string {
@@ -164,6 +175,59 @@ function buildRuntimeContext(): string {
     `- Függő taskok: ${pendingTasks.length}`,
     `- Hibás taskok: ${errorTasks.length}`,
   ].join('\n');
+}
+
+/**
+ * Build agent capabilities summary for the system prompt.
+ * Groups agents by role to help the LLM make smart delegation decisions.
+ */
+function buildAgentCapabilities(): string {
+  try {
+    const agents = agentManager.listAgentStatuses();
+    if (agents.length === 0) return 'Nincs betöltött agent.';
+
+    const capabilityMap: Record<string, string[]> = {
+      'Fejlesztés': [],
+      'Kutatás & Tudás': [],
+      'Tesztelés & Minőség': [],
+      'DevOps & Infrastruktúra': [],
+      'Üzlet & Értékesítés': [],
+      'Kommunikáció': [],
+      'Automatizálás': [],
+      'Egyéb': [],
+    };
+
+    for (const agent of agents) {
+      const name = agent.name.toLowerCase();
+      if (/develop|architect|lint|code|ux/.test(name)) {
+        capabilityMap['Fejlesztés'].push(agent.name);
+      } else if (/research|knowledge|data|market_intel/.test(name)) {
+        capabilityMap['Kutatás & Tudás'].push(agent.name);
+      } else if (/qa|evaluat|test/.test(name)) {
+        capabilityMap['Tesztelés & Minőség'].push(agent.name);
+      } else if (/devops|ops|deploy|cloudflare|edge/.test(name)) {
+        capabilityMap['DevOps & Infrastruktúra'].push(agent.name);
+      } else if (/sales|marketing|pricing|campaign|nurture|grant|finance|procurement/.test(name)) {
+        capabilityMap['Üzlet & Értékesítés'].push(agent.name);
+      } else if (/email|voice|copywrite|document/.test(name)) {
+        capabilityMap['Kommunikáció'].push(agent.name);
+      } else if (/robot|chrome|apify|scraping/.test(name)) {
+        capabilityMap['Automatizálás'].push(agent.name);
+      } else {
+        capabilityMap['Egyéb'].push(agent.name);
+      }
+    }
+
+    const lines: string[] = [];
+    for (const [category, agentNames] of Object.entries(capabilityMap)) {
+      if (agentNames.length > 0) {
+        lines.push(`**${category}**: ${agentNames.join(', ')}`);
+      }
+    }
+    return lines.join('\n');
+  } catch {
+    return 'Agent képességek nem elérhetőek.';
+  }
 }
 
 export class UniversalOrchestratorService {
@@ -253,11 +317,13 @@ export class UniversalOrchestratorService {
       .join('\n');
 
     const runtimeContext = buildRuntimeContext();
-    const systemPrompt = `${MAGYAR_SYSTEM_PROMPT(toolList)}\n\n${runtimeContext}\n\n${this.buildSessionContext(session)}`;
+    const agentCapabilities = buildAgentCapabilities();
+    const systemPrompt = `${MAGYAR_SYSTEM_PROMPT(toolList, agentCapabilities)}\n\n${runtimeContext}\n\n${this.buildSessionContext(session)}`;
 
-    // Build conversation messages for the LLM
+    // Build conversation messages — window to last 20 messages to avoid context overflow
+    const recentHistory = request.conversationHistory.slice(-20);
     const messages = [
-      ...request.conversationHistory,
+      ...recentHistory,
       { role: 'user' as const, content: request.message }
     ];
 
@@ -309,8 +375,8 @@ export class UniversalOrchestratorService {
           { role: 'user', content: lastUserMsg }
         ],
         taskType: 'general',
-        temperature: 0.3,
-        maxTokens: 1024
+        temperature: 0.5,
+        maxTokens: 4096
       });
 
       if (!response.success) {
@@ -389,6 +455,7 @@ export class UniversalOrchestratorService {
       }
 
       // Execute tool calls
+      const toolResultsForLLM: Array<{ tool_call_id: string; name: string; content: string }> = [];
       for (const tc of toolCallsToProcess) {
         this.pushTimeline(missionTimeline, {
           phase: 'tool_execution',
@@ -397,16 +464,65 @@ export class UniversalOrchestratorService {
         });
         const toolResult = await this.executeTool(tc.name, tc.args);
         actionsTriggered.push(...toolResult.actions);
-        if (toolResult.resultText && !reply) {
-          reply = toolResult.resultText;
-        } else if (toolResult.resultText) {
-          reply += `\n\n${toolResult.resultText}`;
-        }
+        toolResultsForLLM.push({
+          tool_call_id: tc.name,
+          name: tc.name,
+          content: toolResult.resultText || 'Végrehajtva.',
+        });
         this.pushTimeline(missionTimeline, {
           phase: 'tool_execution',
           status: 'completed',
           detail: `Tool kész: ${tc.name}`,
         });
+      }
+
+      // Multi-turn synthesis: send tool results back to LLM for natural response
+      if (toolResultsForLLM.length > 0 && response.toolCalls && response.toolCalls.length > 0) {
+        this.pushTimeline(missionTimeline, {
+          phase: 'llm_synthesis',
+          status: 'started',
+          detail: 'Tool eredmények szintetizálása...',
+        });
+
+        try {
+          const toolResultSummary = toolResultsForLLM
+            .map(tr => `[${tr.name}]: ${tr.content}`)
+            .join('\n');
+
+          const synthesisMessages = [
+            { role: 'system', content: systemPrompt },
+            ...messages.slice(0, -1),
+            { role: 'user', content: lastUserMsg },
+            { role: 'assistant', content: reply || '(Tool hívások végrehajtása...)' },
+            { role: 'user', content: `Az eszközök eredménye:\n${toolResultSummary}\n\nKérlek, foglald össze az eredményeket természetes magyarul a felhasználónak.` }
+          ];
+
+          const synthesisResponse = await bifrost.generate({
+            prompt: lastUserMsg,
+            provider: resolvedProvider,
+            model: resolvedModel,
+            systemPrompt,
+            messages: synthesisMessages,
+            taskType: 'general',
+            temperature: 0.5,
+            maxTokens: 4096
+          });
+
+          if (synthesisResponse.success && synthesisResponse.content) {
+            reply = synthesisResponse.content;
+          }
+
+          this.pushTimeline(missionTimeline, {
+            phase: 'llm_synthesis',
+            status: 'completed',
+            detail: 'Szintézis kész.',
+          });
+        } catch (synthError: unknown) {
+          logWarn('UniversalOrchestratorService', `Szintézis hiba, nyers eredmények használata: ${synthError instanceof Error ? synthError.message : String(synthError)}`);
+          // Fall back to raw tool results appended to reply
+          const rawResults = toolResultsForLLM.map(tr => tr.content).join('\n\n');
+          reply = reply ? `${reply}\n\n${rawResults}` : rawResults;
+        }
       }
 
       // If no text reply was produced, generate a summary follow-up
