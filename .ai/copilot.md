@@ -99,6 +99,61 @@
 **Utókövetés ugyanebben a napban:**
 - a commit/push után érkezett további dashboard UI szinkron/formázási módosítások külön követő commitban kerültek rendezésre, hogy a repo tiszta maradjon
 
+## 2026-03-23 (délelőtt) - 🎤 PAIOS Chat: Markdown Rendering + Scroll Fix + Nova TTS Voice
+
+**Commitok:**
+- `803652bb` — feat(dashboard): markdown rendering, scroll fix, Nova TTS for PAIOS Chat
+
+**Probléma azonosítva:**
+1. Chat válaszok nyers markdown szövegként jelentek meg (`###`, `**`, `---` — formázatlanul)
+2. A Radix ScrollArea nem engedte a felhasználónak görgetni a korábbi üzenetekhez
+3. TTS rossz végpontra hívott (`/api/v1/voice/tts` — nem létező), hangválasz nem működött
+4. Metadata (timeline, plan, tasks) túl sok helyet foglalt, elnyomta a tényleges választ
+
+**Javítások (`src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx`):**
+
+1. **Markdown rendering** — `marked` v15 (GFM + breaks) assistant üzenetekhez
+   - `new Marked({ breaks: true, gfm: true })` → `dangerouslySetInnerHTML`
+   - Tailwind prose osztályok: `prose prose-sm dark:prose-invert`
+   - User üzenetek maradtak plain text (`whitespace-pre-wrap`)
+
+2. **Scroll javítás** — Radix `ScrollArea` lecserélve natív `div.overflow-y-auto`
+   - Smart auto-scroll: csak ha a user a chat alján van (<80px)
+   - `chatContainerRef` a scroll konténerhez
+   - `scroll-smooth` animáció
+
+3. **Nova TTS integráció** — OpenAI TTS-1 modell, `nova` hang
+   - Endpoint javítva: `/api/v1/voice/tts` → `/api/tts`
+   - Response: `audio/mpeg` blob (72KB) → `URL.createObjectURL()` → `new Audio().play()`
+   - Fallback: `window.speechSynthesis` magyar (`hu-HU`) hanggal, ha OpenAI nem elérhető
+
+4. **Összecsukható metadata** — "Részletek" toggle gomb
+   - `expandedMeta` state (`Record<number, boolean>`)
+   - Timeline, plan, tasks, actions rejtett → gombnyomásra megjelenik
+   - Runbook hint inline a gombban (pl. "📚 Runbook: 7 futás, sikerjelzés: 6")
+   - Provider + model + timing badge mindig látható
+
+**E2E Teszt Eredmények (böngészőben validálva):**
+- ✅ Dashboard betöltődik — HEALTHY státusz
+- ✅ PAIOS Chat oldal — layout javítva, teljes viewport
+- ✅ Chat küldés → gpt-4.1 válasz 5.4s alatt
+- ✅ Markdown rendering — formázott szöveg (bold, heading, listák)
+- ✅ Scroll működik — natív görgetés, smart auto-scroll
+- ✅ "Részletek" összecsukható — timeline/plan rejtett
+- ✅ Nova TTS — `POST /api/tts` → 200 OK, `audio/mpeg` 72KB, Nova hang lejátszva
+
+**Érintett fájlok:**
+- `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx` (225 sor változás: +141/-84)
+
+**TTS Infrastruktúra (meglévő, most bekötve):**
+- Backend: `src/utils/tts.ts` (OpenAI API hívás, Nova default)
+- Route: `src/server/routes/tts.ts` (`/api/tts`, audio/mpeg)
+- Hook: `src/dashboard/hooks/useTTS.ts` (nem használt — PAIOS Chat-nek saját inline playTTS van)
+
+**Tesztek:** pre-commit hook lefutott, összes teszt PASS (exit code 0)
+
+---
+
 ## 2026-03-24 - 🚀 CF Workflows Deploy + PAIOS GitHub/GPT-4.1 Upgrade + Schema Fix
 
 **Commitok:**
