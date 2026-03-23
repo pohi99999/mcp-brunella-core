@@ -46,6 +46,7 @@ import { registerSwarmCommands } from "./cli/swarmCommands.js";
 import { registerToolDiscoveryCommands } from "./cli/toolDiscoveryCommands.js";
 import { registerSecurityCommands } from "./cli/securityCommands.js";
 import { registerChromeAcpCommands } from "./cli/chromeAcpCommands.js";
+import { registerBrowserCopilotCommands } from "./cli/browserCopilotCommands.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -1592,6 +1593,7 @@ registerSwarmCommands(program);
 registerToolDiscoveryCommands(program);
 registerSecurityCommands(program);
 registerChromeAcpCommands(program);
+registerBrowserCopilotCommands(program);
 
 // Register Conductor commands(Track State Management) - MOVED AFTER conductorCmd definition
 

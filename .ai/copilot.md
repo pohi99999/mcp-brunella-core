@@ -59,6 +59,8 @@
 
 **Megjegyzés:** ez MVP szint, de már közös koordinációs réteget ad a Chrome ACP látható browser és a Robotkéz végrehajtó agent közé.
 
+**Archiválási döntés:** a track jelenleg **nem zárható/archiválható**, mert bár a Browser Copilot MVP kész és validált, az eredeti `robotkez_comet_upgrade_20260222` teljes success criteria listája még nincs teljesítve. A track marad `active` állapotban a Comet-spec további pontjaihoz.
+
 ## 2026-03-23 (esti session) - 🏆 7/7 Modernizációs Track KÉSZ — Sandbox & Security + Teljes Archiválás
 
 **Trackek befejezve ebben a sessionben:**
