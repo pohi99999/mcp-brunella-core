@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-22 23:50
+**Generálva:** 2026-03-23 04:29
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,15 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-03-23
+
+#### 00:00 - [Claude] Swarm Smoke Tesztek + MCP/CLI Hibák Javítása ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `test/swarm_smoke.test.ts` (ÚJ — 25 teszt), `mcp_servers.json` (sqlite disabled), `src/utils/mcpClient.ts` (timeout 3000→8000ms), `src/cli.ts` (conductor status coreOnly+10s)
+
+---
 
 ### 2026-03-22
 
@@ -767,7 +776,7 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 79 | 2026-03-21 |
+| Claude | 80 | 2026-03-21 |
 | Gemini | 10 | 2026-03-01 |
 | Cursor | 0 | N/A |
 | Copilot | 47 | 2026-02-15 |

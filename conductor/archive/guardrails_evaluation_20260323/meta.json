@@ -2,12 +2,17 @@
   "trackName": "guardrails_evaluation_20260323",
   "type": "System Hardening",
   "priority": "CRITICAL",
-  "status": "done",
+  "status": "archived",
   "progress": 100,
+  "created": "2026-03-23T01:30:00Z",
+  "updated": "2026-03-23T12:45:00Z",
   "goal": "Agent output validáció minden kritikus lépésnél: Zod schema validáció, confidence scoring, PII/secret redakció, hallucination detection erősítés. Az EvaluatorAgent legyen kötelező lépés minden fontos workflow-ban.",
   "assignee": "Copilot + Pohánka Péter",
   "createdAt": "2026-03-23T01:30:00Z",
   "updatedAt": "2026-03-23T03:15:00Z",
+  "completed": "2026-03-23T03:15:00Z",
+  "archivedAt": "2026-03-23T12:45:00Z",
+  "archiveReason": "Guardrails evaluation track was already complete and has now been archived from the live backlog.",
   "phases": [
     {
       "name": "Phase 1: Agent Output Schema Validáció",

@@ -2,12 +2,17 @@
   "trackName": "swarm_intelligence_v2_20260323",
   "type": "Core Enhancement",
   "priority": "MEDIUM",
-  "status": "done",
+  "status": "archived",
   "progress": 100,
+  "created": "2026-03-23T01:30:00Z",
+  "updated": "2026-03-23T13:05:00Z",
   "goal": "Swarm Intelligence v2: colony perzisztencia SQLite checkpoint-okkal, weighted voting + negotiation protocol, dynamic swarm resizing, failure recovery + agent respawn.",
   "assignee": "Copilot + Pohánka Péter",
   "createdAt": "2026-03-23T01:30:00Z",
   "updatedAt": "2026-03-23T04:00:00Z",
+  "completed": "2026-03-23T04:00:00Z",
+  "archivedAt": "2026-03-23T13:05:00Z",
+  "archiveReason": "Swarm Intelligence v2 track was complete and has been archived from the live backlog.",
   "phases": [
     {
       "name": "Phase 1: Colony Persistence",
