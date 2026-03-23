@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-23T04:00:00Z
+**Utolso frissites:** 2026-03-23T03:28:48.785Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 112 total | 12 active | 6 completed (modernization) | 90 archived
+**Stats:** 118 total | 5 active | 0 completed | 103 archived
 
 ---
 
@@ -66,31 +66,13 @@
 
 ---
 
-## Aktiv Szalak (Active) (12)
-
-- [x] **agent_memory_structured_20260323** [HIGH]
-  - **ID:** `agent_memory_structured_20260323`
-  - **Progress:** 100%
-  - **Assignee:** Copilot + Pohánka Péter
-  - Mappa: ./tracks/agent_memory_structured_20260323/
-
-- [x] **agent_orchestration_dag_20260323** [HIGH]
-  - **ID:** `agent_orchestration_dag_20260323`
-  - **Progress:** 100%
-  - **Assignee:** Copilot + Pohánka Péter
-  - Mappa: ./tracks/agent_orchestration_dag_20260323/
+## Aktiv Szalak (Active) (5)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
   - **Progress:** 60%
   - **Assignee:** Claude (Phase 1-2 Complete)
   - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
-
-- [x] **guardrails_evaluation_20260323** [CRITICAL]
-  - **ID:** `guardrails_evaluation_20260323`
-  - **Progress:** 100%
-  - **Assignee:** Copilot + Pohánka Péter
-  - Mappa: ./tracks/guardrails_evaluation_20260323/
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
@@ -104,18 +86,6 @@
   - **Assignee:** System
   - Mappa: ./tracks/local_test_scheduler_20260215/
 
-- [x] **mcp_tool_discovery_20260323** [MEDIUM] ✅ DONE
-  - **ID:** `mcp_tool_discovery_20260323`
-  - **Progress:** 100%
-  - **Assignee:** Copilot + Pohánka Péter
-  - Mappa: ./tracks/mcp_tool_discovery_20260323/
-
-- [x] **observability_opentelemetry_20260323** [HIGH]
-  - **ID:** `observability_opentelemetry_20260323`
-  - **Progress:** 100%
-  - **Assignee:** Copilot + Pohánka Péter
-  - Mappa: ./tracks/observability_opentelemetry_20260323/
-
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`
   - **Progress:** 0%
@@ -127,25 +97,15 @@
   - **Updated:** 2026-03-22
   - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
 
-- [ ] **sandbox_security_hardening_20260323** [LOW]
-  - **ID:** `sandbox_security_hardening_20260323`
-  - **Progress:** 0%
-  - **Assignee:** Copilot + Pohánka Péter
-  - Mappa: ./tracks/sandbox_security_hardening_20260323/
-
-- [x] **swarm_intelligence_v2_20260323** [MEDIUM] ✅ DONE
-  - **ID:** `swarm_intelligence_v2_20260323`
-  - **Progress:** 100%
-  - **Assignee:** Copilot + Pohánka Péter
-  - Mappa: ./tracks/swarm_intelligence_v2_20260323/
-
 ---
 
-## Archivalt (Archived) (90)
+## Archivalt (Archived) (98)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
+- [x] **agent_memory_structured_20260323** (2026-03-23T12:00:00Z)
+- [x] **agent_orchestration_dag_20260323** (2026-03-23T12:00:00Z)
 - [x] **aider_integration_20260222** (N/A)
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **basic-test-task-structure-20260219** (N/A)
@@ -153,10 +113,8 @@
 - [x] **BAS Enterprise Suite - 18 Module Business Automation** (N/A)
 - [x] **bas_orchestration_chain_20260221** (N/A)
 - [x] **bas_security_sandbox_20260221** (N/A)
-- [x] **Browser-Use Harvester with Structured JSON Output** (N/A)
-- [x] **Automata Kampány Generátor Ügynök és UI** (2026-02-25)
 
-... and 80 more archived tracks
+... and 88 more archived tracks
 
 ---
 
