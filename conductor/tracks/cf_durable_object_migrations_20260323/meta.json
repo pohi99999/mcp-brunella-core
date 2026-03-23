@@ -1,0 +1,14 @@
+{
+  "id": "cf_durable_object_migrations_20260323",
+  "title": "Cloudflare Durable Object Migrációk",
+  "priority": "CRITICAL",
+  "status": "proposed",
+  "progress": 0,
+  "category": "cloudflare-infrastructure",
+  "created": "2026-03-23",
+  "dependencies": [],
+  "tags": ["cloudflare", "durable-objects", "migrations", "edge-coordinator"],
+  "owner": "brunella-core",
+  "estimated_effort": "S",
+  "description": "EdgeCoordinator Durable Object migrations konfigurálása a wrangler.jsonc-ben. SQLite-alapú DO tárolás engedélyezése."
+}

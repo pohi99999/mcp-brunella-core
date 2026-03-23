@@ -1,0 +1,14 @@
+{
+  "id": "cf_token_permissions_fix_20260323",
+  "title": "Cloudflare API Token Jogosultság Bővítés",
+  "priority": "CRITICAL",
+  "status": "proposed",
+  "progress": 0,
+  "category": "cloudflare-infrastructure",
+  "created": "2026-03-23",
+  "dependencies": [],
+  "tags": ["cloudflare", "security", "tokens", "kv", "vectorize"],
+  "owner": "brunella-core",
+  "estimated_effort": "S",
+  "description": "A jelenlegi CF API token nem fér hozzá a KV Storage-hoz és Vectorize-hoz. Token jogosultságok bővítése szükséges a CF dashboardon."
+}

@@ -1,0 +1,12 @@
+{
+  "id": "cf_hyperdrive_d1_20260323",
+  "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
+  "status": "proposed",
+  "priority": "LOW",
+  "created": "2026-03-23",
+  "owner": "Pohánka Péter",
+  "progress": 0,
+  "description": "Hyperdrive connection pooling D1 teljesítmény javításhoz. Opcionális - csak ha D1 query latency probléma jelentkezik.",
+  "dependencies": [],
+  "phase": "optimization"
+}
