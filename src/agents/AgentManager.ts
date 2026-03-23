@@ -646,7 +646,11 @@ export class AgentManager extends EventEmitter {
         /* non-critical */
       });
 
-      // RULE-OB1: End trace span on success
+      // RULE-OB1: End trace span on success (+ confidence propagation)
+      const confidence = (result as any)?.metadata?.confidence;
+      if (confidence !== undefined) {
+        trace.span.metadata['confidence'] = confidence;
+      }
       trace.end("success");
       recordAgentExecution(agentName, "success", Date.now() - executionStart);
 
