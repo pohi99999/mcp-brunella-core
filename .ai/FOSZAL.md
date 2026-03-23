@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-22 20:59
+**Generálva:** 2026-03-22 23:50
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,15 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-03-22
+
+#### 00:00 - [Claude] Brunella Swarm Hybrid Architecture — 13 feladat, teljes implementáció ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/agents/swarm/SwarmManager.ts`, `SwarmColony.ts`, `src/tools/swarmTools.ts`, `src/server/routes/swarm.ts`, `harvest.ts`, `src/server/web.ts`, `SocketService.ts`, `src/core/eventBus.ts`, `bifrost_gateway.ts`, `ceanFallback.ts` (+5 további)
+
+---
 
 ### 2026-03-21
 
@@ -758,7 +767,7 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 78 | 2026-03-21 |
+| Claude | 79 | 2026-03-21 |
 | Gemini | 10 | 2026-03-01 |
 | Cursor | 0 | N/A |
 | Copilot | 47 | 2026-02-15 |

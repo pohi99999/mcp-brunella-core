@@ -210,27 +210,30 @@ describe('CLI E2E — Harvest Status', () => {
 // Szerver-igényes Parancsok — Graceful Failure
 // ====================================================================
 
+// MCP timeout rövid marad tesztben (3000ms), hogy ne lépje át a 15s Vitest limitet
+const serverEnv = { BRUNELLA_MCP_CONNECT_TIMEOUT_MS: '3000' };
+
 describe('CLI E2E — Szerver-igényes (graceful hiba)', () => {
   it('tools futtatható, nem timeout-ol', async () => {
-    const { exitCode, timedOut } = await runCli(['tools']);
+    const { exitCode, timedOut } = await runCli(['tools'], serverEnv);
     expect(timedOut).toBe(false);
     expect(exitCode).toBeGreaterThanOrEqual(0);
   });
 
   it('tools valami kimenetet ad (hiba vagy lista)', async () => {
-    const { stdout, stderr } = await runCli(['tools']);
+    const { stdout, stderr } = await runCli(['tools'], serverEnv);
     const output = stdout + stderr;
     expect(output.trim().length).toBeGreaterThan(0);
   });
 
   it('agents futtatható, nem timeout-ol', async () => {
-    const { exitCode, timedOut } = await runCli(['agents']);
+    const { exitCode, timedOut } = await runCli(['agents'], serverEnv);
     expect(timedOut).toBe(false);
     expect(exitCode).toBeGreaterThanOrEqual(0);
   });
 
   it('agents valami kimenetet ad (hiba vagy lista)', async () => {
-    const { stdout, stderr } = await runCli(['agents']);
+    const { stdout, stderr } = await runCli(['agents'], serverEnv);
     const output = stdout + stderr;
     expect(output.trim().length).toBeGreaterThan(0);
   });

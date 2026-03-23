@@ -1,0 +1,16 @@
+{
+  "id": "remote_layer_phase6_collective_evolution_20260322",
+  "title": "Brunella Remote Layer — Fázis 6: Evolutionary Collective Intelligence",
+  "status": "archived",
+  "priority": "critical",
+  "createdAt": "2026-03-22",
+  "owner": "GitHub Copilot",
+  "progress": 100,
+  "tags": ["evolutionary-agents", "genetic-flow", "topology-ai", "collective-mind", "meta-reasoner", "unified-runtime"],
+  "sourceDocument": ".worktrees/Brunella_superinnteligencia.md",
+  "phase": 6,
+  "dependencies": ["remote_layer_phase5_adaptive_swarms_20260322"],
+  "completedAt": "2026-03-22",
+  "archivedAt": "2026-03-22",
+  "archiveReason": "Verified complete via Copilot implementation log, dedicated tests, and live conductor audit."
+}

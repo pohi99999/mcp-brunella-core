@@ -1814,7 +1814,8 @@
 		"recommendations": [
 			"github.copilot-workspace",
 			"alessandrobenassi.cloudflare-devtools",
-			"ms-azuretools.vscode-azure-github-copilot"
+			"ms-azuretools.vscode-azure-github-copilot",
+			"shaneyang.api-key-aggregetor"
 		]
 	}
 }

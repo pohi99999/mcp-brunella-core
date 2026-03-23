@@ -37,6 +37,11 @@ type EmbeddingConfig = {
   tableName: string;
 };
 
+type EmbeddingResult = {
+  vector: number[];
+  available: boolean;
+};
+
 const PRIMARY_EMBEDDING_CONFIG: EmbeddingConfig = {
   model: PRIMARY_EMBEDDING_MODEL,
   dimension: PRIMARY_EMBEDDING_DIMENSION,
@@ -50,6 +55,7 @@ const LEGACY_EMBEDDING_CONFIG: EmbeddingConfig = {
 };
 
 const ZERO_VECTOR_RATIO_THRESHOLD = 0.95;
+const modelAvailability = new Map<string, boolean>();
 
 function zeroVector(size: number): number[] {
   return new Array(size).fill(0);
@@ -87,17 +93,32 @@ function isMostlyZeroVector(vector: number[]): boolean {
 async function getEmbedding(
   text: string,
   config: EmbeddingConfig,
-): Promise<number[]> {
+): Promise<EmbeddingResult> {
+  if (modelAvailability.get(config.model) === false) {
+    return {
+      vector: zeroVector(config.dimension),
+      available: false,
+    };
+  }
+
   try {
     const rawEmbedding = await aiGateway.embeddings(text.slice(0, 8000), {
       model: config.model,
       expectedDimension: config.dimension,
     });
 
-    return normalizeEmbedding(rawEmbedding, config.dimension);
+    const vector = normalizeEmbedding(rawEmbedding, config.dimension);
+    const available = !isMostlyZeroVector(vector);
+    modelAvailability.set(config.model, available);
+
+    return { vector, available };
   } catch (error: any) {
+    modelAvailability.set(config.model, false);
     logError("RAG", `Embedding error (${config.model}): ${error.message}`);
-    return zeroVector(config.dimension);
+    return {
+      vector: zeroVector(config.dimension),
+      available: false,
+    };
   }
 }
 
@@ -131,9 +152,10 @@ export class HybridMemory {
     config: EmbeddingConfig,
   ): Promise<Array<{ text: string; path?: string; score?: number }>> {
     const table = await db.openTable(tableName);
-    const queryVector = await getEmbedding(query, config);
+    const embedding = await getEmbedding(query, config);
+    const queryVector = embedding.vector;
 
-    if (!isMostlyZeroVector(queryVector)) {
+    if (embedding.available && !isMostlyZeroVector(queryVector)) {
       const results = await table
         .vectorSearch(queryVector)
         .limit(limit)
@@ -179,30 +201,34 @@ export class HybridMemory {
     const tableNames = await db.tableNames();
 
     const createdAt = new Date().toISOString();
-    const primaryVector = await getEmbedding(content, PRIMARY_EMBEDDING_CONFIG);
+    const primaryEmbedding = await getEmbedding(content, PRIMARY_EMBEDDING_CONFIG);
+    let wroteAnyIndex = false;
 
-    await this.addDocumentToTable(
-      db,
-      tableNames,
-      PRIMARY_EMBEDDING_CONFIG.tableName,
-      {
-        vector: primaryVector,
-        text: content,
-        embeddingModel: PRIMARY_EMBEDDING_CONFIG.model,
-        embeddingDimension: PRIMARY_EMBEDDING_CONFIG.dimension,
-        ...metadata,
-        createdAt,
-      },
-    );
+    if (primaryEmbedding.available) {
+      await this.addDocumentToTable(
+        db,
+        tableNames,
+        PRIMARY_EMBEDDING_CONFIG.tableName,
+        {
+          vector: primaryEmbedding.vector,
+          text: content,
+          embeddingModel: PRIMARY_EMBEDDING_CONFIG.model,
+          embeddingDimension: PRIMARY_EMBEDDING_CONFIG.dimension,
+          ...metadata,
+          createdAt,
+        },
+      );
+      wroteAnyIndex = true;
+    }
 
-    if (DUAL_INDEX_WRITE_ENABLED) {
-      const legacyVector = await getEmbedding(content, LEGACY_EMBEDDING_CONFIG);
+    if (DUAL_INDEX_WRITE_ENABLED || !primaryEmbedding.available) {
+      const legacyEmbedding = await getEmbedding(content, LEGACY_EMBEDDING_CONFIG);
       await this.addDocumentToTable(
         db,
         tableNames,
         LEGACY_EMBEDDING_CONFIG.tableName,
         {
-          vector: legacyVector,
+          vector: legacyEmbedding.vector,
           text: content,
           embeddingModel: LEGACY_EMBEDDING_CONFIG.model,
           embeddingDimension: LEGACY_EMBEDDING_CONFIG.dimension,
@@ -210,6 +236,11 @@ export class HybridMemory {
           createdAt,
         },
       );
+      wroteAnyIndex = true;
+    }
+
+    if (!wroteAnyIndex) {
+      logWarn('RAG', 'No embedding index was written; both primary and legacy embeddings were unavailable');
     }
 
     logInfo("RAG", `Document indexed: ${(metadata as any).path || "unknown"}`);
@@ -244,7 +275,10 @@ export class HybridMemory {
       const tableNames = await db.tableNames();
       if (tableNames.length === 0) return [];
 
-      if (tableNames.includes(PRIMARY_EMBEDDING_CONFIG.tableName)) {
+      if (
+        tableNames.includes(PRIMARY_EMBEDDING_CONFIG.tableName) &&
+        modelAvailability.get(PRIMARY_EMBEDDING_CONFIG.model) !== false
+      ) {
         const primaryResults = await this.searchTable(
           db,
           PRIMARY_EMBEDDING_CONFIG.tableName,
