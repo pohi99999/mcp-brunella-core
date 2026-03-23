@@ -100,6 +100,27 @@
     "enabled": true
   },
 
+  // --- Workflows ---
+  "workflows": [
+    {
+      "name": "daily-health-check",
+      "binding": "HEALTH_CHECK_WORKFLOW",
+      "class_name": "DailyHealthCheckWorkflow"
+    },
+    {
+      "name": "task-pipeline",
+      "binding": "TASK_PIPELINE_WORKFLOW",
+      "class_name": "TaskPipelineWorkflow"
+    }
+  ],
+
+  // --- Cron Triggers ---
+  "triggers": {
+    "crons": [
+      "0 6 * * *"
+    ]
+  },
+
   // --- Dev ---
   "dev": {
     "port": 8787,

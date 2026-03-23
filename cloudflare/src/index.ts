@@ -11,6 +11,8 @@
 
 import { Env, TaskPayload, TaskRecord, TaskResult } from "./types.js";
 export { EdgeCoordinator } from "./edge-coordinator.js";
+export { DailyHealthCheckWorkflow } from "./workflows/daily-health-check.js";
+export { TaskPipelineWorkflow } from "./workflows/task-pipeline.js";
 
 // Task típus osztályozás Workers AI-val (upgraded model)
 async function classifyTask(env: Env, instruction: string): Promise<string> {
@@ -314,6 +316,32 @@ export default {
         });
       }
 
+      // Workflow trigger endpoints
+      if (path === '/workflow/health-check' && request.method === 'POST') {
+        const instance = await env.HEALTH_CHECK_WORKFLOW.create({ params: { trigger: 'manual' } });
+        return new Response(JSON.stringify({
+          workflowId: instance.id,
+          status: 'started',
+          type: 'daily-health-check'
+        }), {
+          status: 202,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
+      if (path === '/workflow/task-pipeline' && request.method === 'POST') {
+        const payload = await request.json();
+        const instance = await env.TASK_PIPELINE_WORKFLOW.create({ params: payload });
+        return new Response(JSON.stringify({
+          workflowId: instance.id,
+          status: 'started',
+          type: 'task-pipeline'
+        }), {
+          status: 202,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
+      }
+
       // 404
       return new Response(
         JSON.stringify({
@@ -322,6 +350,9 @@ export default {
             "GET /health",
             "POST /task",
             "GET /status/:taskId",
+            "GET /history",
+            "POST /workflow/health-check",
+            "POST /workflow/task-pipeline",
             "ANY /api/*",
             "ANY /dashboard/*",
           ],

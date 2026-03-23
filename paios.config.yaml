@@ -3,31 +3,38 @@
 
 # Orchestrator központi beállítások
 orchestrator:
-  default_model: gemini              # gpt4o | gemini | local | anthropic
+  default_model: github              # github | gemini | local | anthropic | cloudflare
   system_prompt_path: src/orchestrator/systemPrompt/paios_orchestrator_prompt.md
   max_tasks_per_request: 5           # LLM max ennyi task-ot bonthat ki egyszerre
 
 # LLM Provider konfigurációk
 providers:
-  gpt4o:
+  github:
     enabled: true
-    model: gpt-4o
-    api_key_env: GITHUB_PAT          # .env-ből olvassa az API kulcsot
-  
+    model: gpt-4.1                   # Fő agy — erős reasoning, magyar nyelv
+    api_key_env: GITHUB_PAT
+    fallback_models:
+      - gpt-4.1-mini
+      - gpt-4o
+
   gemini:
     enabled: true
-    model: gemini-2.0-flash-exp
+    model: gemini-2.5-flash
     api_key_env: GEMINI_API_KEY
-  
+
   local:
     enabled: true
     model: qwen2.5-coder:7b
     base_url_env: OLLAMA_BASE_URL    # http://localhost:11434
-  
+
   anthropic:
     enabled: true
-    model: claude-sonnet-3-5-20241022
+    model: claude-sonnet-4-20250514
     api_key_env: ANTHROPIC_API_KEY
+
+  cloudflare:
+    enabled: true
+    model: "@cf/meta/llama-3.3-70b-instruct-fp8-fast"
 
 # Phoenix Protocol beállítások
 phoenix:
