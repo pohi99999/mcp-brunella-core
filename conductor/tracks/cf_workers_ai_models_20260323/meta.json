@@ -1,11 +1,11 @@
 {
   "id": "cf_workers_ai_models_20260323",
   "name": "Workers AI Modell Paletta Bővítés",
-  "status": "proposed",
+  "status": "DONE",
   "priority": "MEDIUM",
   "created": "2026-03-23",
   "owner": "Pohánka Péter",
-  "progress": 0,
+  "progress": 100,
   "description": "Workers AI modell paletta bővítés. Jelenleg csak Llama 3.1 8B. Cél: 3+ modell különböző feladatokra.",
   "dependencies": [],
   "phase": "feature"

@@ -7,15 +7,45 @@ export interface Env {
   // D1 Database
   DB: D1Database;
 
+  // R2 Buckets
+  R2_ARTIFACTS: R2Bucket;
+
   // Durable Objects
   EDGE_COORDINATOR: DurableObjectNamespace;
 
   // Workers AI
   AI: Ai;
 
+  // Vectorize
+  VECTORIZE_MEMORY: VectorizeIndex;
+
+  // Queues
+  TASK_QUEUE: Queue<TaskPayload>;
+  RESULT_QUEUE: Queue<TaskResult>;
+
+  // Analytics Engine
+  BAS_ANALYTICS: AnalyticsEngineDataset;
+
+  // Workers AI model config
+  DEFAULT_CODE_MODEL: string;
+  FALLBACK_CODE_MODEL: string;
+  REASONING_MODEL: string;
+  FAST_MODEL: string;
+  R2_PREFIX: string;
+
   // Configuration
   BAS_LOCAL_URL?: string;
   BAS_API_KEY?: string;
+}
+
+export interface TaskResult {
+  taskId: string;
+  status: "completed" | "failed";
+  result?: any;
+  error?: string;
+  agentId?: string;
+  durationMs?: number;
+  tokensUsed?: number;
 }
 
 export interface TaskPayload {
