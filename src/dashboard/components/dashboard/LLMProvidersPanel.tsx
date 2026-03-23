@@ -94,7 +94,7 @@ export function LLMProvidersPanel() {
                                         {p.status === 'online' ? `${p.latency}ms` : 'N/A'}
                                     </span>
                                 </div>
-                                <Progress value={p.status === 'online' ? Math.max(10, 100 - (p.latency || 0) / 10) : 0} className="h-1 bg-white/5" />
+                                <Progress value={p.status === 'online' ? Math.max(10, 100 - (p.latency || 0) / 10) : 0} className="h-1 bg-white/[0.04]" />
 
                                 {p.error && (
                                     <div className="bg-destructive/10 border border-destructive/20 rounded p-2 mt-2">

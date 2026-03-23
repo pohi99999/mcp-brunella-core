@@ -1,12 +1,16 @@
 {
   "id": "cf_r2_artifact_storage_20260323",
   "name": "R2 Alapú Agent Artifact Tárolás",
-  "status": "DONE",
+  "status": "archived",
   "priority": "HIGH",
   "created": "2026-03-23",
   "owner": "Pohánka Péter",
   "progress": 100,
   "description": "R2 használata agent futási eredmények, logok, screenshotok, generált kód tárolására. Depends on R2 activation.",
-  "dependencies": ["cf_r2_activation_20260323"],
-  "phase": "feature"
+  "dependencies": [
+    "cf_r2_activation_20260323"
+  ],
+  "phase": "feature",
+  "archivedAt": "2026-03-23T23:30:00Z",
+  "archiveReason": "Completed 100 percent track archived on user request."
 }

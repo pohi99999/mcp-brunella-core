@@ -165,7 +165,7 @@ export function TrojanHorseCommandCenter() {
 
             {/* Outreach Tracker */}
             <Card className="shadow-xl border-primary/20">
-                <CardHeader className="p-4 md:p-6 border-b border-white/5">
+                <CardHeader className="p-4 md:p-6 border-b border-white/[0.04]">
                     <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
                         <div className="flex items-center gap-3">
                             <div className="p-2 bg-primary/10 rounded-full text-primary shrink-0">
@@ -187,7 +187,7 @@ export function TrojanHorseCommandCenter() {
                     <ScrollArea className="h-[500px]">
                         <table className="w-full text-xs">
                             <thead className="sticky top-0 bg-secondary/80 backdrop-blur-sm z-10">
-                                <tr className="border-b border-white/5">
+                                <tr className="border-b border-white/[0.04]">
                                     <th className="text-left p-2 pl-4 font-medium text-zinc-500">#</th>
                                     <th className="text-left p-2 font-medium text-zinc-500">Ügynökség</th>
                                     <th className="text-left p-2 font-medium text-zinc-500 hidden md:table-cell">Email</th>
@@ -200,7 +200,7 @@ export function TrojanHorseCommandCenter() {
                                 {filteredAgencies.map((agency) => {
                                     const statusConf = STATUS_CONFIG[agency.status] || STATUS_CONFIG.pending;
                                     return (
-                                        <tr key={agency.id} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                                        <tr key={agency.id} className="border-b border-white/[0.04] hover:bg-white/[0.02] transition-colors">
                                             <td className="p-2 pl-4 text-zinc-600 font-mono">{agency.id}</td>
                                             <td className="p-2">
                                                 <div className="flex flex-col">

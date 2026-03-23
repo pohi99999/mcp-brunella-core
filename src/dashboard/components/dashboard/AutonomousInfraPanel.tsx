@@ -12,7 +12,7 @@ import {
 
 function StatRow({ label, value }: { label: string; value: string | number }) {
   return (
-    <div className="flex items-center justify-between text-sm py-1 border-b border-white/5 last:border-b-0">
+    <div className="flex items-center justify-between text-sm py-1 border-b border-white/[0.04] last:border-b-0">
       <span className="text-zinc-400">{label}</span>
       <span className="font-mono text-zinc-100">{value}</span>
     </div>
@@ -131,7 +131,7 @@ export function AutonomousInfraPanel() {
       ) : (
         <>
           <div className="grid grid-cols-1 xl:grid-cols-3 gap-4">
-            <Card className="bg-zinc-900 border-zinc-800">
+            <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-zinc-100 text-sm">
                   <Rocket size={16} className="text-cyan-400" />
@@ -146,7 +146,7 @@ export function AutonomousInfraPanel() {
               </CardContent>
             </Card>
 
-            <Card className="bg-zinc-900 border-zinc-800">
+            <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-zinc-100 text-sm">
                   <GitBranchPlus size={16} className="text-emerald-400" />
@@ -161,7 +161,7 @@ export function AutonomousInfraPanel() {
               </CardContent>
             </Card>
 
-            <Card className="bg-zinc-900 border-zinc-800">
+            <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-zinc-100 text-sm">
                   <Cpu size={16} className="text-amber-400" />
@@ -178,7 +178,7 @@ export function AutonomousInfraPanel() {
           </div>
 
           <div className="grid grid-cols-1 xl:grid-cols-2 gap-4">
-            <Card className="bg-zinc-900 border-zinc-800">
+            <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-zinc-100 text-sm">
                   <BrainCircuit size={16} className="text-violet-400" />
@@ -195,7 +195,7 @@ export function AutonomousInfraPanel() {
                 <div>
                   <div className="text-xs uppercase tracking-widest text-zinc-500 mb-2">Célok</div>
                   {data.goals.items.slice(0, 3).map(goal => (
-                    <div key={goal.goalId} className="rounded-md border border-white/5 bg-black/20 px-3 py-2 mb-2 last:mb-0">
+                    <div key={goal.goalId} className="rounded-md border border-white/[0.04] bg-white/[0.02] px-3 py-2 mb-2 last:mb-0">
                       <div className="text-sm text-zinc-100 font-medium">{goal.title}</div>
                       <div className="text-xs text-zinc-400 mt-1">{goal.category} · {goal.status} · priority {goal.priority}</div>
                     </div>
@@ -204,7 +204,7 @@ export function AutonomousInfraPanel() {
               </CardContent>
             </Card>
 
-            <Card className="bg-zinc-900 border-zinc-800">
+            <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center gap-2 text-zinc-100 text-sm">
                   <ShieldAlert size={16} className="text-rose-400" />
@@ -215,7 +215,7 @@ export function AutonomousInfraPanel() {
                 <div>
                   <div className="text-xs uppercase tracking-widest text-zinc-500 mb-2">Replika tervek</div>
                   {data.replication.plans.slice(-3).reverse().map(plan => (
-                    <div key={plan.planId} className="text-sm text-zinc-300 py-1 border-b border-white/5 last:border-b-0">
+                    <div key={plan.planId} className="text-sm text-zinc-300 py-1 border-b border-white/[0.04] last:border-b-0">
                       <div className="font-mono text-xs text-cyan-300">{plan.planId}</div>
                       <div>{plan.sourceNodeId} → {plan.targetRegion} · {plan.status} · risk {plan.risk}</div>
                     </div>
@@ -224,7 +224,7 @@ export function AutonomousInfraPanel() {
                 <div>
                   <div className="text-xs uppercase tracking-widest text-zinc-500 mb-2">Infra ajánlások</div>
                   {data.infra.recommendations.slice(0, 4).map(item => (
-                    <div key={item.recommendationId} className="text-sm text-zinc-300 py-1 border-b border-white/5 last:border-b-0">
+                    <div key={item.recommendationId} className="text-sm text-zinc-300 py-1 border-b border-white/[0.04] last:border-b-0">
                       <div className="font-medium">{item.type} → {item.targetResourceId}</div>
                       <div className="text-xs text-zinc-500 mt-0.5">{item.reason}</div>
                     </div>

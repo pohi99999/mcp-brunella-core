@@ -42,33 +42,10 @@ import { SocketServiceClass } from "../server/SocketService.js"; // Import Socke
 import type { IAgent } from "./types.js";
 import { formatResponse } from "../utils/responseFormatter.js";
 import { SwarmManager } from './swarm/SwarmManager.js';
-
-// ============================================================================
-// INTERFACES
-// ============================================================================
-
-interface AgentConfig {
-  name: string;
-  class: string;
-  module: string;
-  description: string;
-  capabilities: string[];
-  priority: number;
-  autoStart: boolean;
-  systemPrompt?: string;
-  triggers?: string[];
-  config?: Record<string, unknown>;
-}
-
-interface RegistryConfig {
-  version: string;
-  agents: AgentConfig[];
-  defaultAgent: string;
-  routingRules: Array<{
-    pattern: string;
-    agent: string;
-  }>;
-}
+import { resolveAgentExport } from './agentLoader.js';
+import { selectAgentForInstruction } from "./agentRouting.js";
+import { validateAndNormalizeRegistry, type RegistryValidationReport } from "./registryValidation.js";
+import { type AgentConfig, type RegistryConfig } from "./registryStandard.js";
 
 interface EdgeConfig {
   enabled: boolean;
@@ -95,7 +72,7 @@ interface TaskResult {
   executionTime?: number;
 }
 
-type AgentRuntimeStatus = "idle" | "working" | "error";
+type AgentRuntimeStatus = "idle" | "working" | "error" | "unloaded";
 
 interface AgentRuntimeInfo {
   status: AgentRuntimeStatus;
@@ -104,6 +81,21 @@ interface AgentRuntimeInfo {
   successCount: number;
   errorCount: number;
 }
+
+interface AgentLoadDiagnostic {
+  name: string;
+  module: string;
+  configuredClass: string;
+  loadStatus: "pending" | "loaded" | "error" | "skipped";
+  resolvedExportName?: string;
+  resolutionStrategy?: string;
+  availableExports: string[];
+  error?: string;
+  metadata: NonNullable<AgentConfig["metadataStandard"]>;
+  runtime: AgentRuntimeInfo;
+}
+
+type AgentWithSystemPrompt = IAgent & { systemPrompt?: string };
 
 // ============================================================================
 // AGENT MANAGER
@@ -140,6 +132,19 @@ export class AgentManager extends EventEmitter {
   private taskIdCounter = 0;
   private workerInterval?: ReturnType<typeof setInterval>;
   private agentRuntime: Map<string, AgentRuntimeInfo> = new Map();
+  private agentDiagnostics: Map<string, AgentLoadDiagnostic> = new Map();
+  private registryValidationReport: RegistryValidationReport = {
+    valid: true,
+    errors: [],
+    warnings: [],
+    checkedAt: new Date().toISOString(),
+    summary: {
+      totalAgents: 0,
+      activeAgents: 0,
+      invalidAgents: 0,
+      defaultAgent: "Orchestrator",
+    },
+  };
   private circuitBreakers: Map<
     string,
     { failures: number; lastFailure: number; isOpen: boolean }
@@ -161,6 +166,7 @@ export class AgentManager extends EventEmitter {
     } as any);
     this.registry = this.loadRegistry();
     this.edgeConfig = this.loadEdgeConfig();
+    this.seedAgentDiagnostics(this.registry.agents);
   }
 
   // --------------------------------------------------------------------------
@@ -173,6 +179,19 @@ export class AgentManager extends EventEmitter {
     // Load registry asynchronously if in Node environment
     if (typeof process !== "undefined" && process.versions?.node) {
       this.registry = await this.loadRegistryAsync();
+      this.seedAgentDiagnostics(this.registry.agents);
+      if (!this.registryValidationReport.valid) {
+        logError(
+          "AgentManager",
+          `Registry validation errors: ${this.registryValidationReport.errors.join(" | ")}`,
+        );
+      }
+      if (this.registryValidationReport.warnings.length > 0) {
+        logWarn(
+          "AgentManager",
+          `Registry validation warnings: ${this.registryValidationReport.warnings.join(" | ")}`,
+        );
+      }
     }
 
     // Ügynökök betöltése
@@ -181,6 +200,10 @@ export class AgentManager extends EventEmitter {
         try {
           await this.loadAgent(agentConfig);
         } catch (error) {
+          this.markAgentDiagnostic(agentConfig, {
+            loadStatus: "error",
+            error: error instanceof Error ? error.message : String(error),
+          });
           logError(
             "AgentManager",
             `Ügynök betöltési hiba (${agentConfig.name}): ${error}`,
@@ -273,12 +296,20 @@ export class AgentManager extends EventEmitter {
   private async loadAgent(config: AgentConfig): Promise<void> {
     // Dynamic imports for Node.js-specific modules (Worker compatibility)
     if (typeof process === "undefined" || !process.versions?.node) {
+      this.markAgentDiagnostic(config, {
+        loadStatus: "skipped",
+        error: "loadAgent() requires Node.js environment",
+      });
       logError("AgentManager", "loadAgent() requires Node.js environment");
       return;
     }
 
     // Skip if module is not defined (e.g. planned agents)
     if (!config.module) {
+      this.markAgentDiagnostic(config, {
+        loadStatus: "skipped",
+        error: "No module path defined",
+      });
       logInfo(
         "AgentManager",
         `Skipping agent '${config.name}' (no module path defined)`,
@@ -297,6 +328,10 @@ export class AgentManager extends EventEmitter {
     );
 
     if (!fs.default.existsSync(modulePath)) {
+      this.markAgentDiagnostic(config, {
+        loadStatus: "error",
+        error: `Modul nem található: ${modulePath}`,
+      });
       logError("AgentManager", `Modul nem található: ${modulePath}`);
       return;
     }
@@ -305,15 +340,32 @@ export class AgentManager extends EventEmitter {
     const moduleUrl = url.pathToFileURL(modulePath).href;
 
     // Use moduleUrl instead of modulePath for import
-    const AgentClass = (await import(moduleUrl)).default;
-    const agent = new AgentClass(config.config);
+    const importedModule = (await import(moduleUrl)) as Record<string, unknown>;
+    const resolvedExport = resolveAgentExport(importedModule, config.class);
+
+    if (resolvedExport.strategy === 'first-constructable') {
+      logWarn(
+        'AgentManager',
+        `Ügynök export fallback (${config.name}): várt='${config.class}', használt='${resolvedExport.exportName}', elérhető=[${resolvedExport.availableExports.join(', ')}]`,
+      );
+    }
+
+    const agent = new resolvedExport.AgentClass(config.config) as AgentWithSystemPrompt;
 
     agent.name = config.name;
     agent.description = config.description;
     agent.systemPrompt = config.systemPrompt;
 
     this.agents.set(config.name, agent);
-    this.ensureAgentRuntime(config.name);
+    const runtime = this.ensureAgentRuntime(config.name);
+    this.markAgentDiagnostic(config, {
+      loadStatus: "loaded",
+      resolvedExportName: resolvedExport.exportName,
+      resolutionStrategy: resolvedExport.strategy,
+      availableExports: resolvedExport.availableExports,
+      runtime,
+      error: undefined,
+    });
     logInfo(
       "AgentManager",
       `Ügynök betöltve: ${config.name}. Jelenlegi kulcsok: ${[...this.agents.keys()].join(", ")}`,
@@ -323,7 +375,7 @@ export class AgentManager extends EventEmitter {
   private ensureAgentRuntime(agentName: string): AgentRuntimeInfo {
     if (!this.agentRuntime.has(agentName)) {
       this.agentRuntime.set(agentName, {
-        status: "idle",
+        status: this.agents.has(agentName) ? "idle" : "unloaded",
         successCount: 0,
         errorCount: 0,
       });
@@ -336,7 +388,75 @@ export class AgentManager extends EventEmitter {
     updates: Partial<AgentRuntimeInfo>,
   ) {
     const current = this.ensureAgentRuntime(agentName);
-    this.agentRuntime.set(agentName, { ...current, ...updates });
+    const runtime = { ...current, ...updates };
+    this.agentRuntime.set(agentName, runtime);
+    const existing = this.agentDiagnostics.get(agentName);
+    if (existing) {
+      this.agentDiagnostics.set(agentName, { ...existing, runtime });
+    }
+  }
+
+  private seedAgentDiagnostics(agentConfigs: AgentConfig[]): void {
+    this.agentDiagnostics = new Map(
+      agentConfigs.map((config) => {
+        const runtime = this.ensureAgentRuntime(config.name);
+        return [config.name, {
+          name: config.name,
+          module: config.module,
+          configuredClass: config.class,
+          loadStatus: "pending",
+          availableExports: [],
+          metadata: config.metadataStandard ?? {
+            category: "general",
+            status: "active",
+            tags: [],
+            tools: [],
+            triggers: config.triggers ?? [],
+            capabilities: config.capabilities,
+            priority: config.priority,
+            autoStart: config.autoStart,
+            executionMode: "local",
+            costTier: "low",
+            runtimeCompatibility: "node",
+          },
+          runtime,
+        } satisfies AgentLoadDiagnostic];
+      }),
+    );
+  }
+
+  private markAgentDiagnostic(
+    config: AgentConfig,
+    updates: Partial<AgentLoadDiagnostic>,
+  ): void {
+    const current = this.agentDiagnostics.get(config.name) ?? {
+      name: config.name,
+      module: config.module,
+      configuredClass: config.class,
+      loadStatus: "pending",
+      availableExports: [],
+      metadata: config.metadataStandard ?? {
+        category: "general",
+        status: "active",
+        tags: [],
+        tools: [],
+        triggers: config.triggers ?? [],
+        capabilities: config.capabilities,
+        priority: config.priority,
+        autoStart: config.autoStart,
+        executionMode: "local",
+        costTier: "low",
+        runtimeCompatibility: "node",
+      },
+      runtime: this.ensureAgentRuntime(config.name),
+    } satisfies AgentLoadDiagnostic;
+
+    this.agentDiagnostics.set(config.name, {
+      ...current,
+      ...updates,
+      runtime: updates.runtime ?? current.runtime,
+      availableExports: updates.availableExports ?? current.availableExports,
+    });
   }
 
   private async initializeEdgeProxy(): Promise<void> {
@@ -1107,33 +1227,18 @@ export class AgentManager extends EventEmitter {
    * Task routing a szabályok alapján
    */
   private routeTask(instruction: string): string | null {
-    const lowerInstruction = instruction.toLowerCase();
-
-    // Routing szabályok ellenőrzése
-    if (Array.isArray(this.registry.routingRules)) {
-      for (const rule of this.registry.routingRules) {
-        const regex = new RegExp(rule.pattern, "i");
-        if (regex.test(lowerInstruction)) {
-          return rule.agent;
-        }
-      }
-    }
-
-    // Ügynök trigger-ek ellenőrzése
-    if (Array.isArray(this.registry.agents)) {
-      for (const agentConfig of this.registry.agents) {
-        if (agentConfig.triggers) {
-          for (const trigger of agentConfig.triggers) {
-            if (lowerInstruction.includes(trigger.toLowerCase())) {
-              return agentConfig.name;
-            }
-          }
-        }
-      }
-    }
-
-    // Default ügynök
-    return this.registry.defaultAgent;
+    const runtimeByAgent = new Map(
+      this.registry.agents.map((agent) => [
+        agent.name,
+        this.ensureAgentRuntime(agent.name),
+      ]),
+    );
+    const decision = selectAgentForInstruction(
+      instruction,
+      this.registry,
+      runtimeByAgent,
+    );
+    return decision.agentName ?? this.registry.defaultAgent;
   }
 
   // --------------------------------------------------------------------------
@@ -1245,7 +1350,12 @@ export class AgentManager extends EventEmitter {
       execute: agent.execute.bind(agent),
     };
     this.agents.set(agent.name, fullAgent);
-    this.ensureAgentRuntime(agent.name);
+    const runtime = this.ensureAgentRuntime(agent.name);
+    runtime.status = "idle";
+    const existingConfig = this.registry.agents.find((entry) => entry.name === agent.name);
+    if (existingConfig) {
+      this.markAgentDiagnostic(existingConfig, { loadStatus: "loaded", runtime, error: undefined });
+    }
     logInfo("AgentManager", `Ügynök regisztrálva: ${agent.name}`);
   }
 
@@ -1545,6 +1655,42 @@ export class AgentManager extends EventEmitter {
     return { ...this.registry };
   }
 
+  getRegistryValidationReport(): RegistryValidationReport {
+    return {
+      ...this.registryValidationReport,
+      errors: [...this.registryValidationReport.errors],
+      warnings: [...this.registryValidationReport.warnings],
+      summary: { ...this.registryValidationReport.summary },
+    };
+  }
+
+  getAgentDiagnostics(): {
+    validation: RegistryValidationReport;
+    agents: AgentLoadDiagnostic[];
+  } {
+    const agents = this.registry.agents.map((config) => {
+      const runtime = this.ensureAgentRuntime(config.name);
+      const diagnostic = this.agentDiagnostics.get(config.name);
+      return {
+        ...(diagnostic ?? {
+          name: config.name,
+          module: config.module,
+          configuredClass: config.class,
+          loadStatus: "pending",
+          availableExports: [],
+          metadata: config.metadataStandard,
+          runtime,
+        }),
+        runtime,
+      } as AgentLoadDiagnostic;
+    });
+
+    return {
+      validation: this.getRegistryValidationReport(),
+      agents,
+    };
+  }
+
   /** Worker loop indítása – sor feldolgozás */
   startWorkerLoop(): void {
     if (this.workerInterval) return;
@@ -1684,7 +1830,9 @@ export class AgentManager extends EventEmitter {
 
       if (fs.default.existsSync(registryPath)) {
         const content = fs.default.readFileSync(registryPath, "utf-8");
-        return JSON.parse(content);
+        const { registry, report } = validateAndNormalizeRegistry(JSON.parse(content));
+        this.registryValidationReport = report;
+        return registry;
       }
     } catch (e) {
       logError("AgentManager", `Registry load failed: ${e}`);
@@ -1702,12 +1850,14 @@ export class AgentManager extends EventEmitter {
   private loadRegistry(): RegistryConfig {
     // Note: This is called from constructor, which cannot be async
     // So we use a simplified version here and rely on the registry being optional
-    return {
+    const { registry, report } = validateAndNormalizeRegistry({
       version: "1.0.0",
       agents: [],
       defaultAgent: "Orchestrator",
       routingRules: [],
-    };
+    });
+    this.registryValidationReport = report;
+    return registry;
   }
 
   private loadEdgeConfig(): EdgeConfig {

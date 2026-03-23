@@ -73,7 +73,7 @@ export function SwarmStatusWidget() {
   const colonies = data?.colonies ?? [];
 
   return (
-    <div className="bg-black/20 backdrop-blur-md border border-white/5 rounded-2xl p-4 h-full flex flex-col gap-3">
+    <div className="bg-white/[0.02] backdrop-blur-md border border-white/[0.04] rounded-2xl p-4 h-full flex flex-col gap-3">
       {/* Header */}
       <div className="flex items-center justify-between shrink-0">
         <h3 className="text-sm font-semibold text-white/70">Swarm Colonies</h3>
@@ -116,7 +116,7 @@ export function SwarmStatusWidget() {
           {colonies.map((colony) => (
             <div
               key={colony.colonyId}
-              className="bg-white/3 border border-white/5 rounded-lg px-3 py-2 flex items-center justify-between gap-2"
+              className="bg-white/3 border border-white/[0.04] rounded-lg px-3 py-2 flex items-center justify-between gap-2"
             >
               <div className="min-w-0 flex-1">
                 <p className="text-xs font-medium text-white/80 truncate">

@@ -255,7 +255,7 @@ export function BrowserCopilotPanel() {
                                         <ScrollArea className="h-48 px-4 py-3">
                                             <div className="space-y-3">
                                                 { latestMessages.map((message) => (
-                                                    <div key={ message.id } className={ `rounded-xl px-3 py-2 text-xs leading-relaxed ${message.role === 'user' ? 'bg-primary text-primary-foreground ml-8' : message.role === 'assistant' ? 'bg-white/5 text-zinc-100 mr-2' : 'bg-amber-500/10 text-amber-100 border border-amber-500/20'}` }>
+                                                    <div key={ message.id } className={ `rounded-xl px-3 py-2 text-xs leading-relaxed ${message.role === 'user' ? 'bg-primary text-primary-foreground ml-8' : message.role === 'assistant' ? 'bg-white/[0.04] text-zinc-100 mr-2' : 'bg-amber-500/10 text-amber-100 border border-amber-500/20'}` }>
                                                         { message.content }
                                                     </div>
                                                 )) }
@@ -266,7 +266,7 @@ export function BrowserCopilotPanel() {
                                                 value={ input }
                                                 onChange={ (event) => setInput(event.target.value) }
                                                 placeholder="Pl.: nyisd meg az űrlapot, és guide módban töltsük ki együtt…"
-                                                className="min-h-[76px] resize-none border-white/10 bg-white/5 text-white placeholder:text-zinc-500"
+                                                className="min-h-[76px] resize-none border-white/10 bg-white/[0.04] text-white placeholder:text-zinc-500"
                                                 disabled={ isBusy }
                                                 onKeyDown={ (event) => {
                                                     if (event.key === 'Enter' && !event.shiftKey) {

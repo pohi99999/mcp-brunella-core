@@ -95,7 +95,7 @@ export function PropertyVisionaryWidget() {
 
     return (
         <Card className="w-full shadow-xl border-primary/20 bg-card/50 backdrop-blur-md">
-            <CardHeader className="pb-3 border-b border-white/5">
+            <CardHeader className="pb-3 border-b border-white/[0.04]">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-primary/10 rounded-full">
@@ -129,7 +129,7 @@ export function PropertyVisionaryWidget() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Előzmények */}
-                    <div className="lg:col-span-1 border-r border-white/5 pr-4 flex flex-col gap-4">
+                    <div className="lg:col-span-1 border-r border-white/[0.04] pr-4 flex flex-col gap-4">
                         <h3 className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-2">
                             <History size={12} />
                             Ingatlan Portfólió
@@ -179,7 +179,7 @@ export function PropertyVisionaryWidget() {
                                                 </h4>
                                                 <p className="text-sm text-zinc-200 leading-relaxed italic line-clamp-3">"{data.analysis?.buyerProfile || data.buyerProfile}"</p>
                                             </div>
-                                            <div className="p-4 rounded-xl bg-white/5 border border-white/5">
+                                            <div className="p-4 rounded-xl bg-white/[0.04] border border-white/[0.04]">
                                                 <h4 className="text-[10px] font-bold text-zinc-500 uppercase tracking-widest mb-2 flex items-center gap-2">
                                                     <Zap size={12} /> Fő Előnyök (USP)
                                                 </h4>
@@ -204,7 +204,7 @@ export function PropertyVisionaryWidget() {
                                             <ScrollArea className="h-[350px] pr-4">
                                                 <div className="space-y-4">
                                                     {data.leads?.map((lead: any, i: number) => (
-                                                        <div key={i} className="p-4 rounded-xl border border-white/5 bg-white/5 hover:border-primary/20 transition-all group">
+                                                        <div key={i} className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.04] hover:border-primary/20 transition-all group">
                                                             <div className="flex justify-between items-start mb-2">
                                                                 <div>
                                                                     <h5 className="font-bold text-sm text-white group-hover:text-primary transition-colors">{lead.companyName}</h5>
@@ -218,12 +218,12 @@ export function PropertyVisionaryWidget() {
                                                             
                                                             <p className="text-[11px] text-zinc-400 mb-3 leading-snug">{lead.reason}</p>
                                                             
-                                                            <div className="p-3 rounded-lg bg-black/20 border border-white/5 space-y-2">
+                                                            <div className="p-3 rounded-lg bg-white/[0.02] border border-white/[0.04] space-y-2">
                                                                 <div className="text-[9px] font-bold text-primary uppercase flex items-center gap-1">
                                                                     <MessageSquare size={10} /> Nyitó stratégia
                                                                 </div>
                                                                 <p className="text-[11px] text-zinc-200 italic leading-relaxed">"{lead.openingLine}"</p>
-                                                                <div className="pt-2 mt-2 border-t border-white/5">
+                                                                <div className="pt-2 mt-2 border-t border-white/[0.04]">
                                                                     <div className="text-[8px] font-bold text-zinc-500 uppercase mb-1">Értékajánlat (Proposition)</div>
                                                                     <p className="text-[10px] text-zinc-400">{lead.valueProposition}</p>
                                                                 </div>

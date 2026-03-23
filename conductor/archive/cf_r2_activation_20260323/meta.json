@@ -1,12 +1,14 @@
 {
   "id": "cf_r2_activation_20260323",
   "name": "Cloudflare R2 Object Storage Aktiválás",
-  "status": "DONE",
+  "status": "archived",
   "priority": "CRITICAL",
   "created": "2026-03-23",
   "owner": "Pohánka Péter",
   "progress": 100,
   "description": "R2 Object Storage aktiválás a CF fiókon. Wrangler 'Please enable R2' hibaüzenetet ad. Wrangler.jsonc-ben már konfigurálva van (vodor1 bucket).",
   "dependencies": [],
-  "phase": "infrastructure"
+  "phase": "infrastructure",
+  "archivedAt": "2026-03-23T23:30:00Z",
+  "archiveReason": "Completed 100 percent track archived on user request."
 }

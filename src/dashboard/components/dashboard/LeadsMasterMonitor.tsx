@@ -209,7 +209,7 @@ export function LeadsMasterMonitor() {
 
             {/* ── Kampány Tracker tab ── */}
             {activeTab === 'tracking' && (
-                <Card className="bg-zinc-900 border-zinc-700">
+                <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
                     <CardHeader className="pb-2">
                         <CardTitle className="text-sm text-zinc-200">Wave 2 — Outreach Státusz</CardTitle>
                         <CardDescription className="text-zinc-500 text-xs">
@@ -229,7 +229,7 @@ export function LeadsMasterMonitor() {
                                         return (
                                             <div
                                                 key={contact.id}
-                                                className="flex items-center gap-3 px-4 py-2.5 border-b border-zinc-800 hover:bg-zinc-800/40 transition-colors"
+                                                className="flex items-center gap-3 px-4 py-2.5 border-b border-white/[0.04] hover:bg-zinc-800/40 transition-colors"
                                             >
                                                 {/* Név + email */}
                                                 <div className="flex-1 min-w-0">
@@ -309,7 +309,7 @@ export function LeadsMasterMonitor() {
 
             {/* ── Google Sheets iframe tab ── */}
             {(activeTab === 'master' || activeTab === 'wave2') && (
-                <Card className="bg-zinc-900 border-zinc-700">
+                <Card className="bg-white/[0.03] border-white/[0.04] rounded-lg">
                     <CardHeader className="pb-2 flex flex-row items-center justify-between">
                         <div>
                             <CardTitle className="text-sm text-zinc-200">
@@ -354,7 +354,7 @@ export function LeadsMasterMonitor() {
             )}
 
             {/* ── Wave 1 Info ── */}
-            <Card className="bg-zinc-900/50 border-zinc-800">
+            <Card className="bg-zinc-900/50 border-white/[0.04]">
                 <CardContent className="p-3">
                     <div className="flex items-center justify-between flex-wrap gap-3">
                         <div className="text-xs text-zinc-400">

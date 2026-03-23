@@ -41,7 +41,7 @@ export function EnterpriseSuitePanel() {
             </div>
 
             <Tabs defaultValue="innovation" className="w-full">
-                <TabsList className="grid grid-cols-6 w-full lg:w-[1000px] bg-secondary/30 backdrop-blur-md border border-white/5 h-12 p-1">
+                <TabsList className="grid grid-cols-6 w-full lg:w-[1000px] bg-secondary/30 backdrop-blur-md border border-white/[0.04] h-12 p-1">
                     <TabsTrigger value="innovation" className="data-[state=active]:bg-primary data-[state=active]:text-white flex items-center gap-2 text-[10px] font-bold uppercase tracking-wider">
                         <Lightbulb className="w-3 h-3" />
                         Innovation
@@ -91,7 +91,7 @@ export function EnterpriseSuitePanel() {
             </Tabs>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-8 opacity-60">
-                <div className="p-4 rounded-xl border border-white/5 bg-white/5 flex items-center gap-4">
+                <div className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.04] flex items-center gap-4">
                     <div className="p-3 bg-blue-500/10 rounded-lg">
                         <TrendingUp className="w-5 h-5 text-blue-400" />
                     </div>
@@ -100,7 +100,7 @@ export function EnterpriseSuitePanel() {
                         <div className="text-[10px] uppercase text-zinc-500 font-mono">Hamarosan</div>
                     </div>
                 </div>
-                <div className="p-4 rounded-xl border border-white/5 bg-white/5 flex items-center gap-4">
+                <div className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.04] flex items-center gap-4">
                     <div className="p-3 bg-purple-500/10 rounded-lg">
                         <ShieldCheck className="w-5 h-5 text-purple-400" />
                     </div>
@@ -109,7 +109,7 @@ export function EnterpriseSuitePanel() {
                         <div className="text-[10px] uppercase text-zinc-500 font-mono">Beta</div>
                     </div>
                 </div>
-                <div className="p-4 rounded-xl border border-white/5 bg-white/5 flex items-center gap-4">
+                <div className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.04] flex items-center gap-4">
                     <div className="p-3 bg-orange-500/10 rounded-lg">
                         <Star className="w-5 h-5 text-orange-400" />
                     </div>

@@ -63,7 +63,7 @@ export function GrantHunterWidget() {
 
     return (
         <Card className="w-full shadow-xl border-orange-500/20 bg-card/50 backdrop-blur-md">
-            <CardHeader className="pb-3 border-b border-white/5">
+            <CardHeader className="pb-3 border-b border-white/[0.04]">
                 <div className="flex justify-between items-center">
                     <div className="flex items-center gap-3">
                         <div className="p-2 bg-orange-500/10 rounded-full">
@@ -96,7 +96,7 @@ export function GrantHunterWidget() {
 
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Előzmények */}
-                    <div className="lg:col-span-1 border-r border-white/5 pr-4 flex flex-col gap-4">
+                    <div className="lg:col-span-1 border-r border-white/[0.04] pr-4 flex flex-col gap-4">
                         <h3 className="text-xs font-semibold uppercase text-muted-foreground flex items-center gap-2">
                             <History size={12} />
                             Előzmények
@@ -143,7 +143,7 @@ export function GrantHunterWidget() {
                                             {grants.map((grant: any, i: number) => (
                                                 <div
                                                     key={i}
-                                                    className="p-4 rounded-xl border border-white/5 bg-white/5 hover:border-orange-500/30 transition-all group"
+                                                    className="p-4 rounded-xl border border-white/[0.04] bg-white/[0.04] hover:border-orange-500/30 transition-all group"
                                                 >
                                                     <div className="flex justify-between items-start mb-3">
                                                         <h4 className="font-bold text-sm text-orange-100 leading-tight group-hover:text-orange-400 transition-colors">{grant.title}</h4>

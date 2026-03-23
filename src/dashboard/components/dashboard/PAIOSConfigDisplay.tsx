@@ -67,7 +67,7 @@ export function PAIOSConfigDisplay() {
 
     if (error || !config) {
         return (
-            <div className="text-xs text-zinc-500 font-mono p-3 bg-zinc-900/50 rounded border border-zinc-800">
+            <div className="text-xs text-zinc-500 font-mono p-3 bg-zinc-900/50 rounded border border-white/[0.04]">
                 <p>⚠️ Config not loaded: {error || 'Unknown error'}</p>
                 <p className="mt-2">Using .env fallback</p>
             </div>
@@ -78,7 +78,7 @@ export function PAIOSConfigDisplay() {
         <ScrollArea className="h-[400px] w-full">
             <div className="space-y-4 text-xs">
                 {/* Orchestrator */}
-                <div className="p-3 bg-zinc-900/50 rounded border border-zinc-800">
+                <div className="p-3 bg-zinc-900/50 rounded border border-white/[0.04]">
                     <div className="flex items-center gap-2 mb-2">
                         <FileCode2 className="w-4 h-4 text-blue-500" />
                         <span className="font-semibold text-zinc-300">Orchestrator</span>
@@ -90,7 +90,7 @@ export function PAIOSConfigDisplay() {
                 </div>
 
                 {/* Providers */}
-                <div className="p-3 bg-zinc-900/50 rounded border border-zinc-800">
+                <div className="p-3 bg-zinc-900/50 rounded border border-white/[0.04]">
                     <div className="flex items-center gap-2 mb-2">
                         <FileCode2 className="w-4 h-4 text-purple-500" />
                         <span className="font-semibold text-zinc-300">Providers</span>
@@ -114,7 +114,7 @@ export function PAIOSConfigDisplay() {
 
                 {/* Phoenix */}
                 {config.phoenix && (
-                    <div className="p-3 bg-zinc-900/50 rounded border border-zinc-800">
+                    <div className="p-3 bg-zinc-900/50 rounded border border-white/[0.04]">
                         <div className="flex items-center gap-2 mb-2">
                             <FileCode2 className="w-4 h-4 text-orange-500" />
                             <span className="font-semibold text-zinc-300">Phoenix Protocol</span>
@@ -128,7 +128,7 @@ export function PAIOSConfigDisplay() {
 
                 {/* Dashboard */}
                 {config.dashboard && (
-                    <div className="p-3 bg-zinc-900/50 rounded border border-zinc-800">
+                    <div className="p-3 bg-zinc-900/50 rounded border border-white/[0.04]">
                         <div className="flex items-center gap-2 mb-2">
                             <FileCode2 className="w-4 h-4 text-teal-500" />
                             <span className="font-semibold text-zinc-300">Dashboard</span>

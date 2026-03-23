@@ -211,7 +211,7 @@ export function TaskDecomposerPanel() {
             placeholder="Írd be a komplex feladatot (pl. 'Adj hozzá új API route-ot, írj teszteket, frissítsd a dashboardot')..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="bg-black/20 border-white/10 min-h-[110px]"
+            className="bg-white/[0.02] border-white/10 min-h-[110px]"
           />
           <div className="flex justify-end gap-2">
             <Button
@@ -225,7 +225,7 @@ export function TaskDecomposerPanel() {
         </div>
 
         <div className="rounded-xl overflow-hidden border border-white/10 bg-black/10">
-          <div className="flex items-center justify-between px-3 py-2 bg-white/5">
+          <div className="flex items-center justify-between px-3 py-2 bg-white/[0.04]">
             <div className="text-sm font-medium text-muted-foreground">
               DAG vizualizáció
             </div>

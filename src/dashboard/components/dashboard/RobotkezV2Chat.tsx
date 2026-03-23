@@ -506,7 +506,7 @@ export function RobotkezV2Chat() {
                             { msg.content }
                           </p>
                           { msg.screenshot && (
-                            <div className="mt-2 rounded-lg overflow-hidden border border-border/50 bg-black/20">
+                            <div className="mt-2 rounded-lg overflow-hidden border border-border/50 bg-white/[0.02]">
                               <img
                                 src={ msg.screenshot.startsWith('data:') ? msg.screenshot : `data:image/png;base64,${msg.screenshot}` }
                                 alt="Screenshot"

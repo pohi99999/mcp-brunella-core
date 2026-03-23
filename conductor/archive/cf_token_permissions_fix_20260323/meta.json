@@ -1,12 +1,14 @@
 {
   "id": "cf_token_permissions_fix_20260323",
   "name": "Cloudflare API Token Jogosultság Bővítés",
-  "status": "DONE",
+  "status": "archived",
   "priority": "CRITICAL",
   "created": "2026-03-23",
   "owner": "Pohánka Péter",
   "progress": 100,
   "description": "CLOUDFLARE_API_TOKEN jogosultság bővítés: KV Storage, Vectorize, R2 read/write. Jelenlegi token limitált.",
   "dependencies": [],
-  "phase": "infrastructure"
+  "phase": "infrastructure",
+  "archivedAt": "2026-03-23T23:30:00Z",
+  "archiveReason": "Completed 100 percent track archived on user request."
 }

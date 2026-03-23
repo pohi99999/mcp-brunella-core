@@ -49,9 +49,9 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
   // Early return if no agent provided (after hooks)
   if (!agent) {
     return (
-      <Card className="bg-zinc-950/40 border-zinc-800/50 rounded-lg">
+      <Card className="bg-transparent border-none shadow-none">
         <CardHeader>
-          <CardTitle className="text-[11px] font-medium tracking-wider uppercase text-zinc-500">No Agent Loaded</CardTitle>
+          <CardTitle className="text-xs font-medium tracking-wide text-zinc-400 flex items-center gap-2">No Agent Loaded</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-xs text-zinc-500">Agent data is not available</p>
@@ -135,8 +135,8 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
   return (
     <Card
       className={cn(
-        'bg-zinc-950/40 border-zinc-800/50 rounded-lg group h-full flex flex-col',
-        status === 'working' ? 'border-primary/30 shadow-[0_0_15px_rgba(139,92,246,0.1)]' : ''
+        'bg-transparent border-none shadow-none group h-full flex flex-col',
+        status === 'working' ? 'ring-1 ring-primary/30' : ''
       )}
       onClick={() => setExpanded(!expanded)}
     >
@@ -152,7 +152,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
               aria-hidden
             />
             <div className="flex flex-col">
-              <span className="text-[11px] font-medium tracking-wider uppercase text-zinc-500 group-hover:text-primary transition-colors">{displayTitle}</span>
+              <span className="text-xs font-medium tracking-wide text-zinc-400 group-hover:text-primary transition-colors">{displayTitle}</span>
               <span className="text-[10px] font-mono text-zinc-500 uppercase">{displayRole}</span>
             </div>
           </div>
@@ -191,7 +191,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                       id="task"
                       value={delegateTask}
                       onChange={(e) => setDelegateTask(e.target.value)}
-                      className="bg-white/5 border-white/10 text-zinc-100"
+                      className="bg-white/[0.04] border-white/10 text-zinc-100"
                     />
                   </div>
                 </div>
@@ -202,7 +202,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
             </Dialog>
 
             <button
-              className="rounded-full p-1 text-zinc-500 hover:bg-white/5 hover:text-zinc-300 transition-colors"
+              className="rounded-full p-1 text-zinc-500 hover:bg-white/[0.03] hover:text-zinc-300 transition-colors"
               aria-label={expanded ? 'Összecsuk' : 'Részletek'}
             >
               {expanded ? <CaretUp size={18} /> : <CaretDown size={18} />}
@@ -216,10 +216,10 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
         )}
 
         {expanded && (
-          <div className="space-y-4 pt-3 border-t border-white/5 mt-2 animate-in slide-in-from-top-2 duration-300" onClick={(e) => e.stopPropagation()}>
+          <div className="space-y-4 pt-3 border-t border-white/[0.04] mt-2 animate-in slide-in-from-top-2 duration-300" onClick={(e) => e.stopPropagation()}>
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground flex items-center gap-1">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-zinc-500 flex items-center gap-1">
                   <Lightning size={10} className="text-yellow-500" />
                   Képességek (Capabilities)
                 </span>
@@ -237,7 +237,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                           value={newCapability}
                           onChange={(e) => setNewCapability(e.target.value)}
                           placeholder="Új képesség..."
-                          className="h-8 text-xs bg-white/5 border-white/10"
+                          className="h-8 text-xs bg-white/[0.04] border-white/10"
                         />
                         <Button size="sm" onClick={handleAddCapability} className="h-8 w-8 p-0"><Plus size={14} /></Button>
                       </div>
@@ -270,7 +270,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
               </div>
             </div>
 
-            <div className="flex items-center gap-4 text-xs text-zinc-500 pt-2 border-t border-white/5">
+            <div className="flex items-center gap-4 text-xs text-zinc-500 pt-2 border-t border-white/[0.04]">
               <span className="flex items-center gap-1.5">
                 <div className={`w-1.5 h-1.5 rounded-full ${agent.priority <= 1 ? 'bg-red-500' : 'bg-blue-500'}`} />
                 Priority: <span className="text-zinc-300 font-mono">{agent.priority}</span>
@@ -288,7 +288,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                   <input
                     type="text"
                     placeholder="Gyors parancs..."
-                    className="w-full rounded-md border border-white/10 bg-black/20 px-3 py-1.5 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors font-mono"
+                    className="w-full rounded-md border border-white/10 bg-white/[0.02] px-3 py-1.5 text-xs text-zinc-200 placeholder:text-zinc-600 focus:outline-none focus:border-primary/50 transition-colors font-mono"
                     value={quickTask}
                     onChange={(e) => setQuickTask(e.target.value)}
                     onKeyDown={(e) => e.key === 'Enter' && handleQuickRun()}

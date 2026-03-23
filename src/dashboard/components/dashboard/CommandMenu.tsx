@@ -54,11 +54,11 @@ export function CommandMenu({ setActiveTab, activeTab }: CommandMenuProps) {
             <div className="hidden lg:flex relative w-full max-w-sm items-center mr-4">
                 <button
                     onClick={() => setOpen(true)}
-                    className="inline-flex w-full items-center gap-2 rounded-md border border-white/10 bg-white/5 px-3 py-1.5 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-white/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring font-mono"
+                    className="inline-flex w-full items-center gap-2 rounded-md border border-white/10 bg-white/[0.04] px-3 py-1.5 text-sm text-muted-foreground shadow-sm transition-colors hover:bg-white/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring font-mono"
                 >
                     <Search size={14} />
                     <span className="flex-1 text-left">Keresés...</span>
-                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-white/10 bg-white/5 px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
+                    <kbd className="pointer-events-none inline-flex h-5 select-none items-center gap-1 rounded border border-white/10 bg-white/[0.04] px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100">
                         <span className="text-xs">⌘</span>K
                     </kbd>
                 </button>

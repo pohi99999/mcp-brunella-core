@@ -186,11 +186,11 @@ export function MarketWatcherWidget() {
                                                     </div>
                                                     
                                                     <div className="grid grid-cols-2 gap-2 mt-3">
-                                                        <div className="p-2 rounded bg-black/20 flex flex-col">
+                                                        <div className="p-2 rounded bg-white/[0.02] flex flex-col">
                                                             <span className="text-[8px] text-zinc-500 uppercase font-mono">Piaci Átlag</span>
                                                             <span className="text-xs font-bold">{Math.round(item.market_average)} {item.currency}</span>
                                                         </div>
-                                                        <div className="p-2 rounded bg-black/20 flex flex-col">
+                                                        <div className="p-2 rounded bg-white/[0.02] flex flex-col">
                                                             <span className="text-[8px] text-zinc-500 uppercase font-mono">Potenciál</span>
                                                             <div className="flex items-center gap-1">
                                                                 <span className="text-xs font-bold">{Math.round(item.potential_score * 100)}%</span>

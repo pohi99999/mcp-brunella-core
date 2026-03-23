@@ -131,9 +131,9 @@ export function JulesPanel() {
   };
 
   return (
-    <Card className="glass-panel border-purple-500/20 shadow-purple-900/10 h-full flex flex-col">
-      <CardHeader className="flex flex-row items-center justify-between shrink-0">
-        <CardTitle className="flex items-center gap-2 text-purple-400">
+    <Card className="bg-transparent border-none shadow-none h-full flex flex-col">
+      <CardHeader className="flex flex-row items-center justify-between pb-3 px-4 pt-4 shrink-0">
+        <CardTitle className="text-xs font-medium tracking-wide text-zinc-400 flex items-center gap-2">
           <Robot size={24} weight="duotone" />
           Jules Integration
         </CardTitle>
@@ -156,7 +156,7 @@ export function JulesPanel() {
             placeholder="Describe the task for Jules (e.g. 'Refactor the authentication logic in python')..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="bg-black/20 border-white/10 min-h-[100px]"
+            className="bg-white/[0.02] border-white/[0.04] min-h-[100px]"
           />
           <div className="flex justify-end">
             <Button
@@ -175,9 +175,9 @@ export function JulesPanel() {
         </div>
 
         {/* Sessions List - Compact */}
-        <div className="rounded-md border border-white/10 overflow-hidden">
+        <div className="rounded-md border border-white/[0.04] overflow-hidden">
           <Table>
-            <TableHeader className="bg-white/5">
+            <TableHeader className="bg-white/[0.04]">
               <TableRow className="text-xs">
                 <TableHead className="w-[80px] py-2">Session</TableHead>
                 <TableHead className="py-2">Status</TableHead>
@@ -190,7 +190,7 @@ export function JulesPanel() {
                 <TableRow>
                   <TableCell
                     colSpan={4}
-                    className="text-center text-muted-foreground h-16 text-xs"
+                    className="text-center text-zinc-500 h-16 text-xs"
                   >
                     No active sessions found.
                   </TableCell>
@@ -240,7 +240,7 @@ export function JulesPanel() {
             </TableBody>
           </Table>
           {sessions.length > MAX_VISIBLE_SESSIONS && (
-            <div className="border-t border-white/10 bg-white/5 p-2 text-center">
+            <div className="border-t border-white/[0.04] bg-white/[0.04] p-2 text-center">
               <Button
                 variant="ghost"
                 size="sm"
@@ -257,7 +257,7 @@ export function JulesPanel() {
 
         {/* Async Tests (GitHub Actions) - Collapsible */}
         <div
-          className="flex items-center justify-between px-3 py-2 bg-white/5 w-full hover:bg-white/10 transition-colors cursor-pointer"
+          className="flex items-center justify-between px-3 py-2 bg-white/[0.04] w-full hover:bg-white/10 transition-colors cursor-pointer"
           onClick={() => setShowAsyncTests(!showAsyncTests)}
           role="button"
           tabIndex={0}
@@ -267,7 +267,7 @@ export function JulesPanel() {
             }
           }}
         >
-          <div className="text-xs font-medium text-muted-foreground flex items-center gap-2">
+          <div className="text-xs font-medium text-zinc-500 flex items-center gap-2">
             Async Tests (GitHub Actions)
             {runs.length > 0 && (
               <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
@@ -292,15 +292,15 @@ export function JulesPanel() {
                 className={isLoadingRuns ? "animate-spin" : ""}
               />
             </Button>
-            <span className="text-xs text-muted-foreground">
+            <span className="text-xs text-zinc-500">
               {showAsyncTests ? "▼" : "▶"}
             </span>
           </div>
         </div>
         {showAsyncTests && (
-          <div className="rounded-md border border-white/10 overflow-hidden">
+          <div className="rounded-md border border-white/[0.04] overflow-hidden">
             <Table>
-            <TableHeader className="bg-white/5">
+            <TableHeader className="bg-white/[0.04]">
               <TableRow>
                 <TableHead className="w-[80px]">#</TableHead>
                 <TableHead>Status</TableHead>
@@ -313,7 +313,7 @@ export function JulesPanel() {
                 <TableRow>
                   <TableCell
                     colSpan={4}
-                    className="text-center text-muted-foreground h-16"
+                    className="text-center text-zinc-500 h-16"
                   >
                     {isLoadingRuns
                       ? "Betöltés..."
@@ -342,7 +342,7 @@ export function JulesPanel() {
                         {r.conclusion ?? "-"}
                       </Badge>
                     </TableCell>
-                    <TableCell className="text-xs text-muted-foreground">
+                    <TableCell className="text-xs text-zinc-500">
                       {(r.updated_at || r.created_at || "")
                         .slice(0, 19)
                         .replace("T", " ")}
@@ -357,14 +357,14 @@ export function JulesPanel() {
 
         {/* Test Trend Chart - Only show if tests are visible and there are successes */}
         {showAsyncTests && runs.length > 0 && runs.some(r => r.conclusion === "success") && (
-          <div className="rounded-md border border-white/10 overflow-hidden">
-            <div className="flex items-center justify-between px-3 py-2 bg-white/5">
-              <div className="text-sm font-medium text-muted-foreground flex items-center gap-2">
+          <div className="rounded-md border border-white/[0.04] overflow-hidden">
+            <div className="flex items-center justify-between px-3 py-2 bg-white/[0.04]">
+              <div className="text-sm font-medium text-zinc-500 flex items-center gap-2">
                 <ChartLine size={16} />
                 Test Success Trend (Last 10 Runs)
               </div>
             </div>
-            <div className="p-4 bg-black/20">
+            <div className="p-4 bg-white/[0.02]">
               <ResponsiveContainer width="100%" height={200}>
                 <LineChart
                   data={runs
@@ -394,7 +394,7 @@ export function JulesPanel() {
                   />
                 </LineChart>
               </ResponsiveContainer>
-              <div className="mt-2 text-xs text-muted-foreground text-center">
+              <div className="mt-2 text-xs text-zinc-500 text-center">
                 {runs.filter((r) => r.conclusion === "success").length} / {runs.length} successful runs (
                 {Math.round((runs.filter((r) => r.conclusion === "success").length / runs.length) * 100)}% pass rate)
               </div>
