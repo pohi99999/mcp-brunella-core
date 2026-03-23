@@ -14,6 +14,8 @@ import { validateAgentResult } from './middleware/validateOutput.js';
 import { calculateConfidence } from './scoring/confidenceCalculator.js';
 import { wrapWithSpan } from '../utils/otelTracing.js';
 import { safeRedactAgentOutput } from '../security/redactor.js';
+import { checkPattern } from '../core/patternReuse.js';
+import { queryMemory as queryStructuredMemory, saveMemory as saveStructuredMemory, type StoredAgentMemory } from '../core/structuredMemory.js';
 
 export interface AgentContext {
   task?: string;
@@ -54,6 +56,54 @@ export abstract class BaseAgent implements IAgent {
    */
   abstract executeTask(context: AgentContext): Promise<AgentResult>;
 
+  private toStructuredExperience(memory: StoredAgentMemory): { text: string; score?: number } {
+    const resultRecord = typeof memory.result === 'object' && memory.result !== null
+      ? memory.result as Record<string, unknown>
+      : null;
+    const message = resultRecord && typeof resultRecord.message === 'string'
+      ? resultRecord.message
+      : JSON.stringify(memory.result);
+
+    return {
+      text: `StructuredMemory | Task: ${memory.rawTask} | Result: ${message}`,
+      score: memory.confidence,
+    };
+  }
+
+  private normalizeCachedResult(cached: unknown): AgentResult {
+    if (typeof cached === 'object' && cached !== null) {
+      const record = cached as Record<string, unknown>;
+      const success = typeof record.success === 'boolean'
+        ? record.success
+        : record.status === 'success';
+      const message = typeof record.message === 'string'
+        ? record.message
+        : 'Találat a strukturált memóriában.';
+
+      return {
+        success,
+        message,
+        status: typeof record.status === 'string' ? record.status : success ? 'success' : 'error',
+        data: record.data,
+        handoff: record.handoff as AgentHandoff | undefined,
+        thoughts: typeof record.thoughts === 'string' ? record.thoughts : undefined,
+        contextUsed: Array.isArray(record.contextUsed)
+          ? record.contextUsed.filter((item): item is string => typeof item === 'string')
+          : undefined,
+        metadata: typeof record.metadata === 'object' && record.metadata !== null
+          ? { ...(record.metadata as Record<string, unknown>) }
+          : {},
+      };
+    }
+
+    return {
+      success: true,
+      message: 'Találat a strukturált memóriában.',
+      data: cached,
+      metadata: {},
+    };
+  }
+
   /**
    * IAgent-kompatibilis execute bridge.
    * Az AgentManager és az MCP eszközök egységesen hívhatják:
@@ -63,6 +113,37 @@ export abstract class BaseAgent implements IAgent {
    */
   async execute(task: string, context?: any): Promise<AgentResponse> {
     const testMode = this.isTestMode();
+
+    if (!testMode) {
+      const cachedPattern = await wrapWithSpan(
+        'bas-base-agent', `${this.name}::pattern-reuse`,
+        { 'bas.agent.name': this.name, 'bas.operation': 'pattern_reuse' },
+        async () => checkPattern<AgentResult>(this.name, task),
+      );
+
+      if (cachedPattern.matched && cachedPattern.memory) {
+        const cachedResult = this.normalizeCachedResult(cachedPattern.memory.result);
+        if (!cachedResult.metadata) {
+          cachedResult.metadata = {};
+        }
+        cachedResult.metadata.confidence = cachedPattern.memory.confidence;
+        cachedResult.metadata.fromCache = true;
+        cachedResult.metadata.cachedAt = cachedPattern.memory.updatedAt;
+        cachedResult.metadata.reuseCount = cachedPattern.memory.reuseCount;
+
+        validateAgentResult(cachedResult, this.name);
+
+        const formattedMessage = formatAgentResult(cachedResult, this.name, { useEmojis: true });
+        return safeRedactAgentOutput({
+          success: cachedResult.success,
+          status: cachedResult.success ? 'success' : 'error',
+          message: formattedMessage,
+          data: cachedResult.data,
+          error: cachedResult.success ? undefined : cachedResult.message,
+          handoff: cachedResult.handoff,
+        }, this.name);
+      }
+    }
 
     // 1. Kognitív memória lekérdezése végrehajtás előtt (OTel sub-span)
     const pastExperiences = testMode ? [] : await wrapWithSpan(
@@ -91,6 +172,14 @@ export abstract class BaseAgent implements IAgent {
     // 4. Tapasztalat mentése a memóriába (OTel sub-span)
     // Teszt módban kihagyjuk a perzisztens RAG IO-t a stabilitás/gyorsaság miatt.
     if (!testMode) {
+      saveStructuredMemory({
+        agentName: this.name,
+        task,
+        result,
+        confidence: confidence.score,
+        status: result.success ? 'success' : 'error',
+      });
+
       const outcome = result.success ? 'SIKER' : 'HIBA';
       const experienceContent = `Feladat: "${task}" | Eredmény: ${outcome} | Üzenet: ${result.message}`;
       await wrapWithSpan(
@@ -141,8 +230,15 @@ export abstract class BaseAgent implements IAgent {
   protected async queryMemory(query: string, limit = 5): Promise<Array<{ text: string; score?: number }>> {
     logInfo(this.name, `Memória lekérdezése: "${query.substring(0, 50)}..."`);
     try {
+      const structured = queryStructuredMemory({
+        agentName: this.name,
+        task: query,
+        limit,
+      }).map((memory) => this.toStructuredExperience(memory));
+
       const results = await searchRAG(query, limit);
-      return results.map(r => ({ text: r.text, score: r.score }));
+      const vectorResults = results.map(r => ({ text: r.text, score: r.score }));
+      return [...structured, ...vectorResults].slice(0, limit);
     } catch (e) {
       logError(this.name, `Memória lekérdezés hiba: ${e}`);
       return [];

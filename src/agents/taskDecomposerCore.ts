@@ -1,3 +1,5 @@
+import type { DAGWorkflow } from '../core/dagEngine.js';
+
 export interface MicroTask {
   id: string;
   agent: string;
@@ -258,4 +260,57 @@ export function decomposePreview(
     tasks,
     dag,
   };
+}
+
+function microTasksToWorkflow(originalTask: string, tasks: MicroTask[]): DAGWorkflow {
+  return {
+    id: `workflow_${Date.now()}`,
+    name: originalTask.slice(0, 80) || 'Generated Workflow',
+    nodes: tasks.map((task) => ({
+      id: task.id,
+      label: task.task,
+      type: 'agent',
+      agentName: task.agent,
+      instruction: task.task,
+      dependsOn: task.dependencies,
+      timeoutMs: task.timeoutMs,
+      metadata: {
+        retries: task.retries,
+        parallel: task.parallel,
+      },
+    })),
+    edges: tasks.flatMap((task) => task.dependencies.map((dependency) => ({ from: dependency, to: task.id }))),
+  };
+}
+
+export function decomposeToDAG(
+  originalTask: string,
+  opts?: { defaultAgent?: string },
+): DAGWorkflow {
+  const tasks = buildMicroTasks(originalTask, {
+    defaultAgent: opts?.defaultAgent ?? 'Developer',
+  });
+
+  const cycle = detectCycle(tasks);
+  if (cycle) {
+    throw new Error(`Dependency cycle detected: ${cycle.join(' -> ')}`);
+  }
+
+  return microTasksToWorkflow(originalTask, tasks);
+}
+
+export async function decomposeToDAGAsync(
+  originalTask: string,
+  opts?: { defaultAgent?: string },
+): Promise<DAGWorkflow> {
+  const tasks = await buildMicroTasksAsync(originalTask, {
+    defaultAgent: opts?.defaultAgent ?? 'Developer',
+  });
+
+  const cycle = detectCycle(tasks);
+  if (cycle) {
+    throw new Error(`Dependency cycle detected: ${cycle.join(' -> ')}`);
+  }
+
+  return microTasksToWorkflow(originalTask, tasks);
 }

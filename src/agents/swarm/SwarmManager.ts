@@ -13,6 +13,7 @@ import { EventEmitter } from 'events';
 import { logInfo, logWarn } from '../../utils/logger.js';
 import { SwarmAgent, type TaskBid, type SwarmTaskResult } from './SwarmAgent.js';
 import { eventBus } from '../../core/eventBus.js';
+import { saveCheckpoint, pruneCheckpoints } from '../../core/swarm/colonyPersistence.js';
 
 export interface SwarmColony {
   swarmId: string;
@@ -44,6 +45,7 @@ export interface SwarmTask {
 export class SwarmManager extends EventEmitter {
   private colonies = new Map<string, SwarmColony>();
   private taskCounter = 0;
+  private checkpointInterval = 5; // auto-checkpoint every N tasks
 
   /** Create a new swarm colony */
   createColony(config: { swarmId: string; name: string; objective: string }): SwarmColony {
@@ -192,6 +194,16 @@ export class SwarmManager extends EventEmitter {
     colony.metrics.avgDurationMs =
       (colony.metrics.avgDurationMs * (totalTasks - 1) + result.durationMs) / totalTasks;
     colony.metrics.lastActivity = Date.now();
+
+    // Auto-checkpoint after every N tasks
+    if (totalTasks > 0 && totalTasks % this.checkpointInterval === 0) {
+      try {
+        saveCheckpoint(colony);
+        pruneCheckpoints(colony.swarmId, 5);
+      } catch {
+        logWarn('SwarmManager', `Auto-checkpoint failed for colony ${swarmId}`);
+      }
+    }
 
     return result;
   }

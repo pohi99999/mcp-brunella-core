@@ -1,5 +1,5 @@
 import { BaseAgent, type AgentContext, type AgentResult } from "./BaseAgent.js";
-import { decomposePreview, decomposeToChain } from "./taskDecomposerCore.js";
+import { decomposePreview, decomposeToChain, decomposeToDAG } from "./taskDecomposerCore.js";
 import { kahnSort } from "../utils/dagSort.js";
 import { logError, setAgentStatus } from "../utils/logger.js";
 
@@ -18,6 +18,7 @@ export class TaskDecomposerAgent extends BaseAgent {
         : "Developer";
     // preview=false → ChainStep[] visszaadása az OrchestratorAgent számára
     const preview = context.preview !== false;
+    const outputFormat = typeof context.outputFormat === 'string' ? context.outputFormat : 'preview';
 
     setAgentStatus(this.name, "working", task.slice(0, 60) || "decompose");
 
@@ -27,6 +28,15 @@ export class TaskDecomposerAgent extends BaseAgent {
           success: false,
           message: "Hiányzó feladat szöveg (task)",
           data: null,
+        };
+      }
+
+      if (outputFormat === 'dag') {
+        const workflow = decomposeToDAG(task, { defaultAgent });
+        return {
+          success: true,
+          message: `DAG workflow elkészült (${workflow.nodes.length} node).`,
+          data: workflow,
         };
       }
 

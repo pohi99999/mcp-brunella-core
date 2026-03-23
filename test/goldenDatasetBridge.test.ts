@@ -9,9 +9,70 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 const mockFetch = vi.fn();
 vi.stubGlobal('fetch', mockFetch);
 
+type GoldenRow = {
+  sample_hash: string;
+  prompt: string;
+  completion: string;
+  source: string;
+  quality: number;
+  remote_status: string;
+  remote_synced_at?: string;
+  created_at: string;
+  updated_at: string;
+};
+
+const goldenRows = new Map<string, GoldenRow>();
+
+function createFakeDb() {
+  return {
+    exec: vi.fn(),
+    prepare: (sql: string) => ({
+      run: (...args: unknown[]) => {
+        if (sql.includes('INSERT INTO golden_samples')) {
+          const params = args[0] as Record<string, unknown>;
+          const row: GoldenRow = {
+            sample_hash: String(params.sample_hash),
+            prompt: String(params.prompt),
+            completion: String(params.completion),
+            source: String(params.source),
+            quality: Number(params.quality),
+            remote_status: 'pending',
+            created_at: String(params.created_at),
+            updated_at: String(params.updated_at),
+          };
+          goldenRows.set(row.sample_hash, row);
+          return { changes: 1 };
+        }
+
+        if (sql.includes("UPDATE golden_samples")) {
+          const sampleHash = String(args.at(-1));
+          const current = goldenRows.get(sampleHash);
+          if (current) {
+            current.remote_status = sql.includes("remote_status = 'synced'") ? 'synced' : 'failed';
+            current.remote_synced_at = typeof args[0] === 'string' ? String(args[0]) : current.remote_synced_at;
+            current.updated_at = typeof args[1] === 'string' ? String(args[1]) : current.updated_at;
+            goldenRows.set(sampleHash, current);
+          }
+          return { changes: current ? 1 : 0 };
+        }
+
+        return { changes: 0 };
+      },
+      get: () => {
+        if (sql.includes('COUNT(*) AS total_samples')) {
+          return { total_samples: goldenRows.size };
+        }
+        return undefined;
+      },
+      all: () => [],
+    }),
+  };
+}
+
 // Mock getD1Adapter
 vi.mock('../src/utils/globalDb.js', () => ({
-  getD1Adapter: vi.fn()
+  getD1Adapter: vi.fn(),
+  getGlobalDb: vi.fn(() => createFakeDb()),
 }));
 
 import { getD1Adapter } from '../src/utils/globalDb.js';
@@ -28,6 +89,8 @@ import {
 describe('goldenDatasetBridge', () => {
   beforeEach(() => {
     mockFetch.mockReset();
+    goldenRows.clear();
+    vi.mocked(getD1Adapter).mockReset();
   });
 
   describe('saveGoldenSample', () => {
@@ -131,7 +194,7 @@ describe('goldenDatasetBridge', () => {
       mockFetch.mockRejectedValueOnce(new Error('timeout'));
 
       const stats = await getGoldenStats();
-      expect(stats).toBeNull();
+      expect(stats).toEqual({ totalSamples: 0, newSinceLastTraining: 0 });
     });
   });
 

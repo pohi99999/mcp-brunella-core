@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { swarmManager } from '../../agents/AgentManager.js';
 import { logInfo, logError } from '../../utils/logger.js';
+import { listCheckpoints, getCheckpointStats } from '../../core/swarm/colonyPersistence.js';
 
 const swarmRouter = Router();
 
@@ -56,3 +57,33 @@ swarmRouter.post('/dispatch', async (req, res) => {
 });
 
 export { swarmRouter };
+
+// --- Additional Routes: Checkpoint endpoints (Track #5) ---
+
+// GET /api/v1/swarm/checkpoints/stats
+swarmRouter.get('/checkpoints/stats', async (_req, res) => {
+  try {
+    const stats = await getCheckpointStats();
+    return res.json(stats);
+  } catch (e: unknown) {
+    const error = e instanceof Error ? e.message : String(e);
+    logError('SwarmRoute', `checkpoint stats error: ${error}`);
+    return res.status(500).json({ error });
+  }
+});
+
+// GET /api/v1/swarm/checkpoints?swarmId=xxx
+swarmRouter.get('/checkpoints', async (req, res) => {
+  try {
+    const swarmId = req.query.swarmId as string | undefined;
+    if (!swarmId) {
+      return res.status(400).json({ error: 'swarmId query parameter required' });
+    }
+    const checkpoints = await listCheckpoints(swarmId);
+    return res.json({ swarmId, checkpoints, total: checkpoints.length });
+  } catch (e: unknown) {
+    const error = e instanceof Error ? e.message : String(e);
+    logError('SwarmRoute', `checkpoint list error: ${error}`);
+    return res.status(500).json({ error });
+  }
+});

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { getTasks, getTaskCount, getTaskById, getTaskStats } from '../../utils/tasksDb.js';
 import { agentManager } from '../../agents/AgentManager.js';
+import { decomposeToDAGAsync } from '../../agents/taskDecomposerCore.js';
 
 export function createTaskRoutes(): Router {
     const router = Router();
@@ -23,6 +24,54 @@ export function createTaskRoutes(): Router {
         try {
             const stats = await getTaskStats();
             res.json({ stats });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    router.get('/workflow/status', async (_req, res) => {
+        try {
+            res.json({ workflows: agentManager.listWorkflowExecutions() });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    router.post('/workflow/preview', async (req, res) => {
+        try {
+            const { task, defaultAgent } = req.body as { task?: string; defaultAgent?: string };
+            if (!task) {
+                res.status(400).json({ error: 'task is required' });
+                return;
+            }
+
+            const workflow = await decomposeToDAGAsync(task, { defaultAgent });
+            res.json({ success: true, workflow });
+        } catch (e: unknown) {
+            const msg = e instanceof Error ? e.message : String(e);
+            res.status(500).json({ error: msg });
+        }
+    });
+
+    router.post('/workflow/run', async (req, res) => {
+        try {
+            const { task, workflow, defaultAgent, initialContext } = req.body as {
+                task?: string;
+                workflow?: Parameters<typeof agentManager.executeWorkflow>[0];
+                defaultAgent?: string;
+                initialContext?: Record<string, unknown>;
+            };
+
+            const resolvedWorkflow = workflow ?? (task ? await decomposeToDAGAsync(task, { defaultAgent }) : undefined);
+            if (!resolvedWorkflow) {
+                res.status(400).json({ error: 'task or workflow is required' });
+                return;
+            }
+
+            const result = await agentManager.executeWorkflow(resolvedWorkflow, initialContext);
+            res.json({ success: true, workflow: resolvedWorkflow, result });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });
