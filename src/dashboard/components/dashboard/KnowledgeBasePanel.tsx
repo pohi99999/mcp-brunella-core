@@ -120,7 +120,7 @@ export function KnowledgeBasePanel() {
             <div className="flex items-center justify-between">
                 <div>
                     <h1 className="text-3xl font-bold tracking-tight">Knowledge Base</h1>
-                    <p className="text-muted-foreground">
+                    <p className="text-zinc-500">
                         Brunella szemantikus memóriájának (RAG) kezelése és vizualizációja.
                     </p>
                 </div>
@@ -136,17 +136,17 @@ export function KnowledgeBasePanel() {
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Bejegyzések Száma</CardTitle>
-                        <Database className="h-4 w-4 text-muted-foreground" />
+                        <Database className="h-4 w-4 text-zinc-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="text-2xl font-bold">{rowCount}</div>
-                        <p className="text-xs text-muted-foreground">Szemantikus vektor tároló ({stats?.table || 'memory'})</p>
+                        <p className="text-xs text-zinc-500">Szemantikus vektor tároló ({stats?.table || 'memory'})</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                         <CardTitle className="text-sm font-medium">Ingestion</CardTitle>
-                        <Upload className="h-4 w-4 text-muted-foreground" />
+                        <Upload className="h-4 w-4 text-zinc-500" />
                     </CardHeader>
                     <CardContent>
                         <div className="flex items-center gap-2">
@@ -214,7 +214,7 @@ export function KnowledgeBasePanel() {
                                 ))}
                             </div>
                         ) : (
-                            <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-10">
+                            <div className="flex flex-col items-center justify-center h-full text-zinc-500 py-10">
                                 <Search className="w-10 h-10 mb-4 opacity-20" />
                                 <p>Nincsenek aktív keresési találatok</p>
                             </div>

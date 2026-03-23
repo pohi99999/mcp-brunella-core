@@ -129,7 +129,7 @@ export function BrowserCopilotPanel() {
                                 <Sparkles className="w-5 h-5 text-primary" />
                                 Browser Copilot Mission Control
                             </CardTitle>
-                            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
+                            <div className="flex flex-wrap items-center gap-2 text-xs text-zinc-500">
                                 <SessionBadge session={ session ?? {
                                     sessionId: 'loading', status: 'idle', mode: 'auto', enginePreference: 'auto', viewportEngine: 'robotkez', actionEngine: 'robotkez', chromeAcpReachable: false, overlayEnabled: true, paused: false, lastUpdatedAt: 0, messages: [],
                                 } } />
@@ -163,7 +163,7 @@ export function BrowserCopilotPanel() {
                     <CardContent className="p-4 space-y-4">
                         <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
                             <div className="space-y-2 lg:col-span-2">
-                                <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Vezérlési mód</p>
+                                <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">Vezérlési mód</p>
                                 <div className="flex flex-wrap gap-2">
                                     { (Object.keys(modeLabels) as BrowserCopilotMode[]).map((mode) => (
                                         <Button
@@ -179,7 +179,7 @@ export function BrowserCopilotPanel() {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <p className="text-[11px] uppercase tracking-[0.24em] text-muted-foreground">Live viewport</p>
+                                <p className="text-xs uppercase tracking-[0.24em] text-zinc-500">Live viewport</p>
                                 <div className="flex flex-wrap gap-2">
                                     { (Object.keys(engineLabels) as BrowserCopilotEnginePreference[]).map((engine) => (
                                         <Button
@@ -199,10 +199,10 @@ export function BrowserCopilotPanel() {
                         <div className="flex items-center justify-between rounded-xl border border-border/50 bg-muted/20 px-4 py-3">
                             <div>
                                 <p className="text-sm font-medium">Chat overlay</p>
-                                <p className="text-xs text-muted-foreground">Lebegő magyar vezérlőpanel a live nézet felett</p>
+                                <p className="text-xs text-zinc-500">Lebegő magyar vezérlőpanel a live nézet felett</p>
                             </div>
                             <div className="flex items-center gap-2">
-                                { showOverlay ? <Eye className="w-4 h-4 text-primary" /> : <EyeOff className="w-4 h-4 text-muted-foreground" /> }
+                                { showOverlay ? <Eye className="w-4 h-4 text-primary" /> : <EyeOff className="w-4 h-4 text-zinc-500" /> }
                                 <Switch checked={ showOverlay } onCheckedChange={ (checked) => void handleConfigure({ overlayEnabled: checked }) } />
                             </div>
                         </div>
@@ -298,7 +298,7 @@ export function BrowserCopilotPanel() {
                                             Session állapot
                                         </CardTitle>
                                     </CardHeader>
-                                    <CardContent className="space-y-3 text-xs text-muted-foreground">
+                                    <CardContent className="space-y-3 text-xs text-zinc-500">
                                         <div className="grid grid-cols-2 gap-2">
                                             <div className="rounded-lg border border-border/40 bg-background/40 p-3">
                                                 <p className="uppercase tracking-widest text-[10px] mb-1">Mód</p>
@@ -340,7 +340,7 @@ export function BrowserCopilotPanel() {
                             <div className="p-4 space-y-3">
                                 { (session?.messages ?? []).map((message) => (
                                     <div key={ message.id } className={ `rounded-2xl border px-4 py-3 ${message.role === 'user' ? 'bg-primary/10 border-primary/20 ml-6' : message.role === 'assistant' ? 'bg-muted/30 border-border/50 mr-2' : 'bg-amber-500/5 border-amber-500/20'}` }>
-                                        <p className="text-[10px] uppercase tracking-[0.22em] text-muted-foreground mb-2">{ message.role }</p>
+                                        <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500 mb-2">{ message.role }</p>
                                         <p className="text-sm leading-relaxed">{ message.content }</p>
                                     </div>
                                 )) }

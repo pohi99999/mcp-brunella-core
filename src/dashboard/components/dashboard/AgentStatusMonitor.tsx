@@ -22,7 +22,7 @@ export function AgentStatusMonitor() {
   return (
     <Card className="glass-card border-white/10 h-full flex flex-col">
       <CardHeader className="pb-2 border-b border-white/[0.04] shrink-0">
-        <CardTitle className="text-sm font-space font-bold tracking-tight uppercase text-muted-foreground flex items-center gap-2">
+        <CardTitle className="text-sm font-space font-bold tracking-tight uppercase text-zinc-500 flex items-center gap-2">
           <Brain size={16} className="text-primary" />
           Agent Status Monitor
         </CardTitle>

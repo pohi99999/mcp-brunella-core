@@ -211,7 +211,7 @@ export function TrojanHorseCommandCenter() {
                                                 </div>
                                             </td>
                                             <td className="p-2 hidden md:table-cell">
-                                                <span className={`font-mono text-[11px] ${agency.email.startsWith('❌') ? 'text-red-400' : 'text-zinc-300'}`}>
+                                                <span className={`font-mono text-xs ${agency.email.startsWith('❌') ? 'text-red-400' : 'text-zinc-300'}`}>
                                                     {agency.email}
                                                 </span>
                                             </td>
@@ -296,7 +296,7 @@ export function TrojanHorseCommandCenter() {
                                     {step < 4 ? <Loader2 className="w-3 h-3 md:w-4 md:h-4 animate-spin text-primary" /> : <CheckCircle2 className="w-3 h-3 md:w-4 md:h-4 text-green-500" />}
                                     {getStepLabel()}
                                 </span>
-                                <span className="text-muted-foreground font-mono">{getProgressValue()}%</span>
+                                <span className="text-zinc-500 font-mono">{getProgressValue()}%</span>
                             </div>
                             <Progress value={getProgressValue()} className="h-1.5 md:h-2" />
 
@@ -318,7 +318,7 @@ export function TrojanHorseCommandCenter() {
                                             <Globe className="w-4 h-4 md:w-5 md:h-5" />
                                         </div>
                                         <div className="min-w-0 flex-1">
-                                            <div className="text-[10px] text-muted-foreground font-medium uppercase tracking-tight">Generált Demo URL</div>
+                                            <div className="text-[10px] text-zinc-500 font-medium uppercase tracking-tight">Generált Demo URL</div>
                                             <div className="text-xs md:text-sm font-mono font-bold truncate">https://demo.brunella.ai/preview/xyz-123</div>
                                         </div>
                                     </div>

@@ -393,7 +393,7 @@ export function RobotkezV2Chat() {
       case 'error':
         return <XCircle className="w-4 h-4 text-red-500" />;
       default:
-        return <Circle className="w-4 h-4 text-muted-foreground" />;
+        return <Circle className="w-4 h-4 text-zinc-500" />;
     }
   };
 
@@ -436,7 +436,7 @@ export function RobotkezV2Chat() {
               onClick={ () => setViewMode('chat') }
               className={ `flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-colors ${viewMode === 'chat'
                   ? 'border-b-2 border-primary text-primary bg-primary/5'
-                  : 'text-muted-foreground hover:text-foreground'
+                  : 'text-zinc-500 hover:text-foreground'
                 }` }
             >
               <Bot className="w-3.5 h-3.5" />
@@ -446,7 +446,7 @@ export function RobotkezV2Chat() {
               onClick={ () => setViewMode('computer') }
               className={ `flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-colors ${viewMode === 'computer'
                   ? 'border-b-2 border-primary text-primary bg-primary/5'
-                  : 'text-muted-foreground hover:text-foreground'
+                  : 'text-zinc-500 hover:text-foreground'
                 }` }
             >
               <Monitor className="w-3.5 h-3.5" />
@@ -456,7 +456,7 @@ export function RobotkezV2Chat() {
               onClick={ () => setViewMode('devtools') }
               className={ `flex items-center gap-1.5 px-4 py-2 text-xs font-medium transition-colors ${viewMode === 'devtools'
                   ? 'border-b-2 border-primary text-primary bg-primary/5'
-                  : 'text-muted-foreground hover:text-foreground'
+                  : 'text-zinc-500 hover:text-foreground'
                 }` }
             >
               <Bug className="w-3.5 h-3.5" />
@@ -479,7 +479,7 @@ export function RobotkezV2Chat() {
                         <p className="text-sm font-medium text-foreground/80">
                           RobotkezV2 készen áll
                         </p>
-                        <p className="text-xs text-muted-foreground max-w-xs">
+                        <p className="text-xs text-zinc-500 max-w-xs">
                           Adj magyar nyelvű utasításokat a böngésző automatizálásához!
                         </p>
                       </div>
@@ -521,7 +521,7 @@ export function RobotkezV2Chat() {
                         { msg.backgroundTask && msg.taskId && (
                           <button
                             onClick={ () => toggleTaskDetails(msg.taskId!) }
-                            className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-muted-foreground hover:text-primary transition-colors w-fit px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20"
+                            className="flex items-center gap-1.5 text-[10px] uppercase font-bold tracking-widest text-zinc-500 hover:text-primary transition-colors w-fit px-2 py-1 rounded bg-blue-500/10 border border-blue-500/20"
                           >
                             <Clock className="w-3 h-3" />
                             Háttérben fut - Task ID: { msg.taskId.slice(0, 8) }
@@ -541,7 +541,7 @@ export function RobotkezV2Chat() {
                         <Loader className="w-4 h-4 text-primary animate-spin" />
                       </div>
                       <div className="bg-muted/50 rounded-lg px-3 py-2 border border-border/50">
-                        <p className="text-sm text-muted-foreground">Feldolgozás...</p>
+                        <p className="text-sm text-zinc-500">Feldolgozás...</p>
                       </div>
                     </div>
                   ) }
@@ -603,7 +603,7 @@ export function RobotkezV2Chat() {
                       title="Kattints ide a képernyőn való kattintáshoz"
                     />
                   ) : (
-                    <div className="flex items-center justify-center h-full text-muted-foreground flex-col gap-2">
+                    <div className="flex items-center justify-center h-full text-zinc-500 flex-col gap-2">
                       <Monitor className="w-8 h-8 opacity-20" />
                       <span className="text-xs uppercase tracking-widest opacity-50">
                         Képernyő betöltése...
@@ -616,7 +616,7 @@ export function RobotkezV2Chat() {
                 <div className="p-3 border-t border-border/50 space-y-2 bg-background/80">
                   {/* Gépelés sor */ }
                   <div className="flex gap-2">
-                    <div className="flex items-center gap-1 text-muted-foreground shrink-0">
+                    <div className="flex items-center gap-1 text-zinc-500 shrink-0">
                       <Keyboard className="w-4 h-4" />
                     </div>
                     <input
@@ -640,7 +640,7 @@ export function RobotkezV2Chat() {
 
                   {/* Vision kattintás sor */ }
                   <div className="flex gap-2">
-                    <div className="flex items-center gap-1 text-muted-foreground shrink-0">
+                    <div className="flex items-center gap-1 text-zinc-500 shrink-0">
                       <Crosshair className="w-4 h-4" />
                     </div>
                     <input
@@ -664,7 +664,7 @@ export function RobotkezV2Chat() {
 
                   {/* Autonóm feladat sor (Comet Orchestrator) */ }
                   <div className="flex gap-2">
-                    <div className="flex items-center gap-1 text-muted-foreground shrink-0">
+                    <div className="flex items-center gap-1 text-zinc-500 shrink-0">
                       <Bot className="w-4 h-4" />
                     </div>
                     <input
@@ -688,7 +688,7 @@ export function RobotkezV2Chat() {
 
                   {/* Training vezérlés */ }
                   <div className="flex gap-2 items-center pt-1 border-t border-border/30">
-                    <span className="text-[10px] text-muted-foreground shrink-0 uppercase tracking-wider">Tréning:</span>
+                    <span className="text-[10px] text-zinc-500 shrink-0 uppercase tracking-wider">Tréning:</span>
                     <select
                       value={ trainingMode }
                       onChange={ e => setTrainingMode(e.target.value as 'basic' | 'workflows') }
@@ -717,7 +717,7 @@ export function RobotkezV2Chat() {
                   { computerLog.length > 0 && (
                     <div className="max-h-[72px] overflow-y-auto space-y-0.5">
                       { computerLog.map((entry, i) => (
-                        <p key={ i } className="text-[10px] text-muted-foreground font-mono truncate">{ entry }</p>
+                        <p key={ i } className="text-[10px] text-zinc-500 font-mono truncate">{ entry }</p>
                       )) }
                     </div>
                   ) }
@@ -748,7 +748,7 @@ export function RobotkezV2Chat() {
                       <span className="ml-1.5">Elemzés</span>
                     </Button>
                   </div>
-                  <p className="text-[10px] text-muted-foreground">
+                  <p className="text-[10px] text-zinc-500">
                     Hálózati kérések, JS hibák és teljesítmény metrikák elemzése Playwright CDP-vel
                   </p>
                 </div>
@@ -758,7 +758,7 @@ export function RobotkezV2Chat() {
                   { devtoolsLoading && (
                     <div className="flex flex-col items-center justify-center py-12 gap-3">
                       <Loader className="w-8 h-8 text-primary animate-spin" />
-                      <p className="text-sm text-muted-foreground">Elemzés folyamatban... (böngésző indítás + adatgyűjtés)</p>
+                      <p className="text-sm text-zinc-500">Elemzés folyamatban... (böngésző indítás + adatgyűjtés)</p>
                     </div>
                   ) }
 
@@ -768,19 +768,19 @@ export function RobotkezV2Chat() {
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         <div className="bg-muted/30 border border-border/30 rounded-lg p-3 text-center">
                           <p className="text-lg font-bold">{ devtoolsReport.performance.pageLoadTime.toFixed(0) }</p>
-                          <p className="text-[10px] text-muted-foreground uppercase">Page Load (ms)</p>
+                          <p className="text-[10px] text-zinc-500 uppercase">Page Load (ms)</p>
                         </div>
                         <div className="bg-muted/30 border border-border/30 rounded-lg p-3 text-center">
                           <p className="text-lg font-bold">{ devtoolsReport.performance.firstContentfulPaint.toFixed(0) }</p>
-                          <p className="text-[10px] text-muted-foreground uppercase">FCP (ms)</p>
+                          <p className="text-[10px] text-zinc-500 uppercase">FCP (ms)</p>
                         </div>
                         <div className={ `border rounded-lg p-3 text-center ${devtoolsReport.console.errors.length > 0 ? 'bg-red-500/10 border-red-500/30' : 'bg-muted/30 border-border/30'}` }>
                           <p className="text-lg font-bold">{ devtoolsReport.console.errors.length }</p>
-                          <p className="text-[10px] text-muted-foreground uppercase">JS Hibák</p>
+                          <p className="text-[10px] text-zinc-500 uppercase">JS Hibák</p>
                         </div>
                         <div className={ `border rounded-lg p-3 text-center ${devtoolsReport.network.failedRequests > 0 ? 'bg-orange-500/10 border-orange-500/30' : 'bg-muted/30 border-border/30'}` }>
                           <p className="text-lg font-bold">{ devtoolsReport.network.failedRequests }</p>
-                          <p className="text-[10px] text-muted-foreground uppercase">Hálózati Hiba</p>
+                          <p className="text-[10px] text-zinc-500 uppercase">Hálózati Hiba</p>
                         </div>
                       </div>
 
@@ -795,9 +795,9 @@ export function RobotkezV2Chat() {
                           <h4 className="text-xs font-semibold mb-2 text-red-500">JS Hibák ({ devtoolsReport.console.errors.length })</h4>
                           <div className="space-y-1">
                             { devtoolsReport.console.errors.map((err, i) => (
-                              <div key={ i } className="bg-red-500/5 border border-red-500/20 rounded p-2 text-[11px] font-mono">
+                              <div key={ i } className="bg-red-500/5 border border-red-500/20 rounded p-2 text-xs font-mono">
                                 <span className="text-red-400">{ err.message }</span>
-                                { err.source && <span className="text-muted-foreground ml-2">@ { err.source }{ err.line ? `:${err.line}` : '' }</span> }
+                                { err.source && <span className="text-zinc-500 ml-2">@ { err.source }{ err.line ? `:${err.line}` : '' }</span> }
                               </div>
                             )) }
                           </div>
@@ -810,10 +810,10 @@ export function RobotkezV2Chat() {
                           <h4 className="text-xs font-semibold mb-2 text-yellow-500">Figyelmeztetések ({ devtoolsReport.console.warnings.length })</h4>
                           <div className="space-y-1">
                             { devtoolsReport.console.warnings.slice(0, 5).map((w, i) => (
-                              <p key={ i } className="text-[11px] font-mono text-yellow-400 truncate">{ w.message }</p>
+                              <p key={ i } className="text-xs font-mono text-yellow-400 truncate">{ w.message }</p>
                             )) }
                             { devtoolsReport.console.warnings.length > 5 && (
-                              <p className="text-[10px] text-muted-foreground">...és még { devtoolsReport.console.warnings.length - 5 } további</p>
+                              <p className="text-[10px] text-zinc-500">...és még { devtoolsReport.console.warnings.length - 5 } további</p>
                             ) }
                           </div>
                         </div>
@@ -825,9 +825,9 @@ export function RobotkezV2Chat() {
                           <h4 className="text-xs font-semibold mb-2 text-orange-500">Sikertelen Kérések ({ devtoolsReport.network.failedRequestsList.length })</h4>
                           <div className="space-y-1">
                             { devtoolsReport.network.failedRequestsList.map((req, i) => (
-                              <div key={ i } className="text-[11px] font-mono truncate">
+                              <div key={ i } className="text-xs font-mono truncate">
                                 <span className="text-orange-400">{ req.url }</span>
-                                <span className="text-muted-foreground"> — { req.error }</span>
+                                <span className="text-zinc-500"> — { req.error }</span>
                               </div>
                             )) }
                           </div>
@@ -837,7 +837,7 @@ export function RobotkezV2Chat() {
                       {/* Hálózati összesítés */ }
                       <div>
                         <h4 className="text-xs font-semibold mb-2">Hálózat ({ devtoolsReport.network.totalRequests } kérés)</h4>
-                        <div className="text-[11px] text-muted-foreground">
+                        <div className="text-xs text-zinc-500">
                           { devtoolsReport.network.requests
                             .sort((a, b) => b.duration - a.duration)
                             .slice(0, 5)
@@ -854,8 +854,8 @@ export function RobotkezV2Chat() {
 
                   { !devtoolsReport && !devtoolsLoading && (
                     <div className="flex flex-col items-center justify-center py-12 text-center space-y-3">
-                      <Bug className="w-8 h-8 text-muted-foreground opacity-20" />
-                      <p className="text-xs text-muted-foreground">Adj meg egy URL-t és kattints az Elemzés gombra</p>
+                      <Bug className="w-8 h-8 text-zinc-500 opacity-20" />
+                      <p className="text-xs text-zinc-500">Adj meg egy URL-t és kattints az Elemzés gombra</p>
                     </div>
                   ) }
                 </div>
@@ -883,13 +883,13 @@ export function RobotkezV2Chat() {
                     { getStepIcon(currentStep === i ? 'running' : currentStep > i ? 'completed' : 'pending') }
                     <div className="flex-1">
                       <p className="text-sm font-medium">{ step.action }</p>
-                      <p className="text-xs text-muted-foreground">{ step.description }</p>
+                      <p className="text-xs text-zinc-500">{ step.description }</p>
                     </div>
                   </div>
                 )) }
               </div>
               <div className="mt-4">
-                <div className="flex justify-between text-xs text-muted-foreground mb-1">
+                <div className="flex justify-between text-xs text-zinc-500 mb-1">
                   <span>Becsült idő</span>
                   <span>{ (activePlan.estimatedDuration / 1000).toFixed(1) }s</span>
                 </div>
@@ -929,7 +929,7 @@ export function RobotkezV2Chat() {
                   onClick={ () => window.open(screenshotUrl, '_blank') }
                 />
               ) : (
-                <div className="text-muted-foreground flex flex-col items-center gap-2">
+                <div className="text-zinc-500 flex flex-col items-center gap-2">
                   <Activity className="w-8 h-8 opacity-20" />
                   <span className="text-xs uppercase tracking-widest opacity-50">Nincs aktív kép</span>
                 </div>
@@ -950,7 +950,7 @@ export function RobotkezV2Chat() {
             <ScrollArea className="h-[300px]">
               <div className="p-4 space-y-2">
                 { backgroundTasks.length === 0 ? (
-                  <div className="text-xs text-muted-foreground text-center py-8">
+                  <div className="text-xs text-zinc-500 text-center py-8">
                     Nincsenek háttér feladatok
                   </div>
                 ) : (
@@ -969,7 +969,7 @@ export function RobotkezV2Chat() {
                             >
                               { task.status }
                             </Badge>
-                            <span className="text-[10px] text-muted-foreground">{ task.progress }%</span>
+                            <span className="text-[10px] text-zinc-500">{ task.progress }%</span>
                           </div>
                         </div>
                         { task.status === 'running' && (
@@ -997,7 +997,7 @@ export function RobotkezV2Chat() {
                             { task.steps.map((step, i) => (
                               <div key={ i } className="flex items-start gap-2 text-xs">
                                 { getStepIcon(step.status) }
-                                <span className={ step.status === 'completed' ? 'text-muted-foreground line-through' : '' }>
+                                <span className={ step.status === 'completed' ? 'text-zinc-500 line-through' : '' }>
                                   { step.description }
                                 </span>
                               </div>
@@ -1026,23 +1026,23 @@ export function RobotkezV2Chat() {
             </CardHeader>
             <CardContent className="pt-4 space-y-2 text-xs">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Név:</span>
+                <span className="text-zinc-500">Név:</span>
                 <span className="font-medium">{ status.agent.name }</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Szerepkör:</span>
+                <span className="text-zinc-500">Szerepkör:</span>
                 <span className="font-medium">{ status.agent.role }</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Futó feladatok:</span>
+                <span className="text-zinc-500">Futó feladatok:</span>
                 <span className="font-medium text-blue-500">{ status.tasks.running }</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Befejezett:</span>
+                <span className="text-zinc-500">Befejezett:</span>
                 <span className="font-medium text-green-500">{ status.tasks.completed }</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-muted-foreground">Hibák:</span>
+                <span className="text-zinc-500">Hibák:</span>
                 <span className="font-medium text-red-500">{ status.tasks.error }</span>
               </div>
             </CardContent>

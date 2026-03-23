@@ -110,14 +110,14 @@ export function MarketWatcherWidget() {
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     {/* Előzmények */}
                     <div className="lg:col-span-1 border-r border-primary/10 pr-4">
-                        <h3 className="text-xs font-semibold uppercase text-muted-foreground mb-3 flex items-center gap-2">
+                        <h3 className="text-xs font-semibold uppercase text-zinc-500 mb-3 flex items-center gap-2">
                             <History className="w-3 h-3" />
                             Vadászat Előzmények
                         </h3>
                         <ScrollArea className="h-[400px]">
                             <div className="space-y-2">
                                 {marketJobs.length === 0 ? (
-                                    <p className="text-xs text-muted-foreground italic">Nincsenek korábbi adatok.</p>
+                                    <p className="text-xs text-zinc-500 italic">Nincsenek korábbi adatok.</p>
                                 ) : (
                                     marketJobs.map((job) => (
                                         <div 
@@ -133,7 +133,7 @@ export function MarketWatcherWidget() {
                                                 <span className="font-bold text-xs truncate max-w-[120px]">{job.query}</span>
                                                 <CheckCircle2 className="w-3 h-3 text-green-500" />
                                             </div>
-                                            <div className="text-[10px] text-muted-foreground">
+                                            <div className="text-[10px] text-zinc-500">
                                                 {format(new Date(job.created_at), 'MMM d. HH:mm')}
                                             </div>
                                         </div>
@@ -154,7 +154,7 @@ export function MarketWatcherWidget() {
 
                                 <ScrollArea className="h-[360px] pr-4">
                                     {activeJob.status === 'running' ? (
-                                        <div className="h-full flex flex-col items-center justify-center py-20 text-muted-foreground">
+                                        <div className="h-full flex flex-col items-center justify-center py-20 text-zinc-500">
                                             <Loader2 className="w-10 h-10 mb-4 animate-spin text-green-500" />
                                             <p className="animate-pulse">Piaci adatok elemzése...</p>
                                         </div>
@@ -187,11 +187,11 @@ export function MarketWatcherWidget() {
                                                     
                                                     <div className="grid grid-cols-2 gap-2 mt-3">
                                                         <div className="p-2 rounded bg-white/[0.02] flex flex-col">
-                                                            <span className="text-[8px] text-zinc-500 uppercase font-mono">Piaci Átlag</span>
+                                                            <span className="text-[9px] text-zinc-500 uppercase font-mono">Piaci Átlag</span>
                                                             <span className="text-xs font-bold">{Math.round(item.market_average)} {item.currency}</span>
                                                         </div>
                                                         <div className="p-2 rounded bg-white/[0.02] flex flex-col">
-                                                            <span className="text-[8px] text-zinc-500 uppercase font-mono">Potenciál</span>
+                                                            <span className="text-[9px] text-zinc-500 uppercase font-mono">Potenciál</span>
                                                             <div className="flex items-center gap-1">
                                                                 <span className="text-xs font-bold">{Math.round(item.potential_score * 100)}%</span>
                                                                 {item.potential_score > 0.5 ? <TrendingUp className="w-3 h-3 text-green-500" /> : <TrendingDown className="w-3 h-3 text-red-500" />}
@@ -202,14 +202,14 @@ export function MarketWatcherWidget() {
                                             ))}
                                         </div>
                                     ) : (
-                                        <div className="h-full flex flex-col items-center justify-center py-20 text-muted-foreground">
+                                        <div className="h-full flex flex-col items-center justify-center py-20 text-zinc-500">
                                             <p>Nincsenek adatok.</p>
                                         </div>
                                     )}
                                 </ScrollArea>
                             </div>
                         ) : (
-                            <div className="h-full flex flex-col items-center justify-center py-20 text-muted-foreground opacity-40">
+                            <div className="h-full flex flex-col items-center justify-center py-20 text-zinc-500 opacity-40">
                                 <Search className="w-16 h-16 mb-4" />
                                 <p>Indíts egy piaci elemzést!</p>
                             </div>

@@ -81,7 +81,7 @@ export function MemoryPanel() {
     }, [load]);
 
     if (loading) {
-        return <div className="p-4 text-muted-foreground">Structured memory betöltése...</div>;
+        return <div className="p-4 text-zinc-500">Structured memory betöltése...</div>;
     }
 
     return (
@@ -114,21 +114,21 @@ export function MemoryPanel() {
                     <CardHeader className="pb-2"><CardTitle className="text-sm">Memória sorok</CardTitle></CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold">{ stats?.summary.totalEntries ?? 0 }</div>
-                        <p className="text-xs text-muted-foreground">Aktív structured memory bejegyzések</p>
+                        <p className="text-xs text-zinc-500">Aktív structured memory bejegyzések</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="pb-2"><CardTitle className="text-sm">Átlag confidence</CardTitle></CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold">{ (stats?.summary.avgConfidence ?? 0).toFixed(2) }</div>
-                        <p className="text-xs text-muted-foreground">Mentett eredmények minősége</p>
+                        <p className="text-xs text-zinc-500">Mentett eredmények minősége</p>
                     </CardContent>
                 </Card>
                 <Card>
                     <CardHeader className="pb-2"><CardTitle className="text-sm">Pattern reuse</CardTitle></CardHeader>
                     <CardContent>
                         <div className="text-3xl font-bold">{ stats?.summary.totalReuses ?? 0 }</div>
-                        <p className="text-xs text-muted-foreground">Összes cache shortcut</p>
+                        <p className="text-xs text-zinc-500">Összes cache shortcut</p>
                     </CardContent>
                 </Card>
             </div>
@@ -138,20 +138,20 @@ export function MemoryPanel() {
                 <CardContent>
                     <div className="space-y-3">
                         { (stats?.agents ?? []).length === 0 ? (
-                            <p className="text-sm text-muted-foreground">Még nincs structured memory adat.</p>
+                            <p className="text-sm text-zinc-500">Még nincs structured memory adat.</p>
                         ) : (
                             stats?.agents.map((agent) => (
                                 <div key={ agent.agentName } className="rounded-md border p-3">
                                     <div className="flex flex-wrap items-center justify-between gap-3">
                                         <div>
                                             <div className="font-semibold">{ agent.agentName }</div>
-                                            <div className="text-xs text-muted-foreground">Utolsó frissítés: { agent.lastUpdatedAt ? new Date(agent.lastUpdatedAt).toLocaleString() : "—" }</div>
+                                            <div className="text-xs text-zinc-500">Utolsó frissítés: { agent.lastUpdatedAt ? new Date(agent.lastUpdatedAt).toLocaleString() : "—" }</div>
                                         </div>
                                         <div className="grid grid-cols-2 gap-4 text-sm md:grid-cols-4">
-                                            <div><span className="text-muted-foreground">Entries:</span> { agent.totalEntries }</div>
-                                            <div><span className="text-muted-foreground">Avg conf:</span> { agent.avgConfidence.toFixed(2) }</div>
-                                            <div><span className="text-muted-foreground">Hits:</span> { agent.cache.hits }</div>
-                                            <div><span className="text-muted-foreground">Hit rate:</span> { formatPct(agent.cache.hitRate) }</div>
+                                            <div><span className="text-zinc-500">Entries:</span> { agent.totalEntries }</div>
+                                            <div><span className="text-zinc-500">Avg conf:</span> { agent.avgConfidence.toFixed(2) }</div>
+                                            <div><span className="text-zinc-500">Hits:</span> { agent.cache.hits }</div>
+                                            <div><span className="text-zinc-500">Hit rate:</span> { formatPct(agent.cache.hitRate) }</div>
                                         </div>
                                     </div>
                                 </div>
@@ -165,17 +165,17 @@ export function MemoryPanel() {
                 <CardHeader><CardTitle className="text-sm">Legutóbbi pattern reuse találatok</CardTitle></CardHeader>
                 <CardContent>
                     { (stats?.recentReuses ?? []).length === 0 ? (
-                        <p className="text-sm text-muted-foreground">Még nincs cache hit.</p>
+                        <p className="text-sm text-zinc-500">Még nincs cache hit.</p>
                     ) : (
                         <div className="space-y-2">
                             { stats?.recentReuses.map((item) => (
                                 <div key={ item.id } className="rounded-md border p-3 text-sm">
                                     <div className="flex items-center justify-between gap-3">
                                         <div className="font-medium">{ item.agentName }</div>
-                                        <div className="text-xs text-muted-foreground">reuse #{ item.reuseCount } · conf { item.confidence.toFixed(2) }</div>
+                                        <div className="text-xs text-zinc-500">reuse #{ item.reuseCount } · conf { item.confidence.toFixed(2) }</div>
                                     </div>
-                                    <div className="mt-1 text-muted-foreground">{ item.rawTask }</div>
-                                    <div className="mt-1 text-xs text-muted-foreground">{ item.lastReusedAt ? new Date(item.lastReusedAt).toLocaleString() : "—" }</div>
+                                    <div className="mt-1 text-zinc-500">{ item.rawTask }</div>
+                                    <div className="mt-1 text-xs text-zinc-500">{ item.lastReusedAt ? new Date(item.lastReusedAt).toLocaleString() : "—" }</div>
                                 </div>
                             )) }
                         </div>

@@ -858,7 +858,7 @@ export function DeveloperPanel() {
         </h2>
         <div className="flex items-center gap-2">
           {status && (
-            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+            <div className="flex items-center gap-3 text-xs text-zinc-500">
               <span className="flex items-center gap-1">
                 <Activity size={12} className="text-blue-500" />
                 {status.activeTasks} active
@@ -887,7 +887,7 @@ export function DeveloperPanel() {
             "px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
             activeTab === "build"
               ? "bg-background shadow text-foreground"
-              : "text-muted-foreground hover:text-foreground",
+              : "text-zinc-500 hover:text-foreground",
           )}
         >
           <span className="flex items-center gap-1.5">
@@ -900,7 +900,7 @@ export function DeveloperPanel() {
             "px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
             activeTab === "review"
               ? "bg-background shadow text-foreground"
-              : "text-muted-foreground hover:text-foreground",
+              : "text-zinc-500 hover:text-foreground",
           )}
         >
           <span className="flex items-center gap-1.5">
@@ -913,7 +913,7 @@ export function DeveloperPanel() {
             "px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
             activeTab === "coverage"
               ? "bg-background shadow text-foreground"
-              : "text-muted-foreground hover:text-foreground",
+              : "text-zinc-500 hover:text-foreground",
           )}
         >
           <span className="flex items-center gap-1.5">
@@ -926,7 +926,7 @@ export function DeveloperPanel() {
             "px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
             activeTab === "queue"
               ? "bg-background shadow text-foreground"
-              : "text-muted-foreground hover:text-foreground",
+              : "text-zinc-500 hover:text-foreground",
           )}
         >
           <span className="flex items-center gap-1.5">
@@ -939,7 +939,7 @@ export function DeveloperPanel() {
             "px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
             activeTab === "metrics"
               ? "bg-background shadow text-foreground"
-              : "text-muted-foreground hover:text-foreground",
+              : "text-zinc-500 hover:text-foreground",
           )}
         >
           <span className="flex items-center gap-1.5">
@@ -952,7 +952,7 @@ export function DeveloperPanel() {
             "px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
             activeTab === "approvals"
               ? "bg-background shadow text-foreground"
-              : "text-muted-foreground hover:text-foreground",
+              : "text-zinc-500 hover:text-foreground",
           )}
         >
           <span className="flex items-center gap-1.5">
@@ -965,7 +965,7 @@ export function DeveloperPanel() {
             "px-4 py-1.5 rounded-md text-sm font-medium transition-colors",
             activeTab === "activity"
               ? "bg-background shadow text-foreground"
-              : "text-muted-foreground hover:text-foreground",
+              : "text-zinc-500 hover:text-foreground",
           )}
         >
           <span className="flex items-center gap-1.5">
@@ -982,7 +982,7 @@ export function DeveloperPanel() {
             <CardContent className="p-3">
               <button
                 onClick={() => setContextExpanded(!contextExpanded)}
-                className="flex items-center gap-2 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors w-full"
+                className="flex items-center gap-2 text-sm font-medium text-zinc-500 hover:text-foreground transition-colors w-full"
               >
                 {contextExpanded ? (
                   <ChevronDown size={14} />
@@ -1026,7 +1026,7 @@ export function DeveloperPanel() {
                       }}
                       placeholder="Enter file path to discover related files..."
                       className="flex-1 bg-transparent border border-border rounded-md px-3 py-1.5 text-xs
-                             focus:outline-none focus:ring-1 focus:ring-primary/50 placeholder:text-muted-foreground/50"
+                             focus:outline-none focus:ring-1 focus:ring-primary/50 placeholder:text-zinc-500/50"
                       disabled={isGatheringContext}
                     />
                     <Button
@@ -1077,10 +1077,10 @@ export function DeveloperPanel() {
                               </span>
                             </div>
                             <div className="flex items-center gap-2 shrink-0 ml-2">
-                              <span className="text-[10px] text-muted-foreground">
+                              <span className="text-[10px] text-zinc-500">
                                 {f.reason}
                               </span>
-                              <span className="text-[10px] text-muted-foreground/60">
+                              <span className="text-[10px] text-zinc-500/60">
                                 {(f.size / 1024).toFixed(1)}K
                               </span>
                             </div>
@@ -1090,7 +1090,7 @@ export function DeveloperPanel() {
                     </ScrollArea>
                   )}
                   {contextResult && (
-                    <div className="flex items-center justify-between text-[10px] text-muted-foreground px-1">
+                    <div className="flex items-center justify-between text-[10px] text-zinc-500 px-1">
                       <span>
                         Total: {(contextResult.totalSize / 1024).toFixed(1)} KB
                       </span>
@@ -1117,7 +1117,7 @@ export function DeveloperPanel() {
                   }
                   placeholder="Describe what you want to build... (e.g., 'generate a REST API for user management')"
                   className="flex-1 bg-transparent border border-border rounded-lg px-4 py-2.5 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground/50"
+                         focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-zinc-500/50"
                   disabled={isLoading}
                 />
                 <Button
@@ -1145,7 +1145,7 @@ export function DeveloperPanel() {
               <Play size={16} className="text-green-500" />
               <div className="text-left">
                 <div className="text-xs font-medium">Generate</div>
-                <div className="text-[10px] text-muted-foreground">
+                <div className="text-[10px] text-zinc-500">
                   Create code
                 </div>
               </div>
@@ -1163,7 +1163,7 @@ export function DeveloperPanel() {
               <TestTube2 size={16} className="text-blue-500" />
               <div className="text-left">
                 <div className="text-xs font-medium">Test</div>
-                <div className="text-[10px] text-muted-foreground">
+                <div className="text-[10px] text-zinc-500">
                   Write tests
                 </div>
               </div>
@@ -1179,7 +1179,7 @@ export function DeveloperPanel() {
               <Wrench size={16} className="text-orange-500" />
               <div className="text-left">
                 <div className="text-xs font-medium">Fix</div>
-                <div className="text-[10px] text-muted-foreground">
+                <div className="text-[10px] text-zinc-500">
                   Auto-repair
                 </div>
               </div>
@@ -1197,7 +1197,7 @@ export function DeveloperPanel() {
               <HeartPulse size={16} className="text-red-500" />
               <div className="text-left">
                 <div className="text-xs font-medium">Heal</div>
-                <div className="text-[10px] text-muted-foreground">
+                <div className="text-[10px] text-zinc-500">
                   Self-repair
                 </div>
               </div>
@@ -1216,13 +1216,13 @@ export function DeveloperPanel() {
                       className="text-blue-500 animate-pulse"
                     />
                     Active Pipeline
-                    <span className="text-xs text-muted-foreground font-normal ml-auto">
+                    <span className="text-xs text-zinc-500 font-normal ml-auto">
                       {activePipeline.taskId.slice(0, 20)}
                     </span>
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <p className="text-xs text-muted-foreground mb-3 truncate">
+                  <p className="text-xs text-zinc-500 mb-3 truncate">
                     {activePipeline.task}
                   </p>
                   <DeveloperPipeline
@@ -1257,7 +1257,7 @@ export function DeveloperPanel() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <p className="text-xs text-muted-foreground mb-3 truncate">
+                  <p className="text-xs text-zinc-500 mb-3 truncate">
                     {activePipeline.task}
                   </p>
                   <DeveloperPipeline
@@ -1277,14 +1277,14 @@ export function DeveloperPanel() {
           <Card className="glass-card">
             <CardHeader className="pb-3 border-b border-border/50">
               <CardTitle className="flex items-center gap-2 text-sm">
-                <Clock size={14} className="text-muted-foreground" />
+                <Clock size={14} className="text-zinc-500" />
                 Task History
               </CardTitle>
             </CardHeader>
             <CardContent className="p-0">
               <ScrollArea className="h-[280px]">
                 {history.length === 0 ? (
-                  <div className="p-6 text-center text-sm text-muted-foreground">
+                  <div className="p-6 text-center text-sm text-zinc-500">
                     No developer tasks yet. Use the prompt above to start.
                   </div>
                 ) : (
@@ -1308,7 +1308,7 @@ export function DeveloperPanel() {
                         </div>
                         <div className="flex-1 min-w-0">
                           <p className="text-sm truncate">{entry.task}</p>
-                          <p className="text-xs text-muted-foreground">
+                          <p className="text-xs text-zinc-500">
                             {new Date(entry.createdAt).toLocaleTimeString()}
                             {entry.completedAt && (
                               <span className="ml-2">
@@ -1359,7 +1359,7 @@ export function DeveloperPanel() {
                   onKeyDown={(e) => e.key === "Enter" && handleReview()}
                   placeholder="Enter file path to review (e.g., src/agents/DeveloperAgent.ts)"
                   className="flex-1 bg-transparent border border-border rounded-lg px-4 py-2.5 text-sm
-                         focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-muted-foreground/50"
+                         focus:outline-none focus:ring-2 focus:ring-primary/50 placeholder:text-zinc-500/50"
                   disabled={isReviewing}
                 />
                 <Button
@@ -1382,7 +1382,7 @@ export function DeveloperPanel() {
                   size={24}
                   className="text-blue-500 animate-spin mx-auto mb-2"
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-500">
                   Analyzing code quality...
                 </p>
               </CardContent>
@@ -1399,7 +1399,7 @@ export function DeveloperPanel() {
                     <span className="flex items-center gap-2">
                       <FileSearch size={14} className="text-primary" />
                       {reviewResult.fileName}
-                      <span className="text-xs font-normal text-muted-foreground">
+                      <span className="text-xs font-normal text-zinc-500">
                         ({reviewResult.language})
                       </span>
                     </span>
@@ -1414,7 +1414,7 @@ export function DeveloperPanel() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent className="pt-0">
-                  <p className="text-sm text-muted-foreground mb-3">
+                  <p className="text-sm text-zinc-500 mb-3">
                     {reviewResult.summary}
                   </p>
                   {/* Stats row */}
@@ -1444,7 +1444,7 @@ export function DeveloperPanel() {
                 <Card className="glass-card">
                   <CardHeader className="pb-3 border-b border-border/50">
                     <CardTitle className="flex items-center gap-2 text-sm">
-                      <Search size={14} className="text-muted-foreground" />
+                      <Search size={14} className="text-zinc-500" />
                       Findings ({reviewResult.findings.length})
                     </CardTitle>
                   </CardHeader>
@@ -1482,12 +1482,12 @@ export function DeveloperPanel() {
                                       {finding.severity}
                                     </span>
                                     {finding.line && (
-                                      <span className="text-xs text-muted-foreground">
+                                      <span className="text-xs text-zinc-500">
                                         Line {finding.line}
                                       </span>
                                     )}
                                     {finding.rule && (
-                                      <span className="text-[10px] text-muted-foreground font-mono">
+                                      <span className="text-[10px] text-zinc-500 font-mono">
                                         [{finding.rule}]
                                       </span>
                                     )}
@@ -1496,7 +1496,7 @@ export function DeveloperPanel() {
                                     {finding.message}
                                   </p>
                                   {finding.suggestion && (
-                                    <p className="text-xs text-muted-foreground mt-1 italic">
+                                    <p className="text-xs text-zinc-500 mt-1 italic">
                                       → {finding.suggestion}
                                     </p>
                                   )}
@@ -1519,12 +1519,12 @@ export function DeveloperPanel() {
               <CardContent className="p-8 text-center">
                 <FileSearch
                   size={32}
-                  className="text-muted-foreground/50 mx-auto mb-3"
+                  className="text-zinc-500/50 mx-auto mb-3"
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-500">
                   Enter a file path above to start an AI-powered code review.
                 </p>
-                <p className="text-xs text-muted-foreground/70 mt-1">
+                <p className="text-xs text-zinc-500/70 mt-1">
                   The review analyzes code quality, security, patterns, and
                   suggests improvements.
                 </p>
@@ -1612,7 +1612,7 @@ export function DeveloperPanel() {
                   size={24}
                   className="text-blue-500 animate-spin mx-auto mb-2"
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-500">
                   Analyzing coverage...
                 </p>
               </CardContent>
@@ -1628,7 +1628,7 @@ export function DeveloperPanel() {
                   <CardTitle className="text-sm flex items-center gap-2">
                     <BarChart3 size={14} className="text-primary" />
                     Aggregate Coverage
-                    <span className="ml-auto text-xs text-muted-foreground">
+                    <span className="ml-auto text-xs text-zinc-500">
                       {coverageData.filesWithTests} / {coverageData.totalFiles}{" "}
                       files
                     </span>
@@ -1644,7 +1644,7 @@ export function DeveloperPanel() {
                         key={metric}
                         className="flex items-center gap-3 text-xs"
                       >
-                        <span className="w-20 text-muted-foreground capitalize">
+                        <span className="w-20 text-zinc-500 capitalize">
                           {metric}
                         </span>
                         <CoverageBar pct={d.pct} />
@@ -1660,7 +1660,7 @@ export function DeveloperPanel() {
                         >
                           {d.pct}%
                         </span>
-                        <span className="text-muted-foreground/60">
+                        <span className="text-zinc-500/60">
                           {d.covered}/{d.total}
                         </span>
                       </div>
@@ -1708,7 +1708,7 @@ export function DeveloperPanel() {
                             </div>
                             {f.uncoveredLines.length > 0 &&
                               f.uncoveredLines.length <= 10 && (
-                                <p className="text-[10px] text-muted-foreground mt-0.5">
+                                <p className="text-[10px] text-zinc-500 mt-0.5">
                                   Uncovered: L{f.uncoveredLines.join(", L")}
                                 </p>
                               )}
@@ -1754,13 +1754,13 @@ export function DeveloperPanel() {
               <CardContent className="p-8 text-center">
                 <BarChart3
                   size={32}
-                  className="text-muted-foreground/50 mx-auto mb-3"
+                  className="text-zinc-500/50 mx-auto mb-3"
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-500">
                   Click &quot;Load Existing&quot; to parse coverage data, or
                   &quot;Run Coverage&quot; to generate fresh results.
                 </p>
-                <p className="text-xs text-muted-foreground/70 mt-1">
+                <p className="text-xs text-zinc-500/70 mt-1">
                   Coverage analysis shows statement, branch, function, and line
                   coverage metrics.
                 </p>
@@ -1776,7 +1776,7 @@ export function DeveloperPanel() {
           <div className="flex items-center justify-between mb-6">
             <div>
               <h2 className="text-xl font-semibold mb-1">Task Queue</h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-zinc-500">
                 Manage concurrent developer tasks (max 3 workers)
               </p>
             </div>
@@ -1809,7 +1809,7 @@ export function DeveloperPanel() {
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
               <Card className="glass-card">
                 <CardContent className="p-4">
-                  <div className="text-sm text-muted-foreground mb-1">
+                  <div className="text-sm text-zinc-500 mb-1">
                     Queued
                   </div>
                   <div className="text-2xl font-bold text-yellow-500">
@@ -1819,7 +1819,7 @@ export function DeveloperPanel() {
               </Card>
               <Card className="glass-card">
                 <CardContent className="p-4">
-                  <div className="text-sm text-muted-foreground mb-1">
+                  <div className="text-sm text-zinc-500 mb-1">
                     Running
                   </div>
                   <div className="text-2xl font-bold text-blue-500">
@@ -1829,7 +1829,7 @@ export function DeveloperPanel() {
               </Card>
               <Card className="glass-card">
                 <CardContent className="p-4">
-                  <div className="text-sm text-muted-foreground mb-1">
+                  <div className="text-sm text-zinc-500 mb-1">
                     Completed
                   </div>
                   <div className="text-2xl font-bold text-green-500">
@@ -1839,7 +1839,7 @@ export function DeveloperPanel() {
               </Card>
               <Card className="glass-card">
                 <CardContent className="p-4">
-                  <div className="text-sm text-muted-foreground mb-1">
+                  <div className="text-sm text-zinc-500 mb-1">
                     Failed
                   </div>
                   <div className="text-2xl font-bold text-red-500">
@@ -1906,14 +1906,14 @@ export function DeveloperPanel() {
                                     ? "MED"
                                     : "LOW"}
                               </Badge>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-xs text-zinc-500">
                                 {task.type}
                               </span>
                             </div>
                             <p className="text-sm font-medium mb-1 truncate">
                               {task.description}
                             </p>
-                            <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-3 text-xs text-zinc-500">
                               <span>ID: {task.id.slice(0, 8)}</span>
                               <span>
                                 Created:{" "}
@@ -2005,15 +2005,15 @@ export function DeveloperPanel() {
               <CardContent className="p-8 text-center">
                 <ListTodo
                   size={32}
-                  className="text-muted-foreground/50 mx-auto mb-3"
+                  className="text-zinc-500/50 mx-auto mb-3"
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-500">
                   No tasks in queue. Use CLI to add tasks:{" "}
                   <code className="text-xs bg-muted px-1 py-0.5 rounded">
                     brunella dev queue add
                   </code>
                 </p>
-                <p className="text-xs text-muted-foreground/70 mt-1">
+                <p className="text-xs text-zinc-500/70 mt-1">
                   Queue supports concurrent task execution with priority
                   scheduling.
                 </p>
@@ -2029,7 +2029,7 @@ export function DeveloperPanel() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold">Developer Metrics</h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-zinc-500">
                 Build, test, and task performance snapshots
               </p>
             </div>
@@ -2055,7 +2055,7 @@ export function DeveloperPanel() {
                   size={20}
                   className="animate-spin text-blue-500 mx-auto mb-2"
                 />
-                <p className="text-sm text-muted-foreground">
+                <p className="text-sm text-zinc-500">
                   Loading metrics...
                 </p>
               </CardContent>
@@ -2067,7 +2067,7 @@ export function DeveloperPanel() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <Card className="glass-card">
                   <CardContent className="p-4 space-y-2">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <div className="flex items-center justify-between text-sm text-zinc-500">
                       <span className="flex items-center gap-2">
                         <Gauge size={14} className="text-primary" /> Builds
                       </span>
@@ -2080,7 +2080,7 @@ export function DeveloperPanel() {
                     <div className="text-3xl font-bold">
                       {metricsData.builds.total}
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-3 text-xs text-zinc-500">
                       <span className="text-green-500">
                         {metricsData.builds.success} success
                       </span>
@@ -2089,7 +2089,7 @@ export function DeveloperPanel() {
                       </span>
                     </div>
                     {metricsData.builds.lastDurationMs > 0 && (
-                      <p className="text-[11px] text-muted-foreground">
+                      <p className="text-xs text-zinc-500">
                         Last duration:{" "}
                         {(metricsData.builds.lastDurationMs / 1000).toFixed(1)}s
                       </p>
@@ -2098,7 +2098,7 @@ export function DeveloperPanel() {
                 </Card>
                 <Card className="glass-card">
                   <CardContent className="p-4 space-y-2">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <div className="flex items-center justify-between text-sm text-zinc-500">
                       <span className="flex items-center gap-2">
                         <TestTube2 size={14} className="text-primary" /> Tests
                       </span>
@@ -2109,7 +2109,7 @@ export function DeveloperPanel() {
                     <div className="text-3xl font-bold">
                       {metricsData.tests.lastPassRate}%
                     </div>
-                    <p className="text-[11px] text-muted-foreground">
+                    <p className="text-xs text-zinc-500">
                       Last duration:{" "}
                       {(metricsData.tests.lastDurationMs / 1000).toFixed(1)}s
                     </p>
@@ -2117,7 +2117,7 @@ export function DeveloperPanel() {
                 </Card>
                 <Card className="glass-card">
                   <CardContent className="p-4 space-y-2">
-                    <div className="flex items-center justify-between text-sm text-muted-foreground">
+                    <div className="flex items-center justify-between text-sm text-zinc-500">
                       <span className="flex items-center gap-2">
                         <Activity size={14} className="text-primary" /> Tasks
                       </span>
@@ -2129,7 +2129,7 @@ export function DeveloperPanel() {
                     <div className="text-3xl font-bold">
                       {metricsData.tasks.total}
                     </div>
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
+                    <div className="flex items-center gap-3 text-xs text-zinc-500">
                       <span className="text-green-500">
                         {metricsData.tasks.success} success
                       </span>
@@ -2145,7 +2145,7 @@ export function DeveloperPanel() {
                 <Card className="glass-card">
                   <CardHeader className="pb-3 border-b border-border/50">
                     <CardTitle className="flex items-center gap-2 text-sm">
-                      <History size={14} className="text-muted-foreground" />{" "}
+                      <History size={14} className="text-zinc-500" />{" "}
                       Recent Runs
                     </CardTitle>
                   </CardHeader>
@@ -2173,7 +2173,7 @@ export function DeveloperPanel() {
                               <p className="text-sm truncate">
                                 {entry.details}
                               </p>
-                              <p className="text-[11px] text-muted-foreground">
+                              <p className="text-xs text-zinc-500">
                                 {(entry.durationMs / 1000).toFixed(1)}s •{" "}
                                 {new Date(entry.timestamp).toLocaleTimeString()}
                               </p>
@@ -2186,7 +2186,7 @@ export function DeveloperPanel() {
                 </Card>
               ) : (
                 <Card className="glass-card">
-                  <CardContent className="p-6 text-center text-sm text-muted-foreground">
+                  <CardContent className="p-6 text-center text-sm text-zinc-500">
                     No metrics recorded yet. Run builds or tasks to populate
                     history.
                   </CardContent>
@@ -2197,7 +2197,7 @@ export function DeveloperPanel() {
 
           {!metricsData && !isLoadingMetrics && (
             <Card className="glass-card">
-              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+              <CardContent className="p-6 text-center text-sm text-zinc-500">
                 No metrics data available. Trigger a build/test/task to start
                 tracking.
               </CardContent>
@@ -2212,7 +2212,7 @@ export function DeveloperPanel() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold">Approval Requests</h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-zinc-500">
                 Human-in-the-loop confirmations for critical actions
               </p>
             </div>
@@ -2251,7 +2251,7 @@ export function DeveloperPanel() {
 
           {isLoadingApprovals && (
             <Card className="glass-card border-blue-500/20">
-              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+              <CardContent className="p-6 text-center text-sm text-zinc-500">
                 <Activity
                   size={18}
                   className="animate-spin text-blue-500 mx-auto mb-2"
@@ -2279,13 +2279,13 @@ export function DeveloperPanel() {
                             req.status === "rejected" &&
                               "bg-red-500/10 text-red-500 border-red-500/40",
                             req.status === "expired" &&
-                              "bg-muted/60 text-muted-foreground border-border",
+                              "bg-muted/60 text-zinc-500 border-border",
                           )}
                         >
                           {req.status.toUpperCase()}
                         </Badge>
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                          <div className="flex items-center gap-2 text-xs text-zinc-500">
                             <span className="font-mono">
                               {req.id.slice(0, 8)}
                             </span>
@@ -2297,12 +2297,12 @@ export function DeveloperPanel() {
                           </div>
                           <p className="text-sm mt-1">{req.description}</p>
                           {req.metadata && (
-                            <p className="text-[11px] text-muted-foreground mt-1 truncate">
+                            <p className="text-xs text-zinc-500 mt-1 truncate">
                               Meta: {JSON.stringify(req.metadata)}
                             </p>
                           )}
                           {req.response && (
-                            <p className="text-[11px] text-muted-foreground mt-1">
+                            <p className="text-xs text-zinc-500 mt-1">
                               Response: {JSON.stringify(req.response)}
                             </p>
                           )}
@@ -2334,7 +2334,7 @@ export function DeveloperPanel() {
                               </>
                             )}
                             {req.status !== "pending" && req.respondedAt && (
-                              <span className="text-[11px] text-muted-foreground">
+                              <span className="text-xs text-zinc-500">
                                 Resolved{" "}
                                 {new Date(req.respondedAt).toLocaleTimeString()}
                               </span>
@@ -2351,7 +2351,7 @@ export function DeveloperPanel() {
 
           {approvals.length === 0 && !isLoadingApprovals && (
             <Card className="glass-card">
-              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+              <CardContent className="p-6 text-center text-sm text-zinc-500">
                 No approval requests in this state.
               </CardContent>
             </Card>
@@ -2365,7 +2365,7 @@ export function DeveloperPanel() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold">Activity Feed</h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-zinc-500">
                 Recent system, agent, queue, and approval events
               </p>
             </div>
@@ -2398,7 +2398,7 @@ export function DeveloperPanel() {
 
           {isLoadingActivity && (
             <Card className="glass-card border-blue-500/20">
-              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+              <CardContent className="p-6 text-center text-sm text-zinc-500">
                 <Activity
                   size={18}
                   className="animate-spin text-blue-500 mx-auto mb-2"
@@ -2423,7 +2423,7 @@ export function DeveloperPanel() {
                               ? "text-red-500"
                               : item.type === "approval"
                                 ? "text-blue-500"
-                                : "text-muted-foreground";
+                                : "text-zinc-500";
                       return (
                         <div
                           key={`${item.id}-${i}`}
@@ -2444,7 +2444,7 @@ export function DeveloperPanel() {
                             )}
                           />
                           <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-2 text-xs text-zinc-500">
                               <span className={color}>{item.type}</span>
                               <span className="uppercase text-[10px]">
                                 {item.source}
@@ -2455,7 +2455,7 @@ export function DeveloperPanel() {
                             </div>
                             <p className="text-sm mt-1">{item.message}</p>
                             {item.metadata && (
-                              <p className="text-[11px] text-muted-foreground mt-1 truncate">
+                              <p className="text-xs text-zinc-500 mt-1 truncate">
                                 Meta: {JSON.stringify(item.metadata)}
                               </p>
                             )}
@@ -2471,7 +2471,7 @@ export function DeveloperPanel() {
 
           {activities.length === 0 && !isLoadingActivity && (
             <Card className="glass-card">
-              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+              <CardContent className="p-6 text-center text-sm text-zinc-500">
                 No activity recorded yet.
               </CardContent>
             </Card>
@@ -2485,7 +2485,7 @@ export function DeveloperPanel() {
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold">Git Workflow</h2>
-              <p className="text-sm text-muted-foreground">
+              <p className="text-sm text-zinc-500">
                 Branch:{" "}
                 <Badge variant="outline">{gitStatus?.branch || "..."}</Badge>
                 {gitStatus && (gitStatus.ahead > 0 || gitStatus.behind > 0) && (
@@ -2530,7 +2530,7 @@ export function DeveloperPanel() {
 
           {isLoadingGit && (
             <Card className="glass-card border-blue-500/20">
-              <CardContent className="p-6 text-center text-sm text-muted-foreground">
+              <CardContent className="p-6 text-center text-sm text-zinc-500">
                 <Activity
                   size={18}
                   className="animate-spin text-blue-500 mx-auto mb-2"
@@ -2708,7 +2708,7 @@ export function DeveloperPanel() {
                 gitStatus.unstaged.length === 0 &&
                 gitStatus.untracked.length === 0 && (
                   <Card className="glass-card">
-                    <CardContent className="p-6 text-center text-sm text-muted-foreground">
+                    <CardContent className="p-6 text-center text-sm text-zinc-500">
                       <CheckCircle2
                         size={32}
                         className="text-green-500 mx-auto mb-2"

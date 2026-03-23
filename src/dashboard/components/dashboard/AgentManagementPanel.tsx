@@ -102,7 +102,7 @@ export function AgentManagementPanel() {
             <div className="flex items-center justify-between">
                 <div>
                     <h2 className="text-3xl font-space font-bold text-foreground">Agent Management</h2>
-                    <p className="text-muted-foreground mt-1">AI ügynökök felügyelete és közvetlen vezérlése.</p>
+                    <p className="text-zinc-500 mt-1">AI ügynökök felügyelete és közvetlen vezérlése.</p>
                 </div>
                 <Button onClick={fetchAgents} variant="outline" size="sm" className="gap-2">
                     <Clock className="w-4 h-4" /> Frissítés
@@ -114,7 +114,7 @@ export function AgentManagementPanel() {
                 <div className="lg:col-span-1 space-y-4">
                     <Card className="glass-card">
                         <CardHeader>
-                            <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-wider text-muted-foreground">
+                            <CardTitle className="flex items-center gap-2 text-sm uppercase tracking-wider text-zinc-500">
                                 <Brain className="w-4 h-4 text-primary" />
                                 Regisztrált Ügynökök
                             </CardTitle>
@@ -123,7 +123,7 @@ export function AgentManagementPanel() {
                             <ScrollArea className="h-[500px]">
                                 <div className="divide-y divide-border/50">
                                     {loading ? (
-                                        <div className="p-4 text-center text-muted-foreground">Betöltés...</div>
+                                        <div className="p-4 text-center text-zinc-500">Betöltés...</div>
                                     ) : agents.map((agent) => (
                                         <div
                                             key={agent.name}
@@ -139,7 +139,7 @@ export function AgentManagementPanel() {
                                                     {agent.status}
                                                 </Badge>
                                             </div>
-                                            <p className="text-xs text-muted-foreground line-clamp-1">{agent.description}</p>
+                                            <p className="text-xs text-zinc-500 line-clamp-1">{agent.description}</p>
                                         </div>
                                     ))}
                                 </div>
@@ -186,11 +186,11 @@ export function AgentManagementPanel() {
 
                             <Card className="glass-card flex-1 flex flex-col min-h-[400px]">
                                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-3 border-b border-border/50">
-                                    <CardTitle className="text-sm font-medium flex items-center gap-2 text-muted-foreground uppercase tracking-wider">
+                                    <CardTitle className="text-sm font-medium flex items-center gap-2 text-zinc-500 uppercase tracking-wider">
                                         <Terminal className="w-4 h-4" />
                                         Agent Logs: {selectedAgent}
                                     </CardTitle>
-                                    <Button variant="ghost" size="icon" onClick={clearLogs} className="h-8 w-8 text-muted-foreground hover:text-destructive" aria-label="Clear logs" title="Clear logs">
+                                    <Button variant="ghost" size="icon" onClick={clearLogs} className="h-8 w-8 text-zinc-500 hover:text-destructive" aria-label="Clear logs" title="Clear logs">
                                         <Trash2 className="w-4 h-4" />
                                     </Button>
                                 </CardHeader>
@@ -213,7 +213,7 @@ export function AgentManagementPanel() {
                             </Card>
                         </>
                     ) : (
-                        <Card className="glass-card h-full flex flex-col items-center justify-center p-12 text-center text-muted-foreground">
+                        <Card className="glass-card h-full flex flex-col items-center justify-center p-12 text-center text-zinc-500">
                             <Brain className="w-16 h-16 mb-4 opacity-20" />
                             <h3 className="text-lg font-medium">Nincs kiválasztott ügynök</h3>
                             <p className="max-w-xs mt-2">Válassz egy ügynököt a bal oldali listából a vezérléshez és a naplók megtekintéséhez.</p>

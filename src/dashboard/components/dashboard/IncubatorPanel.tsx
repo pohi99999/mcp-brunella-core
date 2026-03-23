@@ -101,7 +101,7 @@ export function IncubatorPanel() {
                         <Flask className="text-primary" />
                         Green Lightning Incubator
                     </h2>
-                    <p className="text-muted-foreground mt-1">
+                    <p className="text-zinc-500 mt-1">
                         AI modellek finomhangolása és az „Arany Adatkészlet” (Golden Dataset) karbantartása.
                     </p>
                 </div>
@@ -123,7 +123,7 @@ export function IncubatorPanel() {
                 {/* Stats Cards */}
                 <Card className="glass-card border-white/10">
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-xs font-mono uppercase text-muted-foreground flex items-center gap-2">
+                        <CardTitle className="text-xs font-mono uppercase text-zinc-500 flex items-center gap-2">
                             <Database size={16} className="text-cyan-400" />
                             Arany Adatkészlet
                         </CardTitle>
@@ -132,13 +132,13 @@ export function IncubatorPanel() {
                         <div className="text-4xl font-space font-bold">
                             {loading ? '...' : stats?.total_samples || 0}
                         </div>
-                        <p className="text-xs text-muted-foreground mt-1">Validált tanító minta összesen</p>
+                        <p className="text-xs text-zinc-500 mt-1">Validált tanító minta összesen</p>
                     </CardContent>
                 </Card>
 
                 <Card className="glass-card border-white/10">
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-xs font-mono uppercase text-muted-foreground flex items-center gap-2">
+                        <CardTitle className="text-xs font-mono uppercase text-zinc-500 flex items-center gap-2">
                             <CheckCircle size={16} className="text-green-400" />
                             Átlagos Minőség
                         </CardTitle>
@@ -153,7 +153,7 @@ export function IncubatorPanel() {
 
                 <Card className="glass-card border-white/10">
                     <CardHeader className="pb-2">
-                        <CardTitle className="text-xs font-mono uppercase text-muted-foreground flex items-center gap-2">
+                        <CardTitle className="text-xs font-mono uppercase text-zinc-500 flex items-center gap-2">
                             <Cpu size={16} className="text-yellow-400" />
                             Hardware Status
                         </CardTitle>
@@ -162,7 +162,7 @@ export function IncubatorPanel() {
                         <div className="text-xl font-space font-bold text-green-500 flex items-center gap-2">
                             RTX 3060 Ready
                         </div>
-                        <p className="text-[10px] text-muted-foreground mt-2 font-mono uppercase">
+                        <p className="text-[10px] text-zinc-500 mt-2 font-mono uppercase">
                             VRAM: 12GB Available | Unsloth: Aktív
                         </p>
                     </CardContent>
@@ -190,8 +190,8 @@ export function IncubatorPanel() {
                         </CardHeader>
                         <CardContent>
                             <div className="flex flex-col items-center justify-center p-12 bg-white/[0.02] rounded-xl border border-dashed border-white/10">
-                                <ClockCounterClockwise size={48} className="text-muted-foreground opacity-20 mb-4" />
-                                <p className="text-muted-foreground italic">Még nem történt finomhangolás ezzel az „Arany Adatkészlettel”.</p>
+                                <ClockCounterClockwise size={48} className="text-zinc-500 opacity-20 mb-4" />
+                                <p className="text-zinc-500 italic">Még nem történt finomhangolás ezzel az „Arany Adatkészlettel”.</p>
                             </div>
                         </CardContent>
                     </Card>

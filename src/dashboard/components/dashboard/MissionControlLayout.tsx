@@ -85,7 +85,7 @@ export function MissionControlLayout() {
           <nav className="hidden sm:flex items-center gap-0.5">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-[11px] font-mono text-zinc-500 hover:text-zinc-300 px-2 h-7 gap-1">
+                <Button variant="ghost" size="sm" className="text-xs font-mono text-zinc-500 hover:text-zinc-300 px-2 h-7 gap-1">
                   <span className="text-zinc-600">LAYOUT</span>
                   <span className="text-zinc-300 font-medium">{currentLayout.name.toUpperCase().replace(' ', '_')}</span>
                   <ChevronDown size={12} className="text-zinc-600" />

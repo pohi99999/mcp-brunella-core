@@ -47,13 +47,13 @@ function SpanRow({ span, depth = 0 }: { span: TraceSpan; depth?: number }) {
       className="flex items-center gap-2 py-1 px-2 hover:bg-muted/50 rounded text-sm font-mono"
       style={{ paddingLeft: `${depth * 24 + 8}px` }}
     >
-      <span className="text-muted-foreground w-6">{depth > 0 ? '└' : '●'}</span>
+      <span className="text-zinc-500 w-6">{depth > 0 ? '└' : '●'}</span>
       <span className="font-medium text-accent">{span.agentName}</span>
-      <span className="text-muted-foreground">::{span.operation}</span>
+      <span className="text-zinc-500">::{span.operation}</span>
       <StatusBadge status={span.status} />
-      <span className="ml-auto text-muted-foreground text-xs">{durStr}</span>
+      <span className="ml-auto text-zinc-500 text-xs">{durStr}</span>
       {span.tokenUsage && (
-        <span className="text-xs text-muted-foreground">
+        <span className="text-xs text-zinc-500">
           {span.tokenUsage.input}↓ {span.tokenUsage.output}↑
         </span>
       )}
@@ -146,7 +146,7 @@ export function TraceViewer() {
           {/* Trace list */}
           <div className="space-y-1 max-h-96 overflow-y-auto">
             {traces.length === 0 && (
-              <p className="text-muted-foreground text-sm">No traces yet.</p>
+              <p className="text-zinc-500 text-sm">No traces yet.</p>
             )}
             {traces.map(t => (
               <button
@@ -160,7 +160,7 @@ export function TraceViewer() {
                   <span className="font-medium">{t.rootAgent}</span>
                   <StatusBadge status={t.status} />
                 </div>
-                <div className="text-xs text-muted-foreground mt-1">
+                <div className="text-xs text-zinc-500 mt-1">
                   {t.spanCount} spans • {t.duration ? `${t.duration}ms` : '…'}
                 </div>
               </button>
@@ -170,11 +170,11 @@ export function TraceViewer() {
           {/* Span hierarchy */}
           <div className="md:col-span-2 max-h-96 overflow-y-auto">
             {!selectedTrace && (
-              <p className="text-muted-foreground text-sm">Select a trace to view spans.</p>
+              <p className="text-zinc-500 text-sm">Select a trace to view spans.</p>
             )}
-            {loading && <p className="text-muted-foreground text-sm">Loading…</p>}
+            {loading && <p className="text-zinc-500 text-sm">Loading…</p>}
             {selectedTrace && !loading && tree.length === 0 && (
-              <p className="text-muted-foreground text-sm">No spans found.</p>
+              <p className="text-zinc-500 text-sm">No spans found.</p>
             )}
             {tree.map(({ span, depth }) => (
               <SpanRow key={span.spanId} span={span} depth={depth} />

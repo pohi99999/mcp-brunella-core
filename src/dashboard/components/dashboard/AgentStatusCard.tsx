@@ -175,7 +175,7 @@ export function AgentStatusCard({ agent, status = 'idle', taskDescription, onExe
                     <Label htmlFor="target-agent" className="text-zinc-300">Cél Ügynök</Label>
                     <select
                       id="target-agent"
-                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-zinc-100"
+                      className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-xs transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-zinc-500 focus-visible:outline-hidden focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 text-zinc-100"
                       value={selectedDelegate}
                       onChange={(e) => setSelectedDelegate(e.target.value)}
                     >
