@@ -6,6 +6,7 @@ import { aiGateway, type ChatMessage as AIChatMessage } from '../utils/aiGateway
 import { type UniversalToolDefinition } from './toolRegistry.js';
 import { phoenixEventBus } from './phoenixEventBus.js';
 import { wrapWithSpan } from '../utils/otelTracing.js';
+import { getPreferenceContext } from './userPreferences.js';
 
 /**
  * Bifrost Gateway - Multi-Provider LLM Routing
@@ -55,6 +56,7 @@ export interface GenerateOptions {
   tools?: Array<UniversalToolDefinition | OpenAIToolDefinition>;   // Added support for tools
   messages?: any[]; // Added support for message history
   phoenixRecoveryTrigger?: boolean;
+  userId?: string;  // User ID for preference context injection
 }
 
 export interface GenerateResponse {
@@ -225,6 +227,25 @@ export class BifrostGateway {
     const startTime = Date.now();
 
     try {
+      // 0. Inject user preference context if userId is provided
+      if (options.userId) {
+        try {
+          const prefContext = await getPreferenceContext(options.userId);
+          if (prefContext) {
+            const basePrompt = options.systemPrompt || '';
+            options = {
+              ...options,
+              systemPrompt: basePrompt
+                ? `${basePrompt}\n\n--- Felhasználói preferenciák ---\n${prefContext}`
+                : `--- Felhasználói preferenciák ---\n${prefContext}`,
+            };
+            logInfo('BifrostGateway', `User preference context injected for user: ${options.userId}`);
+          }
+        } catch (prefErr: unknown) {
+          logWarn('BifrostGateway', `Failed to load user preferences: ${prefErr instanceof Error ? prefErr.message : String(prefErr)}`);
+        }
+      }
+
       // 1. Select provider (manual override or auto-select)
       const selectedProvider = options.provider
         ? options.provider
