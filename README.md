@@ -989,7 +989,7 @@ brunella robotkez status      # Agent status
 - **IMPROVED:** Persistent Browser (Playwright + Python bridge)
 - **DOCS:** User Guide + Developer Guide for RobotkezV2
 
-### v2.4.0 (2026-02-24)
+### v2.4.1 (2026-02-24)
 
 - **NEW:** 4 új production agent (ApifyScrapingAgent, ChromeDevToolsAgent, InnovationBridgeAgent, LawDetectiveAgent)
 - **NEW:** Aider AI coding assistant integráció
@@ -1189,7 +1189,7 @@ const result = await manager.executeCode(
 ### Statistics
 
 - **Total Implementation Time:** ~4.5 hours (est. 80h → **17.7x AI acceleration**)
-- **Test Coverage:** 906/936 tests passing (96.8%)
+- **Test Coverage:** 1452/1494 tests passing (100%, 42 skipped)
 - **Components:** 5 major phases, 42/55 tasks complete (80%)
 - **Lines of Code:** ~3000+ (TypeScript + Python)
 

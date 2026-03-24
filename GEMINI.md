@@ -14,7 +14,7 @@ This file provides guidance to Gemini Cli  when working with code in this reposi
 
 
 
-\*\*Technológiák:\*\* TypeScript (ESM), Express 5, Socket.IO, React 19, Ollama, Gemini, GitHub Models, Python (FastAPI), LanceDB, Cloudflare Workers, SQLite, E2B Sandboxes
+\*\*Technológiák:\*\* TypeScript (ESM), Express 4, Socket.IO, React 19, Ollama, Gemini, GitHub Models, Python (FastAPI), LanceDB, Cloudflare Workers, SQLite, E2B Sandboxes
 
 
 

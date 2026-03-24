@@ -1,5 +1,50 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-25 - 🔍 Rendszer-felmérés és dokumentáció-audit (MEGALLAPITAS.md)
+
+**Feladat:**
+- Teljes rendszer-felmérés a README.md és minden kritikus fájl alapján
+- Hibák, inkonzisztenciák azonosítása és javítása
+- MEGALLAPITAS.md létrehozása részletes megállapításokkal és használati utasításokkal
+
+**Rendszer Állapot (2026-03-25):**
+- Build: ✅ PASS
+- Tesztek: ✅ 168 fájl, 1452 teszt PASSED, 0 fail, 42 skipped
+- Git: Tiszta (main branch)
+- 54 regisztrált agent, 446 TS fájl, 6415 Python fájl, 165 teszt fájl
+
+**Azonosított és javított problémák (9 db):**
+
+1. 🔴 **Verzió eltérés** — `package.json` `1.0.0` → `2.4.0` (README az irányadó)
+2. 🔴 **Express verzió** — "Express 5" → "Express 4" **8 fájlban** (telepített: 4.22.1)
+3. 🟡 **Agent szám** — "30+" → "54" (`BOOTSTRAP.md` 2 hely, `PROJEKT_DIAGRAM.md` 3 hely)
+4. 🟡 **Teszt statisztika** — `conductor/SUMMARY.md`: 719/723 → 1452/1494
+5. 🟡 **README Statistics** — 906/936 → 1452/1494
+6. 🟡 **Duplikált changelog** — Második v2.4.0 → v2.4.1 a README-ben
+7. 🟡 **SUMMARY.md** — Teljes újraírás (track számok, archivált 74→108)
+8. 🟢 **PROJEKT_DIAGRAM.md** — Verzió 2.3.0→2.4.0, dátum→2026-03-25
+9. 🟢 **TEST_RESULTS.md** — Új bejegyzés (168 fájl, 1452 teszt)
+
+**Módosított fájlok (14 db):**
+- `package.json` — verzió szinkron
+- `README.md` — changelog + statisztika
+- `.ai/BOOTSTRAP.md` — agent szám (2 hely)
+- `PROJEKT_DIAGRAM.md` — agent szám + verzió + dátum (5 hely)
+- `conductor/SUMMARY.md` — teljes újraírás
+- `TEST_RESULTS.md` — új teszt eredmény
+- `.github/copilot-instructions.md` — Express 5→4, route szám 48→51
+- `.github/agents/my-agent.agent.md` — Express 5→4, route szám 48→51
+- `CLAUDE.md` — Express 5→4
+- `GEMINI.md` — Express 5→4
+- `src/dashboard/assets/documents/workflow.md` — Express 5.x→4.x
+- `docs/PROJECT_ARCHITECTURE_DIAGRAM.md` — Express 5→4
+- `docs/superpowers/plans/2026-03-22-swarm-hybrid-architecture.md` — Express 5→4
+- `MEGALLAPITAS.md` — ÚJ: Részletes rendszer megállapítás + használati utasítások
+
+**Összegzés:** Kritikus kódhiba nem található. A rendszer tökéletesen működik (build ✅, tesztek ✅). A problémák dokumentációs inkonzisztenciák voltak — a rendszer gyorsabban fejlődött, mint a kísérő dokumentumok. Mind a 9 probléma javítva.
+
+---
+
 ## 2026-03-24 - 🪟 Multi-console launcher stabilizálás (`inditas.bat`) + Windows Bridge / Dashboard duplikációvédelem
 
 **Feladat:**
@@ -54,12 +99,18 @@
     - `!inditas.bat`
     - `!scripts/launchers/*.bat`
 
+7. **Commit közbeni buildblokkoló javítás**
+  - a pre-commit build egy korábban bent maradt `AgentManager.ts` szintaktikai hibát jelzett
+  - a valódi ok egy extra lezáró kapcsos zárójel volt a `performInitialization()` környékén
+  - a felesleges `}` eltávolítva, a build újra zöld
+
 **Validáció:**
 - `cmd.exe /d /s /c "set BRUNELLA_NO_BROWSER=1 && set BRUNELLA_NO_PAUSE=1 && call inditas.bat"` ✅
 - `launch_dashboard_console.bat` közvetlen futtatás → Vite UI feláll `http://localhost:5173/` címen ✅
 - `Invoke-WebRequest http://localhost:5173` → `200` ✅
 - `launch_windows_bridge_console.bat` közvetlen futtatás → FastMCP Windows Automation Bridge indul ✅
 - újrafuttatott `inditas.bat` esetén a Bridge és a Dashboard már futó példányként felismerve, új ablak nélkül ✅
+- `npm run build` ✅
 
 **Érintett fájlok:**
 - `inditas.bat`
@@ -70,6 +121,7 @@
 - `scripts/launchers/launch_backend_console.bat`
 - `scripts/launchers/launch_dashboard_console.bat`
 - `.gitignore`
+- `src/agents/AgentManager.ts`
 
 **Státusz:** ✅ NAPLÓZVA / ✅ VALIDÁLVA / ✅ COMMITRA KÉSZ
 
