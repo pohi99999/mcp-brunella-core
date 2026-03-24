@@ -48,7 +48,7 @@ Hibrid Node.js + Python multi-agent rendszer, Model Context Protocol (MCP) kommu
 
 ### Fő komponensek
 
-**Node.js backend** (`src/`): TypeScript ESM, Express 5, Socket.IO. ~48 REST API route fájl a `src/server/routes/`-ban. WebSocket: `src/server/SocketService.ts`.
+**Node.js backend** (`src/`): TypeScript ESM, Express 4, Socket.IO. ~51 REST API route fájl a `src/server/routes/`-ban. WebSocket: `src/server/SocketService.ts`.
 
 **Python alrendszer** (`myai/`): FastAPI + FastMCP. Böngésző automatizálás (Playwright/browser-use), vektor DB-k (LanceDB, ChromaDB), ML pipeline-ok. A Node.js `pythonShell.ts`-en keresztül kommunikál vele.
 
