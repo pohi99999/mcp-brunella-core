@@ -11,7 +11,7 @@
 
 import { Router, type Request, type Response } from 'express';
 import crypto from 'crypto';
-import { logInfo, logError, setAgentStatus } from '../../utils/logger.js';
+import { logInfo, logError, logWarn, setAgentStatus } from '../../utils/logger.js';
 import type {
   GitHubWorkflowRunPayload,
   GitHubPullRequestPayload,
@@ -28,11 +28,11 @@ const GITHUB_WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET || '';
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN || '';
 
 if (!GITHUB_WEBHOOK_SECRET) {
-  logError('GitHubWebhook', 'GITHUB_WEBHOOK_SECRET environment variable not set');
+  logWarn('GitHubWebhook', 'GITHUB_WEBHOOK_SECRET environment variable not set; webhook endpoint will remain unavailable until configured');
 }
 
 if (!GITHUB_TOKEN) {
-  logError('GitHubWebhook', 'GITHUB_TOKEN environment variable not set');
+  logWarn('GitHubWebhook', 'GITHUB_TOKEN environment variable not set; workflow log analysis features will be limited');
 }
 
 /**
@@ -300,7 +300,7 @@ router.post(
     try {
       // 1. Verify webhook signature
       if (!GITHUB_WEBHOOK_SECRET) {
-        logError('GitHubWebhook', 'GITHUB_WEBHOOK_SECRET not configured');
+        logWarn('GitHubWebhook', 'Webhook request received but GITHUB_WEBHOOK_SECRET is not configured');
         return res.status(500).json({
           error: 'Webhook not configured',
           details: 'GITHUB_WEBHOOK_SECRET missing'

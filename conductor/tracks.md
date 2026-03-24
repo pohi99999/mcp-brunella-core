@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-23T07:18:40.732Z
+**Utolso frissites:** 2026-03-24T17:19:43.990Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 124 total | 6 active | 0 completed | 108 archived
+**Stats:** 126 total | 8 active | 0 completed | 108 archived
 
 ---
 
@@ -66,7 +66,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (6)
+## Aktiv Szalak (Active) (8)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -90,6 +90,16 @@
   - **Progress:** 0%
   - **Assignee:** System
   - Mappa: ./tracks/local_test_scheduler_20260215/
+
+- [ ] **Brunella Personal Assistant — Windows MVP Foundation** [HIGH]
+  - **ID:** `personal_assistant_windows_mvp_20260323`
+  - **Progress:** 90%
+  - Mappa: ./tracks/personal_assistant_windows_mvp_20260323/
+
+- [ ] **README Bootstrap & Health Fixek** [HIGH]
+  - **ID:** `readme_bootstrap_health_fixes_20260324`
+  - **Progress:** 80%
+  - Mappa: ./tracks/readme_bootstrap_health_fixes_20260324/
 
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`

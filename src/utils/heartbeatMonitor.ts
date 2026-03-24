@@ -25,6 +25,8 @@ export interface HeartbeatConfig {
   maxRetries: number;
   /** Enable heartbeat monitoring (default: true) */
   enabled: boolean;
+  /** Suppress startup failures for a short warmup window */
+  startupGraceMs: number;
 }
 
 export interface ServiceConfig {
@@ -42,6 +44,7 @@ const DEFAULT_CONFIG: HeartbeatConfig = {
   timeoutMs: Number(process.env.PHOENIX_HEARTBEAT_TIMEOUT) || 10000,
   maxRetries: Number(process.env.PHOENIX_MAX_RETRIES) || 3,
   enabled: process.env.PHOENIX_HEARTBEAT_ENABLED !== 'false',
+  startupGraceMs: Number(process.env.PHOENIX_STARTUP_GRACE_MS) || 15000,
 };
 
 const DEFAULT_SERVICES: ServiceConfig[] = [
@@ -93,6 +96,7 @@ class HeartbeatMonitorClass {
   private intervalHandle: NodeJS.Timeout | null = null;
   private failureHandlers: Map<string, FailureHandler[]> = new Map();
   private isRunning = false;
+  private startedAt = 0;
 
   constructor() {
     // Initialize service health records
@@ -128,6 +132,7 @@ class HeartbeatMonitorClass {
     }
 
     this.isRunning = true;
+    this.startedAt = Date.now();
     logInfo('HeartbeatMonitor', `Started (interval: ${this.config.intervalMs}ms, timeout: ${this.config.timeoutMs}ms)`);
 
     // Initial check
@@ -169,6 +174,8 @@ class HeartbeatMonitorClass {
   private async checkService(config: ServiceConfig): Promise<void> {
     const health = this.services.get(config.name);
     if (!health) return;
+    const previousStatus = health.status;
+    const inStartupGrace = Date.now() - this.startedAt < this.config.startupGraceMs;
 
     const startTime = Date.now();
     let success = false;
@@ -215,26 +222,46 @@ class HeartbeatMonitorClass {
       health.status = 'healthy';
       health.lastSuccess = new Date();
       health.consecutiveFailures = 0;
+      if (previousStatus === 'degraded' || previousStatus === 'unhealthy') {
+        logInfo('HeartbeatMonitor', `${config.name} recovered`);
+        phoenixEventBus.publish('phoenix:recovery', {
+          type: 'restart',
+          agent: config.name,
+          details: `Service recovered: ${config.name}`,
+          timestamp: new Date().toISOString(),
+        });
+      }
     } else {
+      if (inStartupGrace && health.lastSuccess === null) {
+        health.status = 'checking';
+        health.error = errorMsg;
+        this.services.set(config.name, health);
+        return;
+      }
+
       health.consecutiveFailures++;
 
       if (health.consecutiveFailures >= this.config.maxRetries) {
         health.status = 'unhealthy';
-        logError('HeartbeatMonitor', `${config.name} unhealthy after ${health.consecutiveFailures} failures: ${errorMsg}`);
+        if (previousStatus !== 'unhealthy') {
+          logError('HeartbeatMonitor', `${config.name} unhealthy after ${health.consecutiveFailures} failures: ${errorMsg}`);
 
-        // Trigger failure handlers
-        await this.triggerFailureHandlers(health);
+          // Trigger failure handlers only on transition into unhealthy state.
+          await this.triggerFailureHandlers(health);
 
-        // Publish Phoenix event
-        phoenixEventBus.publish('phoenix:recovery', {
-          type: 'crash',
-          agent: config.name,
-          details: `Service unhealthy: ${errorMsg}`,
-          timestamp: new Date().toISOString(),
-        });
+          // Publish degraded event once when the service becomes unhealthy.
+          phoenixEventBus.publish('phoenix:degraded', {
+            level: config.critical ? 'partial' : 'minimal',
+            services: [config.name],
+            message: `Service unhealthy: ${config.name}${errorMsg ? ` — ${errorMsg}` : ''}`,
+            timestamp: new Date().toISOString(),
+          });
+        }
       } else {
         health.status = 'degraded';
-        logWarn('HeartbeatMonitor', `${config.name} degraded (${health.consecutiveFailures}/${this.config.maxRetries}): ${errorMsg}`);
+        if (previousStatus !== 'degraded') {
+          logWarn('HeartbeatMonitor', `${config.name} degraded (${health.consecutiveFailures}/${this.config.maxRetries}): ${errorMsg}`);
+        }
       }
     }
 

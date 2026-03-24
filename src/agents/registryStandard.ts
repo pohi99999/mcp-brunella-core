@@ -152,12 +152,18 @@ export function normalizeRegistryConfig(partial: Partial<RegistryConfig>): Regis
         .map((rule) => ({ pattern: rule.pattern.trim(), agent: rule.agent.trim() }))
     : [];
 
+  const requestedDefaultAgent = typeof partial.defaultAgent === "string" && partial.defaultAgent.trim()
+    ? partial.defaultAgent.trim()
+    : "orchestrator";
+
+  const matchedDefaultAgent = agents.find(
+    (agent) => agent.name.toLowerCase() === requestedDefaultAgent.toLowerCase(),
+  )?.name;
+
   return {
     version: typeof partial.version === "string" ? partial.version : "1.0.0",
     agents,
-    defaultAgent: typeof partial.defaultAgent === "string" && partial.defaultAgent.trim()
-      ? partial.defaultAgent.trim()
-      : "Orchestrator",
+    defaultAgent: matchedDefaultAgent ?? requestedDefaultAgent,
     routingRules,
   };
 }

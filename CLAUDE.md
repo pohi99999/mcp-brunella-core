@@ -94,6 +94,9 @@ brunella robotkez status        # RobotkezV2 státusz
 brunella decompose [task]       # Feladat dekompozíció (preview-only DAG)
 brunella architect create [d]   # Új ügynök létrehozása TOML config-ból
 brunella jules tests            # Jules async test suite
+brunella swarm status          # Swarm koloniak listája és állapota
+brunella swarm dispatch        # Task küldése egy kolóniának (--colony <id>)
+brunella assistant             # Personal Assistant MVP readiness riport (--json mód is)
 
 # Chat interaktív parancsok (brunella chat-en belül)
 /edge on|off         # Cloudflare Edge mód be/ki
@@ -148,11 +151,15 @@ src/
 ├── core/
 │   ├── llm_client.ts         # Multi-provider LLM kliens (Ollama/Gemini/GitHub Models)
 │   ├── modelRouter.ts        # Brain vs Muscle routing (RULE-MR1–4)
-│   ├── bifrost_gateway.ts    # Multi-LLM Gateway (auto provider-select, 4 provider)
+│   ├── bifrost_gateway.ts    # Multi-LLM Gateway (auto provider-select, 4+ provider, setMode/getMode)
 │   ├── goldenDatasetBridge.ts # G4.1 - Agent outputs → D1 golden samples
 │   ├── checkpoint.ts         # Phoenix Protocol — állapot mentés/visszaállítás
 │   ├── auditLog.ts           # Audit trail SQLite-ban
 │   ├── phoenixEventBus.ts    # Öngyógyító esemény bus
+│   ├── eventBus.ts           # Enterprise Event Bus (SQLite WAL, 13 EventType, wildcard)
+│   ├── ceanFallback.ts       # Phoenix degraded → edge-only + swarm pause automatizmus
+│   ├── universalOrchestratorService.ts  # Universal Orchestrator Chat service
+│   ├── toolRegistry.ts       # Auto-generált MCP tool definíciók registry.json-ból
 │   └── julesIntegration.ts   # Jules AI async task management
 ├── security/
 │   └── e2b_sandbox_manager.ts # E2B izolált Python végrehajtás
@@ -185,7 +192,8 @@ OrchestratorAgent / EnterpriseOrchestratorAgent (Koordinátorok)
 │   ├── Logistics: LogisticsDispatcherAgent
 │   └── Admin: EmailTriageAgent, GrantWatcherAgent, KnowledgeBaseBuilderAgent
 ├── TOML-alapú DynamicAgent: myai/agents/*.toml (MarketingDirector, stb.)
-└── Management: ProjectConductorAgent (tracks.md szinkron)
+├── Management: ProjectConductorAgent (tracks.md szinkron)
+└── Swarm: SwarmManager + SwarmColony (src/agents/swarm/) — párhuzamos kolónia-alapú feladatkiosztás
 ```
 
 `AgentManager` kezeli a registry-t (`registry.json`), Task Queue-t (SQLite), és a Worker Loop-ot.
@@ -194,10 +202,27 @@ OrchestratorAgent / EnterpriseOrchestratorAgent (Koordinátorok)
 
 `src/core/modelRouter.ts` — RULE-MR1–4 szabályok:
 - **Brain (Cloud):** Gemini (1M ctx), GitHub Models GPT-4o → `complexity: 'high'` esetén
-- **Muscle (Local):** Ollama `qwen2.5-coder:7b` → `complexity: 'low'` vagy `budget=0`
+- **Muscle (Local):** Ollama `mistral:latest` → `complexity: 'low'` vagy `budget=0`
+  - **Megjegyzés:** `mistral:latest` az egyetlen stabil Ollama modell (chat + generate API). A `qwen2.5-coder:7b`, `llama3.1:8b` nem támogatják a chat API-t (Ollama 0.17.x bug)
 - Auto-detect: `routeTask(description)` felismeri a komplexitást regex alapján
 
-**Bifrost Gateway** (`src/core/bifrost_gateway.ts`) — magasabb szintű absztrakció, 4 providert kezel egyszerre (Ollama, Gemini, GitHub Models, Anthropic), auto-fallbackkel.
+**Bifrost Gateway** (`src/core/bifrost_gateway.ts`) — magasabb szintű absztrakció, 4+ providert kezel egyszerre (Ollama, Gemini, GitHub Models, Anthropic, Cloudflare), auto-fallbackkel. `setMode('edge-only'|'local-preferred'|'cloud-preferred')` a módváltáshoz.
+
+### Swarm Hybrid Architecture
+
+`src/agents/swarm/SwarmManager.ts` — kolonizált párhuzamos végrehajtás:
+- `listColonies()` / `getColony(id)` / `submitTask(colonyId, task)`
+- `pauseAllColonies()` / `resumeAllColonies()` — Phoenix degraded eseményre
+- REST API: `GET /api/v1/swarm/status`, `POST /api/v1/swarm/dispatch`
+- Dashboard widget: `SwarmStatusWidget` (5s polling)
+
+### CEAN Edge Workers
+
+`workers/cean-*/index.ts` — 4 Cloudflare Worker a peremhálózati feldolgozáshoz:
+- `cean-router` — AI Gateway routing (llama-3.3-70b)
+- `cean-harvest` — Scheduled harvest (6h cron, GitHub Trending + HN)
+- `cean-research` — ResearcherAgent edge fallback
+- `cean-refine` — DataScientistAgent edge fallback
 
 ### Cloudflare D1 Adapter
 
@@ -405,8 +430,8 @@ BRUNELLA_WORKSPACE_ROOT=.
 ```env
 GEMINI_API_KEY=...
 GEMINI_MODEL=gemini-2.0-flash
-GITHUB_PAT=...              # GitHub Models (GPT-4o)
-OLLAMA_MODEL=qwen2.5-coder:7b
+GITHUB_PAT=...              # GitHub Models (GPT-4o) — GITHUB_PAT prioritás GITHUB_TOKEN előtt!
+OLLAMA_MODEL=mistral:latest # Stabil modell; qwen2.5-coder:7b chat-inkompatibilis
 ANTHROPIC_API_KEY=...       # Claude (Bifrost Gateway)
 E2B_API_KEY=...             # Secure Python sandboxes
 ```
@@ -442,6 +467,11 @@ EDGE_ENABLED=true
 | `GET /metrics` | Prometheus metrics |
 | `GET /api-docs` | Swagger UI |
 | `GET /api/cloudflare/status` | Edge státusz |
+| `GET /api/v1/swarm/status` | Swarm koloniak listája |
+| `POST /api/v1/swarm/dispatch` | Task küldése kolóniának |
+| `POST /api/v1/harvest/sync` | Harvest szinkronizálás |
+| `GET /api/assistant/blueprint` | Personal Assistant MVP readiness |
+| `POST /api/orchestrator/universal` | Universal Orchestrator Chat (minden provider) |
 
 ---
 
@@ -478,6 +508,10 @@ EDGE_ENABLED=true
 | uv sync lock hiba | `Remove-Item -Recurse -Force .venv && uv venv && uv sync` |
 | Phoenix Protocol hiba | `tail -n 50 logs/phoenix.log` — öngyógyító, de ellenőrizd! |
 | Agent specifikus hiba | `logs/agent_<name>.log` és `logs/developer.log` átnézése |
+| GitHub Models 401 | `GITHUB_PAT` lejárt vagy helytelen sorrend — `GITHUB_PAT` prioritást kap `GITHUB_TOKEN` előtt (bifrost_gateway.ts) |
+| GitHub Models 404 | Helytelen model ID — használj `gpt-4.1` (nem `azure-openai/gpt-4-1`); az API automatikusan `openai/gpt-4.1`-re konvertál |
+| Ollama "does not support chat" | A modell nem támogatja a chat API-t — válts `mistral:latest`-re |
+| `brunella conductor status` timeout | MCP kliens timeout — növeld `BRUNELLA_MCP_CONNECT_TIMEOUT_MS`-t (default: 8000ms) |
 
 ---
 
@@ -505,6 +539,7 @@ EDGE_ENABLED=true
 - **`conductor/epp-v2.md`** — EPP v2 teljes protokoll
 - **`conductor/workflow.md`** — Data Flywheel & Phoenix Protocol
 - **`docs/robotkezv2-user-guide.md`** — RobotkezV2 felhasználói útmutató
+- **`docs/LOCAL_WINDOWS_ASSISTANT_BLUEPRINT.md`** — Personal Assistant MVP architektúra terv
 
 ---
 

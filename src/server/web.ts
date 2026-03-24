@@ -124,7 +124,7 @@ export async function startWebServer() {
     process.env.WEB_UI_ENABLED !== "0" &&
     process.env.WEB_UI_ENABLED !== "false";
   if (!webUiEnabled) {
-    logError("Server", "WEB_UI_ENABLED=0 -> Web UI disabled");
+    logInfo("Server", "WEB_UI_ENABLED=0 -> Web UI disabled for current process");
     return;
   }
 

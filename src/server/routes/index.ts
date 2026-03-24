@@ -31,6 +31,7 @@ import { createEnterpriseRouter, createEnterpriseAnalyticsRouter } from "./enter
 import { createSystemArchitectureRouter, createSystemControlRouter } from "./system.js";
 import { createBusinessJobsRoutes } from "./businessJobs.js";
 import { securityRouter } from "./security.js";
+import { createAssistantRoutes } from "./assistant.js";
 
 export {
   createHealthRoutes,
@@ -59,6 +60,7 @@ export {
   createEnterpriseRouter,
   createEnterpriseAnalyticsRouter,
   createSystemArchitectureRouter,
+  createAssistantRoutes,
 };
 
 /**
@@ -101,6 +103,7 @@ export function createV1Router(): Router {
   router.use("/llm", createLLMRoutes());
   router.use("/business-jobs", createBusinessJobsRoutes());
   router.use("/security", securityRouter);
+  router.use("/assistant", createAssistantRoutes());
 
   return router;
 }

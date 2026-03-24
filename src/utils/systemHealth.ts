@@ -8,7 +8,7 @@
  */
 
 import { config } from '../config/index.js';
-import { logInfo, logError } from './logger.js';
+import { logInfo } from './logger.js';
 
 const SOURCE = 'systemHealth';
 
@@ -129,7 +129,7 @@ async function checkPythonAPI(timeoutMs: number): Promise<ServiceHealth> {
         const controller = new AbortController();
         const timeout = setTimeout(() => controller.abort(), timeoutMs);
 
-        const response = await fetch(`${baseUrl}/`, {
+        const response = await fetch(`${baseUrl}/health`, {
             signal: controller.signal
         });
         clearTimeout(timeout);
@@ -200,7 +200,7 @@ async function checkMCPServer(timeoutMs: number): Promise<ServiceHealth> {
             lastCheck: new Date(),
             error: `HTTP ${response.status}`
         };
-    } catch (error) {
+    } catch {
         // Self-check might fail if we ARE the server, so mark as unknown
         return {
             name,

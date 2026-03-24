@@ -31,7 +31,9 @@ function runCliSmoke() {
 }
 
 const serverEnv = {
-  WEB_UI_ENABLED: process.env.WEB_UI_ENABLED || "1"
+  // Smoke alatt stdio MCP szervert akarunk tesztelni, nem új HTTP szervert indítani.
+  // Így elkerülhető az EADDRINUSE, ha a 3000-es porton már fut egy példány.
+  WEB_UI_ENABLED: process.env.WEB_UI_ENABLED || "0"
 };
 
 const trim = (v) => (typeof v === "string" ? v.trim() : v);
@@ -88,6 +90,33 @@ function findWorkspaceSlug(payload) {
   return "";
 }
 
+function summarizeWorkspaces(payload) {
+  const workspaces = Array.isArray(payload)
+    ? payload
+    : Array.isArray(payload?.workspaces)
+      ? payload.workspaces
+      : Array.isArray(payload?.data)
+        ? payload.data
+        : [];
+
+  if (workspaces.length === 0) return "none";
+
+  return workspaces
+    .slice(0, 5)
+    .map((workspace) => workspace?.slug || workspace?.name || workspace?.id || "unknown")
+    .join(", ");
+}
+
+function summarizeText(text, maxLength = 240) {
+  const normalized = typeof text === "string"
+    ? text.replace(/\s+/g, " ").trim()
+    : "";
+
+  if (!normalized) return "(empty)";
+  if (normalized.length <= maxLength) return normalized;
+  return `${normalized.slice(0, maxLength)}…`;
+}
+
 async function run() {
   let exitCode = 0;
   if (!runCliSmoke()) exitCode = 1;
@@ -104,12 +133,21 @@ async function run() {
       arguments: {}
     });
     const listText = extractText(listResult);
-    console.log("AnythingLLM workspaces:\n", listText);
+    let parsedWorkspaces = null;
+    try {
+      parsedWorkspaces = JSON.parse(listText);
+    } catch {
+      parsedWorkspaces = null;
+    }
+    console.log(
+      "AnythingLLM workspaces:",
+      parsedWorkspaces ? summarizeWorkspaces(parsedWorkspaces) : summarizeText(listText)
+    );
 
     let workspaceSlug = process.env.ANYTHINGLLM_WORKSPACE?.trim();
     if (!workspaceSlug) {
       try {
-        const parsed = JSON.parse(listText);
+        const parsed = parsedWorkspaces ?? JSON.parse(listText);
         workspaceSlug = findWorkspaceSlug(parsed);
       } catch {
         workspaceSlug = "";
@@ -124,7 +162,7 @@ async function run() {
           message: "Smoke test ping from Brunella."
         }
       });
-      console.log("AnythingLLM chat response:\n", extractText(chatResult));
+      console.log("AnythingLLM chat response:", summarizeText(extractText(chatResult)));
     } else {
       console.warn("Skipping AnythingLLM chat: workspace slug not found.");
     }
