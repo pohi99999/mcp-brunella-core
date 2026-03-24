@@ -16,6 +16,17 @@ import {
   writeSheetsInvoicesTool,
   writeSheetsInvoicesHandler,
 } from "../tools/writeSheetsInvoices.js";
+import {
+  crawl4aiCrawlHandler,
+  crawl4aiBatchHandler,
+} from "../tools/crawl4aiTool.js";
+import {
+  memoryStoreHandler,
+  memoryQueryHandler,
+  memoryContextHandler,
+  memoryDeleteHandler,
+  memoryPurgeHandler,
+} from "../tools/memoryTool.js";
 
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
@@ -439,6 +450,104 @@ export async function registerAllTools(server: McpServer) {
   });
   server.tool("ping", "A simple ping tool.", {}, pingHandler);
   toolHandlers.set("ping", pingHandler);
+
+  // ─── Crawl4AI Tools ──────────────────────────────────────────────────
+  const crawl4aiCrawlMcp = async (args: { url: string; extract_schema?: string; wait_for_selector?: string }) => {
+    const result = await crawl4aiCrawlHandler(args);
+    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+  };
+  server.tool(
+    "crawl4ai_crawl",
+    "Web crawling Crawl4AI-vel: stealth böngésző, Markdown kimenet, opcionális séma-alapú adatkinyerés",
+    {
+      url: z.string().describe("A crawlolandó URL"),
+      extract_schema: z.string().optional().describe("JSON séma a struktúrált adatkinyeréshez"),
+      wait_for_selector: z.string().optional().describe("CSS selector amire várni kell betöltéskor"),
+    },
+    crawl4aiCrawlMcp,
+  );
+  toolHandlers.set("crawl4ai_crawl", crawl4aiCrawlMcp);
+
+  const crawl4aiBatchMcp = async (args: { urls: string[]; extract_schema?: string }) => {
+    const result = await crawl4aiBatchHandler(args);
+    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+  };
+  server.tool(
+    "crawl4ai_batch",
+    "Több URL párhuzamos crawlolása Crawl4AI-vel",
+    {
+      urls: z.array(z.string()).describe("Crawlolandó URL-ek listája"),
+      extract_schema: z.string().optional().describe("JSON séma az adatkinyeréshez"),
+    },
+    crawl4aiBatchMcp,
+  );
+  toolHandlers.set("crawl4ai_batch", crawl4aiBatchMcp);
+
+  // ─── Memory / User Preferences Tools ─────────────────────────────────
+  const memStoreMcp = async (args: { user_id: string; key: string; value: string; memory_type?: string; ttl_days?: number }) => {
+    const result = await memoryStoreHandler(args);
+    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+  };
+  server.tool(
+    "memory_store_preference",
+    "Felhasználói preferencia mentése (episodic/semantic/procedural memória típusok)",
+    {
+      user_id: z.string().describe("Felhasználó azonosító"),
+      key: z.string().describe("Preferencia kulcs (pl. 'language', 'theme')"),
+      value: z.string().describe("Preferencia értéke"),
+      memory_type: z.string().optional().describe("Memória típus: episodic | semantic | procedural (alapértelmezett: semantic)"),
+      ttl_days: z.number().optional().describe("Lejárati idő napokban (alapértelmezett: nincs lejárat)"),
+    },
+    memStoreMcp,
+  );
+  toolHandlers.set("memory_store_preference", memStoreMcp);
+
+  const memQueryMcp = async (args: { user_id: string; memory_type?: string; key_pattern?: string; limit?: number }) => {
+    const result = await memoryQueryHandler(args);
+    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+  };
+  server.tool(
+    "memory_query_preferences",
+    "Felhasználói preferenciák lekérdezése szűrőkkel",
+    {
+      user_id: z.string().describe("Felhasználó azonosító"),
+      memory_type: z.string().optional().describe("Szűrés memória típusra"),
+      key_pattern: z.string().optional().describe("LIKE minta a kulcsra (pl. 'lang%')"),
+      limit: z.number().optional().describe("Max visszaadott rekordok száma"),
+    },
+    memQueryMcp,
+  );
+  toolHandlers.set("memory_query_preferences", memQueryMcp);
+
+  const memContextMcp = async (args: { user_id: string }) => {
+    const result = await memoryContextHandler(args);
+    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+  };
+  server.tool(
+    "memory_get_context",
+    "Felhasználó teljes preferencia kontextusának lekérdezése prompt injection-höz",
+    {
+      user_id: z.string().describe("Felhasználó azonosító"),
+    },
+    memContextMcp,
+  );
+  toolHandlers.set("memory_get_context", memContextMcp);
+
+  const memDeleteMcp = async (args: { user_id: string; key: string; memory_type?: string }) => {
+    const result = await memoryDeleteHandler(args);
+    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
+  };
+  server.tool(
+    "memory_delete_preference",
+    "Felhasználói preferencia törlése",
+    {
+      user_id: z.string().describe("Felhasználó azonosító"),
+      key: z.string().describe("Törlendő preferencia kulcs"),
+      memory_type: z.string().optional().describe("Memória típus (ha nincs megadva, mindegyikből törli)"),
+    },
+    memDeleteMcp,
+  );
+  toolHandlers.set("memory_delete_preference", memDeleteMcp);
 }
 
 export async function executeLocalTool(name: string, args: any) {

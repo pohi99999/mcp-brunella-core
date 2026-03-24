@@ -2,6 +2,7 @@ import path from "path";
 import fs from "fs/promises";
 import { config } from "../config/index.js";
 import { E2BSandboxManager } from "../security/e2b_sandbox_manager.js";
+import { ExecuteResultSchema, validatePythonResponse } from "./pythonBridge.js";
 
 export class PythonShell {
   private scriptPath: string;
@@ -88,18 +89,23 @@ export class PythonShell {
         );
       }
 
-      const data = (await response.json()) as {
-        stdout: string;
-        error?: string;
-      };
-      if (data.error) {
-        // If the python code itself threw an exception, we want to return that as the result string
-        // just like the legacy shell does (it prints the error json)
-        // However, our server returns { stdout: "", error: "..." }
-        // Legacy wrapper printed: print(json.dumps({"error": str(e)}))
-        return JSON.stringify({ error: data.error });
+      const data = (await response.json()) as Record<string, unknown>;
+
+      // Zod validáció — típusbiztos Python válasz
+      const validated = validatePythonResponse(ExecuteResultSchema, data, "/execute");
+      if (validated.success) {
+        const typed = validated.data;
+        if (typed.error) {
+          return JSON.stringify({ error: typed.error });
+        }
+        return typed.stdout;
       }
-      return data.stdout;
+      // Graceful degradation: ha a séma nem stimmel, fallback a régi logikára
+      const fallback = data as { stdout?: string; error?: string };
+      if (fallback.error) {
+        return JSON.stringify({ error: fallback.error });
+      }
+      return String(fallback.stdout ?? "");
     } finally {
       clearTimeout(timeout);
     }
@@ -213,7 +219,15 @@ if __name__ == "__main__":
 `;
   const output = await globalPythonShell.run(code, args);
   try {
-    return JSON.parse(output);
+    const parsed: unknown = JSON.parse(output);
+    // Zod validáció: ha error objektum, explicit jelezzük
+    const errCheck = validatePythonResponse(
+      ExecuteResultSchema,
+      typeof parsed === "object" && parsed !== null && "stdout" in parsed ? parsed : { stdout: output },
+      "runPythonWorker",
+    );
+    // A worker eredményt parseoljuk, nem ExecuteResult-ot
+    return parsed;
   } catch (e) {
     throw new Error(`Failed to parse Python worker output: ${output}. Error: ${e}`);
   }
