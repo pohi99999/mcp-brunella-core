@@ -1821,7 +1821,8 @@
 			"omercnet.vscode-acp",
 			"thnoxs.vs-chrome",
 			"jonnyyu.chrome-app-devtools",
-			"ryanolsonx.chrome-devtools"
+			"ryanolsonx.chrome-devtools",
+			"rust-lang.rust-analyzer"
 		]
 	}
 }

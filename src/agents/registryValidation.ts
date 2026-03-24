@@ -42,9 +42,9 @@ const rawAgentSchema = z.object({
 }).passthrough();
 
 const rawRegistrySchema = z.object({
-  version: z.string().optional().default("1.0.0"),
+  version: z.union([z.string(), z.number()]).transform((value) => String(value)).optional().default("1.0.0"),
   agents: z.array(rawAgentSchema).optional().default([]),
-  defaultAgent: z.string().optional().default("Orchestrator"),
+  defaultAgent: z.string().optional().default("orchestrator"),
   routingRules: z.array(
     z.object({
       pattern: z.string(),

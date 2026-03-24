@@ -1,0 +1,67 @@
+node_modules/@lancedb/lancedb/dist/embedding/embedding_function.d.ts(32,5): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+node_modules/@lancedb/lancedb/dist/embedding/registry.d.ts(16,5): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+node_modules/@lancedb/lancedb/dist/merge.d.ts(5,5): error TS18028: Private identifiers are only available when targeting ECMAScript 2015 and higher.
+node_modules/socket.io/dist/index.d.ts(1,8): error TS1192: Module '"http"' has no default export.
+src/agents/AgentManager.ts(346,29): error TS2339: Property 'default' does not exist on type 'PlatformPath'.
+src/agents/AgentManager.ts(352,13): error TS2339: Property 'default' does not exist on type 'typeof import("fs")'.
+src/agents/AgentManager.ts(393,66): error TS2802: Type 'MapIterator<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/agents/AgentManager.ts(1398,83): error TS2802: Type 'MapIterator<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/agents/AgentManager.ts(1403,29): error TS2802: Type 'MapIterator<[string, IAgent]>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/agents/AgentManager.ts(1413,122): error TS2802: Type 'MapIterator<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/agents/AgentManager.ts(1846,33): error TS2339: Property 'default' does not exist on type 'PlatformPath'.
+src/agents/AgentManager.ts(1853,14): error TS2339: Property 'default' does not exist on type 'typeof import("fs")'.
+src/agents/AgentManager.ts(1854,28): error TS2339: Property 'default' does not exist on type 'typeof import("fs")'.
+src/agents/middleware/validateOutput.ts(49,3): error TS2322: Type 'ValidationResult<{ data?: unknown; message?: string; metadata?: Record<string, unknown>; success?: boolean; status?: string; handoff?: { type?: "handoff"; reason?: string; targetAgent?: string; instruction?: string; contextUpdates?: Record<...>; }; thoughts?: string; contextUsed?: string[]; }>' is not assignable to type 'ValidationResult<AgentResult>'.
+  Type '{ data?: unknown; message?: string; metadata?: Record<string, unknown>; success?: boolean; status?: string; handoff?: { type?: "handoff"; reason?: string; targetAgent?: string; instruction?: string; contextUpdates?: Record<...>; }; thoughts?: string; contextUsed?: string[]; }' is not assignable to type 'AgentResult'.
+    Property 'success' is optional in type '{ data?: unknown; message?: string; metadata?: Record<string, unknown>; success?: boolean; status?: string; handoff?: { type?: "handoff"; reason?: string; targetAgent?: string; instruction?: string; contextUpdates?: Record<...>; }; thoughts?: string; contextUsed?: string[]; }' but required in type 'AgentResult'.
+src/agents/middleware/validateOutput.ts(54,3): error TS2322: Type 'ValidationResult<{ data?: unknown; error?: string; message?: string; metadata?: Record<string, unknown>; success?: boolean; status?: "error" | "success" | "handoff" | "delegated"; handoff?: { type?: "handoff"; reason?: string; targetAgent?: string; instruction?: string; contextUpdates?: Record<...>; }; nextStep?: st...' is not assignable to type 'ValidationResult<AgentResponse>'.
+  Type '{ data?: unknown; error?: string; message?: string; metadata?: Record<string, unknown>; success?: boolean; status?: "error" | "success" | "handoff" | "delegated"; handoff?: { type?: "handoff"; reason?: string; targetAgent?: string; instruction?: string; contextUpdates?: Record<...>; }; nextStep?: string; delegatedTo...' is not assignable to type 'AgentResponse'.
+    Property 'status' is optional in type '{ data?: unknown; error?: string; message?: string; metadata?: Record<string, unknown>; success?: boolean; status?: "error" | "success" | "handoff" | "delegated"; handoff?: { type?: "handoff"; reason?: string; targetAgent?: string; instruction?: string; contextUpdates?: Record<...>; }; nextStep?: string; delegatedTo...' but required in type 'AgentResponse'.
+src/agents/permissions.ts(15,8): error TS1259: Module '"path"' can only be default-imported using the 'esModuleInterop' flag
+src/agents/registryValidation.ts(92,44): error TS2345: Argument of type 'objectOutputType<{ version: ZodDefault<ZodOptional<ZodEffects<ZodUnion<[ZodString, ZodNumber]>, string, string | number>>>; agents: ZodDefault<...>; defaultAgent: ZodDefault<...>; routingRules: ZodDefault<...>; }, ZodTypeAny, "passthrough">' is not assignable to parameter of type 'Partial<RegistryConfig>'.
+  Types of property 'agents' are incompatible.
+    Type 'objectOutputType<{ name: ZodString; class: ZodString; module: ZodString; description: ZodDefault<ZodOptional<ZodString>>; ... 10 more ...; tools: ZodDefault<...>; }, ZodTypeAny, "passthrough">[]' is not assignable to type 'AgentConfig[]'.
+      Type 'objectOutputType<{ name: ZodString; class: ZodString; module: ZodString; description: ZodDefault<ZodOptional<ZodString>>; ... 10 more ...; tools: ZodDefault<...>; }, ZodTypeAny, "passthrough">' is not assignable to type 'AgentConfig'.
+        Property 'name' is optional in type 'objectOutputType<{ name: ZodString; class: ZodString; module: ZodString; description: ZodDefault<ZodOptional<ZodString>>; ... 10 more ...; tools: ZodDefault<...>; }, ZodTypeAny, "passthrough">' but required in type 'AgentConfig'.
+src/agents/swarm/SwarmManager.ts(131,31): error TS2802: Type 'Map<string, SwarmAgent>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/agents/swarm/SwarmManager.ts(163,25): error TS2802: Type 'MapIterator<SwarmAgent>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/agents/swarm/SwarmManager.ts(227,25): error TS2802: Type 'MapIterator<SwarmAgent>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/agents/swarm/SwarmManager.ts(244,26): error TS2802: Type 'MapIterator<SwarmColony>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/agents/swarm/SwarmManager.ts(255,26): error TS2802: Type 'MapIterator<SwarmColony>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/config/index.ts(1,8): error TS1259: Module '"path"' can only be default-imported using the 'esModuleInterop' flag
+src/core/auditLog.ts(57,23): error TS2339: Property 'default' does not exist on type 'PlatformPath'.
+src/core/auditLog.ts(60,31): error TS2339: Property 'default' does not exist on type 'PlatformPath'.
+src/core/auditLog.ts(66,31): error TS2339: Property 'default' does not exist on type 'PlatformPath'.
+src/core/auditLog.ts(67,15): error TS2339: Property 'default' does not exist on type 'typeof import("fs")'.
+src/core/auditLog.ts(68,12): error TS2339: Property 'default' does not exist on type 'typeof import("fs")'.
+src/core/auditLog.ts(70,29): error TS2339: Property 'default' does not exist on type 'PlatformPath'.
+src/core/auditLog.ts(74,24): error TS2339: Property 'default' does not exist on type 'PlatformPath'.
+src/core/auditLog.ts(75,15): error TS2339: Property 'default' does not exist on type 'typeof import("fs")'.
+src/core/auditLog.ts(76,12): error TS2339: Property 'default' does not exist on type 'typeof import("fs")'.
+src/core/auditLog.ts(81,53): error TS2339: Property 'default' does not exist on type 'DatabaseConstructor'.
+src/core/checkpoint.ts(48,22): error TS2339: Property 'default' does not exist on type 'PlatformPath'.
+src/core/checkpoint.ts(49,11): error TS2339: Property 'default' does not exist on type 'typeof import("fs")'.
+src/core/checkpoint.ts(50,8): error TS2339: Property 'default' does not exist on type 'typeof import("fs")'.
+src/core/checkpoint.ts(53,23): error TS2339: Property 'default' does not exist on type 'PlatformPath'.
+src/core/checkpoint.ts(54,53): error TS2339: Property 'default' does not exist on type 'DatabaseConstructor'.
+src/core/dagEngine.ts(202,33): error TS2802: Type 'MapIterator<[string, number]>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/core/dagEngine.ts(210,14): error TS2802: Type 'MapIterator<[number, DAGNode[]]>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/core/eventBus.ts(10,8): error TS1259: Module '"F:/mcp-brunella-core/node_modules/@types/better-sqlite3/index"' can only be default-imported using the 'esModuleInterop' flag
+src/core/eventBus.ts(11,8): error TS1259: Module '"path"' can only be default-imported using the 'esModuleInterop' flag
+src/core/eventBus.ts(12,8): error TS1192: Module '"fs"' has no default export.
+src/core/goldenDatasetBridge.ts(195,21): error TS2802: Type 'Set<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/core/goldenDatasetBridge.ts(200,21): error TS2802: Type 'Set<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/core/hashUtils.ts(42,32): error TS1501: This regular expression flag is only available when targeting 'es6' or later.
+src/core/structuredMemory.ts(118,23): error TS2802: Type 'Set<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/core/swarm/colonyPersistence.ts(75,29): error TS2802: Type 'Map<string, SwarmAgent>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/utils/agentTracer.ts(296,22): error TS2802: Type 'MapIterator<TraceSpan>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/utils/fixQueue.ts(1,8): error TS1192: Module '"fs"' has no default export.
+src/utils/fixQueue.ts(2,8): error TS1259: Module '"path"' can only be default-imported using the 'esModuleInterop' flag
+src/utils/globalDb.ts(1,8): error TS1259: Module '"F:/mcp-brunella-core/node_modules/@types/better-sqlite3/index"' can only be default-imported using the 'esModuleInterop' flag
+src/utils/globalDb.ts(2,8): error TS1259: Module '"path"' can only be default-imported using the 'esModuleInterop' flag
+src/utils/metrics.ts(157,8): error TS2802: Type 'MapIterator<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/utils/metrics.ts(158,8): error TS2802: Type 'MapIterator<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/utils/metrics.ts(162,9): error TS2802: Type 'Set<string>' can only be iterated through when using the '--downlevelIteration' flag or with a '--target' of 'es2015' or higher.
+src/utils/rag.ts(7,8): error TS1192: Module '"fs/promises"' has no default export.
+src/utils/rag.ts(8,8): error TS1259: Module '"path"' can only be default-imported using the 'esModuleInterop' flag
+src/utils/tasksDb.ts(35,55): error TS2339: Property 'default' does not exist on type 'DatabaseConstructor'.

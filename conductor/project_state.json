@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-23T07:18:40.732Z",
+  "lastUpdated": "2026-03-24T17:19:43.990Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -196,6 +196,44 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\owl_agent_coordinator_20260321",
+      "_isArchived": false
+    },
+    {
+      "id": "personal_assistant_windows_mvp_20260323",
+      "name": "Brunella Personal Assistant — Windows MVP Foundation",
+      "status": "active",
+      "priority": "high",
+      "progress": 90,
+      "tags": [
+        "assistant",
+        "windows",
+        "voice",
+        "graphrag",
+        "memory",
+        "robotkez",
+        "tauri",
+        "dashboard",
+        "cli"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\personal_assistant_windows_mvp_20260323",
+      "_isArchived": false
+    },
+    {
+      "id": "readme_bootstrap_health_fixes_20260324",
+      "name": "README Bootstrap & Health Fixek",
+      "status": "active",
+      "priority": "high",
+      "progress": 80,
+      "tags": [
+        "bootstrap",
+        "smoke",
+        "health",
+        "webhook",
+        "registry"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\readme_bootstrap_health_fixes_20260324",
       "_isArchived": false
     },
     {
@@ -2070,8 +2108,8 @@
     }
   ],
   "stats": {
-    "total": 124,
-    "active": 6,
+    "total": 126,
+    "active": 8,
     "completed": 0,
     "archived": 108,
     "proposed": 10

@@ -1,12 +1,12 @@
 import React, { Suspense } from "react";
 import
-  {
-    LayoutDashboard, Network, Rocket, Cloud, Cpu, MessageSquare,
-    Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
-    Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow,
-    BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb, Database,
-    Search, Target, Receipt, ShieldAlert, Users, Wrench
-  } from "lucide-react";
+{
+  LayoutDashboard, Network, Rocket, Cloud, Cpu, MessageSquare,
+  Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
+  Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow,
+  BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb, Database,
+  Search, Target, Receipt, ShieldAlert, Users, Wrench
+} from "lucide-react";
 
 // Component Imports
 import { NeuralLinkChat } from "@/components/dashboard/NeuralLinkChat";
@@ -57,6 +57,7 @@ import { TelemetryPanel } from "@/components/dashboard/TelemetryPanel";
 import { MemoryPanel } from "@/components/dashboard/MemoryPanel";
 import { WorkflowPanel } from "@/components/dashboard/WorkflowPanel";
 import { AgentDiagnosticsPanel } from "@/components/dashboard/AgentDiagnosticsPanel";
+import { AssistantBlueprintPanel } from "@/components/dashboard/AssistantBlueprintPanel";
 import SwarmPanel from "@/components/dashboard/SwarmPanel";
 import ToolDiscoveryPanel from "@/components/dashboard/ToolDiscoveryPanel";
 import SecurityPanel from "@/components/dashboard/SecurityPanel";
@@ -131,6 +132,7 @@ export function initializeNavigation ()
     { id: "autonomy", label: "Autonomous Infra", icon: Rocket, component: <AutonomousInfraPanel /> },
     { id: "chat", label: "Neural Chat", icon: MessageSquare, component: <NeuralLinkChat /> },
     { id: "paios", label: "PAIOS Orchestrator", icon: Brain, component: <PAIOSOrchestratorChat /> },
+    { id: "assistant-blueprint", label: "Personal Assistant", icon: Sparkles, component: <AssistantBlueprintPanel /> },
     { id: "phoenix", label: "Phoenix Events", icon: Flame, component: <PhoenixEventsPanel /> },
     { id: "management", label: "Agent Roster", icon: Sparkles, component: <AgentManagementPanel /> },
     { id: "agent-diagnostics", label: "Agent Diagnostics", icon: Gauge, component: <AgentDiagnosticsPanel /> },
@@ -195,7 +197,7 @@ export function initializeNavigation ()
 
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode"] } );
-  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "phoenix", "management", "agent-diagnostics", "decomposer", "incubator", "knowledge", "memory", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
+  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "assistant-blueprint", "phoenix", "management", "agent-diagnostics", "decomposer", "incubator", "knowledge", "memory", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "enterprise-analytics"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery"] } );

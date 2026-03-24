@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-23 08:29
+**Generálva:** 2026-03-24 18:40
 **Script:** `scripts/sync_foszal.py`
 
 ---

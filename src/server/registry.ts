@@ -141,6 +141,7 @@ const registeredToolsList: RegisteredToolInfo[] = [
 
 // Internal tool handler map
 const toolHandlers = new Map<string, (args: any) => Promise<any>>();
+let dynamicAgentsRegistered = false;
 
 export async function registerAgents() {
   // AgentManager is now directly imported and always available
@@ -150,18 +151,29 @@ export async function registerAgents() {
   await agentManager.initialize();
 
   // Initialize Dynamic Agents (not in registry.json)
+  if (dynamicAgentsRegistered) {
+    return;
+  }
+
   try {
     const { DynamicAgent } = await import("../agents/DynamicAgent.js");
     const { UXDesignerAgent } = await import("../agents/UXDesignerAgent.js");
     const path = await import("path");
     const agentsDir = path.default.join(process.cwd(), "myai/agents");
-    agentManager.registerAgent(
-      new DynamicAgent(path.default.join(agentsDir, "project_organizer.toml")),
-    );
-    agentManager.registerAgent(
-      new DynamicAgent(path.default.join(agentsDir, "agent_architect.toml")),
-    );
-    agentManager.registerAgent(new UXDesignerAgent());
+    if (!agentManager.getAgent("project_organizer")) {
+      agentManager.registerAgent(
+        new DynamicAgent(path.default.join(agentsDir, "project_organizer.toml")),
+      );
+    }
+    if (!agentManager.getAgent("agent_architect")) {
+      agentManager.registerAgent(
+        new DynamicAgent(path.default.join(agentsDir, "agent_architect.toml")),
+      );
+    }
+    if (!agentManager.getAgent("UXDesigner")) {
+      agentManager.registerAgent(new UXDesignerAgent());
+    }
+    dynamicAgentsRegistered = true;
   } catch (e: any) {
     logWarn("System", `Could not load dynamic agents: ${e.message}`);
   }

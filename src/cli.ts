@@ -48,6 +48,7 @@ import { registerSecurityCommands } from "./cli/securityCommands.js";
 import { registerChromeAcpCommands } from "./cli/chromeAcpCommands.js";
 import { registerBrowserCopilotCommands } from "./cli/browserCopilotCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
+import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from "./core/assistantBlueprint.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
@@ -100,6 +101,74 @@ try {
 process.on("beforeExit", () => {
   flushTelemetry();
 });
+
+function assistantStatusColor(status: AssistantReadinessStatus) {
+  if (status === "ready") return chalk.green;
+  if (status === "partial") return chalk.yellow;
+  return chalk.gray;
+}
+
+function assistantStatusLabel(status: AssistantReadinessStatus): string {
+  if (status === "ready") return "KÉSZ";
+  if (status === "partial") return "RÉSZBEN KÉSZ";
+  return "TERVEZETT";
+}
+
+function printAssistantSummary(blueprint: AssistantBlueprint): void {
+  console.log(
+    boxen(chalk.cyan("Brunella Personal Assistant"), {
+      padding: 1,
+      borderStyle: "round",
+      borderColor: "cyan",
+    }),
+  );
+
+  console.log(chalk.bold("Célplatform:"), blueprint.targetPlatform);
+  console.log(chalk.bold("MVP readiness:"), `${blueprint.overallReadiness.score}% · ${blueprint.overallReadiness.label}`);
+  console.log(chalk.bold("Ajánlott működés:"), `${blueprint.recommendedMode.primaryCloudProvider} → ${blueprint.recommendedMode.localFallbackProvider}`);
+  console.log(chalk.bold("Desktop shell:"), blueprint.recommendedMode.desktopShell);
+  console.log(`\n${blueprint.overallReadiness.summary}`);
+
+  console.log(chalk.cyan("\nKépesség állapotok:"));
+  blueprint.capabilities.forEach((capability) => {
+    const color = assistantStatusColor(capability.status);
+    console.log(`  - ${chalk.bold(capability.title)} :: ${color(assistantStatusLabel(capability.status))} (${capability.score}%)`);
+  });
+
+  if (blueprint.providerHealth.length > 0) {
+    console.log(chalk.cyan("\nProvider health:"));
+    blueprint.providerHealth.forEach((provider) => {
+      const state = provider.available ? chalk.green("online") : chalk.red("offline");
+      const latency = typeof provider.response_time_ms === "number" ? ` · ${provider.response_time_ms} ms` : "";
+      console.log(`  - ${provider.provider}: ${state}${latency}`);
+    });
+  }
+
+  console.log(chalk.cyan("\nAzonnali következő lépések:"));
+  blueprint.nextActions.forEach((step) => console.log(`  • ${step}`));
+}
+
+function printAssistantArchitecture(blueprint: AssistantBlueprint): void {
+  console.log(chalk.cyan("\nAjánlott architektúra:"));
+  blueprint.architecture.forEach((layer, index) => {
+    console.log(`\n${chalk.bold(`${index + 1}. ${layer.title}`)}`);
+    console.log(`   ${layer.summary}`);
+    console.log(`   Cél: ${layer.purpose}`);
+    console.log(`   Modulok: ${layer.modules.join(", ")}`);
+    if (layer.nextUpgrade) {
+      console.log(chalk.dim(`   Következő upgrade: ${layer.nextUpgrade}`));
+    }
+  });
+}
+
+function printAssistantRoadmap(blueprint: AssistantBlueprint): void {
+  console.log(chalk.cyan("\nRoadmap:"));
+  blueprint.roadmap.forEach((phase) => {
+    console.log(`\n${chalk.bold(`${phase.id} — ${phase.title}`)}`);
+    console.log(`   Cél: ${phase.goal}`);
+    phase.deliverables.forEach((deliverable) => console.log(`   • ${deliverable}`));
+  });
+}
 
 program
   .name("brunella")
@@ -315,6 +384,54 @@ program
     }
 
     process.exit(0);
+  });
+
+program
+  .command("assistant")
+  .description("Windows személyi AI asszisztens blueprint és readiness áttekintése")
+  .option("--json", "Nyers JSON kimenet")
+  .action(async (cmd?: { json?: boolean }) => {
+    const spinner = ora("Assistant blueprint elemzése...").start();
+    try {
+      const blueprint = await getAssistantBlueprint();
+      spinner.stop();
+
+      if (cmd?.json) {
+        console.log(JSON.stringify(blueprint, null, 2));
+        return;
+      }
+
+      const { view } = await inquirer.prompt<{ view: "summary" | "architecture" | "roadmap" | "all" }>([
+        {
+          type: "list",
+          name: "view",
+          message: "Mit szeretnél megnézni az assistant tervből?",
+          choices: [
+            { name: "Összefoglaló és readiness", value: "summary" },
+            { name: "Ajánlott architektúra", value: "architecture" },
+            { name: "Roadmap", value: "roadmap" },
+            { name: "Mindent", value: "all" },
+          ],
+        },
+      ]);
+
+      if (view === "summary" || view === "all") {
+        printAssistantSummary(blueprint);
+      }
+
+      if (view === "architecture" || view === "all") {
+        printAssistantArchitecture(blueprint);
+      }
+
+      if (view === "roadmap" || view === "all") {
+        printAssistantRoadmap(blueprint);
+      }
+    } catch (error: unknown) {
+      spinner.fail("Assistant blueprint lekérése sikertelen");
+      const message = error instanceof Error ? error.message : String(error);
+      console.error(chalk.red(message));
+      process.exit(1);
+    }
   });
 
 // --- agent (execute specific agent)

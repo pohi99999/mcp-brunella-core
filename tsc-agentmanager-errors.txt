@@ -1,0 +1,298 @@
+src/agents/AgentManager.ts(251,13): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(251,27): error TS1138: Parameter declaration expected.
+src/agents/AgentManager.ts(251,29): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(251,36): error TS1005: ',' expected.
+src/agents/AgentManager.ts(251,43): error TS1005: ',' expected.
+src/agents/AgentManager.ts(251,48): error TS1005: ',' expected.
+src/agents/AgentManager.ts(251,50): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(251,65): error TS1443: Module declaration names may only use ' or " quoted strings.
+src/agents/AgentManager.ts(275,8): error TS1127: Invalid character.
+src/agents/AgentManager.ts(275,8): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(275,23): error TS1005: ';' expected.
+src/agents/AgentManager.ts(275,25): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(275,48): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(275,56): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(275,68): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(275,68): error TS1443: Module declaration names may only use ' or " quoted strings.
+src/agents/AgentManager.ts(282,10): error TS1127: Invalid character.
+src/agents/AgentManager.ts(282,10): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(282,13): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(282,27): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(282,48): error TS1005: ',' expected.
+src/agents/AgentManager.ts(282,52): error TS1005: ',' expected.
+src/agents/AgentManager.ts(282,57): error TS1443: Module declaration names may only use ' or " quoted strings.
+src/agents/AgentManager.ts(294,12): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(294,26): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(294,44): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(294,54): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(294,67): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(294,69): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(294,78): error TS1005: ';' expected.
+src/agents/AgentManager.ts(294,90): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(294,90): error TS1443: Module declaration names may only use ' or " quoted strings.
+src/agents/AgentManager.ts(301,36): error TS1127: Invalid character.
+src/agents/AgentManager.ts(301,36): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(301,38): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(301,52): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(313,12): error TS1127: Invalid character.
+src/agents/AgentManager.ts(313,14): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(313,26): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(313,39): error TS1005: ';' expected.
+src/agents/AgentManager.ts(338,10): error TS1005: ';' expected.
+src/agents/AgentManager.ts(338,19): error TS1435: Unknown keyword or identifier. Did you mean 'get'?
+src/agents/AgentManager.ts(338,46): error TS1005: ',' expected.
+src/agents/AgentManager.ts(338,53): error TS1005: ',' expected.
+src/agents/AgentManager.ts(338,58): error TS1005: ',' expected.
+src/agents/AgentManager.ts(338,66): error TS1443: Module declaration names may only use ' or " quoted strings.
+src/agents/AgentManager.ts(356,17): error TS1435: Unknown keyword or identifier. Did you mean 'module'?
+src/agents/AgentManager.ts(356,23): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(356,38): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(358,33): error TS1005: ';' expected.
+src/agents/AgentManager.ts(358,39): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(358,54): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(372,10): error TS1005: ';' expected.
+src/agents/AgentManager.ts(372,17): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(372,35): error TS1005: ',' expected.
+src/agents/AgentManager.ts(372,42): error TS1005: ',' expected.
+src/agents/AgentManager.ts(372,49): error TS1005: ';' expected.
+src/agents/AgentManager.ts(372,127): error TS1005: ',' expected.
+src/agents/AgentManager.ts(372,142): error TS1005: ',' expected.
+src/agents/AgentManager.ts(394,8): error TS1005: ';' expected.
+src/agents/AgentManager.ts(394,25): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(394,39): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(394,41): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(394,60): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(510,8): error TS1005: ';' expected.
+src/agents/AgentManager.ts(510,24): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(510,56): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(512,58): error TS1005: ';' expected.
+src/agents/AgentManager.ts(512,66): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(512,90): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(512,122): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(535,35): error TS1005: ';' expected.
+src/agents/AgentManager.ts(535,46): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(540,23): error TS1005: ';' expected.
+src/agents/AgentManager.ts(540,34): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(566,8): error TS1005: ';' expected.
+src/agents/AgentManager.ts(566,15): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(622,52): error TS1005: ';' expected.
+src/agents/AgentManager.ts(622,69): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(642,27): error TS1005: ';' expected.
+src/agents/AgentManager.ts(642,46): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(645,19): error TS1005: ';' expected.
+src/agents/AgentManager.ts(645,38): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(663,12): error TS1005: ';' expected.
+src/agents/AgentManager.ts(663,20): error TS1435: Unknown keyword or identifier. Did you mean 'break'?
+src/agents/AgentManager.ts(663,37): error TS1005: ',' expected.
+src/agents/AgentManager.ts(663,61): error TS1005: ';' expected.
+src/agents/AgentManager.ts(663,66): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(663,98): error TS1443: Module declaration names may only use ' or " quoted strings.
+src/agents/AgentManager.ts(665,29): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(665,37): error TS1435: Unknown keyword or identifier. Did you mean 'break'?
+src/agents/AgentManager.ts(665,52): error TS1005: ',' expected.
+src/agents/AgentManager.ts(665,64): error TS1443: Module declaration names may only use ' or " quoted strings.
+src/agents/AgentManager.ts(668,21): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(668,28): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(668,59): error TS1005: ',' expected.
+src/agents/AgentManager.ts(668,67): error TS1005: ';' expected.
+src/agents/AgentManager.ts(668,69): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(675,34): error TS1005: ';' expected.
+src/agents/AgentManager.ts(675,42): error TS1435: Unknown keyword or identifier. Did you mean 'break'?
+src/agents/AgentManager.ts(675,66): error TS1005: ',' expected.
+src/agents/AgentManager.ts(675,78): error TS1443: Module declaration names may only use ' or " quoted strings.
+src/agents/AgentManager.ts(681,27): error TS1435: Unknown keyword or identifier. Did you mean 'get'?
+src/agents/AgentManager.ts(681,33): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(681,44): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(684,19): error TS1005: ';' expected.
+src/agents/AgentManager.ts(684,26): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(684,41): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(695,12): error TS1005: ';' expected.
+src/agents/AgentManager.ts(695,30): error TS1005: ',' expected.
+src/agents/AgentManager.ts(695,42): error TS1005: ';' expected.
+src/agents/AgentManager.ts(695,46): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(695,56): error TS1161: Unterminated regular expression literal.
+src/agents/AgentManager.ts(696,9): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(716,7): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(716,8): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(717,5): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(945,3): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(947,3): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(947,38): error TS1005: ',' expected.
+src/agents/AgentManager.ts(947,48): error TS1005: ';' expected.
+src/agents/AgentManager.ts(975,3): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(976,14): error TS1005: ',' expected.
+src/agents/AgentManager.ts(977,16): error TS1005: ',' expected.
+src/agents/AgentManager.ts(978,13): error TS1109: Expression expected.
+src/agents/AgentManager.ts(979,4): error TS1005: ';' expected.
+src/agents/AgentManager.ts(980,11): error TS1005: ':' expected.
+src/agents/AgentManager.ts(980,36): error TS1005: ',' expected.
+src/agents/AgentManager.ts(981,9): error TS1005: ',' expected.
+src/agents/AgentManager.ts(981,29): error TS1005: ',' expected.
+src/agents/AgentManager.ts(983,13): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(983,27): error TS1138: Parameter declaration expected.
+src/agents/AgentManager.ts(983,29): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(983,80): error TS1005: ',' expected.
+src/agents/AgentManager.ts(983,85): error TS1005: ';' expected.
+src/agents/AgentManager.ts(983,111): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(995,45): error TS1005: ']' expected.
+src/agents/AgentManager.ts(995,53): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(995,55): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(995,63): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(995,66): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(995,74): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(999,23): error TS1005: ';' expected.
+src/agents/AgentManager.ts(999,32): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(999,42): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(999,45): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(999,53): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1010,43): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1010,51): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1010,53): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1010,61): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1010,71): error TS1161: Unterminated regular expression literal.
+src/agents/AgentManager.ts(1010,117): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1058,7): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1058,9): error TS1005: 'try' expected.
+src/agents/AgentManager.ts(1111,5): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1122,3): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1134,3): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1134,11): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1134,41): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1134,50): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1135,9): error TS1005: ':' expected.
+src/agents/AgentManager.ts(1136,15): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(1136,29): error TS1138: Parameter declaration expected.
+src/agents/AgentManager.ts(1136,31): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(1136,81): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1141,43): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1141,50): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1141,61): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1141,69): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1141,70): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1141,102): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1141,105): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1141,115): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1148,43): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1148,50): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1148,52): error TS1435: Unknown keyword or identifier. Did you mean 'get'?
+src/agents/AgentManager.ts(1148,58): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1148,69): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1168,43): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1168,50): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1168,52): error TS1435: Unknown keyword or identifier. Did you mean 'get'?
+src/agents/AgentManager.ts(1168,72): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1168,74): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1177,41): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1177,48): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1177,59): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1182,42): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1182,49): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1182,51): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1182,62): error TS1005: '(' expected.
+src/agents/AgentManager.ts(1182,63): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1182,74): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1182,76): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1210,41): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1210,48): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1210,50): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1210,61): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1210,80): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1213,29): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1213,41): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1213,42): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1219,43): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1219,50): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1219,52): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1219,55): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1219,66): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1219,76): error TS1005: '(' expected.
+src/agents/AgentManager.ts(1219,77): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1226,41): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1226,48): error TS1005: ')' expected.
+src/agents/AgentManager.ts(1226,50): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1226,75): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1226,100): error TS1005: ')' expected.
+src/agents/AgentManager.ts(1226,121): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1244,42): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1244,49): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1244,51): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1244,57): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1244,69): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1244,80): error TS1005: '(' expected.
+src/agents/AgentManager.ts(1244,81): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1244,92): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1244,94): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1382,30): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1382,51): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1393,19): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1393,25): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1393,34): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1393,51): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1393,61): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(1399,19): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1399,45): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1399,75): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1399,77): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1414,21): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1414,48): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1414,52): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1414,62): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1414,77): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1414,90): error TS1005: ',' expected.
+src/agents/AgentManager.ts(1414,106): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1414,116): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1414,153): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1414,155): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1414,164): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1414,167): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1414,183): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(1417,24): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1425,21): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1425,29): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1425,57): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1425,73): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1425,83): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1436,19): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1436,51): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1436,73): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1436,84): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1521,30): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1521,33): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1521,40): error TS1435: Unknown keyword or identifier. Did you mean 'get'?
+src/agents/AgentManager.ts(1521,46): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1521,59): error TS1005: '(' expected.
+src/agents/AgentManager.ts(1521,68): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1521,73): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1606,32): error TS1005: ')' expected.
+src/agents/AgentManager.ts(1606,40): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1606,50): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1606,75): error TS1003: Identifier expected.
+src/agents/AgentManager.ts(1664,30): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1664,35): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1664,56): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1664,63): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1742,14): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1742,19): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1742,41): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1748,35): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1748,40): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1748,61): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1810,25): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1810,38): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1810,39): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1810,41): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1814,25): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1814,38): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1814,39): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1814,48): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1819,23): error TS1005: ']' expected.
+src/agents/AgentManager.ts(1819,36): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1819,37): error TS1128: Declaration or statement expected.
+src/agents/AgentManager.ts(1819,50): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1861,33): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1861,42): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1861,55): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1916,20): error TS1005: ';' expected.
+src/agents/AgentManager.ts(1916,26): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1916,46): error TS1434: Unexpected keyword or identifier.
+src/agents/AgentManager.ts(1919,1): error TS1160: Unterminated template literal.
