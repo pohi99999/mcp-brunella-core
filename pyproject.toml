@@ -22,6 +22,8 @@ dependencies = [
     # Browser automation
     "browser-use>=0.1.0",
     "playwright>=1.49.0",
+    # Adaptive web crawling (stealth, LLM-ready Markdown)
+    "crawl4ai>=0.4.0",
     # Data processing
     "pydantic>=2.10.0",
     "python-dotenv>=1.0.0",
