@@ -50,6 +50,12 @@ PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if PROJECT_ROOT not in sys.path:
     sys.path.append(PROJECT_ROOT)
 
+try:
+    from myai.crawl4ai_worker import crawl_url, batch_crawl, CrawlRequest as Crawl4AICrawlRequest
+    HAS_CRAWL4AI = True
+except ImportError:
+    HAS_CRAWL4AI = False
+
 from myai.rag import rag_service
 from myai.refiner_logic import refiner
 from myai.browser_worker import run_scenario, run_structured_extraction, check_setup
@@ -847,6 +853,43 @@ async def robotkez_snapshot():
         }
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Snapshot failed: {str(e)}")
+
+# ─── Crawl4AI Endpoints ─────────────────────────────────────────────────────
+
+class CrawlRequest(BaseModel):
+    url: str
+    extract_schema: Optional[Dict[str, Any]] = None
+    wait_for_selector: Optional[str] = None
+
+class BatchCrawlRequest(BaseModel):
+    urls: list[str]
+    extract_schema: Optional[Dict[str, Any]] = None
+
+@app.post("/crawl4ai/crawl")
+async def crawl4ai_crawl(req: CrawlRequest):
+    if not HAS_CRAWL4AI:
+        raise HTTPException(status_code=501, detail="crawl4ai not installed. Run: cd myai && uv sync")
+    try:
+        crawl_req = Crawl4AICrawlRequest(
+            url=req.url,
+            extract_schema=req.extract_schema,
+            wait_for_selector=req.wait_for_selector,
+        )
+        result = await crawl_url(crawl_req)
+        return result.model_dump()
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Crawl failed: {str(e)}")
+
+@app.post("/crawl4ai/batch")
+async def crawl4ai_batch(req: BatchCrawlRequest):
+    if not HAS_CRAWL4AI:
+        raise HTTPException(status_code=501, detail="crawl4ai not installed. Run: cd myai && uv sync")
+    try:
+        requests = [Crawl4AICrawlRequest(url=u, extract_schema=req.extract_schema) for u in req.urls]
+        results = await batch_crawl(requests)
+        return {"results": [r.model_dump() for r in results]}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Batch crawl failed: {str(e)}")
 
 def start():
     """Entry point for script execution"""

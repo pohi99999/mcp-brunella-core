@@ -5948,3 +5948,50 @@ ag.ts, index.ts).
 obotkez ágakról.
 
 ✅ **Minden változás tesztelve, buildelve és a main ágba integrálva.**
+
+## 2026-03-25 - 🚀 Kutatas.md Technológia Integráció (3 új rendszerkomponens)
+
+**Feladat:**
+- A `.worktrees/kutatas.md` kutatási dokumentum elemzése (5 technológia: Mem0, LangGraph, Crawl4AI, PydanticAI, Helicone)
+- Top 3 technológia kiválasztása és beépítése a rendszerbe
+- Prioritás: Crawl4AI (MAGAS) → Zod validáció (KÖZEPES) → User Preferences (KÖZEPES)
+
+**1. Crawl4AI Integráció ✅**
+- `myai/crawl4ai_worker.py` — AsyncWebCrawler wrapper (stealth böngésző, Markdown kimenet, séma-alapú adatkinyerés Ollama LLM-mel)
+- `myai/server.py` — Két új FastAPI endpoint: `/crawl4ai/crawl` és `/crawl4ai/batch`
+- `src/tools/crawl4aiTool.ts` — MCP tool: `crawl4ai_crawl` (egyedi URL crawl) + `crawl4ai_batch` (párhuzamos batch crawl)
+- `pyproject.toml` — `crawl4ai>=0.4.0` függőség hozzáadva
+- `test/crawl4ai.test.ts` — 6 unit teszt (mock fetch, hiba kezelés, schema forwarding)
+
+**2. Zod Validáció Node↔Python Határon ✅**
+- `src/utils/pythonBridge.ts` — Zod sémák: ExecuteResult, CrawlResult, HarvestResult, RefineResult, PythonError
+- `src/utils/pythonShell.ts` — `runViaApi()` és `runPythonWorker()` metódusokban Zod safeParse validáció (graceful degradation: sikertelen séma → fallback a régi logikára)
+- `test/pythonBridge.test.ts` — 12 unit teszt (séma validáció, parse+validate, hibajelzés)
+
+**3. User Preferences Réteg (Mem0-szerű) ✅**
+- `src/core/userPreferences.ts` — SQLite-alapú preferencia store, 3 memória típus (episodic/semantic/procedural), UPSERT, TTL, confidence scoring, prompt injection context generálás
+- `src/tools/memoryTool.ts` — 5 MCP tool: `memory_store_preference`, `memory_query_preferences`, `memory_get_context`, `memory_delete_preference`, `memory_purge`
+- `test/userPreferences.test.ts` — 7 unit teszt (CRUD, upsert, szűrés, context generálás, stats)
+
+**Tool Regisztráció:**
+- `src/server/registry.ts` — 7 új MCP tool regisztrálva (2 crawl4ai + 5 memory)
+
+**Rendszer Állapot (2026-03-25, integráció után):**
+- Build: ✅ PASS
+- Tesztek: ✅ 171 fájl, 1478 teszt PASSED, 0 fail, 42 skipped (+26 új teszt)
+- Lint: ✅ PASS
+
+**Új fájlok (7 db):**
+- `myai/crawl4ai_worker.py`
+- `src/utils/pythonBridge.ts`
+- `src/core/userPreferences.ts`
+- `src/tools/crawl4aiTool.ts`
+- `src/tools/memoryTool.ts`
+- `test/pythonBridge.test.ts`
+- `test/crawl4ai.test.ts`
+- `test/userPreferences.test.ts`
+
+**Módosított fájlok (3 db):**
+- `myai/server.py` — Crawl4AI import + 2 endpoint
+- `src/utils/pythonShell.ts` — Zod import + safeParse integrálás
+- `src/server/registry.ts` — 7 új tool regisztráció
