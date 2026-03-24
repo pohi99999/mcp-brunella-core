@@ -1,5 +1,60 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-07-15 - 🎛️ Phase 3: Dashboard + CLI + LLM + Tesztek (Kutatas.md integráció befejezése)
+
+**Feladat:**
+- A Phase 2-ben létrehozott 3 új rendszerkomponens (Crawl4AI, Zod Bridge, User Preferences) beépítése a Dashboard UI-ba, CLI-be, REST API route-okba és az LLM logikába
+- E2E és Smoke tesztek írása az új funkciókhoz
+
+**Elkészült munkák:**
+
+### Dashboard Panelek
+- `src/dashboard/components/dashboard/Crawl4AIPanel.tsx` — React panel (Single/Batch crawl fülek, állapot kijelzés, eredmény előnézet)
+- `src/dashboard/components/dashboard/UserPreferencesPanel.tsx` — React panel (Lista/Hozzáadás/Kontextus fülek, CRUD, LLM context viewer)
+- `src/dashboard/lib/navigation.tsx` — Mindkét panel regisztrálva (Crawl4AI → Orchestration csoport, User Preferences → AI & Agents csoport)
+
+### REST API Route-ok
+- `src/server/routes/crawl4ai.ts` — 3 végpont: GET /status, POST /crawl, POST /batch
+- `src/server/routes/preferences.ts` — 6 végpont: GET stats, GET context, GET list, POST save, DELETE, POST purge
+- `src/server/web.ts` — Route-ok regisztrálva a v1Router-en
+
+### CLI Parancsok (Magyar nyelv, inquirer.js)
+- `src/cli/crawl4aiCommands.ts` — `crawl4ai status|crawl|batch` alparancsok
+- `src/cli/memoriaCommands.ts` — `memoria mentés|lista|kontextus|törlés|takarítás` alparancsok
+- `src/cli.ts` — Parancsok regisztrálva
+
+### LLM Integráció (Bifrost Gateway)
+- `src/core/bifrost_gateway.ts` — User preference context injektálás a `generate()` metódusba
+  - Új `userId` opció a `GenerateOptions`-ban
+  - Automatikus preferencia kontextus betöltés és systemPrompt kiegészítés
+  - Graceful error handling (ha preferencia betöltés sikertelen, folytatódik a generálás)
+
+### Tesztek
+- `test/smoke-phase3.vitest.ts` — **16 smoke teszt** (modul import, Zod validáció, route factory, CLI regisztráció)
+- `test/cli-phase3-e2e.vitest.ts` — **10 E2E teszt** (CLI crawl4ai + memoria --help, alparancsok, graceful failure)
+
+**Teszt Eredmények:**
+- Smoke tesztek: 16/16 ✅
+- E2E tesztek: 10/10 ✅
+- Teljes test:fast: **173 fájl, 1504 teszt PASS, 0 FAIL** ✅
+- Build: sikeres, 0 TypeScript hiba
+
+**Módosított fájlok összesen (Phase 3):**
+1. `src/dashboard/components/dashboard/Crawl4AIPanel.tsx` (ÚJ)
+2. `src/dashboard/components/dashboard/UserPreferencesPanel.tsx` (ÚJ)
+3. `src/dashboard/lib/navigation.tsx` (MÓDOSÍTOTT — panel regisztráció)
+4. `src/server/routes/crawl4ai.ts` (ÚJ)
+5. `src/server/routes/preferences.ts` (ÚJ)
+6. `src/server/web.ts` (MÓDOSÍTOTT — route regisztráció)
+7. `src/cli/crawl4aiCommands.ts` (ÚJ)
+8. `src/cli/memoriaCommands.ts` (ÚJ)
+9. `src/cli.ts` (MÓDOSÍTOTT — CLI parancs regisztráció)
+10. `src/core/bifrost_gateway.ts` (MÓDOSÍTOTT — LLM preference context injection)
+11. `test/smoke-phase3.vitest.ts` (ÚJ)
+12. `test/cli-phase3-e2e.vitest.ts` (ÚJ)
+
+---
+
 ## 2026-03-25 - 🔍 Rendszer-felmérés és dokumentáció-audit (MEGALLAPITAS.md)
 
 **Feladat:**

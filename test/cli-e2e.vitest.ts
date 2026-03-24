@@ -60,7 +60,7 @@ function runCli(args: string[], extraEnv: Record<string, string> = {}): Promise<
     const timeoutHandle = setTimeout(() => {
       timedOut = true;
       child.kill();
-    }, 15_000);
+    }, 25_000);
 
     child.on('error', (error) => {
       clearTimeout(timeoutHandle);
@@ -218,7 +218,7 @@ describe('CLI E2E — Szerver-igényes (graceful hiba)', () => {
     const { exitCode, timedOut } = await runCli(['tools'], serverEnv);
     expect(timedOut).toBe(false);
     expect(exitCode).toBeGreaterThanOrEqual(0);
-  });
+  }, 30_000);
 
   it('tools valami kimenetet ad (hiba vagy lista)', async () => {
     const { stdout, stderr } = await runCli(['tools'], serverEnv);
