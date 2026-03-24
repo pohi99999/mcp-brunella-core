@@ -29,7 +29,7 @@ A **MCP Brunella Core** egy Model Context Protocol (MCP) szerver implementáció
 #### Core
 - **Nyelv:** TypeScript (Node.js runtime)
 - **MCP SDK:** @modelcontextprotocol/sdk v1.0.0
-- **Web Framework:** Express 5.x
+- **Web Framework:** Express 4.x
 - **Real-time:** Socket.IO
 
 #### Adattárolás

@@ -6,7 +6,7 @@
 
 **Architecture:** A meglévő SwarmAgent/SwarmManager kód (Phase 5) bekötésre kerül az AgentManagerbe és MCP toolként elérhetővé válik. SQLite WAL-alapú EventBus biztosítja a real-time Dashboard frissítést. CEAN Cloudflare Workers Edge fallbackként szolgál, Phoenix Protocol automatikusan vált Ollama → CEAN között.
 
-**Tech Stack:** TypeScript (ESM, `import ... from './foo.js'`), Express 5, Socket.IO, MCP SDK (`SSEServerTransport`), Zod, better-sqlite3, Cloudflare Workers (`@cloudflare/workers-types`), Vitest
+**Tech Stack:** TypeScript (ESM, `import ... from './foo.js'`), Express 4, Socket.IO, MCP SDK (`SSEServerTransport`), Zod, better-sqlite3, Cloudflare Workers (`@cloudflare/workers-types`), Vitest
 
 ---
 

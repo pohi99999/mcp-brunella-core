@@ -46,7 +46,7 @@
 │  ├─ Express API (port 3000)                         │
 │  ├─ Socket.IO (WebSocket)                           │
 │  ├─ MCP Server (StdioServerTransport)               │
-│  └─ 30+ AI Agents (IAgent interface)                │
+│  └─ 54 AI Agents (IAgent interface)                 │
 │                                                      │
 │  PYTHON SUBSYSTEM (FastAPI)                         │
 │  ├─ FastAPI server (port 8000)                      │
@@ -79,7 +79,7 @@
 ## 📂 HOL VANNAK A FONTOS DOLGOK?
 
 ### Kód
-- `src/agents/` - 30+ AI ügynök (OrchestratorAgent, DeveloperAgent, stb.)
+- `src/agents/` - 54 AI ügynök (OrchestratorAgent, DeveloperAgent, stb.)
 - `src/server/` - Backend API + MCP registry
 - `src/dashboard/` - React UI komponensek
 - `src/tools/` - MCP tool definíciók

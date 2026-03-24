@@ -94,10 +94,10 @@ describe('CLI E2E — Help & Version', () => {
     expect(exitCode).toBe(0);
   });
 
-  it('--version kimenete tartalmazza az 1.0.0 verziószámot', () => {
+  it('--version kimenete tartalmazza a verziószámot', () => {
     const { stdout, stderr } = runCli(['--version']);
     const output = stdout + stderr;
-    expect(output).toContain('1.0.0');
+    expect(output).toContain('2.4.0');
   });
 
   it('--help nem timeout-ol', () => {

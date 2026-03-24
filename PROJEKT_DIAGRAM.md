@@ -1,7 +1,7 @@
 # Brunella Agent System - Projekt Diagram
 
-**Utolsó frissítés:** 2026-02-16
-**Verzió:** 2.3.0
+**Utolsó frissítés:** 2026-03-25
+**Verzió:** 2.4.0
 
 ---
 
@@ -32,7 +32,7 @@
                                         │                      │
                                 ┌───────▼────────┐   ┌────────▼──────┐
                                 │ PYTHON BACKEND │   │  AGENT LAYER  │
-                                │   (FastAPI)    │   │  (30+ Agents) │
+                                │   (FastAPI)    │   │  (54 Agents)  │
                                 │    :8000       │   │               │
                                 └────────────────┘   └───────────────┘
 ```
@@ -75,7 +75,7 @@ F:\mcp-brunella-core\
 │   │   ├── DeveloperAgent.ts        # Code Writer
 │   │   ├── EvaluatorAgent.ts        # Tester & Auditor
 │   │   ├── ResearcherAgent.ts       # Web Search & RAG
-│   │   └── [30+ other agents...]
+│   │   └── [54 agents total...]
 │   │
 │   ├── tools/                        # 🔧 MCP Tool Definitions
 │   │   ├── toolDefinitions.ts       # Tool schemas
@@ -167,7 +167,7 @@ F:\mcp-brunella-core\
  DataScientist   EdgeProxy  VoiceAgent  TaskDecomposer
     Agent         Agent       Agent         Agent
         │
-  [30+ total agents...]
+  [54 total agents...]
 ```
 
 **Agent Execution Flow:**

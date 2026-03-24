@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Brunella Agent System (BAS)** - AI multi-agent rendszer szoftverfejlesztés automatizálására lokális LLM-ekkel (Ollama), MCP protokollal és hibrid Node.js/Python architektúrával.
 
-**Technológiák:** TypeScript (ESM), Express 5, Socket.IO, React 19, Ollama, Gemini, GitHub Models, Python (FastAPI), LanceDB, Cloudflare Workers, SQLite, E2B Sandboxes
+**Technológiák:** TypeScript (ESM), Express 4, Socket.IO, React 19, Ollama, Gemini, GitHub Models, Python (FastAPI), LanceDB, Cloudflare Workers, SQLite, E2B Sandboxes
 
 **Master dokumentum:** `README.md` — ha ellentmondást találsz, a README az irányadó.
 

@@ -663,7 +663,7 @@ graph TB
 |-------|-------------|-----------|
 | **Frontend** | React 19 + Vite | Dashboard UI |
 | **UI Library** | Radix UI + Tailwind v4 | Component library |
-| **Backend** | Node.js 20 + Express 5 | REST API + Socket.IO |
+| **Backend** | Node.js 20 + Express 4 | REST API + Socket.IO |
 | **Language** | TypeScript 5.3+ | Type-safe code |
 | **MCP** | @modelcontextprotocol/sdk | Multi-agent protocol |
 | **Python** | Python 3.12 + FastAPI | Data processing |
