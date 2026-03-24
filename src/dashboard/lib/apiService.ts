@@ -352,6 +352,74 @@ export async function getLLMModelCatalog(): Promise<LLMModelCatalog> {
   return safeJson<LLMModelCatalog>(response);
 }
 
+export type AssistantReadinessStatus = "ready" | "partial" | "planned";
+
+export interface AssistantCapability {
+  id: string;
+  title: string;
+  status: AssistantReadinessStatus;
+  score: number;
+  summary: string;
+  details: string[];
+  evidence?: Record<string, unknown>;
+}
+
+export interface AssistantArchitectureLayer {
+  id: string;
+  title: string;
+  summary: string;
+  modules: string[];
+  purpose: string;
+  nextUpgrade?: string;
+}
+
+export interface AssistantRoadmapPhase {
+  id: string;
+  title: string;
+  goal: string;
+  deliverables: string[];
+}
+
+export interface AssistantBlueprint {
+  assistantName: string;
+  targetPlatform: string;
+  generatedAt: string;
+  recommendedMode: {
+    primaryCloudProvider: string;
+    localFallbackProvider: string;
+    desktopShell: string;
+    recommendation: string;
+  };
+  overallReadiness: {
+    score: number;
+    label: string;
+    summary: string;
+  };
+  providerHealth: Array<{
+    provider: string;
+    available: boolean;
+    last_check: string;
+    response_time_ms?: number;
+    error?: string;
+  }>;
+  capabilities: AssistantCapability[];
+  architecture: AssistantArchitectureLayer[];
+  roadmap: AssistantRoadmapPhase[];
+  nextActions: string[];
+}
+
+export async function getAssistantBlueprint(): Promise<AssistantBlueprint> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/assistant/blueprint`,
+    {},
+    30000,
+  );
+  if (!response.ok) {
+    throw new Error(`Assistant blueprint: HTTP ${response.status}`);
+  }
+  return safeJson<AssistantBlueprint>(response);
+}
+
 /**
  * Health Check
  */

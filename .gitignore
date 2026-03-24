@@ -52,7 +52,9 @@ copilot-messages.log
 *.exe
 *.msi
 *.bat
+!inditas.bat
 !scripts/*.bat
+!scripts/launchers/*.bat
 *.cmd
 *.com
 *.scr

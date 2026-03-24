@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { evHunterHandler } from '../tools/evHunterTool.js';
 import { trackStateManager } from '../services/trackStateManager.js';
 import { agentManager } from '../agents/AgentManager.js';
@@ -27,6 +27,11 @@ export function startScheduler() {
     cron.schedule('*/15 * * * *', async () => {
         logInfo('Scheduler', 'Running periodic Email Triage & Pipeline monitor...');
         try {
+            const triageAgent = agentManager.getAgent('email_triage');
+            if (!triageAgent) {
+                logWarn('Scheduler', 'Skipping Email Triage check: email_triage agent is not currently loaded');
+                return;
+            }
             await agentManager.delegate('email_triage', 'process inbox', { mode: 'auto' });
             logInfo('Scheduler', 'Email Triage check completed');
         } catch (e: unknown) {

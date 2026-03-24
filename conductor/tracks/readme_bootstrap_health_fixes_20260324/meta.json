@@ -1,0 +1,12 @@
+{
+  "id": "readme_bootstrap_health_fixes_20260324",
+  "title": "README Bootstrap & Health Fixek",
+  "status": "testing",
+  "priority": "high",
+  "createdAt": "2026-03-24",
+  "owner": "GitHub Copilot",
+  "progress": 80,
+  "tags": ["bootstrap", "smoke", "health", "webhook", "registry"],
+  "phase": 1,
+  "dependencies": []
+}

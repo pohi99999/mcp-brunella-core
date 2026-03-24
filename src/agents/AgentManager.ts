@@ -151,6 +151,8 @@ export class AgentManager extends EventEmitter {
   > = new Map();
   private activeExecutions: Map<number, AbortController> = new Map(); // Új: futó feladatok megszakíthatósága
   private recentWorkflowExecutions: WorkflowExecutionSummary[] = [];
+  private initializationPromise: Promise<void> | null = null;
+  private initialized = false;
   private readonly FAILURE_THRESHOLD = 3;
   private readonly RESET_TIMEOUT = 5 * 60 * 1000; // 5 perc
 
@@ -174,6 +176,26 @@ export class AgentManager extends EventEmitter {
   // --------------------------------------------------------------------------
 
   async initialize(): Promise<void> {
+    if (this.initialized) {
+      logInfo("AgentManager", "Inicializálás kihagyva: már inicializálva van");
+      return;
+    }
+
+    if (this.initializationPromise) {
+      logInfo("AgentManager", "Inicializálás már folyamatban van, meglévő promise újrahasználata");
+      return this.initializationPromise;
+    }
+
+    this.initializationPromise = this.performInitialization();
+    try {
+      await this.initializationPromise;
+      this.initialized = true;
+    } finally {
+      this.initializationPromise = null;
+    }
+  }
+
+  private async performInitialization(): Promise<void> {
     logInfo("AgentManager", "Inicializálás...");
 
     // Load registry asynchronously if in Node environment
@@ -1811,7 +1833,7 @@ export class AgentManager extends EventEmitter {
       return {
         version: "1.0.0",
         agents: [],
-        defaultAgent: "Orchestrator",
+        defaultAgent: "orchestrator",
         routingRules: [],
       };
     }
@@ -1842,7 +1864,7 @@ export class AgentManager extends EventEmitter {
     return {
       version: "1.0.0",
       agents: [],
-      defaultAgent: "Orchestrator",
+      defaultAgent: "orchestrator",
       routingRules: [],
     };
   }
@@ -1853,7 +1875,7 @@ export class AgentManager extends EventEmitter {
     const { registry, report } = validateAndNormalizeRegistry({
       version: "1.0.0",
       agents: [],
-      defaultAgent: "Orchestrator",
+      defaultAgent: "orchestrator",
       routingRules: [],
     });
     this.registryValidationReport = report;

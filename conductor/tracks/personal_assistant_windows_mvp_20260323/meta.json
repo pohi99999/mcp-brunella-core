@@ -1,0 +1,13 @@
+{
+  "id": "personal_assistant_windows_mvp_20260323",
+  "title": "Brunella Personal Assistant — Windows MVP Foundation",
+  "status": "testing",
+  "priority": "high",
+  "createdAt": "2026-03-23",
+  "owner": "GitHub Copilot",
+  "progress": 90,
+  "tags": ["assistant", "windows", "voice", "graphrag", "memory", "robotkez", "tauri", "dashboard", "cli"],
+  "sourceDocument": "docs/LOCAL_WINDOWS_ASSISTANT_BLUEPRINT.md",
+  "phase": 1,
+  "dependencies": []
+}

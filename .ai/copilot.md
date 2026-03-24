@@ -1,5 +1,164 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-24 - 🪟 Multi-console launcher stabilizálás (`inditas.bat`) + Windows Bridge / Dashboard duplikációvédelem
+
+**Feladat:**
+- a `README.md` bootstrap és runtime diagnosztika után egy olyan Windows launcher elkészítése, ami egyetlen indítással felhozza a szükséges Brunella szolgáltatásokat
+- külön, látható konzolablakok biztosítása a fő komponensekhez
+- a hibás batch parser / quoting problémák javítása
+- a Windows Bridge és a Dashboard esetén a duplikált ablaknyitások megszüntetése
+
+**Elvégzett fejlesztések:**
+
+1. **Új, látható multi-console indítási flow**
+  - a gyökérben lévő `inditas.bat` koordinátor launcherré lett alakítva
+  - ellenőrzi és szükség esetén elindítja:
+    - Ollama (`11434`)
+    - AnythingLLM (`3001`)
+    - Windows Automation Bridge
+    - Python FastAPI backend (`8000`)
+    - Node.js backend (`3000`)
+    - Dashboard UI (`5173`)
+  - a launcher összefoglaló státuszt is ad a végén
+
+2. **Helper launcherek szétválasztása külön batch fájlokba**
+  - új fájlok:
+    - `scripts/launchers/launch_ollama_console.bat`
+    - `scripts/launchers/launch_anythingllm_console.bat`
+    - `scripts/launchers/launch_windows_bridge_console.bat`
+    - `scripts/launchers/launch_python_api_console.bat`
+    - `scripts/launchers/launch_backend_console.bat`
+    - `scripts/launchers/launch_dashboard_console.bat`
+  - minden helper külön látható `cmd` ablakban indul, és explicit `C:` váltást is kapott a kérésnek megfelelően
+
+3. **Batch parser és quoting hibák javítása**
+  - a korábbi `'Windows' is not recognized as an internal or external command` hibát az okozta, hogy a `title BAS | ...` sorokban a `|` pipe-ként értelmeződött
+  - a helper batch-ekben a `title` sorok javítva lettek (`^|` escape)
+  - a `cmd /k` hívások natív cmd-kompatibilis formára lettek írva
+  - a blokkokon belüli zárójelek miatti `. was unexpected at this time.` parserhibák is javítva lettek
+
+4. **Duplikációvédelem Windows Bridge és Dashboard esetén**
+  - az `inditas.bat` új belső ellenőrző rutinokat kapott:
+    - `:is_bridge_running`
+    - `:is_dashboard_running`
+  - ezek nemcsak a portot és az ablakcímet, hanem a folyamat parancssorát is ellenőrzik PowerShell/CIM alapon
+  - így a launcher nem nyit új konzolt, ha a Bridge vagy a Dashboard már fut vagy épp indul
+
+5. **UX finomítások**
+  - `BRUNELLA_NO_BROWSER=1` támogatás megtartva automatizált futásokhoz
+  - `BRUNELLA_NO_PAUSE=1` támogatás stabilizálva, hogy tesztfutáskor ne ragadjon meg a launcher
+  - a záró státuszüzenet most külön jelzi, hogy valóban nyílt-e új ablak, vagy minden szükséges szolgáltatás már futott
+
+6. **Git karbantarthatósági javítás**
+  - a `.gitignore` bővítve lett, hogy az új launcher fájlok ne legyenek rejtve a git számára:
+    - `!inditas.bat`
+    - `!scripts/launchers/*.bat`
+
+**Validáció:**
+- `cmd.exe /d /s /c "set BRUNELLA_NO_BROWSER=1 && set BRUNELLA_NO_PAUSE=1 && call inditas.bat"` ✅
+- `launch_dashboard_console.bat` közvetlen futtatás → Vite UI feláll `http://localhost:5173/` címen ✅
+- `Invoke-WebRequest http://localhost:5173` → `200` ✅
+- `launch_windows_bridge_console.bat` közvetlen futtatás → FastMCP Windows Automation Bridge indul ✅
+- újrafuttatott `inditas.bat` esetén a Bridge és a Dashboard már futó példányként felismerve, új ablak nélkül ✅
+
+**Érintett fájlok:**
+- `inditas.bat`
+- `scripts/launchers/launch_ollama_console.bat`
+- `scripts/launchers/launch_anythingllm_console.bat`
+- `scripts/launchers/launch_windows_bridge_console.bat`
+- `scripts/launchers/launch_python_api_console.bat`
+- `scripts/launchers/launch_backend_console.bat`
+- `scripts/launchers/launch_dashboard_console.bat`
+- `.gitignore`
+
+**Státusz:** ✅ NAPLÓZVA / ✅ VALIDÁLVA / ✅ COMMITRA KÉSZ
+
+## 2026-03-23 - 🧭 Windows Personal Assistant MVP Foundation (Blueprint + API + Dashboard + CLI)
+
+**Track:** `personal_assistant_windows_mvp_20260323`
+
+**Feladat:**
+- a user új igénye alapján egy Windows-on futó, lokális személyi AI asszisztens legjobb megoldásának kiválasztása
+- a meglévő Brunella képességek feltárása voice / GraphRAG / memory / computer-use / model routing szempontból
+- ne csak elméleti terv készüljön, hanem első implementálható product foundation is
+
+**Elvégzett fejlesztések:**
+
+1. **Assistant readiness / blueprint core réteg**
+   - új fájl: `src/core/assistantBlueprint.ts`
+   - összerakja a Brunella meglévő képességeit egy személyi asszisztens nézőpontjából:
+     - GitHub Models + Ollama váltás
+     - Tauri desktop shell readiness
+     - magyar voice alapok
+     - HybridMemory + GraphRAG + ReflectionEngine
+     - Robotkéz + Windows bridge automation
+     - safe zones + permission profile biztonsági readiness
+   - capability score-okat, architektúra-rétegeket, roadmap fázisokat és azonnali következő lépéseket ad vissza
+
+2. **Új backend API végpont**
+   - új fájl: `src/server/routes/assistant.ts`
+   - bekötve a központi route registry-be: `src/server/routes/index.ts`
+   - új végpont: `GET /api/assistant/blueprint`
+   - cél: a személyi asszisztens MVP readiness programból és dashboardból is lekérhető legyen
+
+3. **Új dashboard panel**
+   - új komponens: `src/dashboard/components/dashboard/AssistantBlueprintPanel.tsx`
+   - bővítés: `src/dashboard/lib/apiService.ts`
+   - navigációs bekötés: `src/dashboard/lib/navigation.tsx`
+   - a panel megjeleníti:
+     - overall readiness százalékot
+     - capability státuszokat
+     - ajánlott architektúrát
+     - roadmap fázisokat
+     - azonnali next action-öket
+
+4. **Új CLI parancs**
+   - bővítés: `src/cli.ts`
+   - új parancs: `brunella assistant`
+   - interaktív inquirer menüvel meg tudja jeleníteni:
+     - összefoglalót
+     - architektúrát
+     - roadmapet
+     - vagy az egészet egyszerre
+   - `--json` mód is bekerült
+
+5. **Dokumentáció és track**
+   - új track létrehozva:
+     - `conductor/tracks/personal_assistant_windows_mvp_20260323/meta.json`
+     - `conductor/tracks/personal_assistant_windows_mvp_20260323/spec.md`
+     - `conductor/tracks/personal_assistant_windows_mvp_20260323/plan.md`
+   - új dokumentáció: `docs/LOCAL_WINDOWS_ASSISTANT_BLUEPRINT.md`
+   - a track státusza `testing`, progress `90%`
+
+**Architektúrális döntés / ajánlás:**
+- a legjobb megoldás **nem külön új projekt**, hanem a meglévő Brunella stack termékesítése
+- ajánlott irány:
+  - **Tauri** desktop shell
+  - **PAIOS / Universal Orchestrator** mint assistant agy
+  - **GitHub Models** primary
+  - **Ollama** local fallback
+  - **HybridMemory + GraphRAG + ReflectionEngine** a hosszú távú memória és önértékelés alapjának
+  - **Robotkéz + Windows bridge** a computer-use / automation réteghez
+
+**Validáció:**
+- `npm run build` ✅
+- `npm run build:ui` ✅
+- `npx vitest run --reporter=dot --exclude test/cli-e2e* --exclude test/phase* --exclude test/swarm_smoke*` ✅
+- `npm run test:fast` ⚠️ Windows quoting-problémásnak tűnt a meglévő npm script miatt, de a közvetlenül futtatott azonos gyors Vitest suite PASS lett
+
+**Érintett fő fájlok:**
+- `src/core/assistantBlueprint.ts`
+- `src/server/routes/assistant.ts`
+- `src/server/routes/index.ts`
+- `src/dashboard/components/dashboard/AssistantBlueprintPanel.tsx`
+- `src/dashboard/lib/apiService.ts`
+- `src/dashboard/lib/navigation.tsx`
+- `src/cli.ts`
+- `docs/LOCAL_WINDOWS_ASSISTANT_BLUEPRINT.md`
+- `conductor/tracks/personal_assistant_windows_mvp_20260323/*`
+
+**Státusz:** ✅ NAPLÓZVA / ✅ IMPLEMENTÁLVA / ✅ BUILD VALIDÁLVA
+
 ## 2026-03-23 - 🚀 Startup protokoll + Tauri fix + Agent platform modernizáció + track archiválás
 
 **Feladat:**
