@@ -111,7 +111,7 @@ interface PaiosChatResponse {
     error?: string;
 }
 
-type ModelProvider = 'gemini' | 'github' | 'ollama' | 'anthropic' | 'cloudflare';
+type ModelProvider = 'gemini' | 'github' | 'ollama' | 'anthropic' | 'cloudflare' | 'copilot';
 
 interface BrowserSpeechRecognitionResultEvent {
     results: ArrayLike<ArrayLike<{ transcript: string }>>;
@@ -176,6 +176,13 @@ const PROVIDER_VISUALS: Record<ModelProvider, ProviderVisual> = {
         color: 'text-green-500',
         defaultModel: 'qwen2.5-coder:7b',
         fallbackModels: ['qwen2.5-coder:7b', 'llama3.1:8b', 'deepseek-r1:8b'],
+    },
+    copilot: {
+        label: 'Copilot CLI',
+        icon: Zap,
+        color: 'text-yellow-500',
+        defaultModel: 'copilot-cli',
+        fallbackModels: ['copilot-cli'],
     },
 };
 
