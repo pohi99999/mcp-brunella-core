@@ -37,7 +37,6 @@ export {
   createHealthRoutes,
   createAgentRoutes,
   createRegistryRoutes,
-  createCloudflareAgentRoutes,
   createProvidersRoutes,
   createOllamaRoutes,
   createGeminiRoutes,
@@ -72,7 +71,6 @@ export function createV1Router(): Router {
   router.use("/health", createHealthRoutes());
   router.use("/agents", createAgentRoutes());
   router.use("/registry", createRegistryRoutes());
-  router.use("/cloudflare/agents", createCloudflareAgentRoutes());
   router.use("/providers", createProvidersRoutes());
   router.use("/ollama", createOllamaRoutes());
   router.use("/gemini", createGeminiRoutes());

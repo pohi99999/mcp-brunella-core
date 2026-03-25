@@ -5,5 +5,13 @@
 - [x] Webhook indulási logika zajcsökkentése opcionális config esetén.
 - [x] Registry `version` mező kompatibilitás javítása.
 - [x] Python health endpoint egységesítése `/health`-re.
-- [ ] Build + smoke + test újrafuttatása.
-- [ ] Runtime health újraellenőrzése.
+- [x] Build + smoke + test újrafuttatása.
+- [x] Runtime health újraellenőrzése.
+
+## Validation — 2026-03-25
+- `npm run build` ✅ (cloudflareConfig.ts duplikáció javítva)
+- Smoke script: port conflict handling ✅
+- Webhook: optional config noise reduction ✅
+- Registry: version field compatible ✅
+- Python `/health` endpoint: unified ✅
+- Track COMPLETED ✅
