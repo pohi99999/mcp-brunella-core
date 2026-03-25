@@ -1,5 +1,69 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-07-16 - 🔧 Phase 4 (Tasks 2,4,5,6,7,8): Crawl4AI Python, Test Speed, WebSocket, Track Cleanup, Golden Dataset
+
+**Feladat:**
+- A Phase 4 Sprint fennmaradó 6 feladatának megvalósítása
+
+**Elkészült munkák:**
+
+### Task 2: Crawl4AI Python Környezet Tesztelés
+- `myai/crawl4ai_worker.py` (MÓDOSÍTOTT) — patchright-alapú `_fallback_crawl()` fallback: crawl4ai ANTIBOT bug miatt Windowson a browser összezuhan, a fallback patchright+markdownify-val dolgozik
+- `myai/server.py` (MÓDOSÍTOTT) — robotkez importok try/except wrapperbe, `HAS_ROBOTKEZ` guard, `/os/*` végpontoknál 501 hiba ha nincs pyautogui
+- `myai/workers/os_worker.py` (MÓDOSÍTOTT) — pyautogui/mss/pygetwindow importok try/except wrapperbe `HAS_OS_DEPS` flag-gel
+- **Eredmény:** FastAPI sikeresen indul, POST /crawl4ai/crawl visszaad markdown-t a fallback-en keresztül ✅
+
+### Task 4: Teszt Sebesség Optimalizáció
+- `.husky/pre-push` (MÓDOSÍTOTT) — lassú tesztek kizárása: `--exclude='**/cli-e2e*' --exclude='**/phase*' --exclude='**/swarm_smoke*' --exclude='**/robotkez_integration*'`
+- **Eredmény:** pre-push ~3-4 perc a korábbi ~11 perc helyett
+
+### Task 5: WebSocket Integráció Új Panelekhez
+- `src/server/routes/crawl4ai.ts` (MÓDOSÍTOTT) — Socket.IO broadcast: `crawl4ai:status`, `crawl4ai:progress`, `crawl4ai:batch-progress`
+- `src/server/routes/preferences.ts` (MÓDOSÍTOTT) — Socket.IO broadcast: `preferences:change`, `preferences:stats`
+- `src/dashboard/components/dashboard/Crawl4AIPanel.tsx` (MÓDOSÍTOTT) — `useSocket()` real-time listener
+- `src/dashboard/components/dashboard/UserPreferencesPanel.tsx` (MÓDOSÍTOTT) — `useSocket()` real-time listener
+- `test/smoke-websocket.vitest.ts` (ÚJ) — 9 WebSocket smoke teszt
+
+### Task 6: Track Karbantartás
+- 6 régi track (0% progress, 28-42 napos) archiválva: `local_test_scheduler`, `creative_friction_mediator`, `micro_csr_automator`, `gemini_git_agent`, `jules_enterprise_cicd`, `invoice-e2e-testing`
+- `conductor/tracks.md` (MÓDOSÍTOTT) — 7 aktív, 5 proposed, 114 archived
+
+### Task 8: Golden Dataset Bővítés
+- `src/utils/globalDb.ts` (MÓDOSÍTOTT) — `tool_runs` SQLite tábla + `recordToolRun()`, `queryToolRuns()`, `getToolRunStats()` + TypeScript interfészek
+- `src/core/toolRunCapture.ts` (ÚJ) — `wrapToolHandler()` instrumentáció + `calculateQuality()` minőségszámítás
+- `src/server/routes/goldenDataset.ts` (ÚJ) — 3 API végpont: GET /tool-runs, GET /tool-stats, GET /export (JSONL fine-tuning)
+- `src/server/web.ts` (MÓDOSÍTOTT) — Golden Dataset route regisztrálva
+- `test/golden-dataset-tools.vitest.ts` (ÚJ) — 12 teszt
+
+### Task 7: E2B Sandbox Crawl4AI — ELHALASZTVA
+- A crawl4ai patchright fallback már stabilan működik Windowson
+- Az E2B izolálás alacsony prioritás, later sprint-re halasztva
+
+**Teszt Eredmények:**
+- Teljes vitest suite: **192 fájl, 1890 teszt PASS** ✅ (2 pre-existing cli-e2e timeout, szerver nélkül normális)
+- Build: sikeres, 0 TypeScript hiba
+- WebSocket tesztek: 9/9 ✅
+- Golden Dataset tesztek: 12/12 ✅
+
+**Módosított/Új fájlok összesen (Phase 4 Tasks 2,4,5,6,8):**
+1. `myai/crawl4ai_worker.py` (MÓDOSÍTOTT — patchright fallback)
+2. `myai/server.py` (MÓDOSÍTOTT — robotkez guard)
+3. `myai/workers/os_worker.py` (MÓDOSÍTOTT — OS deps guard)
+4. `.husky/pre-push` (MÓDOSÍTOTT — lassú tesztek kizárás)
+5. `conductor/tracks.md` (MÓDOSÍTOTT — track cleanup)
+6. `src/server/routes/crawl4ai.ts` (MÓDOSÍTOTT — WebSocket)
+7. `src/server/routes/preferences.ts` (MÓDOSÍTOTT — WebSocket)
+8. `src/dashboard/components/dashboard/Crawl4AIPanel.tsx` (MÓDOSÍTOTT — real-time)
+9. `src/dashboard/components/dashboard/UserPreferencesPanel.tsx` (MÓDOSÍTOTT — real-time)
+10. `src/utils/globalDb.ts` (MÓDOSÍTOTT — tool_runs tábla)
+11. `src/core/toolRunCapture.ts` (ÚJ — tool run capture)
+12. `src/server/routes/goldenDataset.ts` (ÚJ — Golden Dataset API)
+13. `src/server/web.ts` (MÓDOSÍTOTT — golden-dataset route)
+14. `test/smoke-websocket.vitest.ts` (ÚJ — 9 teszt)
+15. `test/golden-dataset-tools.vitest.ts` (ÚJ — 12 teszt)
+
+---
+
 ## 2026-07-15 - 🚀 Phase 4: User Preferences Chat bekötés + LLM Observability Dashboard (Tasks 1 & 3)
 
 **Feladat:**

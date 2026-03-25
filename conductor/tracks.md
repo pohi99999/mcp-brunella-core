@@ -1,53 +1,24 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-24T22:00:00.234Z
+**Utolso frissites:** 2026-03-25T01:00:01.071Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 126 total | 8 active | 0 completed | 108 archived
+**Stats:** 126 total | 7 active | 0 completed | 114 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (10)
+## Tervezett Szalak (Proposed) (5)
 
 - [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
   - **ID:** `cloudflare_workers_migration_20260226`
   - **Progress:** 0%
   - Mappa: ./tracks/cloudflare_workers_migration_20260226/
 
-- [ ] **Creative Friction Mediator (The Vibe-Check)** [LOW]
-  - **ID:** `creative_friction_mediator_20260212`
-  - **Progress:** 0%
-  - **Assignee:** ResearcherAgent + LangFlow
-  - Mappa: ./tracks/creative_friction_mediator_20260212/
-
-- [ ] **Gemini Git Autonomous Agent Architecture** [HIGH]
-  - **ID:** `gemini_git_agent_20260212`
-  - **Progress:** 0%
-  - **Assignee:** Gemini CLI
-  - Mappa: ./tracks/gemini_git_agent_20260212/
-
-- [ ] **Invoice Automation E2E Testing & Validation** [MEDIUM]
-  - **ID:** `invoice-e2e-testing-20260217`
-  - **Progress:** 0%
-  - Mappa: ./tracks/invoice-e2e-testing-20260217/
-
-- [ ] **Jules Enterprise CI/CD & Security Suite** [MEDIUM]
-  - **ID:** `jules_enterprise_cicd_20260212`
-  - **Progress:** 0%
-  - **Assignee:** Jules AI + GitHub Actions
-  - Mappa: ./tracks/jules_enterprise_cicd_20260212/
-
 - [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
   - **ID:** `logistics_vertical_20260222`
   - **Progress:** 5%
   - Mappa: ./tracks/logistics_vertical_20260222/
-
-- [ ] **Micro-Local CSR Automator (Neighborhood Watchman)** [LOW]
-  - **ID:** `micro_csr_automator_20260212`
-  - **Progress:** 0%
-  - **Assignee:** RobotkezAgent + n8n
-  - Mappa: ./tracks/micro_csr_automator_20260212/
 
 - [ ] **OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)** [HIGH]
   - **ID:** `owl_agent_coordinator_20260321`
@@ -66,7 +37,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (8)
+## Aktiv Szalak (Active) (7)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -84,12 +55,6 @@
   - **Progress:** 18%
   - **Assignee:** Claude + Pohánka Péter
   - Mappa: ./tracks/jules_pr_integration_20260222/
-
-- [ ] **local_test_scheduler_20260215** [MEDIUM]
-  - **ID:** `local_test_scheduler_20260215`
-  - **Progress:** 0%
-  - **Assignee:** System
-  - Mappa: ./tracks/local_test_scheduler_20260215/
 
 - [ ] **Brunella Personal Assistant — Windows MVP Foundation** [HIGH]
   - **ID:** `personal_assistant_windows_mvp_20260323`
@@ -114,7 +79,7 @@
 
 ---
 
-## Archivalt (Archived) (108)
+## Archivalt (Archived) (114)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -129,7 +94,7 @@
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **BAS Enterprise Suite - 18 Module Business Automation** (N/A)
 
-... and 98 more archived tracks
+... and 104 more archived tracks
 
 ---
 

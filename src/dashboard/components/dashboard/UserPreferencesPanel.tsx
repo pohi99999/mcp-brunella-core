@@ -3,6 +3,7 @@
  */
 import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { useSocket } from "../../context/SocketContext";
 
 interface Preference {
   id: number;
@@ -36,6 +37,7 @@ export function UserPreferencesPanel() {
   const [userId, setUserId] = useState("default");
   const [typeFilter, setTypeFilter] = useState<string>("");
   const [activeTab, setActiveTab] = useState<"list" | "add" | "context">("list");
+  const { socket } = useSocket();
 
   // Új preferencia form
   const [newKey, setNewKey] = useState("");
@@ -74,6 +76,36 @@ export function UserPreferencesPanel() {
     fetchPreferences();
     fetchStats();
   }, [fetchPreferences, fetchStats]);
+
+  // Real-time WebSocket listeners
+  useEffect(() => {
+    if (!socket) return;
+
+    const onChange = (data: unknown) => {
+      if (!data || typeof data !== "object") return;
+      const payload = data as Record<string, unknown>;
+      if (payload.userId === userId || payload.userId === "system") {
+        fetchPreferences();
+        fetchStats();
+      }
+    };
+
+    const onStats = (data: unknown) => {
+      if (!data || typeof data !== "object") return;
+      const payload = data as Record<string, unknown>;
+      if (payload.userId === userId && payload.stats) {
+        setStats(payload.stats as PreferenceStats);
+      }
+    };
+
+    socket.on("preferences:change", onChange);
+    socket.on("preferences:stats", onStats);
+
+    return () => {
+      socket.off("preferences:change", onChange);
+      socket.off("preferences:stats", onStats);
+    };
+  }, [socket, userId, fetchPreferences, fetchStats]);
 
   const handleSave = async () => {
     if (!newKey.trim() || !newValue.trim()) return;

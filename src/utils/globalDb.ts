@@ -196,6 +196,22 @@ function initSchema(): void {
       CREATE INDEX IF NOT EXISTS idx_llm_calls_timestamp ON llm_calls(timestamp);
       CREATE INDEX IF NOT EXISTS idx_llm_calls_provider ON llm_calls(provider);
       CREATE INDEX IF NOT EXISTS idx_llm_calls_user ON llm_calls(user_id);
+
+      CREATE TABLE IF NOT EXISTS tool_runs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp TEXT DEFAULT (datetime('now')),
+        tool_name TEXT NOT NULL,
+        input_params TEXT,
+        output_data TEXT,
+        success INTEGER DEFAULT 1,
+        duration_ms INTEGER,
+        user_id TEXT,
+        quality_score REAL DEFAULT 0.5
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_tool_runs_timestamp ON tool_runs(timestamp);
+      CREATE INDEX IF NOT EXISTS idx_tool_runs_tool_name ON tool_runs(tool_name);
+      CREATE INDEX IF NOT EXISTS idx_tool_runs_success ON tool_runs(success);
     `);
 
     logInfo('GlobalDb', 'Schema initialized');
@@ -420,5 +436,127 @@ export function getLlmCallStats(since?: string): LlmCallStats {
       totalCalls: 0, successRate: 100, avgDurationMs: 0, totalTokens: 0,
       totalCostUsd: 0, byProvider: [], byModel: [], recentErrors: [],
     };
+  }
+}
+
+/* ───── Tool Run Persistence (Golden Dataset) ───── */
+
+export interface ToolRunRecord {
+  tool_name: string;
+  input_params?: string;
+  output_data?: string;
+  success?: number;
+  duration_ms?: number;
+  user_id?: string;
+  quality_score?: number;
+}
+
+export interface ToolRunQuery {
+  tool_name?: string;
+  success?: number;
+  since?: string;
+  limit?: number;
+  offset?: number;
+}
+
+export interface ToolRunRow {
+  id: number;
+  timestamp: string;
+  tool_name: string;
+  input_params: string | null;
+  output_data: string | null;
+  success: number;
+  duration_ms: number | null;
+  user_id: string | null;
+  quality_score: number;
+}
+
+export interface ToolRunStats {
+  totalRuns: number;
+  successRate: number;
+  avgDurationMs: number;
+  byTool: Array<{ tool_name: string; count: number; success_rate: number; avg_duration: number }>;
+}
+
+export function recordToolRun(run: ToolRunRecord): void {
+  try {
+    const db = getGlobalDb();
+    db.prepare(`
+      INSERT INTO tool_runs (tool_name, input_params, output_data, success, duration_ms, user_id, quality_score)
+      VALUES (?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      run.tool_name,
+      run.input_params ?? null,
+      run.output_data ?? null,
+      run.success ?? 1,
+      run.duration_ms ?? null,
+      run.user_id ?? null,
+      run.quality_score ?? 0.5,
+    );
+  } catch (e) {
+    logError('GlobalDb', `Failed to record tool run: ${e}`);
+  }
+}
+
+export function queryToolRuns(query: ToolRunQuery = {}): ToolRunRow[] {
+  try {
+    const db = getGlobalDb();
+    const conditions: string[] = [];
+    const params: unknown[] = [];
+
+    if (query.tool_name) {
+      conditions.push('tool_name = ?');
+      params.push(query.tool_name);
+    }
+    if (query.success !== undefined) {
+      conditions.push('success = ?');
+      params.push(query.success);
+    }
+    if (query.since) {
+      conditions.push('timestamp >= ?');
+      params.push(query.since);
+    }
+
+    const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const limit = query.limit ?? 200;
+    const offset = query.offset ?? 0;
+
+    return db.prepare(`SELECT * FROM tool_runs ${where} ORDER BY timestamp DESC LIMIT ? OFFSET ?`)
+      .all(...params, limit, offset) as ToolRunRow[];
+  } catch (e) {
+    logError('GlobalDb', `Failed to query tool runs: ${e}`);
+    return [];
+  }
+}
+
+export function getToolRunStats(): ToolRunStats {
+  try {
+    const db = getGlobalDb();
+
+    const totals = db.prepare(`
+      SELECT COUNT(*) as total,
+             SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) as successes,
+             AVG(duration_ms) as avg_duration
+      FROM tool_runs
+    `).get() as { total: number; successes: number; avg_duration: number } | undefined;
+
+    const byTool = db.prepare(`
+      SELECT tool_name,
+             COUNT(*) as count,
+             ROUND(100.0 * SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) / COUNT(*), 1) as success_rate,
+             ROUND(AVG(duration_ms)) as avg_duration
+      FROM tool_runs
+      GROUP BY tool_name ORDER BY count DESC
+    `).all() as Array<{ tool_name: string; count: number; success_rate: number; avg_duration: number }>;
+
+    return {
+      totalRuns: totals?.total ?? 0,
+      successRate: totals?.total ? ((totals.successes ?? 0) / totals.total) * 100 : 100,
+      avgDurationMs: Math.round(totals?.avg_duration ?? 0),
+      byTool,
+    };
+  } catch (e) {
+    logError('GlobalDb', `Failed to get tool run stats: ${e}`);
+    return { totalRuns: 0, successRate: 100, avgDurationMs: 0, byTool: [] };
   }
 }

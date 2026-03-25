@@ -1,13 +1,20 @@
-import pyautogui
-import mss
-import mss.tools
-import pygetwindow as gw
 import os
 import time
 from typing import Optional, Tuple
 
-# Fail-safe: move mouse to corner to abort
-pyautogui.FAILSAFE = True
+try:
+    import pyautogui
+    import mss
+    import mss.tools
+    import pygetwindow as gw
+    HAS_OS_DEPS = True
+    # Fail-safe: move mouse to corner to abort
+    pyautogui.FAILSAFE = True
+except ImportError:
+    HAS_OS_DEPS = False
+    pyautogui = None
+    mss = None
+    gw = None
 
 class OSWorker:
     def __init__(self):
