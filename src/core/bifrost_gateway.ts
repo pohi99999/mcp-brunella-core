@@ -28,7 +28,7 @@ import { recordLlmCall } from '../utils/globalDb.js';
  * ```
  */
 
-export type ProviderType = 'ollama' | 'gemini' | 'github' | 'anthropic' | 'cloudflare';
+export type ProviderType = 'ollama' | 'gemini' | 'github' | 'anthropic' | 'cloudflare' | 'copilot';
 export type TaskType = 'code' | 'general' | 'reasoning' | 'creative' | 'fast';
 export type FallbackReason = 'api_error' | 'timeout' | 'rate_limit' | 'invalid_tool_response' | 'phoenix_recovery';
 
@@ -190,6 +190,17 @@ export class BifrostGateway {
 
     // Initialize clients for enabled providers
     this.initializeClients();
+
+    // 6. Copilot CLI Bridge (file-based async communication)
+    const copilotBridgeDir = process.env.COPILOT_BRIDGE_DIR || './_br_temp/copilot_bridge';
+    this.providers.set('copilot', {
+      type: 'copilot',
+      enabled: true,
+      baseUrl: copilotBridgeDir,
+      defaultModel: 'copilot-cli',
+      priority: 6,
+      maxRetries: 1
+    });
 
     // Log enabled providers
     const enabled = Array.from(this.providers.values())
@@ -486,6 +497,9 @@ export class BifrostGateway {
 
         case 'cloudflare':
           return await this.generateCloudflare(model, options, startTime);
+
+        case 'copilot':
+          return await this.generateCopilot(model, options, startTime);
 
         default:
           throw new Error(`Unknown provider: ${provider}`);
@@ -789,6 +803,114 @@ export class BifrostGateway {
       model,
       duration_ms: Date.now() - startTime
     };
+  }
+
+  /**
+   * Generate via Copilot CLI file bridge
+   * 
+   * Writes a request JSON to the bridge directory and polls for the response.
+   * The Copilot CLI (or any external agent) reads the request, processes it,
+   * and writes the response to the same directory.
+   */
+  private async generateCopilot(
+    model: string,
+    options: GenerateOptions,
+    startTime: number
+  ): Promise<GenerateResponse> {
+    const config = this.providers.get('copilot');
+    const bridgeDir = config?.baseUrl || './_br_temp/copilot_bridge';
+
+    const fs = await import('fs');
+    const path = await import('path');
+
+    // Ensure bridge directory exists
+    fs.mkdirSync(bridgeDir, { recursive: true });
+
+    const reqId = `req_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+    const requestFile = path.join(bridgeDir, `${reqId}.request.json`);
+    const responseFile = path.join(bridgeDir, `${reqId}.response.json`);
+
+    try {
+      const messages = options.messages || [
+        ...(options.systemPrompt ? [{ role: 'system', content: options.systemPrompt }] : []),
+        { role: 'user', content: options.prompt }
+      ];
+
+      fs.writeFileSync(requestFile, JSON.stringify({
+        id: reqId,
+        timestamp: new Date().toISOString(),
+        messages,
+        temperature: options.temperature ?? 0.7,
+        maxTokens: options.maxTokens ?? 2048,
+      }, null, 2), 'utf-8');
+
+      logInfo('BifrostGateway', `Copilot bridge request written: ${reqId}`);
+
+      // Poll for response (max 60s, 200ms interval)
+      const maxWaitMs = 60_000;
+      const pollMs = 200;
+      const deadline = Date.now() + maxWaitMs;
+
+      while (Date.now() < deadline) {
+        if (fs.existsSync(responseFile)) {
+          const raw = fs.readFileSync(responseFile, 'utf-8');
+          const response = JSON.parse(raw) as {
+            success?: boolean;
+            content?: string;
+            text?: string;
+            tokens?: { prompt: number; completion: number; total: number };
+            error?: string;
+          };
+
+          // Cleanup bridge files
+          try { fs.unlinkSync(requestFile); } catch { /* ignore */ }
+          try { fs.unlinkSync(responseFile); } catch { /* ignore */ }
+
+          if (response.error) {
+            return {
+              success: false,
+              content: response.error,
+              provider: 'copilot',
+              model,
+              duration_ms: Date.now() - startTime,
+              error: response.error
+            };
+          }
+
+          return {
+            success: true,
+            content: response.content || response.text || '',
+            provider: 'copilot',
+            model,
+            duration_ms: Date.now() - startTime,
+            tokens: response.tokens
+          };
+        }
+        await new Promise(resolve => setTimeout(resolve, pollMs));
+      }
+
+      // Timeout — cleanup request file
+      try { fs.unlinkSync(requestFile); } catch { /* ignore */ }
+
+      return {
+        success: false,
+        provider: 'copilot',
+        model,
+        duration_ms: Date.now() - startTime,
+        error: 'Copilot bridge timeout — no response within 60s. Is Copilot CLI running?'
+      };
+    } catch (e: unknown) {
+      const error = e instanceof Error ? e.message : String(e);
+      logError('BifrostGateway', `Copilot bridge error: ${error}`);
+      try { fs.unlinkSync(requestFile); } catch { /* ignore */ }
+      return {
+        success: false,
+        provider: 'copilot',
+        model,
+        duration_ms: Date.now() - startTime,
+        error
+      };
+    }
   }
 
   /**
