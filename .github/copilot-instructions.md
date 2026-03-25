@@ -5,7 +5,8 @@
 ## Build, Test, Lint
 
 ```bash
-npm run build                         # TypeScript fordítás (tsc + registry.json/TRIZ másolás)
+npm run build      
+                   # TypeScript fordítás (tsc + registry.json/TRIZ másolás)
 npm run test:fast                     # Gyors tesztek (~1-2 perc) — commit előtt, e2e/phase/swarm NÉLKÜL
 npm test                              # Build + teljes Vitest suite (~10 perc) — track lezáráskor/push előtt
 npx vitest run test/foo.test.ts       # Egy konkrét teszt fájl
@@ -783,3 +784,63 @@ Ezek a `src/server/routes/` konyvtarban leteznek es teljes endpoint-okat kinalna
 | preferences | /api/v1/preferences | Felhasznaloi beallitasok mentese |
 | sales | /api/v1/sales | Ertekesitesi pipeline, lead management |
 | voice | /api/v1/voice | Hang feldolgozas, Whisper integracio |
+
+## COPILOT COGNITIVE BRIDGE — 13 Intelligencia Rendszer
+
+> `src/core/copilotCognitiveBridge.ts` — Copilot CLI kozvetlen hozzaferes MINDEN BAS intelligencia reteghez.
+> REST API: `/api/v1/cognitive/*` — CLI script: `node scripts/copilot-dashboard.js cognitive <action>`
+
+### Hasznalat
+
+```bash
+# Kontextus gazdagitas (MINDEN reteg egyszerre)
+node scripts/copilot-dashboard.js cognitive enrich "média kampány tervezés"
+
+# Tanulasi ciklus (feladat utan)
+node scripts/copilot-dashboard.js cognitive reflect task-001 MarketingAgent true "Campaign created"
+
+# Reteg statisztikak
+node scripts/copilot-dashboard.js cognitive stats
+
+# Egeszseg ellenorzes
+node scripts/copilot-dashboard.js cognitive health
+
+# Kozvetlen reteg lekerdezes
+node scripts/copilot-dashboard.js cognitive query structured "marketing campaign"
+node scripts/copilot-dashboard.js cognitive query graphrag "user authentication"
+```
+
+### 13 Osszekotott Rendszer
+
+| # | Reteg | Forras | Funkcio |
+|---|-------|--------|---------|
+| 1 | StructuredMemory | structuredMemory.ts | Task cache + pattern reuse (SQLite) |
+| 2 | PatternReuse | patternReuse.ts | Fuzzy feladat illesztes (0.7 threshold) |
+| 3 | UserPreferences | userPreferences.ts | Felhasznaloi kontextus (epizodikus/szemantikus) |
+| 4 | GraphRAG | graphRagEngine.ts | Tudasgraf + entitas extrakció + leckek |
+| 5 | SharedCognition | sharedCognition.ts | Kollektiv tudatossag (agent kozi) |
+| 6 | ReflectionEngine | reflectionEngine.ts | Onreflexio + tanulsag kinyeres |
+| 7 | GoldenDataset | goldenDatasetBridge.ts | Sikeres futasok archivuma (fine-tuning) |
+| 8 | SelfModel | selfModel.ts | Onismeret + kepesseg tracking |
+| 9 | MetaReasoner | metaReasoner.ts | Dontes elemzes + pattern felismeres |
+| 10 | PredictiveIntelligence | predictiveIntelligence.ts | Anomalia detektalas + alertek |
+| 11 | CollectiveMind | collectiveMind.ts | Perspektiva szintezis + konszenzus |
+| 12 | VotingProtocol | swarm/ | Multi-agent szavazas |
+| 13 | KnowledgeGraph | knowledgeGraph.ts | Entitas-relacio graf |
+
+### REST API Endpointok
+
+| Method | Endpoint | Leiras |
+|--------|----------|--------|
+| POST | /api/v1/cognitive/enrich | Multi-forras kontextus gazdagitas (11 reteg) |
+| POST | /api/v1/cognitive/reflect | Feladat utani tanulasi ciklus (6 reteg) |
+| GET | /api/v1/cognitive/stats | Osszesitett statisztikak |
+| POST | /api/v1/cognitive/query | Kozvetlen reteg lekerdezes (layer + query) |
+| GET | /api/v1/cognitive/health | Rendszer egeszseg |
+
+### Mikor hasznald
+
+- **enrich**: MINDEN uj feladat elott — kontextust ad korabbi tapasztalatokbol, javasol agentet
+- **reflect**: MINDEN feladat utan — elmenti a tanulsagot, noveli az intelligenciat
+- **stats**: Rendszer diagnosztika — hany reteg aktiv, mennyi adat van
+- **query**: Specifikus reteg lekerdezes — pl. "volt mar hasonlo feladat?"
