@@ -6,8 +6,8 @@
 Ez a mappa tartalmazza a Brunella projekt specifikáció-vezérelt fejlesztési keretrendszerének dokumentációit.
 
 ## 🗂️ Struktúra
-- **`tracks/`**: Aktív és tervezett fejlesztési sávok (18 db)
-- **`archive/`**: Lezárt és archivált sávok (108 db)
+- **`tracks/`**: Aktív és tervezett fejlesztési sávok (13 db)
+- **`archive/`**: Lezárt és archivált sávok (114 db)
 
 ## 🛠️ Kulcsfájlok
 - `product.md`: Termék jövőképe és funkciók
@@ -20,9 +20,10 @@ Ez a mappa tartalmazza a Brunella projekt specifikáció-vezérelt fejlesztési 
 - `meta-schema.json`: Track meta.json séma
 
 ## 📊 Jelenlegi Állapot (2026-03-25)
-- **Aktív track-ek:** 8 (Apify 60%, Hyperdrive 30%, Data Flywheel, Lead Mining, Invoice, Market Intel, stb.)
-- **Tervezett (proposed):** 10 (Cloudflare Workers Migration, Creative Friction, Logistics, stb.)
-- **Archivált:** 108
+- **Aktív track-ek:** 7 (Apify 60%, Hyperdrive 30%, Data Flywheel, Lead Mining, Invoice, Market Intel, stb.)
+- **Tervezett (proposed):** 6 (Cloudflare Workers Migration, Creative Friction, Logistics, stb.)
+- **Archivált:** 114
+- **Összesen:** 127 track (project_state.json)
 - **Build:** ✅ 0 errors
 - **Tesztek:** ✅ 1452/1494 PASS (100%, 42 skipped)
 

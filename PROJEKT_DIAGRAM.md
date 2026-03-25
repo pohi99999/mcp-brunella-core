@@ -75,7 +75,7 @@ F:\mcp-brunella-core\
 │   │   ├── DeveloperAgent.ts        # Code Writer
 │   │   ├── EvaluatorAgent.ts        # Tester & Auditor
 │   │   ├── ResearcherAgent.ts       # Web Search & RAG
-│   │   └── [54 agents total...]
+│   │   └── [57 agents total...]
 │   │
 │   ├── tools/                        # 🔧 MCP Tool Definitions
 │   │   ├── toolDefinitions.ts       # Tool schemas

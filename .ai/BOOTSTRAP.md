@@ -46,7 +46,7 @@
 │  ├─ Express API (port 3000)                         │
 │  ├─ Socket.IO (WebSocket)                           │
 │  ├─ MCP Server (StdioServerTransport)               │
-│  └─ 54 AI Agents (IAgent interface)                 │
+│  └─ 57 AI Agents (IAgent interface)                 │
 │                                                      │
 │  PYTHON SUBSYSTEM (FastAPI)                         │
 │  ├─ FastAPI server (port 8000)                      │
@@ -70,7 +70,7 @@
 
 **LLM Providers:**
 - **Ollama** (lokális, 18 modell): llama3.1, qwen2.5-coder, deepseek-coder, stb.
-- **Gemini** (Google): gemini-2.0-flash-exp (legújabb)
+- **Gemini** (Google): gemini-2.5-flash (alapértelmezett, schema.ts)
 - **GitHub Models** (Copilot Pro+): GPT-4o (korlátlan)
 - **Anthropic** (Claude): claude-sonnet-4-20250514
 - **Cloudflare Workers AI**: @cf/meta/llama-3.1-8b-instruct

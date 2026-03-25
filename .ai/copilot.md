@@ -1,5 +1,68 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-25 03:00 - 🏗️ Teljes Dokumentáció Audit, Bootstrap Protokoll Újratervezés & inditas.bat Átírás
+
+**Feladat:**
+1. README.md / CLAUDE.md / GEMINI.md audit a tényleges kódbázis ellen
+2. Teljes projekt audit (4 párhuzamos explore agent, 57 agent, 53 route, 65 panel, 168 teszt fájl)
+3. Bootstrap protokoll újratervezés: 3 fázisú megközelítés (Quick Context → Task-Specific → Reference)
+4. Dokumentáció eltérések javítása (agent szám, route szám, Gemini modell)
+5. Bootstrap prompt sablonok készítése (3 variáns: általános, track-specifikus, hibakeresés)
+6. inditas.bat teljes átírás 9 lépéses rendszer indító script-té
+
+**Megállapítások a teljes auditból:**
+- **57 agent** a registry.json-ban (dokuk 54-et írtak)
+- **53 REST route modul** 200+ endpointtal (dokuk ~55-öt írtak)
+- **24+ MCP tool modul**, 27+ CLI parancsmodul, 6 Python MCP tool
+- **65 dashboard navigációs panel** 7 csoportban, 112 dashboard komponens
+- **168 teszt fájl**, 52 script, 127 track (7 aktív, 6 proposed, 114 archivált)
+- Ollama default modell: `qwen2.5-coder:7b` (nem `mistral:latest` mint a régi doku írta)
+- Gemini default modell: `gemini-2.5-flash` (nem `gemini-2.0-flash-exp`)
+
+**Elvégzett javítások:**
+
+### README.md
+- Bootstrap szekció teljes újraírás: 3 fázisú megközelítés (Phase 1: 4 fájl mindig → Phase 2: task-specifikus tábla → Phase 3: referencia igény szerint)
+- Route szám ~55 → ~53
+- `test:fast` parancs hozzáadva, "ELAVULT" címkék eltávolítva
+- `.ai/BOOTSTRAP.md` hozzáadva a bootstrap listához
+
+### CLAUDE.md — Teljes újraírás (~577 → ~170 sor)
+- README.md-vel duplikált tartalom eltávolítva
+- 3 fázisú bootstrap protokoll, agent szám 54 → 57
+- Struktúra: Projekt Röviden → Bootstrap (3 fázis) → Parancs Referencia → Kód Konvenciók → Claude Koordináció → Workflow → Env → Hibák → Védett Fájlok
+
+### GEMINI.md — Teljes újraírás (~577 → ~170 sor)
+- Ugyanaz a slim sablon mint CLAUDE.md, Gemini-specifikus hivatkozásokkal
+- 3 fázisú bootstrap protokoll, agent szám 54 → 57
+
+### BOOTSTRAP.md (3 példány szinkronban frissítve)
+- `.ai/BOOTSTRAP.md`, `BOOTSTRAP.md` (gyökér), `.vscode/BOOTSTRAP.md`
+- Agent szám 54 → 57, Gemini modell gemini-2.0-flash-exp → gemini-2.5-flash
+
+### PROJEKT_DIAGRAM.md
+- Agent szám 54 → 57
+
+### conductor/SUMMARY.md
+- Elavult számok javítva: aktív 8→7, proposed 10→6, archivált 108→114, track mappák 18→13
+
+### inditas.bat — Teljes átírás (9 lépéses indító)
+- [1/9] GitHub szinkronizáció (fetch + pull + Jules PR check `gh` CLI-vel)
+- [2/9] Dokumentáció frissítés (FOSZAL.md + conductor/tracks.md + MASTER_CONTEXT.md)
+- [3/9] Ollama indítás (ha nem fut)
+- [4/9] AnythingLLM indítás (ha nem fut)
+- [5/9] Windows Automation Bridge
+- [6/9] Python FastAPI (:8000)
+- [7/9] Node.js Backend (:3000) — `npm run dev` látható konzolban
+- [8/9] Dashboard UI (:5173)
+- [9/9] Health check + összesített állapot kijelzés
+
+**Érintett fájlok (11 db):** README.md, CLAUDE.md, GEMINI.md, .ai/BOOTSTRAP.md, BOOTSTRAP.md, .vscode/BOOTSTRAP.md, PROJEKT_DIAGRAM.md, conductor/SUMMARY.md, inditas.bat, .ai/copilot.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A 3 fázisú bootstrap protokoll jelentősen egyszerűsíti az agent onboarding-ot: Phase 1 csak 4 fájl (BOOTSTRAP.md → agent.md → tracks.md → FOSZAL.md), a többi igény szerint. Bootstrap prompt sablonok 3 variánsban elkészültek (általános, track-specifikus, hibakeresés).
+
+---
+
 ## 2026-03-25 - 📝 Dokumentáció Audit & Frissítés (README.md, CLAUDE.md, GEMINI.md, BOOTSTRAP.md)
 
 **Feladat:**
