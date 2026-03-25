@@ -515,10 +515,11 @@ const commands = {
   },
 
   // ╔══════════════════════════════════════════════╗
-  // ║  20. PYTHON SUBSYSTEM (FastAPI)              ║
+  // ║  20. PYTHON SUBSYSTEM (FastAPI) — FULL       ║
   // ╚══════════════════════════════════════════════╝
   async 'python'(sub, ...args) {
     switch (sub) {
+      // --- Core ---
       case 'health': return GET('/health', FASTAPI_URL);
       case 'execute': {
         const code = args.join(' ');
@@ -530,23 +531,129 @@ const commands = {
         if (!content) return err('Usage: python refine <content>');
         return POST('/refine', { content }, FASTAPI_URL);
       }
+
+      // --- Harvest / Data Pipeline ---
       case 'harvest': {
         const [url] = args;
         if (!url) return err('Usage: python harvest <url>');
         return POST('/harvest', { url }, FASTAPI_URL);
       }
+      case 'harvest-status': return GET('/harvest/status', FASTAPI_URL);
+      case 'harvest-results': return GET('/harvest/results', FASTAPI_URL);
+      case 'harvest-clean': return POST('/harvest/clean', {}, FASTAPI_URL);
+
+      // --- Comet (Agent Memory) ---
       case 'comet': {
         const task = args.join(' ');
         if (!task) return err('Usage: python comet <task>');
         return POST('/comet/execute', { task }, FASTAPI_URL);
       }
+      case 'comet-memory': return GET('/comet/memory', FASTAPI_URL);
+      case 'comet-delete': {
+        const [key] = args;
+        if (!key) return err('Usage: python comet-delete <key>');
+        return POST('/comet/memory/delete', { key }, FASTAPI_URL);
+      }
+
+      // --- Browser Automation ---
+      case 'browser-chat': {
+        const msg = args.join(' ');
+        if (!msg) return err('Usage: python browser-chat <message>');
+        return POST('/browser/chat', { message: msg }, FASTAPI_URL);
+      }
+      case 'browser-start': return POST('/browser/start', {}, FASTAPI_URL);
+      case 'browser-stop': return POST('/browser/stop', {}, FASTAPI_URL);
+      case 'browser-status': return GET('/browser/status', FASTAPI_URL);
+      case 'browser-screenshot': return GET('/browser/screenshot', FASTAPI_URL);
+      case 'browser-navigate': {
+        const [url] = args;
+        if (!url) return err('Usage: python browser-navigate <url>');
+        return POST('/browser/navigate', { url }, FASTAPI_URL);
+      }
+
+      // --- Voice (Whisper) ---
+      case 'voice-transcribe': {
+        const [file] = args;
+        if (!file) return err('Usage: python voice-transcribe <audio_file_path>');
+        return POST('/voice/transcribe', { file_path: file }, FASTAPI_URL);
+      }
+
+      // --- OS Automation (RobotkezV2) ---
+      case 'os-screenshot': return GET('/os/screenshot', FASTAPI_URL);
+      case 'os-click': {
+        const [x, y] = args;
+        if (!x || !y) return err('Usage: python os-click <x> <y>');
+        return POST('/os/click', { x: parseInt(x), y: parseInt(y) }, FASTAPI_URL);
+      }
+      case 'os-click-pct': {
+        const [xPct, yPct] = args;
+        if (!xPct || !yPct) return err('Usage: python os-click-pct <x%> <y%>');
+        return POST('/os/click-pct', { x_pct: parseFloat(xPct), y_pct: parseFloat(yPct) }, FASTAPI_URL);
+      }
+      case 'os-screen-size': return GET('/os/screen-size', FASTAPI_URL);
+      case 'os-type': {
+        const text = args.join(' ');
+        if (!text) return err('Usage: python os-type <text>');
+        return POST('/os/type', { text }, FASTAPI_URL);
+      }
+      case 'os-vision-click': {
+        const desc = args.join(' ');
+        if (!desc) return err('Usage: python os-vision-click <element_description>');
+        return POST('/os/vision-click', { description: desc }, FASTAPI_URL);
+      }
+
+      // --- Robotkez (Playwright LLM) ---
+      case 'robotkez-action': {
+        const instruction = args.join(' ');
+        if (!instruction) return err('Usage: python robotkez-action <instruction>');
+        return POST('/robotkez/action', { instruction }, FASTAPI_URL);
+      }
+      case 'robotkez-snapshot': return GET('/robotkez/snapshot', FASTAPI_URL);
+
+      // --- Crawl4AI (Python-side) ---
+      case 'crawl4ai': {
+        const [url] = args;
+        if (!url) return err('Usage: python crawl4ai <url>');
+        return POST('/crawl4ai/crawl', { url }, FASTAPI_URL);
+      }
+      case 'crawl4ai-batch': {
+        const urls = args;
+        if (!urls.length) return err('Usage: python crawl4ai-batch <url1> <url2> ...');
+        return POST('/crawl4ai/batch', { urls }, FASTAPI_URL);
+      }
+
+      // --- Incubator (Fine-tuning) ---
+      case 'incubator-sample': {
+        const data = args.join(' ');
+        return POST('/incubator/gold-sample', data ? JSON.parse(data) : {}, FASTAPI_URL);
+      }
+      case 'incubator-stats': return GET('/incubator/stats', FASTAPI_URL);
+      case 'incubator-train': return POST('/incubator/train', {}, FASTAPI_URL);
+
+      // --- Testing ---
+      case 'test-run': return POST('/test/run', {}, FASTAPI_URL);
+      case 'test-logs': return GET('/test/logs', FASTAPI_URL);
+
+      // --- Python Workers (Node.js bridge) ---
       case 'workers': return GET('/api/python-workers/list');
       case 'run': {
         const [script] = args;
         if (!script) return err('Usage: python run <script>');
         return POST('/api/python-workers/run', { script });
       }
-      default: return GET('/health', FASTAPI_URL);
+
+      default: return { ok: true, data: { commands: [
+        'health', 'execute', 'refine',
+        'harvest', 'harvest-status', 'harvest-results', 'harvest-clean',
+        'comet', 'comet-memory', 'comet-delete',
+        'browser-chat', 'browser-start', 'browser-stop', 'browser-status', 'browser-screenshot', 'browser-navigate',
+        'voice-transcribe',
+        'os-screenshot', 'os-click', 'os-click-pct', 'os-screen-size', 'os-type', 'os-vision-click',
+        'robotkez-action', 'robotkez-snapshot',
+        'crawl4ai', 'crawl4ai-batch',
+        'incubator-sample', 'incubator-stats', 'incubator-train',
+        'test-run', 'test-logs', 'workers', 'run'
+      ] } };
     }
   },
 
@@ -717,7 +824,7 @@ const commands = {
         'security    — Audit & threats (audit/threats/guardrails)',
         'cloudflare  — Edge workers (status/workers/edge)',
         'cean        — CEAN orchestrator (execute/status/chat)',
-        'python      — FastAPI subsystem (health/execute/refine/harvest/comet/workers/run)',
+        'python      — FastAPI subsystem (35 endpoints: health/execute/refine/harvest*/comet*/browser*/voice/os*/robotkez*/crawl4ai*/incubator*/test*)',
         'invoice     — Szamlazz.hu (list/unpaid/overdue/sheets)',
         'google      — Google Workspace (gmail/calendar/sheets-create/sheets-append)',
         'crawl       — Crawl4AI (fetch/batch)',
@@ -743,12 +850,13 @@ const commands = {
         description: 'Gives Copilot CLI access to ALL 200+ BAS endpoints',
         stats: {
           mcp_tools: 53,
-          agents: '70+',
-          rest_endpoints: '200+',
+          agents: '95+',
+          rest_endpoints: '300+',
           dashboard_panels: '70+',
           enterprise_modules: 18,
-          llm_providers: 5,
+          llm_providers: 6,
           databases: 6,
+          python_endpoints: 35,
           domains: 28
         },
         usage: 'node scripts/copilot-dashboard.js <domain> <action> [args...]',
