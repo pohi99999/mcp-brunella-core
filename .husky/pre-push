@@ -1,8 +1,10 @@
-# Optimized pre-push: exclude slow integration/e2e/phase tests
-# Full suite runs in CI; pre-push only core tests (~3-4 min vs ~11 min)
+# Pre-push: test:fast kizárásokkal (~3-4 perc)
+# Full suite runs in CI; pre-push only core tests
+npm run build || exit 1
 npx vitest run --reporter=dot \
   --exclude 'test/cli-e2e*' \
   --exclude 'test/phase*' \
   --exclude 'test/swarm_smoke*' \
   --exclude 'test/robotkez_integration*' \
+  --exclude 'test/lint_fixer*' \
   < /dev/null || exit 1
