@@ -1,5 +1,55 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-25 - 📝 Dokumentáció Audit & Frissítés (README.md, CLAUDE.md, GEMINI.md, BOOTSTRAP.md)
+
+**Feladat:**
+- Teljes dokumentáció audit: 4 fő fájl átnézése, hibák azonosítása és javítása
+- A Phase 2-4 fejlesztések dokumentálása mindegyik fájlban
+
+**Megállapítások:**
+- README.md: 7 elavult szekció (dátum, track stats, agent hierarchia, API tábla, CLI parancsok, hiányzó komponensek)
+- CLAUDE.md: Agent szám hibás (56→54), hiányzó Phase 2-4 szekciók, elavult track stats
+- GEMINI.md: **KRITIKUS** — az egész fájl escaped markdown (\#, \*\*, \---), teljesen olvashatatlan + ugyanazok a hibák mint CLAUDE.md
+- BOOTSTRAP.md: Prioritások 2026-02-16-iak (elavultak), verzió 1.0.0, Anthropic hiányzik a providerekből
+
+**Elvégzett javítások:**
+
+### README.md
+- Dátum frissítve: 2026-02-24 → 2026-03-25
+- Track stats: "14 aktív, 74 archivált" → "7 aktív, 5 proposed, 114 archivált"
+- Agent hierarchia kibővítve (Enterprise Suite, Swarm, TOML agents)
+- Model Router & Bifrost Gateway szekció hozzáadva
+- Új Alrendszerek tábla (Crawl4AI, Preferences, Observability, Golden Dataset, Zod Bridge, WebSocket)
+- API végpont tábla: 8 → 40+ végpont (6 kategória: Core, Crawl4AI, Preferences, Observability, Golden Dataset, Cloudflare)
+- CLI parancsok: +3 új (crawl4ai, preferences, observability)
+- Könyvtárstruktúra: src/core/ kibővítve (modelRouter, bifrost_gateway, observabilityLogger, toolRunCapture, checkpoint)
+
+### CLAUDE.md
+- Agent szám: 56 → 54
+- Track stats: 14 aktív → 7 aktív, 5 proposed, 114 archivált
+- Új szekció: "Új Alrendszerek (Phase 2-4, 2026-03)" — Crawl4AI, Preferences, Observability, Golden Dataset, Zod Bridge, WebSocket
+- Routes szám: ~30 → ~55
+- CLI parancsok: +3 új (crawl4ai, preferences, observability)
+- API tábla: +8 új végpont
+
+### GEMINI.md
+- **Teljes újraírás** — escaped markdown eltávolítva, clean formázás
+- Tartalom szinkronba hozva CLAUDE.md-vel (Gemini-specifikus hivatkozásokkal)
+- Minden Phase 2-4 fejlesztés dokumentálva
+
+### BOOTSTRAP.md
+- Verzió: 1.0.0 → 2.4.0
+- Dátum: 2026-02-16 → 2026-03-25
+- Prioritások frissítve (elavult SpecWriter/CLI → aktuális Observability/Preferences/Crawl4AI)
+- LLM Providers: +Anthropic, +Bifrost Gateway
+- Kód szekció: routes szám, core mappa, Zod Bridge hozzáadva
+
+**Érintett fájlok:** README.md, CLAUDE.md, GEMINI.md, .ai/BOOTSTRAP.md, .ai/copilot.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** Az agent onboarding-hoz a README.md önmagában NEM elég — a javasolt flow: BOOTSTRAP.md → agent-specifikus .md → tracks.md → FOSZAL.md → README.md (referencia)
+
+---
+
 ## 2026-07-16 - 🔧 Phase 4 (Tasks 2,4,5,6,7,8): Crawl4AI Python, Test Speed, WebSocket, Track Cleanup, Golden Dataset
 
 **Feladat:**
