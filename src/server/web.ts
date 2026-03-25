@@ -96,6 +96,7 @@ import { swarmRouter } from "./routes/swarm.js";
 import { harvestRouter } from "./routes/harvest.js";
 import { createCrawl4aiRouter } from "./routes/crawl4ai.js";
 import { createPreferencesRouter } from "./routes/preferences.js";
+import { createObservabilityRouter } from "./routes/observability.js";
 import "../core/ceanFallback.js"; // Side-effect: registers Phoenix CEAN fallback handlers
 
 const logger = new Logger("web_ui.log");
@@ -235,6 +236,7 @@ export async function startWebServer() {
   v1Router.use("/harvest", harvestRouter);
   v1Router.use("/crawl4ai", createCrawl4aiRouter());
   v1Router.use("/preferences", createPreferencesRouter());
+  v1Router.use("/observability", createObservabilityRouter());
 
   app.use("/api/v1", v1Router);
   app.use("/api", v1Router);

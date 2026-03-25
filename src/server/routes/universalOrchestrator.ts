@@ -14,12 +14,13 @@ export function createUniversalOrchestratorRouter(): Router {
    * értelmezi az utasítást, és delegál a megfelelő agentnek.
    */
   router.post('/universal', async (req, res) => {
-    const { message, provider, model, conversationHistory } = req.body as {
+    const { message, provider, model, conversationHistory, userId } = req.body as {
       message?: string;
       provider?: string;
       model?: string;
       conversationHistory?: UniversalChatMessage[];
       sessionId?: string;
+      userId?: string;
     };
 
     if (!message || typeof message !== 'string' || message.trim() === '') {
@@ -38,6 +39,7 @@ export function createUniversalOrchestratorRouter(): Router {
         model,
         conversationHistory: conversationHistory ?? [],
         sessionId: typeof req.body?.sessionId === 'string' ? req.body.sessionId : undefined,
+        userId,
       });
 
       res.json(result);

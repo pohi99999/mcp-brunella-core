@@ -63,6 +63,7 @@ import ToolDiscoveryPanel from "@/components/dashboard/ToolDiscoveryPanel";
 import SecurityPanel from "@/components/dashboard/SecurityPanel";
 import { Crawl4AIPanel } from "@/components/dashboard/Crawl4AIPanel";
 import { UserPreferencesPanel } from "@/components/dashboard/UserPreferencesPanel";
+import LLMObservabilityPanel from "@/components/dashboard/LLMObservabilityPanel";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy( async () =>
@@ -195,6 +196,7 @@ export function initializeNavigation ()
     { id: "security-panel", label: "Security Monitor", icon: Shield, component: <SecurityPanel /> },
     { id: "crawl4ai", label: "Crawl4AI", icon: Search, component: <Crawl4AIPanel /> },
     { id: "user-preferences", label: "Felhasználói Memória", icon: Database, component: <UserPreferencesPanel /> },
+    { id: "llm-observability", label: "LLM Observability", icon: BarChart3, component: <LLMObservabilityPanel /> },
   ];
 
   items.forEach( item => navigationRegistry.registerItem( item ) );
@@ -206,7 +208,7 @@ export function initializeNavigation ()
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "crawl4ai"] } );
   navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] } );
-  navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "security-panel", "chrome-acp", "settings", "n8n", "langflow"] } );
+  navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow"] } );
 
   logInfo( "NavigationRegistry", "Navigation Registry Initialized." );
 }

@@ -49,6 +49,7 @@ import { registerChromeAcpCommands } from "./cli/chromeAcpCommands.js";
 import { registerBrowserCopilotCommands } from "./cli/browserCopilotCommands.js";
 import { registerCrawl4aiCommands } from "./cli/crawl4aiCommands.js";
 import { registerMemoriaCommands } from "./cli/memoriaCommands.js";
+import { registerObservabilityCommands } from "./cli/observabilityCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
 import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from "./core/assistantBlueprint.js";
 
@@ -1795,6 +1796,7 @@ registerBrowserCopilotCommands(program);
 // Register Crawl4AI & Memoria commands (Phase 3 — kutatas.md integráció)
 registerCrawl4aiCommands(program);
 registerMemoriaCommands(program);
+registerObservabilityCommands(program);
 
 // Register Conductor commands(Track State Management) - MOVED AFTER conductorCmd definition
 

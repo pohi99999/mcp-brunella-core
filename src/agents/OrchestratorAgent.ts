@@ -506,7 +506,8 @@ ${agents}
           taskType: 'general',
           model: 'gpt-4.1',
           tools: ORCHESTRATOR_TOOLS,
-          messages: messages as any
+          messages: messages as any,
+          userId: context?.userId as string | undefined,
         });
 
         if (!response.success) {

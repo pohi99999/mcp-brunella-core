@@ -24,6 +24,7 @@ export interface UniversalRequest {
   model?: string;
   conversationHistory: UniversalChatMessage[];
   sessionId?: string;
+  userId?: string;
 }
 
 export interface UniversalResponse {
@@ -386,7 +387,8 @@ export class UniversalOrchestratorService {
         ],
         taskType: 'general',
         temperature: 0.5,
-        maxTokens: 4096
+        maxTokens: 4096,
+        userId: request.userId,
       });
 
       if (!response.success) {
@@ -515,7 +517,8 @@ export class UniversalOrchestratorService {
             messages: synthesisMessages,
             taskType: 'general',
             temperature: 0.5,
-            maxTokens: 4096
+            maxTokens: 4096,
+            userId: request.userId,
           });
 
           if (synthesisResponse.success && synthesisResponse.content) {

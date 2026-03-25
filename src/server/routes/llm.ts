@@ -384,10 +384,11 @@ export function createLLMRoutes(): Router {
     // POST /api/llm/generate
     router.post('/generate', async (req, res) => {
         try {
-            const { prompt, provider = 'ollama', model } = req.body as {
+            const { prompt, provider = 'ollama', model, userId } = req.body as {
                 prompt?: string;
                 provider?: string;
                 model?: string;
+                userId?: string;
             };
 
             if (!prompt) {
@@ -434,6 +435,7 @@ export function createLLMRoutes(): Router {
                     provider: 'anthropic',
                     model,
                     taskType: 'general',
+                    userId,
                 });
                 if (!response.success) {
                     throw new Error(response.error || 'Anthropic hívás sikertelen');
