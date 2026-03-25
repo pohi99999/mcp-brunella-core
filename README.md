@@ -39,35 +39,43 @@ scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
 
 **Monitoring docs:** [docs/MONITORING_PROMETHEUS.md](docs/MONITORING_PROMETHEUS.md)
 
-### 2. KRITIKUS Fájlok Beolvasása (KÖTELEZŐ MINDEN INDÍTÁSKOR!)
+### 2. Fájlok Beolvasása (3 FÁZIS)
 
-**🔴 MINDIG olvasd be ezeket a fájlokat munkamenet kezdéskor:**
+> **Elv:** Ne olvass be mindent vakon — fázisonként haladj, és csak azt olvasd, amire szükséged van.
+
+**🟢 FÁZIS 1 — GYORS KONTEXTUS (MINDIG, ~5 perc)**
 
 ```
-✅ KÖTELEZŐ KONFIGURÁCIÓK:
-1. package.json - Függőségek, scriptek, verzió
-2. tsconfig.json - TypeScript konfiguráció
-3. src/agents/registry.json - Ügynök regisztráció
-
-✅ KÖTELEZŐ PROJEKT ÁLLAPOT:
-4. PROJEKT_DIAGRAM.md - Rendszer architektúra (KÖTELEZŐ!)
-5. conductor/tracks.md - Aktív track-ek (mi van folyamatban?)
-6. .ai/FOSZAL.md - Mi történt legutóbb? (Egyesített napló)
-7. TEST_RESULTS.md - Legutóbbi teszt eredmények (KÖTELEZŐ!)
-
-✅ KÖTELEZŐ HIBAKEZELÉS:
-8. logs/ könyvtár - Legfrissebb log fájlok
-   - logs/phoenix.log - Phoenix Protocol hibák és állapotok
-   - logs/agent_*.log - Ügynök specifikus logok
-   - logs/developer.log - Legutóbbi fejlesztési események
-
-✅ OPCIONÁLIS (csak ha track-en dolgozol):
-- .ai/<te_neved>.md - Van félbehagyott feladatod?
-- conductor/tracks/<track_id>/plan.md - Track részletes terv
-- conductor/workflow.md - Részletes workflow
+1. .ai/BOOTSTRAP.md              # Projekt összefoglaló (LEGELŐSZÖR!)
+2. conductor/tracks.md            # Aktív fejlesztések (mit csinálunk MOST)
+3. .ai/FOSZAL.md                  # Mi történt legutóbb? (egyesített napló)
+4. .ai/<te_neved>.md              # Te mit csináltál legutóbb (claude/gemini/copilot/cursor)
 ```
 
-**⚠️ FIGYELEM:** Ha ezek bármelyikét NEM olvasod be, hibás döntéseket hozhatsz!
+> Ez a 4 fájl elegendő a kontextushoz. Ha van folyamatban lévő feladatod, innen kiderül.
+
+**🟡 FÁZIS 2 — FELADAT-SPECIFIKUS (csak ami releváns)**
+
+| Ha a feladatod... | Olvasd be: |
+|---|---|
+| Bármilyen kódolás | `README.md` → "Kód Konvenciók" szekció |
+| Új feature / architektúra | `PROJEKT_DIAGRAM.md`, `README.md` → "Architektúra" szekció |
+| Agent fejlesztés | `src/agents/registry.json` (57 agent), `README.md` → "Agent Implementáció" |
+| Függőség/konfig módosítás | `package.json`, `tsconfig.json` |
+| Track-en dolgozol | `conductor/tracks/<track_id>/plan.md` |
+| Teszt probléma | `TEST_RESULTS.md`, `logs/` könyvtár |
+| Hiba diagnózis | `logs/phoenix.log`, `logs/agent_*.log`, `logs/developer.log` |
+| Dashboard fejlesztés | `src/dashboard/lib/navigation.tsx`, `README.md` → "Dashboard" szekció |
+
+**🔴 FÁZIS 3 — REFERENCIA (szükség szerint, bármikor)**
+
+A `README.md` a master dokumentum (~1100 sor). NE olvasd be egészben induláskor — használd szekciónként:
+- "Build, Test, Lint" — parancsok
+- "Kód Konvenciók" — szabályok, minták
+- "EPP v2" — fejlesztési protokoll
+- "API Végpontok" — REST endpoint lista
+- "Hibaelhárítás" — gyakori hibák és megoldások
+- "Environment Variables" — .env beállítások
 
 ### 3. Rendszer Validáció & Teszt Protokoll (Munka ELŐTT - KÖTELEZŐ!)
 
@@ -75,15 +83,11 @@ scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
 # STEP 1: Build check
 npm run build                 # TypeScript fordítás (MUSZÁJ OK!)
 
-# STEP 2: Test check
-npm test                      # Vitest tesztek (MUSZÁJ PASS!)
+# STEP 2: Test check (válaszd a megfelelőt)
+npm run test:fast             # ⚡ Gyors tesztek (~1-2 perc) — napi munka, commit előtt
+npm test                      # 🔒 Teljes suite (~10 perc) — track lezárás / push előtt
 
-# STEP 3: Teszt eredmények dokumentálása
-# Ha új tesztet írtál vagy teszteket futtattál:
-echo "## Teszt Futás - $(date +%Y-%m-%d_%H-%M)" >> TEST_RESULTS.md
-npm test 2>&1 | tee -a TEST_RESULTS.md
-
-# STEP 4: Phoenix Protocol Állapot Ellenőrzés
+# STEP 3: Phoenix Protocol Állapot Ellenőrzés
 # Ellenőrizd a legfrissebb Phoenix logokat:
 tail -n 50 logs/phoenix.log   # Windows: type logs\phoenix.log | more
 ```
@@ -950,7 +954,7 @@ EDGE_ENABLED=true npm run dev
 | `POST /api/cloudflare/task`      | POST    | Task submission Worker-nek               |
 | `POST /api/cloudflare/chat`      | POST    | Chat proxy Cloudflare-hez                |
 
-> **Összesen ~55 route fájl** a `src/server/routes/` mappában. Részletes API docs: `GET /api-docs` (Swagger UI).
+> **Összesen ~53 route fájl** a `src/server/routes/` mappában. Részletes API docs: `GET /api-docs` (Swagger UI).
 
 ---
 
@@ -1053,8 +1057,9 @@ brunella robotkez status      # Agent status
 | `conductor/tracks.md`           | Ha konkrét track-en dolgozol                          |
 | `conductor/workflow.md`         | Ha mélyebben érdekel a Data Flywheel/Phoenix Protocol |
 | `conductor/tracks/<id>/plan.md` | Ha track-specifikus detailsre van szükséged           |
-| `CLAUDE.md`                     | **ELAVULT** - Ez a README.md az aktuális!             |
-| `GEMINI.md`                     | **ELAVULT** - Ez a README.md az aktuális!             |
+| `CLAUDE.md`                     | Claude Code ügynök-specifikus instrukciók (auto-betöltődik) |
+| `GEMINI.md`                     | Gemini CLI ügynök-specifikus instrukciók (auto-betöltődik) |
+| `.ai/BOOTSTRAP.md`              | Gyors projekt összefoglaló (KÖTELEZŐ induláskor!)     |
 
 ---
 
