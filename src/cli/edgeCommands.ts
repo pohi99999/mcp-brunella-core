@@ -5,6 +5,11 @@ import { cloudflareClient } from "../utils/cloudflareClient.js";
 
 const API_BASE = process.env.BRUNELLA_API_URL || "http://localhost:3000";
 
+function getErrorMessage(error: unknown): string {
+  if (error instanceof Error) return error.message;
+  return String(error);
+}
+
 export function registerEdgeCommands(program: Command) {
   const edgeGroup = program
     .command("edge")
@@ -21,15 +26,12 @@ export function registerEdgeCommands(program: Command) {
         spinner.succeed(chalk.green("Edge Worker is Online"));
         console.log(
           chalk.dim(
-            `URL: ${
-              process.env.CLOUDFLARE_WORKER_URL ||
-              "https://bas-orchestrator.iam-dd1.workers.dev"
-            }`,
+            `URL: ${cloudflareClient.getResolvedBaseUrl()}`,
           ),
         );
-      } catch (error: any) {
+      } catch (error: unknown) {
         spinner.fail(chalk.red("Edge Worker is Offline or Unreachable"));
-        console.error(chalk.red(error.message));
+        console.error(chalk.red(getErrorMessage(error)));
       }
     });
 
@@ -59,9 +61,9 @@ export function registerEdgeCommands(program: Command) {
           console.log(JSON.stringify(result.result, null, 2));
         }
         console.log(chalk.dim(`\nTask ID: ${result.taskId}`));
-      } catch (error: any) {
+      } catch (error: unknown) {
         spinner.fail(chalk.red("Task Failed"));
-        console.error(chalk.red(error.message));
+        console.error(chalk.red(getErrorMessage(error)));
       }
     });
 
@@ -123,9 +125,9 @@ export function registerEdgeCommands(program: Command) {
             console.log(chalk.bold("\nResult:"));
             console.log(JSON.stringify(data.result, null, 2));
           }
-        } catch (error: any) {
+        } catch (error: unknown) {
           spinner.fail(chalk.red("Worker task dispatch failed"));
-          console.error(chalk.red(error.message));
+          console.error(chalk.red(getErrorMessage(error)));
         }
       },
     );
@@ -163,9 +165,9 @@ export function registerEdgeCommands(program: Command) {
             }`,
           );
         });
-      } catch (error: any) {
+      } catch (error: unknown) {
         spinner.fail(chalk.red("Failed to fetch history"));
-        console.error(chalk.red(error.message));
+        console.error(chalk.red(getErrorMessage(error)));
       }
     });
 
@@ -227,9 +229,71 @@ export function registerEdgeCommands(program: Command) {
             console.log(chalk.dim(`  note: ${worker.error}`));
           }
         }
-      } catch (error: any) {
+      } catch (error: unknown) {
         spinner.fail(chalk.red("Cloudflare workers audit failed"));
-        console.error(chalk.red(error.message));
+        console.error(chalk.red(getErrorMessage(error)));
+      }
+    });
+
+  edgeGroup
+    .command("tunnel")
+    .description("Show tunnel and Cloudflare runtime configuration")
+    .action(async () => {
+      const spinner = ora("Loading Cloudflare tunnel config...").start();
+
+      try {
+        const response = await fetch(`${API_BASE}/api/cloudflare/config`);
+        const data = (await response.json()) as {
+          edge: { enabled: boolean; workerUrl: string };
+          chat: { url: string };
+          tunnel: {
+            enabled: boolean;
+            apiUrl: string | null;
+            n8nUrl: string | null;
+            browserUrl: string | null;
+            dashboardUrl: string | null;
+          };
+          auth: {
+            hasCloudflareApiToken: boolean;
+            hasCeanApiKey: boolean;
+          };
+          error?: string;
+        };
+
+        if (!response.ok) {
+          throw new Error(data.error || `HTTP ${response.status}`);
+        }
+
+        spinner.succeed(chalk.green("Cloudflare runtime config loaded"));
+
+        console.log(chalk.bold("\nEdge"));
+        console.log(chalk.dim(`  enabled: ${data.edge.enabled}`));
+        console.log(chalk.dim(`  worker:  ${data.edge.workerUrl}`));
+
+        console.log(chalk.bold("\nChat"));
+        console.log(chalk.dim(`  url:     ${data.chat.url}`));
+
+        console.log(chalk.bold("\nTunnel"));
+        console.log(chalk.dim(`  enabled: ${data.tunnel.enabled}`));
+        console.log(chalk.dim(`  api:     ${data.tunnel.apiUrl || "(not set)"}`));
+        console.log(chalk.dim(`  n8n:     ${data.tunnel.n8nUrl || "(not set)"}`));
+        console.log(chalk.dim(`  browser: ${data.tunnel.browserUrl || "(not set)"}`));
+        console.log(chalk.dim(`  dashboard: ${data.tunnel.dashboardUrl || "(not set)"}`));
+
+        console.log(chalk.bold("\nAuth"));
+        console.log(
+          chalk.dim(
+            `  cloudflare token: ${data.auth.hasCloudflareApiToken ? "configured" : "missing"}`,
+          ),
+        );
+        console.log(
+          chalk.dim(
+            `  CEAN api key:      ${data.auth.hasCeanApiKey ? "configured" : "missing"}`,
+          ),
+        );
+      } catch (error: unknown) {
+        spinner.fail(chalk.red("Failed to load tunnel config"));
+        console.error(chalk.red(getErrorMessage(error)));
       }
     });
 }

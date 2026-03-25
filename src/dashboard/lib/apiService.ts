@@ -259,6 +259,27 @@ export interface CloudflareStatus {
   };
 }
 
+export interface CloudflareRuntimeConfig {
+  edge: {
+    enabled: boolean;
+    workerUrl: string;
+  };
+  chat: {
+    url: string;
+  };
+  tunnel: {
+    enabled: boolean;
+    apiUrl: string | null;
+    n8nUrl: string | null;
+    browserUrl: string | null;
+    dashboardUrl: string | null;
+  };
+  auth: {
+    hasCloudflareApiToken: boolean;
+    hasCeanApiKey: boolean;
+  };
+}
+
 export async function getCloudflareStatus(): Promise<CloudflareStatus> {
   const response = await fetchWithTimeout(
     `${API_BASE}/api/cloudflare/status`,
@@ -271,6 +292,17 @@ export async function getCloudflareStatus(): Promise<CloudflareStatus> {
   if (!isCloudflareStatus(data))
     throw new Error("Érvénytelen Cloudflare státusz válasz");
   return data;
+}
+
+export async function getCloudflareConfig(): Promise<CloudflareRuntimeConfig> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/cloudflare/config`,
+    {},
+    5000,
+  );
+  if (!response.ok)
+    throw new Error(`Cloudflare config: HTTP ${response.status}`);
+  return safeJson<CloudflareRuntimeConfig>(response);
 }
 
 export interface WorkersAIResponse {

@@ -1,5 +1,85 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-03-25 - ☁️ Cloudflare stabilizáció + cloudflareversup végső állapotjelentés
+
+**Feladat:**
+- Cloudflare edge/chat/tunnel útvonalak stabilizálása
+- Diagnosztika és láthatóság javítása Dashboard + CLI oldalon
+- `cloudflareversup.md` végső állapotjelentés elkészítése (active/degraded/planned, endpoint-szinten)
+
+**Elvégzett fejlesztések:**
+
+### Backend / API
+- `src/server/routes/cloudflare.ts`
+  - auth-aware header kezelés (token fallback + CEAN key)
+  - `/api/cloudflare/config` új endpoint (edge/chat/tunnel/auth runtime állapot)
+  - worker auditnál 401/403 reachability "online" kezelése
+  - chat proxy bővítve több fallback endpointtal (`/ai/generate`, `/api/chat`, `/chat`, ...)
+
+- `src/server/routes/llm.ts`
+  - cloudflare provider hívás auth header támogatással
+  - URL fallback: `CLOUDFLARE_D1_WORKER_URL || CLOUDFLARE_WORKER_URL`
+
+- `src/utils/cloudflareClient.ts`
+  - base URL fallback erősítés
+  - token fallback (`CLOUDFLARE_API_TOKEN` / `CF_API_TOKEN`)
+  - CEAN API key támogatás
+  - `getResolvedBaseUrl()` diagnosztikához
+
+### Cloudflare Worker
+- `cloudflare/src/index.ts`
+  - új `POST /ai/generate` Workers AI endpoint
+  - CORS header bővítés (`X-CEAN-API-Key`)
+
+### Dashboard
+- `src/dashboard/lib/apiService.ts`
+  - új `getCloudflareConfig()` API helper + típusok
+- `src/dashboard/components/dashboard/CloudflareAgentsCard.tsx`
+  - config blokk: edge/chat URL, tunnel/auth státusz, mobil dashboard link
+- `src/dashboard/components/dashboard/SettingsPanel.tsx`
+  - új "Tunnel Dashboard" gyorsgomb
+
+### CLI
+- `src/cli/edgeCommands.ts`
+  - új `edge tunnel` parancs (runtime config diagnosztika)
+  - edge status URL diagnosztika javítás
+- `src/cli.ts`
+  - cloudflare edge result típusbiztos kezelése (TS strict fix)
+
+### Dokumentáció
+- `cloudflareversup.md` (ÚJ)
+  - valós állapotjelentés: **ACTIVE / DEGRADED / PLANNED**
+  - endpoint-szintű mátrix
+  - következő operatív lépések
+
+**Validáció:**
+- `npm run build` ✅
+- `npx vitest run test/cloudflare_integration.test.ts` ✅
+- `npm run test:fast` ✅
+
+**Státusz:** ✅ Befejezve
+
+## 2026-03-25 05:15 - 🚀 Infrastruktúra Track-ek Implementálása (Track 4-6)
+
+**Feladat:** 6 fejlesztési track létrehozása + 3 track azonnali implementálása
+**Érintett fájlok:**
+- `conductor/tracks/*_20260325/plan.md` (6 új track mappa)
+- `.husky/pre-commit` — Build+lint only (~30-60s, korábban ~10 perc)
+- `.husky/pre-push` — Build + vitest kizárásokkal, lint_fixer is kizárva
+- `scripts/startup_smoke_test.ts` — 5 végpont health checker (--json támogatás)
+- `test/agent_health_matrix.test.ts` — 164/164 teszt: mind az 57 agent betölthető
+
+**Eredmény:**
+- Track 6 (Pre-commit optimization): ✅ KÉSZ — commit idő ~10 perc → ~30-60s
+- Track 5 (Startup smoke test): ✅ KÉSZ — endpoint ellenőrző script
+- Track 4 (Agent health matrix): ✅ KÉSZ — 164/164 teszt zöld
+- Track 1-3 (test infra, doc sync, bootstrap source): 📋 Tervek létrehozva, ACTIVE
+
+**Commit:** `600ff7fa` — 10 fájl, push-olva GitHub-ra (1694 teszt zöld)
+**Státusz:** ✅ Befejezve
+
+---
+
 ## 2026-03-25 03:00 - 🏗️ Teljes Dokumentáció Audit, Bootstrap Protokoll Újratervezés & inditas.bat Átírás
 
 **Feladat:**
