@@ -1,0 +1,1073 @@
+{
+  "version": 1,
+  "generated": "2026-03-25",
+  "total_agents": 54,
+  "domain_routing": {
+    "coding": [
+      "DependencyGraph",
+      "Developer",
+      "github_models",
+      "lint_fixer"
+    ],
+    "research": [
+      "ApifyScraping",
+      "researcher"
+    ],
+    "marketing": [
+      "CampaignGenerator",
+      "MarketingDirector",
+      "copywriter",
+      "marketing_director",
+      "NurturerAgent"
+    ],
+    "enterprise": [
+      "MarketingDirector",
+      "enterprise_orchestrator",
+      "marketing_director"
+    ],
+    "browser": [
+      "ChromeDevTools",
+      "robotkezv2",
+      "RobotkezV2"
+    ],
+    "devops": [
+      "DevOps",
+      "enterprise_orchestrator",
+      "law_detective",
+      "ops"
+    ],
+    "design": [
+      "enterprise_orchestrator",
+      "UXDesigner"
+    ],
+    "legal": [
+      "law_detective",
+      "orchestrator"
+    ],
+    "finance": [
+      "finance_guardian",
+      "FinancialGuard",
+      "PropertyAnalyst"
+    ],
+    "sales": [
+      "CampaignGenerator",
+      "lead_mining",
+      "sales",
+      "sales_hunter"
+    ],
+    "project": [
+      "LocalCSR",
+      "LogisticsDispatcher",
+      "ProjectConductor",
+      "SpecWriter"
+    ],
+    "data": [
+      "DependencyGraph",
+      "PricingAgent"
+    ],
+    "quality": [
+      "evaluator",
+      "qa",
+      "critic_agent"
+    ],
+    "general": []
+  },
+  "agents": [
+    {
+      "name": "agent_architect",
+      "title": "Agent Architect",
+      "description": "?j ?gyn?k?ket tervez, gener?lja a promptjaikat, f?gg?s?geiket ?s konfigur?ci?jukat a le?r?s alapj?n.",
+      "category": "engineering",
+      "capabilities": [
+        "prompt_engineering",
+        "agent_design",
+        "configuration"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "design",
+        "meta"
+      ]
+    },
+    {
+      "name": "ApifyScraping",
+      "title": "ApifyScraping",
+      "description": "Apify platform-alap? professzion?lis scraping: Google, LinkedIn, e-commerce, trendek",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "apifyscraping",
+        "apifyscrapingagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "Architect",
+      "title": "Architect",
+      "description": "Rendszerarchitekt?ra tervez?s - SystemBlueprint, tech stack ?s modul defin?ci?k gener?l?sa",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "architect",
+        "architectagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "ChromeDevTools",
+      "title": "ChromeDevTools",
+      "description": "Chrome DevTools Protocol-alap? web debug: h?l?zati k?r?sek, JS hib?k, performance metrics",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "chromedevtools",
+        "chromedevtoolsagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "CampaignGenerator",
+      "title": "Campaign Generator",
+      "description": "Teljes marketing kamp?nyt gener?l: leadek, posztok, landing oldal ?s akci?terv.",
+      "category": "marketing",
+      "capabilities": [],
+      "triggers": [],
+      "priority": 5,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "MarketingDirector",
+      "title": "Marketing Director",
+      "description": "Marketing kamp?ny orchestrator ?s strat?giai ir?ny?t?.",
+      "category": "marketing",
+      "capabilities": [],
+      "triggers": [],
+      "priority": 6,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "PropertyVisionary",
+      "title": "Property Visionary",
+      "description": "Ingatlan elemz? ?s befektet?si tan?csad? ?gens.",
+      "category": "enterprise",
+      "capabilities": [],
+      "triggers": [],
+      "priority": 7,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "ConflictMediator",
+      "title": "ConflictMediator",
+      "description": "Kreat?v S?rl?d?s Medi?tor - Email hangulatelemz?s, konfliktusfelold?s, szervezeti l?gk?r monitoroz?sa",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "conflictmediator",
+        "conflictmediatoragent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "copywriter",
+      "title": "✍️ Copywriter",
+      "description": "Szoci?lis m?dia ?s email copywriting specialista.",
+      "category": "marketing",
+      "capabilities": [
+        "social_media_generation",
+        "email_drafting",
+        "copywriting",
+        "slogan_creation"
+      ],
+      "triggers": [
+        "copywriter",
+        "copywriting",
+        "content",
+        "post"
+      ],
+      "priority": 4,
+      "status": "active",
+      "tags": [
+        "marketing",
+        "content",
+        "copywriting"
+      ]
+    },
+    {
+      "name": "DataScientist",
+      "title": "DataScientist",
+      "description": "Adatok elemz?s?re, tiszt?t?s?ra ?s Python refiner futtat?s?ra specializ?l?dott ?gyn?k.",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "datascientist",
+        "datascientistagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "DependencyGraph",
+      "title": "DependencyGraph",
+      "description": "Analyzes code dependencies, detects circular references, identifies hotspots, and generates dependency graphs",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "dependencygraph",
+        "dependencygraphagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "Developer",
+      "title": "Developer Agent",
+      "description": "Kodol es javit a self-healing pipeline segitsegevel.",
+      "category": "engineering",
+      "capabilities": [
+        "code_generation",
+        "self_healing"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "code",
+        "pipeline"
+      ]
+    },
+    {
+      "name": "DevOps",
+      "title": "DevOps",
+      "description": "DevOps ?s deployment - CI/CD pipeline, infrastructure setup, monitoring ?s scaling",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "devops",
+        "devopsagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "DigitalHeadhunter",
+      "title": "DigitalHeadhunter",
+      "description": "CV screening with LinkedIn integration and bias-free candidate scoring",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "digitalheadhunter",
+        "digitalheadhunteragent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "documenter",
+      "title": "Documentation Agent",
+      "description": "Dokumentacio frissites, release jegyzetek, hasznalati mintak.",
+      "category": "product",
+      "capabilities": [
+        "docs",
+        "summarization"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "docs",
+        "communication"
+      ]
+    },
+    {
+      "name": "EdgeProxy",
+      "title": "EdgeProxy",
+      "description": "Cloudflare Edge kommunik?ci? ?s task routing",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "edgeproxy",
+        "edgeproxyagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "email_triage",
+      "title": "Email Triage Agent",
+      "description": "Automated email classification with priority detection.",
+      "category": "enterprise",
+      "capabilities": [
+        "email_classification",
+        "priority_detection",
+        "auto_response"
+      ],
+      "triggers": [
+        "email triage",
+        "inbox automation"
+      ],
+      "priority": 8,
+      "status": "active",
+      "tags": [
+        "email",
+        "automation",
+        "triage"
+      ]
+    },
+    {
+      "name": "enterprise_orchestrator",
+      "title": "Enterprise Orchestrator",
+      "description": "Koordinalja a 18 BAS Enterprise Suite modul v?grehajt?s?t priorit?s alap? routing-gal.",
+      "category": "enterprise",
+      "capabilities": [
+        "enterprise_event_parsing",
+        "priority_assignment",
+        "module_routing",
+        "execution_monitoring",
+        "approval_management"
+      ],
+      "triggers": [],
+      "priority": 9,
+      "status": "active",
+      "tags": [
+        "enterprise",
+        "coordination",
+        "multi-module",
+        "erp"
+      ]
+    },
+    {
+      "name": "evaluator",
+      "title": "Evaluator Agent",
+      "description": "Rendszer auditor, health check es belso tesztfuttato.",
+      "category": "quality",
+      "capabilities": [
+        "audit_system",
+        "run_tests",
+        "check_health"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "audit",
+        "health"
+      ]
+    },
+    {
+      "name": "finance_guardian",
+      "title": "Finance Guardian",
+      "description": "Invoice OCR, anomaly detection, financial trend analysis.",
+      "category": "enterprise",
+      "capabilities": [
+        "invoice_processing",
+        "ocr_extraction",
+        "anomaly_detection"
+      ],
+      "triggers": [
+        "finance",
+        "számla",
+        "invoice"
+      ],
+      "priority": 6,
+      "status": "active",
+      "tags": [
+        "finance",
+        "invoice",
+        "ocr"
+      ]
+    },
+    {
+      "name": "FinancialGuard",
+      "title": "FinancialGuard",
+      "description": "OCR-based invoice extraction with duplicate detection, anomaly flagging, and Sheets export",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "financialguard",
+        "financialguardagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "github_models",
+      "title": "GitHub Models Agent",
+      "description": "Premium AI ?gyn?k GitHub Models API (GPT-4o) haszn?lat?val.",
+      "category": "core",
+      "capabilities": [
+        "code_generation",
+        "code_review",
+        "architecture_design"
+      ],
+      "triggers": [
+        "gpt",
+        "github",
+        "premium"
+      ],
+      "priority": 9,
+      "status": "active",
+      "tags": [
+        "premium",
+        "gpt-4o"
+      ]
+    },
+    {
+      "name": "grant_watcher",
+      "title": "Grant Watcher Agent",
+      "description": "Automated tender monitoring.",
+      "category": "enterprise",
+      "capabilities": [
+        "grant_scraping",
+        "eligibility_matching"
+      ],
+      "triggers": [
+        "grant watcher",
+        "pályázatfigyelő",
+        "palyazat"
+      ],
+      "priority": 7,
+      "status": "active",
+      "tags": [
+        "grants",
+        "tenders",
+        "monitoring"
+      ]
+    },
+    {
+      "name": "innovation_bridge",
+      "title": "Innovation Bridge Agent",
+      "description": "TRIZ-based cross-industry knowledge transfer: solve industry problems with innovations from completely different industries",
+      "category": "research",
+      "capabilities": [
+        "problem_abstraction",
+        "triz_analysis",
+        "cross_industry_search",
+        "analogy_matching",
+        "innovation_reporting"
+      ],
+      "triggers": [
+        "innovation",
+        "triz",
+        "cross-industry",
+        "innovate",
+        "innováció",
+        "find solution",
+        "analogy"
+      ],
+      "priority": 5,
+      "status": "active",
+      "tags": [
+        "innovation",
+        "triz",
+        "cross-industry",
+        "research",
+        "knowledge-transfer"
+      ]
+    },
+    {
+      "name": "knowledge_base_builder",
+      "title": "Knowledge Base Builder",
+      "description": "Automated wiki generation.",
+      "category": "enterprise",
+      "capabilities": [
+        "message_analysis",
+        "wiki_generation"
+      ],
+      "triggers": [
+        "knowledge base",
+        "wiki",
+        "tudásbázis"
+      ],
+      "priority": 6,
+      "status": "active",
+      "tags": [
+        "knowledge",
+        "wiki"
+      ]
+    },
+    {
+      "name": "law_detective",
+      "title": "Law Detective Agent",
+      "description": "Magyar K?zl?ny intelligence: automated legal monitoring, compliance analysis, and business impact assessment for SMEs",
+      "category": "compliance",
+      "capabilities": [
+        "law_monitoring",
+        "legal_intelligence",
+        "compliance_analysis",
+        "business_impact_assessment",
+        "magyar_kozlony_tracking"
+      ],
+      "triggers": [
+        "law",
+        "legal",
+        "jogszabály",
+        "közlöny",
+        "compliance",
+        "törvény",
+        "kata",
+        "minimálbér",
+        "adó"
+      ],
+      "priority": 7,
+      "status": "active",
+      "tags": [
+        "legal",
+        "compliance",
+        "monitoring",
+        "magyar-kozlony",
+        "sme"
+      ]
+    },
+    {
+      "name": "lead_mining",
+      "title": "Lead Mining Agent",
+      "description": "Generates targeted B2B lead lists.",
+      "category": "enterprise",
+      "capabilities": [
+        "lead_generation",
+        "web_scraping",
+        "icebreaker_generation"
+      ],
+      "triggers": [
+        "lead mining",
+        "lead generálás"
+      ],
+      "priority": 7,
+      "status": "active",
+      "tags": [
+        "leads",
+        "sales",
+        "mining"
+      ]
+    },
+    {
+      "name": "lint_fixer",
+      "title": "Lint Fixer Agent",
+      "description": "Mikro-ugynok ESLint es TypeScript hibak automatikus javitasara.",
+      "category": "maintenance",
+      "capabilities": [
+        "lint_check",
+        "auto_fix",
+        "suggest_fix",
+        "type_check",
+        "batch_fix"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "lint",
+        "eslint",
+        "typescript",
+        "micro-agent"
+      ]
+    },
+    {
+      "name": "LocalCSR",
+      "title": "LocalCSR",
+      "description": "Carbon calculator, ESG reporting, local charity project discovery",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "localcsr",
+        "localcsragent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "logistics_dispatcher",
+      "title": "Logistics Dispatcher",
+      "description": "Logisztikai Diszp?cser.",
+      "category": "enterprise",
+      "capabilities": [
+        "tracking_extraction",
+        "route_optimization"
+      ],
+      "triggers": [
+        "logisztika",
+        "tracking",
+        "szállítmány"
+      ],
+      "priority": 8,
+      "status": "active",
+      "tags": [
+        "logistics",
+        "automation"
+      ]
+    },
+    {
+      "name": "LogisticsDispatcher",
+      "title": "LogisticsDispatcher",
+      "description": "Multi-carrier tracking with delay prediction and automated complaint generation",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "logisticsdispatcher",
+        "logisticsdispatcheragent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "market_intel",
+      "title": "Market Intelligence Agent",
+      "description": "Competitor price monitoring, trend analysis, and automated alerting.",
+      "category": "enterprise",
+      "capabilities": [
+        "competitor_scraping",
+        "price_extraction",
+        "trend_analysis",
+        "price_alerts"
+      ],
+      "triggers": [
+        "market intel",
+        "price tracking",
+        "competitor monitoring"
+      ],
+      "priority": 7,
+      "status": "active",
+      "tags": [
+        "intelligence",
+        "pricing",
+        "competitor-analysis"
+      ]
+    },
+    {
+      "name": "marketing_director",
+      "title": "🎯 Marketing Director",
+      "description": "Marketing kamp?ny orchestrator.",
+      "category": "marketing",
+      "capabilities": [
+        "campaign_orchestration",
+        "content_assembly",
+        "trend_analysis_coordination"
+      ],
+      "triggers": [
+        "marketing",
+        "campaign",
+        "director"
+      ],
+      "priority": 4,
+      "status": "active",
+      "tags": [
+        "marketing",
+        "campaign",
+        "orchestration"
+      ]
+    },
+    {
+      "name": "NurturerAgent",
+      "title": "NurturerAgent",
+      "description": "Automatikus marketing kamp?nyokat gener?l az elemzett ingatlanokra.",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "nurtureragent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "ops",
+      "title": "Ops Agent",
+      "description": "Rendszer allapot es tool logok felugyelete, gyors diagnosztika.",
+      "category": "operations",
+      "capabilities": [
+        "monitoring",
+        "diagnostics"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "ops",
+        "health"
+      ]
+    },
+    {
+      "name": "orchestrator",
+      "title": "Orchestrator",
+      "description": "Koordinalja a feladatokat es delegalja az agentekhez.",
+      "category": "core",
+      "capabilities": [
+        "planning",
+        "routing",
+        "delegation"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "coordination",
+        "workflow"
+      ]
+    },
+    {
+      "name": "PricingAgent",
+      "title": "PricingAgent",
+      "description": "Dinamikus ?raz? & Piaci H?rszerz? - Analyzes market trends, competitor pricing, generates recommendations",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "pricingagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "ProactiveClaimsAgent",
+      "title": "ProactiveClaimsAgent",
+      "description": "Proakt?v Biztos?t?si ?gyek Kezel? - Biztos?t?si ?gyek, kock?zatfelm?r?s, csal?sok felder?t?se",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "proactiveclaimsagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "procurement",
+      "title": "Procurement Agent",
+      "description": "Automated supplier negotiation with market price analysis.",
+      "category": "enterprise",
+      "capabilities": [
+        "supplier_price_analysis",
+        "negotiation_strategy_selection"
+      ],
+      "triggers": [
+        "procurement",
+        "negotiate",
+        "supplier pricing"
+      ],
+      "priority": 7,
+      "status": "active",
+      "tags": [
+        "procurement",
+        "negotiation",
+        "finance"
+      ]
+    },
+    {
+      "name": "project_organizer",
+      "title": "Project Organizer",
+      "description": "Rendszerezi a projektet, mapp?nk?nti tartalomjegyz?ket k?sz?t ?s friss?ti a k?nyvt?r t?rk?pet.",
+      "category": "operations",
+      "capabilities": [
+        "organization",
+        "documentation",
+        "cleanup"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "cleanup",
+        "structure"
+      ]
+    },
+    {
+      "name": "ProjectConductor",
+      "title": "Project Conductor",
+      "description": "Projekt menedzsment, dokument?ci? szinkroniz?l?s ?s track k?vet?s.",
+      "category": "management",
+      "capabilities": [
+        "project_management",
+        "documentation_sync",
+        "track_management"
+      ],
+      "triggers": [
+        "conductor",
+        "status",
+        "track",
+        "sync"
+      ],
+      "priority": 10,
+      "status": "active",
+      "tags": [
+        "management",
+        "conductor"
+      ]
+    },
+    {
+      "name": "PropertyAnalyst",
+      "title": "PropertyAnalyst",
+      "description": "Ingatlan dokumentumokat (PDF/JPG/PNG) elemez Gemini Vision OCR-rel. Kinyeri a HRSZ-t, alapter?letet, k?zm?veket, ?s alap?rt?kel?st v?gez.",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "propertyanalyst",
+        "propertyanalystagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "Python",
+      "title": "Python",
+      "description": "Monitors and manages the Python subsystem (myai), including environment, dependencies, and FastAPI health",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "python",
+        "pythonagent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "qa",
+      "title": "QA Agent",
+      "description": "Funkcionalis tesztek, gyors validacio, smoke es regresszio ellenorzesek.",
+      "category": "quality",
+      "capabilities": [
+        "test_execution",
+        "validation"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "testing",
+        "qa"
+      ]
+    },
+    {
+      "name": "researcher",
+      "title": "Research Agent",
+      "description": "Keres a tudasbazisban, majd osszefoglalja a relevans informaciokat.",
+      "category": "knowledge",
+      "capabilities": [
+        "rag_search",
+        "summarization"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "rag",
+        "summaries"
+      ]
+    },
+    {
+      "name": "robotkezv2",
+      "title": "RobotkezV2 Comet Agent",
+      "description": "?ntanul? ?s ?njav?t? hibrid b?ng?sz? ?gyn?k (Comet-szint).",
+      "category": "automation",
+      "capabilities": [
+        "web_search",
+        "data_extract",
+        "form_fill",
+        "self_healing",
+        "selector_memory",
+        "vision_analysis"
+      ],
+      "triggers": [
+        "robotkéz",
+        "böngésző",
+        "navigálj",
+        "keress rá",
+        "kattints",
+        "tölts ki",
+        "scrape",
+        "comet"
+      ],
+      "priority": 3,
+      "status": "active",
+      "tags": [
+        "browser",
+        "comet",
+        "agentic",
+        "automation"
+      ]
+    },
+    {
+      "name": "RobotkezV2",
+      "title": "RobotkezV2",
+      "description": "Foly?konyan kommunik?l?, proakt?v b?ng?sz? ?gyn?k vizu?lis visszajelz?ssel.",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "robotkezv2",
+        "robotkezv2agent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "sales",
+      "title": "Sales Agent",
+      "description": "Lead generation, CRM integration, email drafting.",
+      "category": "enterprise",
+      "capabilities": [
+        "lead_generation",
+        "crm_integration",
+        "email_drafting"
+      ],
+      "triggers": [
+        "értékesítés",
+        "sales",
+        "leads"
+      ],
+      "priority": 6,
+      "status": "active",
+      "tags": [
+        "sales",
+        "crm",
+        "automation"
+      ]
+    },
+    {
+      "name": "sales_hunter",
+      "title": "Sales Hunter Agent",
+      "description": "LinkedIn-based lead discovery with email drafting.",
+      "category": "enterprise",
+      "capabilities": [
+        "linkedin_scraping",
+        "lead_scoring",
+        "email_draft_generation"
+      ],
+      "triggers": [
+        "sales hunter",
+        "lead discovery",
+        "linkedin"
+      ],
+      "priority": 7,
+      "status": "active",
+      "tags": [
+        "sales",
+        "linkedin",
+        "automation"
+      ]
+    },
+    {
+      "name": "SpecWriter",
+      "title": "SpecWriter Agent",
+      "description": "Automatikus track gener?l?s EPP v2 protokoll szerint.",
+      "category": "engineering",
+      "capabilities": [
+        "track_generation",
+        "epp_v2_compliance",
+        "requirement_extraction"
+      ],
+      "triggers": [
+        "track",
+        "generate",
+        "spec",
+        "ötlet"
+      ],
+      "priority": 5,
+      "status": "active",
+      "tags": [
+        "tracks",
+        "epp-v2",
+        "automation"
+      ]
+    },
+    {
+      "name": "task_decomposer",
+      "title": "Task Decomposer",
+      "description": "Komplex feladatok dekompoz?ci?ja mikro-taskokra (preview-only, DAG).",
+      "category": "engineering",
+      "capabilities": [
+        "task_decomposition",
+        "dag",
+        "preview"
+      ],
+      "triggers": [],
+      "priority": 0,
+      "status": "active",
+      "tags": [
+        "orchestration",
+        "dag",
+        "planning"
+      ]
+    },
+    {
+      "name": "UXDesigner",
+      "title": "UXDesigner",
+      "description": "UX/UI design specifik?ci?k gener?l?sa - Wireframe, komponensek, accessibility",
+      "category": "general",
+      "capabilities": [],
+      "triggers": [
+        "uxdesigner",
+        "uxdesigneragent"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": []
+    },
+    {
+      "name": "voice",
+      "title": "Voice Agent",
+      "description": "Hangutas?t?sok ?s multimod?lis interakci?k specialist?ja.",
+      "category": "interface",
+      "capabilities": [
+        "voice_command_refinement",
+        "multimodal_context_analysis"
+      ],
+      "triggers": [
+        "hang",
+        "voice",
+        "audio",
+        "screenshot"
+      ],
+      "priority": 1,
+      "status": "active",
+      "tags": [
+        "voice",
+        "multimodal",
+        "auralia"
+      ]
+    },
+    {
+      "name": "critic_agent",
+      "title": "Critic Agent",
+      "description": "Min?s?gellen?rz? ?gens: megvizsg?lja az ?gyn?k?k v?laszait, kimutatja a hallucin?ci? jeleit, titkos adatok sziv?rg?s?t, hi?nyz? tartalmat.",
+      "category": "general",
+      "capabilities": [
+        "quality_review",
+        "hallucination_detection",
+        "secret_leak_detection",
+        "output_validation"
+      ],
+      "triggers": [],
+      "priority": 2,
+      "status": "active",
+      "tags": [
+        "QA",
+        "critic",
+        "quality",
+        "security"
+      ]
+    }
+  ]
+}
