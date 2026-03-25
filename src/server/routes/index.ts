@@ -32,6 +32,7 @@ import { createSystemArchitectureRouter, createSystemControlRouter } from "./sys
 import { createBusinessJobsRoutes } from "./businessJobs.js";
 import { securityRouter } from "./security.js";
 import { createAssistantRoutes } from "./assistant.js";
+import { createCopilotBridgeRoutes } from "./copilotBridge.js";
 
 export {
   createHealthRoutes,
@@ -102,6 +103,7 @@ export function createV1Router(): Router {
   router.use("/business-jobs", createBusinessJobsRoutes());
   router.use("/security", securityRouter);
   router.use("/assistant", createAssistantRoutes());
+  router.use("/copilot-bridge", createCopilotBridgeRoutes());
 
   return router;
 }
