@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-25T01:00:01.071Z
+**Utolso frissites:** 2026-03-25T15:48:58.478Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 126 total | 7 active | 0 completed | 114 archived
+**Stats:** 128 total | 6 active | 3 completed | 114 archived
 
 ---
 
@@ -14,6 +14,11 @@
   - **ID:** `cloudflare_workers_migration_20260226`
   - **Progress:** 0%
   - Mappa: ./tracks/cloudflare_workers_migration_20260226/
+
+- [ ] **E2B Sandbox Crawl4AI** [LOW]
+  - **ID:** `e2b_sandbox_crawl4ai_20260325`
+  - **Progress:** 0%
+  - Mappa: ./tracks/e2b_sandbox_crawl4ai_20260325/
 
 - [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
   - **ID:** `logistics_vertical_20260222`
@@ -25,19 +30,14 @@
   - **Progress:** 0%
   - Mappa: ./tracks/owl_agent_coordinator_20260321/
 
-- [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
-  - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
-  - **Progress:** 0%
-  - Mappa: ./tracks/remote_layer_phase8_planetary_supersystem_20260322/
-
 - [ ] **Brunella Remote Layer — Fázis 9: Emergent Superintelligence** [CRITICAL]
   - **ID:** `remote_layer_phase9_emergent_superintelligence_20260322`
-  - **Progress:** 0%
+  - **Progress:** 8%
   - Mappa: ./tracks/remote_layer_phase9_emergent_superintelligence_20260322/
 
 ---
 
-## Aktiv Szalak (Active) (7)
+## Aktiv Szalak (Active) (6)
 
 - [ ] **apify_deep_scraping_agent_20260223** [LOW]
   - **ID:** `apify_deep_scraping_agent_20260223`
@@ -50,31 +50,41 @@
   - **Progress:** 30%
   - Mappa: ./tracks/cf_hyperdrive_d1_20260323/
 
+- [ ] **Cloudflare Full Optimization & Domain Rollout** [CRITICAL]
+  - **ID:** `cloudflare_full_optimization_20260325`
+  - **Progress:** 45%
+  - Mappa: ./tracks/cloudflare_full_optimization_20260325/
+
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
   - **Progress:** 18%
   - **Assignee:** Claude + Pohánka Péter
   - Mappa: ./tracks/jules_pr_integration_20260222/
 
-- [ ] **Brunella Personal Assistant — Windows MVP Foundation** [HIGH]
-  - **ID:** `personal_assistant_windows_mvp_20260323`
-  - **Progress:** 90%
-  - Mappa: ./tracks/personal_assistant_windows_mvp_20260323/
-
-- [ ] **README Bootstrap & Health Fixek** [HIGH]
-  - **ID:** `readme_bootstrap_health_fixes_20260324`
-  - **Progress:** 80%
-  - Mappa: ./tracks/readme_bootstrap_health_fixes_20260324/
-
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase1_foundation_20260322/
 
-- [ ] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser** [HIGH]
+- [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
+  - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
+  - **Progress:** 12%
+  - Mappa: ./tracks/remote_layer_phase8_planetary_supersystem_20260322/
+
+---
+
+## Befejezett (Completed - Not Archived) (3)
+
+- [x] **Brunella Personal Assistant — Windows MVP Foundation**
+  - **ID:** `personal_assistant_windows_mvp_20260323`
+  - Mappa: ./tracks/personal_assistant_windows_mvp_20260323/
+
+- [x] **README Bootstrap & Health Fixek**
+  - **ID:** `readme_bootstrap_health_fixes_20260324`
+  - Mappa: ./tracks/readme_bootstrap_health_fixes_20260324/
+
+- [x] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser**
   - **ID:** `robotkez_comet_upgrade_20260222`
-  - **Progress:** 75%
-  - **Updated:** 2026-03-23
   - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
 
 ---
