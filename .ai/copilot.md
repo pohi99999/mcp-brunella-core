@@ -3,9 +3,10 @@
 ## 🧠 Copilot ↔ BAS Full Integration v2 (2026-03-26)
 
 A Copilot CLI TELJES hozzáféréssel rendelkezik a BAS rendszerhez:
-- **300+ REST endpoint** (28 domain + 10 újonnan aktivált route)
+- **300+ REST endpoint** (29 domain + 10 újonnan aktivált route + cognitive bridge)
 - **95+ agent** (54 regisztrált + TOML dinamikus)
 - **53 MCP tool** (20 csoport + 11 rejtett tool dokumentálva)
+- **13 intelligencia rendszer** (Cognitive Bridge — enrich/reflect/stats)
 - **18 enterprise modul**
 - **6 SQLite DB** + LanceDB/ChromaDB RAG
 - **6 LLM provider** (GitHub Models, Gemini, Claude, Ollama, Cloudflare, Copilot)
@@ -37,6 +38,12 @@ node scripts/copilot-dashboard.js enterprise execute finance_guardian "Check inv
 # RAG / Knowledge
 node scripts/copilot-dashboard.js knowledge semantic "query"
 
+# Cognitive Bridge (13 intelligencia réteg)
+node scripts/copilot-dashboard.js cognitive enrich "feladat leírás"
+node scripts/copilot-dashboard.js cognitive reflect task-id AgentName true "Eredmény"
+node scripts/copilot-dashboard.js cognitive stats
+node scripts/copilot-dashboard.js cognitive health
+
 # Browser Automation
 node scripts/copilot-dashboard.js robotkez exec "Navigate to..."
 ```
@@ -59,6 +66,53 @@ node scripts/copilot-dashboard.js robotkez exec "Navigate to..."
 1. `node scripts/copilot-route.js "task"` → ha confidence ≥ 0.7 → delegálj
 2. Ha fájlszerkesztés / git / build → NE delegálj, natív Copilot képesség
 3. Ha szerver nem fut → offline router mindig elérhető routing döntéshez
+
+---
+
+## 2026-03-26 21:30 - 🧠 Copilot Cognitive Bridge — 13 intelligencia rendszer integráció
+
+**Feladat:** A BAS összes intelligencia/memória rendszerének közvetlen összekötése a Copilot CLI-vel.
+
+### Elvégzett munkák:
+
+**1. Core modul (copilotCognitiveBridge.ts)**
+- 13 BAS intelligencia rendszer lazy singleton betöltése
+- `enrich(req)`: 11 réteg párhuzamos lekérdezése kontextus gazdagításhoz
+- `reflect(req)`: 6 réteg tanulási ciklus feladat befejezése után
+- `getCognitiveStats()`: aggregált statisztikák minden rétegből
+- Lazy type loading `as unknown as LazyType` pattern (strict TS kompatibilitás)
+- ~420 sor
+
+**2. REST API route (cognitiveBridge.ts)**
+- 5 endpoint: POST /enrich, POST /reflect, GET /stats, POST /query, GET /health
+- Regisztrálva: `src/server/routes/index.ts` → `/cognitive`
+- ~130 sor
+
+**3. Dashboard bridge bővítés (copilot-dashboard.js)**
+- Új `cognitive` domain: enrich, reflect, stats, health, query sub-commands
+
+**4. Dokumentáció (copilot-instructions.md)**
+- Cognitive Bridge szekció: 13 réteg táblázat, REST API endpoint lista, használati útmutató
+
+**5. Tesztek (copilotCognitiveBridge.test.ts)**
+- 11 teszt: enrich, reflect, stats + error handling — mind PASS
+
+**Validáció:**
+- ✅ Build: PASS
+- ✅ Cognitive tesztek: 11/11 PASS
+- ✅ Teljes test:fast suite: 1727 teszt PASS
+- ✅ Commit: 7837fa48
+- ✅ Push: main → GitHub
+
+**Érintett fájlok:**
+- `src/core/copilotCognitiveBridge.ts` — ÚJ (~420 sor)
+- `src/server/routes/cognitiveBridge.ts` — ÚJ (~130 sor)
+- `test/copilotCognitiveBridge.test.ts` — ÚJ (~200 sor)
+- `scripts/copilot-dashboard.js` — cognitive domain hozzáadva
+- `.github/copilot-instructions.md` — Cognitive Bridge szekció
+- `src/server/routes/index.ts` — cognitive route regisztrálva
+
+**Státusz:** ✅ Befejezve
 
 ---
 
