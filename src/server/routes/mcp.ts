@@ -57,7 +57,7 @@ router.get('/providers', async (req, res) => {
  */
 router.post('/generate', async (req, res) => {
   try {
-    const { prompt, taskType, provider, temperature, maxTokens, systemPrompt } = req.body;
+    const { prompt, taskType, provider, temperature, maxTokens, systemPrompt, userId } = req.body;
 
     if (!prompt || typeof prompt !== 'string') {
       return res.status(400).json({
@@ -74,7 +74,8 @@ router.post('/generate', async (req, res) => {
       provider,
       temperature,
       maxTokens,
-      systemPrompt
+      systemPrompt,
+      userId,
     });
 
     res.json(result);

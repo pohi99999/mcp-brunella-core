@@ -174,6 +174,28 @@ function initSchema(): void {
       );
 
       CREATE INDEX IF NOT EXISTS idx_tasks_status ON tasks(status);
+
+      CREATE TABLE IF NOT EXISTS llm_calls (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        timestamp TEXT DEFAULT (datetime('now')),
+        provider TEXT NOT NULL,
+        model TEXT,
+        task_type TEXT,
+        prompt_tokens INTEGER DEFAULT 0,
+        completion_tokens INTEGER DEFAULT 0,
+        total_tokens INTEGER DEFAULT 0,
+        duration_ms INTEGER DEFAULT 0,
+        success INTEGER DEFAULT 1,
+        error TEXT,
+        fallback_used INTEGER DEFAULT 0,
+        fallback_reason TEXT,
+        user_id TEXT,
+        cost_usd REAL DEFAULT 0
+      );
+
+      CREATE INDEX IF NOT EXISTS idx_llm_calls_timestamp ON llm_calls(timestamp);
+      CREATE INDEX IF NOT EXISTS idx_llm_calls_provider ON llm_calls(provider);
+      CREATE INDEX IF NOT EXISTS idx_llm_calls_user ON llm_calls(user_id);
     `);
 
     logInfo('GlobalDb', 'Schema initialized');
@@ -229,3 +251,174 @@ export function closeGlobalDb(): void {
 }
 
 export default getGlobalDb;
+
+/* ───── LLM Call Persistence (Observability) ───── */
+
+export interface LlmCallRecord {
+  provider: string;
+  model?: string;
+  taskType?: string;
+  promptTokens?: number;
+  completionTokens?: number;
+  totalTokens?: number;
+  durationMs?: number;
+  success: boolean;
+  error?: string;
+  fallbackUsed?: boolean;
+  fallbackReason?: string;
+  userId?: string;
+  costUsd?: number;
+}
+
+export interface LlmCallQuery {
+  provider?: string;
+  since?: string;
+  until?: string;
+  userId?: string;
+  limit?: number;
+  offset?: number;
+}
+
+export function recordLlmCall(record: LlmCallRecord): void {
+  try {
+    const db = getGlobalDb();
+    db.prepare(`
+      INSERT INTO llm_calls (provider, model, task_type, prompt_tokens, completion_tokens, total_tokens,
+        duration_ms, success, error, fallback_used, fallback_reason, user_id, cost_usd)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `).run(
+      record.provider,
+      record.model ?? null,
+      record.taskType ?? null,
+      record.promptTokens ?? 0,
+      record.completionTokens ?? 0,
+      record.totalTokens ?? 0,
+      record.durationMs ?? 0,
+      record.success ? 1 : 0,
+      record.error ?? null,
+      record.fallbackUsed ? 1 : 0,
+      record.fallbackReason ?? null,
+      record.userId ?? null,
+      record.costUsd ?? 0,
+    );
+  } catch (e) {
+    logError('GlobalDb', `Failed to record LLM call: ${e}`);
+  }
+}
+
+export interface LlmCallRow {
+  id: number;
+  timestamp: string;
+  provider: string;
+  model: string | null;
+  task_type: string | null;
+  prompt_tokens: number;
+  completion_tokens: number;
+  total_tokens: number;
+  duration_ms: number;
+  success: number;
+  error: string | null;
+  fallback_used: number;
+  fallback_reason: string | null;
+  user_id: string | null;
+  cost_usd: number;
+}
+
+export function queryLlmCalls(query: LlmCallQuery = {}): LlmCallRow[] {
+  try {
+    const db = getGlobalDb();
+    const conditions: string[] = [];
+    const params: unknown[] = [];
+
+    if (query.provider) {
+      conditions.push('provider = ?');
+      params.push(query.provider);
+    }
+    if (query.since) {
+      conditions.push('timestamp >= ?');
+      params.push(query.since);
+    }
+    if (query.until) {
+      conditions.push('timestamp <= ?');
+      params.push(query.until);
+    }
+    if (query.userId) {
+      conditions.push('user_id = ?');
+      params.push(query.userId);
+    }
+
+    const where = conditions.length > 0 ? `WHERE ${conditions.join(' AND ')}` : '';
+    const limit = query.limit ?? 200;
+    const offset = query.offset ?? 0;
+
+    return db.prepare(`SELECT * FROM llm_calls ${where} ORDER BY timestamp DESC LIMIT ? OFFSET ?`)
+      .all(...params, limit, offset) as LlmCallRow[];
+  } catch (e) {
+    logError('GlobalDb', `Failed to query LLM calls: ${e}`);
+    return [];
+  }
+}
+
+export interface LlmCallStats {
+  totalCalls: number;
+  successRate: number;
+  avgDurationMs: number;
+  totalTokens: number;
+  totalCostUsd: number;
+  byProvider: Array<{ provider: string; count: number; avgDuration: number; tokens: number; cost: number }>;
+  byModel: Array<{ model: string; count: number; tokens: number }>;
+  recentErrors: Array<{ timestamp: string; provider: string; error: string }>;
+}
+
+export function getLlmCallStats(since?: string): LlmCallStats {
+  try {
+    const db = getGlobalDb();
+    const whereClause = since ? 'WHERE timestamp >= ?' : '';
+    const params = since ? [since] : [];
+
+    const totals = db.prepare(`
+      SELECT COUNT(*) as total, 
+             SUM(CASE WHEN success = 1 THEN 1 ELSE 0 END) as successes,
+             AVG(duration_ms) as avg_duration,
+             SUM(total_tokens) as total_tokens,
+             SUM(cost_usd) as total_cost
+      FROM llm_calls ${whereClause}
+    `).get(...params) as { total: number; successes: number; avg_duration: number; total_tokens: number; total_cost: number } | undefined;
+
+    const byProvider = db.prepare(`
+      SELECT provider, COUNT(*) as count, AVG(duration_ms) as avgDuration, 
+             SUM(total_tokens) as tokens, SUM(cost_usd) as cost
+      FROM llm_calls ${whereClause}
+      GROUP BY provider ORDER BY count DESC
+    `).all(...params) as Array<{ provider: string; count: number; avgDuration: number; tokens: number; cost: number }>;
+
+    const byModel = db.prepare(`
+      SELECT COALESCE(model, 'unknown') as model, COUNT(*) as count, SUM(total_tokens) as tokens
+      FROM llm_calls ${whereClause}
+      GROUP BY model ORDER BY count DESC
+    `).all(...params) as Array<{ model: string; count: number; tokens: number }>;
+
+    const recentErrors = db.prepare(`
+      SELECT timestamp, provider, error FROM llm_calls 
+      WHERE success = 0 ${since ? 'AND timestamp >= ?' : ''}
+      ORDER BY timestamp DESC LIMIT 10
+    `).all(...(since ? [since] : [])) as Array<{ timestamp: string; provider: string; error: string }>;
+
+    return {
+      totalCalls: totals?.total ?? 0,
+      successRate: totals?.total ? ((totals.successes ?? 0) / totals.total) * 100 : 100,
+      avgDurationMs: Math.round(totals?.avg_duration ?? 0),
+      totalTokens: totals?.total_tokens ?? 0,
+      totalCostUsd: totals?.total_cost ?? 0,
+      byProvider,
+      byModel,
+      recentErrors,
+    };
+  } catch (e) {
+    logError('GlobalDb', `Failed to get LLM call stats: ${e}`);
+    return {
+      totalCalls: 0, successRate: 100, avgDurationMs: 0, totalTokens: 0,
+      totalCostUsd: 0, byProvider: [], byModel: [], recentErrors: [],
+    };
+  }
+}
