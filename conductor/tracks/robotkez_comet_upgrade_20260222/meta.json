@@ -1,11 +1,12 @@
 {
   "id": "robotkez_comet_upgrade_20260222",
   "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
-  "status": "active",
+  "status": "completed",
   "priority": "HIGH",
   "created": "2026-02-22",
+  "completedAt": "2026-03-25",
   "owner": "Pohánka Péter",
-  "progress": 75,
+  "progress": 100,
   "description": "A meglévő RobotkezV2Agent-et Perplexity Comet-szintűre fejlesztjük: Planner→Actor→Critic háromrétegű multi-agent architektúrával, önjavítással, vision-alapú selector generálással, memóriával és cross-tab kezeléssel. Az alap (Playwright + Browser-Use) már megvan — csak a magasabb szintű intelligencia hiányzik.",
   "existing_assets": {
     "python": [
@@ -71,7 +72,7 @@
     {
       "phase": 3,
       "name": "Memory + Cross-Tab",
-      "status": "IN_PROGRESS",
+      "status": "COMPLETE",
       "duration": "~3 óra",
       "tasks": [
         "ActionMemory SQLite: korábban sikeres lépések tárolása",
@@ -83,7 +84,7 @@
     {
       "phase": 4,
       "name": "Brunella integráció + Demo",
-      "status": "PARTIAL",
+      "status": "COMPLETE",
       "duration": "~2 óra",
       "tasks": [
         "CometBrowserAgent.ts: Brunella IAgent interfész",

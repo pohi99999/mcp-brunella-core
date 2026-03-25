@@ -184,6 +184,51 @@ def health_check():
     browser_use_status = "available" if HAS_BROWSER_USE else "not_installed"
     return {"status": "ok", "component": "python_subsystem", "browser_use": browser_use_status}
 
+# --- Comet Browser Endpoints ---
+
+@app.post("/comet/execute")
+async def comet_execute(task: CometTask):
+    """
+    Comet önjavító böngésző feladat végrehajtás.
+    Planner → Actor → Critic loop memóriával.
+    """
+    try:
+        headless = task.context.get("headless", True)
+        orchestrator = CometOrchestrator(headless=headless)
+        result = await orchestrator.execute(task.task)
+        return {
+            "success": result.success,
+            "attempts": result.attempts,
+            "error": result.error,
+            "steps_completed": len(result.data),
+            "data": [
+                {"success": r.success, "extracted": r.extracted, "error": r.error}
+                for r in result.data
+            ]
+        }
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Comet execution failed: {str(e)}")
+
+@app.get("/comet/memory/{domain}")
+async def comet_memory_get(domain: str):
+    """Lekéri a Comet memóriát egy adott domain-hez."""
+    try:
+        memory = ActionMemory()
+        hints = await memory.get_hints(domain, "")
+        return {"domain": domain, "hints": hints}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Memory query failed: {str(e)}")
+
+@app.delete("/comet/memory")
+async def comet_memory_clear():
+    """Törli a régi Comet memória bejegyzéseket."""
+    try:
+        memory = ActionMemory()
+        await memory.clear_old(days=0)
+        return {"status": "cleared"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Memory clear failed: {str(e)}")
+
 @app.post("/api/task")
 async def handle_browser_task(req: TaskRequest):
     """
