@@ -753,10 +753,18 @@ async def harvest_check(scenario_path: str = "myai/scenarios/n8n_training.json")
     return {"status": "ok" if ok else "missing_deps", "scenario_path": scenario_path}
 
 # --- Robotkez Pro (BVAB) Endpoints ---
-from myai.robotkez.browser import overlay_browser
-from myai.robotkez.computer_use import computer_use
-from myai.workers.os_worker import os_worker
-from myai.workers.vision_worker import vision_worker
+try:
+    from myai.robotkez.browser import overlay_browser
+    from myai.robotkez.computer_use import computer_use
+    from myai.workers.os_worker import os_worker
+    from myai.workers.vision_worker import vision_worker
+    HAS_ROBOTKEZ = True
+except ImportError:
+    HAS_ROBOTKEZ = False
+    overlay_browser = None
+    computer_use = None
+    os_worker = None
+    vision_worker = None
 import base64
 
 class RobotkezActionRequest(BaseModel):
@@ -783,30 +791,42 @@ class VisionFindRequest(BaseModel):
 @app.get("/os/screenshot")
 async def os_screenshot():
     """Captures OS screen and returns image."""
+    if not HAS_ROBOTKEZ:
+        raise HTTPException(status_code=501, detail="OS automation deps not installed (pyautogui, mss)")
     path = await os_worker.take_screenshot(f"os_shot_{int(datetime.utcnow().timestamp())}.png")
     return FileResponse(path)
 
 @app.post("/os/click")
 async def os_click(req: OSClickRequest):
+    if not HAS_ROBOTKEZ:
+        raise HTTPException(status_code=501, detail="OS automation deps not installed")
     return await os_worker.click(req.x, req.y, clicks=req.clicks)
 
 @app.post("/os/click-pct")
 async def os_click_pct(req: OSClickPctRequest):
     """Click at percentage-based coordinates (0.0-1.0), screen-resolution independent."""
+    if not HAS_ROBOTKEZ:
+        raise HTTPException(status_code=501, detail="OS automation deps not installed")
     return await os_worker.click_pct(req.x_pct, req.y_pct, clicks=req.clicks)
 
 @app.get("/os/screen-size")
 async def os_screen_size():
     """Returns current screen resolution."""
+    if not HAS_ROBOTKEZ:
+        raise HTTPException(status_code=501, detail="OS automation deps not installed")
     return os_worker.get_screen_size()
 
 @app.post("/os/type")
 async def os_type(req: OSTypeRequest):
+    if not HAS_ROBOTKEZ:
+        raise HTTPException(status_code=501, detail="OS automation deps not installed")
     return await os_worker.type_text(req.text)
 
 @app.post("/os/vision-click")
 async def os_vision_click(req: VisionFindRequest):
     """Uses Vision to find element and clicks it."""
+    if not HAS_ROBOTKEZ:
+        raise HTTPException(status_code=501, detail="OS automation deps not installed")
     # 1. Take screenshot
     shot_path = await os_worker.take_screenshot("vision_temp.png")
     

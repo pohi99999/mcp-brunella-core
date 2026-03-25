@@ -9,6 +9,7 @@
 import { Router } from "express";
 import { crawl4aiCrawlHandler, crawl4aiBatchHandler } from "../../tools/crawl4aiTool.js";
 import { logInfo, logError } from "../../utils/logger.js";
+import { socketService } from "../SocketService.js";
 
 const PYTHON_API = process.env.PYTHON_API_URL || "http://127.0.0.1:8000";
 
@@ -20,20 +21,24 @@ export function createCrawl4aiRouter(): Router {
     try {
       const healthRes = await fetch(`${PYTHON_API}/health`, { signal: AbortSignal.timeout(5000) });
       const health = await healthRes.json() as Record<string, unknown>;
-      res.json({
+      const statusPayload = {
         available: true,
         python_api: PYTHON_API,
         health,
         timestamp: new Date().toISOString(),
-      });
+      };
+      socketService.emit("crawl4ai:status", statusPayload);
+      res.json(statusPayload);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
-      res.json({
+      const statusPayload = {
         available: false,
         python_api: PYTHON_API,
         error: msg,
         timestamp: new Date().toISOString(),
-      });
+      };
+      socketService.emit("crawl4ai:status", statusPayload);
+      res.json(statusPayload);
     }
   });
 
@@ -52,11 +57,14 @@ export function createCrawl4aiRouter(): Router {
       }
 
       logInfo("crawl4ai-route", `Crawl request: ${url}`);
+      socketService.emit("crawl4ai:progress", { url, status: "started", timestamp: Date.now() });
       const result = await crawl4aiCrawlHandler({ url, extract_schema, wait_for_selector });
+      socketService.emit("crawl4ai:progress", { url, status: "completed", timestamp: Date.now() });
       res.json(result);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
       logError("crawl4ai-route", msg);
+      socketService.emit("crawl4ai:progress", { url: (req.body as Record<string, unknown>)?.url ?? "unknown", status: "failed", error: msg, timestamp: Date.now() });
       res.status(500).json({ success: false, error: msg });
     }
   });
@@ -75,11 +83,14 @@ export function createCrawl4aiRouter(): Router {
       }
 
       logInfo("crawl4ai-route", `Batch crawl request: ${urls.length} URLs`);
+      socketService.emit("crawl4ai:batch-progress", { urlCount: urls.length, status: "started", timestamp: Date.now() });
       const result = await crawl4aiBatchHandler({ urls, extract_schema });
+      socketService.emit("crawl4ai:batch-progress", { urlCount: urls.length, status: "completed", timestamp: Date.now() });
       res.json(result);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
       logError("crawl4ai-route", msg);
+      socketService.emit("crawl4ai:batch-progress", { urlCount: ((req.body as Record<string, unknown>)?.urls as unknown[] | undefined)?.length ?? 0, status: "failed", error: msg, timestamp: Date.now() });
       res.status(500).json({ success: false, error: msg });
     }
   });

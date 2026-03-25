@@ -1,8 +1,9 @@
 /**
  * Crawl4AI Panel — Dashboard komponens intelligens web crawlinghoz
  */
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { useSocket } from "../../context/SocketContext";
 
 interface CrawlResult {
   success: boolean;
@@ -29,12 +30,9 @@ export function Crawl4AIPanel() {
   const [status, setStatus] = useState<ServiceStatus | null>(null);
   const [batchUrls, setBatchUrls] = useState("");
   const [activeTab, setActiveTab] = useState<"single" | "batch">("single");
+  const { socket } = useSocket();
 
-  useEffect(() => {
-    checkStatus();
-  }, []);
-
-  const checkStatus = async () => {
+  const checkStatus = useCallback(async () => {
     try {
       const res = await fetch("/api/v1/crawl4ai/status");
       const data = await res.json();
@@ -42,7 +40,48 @@ export function Crawl4AIPanel() {
     } catch {
       setStatus({ available: false, python_api: "N/A", error: "Nem elérhető" });
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    checkStatus();
+  }, [checkStatus]);
+
+  // Real-time WebSocket listeners
+  useEffect(() => {
+    if (!socket) return;
+
+    const onStatus = (data: unknown) => {
+      if (data && typeof data === "object" && "available" in data) {
+        setStatus(data as ServiceStatus);
+      }
+    };
+
+    const onProgress = (data: unknown) => {
+      if (!data || typeof data !== "object") return;
+      const payload = data as Record<string, unknown>;
+      if (payload.status === "completed" || payload.status === "failed") {
+        checkStatus();
+      }
+    };
+
+    const onBatchProgress = (data: unknown) => {
+      if (!data || typeof data !== "object") return;
+      const payload = data as Record<string, unknown>;
+      if (payload.status === "completed" || payload.status === "failed") {
+        checkStatus();
+      }
+    };
+
+    socket.on("crawl4ai:status", onStatus);
+    socket.on("crawl4ai:progress", onProgress);
+    socket.on("crawl4ai:batch-progress", onBatchProgress);
+
+    return () => {
+      socket.off("crawl4ai:status", onStatus);
+      socket.off("crawl4ai:progress", onProgress);
+      socket.off("crawl4ai:batch-progress", onBatchProgress);
+    };
+  }, [socket, checkStatus]);
 
   const handleCrawl = async () => {
     if (!url.trim()) return;
