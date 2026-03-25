@@ -6638,5 +6638,29 @@ obotkez ágakról.
   - 12 azonosított rejtett képesség
   - Kritikus fájlok referencia
 
-**Státusz:** ✅ Tudásbázis frissítve, commit pending
-**Következő lépés:** Git commit + push, majd Layer 2 (CopilotCommanderPanel) tervezése
+**Státusz:** ✅ Tudásbázis frissítve, pusholt (321e0771)
+
+---
+
+### 2026-03-26 — Layer 2: CopilotCommanderPanel + Bridge API
+
+**Feladat:** A 3-rétegű Copilot↔BAS integráció 2. rétegének megvalósítása — Dashboard panel és REST API bridge.
+
+**Létrehozott fájlok:**
+- `src/core/copilotBridgeState.ts` — Singleton in-memory state manager (200-elem körkörös puffer, CopilotCommand/AgentDispatchResult típusok)
+- `src/dashboard/components/dashboard/CopilotCommanderPanel.tsx` — React panel 4 füllel (Overview, Agent Dispatch, Activity Log, Quick Commands), 563 sor
+- `src/server/routes/copilotBridge.ts` — 7 REST végpont: GET/POST /commands, PATCH /commands/:id, GET/POST /dispatches, GET /stats, DELETE /clear
+
+**Módosított fájlok:**
+- `src/dashboard/lib/navigation.tsx` — CopilotCommanderPanel regisztrálva "AI & Agents" csoportba
+- `src/server/routes/index.ts` — copilotBridge route regisztrálva
+
+**Build:** ✅ `npm run build` PASS
+**Tesztek:** ✅ 192 fájl PASS, 2053 teszt PASS (3 pre-existing fail: cloudflare_routes, rag)
+**Commit:** eb18e171 — pushed to main
+**Státusz:** ✅ Layer 2 KÉSZ
+
+**Összefoglaló 3-réteg státusz:**
+- Réteg 1 ✅ — `copilot-dashboard.js` (28 domain, 300+ endpoint) — d4e63de6
+- Réteg 2 ✅ — CopilotCommanderPanel + Bridge API — eb18e171
+- Réteg 3 ⏳ — PAIOSZ "Copilot" provider (opcionális, nem indult el)
