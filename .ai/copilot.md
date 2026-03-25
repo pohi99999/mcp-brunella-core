@@ -1,13 +1,48 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
-## 🤖 Agent Dispatch — BAS Teljes Integráció (2026-03-25)
+## 🧠 Copilot ↔ BAS Full Integration v2 (2026-03-26)
 
-A Copilot CLI a BAS 54+ regisztrált ügynökét sub-agentként hívhatja meg.
+A Copilot CLI TELJES hozzáféréssel rendelkezik a BAS rendszerhez:
+- **300+ REST endpoint** (28 domain)
+- **70+ agent** (12+ kategória)
+- **53 MCP tool** (20 csoport)
+- **18 enterprise modul**
+- **6 SQLite DB** + LanceDB/ChromaDB RAG
+- **5 LLM provider** (GitHub Models, Gemini, Claude, Ollama, Cloudflare)
 
-**2 mód:**
+### Gyors parancsok:
+
 ```powershell
-# 1. Offline routing (szerver NÉLKÜL — gyors döntés, melyik agent kell)
-node scripts/copilot-route.js "feladat leírás"            # → JSON: bestAgent + confidence
+# TELJES rendszer áttekintés
+node scripts/copilot-dashboard.js --quick-status
+
+# Összes domain listázása (28 db)
+node scripts/copilot-dashboard.js --domains
+
+# Agent routing (szerver NÉLKÜL)
+node scripts/copilot-route.js "feladat leírás"
+
+# Agent végrehajtás (szerver KELL: npm run dev)
+node scripts/copilot-dashboard.js agents execute <name> "task"
+node scripts/copilot-dashboard.js agents orchestrate "auto-route task"
+
+# PAIOSZ Chat (5 LLM)
+node scripts/copilot-dashboard.js paios chat "question"
+node scripts/copilot-dashboard.js paios chat-gemini "question"
+
+# Enterprise (18 modul)
+node scripts/copilot-dashboard.js enterprise execute finance_guardian "Check invoices"
+
+# RAG / Knowledge
+node scripts/copilot-dashboard.js knowledge semantic "query"
+
+# Browser Automation
+node scripts/copilot-dashboard.js robotkez exec "Navigate to..."
+```
+
+**Részletek:** `.github/copilot-instructions.md` → "Copilot ↔ BAS Full Integration" szekció
+
+---
 
 # 2. REST dispatch (szerver KELL: npm run dev)
 .\scripts\copilot-dispatch.ps1 -Mode execute -AgentName "lint_fixer" -Task "Fix ESLint errors"
@@ -23,6 +58,42 @@ node scripts/copilot-route.js "feladat leírás"            # → JSON: bestAgen
 1. `node scripts/copilot-route.js "task"` → ha confidence ≥ 0.7 → delegálj
 2. Ha fájlszerkesztés / git / build → NE delegálj, natív Copilot képesség
 3. Ha szerver nem fut → offline router mindig elérhető routing döntéshez
+
+---
+
+## 2026-03-26 — 🧠 Copilot ↔ BAS Full Integration (Layer 1)
+
+**Feladat:** Copilot CLI ↔ BAS Dashboard teljes integráció — minden BAS képesség elérhető legyen a Copilot CLI-ből.
+
+### Elvégzett munkák:
+
+**1. Teljes BAS rendszer audit:**
+- 53 MCP tool (20 kategória), 70+ agent (12+ domain)
+- 300+ REST API endpoint (52 route fájl), 70+ dashboard panel
+- 18 enterprise modul, 6 SQLite DB, LanceDB/ChromaDB RAG
+- 5 LLM provider, Python FastAPI subsystem (15+ endpoint)
+
+**2. copilot-dashboard.js v2 (Layer 1 Bridge):**
+- Teljes újraírás: 28 domain, 200+ command, PUT/DELETE support
+- Új domainok: memory, invoice, google, cean, sales, evhunter, tests, pipeline, workflow, fleet, assistant, browser
+- FastAPI subsystem támogatás (python health/execute/refine/harvest/comet)
+- --quick-status: egyetlen parancs → health + agents + tasks
+- --domains: összes 28 domain listázása
+- Strukturált help rendszer minden domain-hez
+
+**3. copilot-instructions.md Major Update:**
+- Régi "Agent Dispatch" szekció → teljes "Copilot ↔ BAS Full Integration"
+- 28 domain parancsreferencia példákkal
+- Döntési mátrix: mikor melyik agent + bridge parancs
+- 3 eszköz összehasonlító táblázat
+
+**Érintett fájlok:**
+- `scripts/copilot-dashboard.js` (teljes újraírás, ~750 sor)
+- `.github/copilot-instructions.md` (Integration szekció átírás)
+- `.ai/copilot.md` (napló frissítés)
+
+**Státusz:** ✅ Layer 1 Bridge Befejezve
+**Következő:** Layer 2 (CopilotCommanderPanel.tsx) + Layer 3 (PAIOSZ provider) — opcionális
 
 ---
 
