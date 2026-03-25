@@ -1,5 +1,55 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 🤖 Agent Dispatch — BAS Teljes Integráció (2026-03-25)
+
+A Copilot CLI a BAS 54+ regisztrált ügynökét sub-agentként hívhatja meg.
+
+**2 mód:**
+```powershell
+# 1. Offline routing (szerver NÉLKÜL — gyors döntés, melyik agent kell)
+node scripts/copilot-route.js "feladat leírás"            # → JSON: bestAgent + confidence
+
+# 2. REST dispatch (szerver KELL: npm run dev)
+.\scripts\copilot-dispatch.ps1 -Mode execute -AgentName "lint_fixer" -Task "Fix ESLint errors"
+.\scripts\copilot-dispatch.ps1 -Mode route -Task "..."     # Auto-routing (AgentManager dönt)
+.\scripts\copilot-dispatch.ps1 -Mode status                 # Állapot
+```
+
+**Részletes routing guide:** `.ai/agent-routing-guide.md`
+**Capability index (JSON):** `config/copilot-agents.json`
+**Copilot instructions (automatikus):** `.github/copilot-instructions.md` → "Agent Dispatch" szekció
+
+**Döntési logika:**
+1. `node scripts/copilot-route.js "task"` → ha confidence ≥ 0.7 → delegálj
+2. Ha fájlszerkesztés / git / build → NE delegálj, natív Copilot képesség
+3. Ha szerver nem fut → offline router mindig elérhető routing döntéshez
+
+---
+
+## 2026-03-25 19:30 - 🔗 BAS Agent Dispatch Teljes Integráció
+
+**Feladat:** 54+ BAS ügynök integrálása Copilot CLI sub-agentekként
+**Érintett fájlok:**
+- `scripts/copilot-dispatch.ps1` — PS 5.1+ kompatibilis REST dispatch (ÚJRAÍRVA)
+- `scripts/copilot-route.js` — Node.js offline agent router (ÚJ)
+- `config/copilot-agents.json` — Agent capability index (ÚJ, generált)
+- `.ai/agent-routing-guide.md` — Routing mátrix + döntési fa (FRISSÍTVE)
+- `.github/copilot-instructions.md` — Agent Dispatch szekció (HOZZÁADVA)
+- `.ai/copilot.md` — Header + session napló (FRISSÍTVE)
+
+**Architektúra:**
+1. **Offline Router** (`copilot-route.js`): Trigger keyword + capability matching, szerver nélkül
+2. **REST Dispatch** (`copilot-dispatch.ps1`): BAS API hívás agentek végrehajtásához
+3. **Capability Index** (`copilot-agents.json`): 54 agent, 12 domain, gépi feldolgozásra
+4. **Custom Instructions**: Copilot automatikusan betölti → tudja mikor melyik agentet hívja
+
+**Tesztelve:** Router helyesen route-ol: lint_fixer, marketing_director, sales_hunter, evaluator, market_intel
+
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A következő session-ben a Copilot CLI automatikusan ismeri az agent dispatch képességet a `.github/copilot-instructions.md` frissítés miatt.
+
+---
+
 ## 2026-03-25 16:55 - 🏆 3 Track lezárása + Lumen Landing fejlesztés
 
 **Feladat:** 3 közel kész track 100%-ra vitele és lezárása, valamint a Lumen Landing weboldal fejlesztése
