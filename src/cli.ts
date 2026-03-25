@@ -1047,10 +1047,19 @@ program
             const edgeResult = await cloudflareClient.submitTask(prompt, {
               history,
             });
+            const resultObject =
+              typeof edgeResult.result === "object" && edgeResult.result !== null
+                ? (edgeResult.result as Record<string, unknown>)
+                : null;
+            const responseCandidate =
+              resultObject && typeof resultObject.response === "string"
+                ? resultObject.response
+                : null;
+
             responseText =
               typeof edgeResult.result === "string"
                 ? edgeResult.result
-                : edgeResult.result?.response ||
+                : responseCandidate ||
                   edgeResult.message ||
                   JSON.stringify(edgeResult);
           } else {
