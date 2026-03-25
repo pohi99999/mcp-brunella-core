@@ -1,1 +1,8 @@
-npx vitest run --reporter=dot < /dev/null || exit 1
+# Optimized pre-push: exclude slow integration/e2e/phase tests
+# Full suite runs in CI; pre-push only core tests (~3-4 min vs ~11 min)
+npx vitest run --reporter=dot \
+  --exclude 'test/cli-e2e*' \
+  --exclude 'test/phase*' \
+  --exclude 'test/swarm_smoke*' \
+  --exclude 'test/robotkez_integration*' \
+  < /dev/null || exit 1

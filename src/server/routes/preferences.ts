@@ -18,6 +18,7 @@ import {
   memoryPurgeHandler,
 } from "../../tools/memoryTool.js";
 import { logInfo, logError } from "../../utils/logger.js";
+import { socketService } from "../SocketService.js";
 
 export function createPreferencesRouter(): Router {
   const router = Router();
@@ -26,6 +27,7 @@ export function createPreferencesRouter(): Router {
   router.get("/stats/:userId", async (req, res) => {
     try {
       const result = await memoryContextHandler({ user_id: req.params.userId });
+      socketService.emit("preferences:stats", { userId: req.params.userId, stats: (result as Record<string, unknown>)?.stats, timestamp: Date.now() });
       res.json(result);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -94,6 +96,13 @@ export function createPreferencesRouter(): Router {
         memory_type,
         ttl_days,
       });
+      const isUpdate = (result as Record<string, unknown>)?.updated === true;
+      socketService.emit("preferences:change", {
+        userId: user_id || "default",
+        action: isUpdate ? "update" : "create",
+        key,
+        timestamp: Date.now(),
+      });
       res.json(result);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -112,6 +121,12 @@ export function createPreferencesRouter(): Router {
         key: req.params.key,
         memory_type,
       });
+      socketService.emit("preferences:change", {
+        userId: req.params.userId,
+        action: "delete",
+        key: req.params.key,
+        timestamp: Date.now(),
+      });
       res.json(result);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);
@@ -124,6 +139,12 @@ export function createPreferencesRouter(): Router {
   router.post("/purge", async (_req, res) => {
     try {
       const result = await memoryPurgeHandler({} as Record<string, never>);
+      socketService.emit("preferences:change", {
+        userId: "system",
+        action: "purge",
+        key: "*expired*",
+        timestamp: Date.now(),
+      });
       res.json(result);
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : String(e);

@@ -3,11 +3,13 @@ Crawl4AI Worker — Adaptív, LLM-optimalizált web crawling.
 
 Stealth mód, zajmentes Markdown kimenet, séma-alapú extrakció.
 A BAS Data Flywheel Harvest fázisának fejlett változata.
+Fallback: Ha crawl4ai belső browser init sikertelen, patchright-tal crawlol.
 """
 
 import asyncio
 import json
 import logging
+import re
 from typing import Any, Optional
 
 from pydantic import BaseModel, Field
@@ -62,6 +64,7 @@ async def crawl_url(request: CrawlRequest) -> CrawlResult:
     browser_config = BrowserConfig(
         headless=request.headless,
         verbose=False,
+        use_managed_browser=False,
     )
 
     run_config = CrawlerRunConfig(
@@ -83,11 +86,8 @@ async def crawl_url(request: CrawlRequest) -> CrawlResult:
             )
 
             if not result.success:
-                return CrawlResult(
-                    url=request.url,
-                    status="failed",
-                    error=result.error_message or "Crawl failed"
-                )
+                logger.warning(f"Crawl4AI failed, trying fallback: {result.error_message}")
+                return await _fallback_crawl(request)
 
             crawl_result = CrawlResult(
                 url=request.url,
@@ -110,12 +110,8 @@ async def crawl_url(request: CrawlRequest) -> CrawlResult:
             return crawl_result
 
     except Exception as e:
-        logger.error(f"Crawl4AI hiba: {e}")
-        return CrawlResult(
-            url=request.url,
-            status="failed",
-            error=str(e)
-        )
+        logger.warning(f"Crawl4AI hiba, fallback patchright-ra: {e}")
+        return await _fallback_crawl(request)
 
 
 async def _extract_structured(
@@ -145,6 +141,54 @@ async def _extract_structured(
         logger.warning(f"Strukturált extrakció sikertelen: {e}")
 
     return None
+
+
+async def _fallback_crawl(request: CrawlRequest) -> CrawlResult:
+    """Patchright-alapú fallback ha a crawl4ai browser init sikertelen."""
+    try:
+        from patchright.async_api import async_playwright
+        from markdownify import markdownify as md
+    except ImportError:
+        return CrawlResult(
+            url=request.url,
+            status="failed",
+            error="patchright/markdownify not installed for fallback crawl"
+        )
+
+    try:
+        p = await async_playwright().start()
+        browser = await p.chromium.launch(headless=request.headless)
+        page = await browser.new_page()
+        await page.goto(request.url, wait_until="domcontentloaded", timeout=request.timeout)
+
+        title = await page.title()
+        html = await page.content()
+        await browser.close()
+        await p.stop()
+
+        # HTML → Markdown konverzió
+        for selector in request.remove_selectors:
+            pattern = re.compile(rf'<{selector}[^>]*>.*?</{selector}>', re.DOTALL | re.IGNORECASE)
+            html = pattern.sub('', html)
+
+        markdown = md(html, strip=['script', 'style', 'img'])
+        # Link extrakció
+        links = re.findall(r'href=["\']([^"\']+)["\']', html)
+
+        return CrawlResult(
+            url=request.url,
+            markdown=markdown.strip(),
+            title=title,
+            links=links[:50],
+            status="success",
+        )
+    except Exception as e:
+        logger.error(f"Fallback crawl hiba: {e}")
+        return CrawlResult(
+            url=request.url,
+            status="failed",
+            error=f"Fallback crawl failed: {str(e)}"
+        )
 
 
 async def batch_crawl(urls: list[str], stealth: bool = True) -> list[CrawlResult]:
