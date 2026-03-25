@@ -287,70 +287,128 @@ Ne módosítsd explicit kérés nélkül: `package.json`, `src/agents/registry.j
 - **Multi-agent munkamenet**: Claude Code, Gemini CLI, GitHub Copilot, Jules, Cursor párhuzamosan dolgoznak. Koordináció a `.ai/` naplókon és `conductor/tracks.md`-n keresztül.
 - **Log fájlok**: `logs/` mappa — `brunella.db` (SQLite), `dashboard.log`, `health.log`, `http.log`, `orchestrator.log`, `startup.log` stb.
 
-## Copilot Agent Dispatch — BAS integracio
+## Copilot ↔ BAS Full Integration
 
-**54+ BAS ugynok elerhetoseg Copilot CLI-bol mint sub-agent.**
-Az ugynokoket 2 modon hivhatod meg: offline router (gyors dontes) vagy REST API dispatch (vegrehajtas).
+**A Copilot CLI teljes hozzaferessel rendelkezik a BAS rendszerhez — 300+ REST endpoint, 70+ agent, 53 MCP tool.**
 
-### Offline Router (szerver NELKUL)
+### 3 eszkoz — mikor melyiket hasznald
 
-```powershell
-# Melyik agent kell a feladathoz? (JSON valasz: bestAgent, confidence, alternatives)
-node scripts/copilot-route.js "Fix TypeScript lint errors"
+| Eszkoz | Mikor | Szerver kell? |
+|--------|-------|---------------|
+| `node scripts/copilot-route.js` | Gyors dontes: melyik agent kell | ❌ NEM |
+| `node scripts/copilot-dashboard.js` | BARMILYEN dashboard/API muvelet | ✅ IGEN (npm run dev) |
+| `.\scripts\copilot-dispatch.ps1` | PowerShell wrapper (legacy) | ✅ IGEN |
 
-# Domain alapu szures
-node scripts/copilot-route.js --domain marketing
-node scripts/copilot-route.js --domains
+### Dashboard Bridge — Teljes rendszer vezérles
 
-# Osszes agent listazasa
-node scripts/copilot-route.js --list
-```
-
-### REST API Dispatch (szerver KELL: npm run dev)
+**28 domain, 200+ muvelet** — a BAS OSSZES kepcssege egyetlen CLI-bol:
 
 ```powershell
-# Konkret ugynok hivasa
-.\scripts\copilot-dispatch.ps1 -Mode execute -AgentName "lint_fixer" -Task "Fix ESLint errors"
+# Rendszer attekintes
+node scripts/copilot-dashboard.js --quick-status     # Health + Agents + Tasks egyben
+node scripts/copilot-dashboard.js --domains           # 28 domain listazasa
 
-# Automatikus routing (AgentManager dont)
-.\scripts\copilot-dispatch.ps1 -Mode route -Task "Keress ra az AI trendekre"
+# Agent muveletek (70+ agent)
+node scripts/copilot-dashboard.js agents list
+node scripts/copilot-dashboard.js agents execute lint_fixer "Fix ESLint errors"
+node scripts/copilot-dashboard.js agents orchestrate "Create marketing campaign"
 
-# Allapot ellenorzes
-.\scripts\copilot-dispatch.ps1 -Mode status
+# PAIOSZ Chat (5 LLM provider)
+node scripts/copilot-dashboard.js paios chat "Analyze system health"
+node scripts/copilot-dashboard.js paios chat-gemini "Summarize project status"
+node scripts/copilot-dashboard.js paios chat-claude "Review this architecture"
+node scripts/copilot-dashboard.js paios chat-ollama "Quick code suggestion"
+
+# MCP Tools (53 tool)
+node scripts/copilot-dashboard.js mcp tools
+node scripts/copilot-dashboard.js mcp execute knowledge_semantic_search '{"query":"auth"}'
+
+# Enterprise (18 modul: Finance, HR, Sales, Legal, Marketing, stb.)
+node scripts/copilot-dashboard.js enterprise modules
+node scripts/copilot-dashboard.js enterprise execute finance_guardian "Check invoices"
+
+# Browser Automation (Robotkez)
+node scripts/copilot-dashboard.js robotkez exec "Navigate to google.com"
+node scripts/copilot-dashboard.js robotkez chat "Search for AI trends"
+node scripts/copilot-dashboard.js browser navigate "https://example.com"
+node scripts/copilot-dashboard.js browser screenshot
+
+# Developer Pipeline (Git, Code Review, Scaffold)
+node scripts/copilot-dashboard.js developer execute "Review auth module"
+node scripts/copilot-dashboard.js developer scaffold agent
+
+# Knowledge & RAG (LanceDB + ChromaDB)
+node scripts/copilot-dashboard.js knowledge semantic "authentication flow"
+node scripts/copilot-dashboard.js knowledge index src/auth/login.ts
+
+# Memory & Preferences
+node scripts/copilot-dashboard.js memory store default theme "dark"
+node scripts/copilot-dashboard.js memory query default
+
+# Swarm (Multi-Agent Colony)
+node scripts/copilot-dashboard.js swarm dispatch "Research competitor landscape"
+
+# Tasks & Tracks
+node scripts/copilot-dashboard.js tasks stats
+node scripts/copilot-dashboard.js tasks decompose "Build new authentication system"
+node scripts/copilot-dashboard.js tracks list
+node scripts/copilot-dashboard.js tracks todos
+
+# Python Subsystem (FastAPI)
+node scripts/copilot-dashboard.js python health
+node scripts/copilot-dashboard.js python comet "Execute ML pipeline"
+node scripts/copilot-dashboard.js python harvest "https://example.com"
+
+# Invoice & Finance
+node scripts/copilot-dashboard.js invoice unpaid
+node scripts/copilot-dashboard.js invoice list 50
+
+# Google Workspace
+node scripts/copilot-dashboard.js google gmail 20
+node scripts/copilot-dashboard.js google calendar
+
+# Web Crawling
+node scripts/copilot-dashboard.js crawl fetch "https://example.com"
+
+# Observability & Security
+node scripts/copilot-dashboard.js observability stats
+node scripts/copilot-dashboard.js security audit
+
+# Cloudflare Edge
+node scripts/copilot-dashboard.js cloudflare status
 ```
 
-### Mikor delegalj BAS agentre
+### Offline Agent Router (szerver NELKUL)
 
-| Feladattipus | BAS Agent | Megjegyzes |
+```powershell
+node scripts/copilot-route.js "Fix TypeScript lint errors"   # → JSON: bestAgent, confidence
+node scripts/copilot-route.js --domain marketing              # Domain szures
+node scripts/copilot-route.js --list                          # Osszes agent
+```
+
+### Mikor delegalj BAS agentre (vs. csinald magad)
+
+| Feladattipus | BAS Agent | Bridge parancs |
 |---|---|---|
-| ESLint / TSC hiba javitas | `lint_fixer` | auto_fix + batch_fix kepes |
-| Kod generalas / refactoring | `Developer` | self_healing pipeline |
-| Premium AI kod review | `github_models` | GPT-4o GitHub Models API |
-| Web scraping / bongeszesz | `robotkezv2` | Playwright + LLM + Comet |
-| Szamla OCR / penzugy | `finance_guardian` | Invoice feldolgozas |
-| Marketing kampany | `marketing_director` | Campaign orchestration |
-| Piaci kutatas / competitor | `market_intel` | Trend + price analysis |
-| Jogi / compliance | `law_detective` | Magyar Kozlony intelligence |
-| Projekt track kezeles | `ProjectConductor` | EPP-v2 tracks |
-| Feladat dekompozcio | `task_decomposer` | Komplex task → DAG |
-| HR / toborzas | `DigitalHeadhunter` | CV screening |
-| Logisztika | `logistics_dispatcher` | Tracking + route opt |
-| Rendszer health check | `evaluator` | Audit + test runner |
-| Monitoring / ops | `ops` | Diagnosztika |
-| TRIZ innovacio | `innovation_bridge` | Cross-industry transfer |
-| Minosegellenorzes | `critic_agent` | Hallucination detection |
-| Agent tervezes | `agent_architect` | Uj agent prompt/config |
-| Spec iras / track gen | `SpecWriter` | EPP-v2 spec generator |
-| Enterprise koordinacio | `enterprise_orchestrator` | 18 modul routing |
-| Komplex multi-agent | `orchestrator` (route mod) | AgentManager dont |
+| ESLint / TSC javitas | `lint_fixer` | `agents execute lint_fixer "Fix..."` |
+| Kod generalas | `Developer` | `developer execute "Build..."` |
+| Web scraping | `robotkezv2` | `robotkez exec "Navigate..."` |
+| Szamla / penzugy | `finance_guardian` | `enterprise execute finance_guardian "..."` |
+| Marketing | `marketing_director` | `enterprise execute marketing_director "..."` |
+| HR / toborzas | `DigitalHeadhunter` | `enterprise execute digital_headhunter "..."` |
+| Jogi | `law_detective` | `enterprise execute law_detective "..."` |
+| Track kezeles | `ProjectConductor` | `tracks list` / `tracks todos` |
+| Multi-agent | orchestrator | `swarm dispatch "..."` |
+| RAG kereses | knowledge tools | `knowledge semantic "..."` |
+| Browser auto | Robotkez | `robotkez exec "..."` / `browser navigate "..."` |
 
 ### Dontesi logika
 
-1. **Offline routing:** `node scripts/copilot-route.js "feladat"` → JSON
-2. **Ha confidence >= 0.7** → delegald az agentre (REST dispatch)
-3. **Ha confidence < 0.7** → nezd meg az alternativakat, vagy csinald magad
-4. **Ha a feladat fajl szerkesztes / git** → NE delegald, csinald magad (nativ Copilot kepesseg)
-5. **Reszletes routing matrix:** `.ai/agent-routing-guide.md`
+1. `node scripts/copilot-route.js "feladat"` → JSON (confidence score)
+2. **confidence >= 0.7** → delegald: `node scripts/copilot-dashboard.js agents execute <name> "<task>"`
+3. **confidence < 0.7** → nezd meg alternativakat, vagy csinald magad
+4. **Fajl szerkesztes / git** → NE delegald (nativ Copilot kepesseg jobb)
+5. **LLM generacio** → hasznald a `paios chat` parancsot (5 provider)
 6. **Agent kepesseg index:** `config/copilot-agents.json`
 
 ## Hibaelharitas
