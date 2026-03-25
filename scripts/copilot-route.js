@@ -17,6 +17,15 @@ import { fileURLToPath } from 'url';
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const REGISTRY_PATH = resolve(__dirname, '..', 'src', 'agents', 'registry.json');
 
+// English aliases for agents with Hungarian-only triggers
+const TRIGGER_ALIASES = {
+  'robotkezv2': ['navigate', 'browse', 'click', 'fill form', 'scrape', 'website', 'web page', 'open url'],
+  'voice': ['voice command', 'speech', 'audio input', 'whisper'],
+  'law_detective': ['legal', 'regulation', 'compliance', 'law'],
+  'copywriter': ['copywriting', 'write copy', 'blog post', 'article'],
+  'lead_mining': ['lead generation', 'prospect', 'linkedin'],
+};
+
 function loadRegistry() {
   const raw = JSON.parse(readFileSync(REGISTRY_PATH, 'utf8'));
   return raw.agents || raw;
@@ -25,32 +34,53 @@ function loadRegistry() {
 function scoreAgent(agent, taskLower) {
   let score = 0;
   const triggers = (agent.triggers || []).map(t => t.toLowerCase());
+  // Merge in English aliases if available
+  const aliases = TRIGGER_ALIASES[agent.name] || [];
+  const allTriggers = [...triggers, ...aliases];
   const caps = (agent.capabilities || []).map(c => c.toLowerCase());
   const desc = (agent.description || '').toLowerCase();
   const name = agent.name.toLowerCase();
   const tags = (agent.tags || []).map(t => t.toLowerCase());
 
-  // Exact trigger match (highest weight)
-  for (const trigger of triggers) {
-    if (taskLower.includes(trigger)) score += 20;
-  }
+  // Helper: word boundary match (avoids "invoice" matching "voice")
+  const wordMatch = (haystack, needle) => {
+    const re = new RegExp(`\\b${needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`);
+    return re.test(haystack);
+  };
 
-  // Capability keyword match
-  for (const cap of caps) {
-    const capWords = cap.split('_');
-    for (const w of capWords) {
-      if (w.length > 2 && taskLower.includes(w)) score += 8;
+  // Exact trigger match (highest weight) — word boundary required
+  for (const trigger of allTriggers) {
+    if (trigger.length <= 3) {
+      // Short triggers: exact word boundary only
+      if (wordMatch(taskLower, trigger)) score += 20;
+    } else {
+      // Longer triggers: word boundary match
+      if (wordMatch(taskLower, trigger)) score += 20;
     }
   }
 
-  // Name match
-  if (taskLower.includes(name)) score += 15;
+  // Capability keyword match — word boundary, min 5 chars
+  for (const cap of caps) {
+    const capWords = cap.split('_');
+    for (const w of capWords) {
+      if (w.length > 4 && wordMatch(taskLower, w)) score += 8;
+    }
+    // Full capability phrase match (stronger signal)
+    const capPhrase = cap.replace(/_/g, ' ');
+    if (taskLower.includes(capPhrase)) score += 12;
+  }
 
-  // Description keyword overlap
+  // Name match — word boundary required
+  if (wordMatch(taskLower, name)) score += 15;
+
+  // Description keyword overlap — require exact word boundaries (not substrings)
   const taskWords = taskLower.split(/\s+/).filter(w => w.length > 3);
-  const descWords = desc.split(/\s+/).filter(w => w.length > 3);
+  const descTokens = desc.split(/[\s,.:;()\-\/]+/).filter(w => w.length > 3);
   for (const tw of taskWords) {
-    if (descWords.some(dw => dw.includes(tw) || tw.includes(dw))) score += 3;
+    // Exact token match (strong)
+    if (descTokens.includes(tw)) score += 5;
+    // Stem-level match (weaker — only if root >= 5 chars)
+    else if (tw.length >= 5 && descTokens.some(dw => dw.startsWith(tw.slice(0, 5)) || tw.startsWith(dw.slice(0, 5)))) score += 2;
   }
 
   // Tag match
