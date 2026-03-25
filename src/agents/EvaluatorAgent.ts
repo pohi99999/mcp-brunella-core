@@ -110,7 +110,8 @@ A feladatod a rendszerek auditálása, egészségügyi ellenőrzések és TESZTE
           taskType: 'reasoning',
           model: this.llmProvider === 'github' ? 'gpt-4.1' : undefined,
           tools: EVALUATOR_TOOLS,
-          messages: messages
+          messages: messages,
+          userId: context?.userId as string | undefined,
       });
 
       if (!response.success) {

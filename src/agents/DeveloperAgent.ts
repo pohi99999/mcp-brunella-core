@@ -205,7 +205,8 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
           taskType: 'code',
           model: this.llmProvider === 'github' ? 'gpt-4.1' : undefined,
           tools: DEVELOPER_TOOLS,
-          messages: messages
+          messages: messages,
+          userId: context?.userId as string | undefined,
       });
 
       if (!response.success) {

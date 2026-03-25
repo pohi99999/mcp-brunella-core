@@ -48,7 +48,8 @@ export const universalProvider: ChatProvider = {
         message,
         provider,
         model: input.selectedModel || undefined,
-        conversationHistory: history
+        conversationHistory: history,
+        userId: localStorage.getItem('bas_user_id') || 'default',
       })
     });
 

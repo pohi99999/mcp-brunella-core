@@ -1,5 +1,63 @@
 ### MINDEN válasz előtt ellenőrizd a .ai/BOOTSTRAP.md fájlt. Ne adj tanácsot elavult információk alapján.###
 
+## 2026-07-15 - 🚀 Phase 4: User Preferences Chat bekötés + LLM Observability Dashboard (Tasks 1 & 3)
+
+**Feladat:**
+- Phase 4 Sprint: 8 feladatból az 1. és 3. feladat megvalósítása
+- Task 1: userId threading — a User Preferences rendszer valós bekötése minden chat/agent/LLM hívásba
+- Task 3: LLM Observability Dashboard — minden LLM hívás naplózása, vizualizáció, CLI eszközök
+
+**Elkészült munkák:**
+
+### Task 1: User Preferences → Chat Flow Integráció
+- `src/core/universalOrchestratorService.ts` — `UniversalRequest` interfészbe `userId?: string`, mindkét `generate()` hívásba átadva
+- `src/agents/OrchestratorAgent.ts` — `userId` átadás `context?.userId`-ből a `generate()` hívásba
+- `src/agents/DeveloperAgent.ts` — `userId` átadás `context?.userId`-ből
+- `src/agents/EvaluatorAgent.ts` — `userId` átadás `context?.userId`-ből
+- `src/server/routes/llm.ts` — `userId` kinyerés `req.body`-ból, átadás `bifrost.generate()`-nek
+- `src/server/routes/mcp.ts` — `userId` kinyerés `req.body`-ból, átadás `bifrost.generate()`-nek
+- `src/server/routes/universalOrchestrator.ts` — `userId` átadás `service.process()`-nek
+- `src/dashboard/lib/chat/providers/universalProvider.ts` — `userId` küldés `localStorage('bas_user_id')`-ból
+
+### Task 3: LLM Observability Dashboard
+- `src/utils/globalDb.ts` — Új `llm_calls` SQLite tábla + `recordLlmCall()`, `queryLlmCalls()`, `getLlmCallStats()` funkciók teljes TypeScript interfészekkel
+- `src/core/bifrost_gateway.ts` — `logCall()` wrapper a `generate()` metódusban, mind az 5 return útvonalat lefedi (siker, nincs-fallback hiba, fallback siker, összes-hiba, kivétel)
+- `src/server/routes/observability.ts` (ÚJ) — Express route-ok: GET /stats, /calls, /timeline (óránkénti aggregáció)
+- `src/cli/observabilityCommands.ts` (ÚJ) — CLI: `observability stats` (boxen formázott) és `observability calls` (táblázatos)
+- `src/dashboard/components/dashboard/LLMObservabilityPanel.tsx` (ÚJ) — Teljes recharts dashboard (KPI kártyák, PieChart provider eloszlás, BarChart latencia/tokenek, LineChart idővonal, hiba tábla, 30s auto-refresh)
+- `src/server/web.ts` — Observability route regisztrálva
+- `src/cli.ts` — Observability CLI parancs regisztrálva
+- `src/dashboard/lib/navigation.tsx` — LLMObservabilityPanel hozzáadva a System csoporthoz
+
+### Tesztek
+- `test/smoke-phase4.vitest.ts` (ÚJ) — **13 smoke teszt** (userId threading, observability DB, route factory, CLI regisztráció, navigation)
+
+**Teszt Eredmények:**
+- Phase 4 smoke tesztek: 13/13 ✅
+- Teljes test:fast: **175 fájl, 1515 teszt PASS** ✅ (2 flaky teszt egyenként zöld)
+- Build: sikeres, 0 TypeScript hiba
+
+**Módosított/Új fájlok összesen (Phase 4 Tasks 1&3):**
+1. `src/core/universalOrchestratorService.ts` (MÓDOSÍTOTT — userId interface + threading)
+2. `src/agents/OrchestratorAgent.ts` (MÓDOSÍTOTT — userId átadás)
+3. `src/agents/DeveloperAgent.ts` (MÓDOSÍTOTT — userId átadás)
+4. `src/agents/EvaluatorAgent.ts` (MÓDOSÍTOTT — userId átadás)
+5. `src/server/routes/llm.ts` (MÓDOSÍTOTT — userId extraction)
+6. `src/server/routes/mcp.ts` (MÓDOSÍTOTT — userId extraction)
+7. `src/server/routes/universalOrchestrator.ts` (MÓDOSÍTOTT — userId passthrough)
+8. `src/dashboard/lib/chat/providers/universalProvider.ts` (MÓDOSÍTOTT — localStorage userId)
+9. `src/utils/globalDb.ts` (MÓDOSÍTOTT — llm_calls tábla + CRUD)
+10. `src/core/bifrost_gateway.ts` (MÓDOSÍTOTT — logCall wrapper)
+11. `src/server/routes/observability.ts` (ÚJ)
+12. `src/cli/observabilityCommands.ts` (ÚJ)
+13. `src/dashboard/components/dashboard/LLMObservabilityPanel.tsx` (ÚJ)
+14. `src/server/web.ts` (MÓDOSÍTOTT — observability route)
+15. `src/cli.ts` (MÓDOSÍTOTT — observability CLI)
+16. `src/dashboard/lib/navigation.tsx` (MÓDOSÍTOTT — observability panel)
+17. `test/smoke-phase4.vitest.ts` (ÚJ)
+
+---
+
 ## 2026-07-15 - 🎛️ Phase 3: Dashboard + CLI + LLM + Tesztek (Kutatas.md integráció befejezése)
 
 **Feladat:**

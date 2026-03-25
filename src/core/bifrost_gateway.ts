@@ -7,6 +7,7 @@ import { type UniversalToolDefinition } from './toolRegistry.js';
 import { phoenixEventBus } from './phoenixEventBus.js';
 import { wrapWithSpan } from '../utils/otelTracing.js';
 import { getPreferenceContext } from './userPreferences.js';
+import { recordLlmCall } from '../utils/globalDb.js';
 
 /**
  * Bifrost Gateway - Multi-Provider LLM Routing
@@ -225,6 +226,25 @@ export class BifrostGateway {
    */
   async generate(options: GenerateOptions): Promise<GenerateResponse> {
     const startTime = Date.now();
+    const logCall = (resp: GenerateResponse) => {
+      try {
+        recordLlmCall({
+          provider: resp.provider,
+          model: resp.model || undefined,
+          taskType: options.taskType,
+          promptTokens: resp.tokens?.prompt,
+          completionTokens: resp.tokens?.completion,
+          totalTokens: resp.tokens?.total,
+          durationMs: resp.duration_ms,
+          success: resp.success,
+          error: resp.error,
+          fallbackUsed: resp.fallback_used,
+          fallbackReason: resp.fallback_reason,
+          userId: options.userId,
+        });
+      } catch { /* non-critical */ }
+      return resp;
+    };
 
     try {
       // 0. Inject user preference context if userId is provided
@@ -258,7 +278,7 @@ export class BifrostGateway {
 
       if (result.success) {
         this.recordRequest(selectedProvider);
-        return result;
+        return logCall(result);
       }
 
       // 3. Deterministic fallback only for explicit failure categories
@@ -268,12 +288,12 @@ export class BifrostGateway {
 
       if (!fallbackReason) {
         logWarn('BifrostGateway', `${selectedProvider} failed without fallback-eligible reason: ${result.error ?? 'unknown error'}`);
-        return {
+        return logCall({
           ...result,
           success: false,
           fallback_used: false,
           duration_ms: Date.now() - startTime,
-        };
+        });
       }
 
       const fallbackCandidates = this.getFallbackCandidates(selectedProvider);
@@ -326,12 +346,12 @@ export class BifrostGateway {
           fallbackResult.fallback_from = selectedProvider;
           fallbackResult.phoenix_triggered = true;
           this.recordRequest(fallbackProvider);
-          return fallbackResult;
+          return logCall(fallbackResult);
         }
       }
 
       // 4. All providers failed
-      return {
+      return logCall({
         success: false,
         provider: selectedProvider,
         model: 'unknown',
@@ -341,17 +361,17 @@ export class BifrostGateway {
         fallback_reason: fallbackReason,
         fallback_from: selectedProvider,
         phoenix_triggered: fallbackReason === 'phoenix_recovery',
-      };
+      });
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError('BifrostGateway', `Generation failed: ${error}`);
-      return {
+      return logCall({
         success: false,
         provider: 'ollama',
         model: 'unknown',
         duration_ms: Date.now() - startTime,
         error
-      };
+      });
     }
   }
 
