@@ -43,7 +43,17 @@ node scripts/copilot-route.js "feladat leírás"            # → JSON: bestAgen
 3. **Capability Index** (`copilot-agents.json`): 54 agent, 12 domain, gépi feldolgozásra
 4. **Custom Instructions**: Copilot automatikusan betölti → tudja mikor melyik agentet hívja
 
-**Tesztelve:** Router helyesen route-ol: lint_fixer, marketing_director, sales_hunter, evaluator, market_intel
+**Tesztelve:** Router helyesen route-ol minden 6 tesztszcenárió:
+- `finance_guardian` ← invoice/anomaly (NEM voice — word boundary javítva!)
+- `robotkezv2` ← navigate/fill form (angol alias triggerek hozzáadva)
+- `marketing_director` ← social media campaign
+- `lint_fixer` ← TypeScript lint errors
+- `law_detective` ← Magyar Közlöny / regulatory
+- `voice` ← voice command / speech
+
+**Git commitok:**
+- `c75bc08b` — feat(agent): integrate BAS agents as Copilot CLI sub-agents
+- `63dbd4cd` — fix(agent): improve router word-boundary matching and add English aliases
 
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A következő session-ben a Copilot CLI automatikusan ismeri az agent dispatch képességet a `.github/copilot-instructions.md` frissítés miatt.
