@@ -6664,3 +6664,33 @@ obotkez ágakról.
 - Réteg 1 ✅ — `copilot-dashboard.js` (28 domain, 300+ endpoint) — d4e63de6
 - Réteg 2 ✅ — CopilotCommanderPanel + Bridge API — eb18e171
 - Réteg 3 ⏳ — PAIOSZ "Copilot" provider (opcionális, nem indult el)
+
+### 2026-03-26 — Layer 3: PAIOSZ Copilot Provider + Bridge Tesztek
+
+**Feladat:** Copilot CLI integrálása a PAIOSZ chat rendszerbe mint LLM provider + copilotBridge API tesztek.
+
+**Létrehozott fájlok:**
+- `src/dashboard/lib/chat/providers/copilotProvider.ts` — PAIOSZ chat provider plugin (REST bridge → BifrostGateway → file-bridge)
+- `test/copilotBridge.test.ts` — 14 teszt, mind a 7 bridge endpoint lefedve (vitest + supertest)
+
+**Módosított fájlok (típus bővítés — 'copilot' hozzáadva):**
+- `src/config/paiosConfig.ts` — ModelProvider típus + z.enum + providers séma
+- `src/core/bifrost_gateway.ts` — ProviderType + provider config + switch case + generateCopilot() file-bridge metódus (60s poll, auto-cleanup)
+- `src/dashboard/components/dashboard/PAIOSOrchestratorChat.tsx` — ModelProvider + PROVIDER_VISUALS (Copilot CLI / sárga / Zap ikon)
+- `src/dashboard/lib/chat/types.ts` — ChatMode union bővítve
+- `src/dashboard/lib/chat/providerRegistry.ts` — copilotProvider regisztrálva
+
+**Bridge mechanizmus:**
+- BifrostGateway.generateCopilot() → `_br_temp/copilot_bridge/req_*.request.json` fájl írás
+- Copilot CLI (vagy bármely külső ágens) olvassa a request-et, feldolgozza, és `*.response.json`-t ír
+- 60 mp timeout, 200ms poll intervallum, automatikus cleanup
+
+**Build:** ✅ `npm run build` PASS
+**Tesztek:** ✅ `test/copilotBridge.test.ts` 14/14 PASS (258ms)
+**Commitok:** 80fa124f + 2e3f8a27 — pushed to main
+**Státusz:** ✅ Layer 3 KÉSZ — Teljes 3-rétegű integráció BEFEJEZVE
+
+**Végső 3-réteg státusz:**
+- Réteg 1 ✅ — `copilot-dashboard.js` (28 domain, 300+ endpoint) — d4e63de6
+- Réteg 2 ✅ — CopilotCommanderPanel + Bridge API — eb18e171
+- Réteg 3 ✅ — PAIOSZ Copilot Provider (file-bridge) — 80fa124f + 2e3f8a27
