@@ -289,7 +289,7 @@ Ne módosítsd explicit kérés nélkül: `package.json`, `src/agents/registry.j
 
 ## Copilot ↔ BAS Full Integration
 
-**A Copilot CLI teljes hozzaferessel rendelkezik a BAS rendszerhez — 300+ REST endpoint, 70+ agent, 53 MCP tool.**
+**A Copilot CLI teljes hozzaferessel rendelkezik a BAS rendszerhez — 300+ REST endpoint, 95+ agent, 53 MCP tool, 103 befejezett track kepessegeivel.**
 
 ### 3 eszkoz — mikor melyiket hasznald
 
@@ -421,3 +421,204 @@ node scripts/copilot-route.js --list                          # Osszes agent
 | FastAPI nem indul | `cd myai && uv sync && uvicorn server:app --reload --port 8000` |
 | Agent "stuck" (working) | Phoenix Protocol: 3 retry → auto idle reset. Kezi: `setAgentStatus(name, 'idle')` |
 | Dashboard build hiba | `npm run build:ui` — kulon tsconfig.ui.json es vite.config.ts |
+
+## BAS Teljes Kepcsseg Inventar (Deep Audit 2026-03-25)
+
+> 103 befejezett track, 95+ agent, 300+ endpoint, 53 MCP tool — 2 honap intenziv fejlesztes eredmenye.
+
+### RENDSZER MERETEK
+
+| Kategoria | Mennyiseg | Helye |
+|-----------|-----------|-------|
+| Regisztralt agentek | 95+ | `src/agents/registry.json` |
+| MCP toolok | 53 (20 kategoria) | `src/tools/` (33 fajl) |
+| REST route fajlok | 52 | `src/server/routes/` |
+| Aktiv (regisztralt) route-ok | ~20 | `src/server/routes/index.ts` |
+| Dashboard panelek (regisztralt) | ~55 | `src/dashboard/lib/navigation.tsx` |
+| Automation scriptek | 100+ | `scripts/` |
+| Python workerek | 7 | `myai/` (browser, crawl4ai, vision, ocr, web_scraper, cma, os) |
+| LLM providerek | 5 | GitHub Models, Gemini, Claude, Ollama, CF Workers AI |
+| SQLite adatbazisok | 6 | brunella.db, tasks.db, checkpoints.db, audit.db, cean.db, comet_memory.db |
+| Befejezett trackkek | 103 | `conductor/archive/` |
+| Aktiv trackkek | 10 | `conductor/tracks/` |
+
+### 32 INAKTIV ROUTE FAJL — Teljes kod, de NEM regisztralt index.ts-ben
+
+Ezek a `src/server/routes/` konyvtarban leteznek es teljes endpoint-okat kinalnak, de az `index.ts` NEM importalja oket:
+
+| Route fajl | Funkcio | Ertek |
+|------------|---------|-------|
+| `autonomousInfra.ts` | HyperKernel, self-replication, goal engine | 🔴 MAGAS |
+| `universalOrchestrator.ts` | Multi-provider LLM routing | 🔴 MAGAS |
+| `studio.ts` | Vite React scaffold generation | 🟡 KOZEPES |
+| `pythonWorkers.ts` | OCR, web scraper, LanceDB batch | 🔴 MAGAS |
+| `cean.ts` | Cloudflare Edge Agent Network | 🟡 KOZEPES |
+| `paiosOrchestrator.ts` | Universal provider + tool registry | 🔴 MAGAS |
+| `prometheus.ts` | Prometheus metrics endpoint | 🟡 KOZEPES |
+| `metrics.ts` | Rendszer metrikak | 🟡 KOZEPES |
+| `swarm.ts` | Swarm Intelligence API | 🔴 MAGAS |
+| `fleet.ts` | Worker fleet management | 🟡 KOZEPES |
+| `scaling.ts` | Auto-scaling | 🟡 KOZEPES |
+| `sales.ts` | Sales pipeline | 🟡 KOZEPES |
+| `goldenDataset.ts` | Fine-tuning golden dataset | 🔴 MAGAS |
+| `voice.ts` | Hang feldolgozas (Whisper) | 🟡 KOZEPES |
+| `contact.ts` | Kapcsolatkezeles | 🟢 ALACSONY |
+| `remote.ts` | Remote session management | 🔴 MAGAS |
+| `webhooks.ts` | Webhook integraciok | 🟡 KOZEPES |
+| `crawl4ai.ts` | Web crawling API | 🔴 MAGAS |
+| `evhunter.ts` | Event/lead intelligence | 🟡 KOZEPES |
+| `dashboard.ts` | Dashboard specifikus API-k | 🟡 KOZEPES |
+| `suggestedTasks.ts` | AI javasolt feladatok | 🔴 MAGAS |
+| `scheduledTasks.ts` | Utemezett feladatok | 🔴 MAGAS |
+| `testScheduler.ts` | Teszt utemezesi API | 🟢 ALACSONY |
+| `harvests.ts` | Data pipeline harvesting | 🟡 KOZEPES |
+| `preferences.ts` | Felhasznaloi preferencia | 🟢 ALACSONY |
+| `observability.ts` | OpenTelemetry + tracing | 🔴 MAGAS |
+| `mcp.ts` | MCP szerver API | 🔴 MAGAS |
+| `workers.ts` | Worker management | 🟡 KOZEPES |
+| `wrangler.ts` | Cloudflare Wrangler wrapper | 🟡 KOZEPES |
+
+### 15 LATHATATLAN DASHBOARD PANEL — Letezik de NEM regisztralt a NavigationRegistry-ben
+
+| Komponens | Funkcio |
+|-----------|---------|
+| `AdminSelfCheckWidget` | Admin rendszer on-diagnozis |
+| `CognitiveMemoryPanel` | Agent memoria vizualizacio |
+| `CostSummary` | LLM koltseg osszesito |
+| `HarvestPipelineWidget` | Adat gyujtesi pipeline monitor |
+| `LiveChatterWidget` | Real-time chat monitor |
+| `LiveExecutionMonitor` | Agent vegrehajtasi monitor |
+| `MachineHunterWidget` | Ipari gep kereso |
+| `ModelRouterPanel` | LLM model routing vizualizacio |
+| `MarketWatcherWidget` | Piac megfigyelesi panel |
+| `ProcessControlWidget` | Folyamat vezerles |
+| `ServiceControlWidget` | Szolgaltatas vezerles |
+| `VectorizeAnalyticsWidget` | Vektor DB analitika |
+| `TokenUsageChart` | Token hasznalati grafikon |
+| `TraceViewer` | Elosztott nyomkovetes |
+| `LogViewer` | Log nezo |
+
+### KULCS RENDSZER-KEPCSSGEK (103 archivalt trackbol)
+
+#### Agent Framework
+- **Agent Architect 2.0** — Automatikus agent generalas termeszetes nyelvbol (TOML + hot-reload)
+- **Agent Memory Structured** — SQLite memória, pattern reuse, FNV hash + vektor, 30 napos TTL
+- **Agent Orchestration DAG** — DAG workflow engine (parhuzamos vegrehajtás, elágazas, ciklus, budget)
+- **MCP Tool Discovery** — Dinamikus tool registry, semver, tool lancok, per-tool metrikak (latency, p95)
+- **Task Decomposer** — Komplex feladat bontás mikro-lepesekre
+
+#### Orkesztracio
+- **Orchestrator State Machine** — LangGraph-inspiralt TS impl (IDLE→ANALYZING→ROUTING→EXECUTING→DONE)
+- **Phoenix Protocol** — Ongyogyitas: checkpoint + auto-retry (1s→3s→10s) + git recovery
+- **Universal Orchestrator** — Multi-provider routing + fallback chain + conversational history
+- **Hungarian Cognition** — Magyar nyelvu optimalizacio, multi-turn, kontextus kezelés
+
+#### Swarm Intelligence v2
+- **Colony Persistence** — SQLite checkpoint auto-save
+- **Weighted Voting** — confidence × experience × recentSuccessRate
+- **Negotiation Protocol** — Max 3 round, >70% consensus
+- **Dynamic Resizing** — Auto-scale 2-10 agent, queue-alapu
+- **Failure Recovery** — Heartbeat + respawn, max 3 retry
+
+#### Security & Safety
+- **VM Sandbox** — Node.js vm izolacio resource limitekkel
+- **Network Policy** — URL whitelist/blacklist, metadata endpoint blokk
+- **RBAC** — 6 profil: ADMIN, DEVELOPER, RESEARCHER, EVALUATOR, ROBOTKEZ, READONLY
+- **Cost Tracking** — Napi koltseg limit per agent tipus
+- **Guardrails** — Confidence scoring (0.0-1.0), auto-evaluation <0.6 kueszobnel
+- **PII Redactor** — Email, telefon, API key, password, credit card detektalas + redakcio
+
+#### Observability
+- **OpenTelemetry** — Span instrumentacio: minden agent.execute() = trace span
+- **Token Counting** — Preciz prompt + completion token szamolas per LLM hivas
+- **Cost Tracking** — Provider-specifikus ár × token → USD
+- **Fallback Tracking** — Provider valtasi esemenyek naplozasa
+- **Dashboard TelemetryPanel** — Timeline waterfall, koltseg bontás (napi/heti)
+
+#### Cloudflare Ecosystem (16+ integracio)
+- Workers, D1, KV, Vectorize, Durable Objects, Queues, R2, Workflows
+- Analytics Engine, Browser Rendering, Hyperdrive
+- Worker fleet fallback policy, token permissions
+- CEAN (Cloudflare Edge Agents Network) — elosztott agent vegrehajtás az edge-en
+
+#### Browser Automation
+- **CometBrowser** — 3-layer: Planner (GPT-4o) → Actor (Playwright) → Critic (Gemini vision)
+- **RobotkezV2** — Playwright + LLM szelektorok, multi-tab, session persistence
+- **Chrome DevTools MCP** — CDP, network capture, JS error detection, performance metrics
+- **Computer Use API** — 6 endpoint (vision-click, screenshot, navigate, type, scroll, extract)
+
+#### Data & AI Pipeline
+- **Golden Dataset Bridge** — Sikeres agent futasok → D1 → fine-tuning
+- **Data Flywheel** — Harvest→Refine→Index→Learn→Execute korforgas
+- **Brunella Incubator** — Unsloth QLoRA fine-tuning, Ollama Modelfile
+- **Structured Memory** — SQLite + FNV hash + vektor similarity
+- **LanceDB/ChromaDB** — Vektor indexelés RAG lekerdezeshez
+
+#### Uzleti Intelligencia (Enterprise Suite)
+- **18 modul:** Finance, Sales, HR, Logistics, Admin, Marketing, Legal, Procurement, Claims, Pricing
+- **Lead Intelligence** — 550 LOC CF Worker, D1/KV/Google Sheets szinkron
+- **Invoice OCR** — Gemini Vision dokumentum feldolgozas
+- **Campaign Generators** — Marketing + turizmus automatizalas
+- **Law Detective** — Jogi dokumentum elemzes
+- **Grant Watcher** — Palyazat figyelő
+- **Property Visionary/Analyst** — Ingatlan elemzes
+
+#### Remote Layer (7 fazis kesz, 8-9 folyamatban)
+- Phase 1: Foundation (REST + WebSocket)
+- Phase 2: Discovery + Auth (MCP autodiscovery, token auth)
+- Phase 3: Mobile (responsive + touch)
+- Phase 4: Voice (Whisper ASR)
+- Phase 5: Distributed Mesh (multi-node)
+- Phase 6: Adaptive Swarms (onallo rajok)
+- Phase 7: Collective Evolution (kollektiv tanulas)
+- Phase 8-9: Planet-Scale + Superintelligence (folyamatban)
+
+### KRITIKUS FAJLOK REFERENCIA
+
+**Core:**
+- `src/core/dagEngine.ts` — DAG workflow motor
+- `src/core/dynamicToolRegistry.ts` — Runtime tool registry
+- `src/core/toolComposition.ts` — Tool lancok transforms-szel
+- `src/core/structuredMemory.ts` — Pattern reuse engine
+- `src/core/agentStateMachine.ts` — Orkesztrator allapot gep
+- `src/core/telemetry.ts` — OpenTelemetry integracio
+- `src/core/sandbox/wasmSandbox.ts` — VM izolacio
+- `src/core/sandbox/networkPolicy.ts` — Halozati policy
+- `src/core/bifrost_gateway.ts` — 4 LLM provider auto-fallback
+- `src/core/modelRouter.ts` — Brain vs Muscle routing
+- `src/core/checkpoint.ts` — Phoenix Protocol
+- `src/core/goldenDatasetBridge.ts` — Fine-tuning adat gyujtes
+
+**Security:**
+- `src/security/redactor.ts` — PII felismeres + redakcio
+- `src/core/rbac/agentPermissions.ts` — RBAC 6 profil
+- `src/agents/permissions.ts` — Per-agent jogosultsagok
+
+**Python alrendszer:**
+- `myai/agents/comet/` — CometBrowser (planner, actor, critic, memory, orchestrator)
+- `myai/mcp_server.py` — FastMCP MCP szerver (stdio)
+- `myai/server.py` — FastAPI (:8000) + Comet endpoints
+- `myai/browser_worker.py` — Playwright browser worker
+- `myai/refiner_logic.py` — Adat tisztitas/validacio
+
+**Dashboard:**
+- `src/dashboard/components/dashboard/GuardrailsPanel.tsx`
+- `src/dashboard/components/dashboard/SecurityPanel.tsx`
+- `src/dashboard/components/dashboard/TelemetryPanel.tsx`
+- `src/dashboard/components/dashboard/ToolDiscoveryPanel.tsx`
+- `src/dashboard/components/dashboard/SwarmPanel.tsx`
+
+### REJTETT KEPCSSGEK (12 azonositott)
+
+1. **Swarm Voting & Negotiation** — Sullyozott szavazas konszenszus kuszobertekkel
+2. **Phoenix Protocol Checkpoints** — Allapot mentest az orkesztrator helyreallitashoz
+3. **Golden Dataset Pattern Reuse** — FNV hash + vektor minta talalat gyors ujrafelhasznalas
+4. **Network Policy Enforcement** — Granularis URL/domain hozzaferes kontroll sandbox-ban
+5. **Cost Tracking per RBAC Profile** — Napi koltseg limit per agent tipus
+6. **Tool Composition Chains** — Multi-tool pipeline-ok transformokkal
+7. **DAG Loop & Conditional Support** — Komplex elagazas a workflowkban
+8. **Remote Session Persistence** — SQLite session store elosztott agenteknek
+9. **Confidence Score Thresholds** — Auto-evaluation <0.6 trigger
+10. **Worker Fleet Fallback Policies** — Edge worker automatikus failover
+11. **PII Redaction Audit Log** — Redaktalt mezok naplozasa idopecsettel
+12. **Vectorize Fallback** — Alternativ lekcrdezes ha vektor DB nem elerheto
