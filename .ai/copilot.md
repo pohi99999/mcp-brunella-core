@@ -3,12 +3,13 @@
 ## 🧠 Copilot ↔ BAS Full Integration v2 (2026-03-26)
 
 A Copilot CLI TELJES hozzáféréssel rendelkezik a BAS rendszerhez:
-- **300+ REST endpoint** (28 domain)
-- **70+ agent** (12+ kategória)
-- **53 MCP tool** (20 csoport)
+- **300+ REST endpoint** (28 domain + 10 újonnan aktivált route)
+- **95+ agent** (54 regisztrált + TOML dinamikus)
+- **53 MCP tool** (20 csoport + 11 rejtett tool dokumentálva)
 - **18 enterprise modul**
 - **6 SQLite DB** + LanceDB/ChromaDB RAG
-- **5 LLM provider** (GitHub Models, Gemini, Claude, Ollama, Cloudflare)
+- **6 LLM provider** (GitHub Models, Gemini, Claude, Ollama, Cloudflare, Copilot)
+- **35 Python FastAPI endpoint** (browser, voice, os, robotkez, crawl4ai, incubator)
 
 ### Gyors parancsok:
 
@@ -58,6 +59,46 @@ node scripts/copilot-dashboard.js robotkez exec "Navigate to..."
 1. `node scripts/copilot-route.js "task"` → ha confidence ≥ 0.7 → delegálj
 2. Ha fájlszerkesztés / git / build → NE delegálj, natív Copilot képesség
 3. Ha szerver nem fut → offline router mindig elérhető routing döntéshez
+
+---
+
+## 2026-03-26 19:27 - 🔗 3-part BAS Integration (KB + Python Bridge + Dormant Routes)
+
+**Feladat:** Gap analysis alapján 3 párhuzamos integráció a Copilot CLI tudásbázisba
+
+### Elvégzett munkák:
+
+**1. Tudásbázis frissítés (copilot-instructions.md)**
+- 54 agent teljes katalógusa 5 kategóriában (Core, Enterprise, Engineering, Automation, Specialized)
+- 11 rejtett MCP tool fájl dokumentálva (anythingllm, browserBridge, claude, n8n, negotiation, stb.)
+- 35 Python FastAPI endpoint katalógus bridge parancsokkal
+- 10 újonnan aktivált route dokumentálva
+- +161 sor hozzáadva
+
+**2. Python FastAPI bridge bővítés (copilot-dashboard.js)**
+- Python domain 7→35 sub-command-ra bővítve
+- Új kategóriák: browser (6), voice (1), os-automation (6), robotkez (2), crawl4ai (2), incubator (3), test (2), comet-memory (2), harvest (3)
+- Statisztikák frissítve: 95+ agent, 300+ endpoint, 6 provider, 35 python endpoint
+- +120 sor hozzáadva
+
+**3. Alvó route-ok aktiválása (routes/index.ts)**
+- 10 route regisztrálva: observability, swarm, golden-dataset, suggested-tasks, crawl4ai, python-workers, evhunter, preferences, sales, voice
+- Mindegyik a standard pattern-t követi (import + router.use)
+- +23 sor hozzáadva
+
+**Validáció:**
+- ✅ Build: `npm run build` — PASS
+- ✅ Bridge tesztek: 14/14 PASS
+- ✅ Teljes teszt suite: 176 fájl PASS, 1708 teszt PASS
+- ✅ Commit: 650a6568
+- ✅ Push: main → GitHub
+
+**Érintett fájlok:**
+- `.github/copilot-instructions.md` — +161 sor (agent katalógus, tool ref, endpoint katalógus)
+- `scripts/copilot-dashboard.js` — +120 sor (35 Python endpoint bridge)
+- `src/server/routes/index.ts` — +23 sor (10 dormant route aktiválva)
+
+**Státusz:** ✅ Befejezve
 
 ---
 
