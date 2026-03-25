@@ -622,3 +622,164 @@ Ezek a `src/server/routes/` konyvtarban leteznek es teljes endpoint-okat kinalna
 10. **Worker Fleet Fallback Policies** — Edge worker automatikus failover
 11. **PII Redaction Audit Log** — Redaktalt mezok naplozasa idopecsettel
 12. **Vectorize Fallback** — Alternativ lekcrdezes ha vektor DB nem elerheto
+
+---
+
+## TELJES AGENT KATALOGUS (54 regisztralt + TOML dinamikus)
+
+> Az alabbi tablazat a `src/agents/registry.json` alapjan tartalmazza az OSSZES BAS agent-et.
+> Mindegyik meghivhato a Copilot CLI-bol az `agent dispatch <feladat>` paranccsal.
+
+### Core Agents (10)
+| Agent | Szerep | Trigger kulcsszavak |
+|-------|--------|---------------------|
+| orchestrator | Fo orkesztrator, agent valasztas | task, delegate, plan |
+| enterprise_orchestrator | Enterprise feladatok koordinacioja | enterprise, business, organization |
+| Developer | Kodfejlesztes, debug, refaktor | code, develop, implement, debug, fix |
+| evaluator | Kod/feladat ertekelese, minoseg ellenorzes | evaluate, review, quality, score |
+| researcher | Web kutatas, informacio gyujtes | research, search, find, investigate |
+| task_decomposer | Komplex feladatok reszekre bontasa | decompose, breakdown, split, plan |
+| knowledge_base_builder | Tudasbazis epitese es karbantartas | knowledge, learn, index, rag |
+| SpecWriter | Specifikacio es dokumentacio iras | spec, specification, document, write |
+| lint_fixer | ESLint/TSC hiba automatikus javitas | lint, fix, eslint, format |
+| project_organizer | Projekt szervezes, struktúra | organize, structure, clean |
+
+### Enterprise Suite (20)
+| Agent | Szerep | Trigger kulcsszavak |
+|-------|--------|---------------------|
+| finance_guardian | Penzugyi monitoring, szamlak | finance, money, budget, invoice |
+| FinancialGuard | Koltseg limit, audit | cost, limit, spending, audit |
+| sales | Ertekesites, lead management | sales, sell, revenue, deal |
+| sales_hunter | Lead kutatas, prospecting | prospect, lead, outreach, cold |
+| lead_mining | Lead adatbanyaszat | mine, leads, data, contacts |
+| marketing_director | Marketing strategia | marketing, campaign, brand, seo |
+| MarketingDirector | Marketing muveletek | ads, social, content, promotion |
+| CampaignGenerator | Kampany tartalom generalas | campaign, generate, ad, creative |
+| logistics_dispatcher | Logisztika, szallitas | logistics, ship, delivery, route |
+| LogisticsDispatcher | Flotta menedzsment | fleet, dispatch, track, vehicle |
+| procurement | Beszerzes, beszallito management | procure, vendor, supply, purchase |
+| PricingAgent | Arazes, strategia | pricing, price, discount, margin |
+| ProactiveClaimsAgent | Reklamaciok, panaszkezeles | claim, complaint, refund, issue |
+| NurturerAgent | Ugyfel gondozas, retention | nurture, retain, engagement |
+| LocalCSR | Helyi ugyfelfelelős | local, community, csr, region |
+| ConflictMediator | Konfliktuskezeles | conflict, dispute, mediate |
+| copywriter | Szovegiras, tartalomkeszites | copy, write, text, content |
+| grant_watcher | Palyazat figyeles | grant, funding, application, tender |
+| PropertyAnalyst | Ingatlan elemzes | property, real-estate, valuation |
+| PropertyVisionary | Ingatlan strategia, fejlesztes | development, vision, project, invest |
+
+### Engineering & DevOps (10)
+| Agent | Szerep | Trigger kulcsszavak |
+|-------|--------|---------------------|
+| DevOps | CI/CD, deployment, infra | devops, deploy, ci, pipeline, docker |
+| Architect | Rendszer architektura | architect, design, pattern, system |
+| agent_architect | Agent tervezes, template | agent-design, template, scaffold |
+| DependencyGraph | Fuggoseg elemzes | dependency, graph, import, module |
+| qa | Minosegbiztositas, teszteles | qa, test, quality, verify |
+| critic_agent | Kod kritika, code review | critique, review, feedback, improve |
+| documenter | Automatikus dokumentacio | document, readme, jsdoc, api-doc |
+| UXDesigner | UI/UX tervezes, Figma | ux, ui, design, figma, mockup |
+| EdgeProxy | Edge deployment, Cloudflare | edge, proxy, cloudflare, cdn |
+| Python | Python kod futtatas, bridge | python, pip, fastapi, script |
+
+### Automation & AI (8)
+| Agent | Szerep | Trigger kulcsszavak |
+|-------|--------|---------------------|
+| robotkezv2 / RobotkezV2 | Bongeszo automatizalas (Playwright+LLM) | browser, automate, web, click, scrape |
+| voice | Hang feldolgozas (Whisper) | voice, speech, transcribe, audio |
+| ApifyScraping | Apify web scraping | apify, scrape, crawl, extract |
+| ChromeDevTools | Chrome DevTools automatizalas | chrome, devtools, inspect, debug |
+| DataScientist | Adat elemzes, ML | data, analysis, ml, statistics |
+| email_triage | Email besorolasa, feldolgozasa | email, inbox, triage, sort |
+| github_models | GitHub Models LLM hivas | github-models, gpt, inference |
+| innovation_bridge | Innovacios otletek kezelese | innovate, idea, brainstorm |
+
+### Specialized (6)
+| Agent | Szerep | Trigger kulcsszavak |
+|-------|--------|---------------------|
+| DigitalHeadhunter | Toborzas, CV elemzes | recruit, hire, cv, talent |
+| law_detective | Jogi kutatas | legal, law, compliance, regulation |
+| market_intel | Piaci intelligencia | market, competitor, analysis, trend |
+| ops | Uzemeltetesi feladatok | ops, monitor, uptime, system |
+| ProjectConductor | Projekt vezetes, track management | conductor, track, milestone, status |
+| DigitalHeadhunter | Allaskeresesi asszisztens | job, search, career, talent |
+
+---
+
+## MCP ESZKOZ REFERENCIAK (11 rejtett tool fajl)
+
+> Ezek a `src/tools/` mappa fajljai amelyek regisztralt MCP eszkozok de nem voltak dokumentalva.
+
+| Tool fajl | Eszkoz neve | Funkció |
+|-----------|-------------|---------|
+| `anythingllm.ts` | anythingllm_* | AnythingLLM tudasbazis integracio (kerdezz, indexelj) |
+| `browserBridge.ts` | browser_bridge_* | Bongeszo tavvezerles (navigate, click, screenshot) |
+| `claudeTool.ts` | claude_* | Claude API kozvetlen hivas |
+| `copilotCliTool.ts` | copilot_cli_* | Copilot CLI utasitas vegrehajtas |
+| `deploymentAnalyzer.ts` | deployment_analyze | Deployment hiba elemzes |
+| `getAiRecommendation.ts` | ai_recommend | AI ajanlasok MCP tool |
+| `githubModelsTool.ts` | github_models_* | GitHub Models inference hivas |
+| `interpreter.ts` | code_interpret | Kod vegrehajtás sandbox-ban |
+| `n8n.ts` | n8n_* | n8n workflow integráció (trigger, status) |
+| `negotiationEngine.ts` | negotiate_* | Targyalasi strategia es kimenet elemzes |
+| `toolPermissions.ts` | permissions_* | Tool hozzaferes RBAC ellenorzes |
+
+---
+
+## PYTHON FASTAPI ENDPOINT KATALOGUS (35 endpoint — :8000)
+
+> A `myai/server.py` tartalmazza. Elerheto a `python <sub>` bridge parancson keresztul.
+
+| Endpoint csoport | Parancs | FastAPI utvonal |
+|------------------|---------|-----------------|
+| **Core** | `python health` | GET /health |
+| | `python execute <code>` | POST /execute |
+| | `python refine <content>` | POST /refine |
+| **Harvest** | `python harvest <url>` | POST /harvest |
+| | `python harvest-status` | GET /harvest/status |
+| | `python harvest-results` | GET /harvest/results |
+| | `python harvest-clean` | POST /harvest/clean |
+| **Comet** | `python comet <task>` | POST /comet/execute |
+| | `python comet-memory` | GET /comet/memory |
+| | `python comet-delete <key>` | POST /comet/memory/delete |
+| **Browser** | `python browser-chat <msg>` | POST /browser/chat |
+| | `python browser-start` | POST /browser/start |
+| | `python browser-stop` | POST /browser/stop |
+| | `python browser-status` | GET /browser/status |
+| | `python browser-screenshot` | GET /browser/screenshot |
+| | `python browser-navigate <url>` | POST /browser/navigate |
+| **Voice** | `python voice-transcribe <file>` | POST /voice/transcribe |
+| **OS Automation** | `python os-screenshot` | GET /os/screenshot |
+| | `python os-click <x> <y>` | POST /os/click |
+| | `python os-click-pct <x%> <y%>` | POST /os/click-pct |
+| | `python os-screen-size` | GET /os/screen-size |
+| | `python os-type <text>` | POST /os/type |
+| | `python os-vision-click <desc>` | POST /os/vision-click |
+| **Robotkez** | `python robotkez-action <instr>` | POST /robotkez/action |
+| | `python robotkez-snapshot` | GET /robotkez/snapshot |
+| **Crawl4AI** | `python crawl4ai <url>` | POST /crawl4ai/crawl |
+| | `python crawl4ai-batch <urls>` | POST /crawl4ai/batch |
+| **Incubator** | `python incubator-sample` | POST /incubator/gold-sample |
+| | `python incubator-stats` | GET /incubator/stats |
+| | `python incubator-train` | POST /incubator/train |
+| **Testing** | `python test-run` | POST /test/run |
+| | `python test-logs` | GET /test/logs |
+
+---
+
+## AKTIVALT ROUTE-OK (10 uj — 2026-03-25)
+
+> A `src/server/routes/index.ts`-ben regisztralt uj route-ok:
+
+| Route | Mount pont | Leiras |
+|-------|-----------|--------|
+| observability | /api/v1/observability | LLM hivas monitoring, timeline, stats |
+| swarm | /api/v1/swarm | Multi-agent swarm vezerles, voting |
+| golden-dataset | /api/v1/golden-dataset | Sikeres futasok fine-tuning adathalmaza |
+| suggested-tasks | /api/v1/suggested-tasks | AI altal javasolt feladatok |
+| crawl4ai | /api/v1/crawl4ai | Web crawling Crawl4AI integracióval |
+| python-workers | /api/v1/python-workers | Python script futtatás Node.js bridge-en |
+| evhunter | /api/v1/evhunter | Elektromos auto kereso |
+| preferences | /api/v1/preferences | Felhasznaloi beallitasok mentese |
+| sales | /api/v1/sales | Ertekesitesi pipeline, lead management |
+| voice | /api/v1/voice | Hang feldolgozas, Whisper integracio |

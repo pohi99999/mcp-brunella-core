@@ -33,6 +33,17 @@ import { createBusinessJobsRoutes } from "./businessJobs.js";
 import { securityRouter } from "./security.js";
 import { createAssistantRoutes } from "./assistant.js";
 import { createCopilotBridgeRoutes } from "./copilotBridge.js";
+// --- Activated dormant routes (2026-03-25) ---
+import { createObservabilityRouter } from "./observability.js";
+import { swarmRouter } from "./swarm.js";
+import { createGoldenDatasetRouter } from "./goldenDataset.js";
+import { suggestedTasksRouter } from "./suggestedTasks.js";
+import { createCrawl4aiRouter } from "./crawl4ai.js";
+import { createPythonWorkersRouter } from "./pythonWorkers.js";
+import { createEvHunterRouter } from "./evhunter.js";
+import { createPreferencesRouter } from "./preferences.js";
+import salesRouter from "./sales.js";
+import voiceRouter from "./voice.js";
 
 export {
   createHealthRoutes,
@@ -104,6 +115,18 @@ export function createV1Router(): Router {
   router.use("/security", securityRouter);
   router.use("/assistant", createAssistantRoutes());
   router.use("/copilot-bridge", createCopilotBridgeRoutes());
+
+  // --- Activated dormant routes (2026-03-25) ---
+  router.use("/observability", createObservabilityRouter());
+  router.use("/swarm", swarmRouter);
+  router.use("/golden-dataset", createGoldenDatasetRouter());
+  router.use("/suggested-tasks", suggestedTasksRouter);
+  router.use("/crawl4ai", createCrawl4aiRouter());
+  router.use("/python-workers", createPythonWorkersRouter());
+  router.use("/evhunter", createEvHunterRouter());
+  router.use("/preferences", createPreferencesRouter());
+  router.use("/sales", salesRouter);
+  router.use("/voice", voiceRouter);
 
   return router;
 }
