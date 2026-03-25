@@ -287,13 +287,79 @@ Ne módosítsd explicit kérés nélkül: `package.json`, `src/agents/registry.j
 - **Multi-agent munkamenet**: Claude Code, Gemini CLI, GitHub Copilot, Jules, Cursor párhuzamosan dolgoznak. Koordináció a `.ai/` naplókon és `conductor/tracks.md`-n keresztül.
 - **Log fájlok**: `logs/` mappa — `brunella.db` (SQLite), `dashboard.log`, `health.log`, `http.log`, `orchestrator.log`, `startup.log` stb.
 
-## Hibaelhárítás
+## Copilot Agent Dispatch — BAS integracio
 
-| Hiba | Megoldás |
+**54+ BAS ugynok elerhetoseg Copilot CLI-bol mint sub-agent.**
+Az ugynokoket 2 modon hivhatod meg: offline router (gyors dontes) vagy REST API dispatch (vegrehajtas).
+
+### Offline Router (szerver NELKUL)
+
+```powershell
+# Melyik agent kell a feladathoz? (JSON valasz: bestAgent, confidence, alternatives)
+node scripts/copilot-route.js "Fix TypeScript lint errors"
+
+# Domain alapu szures
+node scripts/copilot-route.js --domain marketing
+node scripts/copilot-route.js --domains
+
+# Osszes agent listazasa
+node scripts/copilot-route.js --list
+```
+
+### REST API Dispatch (szerver KELL: npm run dev)
+
+```powershell
+# Konkret ugynok hivasa
+.\scripts\copilot-dispatch.ps1 -Mode execute -AgentName "lint_fixer" -Task "Fix ESLint errors"
+
+# Automatikus routing (AgentManager dont)
+.\scripts\copilot-dispatch.ps1 -Mode route -Task "Keress ra az AI trendekre"
+
+# Allapot ellenorzes
+.\scripts\copilot-dispatch.ps1 -Mode status
+```
+
+### Mikor delegalj BAS agentre
+
+| Feladattipus | BAS Agent | Megjegyzes |
+|---|---|---|
+| ESLint / TSC hiba javitas | `lint_fixer` | auto_fix + batch_fix kepes |
+| Kod generalas / refactoring | `Developer` | self_healing pipeline |
+| Premium AI kod review | `github_models` | GPT-4o GitHub Models API |
+| Web scraping / bongeszesz | `robotkezv2` | Playwright + LLM + Comet |
+| Szamla OCR / penzugy | `finance_guardian` | Invoice feldolgozas |
+| Marketing kampany | `marketing_director` | Campaign orchestration |
+| Piaci kutatas / competitor | `market_intel` | Trend + price analysis |
+| Jogi / compliance | `law_detective` | Magyar Kozlony intelligence |
+| Projekt track kezeles | `ProjectConductor` | EPP-v2 tracks |
+| Feladat dekompozcio | `task_decomposer` | Komplex task → DAG |
+| HR / toborzas | `DigitalHeadhunter` | CV screening |
+| Logisztika | `logistics_dispatcher` | Tracking + route opt |
+| Rendszer health check | `evaluator` | Audit + test runner |
+| Monitoring / ops | `ops` | Diagnosztika |
+| TRIZ innovacio | `innovation_bridge` | Cross-industry transfer |
+| Minosegellenorzes | `critic_agent` | Hallucination detection |
+| Agent tervezes | `agent_architect` | Uj agent prompt/config |
+| Spec iras / track gen | `SpecWriter` | EPP-v2 spec generator |
+| Enterprise koordinacio | `enterprise_orchestrator` | 18 modul routing |
+| Komplex multi-agent | `orchestrator` (route mod) | AgentManager dont |
+
+### Dontesi logika
+
+1. **Offline routing:** `node scripts/copilot-route.js "feladat"` → JSON
+2. **Ha confidence >= 0.7** → delegald az agentre (REST dispatch)
+3. **Ha confidence < 0.7** → nezd meg az alternativakat, vagy csinald magad
+4. **Ha a feladat fajl szerkesztes / git** → NE delegald, csinald magad (nativ Copilot kepesseg)
+5. **Reszletes routing matrix:** `.ai/agent-routing-guide.md`
+6. **Agent kepesseg index:** `config/copilot-agents.json`
+
+## Hibaelharitas
+
+| Hiba | Megoldas |
 |------|----------|
-| `ERR_MODULE_NOT_FOUND` | Import hiányzó `.js` kiterjesztés → add hozzá |
-| `npm test` timeout | `fileParallelism: false` vitest.config-ban → növeld a timeout-ot |
-| Ollama nem elérhető | Indítsd el: `ollama serve`, ellenőrizd: `http://localhost:11434` |
+| `ERR_MODULE_NOT_FOUND` | Import hianyzo `.js` kiterjesztes → add hozza |
+| `npm test` timeout | `fileParallelism: false` vitest.config-ban → noveld a timeout-ot |
+| Ollama nem elerheto | Inditsd el: `ollama serve`, ellenorizd: `http://localhost:11434` |
 | FastAPI nem indul | `cd myai && uv sync && uvicorn server:app --reload --port 8000` |
-| Agent "stuck" (working) | Phoenix Protocol: 3 retry → auto idle reset. Kézi: `setAgentStatus(name, 'idle')` |
-| Dashboard build hiba | `npm run build:ui` — külön tsconfig.ui.json és vite.config.ts |
+| Agent "stuck" (working) | Phoenix Protocol: 3 retry → auto idle reset. Kezi: `setAgentStatus(name, 'idle')` |
+| Dashboard build hiba | `npm run build:ui` — kulon tsconfig.ui.json es vite.config.ts |
