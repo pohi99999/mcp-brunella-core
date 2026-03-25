@@ -1,6 +1,6 @@
 # Brunella Agent System (BAS)
 
-**Verzió:** 2.4.0 | **Utolsó frissítés:** 2026-02-24
+**Verzió:** 2.4.0 | **Utolsó frissítés:** 2026-03-25
 
 AI multi-agent rendszer szoftverfejlesztés automatizálására lokális LLM-ekkel (Ollama), MCP protokollal és hibrid Node.js/Python architektúrával.
 
@@ -168,15 +168,19 @@ git commit -m "Leírás"
 ### Ügynök Hierarchia
 
 ```
-OrchestratorAgent (Planner & Dispatcher)
-  ├── DeveloperAgent        - Kód írás, Python végrehajtás
-  ├── EvaluatorAgent        - Audit, testing, code review
-  ├── ResearcherAgent       - Web search, RAG keresés
-  ├── DataScientistAgent    - Adat tisztítás, LanceDB
-  ├── EdgeProxyAgent        - Cloudflare Workers proxy
-  ├── ProjectConductor      - Docs sync, track management
-  ├── TaskDecomposerAgent   - Komplex feladat dekompozíció (preview-only DAG)
-  └── VoiceAgent            - Hangfelismerés (Whisper)
+OrchestratorAgent / EnterpriseOrchestratorAgent (Koordinátorok)
+├── Core: DeveloperAgent, EvaluatorAgent, ResearcherAgent, TaskDecomposerAgent
+├── Automation: RobotkezV2Agent (Playwright/LLM), VoiceAgent (Whisper)
+├── Engineering: SpecWriterAgent, GenesisOrchestrator, UXDesignerAgent, LintFixerAgent
+├── Enterprise Suite (~20 ügynök):
+│   ├── Finance: FinanceGuardian, FinancialGuardAgent, ProcurementAgent
+│   ├── Sales/Marketing: SalesAgent, CopywriterAgent, MarketingDirectorAgent
+│   ├── HR: HeadHunterAgent, ConflictMediatorAgent
+│   ├── Logistics: LogisticsDispatcherAgent
+│   └── Admin: EmailTriageAgent, GrantWatcherAgent, KnowledgeBaseBuilderAgent
+├── TOML-alapú DynamicAgent: myai/agents/*.toml
+├── Management: ProjectConductorAgent (tracks.md szinkron)
+└── Swarm: SwarmManager + SwarmColony (párhuzamos kolónia-alapú feladatkiosztás)
 ```
 
 ### Data Flywheel (5 lépéses ciklus)
@@ -198,6 +202,29 @@ Hiba detektálva → Checkpointing (SQLite task queue)
                 → Git Recovery (sync_foszal.py + commit)
 ```
 
+### Model Router & Bifrost Gateway
+
+**Model Router** (`src/core/modelRouter.ts`) — Brain vs Muscle routing:
+- **Brain (Cloud):** Gemini (1M ctx), GitHub Models GPT-4o → `complexity: 'high'`
+- **Muscle (Local):** Ollama → `complexity: 'low'` vagy `budget=0`
+
+**Bifrost Gateway** (`src/core/bifrost_gateway.ts`) — Multi-LLM Gateway:
+- 5 provider: Ollama, Gemini, GitHub Models, Anthropic, Cloudflare Workers AI
+- Auto-fallback: ha egy provider nem elérhető, automatikusan átvált
+- `setMode('edge-only'|'local-preferred'|'cloud-preferred')`
+- userId alapú preferenciák támogatása
+
+### Új Alrendszerek (2026-03 Phase 2-4)
+
+| Alrendszer | Leírás | Dashboard | CLI |
+|------------|--------|-----------|-----|
+| **Crawl4AI** | Intelligens webcrawling (patchright fallback) | ✅ Crawl4AI Panel | `brunella crawl4ai` |
+| **User Preferences** | Felhasználói LLM/nyelv/stílus preferenciák | ✅ Preferences Panel | `brunella preferences` |
+| **LLM Observability** | Provider stats, latencia, token monitoring | ✅ Observability Panel | `brunella observability` |
+| **Golden Dataset** | Tool futás instrumentáció fine-tuning-hoz | API endpoints | — |
+| **Zod Bridge** | Runtime séma validáció MCP tool-okhoz | — | — |
+| **WebSocket RT** | Socket.IO real-time frissítés a panelekhez | ✅ Auto | — |
+
 ### Track Rendszer (Fejlesztési Szálak)
 
 ```
@@ -205,7 +232,7 @@ PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 ```
 
 Minden nagyobb fejlesztés = Track a `conductor/tracks/` mappában.
-**Jelenleg:** 14 aktív track, 74 archivált. (2026-02-24 rendszerezés)
+**Jelenleg:** 7 aktív track, 5 proposed, 114 archivált. (2026-03-25 rendszerezés)
 
 ---
 
@@ -229,7 +256,12 @@ mcp-brunella-core/
 │   │   └── registry.ts      # MCP tool regisztráció
 │   ├── dashboard/           # React UI (Vite, Tailwind v4)
 │   ├── core/
-│   │   └── llm_client.ts    # Ollama/Gemini LLM hívások
+│   │   ├── llm_client.ts          # Ollama/Gemini LLM hívások
+│   │   ├── modelRouter.ts         # Brain vs Muscle routing
+│   │   ├── bifrost_gateway.ts     # Multi-LLM Gateway (5 provider, auto-fallback)
+│   │   ├── observabilityLogger.ts # LLM hívás naplózás (SQLite)
+│   │   ├── toolRunCapture.ts      # Golden Dataset tool instrumentáció
+│   │   └── checkpoint.ts          # Phoenix Protocol
 │   ├── utils/
 │   │   ├── logger.ts        # Naplózás (használd console.log helyett!)
 │   │   └── pythonShell.ts   # Python alrendszer kommunikáció
@@ -321,6 +353,11 @@ brunella decompose [task]     # Feladat dekompozíció (preview-only DAG)
 
 # Agent Architect (új ügynök generálás)
 brunella architect create [description]  # Új ügynök létrehozása TOML config-ból
+
+# Új integrációk (Phase 2-4)
+brunella crawl4ai              # Webcrawling menü (URL crawl, status, konfiguráció)
+brunella preferences           # Felhasználói preferenciák (nyelv, provider, stílus)
+brunella observability         # LLM Observability (provider stats, latencia, tokens)
 ```
 
 ### Chat Parancsok (interaktív módban)
@@ -860,16 +897,60 @@ EDGE_ENABLED=true npm run dev
 
 ## 📚 API Végpontok
 
-| Végpont                          | Leírás                                   |
-| -------------------------------- | ---------------------------------------- |
-| `GET /api/health`                | Rendszer állapot (Ollama, FastAPI, stb.) |
-| `GET /api/agents`                | Ügynökök listája                         |
-| `POST /api/agents/:name/execute` | Ügynök futtatás                          |
-| `GET /api/tools`                 | MCP eszközök listája                     |
-| `POST /api/ollama/generate`      | LLM generálás (LangSmith traced)         |
-| `GET /api-docs`                  | Swagger UI (API dokumentáció)            |
-| `GET /files/list`                | Fájl lista (Dashboard File Explorer)     |
-| `GET /files/content`             | Fájl tartalom olvasás                    |
+### Core API
+
+| Végpont                          | Metódus | Leírás                                   |
+| -------------------------------- | ------- | ---------------------------------------- |
+| `GET /api/health`                | GET     | Rendszer állapot (Ollama, FastAPI, stb.) |
+| `GET /api/agents`                | GET     | Ügynökök listája                         |
+| `POST /api/agents/:name/execute` | POST    | Ügynök futtatás                          |
+| `GET /api/tools`                 | GET     | MCP eszközök listája                     |
+| `POST /api/ollama/generate`      | POST    | LLM generálás (LangSmith traced)         |
+| `GET /api-docs`                  | GET     | Swagger UI (API dokumentáció)            |
+| `GET /files/list`                | GET     | Fájl lista (Dashboard File Explorer)     |
+| `GET /files/content`             | GET     | Fájl tartalom olvasás                    |
+
+### Crawl4AI (Webcrawling)
+
+| Végpont                          | Metódus | Leírás                                   |
+| -------------------------------- | ------- | ---------------------------------------- |
+| `POST /api/v1/crawl4ai/crawl`   | POST    | URL crawl indítás                        |
+| `GET /api/v1/crawl4ai/status`   | GET     | Crawl állapot lekérdezés                 |
+| `GET /api/v1/crawl4ai/results`  | GET     | Crawl eredmények listázása               |
+
+### User Preferences
+
+| Végpont                            | Metódus | Leírás                                   |
+| ---------------------------------- | ------- | ---------------------------------------- |
+| `GET /api/v1/preferences/:userId`  | GET     | Felhasználó preferenciái                 |
+| `PUT /api/v1/preferences/:userId`  | PUT     | Preferenciák mentése/frissítése          |
+| `DELETE /api/v1/preferences/:userId` | DELETE | Preferenciák törlése                   |
+
+### LLM Observability
+
+| Végpont                             | Metódus | Leírás                                    |
+| ----------------------------------- | ------- | ----------------------------------------- |
+| `GET /api/v1/observability/stats`   | GET     | Provider statisztikák (latencia, tokens)  |
+| `GET /api/v1/observability/logs`    | GET     | LLM hívás logok (szűrhető)               |
+| `GET /api/v1/observability/providers` | GET   | Provider elérhetőség és fallback chain    |
+
+### Golden Dataset
+
+| Végpont                             | Metódus | Leírás                                    |
+| ----------------------------------- | ------- | ----------------------------------------- |
+| `GET /api/v1/golden-dataset/tool-runs` | GET  | Tool futások listája                      |
+| `GET /api/v1/golden-dataset/tool-stats` | GET | Tool statisztikák (sikerráta, átlag idő) |
+| `GET /api/v1/golden-dataset/export` | GET     | JSONL export fine-tuning célra            |
+
+### Cloudflare Edge
+
+| Végpont                          | Metódus | Leírás                                   |
+| -------------------------------- | ------- | ---------------------------------------- |
+| `GET /api/cloudflare/status`     | GET     | Edge enabled/healthy státusz             |
+| `POST /api/cloudflare/task`      | POST    | Task submission Worker-nek               |
+| `POST /api/cloudflare/chat`      | POST    | Chat proxy Cloudflare-hez                |
+
+> **Összesen ~55 route fájl** a `src/server/routes/` mappában. Részletes API docs: `GET /api-docs` (Swagger UI).
 
 ---
 

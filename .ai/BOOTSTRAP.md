@@ -72,7 +72,9 @@
 - **Ollama** (lokális, 18 modell): llama3.1, qwen2.5-coder, deepseek-coder, stb.
 - **Gemini** (Google): gemini-2.0-flash-exp (legújabb)
 - **GitHub Models** (Copilot Pro+): GPT-4o (korlátlan)
+- **Anthropic** (Claude): claude-sonnet-4-20250514
 - **Cloudflare Workers AI**: @cf/meta/llama-3.1-8b-instruct
+- **Bifrost Gateway**: Auto provider-select, fallback chain, userId preferenciák
 
 ---
 
@@ -80,10 +82,11 @@
 
 ### Kód
 - `src/agents/` - 54 AI ügynök (OrchestratorAgent, DeveloperAgent, stb.)
-- `src/server/` - Backend API + MCP registry
-- `src/dashboard/` - React UI komponensek
+- `src/server/` - Backend API + MCP registry (~55 route fájl)
+- `src/core/` - Model Router, Bifrost Gateway, Observability, Phoenix Protocol
+- `src/dashboard/` - React UI komponensek (Radix UI + Tailwind v4)
 - `src/tools/` - MCP tool definíciók
-- `src/utils/` - Logger, RAG, Python shell, stb.
+- `src/utils/` - Logger, RAG, Python shell, Zod Bridge, stb.
 
 ### Dokumentáció
 - `README.md` - **MASTER DOKUMENTUM** (kezdd itt!)
@@ -157,15 +160,15 @@ git push origin main
 
 **Lásd:** `conductor/tracks.md` (automatikusan frissül)
 
-**Top 3 prioritás (2026-02-16):**
-1. **SpecWriterAgent** - Automatikus track generátor (P0 - CRITICAL)
-2. **Magyar CLI Menürendszer** - Interaktív menük (P0 - CRITICAL) ✅ KÉSZ
-3. **EPP v2 Protocol** - Fejlesztési szabályok (P0 - CRITICAL) ✅ 75% KÉSZ
+**Top 3 prioritás (2026-03-25):**
+1. **LLM Observability** - Provider monitoring, latencia, token tracking (✅ KÉSZ)
+2. **User Preferences** - Felhasználói LLM/nyelv/stílus beállítások (✅ KÉSZ)
+3. **Crawl4AI Integration** - Intelligens webcrawling (✅ KÉSZ)
 
 **Következő:**
-- LangSmith tracing kiterjesztés
-- Robotkéz + Browser Harvester aktiválás
-- Phoenix Protocol V2 (öngyógyítás)
+- E2B Sandbox Crawl4AI izolálás
+- Golden Dataset bővítés (fine-tuning)
+- WebSocket bővítés további panelekhez
 
 ---
 
@@ -325,7 +328,7 @@ Most már tudod:
 
 ---
 
-**Verzió:** 1.0.0
-**Utolsó frissítés:** 2026-02-16
+**Verzió:** 2.4.0
+**Utolsó frissítés:** 2026-03-25
 **Tulajdonos:** Pohánka Péter
 **Ügynök:** [Te vagy - Claude / Gemini / Copilot / Jules / Cursor]

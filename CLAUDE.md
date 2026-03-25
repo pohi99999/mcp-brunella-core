@@ -32,7 +32,7 @@ KÖTELEZŐ (minden munkamenet elején!):
 - TEST_RESULTS.md                 # Legutóbbi teszt eredmények
 - PROJEKT_DIAGRAM.md              # Rendszer architektúra (KÖTELEZŐ!)
 - package.json                    # Függőségek, scriptek, verzió
-- src/agents/registry.json        # Ügynök regisztráció (56 agent)
+- src/agents/registry.json        # Ügynök regisztráció (54 agent)
 
 OPCIONÁLIS (szükség szerint):
 - tsconfig.json                   # TypeScript konfiguráció
@@ -97,6 +97,9 @@ brunella jules tests            # Jules async test suite
 brunella swarm status          # Swarm koloniak listája és állapota
 brunella swarm dispatch        # Task küldése egy kolóniának (--colony <id>)
 brunella assistant             # Personal Assistant MVP readiness riport (--json mód is)
+brunella crawl4ai              # Webcrawling menü (URL crawl, status, konfiguráció)
+brunella preferences           # Felhasználói preferenciák kezelése (nyelv, provider, stílus)
+brunella observability         # LLM Observability (provider stats, latencia, token használat)
 
 # Chat interaktív parancsok (brunella chat-en belül)
 /edge on|off         # Cloudflare Edge mód be/ki
@@ -146,7 +149,12 @@ src/
 ├── server/
 │   ├── web.ts            # Express + Socket.IO szerver
 │   ├── registry.ts       # registerAllTools() — MCP tool regisztráció
-│   ├── routes/           # REST API route-ok (~30 endpoint csoport)
+│   ├── routes/           # REST API route-ok (~55 endpoint fájl)
+│   │   ├── crawl4ai.ts       # Crawl4AI webcrawling endpoints
+│   │   ├── preferences.ts    # User Preferences CRUD
+│   │   ├── observability.ts  # LLM Observability stats
+│   │   ├── goldenDataset.ts  # Golden Dataset export/stats
+│   │   └── ...               # 50+ további route fájl
 │   └── SocketService.ts  # WebSocket kezelés
 ├── core/
 │   ├── llm_client.ts         # Multi-provider LLM kliens (Ollama/Gemini/GitHub Models)
@@ -231,6 +239,20 @@ OrchestratorAgent / EnterpriseOrchestratorAgent (Koordinátorok)
 Node.js → HTTP POST /d1/query → Cloudflare Worker → D1 Database
 ```
 Aktiválás: `CLOUDFLARE_WORKER_URL` + `CEAN_API_KEY` env változók szükségesek.
+
+### Új Alrendszerek (Phase 2-4, 2026-03)
+
+**Crawl4AI Integráció** (`myai/crawl4ai_worker.py`) — Intelligens webcrawling patchright fallback-kel. Dashboard panel: `Crawl4AIPanel.tsx`. REST: `/api/v1/crawl4ai/*`. CLI: `brunella crawl4ai`.
+
+**User Preferences** (`src/server/routes/preferences.ts`) — Felhasználói preferenciák (nyelv, LLM provider, stílus) memorizálása. Bifrost Gateway automatikusan alkalmazza userId alapján. Dashboard panel: `UserPreferencesPanel.tsx`. CLI: `brunella preferences`.
+
+**LLM Observability** (`src/core/observabilityLogger.ts`) — SQLite-alapú LLM hívás naplózás: provider, model, latency, tokens, fallback chain. Dashboard panel: `LLMObservabilityPanel.tsx`. REST: `/api/v1/observability/*`. CLI: `brunella observability`.
+
+**Golden Dataset Extension** (`src/core/toolRunCapture.ts`) — Sikeres tool futások automatikus mentése fine-tuning célra. `wrapToolHandler()` instrumentáció. REST: `/api/v1/golden-dataset/*`.
+
+**Zod Validation Bridge** (`src/utils/zodBridge.ts`) — Runtime Zod séma validáció MCP tool paraméterekhez.
+
+**WebSocket Real-time** — Crawl4AI és Preferences panelek Socket.IO real-time frissítéssel.
 
 ### MCP Filesystem Server & Safe Zones
 
@@ -345,7 +367,7 @@ PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
 
 Minden nagyobb fejlesztés = Track a `conductor/tracks/` mappában. Track archiválásnál: mozgasd `conductor/archive/<track-id>/`-ba.
 
-**Aktuális állapot:** `conductor/tracks.md` — 14 aktív track, 74 archivált.
+**Aktuális állapot:** `conductor/tracks.md` — 7 aktív, 5 proposed, 114 archivált (2026-03-25).
 
 ### Glass Box Filozofia
 
@@ -472,6 +494,14 @@ EDGE_ENABLED=true
 | `POST /api/v1/harvest/sync` | Harvest szinkronizálás |
 | `GET /api/assistant/blueprint` | Personal Assistant MVP readiness |
 | `POST /api/orchestrator/universal` | Universal Orchestrator Chat (minden provider) |
+| `POST /api/v1/crawl4ai/crawl` | URL crawl indítás |
+| `GET /api/v1/crawl4ai/status` | Crawl állapot |
+| `GET /api/v1/preferences/:userId` | Felhasználói preferenciák |
+| `PUT /api/v1/preferences/:userId` | Preferenciák mentése |
+| `GET /api/v1/observability/stats` | LLM provider statisztikák |
+| `GET /api/v1/observability/logs` | LLM hívás logok |
+| `GET /api/v1/golden-dataset/tool-runs` | Tool futások listája |
+| `GET /api/v1/golden-dataset/export` | JSONL export fine-tuning-hoz |
 
 ---
 
