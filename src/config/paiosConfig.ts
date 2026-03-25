@@ -26,7 +26,7 @@ const ProviderSchema = z.object({
 
 export const PAIOSConfigSchema = z.object({
   orchestrator: z.object({
-    default_model: z.enum(['github', 'gemini', 'local', 'anthropic', 'cloudflare']).default('github'),
+    default_model: z.enum(['github', 'gemini', 'local', 'anthropic', 'cloudflare', 'copilot']).default('github'),
     max_tasks_per_request: z.number().int().min(1).max(20).default(5),
   }),
   providers: z.object({
@@ -35,6 +35,7 @@ export const PAIOSConfigSchema = z.object({
     local: ProviderSchema.optional(),
     anthropic: ProviderSchema.optional(),
     cloudflare: ProviderSchema.optional(),
+    copilot: ProviderSchema.optional(),
   }),
   phoenix: z.object({
     retry_max_attempts: z.number().int().min(1).max(10).default(3),
@@ -52,7 +53,7 @@ export const PAIOSConfigSchema = z.object({
 
 export type PAIOSConfig = z.infer<typeof PAIOSConfigSchema>;
 export type ProviderConfig = z.infer<typeof ProviderSchema>;
-export type ModelProvider = 'github' | 'gemini' | 'local' | 'anthropic' | 'cloudflare';
+export type ModelProvider = 'github' | 'gemini' | 'local' | 'anthropic' | 'cloudflare' | 'copilot';
 
 // ============================================================================
 // CONFIG LOADER

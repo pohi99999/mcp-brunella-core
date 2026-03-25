@@ -7,6 +7,7 @@ import { cloudflareEdgeProvider } from "./providers/cloudflareEdgeProvider";
 import { cloudflareChatProvider } from "./providers/cloudflareChatProvider";
 import { MasterOrchestratorProvider } from "./providers/masterOrchestratorProvider";
 import { universalProvider } from "./providers/universalProvider";
+import { copilotProvider } from "./providers/copilotProvider";
 
 const providers: Record<ChatMode, ChatProvider> = {
   orchestrator: orchestratorProvider,
@@ -17,6 +18,7 @@ const providers: Record<ChatMode, ChatProvider> = {
   cloudflare_chat: cloudflareChatProvider,
   master_orchestrator: new MasterOrchestratorProvider(),
   universal: universalProvider,
+  copilot: copilotProvider,
 };
 
 export function getProvider(mode: ChatMode): ChatProvider {

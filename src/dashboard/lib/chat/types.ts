@@ -18,7 +18,8 @@ export type ChatMode =
   | "cloudflare"
   | "cloudflare_chat"
   | "master_orchestrator"
-  | "universal";
+  | "universal"
+  | "copilot";
 
 export interface ChatSendInput {
   text: string;
