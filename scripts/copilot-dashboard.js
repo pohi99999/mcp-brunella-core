@@ -857,7 +857,7 @@ const commands = {
           llm_providers: 6,
           databases: 6,
           python_endpoints: 35,
-          domains: 28
+          domains: 29
         },
         usage: 'node scripts/copilot-dashboard.js <domain> <action> [args...]',
         quickstart: [
@@ -879,6 +879,65 @@ const commands = {
 
 // --- Helpers ---
 function err(message) { return { ok: false, data: { error: message } }; }
+
+// ===========================================================================
+// COGNITIVE domain — Copilot Cognitive Bridge (13 Intelligence Layers)
+// ===========================================================================
+commands['cognitive'] = async (...args) => {
+  const sub = args[0] || 'stats';
+  switch (sub) {
+    case 'enrich': {
+      const query = args.slice(1).join(' ');
+      if (!query) return err('Usage: cognitive enrich <query>');
+      return api('POST', '/api/v1/cognitive/enrich', { query });
+    }
+    case 'reflect': {
+      // cognitive reflect <taskId> <agentName> <success:true/false> <task description...>
+      const [taskId, agentName, successStr, ...rest] = args.slice(1);
+      if (!taskId || !agentName || !successStr) {
+        return err('Usage: cognitive reflect <taskId> <agentName> <true|false> <task description>');
+      }
+      return api('POST', '/api/v1/cognitive/reflect', {
+        taskId, agentName,
+        task: rest.join(' ') || 'task',
+        result: successStr === 'true' ? 'success' : 'failed',
+        success: successStr === 'true',
+      });
+    }
+    case 'stats':
+      return api('GET', '/api/v1/cognitive/stats');
+    case 'health':
+      return api('GET', '/api/v1/cognitive/health');
+    case 'query': {
+      const [layer, ...queryParts] = args.slice(1);
+      if (!layer || queryParts.length === 0) {
+        return err('Usage: cognitive query <layer> <query>. Layers: structured, graphrag, preferences, golden');
+      }
+      return api('POST', '/api/v1/cognitive/query', { layer, query: queryParts.join(' ') });
+    }
+    default:
+      return {
+        ok: true,
+        data: {
+          domain: 'cognitive',
+          description: 'Copilot Cognitive Bridge — 13 BAS intelligence layers',
+          commands: {
+            enrich: 'cognitive enrich <query> — Multi-source context enrichment (all 11 layers)',
+            reflect: 'cognitive reflect <taskId> <agent> <true|false> <desc> — Post-task learning',
+            stats: 'cognitive stats — Aggregate stats from all cognitive layers',
+            health: 'cognitive health — Quick health check',
+            query: 'cognitive query <layer> <query> — Direct layer query (structured|graphrag|preferences|golden)',
+          },
+          layers: [
+            'StructuredMemory', 'PatternReuse', 'UserPreferences', 'GraphRAG',
+            'SharedCognition', 'ReflectionEngine', 'GoldenDataset', 'SelfModel',
+            'MetaReasoner', 'PredictiveIntelligence', 'CollectiveMind'
+          ]
+        }
+      };
+  }
+};
+
 
 // --- Main ---
 async function main() {
