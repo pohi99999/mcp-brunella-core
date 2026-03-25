@@ -41,10 +41,32 @@ type WorkerTaskProxyResponse = {
   error?: string;
 };
 
+function getCloudflareAuthHeaders(): Record<string, string> {
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+  };
+
+  const apiToken = process.env.CLOUDFLARE_API_TOKEN || process.env.CF_API_TOKEN;
+  const ceanApiKey = process.env.CEAN_API_KEY;
+
+  if (apiToken) {
+    headers.Authorization = `Bearer ${apiToken}`;
+    headers["X-BAS-API-Key"] = apiToken;
+  }
+
+  if (ceanApiKey) {
+    headers["X-CEAN-API-Key"] = ceanApiKey;
+  }
+
+  return headers;
+}
+
 function getCloudflareChatBaseUrl(): string {
   return (
     process.env.CLOUDFLARE_CHAT_URL ||
+    process.env.CLOUDFLARE_D1_WORKER_URL ||
     process.env.CLOUDFLARE_WORKER_URL ||
+    process.env.CLOUDFLARE_CHAT_SYNC_URL ||
     "https://llm-chat-app-template.iam-dd1.workers.dev"
   );
 }
@@ -112,6 +134,7 @@ async function checkWorkerHealth(url: string): Promise<{
 }> {
   const base = normalizeBaseUrl(url);
   const candidates = [`${base}/health`, base];
+  const headers = getCloudflareAuthHeaders();
 
   let lastError = "Unknown error";
 
@@ -123,16 +146,21 @@ async function checkWorkerHealth(url: string): Promise<{
     try {
       const response = await fetch(candidate, {
         method: "GET",
+        headers,
         signal: controller.signal,
       });
       const latencyMs = Date.now() - start;
       clearTimeout(timeoutId);
 
-      if (response.ok) {
+      if (response.ok || response.status === 401 || response.status === 403) {
         return {
           status: "online",
           latencyMs,
           statusCode: response.status,
+          error:
+            response.ok
+              ? undefined
+              : "Auth required (worker reachable, but protected)",
         };
       }
 
@@ -167,6 +195,7 @@ async function postTaskToWorker(
 
   const base = normalizeBaseUrl(worker.url);
   const endpoints = ["/task", "/api/task", "/api/v1/task", "/"];
+  const authHeaders = getCloudflareAuthHeaders();
   const payload = {
     instruction,
     task: instruction,
@@ -183,7 +212,7 @@ async function postTaskToWorker(
     try {
       const response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: authHeaders,
         body: JSON.stringify(payload),
         signal: controller.signal,
       });
@@ -258,9 +287,7 @@ async function postCloudflareChat(
   history: ChatHistoryItem[],
 ): Promise<CloudflareChatProxyResponse> {
   const baseUrl = normalizeBaseUrl(getCloudflareChatBaseUrl());
-  const endpoints = ["/api/chat", "/chat", "/api/v1/chat", "/"];
-
-  const payload = {
+  const chatPayload = {
     message: instruction,
     prompt: instruction,
     input: instruction,
@@ -270,14 +297,31 @@ async function postCloudflareChat(
       .concat([{ role: "user", content: instruction }]),
   };
 
+  const requestCandidates: Array<{ endpoint: string; body: Record<string, unknown> }> = [
+    {
+      endpoint: "/ai/generate",
+      body: {
+        prompt: instruction,
+        messages: chatPayload.messages,
+        model: process.env.CF_AI_SMART_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast",
+      },
+    },
+    { endpoint: "/api/chat", body: chatPayload },
+    { endpoint: "/chat", body: chatPayload },
+    { endpoint: "/api/v1/chat", body: chatPayload },
+    { endpoint: "/", body: chatPayload },
+  ];
+  const headers = getCloudflareAuthHeaders();
+
   let lastError = "Cloudflare chat request failed";
-  for (const endpoint of endpoints) {
+  for (const candidate of requestCandidates) {
+    const { endpoint, body } = candidate;
     const url = `${baseUrl}${endpoint}`;
     try {
       const response = await fetch(url, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        headers,
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -320,6 +364,32 @@ async function postCloudflareChat(
 
 export function createCloudflareRoutes(): Router {
   const router = Router();
+
+  router.get("/config", (_req, res) => {
+    const tunnelEnabled = process.env.CLOUDFLARE_TUNNEL_ENABLED === "true";
+    const config = {
+      edge: {
+        enabled: process.env.EDGE_ENABLED === "true",
+        workerUrl: cloudflareClient.getResolvedBaseUrl(),
+      },
+      chat: {
+        url: normalizeBaseUrl(getCloudflareChatBaseUrl()),
+      },
+      tunnel: {
+        enabled: tunnelEnabled,
+        apiUrl: process.env.CLOUDFLARE_TUNNEL_URL || null,
+        n8nUrl: process.env.CLOUDFLARE_TUNNEL_N8N_URL || null,
+        browserUrl: process.env.CLOUDFLARE_TUNNEL_BROWSER_URL || null,
+        dashboardUrl: process.env.CLOUDFLARE_TUNNEL_DASHBOARD_URL || null,
+      },
+      auth: {
+        hasCloudflareApiToken: Boolean(process.env.CLOUDFLARE_API_TOKEN || process.env.CF_API_TOKEN),
+        hasCeanApiKey: Boolean(process.env.CEAN_API_KEY),
+      },
+    };
+
+    res.json(config);
+  });
 
   /**
    * GET /api/cloudflare/agents

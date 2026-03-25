@@ -402,11 +402,24 @@ export function createLLMRoutes(): Router {
 
             if (provider === 'cloudflare') {
                 try {
-                    const cfUrl = process.env.CLOUDFLARE_WORKER_URL;
+                    const cfUrl = process.env.CLOUDFLARE_D1_WORKER_URL || process.env.CLOUDFLARE_WORKER_URL;
                     if (!cfUrl) throw new Error('CLOUDFLARE_WORKER_URL nincs beállítva');
+                    const cfToken = process.env.CLOUDFLARE_API_TOKEN || process.env.CF_API_TOKEN;
+                    const ceanApiKey = process.env.CEAN_API_KEY;
+                    const headers: Record<string, string> = {
+                        'Content-Type': 'application/json',
+                    };
+                    if (cfToken) {
+                        headers.Authorization = `Bearer ${cfToken}`;
+                        headers['X-BAS-API-Key'] = cfToken;
+                    }
+                    if (ceanApiKey) {
+                        headers['X-CEAN-API-Key'] = ceanApiKey;
+                    }
+
                     const cfRes = await fetch(`${cfUrl}/ai/generate`, {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers,
                         body: JSON.stringify({ prompt, model: model || '@cf/meta/llama-3.1-8b-instruct' }),
                         signal: AbortSignal.timeout(30000),
                     });

@@ -100,7 +100,7 @@ export default {
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
       "Access-Control-Allow-Headers":
-        "Content-Type, Authorization, X-BAS-API-Key",
+        "Content-Type, Authorization, X-BAS-API-Key, X-CEAN-API-Key",
     };
 
     // Preflight
@@ -147,6 +147,81 @@ export default {
             headers: { ...corsHeaders, "Content-Type": "application/json" },
           },
         );
+      }
+
+      // Workers AI generate endpoint (used by /api/llm provider=cloudflare)
+      if (path === "/ai/generate" && request.method === "POST") {
+        const body = (await request.json().catch(() => ({}))) as {
+          prompt?: string;
+          model?: string;
+          messages?: Array<{ role?: string; content?: string }>;
+        };
+
+        const prompt = typeof body.prompt === "string" ? body.prompt.trim() : "";
+        const messages = Array.isArray(body.messages)
+          ? body.messages
+              .filter((m) => m && typeof m.content === "string" && m.content.trim().length > 0)
+              .map((m) => ({
+                role: m.role === "system" || m.role === "assistant" || m.role === "user" ? m.role : "user",
+                content: String(m.content),
+              }))
+          : [];
+
+        if (!prompt && messages.length === 0) {
+          return new Response(
+            JSON.stringify({ error: "prompt or messages required" }),
+            {
+              status: 400,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            },
+          );
+        }
+
+        const selectedModel =
+          body.model || env.DEFAULT_CODE_MODEL || "@cf/meta/llama-3.3-70b-instruct-fp8-fast";
+
+        try {
+          const aiResponse = (await env.AI.run(
+            selectedModel as any,
+            {
+              messages:
+                messages.length > 0
+                  ? messages
+                  : [
+                      {
+                        role: "user",
+                        content: prompt,
+                      },
+                    ],
+              max_tokens: 900,
+            },
+          )) as { response?: string };
+
+          return new Response(
+            JSON.stringify({
+              success: true,
+              model: selectedModel,
+              result: {
+                response: aiResponse?.response || "",
+              },
+            }),
+            {
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            },
+          );
+        } catch (error) {
+          return new Response(
+            JSON.stringify({
+              success: false,
+              error: "Workers AI generation failed",
+              details: String(error),
+            }),
+            {
+              status: 500,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            },
+          );
+        }
       }
 
       // Task submission
@@ -348,6 +423,7 @@ export default {
           error: "Not Found",
           availableEndpoints: [
             "GET /health",
+            "POST /ai/generate",
             "POST /task",
             "GET /status/:taskId",
             "GET /history",
