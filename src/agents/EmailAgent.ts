@@ -47,6 +47,30 @@ export class EmailAgent implements IAgent {
     return [];
   }
 
+  // Simple parser for our sample invoice placeholders (text files)
+  private async parseInvoiceText(filePath: string) {
+    try {
+      const txt = await fs.readFile(filePath, 'utf-8');
+      const lines = txt.split(/\r?\n/).map((l) => l.trim());
+      const get = (prefix: string) => {
+        const line = lines.find((ln) => ln.toLowerCase().startsWith(prefix.toLowerCase()));
+        return line ? line.split(':').slice(1).join(':').trim() : undefined;
+      };
+
+      const invoiceId = get('Invoice ID') || get('Invoice');
+      const partner = get('Partner');
+      const net = Number(get('Net') || 0);
+      const vat = Number(get('VAT') || 0);
+      const gross = Number(get('Gross') || 0);
+      const issueDate = get('IssueDate') || get('Issue Date');
+
+      return { id: invoiceId, partner, net, vat, gross, issueDate, source: filePath };
+    } catch (e) {
+      logError(this.name, `parseInvoiceText failed for ${filePath}: ${String(e)}`);
+      return null;
+    }
+  }
+
   async execute(task: string, _context?: Record<string, unknown>): Promise<AgentResponse> {
     setAgentStatus(this.name, 'working', task.slice(0, 50));
     try {
@@ -65,11 +89,19 @@ export class EmailAgent implements IAgent {
         };
       }
 
-      // Fallback: return local sample files for Discovery
+      // Fallback: return local sample files for Discovery and try to parse text placeholders
       const files = await this.listLocalSamples();
       logInfo(this.name, `Found ${files.length} local sample files`);
 
-      return { status: 'success', data: { files }, metadata: { filesFound: files.length } };
+      const parsed: Array<Record<string, unknown>> = [];
+      for (const f of files) {
+        if (f.filename.toLowerCase().endsWith('.txt')) {
+          const p = await this.parseInvoiceText(f.path);
+          if (p) parsed.push(p);
+        }
+      }
+
+      return { status: 'success', data: { files, parsed }, metadata: { filesFound: files.length, parsed: parsed.length } };
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError(this.name, `execute error: ${error}`);
