@@ -2,6 +2,8 @@ import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import fs from 'fs/promises';
 import path from 'path';
+import { fetchEmailsAsEml } from '../connectors/imapConnector.js';
+import { downloadFilesFromFolder } from '../connectors/gdriveConnector.js';
 
 /**
  * EmailAgent
@@ -78,15 +80,48 @@ export class EmailAgent implements IAgent {
 
       // If IMAP/GDRIVE envs are set, indicate that integration is required (placeholder)
       const imapHost = process.env.IMAP_HOST;
-      const gdriveEnabled = process.env.GDRIVE_SERVICE_ACCOUNT !== undefined;
+      const gdriveEnabled = process.env.GDRIVE_SERVICE_ACCOUNT !== undefined || process.env.GDRIVE_FOLDER_ID;
 
-      if (imapHost || gdriveEnabled) {
-        logInfo(this.name, 'External connectors configured, but connector implementation is placeholder.');
-        return {
-          status: 'delegated',
-          message: 'IMAP/GDrive connectors not implemented in-agent. Use connector module or provide local samples.',
-          metadata: { imapHost: !!imapHost, gdrive: !!gdriveEnabled }
-        };
+      const collectedFiles: Array<{ filename: string; path: string }> = [];
+
+      if (imapHost) {
+        try {
+          const imapCfg = {
+            host: process.env.IMAP_HOST || '',
+            port: process.env.IMAP_PORT ? Number(process.env.IMAP_PORT) : 993,
+            secure: process.env.IMAP_SECURE !== 'false',
+            auth: { user: process.env.IMAP_USER || '', pass: process.env.IMAP_PASS || '' },
+            mailbox: process.env.IMAP_MAILBOX || 'INBOX',
+            destDir: path.join(process.cwd(), 'data', 'invoices'),
+            markSeen: process.env.IMAP_MARKSEEN === 'true'
+          };
+          const emls = await fetchEmailsAsEml(imapCfg);
+          for (const e of emls) collectedFiles.push({ filename: e.filename, path: e.path });
+        } catch (e) {
+          logError(this.name, `IMAP fetch failed: ${String(e)}`);
+        }
+      }
+
+      if (gdriveEnabled && process.env.GDRIVE_FOLDER_ID) {
+        try {
+          const files = await downloadFilesFromFolder({ keyFile: process.env.GDRIVE_SERVICE_ACCOUNT, folderId: process.env.GDRIVE_FOLDER_ID, destDir: path.join(process.cwd(), 'data', 'invoices') });
+          for (const f of files) collectedFiles.push(f);
+        } catch (e) {
+          logError(this.name, `GDrive fetch failed: ${String(e)}`);
+        }
+      }
+
+      if (collectedFiles.length > 0) {
+        logInfo(this.name, `Collected ${collectedFiles.length} files from external connectors`);
+        // Parse any text placeholders among them
+        const parsed: Array<Record<string, unknown>> = [];
+        for (const f of collectedFiles) {
+          if (f.filename.toLowerCase().endsWith('.txt')) {
+            const p = await this.parseInvoiceText(f.path);
+            if (p) parsed.push(p);
+          }
+        }
+        return { status: 'success', data: { files: collectedFiles, parsed }, metadata: { collected: collectedFiles.length, parsed: parsed.length } };
       }
 
       // Fallback: return local sample files for Discovery and try to parse text placeholders
