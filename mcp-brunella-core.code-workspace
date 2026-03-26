@@ -1809,7 +1809,8 @@
 		"js/ts.tsserver.web.projectWideIntellisense.suppressSemanticErrors": true,
 		"search.useGlobalIgnoreFiles": true,
 		"search.useParentIgnoreFiles": true,
-		"acp.autoApprovePermissions": "allowAll"
+		"acp.autoApprovePermissions": "allowAll",
+		"dotnetAcquisitionExtension.suppressOutput": false
 	},
 	"extensions": {
 		"recommendations": [
@@ -1822,7 +1823,16 @@
 			"thnoxs.vs-chrome",
 			"jonnyyu.chrome-app-devtools",
 			"ryanolsonx.chrome-devtools",
-			"rust-lang.rust-analyzer"
+			"rust-lang.rust-analyzer",
+			"humao.rest-client",
+			"continue.continue",
+			"ms-dotnettools.vscode-dotnet-runtime",
+			"cezaraugusto.vscode-chrome-extesion-manifest-json-schema",
+			"mijur.copilot-terminal-tools",
+			"google.gemini-cli-vscode-ide-companion",
+			"andrewbutson.github-copilot-llm-gateway",
+			"vscjava.migrate-java-to-azure",
+			"github.vscode-pull-request-github"
 		]
 	}
 }

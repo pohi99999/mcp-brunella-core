@@ -64,7 +64,7 @@ Hibrid Node.js + Python multi-agent rendszer, Model Context Protocol (MCP) kommu
 OrchestratorAgent / EnterpriseOrchestratorAgent (Koordinátorok)
 ├── Core: DeveloperAgent, EvaluatorAgent, ResearcherAgent, TaskDecomposerAgent
 ├── Automation: RobotkezV2Agent (Playwright/LLM), VoiceAgent (Whisper)
-├── Engineering: SpecWriterAgent, GenesisOrchestrator, LintFixerAgent
+├── Engineering: SpecWriterAgent, GenesisOrchestrator, UXDesignerAgent, LintFixerAgent
 ├── Enterprise Suite (~20 agent): Finance, Sales, HR, Logistics, Admin
 ├── Swarm: SwarmManager + SwarmAgent (src/agents/swarm/)
 ├── TOML-alapú DynamicAgent: myai/agents/*.toml
@@ -844,4 +844,3 @@ node scripts/copilot-dashboard.js cognitive query graphrag "user authentication"
 - **reflect**: MINDEN feladat utan — elmenti a tanulsagot, noveli az intelligenciat
 - **stats**: Rendszer diagnosztika — hany reteg aktiv, mennyi adat van
 - **query**: Specifikus reteg lekerdezes — pl. "volt mar hasonlo feladat?"
-
