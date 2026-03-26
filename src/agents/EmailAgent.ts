@@ -2,7 +2,7 @@ import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import fs from 'fs/promises';
 import path from 'path';
-import { fetchEmailsAsEml } from '../connectors/imapConnector.js';
+import { fetchEmailsAsEml, fetchAndExtractAttachments } from '../connectors/imapConnector.js';
 import { downloadFilesFromFolder } from '../connectors/gdriveConnector.js';
 
 /**
@@ -95,8 +95,8 @@ export class EmailAgent implements IAgent {
             destDir: path.join(process.cwd(), 'data', 'invoices'),
             markSeen: process.env.IMAP_MARKSEEN === 'true'
           };
-          const emls = await fetchEmailsAsEml(imapCfg);
-          for (const e of emls) collectedFiles.push({ filename: e.filename, path: e.path });
+          const attachments = await fetchAndExtractAttachments(imapCfg);
+          for (const a of attachments) collectedFiles.push({ filename: a.filename, path: a.path });
         } catch (e) {
           logError(this.name, `IMAP fetch failed: ${String(e)}`);
         }
