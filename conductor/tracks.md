@@ -1,14 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-25T15:48:58.478Z
+**Utolso frissites:** 2026-03-26T02:20:41.543Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 128 total | 6 active | 3 completed | 114 archived
+**Stats:** 132 total | 6 active | 3 completed | 117 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (5)
+## Tervezett Szalak (Proposed) (6)
 
 - [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
   - **ID:** `cloudflare_workers_migration_20260226`
@@ -30,9 +30,14 @@
   - **Progress:** 0%
   - Mappa: ./tracks/owl_agent_coordinator_20260321/
 
+- [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
+  - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
+  - **Progress:** 0%
+  - Mappa: ./tracks/remote_layer_phase8_planetary_supersystem_20260322/
+
 - [ ] **Brunella Remote Layer — Fázis 9: Emergent Superintelligence** [CRITICAL]
   - **ID:** `remote_layer_phase9_emergent_superintelligence_20260322`
-  - **Progress:** 8%
+  - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase9_emergent_superintelligence_20260322/
 
 ---
@@ -45,15 +50,20 @@
   - **Assignee:** Claude (Phase 1-2 Complete)
   - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
 
+- [ ] **Brunella teljes funkció- és tulajdonságmátrix dokumentáció** [CRITICAL]
+  - **ID:** `brunella_function_matrix_20260325`
+  - **Progress:** 5%
+  - Mappa: ./tracks/brunella_function_matrix_20260325/
+
 - [ ] **Hyperdrive Connection Pooling D1 Teljesítményhez** [LOW]
   - **ID:** `cf_hyperdrive_d1_20260323`
   - **Progress:** 30%
   - Mappa: ./tracks/cf_hyperdrive_d1_20260323/
 
-- [ ] **Cloudflare Full Optimization & Domain Rollout** [CRITICAL]
-  - **ID:** `cloudflare_full_optimization_20260325`
-  - **Progress:** 45%
-  - Mappa: ./tracks/cloudflare_full_optimization_20260325/
+- [ ] **Cloudflare DNS Zone Reconciliation for Custom Domains** [HIGH]
+  - **ID:** `cloudflare_dns_zone_reconciliation_20260325`
+  - **Progress:** 15%
+  - Mappa: ./tracks/cloudflare_dns_zone_reconciliation_20260325/
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
@@ -65,11 +75,6 @@
   - **ID:** `remote_layer_phase1_foundation_20260322`
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase1_foundation_20260322/
-
-- [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
-  - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
-  - **Progress:** 12%
-  - Mappa: ./tracks/remote_layer_phase8_planetary_supersystem_20260322/
 
 ---
 
@@ -89,7 +94,7 @@
 
 ---
 
-## Archivalt (Archived) (114)
+## Archivalt (Archived) (117)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -104,7 +109,7 @@
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 - [x] **BAS Enterprise Suite - 18 Module Business Automation** (N/A)
 
-... and 104 more archived tracks
+... and 107 more archived tracks
 
 ---
 
