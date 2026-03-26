@@ -22,6 +22,15 @@
     "thnoxs.vs-chrome",
     "jonnyyu.chrome-app-devtools",
     "ryanolsonx.chrome-devtools",
-    "rust-lang.rust-analyzer"
+    "rust-lang.rust-analyzer",
+    "humao.rest-client",
+    "continue.continue",
+    "ms-dotnettools.vscode-dotnet-runtime",
+    "cezaraugusto.vscode-chrome-extesion-manifest-json-schema",
+    "mijur.copilot-terminal-tools",
+    "google.gemini-cli-vscode-ide-companion",
+    "andrewbutson.github-copilot-llm-gateway",
+    "vscjava.migrate-java-to-azure",
+    "github.vscode-pull-request-github"
   ]
 }

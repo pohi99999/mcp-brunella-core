@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-24T22:00:00.234Z",
+  "lastUpdated": "2026-03-26T02:20:41.543Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -14,6 +14,24 @@
       "_isArchived": false
     },
     {
+      "id": "brunella_function_matrix_20260325",
+      "name": "Brunella teljes funkció- és tulajdonságmátrix dokumentáció",
+      "status": "active",
+      "priority": "critical",
+      "progress": 5,
+      "tags": [
+        "documentation",
+        "inventory",
+        "architecture",
+        "agents",
+        "mcp",
+        "feature-matrix"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_function_matrix_20260325",
+      "_isArchived": false
+    },
+    {
       "id": "cf_hyperdrive_d1_20260323",
       "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
       "status": "active",
@@ -23,6 +41,25 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cf_hyperdrive_d1_20260323",
+      "_isArchived": false
+    },
+    {
+      "id": "cloudflare_dns_zone_reconciliation_20260325",
+      "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
+      "status": "active",
+      "priority": "high",
+      "progress": 15,
+      "tags": [
+        "cloudflare",
+        "dns",
+        "domain",
+        "tunnel",
+        "ops"
+      ],
+      "dependencies": [
+        "cloudflare_full_optimization_20260325"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_dns_zone_reconciliation_20260325",
       "_isArchived": false
     },
     {
@@ -44,84 +81,15 @@
       "_isArchived": false
     },
     {
-      "id": "creative_friction_mediator_20260212",
-      "name": "Creative Friction Mediator (The Vibe-Check)",
+      "id": "e2b_sandbox_crawl4ai_20260325",
+      "name": "E2B Sandbox Crawl4AI",
       "status": "proposed",
       "priority": "low",
       "progress": 0,
-      "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-12T17:19:00Z",
-      "assignee": "ResearcherAgent + LangFlow",
-      "tags": [
-        "experimental",
-        "soft-skills",
-        "mediation",
-        "langflow",
-        "sentiment-analysis"
-      ],
+      "created": "2026-03-25",
+      "tags": [],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\creative_friction_mediator_20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "gemini_git_agent_20260212",
-      "name": "Gemini Git Autonomous Agent Architecture",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-12T15:49:00Z",
-      "assignee": "Gemini CLI",
-      "tags": [
-        "gemini",
-        "git",
-        "autonomous",
-        "memory",
-        "github-actions"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\gemini_git_agent_20260212",
-      "_isArchived": false
-    },
-    {
-      "id": "invoice-e2e-testing-20260217",
-      "name": "Invoice Automation E2E Testing & Validation",
-      "status": "proposed",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-02-17T22:00:00Z",
-      "updated": "2026-02-17T22:00:00Z",
-      "tags": [
-        "testing",
-        "invoice",
-        "e2e",
-        "validation",
-        "ci-cd"
-      ],
-      "dependencies": [
-        "invoice-to-sheets-automation-20260214 (COMPLETED)"
-      ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\invoice-e2e-testing-20260217",
-      "_isArchived": false
-    },
-    {
-      "id": "jules_enterprise_cicd_20260212",
-      "name": "Jules Enterprise CI/CD & Security Suite",
-      "status": "proposed",
-      "priority": "medium",
-      "progress": 0,
-      "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-12T15:50:00Z",
-      "assignee": "Jules AI + GitHub Actions",
-      "tags": [
-        "jules",
-        "cicd",
-        "github-actions",
-        "security",
-        "automation"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\jules_enterprise_cicd_20260212",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\e2b_sandbox_crawl4ai_20260325",
       "_isArchived": false
     },
     {
@@ -134,18 +102,6 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\jules_pr_integration_20260222",
-      "_isArchived": false
-    },
-    {
-      "id": "local_test_scheduler_20260215",
-      "name": "local_test_scheduler_20260215",
-      "status": "active",
-      "priority": "medium",
-      "progress": 0,
-      "assignee": "System",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\local_test_scheduler_20260215",
       "_isArchived": false
     },
     {
@@ -167,26 +123,6 @@
       "_isArchived": false
     },
     {
-      "id": "micro_csr_automator_20260212",
-      "name": "Micro-Local CSR Automator (Neighborhood Watchman)",
-      "status": "proposed",
-      "priority": "low",
-      "progress": 0,
-      "created": "2026-02-12T00:00:00Z",
-      "updated": "2026-02-12T17:17:00Z",
-      "assignee": "RobotkezAgent + n8n",
-      "tags": [
-        "csr",
-        "geo-fencing",
-        "n8n",
-        "social-good",
-        "local-news"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\micro_csr_automator_20260212",
-      "_isArchived": false
-    },
-    {
       "id": "owl_agent_coordinator_20260321",
       "name": "OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)",
       "status": "proposed",
@@ -201,9 +137,9 @@
     {
       "id": "personal_assistant_windows_mvp_20260323",
       "name": "Brunella Personal Assistant — Windows MVP Foundation",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 90,
+      "progress": 100,
       "tags": [
         "assistant",
         "windows",
@@ -222,9 +158,9 @@
     {
       "id": "readme_bootstrap_health_fixes_20260324",
       "name": "README Bootstrap & Health Fixek",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 80,
+      "progress": 100,
       "tags": [
         "bootstrap",
         "smoke",
@@ -298,9 +234,9 @@
     {
       "id": "robotkez_comet_upgrade_20260222",
       "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 75,
+      "progress": 100,
       "created": "2026-02-22",
       "updated": "2026-03-23",
       "tags": [],
@@ -796,6 +732,32 @@
       "_isArchived": true
     },
     {
+      "id": "cloudflare_full_optimization_20260325",
+      "name": "Cloudflare Full Optimization & Domain Rollout",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "updated": "2026-03-25T16:19:39Z",
+      "tags": [
+        "cloudflare",
+        "edge",
+        "domain",
+        "tunnel",
+        "optimization",
+        "migration",
+        "workers",
+        "d1",
+        "kv",
+        "vectorize"
+      ],
+      "dependencies": [
+        "cloudflare_workers_migration_20260226",
+        "cf_hyperdrive_d1_20260323"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_full_optimization_20260325",
+      "_isArchived": true
+    },
+    {
       "id": "cloudflare_vectorize_rag_20260221",
       "name": "cloudflare_vectorize_rag_20260221",
       "status": "archived",
@@ -867,6 +829,26 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\code_quality_improvements_20260210",
+      "_isArchived": true
+    },
+    {
+      "id": "creative_friction_mediator_20260212",
+      "name": "Creative Friction Mediator (The Vibe-Check)",
+      "status": "archived",
+      "priority": "low",
+      "progress": 0,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T17:19:00Z",
+      "assignee": "ResearcherAgent + LangFlow",
+      "tags": [
+        "experimental",
+        "soft-skills",
+        "mediation",
+        "langflow",
+        "sentiment-analysis"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\creative_friction_mediator_20260212",
       "_isArchived": true
     },
     {
@@ -1104,6 +1086,26 @@
       "_isArchived": true
     },
     {
+      "id": "gemini_git_agent_20260212",
+      "name": "Gemini Git Autonomous Agent Architecture",
+      "status": "archived",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T15:49:00Z",
+      "assignee": "Gemini CLI",
+      "tags": [
+        "gemini",
+        "git",
+        "autonomous",
+        "memory",
+        "github-actions"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\gemini_git_agent_20260212",
+      "_isArchived": true
+    },
+    {
       "id": "gold_protocol",
       "name": "Gold Protocol - BAS Observability & Governance",
       "status": "archived",
@@ -1250,6 +1252,27 @@
       "_isArchived": true
     },
     {
+      "id": "invoice-e2e-testing-20260217",
+      "name": "Invoice Automation E2E Testing & Validation",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-02-17T22:00:00Z",
+      "updated": "2026-02-17T22:00:00Z",
+      "tags": [
+        "testing",
+        "invoice",
+        "e2e",
+        "validation",
+        "ci-cd"
+      ],
+      "dependencies": [
+        "invoice-to-sheets-automation-20260214 (COMPLETED)"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\invoice-e2e-testing-20260217",
+      "_isArchived": true
+    },
+    {
       "id": "invoice-to-sheets-automation-20260214",
       "name": "Számla Adatkinyerés és Google Sheets Automatizáció",
       "status": "archived",
@@ -1335,6 +1358,26 @@
       "_isArchived": true
     },
     {
+      "id": "jules_enterprise_cicd_20260212",
+      "name": "Jules Enterprise CI/CD & Security Suite",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T15:50:00Z",
+      "assignee": "Jules AI + GitHub Actions",
+      "tags": [
+        "jules",
+        "cicd",
+        "github-actions",
+        "security",
+        "automation"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\jules_enterprise_cicd_20260212",
+      "_isArchived": true
+    },
+    {
       "id": "law_detective_20260223",
       "name": "law_detective_20260223",
       "status": "archived",
@@ -1358,6 +1401,18 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\living_documentation_system_20260213",
+      "_isArchived": true
+    },
+    {
+      "id": "local_test_scheduler_20260215",
+      "name": "local_test_scheduler_20260215",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 0,
+      "assignee": "System",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\local_test_scheduler_20260215",
       "_isArchived": true
     },
     {
@@ -1487,6 +1542,26 @@
         "observability_opentelemetry_20260323"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\mcp_tool_discovery_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "micro_csr_automator_20260212",
+      "name": "Micro-Local CSR Automator (Neighborhood Watchman)",
+      "status": "archived",
+      "priority": "low",
+      "progress": 0,
+      "created": "2026-02-12T00:00:00Z",
+      "updated": "2026-02-12T17:17:00Z",
+      "assignee": "RobotkezAgent + n8n",
+      "tags": [
+        "csr",
+        "geo-fencing",
+        "n8n",
+        "social-good",
+        "local-news"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\micro_csr_automator_20260212",
       "_isArchived": true
     },
     {
@@ -1663,6 +1738,29 @@
       "_isArchived": true
     },
     {
+      "id": "personal_assistant_windows_mvp_20260323",
+      "name": "Brunella Personal Assistant — Windows MVP Foundation",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "updated": "2026-03-25T16:19:39Z",
+      "completed": "2026-03-25",
+      "tags": [
+        "assistant",
+        "windows",
+        "voice",
+        "graphrag",
+        "memory",
+        "robotkez",
+        "tauri",
+        "dashboard",
+        "cli"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\personal_assistant_windows_mvp_20260323",
+      "_isArchived": true
+    },
+    {
       "id": "phoenix_protocol_v2_20260205",
       "name": "Phoenix Protocol v2 - Öngyógyító Rendszer",
       "status": "archived",
@@ -1680,6 +1778,25 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\phoenix_protocol_v2_20260205",
+      "_isArchived": true
+    },
+    {
+      "id": "readme_bootstrap_health_fixes_20260324",
+      "name": "README Bootstrap & Health Fixek",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "updated": "2026-03-25T16:19:39Z",
+      "completed": "2026-03-25",
+      "tags": [
+        "bootstrap",
+        "smoke",
+        "health",
+        "webhook",
+        "registry"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\readme_bootstrap_health_fixes_20260324",
       "_isArchived": true
     },
     {
@@ -2108,10 +2225,10 @@
     }
   ],
   "stats": {
-    "total": 126,
-    "active": 8,
-    "completed": 0,
-    "archived": 108,
-    "proposed": 10
+    "total": 132,
+    "active": 6,
+    "completed": 3,
+    "archived": 117,
+    "proposed": 6
   }
 }
