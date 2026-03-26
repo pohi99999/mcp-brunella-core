@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<invoice>
+  <invoice_number>INV-2026-0002</invoice_number>
+  <net_amount>125000</net_amount>
+  <vat_amount>33750</vat_amount>
+  <gross_amount>158750</gross_amount>
+  <issue_date>2026-03-02</issue_date>
+  <partner_taxid>87654321-1-99</partner_taxid>
+  <payment_method>bank_transfer</payment_method>
+</invoice>
