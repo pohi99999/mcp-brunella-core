@@ -57,6 +57,8 @@ export function matchTransactionsToInvoices(txs: BankTx[], invoices: Invoice[], 
           if (!isNaN(d1.getTime()) && !isNaN(d2.getTime())) {
             const dd = Math.abs(differenceInCalendarDays(d1, d2));
             if (dd <= dateTol) score += Math.max(0, 30 - dd * 8);
+            // penalize if date is in future far beyond tolerance
+            if (d1.getTime() - d2.getTime() > 1000 * 60 * 60 * 24 * 30) score -= 20;
           }
         } catch { }
       }
