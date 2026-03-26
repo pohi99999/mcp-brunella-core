@@ -1,0 +1,7 @@
+Placeholder for invoice PDF
+Invoice ID: INV-2026-0002
+Partner: Szabó Bt.
+Net: 125000
+VAT: 33750
+Gross: 158750
+IssueDate: 2026-03-02
