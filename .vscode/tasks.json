@@ -27,7 +27,10 @@
 				"panel": "dedicated",
 				"group": "servers"
 			},
-			"detail": "Elindítja a BAS központi agyát (Orchestrator)."
+			"detail": "Elindítja a BAS központi agyát (Orchestrator).",
+			"runOptions": {
+				"runOn": "folderOpen"
+			}
 		},
 		{
 			"label": "🕵️ MCP INSPECTOR (Debug Eszköz)",
