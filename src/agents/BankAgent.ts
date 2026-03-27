@@ -1,6 +1,8 @@
 import { saveTransaction } from '../data/bookkeeping_db.js';
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { BankTransactionData, BookkeepingTransaction, TransactionStatus } from '../types/bookkeeping.d.js';
+import { promises as fs } from 'fs';
+import { logError } from '../utils/logger.js';
 
 export class BankAgent extends BaseAgent {
     name = "BankAgent";
@@ -23,13 +25,13 @@ export class BankAgent extends BaseAgent {
 
     async executeTask(context: AgentContext): Promise<AgentResult> {
         try {
-            const { bankCsvPath } = context.payload; // Assume bankCsvPath is provided in context
+            const bankCsvPath = (context as any)?.payload?.bankCsvPath; // Assume bankCsvPath is provided in context
 
             if (!bankCsvPath) {
-                return { success: false, error: "Missing bankCsvPath in context" };
+                return { success: false, message: "Missing bankCsvPath in context", data: null };
             }
 
-            const csvContent = "2026-03-27;Kovács Kft;10000;INV-2026-001\n2026-03-27;Nagy Zrt;5000;INV-2026-002"; // Mock content
+            const csvContent = await fs.readFile(bankCsvPath, 'utf-8');
 
             const rows = csvContent.split('\n');
             let processedCount = 0;
@@ -48,15 +50,16 @@ export class BankAgent extends BaseAgent {
                     await saveTransaction(newTx);
                     processedCount++;
                 } catch (parseError) {
-                    console.error(`Error parsing row '${row}':`, parseError);
+                    logError("BankAgent", `Error parsing row '${row}':`, parseError);
                     // Continue to next row even if one fails
                 }
             }
 
             return { success: true, message: `Processed ${processedCount} bank transactions`, data: null };
         } catch (error) {
-            console.error("BankAgent executeTask failed:", error);
-            return { success: false, error: error instanceof Error ? error.message : String(error) };
+            logError("BankAgent", "executeTask failed:", error);
+            const errorMsg = error instanceof Error ? error.message : String(error);
+            return { success: false, message: errorMsg, data: null };
         }
     }
 }

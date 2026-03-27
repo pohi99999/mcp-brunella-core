@@ -1,7 +1,17 @@
 import { getAllTransactions } from '../data/bookkeeping_db.js';
 // src/agents/SheetsSyncAgent.ts
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-import { BookkeepingTransaction, TransactionStatus } from '../types/bookkeeping.d.js';
+import { BookkeepingTransaction, TransactionStatus, NavInvoiceData, BankTransactionData } from '../types/bookkeeping.d.js';
+import { logError } from '../utils/logger.js';
+
+function isNavInvoiceData(data: any): data is NavInvoiceData {
+    return data && typeof data.invoiceNumber === 'string';
+}
+
+function isBankTransactionData(data: any): data is BankTransactionData {
+    return data && typeof data.date === 'string';
+}
+
 
 export class SheetsSyncAgent extends BaseAgent {
     name = "SheetsSyncAgent";
@@ -10,9 +20,18 @@ export class SheetsSyncAgent extends BaseAgent {
     capabilities = ["sheets_api"];
 
     formatRow(tx: BookkeepingTransaction): (string | number)[] {
-        const invoiceNumber = (tx.data as any).invoiceNumber || '';
-        const amount = (tx.data as any).amount || 0;
-        const bankDate = (tx.data as any).date || '';
+        let invoiceNumber = '';
+        let amount = 0;
+        let bankDate = '';
+
+        const data = tx.data;
+        if (isNavInvoiceData(data)) {
+            invoiceNumber = data.invoiceNumber;
+            amount = data.amount;
+        } else if (isBankTransactionData(data)) {
+            bankDate = data.date;
+            amount = data.amount;
+        }
 
         return [
             invoiceNumber,
@@ -28,13 +47,13 @@ export class SheetsSyncAgent extends BaseAgent {
             const sheetsRows = allTransactions.map(tx => this.formatRow(tx));
 
             // For MVP, we just log the rows. In a real scenario, this would update Google Sheets.
-            // console.log("Simulating Google Sheets update with the following rows:", sheetsRows);
             // To avoid console.log warnings, we can use logInfo from logger.js
 
             return { success: true, message: `Synced ${allTransactions.length} transactions to Sheets`, data: sheetsRows };
         } catch (error) {
-            console.error("SheetsSyncAgent executeTask failed:", error);
-            return { success: false, error: error instanceof Error ? error.message : String(error) };
+            logError("SheetsSyncAgent", "executeTask failed:", error);
+            const errorMsg = error instanceof Error ? error.message : String(error);
+            return { success: false, message: errorMsg, data: null };
         }
     }
 }
