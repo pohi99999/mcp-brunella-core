@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-27T02:00:00.266Z",
+  "lastUpdated": "2026-03-27T08:01:21.988Z",
   "tracks": [
     {
       "id": "apify_deep_scraping_agent_20260223",
@@ -266,6 +266,20 @@
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_comet_upgrade_20260222",
       "_isArchived": false
+    },
+    {
+      "id": "006_trojan-horse-campaign",
+      "name": "006_trojan-horse-campaign",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "updated": "2026-03-22T22:47:34Z",
+      "completed": "2026-03-22T22:47:34Z",
+      "assignee": "Gemini + Pohánka Péter",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\006_trojan-horse-campaign",
+      "_isArchived": true
     },
     {
       "id": "agent_architect_upgrade_20260205",
@@ -2230,20 +2244,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\TR-20260212-TECH-HAR",
-      "_isArchived": true
-    },
-    {
-      "id": "trojan-horse-campaign-20260224",
-      "name": "trojan-horse-campaign-20260224",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "updated": "2026-03-22T22:47:34Z",
-      "completed": "2026-03-22T22:47:34Z",
-      "assignee": "Gemini + Pohánka Péter",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\trojan-horse-campaign-20260224",
       "_isArchived": true
     }
   ],
