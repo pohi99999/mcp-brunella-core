@@ -6789,3 +6789,5 @@ obotkez ágakról.
 - Réteg 1 ✅ — `copilot-dashboard.js` (28 domain, 300+ endpoint) — d4e63de6
 - Réteg 2 ✅ — CopilotCommanderPanel + Bridge API — eb18e171
 - Réteg 3 ✅ — PAIOSZ Copilot Provider (file-bridge) — 80fa124f + 2e3f8a27
+### Elvégzett munkák:
+- [2026-03-27T02:13:30Z] Javítva: src/agents/registry.json — MatchingAgent és SheetsSyncAgent module útvonalak; futtatva: npm test → sikeres. Commit készül: fix(agents): update registry paths for MatchingAgent and SheetsSyncAgent (Co-authored-by: Copilot <223556219+Copilot@users.noreply.github.com>)
