@@ -2,6 +2,22 @@
   "version": 1,
   "agents": [
     {
+      "name": "InvoiceAutomation",
+      "title": "Invoice Automation Agent",
+      "description": "Számlák automatikus feldolgozása: Gmail letöltés, Gemini Vision elemzés, Drive mentés és Sheets rögzítés.",
+      "class": "InvoiceAutomationAgent",
+      "module": "./agents/InvoiceAutomationAgent.js",
+      "capabilities": [
+        "gmail_read",
+        "vision_extraction",
+        "drive_organization",
+        "sheets_logging"
+      ],
+      "category": "enterprise",
+      "status": "active",
+      "priority": 7
+    },
+    {
       "name": "agent_architect",
       "title": "Agent Architect",
       "description": "Új ügynököket tervez, generálja a promptjaikat, függőségeiket és konfigurációjukat a leírás alapján.",
@@ -1035,6 +1051,20 @@
       ],
       "autoStart": true,
       "priority": 1
+    },
+    {
+      "name": "BankAgent",
+      "description": "Parses bank export files (CSV) and extracts transactions.",
+      "role": "Transaction Watcher",
+      "capabilities": ["parse_csv"],
+      "classPath": "./BankAgent.js"
+    },
+    {
+      "name": "MatchingAgent",
+      "description": "Matches bank transactions with pending invoices.",
+      "role": "The Brain",
+      "capabilities": ["hybrid_matching"],
+      "classPath": "./MatchingAgent.js"
     },
     {
       "name": "critic_agent",
