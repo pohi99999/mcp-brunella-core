@@ -1057,7 +1057,7 @@
       "description": "Parses bank export files (CSV) and extracts transactions.",
       "role": "Transaction Watcher",
       "capabilities": ["parse_csv"],
-      "module": "./BankAgent.js",
+      "module": "./agents/BankAgent.js",
       "class": "BankAgent"
     },
     {
@@ -1065,7 +1065,7 @@
       "description": "Matches bank transactions with pending invoices.",
       "role": "The Brain",
       "capabilities": ["hybrid_matching"],
-      "module": "./MatchingAgent.js",
+      "module": "./agents/MatchingAgent.js",
       "class": "MatchingAgent"
     },
     {
@@ -1073,7 +1073,7 @@
       "description": "Syncs transaction states to Google Sheets.",
       "role": "UI Sync",
       "capabilities": ["sheets_api"],
-      "module": "./SheetsSyncAgent.js",
+      "module": "./agents/SheetsSyncAgent.js",
       "class": "SheetsSyncAgent"
     }
   ]
