@@ -77,8 +77,19 @@ export interface DAGExecutionResult {
   completedNodeIds: string[];
 }
 
+export interface CopilotAgentExecutionContext {
+  node: DAGNode;
+  context: DAGContext;
+  phase: 'before' | 'after';
+  output?: unknown;
+}
+
 export interface DAGExecutor {
   executeAgent(node: DAGNode, context: DAGContext): Promise<unknown>;
+  /**
+   * Optional Copilot orchestration hook for agent execution.
+   */
+  copilotAgentExecutionHook?: (ctx: CopilotAgentExecutionContext) => void;
 }
 
 function withTimeout<T>(promise: Promise<T>, timeoutMs?: number): Promise<T> {
@@ -269,7 +280,15 @@ async function executeNode(node: DAGNode, context: DAGContext, executor: DAGExec
       };
     }
 
-    const output = await withTimeout(executor.executeAgent(node, context), node.timeoutMs);
+    // AGENT node execution
+    let output: unknown;
+    if (typeof executor.copilotAgentExecutionHook === 'function') {
+      executor.copilotAgentExecutionHook({ node, context, phase: 'before' });
+    }
+    output = await withTimeout(executor.executeAgent(node, context), node.timeoutMs);
+    if (typeof executor.copilotAgentExecutionHook === 'function') {
+      executor.copilotAgentExecutionHook({ node, context, phase: 'after', output });
+    }
     const outputRecord = typeof output === "object" && output !== null ? output as Record<string, unknown> : null;
 
     return {

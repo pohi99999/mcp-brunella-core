@@ -14,7 +14,7 @@ describe('MatchingAgent', () => {
     const mockInvoices: NavInvoiceData[] = mockNavTxs.map(tx => tx.data as NavInvoiceData);
 
     beforeEach(() => {
-        vi.spyOn(db, 'getPendingTransactions').mockImplementation(async (source?: string) => {
+        vi.spyOn(db, 'getPendingTransactions').mockImplementation((source?: string) => {
             if (source === 'BankAgent') {
                 return []; // Default to no bank txs
             }
@@ -23,7 +23,7 @@ describe('MatchingAgent', () => {
             }
             return [];
         });
-        vi.spyOn(db, 'updateTransaction').mockResolvedValue(undefined);
+        vi.spyOn(db, 'updateTransaction').mockImplementation(() => undefined);
         vi.spyOn(logger, 'logError').mockImplementation(() => {}); // Mock logError
         vi.spyOn(logger, 'logWarn').mockImplementation(() => {}); // Mock logWarn
     });
@@ -55,7 +55,7 @@ describe('MatchingAgent', () => {
             status: 'PENDING_MATCH'
         };
         
-        vi.mocked(db.getPendingTransactions).mockImplementation(async (source?: string) => {
+        vi.mocked(db.getPendingTransactions).mockImplementation((source?: string) => {
             if (source === 'BankAgent') {
                 return [mockBankTx];
             }
@@ -86,7 +86,7 @@ describe('MatchingAgent', () => {
             status: 'PENDING_MATCH'
         };
         
-        vi.mocked(db.getPendingTransactions).mockImplementation(async (source?: string) => {
+        vi.mocked(db.getPendingTransactions).mockImplementation((source?: string) => {
             if (source === 'BankAgent') {
                 return [mockBankTx];
             }
@@ -109,7 +109,7 @@ describe('MatchingAgent', () => {
     it('should handle errors from getPendingTransactions gracefully', async () => {
         const agent = new MatchingAgent();
         const mockError = new Error("DB error");
-        vi.spyOn(db, 'getPendingTransactions').mockRejectedValue(mockError);
+        vi.spyOn(db, 'getPendingTransactions').mockImplementation(() => { throw mockError; });
 
         const mockContext: AgentContext = { payload: {} };
         const result = await agent.executeTask(mockContext);
@@ -127,7 +127,7 @@ describe('MatchingAgent', () => {
             data: null as any, // Simulate missing data
             status: 'PENDING_MATCH'
         };
-        vi.spyOn(db, 'getPendingTransactions').mockImplementation(async (source?: string) => {
+        vi.spyOn(db, 'getPendingTransactions').mockImplementation((source?: string) => {
             if (source === 'BankAgent') {
                 return [mockBankTx];
             }

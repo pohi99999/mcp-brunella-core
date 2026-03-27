@@ -1,12 +1,13 @@
 import { BookkeepingTransaction, BankTransactionData, NavInvoiceData } from '../types/bookkeeping.d.js';
 import { logError } from '../utils/logger.js';
-let db: any = null; // better-sqlite3 Database instance
+import { Database } from 'better-sqlite3';
+let db: Database | null = null; // better-sqlite3 Database instance
 
 export function initDB(dbPath: string = 'data/bookkeeping.db') {
     try {
         const Database = require('better-sqlite3');
         db = new Database(dbPath);
-        db.exec(`
+        (db as any).exec(`
             CREATE TABLE IF NOT EXISTS transactions (
                 id TEXT PRIMARY KEY,
                 source TEXT NOT NULL,
@@ -35,8 +36,8 @@ export function saveTransaction(tx: BookkeepingTransaction) {
 export function getTransaction(id: string): BookkeepingTransaction | null {
     try {
         if (!db) throw new Error('Database not initialized');
-        const stmt = db.prepare('SELECT * FROM transactions WHERE id = ?');
-        const row: { id: string; source: string; data: string; status: string; matchedInvoice: string | null } = stmt.get(id);
+        const stmt = (db as any).prepare('SELECT * FROM transactions WHERE id = ?');
+        const row: any = stmt.get(id);
         if (!row) return null;
         return {
             id: row.id,
@@ -51,7 +52,7 @@ export function getTransaction(id: string): BookkeepingTransaction | null {
     }
 }
 
-export async function getPendingTransactions(source?: string): Promise<BookkeepingTransaction[]> {
+export function getPendingTransactions(source?: string): BookkeepingTransaction[] {
     try {
         if (!db) throw new Error('Database not initialized');
         let query = "SELECT * FROM transactions WHERE status = 'PENDING_MATCH'";
@@ -60,7 +61,7 @@ export async function getPendingTransactions(source?: string): Promise<Bookkeepi
             query += ' AND source = ?';
             params.push(source);
         }
-        const rows: { id: string; source: string; data: string; status: string; matchedInvoice: string | null }[] = db.prepare(query).all(...params);
+        const rows: any[] = (db as any).prepare(query).all(...params);
         return rows.map(row => ({
             id: row.id,
             source: row.source,
@@ -74,10 +75,10 @@ export async function getPendingTransactions(source?: string): Promise<Bookkeepi
     }
 }
 
-export async function updateTransaction(id: string, updates: Partial<BookkeepingTransaction>) {
+export function updateTransaction(id: string, updates: Partial<BookkeepingTransaction>) {
     try {
         if (!db) throw new Error('Database not initialized');
-        let setClauses: string[] = [];
+        const setClauses: string[] = [];
         const params: any[] = [];
 
         if (updates.status) {
@@ -101,10 +102,10 @@ export async function updateTransaction(id: string, updates: Partial<Bookkeeping
     }
 }
 
-export async function getAllTransactions(): Promise<BookkeepingTransaction[]> {
+export function getAllTransactions(): BookkeepingTransaction[] {
     try {
         if (!db) throw new Error('Database not initialized');
-        const rows: { id: string; source: string; data: string; status: string; matchedInvoice: string | null }[] = db.prepare('SELECT * FROM transactions').all();
+        const rows: any[] = (db as any).prepare('SELECT * FROM transactions').all();
         return rows.map(row => ({
             id: row.id,
             source: row.source,

@@ -1,34 +1,28 @@
 BAS\_server Account Összesített Információ
 
-Domain: peterpohanka.com
+Domain: pohankaestarsa.com
 
 DNS Beállítások (22 rekord)
 
 A Records (4 db):
 
-
-
-peterpohanka.com → 4x Cloudflare IP (összes proxy-zott)
+pohankaestarsa.com → 4x Cloudflare IP (összes proxy-zott)
 
 CNAME Records (5 db):
 
+api.bas.pohankaestarsa.com → cfargotunnel.com
 
+browser-use.bas.pohankaestarsa.com → cfargotunnel.com
 
-api.bas.peterpohanka.com → cfargotunnel.com
+n8n.bas.pohankaestarsa.com → cfargotunnel.com
 
-browser-use.bas.peterpohanka.com → cfargotunnel.com
+www.pohankaestarsa.com → ext-sq.squarespace.com
 
-n8n.bas.peterpohanka.com → cfargotunnel.com
-
-www.peterpohanka.com → ext-sq.squarespace.com
-
-\_domainconnect.peterpohanka.com → \_domainconnect.domains.squarespace.com
+_domainconnect.pohankaestarsa.com → _domainconnect.domains.squarespace.com
 
 MX Records (5 db):
 
-
-
-peterpohanka.com → Google Mail szerverek (összes proxy nélkül)
+pohankaestarsa.com → Google Mail szerverek (összes proxy nélkül)
 
 NS Records (4 db):
 

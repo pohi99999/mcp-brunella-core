@@ -783,10 +783,65 @@ const commands = {
   // ╔══════════════════════════════════════════════╗
   // ║  28. WORKFLOW & FLEET                        ║
   // ╚══════════════════════════════════════════════╝
-  async 'workflow'(sub) {
+  async 'workflow'(sub, ...args) {
     switch (sub) {
       case 'list': return GET('/api/v1/workflow/list');
       case 'status': return GET('/api/v1/workflow/status');
+      case 'run': {
+        const [filePath] = args;
+        if (!filePath) return err('Usage: workflow run <file.yaml|file.json>');
+        let content;
+        try {
+          const fs = await import('fs');
+          // prefer sync if available, otherwise use promises
+          if (typeof fs.readFileSync === 'function') {
+            content = fs.readFileSync(filePath, 'utf8');
+          } else {
+            content = await fs.promises.readFile(filePath, 'utf8');
+          }
+        } catch (e) {
+          return err(`Failed to read file: ${e.message}`);
+        }
+        let body;
+        if (filePath.endsWith('.json')) {
+          try { body = JSON.parse(content); } catch (e) { return err(`Invalid JSON: ${e.message}`); }
+        } else {
+          try {
+            const yamlModule = await import('js-yaml');
+            const yaml = yamlModule.default || yamlModule;
+            body = yaml.load(content);
+          } catch (e) { return err(`Invalid YAML: ${e.message}`); }
+        }
+
+        // If user provided a simple steps array, convert to the internal DAGWorkflow shape
+        let workflowPayload = body;
+        if (body && Array.isArray(body.steps)) {
+          const steps = body.steps;
+          const nodes = steps.map((s, i) => {
+            const id = s.id || `n${i + 1}`;
+            return {
+              id,
+              label: s.label || `${s.agent || 'agent'}:${i + 1}`,
+              type: 'agent',
+              agentName: s.agent,
+              instruction: s.task,
+              dependsOn: i === 0 ? [] : [`n${i}`],
+            };
+          });
+          workflowPayload = {
+            id: body.id || `workflow_${Date.now()}`,
+            name: body.name || 'cli-workflow',
+            nodes,
+          };
+        }
+
+        // Try preferred root workflow endpoint, fall back to tasks' workflow endpoint if not available
+        const result = await POST('/api/v1/workflow/run', { workflow: workflowPayload });
+        if (!result.ok) {
+          return await POST('/api/v1/tasks/workflow/run', { workflow: workflowPayload });
+        }
+        return result;
+      }
       default: return GET('/api/v1/workflow/status');
     }
   },

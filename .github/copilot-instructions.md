@@ -1,4 +1,6 @@
-# Copilot Instructions — Brunella Agent System (BAS)
+
+# 
+Copilot Instructions — Brunella Agent System (BAS)
 
 > Master dokumentum: `README.md` — ha ellentmondást találsz bármely fájllal, a README az irányadó.
 

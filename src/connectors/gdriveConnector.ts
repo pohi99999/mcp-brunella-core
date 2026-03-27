@@ -16,7 +16,9 @@ export async function downloadFilesFromFolder(cfg: GDriveConfig): Promise<Array<
   try {
     const auth = new google.auth.GoogleAuth({ keyFile: cfg.keyFile, scopes: ['https://www.googleapis.com/auth/drive.readonly'] });
     const client = await auth.getClient();
-    const drive = google.drive({ version: 'v3', auth: client });
+    // Type workaround: Google Drive expects OAuth2Client, but GoogleAuth.getClient() returns AnyAuthClient
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const drive = google.drive({ version: 'v3', auth: client as any });
 
     const res = await drive.files.list({ q: `'${cfg.folderId}' in parents and trashed=false`, fields: 'files(id,name,mimeType)', pageSize: 500 });
     const files = res.data.files || [];

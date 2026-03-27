@@ -31,6 +31,19 @@
     "google.gemini-cli-vscode-ide-companion",
     "andrewbutson.github-copilot-llm-gateway",
     "vscjava.migrate-java-to-azure",
-    "github.vscode-pull-request-github"
+    "github.vscode-pull-request-github",
+    "ms-azuretools.vscode-azureappservice",
+    "strato-space.acp-plugin",
+    "ms-dotnettools.vscode-dotnet-modernize",
+    "mkloubert.vscode-http-client",
+    "ms-toolsai.jupyter",
+    "buildwithlayer.mcp-integration-expert-eligr",
+    "teamsdevapp.vscode-ai-foundry",
+    "christian-kohler.npm-intellisense",
+    "fabiospampinato.vscode-open-devtools",
+    "ms-playwright.playwright",
+    "isaotoyama.vs-copilot-mcp",
+    "github.copilot-workspace",
+    "niudai.remote-github"
   ]
 }

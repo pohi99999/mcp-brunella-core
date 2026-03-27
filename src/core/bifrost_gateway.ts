@@ -58,6 +58,7 @@ export interface GenerateOptions {
   messages?: any[]; // Added support for message history
   phoenixRecoveryTrigger?: boolean;
   userId?: string;  // User ID for preference context injection
+  context?: any;    // For vision and other context data
 }
 
 export interface GenerateResponse {
@@ -177,7 +178,7 @@ export class BifrostGateway {
     });
 
     // 5. Cloudflare Workers AI (free inference, no local GPU)
-    const cfToken = process.env.CF_API_TOKEN || process.env.CF_TOKEN;
+    const cfToken = process.env.CF_AI_API_TOKEN || process.env.CF_API_TOKEN || process.env.CF_TOKEN;
     const cfEnabled = !!(cfToken && process.env.AI_GATEWAY_ENABLED === 'true');
     this.providers.set('cloudflare', {
       type: 'cloudflare',
@@ -579,6 +580,25 @@ export class BifrostGateway {
 
     const geminiModel = this.geminiClient.getGenerativeModel({ model });
 
+    const contents: any[] = [];
+    const parts: any[] = [{ text: options.prompt }];
+
+    // Support vision/files from context
+    if (options.context?.files && Array.isArray(options.context.files)) {
+      for (const file of options.context.files) {
+        if (file.data && file.mimeType) {
+          parts.push({
+            inlineData: {
+              data: file.data,
+              mimeType: file.mimeType
+            }
+          });
+        }
+      }
+    }
+
+    contents.push({ role: 'user', parts });
+
     const geminiTools: FunctionDeclarationsTool[] | undefined = options.tools && options.tools.length > 0
       ? [{ functionDeclarations: options.tools.map((t: UniversalToolDefinition | OpenAIToolDefinition) => {
           // Support both UniversalToolDefinition {name, description, parameters}
@@ -593,7 +613,7 @@ export class BifrostGateway {
       : undefined;
 
     const result = await geminiModel.generateContent({
-      contents: [{ role: 'user', parts: [{ text: options.prompt }] }],
+      contents,
       generationConfig: {
         temperature: options.temperature ?? 0.7,
         maxOutputTokens: options.maxTokens ?? 2048
@@ -648,7 +668,7 @@ export class BifrostGateway {
       throw new Error('GitHub Models not configured');
     }
 
-    let messages = options.messages || [];
+    const messages = options.messages || [];
     if (messages.length === 0) {
       if (options.systemPrompt) {
         messages.push({ role: 'system', content: options.systemPrompt });

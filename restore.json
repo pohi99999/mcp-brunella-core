@@ -1,0 +1,1182 @@
+﻿{
+  "updatedAt": "2026-03-26T00:45:46.016Z",
+  "createdAt": "2026-03-18T23:34:23.191Z",
+  "id": "CAEaN0ryx5POpVSv",
+  "name": "02 - ISZ AI Agent Munkaidő",
+  "description": null,
+  "active": true,
+  "isArchived": false,
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        416,
+        784
+      ],
+      "id": "61c671ff-bbcd-4323-a245-e3e3a2cb6ed9",
+      "name": "Telegram_Uzenet",
+      "webhookId": "5145a80b-3b5b-467d-a773-0460b9d58f74",
+      "credentials": {
+        "telegramApi": {
+          "id": "XkjqRpMaHKDFOO3C",
+          "name": "ISZ_Telegram_Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "Te vagy az Iszapfaló Kft. intelligens belső asszisztense. A feladatod, hogy a beérkező Telegram üzeneteket értelmezd és a megfelelő eszközökkel (Tools) rögzítsd az információkat.\n\nFONTOS SZABÁLYOK:\n\n1. MUNKAIDŐ RÖGZÍTÉS:\n- Ha a dolgozó jelzi, hogy kezdett, végzett, érkezett, távozott vagy ledolgozott X órát.\n- Példák: \"8 óra\", \"kezdtem\", \"itt vagyok\", \"ma 10 órát dolgoztam\", \"munka vége 16:30\"\n- Használd a 'Munkaido_Rogzites' eszközt.\n- Date: Ha nincs megadva, használd a mai dátumot (YYYY-MM-DD formátumban).\n- Note: Az eredeti üzenet lényegét tartsd meg, belefoglalva a nevet ha megadták.\n\n2. FELADAT LÉTREHOZÁS:\n- Ha új teendőt, beszerzést, elintéznivalót vagy feladatot említenek.\n- Példák: \"kellene venni cementet\", \"feladat: árajánlat írása\", \"új feladat: takarítás\"\n- Használd a 'Feladat_Letrehozas' eszközt.\n- Task_Description: Az üzenet lényegét rövid, tömör formában.\n- Deadline: Ha van határidő megadva, használd azt (YYYY-MM-DD). Ha nincs, hagyd üresen.\n- Állapot: Mindig \"Várakozás\" (ez automatikusan beállítódik).\n\n3. KÖLTSÉG RÖGZÍTÉS:\n- Ha pénzügyi kiadást, tankolást, vásárlást vagy költséget említenek.\n- Példák: \"tankoltam 5000\", \"vettem csavarokat 3000 Ft\", \"költség: 5000\"\n- Használd a 'Koltseg_Rogzites' eszközt.\n- Amount: Csak a számot (pl. 5000, nem \"5000 Ft\").\n- Date: Ha nincs megadva, mai dátum.\n- Note: Az üzenet lényege (pl. \"Tankolás\", \"Csavarok vásárlása\").\n- Pénznem: Mindig \"Ft\" (automatikusan beállítódik).\n\n4. SZABADSÁG RÖGZÍTÉS:\n- Ha valaki jelzi, hogy nem jön, beteg, szabadságra megy vagy távollétben lesz.\n- Példák: \"holnap nem jövök\", \"szabi pénteken\", \"szabadság július 1-7\", \"beteg vagyok\"\n- Használd a 'Szabadsag_Rogzites' eszközt.\n- Start_Date: Kezdési dátum (YYYY-MM-DD). Ha csak egy nap, akkor ugyanaz a dátum.\n- End_Date: Befejezési dátum (YYYY-MM-DD). Ha csak egy nap, akkor ugyanaz a dátum.\n- Reason: Az üzenet lényege (pl. \"Szabadság\", \"Betegszabadság\").\n\nKOMMUNIKÁCIÓ:\n- Az eszközök használata után mindig válaszolj röviden és barátságosan a felhasználónak.\n- Példák: \"Rendben, rögzítettem a munkaidőt.\", \"Feladat létrehozva!\", \"Szabadság rögzítve.\"\n- Ha valami hiányzik (pl. összeg a költségnél, dátum), kérdezz vissza barátságosan!\n- Ha az üzenet nem tartozik egyik kategóriába sem, válaszolj barátságosan, de ne használj eszközt.\n\nDÁTUM FORMÁTUMOK:\n- Airtable dátumok: YYYY-MM-DD (pl. \"2026-01-20\")\n- Ha dátum nincs megadva, mindig használd a mai dátumot."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        640,
+        784
+      ],
+      "id": "2cce02e6-8903-4082-bdd9-e465416f2da2",
+      "name": "Iszapfalo_AI_Agent"
+    },
+    {
+      "parameters": {
+        "model": "claude-3-5-sonnet-20240620",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.3,
+      "position": [
+        640,
+        1024
+      ],
+      "id": "1e60467c-54dc-4937-8924-6735fcf1e0f7",
+      "name": "Claude_3.5_Sonnet",
+      "credentials": {
+        "anthropicApi": {
+          "id": "odOgwQzht6VFn3Gw",
+          "name": "ISZ_Anthropic_Prod"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        784,
+        1024
+      ],
+      "id": "bbd2b640-02fc-4f65-9f4d-20275577f631",
+      "name": "Rovid_Memoria"
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appU3xQMuAmpmmCEy",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "Munkaidő Nyilvántartás"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Dátum": "={{ $fromAI(\"Date\") || $now.toISO().split('T')[0] }}",
+            "Kezdés": "={{ $fromAI(\"StartTime\") || \"\" }}",
+            "Projekt": "={{ $fromAI(\"Project\") || \"\" }}",
+            "Chat ID": "={{ $node[\"Telegram_zenet\"].json[\"message\"][\"chat\"][\"id\"] }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Dátum",
+              "type": "date",
+              "displayName": "Dátum"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Kezdés",
+              "type": "string",
+              "displayName": "Kezdés"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Projekt",
+              "type": "string",
+              "displayName": "Projekt"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Chat ID",
+              "type": "string",
+              "displayName": "Chat ID"
+            }
+          ]
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2,
+      "position": [
+        928,
+        1024
+      ],
+      "id": "0f052fa9-eb4f-477c-b488-72deafcbcdef",
+      "name": "Munkaido_Rogzites",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "OLUAFTjZT0aSEj6H",
+          "name": "ISZ_Airtable_Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appU3xQMuAmpmmCEy",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "MUNKAK"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Munka típusa": "={{ $fromAI(\"Work_Type\") || \"Iszapelszállítás\" }}",
+            "Állapot": "Várakozás",
+            "Határidő": "={{ $fromAI(\"Deadline\") || $now.toISO().split('T')[0] }}",
+            "Prioritás": "={{ $fromAI(\"Priority\") || \"Közepes\" }}",
+            "Mennyiség": "={{ $fromAI(\"Quantity\") || 1 }}",
+            "Megjegyzés": "={{ $fromAI(\"Task_Description\") || \"Feladat rögzítve\" }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Munka típusa",
+              "type": "string",
+              "displayName": "Munka típusa"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Állapot",
+              "type": "string",
+              "displayName": "Állapot"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Határidő",
+              "type": "date",
+              "displayName": "Határidő"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Prioritás",
+              "type": "string",
+              "displayName": "Prioritás"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Mennyiség",
+              "type": "number",
+              "displayName": "Mennyiség"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Megjegyzés",
+              "type": "string",
+              "displayName": "Megjegyzés"
+            }
+          ]
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2,
+      "position": [
+        1056,
+        1024
+      ],
+      "id": "1f82b8f9-ba90-4e3e-8cda-a105c292849f",
+      "name": "Feladat_Letrehozas",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "OLUAFTjZT0aSEj6H",
+          "name": "ISZ_Airtable_Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appU3xQMuAmpmmCEy",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "KOLTSEGEK"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Dátum": "={{ $fromAI(\"Date\") || $now.toISO().split('T')[0] }}",
+            "Összeg": "={{ $fromAI(\"Amount\") }}",
+            "Pénznem": "={{ $fromAI(\"Currency\") || \"HUF\" }}",
+            "Típus": "={{ $fromAI(\"Cost_Type\") || \"Egyéb\" }}",
+            "Megjegyzés": "={{ $fromAI(\"Note\") || \"Költség rögzítve\" }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Dátum",
+              "type": "date",
+              "displayName": "Dátum"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Összeg",
+              "type": "number",
+              "displayName": "Összeg"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Pénznem",
+              "type": "string",
+              "displayName": "Pénznem"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Típus",
+              "type": "string",
+              "displayName": "Típus"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Megjegyzés",
+              "type": "string",
+              "displayName": "Megjegyzés"
+            }
+          ]
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2,
+      "position": [
+        1200,
+        1024
+      ],
+      "id": "2426e488-8758-4111-99a9-428a2987d396",
+      "name": "Koltseg_Rogzites",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "OLUAFTjZT0aSEj6H",
+          "name": "ISZ_Airtable_Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appU3xQMuAmpmmCEy",
+          "mode": "list",
+          "cachedResultName": "Untitled Base",
+          "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+        },
+        "table": {
+          "__rl": true,
+          "mode": "name",
+          "value": "SZABADSAGOK"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Kezdés": "={{ $fromAI(\"Start_Date\") || $now.toISO().split('T')[0] }}",
+            "Befejezés": "={{ $fromAI(\"End_Date\") || $now.toISO().split('T')[0] }}",
+            "Típus": "={{ $fromAI(\"Leave_Type\") || \"Szabadság\" }}",
+            "Megjegyzés": "={{ $fromAI(\"Reason\") || \"Szabadság rögzítve\" }}",
+            "Státusz": "Feldolgozás alatt"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Kezdés",
+              "type": "date",
+              "displayName": "Kezdés"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Befejezés",
+              "type": "date",
+              "displayName": "Befejezés"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Típus",
+              "type": "string",
+              "displayName": "Típus"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Megjegyzés",
+              "type": "string",
+              "displayName": "Megjegyzés"
+            },
+            {
+              "display": true,
+              "readOnly": false,
+              "required": false,
+              "defaultMatch": false,
+              "id": "Státusz",
+              "type": "string",
+              "displayName": "Státusz"
+            }
+          ]
+        },
+        "options": {
+          "typecast": true
+        }
+      },
+      "type": "n8n-nodes-base.airtableTool",
+      "typeVersion": 2,
+      "position": [
+        1344,
+        1024
+      ],
+      "id": "8fbefbef-0504-4ae1-af53-894fd07ab3ee",
+      "name": "Szabadsag_Rogzites",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "OLUAFTjZT0aSEj6H",
+          "name": "ISZ_Airtable_Prod"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram_Uzenet').item.json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "name": "Telegram_Valasz",
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        864,
+        784
+      ],
+      "id": "b1380843-0a05-49ab-8d7f-aa8133055268",
+      "webhookId": "5ee90a04-3c5f-4519-9b97-bf8e4fbb6319",
+      "credentials": {
+        "telegramApi": {
+          "id": "XkjqRpMaHKDFOO3C",
+          "name": "ISZ_Telegram_Prod"
+        }
+      }
+    }
+  ],
+  "connections": {
+    "Iszapfalo_AI_Agent": {
+      "main": [
+        [
+          {
+            "node": "Telegram_Valasz",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Szabadsag_Rogzites": {
+      "ai_tool": [
+        [
+          {
+            "node": "Iszapfalo_AI_Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rovid_Memoria": {
+      "ai_memory": [
+        [
+          {
+            "node": "Iszapfalo_AI_Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram_Uzenet": {
+      "main": [
+        [
+          {
+            "node": "Iszapfalo_AI_Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Koltseg_Rogzites": {
+      "ai_tool": [
+        [
+          {
+            "node": "Iszapfalo_AI_Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Feladat_Letrehozas": {
+      "ai_tool": [
+        [
+          {
+            "node": "Iszapfalo_AI_Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Munkaido_Rogzites": {
+      "ai_tool": [
+        [
+          {
+            "node": "Iszapfalo_AI_Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Claude_3.5_Sonnet": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Iszapfalo_AI_Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "callerPolicy": "workflowsFromSameOwner",
+    "availableInMCP": false
+  },
+  "staticData": null,
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "pinData": {},
+  "versionId": "7d2eb3fc-5c08-411d-b127-3da8ba713a21",
+  "activeVersionId": "7d2eb3fc-5c08-411d-b127-3da8ba713a21",
+  "versionCounter": 28,
+  "triggerCount": 1,
+  "shared": [
+    {
+      "updatedAt": "2026-03-18T23:34:23.193Z",
+      "createdAt": "2026-03-18T23:34:23.193Z",
+      "role": "workflow:owner",
+      "workflowId": "CAEaN0ryx5POpVSv",
+      "projectId": "johLSwPlUades2LG",
+      "project": {
+        "updatedAt": "2026-01-03T00:33:46.337Z",
+        "createdAt": "2026-01-02T11:12:48.559Z",
+        "id": "johLSwPlUades2LG",
+        "name": "József Péter Pohánka <peterpohankapersonal@gmail.com>",
+        "type": "personal",
+        "icon": null,
+        "description": null,
+        "projectRelations": [
+          {
+            "updatedAt": "2026-01-02T11:12:48.561Z",
+            "createdAt": "2026-01-02T11:12:48.561Z",
+            "userId": "de33e76d-7bbf-4de8-9867-d4646a43eff4",
+            "projectId": "johLSwPlUades2LG",
+            "user": {
+              "updatedAt": "2026-03-25T23:01:14Z",
+              "createdAt": "2026-01-02T11:12:48.556Z",
+              "id": "de33e76d-7bbf-4de8-9867-d4646a43eff4",
+              "email": "peterpohankapersonal@gmail.com",
+              "firstName": "József Péter",
+              "lastName": "Pohánka",
+              "personalizationAnswers": null,
+              "settings": {
+                "userClaimedAiCredits": true,
+                "easyAIWorkflowOnboarded": true,
+                "firstSuccessfulWorkflowId": "Xo0yXlQ7oI7iOFbN",
+                "userActivated": true,
+                "userActivatedAt": 1774243654482
+              },
+              "disabled": false,
+              "mfaEnabled": false,
+              "lastActiveAt": "2026-03-25",
+              "isPending": false
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "tags": [],
+  "activeVersion": {
+    "updatedAt": "2026-03-26T00:45:46.017Z",
+    "createdAt": "2026-03-26T00:45:46.017Z",
+    "versionId": "7d2eb3fc-5c08-411d-b127-3da8ba713a21",
+    "workflowId": "CAEaN0ryx5POpVSv",
+    "nodes": [
+      {
+        "parameters": {
+          "updates": [
+            "message"
+          ],
+          "additionalFields": {}
+        },
+        "type": "n8n-nodes-base.telegramTrigger",
+        "typeVersion": 1.1,
+        "position": [
+          416,
+          784
+        ],
+        "id": "61c671ff-bbcd-4323-a245-e3e3a2cb6ed9",
+        "name": "Telegram_Uzenet",
+        "webhookId": "5145a80b-3b5b-467d-a773-0460b9d58f74",
+        "credentials": {
+          "telegramApi": {
+            "id": "XkjqRpMaHKDFOO3C",
+            "name": "ISZ_Telegram_Prod"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "options": {
+            "systemMessage": "Te vagy az Iszapfaló Kft. intelligens belső asszisztense. A feladatod, hogy a beérkező Telegram üzeneteket értelmezd és a megfelelő eszközökkel (Tools) rögzítsd az információkat.\n\nFONTOS SZABÁLYOK:\n\n1. MUNKAIDŐ RÖGZÍTÉS:\n- Ha a dolgozó jelzi, hogy kezdett, végzett, érkezett, távozott vagy ledolgozott X órát.\n- Példák: \"8 óra\", \"kezdtem\", \"itt vagyok\", \"ma 10 órát dolgoztam\", \"munka vége 16:30\"\n- Használd a 'Munkaido_Rogzites' eszközt.\n- Date: Ha nincs megadva, használd a mai dátumot (YYYY-MM-DD formátumban).\n- Note: Az eredeti üzenet lényegét tartsd meg, belefoglalva a nevet ha megadták.\n\n2. FELADAT LÉTREHOZÁS:\n- Ha új teendőt, beszerzést, elintéznivalót vagy feladatot említenek.\n- Példák: \"kellene venni cementet\", \"feladat: árajánlat írása\", \"új feladat: takarítás\"\n- Használd a 'Feladat_Letrehozas' eszközt.\n- Task_Description: Az üzenet lényegét rövid, tömör formában.\n- Deadline: Ha van határidő megadva, használd azt (YYYY-MM-DD). Ha nincs, hagyd üresen.\n- Állapot: Mindig \"Várakozás\" (ez automatikusan beállítódik).\n\n3. KÖLTSÉG RÖGZÍTÉS:\n- Ha pénzügyi kiadást, tankolást, vásárlást vagy költséget említenek.\n- Példák: \"tankoltam 5000\", \"vettem csavarokat 3000 Ft\", \"költség: 5000\"\n- Használd a 'Koltseg_Rogzites' eszközt.\n- Amount: Csak a számot (pl. 5000, nem \"5000 Ft\").\n- Date: Ha nincs megadva, mai dátum.\n- Note: Az üzenet lényege (pl. \"Tankolás\", \"Csavarok vásárlása\").\n- Pénznem: Mindig \"Ft\" (automatikusan beállítódik).\n\n4. SZABADSÁG RÖGZÍTÉS:\n- Ha valaki jelzi, hogy nem jön, beteg, szabadságra megy vagy távollétben lesz.\n- Példák: \"holnap nem jövök\", \"szabi pénteken\", \"szabadság július 1-7\", \"beteg vagyok\"\n- Használd a 'Szabadsag_Rogzites' eszközt.\n- Start_Date: Kezdési dátum (YYYY-MM-DD). Ha csak egy nap, akkor ugyanaz a dátum.\n- End_Date: Befejezési dátum (YYYY-MM-DD). Ha csak egy nap, akkor ugyanaz a dátum.\n- Reason: Az üzenet lényege (pl. \"Szabadság\", \"Betegszabadság\").\n\nKOMMUNIKÁCIÓ:\n- Az eszközök használata után mindig válaszolj röviden és barátságosan a felhasználónak.\n- Példák: \"Rendben, rögzítettem a munkaidőt.\", \"Feladat létrehozva!\", \"Szabadság rögzítve.\"\n- Ha valami hiányzik (pl. összeg a költségnél, dátum), kérdezz vissza barátságosan!\n- Ha az üzenet nem tartozik egyik kategóriába sem, válaszolj barátságosan, de ne használj eszközt.\n\nDÁTUM FORMÁTUMOK:\n- Airtable dátumok: YYYY-MM-DD (pl. \"2026-01-20\")\n- Ha dátum nincs megadva, mindig használd a mai dátumot."
+          }
+        },
+        "type": "@n8n/n8n-nodes-langchain.agent",
+        "typeVersion": 1.7,
+        "position": [
+          640,
+          784
+        ],
+        "id": "2cce02e6-8903-4082-bdd9-e465416f2da2",
+        "name": "Iszapfalo_AI_Agent"
+      },
+      {
+        "parameters": {
+          "model": "claude-3-5-sonnet-20240620",
+          "options": {}
+        },
+        "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+        "typeVersion": 1.3,
+        "position": [
+          640,
+          1024
+        ],
+        "id": "1e60467c-54dc-4937-8924-6735fcf1e0f7",
+        "name": "Claude_3.5_Sonnet",
+        "credentials": {
+          "anthropicApi": {
+            "id": "odOgwQzht6VFn3Gw",
+            "name": "ISZ_Anthropic_Prod"
+          }
+        }
+      },
+      {
+        "parameters": {},
+        "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+        "typeVersion": 1.3,
+        "position": [
+          784,
+          1024
+        ],
+        "id": "bbd2b640-02fc-4f65-9f4d-20275577f631",
+        "name": "Rovid_Memoria"
+      },
+      {
+        "parameters": {
+          "operation": "create",
+          "base": {
+            "__rl": true,
+            "value": "appU3xQMuAmpmmCEy",
+            "mode": "list",
+            "cachedResultName": "Untitled Base",
+            "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+          },
+          "table": {
+            "__rl": true,
+            "mode": "name",
+            "value": "Munkaidő Nyilvántartás"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Dátum": "={{ $fromAI(\"Date\") || $now.toISO().split('T')[0] }}",
+              "Kezdés": "={{ $fromAI(\"StartTime\") || \"\" }}",
+              "Projekt": "={{ $fromAI(\"Project\") || \"\" }}",
+              "Chat ID": "={{ $node[\"Telegram_zenet\"].json[\"message\"][\"chat\"][\"id\"] }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Dátum",
+                "type": "date",
+                "displayName": "Dátum"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Kezdés",
+                "type": "string",
+                "displayName": "Kezdés"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Projekt",
+                "type": "string",
+                "displayName": "Projekt"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Chat ID",
+                "type": "string",
+                "displayName": "Chat ID"
+              }
+            ]
+          },
+          "options": {
+            "typecast": true
+          }
+        },
+        "type": "n8n-nodes-base.airtableTool",
+        "typeVersion": 2,
+        "position": [
+          928,
+          1024
+        ],
+        "id": "0f052fa9-eb4f-477c-b488-72deafcbcdef",
+        "name": "Munkaido_Rogzites",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "OLUAFTjZT0aSEj6H",
+            "name": "ISZ_Airtable_Prod"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "create",
+          "base": {
+            "__rl": true,
+            "value": "appU3xQMuAmpmmCEy",
+            "mode": "list",
+            "cachedResultName": "Untitled Base",
+            "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+          },
+          "table": {
+            "__rl": true,
+            "mode": "name",
+            "value": "MUNKAK"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Munka típusa": "={{ $fromAI(\"Work_Type\") || \"Iszapelszállítás\" }}",
+              "Állapot": "Várakozás",
+              "Határidő": "={{ $fromAI(\"Deadline\") || $now.toISO().split('T')[0] }}",
+              "Prioritás": "={{ $fromAI(\"Priority\") || \"Közepes\" }}",
+              "Mennyiség": "={{ $fromAI(\"Quantity\") || 1 }}",
+              "Megjegyzés": "={{ $fromAI(\"Task_Description\") || \"Feladat rögzítve\" }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Munka típusa",
+                "type": "string",
+                "displayName": "Munka típusa"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Állapot",
+                "type": "string",
+                "displayName": "Állapot"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Határidő",
+                "type": "date",
+                "displayName": "Határidő"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Prioritás",
+                "type": "string",
+                "displayName": "Prioritás"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Mennyiség",
+                "type": "number",
+                "displayName": "Mennyiség"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Megjegyzés",
+                "type": "string",
+                "displayName": "Megjegyzés"
+              }
+            ]
+          },
+          "options": {
+            "typecast": true
+          }
+        },
+        "type": "n8n-nodes-base.airtableTool",
+        "typeVersion": 2,
+        "position": [
+          1056,
+          1024
+        ],
+        "id": "1f82b8f9-ba90-4e3e-8cda-a105c292849f",
+        "name": "Feladat_Letrehozas",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "OLUAFTjZT0aSEj6H",
+            "name": "ISZ_Airtable_Prod"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "create",
+          "base": {
+            "__rl": true,
+            "value": "appU3xQMuAmpmmCEy",
+            "mode": "list",
+            "cachedResultName": "Untitled Base",
+            "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+          },
+          "table": {
+            "__rl": true,
+            "mode": "name",
+            "value": "KOLTSEGEK"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Dátum": "={{ $fromAI(\"Date\") || $now.toISO().split('T')[0] }}",
+              "Összeg": "={{ $fromAI(\"Amount\") }}",
+              "Pénznem": "={{ $fromAI(\"Currency\") || \"HUF\" }}",
+              "Típus": "={{ $fromAI(\"Cost_Type\") || \"Egyéb\" }}",
+              "Megjegyzés": "={{ $fromAI(\"Note\") || \"Költség rögzítve\" }}"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Dátum",
+                "type": "date",
+                "displayName": "Dátum"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Összeg",
+                "type": "number",
+                "displayName": "Összeg"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Pénznem",
+                "type": "string",
+                "displayName": "Pénznem"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Típus",
+                "type": "string",
+                "displayName": "Típus"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Megjegyzés",
+                "type": "string",
+                "displayName": "Megjegyzés"
+              }
+            ]
+          },
+          "options": {
+            "typecast": true
+          }
+        },
+        "type": "n8n-nodes-base.airtableTool",
+        "typeVersion": 2,
+        "position": [
+          1200,
+          1024
+        ],
+        "id": "2426e488-8758-4111-99a9-428a2987d396",
+        "name": "Koltseg_Rogzites",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "OLUAFTjZT0aSEj6H",
+            "name": "ISZ_Airtable_Prod"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "operation": "create",
+          "base": {
+            "__rl": true,
+            "value": "appU3xQMuAmpmmCEy",
+            "mode": "list",
+            "cachedResultName": "Untitled Base",
+            "cachedResultUrl": "https://airtable.com/appU3xQMuAmpmmCEy"
+          },
+          "table": {
+            "__rl": true,
+            "mode": "name",
+            "value": "SZABADSAGOK"
+          },
+          "columns": {
+            "mappingMode": "defineBelow",
+            "value": {
+              "Kezdés": "={{ $fromAI(\"Start_Date\") || $now.toISO().split('T')[0] }}",
+              "Befejezés": "={{ $fromAI(\"End_Date\") || $now.toISO().split('T')[0] }}",
+              "Típus": "={{ $fromAI(\"Leave_Type\") || \"Szabadság\" }}",
+              "Megjegyzés": "={{ $fromAI(\"Reason\") || \"Szabadság rögzítve\" }}",
+              "Státusz": "Feldolgozás alatt"
+            },
+            "matchingColumns": [],
+            "schema": [
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Kezdés",
+                "type": "date",
+                "displayName": "Kezdés"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Befejezés",
+                "type": "date",
+                "displayName": "Befejezés"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Típus",
+                "type": "string",
+                "displayName": "Típus"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Megjegyzés",
+                "type": "string",
+                "displayName": "Megjegyzés"
+              },
+              {
+                "display": true,
+                "readOnly": false,
+                "required": false,
+                "defaultMatch": false,
+                "id": "Státusz",
+                "type": "string",
+                "displayName": "Státusz"
+              }
+            ]
+          },
+          "options": {
+            "typecast": true
+          }
+        },
+        "type": "n8n-nodes-base.airtableTool",
+        "typeVersion": 2,
+        "position": [
+          1344,
+          1024
+        ],
+        "id": "8fbefbef-0504-4ae1-af53-894fd07ab3ee",
+        "name": "Szabadsag_Rogzites",
+        "credentials": {
+          "airtableTokenApi": {
+            "id": "OLUAFTjZT0aSEj6H",
+            "name": "ISZ_Airtable_Prod"
+          }
+        }
+      },
+      {
+        "parameters": {
+          "chatId": "={{ $('Telegram_Uzenet').item.json.message.chat.id }}",
+          "text": "={{ $json.output }}",
+          "additionalFields": {}
+        },
+        "name": "Telegram_Valasz",
+        "type": "n8n-nodes-base.telegram",
+        "typeVersion": 1.2,
+        "position": [
+          864,
+          784
+        ],
+        "id": "b1380843-0a05-49ab-8d7f-aa8133055268",
+        "webhookId": "5ee90a04-3c5f-4519-9b97-bf8e4fbb6319",
+        "credentials": {
+          "telegramApi": {
+            "id": "XkjqRpMaHKDFOO3C",
+            "name": "ISZ_Telegram_Prod"
+          }
+        }
+      }
+    ],
+    "connections": {
+      "Iszapfalo_AI_Agent": {
+        "main": [
+          [
+            {
+              "node": "Telegram_Valasz",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Szabadsag_Rogzites": {
+        "ai_tool": [
+          [
+            {
+              "node": "Iszapfalo_AI_Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Rovid_Memoria": {
+        "ai_memory": [
+          [
+            {
+              "node": "Iszapfalo_AI_Agent",
+              "type": "ai_memory",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Telegram_Uzenet": {
+        "main": [
+          [
+            {
+              "node": "Iszapfalo_AI_Agent",
+              "type": "main",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Koltseg_Rogzites": {
+        "ai_tool": [
+          [
+            {
+              "node": "Iszapfalo_AI_Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Feladat_Letrehozas": {
+        "ai_tool": [
+          [
+            {
+              "node": "Iszapfalo_AI_Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Munkaido_Rogzites": {
+        "ai_tool": [
+          [
+            {
+              "node": "Iszapfalo_AI_Agent",
+              "type": "ai_tool",
+              "index": 0
+            }
+          ]
+        ]
+      },
+      "Claude_3.5_Sonnet": {
+        "ai_languageModel": [
+          [
+            {
+              "node": "Iszapfalo_AI_Agent",
+              "type": "ai_languageModel",
+              "index": 0
+            }
+          ]
+        ]
+      }
+    },
+    "authors": "József Péter Pohánka",
+    "name": null,
+    "description": null
+  }
+}
+

@@ -20,6 +20,10 @@ import { queryMemory as queryStructuredMemory, saveMemory as saveStructuredMemor
 export interface AgentContext {
   task?: string;
   swarm?: ISwarmContext;
+  payload?: {
+      bankCsvPath?: string;
+      [key: string]: unknown;
+  };
   [key: string]: unknown;
 }
 

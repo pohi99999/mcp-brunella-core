@@ -155,6 +155,12 @@ export const WIDGET_REGISTRY: Record<string, WidgetDefinition> = {
     component: InvoiceSyncWidget,
     defaultSize: { w: 6, h: 8 }
   },
+  invoice_automation: {
+    id: "invoice_automation",
+    label: "Számla Automatizálás (Vision)",
+    component: InvoiceAutomationWidget,
+    defaultSize: { w: 6, h: 8 }
+  },
   market_watcher: {
     id: "market_watcher",
     label: "Market Watcher",

@@ -915,7 +915,7 @@
         "auditLevel": "low",
         "auditMode": "direct"
       },
-      "SdkAnalysisLevel": "10.0.100"
+      "SdkAnalysisLevel": "10.0.200"
     },
     "frameworks": {
       "net5.0": {
@@ -1008,7 +1008,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.104\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.201\\RuntimeIdentifierGraph.json"
       }
     }
   },
@@ -1020,7 +1020,7 @@
       "message": "gsnapshot depends on Microsoft.Extensions.Configuration.Json (>= 5.0.0) but Microsoft.Extensions.Configuration.Json 5.0.0 was not found. Microsoft.Extensions.Configuration.Json 8.0.1 was resolved instead.",
       "libraryId": "Microsoft.Extensions.Configuration.Json",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1030,7 +1030,7 @@
       "message": "gsnapshot depends on Microsoft.Extensions.DependencyInjection (>= 5.0.1) but Microsoft.Extensions.DependencyInjection 5.0.1 was not found. Microsoft.Extensions.DependencyInjection 8.0.1 was resolved instead.",
       "libraryId": "Microsoft.Extensions.DependencyInjection",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1040,7 +1040,7 @@
       "message": "gsnapshot depends on Newtonsoft.Json (>= 12.0.3) but Newtonsoft.Json 12.0.3 was not found. Newtonsoft.Json 13.0.1 was resolved instead.",
       "libraryId": "Newtonsoft.Json",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1049,7 +1049,7 @@
       "message": "Unable to find package ByteSize. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "ByteSize",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1058,7 +1058,7 @@
       "message": "Unable to find package CommandLineParser. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "CommandLineParser",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1067,7 +1067,7 @@
       "message": "Unable to find package ConsoleUI.ConsoleMenu. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "ConsoleUI.ConsoleMenu",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1076,7 +1076,7 @@
       "message": "Unable to find package Google.Apis.Auth. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "Google.Apis.Auth",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1085,7 +1085,7 @@
       "message": "Unable to find package Google.Apis.CloudResourceManager.v1. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "Google.Apis.CloudResourceManager.v1",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1094,7 +1094,7 @@
       "message": "Unable to find package Google.Apis.Compute.beta. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "Google.Apis.Compute.beta",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1103,7 +1103,7 @@
       "message": "Unable to find package Google.Apis.Compute.v1. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "Google.Apis.Compute.v1",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1112,7 +1112,7 @@
       "message": "Unable to find package NLog. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "NLog",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1121,7 +1121,7 @@
       "message": "Unable to find package NLog.Extensions.Logging. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "NLog.Extensions.Logging",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1130,7 +1130,7 @@
       "message": "Unable to find package ReadLine. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "ReadLine",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -1139,7 +1139,7 @@
       "message": "Unable to find package System.Buffers. No packages exist with this id in source(s): Microsoft Visual Studio Offline Packages",
       "libraryId": "System.Buffers",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {

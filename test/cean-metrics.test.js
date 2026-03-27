@@ -69,7 +69,7 @@ describe('Metrics Collection', () => {
     });
     it('should format metrics in Prometheus format', async () => {
         const { gatherMetrics, formatPrometheusMetrics } = await import('../src/metrics');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         const metrics = await gatherMetrics(mockDb);
         const output = formatPrometheusMetrics(metrics);
         // Verify Prometheus format headers
@@ -97,14 +97,14 @@ describe('Metrics Collection', () => {
     });
     it.skip('should calculate success rate correctly', async () => {
         const { gatherMetrics } = await import('../src/metrics');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         const metrics = await gatherMetrics(mockDb);
         // 950 completed / 1000 total = 95%
         expect(metrics.success_rate_pct).toBe(95);
     });
     it.skip('should calculate cache hit rate', async () => {
         const { gatherMetrics } = await import('../src/metrics');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         const metrics = await gatherMetrics(mockDb);
         // Cache hit rate should be > 0
         expect(metrics.cache_hit_rate_pct).toBeGreaterThan(0);
@@ -112,7 +112,7 @@ describe('Metrics Collection', () => {
     });
     it.skip('should estimate cost correctly', async () => {
         const { gatherMetrics } = await import('../src/metrics');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         const metrics = await gatherMetrics(mockDb);
         // Cost per 100 pipelines: $0.000118
         // 1000 pipelines = $0.00118
@@ -121,7 +121,7 @@ describe('Metrics Collection', () => {
     });
     it('should include timestamp in metrics', async () => {
         const { gatherMetrics } = await import('../src/metrics');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         const metrics = await gatherMetrics(mockDb);
         // Verify timestamp exists and is ISO 8601
         expect(metrics.timestamp).toBeDefined();
@@ -135,7 +135,7 @@ describe('Metrics Collection', () => {
             }),
         };
         const { gatherMetrics } = await import('../src/metrics');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         const metrics = await gatherMetrics(emptyDb);
         // Should return zeros, not errors
         expect(metrics.pipelines_total).toBe(0);
@@ -149,7 +149,7 @@ describe('Metrics Collection', () => {
             }),
         };
         const { gatherMetrics } = await import('../src/metrics');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         const metrics = await gatherMetrics(zeroDb);
         // Should return 0, not NaN or infinity
         expect(metrics.success_rate_pct).toBeGreaterThanOrEqual(0);
@@ -157,9 +157,9 @@ describe('Metrics Collection', () => {
     });
     it('should generate valid metrics within 1 second', async () => {
         const { gatherMetrics } = await import('../src/metrics');
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         const startTime = Date.now();
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+         
         await gatherMetrics(mockDb);
         const duration = Date.now() - startTime;
         // Metrics gathering should be fast

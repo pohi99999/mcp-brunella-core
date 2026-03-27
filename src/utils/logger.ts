@@ -1,159 +1,92 @@
-import { EventEmitter } from "events";
+// src/utils/logger.ts
 
-// Dynamic imports for Node.js-specific modules (Worker compatibility)
-let fs: typeof import("fs/promises") | null = null;
-let path: typeof import("path") | null = null;
+import { EventEmitter } from 'events';
 
-export type LogLevel = "info" | "warn" | "error" | "success";
+const LOG_LEVELS = {
+  error: 0,
+  warn: 1,
+  info: 2,
+  debug: 3,
+};
 
-export interface LogEvent {
-  level: LogLevel;
-  message: string;
-  timestamp: string;
-  agent?: string;
-  source?: string;
+// In a real app, this would come from env vars
+const CURRENT_LOG_LEVEL = 'debug';
+
+function getTimestamp(): string {
+  return new Date().toISOString();
 }
 
-export interface AgentStatusEvent {
-  agent: string;
-  status: string;
-  task?: string;
-  timestamp: string;
-}
+export type LogLevel = 'error' | 'warn' | 'info' | 'debug' | string;
+export type LogEvent = Record<string, any>;
+export type AgentStatusEvent = Record<string, any>;
 
 export const logEmitter = new EventEmitter();
 
-async function ensureNodeModules() {
-  if (typeof process !== "undefined" && process.versions?.node) {
-    if (!fs) fs = await import("fs/promises");
-    if (!path) path = await import("path");
+function emitLog(level: LogLevel, message: string, details?: any) {
+  const event: LogEvent = { timestamp: getTimestamp(), level, message, details };
+  try {
+    logEmitter.emit('log', event);
+  } catch (e) {
+    // best effort
   }
+}
+
+export function logError(message: string, ...args: any[]) {
+  if (LOG_LEVELS.error <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
+    console.error(`[${getTimestamp()}] [ERROR]`, message, ...args);
+    emitLog('error', String(message), args.length ? args : undefined);
+  }
+}
+
+export function logWarn(message: string, ...args: any[]) {
+  if (LOG_LEVELS.warn <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
+    console.warn(`[${getTimestamp()}] [WARN]`, message, ...args);
+    emitLog('warn', String(message), args.length ? args : undefined);
+  }
+}
+
+export function logInfo(message: string, ...args: any[]) {
+  if (LOG_LEVELS.info <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
+    console.log(`[${getTimestamp()}] [INFO]`, message, ...args);
+    emitLog('info', String(message), args.length ? args : undefined);
+  }
+}
+
+export function logDebug(message: string, ...args: any[]) {
+  if (LOG_LEVELS.debug <= LOG_LEVELS[CURRENT_LOG_LEVEL]) {
+    console.debug(`[${getTimestamp()}] [DEBUG]`, message, ...args);
+    emitLog('debug', String(message), args.length ? args : undefined);
+  }
+}
+
+export function setAgentStatus(agentName: string, status: string, message?: string) {
+  const ev: AgentStatusEvent = { agentName, status, message, timestamp: getTimestamp() };
+  try {
+    logEmitter.emit('agentStatus', ev);
+  } catch (e) {
+    // ignore
+  }
+  logInfo(`[AgentStatus] ${agentName} -> ${status} ${message ?? ''}`);
 }
 
 export class Logger {
-  private logFile: string;
-
-  constructor(filename: string) {
-    // Lazy init - will use config when available
-    this.logFile = filename;
+  prefix: string;
+  constructor(prefix = '') {
+    this.prefix = prefix;
   }
-
-  async log(message: string, meta?: any) {
-    const timestamp = new Date().toISOString();
-    const logEntry = `[${timestamp}] ${message} ${meta ? JSON.stringify(meta) : ""}\n`;
-
-    try {
-      await ensureNodeModules();
-      if (!fs || !path) {
-        // Fallback to console in Worker environments
-        console.log(logEntry.trim());
-        return;
-      }
-
-      const { config } = await import("../config/index.js");
-      const fullPath = path.join(config.systemLogDir, this.logFile);
-
-      await fs.mkdir(path.dirname(fullPath), { recursive: true });
-      await fs.appendFile(fullPath, logEntry);
-    } catch (error) {
-      console.error(`Failed to write to log file: ${this.logFile}`, error);
-    }
-  }
-
-  /** Structured JSON log: { level, timestamp, message, requestId?, ...meta } */
-  async structured(
-    level: "info" | "warn" | "error",
-    message: string,
-    meta?: Record<string, unknown>,
-  ) {
-    const entry = {
-      level,
-      timestamp: new Date().toISOString(),
-      message,
-      ...meta,
-    };
-    const line = JSON.stringify(entry) + "\n";
-
-    try {
-      await ensureNodeModules();
-      if (!fs || !path) {
-        // Fallback to console in Worker environments
-        console.log(line.trim());
-        return;
-      }
-
-      const { config } = await import("../config/index.js");
-      const fullPath = path.join(config.systemLogDir, this.logFile);
-
-      await fs.mkdir(path.dirname(fullPath), { recursive: true });
-      await fs.appendFile(fullPath, line);
-    } catch (error) {
-      console.error(`Failed to write to log file: ${this.logFile}`, error);
-    }
-  }
-
-  info(message: string, meta?: any) {
-    return this.log(`[INFO] ${message}`, meta);
-  }
-
-  error(message: string, meta?: any) {
-    return this.log(`[ERROR] ${message}`, meta);
-  }
-
-  warn(message: string, meta?: any) {
-    return this.log(`[WARN] ${message}`, meta);
-  }
+  info(msg: string, ...args: any[]) { logInfo(`${this.prefix} ${msg}`, ...args); }
+  warn(msg: string, ...args: any[]) { logWarn(`${this.prefix} ${msg}`, ...args); }
+  error(msg: string, ...args: any[]) { logError(`${this.prefix} ${msg}`, ...args); }
+  debug(msg: string, ...args: any[]) { logDebug(`${this.prefix} ${msg}`, ...args); }
+  async log(msg: string, meta?: any) { logInfo(`${this.prefix} ${msg}`, meta); return Promise.resolve(); }
+  structured(level: LogLevel, msg: string, meta?: any) { emitLog(level, `${this.prefix} ${msg}`, meta); }
 }
 
-export const systemLogger = new Logger("system_commands.log");
-export const cliLogger = new Logger("cli_tools.log");
-
-// Simple helper functions for quick logging (exported for agent use)
-export function logInfo(agent: string, message: string) {
-  if (process.env.BRUNELLA_QUIET_LOGS !== "true") {
-    console.log(`[INFO] [${agent}] ${message}`);
-  }
-  logEmitter.emit("log", {
-    level: "info",
-    message,
-    timestamp: new Date().toISOString(),
-    agent,
-  } satisfies LogEvent);
-}
-
-export function logError(agent: string, message: string) {
-  if (process.env.BRUNELLA_QUIET_LOGS !== "true") {
-    console.error(`[ERROR] [${agent}] ${message}`);
-  }
-  logEmitter.emit("log", {
-    level: "error",
-    message,
-    timestamp: new Date().toISOString(),
-    agent,
-  } satisfies LogEvent);
-}
-
-export function logWarn(agent: string, message: string) {
-  if (process.env.BRUNELLA_QUIET_LOGS !== "true") {
-    console.warn(`[WARN] [${agent}] ${message}`);
-  }
-  logEmitter.emit("log", {
-    level: "warn",
-    message,
-    timestamp: new Date().toISOString(),
-    agent,
-  } satisfies LogEvent);
-}
-
-export function setAgentStatus(agent: string, status: string, task?: string) {
-  const statusMsg = task ? `${status} - ${task}` : status;
-  if (process.env.BRUNELLA_QUIET_LOGS !== "true") {
-    console.log(`[STATUS] [${agent}] ${statusMsg}`);
-  }
-  logEmitter.emit("agent_status", {
-    agent,
-    status,
-    task,
-    timestamp: new Date().toISOString(),
-  } satisfies AgentStatusEvent);
-}
+export const cliLogger = {
+  info: async (m: string, ...a: any[]) => { logInfo(m, ...a); return Promise.resolve(); },
+  warn: async (m: string, ...a: any[]) => { logWarn(m, ...a); return Promise.resolve(); },
+  error: async (m: string, ...a: any[]) => { logError(m, ...a); return Promise.resolve(); },
+  debug: async (m: string, ...a: any[]) => { logDebug(m, ...a); return Promise.resolve(); },
+  log: async (m: string, meta?: any) => { logInfo(m, meta); return Promise.resolve(); },
+  structured: async (level: LogLevel, m: string, meta?: any) => { emitLog(level, m, meta); return Promise.resolve(); }
+};

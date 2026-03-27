@@ -65,7 +65,7 @@ export class SharedCognition extends EventEmitter {
     const q = query.question.toLowerCase();
 
     // Filter and rank entries
-    let candidates = Array.from(this.entries.values())
+    const candidates = Array.from(this.entries.values())
       .filter(e => {
         if (e.confidence < minConf) return false;
         if (e.expiresAt && e.expiresAt < Date.now()) return false;

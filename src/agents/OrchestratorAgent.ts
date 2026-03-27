@@ -496,7 +496,7 @@ ${agents}
       const gateway = getBifrostGateway();
       const MAX_ITERATIONS = 5;
       let finalMessage = 'A feladatot feldolgoztam.';
-      let taskIds: number[] = [];
+      const taskIds: number[] = [];
 
       for (let i = 0; i < MAX_ITERATIONS; i++) {
         this.logger.info(`ReAct iteráció ${i + 1}/${MAX_ITERATIONS}`);

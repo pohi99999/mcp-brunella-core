@@ -35,7 +35,24 @@ async function previewTask(task: string, defaultAgent = "Developer"): Promise<vo
   console.log("");
 }
 
-async function runTask(task: string, defaultAgent = "Developer"): Promise<void> {
+/**
+ * Optional Copilot orchestration stub: if enabled, this can notify Copilot CLI about workflow execution.
+ */
+import { copilotBridgeState } from "../core/copilotBridgeState.js";
+let copilotOrchestrationEnabled = false;
+
+async function runTask(task: string, defaultAgent = "Developer", copilotOrchestrate = false): Promise<void> {
+  if (copilotOrchestrate) {
+    copilotOrchestrationEnabled = true;
+    // Dinamikus agent dispatch naplózása Copilot Bridge-be
+    copilotBridgeState.addDispatch({
+      agentName: defaultAgent,
+      task,
+      status: 'queued',
+      result: undefined
+    });
+    console.log(chalk.cyan("[Copilot Orchestration] Workflow orchestration enabled. Dispatch naplózva."));
+  }
   const response = await fetchJson<{
     success: boolean;
     result: { status: string; durationMs: number; completedNodeIds: string[]; warnings: string[] };
@@ -74,8 +91,12 @@ export function registerWorkflowCommands(program: Command): void {
     .description("Workflow preview generálása egy taskból")
     .argument("<task>", "Task szöveg")
     .option("--agent <agent>", "Default agent", "Developer")
-    .action(async (task: string, options: { agent: string }) => {
+    .option("--copilot-orchestrate", "Enable Copilot CLI orchestration")
+    .action(async (task: string, options: { agent: string; copilotOrchestrate?: boolean }) => {
       await previewTask(task, options.agent);
+      if (options.copilotOrchestrate) {
+        console.log(chalk.cyan("[Copilot Orchestration] Preview mode: Copilot orchestration would be triggered here."));
+      }
     });
 
   workflow
@@ -83,8 +104,9 @@ export function registerWorkflowCommands(program: Command): void {
     .description("Workflow futtatása egy taskból")
     .argument("<task>", "Task szöveg")
     .option("--agent <agent>", "Default agent", "Developer")
-    .action(async (task: string, options: { agent: string }) => {
-      await runTask(task, options.agent);
+    .option("--copilot-orchestrate", "Enable Copilot CLI orchestration")
+    .action(async (task: string, options: { agent: string; copilotOrchestrate?: boolean }) => {
+      await runTask(task, options.agent, options.copilotOrchestrate);
     });
 
   workflow

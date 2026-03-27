@@ -1,0 +1,6 @@
+name: "demo workflow"
+steps:
+  - agent: "Developer"
+    task: "Echo hello"
+  - agent: "lint_fixer"
+    task: "Fix lint errors"

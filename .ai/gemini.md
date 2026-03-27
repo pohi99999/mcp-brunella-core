@@ -1,3 +1,38 @@
+### 2026-03-27 HH:MM - 💸 Könyvelés Automatizálás MVP
+
+**Feladat:** A "Szent Háromság" (NAV + PDF + Bank) happy-path automatizált párosításának megvalósítása egy Eseményvezérelt Agent Swarm architektúrában, Google Sheets vezérlőpulttal.
+
+**Főbb eredmények:**
+- Létrehozva a központi SQLite adatbázis (`src/data/bookkeeping_db.ts`) tranzakció-állapotgépként.
+- Elkészült a `BankAgent` (`src/agents/BankAgent.ts`) a banki CSV exportok feldolgozására.
+- Implementálva lett a `MatchingAgent` (`src/agents/MatchingAgent.ts`) hibrid párosítási logikával (számlaszám, összeg, partner, dátum).
+- Regisztrálva lettek az új ügynökök (`BankAgent`, `MatchingAgent`, `SheetsSyncAgent`) a `src/agents/registry.json` fájlban, a projekt konvencióinak megfelelően.
+- Kialakult a `SheetsSyncAgent` (`src/agents/SheetsSyncAgent.ts`) a Google Sheets-be történő szinkronizáláshoz (MVP-ben logolással szimulálva).
+- Bevezetve a szigorú TypeScript típusok (`src/types/bookkeeping.d.ts`) az adatstruktúrákhoz.
+- Kiterjesztve a tesztlefedettség az `executeTask` metódusokra és a hibaelérési utakra.
+- Alapvető hibakezelés és védelmi ellenőrzések hozzáadva az ágensekhez és az adatbázis modulhoz.
+- A `console.*` utasítások lecserélve a `logger` modulra.
+
+**Érintett fájlok:**
+- `src/data/bookkeeping_db.ts`
+- `test/bookkeeping_db.test.ts`
+- `src/agents/BankAgent.ts`
+- `test/BankAgent.test.ts`
+- `src/agents/MatchingAgent.ts`
+- `test/MatchingAgent.test.ts`
+- `src/agents/registry.json`
+- `src/agents/SheetsSyncAgent.ts`
+- `test/SheetsSyncAgent.test.ts`
+- `src/types/bookkeeping.d.ts`
+- `docs/plans/2026-03-27-bookkeeping-automation-design.md`
+- `docs/plans/2026-03-27-bookkeeping-automation-mvp.md`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** Az ág feltöltve a GitHubra `feature/konyveles_automatizalas` néven. A Pull Request létrehozása jogosultsági hiba miatt sikertelen volt, manuálisan kell elvégezni. A helyi ág és a munkaterület megmaradt.
+
+---
+
 ### 2026-03-01 - 🚀 PAIOS Orchestrator "Zero-Mock" Chat Integration
 
 **Feladat:** A PAIOS Orchestrator Chat felületének (Dashboard) és a `orchestratorCore.ts` API végpontjának szinkronizálása a frissített, "Zero-Mock" `OrchestratorAgent`-tel.
@@ -89,7 +124,7 @@
     - **OS Control:** `os_worker.py` (pyautogui) segítségével Windows-szintű vezérlés (kattintás, gépelés).
     - **Self-Healing:** Öngyógyító hurok implementálva: ha a szelektor nem található, az ágens automatikusan vizuális keresésre vált.
     - **Live Feedback:** Dashboard frissítés élő kattintás-vizualizációval (ping) és magyar nyelvű "gondolatbuborékkal".
-- **Mobil Reszponzivitás:**
+    - **Mobil Reszponzivitás:**
     - `WidgetGrid.tsx` átalakítása: Mobilon automatikus "Stack" elrendezés (egymás alatti kártyák).
     - `MissionControlLayout.tsx`: Fix magasság eltávolítása mobilon, gördülékeny navigáció és optimalizált fejléc.
 
@@ -107,7 +142,7 @@
 
 **Státusz:** ✅ Befejezve & Tesztelve (test/outreach_flow.test.ts és test/robotkez_pro_e2e.test.ts PASS)
 
-**Megjegyzés:** A rendszer mostantól egy professzionális, piackész állapotban van, amely képes autonóm módon értéket teremteni (leadek, demók) és komplex UI folyamatokat (n8n) kezelni.
+**Megjegyzés:** A rendszer mostantól egy professzionális, piarkész állapotban van, amely képes autonóm módon értéket teremteni (leadek, demók) és komplex UI folyamatokat (n8n) kezelni.
 
 ---
 

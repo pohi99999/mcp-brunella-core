@@ -90,7 +90,30 @@ export function createTaskRoutes(): Router {
                 res.status(404).json({ error: 'Task not found' });
                 return;
             }
-            res.json({ task });
+
+            // If the task result contains a traceId, fetch trace spans for deeper logs
+            let logs: Array<{ timestamp: string; level: string; message: string; details?: any }> = [];
+            try {
+                if (task.result) {
+                    let parsed: any = null;
+                    try { parsed = JSON.parse(task.result); } catch { parsed = null; }
+                    const traceId = parsed?.metadata?.traceId || parsed?.traceId || (parsed?.data && parsed.data.traceId);
+                    if (traceId) {
+                        const { getTraceSpans } = await import('../../utils/agentTracer.js');
+                        const spans = getTraceSpans(traceId);
+                        logs = spans.map(s => ({
+                            timestamp: new Date(s.startTime).toISOString(),
+                            level: s.status === 'error' ? 'error' : 'info',
+                            message: `${s.agentName} ${s.operation}`,
+                            details: s,
+                        }));
+                    }
+                }
+            } catch {
+                // ignore tracing errors
+            }
+
+            res.json({ task: { ...task, logs } });
         } catch (e: unknown) {
             const msg = e instanceof Error ? e.message : String(e);
             res.status(500).json({ error: msg });

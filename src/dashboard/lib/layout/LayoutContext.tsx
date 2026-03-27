@@ -105,13 +105,14 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
       gridTemplateAreas: [
         '"biz-health biz-market biz-lead"',
         '"biz-invoice biz-market biz-lead"',
-        '"biz-tasks biz-tasks biz-tasks"'
+        '"biz-auto biz-tasks biz-tasks"'
       ],
       gridTemplateColumns: '1.2fr 1fr 1fr',
       gridTemplateRows: '140px 1.5fr 1fr',
       widgetAssignments: {
         health: 'biz-health',
         invoice_sync: 'biz-invoice',
+        invoice_automation: 'biz-auto',
         market_watcher: 'biz-market',
         lead_mining: 'biz-lead',
         task_queue: 'biz-tasks'

@@ -34,24 +34,24 @@ export class MatchingAgent extends BaseAgent {
 
     async executeTask(context: AgentContext): Promise<AgentResult> {
         try {
-            const pendingInvoicesFromDB: BookkeepingTransaction[] = await getPendingTransactions("NAV");
+            const pendingInvoicesFromDB: BookkeepingTransaction[] = getPendingTransactions("NAV");
             const pendingInvoices: NavInvoiceData[] = pendingInvoicesFromDB
                 .map(tx => tx.data as NavInvoiceData) // Assuming NAV transactions always have NavInvoiceData
                 .filter(data => data.invoiceNumber && typeof data.amount === 'number'); // Basic validation
 
-            const pendingBankTxs: BookkeepingTransaction[] = await getPendingTransactions("BankAgent");
+            const pendingBankTxs: BookkeepingTransaction[] = getPendingTransactions("BankAgent");
 
             for (const bankTx of pendingBankTxs) {
                 if (!bankTx.data) {
                     logWarn("MatchingAgent", "Skipping bank transaction due to missing data:", bankTx.id);
-                    await updateTransaction(bankTx.id, { status: 'ERROR' as TransactionStatus });
+                    updateTransaction(bankTx.id, { status: 'ERROR' as TransactionStatus });
                     continue;
                 }
                 const match = this.findMatch(bankTx.data as BankTransactionData, pendingInvoices);
                 if (match) {
-                    await updateTransaction(bankTx.id, { status: 'COMPLETED' as TransactionStatus, matchedInvoice: match.invoice.invoiceNumber });
+                    updateTransaction(bankTx.id, { status: 'COMPLETED' as TransactionStatus, matchedInvoice: match.invoice.invoiceNumber });
                 } else {
-                    await updateTransaction(bankTx.id, { status: 'UNMATCHED' as TransactionStatus });
+                    updateTransaction(bankTx.id, { status: 'UNMATCHED' as TransactionStatus });
                 }
             }
 
