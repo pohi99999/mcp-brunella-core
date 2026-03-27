@@ -1,6 +1,7 @@
 import { getPendingTransactions, updateTransaction } from '../data/bookkeeping_db.js';
 // src/agents/MatchingAgent.ts
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
+import { BookkeepingTransaction, NavInvoiceData, MatchedResult, TransactionStatus } from '../types/bookkeeping.d.js';
 
 export class MatchingAgent extends BaseAgent {
     name = "MatchingAgent";
@@ -8,12 +9,12 @@ export class MatchingAgent extends BaseAgent {
     role = "The Brain";
     capabilities = ["hybrid_matching"];
 
-    findMatch(bankTx: any, pendingInvoices: any[]) {
+    findMatch(bankTxData: any, pendingInvoices: NavInvoiceData[]): MatchedResult | null {
         // Level 1: Hard Match (Reference Number)
         for (const inv of pendingInvoices) {
-            if (bankTx.reference.includes(inv.invoiceNumber)) {
+            if (bankTxData.reference.includes(inv.invoiceNumber)) {
                 // Verify amount
-                if (bankTx.amount === inv.amount) {
+                if (bankTxData.amount === inv.amount) {
                     return {
                         invoice: inv,
                         confidence: 100,
@@ -28,25 +29,24 @@ export class MatchingAgent extends BaseAgent {
     async executeTask(context: AgentContext): Promise<AgentResult> {
         // For MVP, assume invoices are loaded from somewhere (e.g., NAV/PDF agents)
         // For now, let's mock some invoices
-        const pendingInvoices = [
-            { id: 'nav_001', invoiceNumber: 'INV-2026-001', amount: 10000, partner: 'Kovács Kft', status: 'PENDING_MATCH' },
-            { id: 'nav_002', invoiceNumber: 'INV-2026-002', amount: 5000, partner: 'Nagy Zrt', status: 'PENDING_MATCH' }
+        const pendingInvoices: NavInvoiceData[] = [
+            { invoiceNumber: 'INV-2026-001', amount: 10000, partner: 'Kovács Kft' },
+            { invoiceNumber: 'INV-2026-002', amount: 5000, partner: 'Nagy Zrt' }
         ];
 
-        const pendingBankTxs = await getPendingTransactions("BankAgent"); // Assuming source filter for BankAgent
+        const pendingBankTxs: BookkeepingTransaction[] = await getPendingTransactions("BankAgent"); // Assuming source filter for BankAgent
 
         for (const bankTx of pendingBankTxs) {
             const match = this.findMatch(bankTx.data, pendingInvoices);
             if (match) {
                 // Update bank transaction status
-                await updateTransaction(bankTx.id, { status: 'COMPLETED', matchedInvoice: match.invoice.id });
+                await updateTransaction(bankTx.id, { status: 'COMPLETED' as TransactionStatus, matchedInvoice: match.invoice.invoiceNumber });
                 // In a real system, you would also update the invoice status
             } else {
-                await updateTransaction(bankTx.id, { status: 'UNMATCHED' });
+                await updateTransaction(bankTx.id, { status: 'UNMATCHED' as TransactionStatus });
             }
         }
 
         return { success: true, message: "Matching process completed", data: null };
     }
 }
-
