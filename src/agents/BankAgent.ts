@@ -10,6 +10,9 @@ export class BankAgent extends BaseAgent {
 
     parseRow(csvRow: string): BankTransactionData {
         const parts = csvRow.split(';');
+        if (parts.length < 4) {
+            throw new Error(`Invalid CSV row format: ${csvRow}`);
+        }
         return {
             date: parts[0],
             partner: parts[1],
@@ -19,31 +22,41 @@ export class BankAgent extends BaseAgent {
     }
 
     async executeTask(context: AgentContext): Promise<AgentResult> {
-        const { bankCsvPath } = context.payload; // Assume bankCsvPath is provided in context
+        try {
+            const { bankCsvPath } = context.payload; // Assume bankCsvPath is provided in context
 
-        if (!bankCsvPath) {
-            return { success: false, error: "Missing bankCsvPath in context" };
+            if (!bankCsvPath) {
+                return { success: false, error: "Missing bankCsvPath in context" };
+            }
+
+            const csvContent = "2026-03-27;Kovács Kft;10000;INV-2026-001\n2026-03-27;Nagy Zrt;5000;INV-2026-002"; // Mock content
+
+            const rows = csvContent.split('\n');
+            let processedCount = 0;
+            for (const row of rows) {
+                if (row.trim() === '') continue;
+                try {
+                    const parsedTx: BankTransactionData = this.parseRow(row);
+                    const txId = `bank_${parsedTx.reference}_${parsedTx.amount}`; // Generate a unique ID
+
+                    const newTx: BookkeepingTransaction = {
+                        id: txId,
+                        source: this.name,
+                        data: parsedTx,
+                        status: 'PENDING_MATCH' as TransactionStatus
+                    };
+                    await saveTransaction(newTx);
+                    processedCount++;
+                } catch (parseError) {
+                    console.error(`Error parsing row '${row}':`, parseError);
+                    // Continue to next row even if one fails
+                }
+            }
+
+            return { success: true, message: `Processed ${processedCount} bank transactions`, data: null };
+        } catch (error) {
+            console.error("BankAgent executeTask failed:", error);
+            return { success: false, error: error instanceof Error ? error.message : String(error) };
         }
-
-        // In a real scenario, you would read the file content here
-        // For MVP, assume content is directly passed or mocked
-        const csvContent = "2026-03-27;Kovács Kft;10000;INV-2026-001\n2026-03-27;Nagy Zrt;5000;INV-2026-002"; // Mock content
-
-        const rows = csvContent.split('\n');
-        for (const row of rows) {
-            if (row.trim() === '') continue;
-            const parsedTx: BankTransactionData = this.parseRow(row);
-            const txId = `bank_${parsedTx.reference}_${parsedTx.amount}`; // Generate a unique ID
-
-            const newTx: BookkeepingTransaction = {
-                id: txId,
-                source: this.name,
-                data: parsedTx,
-                status: 'PENDING_MATCH' as TransactionStatus
-            };
-            await saveTransaction(newTx);
-        }
-
-        return { success: true, message: `Processed ${rows.length} bank transactions`, data: null };
     }
 }
