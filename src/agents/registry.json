@@ -1057,37 +1057,24 @@
       "description": "Parses bank export files (CSV) and extracts transactions.",
       "role": "Transaction Watcher",
       "capabilities": ["parse_csv"],
-      "classPath": "./BankAgent.js"
+      "module": "./BankAgent.js",
+      "class": "BankAgent"
     },
     {
       "name": "MatchingAgent",
       "description": "Matches bank transactions with pending invoices.",
       "role": "The Brain",
       "capabilities": ["hybrid_matching"],
-      "classPath": "./MatchingAgent.js"
+      "module": "./MatchingAgent.js",
+      "class": "MatchingAgent"
     },
     {
-      "name": "critic_agent",
-      "title": "Critic Agent",
-      "description": "Minőségellenőrző ágens: megvizsgálja az ügynökök válaszait, kimutatja a hallucináció jeleit, titkos adatok szivárgását, hiányzó tartalmat.",
-      "class": "CriticAgent",
-      "module": "./agents/CriticAgent.js",
-      "config": {},
-      "capabilities": [
-        "quality_review",
-        "hallucination_detection",
-        "secret_leak_detection",
-        "output_validation"
-      ],
-      "tools": [],
-      "tags": [
-        "QA",
-        "critic",
-        "quality",
-        "security"
-      ],
-      "autoStart": false,
-      "priority": 2
+      "name": "SheetsSyncAgent",
+      "description": "Syncs transaction states to Google Sheets.",
+      "role": "UI Sync",
+      "capabilities": ["sheets_api"],
+      "module": "./SheetsSyncAgent.js",
+      "class": "SheetsSyncAgent"
     }
   ]
 }
