@@ -34,10 +34,19 @@ if (-not (Test-Url $McpUrl)) {
     Write-Output "Brunella already running at $McpUrl"
 }
 
-# Launch Copilot CLI with passed arguments (if available)
+# Build copilot args, optionally include additional-mcp-config from repo scripts
+$extraCfg = Join-Path $PSScriptRoot 'copilot-mcp-config.json'
+$copilotArgs = @()
+if (Test-Path $extraCfg) {
+    Write-Output "Using additional MCP config: $extraCfg"
+    $copilotArgs += '--additional-mcp-config'
+    $copilotArgs += "@$extraCfg"
+}
+if ($args) { $copilotArgs += $args }
+
 if (Get-Command copilot -ErrorAction SilentlyContinue) {
-    Write-Output "Launching Copilot CLI with arguments: $args"
-    & copilot @args
+    Write-Output "Launching Copilot CLI with arguments: $copilotArgs"
+    & copilot @copilotArgs
 } else {
     Write-Output "Copilot CLI not found in PATH. Please install Copilot CLI or run 'copilot' directly."
     exit 2
