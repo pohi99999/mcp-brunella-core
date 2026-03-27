@@ -1,21 +1,76 @@
-
-// test/MatchingAgent.test.ts
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { MatchingAgent } from '../src/agents/MatchingAgent.js';
+import * as db from '../src/data/bookkeeping_db.js';
+import { AgentContext } from '../src/agents/BaseAgent.js';
+import { BookkeepingTransaction, NavInvoiceData, TransactionStatus } from '../src/types/bookkeeping.d.js';
 
 describe('MatchingAgent', () => {
+    const mockInvoices: NavInvoiceData[] = [
+        { invoiceNumber: 'INV-2026-001', amount: 10000, partner: 'Kovács Kft' },
+        { invoiceNumber: 'INV-2026-002', amount: 5000, partner: 'Nagy Zrt' },
+        { invoiceNumber: 'INV-2026-003', amount: 7500, partner: 'Teszt Elek' }
+    ];
+
+    beforeEach(() => {
+        vi.spyOn(db, 'getPendingTransactions').mockResolvedValue([]);
+        vi.spyOn(db, 'updateTransaction').mockResolvedValue(undefined);
+    });
+
     it('should match invoice by exact reference number (Hard Match)', () => {
         const agent = new MatchingAgent();
-        const bankTx = { amount: 10000, reference: 'Kifizetés INV-2026-001' };
-        const pendingInvoices = [
-            { id: 'inv_1', invoiceNumber: 'INV-2026-001', amount: 10000 },
-            { id: 'inv_2', invoiceNumber: 'INV-2026-002', amount: 5000 }
-        ];
+        const bankTxData = { amount: 10000, reference: 'Kifizetés INV-2026-001' };
         
-        const match = agent.findMatch(bankTx, pendingInvoices);
+        const match = agent.findMatch(bankTxData, mockInvoices);
         expect(match).not.toBeNull();
-        expect(match!.invoice.id).toBe('inv_1');
+        expect(match!.invoice.invoiceNumber).toBe('INV-2026-001');
         expect(match!.confidence).toBe(100);
         expect(match!.type).toBe('HARD_MATCH');
+    });
+
+    it('should return null if no hard match is found', () => {
+        const agent = new MatchingAgent();
+        const bankTxData = { amount: 9999, reference: 'NoMatch' };
+        const match = agent.findMatch(bankTxData, mockInvoices);
+        expect(match).toBeNull();
+    });
+
+    it('should execute matching and update transactions', async () => {
+        const agent = new MatchingAgent();
+        const mockBankTx: BookkeepingTransaction = {
+            id: 'bank_tx_1',
+            source: 'BankAgent',
+            data: { date: '2026-03-27', partner: 'Kovács Kft', amount: 10000, reference: 'Kifizetés INV-2026-001' },
+            status: 'PENDING_MATCH'
+        };
+        vi.spyOn(db, 'getPendingTransactions').mockResolvedValue([mockBankTx]);
+
+        const mockContext: AgentContext = { payload: {} };
+        const result = await agent.executeTask(mockContext);
+
+        expect(result.success).toBe(true);
+        expect(db.updateTransaction).toHaveBeenCalledWith(
+            'bank_tx_1',
+            { status: 'COMPLETED', matchedInvoice: 'INV-2026-001' }
+        );
+    });
+
+    it('should mark transaction as UNMATCHED if no match is found', async () => {
+        const agent = new MatchingAgent();
+        const mockBankTx: BookkeepingTransaction = {
+            id: 'bank_tx_2',
+            source: 'BankAgent',
+            data: { date: '2026-03-28', partner: 'Unknown Plc', amount: 12345, reference: 'Unmatched payment' },
+            status: 'PENDING_MATCH'
+        };
+        vi.spyOn(db, 'getPendingTransactions').mockResolvedValue([mockBankTx]);
+
+        const mockContext: AgentContext = { payload: {} };
+        const result = await agent.executeTask(mockContext);
+
+        expect(result.success).toBe(true);
+        expect(db.updateTransaction).toHaveBeenCalledWith(
+            'bank_tx_2',
+            { status: 'UNMATCHED' }
+        );
     });
 });
