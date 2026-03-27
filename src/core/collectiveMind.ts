@@ -69,7 +69,7 @@ export class CollectiveMind extends EventEmitter {
     const topicLower = query.topic.toLowerCase();
 
     // Gather relevant perspectives
-    let relevant = Array.from(this.perspectives.values())
+    const relevant = Array.from(this.perspectives.values())
       .filter(p => {
         if (p.confidence < minConf) return false;
         const matches = p.topic.toLowerCase().includes(topicLower) ||

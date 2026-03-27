@@ -1,6 +1,6 @@
 // src/types/bookkeeping.d.ts
 
-export type TransactionStatus = 'PENDING_MATCH' | 'PARTIALLY_MATCHED' | 'COMPLETED' | 'MANUAL_REVIEW' | 'UNMATCHED';
+export type TransactionStatus = 'PENDING_MATCH' | 'PARTIALLY_MATCHED' | 'COMPLETED' | 'MANUAL_REVIEW' | 'UNMATCHED' | 'ERROR';
 
 export interface BankTransactionData {
     date: string;

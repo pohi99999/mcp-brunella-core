@@ -10,13 +10,14 @@
  * - Activity Log: recent Copilot commands and results
  * - Quick Commands: common operations grid
  */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
   Terminal, Activity, Send, RefreshCw, AlertCircle, CheckCircle2,
   Clock, Zap, Users, Cpu, Database, ArrowRight, Play, XCircle,
   BarChart3, Loader2, ChevronRight
 } from 'lucide-react';
 import { toast } from 'sonner';
+import { TraceViewerModal } from './TraceViewerModal';
 
 // ---------- Types ----------
 
@@ -208,29 +209,54 @@ function StatCard({ label, value, sub, icon }: { label: string; value: string; s
   );
 }
 
-function DispatchTab({ agents, onDispatch }: {
+type DispatchMode = 'single' | 'multi';
+
+function DispatchTab({ agents, onDispatch, onMultiDispatch, dispatchResults, onOpenTrace }: {
   agents: AgentStatus[];
   onDispatch: (agentName: string, task: string) => Promise<void>;
+  onMultiDispatch: (agentNames: string[], task: string) => Promise<void>;
+  dispatchResults?: Record<string, { taskId?: number; status?: string; logs?: any[]; lastUpdate?: string }>
+  onOpenTrace?: (taskId: number | null) => void;
 }) {
+  const [dispatchMode, setDispatchMode] = useState<DispatchMode>('single');
   const [selectedAgent, setSelectedAgent] = useState('');
+  const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
   const [taskInput, setTaskInput] = useState('');
   const [dispatching, setDispatching] = useState(false);
 
   const handleDispatch = async () => {
-    if (!selectedAgent || !taskInput.trim()) {
-      toast.error('Válassz ügynököt és adj meg feladatot!');
-      return;
-    }
-    setDispatching(true);
-    try {
-      await onDispatch(selectedAgent, taskInput);
-      toast.success(`Feladat elküldve: ${selectedAgent}`);
-      setTaskInput('');
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      toast.error(`Dispatch hiba: ${msg}`);
-    } finally {
-      setDispatching(false);
+    if (dispatchMode === 'single') {
+      if (!selectedAgent || !taskInput.trim()) {
+        toast.error('Válassz ügynököt és adj meg feladatot!');
+        return;
+      }
+      setDispatching(true);
+      try {
+        await onDispatch(selectedAgent, taskInput);
+        toast.success(`Feladat elküldve: ${selectedAgent}`);
+        setTaskInput('');
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        toast.error(`Dispatch hiba: ${msg}`);
+      } finally {
+        setDispatching(false);
+      }
+    } else {
+      if (selectedAgents.length === 0 || !taskInput.trim()) {
+        toast.error('Válassz legalább egy ügynököt és adj meg feladatot!');
+        return;
+      }
+      setDispatching(true);
+      try {
+        await onMultiDispatch(selectedAgents, taskInput);
+        toast.success(`Feladat elküldve: ${selectedAgents.join(', ')}`);
+        setTaskInput('');
+      } catch (err: unknown) {
+        const msg = err instanceof Error ? err.message : String(err);
+        toast.error(`Multi-dispatch hiba: ${msg}`);
+      } finally {
+        setDispatching(false);
+      }
     }
   };
 
@@ -238,21 +264,57 @@ function DispatchTab({ agents, onDispatch }: {
 
   return (
     <div className="space-y-4">
+      {/* Dispatch mode selector */}
+      <div>
+        <label className="block text-sm text-gray-400 mb-1">Dispatch mód</label>
+        <div className="flex gap-3">
+          <button
+            className={`px-3 py-1 rounded-lg text-sm border ${dispatchMode === 'single' ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-800 text-gray-300 border-gray-600'}`}
+            onClick={() => setDispatchMode('single')}
+            type="button"
+          >
+            Egy ügynök
+          </button>
+          <button
+            className={`px-3 py-1 rounded-lg text-sm border ${dispatchMode === 'multi' ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-800 text-gray-300 border-gray-600'}`}
+            onClick={() => setDispatchMode('multi')}
+            type="button"
+          >
+            Több ügynök
+          </button>
+        </div>
+      </div>
+
       {/* Agent selector */}
       <div>
         <label className="block text-sm text-gray-400 mb-1">Ügynök kiválasztása</label>
-        <select
-          value={selectedAgent}
-          onChange={(e) => setSelectedAgent(e.target.value)}
-          className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-        >
-          <option value="">— Válassz ügynököt —</option>
-          {sortedAgents.map(a => (
-            <option key={a.name} value={a.name}>
-              {a.name} ({a.status})
-            </option>
-          ))}
-        </select>
+        {dispatchMode === 'single' ? (
+          <select
+            value={selectedAgent}
+            onChange={(e) => setSelectedAgent(e.target.value)}
+            className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
+          >
+            <option value="">— Válassz ügynököt —</option>
+            {sortedAgents.map(a => (
+              <option key={a.name} value={a.name}>
+                {a.name} ({a.status})
+              </option>
+            ))}
+          </select>
+        ) : (
+          <select
+            multiple
+            value={selectedAgents}
+            onChange={(e) => setSelectedAgents(Array.from(e.target.selectedOptions, o => o.value))}
+            className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none h-32"
+          >
+            {sortedAgents.map(a => (
+              <option key={a.name} value={a.name}>
+                {a.name} ({a.status})
+              </option>
+            ))}
+          </select>
+        )}
       </div>
 
       {/* Task input */}
@@ -270,7 +332,7 @@ function DispatchTab({ agents, onDispatch }: {
       {/* Dispatch button */}
       <button
         onClick={() => void handleDispatch()}
-        disabled={dispatching || !selectedAgent || !taskInput.trim()}
+        disabled={dispatching || (dispatchMode === 'single' ? !selectedAgent : selectedAgents.length === 0) || !taskInput.trim()}
         className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-colors"
       >
         {dispatching ? (
@@ -282,7 +344,7 @@ function DispatchTab({ agents, onDispatch }: {
       </button>
 
       {/* Agent quick-info */}
-      {selectedAgent && (
+      {dispatchMode === 'single' && selectedAgent && (
         <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-3">
           <div className="flex items-center gap-2 mb-1">
             <ChevronRight className="w-4 h-4 text-blue-400" />
@@ -294,6 +356,36 @@ function DispatchTab({ agents, onDispatch }: {
               ? `Jelenlegi: ${agents.find(a => a.name === selectedAgent)?.currentTask}`
               : 'Várakozik feladatra'}
           </p>
+        </div>
+      )}
+      {dispatchMode === 'multi' && selectedAgents.length > 0 && (
+        <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-3">
+          <div className="flex items-center gap-2 mb-1">
+            <ChevronRight className="w-4 h-4 text-blue-400" />
+            <span className="font-semibold text-sm">{selectedAgents.join(', ')}</span>
+          </div>
+          <div className="space-y-2 text-xs text-gray-400">
+            {selectedAgents.map(name => {
+              const agent = agents.find(a => a.name === name);
+              const dr = (dispatchResults && dispatchResults[name]) || null;
+              return (
+                <div key={name} className="bg-gray-900/30 rounded px-2 py-1">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <span className="font-mono mr-2">{name}</span>
+                      {statusBadge(agent?.status ?? 'unknown')}
+                      {agent?.currentTask ? <span className="ml-2 text-xs">Jelenlegi: {agent.currentTask}</span> : null}
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {dr?.taskId && <button onClick={() => onOpenTrace?.(dr.taskId)} className="text-xs text-blue-400 hover:underline">Trace #{dr.taskId}</button>}
+                      {dr?.status && <span className="text-xs text-gray-300">{dr.status}</span>}
+                    </div>
+                  </div>
+                  {dr?.lastUpdate && <div className="text-xs text-gray-500 mt-1">Utolsó frissítés: {relativeTime(dr.lastUpdate)}</div>}
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
@@ -410,6 +502,73 @@ export function CopilotCommanderPanel() {
   const [commands, setCommands] = useState<BridgeCommand[]>([]);
   const [bridgeStats, setBridgeStats] = useState<BridgeStats | null>(null);
   const [loading, setLoading] = useState(true);
+  const [dispatchResults, setDispatchResults] = useState<Record<string, { taskId?: number; status?: string; logs: any[]; lastUpdate?: string }>>({});
+  const [traceModalOpen, setTraceModalOpen] = useState(false);
+  const [traceModalTaskId, setTraceModalTaskId] = useState<number | null>(null);
+  const pollTimersRef = useRef<Record<number, number>>({});
+  const eventSourcesRef = useRef<Record<string, EventSource | null>>({});
+
+  useEffect(() => {
+    return () => {
+      // cleanup on unmount
+      Object.values(eventSourcesRef.current).forEach(es => es?.close());
+      Object.values(pollTimersRef.current).forEach(id => clearInterval(id));
+    };
+  }, []);
+
+  const openTraceForTask = (taskId: number | null) => {
+    if (!taskId) return;
+    setTraceModalTaskId(taskId);
+    setTraceModalOpen(true);
+  };
+
+  const startTaskPolling = (taskId: number, agentName?: string) => {
+    if (pollTimersRef.current[taskId]) return;
+    const poll = async () => {
+      try {
+        const res = await fetch(`/api/tasks/${taskId}`);
+        if (!res.ok) return;
+        const data = await res.json();
+        const status = data.task?.status ?? data.task?.state ?? 'unknown';
+        setDispatchResults(prev => {
+          const key = agentName ?? String(taskId);
+          const prevItem = prev[key] || { logs: [] };
+          return { ...prev, [key]: { ...prevItem, taskId, status, lastUpdate: new Date().toISOString() } };
+        });
+        if (['done', 'completed', 'error', 'failed', 'cancelled'].includes(String(status))) {
+          clearInterval(pollTimersRef.current[taskId]);
+          delete pollTimersRef.current[taskId];
+        }
+      } catch (e) {
+        // ignore polling errors
+      }
+    };
+    pollTimersRef.current[taskId] = window.setInterval(poll, 3000);
+    // run immediately
+    void poll();
+  };
+
+  const subscribeAgentLogs = (agentName: string) => {
+    if (eventSourcesRef.current[agentName]) return;
+    try {
+      const es = new EventSource(`/api/agents/${encodeURIComponent(agentName)}/logs`);
+      es.addEventListener('log', (ev: MessageEvent) => {
+        try {
+          const entry = JSON.parse(ev.data);
+          setDispatchResults(prev => {
+            const prevItem = prev[agentName] || { logs: [] };
+            const logs = [...(prevItem.logs || []), entry].slice(-200);
+            return { ...prev, [agentName]: { ...prevItem, logs, lastUpdate: new Date().toISOString() } };
+          });
+        } catch (err) {
+          // ignore JSON parse errors
+        }
+      });
+      eventSourcesRef.current[agentName] = es;
+    } catch (e) {
+      // cannot open EventSource in this environment
+    }
+  };
 
   const fetchAll = useCallback(async () => {
     setLoading(true);
@@ -458,15 +617,58 @@ export function CopilotCommanderPanel() {
   }, [fetchAll, fetchActivity]);
 
   const handleDispatch = async (agentName: string, task: string) => {
-    const res = await fetch('/api/agents/execute', {
+    const res = await fetch(`/api/agents/${encodeURIComponent(agentName)}/execute`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ agentName, task }),
+      body: JSON.stringify({ task }),
     });
     if (!res.ok) {
       const text = await res.text();
       throw new Error(text || `HTTP ${res.status}`);
     }
+    void fetchAll();
+    void fetchActivity();
+  };
+
+  const handleMultiDispatch = async (agentNames: string[], task: string) => {
+    // Dispatch tasks to multiple agents concurrently and wait for them to be queued
+    const promises = agentNames.map(name =>
+      fetch(`/api/agents/${encodeURIComponent(name)}/execute`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ task }),
+      }).then(async res => {
+        if (!res.ok) {
+          const text = await res.text();
+          throw new Error(`Agent ${name} error: ${text || `HTTP ${res.status}`}`);
+        }
+        return res.json();
+      })
+    );
+
+    const results = await Promise.allSettled(promises);
+    const errors = results.filter(r => r.status === 'rejected') as PromiseRejectedResult[];
+    if (errors.length > 0) {
+      throw new Error(errors.map(e => (e.reason instanceof Error ? e.reason.message : String(e.reason))).join('; '));
+    }
+
+    // Update dispatchResults per-agent and start polling + logs subscription
+    for (let i = 0; i < results.length; i++) {
+      const settled = results[i] as PromiseSettledResult<any>;
+      const agent = agentNames[i];
+      if (settled.status === 'fulfilled') {
+        const data = settled.value;
+        const taskId = typeof data?.taskId === 'number' ? data.taskId : (typeof data?.taskId === 'string' ? Number(data.taskId) : undefined);
+        setDispatchResults(prev => ({
+          ...prev,
+          [agent]: { ...(prev[agent] || { logs: [] }), taskId, status: 'queued', lastUpdate: new Date().toISOString() },
+        }));
+        // subscribe to agent logs and start polling task status
+        subscribeAgentLogs(agent);
+        if (taskId) startTaskPolling(taskId, agent);
+      }
+    }
+
     void fetchAll();
     void fetchActivity();
   };
@@ -534,7 +736,7 @@ export function CopilotCommanderPanel() {
           />
         )}
         {activeTab === 'dispatch' && (
-          <DispatchTab agents={agents} onDispatch={handleDispatch} />
+          <DispatchTab agents={agents} onDispatch={handleDispatch} onMultiDispatch={handleMultiDispatch} dispatchResults={dispatchResults} onOpenTrace={openTraceForTask} />
         )}
         {activeTab === 'activity' && (
           <ActivityTab commands={commands} loading={loading} />
@@ -556,6 +758,9 @@ export function CopilotCommanderPanel() {
         </div>
         <span>Auto-refresh: 15s</span>
       </div>
+
+      {/* Trace modal for task deep-dive */}
+      <TraceViewerModal isOpen={traceModalOpen} onClose={() => setTraceModalOpen(false)} taskId={traceModalTaskId} />
     </div>
   );
 }

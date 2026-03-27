@@ -1,0 +1,7 @@
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mf:/mcp-brunella-core[39m
+
+[90mstdout[2m | test/rag.test.ts
+[22m[39m[INFO] [AIGateway] ✅ AI Gateway v3.0 initialized: CF Workers AI (@cf/meta/llama-3.1-8b-instruct)
+
+Terminate batch job (Y/N)? Terminate batch job (Y/N)? ^C

@@ -366,7 +366,7 @@ export class UniversalOrchestratorService {
     logInfo('UniversalOrchestratorService', `Processing via ${providerType}: "${lastUserMsg.slice(0, 60)}..."`);
 
     let reply = '';
-    let toolCallsToProcess: Array<{ name: string; args: Record<string, unknown> }> = [];
+    const toolCallsToProcess: Array<{ name: string; args: Record<string, unknown> }> = [];
     let resolvedProvider: ProviderType = providerType;
     let resolvedModel: string = request.model ?? this.resolveDefaultModel(providerType);
     let fallbackUsed = false;
@@ -1436,6 +1436,12 @@ export class UniversalOrchestratorService {
     return null;
   }
 
+  /**
+   * Copilot orchestration hook (stub):
+   * If Copilot orchestration is enabled, this hook can be used to notify or coordinate with Copilot CLI.
+   */
+  private copilotOrchestrationHook?(context: { toolName: string; args: Record<string, unknown>; phase: 'before' | 'after'; result?: unknown }): void;
+
   private async executeTool(
     toolName: string,
     args: Record<string, unknown>
@@ -1561,6 +1567,12 @@ export class UniversalOrchestratorService {
   }
 
   /** Post-response intelligence hooks — runs async, non-blocking */
+  /**
+   * Copilot orchestration post-response hook (stub):
+   * Can be used to notify Copilot CLI after response is generated.
+   */
+  private copilotPostResponseHook?(context: { sessionId: string; userMessage: string; reply: string; actionsTriggered: ActionTriggered[]; durationMs: number }): void;
+
   private postResponseHooks(
     sessionId: string,
     userMessage: string,

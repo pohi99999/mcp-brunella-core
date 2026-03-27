@@ -191,7 +191,7 @@ describe('Metrics Collection', () => {
 
   it('should generate valid metrics within 1 second', async () => {
     const { gatherMetrics } = await import('../src/metrics');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const startTime = Date.now();
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     await gatherMetrics(mockDb as any);

@@ -1,0 +1,8 @@
+{
+  "name": "E2B Sandbox Crawl4AI",
+  "status": "proposed",
+  "created": "2026-03-25",
+  "priority": "low",
+  "owner": "copilot",
+  "description": "Crawl4AI webcrawling izolálása E2B sandbox-ban a biztonságosabb végrehajtásért. Jelenleg a patchright fallback stabilan működik Windowson, az E2B izolálás nice-to-have."
+}

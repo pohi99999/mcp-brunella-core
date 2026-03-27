@@ -25,7 +25,7 @@ export class BankAgent extends BaseAgent {
 
     async executeTask(context: AgentContext): Promise<AgentResult> {
         try {
-            const bankCsvPath = (context as any)?.payload?.bankCsvPath; // Assume bankCsvPath is provided in context
+            const bankCsvPath = context.payload?.bankCsvPath; // Assume bankCsvPath is provided in context
 
             if (!bankCsvPath) {
                 return { success: false, message: "Missing bankCsvPath in context", data: null };
@@ -47,7 +47,7 @@ export class BankAgent extends BaseAgent {
                         data: parsedTx,
                         status: 'PENDING_MATCH' as TransactionStatus
                     };
-                    await saveTransaction(newTx);
+                    saveTransaction(newTx);
                     processedCount++;
                 } catch (parseError) {
                     logError("BankAgent", `Error parsing row '${row}':`, parseError);

@@ -1,0 +1,207 @@
+{
+  "name": "07 - ISZ Heti Kontextus Csomag",
+  "type": "n8n-workflow-blueprint",
+  "version": "1.0",
+  "purpose": "Heti Airtable -> Markdown -> Google Drive kontextus riport Claude számára",
+  "notes": [
+    "Ez blueprint, nem garantáltan közvetlenül importálható n8n export.",
+    "A node-nevek szándékosan egyeznek a mellékelt Code node script elvárásaival.",
+    "A tényleges mező- és credential-beállításokat az n8n UI-ban kell kitölteni."
+  ],
+  "relatedFiles": {
+    "vision": "docs/ISZAPFALO_CLAUDE_VIZIO_2026.md",
+    "actionPlan": "docs/ISZAPFALO_HETI_KONTEXTUS_AKCIOPLAN.md",
+    "nodeByNode": "docs/ISZAPFALO_HETI_KONTEXTUS_NODE_BY_NODE.md",
+    "codeGuide": "docs/ISZAPFALO_HETI_KONTEXTUS_CODE_NODE_GUIDE.md",
+    "script": "docs/snippets/n8n/iszapfalo_heti_kontextus_code_node.js",
+    "template": "docs/templates/HETI_KONTEXTUS_TEMPLATE.md"
+  },
+  "nodes": [
+    {
+      "name": "Schedule - Hétfő 07:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "role": "workflow indítása minden hétfő reggel",
+      "parameters": {
+        "mode": "weekly",
+        "dayOfWeek": "monday",
+        "hour": 7,
+        "minute": 0
+      },
+      "position": [100, 120]
+    },
+    {
+      "name": "Airtable - Folyamatok lekérdezés",
+      "type": "n8n-nodes-base.airtable",
+      "role": "aktív projektek / folyamatok lekérése",
+      "parameters": {
+        "resource": "record",
+        "operation": "list",
+        "table": "Folyamatok",
+        "suggestedFields": [
+          "Folyamat neve",
+          "Státusz",
+          "Késés napokban",
+          "Felelős",
+          "Határidő",
+          "Feladatok száma",
+          "Kiajánlott Ár",
+          "Késés oka"
+        ],
+        "suggestedFilter": "OR({Státusz}='Folyamatban',{Státusz}='Számlázásra vár',{Státusz}='Ajánlat alatt')"
+      },
+      "position": [350, 20]
+    },
+    {
+      "name": "Airtable - Feladatok lekérdezés",
+      "type": "n8n-nodes-base.airtable",
+      "role": "magas prioritású nyitott feladatok lekérése",
+      "parameters": {
+        "resource": "record",
+        "operation": "list",
+        "table": "Feladatok",
+        "suggestedFields": [
+          "Feladat neve",
+          "Prioritás",
+          "Státusz",
+          "Felelős",
+          "Folyamat kapcsolat",
+          "Határidő"
+        ],
+        "suggestedFilter": "AND({Prioritás}='Magas',OR({Státusz}='Új',{Státusz}='Folyamatban'))"
+      },
+      "position": [350, 120]
+    },
+    {
+      "name": "Airtable - Munkatársak lekérdezés",
+      "type": "n8n-nodes-base.airtable",
+      "role": "kapacitás, szerepkör és terheltség lekérése",
+      "parameters": {
+        "resource": "record",
+        "operation": "list",
+        "table": "Munkatársak",
+        "suggestedFields": [
+          "Név",
+          "Beosztás",
+          "Feladat leterheltség (%)",
+          "Telegram Chat ID",
+          "Kapcsolódó folyamatok"
+        ]
+      },
+      "position": [350, 220]
+    },
+    {
+      "name": "Airtable - Szabadságok lekérdezés",
+      "type": "n8n-nodes-base.airtable",
+      "role": "aktuális / közelgő szabadságok lekérése",
+      "parameters": {
+        "resource": "record",
+        "operation": "list",
+        "table": "Szabadságok",
+        "suggestedFields": [
+          "Munkatárs neve",
+          "Szabadság kezdete",
+          "Szabadság vége",
+          "Típus"
+        ]
+      },
+      "position": [350, 320]
+    },
+    {
+      "name": "Airtable - Munkaidő Nyilvántartás",
+      "type": "n8n-nodes-base.airtable",
+      "role": "előző heti óraszámok (opcionális 2. fázis)",
+      "optional": true,
+      "parameters": {
+        "resource": "record",
+        "operation": "list",
+        "table": "Munkaidő Nyilvántartás",
+        "suggestedFields": [
+          "Munkatárs",
+          "Dátum",
+          "Ledolgozott órák",
+          "Projekt"
+        ]
+      },
+      "position": [350, 420]
+    },
+    {
+      "name": "Code - Heti Kontextus Generátor",
+      "type": "n8n-nodes-base.code",
+      "role": "összefűzi az Airtable adatokat és Markdown riportot generál",
+      "parameters": {
+        "language": "JavaScript",
+        "mode": "runOnceForAllItems",
+        "scriptSource": "docs/snippets/n8n/iszapfalo_heti_kontextus_code_node.js",
+        "outputs": [
+          "json.fileName",
+          "json.markdown",
+          "binary.report"
+        ]
+      },
+      "position": [700, 220]
+    },
+    {
+      "name": "Google Drive - Heti Kontextus Upload",
+      "type": "n8n-nodes-base.googleDrive",
+      "role": "a kész markdown riport feltöltése Drive-ra",
+      "parameters": {
+        "operation": "upload",
+        "binaryProperty": "report",
+        "fileNameExpression": "={{ $json.fileName }}",
+        "targetFolder": "Airtable Kontextus"
+      },
+      "position": [980, 220]
+    },
+    {
+      "name": "Telegram - Heti Kontextus kész",
+      "type": "n8n-nodes-base.telegram",
+      "role": "opcionális admin értesítés",
+      "optional": true,
+      "parameters": {
+        "operation": "sendMessage",
+        "text": "Elkészült a heti kontextus riport: {{$json.fileName}}"
+      },
+      "position": [1220, 220]
+    }
+  ],
+  "connections": [
+    {
+      "from": "Schedule - Hétfő 07:00",
+      "to": [
+        "Airtable - Folyamatok lekérdezés",
+        "Airtable - Feladatok lekérdezés",
+        "Airtable - Munkatársak lekérdezés",
+        "Airtable - Szabadságok lekérdezés",
+        "Airtable - Munkaidő Nyilvántartás"
+      ],
+      "pattern": "fan-out"
+    },
+    {
+      "from": [
+        "Airtable - Folyamatok lekérdezés",
+        "Airtable - Feladatok lekérdezés",
+        "Airtable - Munkatársak lekérdezés",
+        "Airtable - Szabadságok lekérdezés",
+        "Airtable - Munkaidő Nyilvántartás"
+      ],
+      "to": "Code - Heti Kontextus Generátor",
+      "pattern": "read-by-node-name",
+      "note": "A mellékelt script $(nodeName).all() hívásokkal dolgozik, ezért a Code node név alapján olvassa a korábbi node-ok kimenetét."
+    },
+    {
+      "from": "Code - Heti Kontextus Generátor",
+      "to": "Google Drive - Heti Kontextus Upload"
+    },
+    {
+      "from": "Google Drive - Heti Kontextus Upload",
+      "to": "Telegram - Heti Kontextus kész",
+      "optional": true
+    }
+  ],
+  "acceptanceCriteria": [
+    "Kézi futtatással létrejön egy Heti_Kontextus_YYYYMMDD.md fájl.",
+    "A fájl felkerül az Airtable Kontextus Drive mappába.",
+    "A markdown tartalmazza a vezetői összképet, aktív projekteket, kritikus projekteket, magas prioritású feladatokat és munkatárs elérhetőséget.",
+    "Claude a feltöltött riportból heti prioritási és munkarend-javaslatot tud adni."
+  ]
+}

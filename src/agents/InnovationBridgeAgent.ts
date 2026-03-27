@@ -188,7 +188,7 @@ export class InnovationBridgeAgent extends BaseAgent {
     const worsenedIdx = abstraction.worsenedParamIndex;
     
     const row = (trizMatrix.matrix as any)[improvedIdx?.toString()];
-    let principleIds: number[] = (row && row[worsenedIdx?.toString()]) ? row[worsenedIdx?.toString()] : (abstraction.trizPrinciples || []).map((p:any) => p.id);
+    const principleIds: number[] = (row && row[worsenedIdx?.toString()]) ? row[worsenedIdx?.toString()] : (abstraction.trizPrinciples || []).map((p:any) => p.id);
     
     if (!principleIds || principleIds.length === 0) {
         return [{ isMissing: true }];

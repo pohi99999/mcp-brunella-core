@@ -28,6 +28,7 @@ import {
   memoryPurgeHandler,
 } from "../tools/memoryTool.js";
 
+import { gmailInvoiceFetcherDefinition, gmailInvoiceFetcherHandler } from "../tools/gmailInvoiceFetcher.js";
 // Tool list for dashboard display
 export interface RegisteredToolInfo {
   id: string;
@@ -191,6 +192,16 @@ export async function registerAgents() {
 }
 
 export async function registerAllTools(server: McpServer) {
+  // Register Gmail Invoice Fetcher Tool
+  server.tool(
+    "gmail_invoice_fetcher",
+    "Letölti a Gmail-ből a PDF számlákat és elmenti az invoices mappába.",
+    {
+      query: z.string().optional().describe('Gmail keresési lekérdezés, pl. "has:attachment filename:pdf"'),
+      saveDir: z.string().optional().describe('Mentési könyvtár, alapértelmezett: invoices')
+    },
+    async (args) => gmailInvoiceFetcherHandler(args, {})
+  );
   // Dynamically import Node.js-specific modules only in Node environment
   const isNode = typeof process !== "undefined" && process.versions?.node;
 

@@ -43,7 +43,7 @@ export class SheetsSyncAgent extends BaseAgent {
 
     async executeTask(context: AgentContext): Promise<AgentResult> {
         try {
-            const allTransactions: BookkeepingTransaction[] = await getAllTransactions();
+            const allTransactions: BookkeepingTransaction[] = getAllTransactions();
             const sheetsRows = allTransactions.map(tx => this.formatRow(tx));
 
             // For MVP, we just log the rows. In a real scenario, this would update Google Sheets.

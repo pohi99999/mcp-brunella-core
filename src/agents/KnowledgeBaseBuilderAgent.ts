@@ -130,7 +130,7 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
       } catch {}
 
       // Transform based on task type
-      let responseData: any = {
+      const responseData: any = {
         faqItems: result.faqItems,
         wikiPages: result.wikiPages,
         stats: result.stats

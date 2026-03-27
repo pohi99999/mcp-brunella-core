@@ -1,0 +1,13 @@
+{
+  "id": "brunella_function_matrix_20260325",
+  "title": "Brunella teljes funkció- és tulajdonságmátrix dokumentáció",
+  "status": "completed",
+  "priority": "critical",
+  "createdAt": "2026-03-25",
+  "completedAt": "2026-03-26",
+  "owner": "Gemini CLI",
+  "progress": 100,
+  "tags": ["documentation", "inventory", "architecture", "agents", "mcp", "feature-matrix"],
+  "phase": 3,
+  "dependencies": []
+}

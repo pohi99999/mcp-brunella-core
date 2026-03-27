@@ -8,15 +8,15 @@ type Invoice = { id?: string; invoice_number?: string; gross?: number; net?: num
 export async function parseBankCsv(csvPath: string): Promise<BankTx[]> {
   try {
     const txt = await fs.readFile(csvPath, 'utf-8');
-    const lines = txt.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const lines = txt.split(/\r?\n/).map((l: string) => l.trim()).filter(Boolean);
     const rows: string[][] = [];
     for (const line of lines) {
       // naive CSV split (handles simple CSV without embedded commas)
-      const parts = line.split(',').map((p) => p.replace(/^"|"$/g, '').trim());
+      const parts = line.split(',').map((p: string) => p.replace(/^"|"$/g, '').trim());
       rows.push(parts);
     }
     // Try to detect header
-    const header = rows[0].map((h) => h.toLowerCase());
+    const header = rows[0].map((h: string) => h.toLowerCase());
     const idxDate = header.findIndex((h) => h.includes('date'));
     const idxAmount = header.findIndex((h) => h.includes('amount') || h.includes('price') || h.includes('sum'));
     const idxDesc = header.findIndex((h) => h.includes('description') || h.includes('desc') || h.includes('partner'));

@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-26T02:20:41.543Z
+**Utolso frissites:** 2026-03-27T02:00:00.266Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 132 total | 6 active | 3 completed | 117 archived
+**Stats:** 133 total | 6 active | 4 completed | 117 archived
 
 ---
 
@@ -50,11 +50,6 @@
   - **Assignee:** Claude (Phase 1-2 Complete)
   - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
 
-- [ ] **Brunella teljes funkció- és tulajdonságmátrix dokumentáció** [CRITICAL]
-  - **ID:** `brunella_function_matrix_20260325`
-  - **Progress:** 5%
-  - Mappa: ./tracks/brunella_function_matrix_20260325/
-
 - [ ] **Hyperdrive Connection Pooling D1 Teljesítményhez** [LOW]
   - **ID:** `cf_hyperdrive_d1_20260323`
   - **Progress:** 30%
@@ -62,7 +57,7 @@
 
 - [ ] **Cloudflare DNS Zone Reconciliation for Custom Domains** [HIGH]
   - **ID:** `cloudflare_dns_zone_reconciliation_20260325`
-  - **Progress:** 15%
+  - **Progress:** 50%
   - Mappa: ./tracks/cloudflare_dns_zone_reconciliation_20260325/
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
@@ -71,6 +66,11 @@
   - **Assignee:** Claude + Pohánka Péter
   - Mappa: ./tracks/jules_pr_integration_20260222/
 
+- [ ] **Könyvelés automatizálása** [MEDIUM]
+  - **ID:** `konyveles_automatizalas`
+  - **Progress:** 0%
+  - Mappa: ./tracks/konyveles_automatizalas/
+
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`
   - **Progress:** 0%
@@ -78,7 +78,11 @@
 
 ---
 
-## Befejezett (Completed - Not Archived) (3)
+## Befejezett (Completed - Not Archived) (4)
+
+- [x] **Brunella teljes funkció- és tulajdonságmátrix dokumentáció**
+  - **ID:** `brunella_function_matrix_20260325`
+  - Mappa: ./tracks/brunella_function_matrix_20260325/
 
 - [x] **Brunella Personal Assistant — Windows MVP Foundation**
   - **ID:** `personal_assistant_windows_mvp_20260323`

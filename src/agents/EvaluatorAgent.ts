@@ -100,7 +100,7 @@ A feladatod a rendszerek auditálása, egészségügyi ellenőrzések és TESZTE
     const gateway = getBifrostGateway();
     const MAX_ITERATIONS = 5;
     let finalMessage = "A kiértékelés befejeződött.";
-    let finalData: any = {};
+    const finalData: any = {};
 
     for (let i = 0; i < MAX_ITERATIONS; i++) {
       this.logger.info(`ReAct iteráció ${i + 1}/${MAX_ITERATIONS}`);

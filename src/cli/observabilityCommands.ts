@@ -105,4 +105,91 @@ export function registerObservabilityCommands(program: Command): void {
         process.exit(1);
       }
     });
-}
+
+  obs
+    .command('agent-diagnostics <agentName>')
+    .description('Agent diagnosztika és legutóbbi feladatok')
+    .option('-n, --limit <count>', 'Maximum elemszám', '10')
+    .action(async (agentName: string, opts: { limit?: string }) => {
+      try {
+        const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
+        const ora = (await import('ora')).default;
+        const spinner = ora(`Lekérdezem agent: ${agentName}`);
+        spinner.start();
+
+        const statusRes = await fetch(`${API_BASE}/api/agents/status`);
+        const statusJson = statusRes.ok ? await statusRes.json() : { agents: [] };
+        const agents = statusJson.agents || [];
+        const agent = agents.find((a: any) => a.name?.toLowerCase() === agentName.toLowerCase());
+
+        const diagRes = await fetch(`${API_BASE}/api/agents/diagnostics`);
+        const diags = diagRes.ok ? await diagRes.json() : {};
+
+        const tasksRes = await fetch(`${API_BASE}/api/tasks?limit=${opts.limit || '50'}`);
+        const tasksJson = tasksRes.ok ? await tasksRes.json() : { tasks: [] };
+        const allTasks = tasksJson.tasks || [];
+        const agentTasks = allTasks.filter((t: any) => t.agent && t.agent.toLowerCase() === agentName.toLowerCase()).slice(0, parseInt(opts.limit || '10', 10));
+
+        spinner.succeed('Lekérdezés kész');
+        const chalk = (await import('chalk')).default;
+        console.log(chalk.bold(`\nAgent diagnostics: ${agentName}\n`));
+        if (agent) {
+          console.log(chalk.gray(JSON.stringify(agent, null, 2)));
+        } else {
+          console.log(chalk.yellow('Agent nem található a status listában.'));
+        }
+
+        console.log(chalk.bold('\nLegutóbbi feladatok:'));
+        if (agentTasks.length === 0) {
+          console.log(chalk.gray('  Nincs feladat.'));
+        } else {
+          for (const t of agentTasks) {
+            console.log(chalk.gray(`  #${t.id} [${t.status}] ${t.created_at} ${t.completed_at || ''}`));
+            if (t.result) console.log(chalk.dim(`     ${JSON.stringify(typeof t.result === 'string' ? t.result : t.result).slice(0,200)}`));
+          }
+        }
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        console.error('Hiba:', msg);
+        process.exit(1);
+      }
+    });
+
+  obs
+    .command('task-logs <taskId>')
+    .description('Task részletes naplók és trace megjelenítése')
+    .action(async (taskIdStr: string) => {
+      try {
+        const API_BASE = process.env.BRUNELLA_API_URL || 'http://localhost:3000';
+        const taskId = Number(taskIdStr);
+        if (Number.isNaN(taskId)) {
+          console.error('Érvénytelen taskId');
+          process.exit(1);
+        }
+        const res = await fetch(`${API_BASE}/api/tasks/${taskId}`);
+        if (!res.ok) {
+          console.error('Task nem található');
+          process.exit(1);
+        }
+        const data = await res.json();
+        const task = data.task;
+        const chalk = (await import('chalk')).default;
+        console.log(chalk.bold(`\nTask #${taskId} — ${task.agent} — ${task.status}\n`));
+        if (task.logs && task.logs.length) {
+          for (const log of task.logs) {
+            const levelColor = log.level === 'error' ? chalk.red : (log.level === 'warn' ? chalk.yellow : chalk.gray);
+            console.log(`${chalk.gray(log.timestamp)} ${levelColor(`[${log.level}]`)} ${log.message}`);
+          }
+        } else {
+          console.log(chalk.gray('Nincsenek naplók a taskhoz.'));
+        }
+        if (task.result) {
+          console.log(chalk.bold('\nResult:\n'), JSON.stringify(task.result, null, 2));
+        }
+      } catch (e: unknown) {
+        const msg = e instanceof Error ? e.message : String(e);
+        console.error('Hiba:', msg);
+        process.exit(1);
+      }
+    });
+  }

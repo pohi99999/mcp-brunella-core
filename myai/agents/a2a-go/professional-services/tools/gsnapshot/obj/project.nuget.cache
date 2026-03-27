@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "Yz1xTjEOh+4=",
+  "dgSpecHash": "rtDLwt8/hJ4=",
   "success": false,
   "projectFilePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
   "expectedPackageFiles": [
@@ -32,7 +32,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Microsoft.Extensions.Configuration.Json",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -44,7 +44,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Microsoft.Extensions.DependencyInjection",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -56,7 +56,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Newtonsoft.Json",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -67,7 +67,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "ByteSize",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -78,7 +78,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "CommandLineParser",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -89,7 +89,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "ConsoleUI.ConsoleMenu",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -100,7 +100,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Google.Apis.Auth",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -111,7 +111,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Google.Apis.CloudResourceManager.v1",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -122,7 +122,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Google.Apis.Compute.beta",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -133,7 +133,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "Google.Apis.Compute.v1",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -144,7 +144,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "NLog",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -155,7 +155,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "NLog.Extensions.Logging",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -166,7 +166,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "ReadLine",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {
@@ -177,7 +177,7 @@
       "filePath": "F:\\mcp-brunella-core\\myai\\agents\\a2a-go\\professional-services\\tools\\gsnapshot\\gsnapshot.csproj",
       "libraryId": "System.Buffers",
       "targetGraphs": [
-        "net5.0"
+        "netcoreapp5.0"
       ]
     },
     {

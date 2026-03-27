@@ -153,6 +153,31 @@ export class UnifiedWorkspaceClient {
   }
 
   /**
+   * Modify email labels
+   */
+  async modifyEmail(messageId: string, options: { addLabelIds?: string[], removeLabelIds?: string[] }): Promise<void> {
+    if (!this.gmail) {
+      await this.initialize();
+    }
+
+    try {
+      await this.gmail.users.messages.modify({
+        userId: 'me',
+        id: messageId,
+        requestBody: {
+          addLabelIds: options.addLabelIds,
+          removeLabelIds: options.removeLabelIds,
+        },
+      });
+      logInfo('UnifiedWorkspace', `✅ Email modified: ${messageId}`);
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Failed to modify email: ${errorMsg}`);
+      throw error;
+    }
+  }
+
+  /**
    * Get email attachments (for invoice processing, etc.)
    */
   async getEmailAttachments(messageId: string): Promise<{ filename: string; data: Buffer }[]> {
@@ -324,6 +349,108 @@ export class UnifiedWorkspaceClient {
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError('UnifiedWorkspace', `File upload failed: ${errorMsg}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Upload file from Buffer
+   */
+  async uploadFileFromBuffer(data: Buffer, name: string, mimeType: string, parentId?: string): Promise<{ fileId: string; webViewLink: string }> {
+    if (!this.drive) {
+      await this.initialize();
+    }
+
+    try {
+      const fileMetadata: any = {
+        name,
+        mimeType,
+      };
+
+      if (parentId) {
+        fileMetadata.parents = [parentId];
+      }
+
+      const stream = new (await import('stream')).PassThrough();
+      stream.end(data);
+
+      const response = await this.drive.files.create({
+        requestBody: fileMetadata,
+        media: {
+          mimeType,
+          body: stream,
+        },
+        fields: 'id,webViewLink',
+      });
+
+      logInfo('UnifiedWorkspace', `✅ File uploaded from buffer: ${response.data.id}`);
+      return {
+        fileId: response.data.id,
+        webViewLink: response.data.webViewLink,
+      };
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `File upload from buffer failed: ${errorMsg}`);
+      throw error;
+    }
+  }
+
+  /**
+   * Find a folder by name
+   */
+  async findFolder(name: string, parentId?: string): Promise<{ id: string, name: string } | null> {
+    if (!this.drive) {
+      await this.initialize();
+    }
+
+    try {
+      let q = `mimeType='application/vnd.google-apps.folder' and name='${name}' and trashed=false`;
+      if (parentId) {
+        q += ` and '${parentId}' in parents`;
+      }
+
+      const response = await this.drive.files.list({
+        q,
+        fields: 'files(id, name)',
+        pageSize: 1,
+      });
+
+      return response.data.files && response.data.files.length > 0 ? response.data.files[0] : null;
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Find folder failed: ${errorMsg}`);
+      return null;
+    }
+  }
+
+  /**
+   * Create a folder
+   */
+  async createFolder(name: string, parentId?: string): Promise<{ id: string, name: string }> {
+    if (!this.drive) {
+      await this.initialize();
+    }
+
+    try {
+      const fileMetadata: any = {
+        name,
+        mimeType: 'application/vnd.google-apps.folder',
+      };
+
+      if (parentId) {
+        fileMetadata.parents = [parentId];
+      }
+
+      const response = await this.drive.files.create({
+        requestBody: fileMetadata,
+        fields: 'id, name',
+      });
+
+      logInfo('UnifiedWorkspace', `✅ Folder created: ${name} (${response.data.id})`);
+      return response.data;
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('UnifiedWorkspace', `Create folder failed: ${errorMsg}`);
       throw error;
     }
   }

@@ -8,7 +8,7 @@ import * as logger from '../src/utils/logger.js';
 
 describe('SheetsSyncAgent', () => {
     beforeEach(() => {
-        vi.spyOn(db, 'getAllTransactions').mockResolvedValue([]);
+        vi.spyOn(db, 'getAllTransactions').mockReturnValue([]);
         vi.spyOn(logger, 'logError').mockImplementation(() => {}); // Mock logError
     });
 
@@ -42,7 +42,7 @@ describe('SheetsSyncAgent', () => {
             status: 'PENDING_MATCH' as TransactionStatus,
             data: { date: '2026-03-29', partner: 'P2', amount: 200, reference: 'REF-B' }
         };
-        vi.spyOn(db, 'getAllTransactions').mockResolvedValue([mockTx1, mockTx2]);
+        vi.spyOn(db, 'getAllTransactions').mockReturnValue([mockTx1, mockTx2]);
 
         const mockContext: AgentContext = { payload: {} };
         const result = await agent.executeTask(mockContext);
@@ -58,7 +58,7 @@ describe('SheetsSyncAgent', () => {
     it('should handle errors from getAllTransactions gracefully', async () => {
         const agent = new SheetsSyncAgent();
         const mockError = new Error("DB error");
-        vi.spyOn(db, 'getAllTransactions').mockRejectedValue(mockError);
+        vi.spyOn(db, 'getAllTransactions').mockImplementation(() => { throw mockError; });
 
         const mockContext: AgentContext = { payload: {} };
         const result = await agent.executeTask(mockContext);

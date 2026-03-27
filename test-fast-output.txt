@@ -1,0 +1,10 @@
+
+ RUN  v3.2.4 F:/mcp-brunella-core
+
+ Ôťô test/modelRouter.test.ts (22 tests) 16ms
+
+ Test Files  1 passed (1)
+      Tests  22 passed (22)
+   Start at  16:39:02
+   Duration  733ms (transform 118ms, setup 54ms, collect 106ms, tests 16ms, environment 0ms, prepare 259ms)
+

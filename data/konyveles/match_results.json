@@ -1,0 +1,22 @@
+{
+  "txCount": 1,
+  "invoiceCount": 6,
+  "matches": [
+    {
+      "tx": {
+        "date": "2026-03-02",
+        "amount": 48080,
+        "description": "Invoice INV-2026-0001"
+      },
+      "invoice": {
+        "invoice_number": "INV-2026-0001",
+        "net": 40000,
+        "vat": 8080,
+        "gross": 48080,
+        "issueDate": "2026-03-01",
+        "source": "F:\\mcp-brunella-core\\conductor\\tracks\\konyveles_automatizalas\\resources\\samples\\sample_invoice_placeholder.txt"
+      },
+      "score": 102
+    }
+  ]
+}

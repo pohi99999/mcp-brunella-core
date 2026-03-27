@@ -22,8 +22,12 @@ async function getOAuthToken(oauth: NonNullable<NavConfig['oauth']>): Promise<st
       logError('navClient', `OAuth token fetch failed: ${res.status} ${res.statusText}`);
       return null;
     }
-    const json = await res.json();
-    return json.access_token ?? null;
+    const json: unknown = await res.json();
+    if (typeof json === 'object' && json !== null && 'access_token' in json) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      return (json as any).access_token ?? null;
+    }
+    return null;
   } catch (e) {
     logError('navClient', `getOAuthToken error: ${String(e)}`);
     return null;

@@ -1832,7 +1832,8 @@
 			"google.gemini-cli-vscode-ide-companion",
 			"andrewbutson.github-copilot-llm-gateway",
 			"vscjava.migrate-java-to-azure",
-			"github.vscode-pull-request-github"
+			"github.vscode-pull-request-github",
+			"ms-azuretools.vscode-azureappservice"
 		]
 	}
 }

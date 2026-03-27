@@ -806,6 +806,15 @@ export class AgentManager extends EventEmitter {
       if (confidence !== undefined) {
         trace.span.metadata['confidence'] = confidence;
       }
+      // Attach traceId to result for later lookup by tasks API / observability CLI
+      try {
+        if (result && typeof result === 'object') {
+          (result as any).metadata = (result as any).metadata ?? {};
+          (result as any).metadata.traceId = trace.span.traceId;
+        }
+      } catch {
+        /* non-critical */
+      }
       trace.end("success");
       recordAgentExecution(agentName, "success", Date.now() - executionStart);
 

@@ -5,12 +5,29 @@
  * through the Bifrost Gateway "copilot" provider (file-bridge).
  * The Copilot CLI picks up request files, processes them, and writes responses.
  */
-import type { ChatProvider } from "../types";
+import type { ChatProvider, ChatSendInput, ChatSendOutput } from "../types";
+import { MasterOrchestratorProvider } from "./masterOrchestratorProvider";
+
+// Egyszerű heurisztika: ha a promptban szerepel "agent", "orchestrate", "swarm", vagy több agent neve, multi-agent orchestration-t indítunk
+function needsMultiAgentOrchestration(input: ChatSendInput): boolean {
+  const text = input.text.toLowerCase();
+  // Egyszerűbb trigger szavak
+  if (text.includes("orchestrate") || text.includes("swarm") || text.includes("multi-agent") || text.includes("több ügynök")) return true;
+  // Ha felsorolás van, vesszővel elválasztva legalább 2 agent név
+  if ((text.match(/agent/gi) || []).length > 1) return true;
+  return false;
+}
 
 export const copilotProvider: ChatProvider = {
   mode: "copilot",
 
   async send(input) {
+    if (needsMultiAgentOrchestration(input)) {
+      // Multi-agent orchestration delegálás a masterOrchestratorProvider-nek
+      const master = new MasterOrchestratorProvider();
+      return master.send(input);
+    }
+    // Single-agent (alapértelmezett)
     const response = await fetch("/api/paios/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
