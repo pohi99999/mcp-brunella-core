@@ -79,7 +79,8 @@ export class TrackStateManager {
     if (fs.existsSync(STATE_FILE)) {
       try {
         const raw = fs.readFileSync(STATE_FILE, 'utf-8');
-        const data = JSON.parse(raw);
+        const rawClean = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
+        const data = JSON.parse(rawClean);
 
         // Ensure tracks array exists
         if (!data.tracks || !Array.isArray(data.tracks)) {
@@ -138,7 +139,8 @@ export class TrackStateManager {
   private parseMetaJson(metaPath: string, trackDir: string, isArchived: boolean): TrackMetadata | null {
     try {
       const raw = fs.readFileSync(metaPath, 'utf-8');
-      const meta = JSON.parse(raw);
+      const rawClean = raw.charCodeAt(0) === 0xFEFF ? raw.slice(1) : raw;
+      const meta = JSON.parse(rawClean);
 
       // Unified ID extraction (supports both "id" and "track_id")
       const id = String(meta.id || meta.track_id || path.basename(trackDir));

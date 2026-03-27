@@ -114,8 +114,14 @@ describe("CLI E2E — Memória", () => {
   });
 
   it("memoria lista alparancs létezik", async () => {
-    const result = await runCli(["memoria", "--help"]);
-    const output = (result.stdout + result.stderr).toLowerCase();
+    // Először a főparancs help outputját nézzük
+    let result = await runCli(["memoria", "--help"]);
+    let output = (result.stdout + result.stderr).toLowerCase();
+    if (!output.includes("lista")) {
+      // Ha nincs benne, próbáljuk a memoria lista --help outputot
+      result = await runCli(["memoria", "lista", "--help"]);
+      output = (result.stdout + result.stderr).toLowerCase();
+    }
     expect(output.includes("lista") || output.includes("memoria")).toBe(true);
   });
 

@@ -26,6 +26,7 @@ import { logInfo, logError } from '../../utils/logger.js';
 import { getMessages, saveMessage } from '../../utils/db.js';
 import { socketService } from '../SocketService.js';
 import { ChromeDevToolsAgent } from '../../agents/ChromeDevToolsAgent.js';
+import { ISwarmContext } from '../../agents/types.js';
 
 const PYTHON_API = process.env.PYTHON_API_URL || 'http://localhost:8000';
 
@@ -58,11 +59,16 @@ export function createRobotkezRoutes(): Router {
             // Save user message
             await saveMessage(CHAT_ID, 'user', instruction);
 
-            // Get history (last 10 messages)
+            // Get history (last 10 messages) — ensure role is valid
             const allMessages = await getMessages(CHAT_ID);
-            const history = allMessages.slice(-10).map(m => ({
-                role: m.role as 'user' | 'assistant' | 'system',
-                content: m.content
+
+            function isChatRole(x: unknown): x is 'user' | 'assistant' | 'system' {
+                return x === 'user' || x === 'assistant' || x === 'system';
+            }
+
+            const history: ISwarmContext['history'] = allMessages.slice(-10).map((m: any) => ({
+                role: (['user', 'assistant', 'system'].includes(m.role) ? m.role : 'system') as 'user' | 'assistant' | 'system',
+                content: String(m.content)
             }));
 
             const result = await agent.execute(instruction, { 
