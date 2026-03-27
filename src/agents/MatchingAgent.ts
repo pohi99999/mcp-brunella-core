@@ -2,6 +2,7 @@ import { getPendingTransactions, updateTransaction } from '../data/bookkeeping_d
 // src/agents/MatchingAgent.ts
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { BookkeepingTransaction, NavInvoiceData, MatchedResult, TransactionStatus, BankTransactionData } from '../types/bookkeeping.d.js';
+import { logError, logWarn } from '../utils/logger.js';
 
 export class MatchingAgent extends BaseAgent {
     name = "MatchingAgent";
@@ -11,13 +12,13 @@ export class MatchingAgent extends BaseAgent {
 
     findMatch(bankTxData: BankTransactionData, pendingInvoices: NavInvoiceData[]): MatchedResult | null {
         if (!bankTxData || !bankTxData.reference || typeof bankTxData.amount !== 'number') {
-            console.warn("Invalid bank transaction data for matching:", bankTxData);
+            logWarn("MatchingAgent", "Invalid bank transaction data for matching:", bankTxData);
             return null;
         }
 
         // Level 1: Hard Match (Reference Number)
         for (const inv of pendingInvoices) {
-            if (bankTxData.reference.includes(inv.invoiceNumber)) {
+            if (bankTxData.reference.includes(String(inv.invoiceNumber))) {
                 // Verify amount
                 if (bankTxData.amount === inv.amount) {
                     return {
@@ -33,18 +34,16 @@ export class MatchingAgent extends BaseAgent {
 
     async executeTask(context: AgentContext): Promise<AgentResult> {
         try {
-            // For MVP, assume invoices are loaded from somewhere (e.g., NAV/PDF agents)
-            // For now, let's mock some invoices
-            const pendingInvoices: NavInvoiceData[] = [
-                { invoiceNumber: 'INV-2026-001', amount: 10000, partner: 'Kovács Kft' },
-                { invoiceNumber: 'INV-2026-002', amount: 5000, partner: 'Nagy Zrt' }
-            ];
+            const pendingInvoicesFromDB: BookkeepingTransaction[] = await getPendingTransactions("NAV");
+            const pendingInvoices: NavInvoiceData[] = pendingInvoicesFromDB
+                .map(tx => tx.data as NavInvoiceData) // Assuming NAV transactions always have NavInvoiceData
+                .filter(data => data.invoiceNumber && typeof data.amount === 'number'); // Basic validation
 
             const pendingBankTxs: BookkeepingTransaction[] = await getPendingTransactions("BankAgent");
 
             for (const bankTx of pendingBankTxs) {
                 if (!bankTx.data) {
-                    console.warn("Skipping bank transaction due to missing data:", bankTx.id);
+                    logWarn("MatchingAgent", "Skipping bank transaction due to missing data:", bankTx.id);
                     await updateTransaction(bankTx.id, { status: 'ERROR' as TransactionStatus });
                     continue;
                 }
@@ -58,8 +57,9 @@ export class MatchingAgent extends BaseAgent {
 
             return { success: true, message: "Matching process completed", data: null };
         } catch (error) {
-            console.error("MatchingAgent executeTask failed:", error);
-            return { success: false, error: error instanceof Error ? error.message : String(error) };
+            logError("MatchingAgent", "executeTask failed:", error);
+            const errorMsg = error instanceof Error ? error.message : String(error);
+            return { success: false, message: errorMsg, data: null };
         }
     }
 }

@@ -1,10 +1,10 @@
-import Database from 'better-sqlite3';
 import { BookkeepingTransaction, BankTransactionData, NavInvoiceData } from '../types/bookkeeping.d.js';
-
-let db: Database.Database; // Use the specific Database type
+import { logError } from '../utils/logger.js';
+let db: any = null; // better-sqlite3 Database instance
 
 export function initDB(dbPath: string = 'data/bookkeeping.db') {
     try {
+        const Database = require('better-sqlite3');
         db = new Database(dbPath);
         db.exec(`
             CREATE TABLE IF NOT EXISTS transactions (
@@ -16,23 +16,25 @@ export function initDB(dbPath: string = 'data/bookkeeping.db') {
             )
         `);
     } catch (error) {
-        console.error("Failed to initialize database:", error);
+        logError("bookkeeping_db", "Failed to initialize database:", error);
         throw error;
     }
 }
 
 export function saveTransaction(tx: BookkeepingTransaction) {
     try {
+        if (!db) throw new Error('Database not initialized');
         const stmt = db.prepare('INSERT OR REPLACE INTO transactions (id, source, data, status, matchedInvoice) VALUES (?, ?, ?, ?, ?)');
         stmt.run(tx.id, tx.source, JSON.stringify(tx.data), tx.status, tx.matchedInvoice || null);
     } catch (error) {
-        console.error("Failed to save transaction:", tx.id, error);
+        logError("bookkeeping_db", `Failed to save transaction: ${tx.id}`, error);
         throw error;
     }
 }
 
 export function getTransaction(id: string): BookkeepingTransaction | null {
     try {
+        if (!db) throw new Error('Database not initialized');
         const stmt = db.prepare('SELECT * FROM transactions WHERE id = ?');
         const row: { id: string; source: string; data: string; status: string; matchedInvoice: string | null } = stmt.get(id);
         if (!row) return null;
@@ -44,20 +46,21 @@ export function getTransaction(id: string): BookkeepingTransaction | null {
             matchedInvoice: row.matchedInvoice || undefined
         };
     } catch (error) {
-        console.error("Failed to get transaction:", id, error);
+        logError("bookkeeping_db", `Failed to get transaction: ${id}`, error);
         throw error;
     }
 }
 
 export async function getPendingTransactions(source?: string): Promise<BookkeepingTransaction[]> {
     try {
-        let query = 'SELECT * FROM transactions WHERE status = \'PENDING_MATCH\'';
-        const params: string[] = [];
+        if (!db) throw new Error('Database not initialized');
+        let query = "SELECT * FROM transactions WHERE status = 'PENDING_MATCH'";
+        const params: any[] = [];
         if (source) {
             query += ' AND source = ?';
             params.push(source);
         }
-        const rows: { id: string; source: string; data: string; status: string; matchedInvoice: string | null }[] = db.prepare(query).all(params);
+        const rows: { id: string; source: string; data: string; status: string; matchedInvoice: string | null }[] = db.prepare(query).all(...params);
         return rows.map(row => ({
             id: row.id,
             source: row.source,
@@ -66,15 +69,16 @@ export async function getPendingTransactions(source?: string): Promise<Bookkeepi
             matchedInvoice: row.matchedInvoice || undefined
         }));
     } catch (error) {
-        console.error("Failed to get pending transactions:", error);
+        logError("bookkeeping_db", "Failed to get pending transactions:", error);
         throw error;
     }
 }
 
 export async function updateTransaction(id: string, updates: Partial<BookkeepingTransaction>) {
     try {
+        if (!db) throw new Error('Database not initialized');
         let setClauses: string[] = [];
-        const params: (string | TransactionStatus)[] = [];
+        const params: any[] = [];
 
         if (updates.status) {
             setClauses.push('status = ?');
@@ -90,15 +94,16 @@ export async function updateTransaction(id: string, updates: Partial<Bookkeeping
         const query = `UPDATE transactions SET ${setClauses.join(', ')} WHERE id = ?`;
         params.push(id);
 
-        db.prepare(query).run(params);
+        db.prepare(query).run(...params);
     } catch (error) {
-        console.error("Failed to update transaction:", id, error);
+        logError("bookkeeping_db", `Failed to update transaction: ${id}`, error);
         throw error;
     }
 }
 
 export async function getAllTransactions(): Promise<BookkeepingTransaction[]> {
     try {
+        if (!db) throw new Error('Database not initialized');
         const rows: { id: string; source: string; data: string; status: string; matchedInvoice: string | null }[] = db.prepare('SELECT * FROM transactions').all();
         return rows.map(row => ({
             id: row.id,
@@ -108,7 +113,7 @@ export async function getAllTransactions(): Promise<BookkeepingTransaction[]> {
             matchedInvoice: row.matchedInvoice || undefined
         }));
     } catch (error) {
-        console.error("Failed to get all transactions:", error);
+        logError("bookkeeping_db", "Failed to get all transactions:", error);
         throw error;
     }
 }
