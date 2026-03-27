@@ -25,7 +25,7 @@ export class AgentArchitect {
             const safeName = req.name.toLowerCase().replace(/[^a-z0-9]/g, '_');
             const tomlFileName = `${safeName}.toml`;
             const tomlPath = path.join(process.cwd(), 'myai', 'agents', tomlFileName);
-            const registryPath = path.join(process.cwd(), 'src', 'agents', 'registry.json');
+            const _registryPath = path.join(process.cwd(), 'src', 'agents', 'registry.json');
 
             // 1. System Prompt generálása ha nincs megadva
             let systemPrompt = req.systemPrompt;
@@ -99,8 +99,9 @@ query = "\${task}"
 
                     fs.writeFileSync(rPath, JSON.stringify(registry, null, 2));
                     logInfo('AgentArchitect', `Registry frissítve: ${rPath}`);
-                } catch (err: any) {
-                    logError('AgentArchitect', `Hiba a registry frissítésekor (${rPath}): ${err.message}`);
+                } catch (err: unknown) {
+                    const msg = err instanceof Error ? err.message : String(err);
+                    logError('AgentArchitect', `Hiba a registry frissítésekor (${rPath}): ${msg}`);
                 }
             }
 
@@ -135,9 +136,10 @@ query = "\${task}"
                 message: `A(z) ${req.name} ügynök sikeresen létrehozva és aktiválva.` 
             };
 
-        } catch (error: any) {
-            logError('AgentArchitect', `Hiba az ügynök létrehozásakor: ${error.message}`);
-            return { success: false, message: error.message };
+        } catch (error: unknown) {
+            const message = error instanceof Error ? error.message : String(error);
+            logError('AgentArchitect', `Hiba az ügynök létrehozásakor: ${message}`);
+            return { success: false, message };
         }
     }
 }

@@ -22,7 +22,6 @@ import {
 import {
   saveCheckpoint,
   loadCheckpoint,
-  clearCheckpoints,
   type CheckpointState,
 } from "../core/checkpoint.js";
 import { gitAutoCheckpoint, logRecoveryEvent } from "../core/gitRecovery.js";
