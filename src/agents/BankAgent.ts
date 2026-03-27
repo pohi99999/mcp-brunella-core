@@ -1,6 +1,6 @@
-// src/agents/BankAgent.ts
 import { saveTransaction } from '../data/bookkeeping_db.js';
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
+import { BankTransactionData, BookkeepingTransaction, TransactionStatus } from '../types/bookkeeping.d.js';
 
 export class BankAgent extends BaseAgent {
     name = "BankAgent";
@@ -8,7 +8,7 @@ export class BankAgent extends BaseAgent {
     role = "Transaction Watcher";
     capabilities = ["parse_csv"];
 
-    parseRow(csvRow: string) {
+    parseRow(csvRow: string): BankTransactionData {
         const parts = csvRow.split(';');
         return {
             date: parts[0],
@@ -32,15 +32,16 @@ export class BankAgent extends BaseAgent {
         const rows = csvContent.split('\n');
         for (const row of rows) {
             if (row.trim() === '') continue;
-            const parsedTx = this.parseRow(row);
+            const parsedTx: BankTransactionData = this.parseRow(row);
             const txId = `bank_${parsedTx.reference}_${parsedTx.amount}`; // Generate a unique ID
 
-            await saveTransaction({
+            const newTx: BookkeepingTransaction = {
                 id: txId,
                 source: this.name,
                 data: parsedTx,
-                status: 'PENDING_MATCH'
-            });
+                status: 'PENDING_MATCH' as TransactionStatus
+            };
+            await saveTransaction(newTx);
         }
 
         return { success: true, message: `Processed ${rows.length} bank transactions`, data: null };
