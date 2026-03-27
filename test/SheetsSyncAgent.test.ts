@@ -4,11 +4,12 @@ import { SheetsSyncAgent } from '../src/agents/SheetsSyncAgent.js';
 import * as db from '../src/data/bookkeeping_db.js';
 import { AgentContext } from '../src/agents/BaseAgent.js';
 import { BookkeepingTransaction, TransactionStatus } from '../src/types/bookkeeping.d.js';
+import * as logger from '../src/utils/logger.js';
 
 describe('SheetsSyncAgent', () => {
     beforeEach(() => {
         vi.spyOn(db, 'getAllTransactions').mockResolvedValue([]);
-        vi.spyOn(console, 'log').mockImplementation(() => {}); // Mock console.log
+        vi.spyOn(logger, 'logError').mockImplementation(() => {}); // Mock logError
     });
 
     it('should format a transaction into a Sheets row', () => {
@@ -52,6 +53,18 @@ describe('SheetsSyncAgent', () => {
             ['INV-A', 100, '', 'COMPLETED'],
             ['', 200, '2026-03-29', 'PENDING_MATCH']
         ]);
-        expect(console.log).toHaveBeenCalledWith("Simulating Google Sheets update with the following rows:", expect.any(Array));
+    });
+
+    it('should handle errors from getAllTransactions gracefully', async () => {
+        const agent = new SheetsSyncAgent();
+        const mockError = new Error("DB error");
+        vi.spyOn(db, 'getAllTransactions').mockRejectedValue(mockError);
+
+        const mockContext: AgentContext = { payload: {} };
+        const result = await agent.executeTask(mockContext);
+
+        expect(result.success).toBe(false);
+        expect(result.message).toBe("DB error");
+        expect(logger.logError).toHaveBeenCalledWith("SheetsSyncAgent", "executeTask failed:", mockError);
     });
 });
