@@ -5,7 +5,6 @@
 
 import { IAgent, AgentResponse, ISwarmContext } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
-import { v4 as uuidv4 } from 'uuid';
 
 export interface GenesisRequest {
   originalIdea: string;

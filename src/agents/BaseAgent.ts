@@ -35,7 +35,7 @@ export interface AgentResult {
   handoff?: AgentHandoff;
   thoughts?: string;
   contextUsed?: string[];
-  metadata?: any;        // Egyéb metaadatok (pl. source, confidence)
+  metadata?: Record<string, unknown>;        // Egyéb metaadatok (pl. source, confidence)
 }
 
 export abstract class BaseAgent implements IAgent {
@@ -115,7 +115,7 @@ export abstract class BaseAgent implements IAgent {
    *
    * Magyar nyelvű válaszokat ad vissza az AgentResult formázásával.
    */
-  async execute(task: string, context?: any): Promise<AgentResponse> {
+  async execute(task: string, context?: AgentContext): Promise<AgentResponse> {
     const testMode = this.isTestMode();
 
     if (!testMode) {
