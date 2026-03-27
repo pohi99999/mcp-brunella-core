@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-27T02:00:00.266Z
+**Utolso frissites:** 2026-03-27T08:01:21.988Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -102,6 +102,7 @@
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
+- [x] **006_trojan-horse-campaign** (2026-03-22T22:47:34Z)
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **Agent diagnostics and routing modernization** (2026-03-23T08:15:00Z)
 - [x] **Agent Loader Modernization** (2026-03-23T08:00:00Z)
@@ -111,7 +112,6 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **basic-test-task-structure-20260219** (N/A)
 - [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
-- [x] **BAS Enterprise Suite - 18 Module Business Automation** (N/A)
 
 ... and 107 more archived tracks
 

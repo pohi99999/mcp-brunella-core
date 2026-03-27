@@ -61,7 +61,7 @@ export function createRobotkezRoutes(): Router {
             // Get history (last 10 messages)
             const allMessages = await getMessages(CHAT_ID);
             const history = allMessages.slice(-10).map(m => ({
-                role: m.role,
+                role: m.role as 'user' | 'assistant' | 'system',
                 content: m.content
             }));
 

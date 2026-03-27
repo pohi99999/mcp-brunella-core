@@ -12,6 +12,7 @@ import {
   createGithubModelsRoutes,
   createLLMRoutes,
 } from "./llm.js";
+import { createAnthropicRoutes } from "./anthropic.js";
 import { createFileRoutes, createRagRoutes } from "./files.js";
 import { createTaskRoutes } from "./tasks.js";
 import { createToolRoutes, createDebugRoutes } from "./tools.js";
@@ -113,6 +114,7 @@ export function createV1Router(): Router {
   router.use("/system", createSystemArchitectureRouter());
   router.use("/system", createSystemControlRouter());
   router.use("/llm", createLLMRoutes());
+  router.use("/anthropic", createAnthropicRoutes());
   router.use("/business-jobs", createBusinessJobsRoutes());
   router.use("/security", securityRouter);
   router.use("/assistant", createAssistantRoutes());

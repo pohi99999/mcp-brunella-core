@@ -44,6 +44,9 @@
     "ms-playwright.playwright",
     "isaotoyama.vs-copilot-mcp",
     "github.copilot-workspace",
-    "niudai.remote-github"
+    "niudai.remote-github",
+    "dotjoshjohnson.xml",
+    "diegoomal.ollama-connection",
+    "warm3snow.vscode-ollama"
   ]
 }
