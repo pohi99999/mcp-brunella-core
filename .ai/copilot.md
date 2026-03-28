@@ -1,4 +1,4 @@
-<overview>
+﻿<overview>
 User requested that the Copilot CLI automatically connect to a local Brunella MCP server and that Brunella be started automatically when opening VS Code (Insiders) or launching the Copilot CLI. The approach: add a VS Code task configured to run on folder open and create a small wrapper (PowerShell + .bat) that ensures Brunella is running, waits for the MCP endpoint, and then launches the Copilot CLI with an optional repo-level MCP config.
 </overview>
 
@@ -123,3 +123,44 @@ Optional follow-ups (I can perform on request):
 - A standalone shell kapott branding/onboarding kártyát és frissített fókuszszövegeket; a következő lépés az auth modell és tenant-konfiguráció.
 - A track meta és a session plan frissült: a csomagolás lezárva, a branding/onboarding kész, az auth modell pedig külön pending todo-t kapott.
 - Verifikáció: `npm run test:fast` zöld, `npx vite build --config vite.p-sales.config.ts` zöld.
+
+### 2026-03-28 04:35
+**Feladat:** Heti AI ökoszisztéma felderítő ügynök és ütemezett riport pipeline bevezetése
+**Érintett fájlok:** src/agents/AIResearchWeeklyAgent.ts, src/utils/reportWriter.ts, src/server/schedulers/scheduledTasksRunner.ts, src/server/routes/scheduledTasks.ts, src/agents/registry.json, test/agents/AIResearchWeeklyAgent.test.ts, test/utils/reportWriter.test.ts
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- Létrejött a heti AI scout agent, amely GitHub/open source, Chrome DevTools, Google/Foundry és agent framework frissítéseket gyűjt, majd `docs/001_Jelentés/<YYYY-MM-DD>.md` néven riportot ír.
+- A scheduled task runner most explicit módon biztosítja a hétfő 05:00-s futást és az agentnek átadott metadata/context alapú konfigurációt.
+- A scheduled-tasks route metadata mezőt is kezel, így a jövőbeli ütemezett agentek rugalmasabban konfigurálhatók.
+- Verifikáció: `npm run build` sikeres; célzott Vitest futtatás zöld a heti agent és a report writer tesztekre.
+
+### 2026-03-28 04:05
+**Feladat:** Golden intelligencia track scaffold létrehozása
+**Érintett fájlok:** conductor/tracks/goldeninteligencia20260327/plan.md, conductor/tracks/goldeninteligencia20260327/spec.md, conductor/tracks/goldeninteligencia20260327/meta.json, conductor/tracks.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- Létrejött a `goldeninteligencia20260327` track scaffold a public business / társadalmi / politikai / pénzügyi / technológiai signal-ek kurált intelligenciává alakításához.
+- A `conductor/tracks.md` felkerült a track a Proposed szekcióba, a session plan pedig rögzíti, hogy ez külön follow-on track az intelligence harvester irányhoz.
+
+---
+
+### 2026-03-28 — my_websitev2 (pohankaestarsa.com) tartalmi frissítések + 500 hiba javítás
+
+**Feladat:** 4 új alkalmazás (Könyvelési Automatizálás, Nova, P-Sales, P-Search) integrálása a pohankaestarsa.com weboldalra; Portfólió referencia-képek cseréje; Szolgáltatásaink oldal 500 hibájának javítása.
+
+**Érintett fájlok:**
+- app/components/AIFolyamatok.tsx — stats grid -> 4 új alkalmazás-kártya
+- app/components/Portfolio.tsx — gradient fejlécek -> valós képek + 4 új app kártya szekció
+- app/termekek/page.jsx — "Megnyitás" gomb /blog -> /szolgaltatasok
+- app/szolgaltatasok/page.jsx — 4 új kategória + colorMap bővítés + revalidate=3600 eltávolítva
+- public/{cimbi,edmund,aaronia,lumen}.jpg — új referencia képek
+
+**Hibakeresés — Vercel 500:**
+- Gyökér ok: új kategóriák color: 'teal'/'violet' nem volt a colorMap-ban -> colors.dot TypeError
+- Lokálisan 200, Vercelen 500 (streaming vs serverless különbség)
+- Fix: teal + violet hozzáadva colorMap-hoz (commit 43e732c)
+
+**Playwright audit:**
+- Kezdőlap ✅, Szolgáltatásaink ✅ (500->200), Portfolio ✅, Termékek ✅
+
+**Státusz:** ✅ Befejezve
