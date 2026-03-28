@@ -1,0 +1,142 @@
+{
+  "name": "Brunella Bookkeeping Reconciliation Scaffold",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Every Day 08:00",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [260, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "http://localhost:3000/api/v1/bookkeeping/status",
+        "options": {}
+      },
+      "id": "fetch-status",
+      "name": "Fetch Bookkeeping Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [500, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/bookkeeping/reconcile",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "task",
+              "value": "Match all PENDING bank transactions"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "reconcile",
+      "name": "Reconcile Pending Entries",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [760, 300]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://localhost:3000/api/v1/bookkeeping/status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ summary: { ...$node[\"Fetch Bookkeeping Status\"].json.summary, lastReconcile: $node[\"Reconcile Pending Entries\"].json.result ?? $node[\"Reconcile Pending Entries\"].json }, exceptions: $node[\"Fetch Bookkeeping Status\"].json.snapshot?.exceptions ?? [], timestamp: $now.toISO(), source: 'n8n' }) }}",
+        "options": {}
+      },
+      "id": "publish-snapshot",
+      "name": "Publish Bookkeeping Snapshot",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1020, 300]
+    }
+  ],
+  "connections": {
+    "Every Day 08:00": {
+      "main": [
+        [
+          {
+            "node": "Fetch Bookkeeping Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch Bookkeeping Status": {
+      "main": [
+        [
+          {
+            "node": "Reconcile Pending Entries",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reconcile Pending Entries": {
+      "main": [
+        [
+          {
+            "node": "Publish Bookkeeping Snapshot",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "bookkeeping",
+      "name": "bookkeeping"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n"
+    }
+  ],
+  "pinData": {},
+  "versionId": "wf2-bookkeeping-reconciliation-scaffold",
+  "meta": {
+    "project": "n8n_konyveles_pipeline_20260328",
+    "track": "bookkeeping automation",
+    "status": "draft"
+  }
+}

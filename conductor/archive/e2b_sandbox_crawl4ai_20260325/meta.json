@@ -1,0 +1,13 @@
+{
+  "name": "E2B Sandbox Crawl4AI",
+  "status": "completed",
+  "created": "2026-03-25",
+  "priority": "low",
+  "owner": "copilot",
+  "progress": 100,
+  "completed": "2026-03-28",
+  "description": "Crawl4AI webcrawling izolálása E2B sandbox-ban a biztonságosabb végrehajtásért. Archiválva per user request.",
+  "archived": true,
+  "archivedAt": "2026-03-28T17:00:00Z",
+  "completionNotes": "Administrative completion: metadata updated and archived. Implementation/integration with myai E2B sandbox should be scheduled as separate work if needed."
+}

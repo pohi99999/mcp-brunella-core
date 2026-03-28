@@ -1,0 +1,113 @@
+{
+  "trackName": "P-Sales20260327",
+  "type": "Platform / Application Development",
+  "priority": "HIGH",
+  "status": "archived",
+  "progress": 100,
+  "completedAt": "2026-03-28T19:00:00.000Z",
+  "updatedAt": "2026-03-28T20:25:00.000Z",
+  "goal": "Közös domain-core-ra épülő ingatlan- és iparterület-értékesítési platform létrehozása három szállítási modelllel: BAS enterprise dashboard modul, külön telepíthető standalone alkalmazás, és ahol praktikus, Cloudflare edge/backend megoldások.",
+  "createdAt": "2026-03-27T23:51:21.608Z",
+  "updatedAt": "2026-03-28T02:09:42.7963037Z",
+  "phases": [
+    {
+      "name": "Phase 0: Architektúra és szállítási modell",
+      "status": "completed",
+      "description": "Közös domain-core, enterprise integráció, standalone csomagolás és Cloudflare opciók meghatározása.",
+      "tasks": [
+        "[ ] Közös domain-core és agent szerepkörök",
+        "[ ] Három szállítási réteg felelősségi határai",
+        "[ ] Shared core és UI shell szétválasztása",
+        "[ ] Cloudflare edge/backend opciók"
+      ]
+    },
+    {
+      "name": "Phase 1: Enterprise dashboard integráció",
+      "status": "completed",
+      "description": "A BAS dashboard Enterprise részébe illeszkedő intake, research és strategy panel.",
+      "tasks": [
+        "[x] Enterprise navigation entry és panel helye",
+        "[x] Intake, checklist és státusz nézetek",
+        "[x] Kutatási riport és értékelési nézetek",
+        "[x] Stratégia és approval nézetek"
+      ]
+    },
+    {
+      "name": "Phase 2: Standalone alkalmazás",
+      "status": "active",
+      "description": "Külön telepíthető app shell, installálható PWA csomag, branding/onboarding és auth váz.",
+      "tasks": [
+        "[x] Különálló app shell és entrypoint",
+        "[x] PWA manifest, service worker és Docker image",
+        "[x] Saját branding és onboarding",
+        "[ ] Alap auth modell",
+        "[ ] Több-ügyfél / jövőbeli installálhatóság"
+      ]
+    },
+    {
+      "name": "Phase 3: Intake és felmérő ügynök",
+      "status": "pending",
+      "description": "Dokumentumfeltöltés, hiánylista és ingatlantípus-alapú ellenőrzés.",
+      "tasks": [
+        "[ ] Dokumentumfeltöltési folyam",
+        "[ ] Kötelező iratok generálása ingatlantípus szerint",
+        "[ ] Felmérő ügynök kérdező és ellenőrző logika",
+        "[ ] Hiánylista és teljességjelző"
+      ]
+    },
+    {
+      "name": "Phase 4: Kutató és értékelő ügynök",
+      "status": "pending",
+      "description": "Piaci összehasonlítás, értéktartomány és kutatási riport.",
+      "tasks": [
+        "[ ] Internetes kutatási források",
+        "[ ] Hasonló ingatlanok múltbeli eladásai",
+        "[ ] Értéktartomány és kockázati jelzések",
+        "[ ] Kutatási riport referenciákkal"
+      ]
+    },
+    {
+      "name": "Phase 5: Stratégia és akcióterv",
+      "status": "pending",
+      "description": "Értékesítési csatornák, kampányok és döntéshozói megkeresések megtervezése.",
+      "tasks": [
+        "[ ] Stratégia-tervező ügynök",
+        "[ ] Csatornaajánlat és teaser opciók",
+        "[ ] Döntéshozói és targetlista javaslat",
+        "[ ] Jóváhagyási kapu és összefoglaló"
+      ]
+    },
+    {
+      "name": "Phase 6: Értékesítési végrehajtás",
+      "status": "completed",
+      "description": "A jóváhagyott terv végrehajtási flow-ja, audit és visszajelzés modellje.",
+      "tasks": [
+        "[x] Jóváhagyott terv végrehajtási flow-ja",
+        "[x] Csatornánkénti státusz- és eredménykövetés",
+        "[x] Felhasználói visszajelzés és újratervezési pontok",
+        "[x] Záró riport és audit napló"
+      ]
+    },
+    {
+      "name": "Phase 7: Cloudflare opció",
+      "status": "completed",
+      "description": "R2, D1, Workers és az edge delivery / public standalone opció kiválasztva.",
+      "tasks": [
+        "[x] R2 dokumentumtárolás",
+        "[x] D1 metaadat és workflow state",
+        "[x] Workers edge API / auth / routing",
+        "[x] KV vagy Durable Objects, ha szükséges"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "Enterprise dashboard modul a BAS-on belül",
+    "Külön telepíthető standalone alkalmazás",
+    "Közös domain-core és agent workflow",
+    "Felmérő, kutató, stratégia-tervező és értékesítő ügynök",
+    "Piaci kutatási és értékelő riport",
+    "Jóváhagyott akcióterv és végrehajtási flow",
+    "Cloudflare-alapú edge/backend opció",
+    "Tesztelt és dokumentált track"
+  ]
+}

@@ -1,19 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-28T02:00:00.326Z
+**Utolso frissites:** 2026-03-28T20:34:34.880Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 134 total | 5 active | 4 completed | 119 archived
+**Stats:** 142 total | 5 active | 4 completed | 126 archived
 
 ---
 
 ## Tervezett Szalak (Proposed) (7)
-
-- [ ] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** [HIGH]
-  - **ID:** `n8n_konyveles_pipeline_20260328`
-  - **Progress:** 0%
-  - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
 
 - [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
   - **ID:** `cloudflare_workers_migration_20260226`
@@ -29,6 +24,11 @@
   - **ID:** `logistics_vertical_20260222`
   - **Progress:** 5%
   - Mappa: ./tracks/logistics_vertical_20260222/
+
+- [ ] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** [HIGH]
+  - **ID:** `n8n_konyveles_pipeline_20260328`
+  - **Progress:** 0%
+  - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
 
 - [ ] **OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)** [HIGH]
   - **ID:** `owl_agent_coordinator_20260321`
@@ -67,7 +67,7 @@
 
 - [ ] **P-Sales20260327** [HIGH]
   - **ID:** `P-Sales20260327`
-  - **Progress:** 65%
+  - **Progress:** 80%
   - Mappa: ./tracks/P-Sales20260327/
 
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
@@ -97,7 +97,7 @@
 
 ---
 
-## Archivalt (Archived) (119)
+## Archivalt (Archived) (126)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -112,7 +112,7 @@
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 - [x] **basic-test-task-structure-20260219** (N/A)
 
-... and 109 more archived tracks
+... and 116 more archived tracks
 
 ---
 

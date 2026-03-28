@@ -1,21 +1,50 @@
 import DatabaseConstructor, { Database } from 'better-sqlite3';
+import { mkdirSync } from 'fs';
+import path from 'path';
 import { logError } from '../utils/logger.js';
 import { BookkeepingTransaction, BankTransactionData, NavInvoiceData } from '../types/bookkeeping.d.js';
 
 let db: Database | null = null; // better-sqlite3 Database instance
+let dbPath: string | null = null;
+const DEFAULT_DB_PATH = 'data/bookkeeping.db';
+
+function openDB(dbFilePath: string): Database {
+    if (db) {
+        db.close();
+        db = null;
+        dbPath = null;
+    }
+
+    mkdirSync(path.dirname(dbFilePath), { recursive: true });
+    db = new DatabaseConstructor(dbFilePath);
+    db.exec(`
+        CREATE TABLE IF NOT EXISTS transactions (
+            id TEXT PRIMARY KEY,
+            source TEXT NOT NULL,
+            data TEXT NOT NULL,
+            status TEXT NOT NULL,
+            matchedInvoice TEXT
+        )
+    `);
+    dbPath = dbFilePath;
+    return db;
+}
+
+function ensureDB(dbFilePath: string = dbPath ?? DEFAULT_DB_PATH): Database {
+    if (db && dbPath === dbFilePath) {
+        return db;
+    }
+
+    if (db && dbPath !== dbFilePath) {
+        return openDB(dbFilePath);
+    }
+
+    return openDB(dbFilePath);
+}
 
 export function initDB(dbPath: string = 'data/bookkeeping.db') {
     try {
-        db = new DatabaseConstructor(dbPath);
-        db.exec(`
-            CREATE TABLE IF NOT EXISTS transactions (
-                id TEXT PRIMARY KEY,
-                source TEXT NOT NULL,
-                data TEXT NOT NULL,
-                status TEXT NOT NULL,
-                matchedInvoice TEXT
-            )
-        `);
+        openDB(dbPath);
     } catch (error) {
         logError("bookkeeping_db", "Failed to initialize database:", error);
         throw error;
@@ -24,8 +53,8 @@ export function initDB(dbPath: string = 'data/bookkeeping.db') {
 
 export function saveTransaction(tx: BookkeepingTransaction) {
     try {
-        if (!db) throw new Error('Database not initialized');
-        const stmt = db.prepare('INSERT OR REPLACE INTO transactions (id, source, data, status, matchedInvoice) VALUES (?, ?, ?, ?, ?)');
+        const database = ensureDB();
+        const stmt = database.prepare('INSERT OR REPLACE INTO transactions (id, source, data, status, matchedInvoice) VALUES (?, ?, ?, ?, ?)');
         stmt.run(tx.id, tx.source, JSON.stringify(tx.data), tx.status, tx.matchedInvoice || null);
     } catch (error) {
         logError("bookkeeping_db", `Failed to save transaction: ${tx.id}`, error);
@@ -35,8 +64,8 @@ export function saveTransaction(tx: BookkeepingTransaction) {
 
 export function getTransaction(id: string): BookkeepingTransaction | null {
     try {
-        if (!db) throw new Error('Database not initialized');
-        const stmt = db.prepare('SELECT * FROM transactions WHERE id = ?');
+        const database = ensureDB();
+        const stmt = database.prepare('SELECT * FROM transactions WHERE id = ?');
         const row = stmt.get(id) as Record<string, unknown> | null;
         if (!row) return null;
         return {
@@ -54,14 +83,14 @@ export function getTransaction(id: string): BookkeepingTransaction | null {
 
 export function getPendingTransactions(source?: string): BookkeepingTransaction[] {
     try {
-        if (!db) throw new Error('Database not initialized');
+        const database = ensureDB();
         let query = "SELECT * FROM transactions WHERE status = 'PENDING_MATCH'";
         const params: unknown[] = [];
         if (source) {
             query += ' AND source = ?';
             params.push(source);
         }
-        const rows = db.prepare(query).all(...params) as Record<string, unknown>[];
+        const rows = database.prepare(query).all(...params) as Record<string, unknown>[];
         return rows.map(row => ({
             id: String(row.id),
             source: String(row.source),
@@ -77,7 +106,7 @@ export function getPendingTransactions(source?: string): BookkeepingTransaction[
 
 export function updateTransaction(id: string, updates: Partial<BookkeepingTransaction>) {
     try {
-        if (!db) throw new Error('Database not initialized');
+        const database = ensureDB();
         const setClauses: string[] = [];
         const params: unknown[] = [];
 
@@ -95,7 +124,7 @@ export function updateTransaction(id: string, updates: Partial<BookkeepingTransa
         const query = `UPDATE transactions SET ${setClauses.join(', ')} WHERE id = ?`;
         params.push(id);
 
-        db.prepare(query).run(...params);
+        database.prepare(query).run(...params);
     } catch (error) {
         logError("bookkeeping_db", `Failed to update transaction: ${id}`, error);
         throw error;
@@ -104,8 +133,8 @@ export function updateTransaction(id: string, updates: Partial<BookkeepingTransa
 
 export function getAllTransactions(): BookkeepingTransaction[] {
     try {
-        if (!db) throw new Error('Database not initialized');
-        const rows = db.prepare('SELECT * FROM transactions').all() as Record<string, unknown>[];
+        const database = ensureDB();
+        const rows = database.prepare('SELECT * FROM transactions').all() as Record<string, unknown>[];
         return rows.map(row => ({
             id: String(row.id),
             source: String(row.source),

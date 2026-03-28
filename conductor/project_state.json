@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-28T01:00:00.307Z",
+  "lastUpdated": "2026-03-28T20:34:34.880Z",
   "tracks": [
     {
       "id": "brunella_function_matrix_20260325",
@@ -122,6 +122,29 @@
       "_isArchived": false
     },
     {
+      "id": "n8n_konyveles_pipeline_20260328",
+      "name": "n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu",
+      "status": "proposed",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-03-28",
+      "tags": [
+        "n8n",
+        "könyvelés",
+        "bank",
+        "KP",
+        "pénztár",
+        "Google Sheets",
+        "szamlazz.hu",
+        "pipeline"
+      ],
+      "dependencies": [
+        "konyveles_automatizalas"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\n8n_konyveles_pipeline_20260328",
+      "_isArchived": false
+    },
+    {
       "id": "owl_agent_coordinator_20260321",
       "name": "OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)",
       "status": "proposed",
@@ -138,7 +161,7 @@
       "name": "P-Sales20260327",
       "status": "active",
       "priority": "high",
-      "progress": 20,
+      "progress": 80,
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\P-Sales20260327",
@@ -486,6 +509,24 @@
       "_isArchived": true
     },
     {
+      "id": "brunella_function_matrix_20260325",
+      "name": "Brunella teljes funkció- és tulajdonságmátrix dokumentáció",
+      "status": "archived",
+      "priority": "critical",
+      "progress": 100,
+      "tags": [
+        "documentation",
+        "inventory",
+        "architecture",
+        "agents",
+        "mcp",
+        "feature-matrix"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\brunella_function_matrix_20260325",
+      "_isArchived": true
+    },
+    {
       "id": "campaign-generator-agent-20260225",
       "name": "Automata Kampány Generátor Ügynök és UI",
       "status": "archived",
@@ -740,6 +781,25 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_d1_kv_storage_20260221_archived_20260222",
+      "_isArchived": true
+    },
+    {
+      "id": "cloudflare_dns_zone_reconciliation_20260325",
+      "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "tags": [
+        "cloudflare",
+        "dns",
+        "domain",
+        "tunnel",
+        "ops"
+      ],
+      "dependencies": [
+        "cloudflare_full_optimization_20260325"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_dns_zone_reconciliation_20260325",
       "_isArchived": true
     },
     {
@@ -1060,6 +1120,19 @@
       "_isArchived": true
     },
     {
+      "id": "e2b_sandbox_crawl4ai_20260325",
+      "name": "E2B Sandbox Crawl4AI",
+      "status": "archived",
+      "priority": "low",
+      "progress": 100,
+      "created": "2026-03-25",
+      "completed": "2026-03-28",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\e2b_sandbox_crawl4ai_20260325",
+      "_isArchived": true
+    },
+    {
       "id": "enterprise_suite_master_20260216",
       "name": "Enterprise Suite Master - 14 Modulos Vállalati Irányító",
       "status": "archived",
@@ -1151,6 +1224,17 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\gemini_git_agent_20260212",
+      "_isArchived": true
+    },
+    {
+      "id": "goldeninteligencia20260327",
+      "name": "goldeninteligencia20260327",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\goldeninteligencia20260327",
       "_isArchived": true
     },
     {
@@ -1738,6 +1822,30 @@
       "_isArchived": true
     },
     {
+      "id": "owl_agent_coordinator_20260321",
+      "name": "OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-21",
+      "completed": "2026-03-28",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\owl_agent_coordinator_20260321",
+      "_isArchived": true
+    },
+    {
+      "id": "P-Sales20260327",
+      "name": "P-Sales20260327",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\P-Sales20260327",
+      "_isArchived": true
+    },
+    {
       "id": "paios_model_selector_ui_20260223",
       "name": "paios_model_selector_ui_20260223",
       "status": "archived",
@@ -2024,6 +2132,19 @@
       "_isArchived": true
     },
     {
+      "id": "robotkez_comet_upgrade_20260222",
+      "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-02-22",
+      "updated": "2026-03-23",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\robotkez_comet_upgrade_20260222",
+      "_isArchived": true
+    },
+    {
       "id": "robotkez_n8n_sandbox_edzesterv",
       "name": "Robotkéz n8n Sandbox és Edzésterv",
       "status": "archived",
@@ -2259,10 +2380,10 @@
     }
   ],
   "stats": {
-    "total": 134,
+    "total": 142,
     "active": 5,
     "completed": 4,
-    "archived": 119,
-    "proposed": 6
+    "archived": 126,
+    "proposed": 7
   }
 }
