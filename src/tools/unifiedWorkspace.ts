@@ -86,7 +86,7 @@ export class UnifiedWorkspaceClient {
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError('UnifiedWorkspace', `Failed to initialize: ${errorMsg}`);
-      throw new Error(`Google Workspace init failed: ${errorMsg}`);
+      throw new Error(`Google Workspace init failed: ${errorMsg}`, { cause: error });
     }
   }
 
@@ -234,14 +234,15 @@ export class UnifiedWorkspaceClient {
       logInfo('UnifiedWorkspace', `Sheet ${operation.operation}: ${operation.spreadsheetId}`);
 
       switch (operation.operation) {
-        case 'read':
+        case 'read': {
           const readResponse = await this.sheets.spreadsheets.values.get({
             spreadsheetId: operation.spreadsheetId,
             range: operation.range,
           });
           return readResponse.data.values || [];
+        }
 
-        case 'append':
+        case 'append': {
           const appendResponse = await this.sheets.spreadsheets.values.append({
             spreadsheetId: operation.spreadsheetId,
             range: operation.range,
@@ -251,8 +252,9 @@ export class UnifiedWorkspaceClient {
             },
           });
           return appendResponse.data;
+        }
 
-        case 'update':
+        case 'update': {
           const updateResponse = await this.sheets.spreadsheets.values.update({
             spreadsheetId: operation.spreadsheetId,
             range: operation.range,
@@ -262,9 +264,11 @@ export class UnifiedWorkspaceClient {
             },
           });
           return updateResponse.data;
+        }
 
-        default:
+        default: {
           throw new Error(`Unknown sheet operation: ${operation.operation}`);
+        }
       }
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);

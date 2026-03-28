@@ -47,6 +47,7 @@ import { InnovationBridgeWidget } from "@/components/dashboard/InnovationBridgeW
 import { DigitalHRWidget } from "@/components/dashboard/DigitalHRWidget";
 import { GrantHunterWidget } from "@/components/dashboard/GrantHunterWidget";
 import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
+import { BookkeepingWidget } from "@/components/dashboard/BookkeepingWidget";
 import { PropertyVisionaryWidget } from "@/components/dashboard/PropertyVisionaryWidget";
 import { LeadsMasterMonitor } from "@/components/dashboard/LeadsMasterMonitor";
 import { TrojanHorseCommandCenter } from "@/components/dashboard/TrojanHorseCommandCenter";
@@ -65,6 +66,7 @@ import { Crawl4AIPanel } from "@/components/dashboard/Crawl4AIPanel";
 import { UserPreferencesPanel } from "@/components/dashboard/UserPreferencesPanel";
 import LLMObservabilityPanel from "@/components/dashboard/LLMObservabilityPanel";
 import { CopilotCommanderPanel } from "@/components/dashboard/CopilotCommanderPanel";
+import { RemoteConsolePanel } from "@/components/dashboard/RemoteConsolePanel";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy( async () =>
@@ -173,6 +175,7 @@ export function initializeNavigation ()
     { id: "campaign-studio", label: "Kampány Stúdió", icon: DollarSign, component: <CampaignStudio /> },
     { id: "innovation-bridge", label: "Innovation Bridge", icon: Lightbulb, component: <InnovationBridgeWidget /> },
     { id: "invoice-sync", label: "Számla Szinkron", icon: Receipt, component: <InvoiceSyncWidget /> },
+    { id: "bookkeeping", label: "Könyvelés", icon: BarChart3, component: <BookkeepingWidget /> },
     { id: "lead-mining", label: "Lead Mining", icon: Target, component: <LeadMiningWidget /> },
     { id: "leads-master", label: "Leads Monitor", icon: DollarSign, component: <LeadsMasterMonitor /> },
     { id: "trojan-horse", label: "Trójai Faló", icon: ShieldAlert, component: <TrojanHorseCommandCenter /> },
@@ -199,6 +202,7 @@ export function initializeNavigation ()
     { id: "user-preferences", label: "Felhasználói Memória", icon: Database, component: <UserPreferencesPanel /> },
     { id: "llm-observability", label: "LLM Observability", icon: BarChart3, component: <LLMObservabilityPanel /> },
     { id: "copilot-commander", label: "Copilot Commander", icon: Terminal, component: <CopilotCommanderPanel /> },
+    { id: "remote-console", label: "Remote Layer", icon: Target, component: <RemoteConsolePanel /> },
   ];
 
   items.forEach( item => navigationRegistry.registerItem( item ) );
@@ -207,10 +211,10 @@ export function initializeNavigation ()
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode"] } );
   navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-commander", "assistant-blueprint", "phoenix", "management", "agent-diagnostics", "decomposer", "incubator", "knowledge", "memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "enterprise-analytics"] } );
-  navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "lead-mining", "marketwatcher", "inventory"] } );
+  navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "crawl4ai"] } );
   navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] } );
-  navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow"] } );
+  navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console"] } );
 
   logInfo( "NavigationRegistry", "Navigation Registry Initialized." );
 }

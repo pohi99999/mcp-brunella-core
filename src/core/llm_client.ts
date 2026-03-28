@@ -38,7 +38,7 @@ export const generateResponse: (
     provider: string = "ollama",
     modelName?: string,
   ): Promise<string> => {
-    let lastError: Error | null = null;
+    let lastError: Error | null;
 
     try {
       if (provider === "gemini") {

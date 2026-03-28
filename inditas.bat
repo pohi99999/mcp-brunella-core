@@ -180,63 +180,17 @@ if !ERRORLEVEL! EQU 0 (
 echo.
 
 :: =========================================================================
-:: [9/9] HEALTH CHECK + OSSZESITES
+:: [9/9] STARTUP SMOKE TEST
 :: =========================================================================
-echo  [9/9] Varakozas a szolgaltatasok indulasara (15 mp)...
-timeout /t 15 /nobreak >nul
-echo.
-echo  +--------------------------------------------------+
-echo  ^|  RENDSZER ALLAPOT                                ^|
-echo  +--------------------------------------------------+
-
-curl -s --max-time 3 http://localhost:11434/api/tags >nul 2>&1
-if !ERRORLEVEL! EQU 0 (echo  ^|  [OK] Ollama       http://localhost:11434  ^|) else (echo  ^|  [..] Ollama       indul / ellenorizd     ^|)
-
-curl -s --max-time 3 http://localhost:3001/api/ping >nul 2>&1
-if !ERRORLEVEL! EQU 0 (echo  ^|  [OK] AnythingLLM  http://localhost:3001   ^|) else (echo  ^|  [..] AnythingLLM  indul / ellenorizd     ^|)
-
-curl -s --max-time 3 http://localhost:8000/health >nul 2>&1
-if !ERRORLEVEL! EQU 0 (echo  ^|  [OK] Python API   http://localhost:8000   ^|) else (echo  ^|  [..] Python API   indul / ellenorizd     ^|)
-
-curl -s --max-time 3 http://localhost:3000/api/health >nul 2>&1
-if !ERRORLEVEL! EQU 0 (echo  ^|  [OK] Backend      http://localhost:3000   ^|) else (echo  ^|  [..] Backend      indul / ellenorizd     ^|)
-
-curl -s --max-time 3 http://localhost:5173 >nul 2>&1
-if !ERRORLEVEL! EQU 0 (echo  ^|  [OK] Dashboard    http://localhost:5173   ^|) else (echo  ^|  [..] Dashboard    indul / ellenorizd     ^|)
-
-echo  +--------------------------------------------------+
-echo.
-echo  Hasznos parancsok:
-echo    brunella chat          - Interaktiv chat
-echo    brunella agents        - Ugynoklistak
-echo    brunella conductor status - Projekt statusz
-echo    npm run test:fast      - Gyors tesztek
-echo.
-
-:: Bongeszo megnyitasa
-if /I not "%BRUNELLA_NO_BROWSER%"=="1" (
-    start http://localhost:5173
+echo  [9/9] Startup smoke test futtatasa...
+call npx tsx scripts/startup_smoke_test.ts
+if !ERRORLEVEL! EQU 0 (
+    echo    [OK] Minden szolgaltatas elerheto!
+) else (
+    echo    [!!] HIBA: Legalabb egy kritikus szolgaltatas nem elerheto!
 )
-
-echo  Nyomj Enter-t a launcher bezarasahoz...
-pause >nul
-endlocal
-exit /b 0
-
+echo.
 :: =========================================================================
-:: HELPER FUGGVENYEK
+:: INDITAS KESZ!
 :: =========================================================================
-
-:is_bridge_running
-tasklist /V /FI "IMAGENAME eq cmd.exe" 2>nul | findstr /I /C:"BAS | Windows Bridge" >nul
-if !ERRORLEVEL! EQU 0 exit /b 0
-powershell -NoProfile -Command "$p = Get-CimInstance Win32_Process | Where-Object { ($_.CommandLine -like '*wab_server.py*') -or ($_.CommandLine -like '*launch_windows_bridge_console.bat*') }; if ($p) { exit 0 } else { exit 1 }" >nul 2>&1
-exit /b !ERRORLEVEL!
-
-:is_dashboard_running
-curl -s --max-time 2 http://localhost:5173 >nul 2>&1
-if !ERRORLEVEL! EQU 0 exit /b 0
-tasklist /V /FI "IMAGENAME eq cmd.exe" 2>nul | findstr /I /C:"BAS | Dashboard UI :5173" >nul
-if !ERRORLEVEL! EQU 0 exit /b 0
-powershell -NoProfile -Command "$p = Get-CimInstance Win32_Process | Where-Object { ($_.CommandLine -like '*launch_dashboard_console.bat*') -or ($_.CommandLine -like '*vite src/dashboard*') }; if ($p) { exit 0 } else { exit 1 }" >nul 2>&1
-exit /b !ERRORLEVEL!
+echo  [OK] BAS rendszer inditasa befejezve.

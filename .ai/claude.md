@@ -2,11 +2,54 @@
 
 **Agent:** Claude Code (Anthropic)
 **Fájl:** `.ai/claude.md`
-**Utolsó frissítés:** 2026-03-21
+**Utolsó frissítés:** 2026-03-27
 
 ---
 
 ## 📋 LEGUTÓBBI MUNKAMENET
+
+### 2026-03-27 23:30 - Rendszer audit + Copilot integráció bővítés + RAG ellenőrzés ✅
+
+**Feladat:** Teljes rendszer audit (log rotáció, Ollama model fix, smoke teszt, Copilot integráció, RAG/memória ellenőrzés)
+
+**Érintett fájlok:**
+- `scripts/log_rotate.bat` — Létezik, sikeres futtatás (http.log 125MB, health.log 113MB archiválva, nullázva)
+- `scripts/setup_log_rotate_task.ps1` — ÚJ: Windows Task Scheduler regisztráló script (minden Hétfő 03:00)
+- `myai/tools/knowledge_integrator.py` — Ollama default model: `qwen2.5-coder:latest` → `llama3.1:8b` (3 helyen)
+- `scripts/copilot-dashboard.js` — 2 ÚJ domain: `bookkeeping` + `remote` (összesen 31 domain); `--domains` és `--help` frissítve
+- `.vscode/mcp.json` — ChromeDevTools duplikált `"command"` kulcs javítva
+
+**Eredmények:**
+- Log rotáció: ✅ http.log + health.log archiválva (21MB zip), heti automation beállítva
+- Ollama 404 javítva: ✅ knowledge_integrator mostantól `llama3.1:8b`-t használ alapból
+- Tesztek: ✅ 1748 PASS, 0 FAIL (előző session)
+- Health check: ✅ 6/6 szolgáltatás healthy (ollama, anythingllm, agents, mcp, python, cloudflare)
+- GraphRAG: ✅ 126 node, 170 él, 11 kognitív réteg aktív
+- GoldenDataset: ✅ 1431 minta
+- LanceDB: ✅ 6 tábla (memory, memory_v2/v3, tech_trends)
+- Copilot dashboard: ✅ bookkeeping + remote domain hozzáadva (BankAgent, MatchingAgent, /api/remote/*)
+
+**Fontos megfigyelések:**
+- GraphRAG `/cognitive/query` endpoint: strict entity extraction, egyszerű query-kre üres → normális; `/cognitive/enrich` működik jól
+- OrchestratorAgent nem regisztrált REST névvel (EnterpriseOrchestratorAgent működik)
+- Swarm: 1 colony (triad-default), forming státusz
+
+**Státusz:** ✅ Befejezve
+
+### 2026-03-27 22:53 - Bookkeeping fix + full fast suite ✅
+
+**Feladat:** A korábban talált bookkeeping/Phoenix regressziók javítása, majd a teljes `npm run test:fast` futás újraellenőrzése.
+
+**Érintett fájlok:**
+- `src/agents/BankAgent.ts`
+- `src/agents/MatchingAgent.ts`
+- `src/agents/NavAgent.ts`
+- `src/types/bookkeeping.d.ts`
+- `test/phoenixRecoveryLogic.test.ts`
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A GitHub szinkron már Windows PowerShellből sikeresen lefutott, a build és a smoke ellenőrzés zöld volt, és a teljes fast suite is exit code 0-val végzett.
 
 ### 2026-03-21 05:00 - GitHub Models gpt-4.1 + Ollama fallback javítás ✅
 

@@ -48,6 +48,7 @@ import { registerSecurityCommands } from "./cli/securityCommands.js";
 import { registerChromeAcpCommands } from "./cli/chromeAcpCommands.js";
 import { registerBrowserCopilotCommands } from "./cli/browserCopilotCommands.js";
 import { registerCrawl4aiCommands } from "./cli/crawl4aiCommands.js";
+import { registerBookkeepingCommands } from "./cli/bookkeepingCommands.js";
 import { registerMemoriaCommands } from "./cli/memoriaCommands.js";
 import { registerObservabilityCommands } from "./cli/observabilityCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
@@ -1804,6 +1805,7 @@ registerBrowserCopilotCommands(program);
 
 // Register Crawl4AI & Memoria commands (Phase 3 — kutatas.md integráció)
 registerCrawl4aiCommands(program);
+registerBookkeepingCommands(program);
 registerMemoriaCommands(program);
 registerObservabilityCommands(program);
 

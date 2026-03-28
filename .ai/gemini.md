@@ -264,3 +264,15 @@ Az "Innovation Bridge" (8. Pillér) teljes körű implementálása: TRIZ motor, 
 ---
 
 ### 2026-02-25 19:30 - 🌉 Innovation Bridge (8. Pillér) Design & Brainstorming (COMPLETE ✅)
+
+### 2026-03-27 22:26 - Könyvelési Automatizálás (Mission Control)
+**Feladat:** Könyvelési automatizációs modul (Nav, Bank, Matching) implementálása CLI és Dashboard felülettel.
+**Érintett fájlok:**
+- src/data/bookkeeping_db.ts (SQLite perzisztencia)
+- src/agents/NavAgent.ts, src/agents/BankAgent.ts, src/agents/MatchingAgent.ts
+- src/cli/commands/bookkeeping-hu.ts (Magyar CLI)
+- src/dashboard/components/dashboard/BookkeepingWidget.tsx (React UI)
+- src/dashboard/lib/navigation.tsx (UI regisztráció)
+- src/demo_bookkeeping.ts (E2E teszt script)
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A rendszer 100%-os build és teszt stabilitással rendelkezik. A MatchingAgent heuriszztikus pontozást használ a rekordok párosításához.

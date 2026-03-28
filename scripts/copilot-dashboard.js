@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+/* global console, fetch, process */
 /**
  * Copilot Dashboard Bridge v2 — FULL BAS System Control
  * 
@@ -855,6 +856,115 @@ const commands = {
   },
 
   // ╔══════════════════════════════════════════════╗
+  // ║  BOOKKEEPING (Könyvelés Automatizálás)        ║
+  // ╚══════════════════════════════════════════════╝
+  async 'bookkeeping'(sub, ...args) {
+    switch (sub) {
+      case 'match': {
+        // bookkeeping match <csvPath> — Bank CSV ↔ NAV számla párosítás
+        const csvPath = args[0];
+        if (!csvPath) return { ok: false, data: { error: 'Usage: bookkeeping match <csvPath>' } };
+        return POST('/api/v1/agents/MatchingAgent/execute', { task: `Match bank transactions from CSV: ${csvPath}` });
+      }
+      case 'bank': {
+        // bookkeeping bank <query> — BankAgent futtatása
+        const query = args.join(' ') || 'Get bank account summary';
+        return POST('/api/v1/agents/BankAgent/execute', { task: query });
+      }
+      case 'invoices': {
+        // bookkeeping invoices — NAV számlák listázása
+        return POST('/api/v1/agents/MatchingAgent/execute', { task: 'List recent invoices from database' });
+      }
+      case 'unmatched': {
+        // bookkeeping unmatched — Párosítatlan tételek
+        return POST('/api/v1/agents/MatchingAgent/execute', { task: 'Find unmatched transactions requiring manual review' });
+      }
+      case 'status': {
+        const [bank, matching] = await Promise.all([
+          POST('/api/v1/agents/BankAgent/execute', { task: 'status check' }),
+          POST('/api/v1/agents/MatchingAgent/execute', { task: 'status check' }),
+        ]);
+        return { ok: true, data: { BankAgent: bank.data, MatchingAgent: matching.data } };
+      }
+      default:
+        return { ok: true, data: {
+          domain: 'bookkeeping',
+          description: 'Könyvelés automatizálás — Bank CSV ↔ NAV számla párosítás',
+          commands: {
+            match:     'bookkeeping match <csvPath> — Bank CSV importálás + számla párosítás',
+            bank:      'bookkeeping bank [query]   — BankAgent közvetlen futtatás',
+            invoices:  'bookkeeping invoices       — NAV számlák listázása',
+            unmatched: 'bookkeeping unmatched      — Párosítatlan tételek keresése',
+            status:    'bookkeeping status         — BankAgent + MatchingAgent státusz',
+          }
+        }};
+    }
+  },
+
+  // ╔══════════════════════════════════════════════╗
+  // ║  REMOTE LAYER (Mobil / PAIOSZ Hídvonal)      ║
+  // ╚══════════════════════════════════════════════╝
+  async 'remote'(sub, ...args) {
+    switch (sub) {
+      case 'token': {
+        // remote token — Auth token generálás
+        const deviceId = args[0] || 'copilot-cli';
+        return POST('/api/v1/remote/auth/token', { deviceId, role: 'admin' });
+      }
+      case 'sessions': return GET('/api/v1/remote/sessions');
+      case 'session-create': {
+        // remote session-create <deviceName>
+        const deviceName = args.join(' ') || 'copilot';
+        return POST('/api/v1/remote/sessions', { deviceName, role: 'viewer' });
+      }
+      case 'session-close': {
+        const id = args[0];
+        if (!id) return { ok: false, data: { error: 'Usage: remote session-close <sessionId>' } };
+        return DELETE(`/api/v1/remote/sessions/${id}`);
+      }
+      case 'cmd': {
+        // remote cmd <sessionId> <command...>
+        const [sessionId, ...rest] = args;
+        if (!sessionId || rest.length === 0) return { ok: false, data: { error: 'Usage: remote cmd <sessionId> <command>' } };
+        return POST('/api/v1/remote/commands', { sessionId, command: rest.join(' '), source: 'copilot' });
+      }
+      case 'voice': {
+        // remote voice <sessionId> <text>
+        const [sessionId, ...rest] = args;
+        if (!sessionId) return { ok: false, data: { error: 'Usage: remote voice <sessionId> <text>' } };
+        return POST('/api/v1/remote/voice/input', { sessionId, text: rest.join(' ') });
+      }
+      case 'voice-intents': return GET('/api/v1/remote/voice/intents');
+      case 'discover': return GET('/api/v1/remote/discover');
+      case 'targets': return GET('/api/v1/remote/targets');
+      case 'paios-queue': return GET('/api/v1/remote/paios/queue');
+      case 'mobile-summary': {
+        const id = args[0];
+        if (!id) return { ok: false, data: { error: 'Usage: remote mobile-summary <sessionId>' } };
+        return GET(`/api/v1/remote/mobile/summary/${id}`);
+      }
+      default:
+        return { ok: true, data: {
+          domain: 'remote',
+          description: 'Remote Layer — Mobil/PAIOSZ hídvonal, szessions, hangparancsok',
+          commands: {
+            token:          'remote token [deviceId]            — Auth token generálás',
+            sessions:       'remote sessions                    — Aktív szessions listázása',
+            'session-create':'remote session-create [deviceName] — Új szession',
+            'session-close':'remote session-close <id>          — Szession lezárása',
+            cmd:            'remote cmd <sessionId> <command>   — Parancs küldése',
+            voice:          'remote voice <sessionId> <text>    — Hangparancs küldése',
+            'voice-intents':'remote voice-intents               — Elérhető hangintenciók',
+            discover:       'remote discover                    — MCP szerverek felfedezése',
+            targets:        'remote targets                     — Felfedezett célpontok',
+            'paios-queue':  'remote paios-queue                 — PAIOSZ művelet sor státusz',
+            'mobile-summary':'remote mobile-summary <sessionId> — Mobil összefoglaló',
+          }
+        }};
+    }
+  },
+
+  // ╔══════════════════════════════════════════════╗
   // ║  DOMAINS LIST                                ║
   // ╚══════════════════════════════════════════════╝
   async '--domains'() {
@@ -889,7 +999,9 @@ const commands = {
         'tests       — Test scheduler (run/status)',
         'pipeline    — Code pipeline (generate)',
         'workflow    — Workflow engine (list/status)',
-        'fleet       — Agent fleet (status/agents)',
+        'fleet        — Agent fleet (status/agents)',
+        'bookkeeping — Bank CSV ↔ NAV számla párosítás (match/bank/invoices/unmatched/status)',
+        'remote      — Mobil/PAIOSZ hídvonal (token/sessions/cmd/voice/discover)',
       ]
     }};
   },
@@ -912,7 +1024,7 @@ const commands = {
           llm_providers: 6,
           databases: 6,
           python_endpoints: 35,
-          domains: 29
+          domains: 31
         },
         usage: 'node scripts/copilot-dashboard.js <domain> <action> [args...]',
         quickstart: [

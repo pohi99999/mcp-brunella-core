@@ -1,13 +1,13 @@
-import { BookkeepingTransaction, BankTransactionData, NavInvoiceData } from '../types/bookkeeping.d.js';
+import DatabaseConstructor, { Database } from 'better-sqlite3';
 import { logError } from '../utils/logger.js';
-import { Database } from 'better-sqlite3';
+import { BookkeepingTransaction, BankTransactionData, NavInvoiceData } from '../types/bookkeeping.d.js';
+
 let db: Database | null = null; // better-sqlite3 Database instance
 
 export function initDB(dbPath: string = 'data/bookkeeping.db') {
     try {
-        const Database = require('better-sqlite3');
-        db = new Database(dbPath);
-        (db as any).exec(`
+        db = new DatabaseConstructor(dbPath);
+        db.exec(`
             CREATE TABLE IF NOT EXISTS transactions (
                 id TEXT PRIMARY KEY,
                 source TEXT NOT NULL,

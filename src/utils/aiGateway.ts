@@ -25,6 +25,7 @@ const CF_GATEWAY_ID = process.env.CF_GATEWAY_ID || "brunella-gateway";
 const CF_API_TOKEN = process.env.CF_AI_API_TOKEN || process.env.CF_API_TOKEN || process.env.CF_TOKEN;
 const OLLAMA_BASE_URL = process.env.OLLAMA_BASE_URL || "http://127.0.0.1:11434";
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || "llama3.1:8b";
+const OLLAMA_EMBEDDING_TIMEOUT_MS = parseInt(process.env.OLLAMA_EMBEDDING_TIMEOUT_MS || process.env.EMBEDDING_TIMEOUT_MS || "5000", 10);
 const CF_MODEL = process.env.CF_MODEL || "@cf/meta/llama-3.1-8b-instruct";
 
 // ============================================================================
@@ -164,7 +165,7 @@ export class AIGatewayClient {
       const response = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        signal: AbortSignal.timeout(5000),
+        signal: AbortSignal.timeout(OLLAMA_EMBEDDING_TIMEOUT_MS),
         body: JSON.stringify({
           model: options?.model || "nomic-embed-text",
           prompt: text.slice(0, 8000),

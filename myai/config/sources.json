@@ -55,6 +55,51 @@
       "selector": "article.paper-card",
       "extractFields": ["title", "abstract", "authors", "arxiv_url"],
       "keywords": ["LLM", "Fine-tuning", "Embeddings", "RAG"]
+    },
+    {
+      "name": "Apify Google Search",
+      "source": "apify_google",
+      "type": "apify",
+      "actor_id": "apify/google-search-scraper",
+      "query": "AI agent systems 2026",
+      "limit": 20,
+      "enabled": true
+    },
+    {
+      "name": "Apify LinkedIn Profile",
+      "source": "apify_linkedin",
+      "type": "apify",
+      "actor_id": "apify/linkedin-profile-scraper",
+      "query": "https://www.linkedin.com/in/satyanadella/",
+      "limit": 5,
+      "enabled": true
+    },
+    {
+      "name": "Apify Amazon Product",
+      "source": "apify_amazon",
+      "type": "apify",
+      "actor_id": "apify/amazon-product-scraper",
+      "query": "B0CGLV3V2S",
+      "limit": 5,
+      "enabled": true
+    },
+    {
+      "name": "Apify Twitter User",
+      "source": "apify_twitter",
+      "type": "apify",
+      "actor_id": "apify/twitter-user-scraper",
+      "query": "@OpenAI",
+      "limit": 5,
+      "enabled": true
+    },
+    {
+      "name": "Apify Generic Actor",
+      "source": "apify_generic",
+      "type": "apify",
+      "actor_id": "apify/actor-template",
+      "query": "custom input",
+      "limit": 5,
+      "enabled": false
     }
   ],
   "globalKeywords": [

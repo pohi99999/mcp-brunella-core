@@ -281,11 +281,10 @@ async function executeNode(node: DAGNode, context: DAGContext, executor: DAGExec
     }
 
     // AGENT node execution
-    let output: unknown;
     if (typeof executor.copilotAgentExecutionHook === 'function') {
       executor.copilotAgentExecutionHook({ node, context, phase: 'before' });
     }
-    output = await withTimeout(executor.executeAgent(node, context), node.timeoutMs);
+    const output = await withTimeout(executor.executeAgent(node, context), node.timeoutMs);
     if (typeof executor.copilotAgentExecutionHook === 'function') {
       executor.copilotAgentExecutionHook({ node, context, phase: 'after', output });
     }

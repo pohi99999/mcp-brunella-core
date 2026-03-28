@@ -312,7 +312,8 @@ export class FinancialGuardAgent extends BaseAgent {
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError(this.name, `PDF extraction failed: ${errorMsg}`);
-      throw new Error(`Failed to extract invoice from PDF: ${errorMsg}`);
+      const cause = error instanceof Error ? error : undefined;
+      throw new Error(`Failed to extract invoice from PDF: ${errorMsg}`, { cause });
     }
   }
 
@@ -351,7 +352,8 @@ except Exception as e:
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError(this.name, `Python OCR worker failed: ${errorMsg}`);
-      throw new Error(`OCR processing failed: ${errorMsg}`);
+      const cause = error instanceof Error ? error : undefined;
+      throw new Error(`OCR processing failed: ${errorMsg}`, { cause });
     }
   }
 

@@ -50,10 +50,9 @@
       "role": "Research & Intelligence — Deep Web Scraper",
       "description": "Apify platform-alapú professzionális scraping: Google, LinkedIn, e-commerce, trendek",
       "triggers": [
-        "apifyscraping",
-        "apifyscrapingagent"
+        "scrape", "google", "linkedin", "leads", "ecommerce", "apify"
       ],
-      "priority": 1
+      "priority": 4
     },
     {
       "name": "Architect",

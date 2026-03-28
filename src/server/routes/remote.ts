@@ -1,19 +1,3 @@
-/**
- * Remote Layer API Routes
- * Phase 2: Discovery, Capability & Auth
- *
- * Endpoints:
- *   GET  /api/v1/remote/targets          — List available MCP/agent targets
- *   POST /api/v1/remote/sessions         — Create a new remote session
- *   GET  /api/v1/remote/sessions/:id     — Get session details
- *   DELETE /api/v1/remote/sessions/:id   — Close / deactivate a session
- *   GET  /api/v1/remote/sessions         — List active sessions (for user)
- *   POST /api/v1/remote/commands         — Send a command in a session
- *   GET  /api/v1/remote/commands/:id     — Get command status
- *   POST /api/v1/remote/auth/token       — Issue a remote access token
- *   GET  /api/v1/remote/discover         — MCP server discovery info
- */
-
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import { logInfo, logError } from '../../utils/logger.js';
@@ -47,7 +31,7 @@ import type {
 } from '../../core/types/remote.js';
 import type { PaiosAction } from '../../core/paiosRemoteIntegration.js';
 
-export function createRemoteRouter(): Router {
+export function createRemoteRoutes(): Router {
   const router = Router();
 
   // ── Auth ───────────────────────────────────────────────────────────────────
@@ -363,9 +347,9 @@ export function createRemoteRouter(): Router {
   // ── Phase 3: PAIOS ─────────────────────────────────────────────────────────
 
   /**
-   * POST /paios/action
-   * Body: { sessionId: string, action: PaiosAction }
-   */
+  * POST /paios/action
+  * Body: { sessionId: string, action: PaiosAction }
+  */
   router.post('/paios/action', requireRemoteAuth, (req, res) => {
     const { sessionId, action } = req.body as { sessionId?: string; action?: PaiosAction };
     if (!sessionId || !action || !action.actionId || !action.type) {

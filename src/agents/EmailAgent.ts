@@ -1,5 +1,7 @@
 import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { saveTransaction } from '../data/bookkeeping_db.js';
+import { BookkeepingTransaction, NavInvoiceData, TransactionStatus } from '../types/bookkeeping.d.js';
 import fs from 'fs/promises';
 import path from 'path';
 import { fetchEmailsAsEml, fetchAndExtractAttachments } from '../connectors/imapConnector.js';
@@ -9,11 +11,12 @@ import { downloadFilesFromFolder } from '../connectors/gdriveConnector.js';
  * EmailAgent
  * - Feladata: IMAP/GDrive figyelés (PDF számlák letöltése) és egyedi azonosító hozzárendelése
  * - Implementáció: ha nincsenek külső hitelesítések, helyi minta fájlokat ad vissza
+ * - Mentési cél: bookkeeping_db.ts
  */
 export class EmailAgent implements IAgent {
   name = 'EmailAgent';
   role = 'Email/Drive watcher - PDF collector';
-  description = 'Letölti a PDF számlákat IMAP/GDrive forrásból és menti a data/invoices/ alá';
+  description = 'Letölti a PDF számlákat IMAP/GDrive forrásból és menti a bookkeeping_db-be';
   capabilities = ['email_fetch', 'pdf_store', 'id_assign'];
 
   async initialize(): Promise<void> {
@@ -33,20 +36,6 @@ export class EmailAgent implements IAgent {
       logError(this.name, `listLocalSamples failed: ${String(e)}`);
       return [];
     }
-  }
-
-  // Placeholder for IMAP fetch implementation
-  private async fetchFromImap(): Promise<Array<{ id: string; filename: string; path: string }>> {
-    // Intended implementation: connect to IMAP, search unseen, download PDF attachments
-    logInfo(this.name, 'fetchFromImap: not implemented (placeholder)');
-    return [];
-  }
-
-  // Placeholder for Google Drive fetch implementation
-  private async fetchFromGDrive(): Promise<Array<{ id: string; filename: string; path: string }>> {
-    // Intended implementation: use service account to list files in configured folder and download PDFs
-    logInfo(this.name, 'fetchFromGDrive: not implemented (placeholder)');
-    return [];
   }
 
   // Simple parser for our sample invoice placeholders (text files)
@@ -78,7 +67,6 @@ export class EmailAgent implements IAgent {
     try {
       logInfo(this.name, `execute: ${task}`);
 
-      // If IMAP/GDRIVE envs are set, indicate that integration is required (placeholder)
       const imapHost = process.env.IMAP_HOST;
       const gdriveEnabled = process.env.GDRIVE_SERVICE_ACCOUNT !== undefined || process.env.GDRIVE_FOLDER_ID;
 
@@ -111,32 +99,51 @@ export class EmailAgent implements IAgent {
         }
       }
 
-      if (collectedFiles.length > 0) {
-        logInfo(this.name, `Collected ${collectedFiles.length} files from external connectors`);
-        // Parse any text placeholders among them
-        const parsed: Array<Record<string, unknown>> = [];
-        for (const f of collectedFiles) {
-          if (f.filename.toLowerCase().endsWith('.txt')) {
-            const p = await this.parseInvoiceText(f.path);
-            if (p) parsed.push(p);
+      let finals: Array<{ filename: string; path: string }> = collectedFiles;
+      if (finals.length === 0) {
+        // Fallback: use local sample files
+        const localSamples = await this.listLocalSamples();
+        finals = localSamples;
+        logInfo(this.name, `No external files collected, using ${finals.length} local samples.`);
+      }
+
+      const parsedEntries: Array<any> = [];
+      for (const f of finals) {
+        if (f.filename.toLowerCase().endsWith('.txt')) {
+          const data = await this.parseInvoiceText(f.path);
+          if (data && data.id) {
+            const tx: BookkeepingTransaction = {
+              id: `email_${data.id}`,
+              source: this.name,
+              data: {
+                invoiceNumber: data.id,
+                amount: data.gross,
+                partner: data.partner,
+                issueDate: data.issueDate
+              } as any,
+              status: 'PENDING_MATCH' as TransactionStatus
+            };
+            
+            try {
+              saveTransaction(tx);
+              parsedEntries.push(data);
+              logInfo(this.name, `Saved email/drive invoice ${data.id} to DB`);
+            } catch (dbErr) {
+              logError(this.name, `DB Save error for ${f.filename}: ${String(dbErr)}`);
+            }
           }
         }
-        return { status: 'success', data: { files: collectedFiles, parsed }, metadata: { collected: collectedFiles.length, parsed: parsed.length } };
       }
 
-      // Fallback: return local sample files for Discovery and try to parse text placeholders
-      const files = await this.listLocalSamples();
-      logInfo(this.name, `Found ${files.length} local sample files`);
-
-      const parsed: Array<Record<string, unknown>> = [];
-      for (const f of files) {
-        if (f.filename.toLowerCase().endsWith('.txt')) {
-          const p = await this.parseInvoiceText(f.path);
-          if (p) parsed.push(p);
-        }
-      }
-
-      return { status: 'success', data: { files, parsed }, metadata: { filesFound: files.length, parsed: parsed.length } };
+      return { 
+        status: 'success', 
+        data: { files: finals, parsed: parsedEntries }, 
+        metadata: { 
+          source: collectedFiles.length > 0 ? 'external' : 'local_samples',
+          totalFiles: finals.length, 
+          savedEntries: parsedEntries.length 
+        } 
+      };
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError(this.name, `execute error: ${error}`);

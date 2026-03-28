@@ -207,7 +207,7 @@ export class MCPFilesystemServer {
         ]
       };
     } catch (error: any) {
-      throw new Error(`Failed to read file: ${error.message}`);
+      throw new Error(`Failed to read file: ${error.message}`, { cause: error });
     }
   }
 
@@ -253,7 +253,7 @@ export class MCPFilesystemServer {
         ]
       };
     } catch (error: any) {
-      throw new Error(`Failed to write file: ${error.message}`);
+      throw new Error(`Failed to write file: ${error.message}`, { cause: error });
     }
   }
 
@@ -316,7 +316,7 @@ export class MCPFilesystemServer {
         ]
       };
     } catch (error: any) {
-      throw new Error(`Failed to list directory: ${error.message}`);
+      throw new Error(`Failed to list directory: ${error.message}`, { cause: error });
     }
   }
 
@@ -363,7 +363,7 @@ export class MCPFilesystemServer {
         ]
       };
     } catch (error: any) {
-      throw new Error(`Failed to search files: ${error.message}`);
+      throw new Error(`Failed to search files: ${error.message}`, { cause: error });
     }
   }
 

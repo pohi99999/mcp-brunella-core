@@ -3,7 +3,6 @@
 // Zone IV: Dual Storage (LanceDB + JSONL backup).
 // Zone V: Vector Embeddings via Ollama nomic-embed-text model.
 
-import * as lancedb from "@lancedb/lancedb";
 import fs from "fs/promises";
 import path from "path";
 import { logInfo, logError, logWarn } from "./logger.js";
@@ -12,6 +11,43 @@ import { vectorizeClient } from "./vectorize.js";
 
 const DB_PATH = "./data/brunella_lancedb";
 const HARVEST_BACKUP_PATH = "./logs/harvest_backup.jsonl";
+
+let _lancedbModule: any = null;
+let _lancedbConnected: any = null;
+
+async function loadLanceDBModule(): Promise<any | null> {
+  if (_lancedbModule) return _lancedbModule;
+  try {
+    _lancedbModule = await import("@lancedb/lancedb");
+    logInfo("RAG", "LanceDB module loaded dynamically.");
+    return _lancedbModule;
+  } catch (e: unknown) {
+    logWarn("RAG", `LanceDB module not available: ${e instanceof Error ? e.message : String(e)}`);
+    _lancedbModule = null;
+    return null;
+  }
+}
+
+async function connectToLanceDB(): Promise<any | null> {
+  if (_lancedbConnected) return _lancedbConnected;
+  const mod = await loadLanceDBModule();
+  if (!mod) return null;
+  try {
+    const connector = mod.connect ?? mod.default?.connect;
+    if (typeof connector !== "function") {
+      logError("RAG", "@lancedb/lancedb module does not expose a connect() function. LanceDB disabled.");
+      _lancedbConnected = null;
+      return null;
+    }
+    _lancedbConnected = await connector(DB_PATH);
+    logInfo("RAG", "Connected to LanceDB.");
+    return _lancedbConnected;
+  } catch (e: unknown) {
+    logError("RAG", `Failed to connect to LanceDB: ${e instanceof Error ? e.message : String(e)}`);
+    _lancedbConnected = null;
+    return null;
+  }
+}
 
 // Ollama embedding configuration (dual-index transition)
 const PRIMARY_EMBEDDING_MODEL =
@@ -130,22 +166,47 @@ export class HybridMemory {
   }
 
   private async addDocumentToTable(
-    db: lancedb.Connection,
+    db: any,
     tableNames: string[],
     tableName: string,
     record: Record<string, unknown>,
   ): Promise<void> {
     if (tableNames.includes(tableName)) {
       const table = await db.openTable(tableName);
-      await table.add([record]);
-      return;
+      try {
+        await table.add([record]);
+        return;
+      } catch (e: any) {
+        const msg = e instanceof Error ? e.message : String(e);
+        logWarn("RAG", `Failed to add to table ${tableName}: ${msg}. Attempting to recreate table with new schema.`);
+        try {
+          if (typeof db.deleteTable === "function") {
+            await db.deleteTable(tableName);
+            logInfo("RAG", `Deleted table ${tableName} to recreate schema.`);
+          } else if (typeof db.dropTable === "function") {
+            await db.dropTable(tableName);
+            logInfo("RAG", `Dropped table ${tableName} to recreate schema.`);
+          } else {
+            logWarn("RAG", "DB does not support deleteTable/dropTable; attempting createTable which may fail if table exists.");
+          }
+        } catch (ee: any) {
+          logWarn("RAG", `Error deleting table ${tableName}: ${ee?.message ?? String(ee)}`);
+        }
+        try {
+          await db.createTable(tableName, [record]);
+          return;
+        } catch (ee: any) {
+          logError("RAG", `Failed to recreate table ${tableName}: ${ee?.message ?? String(ee)}`);
+          throw e;
+        }
+      }
     }
 
     await db.createTable(tableName, [record]);
   }
 
   private async searchTable(
-    db: lancedb.Connection,
+    db: any,
     tableName: string,
     query: string,
     limit: number,
@@ -177,7 +238,7 @@ export class HybridMemory {
 
     for await (const batch of table.query().limit(limit * 3)) {
       const textCol = batch.getChild("text");
-      const pathCol = batch.schema.fields.find((f) => f.name === "path")
+      const pathCol = (batch.schema.fields as Array<{ name?: string }>).find((f) => f.name === "path")
         ? batch.getChild("path")
         : null;
       const n = batch.numRows;
@@ -193,11 +254,55 @@ export class HybridMemory {
       }
     }
 
+    // Fallback: some LanceDB table implementations expose row arrays via toArray()/query().toArray() or simple toArray
+    if (results.length === 0) {
+      try {
+        // try table.toArray()
+        if (typeof (table as any).toArray === "function") {
+          const rows = await (table as any).toArray();
+          for (const r of rows) {
+            const text = String(r?.text ?? r?.get?.("text") ?? "");
+            const pathVal = r?.path ?? (typeof r?.get === "function" ? r.get("path") : undefined);
+            if (text.toLowerCase().includes(q)) {
+              results.push({ text, path: pathVal });
+              if (results.length >= limit) return results;
+            }
+          }
+        } else if (typeof table.query === "function" && typeof (table.query() as any).toArray === "function") {
+          const rows = await (table.query() as any).toArray();
+          for (const r of rows) {
+            const text = String(r?.text ?? "");
+            const pathVal = r?.path;
+            if (text.toLowerCase().includes(q)) {
+              results.push({ text, path: pathVal });
+              if (results.length >= limit) return results;
+            }
+          }
+        } else if (typeof (table as any).getRows === "function") {
+          const rows = await (table as any).getRows();
+          for (const r of rows) {
+            const text = String(r?.text ?? "");
+            const pathVal = r?.path;
+            if (text.toLowerCase().includes(q)) {
+              results.push({ text, path: pathVal });
+              if (results.length >= limit) return results;
+            }
+          }
+        }
+      } catch (ee: any) {
+        logWarn('RAG', `Fallback table enumeration failed: ${ee?.message ?? String(ee)}`);
+      }
+    }
+
     return results;
   }
 
   async addDocument(content: string, metadata: object) {
-    const db = await lancedb.connect(this.dbPath);
+    const db = await connectToLanceDB();
+    if (!db) {
+      logWarn('RAG', 'LanceDB not available; skipping local index write.');
+      return;
+    }
     const tableNames = await db.tableNames();
 
     const createdAt = new Date().toISOString();
@@ -248,7 +353,11 @@ export class HybridMemory {
 
   async getTableCount(): Promise<number> {
     try {
-      const db = await lancedb.connect(this.dbPath);
+      const db = await connectToLanceDB();
+      if (!db) {
+        logWarn('RAG', 'LanceDB not available; getTableCount() returning 0.');
+        return 0;
+      }
       const tableNames = await db.tableNames();
 
       const selectedTable = tableNames.includes(
@@ -271,7 +380,11 @@ export class HybridMemory {
     limit = 20,
   ): Promise<Array<{ text: string; path?: string; score?: number }>> {
     try {
-      const db = await lancedb.connect(this.dbPath);
+      const db = await connectToLanceDB();
+      if (!db) {
+        logWarn('RAG', 'LanceDB not available; search() returning empty results.');
+        return [];
+      }
       const tableNames = await db.tableNames();
       if (tableNames.length === 0) return [];
 
