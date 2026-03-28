@@ -1,83 +1,186 @@
 import { IAgent, AgentResponse } from './types.js';
-import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import type { AgentContext, AgentResult } from './BaseAgent.js';
+import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
 import { getPendingTransactions, updateTransaction } from '../data/bookkeeping_db.js';
-import { findFuzzyMatch } from './matcher.js';
+import type { BankTransactionData, BookkeepingTransaction, NavInvoiceData } from '../types/bookkeeping.d.js';
+
+type MatchableInvoice = NavInvoiceData & {
+  id?: string;
+  issueDate?: string;
+  originalTransaction?: BookkeepingTransaction;
+};
+
+interface MatchResult {
+  invoice: MatchableInvoice;
+  confidence: number;
+  type: 'HARD_MATCH' | 'FUZZY_MATCH';
+}
+
+type BankMatchInput = BankTransactionData & { id?: string };
+
+function isRecord(value: unknown): value is Record<string, unknown> {
+  return typeof value === 'object' && value !== null;
+}
 
 /**
  * MatchingAgent
- * - Queries the DB for bank transactions and invoices
- * - Uses the fuzzy matcher to suggest pairings
- * - Updates transaction status in DB
+ * Reconciles bank transactions against NAV and email invoices.
  */
 export class MatchingAgent implements IAgent {
   name = 'MatchingAgent';
-  role = 'Match bank transactions with multi-source invoices';
-  description = 'Uses heuristic scoring to reconcile bank statements with NAV and Email invoices.';
-  capabilities = ['reconciliation', 'fuzzy-matching', 'bookkeeping'];
+  role = 'Match bank transactions with invoices';
+  description = 'Uses reference-number matching to reconcile bank statements with NAV and email invoices.';
+  capabilities = ['reconciliation', 'matching', 'bookkeeping'];
 
-  async execute(task: string): Promise<AgentResponse> {
-    setAgentStatus(this.name, 'working', task.slice(0, 50));
+  private toResponse(result: AgentResult): AgentResponse {
+    return {
+      success: result.success,
+      status: result.success ? 'success' : 'error',
+      message: result.message,
+      data: result.data,
+      error: result.success ? undefined : result.message,
+    };
+  }
+
+  private isBankTransactionData(data: unknown): data is BankTransactionData {
+    if (!isRecord(data)) {
+      return false;
+    }
+
+    return (
+      typeof data.date === 'string' &&
+      typeof data.partner === 'string' &&
+      typeof data.amount === 'number' &&
+      typeof data.reference === 'string'
+    );
+  }
+
+  private isInvoiceData(data: unknown): data is NavInvoiceData & { issueDate?: string } {
+    if (!isRecord(data)) {
+      return false;
+    }
+
+    return (
+      typeof data.invoiceNumber === 'string' &&
+      typeof data.partner === 'string' &&
+      typeof data.amount === 'number' &&
+      (data.issueDate === undefined || typeof data.issueDate === 'string')
+    );
+  }
+
+  private toBankTx(tx: BookkeepingTransaction): BankMatchInput | null {
+    if (!this.isBankTransactionData(tx.data)) {
+      return null;
+    }
+
+    return {
+      id: tx.id,
+      date: tx.data.date,
+      partner: tx.data.partner,
+      amount: tx.data.amount,
+      reference: tx.data.reference,
+    };
+  }
+
+  private toInvoice(tx: BookkeepingTransaction): MatchableInvoice | null {
+    if (!this.isInvoiceData(tx.data)) {
+      return null;
+    }
+
+    return {
+      id: tx.id,
+      invoiceNumber: tx.data.invoiceNumber,
+      partner: tx.data.partner,
+      amount: tx.data.amount,
+      issueDate: tx.data.issueDate ?? '',
+      originalTransaction: tx,
+    };
+  }
+
+  findMatch(bankTx: BankMatchInput, pendingInvoices: MatchableInvoice[]): MatchResult | null {
+    const reference = bankTx.reference?.trim();
+    if (!reference) {
+      return null;
+    }
+
+    for (const invoice of pendingInvoices) {
+      if (reference.includes(invoice.invoiceNumber) && bankTx.amount === invoice.amount) {
+        return {
+          invoice,
+          confidence: 100,
+          type: 'HARD_MATCH',
+        };
+      }
+    }
+
+    return null;
+  }
+
+  async executeTask(context: AgentContext): Promise<AgentResult> {
     try {
-      // 1. Fetch data from DB
-      const pendingBank = getPendingTransactions('bank_tx');
-      const pendingNav = getPendingTransactions('nav_invoice');
-      const pendingEmail = getPendingTransactions('email_invoice');
-      
-      const invoices = [...pendingNav, ...pendingEmail].map(inv => ({
-        invoiceNumber: (inv.data as any).invoiceNumber,
-        partner: (inv.data as any).partner,
-        amount: Number((inv.data as any).amount),
-        issueDate: (inv.data as any).issueDate,
-        originalTransaction: inv
-      }));
+      const pendingBank = getPendingTransactions('BankAgent');
+      const pendingNav = getPendingTransactions('NAV');
+      const pendingEmail = getPendingTransactions('EmailAgent');
+      const invoices = [...pendingNav, ...pendingEmail]
+        .map((tx) => this.toInvoice(tx))
+        .filter((invoice): invoice is MatchableInvoice => invoice !== null);
 
-      logInfo(this.name, `Comparing ${pendingBank.length} bank transactions against ${invoices.length} potential invoices...`);
+      logInfo(this.name, `Comparing ${pendingBank.length} bank transactions against ${invoices.length} invoices...`);
 
       let matched = 0;
       let manual = 0;
 
       for (const tx of pendingBank) {
-        // Standardize bank transaction for matcher
-        const bTx = {
-          id: tx.id,
-          amount: Number((tx.data as any).amount),
-          date: (tx.data as any).date,
-          partner: (tx.data as any).partner,
-          reference: (tx.data as any).reference
-        };
+        const bankTx = this.toBankTx(tx);
+        if (!bankTx) {
+          logWarn(this.name, 'Skipping bank transaction due to missing data:', tx.id);
+          updateTransaction(tx.id, { status: 'ERROR' });
+          continue;
+        }
 
-        const result = findFuzzyMatch(bTx, invoices);
-        logInfo(this.name, `Tx ${bTx.id} (${bTx.amount}) result: ${result.matchType} (Score: ${result.confidence})`);
-        if (result.matchType === 'EXACT' || result.matchType === 'FUZZY') {
-          // Update bank transaction as COMPLETED
-          updateTransaction(tx.id, { 
-            status: 'COMPLETED', 
-            matchedInvoice: result.invoice!.invoiceNumber 
+        const match = this.findMatch(bankTx, invoices);
+        if (match) {
+          updateTransaction(tx.id, {
+            status: 'COMPLETED',
+            matchedInvoice: match.invoice.invoiceNumber,
           });
-          
-          // Update the specific invoice as COMPLETED if it exists as a separate transaction
-          if (result.invoice?.originalTransaction?.id) {
-             updateTransaction(result.invoice.originalTransaction.id, { 
-               status: 'COMPLETED',
-               matchedInvoice: tx.id // Cross-reference back to bank transaction
-             });
+
+          if (match.invoice.originalTransaction && match.invoice.originalTransaction.id !== tx.id) {
+            updateTransaction(match.invoice.originalTransaction.id, {
+              status: 'COMPLETED',
+              matchedInvoice: tx.id,
+            });
           }
           matched++;
         } else {
-          updateTransaction(tx.id, { status: 'MANUAL_REVIEW' });
+          updateTransaction(tx.id, { status: 'UNMATCHED' });
           manual++;
         }
       }
 
-      return { 
-        status: 'success', 
-        data: { total: pendingBank.length, matched, manual } 
+      return {
+        success: true,
+        status: 'success',
+        message: `Processed ${pendingBank.length} bank transactions`,
+        data: { total: pendingBank.length, matched, manual },
       };
+    } catch (error: unknown) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      logError(this.name, 'executeTask failed:', err);
+      return {
+        success: false,
+        status: 'error',
+        message: err.message,
+        data: { total: 0, matched: 0, manual: 0 },
+      };
+    }
+  }
 
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, error);
-      return { status: 'error', error };
+  async execute(task: string, _context?: Record<string, unknown>): Promise<AgentResponse> {
+    setAgentStatus(this.name, 'working', task.slice(0, 50));
+    try {
+      const result = await this.executeTask({ task });
+      return this.toResponse(result);
     } finally {
       setAgentStatus(this.name, 'idle');
     }

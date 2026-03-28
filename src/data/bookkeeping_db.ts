@@ -36,15 +36,15 @@ export function saveTransaction(tx: BookkeepingTransaction) {
 export function getTransaction(id: string): BookkeepingTransaction | null {
     try {
         if (!db) throw new Error('Database not initialized');
-        const stmt = (db as any).prepare('SELECT * FROM transactions WHERE id = ?');
-        const row: any = stmt.get(id);
+        const stmt = db.prepare('SELECT * FROM transactions WHERE id = ?');
+        const row = stmt.get(id) as Record<string, unknown> | null;
         if (!row) return null;
         return {
-            id: row.id,
-            source: row.source,
-            data: JSON.parse(row.data) as (BankTransactionData | NavInvoiceData),
+            id: String(row.id),
+            source: String(row.source),
+            data: JSON.parse(String(row.data)) as (BankTransactionData | NavInvoiceData),
             status: row.status as BookkeepingTransaction['status'],
-            matchedInvoice: row.matchedInvoice || undefined
+            matchedInvoice: row.matchedInvoice ? String(row.matchedInvoice) : undefined
         };
     } catch (error) {
         logError("bookkeeping_db", `Failed to get transaction: ${id}`, error);
@@ -56,18 +56,18 @@ export function getPendingTransactions(source?: string): BookkeepingTransaction[
     try {
         if (!db) throw new Error('Database not initialized');
         let query = "SELECT * FROM transactions WHERE status = 'PENDING_MATCH'";
-        const params: any[] = [];
+        const params: unknown[] = [];
         if (source) {
             query += ' AND source = ?';
             params.push(source);
         }
-        const rows: any[] = (db as any).prepare(query).all(...params);
+        const rows = db.prepare(query).all(...params) as Record<string, unknown>[];
         return rows.map(row => ({
-            id: row.id,
-            source: row.source,
-            data: JSON.parse(row.data) as (BankTransactionData | NavInvoiceData),
+            id: String(row.id),
+            source: String(row.source),
+            data: JSON.parse(String(row.data)) as (BankTransactionData | NavInvoiceData),
             status: row.status as BookkeepingTransaction['status'],
-            matchedInvoice: row.matchedInvoice || undefined
+            matchedInvoice: row.matchedInvoice ? String(row.matchedInvoice) : undefined
         }));
     } catch (error) {
         logError("bookkeeping_db", "Failed to get pending transactions:", error);
@@ -79,7 +79,7 @@ export function updateTransaction(id: string, updates: Partial<BookkeepingTransa
     try {
         if (!db) throw new Error('Database not initialized');
         const setClauses: string[] = [];
-        const params: any[] = [];
+        const params: unknown[] = [];
 
         if (updates.status) {
             setClauses.push('status = ?');
@@ -105,13 +105,13 @@ export function updateTransaction(id: string, updates: Partial<BookkeepingTransa
 export function getAllTransactions(): BookkeepingTransaction[] {
     try {
         if (!db) throw new Error('Database not initialized');
-        const rows: any[] = (db as any).prepare('SELECT * FROM transactions').all();
+        const rows = db.prepare('SELECT * FROM transactions').all() as Record<string, unknown>[];
         return rows.map(row => ({
-            id: row.id,
-            source: row.source,
-            data: JSON.parse(row.data) as (BankTransactionData | NavInvoiceData),
+            id: String(row.id),
+            source: String(row.source),
+            data: JSON.parse(String(row.data)) as (BankTransactionData | NavInvoiceData),
             status: row.status as BookkeepingTransaction['status'],
-            matchedInvoice: row.matchedInvoice || undefined
+            matchedInvoice: row.matchedInvoice ? String(row.matchedInvoice) : undefined
         }));
     } catch (error) {
         logError("bookkeeping_db", "Failed to get all transactions:", error);

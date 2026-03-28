@@ -3,7 +3,6 @@ import { createHealthRoutes } from "./health.js";
 import {
   createAgentRoutes,
   createRegistryRoutes,
-  createCloudflareAgentRoutes,
 } from "./agents.js";
 import {
   createProvidersRoutes,

@@ -1,7 +1,7 @@
 import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { saveTransaction } from '../data/bookkeeping_db.js';
-import { BookkeepingTransaction, NavInvoiceData, TransactionStatus } from '../types/bookkeeping.d.js';
+import { BookkeepingTransaction, TransactionStatus } from '../types/bookkeeping.d.js';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -74,7 +74,7 @@ export class NavAgent implements IAgent {
 
       // Else: parse local sample XML files
       const xmlFiles = await this.listLocalNavSamples();
-      const results: Array<any> = [];
+      const results: Array<Record<string, unknown>> = [];
 
       for (const f of xmlFiles) {
         try {
@@ -86,13 +86,13 @@ export class NavAgent implements IAgent {
               // Standard source for MatchingAgent
               saveTransaction({
                 id: `nav_${data.invoice_number}`,
-                source: 'nav_invoice',
+                source: 'NAV',
                 data: {
                   invoiceNumber: data.invoice_number,
                   amount: Number(data.gross_amount),
-                  partner: data.partner_taxid,
+                  partner: data.partner || data.partner_taxid,
                   issueDate: data.issue_date
-                } as any,
+                } as BookkeepingTransaction['data'],
                 status: 'PENDING_MATCH' as TransactionStatus
               });
               results.push(data);

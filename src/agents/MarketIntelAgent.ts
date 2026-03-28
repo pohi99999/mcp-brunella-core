@@ -592,7 +592,7 @@ export class MarketIntelAgent extends BaseAgent {
       };
 
       // Actual LanceDB insert
-      await lanceDBClient.insert('market_intel', record);
+      await lanceDBClient.insert('market_intel', record as unknown as Record<string, unknown>);
     }
 
     logInfo(this.name, '✅ Price data stored in LanceDB');

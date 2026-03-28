@@ -12,9 +12,12 @@ import { vectorizeClient } from "./vectorize.js";
 const DB_PATH = "./data/brunella_lancedb";
 const HARVEST_BACKUP_PATH = "./logs/harvest_backup.jsonl";
 
+ 
 let _lancedbModule: any = null;
+ 
 let _lancedbConnected: any = null;
 
+ 
 async function loadLanceDBModule(): Promise<any | null> {
   if (_lancedbModule) return _lancedbModule;
   try {
@@ -28,6 +31,7 @@ async function loadLanceDBModule(): Promise<any | null> {
   }
 }
 
+ 
 async function connectToLanceDB(): Promise<any | null> {
   if (_lancedbConnected) return _lancedbConnected;
   const mod = await loadLanceDBModule();
@@ -166,6 +170,7 @@ export class HybridMemory {
   }
 
   private async addDocumentToTable(
+     
     db: any,
     tableNames: string[],
     tableName: string,
@@ -176,7 +181,7 @@ export class HybridMemory {
       try {
         await table.add([record]);
         return;
-      } catch (e: any) {
+      } catch (e: unknown) {
         const msg = e instanceof Error ? e.message : String(e);
         logWarn("RAG", `Failed to add to table ${tableName}: ${msg}. Attempting to recreate table with new schema.`);
         try {
@@ -189,14 +194,14 @@ export class HybridMemory {
           } else {
             logWarn("RAG", "DB does not support deleteTable/dropTable; attempting createTable which may fail if table exists.");
           }
-        } catch (ee: any) {
-          logWarn("RAG", `Error deleting table ${tableName}: ${ee?.message ?? String(ee)}`);
+        } catch (ee: unknown) {
+          logWarn("RAG", `Error deleting table ${tableName}: ${ee instanceof Error ? ee.message : String(ee)}`);
         }
         try {
           await db.createTable(tableName, [record]);
           return;
-        } catch (ee: any) {
-          logError("RAG", `Failed to recreate table ${tableName}: ${ee?.message ?? String(ee)}`);
+        } catch (ee: unknown) {
+          logError("RAG", `Failed to recreate table ${tableName}: ${ee instanceof Error ? ee.message : String(ee)}`);
           throw e;
         }
       }
@@ -206,6 +211,7 @@ export class HybridMemory {
   }
 
   private async searchTable(
+     
     db: any,
     tableName: string,
     query: string,
@@ -222,10 +228,10 @@ export class HybridMemory {
         .limit(limit)
         .toArray();
 
-      return results.map((r: any) => ({
-        text: r.text || "",
-        path: r.path,
-        score: r._distance,
+      return results.map((r: Record<string, unknown>) => ({
+        text: String(r.text || ""),
+        path: r.path as string | undefined,
+        score: r._distance as number | undefined,
       }));
     }
 
@@ -258,31 +264,34 @@ export class HybridMemory {
     if (results.length === 0) {
       try {
         // try table.toArray()
-        if (typeof (table as any).toArray === "function") {
-          const rows = await (table as any).toArray();
+         
+        const tableAny = table as any;
+        if (typeof tableAny.toArray === "function") {
+          const rows = await tableAny.toArray() as Record<string, unknown>[];
           for (const r of rows) {
-            const text = String(r?.text ?? r?.get?.("text") ?? "");
-            const pathVal = r?.path ?? (typeof r?.get === "function" ? r.get("path") : undefined);
+            const text = String(r?.text ?? (typeof (r as Record<string, unknown> & { get?: (k: string) => unknown })?.get === "function" ? (r as Record<string, unknown> & { get: (k: string) => unknown }).get("text") : "") ?? "");
+            const pathVal = r?.path as string | undefined;
             if (text.toLowerCase().includes(q)) {
               results.push({ text, path: pathVal });
               if (results.length >= limit) return results;
             }
           }
-        } else if (typeof table.query === "function" && typeof (table.query() as any).toArray === "function") {
-          const rows = await (table.query() as any).toArray();
+        } else if (typeof table.query === "function" && typeof (table.query() as Record<string, unknown>)["toArray"] === "function") {
+           
+          const rows = await (table.query() as any).toArray() as Record<string, unknown>[];
           for (const r of rows) {
             const text = String(r?.text ?? "");
-            const pathVal = r?.path;
+            const pathVal = r?.path as string | undefined;
             if (text.toLowerCase().includes(q)) {
               results.push({ text, path: pathVal });
               if (results.length >= limit) return results;
             }
           }
-        } else if (typeof (table as any).getRows === "function") {
-          const rows = await (table as any).getRows();
+        } else if (typeof tableAny.getRows === "function") {
+          const rows = await tableAny.getRows() as Record<string, unknown>[];
           for (const r of rows) {
             const text = String(r?.text ?? "");
-            const pathVal = r?.path;
+            const pathVal = r?.path as string | undefined;
             if (text.toLowerCase().includes(q)) {
               results.push({ text, path: pathVal });
               if (results.length >= limit) return results;

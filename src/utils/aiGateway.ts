@@ -261,7 +261,7 @@ export class AIGatewayClient {
 
   private async chatOllama(
     messages: ChatMessage[],
-    options?: any,
+    options?: { model?: string; temperature?: number; maxTokens?: number; forceLocal?: boolean },
   ): Promise<string> {
     this.stats.ollamaRequests++;
 

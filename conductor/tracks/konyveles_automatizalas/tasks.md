@@ -1,31 +1,32 @@
-# Tasks: Könyvelés automatizálása — kezdeti teendők
+# Tasks: Könyvelés automatizálása — Állapot
 
 ## Aktuális státusz
-- Discovery (mezőtérképek & minta adathalmaz) — in progress
+- **100% - COMPLETED** (2026-03-27)
 
-## Kezdő feladatok
+## Elvégzett feladatok
 
-1. Discovery & Data mapping — felelős: ProjectConductor
-   - Output: `conductor/tracks/konyveles_automatizalas/resources/mappings/` + `samples/`
-   - Feladatok:
-     - NAV XML mezők listázása
-     - PDF mezők elvárt sémája (OCR output)
-     - Bank CSV/JSON mező térkép készítése
+1. Discovery & Data mapping — felelős: ProjectConductor (✔️)
+   - Adatstruktúrák és mappingek rögzítve.
 
-2. Email-Agent skeleton — felelős: robotkez / Developer
-   - Output: `src/agents/emailAgent.ts` (skeleton) + `data/invoices/`
+2. Email-Agent skeleton — felelős: robotkez / Developer (✔️)
+   - Megvalósítva: `src/agents/EmailAgent.ts`
 
-3. NAV-API Agent skeleton — felelős: Developer
-   - Output: `src/agents/navAgent.ts` + `data/nav/`
+3. NAV-API Agent skeleton — felelős: Developer (✔️)
+   - Megvalósítva: `src/agents/navAgent.ts`
 
-4. OCR/LLM extraction prototype — felelős: DataScientist
-   - Output: `scripts/ocr_extract.sh` vagy `myai/` Python prototípus
+4. OCR/LLM extraction prototype — felelős: DataScientist (✔️)
+   - Implementálva az ügynökök belső logikájában.
 
 5. Matching Engine design doc — felelős: Architect (✔️ elkészült)
-   - Output: `conductor/tracks/konyveles_automatizalas/design/matching_engine.md`
+   - Dokumentáció: `conductor/tracks/konyveles_automatizalas/design/matching_engine.md`
 
-## Következő lépések (ma)
-- Folyamatosan gyűjtsük a bank/NAV/email mintákat, és a design dokumentum alapján kezdjük összekötni a matching logikát az agent pipeline-nal.
-   - Futtassuk a `scripts/konyveles_discovery_run.js`-t ütemezve, hogy bank CSV importálást automatizáljuk.
-   - Illesszük be az EmailAgent / NavAgent outputot a `match` függvényhívásokba (adhatók `parsed` mezők).
-   - Bővítsük a `src/matching/matcher.ts` és `data/bookkeeping_db.ts` modulokat, hogy a pontszámokat, kivételeket és státuszokat eltárolják.
+6. SQLite perzisztencia — felelős: Developer (✔️)
+   - Megvalósítva: `src/data/bookkeeping_db.ts`
+
+7. CLI & Dashboard integráció — felelős: Developer (✔️)
+   - Megvalósítva: UI widget és interaktív magyar CLI parancs.
+
+## Következő lépések (Archiválás előtt)
+- [x] E2E Demo futtatása (`src/demo_bookkeeping.ts`)
+- [x] GitHub push és dokumentáció frissítés
+- [ ] Track archiválása a `conductor/archive/` mappába (Később)

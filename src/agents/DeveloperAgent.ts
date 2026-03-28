@@ -233,7 +233,7 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
           for (const toolCall of toolCalls) {
               const name = toolCall.function.name;
               const args = JSON.parse(toolCall.function.arguments);
-              let toolResult = "";
+              let toolResult: string;
 
               logInfo(this.name, `Tool meghívva: ${name}`);
 

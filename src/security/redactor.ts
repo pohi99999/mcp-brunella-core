@@ -34,14 +34,14 @@ const PII_PATTERNS: Array<{ name: string; pattern: RegExp; replacement: string }
 
 // Secret/token minták
 const SECRET_PATTERNS: Array<{ name: string; pattern: RegExp; replacement: string }> = [
-  { name: 'jwt_token', pattern: /eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_\-]+/g, replacement: '[JWT_REDACTED]' },
-  { name: 'anthropic_key', pattern: /sk-ant-[A-Za-z0-9_\-]{20,}/g, replacement: '[ANTHROPIC_KEY_REDACTED]' },
+  { name: 'jwt_token', pattern: /eyJ[A-Za-z0-9_-]{10,}\.eyJ[A-Za-z0-9_-]{10,}\.[A-Za-z0-9_-]+/g, replacement: '[JWT_REDACTED]' },
+  { name: 'anthropic_key', pattern: /sk-ant-[A-Za-z0-9_-]{20,}/g, replacement: '[ANTHROPIC_KEY_REDACTED]' },
   { name: 'openai_key', pattern: /sk-[A-Za-z0-9]{20,}/g, replacement: '[OPENAI_KEY_REDACTED]' },
   { name: 'aws_key', pattern: /(?:AKIA|ASIA)[A-Z0-9]{16}/g, replacement: '[AWS_KEY_REDACTED]' },
   { name: 'github_token', pattern: /(?:ghp|gho|ghu|ghs|ghr)_[A-Za-z0-9_]{36,}/g, replacement: '[GITHUB_TOKEN_REDACTED]' },
   { name: 'bearer_token', pattern: /Bearer\s+[A-Za-z0-9_\-.]+/gi, replacement: 'Bearer [TOKEN_REDACTED]' },
   { name: 'connection_string', pattern: /(?:mongodb|postgres|mysql|redis):\/\/[^\s"']+/gi, replacement: '[CONNECTION_STRING_REDACTED]' },
-  { name: 'api_key_generic', pattern: /(?:api[_-]?key|apikey|api[_-]?secret)\s*[:=]\s*['"]?[A-Za-z0-9_\-]{20,}['"]?/gi, replacement: '[API_KEY_REDACTED]' },
+  { name: 'api_key_generic', pattern: /(?:api[_-]?key|apikey|api[_-]?secret)\s*[:=]\s*['"]?[A-Za-z0-9_-]{20,}['"]?/gi, replacement: '[API_KEY_REDACTED]' },
   { name: 'password_field', pattern: /(?:password|passwd|pwd)\s*[:=]\s*['"]?[^\s'"]{4,}['"]?/gi, replacement: '[PASSWORD_REDACTED]' },
 ];
 

@@ -83,7 +83,7 @@ export function registerEvHunterTools(server: McpServer) {
     },
     async ({ mock, dry_run }) => {
       // Map tool params to handler options
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       return evHunterHandler({ mock, dryRun: dry_run }) as any;
     },
   );

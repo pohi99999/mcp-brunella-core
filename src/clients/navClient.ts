@@ -24,7 +24,7 @@ async function getOAuthToken(oauth: NonNullable<NavConfig['oauth']>): Promise<st
     }
     const json: unknown = await res.json();
     if (typeof json === 'object' && json !== null && 'access_token' in json) {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+       
       return (json as any).access_token ?? null;
     }
     return null;

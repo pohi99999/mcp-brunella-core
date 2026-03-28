@@ -95,7 +95,7 @@ async function julesNew() {
         }
     ]);
 
-    let prompt = '';
+    let prompt: string;
 
     if (answers.taskType === 'custom') {
         const customAnswer = await inquirer.prompt([

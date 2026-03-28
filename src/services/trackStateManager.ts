@@ -80,7 +80,7 @@ export class TrackStateManager {
       try {
         const raw = fs.readFileSync(STATE_FILE, 'utf-8');
         // Remove BOM or common zero-width characters at the start to avoid JSON.parse errors
-        const rawClean = raw.replace(/^[\uFEFF\u200B\u200C\u200D\u200E\u200F]+/, '');
+        const rawClean = raw.replace(/^(?:\uFEFF|\u200B|\u200C|\u200D|\u200E|\u200F)+/, '');
         const data = JSON.parse(rawClean);
 
         // Ensure tracks array exists
@@ -141,7 +141,7 @@ export class TrackStateManager {
     try {
       const raw = fs.readFileSync(metaPath, 'utf-8');
       // Strip BOM / zero-width chars that may precede JSON content
-      const rawClean = raw.replace(/^[\uFEFF\u200B\u200C\u200D\u200E\u200F]+/, '');
+        const rawClean = raw.replace(/^(?:\uFEFF|\u200B|\u200C|\u200D|\u200E|\u200F)+/, '');
       const meta = JSON.parse(rawClean);
 
       // Unified ID extraction (supports both "id" and "track_id")

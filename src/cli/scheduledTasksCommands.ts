@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+ 
 
 import type { Command } from 'commander';
 import chalk from 'chalk';

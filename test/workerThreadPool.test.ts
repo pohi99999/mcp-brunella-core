@@ -13,6 +13,7 @@ import path from 'path';
 
 // Mock worker_threads
 vi.mock('worker_threads', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { EventEmitter } = require('events');
   class MockWorker extends EventEmitter {
     threadId = Math.floor(Math.random() * 1000);

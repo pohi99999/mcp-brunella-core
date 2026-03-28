@@ -39,7 +39,6 @@ export function globalErrorHandler(
   err: Error | AppError,
   req: Request,
   res: Response,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   next: NextFunction
 ): void {
   // AppError handling

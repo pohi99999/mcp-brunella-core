@@ -16,7 +16,7 @@
  * @version 1.0.0
  */
 
-import { BaseAgent } from './BaseAgent.js';
+import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus, logWarn } from '../utils/logger.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
@@ -78,9 +78,26 @@ export class FinancialGuardAgent extends BaseAgent {
   /**
    * Execute task (BaseAgent interface)
    */
-  async executeTask(context: any): Promise<any> {
-    const task = context.task || context;
-    return this.execute(task, context);
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = (context.task || '').trim();
+
+    if (!task) {
+      return {
+        success: false,
+        status: 'error',
+        message: 'Üres feladat leírás',
+      };
+    }
+
+    const response = await this.execute(task, context);
+    return {
+      success: response.success ?? response.status !== 'error',
+      status: response.status,
+      message: response.message ?? response.error ?? '',
+      data: response.data,
+      handoff: response.handoff,
+      metadata: response.metadata,
+    };
   }
 
   /**
@@ -312,8 +329,7 @@ export class FinancialGuardAgent extends BaseAgent {
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError(this.name, `PDF extraction failed: ${errorMsg}`);
-      const cause = error instanceof Error ? error : undefined;
-      throw new Error(`Failed to extract invoice from PDF: ${errorMsg}`, { cause });
+      throw new Error(`Failed to extract invoice from PDF: ${errorMsg}`, { cause: error });
     }
   }
 
@@ -352,8 +368,7 @@ except Exception as e:
     } catch (error: unknown) {
       const errorMsg = error instanceof Error ? error.message : String(error);
       logError(this.name, `Python OCR worker failed: ${errorMsg}`);
-      const cause = error instanceof Error ? error : undefined;
-      throw new Error(`OCR processing failed: ${errorMsg}`, { cause });
+      throw new Error(`OCR processing failed: ${errorMsg}`, { cause: error });
     }
   }
 
@@ -392,7 +407,7 @@ except Exception as e:
     }
 
     // Extract amount
-    const amountMatch = text.match(/Amount:\s*([\d,\.]+)\s*(HUF|EUR|USD)/i);
+    const amountMatch = text.match(/Amount:\s*([\d,.]+)\s*(HUF|EUR|USD)/i);
     if (amountMatch) {
       invoiceData.amount = parseFloat(amountMatch[1].replace(/,/g, ''));
       invoiceData.currency = amountMatch[2] as 'HUF' | 'EUR' | 'USD';

@@ -149,7 +149,7 @@ const mockResponses: Record<string, JulesFixResponse> = {
       },
       {
         file: 'src/worker.ts',
-        change: 'const unused = require(\"heavy-library\"); // Remove or lazy-load',
+        change: "const unused = require('heavy-library'); // Remove or lazy-load",
         location: 'line 12',
         reason: 'Remove unused dependencies from deployment bundle',
         diffHunk: `-const unused = require("heavy-library");`

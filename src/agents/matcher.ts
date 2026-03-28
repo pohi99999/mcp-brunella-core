@@ -5,7 +5,7 @@ export interface MatchInvoice {
   partner: string;
   amount: number;
   issueDate: string;
-  originalTransaction?: any;
+  originalTransaction?: unknown;
 }
 
 export interface MatchBankTx {
@@ -49,7 +49,7 @@ export function findFuzzyMatch(tx: MatchBankTx, invoices: MatchInvoice[]): Fuzzy
       if (diff === 0) score += 30;
       else if (diff <= 3) score += 20;
       else if (diff <= 7) score += 10;
-    } catch (e) {
+    } catch {
       // Ignore date parsing errors in scoring
     }
 

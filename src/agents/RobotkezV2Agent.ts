@@ -291,7 +291,7 @@ export class RobotkezV2Agent extends BaseAgent {
           }
 
           // Strip description and other non-command properties for browser compatibility
-          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+           
           const { description: _desc, ...command } = step as unknown as Record<string, unknown>;
           const browserCommand = command as unknown as BrowserCommand;
           let response = await browserEngine.sendCommand(browserCommand);

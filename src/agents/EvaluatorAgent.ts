@@ -138,7 +138,7 @@ A feladatod a rendszerek auditálása, egészségügyi ellenőrzések és TESZTE
           for (const toolCall of toolCalls) {
               const name = toolCall.function.name;
               const args = toolCall.function.arguments ? JSON.parse(toolCall.function.arguments) : {};
-              let toolResult = "";
+              let toolResult: string;
 
               logInfo(this.name, `Tool meghívva: ${name}`);
 

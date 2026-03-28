@@ -16,7 +16,7 @@
  * @version 1.0.0
  */
 
-import { BaseAgent } from './BaseAgent.js';
+import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
 import { AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus, logWarn } from '../utils/logger.js';
 import type { ProcurementData } from '../types/enterprise.js';
@@ -92,9 +92,26 @@ export class ProcurementAgent extends BaseAgent {
   /**
    * Execute task (BaseAgent interface)
    */
-  async executeTask(context: any): Promise<any> {
-    const task = context.task || context;
-    return this.execute(task, context);
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const task = (context.task || '').trim();
+
+    if (!task) {
+      return {
+        success: false,
+        status: 'error',
+        message: 'Üres feladat leírás',
+      };
+    }
+
+    const response = await this.execute(task, context);
+    return {
+      success: response.success ?? response.status !== 'error',
+      status: response.status,
+      message: response.message ?? response.error ?? '',
+      data: response.data,
+      handoff: response.handoff,
+      metadata: response.metadata,
+    };
   }
 
   /**

@@ -60,7 +60,7 @@ export function matchTransactionsToInvoices(txs: BankTx[], invoices: Invoice[], 
             // penalize if date is in future far beyond tolerance
             if (d1.getTime() - d2.getTime() > 1000 * 60 * 60 * 24 * 30) score -= 20;
           }
-        } catch (err) { /* ignore parse errors */ }
+        } catch { /* ignore parse errors */ }
       }
       // partner name in description
       if (inv.partner && tx.description && tx.description.toLowerCase().includes(String(inv.partner).toLowerCase())) score += 15;

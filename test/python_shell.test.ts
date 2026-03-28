@@ -12,7 +12,7 @@ const venvPy = path.resolve(
     ? ".venv/Scripts/python.exe"
     : ".venv/bin/python",
 );
-let hasPython = false;
+let hasPython: boolean;
 
 try {
   execSync(`"${venvPy}" --version`, { stdio: "ignore" });

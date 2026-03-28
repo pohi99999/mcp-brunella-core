@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -11,9 +11,6 @@ import
         Database,
         Scale,
         RefreshCcw,
-        CheckCircle2,
-        AlertCircle,
-        Clock,
         ArrowRightLeft
     } from "lucide-react";
 
@@ -57,11 +54,11 @@ export function BookkeepingWidget ()
             {
                 throw new Error( matchRes.message || "Hiba a párosítás során." );
             }
-        } catch ( error: any )
+        } catch ( error: unknown )
         {
-            console.error( "[BookkeepingWidget]", error );
             setStatus( "error" );
-            toast.error( `Sikertelen folyamat: ${ error.message }` );
+            const msg = error instanceof Error ? error.message : String( error );
+            toast.error( `Sikertelen folyamat: ${ msg }` );
         }
     };
 

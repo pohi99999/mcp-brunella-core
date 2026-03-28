@@ -1,4 +1,3 @@
-/* global console */
 import fs from "fs";
 
 /** @type {import('tailwindcss').Config} */

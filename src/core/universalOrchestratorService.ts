@@ -244,7 +244,7 @@ export class UniversalOrchestratorService {
     const startTime = Date.now();
     const actionsTriggered: ActionTriggered[] = [];
     const missionTimeline: MissionTimelineEntry[] = [];
-    const role: 'orchestrator' = 'orchestrator';
+    const role = 'orchestrator' as const;
     const session = this.getOrCreateSession(request.sessionId);
     const lastUserMsg = request.message.trim();
 
@@ -365,7 +365,7 @@ export class UniversalOrchestratorService {
 
     logInfo('UniversalOrchestratorService', `Processing via ${providerType}: "${lastUserMsg.slice(0, 60)}..."`);
 
-    let reply = '';
+    let reply: string;
     const toolCallsToProcess: Array<{ name: string; args: Record<string, unknown> }> = [];
     let resolvedProvider: ProviderType = providerType;
     let resolvedModel: string = request.model ?? this.resolveDefaultModel(providerType);
@@ -452,7 +452,7 @@ export class UniversalOrchestratorService {
 
       // Also check for Qwen-style [DELEGÁLÁS: AgentNév | feladat] syntax in text
       if (toolCallsToProcess.length === 0 && reply) {
-        const delegateRegex = /\[DELEGÁLÁS:\s*([^\|]+)\|\s*([^\]]+)\]/gi;
+        const delegateRegex = /\[DELEGÁLÁS:\s*([^|]+)\|\s*([^\]]+)\]/gi;
         let match;
         while ((match = delegateRegex.exec(reply)) !== null) {
           toolCallsToProcess.push({

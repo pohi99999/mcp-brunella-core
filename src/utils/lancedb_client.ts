@@ -3,9 +3,11 @@ import { logInfo, logError } from './logger.js';
 
 const DB_PATH = path.join(process.cwd(), 'data', 'brunella_lancedb');
 
+ 
 let lancedbModule: any = null;
 
 export class LanceDBClient {
+   
   private db: any | undefined;
 
   async connect(): Promise<void> {
@@ -52,7 +54,7 @@ export class LanceDBClient {
     }
   }
 
-  async addData(tableName: string, data: any): Promise<void> {
+  async addData(tableName: string, data: Record<string, unknown> | Record<string, unknown>[]): Promise<void> {
     try {
       await this.connect();
       if (!this.db) return;
@@ -70,11 +72,11 @@ export class LanceDBClient {
   }
 
   // Alias for addData to support existing codebase usage
-  async insert(tableName: string, data: any): Promise<void> {
+  async insert(tableName: string, data: Record<string, unknown> | Record<string, unknown>[]): Promise<void> {
     return this.addData(tableName, data);
   }
 
-  async query(tableName: string, filter?: string, limit: number = 10): Promise<any[]> {
+  async query(tableName: string, filter?: string, limit: number = 10): Promise<Record<string, unknown>[]> {
     try {
       await this.connect();
       if (!this.db) return [];
@@ -90,7 +92,7 @@ export class LanceDBClient {
     }
   }
 
-  async searchVector(tableName: string, vector: number[], limit: number = 5): Promise<any[]> {
+  async searchVector(tableName: string, vector: number[], limit: number = 5): Promise<Record<string, unknown>[]> {
     try {
       await this.connect();
       if (!this.db) return [];
@@ -108,5 +110,5 @@ export class LanceDBClient {
 export const lanceDBClient = new LanceDBClient();// For backward compatibility with MT2
 export const invoiceStore = {
   isDuplicate: (invNo: string) => lanceDBClient.isDuplicate('invoices', `invoice_number = "${invNo}"`),
-  addInvoice: (data: any) => lanceDBClient.addData('invoices', data)
+  addInvoice: (data: Record<string, unknown>) => lanceDBClient.addData('invoices', data)
 };
