@@ -1058,21 +1058,46 @@ export class BifrostGateway {
   }
 }
 
-// Singleton instance
-let gatewayInstance: BifrostGateway | null = null;
+// Lazy singleton: do NOT instantiate BifrostGateway at module import time.
+// Some CLIs import many modules; creating the gateway eagerly pollutes help
+// output with initialization logs. We use a Proxy to lazily construct the
+// real gateway only when a method/property is first accessed.
 
-/**
- * Get singleton BifrostGateway instance
- */
-export function getBifrostGateway(): BifrostGateway {
-  if (!gatewayInstance) {
-    gatewayInstance = new BifrostGateway();
-  }
-  return gatewayInstance;
+let _bifrostInstance: BifrostGateway | null = null;
+function ensureBifrostGateway(): BifrostGateway {
+  if (!_bifrostInstance) _bifrostInstance = new BifrostGateway();
+  return _bifrostInstance;
 }
 
 /**
- * Named singleton export for direct import convenience.
- * Usage: import { bifrostGateway } from './bifrost_gateway.js'
+ * Get singleton BifrostGateway instance (explicit construction)
  */
-export const bifrostGateway: BifrostGateway = getBifrostGateway();
+export function getBifrostGateway(): BifrostGateway {
+  return ensureBifrostGateway();
+}
+
+/**
+ * Named singleton export for direct import convenience. This is a lazy Proxy
+ * that constructs the real gateway only when accessed, keeping module import
+ * side-effects silent.
+ */
+export const bifrostGateway: BifrostGateway = new Proxy(
+  {},
+  {
+    get(_target, prop: string | symbol) {
+      const inst = ensureBifrostGateway();
+      const value = (inst as any)[prop];
+      if (typeof value === 'function') return value.bind(inst);
+      return value;
+    },
+    set(_target, prop: string | symbol, val: unknown) {
+      const inst = ensureBifrostGateway();
+      (inst as any)[prop] = val;
+      return true;
+    },
+    has(_target, prop: string | symbol) {
+      const inst = ensureBifrostGateway();
+      return prop in inst;
+    },
+  },
+) as unknown as BifrostGateway;

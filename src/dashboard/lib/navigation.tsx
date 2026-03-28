@@ -63,6 +63,7 @@ import SwarmPanel from "@/components/dashboard/SwarmPanel";
 import ToolDiscoveryPanel from "@/components/dashboard/ToolDiscoveryPanel";
 import SecurityPanel from "@/components/dashboard/SecurityPanel";
 import { Crawl4AIPanel } from "@/components/dashboard/Crawl4AIPanel";
+import { IntelligenceMonitorPanel } from "@/components/dashboard/IntelligenceMonitorPanel";
 import { UserPreferencesPanel } from "@/components/dashboard/UserPreferencesPanel";
 import LLMObservabilityPanel from "@/components/dashboard/LLMObservabilityPanel";
 import { CopilotCommanderPanel } from "@/components/dashboard/CopilotCommanderPanel";
@@ -200,6 +201,7 @@ export function initializeNavigation ()
     { id: "tool-discovery", label: "Tool Discovery", icon: Wrench, component: <ToolDiscoveryPanel /> },
     { id: "security-panel", label: "Security Monitor", icon: Shield, component: <SecurityPanel /> },
     { id: "crawl4ai", label: "Crawl4AI", icon: Search, component: <Crawl4AIPanel /> },
+    { id: "intelligence-monitor", label: "Intelligence Monitor", icon: Database, component: <IntelligenceMonitorPanel /> },
     { id: "user-preferences", label: "Felhasználói Memória", icon: Database, component: <UserPreferencesPanel /> },
     { id: "llm-observability", label: "LLM Observability", icon: BarChart3, component: <LLMObservabilityPanel /> },
     { id: "copilot-commander", label: "Copilot Commander", icon: Terminal, component: <CopilotCommanderPanel /> },
@@ -211,7 +213,7 @@ export function initializeNavigation ()
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode"] } );
   navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-commander", "assistant-blueprint", "phoenix", "management", "agent-diagnostics", "decomposer", "incubator", "knowledge", "memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
-  navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "enterprise-analytics"] } );
+  navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "enterprise-analytics", "intelligence-monitor"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "crawl4ai"] } );
   navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] } );

@@ -26,6 +26,7 @@ import { createCloudflareRoutes } from "./cloudflare.js";
 import { createTracksRoutes } from "./tracks.js";
 import { createTTSRoutes } from "./tts.js";
 import { createRecommendationRoutes } from "./recommendation.js";
+import { createBookkeepingRoutes } from "./bookkeeping.js";
 import { createMachinesRouter } from "./machines.js";
 import { createEnterpriseRouter, createEnterpriseAnalyticsRouter } from "./enterprise.js";
 import { createSystemArchitectureRouter, createSystemControlRouter } from "./system.js";
@@ -40,6 +41,7 @@ import { createRemoteRoutes } from "./remote.js";
 import { createObservabilityRouter } from "./observability.js";
 import { swarmRouter } from "./swarm.js";
 import { createGoldenDatasetRouter } from "./goldenDataset.js";
+import { createIntelligenceRouter } from "./intelligence.js";
 import { suggestedTasksRouter } from "./suggestedTasks.js";
 import { createCrawl4aiRouter } from "./crawl4ai.js";
 import { createPythonWorkersRouter } from "./pythonWorkers.js";
@@ -75,6 +77,7 @@ export {
   createEnterpriseAnalyticsRouter,
   createSystemArchitectureRouter,
   createAssistantRoutes,
+  createBookkeepingRoutes,
 };
 
 /**
@@ -108,6 +111,7 @@ export function createV1Router(): Router {
   router.use("/tracks", createTracksRoutes());
   router.use("/tts", createTTSRoutes());
   router.use("/brunella", createRecommendationRoutes());
+  router.use("/bookkeeping", createBookkeepingRoutes());
   router.use("/machines", createMachinesRouter());
   router.use("/enterprise", createEnterpriseRouter());
   router.use("/enterprise/analytics", createEnterpriseAnalyticsRouter());
@@ -127,6 +131,7 @@ export function createV1Router(): Router {
   router.use("/observability", createObservabilityRouter());
   router.use("/swarm", swarmRouter);
   router.use("/golden-dataset", createGoldenDatasetRouter());
+  router.use("/intelligence", createIntelligenceRouter());
   router.use("/suggested-tasks", suggestedTasksRouter);
   router.use("/crawl4ai", createCrawl4aiRouter());
   router.use("/python-workers", createPythonWorkersRouter());

@@ -8,6 +8,52 @@
 
 ## 📋 LEGUTÓBBI MUNKAMENET
 
+### 2026-03-28 20:25 - 100%-os trackek archiválása ✅
+
+**Feladat:** A befejezett, 100%-os trackek lezárása és áthelyezése a conductor/archive alá.
+
+**Érintett fájlok:**
+- `conductor/tracks.md` — Completed blokk ürítve, archive blokk + statisztikák frissítve (129 archived, 0 completed)
+- `conductor/tracks/goldeninteligencia20260327/meta.json` — archived státusz
+- `conductor/tracks/P-Sales20260327/meta.json` — archived státusz
+- `conductor/tracks/cloudflare_dns_zone_reconciliation_20260325/meta.json` — archived státusz
+- `conductor/archive/goldeninteligencia20260327/` — frissített archive példány
+- `conductor/archive/P-Sales20260327/` — frissített archive példány
+- `conductor/archive/cloudflare_dns_zone_reconciliation_20260325/` — frissített archive példány
+
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés:** A `tracks/` alatt már nincs nem-archivált completed track; a következő körben az ACTIVE / PROPOSED szálak közül lehet választani.
+
+### 2026-03-28 - ESLint teljes javítás + n8n könyvelési pipeline track ✅
+
+**Feladat:** ESLint 0-hiba állapot elérése + n8n könyvelési pipeline conductor track tervezése és dokumentálása
+
+**Érintett fájlok:**
+- `eslint.config.js` — globals (node/browser/es2021), könyvtár-szintű rule override-ok (agents, dashboard, cli, scripts, core, utils), `analyze.js` ignores, vitest globals, `@typescript-eslint/ban-ts-comment: "off"` teszteknek
+- `tsconfig.json` — `"src/p-sales-standalone"` exclude-ba (JSX build isolation)
+- `scripts/precommit-lint.mjs` — `--no-warn-ignored` flag (config fájlok false-positive warnolása megszűnt)
+- `conductor/tracks/n8n_konyveles_pipeline_20260328/meta.json` — ÚJ track, ACTIVE státusz
+- `conductor/tracks/n8n_konyveles_pipeline_20260328/spec.md` — ÚJ teljes specifikáció
+- `conductor/tracks/n8n_konyveles_pipeline_20260328/plan.md` — ÚJ Phase 1-2 checklist + kockázatok
+- `conductor/tracks.md` — stats 134→135, n8n track hozzáadva Active szekcióhoz
+
+**Eredmények:**
+- ESLint: ✅ 0 error, 0 warning (`npm run lint --max-warnings=0` PASS)
+- Pre-commit hook: ✅ staged fájlokra helyes, nincs false-positive
+- n8n könyvelési pipeline track: ✅ ACTIVE, dokumentálva (meta.json + spec.md + plan.md)
+- Track architektúra: n8n (trigger/glue: IMAP, file watch, cron, retry, Sheets, SMTP) + BAS (business logic: EmailAgent, BankAgent, MatchingAgent, NavAgent)
+- 5 workflow: WF-1 Email Intake, WF-2 Bank Reconciliation, WF-3 NAV Validation, WF-4 Exception+Notify, WF-5 KP Pénztár
+- Phase 2: cash_entries SQLite tábla, 4 új REST endpoint, HázipénztárWidget dashboard
+- Phase 3: szamlazz.hu integráció placeholder (külön jövőbeli track)
+
+**Fontos döntések:**
+- n8n self-hosted (npm vagy Docker, port 5678) + BAS API (localhost:3000)
+- SQLite elsődleges igazságforrás a KP pénztárhoz, Google Sheets szinkron via n8n
+- szamlazz.hu nem ebben a trackben, hanem külön trackben (Phase 1+2 stabilizálása után)
+
+**Státusz:** ✅ Befejezve (track ACTIVE, implementáció még nem indult el)
+
 ### 2026-03-27 23:30 - Rendszer audit + Copilot integráció bővítés + RAG ellenőrzés ✅
 
 **Feladat:** Teljes rendszer audit (log rotáció, Ollama model fix, smoke teszt, Copilot integráció, RAG/memória ellenőrzés)
