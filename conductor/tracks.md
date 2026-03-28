@@ -1,6 +1,6 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-28T01:10:12.503Z
+**Utolso frissites:** 2026-03-28T02:00:00.326Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
@@ -8,7 +8,12 @@
 
 ---
 
-## Tervezett Szalak (Proposed) (6)
+## Tervezett Szalak (Proposed) (7)
+
+- [ ] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** [HIGH]
+  - **ID:** `n8n_konyveles_pipeline_20260328`
+  - **Progress:** 0%
+  - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
 
 - [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
   - **ID:** `cloudflare_workers_migration_20260226`
@@ -62,7 +67,7 @@
 
 - [ ] **P-Sales20260327** [HIGH]
   - **ID:** `P-Sales20260327`
-  - **Progress:** 25%
+  - **Progress:** 65%
   - Mappa: ./tracks/P-Sales20260327/
 
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]

@@ -1,0 +1,30 @@
+{
+  "id": "n8n_konyveles_pipeline_20260328",
+  "name": "n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu",
+  "status": "PROPOSED",
+  "priority": "HIGH",
+  "created": "2026-03-28",
+  "owner": "Pohánka Péter",
+  "progress": 0,
+  "description": "Hibrid n8n + BAS könyvelési automatizálás: n8n kezeli a külső triggereket (IMAP, file watch, cron, Sheets szinkron, email értesítés), a BAS ügynökök végzik az üzleti logikát (MatchingAgent, BankAgent, NavAgent, EmailAgent). Két fő ág: (1) bank-számla egyeztetés, (2) KP/pénztár kezelés SQLite + Google Sheets szinkronnal. Phase 3-ban szamlazz.hu integráció.",
+  "dependencies": ["konyveles_automatizalas"],
+  "phase": "pipeline-automation",
+  "tags": ["n8n", "könyvelés", "bank", "KP", "pénztár", "Google Sheets", "szamlazz.hu", "pipeline"],
+  "phases": {
+    "phase1": {
+      "name": "Bank egyeztetés + n8n alapinfra",
+      "status": "PENDING",
+      "estimated_days": 3
+    },
+    "phase2": {
+      "name": "KP pénztár modul + Sheets szinkron",
+      "status": "PENDING",
+      "estimated_days": 3
+    },
+    "phase3": {
+      "name": "szamlazz.hu integráció (jövő)",
+      "status": "PLANNED",
+      "estimated_days": 5
+    }
+  }
+}
