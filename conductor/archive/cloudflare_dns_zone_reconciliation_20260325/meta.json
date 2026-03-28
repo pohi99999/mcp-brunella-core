@@ -1,0 +1,14 @@
+{
+  "id": "cloudflare_dns_zone_reconciliation_20260325",
+  "title": "Cloudflare DNS Zone Reconciliation for Custom Domains",
+  "status": "archived",
+  "priority": "high",
+  "createdAt": "2026-03-25",
+  "owner": "Gemini CLI",
+  "progress": 100,
+  "completedAt": "2026-03-28T19:00:00.000Z",
+  "updatedAt": "2026-03-28T20:25:00.000Z",
+  "tags": ["cloudflare", "dns", "domain", "tunnel", "ops"],
+  "phase": 2,
+  "dependencies": ["cloudflare_full_optimization_20260325"]
+}

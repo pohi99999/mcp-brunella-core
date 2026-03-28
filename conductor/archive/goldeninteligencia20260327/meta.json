@@ -1,0 +1,77 @@
+{
+  "trackName": "goldeninteligencia20260327",
+  "type": "Platform / Intelligence Infrastructure",
+  "priority": "HIGH",
+  "status": "archived",
+  "progress": 100,
+  "goal": "Public business, társadalmi, politikai, pénzügyi és technológiai jelzések gyűjtése, normalizálása, score-olása és beemelése a golden datasetbe és a releváns tudásbázisokba, hogy a Brunella döntéstámogatása folyamatosan élesedjen.",
+  "createdAt": "2026-03-28T04:05:11.517Z",
+  "updatedAt": "2026-03-28T20:25:00.000Z",
+  "completedAt": "2026-03-28T20:00:00.000Z",
+  "phases": [
+    {
+      "name": "Phase 0: Governance és taxonómia",
+      "status": "completed",
+      "description": "Forrásosztályok, etikai guardrail-ek és jelzés-taxonomy meghatározása.",
+      "tasks": [
+        "[x] Public source classes meghatározása",
+        "[x] Bias és provenance label szabályok",
+        "[x] Sensitive domain review policy",
+        "[x] Dashboard / CLI scope rögzítése"
+      ]
+    },
+    {
+      "name": "Phase 1: Scout és gyűjtés",
+      "status": "completed",
+      "description": "Különböző domain-ek public signal-jeinek gyűjtése és strukturálása.",
+      "tasks": [
+        "[x] Source discovery réteg",
+        "[x] Retrieval és snapshot kezelés",
+        "[x] Normalizált signal rekordok",
+        "[x] Upstream collector újrahasznosíthatóság"
+      ]
+    },
+    {
+      "name": "Phase 2: Evidence layer és scoring",
+      "status": "completed",
+      "description": "Dedupe, confidence scoring, ellentmondás-kezelés és validálhatóság.",
+      "tasks": [
+        "[x] Claim / evidence séma",
+        "[x] Confidence score modell",
+        "[x] Dedupe és contradiction detection",
+        "[x] Review queue logika"
+      ]
+    },
+    {
+      "name": "Phase 3: Gold dataset és KB promotion",
+      "status": "completed",
+      "description": "Kurált elemek beemelése a golden datasetbe és a releváns tudásbázisokba.",
+      "tasks": [
+        "[x] Promotion contract",
+        "[x] Golden dataset write path",
+        "[x] Knowledge base sync",
+        "[x] Audit trail és verziózás"
+      ]
+    },
+    {
+      "name": "Phase 4: Dashboard / CLI és feedback loop",
+      "status": "completed",
+      "description": "Enterprise monitoring panel, CLI parancs és emberi visszacsatolás.",
+      "tasks": [
+        "[x] Intelligence Monitor panel",
+        "[x] brunella intelligence watch parancs",
+        "[x] Manual review és approval flow",
+        "[x] Eval / quality feedback loop"
+      ]
+    }
+  ],
+  "expectedOutput": [
+    "Kurált public intelligence feed",
+    "Golden dataset entryk provenance-dzsel",
+    "Releváns tudásbázisok trace-elhető frissítése",
+    "Enterprise dashboard Intelligence Monitor panel",
+    "CLI parancs a futtatáshoz és review-hoz",
+    "Auditálható scoring és promotion folyamat",
+    "Mérhető minőségjavulás az evalokon"
+  ]
+}
