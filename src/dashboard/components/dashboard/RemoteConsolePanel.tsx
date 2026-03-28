@@ -41,9 +41,9 @@ export function RemoteConsolePanel ()
                 setSelectedTarget( data.targets[0].id );
             }
         }
-        catch ( error )
+        catch
         {
-            console.error( error );
+            // fetch failed silently - state stays as default empty array
         }
     }
 
@@ -55,9 +55,9 @@ export function RemoteConsolePanel ()
             const data = await res.json();
             setSessions( data.sessions ?? [] );
         }
-        catch ( error )
+        catch
         {
-            console.error( error );
+            // fetch failed silently - state stays as default empty array
         }
     }
 
@@ -217,9 +217,9 @@ export function RemoteConsolePanel ()
                 setSelectedTarget( data.targets[0].id );
             }
         }
-        catch ( error )
+        catch
         {
-            console.error( error );
+            // fetch failed silently - state stays as default empty array
         }
     }
 
@@ -231,9 +231,9 @@ export function RemoteConsolePanel ()
             const data = await res.json();
             setSessions( data.sessions ?? [] );
         }
-        catch ( error )
+        catch
         {
-            console.error( error );
+            // fetch failed silently - state stays as default empty array
         }
     }
 

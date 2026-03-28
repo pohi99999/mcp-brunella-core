@@ -1,10 +1,10 @@
 import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { saveTransaction } from '../data/bookkeeping_db.js';
-import { BookkeepingTransaction, NavInvoiceData, TransactionStatus } from '../types/bookkeeping.d.js';
+import { BookkeepingTransaction, TransactionStatus } from '../types/bookkeeping.d.js';
 import fs from 'fs/promises';
 import path from 'path';
-import { fetchEmailsAsEml, fetchAndExtractAttachments } from '../connectors/imapConnector.js';
+import { fetchAndExtractAttachments } from '../connectors/imapConnector.js';
 import { downloadFilesFromFolder } from '../connectors/gdriveConnector.js';
 
 /**
@@ -107,7 +107,7 @@ export class EmailAgent implements IAgent {
         logInfo(this.name, `No external files collected, using ${finals.length} local samples.`);
       }
 
-      const parsedEntries: Array<any> = [];
+      const parsedEntries: Array<Record<string, unknown>> = [];
       for (const f of finals) {
         if (f.filename.toLowerCase().endsWith('.txt')) {
           const data = await this.parseInvoiceText(f.path);
@@ -120,7 +120,7 @@ export class EmailAgent implements IAgent {
                 amount: data.gross,
                 partner: data.partner,
                 issueDate: data.issueDate
-              } as any,
+              } as BookkeepingTransaction['data'],
               status: 'PENDING_MATCH' as TransactionStatus
             };
             

@@ -278,11 +278,11 @@ export class EmailTriageAgent extends BaseAgent {
     const { from, subject, snippet } = email;
     const combinedText = `${subject} ${snippet}`.toLowerCase();
 
-    let priority: EmailPriority = 'INFO';
+    let priority: EmailPriority;
     let shouldAutoRespond = false;
     let autoResponseTemplate: string | undefined;
     const labels: string[] = [];
-    let reasoning = '';
+    let reasoning: string;
 
     // Check for URGENT keywords
     if (this.URGENT_KEYWORDS.some(kw => combinedText.includes(kw))) {

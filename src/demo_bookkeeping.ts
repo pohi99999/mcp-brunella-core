@@ -2,7 +2,7 @@ import { NavAgent } from './agents/NavAgent.js';
 import { BankAgent } from './agents/BankAgent.js';
 import { MatchingAgent } from './agents/MatchingAgent.js';
 import { logInfo, logError } from './utils/logger.js';
-import { initDB, getPendingTransactions } from './data/bookkeeping_db.js';
+import { initDB } from './data/bookkeeping_db.js';
 import { AgentResponse } from './agents/types.js';
 
 async function runBookkeepingDemo() {
@@ -22,8 +22,8 @@ async function runBookkeepingDemo() {
     const navResult = await nav.execute('Process NAV invoices from conductor track samples') as AgentResponse;
     const bankResult = await bank.execute('Process bank transactions from conductor track samples') as AgentResponse;
 
-    console.log(`NAV Status: ${navResult.status}, Invoices found: ${(navResult.data as any)?.length || 0}`);
-    console.log(`Bank Status: ${bankResult.status}, Transactions found: ${(bankResult.data as any)?.length || 0}`);
+    console.log(`NAV Status: ${navResult.status}, Invoices found: ${Array.isArray(navResult.data) ? navResult.data.length : 0}`);
+    console.log(`Bank Status: ${bankResult.status}, Transactions found: ${Array.isArray(bankResult.data) ? bankResult.data.length : 0}`);
 
     // 2. Run Matcher Agent
     const matcher = new MatchingAgent();
@@ -33,18 +33,18 @@ async function runBookkeepingDemo() {
     
     console.log(`Matcher Status: ${matchingResult.status}`);
     if (matchingResult.data) {
-      const { total, matched, manual } = matchingResult.data as any;
+      const data = matchingResult.data as { total: number; matched: number; manual: number };
       console.log('--- Matching Summary ---');
-      console.log(`Total Handled: ${total}`);
-      console.log(`Auto-Completed: ${matched}`);
-      console.log(`Manual Review: ${manual}`);
+      console.log(`Total Handled: ${data.total}`);
+      console.log(`Auto-Completed: ${data.matched}`);
+      console.log(`Manual Review: ${data.manual}`);
       console.log('-------------------------');
     }
 
     // 3. Final Verification
-    // const all = getPendingTransactions(); 
-    
-    logInfo(SESSION_NAME, `✅ DEMO COMPLETE: ${(matchingResult.data as any).matched} matches reconciled.`);
+
+    const matchedCount = (matchingResult.data as { matched?: number } | undefined)?.matched ?? 0;
+    logInfo(SESSION_NAME, `✅ DEMO COMPLETE: ${matchedCount} matches reconciled.`);
 
   } catch (e) {
     logError(SESSION_NAME, `Demo failed: ${String(e)}`);

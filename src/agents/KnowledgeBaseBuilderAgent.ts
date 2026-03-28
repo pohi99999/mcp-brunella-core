@@ -127,7 +127,7 @@ export class KnowledgeBaseBuilderAgent extends BaseAgent {
       let taskData: any = {};
       try {
         taskData = JSON.parse(task);
-      } catch {}
+      } catch { /* ignore parse errors, use empty taskData */ }
 
       // Transform based on task type
       const responseData: any = {

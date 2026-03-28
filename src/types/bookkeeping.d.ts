@@ -13,12 +13,13 @@ export interface NavInvoiceData {
     invoiceNumber: string;
     amount: number;
     partner: string;
+    issueDate?: string;
     // Add other NAV specific fields as needed
 }
 
 export interface BookkeepingTransaction {
     id: string;
-    source: string; // e.g., 'BankAgent', 'NavAgent', 'EmailAgent'
+    source: string; // e.g., 'BankAgent', 'NAV', 'EmailAgent'
     data: BankTransactionData | NavInvoiceData; // Can be a bank transaction or an NAV invoice
     status: TransactionStatus;
     matchedInvoice?: string; // ID of the matched invoice if applicable

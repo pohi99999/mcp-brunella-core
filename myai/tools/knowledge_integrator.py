@@ -97,7 +97,7 @@ class OllamaClient:
     def __init__(
         self,
         base_url: str = "http://localhost:11434",
-        model: str = "qwen2.5-coder:latest",
+        model: str = "llama3.1:8b",
         embedding_model: str = "mxbai-embed-large",
         embedding_dimension: int = 1024,
     ):
@@ -181,7 +181,7 @@ class KnowledgeIntegrator:
     def __init__(
         self,
         ollama_url: str = "http://localhost:11434",
-        ollama_model: str = "qwen2.5-coder:latest",
+        ollama_model: str = "llama3.1:8b",
         embedding_model: str = "mxbai-embed-large",
         embedding_dim_primary: int = 1024,
         embedding_model_legacy: str = "nomic-embed-text",
@@ -607,7 +607,7 @@ def main():
     parser = argparse.ArgumentParser(description="Knowledge Integrator - Refine & Integrate Harvest Data")
     parser.add_argument("input_file", help="Path to harvest results JSON file")
     parser.add_argument("--ollama-url", default="http://localhost:11434", help="Ollama API URL")
-    parser.add_argument("--ollama-model", default="qwen2.5-coder:latest", help="Ollama model name")
+    parser.add_argument("--ollama-model", default="llama3.1:8b", help="Ollama model name")
     parser.add_argument("--embedding-model", default="mxbai-embed-large", help="Primary embedding model")
     parser.add_argument("--embedding-dim-primary", type=int, default=1024, help="Primary embedding vector size")
     parser.add_argument("--embedding-model-legacy", default="nomic-embed-text", help="Legacy embedding model")

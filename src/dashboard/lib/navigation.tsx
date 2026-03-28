@@ -5,14 +5,13 @@ import
   Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
   Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow, Terminal,
   BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb, Database,
-  Search, Target, Receipt, ShieldAlert, Users, Wrench
+  Search, Target, Receipt, ShieldAlert, Users, Wrench, Building2
 } from "lucide-react";
 
 // Component Imports
 import { NeuralLinkChat } from "@/components/dashboard/NeuralLinkChat";
 import { SettingsPanel } from "@/components/dashboard/SettingsPanel";
 import { FileExplorer } from "@/components/dashboard/FileExplorer";
-import { ProjectExplorer } from "@/components/dashboard/ProjectExplorer";
 import { RobotkezV2Chat } from "@/components/dashboard/RobotkezV2Chat";
 import { BrowserCopilotPanel } from "@/components/dashboard/BrowserCopilotPanel";
 import { PAIOSOrchestratorChat } from "@/components/dashboard/PAIOSOrchestratorChat";
@@ -49,6 +48,7 @@ import { GrantHunterWidget } from "@/components/dashboard/GrantHunterWidget";
 import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
 import { BookkeepingWidget } from "@/components/dashboard/BookkeepingWidget";
 import { PropertyVisionaryWidget } from "@/components/dashboard/PropertyVisionaryWidget";
+import { PropertySalesWidget } from "@/components/dashboard/PropertySalesWidget";
 import { LeadsMasterMonitor } from "@/components/dashboard/LeadsMasterMonitor";
 import { TrojanHorseCommandCenter } from "@/components/dashboard/TrojanHorseCommandCenter";
 import { AutonomousInfraPanel } from "@/components/dashboard/AutonomousInfraPanel";
@@ -79,7 +79,7 @@ export interface NavItem
 {
   id: string;
   label: string;
-  icon: any;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
   component: React.ReactNode;
 }
 
@@ -87,7 +87,7 @@ export interface NavGroup
 {
   title: string;
   items: string[];
-  icon: any;
+  icon: React.ComponentType<{ size?: number; className?: string }>;
 }
 
 class NavigationRegistry
@@ -180,6 +180,7 @@ export function initializeNavigation ()
     { id: "leads-master", label: "Leads Monitor", icon: DollarSign, component: <LeadsMasterMonitor /> },
     { id: "trojan-horse", label: "Trójai Faló", icon: ShieldAlert, component: <TrojanHorseCommandCenter /> },
     { id: "lead-monitor", label: "Lead Monitor", icon: Activity, component: <LeadsMasterMonitor /> },
+    { id: "property-sales", label: "Ingatlan Értékesítés", icon: Building2, component: <PropertySalesWidget /> },
     { id: "demo-factory", label: "Demo Gyár", icon: FlaskConical, component: <IncubatorPanel /> },
     { id: "showcase", label: "AI Showcase", icon: Sparkles, component: <ShowcasePage /> },
     { id: "jules", label: "Jules AI", icon: Zap, component: <JulesPanel /> },
@@ -210,7 +211,7 @@ export function initializeNavigation ()
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode"] } );
   navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-commander", "assistant-blueprint", "phoenix", "management", "agent-diagnostics", "decomposer", "incubator", "knowledge", "memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
-  navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "enterprise-analytics"] } );
+  navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "enterprise-analytics"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "crawl4ai"] } );
   navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] } );

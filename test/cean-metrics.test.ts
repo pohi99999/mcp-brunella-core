@@ -81,7 +81,7 @@ describe('Metrics Collection', () => {
     const { gatherMetrics, formatPrometheusMetrics } = await import(
       '../src/metrics'
     );
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const metrics = await gatherMetrics(mockDb as any);
     const output = formatPrometheusMetrics(metrics);
 
@@ -117,7 +117,7 @@ describe('Metrics Collection', () => {
 
   it.skip('should calculate success rate correctly', async () => {
     const { gatherMetrics } = await import('../src/metrics');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const metrics = await gatherMetrics(mockDb as any);
 
     // 950 completed / 1000 total = 95%
@@ -126,7 +126,7 @@ describe('Metrics Collection', () => {
 
   it.skip('should calculate cache hit rate', async () => {
     const { gatherMetrics } = await import('../src/metrics');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const metrics = await gatherMetrics(mockDb as any);
 
     // Cache hit rate should be > 0
@@ -136,7 +136,7 @@ describe('Metrics Collection', () => {
 
   it.skip('should estimate cost correctly', async () => {
     const { gatherMetrics } = await import('../src/metrics');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const metrics = await gatherMetrics(mockDb as any);
 
     // Cost per 100 pipelines: $0.000118
@@ -147,7 +147,7 @@ describe('Metrics Collection', () => {
 
   it('should include timestamp in metrics', async () => {
     const { gatherMetrics } = await import('../src/metrics');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const metrics = await gatherMetrics(mockDb as any);
 
     // Verify timestamp exists and is ISO 8601
@@ -164,7 +164,7 @@ describe('Metrics Collection', () => {
     };
 
     const { gatherMetrics } = await import('../src/metrics');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const metrics = await gatherMetrics(emptyDb as any);
 
     // Should return zeros, not errors
@@ -181,7 +181,7 @@ describe('Metrics Collection', () => {
     };
 
     const { gatherMetrics } = await import('../src/metrics');
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     const metrics = await gatherMetrics(zeroDb as any);
 
     // Should return 0, not NaN or infinity
@@ -193,7 +193,7 @@ describe('Metrics Collection', () => {
     const { gatherMetrics } = await import('../src/metrics');
      
     const startTime = Date.now();
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+     
     await gatherMetrics(mockDb as any);
     const duration = Date.now() - startTime;
 

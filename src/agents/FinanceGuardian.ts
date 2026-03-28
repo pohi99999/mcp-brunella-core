@@ -1,5 +1,5 @@
 import { BaseAgent, AgentContext, AgentResult } from './BaseAgent.js';
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, logWarn } from '../utils/logger.js';
 import { getWorkspaceClient } from '../tools/unifiedWorkspace.js';
 import { invoiceStore } from '../utils/lancedb_client.js';
 import * as fs from 'fs/promises';
@@ -172,7 +172,7 @@ export class FinanceGuardian extends BaseAgent {
     logInfo(this.name, `Searching Gmail for invoices with query: "${query}"`);
 
     const workspace = await getWorkspaceClient();
-    const messages = await workspace.searchEmails(query, 5);
+    const messages = (await workspace.searchEmails(query, 5)) as Array<{ id?: string }>;
 
     if (messages.length === 0) {
       return {
@@ -187,10 +187,16 @@ export class FinanceGuardian extends BaseAgent {
     await fs.mkdir(tempDir, { recursive: true });
 
     for (const msg of messages) {
-      const attachments = await workspace.getEmailAttachments(msg.id!);
+      const messageId = msg.id;
+      if (!messageId) {
+        logWarn(this.name, 'Skipping Gmail message without id');
+        continue;
+      }
+
+      const attachments = await workspace.getEmailAttachments(messageId);
       for (const att of attachments) {
         if (att.filename.toLowerCase().endsWith('.pdf')) {
-          const localPath = path.join(tempDir, `${msg.id}_${att.filename}`);
+          const localPath = path.join(tempDir, `${messageId}_${att.filename}`);
           await fs.writeFile(localPath, att.data);
           downloadedFiles.push(localPath);
           logInfo(this.name, `Downloaded invoice: ${att.filename} to ${localPath}`);

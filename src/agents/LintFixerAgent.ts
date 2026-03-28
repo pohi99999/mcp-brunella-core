@@ -340,7 +340,7 @@ export class LintFixerAgent implements IAgent {
       ? filePath
       : path.join(this.workspaceRoot, filePath);
 
-    let fileContent = "";
+    let fileContent: string;
     try {
       fileContent = await fs.readFile(fullPath, "utf-8");
     } catch {

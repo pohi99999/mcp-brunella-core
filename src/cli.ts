@@ -49,6 +49,7 @@ import { registerChromeAcpCommands } from "./cli/chromeAcpCommands.js";
 import { registerBrowserCopilotCommands } from "./cli/browserCopilotCommands.js";
 import { registerCrawl4aiCommands } from "./cli/crawl4aiCommands.js";
 import { registerBookkeepingCommands } from "./cli/bookkeepingCommands.js";
+import { registerPropertySalesCommands } from "./cli/propertySalesCommands.js";
 import { registerMemoriaCommands } from "./cli/memoriaCommands.js";
 import { registerObservabilityCommands } from "./cli/observabilityCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
@@ -539,7 +540,15 @@ program
           parsedArgs[key] = value;
         } else if (arg.startsWith("{")) {
           try {
-          } catch (e) { /* non-critical */ }
+            const jsonArg = JSON.parse(arg) as Record<string, unknown>;
+            if (jsonArg && typeof jsonArg === "object" && !Array.isArray(jsonArg)) {
+              for (const [key, value] of Object.entries(jsonArg)) {
+                parsedArgs[key] = typeof value === "string" ? value : JSON.stringify(value) ?? String(value);
+              }
+            }
+          } catch {
+            void 0;
+          }
         }
       }
 
@@ -551,8 +560,8 @@ program
         if (opts.json) {
           console.log(JSON.stringify(result, null, 2));
         } else {
-          // @ts-expect-error
-          const text = result.content?.[0]?.text;
+          const response = result as { content?: Array<{ text?: string }> };
+          const text = response.content?.[0]?.text;
           if (text) console.log(text);
           else console.log(JSON.stringify(result, null, 2));
         }
@@ -1356,7 +1365,9 @@ conductorCmd
             const json = JSON.parse(text);
             responseText =
               json.message || json.data?.text || JSON.stringify(json, null, 2);
-          } catch {}
+          } catch {
+            void 0;
+          }
 
           console.log(marked(responseText));
 
@@ -1806,6 +1817,7 @@ registerBrowserCopilotCommands(program);
 // Register Crawl4AI & Memoria commands (Phase 3 — kutatas.md integráció)
 registerCrawl4aiCommands(program);
 registerBookkeepingCommands(program);
+registerPropertySalesCommands(program);
 registerMemoriaCommands(program);
 registerObservabilityCommands(program);
 

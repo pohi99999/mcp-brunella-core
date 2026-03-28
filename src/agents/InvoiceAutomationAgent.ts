@@ -53,7 +53,7 @@ export class InvoiceAutomationAgent extends BaseAgent {
     // 1. Gmail keresés - utolsó 10 releváns levél
     const query = 'has:attachment (filename:pdf OR filename:jpg OR filename:png) label:inbox "számla"';
     const workspace = await getWorkspaceClient();
-    const messages = await workspace.searchEmails(query, 10);
+    const messages = (await workspace.searchEmails(query, 10)) as Array<{ id?: string }>;
 
     if (messages.length === 0) {
       return { 
@@ -68,8 +68,14 @@ export class InvoiceAutomationAgent extends BaseAgent {
     const results = [];
 
     for (const msg of messages) {
-      logInfo(this.name, `Levél feldolgozása: ${msg.id}`);
-      const attachments = await workspace.getEmailAttachments(msg.id!);
+      const messageId = msg.id;
+      if (!messageId) {
+        logWarn(this.name, 'Skipping Gmail message without id');
+        continue;
+      }
+
+      logInfo(this.name, `Levél feldolgozása: ${messageId}`);
+      const attachments = await workspace.getEmailAttachments(messageId);
       
       for (const att of attachments) {
         if (this.isInvoiceFile(att.filename)) {
@@ -94,7 +100,7 @@ export class InvoiceAutomationAgent extends BaseAgent {
             logError(this.name, `Hiba a fájl feldolgozásakor (${att.filename}): ${err.message}`);
             // Hiba esetén megjelöljük a levelet egy speciális címkével
             try {
-              await workspace.modifyEmail(msg.id!, { addLabelIds: ['Brunella-Manual-Check'] });
+              await workspace.modifyEmail(messageId, { addLabelIds: ['Brunella-Manual-Check'] });
             } catch (labelErr) {
               logError(this.name, `Nem sikerült a címkézés: ${labelErr}`);
             }
@@ -105,7 +111,7 @@ export class InvoiceAutomationAgent extends BaseAgent {
       }
       
       // Sikeres feldolgozás után levehetjük az INBOX címkét (archiválás)
-      // await workspace.modifyEmail(msg.id!, { removeLabelIds: ['INBOX'] });
+      // await workspace.modifyEmail(messageId, { removeLabelIds: ['INBOX'] });
     }
 
     return {

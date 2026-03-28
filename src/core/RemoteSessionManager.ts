@@ -19,7 +19,7 @@ export class RemoteSessionManager {
   createSession(
     userId: string,
     targetId: string,
-    metadata?: Record<string, any>
+    metadata?: Record<string, unknown>
   ): RemoteSession {
     const now = Date.now();
     const session: RemoteSession = {
@@ -62,7 +62,7 @@ export class RemoteSessionManager {
     sessionId: string,
     targetId: string,
     toolName: string,
-    input: Record<string, any>
+    input: Record<string, unknown>
   ): RemoteCommand | null {
     const session = this.getSession(sessionId);
     if (!session) {
@@ -93,7 +93,7 @@ export class RemoteSessionManager {
     sessionId: string,
     commandId: string,
     status: 'pending' | 'running' | 'completed' | 'failed',
-    result?: Record<string, any>,
+    result?: Record<string, unknown>,
     error?: string
   ): RemoteCommand | null {
     const session = this.getSession(sessionId);

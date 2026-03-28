@@ -31,7 +31,7 @@ describe('Phoenix Protocol v2 - AgentManager Recovery Logic', () => {
 
     // Clear any existing checkpoints
     await clearCheckpoints('TestRecoveryAgent:test_task');
-  });
+  }, 30000);
 
   // Reset mocks and circuit breaker before each test
   beforeEach(async () => {

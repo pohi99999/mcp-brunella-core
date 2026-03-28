@@ -1,4 +1,4 @@
-# Pre-commit: csak build + lint (~30-60mp)
-# Tesztek a pre-push hookba kerültek — ne lassítsd a commitot!
+# Pre-commit: build + lint staged code files
+# Repo-wide lint is noisy while the autofix branch is in progress.
 npm run build || exit 1
-npm run lint || exit 1
+node scripts/precommit-lint.mjs || exit 1

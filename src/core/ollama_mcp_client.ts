@@ -17,7 +17,7 @@ export interface OllamaMCPConfig {
 
 export interface MCPToolCall {
   name: string;
-  arguments: Record<string, any>;
+  arguments: Record<string, unknown>;
 }
 
 export interface OllamaChatOptions {
@@ -26,6 +26,15 @@ export interface OllamaChatOptions {
   maxTokens?: number;
   tools?: string[]; // Tool names to make available
   stream?: boolean;
+}
+
+interface MCPToolResult {
+  success?: boolean;
+  error?: string;
+  content?: string;
+  items?: unknown[];
+  matches?: string[];
+  data?: unknown;
 }
 
 /**
@@ -101,10 +110,10 @@ export class OllamaMCPClient {
       this.isConnected = true;
 
       logInfo('OllamaMCPClient', 'Connected to MCP server');
-    } catch (error: any) {
-      logError('OllamaMCPClient', `Failed to connect to MCP server: ${error.message}`);
-      const cause = error instanceof Error ? error : undefined;
-      throw new Error(`MCP connection failed: ${error.message}`, { cause });
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('OllamaMCPClient', `Failed to connect to MCP server: ${errorMsg}`);
+      throw new Error(`MCP connection failed: ${errorMsg}`, { cause: error });
     }
   }
 
@@ -129,8 +138,9 @@ export class OllamaMCPClient {
 
       this.isConnected = false;
       logInfo('OllamaMCPClient', 'Disconnected from MCP server');
-    } catch (error: any) {
-      logError('OllamaMCPClient', `Error during disconnect: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('OllamaMCPClient', `Error during disconnect: ${errorMsg}`);
     }
   }
 
@@ -157,9 +167,10 @@ export class OllamaMCPClient {
 
       logInfo('OllamaMCPClient', `Listed ${ollamaTools.length} MCP tools`);
       return ollamaTools;
-    } catch (error: any) {
-      logError('OllamaMCPClient', `Failed to list tools: ${error.message}`);
-      throw error;
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('OllamaMCPClient', `Failed to list tools: ${errorMsg}`);
+      throw new Error(`Failed to list tools: ${errorMsg}`, { cause: error });
     }
   }
 
@@ -212,7 +223,7 @@ export class OllamaMCPClient {
 
         // Execute each tool call
         const toolResults = await Promise.all(
-          response.message.tool_calls.map(async (toolCall: any) => {
+          response.message.tool_calls.map(async (toolCall: { function: { name: string; arguments: Record<string, unknown> } }) => {
             return await this.executeTool(toolCall.function.name, toolCall.function.arguments);
           })
         );
@@ -221,7 +232,7 @@ export class OllamaMCPClient {
         messages.push(response.message);
 
         // Add tool results as messages
-        toolResults.forEach((result: any) => {
+        toolResults.forEach((result: unknown) => {
           messages.push({
             role: 'tool',
             content: JSON.stringify(result)
@@ -247,8 +258,9 @@ export class OllamaMCPClient {
 
       logInfo('OllamaMCPClient', `Chat completed in ${iterations} iterations`);
       return response;
-    } catch (error: any) {
-      logError('OllamaMCPClient', `Chat failed: ${error.message}`);
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('OllamaMCPClient', `Chat failed: ${errorMsg}`);
       throw error;
     }
   }
@@ -256,7 +268,7 @@ export class OllamaMCPClient {
   /**
    * Execute MCP tool
    */
-  private async executeTool(toolName: string, args: Record<string, any>): Promise<any> {
+  private async executeTool(toolName: string, args: Record<string, unknown>): Promise<MCPToolResult> {
     if (!this.mcpClient) {
       throw new Error('MCP client not initialized');
     }
@@ -275,7 +287,7 @@ export class OllamaMCPClient {
         if (textContent && 'text' in textContent) {
           try {
             // Try to parse JSON response
-            return JSON.parse(textContent.text);
+            return JSON.parse(textContent.text) as MCPToolResult;
           } catch {
             // Return raw text if not JSON
             return { success: true, data: textContent.text };
@@ -283,12 +295,13 @@ export class OllamaMCPClient {
         }
       }
 
-      return result;
-    } catch (error: any) {
-      logError('OllamaMCPClient', `Tool execution failed: ${error.message}`);
+      return result as MCPToolResult;
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      logError('OllamaMCPClient', `Tool execution failed: ${errorMsg}`);
       return {
         success: false,
-        error: error.message
+        error: errorMsg
       };
     }
   }
@@ -301,6 +314,10 @@ export class OllamaMCPClient {
 
     if (!result.success) {
       throw new Error(`Failed to read file: ${result.error}`);
+    }
+
+    if (typeof result.content !== 'string') {
+      throw new Error('Failed to read file: malformed MCP response');
     }
 
     return result.content;
@@ -325,7 +342,7 @@ export class OllamaMCPClient {
   /**
    * List directory contents via MCP (convenience method)
    */
-  async listDirectory(dirPath: string, includeHidden: boolean = false): Promise<any[]> {
+  async listDirectory(dirPath: string, includeHidden: boolean = false): Promise<unknown[]> {
     const result = await this.executeTool('list_directory', {
       path: dirPath,
       include_hidden: includeHidden
@@ -333,6 +350,10 @@ export class OllamaMCPClient {
 
     if (!result.success) {
       throw new Error(`Failed to list directory: ${result.error}`);
+    }
+
+    if (!Array.isArray(result.items)) {
+      throw new Error('Failed to list directory: malformed MCP response');
     }
 
     return result.items;
@@ -351,7 +372,11 @@ export class OllamaMCPClient {
       throw new Error(`Failed to search files: ${result.error}`);
     }
 
-    return result.matches;
+    if (!Array.isArray(result.matches)) {
+      throw new Error('Failed to search files: malformed MCP response');
+    }
+
+    return result.matches.filter((match): match is string => typeof match === 'string');
   }
 
   /**

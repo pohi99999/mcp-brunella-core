@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-27T21:00:00.372Z
+**Utolso frissites:** 2026-03-28T01:10:12.503Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 133 total | 4 active | 4 completed | 119 archived
+**Stats:** 134 total | 5 active | 4 completed | 119 archived
 
 ---
 
@@ -42,7 +42,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (4)
+## Aktiv Szalak (Active) (5)
 
 - [ ] **Cloudflare DNS Zone Reconciliation for Custom Domains** [HIGH]
   - **ID:** `cloudflare_dns_zone_reconciliation_20260325`
@@ -59,6 +59,11 @@
   - **ID:** `konyveles_automatizalas`
   - **Progress:** 0%
   - Mappa: ./tracks/konyveles_automatizalas/
+
+- [ ] **P-Sales20260327** [HIGH]
+  - **ID:** `P-Sales20260327`
+  - **Progress:** 25%
+  - Mappa: ./tracks/P-Sales20260327/
 
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`

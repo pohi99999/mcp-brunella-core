@@ -1,13 +1,14 @@
+import { promises as fs } from 'fs';
+import path from 'path';
 import { IAgent, AgentResponse } from './types.js';
+import type { AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { saveTransaction } from '../data/bookkeeping_db.js';
-import fs from 'fs';
-import path from 'path';
+import type { BankTransactionData, BookkeepingTransaction, TransactionStatus } from '../types/bookkeeping.d.js';
 
 /**
  * BankAgent
- * Matches bank transactions in CSV format against expected sample formats.
- * Current standard is comma-separated from bank_transactions.csv.
+ * Parses bank CSV exports and stores transactions for bookkeeping reconciliation.
  */
 export class BankAgent implements IAgent {
   name = 'BankAgent';
@@ -15,49 +16,127 @@ export class BankAgent implements IAgent {
   description = 'Parses CSV data from bank statements and populates the bookkeeping database.';
   capabilities = ['csv-parsing', 'bank-reconciliation', 'data-ingestion'];
 
-  async execute(task: string): Promise<AgentResponse> {
-    setAgentStatus(this.name, 'working', task.slice(0, 50));
-    logInfo(this.name, `execute: ${task}`);
-    try {
-      // Use local sample for demo if no specific file provided
-      const samplePath = path.resolve('conductor/tracks/konyveles_automatizalas/resources/samples/bank_transactions.csv');
-      
-      if (!fs.existsSync(samplePath)) {
-        logError(this.name, `Sample file not found: ${samplePath}`);
-        return { status: 'error', error: 'Sample file missing' };
-      }
+  private getSamplePath(): string {
+    return path.resolve('conductor/tracks/konyveles_automatizalas/resources/samples/bank_transactions.csv');
+  }
 
-      const content = fs.readFileSync(samplePath, 'utf8');
-      const lines = content.split('\n').filter(l => l.trim().length > 0);
-      
-      // Basic CSV parser (skipping header) - id,date,amount,counterparty,description
-      const transactions = [];
-      for (let i = 1; i < lines.length; i++) {
-        const parts = lines[i].split(',').map(p => p.trim());
-        if (parts.length >= 4) {
-          const tx = {
-            id: `BANK-${parts[0]}`,
-            source: 'bank_tx',
-            data: {
-              id: parts[0],
-              date: parts[1],
-              amount: parseFloat(parts[2]),
-              partner: parts[3],
-              reference: parts[4] || ''
-            },
-            status: 'PENDING_MATCH' as const
+  private resolveCsvPath(context?: AgentContext | Record<string, unknown>): string | undefined {
+    if (!context || typeof context !== 'object') {
+      return undefined;
+    }
+
+    const directPath = (context as Record<string, unknown>).bankCsvPath;
+    if (typeof directPath === 'string' && directPath.trim()) {
+      return directPath.trim();
+    }
+
+    if ('payload' in context) {
+      const payload = (context as AgentContext).payload;
+      const payloadPath = payload?.bankCsvPath;
+      if (typeof payloadPath === 'string' && payloadPath.trim()) {
+        return payloadPath.trim();
+      }
+    }
+
+    return undefined;
+  }
+
+  private toResponse(result: AgentResult): AgentResponse {
+    return {
+      success: result.success,
+      status: result.success ? 'success' : 'error',
+      message: result.message,
+      data: result.data,
+      error: result.success ? undefined : result.message,
+    };
+  }
+
+  private isHeaderRow(row: string): boolean {
+    const normalized = row.toLowerCase();
+    return normalized.includes('date') && normalized.includes('amount') && (normalized.includes('partner') || normalized.includes('reference'));
+  }
+
+  parseRow(csvRow: string): BankTransactionData {
+    const delimiter = csvRow.includes(';') ? ';' : ',';
+    const parts = csvRow.split(delimiter).map((part) => part.trim());
+
+    if (parts.length < 4) {
+      throw new Error('Invalid bank CSV row');
+    }
+
+    const [date, partner, amountText, reference] = parts;
+    const normalizedAmount = amountText.replace(/\s/g, '').replace(',', '.');
+    const amount = Number(normalizedAmount);
+
+    if (!date || !partner || !reference || Number.isNaN(amount)) {
+      throw new Error('Invalid bank CSV row');
+    }
+
+    return { date, partner, amount, reference };
+  }
+
+  async executeTask(context: AgentContext): Promise<AgentResult> {
+    const bankCsvPath = this.resolveCsvPath(context);
+
+    if (!bankCsvPath) {
+      return {
+        success: false,
+        status: 'error',
+        message: 'Missing bankCsvPath in context',
+        data: [],
+      };
+    }
+
+    logInfo(this.name, `Processing bank CSV: ${bankCsvPath}`);
+
+    try {
+      const content = await fs.readFile(bankCsvPath, 'utf-8');
+      const lines = content.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+      const rows = lines.length > 0 && this.isHeaderRow(lines[0]) ? lines.slice(1) : lines;
+      const transactions: BankTransactionData[] = [];
+
+      for (const row of rows) {
+        try {
+          const parsed = this.parseRow(row);
+          const transaction: BookkeepingTransaction = {
+            id: `bank_${transactions.length + 1}`,
+            source: 'BankAgent',
+            data: parsed,
+            status: 'PENDING_MATCH' as TransactionStatus,
           };
-          
-          saveTransaction(tx);
-          transactions.push(tx);
+
+          saveTransaction(transaction);
+          transactions.push(parsed);
+        } catch (error: unknown) {
+          const rowError = error instanceof Error ? error : new Error(String(error));
+          logError(this.name, `Error parsing row '${row}':`, rowError);
         }
       }
 
-      return { status: 'success', data: transactions };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError(this.name, `execute error: ${error}`);
-      return { status: 'error', error };
+      return {
+        success: true,
+        status: 'success',
+        message: `Processed ${transactions.length} bank transactions`,
+        data: transactions,
+      };
+    } catch (error: unknown) {
+      const err = error instanceof Error ? error : new Error(String(error));
+      logError(this.name, 'executeTask failed:', err);
+      return {
+        success: false,
+        status: 'error',
+        message: err.message,
+        data: [],
+      };
+    }
+  }
+
+  async execute(task: string, context?: Record<string, unknown>): Promise<AgentResponse> {
+    setAgentStatus(this.name, 'working', task.slice(0, 50));
+    try {
+      const bankCsvPath = this.resolveCsvPath(context) ?? this.getSamplePath();
+      const result = await this.executeTask({ task, payload: { bankCsvPath } });
+      return this.toResponse(result);
     } finally {
       setAgentStatus(this.name, 'idle');
     }

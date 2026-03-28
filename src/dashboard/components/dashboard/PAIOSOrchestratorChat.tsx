@@ -317,7 +317,7 @@ export function PAIOSOrchestratorChat() {
     };
 
     const playTTS = async (text: string) => {
-        const plainText = text.replace(/[#*_`~\[\]()>|-]/g, '').replace(/\n{2,}/g, '. ').trim();
+        const plainText = text.replace(/[#*_`~[\]()>|-]/g, '').replace(/\n{2,}/g, '. ').trim();
         if (!plainText) return;
 
         try {

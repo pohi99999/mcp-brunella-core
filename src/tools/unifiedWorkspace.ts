@@ -12,7 +12,6 @@ import { google, Auth } from 'googleapis';
 import { logInfo, logError } from '../utils/logger.js';
 import { getGoogleAuth } from '../utils/googleAuth.js';
 import * as fs from 'fs/promises';
-import * as path from 'path';
 
 // ============================================================================
 // Types & Interfaces
@@ -34,7 +33,7 @@ export interface EmailDraft {
 export interface SheetOperation {
   spreadsheetId: string;
   range: string;
-  values: any[][];
+  values: unknown[][];
   operation: 'append' | 'update' | 'read';
 }
 
@@ -59,9 +58,13 @@ export interface CalendarEvent {
 
 export class UnifiedWorkspaceClient {
   private auth: Auth.OAuth2Client | undefined;
+   
   private gmail: any;
+   
   private sheets: any;
+   
   private drive: any;
+   
   private calendar: any;
 
   constructor(private config: WorkspaceConfig) {}
@@ -130,7 +133,7 @@ export class UnifiedWorkspaceClient {
   /**
    * Search emails by query
    */
-  async searchEmails(query: string, maxResults: number = 10): Promise<any[]> {
+  async searchEmails(query: string, maxResults: number = 10): Promise<unknown[]> {
     if (!this.gmail) {
       await this.initialize();
     }
@@ -325,7 +328,7 @@ export class UnifiedWorkspaceClient {
 
       logInfo('UnifiedWorkspace', `Uploading file: ${fileInfo.name}`);
 
-      const fileMetadata: any = {
+      const fileMetadata: { name: string; mimeType: string; parents?: string[] } = {
         name: fileInfo.name,
         mimeType: fileInfo.mimeType,
       };
@@ -494,7 +497,7 @@ export class UnifiedWorkspaceClient {
   /**
    * List files in a Drive folder
    */
-  async listFiles(folderId?: string, query?: string): Promise<any[]> {
+  async listFiles(folderId?: string, query?: string): Promise<unknown[]> {
     if (!this.drive) {
       await this.initialize();
     }

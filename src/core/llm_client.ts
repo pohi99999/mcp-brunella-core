@@ -125,11 +125,12 @@ export const generateResponse: (
       });
 
       return response;
-    } catch (error: any) {
-      lastError = error;
+    } catch (error: unknown) {
+      const errorMsg = error instanceof Error ? error.message : String(error);
+      lastError = error instanceof Error ? error : new Error(String(error));
       logError(
         "LLM_CLIENT",
-        `Hiba a(z) ${provider} szolgáltatónál: ${error.message}`,
+        `Hiba a(z) ${provider} szolgáltatónál: ${errorMsg}`,
       );
 
       // Fallback: prefer Gemini 2.0 Flash if Ollama is unavailable
@@ -142,10 +143,11 @@ export const generateResponse: (
             GEMINI_MODEL,
           );
           return fallbackResponse;
-        } catch (fallbackError: any) {
+        } catch (fallbackError: unknown) {
+          const fallbackMsg = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
           logError(
             "LLM_CLIENT",
-            `Gemini fallback is sikertelen: ${fallbackError.message}`,
+            `Gemini fallback is sikertelen: ${fallbackMsg}`,
           );
           throw lastError;
         }
@@ -161,10 +163,11 @@ export const generateResponse: (
             modelName,
           );
           return fallbackResponse;
-        } catch (fallbackError: any) {
+        } catch (fallbackError: unknown) {
+          const fallbackMsg = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
           logError(
             "LLM_CLIENT",
-            `Ollama fallback is sikertelen: ${fallbackError.message}`,
+            `Ollama fallback is sikertelen: ${fallbackMsg}`,
           );
           // Throw original error, not the fallback error
           throw lastError;

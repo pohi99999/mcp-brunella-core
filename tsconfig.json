@@ -12,5 +12,5 @@
     "types": ["node", "vitest/globals"]
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "src/dashboard", "src/cli/dashboardCommands.test.ts"]
+  "exclude": ["node_modules", "src/dashboard", "src/p-sales-standalone", "src/cli/dashboardCommands.test.ts"]
 }

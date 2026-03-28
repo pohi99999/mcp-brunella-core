@@ -115,7 +115,7 @@ export class GrantWatcherAgent extends BaseAgent {
       let taskData: any = {};
       try {
         taskData = JSON.parse(task);
-      } catch {}
+      } catch { /* ignore parse errors, use empty taskData */ }
 
       // Transform result to match test expectations
       const transformedResult = {

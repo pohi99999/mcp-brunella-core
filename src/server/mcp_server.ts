@@ -4,13 +4,14 @@ import {
   CallToolRequestSchema,
   ListToolsRequestSchema,
   Tool,
-  TextContent
+  TextContent,
+  type CallToolResult
 } from '@modelcontextprotocol/sdk/types.js';
 import fs from 'fs';
 import path from 'path';
 import { glob } from 'glob';
 import { getSafeZoneValidator } from '../security/safe_zone_validator.js';
-import { logInfo, logError, logWarn } from '../utils/logger.js';
+import { logInfo, logError } from '../utils/logger.js';
 
 /**
  * MCP Filesystem Server
@@ -54,8 +55,9 @@ export class MCPFilesystemServer {
     });
 
     // Call tool
-    this.server.setRequestHandler(CallToolRequestSchema, async (request) => {
-      const { name, arguments: args } = request.params;
+    this.server.setRequestHandler(CallToolRequestSchema, async (request): Promise<CallToolResult> => {
+      const { name } = request.params;
+      const args: Record<string, unknown> = request.params.arguments ?? {};
       logInfo('MCPFilesystemServer', `Calling tool: ${name}`);
 
       try {
@@ -71,13 +73,14 @@ export class MCPFilesystemServer {
           default:
             throw new Error(`Unknown tool: ${name}`);
         }
-      } catch (error: any) {
-        logError('MCPFilesystemServer', `Tool ${name} failed: ${error.message}`);
+      } catch (error: unknown) {
+        const errorMsg = error instanceof Error ? error.message : String(error);
+        logError('MCPFilesystemServer', `Tool ${name} failed: ${errorMsg}`);
         return {
           content: [
             {
               type: 'text',
-              text: `Error: ${error.message}`
+              text: `Error: ${errorMsg}`
             } as TextContent
           ],
           isError: true
@@ -169,7 +172,7 @@ export class MCPFilesystemServer {
   /**
    * Handle read_file tool
    */
-  private async handleReadFile(args: any): Promise<any> {
+  private async handleReadFile(args: Record<string, unknown>): Promise<CallToolResult> {
     const filePath = args.path as string;
 
     // Validate access
@@ -206,15 +209,16 @@ export class MCPFilesystemServer {
           } as TextContent
         ]
       };
-    } catch (error: any) {
-      throw new Error(`Failed to read file: ${error.message}`, { cause: error });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to read file: ${msg}`, { cause: error });
     }
   }
 
   /**
    * Handle write_file tool
    */
-  private async handleWriteFile(args: any): Promise<any> {
+  private async handleWriteFile(args: Record<string, unknown>): Promise<CallToolResult> {
     const filePath = args.path as string;
     const content = args.content as string;
     const createDirs = args.create_dirs !== false; // Default true
@@ -252,15 +256,16 @@ export class MCPFilesystemServer {
           } as TextContent
         ]
       };
-    } catch (error: any) {
-      throw new Error(`Failed to write file: ${error.message}`, { cause: error });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to write file: ${msg}`, { cause: error });
     }
   }
 
   /**
    * Handle list_directory tool
    */
-  private async handleListDirectory(args: any): Promise<any> {
+  private async handleListDirectory(args: Record<string, unknown>): Promise<CallToolResult> {
     const dirPath = args.path as string;
     const includeHidden = args.include_hidden === true;
 
@@ -315,17 +320,20 @@ export class MCPFilesystemServer {
           } as TextContent
         ]
       };
-    } catch (error: any) {
-      throw new Error(`Failed to list directory: ${error.message}`, { cause: error });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to list directory: ${msg}`, { cause: error });
     }
   }
 
   /**
    * Handle search_files tool
    */
-  private async handleSearchFiles(args: any): Promise<any> {
+  private async handleSearchFiles(args: Record<string, unknown>): Promise<CallToolResult> {
     const pattern = args.pattern as string;
-    const directory = args.directory || process.cwd();
+    const directory = typeof args.directory === 'string' && args.directory.trim().length > 0
+      ? args.directory
+      : process.cwd();
 
     // Validate directory access
     if (!this.validator.validate(directory, 'read')) {
@@ -362,8 +370,9 @@ export class MCPFilesystemServer {
           } as TextContent
         ]
       };
-    } catch (error: any) {
-      throw new Error(`Failed to search files: ${error.message}`, { cause: error });
+    } catch (error: unknown) {
+      const msg = error instanceof Error ? error.message : String(error);
+      throw new Error(`Failed to search files: ${msg}`, { cause: error });
     }
   }
 

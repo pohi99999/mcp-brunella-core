@@ -7,7 +7,7 @@ import { PythonShell } from "../src/utils/pythonShell.js";
 const venvPy = path.resolve(config.workspaceRoot, process.platform === "win32"
     ? ".venv/Scripts/python.exe"
     : ".venv/bin/python");
-let hasPython = false;
+let hasPython;
 try {
     execSync(`"${venvPy}" --version`, { stdio: "ignore" });
     hasPython = true;

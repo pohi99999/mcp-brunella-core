@@ -38,9 +38,9 @@ export async function bookkeepingCommand() {
     const spinner = ora('Banki és NAV adatok beolvasása...').start();
     try {
       // Ingest NAV
-      const navResult: any = await agentManager.delegate('NavAgent', 'Process NAV invoices from samples');
+      const navResult = await agentManager.delegate('NavAgent', 'Process NAV invoices from samples') as { data?: unknown[] };
       // Ingest Bank
-      const bankResult: any = await agentManager.delegate('BankAgent', 'Process bank transactions from samples');
+      const bankResult = await agentManager.delegate('BankAgent', 'Process bank transactions from samples') as { data?: unknown[] };
       
       spinner.stop();
       console.log(chalk.green(`✅ NAV számlák: ${navResult.data?.length || 0} db`));
@@ -54,11 +54,11 @@ export async function bookkeepingCommand() {
   if (action === 'match') {
     const spinner = ora('Intelligens párosítás folyamatban...').start();
     try {
-      const result: any = await agentManager.delegate('MatchingAgent', 'Match all PENDING bank transactions');
+      const result = await agentManager.delegate('MatchingAgent', 'Match all PENDING bank transactions') as { status: string; data?: { total: number; matched: number; manual: number }; error?: string };
       spinner.stop();
 
       if (result.status === 'success') {
-        const { total, matched, manual } = result.data;
+        const { total, matched, manual } = result.data ?? { total: 0, matched: 0, manual: 0 };
         console.log(boxen(
           chalk.white(`Összes tétel: ${chalk.bold(total)}\n`) +
           chalk.green(`Párosítva: ${chalk.bold(matched)}\n`) +
