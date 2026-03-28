@@ -1,5 +1,9 @@
 # Copilot Instructions - Brunella Agent System
 
+
+
+
+
 > Source of truth: `README.md`. If anything conflicts, follow `README.md`.
 
 ## Start here

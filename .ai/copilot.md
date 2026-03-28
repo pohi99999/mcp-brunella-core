@@ -102,6 +102,33 @@ Optional follow-ups (I can perform on request):
 - Address the Vite / React import errors in the dashboard dev:ui if you want help with that separately.
 </next_steps>
 
+<track_updates>
+### 2026-03-28 20:00 - Golden intelligencia track implementáció
+
+- **goldeninteligencia20260327** — Implementálva: intelligence monitor route + CLI + dashboard panel, build és fast suite zöld
+  - **ID:** goldeninteligencia20260327
+  - **CompletedAt:** 2026-03-28T20:00:00.000Z
+  - Új API: `src/server/routes/intelligence.ts` + mount a `src/server/routes/index.ts` és `src/server/web.ts` útvonalakon
+  - Új CLI: `brunella intelligence watch` (`src/cli/intelligenceCommands.ts`) interaktív review / ingest flow-val
+  - Új dashboard panel: `IntelligenceMonitorPanel` + regisztráció a navigation registry-ben
+  - Backend core: meglévő `src/core/intelligenceMonitor.ts` auditálva és típushibák javítva (confidence, index stats)
+  - Verifikáció: `npm run build` ✅, `npm run test:fast` ✅ (186 passed, 1 skipped)
+
+### 2026-03-28 — Track Completion & Archival (rövid napló)
+
+- **P-Sales20260327** — Jelölve: completed (100%), archiválva
+  - **ID:** P-Sales20260327
+  - **CompletedAt:** 2026-03-28T19:00:00.000Z
+  - Lokáció: conductor/tracks/P-Sales20260327/ → archivált másolat: conductor/archive/P-Sales20260327/
+
+- **Cloudflare DNS Zone Reconciliation for Custom Domains** — Jelölve: completed (100%), archiválva
+  - **ID:** cloudflare_dns_zone_reconciliation_20260325
+  - **CompletedAt:** 2026-03-28T19:00:00.000Z
+  - Lokáció: conductor/tracks/cloudflare_dns_zone_reconciliation_20260325/ → archivált másolat: conductor/archive/cloudflare_dns_zone_reconciliation_20260325/
+
+Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre hoztuk létre; további dokumentáció frissítéseket, dashboard regisztrációt és CLI hivatkozásokat kérésre hozzáadok.
+</track_updates>
+
 <checkpoint_title>Auto-start Brunella & Copilot</checkpoint_title>
 
 ### 2026-03-27  
@@ -164,3 +191,18 @@ Optional follow-ups (I can perform on request):
 - Kezdőlap ✅, Szolgáltatásaink ✅ (500->200), Portfolio ✅, Termékek ✅
 
 **Státusz:** ✅ Befejezve
+
+### 2026-03-28 — Track Completion & Archival
+**Feladat:** OWL-inspirált Multi-Agent Conflict Resolution (owl_agent_coordinator_20260321) és E2B Sandbox Crawl4AI (e2b_sandbox_crawl4ai_20260325) végleges lezárása és archiválása per felhasználói kérés
+**Műveletek:**
+- A két track meta.json fájlát frissítettük → status: completed, progress: 100, completed dátum hozzáadva
+- Archív másolatok létrehozva: conductor/archive/owl_agent_coordinator_20260321/, conductor/archive/e2b_sandbox_crawl4ai_20260325/
+- A conductor/tracks.md fájl frissítve: a két track áthelyezve a Completed / Archived státuszokba
+- Ez a checkpoint dokumentálja a döntést; a konkrét implementációs munkák (kód, tesztek, dashboard, CLI) külön taskként kezelendők és ütemezhetők.
+**Érintett fájlok:**
+- conductor/archive/owl_agent_coordinator_20260321/meta.json
+- conductor/archive/owl_agent_coordinator_20260321/track.md
+- conductor/archive/e2b_sandbox_crawl4ai_20260325/meta.json
+- conductor/archive/e2b_sandbox_crawl4ai_20260325/spec.md
+- conductor/archive/e2b_sandbox_crawl4ai_20260325/track.md
+- conductor/tracks.md

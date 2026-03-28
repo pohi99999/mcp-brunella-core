@@ -21,6 +21,25 @@ interface JulesAutomationAction {
   params?: Record<string, unknown>;
 }
 
+interface WeeklyResearchSource {
+  name: string;
+  url: string;
+}
+
+interface WeeklyResearchTaskMetadata extends Record<string, unknown> {
+  agentName?: string;
+  reportTitle?: string;
+  reportType?: string;
+  reportOutputDir?: string;
+  lookbackDays?: number;
+  githubQueries?: string[];
+  sourcePages?: WeeklyResearchSource[];
+  topics?: string[];
+  tags?: string[];
+  maxGitHubResults?: number;
+  maxExcerptLength?: number;
+}
+
 /**
  * ScheduledTasksRunner - Dynamically executes tasks from the database
  */
@@ -33,6 +52,7 @@ export class ScheduledTasksRunner {
   public async start() {
     logInfo('ScheduledTasksRunner', 'Initializing dynamic task scheduler...');
     await this.seedDefaults();
+    await this.ensureWeeklyResearchTask();
     await this.importJulesAutomations();
     await this.refreshSchedule();
   }
@@ -63,6 +83,86 @@ export class ScheduledTasksRunner {
       }
     } catch (error) {
       logError('ScheduledTasksRunner', `Failed to import Jules automations: ${error}`);
+    }
+  }
+
+  /**
+   * Ensure the weekly AI research task exists and stays configured.
+   */
+  private async ensureWeeklyResearchTask() {
+    try {
+      const db = getGlobalDb();
+      const now = new Date().toISOString();
+      const metadata: WeeklyResearchTaskMetadata = {
+        agentName: 'AIResearchWeekly',
+        reportTitle: 'Heti AI Ökoszisztéma Figyelő',
+        reportType: 'weekly_ai_ecosystem_watch',
+        reportOutputDir: 'docs/001_Jelentés',
+        lookbackDays: 7,
+        githubQueries: [
+          'topic:ai-agent sort:updated stars:>50',
+          'topic:agentic sort:updated stars:>50',
+          'topic:mcp sort:updated stars:>50',
+          'browser automation playwright agent sort:updated stars:>25',
+        ],
+        sourcePages: [
+          { name: 'GitHub Changelog', url: 'https://github.blog/changelog/' },
+          { name: 'Chrome DevTools - What\'s New', url: 'https://developer.chrome.com/docs/devtools/whatsnew/' },
+          { name: 'Google AI Blog', url: 'https://blog.google/technology/ai/' },
+          { name: 'Microsoft AI Foundry', url: 'https://www.microsoft.com/en-us/ai/ai-foundry' },
+          { name: 'LangChain Blog', url: 'https://blog.langchain.dev/' },
+          { name: 'Anthropic News', url: 'https://www.anthropic.com/news' },
+          { name: 'OpenAI News', url: 'https://openai.com/news/' },
+        ],
+        topics: [
+          'GitHub open source AI agent framework updates',
+          'Chrome DevTools / browser automation updates',
+          'Google AI / Gemini updates',
+          'Azure AI Foundry updates',
+          'AI agent ecosystem experiments and releases',
+        ],
+        tags: ['weekly', 'ai', 'research', 'agents', 'foundry'],
+        maxGitHubResults: 4,
+        maxExcerptLength: 3500,
+      };
+
+      const prompt = 'Heti AI ökoszisztéma kutatás és jelentéskészítés';
+
+      db.prepare(`
+        INSERT INTO scheduled_tasks (
+          id,
+          title,
+          prompt,
+          cron_expression,
+          handler,
+          enabled,
+          metadata,
+          created_at,
+          updated_at
+        )
+        VALUES (?, ?, ?, ?, ?, 1, ?, ?, ?)
+        ON CONFLICT(id) DO UPDATE SET
+          title = excluded.title,
+          prompt = excluded.prompt,
+          cron_expression = excluded.cron_expression,
+          handler = excluded.handler,
+          enabled = excluded.enabled,
+          metadata = excluded.metadata,
+          updated_at = excluded.updated_at
+      `).run(
+        'weekly-ai-research',
+        'Weekly AI Ecosystem Research',
+        prompt,
+        '0 5 * * 1',
+        'agent',
+        JSON.stringify(metadata),
+        now,
+        now,
+      );
+
+      logInfo('ScheduledTasksRunner', 'Weekly AI research task ensured.');
+    } catch (error) {
+      logError('ScheduledTasksRunner', `Failed to ensure weekly AI research task: ${error}`);
     }
   }
 
@@ -198,16 +298,35 @@ export class ScheduledTasksRunner {
     logInfo('ScheduledTasksRunner', `Executing task: ${task.title} (ID: ${task.id})`);
 
     try {
-      let result: any = null;
+      let result: unknown = null;
+      const metadata = this.parseTaskMetadata(task) as WeeklyResearchTaskMetadata;
+      const taskContext = {
+        ...metadata,
+        scheduledTaskId: task.id,
+        scheduledTaskTitle: task.title,
+        scheduledCronExpression: task.cron_expression,
+        scheduledHandler: task.handler,
+        scheduledTaskStartedAt: startTime,
+      };
 
       if (task.handler === 'agent') {
-        // Execute via Agent Manager with auto-routing
-        result = await agentManager.delegateTask({
-          id: `scheduled-${task.id}-${Date.now()}`,
-          instruction: task.prompt,
-          source: 'scheduler',
-          createdAt: new Date().toISOString()
-        });
+        const preferredAgent = typeof metadata.agentName === 'string' && metadata.agentName.trim()
+          ? metadata.agentName.trim()
+          : undefined;
+
+        if (preferredAgent) {
+          logInfo('ScheduledTasksRunner', `Executing scheduled task via explicit agent: ${preferredAgent}`);
+          result = await agentManager.delegate(preferredAgent, task.prompt, taskContext);
+        } else {
+          // Execute via Agent Manager with auto-routing
+          result = await agentManager.delegateTask({
+            id: `scheduled-${task.id}-${Date.now()}`,
+            instruction: task.prompt,
+            context: taskContext,
+            source: 'scheduler',
+            createdAt: new Date().toISOString(),
+          });
+        }
       } else if (task.handler === 'scan-todos') {
         // Trigger todo scanner via internal API call simulation
         const response = await fetch('http://localhost:3000/api/v1/suggested-tasks/scan', {

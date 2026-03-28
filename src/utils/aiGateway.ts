@@ -336,7 +336,37 @@ export class AIGatewayClient {
 // SINGLETON INSTANCE
 // ============================================================================
 
-export const aiGateway = new AIGatewayClient();
+// Lazy singleton: do NOT instantiate AIGatewayClient at module import time.
+// Some CLIs import many modules; creating the client eagerly pollutes help output
+// with initialization logs. We use a Proxy to lazily construct the real client
+// only when a method/property is first accessed.
+
+let _aiGatewayInstance: AIGatewayClient | null = null;
+function ensureAiGateway(): AIGatewayClient {
+  if (!_aiGatewayInstance) _aiGatewayInstance = new AIGatewayClient();
+  return _aiGatewayInstance;
+}
+
+export const aiGateway: AIGatewayClient = new Proxy(
+  {},
+  {
+    get(_target, prop: string | symbol) {
+      const inst = ensureAiGateway();
+      const value = (inst as any)[prop];
+      if (typeof value === "function") return value.bind(inst);
+      return value;
+    },
+    set(_target, prop: string | symbol, val: unknown) {
+      const inst = ensureAiGateway();
+      (inst as any)[prop] = val;
+      return true;
+    },
+    has(_target, prop: string | symbol) {
+      const inst = ensureAiGateway();
+      return prop in inst;
+    },
+  },
+) as unknown as AIGatewayClient;
 
 // ============================================================================
 // HELPER FUNCTIONS (backward compatible)
@@ -346,27 +376,27 @@ export async function llmChat(
   messages: ChatMessage[],
   options?: { model?: string; temperature?: number; maxTokens?: number },
 ): Promise<string> {
-  return aiGateway.chat(messages, options);
+  return ensureAiGateway().chat(messages, options);
 }
 
 export async function llmGenerate(
   prompt: string,
   options?: { model?: string; temperature?: number; maxTokens?: number },
 ): Promise<string> {
-  return aiGateway.generate(prompt, options);
+  return ensureAiGateway().generate(prompt, options);
 }
 
 export async function llmEmbeddings(
   text: string,
   options?: { model?: string; expectedDimension?: number },
 ): Promise<number[]> {
-  return aiGateway.embeddings(text, options);
+  return ensureAiGateway().embeddings(text, options);
 }
 
 export function getAIGatewayStats(): AIGatewayStats {
-  return aiGateway.getStats();
+  return ensureAiGateway().getStats();
 }
 
 export function isUsingCFGateway(): boolean {
-  return aiGateway.isUsingGateway();
+  return ensureAiGateway().isUsingGateway();
 }

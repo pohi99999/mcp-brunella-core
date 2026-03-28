@@ -52,6 +52,7 @@ import { registerBookkeepingCommands } from "./cli/bookkeepingCommands.js";
 import { registerPropertySalesCommands } from "./cli/propertySalesCommands.js";
 import { registerMemoriaCommands } from "./cli/memoriaCommands.js";
 import { registerObservabilityCommands } from "./cli/observabilityCommands.js";
+import { registerIntelligenceCommands } from "./cli/intelligenceCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
 import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from "./core/assistantBlueprint.js";
 
@@ -1819,6 +1820,7 @@ registerCrawl4aiCommands(program);
 registerBookkeepingCommands(program);
 registerPropertySalesCommands(program);
 registerMemoriaCommands(program);
+registerIntelligenceCommands(program);
 registerObservabilityCommands(program);
 
 // Register Conductor commands(Track State Management) - MOVED AFTER conductorCmd definition

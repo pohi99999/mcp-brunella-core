@@ -1,7 +1,7 @@
 # 🌌 BRUNELLA MASTER CONTEXT (Élő Rendszertérkép)
 
 **Verzió:** 2.4.0
-**Frissítve:** 2026-03-27
+**Frissítve:** 2026-03-28
 **Státusz:** ACTIVE (Élő rendszer)
 
 ---
@@ -20,7 +20,7 @@ A **Brunella Agent System (BAS)** egy hibrid, multi-agent AI ökoszisztéma, ame
 
 ## 2. 🤖 Az Ügynök Sereg (The Legion)
 
-A rendszer **57** regisztrált ügynökkel rendelkezik.
+A rendszer **58** regisztrált ügynökkel rendelkezik.
 
 ### 👑 Vezérkar (Core Leadership)
 | Ügynök | Szerep | Képességek |
@@ -82,6 +82,7 @@ A rendszer **57** regisztrált ügynökkel rendelkezik.
 | **Python** | Python Subsystem Guardian |  |
 | **qa** | undefined | test_execution, validation |
 | **researcher** | undefined | rag_search, summarization |
+| **AIResearchWeekly** | undefined | web_research, github_signal_collection, official_updates_monitoring |
 | **robotkezv2** | undefined | web_search, data_extract, form_fill |
 | **sales** | undefined | lead_generation, crm_integration, email_drafting |
 | **sales_hunter** | undefined | linkedin_scraping, lead_scoring, email_draft_generation |

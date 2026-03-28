@@ -33,6 +33,7 @@ import {
   traceAgentExecution,
   type TraceContext,
 } from "../utils/agentTracer.js";
+import AgentCoordinator from "../core/agentCoordinator.js";
 import { recordAgentExecution } from "../utils/metrics.js";
 import { checkToolPermission } from "../tools/toolPermissions.js";
 import { record as auditRecord } from "../core/auditLog.js";
@@ -151,6 +152,8 @@ export class AgentManager extends EventEmitter {
   private activeExecutions: Map<number, AbortController> = new Map(); // Új: futó feladatok megszakíthatósága
   private recentWorkflowExecutions: WorkflowExecutionSummary[] = [];
   private initializationPromise: Promise<void> | null = null;
+  // AgentCoordinator coordinates resource locks and simple negotiation between agents
+  private agentCoordinator: AgentCoordinator;
   private initialized = false;
   private readonly FAILURE_THRESHOLD = 3;
   private readonly RESET_TIMEOUT = 5 * 60 * 1000; // 5 perc
@@ -168,6 +171,13 @@ export class AgentManager extends EventEmitter {
     this.registry = this.loadRegistry();
     this.edgeConfig = this.loadEdgeConfig();
     this.seedAgentDiagnostics(this.registry.agents);
+    // Initialize coordinator for resource locking and negotiation
+    this.agentCoordinator = new AgentCoordinator();
+  }
+
+  /** Expose internal coordinator for hooks and instrumentation */
+  getCoordinator(): AgentCoordinator {
+    return this.agentCoordinator;
   }
 
   // --------------------------------------------------------------------------
@@ -722,6 +732,14 @@ export class AgentManager extends EventEmitter {
             throw new Error(`Circuit Breaker OPEN for ${agentName}`);
           }
 
+          // Instrumentation: increment coordinator load for this agent execution
+          try {
+            const prevLoad = this.agentCoordinator.getLoad(agentName) || 0;
+            this.agentCoordinator.setLoad(agentName, prevLoad + 1);
+          } catch {
+            /* non-critical */
+          }
+
           this.updateAgentRuntime(agentName, {
             status: "working",
             lastTask: instruction,
@@ -763,6 +781,13 @@ export class AgentManager extends EventEmitter {
             }
           } finally {
             if (taskId) this.activeExecutions.delete(taskId);
+            // Decrement coordinator load after execution attempt
+            try {
+              const prev = this.agentCoordinator.getLoad(agentName) || 0;
+              this.agentCoordinator.setLoad(agentName, Math.max(0, prev - 1));
+            } catch {
+              /* non-critical */
+            }
           }
         },
         `${agentName}:execute`,

@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-28 00:55
+**Generálva:** 2026-03-28 21:17
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -27,6 +27,24 @@ start-full.bat
 ---
 
 ## Összesített Napló (Időrendben)
+
+### 2026-03-28
+
+#### 20:25 - [Claude] 100%-os trackek archiválása ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks.md` — Completed blokk ürítve, archive blokk + statisztikák frissítve (129 archived, 0 completed), `conductor/tracks/goldeninteligencia20260327/meta.json` — archived státusz, `conductor/tracks/P-Sales20260327/meta.json` — archived státusz, `conductor/tracks/cloudflare_dns_zone_reconciliation_20260325/meta.json` — archived státusz, `conductor/archive/goldeninteligencia20260327/` — frissített archive példány (+2 további)
+
+#### 20:00 - [Copilot] Golden intelligencia track implementáció
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+
+#### 00:00 - [Claude] ESLint teljes javítás + n8n könyvelési pipeline track ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `eslint.config.js` — globals (node/browser/es2021), könyvtár-szintű rule override-ok (agents, dashboard, cli, scripts, core, utils), `analyze.js` ignores, vitest globals, `@typescript-eslint/ban-ts-comment: "off"` teszteknek, `tsconfig.json` — `"src/p-sales-standalone"` exclude-ba (JSX build isolation), `scripts/precommit-lint.mjs` — `--no-warn-ignored` flag (config fájlok false-positive warnolása megszűnt), `conductor/tracks/n8n_konyveles_pipeline_20260328/meta.json` — ÚJ track, ACTIVE státusz, `conductor/tracks/n8n_konyveles_pipeline_20260328/spec.md` — ÚJ teljes specifikáció (+2 további)
+
+---
 
 ### 2026-03-27
 
@@ -578,10 +596,10 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 82 | 2026-03-27 |
+| Claude | 84 | 2026-03-28 |
 | Gemini | 11 | 2026-03-01 |
 | Cursor | 0 | N/A |
-| Copilot | 0 | N/A |
+| Copilot | 1 | 2026-03-28 |
 
 ---
 

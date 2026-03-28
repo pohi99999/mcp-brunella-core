@@ -1,7 +1,7 @@
 {
   "id": "n8n_konyveles_pipeline_20260328",
   "name": "n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu",
-  "status": "PROPOSED",
+  "status": "ACTIVE",
   "priority": "HIGH",
   "created": "2026-03-28",
   "owner": "Pohánka Péter",

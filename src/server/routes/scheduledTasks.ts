@@ -15,8 +15,21 @@ interface ScheduledTaskRecord {
   next_run_at?: string;
   last_status?: string;
   last_result?: string;
+  metadata?: string | null;
   created_at: string;
   updated_at: string;
+}
+
+function normalizeMetadata(value: unknown): string {
+  if (typeof value === 'string') {
+    return value.trim() ? value : '{}';
+  }
+
+  if (value && typeof value === 'object') {
+    return JSON.stringify(value);
+  }
+
+  return '{}';
 }
 
 export function createScheduledTasksRoutes(db: Database.Database): Router {
@@ -70,7 +83,7 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    */
   router.post('/', (req: Request, res: Response) => {
     try {
-      const { title, prompt, cron_expression, handler } = req.body;
+      const { title, prompt, cron_expression, handler, metadata } = req.body;
 
       if (!title || !prompt || !cron_expression || !handler) {
         return res.status(400).json({ error: 'Missing required fields' });
@@ -83,11 +96,24 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
 
       const id = uuidv4();
       const now = new Date().toISOString();
+      const normalizedMetadata = normalizeMetadata(metadata);
 
-      db.prepare(`
-        INSERT INTO scheduled_tasks (id, title, prompt, cron_expression, handler, created_at, updated_at)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-      `).run(id, title, prompt, cron_expression, handler, now, now);
+      // Some installations (tests) may have a scheduled_tasks schema without the `metadata` column.
+      // Check table info and adapt the INSERT statement accordingly to remain compatible.
+      const tableInfo = db.prepare("PRAGMA table_info(scheduled_tasks)").all() as Array<{ name: string }>;
+      const hasMetadata = tableInfo.some((c) => c.name === 'metadata');
+
+      if (hasMetadata) {
+        db.prepare(`
+          INSERT INTO scheduled_tasks (id, title, prompt, cron_expression, handler, metadata, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        `).run(id, title, prompt, cron_expression, handler, normalizedMetadata, now, now);
+      } else {
+        db.prepare(`
+          INSERT INTO scheduled_tasks (id, title, prompt, cron_expression, handler, created_at, updated_at)
+          VALUES (?, ?, ?, ?, ?, ?, ?)
+        `).run(id, title, prompt, cron_expression, handler, now, now);
+      }
 
       const task = db
         .prepare('SELECT * FROM scheduled_tasks WHERE id = ?')
@@ -112,7 +138,7 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
    */
   router.patch('/:id', (req: Request, res: Response) => {
     try {
-      const { title, prompt, cron_expression, handler, enabled } = req.body;
+      const { title, prompt, cron_expression, handler, enabled, metadata } = req.body;
       const { id } = req.params;
 
       const task = db
@@ -135,12 +161,13 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
         cron_expression: cron_expression ?? task.cron_expression,
         handler: handler ?? task.handler,
         enabled: enabled !== undefined ? enabled : task.enabled,
+        metadata: metadata !== undefined ? normalizeMetadata(metadata) : task.metadata ?? '{}',
         updated_at: now,
       };
 
       db.prepare(`
         UPDATE scheduled_tasks 
-        SET title = ?, prompt = ?, cron_expression = ?, handler = ?, enabled = ?, updated_at = ?
+        SET title = ?, prompt = ?, cron_expression = ?, handler = ?, enabled = ?, metadata = ?, updated_at = ?
         WHERE id = ?
       `).run(
         updates.title,
@@ -148,6 +175,7 @@ export function createScheduledTasksRoutes(db: Database.Database): Router {
         updates.cron_expression,
         updates.handler,
         updates.enabled ? 1 : 0,
+        updates.metadata,
         updates.updated_at,
         id,
       );

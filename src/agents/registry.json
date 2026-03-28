@@ -871,6 +871,36 @@
       ]
     },
     {
+      "name": "AIResearchWeekly",
+      "title": "Weekly AI Ecosystem Scout",
+      "description": "Heti, ismétlődő kutató-felderítő ügynök, amely GitHub, Chrome DevTools, Google, Foundry és az AI agent ökoszisztéma frissítéseit gyűjti össze és markdown riportot ír.",
+      "class": "AIResearchWeeklyAgent",
+      "module": "./agents/AIResearchWeeklyAgent.js",
+      "capabilities": [
+        "web_research",
+        "github_signal_collection",
+        "official_updates_monitoring",
+        "markdown_report_generation",
+        "weekly_digest"
+      ],
+      "triggers": [
+        "heti kutatás",
+        "weekly research",
+        "ai ecosystem watch",
+        "agent ecosystem watch",
+        "webes felderítés"
+      ],
+      "category": "intelligence",
+      "status": "active",
+      "tags": [
+        "weekly",
+        "research",
+        "agent",
+        "foundry"
+      ],
+      "priority": 4
+    },
+    {
       "name": "robotkezv2",
       "title": "RobotkezV2 Comet Agent",
       "description": "Öntanuló és önjavító hibrid böngésző ügynök (Comet-szint).",
