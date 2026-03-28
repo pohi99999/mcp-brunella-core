@@ -1,0 +1,20 @@
+{
+  "name": "P-Sales standalone shell",
+  "short_name": "P-Sales",
+  "description": "Standalone property and industrial asset sales workflow shell.",
+  "id": "/",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "display_override": ["standalone", "window-controls-overlay"],
+  "background_color": "#050816",
+  "theme_color": "#050816",
+  "icons": [
+    {
+      "src": "/p-sales-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

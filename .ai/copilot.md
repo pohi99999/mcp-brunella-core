@@ -1333,7 +1333,6 @@ node scripts/copilot-dashboard.js robotkez exec "Navigate to..."
 - A live backlog immár csak a ténylegesen nem-archivált 15 tracket tartalmazza (`5 active + 10 proposed`).
 
 **Megjegyzés:**
-
 - A conductor állapot most konzisztens.
 - A `tracks list` parancs viszont továbbra is külön CLI/API szerződési hibát hordoz (`name/title`, `count` hiány), ezért a címek és az összesítő darabszám még külön javítást igényelnek, ha azt is el akarjuk varrni.
 
@@ -6789,3 +6788,17 @@ obotkez ágakról.
 - Réteg 1 ✅ — `copilot-dashboard.js` (28 domain, 300+ endpoint) — d4e63de6
 - Réteg 2 ✅ — CopilotCommanderPanel + Bridge API — eb18e171
 - Réteg 3 ✅ — PAIOSZ Copilot Provider (file-bridge) — 80fa124f + 2e3f8a27
+- Cloudflare zóna meta-információk és whois/NS delegációs állapot ellenőrzése sikeres, a domain delegáció mostantól teljes körűen vizsgálható.
+- Copilot CLI wrapper és MCP auto-start: repo-szintű MCP config, automatikus Brunella indítás VSCode megnyitásakor, PowerShell/batch wrapper, tasks.json módosítás.
+- whois telepítve, parancssorból működik, NS rekordok és delegációs állapot mostantól ellenőrizhető.
+- Következő lépés: aktív/proposed trackek folytatása (lásd conductor/tracks.md)
+
+### 2026-03-28 02:12
+**Feladat:** P-Sales standalone branding/onboarding körének lezárása és track naplózása
+**Érintett fájlok:** src/data/pSalesTrack.ts, src/p-sales-standalone/App.tsx, conductor/tracks/P-Sales20260327/plan.md, conductor/tracks/P-Sales20260327/meta.json, C:\Users\pohi9\.copilot\session-state\c2c4ca83-03b5-494a-bd49-c63f17def8cc\plan.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- A shared `pSalesTrack` adat külön standalone brand/onboarding blokkal bővült, és a progress/currentFocus most az auth modell felé mutat.
+- A standalone shell kapott branding/onboarding kártyát és frissített fókuszszövegeket; a következő lépés az auth modell és tenant-konfiguráció.
+- A track meta és a session plan frissült: a csomagolás lezárva, a branding/onboarding kész, az auth modell pedig külön pending todo-t kapott.
+- Verifikáció: `npm run test:fast` zöld, `npx vite build --config vite.p-sales.config.ts` zöld.
