@@ -113,3 +113,13 @@ Optional follow-ups (I can perform on request):
 - Copilot CLI wrapper és MCP auto-start: repo-szintű MCP config, automatikus Brunella indítás VSCode megnyitásakor, PowerShell/batch wrapper, tasks.json módosítás.
 - whois telepítve, parancssorból működik, NS rekordok és delegációs állapot mostantól ellenőrizhető.
 - Következő lépés: aktív/proposed trackek folytatása (lásd conductor/tracks.md)
+
+### 2026-03-28 02:12
+**Feladat:** P-Sales standalone branding/onboarding körének lezárása és track naplózása
+**Érintett fájlok:** src/data/pSalesTrack.ts, src/p-sales-standalone/App.tsx, conductor/tracks/P-Sales20260327/plan.md, conductor/tracks/P-Sales20260327/meta.json, C:\Users\pohi9\.copilot\session-state\c2c4ca83-03b5-494a-bd49-c63f17def8cc\plan.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- A shared `pSalesTrack` adat külön standalone brand/onboarding blokkal bővült, és a progress/currentFocus most az auth modell felé mutat.
+- A standalone shell kapott branding/onboarding kártyát és frissített fókuszszövegeket; a következő lépés az auth modell és tenant-konfiguráció.
+- A track meta és a session plan frissült: a csomagolás lezárva, a branding/onboarding kész, az auth modell pedig külön pending todo-t kapott.
+- Verifikáció: `npm run test:fast` zöld, `npx vite build --config vite.p-sales.config.ts` zöld.

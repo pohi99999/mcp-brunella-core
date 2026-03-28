@@ -20,14 +20,16 @@ A megoldás a dokumentumfeltöltéstől a piackutatáson és stratégiatervezés
 - [x] Panel helyének kijelölése a BAS dashboard Enterprise részében.
 - [x] Beágyazott modern belépőfelület és gyors áttekintő nézet.
 - [x] Ingatlanprofil, dokumentumcsomag és státuszmodell kialakítása.
-- [ ] Dokumentumfeltöltés, hiánylista és felmérési állapot panel.
-- [ ] Kutatási riport, stratégia és approval nézetek az Enterprise felületen.
+- [x] Dokumentumfeltöltés, hiánylista és felmérési állapot panel.
+- [x] Kutatási riport és értékelési nézetek az Enterprise felületen.
+- [x] Stratégia és approval nézetek az Enterprise felületen.
 - [x] Shared core összehangolása a dashboard registry-vel.
 
 ## Phase 2: Standalone alkalmazás
 - [x] Különálló app shell és saját entrypoint létrehozása.
-- [ ] Telepíthető csomagolási stratégia és deployment útvonal.
-- [ ] Saját branding, onboarding és alap auth modell.
+- [x] Telepíthető csomagolási stratégia és deployment útvonal.
+- [x] Saját branding és onboarding.
+- [ ] Alap auth modell.
 - [ ] A standalone app és az enterprise modul közös logikai rétegének kialakítása.
 - [ ] Public-facing landing / intake flow, amely más felhasználóknak is telepíthetővé teszi a megoldást.
 - [ ] Konfigurációs modell a jövőbeli több-tenant vagy több-ügyfél használathoz.
@@ -54,19 +56,19 @@ A megoldás a dokumentumfeltöltéstől a piackutatáson és stratégiatervezés
 - [ ] A stratégiai ajánlás külön nézetben megjeleníthető legyen az enterprise felületen.
 
 ## Phase 6: Értékesítési végrehajtás
-- [ ] A jóváhagyott akcióterv végrehajtási flow-ja.
-- [ ] Csatornánkénti státusz- és eredménykövetés.
-- [ ] Felhasználói visszajelzés és újratervezési pontok.
-- [ ] Záró riport és audit napló.
-- [ ] Egységes végrehajtási napló a dashboard és a standalone app számára.
+- [x] A jóváhagyott akcióterv végrehajtási flow-ja.
+- [x] Csatornánkénti státusz- és eredménykövetés.
+- [x] Felhasználói visszajelzés és újratervezési pontok.
+- [x] Záró riport és audit napló.
+- [x] Egységes végrehajtási napló a dashboard és a standalone app számára.
 
 ## Phase 7: Cloudflare opció
-- [ ] R2 a dokumentumok tárolására.
-- [ ] D1 a metadatákhoz, workflow állapothoz és tranzakciós adatokhoz.
-- [ ] Workers mint edge API / auth / routing réteg.
-- [ ] KV vagy Durable Objects a rövid életű állapothoz, ha szükséges.
-- [ ] Nyilvánosan telepíthető app útvonal kialakítása.
-- [ ] Preview / staging útvonalak és edge konfiguráció.
+- [x] R2 a dokumentumok tárolására.
+- [x] D1 a metadatákhoz, workflow állapothoz és tranzakciós adatokhoz.
+- [x] Workers mint edge API / auth / routing réteg.
+- [x] KV vagy Durable Objects a rövid életű állapothoz, ha szükséges.
+- [x] Nyilvánosan telepíthető app útvonal kialakítása.
+- [x] Preview / staging útvonalak és edge konfiguráció.
 
 ## Megjegyzések
 - Minden külső publikálás vagy megkeresés előtt explicit felhasználói jóváhagyás kell.
@@ -74,3 +76,4 @@ A megoldás a dokumentumfeltöltéstől a piackutatáson és stratégiatervezés
 - Ha új BAS-szintű képesség jelenik meg, a dashboard és a CLI útját is meg kell tervezni.
 - A Phase 0 architektúra kimenete: `architecture.md`.
 - A Phase 1 shell és CLI belépő: `PropertySalesWidget` + `ingatlan-ertekesites`.
+- A Phase 1 enterprise surface lezárult; a végrehajtási és Cloudflare terv is elkészült, a következő fókusz a standalone auth modell és tenant-konfiguráció.

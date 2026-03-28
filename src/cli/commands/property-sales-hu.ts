@@ -73,6 +73,85 @@ function printResearch(): void {
   pSalesTrack.research.reportSections.forEach((section) => console.log(`  • ${section}`));
 }
 
+function printStrategy(): void {
+  console.log(chalk.cyan.bold("\nStratégia és approval"));
+  console.log(chalk.dim("Kutatási eredmény → csatorna-mix → jóváhagyás → végrehajtási irány."));
+
+  console.log(chalk.cyan("\nCsatorna-ajánlatok:"));
+  pSalesTrack.strategy.channelOptions.forEach((channel) => console.log(`  • ${channel}`));
+
+  console.log(chalk.cyan("\nCélcsoport és döntéshozók:"));
+  pSalesTrack.strategy.targetSegments.forEach((segment, index) => {
+    console.log(`  ${index + 1}. ${segment}`);
+  });
+
+  console.log(chalk.cyan("\nJóváhagyási lépések:"));
+  pSalesTrack.strategy.approvalSteps.forEach((step) => console.log(`  • ${step}`));
+
+  console.log(chalk.cyan("\nKimeneti fókuszok:"));
+  pSalesTrack.strategy.executionPaths.forEach((path) => console.log(`  • ${path}`));
+
+  console.log(chalk.cyan("\nRiport szekciók:"));
+  pSalesTrack.strategy.reportSections.forEach((section) => console.log(`  • ${section}`));
+
+  console.log(chalk.cyan("\nKérdések az approval előtt:"));
+  pSalesTrack.strategy.questions.forEach((question, index) => {
+    console.log(`  ${index + 1}. ${question}`);
+  });
+}
+
+function printExecution(): void {
+  console.log(chalk.cyan.bold("\nVégrehajtás és audit"));
+  console.log(chalk.dim("Jóváhagyott terv → csatornánkénti futtatás → audit → visszajelzés."));
+
+  console.log(chalk.cyan("\nVégrehajtási módok:"));
+  pSalesTrack.execution.executionModes.forEach((mode) => console.log(`  • ${mode}`));
+
+  console.log(chalk.cyan("\nMérföldkövek:"));
+  pSalesTrack.execution.statusMilestones.forEach((milestone, index) => {
+    console.log(`  ${index + 1}. ${milestone}`);
+  });
+
+  console.log(chalk.cyan("\nVisszajelzési pontok:"));
+  pSalesTrack.execution.feedbackLoops.forEach((loop) => console.log(`  • ${loop}`));
+
+  console.log(chalk.cyan("\nAudit napló:"));
+  pSalesTrack.execution.auditTrail.forEach((entry) => console.log(`  • ${entry}`));
+
+  console.log(chalk.cyan("\nRiport szekciók:"));
+  pSalesTrack.execution.reportSections.forEach((section) => console.log(`  • ${section}`));
+
+  console.log(chalk.cyan("\nKérdések a zárás előtt:"));
+  pSalesTrack.execution.questions.forEach((question, index) => {
+    console.log(`  ${index + 1}. ${question}`);
+  });
+}
+
+function printCloudflareOption(): void {
+  console.log(chalk.cyan.bold("\nCloudflare delivery opció"));
+  console.log(chalk.dim(pSalesTrack.cloudflareDecision.recommendedPath));
+
+  console.log(chalk.cyan("\nStorage és state:"));
+  pSalesTrack.cloudflareDecision.storageOptions.forEach((option) => console.log(`  • ${option}`));
+
+  console.log(chalk.cyan("\nRuntime és hosting:"));
+  pSalesTrack.cloudflareDecision.runtimeOptions.forEach((option) => console.log(`  • ${option}`));
+  pSalesTrack.cloudflareDecision.hostingOptions.forEach((option) => console.log(`  • ${option}`));
+
+  console.log(chalk.cyan("\nDöntési szempontok:"));
+  pSalesTrack.cloudflareDecision.decisionCriteria.forEach((criterion, index) => {
+    console.log(`  ${index + 1}. ${criterion}`);
+  });
+
+  console.log(chalk.cyan("\nNyitott kérdések:"));
+  pSalesTrack.cloudflareDecision.openQuestions.forEach((question, index) => {
+    console.log(`  ${index + 1}. ${question}`);
+  });
+
+  console.log(chalk.cyan("\nGyors opciók:"));
+  pSalesTrack.cloudflare.forEach((option) => console.log(`  • ${option}`));
+}
+
 function printPhaseRoadmap(): void {
   console.log(chalk.cyan.bold("\nPhase roadmap"));
   pSalesTrack.phases.forEach((phase) => {
@@ -103,6 +182,9 @@ async function runMenu(): Promise<void> {
           { name: "🧭 Architektúra összefoglaló", value: "architecture" },
           { name: "📄 Intake és felmérés", value: "intake" },
           { name: "🔎 Kutatás és értékelés", value: "research" },
+          { name: "🎯 Stratégia és approval", value: "strategy" },
+          { name: "🚀 Végrehajtás és audit", value: "execution" },
+          { name: "☁ Cloudflare opció", value: "cloudflare" },
           { name: "🪜 Phase roadmap", value: "roadmap" },
           { name: "❌ Kilépés", value: "exit" },
         ],
@@ -121,6 +203,12 @@ async function runMenu(): Promise<void> {
       printIntake();
     } else if (action === "research") {
       printResearch();
+    } else if (action === "strategy") {
+      printStrategy();
+    } else if (action === "execution") {
+      printExecution();
+    } else if (action === "cloudflare") {
+      printCloudflareOption();
     } else if (action === "roadmap") {
       printPhaseRoadmap();
     }
