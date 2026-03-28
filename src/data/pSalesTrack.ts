@@ -28,6 +28,40 @@ export interface PSalesResearchData {
   questions: string[];
 }
 
+export interface PSalesStrategyData {
+  channelOptions: string[];
+  targetSegments: string[];
+  approvalSteps: string[];
+  executionPaths: string[];
+  reportSections: string[];
+  questions: string[];
+}
+
+export interface PSalesExecutionData {
+  executionModes: string[];
+  statusMilestones: string[];
+  feedbackLoops: string[];
+  auditTrail: string[];
+  reportSections: string[];
+  questions: string[];
+}
+
+export interface PSalesCloudflareDecisionData {
+  recommendedPath: string;
+  storageOptions: string[];
+  runtimeOptions: string[];
+  hostingOptions: string[];
+  decisionCriteria: string[];
+  openQuestions: string[];
+}
+
+export interface PSalesStandaloneData {
+  brandPromise: string;
+  onboardingSteps: string[];
+  installGuidance: string[];
+  tenantNotes: string[];
+}
+
 export interface PSalesTrackData {
   trackId: string;
   title: string;
@@ -41,6 +75,10 @@ export interface PSalesTrackData {
   cloudflare: string[];
   intake: PSalesIntakeData;
   research: PSalesResearchData;
+  strategy: PSalesStrategyData;
+  execution: PSalesExecutionData;
+  cloudflareDecision: PSalesCloudflareDecisionData;
+  standalone: PSalesStandaloneData;
   phases: PSalesPhase[];
 }
 
@@ -59,10 +97,10 @@ export const pSalesTrack: PSalesTrackData = {
   trackId: "P-Sales20260327",
   title: "P-Sales20260327",
   status: "active",
-  progress: 25,
+  progress: 80,
   architectureDoc: "conductor/tracks/P-Sales20260327/architecture.md",
-  currentFocus: "Phase 2: Standalone alkalmazás",
-  nextReadyStep: "Telepíthető csomagolási stratégia és deployment útvonal kialakítása",
+  currentFocus: "Phase 2: Alap auth modell",
+  nextReadyStep: "Alap auth és tenant-konfiguráció finomítása",
   surfaces: [
     "BAS enterprise dashboard modul",
     "Külön telepíthető standalone alkalmazás",
@@ -167,6 +205,128 @@ export const pSalesTrack: PSalesTrackData = {
       "Mely adatforrások tekinthetők hitelesnek a döntéshez?",
     ],
   },
+  strategy: {
+    channelOptions: [
+      "Ingatlanportálra feltöltés",
+      "Célzott kampány befektetői vagy fejlesztői körnek",
+      "Teaser alapú érdeklődőgyűjtés",
+      "Direkt megkeresés döntéshozóknak",
+    ],
+    targetSegments: [
+      "Befektetők és fejlesztők",
+      "Ipari / logisztikai vásárlók",
+      "Helyi döntéshozók és céges vevők",
+      "Portálon aktív keresők",
+    ],
+    approvalSteps: [
+      "A rendszer először stratégiai ajánlást készít, majd felhasználói jóváhagyást kér.",
+      "Csak jóváhagyás után indulhat külső publikálás vagy direkt megkeresés.",
+      "Az első végrehajtási lépések a választott csatornához igazodnak.",
+    ],
+    executionPaths: [
+      "Portál-feltöltés és hirdetési csomag",
+      "Teaser / érdeklődői előszűrés",
+      "Célzott outreach és személyes megkeresés",
+      "Kombinált multi-channel akcióterv",
+    ],
+    reportSections: [
+      "csatorna mix",
+      "célcsoport és döntéshozói kör",
+      "approval gate",
+      "első végrehajtási lépések",
+    ],
+    questions: [
+      "Mely csatornát preferálod első körben?",
+      "Milyen gyorsan indulhat a publikálás?",
+      "Van-e kizárt vevői szegmens vagy csatorna?",
+      "Mennyi kontrollt szeretnél az első outreach előtt?",
+    ],
+  },
+  execution: {
+    executionModes: [
+      "Portál publikálás és hirdetési csomag",
+      "Teaser alapú érdeklődőgyűjtés",
+      "Célzott outreach és direkt megkeresés",
+      "Kombinált multi-channel végrehajtás",
+    ],
+    statusMilestones: [
+      "jóváhagyott terv",
+      "aktivált csatorna",
+      "lead / érdeklődő beérkezett",
+      "követés és újratervezés",
+      "ajánlat vagy zárás",
+    ],
+    feedbackLoops: [
+      "lead minőség visszajelzés",
+      "csatorna teljesítmény mérés",
+      "replan trigger a felhasználótól",
+      "audit alapú állapotfrissítés",
+    ],
+    auditTrail: [
+      "publikálási időpontok",
+      "outreach események",
+      "változtatási és approval napló",
+      "követési és zárási események",
+    ],
+    reportSections: [
+      "csatorna státusz",
+      "lead pipeline",
+      "audit log",
+      "replan pontok",
+    ],
+    questions: [
+      "Mely csatornák aktívak most?",
+      "Milyen lead minőség esetén álljon meg a flow?",
+      "Mekkora audit részletességre van szükség?",
+      "Mikor kell újratervezni a végrehajtást?",
+    ],
+  },
+  cloudflareDecision: {
+    recommendedPath:
+      "R2 + D1 + Workers a nyilvános standalone útvonalhoz; KV / Durable Objects csak rövid életű koordinációhoz.",
+    storageOptions: [
+      "R2 dokumentum tárolásra",
+      "D1 workflow és metaadat rétegnek",
+      "KV vagy Durable Objects rövid életű állapothoz",
+    ],
+    runtimeOptions: [
+      "Workers edge API / auth / routing",
+      "Edge-hosted preview és staging útvonalak",
+    ],
+    hostingOptions: [
+      "Public standalone frontend Cloudflare Pages vagy Workers-hosted route alatt",
+      "BAS backendhez illesztett edge gateway",
+    ],
+    decisionCriteria: [
+      "nyilvános telepíthető út szükséges-e",
+      "kell-e külön preview / staging",
+      "igényel-e rövid életű koordinált állapotot",
+      "maradhat-e az auth és routing a BAS oldalon",
+    ],
+    openQuestions: [
+      "Lesz-e több-tenant vagy több ügyfél támogatás?",
+      "Kell-e külön publikus landing és intake flow?",
+      "A dokumentumokat teljesen edge-en akarjuk-e tárolni?",
+      "Melyik állapotnak kell hosszabb életűnek lennie?",
+    ],
+  },
+  standalone: {
+    brandPromise: "Letisztult, modern, installálható shell az ingatlan- és iparterület-értékesítési workflow-hoz.",
+    onboardingSteps: [
+      "Ingatlan dokumentáció feltöltése és alapadatok megadása",
+      "Felmérő ügynök hiánylistája és kérdésköre",
+      "Kutatási és stratégiai riport jóváhagyása",
+    ],
+    installGuidance: [
+      "PWA manifest és service worker a telepíthető shellhez",
+      "Docker image és nginx fallback a deploymenthez",
+      "Későbbi Cloudflare Pages / Workers útvonal",
+    ],
+    tenantNotes: [
+      "Branding projekt- vagy ügyfélszinten átadható",
+      "Későbbi több-tenant konfigurációhoz készít elő teret",
+    ],
+  },
   phases: [
     {
       id: "phase-0",
@@ -183,24 +343,25 @@ export const pSalesTrack: PSalesTrackData = {
     {
       id: "phase-1",
       title: "Phase 1: Enterprise dashboard integráció",
-      status: "active",
-      summary: "A BAS dashboard Enterprise részébe illeszkedő panel és gyors áttekintő nézet.",
+      status: "completed",
+      summary: "A BAS dashboard Enterprise részébe illeszkedő intake, research és strategy panel.",
       checkpoints: [
         "Enterprise navigation entry és panel helye",
         "Intake, checklist és státusz nézetek",
-        "Kutatási riport és stratégia nézetek",
-        "Approval modal és workflow állapotok",
+        "Kutatási riport és értékelési nézetek",
+        "Stratégia és approval flow",
       ],
     },
     {
       id: "phase-2",
       title: "Phase 2: Standalone alkalmazás",
       status: "active",
-      summary: "Külön telepíthető app shell, saját branding és deployment útvonal.",
+      summary: "Külön telepíthető app shell, installálható PWA csomag, branding/onboarding és auth váz.",
       checkpoints: [
         "Különálló app shell és entrypoint",
-        "Telepíthető csomagolási stratégia",
+        "PWA manifest, service worker és Docker image",
         "Saját branding és onboarding",
+        "Alap auth modell",
         "Jövőbeli több-ügyfél használat",
       ],
     },
@@ -243,8 +404,8 @@ export const pSalesTrack: PSalesTrackData = {
     {
       id: "phase-6",
       title: "Phase 6: Értékesítési végrehajtás",
-      status: "pending",
-      summary: "A jóváhagyott terv végrehajtása, naplózása és újratervezése.",
+      status: "completed",
+      summary: "A jóváhagyott terv végrehajtási flow-ja, audit és visszajelzés modellje.",
       checkpoints: [
         "Jóváhagyott terv végrehajtási flow-ja",
         "Csatornánkénti státusz- és eredménykövetés",
@@ -255,8 +416,8 @@ export const pSalesTrack: PSalesTrackData = {
     {
       id: "phase-7",
       title: "Phase 7: Cloudflare opció",
-      status: "pending",
-      summary: "R2, D1, Workers és opcionális állapotkezelési réteg a standalone útvonalhoz.",
+      status: "completed",
+      summary: "R2, D1, Workers és az edge delivery / public standalone opció kiválasztva.",
       checkpoints: [
         "R2 dokumentumtárolás",
         "D1 metaadat és workflow state",

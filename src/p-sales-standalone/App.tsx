@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Badge } from '../dashboard/components/ui/badge';
 import { Button } from '../dashboard/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '../dashboard/components/ui/card';
@@ -8,7 +9,77 @@ import { pSalesTrack } from '../data/pSalesTrack';
 import { Building2, Download, Globe2, Rocket, ShieldCheck, Layers3 } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
 
+type StandaloneBeforeInstallPromptEvent = Event & {
+  prompt: () => Promise<void>;
+  userChoice: Promise<{ outcome: 'accepted' | 'dismissed'; platform: string }>;
+  platforms?: string[];
+};
+
 export function PSalesStandaloneApp() {
+  const [installPrompt, setInstallPrompt] = useState<StandaloneBeforeInstallPromptEvent | null>(null);
+  const [isStandalone, setIsStandalone] = useState(false);
+
+  useEffect(() => {
+    const standaloneMatch =
+      typeof window !== 'undefined' &&
+      (window.matchMedia('(display-mode: standalone)').matches ||
+        Boolean((window.navigator as Navigator & { standalone?: boolean }).standalone));
+
+    setIsStandalone(standaloneMatch);
+
+    if (typeof window === 'undefined') {
+      return;
+    }
+
+    const handleBeforeInstallPrompt = (event: Event): void => {
+      event.preventDefault();
+      setInstallPrompt(event as StandaloneBeforeInstallPromptEvent);
+    };
+
+    const handleAppInstalled = (): void => {
+      setIsStandalone(true);
+      setInstallPrompt(null);
+      toast.success('A P-Sales standalone shell telepítve lett.');
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
+    window.addEventListener('appinstalled', handleAppInstalled);
+
+    if (import.meta.env.PROD && 'serviceWorker' in navigator) {
+      void navigator.serviceWorker.register('/p-sales-sw.js').catch((error: unknown) => {
+        const message = error instanceof Error ? error.message : String(error);
+        toast.error(`A service worker regisztráció nem sikerült: ${message}`);
+      });
+    }
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt as EventListener);
+      window.removeEventListener('appinstalled', handleAppInstalled);
+    };
+  }, []);
+
+  const handleInstallClick = async (): Promise<void> => {
+    if (isStandalone) {
+      toast.info('Ez az alkalmazás már standalone módban fut.');
+      return;
+    }
+
+    if (!installPrompt) {
+      toast.info('A böngésző még nem adta ki az install promptot. Használd a böngésző menüjének Install opcióját.');
+      return;
+    }
+
+    await installPrompt.prompt();
+    const choice = await installPrompt.userChoice;
+    if (choice.outcome === 'accepted') {
+      toast.success('A telepítési promptot elfogadtad.');
+    } else {
+      toast.info('A telepítési promptot elutasítottad.');
+    }
+
+    setInstallPrompt(null);
+  };
+
   return (
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <div className="min-h-screen bg-[#050816] text-white">
@@ -57,7 +128,15 @@ export function PSalesStandaloneApp() {
                 <Button
                   variant="outline"
                   className="border-white/[0.08] bg-white/[0.04] text-zinc-200 hover:bg-white/[0.08]"
-                  onClick={() => toast.success('A standalone shell scaffold kész. A következő lépés a csomagolási útvonal finomítása.')}
+                  onClick={handleInstallClick}
+                >
+                  <Layers3 className="mr-2 h-4 w-4" />
+                  {isStandalone ? 'Már telepítve' : installPrompt ? 'Telepítés' : 'Telepítésre kész'}
+                </Button>
+                <Button
+                  variant="outline"
+                  className="border-white/[0.08] bg-white/[0.04] text-zinc-200 hover:bg-white/[0.08]"
+                  onClick={() => toast.success('A standalone shell scaffold kész. A következő lépés az auth modell és tenant-konfiguráció finomítása.')}
                 >
                   <Download className="mr-2 h-4 w-4" />
                   Scaffold állapot
@@ -82,6 +161,63 @@ export function PSalesStandaloneApp() {
                     {pSalesTrack.surfaces.map((surface) => (
                       <div key={surface} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
                         {surface}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-white/[0.04] bg-white/[0.03] backdrop-blur-xl">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-sm text-white">
+                    <Download className="h-4 w-4 text-primary" />
+                    Telepíthető csomag
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm text-zinc-400">
+                  <p>A standalone shell PWA manifesttel, service workerrel és külön Docker image-csel készül elő a telepítésre.</p>
+                  <div className="grid gap-2">
+                    <div className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                      PWA manifest + install prompt
+                    </div>
+                    <div className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                      Service worker + offline shell
+                    </div>
+                    <div className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                      Docker image + nginx fallback
+                    </div>
+                    <div className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                      Future option: Cloudflare Pages / Workers
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card className="border-white/[0.04] bg-white/[0.03] backdrop-blur-xl">
+                <CardHeader className="pb-3">
+                  <CardTitle className="flex items-center gap-2 text-sm text-white">
+                    <Layers3 className="h-4 w-4 text-primary" />
+                    Branding és onboarding
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-3 text-sm text-zinc-400">
+                  <p>{pSalesTrack.standalone.brandPromise}</p>
+                  <div className="space-y-2">
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Onboarding lépések</p>
+                    {pSalesTrack.standalone.onboardingSteps.map((step, index) => (
+                      <div key={step} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                        <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                          {index + 1}
+                        </span>
+                        {step}
+                      </div>
+                    ))}
+                  </div>
+                  <div className="space-y-2">
+                    <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Tenant / branding megfontolások</p>
+                    {pSalesTrack.standalone.tenantNotes.map((note) => (
+                      <div key={note} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                        {note}
                       </div>
                     ))}
                   </div>
@@ -124,7 +260,7 @@ export function PSalesStandaloneApp() {
                 <CardContent className="space-y-3 text-sm text-zinc-400">
                   <p>{pSalesTrack.nextReadyStep}</p>
                   <div className="rounded-lg border border-white/[0.04] bg-white/[0.02] p-3 text-xs text-zinc-300">
-                    A standalone shell ezután a telepítési és csomagolási útvonalat kapja meg.
+                    A standalone shell ezután a branding, onboarding és tenant-konfiguráció finomítását kapja meg.
                   </div>
                 </CardContent>
               </Card>

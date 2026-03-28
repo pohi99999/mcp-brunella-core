@@ -1,0 +1,12 @@
+**
+!package.json
+!package-lock.json
+!vite.p-sales.config.ts
+!tsconfig.json
+!tsconfig.ui.json
+!tailwind.config.js
+!nginx.p-sales.conf
+!public/**
+!src/dashboard/**
+!src/data/**
+!src/p-sales-standalone/**

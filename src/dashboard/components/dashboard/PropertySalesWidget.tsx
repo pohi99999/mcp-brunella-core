@@ -93,7 +93,7 @@ export function PropertySalesWidget() {
       </Card>
 
       <Tabs defaultValue="workflow" className="w-full">
-        <TabsList className="grid h-12 w-full grid-cols-6 rounded-xl bg-white/[0.03] p-1 backdrop-blur-md lg:w-[1120px]">
+        <TabsList className="grid h-12 w-full grid-cols-8 rounded-xl bg-white/[0.03] p-1 backdrop-blur-md lg:w-[1520px]">
           <TabsTrigger value="workflow" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
             Folyamat
           </TabsTrigger>
@@ -102,6 +102,12 @@ export function PropertySalesWidget() {
           </TabsTrigger>
           <TabsTrigger value="research" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
             Kutatás
+          </TabsTrigger>
+          <TabsTrigger value="strategy" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
+            Stratégia
+          </TabsTrigger>
+          <TabsTrigger value="execution" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
+            Végrehajtás
           </TabsTrigger>
           <TabsTrigger value="agents" className="text-[10px] font-bold uppercase tracking-wider data-[state=active]:bg-primary data-[state=active]:text-white">
             Ügynökök
@@ -302,6 +308,199 @@ export function PropertySalesWidget() {
           </Card>
         </TabsContent>
 
+        <TabsContent value="strategy" className="mt-6">
+          <Card className="border-white/[0.04] bg-white/[0.03] backdrop-blur-xl">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-sm text-white">
+                <Rocket className="h-4 w-4 text-primary" />
+                Stratégia és approval
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-zinc-400">
+                A stratégiai réteg a kutatási eredményeket csatorna-mixre, célcsoportra és jóváhagyási kapura fordítja, mielőtt bármi külső lépés indulna.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
+                  <div className="flex items-center gap-2">
+                    <TrendingUp className="h-4 w-4 text-primary" />
+                    <h3 className="text-sm font-bold text-white">Csatorna-ajánlatok</h3>
+                  </div>
+                  <ScrollArea className="mt-3 h-56 pr-3">
+                    <div className="space-y-3">
+                      {pSalesTrack.strategy.channelOptions.map((channel) => (
+                        <div key={channel} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                          {channel}
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </div>
+                <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
+                  <div className="flex items-center gap-2">
+                    <Users className="h-4 w-4 text-primary" />
+                    <h3 className="text-sm font-bold text-white">Célcsoport és döntéshozók</h3>
+                  </div>
+                  <ScrollArea className="mt-3 h-56 pr-3">
+                    <ol className="space-y-3 text-sm text-zinc-300">
+                      {pSalesTrack.strategy.targetSegments.map((segment, index) => (
+                        <li key={segment} className="rounded-lg border border-white/[0.04] bg-white/[0.02] p-3">
+                          <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                            {index + 1}
+                          </span>
+                          {segment}
+                        </li>
+                      ))}
+                    </ol>
+                  </ScrollArea>
+                </div>
+                <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-primary" />
+                    <h3 className="text-sm font-bold text-white">Approval és végrehajtás</h3>
+                  </div>
+                  <div className="mt-3 space-y-4">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Jóváhagyási lépések</p>
+                      <div className="mt-2 space-y-2">
+                        {pSalesTrack.strategy.approvalSteps.map((step) => (
+                          <div key={step} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                            {step}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Kimeneti fókuszok</p>
+                      <div className="mt-2 space-y-2">
+                        {pSalesTrack.strategy.executionPaths.map((path) => (
+                          <div key={path} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                            {path}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Riport szekciók</p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {pSalesTrack.strategy.reportSections.map((section) => (
+                          <Badge key={section} variant="outline" className="border-primary/20 bg-primary/10 text-primary">
+                            {section}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="execution" className="mt-6">
+          <Card className="border-white/[0.04] bg-white/[0.03] backdrop-blur-xl">
+            <CardHeader className="pb-3">
+              <CardTitle className="flex items-center gap-2 text-sm text-white">
+                <ClipboardList className="h-4 w-4 text-primary" />
+                Végrehajtás és audit
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-zinc-400">
+                Az execution réteg a jóváhagyott terv tényleges futtatását, a csatornánkénti státuszokat, a visszajelzési pontokat és az audit naplót fogja össze.
+              </p>
+              <div className="grid gap-4 md:grid-cols-3">
+                <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
+                  <div className="flex items-center gap-2">
+                    <Rocket className="h-4 w-4 text-primary" />
+                    <h3 className="text-sm font-bold text-white">Végrehajtási módok</h3>
+                  </div>
+                  <ScrollArea className="mt-3 h-56 pr-3">
+                    <div className="space-y-3">
+                      {pSalesTrack.execution.executionModes.map((mode) => (
+                        <div key={mode} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                          {mode}
+                        </div>
+                      ))}
+                    </div>
+                  </ScrollArea>
+                </div>
+                <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="h-4 w-4 text-primary" />
+                    <h3 className="text-sm font-bold text-white">Státusz és feedback</h3>
+                  </div>
+                  <ScrollArea className="mt-3 h-56 pr-3">
+                    <div className="space-y-4">
+                      <div>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Mérföldkövek</p>
+                        <div className="mt-2 space-y-2">
+                          {pSalesTrack.execution.statusMilestones.map((milestone) => (
+                            <div key={milestone} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                              {milestone}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div>
+                        <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Visszajelzési pontok</p>
+                        <div className="mt-2 space-y-2">
+                          {pSalesTrack.execution.feedbackLoops.map((loop) => (
+                            <div key={loop} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                              {loop}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </ScrollArea>
+                </div>
+                <div className="rounded-xl border border-white/[0.04] bg-black/20 p-4">
+                  <div className="flex items-center gap-2">
+                    <ShieldCheck className="h-4 w-4 text-primary" />
+                    <h3 className="text-sm font-bold text-white">Audit és riport</h3>
+                  </div>
+                  <div className="mt-3 space-y-4">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Audit napló</p>
+                      <div className="mt-2 space-y-2">
+                        {pSalesTrack.execution.auditTrail.map((entry) => (
+                          <div key={entry} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                            {entry}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Riport szekciók</p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {pSalesTrack.execution.reportSections.map((section) => (
+                          <Badge key={section} variant="outline" className="border-primary/20 bg-primary/10 text-primary">
+                            {section}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Kérdések a zárás előtt</p>
+                      <div className="mt-2 space-y-2">
+                        {pSalesTrack.execution.questions.map((question, index) => (
+                          <div key={question} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2 text-sm text-zinc-300">
+                            <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                              {index + 1}
+                            </span>
+                            {question}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
         <TabsContent value="agents" className="mt-6">
           <Card className="border-white/[0.04] bg-white/[0.03] backdrop-blur-xl">
             <CardHeader className="pb-3">
@@ -356,12 +555,60 @@ export function PropertySalesWidget() {
                   Cloudflare
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm text-zinc-400">
-                {pSalesTrack.cloudflare.map((item) => (
-                  <div key={item} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2">
-                    {item}
+              <CardContent className="space-y-3 text-sm text-zinc-400">
+                <p>{pSalesTrack.cloudflareDecision.recommendedPath}</p>
+                <ScrollArea className="h-64 pr-3">
+                  <div className="space-y-4">
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Storage és state</p>
+                      <div className="mt-2 space-y-2">
+                        {pSalesTrack.cloudflareDecision.storageOptions.map((option) => (
+                          <div key={option} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2">
+                            {option}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Runtime és hosting</p>
+                      <div className="mt-2 space-y-2">
+                        {pSalesTrack.cloudflareDecision.runtimeOptions.map((option) => (
+                          <div key={option} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2">
+                            {option}
+                          </div>
+                        ))}
+                        {pSalesTrack.cloudflareDecision.hostingOptions.map((option) => (
+                          <div key={option} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2">
+                            {option}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Döntési szempontok</p>
+                      <div className="mt-2 flex flex-wrap gap-2">
+                        {pSalesTrack.cloudflareDecision.decisionCriteria.map((criterion) => (
+                          <Badge key={criterion} variant="outline" className="border-primary/20 bg-primary/10 text-primary">
+                            {criterion}
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
+                    <div>
+                      <p className="text-[10px] uppercase tracking-[0.2em] text-zinc-500">Nyitott kérdések</p>
+                      <div className="mt-2 space-y-2">
+                        {pSalesTrack.cloudflareDecision.openQuestions.map((question, index) => (
+                          <div key={question} className="rounded-lg border border-white/[0.04] bg-white/[0.02] px-3 py-2">
+                            <span className="mr-2 inline-flex h-6 w-6 items-center justify-center rounded-full bg-primary/20 text-xs font-bold text-primary">
+                              {index + 1}
+                            </span>
+                            {question}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
-                ))}
+                </ScrollArea>
               </CardContent>
             </Card>
           </div>
