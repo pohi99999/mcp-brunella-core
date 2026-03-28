@@ -47,6 +47,14 @@
     "niudai.remote-github",
     "dotjoshjohnson.xml",
     "diegoomal.ollama-connection",
-    "warm3snow.vscode-ollama"
+    "warm3snow.vscode-ollama",
+    "suhaibbinyounis.github-copilot-api-vscode",
+    "mai-engineeringsystems.mai-papyrusproxy",
+    "ryonakae.vscode-lm-proxy",
+    "tienn-fpt.knowledge-rag",
+    "fabiospampinato.vscode-open-in-github",
+    "jakubkozera.github-copilot-code-reviewer",
+    "shubhj.ghcp-dashboard",
+    "google.geminicodeassist"
   ]
 }

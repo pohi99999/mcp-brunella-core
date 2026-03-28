@@ -103,7 +103,8 @@ export class OllamaMCPClient {
       logInfo('OllamaMCPClient', 'Connected to MCP server');
     } catch (error: any) {
       logError('OllamaMCPClient', `Failed to connect to MCP server: ${error.message}`);
-      throw new Error(`MCP connection failed: ${error.message}`);
+      const cause = error instanceof Error ? error : undefined;
+      throw new Error(`MCP connection failed: ${error.message}`, { cause });
     }
   }
 

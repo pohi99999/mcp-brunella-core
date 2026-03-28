@@ -15,5 +15,16 @@
     "no-unused-vars": "off",
     "no-console": "off",
     "no-undef": "off"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["test/**/*.ts", "test/**/*.tsx", "test/**/*.js"],
+      "env": {
+        "vitest": true
+      },
+      "rules": {
+        "no-console": "off"
+      }
+    }
+  ]
 }

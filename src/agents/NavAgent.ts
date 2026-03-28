@@ -1,5 +1,7 @@
 import { IAgent, AgentResponse } from './types.js';
 import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
+import { saveTransaction } from '../data/bookkeeping_db.js';
+import { BookkeepingTransaction, NavInvoiceData, TransactionStatus } from '../types/bookkeeping.d.js';
 import fs from 'fs/promises';
 import path from 'path';
 
@@ -7,11 +9,12 @@ import path from 'path';
  * NavAgent
  * - Feladata: NAV Online Számla API lekérések és XML normalizálás
  * - Implementáció: helyi mintafájlokból normalizálás, NAV API placeholder
+ * - Mentési cél: bookkeeping_db.ts
  */
 export class NavAgent implements IAgent {
   name = 'NavAgent';
   role = 'NAV Online Számla integráció';
-  description = 'Lekéri és normalizálja a NAV XML adatokat';
+  description = 'Lekéri és normalizálja a NAV XML adatokat a központi adatbázisba';
   capabilities = ['nav_fetch', 'xml_normalize'];
 
   private samplesDir() {
@@ -32,7 +35,7 @@ export class NavAgent implements IAgent {
   private xmlToJson(xml: string) {
     // Very small, brittle XML->JSON extraction for known invoice tags in samples
     const extract = (tag: string) => {
-      const re = new RegExp(`<${tag}>([\s\S]*?)<\/${tag}>`, 'i');
+      const re = new RegExp(`<${tag}>([\\s\\S]*?)<\\/${tag}>`, 'i');
       const m = xml.match(re);
       return m ? m[1].trim() : undefined;
     };
@@ -43,7 +46,9 @@ export class NavAgent implements IAgent {
       vat_amount: Number(extract('vat_amount') || 0),
       gross_amount: Number(extract('gross_amount') || 0),
       issue_date: extract('issue_date'),
+      issueDate: extract('issue_date'), // standard alias
       partner_taxid: extract('partner_taxid'),
+      partner: extract('partner_name') || extract('partner_taxid'), // standard alias
       payment_method: extract('payment_method')
     };
   }
@@ -69,17 +74,38 @@ export class NavAgent implements IAgent {
 
       // Else: parse local sample XML files
       const xmlFiles = await this.listLocalNavSamples();
-      const parsed = [] as unknown[];
+      const results: Array<any> = [];
+
       for (const f of xmlFiles) {
         try {
           const txt = await fs.readFile(f, 'utf-8');
-          parsed.push(this.xmlToJson(txt));
+          const data = this.xmlToJson(txt);
+          
+          if (data.invoice_number) {
+            try {
+              // Standard source for MatchingAgent
+              saveTransaction({
+                id: `nav_${data.invoice_number}`,
+                source: 'nav_invoice',
+                data: {
+                  invoiceNumber: data.invoice_number,
+                  amount: Number(data.gross_amount),
+                  partner: data.partner_taxid,
+                  issueDate: data.issue_date
+                } as any,
+                status: 'PENDING_MATCH' as TransactionStatus
+              });
+              results.push(data);
+            } catch (dbErr) {
+              logError(this.name, `DB Save error for ${f}: ${String(dbErr)}`);
+            }
+          }
         } catch (e) {
           logError(this.name, `Failed to read/parse ${f}: ${String(e)}`);
         }
       }
 
-      return { status: 'success', data: parsed, metadata: { files: xmlFiles.length } };
+      return { status: 'success', data: results, metadata: { filesProcessed: xmlFiles.length, savedEntries: results.length } };
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       logError(this.name, `execute error: ${error}`);

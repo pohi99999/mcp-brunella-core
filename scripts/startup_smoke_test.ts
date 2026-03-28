@@ -67,6 +67,20 @@ async function main() {
     console.log(`  ${icon(r.status)} ${name}  ${time}${detail}`);
   }
 
+  // Színes ASCII táblázat
+  const tableHeader = `\n\x1b[36m╔${'═'.repeat(maxName + 22)}╗\x1b[0m\n` +
+    `\x1b[36m║  Szolgáltatás${' '.repeat(maxName - 12)}  │  Státusz  │  Idő   │ Hiba\x1b[0m\n` +
+    `\x1b[36m╠${'═'.repeat(maxName + 2)}╦══════════╦========╦${'═'.repeat(20)}╣\x1b[0m`;
+  console.log(tableHeader);
+  for (const r of results) {
+    const name = r.name.padEnd(maxName);
+    const time = `${r.responseTime}ms`.padStart(6);
+    const stat = icon(r.status).padEnd(8);
+    const err = r.error ? `\x1b[31m${r.error.slice(0, 20)}\x1b[0m` : '';
+    console.log(`\x1b[36m║\x1b[0m ${name} │  ${stat} │ ${time} │ ${err}`);
+  }
+  console.log(`\x1b[36m╚${'═'.repeat(maxName + 22)}╝\x1b[0m`);
+
   const ok = results.filter(r => r.status === "ok").length;
   const fail = results.filter(r => r.status === "fail" && !r.optional).length;
   const warnFail = results.filter(r => r.status === "fail" && r.optional).length;

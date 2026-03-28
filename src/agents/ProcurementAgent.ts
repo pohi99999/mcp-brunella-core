@@ -313,8 +313,8 @@ export class ProcurementAgent extends BaseAgent {
   ): NegotiationEmailDraft {
     const citedSources: string[] = [comparison.sourceUrl];
 
-    let body = '';
-    let subject = '';
+    let body: string;
+    let subject: string;
 
     switch (strategy.name) {
       case 'competitor_match':
@@ -522,8 +522,8 @@ Kérem, jelezzen vissza az árazási lehetőségekkel kapcsolatban.
       if (parsed.productCategory) {
         return parsed as ProcurementData;
       }
-    } catch {
-      // Not JSON, parse natural language
+    } catch (_err) {
+      // Not JSON - fallback to natural language parsing
     }
 
     return {
@@ -535,12 +535,12 @@ Kérem, jelezzen vissza az árazási lehetőségekkel kapcsolatban.
   }
 
   private extractProductCategory(task: string): string {
-    const match = task.match(/product[:\s]+([^,\.]+)/i);
+    const match = task.match(/product[:\s]+([^,.]+)/i);
     return match ? match[1].trim() : 'industrial products';
   }
 
   private extractSupplier(task: string): string {
-    const match = task.match(/supplier[:\s]+([^,\.]+)/i);
+    const match = task.match(/supplier[:\s]+([^,.]+)/i);
     return match ? match[1].trim() : 'Current Supplier';
   }
 

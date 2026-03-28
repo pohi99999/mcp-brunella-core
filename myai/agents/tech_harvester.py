@@ -234,6 +234,40 @@ class TechHarvester:
 
             return []
 
+    async def harvest_source_with_apify(self, target: Dict[str, Any]) -> List[Dict[str, Any]]:
+        """
+        Harvest a single source using ApifyScrapingAgent via Node.js REST API.
+        """
+        import aiohttp
+        self.logger.info("[APIFY] Harvesting: %s", target["name"])
+        try:
+            # Build payload for ApifyScrapingAgent
+            payload = {
+                "actorId": target.get("actor_id"),
+                "query": target.get("query"),
+                "limit": target.get("limit", self.max_items)
+            }
+            async with aiohttp.ClientSession() as session:
+                url = "http://localhost:3000/api/agents/ApifyScraping/execute"
+                async with session.post(url, json=payload, timeout=60) as resp:
+                    if resp.status == 200:
+                        data = await resp.json()
+                        items = data.get("data") or []
+                        self.logger.info("[OK] ApifyScrapingAgent returned %d items for %s", len(items), target["name"])
+                        # Add metadata
+                        for item in items:
+                            item["source"] = target["name"]
+                            item["source_url"] = target.get("query")
+                            item["timestamp"] = datetime.utcnow().isoformat()
+                            item["type"] = target.get("type", "apify")
+                        return items
+                    else:
+                        self.logger.error("[ERROR] ApifyScrapingAgent HTTP %d for %s", resp.status, target["name"])
+                        return []
+        except Exception as e:
+            self.logger.error("[ERROR] ApifyScrapingAgent failed for %s: %s", target["name"], str(e))
+            return []
+
     def _build_browser_use_task(self, target: Dict[str, Any]) -> str:
         """Build natural language task for Browser-Use agent."""
         keywords_str = ", ".join(target.get("keywords", self.global_keywords[:5]))

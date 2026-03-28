@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-27T09:31:47.936Z
+**Utolso frissites:** 2026-03-27T21:00:00.372Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 133 total | 6 active | 4 completed | 117 archived
+**Stats:** 133 total | 4 active | 4 completed | 119 archived
 
 ---
 
@@ -42,18 +42,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (6)
-
-- [ ] **apify_deep_scraping_agent_20260223** [LOW]
-  - **ID:** `apify_deep_scraping_agent_20260223`
-  - **Progress:** 60%
-  - **Assignee:** Claude (Phase 1-2 Complete)
-  - Mappa: ./tracks/apify_deep_scraping_agent_20260223/
-
-- [ ] **Hyperdrive Connection Pooling D1 Teljesítményhez** [LOW]
-  - **ID:** `cf_hyperdrive_d1_20260323`
-  - **Progress:** 30%
-  - Mappa: ./tracks/cf_hyperdrive_d1_20260323/
+## Aktiv Szalak (Active) (4)
 
 - [ ] **Cloudflare DNS Zone Reconciliation for Custom Domains** [HIGH]
   - **ID:** `cloudflare_dns_zone_reconciliation_20260325`
@@ -98,7 +87,7 @@
 
 ---
 
-## Archivalt (Archived) (117)
+## Archivalt (Archived) (119)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -110,10 +99,10 @@
 - [x] **agent_orchestration_dag_20260323** (2026-03-23T12:00:00Z)
 - [x] **aider_integration_20260222** (N/A)
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
+- [x] **apify_deep_scraping_agent_20260223** (N/A)
 - [x] **basic-test-task-structure-20260219** (N/A)
-- [x] **BAS Átfogó Tesztprotokol** (2026-02-16T15:05:00Z)
 
-... and 107 more archived tracks
+... and 109 more archived tracks
 
 ---
 

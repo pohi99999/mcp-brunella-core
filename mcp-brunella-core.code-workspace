@@ -1810,7 +1810,14 @@
 		"search.useGlobalIgnoreFiles": true,
 		"search.useParentIgnoreFiles": true,
 		"acp.autoApprovePermissions": "allowAll",
-		"dotnetAcquisitionExtension.suppressOutput": false
+		"dotnetAcquisitionExtension.suppressOutput": false,
+		"appmod.experimental.task.rearchitecture": true,
+		"githubCopilotApi.audit.logRequestBodies": true,
+		"githubCopilotApi.server.autoStart": true,
+		"githubCopilotApi.server.enabled": true,
+		"githubCopilotApi.server.enableHttps": true,
+		"githubCopilotApi.server.enableLogging": true,
+		"githubCopilotApi.server.enableWebSocket": true
 	},
 	"extensions": {
 		"recommendations": [
@@ -1833,7 +1840,15 @@
 			"andrewbutson.github-copilot-llm-gateway",
 			"vscjava.migrate-java-to-azure",
 			"github.vscode-pull-request-github",
-			"ms-azuretools.vscode-azureappservice"
+			"ms-azuretools.vscode-azureappservice",
+			"suhaibbinyounis.github-copilot-api-vscode",
+			"mai-engineeringsystems.mai-papyrusproxy",
+			"ryonakae.vscode-lm-proxy",
+			"tienn-fpt.knowledge-rag",
+			"fabiospampinato.vscode-open-in-github",
+			"jakubkozera.github-copilot-code-reviewer",
+			"shubhj.ghcp-dashboard",
+			"google.geminicodeassist"
 		]
 	}
 }

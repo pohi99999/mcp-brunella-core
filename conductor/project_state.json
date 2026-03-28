@@ -1,18 +1,6 @@
 {
-  "lastUpdated": "2026-03-27T09:31:47.936Z",
+  "lastUpdated": "2026-03-27T21:00:00.372Z",
   "tracks": [
-    {
-      "id": "apify_deep_scraping_agent_20260223",
-      "name": "apify_deep_scraping_agent_20260223",
-      "status": "active",
-      "priority": "low",
-      "progress": 60,
-      "assignee": "Claude (Phase 1-2 Complete)",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\apify_deep_scraping_agent_20260223",
-      "_isArchived": false
-    },
     {
       "id": "brunella_function_matrix_20260325",
       "name": "Brunella teljes funkció- és tulajdonságmátrix dokumentáció",
@@ -29,18 +17,6 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_function_matrix_20260325",
-      "_isArchived": false
-    },
-    {
-      "id": "cf_hyperdrive_d1_20260323",
-      "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
-      "status": "active",
-      "priority": "low",
-      "progress": 30,
-      "created": "2026-03-23",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cf_hyperdrive_d1_20260323",
       "_isArchived": false
     },
     {
@@ -391,6 +367,18 @@
       "_isArchived": true
     },
     {
+      "id": "apify_deep_scraping_agent_20260223",
+      "name": "apify_deep_scraping_agent_20260223",
+      "status": "archived",
+      "priority": "low",
+      "progress": 60,
+      "assignee": "Claude (Phase 1-2 Complete)",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\apify_deep_scraping_agent_20260223",
+      "_isArchived": true
+    },
+    {
       "id": "basic-test-task-structure-20260219",
       "name": "basic-test-task-structure-20260219",
       "status": "archived",
@@ -558,6 +546,18 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_durable_object_migrations_20260323",
+      "_isArchived": true
+    },
+    {
+      "id": "cf_hyperdrive_d1_20260323",
+      "name": "Hyperdrive Connection Pooling D1 Teljesítményhez",
+      "status": "archived",
+      "priority": "low",
+      "progress": 30,
+      "created": "2026-03-23",
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cf_hyperdrive_d1_20260323",
       "_isArchived": true
     },
     {
@@ -2249,9 +2249,9 @@
   ],
   "stats": {
     "total": 133,
-    "active": 6,
+    "active": 4,
     "completed": 4,
-    "archived": 117,
+    "archived": 119,
     "proposed": 6
   }
 }

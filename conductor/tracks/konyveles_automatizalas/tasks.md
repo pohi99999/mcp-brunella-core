@@ -21,8 +21,11 @@
 4. OCR/LLM extraction prototype — felelős: DataScientist
    - Output: `scripts/ocr_extract.sh` vagy `myai/` Python prototípus
 
-5. Matching Engine design doc — felelős: Architect
+5. Matching Engine design doc — felelős: Architect (✔️ elkészült)
    - Output: `conductor/tracks/konyveles_automatizalas/design/matching_engine.md`
 
 ## Következő lépések (ma)
-- Létrehozom a `resources/mappings/` mappát és egy `sample_nav_fields.csv` + `sample_pdf_fields.csv` fájlt példa mezőkkel.
+- Folyamatosan gyűjtsük a bank/NAV/email mintákat, és a design dokumentum alapján kezdjük összekötni a matching logikát az agent pipeline-nal.
+   - Futtassuk a `scripts/konyveles_discovery_run.js`-t ütemezve, hogy bank CSV importálást automatizáljuk.
+   - Illesszük be az EmailAgent / NavAgent outputot a `match` függvényhívásokba (adhatók `parsed` mezők).
+   - Bővítsük a `src/matching/matcher.ts` és `data/bookkeeping_db.ts` modulokat, hogy a pontszámokat, kivételeket és státuszokat eltárolják.

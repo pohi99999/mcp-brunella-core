@@ -31,4 +31,5 @@ node scripts/konyveles_discovery_run.js
 Fejlesztési jegyzetek
 - A `src/connectors/imapConnector.ts` tartalmazza a `fetchAndExtractAttachments` függvényt, amely letölti a csatolmányokat és menti őket `data/invoices` alá.
 - A `src/connectors/gdriveConnector.ts` letölti a fájlokat egy Drive mappából (service account használható).
-- A `src/matching/matcher.ts` egy egyszerű heuristikus párosítót tartalmaz; finomhangolható további minták és szabályok hozzáadásával.
+- A `src/matching/matcher.ts` egy egyszerű heuritikusan pontozó párosítót tartalmaz; finomhangolható további minták és szabályok hozzáadásával.
+- Az új `conductor/tracks/konyveles_automatizalas/design/matching_engine.md` dokumentáció részletezi a pontozási, kivételkezelési és integrációs stratégiát, valamint leírja, hogyan illeszkednek a `scripts/konyveles_discovery_run.js` és `data/bookkeeping_db.ts` modulokhoz.

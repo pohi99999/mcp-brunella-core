@@ -1,13 +1,3 @@
-/**
- * Remote Session Manager
- * Manages in-memory remote sessions, commands, and event streams
- *
- * Phase 1: Foundation
- * - Session lifecycle (create, expire, cleanup)
- * - Command queuing and tracking
- * - Event stream for real-time updates
- */
-
 import { v4 as uuidv4 } from 'uuid';
 import { logInfo, logError } from '../utils/logger.js';
 import type {

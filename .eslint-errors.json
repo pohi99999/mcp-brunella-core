@@ -1,0 +1,221 @@
+[
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\DeveloperAgent.ts",
+    "errors": "no-useless-assignment @236:19 -> This assigned value is not used in subsequent statements."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\EmailTriageAgent.ts",
+    "errors": [
+      "no-useless-assignment @281:9 -> This assigned value is not used in subsequent statements.",
+      "no-useless-assignment @285:9 -> This assigned value is not used in subsequent statements."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\EvaluatorAgent.ts",
+    "errors": "no-useless-assignment @141:19 -> This assigned value is not used in subsequent statements."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\FinancialGuardAgent.ts",
+    "errors": [
+      "preserve-caught-error @315:7 -> There is no `cause` attached to the symptom error being thrown.",
+      "preserve-caught-error @354:7 -> There is no `cause` attached to the symptom error being thrown.",
+      "no-useless-escape @393:52 -> Unnecessary escape character: \\.."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\GrantWatcherAgent.ts",
+    "errors": "no-empty @118:15 -> Empty block statement."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\KnowledgeBaseBuilderAgent.ts",
+    "errors": "no-empty @130:15 -> Empty block statement."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\LintFixerAgent.ts",
+    "errors": "no-useless-assignment @343:9 -> This assigned value is not used in subsequent statements."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\NavAgent.ts",
+    "errors": [
+      "no-useless-escape @35:40 -> Unnecessary escape character: \\s.",
+      "no-useless-escape @35:42 -> Unnecessary escape character: \\S.",
+      "no-useless-escape @35:49 -> Unnecessary escape character: \\/."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\ProcurementAgent.ts",
+    "errors": [
+      "no-useless-assignment @316:9 -> This assigned value is not used in subsequent statements.",
+      "no-useless-assignment @317:9 -> This assigned value is not used in subsequent statements.",
+      "no-useless-escape @538:48 -> Unnecessary escape character: \\..",
+      "no-useless-escape @543:49 -> Unnecessary escape character: \\.."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\SalesHunterAgent.ts",
+    "errors": "preserve-caught-error @437:7 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\SpecWriterAgent.ts",
+    "errors": [
+      "preserve-caught-error @591:7 -> There is no `cause` attached to the symptom error being thrown.",
+      "preserve-caught-error @696:7 -> There is no `cause` attached to the symptom error being thrown."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\codeReview.ts",
+    "errors": "preserve-caught-error @128:13 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\agents\\gitIntegration.ts",
+    "errors": "preserve-caught-error @109:13 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\cli-jules-interactive.ts",
+    "errors": "no-useless-assignment @98:9 -> This assigned value is not used in subsequent statements."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\cli.ts",
+    "errors": [
+      "no-empty @540:15 -> Empty block statement.",
+      "@typescript-eslint/ban-ts-comment @553:11 -> Include a description after the '@ts-expect-error' directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer.",
+      "no-empty @1358:19 -> Empty block statement."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\cli\\invoiceSync.ts",
+    "errors": "preserve-caught-error @56:5 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\config\\paiosConfig.ts",
+    "errors": "preserve-caught-error @116:7 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\config\\schema.ts",
+    "errors": "preserve-caught-error @91:7 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\core\\dagEngine.ts",
+    "errors": "prefer-const @288:5 -> 'output' is never reassigned. Use 'const' instead."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\core\\julesMock.ts",
+    "errors": [
+      "no-useless-escape @152:41 -> Unnecessary escape character: \\'.",
+      "no-useless-escape @152:56 -> Unnecessary escape character: \\'."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\core\\llm_client.ts",
+    "errors": "no-useless-assignment @41:9 -> This assigned value is not used in subsequent statements."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\core\\ollama_mcp_client.ts",
+    "errors": "preserve-caught-error @106:7 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\core\\universalOrchestratorService.ts",
+    "errors": [
+      "@typescript-eslint/prefer-as-const @247:17 -> Expected a `const` assertion instead of a literal type annotation.",
+      "no-useless-assignment @368:9 -> This assigned value is not used in subsequent statements.",
+      "no-useless-escape @455:50 -> Unnecessary escape character: \\|."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\dashboard\\components\\dashboard\\PAIOSOrchestratorChat.tsx",
+    "errors": "no-useless-escape @320:47 -> Unnecessary escape character: \\[."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\dashboard\\lib\\apiService.ts",
+    "errors": "preserve-caught-error @29:7 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\dashboard\\lib\\chat\\providers\\masterOrchestratorProvider.ts",
+    "errors": "preserve-caught-error @47:7 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\dashboard\\lib\\ollamaService.ts",
+    "errors": "preserve-caught-error @138:7 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\data\\bookkeeping_db.ts",
+    "errors": "@typescript-eslint/no-require-imports @8:26 -> A `require()` style import is forbidden."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\matching\\matcher.ts",
+    "errors": "no-empty @63:17 -> Empty block statement."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\security\\redactor.ts",
+    "errors": [
+      "no-useless-escape @37:91 -> Unnecessary escape character: \\-.",
+      "no-useless-escape @38:56 -> Unnecessary escape character: \\-.",
+      "no-useless-escape @44:103 -> Unnecessary escape character: \\-."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\security\\safe_zone_validator.ts",
+    "errors": "preserve-caught-error @78:7 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\server\\mcp_server.ts",
+    "errors": [
+      "preserve-caught-error @210:7 -> There is no `cause` attached to the symptom error being thrown.",
+      "preserve-caught-error @256:7 -> There is no `cause` attached to the symptom error being thrown.",
+      "preserve-caught-error @319:7 -> There is no `cause` attached to the symptom error being thrown.",
+      "preserve-caught-error @366:7 -> There is no `cause` attached to the symptom error being thrown."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\server\\middleware\\authRemote.ts",
+    "errors": "@typescript-eslint/no-namespace @13:3 -> ES2015 module syntax is preferred over namespaces."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\services\\trackStateManager.ts",
+    "errors": [
+      "no-misleading-character-class @83:53 -> Unexpected joined character sequence in character class.",
+      "no-misleading-character-class @144:51 -> Unexpected joined character sequence in character class."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\tools\\browser.ts",
+    "errors": "preserve-caught-error @52:7 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\tools\\gitAutomation.ts",
+    "errors": "preserve-caught-error @30:7 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\tools\\unifiedWorkspace.ts",
+    "errors": [
+      "preserve-caught-error @89:7 -> There is no `cause` attached to the symptom error being thrown.",
+      "no-case-declarations @238:11 -> Unexpected lexical declaration in case block.",
+      "no-case-declarations @245:11 -> Unexpected lexical declaration in case block.",
+      "no-case-declarations @256:11 -> Unexpected lexical declaration in case block."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\utils\\backgroundTaskManager.ts",
+    "errors": "preserve-caught-error @260:25 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\utils\\cloudflareClient.ts",
+    "errors": [
+      "preserve-caught-error @88:7 -> There is no `cause` attached to the symptom error being thrown.",
+      "preserve-caught-error @98:7 -> There is no `cause` attached to the symptom error being thrown.",
+      "preserve-caught-error @108:7 -> There is no `cause` attached to the symptom error being thrown."
+    ]
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\utils\\llmPlanner.ts",
+    "errors": "preserve-caught-error @160:13 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\utils\\persistentBrowser.ts",
+    "errors": "preserve-caught-error @133:17 -> There is no `cause` attached to the symptom error being thrown."
+  },
+  {
+    "file": "F:\\mcp-brunella-core\\src\\utils\\pythonShell.ts",
+    "errors": "preserve-caught-error @232:5 -> There is no `cause` attached to the symptom error being thrown."
+  }
+]

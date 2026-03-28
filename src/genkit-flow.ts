@@ -29,13 +29,14 @@ const RecipeSchema = z.object({
 });
 
 // Define a recipe generator flow
+interface RecipeInput { ingredient: string; dietaryRestrictions?: string; }
 export const recipeGeneratorFlow = ai.defineFlow(
   {
     name: 'recipeGeneratorFlow',
     inputSchema: RecipeInputSchema,
     outputSchema: RecipeSchema,
   },
-  async (input) => {
+  async (input: RecipeInput) => {
     // Create a prompt based on the input
     const prompt = `Create a recipe with the following requirements:
       Main ingredient: ${input.ingredient}
