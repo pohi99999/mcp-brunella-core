@@ -42,7 +42,8 @@ KP manuális/email ──────► WF-5: KP Pénztár       ──►  cas
 
 ### n8n futtatás
 
-- **Mód:** self-hosted (npm: `npx n8n` VAGY Docker: `docker run n8nio/n8n`)
+- **Mód:** self-hosted local npm workspace (`conductor/tracks/n8n_konyveles_pipeline_20260328/local-n8n/`, `npm run dev` → track-local launcher → `n8n start`)
+- **Import:** `npm run import:workflows` betölti a WF-1..WF-4 scaffoldokat a track `n8n-workflows/` mappájából
 - **Port:** 5678 (alapértelmezett)
 - **BAS API alap URL:** `http://localhost:3000`
 - **Credentials store:** n8n beépített credential vault (SMTP, Google OAuth2, IMAP)
@@ -94,14 +95,14 @@ KP manuális/email ──────► WF-5: KP Pénztár       ──►  cas
 - 3 sikertelen próbálkozás után: WF-4 exception-ba kerül
 - n8n beépített execution log megőrzi a hibákat
 
-### 3.4 Szükséges új BAS endpoint
+### 3.4 BAS endpoint
 
 ```
 PATCH /api/v1/bookkeeping/status
 Body: { summary: {...}, exceptions: [...], timestamp: string }
 ```
 
-Ez az egyetlen hiányzó endpoint — a többi BAS API már létezik.
+Ez a BAS endpoint már elérhető; a repo oldali workflow scaffoldok most erre épülnek.
 
 ---
 
@@ -216,10 +217,10 @@ Részletek: http://localhost:5173 → Könyvelés panel
 | EmailAgent, BankAgent, MatchingAgent, NavAgent | ✅ Kész |
 | `bookkeeping_db.ts` (transactions tábla) | ✅ Kész |
 | `BookkeepingWidget` (Dashboard) | ✅ Kész |
-| n8n self-hosted futó instance | ⚠️ Szükséges (npm/Docker) |
+| n8n self-hosted futó instance | ⚠️ Szükséges (local npm workspace) |
 | Google OAuth2 credential (Sheets) | ⚠️ Szükséges |
 | SMTP credential (email értesítő) | ⚠️ Szükséges |
-| `PATCH /api/v1/bookkeeping/status` | ❌ Létrehozandó |
+| `PATCH /api/v1/bookkeeping/status` | ✅ Kész |
 | `POST/GET /api/v1/bookkeeping/cash-entries` | ❌ Létrehozandó |
 | `cash_entries` SQLite tábla | ❌ Létrehozandó |
 | `HázipénztárWidget` | ❌ Létrehozandó |

@@ -9,26 +9,38 @@
 
 ### 1.1 n8n infrastruktúra beállítása
 
-- [ ] n8n instance elindítása és elérhetőség ellenőrzése (`http://localhost:5678`)
+- [x] Track-local npm workspace létrehozása: `conductor/tracks/n8n_konyveles_pipeline_20260328/local-n8n/`
+- [x] n8n instance elindítása és elérhetőség ellenőrzése (`http://localhost:5678`)
+- [x] `npm run import:workflows` a WF-1..WF-4 scaffoldok betöltéséhez
 - [ ] BAS HTTP credential létrehozása n8n-ben (`http://localhost:3000`)
 - [ ] SMTP credential konfigurálása n8n-ben (email értesítőkhöz)
 - [ ] IMAP credential konfigurálása n8n-ben (bejövő számlák figyeléséhez)
 - [ ] `data/bank-imports/` mappa létrehozása (bank CSV drop zone)
 - [ ] `.gitignore` frissítése: `data/bank-imports/*.csv` (érzékeny adatok)
 
-### 1.2 Hiányzó BAS endpoint: PATCH /api/v1/bookkeeping/status
+## Progress
 
-- [ ] Route létrehozása: `src/server/routes/bookkeeping.ts` (ha még nincs)
-  ```typescript
-  PATCH /api/v1/bookkeeping/status
-  Body: { summary: BookkeepingSummary, exceptions: BookkeepingException[], timestamp: string }
-  ```
-- [ ] Route regisztrálása `src/server/routes/index.ts`-ben
-- [ ] `BookkeepingWidget` frissítése: `/api/v1/bookkeeping/status` GET endpoint és polling
+- Repo-side scaffolds are now present for WF-1, WF-2, WF-3, and WF-4 under `n8n-workflows/`.
+- WF-2 now includes the unmatched-to-notify branch, so the bank reconciliation scaffold matches the phase 1 flow.
+- The bookkeeping status endpoint and snapshot persistence are already available in BAS.
+- `BookkeepingWidget` now fetches `/api/v1/bookkeeping/status` and auto-refreshes every 30 seconds.
+- The four workflow scaffolds were imported into the live local n8n instance as inactive drafts.
+- A shared TypeScript `N8nClient` now centralizes workflow list/run/create/update/rename/delete calls for Node-side n8n access.
+- The existing n8n trigger tool and `/api/n8n/workflows` route now reuse the shared client instead of duplicating fetch logic.
+- A track-local npm workspace now exists for the local n8n editor and workflow import flow.
+- The local launcher now loads the track `.env` or `.env.example` so the editor state stays isolated under the track-local `.n8n/` folder.
+
+### 1.2 BAS endpoint: PATCH /api/v1/bookkeeping/status
+
+- [x] Route létrehozása: `src/server/routes/bookkeeping.ts` (kész)
+- [x] Route regisztrálása `src/server/routes/index.ts`-ben (kész)
+- [x] `PATCH /api/v1/bookkeeping/status` payload: `{ summary, exceptions, timestamp }`
+- [x] `BookkeepingWidget` frissítése: `/api/v1/bookkeeping/status` GET endpoint és polling
 
 ### 1.3 WF-4 — Exception & Notify workflow (először, mert a többi ezt hívja)
 
-- [ ] n8n workflow importálása: `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf4-exception-notify.json`
+- [x] Repo scaffold hozzáadva: `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf4-exception-notify.json`
+- [x] n8n workflow importálása
 - [ ] Webhook endpoint tesztelése: `POST http://localhost:5678/webhook/notify`
 - [ ] SMTP email sablon beállítása
 - [ ] `data/konyveles/exceptions.json` írási jogosultság ellenőrzése
@@ -36,6 +48,8 @@
 
 ### 1.4 WF-1 — Email Intake workflow
 
+- [x] Repo scaffold hozzáadva: `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf1-email-intake.json`
+- [x] n8n workflow importálása
 - [ ] n8n IMAP trigger konfigurálása (poll interval: 5 perc)
 - [ ] EmailAgent hívás node konfigurálása
 - [ ] WF-3 webhook trigger csatolása (NAV validációhoz)
@@ -44,6 +58,8 @@
 
 ### 1.5 WF-2 — Bank Reconciliation workflow
 
+- [x] Repo scaffold hozzáadva: `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf2-bank-reconciliation.json`
+- [x] n8n workflow importálása
 - [ ] File watch node konfigurálása (`data/bank-imports/*.csv`)
 - [ ] Cron trigger beállítása (08:00 naponta)
 - [ ] BankAgent HTTP node konfigurálása
@@ -54,6 +70,8 @@
 
 ### 1.6 WF-3 — NAV Validation workflow
 
+- [x] Repo scaffold hozzáadva: `conductor/tracks/n8n_konyveles_pipeline_20260328/n8n-workflows/wf3-nav-validation.json`
+- [x] n8n workflow importálása
 - [ ] Webhook endpoint: `/n8n/nav-validate`
 - [ ] NavAgent HTTP node konfigurálása
 - [ ] MISMATCH IF elágazás → WF-4
@@ -72,7 +90,7 @@
 
 ### 2.1 SQLite — cash_entries tábla
 
-- [ ] `src/data/bookkeeping_db.ts` bővítése:
+- [x] `src/data/bookkeeping_db.ts` bővítése:
   ```sql
   CREATE TABLE IF NOT EXISTS cash_entries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -87,27 +105,27 @@
   );
   ```
 - [ ] Migration futtatása meglévő adatbázison
-- [ ] TypeScript típus hozzáadása: `CashEntry` interface a `src/types/bookkeeping.d.ts`-be
+- [x] TypeScript típus hozzáadása: `CashEntry` interface a `src/types/bookkeeping.d.ts`-be
 
 ### 2.2 BAS REST API — KP endpoint-ok
 
-- [ ] `src/server/routes/bookkeeping.ts` bővítése:
-  - [ ] `POST /api/v1/bookkeeping/cash-entries` — tétel felvitele
-  - [ ] `GET /api/v1/bookkeeping/cash-entries` — lista (szűrők: date_from, date_to, type, synced_sheets)
-  - [ ] `GET /api/v1/bookkeeping/cash-summary` — egyenleg összesítő
-  - [ ] `PATCH /api/v1/bookkeeping/cash-entries/:id` — synced_sheets flag frissítése
-- [ ] Route-ok regisztrálása `index.ts`-ben
-- [ ] Vitest tesztek az új endpoint-okhoz
+- [x] `src/server/routes/bookkeeping.ts` bővítése:
+  - [x] `POST /api/v1/bookkeeping/cash-entries` — tétel felvitele
+  - [x] `GET /api/v1/bookkeeping/cash-entries` — lista (szűrők: date_from, date_to, type, synced_sheets)
+  - [x] `GET /api/v1/bookkeeping/cash-summary` — egyenleg összesítő
+  - [x] `PATCH /api/v1/bookkeeping/cash-entries/:id` — synced_sheets flag frissítése
+- [x] Route-ok regisztrálása `index.ts`-ben
+- [x] Vitest tesztek az új endpoint-okhoz
 
 ### 2.3 Dashboard — HázipénztárWidget
 
-- [ ] `src/dashboard/components/dashboard/HázipénztárWidget.tsx` létrehozása:
+- [x] `src/dashboard/components/dashboard/HazipenztarWidget.tsx` létrehozása:
   - [ ] Egyenleg sáv (nyitó → mozgások → záró)
   - [ ] Tétel lista (dátum, típus badge, összeg, leírás, forrás, Sheets szinkron státusz)
   - [ ] Új tétel form (dátum, KP_IN/KP_OUT toggle, összeg, leírás, számlaszám)
   - [ ] 30 másodperces auto-refresh
-- [ ] Regisztrálás `src/dashboard/lib/navigation.tsx`-ben (NavigationRegistry)
-- [ ] `src/dashboard/lib/apiService.ts` bővítése KP endpoint-okkal
+- [x] Regisztrálás `src/dashboard/lib/navigation.tsx`-ben (NavigationRegistry)
+- [x] `src/dashboard/lib/apiService.ts` bővítése KP endpoint-okkal
 
 ### 2.4 Google Sheets credential és tábla
 
@@ -163,6 +181,12 @@ conductor/tracks/n8n_konyveles_pipeline_20260328/
 ```
 
 Importálás n8n-be: Settings → Import from file.
+
+These files now exist in the repository and are imported into the live local n8n instance; the remaining work is wiring the live credentials/runtime checks.
+
+## Next action
+
+- Configure the local n8n credentials, import the workflow scaffolds from the track workspace, and execute them against the BAS endpoints using the shared Node helper.
 
 ---
 

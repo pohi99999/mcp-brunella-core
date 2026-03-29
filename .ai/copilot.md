@@ -212,3 +212,9 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 **Érintett fájlok:** conductor/tracks/n8n_konyveles_pipeline_20260328/local-n8n/package.json, docs/n8n-setup.md, conductor/tracks/n8n_konyveles_pipeline_20260328/plan.md, conductor/tracks/n8n_konyveles_pipeline_20260328/spec.md, conductor/tracks.md, .ai/copilot.md
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** Fresh sessions often redirected to sign-in or hit 429; the successful pass showed four visible Brunella bookkeeping workflows and the Email Intake canvas with 6 nodes. Screenshots were captured in workflows-list.png and workflows-brunella-intake-canvas.png.
+
+### 2026-03-29 20:00 - KP bookkeeping flow
+**Feladat:** KP/pénztár flow végigvitele a bookkeeping backend, dashboard és CLI felületeken, majd a kapcsolódó tesztek és build ellenőrzése.
+**Érintett fájlok:** src/data/bookkeeping_db.ts, src/server/routes/bookkeeping.ts, src/dashboard/lib/apiService.ts, src/dashboard/components/dashboard/HazipenztarWidget.tsx, src/dashboard/lib/navigation.tsx, src/cli/commands/bookkeeping-hu.ts, src/cli/bookkeepingCommands.ts, test/bookkeeping_db.test.ts, test/bookkeeping_routes.test.ts, test/dashboard/components/HazipenztarWidget.test.tsx, conductor/tracks/n8n_konyveles_pipeline_20260328/meta.json, conductor/tracks/n8n_konyveles_pipeline_20260328/plan.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A cash-entry persistence, a KP endpointok, a dashboard panel és a CLI kész; `npm run build`, `npx vitest run test/bookkeeping_db.test.ts test/bookkeeping_routes.test.ts test/dashboard/components/HazipenztarWidget.test.tsx test/dashboard/components/BookkeepingWidget.test.tsx --reporter=dot`, valamint `npm run test:fast` is zöld lett.

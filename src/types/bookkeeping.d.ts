@@ -30,3 +30,40 @@ export interface MatchedResult {
     confidence: number;
     type: 'HARD_MATCH' | 'FUZZY_MATCH';
 }
+
+export type CashEntryType = 'KP_IN' | 'KP_OUT';
+
+export type CashEntrySource = 'manual' | 'email' | 'import';
+
+export interface CashEntryInput {
+    date: string;
+    type: CashEntryType;
+    amount: number;
+    description: string;
+    invoiceNumber?: string;
+    source?: CashEntrySource;
+    syncedSheets?: boolean;
+}
+
+export interface CashEntry {
+    id: number;
+    date: string;
+    type: CashEntryType;
+    amount: number;
+    description: string;
+    invoiceNumber?: string;
+    source: CashEntrySource;
+    syncedSheets: boolean;
+    createdAt: string;
+    updatedAt: string;
+}
+
+export interface CashEntrySummary {
+    total: number;
+    income: number;
+    expense: number;
+    balance: number;
+    syncedSheets: number;
+    pendingSheets: number;
+    byType: Record<CashEntryType, number>;
+}

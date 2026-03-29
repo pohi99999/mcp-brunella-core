@@ -7,7 +7,7 @@ import { Command } from "commander";
 export function registerBookkeepingCommands(program: Command): void {
   program
     .command("bookkeeping")
-    .description("📊 Könyvelés automatizálás (Bank + NAV párosítás)")
+    .description("📊 Könyvelés automatizálás (Bank + NAV + KP)")
     .action(async () => {
       const { bookkeepingCommand } = await import("./commands/bookkeeping-hu.js");
       await bookkeepingCommand();

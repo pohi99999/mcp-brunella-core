@@ -305,6 +305,217 @@ export async function getCloudflareConfig(): Promise<CloudflareRuntimeConfig> {
   return safeJson<CloudflareRuntimeConfig>(response);
 }
 
+export interface BookkeepingStatusSummary {
+  total: number;
+  pending: number;
+  completed: number;
+  manualReview: number;
+  unmatched: number;
+  partiallyMatched: number;
+  error: number;
+  byStatus: Record<string, number>;
+  bySource: Record<string, number>;
+}
+
+export interface BookkeepingStatusSnapshot {
+  summary: Record<string, unknown>;
+  exceptions: Array<Record<string, unknown>>;
+  timestamp: string;
+  updatedAt: string;
+  source: "api" | "n8n" | "dashboard";
+}
+
+export interface BookkeepingStatusResponse {
+  success: boolean;
+  summary: BookkeepingStatusSummary;
+  pendingTransactions: number;
+  snapshot: BookkeepingStatusSnapshot | null;
+  timestamp: string;
+}
+
+export async function getBookkeepingStatus(): Promise<BookkeepingStatusResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/bookkeeping/status`,
+    {},
+    5000,
+  );
+  if (!response.ok)
+    throw new Error(`Bookkeeping status: HTTP ${response.status}`);
+  return safeJson<BookkeepingStatusResponse>(response);
+}
+
+export type CashEntryType = "KP_IN" | "KP_OUT";
+
+export type CashEntrySource = "manual" | "email" | "import";
+
+export interface CashEntry {
+  id: number;
+  date: string;
+  type: CashEntryType;
+  amount: number;
+  description: string;
+  invoiceNumber?: string;
+  source: CashEntrySource;
+  syncedSheets: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CashEntrySummary {
+  total: number;
+  income: number;
+  expense: number;
+  balance: number;
+  syncedSheets: number;
+  pendingSheets: number;
+  byType: Record<CashEntryType, number>;
+}
+
+export interface CashEntryListResponse {
+  success: boolean;
+  entries: CashEntry[];
+  total: number;
+  offset: number;
+  limit: number;
+}
+
+export interface CashEntryResponse {
+  success: boolean;
+  entry: CashEntry;
+}
+
+export interface CashEntrySummaryResponse {
+  success: boolean;
+  summary: CashEntrySummary;
+  timestamp: string;
+}
+
+export interface CashEntryFilters {
+  dateFrom?: string;
+  dateTo?: string;
+  type?: CashEntryType;
+  syncedSheets?: boolean;
+  limit?: number;
+  offset?: number;
+}
+
+export interface CashEntryInput {
+  date: string;
+  type: CashEntryType;
+  amount: number;
+  description: string;
+  invoiceNumber?: string;
+  source?: CashEntrySource;
+  syncedSheets?: boolean;
+}
+
+function buildQuery(params: Record<string, string | number | boolean | undefined>): string {
+  const searchParams = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value === undefined) {
+      continue;
+    }
+    searchParams.set(key, String(value));
+  }
+  const query = searchParams.toString();
+  return query.length > 0 ? `?${query}` : "";
+}
+
+export async function getCashEntries(filters: CashEntryFilters = {}): Promise<CashEntryListResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/bookkeeping/cash-entries${buildQuery({
+      date_from: filters.dateFrom,
+      date_to: filters.dateTo,
+      type: filters.type,
+      synced_sheets: filters.syncedSheets,
+      limit: filters.limit,
+      offset: filters.offset,
+    })}`,
+    {},
+    5000,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Cash entry list: HTTP ${response.status}`);
+  }
+
+  return safeJson<CashEntryListResponse>(response);
+}
+
+export async function getCashSummary(filters: Omit<CashEntryFilters, "limit" | "offset"> = {}): Promise<CashEntrySummaryResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/bookkeeping/cash-summary${buildQuery({
+      date_from: filters.dateFrom,
+      date_to: filters.dateTo,
+      type: filters.type,
+      synced_sheets: filters.syncedSheets,
+    })}`,
+    {},
+    5000,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Cash summary: HTTP ${response.status}`);
+  }
+
+  return safeJson<CashEntrySummaryResponse>(response);
+}
+
+export async function createCashEntry(input: CashEntryInput): Promise<CashEntryResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/bookkeeping/cash-entries`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        date: input.date,
+        type: input.type,
+        amount: input.amount,
+        description: input.description,
+        invoice_number: input.invoiceNumber,
+        source: input.source,
+        synced_sheets: input.syncedSheets,
+      }),
+    },
+    10000,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Cash entry create: HTTP ${response.status}`);
+  }
+
+  return safeJson<CashEntryResponse>(response);
+}
+
+export async function updateCashEntry(
+  id: number,
+  updates: Partial<CashEntryInput> & { syncedSheets?: boolean },
+): Promise<CashEntryResponse> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/bookkeeping/cash-entries/${encodeURIComponent(String(id))}`,
+    {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        date: updates.date,
+        type: updates.type,
+        amount: updates.amount,
+        description: updates.description,
+        invoice_number: updates.invoiceNumber,
+        source: updates.source,
+        synced_sheets: updates.syncedSheets,
+      }),
+    },
+    10000,
+  );
+
+  if (!response.ok) {
+    throw new Error(`Cash entry update: HTTP ${response.status}`);
+  }
+
+  return safeJson<CashEntryResponse>(response);
+}
+
 export interface WorkersAIResponse {
   text: string;
   provider: string;
@@ -2463,6 +2674,95 @@ export async function getActivityFeed(
   if (!response.ok) throw new Error(`Activity feed: HTTP ${response.status}`);
   const data = await safeJson<{ activities: ActivityFeedItem[] }>(response);
   return data.activities || [];
+}
+
+export type NotificationDeliveryChannel =
+  | 'email'
+  | 'slack'
+  | 'discord'
+  | 'system';
+
+export type NotificationDeliveryStatus = 'sent' | 'failed' | 'skipped';
+
+export interface ApprovalNotificationDelivery {
+  id: string;
+  workflowId?: string;
+  approvalRequestId?: string;
+  channel: NotificationDeliveryChannel;
+  status: NotificationDeliveryStatus;
+  eventType: 'approval_requested' | 'approval_resolved' | 'approval_expired';
+  title: string;
+  message: string;
+  error?: string;
+  createdAt: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface ApprovalNotificationChannelAvailability {
+  channel: 'email' | 'slack' | 'discord';
+  enabled: boolean;
+  target?: string;
+}
+
+export interface ApprovalNotificationSummary {
+  total: number;
+  sent: number;
+  failed: number;
+  skipped: number;
+  byChannel: Partial<Record<NotificationDeliveryChannel, number>>;
+  availableChannels: ApprovalNotificationChannelAvailability[];
+  workflowCounts: {
+    pending: number;
+    approved: number;
+    rejected: number;
+    expired: number;
+  };
+}
+
+export async function getApprovalNotificationDeliveries(
+  limit: number = 20,
+): Promise<ApprovalNotificationDelivery[]> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/developer/approval/notifications?limit=${limit}`,
+  );
+  if (!response.ok) {
+    throw new Error(`Approval notifications: HTTP ${response.status}`);
+  }
+
+  const data = await safeJson<{ deliveries: ApprovalNotificationDelivery[] }>(response);
+  return data.deliveries || [];
+}
+
+export async function getApprovalNotificationSummary(): Promise<ApprovalNotificationSummary> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/developer/approval/notifications/summary`,
+  );
+  if (!response.ok) {
+    throw new Error(`Approval notification summary: HTTP ${response.status}`);
+  }
+
+  const data = await safeJson<{ summary: ApprovalNotificationSummary }>(response);
+  return data.summary;
+}
+
+export async function dispatchApprovalWorkflowNotification(
+  workflowId: string,
+): Promise<ApprovalNotificationDelivery[]> {
+  const response = await fetchWithTimeout(
+    `${API_BASE}/api/v1/developer/approval/workflows/${encodeURIComponent(workflowId)}/notify`,
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },
+  );
+  if (!response.ok) {
+    throw new Error(`Approval notification dispatch: HTTP ${response.status}`);
+  }
+
+  const data = await safeJson<{ success: boolean; deliveries: ApprovalNotificationDelivery[] }>(response);
+  return data.deliveries || [];
 }
 
 /**
