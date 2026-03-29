@@ -206,3 +206,9 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - conductor/archive/e2b_sandbox_crawl4ai_20260325/spec.md
 - conductor/archive/e2b_sandbox_crawl4ai_20260325/track.md
 - conductor/tracks.md
+
+### 2026-03-29 05:32 - n8n workflow verification
+**Feladat:** Verified the track-local n8n instance, listed the Brunella bookkeeping workflows, and inspected the Email Intake canvas read-only.
+**Érintett fájlok:** conductor/tracks/n8n_konyveles_pipeline_20260328/local-n8n/package.json, docs/n8n-setup.md, conductor/tracks/n8n_konyveles_pipeline_20260328/plan.md, conductor/tracks/n8n_konyveles_pipeline_20260328/spec.md, conductor/tracks.md, .ai/copilot.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** Fresh sessions often redirected to sign-in or hit 429; the successful pass showed four visible Brunella bookkeeping workflows and the Email Intake canvas with 6 nodes. Screenshots were captured in workflows-list.png and workflows-brunella-intake-canvas.png.
