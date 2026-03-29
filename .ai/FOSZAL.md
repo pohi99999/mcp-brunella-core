@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-29 23:04
+**Generálva:** 2026-03-30 00:06
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -34,6 +34,11 @@ start-full.bat
 - **Agent:** Gemini
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** `src/core/federation/trustRegistry.ts`, `capabilityManifest.ts`, `federatedGateway.ts`, `negotiationProtocol.ts`, `src/server/routes/federation.ts`, `src/server/web.ts`, `src/cli/federationCommands.ts`, `src/cli.ts` (+4 további)
+
+#### 22:10 - [Copilot] Phase 3 Ephemeral Agents closure + archival
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/core/ephemeralAgentManager.ts, src/core/ephemeralAudit.ts, src/core/ephemeralSandbox.ts, src/core/ephemeralLeaseManager.ts, src/core/ephemeralScopedToolRegistry.ts, src/core/phoenixEventBus.ts, src/dashboard/components/dashboard/EphemeralAgentsPanel.tsx, src/cli/devCommands.ts, test/ephemeralSandbox.test.ts, test/ephemeralAgentManager.test.ts, test/ephemeralScopedToolRegistry.test.ts, conductor/tracks/ephemeral_agents_*/*, conductor/archive/ephemeral_agents_*/*, conductor/tracks.md, conductor/project_state.json
 
 #### 21:10 - [Copilot] Zero-Prompt Phase 1 100% completion
 - **Agent:** Copilot
@@ -643,7 +648,7 @@ start-full.bat
 | Claude | 86 | 2026-03-29 |
 | Gemini | 12 | 2026-03-29 |
 | Cursor | 0 | N/A |
-| Copilot | 6 | 2026-03-28 |
+| Copilot | 7 | 2026-03-28 |
 
 ---
 

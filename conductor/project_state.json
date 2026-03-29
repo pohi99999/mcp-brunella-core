@@ -1,30 +1,12 @@
 {
-  "lastUpdated": "2026-03-28T20:34:34.880Z",
+  "lastUpdated": "2026-03-29T22:04:40.660Z",
   "tracks": [
-    {
-      "id": "brunella_function_matrix_20260325",
-      "name": "Brunella teljes funkció- és tulajdonságmátrix dokumentáció",
-      "status": "completed",
-      "priority": "critical",
-      "progress": 100,
-      "tags": [
-        "documentation",
-        "inventory",
-        "architecture",
-        "agents",
-        "mcp",
-        "feature-matrix"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\brunella_function_matrix_20260325",
-      "_isArchived": false
-    },
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
       "name": "Cloudflare DNS Zone Reconciliation for Custom Domains",
-      "status": "active",
+      "status": "archived",
       "priority": "high",
-      "progress": 50,
+      "progress": 100,
       "tags": [
         "cloudflare",
         "dns",
@@ -57,15 +39,14 @@
       "_isArchived": false
     },
     {
-      "id": "e2b_sandbox_crawl4ai_20260325",
-      "name": "E2B Sandbox Crawl4AI",
+      "id": "goldeninteligencia20260327",
+      "name": "goldeninteligencia20260327",
       "status": "proposed",
-      "priority": "low",
+      "priority": "high",
       "progress": 0,
-      "created": "2026-03-25",
       "tags": [],
       "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\e2b_sandbox_crawl4ai_20260325",
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\goldeninteligencia20260327",
       "_isArchived": false
     },
     {
@@ -124,9 +105,9 @@
     {
       "id": "n8n_konyveles_pipeline_20260328",
       "name": "n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu",
-      "status": "proposed",
+      "status": "active",
       "priority": "high",
-      "progress": 0,
+      "progress": 85,
       "created": "2026-03-28",
       "tags": [
         "n8n",
@@ -142,67 +123,6 @@
         "konyveles_automatizalas"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\n8n_konyveles_pipeline_20260328",
-      "_isArchived": false
-    },
-    {
-      "id": "owl_agent_coordinator_20260321",
-      "name": "OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)",
-      "status": "proposed",
-      "priority": "high",
-      "progress": 0,
-      "created": "2026-03-21",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\owl_agent_coordinator_20260321",
-      "_isArchived": false
-    },
-    {
-      "id": "P-Sales20260327",
-      "name": "P-Sales20260327",
-      "status": "active",
-      "priority": "high",
-      "progress": 80,
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\P-Sales20260327",
-      "_isArchived": false
-    },
-    {
-      "id": "personal_assistant_windows_mvp_20260323",
-      "name": "Brunella Personal Assistant — Windows MVP Foundation",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "assistant",
-        "windows",
-        "voice",
-        "graphrag",
-        "memory",
-        "robotkez",
-        "tauri",
-        "dashboard",
-        "cli"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\personal_assistant_windows_mvp_20260323",
-      "_isArchived": false
-    },
-    {
-      "id": "readme_bootstrap_health_fixes_20260324",
-      "name": "README Bootstrap & Health Fixek",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "tags": [
-        "bootstrap",
-        "smoke",
-        "health",
-        "webhook",
-        "registry"
-      ],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\readme_bootstrap_health_fixes_20260324",
       "_isArchived": false
     },
     {
@@ -262,19 +182,6 @@
         "remote_layer_phase8_planetary_supersystem_20260322"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\remote_layer_phase9_emergent_superintelligence_20260322",
-      "_isArchived": false
-    },
-    {
-      "id": "robotkez_comet_upgrade_20260222",
-      "name": "RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser",
-      "status": "completed",
-      "priority": "high",
-      "progress": 100,
-      "created": "2026-02-22",
-      "updated": "2026-03-23",
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\robotkez_comet_upgrade_20260222",
       "_isArchived": false
     },
     {
@@ -1157,6 +1064,87 @@
       "_isArchived": true
     },
     {
+      "id": "ephemeral_agents_cleanup_audit_20260329",
+      "name": "Ephemeral Agents — Cleanup és Audit",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "ephemeral-agents",
+        "cleanup",
+        "audit",
+        "artifacts"
+      ],
+      "dependencies": [
+        "ephemeral_agents_ttl_budget_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\ephemeral_agents_cleanup_audit_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "ephemeral_agents_limited_tools_20260329",
+      "name": "Ephemeral Agents — Limited Tools",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "ephemeral-agents",
+        "sandbox",
+        "tool-scope",
+        "security"
+      ],
+      "dependencies": [
+        "ephemeral_agents_runtime_spawn_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\ephemeral_agents_limited_tools_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "ephemeral_agents_runtime_spawn_20260329",
+      "name": "Ephemeral Agents — Runtime Spawn",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "ephemeral-agents",
+        "runtime",
+        "spawn",
+        "dynamic-agent"
+      ],
+      "dependencies": [
+        "zero_prompt_policy_engine_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\ephemeral_agents_runtime_spawn_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "ephemeral_agents_ttl_budget_20260329",
+      "name": "Ephemeral Agents — TTL és Budget",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "ephemeral-agents",
+        "ttl",
+        "budget",
+        "cost-control"
+      ],
+      "dependencies": [
+        "ephemeral_agents_runtime_spawn_20260329",
+        "ephemeral_agents_limited_tools_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\ephemeral_agents_ttl_budget_20260329",
+      "_isArchived": true
+    },
+    {
       "id": "epp-v2-protocol-20260211",
       "name": "Engineering Precision Protocol v2 (EPP v2)",
       "status": "archived",
@@ -1173,6 +1161,88 @@
       ],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\epp-v2-protocol-20260211",
+      "_isArchived": true
+    },
+    {
+      "id": "federated_mcp_negotiation_20260329",
+      "name": "Federated MCP — Negotiation Protocol",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 0,
+      "created": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "federated-mcp",
+        "negotiation",
+        "approval",
+        "b2b-agents"
+      ],
+      "dependencies": [
+        "federated_mcp_remote_routing_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\federated_mcp_negotiation_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "federated_mcp_remote_routing_20260329",
+      "name": "Federated MCP — Remote Capability Routing",
+      "status": "archived",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "federated-mcp",
+        "routing",
+        "remote",
+        "capability-discovery"
+      ],
+      "dependencies": [
+        "federated_mcp_trust_20260329",
+        "federated_mcp_signed_manifests_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\federated_mcp_remote_routing_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "federated_mcp_signed_manifests_20260329",
+      "name": "Federated MCP — Signed Capability Manifests",
+      "status": "archived",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "federated-mcp",
+        "manifest",
+        "signing",
+        "capabilities"
+      ],
+      "dependencies": [
+        "federated_mcp_trust_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\federated_mcp_signed_manifests_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "federated_mcp_trust_20260329",
+      "name": "Federated MCP — Trust Layer",
+      "status": "archived",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "federated-mcp",
+        "trust",
+        "identity",
+        "security"
+      ],
+      "dependencies": [
+        "zero_prompt_policy_engine_20260329",
+        "remote_layer_phase1_foundation_20260322"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\federated_mcp_trust_20260329",
       "_isArchived": true
     },
     {
@@ -1519,6 +1589,93 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\law_detective_20260223",
+      "_isArchived": true
+    },
+    {
+      "id": "learning_loop_curated_golden_dataset_20260329",
+      "name": "Learning Loop — Curated Golden Dataset",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "updated": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "learning",
+        "golden-dataset",
+        "reflection",
+        "curation",
+        "privacy"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\learning_loop_curated_golden_dataset_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "learning_loop_eval_harness_20260329",
+      "name": "Learning Loop — Eval Harness",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "updated": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "learning",
+        "eval",
+        "benchmark",
+        "quality-gates",
+        "regression"
+      ],
+      "dependencies": [
+        "learning_loop_curated_golden_dataset_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\learning_loop_eval_harness_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "learning_loop_nightly_trainer_20260329",
+      "name": "Learning Loop — Nightly Trainer",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "updated": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "learning",
+        "training",
+        "nightly",
+        "slm",
+        "fine-tuning"
+      ],
+      "dependencies": [
+        "learning_loop_curated_golden_dataset_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\learning_loop_nightly_trainer_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "learning_loop_reflex_model_registry_20260329",
+      "name": "Learning Loop — Reflex Model Registry",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "updated": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "learning",
+        "model-registry",
+        "routing",
+        "slm",
+        "versioning"
+      ],
+      "dependencies": [
+        "learning_loop_nightly_trainer_20260329",
+        "learning_loop_eval_harness_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\learning_loop_reflex_model_registry_20260329",
       "_isArchived": true
     },
     {
@@ -1899,8 +2056,6 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
-      "updated": "2026-03-25T16:19:39Z",
-      "completed": "2026-03-25",
       "tags": [
         "assistant",
         "windows",
@@ -1942,8 +2097,6 @@
       "status": "archived",
       "priority": "high",
       "progress": 100,
-      "updated": "2026-03-25T16:19:39Z",
-      "completed": "2026-03-25",
       "tags": [
         "bootstrap",
         "smoke",
@@ -2377,13 +2530,121 @@
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\TR-20260212-TECH-HAR",
       "_isArchived": true
+    },
+    {
+      "id": "zero_prompt_approval_router_20260329",
+      "name": "Zero-Prompt Core — Approval Router",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "updated": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "autonomy",
+        "approval",
+        "human-in-loop",
+        "workflow"
+      ],
+      "dependencies": [
+        "zero_prompt_policy_engine_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\zero_prompt_approval_router_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "zero_prompt_event_fabric_20260329",
+      "name": "Zero-Prompt Core — Event Fabric",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "updated": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "autonomy",
+        "zero-prompt",
+        "event-fabric",
+        "webhooks",
+        "scheduler"
+      ],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\zero_prompt_event_fabric_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "zero_prompt_notification_channels_20260329",
+      "name": "Zero-Prompt Core — Slack/Discord/Email Jóváhagyás",
+      "status": "archived",
+      "priority": "medium",
+      "progress": 100,
+      "created": "2026-03-29",
+      "updated": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "autonomy",
+        "notifications",
+        "slack",
+        "discord",
+        "email"
+      ],
+      "dependencies": [
+        "zero_prompt_approval_router_20260329",
+        "zero_prompt_signal_ingest_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\zero_prompt_notification_channels_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "zero_prompt_policy_engine_20260329",
+      "name": "Zero-Prompt Core — Policy Engine",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "updated": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "autonomy",
+        "policy",
+        "risk",
+        "guardrails",
+        "approval"
+      ],
+      "dependencies": [
+        "zero_prompt_event_fabric_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\zero_prompt_policy_engine_20260329",
+      "_isArchived": true
+    },
+    {
+      "id": "zero_prompt_signal_ingest_20260329",
+      "name": "Zero-Prompt Core — GitHub + Health + Scheduled Inputok",
+      "status": "archived",
+      "priority": "high",
+      "progress": 100,
+      "created": "2026-03-29",
+      "updated": "2026-03-29",
+      "completed": "2026-03-29",
+      "tags": [
+        "autonomy",
+        "github",
+        "health",
+        "scheduler",
+        "signals"
+      ],
+      "dependencies": [
+        "zero_prompt_event_fabric_20260329"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\zero_prompt_signal_ingest_20260329",
+      "_isArchived": true
     }
   ],
   "stats": {
-    "total": 142,
-    "active": 5,
-    "completed": 4,
-    "archived": 126,
-    "proposed": 7
+    "total": 153,
+    "active": 4,
+    "completed": 0,
+    "archived": 143,
+    "proposed": 5
   }
 }

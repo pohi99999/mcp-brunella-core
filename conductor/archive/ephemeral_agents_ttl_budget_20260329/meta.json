@@ -1,0 +1,34 @@
+{
+  "id": "ephemeral_agents_ttl_budget_20260329",
+  "name": "Ephemeral Agents — TTL és Budget",
+  "status": "ARCHIVED",
+  "priority": "HIGH",
+  "created": "2026-03-29",
+  "completed": "2026-03-29",
+  "owner": "Pohánka Péter",
+  "progress": 100,
+  "description": "Idő-, token-, költség- és lépésszintű budget/lease enforcement az ephemeral ágensekhez.",
+  "dependencies": [
+    "ephemeral_agents_runtime_spawn_20260329",
+    "ephemeral_agents_limited_tools_20260329"
+  ],
+  "phase": "phase3-ephemeral-agents",
+  "tags": [
+    "ephemeral-agents",
+    "ttl",
+    "budget",
+    "cost-control"
+  ],
+  "deliverables": [
+    "src/core/ephemeralLeaseManager.ts",
+    "TTL setTimeout kill-switch + renewal-aware lease state",
+    "recordUsage() — token/cost/step budget enforcement és approval escalation",
+    "phoenix:ephemeral_budget_exceeded event + supervisor approval renewal flow"
+  ],
+  "successCriteria": [
+    "TTL lejárat után az ephemeral agent nem marad aktív",
+    "Költség vagy token budget túllépés leállítja a futást",
+    "A supervisor valós időben látja a budget állapotot",
+    "A limitált agent nem tud végtelen retry loopba kerülni"
+  ]
+}

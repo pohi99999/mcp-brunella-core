@@ -1,0 +1,37 @@
+{
+  "id": "ephemeral_agents_runtime_spawn_20260329",
+  "name": "Ephemeral Agents — Runtime Spawn",
+  "status": "ARCHIVED",
+  "priority": "HIGH",
+  "created": "2026-03-29",
+  "completed": "2026-03-29",
+  "owner": "Pohánka Péter",
+  "progress": 100,
+  "description": "Futás közbeni ideiglenes ágens-példányok létrehozása dinamikus specből, supervisor kontrollal és task-local memóriával.",
+  "dependencies": [
+    "zero_prompt_policy_engine_20260329"
+  ],
+  "phase": "phase3-ephemeral-agents",
+  "tags": [
+    "ephemeral-agents",
+    "runtime",
+    "spawn",
+    "dynamic-agent"
+  ],
+  "deliverables": [
+    "src/core/ephemeralAgentManager.ts",
+    "Ephemeral agent spec séma (EphemeralAgentSpec, EphemeralAgentRecord)",
+    "Spawn / terminate workflow TTL kill-switch-szel",
+    "PhoenixEventBus integráció (phoenix:ephemeral_spawned, phoenix:ephemeral_terminated)",
+    "Policy Engine check before spawn",
+    "REST API: GET/POST /api/v1/developer/ephemeral/agents",
+    "Dashboard panel: EphemeralAgentsPanel.tsx",
+    "CLI: brunella dev ephemeral list/terminate/postmortems"
+  ],
+  "successCriteria": [
+    "A rendszer létre tud hozni ideiglenes specialistát futás közben",
+    "Az ágens parent taskhoz kötötten követhető",
+    "A task végén az ephemeral agent lezárható vagy felszabadítható",
+    "A létrejövő példány auditált metaadatot hagy maga után"
+  ]
+}

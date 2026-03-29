@@ -15,6 +15,7 @@
 
 import { Command } from 'commander';
 import chalk from 'chalk';
+import boxen from 'boxen';
 import ora from 'ora';
 import inquirer from 'inquirer';
 import { BrunellaClient } from '../utils/mcpClient.js';
@@ -52,6 +53,53 @@ async function executeDevTask(task: string, context?: Record<string, unknown>): 
         method: 'POST',
         body: JSON.stringify({ task, context }),
     });
+}
+
+interface ApprovalNotificationDelivery {
+    id: string;
+    workflowId?: string;
+    approvalRequestId?: string;
+    channel: 'email' | 'slack' | 'discord' | 'system';
+    status: 'sent' | 'failed' | 'skipped';
+    eventType: 'approval_requested' | 'approval_resolved' | 'approval_expired';
+    title: string;
+    message: string;
+    error?: string;
+    createdAt: string;
+}
+
+interface ApprovalNotificationSummary {
+    total: number;
+    sent: number;
+    failed: number;
+    skipped: number;
+    byChannel: Partial<Record<'email' | 'slack' | 'discord' | 'system', number>>;
+    availableChannels: Array<{
+        channel: 'email' | 'slack' | 'discord';
+        enabled: boolean;
+        target?: string;
+    }>;
+    channelPolicies?: Array<{
+        channel: 'email' | 'slack' | 'discord';
+        enabled: boolean;
+        eventTypes: Array<'approval_requested' | 'approval_resolved' | 'approval_expired'>;
+        fallbackChannel?: 'email' | 'slack' | 'discord';
+    }>;
+    workflowCounts: {
+        pending: number;
+        approved: number;
+        rejected: number;
+        expired: number;
+    };
+}
+
+interface ApprovalWorkflowItem {
+    workflowId: string;
+    approvalRequestId: string;
+    status: 'pending' | 'approved' | 'rejected' | 'expired';
+    eventType: string;
+    source: string;
+    createdAt: string;
 }
 
 /**
@@ -1383,6 +1431,279 @@ export function registerDevCommands(program: Command): void {
             }
         });
 
+    approval
+        .command('kozpont')
+        .description('Jóváhagyási értesítési központ')
+        .action(async () => {
+            const fetchSummary = async () => {
+                const result = await apiFetch<{ summary: ApprovalNotificationSummary }>('/approval/notifications/summary');
+                return result.summary;
+            };
+
+            const fetchDeliveries = async (limit = 12) => {
+                const result = await apiFetch<{ deliveries: ApprovalNotificationDelivery[] }>(`/approval/notifications?limit=${limit}`);
+                return result.deliveries;
+            };
+
+            const fetchWorkflows = async () => {
+                const result = await apiFetch<{ workflows: ApprovalWorkflowItem[] }>('/approval/workflows');
+                return result.workflows;
+            };
+
+            const renderOverview = async () => {
+                const spinner = ora('Értesítési áttekintés betöltése...').start();
+                try {
+                    const summary = await fetchSummary();
+                    spinner.stop();
+
+                    const channelSummary = summary.availableChannels
+                        .map((channel) => `${channel.enabled ? '✅' : '⚪'} ${channel.channel.toUpperCase()}${channel.target ? ` (${channel.target})` : ''}`)
+                        .join('\n');
+
+                    console.log(boxen([
+                        chalk.bold.cyan('Zero-Prompt Notification Center'),
+                        '',
+                        `${chalk.yellow('Pending workflowk:')} ${summary.workflowCounts.pending}`,
+                        `${chalk.green('Kézbesítve:')} ${summary.sent}`,
+                        `${chalk.red('Hibás:')} ${summary.failed}`,
+                        `${chalk.gray('Skip:')} ${summary.skipped}`,
+                        '',
+                        chalk.bold('Csatornák:'),
+                        channelSummary || chalk.dim('Nincs konfigurált csatorna'),
+                    ].join('\n'), {
+                        padding: 1,
+                        borderStyle: 'round',
+                        borderColor: 'cyan',
+                    }));
+                } catch (e: unknown) {
+                    const msg = e instanceof Error ? e.message : String(e);
+                    spinner.fail(chalk.red(`Áttekintés betöltése sikertelen: ${msg}`));
+                }
+            };
+
+            const renderDeliveries = async () => {
+                const spinner = ora('Kézbesítések betöltése...').start();
+                try {
+                    const deliveries = await fetchDeliveries();
+                    spinner.stop();
+
+                    if (deliveries.length === 0) {
+                        console.log(chalk.dim('\nMég nincs kézbesítési esemény.'));
+                        return;
+                    }
+
+                    console.log(chalk.bold('\nLegutóbbi kézbesítések:\n'));
+                    for (const delivery of deliveries) {
+                        const statusColor = delivery.status === 'sent'
+                            ? chalk.green
+                            : delivery.status === 'failed'
+                                ? chalk.red
+                                : chalk.yellow;
+                        console.log(`${statusColor(delivery.status.toUpperCase())} ${chalk.cyan(delivery.channel.toUpperCase())} ${delivery.title}`);
+                        console.log(`  ${chalk.dim(delivery.createdAt)} ${chalk.dim(delivery.eventType)}`);
+                        if (delivery.workflowId) {
+                            console.log(`  Workflow: ${delivery.workflowId}`);
+                        }
+                        if (delivery.error) {
+                            console.log(`  ${chalk.red(delivery.error)}`);
+                        }
+                        console.log('');
+                    }
+                } catch (e: unknown) {
+                    const msg = e instanceof Error ? e.message : String(e);
+                    spinner.fail(chalk.red(`Kézbesítések betöltése sikertelen: ${msg}`));
+                }
+            };
+
+            const resendNotification = async () => {
+                const spinner = ora('Workflow lista betöltése...').start();
+                try {
+                    const workflows = await fetchWorkflows();
+                    spinner.stop();
+
+                    if (workflows.length === 0) {
+                        console.log(chalk.dim('\nNincs elérhető approval workflow.'));
+                        return;
+                    }
+
+                    const { workflowId } = await inquirer.prompt<{ workflowId: string }>([
+                        {
+                            type: 'list',
+                            name: 'workflowId',
+                            message: 'Melyik workflow értesítését küldjük újra?',
+                            choices: workflows.map((workflow) => ({
+                                name: `${workflow.status.toUpperCase()} · ${workflow.eventType} · ${workflow.workflowId}`,
+                                value: workflow.workflowId,
+                            })),
+                        },
+                    ]);
+
+                    const sendSpinner = ora('Értesítés újraküldése...').start();
+                    const result = await apiFetch<{ success: boolean; deliveries: ApprovalNotificationDelivery[] }>(`/approval/workflows/${workflowId}/notify`, {
+                        method: 'POST',
+                    });
+
+                    sendSpinner.succeed(chalk.green(`${result.deliveries.length} kézbesítés újraindítva.`));
+                } catch (e: unknown) {
+                    const msg = e instanceof Error ? e.message : String(e);
+                    spinner.fail(chalk.red(`Újraküldés sikertelen: ${msg}`));
+                }
+            };
+
+            const refreshWorkflowState = async () => {
+                const spinner = ora('Workflow lista betöltése...').start();
+                try {
+                    const workflows = await fetchWorkflows();
+                    spinner.stop();
+
+                    if (workflows.length === 0) {
+                        console.log(chalk.dim('\nNincs elérhető approval workflow.'));
+                        return;
+                    }
+
+                    const { workflowId } = await inquirer.prompt<{ workflowId: string }>([
+                        {
+                            type: 'list',
+                            name: 'workflowId',
+                            message: 'Melyik workflow állapotát frissítsük?',
+                            choices: workflows.map((workflow) => ({
+                                name: `${workflow.status.toUpperCase()} · ${workflow.eventType} · ${workflow.workflowId}`,
+                                value: workflow.workflowId,
+                            })),
+                        },
+                    ]);
+
+                    const refreshSpinner = ora('Workflow állapot frissítése...').start();
+                    const result = await apiFetch<{ success: boolean; workflow: ApprovalWorkflowItem }>(`/approval/workflows/${workflowId}/refresh`, {
+                        method: 'POST',
+                    });
+
+                    refreshSpinner.succeed(chalk.green(`Workflow frissítve: ${result.workflow.status.toUpperCase()}`));
+                } catch (e: unknown) {
+                    const msg = e instanceof Error ? e.message : String(e);
+                    spinner.fail(chalk.red(`Workflow frissítése sikertelen: ${msg}`));
+                }
+            };
+
+            const configurePolicies = async () => {
+                const spinner = ora('Notification policy-k betöltése...').start();
+                try {
+                    const result = await apiFetch<{ policies: ApprovalNotificationSummary['channelPolicies'] }>('/approval/notifications/policies');
+                    spinner.stop();
+
+                    const policies = result.policies ?? [];
+                    if (policies.length === 0) {
+                        console.log(chalk.dim('\nNincs konfigurálható policy.'));
+                        return;
+                    }
+
+                    const { channel } = await inquirer.prompt<{ channel: 'email' | 'slack' | 'discord' }>([
+                        {
+                            type: 'list',
+                            name: 'channel',
+                            message: 'Melyik csatorna policy-ját szerkeszted?',
+                            choices: policies.map((policy) => ({
+                                name: `${policy.channel.toUpperCase()} · ${policy.enabled ? 'aktív' : 'tiltva'}`,
+                                value: policy.channel,
+                            })),
+                        },
+                    ]);
+
+                    const current = policies.find((policy) => policy.channel === channel);
+                    if (!current) {
+                        console.log(chalk.red('A kiválasztott policy nem található.'));
+                        return;
+                    }
+
+                    const answers = await inquirer.prompt<{
+                        enabled: boolean;
+                        eventTypes: Array<'approval_requested' | 'approval_resolved' | 'approval_expired'>;
+                        fallbackChannel: '' | 'email' | 'slack' | 'discord';
+                    }>([
+                        {
+                            type: 'confirm',
+                            name: 'enabled',
+                            message: 'Legyen aktív ez a csatorna?',
+                            default: current.enabled,
+                        },
+                        {
+                            type: 'checkbox',
+                            name: 'eventTypes',
+                            message: 'Milyen eseményeket kapjon?',
+                            choices: [
+                                { name: 'approval_requested', value: 'approval_requested', checked: current.eventTypes.includes('approval_requested') },
+                                { name: 'approval_resolved', value: 'approval_resolved', checked: current.eventTypes.includes('approval_resolved') },
+                                { name: 'approval_expired', value: 'approval_expired', checked: current.eventTypes.includes('approval_expired') },
+                            ],
+                        },
+                        {
+                            type: 'list',
+                            name: 'fallbackChannel',
+                            message: 'Fallback csatorna',
+                            choices: [
+                                { name: 'Nincs fallback', value: '' },
+                                ...(['email', 'slack', 'discord'] as const)
+                                    .filter((candidate) => candidate !== channel)
+                                    .map((candidate) => ({
+                                        name: candidate.toUpperCase(),
+                                        value: candidate,
+                                    })),
+                            ],
+                            default: current.fallbackChannel ?? '',
+                        },
+                    ]);
+
+                    const saveSpinner = ora('Policy mentése...').start();
+                    const saved = await apiFetch<{ success: boolean; policy: NonNullable<ApprovalNotificationSummary['channelPolicies']>[number] }>(`/approval/notifications/policies/${channel}`, {
+                        method: 'PUT',
+                        body: JSON.stringify({
+                            enabled: answers.enabled,
+                            eventTypes: answers.eventTypes,
+                            fallbackChannel: answers.fallbackChannel || undefined,
+                        }),
+                    });
+
+                    saveSpinner.succeed(chalk.green(`Policy mentve: ${saved.policy.channel.toUpperCase()}`));
+                } catch (e: unknown) {
+                    const msg = e instanceof Error ? e.message : String(e);
+                    spinner.fail(chalk.red(`Policy mentése sikertelen: ${msg}`));
+                }
+            };
+
+            let active = true;
+            while (active) {
+                const { action } = await inquirer.prompt<{ action: string }>([
+                    {
+                        type: 'list',
+                        name: 'action',
+                        message: 'Jóváhagyási értesítési központ',
+                        choices: [
+                            { name: '📊 Áttekintés', value: 'overview' },
+                            { name: '📬 Kézbesítések listája', value: 'deliveries' },
+                            { name: '🧭 Csatorna policy szerkesztése', value: 'policies' },
+                            { name: '⏱️ Workflow státusz frissítése', value: 'refresh' },
+                            { name: '🔁 Workflow értesítés újraküldése', value: 'resend' },
+                            { name: '🚪 Kilépés', value: 'exit' },
+                        ],
+                    },
+                ]);
+
+                if (action === 'overview') {
+                    await renderOverview();
+                } else if (action === 'deliveries') {
+                    await renderDeliveries();
+                } else if (action === 'policies') {
+                    await configurePolicies();
+                } else if (action === 'refresh') {
+                    await refreshWorkflowState();
+                } else if (action === 'resend') {
+                    await resendNotification();
+                } else {
+                    active = false;
+                }
+            }
+        });
+
     // ==================== P12: Activity Feed Commands ====================
 
     dev
@@ -1480,6 +1801,136 @@ export function registerDevCommands(program: Command): void {
                  const msg = e instanceof Error ? e.message : String(e);
                 console.error(chalk.red(`Failed: ${msg}`));
                  process.exit(1);
+            }
+        });
+
+    // -------------------------------------------------------------------------
+    // brunella dev ephemeral — Ephemeral Agents CLI (Phase 3)
+    // -------------------------------------------------------------------------
+
+    const ephemeral = dev
+        .command('ephemeral')
+        .description('Ephemeral Agents kezelése (Phase 3)');
+
+    // brunella dev ephemeral list [--state <state>]
+    ephemeral
+        .command('list')
+        .description('Ephemeral ügynökök listázása')
+        .option('--state <state>', 'Szűrés állapot szerint (running|pending|terminated|expired|failed)')
+        .option('--json', 'Nyers JSON kimenet')
+        .action(async (opts: { state?: string; json?: boolean }) => {
+            const spinner = ora('Ephemeral ügynökök lekérése...').start();
+            try {
+                const data = await apiFetch<{ agents: unknown[] }>('/ephemeral/agents');
+                const agents = opts.state
+                    ? data.agents.filter((a: any) => a.state === opts.state)
+                    : data.agents;
+
+                spinner.stop();
+
+                if (opts.json) {
+                    logInfo('CLI', JSON.stringify(agents, null, 2));
+                    return;
+                }
+
+                if (agents.length === 0) {
+                    console.log(chalk.yellow('Nincs ephemeral ágens.'));
+                    return;
+                }
+
+                console.log(boxen(
+                    chalk.bold.white(`Ephemeral Agents (${agents.length})`),
+                    { padding: 1, borderStyle: 'round', borderColor: 'magentaBright' },
+                ));
+
+                for (const a of agents as any[]) {
+                    const stateColor = a.state === 'running' ? chalk.green
+                        : a.state === 'pending' ? chalk.yellow
+                        : a.state === 'expired' ? chalk.yellowBright
+                        : a.state === 'failed' ? chalk.red
+                        : chalk.dim;
+                    const scopeSummary = chalk.dim(
+                        `[tools:${a.spec.allowedTools.length} ` +
+                        `paths:${(a.spec.allowedPaths ?? []).length} ` +
+                        `hosts:${(a.spec.allowedHosts ?? []).length} ` +
+                        `renew:${a.lease?.renewalsUsed ?? 0}/${a.lease?.maxRenewals ?? 0}]`,
+                    );
+                    console.log(
+                        `  ${chalk.cyan(a.id.slice(0, 8))} ${stateColor(a.state.toUpperCase().padEnd(12))} ` +
+                        `${chalk.white(a.spec.purpose)} ${chalk.dim('← ' + a.spec.parentAgentName)} ${scopeSummary}`,
+                    );
+
+                    if (a.approval?.reason) {
+                        console.log(chalk.yellow(`     approval: ${a.approval.kind} — ${a.approval.reason}`));
+                    }
+                }
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Lekérés sikertelen: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    // brunella dev ephemeral terminate <id>
+    ephemeral
+        .command('terminate <id>')
+        .description('Ephemeral ágens leállítása')
+        .option('--reason <reason>', 'Leállítás oka', 'cli_request')
+        .action(async (id: string, opts: { reason: string }) => {
+            const { confirm } = await inquirer.prompt([
+                { type: 'confirm', name: 'confirm', message: `Leállítod az ágenst (${id.slice(0, 8)})? (ok: ${opts.reason})`, default: false },
+            ]);
+            if (!confirm) { console.log(chalk.dim('Megszakítva.')); return; }
+
+            const spinner = ora(`Ágens leállítása: ${id}...`).start();
+            try {
+                await apiFetch(`/ephemeral/agents/${encodeURIComponent(id)}/terminate`, {
+                    method: 'POST',
+                    body: JSON.stringify({ reason: opts.reason }),
+                });
+                spinner.succeed(chalk.green(`Ágens leállítva: ${id}`));
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Leállítás sikertelen: ${msg}`));
+                process.exit(1);
+            }
+        });
+
+    // brunella dev ephemeral postmortems [--limit <n>]
+    ephemeral
+        .command('postmortems')
+        .description('Ephemeral postmortem összefoglalók listázása')
+        .option('--limit <n>', 'Maximum sorok száma', '20')
+        .option('--json', 'Nyers JSON kimenet')
+        .action(async (opts: { limit: string; json?: boolean }) => {
+            const limit = parseInt(opts.limit) || 20;
+            const spinner = ora('Postmortems lekérése...').start();
+            try {
+                const data = await apiFetch<{ postmortems: unknown[] }>(`/ephemeral/postmortems?limit=${limit}`);
+                spinner.stop();
+
+                if (opts.json) {
+                    logInfo('CLI', JSON.stringify(data.postmortems, null, 2));
+                    return;
+                }
+
+                if (data.postmortems.length === 0) {
+                    console.log(chalk.yellow('Nincs postmortem adat.'));
+                    return;
+                }
+
+                console.log(boxen(
+                    chalk.bold.white(`Ephemeral Postmortems (${data.postmortems.length})`),
+                    { padding: 1, borderStyle: 'round', borderColor: 'cyan' },
+                ));
+
+                for (const pm of data.postmortems as any[]) {
+                    console.log(`  ${chalk.cyan(pm.agentId.slice(0, 8))} ${chalk.dim(pm.state)} — ${pm.summary}`);
+                }
+            } catch (e: unknown) {
+                const msg = e instanceof Error ? e.message : String(e);
+                spinner.fail(chalk.red(`Lekérés sikertelen: ${msg}`));
+                process.exit(1);
             }
         });
 

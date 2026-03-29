@@ -93,6 +93,161 @@ export interface PhoenixDegradedEvent {
   timestamp: string;
 }
 
+export interface PhoenixEventFabricSignalEvent {
+  envelope: {
+    id: string;
+    source: string;
+    type: string;
+    priority: 'critical' | 'high' | 'medium' | 'low';
+    riskHint?: 'safe' | 'guarded' | 'dangerous';
+    dedupKey: string;
+    payload: unknown;
+    metadata?: Record<string, unknown>;
+    timestamp: string;
+  };
+  source: string;
+  eventType: string;
+  priority: 'critical' | 'high' | 'medium' | 'low';
+  riskHint: 'safe' | 'guarded' | 'dangerous';
+  timestamp: string;
+}
+
+export interface PhoenixPolicyDecisionEvent {
+  source: string;
+  eventType: string;
+  actionClass: 'safe' | 'guarded' | 'dangerous';
+  riskScore: number;
+  autonomyLevel: 'low' | 'medium' | 'high';
+  requiresApproval: boolean;
+  guardrails: string[];
+  reason: string;
+  riskHint: 'safe' | 'guarded' | 'dangerous';
+  timestamp: string;
+}
+
+export interface PhoenixApprovalRequestedEvent {
+  workflowId: string;
+  approvalRequestId: string;
+  eventType: string;
+  source: string;
+  reason: string;
+  timeoutMs: number;
+  timestamp: string;
+}
+
+export interface PhoenixApprovalResolvedEvent {
+  workflowId: string;
+  approvalRequestId: string;
+  status: 'approved' | 'rejected' | 'expired';
+  action: 'approve' | 'reject' | 'expire';
+  response?: unknown;
+  resumeEventType?: string;
+  timestamp: string;
+}
+
+export interface PhoenixEphemeralSpawnedEvent {
+  agentId: string;
+  parentAgentName: string;
+  purpose: string;
+  allowedTools: string[];
+  deniedTools?: string[];
+  allowedPaths?: string[];
+  allowedHosts?: string[];
+  ttlMs: number;
+  state: string;
+  timestamp: string;
+}
+
+export interface PhoenixEphemeralTerminatedEvent {
+  agentId: string;
+  parentAgentName: string;
+  reason: string;
+  state: string;
+  tokenUsed: number;
+  costUsed: number;
+  stepsUsed: number;
+  timestamp: string;
+}
+
+export interface PhoenixEphemeralBudgetExceededEvent {
+  agentId: string;
+  budgetType: 'token' | 'cost' | 'step';
+  used: number;
+  limit: number;
+  action?: 'terminated' | 'approval_requested' | 'renewed';
+  workflowId?: string;
+  approvalRequestId?: string;
+  state?: string;
+  timestamp: string;
+}
+
+export interface PhoenixEphemeralToolViolationEvent {
+  agentId: string;
+  parentAgentName: string;
+  toolName: string;
+  allowedTools: string[];
+  violationType?: 'tool' | 'file' | 'network' | 'composition';
+  target?: string;
+  reason?: string;
+  chainId?: string;
+  timestamp: string;
+}
+
+export interface PhoenixFederationPeerRegisteredEvent {
+  peerId: string;
+  displayName: string;
+  endpoint: string;
+  trustState: string;
+  timestamp: string;
+}
+
+export interface PhoenixFederationPeerRevokedEvent {
+  peerId: string;
+  displayName: string;
+  reason: string;
+  timestamp: string;
+}
+
+export interface PhoenixFederationManifestIssuedEvent {
+  manifestId: string;
+  peerId: string;
+  capabilityCount: number;
+  expiresAt: string;
+  timestamp: string;
+}
+
+export interface PhoenixFederationRouteRequestedEvent {
+  requestId: string;
+  capabilityName: string;
+  preferredPeerId: string | null;
+  timestamp: string;
+}
+
+export interface PhoenixFederationRouteResolvedEvent {
+  requestId: string;
+  capabilityName: string;
+  selectedPeer: string | null;
+  candidateCount: number;
+  fallbackUsed: boolean;
+  timestamp: string;
+}
+
+export interface PhoenixFederationNegotiationStartedEvent {
+  sessionId: string;
+  fromPeerId: string;
+  toPeerId: string;
+  capabilityCount: number;
+  requiresApproval: boolean;
+  timestamp: string;
+}
+
+export interface PhoenixFederationNegotiationCompletedEvent {
+  sessionId: string;
+  outcome: 'accepted' | 'rejected';
+  agreedCapabilities: string[];
+  timestamp: string;
+}
+
 export type PhoenixEventMap = {
   'phoenix:agent_failed': PhoenixAgentFailedEvent;
   'phoenix:failover_triggered': PhoenixFailoverTriggeredEvent;
@@ -103,6 +258,21 @@ export type PhoenixEventMap = {
   'phoenix:restart': PhoenixRestartEvent;
   'phoenix:state_restored': PhoenixStateRestoredEvent;
   'phoenix:degraded': PhoenixDegradedEvent;
+  'phoenix:event_fabric_signal': PhoenixEventFabricSignalEvent;
+  'phoenix:policy_decision': PhoenixPolicyDecisionEvent;
+  'phoenix:approval_requested': PhoenixApprovalRequestedEvent;
+  'phoenix:approval_resolved': PhoenixApprovalResolvedEvent;
+  'phoenix:ephemeral_spawned': PhoenixEphemeralSpawnedEvent;
+  'phoenix:ephemeral_terminated': PhoenixEphemeralTerminatedEvent;
+  'phoenix:ephemeral_budget_exceeded': PhoenixEphemeralBudgetExceededEvent;
+  'phoenix:ephemeral_tool_violation': PhoenixEphemeralToolViolationEvent;
+  'phoenix:federation_peer_registered': PhoenixFederationPeerRegisteredEvent;
+  'phoenix:federation_peer_revoked': PhoenixFederationPeerRevokedEvent;
+  'phoenix:federation_manifest_issued': PhoenixFederationManifestIssuedEvent;
+  'phoenix:federation_route_requested': PhoenixFederationRouteRequestedEvent;
+  'phoenix:federation_route_resolved': PhoenixFederationRouteResolvedEvent;
+  'phoenix:federation_negotiation_started': PhoenixFederationNegotiationStartedEvent;
+  'phoenix:federation_negotiation_completed': PhoenixFederationNegotiationCompletedEvent;
 };
 
 export type PhoenixEventName = keyof PhoenixEventMap;
