@@ -1,39 +1,89 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-28T20:34:34.880Z
+**Utolso frissites:** 2026-03-29T03:02:22.049Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 142 total | 5 active | 4 completed | 126 archived
+**Stats:** 153 total | 4 active | 0 completed | 126 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (7)
+## Tervezett Szalak (Proposed) (22)
 
 - [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
   - **ID:** `cloudflare_workers_migration_20260226`
   - **Progress:** 0%
   - Mappa: ./tracks/cloudflare_workers_migration_20260226/
 
-- [ ] **E2B Sandbox Crawl4AI** [LOW]
-  - **ID:** `e2b_sandbox_crawl4ai_20260325`
+- [ ] **Ephemeral Agents — Cleanup és Audit** [MEDIUM]
+  - **ID:** `ephemeral_agents_cleanup_audit_20260329`
   - **Progress:** 0%
-  - Mappa: ./tracks/e2b_sandbox_crawl4ai_20260325/
+  - Mappa: ./tracks/ephemeral_agents_cleanup_audit_20260329/
+
+- [ ] **Ephemeral Agents — Limited Tools** [HIGH]
+  - **ID:** `ephemeral_agents_limited_tools_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/ephemeral_agents_limited_tools_20260329/
+
+- [ ] **Ephemeral Agents — Runtime Spawn** [HIGH]
+  - **ID:** `ephemeral_agents_runtime_spawn_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/ephemeral_agents_runtime_spawn_20260329/
+
+- [ ] **Ephemeral Agents — TTL és Budget** [HIGH]
+  - **ID:** `ephemeral_agents_ttl_budget_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/ephemeral_agents_ttl_budget_20260329/
+
+- [ ] **Federated MCP — Negotiation Protocol** [MEDIUM]
+  - **ID:** `federated_mcp_negotiation_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/federated_mcp_negotiation_20260329/
+
+- [ ] **Federated MCP — Remote Capability Routing** [HIGH]
+  - **ID:** `federated_mcp_remote_routing_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/federated_mcp_remote_routing_20260329/
+
+- [ ] **Federated MCP — Signed Capability Manifests** [HIGH]
+  - **ID:** `federated_mcp_signed_manifests_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/federated_mcp_signed_manifests_20260329/
+
+- [ ] **Federated MCP — Trust Layer** [HIGH]
+  - **ID:** `federated_mcp_trust_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/federated_mcp_trust_20260329/
+
+- [ ] **goldeninteligencia20260327** [HIGH]
+  - **ID:** `goldeninteligencia20260327`
+  - **Progress:** 0%
+  - Mappa: ./tracks/goldeninteligencia20260327/
+
+- [ ] **Learning Loop — Curated Golden Dataset** [HIGH]
+  - **ID:** `learning_loop_curated_golden_dataset_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/learning_loop_curated_golden_dataset_20260329/
+
+- [ ] **Learning Loop — Eval Harness** [HIGH]
+  - **ID:** `learning_loop_eval_harness_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/learning_loop_eval_harness_20260329/
+
+- [ ] **Learning Loop — Nightly Trainer** [HIGH]
+  - **ID:** `learning_loop_nightly_trainer_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/learning_loop_nightly_trainer_20260329/
+
+- [ ] **Learning Loop — Reflex Model Registry** [HIGH]
+  - **ID:** `learning_loop_reflex_model_registry_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/learning_loop_reflex_model_registry_20260329/
 
 - [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
   - **ID:** `logistics_vertical_20260222`
   - **Progress:** 5%
   - Mappa: ./tracks/logistics_vertical_20260222/
-
-- [ ] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** [HIGH]
-  - **ID:** `n8n_konyveles_pipeline_20260328`
-  - **Progress:** 0%
-  - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
-
-- [ ] **OWL-inspirált Multi-Agent Conflict Resolution (AgentCoordinator)** [HIGH]
-  - **ID:** `owl_agent_coordinator_20260321`
-  - **Progress:** 0%
-  - Mappa: ./tracks/owl_agent_coordinator_20260321/
 
 - [ ] **Brunella Remote Layer — Fázis 8: Planet-Scale Supersystem** [CRITICAL]
   - **ID:** `remote_layer_phase8_planetary_supersystem_20260322`
@@ -45,14 +95,34 @@
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase9_emergent_superintelligence_20260322/
 
+- [ ] **Zero-Prompt Core — Approval Router** [HIGH]
+  - **ID:** `zero_prompt_approval_router_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/zero_prompt_approval_router_20260329/
+
+- [ ] **Zero-Prompt Core — Event Fabric** [HIGH]
+  - **ID:** `zero_prompt_event_fabric_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/zero_prompt_event_fabric_20260329/
+
+- [ ] **Zero-Prompt Core — Slack/Discord/Email Jóváhagyás** [MEDIUM]
+  - **ID:** `zero_prompt_notification_channels_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/zero_prompt_notification_channels_20260329/
+
+- [ ] **Zero-Prompt Core — Policy Engine** [HIGH]
+  - **ID:** `zero_prompt_policy_engine_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/zero_prompt_policy_engine_20260329/
+
+- [ ] **Zero-Prompt Core — GitHub + Health + Scheduled Inputok** [HIGH]
+  - **ID:** `zero_prompt_signal_ingest_20260329`
+  - **Progress:** 0%
+  - Mappa: ./tracks/zero_prompt_signal_ingest_20260329/
+
 ---
 
-## Aktiv Szalak (Active) (5)
-
-- [ ] **Cloudflare DNS Zone Reconciliation for Custom Domains** [HIGH]
-  - **ID:** `cloudflare_dns_zone_reconciliation_20260325`
-  - **Progress:** 50%
-  - Mappa: ./tracks/cloudflare_dns_zone_reconciliation_20260325/
+## Aktiv Szalak (Active) (4)
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
@@ -65,35 +135,16 @@
   - **Progress:** 0%
   - Mappa: ./tracks/konyveles_automatizalas/
 
-- [ ] **P-Sales20260327** [HIGH]
-  - **ID:** `P-Sales20260327`
-  - **Progress:** 80%
-  - Mappa: ./tracks/P-Sales20260327/
+- [ ] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** [HIGH]
+  - **ID:** `n8n_konyveles_pipeline_20260328`
+  - **Progress:** 70%
+  - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
+  - **Note (2026-03-29):** Track-local n8n at `http://localhost:5678` was verified in browser automation; the Brunella bookkeeping workflows list and the Email Intake canvas loaded read-only after login, while fresh sessions still redirected to sign-in or hit 429.
 
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase1_foundation_20260322/
-
----
-
-## Befejezett (Completed - Not Archived) (4)
-
-- [x] **Brunella teljes funkció- és tulajdonságmátrix dokumentáció**
-  - **ID:** `brunella_function_matrix_20260325`
-  - Mappa: ./tracks/brunella_function_matrix_20260325/
-
-- [x] **Brunella Personal Assistant — Windows MVP Foundation**
-  - **ID:** `personal_assistant_windows_mvp_20260323`
-  - Mappa: ./tracks/personal_assistant_windows_mvp_20260323/
-
-- [x] **README Bootstrap & Health Fixek**
-  - **ID:** `readme_bootstrap_health_fixes_20260324`
-  - Mappa: ./tracks/readme_bootstrap_health_fixes_20260324/
-
-- [x] **RobotkezV2 Comet-szintű Upgrade — Önjavító Multi-Agent Browser**
-  - **ID:** `robotkez_comet_upgrade_20260222`
-  - Mappa: ./tracks/robotkez_comet_upgrade_20260222/
 
 ---
 
