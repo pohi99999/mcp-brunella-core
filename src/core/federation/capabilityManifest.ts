@@ -13,6 +13,8 @@ export interface Capability {
   version?: string;
   inputSchema?: Record<string, unknown>;
   outputSchema?: Record<string, unknown>;
+  deprecated?: boolean;
+  deprecatedMessage?: string;
 }
 
 export interface CapabilityManifest {

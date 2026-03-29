@@ -15,22 +15,29 @@
 
 ### 1. Protocol design
 
-- [ ] Negotiation message schema és állapotgép megírása
-- [ ] Elfogadási küszöbök és approval pontok definiálása
+- [x] Negotiation message schema és állapotgép megírása
+- [x] Elfogadási küszöbök és approval pontok definiálása
 ### 2. Implementáció
 
-- [ ] Negotiation protocol modul létrehozása
-- [ ] Offer/counter-offer/reject/accept flow implementálása
-- [ ] Transcript és audit mentés hozzáadása
+- [x] Negotiation protocol modul létrehozása
+- [x] Offer/counter-offer/reject/accept flow implementálása
+- [x] Transcript és audit mentés hozzáadása
 ### 3. Integráció
 
-- [ ] Federated gateway és Approval Router összekötése
-- [ ] Policy Engine üzleti guardrail-jeinek bekapcsolása
+- [x] Federated gateway és Approval Router összekötése
+- [x] Policy Engine üzleti guardrail-jeinek bekapcsolása
 ### 4. Validáció
 
-- [ ] Egyszerű negotiation happy-path teszt
-- [ ] Approval-required negotiation branch teszt
-- [ ] Reject/cancel branch teszt
+- [x] Egyszerű negotiation happy-path teszt
+- [x] Approval-required negotiation branch teszt
+- [x] Reject/cancel branch teszt
+
+## Végső validáció (2026-03-30)
+
+- Strukturált offer / counter-offer / accept / reject flow és transcript audit elérhető ✅
+- Dashboard panel és REST route látható a Brunellában ✅
+- `npx vitest run test/federationRoutes.test.ts test/federation/federatedGateway.test.ts` ✅
+- `npx vitest run --config vitest.dashboard.config.ts test/dashboard/components/FederationCenter.test.tsx` ✅
 
 ## Megjegyzések
 

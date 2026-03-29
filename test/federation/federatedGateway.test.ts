@@ -88,4 +88,33 @@ describe('FederatedGateway', () => {
 
     globalThis.fetch = originalFetch;
   });
+
+  it('falls back to the next trusted peer when the preferred peer keeps failing', async () => {
+    await trustRegistry.register({ peerId: 'p1', displayName: 'D1', endpoint: 'http://p1' });
+    await trustRegistry.register({ peerId: 'p2', displayName: 'D2', endpoint: 'http://p2' });
+    capabilityManifestManager.issue('p1', [{ name: 'c1', description: 'd1' }]);
+    capabilityManifestManager.issue('p2', [{ name: 'c1', description: 'd1' }]);
+
+    const originalFetch = globalThis.fetch;
+    globalThis.fetch = vi.fn()
+      .mockRejectedValueOnce(new Error('primary peer down'))
+      .mockRejectedValueOnce(new Error('primary peer still down'))
+      .mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ result: 'fallback-success' }),
+      } as Response);
+
+    const result = await federatedGateway.execute({
+      capabilityName: 'c1',
+      payload: { data: 'test' },
+      preferredPeerId: 'p1',
+    });
+
+    expect(result.success).toBe(true);
+    expect(result.peerId).toBe('p2');
+    expect(result.data).toEqual({ result: 'fallback-success' });
+    expect(globalThis.fetch).toHaveBeenCalledTimes(3);
+
+    globalThis.fetch = originalFetch;
+  });
 });

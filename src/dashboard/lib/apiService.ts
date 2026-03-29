@@ -1068,12 +1068,140 @@ export interface ProviderStatus {
   error?: string;
 }
 
+export interface FederationPeer {
+  peerId: string;
+  displayName: string;
+  endpoint: string;
+  trustState: "trusted" | "revoked" | "pending" | "unknown";
+  trustedAt?: string;
+  revokedAt?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export interface FederationCapability {
+  name: string;
+  description: string;
+  version?: string;
+  deprecated?: boolean;
+  deprecatedMessage?: string;
+}
+
+export interface FederationManifest {
+  manifestId: string;
+  peerId: string;
+  capabilities: FederationCapability[];
+  version: string;
+  issuedAt: string;
+  expiresAt: string;
+  signature: string;
+}
+
+export interface FederationNegotiationOffer {
+  offerId: string;
+  fromPeerId: string;
+  toPeerId: string;
+  capabilities: string[];
+  terms: Record<string, unknown>;
+  proposedAt: string;
+}
+
+export interface FederationNegotiationCounterOffer {
+  counterOfferId: string;
+  originalOfferId: string;
+  fromPeerId: string;
+  modifiedCapabilities: string[];
+  modifiedTerms: Record<string, unknown>;
+  proposedAt: string;
+}
+
+export interface FederationNegotiationTranscriptEntry {
+  timestamp: string;
+  action: string;
+  actor: string;
+  detail?: string;
+}
+
+export interface FederationNegotiationSession {
+  sessionId: string;
+  state: string;
+  initialOffer: FederationNegotiationOffer;
+  counterOffer?: FederationNegotiationCounterOffer;
+  agreedCapabilities?: string[];
+  agreedTerms?: Record<string, unknown>;
+  rejectionReason?: string;
+  createdAt: string;
+  resolvedAt?: string;
+  requiresApproval: boolean;
+  transcript: FederationNegotiationTranscriptEntry[];
+}
+
 export async function getProvidersStatus(): Promise<ProviderStatus[]> {
   const response = await fetchWithTimeout(`${API_BASE}/api/providers/status`);
   if (!response.ok)
     throw new Error(`Providers Status: HTTP ${response.status}`);
   const data = await safeJson<{ providers?: ProviderStatus[] }>(response);
   return data.providers || [];
+}
+
+export async function getFederationPeers(): Promise<FederationPeer[]> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/federation/peers`);
+  if (!response.ok) throw new Error(`Federation Peers: HTTP ${response.status}`);
+  const data = await safeJson<{ peers?: FederationPeer[] }>(response);
+  return data.peers || [];
+}
+
+export async function registerFederationPeer(input: {
+  peerId: string;
+  displayName: string;
+  endpoint: string;
+}): Promise<FederationPeer> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/federation/peers/register`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(input),
+  });
+  const data = await safeJson<FederationPeer | { error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(getErrorMessage(data) || 'Federation peer registration failed');
+  return data as FederationPeer;
+}
+
+export async function revokeFederationPeer(peerId: string, reason: string): Promise<FederationPeer> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/federation/peers/${encodeURIComponent(peerId)}/revoke`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ reason }),
+  });
+  const data = await safeJson<FederationPeer | { error?: string }>(response).catch(() => ({
+    error: `HTTP ${response.status}`,
+  }));
+  if (!response.ok) throw new Error(getErrorMessage(data) || 'Federation peer revocation failed');
+  return data as FederationPeer;
+}
+
+export async function getFederationNegotiations(): Promise<FederationNegotiationSession[]> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/federation/negotiations`);
+  if (!response.ok) throw new Error(`Federation Negotiations: HTTP ${response.status}`);
+  const data = await safeJson<{ sessions?: FederationNegotiationSession[] }>(response);
+  return data.sessions || [];
+}
+
+export async function getLocalFederationManifest(): Promise<FederationManifest> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/federation/manifests/local`);
+  if (!response.ok) throw new Error(`Federation Manifest: HTTP ${response.status}`);
+  return safeJson<FederationManifest>(response);
+}
+
+export async function verifyFederationManifest(manifest: FederationManifest): Promise<'valid' | 'invalid_signature' | 'expired'> {
+  const response = await fetchWithTimeout(`${API_BASE}/api/v1/federation/manifests/verify`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(manifest),
+  });
+  if (!response.ok) throw new Error(`Federation Verify: HTTP ${response.status}`);
+  const data = await safeJson<{ result: 'valid' | 'invalid_signature' | 'expired' }>(response);
+  return data.result;
 }
 
 export async function executeAgent(
@@ -2704,6 +2832,13 @@ export interface ApprovalNotificationChannelAvailability {
   target?: string;
 }
 
+export interface ApprovalNotificationChannelPolicy {
+  channel: 'email' | 'slack' | 'discord';
+  enabled: boolean;
+  eventTypes: Array<'approval_requested' | 'approval_resolved' | 'approval_expired'>;
+  fallbackChannel?: 'email' | 'slack' | 'discord';
+}
+
 export interface ApprovalNotificationSummary {
   total: number;
   sent: number;
@@ -2711,6 +2846,7 @@ export interface ApprovalNotificationSummary {
   skipped: number;
   byChannel: Partial<Record<NotificationDeliveryChannel, number>>;
   availableChannels: ApprovalNotificationChannelAvailability[];
+  channelPolicies?: ApprovalNotificationChannelPolicy[];
   workflowCounts: {
     pending: number;
     approved: number;

@@ -15,23 +15,31 @@
 
 ### 1. Trust modell
 
-- [ ] Peer identity és trust state séma definiálása
-- [ ] Revocation és review cycle szabályok rögzítése
-- [ ] Minimal visibility policy meghatározása
+- [x] Peer identity és trust state séma definiálása
+- [x] Revocation és review cycle szabályok rögzítése
+- [x] Minimal visibility policy meghatározása
 ### 2. Implementáció
 
-- [ ] Trust registry modul létrehozása
-- [ ] Remote peer ellenőrzési hookok bekötése
-- [ ] Revocation kezelő logika hozzáadása
+- [x] Trust registry modul létrehozása
+- [x] Remote peer ellenőrzési hookok bekötése
+- [x] Revocation kezelő logika hozzáadása
 ### 3. Integráció
 
-- [ ] Remote route-ok elé trust check bevezetése
-- [ ] Audit és security események összekapcsolása
+- [x] Remote route-ok elé trust check bevezetése
+- [x] Audit és security események összekapcsolása
 ### 4. Validáció
 
-- [ ] Unknown peer deny teszt
-- [ ] Revoked peer deny teszt
-- [ ] Trusted peer handshake smoke teszt
+- [x] Unknown peer deny teszt
+- [x] Revoked peer deny teszt
+- [x] Trusted peer handshake smoke teszt
+
+## Végső validáció (2026-03-30)
+
+- `npm run build` ✅
+- `npm run build:ui` ✅
+- `npx vitest run test/federationRoutes.test.ts test/federation/federatedGateway.test.ts` ✅
+- `npx vitest run --config vitest.dashboard.config.ts test/dashboard/components/FederationCenter.test.tsx` ✅
+- `node build/cli.js --help` → `federation|fed` parancsfelület látható ✅
 
 ## Megjegyzések
 

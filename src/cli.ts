@@ -1825,6 +1825,7 @@ registerMemoriaCommands(program);
 registerIntelligenceCommands(program);
 registerLearningLoopCommands(program);
 registerObservabilityCommands(program);
+registerFederationCommands(program);
 
 // Register Conductor commands(Track State Management) - MOVED AFTER conductorCmd definition
 

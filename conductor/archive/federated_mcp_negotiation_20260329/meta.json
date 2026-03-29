@@ -4,9 +4,9 @@
   "status": "COMPLETED",
   "priority": "MEDIUM",
   "created": "2026-03-29",
-  "completed": "2026-03-29",
+  "completed": "2026-03-30",
   "owner": "Pohánka Péter",
-  "progress": 0,
+  "progress": 100,
   "description": "Strukturált agent-agent tárgyalási protokoll ajánlat, ellenajánlat, korlátok és emberi approval checkpointok kezelésére.",
   "dependencies": [
     "federated_mcp_remote_routing_20260329"
