@@ -3,14 +3,24 @@ import path from 'path';
 import { promises as fs } from 'fs';
 import { agentManager } from '../../agents/AgentManager.js';
 import {
+  createCashEntry,
   getAllTransactions,
+  getCashEntries,
+  getCashEntry as getCashEntryById,
+  getCashSummary,
   getPendingTransactions,
   getTransaction,
   updateTransaction,
+  updateCashEntry,
 } from '../../data/bookkeeping_db.js';
 import { logError, logInfo } from '../../utils/logger.js';
 import type {
   BookkeepingTransaction,
+  CashEntry,
+  CashEntryInput,
+  CashEntrySource,
+  CashEntrySummary,
+  CashEntryType,
   TransactionStatus,
 } from '../../types/bookkeeping.d.js';
 
@@ -53,8 +63,38 @@ function isTransactionStatus(value: unknown): value is TransactionStatus {
   return typeof value === 'string' && STATUS_VALUES.includes(value as TransactionStatus);
 }
 
+function isCashEntryType(value: unknown): value is CashEntryType {
+  return value === 'KP_IN' || value === 'KP_OUT';
+}
+
+function isCashEntrySource(value: unknown): value is CashEntrySource {
+  return value === 'manual' || value === 'email' || value === 'import';
+}
+
 function getOptionalString(value: unknown): string | undefined {
   return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
+}
+
+function getBooleanLike(value: unknown): boolean | undefined {
+  if (typeof value === 'boolean') {
+    return value;
+  }
+
+  if (typeof value === 'number' && Number.isFinite(value)) {
+    return value !== 0;
+  }
+
+  if (typeof value === 'string') {
+    const normalized = value.trim().toLowerCase();
+    if (['1', 'true', 'yes', 'on'].includes(normalized)) {
+      return true;
+    }
+    if (['0', 'false', 'no', 'off'].includes(normalized)) {
+      return false;
+    }
+  }
+
+  return undefined;
 }
 
 function getPositiveInteger(value: unknown, fallback: number, max = 500): number {
@@ -108,6 +148,93 @@ function buildSummary(transactions: BookkeepingTransaction[]): BookkeepingSummar
     byStatus,
     bySource,
   };
+}
+
+function parseCashEntryInput(body: Record<string, unknown>): CashEntryInput | null {
+  const date = getOptionalString(body.date);
+  const description = getOptionalString(body.description);
+  const type = getOptionalString(body.type);
+  const amount = Number(body.amount);
+  const invoiceNumber = getOptionalString(body.invoice_number ?? body.invoiceNumber);
+  const source = getOptionalString(body.source);
+  const syncedSheets = getBooleanLike(body.synced_sheets ?? body.syncedSheets);
+
+  if (!date || !description || !isCashEntryType(type) || !Number.isFinite(amount) || amount < 0) {
+    return null;
+  }
+
+  if (source !== undefined && !isCashEntrySource(source)) {
+    return null;
+  }
+
+  return {
+    date,
+    type,
+    amount,
+    description,
+    ...(invoiceNumber ? { invoiceNumber } : {}),
+    ...(source ? { source } : {}),
+    ...(typeof syncedSheets === 'boolean' ? { syncedSheets } : {}),
+  };
+}
+
+function parseCashEntryUpdate(body: Record<string, unknown>): Partial<CashEntryInput> {
+  const updates: Partial<CashEntryInput> = {};
+
+  if (body.date !== undefined) {
+    const date = getOptionalString(body.date);
+    if (!date) {
+      throw new Error('date is required');
+    }
+    updates.date = date;
+  }
+
+  if (body.type !== undefined) {
+    const type = getOptionalString(body.type);
+    if (!isCashEntryType(type)) {
+      throw new Error(`Invalid cash entry type: ${String(body.type)}`);
+    }
+    updates.type = type;
+  }
+
+  if (body.amount !== undefined) {
+    const amount = Number(body.amount);
+    if (!Number.isFinite(amount) || amount < 0) {
+      throw new Error('amount must be a positive number');
+    }
+    updates.amount = amount;
+  }
+
+  if (body.description !== undefined) {
+    const description = getOptionalString(body.description);
+    if (!description) {
+      throw new Error('description is required');
+    }
+    updates.description = description;
+  }
+
+  if (body.invoice_number !== undefined || body.invoiceNumber !== undefined) {
+    const invoiceNumber = getOptionalString(body.invoice_number ?? body.invoiceNumber);
+    updates.invoiceNumber = invoiceNumber;
+  }
+
+  if (body.source !== undefined) {
+    const source = getOptionalString(body.source);
+    if (!isCashEntrySource(source)) {
+      throw new Error(`Invalid cash entry source: ${String(body.source)}`);
+    }
+    updates.source = source;
+  }
+
+  if (body.synced_sheets !== undefined || body.syncedSheets !== undefined) {
+    const syncedSheets = getBooleanLike(body.synced_sheets ?? body.syncedSheets);
+    if (typeof syncedSheets !== 'boolean') {
+      throw new Error('synced_sheets must be boolean-like');
+    }
+    updates.syncedSheets = syncedSheets;
+  }
+
+  return updates;
 }
 
 function isAgentSuccess(result: unknown): boolean {
@@ -207,7 +334,7 @@ export function createBookkeepingRoutes(): Router {
     }
   });
 
-  router.get('/cash-entries', (_req, res) => {
+  router.get('/transactions', (_req, res) => {
     try {
       const transactions = getAllTransactions();
       const statusFilter = getOptionalString(_req.query.status);
@@ -239,12 +366,12 @@ export function createBookkeepingRoutes(): Router {
       });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
-      logError('BookkeepingRoutes', `Failed to list bookkeeping entries: ${message}`);
+      logError('BookkeepingRoutes', `Failed to list bookkeeping transactions: ${message}`);
       res.status(500).json({ success: false, error: message });
     }
   });
 
-  router.get('/cash-entries/:id', (req, res) => {
+  router.get('/transactions/:id', (req, res) => {
     try {
       const entry = getTransaction(req.params.id);
       if (!entry) {
@@ -255,7 +382,155 @@ export function createBookkeepingRoutes(): Router {
       res.json({ success: true, entry });
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
-      logError('BookkeepingRoutes', `Failed to read bookkeeping entry ${req.params.id}: ${message}`);
+      logError('BookkeepingRoutes', `Failed to read bookkeeping transaction ${req.params.id}: ${message}`);
+      res.status(500).json({ success: false, error: message });
+    }
+  });
+
+  router.get('/cash-entries', (_req, res) => {
+    try {
+      const dateFrom = getOptionalString(_req.query.date_from ?? _req.query.dateFrom);
+      const dateTo = getOptionalString(_req.query.date_to ?? _req.query.dateTo);
+      const typeRaw = getOptionalString(_req.query.type);
+      const syncedRaw = _req.query.synced_sheets ?? _req.query.syncedSheets;
+      const syncedSheets = syncedRaw === undefined ? undefined : getBooleanLike(syncedRaw);
+      const limit = getPositiveInteger(_req.query.limit, 100);
+      const offset = getPositiveInteger(_req.query.offset, 0);
+
+      if (typeRaw && !isCashEntryType(typeRaw)) {
+        res.status(400).json({ success: false, error: `Invalid cash entry type: ${typeRaw}` });
+        return;
+      }
+
+      if (syncedRaw !== undefined && typeof syncedSheets !== 'boolean') {
+        res.status(400).json({ success: false, error: 'synced_sheets must be boolean-like' });
+        return;
+      }
+
+      const filters = {
+        ...(dateFrom ? { dateFrom } : {}),
+        ...(dateTo ? { dateTo } : {}),
+        ...(typeRaw ? { type: typeRaw as CashEntryType } : {}),
+        ...(typeof syncedSheets === 'boolean' ? { syncedSheets } : {}),
+      };
+
+      const allEntries: CashEntry[] = getCashEntries(filters);
+      const entries = allEntries.slice(offset, offset + limit);
+
+      res.json({
+        success: true,
+        entries,
+        total: allEntries.length,
+        offset,
+        limit,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError('BookkeepingRoutes', `Failed to list cash entries: ${message}`);
+      res.status(500).json({ success: false, error: message });
+    }
+  });
+
+  router.post('/cash-entries', (req, res) => {
+    try {
+      const body: unknown = req.body;
+      if (!isRecord(body)) {
+        res.status(400).json({ success: false, error: 'Request body must be an object' });
+        return;
+      }
+
+      const input = parseCashEntryInput(body);
+      if (!input) {
+        res.status(400).json({ success: false, error: 'Invalid cash entry payload' });
+        return;
+      }
+
+      const entry = createCashEntry(input);
+      res.status(201).json({ success: true, entry });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError('BookkeepingRoutes', `Failed to create cash entry: ${message}`);
+      res.status(500).json({ success: false, error: message });
+    }
+  });
+
+  router.get('/cash-entries/:id', (req, res) => {
+    try {
+      const entry = getCashEntryById(req.params.id);
+      if (!entry) {
+        res.status(404).json({ success: false, error: 'Cash entry not found' });
+        return;
+      }
+
+      res.json({ success: true, entry });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError('BookkeepingRoutes', `Failed to read cash entry ${req.params.id}: ${message}`);
+      res.status(500).json({ success: false, error: message });
+    }
+  });
+
+  router.patch('/cash-entries/:id', (req, res) => {
+    try {
+      const body: unknown = req.body;
+      if (!isRecord(body)) {
+        res.status(400).json({ success: false, error: 'Request body must be an object' });
+        return;
+      }
+
+      let updates: Partial<CashEntryInput>;
+      try {
+        updates = parseCashEntryUpdate(body);
+      } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        res.status(400).json({ success: false, error: message });
+        return;
+      }
+
+      const updated = updateCashEntry(req.params.id, updates);
+      if (!updated) {
+        res.status(404).json({ success: false, error: 'Cash entry not found' });
+        return;
+      }
+
+      res.json({ success: true, entry: updated });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError('BookkeepingRoutes', `Failed to update cash entry ${req.params.id}: ${message}`);
+      res.status(500).json({ success: false, error: message });
+    }
+  });
+
+  router.get('/cash-summary', (_req, res) => {
+    try {
+      const dateFrom = getOptionalString(_req.query.date_from ?? _req.query.dateFrom);
+      const dateTo = getOptionalString(_req.query.date_to ?? _req.query.dateTo);
+      const typeRaw = getOptionalString(_req.query.type);
+      const syncedRaw = _req.query.synced_sheets ?? _req.query.syncedSheets;
+      const syncedSheets = syncedRaw === undefined ? undefined : getBooleanLike(syncedRaw);
+
+      if (typeRaw && !isCashEntryType(typeRaw)) {
+        res.status(400).json({ success: false, error: `Invalid cash entry type: ${typeRaw}` });
+        return;
+      }
+
+      if (syncedRaw !== undefined && typeof syncedSheets !== 'boolean') {
+        res.status(400).json({ success: false, error: 'synced_sheets must be boolean-like' });
+        return;
+      }
+
+      const filters = {
+        ...(dateFrom ? { dateFrom } : {}),
+        ...(dateTo ? { dateTo } : {}),
+        ...(typeRaw ? { type: typeRaw as CashEntryType } : {}),
+        ...(typeof syncedSheets === 'boolean' ? { syncedSheets } : {}),
+      };
+
+      const summary: CashEntrySummary = getCashSummary(filters);
+      res.json({ success: true, summary, timestamp: new Date().toISOString() });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError('BookkeepingRoutes', `Failed to read cash summary: ${message}`);
       res.status(500).json({ success: false, error: message });
     }
   });

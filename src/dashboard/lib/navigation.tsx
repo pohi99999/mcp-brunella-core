@@ -4,7 +4,7 @@ import
   LayoutDashboard, Network, Rocket, Cloud, Cpu, MessageSquare,
   Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
   Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow, Terminal,
-  BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb, Database,
+  BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb, Database, Bell, Wallet,
   Search, Target, Receipt, ShieldAlert, Users, Wrench, Building2
 } from "lucide-react";
 
@@ -47,6 +47,7 @@ import { DigitalHRWidget } from "@/components/dashboard/DigitalHRWidget";
 import { GrantHunterWidget } from "@/components/dashboard/GrantHunterWidget";
 import { LawDetectiveWidget } from "@/components/dashboard/LawDetectiveWidget";
 import { BookkeepingWidget } from "@/components/dashboard/BookkeepingWidget";
+import { HazipenztarWidget } from "@/components/dashboard/HazipenztarWidget";
 import { PropertyVisionaryWidget } from "@/components/dashboard/PropertyVisionaryWidget";
 import { PropertySalesWidget } from "@/components/dashboard/PropertySalesWidget";
 import { LeadsMasterMonitor } from "@/components/dashboard/LeadsMasterMonitor";
@@ -68,6 +69,7 @@ import { UserPreferencesPanel } from "@/components/dashboard/UserPreferencesPane
 import LLMObservabilityPanel from "@/components/dashboard/LLMObservabilityPanel";
 import { CopilotCommanderPanel } from "@/components/dashboard/CopilotCommanderPanel";
 import { RemoteConsolePanel } from "@/components/dashboard/RemoteConsolePanel";
+import { ZeroPromptNotificationPanel } from "@/components/dashboard/ZeroPromptNotificationPanel";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy( async () =>
@@ -141,6 +143,7 @@ export function initializeNavigation ()
     { id: "paios", label: "PAIOS Orchestrator", icon: Brain, component: <PAIOSOrchestratorChat /> },
     { id: "assistant-blueprint", label: "Personal Assistant", icon: Sparkles, component: <AssistantBlueprintPanel /> },
     { id: "phoenix", label: "Phoenix Events", icon: Flame, component: <PhoenixEventsPanel /> },
+    { id: "zero-prompt-notifications", label: "Approval Notifications", icon: Bell, component: <ZeroPromptNotificationPanel /> },
     { id: "management", label: "Agent Roster", icon: Sparkles, component: <AgentManagementPanel /> },
     { id: "agent-diagnostics", label: "Agent Diagnostics", icon: Gauge, component: <AgentDiagnosticsPanel /> },
     { id: "decomposer", label: "Decompose", icon: Layers, component: <TaskDecomposerPanel /> },
@@ -177,6 +180,7 @@ export function initializeNavigation ()
     { id: "innovation-bridge", label: "Innovation Bridge", icon: Lightbulb, component: <InnovationBridgeWidget /> },
     { id: "invoice-sync", label: "Számla Szinkron", icon: Receipt, component: <InvoiceSyncWidget /> },
     { id: "bookkeeping", label: "Könyvelés", icon: BarChart3, component: <BookkeepingWidget /> },
+    { id: "kp-penztar", label: "Házipénztár", icon: Wallet, component: <HazipenztarWidget /> },
     { id: "lead-mining", label: "Lead Mining", icon: Target, component: <LeadMiningWidget /> },
     { id: "leads-master", label: "Leads Monitor", icon: DollarSign, component: <LeadsMasterMonitor /> },
     { id: "trojan-horse", label: "Trójai Faló", icon: ShieldAlert, component: <TrojanHorseCommandCenter /> },
@@ -212,9 +216,9 @@ export function initializeNavigation ()
 
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode"] } );
-  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-commander", "assistant-blueprint", "phoenix", "management", "agent-diagnostics", "decomposer", "incubator", "knowledge", "memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
+  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-commander", "assistant-blueprint", "phoenix", "zero-prompt-notifications", "management", "agent-diagnostics", "decomposer", "incubator", "knowledge", "memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "enterprise-analytics", "intelligence-monitor"] } );
-  navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "lead-mining", "marketwatcher", "inventory"] } );
+  navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "crawl4ai"] } );
   navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] } );
   navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console"] } );

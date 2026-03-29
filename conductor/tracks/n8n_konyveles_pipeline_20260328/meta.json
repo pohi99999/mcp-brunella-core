@@ -5,7 +5,7 @@
   "priority": "HIGH",
   "created": "2026-03-28",
   "owner": "Pohánka Péter",
-  "progress": 0,
+  "progress": 85,
   "description": "Hibrid n8n + BAS könyvelési automatizálás: n8n kezeli a külső triggereket (IMAP, file watch, cron, Sheets szinkron, email értesítés), a BAS ügynökök végzik az üzleti logikát (MatchingAgent, BankAgent, NavAgent, EmailAgent). Két fő ág: (1) bank-számla egyeztetés, (2) KP/pénztár kezelés SQLite + Google Sheets szinkronnal. Phase 3-ban szamlazz.hu integráció.",
   "dependencies": ["konyveles_automatizalas"],
   "phase": "pipeline-automation",
@@ -13,12 +13,12 @@
   "phases": {
     "phase1": {
       "name": "Bank egyeztetés + n8n alapinfra",
-      "status": "PENDING",
+      "status": "IN_PROGRESS",
       "estimated_days": 3
     },
     "phase2": {
       "name": "KP pénztár modul + Sheets szinkron",
-      "status": "PENDING",
+      "status": "IN_PROGRESS",
       "estimated_days": 3
     },
     "phase3": {

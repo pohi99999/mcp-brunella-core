@@ -1,215 +1,309 @@
-import { describe, expect, it, beforeEach, afterEach, vi } from 'vitest';
 import express from 'express';
-import request from 'supertest';
 import fs from 'fs/promises';
 import os from 'os';
 import path from 'path';
+import request from 'supertest';
+import { beforeEach, afterEach, describe, expect, it, vi } from 'vitest';
+import { initDB, saveTransaction, createCashEntry } from '../src/data/bookkeeping_db.js';
 import { createBookkeepingRoutes } from '../src/server/routes/bookkeeping.js';
 import type { BookkeepingTransaction } from '../src/types/bookkeeping.d.js';
 
-const { delegateMock, dbState } = vi.hoisted(() => {
-  const delegateMock = vi.fn();
-  return {
-    delegateMock,
-    dbState: {
-      transactions: [] as BookkeepingTransaction[],
-    },
-  };
-});
+const { delegateMock } = vi.hoisted(() => ({
+    delegateMock: vi.fn(),
+}));
 
 vi.mock('../src/utils/logger.js', () => ({
-  logInfo: vi.fn(),
-  logError: vi.fn(),
+    logInfo: vi.fn(),
+    logError: vi.fn(),
 }));
 
 vi.mock('../src/agents/AgentManager.js', () => ({
-  agentManager: {
-    delegate: delegateMock,
-  },
+    agentManager: {
+        delegate: delegateMock,
+    },
 }));
-
-vi.mock('../src/data/bookkeeping_db.js', () => ({
-  getAllTransactions: vi.fn(() => dbState.transactions),
-  getPendingTransactions: vi.fn((source?: string) =>
-    dbState.transactions.filter((transaction) => {
-      if (transaction.status !== 'PENDING_MATCH') {
-        return false;
-      }
-      return source ? transaction.source === source : true;
-    }),
-  ),
-  getTransaction: vi.fn((id: string) =>
-    dbState.transactions.find((transaction) => transaction.id === id) ?? null,
-  ),
-  updateTransaction: vi.fn((id: string, updates: Partial<BookkeepingTransaction>) => {
-    const index = dbState.transactions.findIndex((transaction) => transaction.id === id);
-    if (index === -1) {
-      return;
-    }
-
-    dbState.transactions[index] = {
-      ...dbState.transactions[index],
-      ...updates,
-    };
-  }),
-}));
-
-function createApp(): express.Express {
-  const app = express();
-  app.use(express.json());
-  app.use('/api/v1/bookkeeping', createBookkeepingRoutes());
-  return app;
-}
 
 describe('Bookkeeping routes', () => {
-  let tempDir: string;
-  let statusPath: string;
+    let tempDir: string;
+    let statusPath: string;
 
-  beforeEach(async () => {
-    tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'bookkeeping-routes-'));
-    statusPath = path.join(tempDir, 'status.json');
-    process.env.BOOKKEEPING_STATUS_PATH = statusPath;
-
-    dbState.transactions = [
-      {
-        id: 'bank_1',
-        source: 'BankAgent',
-        data: { date: '2026-03-01', partner: 'Kovacs Kft.', amount: 100, reference: 'INV-1' },
-        status: 'PENDING_MATCH',
-      },
-      {
-        id: 'nav_1',
-        source: 'NAV',
-        data: { invoiceNumber: 'INV-1', amount: 100, partner: 'Kovacs Kft.', issueDate: '2026-03-01' },
-        status: 'COMPLETED',
-        matchedInvoice: 'INV-1',
-      },
-      {
-        id: 'email_1',
-        source: 'EmailAgent',
-        data: { invoiceNumber: 'INV-2', amount: 80, partner: 'Masik Kft.', issueDate: '2026-03-02' },
-        status: 'MANUAL_REVIEW',
-      },
-      {
-        id: 'bank_2',
-        source: 'BankAgent',
-        data: { date: '2026-03-03', partner: 'Unknown Bt.', amount: 50, reference: 'N/A' },
-        status: 'UNMATCHED',
-      },
-    ];
-
-    delegateMock.mockReset();
-    delegateMock.mockResolvedValue({
-      success: true,
-      status: 'success',
-      message: 'Matching finished',
-      data: { total: 1, matched: 1, manual: 0 },
+    beforeEach(async () => {
+        tempDir = await fs.mkdtemp(path.join(os.tmpdir(), 'bookkeeping-routes-'));
+        statusPath = path.join(tempDir, 'status.json');
+        process.env.BOOKKEEPING_STATUS_PATH = statusPath;
+        initDB(':memory:');
+        seedDatabase();
+        delegateMock.mockReset();
+        delegateMock.mockResolvedValue({
+            status: 'delegated',
+        });
     });
-  });
 
-  afterEach(async () => {
-    delete process.env.BOOKKEEPING_STATUS_PATH;
-    await fs.rm(tempDir, { recursive: true, force: true }).catch(() => undefined);
-    vi.clearAllMocks();
-  });
-
-  it('GET /status returns aggregated bookkeeping counts', async () => {
-    const app = createApp();
-    const res = await request(app).get('/api/v1/bookkeeping/status');
-
-    expect(res.status).toBe(200);
-    expect(res.body.success).toBe(true);
-    expect(res.body.summary).toMatchObject({
-      total: 4,
-      pending: 1,
-      completed: 1,
-      manualReview: 1,
-      unmatched: 1,
-      partiallyMatched: 0,
-      error: 0,
+    afterEach(async () => {
+        delete process.env.BOOKKEEPING_STATUS_PATH;
+        await fs.rm(tempDir, { recursive: true, force: true });
+        vi.clearAllMocks();
     });
-    expect(res.body.pendingTransactions).toBe(1);
-    expect(res.body.snapshot).toBeNull();
-  });
 
-  it('PATCH /status persists a snapshot and GET /status reads it back', async () => {
-    const app = createApp();
+    function createApp() {
+        const app = express();
+        app.use(express.json());
+        app.use('/api/v1/bookkeeping', createBookkeepingRoutes());
+        return app;
+    }
 
-    const patchResponse = await request(app)
-      .patch('/api/v1/bookkeeping/status')
-      .send({
-        summary: {
-          total: 4,
-          pending: 1,
-          completed: 1,
-        },
-        exceptions: [{ id: 'exc-1', message: 'NAV mismatch' }],
-        timestamp: '2026-03-28T20:00:00.000Z',
-        source: 'n8n',
-      });
+    function seedDatabase() {
+        const transactions: BookkeepingTransaction[] = [
+            {
+                id: 'bank_1',
+                source: 'BankAgent',
+                data: {
+                    reference: 'BANK-001',
+                    amount: 150000,
+                    partner: 'Partner A',
+                    date: '2026-03-29',
+                },
+                status: 'PENDING_MATCH',
+            },
+            {
+                id: 'nav_1',
+                source: 'NAV',
+                data: {
+                    invoiceNumber: 'INV-100',
+                    amount: 87000,
+                },
+                status: 'PENDING_MATCH',
+            },
+            {
+                id: 'bank_2',
+                source: 'BankAgent',
+                data: {
+                    reference: 'BANK-002',
+                    amount: 42000,
+                    partner: 'Partner B',
+                    date: '2026-03-28',
+                },
+                status: 'COMPLETED',
+            },
+        ];
 
-    expect(patchResponse.status).toBe(200);
-    expect(patchResponse.body.success).toBe(true);
-    expect(patchResponse.body.snapshot.summary).toMatchObject({ total: 4, pending: 1, completed: 1 });
+        for (const transaction of transactions) {
+            saveTransaction(transaction);
+        }
 
-    const raw = await fs.readFile(statusPath, 'utf-8');
-    const stored = JSON.parse(raw) as { source: string; exceptions: unknown[]; summary: Record<string, unknown> };
-    expect(stored.source).toBe('n8n');
-    expect(stored.exceptions).toHaveLength(1);
+        createCashEntry({
+            date: '2026-03-29',
+            type: 'KP_IN',
+            amount: 15000,
+            description: 'Keszpenzes bevetelek',
+            source: 'manual',
+            syncedSheets: false,
+        });
 
-    const getResponse = await request(app).get('/api/v1/bookkeeping/status');
-    expect(getResponse.status).toBe(200);
-    expect(getResponse.body.snapshot).toMatchObject({
-      source: 'n8n',
-      timestamp: '2026-03-28T20:00:00.000Z',
+        createCashEntry({
+            date: '2026-03-30',
+            type: 'KP_OUT',
+            amount: 2500,
+            description: 'Irodaszer beszerzes',
+            invoiceNumber: 'INV-200',
+            source: 'email',
+            syncedSheets: true,
+        });
+    }
+
+    it('returns bookkeeping status and persists snapshots', async () => {
+        const app = createApp();
+
+        const getResponse = await request(app).get('/api/v1/bookkeeping/status');
+        expect(getResponse.status).toBe(200);
+        expect(getResponse.body.pendingTransactions).toBe(2);
+        expect(getResponse.body.summary).toMatchObject({
+            total: 3,
+            pending: 2,
+            completed: 1,
+            manualReview: 0,
+            unmatched: 0,
+            partiallyMatched: 0,
+            error: 0,
+        });
+        expect(getResponse.body.summary.bySource).toMatchObject({
+            BankAgent: 2,
+            NAV: 1,
+        });
+        expect(getResponse.body.snapshot).toBeNull();
+
+        const patchPayload = {
+            summary: {
+                total: 3,
+                pending: 2,
+                completed: 1,
+                manualReview: 0,
+                unmatched: 0,
+                partiallyMatched: 0,
+                error: 0,
+                byStatus: {
+                    PENDING_MATCH: 2,
+                    COMPLETED: 1,
+                },
+                bySource: {
+                    BankAgent: 2,
+                    NAV: 1,
+                },
+            },
+            exceptions: [{ id: 'exc-1', kind: 'manual-review' }],
+            timestamp: '2026-03-29T12:00:00.000Z',
+            source: 'dashboard',
+        };
+
+        const patchResponse = await request(app)
+            .patch('/api/v1/bookkeeping/status')
+            .send(patchPayload);
+
+        expect(patchResponse.status).toBe(200);
+        expect(patchResponse.body.snapshot).toMatchObject(patchPayload);
+
+        const storedStatus = JSON.parse(await fs.readFile(statusPath, 'utf8')) as Record<string, unknown>;
+        expect(storedStatus).toMatchObject(patchPayload);
+        expect(typeof storedStatus.updatedAt).toBe('string');
     });
-  });
 
-  it('GET /cash-entries supports filters and pagination', async () => {
-    const app = createApp();
-    const res = await request(app).get('/api/v1/bookkeeping/cash-entries?status=PENDING_MATCH&limit=1&offset=0');
+    it('lists and reads transactions through the dedicated transaction endpoints', async () => {
+        const app = createApp();
 
-    expect(res.status).toBe(200);
-    expect(res.body.success).toBe(true);
-    expect(res.body.total).toBe(1);
-    expect(res.body.entries).toHaveLength(1);
-    expect(res.body.entries[0].id).toBe('bank_1');
-  });
+        const listResponse = await request(app)
+            .get('/api/v1/bookkeeping/transactions')
+            .query({ status: 'PENDING_MATCH', limit: 1, offset: 0 });
 
-  it('GET /cash-entries/:id returns a single transaction', async () => {
-    const app = createApp();
-    const res = await request(app).get('/api/v1/bookkeeping/cash-entries/nav_1');
+        expect(listResponse.status).toBe(200);
+        expect(listResponse.body.total).toBe(2);
+        expect(listResponse.body.entries).toHaveLength(1);
+        expect(listResponse.body.entries[0]).toMatchObject({
+            id: 'bank_1',
+            source: 'BankAgent',
+            status: 'PENDING_MATCH',
+        });
 
-    expect(res.status).toBe(200);
-    expect(res.body.success).toBe(true);
-    expect(res.body.entry.id).toBe('nav_1');
-    expect(res.body.entry.matchedInvoice).toBe('INV-1');
-  });
+        const singleResponse = await request(app).get('/api/v1/bookkeeping/transactions/nav_1');
 
-  it('PATCH /transactions/:id updates status and matched invoice', async () => {
-    const app = createApp();
-    const res = await request(app)
-      .patch('/api/v1/bookkeeping/transactions/bank_1')
-      .send({ status: 'COMPLETED', matchedInvoice: 'INV-1' });
+        expect(singleResponse.status).toBe(200);
+        expect(singleResponse.body.entry).toMatchObject({
+            id: 'nav_1',
+            source: 'NAV',
+            status: 'PENDING_MATCH',
+        });
+    });
 
-    expect(res.status).toBe(200);
-    expect(res.body.success).toBe(true);
-    expect(res.body.transaction.status).toBe('COMPLETED');
-    expect(res.body.transaction.matchedInvoice).toBe('INV-1');
-  });
+    it('lists, creates and updates cash entries', async () => {
+        const app = createApp();
 
-  it('POST /reconcile delegates to MatchingAgent', async () => {
-    const app = createApp();
-    const res = await request(app)
-      .post('/api/v1/bookkeeping/reconcile')
-      .send({ task: 'Reconcile the current bookkeeping batch' });
+        const listResponse = await request(app)
+            .get('/api/v1/bookkeeping/cash-entries')
+            .query({ type: 'KP_IN', limit: 1, offset: 0 });
 
-    expect(res.status).toBe(200);
-    expect(res.body.success).toBe(true);
-    expect(delegateMock).toHaveBeenCalledWith(
-      'MatchingAgent',
-      'Reconcile the current bookkeeping batch',
-      undefined,
-    );
-  });
+        expect(listResponse.status).toBe(200);
+        expect(listResponse.body.total).toBe(1);
+        expect(listResponse.body.entries).toHaveLength(1);
+        expect(listResponse.body.entries[0]).toMatchObject({
+            id: 1,
+            type: 'KP_IN',
+            syncedSheets: false,
+        });
+
+        const createResponse = await request(app)
+            .post('/api/v1/bookkeeping/cash-entries')
+            .send({
+                date: '2026-03-31',
+                type: 'KP_IN',
+                amount: 9900,
+                description: 'Napi bevetelek',
+                source: 'manual',
+                syncedSheets: 'true',
+            });
+
+        expect(createResponse.status).toBe(201);
+        expect(createResponse.body.entry).toMatchObject({
+            id: 3,
+            type: 'KP_IN',
+            amount: 9900,
+            description: 'Napi bevetelek',
+            syncedSheets: true,
+        });
+
+        const readResponse = await request(app).get('/api/v1/bookkeeping/cash-entries/3');
+        expect(readResponse.status).toBe(200);
+        expect(readResponse.body.entry).toMatchObject({
+            id: 3,
+            type: 'KP_IN',
+            amount: 9900,
+            syncedSheets: true,
+        });
+
+        const patchResponse = await request(app)
+            .patch('/api/v1/bookkeeping/cash-entries/3')
+            .send({ syncedSheets: false, description: 'Frissitett bevetelek' });
+
+        expect(patchResponse.status).toBe(200);
+        expect(patchResponse.body.entry).toMatchObject({
+            id: 3,
+            syncedSheets: false,
+            description: 'Frissitett bevetelek',
+        });
+    });
+
+    it('returns cash summaries from the dedicated summary endpoint', async () => {
+        const app = createApp();
+
+        const response = await request(app).get('/api/v1/bookkeeping/cash-summary');
+
+        expect(response.status).toBe(200);
+        expect(response.body.summary).toMatchObject({
+            total: 2,
+            income: 15000,
+            expense: 2500,
+            balance: 12500,
+            syncedSheets: 1,
+            pendingSheets: 1,
+        });
+        expect(response.body.summary.byType).toMatchObject({
+            KP_IN: 1,
+            KP_OUT: 1,
+        });
+    });
+
+    it('updates transaction records and delegates reconciliation', async () => {
+        const app = createApp();
+
+        const patchResponse = await request(app)
+            .patch('/api/v1/bookkeeping/transactions/bank_1')
+            .send({
+                status: 'COMPLETED',
+                matchedInvoice: 'INV-123',
+            });
+
+        expect(patchResponse.status).toBe(200);
+        expect(patchResponse.body.transaction).toMatchObject({
+            id: 'bank_1',
+            status: 'COMPLETED',
+            matchedInvoice: 'INV-123',
+        });
+
+        const reconcileResponse = await request(app)
+            .post('/api/v1/bookkeeping/reconcile')
+            .send({
+                transactionIds: ['bank_1', 'nav_1'],
+            });
+
+        expect(reconcileResponse.status).toBe(200);
+        expect(reconcileResponse.body).toMatchObject({
+            success: true,
+            result: {
+                status: 'delegated',
+            },
+        });
+        expect(delegateMock).toHaveBeenCalledWith(
+            'MatchingAgent',
+            'Match all PENDING bank transactions',
+            undefined,
+        );
+    });
 });

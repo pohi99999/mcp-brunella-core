@@ -1,7 +1,19 @@
 // test/bookkeeping_db.test.ts
 import { describe, it, expect, beforeEach } from 'vitest';
-import { initDB, getTransaction, saveTransaction, getPendingTransactions, updateTransaction, getAllTransactions } from '../src/data/bookkeeping_db.js';
-import { BookkeepingTransaction, TransactionStatus } from '../src/types/bookkeeping.d.js';
+import {
+    createCashEntry,
+    getAllTransactions,
+    getCashEntry,
+    getCashEntries,
+    getCashSummary,
+    getPendingTransactions,
+    getTransaction,
+    initDB,
+    saveTransaction,
+    updateCashEntry,
+    updateTransaction,
+} from '../src/data/bookkeeping_db.js';
+import { BookkeepingTransaction } from '../src/types/bookkeeping.d.js';
 
 describe('Bookkeeping Database', () => {
     beforeEach(() => {
@@ -54,5 +66,48 @@ describe('Bookkeeping Database', () => {
         const allTxs = getAllTransactions();
         expect(allTxs).toEqual(expect.arrayContaining([tx1, tx2]));
         expect(allTxs.length).toBe(2);
+    });
+
+    it('should create, filter, update and summarize cash entries', () => {
+        const entry1 = createCashEntry({
+            date: '2026-03-29',
+            type: 'KP_IN',
+            amount: 15000,
+            description: 'Készpénzes bevétel',
+            source: 'manual',
+            syncedSheets: false,
+        });
+        const entry2 = createCashEntry({
+            date: '2026-03-30',
+            type: 'KP_OUT',
+            amount: 2500,
+            description: 'Irodaszer beszerzés',
+            invoiceNumber: 'INV-2',
+            source: 'email',
+            syncedSheets: true,
+        });
+
+        expect(entry1.id).toBe(1);
+        expect(entry1.syncedSheets).toBe(false);
+        expect(getCashEntry(entry2.id)).toEqual(entry2);
+
+        const filtered = getCashEntries({ type: 'KP_IN' });
+        expect(filtered).toHaveLength(1);
+        expect(filtered[0].description).toBe('Készpénzes bevétel');
+
+        const updated = updateCashEntry(entry1.id, { syncedSheets: true, description: 'Frissített bevétel' });
+        expect(updated?.syncedSheets).toBe(true);
+        expect(getCashEntry(entry1.id)?.description).toBe('Frissített bevétel');
+
+        const summary = getCashSummary();
+        expect(summary).toMatchObject({
+            total: 2,
+            income: 15000,
+            expense: 2500,
+            balance: 12500,
+            syncedSheets: 2,
+            pendingSheets: 0,
+        });
+        expect(summary.byType).toMatchObject({ KP_IN: 1, KP_OUT: 1 });
     });
 });
