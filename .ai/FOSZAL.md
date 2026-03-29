@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-29 20:02
+**Generálva:** 2026-03-29 23:04
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -30,6 +30,26 @@ start-full.bat
 
 ### 2026-03-29
 
+#### 22:55 - [Gemini] 🌐 Federated MCP (Fázis 4) Implementation
+- **Agent:** Gemini
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/core/federation/trustRegistry.ts`, `capabilityManifest.ts`, `federatedGateway.ts`, `negotiationProtocol.ts`, `src/server/routes/federation.ts`, `src/server/web.ts`, `src/cli/federationCommands.ts`, `src/cli.ts` (+4 további)
+
+#### 21:10 - [Copilot] Zero-Prompt Phase 1 100% completion
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/core/eventFabric.ts, src/core/policyEngine.ts, src/core/approvalRouter.ts, src/core/zeroPromptRuntime.ts, src/core/notificationChannels.ts, src/core/phoenixEventBus.ts, src/server/routes/webhooks.ts, src/server/routes/developer.ts, src/dashboard/lib/apiService.ts, src/dashboard/components/dashboard/ZeroPromptNotificationPanel.tsx, src/cli/devCommands.ts, test/eventFabric.test.ts, test/approvalRouter.test.ts, test/notificationChannels.test.ts, test/zeroPromptRuntime.test.ts, test/routes_developer.test.ts, test/webhooks.test.ts, conductor/tracks/zero_prompt_*/*
+
+#### 21:05 - [Copilot] Phase 2 archival + Phase 3 readiness audit
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** conductor/archive/learning_loop_*/*, conductor/tracks.md, conductor/project_state.json, .ai/copilot.md
+
+#### 20:40 - [Copilot] Phase 1 archive + Phase 2 Learning Loop sync
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** conductor/archive/zero_prompt_*/*, conductor/tracks/learning_loop_*/*, conductor/project_state.json, conductor/tracks.md, src/core/goldenDatasetBridge.ts, test/goldenDatasetBridge.test.ts, .ai/copilot.md
+
 #### 20:00 - [Copilot] KP bookkeeping flow
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
@@ -39,6 +59,11 @@ start-full.bat
 - **Agent:** Copilot
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** conductor/tracks/n8n_konyveles_pipeline_20260328/local-n8n/package.json, docs/n8n-setup.md, conductor/tracks/n8n_konyveles_pipeline_20260328/plan.md, conductor/tracks/n8n_konyveles_pipeline_20260328/spec.md, conductor/tracks.md, .ai/copilot.md
+
+#### 00:00 - [Claude] Ephemeral Agents (Fázis 3) teljes implementáció ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `src/core/ephemeralAgentManager.ts` (ÚJ) — EphemeralAgentManager: spawn/terminate/recordUsage, TTL kill-switch, budget enforcement, `src/core/ephemeralSandbox.ts` (ÚJ) — Tool sandbox: checkToolAccess(), DENIED audit + event, `src/core/ephemeralAudit.ts` (ÚJ) — Postmortem generálás, ring buffer (max 500), getPostmortems/getPostmortem API, `src/core/phoenixEventBus.ts` (SZERKESZTVE) — 4 új event type: ephemeral_spawned, ephemeral_terminated, ephemeral_budget_exceeded, ephemeral_tool_violation, `test/ephemeralAgentManager.test.ts` (ÚJ) — 6 teszt (+8 további)
 
 ---
 
@@ -615,10 +640,10 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 85 | 2026-03-28 |
-| Gemini | 11 | 2026-03-01 |
+| Claude | 86 | 2026-03-29 |
+| Gemini | 12 | 2026-03-29 |
 | Cursor | 0 | N/A |
-| Copilot | 3 | 2026-03-28 |
+| Copilot | 6 | 2026-03-28 |
 
 ---
 
