@@ -15,23 +15,30 @@
 
 ### 1. Schema és signing
 
-- [ ] Capability manifest schema megírása
-- [ ] Aláírási és verify folyamat rögzítése
-- [ ] Expiry és version mezők definiálása
+- [x] Capability manifest schema megírása
+- [x] Aláírási és verify folyamat rögzítése
+- [x] Expiry és version mezők definiálása
 ### 2. Implementáció
 
-- [ ] Manifest generator és verifier utility létrehozása
-- [ ] Peer manifest cache réteg kialakítása
-- [ ] Schema validation és failure handling hozzáadása
+- [x] Manifest generator és verifier utility létrehozása
+- [x] Peer manifest cache réteg kialakítása
+- [x] Schema validation és failure handling hozzáadása
 ### 3. Integráció
 
-- [ ] DynamicToolRegistry / registry adatokból saját manifest előállítása
-- [ ] Trust layerrel közös verification flow bekötése
+- [x] DynamicToolRegistry / registry adatokból saját manifest előállítása
+- [x] Trust layerrel közös verification flow bekötése
 ### 4. Validáció
 
-- [ ] Valid manifest acceptance teszt
-- [ ] Invalid signature reject teszt
-- [ ] Expired manifest reject teszt
+- [x] Valid manifest acceptance teszt
+- [x] Invalid signature reject teszt
+- [x] Expired manifest reject teszt
+
+## Végső validáció (2026-03-30)
+
+- A helyi manifest több forrásból (DynamicToolRegistry + registered tools + tool registry) épül fel ✅
+- A manifest verzió/deprecáció adatai a dashboardon is láthatók ✅
+- `npm run build` ✅
+- `npx vitest run test/federationRoutes.test.ts test/federation/federatedGateway.test.ts` ✅
 
 ## Megjegyzések
 

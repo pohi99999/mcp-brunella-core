@@ -5,7 +5,7 @@ import
   Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
   Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow, Terminal,
   BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb, Database, Bell, Wallet,
-  Search, Target, Receipt, ShieldAlert, Users, Wrench, Building2
+  Search, Target, Receipt, ShieldAlert, Users, Wrench, Building2, Globe
 } from "lucide-react";
 
 // Component Imports
@@ -72,6 +72,7 @@ import { RemoteConsolePanel } from "@/components/dashboard/RemoteConsolePanel";
 import { ZeroPromptNotificationPanel } from "@/components/dashboard/ZeroPromptNotificationPanel";
 import { EphemeralAgentsPanel } from "@/components/dashboard/EphemeralAgentsPanel";
 import { LearningLoopPanel } from "@/components/dashboard/LearningLoopPanel";
+import { FederationCenter } from "@/components/FederationCenter";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy( async () =>
@@ -148,6 +149,7 @@ export function initializeNavigation ()
     { id: "zero-prompt-notifications", label: "Approval Notifications", icon: Bell, component: <ZeroPromptNotificationPanel /> },
     { id: "ephemeral-agents", label: "Ephemeral Agents", icon: Zap, component: <EphemeralAgentsPanel /> },
     { id: "learning-loop", label: "Learning Loop", icon: Brain, component: <LearningLoopPanel /> },
+    { id: "federation", label: "Federated MCP", icon: Globe, component: <FederationCenter /> },
     { id: "management", label: "Agent Roster", icon: Sparkles, component: <AgentManagementPanel /> },
     { id: "agent-diagnostics", label: "Agent Diagnostics", icon: Gauge, component: <AgentDiagnosticsPanel /> },
     { id: "decomposer", label: "Decompose", icon: Layers, component: <TaskDecomposerPanel /> },

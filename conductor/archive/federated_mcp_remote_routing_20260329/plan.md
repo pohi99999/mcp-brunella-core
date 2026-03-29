@@ -15,22 +15,29 @@
 
 ### 1. Routing design
 
-- [ ] Capability discovery és peer selection szabályok definiálása
-- [ ] Fallback és safe-abort stratégia rögzítése
+- [x] Capability discovery és peer selection szabályok definiálása
+- [x] Fallback és safe-abort stratégia rögzítése
 ### 2. Implementáció
 
-- [ ] Federated gateway modul létrehozása
-- [ ] Remote peer selection engine implementálása
-- [ ] Invocation audit és retry policy hozzáadása
+- [x] Federated gateway modul létrehozása
+- [x] Remote peer selection engine implementálása
+- [x] Invocation audit és retry policy hozzáadása
 ### 3. Integráció
 
-- [ ] Trust és manifest verification bekötése a routing elé
-- [ ] Orchestrator és policy engine kapcsolódási pontok kidolgozása
+- [x] Trust és manifest verification bekötése a routing elé
+- [x] Orchestrator és policy engine kapcsolódási pontok kidolgozása
 ### 4. Validáció
 
-- [ ] Trusted peer routing smoke teszt
-- [ ] Unavailable peer fallback teszt
-- [ ] Remote deny path teszt policy tiltásnál
+- [x] Trusted peer routing smoke teszt
+- [x] Unavailable peer fallback teszt
+- [x] Remote deny path teszt policy tiltásnál
+
+## Végső validáció (2026-03-30)
+
+- A gateway most már retry + fallback útvonalat használ több peer között ✅
+- Minden remote végrehajtás trust/policy/audit kontroll alatt fut ✅
+- `npx vitest run test/federationRoutes.test.ts test/federation/federatedGateway.test.ts` ✅
+- `node build/cli.js --help` → federation parancs elérhető ✅
 
 ## Megjegyzések
 

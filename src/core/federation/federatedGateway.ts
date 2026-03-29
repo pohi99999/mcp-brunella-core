@@ -45,6 +45,7 @@ export interface RemoteCapabilityResult {
 
 const DEFAULT_TIMEOUT_MS = 30_000;
 const DEFAULT_TRUST_SCORE = 80;
+const DEFAULT_MAX_ATTEMPTS_PER_PEER = 2;
 
 // ============================================================================
 // FEDERATED GATEWAY
@@ -169,6 +170,12 @@ class FederatedGateway {
     });
 
     const decision = this.route(request.capabilityName, request.preferredPeerId);
+    const candidateOrder = [
+      ...(decision.selectedPeer ? [decision.selectedPeer] : []),
+      ...decision.candidates
+        .map((candidate) => candidate.peerId)
+        .filter((peerId) => peerId !== decision.selectedPeer),
+    ];
 
     if (!decision.selectedPeer) {
       await auditRecord(
@@ -181,55 +188,71 @@ class FederatedGateway {
       return { requestId, peerId: '', success: false, error: decision.reason, durationMs: Date.now() - startMs };
     }
 
-    const isAllowed = await trustRegistry.isPeerAllowedForRouting(decision.selectedPeer);
-    if (!isAllowed) {
-      return {
-        requestId,
-        peerId: decision.selectedPeer,
-        success: false,
-        error: `Peer ${decision.selectedPeer} not allowed for routing`,
-        durationMs: Date.now() - startMs,
-      };
-    }
+    let lastError = decision.reason;
 
-    const peer = trustRegistry.getPeer(decision.selectedPeer);
-    if (!peer) {
-      return {
-        requestId,
-        peerId: decision.selectedPeer,
-        success: false,
-        error: 'Peer record not found',
-        durationMs: Date.now() - startMs,
-      };
-    }
+    for (const peerId of candidateOrder) {
+      const isAllowed = await trustRegistry.isPeerAllowedForRouting(peerId);
+      if (!isAllowed) {
+        lastError = `Peer ${peerId} not allowed for routing`;
+        continue;
+      }
 
-    await auditRecord(
-      'ALLOWED',
-      'FederatedGateway',
-      'federation:execute',
-      `${decision.selectedPeer}/${request.capabilityName}`,
-    );
+      const peer = trustRegistry.getPeer(peerId);
+      if (!peer) {
+        lastError = `Peer record not found for ${peerId}`;
+        continue;
+      }
 
-    try {
-      const data = await this.callRemotePeer(
-        peer.endpoint,
-        request.capabilityName,
-        request.payload,
-        request.timeoutMs ?? DEFAULT_TIMEOUT_MS,
-      );
-      return { requestId, peerId: decision.selectedPeer, success: true, data, durationMs: Date.now() - startMs };
-    } catch (e: unknown) {
-      const error = e instanceof Error ? e.message : String(e);
-      logError('FederatedGateway', `Remote call failed: ${error}`);
       await auditRecord(
-        'DENIED',
+        'ALLOWED',
         'FederatedGateway',
-        'federation:execute:error',
-        `${decision.selectedPeer}/${request.capabilityName}`,
-        error,
+        'federation:execute',
+        `${peerId}/${request.capabilityName}`,
       );
-      return { requestId, peerId: decision.selectedPeer, success: false, error, durationMs: Date.now() - startMs };
+
+      for (let attempt = 1; attempt <= DEFAULT_MAX_ATTEMPTS_PER_PEER; attempt += 1) {
+        try {
+          const data = await this.callRemotePeer(
+            peer.endpoint,
+            request.capabilityName,
+            request.payload,
+            request.timeoutMs ?? DEFAULT_TIMEOUT_MS,
+          );
+
+          return {
+            requestId,
+            peerId,
+            success: true,
+            data,
+            durationMs: Date.now() - startMs,
+          };
+        } catch (e: unknown) {
+          const error = e instanceof Error ? e.message : String(e);
+          lastError = error;
+          logError('FederatedGateway', `Remote call failed (${peerId}, attempt ${attempt}): ${error}`);
+
+          await auditRecord(
+            'DENIED',
+            'FederatedGateway',
+            'federation:execute:error',
+            `${peerId}/${request.capabilityName}`,
+            `attempt ${attempt}: ${error}`,
+          );
+
+          if (attempt < DEFAULT_MAX_ATTEMPTS_PER_PEER) {
+            continue;
+          }
+        }
+      }
     }
+
+    return {
+      requestId,
+      peerId: candidateOrder[candidateOrder.length - 1] ?? decision.selectedPeer,
+      success: false,
+      error: lastError,
+      durationMs: Date.now() - startMs,
+    };
   }
 
   private async callRemotePeer(

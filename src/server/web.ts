@@ -99,7 +99,6 @@ import { createPreferencesRouter } from "./routes/preferences.js";
 import { createObservabilityRouter } from "./routes/observability.js";
 import { createGoldenDatasetRouter } from "./routes/goldenDataset.js";
 import { createIntelligenceRouter } from "./routes/intelligence.js";
-import { createFederationRouter } from "./routes/federation.js";
 import "../core/ceanFallback.js"; // Side-effect: registers Phoenix CEAN fallback handlers
 import { zeroPromptRuntime } from '../core/zeroPromptRuntime.js';
 
