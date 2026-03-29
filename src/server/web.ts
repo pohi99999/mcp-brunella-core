@@ -99,7 +99,9 @@ import { createPreferencesRouter } from "./routes/preferences.js";
 import { createObservabilityRouter } from "./routes/observability.js";
 import { createGoldenDatasetRouter } from "./routes/goldenDataset.js";
 import { createIntelligenceRouter } from "./routes/intelligence.js";
+import { createFederationRouter } from "./routes/federation.js";
 import "../core/ceanFallback.js"; // Side-effect: registers Phoenix CEAN fallback handlers
+import { zeroPromptRuntime } from '../core/zeroPromptRuntime.js';
 
 const logger = new Logger("web_ui.log");
 
@@ -271,6 +273,7 @@ export async function startWebServer() {
   phoenixEventBus.connectSocketBroadcaster((event: string, data: unknown) => {
     socketService.emit(event, data);
   });
+  zeroPromptRuntime.start();
 
   // Bridge pipelineRunner progress events to Socket.IO (BrunellaStudio + developer dashboard)
   const { pipelineRunner } = await import('../agents/developerPipeline.js');

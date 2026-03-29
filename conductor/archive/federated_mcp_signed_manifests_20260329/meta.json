@@ -1,0 +1,33 @@
+{
+  "id": "federated_mcp_signed_manifests_20260329",
+  "name": "Federated MCP — Signed Capability Manifests",
+  "status": "COMPLETED",
+  "priority": "HIGH",
+  "created": "2026-03-29",
+  "completed": "2026-03-29",
+  "owner": "Pohánka Péter",
+  "progress": 0,
+  "description": "Aláírt capability manifest séma és verifikáció a remote agentek/toolok képességeinek biztonságos publikálásához.",
+  "dependencies": [
+    "federated_mcp_trust_20260329"
+  ],
+  "phase": "phase4-federated-mcp",
+  "tags": [
+    "federated-mcp",
+    "manifest",
+    "signing",
+    "capabilities"
+  ],
+  "deliverables": [
+    "src/core/federation/capabilityManifest.ts",
+    "Manifest sign/verify utility",
+    "Peer manifest cache",
+    "Schema validation és expiry kezelés"
+  ],
+  "successCriteria": [
+    "A BAS tud saját capability manifestet publikálni",
+    "A BAS csak érvényes aláírású remote manifestet fogad el",
+    "Lejárt vagy sérült manifest nem használható routingra",
+    "A manifest verzió- és deprecációs adatai láthatók"
+  ]
+}
