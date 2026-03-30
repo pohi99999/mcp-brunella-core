@@ -11,6 +11,8 @@ import type {
   CashEntrySource,
   CashEntryType,
   NavInvoiceData,
+  ReconciliationEvent,
+  ReconciliationEventInput,
 } from '../types/bookkeeping.d.js';
 
 type TransactionRow = {
@@ -32,6 +34,18 @@ type CashEntryRow = {
   synced_sheets: number;
   created_at: string;
   updated_at: string;
+};
+
+type ReconciliationEventRow = {
+  id: number;
+  run_id: string;
+  tx_id: string;
+  invoice_id: string | null;
+  outcome: string;
+  match_type: string | null;
+  confidence: number | null;
+  notes: string | null;
+  created_at: string;
 };
 
 export interface CashEntryFilters {
@@ -77,6 +91,21 @@ function openDB(dbFilePath: string): Database {
       created_at TEXT NOT NULL DEFAULT (datetime('now')),
       updated_at TEXT NOT NULL DEFAULT (datetime('now'))
     );
+
+    CREATE TABLE IF NOT EXISTS reconciliation_events (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      run_id TEXT NOT NULL,
+      tx_id TEXT NOT NULL,
+      invoice_id TEXT,
+      outcome TEXT NOT NULL,
+      match_type TEXT,
+      confidence INTEGER,
+      notes TEXT,
+      created_at TEXT NOT NULL DEFAULT (datetime('now'))
+    );
+
+    CREATE INDEX IF NOT EXISTS idx_recon_events_run_id ON reconciliation_events (run_id);
+    CREATE INDEX IF NOT EXISTS idx_recon_events_tx_id  ON reconciliation_events (tx_id);
   `);
   dbPath = dbFilePath;
   return db;
@@ -97,6 +126,20 @@ function toTransaction(row: TransactionRow): BookkeepingTransaction {
     data: JSON.parse(row.data) as BankTransactionData | NavInvoiceData,
     status: row.status as BookkeepingTransaction['status'],
     matchedInvoice: row.matchedInvoice ?? undefined,
+  };
+}
+
+function toReconciliationEvent(row: ReconciliationEventRow): ReconciliationEvent {
+  return {
+    id: Number(row.id),
+    runId: String(row.run_id),
+    txId: String(row.tx_id),
+    invoiceId: row.invoice_id ? String(row.invoice_id) : undefined,
+    outcome: row.outcome as ReconciliationEvent['outcome'],
+    matchType: row.match_type ? (row.match_type as ReconciliationEvent['matchType']) : undefined,
+    confidence: row.confidence !== null ? Number(row.confidence) : undefined,
+    notes: row.notes ? String(row.notes) : undefined,
+    createdAt: String(row.created_at),
   };
 }
 
@@ -388,4 +431,92 @@ export function getCashSummary(filters: CashEntryFilters = {}): CashEntrySummary
     pendingSheets: entries.length - syncedSheets,
     byType,
   };
+}
+
+// ─── Reconciliation Events ────────────────────────────────────────────────────
+
+/**
+ * Persists a single reconciliation event produced during a MatchingAgent run.
+ *
+ * @param input - Event data (without generated id/createdAt).
+ * @returns The fully hydrated ReconciliationEvent row.
+ */
+export function saveReconciliationEvent(input: ReconciliationEventInput): ReconciliationEvent {
+  try {
+    const database = ensureDB();
+    const result = database
+      .prepare(
+        `INSERT INTO reconciliation_events (run_id, tx_id, invoice_id, outcome, match_type, confidence, notes)
+         VALUES (?, ?, ?, ?, ?, ?, ?)`,
+      )
+      .run(
+        input.runId,
+        input.txId,
+        input.invoiceId ?? null,
+        input.outcome,
+        input.matchType ?? null,
+        input.confidence !== undefined ? Math.round(input.confidence) : null,
+        input.notes ?? null,
+      );
+
+    const row = database
+      .prepare('SELECT * FROM reconciliation_events WHERE id = ?')
+      .get(Number(result.lastInsertRowid)) as ReconciliationEventRow | undefined;
+
+    if (!row) {
+      throw new Error('Failed to read back created reconciliation event');
+    }
+
+    return toReconciliationEvent(row);
+  } catch (error) {
+    logError('bookkeeping_db', 'Failed to save reconciliation event:', error);
+    throw error;
+  }
+}
+
+/**
+ * Returns reconciliation events, optionally filtered by run or transaction.
+ *
+ * @param runId   - If provided, restrict to a specific agent run.
+ * @param limit   - Maximum rows to return (default 200).
+ */
+export function getReconciliationEvents(runId?: string, limit = 200): ReconciliationEvent[] {
+  try {
+    const database = ensureDB();
+    if (runId) {
+      const rows = database
+        .prepare(
+          'SELECT * FROM reconciliation_events WHERE run_id = ? ORDER BY id DESC LIMIT ?',
+        )
+        .all(runId, limit) as ReconciliationEventRow[];
+      return rows.map(toReconciliationEvent);
+    }
+
+    const rows = database
+      .prepare('SELECT * FROM reconciliation_events ORDER BY id DESC LIMIT ?')
+      .all(limit) as ReconciliationEventRow[];
+    return rows.map(toReconciliationEvent);
+  } catch (error) {
+    logError('bookkeeping_db', 'Failed to get reconciliation events:', error);
+    throw error;
+  }
+}
+
+/**
+ * Returns the count of reconciliation events with exception-level outcomes
+ * (UNMATCHED or ERROR) across all runs, useful for dashboard display.
+ */
+export function getExceptionCount(): number {
+  try {
+    const database = ensureDB();
+    const row = database
+      .prepare(
+        "SELECT COUNT(*) as cnt FROM reconciliation_events WHERE outcome IN ('UNMATCHED', 'ERROR')",
+      )
+      .get() as { cnt: number };
+    return Number(row.cnt);
+  } catch (error) {
+    logError('bookkeeping_db', 'Failed to get exception count:', error);
+    return 0;
+  }
 }

@@ -1,8 +1,16 @@
 import { IAgent, AgentResponse } from './types.js';
 import type { AgentContext, AgentResult } from './BaseAgent.js';
 import { logInfo, logError, logWarn, setAgentStatus } from '../utils/logger.js';
-import { getPendingTransactions, updateTransaction } from '../data/bookkeeping_db.js';
-import type { BankTransactionData, BookkeepingTransaction, NavInvoiceData } from '../types/bookkeeping.d.js';
+import {
+  getPendingTransactions,
+  updateTransaction,
+  saveReconciliationEvent,
+} from '../data/bookkeeping_db.js';
+import type {
+  BankTransactionData,
+  BookkeepingTransaction,
+  NavInvoiceData,
+} from '../types/bookkeeping.d.js';
 
 type MatchableInvoice = NavInvoiceData & {
   id?: string;
@@ -29,7 +37,8 @@ function isRecord(value: unknown): value is Record<string, unknown> {
 export class MatchingAgent implements IAgent {
   name = 'MatchingAgent';
   role = 'Match bank transactions with invoices';
-  description = 'Uses reference-number matching to reconcile bank statements with NAV and email invoices.';
+  description =
+    'Uses reference-number and fuzzy matching to reconcile bank statements with NAV and email invoices.';
   capabilities = ['reconciliation', 'matching', 'bookkeeping'];
 
   private toResponse(result: AgentResult): AgentResponse {
@@ -97,20 +106,105 @@ export class MatchingAgent implements IAgent {
     };
   }
 
-  findMatch(bankTx: BankMatchInput, pendingInvoices: MatchableInvoice[]): MatchResult | null {
-    const reference = bankTx.reference?.trim();
-    if (!reference) {
-      return null;
+  /**
+   * Computes a fuzzy relevance score between a bank transaction and an invoice.
+   *
+   * Scoring breakdown:
+   *  - Exact amount match (within 1 HUF):           60 pts
+   *  - Near amount match (within 1 % of invoice):   20 pts
+   *  - Partner name exact match (case-insensitive): 25 pts
+   *  - Partner name partial match:                  15 pts
+   *  - Same-day issue date:                         25 pts
+   *  - Issue date within 3 days:                    15 pts
+   *
+   * A score ≥ 50 is considered a FUZZY_MATCH.
+   */
+  private fuzzyScore(bankTx: BankMatchInput, invoice: MatchableInvoice): number {
+    let score = 0;
+
+    // ── Amount proximity ──────────────────────────────────────────────────────
+    const amtDiff = Math.abs(invoice.amount - bankTx.amount);
+    const amtOnePct = Math.max(invoice.amount * 0.01, 1);
+    if (amtDiff < 0.01) {
+      score += 60; // Exact (float tolerance)
+    } else if (amtDiff <= amtOnePct) {
+      score += 20; // Within 1 % — partial credit
     }
 
+    // ── Partner name ─────────────────────────────────────────────────────────
+    if (invoice.partner && bankTx.partner) {
+      const invLower = invoice.partner.toLowerCase();
+      const bankLower = bankTx.partner.toLowerCase();
+      const refLower = (bankTx.reference ?? '').toLowerCase();
+
+      if (invLower === bankLower) {
+        score += 25;
+      } else if (bankLower.includes(invLower) || invLower.includes(bankLower)) {
+        score += 15;
+      } else if (refLower.includes(invLower)) {
+        score += 10;
+      }
+    }
+
+    // ── Date proximity ────────────────────────────────────────────────────────
+    const issueDate = invoice.issueDate;
+    if (issueDate && bankTx.date) {
+      try {
+        const d1 = new Date(issueDate);
+        const d2 = new Date(bankTx.date);
+        if (!isNaN(d1.getTime()) && !isNaN(d2.getTime())) {
+          const diffDays = Math.abs(d1.getTime() - d2.getTime()) / 86_400_000;
+          if (diffDays < 1) {
+            score += 25;
+          } else if (diffDays <= 3) {
+            score += 15;
+          }
+        }
+      } catch {
+        // ignore unparseable dates
+      }
+    }
+
+    return score;
+  }
+
+  /**
+   * Finds the best matching invoice for a bank transaction.
+   *
+   * Strategy:
+   *  1. Hard match — invoice number appears in the payment reference AND
+   *     amounts match exactly. Returns confidence 100, type HARD_MATCH.
+   *  2. Fuzzy match — highest-scoring invoice above the FUZZY_THRESHOLD (50).
+   *     Returns confidence = score (capped at 99), type FUZZY_MATCH.
+   *  3. Returns null if no candidate clears the threshold.
+   */
+  findMatch(bankTx: BankMatchInput, pendingInvoices: MatchableInvoice[]): MatchResult | null {
+    const FUZZY_THRESHOLD = 50;
+    const reference = bankTx.reference?.trim() ?? '';
+
+    // ── 1. Hard match ─────────────────────────────────────────────────────────
     for (const invoice of pendingInvoices) {
       if (reference.includes(invoice.invoiceNumber) && bankTx.amount === invoice.amount) {
-        return {
-          invoice,
-          confidence: 100,
-          type: 'HARD_MATCH',
-        };
+        return { invoice, confidence: 100, type: 'HARD_MATCH' };
       }
+    }
+
+    // ── 2. Fuzzy match ────────────────────────────────────────────────────────
+    let best: { invoice: MatchableInvoice; score: number } | null = null;
+
+    for (const invoice of pendingInvoices) {
+      const score = this.fuzzyScore(bankTx, invoice);
+      if (score >= FUZZY_THRESHOLD && (!best || score > best.score)) {
+        best = { invoice, score };
+      }
+    }
+
+    if (best) {
+      return {
+        invoice: best.invoice,
+        confidence: Math.min(best.score, 99),
+        type: 'FUZZY_MATCH',
+      };
     }
 
     return null;
@@ -125,7 +219,13 @@ export class MatchingAgent implements IAgent {
         .map((tx) => this.toInvoice(tx))
         .filter((invoice): invoice is MatchableInvoice => invoice !== null);
 
-      logInfo(this.name, `Comparing ${pendingBank.length} bank transactions against ${invoices.length} invoices...`);
+      logInfo(
+        this.name,
+        `Comparing ${pendingBank.length} bank transactions against ${invoices.length} invoices...`,
+      );
+
+      // Unique run identifier used for the audit trail
+      const runId = `run_${Date.now()}`;
 
       let matched = 0;
       let manual = 0;
@@ -135,25 +235,38 @@ export class MatchingAgent implements IAgent {
         if (!bankTx) {
           logWarn(this.name, 'Skipping bank transaction due to missing data:', tx.id);
           updateTransaction(tx.id, { status: 'ERROR' });
+          this.persistEvent(runId, tx.id, 'ERROR', null);
           continue;
         }
 
         const match = this.findMatch(bankTx, invoices);
         if (match) {
+          const newStatus = match.type === 'HARD_MATCH' ? 'COMPLETED' : 'PARTIALLY_MATCHED';
           updateTransaction(tx.id, {
-            status: 'COMPLETED',
+            status: newStatus,
             matchedInvoice: match.invoice.invoiceNumber,
           });
 
-          if (match.invoice.originalTransaction && match.invoice.originalTransaction.id !== tx.id) {
+          if (
+            match.invoice.originalTransaction &&
+            match.invoice.originalTransaction.id !== tx.id
+          ) {
             updateTransaction(match.invoice.originalTransaction.id, {
-              status: 'COMPLETED',
+              status: newStatus,
               matchedInvoice: tx.id,
             });
           }
+
+          this.persistEvent(
+            runId,
+            tx.id,
+            match.type === 'HARD_MATCH' ? 'MATCHED' : 'FUZZY_MATCHED',
+            match,
+          );
           matched++;
         } else {
           updateTransaction(tx.id, { status: 'UNMATCHED' });
+          this.persistEvent(runId, tx.id, 'UNMATCHED', null);
           manual++;
         }
       }
@@ -162,7 +275,7 @@ export class MatchingAgent implements IAgent {
         success: true,
         status: 'success',
         message: `Processed ${pendingBank.length} bank transactions`,
-        data: { total: pendingBank.length, matched, manual },
+        data: { total: pendingBank.length, matched, manual, runId },
       };
     } catch (error: unknown) {
       const err = error instanceof Error ? error : new Error(String(error));
@@ -173,6 +286,30 @@ export class MatchingAgent implements IAgent {
         message: err.message,
         data: { total: 0, matched: 0, manual: 0 },
       };
+    }
+  }
+
+  /**
+   * Silently persists a reconciliation event. Failures are caught and logged
+   * so a DB hiccup never interrupts the reconciliation run.
+   */
+  private persistEvent(
+    runId: string,
+    txId: string,
+    outcome: 'MATCHED' | 'FUZZY_MATCHED' | 'UNMATCHED' | 'ERROR',
+    match: MatchResult | null,
+  ): void {
+    try {
+      saveReconciliationEvent({
+        runId,
+        txId,
+        invoiceId: match?.invoice.invoiceNumber,
+        outcome,
+        matchType: match?.type,
+        confidence: match?.confidence,
+      });
+    } catch (err) {
+      logError(this.name, `Failed to persist reconciliation event for ${txId}:`, err);
     }
   }
 

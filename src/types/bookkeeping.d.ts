@@ -67,3 +67,32 @@ export interface CashEntrySummary {
     pendingSheets: number;
     byType: Record<CashEntryType, number>;
 }
+
+export type ReconciliationOutcome = 'MATCHED' | 'FUZZY_MATCHED' | 'UNMATCHED' | 'ERROR' | 'PARTIAL';
+
+export interface ReconciliationEvent {
+    id: number;
+    /** Unique identifier for a single MatchingAgent run (e.g. UUID or timestamp-based). */
+    runId: string;
+    /** ID of the bank transaction being reconciled. */
+    txId: string;
+    /** Invoice ID or invoice number that was matched (if any). */
+    invoiceId?: string;
+    outcome: ReconciliationOutcome;
+    matchType?: 'HARD_MATCH' | 'FUZZY_MATCH';
+    /** Confidence score 0-100 assigned by the matcher. */
+    confidence?: number;
+    /** Free-form notes for manual review context. */
+    notes?: string;
+    createdAt: string;
+}
+
+export interface ReconciliationEventInput {
+    runId: string;
+    txId: string;
+    invoiceId?: string;
+    outcome: ReconciliationOutcome;
+    matchType?: 'HARD_MATCH' | 'FUZZY_MATCH';
+    confidence?: number;
+    notes?: string;
+}

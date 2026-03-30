@@ -8,7 +8,9 @@ import {
   getCashEntries,
   getCashEntry as getCashEntryById,
   getCashSummary,
+  getExceptionCount,
   getPendingTransactions,
+  getReconciliationEvents,
   getTransaction,
   updateTransaction,
   updateCashEntry,
@@ -595,6 +597,37 @@ export function createBookkeepingRoutes(): Router {
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : String(error);
       logError('BookkeepingRoutes', `Reconcile failed: ${message}`);
+      res.status(500).json({ success: false, error: message });
+    }
+  });
+  /**
+   * GET /api/v1/bookkeeping/reconciliation-events
+   * Returns reconciliation events, optionally filtered by run_id.
+   *
+   * Query params:
+   *  - run_id: filter to a specific agent run
+   *  - limit:  max rows to return (default 200)
+   */
+  router.get('/reconciliation-events', (req, res) => {
+    try {
+      const runId = typeof req.query.run_id === 'string' ? req.query.run_id : undefined;
+      const limit =
+        typeof req.query.limit === 'string'
+          ? Math.min(parseInt(req.query.limit, 10) || 200, 500)
+          : 200;
+
+      const events = getReconciliationEvents(runId, limit);
+      const exceptionCount = getExceptionCount();
+
+      res.json({
+        success: true,
+        events,
+        total: events.length,
+        exceptionCount,
+      });
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError('BookkeepingRoutes', `Failed to get reconciliation events: ${message}`);
       res.status(500).json({ success: false, error: message });
     }
   });

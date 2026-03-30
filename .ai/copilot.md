@@ -254,3 +254,19 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 **Érintett fájlok:** src/utils/prebuiltTools.ts, src/utils/mcpClient.ts, src/cli.ts, src/cli/toolDiscoveryCommands.ts, start-with-copilot.bat, out/tools.json
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A CLI most a helyi tool catalogot is beolvassa, a `tools` és `tool-discovery list` parancsok MCP nélkül is visszaesnek a helyi katalogusra, és a `start-with-copilot.bat` build + export után indít. Verifikáció: `npm run build` ✅, célzott ESLint ✅, `brunella tools` MCP nélkül ✅. A teljes `npm run test:fast` futásban továbbra is van egy meglévő, nem ehhez a módosításhoz kötődő hiba a `test/zeroPromptRoutes.test.ts` fájlban.
+
+### 2026-03-30 14:10 - Track closure batch (health/bootstrap/docs/test infra)
+**Feladat:** A 2026-03-25/27-es agent health, bootstrap single source, doc auto-sync, golden intelligencia, pre-commit hook optimalizáció, startup smoke és test infrastruktúra trackek 100%-ra vitele és validálása.
+**Érintett fájlok:** scripts/sync_bootstrap.ts, scripts/sync_doc_stats.ts, scripts/agent_health_check.ts, scripts/startup_smoke_test.ts, test/sync_bootstrap.test.ts, test/sync_doc_stats.test.ts, conductor/tracks/*/plan.md, conductor/tracks/*/meta.json, conductor/project_state.json, conductor/tracks.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- A doc-stats sync most a `.ai/BOOTSTRAP.md` forrásból a generált `BOOTSTRAP.md` és `.vscode/BOOTSTRAP.md` másolatokat is együtt kezeli.
+- Új regressziós tesztek készültek a bootstrap és dokumentációs szinkron scriptekre.
+- A 7 céltrack completed (100%) státuszba került, majd a conductor rescan frissítette a `project_state.json` és `tracks.md` állományokat.
+- Verifikáció: `npm run build` ✅, `npx vitest run test/sync_bootstrap.test.ts test/sync_doc_stats.test.ts test/zeroPromptRoutes.test.ts test/cloudflare_integration.test.ts test/agent_health_matrix.test.ts` ✅, `npm run agent:health -- --json` ✅ (58/58 OK), `npm run smoke` ✅ (AnythingLLM opcionális hiány), `npm run test:fast` ✅, `npm test` ✅.
+
+### 2026-03-30 14:25 - Könyvelés automatizálás lezárás
+**Feladat:** A könyvelési matching, audit trail, dashboard szinkron és új API útvonal lezárása, valamint a kapcsolódó tesztek és dokumentáció frissítése.
+**Érintett fájlok:** src/data/bookkeeping_db.ts, src/types/bookkeeping.d.ts, src/agents/MatchingAgent.ts, src/server/routes/bookkeeping.ts, src/dashboard/components/dashboard/BookkeepingWidget.tsx, test/bookkeeping_db.test.ts, test/MatchingAgent.test.ts, test/bookkeeping_routes.test.ts, CHANGELOG.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A bookkeeping most reconciliation event audit trailt tárol, fuzzy matchinget használ, és külön `GET /api/v1/bookkeeping/reconciliation-events` route-on keresztül visszaadja az eseményeket + exception countot. A dashboard widget induláskor lekéri az élő státuszt és 30 másodpercenként frissít; a kapcsolódó backend tesztek és a build zöldek. Verifikáció: `npm run build` ✅, célzott bookkeeping Vitest kör ✅, `npm run test:fast` ✅, a background agent szerint `tsc --noEmit` ✅ és 18/18 releváns teszt ✅.
