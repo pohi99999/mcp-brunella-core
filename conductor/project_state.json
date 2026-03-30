@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-29T22:04:40.660Z",
+  "lastUpdated": "2026-03-30T04:00:02.590Z",
   "tracks": [
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
@@ -123,6 +123,17 @@
         "konyveles_automatizalas"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\n8n_konyveles_pipeline_20260328",
+      "_isArchived": false
+    },
+    {
+      "id": "P-Sales20260327",
+      "name": "P-Sales20260327",
+      "status": "active",
+      "priority": "high",
+      "progress": 40,
+      "tags": [],
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\P-Sales20260327",
       "_isArchived": false
     },
     {
@@ -1168,9 +1179,9 @@
       "name": "Federated MCP — Negotiation Protocol",
       "status": "archived",
       "priority": "medium",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-29",
-      "completed": "2026-03-29",
+      "completed": "2026-03-30",
       "tags": [
         "federated-mcp",
         "negotiation",
@@ -1188,9 +1199,9 @@
       "name": "Federated MCP — Remote Capability Routing",
       "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-29",
-      "completed": "2026-03-29",
+      "completed": "2026-03-30",
       "tags": [
         "federated-mcp",
         "routing",
@@ -1209,9 +1220,9 @@
       "name": "Federated MCP — Signed Capability Manifests",
       "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-29",
-      "completed": "2026-03-29",
+      "completed": "2026-03-30",
       "tags": [
         "federated-mcp",
         "manifest",
@@ -1229,9 +1240,9 @@
       "name": "Federated MCP — Trust Layer",
       "status": "archived",
       "priority": "high",
-      "progress": 0,
+      "progress": 100,
       "created": "2026-03-29",
-      "completed": "2026-03-29",
+      "completed": "2026-03-30",
       "tags": [
         "federated-mcp",
         "trust",
@@ -1992,17 +2003,6 @@
       "_isArchived": true
     },
     {
-      "id": "P-Sales20260327",
-      "name": "P-Sales20260327",
-      "status": "archived",
-      "priority": "high",
-      "progress": 100,
-      "tags": [],
-      "dependencies": [],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\P-Sales20260327",
-      "_isArchived": true
-    },
-    {
       "id": "paios_model_selector_ui_20260223",
       "name": "paios_model_selector_ui_20260223",
       "status": "archived",
@@ -2642,9 +2642,9 @@
   ],
   "stats": {
     "total": 153,
-    "active": 4,
+    "active": 5,
     "completed": 0,
-    "archived": 143,
+    "archived": 142,
     "proposed": 5
   }
 }

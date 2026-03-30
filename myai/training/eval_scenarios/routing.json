@@ -1,0 +1,7 @@
+{
+  "id": "routing_accuracy",
+  "category": "routing",
+  "weight": 1.0,
+  "difficulty": 0.45,
+  "min_score": 0.7
+}

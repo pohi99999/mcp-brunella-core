@@ -8,6 +8,7 @@ interface TestUser {
   role: string;
 }
 
+// WARNING: test-only credentials — PSALES_TEST_USERS must never contain real passwords
 function getTestUsers(): TestUser[] {
   try {
     return JSON.parse(process.env.PSALES_TEST_USERS ?? '[]') as TestUser[];
@@ -66,11 +67,12 @@ export function createPSalesAuthRoutes(): Router {
 
     try {
       const { payload } = await jwtVerify(token, getSecret());
-      return res.json({
-        valid: true,
-        email: payload['email'],
-        role: payload['role']
-      });
+      const email = typeof payload['email'] === 'string' ? payload['email'] : undefined;
+      const role = typeof payload['role'] === 'string' ? payload['role'] : undefined;
+      if (!email || !role) {
+        return res.status(401).json({ valid: false, error: 'Érvénytelen token tartalom' });
+      }
+      return res.json({ valid: true, email, role });
     } catch {
       return res.status(401).json({ valid: false, error: 'Érvénytelen vagy lejárt token' });
     }

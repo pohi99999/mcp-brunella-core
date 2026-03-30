@@ -3,6 +3,14 @@
   "description": "MCP Filesystem Safe Zone Configuration - Defines allowed directories for AI agent file operations",
   "safe_zones": [
     {
+      "name": "Project Root Read-Only",
+      "path": ".",
+      "permissions": ["read"],
+      "description": "Workspace root read-only access for documentation and top-level metadata files",
+      "max_file_size_mb": 20,
+      "allowed_extensions": ["md", "txt", "json", "yml", "yaml", "toml", "csv", "LICENSE"]
+    },
+    {
       "name": "Data Directory",
       "path": "./data",
       "permissions": ["read", "write", "delete"],

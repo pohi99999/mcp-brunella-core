@@ -1,0 +1,58 @@
+
+> mcp-brunella-core@2.4.0 test:fast
+> npm run build && vitest run --reporter=dot --exclude 'test/cli-e2e*' --exclude 'test/phase*' --exclude 'test/swarm_smoke*'
+
+
+> mcp-brunella-core@2.4.0 build
+> tsc && node -e "const fs=require('fs');fs.mkdirSync('build/agents',{recursive:true});fs.copyFileSync('src/agents/registry.json','build/agents/registry.json');console.log('registry.json copied to build/agents/');fs.mkdirSync('build/data',{recursive:true});fs.copyFileSync('src/data/triz_matrix.json','build/data/triz_matrix.json');fs.copyFileSync('src/data/triz_principles.json','build/data/triz_principles.json');console.log('TRIZ data copied');"
+
+registry.json copied to build/agents/
+TRIZ data copied
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mF:/mcp-brunella-core[39m
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on "check" command
+[22m[39m[STATUS] [LintFixer] working - check src/
+[INFO] [LintFixer] ESLint check ind├şt├ísa...
+
+[33m[39m[32m┬Ě[39m[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on "check" command
+[22m[39m[STATUS] [LintFixer] idle
+
+[33m[39m[32m┬Ě[39m[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on Hungarian command
+[22m[39m[STATUS] [LintFixer] working - ellen┼Ĺrizd a k├│dot
+[INFO] [LintFixer] ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on Hungarian command
+[22m[39m[STATUS] [LintFixer] idle
+
+[33m[39m[32m┬Ě[39m[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould detect file path in task
+[22m[39m[STATUS] [LintFixer] working - check "src/cli.ts"
+[INFO] [LintFixer] ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould detect file path in task
+[22m[39m[STATUS] [LintFixer] idle
+
+[33m[39m[32m┬Ě[39m[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run TypeScript check on "type" command
+[22m[39m[STATUS] [LintFixer] working - type check
+[INFO] [LintFixer] ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run TypeScript check on "type" command
+[22m[39m[STATUS] [LintFixer] idle
+
+[33m[39m[32m┬Ě[39m[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould generate fix suggestions
+[22m[39m[STATUS] [LintFixer] working - suggest fix for src/cli.ts
+[INFO] [LintFixer] F├íjl jav├şt├ísa: src/cli.ts
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould generate fix suggestions
+[22m[39m[INFO] [LintFixer] ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould generate fix suggestions
+[22m[39m[STATUS] [LintFixer] idle
+
+[33m[39m[32m┬Ě[39m[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould handle non-existent file gracefully
+[22m[39m[STATUS] [LintFixer] working - fix "nonexistent-file-12345.ts"
+[INFO] [LintFixer] F├íjl jav├şt├ísa: nonexistent-file-12345.ts
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould handle non-existent file gracefully
+[22m[39m[STATUS] [LintFixer] idle
+

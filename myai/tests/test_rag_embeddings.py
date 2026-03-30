@@ -2,14 +2,18 @@ import sys
 import os
 import unittest
 from unittest.mock import patch, MagicMock
+from importlib.machinery import ModuleSpec
 
 # Mock requests so we can import rag without it actually installed
 mock_requests = MagicMock()
+mock_requests.__spec__ = ModuleSpec('requests', loader=None)
 sys.modules['requests'] = mock_requests
 
 # Inject mock modules for optional dependencies
 mock_lancedb = MagicMock()
+mock_lancedb.__spec__ = ModuleSpec('lancedb', loader=None)
 mock_pa = MagicMock()
+mock_pa.__spec__ = ModuleSpec('pyarrow', loader=None)
 sys.modules['lancedb'] = mock_lancedb
 sys.modules['pyarrow'] = mock_pa
 

@@ -1,13 +1,19 @@
 import platform
 
+pyautogui = None
+
 class NativeComputerUse:
     def __init__(self):
         # Only import pyautogui if needed to avoid display errors in headless CI
         pass
 
     def _ensure_pyautogui(self):
+        global pyautogui
+        if pyautogui is not None:
+            return pyautogui
         try:
             import pyautogui
+            globals()['pyautogui'] = pyautogui
             return pyautogui
         except ImportError:
             raise RuntimeError("pyautogui is not installed. Run: pip install pyautogui")

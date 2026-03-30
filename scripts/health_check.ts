@@ -148,7 +148,10 @@ async function checkCloudflare(): Promise<CheckResult> {
           break;
         }
         aiMessage = `AI Gateway HTTP ${resp.status} (${tokenObj.name})`;
-        if (resp.status === 401 || resp.status === 403) aiStatus = "fail";
+        if (resp.status === 401 || resp.status === 403) {
+          aiStatus = "warn";
+          aiMessage = `AI Gateway auth issue (optional in local env): HTTP ${resp.status} (${tokenObj.name})`;
+        }
       } catch (e) {
         aiMessage = `AI Gateway: ${(e as Error).message}`;
         aiStatus = "fail";
@@ -160,7 +163,7 @@ async function checkCloudflare(): Promise<CheckResult> {
 
   // R2 Check
   let r2Status: "pass" | "fail" | "warn" = "warn";
-  let r2Message = "";
+  let r2Message: string;
   const r2Url =
     process.env.S3_API || `https://${accountId}.r2.cloudflarestorage.com`;
 

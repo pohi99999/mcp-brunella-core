@@ -412,6 +412,11 @@ def load_capacities_from_stdin() -> list[FreightCapacity]:
 
 
 def main() -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8")
+
     parser = argparse.ArgumentParser(description="Supply Chain Matchmaker")
     parser.add_argument("--needs", default="data/internal_needs.json",
                         help="Belső igények JSON fájl (default: data/internal_needs.json)")
@@ -454,9 +459,9 @@ def main() -> None:
 
     # Kimenet
     if args.markdown:
-        print(to_markdown(report))
+        print(to_markdown(report).encode("ascii", "ignore").decode("ascii"))
     else:
-        print(json.dumps(report.model_dump(), ensure_ascii=False, indent=2))
+        print(json.dumps(report.model_dump(), ensure_ascii=True, indent=2))
 
 
 if __name__ == "__main__":

@@ -1,0 +1,35 @@
+{
+  "id": "zero_prompt_policy_engine_20260329",
+  "name": "Zero-Prompt Core — Policy Engine",
+  "status": "ARCHIVED",
+  "priority": "HIGH",
+  "created": "2026-03-29",
+  "owner": "Pohánka Péter",
+  "progress": 100,
+  "updated": "2026-03-29",
+  "completed": "2026-03-29",
+  "description": "Risk- és policy-motor, amely eldönti, hogy egy esemény csak ajánlás, approval-köteles akció vagy teljesen autonóm végrehajtás lehet.",
+  "dependencies": [
+    "zero_prompt_event_fabric_20260329"
+  ],
+  "phase": "phase1-zero-prompt",
+  "tags": [
+    "autonomy",
+    "policy",
+    "risk",
+    "guardrails",
+    "approval"
+  ],
+  "deliverables": [
+    "src/core/policyEngine.ts",
+    "Risk / autonomy scoring contract",
+    "Guardrail szabálykészlet kritikus műveletekre",
+    "Policy audit log rekordok"
+  ],
+  "successCriteria": [
+    "Minden normalizált esemény policy-kiértékelést kap",
+    "Magas kockázatú esemény nem tud approval nélkül végrehajtást indítani",
+    "A policy döntés visszakövethető audit logban",
+    "A decision outcome használható az Approval Router inputjaként"
+  ]
+}

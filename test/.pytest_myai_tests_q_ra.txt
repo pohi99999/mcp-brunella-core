@@ -1,0 +1,1210 @@
+..............................................................FFFFFEEF.. [ 15%]
+........................................................................ [ 31%]
+......................................................................EE [ 46%]
+EEEEEEEE................................................................ [ 62%]
+..............................................FFFFF..................... [ 78%]
+........................................................................ [ 93%]
+.ss..F...s...s.............s                                             [100%]
+=================================== ERRORS ====================================
+________________________ ERROR at setup of test_click _________________________
+
+    @pytest.fixture
+    def mock_pyautogui():
+>       with patch('myai.robotkez.computer_use.pyautogui') as mock:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_computer_use.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py:1503: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x00000150A7E773F0>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'myai.robotkez.computer_use' from 'F:\\mcp-brunella-core\\myai\\robotkez\\computer_use.py'> does not have the attribute 'pyautogui'
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py:1473: AttributeError
+______________________ ERROR at setup of test_type_text _______________________
+
+    @pytest.fixture
+    def mock_pyautogui():
+>       with patch('myai.robotkez.computer_use.pyautogui') as mock:
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_computer_use.py:12: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py:1503: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <unittest.mock._patch object at 0x00000150A7EC7A10>
+
+    def get_original(self):
+        target = self.getter()
+        name = self.attribute
+    
+        original = DEFAULT
+        local = False
+    
+        try:
+            original = target.__dict__[name]
+        except (AttributeError, KeyError):
+            original = getattr(target, name, DEFAULT)
+        else:
+            local = True
+    
+        if name in _builtins and isinstance(target, ModuleType):
+            self.create = True
+    
+        if not self.create and original is DEFAULT:
+>           raise AttributeError(
+                "%s does not have the attribute %r" % (target, name)
+            )
+E           AttributeError: <module 'myai.robotkez.computer_use' from 'F:\\mcp-brunella-core\\myai\\robotkez\\computer_use.py'> does not have the attribute 'pyautogui'
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py:1473: AttributeError
+_______________ ERROR at setup of TestMCPBridge.test_read_file ________________
+
+self = <Coroutine test_read_file>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fixturedef = <FixtureDef argname='bridge' scope='function' baseid='myai/tests/test_mcp_bridge.py'>
+request = <SubRequest 'bridge' for <Coroutine test_read_file>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_read_file' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: PytestRemovedIn9Warning
+_________ ERROR at setup of TestMCPBridge.test_read_nonexistent_file __________
+
+self = <Coroutine test_read_nonexistent_file>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fixturedef = <FixtureDef argname='bridge' scope='function' baseid='myai/tests/test_mcp_bridge.py'>
+request = <SubRequest 'bridge' for <Coroutine test_read_nonexistent_file>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_read_nonexistent_file' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: PytestRemovedIn9Warning
+_________ ERROR at setup of TestMCPBridge.test_read_outside_safezone __________
+
+self = <Coroutine test_read_outside_safezone>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fixturedef = <FixtureDef argname='bridge' scope='function' baseid='myai/tests/test_mcp_bridge.py'>
+request = <SubRequest 'bridge' for <Coroutine test_read_outside_safezone>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_read_outside_safezone' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: PytestRemovedIn9Warning
+_______________ ERROR at setup of TestMCPBridge.test_write_file _______________
+
+self = <Coroutine test_write_file>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fixturedef = <FixtureDef argname='bridge' scope='function' baseid='myai/tests/test_mcp_bridge.py'>
+request = <SubRequest 'bridge' for <Coroutine test_write_file>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_write_file' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: PytestRemovedIn9Warning
+_________ ERROR at setup of TestMCPBridge.test_write_file_create_dirs _________
+
+self = <Coroutine test_write_file_create_dirs>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fixturedef = <FixtureDef argname='bridge' scope='function' baseid='myai/tests/test_mcp_bridge.py'>
+request = <SubRequest 'bridge' for <Coroutine test_write_file_create_dirs>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_write_file_create_dirs' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: PytestRemovedIn9Warning
+_____________ ERROR at setup of TestMCPBridge.test_list_directory _____________
+
+self = <Coroutine test_list_directory>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fixturedef = <FixtureDef argname='bridge' scope='function' baseid='myai/tests/test_mcp_bridge.py'>
+request = <SubRequest 'bridge' for <Coroutine test_list_directory>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_list_directory' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: PytestRemovedIn9Warning
+_______ ERROR at setup of TestMCPBridge.test_list_directory_nonexistent _______
+
+self = <Coroutine test_list_directory_nonexistent>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fixturedef = <FixtureDef argname='bridge' scope='function' baseid='myai/tests/test_mcp_bridge.py'>
+request = <SubRequest 'bridge' for <Coroutine test_list_directory_nonexistent>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_list_directory_nonexistent' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: PytestRemovedIn9Warning
+______________ ERROR at setup of TestMCPBridge.test_search_files ______________
+
+self = <Coroutine test_search_files>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fixturedef = <FixtureDef argname='bridge' scope='function' baseid='myai/tests/test_mcp_bridge.py'>
+request = <SubRequest 'bridge' for <Coroutine test_search_files>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_search_files' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: PytestRemovedIn9Warning
+_________ ERROR at setup of TestMCPBridge.test_search_files_recursive _________
+
+self = <Coroutine test_search_files_recursive>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fixturedef = <FixtureDef argname='bridge' scope='function' baseid='myai/tests/test_mcp_bridge.py'>
+request = <SubRequest 'bridge' for <Coroutine test_search_files_recursive>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_search_files_recursive' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: PytestRemovedIn9Warning
+________ ERROR at setup of TestMCPBridge.test_search_files_no_matches _________
+
+self = <Coroutine test_search_files_no_matches>
+
+    def setup(self) -> None:
+        runner_fixture_id = f"_{self._loop_scope}_scoped_runner"
+        if runner_fixture_id not in self.fixturenames:
+            self.fixturenames.append(runner_fixture_id)
+>       return super().setup()
+               ^^^^^^^^^^^^^^^
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+fixturedef = <FixtureDef argname='bridge' scope='function' baseid='myai/tests/test_mcp_bridge.py'>
+request = <SubRequest 'bridge' for <Coroutine test_search_files_no_matches>>
+
+    @pytest.hookimpl(wrapper=True)
+    def pytest_fixture_setup(fixturedef: FixtureDef, request) -> object | None:
+        asyncio_mode = _get_asyncio_mode(request.config)
+        if not _is_asyncio_fixture_function(fixturedef.func):
+            if asyncio_mode == Mode.STRICT:
+                # Ignore async fixtures without explicit asyncio mark in strict mode
+                # This applies to pytest_trio fixtures, for example
+>               return (yield)
+                        ^^^^^
+E               pytest.PytestRemovedIn9Warning: 'test_search_files_no_matches' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E               See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: PytestRemovedIn9Warning
+================================== FAILURES ===================================
+________________________ TestCLI.test_mock_json_output ________________________
+
+self = <test_cma_worker.TestCLI object at 0x00000150F13242D0>
+
+    def test_mock_json_output(self):
+        result = subprocess.run(
+            [PYTHON, WORKER_PATH, "--mock", "--location", "Budapest, XI.",
+             "--area", "75", "--type", "apartment"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+        assert result.returncode == 0
+>       data = json.loads(result.stdout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_cma_worker.py:384: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+s = None, cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with
+        the result of any object literal decoded with an ordered list of pairs.
+        The return value of ``object_pairs_hook`` will be used instead of the
+        ``dict``.  This feature can be used to implement custom decoders.  If
+        ``object_hook`` is also defined, the ``object_pairs_hook`` takes
+        priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+>               raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+E               TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: TypeError
+______________________ TestCLI.test_mock_markdown_output ______________________
+
+self = <test_cma_worker.TestCLI object at 0x00000150F1324410>
+
+    def test_mock_markdown_output(self):
+        result = subprocess.run(
+            [PYTHON, WORKER_PATH, "--mock", "--markdown",
+             "--location", "Debrecen", "--area", "90"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+>       assert result.returncode == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\pohi9\\AppData\\Local\\Programs\\Python\\Python314\\python.exe', 'F:\\mcp-brunella-...EncodeError: \'charmap\' codec can\'t encode character \'\\U0001f3e0\' in position 2: character maps to <undefined>\n').returncode
+
+myai\tests\test_cma_worker.py:394: AssertionError
+________________________ TestCLI.test_office_type_cli _________________________
+
+self = <test_cma_worker.TestCLI object at 0x00000150F1243E10>
+
+    def test_office_type_cli(self):
+        result = subprocess.run(
+            [PYTHON, WORKER_PATH, "--mock", "--type", "office",
+             "--location", "Budapest, V.", "--area", "200"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+        assert result.returncode == 0
+>       data = json.loads(result.stdout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_cma_worker.py:404: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+s = None, cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with
+        the result of any object literal decoded with an ordered list of pairs.
+        The return value of ``object_pairs_hook`` will be used instead of the
+        ``dict``.  This feature can be used to implement custom decoders.  If
+        ``object_hook`` is also defined, the ``object_pairs_hook`` takes
+        priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+>               raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+E               TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: TypeError
+______________________ TestCLI.test_parking_flag_in_json ______________________
+
+self = <test_cma_worker.TestCLI object at 0x00000150F1330050>
+
+    def test_parking_flag_in_json(self):
+        result = subprocess.run(
+            [PYTHON, WORKER_PATH, "--mock", "--parking",
+             "--location", "Budapest, XI.", "--area", "80"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+        assert result.returncode == 0
+>       data = json.loads(result.stdout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_cma_worker.py:414: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+s = None, cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with
+        the result of any object literal decoded with an ordered list of pairs.
+        The return value of ``object_pairs_hook`` will be used instead of the
+        ``dict``.  This feature can be used to implement custom decoders.  If
+        ``object_hook`` is also defined, the ``object_pairs_hook`` takes
+        priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+>               raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+E               TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: TypeError
+________________ TestCLI.test_limit_controls_comparables_count ________________
+
+self = <test_cma_worker.TestCLI object at 0x00000150F12B4830>
+
+    def test_limit_controls_comparables_count(self):
+        result = subprocess.run(
+            [PYTHON, WORKER_PATH, "--mock", "--location", "Debrecen",
+             "--area", "85", "--limit", "3"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+        assert result.returncode == 0
+>       data = json.loads(result.stdout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_cma_worker.py:424: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+s = None, cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with
+        the result of any object literal decoded with an ordered list of pairs.
+        The return value of ``object_pairs_hook`` will be used instead of the
+        ``dict``.  This feature can be used to implement custom decoders.  If
+        ``object_hook`` is also defined, the ``object_pairs_hook`` takes
+        priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+>               raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+E               TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: TypeError
+_________________________ test_dependencies_installed _________________________
+
+    def test_dependencies_installed():
+        dependencies = ["typer", "requests", "rich", "pytest", "pydantic", "langsmith", "lancedb", "chromadb"]
+        for dep in dependencies:
+>           spec = importlib.util.find_spec(dep)
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_dependencies.py:6: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+name = 'requests', package = None
+
+>   ???
+E   ValueError: requests.__spec__ is not set
+
+<frozen importlib.util>:107: ValueError
+________________________ TestCLI.test_mock_json_output ________________________
+
+self = <test_supply_matcher.TestCLI object at 0x00000150993E91D0>
+
+    def test_mock_json_output(self):
+        result = subprocess.run(
+            [PYTHON, WORKER_PATH, "--mock"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+        assert result.returncode == 0
+>       data = json.loads(result.stdout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_supply_matcher.py:412: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+s = None, cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with
+        the result of any object literal decoded with an ordered list of pairs.
+        The return value of ``object_pairs_hook`` will be used instead of the
+        ``dict``.  This feature can be used to implement custom decoders.  If
+        ``object_hook`` is also defined, the ``object_pairs_hook`` takes
+        priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+>               raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+E               TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: TypeError
+______________________ TestCLI.test_mock_markdown_output ______________________
+
+self = <test_supply_matcher.TestCLI object at 0x00000150993E9310>
+
+    def test_mock_markdown_output(self):
+        result = subprocess.run(
+            [PYTHON, WORKER_PATH, "--mock", "--markdown"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+        assert result.returncode == 0
+>       assert "Match Report" in result.stdout
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: argument of type 'NoneType' is not a container or iterable
+
+myai\tests\test_supply_matcher.py:422: TypeError
+______________________ TestCLI.test_mock_book_only_flag _______________________
+
+self = <test_supply_matcher.TestCLI object at 0x000001509866BCE0>
+
+    def test_mock_book_only_flag(self):
+        result = subprocess.run(
+            [PYTHON, WORKER_PATH, "--mock", "--book-only"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+        assert result.returncode == 0
+>       data = json.loads(result.stdout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_supply_matcher.py:430: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+s = None, cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with
+        the result of any object literal decoded with an ordered list of pairs.
+        The return value of ``object_pairs_hook`` will be used instead of the
+        ``dict``.  This feature can be used to implement custom decoders.  If
+        ``object_hook`` is also defined, the ``object_pairs_hook`` takes
+        priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+>               raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+E               TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: TypeError
+_____________________ TestCLI.test_mock_min_score_filter ______________________
+
+self = <test_supply_matcher.TestCLI object at 0x000001509866BE10>
+
+    def test_mock_min_score_filter(self):
+        result = subprocess.run(
+            [PYTHON, WORKER_PATH, "--mock", "--min-score", "0.6"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+        assert result.returncode == 0
+>       data = json.loads(result.stdout)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_supply_matcher.py:440: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+s = None, cls = None, object_hook = None, parse_float = None, parse_int = None
+parse_constant = None, object_pairs_hook = None, kw = {}
+
+    def loads(s, *, cls=None, object_hook=None, parse_float=None,
+            parse_int=None, parse_constant=None, object_pairs_hook=None, **kw):
+        """Deserialize ``s`` (a ``str``, ``bytes`` or ``bytearray`` instance
+        containing a JSON document) to a Python object.
+    
+        ``object_hook`` is an optional function that will be called with the
+        result of any object literal decode (a ``dict``). The return value of
+        ``object_hook`` will be used instead of the ``dict``. This feature
+        can be used to implement custom decoders (e.g. JSON-RPC class hinting).
+    
+        ``object_pairs_hook`` is an optional function that will be called with
+        the result of any object literal decoded with an ordered list of pairs.
+        The return value of ``object_pairs_hook`` will be used instead of the
+        ``dict``.  This feature can be used to implement custom decoders.  If
+        ``object_hook`` is also defined, the ``object_pairs_hook`` takes
+        priority.
+    
+        ``parse_float``, if specified, will be called with the string
+        of every JSON float to be decoded. By default this is equivalent to
+        float(num_str). This can be used to use another datatype or parser
+        for JSON floats (e.g. decimal.Decimal).
+    
+        ``parse_int``, if specified, will be called with the string
+        of every JSON int to be decoded. By default this is equivalent to
+        int(num_str). This can be used to use another datatype or parser
+        for JSON integers (e.g. float).
+    
+        ``parse_constant``, if specified, will be called with one of the
+        following strings: -Infinity, Infinity, NaN.
+        This can be used to raise an exception if invalid JSON numbers
+        are encountered.
+    
+        To use a custom ``JSONDecoder`` subclass, specify it with the ``cls``
+        kwarg; otherwise ``JSONDecoder`` is used.
+        """
+        if isinstance(s, str):
+            if s.startswith('\ufeff'):
+                raise JSONDecodeError("Unexpected UTF-8 BOM (decode using utf-8-sig)",
+                                      s, 0)
+        else:
+            if not isinstance(s, (bytes, bytearray)):
+>               raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+                                f'not {s.__class__.__name__}')
+E               TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: TypeError
+___________________________ TestCLI.test_help_flag ____________________________
+
+self = <test_supply_matcher.TestCLI object at 0x00000150986FD7F0>
+
+    def test_help_flag(self):
+        result = subprocess.run(
+            [PYTHON, WORKER_PATH, "--help"],
+            capture_output=True, text=True, encoding="utf-8",
+        )
+        assert result.returncode == 0
+>       assert "Matchmaker" in result.stdout or "usage" in result.stdout.lower()
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: argument of type 'NoneType' is not a container or iterable
+
+myai\tests\test_supply_matcher.py:450: TypeError
+_________________ TestOCRWorker.test_select_best_engine_auto __________________
+
+self = <test_workers_ocr.TestOCRWorker object at 0x0000015098CDAFD0>
+
+    def test_select_best_engine_auto(self):
+        """Test automatic engine selection"""
+>       engine = select_best_engine("auto")
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_workers_ocr.py:60: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+preferred = 'auto'
+
+    def select_best_engine(preferred: str) -> str:
+        """Select best available OCR engine"""
+        if preferred != "auto":
+            return preferred
+    
+        # Priority: PaddleOCR > EasyOCR > Tesseract
+        if HAS_PADDLEOCR:
+            return "paddleocr"
+        elif HAS_EASYOCR:
+            return "easyocr"
+        elif HAS_TESSERACT:
+            return "tesseract"
+        else:
+>           raise RuntimeError("No OCR engine available. Install at least one: pytesseract, paddleocr, or easyocr")
+E           RuntimeError: No OCR engine available. Install at least one: pytesseract, paddleocr, or easyocr
+
+myai\workers\ocr_worker.py:207: RuntimeError
+============================== warnings summary ===============================
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\google\genai\types.py:43
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\google\genai\types.py:43: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+myai/tests/test_cma_worker.py::TestCLI::test_mock_json_output
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-3 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe9 in position 2999: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_cma_worker.py::TestCLI::test_office_type_cli
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-7 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe9 in position 2979: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_cma_worker.py::TestCLI::test_parking_flag_in_json
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-9 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe9 in position 3000: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_cma_worker.py::TestCLI::test_limit_controls_comparables_count
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-11 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe9 in position 2078: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_dependencies.py::test_dependencies_installed
+  <frozen importlib._bootstrap>:491: DeprecationWarning: builtin type SwigPyPacked has no __module__ attribute
+
+myai/tests/test_dependencies.py::test_dependencies_installed
+  <frozen importlib._bootstrap>:491: DeprecationWarning: builtin type SwigPyObject has no __module__ attribute
+
+myai/tests/test_geo_scraper.py: 185 warnings
+myai/tests/test_machine_hunter.py: 698 warnings
+myai/tests/test_media_factory.py: 20 warnings
+myai/tests/test_trend_analyst.py: 19 warnings
+myai/tests/test_vision_worker.py: 22 warnings
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+myai/tests/test_learning_loop_training.py::test_learning_loop_training_pipeline
+  F:\mcp-brunella-core\myai\training\dataset_curator.py:85: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    created_at = datetime.utcnow().isoformat()
+
+myai/tests/test_learning_loop_training.py::test_learning_loop_training_pipeline
+  F:\mcp-brunella-core\myai\training\nightly_trainer.py:56: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    created_at = datetime.utcnow().isoformat()
+
+myai/tests/test_learning_loop_training.py::test_learning_loop_training_pipeline
+  F:\mcp-brunella-core\myai\training\eval_harness.py:92: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    created_at = datetime.utcnow().isoformat()
+
+myai/tests/test_machine_hunter.py::TestMachineListingModel::test_age_years_property
+  F:\mcp-brunella-core\myai\tests\test_machine_hunter.py:143: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    expected_age = datetime.utcnow().year - cnc_listing.year
+
+myai/tests/test_machine_hunter.py: 286 warnings
+  F:\mcp-brunella-core\myai\workers\machine_hunter.py:128: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return max(0, datetime.utcnow().year - self.year)
+
+myai/tests/test_machine_hunter.py::TestEstimateMachineValue::test_new_machine_high_value
+  F:\mcp-brunella-core\myai\tests\test_machine_hunter.py:211: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    year=datetime.utcnow().year, hours=0, source="x"
+
+myai/tests/test_machine_hunter.py: 49 warnings
+  F:\mcp-brunella-core\myai\workers\machine_hunter.py:550: DeprecationWarning: 'asyncio.iscoroutinefunction' is deprecated and slated for removal in Python 3.16; use inspect.iscoroutinefunction() instead
+    if asyncio.iscoroutinefunction(fn):
+
+myai/tests/test_media_factory.py: 22 warnings
+  F:\mcp-brunella-core\myai\workers\media_factory.py:117: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
+
+myai/tests/test_supply_matcher.py::TestCLI::test_mock_json_output
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-90 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xed in position 183: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_supply_matcher.py::TestCLI::test_mock_markdown_output
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-92 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe1 in position 44: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_supply_matcher.py::TestCLI::test_mock_book_only_flag
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-94 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xed in position 183: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_supply_matcher.py::TestCLI::test_mock_min_score_filter
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-96 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xed in position 183: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_supply_matcher.py::TestCLI::test_help_flag
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-98 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 257: invalid start byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_trend_analyst.py::TestTrendAnalysisReportModel::test_generated_at_is_recent
+  F:\mcp-brunella-core\myai\tests\test_trend_analyst.py:148: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    delta = (datetime.utcnow() - report.generated_at).total_seconds()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [1] myai\tests\test_iron_clad_langgraph_phase3.py:17: langgraph not installed
+SKIPPED [1] myai\tests\test_workers_lancedb_batch.py:238: LanceDB or Sentence Transformers not installed
+SKIPPED [1] myai\tests\test_workers_lancedb_batch.py:243: LanceDB or Sentence Transformers not installed
+SKIPPED [1] myai\tests\test_workers_ocr.py:104: No OCR engines installed (expected in CI)
+SKIPPED [1] myai\tests\test_workers_ocr.py:142: No OCR engine installed
+SKIPPED [1] myai\tests\test_workers_web_scraper.py:173: Requires mock HTTP server or network access
+ERROR myai/tests/test_computer_use.py::test_click - AttributeError: <module '...
+ERROR myai/tests/test_computer_use.py::test_type_text - AttributeError: <modu...
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_read_file - pytest.P...
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_read_nonexistent_file
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_read_outside_safezone
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_write_file - pytest....
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_write_file_create_dirs
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_list_directory - pyt...
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_list_directory_nonexistent
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_search_files - pytes...
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_search_files_recursive
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_search_files_no_matches
+FAILED myai/tests/test_cma_worker.py::TestCLI::test_mock_json_output - TypeEr...
+FAILED myai/tests/test_cma_worker.py::TestCLI::test_mock_markdown_output - As...
+FAILED myai/tests/test_cma_worker.py::TestCLI::test_office_type_cli - TypeErr...
+FAILED myai/tests/test_cma_worker.py::TestCLI::test_parking_flag_in_json - Ty...
+FAILED myai/tests/test_cma_worker.py::TestCLI::test_limit_controls_comparables_count
+FAILED myai/tests/test_dependencies.py::test_dependencies_installed - ValueEr...
+FAILED myai/tests/test_supply_matcher.py::TestCLI::test_mock_json_output - Ty...
+FAILED myai/tests/test_supply_matcher.py::TestCLI::test_mock_markdown_output
+FAILED myai/tests/test_supply_matcher.py::TestCLI::test_mock_book_only_flag
+FAILED myai/tests/test_supply_matcher.py::TestCLI::test_mock_min_score_filter
+FAILED myai/tests/test_supply_matcher.py::TestCLI::test_help_flag - TypeError...
+FAILED myai/tests/test_workers_ocr.py::TestOCRWorker::test_select_best_engine_auto
+12 failed, 431 passed, 6 skipped, 1319 warnings, 12 errors in 48.01s
+<sys>:0: DeprecationWarning: builtin type swigvarlink has no __module__ attribute

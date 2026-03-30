@@ -21,9 +21,11 @@ from datetime import datetime
 import pytest
 
 # ── Importok ─────────────────────────────────────────────────────────────────
-sys.path.insert(0, str(Path(__file__).parent.parent))
+ROOT = str(Path(__file__).parent.parent.parent)
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
 
-from core.vision_worker import (
+from myai.core.vision_worker import (
     PropertyAsset,
     PropertyAddress,
     PropertyUtilities,

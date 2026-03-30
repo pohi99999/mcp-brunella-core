@@ -1,0 +1,216 @@
+{
+  "name": "Brunella Bookkeeping Email Intake Scaffold",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "imap-intake",
+      "name": "IMAP Email Intake",
+      "type": "n8n-nodes-base.emailReadImap",
+      "typeVersion": 1.2,
+      "position": [260, 320]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/agents/EmailAgent/execute",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ task: 'Parse the latest invoice email and extract structured invoice data', context: { source: 'n8n', trigger: 'imap', subject: $node['IMAP Email Intake'].json.subject ?? null, from: $node['IMAP Email Intake'].json.from ?? null, messageId: $node['IMAP Email Intake'].json.messageId ?? $node['IMAP Email Intake'].json.id ?? null, timestamp: $now.toISO() } }) }}",
+        "options": {}
+      },
+      "id": "email-agent",
+      "name": "Parse Invoice with EmailAgent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 320]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "json": [
+            {
+              "name": "summary",
+              "value": "={{ { stage: 'email-intake', source: 'imap', subject: $node['IMAP Email Intake'].json.subject ?? null } }}"
+            },
+            {
+              "name": "invoice",
+              "value": "={{ $json.result ?? $json.data ?? $json.invoice ?? $json }}"
+            },
+            {
+              "name": "exceptions",
+              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : ($json.error ? [{ stage: 'email-intake', message: $json.error }] : []) }}"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "isSuccess",
+              "value": "={{ $json.success === true || $json.status === 'success' || ($json.error ? false : true) }}"
+            }
+          ],
+          "string": [
+            {
+              "name": "source",
+              "value": "n8n"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}"
+            }
+          ]
+        }
+      },
+      "id": "normalize-email",
+      "name": "Normalize EmailAgent Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2.1,
+      "position": [780, 320]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.isSuccess }}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "email-success",
+      "name": "Email Parse Success?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1040, 320]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/nav-validate",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ invoice: $json.invoice, summary: $json.summary, timestamp: $json.timestamp, source: $json.source }) }}",
+        "options": {}
+      },
+      "id": "nav-webhook",
+      "name": "Trigger NAV Validation",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 220]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/notify",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ summary: $json.summary, exceptions: $json.exceptions, timestamp: $json.timestamp, source: $json.source }) }}",
+        "options": {}
+      },
+      "id": "notify-exception",
+      "name": "Notify Intake Exception",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 420]
+    }
+  ],
+  "connections": {
+    "IMAP Email Intake": {
+      "main": [
+        [
+          {
+            "node": "Parse Invoice with EmailAgent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse Invoice with EmailAgent": {
+      "main": [
+        [
+          {
+            "node": "Normalize EmailAgent Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize EmailAgent Result": {
+      "main": [
+        [
+          {
+            "node": "Email Parse Success?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Email Parse Success?": {
+      "main": [
+        [
+          {
+            "node": "Trigger NAV Validation",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Notify Intake Exception",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "bookkeeping",
+      "name": "bookkeeping"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n"
+    }
+  ],
+  "pinData": {},
+  "versionId": "wf1-bookkeeping-email-intake-scaffold",
+  "meta": {
+    "project": "n8n_konyveles_pipeline_20260328",
+    "track": "bookkeeping automation",
+    "status": "draft"
+  }
+}
