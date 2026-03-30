@@ -9,12 +9,13 @@
 import { Router } from 'express';
 import { ephemeralAgentManager } from '../../core/ephemeralAgentManager.js';
 import type { EphemeralAgentSpec } from '../../core/ephemeralAgentManager.js';
+import { executeEphemeralAgent } from '../../core/ephemeralAgentExecutor.js';
 import { logInfo } from '../../utils/logger.js';
 
 export function createEphemeralRouter(): Router {
   const router = Router();
 
-  /** Ephemeral agent indítása */
+  /** Ephemeral agent indítása — életciklus kezelés nélkül (csak spawn) */
   router.post('/spawn', async (req, res): Promise<void> => {
     try {
       const spec = req.body as EphemeralAgentSpec;
@@ -25,6 +26,26 @@ export function createEphemeralRouter(): Router {
       logInfo('EphemeralRoute', `Spawn kérés: ${spec.purpose} (parent: ${spec.parentAgentName})`);
       const record = await ephemeralAgentManager.spawn(spec);
       res.status(201).json({ success: true, agent: record });
+    } catch (e: unknown) {
+      res.status(500).json({ error: e instanceof Error ? e.message : String(e) });
+    }
+  });
+
+  /** Ephemeral agent teljes végrehajtás (spawn + execute + terminate) */
+  router.post('/execute', async (req, res): Promise<void> => {
+    try {
+      const { spec, task, context } = req.body as {
+        spec: EphemeralAgentSpec & { systemPrompt?: string; name?: string };
+        task: string;
+        context?: Record<string, unknown>;
+      };
+      if (!spec?.parentAgentName || !spec?.purpose || !Array.isArray(spec?.allowedTools) || !task) {
+        res.status(400).json({ error: 'spec.parentAgentName, spec.purpose, spec.allowedTools és task kötelező' });
+        return;
+      }
+      logInfo('EphemeralRoute', `Execute kérés: ${spec.purpose} — "${task.slice(0, 60)}"`);
+      const result = await executeEphemeralAgent({ spec, task, context });
+      res.status(result.success ? 200 : 500).json(result);
     } catch (e: unknown) {
       res.status(500).json({ error: e instanceof Error ? e.message : String(e) });
     }
