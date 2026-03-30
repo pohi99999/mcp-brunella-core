@@ -53,6 +53,7 @@ import salesRouter from "./sales.js";
 import voiceRouter from "./voice.js";
 import { createPSalesAuthRoutes } from "./psales-auth.js";
 import { createPSalesIntakeRoutes } from "./psales-intake.js";
+import { createPSalesResearchRoutes } from "./psales-research.js";
 
 export {
   createHealthRoutes,
@@ -146,6 +147,7 @@ export function createV1Router(): Router {
   router.use("/sales", salesRouter);
   router.use("/psales/auth", createPSalesAuthRoutes());
   router.use("/psales/intake", createPSalesIntakeRoutes());
+  router.use("/psales/research", createPSalesResearchRoutes());
   router.use("/voice", voiceRouter);
 
   return router;
