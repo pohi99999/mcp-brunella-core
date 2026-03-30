@@ -209,7 +209,10 @@ export class SafeZoneValidator {
    * Find matching safe zone for a path
    */
   private findMatchingZone(normalizedPath: string): SafeZone | undefined {
-    return this.zones.find(zone => normalizedPath.startsWith(zone.path));
+    // Sort by path length descending so the most specific (longest) zone wins
+    return this.zones
+      .filter(zone => normalizedPath.startsWith(zone.path))
+      .sort((a, b) => b.path.length - a.path.length)[0];
   }
 
   /**

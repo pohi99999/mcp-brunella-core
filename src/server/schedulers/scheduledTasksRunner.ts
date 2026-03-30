@@ -4,6 +4,8 @@ import { logInfo, logError, logWarn } from '../../utils/logger.js';
 import { agentManager } from '../../agents/AgentManager.js';
 import { PythonShell } from 'python-shell';
 import { JulesAutomationService } from '../../core/julesAutomationService.js';
+import { executeLearningLoopCycle } from '../../core/learningLoopService.js';
+import { eventFabric, createSchedulerTaskOutcomeEnvelope } from '../../core/eventFabric.js';
 
 interface ScheduledTask {
   id: string;
@@ -359,6 +361,21 @@ export class ScheduledTasksRunner {
         });
       } else if (task.handler === 'jules_automation') {
         result = await this.executeJulesAutomation(task);
+      } else if (task.handler === 'learning_loop_cycle') {
+        const loopMeta = this.parseTaskMetadata(task);
+        result = await executeLearningLoopCycle({
+          dryRun: typeof loopMeta.dryRun === 'boolean' ? loopMeta.dryRun : true,
+          promotePassed: typeof loopMeta.promotePassed === 'boolean' ? loopMeta.promotePassed : false,
+          baselineModel: typeof loopMeta.baselineModel === 'string' ? loopMeta.baselineModel : undefined,
+        });
+        const finishedAt = new Date().toISOString();
+        const envelope = createSchedulerTaskOutcomeEnvelope(task, {
+          status: 'success',
+          startedAt: startTime,
+          finishedAt,
+          durationMs: Date.now() - new Date(startTime).getTime(),
+        });
+        eventFabric.publish(envelope);
       } else {
         throw new Error(`Unknown handler: ${task.handler}`);
       }
