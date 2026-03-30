@@ -8,6 +8,8 @@ import { PropertySalesWidget } from '../dashboard/components/dashboard/PropertyS
 import { pSalesTrack } from '../data/pSalesTrack';
 import { Building2, Download, Globe2, Rocket, ShieldCheck, Layers3 } from 'lucide-react';
 import { Toaster, toast } from 'sonner';
+import { AuthProvider } from './auth/AuthProvider.js';
+import { ProtectedRoute } from './auth/ProtectedRoute.js';
 
 type StandaloneBeforeInstallPromptEvent = Event & {
   prompt: () => Promise<void>;
@@ -81,6 +83,8 @@ export function PSalesStandaloneApp() {
   };
 
   return (
+    <AuthProvider>
+      <ProtectedRoute>
     <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
       <div className="min-h-screen bg-[#050816] text-white">
         <div className="mx-auto flex min-h-screen max-w-7xl flex-col gap-8 px-6 py-8">
@@ -285,5 +289,7 @@ export function PSalesStandaloneApp() {
         <Toaster richColors theme="dark" position="top-right" />
       </div>
     </ThemeProvider>
+      </ProtectedRoute>
+    </AuthProvider>
   );
 }
