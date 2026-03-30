@@ -1,24 +1,19 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-30T06:27:12.825Z
+**Utolso frissites:** 2026-03-30T14:15:01.465Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 153 total | 4 active | 1 completed | 142 archived
+**Stats:** 158 total | 5 active | 0 completed | 148 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (5)
+## Tervezett Szalak (Proposed) (4)
 
 - [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
   - **ID:** `cloudflare_workers_migration_20260226`
   - **Progress:** 0%
   - Mappa: ./tracks/cloudflare_workers_migration_20260226/
-
-- [ ] **goldeninteligencia20260327** [HIGH]
-  - **ID:** `goldeninteligencia20260327`
-  - **Progress:** 0%
-  - Mappa: ./tracks/goldeninteligencia20260327/
 
 - [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
   - **ID:** `logistics_vertical_20260222`
@@ -55,6 +50,11 @@
   - **Progress:** 85%
   - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
 
+- [ ] **P-Sales20260327** [HIGH]
+  - **ID:** `P-Sales20260327`
+  - **Progress:** 40%
+  - Mappa: ./tracks/P-Sales20260327/
+
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`
   - **Progress:** 0%
@@ -62,28 +62,22 @@
 
 ---
 
-## Befejezett (Completed) (1)
-
-- [x] **P-Sales20260327** (2026-03-30) — Ingatlan- és iparterület-értékesítési platform, JWT auth, 3 agent, 3 dashboard panel, 24 teszt
-
----
-
-## Archivalt (Archived) (142)
+## Archivalt (Archived) (148)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
 - [x] **006_trojan-horse-campaign** (2026-03-22T22:47:34Z)
 - [x] **Agent Architect 2.0 Meta-Ügynök** (2026-02-13)
 - [x] **Agent diagnostics and routing modernization** (2026-03-23T08:15:00Z)
+- [x] **Agent Health Matrix** (N/A)
 - [x] **Agent Loader Modernization** (2026-03-23T08:00:00Z)
 - [x] **agent_memory_structured_20260323** (2026-03-23T12:00:00Z)
 - [x] **agent_orchestration_dag_20260323** (2026-03-23T12:00:00Z)
 - [x] **aider_integration_20260222** (N/A)
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
-- [x] **basic-test-task-structure-20260219** (N/A)
 
-... and 132 more archived tracks
+... and 138 more archived tracks
 
 ---
 

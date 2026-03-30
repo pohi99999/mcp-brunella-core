@@ -1,0 +1,20 @@
+{
+  "id": "doc_code_auto_sync_20260325",
+  "trackName": "doc_code_auto_sync_20260325",
+  "name": "Documentation-Code Auto-Sync",
+  "type": "Documentation / Automation",
+  "priority": "HIGH",
+  "status": "archived",
+  "progress": 100,
+  "assignee": "Copilot",
+  "createdAt": "2026-03-25T00:00:00.000Z",
+  "updatedAt": "2026-03-30T14:15:00.000Z",
+  "completedAt": "2026-03-30T15:30:00.000Z",
+  "archivedAt": "2026-03-30T14:15:00.000Z",
+  "archiveReason": "Teljesen validált és lezárt track; Conductor archive-ba mozgatva.",
+  "phases": [
+    { "name": "Phase 1: Sync script létrehozása", "status": "completed" },
+    { "name": "Phase 2: CI integráció", "status": "completed" }
+  ],
+  "tags": ["docs", "sync", "automation", "stats"]
+}

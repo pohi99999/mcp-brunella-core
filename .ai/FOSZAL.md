@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-30 05:50
+**Generálva:** 2026-03-30 16:15
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -29,6 +29,31 @@ start-full.bat
 ## Összesített Napló (Időrendben)
 
 ### 2026-03-30
+
+#### 14:25 - [Copilot] Könyvelés automatizálás lezárás
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/data/bookkeeping_db.ts, src/types/bookkeeping.d.ts, src/agents/MatchingAgent.ts, src/server/routes/bookkeeping.ts, src/dashboard/components/dashboard/BookkeepingWidget.tsx, test/bookkeeping_db.test.ts, test/MatchingAgent.test.ts, test/bookkeeping_routes.test.ts, CHANGELOG.md
+
+#### 14:20 - [Copilot] Completed track archival batch
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** conductor/archive/agent_health_matrix_20260325/*, conductor/archive/bootstrap_single_source_20260325/*, conductor/archive/doc_code_auto_sync_20260325/*, conductor/archive/goldeninteligencia20260327/*, conductor/archive/precommit_hook_optimization_20260325/*, conductor/archive/startup_smoke_test_20260325/*, conductor/archive/test_infrastructure_stabilization_20260325/*, conductor/project_state.json, conductor/tracks.md, .ai/copilot.md
+
+#### 14:10 - [Copilot] Track closure batch (health/bootstrap/docs/test infra)
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** scripts/sync_bootstrap.ts, scripts/sync_doc_stats.ts, scripts/agent_health_check.ts, scripts/startup_smoke_test.ts, test/sync_bootstrap.test.ts, test/sync_doc_stats.test.ts, conductor/tracks/*/plan.md, conductor/tracks/*/meta.json, conductor/project_state.json, conductor/tracks.md
+
+#### 13:00 - [Copilot] tools.json CLI fallback + launcher export
+- **Agent:** Copilot
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** src/utils/prebuiltTools.ts, src/utils/mcpClient.ts, src/cli.ts, src/cli/toolDiscoveryCommands.ts, start-with-copilot.bat, out/tools.json
+
+#### 12:00 - [Claude] P-Sales20260327 track lezárás — Task 10 ✅
+- **Agent:** Claude
+- **Státusz:** ✅ Befejezve
+- **Érintett fájlok:** `conductor/tracks/P-Sales20260327/meta.json` — `status: "completed"`, `progress: 100`, `completedAt` hozzáadva, mind 8 fázis `"completed"`, `conductor/tracks.md` — P-Sales eltávolítva Active-ból, új "Befejezett (Completed) (1)" szekció hozzáadva, stats frissítve (5 active → 4 active, 0 completed → 1 completed)
 
 #### 00:59 - [Copilot] Phase 4 Federated MCP closure audit + integration fix
 - **Agent:** Copilot
@@ -644,10 +669,10 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 84 | 2026-03-28 |
+| Claude | 85 | 2026-03-30 |
 | Gemini | 12 | 2026-03-29 |
 | Cursor | 0 | N/A |
-| Copilot | 8 | 2026-03-28 |
+| Copilot | 12 | 2026-03-28 |
 
 ---
 

@@ -2,6 +2,7 @@ import { Router, type Request, type Response } from 'express';
 import { zeroPromptRuntime } from '../../core/zeroPromptRuntime.js';
 import { eventFabric } from '../../core/eventFabric.js';
 import { approvalRouter } from '../../core/approvalRouter.js';
+import { notificationChannels } from '../../core/notificationChannels.js';
 import { evaluateAndLogPolicy } from '../../core/policyEngine.js';
 import { logError } from '../../utils/logger.js';
 import { v4 as uuidv4 } from 'uuid';
@@ -160,6 +161,79 @@ export function createZeroPromptRouter(): Router {
     } catch (e: unknown) {
       logError('ZeroPromptRoute', `approval get error: ${e instanceof Error ? e.message : String(e)}`);
       res.status(500).json({ error: 'Failed to get workflow' });
+    }
+  });
+
+  /**
+   * GET /notifications
+   * Approval notification delivery history.
+   */
+  router.get('/notifications', (req: Request, res: Response) => {
+    try {
+      const limit = parseInt(String(req.query.limit ?? '20'), 10);
+      const channel = isString(req.query.channel) ? req.query.channel : undefined;
+      const status = isString(req.query.status) ? req.query.status : undefined;
+
+      const deliveries = notificationChannels.listDeliveries({
+        limit: isNaN(limit) ? 20 : limit,
+        channel: channel as 'email' | 'slack' | 'discord' | 'system' | undefined,
+        status: status as 'sent' | 'failed' | 'skipped' | undefined,
+      });
+
+      res.json({
+        deliveries,
+        count: deliveries.length,
+      });
+    } catch (e: unknown) {
+      logError('ZeroPromptRoute', `notifications list error: ${e instanceof Error ? e.message : String(e)}`);
+      res.status(500).json({ error: 'Failed to list approval notification deliveries' });
+    }
+  });
+
+  /**
+   * GET /notifications/summary
+   * Approval notification summary + workflow counters.
+   */
+  router.get('/notifications/summary', (_req: Request, res: Response) => {
+    try {
+      const summary = notificationChannels.getSummary();
+      const workflows = approvalRouter.listWorkflows();
+
+      res.json({
+        summary: {
+          ...summary,
+          channelPolicies: notificationChannels.getPolicies(),
+          workflowCounts: {
+            pending: workflows.filter((workflow) => workflow.status === 'pending').length,
+            approved: workflows.filter((workflow) => workflow.status === 'approved').length,
+            rejected: workflows.filter((workflow) => workflow.status === 'rejected').length,
+            expired: workflows.filter((workflow) => workflow.status === 'expired').length,
+          },
+        },
+      });
+    } catch (e: unknown) {
+      logError('ZeroPromptRoute', `notifications summary error: ${e instanceof Error ? e.message : String(e)}`);
+      res.status(500).json({ error: 'Failed to summarize approval notifications' });
+    }
+  });
+
+  /**
+   * POST /workflows/:workflowId/notify
+   * Re-dispatch notification delivery for an approval workflow.
+   */
+  router.post('/workflows/:workflowId/notify', async (req: Request, res: Response) => {
+    try {
+      const workflow = approvalRouter.getWorkflow(String(req.params.workflowId));
+      if (!workflow) {
+        res.status(404).json({ error: 'Workflow not found' });
+        return;
+      }
+
+      const deliveries = await notificationChannels.dispatchWorkflowState(workflow);
+      res.json({ success: true, deliveries });
+    } catch (e: unknown) {
+      logError('ZeroPromptRoute', `workflow notify error: ${e instanceof Error ? e.message : String(e)}`);
+      res.status(500).json({ error: 'Failed to dispatch approval workflow notification' });
     }
   });
 

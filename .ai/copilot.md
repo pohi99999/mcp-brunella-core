@@ -270,3 +270,13 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 **Érintett fájlok:** src/data/bookkeeping_db.ts, src/types/bookkeeping.d.ts, src/agents/MatchingAgent.ts, src/server/routes/bookkeeping.ts, src/dashboard/components/dashboard/BookkeepingWidget.tsx, test/bookkeeping_db.test.ts, test/MatchingAgent.test.ts, test/bookkeeping_routes.test.ts, CHANGELOG.md
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A bookkeeping most reconciliation event audit trailt tárol, fuzzy matchinget használ, és külön `GET /api/v1/bookkeeping/reconciliation-events` route-on keresztül visszaadja az eseményeket + exception countot. A dashboard widget induláskor lekéri az élő státuszt és 30 másodpercenként frissít; a kapcsolódó backend tesztek és a build zöldek. Verifikáció: `npm run build` ✅, célzott bookkeeping Vitest kör ✅, `npm run test:fast` ✅, a background agent szerint `tsc --noEmit` ✅ és 18/18 releváns teszt ✅.
+
+### 2026-03-30 14:20 - Completed track archival batch
+**Feladat:** A teljesen kész és 100%-os trackek archiválása a Conductor rendszerben, majd az állapot újraszinkronizálása és commit/push előkészítése.
+**Érintett fájlok:** conductor/archive/agent_health_matrix_20260325/*, conductor/archive/bootstrap_single_source_20260325/*, conductor/archive/doc_code_auto_sync_20260325/*, conductor/archive/goldeninteligencia20260327/*, conductor/archive/precommit_hook_optimization_20260325/*, conductor/archive/startup_smoke_test_20260325/*, conductor/archive/test_infrastructure_stabilization_20260325/*, conductor/project_state.json, conductor/tracks.md, .ai/copilot.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- A 7 completed track fizikailag átkerült a `conductor/archive/` alá; az aktív `conductor/tracks/` mappából kikerültek.
+- Az archivált meta fájlok `status: archived` állapotot, archíválási időbélyeget és archíválási indoklást kaptak.
+- A `node build/cli.js conductor rescan` után a Conductor összesítés: `158 total | 5 active | 0 completed | 148 archived`.
+- A `goldeninteligencia20260327` korábbi placeholder archívuma lecserélődött a teljes track tartalomra (plan + spec + meta).

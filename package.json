@@ -11,6 +11,10 @@
   },
   "scripts": {
     "build": "tsc && node -e \"const fs=require('fs');fs.mkdirSync('build/agents',{recursive:true});fs.copyFileSync('src/agents/registry.json','build/agents/registry.json');console.log('registry.json copied to build/agents/');fs.mkdirSync('build/data',{recursive:true});fs.copyFileSync('src/data/triz_matrix.json','build/data/triz_matrix.json');fs.copyFileSync('src/data/triz_principles.json','build/data/triz_principles.json');console.log('TRIZ data copied');\"",
+    "sync:bootstrap": "tsx scripts/sync_bootstrap.ts",
+    "sync:doc-stats": "tsx scripts/sync_doc_stats.ts",
+    "sync:doc-stats:check": "tsx scripts/sync_doc_stats.ts --dry-run --fail-on-drift",
+    "agent:health": "tsx scripts/agent_health_check.ts",
     "start": "node build/index.js",
     "dev": "node --loader ts-node/esm src/index.ts",
     "watch": "tsc -w",

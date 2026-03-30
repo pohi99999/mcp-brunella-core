@@ -60,7 +60,7 @@ scripts\sync.bat --build --test  # Sync + build + test (teljes ellenőrzés)
 |---|---|
 | Bármilyen kódolás | `README.md` → "Kód Konvenciók" szekció |
 | Új feature / architektúra | `PROJEKT_DIAGRAM.md`, `README.md` → "Architektúra" szekció |
-| Agent fejlesztés | `src/agents/registry.json` (57 agent), `README.md` → "Agent Implementáció" |
+| Agent fejlesztés | `src/agents/registry.json` (58 agent), `README.md` → "Agent Implementáció" |
 | Függőség/konfig módosítás | `package.json`, `tsconfig.json` |
 | Track-en dolgozol | `conductor/tracks/<track_id>/plan.md` |
 | Teszt probléma | `TEST_RESULTS.md`, `logs/` könyvtár |
@@ -76,6 +76,20 @@ A `README.md` a master dokumentum (~1100 sor). NE olvasd be egészben indulásko
 - "API Végpontok" — REST endpoint lista
 - "Hibaelhárítás" — gyakori hibák és megoldások
 - "Environment Variables" — .env beállítások
+
+<!-- DOC_STATS_START -->
+## 📊 Auto-generated projekt statisztikák
+
+- Agent registry entries: **58**
+- Route modulok a `src/server/routes/` alatt: **69**
+- Aktív route mountok a központi routerben: **59**
+- MCP tool fájlok a `src/tools/` alatt: **33**
+- Detektált MCP tool definíciók / regisztrációk: **4**
+- CLI parancs deklarációk: **211**
+- Dashboard navigációs panelek: **75**
+
+> Ezt a blokkot a `npm run sync:doc-stats` generálja.
+<!-- DOC_STATS_END -->
 
 ### 3. Rendszer Validáció & Teszt Protokoll (Munka ELŐTT - KÖTELEZŐ!)
 
