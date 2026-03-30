@@ -51,6 +51,7 @@ import { createEvHunterRouter } from "./evhunter.js";
 import { createPreferencesRouter } from "./preferences.js";
 import salesRouter from "./sales.js";
 import voiceRouter from "./voice.js";
+import { createPSalesAuthRoutes } from "./psales-auth.js";
 
 export {
   createHealthRoutes,
@@ -142,6 +143,7 @@ export function createV1Router(): Router {
   router.use("/evhunter", createEvHunterRouter());
   router.use("/preferences", createPreferencesRouter());
   router.use("/sales", salesRouter);
+  router.use("/psales/auth", createPSalesAuthRoutes());
   router.use("/voice", voiceRouter);
 
   return router;
