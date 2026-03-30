@@ -57,28 +57,13 @@ import { registerLearningLoopCommands } from "./cli/learningLoopCommands.js";
 import { registerFederationCommands } from "./cli/federationCommands.js";
 import { validateAndNormalizeRegistry } from "./agents/registryValidation.js";
 import { getAssistantBlueprint, type AssistantBlueprint, type AssistantReadinessStatus } from "./core/assistantBlueprint.js";
+import { getPrebuiltToolCatalog, mergeToolLists, type ToolLike } from "./utils/prebuiltTools.js";
 
 marked.setOptions({ renderer: new TerminalRenderer() as any });
 
 const program = new Command();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
-
-// Load prebuilt tools.json (exported runtime registry) as fallback or startup augmentation
-let prebuiltTools: any[] = [];
-try {
-  const candidates = [
-    join(process.cwd(), "out", "tools.json"),
-    join(__dirname, "..", "out", "tools.json"),
-    join(__dirname, "../../out/tools.json"),
-  ];
-  const toolsPath = candidates.find((p) => existsSync(p));
-  if (toolsPath) {
-    prebuiltTools = JSON.parse(readFileSync(toolsPath, "utf-8"));
-  }
-} catch (e) {
-  // ignore — prebuiltTools stays empty
-}
 
 // Try to read package.json version
 let version = "0.0.0";
@@ -285,10 +270,11 @@ program
   .description("List available MCP tools")
   .action(async () => {
     const client = new BrunellaClient();
+    const fallbackTools = getPrebuiltToolCatalog();
     try {
       await client.connect({ coreOnly: true });
       const result = await client.listTools();
-      const tools = result.tools;
+      const tools = mergeToolLists(result.tools as ToolLike[], fallbackTools);
 
       console.log(chalk.bold(`Available Tools (${tools.length}):`));
       for (const tool of tools) {
@@ -297,8 +283,20 @@ program
             (tool.description ? ": " + chalk.dim(tool.description) : ""),
         );
       }
-    } catch (error: any) {
-      console.error(chalk.red("Error fetching tools:"), error.message);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      if (fallbackTools.length > 0) {
+        console.log(chalk.yellow("MCP kapcsolat nem elérhető, helyi tools.json fallback használata."));
+        console.log(chalk.bold(`Available Tools (${fallbackTools.length}):`));
+        for (const tool of fallbackTools) {
+          console.log(
+            chalk.green("• " + tool.name) +
+              (tool.description ? ": " + chalk.dim(tool.description) : ""),
+          );
+        }
+      } else {
+        console.error(chalk.red("Error fetching tools:"), message);
+      }
     } finally {
       await client.close();
       process.exit(0);
