@@ -35,6 +35,47 @@ function getEmailConfig(): EmailConfig | null {
   return { host, port, user, pass, from, to };
 }
 
+export function isNotificationEmailConfigured(): boolean {
+  return getEmailConfig() !== null;
+}
+
+export interface NotificationEmailPayload {
+  subject: string;
+  text: string;
+  html: string;
+}
+
+export async function sendNotificationEmail(payload: NotificationEmailPayload): Promise<EmailSendResult> {
+  const config = getEmailConfig();
+  if (!config) {
+    logWarn('NotificationService', 'SMTP config missing, skipping notification email');
+    return { sent: false, message: 'SMTP config missing' };
+  }
+
+  const transporter = nodemailer.createTransport({
+    host: config.host,
+    port: config.port,
+    secure: config.port === 465,
+    auth: { user: config.user, pass: config.pass },
+  });
+
+  try {
+    await transporter.sendMail({
+      from: config.from,
+      to: config.to,
+      subject: payload.subject,
+      text: payload.text,
+      html: payload.html,
+    });
+    logInfo('NotificationService', `Notification email sent to ${config.to}`);
+    return { sent: true, message: 'Email sent' };
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    logError('NotificationService', `Notification email send failed: ${message}`);
+    return { sent: false, message };
+  }
+}
+
 export async function sendCriticalTasksEmail(payload: CriticalEmailPayload): Promise<EmailSendResult> {
   if (payload.count === 0) {
     return { sent: false, message: 'No critical tasks to notify' };
