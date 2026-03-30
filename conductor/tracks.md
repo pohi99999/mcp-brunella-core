@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-30T04:00:02.590Z
+**Utolso frissites:** 2026-03-30T06:27:12.825Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 153 total | 5 active | 0 completed | 142 archived
+**Stats:** 153 total | 4 active | 1 completed | 142 archived
 
 ---
 
@@ -55,15 +55,16 @@
   - **Progress:** 85%
   - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
 
-- [ ] **P-Sales20260327** [HIGH]
-  - **ID:** `P-Sales20260327`
-  - **Progress:** 40%
-  - Mappa: ./tracks/P-Sales20260327/
-
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase1_foundation_20260322/
+
+---
+
+## Befejezett (Completed) (1)
+
+- [x] **P-Sales20260327** (2026-03-30) — Ingatlan- és iparterület-értékesítési platform, JWT auth, 3 agent, 3 dashboard panel, 24 teszt
 
 ---
 
