@@ -2,11 +2,13 @@ import { Client } from "@modelcontextprotocol/sdk/client/index.js";
 import { StdioClientTransport } from "@modelcontextprotocol/sdk/client/stdio.js";
 import path from "path";
 import fs from "fs";
-import { fileURLToPath } from "url";
 import { logError, logInfo } from "./logger.js";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+import {
+  getPrebuiltToolCatalog,
+  hasPrebuiltTool,
+  mergeToolLists,
+  type ToolLike,
+} from "./prebuiltTools.js";
 
 interface McpServerConfig {
   name: string;
@@ -95,11 +97,12 @@ export class BrunellaClient {
         ]);
         this.clients.set(server.name, client);
         this.transports.set(server.name, transport);
-      } catch (e: any) {
+      } catch (e: unknown) {
         if (transport && transport.close) {
           try { await transport.close(); } catch { /* best effort */ }
         }
-        logError("MCP", `Failed to connect to ${server.name}: ${e.message}`);
+        const message = e instanceof Error ? e.message : String(e);
+        logError("MCP", `Failed to connect to ${server.name}: ${message}`);
       }
     };
 
@@ -107,42 +110,27 @@ export class BrunellaClient {
   }
 
   async listTools() {
-    const allTools: any[] = [];
     if (this.clients.size === 0) {
-      // Fallback to prebuilt out/tools.json if present
-      try {
-        const candidates = [
-          path.resolve(process.cwd(), "out", "tools.json"),
-          path.resolve(__dirname, "..", "out", "tools.json"),
-          path.resolve(process.cwd(), "tools.json"),
-        ];
-        const toolsPath = candidates.find((p) => fs.existsSync(p));
-        if (toolsPath) {
-          const raw = fs.readFileSync(toolsPath, "utf-8");
-          const parsed = JSON.parse(raw);
-          if (Array.isArray(parsed)) {
-            return { tools: parsed };
-          }
-          if (parsed && Array.isArray(parsed.tools)) return { tools: parsed.tools };
-        }
-      } catch (e: any) {
-        logError("MCP", `Failed to load fallback tools.json: ${e.message}`);
-      }
+      return { tools: getPrebuiltToolCatalog() };
     }
 
+    const liveTools: ToolLike[] = [];
     for (const [name, client] of this.clients) {
       try {
         const result = await client.listTools();
         // Cache tool -> server mapping
-        for (const tool of result.tools) {
+        const tools = Array.isArray(result.tools) ? (result.tools as ToolLike[]) : [];
+        for (const tool of tools) {
           this.toolCache.set(tool.name, name);
         }
-        allTools.push(...result.tools);
-      } catch (e: any) {
-        logError("MCP", `Failed to list tools from ${name}: ${e.message}`);
+        liveTools.push(...tools);
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
+        logError("MCP", `Failed to list tools from ${name}: ${message}`);
       }
     }
-    return { tools: allTools };
+
+    return { tools: mergeToolLists(liveTools, getPrebuiltToolCatalog()) };
   }
 
   async callTool(name: string, args: any) {
@@ -153,11 +141,12 @@ export class BrunellaClient {
       if (client) {
         try {
           return await client.callTool({ name, arguments: args });
-        } catch (error: any) {
+        } catch (error: unknown) {
           // If cached lookup fails, fall through to full search
+          const message = error instanceof Error ? error.message : String(error);
           logError(
             "MCP",
-            `Tool '${name}' failed on cached server '${serverName}', retrying...`,
+            `Tool '${name}' failed on cached server '${serverName}', retrying... (${message})`,
           );
           this.toolCache.delete(name);
         }
@@ -172,6 +161,11 @@ export class BrunellaClient {
         this.toolCache.set(name, serverName); // Update cache
         return client.callTool({ name, arguments: args });
       }
+    }
+    if (hasPrebuiltTool(name)) {
+      throw new Error(
+        `Tool '${name}' is present in out/tools.json, but no connected MCP server exposes it.`,
+      );
     }
     throw new Error(`Tool '${name}' not found on any connected MCP server.`);
   }

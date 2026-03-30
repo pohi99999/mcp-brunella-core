@@ -5,6 +5,56 @@
 import { Command } from 'commander';
 import chalk from 'chalk';
 import { logError } from '../utils/logger.js';
+import { getPrebuiltToolCatalog, mergeToolLists, type ToolLike } from '../utils/prebuiltTools.js';
+
+function printToolCatalog(tools: ToolLike[]) {
+  if (tools.length === 0) {
+    console.log(chalk.gray('  Nincs regisztrált tool.'));
+    return;
+  }
+
+  for (const tool of tools) {
+    const version = tool.version ? ` v${tool.version}` : '';
+    const state = tool.enabled === false ? chalk.yellow(' [DISABLED]') : '';
+    const deprecated = tool.deprecated ? chalk.yellow(' [DEPRECATED]') : '';
+    const category = tool.category ? chalk.dim(` (${tool.category})`) : '';
+    console.log(`  ${chalk.bold(tool.name)}${version}${deprecated}${state}${category}`);
+
+    if (tool.description) {
+      console.log(`    ${chalk.gray(tool.description)}`);
+    }
+
+    const tags = tool.tags ?? [];
+    if (tags.length > 0) {
+      console.log(`    ${chalk.dim(`Tags: ${tags.map((tag) => chalk.blue(tag)).join(', ')}`)}`);
+    }
+
+    const parameters = tool.parameters ?? [];
+    if (parameters.length > 0) {
+      const paramText = parameters
+        .map((parameter) => `${parameter.name}:${parameter.type}${parameter.required ? '*' : ''}`)
+        .join(', ');
+      console.log(`    ${chalk.dim(`Params: ${paramText}`)}`);
+    }
+
+    console.log('');
+  }
+}
+
+function extractToolArray(value: unknown): ToolLike[] {
+  if (Array.isArray(value)) {
+    return value as ToolLike[];
+  }
+
+  if (value && typeof value === 'object') {
+    const maybeTools = (value as { tools?: unknown }).tools;
+    if (Array.isArray(maybeTools)) {
+      return maybeTools as ToolLike[];
+    }
+  }
+
+  return [];
+}
 
 export function registerToolDiscoveryCommands(program: Command) {
   const toolDiscovery = program
@@ -25,23 +75,21 @@ export function registerToolDiscoveryCommands(program: Command) {
         if (params.length) url += `?${params.join('&')}`;
 
         const res = await fetch(url);
-        const data = await res.json();
+        const data: unknown = await res.json();
+        const serverTools = extractToolArray(data);
+        const localTools = getPrebuiltToolCatalog();
+        const tools = mergeToolLists(serverTools, localTools);
+
         console.log(chalk.bold.cyan('\n🔧 MCP Tool Registry\n'));
-        if (!Array.isArray(data) || data.length === 0) {
-          console.log(chalk.gray('  Nincs regisztrált tool.'));
-          return;
-        }
-        for (const t of data) {
-          const deprecated = t.deprecated ? chalk.yellow(' [DEPRECATED]') : '';
-          console.log(`  ${chalk.bold(t.name)} v${t.version}${deprecated}`);
-          console.log(`    ${chalk.gray(t.description)}`);
-          if (t.tags?.length) console.log(`    Tags: ${t.tags.map((tg: string) => chalk.blue(tg)).join(', ')}`);
-          console.log('');
-        }
-        console.log(chalk.gray(`  Összesen: ${data.length} tool`));
-      } catch (e) {
-        logError('ToolsCLI', `list hiba: ${e}`);
-        console.log(chalk.red(`Hiba: ${e}`));
+        printToolCatalog(tools);
+        console.log(chalk.gray(`  Összesen: ${tools.length} tool`));
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
+        const fallbackTools = getPrebuiltToolCatalog();
+        logError('ToolsCLI', `list hiba: ${message}`);
+        console.log(chalk.bold.cyan('\n🔧 MCP Tool Registry (local fallback)\n'));
+        printToolCatalog(fallbackTools);
+        console.log(chalk.gray(`  Összesen: ${fallbackTools.length} tool`));
       }
     });
 
@@ -58,8 +106,9 @@ export function registerToolDiscoveryCommands(program: Command) {
         const data = await res.json();
         console.log(chalk.bold.cyan('\n📊 Tool Metrics\n'));
         console.log(JSON.stringify(data, null, 2));
-      } catch (e) {
-        console.log(chalk.red(`Hiba: ${e}`));
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
+        console.log(chalk.red(`Hiba: ${message}`));
       }
     });
 
@@ -84,8 +133,9 @@ export function registerToolDiscoveryCommands(program: Command) {
           console.log(chalk.red(`❌ Chain hiba a ${data.failedAtStep ?? '?'}. lépésnél`));
           console.log(chalk.red(data.error));
         }
-      } catch (e) {
-        console.log(chalk.red(`Hiba: ${e}`));
+      } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : String(e);
+        console.log(chalk.red(`Hiba: ${message}`));
       }
     });
 }
