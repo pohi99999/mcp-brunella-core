@@ -1,6 +1,7 @@
 import { describe, it, expect, beforeAll } from 'vitest';
 import express from 'express';
 import request from 'supertest';
+import { SignJWT } from 'jose';
 import { createPSalesAuthRoutes } from '../src/server/routes/psales-auth.js';
 
 // Tesztfelhasználók beállítása
@@ -63,10 +64,41 @@ describe('PSales Auth — /api/psales/auth', () => {
     expect(verifyRes.body.email).toBe('demo@psales.dev');
   });
 
-  it('érvénytelen token verify 401-et ad', async () => {
+  it('érvénytelen (malformed) token verify 401-et ad', async () => {
     const res = await request(app)
       .post('/api/psales/auth/verify')
       .send({ token: 'totally.invalid.token' });
+
+    expect(res.status).toBe(401);
+    expect(res.body.valid).toBe(false);
+  });
+
+  it('hamis secret-tel aláírt (tampered) token verify 401-et ad', async () => {
+    const wrongSecret = new TextEncoder().encode('wrong-secret-completely-different!!');
+    const tamperedToken = await new SignJWT({ email: 'admin@psales.dev', role: 'admin' })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setExpirationTime('8h')
+      .sign(wrongSecret);
+
+    const res = await request(app)
+      .post('/api/psales/auth/verify')
+      .send({ token: tamperedToken });
+
+    expect(res.status).toBe(401);
+    expect(res.body.valid).toBe(false);
+  });
+
+  it('lejárt token verify 401-et ad', async () => {
+    const secret = new TextEncoder().encode('test-secret-32-chars-minimum-ok!!');
+    const expiredToken = await new SignJWT({ email: 'admin@psales.dev', role: 'admin' })
+      .setProtectedHeader({ alg: 'HS256' })
+      .setIssuedAt(Math.floor(Date.now() / 1000) - 3600)
+      .setExpirationTime(Math.floor(Date.now() / 1000) - 1800)
+      .sign(secret);
+
+    const res = await request(app)
+      .post('/api/psales/auth/verify')
+      .send({ token: expiredToken });
 
     expect(res.status).toBe(401);
     expect(res.body.valid).toBe(false);
