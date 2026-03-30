@@ -11,6 +11,23 @@ import { fnvHash } from './hashUtils.js';
 // TYPES
 // ============================================================================
 
+export type CuratedGoldenApprovalState = 'pending' | 'approved' | 'rejected';
+
+export interface CuratedGoldenSample {
+  id: string;
+  prompt: string;
+  completion: string;
+  source: string;
+  quality: number;
+  approvalState: CuratedGoldenApprovalState;
+  provenance?: Record<string, unknown>;
+  piiRedactedCount?: number;
+  createdAt: string;
+  approvedAt?: string;
+  reviewedBy?: string;
+  reviewNotes?: string;
+}
+
 export interface GoldenSample {
   prompt: string;
   completion: string;
@@ -407,6 +424,160 @@ export async function getGoldenStats(): Promise<GoldenDatasetStats | null> {
     logError('GoldenBridge', 'Failed to get golden dataset stats from both D1 and Python');
     return null;
   }
+}
+
+// ============================================================================
+// CURATED GOLDEN DATASET (approval-gated training data)
+// ============================================================================
+
+function ensureCuratedTable(): void {
+  const db = getGlobalDb();
+  db.exec(`
+    CREATE TABLE IF NOT EXISTS curated_golden_samples (
+      id TEXT PRIMARY KEY,
+      prompt TEXT NOT NULL,
+      completion TEXT NOT NULL,
+      source TEXT NOT NULL,
+      quality REAL NOT NULL,
+      approval_state TEXT NOT NULL DEFAULT 'pending',
+      provenance TEXT,
+      pii_redacted_count INTEGER DEFAULT 0,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      approved_at TEXT,
+      reviewed_by TEXT,
+      review_notes TEXT
+    );
+    CREATE INDEX IF NOT EXISTS idx_curated_approval_state ON curated_golden_samples(approval_state);
+  `);
+}
+
+function rowToCuratedSample(row: Record<string, unknown>): CuratedGoldenSample {
+  return {
+    id: String(row['id']),
+    prompt: String(row['prompt']),
+    completion: String(row['completion']),
+    source: String(row['source']),
+    quality: Number(row['quality']),
+    approvalState: String(row['approval_state']) as CuratedGoldenApprovalState,
+    provenance: row['provenance'] ? JSON.parse(String(row['provenance'])) as Record<string, unknown> : undefined,
+    piiRedactedCount: Number(row['pii_redacted_count'] ?? 0),
+    createdAt: String(row['created_at']),
+    approvedAt: row['approved_at'] ? String(row['approved_at']) : undefined,
+    reviewedBy: row['reviewed_by'] ? String(row['reviewed_by']) : undefined,
+    reviewNotes: row['review_notes'] ? String(row['review_notes']) : undefined,
+  };
+}
+
+export function listCuratedGoldenSamples(opts: {
+  state?: CuratedGoldenApprovalState;
+  limit?: number;
+  offset?: number;
+}): CuratedGoldenSample[] {
+  ensureCuratedTable();
+  const db = getGlobalDb();
+  const limit = opts.limit ?? 100;
+  const offset = opts.offset ?? 0;
+  if (opts.state) {
+    const rows = db.prepare(
+      'SELECT * FROM curated_golden_samples WHERE approval_state = ? ORDER BY created_at DESC LIMIT ? OFFSET ?'
+    ).all(opts.state, limit, offset) as Array<Record<string, unknown>>;
+    return rows.map(rowToCuratedSample);
+  }
+  const rows = db.prepare(
+    'SELECT * FROM curated_golden_samples ORDER BY created_at DESC LIMIT ? OFFSET ?'
+  ).all(limit, offset) as Array<Record<string, unknown>>;
+  return rows.map(rowToCuratedSample);
+}
+
+export function captureCuratedGoldenCandidate(opts: {
+  prompt: string;
+  completion: string;
+  source: string;
+  quality?: number;
+  provenance?: Record<string, unknown>;
+  autoApprove?: boolean;
+}): { success: boolean; id?: string; message?: string } {
+  ensureCuratedTable();
+  const db = getGlobalDb();
+  const id = `curated_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+  const quality = opts.quality ?? calculateQuality(opts.prompt, opts.completion);
+  const approvalState: CuratedGoldenApprovalState = opts.autoApprove ? 'approved' : 'pending';
+  const now = new Date().toISOString();
+  db.prepare(
+    'INSERT INTO curated_golden_samples (id, prompt, completion, source, quality, approval_state, provenance, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+  ).run(id, opts.prompt, opts.completion, opts.source, quality, approvalState, opts.provenance ? JSON.stringify(opts.provenance) : null, now);
+  return { success: true, id };
+}
+
+export function captureToolRunCandidates(limit = 50): CuratedGoldenSample[] {
+  ensureCuratedTable();
+  ensureGoldenLocalTable();
+  const db = getGlobalDb();
+  const rows = db.prepare(
+    'SELECT * FROM golden_samples ORDER BY created_at DESC LIMIT ?'
+  ).all(limit) as Array<Record<string, unknown>>;
+  const results: CuratedGoldenSample[] = [];
+  for (const row of rows) {
+    const id = `curated_tool_${String(row['sample_hash'])}`;
+    const exists = db.prepare('SELECT id FROM curated_golden_samples WHERE id = ?').get(id);
+    if (exists) continue;
+    const now = new Date().toISOString();
+    db.prepare(
+      'INSERT OR IGNORE INTO curated_golden_samples (id, prompt, completion, source, quality, approval_state, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)'
+    ).run(id, String(row['prompt']), String(row['completion']), String(row['source']), Number(row['quality']), 'pending', now);
+    results.push({
+      id,
+      prompt: String(row['prompt']),
+      completion: String(row['completion']),
+      source: String(row['source']),
+      quality: Number(row['quality']),
+      approvalState: 'pending',
+      createdAt: now,
+    });
+  }
+  return results;
+}
+
+export function reviewCuratedGoldenSample(
+  sampleId: string,
+  decision: 'approved' | 'rejected',
+  reviewer: string,
+  notes?: string,
+): CuratedGoldenSample | null {
+  ensureCuratedTable();
+  const db = getGlobalDb();
+  const now = new Date().toISOString();
+  const result = db.prepare(
+    'UPDATE curated_golden_samples SET approval_state = ?, reviewed_by = ?, review_notes = ?, approved_at = ? WHERE id = ?'
+  ).run(decision, reviewer, notes ?? null, decision === 'approved' ? now : null, sampleId);
+  if ((result as { changes: number }).changes === 0) return null;
+  const row = db.prepare('SELECT * FROM curated_golden_samples WHERE id = ?').get(sampleId) as Record<string, unknown> | undefined;
+  return row ? rowToCuratedSample(row) : null;
+}
+
+export function getCuratedGoldenStats(): { total: number; pending: number; approved: number; rejected: number } {
+  try {
+    ensureCuratedTable();
+    const db = getGlobalDb();
+    const rows = db.prepare(
+      'SELECT approval_state, COUNT(*) AS count FROM curated_golden_samples GROUP BY approval_state'
+    ).all() as Array<{ approval_state: string; count: number }>;
+    const stats = { total: 0, pending: 0, approved: 0, rejected: 0 };
+    for (const row of rows) {
+      const count = Number(row.count);
+      stats.total += count;
+      if (row.approval_state === 'pending') stats.pending = count;
+      if (row.approval_state === 'approved') stats.approved = count;
+      if (row.approval_state === 'rejected') stats.rejected = count;
+    }
+    return stats;
+  } catch {
+    return { total: 0, pending: 0, approved: 0, rejected: 0 };
+  }
+}
+
+export function exportCuratedGoldenDataset(format: 'jsonl' | 'json' = 'jsonl'): string {
+  return exportGoldenDataset(format);
 }
 
 /**
