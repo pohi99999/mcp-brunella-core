@@ -31,10 +31,11 @@ export default function ToolDiscoveryPanel() {
   const [stats, setStats] = useState<RegistryStats | null>(null);
   const [filter, setFilter] = useState('');
   const [loading, setLoading] = useState(true);
+  const [isRefreshing, setIsRefreshing] = useState(false);
   const [expandedTool, setExpandedTool] = useState<string | null>(null);
 
-  async function fetchData() {
-    setLoading(true);
+  async function fetchData(isManual = false) {
+    isManual ? setIsRefreshing(true) : setLoading(true);
     try {
       const [toolsRes, statsRes] = await Promise.all([
         fetch('/api/v1/tools/registry'),
@@ -45,7 +46,7 @@ export default function ToolDiscoveryPanel() {
     } catch {
       // silent
     } finally {
-      setLoading(false);
+      isManual ? setIsRefreshing(false) : setLoading(false);
     }
   }
 
@@ -63,8 +64,14 @@ export default function ToolDiscoveryPanel() {
         <h2 className="text-xl font-bold flex items-center gap-2">
           <Wrench className="w-5 h-5" /> MCP Tool Discovery
         </h2>
-        <button onClick={() => void fetchData()} className="p-2 rounded hover:bg-gray-700" title="Frissítés">
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
+        <button
+          onClick={() => void fetchData(true)}
+          className="p-2 rounded hover:bg-gray-700 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          aria-label="Frissítés"
+          title="Frissítés"
+          disabled={isRefreshing}
+        >
+          <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
         </button>
       </div>
 
