@@ -280,3 +280,26 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - Az archivált meta fájlok `status: archived` állapotot, archíválási időbélyeget és archíválási indoklást kaptak.
 - A `node build/cli.js conductor rescan` után a Conductor összesítés: `158 total | 5 active | 0 completed | 148 archived`.
 - A `goldeninteligencia20260327` korábbi placeholder archívuma lecserélődött a teljes track tartalomra (plan + spec + meta).
+
+### 2026-03-30 15:30 - Lumen landing page mobiljavítás
+**Feladat:** lumenlimitedseries.com — hero kép és galéria /9.jpg képek kitöltése az aranyszínű kereten belül mobilnézetben
+**Érintett fájlok:** F:\mcp-brunella-core\temp\Lumen-landing\app\page.tsx
+**Státusz:** ✅ Befejezve, push-olva, Vercel deploy folyamatban
+**Megjegyzés:**
+- Root cause 1 (hero): `ImageFrame` hívásban `imageClassName="max-md:object-contain"` prop Tailwind-en keresztül mobilon felülírta az `object-cover`-t → eltávolítva
+- Root cause 2 (galéria /9.jpg): `ImageFrame` hívásban explicit `fit="contain"` prop → eltávolítva, visszaállt a cover alapértelmezés
+- Vizuális ellenőrzés Chrome DevTools MCP-vel (390px mobil viewport, isMobile, hasTouch, deviceScaleFactor:3): hero ✅, galéria 4 kép ✅
+- Commit: `5c0f5ea` — `fix(mobile): hero and gallery images fill gold frame on mobile`
+- Git push: `git push origin main` ✅ → Vercel auto-deploy elindult
+
+### 2026-03-30 16:40 - Archival lezárás + GitHub push rögzítése
+**Feladat:** A már elvégzett archival batch végleges naplózása a Copilot munkanaplóban, valamint a GitHub feltöltés tényleges eredményének rögzítése.
+**Érintett fájlok:** .ai/copilot.md
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- A korábban lezárt 7 track archiválása változatlanul érvényes; ez a bejegyzés a végső remote állapotot dokumentálja.
+- A lokális archival commit: `99b4f0ea` (`chore(conductor): archive completed validation tracks`).
+- A közvetlen push elsőre GitHub Push Protection miatt blokkolódott egy régebbi, lokális ancestor commitban talált titokszivárgás miatt (`6db42eae`, `.env.fixed`), nem a mostani archival változások tartalma miatt.
+- A végső feltöltés tiszta worktree-alapú transzplantációval történt meg, így a secretet tartalmazó lokális history nem került a pusholt branchbe.
+- A sikeresen feltöltött remote commit a `feature/robotkez-mission-control` branchen: `0a19a3de8354a5329d287653f3e7752cf68a8535`.
+- Remote ellenőrzés: `git ls-remote --heads origin feature/robotkez-mission-control` ✅, a branch a fenti commitra mutat.
