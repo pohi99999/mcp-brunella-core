@@ -42,43 +42,20 @@ test.describe('🎯 Dashboard - Teljes Körű Funkcionális Teszt', () => {
     });
 
     test('✅ 2. Sidebar navigáció - minden tab elérhető', async ({ page }) => {
-        const tabs = [
-            'Mission Control',
-            { label: 'Neural Chat', alt: 'Agent Roster' },
-            'Developer',
-            'Robotkéz'
-        ];
+        const tabButtons = page.locator('aside button[aria-label]');
+        const count = await tabButtons.count();
+        expect(count).toBeGreaterThan(3);
 
-        for (const tab of tabs) {
-            const tabName = typeof tab === 'string' ? tab : tab.label;
-            const tabLocator = page.locator(`button:has-text("${tabName}")`).or(
-                page.locator(`a:has-text("${tabName}")`)
-            ).first();
-            
-            if (await tabLocator.isVisible({ timeout: 3000 }).catch(() => false)) {
-                await tabLocator.click();
-                await page.waitForTimeout(1000);
-
-                // Content megváltozott
-                const content = await page.textContent('main, [role="main"]');
-                expect(content).toBeTruthy();
-                console.log(`✅ Tab navigáció: ${tabName}`);
-            } else {
-                console.log(`⚠️ Tab nem található: ${tabName}`);
-            }
+        for (let i = 0; i < Math.min(count, 4); i++) {
+            await tabButtons.nth(i).click();
+            await page.waitForTimeout(600);
+            const content = await page.textContent('main, [role="main"]');
+            expect(content).toBeTruthy();
         }
     });
 
     test('✅ 3. Mission Control: Kártyák megjelennek', async ({ page }) => {
-        // Mission Control tab (lehet hogy már ott vagyunk)
-        const mcTab = page.locator('button:has-text("Mission Control")').first();
-        if (await mcTab.isVisible({ timeout: 2000 }).catch(() => false)) {
-            await mcTab.click();
-            await page.waitForTimeout(2000);
-        }
-
-        // Widget Grid vagy kártyák megjelenése
-        const cards = page.locator('[class*="card"], [class*="Card"], [class*="widget"]');
+        const cards = page.locator('main [class*="card"], main [class*="Card"], main [class*="widget"], [data-testid="widget-grid"]');
         const count = await cards.count();
         
         console.log(`📦 Talált kártyák száma: ${count}`);

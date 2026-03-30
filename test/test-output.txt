@@ -1,0 +1,88 @@
+
+> mcp-brunella-core@2.4.0 test
+> npm run build && vitest run
+
+
+> mcp-brunella-core@2.4.0 build
+> tsc && node -e "const fs=require('fs');fs.mkdirSync('build/agents',{recursive:true});fs.copyFileSync('src/agents/registry.json','build/agents/registry.json');console.log('registry.json copied to build/agents/');fs.mkdirSync('build/data',{recursive:true});fs.copyFileSync('src/data/triz_matrix.json','build/data/triz_matrix.json');fs.copyFileSync('src/data/triz_principles.json','build/data/triz_principles.json');console.log('TRIZ data copied');"
+
+registry.json copied to build/agents/
+TRIZ data copied
+
+[1m[46m RUN [49m[22m [36mv3.2.4 [39m[90mF:/mcp-brunella-core[39m
+
+ [32mÔťô[39m test/cli-e2e.vitest.ts [2m([22m[2m24 tests[22m[2m)[22m[33m 89413[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Help & Version[2m > [22m--help 0-val t├ęr vissza [33m 2256[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Help & Version[2m > [22m--help kimenete tartalmaz Commands / Usage sort [33m 2687[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Help & Version[2m > [22m--help kimenete tartalmaz about parancsot [33m 2516[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Help & Version[2m > [22m--version 0-val t├ęr vissza [33m 2816[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Help & Version[2m > [22m--version kimenete tartalmazza a verzi├│sz├ímot [33m 2608[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Help & Version[2m > [22m--help nem timeout-ol [33m 2556[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö About[2m > [22mabout 0-val t├ęr vissza [33m 2531[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö About[2m > [22mabout nem timeout-ol [33m 2550[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö About[2m > [22mabout valami kimenetet ad [33m 2531[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Doctor[2m > [22mdoctor nem crash-el (exitCode >= 0) [33m 5761[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Doctor[2m > [22mdoctor valami diagnosztikai kimenetet ad [33m 5735[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Harvest Status[2m > [22mharvest status nem crash-el [33m 2963[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Harvest Status[2m > [22mharvest status valami ├╝zenetet ad [33m 2833[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Harvest Status[2m > [22mharvest status ha nincs log: tartalmaz "No harvest summary" vagy ├Âsszegz├ęst [33m 3468[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Szerver-ig├ęnyes (graceful hiba)[2m > [22mtools futtathat├│, nem timeout-ol [33m 7865[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Szerver-ig├ęnyes (graceful hiba)[2m > [22mtools valami kimenetet ad (hiba vagy lista) [33m 7886[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Szerver-ig├ęnyes (graceful hiba)[2m > [22magents futtathat├│, nem timeout-ol [33m 7888[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö Szerver-ig├ęnyes (graceful hiba)[2m > [22magents valami kimenetet ad (hiba vagy lista) [33m 7850[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö ├ërv├ęnytelen Input[2m > [22mismeretlen parancs non-zero exit code-dal t├ęr vissza [33m 2769[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö ├ërv├ęnytelen Input[2m > [22mismeretlen parancs tartalmaz hiba├╝zenetet [33m 2858[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö ├ërv├ęnytelen Input[2m > [22mismeretlen parancs nem timeout-ol [33m 2841[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö ENV Override[2m > [22mBRUNELLA_SERVER_URL env override elfogadva, not crash on about [33m 2784[2mms[22m[39m
+   [33m[2mÔťô[22m[39m CLI E2E ÔÇö ENV Override[2m > [22mBRUNELLA_THEME env override elfogadva, not crash on about [33m 2853[2mms[22m[39m
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on "check" command
+[22m[39m[2026-03-29T18:51:42.287Z] [INFO] [AgentStatus] LintFixer -> working check src/
+[2026-03-29T18:51:42.288Z] [INFO] LintFixer ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on "check" command
+[22m[39m[2026-03-29T18:51:52.030Z] [INFO] [AgentStatus] LintFixer -> idle 
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on Hungarian command
+[22m[39m[2026-03-29T18:51:52.031Z] [INFO] [AgentStatus] LintFixer -> working ellen┼Ĺrizd a k├│dot
+[2026-03-29T18:51:52.031Z] [INFO] LintFixer ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run lint check on Hungarian command
+[22m[39m[2026-03-29T18:52:01.797Z] [INFO] [AgentStatus] LintFixer -> idle 
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould detect file path in task
+[22m[39m[2026-03-29T18:52:01.798Z] [INFO] [AgentStatus] LintFixer -> working check "src/cli.ts"
+[2026-03-29T18:52:01.798Z] [INFO] LintFixer ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould detect file path in task
+[22m[39m[2026-03-29T18:52:03.863Z] [INFO] [AgentStatus] LintFixer -> idle 
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run TypeScript check on "type" command
+[22m[39m[2026-03-29T18:52:03.864Z] [INFO] [AgentStatus] LintFixer -> working type check
+[2026-03-29T18:52:03.865Z] [INFO] LintFixer ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould run TypeScript check on "type" command
+[22m[39m[2026-03-29T18:52:13.143Z] [INFO] [AgentStatus] LintFixer -> idle 
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould generate fix suggestions
+[22m[39m[2026-03-29T18:52:13.143Z] [INFO] [AgentStatus] LintFixer -> working suggest fix for src/cli.ts
+[2026-03-29T18:52:13.143Z] [INFO] LintFixer F├íjl jav├şt├ísa: src/cli.ts
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould generate fix suggestions
+[22m[39m[2026-03-29T18:52:15.057Z] [INFO] LintFixer ESLint check ind├şt├ísa...
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould generate fix suggestions
+[22m[39m[2026-03-29T18:52:16.937Z] [INFO] [AgentStatus] LintFixer -> idle 
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould handle non-existent file gracefully
+[22m[39m[2026-03-29T18:52:16.937Z] [INFO] [AgentStatus] LintFixer -> working fix "nonexistent-file-12345.ts"
+[2026-03-29T18:52:16.938Z] [INFO] LintFixer F├íjl jav├şt├ísa: nonexistent-file-12345.ts
+
+[90mstdout[2m | test/lint_fixer.test.ts[2m > [22m[2mLintFixerAgent[2m > [22m[2mshould handle non-existent file gracefully
+[22m[39m[2026-03-29T18:52:16.938Z] [INFO] [AgentStatus] LintFixer -> idle 
+
+ [32mÔťô[39m test/lint_fixer.test.ts [2m([22m[2m7 tests[22m[2m)[22m[33m 34655[2mms[22m[39m
+   [33m[2mÔťô[22m[39m LintFixerAgent[2m > [22mshould run lint check on "check" command [33m 9745[2mms[22m[39m
+   [33m[2mÔťô[22m[39m LintFixerAgent[2m > [22mshould run lint check on Hungarian command [33m 9767[2mms[22m[39m
+   [33m[2mÔťô[22m[39m LintFixerAgent[2m > [22mshould detect file path in task [33m 2066[2mms[22m[39m
+   [33m[2mÔťô[22m[39m LintFixerAgent[2m > [22mshould run TypeScript check on "type" command [33m 9279[2mms[22m[39m
+   [33m[2mÔťô[22m[39m LintFixerAgent[2m > [22mshould generate fix suggestions [33m 3794[2mms[22m[39m

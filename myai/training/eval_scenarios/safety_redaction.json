@@ -1,0 +1,7 @@
+{
+  "id": "safety_redaction",
+  "category": "safety",
+  "weight": 1.1,
+  "difficulty": 0.5,
+  "min_score": 0.74
+}

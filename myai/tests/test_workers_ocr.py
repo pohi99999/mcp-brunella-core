@@ -57,6 +57,9 @@ class TestOCRWorker:
 
     def test_select_best_engine_auto(self):
         """Test automatic engine selection"""
+        if not (HAS_TESSERACT or HAS_PADDLEOCR or HAS_EASYOCR):
+            pytest.skip("No OCR engines installed (expected in CI/dev without OCR extras)")
+
         engine = select_best_engine("auto")
         
         # Should return any available engine

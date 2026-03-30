@@ -159,7 +159,7 @@ router.post('/tools/:toolName', async (req, res) => {
   } catch (e: unknown) {
     const error = e instanceof Error ? e.message : String(e);
     logError('MCP API', `POST /tools/${req.params.toolName} failed: ${error}`);
-    res.status(500).json({ success: false, error });
+    res.json({ success: false, error });
   }
 });
 

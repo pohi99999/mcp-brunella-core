@@ -1,0 +1,36 @@
+{
+  "id": "zero_prompt_notification_channels_20260329",
+  "name": "Zero-Prompt Core — Slack/Discord/Email Jóváhagyás",
+  "status": "ARCHIVED",
+  "priority": "MEDIUM",
+  "created": "2026-03-29",
+  "owner": "Pohánka Péter",
+  "progress": 100,
+  "updated": "2026-03-29",
+  "completed": "2026-03-29",
+  "description": "Notification channel adapterek és üzenetsablonok a jóváhagyás-kérések, autonóm riasztások és status update-ek Slack/Discord/email csatornákra küldéséhez.",
+  "dependencies": [
+    "zero_prompt_approval_router_20260329",
+    "zero_prompt_signal_ingest_20260329"
+  ],
+  "phase": "phase1-zero-prompt",
+  "tags": [
+    "autonomy",
+    "notifications",
+    "slack",
+    "discord",
+    "email"
+  ],
+  "deliverables": [
+    "Notification channel adapter interface",
+    "Slack, Discord és email alap adapterek",
+    "Approval message template csomag",
+    "Delivery log és hibakezelés"
+  ],
+  "successCriteria": [
+    "Approval request legalább egy támogatott csatornára kimegy",
+    "Hiba esetén fallback csatorna vagy delivery failure log keletkezik",
+    "A felhasználó csatornánként más jelzési policy-t tud beállítani",
+    "Az Approval Router integráltan hívja a transport réteget"
+  ]
+}

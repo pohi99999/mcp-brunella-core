@@ -1,0 +1,394 @@
+EE..EEEEEEEEEE....................................................FFFFF. [ 54%]
+.............................................FFFFF..F...s...s            [100%]
+=================================== ERRORS ====================================
+________________________ ERROR at setup of test_click _________________________
+myai\tests\test_computer_use.py:12: in mock_pyautogui
+    with patch('myai.robotkez.computer_use.pyautogui') as mock:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py:1503: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py:1473: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'myai.robotkez.computer_use' from 'F:\\mcp-brunella-core\\myai\\robotkez\\computer_use.py'> does not have the attribute 'pyautogui'
+______________________ ERROR at setup of test_type_text _______________________
+myai\tests\test_computer_use.py:12: in mock_pyautogui
+    with patch('myai.robotkez.computer_use.pyautogui') as mock:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py:1503: in __enter__
+    original, local = self.get_original()
+                      ^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\unittest\mock.py:1473: in get_original
+    raise AttributeError(
+E   AttributeError: <module 'myai.robotkez.computer_use' from 'F:\\mcp-brunella-core\\myai\\robotkez\\computer_use.py'> does not have the attribute 'pyautogui'
+_______________ ERROR at setup of TestMCPBridge.test_read_file ________________
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: in setup
+    return super().setup()
+           ^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+E   pytest.PytestRemovedIn9Warning: 'test_read_file' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E   See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+_________ ERROR at setup of TestMCPBridge.test_read_nonexistent_file __________
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: in setup
+    return super().setup()
+           ^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+E   pytest.PytestRemovedIn9Warning: 'test_read_nonexistent_file' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E   See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+_________ ERROR at setup of TestMCPBridge.test_read_outside_safezone __________
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: in setup
+    return super().setup()
+           ^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+E   pytest.PytestRemovedIn9Warning: 'test_read_outside_safezone' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E   See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+_______________ ERROR at setup of TestMCPBridge.test_write_file _______________
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: in setup
+    return super().setup()
+           ^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+E   pytest.PytestRemovedIn9Warning: 'test_write_file' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E   See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+_________ ERROR at setup of TestMCPBridge.test_write_file_create_dirs _________
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: in setup
+    return super().setup()
+           ^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+E   pytest.PytestRemovedIn9Warning: 'test_write_file_create_dirs' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E   See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+_____________ ERROR at setup of TestMCPBridge.test_list_directory _____________
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: in setup
+    return super().setup()
+           ^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+E   pytest.PytestRemovedIn9Warning: 'test_list_directory' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E   See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+_______ ERROR at setup of TestMCPBridge.test_list_directory_nonexistent _______
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: in setup
+    return super().setup()
+           ^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+E   pytest.PytestRemovedIn9Warning: 'test_list_directory_nonexistent' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E   See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+______________ ERROR at setup of TestMCPBridge.test_search_files ______________
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: in setup
+    return super().setup()
+           ^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+E   pytest.PytestRemovedIn9Warning: 'test_search_files' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E   See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+_________ ERROR at setup of TestMCPBridge.test_search_files_recursive _________
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: in setup
+    return super().setup()
+           ^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+E   pytest.PytestRemovedIn9Warning: 'test_search_files_recursive' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E   See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+________ ERROR at setup of TestMCPBridge.test_search_files_no_matches _________
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:458: in setup
+    return super().setup()
+           ^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pytest_asyncio\plugin.py:728: in pytest_fixture_setup
+    return (yield)
+            ^^^^^
+E   pytest.PytestRemovedIn9Warning: 'test_search_files_no_matches' requested an async fixture 'bridge', with no plugin or hook that handled it. This is usually an error, as pytest does not natively support it. This will turn into an error in pytest 9.
+E   See: https://docs.pytest.org/en/stable/deprecations.html#sync-test-depending-on-async-fixture
+================================== FAILURES ===================================
+________________________ TestCLI.test_mock_json_output ________________________
+myai\tests\test_cma_worker.py:384: in test_mock_json_output
+    data = json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+E   TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+______________________ TestCLI.test_mock_markdown_output ______________________
+myai\tests\test_cma_worker.py:394: in test_mock_markdown_output
+    assert result.returncode == 0
+E   AssertionError: assert 1 == 0
+E    +  where 1 = CompletedProcess(args=['C:\\Users\\pohi9\\AppData\\Local\\Programs\\Python\\Python314\\python.exe', 'F:\\mcp-brunella-...EncodeError: \'charmap\' codec can\'t encode character \'\\U0001f3e0\' in position 2: character maps to <undefined>\n').returncode
+________________________ TestCLI.test_office_type_cli _________________________
+myai\tests\test_cma_worker.py:404: in test_office_type_cli
+    data = json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+E   TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+______________________ TestCLI.test_parking_flag_in_json ______________________
+myai\tests\test_cma_worker.py:414: in test_parking_flag_in_json
+    data = json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+E   TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+________________ TestCLI.test_limit_controls_comparables_count ________________
+myai\tests\test_cma_worker.py:424: in test_limit_controls_comparables_count
+    data = json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+E   TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+________________________ TestCLI.test_mock_json_output ________________________
+myai\tests\test_supply_matcher.py:412: in test_mock_json_output
+    data = json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+E   TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+______________________ TestCLI.test_mock_markdown_output ______________________
+myai\tests\test_supply_matcher.py:422: in test_mock_markdown_output
+    assert "Match Report" in result.stdout
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: argument of type 'NoneType' is not a container or iterable
+______________________ TestCLI.test_mock_book_only_flag _______________________
+myai\tests\test_supply_matcher.py:430: in test_mock_book_only_flag
+    data = json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+E   TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+_____________________ TestCLI.test_mock_min_score_filter ______________________
+myai\tests\test_supply_matcher.py:440: in test_mock_min_score_filter
+    data = json.loads(result.stdout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:345: in loads
+    raise TypeError(f'the JSON object must be str, bytes or bytearray, '
+E   TypeError: the JSON object must be str, bytes or bytearray, not NoneType
+___________________________ TestCLI.test_help_flag ____________________________
+myai\tests\test_supply_matcher.py:450: in test_help_flag
+    assert "Matchmaker" in result.stdout or "usage" in result.stdout.lower()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   TypeError: argument of type 'NoneType' is not a container or iterable
+_________________ TestOCRWorker.test_select_best_engine_auto __________________
+myai\tests\test_workers_ocr.py:60: in test_select_best_engine_auto
+    engine = select_best_engine("auto")
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^
+myai\workers\ocr_worker.py:207: in select_best_engine
+    raise RuntimeError("No OCR engine available. Install at least one: pytesseract, paddleocr, or easyocr")
+E   RuntimeError: No OCR engine available. Install at least one: pytesseract, paddleocr, or easyocr
+============================== warnings summary ===============================
+myai/tests/test_cma_worker.py::TestCLI::test_mock_json_output
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-4 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe9 in position 2998: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_cma_worker.py::TestCLI::test_office_type_cli
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-8 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe9 in position 2979: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_cma_worker.py::TestCLI::test_parking_flag_in_json
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-10 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe9 in position 2997: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_cma_worker.py::TestCLI::test_limit_controls_comparables_count
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-12 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe9 in position 2078: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_supply_matcher.py::TestCLI::test_mock_json_output
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-14 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xed in position 183: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_supply_matcher.py::TestCLI::test_mock_markdown_output
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-16 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xe1 in position 44: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_supply_matcher.py::TestCLI::test_mock_book_only_flag
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-18 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xed in position 183: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_supply_matcher.py::TestCLI::test_mock_min_score_filter
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-20 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xed in position 183: invalid continuation byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+myai/tests/test_supply_matcher.py::TestCLI::test_help_flag
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\threadexception.py:58: PytestUnhandledThreadExceptionWarning: Exception in thread Thread-22 (_readerthread)
+  
+  Traceback (most recent call last):
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1082, in _bootstrap_inner
+      self._context.run(self.run)
+      ~~~~~~~~~~~~~~~~~^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\threading.py", line 1024, in run
+      self._target(*self._args, **self._kwargs)
+      ~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\subprocess.py", line 1613, in _readerthread
+      buffer.append(fh.read())
+                    ~~~~~~~^^
+    File "<frozen codecs>", line 325, in decode
+  UnicodeDecodeError: 'utf-8' codec can't decode byte 0xf5 in position 257: invalid start byte
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnhandledThreadExceptionWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [1] myai\tests\test_workers_ocr.py:104: No OCR engines installed (expected in CI)
+SKIPPED [1] myai\tests\test_workers_ocr.py:142: No OCR engine installed
+ERROR myai/tests/test_computer_use.py::test_click - AttributeError: <module '...
+ERROR myai/tests/test_computer_use.py::test_type_text - AttributeError: <modu...
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_read_file - pytest.P...
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_read_nonexistent_file
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_read_outside_safezone
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_write_file - pytest....
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_write_file_create_dirs
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_list_directory - pyt...
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_list_directory_nonexistent
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_search_files - pytes...
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_search_files_recursive
+ERROR myai/tests/test_mcp_bridge.py::TestMCPBridge::test_search_files_no_matches
+FAILED myai/tests/test_cma_worker.py::TestCLI::test_mock_json_output - TypeEr...
+FAILED myai/tests/test_cma_worker.py::TestCLI::test_mock_markdown_output - As...
+FAILED myai/tests/test_cma_worker.py::TestCLI::test_office_type_cli - TypeErr...
+FAILED myai/tests/test_cma_worker.py::TestCLI::test_parking_flag_in_json - Ty...
+FAILED myai/tests/test_cma_worker.py::TestCLI::test_limit_controls_comparables_count
+FAILED myai/tests/test_supply_matcher.py::TestCLI::test_mock_json_output - Ty...
+FAILED myai/tests/test_supply_matcher.py::TestCLI::test_mock_markdown_output
+FAILED myai/tests/test_supply_matcher.py::TestCLI::test_mock_book_only_flag
+FAILED myai/tests/test_supply_matcher.py::TestCLI::test_mock_min_score_filter
+FAILED myai/tests/test_supply_matcher.py::TestCLI::test_help_flag - TypeError...
+FAILED myai/tests/test_workers_ocr.py::TestOCRWorker::test_select_best_engine_auto
+11 failed, 108 passed, 2 skipped, 9 warnings, 12 errors in 3.29s

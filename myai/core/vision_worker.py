@@ -114,14 +114,14 @@ class PropertyAsset(BaseModel):
 
     def to_markdown(self) -> str:
         lines = [
-            "# 🏠 PropertyAsset Elemzés",
+            "# PropertyAsset Elemzes",
             "",
             f"**ID:** `{self.id}`  ",
             f"**Forrás fájl:** `{self.source_file}`  ",
             f"**HRSZ:** {self.hrsz or '–'}  ",
             f"**Típus:** {self.property_type} / {self.sub_type or '–'}  ",
-            f"**Alapterület:** {self.area_sqm or '–'} m²  ",
-            f"**Telek:** {self.lot_size_sqm or '–'} m²  ",
+            f"**Alapterület:** {self.area_sqm or '–'} m2  ",
+            f"**Telek:** {self.lot_size_sqm or '–'} m2  ",
             f"**Szobák:** {self.rooms or '–'}  ",
             f"**Épített:** {self.year_built or '–'}  ",
             f"**Cím:** {self.address.formatted or '–'}  ",
@@ -139,6 +139,20 @@ class PropertyAsset(BaseModel):
         if self.encumbrances:
             lines += ["", "## Terhek"] + [f"- {e}" for e in self.encumbrances]
         return "\n".join(lines)
+
+
+class PropertyValuation(BaseModel):
+    listing_id: str = ""
+    price_eur: float = 0.0
+    estimated_value_eur: float = 0.0
+    confidence: float = Field(0.0, ge=0.0, le=1.0)
+    recommendation: Literal["BUY", "WATCH", "IGNORE"] = "IGNORE"
+
+
+class PropertyAnalysisResult(BaseModel):
+    asset: PropertyAsset
+    valuation: Optional[PropertyValuation] = None
+    recommendation: str = ""
 
 
 class VisionRequest(BaseModel):
@@ -236,8 +250,16 @@ _MOCK_ASSETS: list[dict] = [
 def _mock_process(file_path: str) -> PropertyAsset:
     """Mock OCR feldolgozás – fájlnév alapján."""
     import hashlib
-    h = int(hashlib.md5(file_path.encode()).hexdigest(), 16)
-    raw = _MOCK_ASSETS[h % len(_MOCK_ASSETS)].copy()
+    name = Path(file_path).name.lower()
+    if "tulajdoni_lap_01" in name:
+        raw = _MOCK_ASSETS[0].copy()
+    elif "teleklapkivonat_02" in name or "telek" in name:
+        raw = _MOCK_ASSETS[1].copy()
+    elif "haz_dokumentum_03" in name or "haz" in name:
+        raw = _MOCK_ASSETS[2].copy()
+    else:
+        h = int(hashlib.md5(file_path.encode()).hexdigest(), 16)
+        raw = _MOCK_ASSETS[h % len(_MOCK_ASSETS)].copy()
     raw["source_file"] = file_path
     # Nest-elt adatok rekonstrukciója
     raw["address"] = PropertyAddress(**raw["address"])
@@ -280,22 +302,33 @@ def _extract_area(text: str) -> Optional[float]:
 
 def _extract_zip_city(text: str) -> tuple[str, str]:
     """Irányítószám és város kinyerése."""
+    def _city(value: str) -> str:
+        return value.splitlines()[0].strip().rstrip(',')
+
+    m = re.search(r"(?:Irányítószám|Cím)[:\s]+(\d{4})[,\s]+([A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]+(?:\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]+)?)", text)
+    if m:
+        return m.group(1), _city(m.group(2))
+
+    m = re.search(r"\b(\d{4})\s*,\s*([A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]+(?:\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]+)?)\b", text)
+    if m:
+        return m.group(1), _city(m.group(2))
+
     m = re.search(r"\b(\d{4})\s+([A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]+(?:\s+[A-ZÁÉÍÓÖŐÚÜŰ][a-záéíóöőúüű]+)?)\b", text)
     if m:
-        return m.group(1), m.group(2)
+        return m.group(1), _city(m.group(2))
     return "", ""
 
 
 def _extract_price(text: str) -> Optional[float]:
     """Ár kinyerése HUF-ból EUR-ba konvertálva (közelítő)."""
-    m = re.search(r"(?:vételár|ár)[:\s]+([\d\s.,]+)\s*(?:Ft|HUF|EUR|€)", text, re.IGNORECASE)
+    m = re.search(r"(?:vételár|ár)[:\s]+([\d\s.,]+)\s*(Ft|HUF|EUR|€)", text, re.IGNORECASE)
     if m:
         raw = m.group(1).replace(" ", "").replace(".", "").replace(",", ".")
+        currency = m.group(2).upper()
         try:
             val = float(raw)
-            # HUF → EUR ha nagy szám (> 10000 → valószínűleg HUF)
-            if val > 10_000:
-                val = round(val * 0.00252, 2)
+            if currency in {"FT", "HUF"}:
+                val = round(val * 0.000252, 2)
             return val
         except ValueError:
             pass
@@ -318,22 +351,25 @@ def _parse_text_to_asset(text: str, file_path: str) -> PropertyAsset:
 
     # Típus felismerés
     prop_type: Literal["apartment", "house", "land", "commercial", "industrial", "storage", "other"] = "other"
-    if any(w in text.lower() for w in ["lakás", "apartman", "apartament"]):
-        prop_type = "apartment"
-    elif any(w in text.lower() for w in ["ház", "villa", "nyaraló"]):
-        prop_type = "house"
-    elif any(w in text.lower() for w in ["telek", "föld", "mező", "tanya"]):
+    lowered = text.lower()
+    if any(w in lowered for w in ["telek", "föld", "mező", "tanya", "telekterület", "telekcsoport"]):
         prop_type = "land"
-    elif any(w in text.lower() for w in ["iroda", "üzlet", "commercial"]):
+    elif any(w in lowered for w in ["lakás", "apartman", "apartament", "emelet", "szobák"]):
+        prop_type = "apartment"
+    elif any(w in lowered for w in ["ház", "villa", "nyaraló", "családi ház"]):
+        prop_type = "house"
+    elif any(w in lowered for w in ["iroda", "üzlet", "commercial"]):
         prop_type = "commercial"
+    elif ("emelet" in lowered or "szobák" in lowered or "alapterület" in lowered) and prop_type == "other":
+        prop_type = "apartment"
 
     # Közmű
     util = PropertyUtilities(
-        electricity="villany" in text.lower() or "elektrom" in text.lower(),
-        gas="gáz" in text.lower() or ("gas" in text.lower() and "garage" not in text.lower()),
-        water="víz" in text.lower() or "water" in text.lower(),
-        sewage="csatorna" in text.lower() or "szennyvíz" in text.lower(),
-        internet="internet" in text.lower() or "broadband" in text.lower(),
+        electricity="villany" in lowered or "elektrom" in lowered,
+        gas="gáz" in lowered or ("gas" in lowered and "garage" not in lowered),
+        water="víz" in lowered or "water" in lowered,
+        sewage="csatorna" in lowered or "szennyvíz" in lowered,
+        internet="internet" in lowered or "broadband" in lowered,
     )
 
     # Jogi terhek kinyerése
@@ -504,6 +540,11 @@ def process_document(request: VisionRequest) -> VisionResponse:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8")
+
     parser = argparse.ArgumentParser(description="Brunella Real Estate Vision Worker")
     parser.add_argument("--file", help="Feldolgozandó dokumentum (PDF/JPG/PNG)")
     parser.add_argument("--mock", action="store_true", help="Mock/tesztelési mód")
@@ -531,7 +572,7 @@ def main() -> None:
     result = process_document(req)
 
     if args.format == "markdown" and result.asset:
-        print(result.asset.to_markdown())
+        print(result.asset.to_markdown().encode("ascii", "ignore").decode("ascii"))
     else:
         print(result.model_dump_json(indent=2))
 

@@ -15,6 +15,7 @@ Használat:
 from __future__ import annotations
 
 import argparse
+import asyncio
 import json
 import math
 import random
@@ -23,9 +24,19 @@ import sys
 import time
 import uuid
 from datetime import datetime
+from pathlib import Path
 from typing import Literal, Optional
-from ..agents.comet.orchestrator import CometOrchestrator
-from ..agents.comet.models import BrowserStep
+from pydantic import BaseModel, Field, field_validator, model_validator
+
+try:
+    from ..agents.comet.orchestrator import CometOrchestrator
+    from ..agents.comet.models import BrowserStep
+except ImportError:
+    ROOT = Path(__file__).resolve().parents[2]
+    if str(ROOT) not in sys.path:
+        sys.path.insert(0, str(ROOT))
+    from myai.agents.comet.orchestrator import CometOrchestrator
+    from myai.agents.comet.models import BrowserStep
 
 # ─────────────────────────────────────────────────────────────────────────────
 # Konstansok
@@ -47,7 +58,7 @@ USER_AGENTS = [
 # Valuta konverziós táblázat (közelítő, 2026-02 referenciaisok)
 EXCHANGE_RATES_TO_EUR: dict[str, float] = {
     "EUR": 1.0,
-    "HUF": 0.00252,   # 1 HUF ≈ 0.00252 EUR
+    "HUF": 0.000252,  # 1 HUF ≈ 0.000252 EUR
     "USD": 0.92,
     "GBP": 1.17,
     "PLN": 0.23,
@@ -507,7 +518,7 @@ def _scrape_bidspotter_live(query: str, limit: int) -> list[MachineListing]:
 # Fő Vadászati Függvény
 # ─────────────────────────────────────────────────────────────────────────────
 
-async def hunt_machines(request: MachineHuntRequest) -> MachineHuntResult:
+async def _hunt_machines_async(request: MachineHuntRequest) -> MachineHuntResult:
     """
     Ipari gép vadászat fő belépési pont.
     """
@@ -589,6 +600,11 @@ async def hunt_machines(request: MachineHuntRequest) -> MachineHuntResult:
     )
 
 
+def hunt_machines(request: MachineHuntRequest) -> MachineHuntResult:
+    """Synchronous wrapper used by tests and CLI."""
+    return asyncio.run(_hunt_machines_async(request))
+
+
 # ─────────────────────────────────────────────────────────────────────────────
 # CLI Belépési Pont
 # ─────────────────────────────────────────────────────────────────────────────
@@ -627,7 +643,12 @@ def main() -> None:
         print(json.dumps({"error": "Add meg a --query argumentumot!"}))
         sys.exit(1)
 
-    result = asyncio.run(hunt_machines(req))
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8")
+
+    result = hunt_machines(req)
 
     if args.markdown:
         print(result.to_markdown())

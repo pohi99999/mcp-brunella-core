@@ -1,0 +1,176 @@
+{
+  "name": "Brunella Bookkeeping Exception Notify Scaffold",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "notify",
+        "responseMode": "onReceived"
+      },
+      "id": "exception-webhook",
+      "name": "Exception Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 320]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "json": [
+            {
+              "name": "summary",
+              "value": "={{ $json.summary ?? {} }}"
+            },
+            {
+              "name": "exceptions",
+              "value": "={{ Array.isArray($json.exceptions) ? $json.exceptions : [] }}"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "hasExceptions",
+              "value": "={{ Array.isArray($json.exceptions) && $json.exceptions.length > 0 }}"
+            }
+          ],
+          "string": [
+            {
+              "name": "source",
+              "value": "={{ $json.source ?? 'n8n' }}"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $json.timestamp ?? $now.toISO() }}"
+            },
+            {
+              "name": "stage",
+              "value": "={{ $json.stage ?? 'exception-notify' }}"
+            }
+          ]
+        }
+      },
+      "id": "normalize-exception",
+      "name": "Normalize Exception Payload",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2.1,
+      "position": [520, 320]
+    },
+    {
+      "parameters": {
+        "method": "PATCH",
+        "url": "http://localhost:3000/api/v1/bookkeeping/status",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ summary: $json.summary, exceptions: $json.exceptions, timestamp: $json.timestamp, source: $json.source }) }}",
+        "options": {}
+      },
+      "id": "update-bookkeeping-status",
+      "name": "Update Bookkeeping Status",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [780, 220]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.hasExceptions }}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "has-exceptions",
+      "name": "Has Exceptions?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [780, 420]
+    },
+    {
+      "parameters": {
+        "fromEmail": "no-reply@brunella.local",
+        "toEmail": "={{ $env.BOOKKEEPING_NOTIFY_EMAIL || 'konyveles@example.com' }}",
+        "subject": "={{ '[Brunella] Bookkeeping exceptions - ' + $now.toFormat('yyyy-LL-dd') }}",
+        "text": "={{ JSON.stringify({ stage: $json.stage, summary: $json.summary, exceptions: $json.exceptions }, null, 2) }}",
+        "options": {}
+      },
+      "id": "send-email",
+      "name": "Send Exception Email",
+      "type": "n8n-nodes-base.emailSend",
+      "typeVersion": 2.1,
+      "position": [1040, 420]
+    }
+  ],
+  "connections": {
+    "Exception Webhook": {
+      "main": [
+        [
+          {
+            "node": "Normalize Exception Payload",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize Exception Payload": {
+      "main": [
+        [
+          {
+            "node": "Update Bookkeeping Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Has Exceptions?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Has Exceptions?": {
+      "main": [
+        [
+          {
+            "node": "Send Exception Email",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "bookkeeping",
+      "name": "bookkeeping"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n"
+    }
+  ],
+  "pinData": {},
+  "versionId": "wf4-bookkeeping-exception-notify-scaffold",
+  "meta": {
+    "project": "n8n_konyveles_pipeline_20260328",
+    "track": "bookkeeping automation",
+    "status": "draft"
+  }
+}

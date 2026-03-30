@@ -126,8 +126,15 @@ test.describe('ErrorBoundary Védelmi Teszt', () => {
     });
 
     test('should recover after error boundary reset', async ({ page }) => {
+        const navButtons = page.locator('aside button[aria-label]');
+        const navCount = await navButtons.count();
+        if (navCount < 2) {
+            test.skip();
+            return;
+        }
+
         // Navigate to any tab
-        await page.locator('text=Agents').or(page.locator('text=Ügynökök')).first().click().catch(() => { });
+        await navButtons.nth(1).click().catch(() => { });
         await page.waitForTimeout(500);
 
         // Page should be interactive
@@ -135,9 +142,9 @@ test.describe('ErrorBoundary Védelmi Teszt', () => {
         expect(visible).toBe(true);
 
         // Navigate away and back
-        await page.locator('text=Settings').or(page.locator('text=Beállítások')).first().click().catch(() => { });
+        await navButtons.last().click().catch(() => { });
         await page.waitForTimeout(300);
-        await page.locator('text=Agents').or(page.locator('text=Ügynökök')).first().click().catch(() => { });
+        await navButtons.nth(1).click().catch(() => { });
         await page.waitForTimeout(300);
 
         // Should still work

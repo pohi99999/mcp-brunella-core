@@ -1,0 +1,190 @@
+{
+  "name": "Brunella Bookkeeping NAV Validation Scaffold",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "nav-validate",
+        "responseMode": "onReceived"
+      },
+      "id": "nav-webhook",
+      "name": "NAV Validation Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [260, 320]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/agents/NavAgent/execute",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ task: 'Validate the invoice data against NAV and return the status', context: { source: 'n8n', trigger: 'webhook', invoice: $node['NAV Validation Webhook'].json.invoice ?? $node['NAV Validation Webhook'].json, timestamp: $now.toISO() } }) }}",
+        "options": {}
+      },
+      "id": "nav-agent",
+      "name": "Validate Invoice with NavAgent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [520, 320]
+    },
+    {
+      "parameters": {
+        "keepOnlySet": false,
+        "values": {
+          "json": [
+            {
+              "name": "summary",
+              "value": "={{ { stage: 'nav-validation', navStatus: ($json.nav_status ?? $json.result?.nav_status ?? $json.result?.status ?? $json.status ?? 'OK') } }}"
+            },
+            {
+              "name": "exceptions",
+              "value": "={{ ($json.nav_status ?? $json.result?.nav_status ?? $json.result?.status ?? $json.status ?? 'OK') === 'MISMATCH' ? [{ stage: 'nav-validation', message: 'NAV mismatch detected' }] : [] }}"
+            }
+          ],
+          "boolean": [
+            {
+              "name": "hasMismatch",
+              "value": "={{ ($json.nav_status ?? $json.result?.nav_status ?? $json.result?.status ?? $json.status ?? 'OK') === 'MISMATCH' }}"
+            }
+          ],
+          "string": [
+            {
+              "name": "source",
+              "value": "n8n"
+            },
+            {
+              "name": "timestamp",
+              "value": "={{ $now.toISO() }}"
+            },
+            {
+              "name": "navStatus",
+              "value": "={{ $json.nav_status ?? $json.result?.nav_status ?? $json.result?.status ?? $json.status ?? 'OK' }}"
+            }
+          ]
+        }
+      },
+      "id": "normalize-nav",
+      "name": "Normalize NAV Result",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 2.1,
+      "position": [780, 320]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "boolean": [
+            {
+              "value1": "={{ $json.hasMismatch }}",
+              "operation": "isTrue"
+            }
+          ]
+        }
+      },
+      "id": "has-mismatch",
+      "name": "Mismatch?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [1040, 320]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://localhost:5678/webhook/notify",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ summary: $json.summary, exceptions: $json.exceptions, timestamp: $json.timestamp, source: $json.source }) }}",
+        "options": {}
+      },
+      "id": "notify-mismatch",
+      "name": "Notify NAV Mismatch",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1300, 320]
+    }
+  ],
+  "connections": {
+    "NAV Validation Webhook": {
+      "main": [
+        [
+          {
+            "node": "Validate Invoice with NavAgent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Invoice with NavAgent": {
+      "main": [
+        [
+          {
+            "node": "Normalize NAV Result",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalize NAV Result": {
+      "main": [
+        [
+          {
+            "node": "Mismatch?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mismatch?": {
+      "main": [
+        [
+          {
+            "node": "Notify NAV Mismatch",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        []
+      ]
+    }
+  },
+  "settings": {},
+  "staticData": null,
+  "tags": [
+    {
+      "id": "bookkeeping",
+      "name": "bookkeeping"
+    },
+    {
+      "id": "n8n",
+      "name": "n8n"
+    }
+  ],
+  "pinData": {},
+  "versionId": "wf3-bookkeeping-nav-validation-scaffold",
+  "meta": {
+    "project": "n8n_konyveles_pipeline_20260328",
+    "track": "bookkeeping automation",
+    "status": "draft"
+  }
+}

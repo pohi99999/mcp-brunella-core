@@ -1,0 +1,15 @@
+{
+  "name": "n8n-konyveles-pipeline-local",
+  "private": true,
+  "type": "module",
+  "description": "Local npm workspace for the Brunella bookkeeping n8n track.",
+  "scripts": {
+    "dev": "node ./scripts/run-n8n.mjs",
+    "start": "node ./scripts/run-n8n.mjs",
+    "import:workflows": "node ./scripts/run-n8n.mjs import:workflow --separate --input ../n8n-workflows",
+    "export:workflows": "node ./scripts/run-n8n.mjs export:workflow --backup --output ../n8n-backups",
+    "list:workflows": "node ./scripts/run-n8n.mjs list:workflow --active=false",
+    "reset:user-data": "node ./scripts/run-n8n.mjs user-management:reset",
+    "help": "node ./scripts/run-n8n.mjs --help"
+  }
+}

@@ -429,6 +429,11 @@ def to_markdown(report: CMAReport) -> str:
 # ─────────────────────────────────────────────────────────────────────────────
 
 def main() -> None:
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8")
+
     parser = argparse.ArgumentParser(description="CMA Worker – Comparable Market Analysis")
     parser.add_argument("--location", default="Budapest, XI.", help="Helyszín")
     parser.add_argument("--type", dest="prop_type", default="apartment",
@@ -472,9 +477,9 @@ def main() -> None:
     report = run_cma(query)
 
     if args.markdown:
-        print(to_markdown(report))
+        print(to_markdown(report).encode("ascii", "ignore").decode("ascii"))
     else:
-        print(json.dumps(report.model_dump(), ensure_ascii=False, indent=2))
+        print(json.dumps(report.model_dump(), ensure_ascii=True, indent=2))
 
 
 if __name__ == "__main__":

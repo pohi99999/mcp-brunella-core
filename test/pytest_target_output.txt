@@ -1,0 +1,608 @@
+................................................FFFFFFFFFFFFFFFFFFFFFFF. [ 66%]
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\_pytest\unraisableexception.py:33: RuntimeWarning: coroutine 'hunt_machines' was never awaited
+  gc.collect()
+RuntimeWarning: Enable tracemalloc to get the object allocation traceback
+.FF.F...F.............FF...FF....FF.F                                    [100%]
+================================== FAILURES ===================================
+________________ TestHuntMachinesMock.test_returns_hunt_result ________________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404A53D90>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_returns_hunt_result(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       assert isinstance(res, MachineHuntResult)
+E       assert False
+E        +  where False = isinstance(<coroutine object hunt_machines at 0x0000013404D8CDC0>, MachineHuntResult)
+
+myai\tests\test_machine_hunter.py:390: AssertionError
+___________________ TestHuntMachinesMock.test_success_flag ____________________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404A53ED0>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_success_flag(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       assert res.success is True
+               ^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'success'
+
+myai\tests\test_machine_hunter.py:394: AttributeError
+__________________ TestHuntMachinesMock.test_query_preserved __________________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404A7B820>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_query_preserved(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       assert res.query == "CNC Germany"
+               ^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'query'
+
+myai\tests\test_machine_hunter.py:398: AttributeError
+________________ TestHuntMachinesMock.test_listings_not_empty _________________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404A7B950>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_listings_not_empty(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       assert len(res.listings) > 0
+                   ^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'listings'
+
+myai\tests\test_machine_hunter.py:402: AttributeError
+_____________ TestHuntMachinesMock.test_valuations_match_listings _____________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404A69370>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_valuations_match_listings(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       assert len(res.valuations) == len(res.listings)
+                   ^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'valuations'
+
+myai\tests\test_machine_hunter.py:406: AttributeError
+______________ TestHuntMachinesMock.test_for_parts_filtered_out _______________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404ADEBE0>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_for_parts_filtered_out(self, mock_hunt_request):
+        """for_parts ßllapot˙ tÚtelek ne maradjanak a vÚgs§ listßban."""
+        res = hunt_machines(mock_hunt_request)
+>       for l in res.listings:
+                 ^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'listings'
+
+myai\tests\test_machine_hunter.py:411: AttributeError
+__________ TestHuntMachinesMock.test_top_buys_all_recommendation_buy __________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404ADEAD0>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_top_buys_all_recommendation_buy(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       for v in res.top_buys:
+                 ^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'top_buys'
+
+myai\tests\test_machine_hunter.py:416: AttributeError
+_____________ TestHuntMachinesMock.test_top_buys_sorted_by_score ______________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404AA3A50>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_top_buys_sorted_by_score(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       scores = [v.arbitrage_score for v in res.top_buys]
+                                             ^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'top_buys'
+
+myai\tests\test_machine_hunter.py:421: AttributeError
+_________________ TestHuntMachinesMock.test_duration_positive _________________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404AA3C50>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_duration_positive(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       assert res.duration_seconds >= 0.0
+               ^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'duration_seconds'
+
+myai\tests\test_machine_hunter.py:426: AttributeError
+__________________ TestHuntMachinesMock.test_min_year_filter __________________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404B16210>
+
+    def test_min_year_filter(self):
+        req = MachineHuntRequest(query="CNC", mock=True, min_year=2018)
+        res = hunt_machines(req)
+>       for l in res.listings:
+                 ^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'listings'
+
+myai\tests\test_machine_hunter.py:431: AttributeError
+_________________ TestHuntMachinesMock.test_max_hours_filter __________________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404B163F0>
+
+    def test_max_hours_filter(self):
+        req = MachineHuntRequest(query="CNC", mock=True, max_hours=5000)
+        res = hunt_machines(req)
+>       for l in res.listings:
+                 ^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'listings'
+
+myai\tests\test_machine_hunter.py:437: AttributeError
+_________________ TestHuntMachinesMock.test_max_price_filter __________________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404B3D710>
+
+    def test_max_price_filter(self):
+        req = MachineHuntRequest(query="CNC", mock=True, max_price_eur=20000)
+        res = hunt_machines(req)
+>       for l in res.listings:
+                 ^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'listings'
+
+myai\tests\test_machine_hunter.py:443: AttributeError
+___________________ TestHuntMachinesMock.test_single_source ___________________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x0000013404B3DA90>
+
+    def test_single_source(self):
+        req = MachineHuntRequest(query="CNC", mock=True, sources=["machineseeker"])
+        res = hunt_machines(req)
+>       assert res.sources_used == ["machineseeker"]
+               ^^^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'sources_used'
+
+myai\tests\test_machine_hunter.py:449: AttributeError
+__________________ TestHuntMachinesMock.test_limit_respected __________________
+
+self = <test_machine_hunter.TestHuntMachinesMock object at 0x000001345EFAB5F0>
+
+    def test_limit_respected(self):
+        req = MachineHuntRequest(query="CNC", mock=True, limit=3)
+        res = hunt_machines(req)
+>       assert len(res.listings) <= 3
+                   ^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'listings'
+
+myai\tests\test_machine_hunter.py:456: AttributeError
+_______________ TestHuntResultMarkdown.test_markdown_h1_present _______________
+
+self = <test_machine_hunter.TestHuntResultMarkdown object at 0x0000013404B4C050>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_markdown_h1_present(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       md = res.to_markdown()
+             ^^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'to_markdown'
+
+myai\tests\test_machine_hunter.py:466: AttributeError
+_____________ TestHuntResultMarkdown.test_markdown_contains_query _____________
+
+self = <test_machine_hunter.TestHuntResultMarkdown object at 0x0000013404B4C190>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_markdown_contains_query(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       md = res.to_markdown()
+             ^^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'to_markdown'
+
+myai\tests\test_machine_hunter.py:471: AttributeError
+__________ TestHuntResultMarkdown.test_recommendation_icons_present ___________
+
+self = <test_machine_hunter.TestHuntResultMarkdown object at 0x0000013404A7BA80>
+mock_hunt_request = MachineHuntRequest(query='CNC Germany', sources=['machineseeker', 'maschinensucher', 'bidspotter'], limit=20, mock=True, currency_base='EUR', min_year=None, max_hours=None, max_price_eur=None, categories=[])
+
+    def test_recommendation_icons_present(self, mock_hunt_request):
+        res = hunt_machines(mock_hunt_request)
+>       md = res.to_markdown()
+             ^^^^^^^^^^^^^^^
+E       AttributeError: 'coroutine' object has no attribute 'to_markdown'
+
+myai\tests\test_machine_hunter.py:476: AttributeError
+_______________ TestMachineHunterCLI.test_mock_query_exits_zero _______________
+
+self = <test_machine_hunter.TestMachineHunterCLI object at 0x0000013404B4C410>
+
+    def test_mock_query_exits_zero(self):
+        out = self._run(["--query", "CNC Germany", "--mock"])
+>       assert out["returncode"] == 0, f"stderr: {out['stderr']}"
+E       AssertionError: stderr: Traceback (most recent call last):
+E           File "F:\mcp-brunella-core\myai\workers\machine_hunter.py", line 28, in <module>
+E             from ..agents.comet.orchestrator import CometOrchestrator
+E         ImportError: attempted relative import with no known parent package
+E         
+E       assert 1 == 0
+
+myai\tests\test_machine_hunter.py:501: AssertionError
+_________________ TestMachineHunterCLI.test_json_output_valid _________________
+
+self = <test_machine_hunter.TestMachineHunterCLI object at 0x0000013404B4C2D0>
+
+    def test_json_output_valid(self):
+        out = self._run(["--query", "CNC Germany", "--mock"])
+>       data = json.loads(out["stdout"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_machine_hunter.py:505: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x00000134595330E0>, s = '', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\decoder.py:363: JSONDecodeError
+___________________ TestMachineHunterCLI.test_markdown_mode ___________________
+
+self = <test_machine_hunter.TestMachineHunterCLI object at 0x0000013404A7BBB0>
+
+    def test_markdown_mode(self):
+        out = self._run(["--query", "CNC", "--mock", "--markdown"])
+>       assert "Industrial Machine Hunter" in out["stdout"]
+E       AssertionError: assert 'Industrial Machine Hunter' in ''
+
+myai\tests\test_machine_hunter.py:512: AssertionError
+___________________ TestMachineHunterCLI.test_min_year_cli ____________________
+
+self = <test_machine_hunter.TestMachineHunterCLI object at 0x0000013404A7BCE0>
+
+    def test_min_year_cli(self):
+        out = self._run(["--query", "CNC", "--mock", "--min-year", "2018"])
+>       data = json.loads(out["stdout"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_machine_hunter.py:516: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x00000134595330E0>, s = '', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\decoder.py:363: JSONDecodeError
+___________________ TestMachineHunterCLI.test_max_price_cli ___________________
+
+self = <test_machine_hunter.TestMachineHunterCLI object at 0x0000013404A69910>
+
+    def test_max_price_cli(self):
+        out = self._run(["--query", "CNC", "--mock", "--max-price", "30000"])
+>       data = json.loads(out["stdout"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_machine_hunter.py:522: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x00000134595330E0>, s = '', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\decoder.py:363: JSONDecodeError
+__________________ TestMachineHunterCLI.test_stdin_json_mode __________________
+
+self = <test_machine_hunter.TestMachineHunterCLI object at 0x0000013404ADECF0>
+
+    def test_stdin_json_mode(self):
+        payload = json.dumps({"query": "Forklift Austria", "mock": True, "limit": 5})
+        out = self._run([], stdin_data=payload)
+>       assert out["returncode"] == 0
+E       assert 1 == 0
+
+myai\tests\test_machine_hunter.py:530: AssertionError
+______________ TestMachineHunterCLI.test_slug_source_filter_cli _______________
+
+self = <test_machine_hunter.TestMachineHunterCLI object at 0x0000013404B49050>
+
+    def test_slug_source_filter_cli(self):
+        out = self._run(["--query", "CNC", "--mock", "--sources", "machineseeker"])
+>       data = json.loads(out["stdout"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+myai\tests\test_machine_hunter.py:544: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\__init__.py:352: in loads
+    return _default_decoder.decode(s)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\decoder.py:345: in decode
+    obj, end = self.raw_decode(s, idx=_w(s, 0).end())
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <json.decoder.JSONDecoder object at 0x00000134595330E0>, s = '', idx = 0
+
+    def raw_decode(self, s, idx=0):
+        """Decode a JSON document from ``s`` (a ``str`` beginning with
+        a JSON document) and return a 2-tuple of the Python
+        representation and the index in ``s`` where the document ended.
+    
+        This can be used to decode a JSON document from a string that may
+        have extraneous data at the end.
+    
+        """
+        try:
+            obj, end = self.scan_once(s, idx)
+        except StopIteration as err:
+>           raise JSONDecodeError("Expecting value", s, err.value) from None
+E           json.decoder.JSONDecodeError: Expecting value: line 1 column 1 (char 0)
+
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\json\decoder.py:363: JSONDecodeError
+_____________________ TestMockProcess.test_apartment_mock _____________________
+
+self = <test_vision_worker.TestMockProcess object at 0x0000013404B4C690>
+
+    def test_apartment_mock(self):
+        asset = _mock_process("tulajdoni_lap_01.pdf")
+        assert asset is not None
+>       assert asset.property_type == "apartment"
+E       AssertionError: assert 'house' == 'apartment'
+E         
+E         - apartment
+E         + house
+
+myai\tests\test_vision_worker.py:89: AssertionError
+_______________________ TestMockProcess.test_house_mock _______________________
+
+self = <test_vision_worker.TestMockProcess object at 0x0000013404A7BE10>
+
+    def test_house_mock(self):
+        asset = _mock_process("haz_dokumentum_03.pdf")
+        assert asset is not None
+>       assert asset.property_type == "house"
+E       AssertionError: assert 'land' == 'house'
+E         
+E         - house
+E         + land
+
+myai\tests\test_vision_worker.py:103: AssertionError
+____________________ TestPropertyAsset.test_address_nested ____________________
+
+self = <test_vision_worker.TestPropertyAsset object at 0x0000013404B4CA50>
+apartment_asset = PropertyAsset(id='09ae030a-3505-4035-a16e-50cda14b1ea6', source_file='tulajdoni_lap_01.pdf', extracted_at=datetime.dat...nHRSZ: 91011/B\\nCsal\xe1di h\xe1z 145 m\xb2\\nTelekter\xfclet: 850 m\xb2\\nTeher: Jelz\xe1log K&H...', confidence=0.88, ocr_quality='good')
+
+    def test_address_nested(self, apartment_asset):
+        assert isinstance(apartment_asset.address, PropertyAddress)
+>       assert apartment_asset.address.city == "Budapest"
+E       AssertionError: assert 'Gy§r' == 'Budapest'
+E         
+E         - Budapest
+E         + Gy§r
+
+myai\tests\test_vision_worker.py:133: AssertionError
+__________________ TestOcrHeuristics.test_extract_price_huf ___________________
+
+self = <test_vision_worker.TestOcrHeuristics object at 0x0000013404B4B450>
+
+    def test_extract_price_huf(self):
+        text = "VÚtelßr: 180 000 000 Ft"
+        price_eur = _extract_price(text)
+        # 180M HUF \u2192 ~45,360 EUR (0.00252 konverzi\xf3s)
+        assert price_eur is not None
+>       assert 40_000 < price_eur < 55_000
+E       assert 453600.0 < 55000
+
+myai\tests\test_vision_worker.py:202: AssertionError
+__________________ TestOcrHeuristics.test_extract_price_eur ___________________
+
+self = <test_vision_worker.TestOcrHeuristics object at 0x0000013404B4B650>
+
+    def test_extract_price_eur(self):
+        text = "VÚtelßr: 45 000 EUR"
+        price_eur = _extract_price(text)
+        assert price_eur is not None
+>       assert 44_000 < price_eur < 46_000
+E       assert 44000 < 113.4
+
+myai\tests\test_vision_worker.py:208: AssertionError
+__________________ TestParseTextToAsset.test_apartment_text ___________________
+
+self = <test_vision_worker.TestParseTextToAsset object at 0x0000013404B4D090>
+sample_ocr_text = 'Tulajdoni Lap Kivonat\\nHRSZ: 2345/B\\nC\xedm: 1056 Budapest, Veres P\xe1ln\xe9 utca 7.\\nAlapter\xfclet: 95.5 m\xb2\\nSzob\xe1k: 4\\nEmelet...00 000 Ft\\nTeher: Jelz\xe1logjog \u2013 OTP Bank Zrt.\\nVillany: becsatlakoztatva\\nG\xe1z: bek\xf6tve\\nV\xedz: megoszl\xf3\\nCsatorna: van\\n'
+
+    def test_apartment_text(self, sample_ocr_text):
+        asset = _parse_text_to_asset(sample_ocr_text, "test_doc.pdf")
+        assert asset.hrsz == "2345/B"
+        assert asset.area_sqm == 95.5
+>       assert asset.property_type == "apartment"
+E       AssertionError: assert 'house' == 'apartment'
+E         
+E         - apartment
+E         + house
+
+myai\tests\test_vision_worker.py:250: AssertionError
+_____________________ TestParseTextToAsset.test_land_text _____________________
+
+self = <test_vision_worker.TestParseTextToAsset object at 0x0000013404B4D1D0>
+sample_land_text = 'Telekcsoport: 8899\\nTelekter\xfclet: 2500 m\xb2\\nTanya / mez\u0151gazdas\xe1gi ter\xfclet\\nIr\xe1ny\xedt\xf3sz\xe1m: 6000, Kecskem\xe9t\\nV\xe9tel\xe1r: 45 000 EUR\\nVillany: van\\nCsatorna: nincs\\n'
+
+    def test_land_text(self, sample_land_text):
+        asset = _parse_text_to_asset(sample_land_text, "telek.pdf")
+        assert asset.hrsz == "8899"
+>       assert asset.property_type == "land"
+E       AssertionError: assert 'house' == 'land'
+E         
+E         - land
+E         + house
+
+myai\tests\test_vision_worker.py:259: AssertionError
+____________________ TestCliEntryPoint.test_cli_mock_file _____________________
+
+self = <test_vision_worker.TestCliEntryPoint object at 0x0000013404B4D590>
+
+    def test_cli_mock_file(self):
+        result = subprocess.run(
+            [sys.executable, str(self.WORKER), "--file", "test_plan.pdf", "--mock"],
+            capture_output=True, text=True, cwd=Path(__file__).parent.parent,
+        )
+>       assert result.returncode == 0, f"STDERR: {result.stderr}"
+E       AssertionError: STDERR: Traceback (most recent call last):
+E           File "F:\mcp-brunella-core\myai\core\vision_worker.py", line 540, in <module>
+E             main()
+E             ~~~~^^
+E           File "F:\mcp-brunella-core\myai\core\vision_worker.py", line 536, in main
+E             print(result.model_dump_json(indent=2))
+E             ~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\encodings\cp1250.py", line 19, in encode
+E             return codecs.charmap_encode(input,self.errors,encoding_table)[0]
+E                    ~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E         UnicodeEncodeError: 'charmap' codec can't encode character '\xb2' in position 1306: character maps to <undefined>
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\pohi9\\AppData\\Local\\Programs\\Python\\Python314\\python.exe', 'F:\\mcp-brunella-...odeEncodeError: \'charmap\' codec can\'t encode character \'\\xb2\' in position 1306: character maps to <undefined>\n').returncode
+
+myai\tests\test_vision_worker.py:311: AssertionError
+_________________ TestCliEntryPoint.test_cli_markdown_output __________________
+
+self = <test_vision_worker.TestCliEntryPoint object at 0x0000013404B4D6D0>
+
+    def test_cli_markdown_output(self):
+        result = subprocess.run(
+            [sys.executable, str(self.WORKER), "--file", "test.pdf", "--mock", "--format", "markdown"],
+            capture_output=True, text=True, cwd=Path(__file__).parent.parent,
+        )
+>       assert result.returncode == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\pohi9\\AppData\\Local\\Programs\\Python\\Python314\\python.exe', 'F:\\mcp-brunella-...EncodeError: \'charmap\' codec can\'t encode character \'\\U0001f3e0\' in position 2: character maps to <undefined>\n').returncode
+
+myai\tests\test_vision_worker.py:321: AssertionError
+____________________ TestCliEntryPoint.test_cli_stdin_json ____________________
+
+self = <test_vision_worker.TestCliEntryPoint object at 0x0000013404B6CFC0>
+
+    def test_cli_stdin_json(self):
+        payload = json.dumps({"file_path": "stdin_test.pdf", "mock": True})
+        result = subprocess.run(
+            [sys.executable, str(self.WORKER)],
+            input=payload, capture_output=True, text=True,
+            cwd=Path(__file__).parent.parent,
+        )
+>       assert result.returncode == 0
+E       AssertionError: assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['C:\\Users\\pohi9\\AppData\\Local\\Programs\\Python\\Python314\\python.exe', 'F:\\mcp-brunella-...odeEncodeError: \'charmap\' codec can\'t encode character \'\\xb2\' in position 1308: character maps to <undefined>\n').returncode
+
+myai\tests\test_vision_worker.py:340: AssertionError
+============================== warnings summary ===============================
+C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\google\genai\types.py:43
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\google\genai\types.py:43: DeprecationWarning: '_UnionGenericAlias' is deprecated and slated for removal in Python 3.17
+    VersionedUnionType = Union[builtin_types.UnionType, _UnionGenericAlias]
+
+myai/tests/test_machine_hunter.py: 62 warnings
+myai/tests/test_vision_worker.py: 22 warnings
+  C:\Users\pohi9\AppData\Local\Programs\Python\Python314\Lib\site-packages\pydantic\main.py:250: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    validated_self = self.__pydantic_validator__.validate_python(data, self_instance=self)
+
+myai/tests/test_machine_hunter.py::TestMachineListingModel::test_age_years_property
+  F:\mcp-brunella-core\myai\tests\test_machine_hunter.py:143: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    expected_age = datetime.utcnow().year - cnc_listing.year
+
+myai/tests/test_machine_hunter.py: 14 warnings
+  F:\mcp-brunella-core\myai\workers\machine_hunter.py:118: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    return max(0, datetime.utcnow().year - self.year)
+
+myai/tests/test_machine_hunter.py::TestEstimateMachineValue::test_new_machine_high_value
+  F:\mcp-brunella-core\myai\tests\test_machine_hunter.py:211: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    year=datetime.utcnow().year, hours=0, source="x"
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_returns_hunt_result
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_success_flag
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_query_preserved
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_listings_not_empty
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_valuations_match_listings
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_for_parts_filtered_out
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_top_buys_all_recommendation_buy
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_top_buys_sorted_by_score
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_duration_positive
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_min_year_filter
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_max_hours_filter
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_max_price_filter
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_single_source
+FAILED myai/tests/test_machine_hunter.py::TestHuntMachinesMock::test_limit_respected
+FAILED myai/tests/test_machine_hunter.py::TestHuntResultMarkdown::test_markdown_h1_present
+FAILED myai/tests/test_machine_hunter.py::TestHuntResultMarkdown::test_markdown_contains_query
+FAILED myai/tests/test_machine_hunter.py::TestHuntResultMarkdown::test_recommendation_icons_present
+FAILED myai/tests/test_machine_hunter.py::TestMachineHunterCLI::test_mock_query_exits_zero
+FAILED myai/tests/test_machine_hunter.py::TestMachineHunterCLI::test_json_output_valid
+FAILED myai/tests/test_machine_hunter.py::TestMachineHunterCLI::test_markdown_mode
+FAILED myai/tests/test_machine_hunter.py::TestMachineHunterCLI::test_min_year_cli
+FAILED myai/tests/test_machine_hunter.py::TestMachineHunterCLI::test_max_price_cli
+FAILED myai/tests/test_machine_hunter.py::TestMachineHunterCLI::test_stdin_json_mode
+FAILED myai/tests/test_machine_hunter.py::TestMachineHunterCLI::test_slug_source_filter_cli
+FAILED myai/tests/test_vision_worker.py::TestMockProcess::test_apartment_mock
+FAILED myai/tests/test_vision_worker.py::TestMockProcess::test_house_mock - A...
+FAILED myai/tests/test_vision_worker.py::TestPropertyAsset::test_address_nested
+FAILED myai/tests/test_vision_worker.py::TestOcrHeuristics::test_extract_price_huf
+FAILED myai/tests/test_vision_worker.py::TestOcrHeuristics::test_extract_price_eur
+FAILED myai/tests/test_vision_worker.py::TestParseTextToAsset::test_apartment_text
+FAILED myai/tests/test_vision_worker.py::TestParseTextToAsset::test_land_text
+FAILED myai/tests/test_vision_worker.py::TestCliEntryPoint::test_cli_mock_file
+FAILED myai/tests/test_vision_worker.py::TestCliEntryPoint::test_cli_markdown_output
+FAILED myai/tests/test_vision_worker.py::TestCliEntryPoint::test_cli_stdin_json
+34 failed, 75 passed, 101 warnings in 5.84s

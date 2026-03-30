@@ -1,6 +1,6 @@
 # FŐSZÁL - Egyesített Fejlesztési Napló
 
-**Generálva:** 2026-03-30 01:00
+**Generálva:** 2026-03-30 05:50
 **Script:** `scripts/sync_foszal.py`
 
 ---
@@ -74,19 +74,9 @@ start-full.bat
 - **Státusz:** ✅ Befejezve
 - **Érintett fájlok:** conductor/tracks/n8n_konyveles_pipeline_20260328/local-n8n/package.json, docs/n8n-setup.md, conductor/tracks/n8n_konyveles_pipeline_20260328/plan.md, conductor/tracks/n8n_konyveles_pipeline_20260328/spec.md, conductor/tracks.md, .ai/copilot.md
 
-#### 00:00 - [Claude] Ephemeral Agents (Fázis 3) teljes implementáció ✅
-- **Agent:** Claude
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/core/ephemeralAgentManager.ts` (ÚJ) — EphemeralAgentManager: spawn/terminate/recordUsage, TTL kill-switch, budget enforcement, `src/core/ephemeralSandbox.ts` (ÚJ) — Tool sandbox: checkToolAccess(), DENIED audit + event, `src/core/ephemeralAudit.ts` (ÚJ) — Postmortem generálás, ring buffer (max 500), getPostmortems/getPostmortem API, `src/core/phoenixEventBus.ts` (SZERKESZTVE) — 4 új event type: ephemeral_spawned, ephemeral_terminated, ephemeral_budget_exceeded, ephemeral_tool_violation, `test/ephemeralAgentManager.test.ts` (ÚJ) — 6 teszt (+8 további)
-
 ---
 
 ### 2026-03-28
-
-#### 22:49 - [Claude] n8n bookkeeping dashboard refresh ✅
-- **Agent:** Claude
-- **Státusz:** ✅ Befejezve
-- **Érintett fájlok:** `src/dashboard/lib/apiService.ts` — új `BookkeepingStatus*` típusok és `getBookkeepingStatus()`, `src/dashboard/components/dashboard/BookkeepingWidget.tsx` — 30 másodperces polling, élő összegző panel, `test/dashboard/components/BookkeepingWidget.test.tsx` — mount/polling és reconcile tesztek, `conductor/tracks/n8n_konyveles_pipeline_20260328/plan.md` — checklist frissítve, `conductor/tracks/n8n_konyveles_pipeline_20260328/meta.json` — progress 70%-ra emelve
 
 #### 20:25 - [Claude] 100%-os trackek archiválása ✅
 - **Agent:** Claude
@@ -654,7 +644,7 @@ start-full.bat
 
 | Agent | Bejegyzések | Utolsó Aktivitás |
 |-------|-------------|------------------|
-| Claude | 86 | 2026-03-29 |
+| Claude | 84 | 2026-03-28 |
 | Gemini | 12 | 2026-03-29 |
 | Cursor | 0 | N/A |
 | Copilot | 8 | 2026-03-28 |

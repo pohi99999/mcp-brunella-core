@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-30T01:00:00.091Z
+**Utolso frissites:** 2026-03-30T04:00:02.590Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 154 total | 5 active | 0 completed | 142 archived
+**Stats:** 153 total | 5 active | 0 completed | 142 archived
 
 ---
 
@@ -55,16 +55,15 @@
   - **Progress:** 85%
   - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
 
+- [ ] **P-Sales20260327** [HIGH]
+  - **ID:** `P-Sales20260327`
+  - **Progress:** 40%
+  - Mappa: ./tracks/P-Sales20260327/
+
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase1_foundation_20260322/
-
-- [ ] **P-Sales20260327 — Ingatlan Értékesítési Platform** [HIGH]
-  - **ID:** `P-Sales20260327`
-  - **Progress:** 40%
-  - **Assignee:** Claude + Pohánka Péter
-  - Mappa: ./tracks/P-Sales20260327/
 
 ---
 
@@ -83,7 +82,7 @@
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 - [x] **basic-test-task-structure-20260219** (N/A)
 
-... and 133 more archived tracks
+... and 132 more archived tracks
 
 ---
 
