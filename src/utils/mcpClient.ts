@@ -108,13 +108,39 @@ export class BrunellaClient {
 
   async listTools() {
     const allTools: any[] = [];
-    for (const [name, client] of this.clients) {
-      const result = await client.listTools();
-      // Cache tool -> server mapping
-      for (const tool of result.tools) {
-        this.toolCache.set(tool.name, name);
+    if (this.clients.size === 0) {
+      // Fallback to prebuilt out/tools.json if present
+      try {
+        const candidates = [
+          path.resolve(process.cwd(), "out", "tools.json"),
+          path.resolve(__dirname, "..", "out", "tools.json"),
+          path.resolve(process.cwd(), "tools.json"),
+        ];
+        const toolsPath = candidates.find((p) => fs.existsSync(p));
+        if (toolsPath) {
+          const raw = fs.readFileSync(toolsPath, "utf-8");
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) {
+            return { tools: parsed };
+          }
+          if (parsed && Array.isArray(parsed.tools)) return { tools: parsed.tools };
+        }
+      } catch (e: any) {
+        logError("MCP", `Failed to load fallback tools.json: ${e.message}`);
       }
-      allTools.push(...result.tools);
+    }
+
+    for (const [name, client] of this.clients) {
+      try {
+        const result = await client.listTools();
+        // Cache tool -> server mapping
+        for (const tool of result.tools) {
+          this.toolCache.set(tool.name, name);
+        }
+        allTools.push(...result.tools);
+      } catch (e: any) {
+        logError("MCP", `Failed to list tools from ${name}: ${e.message}`);
+      }
     }
     return { tools: allTools };
   }
