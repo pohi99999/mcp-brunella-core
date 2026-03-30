@@ -144,4 +144,60 @@ describe('MatchingAgent', () => {
         );
         expect(logger.logWarn).toHaveBeenCalledWith("MatchingAgent", "Skipping bank transaction due to missing data:", 'bank_tx_3');
     });
+
+    it('should return a FUZZY_MATCH when partner partially matches and amounts are identical', () =>
+    {
+        const agent = new MatchingAgent();
+
+        // Bank tx: no useful reference number, but partner is a substring of the invoice partner
+        const bankTx = {
+            date: '2026-03-27',
+            partner: 'Kovács',
+            amount: 10000,
+            reference: 'payment-unrelated-ref',
+        };
+
+        const invoices = [
+            {
+                invoiceNumber: 'INV-99',
+                partner: 'Kovács Kft',
+                amount: 10000,
+                issueDate: '2026-03-27',
+            },
+        ];
+
+        const result = agent.findMatch(bankTx, invoices);
+
+        // Should score: exact amount (60) + partial partner (15) + same-day date (25) = 100 → capped to 99
+        expect(result).not.toBeNull();
+        expect(result!.type).toBe('FUZZY_MATCH');
+        expect(result!.confidence).toBeLessThan(100);
+        expect(result!.confidence).toBeGreaterThan(50);
+    });
+
+    it('should NOT return a FUZZY_MATCH when score is below threshold', () =>
+    {
+        const agent = new MatchingAgent();
+
+        // amount diff = 1, within 1% of 10000 (=100), so +20; partner mismatch = 0; no date = 0; total = 20 < 50
+        const bankTx = {
+            date: '2026-03-27',
+            partner: 'Valaki',
+            amount: 9999,
+            reference: 'no-matching-invoice',
+        };
+
+        const invoices = [
+            {
+                invoiceNumber: 'INV-X',
+                partner: 'Kovács Kft',
+                amount: 10000,
+                issueDate: '2026-03-27',
+            },
+        ];
+
+        const result = agent.findMatch(bankTx, invoices);
+        expect(result).toBeNull();
+    });
 });
+

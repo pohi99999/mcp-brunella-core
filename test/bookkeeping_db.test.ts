@@ -6,9 +6,12 @@ import {
     getCashEntry,
     getCashEntries,
     getCashSummary,
+    getExceptionCount,
     getPendingTransactions,
+    getReconciliationEvents,
     getTransaction,
     initDB,
+    saveReconciliationEvent,
     saveTransaction,
     updateCashEntry,
     updateTransaction,
@@ -109,5 +112,55 @@ describe('Bookkeeping Database', () => {
             pendingSheets: 0,
         });
         expect(summary.byType).toMatchObject({ KP_IN: 1, KP_OUT: 1 });
+    });
+});
+
+describe('Reconciliation Events', () => {
+    beforeEach(() => {
+        initDB(':memory:');
+    });
+
+    it('should save and retrieve reconciliation events', () => {
+        const saved = saveReconciliationEvent({
+            runId: 'run-1',
+            txId: 'tx-1',
+            outcome: 'MATCHED',
+            matchType: 'HARD_MATCH',
+            confidence: 100,
+        });
+
+        expect(saved.id).toBeGreaterThan(0);
+        expect(saved.runId).toBe('run-1');
+        expect(saved.txId).toBe('tx-1');
+        expect(saved.outcome).toBe('MATCHED');
+        expect(saved.matchType).toBe('HARD_MATCH');
+        expect(saved.confidence).toBe(100);
+        expect(saved.createdAt).toBeTruthy();
+
+        const events = getReconciliationEvents('run-1');
+        expect(events).toHaveLength(1);
+        expect(events[0].txId).toBe('tx-1');
+    });
+
+    it('should filter events by runId', () => {
+        saveReconciliationEvent({ runId: 'run-A', txId: 'tx-1', outcome: 'MATCHED' });
+        saveReconciliationEvent({ runId: 'run-B', txId: 'tx-2', outcome: 'UNMATCHED' });
+        saveReconciliationEvent({ runId: 'run-A', txId: 'tx-3', outcome: 'FUZZY_MATCHED' });
+
+        const eventsA = getReconciliationEvents('run-A');
+        expect(eventsA).toHaveLength(2);
+
+        const eventsB = getReconciliationEvents('run-B');
+        expect(eventsB).toHaveLength(1);
+        expect(eventsB[0].outcome).toBe('UNMATCHED');
+    });
+
+    it('should count exceptions (UNMATCHED + ERROR outcomes)', () => {
+        saveReconciliationEvent({ runId: 'r1', txId: 'tx-1', outcome: 'MATCHED' });
+        saveReconciliationEvent({ runId: 'r1', txId: 'tx-2', outcome: 'UNMATCHED' });
+        saveReconciliationEvent({ runId: 'r1', txId: 'tx-3', outcome: 'ERROR' });
+        saveReconciliationEvent({ runId: 'r1', txId: 'tx-4', outcome: 'FUZZY_MATCHED' });
+
+        expect(getExceptionCount()).toBe(2);
     });
 });
