@@ -1,10 +1,10 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-29T22:04:40.660Z
+**Utolso frissites:** 2026-03-30T01:00:00.091Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 153 total | 4 active | 0 completed | 143 archived
+**Stats:** 154 total | 5 active | 0 completed | 142 archived
 
 ---
 
@@ -37,7 +37,7 @@
 
 ---
 
-## Aktiv Szalak (Active) (4)
+## Aktiv Szalak (Active) (5)
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
@@ -60,9 +60,15 @@
   - **Progress:** 0%
   - Mappa: ./tracks/remote_layer_phase1_foundation_20260322/
 
+- [ ] **P-Sales20260327 — Ingatlan Értékesítési Platform** [HIGH]
+  - **ID:** `P-Sales20260327`
+  - **Progress:** 40%
+  - **Assignee:** Claude + Pohánka Péter
+  - Mappa: ./tracks/P-Sales20260327/
+
 ---
 
-## Archivalt (Archived) (143)
+## Archivalt (Archived) (142)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
