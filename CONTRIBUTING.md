@@ -12,6 +12,7 @@ Köszönjük, hogy hozzá szeretnél járulni a Brunella Agent System projekthez
 - [Kód Minőségi Szabályok](#kód-minőségi-szabályok)
 - [Fejlesztési Környezet](#fejlesztési-környezet)
 - [Tesztelés](#tesztelés)
+- [Git Hook-ok](#-git-hook-ok)
 
 ---
 
@@ -195,6 +196,37 @@ Relates to #456
 - **Squash and merge** az előnyben részesített módszer
 - Branch automatikusan törlődik merge után
 - Zárd le a kapcsolódó issue-kat
+
+---
+
+## 🪝 Git Hook-ok
+
+Ez a repository Husky hookokat használ a gyors visszajelzéshez és a dokumentációs drift csökkentéséhez.
+
+### Pre-commit
+
+Fut minden commit előtt:
+
+1. `npx tsx scripts/sync_bootstrap.ts --stage`
+  - `.ai/BOOTSTRAP.md` az egyetlen forrás
+  - automatikusan frissíti a `BOOTSTRAP.md` és `.vscode/BOOTSTRAP.md` másolatokat
+  - a generált példányokat újra stage-eli, ha változtak
+2. `npm run build`
+3. `node scripts/precommit-lint.mjs`
+  - csak a stage-elt TS/JS fájlokat linteli
+
+**Cél:** gyors commit-visszajelzés, teljes teszt suite nélkül.
+
+### Pre-push
+
+Fut minden push előtt:
+
+1. `npx tsx scripts/sync_doc_stats.ts --dry-run`
+  - figyelmeztet, ha a README / BOOTSTRAP / PROJEKT_DIAGRAM statisztikái eltérnek a kódtól
+2. `npm run build`
+3. `vitest` gyorsított exclude listával
+
+**Cél:** a gyors fejlesztői élmény megtartása commitnál, de erősebb ellenőrzés push előtt.
 
 ---
 
