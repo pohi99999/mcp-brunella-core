@@ -5,7 +5,7 @@ import
   Sparkles, Layers, History, FlaskConical, Brain, Shield, Code2,
   Zap, FileText, Gauge, Activity, Box, FolderOpen, Settings, Workflow, Terminal,
   BarChart3, Flame, Briefcase, Palette, DollarSign, Lightbulb, Database, Bell, Wallet,
-  Search, Target, Receipt, ShieldAlert, Users, Wrench, Building2, Globe
+  Search, Target, Receipt, ShieldAlert, Users, Wrench, Building2, Globe, ClipboardList
 } from "lucide-react";
 
 // Component Imports
@@ -72,6 +72,7 @@ import { RemoteConsolePanel } from "@/components/dashboard/RemoteConsolePanel";
 import { ZeroPromptNotificationPanel } from "@/components/dashboard/ZeroPromptNotificationPanel";
 import { EphemeralAgentsPanel } from "@/components/dashboard/EphemeralAgentsPanel";
 import { LearningLoopPanel } from "@/components/dashboard/LearningLoopPanel";
+import { PSalesIntakePanel } from "@/components/dashboard/PSalesIntakePanel";
 import { FederationCenter } from "@/components/FederationCenter";
 import { logInfo } from "@/utils/logger";
 
@@ -192,6 +193,7 @@ export function initializeNavigation ()
     { id: "trojan-horse", label: "Trójai Faló", icon: ShieldAlert, component: <TrojanHorseCommandCenter /> },
     { id: "lead-monitor", label: "Lead Monitor", icon: Activity, component: <LeadsMasterMonitor /> },
     { id: "property-sales", label: "Ingatlan Értékesítés", icon: Building2, component: <PropertySalesWidget /> },
+    { id: "psales-intake", label: "P-Sales Intake", icon: ClipboardList, component: <PSalesIntakePanel /> },
     { id: "demo-factory", label: "Demo Gyár", icon: FlaskConical, component: <IncubatorPanel /> },
     { id: "showcase", label: "AI Showcase", icon: Sparkles, component: <ShowcasePage /> },
     { id: "jules", label: "Jules AI", icon: Zap, component: <JulesPanel /> },
@@ -223,7 +225,7 @@ export function initializeNavigation ()
   // Register groups
   navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode"] } );
   navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-commander", "assistant-blueprint", "phoenix", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "decomposer", "incubator", "knowledge", "memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
-  navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "enterprise-analytics", "intelligence-monitor"] } );
+  navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "enterprise-analytics", "intelligence-monitor"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
   navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "crawl4ai"] } );
   navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] } );
