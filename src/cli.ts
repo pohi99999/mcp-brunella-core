@@ -64,6 +64,22 @@ const program = new Command();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
+// Load prebuilt tools.json (exported runtime registry) as fallback or startup augmentation
+let prebuiltTools: any[] = [];
+try {
+  const candidates = [
+    join(process.cwd(), "out", "tools.json"),
+    join(__dirname, "..", "out", "tools.json"),
+    join(__dirname, "../../out/tools.json"),
+  ];
+  const toolsPath = candidates.find((p) => existsSync(p));
+  if (toolsPath) {
+    prebuiltTools = JSON.parse(readFileSync(toolsPath, "utf-8"));
+  }
+} catch (e) {
+  // ignore — prebuiltTools stays empty
+}
+
 // Try to read package.json version
 let version = "0.0.0";
 try {
