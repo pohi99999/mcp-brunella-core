@@ -123,6 +123,34 @@ export function createFederationRouter(): Router {
     res.json(session);
   });
 
+  // ── Capabilities execute ───────────────────────────────────────────────────
+
+  router.post('/capabilities/execute', async (req, res): Promise<void> => {
+    try {
+      const { capabilityName, payload, preferredPeerId, timeoutMs } = req.body as {
+        capabilityName: string;
+        payload: unknown;
+        preferredPeerId?: string;
+        timeoutMs?: number;
+      };
+      if (!capabilityName || payload === undefined) {
+        res.status(400).json({ error: 'capabilityName és payload kötelező' });
+        return;
+      }
+      const result = await federatedGateway.execute({
+        capabilityName,
+        payload,
+        preferredPeerId,
+        timeoutMs,
+      });
+      res.status(result.success ? 200 : 502).json(result);
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : String(e);
+      logError('FederationRoute', `capabilities/execute hiba: ${message}`);
+      res.status(500).json({ error: message });
+    }
+  });
+
   router.post('/negotiations/:id/reject', async (req, res) => {
     const session = await negotiationProtocol.reject(req.params.id, req.body.reason);
     if (!session) return res.status(404).json({ error: 'Session not found' });

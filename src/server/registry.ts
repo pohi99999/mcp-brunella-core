@@ -233,6 +233,7 @@ export async function registerAllTools(server: McpServer) {
       await import("../tools/githubModelsTool.js");
     const { registerGeminiTool } = await import("../tools/geminiTool.js");
     const { registerEvHunterTools } = await import("../tools/evHunterTool.js");
+    const { registerEphemeralAgentTools } = await import("../tools/ephemeralAgentControl.js");
 
     registerWorkspaceTools(server);
     registerKnowledgeTools(server);
@@ -252,6 +253,7 @@ export async function registerAllTools(server: McpServer) {
     registerGithubModelsTool(server);
     registerGeminiTool(server);
     registerEvHunterTools(server);
+    registerEphemeralAgentTools(server);
 
     // AI Recommendation tool (Track: ai_recommendation_system_20260216)
     const { registerAiRecommendationTool } = await import("../tools/getAiRecommendation.js");
