@@ -291,6 +291,85 @@ export class GitHubAPIClient {
   }
 
   /**
+   * List open (or other state) issues for a repository
+   */
+  async getIssues(
+    owner: string,
+    repo: string,
+    state: 'open' | 'closed' | 'all' = 'open',
+    limit = 50
+  ): Promise<Array<{
+    number: number;
+    title: string;
+    state: string;
+    body: string;
+    created_at: string;
+    updated_at: string;
+    labels: Array<{ name: string }>;
+    user: { login: string };
+  }>> {
+    logInfo('GitHubAPIClient', `Listing issues (${state}) for ${owner}/${repo}`);
+    return this.request<Array<{
+      number: number; title: string; state: string; body: string;
+      created_at: string; updated_at: string;
+      labels: Array<{ name: string }>; user: { login: string };
+    }>>('GET', `/repos/${owner}/${repo}/issues?state=${state}&per_page=${limit}&sort=updated&direction=desc`);
+  }
+
+  /**
+   * Get a single issue
+   */
+  async getIssue(
+    owner: string,
+    repo: string,
+    issueNumber: number
+  ): Promise<{
+    number: number;
+    title: string;
+    state: string;
+    body: string;
+    created_at: string;
+    updated_at: string;
+    labels: Array<{ name: string }>;
+    user: { login: string };
+  }> {
+    logInfo('GitHubAPIClient', `Fetching issue #${issueNumber} for ${owner}/${repo}`);
+    return this.request<{
+      number: number; title: string; state: string; body: string;
+      created_at: string; updated_at: string;
+      labels: Array<{ name: string }>; user: { login: string };
+    }>('GET', `/repos/${owner}/${repo}/issues/${issueNumber}`);
+  }
+
+  /**
+   * List pull requests for a repository
+   */
+  async getPullRequests(
+    owner: string,
+    repo: string,
+    state: 'open' | 'closed' | 'all' = 'open',
+    limit = 50
+  ): Promise<Array<{
+    number: number;
+    title: string;
+    state: string;
+    created_at: string;
+    updated_at: string;
+    head: { ref: string; sha: string };
+    base: { ref: string };
+    user: { login: string };
+    draft: boolean;
+  }>> {
+    logInfo('GitHubAPIClient', `Listing PRs (${state}) for ${owner}/${repo}`);
+    return this.request<Array<{
+      number: number; title: string; state: string;
+      created_at: string; updated_at: string;
+      head: { ref: string; sha: string }; base: { ref: string };
+      user: { login: string }; draft: boolean;
+    }>>('GET', `/repos/${owner}/${repo}/pulls?state=${state}&per_page=${limit}&sort=updated&direction=desc`);
+  }
+
+  /**
    * Create a new branch
    */
   async createBranch(
