@@ -315,12 +315,13 @@ export class PermissionManager {
     /**
      * Audit log for denied operations
      */
-    logDeniedOperation(agentName: string, operation: string, reason: string, resource: string = 'unknown'): void {
-        logError('PermissionManager', `DENIED: ${agentName} attempted ${operation} - ${reason}`);
+    logDeniedOperation(agentName: string, operation: string, resource: string, reason: string): void {
+        logError('PermissionManager', `DENIED: ${agentName} attempted ${operation} on ${resource} - ${reason}`);
 
-        // Integrate with audit trail
-        // Using void to treat promise as fire-and-forget
-        void record('DENIED', agentName, operation, resource, reason);
+        // Fire-and-forget (non-blocking)
+        record('DENIED', agentName, operation, resource, reason).catch((err) => {
+            logError('PermissionManager', `Failed to record audit log: ${err}`);
+        });
     }
 }
 
