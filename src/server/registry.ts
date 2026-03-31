@@ -2,211 +2,113 @@ import type { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
 import { logWarn } from "../utils/logger.js";
 import {
-  testSchedulerRunDefinition,
-  testSchedulerStatusDefinition,
-  testSchedulerRunHandler,
-  testSchedulerStatusHandler,
-} from "../tools/testSchedulerTool.js";
-import { agentManager } from "../agents/AgentManager.js";
-import {
-  getSzamlazzInvoicesTool,
-  getSzamlazzInvoicesHandler,
-} from "../tools/getSzamlazzInvoices.js";
-import {
-  writeSheetsInvoicesTool,
-  writeSheetsInvoicesHandler,
-} from "../tools/writeSheetsInvoices.js";
-import {
-  crawl4aiCrawlHandler,
-  crawl4aiBatchHandler,
-} from "../tools/crawl4aiTool.js";
-import {
-  memoryStoreHandler,
-  memoryQueryHandler,
-  memoryContextHandler,
-  memoryDeleteHandler,
-  memoryPurgeHandler,
-} from "../tools/memoryTool.js";
+  registerToolHandler,
+  registerToolDefinition,
+  getAllToolDefinitions,
+  executeLocalTool,
+  getRegisteredToolsList
+} from "./toolRegistry.js";
 
-import { gmailInvoiceFetcherDefinition, gmailInvoiceFetcherHandler } from "../tools/gmailInvoiceFetcher.js";
-// Tool list for dashboard display
-export interface RegisteredToolInfo {
-  id: string;
-  name: string;
-  description: string;
-  enabled: boolean;
-  category: "server" | "monitoring" | "configuration" | "custom";
-  parameters: { name: string; type: string; required: boolean }[];
-}
+// Re-export for compatibility
+export { getAllToolDefinitions, executeLocalTool, getRegisteredToolsList };
 
-const registeredToolsList: RegisteredToolInfo[] = [
-  {
-    id: "ping",
-    name: "ping",
-    description: "Ellenőrzi a szerver elérhetőségét",
-    enabled: true,
-    category: "server",
-    parameters: [],
-  },
-  {
-    id: "agent_list",
-    name: "agent_list",
-    description: "Aktív ágensek listázása",
-    enabled: true,
-    category: "server",
-    parameters: [],
-  },
-  {
-    id: "agent_registry",
-    name: "agent_registry",
-    description: "Összes ágens definíció listázása",
-    enabled: true,
-    category: "server",
-    parameters: [],
-  },
-  {
-    id: "agent_delegate",
-    name: "agent_delegate",
-    description: "Feladat delegálása ágensnek",
-    enabled: true,
-    category: "server",
-    parameters: [
-      { name: "agent_name", type: "string", required: true },
-      { name: "task", type: "string", required: true },
-    ],
-  },
-  {
-    id: "agent_execute",
-    name: "agent_execute",
-    description:
-      "Execute an agent with optional JSON context (CLI compatibility)",
-    enabled: true,
-    category: "server",
-    parameters: [
-      { name: "agentName", type: "string", required: true },
-      { name: "task", type: "string", required: true },
-      { name: "context", type: "string", required: false },
-    ],
-  },
-  {
-    id: "test-scheduler-run",
-    name: "test-scheduler-run",
-    description: "Trigger a manual test run immediately",
-    enabled: true,
-    category: "monitoring",
-    parameters: [
-      { name: "triggerReason", type: "string", required: false },
-    ],
-  },
-  {
-    id: "test-scheduler-status",
-    name: "test-scheduler-status",
-    description: "Get the current test scheduler status and recent test statistics",
-    enabled: true,
-    category: "monitoring",
-    parameters: [
-      { name: "includeDetails", type: "boolean", required: false },
-    ],
-  },
-  {
-    id: "get_szamlazz_invoices",
-    name: "get_szamlazz_invoices",
-    description: "Lekéri a számlákat a Számlázz.hu API-ból InvoiceData formátumban",
-    enabled: true,
-    category: "custom",
-    parameters: [
-      { name: "since_date", type: "string", required: false },
-      { name: "limit", type: "integer", required: false },
-      { name: "force_refresh", type: "boolean", required: false },
-      { name: "include_unpaid_only", type: "boolean", required: false },
-      { name: "get_overdue", type: "boolean", required: false },
-    ],
-  },
-  {
-    id: "write_sheets_invoices",
-    name: "write_sheets_invoices",
-    description: "Invoice adatok írása Google Sheets-be (batch mode)",
-    enabled: true,
-    category: "custom",
-    parameters: [
-      { name: "invoices", type: "array", required: true },
-      { name: "append", type: "boolean", required: false },
-      { name: "include_line_items", type: "boolean", required: false },
-      { name: "clear_first", type: "boolean", required: false },
-      { name: "skip_duplicates", type: "boolean", required: false },
-      { name: "batch_size", type: "number", required: false },
-    ],
-  },
-  {
-    id: "get_ai_recommendation",
-    name: "get_ai_recommendation",
-    description: "AI-alapú ajánlásokat ad vissza LanceDB RAG keresés segítségével",
-    enabled: true,
-    category: "custom",
-    parameters: [
-      { name: "query", type: "string", required: true },
-      { name: "limit", type: "number", required: false },
-      { name: "context", type: "string", required: false },
-    ],
-  },
-];
-
-// Internal tool handler map
-const toolHandlers = new Map<string, (args: any) => Promise<any>>();
-let dynamicAgentsRegistered = false;
+let agentManager: any = null;
 
 export async function registerAgents() {
-  // AgentManager is now directly imported and always available
-  // No need for conditional import here
+  if (!agentManager) {
+    agentManager = (await import("../agents/AgentManager.js")).agentManager;
+  }
 
   // Initialize AgentManager - this loads all agents from registry.json
   await agentManager.initialize();
 
   // Initialize Dynamic Agents (not in registry.json)
-  if (dynamicAgentsRegistered) {
-    return;
-  }
-
   try {
     const { DynamicAgent } = await import("../agents/DynamicAgent.js");
-    const { UXDesignerAgent } = await import("../agents/UXDesignerAgent.js");
     const path = await import("path");
     const agentsDir = path.default.join(process.cwd(), "myai/agents");
-    if (!agentManager.getAgent("project_organizer")) {
-      agentManager.registerAgent(
-        new DynamicAgent(path.default.join(agentsDir, "project_organizer.toml")),
-      );
-    }
-    if (!agentManager.getAgent("agent_architect")) {
-      agentManager.registerAgent(
-        new DynamicAgent(path.default.join(agentsDir, "agent_architect.toml")),
-      );
-    }
-    if (!agentManager.getAgent("UXDesigner")) {
-      agentManager.registerAgent(new UXDesignerAgent());
-    }
-    dynamicAgentsRegistered = true;
+    agentManager.registerAgent(
+      new DynamicAgent(path.default.join(agentsDir, "project_organizer.toml")),
+    );
+    agentManager.registerAgent(
+      new DynamicAgent(path.default.join(agentsDir, "agent_architect.toml")),
+    );
   } catch (e: any) {
     logWarn("System", `Could not load dynamic agents: ${e.message}`);
   }
 }
 
 export async function registerAllTools(server: McpServer) {
-  // Register Gmail Invoice Fetcher Tool
-  server.tool(
-    "gmail_invoice_fetcher",
-    "Letölti a Gmail-ből a PDF számlákat és elmenti az invoices mappába.",
-    {
-      query: z.string().optional().describe('Gmail keresési lekérdezés, pl. "has:attachment filename:pdf"'),
-      saveDir: z.string().optional().describe('Mentési könyvtár, alapértelmezett: invoices')
-    },
-    async (args) => gmailInvoiceFetcherHandler(args, {})
-  );
   // Dynamically import Node.js-specific modules only in Node environment
   const isNode = typeof process !== "undefined" && process.versions?.node;
 
+  // Monkey patch server.tool to capture tool definitions and handlers
+  let zodToJsonSchema: any;
+  if (isNode) {
+    try {
+        const mod = await import("zod-to-json-schema");
+        zodToJsonSchema = mod.zodToJsonSchema;
+    } catch (e) {
+        logWarn("Registry", "Could not load zod-to-json-schema");
+    }
+  }
+
+  const originalTool = server.tool.bind(server);
+  // @ts-expect-error patching server.tool for tool registration tracking
+  server.tool = (name: string, description: string, parameters: any, handler: any) => {
+    // 1. Store handler for local execution
+    registerToolHandler(name, handler);
+
+    // 2. Convert schema and store definition for agents
+    try {
+      // If parameters is a Zod schema, convert it
+      let jsonSchema: any;
+      if (isNode && zodToJsonSchema && parameters && typeof parameters.parse === 'function') {
+         jsonSchema = zodToJsonSchema(parameters);
+         if ('$schema' in jsonSchema) delete (jsonSchema as any).$schema;
+      } else {
+         // Assume it's already a schema or undefined, or we can't convert
+         jsonSchema = parameters || { type: "object", properties: {} };
+      }
+
+      registerToolDefinition({
+        name,
+        description,
+        inputSchema: jsonSchema
+      });
+    } catch (e) {
+      logWarn("Registry", `Failed to convert schema for tool ${name}: ${e}`);
+      registerToolDefinition({
+        name,
+        description,
+        inputSchema: { type: "object", properties: {} }
+      });
+    }
+
+    return originalTool(name, description, parameters, handler);
+  };
+
   if (isNode) {
     await registerAgents();
+
+    // Dynamically import tools to avoid top-level imports of Node-specific modules (like child_process)
+    const {
+        testSchedulerRunDefinition,
+        testSchedulerStatusDefinition,
+        testSchedulerRunHandler,
+        testSchedulerStatusHandler,
+    } = await import("../tools/testSchedulerTool.js");
+
+    const {
+        getSzamlazzInvoicesTool,
+        getSzamlazzInvoicesHandler,
+    } = await import("../tools/getSzamlazzInvoices.js");
+
+    const {
+        writeSheetsInvoicesTool,
+        writeSheetsInvoicesHandler,
+    } = await import("../tools/writeSheetsInvoices.js");
+
 
     // Register Node-specific tools
     const { registerWorkspaceTools } = await import("../tools/workspace.js");
@@ -233,7 +135,6 @@ export async function registerAllTools(server: McpServer) {
       await import("../tools/githubModelsTool.js");
     const { registerGeminiTool } = await import("../tools/geminiTool.js");
     const { registerEvHunterTools } = await import("../tools/evHunterTool.js");
-    const { registerEphemeralAgentTools } = await import("../tools/ephemeralAgentControl.js");
 
     registerWorkspaceTools(server);
     registerKnowledgeTools(server);
@@ -253,7 +154,6 @@ export async function registerAllTools(server: McpServer) {
     registerGithubModelsTool(server);
     registerGeminiTool(server);
     registerEvHunterTools(server);
-    registerEphemeralAgentTools(server);
 
     // AI Recommendation tool (Track: ai_recommendation_system_20260216)
     const { registerAiRecommendationTool } = await import("../tools/getAiRecommendation.js");
@@ -274,7 +174,6 @@ export async function registerAllTools(server: McpServer) {
       {},
       agentListHandler,
     );
-    toolHandlers.set("agent_list", agentListHandler);
 
     const agentRegistryHandler = async () => {
       const agents = agentManager.listRegistryDefinitions();
@@ -290,7 +189,6 @@ export async function registerAllTools(server: McpServer) {
       {},
       agentRegistryHandler,
     );
-    toolHandlers.set("agent_registry", agentRegistryHandler);
 
     const agentDelegateHandler = async ({ agent_name, task }: any) => {
       try {
@@ -316,7 +214,6 @@ export async function registerAllTools(server: McpServer) {
       },
       agentDelegateHandler,
     );
-    toolHandlers.set("agent_delegate", agentDelegateHandler);
 
     // CLI compatibility: src/cli.ts expects an MCP tool called `agent_execute`
     // with params { agentName, task, context?: string }
@@ -368,7 +265,6 @@ export async function registerAllTools(server: McpServer) {
       },
       agentExecuteHandler,
     );
-    toolHandlers.set("agent_execute", agentExecuteHandler);
 
     // Register Test Scheduler Tools
     const testSchedulerRunMcpHandler = async (args: any) => {
@@ -387,7 +283,6 @@ export async function registerAllTools(server: McpServer) {
       },
       testSchedulerRunMcpHandler,
     );
-    toolHandlers.set("test-scheduler-run", testSchedulerRunMcpHandler);
 
     const testSchedulerStatusMcpHandler = async (args: any) => {
       const result = await testSchedulerStatusHandler(args);
@@ -405,7 +300,6 @@ export async function registerAllTools(server: McpServer) {
       },
       testSchedulerStatusMcpHandler,
     );
-    toolHandlers.set("test-scheduler-status", testSchedulerStatusMcpHandler);
 
     // Register Számlázz.hu Invoice Fetcher Tool
     const getSzamlazzInvoicesMcpHandler = async (args: any) => {
@@ -428,7 +322,6 @@ export async function registerAllTools(server: McpServer) {
       },
       getSzamlazzInvoicesMcpHandler,
     );
-    toolHandlers.set("get_szamlazz_invoices", getSzamlazzInvoicesMcpHandler);
 
     // Register Google Sheets Invoice Writer Tool
     const writeSheetsInvoicesMcpHandler = async (args: any) => {
@@ -452,7 +345,6 @@ export async function registerAllTools(server: McpServer) {
       },
       writeSheetsInvoicesMcpHandler,
     );
-    toolHandlers.set("write_sheets_invoices", writeSheetsInvoicesMcpHandler);
   }
 
   // Always register ping tool (works in any environment)
@@ -462,115 +354,4 @@ export async function registerAllTools(server: McpServer) {
     ],
   });
   server.tool("ping", "A simple ping tool.", {}, pingHandler);
-  toolHandlers.set("ping", pingHandler);
-
-  // ─── Crawl4AI Tools ──────────────────────────────────────────────────
-  const crawl4aiCrawlMcp = async (args: { url: string; extract_schema?: string; wait_for_selector?: string }) => {
-    const result = await crawl4aiCrawlHandler(args);
-    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
-  };
-  server.tool(
-    "crawl4ai_crawl",
-    "Web crawling Crawl4AI-vel: stealth böngésző, Markdown kimenet, opcionális séma-alapú adatkinyerés",
-    {
-      url: z.string().describe("A crawlolandó URL"),
-      extract_schema: z.string().optional().describe("JSON séma a struktúrált adatkinyeréshez"),
-      wait_for_selector: z.string().optional().describe("CSS selector amire várni kell betöltéskor"),
-    },
-    crawl4aiCrawlMcp,
-  );
-  toolHandlers.set("crawl4ai_crawl", crawl4aiCrawlMcp);
-
-  const crawl4aiBatchMcp = async (args: { urls: string[]; extract_schema?: string }) => {
-    const result = await crawl4aiBatchHandler(args);
-    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
-  };
-  server.tool(
-    "crawl4ai_batch",
-    "Több URL párhuzamos crawlolása Crawl4AI-vel",
-    {
-      urls: z.array(z.string()).describe("Crawlolandó URL-ek listája"),
-      extract_schema: z.string().optional().describe("JSON séma az adatkinyeréshez"),
-    },
-    crawl4aiBatchMcp,
-  );
-  toolHandlers.set("crawl4ai_batch", crawl4aiBatchMcp);
-
-  // ─── Memory / User Preferences Tools ─────────────────────────────────
-  const memStoreMcp = async (args: { user_id: string; key: string; value: string; memory_type?: string; ttl_days?: number }) => {
-    const result = await memoryStoreHandler(args);
-    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
-  };
-  server.tool(
-    "memory_store_preference",
-    "Felhasználói preferencia mentése (episodic/semantic/procedural memória típusok)",
-    {
-      user_id: z.string().describe("Felhasználó azonosító"),
-      key: z.string().describe("Preferencia kulcs (pl. 'language', 'theme')"),
-      value: z.string().describe("Preferencia értéke"),
-      memory_type: z.string().optional().describe("Memória típus: episodic | semantic | procedural (alapértelmezett: semantic)"),
-      ttl_days: z.number().optional().describe("Lejárati idő napokban (alapértelmezett: nincs lejárat)"),
-    },
-    memStoreMcp,
-  );
-  toolHandlers.set("memory_store_preference", memStoreMcp);
-
-  const memQueryMcp = async (args: { user_id: string; memory_type?: string; key_pattern?: string; limit?: number }) => {
-    const result = await memoryQueryHandler(args);
-    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
-  };
-  server.tool(
-    "memory_query_preferences",
-    "Felhasználói preferenciák lekérdezése szűrőkkel",
-    {
-      user_id: z.string().describe("Felhasználó azonosító"),
-      memory_type: z.string().optional().describe("Szűrés memória típusra"),
-      key_pattern: z.string().optional().describe("LIKE minta a kulcsra (pl. 'lang%')"),
-      limit: z.number().optional().describe("Max visszaadott rekordok száma"),
-    },
-    memQueryMcp,
-  );
-  toolHandlers.set("memory_query_preferences", memQueryMcp);
-
-  const memContextMcp = async (args: { user_id: string }) => {
-    const result = await memoryContextHandler(args);
-    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
-  };
-  server.tool(
-    "memory_get_context",
-    "Felhasználó teljes preferencia kontextusának lekérdezése prompt injection-höz",
-    {
-      user_id: z.string().describe("Felhasználó azonosító"),
-    },
-    memContextMcp,
-  );
-  toolHandlers.set("memory_get_context", memContextMcp);
-
-  const memDeleteMcp = async (args: { user_id: string; key: string; memory_type?: string }) => {
-    const result = await memoryDeleteHandler(args);
-    return { content: [{ type: "text" as const, text: JSON.stringify(result, null, 2) }] };
-  };
-  server.tool(
-    "memory_delete_preference",
-    "Felhasználói preferencia törlése",
-    {
-      user_id: z.string().describe("Felhasználó azonosító"),
-      key: z.string().describe("Törlendő preferencia kulcs"),
-      memory_type: z.string().optional().describe("Memória típus (ha nincs megadva, mindegyikből törli)"),
-    },
-    memDeleteMcp,
-  );
-  toolHandlers.set("memory_delete_preference", memDeleteMcp);
-}
-
-export async function executeLocalTool(name: string, args: any) {
-  const handler = toolHandlers.get(name);
-  if (handler) {
-    return await handler(args);
-  }
-  throw new Error(`Tool ${name} not found or not executable directly.`);
-}
-
-export function getRegisteredToolsList(): RegisteredToolInfo[] {
-  return registeredToolsList;
 }
