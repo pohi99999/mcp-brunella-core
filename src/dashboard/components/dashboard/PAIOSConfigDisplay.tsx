@@ -16,6 +16,10 @@ interface PAIOSConfigData {
     orchestrator: {
         default_model: string;
         max_tasks_per_request: number;
+        concurrency?: {
+            profile: string;
+            max_concurrent_tasks: number;
+        };
     };
     providers: Record<string, {
         enabled: boolean;
@@ -86,6 +90,8 @@ export function PAIOSConfigDisplay() {
                     <div className="space-y-1 font-mono text-zinc-400">
                         <p>default_model: <Badge variant="outline">{config.orchestrator.default_model}</Badge></p>
                         <p>max_tasks: {config.orchestrator.max_tasks_per_request}</p>
+                        <p>concurrency_profile: {config.orchestrator.concurrency?.profile ?? 'balanced'}</p>
+                        <p>max_concurrent_tasks: {config.orchestrator.concurrency?.max_concurrent_tasks ?? 3}</p>
                     </div>
                 </div>
 

@@ -1,5 +1,13 @@
 import sys
 import os
+
+# Add project root to sys.path before importing the package so the module works
+# both as `uvicorn server:app` from `myai/` and as `uvicorn myai.server:app`
+# from the repository root.
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if PROJECT_ROOT not in sys.path:
+    sys.path.insert(0, PROJECT_ROOT)
+
 import json
 import traceback
 import io
@@ -46,13 +54,6 @@ try:
 except ImportError:
     async_playwright = None
     HAS_PLAYWRIGHT = False
-
-# Add project root to sys.path so imports work
-import sys
-import os
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-if PROJECT_ROOT not in sys.path:
-    sys.path.append(PROJECT_ROOT)
 
 try:
     from myai.crawl4ai_worker import crawl_url, batch_crawl, CrawlRequest as Crawl4AICrawlRequest

@@ -40,7 +40,7 @@ class TaskPlanner:
                 base_url="https://models.inference.ai.azure.com",
                 api_key=github_pat
             )
-            logger.info(f"[TaskPlanner] GitHub Models kliens inicializálva ({model})")
+            logger.info(f"[AI] [TaskPlanner] GitHub Models kliens inicializalva ({model})")
         else:
             # Ollama fallback
             self.client = AsyncOpenAI(
@@ -48,7 +48,7 @@ class TaskPlanner:
                 api_key="ollama"
             )
             self.model = os.getenv("OLLAMA_MODEL", "qwen2.5-coder:7b")
-            logger.warning(f"[TaskPlanner] GITHUB_PAT hiányzik, Ollama fallback: {self.model}")
+            logger.warning(f"[WARN] [TaskPlanner] GITHUB_PAT hianyzik, Ollama fallback: {self.model}")
 
     async def plan(self, task: str, current_url: str = "", memory_hints: List[str] = []) -> List[BrowserStep]:
         """Természetes nyelvű feladat → BrowserStep lista"""
@@ -79,11 +79,11 @@ class TaskPlanner:
                 steps_data = data.get("steps", data) if isinstance(data, dict) else data
 
             steps = [BrowserStep(**step) for step in steps_data]
-            logger.info(f"[TaskPlanner] Terv elkészült: {len(steps)} lépés")
+            logger.info(f"[AI] [TaskPlanner] Terv elkeszult: {len(steps)} lepes")
             return steps
 
         except Exception as e:
-            logger.error(f"[TaskPlanner] Hiba a tervezés során: {e}")
+            logger.error(f"[ERROR] [TaskPlanner] Hiba a tervezes soran: {e}")
             # Alapértelmezett vészterv: keresés a feladatra
             return [
                 BrowserStep(

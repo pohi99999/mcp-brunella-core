@@ -402,4 +402,12 @@ describe('TaskQueueManager - P7 Queue', () => {
     // (hard to test without exposing interval ID, but we can ensure no errors)
     expect(true).toBe(true)
   })
+
+  it('should expose the configured orchestration concurrency profile', () => {
+    const profile = manager.getConcurrencyProfile()
+
+    expect(profile.profile).toBe('balanced')
+    expect(profile.max_concurrent_tasks).toBe(3)
+    expect(manager.getMaxWorkers()).toBe(3)
+  })
 })

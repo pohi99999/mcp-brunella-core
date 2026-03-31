@@ -46,6 +46,8 @@ import { resolveAgentExport } from './agentLoader.js';
 import { selectAgentForInstruction } from "./agentRouting.js";
 import { validateAndNormalizeRegistry, type RegistryValidationReport } from "./registryValidation.js";
 import { type AgentConfig, type RegistryConfig } from "./registryStandard.js";
+import { getSkill, SKILL_REGISTRY } from "../skills/index.js";
+import { getOrchestrationConcurrencyConfig, getOrchestrationConcurrencyLimit } from "../config/paiosConfig.js";
 
 interface EdgeConfig {
   enabled: boolean;
@@ -123,6 +125,12 @@ interface WorkflowExecutionSummary {
   warnings: number;
 }
 
+interface PendingTaskProcessResult {
+  taskId?: number;
+  status: string;
+  message?: string;
+}
+
 export class AgentManager extends EventEmitter {
   private agents: Map<string, IAgent> = new Map();
   private registry: RegistryConfig;
@@ -155,6 +163,7 @@ export class AgentManager extends EventEmitter {
   // AgentCoordinator coordinates resource locks and simple negotiation between agents
   private agentCoordinator: AgentCoordinator;
   private initialized = false;
+  private workerLoopBusy = false;
   private readonly FAILURE_THRESHOLD = 3;
   private readonly RESET_TIMEOUT = 5 * 60 * 1000; // 5 perc
 
@@ -178,6 +187,47 @@ export class AgentManager extends EventEmitter {
   /** Expose internal coordinator for hooks and instrumentation */
   getCoordinator(): AgentCoordinator {
     return this.agentCoordinator;
+  }
+
+  /**
+   * Skill végrehajtása név alapján.
+   *
+   * @param skillName - A futtatandó skill neve
+   * @param params - Paraméterek a skill számára
+   * @returns A skill végrehajtásának eredménye
+   */
+  public async executeSkill(
+    skillName: string,
+    params: Record<string, unknown>,
+  ): Promise<unknown> {
+    const skill = getSkill(skillName) ?? SKILL_REGISTRY[skillName];
+    if (!skill) {
+      throw new Error(
+        `Ismeretlen skill: ${skillName}. Elérhető skill-ek: ${Object.keys(SKILL_REGISTRY).join(", ")}`,
+      );
+    }
+
+    const validationResult = skill.getValidationResult?.(params);
+    if (validationResult) {
+      if (!validationResult.valid) {
+        throw new Error(
+          validationResult.error ?? `Érvénytelen paraméterek a skillhez: ${skillName}`,
+        );
+      }
+    } else if (skill.validate && !skill.validate(params)) {
+      throw new Error(`Érvénytelen paraméterek a skillhez: ${skillName}`);
+    }
+
+    try {
+      return await skill.execute(params);
+    } catch (error: unknown) {
+      const message = error instanceof Error ? error.message : String(error);
+      logError("AgentManager", `Skill futtatási hiba (${skillName}): ${message}`);
+      throw new Error(`Skill futtatási hiba (${skillName}): ${message}`);
+    } finally {
+      // Nincs erőforrás, amit itt fel kellene szabadítani, de a blokk
+      // megtartja az egységes hiba-kezelési mintát.
+    }
   }
 
   // --------------------------------------------------------------------------
@@ -1592,14 +1642,17 @@ export class AgentManager extends EventEmitter {
   }
 
   /** Egy pending feladat azonnali feldolgozása */
-  async processPendingTasks(): Promise<{
-    taskId?: number;
-    status: string;
-    message?: string;
-  } | null> {
+  async processPendingTasks(): Promise<PendingTaskProcessResult | null> {
     const pending = this.taskQueue.find((t) => t.status === "pending");
     if (!pending) return null;
 
+    return this.processQueuedTask(pending);
+  }
+
+  private async processQueuedTask(
+    pending: QueuedTask,
+    emitTaskEvents = false,
+  ): Promise<PendingTaskProcessResult> {
     pending.status = "running";
     pending.startedAt = new Date().toISOString();
     await updateTaskStatus(pending.id, "running");
@@ -1614,6 +1667,14 @@ export class AgentManager extends EventEmitter {
       const resultStr =
         typeof result === "object" ? JSON.stringify(result) : String(result);
       await updateTaskStatus(pending.id, pending.status, resultStr);
+      if (emitTaskEvents && result.success) {
+        this.emit("task_done", { task: pending, result });
+      } else if (emitTaskEvents && !result.success) {
+        logError(
+          "AgentManager",
+          `Task ${pending.id} failed: ${result.message}`,
+        );
+      }
       return {
         taskId: pending.id,
         status: pending.status,
@@ -1624,6 +1685,30 @@ export class AgentManager extends EventEmitter {
       await updateTaskStatus(pending.id, "error", e.message);
       return { taskId: pending.id, status: "error", message: e.message };
     }
+  }
+
+  private async processPendingTasksBatch(
+    maxConcurrent: number,
+    emitTaskEvents = false,
+  ): Promise<void> {
+    const concurrency = Math.max(1, maxConcurrent);
+    const runningCount = this.taskQueue.filter((task) => task.status === "running").length;
+    const availableSlots = Math.max(0, concurrency - runningCount);
+    if (availableSlots === 0) {
+      return;
+    }
+
+    const pendingTasks = this.taskQueue
+      .filter((task) => task.status === "pending")
+      .slice(0, availableSlots);
+
+    if (pendingTasks.length === 0) {
+      return;
+    }
+
+    await Promise.allSettled(
+      pendingTasks.map((task) => this.processQueuedTask(task, emitTaskEvents)),
+    );
   }
 
   async cancelTask(taskId: number): Promise<boolean> {
@@ -1750,37 +1835,20 @@ export class AgentManager extends EventEmitter {
   startWorkerLoop(): void {
     if (this.workerInterval) return;
     this.workerInterval = setInterval(async () => {
-      const pending = this.taskQueue.find((t) => t.status === "pending");
-      if (!pending) return;
-      pending.status = "running";
-      await updateTaskStatus(pending.id, "running");
+      if (this.workerLoopBusy) return;
+      this.workerLoopBusy = true;
       try {
-        const result = await this.executeAgentWithRetry(
-          pending.agentName,
-          pending.description,
-          pending.context,
-        );
-
-        pending.status = result.success ? "done" : "error";
-        const resultStr =
-          typeof result === "object" ? JSON.stringify(result) : String(result);
-        await updateTaskStatus(pending.id, pending.status, resultStr);
-
-        if (result.success) {
-          this.emit("task_done", { task: pending, result });
-        } else {
-          logError(
-            "AgentManager",
-            `Task ${pending.id} failed: ${result.message}`,
-          );
-        }
+        await this.processPendingTasksBatch(getOrchestrationConcurrencyLimit(), true);
       } catch (e: any) {
-        pending.status = "error";
-        await updateTaskStatus(pending.id, "error", e.message);
-        logError("AgentManager", `Task ${pending.id} error: ${e.message}`);
+        logError("AgentManager", `Worker loop error: ${e.message}`);
+      } finally {
+        this.workerLoopBusy = false;
       }
     }, 2000);
-    logInfo("AgentManager", "Worker loop started");
+    logInfo(
+      "AgentManager",
+      `Worker loop started (maxConcurrent=${getOrchestrationConcurrencyLimit()}, profile=${getOrchestrationConcurrencyConfig().profile})`,
+    );
   }
 
   /** Worker loop leállítása graceful shutdown-hoz */

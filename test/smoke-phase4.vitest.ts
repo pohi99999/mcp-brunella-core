@@ -116,11 +116,18 @@ describe('Phase 4 — LLM Observability DB', () => {
 // ─── Route integration ───
 
 describe('Phase 4 — Route regisztráció', () => {
-  it('web.ts tartalmazza az observability route importot', async () => {
+  it('index.ts tartalmazza az observability route importot', async () => {
     const fs = await import('fs');
-    const content = fs.readFileSync('src/server/web.ts', 'utf-8');
+    const content = fs.readFileSync('src/server/routes/index.ts', 'utf-8');
     expect(content).toContain('createObservabilityRouter');
     expect(content).toContain('/observability');
+  });
+
+  it('web.ts meghívja a createV1Router-t', async () => {
+    const fs = await import('fs');
+    const content = fs.readFileSync('src/server/web.ts', 'utf-8');
+    expect(content).toContain('createV1Router');
+    expect(content).toContain('/api');
   });
 
   it('universalOrchestrator route átadja a userId-t', async () => {

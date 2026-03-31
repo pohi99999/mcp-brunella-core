@@ -9,7 +9,7 @@
 import { IAgent, ISwarmContext, AgentHandoff, AgentResponse } from './types.js';
 import { formatAgentResult } from '../utils/responseFormatter.js';
 import { searchRAG, addToIndex } from '../utils/rag.js';
-import { logInfo, logError } from '../utils/logger.js';
+import { logInfo, logError, setAgentStatus } from '../utils/logger.js';
 import { validateAgentResult } from './middleware/validateOutput.js';
 import { calculateConfidence } from './scoring/confidenceCalculator.js';
 import { wrapWithSpan } from '../utils/otelTracing.js';
@@ -162,54 +162,60 @@ export abstract class BaseAgent implements IAgent {
       ...(context || {})
     };
 
-    const result = await this.executeTask(agentContext);
+    setAgentStatus(this.name, 'working', task.slice(0, 50));
 
-    // 2. Guardrails: AgentResult validáció
-    validateAgentResult(result, this.name);
+    try {
+      const result = await this.executeTask(agentContext);
 
-    // 3. Confidence scoring
-    const confidence = calculateConfidence(result);
-    if (!result.metadata) result.metadata = {};
-    result.metadata.confidence = confidence.score;
-    result.metadata.confidenceFactors = confidence.factors;
+      // 2. Guardrails: AgentResult validáció
+      validateAgentResult(result, this.name);
 
-    // 4. Tapasztalat mentése a memóriába (OTel sub-span)
-    // Teszt módban kihagyjuk a perzisztens RAG IO-t a stabilitás/gyorsaság miatt.
-    if (!testMode) {
-      saveStructuredMemory({
-        agentName: this.name,
-        task,
-        result,
-        confidence: confidence.score,
-        status: result.success ? 'success' : 'error',
-      });
+      // 3. Confidence scoring
+      const confidence = calculateConfidence(result);
+      if (!result.metadata) result.metadata = {};
+      result.metadata.confidence = confidence.score;
+      result.metadata.confidenceFactors = confidence.factors;
 
-      const outcome = result.success ? 'SIKER' : 'HIBA';
-      const experienceContent = `Feladat: "${task}" | Eredmény: ${outcome} | Üzenet: ${result.message}`;
-      await wrapWithSpan(
-        'bas-base-agent', `${this.name}::memory-save`,
-        { 'bas.agent.name': this.name, 'bas.operation': 'memory_save', 'bas.confidence': confidence.score },
-        () => this.saveToMemory(experienceContent, {
+      // 4. Tapasztalat mentése a memóriába (OTel sub-span)
+      // Teszt módban kihagyjuk a perzisztens RAG IO-t a stabilitás/gyorsaság miatt.
+      if (!testMode) {
+        saveStructuredMemory({
+          agentName: this.name,
+          task,
+          result,
+          confidence: confidence.score,
           status: result.success ? 'success' : 'error',
-          taskId: context?.taskId
-        }),
-      );
+        });
+
+        const outcome = result.success ? 'SIKER' : 'HIBA';
+        const experienceContent = `Feladat: "${task}" | Eredmény: ${outcome} | Üzenet: ${result.message}`;
+        await wrapWithSpan(
+          'bas-base-agent', `${this.name}::memory-save`,
+          { 'bas.agent.name': this.name, 'bas.operation': 'memory_save', 'bas.confidence': confidence.score },
+          () => this.saveToMemory(experienceContent, {
+            status: result.success ? 'success' : 'error',
+            taskId: context?.taskId
+          }),
+        );
+      }
+
+      // Format result as Hungarian human-readable text
+      const formattedMessage = formatAgentResult(result, this.name, { useEmojis: true });
+
+      // 5. PII/Secret redakció az output-on
+      const response: AgentResponse = {
+        success: result.success,
+        status: result.success ? 'success' : 'error',
+        message: formattedMessage,
+        data: result.data,
+        error: result.success ? undefined : result.message,
+        handoff: result.handoff,
+      };
+
+      return safeRedactAgentOutput(response, this.name);
+    } finally {
+      setAgentStatus(this.name, 'idle');
     }
-
-    // Format result as Hungarian human-readable text
-    const formattedMessage = formatAgentResult(result, this.name, { useEmojis: true });
-
-    // 5. PII/Secret redakció az output-on
-    const response: AgentResponse = {
-      success: result.success,
-      status: result.success ? 'success' : 'error',
-      message: formattedMessage,
-      data: result.data,
-      error: result.success ? undefined : result.message,
-      handoff: result.handoff,
-    };
-
-    return safeRedactAgentOutput(response, this.name);
   }
 
   /**

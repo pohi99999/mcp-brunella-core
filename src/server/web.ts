@@ -48,61 +48,16 @@ import {
   initMetrics,
   recordHttpRequest,
 } from "../utils/metrics.js";
-import { createTelemetryRouter } from "./telemetryRoutes.js";
-import { createGuardrailsRouter } from "./guardrailsRoutes.js";
-import { createAuditRouter } from "./auditRoutes.js";
-import { createSpecRouter } from "./specRoutes.js";
-import { createPhoenixRouter } from "./phoenixRoutes.js";
-import { createRouterRouter } from "./routerRoutes.js";
-import { createMemoryRouter } from "./memoryRoutes.js";
-import { createTracksRouter } from "./tracksRoutes.js";
-import ceanRouter from "./routes/cean.js";
-import { createWranglerRouter } from "./routes/wrangler.js";
-import mcpRouter from "./routes/mcp.js";
 import { createV1Router } from "./routes/index.js";
-import { createAgentRoutes } from "./routes/agents.js";
-import { createChatRoutes } from "./routes/chat.js";
-import { createUniversalOrchestratorRouter } from "./routes/universalOrchestrator.js";
-import { createRobotkezRoutes } from "./routes/robotkez.js";
-import { createTaskRoutes } from "./routes/tasks.js";
-import { suggestedTasksRouter } from "./routes/suggestedTasks.js";
-import { createFleetRouter } from "./routes/fleet.js";
-import { createWorkersRouter } from "./routes/workers.js";
-import { createMetricsRouter } from "./routes/metrics.js";
-import { createScalingRouter } from "./routes/scaling.js";
 import { registerEdgeWebSocketHandlers, registerCEANWebSocketHandlers, registerFleetWebSocketHandlers } from "./websocket.js";
-import testSchedulerRoutes from "./routes/testScheduler.js";
 import { startScheduler, stopScheduler } from "./schedulers/testRunner.js";
 import { startScheduler as startCronScheduler } from "./cron.js";
 import { scheduledTasksRunner } from "./schedulers/scheduledTasksRunner.js";
 import { initTestResultsDb } from "../core/testResultsService.js";
 import { initSuggestedTasksDb } from "../core/suggestedTasksScanner.js";
-import { createScheduledTasksRoutes } from "./routes/scheduledTasks.js";
-import createWebhookRoutes from "./routes/webhooks.js";
-import githubWebhookRouter from "./routes/githubWebhook.js";
 import { heartbeatMonitor } from "../utils/heartbeatMonitor.js";
 import { fastApiService } from "../services/fastApiService.js";
-import { createEnterpriseRouter } from "./routes/enterprise.js";
-import paiosOrchestratorRouter from "./routes/paiosOrchestrator.js";
-import { createPythonWorkersRouter } from "./routes/pythonWorkers.js";
-import { createDashboardRoutes } from "./routes/dashboard.js";
-import { createBusinessJobsRoutes } from "./routes/businessJobs.js";
-import { createStudioRoutes } from "./routes/studio.js";
-import salesRouter from "./routes/sales.js";
-import grantsRouter from "./routes/grants.js";
-import voiceRouter from "./routes/voice.js";
 import { syncService } from "../utils/syncService.js";
-import contactRouter from "./routes/contact.js";
-import { swarmRouter } from "./routes/swarm.js";
-import { harvestRouter } from "./routes/harvest.js";
-import { createCrawl4aiRouter } from "./routes/crawl4ai.js";
-import { createPreferencesRouter } from "./routes/preferences.js";
-import { createObservabilityRouter } from "./routes/observability.js";
-import { createGoldenDatasetRouter } from "./routes/goldenDataset.js";
-import { createIntelligenceRouter } from "./routes/intelligence.js";
-import { createZeroPromptRouter } from "./routes/zeroPrompt.js";
-import { createEphemeralRouter } from "./routes/ephemeral.js";
-import { createAutonomousInfraRouter } from "./routes/autonomousInfra.js";
 import { githubPollingService } from "../core/githubPollingService.js";
 import "../core/ceanFallback.js";// Side-effect: registers Phoenix CEAN fallback handlers
 import { zeroPromptRuntime } from '../core/zeroPromptRuntime.js';
@@ -183,16 +138,13 @@ export async function startWebServer() {
   app.use(requestLogging);
   app.use("/api", apiRateLimit);
 
-  app.get("/api/browser/snapshot", (req, res) => {
-    const screenshot = persistentBrowser.getLastScreenshot();
-    if (screenshot) {
-      res.setHeader("Content-Type", "image/png");
-      res.send(screenshot);
-    } else {
-      res.status(404).send("No active browser session or screenshot available.");
-    }
-  });
+  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
+  const v1Router = createV1Router();
+  app.use("/api/v1", v1Router);
+  app.use("/api", v1Router);
+
+  // Prometheus metrics moved to router/metrics.ts or handled here for root access
   app.get("/metrics", async (_req, res) => {
     try {
       res.set("Content-Type", getPrometheusContentType());
@@ -203,59 +155,6 @@ export async function startWebServer() {
       res.status(500).json({ error: message });
     }
   });
-
-  app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
-
-  const v1Router = createV1Router();
-  v1Router.use("/telemetry", createTelemetryRouter());
-  v1Router.use("/guardrails", createGuardrailsRouter());
-  v1Router.use("/audit", createAuditRouter());
-  v1Router.use("/specs", createSpecRouter());
-  v1Router.use("/phoenix", createPhoenixRouter());
-  v1Router.use("/router", createRouterRouter());
-  v1Router.use("/memory", createMemoryRouter());
-  v1Router.use("/mcp", mcpRouter);
-  v1Router.use("/tracks", createTracksRouter());
-  v1Router.use(ceanRouter);
-  v1Router.use(createWranglerRouter());
-  const db = getGlobalDb();
-  v1Router.use("/fleet", createFleetRouter(db));
-  v1Router.use("/workers", createWorkersRouter(db));
-  v1Router.use("/metrics", createMetricsRouter(db));
-  v1Router.use("/scaling", createScalingRouter(db));
-  v1Router.use("/robotkez", createRobotkezRoutes());
-  v1Router.use("/agents", createAgentRoutes());
-  v1Router.use("/chat", createChatRoutes());
-  v1Router.use("/tasks", createTaskRoutes());
-  v1Router.use("/tests", testSchedulerRoutes);
-  v1Router.use("/suggested-tasks", suggestedTasksRouter);
-  v1Router.use("/enterprise", createEnterpriseRouter());
-  v1Router.use("/python-workers", createPythonWorkersRouter());
-  v1Router.use("/scheduled-tasks", createScheduledTasksRoutes(db));
-  v1Router.use("/dashboard", createDashboardRoutes());
-  v1Router.use("/business-jobs", createBusinessJobsRoutes());
-  v1Router.use("/studio", createStudioRoutes());
-  v1Router.use("/sales", salesRouter);
-  v1Router.use("/grants", grantsRouter);
-  v1Router.use("/webhooks", createWebhookRoutes(db));
-  v1Router.use("/voice", voiceRouter);
-  v1Router.use("/contact", contactRouter);
-  v1Router.use("/swarm", swarmRouter);
-  v1Router.use("/harvest", harvestRouter);
-  v1Router.use("/crawl4ai", createCrawl4aiRouter());
-  v1Router.use("/preferences", createPreferencesRouter());
-  v1Router.use("/observability", createObservabilityRouter());
-  v1Router.use("/golden-dataset", createGoldenDatasetRouter());
-  v1Router.use("/intelligence", createIntelligenceRouter());
-  v1Router.use("/zero-prompt", createZeroPromptRouter());
-  v1Router.use("/ephemeral", createEphemeralRouter());
-  v1Router.use("/autonomous-infra", createAutonomousInfraRouter());
-
-  app.use("/api/v1", v1Router);
-  app.use("/api", v1Router);
-  app.use("/api/orchestrator", createUniversalOrchestratorRouter());
-  app.use("/api/paios", paiosOrchestratorRouter);
-  app.use("/api/github", githubWebhookRouter);
 
   const httpServer = createServer(app);
   const io = new Server(httpServer, {

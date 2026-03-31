@@ -150,7 +150,7 @@ class EnhancedInvoiceClient:
                     gmail_email=gmail_email,
                     gmail_password=gmail_password,
                 )
-                logger.info("Gmail fallback inicializálva")
+                logger.info("Gmail fallback inicializalva")
             except Exception as e:
                 logger.warning(f"Gmail fallback init failed: {e}")
 
@@ -209,7 +209,7 @@ class EnhancedInvoiceClient:
                 szamlazz_invoices = self.szamlazz_client.get_invoices(limit=limit)
 
             invoices.extend(szamlazz_invoices)
-            logger.info(f"✅ Szamlazz.hu: {len(szamlazz_invoices)} számlá")
+            logger.info(f"[OK] Szamlazz.hu: {len(szamlazz_invoices)} szamla")
 
         except SzamlazzHuError as e:
             logger.warning(f"Szamlazz.hu API failed: {e}")
@@ -231,7 +231,7 @@ class EnhancedInvoiceClient:
                         self.gmail_client.fetch_invoice_pdfs(days_back=days_back, max_emails=limit)
                     )
                     
-                    logger.info(f"✅ Gmail fallback: {len(gmail_pdfs)} PDF downloaded")
+                    logger.info(f"[OK] Gmail fallback: {len(gmail_pdfs)} PDF downloaded")
                     
                     # Note: Phase 3-ban ezt majd parse-oljuk InvoiceData-vá (OCR + extraction)
                     # Egyelőre csak a metadata-t log-oljuk
@@ -255,7 +255,7 @@ class EnhancedInvoiceClient:
             cached_data = [inv.dict() for inv in invoices]
             self.cache.set(cache_params, cached_data)
 
-        logger.info(f"📊 Total invoices: {len(invoices)}")
+        logger.info(f"[OK] Total invoices: {len(invoices)}")
         return invoices
 
     def get_recent_invoices(self, days: int = 30) -> List[InvoiceData]:

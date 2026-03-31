@@ -76,6 +76,15 @@ import { PSalesIntakePanel } from "@/components/dashboard/PSalesIntakePanel";
 import { PSalesResearchPanel } from "@/components/dashboard/PSalesResearchPanel";
 import { PSalesStrategyPanel } from "@/components/dashboard/PSalesStrategyPanel";
 import { FederationCenter } from "@/components/FederationCenter";
+import { AdminSelfCheckWidget } from "@/components/dashboard/AdminSelfCheckWidget";
+import { CognitiveMemoryPanel } from "@/components/dashboard/CognitiveMemoryPanel";
+import { TraceViewer } from "@/components/dashboard/TraceViewer";
+import { LogViewer } from "@/components/dashboard/LogViewer";
+import { AuditPanel } from "@/components/dashboard/AuditPanel";
+import { ModelRouterPanel } from "@/components/dashboard/ModelRouterPanel";
+import { ScheduledTasksPanel } from "@/components/dashboard/ScheduledTasksPanel";
+import { SpecManagerPanel } from "@/components/dashboard/SpecManagerPanel";
+import { VectorizeAnalyticsWidget } from "@/components/dashboard/VectorizeAnalyticsWidget";
 import { logInfo } from "@/utils/logger";
 
 const LazyEnterpriseAnalyticsWidget = React.lazy( async () =>
@@ -222,18 +231,32 @@ export function initializeNavigation ()
     { id: "llm-observability", label: "LLM Observability", icon: BarChart3, component: <LLMObservabilityPanel /> },
     { id: "copilot-commander", label: "Copilot Commander", icon: Terminal, component: <CopilotCommanderPanel /> },
     { id: "remote-console", label: "Remote Layer", icon: Target, component: <RemoteConsolePanel /> },
+    { id: "admin-check", label: "Admin Self-Check", icon: Shield, component: <AdminSelfCheckWidget /> },
+    { id: "cognitive-memory", label: "Cognitive Memory", icon: Brain, component: <CognitiveMemoryPanel /> },
+    { id: "trace-viewer", label: "Trace Viewer", icon: Search, component: <TraceViewer /> },
+    { id: "log-viewer", label: "System Logs", icon: FileText, component: <LogViewer /> },
+    { id: "audit-log", label: "Audit Trail", icon: ClipboardList, component: <AuditPanel /> },
+    { id: "model-router", label: "Model Router", icon: Network, component: <ModelRouterPanel /> },
+    { id: "scheduled-tasks", label: "Scheduled", icon: History, component: <ScheduledTasksPanel /> },
+    { id: "spec-manager", label: "Spec Manager", icon: Settings, component: <SpecManagerPanel /> },
+    { id: "vector-stats", label: "Vector Analytics", icon: BarChart3, component: <VectorizeAnalyticsWidget /> },
+    { id: "agent-factory", label: "Agent Factory", icon: Sparkles, component: <AgentFactory /> },
+    { id: "tools-manager", label: "Tool Manager", icon: Wrench, component: <AgentToolsManager /> },
+    { id: "harvest-pipeline", label: "Harvest Pipeline", icon: Activity, component: <HarvestPipelineWidget /> },
+    { id: "process-control", label: "Process Control", icon: Gauge, component: <ProcessControlWidget /> },
+    { id: "service-control", label: "Service Control", icon: Settings, component: <ServiceControlWidget /> },
   ];
 
   items.forEach( item => navigationRegistry.registerItem( item ) );
 
   // Register groups
-  navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode"] } );
-  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-commander", "assistant-blueprint", "phoenix", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "decomposer", "incubator", "knowledge", "memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
+  navigationRegistry.registerGroup( { title: "Core Systems", icon: Layers, items: ["dashboard", "neural-map", "system-arch", "studio", "vscode", "process-control", "service-control"] } );
+  navigationRegistry.registerGroup( { title: "AI & Agents", icon: Brain, items: ["chat", "paios", "copilot-commander", "assistant-blueprint", "phoenix", "zero-prompt-notifications", "ephemeral-agents", "learning-loop", "federation", "management", "agent-diagnostics", "agent-factory", "decomposer", "incubator", "knowledge", "memory", "cognitive-memory", "user-preferences", "developer", "edge", "robotkez", "browser-copilot", "jules"] } );
   navigationRegistry.registerGroup( { title: "Enterprise", icon: Briefcase, items: ["enterprise-suite", "digital-hr", "grant-hunter", "law-detective", "property-visionary", "property-sales", "psales-intake", "psales-research", "psales-strategy", "enterprise-analytics", "intelligence-monitor"] } );
   navigationRegistry.registerGroup( { title: "Értékesítési Központ", icon: DollarSign, items: ["trojan-horse", "lead-monitor", "demo-factory", "showcase", "campaign-studio", "leads-master", "innovation-bridge", "invoice-sync", "bookkeeping", "kp-penztar", "lead-mining", "marketwatcher", "inventory"] } );
-  navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "crawl4ai"] } );
-  navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests"] } );
-  navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console"] } );
+  navigationRegistry.registerGroup( { title: "Orchestration", icon: Rocket, items: ["cean", "cloudflare", "fleet_manager", "autonomy", "tasks", "workflow-engine", "swarm-panel", "tool-discovery", "tools-manager", "crawl4ai", "harvest-pipeline"] } );
+  navigationRegistry.registerGroup( { title: "Project Mgmt", icon: FileText, items: ["tracks", "suggested-tasks", "tests", "spec-manager"] } );
+  navigationRegistry.registerGroup( { title: "System", icon: Settings, items: ["python-workers", "files", "guardrails", "telemetry", "llm-observability", "security-panel", "chrome-acp", "settings", "n8n", "langflow", "remote-console", "admin-check", "trace-viewer", "log-viewer", "audit-log", "model-router", "scheduled-tasks", "vector-stats"] } );
 
   logInfo( "NavigationRegistry", "Navigation Registry Initialized." );
 }

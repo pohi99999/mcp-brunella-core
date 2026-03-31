@@ -531,8 +531,6 @@ export class AIResearchWeeklyAgent extends BaseAgent {
         success: false,
         message: `A heti kutatási riport elkészítése nem sikerült: ${message}`,
       };
-    } finally {
-      setAgentStatus(this.name, 'idle');
     }
   }
 }

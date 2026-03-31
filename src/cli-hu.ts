@@ -10,9 +10,12 @@ import { configManager } from './utils/cliConfig.js';
 import { marked } from "marked";
 import TerminalRenderer from "marked-terminal";
 import { readdirSync, existsSync, readFileSync } from 'fs';
-import { join } from 'path';
+import { join, resolve } from 'path';
+import { fileURLToPath } from 'url';
 import { runInvoiceSync } from './cli/invoiceSync.js';
 import { innovateCommand } from './cli/commands/innovate-hu.js';
+import { agentManager } from './agents/AgentManager.js';
+import { getSkill, listSkills } from './skills/index.js';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 marked.setOptions({ renderer: new TerminalRenderer() as any });
@@ -26,8 +29,70 @@ marked.setOptions({ renderer: new TerminalRenderer() as any });
 
 const client = new BrunellaClient();
 const BACK = '__back__';
+const argv = process.argv.slice(2);
 
-async function pause() {
+export function parseSkillParams(rawParams?: string): Record<string, unknown> {
+    if (!rawParams) {
+        return {};
+    }
+
+    try {
+        const parsed = JSON.parse(rawParams) as unknown;
+        if (typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)) {
+            return parsed as Record<string, unknown>;
+        }
+        throw new Error('A paramétereknek JSON objektumnak kell lenniük.');
+    } catch (error: unknown) {
+        const message = error instanceof Error ? error.message : String(error);
+        throw new Error(`Hibás JSON paraméterek: ${message}`);
+    }
+}
+
+export async function runSkillCommand(args: string[]): Promise<boolean> {
+    const [subcommand, ...rest] = args;
+    if (subcommand !== 'skill') {
+        return false;
+    }
+
+    const [action, skillName, ...paramParts] = rest;
+    if (action === 'lista') {
+        const skills = listSkills();
+        console.log(chalk.bold('\nElérhető skill-ek:\n'));
+        for (const skill of skills) {
+            console.log(
+                chalk.green(`• ${skill.name}`) +
+                chalk.dim(` | ${skill.category} | ${skill.version}`) +
+                `\n  ${skill.description}`
+            );
+        }
+        return true;
+    }
+
+    if (action === 'futtat') {
+        if (!skillName) {
+            throw new Error('Használat: brunella skill futtat <nev> [params]');
+        }
+
+        const skill = getSkill(skillName);
+        if (!skill) {
+            throw new Error(`Ismeretlen skill: ${skillName}`);
+        }
+
+        const params = parseSkillParams(paramParts.join(' '));
+        console.log(chalk.cyan(`Skill futtatása: ${skill.name}`));
+        const result = await agentManager.executeSkill(skill.name, params);
+        console.log(JSON.stringify(result, null, 2));
+        return true;
+    }
+
+    if (action) {
+        throw new Error(`Ismeretlen skill parancs: ${action}`);
+    }
+
+    return false;
+}
+
+export async function pause() {
     await inquirer.prompt([{
         type: 'input',
         name: '_',
@@ -35,7 +100,7 @@ async function pause() {
     }]);
 }
 
-async function getTrackNames(): Promise<string[]> {
+export async function getTrackNames(): Promise<string[]> {
     const tracksDir = join(process.cwd(), 'conductor', 'tracks');
     if (!existsSync(tracksDir)) return [];
     try {
@@ -49,6 +114,13 @@ async function getTrackNames(): Promise<string[]> {
 
 async function start() {
     try {
+        if (argv.length > 0) {
+            const handled = await runSkillCommand(argv);
+            if (handled) {
+                return;
+            }
+        }
+
         await client.connect();
         await mainLoop();
     } catch (e: unknown) {
@@ -564,5 +636,15 @@ async function systemMenu() {
     }
 }
 
-start();
+const isDirectExecution = (() => {
+    try {
+        return process.argv[1] !== undefined && resolve(process.argv[1]) === fileURLToPath(import.meta.url);
+    } catch {
+        return false;
+    }
+})();
+
+if (isDirectExecution) {
+    void start();
+}
 

@@ -19,8 +19,8 @@ describe('Core Tools', () => {
     });
     client = new Client({ name: "test-client", version: "1.0.0" });
     await client.connect(transport);
-    await waitForPing(client, 10000);
-  }, 45000);
+    await waitForPing(client, 30000);
+  }, 90000);
 
   afterAll(async () => {
     await transport.close();

@@ -1,4 +1,5 @@
 import { wrapWithSpan } from "../utils/otelTracing.js";
+import { getOrchestrationConcurrencyLimit } from "../config/paiosConfig.js";
 
 export type DAGNodeType = "agent" | "condition" | "loop" | "transform";
 export type DAGExecutionStatus = "success" | "partial" | "error" | "budget_exceeded" | "timeout";
@@ -52,6 +53,7 @@ export interface DAGWorkflow {
   nodes: DAGNode[];
   edges?: DAGEdge[];
   budget?: DAGBudget;
+  maxConcurrency?: number;
 }
 
 export interface NodeResult {
@@ -338,36 +340,41 @@ export async function executeDAG(
       };
 
       const rounds = getExecutionRounds(workflow);
+      const configuredConcurrency = workflow.maxConcurrency ?? getOrchestrationConcurrencyLimit();
+      const maxConcurrency = Math.max(1, configuredConcurrency);
       const completedNodeIds: string[] = [];
       let status: DAGExecutionStatus = "success";
 
       for (const round of rounds) {
-        const settled = await Promise.allSettled(round.map((node) => executeNode(node, context, executor)));
+        for (let index = 0; index < round.length; index += maxConcurrency) {
+          const batch = round.slice(index, index + maxConcurrency);
+          const settled = await Promise.allSettled(batch.map((node) => executeNode(node, context, executor)));
 
-        for (const item of settled) {
-          if (item.status === "rejected") {
-            status = "error";
-            context.warnings.push(item.reason instanceof Error ? item.reason.message : String(item.reason));
-            continue;
-          }
-
-          const nodeResult = item.value;
-          updateBudget(context, nodeResult);
-          completedNodeIds.push(nodeResult.nodeId);
-
-          if (nodeResult.status === "timeout") {
-            status = status === "success" ? "timeout" : status;
-            context.warnings.push(`Node timeout: ${nodeResult.nodeId}`);
-            continue;
-          }
-
-          if (nodeResult.status === "error") {
-            const node = workflow.nodes.find((candidate) => candidate.id === nodeResult.nodeId);
-            if (node?.continueOnError) {
-              status = status === "success" ? "partial" : status;
+          for (const item of settled) {
+            if (item.status === "rejected") {
+              status = "error";
+              context.warnings.push(item.reason instanceof Error ? item.reason.message : String(item.reason));
               continue;
             }
-            status = "error";
+
+            const nodeResult = item.value;
+            updateBudget(context, nodeResult);
+            completedNodeIds.push(nodeResult.nodeId);
+
+            if (nodeResult.status === "timeout") {
+              status = status === "success" ? "timeout" : status;
+              context.warnings.push(`Node timeout: ${nodeResult.nodeId}`);
+              continue;
+            }
+
+            if (nodeResult.status === "error") {
+              const node = workflow.nodes.find((candidate) => candidate.id === nodeResult.nodeId);
+              if (node?.continueOnError) {
+                status = status === "success" ? "partial" : status;
+                continue;
+              }
+              status = "error";
+            }
           }
         }
 

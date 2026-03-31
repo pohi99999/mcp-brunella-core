@@ -24,10 +24,19 @@ const ProviderSchema = z.object({
   gateway_url_env: z.string().optional(),
 });
 
+export const OrchestrationConcurrencySchema = z.object({
+  profile: z.enum(['balanced', 'aggressive', 'conservative']).default('balanced'),
+  max_concurrent_tasks: z.number().int().min(1).max(10).default(3),
+});
+
 export const PAIOSConfigSchema = z.object({
   orchestrator: z.object({
     default_model: z.enum(['github', 'gemini', 'local', 'anthropic', 'cloudflare', 'copilot']).default('github'),
     max_tasks_per_request: z.number().int().min(1).max(20).default(5),
+    concurrency: OrchestrationConcurrencySchema.default({
+      profile: 'balanced',
+      max_concurrent_tasks: 3,
+    }),
   }),
   providers: z.object({
     github: ProviderSchema.optional(),
@@ -54,6 +63,7 @@ export const PAIOSConfigSchema = z.object({
 export type PAIOSConfig = z.infer<typeof PAIOSConfigSchema>;
 export type ProviderConfig = z.infer<typeof ProviderSchema>;
 export type ModelProvider = 'github' | 'gemini' | 'local' | 'anthropic' | 'cloudflare' | 'copilot';
+export type OrchestrationConcurrency = z.infer<typeof OrchestrationConcurrencySchema>;
 
 // ============================================================================
 // CONFIG LOADER
@@ -81,6 +91,10 @@ export function loadPaiosConfig(configPath = 'paios.config.yaml'): PAIOSConfig {
       orchestrator: {
         default_model: (process.env.PAIOS_DEFAULT_MODEL as ModelProvider) ?? 'github',
         max_tasks_per_request: 5,
+        concurrency: {
+          profile: 'balanced',
+          max_concurrent_tasks: 3,
+        },
       },
       providers: {
         local: {
@@ -179,6 +193,20 @@ export function getEnabledProviders(): ModelProvider[] {
   }
 
   return providers;
+}
+
+/**
+ * Get the current orchestration concurrency profile.
+ */
+export function getOrchestrationConcurrencyConfig(): OrchestrationConcurrency {
+  return loadPaiosConfig().orchestrator.concurrency;
+}
+
+/**
+ * Get the current max concurrent task limit for subagent execution.
+ */
+export function getOrchestrationConcurrencyLimit(): number {
+  return getOrchestrationConcurrencyConfig().max_concurrent_tasks;
 }
 
 // ============================================================================

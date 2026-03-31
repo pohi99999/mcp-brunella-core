@@ -27,7 +27,6 @@ export class GenesisOrchestrator extends BaseAgent {
 
   async executeTask(context: AgentContext): Promise<AgentResult> {
     const task = (context.task || "").toLowerCase();
-    setAgentStatus(this.name, "working", "Genesis orchestrating...");
 
     try {
       if (task.includes("genesis") || task.includes("futtasd") || task.includes("run")) {
@@ -57,8 +56,6 @@ export class GenesisOrchestrator extends BaseAgent {
     } catch (e: any) {
       logError(this.name, e.message);
       return { success: false, message: `Hiba: ${e.message}` };
-    } finally {
-      setAgentStatus(this.name, "idle");
     }
   }
 

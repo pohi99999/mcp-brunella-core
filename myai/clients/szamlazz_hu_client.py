@@ -67,7 +67,7 @@ class SzamlazzHuClient:
         self.max_retries = max_retries
 
         if not self.api_key:
-            logger.warning("Számlázz.hu API key nem beállított")
+            logger.warning("[WARN] Szamlazz.hu API key nincs beallitva")
 
         # Session beállítása retry logikával
         self.session = requests.Session()
@@ -105,8 +105,8 @@ class SzamlazzHuClient:
         except ValueError:
             error_msg = response.text
 
-        msg = f"Számlázz.hu API hiba ({context}): [{response.status_code}] {error_msg}"
-        logger.error(msg)
+        msg = f"Szamlazz.hu API hiba ({context}): [{response.status_code}] {error_msg}"
+        logger.error(f"[ERROR] {msg}")
         raise SzamlazzHuError(msg)
 
     def _convert_to_invoice_data(self, api_invoice: Dict[str, Any]) -> Optional[InvoiceData]:
@@ -127,7 +127,7 @@ class SzamlazzHuClient:
             due_date = self._parse_date(api_invoice.get("dueDate"))
             
             if not invoice_date or not due_date:
-                logger.warning(f"Érvénytelen dátumok a számlán: {api_invoice.get('id')}")
+                logger.warning(f"[WARN] Ervenytelen datumok a szamlan: {api_invoice.get('id')}")
                 return None
 
             # Összegek kezelése
@@ -156,7 +156,7 @@ class SzamlazzHuClient:
             return invoice_data
 
         except (ValueError, KeyError) as e:
-            logger.error(f"Hiba az invoice konvertálásakor: {e}")
+            logger.error(f"[ERROR] Hiba az invoice konvertalasakor: {e}")
             return None
 
     @staticmethod
@@ -191,7 +191,7 @@ class SzamlazzHuClient:
             except ValueError:
                 continue
 
-        logger.warning(f"Nem lehet parsálni a dátumot: {date_str}")
+        logger.warning(f"[WARN] Nem lehet parsali a datumot: {date_str}")
         return None
 
     @staticmethod
@@ -231,14 +231,14 @@ class SzamlazzHuClient:
             SzamlazzHuError: Ha hiba az API-ben
         """
         if not self.api_key:
-            logger.error("API key nincs beállítva")
+            logger.error("[ERROR] API key nincs beallitva")
             return []
 
         endpoint = f"{self.base_url}/invoices"
         params = {"limit": limit}
 
         try:
-            logger.info(f"Számlák lekérése: {endpoint}")
+            logger.info(f"[OK] Szamlak lekerese: {endpoint}")
             response = self.session.get(
                 endpoint,
                 params=params,
@@ -251,7 +251,7 @@ class SzamlazzHuClient:
             data = response.json()
             invoices = data.get("invoices", [])
 
-            logger.info(f"{len(invoices)} számla lekérve az API-ból")
+            logger.info(f"[OK] {len(invoices)} szamla lekerve az API-bol")
 
             # Konvertálás InvoiceData listára
             result = []
@@ -263,7 +263,7 @@ class SzamlazzHuClient:
             return result
 
         except requests.RequestException as e:
-            logger.error(f"Network hiba a számlák lekérésekor: {e}")
+            logger.error(f"[ERROR] Network hiba a szamlak lekeresekor: {e}")
             raise SzamlazzHuError(f"Network hiba: {e}")
 
     def get_invoices_since(self, since_date: date) -> List[InvoiceData]:
@@ -280,7 +280,7 @@ class SzamlazzHuClient:
             SzamlazzHuError: Ha hiba az API-ben
         """
         if not self.api_key:
-            logger.error("API key nincs beállítva")
+            logger.error("[ERROR] API key nincs beallitva")
             return []
 
         endpoint = f"{self.base_url}/invoices"
@@ -290,7 +290,7 @@ class SzamlazzHuClient:
         }
 
         try:
-            logger.info(f"Számlák lekérése: {since_date} óta")
+            logger.info(f"[OK] Szamlak lekerese: {since_date} ota")
             response = self.session.get(
                 endpoint,
                 params=params,
@@ -303,7 +303,7 @@ class SzamlazzHuClient:
             data = response.json()
             invoices = data.get("invoices", [])
 
-            logger.info(f"{len(invoices)} számla lekérve {since_date} óta")
+            logger.info(f"[OK] {len(invoices)} szamla lekerve {since_date} ota")
 
             result = []
             for api_invoice in invoices:
@@ -314,7 +314,7 @@ class SzamlazzHuClient:
             return result
 
         except requests.RequestException as e:
-            logger.error(f"Network hiba: {e}")
+            logger.error(f"[ERROR] Network hiba: {e}")
             raise SzamlazzHuError(f"Network hiba: {e}")
 
     def get_invoice_by_id(self, invoice_id: str) -> Optional[InvoiceData]:
@@ -331,20 +331,20 @@ class SzamlazzHuClient:
             SzamlazzHuError: Ha hiba az API-ben
         """
         if not self.api_key:
-            logger.error("API key nincs beállítva")
+            logger.error("[ERROR] API key nincs beallitva")
             return None
 
         endpoint = f"{self.base_url}/invoices/{invoice_id}"
 
         try:
-            logger.info(f"Számla lekérése: {invoice_id}")
+            logger.info(f"[OK] Szamla lekerese: {invoice_id}")
             response = self.session.get(
                 endpoint,
                 timeout=self.timeout,
             )
 
             if response.status_code == 404:
-                logger.warning(f"Számla nem található: {invoice_id}")
+                logger.warning(f"[WARN] Szamla nem talalhato: {invoice_id}")
                 return None
 
             if response.status_code != 200:
@@ -356,7 +356,7 @@ class SzamlazzHuClient:
             return invoice
 
         except requests.RequestException as e:
-            logger.error(f"Network hiba: {e}")
+            logger.error(f"[ERROR] Network hiba: {e}")
             raise SzamlazzHuError(f"Network hiba: {e}")
 
     async def get_invoices_async(self, limit: int = 100) -> List[InvoiceData]:
@@ -370,7 +370,7 @@ class SzamlazzHuClient:
             InvoiceData objektumok listája
         """
         if not self.api_key:
-            logger.error("API key nincs beállítva")
+            logger.error("[ERROR] API key nincs beallitva")
             return []
 
         endpoint = f"{self.base_url}/invoices"
@@ -391,7 +391,7 @@ class SzamlazzHuClient:
                 ) as response:
                     
                     if response.status != 200:
-                        logger.error(f"API hiba: {response.status}")
+                        logger.error(f"[ERROR] API hiba: {response.status}")
                         return []
 
                     data = await response.json()
@@ -403,14 +403,14 @@ class SzamlazzHuClient:
                         if invoice:
                             result.append(invoice)
 
-                    logger.info(f"{len(result)} számla lekérve async módon")
+                    logger.info(f"[OK] {len(result)} szamla lekerve async modon")
                     return result
 
         except asyncio.TimeoutError:
-            logger.error("Request timeout az async lekéréskor")
+            logger.error("[ERROR] Request timeout az async lekereskor")
             return []
         except aiohttp.ClientError as e:
-            logger.error(f"Async hiba: {e}")
+            logger.error(f"[ERROR] Async hiba: {e}")
             return []
 
     def test_connection(self) -> bool:
@@ -421,7 +421,7 @@ class SzamlazzHuClient:
             True ha a kapcsolat működik, False egyébként
         """
         if not self.api_key:
-            logger.error("API key nincs beállítva")
+            logger.error("[ERROR] API key nincs beallitva")
             return False
 
         endpoint = f"{self.base_url}/health"
@@ -431,14 +431,14 @@ class SzamlazzHuClient:
             is_ok = response.status_code == 200
             
             if is_ok:
-                logger.info("Számlázz.hu API elérhető")
+                logger.info("[OK] Szamlazz.hu API elerheto")
             else:
-                logger.warning(f"Számlázz.hu API nem elérhető: {response.status_code}")
+                logger.warning(f"[WARN] Szamlazz.hu API nem elerheto: {response.status_code}")
             
             return is_ok
 
         except requests.RequestException as e:
-            logger.error(f"Kapcsolat tesztelés sikertelen: {e}")
+            logger.error(f"[ERROR] Kapcsolat teszteles sikertelen: {e}")
             return False
 
     def __repr__(self) -> str:

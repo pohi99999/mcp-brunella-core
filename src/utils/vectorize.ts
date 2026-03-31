@@ -23,6 +23,7 @@ export class VectorizeClient {
   private readonly globalApiKey?: string;
   private readonly email?: string;
   private readonly indexName: string;
+  private readonly gatewayId: string;
 
   constructor() {
     this.baseUrl = 'https://api.cloudflare.com/client/v4';
@@ -31,6 +32,7 @@ export class VectorizeClient {
     this.globalApiKey = process.env.CLOUDFLARE_GLOBAL_API_KEY || process.env.CF_GLOBAL_API_KEY;
     this.email = process.env.CLOUDFLARE_EMAIL || process.env.CF_EMAIL;
     this.indexName = process.env.CF_VECTORIZE_INDEX || 'brunella-agent-memory';
+    this.gatewayId = process.env.CF_GATEWAY_ID || 'brunella-gateway';
   }
 
   private get enabled(): boolean {
@@ -54,12 +56,18 @@ export class VectorizeClient {
     if (!this.enabled) return [];
 
     try {
-      const response = await fetch(
-        `${this.baseUrl}/accounts/${this.accountId}/ai/run/@cf/baai/bge-small-en-v1.5`,
-        {
+      // Use direct API if Global Key is available (as Gateway requires Token)
+      const useDirectApi = Boolean(this.globalApiKey && this.email);
+      const model = '@cf/baai/bge-large-en-v1.5';
+      
+      const url = useDirectApi
+        ? `https://api.cloudflare.com/client/v4/accounts/${this.accountId}/ai/run/${model}`
+        : `https://gateway.ai.cloudflare.com/v1/${this.accountId}/${this.gatewayId}/workers-ai/${model}`;
+      
+      const response = await fetch(url, {
           method: 'POST',
           headers: this.getHeaders(),
-          body: JSON.stringify({ text }),
+          body: JSON.stringify({ text: [text] }),
         },
       );
 

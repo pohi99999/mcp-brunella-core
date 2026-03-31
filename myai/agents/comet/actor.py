@@ -16,11 +16,11 @@ except ImportError:
     _HAS_PYAUTOGUI = False
 
 class BrowserActor:
-    """Playwright async — lépések végrehajtója"""
+    """Playwright async - lepesek vegrehajtoja"""
 
     def __init__(self, headless: bool = True):
         self.headless = headless
-        self.timeout = 30000  # 30s alapértelmezett timeout
+        self.timeout = 30000  # 30s alapertelmezett timeout
         github_pat = os.getenv("GITHUB_PAT")
         if github_pat:
             self.vision_client = AsyncOpenAI(
@@ -31,17 +31,17 @@ class BrowserActor:
             self.vision_client = None
 
     async def _vision_selector(self, page: Page, description: str) -> Optional[str]:
-        """Screenshot → GPT-4o vision → CSS selector"""
+        """Screenshot -> GPT-4o vision -> CSS selector"""
         if not self.vision_client:
-            logger.warning("[BrowserActor] Nincs GITHUB_PAT, Vision Selector nem érhető el.")
+            logger.warning("[BrowserActor] Nincs GITHUB_PAT, Vision Selector nem erheto el.")
             return None
 
         try:
-            logger.info(f"[BrowserActor] Vision Selector keresése: {description}")
+            logger.info(f"[BrowserActor] Vision Selector keresese: {description}")
             screenshot_bytes = await page.screenshot()
             base64_image = base64.b64encode(screenshot_bytes).decode('utf-8')
 
-            prompt = f"A csatolt képernyőképen keresd meg a következőt: '{description}'. Adj vissza egy pontos CSS selectort, amivel kattintani lehet rá vagy ki lehet tölteni. Csak a selectort add vissza, semmi mást."
+            prompt = f"A csatolt kepernyokepen keresd meg a kovetkezot: '{description}'. Adj vissza egy pontos CSS selectort, amivel kattintani lehet ra vagy ki lehet tolteni. Csak a selectort add vissza, semmi mast."
 
             response = await self.vision_client.chat.completions.create(
                 model="gpt-4o",
@@ -61,32 +61,32 @@ class BrowserActor:
             )
 
             selector = response.choices[0].message.content.strip().replace('`', '')
-            logger.info(f"[BrowserActor] Vision által talált selector: {selector}")
+            logger.info(f"[BrowserActor] Vision altal talalt selector: {selector}")
             return selector
         except Exception as e:
             logger.error(f"[BrowserActor] Vision Selector hiba: {e}")
             return None
 
     async def execute_steps(self, steps: List[BrowserStep], pages: List[Page], context: BrowserContext) -> List[ActorResult]:
-        """Lépéslista végrehajtása az adott kontextusban"""
+        """Lepeslista vegrehajtasa az adott kontextusban"""
         results = []
 
         for step in steps:
-            logger.info(f"[BrowserActor] Végrehajtás: {step.action} (Tab: {step.tab_index})")
+            logger.info(f"[BrowserActor] Vegrehajtas: {step.action} (Tab: {step.tab_index})")
             
-            # Megfelelő fül (page) kiválasztása vagy létrehozása
+            # Megfelelo ful (page) kivalasztasa vagy letrehozasa
             if step.tab_index == -1:
-                # Kifejezetten új fül kérése
+                # Kifejezetten uj ful kerese
                 page = await context.new_page()
                 pages.append(page)
             else:
-                # Meglévő fül választása vagy automatikus bővítés
+                # Meglevo ful valasztasa vagy automatikus bovites
                 while step.tab_index >= len(pages):
                     new_page = await context.new_page()
                     pages.append(new_page)
                 page = pages[step.tab_index]
             
-            # Fül előtérbe hozása
+            # Ful eloterbe hozasa
             try:
                 await page.bring_to_front()
             except:
@@ -97,11 +97,11 @@ class BrowserActor:
                 results.append(result)
                 
                 if not result.success and step.critical:
-                    logger.error(f"[BrowserActor] Kritikus hiba a(z) {step.action} lépésnél: {result.error}")
+                    logger.error(f"[BrowserActor] Kritikus hiba a(z) {step.action} lepesnel: {result.error}")
                     break
                     
             except Exception as e:
-                logger.error(f"[BrowserActor] Váratlan hiba: {e}")
+                logger.error(f"[BrowserActor] Varatlan hiba: {e}")
                 results.append(ActorResult(success=False, error=str(e)))
                 if step.critical:
                     break
@@ -109,13 +109,13 @@ class BrowserActor:
         return results
 
     async def execute_step(self, step: BrowserStep, page: Page) -> ActorResult:
-        """Egyetlen lépés végrehajtása"""
+        """Egyetlen lepes vegrehajtasa"""
         action = step.action.lower()
         
         try:
             if action == "navigate":
                 if not step.url:
-                    return ActorResult(success=False, error="Nincs megadva URL a navigációhoz")
+                    return ActorResult(success=False, error="Nincs megadva URL a navigaciohoz")
                 await page.goto(step.url, wait_until="networkidle", timeout=self.timeout)
                 return ActorResult(success=True)
 
@@ -124,7 +124,7 @@ class BrowserActor:
                     step.selector = await self._vision_selector(page, step.description)
                 
                 if not step.selector or not step.text:
-                    return ActorResult(success=False, error="Hiányzó selector vagy szöveg a kereséshez")
+                    return ActorResult(success=False, error="Hianyzo selector vagy szoveg a kereseshez")
                 
                 await page.fill(step.selector, step.text)
                 await page.press(step.selector, "Enter")
@@ -136,7 +136,7 @@ class BrowserActor:
                     step.selector = await self._vision_selector(page, step.description)
                 
                 if not step.selector:
-                    return ActorResult(success=False, error="Nem sikerült selectort találni a kattintáshoz.")
+                    return ActorResult(success=False, error="Nem sikerult selectort talalni a kattintashoz.")
                 
                 await page.click(step.selector, timeout=10000)
                 return ActorResult(success=True)
@@ -146,14 +146,14 @@ class BrowserActor:
                     step.selector = await self._vision_selector(page, step.description)
                 
                 if not step.selector or not step.text:
-                    return ActorResult(success=False, error="Hiányzó selector vagy szöveg a kitöltéshez")
+                    return ActorResult(success=False, error="Hianyzo selector vagy szoveg a kitolteshez")
                 
                 await page.fill(step.selector, step.text)
                 return ActorResult(success=True)
 
             elif action == "extract":
                 if not step.selector or not step.key:
-                    return ActorResult(success=False, error="Hiányzó selector vagy kulcs az adatkinyeréshez")
+                    return ActorResult(success=False, error="Hianyzo selector vagy kulcs az adatkinyeresez")
                 text = await page.inner_text(step.selector)
                 return ActorResult(success=True, extracted={step.key: text})
 
@@ -162,7 +162,7 @@ class BrowserActor:
                 return ActorResult(success=True, screenshot=screenshot_bytes)
 
             elif action == "wait":
-                seconds = step.description or "2" # Hack: ha a description-be került a szám
+                seconds = step.description or "2" # Hack: ha a description-be kerult a szam
                 try:
                     sec = float(str(seconds).split()[0])
                 except:
@@ -171,24 +171,24 @@ class BrowserActor:
                 return ActorResult(success=True)
 
             elif action == "click_os":
-                # OS-szintű kattintás pyautogui-val (pixel koordináták)
+                # OS-szintu kattintas pyautogui-val (pixel koordinatak)
                 if not _HAS_PYAUTOGUI:
-                    return ActorResult(success=False, error="pyautogui nem elérhető")
+                    return ActorResult(success=False, error="pyautogui nem elerheto")
                 x = step.x or 0
                 y = step.y or 0
                 if x == 0 and y == 0:
-                    return ActorResult(success=False, error="click_os: x és y koordináta szükséges")
+                    return ActorResult(success=False, error="click_os: x es y koordinata szukseges")
                 pyautogui.click(x=x, y=y)
                 await asyncio.sleep(0.3)
                 return ActorResult(success=True)
 
             elif action == "type_os":
-                # OS-szintű gépelés pyautogui-val
+                # OS-szintu gepeles pyautogui-val
                 if not _HAS_PYAUTOGUI:
-                    return ActorResult(success=False, error="pyautogui nem elérhető")
+                    return ActorResult(success=False, error="pyautogui nem elerheto")
                 text = step.text or ""
                 if not text:
-                    return ActorResult(success=False, error="type_os: szöveg szükséges")
+                    return ActorResult(success=False, error="type_os: szoveg szukseges")
                 pyautogui.typewrite(text, interval=0.05)
                 return ActorResult(success=True)
 
@@ -198,7 +198,7 @@ class BrowserActor:
                 return ActorResult(success=True)
 
             else:
-                return ActorResult(success=False, error=f"Ismeretlen művelet: {action}")
+                return ActorResult(success=False, error=f"Ismeretlen muvelet: {action}")
 
         except Exception as e:
             return ActorResult(success=False, error=str(e))

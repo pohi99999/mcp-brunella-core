@@ -415,6 +415,8 @@ Kontextus a projektről: ESM modulokat használunk (imports with .js extensions)
     } catch (e: unknown) {
       const error = e instanceof Error ? e.message : String(e);
       return { status: "error", error };
+    } finally {
+      setAgentStatus(this.name, "idle");
     }
   }
 

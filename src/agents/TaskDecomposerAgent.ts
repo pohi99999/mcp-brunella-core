@@ -20,8 +20,6 @@ export class TaskDecomposerAgent extends BaseAgent {
     const preview = context.preview !== false;
     const outputFormat = typeof context.outputFormat === 'string' ? context.outputFormat : 'preview';
 
-    setAgentStatus(this.name, "working", task.slice(0, 60) || "decompose");
-
     try {
       if (!task) {
         return {
@@ -65,8 +63,6 @@ export class TaskDecomposerAgent extends BaseAgent {
         message: `TaskDecomposer hiba: ${msg}`,
         data: null,
       };
-    } finally {
-      setAgentStatus(this.name, "idle");
     }
   }
 }

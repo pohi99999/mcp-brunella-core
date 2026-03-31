@@ -124,7 +124,6 @@ export class RobotkezV2Agent extends BaseAgent {
    */
   async executeTask(context: AgentContext): Promise<AgentResult> {
     const task = (context.task || '').trim();
-    setAgentStatus(this.name, 'working', task.slice(0, 50));
 
     try {
       const browserEngine = getRobotkezBrowserEngine();
@@ -455,3 +454,4 @@ export class RobotkezV2Agent extends BaseAgent {
 }
 
 export default RobotkezV2Agent;
+;

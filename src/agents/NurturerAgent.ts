@@ -36,8 +36,6 @@ export class NurturerAgent extends BaseAgent {
       const errorMsg = e instanceof Error ? e.message : String(e);
       logError(this.name, errorMsg);
       return { success: false, message: `Hiba: ${errorMsg}` };
-    } finally {
-      setAgentStatus(this.name, "idle");
     }
   }
 

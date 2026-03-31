@@ -12,6 +12,10 @@ import { logInfo, logError } from '../utils/logger.js';
 import { EventEmitter } from 'events';
 import { pipelineRunner } from './developerPipeline.js';
 import type { TaskPipeline } from './developerPipeline.js';
+import {
+    getOrchestrationConcurrencyConfig,
+    type OrchestrationConcurrency,
+} from '../config/paiosConfig.js';
 
 // ==================== Types ====================
 
@@ -70,7 +74,7 @@ export interface AddTaskOptions {
 
 // ==================== Constants ====================
 
-const DEFAULT_MAX_WORKERS = 3; // Max concurrent tasks
+const DEFAULT_MAX_WORKERS = 3; // Balanced default profile
 const DEFAULT_MAX_RETRIES = 2;
 const PRIORITY_WEIGHTS = {
     high: 3,
@@ -84,17 +88,37 @@ export class TaskQueueManager extends EventEmitter {
     private tasks: Map<string, QueuedTask> = new Map();
     private runningTasks: Set<string> = new Set();
     private maxWorkers: number;
+    private concurrencyProfile: OrchestrationConcurrency;
     private nextTaskId = 1;
     private processingLoop: NodeJS.Timeout | null = null;
     private autoStart: boolean;
 
-    constructor(maxWorkers = DEFAULT_MAX_WORKERS, autoStart = true) {
+    constructor(maxWorkers?: number, autoStart = true) {
         super();
-        this.maxWorkers = maxWorkers;
+        const baseProfile = getOrchestrationConcurrencyConfig();
+        this.maxWorkers = maxWorkers ?? baseProfile.max_concurrent_tasks ?? DEFAULT_MAX_WORKERS;
+        this.concurrencyProfile = {
+            ...baseProfile,
+            max_concurrent_tasks: this.maxWorkers,
+        };
         this.autoStart = autoStart;
         if (autoStart) {
             this.startProcessing();
         }
+    }
+
+    /**
+     * Get the current orchestration concurrency profile.
+     */
+    getConcurrencyProfile(): OrchestrationConcurrency {
+        return { ...this.concurrencyProfile };
+    }
+
+    /**
+     * Get the current maximum worker count.
+     */
+    getMaxWorkers(): number {
+        return this.maxWorkers;
     }
 
     /**

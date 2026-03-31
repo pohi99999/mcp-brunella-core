@@ -6,6 +6,9 @@ orchestrator:
   default_model: github              # github | gemini | local | anthropic | cloudflare
   system_prompt_path: src/orchestrator/systemPrompt/paios_orchestrator_prompt.md
   max_tasks_per_request: 5           # LLM max ennyi task-ot bonthat ki egyszerre
+  concurrency:
+    profile: balanced                # balanced | aggressive | conservative
+    max_concurrent_tasks: 3          # Subagent párhuzamosság alapértelmezett limitje
 
 # LLM Provider konfigurációk
 providers:

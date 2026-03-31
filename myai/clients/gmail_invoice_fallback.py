@@ -62,7 +62,7 @@ class GmailInvoiceFallback:
                         scopes=GMAIL_SCOPES
                     )
                 )
-                logger.info("Gmail API autentifikáció: Service Account")
+                logger.info("[OK] Gmail API autentifikacio: Service Account")
             else:
                 # OAuth2 flow
                 creds = None
@@ -73,14 +73,14 @@ class GmailInvoiceFallback:
                     if creds and creds.expired and creds.refresh_token:
                         creds.refresh(Request())
                     else:
-                        logger.warning("Gmail OAuth2 credentials nem konfigurálva")
+                        logger.warning("[WARN] Gmail OAuth2 credentials nem konfiguralva")
                         return
 
                 self.service = build('gmail', 'v1', credentials=creds)
-                logger.info("Gmail API autentifikáció: OAuth2")
+                logger.info("[OK] Gmail API autentifikacio: OAuth2")
 
         except Exception as e:
-            logger.error(f"Gmail autentifikáció hiba: {e}")
+            logger.error(f"[ERROR] Gmail autentifikacio hiba: {e}")
             self.service = None
 
     def search_invoice_emails(self, query: str = "szamla") -> List[str]:
@@ -94,7 +94,7 @@ class GmailInvoiceFallback:
             Email ID lista
         """
         if not self.service:
-            logger.error("Gmail service nem elérhető")
+            logger.error("[ERROR] Gmail service nem elerheto")
             return []
 
         try:
@@ -107,11 +107,11 @@ class GmailInvoiceFallback:
             messages = results.get('messages', [])
             email_ids = [msg['id'] for msg in messages]
             
-            logger.info(f"{len(email_ids)} szám-email talált a Gmail-ben")
+            logger.info(f"[OK] {len(email_ids)} szam-email talalva a Gmail-ben")
             return email_ids
 
         except HttpError as e:
-            logger.error(f"Gmail search hiba: {e}")
+            logger.error(f"[ERROR] Gmail search hiba: {e}")
             return []
 
     def extract_invoice_from_email(self, message_id: str) -> Optional[InvoiceData]:
@@ -125,7 +125,7 @@ class GmailInvoiceFallback:
             InvoiceData object vagy None
         """
         if not self.service:
-            logger.error("Gmail service nem elérhető")
+            logger.error("[ERROR] Gmail service nem elerheto")
             return None
 
         try:
@@ -146,7 +146,7 @@ class GmailInvoiceFallback:
             # Számlaszám kinyerése
             invoice_no = self._extract_invoice_number(subject + " " + body)
             if not invoice_no:
-                logger.warning(f"Nincs szám szám az emailben: {subject}")
+                logger.warning(f"[WARN] Nincs szam szam az emailben: {subject}")
                 return None
 
             # Partner név kinyerése
@@ -156,7 +156,7 @@ class GmailInvoiceFallback:
             amount, vat_amount, vat_rate = self._extract_amounts(body)
             
             if amount is None:
-                logger.warning(f"Nincs összeg az emailben: {invoice_no}")
+                logger.warning(f"[WARN] Nincs osszeg az emailben: {invoice_no}")
                 return None
 
             # Dátumok kinyerése
@@ -182,11 +182,11 @@ class GmailInvoiceFallback:
                 source="gmail",
             )
 
-            logger.info(f"Számla kinyerve Gmail-ből: {invoice_no}")
+            logger.info(f"[OK] Szamla kinyerve Gmail-bol: {invoice_no}")
             return invoice
 
         except HttpError as e:
-            logger.error(f"Email feldolgozás hiba: {e}")
+            logger.error(f"[ERROR] Email feldolgozas hiba: {e}")
             return None
 
     def get_invoices_from_gmail(self, query: str = "szamla") -> List[InvoiceData]:
@@ -207,7 +207,7 @@ class GmailInvoiceFallback:
             if invoice:
                 invoices.append(invoice)
 
-        logger.info(f"{len(invoices)} számla kinyerve Gmail-ből")
+        logger.info(f"[OK] {len(invoices)} szamla kinyerve Gmail-bol")
         return invoices
 
     @staticmethod
@@ -229,7 +229,7 @@ class GmailInvoiceFallback:
 
             return ""
         except Exception as e:
-            logger.error(f"Email body kinyerés hiba: {e}")
+            logger.error(f"[ERROR] Email body kinyeres hiba: {e}")
             return ""
 
     @staticmethod

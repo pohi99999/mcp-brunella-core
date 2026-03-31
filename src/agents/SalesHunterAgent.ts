@@ -92,8 +92,6 @@ export class SalesHunterAgent extends BaseAgent {
     const task = (context.task || '').trim();
     if (!task) return { success: false, message: 'Üres feladat leírás' };
 
-    setAgentStatus(this.name, 'working', `Lead generálás: ${task.substring(0, 50)}...`);
-
     // Memory awareness: Check for past failures
     const failures = (context.pastExperiences as any[])?.filter(e => e.text.includes('HIBA')) || [];
     if (failures.length > 0) {
@@ -140,8 +138,6 @@ export class SalesHunterAgent extends BaseAgent {
         success: false,
         message: errorMsg,
       };
-    } finally {
-      setAgentStatus(this.name, 'idle');
     }
   }
 

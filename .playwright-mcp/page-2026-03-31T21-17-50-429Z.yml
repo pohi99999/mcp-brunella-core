@@ -1,0 +1,96 @@
+- generic [active] [ref=e1]:
+  - link "Skip to content" [ref=e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - button "Change language" [ref=e4]:
+    - img [ref=e5]
+    - generic [ref=e8]: 🇬🇧 English
+  - main [ref=e9]:
+    - generic [ref=e15]:
+      - generic [ref=e16]:
+        - paragraph [ref=e17]: Lumen — Limited access
+        - heading "There are things not made for the world only for those who recognize value." [level=1] [ref=e18]:
+          - generic [ref=e19]: There are things not made for the world
+          - generic [ref=e20]: only for those who recognize value.
+        - paragraph [ref=e21]: Lumen is a limited, numbered collector's wine collection — for those who understand the true meaning of rarity.
+        - paragraph [ref=e22]: “Rarity does not have to mean inaccessibility.”
+        - link "View availability" [ref=e23] [cursor=pointer]:
+          - /url: "#"
+      - img "Lumen limited wine collection showcase" [ref=e28]
+    - generic [ref=e31]:
+      - generic [ref=e33]:
+        - paragraph [ref=e34]: Some things are not meant to be rushed. They require time. Attention. Silence.
+        - paragraph [ref=e36]: Lumen is not created for the moment — but for those who recognize its value.
+        - paragraph [ref=e37]: It does not appear everywhere. And it does not remain for long.
+      - img "Lumen díszes L jel" [ref=e42]
+    - generic [ref=e44]:
+      - img "The story of Lumen — premium wine bottle" [ref=e47]
+      - generic [ref=e49]:
+        - img [ref=e50]
+        - heading "Every Lumen release is a story of its own." [level=2] [ref=e52]
+        - generic [ref=e53]:
+          - paragraph [ref=e54]: A reflection of a moment in time, a carefully selected wine, and a collection produced in strictly limited quantities.
+          - paragraph [ref=e55]: Every bottle is individually numbered. Each piece is tied to a place and a moment.
+          - paragraph [ref=e56]: Once a release is gone, it does not return in the same form.
+          - paragraph [ref=e57]: It existed once. And those who were there remember.
+    - generic [ref=e59]:
+      - generic [ref=e60]:
+        - heading "The roots of Lumen run deep." [level=2] [ref=e61]
+        - generic [ref=e62]:
+          - paragraph [ref=e63]: Hungarian winemaking has been shaped for centuries — by the delicate balance of the land, the climate, and knowledge passed down through generations.
+          - paragraph [ref=e64]: That knowledge is not visual or loud — it builds layer by layer.
+          - paragraph [ref=e65]: Lumen lifts this heritage into a contemporary, clean form. A carefully selected Pinot Gris, briefly matured in oak, gains subtle depth and elegance while keeping its natural freshness.
+          - paragraph [ref=e66]: “A bottle that not only preserves, but continues to tell its story.”
+      - img "Hungarian vineyard landscape, winemaking heritage" [ref=e69]
+    - generic [ref=e71]:
+      - img "Digital authentication and QR code verification" [ref=e73]
+      - generic [ref=e74]:
+        - img [ref=e75]
+        - heading "Lumen is more than an object." [level=2] [ref=e80]
+        - generic [ref=e81]:
+          - paragraph [ref=e82]: Individually numbered and digitally authenticated.
+          - paragraph [ref=e83]: Through the QR code, the origin, story, and provenance of each piece can be traced.
+        - paragraph [ref=e84]: A point of certainty — in a world where true value is rarely obvious.
+    - generic [ref=e86]:
+      - generic [ref=e87]:
+        - img "Hungarian vineyard landscape, winemaking heritage" [ref=e89]
+        - img "Lumen collection detail — packaging" [ref=e91]
+      - generic [ref=e92]:
+        - img "Szerzetes borral, pohárral" [ref=e94]
+        - img "Szőlőfürt közelkép" [ref=e96]
+    - generic [ref=e99]:
+      - heading "Not every decision is about choice." [level=2] [ref=e100]
+      - generic [ref=e101]:
+        - paragraph [ref=e102]: Sometimes what matters is being there. In that city. At that time.
+        - paragraph [ref=e103]: Each release becomes available to a select few. A maximum of 1000 bottles. Unrepeatable. Irreplaceable.
+      - paragraph [ref=e104]: Those who obtain it do not simply own it — they become part of a singular moment.
+    - generic [ref=e107]:
+      - img "Preview of the next Lumen release" [ref=e109]
+      - generic [ref=e111]:
+        - heading "The story continues." [level=2] [ref=e112]
+        - paragraph [ref=e113]: A handful of new collections appear each year, each with its own character and story. The next release is already taking shape.
+        - button "Notify me" [ref=e115]
+    - generic [ref=e116]:
+      - generic [ref=e117]:
+        - heading "Not everything remains available." [level=2] [ref=e118]
+        - paragraph [ref=e119]: And perhaps that is exactly what makes it truly valuable.
+      - generic [ref=e120]:
+        - generic [ref=e121]:
+          - generic [ref=e122]: Lumen Collection
+          - generic [ref=e123]: Limited series
+        - img "Lumen díszes L jel" [ref=e127]
+        - generic [ref=e128]:
+          - link "Imprint" [ref=e129] [cursor=pointer]:
+            - /url: "#"
+          - link "Privacy" [ref=e130] [cursor=pointer]:
+            - /url: "#"
+          - link "Contact" [ref=e131] [cursor=pointer]:
+            - /url: "#"
+  - dialog "Cookie consent" [ref=e132]:
+    - generic [ref=e133]:
+      - paragraph [ref=e134]: This website uses cookies to ensure the best user experience.
+      - generic [ref=e135]:
+        - button "Accept" [ref=e136]
+        - button "Decline" [ref=e137]
+        - button "Close" [ref=e138]:
+          - img [ref=e139]
+  - alert [ref=e142]

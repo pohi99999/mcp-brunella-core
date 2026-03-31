@@ -26,18 +26,18 @@ try:
     import lancedb
     import pyarrow as pa
     HAS_LANCEDB = True
-    logger.info("✅ LanceDB available")
+    logger.info("[OK] LanceDB available")
 except ImportError:
-    logger.warning("⚠️ LanceDB not available (pip install lancedb pyarrow)")
+    logger.warning("[WARN] LanceDB not available (pip install lancedb pyarrow)")
 
 # Check embedding models
 HAS_SENTENCE_TRANSFORMERS = False
 try:
     from sentence_transformers import SentenceTransformer
     HAS_SENTENCE_TRANSFORMERS = True
-    logger.info("✅ Sentence Transformers available")
+    logger.info("[OK] Sentence Transformers available")
 except ImportError:
-    logger.warning("⚠️ Sentence Transformers not available (pip install sentence-transformers)")
+    logger.warning("[WARN] Sentence Transformers not available (pip install sentence-transformers)")
 
 
 # ============================================================================
@@ -165,7 +165,7 @@ class EmbeddingGenerator:
         
         logger.info(f"Loading embedding model: {model_name}")
         self.model = SentenceTransformer(model_name)
-        logger.info(f"✅ Model loaded ({self.model.get_sentence_embedding_dimension()}D embeddings)")
+        logger.info(f"[OK] Model loaded ({self.model.get_sentence_embedding_dimension()}D embeddings)")
     
     def embed(self, texts: List[str], batch_size: int = 32) -> List[List[float]]:
         """Generate embeddings for list of texts"""
@@ -295,7 +295,7 @@ def ingest_batch(request: IngestionRequest) -> IngestionResponse:
             else:
                 db.create_table(request.table_name, all_batch_data)
             
-            logger.info(f"✅ Ingestion complete: {records_processed} records")
+            logger.info(f"[OK] Ingestion complete: {records_processed} records")
         
         duration = time.time() - start_time
         
@@ -403,14 +403,14 @@ if __name__ == "__main__":
         response = ingest_batch(request)
         
         if response.success:
-            print(f"\n✅ Ingestion Success")
+            print(f"\n[OK] Ingestion Success")
             print(f"Table: {response.table_name}")
             print(f"Records processed: {response.records_processed}")
             print(f"Records failed: {response.records_failed}")
             print(f"Duration: {response.duration_seconds:.2f}s")
             print(f"Database: {response.db_path}")
         else:
-            print(f"\n❌ Ingestion Failed: {response.error}")
+            print(f"\n[ERROR] Ingestion Failed: {response.error}")
             sys.exit(1)
     
     elif command == "query":
@@ -425,7 +425,7 @@ if __name__ == "__main__":
         try:
             results = query_lancedb(table_name, query_text, limit)
             
-            print(f"\n✅ Query Results ({len(results)} matches)")
+            print(f"\n[OK] Query Results ({len(results)} matches)")
             print(f"Query: {query_text}\n")
             
             for i, result in enumerate(results, 1):
@@ -435,7 +435,7 @@ if __name__ == "__main__":
                 print()
         
         except Exception as e:
-            print(f"\n❌ Query Failed: {e}")
+            print(f"\n[ERROR] Query Failed: {e}")
             sys.exit(1)
     
     else:
