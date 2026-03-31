@@ -28,7 +28,7 @@ async function buildLocalCapabilities() {
     });
   }
 
-  for (const tool of getRegisteredToolsList()) {
+  for (const tool of await getRegisteredToolsList()) {
     if (!capabilities.has(tool.id)) {
       capabilities.set(tool.id, {
         name: tool.id,
