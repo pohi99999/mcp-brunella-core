@@ -8,6 +8,56 @@
 
 ## 📋 LEGUTÓBBI MUNKAMENET
 
+### 2026-03-31 - 7 Jules PR beépítése (Phase 1 + Phase 2) ✅
+
+**Feladat:** 7 korábban CLOSED állapotú Jules-bot PR beépítése a `wip/save-local-20260328214645` branch-be. Minden PR cherry-pick / merge hibával járt (package.json konfliktus, hiányzó interfészek, destructive schema változások), ezeket manuálisan javítottuk.
+
+**PRek (Phase 1 – Megbízhatóság):**
+- **#96** `feat(cron)`: cron-parser v5 API fix — `CronExpressionParser.parse()` helyes API-ra javítva; `ToolDefinition` interfész hozzáadva `src/agents/types.ts`-be
+- **#66** `fix(audit)`: Audit trail RBAC javítás — `logDeniedOperation` paraméter sorrend fix, `.catch()` error handling, EV Hunter toolok eltávolítva `ToolPermissionMap`-ból; 2 új tesztfájl: `test/audit_permissions.test.ts`, `test/verify_permissions_calls.test.ts`
+- **#94** `feat(ollama)`: Ollama silent restart — `src/server/SystemController.ts` ESRCH hibakezelés + `stoppedChild` állapot
+- **#92** `feat(fastapi)`: FastAPI silent restart — `src/services/fastApiService.ts` újraírva; `src/utils/processUtils.ts` (ÚJ); `src/utils/pythonUtils.ts` (ÚJ); `src/utils/pythonShell.ts` frissítve (E2B eltávolítva, `resolvePythonPath` bekapcsolva); `src/server/web.ts` heartbeat failure handler hozzáadva
+
+**PRek (Phase 2 – Funkciók):**
+- **#99** `feat(agent)`: GitHubModelsAgent multi-iterációs tool execution loop (max 10) — `src/agents/GitHubModelsAgent.ts` újraírva; `src/server/registry.ts` `@ts-ignore` → `@ts-expect-error`; `src/server/routes/federation.ts` hiányzó `await` javítva
+- **#98** `feat(jules)`: Valódi Jules API kliens fallback logikával — `src/core/julesMock.ts` újraírva; `src/dashboard/components/dashboard/WidgetGrid.tsx` `</div>` → `</CardContent>` fix
+- **#93** `feat(db)`: `pull_requests` SQLite tábla + GitHub webhook PR tracking — `src/utils/db.ts` (`DbPullRequest` interfész, `savePullRequest`, `getPullRequest`); `src/server/routes/githubWebhook.ts` újraírva; **nem töröltük** a meglévő `business_jobs`/`business_leads` táblákat (backward compatibility)
+
+**Mellék-javítások:**
+- `src/agents/MarketIntelAgent.ts` — `runPythonWorker` visszatérési típus `as Record<string, unknown>` casttal rögzítve
+- `src/utils/pythonShell.ts` — `runPythonWorker` compatibility shim hozzáadva (MarketIntelAgent és mások importálják)
+- `src/agents/types.ts` — `ToolDefinition` interfész hozzáadva (hiányzott `toolRegistry.ts`-hez)
+
+**Érintett fájlok:**
+- `src/agents/types.ts`, `src/agents/GitHubModelsAgent.ts`, `src/agents/MarketIntelAgent.ts`
+- `src/agents/permissions.ts`, `src/tools/toolPermissions.ts`
+- `src/core/scheduledTasksEngine.ts`, `src/core/julesMock.ts`
+- `src/server/SystemController.ts`, `src/server/registry.ts`, `src/server/routes/index.ts`
+- `src/server/routes/federation.ts`, `src/server/routes/githubWebhook.ts`
+- `src/server/web.ts`
+- `src/services/fastApiService.ts`
+- `src/utils/db.ts`, `src/utils/pythonShell.ts`, `src/utils/processUtils.ts` (ÚJ), `src/utils/pythonUtils.ts` (ÚJ)
+- `src/dashboard/components/dashboard/WidgetGrid.tsx`
+- `test/audit_permissions.test.ts` (ÚJ), `test/verify_permissions_calls.test.ts` (ÚJ)
+
+**Git commitok:**
+- `87304606` feat(cron): dynamic next_run calculation using cron-parser
+- (audit trail RBAC fix)
+- `330cdf50` feat(jules): real Jules API client with fallback logic
+- `1258e640` feat(db): pull_requests SQLite table + GitHub webhook PR tracking
+- `bae370f5` feat(agent): GitHubModelsAgent tool execution loop
+- `8109d3e7` feat(ollama): silent restart logic for Ollama service
+- (fastapi silent restart)
+
+**Build:** ✅ 0 hiba, 0 ESLint warning
+**Státusz:** ✅ Befejezve
+
+**Megjegyzés a következő ügynöknek:**
+- A cron-parser v5 csak `CronExpressionParser.parse()` API-t ad — ne használj `parseExpression`-t
+- `runPythonWorker` kompatibilitási shim él a `pythonShell.ts` végén — `MarketIntelAgent` és hasonlók importálhatják
+- `business_jobs` és `business_leads` táblák **szándékosan megmaradtak** — meglévő route kód használja
+- `GITHUB_PAT` szükséges a GitHubModelsAgent tool execution loop-hoz (ne `GITHUB_TOKEN`)
+
 ### 2026-03-28 20:25 - 100%-os trackek archiválása ✅
 
 **Feladat:** A befejezett, 100%-os trackek lezárása és áthelyezése a conductor/archive alá.

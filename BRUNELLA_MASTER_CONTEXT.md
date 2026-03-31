@@ -1,7 +1,7 @@
 # 🌌 BRUNELLA MASTER CONTEXT (Élő Rendszertérkép)
 
 **Verzió:** 2.4.0
-**Frissítve:** 2026-03-30
+**Frissítve:** 2026-03-31
 **Státusz:** ACTIVE (Élő rendszer)
 
 ---

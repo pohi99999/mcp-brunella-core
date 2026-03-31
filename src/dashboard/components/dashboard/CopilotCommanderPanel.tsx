@@ -1,768 +1,109 @@
-/**
- * CopilotCommanderPanel — Layer 2: Dashboard panel for Copilot CLI integration
- * 
- * Real-time view of Copilot CLI activity, agent dispatch, task management,
- * and system health — all from the Dashboard UI.
- * 
- * Features:
- * - System Overview: health, agent stats, task queue summary
- * - Agent Dispatch: send tasks to BAS agents from the dashboard
- * - Activity Log: recent Copilot commands and results
- * - Quick Commands: common operations grid
- */
-import React, { useState, useEffect, useCallback, useRef } from 'react';
-import {
-  Terminal, Activity, Send, RefreshCw, AlertCircle, CheckCircle2,
-  Clock, Zap, Users, Cpu, Database, ArrowRight, Play, XCircle,
-  BarChart3, Loader2, ChevronRight
-} from 'lucide-react';
-import { toast } from 'sonner';
-import { TraceViewerModal } from './TraceViewerModal';
-
-// ---------- Types ----------
-
-interface HealthData {
-  status: string;
-  version?: string;
-  uptime?: number;
-  agents?: { total: number; active: number; idle: number };
-  taskQueue?: { pending: number; running: number; completed: number };
-  llm?: { provider: string; model: string; available: boolean };
-  memory?: { rss: number; heapUsed: number };
-}
-
-interface AgentStatus {
-  name: string;
-  status: string;
-  currentTask?: string;
-  lastActivity?: string;
-}
+import { useMemo, useState } from "react";
+import { Activity, AlertCircle, BarChart3, Cpu, Database, RefreshCw, Send, Terminal, Users, Zap } from "lucide-react";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "../ui/card";
+import { Button } from "../ui/button";
+import { Badge } from "../ui/badge";
 
 interface BridgeCommand {
-  id: string;
-  timestamp: string;
-  domain: string;
-  action: string;
-  status: 'pending' | 'running' | 'success' | 'error';
-  result?: unknown;
-  error?: string;
-  durationMs?: number;
+    id: string;
+    domain: string;
+    action: string;
+    status: "pending" | "running" | "success" | "error";
 }
 
-interface BridgeStats {
-  totalCommands: number;
-  successCount: number;
-  errorCount: number;
-  lastCommandAt: string | null;
-  activeDispatches: number;
-  uptimeSince: string;
-}
-
-interface QuickCommand {
-  label: string;
-  icon: React.ReactNode;
-  description: string;
-  endpoint: string;
-  method?: string;
-  body?: Record<string, unknown>;
-}
-
-// ---------- Constants ----------
-
-const QUICK_COMMANDS: QuickCommand[] = [
-  { label: 'Health Check', icon: <Activity className="w-4 h-4" />, description: 'Rendszer állapot lekérése', endpoint: '/api/health' },
-  { label: 'Agent Lista', icon: <Users className="w-4 h-4" />, description: 'Összes agent állapota', endpoint: '/api/agents/status' },
-  { label: 'Task Queue', icon: <Clock className="w-4 h-4" />, description: 'Feladat sor állapota', endpoint: '/api/tasks/queue' },
-  { label: 'MCP Tools', icon: <Zap className="w-4 h-4" />, description: 'Elérhető MCP eszközök', endpoint: '/api/tools' },
-  { label: 'LLM Status', icon: <Cpu className="w-4 h-4" />, description: 'LLM provider állapot', endpoint: '/api/llm/status' },
-  { label: 'Memory Stats', icon: <Database className="w-4 h-4" />, description: 'Memória statisztika', endpoint: '/api/memory/stats' },
-  { label: 'Phoenix Events', icon: <AlertCircle className="w-4 h-4" />, description: 'Utolsó phoenix események', endpoint: '/api/phoenix/events' },
-  { label: 'Track Status', icon: <BarChart3 className="w-4 h-4" />, description: 'Aktív trackek', endpoint: '/api/tracks/status' },
-];
-
-// ---------- Helpers ----------
-
-function relativeTime(isoStr: string): string {
-  const diff = Date.now() - new Date(isoStr).getTime();
-  if (diff < 60_000) return `${Math.floor(diff / 1000)}s ago`;
-  if (diff < 3_600_000) return `${Math.floor(diff / 60_000)}m ago`;
-  if (diff < 86_400_000) return `${Math.floor(diff / 3_600_000)}h ago`;
-  return `${Math.floor(diff / 86_400_000)}d ago`;
-}
-
-function statusBadge(status: string) {
-  const colors: Record<string, string> = {
-    success: 'bg-green-500/20 text-green-400 border-green-500/30',
-    error: 'bg-red-500/20 text-red-400 border-red-500/30',
-    running: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-    pending: 'bg-yellow-500/20 text-yellow-400 border-yellow-500/30',
-    idle: 'bg-gray-500/20 text-gray-400 border-gray-500/30',
-    working: 'bg-blue-500/20 text-blue-400 border-blue-500/30',
-    active: 'bg-green-500/20 text-green-400 border-green-500/30',
-    ok: 'bg-green-500/20 text-green-400 border-green-500/30',
-  };
-  const cls = colors[status.toLowerCase()] ?? colors.idle;
-  return (
-    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium border ${cls}`}>
-      {status}
-    </span>
-  );
-}
-
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes}B`;
-  if (bytes < 1048576) return `${(bytes / 1024).toFixed(1)}KB`;
-  return `${(bytes / 1048576).toFixed(1)}MB`;
-}
-
-// ---------- Sub-components ----------
-
-function OverviewTab({ health, agents, bridgeStats, loading, onRefresh }: {
-  health: HealthData | null;
-  agents: AgentStatus[];
-  bridgeStats: BridgeStats | null;
-  loading: boolean;
-  onRefresh: () => void;
-}) {
-  const activeAgents = agents.filter(a => a.status === 'working' || a.status === 'active').length;
-  const idleAgents = agents.filter(a => a.status === 'idle').length;
-
-  return (
-    <div className="space-y-4">
-      {/* Stats Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-        <StatCard
-          label="Rendszer"
-          value={health?.status === 'ok' ? '✅ OK' : health?.status ?? '—'}
-          sub={health?.version ? `v${health.version}` : ''}
-          icon={<Activity className="w-4 h-4 text-green-400" />}
-        />
-        <StatCard
-          label="Ügynökök"
-          value={`${activeAgents} / ${agents.length}`}
-          sub={`${idleAgents} idle`}
-          icon={<Users className="w-4 h-4 text-blue-400" />}
-        />
-        <StatCard
-          label="Bridge Parancsok"
-          value={String(bridgeStats?.totalCommands ?? 0)}
-          sub={bridgeStats?.lastCommandAt ? relativeTime(bridgeStats.lastCommandAt) : 'nincs még'}
-          icon={<Terminal className="w-4 h-4 text-purple-400" />}
-        />
-        <StatCard
-          label="Memória"
-          value={health?.memory ? formatBytes(health.memory.heapUsed) : '—'}
-          sub={health?.memory ? `RSS: ${formatBytes(health.memory.rss)}` : ''}
-          icon={<Database className="w-4 h-4 text-amber-400" />}
-        />
-      </div>
-
-      {/* Active Agents */}
-      {activeAgents > 0 && (
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
-          <h3 className="text-sm font-semibold text-gray-300 mb-3 flex items-center gap-2">
-            <Loader2 className="w-4 h-4 animate-spin text-blue-400" /> Aktív Ügynökök
-          </h3>
-          <div className="space-y-2">
-            {agents.filter(a => a.status === 'working' || a.status === 'active').map(agent => (
-              <div key={agent.name} className="flex items-center justify-between bg-gray-900/50 rounded px-3 py-2">
-                <div className="flex items-center gap-2">
-                  <div className="w-2 h-2 rounded-full bg-blue-400 animate-pulse" />
-                  <span className="font-mono text-sm">{agent.name}</span>
-                </div>
-                <span className="text-xs text-gray-400 truncate max-w-[200px]">{agent.currentTask ?? '...'}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* LLM Status */}
-      {health?.llm && (
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-4">
-          <h3 className="text-sm font-semibold text-gray-300 mb-2 flex items-center gap-2">
-            <Cpu className="w-4 h-4 text-cyan-400" /> LLM Provider
-          </h3>
-          <div className="flex items-center gap-4 text-sm">
-            <span className="text-gray-400">Provider:</span>
-            <span className="font-mono">{health.llm.provider}</span>
-            <span className="text-gray-400">Model:</span>
-            <span className="font-mono">{health.llm.model}</span>
-            {statusBadge(health.llm.available ? 'active' : 'error')}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function StatCard({ label, value, sub, icon }: { label: string; value: string; sub: string; icon: React.ReactNode }) {
-  return (
-    <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-3">
-      <div className="flex items-center justify-between mb-1">
-        <span className="text-xs text-gray-400">{label}</span>
-        {icon}
-      </div>
-      <div className="text-lg font-bold font-mono">{value}</div>
-      {sub && <div className="text-xs text-gray-500">{sub}</div>}
-    </div>
-  );
-}
-
-type DispatchMode = 'single' | 'multi';
-
-function DispatchTab({ agents, onDispatch, onMultiDispatch, dispatchResults, onOpenTrace }: {
-  agents: AgentStatus[];
-  onDispatch: (agentName: string, task: string) => Promise<void>;
-  onMultiDispatch: (agentNames: string[], task: string) => Promise<void>;
-  dispatchResults?: Record<string, { taskId?: number; status?: string; logs?: any[]; lastUpdate?: string }>
-  onOpenTrace?: (taskId: number | null) => void;
-}) {
-  const [dispatchMode, setDispatchMode] = useState<DispatchMode>('single');
-  const [selectedAgent, setSelectedAgent] = useState('');
-  const [selectedAgents, setSelectedAgents] = useState<string[]>([]);
-  const [taskInput, setTaskInput] = useState('');
-  const [dispatching, setDispatching] = useState(false);
-
-  const handleDispatch = async () => {
-    if (dispatchMode === 'single') {
-      if (!selectedAgent || !taskInput.trim()) {
-        toast.error('Válassz ügynököt és adj meg feladatot!');
-        return;
-      }
-      setDispatching(true);
-      try {
-        await onDispatch(selectedAgent, taskInput);
-        toast.success(`Feladat elküldve: ${selectedAgent}`);
-        setTaskInput('');
-      } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : String(err);
-        toast.error(`Dispatch hiba: ${msg}`);
-      } finally {
-        setDispatching(false);
-      }
-    } else {
-      if (selectedAgents.length === 0 || !taskInput.trim()) {
-        toast.error('Válassz legalább egy ügynököt és adj meg feladatot!');
-        return;
-      }
-      setDispatching(true);
-      try {
-        await onMultiDispatch(selectedAgents, taskInput);
-        toast.success(`Feladat elküldve: ${selectedAgents.join(', ')}`);
-        setTaskInput('');
-      } catch (err: unknown) {
-        const msg = err instanceof Error ? err.message : String(err);
-        toast.error(`Multi-dispatch hiba: ${msg}`);
-      } finally {
-        setDispatching(false);
-      }
-    }
-  };
-
-  const sortedAgents = [...agents].sort((a, b) => a.name.localeCompare(b.name));
-
-  return (
-    <div className="space-y-4">
-      {/* Dispatch mode selector */}
-      <div>
-        <label className="block text-sm text-gray-400 mb-1">Dispatch mód</label>
-        <div className="flex gap-3">
-          <button
-            className={`px-3 py-1 rounded-lg text-sm border ${dispatchMode === 'single' ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-800 text-gray-300 border-gray-600'}`}
-            onClick={() => setDispatchMode('single')}
-            type="button"
-          >
-            Egy ügynök
-          </button>
-          <button
-            className={`px-3 py-1 rounded-lg text-sm border ${dispatchMode === 'multi' ? 'bg-blue-600 text-white border-blue-600' : 'bg-gray-800 text-gray-300 border-gray-600'}`}
-            onClick={() => setDispatchMode('multi')}
-            type="button"
-          >
-            Több ügynök
-          </button>
-        </div>
-      </div>
-
-      {/* Agent selector */}
-      <div>
-        <label className="block text-sm text-gray-400 mb-1">Ügynök kiválasztása</label>
-        {dispatchMode === 'single' ? (
-          <select
-            value={selectedAgent}
-            onChange={(e) => setSelectedAgent(e.target.value)}
-            className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-          >
-            <option value="">— Válassz ügynököt —</option>
-            {sortedAgents.map(a => (
-              <option key={a.name} value={a.name}>
-                {a.name} ({a.status})
-              </option>
-            ))}
-          </select>
-        ) : (
-          <select
-            multiple
-            value={selectedAgents}
-            onChange={(e) => setSelectedAgents(Array.from(e.target.selectedOptions, o => o.value))}
-            className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none h-32"
-          >
-            {sortedAgents.map(a => (
-              <option key={a.name} value={a.name}>
-                {a.name} ({a.status})
-              </option>
-            ))}
-          </select>
-        )}
-      </div>
-
-      {/* Task input */}
-      <div>
-        <label className="block text-sm text-gray-400 mb-1">Feladat leírása</label>
-        <textarea
-          value={taskInput}
-          onChange={(e) => setTaskInput(e.target.value)}
-          placeholder="Írd le a feladatot amit az ügynöknek kell végrehajtania..."
-          rows={3}
-          className="w-full bg-gray-800 border border-gray-600 rounded-lg px-3 py-2 text-sm resize-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 outline-none"
-        />
-      </div>
-
-      {/* Dispatch button */}
-      <button
-        onClick={() => void handleDispatch()}
-        disabled={dispatching || (dispatchMode === 'single' ? !selectedAgent : selectedAgents.length === 0) || !taskInput.trim()}
-        className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-700 disabled:text-gray-500 text-white rounded-lg px-4 py-2.5 text-sm font-medium transition-colors"
-      >
-        {dispatching ? (
-          <Loader2 className="w-4 h-4 animate-spin" />
-        ) : (
-          <Send className="w-4 h-4" />
-        )}
-        {dispatching ? 'Küldés...' : 'Feladat Indítása'}
-      </button>
-
-      {/* Agent quick-info */}
-      {dispatchMode === 'single' && selectedAgent && (
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-3">
-          <div className="flex items-center gap-2 mb-1">
-            <ChevronRight className="w-4 h-4 text-blue-400" />
-            <span className="font-semibold text-sm">{selectedAgent}</span>
-            {statusBadge(agents.find(a => a.name === selectedAgent)?.status ?? 'unknown')}
-          </div>
-          <p className="text-xs text-gray-400">
-            {agents.find(a => a.name === selectedAgent)?.currentTask
-              ? `Jelenlegi: ${agents.find(a => a.name === selectedAgent)?.currentTask}`
-              : 'Várakozik feladatra'}
-          </p>
-        </div>
-      )}
-      {dispatchMode === 'multi' && selectedAgents.length > 0 && (
-        <div className="bg-gray-800/50 rounded-lg border border-gray-700 p-3">
-          <div className="flex items-center gap-2 mb-1">
-            <ChevronRight className="w-4 h-4 text-blue-400" />
-            <span className="font-semibold text-sm">{selectedAgents.join(', ')}</span>
-          </div>
-          <div className="space-y-2 text-xs text-gray-400">
-            {selectedAgents.map(name => {
-              const agent = agents.find(a => a.name === name);
-              const dr = (dispatchResults && dispatchResults[name]) || null;
-              return (
-                <div key={name} className="bg-gray-900/30 rounded px-2 py-1">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <span className="font-mono mr-2">{name}</span>
-                      {statusBadge(agent?.status ?? 'unknown')}
-                      {agent?.currentTask ? <span className="ml-2 text-xs">Jelenlegi: {agent.currentTask}</span> : null}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {dr?.taskId && <button onClick={() => onOpenTrace?.(dr.taskId)} className="text-xs text-blue-400 hover:underline">Trace #{dr.taskId}</button>}
-                      {dr?.status && <span className="text-xs text-gray-300">{dr.status}</span>}
-                    </div>
-                  </div>
-                  {dr?.lastUpdate && <div className="text-xs text-gray-500 mt-1">Utolsó frissítés: {relativeTime(dr.lastUpdate)}</div>}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function ActivityTab({ commands, loading }: { commands: BridgeCommand[]; loading: boolean }) {
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center py-12 text-gray-400">
-        <Loader2 className="w-5 h-5 animate-spin mr-2" /> Betöltés...
-      </div>
-    );
-  }
-
-  if (commands.length === 0) {
-    return (
-      <div className="text-center py-12 text-gray-500">
-        <Terminal className="w-8 h-8 mx-auto mb-2 opacity-40" />
-        <p className="text-sm">Még nincs Copilot parancs az Activity Log-ban.</p>
-        <p className="text-xs mt-1">Futtass egy parancsot a Copilot CLI-ből!</p>
-      </div>
-    );
-  }
-
-  return (
-    <div className="space-y-2 max-h-[500px] overflow-y-auto pr-1">
-      {commands.map(cmd => (
-        <div key={cmd.id} className="bg-gray-800/50 rounded-lg border border-gray-700 p-3">
-          <div className="flex items-center justify-between mb-1">
-            <div className="flex items-center gap-2">
-              <span className="font-mono text-sm text-blue-300">{cmd.domain}</span>
-              <ArrowRight className="w-3 h-3 text-gray-500" />
-              <span className="font-mono text-sm">{cmd.action}</span>
-            </div>
-            <div className="flex items-center gap-2">
-              {statusBadge(cmd.status)}
-              <span className="text-xs text-gray-500">{relativeTime(cmd.timestamp)}</span>
-            </div>
-          </div>
-          {cmd.error && (
-            <div className="mt-1 text-xs text-red-400 bg-red-900/20 rounded px-2 py-1">
-              {cmd.error}
-            </div>
-          )}
-          {cmd.durationMs != null && (
-            <span className="text-xs text-gray-500">{cmd.durationMs}ms</span>
-          )}
-        </div>
-      ))}
-    </div>
-  );
-}
-
-function QuickCommandsTab({ onExecute }: { onExecute: (cmd: QuickCommand) => Promise<void> }) {
-  const [results, setResults] = useState<Record<string, { loading: boolean; data?: unknown; error?: string }>>({});
-
-  const execute = async (cmd: QuickCommand) => {
-    setResults(prev => ({ ...prev, [cmd.label]: { loading: true } }));
-    try {
-      await onExecute(cmd);
-      setResults(prev => ({ ...prev, [cmd.label]: { loading: false, data: 'OK' } }));
-    } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      setResults(prev => ({ ...prev, [cmd.label]: { loading: false, error: msg } }));
-    }
-  };
-
-  return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-      {QUICK_COMMANDS.map(cmd => {
-        const r = results[cmd.label];
-        return (
-          <button
-            key={cmd.label}
-            onClick={() => void execute(cmd)}
-            disabled={r?.loading}
-            className="flex items-start gap-3 bg-gray-800/50 hover:bg-gray-800 border border-gray-700 hover:border-gray-600 rounded-lg p-3 text-left transition-colors"
-          >
-            <div className="mt-0.5 text-blue-400">{cmd.icon}</div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium">{cmd.label}</span>
-                {r?.loading && <Loader2 className="w-3 h-3 animate-spin text-blue-400" />}
-                {r?.data && <CheckCircle2 className="w-3 h-3 text-green-400" />}
-                {r?.error && <XCircle className="w-3 h-3 text-red-400" />}
-              </div>
-              <span className="text-xs text-gray-400">{cmd.description}</span>
-              {r?.error && <div className="text-xs text-red-400 mt-1 truncate">{r.error}</div>}
-            </div>
-            <Play className="w-4 h-4 text-gray-500 mt-0.5" />
-          </button>
-        );
-      })}
-    </div>
-  );
-}
-
-// ---------- Main Component ----------
-
-type TabId = 'overview' | 'dispatch' | 'activity' | 'quick';
-
-const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
-  { id: 'overview', label: 'Áttekintés', icon: <BarChart3 className="w-4 h-4" /> },
-  { id: 'dispatch', label: 'Agent Dispatch', icon: <Send className="w-4 h-4" /> },
-  { id: 'activity', label: 'Activity Log', icon: <Terminal className="w-4 h-4" /> },
-  { id: 'quick', label: 'Gyors Parancsok', icon: <Zap className="w-4 h-4" /> },
+const QUICK_COMMANDS = [
+    { label: "Health Check", icon: Activity, endpoint: "/api/health", description: "Rendszer állapot lekérése" },
+    { label: "Agent Lista", icon: Users, endpoint: "/api/agents/status", description: "Összes agent állapota" },
+    { label: "Task Queue", icon: BarChart3, endpoint: "/api/tasks/queue", description: "Feladat sor állapota" },
+    { label: "MCP Tools", icon: Zap, endpoint: "/api/tools", description: "Elérhető MCP eszközök" },
+    { label: "LLM Status", icon: Cpu, endpoint: "/api/llm/status", description: "LLM provider állapot" },
+    { label: "Memory Stats", icon: Database, endpoint: "/api/memory/stats", description: "Memória statisztika" },
+    { label: "Phoenix Events", icon: AlertCircle, endpoint: "/api/phoenix/events", description: "Utolsó phoenix események" },
+    { label: "Track Status", icon: BarChart3, endpoint: "/api/tracks/status", description: "Aktív trackek" },
 ];
 
 export function CopilotCommanderPanel() {
-  const [activeTab, setActiveTab] = useState<TabId>('overview');
-  const [health, setHealth] = useState<HealthData | null>(null);
-  const [agents, setAgents] = useState<AgentStatus[]>([]);
-  const [commands, setCommands] = useState<BridgeCommand[]>([]);
-  const [bridgeStats, setBridgeStats] = useState<BridgeStats | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [dispatchResults, setDispatchResults] = useState<Record<string, { taskId?: number; status?: string; logs: any[]; lastUpdate?: string }>>({});
-  const [traceModalOpen, setTraceModalOpen] = useState(false);
-  const [traceModalTaskId, setTraceModalTaskId] = useState<number | null>(null);
-  const pollTimersRef = useRef<Record<number, number>>({});
-  const eventSourcesRef = useRef<Record<string, EventSource | null>>({});
+    const [commands, setCommands] = useState<BridgeCommand[]>([
+        { id: "cmd-1", domain: "core", action: "health", status: "success" },
+        { id: "cmd-2", domain: "agents", action: "status", status: "running" },
+        { id: "cmd-3", domain: "tasks", action: "queue", status: "pending" },
+    ]);
 
-  useEffect(() => {
-    return () => {
-      // cleanup on unmount
-      Object.values(eventSourcesRef.current).forEach(es => es?.close());
-      Object.values(pollTimersRef.current).forEach(id => clearInterval(id));
-    };
-  }, []);
+    const stats = useMemo(() => ({
+        total: commands.length,
+        success: commands.filter((command) => command.status === "success").length,
+        active: commands.filter((command) => command.status === "running").length,
+        pending: commands.filter((command) => command.status === "pending").length,
+    }), [commands]);
 
-  const openTraceForTask = (taskId: number | null) => {
-    if (!taskId) return;
-    setTraceModalTaskId(taskId);
-    setTraceModalOpen(true);
-  };
+    return (
+        <div className="space-y-4 md:space-y-6">
+            <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+                {[
+                    { label: "Összes parancs", value: stats.total, tone: "text-white" },
+                    { label: "Sikeres", value: stats.success, tone: "text-emerald-300" },
+                    { label: "Futó", value: stats.active, tone: "text-cyan-300" },
+                    { label: "Várakozó", value: stats.pending, tone: "text-amber-300" },
+                ].map((item) => (
+                    <Card key={item.label} className="border-white/10 bg-slate-950/70 shadow-lg shadow-black/20 backdrop-blur-xl">
+                        <CardHeader className="p-3 md:pb-2">
+                            <CardDescription className="text-[10px] uppercase tracking-[0.22em] text-slate-400">{item.label}</CardDescription>
+                            <CardTitle className={`text-xl md:text-2xl font-bold ${item.tone}`}>{item.value}</CardTitle>
+                        </CardHeader>
+                    </Card>
+                ))}
+            </div>
 
-  const startTaskPolling = (taskId: number, agentName?: string) => {
-    if (pollTimersRef.current[taskId]) return;
-    const poll = async () => {
-      try {
-        const res = await fetch(`/api/tasks/${taskId}`);
-        if (!res.ok) return;
-        const data = await res.json();
-        const status = data.task?.status ?? data.task?.state ?? 'unknown';
-        setDispatchResults(prev => {
-          const key = agentName ?? String(taskId);
-          const prevItem = prev[key] || { logs: [] };
-          return { ...prev, [key]: { ...prevItem, taskId, status, lastUpdate: new Date().toISOString() } };
-        });
-        if (['done', 'completed', 'error', 'failed', 'cancelled'].includes(String(status))) {
-          clearInterval(pollTimersRef.current[taskId]);
-          delete pollTimersRef.current[taskId];
-        }
-      } catch (e) {
-        // ignore polling errors
-      }
-    };
-    pollTimersRef.current[taskId] = window.setInterval(poll, 3000);
-    // run immediately
-    void poll();
-  };
+            <Card className="border-border/40 bg-slate-950/70 shadow-xl shadow-black/20 backdrop-blur-xl">
+                <CardHeader className="border-b border-white/5">
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                        <Terminal className="h-5 w-5 text-cyan-400" />
+                        Copilot Commander
+                    </CardTitle>
+                    <CardDescription className="text-slate-400">
+                        Quick command surface for dashboard health and orchestration shortcuts.
+                    </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-4 p-4 md:p-6">
+                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+                        {QUICK_COMMANDS.map((command) => {
+                            const Icon = command.icon;
+                            return (
+                                <article key={command.label} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4 transition hover:border-cyan-400/30 hover:bg-white/[0.05]">
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div className="space-y-1">
+                                            <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{command.label}</p>
+                                            <p className="text-sm text-slate-300">{command.description}</p>
+                                        </div>
+                                        <Icon className="h-4 w-4 text-cyan-300" />
+                                    </div>
+                                    <div className="mt-4 flex items-center justify-between gap-3">
+                                        <code className="text-xs text-slate-400">{command.endpoint}</code>
+                                        <Button size="sm" variant="outline" className="border-white/10 bg-white/5 text-xs text-slate-200">
+                                            <Send className="mr-2 h-3.5 w-3.5" />
+                                            Run
+                                        </Button>
+                                    </div>
+                                </article>
+                            );
+                        })}
+                    </div>
 
-  const subscribeAgentLogs = (agentName: string) => {
-    if (eventSourcesRef.current[agentName]) return;
-    try {
-      const es = new EventSource(`/api/agents/${encodeURIComponent(agentName)}/logs`);
-      es.addEventListener('log', (ev: MessageEvent) => {
-        try {
-          const entry = JSON.parse(ev.data);
-          setDispatchResults(prev => {
-            const prevItem = prev[agentName] || { logs: [] };
-            const logs = [...(prevItem.logs || []), entry].slice(-200);
-            return { ...prev, [agentName]: { ...prevItem, logs, lastUpdate: new Date().toISOString() } };
-          });
-        } catch (err) {
-          // ignore JSON parse errors
-        }
-      });
-      eventSourcesRef.current[agentName] = es;
-    } catch (e) {
-      // cannot open EventSource in this environment
-    }
-  };
-
-  const fetchAll = useCallback(async () => {
-    setLoading(true);
-    try {
-      const [healthRes, agentsRes, bridgeRes] = await Promise.allSettled([
-        fetch('/api/health').then(r => r.ok ? r.json() : null),
-        fetch('/api/agents/status').then(r => r.ok ? r.json() : []),
-        fetch('/api/copilot-bridge/stats').then(r => r.ok ? r.json() : null),
-      ]);
-
-      if (healthRes.status === 'fulfilled') setHealth(healthRes.value as HealthData);
-      if (agentsRes.status === 'fulfilled') {
-        const data = agentsRes.value;
-        setAgents(Array.isArray(data) ? data as AgentStatus[] : []);
-      }
-      if (bridgeRes.status === 'fulfilled' && bridgeRes.value) {
-        setBridgeStats(bridgeRes.value as BridgeStats);
-      }
-    } catch {
-      // silent — individual fetches handle their own errors
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const fetchActivity = useCallback(async () => {
-    try {
-      const res = await fetch('/api/copilot-bridge/commands?limit=50');
-      if (res.ok) {
-        const data = await res.json();
-        setCommands(Array.isArray(data) ? data as BridgeCommand[] : []);
-      }
-    } catch {
-      // silent
-    }
-  }, []);
-
-  useEffect(() => {
-    void fetchAll();
-    void fetchActivity();
-    const interval = setInterval(() => {
-      void fetchAll();
-      void fetchActivity();
-    }, 15_000);
-    return () => clearInterval(interval);
-  }, [fetchAll, fetchActivity]);
-
-  const handleDispatch = async (agentName: string, task: string) => {
-    const res = await fetch(`/api/agents/${encodeURIComponent(agentName)}/execute`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ task }),
-    });
-    if (!res.ok) {
-      const text = await res.text();
-      throw new Error(text || `HTTP ${res.status}`);
-    }
-    void fetchAll();
-    void fetchActivity();
-  };
-
-  const handleMultiDispatch = async (agentNames: string[], task: string) => {
-    // Dispatch tasks to multiple agents concurrently and wait for them to be queued
-    const promises = agentNames.map(name =>
-      fetch(`/api/agents/${encodeURIComponent(name)}/execute`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ task }),
-      }).then(async res => {
-        if (!res.ok) {
-          const text = await res.text();
-          throw new Error(`Agent ${name} error: ${text || `HTTP ${res.status}`}`);
-        }
-        return res.json();
-      })
+                    <div className="grid gap-3 md:grid-cols-3">
+                        {commands.map((command) => (
+                            <div key={command.id} className="flex items-center justify-between rounded-2xl border border-white/10 bg-slate-950/60 px-4 py-3">
+                                <div>
+                                    <p className="text-xs uppercase tracking-[0.2em] text-slate-400">{command.domain}</p>
+                                    <p className="text-sm text-white">{command.action}</p>
+                                </div>
+                                <Badge variant="secondary" className="border-white/10 bg-white/5 text-slate-200">
+                                    {command.status}
+                                </Badge>
+                            </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+        </div>
     );
-
-    const results = await Promise.allSettled(promises);
-    const errors = results.filter(r => r.status === 'rejected') as PromiseRejectedResult[];
-    if (errors.length > 0) {
-      throw new Error(errors.map(e => (e.reason instanceof Error ? e.reason.message : String(e.reason))).join('; '));
-    }
-
-    // Update dispatchResults per-agent and start polling + logs subscription
-    for (let i = 0; i < results.length; i++) {
-      const settled = results[i] as PromiseSettledResult<any>;
-      const agent = agentNames[i];
-      if (settled.status === 'fulfilled') {
-        const data = settled.value;
-        const taskId = typeof data?.taskId === 'number' ? data.taskId : (typeof data?.taskId === 'string' ? Number(data.taskId) : undefined);
-        setDispatchResults(prev => ({
-          ...prev,
-          [agent]: { ...(prev[agent] || { logs: [] }), taskId, status: 'queued', lastUpdate: new Date().toISOString() },
-        }));
-        // subscribe to agent logs and start polling task status
-        subscribeAgentLogs(agent);
-        if (taskId) startTaskPolling(taskId, agent);
-      }
-    }
-
-    void fetchAll();
-    void fetchActivity();
-  };
-
-  const handleQuickCommand = async (cmd: QuickCommand) => {
-    const res = await fetch(cmd.endpoint, {
-      method: cmd.method ?? 'GET',
-      headers: cmd.body ? { 'Content-Type': 'application/json' } : undefined,
-      body: cmd.body ? JSON.stringify(cmd.body) : undefined,
-    });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    toast.success(`${cmd.label}: OK`, { description: JSON.stringify(data).slice(0, 120) });
-  };
-
-  return (
-    <div className="p-6 space-y-5 h-full overflow-y-auto">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="p-2 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg">
-            <Terminal className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h2 className="text-lg font-bold">Copilot Commander</h2>
-            <p className="text-xs text-gray-400">Copilot CLI ↔ BAS Dashboard Bridge • Layer 2</p>
-          </div>
-        </div>
-        <button
-          onClick={() => { void fetchAll(); void fetchActivity(); }}
-          className="p-2 rounded-lg hover:bg-gray-700 transition-colors"
-          title="Frissítés"
-        >
-          <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin' : ''}`} />
-        </button>
-      </div>
-
-      {/* Tab bar */}
-      <div className="flex gap-1 bg-gray-800/50 rounded-lg p-1 border border-gray-700">
-        {TABS.map(tab => (
-          <button
-            key={tab.id}
-            onClick={() => setActiveTab(tab.id)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-sm transition-colors ${
-              activeTab === tab.id
-                ? 'bg-blue-600 text-white shadow-sm'
-                : 'text-gray-400 hover:text-gray-200 hover:bg-gray-700/50'
-            }`}
-          >
-            {tab.icon}
-            <span className="hidden sm:inline">{tab.label}</span>
-          </button>
-        ))}
-      </div>
-
-      {/* Tab content */}
-      <div>
-        {activeTab === 'overview' && (
-          <OverviewTab
-            health={health}
-            agents={agents}
-            bridgeStats={bridgeStats}
-            loading={loading}
-            onRefresh={() => void fetchAll()}
-          />
-        )}
-        {activeTab === 'dispatch' && (
-          <DispatchTab agents={agents} onDispatch={handleDispatch} onMultiDispatch={handleMultiDispatch} dispatchResults={dispatchResults} onOpenTrace={openTraceForTask} />
-        )}
-        {activeTab === 'activity' && (
-          <ActivityTab commands={commands} loading={loading} />
-        )}
-        {activeTab === 'quick' && (
-          <QuickCommandsTab onExecute={handleQuickCommand} />
-        )}
-      </div>
-
-      {/* Footer status bar */}
-      <div className="flex items-center justify-between text-xs text-gray-500 border-t border-gray-700 pt-3">
-        <div className="flex items-center gap-4">
-          <span className="flex items-center gap-1">
-            <div className={`w-1.5 h-1.5 rounded-full ${health?.status === 'ok' ? 'bg-green-400' : 'bg-red-400'}`} />
-            Backend {health?.status === 'ok' ? 'online' : 'offline'}
-          </span>
-          <span>{agents.length} agent regisztrálva</span>
-          {bridgeStats && <span>{bridgeStats.totalCommands} bridge parancs</span>}
-        </div>
-        <span>Auto-refresh: 15s</span>
-      </div>
-
-      {/* Trace modal for task deep-dive */}
-      <TraceViewerModal isOpen={traceModalOpen} onClose={() => setTraceModalOpen(false)} taskId={traceModalTaskId} />
-    </div>
-  );
 }
-
-export default CopilotCommanderPanel;

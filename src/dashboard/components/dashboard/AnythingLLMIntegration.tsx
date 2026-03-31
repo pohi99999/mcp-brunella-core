@@ -83,15 +83,15 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
 
     if (loading) {
         return (
-            <Card className={className}>
-                <CardHeader>
-                    <CardTitle className="flex items-center gap-2">
+            <Card className={`glass-card border-white/10 overflow-hidden shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)] ${className ?? ''}`}>
+                <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+                    <CardTitle className="flex items-center gap-2 text-[11px] font-mono font-semibold tracking-[0.28em] uppercase text-zinc-400">
                         <Database size={24} />
                         AnythingLLM RAG
                     </CardTitle>
-                    <CardDescription>Betöltés...</CardDescription>
+                    <CardDescription className="text-zinc-500">Betöltés...</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 p-4 lg:p-5">
                     <Skeleton className="h-10 w-full" />
                     <Skeleton className="h-32 w-full" />
                 </CardContent>
@@ -100,19 +100,19 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
     }
 
     return (
-        <Card className={className}>
-            <CardHeader>
-                <CardTitle className="flex items-center gap-2">
+        <Card className={`glass-card border-white/10 overflow-hidden shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)] ${className ?? ''}`}>
+            <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+                <CardTitle className="flex items-center gap-2 text-[11px] font-mono font-semibold tracking-[0.28em] uppercase text-zinc-400">
                     <Database size={24} />
                     AnythingLLM RAG
                 </CardTitle>
-                <CardDescription>
+                <CardDescription className="text-zinc-500">
                     Kérdezz a tudásbázisodból dokumentumok alapján
                 </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
+            <CardContent className="space-y-4 p-4 lg:p-5">
                 {workspaces.length === 0 ? (
-                    <Alert>
+                    <Alert className="border-white/10 bg-white/[0.03] text-zinc-200">
                         <Info size={20} />
                         <AlertDescription>
                             Nincs elérhető workspace. Ellenőrizd az AnythingLLM kapcsolatot és az API kulcsot.
@@ -122,12 +122,12 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
                     <>
                         {/* Workspace Selector */}
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Workspace</label>
+                            <label className="text-[10px] uppercase tracking-[0.24em] text-zinc-500">Workspace</label>
                             <Select
                                 value={selectedWorkspace}
                                 onValueChange={setSelectedWorkspace}
                             >
-                                <SelectTrigger>
+                                <SelectTrigger className="glass-card border-white/10 bg-white/[0.03]">
                                     <SelectValue placeholder="Válassz workspace-t" />
                                 </SelectTrigger>
                                 <SelectContent>
@@ -148,13 +148,13 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
 
                         {/* Message Input */}
                         <div className="space-y-2">
-                            <label className="text-sm font-medium">Kérdés</label>
+                            <label className="text-[10px] uppercase tracking-[0.24em] text-zinc-500">Kérdés</label>
                             <Textarea
                                 value={message}
                                 onChange={(e) => setMessage(e.target.value)}
                                 onKeyDown={handleKeyDown}
                                 placeholder="Pl.: Milyen dokumentumok vannak a projektről?"
-                                className="min-h-[100px]"
+                                className="min-h-[120px] glass-card border-white/10 bg-white/[0.03]"
                                 disabled={isProcessing}
                             />
                             <p className="text-xs text-zinc-500">
@@ -166,7 +166,7 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
                         <Button
                             onClick={handleSendMessage}
                             disabled={isProcessing || !message.trim()}
-                            className="w-full"
+                            className="w-full rounded-full border border-white/10 bg-cyan-500/15 text-cyan-100 hover:bg-cyan-500/20"
                         >
                             <Sparkle size={18} className={isProcessing ? 'animate-pulse' : ''} />
                             <span className="ml-2">
@@ -179,10 +179,10 @@ export function AnythingLLMIntegration({ className }: AnythingLLMIntegrationProp
                         {response && (
                             <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                    <label className="text-sm font-medium">Válasz</label>
-                                    <Badge variant="outline">RAG</Badge>
+                                    <label className="text-[10px] uppercase tracking-[0.24em] text-zinc-500">Válasz</label>
+                                    <Badge variant="outline" className="border-white/10 bg-white/[0.03] text-zinc-300">RAG</Badge>
                                 </div>
-                                <div className="p-4 rounded-lg border bg-muted/50">
+                                <div className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
                                     <p className="text-sm whitespace-pre-wrap">{response}</p>
                                 </div>
                             </div>

@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-03-30T14:15:01.465Z",
+  "lastUpdated": "2026-03-31T04:22:48.951Z",
   "tracks": [
     {
       "id": "cloudflare_dns_zone_reconciliation_20260325",
@@ -21,21 +21,28 @@
       "_isArchived": false
     },
     {
-      "id": "cloudflare_workers_migration_20260226",
-      "name": "Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor",
-      "status": "proposed",
-      "priority": "high",
+      "id": "inventory_automation_20260330",
+      "name": "Autonóm Készlet- és Leltárkezelési Rendszer — KKV",
+      "status": "active",
+      "priority": "medium",
       "progress": 0,
-      "created": "2026-02-26",
-      "tags": [],
-      "dependencies": [
-        "Cloudflare account dd107933ac970dac857f27cee7a7ff46 (BAS_server) — MEGVAN",
-        "CLOUDFLARE_API_TOKEN — MEGVAN (.env-ben)",
-        "Browser Rendering API token — MEGVAN (siTRHomo1G_...)",
-        "wrangler CLI telepítve — ellenőrizd: npx wrangler --version",
-        "D1 binding: bas-metadata (1c4e7d00-7b09-4ddf-88b4-8df42e1123ab) — MEGVAN"
+      "created": "2026-03-30",
+      "tags": [
+        "készlet",
+        "leltár",
+        "FIFO",
+        "WAC",
+        "inventory",
+        "n8n",
+        "Langflow",
+        "Google Sheets",
+        "Supabase",
+        "KKV",
+        "replenishment",
+        "stocktake"
       ],
-      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\cloudflare_workers_migration_20260226",
+      "dependencies": [],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\inventory_automation_20260330",
       "_isArchived": false
     },
     {
@@ -71,6 +78,32 @@
         "Google Drive / IMAP hozzáférés"
       ],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\konyveles_automatizalas",
+      "_isArchived": false
+    },
+    {
+      "id": "konyveles_kognitiv_bovites_20260330",
+      "name": "Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény",
+      "status": "active",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-03-30",
+      "tags": [
+        "könyvelés",
+        "MCP",
+        "Langflow",
+        "LanceDB",
+        "multi-agent",
+        "reconciliation",
+        "anomáliadetektálás",
+        "NAV",
+        "n8n",
+        "RAG"
+      ],
+      "dependencies": [
+        "konyveles_automatizalas",
+        "n8n_konyveles_pipeline_20260328"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\konyveles_kognitiv_bovites_20260330",
       "_isArchived": false
     },
     {
@@ -117,9 +150,9 @@
     {
       "id": "P-Sales20260327",
       "name": "P-Sales20260327",
-      "status": "active",
+      "status": "completed",
       "priority": "high",
-      "progress": 40,
+      "progress": 100,
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\tracks\\P-Sales20260327",
@@ -839,6 +872,24 @@
       "tags": [],
       "dependencies": [],
       "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_workers_audit_20260221",
+      "_isArchived": true
+    },
+    {
+      "id": "cloudflare_workers_migration_20260226",
+      "name": "Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor",
+      "status": "archived",
+      "priority": "high",
+      "progress": 0,
+      "created": "2026-02-26",
+      "tags": [],
+      "dependencies": [
+        "Cloudflare account dd107933ac970dac857f27cee7a7ff46 (BAS_server) — MEGVAN",
+        "CLOUDFLARE_API_TOKEN — MEGVAN (.env-ben)",
+        "Browser Rendering API token — MEGVAN (siTRHomo1G_...)",
+        "wrangler CLI telepítve — ellenőrizd: npx wrangler --version",
+        "D1 binding: bas-metadata (1c4e7d00-7b09-4ddf-88b4-8df42e1123ab) — MEGVAN"
+      ],
+      "_sourcePath": "F:\\mcp-brunella-core\\conductor\\archive\\cloudflare_workers_migration_20260226",
       "_isArchived": true
     },
     {
@@ -2730,10 +2781,10 @@
     }
   ],
   "stats": {
-    "total": 158,
-    "active": 5,
-    "completed": 0,
-    "archived": 148,
-    "proposed": 4
+    "total": 160,
+    "active": 6,
+    "completed": 1,
+    "archived": 149,
+    "proposed": 3
   }
 }

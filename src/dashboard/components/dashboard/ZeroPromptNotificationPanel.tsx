@@ -5,6 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useSocket } from '@/context/SocketContext';
+import { cn } from '@/lib/utils';
 import
 {
     dispatchApprovalWorkflowNotification,
@@ -147,19 +148,19 @@ export function ZeroPromptNotificationPanel ()
 
     const availableChannels = summary?.availableChannels ?? [];
 
-    return (
-        <Card className="glass-card border-white/[0.04] bg-white/[0.03] backdrop-blur-xl h-full flex flex-col">
-            <CardHeader className="p-4 border-b border-white/[0.04]">
-                <CardTitle className="flex items-center justify-between text-xs font-bold tracking-widest uppercase text-white">
+  return (
+        <Card className="glass-card border-white/10 bg-white/[0.03] backdrop-blur-xl h-full flex flex-col overflow-hidden shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)]">
+            <CardHeader className="p-4 border-b border-white/[0.05] bg-white/[0.015]">
+                <CardTitle className="flex items-center justify-between text-[11px] font-mono font-semibold tracking-[0.28em] uppercase text-zinc-400">
                     <span className="flex items-center gap-2">
-                        <Bell size={ 16 } className="text-amber-400" />
+                        <Bell size={ 16 } className="text-amber-300" />
                         Zero-Prompt Értesítések
                     </span>
                     <div className="flex items-center gap-2">
                         <Badge variant={ error ? 'destructive' : loading ? 'secondary' : 'default' }>
                             { error ? 'HIBA' : loading ? 'FRISSÍTÉS' : 'ÉLŐ' }
                         </Badge>
-                        <Button variant="outline" size="sm" className="h-7" onClick={ () => void refreshData() }>
+                        <Button variant="outline" size="sm" className="h-7 rounded-full border-white/10 bg-white/[0.02] text-zinc-100 hover:bg-white/[0.05]" onClick={ () => void refreshData() }>
                             <RefreshCcw size={ 12 } className="mr-1" />
                             Frissítés
                         </Button>
@@ -169,7 +170,7 @@ export function ZeroPromptNotificationPanel ()
 
             <CardContent className="p-4 flex-1 flex flex-col gap-4">
                 { error ? (
-                    <div className="rounded-xl border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">{ error }</div>
+                    <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-3 text-sm text-red-300">{ error }</div>
                 ) : null }
 
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
@@ -179,9 +180,9 @@ export function ZeroPromptNotificationPanel ()
                     <StatTile label="Skip" value={ summary?.skipped ?? 0 } tone="text-zinc-300" />
                 </div>
 
-                <div className="rounded-xl border border-white/[0.04] bg-zinc-900/50 p-3 space-y-3">
-                    <div className="flex items-center gap-2 text-xs uppercase tracking-wider text-zinc-400 font-mono">
-                        <ShieldCheck size={ 13 } className="text-emerald-400" />
+                <div className="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-3 space-y-3">
+                    <div className="flex items-center gap-2 text-[10px] uppercase tracking-[0.22em] text-zinc-400 font-mono">
+                        <ShieldCheck size={ 13 } className="text-emerald-300" />
                         Elérhető csatornák
                     </div>
                     <div className="flex flex-wrap gap-2">
@@ -199,10 +200,10 @@ export function ZeroPromptNotificationPanel ()
                     </div>
                     { ( summary?.channelPolicies?.length ?? 0 ) > 0 ? (
                         <div className="space-y-2">
-                            <p className="text-[10px] uppercase tracking-wider text-zinc-500 font-mono">Aktív jelzési policy</p>
+                            <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500 font-mono">Aktív jelzési policy</p>
                             <div className="space-y-2">
                                 { summary?.channelPolicies?.map( ( policy ) => (
-                                    <div key={ policy.channel } className="rounded-lg border border-white/[0.04] bg-white/[0.02] p-2">
+                                    <div key={ policy.channel } className="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-2">
                                         <div className="flex flex-wrap items-center gap-2 text-[10px] uppercase font-mono text-zinc-400">
                                             <Badge variant="outline" className={ channelTone( policy.channel ) }>
                                                 { policy.channel.toUpperCase() }
@@ -212,7 +213,7 @@ export function ZeroPromptNotificationPanel ()
                                         </div>
                                         <div className="mt-2 flex flex-wrap gap-1">
                                             { policy.eventTypes.map( ( eventType ) => (
-                                                <Badge key={ `${ policy.channel }-${ eventType }` } variant="secondary" className="text-[10px]">
+                                                <Badge key={ `${ policy.channel }-${ eventType }` } variant="secondary" className="text-[10px] bg-white/[0.04] text-zinc-100 border-white/[0.08]">
                                                     { eventType }
                                                 </Badge>
                                             ) ) }
@@ -224,9 +225,9 @@ export function ZeroPromptNotificationPanel ()
                     ) : null }
                 </div>
 
-                <div className="rounded-xl border border-white/[0.04] bg-zinc-900/50 p-3 flex-1">
+                <div className="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-3 flex-1">
                     <div className="flex items-center justify-between mb-3">
-                        <p className="text-xs uppercase tracking-wider text-zinc-400 font-mono">Legutóbbi kézbesítések</p>
+                        <p className="text-xs uppercase tracking-[0.22em] text-zinc-400 font-mono">Legutóbbi kézbesítések</p>
                         <Badge variant="outline" className="text-[10px] border-white/[0.08] text-zinc-400">
                             { deliveries.length } esemény
                         </Badge>
@@ -236,7 +237,7 @@ export function ZeroPromptNotificationPanel ()
                         { deliveries.length === 0 ? (
                             <p className="text-sm text-zinc-500">Még nincs kézbesítési esemény.</p>
                         ) : deliveries.map( ( delivery ) => (
-                            <div key={ delivery.id } className="rounded-lg border border-white/[0.04] bg-white/[0.02] p-3 space-y-2">
+                            <div key={ delivery.id } className="rounded-2xl border border-white/[0.04] bg-white/[0.02] p-3 space-y-2">
                                 <div className="flex items-start justify-between gap-2">
                                     <div className="space-y-1 min-w-0">
                                         <div className="flex flex-wrap items-center gap-2">
@@ -251,13 +252,13 @@ export function ZeroPromptNotificationPanel ()
                                         <p className="text-xs text-zinc-400 line-clamp-3 whitespace-pre-line">{ delivery.message }</p>
                                     </div>
 
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="h-8 shrink-0"
-                                        onClick={ () => void resendWorkflowNotification( delivery.workflowId ) }
-                                        disabled={ !delivery.workflowId || dispatchingWorkflowId === delivery.workflowId }
-                                    >
+                                        <Button
+                                            variant="ghost"
+                                            size="sm"
+                                            className="h-8 shrink-0 rounded-full border border-white/10 bg-white/[0.03]"
+                                            onClick={ () => void resendWorkflowNotification( delivery.workflowId ) }
+                                            disabled={ !delivery.workflowId || dispatchingWorkflowId === delivery.workflowId }
+                                        >
                                         <Send size={ 12 } className="mr-1" />
                                         Újra
                                     </Button>

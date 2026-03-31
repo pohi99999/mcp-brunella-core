@@ -10,6 +10,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 **Brunella Agent System (BAS)** — Hibrid Node.js/Python multi-agent rendszer, MCP protokoll.
 Technológiák: TypeScript ESM, Express 4, React 19, Ollama, Gemini, GitHub Models, FastAPI, Cloudflare Workers.
 
+Méret (2026-03-25 audit): 95+ agent, 53 MCP tool, 52 route fájl (~20 aktív), ~55 dashboard panel, 6 SQLite DB, 5 LLM provider.
+
 ---
 
 ## KÖTELEZŐ Bootstrap (Munkamenet Elején!)
@@ -57,7 +59,15 @@ npm run test:fast                     # Gyors tesztek (~1-2 perc) — napi munka
 npm test                              # Build + teljes Vitest suite (~10 perc)
 npx vitest run test/foo.test.ts       # Egy teszt fájl
 npm run test:watch                    # Watch mód
+npm run test:coverage                 # Lefedettségi riport
 npm run test:e2e                      # Playwright e2e
+cd myai && pytest tests/              # Python tesztek
+
+# Mikor mit futtass:
+# | Esemény                          | Parancs                  |
+# | Commit előtt                     | npm run test:fast        |  ← pre-commit hook is futtatja
+# | Track lezárásakor / Push előtt   | npm test + npm run smoke |
+# | Napi fejlesztés                  | npm run test:fast        |
 
 # CLI
 brunella                  # Interaktív menü (nyíl + enter navigáció)
@@ -69,8 +79,15 @@ brunella conductor status # Projekt státusz
 cd myai && uv sync                          # Függőségek
 uvicorn server:app --reload --port 8000     # FastAPI
 
+# Copilot Dashboard Bridge (szerver nélküli gyors műveletek)
+node scripts/copilot-dashboard.js tracks list
+node scripts/copilot-dashboard.js agents execute <name> "<task>"
+node scripts/copilot-route.js "feladat"     # Agent routing (confidence score)
+
 # Szinkronizálás
 python scripts/sync_foszal.py  # .ai/FOSZAL.md frissítése munka után
+npm run sync:bootstrap         # .ai/BOOTSTRAP.md regenerálása
+npm run agent:health           # Agent registry + capability health check
 ```
 
 ---
@@ -87,13 +104,17 @@ python scripts/sync_foszal.py  # .ai/FOSZAL.md frissítése munka után
 | Alrendszer | Helye | Technológia |
 |---|---|---|
 | Node.js backend | `src/` | TypeScript ESM, Express 4, Socket.IO |
-| REST routes | `src/server/routes/` | 52 fájl, de csak ~20 aktív `index.ts`-ben (lásd figyelmeztetés!) |
+| REST routes | `src/server/routes/` | 52 fájl, de csak ~20 aktív `index.ts`-ben |
 | Dashboard | `src/dashboard/` | React 19, Vite, Tailwind v4, Radix UI |
-| Python alrendszer | `myai/` | FastAPI `:8000`, FastMCP, LanceDB, ChromaDB |
+| Python alrendszer | `myai/` | FastAPI `:8000`, FastMCP ≥2.14.3, LanceDB, ChromaDB |
 | Agent rendszer | `src/agents/` | 95+ agent, SQLite task queue |
 | MCP tools | `src/tools/` | 53 tool, 33 fájl |
+| Golden Dataset Bridge | `src/core/goldenDatasetBridge.ts` | Fine-tuning adatgyűjtés |
+| Safe Zones | `config/safe_zones.json` | Sandboxolt műveleti határok |
+| E2B Sandbox | `src/security/e2b_sandbox_manager.ts` | Kód-végrehajtás izolálás |
+| Jules Integration | `src/core/julesIntegration.ts` | Jules PR automation |
 
-> ⚠️ **Route regisztrációs rés:** `src/server/routes/` 52 fájlt tartalmaz, de csak ~20 van importálva `src/server/routes/index.ts`-ben. Új route hozzáadása előtt ellenőrizd, hogy nem létezik-e már nem-regisztrált fájlként.
+> ⚠️ **Route regisztrációs rés:** `src/server/routes/` 52 fájlt tartalmaz, de csak ~20 van importálva `src/server/routes/index.ts`-ben. Magas értékű regisztrálatlan fájlok: `autonomousInfra.ts`, `universalOrchestrator.ts`, `pythonWorkers.ts`, `paiosOrchestrator.ts`, `swarm.ts`, `goldenDataset.ts`, `remote.ts`, `crawl4ai.ts`. **Új route előtt ellenőrizd, hogy nem létezik-e már!**
 
 > ⚠️ **Dashboard panel rés:** Sok komponens van `src/dashboard/components/dashboard/`-ban, ami **nincs** regisztrálva `src/dashboard/lib/navigation.tsx`-ben (NavigationRegistry). Minden új panelt ott is regisztrálj.
 
@@ -102,7 +123,7 @@ python scripts/sync_foszal.py  # .ai/FOSZAL.md frissítése munka után
 ```
 OrchestratorAgent / EnterpriseOrchestratorAgent  (koordinátorok)
 ├── Core: Developer, Evaluator, Researcher, TaskDecomposer
-├── Automatizálás: RobotkezV2 (Playwright/LLM), Voice (Whisper)
+├── Automatizálás: RobotkezV2 (Playwright/browser-use), Voice (Whisper)
 ├── Engineering: SpecWriter, GenesisOrchestrator, LintFixer
 ├── Enterprise (~20): Finance, Sales, HR, Logistics, Legal, Marketing…
 ├── Swarm: SwarmManager + SwarmAgent (src/agents/swarm/)
@@ -113,6 +134,13 @@ OrchestratorAgent / EnterpriseOrchestratorAgent  (koordinátorok)
 **Registry:** `src/agents/registry.json` — minden bejegyzés: `name`, `module`, `class`, `triggers`, `priority`, `capabilities`. TOML-alapú agentek `"class": "DynamicAgent"` + `"tomlPath"`.
 
 **RBAC:** `src/agents/permissions.ts` — 6 profil: `ADMIN`, `DEVELOPER`, `RESEARCHER`, `EVALUATOR`, `ROBOTKEZ`, `READONLY`.
+
+**Agent routing (confidence-alapú):**
+```bash
+node scripts/copilot-route.js "feladat"   # → { bestAgent, confidence }
+# confidence >= 0.7 → delegálj; < 0.7 → csinálj magad vagy keress alternativát
+# Fájl szerkesztés / git → NE delegálj (natív Claude képesség jobb)
+```
 
 ### Model Router / Bifrost Gateway
 
@@ -126,6 +154,17 @@ OrchestratorAgent / EnterpriseOrchestratorAgent  (koordinátorok)
 2. AgentManager auto-retry: 1s → 3s → 10s, max 3 kísérlet
 3. Git recovery `sync_foszal.py` + commit
 
+### SQLite Adatbázisok
+
+| DB | Tartalom |
+|----|----------|
+| `brunella.db` | Fő rendszer adatok |
+| `tasks.db` | Agent task queue |
+| `checkpoints.db` | Phoenix Protocol checkpointok |
+| `audit.db` | Audit trail |
+| `cean.db` | Cloudflare Edge Agent Network |
+| `comet_memory.db` | COMET memória |
+
 ### TypeScript konfiguráció
 
 - Target: ES2022, Module: Node16, Strict mode
@@ -134,9 +173,31 @@ OrchestratorAgent / EnterpriseOrchestratorAgent  (koordinátorok)
 
 ---
 
+## Data Flywheel Pipeline
+
+```
+1. Harvest  → myai/agents/tech_harvester.py (Playwright/browser-use scraping)
+2. Refine   → myai/refiner_logic.py (LLM summary, adattisztítás, dedup)
+3. Index    → LanceDB (data/brunella_lancedb/) + Golden Dataset (JSONL)
+4. Learn    → Agent RAG (src/core/goldenDatasetBridge.ts)
+5. Execute  → OrchestratorAgent döntések (RAG-enhanced)
+```
+
+```bash
+brunella harvest run      # Teljes pipeline
+brunella harvest status   # Utolsó harvest összegzés
+```
+
+**Golden Dataset formátum** (`myai/data/training/golden_dataset.jsonl`):
+```json
+{ "instruction": "...", "input": "", "output": "...", "metadata": {"source": "...", "timestamp": "..."} }
+```
+
+---
+
 ## Kód Konvenciók
 
-**Kritikus szabályok:**
+**TypeScript kritikus szabályok:**
 - **ESM `.js` kiterjesztés KÖTELEZŐ:** `import { foo } from './bar.js'` — BUILD FAIL nélküle
 - **`any` TILOS** — használj `unknown` + type guard
 - **`console.log` TILOS** — ESLint `no-console: warn` érvényesíti. Használd:
@@ -145,6 +206,13 @@ OrchestratorAgent / EnterpriseOrchestratorAgent  (koordinátorok)
 - **Agent `finally` KÖTELEZŐ:** `setAgentStatus(this.name, 'idle')` mindig legyen `finally`-ban
 - **Vitest (NE Jest!):** `vi.fn()`, `vi.mock()`, `vi.spyOn()` — soha nem `jest.*`
 - **Teszt konfig:** `fileParallelism: false`, 15s default timeout, `test/setup.ts`
+
+**Python kritikus szabályok:**
+- **Pydantic modellek** kötelezők (`myai/pydantic_models.py`) — ne használj nyers dict-et
+- **FastMCP ≥2.14.3** a Python MCP serverhez
+- **browser-use** a Playwright helyett LLM-vezérelt böngészőautomatizáláshoz
+- **Windows Unicode:** emoji-t NE használj logban — `[OK]` / `[AI]` ASCII alternatívák (UnicodeEncodeError!)
+- **LanceDB opcionális import:** `try: import lancedb; HAS_LANCEDB = True except: HAS_LANCEDB = False`
 
 **Commit:** Conventional Commits — `feat(scope): subject`, `fix(scope): subject`
 
@@ -218,7 +286,7 @@ export async function myToolHandler(params: { param: string }) {
 }
 ```
 
-Regisztrálás: `src/server/registry.ts` → `registerAllTools()` → `server.registerTool(definition, handler)`.
+Regisztrálás: `src/server/registry.ts` → `registerAllTools()` → `server.tool(name, desc, schema, handler)`.
 
 ---
 
@@ -234,10 +302,22 @@ Minden új CLI parancsnak:
 
 ## Fejlesztési Workflow
 
-- **Track életciklus:** PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
-- **0-Hiba Stratégia:** `npm run build` + `npm run test:fast` MUSZÁJ PASS commit előtt
-- **EPP v2 6. szabály (KRITIKUS):** Minden új funkció = Dashboard panel (React, Radix UI) + CLI parancs (magyar, inquirer.js) IS KÖTELEZŐ
-- **Új feature ellenőrzőlista:** Route regisztrálva `index.ts`-ben? Panel regisztrálva `navigation.tsx`-ben?
+**Track életciklus:** PROPOSED → ACTIVE → TESTING → COMPLETED → ARCHIVED
+
+**EPP v2 — 7 Arany Szabály (mind kötelező!):**
+1. Minden feature = új track a `conductor/tracks/`-ban
+2. Hibák javítása AZONNAL — ne haladj tovább törött kóddal
+3. Commit gyakran — kis, logikus egységek
+4. TODO lista frissítése folyamatosan
+5. `npm run build` + `npm run test:fast` MUSZÁJ PASS commit előtt
+6. Minden új funkció = **Dashboard panel** (React, Radix UI) + **CLI parancs** (magyar, inquirer.js) IS KÖTELEZŐ
+7. Track lezárásakor: teljes dokumentáció + `sync_foszal.py`
+
+**Új feature ellenőrzőlista:**
+- [ ] Route regisztrálva `src/server/routes/index.ts`-ben?
+- [ ] Panel regisztrálva `src/dashboard/lib/navigation.tsx`-ben?
+- [ ] Agent hozzáadva `src/agents/registry.json`-hoz?
+- [ ] `npm run build` + `npm run test:fast` zöld?
 
 ---
 
@@ -277,6 +357,8 @@ ANTHROPIC_API_KEY=...         # Claude (Bifrost Gateway)
 OLLAMA_MODEL=qwen2.5-coder:7b # Alapértelmezett lokális modell
 ```
 
+**.env változtatás után MINDIG:** Node.js restart + FastAPI restart + health check!
+
 ---
 
 ## Gyakori Hibák
@@ -290,6 +372,8 @@ OLLAMA_MODEL=qwen2.5-coder:7b # Alapértelmezett lokális modell
 | Agent "stuck" | Phoenix auto-retry, kézi: `setAgentStatus(name, 'idle')` |
 | GitHub Models 401 | `GITHUB_PAT` lejárt — frissítsd (ne a `GITHUB_TOKEN`-t!) |
 | FastAPI nem indul | `cd myai && uv sync && uvicorn server:app --reload --port 8000` |
+| Windows Unicode hiba | Emoji → ASCII (`[OK]` / `[AI]`) a Python logokban |
+| cron-parser v5 | Csak `CronExpressionParser.parse()` érvényes — nem `parseExpression()` |
 
 ---
 

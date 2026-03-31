@@ -102,6 +102,7 @@ import { createGoldenDatasetRouter } from "./routes/goldenDataset.js";
 import { createIntelligenceRouter } from "./routes/intelligence.js";
 import { createZeroPromptRouter } from "./routes/zeroPrompt.js";
 import { createEphemeralRouter } from "./routes/ephemeral.js";
+import { createAutonomousInfraRouter } from "./routes/autonomousInfra.js";
 import { githubPollingService } from "../core/githubPollingService.js";
 import "../core/ceanFallback.js";// Side-effect: registers Phoenix CEAN fallback handlers
 import { zeroPromptRuntime } from '../core/zeroPromptRuntime.js';
@@ -248,6 +249,7 @@ export async function startWebServer() {
   v1Router.use("/intelligence", createIntelligenceRouter());
   v1Router.use("/zero-prompt", createZeroPromptRouter());
   v1Router.use("/ephemeral", createEphemeralRouter());
+  v1Router.use("/autonomous-infra", createAutonomousInfraRouter());
 
   app.use("/api/v1", v1Router);
   app.use("/api", v1Router);

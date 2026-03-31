@@ -7,23 +7,28 @@ const defaultLayoutConfig: DashboardLayoutConfig = {
   modes: [
     {
       id: 'default-dashboard',
-      name: 'Default Dashboard',
-      description: 'A standard multi-widget dashboard view.',
+      name: 'Mission Control',
+      description: 'A premium bento-grid dashboard for operational scanning.',
       gridTemplateAreas: [
-        '"health health jules"',
-        '"agent-status chatter jules"',
-        '"tasks harvest scheduled"'
+        '"health health health health health health agents agents agents tasks tasks tasks"',
+        '"health health health health health health agents agents agents tasks tasks tasks"',
+        '"jules jules jules jules chatter chatter chatter logs logs logs logs logs"',
+        '"suggestions suggestions tracks tracks schedule schedule schedule harvest harvest cloudflare cloudflare cloudflare"'
       ],
-      gridTemplateColumns: '1fr 1fr 1.2fr',
-      gridTemplateRows: '140px 1.5fr 1fr',
+      gridTemplateColumns: 'repeat(12, minmax(0, 1fr))',
+      gridTemplateRows: 'minmax(18rem, auto) minmax(18rem, auto) minmax(15rem, auto) minmax(14rem, auto)',
       widgetAssignments: {
         health: 'health',
-        agent_status: 'agent-status',
+        agent_status: 'agents',
         agent_chatter: 'chatter',
         jules: 'jules',
         task_queue: 'tasks',
+        logs: 'logs',
+        suggested_tasks: 'suggestions',
+        track_progress: 'tracks',
+        scheduled_tasks: 'schedule',
         harvest_pipeline: 'harvest',
-        scheduled_tasks: 'scheduled'
+        cloudflare_agents: 'cloudflare'
       },
     },
     {

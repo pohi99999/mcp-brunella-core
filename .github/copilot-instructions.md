@@ -76,7 +76,7 @@ OrchestratorAgent / EnterpriseOrchestratorAgent (Koordinátorok)
 ### Model Router
 
 **`src/core/modelRouter.ts`** — Brain vs Muscle routing (RULE-MR1–4):
-- **Brain (Cloud):** Gemini (1M ctx), GitHub Models GPT-4o → `complexity: 'high'`
+- **Brain (Cloud):** Gemini (1M ctx), GitHub Models GPT-5 mini → `complexity: 'high'`
 - **Muscle (Local):** Ollama `qwen2.5-coder:7b` → `complexity: 'low'` vagy `budget=0`
 
 **Bifrost Gateway** (`src/core/bifrost_gateway.ts`): 4 provider (Ollama, Gemini, GitHub Models, Anthropic) auto-fallbackkel.

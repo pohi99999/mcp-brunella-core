@@ -199,34 +199,34 @@ export function TaskDecomposerPanel() {
   };
 
   return (
-    <Card className="glass-panel border-cyan-500/20 shadow-cyan-900/10">
-      <CardHeader className="flex flex-row items-center justify-between">
-        <CardTitle className="flex items-center gap-2 text-cyan-300">
+    <Card className="glass-card border-cyan-500/20 overflow-hidden shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)]">
+      <CardHeader className="flex flex-row items-center justify-between border-b border-white/[0.05] bg-white/[0.015]">
+        <CardTitle className="flex items-center gap-2 text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-cyan-300">
           🧩 Task Decomposer (preview)
         </CardTitle>
       </CardHeader>
-      <CardContent className="space-y-4">
+      <CardContent className="space-y-4 p-4 lg:p-5">
         <div className="space-y-2">
           <Textarea
             placeholder="Írd be a komplex feladatot (pl. 'Adj hozzá új API route-ot, írj teszteket, frissítsd a dashboardot')..."
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
-            className="bg-white/[0.02] border-white/10 min-h-[110px]"
+            className="glass-card border-white/10 bg-white/[0.03] min-h-[110px]"
           />
           <div className="flex justify-end gap-2">
             <Button
               onClick={run}
               disabled={isRunning || !prompt.trim()}
-              className="bg-cyan-600 hover:bg-cyan-700"
+              className="rounded-full bg-cyan-600 hover:bg-cyan-700"
             >
               {isRunning ? "Fut..." : "Dekomponálás"}
             </Button>
           </div>
         </div>
 
-        <div className="rounded-xl overflow-hidden border border-white/10 bg-black/10">
-          <div className="flex items-center justify-between px-3 py-2 bg-white/[0.04]">
-            <div className="text-sm font-medium text-zinc-500">
+        <div className="rounded-3xl overflow-hidden border border-white/10 bg-white/[0.03]">
+          <div className="flex items-center justify-between px-3 py-2 bg-white/[0.04] border-b border-white/[0.05]">
+            <div className="text-[10px] uppercase tracking-[0.24em] text-zinc-500">
               DAG vizualizáció
             </div>
             <div className="text-xs text-zinc-500 font-mono">

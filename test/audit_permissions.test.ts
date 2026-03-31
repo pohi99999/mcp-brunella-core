@@ -22,10 +22,10 @@ describe('Permission Manager Audit Integration', () => {
     });
 
     it('should call audit record when logDeniedOperation is called', () => {
-        // @ts-ignore - Argument list will change
-        globalPermissionManager.logDeniedOperation('TestAgent', 'test_op', 'test_resource', 'test_reason');
+        // signature: logDeniedOperation(agentName, operation, reason, resource)
+        globalPermissionManager.logDeniedOperation('TestAgent', 'test_op', 'test_reason', 'test_resource');
 
-        // This expectation will fail until implementation is done
+        // record() is called with resource before reason internally
         expect(auditLog.record).toHaveBeenCalledWith('DENIED', 'TestAgent', 'test_op', 'test_resource', 'test_reason');
     });
 });

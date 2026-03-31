@@ -1,4 +1,10 @@
-export type LayoutModeId = 'default-dashboard' | 'dev-mode' | 'ops-mode' | 'focused-mode';
+export type LayoutModeId =
+  | 'default-dashboard'
+  | 'dev-mode'
+  | 'ops-mode'
+  | 'focused-mode'
+  | 'ai-control'
+  | 'business-mode';
 
 export interface LayoutMode {
   id: LayoutModeId;

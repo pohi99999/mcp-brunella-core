@@ -116,39 +116,40 @@ export function KnowledgeBasePanel() {
     }
 
     return (
-        <div className="p-6 space-y-6">
-            <div className="flex items-center justify-between">
+        <div className="space-y-6 p-6">
+            <div className="flex items-end justify-between gap-4">
                 <div>
-                    <h1 className="text-3xl font-bold tracking-tight">Knowledge Base</h1>
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500">Semantic memory</p>
+                    <h1 className="text-2xl font-semibold text-zinc-100">Knowledge Base</h1>
                     <p className="text-zinc-500">
                         Brunella szemantikus memóriájának (RAG) kezelése és vizualizációja.
                     </p>
                 </div>
                 <div className="flex gap-2">
-                    <Button variant="outline" onClick={fetchStats} disabled={isLoading}>
-                        <CheckCircle2 className={`w-4 h-4 mr-2 ${stats?.status === 'online' ? 'text-green-500' : ''}`} />
+                    <Button variant="outline" onClick={fetchStats} disabled={isLoading} className="rounded-full border-white/10 bg-white/[0.02] text-zinc-100 hover:bg-white/[0.05]">
+                        <CheckCircle2 className={`w-4 h-4 mr-2 ${stats?.status === 'online' ? 'text-emerald-300' : 'text-zinc-500'}`} />
                         {stats?.provider || 'LanceDB'} {stats?.status || 'Offline'}
                     </Button>
                 </div>
             </div>
 
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Bejegyzések Száma</CardTitle>
-                        <Database className="h-4 w-4 text-zinc-500" />
+                <Card className="glass-card border-white/10 overflow-hidden">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+                        <CardTitle className="text-[10px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400">Bejegyzések Száma</CardTitle>
+                        <Database className="h-4 w-4 text-cyan-300" />
                     </CardHeader>
-                    <CardContent>
-                        <div className="text-2xl font-bold">{rowCount}</div>
+                    <CardContent className="p-4">
+                        <div className="text-2xl font-semibold font-mono text-zinc-100">{rowCount}</div>
                         <p className="text-xs text-zinc-500">Szemantikus vektor tároló ({stats?.table || 'memory'})</p>
                     </CardContent>
                 </Card>
-                <Card>
-                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                        <CardTitle className="text-sm font-medium">Ingestion</CardTitle>
-                        <Upload className="h-4 w-4 text-zinc-500" />
+                <Card className="glass-card border-white/10 overflow-hidden">
+                    <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+                        <CardTitle className="text-[10px] font-mono font-semibold uppercase tracking-[0.24em] text-zinc-400">Ingestion</CardTitle>
+                        <Upload className="h-4 w-4 text-violet-300" />
                     </CardHeader>
-                    <CardContent>
+                    <CardContent className="p-4">
                         <div className="flex items-center gap-2">
                             <Input
                                 id="rag-file-upload"
@@ -160,7 +161,7 @@ export function KnowledgeBasePanel() {
                             />
                             <Button
                                 variant="outline"
-                                className="w-full"
+                                className="w-full rounded-xl border-white/10 bg-white/[0.02] text-zinc-100 hover:bg-white/[0.05]"
                                 onClick={() => document.getElementById('rag-file-upload')?.click()}
                                 disabled={isIngesting}
                             >
@@ -172,42 +173,43 @@ export function KnowledgeBasePanel() {
                 </Card>
             </div>
 
-            <Card className="col-span-3">
-                <CardHeader>
-                    <CardTitle>Szemantikus Keresés</CardTitle>
-                    <CardDescription>
+            <Card className="glass-card border-white/10 overflow-hidden col-span-3">
+                <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+                    <CardTitle className="text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400">Szemantikus Keresés</CardTitle>
+                    <CardDescription className="text-zinc-500">
                         Keress a beindexelt dokumentumok között természetes nyelven.
                     </CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
+                <CardContent className="space-y-4 p-4 lg:p-5">
                     <div className="flex gap-2">
                         <Input
                             placeholder="Mire emlékszik Brunella?..."
                             value={query}
                             onChange={(e) => setQuery(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                            className="rounded-xl border-white/10 bg-white/[0.03] text-zinc-100 placeholder:text-zinc-500"
                         />
-                        <Button onClick={handleSearch} disabled={isSearching}>
+                        <Button onClick={handleSearch} disabled={isSearching} className="rounded-xl bg-cyan-500 text-slate-950 hover:bg-cyan-400">
                             {isSearching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4 mr-2" />}
                             Keresés
                         </Button>
                     </div>
 
-                    <ScrollArea className="h-[400px] rounded-md border p-4">
+                    <ScrollArea className="h-[400px] rounded-xl border border-white/[0.05] bg-white/[0.015] p-4">
                         {results.length > 0 ? (
                             <div className="space-y-4">
                                 {results.map((res, idx) => (
-                                    <div key={idx} className="p-3 rounded-lg bg-muted/50 border border-border space-y-2">
+                                    <div key={idx} className="space-y-2 rounded-xl border border-white/[0.05] bg-white/[0.02] p-3">
                                         <div className="flex items-center justify-between">
                                             <div className="flex items-center gap-2">
-                                                <FileText className="w-4 h-4 text-primary" />
-                                                <span className="text-sm font-semibold">{res.path || 'Unknown Source'}</span>
+                                                <FileText className="w-4 h-4 text-cyan-300" />
+                                                <span className="text-sm font-semibold text-zinc-100">{res.path || 'Unknown Source'}</span>
                                             </div>
                                             {res.score !== undefined && (
-                                                <Badge variant="secondary">Dist: {res.score.toFixed(4)}</Badge>
+                                                <Badge variant="secondary" className="bg-cyan-500/15 text-cyan-100 border border-cyan-400/20">Dist: {res.score.toFixed(4)}</Badge>
                                             )}
                                         </div>
-                                        <p className="text-sm text-foreground leading-relaxed italic border-l-2 border-primary/30 pl-3">
+                                        <p className="border-l-2 border-cyan-400/30 pl-3 text-sm leading-relaxed italic text-zinc-200">
                                             "{res.text}"
                                         </p>
                                     </div>

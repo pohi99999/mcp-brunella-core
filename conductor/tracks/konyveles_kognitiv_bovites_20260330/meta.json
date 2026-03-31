@@ -1,0 +1,40 @@
+{
+  "id": "konyveles_kognitiv_bovites_20260330",
+  "name": "Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény",
+  "status": "ACTIVE",
+  "activated": "2026-03-30",
+  "priority": "HIGH",
+  "created": "2026-03-30",
+  "owner": "Pohánka Péter",
+  "progress": 0,
+  "description": "A meglévő n8n könyvelési pipeline kognitív intelligenciával való felruházása: MCP-alapú számviteli tudásbázis, multi-ágens reconciliation motor (NAV/Bank/Számla egyeztetés), prediktív anomáliadetektálás és cash-flow előrejelzés Langflow + LanceDB + n8n stack-kel.",
+  "dependencies": ["konyveles_automatizalas", "n8n_konyveles_pipeline_20260328"],
+  "phase": "cognitive-extension",
+  "tags": ["könyvelés", "MCP", "Langflow", "LanceDB", "multi-agent", "reconciliation", "anomáliadetektálás", "NAV", "n8n", "RAG"],
+  "phases": {
+    "phase1": {
+      "name": "Számviteli Tudásbázis és MCP Integráció",
+      "status": "IN_PROGRESS",
+      "estimated_days": 5,
+      "weight_percent": 25
+    },
+    "phase2": {
+      "name": "Multi-Ágens Reconciliation Motor",
+      "status": "PLANNED",
+      "estimated_days": 7,
+      "weight_percent": 35
+    },
+    "phase3": {
+      "name": "Anomáliadetektálás és Prediktív Analitika",
+      "status": "PLANNED",
+      "estimated_days": 5,
+      "weight_percent": 25
+    },
+    "phase4": {
+      "name": "Dashboard, CLI és Tesztek",
+      "status": "PLANNED",
+      "estimated_days": 3,
+      "weight_percent": 15
+    }
+  }
+}

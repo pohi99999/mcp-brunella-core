@@ -20,11 +20,11 @@ export function AgentStatusMonitor() {
   };
 
   return (
-    <Card className="glass-card border-white/10 h-full flex flex-col">
-      <CardHeader className="pb-2 border-b border-white/[0.04] shrink-0">
-        <CardTitle className="text-sm font-space font-bold tracking-tight uppercase text-zinc-500 flex items-center gap-2">
-          <Brain size={16} className="text-primary" />
-          Agent Status Monitor
+    <Card className="glass-card border-white/10 h-full flex flex-col overflow-hidden">
+      <CardHeader className="pb-3 border-b border-white/[0.05] shrink-0 bg-white/[0.015]">
+        <CardTitle className="text-[11px] font-mono font-semibold tracking-[0.28em] uppercase text-zinc-400 flex items-center gap-2">
+          <Brain size={16} className="text-cyan-400" />
+          Agent State
         </CardTitle>
       </CardHeader>
       <CardContent className="p-0 flex-1 min-h-0">
@@ -35,24 +35,40 @@ export function AgentStatusMonitor() {
                 NO_AGENTS_DETECTED
               </div>
             ) : agentsList.map((agent) => (
-              <div key={agent.name} className="p-3 hover:bg-white/[0.03] transition-colors group">
-                <div className="flex items-center justify-between mb-1">
+              <div
+                key={agent.name}
+                className={cn(
+                  "p-3 transition-colors group",
+                  "hover:bg-white/[0.03]",
+                )}
+              >
+                <div className="flex items-center justify-between gap-3 mb-1">
                   <div className="flex items-center gap-2">
                     <span className={cn(
                       "w-1.5 h-1.5 rounded-full",
                       agent.status === 'working' ? "bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]" : 
                       agent.status === 'error' ? "bg-red-500" : "bg-zinc-600"
                     )} />
-                    <span className="font-bold text-xs font-mono group-hover:text-primary transition-colors uppercase tracking-tight">
+                    <span className="font-semibold text-xs font-mono group-hover:text-cyan-300 transition-colors uppercase tracking-[0.12em]">
                       {agent.name}
                     </span>
                   </div>
-                  <Badge variant={agent.status === 'working' ? 'default' : 'secondary'} className="text-[9px] h-4 px-1 font-mono">
+                  <Badge
+                    variant={agent.status === 'working' ? 'default' : 'secondary'}
+                    className={cn(
+                      "text-[9px] h-5 px-2 font-mono tracking-[0.2em] uppercase border",
+                      agent.status === 'working'
+                        ? "bg-emerald-400/10 text-emerald-300 border-emerald-400/20"
+                        : agent.status === 'error'
+                          ? "bg-red-400/10 text-red-300 border-red-400/20"
+                          : "bg-zinc-800/70 text-zinc-300 border-white/10",
+                    )}
+                  >
                     {agent.status.toUpperCase()}
                   </Badge>
                 </div>
                 {agent.taskDescription && (
-                  <div className="flex items-start gap-1.5 mt-1 px-3 py-1 bg-white/[0.04] rounded border border-white/[0.04]">
+                  <div className="flex items-start gap-1.5 mt-1 px-3 py-2 bg-white/[0.04] rounded-xl border border-white/[0.05]">
                     <Clock size={10} className="text-zinc-500 mt-0.5 shrink-0" />
                     <p className="text-[10px] text-zinc-400 font-mono line-clamp-1 italic leading-tight">
                       {agent.taskDescription}

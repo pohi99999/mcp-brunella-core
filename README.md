@@ -240,6 +240,10 @@ Hiba detektálva → Checkpointing (SQLite task queue)
 | **User Preferences** | Felhasználói LLM/nyelv/stílus preferenciák | ✅ Preferences Panel | `brunella preferences` |
 | **LLM Observability** | Provider stats, latencia, token monitoring | ✅ Observability Panel | `brunella observability` |
 | **Golden Dataset** | Tool futás instrumentáció fine-tuning-hoz | API endpoints | — |
+| **Golden Dataset Bridge** | Tool futás- és sikeresség-instrumentáció fine-tuning célra | `src/core/goldenDatasetBridge.ts` | — |
+| **Safe Zones** | Fájlrendszer- és titokvédelmi whitelist/blacklist réteg | `config/safe_zones.json` | — |
+| **E2B Sandbox** | Izolált Python futtatás nem megbízható kódhoz | Secure Python execution | — |
+| **Jules Integration** | Aszinkron tesztfuttatás és workflow koordináció | ✅ Jules Panel | `brunella jules tests` |
 | **Zod Bridge** | Runtime séma validáció MCP tool-okhoz | — | — |
 | **WebSocket RT** | Socket.IO real-time frissítés a panelekhez | ✅ Auto | — |
 

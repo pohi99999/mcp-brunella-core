@@ -10,12 +10,12 @@ export function LiveIndicator({ status, className }: LiveIndicatorProps) {
   const getStatusColor = () => {
     switch (status) {
       case 'running':
-        return 'bg-[var(--success)]'
+        return 'bg-emerald-400'
       case 'stopped':
         return 'bg-destructive'
       case 'starting':
       case 'stopping':
-        return 'bg-[var(--warning)]'
+        return 'bg-amber-400'
       case 'error':
         return 'bg-destructive'
       default:

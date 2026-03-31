@@ -153,7 +153,7 @@ export function BrunellaStudio() {
             <div className="grid grid-cols-12 gap-6 flex-1 overflow-hidden">
                 {/* Bal szekció: Projektek & Chat */}
                 <div className="col-span-12 lg:col-span-4 flex flex-col gap-6 overflow-hidden">
-                    <Card className="bg-card/50 backdrop-blur-xl border-white/[0.04]">
+                    <Card className="glass-card border-white/10 overflow-hidden shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)]">
                         <CardHeader className="pb-3">
                             <CardTitle className="text-sm flex items-center gap-2 font-mono uppercase tracking-widest">
                                 <Plus className="w-4 h-4" /> Új Alkalmazás
@@ -199,7 +199,7 @@ export function BrunellaStudio() {
                         </CardContent>
                     </Card>
 
-                    <Card className="bg-card/50 backdrop-blur-xl border-white/[0.04] flex-1 overflow-hidden">
+                    <Card className="glass-card border-white/10 overflow-hidden shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)] flex-1">
                         <CardHeader className="pb-2">
                             <CardTitle className="text-xs font-mono uppercase text-zinc-500">Korábbi Projektek</CardTitle>
                         </CardHeader>
@@ -255,7 +255,7 @@ export function BrunellaStudio() {
                             )}
                         </div>
 
-                        <TabsContent value="preview" className="flex-1 mt-0 bg-white/[0.03] rounded-3xl border border-white/10 overflow-hidden relative group">
+                        <TabsContent value="preview" className="flex-1 mt-0 glass-card border-white/10 rounded-3xl overflow-hidden relative group shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)]">
                             {activeProject?.preview_url ? (
                                 <iframe 
                                     src={activeProject.preview_url} 
@@ -277,7 +277,7 @@ export function BrunellaStudio() {
                             </div>
                         </TabsContent>
 
-                        <TabsContent value="code" className="flex-1 mt-0 bg-zinc-950 rounded-3xl border border-white/10 overflow-hidden p-6 font-mono text-xs">
+                        <TabsContent value="code" className="flex-1 mt-0 glass-card border-white/10 rounded-3xl overflow-hidden p-6 font-mono text-xs shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)]">
                             <div className="flex justify-between items-center mb-4 border-b border-white/[0.04] pb-2">
                                 <span className="text-zinc-500 uppercase tracking-widest">Build & Execution Stream</span>
                                 <span className="text-emerald-500/50">Live</span>

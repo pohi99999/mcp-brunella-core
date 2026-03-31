@@ -219,6 +219,12 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 **Státusz:** ✅ Befejezve
 **Megjegyzés:** A cash-entry persistence, a KP endpointok, a dashboard panel és a CLI kész; `npm run build`, `npx vitest run test/bookkeeping_db.test.ts test/bookkeeping_routes.test.ts test/dashboard/components/HazipenztarWidget.test.tsx test/dashboard/components/BookkeepingWidget.test.tsx --reporter=dot`, valamint `npm run test:fast` is zöld lett.
 
+### 2026-03-31 02:29 - Route/docs sync
+**Feladat:** A README alrendszer táblájának szinkronizálása a tényleges rendszerrel, valamint az `autonomousInfra` route regisztrálása az API routerekben.
+**Érintett fájlok:** README.md, src/server/routes/index.ts, src/server/web.ts
+**Státusz:** ✅ Befejezve
+**Megjegyzés:** A Golden Dataset Bridge, Safe Zones, E2B Sandbox és Jules Integration külön sorba kerültek a táblában; az `autonomous-infra` mount bekerült a központi route regisztrációba, a Python backend pedig OpenAI-kompatibilis `/v1/models` és `/v1/chat/completions` aliasokat kapott a 404 spam megszüntetésére.
+
 ### 2026-03-29 21:10 - Zero-Prompt Phase 1 100% completion
 **Feladat:** A Zero-Prompt Phase 1 trackek teljes lezárása: Event Fabric perzisztencia/replay, signed approval callback + resume flow, notification retry/fallback + channel policy, dashboard/CLI láthatóság és a kapcsolódó track-dokumentációk szinkronizálása.
 **Érintett fájlok:** src/core/eventFabric.ts, src/core/policyEngine.ts, src/core/approvalRouter.ts, src/core/zeroPromptRuntime.ts, src/core/notificationChannels.ts, src/core/phoenixEventBus.ts, src/server/routes/webhooks.ts, src/server/routes/developer.ts, src/dashboard/lib/apiService.ts, src/dashboard/components/dashboard/ZeroPromptNotificationPanel.tsx, src/cli/devCommands.ts, test/eventFabric.test.ts, test/approvalRouter.test.ts, test/notificationChannels.test.ts, test/zeroPromptRuntime.test.ts, test/routes_developer.test.ts, test/webhooks.test.ts, conductor/tracks/zero_prompt_*/*

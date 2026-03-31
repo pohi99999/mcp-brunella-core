@@ -315,7 +315,7 @@ export class PermissionManager {
     /**
      * Audit log for denied operations
      */
-    logDeniedOperation(agentName: string, operation: string, resource: string, reason: string): void {
+    logDeniedOperation(agentName: string, operation: string, reason: string, resource: string = 'unknown'): void {
         logError('PermissionManager', `DENIED: ${agentName} attempted ${operation} on ${resource} - ${reason}`);
 
         // Fire-and-forget (non-blocking)

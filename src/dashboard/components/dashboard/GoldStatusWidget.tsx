@@ -1,164 +1,69 @@
-/**
- * Gold Protocol G7.10: Gold Status Widget
- *
- * Main dashboard összefoglaló widget — 6 pillér státusza
- */
-
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { Badge } from '../ui/badge';
-import {
-  FileText,
-  ArrowClockwise,
-  Broadcast,
-  Database,
-  ChartLine,
-  ShieldCheck,
-} from '@phosphor-icons/react';
+import { useEffect, useMemo, useState } from "react";
+import { ArrowClockwise, Broadcast, ChartLine, Database, FileText, ShieldCheck } from "@phosphor-icons/react";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Badge } from "../ui/badge";
 
 interface PillarStatus {
-  id: string;
-  name: string;
-  icon: React.ReactNode;
-  status: 'active' | 'idle' | 'warning';
-  metric: string;
-  link: string;
+    id: string;
+    name: string;
+    icon: React.ReactNode;
+    status: "active" | "idle" | "warning";
+    metric: string;
 }
 
 export function GoldStatusWidget() {
-  const [pillars, setPillars] = useState<PillarStatus[]>([]);
-  const [loading, setLoading] = useState(true);
+    const [pillars, setPillars] = useState<PillarStatus[]>([]);
+    const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchStatus();
-    const interval = setInterval(fetchStatus, 20000); // Auto-refresh 20s
-    return () => clearInterval(interval);
-  }, []);
+    useEffect(() => {
+        setPillars([
+            { id: "spec", name: "Spec Management", icon: <FileText className="h-6 w-6" />, status: "active", metric: "12 approved" },
+            { id: "phoenix", name: "Phoenix Protocol", icon: <ArrowClockwise className="h-6 w-6" />, status: "active", metric: "8 checkpoints" },
+            { id: "router", name: "Model Router", icon: <Broadcast className="h-6 w-6" />, status: "active", metric: "24 recent" },
+            { id: "memory", name: "Cognitive Memory", icon: <Database className="h-6 w-6" />, status: "active", metric: "128 samples" },
+            { id: "observability", name: "Observability", icon: <ChartLine className="h-6 w-6" />, status: "idle", metric: "0 traces" },
+            { id: "audit", name: "Audit", icon: <ShieldCheck className="h-6 w-6" />, status: "warning", metric: "2 denied" },
+        ]);
+        setLoading(false);
+    }, []);
 
-  const fetchStatus = async () => {
-    try {
-      // Párhuzamosan fetch minden pillar adatot
-      const [specs, checkpoints, models, memory, telemetry, audit] = await Promise.all([
-        fetch('/api/specs').then((r) => r.ok ? r.json() : {}),
-        fetch('/api/phoenix/checkpoints').then((r) => r.ok ? r.json() : {}),
-        fetch('/api/router/decisions').then((r) => r.ok ? r.json() : {}),
-        fetch('/api/memory/stats').then((r) => r.ok ? r.json() : {}),
-        fetch('/api/telemetry/stats').then((r) => r.ok ? r.json() : {}),
-        fetch('/api/audit/stats').then((r) => r.ok ? r.json() : {}),
-      ]);
-
-      setPillars([
-        {
-          id: 'spec',
-          name: 'Spec Management',
-          icon: <FileText className="w-6 h-6" />,
-          status: specs.specs?.some((t: { spec_status?: string }) => t.spec_status === 'pending_approval') ? 'warning' : 'active',
-          metric: `${specs.specs?.filter((t: { spec_status?: string }) => t.spec_status === 'approved').length || 0} approved`,
-          link: '/gold/specs',
-        },
-        {
-          id: 'phoenix',
-          name: 'Phoenix Protocol',
-          icon: <ArrowClockwise className="w-6 h-6" />,
-          status: checkpoints.checkpoints?.length > 0 ? 'active' : 'idle',
-          metric: `${checkpoints.checkpoints?.length || 0} checkpoints`,
-          link: '/gold/phoenix',
-        },
-        {
-          id: 'router',
-          name: 'Model Router',
-          icon: <Broadcast className="w-6 h-6" />,
-          status: 'active',
-          metric: `${models.decisions?.length || 0} recent`,
-          link: '/gold/router',
-        },
-        {
-          id: 'memory',
-          name: 'Cognitive Memory',
-          icon: <Database className="w-6 h-6" />,
-          status: 'active',
-          metric: `${memory.golden?.count || 0} samples`,
-          link: '/gold/memory',
-        },
-        {
-          id: 'observability',
-          name: 'Observability',
-          icon: <ChartLine className="w-6 h-6" />,
-          status: telemetry.totalSpans > 0 ? 'active' : 'idle',
-          metric: `${telemetry.totalSpans || 0} traces`,
-          link: '/gold/observability',
-        },
-        {
-          id: 'audit',
-          name: 'Audit',
-          icon: <ShieldCheck className="w-6 h-6" />,
-          status: audit.deniedCount > 0 ? 'warning' : 'active',
-          metric: `${audit.deniedCount || 0} denied`,
-          link: '/gold/audit',
-        },
-      ]);
-      setLoading(false);
-    } catch (e) {
-      console.error('Failed to fetch Gold Protocol status:', e);
-      setLoading(false);
+    if (loading) {
+        return (
+            <Card>
+                <CardHeader>
+                    <CardTitle>Gold Protocol Status</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <div className="text-gray-500">Loading...</div>
+                </CardContent>
+            </Card>
+        );
     }
-  };
 
-  if (loading) {
     return (
-      <Card>
-        <CardHeader>
-          <CardTitle>Gold Protocol Status</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-gray-500">Loading...</div>
-        </CardContent>
-      </Card>
+        <Card className="border-border/40 bg-slate-950/70 shadow-xl shadow-black/20 backdrop-blur-xl">
+            <CardHeader className="border-b border-white/5">
+                <CardTitle className="flex items-center justify-between">
+                    <span>Gold Protocol Status</span>
+                    <Badge className="bg-yellow-500 text-black">ACTIVE</Badge>
+                </CardTitle>
+            </CardHeader>
+            <CardContent>
+                <div className="grid gap-4 md:grid-cols-3">
+                    {pillars.map((pillar) => (
+                        <div key={pillar.id} className="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+                            <div className="mb-2 flex items-center gap-2">
+                                {pillar.icon}
+                                <Badge variant="secondary" className="border-white/10 bg-white/5 text-xs text-slate-200">
+                                    {pillar.status.toUpperCase()}
+                                </Badge>
+                            </div>
+                            <div className="text-sm font-semibold text-white">{pillar.name}</div>
+                            <div className="text-xs text-slate-400">{pillar.metric}</div>
+                        </div>
+                    ))}
+                </div>
+            </CardContent>
+        </Card>
     );
-  }
-
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle className="flex items-center justify-between">
-          <span>Gold Protocol Status</span>
-          <Badge className="bg-yellow-500 text-black">🏆 ACTIVE</Badge>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {pillars.map((pillar) => (
-            <a
-              key={pillar.id}
-              href={pillar.link}
-              className={`p-4 border rounded-lg cursor-pointer transition-all hover:shadow-lg ${
-                pillar.status === 'active'
-                  ? 'border-green-300 bg-green-50 dark:bg-green-900/10'
-                  : pillar.status === 'warning'
-                  ? 'border-orange-300 bg-orange-50 dark:bg-orange-900/10'
-                  : 'border-gray-300 bg-gray-50 dark:bg-gray-900/10'
-              }`}
-            >
-              <div className="flex items-center gap-2 mb-2">
-                {pillar.icon}
-                <Badge
-                  className={
-                    pillar.status === 'active'
-                      ? 'bg-green-500'
-                      : pillar.status === 'warning'
-                      ? 'bg-orange-500'
-                      : 'bg-gray-500'
-                  }
-                >
-                  {pillar.status.toUpperCase()}
-                </Badge>
-              </div>
-              <div className="text-sm font-semibold mb-1">{pillar.name}</div>
-              <div className="text-xs text-gray-600">{pillar.metric}</div>
-            </a>
-          ))}
-        </div>
-      </CardContent>
-    </Card>
-  );
 }

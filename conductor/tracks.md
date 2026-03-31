@@ -1,19 +1,14 @@
 # Projekt Nyomkovetes (Tracks)
 
-**Utolso frissites:** 2026-03-30T14:15:01.465Z
+**Utolso frissites:** 2026-03-31T04:22:48.951Z
 **Generator:** Track State Manager v2.0
 **Auto-Sync:** Enabled (realtime)
 
-**Stats:** 158 total | 5 active | 0 completed | 148 archived
+**Stats:** 160 total | 6 active | 1 completed | 149 archived
 
 ---
 
-## Tervezett Szalak (Proposed) (4)
-
-- [ ] **Cloudflare Workers Migration — 16 Agent Edge Orkesztrátor** [HIGH]
-  - **ID:** `cloudflare_workers_migration_20260226`
-  - **Progress:** 0%
-  - Mappa: ./tracks/cloudflare_workers_migration_20260226/
+## Tervezett Szalak (Proposed) (3)
 
 - [ ] **PohiAIPro Logistics Vertical — Brunella integráció** [HIGH]
   - **ID:** `logistics_vertical_20260222`
@@ -32,7 +27,12 @@
 
 ---
 
-## Aktiv Szalak (Active) (5)
+## Aktiv Szalak (Active) (6)
+
+- [ ] **Autonóm Készlet- és Leltárkezelési Rendszer — KKV** [MEDIUM]
+  - **ID:** `inventory_automation_20260330`
+  - **Progress:** 0%
+  - Mappa: ./tracks/inventory_automation_20260330/
 
 - [ ] **jules_pr_integration_20260222** [HIGH]
   - **ID:** `jules_pr_integration_20260222`
@@ -45,15 +45,15 @@
   - **Progress:** 0%
   - Mappa: ./tracks/konyveles_automatizalas/
 
+- [ ] **Kognitív Könyvelés és Multi-Ágens Egyeztetés — Bővítmény** [HIGH]
+  - **ID:** `konyveles_kognitiv_bovites_20260330`
+  - **Progress:** 0%
+  - Mappa: ./tracks/konyveles_kognitiv_bovites_20260330/
+
 - [ ] **n8n Könyvelési Pipeline — Bank + KP + szamlazz.hu** [HIGH]
   - **ID:** `n8n_konyveles_pipeline_20260328`
   - **Progress:** 85%
   - Mappa: ./tracks/n8n_konyveles_pipeline_20260328/
-
-- [ ] **P-Sales20260327** [HIGH]
-  - **ID:** `P-Sales20260327`
-  - **Progress:** 40%
-  - Mappa: ./tracks/P-Sales20260327/
 
 - [ ] **Brunella Remote Layer — Fázis 1: Remote Foundation** [HIGH]
   - **ID:** `remote_layer_phase1_foundation_20260322`
@@ -62,7 +62,15 @@
 
 ---
 
-## Archivalt (Archived) (148)
+## Befejezett (Completed - Not Archived) (1)
+
+- [x] **P-Sales20260327**
+  - **ID:** `P-Sales20260327`
+  - Mappa: ./tracks/P-Sales20260327/
+
+---
+
+## Archivalt (Archived) (149)
 
 > Archived tracks are hidden by default. View in `conductor/archive/`
 
@@ -77,7 +85,7 @@
 - [x] **AI Recommendation System Integration** (2026-02-17T22:45:00Z)
 - [x] **apify_deep_scraping_agent_20260223** (N/A)
 
-... and 138 more archived tracks
+... and 139 more archived tracks
 
 ---
 

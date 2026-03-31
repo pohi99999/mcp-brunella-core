@@ -55,6 +55,7 @@
     "fabiospampinato.vscode-open-in-github",
     "jakubkozera.github-copilot-code-reviewer",
     "shubhj.ghcp-dashboard",
-    "google.geminicodeassist"
+    "google.geminicodeassist",
+    "conductor.conductor"
   ]
 }

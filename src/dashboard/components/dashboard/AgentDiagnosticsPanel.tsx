@@ -58,22 +58,23 @@ export function AgentDiagnosticsPanel ()
     const summary = useMemo( () => data?.validation.summary, [data] );
 
     return (
-        <div className="space-y-6 animate-in fade-in duration-500">
-            <div className="flex items-center justify-between gap-4">
+            <div className="space-y-6 animate-in fade-in duration-500">
+            <div className="flex items-end justify-between gap-4">
                 <div>
-                    <h2 className="text-3xl font-space font-bold text-foreground">Agent Diagnostics</h2>
-                    <p className="text-zinc-500 mt-1">Registry validáció, export loader állapot és routing metadata egy helyen.</p>
+                    <p className="text-[10px] uppercase tracking-[0.22em] text-zinc-500">Diagnostics</p>
+                    <h2 className="text-2xl font-semibold text-zinc-100">Agent Diagnostics</h2>
+                    <p className="mt-1 text-sm text-zinc-500">Registry validáció, export loader állapot és routing metadata egy helyen.</p>
                 </div>
-                <Button onClick={ () => void loadDiagnostics() } variant="outline" size="sm" className="gap-2">
+                <Button onClick={ () => void loadDiagnostics() } variant="outline" size="sm" className="gap-2 rounded-full border-white/10 bg-white/[0.02] text-zinc-100 hover:bg-white/[0.05]">
                     <RefreshCcw className="w-4 h-4" /> Frissítés
                 </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                <Card className="glass-card">
-                    <CardHeader className="pb-2">
-                        <CardDescription>Registry állapot</CardDescription>
-                        <CardTitle className="flex items-center gap-2 text-lg">
+                <Card className="glass-card border-white/10 overflow-hidden">
+                    <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+                        <CardDescription className="text-zinc-500 uppercase tracking-[0.22em] text-[10px]">Registry állapot</CardDescription>
+                        <CardTitle className="flex items-center gap-2 text-lg text-zinc-100">
                             { data?.validation.valid ? <CheckCircle2 className="w-5 h-5 text-emerald-400" /> : <AlertTriangle className="w-5 h-5 text-amber-400" /> }
                             { data?.validation.valid ? "Valid" : "Figyelmet kér" }
                         </CardTitle>
@@ -83,30 +84,30 @@ export function AgentDiagnosticsPanel ()
                     </CardContent>
                 </Card>
 
-                <Card className="glass-card">
-                    <CardHeader className="pb-2">
-                        <CardDescription>Összes agent</CardDescription>
-                        <CardTitle className="text-2xl">{ summary?.totalAgents ?? 0 }</CardTitle>
+                <Card className="glass-card border-white/10 overflow-hidden">
+                    <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+                        <CardDescription className="text-zinc-500 uppercase tracking-[0.22em] text-[10px]">Összes agent</CardDescription>
+                        <CardTitle className="text-2xl font-mono text-zinc-100">{ summary?.totalAgents ?? 0 }</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <p className="text-xs text-zinc-500">Aktív: { summary?.activeAgents ?? 0 }</p>
                     </CardContent>
                 </Card>
 
-                <Card className="glass-card">
-                    <CardHeader className="pb-2">
-                        <CardDescription>Validációs hibák</CardDescription>
-                        <CardTitle className="text-2xl">{ data?.validation.errors.length ?? 0 }</CardTitle>
+                <Card className="glass-card border-white/10 overflow-hidden">
+                    <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+                        <CardDescription className="text-zinc-500 uppercase tracking-[0.22em] text-[10px]">Validációs hibák</CardDescription>
+                        <CardTitle className="text-2xl font-mono text-zinc-100">{ data?.validation.errors.length ?? 0 }</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <p className="text-xs text-zinc-500">Warningok: { data?.validation.warnings.length ?? 0 }</p>
                     </CardContent>
                 </Card>
 
-                <Card className="glass-card">
-                    <CardHeader className="pb-2">
-                        <CardDescription>Default agent</CardDescription>
-                        <CardTitle className="text-lg">{ summary?.defaultAgent ?? "-" }</CardTitle>
+                <Card className="glass-card border-white/10 overflow-hidden">
+                    <CardHeader className="pb-2 border-b border-white/[0.05] bg-white/[0.015]">
+                        <CardDescription className="text-zinc-500 uppercase tracking-[0.22em] text-[10px]">Default agent</CardDescription>
+                        <CardTitle className="text-lg text-zinc-100">{ summary?.defaultAgent ?? "-" }</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <p className="text-xs text-zinc-500">Routing fallback cél</p>
@@ -115,10 +116,10 @@ export function AgentDiagnosticsPanel ()
             </div>
 
             <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                <Card className="glass-card xl:col-span-1">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Wrench className="w-4 h-4 text-primary" /> Registry Validation</CardTitle>
-                        <CardDescription>A normalizáló és schema validáló összesítése.</CardDescription>
+                <Card className="glass-card border-white/10 xl:col-span-1 overflow-hidden">
+                    <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+                        <CardTitle className="flex items-center gap-2 text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400"><Wrench className="w-4 h-4 text-cyan-300" /> Registry Validation</CardTitle>
+                        <CardDescription className="text-zinc-500">A normalizáló és schema validáló összesítése.</CardDescription>
                     </CardHeader>
                     <CardContent className="space-y-4">
                         <div>
@@ -148,10 +149,10 @@ export function AgentDiagnosticsPanel ()
                     </CardContent>
                 </Card>
 
-                <Card className="glass-card xl:col-span-2">
-                    <CardHeader>
-                        <CardTitle className="flex items-center gap-2"><Router className="w-4 h-4 text-primary" /> Agent Loader & Routing Metadata</CardTitle>
-                        <CardDescription>Betöltési stratégia, runtime státusz, cost/execution profil.</CardDescription>
+                <Card className="glass-card border-white/10 xl:col-span-2 overflow-hidden">
+                    <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+                        <CardTitle className="flex items-center gap-2 text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400"><Router className="w-4 h-4 text-violet-300" /> Agent Loader & Routing Metadata</CardTitle>
+                        <CardDescription className="text-zinc-500">Betöltési stratégia, runtime státusz, cost/execution profil.</CardDescription>
                     </CardHeader>
                     <CardContent className="p-0">
                         <ScrollArea className="h-[640px]">

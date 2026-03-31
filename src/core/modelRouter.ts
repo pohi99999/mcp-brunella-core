@@ -53,7 +53,7 @@ export interface RoutingDecision {
 export const MODEL_REGISTRY: ModelProfile[] = [
   // Brain models (Cloud) — planning, architecture, complex analysis
   {
-    name: 'gpt-4o',
+    name: 'openai/gpt-5-mini',
     provider: 'github',
     role: 'brain',
     contextWindow: 128000,
@@ -193,8 +193,15 @@ export function selectModel(task: TaskProfile, config: Partial<RouterConfig> = {
   // Manual override (highest priority)
   if (cfg.overrideModel) {
     const overrideProfile = MODEL_REGISTRY.find(m => m.name === cfg.overrideModel)
-      || MODEL_REGISTRY.find(m => m.provider === cfg.overrideProvider)
-      || MODEL_REGISTRY[0];
+      || {
+        name: cfg.overrideModel,
+        provider: (cfg.overrideProvider || 'github') as ModelProfile['provider'],
+        role: 'brain' as ModelProfile['role'],
+        contextWindow: 128000,
+        costPerToken: 0.01,
+        speed: 'medium' as ModelProfile['speed'],
+        strengths: ['general']
+      };
     
     const decision: RoutingDecision = {
       model: overrideProfile,
