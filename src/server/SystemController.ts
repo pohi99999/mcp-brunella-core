@@ -140,15 +140,21 @@ export class SystemController {
 
     const { spawn } = await import('child_process');
     const child = spawnedProcesses.get(serviceId);
+    let stoppedChild = false;
+
     if (child && child.pid) {
       try {
         process.kill(child.pid, 'SIGTERM');
-        spawnedProcesses.delete(serviceId);
-        logInfo('SystemController', `${serviceId} leállítva`);
-        return { success: true, message: `${serviceId} leállítva` };
+        stoppedChild = true;
       } catch (e: any) {
-        return { success: false, message: e.message };
+        // If ESRCH, process is already gone
+        if (e.code === 'ESRCH') {
+           stoppedChild = true;
+        } else {
+           return { success: false, message: e.message };
+        }
       }
+      spawnedProcesses.delete(serviceId);
     }
 
     if (serviceId === 'ollama') {
@@ -160,8 +166,14 @@ export class SystemController {
         }
         return { success: true, message: 'Ollama leállítás parancs elküldve' };
       } catch {
-        return { success: false, message: 'Ollama nem fut vagy nem állítható le' };
+         if (stoppedChild) return { success: true, message: 'Ollama leállítva (child process)' };
+         return { success: false, message: 'Ollama nem fut vagy nem állítható le' };
       }
+    }
+
+    if (stoppedChild) {
+        logInfo('SystemController', `${serviceId} leállítva`);
+        return { success: true, message: `${serviceId} leállítva` };
     }
 
     return { success: false, message: `${serviceId} nem fut (nem indítottuk)` };
