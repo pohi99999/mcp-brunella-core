@@ -1,8 +1,7 @@
 import path from "path";
 import fs from "fs/promises";
 import { config } from "../config/index.js";
-import { E2BSandboxManager } from "../security/e2b_sandbox_manager.js";
-import { ExecuteResultSchema, validatePythonResponse } from "./pythonBridge.js";
+import { resolvePythonPath } from "./pythonUtils.js";
 
 export class PythonShell {
   private scriptPath: string;
@@ -12,11 +11,6 @@ export class PythonShell {
 
   constructor(scriptRelativePath: string) {
     this.scriptPath = path.resolve(config.workspaceRoot, scriptRelativePath);
-    const venvRel =
-      process.platform === "win32"
-        ? ".venv/Scripts/python.exe"
-        : ".venv/bin/python";
-    const candidatePath = path.resolve(config.workspaceRoot, venvRel);
     this.apiUrl =
       process.env.BRUNELLA_PYTHON_API_URL ?? "http://127.0.0.1:8000";
     this.useApi = this.apiUrl !== "" && this.apiUrl !== "disabled";
@@ -25,27 +19,14 @@ export class PythonShell {
 
     // Validate python path for legacy fallback - ONLY in Node environment
     if (typeof process !== 'undefined' && process.versions?.node) {
-       this.validatePythonPath(candidatePath);
-    }
-  }
-
-  private async validatePythonPath(candidatePath: string) {
-    try {
-      const { execSync } = await import("child_process");
-      execSync(`"${candidatePath}" --version`, { stdio: "ignore" });
-      this.pythonPath = candidatePath;
-    } catch (e) {
-      this.pythonPath = "python"; // Fallback
+       resolvePythonPath(config.workspaceRoot).then((p) => {
+         this.pythonPath = p;
+       });
     }
   }
 
   /** Zone IV: Phoenix Protocol – retry on failure, then fallback. */
   async run(code: string, context?: any): Promise<string> {
-    // E2B Sandbox mode: isolated cloud execution (highest security)
-    if (process.env.E2B_ENABLED === 'true') {
-      return this.runViaE2B(code);
-    }
-
     if (this.useApi) {
       try {
         return await this.runViaApi(code, context);
@@ -60,15 +41,6 @@ export class PythonShell {
       }
     }
     return this.runLegacy(code, context);
-  }
-
-  private async runViaE2B(code: string): Promise<string> {
-    const sandbox = new E2BSandboxManager();
-    const result = await sandbox.executeCode(code, { export_artifacts: false });
-    if (!result.success) {
-      return JSON.stringify({ error: result.error ?? 'E2B execution failed' });
-    }
-    return result.output ?? '';
   }
 
   private async runViaApi(code: string, context?: any): Promise<string> {
@@ -89,23 +61,18 @@ export class PythonShell {
         );
       }
 
-      const data = (await response.json()) as Record<string, unknown>;
-
-      // Zod validáció — típusbiztos Python válasz
-      const validated = validatePythonResponse(ExecuteResultSchema, data, "/execute");
-      if (validated.success) {
-        const typed = validated.data;
-        if (typed.error) {
-          return JSON.stringify({ error: typed.error });
-        }
-        return typed.stdout;
+      const data = (await response.json()) as {
+        stdout: string;
+        error?: string;
+      };
+      if (data.error) {
+        // If the python code itself threw an exception, we want to return that as the result string
+        // just like the legacy shell does (it prints the error json)
+        // However, our server returns { stdout: "", error: "..." }
+        // Legacy wrapper printed: print(json.dumps({"error": str(e)}))
+        return JSON.stringify({ error: data.error });
       }
-      // Graceful degradation: ha a séma nem stimmel, fallback a régi logikára
-      const fallback = data as { stdout?: string; error?: string };
-      if (fallback.error) {
-        return JSON.stringify({ error: fallback.error });
-      }
-      return String(fallback.stdout ?? "");
+      return data.stdout;
     } finally {
       clearTimeout(timeout);
     }
@@ -178,57 +145,25 @@ except Exception as e:
 
 export const globalPythonShell = new PythonShell("interactive.py");
 
-/**
- * Runs a specific Python worker script with JSON arguments.
- */
-export async function runPythonWorker(scriptName: string, args: any): Promise<any> {
+// Compatibility shim for agents that import runPythonWorker
+export async function runPythonWorker(scriptName: string, args: unknown): Promise<unknown> {
   const code = `
-import asyncio
-import json
-import sys
+import asyncio, json, sys
 from importlib import import_module
-
-# Add project root to path
 sys.path.append('.')
-
 async def main():
     module_name = "${scriptName.replace('.py', '').replace('/', '.')}"
-    # Try different locations
     try:
         module = import_module(module_name)
     except ImportError:
-        try:
-            module = import_module("myai.workers." + module_name)
-        except ImportError:
-            module = import_module("myai.refiners." + module_name)
-            
-    # Look for common entry points
-    if hasattr(module, 'scrape_page_data'):
-        res = await module.scrape_page_data(**context)
-    elif hasattr(module, 'evaluate_product_potential'):
-        res = await module.evaluate_product_potential(context)
-    elif hasattr(module, 'parse_invoice_text'):
-        res = await module.parse_invoice_text(context.get('text', ''))
-    else:
-        raise AttributeError(f"No valid entry point found in {module_name}")
-        
-    print(json.dumps(res))
-
-if __name__ == "__main__":
-    asyncio.run(main())
+        module = import_module("myai.workers." + module_name)
+    for fn in ['scrape_page_data','evaluate_product_potential','parse_invoice_text','run']:
+        if hasattr(module, fn):
+            res = await getattr(module, fn)(context) if asyncio.iscoroutinefunction(getattr(module, fn)) else getattr(module, fn)(context)
+            print(json.dumps(res)); return
+    raise AttributeError(f"No valid entry point in {module_name}")
+asyncio.run(main())
 `;
-  const output = await globalPythonShell.run(code, args);
-  try {
-    const parsed: unknown = JSON.parse(output);
-    // Zod validáció: ha error objektum, explicit jelezzük
-    const errCheck = validatePythonResponse(
-      ExecuteResultSchema,
-      typeof parsed === "object" && parsed !== null && "stdout" in parsed ? parsed : { stdout: output },
-      "runPythonWorker",
-    );
-    // A worker eredményt parseoljuk, nem ExecuteResult-ot
-    return parsed;
-  } catch (e) {
-    throw new Error(`Failed to parse Python worker output: ${output}. Error: ${e}`);
-  }
+  const output = await globalPythonShell.run(code, args as Record<string, unknown>);
+  try { return JSON.parse(output); } catch { return output; }
 }
