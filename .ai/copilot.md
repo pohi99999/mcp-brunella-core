@@ -303,3 +303,12 @@ Ezeket a módosításokat a conductor/tracks.md és a conductor/archive/ helyre 
 - A végső feltöltés tiszta worktree-alapú transzplantációval történt meg, így a secretet tartalmazó lokális history nem került a pusholt branchbe.
 - A sikeresen feltöltött remote commit a `feature/robotkez-mission-control` branchen: `0a19a3de8354a5329d287653f3e7752cf68a8535`.
 - Remote ellenőrzés: `git ls-remote --heads origin feature/robotkez-mission-control` ✅, a branch a fenti commitra mutat.
+
+### 2026-03-31 02:16 - Mission Control cleanup + validation
+**Feladat:** A Mission Control facelift után a maradék legacy dashboard zaj csökkentése, a Jules és track widgetek mount-kori automatikus fetch-einek kézi indításra állítása, majd build és live validation.
+**Érintett fájlok:** src/dashboard/components/dashboard/JulesPanel.tsx, src/dashboard/components/dashboard/TrackProgress.tsx, src/dashboard/components/dashboard/TrackTodoWidget.tsx
+**Státusz:** ✅ Befejezve
+**Megjegyzés:**
+- A Jules panel többé nem mountkor kér le workflow-runs adatot; session/run frissítés kézzel indítható, így a dashboard indításakor nem generál felesleges 401 zajt.
+- A Track Progress widget TODO részletei kézi betöltésre kerültek, a Track TODO widget pedig nem auto-selectál tracket induláskor, így a mount-kori 404 zaj csökkenthető.
+- Verifikáció: `npm run build` ✅. Live browser validációt újra megpróbáltam, de a böngésző-MCP instabil volt / timeoutra futott, ezért a végső konzolcímzett smoke pass külön stabil sessiont igényel.

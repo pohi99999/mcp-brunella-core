@@ -48,24 +48,11 @@ export function TrackTodoWidget() {
     fetchTracks();
   }, []);
 
-  // Load TODOs when track is selected
-  useEffect(() => {
-    if (selectedTrackId) {
-      fetchTodos(selectedTrackId);
-    }
-  }, [selectedTrackId]);
-
   const fetchTracks = async () => {
     try {
       const res = await fetch('/api/v1/tracks');
       const data = await res.json();
       setTracks(data.tracks || []);
-
-      // Auto-select first active track
-      const firstActive = data.tracks.find((t: TrackMeta) => t.status === 'active' || t.status === 'in_progress');
-      if (firstActive) {
-        setSelectedTrackId(firstActive.id);
-      }
     } catch (err) {
       console.error('Failed to fetch tracks:', err);
       setError('Failed to load tracks');
@@ -149,6 +136,16 @@ export function TrackTodoWidget() {
               ))}
             </SelectContent>
           </Select>
+          <div className="flex justify-end">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => selectedTrackId && fetchTodos(selectedTrackId)}
+              disabled={!selectedTrackId || loading}
+            >
+              {loading ? 'Loading...' : 'Load TODOs'}
+            </Button>
+          </div>
         </div>
 
         {/* Error Message */}

@@ -20,6 +20,7 @@ import {
   ClockCountdown,
   HardDrives,
 } from "@phosphor-icons/react";
+import { cn } from "@/lib/utils";
 
 type TrackTodosState = {
   trackId: string;
@@ -56,6 +57,7 @@ export function TrackProgressWidget() {
   >({});
   const [error, setError] = useState<string | null>(null);
   const [showWaitingTracks, setShowWaitingTracks] = useState(false);
+  const [visibleTodoTrackIds, setVisibleTodoTrackIds] = useState<string[]>([]);
 
   const refreshTracks = useCallback(async () => {
     setIsLoadingTracks(true);
@@ -74,57 +76,9 @@ export function TrackProgressWidget() {
     }
   }, []);
 
-  const refreshTodosForTracks = useCallback(async (activeTracks: Track[]) => {
-    if (activeTracks.length === 0) {
-      setTodosByTrack({});
-      return;
-    }
-
-    setIsLoadingTodos(true);
-    const results = await Promise.allSettled(
-      activeTracks.map(async (track) => {
-        const data = await getTrackTodos(track.id);
-        return { trackId: track.id, data };
-      }),
-    );
-
-    const next: Record<string, TrackTodosState> = {};
-    for (const result of results) {
-      if (result.status === "fulfilled") {
-        const payload = result.value;
-        const data: TrackTodosResponse = payload.data;
-        next[payload.trackId] = {
-          trackId: data.trackId,
-          title: data.title,
-          todos: data.todos,
-          progress: data.progress,
-          completedCount: data.completedCount,
-          totalCount: data.totalCount,
-          updatedAt: data.updatedAt,
-        };
-      } else {
-        const reason =
-          result.reason instanceof Error
-            ? result.reason.message
-            : "Nem sikerült betölteni a TODO-kat";
-        toast.error(reason);
-      }
-    }
-
-    setTodosByTrack(next);
-    setIsLoadingTodos(false);
-  }, []);
-
   useEffect(() => {
     refreshTracks();
   }, [refreshTracks]);
-
-  useEffect(() => {
-    const active = tracks.filter(
-      (track) => track.progress > 0 && track.progress < 100,
-    );
-    refreshTodosForTracks(active);
-  }, [tracks, refreshTodosForTracks]);
 
   useEffect(() => {
     if (!socket) return;
@@ -206,12 +160,41 @@ export function TrackProgressWidget() {
     [tracks],
   );
 
+  const loadTodosForTrack = useCallback(async (trackId: string) => {
+    setVisibleTodoTrackIds((prev) =>
+      prev.includes(trackId) ? prev : [...prev, trackId],
+    );
+
+    setIsLoadingTodos(true);
+    try {
+      const data = await getTrackTodos(trackId);
+      setTodosByTrack((prev) => ({
+        ...prev,
+        [trackId]: {
+          trackId: data.trackId,
+          title: data.title,
+          todos: data.todos,
+          progress: data.progress,
+          completedCount: data.completedCount,
+          totalCount: data.totalCount,
+          updatedAt: data.updatedAt,
+        },
+      }));
+    } catch (e: unknown) {
+      const message =
+        e instanceof Error ? e.message : "Nem sikerült betölteni a TODO-kat";
+      toast.error(message);
+    } finally {
+      setIsLoadingTodos(false);
+    }
+  }, []);
+
   return (
-    <Card className="glass-card border-white/10 overflow-hidden">
-      <CardHeader className="pb-3 border-b border-border/50 bg-muted/20">
-        <CardTitle className="flex items-center justify-between text-sm font-bold tracking-wider uppercase text-zinc-500">
+    <Card className="glass-card border-white/10 overflow-hidden shadow-[0_16px_60px_-36px_rgba(0,0,0,0.85)]">
+      <CardHeader className="pb-3 border-b border-white/[0.05] bg-white/[0.015]">
+        <CardTitle className="flex items-center justify-between text-[11px] font-mono font-semibold uppercase tracking-[0.28em] text-zinc-400">
           <span className="flex items-center gap-2">
-            <ListChecks size={16} className="text-emerald-400" />
+            <ListChecks size={16} className="text-emerald-300" />
             Track Haladás
           </span>
           <span className="flex items-center gap-2">
@@ -225,6 +208,7 @@ export function TrackProgressWidget() {
               disabled={isLoadingTracks || isLoadingTodos}
               title="Frissítés"
               aria-label="Track lista frissítése"
+              className="rounded-full"
             >
               <ArrowsClockwise
                 size={16}
@@ -238,16 +222,16 @@ export function TrackProgressWidget() {
       </CardHeader>
 
       <CardContent className="space-y-4 p-4">
-        {error && <div className="text-xs text-red-400">❌ {error}</div>}
+        {error && <div className="rounded-2xl border border-red-500/20 bg-red-500/10 p-3 text-xs text-red-200">❌ {error}</div>}
 
         {/* Várakozó track-ek - Collapsible, alapból összecsukva */}
         {waitingTracks.length > 0 && (
           <div className="space-y-2">
             <button
               onClick={() => setShowWaitingTracks(!showWaitingTracks)}
-              className="flex items-center gap-2 text-xs font-semibold text-zinc-500 w-full hover:text-foreground transition-colors"
+              className="flex w-full items-center gap-2 text-xs font-semibold text-zinc-500 transition-colors hover:text-zinc-100"
             >
-              <ClockCountdown size={14} className="text-blue-400" />
+              <ClockCountdown size={14} className="text-cyan-300" />
               Várakozó fejlesztésre
               <Badge variant="outline" className="ml-auto">
                 {waitingTracks.length}
@@ -259,10 +243,7 @@ export function TrackProgressWidget() {
                 {waitingTracks.map((track) => {
                   const badge = getPriorityBadge(track.priority);
                   return (
-                    <div
-                      key={track.id}
-                      className="rounded-md border border-border/40 bg-background/40 p-2"
-                    >
+                      <div key={track.id} className="rounded-2xl border border-white/[0.05] bg-white/[0.02] p-2">
                       <div className="flex items-start justify-between gap-2">
                         <div className="min-w-0">
                           <p className="truncate text-xs font-medium">
@@ -290,7 +271,7 @@ export function TrackProgressWidget() {
 
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-xs font-semibold text-zinc-500">
-            <HardDrives size={14} className="text-amber-400" />
+            <HardDrives size={14} className="text-amber-300" />
             Fejlesztés alatt
             <Badge variant="outline" className="ml-auto">
               {activeTracks.length}
@@ -314,10 +295,7 @@ export function TrackProgressWidget() {
                   : null;
 
                 return (
-                  <div
-                    key={track.id}
-                    className="rounded-md border border-border/40 bg-background/40 p-2"
-                  >
+                  <div key={track.id} className="rounded-2xl border border-white/[0.05] bg-white/[0.02] p-2">
                     <div className="flex items-start justify-between gap-2">
                       <div className="min-w-0">
                         <p className="truncate text-xs font-medium">
@@ -328,18 +306,21 @@ export function TrackProgressWidget() {
                           {remaining !== null ? ` • ${remaining} hátra` : ""}
                         </p>
                       </div>
-                      <Badge
-                        variant="outline"
-                        className={`text-[9px] px-1 py-0 ${badge.className}`}
-                      >
-                        {badge.label}
-                      </Badge>
-                    </div>
+                        <Badge
+                          variant="outline"
+                          className={`text-[9px] px-1 py-0 ${badge.className}`}
+                          title="Kézi TODO betöltés"
+                          role="button"
+                          onClick={() => loadTodosForTrack(track.id)}
+                        >
+                          {badge.label}
+                        </Badge>
+                      </div>
 
-                    <Progress value={progress} className="mt-1.5 h-1" />
+                      <Progress value={progress} className="mt-1.5 h-1" />
 
-                    <div className="mt-2 space-y-1">
-                      {todoState?.todos?.length ? (
+                      <div className="mt-2 space-y-1">
+                      {visibleTodoTrackIds.includes(track.id) && todoState?.todos?.length ? (
                         <ul className="space-y-0.5 text-[10px]">
                           {todoState.todos.slice(0, 2).map((todo) => (
                             <li
@@ -354,11 +335,9 @@ export function TrackProgressWidget() {
                                 aria-label={`TODO: ${todo.text}`}
                               />
                               <span
-                                className={
-                                  todo.completed
-                                    ? "line-through text-zinc-500"
-                                    : "text-foreground"
-                                }
+                                className={todo.completed
+                                  ? "line-through text-zinc-500"
+                                  : "text-zinc-100"}
                               >
                                 {todo.text}
                               </span>
@@ -370,11 +349,15 @@ export function TrackProgressWidget() {
                             </li>
                           )}
                         </ul>
-                      ) : (
+                      ) : visibleTodoTrackIds.includes(track.id) ? (
                         <div className="text-xs text-zinc-500">
                           {isLoadingTodos
                             ? "TODO betöltése..."
                             : "Nincs TODO elem"}
+                        </div>
+                      ) : (
+                        <div className="text-xs text-zinc-500">
+                          Kattints a prioritás badge-re a TODO-k kézi betöltéséhez.
                         </div>
                       )}
                     </div>
